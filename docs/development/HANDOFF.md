@@ -1,15 +1,13 @@
-# Current Technical Review Checkpoint — #4413
+# Current Technical Review Checkpoint — #4415
 
-The user resumed the full review on September 22. Canonical continuation is in
-`AGENT_HANDOFF.md`, Technical Content Review, and `DEVELOPMENT_LOG.md`, DL-#4413.
-Anatomy PR #4414 merged green as 4ac3a34a; deploy 35771389008 is running. The separate
-`fix/physics-preface-rigor` branch contains the complete paired preface revision,
-source comparison and print/browser verification. Source/report f8bda7c3 is
-committed and bound. Regular PR #4416 is open; SELF merges anatomy's remote main
-and preserves the subsequent preface evidence after verifying main's tree equals
-97ae10e1. Pass #4416's checks, merge and verify publication. #4415 tracks the next
-paired ground-reaction chapter review. Broader
-scientific review remains active under #4009/#4021/#4054.
+Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
+`DEVELOPMENT_LOG.md`, DL-#4415/#4413/#4412. Branch `fix/ground-reaction-rigor`,
+checkpoint SELF, no PR yet. Paired Chapter15 corrections and 16 mechanics/contract
+checks are complete; rendering, citation-metadata evidence carry-forward and
+source-bound acceptance remain pending. Route status is honestly deferred.
+Anatomy #4414 merged green (4ac3a34a); verify deployment35771389008. Preface#4416
+has protected auto-merge enabled. Merge remote main into this branch after it
+lands. Preserve the broader active goal; do not treat this as corpus completion.
 
 The following previously merged persona-work handoff is retained for its
 separate scope; it is not the active technical-review task.

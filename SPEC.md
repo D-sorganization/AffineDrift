@@ -377,3 +377,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-22 | #4414 | Correct paired Chapter22 joint/anatomical models, work and clinical inference; add seven worked exercises, source evidence and numerical/print/mobile checks; reopen unsupported review acceptance. |
 
 | 2026-09-22 | #4416 | Align print/web Physics prefaces on model-dependent drift, zero-input interventions, work, task authority and interconnected biomechanical inference. |
+
+| 2026-09-22 | #4415 | Reconcile paired ground-reaction mechanics, contact work, input attribution and admissible counterfactuals; verify evidence, bibliography and worked solutions. |

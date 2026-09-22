@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4415 (Physics #4054; corpus #4021; epic #4009)
+- **PR:** not created
+- **Branch:** `fix/ground-reaction-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch15_ground_reaction_forces.tex`, `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `references/proximal-distal-energy.bib`, `tests/test_ground_reaction_derivations.py`, `data/trust/claim_audit_inventory.json`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; both original sources read; 16 mechanics/contract tests, Black100/Ruff, 638-source title audit and citation checks pass; actual-preamble print compilation passes, layout/browser acceptance pending)
+- **Summary:** Reconciles paired system boundaries, momentum signs, COP/free moment, work, input-induced reactions, admissible counterfactuals, muscle inference and human evidence; adds eight worked solutions and corrects three bibliographic author lists from primary records.
+- **Next step:** Complete print/browser validation and exact-source evidence binding for both chapter editions.
+
 ### DL-#4413 · Physics of Golf Preface Scientific Framing
 
 - **State:** in_review

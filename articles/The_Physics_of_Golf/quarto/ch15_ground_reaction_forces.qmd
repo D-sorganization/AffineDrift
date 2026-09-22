@@ -1,4 +1,5 @@
 ---
+pagetitle: "Ground-Reaction Forces and Constrained Dynamics"
 description: "A frame-explicit treatment of measured ground-reaction wrenches, constrained dynamics, pointwise counterfactual attribution, and falsifiable golf-swing predictions."
 ---
 
@@ -26,6 +27,34 @@ The third operation is model dependent. It does not turn a force-plate trace
 into a unique estimate of muscle activation.
 :::
 
+The central question is how internally generated motion and external support
+jointly shape club delivery. A foot constraint changes the accelerations that
+joint inputs can produce; those accelerations determine the required contact
+reaction. Contact and muscle action therefore cannot be assigned independent
+roles merely by naming one a reaction and the other a control. Momentum,
+work, and input attribution describe different aspects of the same motion.
+
+## Declare the System and the Frame
+
+Use an inertial laboratory frame with $z$ upward. Declare the horizontal axes
+explicitly, for example $x$ along the target line and $y$ completing a
+right-handed frame. Anatomical anterior-posterior and medial-lateral directions
+need a stated transformation; their names do not automatically identify the
+laboratory axes for a golfer whose body rotates.
+
+Unless stated otherwise, the system below includes the **golfer and club**,
+ends before ball contact, and neglects aerodynamic loads. Hand-club interaction
+forces and couples are then internal and cancel in whole-system balances.
+If the club is excluded, its wrench on the hands is external and must be
+included. During ball impact, include the ball's contact impulse or enlarge
+the system again. Use the mass and center of mass of the chosen system
+consistently.
+
+The third-law partner of the ground's force on the shoe is the shoe's force on
+the ground. Gravity and the normal reaction both act on the golfer, so they
+are **not** a third-law pair. Their equality in magnitude in a simple static
+stance follows from zero acceleration. Dynamic contact need not equal weight.
+
 ## Force, Moment, Center of Pressure, and Free Moment
 
 Let a force plate report force
@@ -40,20 +69,37 @@ $$
 \bm{M}_O=(M_x,M_y,M_z).
 $$
 
-The axes, signs, origin, and units must accompany the data. When the contact
-surface is the plane $z=0$ and $F_z$ is sufficiently large, an equivalent
-center of pressure (COP) is commonly computed as
+The axes, signs, origin, and units must accompany the data. Suppose the flat
+contact surface is $z=z_s$ relative to the reporting origin $O$. Transport the
+moment to $C=(x_C,y_C,z_s)$ using
 
 $$
-x_{\mathrm{COP}}=-\frac{M_y}{F_z}, \qquad
-y_{\mathrm{COP}}=\frac{M_x}{F_z}.
+\bm M_C=\bm M_O-\bm r_{OC}\times\bm F.
 $$
 
-The remaining moment about the surface normal, transported to the COP, is the
-vertical **free moment**. It represents a distributed contact couple and
+The **center of pressure** (COP) is the surface location where the two
+tangential moment components vanish. For sufficiently large $F_z$,
+
+$$
+\begin{aligned}
+x_C&=\frac{z_sF_x-M_y}{F_z},\\
+y_C&=\frac{M_x+z_sF_y}{F_z},\\
+M_{C,z}&=M_z-(x_CF_y-y_CF_x).
+\end{aligned}
+$$
+
+At a surface origin, $z_s=0$, these reduce to $x_C=-M_y/F_z$ and
+$y_C=M_x/F_z$. The remaining $M_{C,z}$ is the vertical **free moment**.
+Thus the complete wrench generally requires a force **and** a couple at the
+COP: not all moments vanish there. The free moment represents a distributed contact couple and
 cannot be reconstructed from a planar point-contact force alone. COP is also a
 ratio, so it becomes unstable as $F_z$ approaches zero. Low-load samples need
 an explicit mask rather than a silently reported COP.
+
+For example, a surface point $C=(0.1,-0.05,0.04)$ m, force
+$\bm F=(100,-50,800)$ N and free moment $M_{C,z}=8$ N m produce
+$\bm M_O=(-38,-76,8)$ N m. Omitting the 0.04 m surface offset gives the
+wrong COP even though the force and moment data are otherwise correct.
 
 Pressure insoles measure plantar pressure, primarily the normal component.
 Shear forces and free moment require additional sensing or an empirically
@@ -81,6 +127,11 @@ $$
 For example, $F_z=1200$ N for a 90 kg system gives
 $\ddot z_{\mathrm{COM}}=1200/90-9.81=3.52\ \mathrm{m\,s^{-2}}$ upward. A
 formula yielding $23.1\ \mathrm{m\,s^{-2}}$ would have added gravity twice.
+If $F_x=200$ N at the same instant, $\ddot x=2.22\ \mathrm{m\,s^{-2}}$.
+These are instantaneous accelerations, not velocities or distances.
+Downward motion can coexist with upward acceleration: braking a descent
+requires $F_z>mg$ under this system boundary. Downward acceleration requires
+$F_z<mg$, irrespective of whether the system is currently moving up or down.
 
 Integrating @eq-grf-com over $[t_1,t_2]$ gives
 
@@ -92,6 +143,12 @@ $$
 This is a strong data-quality check: the measured resultant impulse should
 agree with the change in whole-system momentum under the same filtering,
 events, mass, and coordinate convention.
+Impulse has units N s; mechanical work has units N m. An impulse is not an
+energy quantity and does not, by itself, specify an ordering of segment-speed
+peaks. The legs, trunk, arms and club form a coupled system with simultaneous
+interactions. A proximal-to-distal sequence is an outcome to explain with
+kinematics, joint powers, inertia and inputs, not a theorem of the whole-body
+impulse balance. A smaller distal mass alone does not prove greater speed.
 
 The angular-momentum balance about the system COM is
 
@@ -103,10 +160,16 @@ $$
 
 Consequently, the same resultant force can have different rotational effects
 when its line of action, bilateral allocation, or free moment differs.
+Uniform gravity has zero resultant moment about this COM. If another external
+wrench is retained, include its moment too. The complete resultant force and
+moment determine the whole-system momentum rates; they generally do not
+determine every individual foot wrench or internal joint load.
 
 ## Contact Work Is a Conditional Statement
 
-Contact power for a resultant wrench is
+For a rigid contacting body, contact power can be represented at a point $C$
+using its wrench and the body's instantaneous rigid-body velocity evaluated
+at that same location:
 
 $$
 P_c=\bm{F}_c\cdot\bm{v}_c+\bm{M}_c\cdot\bm{\omega}_c.
@@ -115,23 +178,65 @@ $$
 For an **ideal rigid, stationary, no-slip contact**, the constrained contact
 velocity is zero, and the ideal constraint wrench does no work. This useful
 idealization does not imply zero muscular work. It also does not apply without
-qualification when the shoe deforms, the foot rolls, the contact patch changes,
-the surface deforms, or slip occurs. A COP is an equivalent-wrench location,
+qualification when the shoe or surface deforms, the support moves, or slip
+occurs. Ideal rolling without slip on a stationary rigid surface can still
+have zero contact power; rolling alone is not proof of nonzero work.
+A COP is an equivalent-wrench location,
 not necessarily a material point whose velocity can be inserted into a power
 calculation.
+
+In particular, differentiating the COP coordinates gives the velocity of a
+moving **location**, not the contacting body's material velocity there.
+On a stationary planted rigid foot, the COP can travel while all contact
+material points remain stationary. For a deformable interface, the general
+power is the surface integral $\int_S\bm t\cdot\bm v\,dA$ of traction times
+local material velocity; one resultant wrench is insufficient without
+assumptions about the velocity field.
+
+The wrench formula is independent of the reference point when transported
+consistently. With $\bm r=\bm r_{OC}$,
+
+$$
+\begin{aligned}
+\bm v_C&=\bm v_O+\bm\omega\times\bm r,\\
+\bm M_C&=\bm M_O-\bm r\times\bm F,\\
+\bm F\cdot\bm v_C+\bm M_C\cdot\bm\omega
+&=\bm F\cdot\bm v_O+\bm M_O\cdot\bm\omega.
+\end{aligned}
+$$
+
+The cancellation follows from the scalar triple product. Mixing a moment
+about one origin with the velocity at another violates this identity.
 
 Muscles and tendons may perform positive, negative, and elastic work while an
 ideal external contact wrench has zero instantaneous power at its constrained
 point. GRF can still redirect momentum and alter how internally supplied energy
 is distributed among segments.
 
+Multiplying the COM balance by $\dot{\bm r}_{\mathrm{COM}}$ yields
+
+$$
+\frac{d}{dt}\left(\tfrac12m\|\dot{\bm r}_{\mathrm{COM}}\|^2\right)
+=(\bm F_{\mathrm{GRF}}+m\bm g)\cdot\dot{\bm r}_{\mathrm{COM}}.
+$$
+
+This is a translational COM kinetic-energy identity. The term
+$\bm F_{\mathrm{GRF}}\cdot\dot{\bm r}_{\mathrm{COM}}$ is not generally the
+actual contact power. Total mechanical energy also includes segmental motion
+relative to the COM, gravitational potential, and retained elastic storage.
+Muscle work and release of previously stored energy can increase kinetic
+energy while a stationary ideal contact does no work. Deformation may store
+or dissipate energy, and a moving support may exchange work with the system.
+
 ## Constrained-Reaction Mechanics
 
 At one state, write the multibody equations as
 
 $$
-M(q)\ddot q+h_0(q)+h_v(q,\dot q)
-=B(q)u+Q_{\mathrm{ext}}+J(q)^\mathsf{T}\lambda,
+\begin{aligned}
+M(q)\ddot q&+h_0(q)+h_v(q,\dot q)\\
+&=B(q)u+Q_{\mathrm{ext}}+J(q)^\mathsf{T}\lambda.
+\end{aligned}
 $$ {#eq-grf-multibody}
 
 with acceleration constraint
@@ -140,6 +245,10 @@ $$
 J(q)\ddot q+\gamma(q,\dot q)=0.
 $$
 
+Use independent local generalized coordinates $q$ so that $M$ is positive
+definite. If a model uses redundant quaternion coordinates, formulate these
+equations in independent tangent velocities with the corresponding kinematic
+map rather than blindly inverting a redundant coordinate mass matrix.
 Here $h_0$ is velocity independent, $h_v$ is velocity dependent, $u$ is the
 declared controllable generalized input, $Q_{\mathrm{ext}}$ contains other
 known applied loads, $J$ is the active-contact Jacobian, and $\lambda$ is the
@@ -149,16 +258,29 @@ $$
 A=JM^{-1}J^\mathsf{T}.
 $$
 
-If $J$ has full row rank and $A$ is well conditioned, then
+For the formulas immediately below, contact constraints are stationary and
+holonomic, $\Phi(q)=0$, with $J=\partial\Phi/\partial q$ and
+$\gamma=\dot J\dot q$. Define $h_0=h(q,0)$ and $h_v=h(q,\dot q)-h(q,0)$,
+so $h_v(q,0)=0$. Hold the declared $Q_{\mathrm{ext}}$ fixed in the pointwise
+comparisons. The matrix $B$ and retained external loads must be independent
+of $u$ for the stated affine split.
+
+Solving the motion equation for $\ddot q$, substituting into the acceleration
+constraint and collecting the $JM^{-1}J^\mathsf{T}\lambda$ term gives the
+following result. If $J$ has full row rank, $A$ is positive definite; adequate
+conditioning is also needed for a reliable numerical solution:
 
 $$
-\lambda=A^{-1}\left[
-JM^{-1}(h_0+h_v-Bu-Q_{\mathrm{ext}})-\gamma
-\right].
+\begin{aligned}
+d&=h_0+h_v-Bu-Q_{\mathrm{ext}},\\
+\lambda&=A^{-1}\left[JM^{-1}d-\gamma\right].
+\end{aligned}
 $$ {#eq-grf-lambda}
 
 The reaction is affine in the declared generalized inputs, even though it is
-not itself an independently commanded input. It can be separated as
+not itself an independently commanded input. A reaction is therefore not
+automatically a drift-only effect. Eliminating the constraint reactions changes
+both the drift and input terms of the constrained state equation. It can be separated as
 
 $$
 \lambda=\lambda_0+\lambda_v+\lambda_u+\lambda_e,
@@ -180,6 +302,40 @@ kinematics, inertial parameters, contact assignment, external loads, and
 filtering enter the residual. Dynamic inconsistency is therefore a primary
 falsification outcome, not a nuisance to hide [@sturdy2022; @werling2023].
 
+If constraint rows are redundant, do not use the ordinary inverse of $A$.
+Determine the independent constraints and the admissible reaction set. A
+minimum-norm pseudoinverse can select one solution but cannot establish a
+unique physical distribution without additional measurements or a justified
+contact/compliance model.
+
+### A Coupled Example With Zero Contact Work
+
+Consider a deliberately simple two-coordinate translational model, with both
+coordinates measured in meters, $M$ in kilograms and generalized forces in
+newtons:
+
+$$
+M=\begin{bmatrix}2&1\\1&2\end{bmatrix},\qquad
+J=\begin{bmatrix}1&0\end{bmatrix},\qquad
+B=\begin{bmatrix}0\\1\end{bmatrix}.
+$$
+
+Let $h_0=h_v=Q_{\mathrm{ext}}=\gamma=0$, and constrain $q_1=0$. The direct
+equations are
+
+$$
+2\ddot q_1+\ddot q_2=\lambda,\qquad
+\ddot q_1+2\ddot q_2=u.
+$$
+
+Consequently $\ddot q_1=0$, $\ddot q_2=u/2$ and $\lambda=u/2$. The Schur
+formula gives the same result because $A=2/3$ and $JM^{-1}B=-1/3$.
+The contact reaction depends on input, yet its power
+$\lambda\dot q_1$ is zero. This is an algebraic counterexample, not a
+calibration of shoulder torque into foot force. A human estimate requires the
+whole body's inertial coupling, joint geometry, state and active contacts.
+Planted feet do not in themselves prohibit torso rotation.
+
 ### Pointwise Ground-Reaction ZTCF
 
 The pointwise ground-reaction zero-torque counterfactual (ZTCF) sets the
@@ -193,6 +349,8 @@ $$
 It answers what reaction the model requires at this state with zero declared
 control. It is not a no-muscle experiment and does not describe what the body
 would do after controls were removed.
+The retained state may contain activation or elastic energy from prior action;
+zero generalized torque and zero muscle excitation are different interventions.
 
 ### Pointwise Ground-Reaction ZVCF
 
@@ -208,6 +366,37 @@ $\lambda_0+\lambda_e$ and must not be added to reconstruct the total. The
 additive attribution is configuration plus velocity plus control plus other
 external load.
 
+### Feasibility and Moving Constraints
+
+An equality-constrained calculation is not sufficient to establish a physical
+contact. A unilateral contact requires a nonnegative compressive normal
+reaction; sticking additionally requires a tangential force inside the
+declared friction cone, for example $\|\bm F_t\|\leq\mu F_n$. A finite
+support patch also bounds admissible moments and COP. Test these conditions
+for the full model and for each recomputation. A negative normal reaction
+means that the retained mode would require adhesion, not that the ground
+actually pulls the shoe downward. Lift-off or slip requires a different mode.
+
+For the toy model above, interpreting $q_1\geq0$ as a normal gap makes a
+negative $u$ incompatible with the assumed closed, non-adhesive contact because
+$\lambda=u/2<0$. Analogous failures can occur when zeroing an input in a
+loaded model. For example, retain $Q_{\mathrm{ext}}=(1,0)^\mathsf{T}$ N in
+the toy model. Then $\lambda=u/2-1$ N: $u=4$ N gives an admissible
+1 N reaction, while zero input would require $-1$ N. Releasing the contact
+instead gives $\ddot q_1=2/3\ \mathrm{m\,s^{-2}}$, consistent with separation.
+Report an infeasible fixed-mode diagnostic as such; do not
+silently relabel it a realizable swing.
+
+For a moving support $\Phi(q,t)=0$, the velocity constraint is
+$J\dot q+\Phi_t=0$, and the acceleration bias contains prescribed-motion
+terms that may survive at zero velocity. Zeroing all velocities may violate
+the velocity constraint itself. Reevaluate the complete equations, specify
+which support motion and external loads are retained, and label any
+velocity projection as a different intervention. The compact ZVCF expression
+above is valid only under its stationary-constraint and held-load assumptions.
+Even for a stationary support, a drag load reevaluated at zero velocity changes
+$\lambda_e$ unless the protocol explicitly freezes that load.
+
 ::: {.callout-warning}
 ## What a GRF Residual Cannot Establish
 
@@ -218,6 +407,14 @@ the model cannot uniquely determine the bilateral allocation when the contact
 system is redundant. A pseudoinverse supplies a numerical allocation, not new
 physical information.
 :::
+
+With known kinematics, inertia, and individual external wrenches, inverse
+dynamics estimates the **net generalized joint load** required by the model.
+That load can combine muscle, tendon, passive tissue and other modeled effects.
+It is not a measurement of each muscle force, activation, effort, or injury
+risk. Differentiation and filtering errors matter, as do unmeasured club loads
+and contact allocation. Multiple muscle-force combinations can produce the
+same net joint moment.
 
 ## Interpreting Common Golf Measurements
 
@@ -237,7 +434,7 @@ for left-handed participants.
 
 ### Center of Pressure
 
-COP describes the equivalent line of action of the measured wrench. It is not
+COP locates an equivalent force together with the residual free couple. It is not
 the center of mass, not “weight transfer,” and not energy transfer. Ball and
 Best observed more than one recurring COP strategy across skill levels
 [@ballbest2007]. The literature therefore does not justify one universal COP or
@@ -264,6 +461,21 @@ foot-ground variables were combined with trunk and transfer variables
 a controlled causal intervention. The systematic review documents substantial
 methodological heterogeneity [@watson2026grf].
 
+For the Rachnavy study, the initial regression block includes skill group as
+well as COP factors; its explained variance must not be credited to foot
+variables alone. Its constructed transfer factor is not automatically a
+dimensionless mechanical efficiency. Establish numerator, denominator,
+system boundary and power/impulse definitions before interpreting such a
+quantity as energy conversion. Neither that association nor a force peak
+establishes the benefit of a particular coaching intervention.
+
+Coaching descriptions such as sway, hanging back and early extension require
+operational kinematic definitions and synchronized observation. A GRF or COP
+trace alone does not uniquely identify one of these patterns or prove that
+it caused a poor strike. Changes should be evaluated against the golfer's
+task outcome, repeatability and relevant constraints, rather than inferred
+from agreement with a single reference waveform.
+
 ## Falsifying a Drift-Based GRF Model
 
 A defensible human study needs synchronized bilateral six-axis force plates,
@@ -284,11 +496,30 @@ At minimum, report for every force and moment component:
 - sensitivity to inertial parameters, filtering, coordinate transforms, and
   contact allocation.
 
-The drift hypothesis is rejected or narrowed when the full model cannot first
-reproduce measured wrench data, drift-only predictions fail held-out tests, or
-the inferred drift share changes qualitatively under plausible assumptions. A
-center-of-mass acceleration baseline should be included; a more complex model
-must outperform it on held-out observables to justify its additional claims.
+First specify the tested hypothesis: for example, a declared zero-input
+recomputation predicts a particular phase's vertical impulse within a
+preregistered tolerance. Reject or narrow it when the full model fails its
+validation, the zero-input prediction fails held-out tests, or the attributed
+share changes qualitatively under plausible assumptions. Do not convert one
+failed implementation into a disproof of every possible drift model.
+
+Include a center-of-mass acceleration baseline. For the total resultant force,
+the COM equation is already an exact balance under its assumptions, not an
+approximation that added model complexity must beat. A richer model should
+justify additional claims about individual foot wrenches, internal loads or
+interventions on appropriately observed outcomes. Compare shared outputs with
+the same available inputs, filtering, events and error metrics.
+
+Declare whether force measurements were used to fit kinematics, inertial
+parameters or residual corrections. In-sample agreement after such fitting is
+a consistency check, not an independent prediction of the fitted force.
+AddBiomechanics uses measured ground forces in its dynamics optimization
+[@werling2023]; RRA parameter optimization reduces manual tuning of dynamic
+consistency [@sturdy2022]. These methods are useful, but neither method's
+success alone validates a golf-specific drift attribution. Separate calibration
+from evaluation, and keep participant-specific calibration data distinct from
+held-out evaluation trials. In a predictive comparison, infer inputs without
+using the evaluation wrench that the model is supposed to predict.
 
 ## Key Takeaways
 
@@ -304,8 +535,8 @@ must outperform it on held-out observables to justify its additional claims.
   causes and not forward simulations.
 - A measured-minus-ZTCF residual combines control-induced reaction with model
   and measurement error; it does not reveal unique muscle torques.
-- Golfers exhibit multiple viable force and COP patterns. Evaluation should be
-  participant-aware and falsification focused rather than template matching.
+- Golfers exhibit multiple viable force and COP patterns. Evaluate individual
+  task outcomes and uncertainty, and test claims against evidence.
 
 ::: {.callout-note}
 ## On This Site
@@ -316,16 +547,122 @@ must outperform it on held-out observables to justify its additional claims.
 
 ## Chapter Exercises
 
-1. A 95 kg golfer stands still. Compute vertical GRF with upward positive.
-2. For the same golfer, $F_z=1350$ N during the downswing. Compute vertical COM
-   acceleration and state the sign convention.
+1. A 95 kg golfer-plus-club system stands still, with only gravity and ground
+   forces external. Compute vertical GRF with upward positive.
+2. For the same system, $F_z=1350$ N during the downswing. Compute vertical COM
+   acceleration. Can it be moving downward at that instant? Also compute the
+   velocity change if this force remains constant for 0.10 s.
 3. Explain when an ideal contact wrench does zero work and list three reasons a
    real shoe-ground interface may violate the idealization.
 4. Derive @eq-grf-lambda from @eq-grf-multibody and the acceleration
    constraint.
-5. Show algebraically why ZTCF plus ZVCF double-counts configuration reaction.
+5. Show algebraically why ZTCF plus ZVCF double-counts configuration and retained
+   external-load reaction. State the assumptions needed for the compact ZVCF.
 6. Give two different bilateral foot-force allocations with the same combined
    resultant and explain what additional measurements distinguish them.
 7. Design a held-out test that compares a COM-only GRF baseline, ZTCF, and the
    full constrained model without splitting samples from the same participant
    across training and test sets.
+8. Recover COP and free moment from the offset-surface numerical example.
+   Explain why differentiating that COP path does not generally give contact
+   power, and why inverse joint moments do not uniquely determine muscle force.
+
+## Worked Solutions
+
+1. Static vertical balance gives $F_z=mg=95(9.81)=931.95$ N. If the 95 kg
+   excluded a held club, its hand load would have to be included instead of
+   silently applying the golfer-plus-club equation to golfer mass alone.
+
+2. With upward positive,
+
+   $$
+   \begin{aligned}
+   \ddot z&=1350/95-9.81\\
+   &=4.4005\ \mathrm{m\,s^{-2}},\\
+   \Delta\dot z&=(1350-931.95)(0.10)/95\\
+   &=0.4401\ \mathrm{m\,s^{-1}}.
+   \end{aligned}
+   $$
+
+   A negative initial vertical velocity is compatible with that positive
+   acceleration: the descent is being braked. Acceleration alone does not
+   reveal the current direction of travel or displacement.
+
+3. For an ideal rigid, stationary, no-slip contact, the reaction pairs with
+   zero constrained velocity, so its power is zero. A moving support, material
+   deformation with nonzero local traction power, or tangential slip can
+   invalidate the idealization. Pure rolling without slip need not do so.
+   Muscle or elastic work elsewhere can remain nonzero. A particle constrained
+   to a stationary frictionless curved track provides a simple example:
+   the normal force redirects velocity while remaining perpendicular to it.
+
+4. Write $h=h_0+h_v$. Substitution gives
+
+   $$
+   \begin{aligned}
+   0&=JM^{-1}(Bu+Q_{\mathrm{ext}}+J^\mathsf{T}\lambda-h)+\gamma,\\
+   A\lambda&=JM^{-1}(h-Bu-Q_{\mathrm{ext}})-\gamma.
+   \end{aligned}
+   $$
+
+   Invert $A$ only for independent constraint rows. In the two-coordinate
+   example, direct solution and this formula both give $\lambda=u/2$.
+   If the input channel has more independent components than the measured
+   reaction, the reaction-to-input inverse cannot generally be unique.
+
+5. Under the stated stationary-contact, zero-velocity-bias and held-load
+   assumptions,
+
+   $$
+   \begin{aligned}
+   \lambda_{\mathrm{ZTCF}}+\lambda_{\mathrm{ZVCF}}
+   &=2\lambda_0+\lambda_v+\lambda_u+2\lambda_e\\
+   &=\lambda+\lambda_0+\lambda_e.
+   \end{aligned}
+   $$
+
+   They double-count the retained baseline. Moving supports or reevaluated
+   velocity-dependent loads require recomputing the relevant terms, and any
+   retained unilateral/sticking mode must pass its feasibility conditions.
+
+6. Place point contacts at $(-a,0,0)$ and $(a,0,0)$, with total vertical force
+   $F>0$. Allocations $(F/2,F/2)$ and $(3F/4,F/4)$ have the same resultant
+   $(0,0,F)$ but different moments about the midpoint: $M_y=0$ and $aF/2$.
+   A measured total moment or separate plates distinguishes these cases.
+   Even a complete total wrench need not fix all individual loads: add equal
+   and opposite horizontal forces directed along the line joining the contacts.
+   Their total force and moment are zero. Separate shear measurements can
+   distinguish this self-equilibrated allocation, provided friction permits it.
+
+7. Split by participant before choosing model structure, thresholds or
+   regression parameters. Define any allowed personal calibration separately.
+   Obtain synchronized kinematics and plate data, but reserve the evaluation
+   plate wrench as an outcome. Use kinematics and declared inertial parameters
+   for the COM resultant baseline; use independently specified or estimated
+   inputs for the full constrained prediction and zero the declared channel
+   for ZTCF. Report errors, uncertainty and contact feasibility on matching
+   outcomes. Individual-foot moments provide additional tests beyond the COM
+   resultant. If inverse dynamics used the same force trace to infer the
+   inputs, label the reconstructed full-model agreement as an identity or
+   consistency check and obtain separate evidence for predictive claims.
+
+8. With $z_s=0.04$ m,
+
+   $$
+   \begin{aligned}
+   x_C&=[0.04(100)-(-76)]/800\\
+   &=0.10\ \mathrm m,\\
+   y_C&=[-38+0.04(-50)]/800\\
+   &=-0.05\ \mathrm m,\\
+   x_CF_y-y_CF_x&=0.10(-50)-(-0.05)(100)\\
+   &=0,\\
+   M_{C,z}&=8-0=8\ \mathrm{N\,m}.
+   \end{aligned}
+   $$
+
+   For power use the rigid body's velocity field at $C$, not the rate at which
+   the equivalent COP location changes. For deformable contact, use local
+   traction power or a justified reduction. A net joint moment similarly
+   summarizes combined actions: antagonistic muscle forces can change together
+   while leaving their net moment unchanged, so inverse dynamics alone cannot
+   identify individual muscle forces.
