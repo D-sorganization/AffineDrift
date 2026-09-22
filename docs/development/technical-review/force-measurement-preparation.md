@@ -1,5 +1,9 @@
 # Force Measurement Review Preparation — #4420
 
+These are chronological research notes. The initial no-edit/no-lease status below
+is superseded by the completed review in
+`reports/technical-review/force-measurement-review.md` and the current handoff.
+
 Read the long canonical article, including lay overview, five parts and reference list. No source edits yet; queued behind delivery PR4417/4419. Native child of4059, within4021/4009.
 
 The issue records seven concrete finding groups. Strongest independently confirmed items:

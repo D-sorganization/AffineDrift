@@ -3,6 +3,7 @@ title: "Force Measurement Technology: Plates, Pressure, and the Ground Reaction 
 description: "How force plates and pressure systems actually work: transducer physics, the six-component ground reaction wrench, centre-of-pressure geometry and its error behaviour, and what pressure mats cannot measure."
 author: "Dieter Olson"
 date: "2026-08-02"
+css: ../css/force-measurement.css
 categories:
 - technology
 ---
@@ -19,34 +20,34 @@ categories:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        A force plate is a very expensive bathroom scale that can also tell which way you are pushing sideways and how hard you are twisting. That last part — the sideways and the twisting — is what separates a real force plate from the pressure mats that are much more common in golf studios, and it changes what questions the data can answer.
+        A multiaxis force plate measures the contact load between a golfer and the ground: upward support, sideways push and turning effects. A pressure-only mat instead shows how normal pressure is distributed. Both can be useful, but they answer different questions. Neither directly measures muscle effort or tells you which change will improve a swing.
       </p>
 
       <div class="laymans-item">
-        <h3>What is under the floor</h3>
+        <h3>What Is Under the Floor</h3>
         <p>
-          Buried in each corner of the plate are load cells: small structures that deform microscopically when loaded. Two technologies dominate. Strain gauges measure that deformation as a change in electrical resistance, which is stable enough to hold a reading for minutes. Piezoelectric quartz crystals generate charge when squeezed, which is superb for fast events but slowly bleeds away, so the reading drifts if you stand still.
+          Load-sensitive structures beneath the surface turn mechanical loading into electrical signals. Strain gauges detect small changes in resistance; piezoelectric sensors generate charge. Calibration converts those signals into forces and moments. The entire system, including its mounting and electronics, determines how accurately it measures a brief transient or sustained standing load.
         </p>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> A force plate reports six numbers, not one: three force components and three moment components. A pressure mat reports only how hard you push straight down, distributed over an area. You cannot recover friction or twist from a pressure mat, no matter how good its resolution.
+        <strong>Key Takeaway:</strong> A six-axis force plate reports three force and three moment components in a specified frame. A pressure-only mat cannot uniquely determine sideways friction or twisting from normal pressure alone. A model may predict them, but that prediction needs its own validation.
       </div>
 
       <div class="laymans-item">
-        <h3>The centre of pressure is not where the force "is"</h3>
+        <h3>What the Centre of Pressure Summarizes</h3>
         <p>
-          Systems display a moving dot called the centre of pressure, and it is easy to read it as "where your weight is". It is really the single point where the distributed push could be replaced by one equivalent force. Two very different pressure patterns can produce the identical dot. And when the vertical load is small — early in a step, or on a trail foot unweighting during a swing — the dot becomes wildly noisy, because it is computed by dividing by that small number.
+          The centre of pressure is a summary point on the contact surface, not the location of your body mass. The full equivalent load generally includes a force at that point plus a remaining twisting couple. Different pressure patterns can produce the same dot. When normal load becomes small, small measurement errors can cause large errors in the dot, so an unloading foot needs careful interpretation.
         </p>
         <div class="analogy">
-          <strong>The balance point of a seesaw:</strong> Knowing the balance point tells you nothing about whether two children sit near the middle or one heavy child sits at the far end. It is a summary, and summaries discard information. The centre of pressure is the balance point of your foot pressure — useful, but not a picture of the loading.
+          <strong>The Balance Point of a Seesaw:</strong> Knowing the balance point tells you nothing about whether two children sit near the middle or one heavy child sits at the far end. It is a summary, and summaries discard information. The centre of pressure is the balance point of your foot pressure — useful, but not a picture of the loading.
         </div>
       </div>
 
       <div class="laymans-item">
-        <h3>Why golf cares about the twist</h3>
+        <h3>Why Golf Cares About Turning Effects</h3>
         <p>
-          A golfer standing on the ground can push sideways with each foot in opposite directions, creating a turning effect without any net sideways force. That couple is a major source of the rotation that drives the swing — and it is invisible to any sensor that only measures downward pressure.
+          Opposite sideways forces at separated feet can create a turning effect even when they cancel as a net force. Each footprint can also transmit its own twisting couple. These are distinct contributions. Measuring them helps describe how angular momentum changes; explaining muscle work or a better technique requires additional evidence.
         </p>
       </div>
     </div>
@@ -56,294 +57,457 @@ categories:
 
 ## Why This Article Exists
 
-Ground reaction force is the only external kinetic quantity in human movement that can be measured directly. Everything else in the kinetic chain — joint torques, muscle forces, segment power — is computed from kinematics and a model, with all the interpretive caveats that entails. That makes the force plate the anchor of quantitative biomechanics, and it makes understanding its transducers, its coordinate conventions, and its error behaviour foundational rather than incidental.
+A force plate connects a movement to the loads exchanged with its surroundings. It is especially valuable because a calibrated instrument observes contact loads independently of the kinematic model used to estimate joint moments. It is not the only way to measure an external load: instrumented handles, clubs and wearable force transducers provide other examples. Nor does a plate directly measure muscle force, joint work or the cause of a movement strategy.
 
-This article treats force measurement as an instrument-design problem: what the transducers physically do, what the six output channels mean geometrically, where the errors come from, and what the increasingly common pressure-based systems can and cannot substitute for.
+The useful chain of reasoning is **sensor response → calibrated contact wrench → momentum balance → model-dependent joint kinetics → a testable performance hypothesis**. Each arrow introduces assumptions. A precise instrument does not rescue a wrong coordinate convention; an accurate contact wrench does not uniquely identify individual muscles; an association with clubhead speed does not establish an effective coaching intervention.
+
+This article follows that chain through transducer physics, wrench geometry, uncertainty, pressure sensing and the golf literature. The aim is to identify which questions an instrument can answer, how to check the answer, and what additional evidence is needed for the next inference.
 
 ## Part I: The Measurand Is a Wrench
 
-### Six Components, Not One
+### Six Components in a Declared Frame
 
-A force plate measures the resultant of a distributed contact load. Any such distributed load, however complicated, is statically equivalent to a single force plus a single couple — and that pairing is precisely a **wrench**:
-
-$$
-\mathcal{W} = (\mathbf{F},\, \mathbf{M}_O) = (F_x, F_y, F_z,\, M_x, M_y, M_z)
-$$
-
-expressed about some reference point $O$ (conventionally the plate's geometric centre or a defined corner). The moment is reference-dependent: moving the reference point from $O$ to $P$ transforms the wrench as
+A distributed contact load is mechanically equivalent, for the resultant force and moment on a rigid body, to a force and a couple:
 
 $$
-\mathbf{M}_P = \mathbf{M}_O + (\mathbf{r}_{O} - \mathbf{r}_{P}) \times \mathbf{F}
+\mathcal W_O=(\mathbf F,\mathbf M_O).
 $$
 
-while the force is invariant. This is the *dual* of how a twist transforms under a change of reference point — and that duality is not a coincidence. Twists and wrenches are the two natural six-dimensional objects of rigid-body mechanics, paired by the reciprocal product, whose value is mechanical power:
+Here the components are expressed in one right-handed Cartesian frame and the moment is about a declared point $O$. We use the **ground-on-golfer** sign convention, with $z$ upward. A device may instead export the opposite action or different axis directions; transform its calibrated outputs before using the equations below. A six-component output also says nothing by itself about accuracy, bandwidth or the loads that bypass the sensing structure.
+
+Moving the reference point to $P$, while retaining the same axis orientation, gives
 
 $$
-P = \mathcal{W} \cdot \xi = \mathbf{F}\cdot\mathbf{v}_O + \mathbf{M}_O\cdot\boldsymbol{\omega}
+\mathbf M_P=\mathbf M_O-\mathbf r_{OP}\times\mathbf F.
 $$
 
-A motion-capture system measures twists; a force plate measures wrenches; inverse dynamics is the machinery that combines them. Reading the instruments in this shared algebra makes their complementarity structural rather than metaphorical.
+The force is unchanged by this translation. Rotating the coordinate frame transforms the components of both vectors. A surface-height correction is therefore a wrench transport, not an optional plotting adjustment.
 
-### The Central Axis: A Wrench Is a Screw Too
-
-Chasles' theorem has a static counterpart, usually attributed to Poinsot: any wrench is equivalent to a force along a unique line together with a couple about that same line. That line is the **central axis** of the wrench, and its pitch is
+For a rigid body with angular velocity $\boldsymbol\omega$, the paired twist uses the velocity of the same reference point:
 
 $$
-h = \frac{\mathbf{F}\cdot\mathbf{M}_O}{\lVert\mathbf{F}\rVert^2},
-\qquad
-\mathbf{r}_{\text{axis}} = \frac{\mathbf{F}\times\mathbf{M}_O}{\lVert\mathbf{F}\rVert^2}
+\begin{aligned}
+P&=\mathbf F\cdot\mathbf v_O+
+\mathbf M_O\cdot\boldsymbol\omega,\\
+\mathbf v_P&=\mathbf v_O+
+\boldsymbol\omega\times\mathbf r_{OP}.
+\end{aligned}
 $$
 
-For ground reaction, this construction has a direct physical reading. The component of moment *along* the force is the irreducible twisting — in biomechanics terms, closely related to the **free moment** — while the perpendicular component is what relocating the reference point can absorb. The central axis is the geometric object that the centre of pressure is a two-dimensional shadow of.
+Consistent transport leaves $P$ unchanged. Motion capture observes marker positions or images; fitting segment poses, differentiating and filtering are needed to estimate these velocities. A COP trace is a changing summary of contact loading, so its time derivative is generally **not** the material-point velocity to use in this power equation. For deforming contact, the more general statement integrates local traction dotted with local material velocity over the contact area.
 
-### Centre of Pressure and Its Error Behaviour
+### The Central Axis and Its Exceptional Cases
 
-Centre of pressure is defined as the point on the plate surface where the moment components in the plane vanish. Taking $z$ as vertical and the plate surface at $z = z_0$ relative to the sensor origin:
-
-$$
-x_{\text{COP}} = \frac{-M_y - F_x z_0}{F_z},
-\qquad
-y_{\text{COP}} = \frac{M_x - F_y z_0}{F_z}
-$$
-
-Three consequences follow immediately from the algebra, and all three matter in practice.
-
-**First, COP is a division by vertical load.** The relative error in COP scales as $1/F_z$, so at low vertical force the estimate degenerates. This is why COP traces are erratic at heel strike and toe off, and why a trail foot unweighting during a golf downswing produces a COP path that looks dramatic but carries little information. Any analysis of COP should be gated on a minimum $F_z$ threshold, and papers that do not state one should be read with that in mind.
-
-**Second, the $z_0$ term is a real correction, not a formality.** The transducer plane sits below the contact surface, so horizontal shear produces a moment that must be removed using the correct surface height. An error in $z_0$ produces a COP error proportional to the shear force — meaning it appears exactly when the subject is pushing hardest horizontally, and vanishes in quiet standing where it would be easiest to detect.
-
-**Third, COP is a summary statistic and discards the pressure distribution.** Infinitely many distributions share a COP. It is a valid *equivalent point of application*, not a description of loading.
-
-### The Free Moment
-
-The vertical moment about the COP does not vanish. This residual, $T_z$, is the **free moment** — the couple transmitted through friction between foot and ground, independent of where you place the reference point:
+When $\mathbf F\ne\mathbf0$, a wrench has a central axis on which the residual moment is parallel to its force:
 
 $$
-T_z = M_z - \bigl(x_{\text{COP}} F_y - y_{\text{COP}} F_x\bigr)
+\begin{aligned}
+h&=\frac{\mathbf F\cdot\mathbf M_O}{\|\mathbf F\|^2},\\
+\mathbf r_{OA}(\alpha)&=
+\frac{\mathbf F\times\mathbf M_O}{\|\mathbf F\|^2}
++\alpha\mathbf F.
+\end{aligned}
 $$
 
-Physically, it is the torsional friction of the shoe against the surface. For golf this term is central rather than incidental: two feet pushing horizontally in opposite directions generate a couple that produces rotation with no net horizontal force, and that couple is one of the principal routes by which a golfer generates angular momentum about the vertical axis. It is also the single quantity most commonly missing from the data, for reasons developed in Part III.
+The first term is the closest point on that axis to $O$; $\alpha$ parametrizes the line. At every point on it the remaining moment is $h\mathbf F$. The pitch $h$ has units of length. A pure couple ($\mathbf F=0$, $\mathbf M_O\ne0$) is already independent of origin and has no finite central axis defined by this formula. The zero wrench has no unique axis either.
+
+The central axis should not be confused with the centre of pressure. The former aligns the residual moment with **the force**; the latter, for planar contact, aligns it with **the surface normal**. Those directions differ when shear is present.
+
+### Centre of Pressure, Surface Height and the Free Moment
+
+Let the contact surface be the plane $z=z_0$ relative to $O$. For $F_z\ne0$, define $C=(x_C,y_C,z_0)$ so that the transported moment has no $x$ or $y$ component. Expanding $\mathbf M_C=\mathbf M_O-\mathbf r_{OC}\times\mathbf F$ yields
+
+$$
+\begin{aligned}
+x_C&=\frac{z_0F_x-M_y}{F_z},\\
+y_C&=\frac{M_x+z_0F_y}{F_z},\\
+T_z&=M_z-x_CF_y+y_CF_x.
+\end{aligned}
+$$
+
+Thus the equivalent contact description is **a force at the COP plus a free normal couple** $T_z\mathbf e_z$. A single force at the COP is insufficient unless this residual couple vanishes. The $z_0$ signs follow from the stated axes and moment convention; copying a manufacturer's formula without its convention can reverse them.
+
+For a flat, unilateral pressure distribution without additional local bending couples, the COP is the centroid of normal pressure and lies within the convex hull of the loaded area. It does not locate the centre of mass or describe the pressure pattern. Two very different heel/forefoot distributions can have the same resultant and COP. Nonplanar contact requires a corresponding surface model rather than blind use of planar formulas.
+
+::: {.callout-note}
+## A Surface-Offset Check
+
+Take $\mathbf F=(100,-50,800)$ N, $C=(0.10,-0.05,0.04)$ m and $T_z=8$ N m. The moment at the sensor origin is
+
+$$
+\mathbf M_O=C\times\mathbf F+8\mathbf e_z
+=(-38,-76,8)\ \mathrm{N\,m}.
+$$
+
+The equations recover the original COP and free couple. Omitting the height produces $(0.095,-0.0475)$ m: errors of $-5$ mm and $+2.5$ mm. Reversing both height signs doubles these errors. This constructed load is a useful sign check; it is not a measurement of a golfer.
+:::
+
+For this same planar wrench, the central axis intersects the surface at
+
+$$
+A=C+\frac{T_z}{\|\mathbf F\|^2}(F_y,-F_x,0).
+$$
+
+It therefore misses the COP when $T_z\ne0$ and shear is nonzero. In the example, the horizontal difference is approximately $(-0.61,-1.23)$ mm. The distinction is geometric, not sensor noise. With a fixed surface and consistent wrench transport, the computed residual free couple is unchanged by moving the reporting origin; the raw component $M_z$ generally is not.
+
+### Why COP Uncertainty Grows During Unloading
+
+A denominator near zero makes COP ill-conditioned, but “relative COP error scales as $1/F_z$” is not a general uncertainty law. The numerator, denominator, surface height and their correlations all matter; relative error is also ill-defined when the chosen COP coordinate is zero.
+
+For small perturbations about a nonzero load, first-order propagation gives
+
+$$
+\begin{aligned}
+\delta x_C&\simeq
+\frac{z_0\delta F_x-\delta M_y+F_x\delta z_0-x_C\delta F_z}{F_z},\\
+\delta y_C&\simeq
+\frac{\delta M_x+z_0\delta F_y+F_y\delta z_0-y_C\delta F_z}{F_z}.
+\end{aligned}
+$$
+
+Writing these derivatives as a Jacobian $J_C$ for the measured wrench and height, the covariance estimate is $\Sigma_C\simeq J_C\Sigma J_C^\mathsf T$. Retain cross-channel covariance when calibration or electronics couple the errors. The linear approximation becomes unreliable when the uncertainty in $F_z$ is comparable to $|F_z|$; reporting a confident COP ellipse then is misleading.
+
+A height bias alone gives $\delta x_C=(F_x/F_z)\delta z_0$ and $\delta y_C=(F_y/F_z)\delta z_0$. It depends on the **shear-to-normal ratio**, not just the size of shear. Moment offsets can dominate during unloading, while gain, alignment, dynamic response or pressure saturation can dominate elsewhere. There is no universal noise source or universal minimum-load threshold.
+
+Report the chosen load gate and how it was established from the instrument's uncertainty and the intended analysis. Mask or flag unsupported COP samples rather than interpreting an unloading trail-foot excursion as a deliberate control action. Keep force and moment data with the COP: the dot alone hides why the estimate changed.
+
+### Per-Foot Torsion Is Not the Whole Turning Moment
+
+For two feet, moments about a common point $O$ add as
+
+$$
+\mathbf M_O=\sum_{i=1}^{2}
+\left(\mathbf r_{OC_i}\times\mathbf F_i+T_{z,i}\mathbf e_z\right).
+$$
+
+Opposite horizontal forces at separated feet can produce a vertical turning moment with zero net horizontal force **even if both per-foot free moments are zero**. Conversely, torsional traction within either footprint can produce a free moment. Both effects can change angular momentum; they are distinct terms and should not be given the same label. A reported pivoting moment must be interpreted using the study's reference point and decomposition.
+
+This distinction is also central to control. Contact loads are reactions compatible with the golfer's actuation, motion and contact conditions. They are not independent commands that can be added arbitrarily while holding the rest of the swing fixed. The [ground-reaction chapter](The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html) develops the corresponding constrained equations and admissible counterfactuals.
 
 ## Part II: Transducer Physics
 
-### Strain Gauge
+### Strain Gauges, Bridges and Calibration
 
-A strain-gauge plate supports its top surface on load cells whose elastic deformation under load is read as a resistance change in bonded foil gauges, wired as full four-arm Wheatstone bridges. AMTI's amplifier specification names the arrangement exactly — six four-arm bridges of 350 Ω minimum, with software-selectable excitation at 2.5, 5 or 10 V — and the four-arm topology is the reason this technology is the DC-stable choice: it cancels thermal-expansion and excitation-voltage drift to first order.
+A strain-gauge load cell turns elastic deformation into a resistance change. Gauges placed on selected parts of the structure respond to compression, bending, shear or torsion. A bridge combines these responses; a calibration matrix converts electrical channels into force and moment components. The number of raw channels and the location of this calculation are instrument-specific. Both strain-gauge and piezoelectric systems require calibration and geometric information, even when the software exports six finished channels.
 
-The foundational patent is worth reading for the clearest statement in the literature of *why* a plate can measure what a pressure array cannot. [AMTI's US 4,493,220](https://patents.google.com/patent/US4493220A/en) (filed 1982) describes a top plate on tubular load cells where "the load cells have strain gages to measure the strain due to the horizontal shear forces," and notes that "the 'shear' strain gages also measure moments about the Z axis when properly placed in a bridge circuit." Shear and free moment are available because the structure is instrumented for tangential load transfer. Bertec's approach, patented by Necip Berme, places gauges so that [each load cell independently resolves all six components](https://patents.google.com/patent/US6354155B1/en), which also allows plates to be tiled into arrays — the architectural basis for the dual-plate installations that golf work requires.
+A Wheatstone bridge is a pair of voltage dividers. For one stated labeling of its four resistors,
 
-Representative published accuracy, useful as a calibration of expectations:
+$$
+V_o=V_{\rm ex}
+\left(\frac{R_2}{R_1+R_2}-\frac{R_4}{R_3+R_4}\right).
+$$
 
-| Specification | AMTI HPS series | Bertec (typical) |
-|---|---|---|
-| Accuracy | ±0.1% of applied load | 0.2% of applied load |
-| Crosstalk | ±0.05% AL | 0.1% AL |
-| COP accuracy | < 0.2 mm | 0.8 mm |
-| Hysteresis | < 0.5% FSO | — |
-| Linearity | — | 0.2% FSO |
+The bridge balances when the two fractions match. Full-bridge gauge arrangements can increase strain sensitivity and cancel matched common temperature effects, but the output still scales with excitation $V_{\rm ex}$. Four arms alone do **not** cancel excitation-voltage drift. Ratiometric readout, using the measured excitation or an ADC reference that tracks it, controls that source of gain error. Temperature gradients, imperfect matching, self-heating, creep and electronics remain relevant. [NI's bridge guidance](https://www.ni.com/getting-started/set-up-hardware/data-acquisition/i/strain-gages) and [excitation discussion](https://www.ni.com/en/support/documentation/supplemental/21/making-accurate-strain-measurements-improving-snr-and-determining-optimal-excitation-levels.html) explain these distinctions.
 
-All such figures carry a load floor — AMTI's are qualified "minimum 50 lb applied" — for reasons that Part I already explained algebraically. Note also that AMTI's own mid-tier BMS line specifies ±0.5% accuracy and ±0.2% crosstalk: a five-fold accuracy difference from the same vendor using the same physics, the delta being calibration density and electronics rather than transducer type.
+The ability to observe shear or torsion comes from the mechanical load path and its instrumentation. [AMTI's US 4,493,220](https://patents.google.com/patent/US4493220A/en) describes strain-gauge arrangements sensitive to shear and vertical-axis moments; [Bertec's US 6,354,155](https://patents.google.com/patent/US6354155B1/en) describes a multicomponent load-transducer architecture. These patents explain designs. They do not independently validate the accuracy of every product using the same transducer family.
 
-Crosstalk deserves a concrete reading. Bertec defines it as the response of the shear channels to a purely vertical applied load, and vice versa. At 0.1% of applied load, a 2000 N vertical peak produces roughly 2 N of phantom shear — negligible against golf shear peaks, but not against quiet-stance measurements.
+A useful measurement model is
 
-### Piezoelectric
+$$
+\widehat{\mathbf w}=K\,[\mathbf s-\mathbf b],
+$$
 
-A piezoelectric plate transmits load through four three-component quartz sensors mounted **under high preload**, each containing three crystal pairs — one for vertical compression, two for orthogonal shear. Twelve crystal stacks are bussed into eight output channels, which is why piezoelectric plates require the acquisition software to know the plate geometry in order to form the moment components, whereas strain-gauge plates deliver six components directly.
+where $\mathbf s$ is the raw channel vector, $\mathbf b$ the zero offset and $K$ the calibrated conversion matrix. This locally linear description may need load-, location- or temperature-dependent correction. Calibration uncertainty, channel noise and uncertainty in the frame transform all propagate into the wrench and derived COP. “Six axes” describes the measurand; it is not an uncertainty specification.
 
-Quartz generates charge in proportion to applied force and is not pyroelectric, giving good intrinsic temperature stability. The signal is read by a charge amplifier — an integrator with finite feedback resistance $R_f$ and capacitance $C_f$, hence a time constant $\tau = R_f C_f$. That time constant is the whole story of piezoelectric drift:
+### Read Specifications as Qualified Claims
 
-- **Long $\tau$** preserves quasi-static content but allows leakage-current offset to accumulate, which is why zeroing immediately before each trial is mandatory rather than optional.
-- **Short $\tau$** suppresses drift but high-passes the signal, destroying the baseline needed for impulse-momentum integration.
+For a concrete example, [AMTI's HPS400600 product page](https://www.amti.biz/product/hps400600/) reports typical accuracy within $\pm0.1\%$ of applied load, crosstalk within $\pm0.05\%$ of applied load, and COP accuracy below $0.2$ mm, with a stated minimum applied load of 50 lb. It also lists hysteresis below $0.5\%$ of full-scale output. These are manufacturer specifications with their stated conditions, not an independent comparison against another brand or a guarantee for every swing sample.
 
-For golf this is a decisive practical matter. A swing sequence spans several seconds of quasi-static loading during address and takeaway, so the long time constant is required — but a plate left in operate mode through a thirty-swing session without re-zeroing accumulates baseline offset, and Part I established that COP error is dominated by exactly that kind of offset.
+**Applied load and full scale are different denominators.** A percentage of full scale becomes a larger fraction of the measured signal at small loads. Likewise, an impressive vertical-force specification does not establish equally small relative error in a near-zero shear channel. As an illustrative calculation, crosstalk equal to $0.1\%$ of a 2000 N vertical load is 2 N of apparent shear. Whether that matters depends on the actual shear and the downstream inference, rather than the sport's name.
 
-Where piezoelectric wins is stiffness. The preloaded quartz stack is far more rigid than a compliant spring body, which raises the natural frequency and widens the usable bandwidth — the correct choice when the event of interest is an impact transient rather than a multi-second postural sequence.
+To compare instruments, require the model, capacity, loading direction and location, temperature range, conditioning settings, uncertainty convention and tested bandwidth. A typical error, a maximum bound, hysteresis and repeatability are not interchangeable. Different calibration procedures can produce different performance from the same transducer principle; attributing a specification difference solely to sensor type or calibration density needs evidence.
 
-### Natural Frequency and Mounting
+### Piezoelectric Sensing and the Measurement Time Window
 
-Natural frequency is the specification most often ignored and most likely to matter for fast sporting movements. Published figures show three patterns worth internalising:
+Quartz transducers generate charge under load. Preloaded multiaxis sensors can resolve compression and shear; a platform combines their outputs to recover its wrench. Four-sensor/eight-channel arrangements are familiar examples, not a universal requirement. Quartz's lack of pyroelectricity does not make a complete mounted system immune to temperature effects, leakage, changing preload or electronic drift.
 
-| Plate | $f_n$ (Fx) | $f_n$ (Fy) | $f_n$ (Fz) |
-|---|---|---|---|
-| Bertec FP4060-05-PT, portable, 5 cm | 120 Hz | **75 Hz** | 120 Hz |
-| Bertec FP4060-10-TM, fixed, 10 cm | 325 Hz | 325 Hz | > 500 Hz |
-| Bertec FP6090-15-TM, 60 × 90 cm | 240 Hz | 230 Hz | 400 Hz |
-| AMTI HPS400600, standard | 310 Hz | 310 Hz | 370 Hz |
-| AMTI HPS400600, high-frequency option | 480 Hz | 480 Hz | 720 Hz |
-| AMTI instrumented treadmill — plate | 300 Hz | 300 Hz | — |
-| AMTI instrumented treadmill — **structure** | — | — | **120 Hz** |
+A simple charge-amplifier model separates two effects that are often conflated. Let the sensor charge be $q=dF$, and let the feedback capacitor and resistor be $C_f$ and $R_f$. With ideal amplifier behavior otherwise and $\tau=R_fC_f$,
 
-First, **portable plates are the weak link**: a shear-axis natural frequency of 75 Hz sits inside the band of interest for impacts and rapid transitions, and portable plates are precisely what gets carried to a driving range. Second, **larger plates resonate lower**, so the 60 × 90 cm plate underperforms the 40 × 60 cm one at equal height. Third, and most easily overlooked, **the mounting structure rather than the transducer can set the limit** — the same manufacturer quotes 300 Hz for the plate and 120 Hz for the treadmill structure carrying it. A plate bolted to a suspended floor rather than an isolated concrete pier inherits the floor's resonance, which is why in-situ verification exists.
+$$
+\frac{V(s)}{F(s)}=-\frac{d}{C_f}
+\frac{s\tau}{1+s\tau}.
+$$
 
-On the acquisition side, anti-alias filtering is typically fixed near 1000 Hz with a two-pole rolloff, and sampling at 2000 Hz therefore sits exactly at Nyquist with a gentle filter — thin margin for genuine impact work, and worth stating when reporting impact-adjacent measurements.
+This is a **high-pass response** from force to voltage, with low-frequency corner $1/(2\pi\tau)$. For a force step applied after zeroing, the magnitude of the response decays as $\exp(-t/\tau)$. That droop is different from an accumulating offset caused by leakage or amplifier input current. Kistler distinguishes these mechanisms in its [time-constant explanation](https://www.kistler.com/US/en/time-constant-resistor/C00000161) and [charge-amplifier manual](https://assets.kistler.com.cn/SAPCommerce_Download_original/012-067e.pdf).
+
+For example, a 5 s constant load produces about $4.9\%$ droop with $\tau=100$ s, but about $0.5\%$ with $\tau=1000$ s in this ideal model. Requiring droop no greater than a chosen fraction $0<\epsilon<1$ over duration $T>0$ gives
+
+$$
+\tau\ge\frac{-T}{\ln(1-\epsilon)}.
+$$
+
+This is a design check, not a claim that a particular plate has either time constant. Shorter time constants may be suitable for transient measurements but distort sustained loading and impulse. Longer time constants preserve low-frequency content while making offset control important. An acquisition chain can add further filters, compensation and saturation limits.
+
+Choose the range, time constant, zeroing procedure and permitted trial duration from the actual instrument and error budget. Zeroing while a golfer is already standing on the plate removes that loaded reference unless it is restored explicitly; it does not create an absolute body-weight measurement. Record whether a trace represents absolute load or change from a tare. For impulse, a constant baseline error $b_F$ accumulates an error $b_F T$, even if the waveform looks smooth.
+
+### Resonance, Mounting and Sampling Are Separate Limits
+
+A high natural frequency can support a wide useful measurement band, but **natural frequency is not usable bandwidth**. Amplitude and phase error develop below resonance and depend on damping and the coupled plate–support–load system. For an illustrative single-mode transfer function normalized to unit static gain,
+
+$$
+H(j\omega)=\frac{1}
+{1-(\omega/\omega_n)^2+2j\zeta\omega/\omega_n}.
+$$
+
+With zero damping, even $\omega/\omega_n=0.2$ gives a gain of about 1.042. A real system has multiple modes and damping; the acceptable band must be established from its measured response and the tolerated amplitude/phase errors. Surface coverings, fixtures, foundations and added mass can change that response.
+
+The HPS400600 page illustrates why the precise model matters: for its 1000 lb version, listed standard natural frequencies are 310 Hz in shear and 370 Hz vertically, with 480/720 Hz for the high-frequency option. The 2000 lb version has different values. These are model-specific natural frequencies, not a validated bandwidth for golf impacts. Neither “portable” nor “piezoelectric” alone determines suitability; geometry, stiffness, mass, mounting and electronics all matter.
+
+Sampling adds another constraint. If $f_s=2000$ Hz, a 1300 Hz sinusoid can alias into a 700 Hz sampled signal. A digital filter applied afterwards cannot reconstruct which original frequency produced it. Effective analog anti-alias filtering, or the equivalent properly designed oversampling/decimation chain, must attenuate unwanted content **before** it aliases. State the filter response and acquisition architecture, not only the sample rate. A nominal cutoff at Nyquist with a gentle rolloff is not a general guarantee of adequate suppression, and there is no universal 1000 Hz filter fitted to all force plates.
+
+For ordinary swing loading and for impact transients, define the bandwidth of the question separately. Increasing the sample rate does not repair structural resonance, transducer saturation or a low-pass reference that already removed the event of interest. Synchronization matters too: a time shift between force and kinematics can corrupt inverse dynamics even when each signal is individually accurate.
 
 ### Calibration and In-Situ Verification
 
-Factory calibration is thorough: AMTI reports verifying each system with up to 4000 measurements at roughly 400 surface locations, on positioning equipment accurate to 0.005 mm, against traceable standards.
+Factory calibration and installed-system verification answer different questions. [AMTI's Optima description](https://www.amti.biz/optima-technology/) reports up to 4000 measurements across rated capacity and up to 400 surface positions. Its stated 0.005 mm positioning accuracy describes the calibration machine's positioning, not the resulting force or COP uncertainty.
 
-Factory calibration is nonetheless not sufficient. [List et al. (2017)](https://pubmed.ncbi.nlm.nih.gov/28763716/), tracking six plates over twelve years, found that in-situ correction of the point of force application **reduced root-mean-square errors by up to about 60% relative to the manufacturer's calculation**, and — the operationally important finding — that **remounting changed the correction coefficients more than gradual ageing did**. Their recommendation is to recalibrate after any remounting and at minimum every five years. [Chockalingam et al. (2002)](https://pubmed.ncbi.nlm.nih.gov/12443947/) reached a compatible conclusion, additionally showing that accuracy degrades toward the plate edges.
-
-A defensible verification protocol follows from the failure modes above: record unloaded baseline drift over the intended trial duration; apply known dead weight at a surveyed grid including near-edge positions; verify shear response with a pulley at a known angle, which is the only way to observe crosstalk directly; check impulse against a known momentum change; and re-verify after any remounting.
+[List et al. (2017)](https://pubmed.ncbi.nlm.nih.gov/28763716/) studied six plates and reported up to approximately 60% reduction in point-of-force-application RMS error with their in-situ correction. Remounting changed correction coefficients substantially. Their recommendation to recalibrate after remounting and at least every five years is evidence from that study, not a universal interval covering every instrument and use. Installation, load range and required uncertainty determine the appropriate local verification plan.
 
 ::: {.callout-note}
-## A Gap Worth Naming
+## A Force-Platform Standard Exists
 
-There is no ISO or ASTM standard specifically governing biomechanical force platform performance or in-situ verification. General force-metrology standards such as ISO 376 and OIML R 60 cover load cells, and manufacturers supply traceable calibration certificates, but the verification practices described above exist as ad hoc academic convention rather than as a normative standard. For a field whose central instrument this is, that is a notable absence.
+[ASTM F3109-23, *Standard Practice for Verification of Multi-Axis Force Measuring Platforms*](https://store.astm.org/f3109-23.html), addresses performance verification and reporting for multiaxis platforms, including COP and variation with load and surface position. Its public scope excludes dynamic characteristics and platforms integrated into treadmills or stairs. It therefore corrects the claim that no ASTM force-platform standard exists, while leaving important application-specific work. This description uses the published scope; it is not a compliance assessment or a substitute for the complete standard.
 :::
 
-## Part III: Pressure Systems and the Dimensional Limit
+A verification plan should expose the failure modes relevant to the proposed inference:
 
-### What a Pressure Array Can and Cannot Observe
+- Measure unloaded offset and drift over the intended trial duration, and verify the meaning of any loaded tare.
+- Apply independently known loads at surveyed locations, including the intended working region and near its boundaries; compare the reconstructed wrench and COP with their uncertainties.
+- Test cross-axis response using appropriate independent reference loads. A vertical load can reveal spurious shear; inclined loads and known couples probe other components. A pulley is one possible fixture, not the only way to detect crosstalk.
+- Check coordinate signs, surface height, reference-point transport, synchronization and saturation. Reassess after remounting or changing coverings.
+- For dynamic claims, verify the installed frequency response and filtering. An impulse comparison is useful only when the reference momentum change and all relevant external impulses are independently known.
 
-A pressure mat or instrumented insole is an array of sensels, each measuring **normal stress only**. Summing and taking moments of that scalar field over the contact area yields:
+The goal is traceability from a stated load to a stated error, rather than a generic certificate used as permission for every downstream calculation.
 
-- vertical force $F_z$, subject to calibration and sensel saturation;
-- centre of pressure, as the pressure-weighted centroid;
-- the pressure distribution and contact area, which a force plate cannot provide.
+## Part III: Pressure Systems and What Is Observable
 
-It cannot yield $F_x$, $F_y$, or $T_z$. This is worth stating precisely, because it is often described as an accuracy limitation when it is in fact a **dimensional** one: a scalar normal-stress field over a plane carries no information whatsoever about tangential traction. No improvement in sensel density, sample rate, or calibration recovers shear or free moment, because the information was never sampled.
+### Normal Pressure Is Valuable but Incomplete
 
-The clearest published statement of this comes, conveniently, from a golf study. [Joo, Oh and Mun (2016)](https://pubmed.ncbi.nlm.nih.gov/27515436/) state plainly that only vertical force is directly calculable from plantar pressure, and then do the only thing that can be done about it: train wavelet neural networks to *estimate* the three-axis ground reaction forces and moments from pressure inputs, validated against force-plate ground truth during golf swings in 80 subjects. Reported agreement was $r = 0.73$–$0.97$ using accumulated pressure plus the opposite foot's data, improving to $r = 0.83$–$0.98$ with the centre-of-pressure pattern added.
+For a flat horizontal surface with normal pressure $p(x,y)$ and no independent local bending couples,
 
-That paper is the honest benchmark. A commercial device reporting shear or torque from a pressure array is, at best, doing something of this kind — a trained model, not a measurement — and the distinction belongs in the documentation.
+$$
+\begin{aligned}
+F_z&=\int_A p\,dA,\\
+x_C&=\frac{\int_A xp\,dA}{F_z},\qquad
+ y_C=\frac{\int_A yp\,dA}{F_z}.
+\end{aligned}
+$$
 
-### Centre of Pressure Error in Pressure Systems
+A sensel array approximates these integrals with calibrated area-weighted sums. It additionally resolves contact area and pressure distribution, information that a resultant force plate discards. Saturation, unsensed regions, spatial resolution, hysteresis and calibration affect the approximation. On a curved or deforming insole, local normals and geometry must also be considered before equating a sensel sum with global vertical ground force. The in-shoe interface is not automatically identical to the shoe–ground interface during motion.
 
-Even the quantity pressure arrays *can* measure directly degrades in ways that matter.
+Normal pressure alone does not determine tangential traction. On a planar patch,
 
-- Low-cost piezoresistive mats show a baseline **mean absolute COP error of 17.4%** for an 8×8 sensel layout, improving to 5.5% with optimised track geometry and 3.9% only after adding assumed foot-geometry priors — again, a model-based correction rather than a measurement improvement ([Bincalar et al. 2025](https://pubmed.ncbi.nlm.nih.gov/40096044/)).
-- Validated wireless pressure insoles show **COP root-mean-square error of 1.7–3.4 cm** against force plates ([Davidson et al. 2025](https://pubmed.ncbi.nlm.nih.gov/40704489/)).
-- Insoles reproduce anteroposterior COP trajectories reasonably but show **consistently shortened mediolateral COP** excursion and consistently lower vertical force ([Cudejko et al. 2023](https://pubmed.ncbi.nlm.nih.gov/37696840/)).
+$$
+\begin{aligned}
+F_x&=\int_A t_x\,dA,\qquad F_y=\int_A t_y\,dA,\\
+T_z&=\int_A[(x-x_C)t_y-(y-y_C)t_x]\,dA.
+\end{aligned}
+$$
 
-Put those numbers beside a result from gait analysis. Injecting COP location error in 3 mm increments and propagating it through inverse dynamics, [Brady and Kiernan (2020)](https://pubmed.ncbi.nlm.nih.gov/32911097/) found the kinetic gait deviation index became clinically significant at **9 mm and 12 mm** of error. Gait is a slow, well-conditioned, low-force problem. Validated pressure insoles exhibit COP errors two to four times that threshold, and the golf swing is faster, with larger moment arms and a far shorter event of interest.
+One can keep $p$ fixed and change $t_x,t_y$ within the admissible friction limits. The pressure data and COP remain identical while shear and torsion change. Friction assumptions can **bound** possible tractions; they do not generally select a unique one. Higher sensel density improves the measured pressure field but does not add the missing tangential observations.
 
-The uncomfortable conclusion is not that pressure systems are useless — their spatial distribution data is genuinely informative and unavailable from a plate — but that joint kinetics computed from pressure-derived COP during a golf swing operates well outside the error budget where gait inverse dynamics is already considered unreliable.
+That is an identifiability limit, rather than a claim that pressure has no statistical relationship to shear. A learned model can exploit relationships within its training population and task. It must be described and validated as an estimator. Additional dedicated shear or torsion sensors can change the measurement capabilities; absence of a displayed horizontal-force channel alone does not logically prove that no independent moment channel exists.
 
-There is a further irony specific to golf. The COP variables that predict clubhead velocity are the **mediolateral** timing and rate-of-change terms ([Smith et al. 2017](https://pubmed.ncbi.nlm.nih.gov/27737623/)) — and mediolateral is precisely the axis on which insole COP is systematically compressed.
+### Learned Wrenches Are Predictions
 
-::: {.callout-important}
-## Terminology to Insist On
+[Joo, Oh and Mun (2016)](https://pubmed.ncbi.nlm.nih.gov/27515436/) used golf swings from 80 participants to predict force and moment components from plantar-pressure features, with five-fold validation against two force plates. Different feature combinations worked best for different outputs: accumulated pressure with opposite-foot data yielded reported correlations of $0.73$–$0.97$ for selected components; accumulated pressure with COP patterns yielded $0.83$–$0.98$ for others. This is not one universal improvement obtained by sequentially adding every feature.
 
-Several commercial golf systems are described as "force plates" while sensing only normal pressure, and some vendors market both a genuine three-component force plate and a pressure-only plate under related names. Before interpreting any dataset, establish which quantity was sampled: if the device cannot report a horizontal force component, it cannot report a free moment either, and any torque value it displays is an inference from a model whose validation should be requested.
-:::
+Correlation measures co-variation, not agreement in magnitude: doubling every predicted force can preserve perfect correlation while producing a large load error. A useful validation therefore includes absolute errors, bias, timing and peak errors, uncertainty across people, and the train/test split. Generalization to unseen golfers and surfaces is a different claim from reproducing trials drawn from the development protocol.
+
+For any commercial output, identify the actual sensing architecture and processing. A pressure-only estimator, a calibrated six-axis platform and a hybrid device should not inherit each other's validation merely because their screens use the same labels.
+
+### COP Error Must Retain Its Units and Study Context
+
+Three examples show why published errors cannot be combined into one device-class verdict:
+
+| Study | What Was Evaluated | What the Result Supports |
+|---|---|---|
+| [Bincalar et al. (2025)](https://doi.org/10.3390/s25051283) | Simulated low-resolution mat geometry and footprint fitting | Optimization reduced the study's coordinate-relative error metric; physical validation remained future work. |
+| [Davidson et al. (online 2025; 2026 issue)](https://pubmed.ncbi.nlm.nih.gov/40704489/) | Three-compartment insoles in 39 participants doing occupational tasks | COP RMSE of 1.7–3.4 cm for that device, estimator and protocol. |
+| [Cudejko et al. (2023)](https://pubmed.ncbi.nlm.nih.gov/37696840/) | Wireless insoles during functional activities | AP trajectories were comparable; ML trajectories were shorter except during jumps, and vertical forces were lower than plate measurements. |
+
+Bincalar's 17.37%, 5.47% and 3.93% values describe simulations of an 8-by-8, 48 cm square mat. The metric combines errors relative to each true COP coordinate; it is origin-dependent and is neither millimetres nor a percentage of mat width. The optimized geometry and footprint-fitting results are separate alternatives, not consecutive corrections to the same optimized device. These figures should not be presented as measured errors of all inexpensive mats.
+
+[Brady and Kiernan (2020)](https://pubmed.ncbi.nlm.nih.gov/32911097/) investigated imposed anterior–posterior COP perturbations in children during walking, fast walking and running. Their gait-index threshold was exceeded for 9 and 12 mm perturbations in self-selected walking; the same conclusion did not hold for faster walking and running. Relative joint-moment error decreased with speed in their analysis. This is not a universal 9 mm clinical limit, still less a validated error budget for golf.
+
+The mechanical sensitivity is nevertheless real. Holding force fixed, a position error changes a moment by $\delta\mathbf M=\delta\mathbf r\times\mathbf F$. A 10 mm perpendicular lever-arm error under 1000 N can therefore produce 10 N m of moment error. It could also produce zero error if the displacement is parallel to the force. This calculation identifies a sensitivity to test; it does not predict a whole inverse-dynamics error without the actual directions, time history, force errors and model.
+
+The appropriate golf test propagates plausible measurement and synchronization errors through the intended analysis, reports the resulting uncertainty in the chosen outcome, and compares it with the effect being interpreted. A trace can be useful for pressure-distribution feedback while remaining insufficient for a particular joint-moment claim.
+
+### Do Not Confuse the Two Meanings of Mediolateral
+
+[Smith et al. (2017)](https://pubmed.ncbi.nlm.nih.gov/27737623/) related COP/centre-of-gravity timing and rate-of-change features to clubhead velocity in 22 low-handicap golfers. Those are associations in a declared golf coordinate frame. An insole's across-foot direction and a golfer's between-feet direction are not automatically the same global axis, especially with toe-out and changing foot orientation. A reported insole ML bias cannot simply be transferred to the study's golf ML predictor without transforming frames and validating the relevant motion.
+
+This is one reason the full chain matters: sensor axes, shoe orientation, foot-contact geometry, signal processing and the statistical feature all contribute to what a plotted “weight shift” means.
 
 ## Part IV: What the Golf Literature Actually Shows
 
-### The Free Moment Is the Discriminating Variable
+### Several Wrench Components Carry Information
 
-The most consistent finding across independent golf studies is that the *torsional* component — the one pressure systems cannot measure — carries the skill-related signal.
+[Worsfold, Smith and Dyson (2008)](https://www.jssm.org/volume07/iss3/cap/jssm-07-408.pdf) studied 24 golfers using two force platforms covered with natural turf. Their driver results showed handicap-related differences in trail-foot torque range across the tested shoe types. For metal spikes, the low- and high-handicap groups had values of $18.2\pm3.1$ and $14.2\pm7.4$ N m. The reported measure was the **maximum-to-minimum torque range**, not a single positive peak, an angular impulse or work. The lead foot did not show a significant handicap effect in that analysis.
 
-[Worsfold, Smith and Dyson (2008)](https://www.jssm.org/volume07/iss3/cap/jssm-07-408.pdf), using two Kistler 9851 plates covered with natural grass turf and sampled at 1000 Hz, measured free moment in 24 golfers across three handicap bands. Trail-foot torque generated through the swing separated the groups for every shoe tested — 18.2 ± 3.1 Nm for the low-handicap group against 14.2 ± 7.4 Nm for the high-handicap group with metal spikes ($p < 0.05$) — while the **front foot showed no handicap effect at all** (38.9–43.5 Nm across every cell).
+This supports examining torsional loading in its particular shoe–surface and club context. It does not establish that torsion is the sole performance signal, that the trail foot always supplies the dominant moment, or that increasing this torque range will improve an individual golfer's swing. Surface conditions and footwear are part of the experiment, not incidental details.
 
-The same work overturns a common assumption about the driver. Peak vertical force was *lower* with the driver (0.49 body weight trail, 0.84 lead) than with irons (0.82 and 1.1 body weight). The driver's distinguishing kinetic signature is torsional, not vertical.
+[Han et al. (2019)](https://pubmed.ncbi.nlm.nih.gov/31042142/) examined 63 highly skilled male golfers in three club conditions. Their decomposition distinguished GRF moments, pivoting moments and foot-contact moments. Associations with clubhead speed included lead-foot force components, trail-foot forward/backward force, lead-foot GRF moment and trail-foot pivoting moment. These findings support analyzing the entire wrench and its lever arms. A pivoting moment in that decomposition should not be silently relabeled as the per-foot free moment defined in Part I.
 
-[Han et al. (2019)](https://pubmed.ncbi.nlm.nih.gov/31042142/), with 63 highly skilled golfers — the largest force-plate golf sample published — decomposed the golfer-ground interaction into GRF moments, pivoting moments, and foot contact moments, and identified two primaries: the GRF moment about the forward-backward axis and the **pivoting moment about the vertical axis**. Their division of labour is striking: the lead foot principally generates the GRF moment, while the **trail foot contributes more to the pivoting moment**. Two independent methods, converging on the trail foot as the site of torsional action.
+Comparisons need the same reference point and frame. A large moment may result from a large force, a long perpendicular lever arm, a free couple, or their combination. The mechanically relevant quantity for angular-momentum change is the **net external moment integrated over the specified interval**, with the chosen system boundary and reference-point balance treated consistently. Ranking one channel's peak is not equivalent to explaining that angular impulse.
 
-### Ground Reaction Force Is Not Leg Work
+### Ground Reaction, Joint Work and Muscle Effort
 
-[Nesbit and Serrano (2005)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3899668/) computed the work performed by each body region through the downswing. The legs contributed **3.3–3.8% of total body work** across golfers spanning scratch to 18 handicap, while the core (back and hips) contributed roughly 70%.
+For a system containing the golfer and club, before ball contact and neglecting other environmental loads,
 
-Yet 100% of the external wrench enters the body through the feet. This is the cleanest available demonstration that ground reaction force is the *reaction to whole-body momentum change*, not a readout of leg effort. Reading a large vertical force as evidence that the legs are "producing power" is a category error, and Nesbit's own numbers refute it.
+$$
+\dot{\mathbf p}=\mathbf F_{\rm ground}+m\mathbf g.
+$$
 
-### There Is No Canonical Pattern to Train Toward
+For the golfer alone, hand–club interaction is an additional external load; at ball impact the ball's force is external to the golfer–club system. Thus “100% of the external wrench enters through the feet” is false. Gravity alone already disproves it. Internal muscle and joint actions influence movement and contact reactions, even though their action–reaction pairs cancel from the whole-system momentum balance.
 
-Perhaps the most consequential finding for practice is that the field's normative framing is not supported.
+A large GRF also does not, by itself, reveal mechanical power. In ideal stationary no-slip contact, material contact-point velocity is zero and contact does no work on the system. Meanwhile, internal joint actuation can change segment motion and mechanical energy. The product $\mathbf F_{\rm ground}\cdot\mathbf v_{\rm COM}$ enters a centre-of-mass translational-energy balance; it is not generally the actual contact power or the sum of leg-muscle powers.
 
-[Ball and Best (2007)](https://pubmed.ncbi.nlm.nih.gov/17454544/) applied cluster analysis to COP trajectories in 62 golfers and identified two distinct styles. The **Front Foot** style moves the centre of pressure forward through impact; the **Reverse** style moves it back toward the trail foot through impact and follow-through. Both styles occurred at every skill level from professional to high handicap — neither is a fault. In the companion paper, the correlates of clubhead velocity were **opposite in sign** between styles: Front Foot golfers gained speed with a larger, more rapid forward COP excursion, Reverse golfers with more rapid transfer *toward the trail foot* at contact.
+[Nesbit and Serrano (2005)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3899668/) reported modeled work allocations for four golfers. Their leg-joint category accounted for approximately 3.3–3.8%, while their back-and-hip category accounted for approximately 69–72%. **The hips were counted with the core**, so this is not a general statement that the anatomical lower limbs contribute only a few percent. The numbers depend on the modeled joints, coordinates and work accounting; they are not direct muscle-energy or metabolic measurements.
 
-The methodological implication is severe: pooling the two styles produces statistical cancellation, which Ball identifies as the likely source of decades of conflicting weight-transfer results. Style is also stable — 96% of golfers used the same style across driver, 3-iron and 7-iron — and individual-level analysis with 50 swings per golfer found that *which* variables predicted speed differed per person.
+The justified conclusion is narrower and more useful: force, joint torque, joint power and muscle effort are different quantities. Small net joint work can coexist with substantial support forces, co-contraction, positive and negative work, or energy transfer through multiarticular tissues. To test a claim about leg contribution, specify the joints and tissues, define signed versus positive work, and examine synchronized kinematics and kinetics with model uncertainty. Neither a high force peak nor a low work percentage settles the claim alone.
 
-[Jones, Wallace and Otto (2024)](https://pubmed.ncbi.nlm.nih.gov/34455916/), with 104 amateurs, closed the argument from the variability side: intra-individual variability was far below inter-individual variability. Each golfer is consistent to their own signature, and the signatures differ substantially between golfers.
+### Variation and the Search for an Ideal Pattern
 
-### Centre of Pressure, Transfer Measures, and Causal Inference
+[Ball and Best (2007), Part I](https://pubmed.ncbi.nlm.nih.gov/17454544/), clustered COP trajectories from 62 golfers into front-foot and reverse patterns. Both occurred across skill levels. [Part II](https://pubmed.ncbi.nlm.nih.gov/17454545/) found different within-group associations with clubhead velocity, including opposite directions of COP movement near contact. This warns against pooling distinct movement patterns without checking the structure of the data.
 
-[Rachnavy et al. (2026)](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2026.1790645/full) report regression and mediation analyses in 30 golfers. Their model fit improves when sequencing and transfer measures are added to foot-ground variables. These are observational associations: a significant indirect path does not establish causation, and a nonsignificant direct coefficient does not prove the absence of a direct effect.
+It does not establish two immutable biological types. [Jones, Wallace and Otto (2023)](https://pubmed.ncbi.nlm.nih.gov/37149899/) analyzed 104 amateurs and found that the preferred cluster count depended on the criterion. A continuous analysis supported a multidimensional continuum; lower handicap and higher speed tended toward front-foot patterns and faster transfer early in the downswing. That is relevant counterevidence to treating the older two-group classification as settled.
 
-Distinguish impulse, work, and efficiency when interpreting the transfer construct. Impulse integrates force over time; mechanical work integrates power. A force-plate association alone does not measure energy transmitted to the club. A stronger causal test would specify an intervention, account for confounding and repeated measurements, and test predicted kinematics and segmental power together.
+A [separate Jones et al. study (2024, online 2021)](https://pubmed.ncbi.nlm.nih.gov/34455916/) found lower within-golfer than between-golfer GRF variability, alongside skill-related differences in some variability components. Individual consistency does not prove individual optimality. Conversely, a group association does not prescribe an identical waveform for every person.
 
-::: {.callout-warning}
-## Two Claims to Retire
+A stronger performance argument states the task, outcome and comparison: for example, whether changing a specified force-timing feature improves speed at a controlled accuracy requirement within the same golfer. It then tests that intervention, allowing for learning, fatigue, club choice, surface conditions and uncertainty. Descriptive clustering can help formulate that question; it cannot answer it by itself.
 
-**"Tour players generate about 200% of body weight in vertical ground reaction force."** No peer-reviewed primary source for this figure could be located, and it conflicts with the only verified per-foot peaks in the literature (0.49/0.84 body weight with a driver; 0.82/1.1 with irons). It should not be repeated without a citation.
+### Associations, Mediation and Strength Tests
 
-**"Rate of force development predicts clubhead speed."** The study usually cited for this ([Leary et al. 2012](https://pubmed.ncbi.nlm.nih.gov/22797001/)) reported correlations of $r \approx 0.46$–$0.47$ at $p = 0.06$–$0.07$ with $n = 12$ — that is, non-significant. Stronger evidence for a strength-speed link exists in [Johansen et al. (2023, 2026)](https://pubmed.ncbi.nlm.nih.gov/37585706/), where trunk rotational power correlated with clubhead speed at $r = 0.89$ in elite males; cite that instead.
+[Rachnavy et al. (2026)](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2026.1790645/full) report observational regression and mediation analyses in 30 golfers. Adding sequencing and transfer measures improved their model fit. A significant indirect path does not establish causation, and a nonsignificant direct coefficient does not prove the absence of a direct effect. Force impulse, mechanical work and transfer efficiency also remain distinct quantities.
+
+The same discipline applies to strength testing. [Leary et al. (2012)](https://pubmed.ncbi.nlm.nih.gov/22797001/) studied 12 recreational golfers. Force at 150 ms during an isometric mid-thigh pull had correlations of about $0.46$–$0.47$ with average/maximum clubhead speed; those are **force-at-time** values. Their reported 0–150 ms rate-of-force-development correlations were about $0.38$–$0.36$, with $p=0.11$–$0.12$. These estimates do not establish either a reliable predictor or the absence of a relationship. The tested RFD is also not the slope of the swing's ground-force trace.
+
+[Johansen et al. (2023)](https://pubmed.ncbi.nlm.nih.gov/37585706/) reported positive associations between maximal clubhead speed and several strength/power measures, including leg-press RFD, in 21 national-level male golfers. Different tasks and populations can produce different estimates. Replacing one small observational study with another does not establish the effect of a training intervention; use effect estimates, uncertainty and the actual test definition rather than a binary significant/nonsignificant slogan.
+
+::: {.callout-note}
+## Comparing Body-Weight-Normalized Peaks
+
+A statement such as “players reach twice body weight” needs a cited population, club, trial and definition: one foot or both, instantaneous sum or separate peaks, and total vertical force or force after subtracting body weight.
+
+For the same trial,
+
+$$
+\max_t[F_{z,1}(t)+F_{z,2}(t)]
+\le\max_t F_{z,1}(t)+\max_t F_{z,2}(t).
+$$
+
+Equality requires compatible peak timing. Published per-foot peaks from one cohort cannot validate or refute a universal combined-force claim about another. Group averages of individual peaks introduce another distinction. Retain the synchronized signals and normalization before comparing numbers.
 :::
 
-### Screw Theory Meets Ground Reaction
+### Screw Theory Connects the Questions, Not Their Answers
 
-One recent study connects the wrench framing of Part I directly to golf. [Kim (2025)](https://pubmed.ncbi.nlm.nih.gov/40843846/) computes the instantaneous screw axis of the swing from marker data and examines its **pitch** — the ratio of translation to rotation along the axis — synchronised with vertical ground reaction force. The proficient golfer showed tightly bounded pitch oscillations aligned with a single well-defined force peak; the novice showed fluctuations an order of magnitude larger and asynchronous force patterns with multiple peaks.
+[Kim (2025)](https://pubmed.ncbi.nlm.nih.gov/40843846/) reanalyzed one proficient and one novice female golfer, relating a kinematic instantaneous screw-axis pitch to vertical-force timing. This is a two-person exploratory comparison, not a validated skill classifier or proof that one waveform is necessary for expertise. Kinematic screw estimates require a declared moving body and frame, and become sensitive when angular speed is small.
 
-The caveat is substantial: the analysis covers exactly two golfers, so this is hypothesis-generating rather than established. It is nonetheless the only published work uniting screw-theoretic kinematics with golf force measurement, and it points at the right object — the coupling between the motion screw and the wrench that drives it.
+A **motion screw** describes velocity geometry; a **wrench screw** describes force/moment geometry. Their pitches and axes need not coincide. Power pairs the full, consistently referenced twist and wrench; a vertical-force trace and a kinematic pitch alone do not determine that pairing. This makes screw theory useful for asking a precise question without letting an attractive geometric analogy substitute for the missing measurements.
 
-### What the Field Says It Needs
-
-A 2026 systematic review of 24 studies ([Watson et al.](https://pubmed.ncbi.nlm.nih.gov/41653371/)) concluded with an explicit call for *"clearly defined methods for assessing force during the golf swing and universal terminology regarding GRF and CoP metrics."* That is a peer-reviewed acknowledgement that the measurement vocabulary in this area is inconsistent — which is precisely the gap that distinguishing wrench components, and naming which of them a given device actually samples, is meant to close.
+A [2026 systematic review by Watson et al.](https://pubmed.ncbi.nlm.nih.gov/41653371/) likewise calls for clearer methods and terminology across the golf GRF/COP literature. Useful synthesis preserves the definitions of forces, moments, timing features and outcomes before comparing studies or drawing coaching conclusions.
 
 ## Part V: Estimating Force Without a Plate
 
-The obvious question for anyone who cannot install plates is how well ground reaction force can be estimated from kinematics alone. The answer has a consistent shape: **very well for vertical force, progressively worse for shear, and poorly for moments.**
+### Whole-Body Dynamics Estimates a Net Load
 
-Two approaches dominate. Kinematics-only Newton-Euler sums mass times acceleration across all segments; the net external force follows, but the *partition between limbs* does not, because a single net wrench cannot be split into two. [Ren, Jones and Howard (2008)](https://pubmed.ncbi.nlm.nih.gov/18672243/) introduced the Smooth Transition Assumption to resolve this for gait, and noted that errors in body segment inertial parameters "play a crucial role" in the result. Inertial sensor approaches apply the same mechanics from wearable data; the benchmark result from [Karatsidis et al. (2017)](https://pubmed.ncbi.nlm.nih.gov/28042857/) shows the gradient plainly:
+Given sufficiently accurate segment masses, inertias and kinematics, Newton–Euler balances estimate the **net external wrench**. To attribute that net load to the ground, subtract gravity and account for other external interactions. Missing club dynamics, uncertain segment parameters, soft-tissue motion, differentiation noise and synchronization all affect the estimate. A force plate observes a contact load through its calibrated sensing chain; a kinematic estimate obtains it through these additional model assumptions.
 
-| Component | Correlation | Relative RMSE |
-|---|---|---|
-| Vertical force | 0.992 | **5.3%** |
-| Anterior force | 0.965 | 9.4% |
-| Sagittal moment | 0.933 | 12.4% |
-| Lateral force | 0.862 | 13.1% |
-| Transverse moment | 0.826 | 18.2% |
-| Frontal moment | 0.710 | **29.6%** |
+During double support, the net wrench does not uniquely determine two arbitrary foot wrenches. [Ren, Jones and Howard (2008)](https://pubmed.ncbi.nlm.nih.gov/18672243/) introduced a smooth-transition assumption for walking to resolve that indeterminacy. It is a closure model based on gait behavior, not an additional measured equation or a universal law of bilateral contact.
 
-Vertical force is essentially solved; the frontal-plane moment is barely usable. Machine learning improves matters — a golf-specific study predicting three-dimensional ground reaction force from lower-limb inertial sensors reports $R^2 = 0.94$ with a temporal convolutional and recurrent architecture ([Li et al. 2026](https://pubmed.ncbi.nlm.nih.gov/41892082/)) — but reports the same ordering, with vertical components most reliable.
+[Karatsidis et al. (2017)](https://doi.org/10.3390/s17010075) evaluated inertial-motion-based estimates in 11 healthy people walking at different speeds. Their normal-speed results had stronger agreement for vertical force than for some shear and moment components. Importantly, moments were referenced to the ground projection of the ankle, and the distribution curves were derived from the study's measured data. These results support feasibility under the evaluated gait protocol; they do not establish independent validation in golf, solve vertical-force estimation generally or classify frontal-plane moments as universally unusable.
 
-The practical conclusion mirrors Part III: estimation is a reasonable substitute for a plate when you want vertical loading, and not when you want torque. In golf, torque is usually what you want.
+The appropriate accuracy threshold depends on the question. A useful gross-load estimate may be inadequate for a small change in angular impulse. Conversely, a moment estimate with quantified uncertainty can be useful for a sufficiently large effect. Report absolute as well as normalized errors, their normalization and phase dependence, and test the intended outcome rather than attaching a universal usable/unusable label to a component.
 
-### Why Golf Makes the Partition Problem Acute
+### A Golf-Specific Learning Result and Its Boundaries
 
-In gait, both feet share the ground for roughly a fifth of the cycle, and the Smooth Transition Assumption is a fair model of a rolling weight transfer. **In golf both feet are down for essentially the entire swing**, and every phenomenon of interest — the two weight-transfer styles, the division of moment-generating labour between lead and trail foot, the coordination of angular impulse between legs — *is* the per-foot partition.
+[Li et al. (2026)](https://doi.org/10.3390/biomimetics11030159) used lower-limb IMU kinematics to predict three force components in 48 professional golfers, with ten driver swings per participant. Their TCN–BiGRU model reported $R^2\approx0.94$ under subject-level ten-fold validation. Keeping each golfer's trials in one fold addresses a key source of leakage between training and evaluation.
 
-A single plate measures the net wrench of everything touching it: twelve unknowns, six equations, under-determined by six. Two independent plates resolve it completely and are the only method that recovers per-foot shear and per-foot free moment. A pressure mat spanning both feet can partition vertical force and centre of pressure exactly, because it localises the two contact regions — but it cannot partition shear or free moment, because it never sampled them. That is precisely the architecture, and precisely the limit, of the [Initial Force patent](https://patents.google.com/patent/US20110260890A1/en) underlying one prominent commercial golf system: three-dimensional force sensors supply the force, a pressure mat supplies the per-foot moment arm, and the combination — not either alone — yields torque.
+The measurement target was nevertheless specific: indoor swings, 60 Hz IMUs and force references low-pass filtered at 6 Hz. The result does not establish accuracy for impact transients, moments, other skill groups or outdoor shoe–surface conditions. A bidirectional sequence model's offline accuracy also does not demonstrate causal real-time prediction, because later samples may contribute to earlier estimates. These are boundaries on the supported claim, not reasons to dismiss the approach.
+
+Any deployment claim should retain the signal-processing pipeline, model version, sensor placement, held-out population and component-wise error distribution. Changes to the target filter or trial segmentation change what is being predicted. A high coefficient of determination is not a substitute for this record.
+
+### Why the Per-Foot Partition Remains Underdetermined
+
+At a common reference point,
+
+$$
+\mathbf w_{\rm net}=\mathbf w_1+\mathbf w_2.
+$$
+
+For arbitrary six-component foot wrenches this is six equations for twelve components. Adding $\Delta\mathbf w$ to one foot and subtracting it from the other leaves the net wrench unchanged. Contact geometry and friction restrict the possible choices, but generally leave multiple admissible solutions. When only one foot is in contact, that particular partition ambiguity disappears; golf includes heel lift, rolling and sometimes loss of contact, so the contact mode should be measured or modeled rather than assumed constant throughout every swing.
+
+Even knowing both normal loads and COPs does not generally fix the shear partition. For two coplanar contacts, transfer a small horizontal force $\mathbf a$ from foot 2 to foot 1. The net force is unchanged, while the change in moment is
+
+$$
+\Delta\mathbf M=(\mathbf r_1-\mathbf r_2)\times\mathbf a.
+$$
+
+If $\mathbf a$ is parallel to the line between the COPs, this moment is also unchanged: normal pressure, both COPs and the entire net wrench can all remain identical. Other horizontal transfers can be offset by changes in the per-foot normal couples, when the friction limits permit. This provides a concrete reason that combined net-force and pressure measurements do not automatically recover each foot's complete wrench.
+
+Two independently calibrated six-axis platforms, with one foot on each and no load paths bypassing them, provide a direct way to resolve the per-foot wrenches. They are not the only possible instrumentation: suitably designed multiaxis wearable sensors or other independently instrumented contact regions can add the necessary observations. Each still needs calibration, frame registration and a check that the measured load belongs to the intended foot.
+
+A pressure mat can separate the normal-pressure contributions of two spatially resolved footprints, subject to its measurement errors. It does not do so “exactly” in a physical instrument, and overlapping or unsensed contacts add difficulties. A hybrid system may combine pressure-derived locations with additional force channels. The [Initial Force motion-analysis patent](https://patents.google.com/patent/US20110260890A1/en) is an example of such architectural ideas; a patent does not prove that a particular commercial implementation uniquely measures every per-foot shear and free-moment component. Identify which additional channels or modeling assumptions resolve each unknown.
+
+### Building an Argument From the Available Measurements
+
+Start with the proposed claim and work backward to the observations it needs:
+
+| Proposed Claim | Required Reasoning Beyond a Force Trace |
+|---|---|
+| The golfer–club system changes momentum | Integrate the complete net external force, with gravity, system mass and other impulses accounted for. |
+| A foot contributes a turning moment | Declare the reference point; include force lever arms and free couples, and identify the per-foot partition. |
+| A joint generates mechanical work | Combine model-consistent joint load with its conjugate velocity; specify sign and integration interval. |
+| Particular muscles supplied that work | Add a muscle/tissue model and supporting observations; net joint kinetics alone is insufficient. |
+| A technique improves performance | Test an intervention with defined performance criteria, uncertainty and appropriate within-person and between-person comparisons. |
+
+These questions are intertwined because one measurement feeds the next calculation. Keeping their boundaries explicit strengthens the argument: it identifies which conclusions are already supported, which depend on a model, and which experiment would resolve the remaining uncertainty.
 
 ## References and Further Reading
 
-**Textbooks and standards**
+**Textbooks and Standards**
+
+- ASTM International (2023). *Standard Practice for Verification of Multi-Axis Force Measuring Platforms*, F3109-23. [Public scope](https://store.astm.org/f3109-23.html).
 
 - Winter, D. A. (2009). *Biomechanics and Motor Control of Human Movement*, 4th ed. Wiley — body segment parameters, link-segment inverse dynamics, residual analysis for filter selection.
-- Zatsiorsky, V. M. (2002). *Kinetics of Human Motion*. Human Kinetics — the most rigorous treatment of forces and moments as screws and wrenches.
-- Robertson, D. G. E., Caldwell, G. E., Hamill, J., Kamen, G. and Whittlesey, S. (2014). *Research Methods in Biomechanics*, 2nd ed. Human Kinetics — Chapter 4 is the standard treatment of force plate construction, calibration, and free-moment extraction.
+- Zatsiorsky, V. M. (2002). *Kinetics of Human Motion*. Human Kinetics — forces, moments and human-motion kinetics.
+- Robertson, D. G. E., Caldwell, G. E., Hamill, J., Kamen, G. and Whittlesey, S. (2014). *Research Methods in Biomechanics*, 2nd ed. Human Kinetics — biomechanical measurement and analysis methods.
 - de Leva, P. (1996). Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. *Journal of Biomechanics* 29(9), 1223–1230. [PubMed](https://pubmed.ncbi.nlm.nih.gov/8872282/).
 - Wu, G. and Cavanagh, P. R. (1995). ISB recommendations for standardization in the reporting of kinematic data. *Journal of Biomechanics* 28(10), 1257–1261. [PubMed](https://pubmed.ncbi.nlm.nih.gov/8550644/); joint coordinate system definitions [Part I](https://pubmed.ncbi.nlm.nih.gov/11934426/) (2002) and [Part II](https://pubmed.ncbi.nlm.nih.gov/15844264/) (2005).
 
-**Instrument physics and patents**
+**Instrument Physics and Patents**
 
 - AMTI. *Force measuring platform and load cell therefor using strain gages to measure shear forces*. [US 4,493,220](https://patents.google.com/patent/US4493220A/en).
 - Berme, N. (Bertec). *Multi-component force and moment measuring platform and load transducer*. [US 6,354,155](https://patents.google.com/patent/US6354155B1/en); *Force measurement system having a plurality of measurement surfaces*, [US 8,544,347](https://patents.google.com/patent/US8544347B1/en).
 - Kistler. *Force transducers for fitting in force plates*. [US 4,974,454](https://patents.google.com/patent/US4974454A/en).
-- Tekscan. *Flexible tactile sensor for measuring foot pressure distributions*. [US 5,033,291](https://patents.google.com/patent/US5033291A/en).
-- Seitz, P. (novel). *Capacitive measuring assembly for determining forces and pressures*. [US 4,836,033](https://patents.google.com/patent/US4836033A/en).
+- Tekscan. *Flexible tactile sensor for measuring foot pressure distributions and for gaskets*. [US 5,033,291](https://patents.google.com/patent/US5033291A/en).
+- Seitz, P. *Capacitive measuring assembly for determining forces and pressures*. [US 4,836,033](https://patents.google.com/patent/US4836033A/en).
 - Initial Force AS (Swing Catalyst). *Motion Analysis Apparatus*. [US 2011/0260890](https://patents.google.com/patent/US20110260890A1/en).
-- U.S. Army. *Force sensing treadmill*. [US 6,878,100](https://patents.google.com/patent/US6878100B2/en) — the split-platform answer to double-support indeterminacy.
+- U.S. Army. *Force sensing treadmill*. [US 6,878,100](https://patents.google.com/patent/US6878100B2/en) — an example of separately instrumented support surfaces.
 
-**Measurement accuracy and calibration**
+**Measurement Accuracy and Calibration**
 
-- List, R. et al. (2017). In-situ correction of force plate measurements. *Gait & Posture*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/28763716/).
+- List, R. et al. (2017). In-situ force plate calibration: 12 years’ experience with an approach for correcting the point of force application. *Gait & Posture*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/28763716/).
 - Chockalingam, N. et al. (2002). Do strain gauge force platforms need in situ correction? *Gait & Posture*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/12443947/).
 - Middleton, J., Sinclair, P. and Patton, R. (1999). Accuracy of centre of pressure measurement using a piezoelectric force platform. *Clinical Biomechanics*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/10521614/).
-- Giacomozzi, C. (2010). Appropriateness of plantar pressure measurement devices. *Gait & Posture*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/20399101/).
-- Joo, S. B., Oh, S. E. and Mun, J. H. (2016). Improving the ground reaction force prediction accuracy using one-axis plantar pressure. *Journal of Biomechanics* 49(14), 3153–3161. [PubMed](https://pubmed.ncbi.nlm.nih.gov/27515436/).
+- Giacomozzi, C. (2010). Appropriateness of plantar pressure measurement devices: a comparative technical assessment. *Gait & Posture*. [PubMed](https://pubmed.ncbi.nlm.nih.gov/20399101/).
+- Joo, S. B., Oh, S. E. and Mun, J. H. (2016). Improving the ground reaction force prediction accuracy using one-axis plantar pressure: Expansion of input variable for neural network. *Journal of Biomechanics* 49(14), 3153–3161. [PubMed](https://pubmed.ncbi.nlm.nih.gov/27515436/).
 
-**Golf ground reaction force literature**
+**Golf Ground Reaction Force Literature**
 
-- Watson, A. et al. (2026). Ground reaction force and centre of pressure during the golf swing: a systematic review. *Sports Medicine* 56(5), 1191–1212. [PubMed](https://pubmed.ncbi.nlm.nih.gov/41653371/).
-- Worsfold, P., Smith, N. A. and Dyson, R. J. (2008). Low handicap golfers generate more torque at the shoe–natural grass interface when using a driver. *Journal of Sports Science and Medicine* 7(3), 408–414. [Full text](https://www.jssm.org/jssm-07-408.xml); companion 2007 vertical-force paper [here](https://www.jssm.org/jssm-06-484.xml).
+- Watson, A. et al. (2026). Ground reaction force and centre of pressure during the golf swing and associations with clubhead speed and skill level: a systematic review. *Sports Medicine* 56(5), 1191–1212. [PubMed](https://pubmed.ncbi.nlm.nih.gov/41653371/).
+- Worsfold, P., Smith, N. A. and Dyson, R. J. (2008). Low handicap golfers generate more torque at the shoe–natural grass interface when using a driver. *Journal of Sports Science and Medicine* 7(3), 408–414. [Full text](https://www.jssm.org/volume07/iss3/cap/jssm-07-408.pdf).
 - Han, K. H. et al. (2019). Effects of the golfer–ground interaction on clubhead speed in skilled male golfers. *Sports Biomechanics* 18(2), 115–134. [PubMed](https://pubmed.ncbi.nlm.nih.gov/31042142/).
 - Ball, K. A. and Best, R. J. (2007). Different centre of pressure patterns within the golf stroke, [Part I](https://pubmed.ncbi.nlm.nih.gov/17454544/) and [Part II](https://pubmed.ncbi.nlm.nih.gov/17454545/). *Journal of Sports Sciences* 25(7).
 - Jones, K. M., Wallace, E. S. and Otto, S. R. (2023). Centre of pressure golf swing movement strategies are better defined using a continuous approach than by segregated styles. *Journal of Sports Sciences* 41(4), 342–349. [PubMed](https://pubmed.ncbi.nlm.nih.gov/37149899/).
 - McNitt-Gray, J. L. et al. (2013). Regulation of reaction forces during the golf swing. *Sports Biomechanics* 12(2), 121–131. [PubMed](https://pubmed.ncbi.nlm.nih.gov/23898685/).
 - Peterson, T. J., Wilcox, R. R. and McNitt-Gray, J. L. (2016). Angular impulse and balance regulation during the golf swing. *Journal of Applied Biomechanics* 32(4), 342–349. [PubMed](https://pubmed.ncbi.nlm.nih.gov/26958870/).
 - Nesbit, S. M. and Serrano, M. (2005). Work and power analysis of the golf swing. *Journal of Sports Science and Medicine* 4(4), 520–533. [PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC3899668/).
-- Wells, J. E. T. et al. (2018, 2019). Strength and impulse correlates of clubhead velocity. [2018](https://pubmed.ncbi.nlm.nih.gov/29300147/), [2019](https://pubmed.ncbi.nlm.nih.gov/30572804/).
-- Kim, W. (2025). Pitch invariance reveals skill-specific coordination: a screw-theoretic reanalysis of golf swing dynamics. *Journal of Functional Morphology and Kinesiology* 10(3), 315. [PubMed](https://pubmed.ncbi.nlm.nih.gov/40843846/).
+- Wells, J. E. T. et al. (2018). Relationships between highly skilled golfers' clubhead velocity and force producing capabilities during vertical jumps and an isometric mid-thigh pull. *Journal of Sports Sciences* 36(16), 1847–1851. [PubMed](https://pubmed.ncbi.nlm.nih.gov/29300147/).
+- Wells, J. E. T. et al. (2019). Relationships between Challenge Tour golfers' clubhead velocity and force producing capabilities during a countermovement jump and isometric mid-thigh pull. *Journal of Sports Sciences* 37(12), 1381–1386. [PubMed](https://pubmed.ncbi.nlm.nih.gov/30572804/).
+- Kim, W. (2025). Pitch invariance reveals skill-specific coordination in human movement: a screw-theoretic reanalysis of golf swing dynamics. *Journal of Functional Morphology and Kinesiology* 10(3), 315. [PubMed](https://pubmed.ncbi.nlm.nih.gov/40843846/).
 
 ::: {.callout-note}
 ## Related Concepts
