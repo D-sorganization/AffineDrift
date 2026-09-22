@@ -35,7 +35,11 @@ Receipt: reports/technical-review/induced-acceleration-publication.json. Putting
 shipped atded63640 with live960/960. Normal merge of origin/main99aa5835 preserves the complete fc5745ea tree;
 the main tree equals our IAA parent03db46ff, so four turnover/index conflicts
 retain the newer zero-torque records. No source or SPEC row changes.
-Regular PR4430 is open. Next complete protected CI, merge it, and verify its
+Regular PR4430 is open. Python CI exposed two stale figure-census expectations after the deliberate
+unsupported timeline removal; the corpus now has27 figured chapters,36 figures,
+five TikZ figures and four unpaired figures. The23 figure-audit tests pass after
+updating exact counts; no source or frozen scientific evidence changed.
+Next complete protected CI, merge it, and verify its
 main deployment/live artifact before recording the zero-torque release as shipped.
 No draft PRs. Goal remains active; entries advanced DL-#4427 and DL-#4425.
 
