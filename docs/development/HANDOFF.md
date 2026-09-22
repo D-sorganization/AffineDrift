@@ -39,8 +39,10 @@ python3 -m black --check --line-length 100 tests/test_persona_start_paths.py  # 
 
 ## Next Steps
 
-1. Commit all changes
-2. Push branch
-3. Create PR referencing #4409
+1. ~~Commit all changes~~
+2. ~~Push branch~~
+3. ~~Create PR referencing #4409~~
 4. Wait for CI to pass
 5. Arm squash auto-merge
+
+PR created: https://github.com/D-sorganization/AffineDrift/pull/4411
