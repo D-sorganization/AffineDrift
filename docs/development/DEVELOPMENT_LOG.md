@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
-- **Next step:** Freeze source/report/render checkpoint, verify bibliography dependency carry-forward and bind eight corrected findings; drive regular PR after force/putting delivery. Low disk headroom requires prompt checkpoints.
+- **Next step:** Eight findings and12 evidence paths bound to06c948b7; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Publish a regular PR and complete protected checks; putting deploy35792227837 must finish first.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
@@ -42,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
 - **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
-- **Next step:** Seven findings bound to a17f5ded with all five evidence paths verified against committed LF bytes; zero-deferred census restored. Drive regular PR #4424 through protected checks and await force publication before merge.
+- **Next step:** Protected merge ded63640 is tree-identical to checked head cd55cce8. Verify deployment35792227837 and live artifact, then mark shipped; source evidence remains a17f5ded.
 
 ### DL-#4253 - Deferred Impact Evidence Planning
 

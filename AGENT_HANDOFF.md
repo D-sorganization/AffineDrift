@@ -1,7 +1,9 @@
 # Agent Handoff — AffineDrift
 
 Current technical review: paired IAA issue4425 is fully rewritten and locally
-rendered; immutable evidence binding remains. See docs/development/HANDOFF.md
+rendered; eight findings are bound to06c948b7 with verified bibliography
+dependency carry-forward. Force is live; putting merged asded63640 and
+deployment35792227837 is pending. See docs/development/HANDOFF.md
 for exact checks, disk recovery and force/putting publication dependencies.
 
 ## Deferred Impact Evidence - 2026-09-22

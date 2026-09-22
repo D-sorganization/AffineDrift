@@ -8,20 +8,24 @@ contracts pass with their explicit marker. All128 body math expressions agree.
 All ten isolated print pages inspected, zero overfull/undefined/duplicate warnings.
 The root public route passes four production cases; all139 browser expressions
 render in each case. All18 desktop displays inspected and all11 wide mobile
-expressions reach their horizontal endpoints. Final binding/carry-forward pending.
+expressions reach their horizontal endpoints. Eight corrected findings and all12 evidence paths are bound to06c948b7.
+Three prior bibliography-dependent reviews were carried forward after every
+other review/corrected-finding evidence path matched its prior commit and this
+checkpoint exactly. The pre-existing open TOC finding remains unchanged.
 
 Issue4425 is a native subissue of4054 under4021/4009. Lease/presence expire
 23:44UTC September22. Read technical-review/induced-acceleration-preparation.md
 and reports/technical-review/induced-acceleration-review.md for scope and limits.
 The shared include and predecessor force/putting scientific evidence are unchanged.
-The route is explicitly deferred during binding; the census is218 plus1 reopened.
+The route is reviewed and the219-route census restored; publication is pending.
 
-Putting regular PR4424 is open at cd55cce8 after merging planning main d9a8d08e;
+Putting regular PR4424 merged asded63640, tree-identical to checked head cd55cce8;
 its source/render evidence remains frozen at a17f5ded. Force4421 merged as9ef76c6e.
 Its first deployment35787101015 was superseded by planning PR4423; replacement
 35789304756 at d9a8d08e succeeded. Live artifact10721968227 passes960/960 and
-four force cases; publication receipt saved. Protected squash auto-merge is enabled
-for putting head cd55cce8. Verify putting live separately. Preserve all planning work.
+four force cases; publication receipt saved. Putting deployment35792227837 is pending; verify it before the next merge.
+Normal integration a1197c03 preserves all scientific bytes and main SPEC order.
+Preserve all planning work.
 
 Disk space hit zero during derived screenshot assembly and checks. All tracked
 JSON files parsed successfully afterward; no chapter source was truncated. Removed
@@ -30,10 +34,10 @@ retaining JSON evidence, source, frozen reports and current QA. Headroom continu
 to fall due activity outside these small chapter outputs. Re-run interrupted checks;
 never mark a partial check complete. Save and push checkpoints promptly.
 
-Next: commit this complete source/render checkpoint, carry forward the three
-previously bound Physics bibliography dependencies with exact-byte proof, bind the
-eight current findings to a complete committed LF checkpoint, restore219 census,
-then open a regular PR after predecessor delivery. The review goal remains active.
+Next: publish the bound chapter as a regular PR and drive protected checks.
+Wait for putting deployment before enabling merge. Scientific/render evidence
+is frozen at06c948b7; update publication/turnover separately. This is analytical
+chapter acceptance, not an empirical golf or full-book result. The goal is active.
 
 # Deferred Validation Planning Checkpoint
 

@@ -4,13 +4,12 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 236
-- Deferred: 1
+- Reviewed: 237
+- Deferred: 0
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
-- [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 1 routes
 
 ## Reviewed Evidence
 
@@ -132,6 +131,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | `articles/The_Physics_of_Golf/quarto/ch28_impact_collision.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | `articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | `articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd` | 12 |
 | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | `articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | `articles/The_Physics_of_Golf/quarto/ch32_putting.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/glossary.html` | `articles/The_Physics_of_Golf/quarto/glossary.qmd` | 1 |
@@ -374,7 +374,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-b334697f4c84` | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c2474c7d87e4` | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | Reviewed | — | None | None | 0 |
 | `ad-route-166fffd1b8a2` | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | Reviewed | — | None | None | 0 |
-| `ad-route-9c6617aeafdc` | `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
+| `ad-route-9c6617aeafdc` | `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | Reviewed | — | None | None | 8 |
 | `ad-route-adc9d9939455` | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | Reviewed | — | None | None | 0 |
 | `ad-route-256c9a08f2b1` | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Reviewed | — | None | None | 0 |
