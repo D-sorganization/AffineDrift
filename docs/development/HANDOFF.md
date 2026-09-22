@@ -8,7 +8,7 @@ contracts pass with their explicit marker. All128 body math expressions agree.
 All ten isolated print pages inspected, zero overfull/undefined/duplicate warnings.
 The root public route passes four production cases; all139 browser expressions
 render in each case. All18 desktop displays inspected and all11 wide mobile
-expressions reach their horizontal endpoints. Eight corrected findings and all12 evidence paths are bound to06c948b7.
+expressions reach their horizontal endpoints. Eight corrected findings and all12 evidence paths are bound to9981bddf.
 Three prior bibliography-dependent reviews were carried forward after every
 other review/corrected-finding evidence path matched its prior commit and this
 checkpoint exactly. The pre-existing open TOC finding remains unchanged.
@@ -34,9 +34,8 @@ retaining JSON evidence, source, frozen reports and current QA. Headroom continu
 to fall due activity outside these small chapter outputs. Re-run interrupted checks;
 never mark a partial check complete. Save and push checkpoints promptly.
 
-Regular PR4426 is open and attached. All eight full textbook builds and Python3.12 tests passed. Static checks found an unnamed gravity literal in the new test; SELF extracts GRAVITY_M_S2 without numerical changes. Refresh the IAA evidence binding to this committed test revision before pushing.
-Wait for putting deployment before enabling merge. Scientific/render evidence
-is frozen at06c948b7; update publication/turnover separately. This is analytical
+Regular PR4426 is open and attached. All eight full textbook builds and Python3.12 tests passed. Static checks found an unnamed gravity literal in the new test; SELF extracts GRAVITY_M_S2 without numerical changes. All12 IAA evidence paths are verified at9981bddf; only the named test constant differs from06c948b7. Source/render bytes and bibliography carry-forward remain unchanged. The broad local quality scan includes untracked drafting helpers; its194 unrelated findings are not a clean-CI result. The tracked new test passes the same file checker.
+Wait for putting deployment before enabling merge. Scientific/render source bytes remain frozen at06c948b7; the test-only evidence refresh is9981bddf. Evidence; update publication/turnover separately. This is analytical
 chapter acceptance, not an empirical golf or full-book result. The goal is active.
 
 # Deferred Validation Planning Checkpoint

@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
-- **Next step:** Eight findings and12 evidence paths bound to06c948b7; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Complete protected checks on regular PR4426; putting deploy35792227837 must finish first.
+- **Next step:** Eight findings and12 evidence paths bound to9981bddf; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Complete protected checks on regular PR4426; putting deploy35792227837 must finish first.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
