@@ -43,7 +43,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 1 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
-| `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 1 |
+| `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 5 |
 | `/articles/reference-point-problem.html` | `articles/reference-point-problem.qmd` | 1 |
 | `/articles/rotation-converter.html` | `articles/rotation-converter.qmd` | 1 |
 | `/articles/rotation-induced-spin.html` | `articles/rotation-induced-spin.qmd` | 1 |
@@ -286,7 +286,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Reviewed | — | None | None | 0 |
-| `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Reviewed | — | None | None | 7 |
 | `ad-route-85ac4b6d5e6d` | `/articles/reference-point-problem.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e7072902cc8a` | `/articles/rotation-converter.html` | Reviewed | — | None | None | 0 |
 | `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Reviewed | — | None | None | 0 |

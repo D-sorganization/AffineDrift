@@ -23,32 +23,35 @@
   were made. Local disk exhaustion interrupted unrelated Design-Procedures
   tests; avoid broad local reruns until capacity is restored.
 
-# Current Technical Review Checkpoint — #4420
+# Current Technical Review Checkpoint — #4422
 
-Regular PR #4421 uses branch `fix/force-measurement-rigor`. Protected main
-31cdc615 is integrated by normal merge 7cac4aad, with no source changes.
-SELF saves the completed force-measurement source review, eight finding groups,
-independent checks, article-scoped reading fixes and final local render evidence.
-The route is now reviewed, with eight findings bound to complete checkpoint
-99d1653c. All five evidence paths match committed LF bytes.
-The zero-deferred census test is restored, the audit is regenerated, and all
-29 article/inventory checks pass. Continue to the protected delivery gates.
+Branch `fix/putting-roll-rigor` begins at force head 4047d917. SELF saves
+the full putting rewrite, 15 independent passing numerical checks and four
+production browser cases. Detailed equation/overview QA passes: all168 math expressions in four cases,
+28 inspected desktop equations, all table contents, expanded accessibility and
+scroll endpoints. SELF saves the complete scientific/render checkpoint before binding. Issue #4422 is claimed under #4059/#4021/#4009.
+Lease/presence expire 23:09 UTC September 22. Inbox has no reported messages
+or conflicts but is incomplete because of unrelated malformed board records.
+See `technical-review/putting-roll-preparation.md` for derivations, source
+access limits and the next steps. The route is reviewed with seven findings bound to complete checkpoint
+a17f5ded. All five evidence paths match committed LF bytes; zero-deferred census
+is restored. Final33 audit/mechanics checks pass; regular PR #4424 is open. Drive
+protected checks and wait for force publication before enabling merge.
 
-GRF PR #4417 is shipped at main a6774e33: deploy 35779150741 and live artifact
-10718336671 passed all 960 cases. The publication record is committed here.
-Superposition PR #4419 merged as 31cdc615; deploy 35782578807 is pending.
-Protected main has the same tree as f5e8dca1; merge conflicts only repeated
-predecessor turnover and were resolved by preserving the later force review.
-Final PR diff excludes superposition science. Drive #4421 checks and wait for
-the superposition live gate before merging; then verify its own live revision.
+Delivery: superposition #4419 is shipped at 31cdc615; deploy 35782578807
+and live artifact 10720600549 passed 960/960 cases. Publication record saved. Force #4421 merged as 9ef76c6e after all protected checks passed. Its tree
+matches 4047d917 exactly; normal merge of origin/main retains the later putting
+turnover where squash ancestry repeated predecessor text. Deployment35787101015 was superseded by the planning merge #4423; replacement
+deployment35789304756 at d9a8d08e is pending. Save its publication record independently of frozen scientific evidence. Do not alter
+force-bound files at 99d1653c; the putting article may reuse its scoped CSS.
 
-Issue #4420 is under measurement #4059, corpus #4021 and epic #4009. Lease expires
-22:21 UTC; renewed presence 9730b845 expires 22:52 UTC September 22. The inbox
-reports no conflicts/messages but has unrelated malformed records. Source
-research access limits and the exact validation scope are in the review report.
+The comprehensive review goal remains active. No draft PRs.
 
-Active goal: continue the broader review. Updated entries: DL-#4420/#4418/#4415.
-No whole-book or corpus completion is claimed. See `AGENT_HANDOFF.md` for details.
+A disk-full event interrupted the first audit binding attempt. The committed
+inventory was restored, six untracked reproducible research PDF downloads were
+removed within this worktree, and binding was repeated with an atomic file
+replacement. No tracked source or frozen evidence was lost. Disk headroom
+remains low; monitor before additional rendering.
 
 The following previously merged persona-work handoff is retained for its
 separate scope; it is not the active technical-review task.
@@ -119,3 +122,7 @@ python3 -m black --check --line-length 100 tests/test_persona_start_paths.py  # 
 1. Wait for GitHub Actions to recover and trigger CI for latest commit
 2. Once CI passes, arm squash auto-merge
 3. If CI continues to fail to trigger, may need to create a new PR
+
+Integration checkpoint: merge planning main d9a8d08e into putting PR4424;
+preserve both delivery records and all planning artifacts. Putting science and
+frozen evidence are unchanged. Wait for the replacement deployment before merge.

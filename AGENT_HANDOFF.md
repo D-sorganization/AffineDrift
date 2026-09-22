@@ -94,6 +94,16 @@
 
 ## Technical Content Review
 
+- **Force merged:** #4421 passed protected checks and merged as 9ef76c6e;
+  tree equals4047d917. Deployment35787101015 is pending.
+
+- **Superposition shipped:** deploy 35782578807 succeeded at 31cdc615; 960/960 live cases and all four article cases passed. Durable publication record is saved.
+
+- **Current successor:** putting issue #4422, regular PR #4424, branch `fix/putting-roll-rigor`,
+  starts at force head 4047d917. Fifteen independent checks and four production browser cases pass; final
+  rendered review passes and seven findings are bound to a17f5ded. Preparation notes and current HANDOFF lead.
+  Prior force implementation details below remain valid for PR #4421.
+
 - **Active:** comprehensive review #4009/#4021; long articles and paired sources
   first, regular PRs only. The goal remains active.
 - **Shipped:** anatomy #4414 and preface #4416, verified on protected main

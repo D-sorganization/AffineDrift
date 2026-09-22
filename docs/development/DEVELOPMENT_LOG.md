@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4422 · Putting Launch, Rolling, Slope and Capture
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4422 (measurement #4059; corpus #4021; epic #4009)
+- **PR:** #4424
+- **Branch:** `fix/putting-roll-rigor`
+- **Paths:** `articles/putting-roll-models.qmd`, `tests/test_putting_roll_rigor.py`, `data/trust/claim_audit_inventory.json`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
+- **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
+- **Next step:** Seven findings bound to a17f5ded with all five evidence paths verified against committed LF bytes; zero-deferred census restored. Drive regular PR #4424 through protected checks and await force publication before merge.
+
 ### DL-#4253 - Deferred Impact Evidence Planning
 
 - **State:** in_progress
@@ -30,6 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-22 (`b09301bd` plus integration of main `9ef76c6e`; catalog, three heavy-hit controls and 637-file title audit pass)
 - **Summary:** Separates unavailable empirical/perceptual obligations from active qualified theory synthesis. Existing source issues and scientific acceptance criteria are preserved.
 - **Next step:** Publish the planning PR and link the verified scope split on #4253.
+
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
 - **State:** in_review
@@ -41,12 +55,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; eight findings bound to complete checkpoint 99d1653c with all five evidence digests checked against committed LF bytes)
 - **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
-- **Next step:** Drive regular PR #4421 through protected checks; verify predecessor superposition deployment before merge.
+- **Next step:** PR #4421 merged as 9ef76c6e; its tree matches 4047d917. Verify deployment35787101015 and live article cases before marking shipped.
 
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4418 (foundations #4058; corpus #4021; epic #4009)
 - **PR:** #4419
@@ -55,7 +69,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; protected main a6774e33 integrated after exact-tree verification against 7ee71416; final diff excludes prerequisite GRF science; complete article reread;11 independent/existing checks pass; Black100/Ruff/title638 and changed-file quality pass; final four browser cases and416 settled math expressions pass; all21 wide mobile math scrollers reach their endpoint; selected section/equation views inspected)
 - **Summary:** Retains earlier mechanics corrections and adds feasible-reference input sets, constrained inverse-mass and task maps, a circular-guide example and correct reaction/virtual-work language. Repairs three wide or spuriously numbered equation groups.
-- **Next step:** PR #4419 merged as 31cdc615; verify live deployment 35782578807 before marking shipped.
+- **Next step:** None for this delivery; deployment 35782578807 succeeded at 31cdc615, live artifact 10720600549 passes 960/960 cases and all four superposition records. Publication evidence: reports/technical-review/superposition-publication.json.
 
 ### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 
