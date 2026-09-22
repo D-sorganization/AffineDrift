@@ -1,22 +1,15 @@
-# Current Technical Review Checkpoint — #4415
+# Current Technical Review Checkpoint — #4418
 
 Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
-`DEVELOPMENT_LOG.md`, DL-#4415/#4413/#4412. Branch `fix/ground-reaction-rigor`,
-checkpoint SELF, regular PR #4417. CI requested the named GRAVITY_M_S2
-constant in its numerical test; SELF changes only that identifier and refreshed
-evidence digests. Evidence binds to test checkpoint8feeaa11; SELF corrects its CRLF/LF hash
-difference and checks every evidence path against the committed bytes; all29
-mechanics/inventory tests and the tracked-Python quality gate pass. All six findings are source-bound to complete review
-checkpoint dfe90fed2658ab8b43b6e26a8208591aca150e9d. Final 19 audit/boundary tests
-pass. All 13 print pages and four public browser cases pass; 118 paired math
-expressions match with no final clipping or errors. Chapters 16/22 retain their
-original review scope through the verified metadata-only carry-forward.
-Anatomy #4414 and preface #4416 merged green. Anatomy deploy35771389008 deployed
-but live verification was superseded; verify both routes on successor preface
-main581857cb, deploy35774559003. SELF merges remote main normally after
-verifying its complete tree equals existing parent053f88a5; later GRF records
-and peer sections are retained. Pass PR #4417 checks and merge next. Preserve the broader active goal; this is not corpus
-completion.
+`DEVELOPMENT_LOG.md`, DL-#4418/#4415/#4413/#4412. Branch
+`fix/superposition-feasible-inputs`, checkpoint SELF, no PR yet. Complete
+standalone-article reread and remaining feasible-input/contact/task corrections
+are saved with11 passing mechanics checks. Final browser layout verification,
+complete review record and source binding remain pending; route is deferred.
+GRF regular PR4417 at7ee71416 awaits protected CI after a gravity-constant naming
+fix and committed-LF evidence correction. Science/rendering is unchanged.
+Anatomy and preface merged; verify their live routes in successor deploy35774559003.
+Keep the broader goal active. No whole-book/corpus completion is claimed.
 
 The following previously merged persona-work handoff is retained for its
 separate scope; it is not the active technical-review task.

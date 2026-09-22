@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4418 · Superposition Feasibility and Constrained Task Authority
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4418 (foundations #4058; corpus #4021; epic #4009)
+- **PR:** not created
+- **Branch:** `fix/superposition-feasible-inputs`
+- **Paths:** `articles/superposition.qmd`, `tests/test_superposition_article_rigor.py`, `data/trust/claim_audit_inventory.json`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; complete article reread;11 independent/existing checks pass; Black100/Ruff/title638 and changed-file quality pass; initial four browser cases and409 settled math expressions pass, final layout verification pending)
+- **Summary:** Retains earlier mechanics corrections and adds feasible-reference input sets, constrained inverse-mass and task maps, a circular-guide example and correct reaction/virtual-work language. Repairs three wide or spuriously numbered equation groups.
+- **Next step:** Finish visual/scroll verification, commit the complete report/render record and bind committed LF evidence, then open a regular PR after GRF delivery.
+
 ### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 
 - **State:** in_review
