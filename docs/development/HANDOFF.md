@@ -1,23 +1,46 @@
-# Implementation Handoff — #4406
+# Implementation Handoff — #4409
 
 - Repository: `D-sorganization/AffineDrift`
-- Working directory: `C:/Users/diete/Repositories/agent-worktrees/issue-4406-local`
-- Branch: `fix/issue-4406-deploy-website-local-storage-pageerrors-local` (base `origin/main` @ `7a0a9986`)
+- Working directory: `/workspace`
+- Branch: `cursor/persona-start-paths-394f` (base `origin/main`)
 - Pull request: not created
-- Governing issue: `#4406` (Deploy Website fleet-main-health)
+- Governing issue: `#4409` (Persona start paths on learning-paths)
 
 ## Objective and Status
 
-- Objective: Restore green Deploy Website by fixing the single failing every-page
-  verification cell on the Videos hub without weakening first-party error detection.
-- Completed: Identified failure from run 35619994945 artifact; added
-  `isActionablePageError` filter and contract test; node smoke test passed.
-- Next: Commit, push, open PR (Fixes #4406), wait for CI Standard + Deploy Website,
-  merge, teardown worktree.
+- Objective: Add persona start paths (learner / researcher / integrator / experimentalist / reviewer / contributor) to `resources/learning-paths.qmd`, each routing to content clusters and exact-commit workflow pages.
+- Completed:
+  - Created `config/personas.yml` with persona definitions mapping to categories and workflows
+  - Updated `resources/learning-paths.qmd` with "Start by Persona" section
+  - Created `tests/test_persona_start_paths.py` with 14 tests validating persona configuration
+  - All tests pass, linting passes
+- Next: Commit, push, open PR (Fixes #4409), wait for CI, arm auto-merge.
+
+## Files Changed
+
+- `config/personas.yml` (new) — persona configuration with content clusters and workflow mappings
+- `resources/learning-paths.qmd` (modified) — added persona start paths section
+- `tests/test_persona_start_paths.py` (new) — contract tests for persona paths
 
 ## Validation
 
-- `node` smoke script for `isActionablePageError` → pass
-- Full Quarto render + `verify-public-site.js` locally → not run (defer to CI)
+```bash
+python3 -m pytest tests/test_persona_start_paths.py -v  # 14 passed
+python3 -m ruff check tests/test_persona_start_paths.py  # passed
+python3 -m black --check --line-length 100 tests/test_persona_start_paths.py  # passed
+```
 
-No material handoff change beyond this checkpoint refresh — SELF pending commit.
+## Key Decisions
+
+- Reused existing `resource-grid` and `resource-card` CSS classes (DRY compliance)
+- Persona configuration stored in `config/personas.yml` for maintainability
+- Each persona links to workflows page with specific workflow IDs in parentheses (table format doesn't support per-row anchors)
+- All content links verified to exist
+
+## Next Steps
+
+1. Commit all changes
+2. Push branch
+3. Create PR referencing #4409
+4. Wait for CI to pass
+5. Arm squash auto-merge
