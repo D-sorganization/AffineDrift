@@ -42,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; eight findings bound to complete checkpoint 99d1653c with all five evidence digests checked against committed LF bytes)
 - **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
-- **Next step:** Drive regular PR #4421 through protected checks; verify predecessor superposition deployment before merge.
+- **Next step:** PR #4421 merged as 9ef76c6e; its tree matches 4047d917. Verify deployment35787101015 and live article cases before marking shipped.
 
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority

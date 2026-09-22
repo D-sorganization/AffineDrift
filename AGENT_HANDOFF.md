@@ -75,6 +75,9 @@
 
 ## Technical Content Review
 
+- **Force merged:** #4421 passed protected checks and merged as 9ef76c6e;
+  tree equals4047d917. Deployment35787101015 is pending.
+
 - **Superposition shipped:** deploy 35782578807 succeeded at 31cdc615; 960/960 live cases and all four article cases passed. Durable publication record is saved.
 
 - **Current successor:** putting issue #4422, branch `fix/putting-roll-rigor`,
