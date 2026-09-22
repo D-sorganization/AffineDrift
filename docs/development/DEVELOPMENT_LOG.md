@@ -24,10 +24,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** codex (planning migration)
 - **Issue:** #4253
 - **Branch:** `docs/deferred-validation-planning`
-- **PR:** not created
+- **PR:** #4423
 - **Paths:** `docs/development/planning/`, `README.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (`31cdc615` plus planning changes; catalog, three heavy-hit controls and 637-file title audit pass)
+- **Last verified:** 2026-09-22 (`3a8998a2` plus PR receipt; catalog, three heavy-hit controls and 637-file title audit pass)
 - **Summary:** Separates unavailable empirical/perceptual obligations from active qualified theory synthesis. Existing source issues and scientific acceptance criteria are preserved.
 - **Next step:** Publish the planning PR and link the verified scope split on #4253.
 

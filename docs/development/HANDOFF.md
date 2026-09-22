@@ -3,7 +3,7 @@
 ## Deferred Impact Evidence - 2026-09-22
 
 - Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-validation-planning`.
-  Branch `docs/deferred-validation-planning`; commit `SELF`; PR not created.
+  Branch `docs/deferred-validation-planning`; commit `SELF`; PR #4423 is open.
 - Governing epic #4253; central standard Repository_Management #1687. Added
   DV-4253, catalog and original public issue snapshot, README link and synced
   central policy. Empirical/perceptual dependencies are future Board work.
