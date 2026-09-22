@@ -5,11 +5,11 @@
 Issue [#4412](https://github.com/D-sorganization/AffineDrift/issues/4412) continues
 the Physics review #4054 under corpus #4021 and epic #4009. Both Chapter 22
 sources were inspected, including their differing injury language, taxonomy,
-anatomical sections, summary and seven exercises. This is an intermediate
-correction record, not completed chapter acceptance. The current commit corrects
-the joint taxonomy and independent kinematic examples. The biological sections,
-model-selection advice, injury interpretation, exercises and full print/web
-validation remain to be corrected and verified.
+anatomical sections, summary and seven exercises. Both sources now have a complete
+technical revision, including all seven worked exercises. Local numerical,
+source, print and public-route checks are recorded below. Protected merge and
+exact-main deployment acceptance remain outstanding. This review qualifies this
+chapter, not the entire textbook or a clinical application.
 
 ## Why the Review Was Reopened
 
@@ -50,23 +50,62 @@ The initial regression run failed in both editions, with six mathematical
 checks passing. After correction all eight checks pass. These checks support
 the stated equations; they do not prove human joint fidelity or clinical risk.
 
-## Outstanding Findings
+## Anatomical Findings and Dispositions
 
-1. Replace categorical knee fidelity/optimization claims and unsupported error
-   percentages with task-specific sensitivity and identifiability reasoning.
-2. Correct coupled shoulder topology, moving centers, scapulohumeral rhythm and
-   the distinction between humerothoracic and glenohumeral measurements.
-3. Correct dart-throwing direction, forearm rotation, stiffness coupling and
-   the distinction between club orientation in space and grip slip.
-4. Reconcile hip measurement/FAI framing, elbow carrying-angle inference and
-   ankle/foot contact and elastic-energy interpretation.
-5. Replace the false per-arm/full-body count and give a complete topology.
-6. Remove unsupported clinical thresholds, phase-specific universal spinal
-   loads, inferred eccentric recruitment and DCR-based injury explanation.
-   Explain what measurements and models can actually identify.
-7. Rework all seven exercises with adequate data and explicit worked answers.
-8. Verify citations, inspect complete rendered chapter in print/web, bind the
-   completed review to source and evidence commits, and pass protected checks.
+1. **P1, corrected — Joint geometry and counting.** Replace dimensionally invalid
+   constraints, a fixed universal-joint normal and false axis-alignment locking.
+   Separate coordinate singularities, joint mobility, loop rank and task authority.
+2. **P1, corrected — Anatomy and force inference.** Replace universal knee fidelity
+   and optimizer claims with sensitivity and identification requirements. Distinguish
+   hip rotation from pelvis turn, moving scapular centers from fixed humeral roots,
+   anatomical angles from laboratory orientations, and forearm rotation from wrist
+   deformation. Two coordinates can have coupled forces and energy.
+3. **P1, corrected — Clinical interpretation.** Remove unsourced injury cutoffs,
+   direct-measurement attribution for modeled spine loads, a universal wrist rate,
+   compulsory trail-arm eccentric recruitment and DCR-based injury causation.
+   Explain what kinematics, net moments, EMG, tissue-load models and clinical
+   outcomes can identify at each stage.
+4. **P2, corrected — Worked models and exercises.** Replace the erroneous per-arm
+   count with a fully specified 35-velocity tree; the separate fixed-pelvis exercise
+   has 18 freedoms before an assumed independent rank-six hand closure. Rework
+   every exercise with sufficient data or an explicit non-identifiability answer.
+5. **P2, corrected — Presentation and editions.** Align the scientific content,
+   preserve section targets, split six wide displays, fix print title/paragraph
+   overflow and avoid a duplicate exercise label. Remove the small print-only
+   primitive sketch, whose spherical 3R shorthand obscured the chart distinction.
+
+## Connections and Adversarial Checks
+
+- A fitted segment orientation cannot recover a missing translating shoulder
+  center. Differentiate the center-plus-orientation expression and check it against
+  finite position increments.
+- A common laboratory rotation changes pelvis and femur poses while preserving
+  their relative hip rotation. A pelvis-turn target therefore does not prescribe
+  a unique anatomical hip angle or spinal compensation.
+- A prescribed scapular coupling changes generalized forces through the transpose
+  of its derivative. Power conservation under that reduction does not validate its
+  physiology. Existing muscle-work evidence is bounded to its observed task.
+- A positive-definite two-coordinate stiffness matrix has distinct soft and stiff
+  directions without adding a kinematic degree of freedom. The numerical matrix
+  and its energies are constructed examples, not identified wrist parameters.
+- A rigid grip retains a constant relative transform while the club has nonzero
+  shaft-axis angular velocity in space. Club roll alone cannot identify slip.
+- An omitted axial rotation moves an off-axis point, not a point on its axis;
+  tibial length alone cannot resolve the exercise. Geometry uncertainty contributes
+  separately from coordinate uncertainty to an output sensitivity.
+- Ground wrench, contact-point power, COM power and arch energy are separate
+  quantities. The passive spring-damper example explicitly balances storage and
+  dissipation. A club momentum balance does not uniquely allocate two hand loads.
+- A matching release trace does not uniquely identify wrist stiffness. Geometry,
+  inputs, initial state, contact, shaft dynamics and measurement conventions offer
+  competing explanations. More detail requires additional observations, not
+  stronger clinical language.
+
+These counterexamples support the chapter's investigative message: model choices
+connect motion, load, work and control, while every inference needs its own
+observable and validation boundary. The preface still contains a contradictory
+muscles-going-limp/free-power explanation; that separate finding is tracked in
+[#4413](https://github.com/D-sorganization/AffineDrift/issues/4413), also under #4054.
 
 ## Sources Read and Reading Limits
 
@@ -79,20 +118,68 @@ the stated equations; they do not prove human joint fidelity or clinical risk.
 - McClure et al. (2001), [abstract](https://pubmed.ncbi.nlm.nih.gov/11408911/):
   eight volunteers, bone-pin scapular measurements and three-dimensional motion
   during arm elevation. This is not a golf-specific rhythm calibration.
-- Seth et al. (2016), [abstract](https://pubmed.ncbi.nlm.nih.gov/26734761/):
-  scapulothoracic joint modeling. Full PMC retrieval returned a challenge page;
-  full-paper reading is not claimed at this checkpoint.
-- Seth et al. (2019), [abstract](https://pubmed.ncbi.nlm.nih.gov/31780916/):
-  coupling scapular movement to humeral movement can change modeled muscle
-  work attribution. Full-paper methods and results remain to be read.
+- Seth et al. (2016), [publisher article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0141028):
+  abstract plus selected methods/results/discussion inspected for the cited
+  scapulothoracic formulation. No golf-specific numerical accuracy is claimed.
+- Seth et al. (2019), [publisher article](https://www.frontiersin.org/journals/neurorobotics/articles/10.3389/fnbot.2019.00090/full):
+  abstract, methods, results and discussion inspected, including model scaling and
+  the single-subject limitation. Its work estimates are not direct force measurements.
+- Griffin et al. (2016), [consensus abstract](https://pubmed.ncbi.nlm.nih.gov/27629403/):
+  the FAI-syndrome definition requires symptoms, signs and imaging; it supplies no
+  universal golf hip-angle limit.
+- Lim et al. (2012), [study abstract](https://pubmed.ncbi.nlm.nih.gov/22900401/):
+  five male collegiate golfers; modeled L4-L5 loading, not instrumented spinal
+  measurements. Only abstract-supported details are retained.
 
-The knee, hip and clinical sources found during discovery remain candidates
-until their actual abstracts or full text are inspected. Search snippets alone
-do not qualify a numerical or clinical statement.
+Neumann/Nordin remain the chapter's existing general anatomy references; their
+entire books were not retrieved or newly reviewed. Reference ROM values remain
+qualified examples of assessment, not swing targets. The Cheetham citation retains
+the earlier verified pelvis/torso distinction. Search snippets alone were not used
+to support new quantitative or clinical statements.
+
+## Validation and Remaining Publication Work
+
+- Initial taxonomy checks: two edition regressions failed, six independent
+  checks passed; corrected run eight passed. Extended revision: two further
+  edition regressions failed; an initially overstrict floating-point zero check
+  was corrected to a 1e-14 tolerance. Final mechanics/edition/label module has
+  16 passing checks. Ruff and Black100 pass.
+- Full Python run: 5,368 passed, 29 skipped, 132 deselected, 59 warnings;
+  coverage 79.06% against a 75% floor. Two failures identified the shared
+  bibliography's stale review digest. Regeneration fixed that dependency;
+  the combined mechanics, inventory, deployment-boundary, citation and LaTeX
+  focused rerun passed all 94 checks. This is not described as a clean full rerun.
+- Added five bibliography entries; reused the existing Lim entry. Existing
+  bibliography records were not changed. The Chapter 16 evidence dependency
+  requires an explicit commit rebind after the new source checkpoint.
+- Quarto 1.8.26, matching the repository pin, rendered the book view and the
+  public route. The initial book phone view exposed six wide displays; these
+  were split at natural boundaries. The public route has 109 MathJax containers,
+  no MathJax errors and no document overflow at 390 pixels. A complete scroll
+  pass in all four viewport/theme cases rendered all 109 expressions (zero
+  remaining lazy placeholders), with no display-container overflow or broken
+  local anchors. Initial immediate-scroll screenshots were premature; settled
+  captures were inspected instead. The service-worker update notice was
+  dismissed using its normal accessible button.
+- The chapter-only print build uses the actual book preamble and the production
+  print ordinal (24). All 18 pages, including the bibliography, were rasterized
+  and visually inspected. Final compilation has no overfull boxes, undefined
+  citations or reference warnings. This is not a complete-book PDF acceptance.
+- The normal public-site verifier passes all four desktop/mobile light/dark
+  cases, with zero serious/critical axe violations. The standard deployment
+  polyfill sanitation was applied; no CSP relaxation or source workaround was
+  introduced. A scoped manifest avoids treating old local excluded HTML as
+  fresh deployment content.
+- Local artifacts remain under `docs/development/technical-review/anatomy-*`.
+  Exact committed evidence binding, protected PR checks, merge and post-merge
+  deployment verification remain to be completed.
 
 ## Publication Checkpoint From the Previous Session
 
 PR #4377 is merged at `32010d08d9980896c51f0c93ac875f23eb818556`.
 Its exact Deploy Website run `34730740904` completed successfully. Live artifact
-`10309497076` is available but has not yet been inspected in this resumed
-session; earlier delivery-log entries must not claim that inspection.
+`10309497076` was downloaded and inspected on September 22. All 960 route cases
+passed; the four companion-route records independently confirm HTTP 200, zero
+overflow and passing desktop/mobile light/dark checks, with no serious/critical
+axe findings. This closes the outstanding publication verification for
+DL-#4375 and DL-#4376; it is not a new review of every companion chapter.

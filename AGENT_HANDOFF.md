@@ -75,47 +75,41 @@
 
 ## Technical Content Review
 
-- **Resumed by the user on 2026-09-22.** The prior pause is revoked. Continue
-  the complete scientific review, prioritizing long sources; use regular PRs
-  and protected merges to main. Do not declare the corpus complete from the
-  current reviewed-route count.
-- **Current work:** #4412, native child of reopened Physics #4054, corpus #4021
-  and epic #4009. Worktree `C:/Users/diete/Repositories/AffineDrift-technical-review`,
-  branch `fix/technical-review-resume`, checkpoint SELF; PR not created.
-  DL-#4412 is in_progress. Both original Chapter 22 editions were inspected;
-  paired joint-taxonomy corrections and eight independent kinematic/work
-  checks are implemented. Anatomy, clinical language, summary and seven
-  exercises, complete rendering and protected publication remain unfinished.
-- **Reason for reopening:** Chapter 22 retained demonstrable constraint and
-  mobility errors under a source-only reviewed record. Its route is deferred
-  again while #4412 completes acceptance. Other routes retain their current
-  classifications pending actual inspection. Details, source-reading limits,
-  outstanding findings and numerical rationale are in
+- **Active:** the user resumed the complete review on September 22. Continue
+  long-form scientific review with regular PRs and protected merges. The corpus
+  is not complete merely because routes carry reviewed metadata.
+- **Current delivery:** #4412 under Physics #4054, corpus #4021 and epic #4009.
+  Branch `fix/technical-review-resume`; taxonomy checkpoint607fae7e is pushed.
+  SELF completes the paired Chapter22 prose, derivations, citations and all seven
+  worked exercises. No PR yet. Route remains deferred until final evidence binding.
+- **Technical result:** correct joint constraints/rank, anatomical reductions,
+  moving shoulder centers, coupled wrist energy, rigid-grip club roll, contact
+  power, body counts and limits of clinical inference. The complete rationale,
+  counterexamples and source-reading boundaries are in
   `reports/technical-review/anatomy-joint-review.md`.
-- **Validation:** `py -3.12 -X utf8 -m pytest tests/test_anatomy_joint_rigor.py
---no-cov -q`: initial two source regressions failed, six mathematical checks
-  passed; corrected run all eight passed. Ruff and Black100 pass for the two
-  touched test modules. Combined mechanics/inventory suite:26 passed; title audit:638 passed. Inventory regeneration completed. No chapter render
-  or full-suite clearance is claimed for this intermediate checkpoint.
-- **Next action:** correct and source-check the knee, hip, shoulder, wrist,
-  elbow, ankle, injury and exercise sections in both Chapter 22 editions.
-  Then rebuild/inspect print and web, bind actual completed review evidence,
-  run root and publication gates, open a regular PR, merge protected and
-  verify deployment. Keep the broader corpus active afterward.
-- **Previous delivery:** PR4377 is merged at
-  `32010d08d9980896c51f0c93ac875f23eb818556`; exact Deploy Website34730740904
-  succeeded. Live artifact10309497076 has not yet been read in this resumed
-  session. DL-#4375/#4376 remain in_review until that evidence is inspected.
-  Previous mechanical/render records remain in the curiosity and companion
-  hierarchy reports under `reports/technical-review/`.
-- **Coordination:** session `technical-review-20260922-anatomy`, #4412 lease
-  5780993804 expires19:29Z September22. Registration6f435cf6 is active.
-  Inbox returned incomplete coordination evidence with malformed/rejected
-  unrelated events; that is not proof of vacancy. Focused open-PR lookup
-  returned no open PRs at startup. Preserve peer worktrees and chapters,
-  immutable `articles/proximal_distal_energy_transfer/`, authority pins and
-  all other handoff/development-log sections. Explicit staging only; many
-  old untracked QA artifacts remain. Never mutate git during local validation.
+- **Validation:**16 mechanics/edition/label checks;94 combined mechanics,
+  inventory, deployment-boundary, citation and LaTeX checks pass. Full suite:
+  5368 passed/29 skipped/132 deselected,79.06% coverage; two stale bibliography
+  digest failures repaired and covered by that focused rerun. Quarto1.8.26
+  public-route build and18-page chapter-only print build pass; all PDF pages
+  inspected. Four production desktop/mobile light/dark cases pass, axe clean.
+  Final browser inspection/evidence binding and protected delivery remain.
+- **Next action:** bind the completed anatomy source and rendered verification
+  to a committed checkpoint; rebind Chapter16's shared bibliography dependency
+  with an explicit additive-only carry-forward record. Create a regular PR,
+  replace the SPEC issue placeholder with its PR number, pass protected checks,
+  merge and inspect the exact-main deployment. Then claim and address #4413
+  (print/web preface discrepancy) and continue the wider corpus.
+- **Previous delivery verified:** PR4377 merge32010d08d9980896c51f0c93ac875f23eb818556,
+  deployment34730740904, live artifact10309497076 inspected September22:960/960
+  cases pass; all four companion-route records pass with zero overflow and a
+  clean axe scan. DL-#4375 andDL-#4376 are shipped.
+- **Coordination:** session `technical-review-20260922-anatomy`, issue4412 lease
+  5780993804 expires19:29Z; presence11f6e93b expires20:03Z September22. Inbox has
+  no messages/conflicts but reports incomplete evidence from malformed unrelated
+  events. Preserve peer worktrees, immutable source archive, authority pins and
+  unrelated handoff sections. Explicit staging only; old untracked QA artifacts
+  are extensive. Never mutate git during validation.
 
 ## Protected Authority
 
