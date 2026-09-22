@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4415 (Physics #4054; corpus #4021; epic #4009)
-- **PR:** not created
+- **PR:** #4417
 - **Branch:** `fix/ground-reaction-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch15_ground_reaction_forces.tex`, `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `references/proximal-distal-energy.bib`, `tests/test_ground_reaction_derivations.py`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; six findings bound to complete checkpoint dfe90fed; final 19 audit/boundary tests pass; source e0ce6133 pushed; 70 mechanics/contract/LaTeX checks and 34 mechanics/inventory checks pass, Black100/Ruff/title638/citations pass; all13 final PDF pages inspected, four public browser cases pass with clean axe, all118 paired math expressions match and render without clipping/errors; metadata-only Chapter16/22 carry-forward verified)
 - **Summary:** Reconciles paired system boundaries, momentum signs, COP/free moment, work, input-induced reactions, admissible counterfactuals, muscle inference and human evidence; adds eight worked solutions and corrects three bibliographic author lists from primary records.
-- **Next step:** Protected preface main581857cb is merged normally in SELF after exact-tree verification against053f88a5; open a regular PR and pass protected checks/publication verification.
+- **Next step:** Protected preface main581857cb is merged normally in SELF after exact-tree verification against053f88a5; regular PR #4417 is open; pass protected checks, merge and verify publication.
 
 ### DL-#4413 · Physics of Golf Preface Scientific Framing
 

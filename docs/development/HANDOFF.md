@@ -2,7 +2,7 @@
 
 Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
 `DEVELOPMENT_LOG.md`, DL-#4415/#4413/#4412. Branch `fix/ground-reaction-rigor`,
-checkpoint SELF, no PR yet. All six findings are source-bound to complete review
+checkpoint SELF, regular PR #4417. All six findings are source-bound to complete review
 checkpoint dfe90fed2658ab8b43b6e26a8208591aca150e9d. Final 19 audit/boundary tests
 pass. All 13 print pages and four public browser cases pass; 118 paired math
 expressions match with no final clipping or errors. Chapters 16/22 retain their
@@ -11,7 +11,7 @@ Anatomy #4414 and preface #4416 merged green. Anatomy deploy35771389008 deployed
 but live verification was superseded; verify both routes on successor preface
 main581857cb, deploy35774559003. SELF merges remote main normally after
 verifying its complete tree equals existing parent053f88a5; later GRF records
-and peer sections are retained. Open a regular GRF PR next. Preserve the broader active goal; this is not corpus
+and peer sections are retained. Pass PR #4417 checks and merge next. Preserve the broader active goal; this is not corpus
 completion.
 
 The following previously merged persona-work handoff is retained for its

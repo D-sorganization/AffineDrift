@@ -89,7 +89,7 @@
   Exact-main publication is running in deploy 35774559003.
 - **Current:** #4415, branch `fix/ground-reaction-rigor`, based on the published
   preface branch. Scientific source e0ce6133 and complete report/render checkpoint dfe90fed are
-  pushed; no PR yet. SELF binds all six corrected findings to exact evidence bytes
+  pushed; regular PR #4417 is open. SELF records PR tracking; all six findings bind
   at dfe90fed2658ab8b43b6e26a8208591aca150e9d.
   Both original sources were read completely. Print's third-law/sign mistakes,
   omitted club boundary, unconditional work claims, drift-only reaction,
@@ -113,7 +113,8 @@
 - **Integration:** SELF merges protected preface main581857cb normally. Its
   complete tree was verified identical to our existing preface parent053f88a5;
   conflict resolution preserves the later GRF records and all peer sections.
-- **Next:** open the regular Chapter 15 PR and pass protected checks. Verify anatomy/preface publication in parallel. Preserve
+- **Next:** pass regular PR #4417 protected checks and merge; verify successor
+  main publication before marking delivery shipped. Verify anatomy/preface publication in parallel. Preserve
   broad parent issues as active; source-only metadata does not complete a book.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4415 lease
   5782334386 expires21:05Z; presence2aacab03 expires21:08Z September22. Inbox has
