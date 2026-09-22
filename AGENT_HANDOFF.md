@@ -91,7 +91,7 @@
   quality pass. No scientific content changed in those CI follow-ups.
 - **Current:** #4418 under foundations #4058; branch
   `fix/superposition-feasible-inputs`, based on published GRF head7ee71416.
-  SELF saves the complete reread and residual correction of the standalone
+  Source checkpointa2cb282d saves the complete reread and residual correction of the standalone
   superposition article, retaining the earlier Newton–Euler/Lagrange/spatial/2R
   corrections. Added feasible-reference sets, constrained inverse-mass derivation,
   a circular-guide counterexample and task-acceleration distinction. Corrected
@@ -99,11 +99,14 @@
 - **Validation:** all11 article mechanics checks pass, including direct KKT,
   reaction/curvature and task increments and independent general-2R body moments
   and kinetic/potential power. Black100/Ruff/title638 and changed-file quality
-  pass. Initial full-page scrolling rendered409 math expressions in each of four
-  cases, with zero errors or broken anchors; final layout rerun is in progress.
+  pass. Final full-page scrolling renders416 math expressions in all four cases
+  with zero errors or broken anchors. All13 main-section mobile openings and
+  selected new-section/changed-equation views were inspected. All21 wide mobile
+  display containers scroll to their endpoints; desktop displays fit. SELF saves
+  the complete report/render record.
   The route is deferred until final evidence is committed and bound.
-- **Next:** finish visual/scroll verification, save complete source/report/render
-  checkpoint, bind exact committed LF bytes, then open a regular #4418 PR after
+- **Next:** bind SELF complete source/report/render checkpoint using committed
+  LF bytes, then open a regular #4418 PR after
   #4417 lands and main is merged normally. Keep delivery and publication gates
   separate; verify earlier live routes while their successor deployment runs.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4418 lease

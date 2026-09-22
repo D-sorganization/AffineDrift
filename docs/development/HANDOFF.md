@@ -4,8 +4,10 @@ Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
 `DEVELOPMENT_LOG.md`, DL-#4418/#4415/#4413/#4412. Branch
 `fix/superposition-feasible-inputs`, checkpoint SELF, no PR yet. Complete
 standalone-article reread and remaining feasible-input/contact/task corrections
-are saved with11 passing mechanics checks. Final browser layout verification,
-complete review record and source binding remain pending; route is deferred.
+are saved in source checkpointa2cb282d with11 passing mechanics checks. SELF
+saves the final report/render record: four cases,416 expressions,21 verified
+mobile math scrollers and selected visual inspections. Bind SELF to the route
+next; it remains deferred until binding.
 GRF regular PR4417 at7ee71416 awaits protected CI after a gravity-constant naming
 fix and committed-LF evidence correction. Science/rendering is unchanged.
 Anatomy and preface merged; verify their live routes in successor deploy35774559003.

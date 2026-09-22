@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/superposition-feasible-inputs`
 - **Paths:** `articles/superposition.qmd`, `tests/test_superposition_article_rigor.py`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; complete article reread;11 independent/existing checks pass; Black100/Ruff/title638 and changed-file quality pass; initial four browser cases and409 settled math expressions pass, final layout verification pending)
+- **Last verified:** 2026-09-22 (SELF; complete article reread;11 independent/existing checks pass; Black100/Ruff/title638 and changed-file quality pass; final four browser cases and416 settled math expressions pass; all21 wide mobile math scrollers reach their endpoint; selected section/equation views inspected)
 - **Summary:** Retains earlier mechanics corrections and adds feasible-reference input sets, constrained inverse-mass and task maps, a circular-guide example and correct reaction/virtual-work language. Repairs three wide or spuriously numbered equation groups.
-- **Next step:** Finish visual/scroll verification, commit the complete report/render record and bind committed LF evidence, then open a regular PR after GRF delivery.
+- **Next step:** Bind SELF complete report/render checkpoint using committed LF evidence, then open a regular PR after GRF delivery.
 
 ### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 
