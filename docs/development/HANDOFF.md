@@ -1,3 +1,28 @@
+# Deferred Validation Planning Checkpoint
+
+## Deferred Impact Evidence - 2026-09-22
+
+- Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-validation-planning`.
+  Branch `docs/deferred-validation-planning`; commit `SELF`; PR #4423 is open.
+- Governing epic #4253; central standard Repository_Management #1687. Added
+  DV-4253, catalog and original public issue snapshot, README link and synced
+  central policy. Empirical/perceptual dependencies are future Board work.
+- Keep #4253 open for qualified provider-result and literature synthesis. No
+  roadmap label, completed experiment, acoustic effect or perception claim is
+  supplied by this documentation. Tools/UpstreamDrift retain experiment ownership.
+- Validation: catalog valid, all three existing heavy-hit boundary checks pass,
+  and the 637-file publishable title audit passes.
+  No article, citation, executable model or trust-evidence source was changed.
+- Next: publish through normal PR checks, verify default-branch plan artifacts,
+  then post the immutable scope link on #4253 and record the audit receipt.
+- Branch policy: current root CLAUDE/AGENTS and user-authorized topic-PR workflow
+  target main; older GAAI staging guidance is superseded for this work.
+
+- Integration: main `9ef76c6e` is preserved in full; conflict resolution keeps
+  the force-measurement delivery and planning records. No article/model edits
+  were made. Local disk exhaustion interrupted unrelated Design-Procedures
+  tests; avoid broad local reruns until capacity is restored.
+
 # Current Technical Review Checkpoint — #4422
 
 Branch `fix/putting-roll-rigor` begins at force head 4047d917. SELF saves
@@ -16,8 +41,8 @@ protected checks and wait for force publication before enabling merge.
 Delivery: superposition #4419 is shipped at 31cdc615; deploy 35782578807
 and live artifact 10720600549 passed 960/960 cases. Publication record saved. Force #4421 merged as 9ef76c6e after all protected checks passed. Its tree
 matches 4047d917 exactly; normal merge of origin/main retains the later putting
-turnover where squash ancestry repeated predecessor text. Deployment35787101015
-is pending. Save its publication record independently of frozen scientific evidence. Do not alter
+turnover where squash ancestry repeated predecessor text. Deployment35787101015 was superseded by the planning merge #4423; replacement
+deployment35789304756 at d9a8d08e is pending. Save its publication record independently of frozen scientific evidence. Do not alter
 force-bound files at 99d1653c; the putting article may reuse its scoped CSS.
 
 The comprehensive review goal remains active. No draft PRs.
@@ -97,3 +122,7 @@ python3 -m black --check --line-length 100 tests/test_persona_start_paths.py  # 
 1. Wait for GitHub Actions to recover and trigger CI for latest commit
 2. Once CI passes, arm squash auto-merge
 3. If CI continues to fail to trigger, may need to create a new PR
+
+Integration checkpoint: merge planning main d9a8d08e into putting PR4424;
+preserve both delivery records and all planning artifacts. Putting science and
+frozen evidence are unchanged. Wait for the replacement deployment before merge.
