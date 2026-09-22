@@ -1,7 +1,8 @@
 # Current Technical Review Checkpoint — #4427
 
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
-`fix/zero-torque-counterfactual-rigor`; commit `SELF`; PR not created.
+`fix/zero-torque-counterfactual-rigor`; commit `SELF`; regular PR #4430 open:
+https://github.com/D-sorganization/AffineDrift/pull/4430.
 Issue #4427 under Physics #4054/core #4058, corpus #4021 and epic #4009.
 Complete chapter print/web and canonical article rewrite is qualified and saved.
 Scientific/render evidence is frozen at e7d8c6885550ed2731843ff7d9e581d36b69788e:
@@ -28,12 +29,14 @@ tests/test_ztcf_intervention_contract.py tests/test_claim_audit_inventory.py
 tests/test_site_trust_surface_audit.py -q --no-cov. Normal hooks remain mandatory.
 No adapter, fixture, schema, existing shared CSS or predecessor science changed.
 
-IAA #4426 merged to99aa58356f45f4ff2bf15dd90dc735460dc8d3b4. Deployment35796355561
-is pending; verify its live artifact before merging the successor. Putting is
+IAA #4426 is shipped at99aa58356f45f4ff2bf15dd90dc735460dc8d3b4. Deployment35796355561
+succeeded; artifact10725510305 passes960/960 and all four IAA chapter cases.
+Receipt: reports/technical-review/induced-acceleration-publication.json. Putting is
 shipped atded63640 with live960/960. Normal merge of origin/main99aa5835 preserves the complete fc5745ea tree;
 the main tree equals our IAA parent03db46ff, so four turnover/index conflicts
 retain the newer zero-torque records. No source or SPEC row changes.
-Next push, open a regular PR, and complete protected checks/publication.
+Regular PR4430 is open. Next complete protected CI, merge it, and verify its
+main deployment/live artifact before recording the zero-torque release as shipped.
 No draft PRs. Goal remains active; entries advanced DL-#4427 and DL-#4425.
 
 Disk headroom is very low due external activity. Removed seven untracked

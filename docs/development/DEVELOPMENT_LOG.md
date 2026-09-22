@@ -20,28 +20,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4427 · Zero-Torque Counterfactual Mechanics and Interpretation
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
+- **PR:** #4430
 - **Issue:** #4427 (Physics #4054; core #4058; corpus #4021; epic #4009)
 - **Branch:** `fix/zero-torque-counterfactual-rigor`
 - **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; normal main99aa5835 integration preserves all evidence; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
+- **Last verified:** 2026-09-22 (SELF; regular PR4430 opened, main99aa5835 integrated, IAA publication960/960 verified; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
-- **Next step:** Open the regular zero-torque correction PR after pushing the integrated branch.
+- **Next step:** Complete protected CI and merge regular PR4430.
 
 ### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4425 (Physics #4054; corpus #4021; epic #4009)
 - **PR:** #4426
 - **Branch:** `fix/induced-acceleration-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex`, `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd`, `tests/test_induced_acceleration_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; PR4426 merged as99aa5835; deployment35796355561 pending; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
+- **Last verified:** 2026-09-22 (SELF; PR4426 merged as99aa5835; deployment35796355561 succeeded with live artifact10725510305,960/960 and four chapter cases pass; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
-- **Next step:** Verify live publication from deployment35796355561 at merged main99aa5835.
+- **Next step:** Preserve the frozen scientific evidence and publication receipt at main99aa5835.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
