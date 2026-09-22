@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4253 - Deferred Impact Evidence Planning
+
+- **State:** in_progress
+- **Owner:** codex (planning migration)
+- **Issue:** #4253
+- **Branch:** `docs/deferred-validation-planning`
+- **PR:** not created
+- **Paths:** `docs/development/planning/`, `README.md`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (`31cdc615` plus planning changes; catalog, three heavy-hit controls and 637-file title audit pass)
+- **Summary:** Separates unavailable empirical/perceptual obligations from active qualified theory synthesis. Existing source issues and scientific acceptance criteria are preserved.
+- **Next step:** Publish the planning PR and link the verified scope split on #4253.
+
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority
 
 - **State:** in_review
