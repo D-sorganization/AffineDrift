@@ -18,6 +18,10 @@ The useful question is precise: which input was changed, which state was copied,
 
 ## Formal Definition of the ZTCF {#sec-ztcf_formal_definition}
 
+[]{#formal-definition-of-the-ztcf}
+[]{#the-zero-torque-counterfactual}
+[]{#inplain:ztcf_meaning}
+
 Choose generalized coordinates $q$, velocities $v=\dot q$, internal states $z$, and parameters $p$. Internal states can include actuator activation, tendon strain, controller memory or flexible modes when the chosen model represents them. They must either evolve under specified equations or be explicitly held fixed as part of the intervention. The rigid three-link fixture discussed below has no such additional states.
 
 For an unconstrained mechanical model with applied input $u$, write
@@ -65,6 +69,10 @@ The analytical two-rod calculation later in this chapter checks the mechanics un
 
 ## The Decomposition: What the ZTCF Reveals {#sec-ztcf_decomposition}
 
+[]{#the-decomposition-what-the-ztcf-reveals}
+[]{#generalized-input-is-not-physiological-attribution}
+[]{#inplain:ztcf_application}
+
 At the same time and full state, with the same parameters and admissible constraint mode, an affine acceleration solve gives
 
 $$
@@ -110,6 +118,9 @@ With $B\ne I$, the acceleration difference determines $Bu$, not necessarily a un
 
 ## Computing the ZTCF: Algorithm and Simulation {#sec-ztcf_algorithm}
 
+[]{#computing-the-ztcf-algorithm-and-simulation}
+[]{#proc:ztcf_algorithm}
+
 Copy the complete declared state at $t_0$, including any solver-required contact, actuator and controller state. Record the model revision, parameter convention, zeroed channels and their physical level. Specify the reference input policy and every retained load, constraint, mode rule and internal-state law. Use identical initial states for a paired intervention.
 
 An illustrative branch switch applies only to the selected channel:
@@ -125,6 +136,10 @@ Integrate each declared branch to the stated time or event. Record integration m
 Numerical checks should include forward/inverse closure, constraint residuals, physically appropriate energy or power balances, and step refinement in the reported output. An autonomous conservative model with ideal fixed constraints conserves mechanical energy; damping, moving supports or external work change that balance. Energy conservation by itself does not prove trajectory accuracy. Large acceleration and nonlinearity alone do not establish numerical stiffness: fast decaying modes relative to the solution time scale can restrict explicit stability. Contact discontinuities additionally require an event or nonsmooth formulation, not simply a smaller arbitrary step.
 
 ## The Zero-Velocity Counterfactual {#sec-zvcf}
+
+[]{#the-zero-velocity-counterfactual-zvcf}
+[]{#the-zero-velocity-counterfactual}
+[]{#inplain:zvcf_vs_ztcf}
 
 The **instantaneous Zero-Velocity Counterfactual (ZVCF)** evaluates acceleration at the same configuration with specified velocities reset and declared input zero. For the unconstrained convention above, holding $z,t,p$ fixed gives
 
@@ -146,11 +161,29 @@ This state reset is distinct from removing an input. It changes kinetic energy a
 
 ## Two Uniform Rods: A Mechanics Check {#sec-double_pendulum_ztcf}
 
+[]{#double-pendulum-ztcf-a-worked-example}
+
 Use two planar uniform rods with a fixed base, no contact, no damping and uniform gravity. These are manufactured mechanics parameters, not anthropometry or a fitted golf swing. The inertial frame has $x$ right and $y$ up. Angle $q_1$ is counterclockwise from $+x$; $q_2$ is relative to rod 1, so rod 2 has absolute angle $q_1+q_2$. Positive inputs do positive work against positive coordinate velocities.
 
 Take masses $(m_1,m_2)=(2,0.2)$ kg and lengths $(L_1,L_2)=(0.4,0.3)$ m. The COM distances are $r_i=L_i/2$, and COM inertias are $J_i=m_iL_i^2/12$. A pivot inertia would instead be $J_i+m_ir_i^2$; do not add the parallel-axis term twice. Set $g=9.81$ m/s$^2$ and $k=m_2L_1r_2=0.012$ kg·m$^2$.
 
-The COM positions are $c_1=r_1(\cos q_1,\sin q_1)^T$ and $c_2=L_1(\cos q_1,\sin q_1)^T+r_2(\cos(q_1+q_2),\sin(q_1+q_2))^T$. Summing translational COM and rotational kinetic energies gives
+The COM positions are
+
+$$
+\begin{aligned}
+c_1&=r_1(\cos q_1,\sin q_1)^T,\\
+c_2&=L_1(\cos q_1,\sin q_1)^T\\
+&\quad+r_2(\cos(q_1+q_2),\sin(q_1+q_2))^T.
+\end{aligned}
+$$
+
+Sum translational COM and rotational kinetic energies:
+
+$$
+T=\tfrac12\sum_i m_i\|\dot c_i\|^2+\tfrac12J_1v_1^2+\tfrac12J_2(v_1+v_2)^2.
+$$
+
+Collecting the coefficients in $T=\tfrac12v^TMv$ gives
 
 $$
 \begin{aligned}
@@ -160,17 +193,28 @@ M_{22}&=J_2+m_2r_2^2.
 \end{aligned}
 $$ {#eq-double_pend_mass_matrix}
 
-The potential energy is $V=g[(m_1r_1+m_2L_1)\sin q_1+m_2r_2\sin(q_1+q_2)]$. With $T=\tfrac12v^TMv$, the Euler--Lagrange equations give $M a+h_v+h_g=u$, where
+The potential energy is
 
 $$
-h_v=k\sin q_2\begin{bmatrix}-(2v_1v_2+v_2^2)\\v_1^2\end{bmatrix},
-\qquad
-h_g=g\begin{bmatrix}(m_1r_1+m_2L_1)\cos q_1+m_2r_2\cos(q_1+q_2)\\m_2r_2\cos(q_1+q_2)\end{bmatrix}.
+V=g[(m_1r_1+m_2L_1)\sin q_1+m_2r_2\sin(q_1+q_2)].
+$$
+ With $T=\tfrac12v^TMv$, the Euler--Lagrange equations give $M a+h_v+h_g=u$, where
+
+$$
+\begin{aligned}
+h_v&=k\sin q_2\begin{bmatrix}-(2v_1v_2+v_2^2)\\v_1^2\end{bmatrix},\\
+h_g&=g\begin{bmatrix}(m_1r_1+m_2L_1)\cos q_1+m_2r_2\cos(q_1+q_2)\\m_2r_2\cos(q_1+q_2)\end{bmatrix}.
+\end{aligned}
 $$ {#eq-coriolis_1}
 
 Both velocity-bias components matter. The first contains a factor-two cross term and a squared distal-rate term; the second contains the proximal-rate squared. Their signs follow the stated relative-angle convention. They satisfy $v^Th_v=\tfrac12v^T\dot Mv$, the identity needed for conservative energy balance.
 
-At $q=(45,70)$ degrees and $v=(8,12)$ rad/s, $\cos(q_1+q_2)=\cos115^\circ=-0.422618$. All computations use unrounded values; displayed matrices are rounded:
+At $q=(45,70)$ degrees and $v=(8,12)$ rad/s, the combined angle has cosine
+
+$$
+\cos(q_1+q_2)=\cos115^\circ=-0.422618.
+$$
+ All computations use unrounded values; displayed matrices are rounded:
 
 $$
 M\simeq\begin{bmatrix}0.152875&0.010104\\0.010104&0.006000\end{bmatrix}
@@ -210,6 +254,12 @@ Diagonal-only multiplication would give approximately $(-1.482810,0.763522)^T$ N
 
 ## The Drift-Control Ratio and Correction Authority {#sec-dcr_blowup}
 
+[]{#the-drift-control-ratio-dcr-and-late-downswing-authority}
+[]{#drift-control-ratio-dcr}
+[]{#minimum-reporting-standard-for-dcr}
+[]{#constraint:dcr_meaning}
+[]{#inplain:dcr_blowup_reason}
+
 For a stated angular-acceleration projection $W$, norm and admissible input set $\mathcal U$, define
 
 $$
@@ -222,9 +272,11 @@ The regularizer $\varepsilon$ has the denominator's units and must be reported. 
 For the two-rod snapshot, choose $W=(0,1)$, absolute value, $B=I$, $\varepsilon=0$, and the illustrative torque box $|u_1|\le2$ N·m, $|u_2|\le0.2$ N·m. These are chosen limits, not muscular capacity estimates. The exact scalar projection bound is
 
 $$
-s=\sum_j |(WM^{-1})_j|\bar u_j
-=12.395482(2)+187.541158(0.2)
-\simeq62.299196\quad\mathrm{rad/s^2}.
+\begin{aligned}
+s&=\sum_j |(WM^{-1})_j|\bar u_j\\
+&=12.395482(2)+187.541158(0.2)\\
+&\simeq62.299196\quad\mathrm{rad/s^2}.
+\end{aligned}
 $$ {#eq-dcr_example_coriolis}
 
 The bound is attained at a vertex of the torque box. The corresponding ratio is
@@ -253,6 +305,10 @@ This is a rate-scaling experiment, not a later measured swing state. The total r
 
 ### Magnitude Is Not Direction or Reachability {#sec-swing_ballistic_commitment}
 
+[]{#hypothesis-late-downswing-correction-under-a-declared-model}
+[]{#model-conditioned-late-downswing-hypothesis}
+[]{#drift-magnitude-versus-reachability}
+
 Consider an abstract two-dimensional acceleration drift $(1,0)^T$ and scalar input $|u|\le1$. The input directions $H_1=(1,0)^T$ and $H_2=(0,1)^T$ both give Euclidean DCR equal to one. The first cancels drift with $u=-1$; the second cannot change the first component. Equal ratios therefore allow different instantaneous cancellation authority.
 
 For the one-dimensional double integrator $\ddot y=u$, $|u|\le a_{\max}$, the displacement change relative to the zero-input branch at time $T$ is
@@ -266,6 +322,10 @@ This bound is attained by constant extreme input when no other constraints apply
 
 ## Why ZTCF Cannot Be Measured Directly {#sec-ztcf_model_dependent}
 
+[]{#why-ztcf-cannot-be-measured-directly}
+[]{#ztcf-is-model-dependent}
+[]{#inplain:ztcf_model_error}
+
 Motion capture or IMUs provide measurements from which pose and motion are estimated under calibration and reconstruction assumptions. Differentiation amplifies noise; filtering, synchronization, uncertainty and sensitivity must be documented. EMG records electrical activity related to muscle excitation, not a direct measurement of muscle force or a uniquely identified activation state. A force plate measures the ground-contact wrench; grip loading requires an instrumented grip/club or a model-based inference. These observations constrain different parts of the model.
 
 The unperformed branch is not observed in the recorded swing. Within an exact fixed deterministic model, a paired branch difference is the consequence of the specified intervention under its retained protocol. Comparing that branch to human data introduces parameter error, state-estimation error, omitted loads, contact mismatch and model discrepancy. Those are different claims and need different uncertainty analyses.
@@ -274,13 +334,18 @@ Zero generalized torque can coexist with substantial antagonistic muscle forces.
 
 ## Summary and Preview {#sec-ztcf_summary}
 
+[]{#summary-and-preview}
+[]{#key-takeaways-the-zero-torque-counterfactual}
+
 The central chain of reasoning is: define the input and full state; derive the retained dynamics; distinguish a pointwise evaluation from an integrated intervention; project into a named physical output; then test numerical and model uncertainty. The same mass matrix couples torque and acceleration, while state evolution couples present input removal to future drift. ZVCF adds a distinct state reset, and DCR adds a magnitude comparison. None of these steps by itself identifies biological effort or finite-horizon control authority.
 
 The next chapter studies constraint forces. Those forces are essential to a feasible counterfactual whenever supports and contacts matter, even when all declared applied torques are zero.
 
 ## Chapter Exercises {#ex:chapter_6_exercises}
 
-1. Starting from the two COM positions above, recover all entries of $M$ using $T=\tfrac12\sum_i m_i\|\dot c_i\|^2+\tfrac12J_1v_1^2+\tfrac12J_2(v_1+v_2)^2$. Explain why a COM inertia and a pivot inertia cannot be interchanged without a parallel-axis correction.
+[]{#chapter-exercises-the-zero-torque-counterfactual}
+
+1. Starting from the two COM positions above, recover all entries of $M$ using the displayed sum of translational and rotational kinetic energies. Explain why a COM inertia and a pivot inertia cannot be interchanged without a parallel-axis correction.
 1. Derive $h_v$ from the Euler--Lagrange equations and $h_g$ from $\nabla V$. Verify $v^Th_v=\tfrac12v^T\dot Mv$, and recover both components of the stated reference input. Explain why zero applied input does not imply constant velocity.
 1. For a uniform rod with mass $2$ kg and length $0.7$ m, let $\theta$ measure displacement from vertically downward. At $\theta=45^\circ$, the pivot inertia is $mL^2/3=0.326667$ kg·m$^2$ and gravity acceleration is $-3g\sin\theta/(2L)=-14.864395$ rad/s$^2$. Verify these values. An illustrative $+10$ N·m input adds $30.612245$ rad/s$^2$; it is not a measured muscle capacity.
 1. Replay the registered three-link Python golden fixture without changing its parameters or source authority. Report its terminal state and units, then assess step refinement separately. Explain why matching the fixture cannot establish a second engine, flexible-shaft validity or an individual golfer's muscle state.

@@ -135,7 +135,19 @@ Use two planar uniform rods with a fixed base, no contact, no damping and unifor
 
 Take masses $(m_1,m_2)=(2,0.2)$ kg and lengths $(L_1,L_2)=(0.4,0.3)$ m. The COM distances are $r_i=L_i/2$, and COM inertias are $J_i=m_iL_i^2/12$. A pivot inertia would instead be $J_i+m_ir_i^2$; do not add the parallel-axis term twice. Set $g=9.81$ m/s$^2$ and $k=m_2L_1r_2=0.012$ kg\,m$^2$.
 
-The COM positions are $c_1=r_1(\cos q_1,\sin q_1)^T$ and $c_2=L_1(\cos q_1,\sin q_1)^T+r_2(\cos(q_1+q_2),\sin(q_1+q_2))^T$. Summing translational COM and rotational kinetic energies gives
+The COM positions are
+\begin{equation}
+\begin{aligned}
+c_1&=r_1(\cos q_1,\sin q_1)^T,\\
+c_2&=L_1(\cos q_1,\sin q_1)^T\\
+&\quad+r_2(\cos(q_1+q_2),\sin(q_1+q_2))^T.
+\end{aligned}
+\end{equation}
+Sum translational COM and rotational kinetic energies:
+\begin{equation}
+T=\tfrac12\sum_i m_i\|\dot c_i\|^2+\tfrac12J_1v_1^2+\tfrac12J_2(v_1+v_2)^2.
+\end{equation}
+Collecting the coefficients in $T=\tfrac12v^TMv$ gives
 \begin{equation}
 \begin{aligned}
 M_{11}&=J_1+m_1r_1^2+J_2+m_2(L_1^2+r_2^2)+2k\cos q_2,\\
@@ -144,16 +156,23 @@ M_{22}&=J_2+m_2r_2^2.
 \end{aligned}
 \label{eq:double_pend_mass_matrix}
 \end{equation}
-The potential energy is $V=g[(m_1r_1+m_2L_1)\sin q_1+m_2r_2\sin(q_1+q_2)]$. With $T=\tfrac12v^TMv$, the Euler--Lagrange equations give $M a+h_v+h_g=u$, where
+The potential energy is
 \begin{equation}
-h_v=k\sin q_2\begin{bmatrix}-(2v_1v_2+v_2^2)\\v_1^2\end{bmatrix},
-\qquad
-h_g=g\begin{bmatrix}(m_1r_1+m_2L_1)\cos q_1+m_2r_2\cos(q_1+q_2)\\m_2r_2\cos(q_1+q_2)\end{bmatrix}.
+V=g[(m_1r_1+m_2L_1)\sin q_1+m_2r_2\sin(q_1+q_2)].
+\end{equation} With $T=\tfrac12v^TMv$, the Euler--Lagrange equations give $M a+h_v+h_g=u$, where
+\begin{equation}
+\begin{aligned}
+h_v&=k\sin q_2\begin{bmatrix}-(2v_1v_2+v_2^2)\\v_1^2\end{bmatrix},\\
+h_g&=g\begin{bmatrix}(m_1r_1+m_2L_1)\cos q_1+m_2r_2\cos(q_1+q_2)\\m_2r_2\cos(q_1+q_2)\end{bmatrix}.
+\end{aligned}
 \label{eq:coriolis_1}
 \end{equation}
 Both velocity-bias components matter. The first contains a factor-two cross term and a squared distal-rate term; the second contains the proximal-rate squared. Their signs follow the stated relative-angle convention. They satisfy $v^Th_v=\tfrac12v^T\dot Mv$, the identity needed for conservative energy balance.
 
-At $q=(45,70)$ degrees and $v=(8,12)$ rad/s, $\cos(q_1+q_2)=\cos115^\circ=-0.422618$. All computations use unrounded values; displayed matrices are rounded:
+At $q=(45,70)$ degrees and $v=(8,12)$ rad/s, the combined angle has cosine
+\begin{equation}
+\cos(q_1+q_2)=\cos115^\circ=-0.422618.
+\end{equation} All computations use unrounded values; displayed matrices are rounded:
 \begin{equation}
 M\simeq\begin{bmatrix}0.152875&0.010104\\0.010104&0.006000\end{bmatrix}
 \quad\mathrm{kg\,m^2}.
@@ -199,9 +218,11 @@ The regularizer $\varepsilon$ has the denominator's units and must be reported. 
 
 For the two-rod snapshot, choose $W=(0,1)$, absolute value, $B=I$, $\varepsilon=0$, and the illustrative torque box $|u_1|\le2$ N\,m, $|u_2|\le0.2$ N\,m. These are chosen limits, not muscular capacity estimates. The exact scalar projection bound is
 \begin{equation}
-s=\sum_j |(WM^{-1})_j|\bar u_j
-=12.395482(2)+187.541158(0.2)
-\simeq62.299196\quad\mathrm{rad/s^2}.
+\begin{aligned}
+s&=\sum_j |(WM^{-1})_j|\bar u_j\\
+&=12.395482(2)+187.541158(0.2)\\
+&\simeq62.299196\quad\mathrm{rad/s^2}.
+\end{aligned}
 \label{eq:dcr_example_coriolis}
 \end{equation}
 The bound is attained at a vertex of the torque box. The corresponding ratio is
@@ -255,7 +276,7 @@ The next chapter studies constraint forces. Those forces are essential to a feas
 
 \begin{exercises}{Chapter Exercises}{ex:chapter_6_exercises}
 \begin{enumerate}
-\item Starting from the two COM positions above, recover all entries of $M$ using $T=\tfrac12\sum_i m_i\|\dot c_i\|^2+\tfrac12J_1v_1^2+\tfrac12J_2(v_1+v_2)^2$. Explain why a COM inertia and a pivot inertia cannot be interchanged without a parallel-axis correction.
+\item Starting from the two COM positions above, recover all entries of $M$ using the displayed sum of translational and rotational kinetic energies. Explain why a COM inertia and a pivot inertia cannot be interchanged without a parallel-axis correction.
 \item Derive $h_v$ from the Euler--Lagrange equations and $h_g$ from $\nabla V$. Verify $v^Th_v=\tfrac12v^T\dot Mv$, and recover both components of the stated reference input. Explain why zero applied input does not imply constant velocity.
 \item For a uniform rod with mass $2$ kg and length $0.7$ m, let $\theta$ measure displacement from vertically downward. At $\theta=45^\circ$, the pivot inertia is $mL^2/3=0.326667$ kg\,m$^2$ and gravity acceleration is $-3g\sin\theta/(2L)=-14.864395$ rad/s$^2$. Verify these values. An illustrative $+10$ N\,m input adds $30.612245$ rad/s$^2$; it is not a measured muscle capacity.
 \item Replay the registered three-link Python golden fixture without changing its parameters or source authority. Report its terminal state and units, then assess step refinement separately. Explain why matching the fixture cannot establish a second engine, flexible-shaft validity or an individual golfer's muscle state.

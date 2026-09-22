@@ -1,11 +1,11 @@
 # Agent Handoff — AffineDrift
 
-Current technical review: issue4427 rewrites both Chapter6 editions and the
-canonical zero-torque article. Independent mechanics and contract tests pass;
-print/browser qualification and evidence binding remain pending. Putting is
-live960/960; IAA4426 has protected auto-merge enabled. Read
-`docs/development/HANDOFF.md` and `technical-review/zero-torque-preparation.md`
-for the reproducible derivation and publication dependencies.
+Current work: #4427, branch `fix/zero-torque-counterfactual-rigor`, commit `SELF`;
+PR not created. Three sources and complete local print/browser review saved.
+Next: bind committed evidence, restore route acceptance, and open a regular PR.
+IAA #4426 merged at99aa5835; deployment35796355561 is pending. Verify publication
+before merging the successor. Read docs/development/HANDOFF.md and the complete
+zero-torque review report. The goal remains active; no draft PRs.
 
 ## Deferred Impact Evidence - 2026-09-22
 

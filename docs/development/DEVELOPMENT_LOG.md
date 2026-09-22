@@ -26,9 +26,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/zero-torque-counterfactual-rigor`
 - **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; full three-source rewrite; eleven new checks and twelve existing contract tests pass; published-source regression failed before correction)
+- **Last verified:** 2026-09-22 (SELF; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
-- **Next step:** Render and inspect the isolated chapter PDF and both public routes before binding acceptance evidence.
+- **Next step:** Bind both reviewed routes and dependent audit records to the final committed source/render checkpoint.
 
 ### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 
@@ -39,7 +39,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/induced-acceleration-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex`, `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd`, `tests/test_induced_acceleration_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
+- **Last verified:** 2026-09-22 (SELF; PR4426 merged as99aa5835; deployment35796355561 pending; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
 - **Next step:** Eight findings and12 evidence paths bound to9981bddf; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Complete protected checks on regular PR4426; putting deploy35792227837 must finish first.
 

@@ -1,19 +1,35 @@
 # Current Technical Review Checkpoint — #4427
 
-Branch `fix/zero-torque-counterfactual-rigor` starts at03db46ff. All three
-zero-torque sources are rewritten; ten independent mechanics checks plus the
-published-source regression and twelve existing contract checks pass. The
-source regression was red before correction. Two routes are temporarily
-deferred until complete print/browser QA and committed evidence binding.
-Read technical-review/zero-torque-preparation.md for findings, exact worked
-values, source access and limitations. No adapter, schema or fixture changed.
+Repository/worktree: C:/Users/diete/Repositories/AffineDrift-technical-review.
+Branch `fix/zero-torque-counterfactual-rigor`; checkpoint `SELF`; PR not created.
+Issue #4427 under Physics #4054/core #4058, corpus #4021 and epic #4009.
+Complete three-source rewrite, independent mechanics, and final print/browser
+review are saved. All 128 paired expressions agree; nine print pages and all
+26/16 chapter/article displays were inspected. The two-route production gate
+passes 8/8; expanded overview passes four theme/width accessibility cases.
+All 25 chapter and eight article mobile equation scrolls reach their endpoints.
+Read reports/technical-review/zero-torque-review.md and its render-verification
+JSON for exact scope, derivation, adversarial limits and source access.
 
-Putting is shipped: ded63640, deployment35792227837, live960/960 and all four
-putting cases pass. Receipt reports/technical-review/putting-roll-publication.json.
-IAA regular PR4426 head03db46ff has protected auto-merge enabled; all checks
-except pending e2e were green when enabled. Verify its main/live result before
-merging this successor. The goal remains active; no draft PRs. Updated entries:
-DL-#4427 and DL-#4422. Next: isolated print and both public-route render review.
+Final evidence binding is next: commit these source/report bytes, refresh the
+manifesto intervention dependency at that commit, then carry forward 13 audit
+dependencies with byte comparisons and bind both zero-torque routes. Restore
+the 219-route census only after binding. Issue #4428 separately tracks the
+manifesto notation-units error; no full-page reacceptance is implied here.
+
+IAA #4426 merged to remote main 99aa58356f45f4ff2bf15dd90dc735460dc8d3b4;
+deployment 35796355561 is still in progress. Verify its live artifact before
+merging this successor. Putting is shipped at ded63640 with live 960/960.
+After evidence binding, integrate origin/main normally, open a regular PR
+(never draft), complete checks, merge and verify publication. Goal remains active.
+Entries advanced: DL-#4427 and DL-#4425. Preserve unrelated planning records.
+Disk headroom is about 30 MB and falling externally; save checkpoints promptly.
+Many older untracked QA artifacts are present; stage only explicit task paths.
+
+Validation: eleven new mechanics tests and twelve existing ZTCF contract tests
+pass. Inventory test initially caught the expected stale article digest after
+presentation edits; regeneration repaired it; all 41 selected tests then passed.
+No adapter, fixture, schema, existing shared CSS or predecessor evidence changed.
 
 # Current Technical Review Checkpoint — #4425
 
