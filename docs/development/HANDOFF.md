@@ -2,9 +2,11 @@
 
 Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
 `DEVELOPMENT_LOG.md`, DL-#4415/#4413/#4412. Branch `fix/ground-reaction-rigor`,
-checkpoint SELF, no PR yet. Paired Chapter15 corrections and 16 mechanics/contract
-checks are complete; rendering, citation-metadata evidence carry-forward and
-source-bound acceptance remain pending. Route status is honestly deferred.
+checkpoint SELF, no PR yet. Scientific source e0ce6133 is pushed. All 13 print
+pages and four public browser cases pass; 118 paired math expressions match,
+with no final math overflow or errors. Metadata-only evidence carry-forward is
+verified for Chapters16/22. Bind this complete review/render checkpoint next;
+route status remains deferred until binding is complete.
 Anatomy #4414 merged green (4ac3a34a); verify deployment35771389008. Preface#4416
 has protected auto-merge enabled. Merge remote main into this branch after it
 lands. Preserve the broader active goal; do not treat this as corpus completion.

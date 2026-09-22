@@ -86,7 +86,8 @@
   merged normally, final diff checked and 19 evidence-boundary tests passed.
   Protected auto-merge is enabled; monitor checks and exact-main publication.
 - **Current:** #4415, branch `fix/ground-reaction-rigor`, based on the published
-  preface branch. SELF saves a paired Chapter 15 scientific correction; no PR yet.
+  preface branch. Scientific source e0ce6133 is pushed; no PR yet. SELF saves
+  final render/review evidence and verifies metadata-only dependent carry-forward.
   Both original sources were read completely. Print's third-law/sign mistakes,
   omitted club boundary, unconditional work claims, drift-only reaction,
   shoulder-to-GRF shortcut and universal coaching waveform have been replaced.
@@ -95,15 +96,18 @@
   Both editions include eight worked solutions and honest validation design.
 - **Bibliography:** primary publication records correct Joo, Sturdy and Werling
   authors in textbook and shared proximal-distal databases. This is metadata
-  correction only. Chapter 16/22 do not cite those keys; verify exact diffs and
-  carry forward dependent evidence without inventing a new scientific review.
+  correction only. Chapter 16/22 do not cite those keys; exact diffs and all their
+  other evidence were verified byte-identical. Their dependency records now bind
+  to e0ce6133 without claiming a new chapter scientific review.
 - **Validation:** 11 independent balance/KKT/wrench/contact checks plus five
   existing chapter contract tests pass; Black100/Ruff pass. Title audit638 and
-  citation audit pass. Actual-preamble print compilation succeeds; final print
-  layout and public browser QA are still in progress. The chapter route is
-  deferred until complete evidence is committed and bound.
-- **Next:** finish print/web validation and report, bind Chapter 15 evidence and
-  bibliography carry-forward, then open a regular PR after merging remote main
+  citation audit pass. All 13 final print pages were inspected, with no overflow
+  or unresolved references. All 118 paired math expressions match. Four public
+  browser cases pass with clean axe; settled math has no clipping, errors or
+  broken anchors after four display groups were split. The chapter route stays
+  deferred until this complete evidence checkpoint is committed and bound.
+- **Next:** bind Chapter 15 to SELF's complete source/report/render checkpoint,
+  then open a regular PR after merging remote main
   once #4416 lands. Verify anatomy/preface publication in parallel. Preserve
   broad parent issues as active; source-only metadata does not complete a book.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4415 lease
