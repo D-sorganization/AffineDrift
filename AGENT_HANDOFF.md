@@ -106,8 +106,9 @@
   the complete report/render record.
   SELF binds four findings and all four evidence paths to47321eb8 after
   verifying committed LF bytes. Route review is complete; publication is pending.
-- **Next:** save/push SELF, then open a regular #4418 PR after
-  #4417 lands and main is merged normally. Keep delivery and publication gates
+- **PR:** regular #4419 is open; SELF records its dependency on #4417.
+- **Next:** merge #4417 after protected checks; integrate main normally into
+  #4419 and verify its final diff excludes the prerequisite GRF changes. Keep delivery and publication gates
   separate; verify earlier live routes while their successor deployment runs.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4418 lease
   5782825163 and presencee4366cf4 expire21:40Z September22. Inbox has no reported

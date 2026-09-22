@@ -2,13 +2,14 @@
 
 Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
 `DEVELOPMENT_LOG.md`, DL-#4418/#4415/#4413/#4412. Branch
-`fix/superposition-feasible-inputs`, checkpoint SELF, no PR yet. Complete
+`fix/superposition-feasible-inputs`, checkpoint SELF, regular PR4419. Complete
 standalone-article reread and remaining feasible-input/contact/task corrections
 are saved in source checkpointa2cb282d with11 passing mechanics checks. SELF
 saves the final report/render record: four cases,416 expressions,21 verified
 mobile math scrollers and selected visual inspections. SELF binds four findings
 and all four evidence paths to complete checkpoint47321eb8 using verified
-committed LF bytes. Save/push and open a regular PR after GRF delivery.
+committed LF bytes. SELF records regular PR4419; merge GRF first, integrate main normally and
+verify the final superposition-only diff.
 GRF regular PR4417 at7ee71416 awaits protected CI after a gravity-constant naming
 fix and committed-LF evidence correction. Science/rendering is unchanged.
 Anatomy and preface merged; verify their live routes in successor deploy35774559003.
