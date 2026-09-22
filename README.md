@@ -19,6 +19,13 @@ contribution here is the application, synthesis, and review workflow around golf
 swing models: assumptions, derivations, references, simulations, and open
 limitations tracked together and visible to a reader.
 
+## Future Validation Planning
+
+[The Board planning catalog](docs/development/planning/README.md) preserves
+unavailable empirical and perceptual evidence requirements. The impact/acoustics
+epic stays active for source review and qualified numerical synthesis; deferral
+does not establish player-specific effects, sound pressure or sweetness.
+
 ## Read the material
 
 | Start here                                                                                | What it covers                                                   |
