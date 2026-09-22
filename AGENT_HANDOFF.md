@@ -113,9 +113,11 @@
 - **Integration:** SELF merges protected preface main581857cb normally. Its
   complete tree was verified identical to our existing preface parent053f88a5;
   conflict resolution preserves the later GRF records and all peer sections.
-- **CI follow-up:** SELF names the existing gravity value GRAVITY_M_S2 for the
+- **CI follow-up:** test checkpoint8feeaa11 names the existing gravity value GRAVITY_M_S2 for the
   repository quality gate; no equations or values changed. All 29 mechanics/inventory checks and the tracked-Python quality gate pass.
-  SELF binds the unchanged science/render plus test naming to 8feeaa11. Superposition #4418 is leased; its
+  Evidence binds the unchanged science/render plus test naming to 8feeaa11.
+  SELF fixes a Windows CRLF-versus-committed-LF digest mismatch exposed by CI;
+  all seven evidence bytes are compared with the committed checkpoint. Superposition #4418 is leased; its
   uncommitted next-article draft is saved in local QA/superposition-4418-working.qmd.
 - **Next:** pass regular PR #4417 protected checks and merge; verify successor
   main publication before marking delivery shipped. Verify anatomy/preface publication in parallel. Preserve

@@ -4,7 +4,8 @@ Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
 `DEVELOPMENT_LOG.md`, DL-#4415/#4413/#4412. Branch `fix/ground-reaction-rigor`,
 checkpoint SELF, regular PR #4417. CI requested the named GRAVITY_M_S2
 constant in its numerical test; SELF changes only that identifier and refreshed
-evidence digests. SELF binds the corrected test checkpoint8feeaa11; all29
+evidence digests. Evidence binds to test checkpoint8feeaa11; SELF corrects its CRLF/LF hash
+difference and checks every evidence path against the committed bytes; all29
 mechanics/inventory tests and the tracked-Python quality gate pass. All six findings are source-bound to complete review
 checkpoint dfe90fed2658ab8b43b6e26a8208591aca150e9d. Final 19 audit/boundary tests
 pass. All 13 print pages and four public browser cases pass; 118 paired math
