@@ -122,7 +122,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | `articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.html` | `articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.html` | `articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | `articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | `articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.qmd` | 6 |
 | `/articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html` | `articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | `articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | `articles/The_Physics_of_Golf/quarto/ch25_motor_learning.qmd` | 1 |
@@ -365,7 +365,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-ef14cf95e2cc` | `/articles/The_Physics_of_Golf/quarto/ch19_aerodynamic_drag.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cb1f1f3aec30` | `/articles/The_Physics_of_Golf/quarto/ch20_soft_tissue_pliable.html` | Reviewed | — | None | None | 0 |
 | `ad-route-671af74df048` | `/articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.html` | Reviewed | — | None | None | 0 |
-| `ad-route-58651a60328b` | `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | Reviewed | — | None | None | 0 |
+| `ad-route-58651a60328b` | `/articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.html` | Reviewed | — | None | None | 5 |
 | `ad-route-014de473327d` | `/articles/The_Physics_of_Golf/quarto/ch23_dof_urdf_models.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f03c3bac009d` | `/articles/The_Physics_of_Golf/quarto/ch24_motor_control_brain.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b22748fa703e` | `/articles/The_Physics_of_Golf/quarto/ch25_motor_learning.html` | Reviewed | — | None | None | 0 |

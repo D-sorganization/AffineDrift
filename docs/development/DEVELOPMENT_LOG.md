@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4412 · Anatomy and Joint Modeling Scientific Review
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4412 (Physics #4054; corpus #4021; epic #4009)
+- **PR:** #4414
+- **Branch:** `fix/technical-review-resume`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch22_anatomy_joint_modeling.tex`, `articles/The_Physics_of_Golf/quarto/ch22_anatomy_joint_modeling.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `tests/test_anatomy_joint_rigor.py`, `tests/test_claim_audit_inventory.py`, `reports/technical-review/anatomy-joint-review.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `docs/development/technical-review/corpus-review-index.csv`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; complete paired source review; 16 mechanics/edition/label checks and 94 combined focused checks pass; full run 5368 passed with two stale shared-bibliography digest failures subsequently repaired, 79.06% coverage; actual-preamble 18-page chapter PDF compiled and all pages visually inspected; Quarto 1.8.26 public route rendered; 4/4 public browser cases pass, axe clean)
+- **Summary:** Corrects all identified Chapter 22 geometry, anatomical, work, contact and injury-inference errors, with seven worked exercises and explicit primary-source boundaries. Reopens unsupported prior acceptance; review evidence is bound to 14f1c148. CI exposed two stale figure-census assertions after removing the documented unpaired sketch; the expected counts are corrected without weakening parity checks. Protected publication remains pending.
+- **Next step:** Source 14f1c148 pushed; anatomy evidence bound and Chapter 16 additive bibliography/reading-links carry-forward verified. Pass PR #4414 checks, merge and verify exact-main publication; continue with #4413.
+
 ### DL-#4406 · Deploy Website Public-Site Verification Gate
 
 - **State:** in_review
@@ -33,29 +46,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4375 · Curious Golfer Mechanics and Evidence Reasoning
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4375 (epic #4009; corpus #4021; foundations #4058)
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4377 (regular)
 - **Branch:** `fix/4375-curiosity-rigor`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch30_curiosity_and_review.qmd`, `reports/technical-review/curiosity-mechanics-review.md`, `reports/technical-review/curiosity-checked-examples.json`, `docs/development/technical-review/curiosity-review.md`, `tests/test_proximal_distal_companion_contract.py`, `data/companion/pins.json`, `models/programming/freshness.qmd`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
 - **Started:** 2026-09-12
-- **Last verified:** 2026-09-13 (SELF; user requests protected merge to remote main followed by a pause; SELF; implementation f3a68326509c4ef0d97060b389b7a2531caedcf4 pushed with all normal hooks passing; all seven source/PDF hash bindings independently match committed Git objects; regular PR4377 opened; SELF, base 7b7ef6a15857d66497c61c78a2ccdf9f92f3a1f2; full original/revised source read; archived arrays and independent constructed examples pass;27 companion/pin checks pass; Ruff/Black100 and638 titles pass; original HTML/PDF render passed with a hierarchy defect; SELF repairs hierarchy, synchronizes the205-page PDF and records complete Chapter30 PDF/web reading; eight browser cases pass readable math and keyboard scrolling; root7257 passed5335 but failed two QA-file hygiene checks, repaired with8 focused checks; clean root15451 passes5337/29 skipped/132 deselected/59 warnings in192.94s, coverage79.29%; all14 local production route records pass with one clean axe scan; five dashboard evidence files independently match beca5d90 and review binding is updated; root70725 failed four subsequently repaired checks; final root25465 passes5335/29 skipped/132 deselected/59 warnings in193.66s, coverage79.29%; metadata/inventory22 checks pass)
+- **Last verified:** 2026-09-22 (merge32010d08d9980896c51f0c93ac875f23eb818556; successful exact deployment34730740904; downloaded live artifact10309497076:960/960 cases pass; independently inspected four companion-route records, all HTTP200 with zero overflow and no serious/critical axe violations; prior detailed numerical/render validation retained in technical review reports)
 - **Summary:** Corrects acceleration, wrench power and storage, forward versus instantaneous intervention, force-couple limits, numerical convergence and identifiability. Keeps the dialogue and extended examples. New issue4376 records direct-render/web chapter hierarchy drift; the corrected205-page PDF now carries the scientific update in both tracked destinations. No complete-book review or human performance qualification is asserted.
-- **Next step:** Protected-merge PR4377 after all required checks pass, verify remote main, then stop as requested.
+- **Next step:** None for this delivery; broader corpus work continues under #4009/#4021.
 
 ### DL-#4376 · Companion Chapter Hierarchy and PDF Synchronization
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4376 (epic #4009; companion to #4375)
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4377 (regular)
 - **Branch:** `fix/4375-curiosity-rigor`
 - **Paths:** `scripts/filters/companion-hierarchy.lua`, `tests/test_companion_hierarchy.py`, `articles/proximal-distal-a-journey-through-the-swing.qmd`, `articles/proximal-distal-a-journey-through-the-swing.pdf`, `docs/articles/proximal-distal-a-journey-through-the-swing.pdf`, `articles/proximal-distal-companion.css`, `reports/technical-review/companion-hierarchy-review.md`, `reports/technical-review/companion-hierarchy-verification.json`
 - **Started:** 2026-09-13
-- **Last verified:** 2026-09-13 (SELF; user requests protected merge to remote main followed by a pause; SELF; implementation f3a68326509c4ef0d97060b389b7a2531caedcf4 pushed with all normal hooks passing; all seven source/PDF hash bindings independently match committed Git objects; regular PR4377 opened; SELF; source base beca5d90e409ade8649bb57e4e1ab39dad7200ea; actual Pandoc RED-to-GREEN2 tests; actual Quarto HTML oneH1/thirty chapters; PDF205 pages, all30 chapter starts checked, every physical page188–205 visually read;29 web captures read;8 settled cases confirm math/readability/keyboard scroll; Ruff/Black100 pass; root7257 passed5335 but failed2 scratch-file hygiene checks, corrected and8 focused checks pass; clean root15451 passes5337/29 skipped/132 deselected/59 warnings in192.94s, coverage79.29%; local production route gate14/14 passes)
+- **Last verified:** 2026-09-22 (merge32010d08d9980896c51f0c93ac875f23eb818556; successful exact deployment34730740904; downloaded live artifact10309497076:960/960 cases pass; independently inspected four companion-route records, all HTTP200 with zero overflow and no serious/critical axe violations; prior detailed numerical/render validation retained in technical review reports)
 - **Summary:** Restores subordinate heading levels without changing chapter prose or incoming anchors. Rebuilds and synchronizes both PDFs with the corrected Chapter30 science. Preserves mobile equation type size. Integrates protected nullspace main squash7f0fed76; retains current turnover records through three documentation conflicts.
-- **Next step:** Protected-merge PR4377 after all required checks pass, verify remote main, then stop as requested.
+- **Next step:** None for this delivery; broader corpus work continues under #4009/#4021.
 
 ### DL-#4371 · Constraint Null Spaces, Dynamics and Golf Inference
 

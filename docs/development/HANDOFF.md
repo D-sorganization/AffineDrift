@@ -1,3 +1,21 @@
+# Current Technical Review Checkpoint — #4412
+
+The user resumed the full technical review on 2026-09-22. Canonical technical
+review continuation is in `AGENT_HANDOFF.md`, section Technical Content Review,
+and `docs/development/DEVELOPMENT_LOG.md`, DL-#4412. Branch
+`fix/technical-review-resume`, checkpoint SELF, regular PR #4414. The paired
+Chapter 22 scientific revision and local numerical/print/browser checks are
+complete. Source/evidence commit `14f1c1481530f8cf05d20539e18b5c2b19f836ce`
+is pushed and bound in the inventory. Chapter 16's bibliography/reading-links
+carry-forward preserves its prior scientific review. Protected checks, merge
+and exact-main publication remain pending. CI figure-census failures were
+reproduced and the counts corrected for the removed unpaired anatomy sketch. See
+`reports/technical-review/anatomy-joint-review.md` for the argument and source
+boundaries. Issue #4413 tracks the next preface review.
+
+The following previously merged persona-work handoff is retained for its
+separate scope; it is not the active technical-review task.
+
 # Implementation Handoff — #4409
 
 - Repository: `D-sorganization/AffineDrift`

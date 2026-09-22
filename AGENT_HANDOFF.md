@@ -75,100 +75,50 @@
 
 ## Technical Content Review
 
-- **User-requested pause:** finish and protected-merge regular PR4377, verify
-  its merge commit is on remote main, then stop. Do not start another article
-  review or automatically continue the corpus epic. This checkpoint records
-  the pre-merge state; the authoritative merge identity is on PR4377. At a
-  future user-requested restart, inspect that PR and its deployment before
-  advancing the delivery log from in_review to shipped. The full-corpus goal
-  is unfinished and is not being declared complete.
-- **Current work:** issues #4375/#4376, native children of epic #4009, corpus #4021 and
-  foundations #4058. Worktree `C:/Users/diete/Repositories/AffineDrift-technical-review`,
-  branch `fix/4375-curiosity-rigor`, checkpoint SELF; regular PR4377 is open. DL-#4375/#4376
-  are in_review. Implementation f3a68326509c4ef0d97060b389b7a2531caedcf4 is pushed;
-  all seven reported source/PDF hashes independently match its Git objects. Complete original and revised Chapter 30 source read; the
-  golfer/reviewer dialogue and both extended conversations remain. Source
-  corrections cover acceleration, wrench/joint power, storage, forward versus
-  instantaneous attribution, bounded-force couples, numerical convergence,
-  identifiability, null results and exact archived model evidence. Decisions and
-  reading boundaries: `reports/technical-review/curiosity-mechanics-review.md`;
-  independent numerical checks and six primary hashes:
-  `reports/technical-review/curiosity-checked-examples.json`.
-- **What the evidence establishes:** archived JSON and NPZ from provider
-  a1a613999eb0c744da96caa040941955eb210a21 agree on the inspected branch and
-  sensitivity results; no upstream rollout was rerun. The biological difference
-  is explicitly not converged in magnitude. New constructed mass, rotor,
-  wrench-transport and couple examples independently pass. Existing provider
-  revisions, states, dates and active lock are unchanged. The pins registry adds
-  only this wrapper's route to the existing unqualified a1a61399 record. Its
-  dashboard is regenerated; only that dashboard's two evidence digests change.
-  All five dashboard evidence paths now independently match committed beca5d90;
-  its metadata follow-up review is rebound to that source checkpoint. This does
-  not qualify the provider scientifically. All other inventory records remain unchanged.
-- **Current render checkpoint (SELF):** hierarchy #4376 is repaired with a
-  wrapper-scoped Lua filter. Actual HTML has one H1, thirty chapters and nested
-  30.1–30.3 sections; real-Pandoc tests preserve every heading ID and non-heading
-  block. The revised PDF has205 pages and Chapter30 starts at physical188.
-  Every page188–205 (full chapter, glossary, references) was visually read, and
-  both tracked PDF copies now match. All21 desktop and8 mobile web captures
-  were read. Eight settled width/theme cases have47 math expressions/four
-  displays, zero math errors and no page overflow; wide equations retain text
-  size and keyboard scroll. Details, safe rebuild procedure and exact hashes:
-  `reports/technical-review/companion-hierarchy-review.md` and
-  `reports/technical-review/companion-hierarchy-verification.json`.
-- **Remaining release checks:** verify all required checks on regular
-  PR4377, then use a protected merge against the exact passing head. The actual local
-  production route gate passes all14 width/theme cases after the existing
-  legacy-polyfill normalization, with one axe scan and zero serious/critical
-  findings. Dashboard metadata is bound to the independently checked beca5d90. The figure's small mobile labels and
-  floating site controls remain presentation limits recorded in the report.
-  Full-companion scientific review remains deferred. Do not claim that the
-  corrected chapter qualifies every other chapter or the provider revision.
-- **Validation:** source/example/pin validation at beca5d90 remains recorded in
-  the previous log entry. Current two real-Pandoc tests and Ruff/Black100 pass. Final metadata/inventory
-  checks pass after the five evidence-path identities were independently matched.
-  All normal commit/push hooks pass; Prettier changes were inspected for semantic
-  equivalence before restaging. No hook was bypassed.
-  Root7257 passed5335 but failed two hygiene checks caused by29 browser PNGs and
-  .playwright-cli at root. Those scratch files were moved into the review
-  directory; all8 hygiene/hierarchy checks pass. Clean root15451 passes5337/29 skipped/132
-  deselected/59 warnings in192.94s, coverage79.29%.
-  All render/browser handles have finished and the curiosity browser is closed.
-  Idle preview8767 remains. Six generated files were restored after proven
-  text/JSON equivalence. Keep browser sessions rooted in the review directory.
-- **Main integration:** committed f3a68326 integrates the protected nullspace
-  squash7f0fed760f3e1d45610f5612c900ed4c67c49302. Three documentation conflicts
-  were resolved after comparison with both parents, retaining current Chapter30
-  records and both SPEC rows. That merge is complete; do not
-  reintroduce the nullspace implementation in a second PR.
-- **Null-space delivery:** regular PR4373 is merged and shipped. All15 checks
-  passed at7b7ef6a15857d66497c61c78a2ccdf9f92f3a1f2. Exact deployment34727537466
-  succeeded at7f0fed76; live artifact10309086348 was downloaded and all960
-  unique records/240 routes individually checked: HTTP200/pass, no failures,
-  overflow or retries. All8 article/bibliography cases pass;240 actual route
-  axe scans have zero serious/critical violations. DL-#4371 is shipped.
-  Original local scientific evidence remains bound to fdd6effabcb6f955d2d18bc2587e1208c4cddcd2.
-- **Previously published:** muscle PR4372 at3f87332512858febf2c131fbda44b62acad8d222,
-  exact deployment34722147597 and live artifact10306629143: all956 unique
-  records/239 routes verified HTTP200/pass, no failures/overflow/retries;
-  239 axe route scans, zero serious/critical findings. Strokes PR4368 at
-  93bbfd29d3e69147dedef153749a47a1b650dfe9, deployment34717587828,
-  artifact10305443224 likewise verified956/239. Forces PR4357 at0c753400,
-  deployment34477888759/artifact10153444359 verified956/239. That forces
-  publication also proves unchanged Chapter3 content from ancestor e9ad402e;
-  the earlier exact double-pendulum deployment was cancelled, not successful.
-  Constraint4352, affine4350, brain4348, triple4346, fascia4341 and DCR4338
-  remain shipped; their detailed audits are retained in the review directory.
-- **Coordination and preservation:** session technical-review-20260912-curiosity,
-  lease5649526663 expires01:56Z September13; presence4ce6e086-0683-40ca-b506-6b180b8b5307
-  expires02:18Z. Latest inbox has no conflicts/messages; unrelated rejected
-  identity-change warning is not proof of vacancy. Preserve original checkout,
-  immutable articles/proximal_distal_energy_transfer/, active authority pins,
-  peer Chapter29 and impact/acoustics4253/4255, and all other handoff/DL sections.
-  Stage explicit paths only; thousands of untracked local QA files remain.
-  Shared TOC4370 and keyboard4374 remain open. Central DL checker has previously
-  reported peer1595/3903/3902 metadata gaps; do not silently rewrite peer entries.
-  Never mutate git while a local validation handle is live.
+- **Active:** the user resumed the complete review on September 22. Continue
+  long-form scientific review with regular PRs and protected merges. The corpus
+  is not complete merely because routes carry reviewed metadata.
+- **Current delivery:** #4412 under Physics #4054, corpus #4021 and epic #4009.
+  Branch `fix/technical-review-resume`; taxonomy checkpoint607fae7e is pushed.
+  Source/evidence checkpoint `14f1c1481530f8cf05d20539e18b5c2b19f836ce` is pushed.
+  SELF binds both editions, report, numerical tests and settled rendering evidence
+  to that exact checkpoint; five corrected findings restore reviewed status.
+  Regular PR #4414 is open; protected merge and publication remain pending.
+- **Technical result:** correct joint constraints/rank, anatomical reductions,
+  moving shoulder centers, coupled wrist energy, rigid-grip club roll, contact
+  power, body counts and limits of clinical inference. The complete rationale,
+  counterexamples and source-reading boundaries are in
+  `reports/technical-review/anatomy-joint-review.md`.
+- **Validation:**16 mechanics/edition/label checks;94 combined mechanics,
+  inventory, deployment-boundary, citation and LaTeX checks pass. Full suite:
+  5368 passed/29 skipped/132 deselected,79.06% coverage; two stale bibliography
+  digest failures repaired and covered by that focused rerun. Quarto1.8.26
+  public-route build and18-page chapter-only print build pass; all PDF pages
+  inspected. Four production desktop/mobile light/dark cases pass, axe clean.
+  Settled scrolling rendered all 109 equations in all four cases without display
+  overflow or broken anchors. CI at 76f0ee1f exposed stale figure census counts
+  after the documented removal of the unpaired anatomy sketch. SELF updates
+  those counts (37 figures, 6 TikZ, 5 remaining missing pairs); no gate is removed.
+  The two CI failures were reproduced locally. Protected delivery remains.
+- **Shared dependency:** Chapter16 keeps its original review date and findings.
+  Every old bibliography record and seven other evidence files match
+  a2d482bff6252be13cbced65cddb3b3f353027ac byte-for-byte. Its QMD differs only
+  by the existing On This Site block from 7a0a9986; both link targets exist. Five
+  bibliography entries were added for Chapter22. The dependency now binds
+  to 14f1c148; this is not a new Chapter16 scientific review.
+- **Next action:** push the final PR #4414 evidence update, pass protected checks,
+  merge and inspect the exact-main deployment. Then claim and address #4413
+  (print/web preface discrepancy) and continue the wider corpus.
+- **Previous delivery verified:** PR4377 merge32010d08d9980896c51f0c93ac875f23eb818556,
+  deployment34730740904, live artifact10309497076 inspected September22:960/960
+  cases pass; all four companion-route records pass with zero overflow and a
+  clean axe scan. DL-#4375 andDL-#4376 are shipped.
+- **Coordination:** session `technical-review-20260922-anatomy`, issue4412 lease
+  5780993804 expires19:29Z; presence11f6e93b expires20:03Z September22. Inbox has
+  no messages/conflicts but reports incomplete evidence from malformed unrelated
+  events. Preserve peer worktrees, immutable source archive, authority pins and
+  unrelated handoff sections. Explicit staging only; old untracked QA artifacts
+  are extensive. Never mutate git during validation.
 
 ## Protected Authority
 

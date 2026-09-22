@@ -275,10 +275,11 @@ class TestAuditBookPhysicsOfGolf:
         # #4313 replaces one unpaired synthesis map with two checked figure pairs.
         # #4315 replaces one unpaired tissue sketch with two checked figure pairs.
         # #4320 replaces an unpaired energy-flow sketch with two checked figure pairs.
-        assert res.chapters_with_latex_figures == 29
+        # #4412 removes the unpaired anatomy sketch that conflated spherical joints and 3R.
+        assert res.chapters_with_latex_figures == 28
         # #4326 replaces an unpaired learning-stage sketch with two checked figure pairs.
         # #4331 replaces an unpaired muscle schematic with two checked figure pairs.
-        assert res.total_latex_figures == 38
+        assert res.total_latex_figures == 37
         # #4160, #4161, and #4164 replace diagrams with shared print/web images.
         # #4283 replaces the spine schematic with a shared evidence/model diagram.
         # #4333 pairs the shaft figures; #4336 adds a paired damping-regime figure.
@@ -288,11 +289,11 @@ class TestAuditBookPhysicsOfGolf:
         # #4349 pairs a computed reduced drift field and proved optimal-control examples.
         # #4351 replaces the dimensionally incorrect hinge sketch with verified trajectories.
         # #4369 replaces the muscle sketch with a shared feasibility/power figure.
-        assert res.total_latex_tikz == 7
+        assert res.total_latex_tikz == 6
         assert res.total_latex_includegraphics == 31
-        assert res.total_latex_fig_labels == 38
+        assert res.total_latex_fig_labels == 37
         assert res.total_quarto_figures == 32
-        assert res.missing_figures_count == 6
+        assert res.missing_figures_count == 5
         assert res.is_in_full_parity is False
         muscle = next(
             chapter
@@ -388,7 +389,7 @@ class TestCLI:
         data = json.loads(captured.out)
         assert data["book_name"] == "The_Physics_of_Golf"
         assert data["total_chapters"] == 34
-        assert data["total_latex_figures"] == 38
+        assert data["total_latex_figures"] == 37
 
     def test_cli_check_mode_fails_when_discrepancy(self) -> None:
         repo_root = Path(__file__).resolve().parent.parent

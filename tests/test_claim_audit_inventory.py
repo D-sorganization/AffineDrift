@@ -493,7 +493,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4056"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4055"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"]
-    assert len(deferred) == 0
+    assert deferred == []
     assert len(reviewed_completed_batches) == 219
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
