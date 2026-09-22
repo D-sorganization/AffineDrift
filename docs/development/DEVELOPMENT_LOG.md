@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/putting-roll-rigor`
 - **Paths:** `articles/putting-roll-models.qmd`, `tests/test_putting_roll_rigor.py`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; entire existing article read; 12 independent mechanics/calibration/capture checks pass; article rewrite and render review pending)
+- **Last verified:** 2026-09-22 (SELF; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; detailed render review pending)
 - **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
-- **Next step:** Rewrite the article and reopen its source-only acceptance; validate all worked values and final rendered reading; deliver a regular PR after predecessor publication gates.
+- **Next step:** Complete detailed equation/overview render review and scientific evidence binding; deliver a regular PR after predecessor publication gates.
 
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
@@ -47,7 +47,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4418 (foundations #4058; corpus #4021; epic #4009)
 - **PR:** #4419
@@ -56,7 +56,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; protected main a6774e33 integrated after exact-tree verification against 7ee71416; final diff excludes prerequisite GRF science; complete article reread;11 independent/existing checks pass; Black100/Ruff/title638 and changed-file quality pass; final four browser cases and416 settled math expressions pass; all21 wide mobile math scrollers reach their endpoint; selected section/equation views inspected)
 - **Summary:** Retains earlier mechanics corrections and adds feasible-reference input sets, constrained inverse-mass and task maps, a circular-guide example and correct reaction/virtual-work language. Repairs three wide or spuriously numbered equation groups.
-- **Next step:** PR #4419 merged as 31cdc615; verify live deployment 35782578807 before marking shipped.
+- **Next step:** None for this delivery; deployment 35782578807 succeeded at 31cdc615, live artifact 10720600549 passes 960/960 cases and all four superposition records. Publication evidence: reports/technical-review/superposition-publication.json.
 
 ### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 

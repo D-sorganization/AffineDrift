@@ -1,15 +1,15 @@
 # Current Technical Review Checkpoint — #4422
 
 Branch `fix/putting-roll-rigor` begins at force head 4047d917. SELF saves
-research preparation and 12 passing independent putting checks; the article
-has not yet been edited. Issue #4422 is claimed under #4059/#4021/#4009.
+the full putting rewrite, 15 independent passing numerical checks and four
+production browser cases. Detailed equation/overview QA is in progress. Issue #4422 is claimed under #4059/#4021/#4009.
 Lease/presence expire 23:09 UTC September 22. Inbox has no reported messages
 or conflicts but is incomplete because of unrelated malformed board records.
 See `technical-review/putting-roll-preparation.md` for derivations, source
-access limits and the next steps. No new article acceptance is claimed.
+access limits and the next steps. The route is deferred pending final evidence binding; no completed acceptance is claimed.
 
-Delivery: superposition #4419 merged as 31cdc615; deploy 35782578807 has
-passed build and is deploying. Force #4421 is a regular PR at 4047d917;
+Delivery: superposition #4419 is shipped at 31cdc615; deploy 35782578807
+and live artifact 10720600549 passed 960/960 cases. Publication record saved. Force #4421 is a regular PR at 4047d917;
 Python checks pass and E2E is pending. Wait for superposition live success,
 then enable protected squash auto-merge for that exact force head. Save both
 publication records independently of frozen scientific evidence. Do not alter

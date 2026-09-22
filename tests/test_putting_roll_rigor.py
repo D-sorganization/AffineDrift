@@ -135,3 +135,24 @@ def test_finite_ball_free_fall_criterion_differs_from_full_hole_chord() -> None:
     # This is a separately labeled historical fit that includes lip interactions.
     fitted_half_width = hole_radius * np.sqrt(1 - 1.5 / 1.63)
     assert fitted_half_width * 1000 == pytest.approx(15.243, rel=1e-4)
+
+
+@pytest.mark.parametrize(
+    "stimp, launch", [(8, 2.6294556075), (10, 2.3864324811), (12, 2.2003372211)]
+)
+def test_worked_three_metre_putts_from_contact_phase_integration(stimp: int, launch: float) -> None:
+    friction = 0.4 * GRAVITY_M_S2
+    rolling_loss = 1.83**2 / (2 * 0.3048 * stimp)
+
+    def sliding(_time: float, state: np.ndarray) -> list[float]:
+        return [state[1], -friction, friction / (INERTIA_RATIO * BALL_RADIUS_M)]
+
+    def zero_slip(_time: float, state: np.ndarray) -> float:
+        return float(state[1] - BALL_RADIUS_M * state[2])
+
+    solution = solve_ivp(
+        sliding, (0, 0.25), [0, launch, 0], events=zero_slip, rtol=1e-11, atol=1e-12
+    )
+    displacement, speed, spin = solution.y_events[0][0]
+    assert speed == pytest.approx(BALL_RADIUS_M * spin)
+    assert displacement + speed**2 / (2 * rolling_loss) == pytest.approx(3, abs=1e-9)
