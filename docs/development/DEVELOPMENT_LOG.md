@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4425 (Physics #4054; corpus #4021; epic #4009)
+- **PR:** #4426
+- **Branch:** `fix/induced-acceleration-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex`, `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd`, `tests/test_induced_acceleration_chapter_rigor.py`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
+- **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
+- **Next step:** Eight findings and12 evidence paths bound to9981bddf; three bibliography dependents carried forward with all other bytes unchanged;219 census restored. Complete protected checks on regular PR4426; putting deploy35792227837 must finish first.
+
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
 - **State:** in_review
@@ -29,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
 - **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
-- **Next step:** Seven findings bound to a17f5ded with all five evidence paths verified against committed LF bytes; zero-deferred census restored. Drive regular PR #4424 through protected checks and await force publication before merge.
+- **Next step:** Protected merge ded63640 is tree-identical to checked head cd55cce8. Verify deployment35792227837 and live artifact, then mark shipped; source evidence remains a17f5ded.
 
 ### DL-#4253 - Deferred Impact Evidence Planning
 
@@ -46,16 +59,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4420 (measurement #4059; corpus #4021; epic #4009)
 - **PR:** #4421
 - **Branch:** `fix/force-measurement-rigor`
 - **Paths:** `articles/technology-force-measurement.qmd`, `tests/test_force_measurement_rigor.py`, `data/trust/claim_audit_inventory.json`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; complete article reread and eight corrected finding groups; eleven new mechanics/instrument cases plus eleven existing GRF cases pass; 29 article/inventory checks pass; Black100/Ruff/title638 and CSS budget/architecture pass; final rendered review recorded; eight findings bound to complete checkpoint 99d1653c with all five evidence digests checked against committed LF bytes)
+- **Last verified:** 2026-09-22 (protected merge9ef76c6e; replacement deployment35789304756 at d9a8d08e succeeded; artifact10721968227 passes all960 live cases, including four force cases with zero overflow/axe failures)
 - **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
-- **Next step:** PR #4421 merged as 9ef76c6e; its tree matches 4047d917. Verify deployment35787101015 and live article cases before marking shipped.
+- **Next step:** None for this delivery; publication receipt saved separately from frozen scientific evidence. Continue corpus review.
 
 
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority

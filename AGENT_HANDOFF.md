@@ -1,5 +1,11 @@
 # Agent Handoff — AffineDrift
 
+Current technical review: paired IAA issue4425 is fully rewritten and locally
+rendered; eight findings are bound to06c948b7 with verified bibliography
+dependency carry-forward. Force is live; putting merged asded63640 and
+deployment35792227837 is pending. See docs/development/HANDOFF.md
+for exact checks, disk recovery and force/putting publication dependencies.
+
 ## Deferred Impact Evidence - 2026-09-22
 
 - Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-validation-planning`.
@@ -93,6 +99,11 @@
   branch; do not duplicate them here.
 
 ## Technical Content Review
+
+- **Current implementation:** paired Chapter30b review #4425, branch
+  `fix/induced-acceleration-rigor`, starts at d3bc7d76. Complete original source
+  reads and eight new/19 combined mechanics checks are saved; rewrite pending.
+  Current HANDOFF and induced-acceleration-preparation.md lead.
 
 - **Force merged:** #4421 passed protected checks and merged as 9ef76c6e;
   tree equals4047d917. Deployment35787101015 is pending.

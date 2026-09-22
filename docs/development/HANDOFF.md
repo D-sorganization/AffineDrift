@@ -1,3 +1,43 @@
+# Current Technical Review Checkpoint — #4425
+
+Branch `fix/induced-acceleration-rigor` now contains the complete paired Chapter30b
+rewrite, nine new independent numerical checks, corrected bibliographies and a
+review report explaining the argument and primary-source access limits. Twenty
+numerical checks pass with the existing constrained tests; fourteen attribution
+contracts pass with their explicit marker. All128 body math expressions agree.
+All ten isolated print pages inspected, zero overfull/undefined/duplicate warnings.
+The root public route passes four production cases; all139 browser expressions
+render in each case. All18 desktop displays inspected and all11 wide mobile
+expressions reach their horizontal endpoints. Eight corrected findings and all12 evidence paths are bound to9981bddf.
+Three prior bibliography-dependent reviews were carried forward after every
+other review/corrected-finding evidence path matched its prior commit and this
+checkpoint exactly. The pre-existing open TOC finding remains unchanged.
+
+Issue4425 is a native subissue of4054 under4021/4009. Lease/presence expire
+23:44UTC September22. Read technical-review/induced-acceleration-preparation.md
+and reports/technical-review/induced-acceleration-review.md for scope and limits.
+The shared include and predecessor force/putting scientific evidence are unchanged.
+The route is reviewed and the219-route census restored; publication is pending.
+
+Putting regular PR4424 merged asded63640, tree-identical to checked head cd55cce8;
+its source/render evidence remains frozen at a17f5ded. Force4421 merged as9ef76c6e.
+Its first deployment35787101015 was superseded by planning PR4423; replacement
+35789304756 at d9a8d08e succeeded. Live artifact10721968227 passes960/960 and
+four force cases; publication receipt saved. Putting deployment35792227837 is pending; verify it before the next merge.
+Normal integration a1197c03 preserves all scientific bytes and main SPEC order.
+Preserve all planning work.
+
+Disk space hit zero during derived screenshot assembly and checks. All tracked
+JSON files parsed successfully afterward; no chapter source was truncated. Removed
+only untracked downloaded PNG copies in six older CI artifact folders (about208MB),
+retaining JSON evidence, source, frozen reports and current QA. Headroom continues
+to fall due activity outside these small chapter outputs. Re-run interrupted checks;
+never mark a partial check complete. Save and push checkpoints promptly.
+
+Regular PR4426 is open and attached. All eight full textbook builds and Python3.12 tests passed. Static checks found an unnamed gravity literal in the new test; SELF extracts GRAVITY_M_S2 without numerical changes. All12 IAA evidence paths are verified at9981bddf; only the named test constant differs from06c948b7. Source/render bytes and bibliography carry-forward remain unchanged. The broad local quality scan includes untracked drafting helpers; its194 unrelated findings are not a clean-CI result. The tracked new test passes the same file checker.
+Wait for putting deployment before enabling merge. Scientific/render source bytes remain frozen at06c948b7; the test-only evidence refresh is9981bddf. Evidence; update publication/turnover separately. This is analytical
+chapter acceptance, not an empirical golf or full-book result. The goal is active.
+
 # Deferred Validation Planning Checkpoint
 
 ## Deferred Impact Evidence - 2026-09-22
