@@ -59,7 +59,11 @@ If you're studying the golf swing, the knee is essentially a hinge. Model a 1-DO
 Never add complexity you don't need. Never remove complexity the physics requires.
 \end{principle}
 
-\section{Joint Types in Robotics --- A Taxonomy}
+\section{Joint Types in Robotics --- A Taxonomy}\label{sec-joint_types}\label{sec:joint_types}
+
+A joint primitive specifies admissible relative motion. It does not specify the actuator, muscle recruitment, friction, contact pressure or tissue tolerance. For two otherwise free rigid bodies, relative configuration has six dimensions. A regular joint with \(f\) local freedoms imposes \(6-f\) independent constraints. Count the rank of the constraints, not the number of entries in a rotation matrix \citep{Lynch2017}.
+
+In this section, \(R\in SO(3)\) maps vector components from body B's joint frame into body A's joint frame. The vector \(p\) is the displacement from A's joint-frame origin to B's, expressed in A. Attach those origins at the modeled joint center, not at the segment centers of mass. A statement that \(p=0\) therefore permits a segment center of mass to move on an arc. Joint axes are unit vectors and all angular velocities below are relative to A and expressed in A.
 
 \begin{figure}[h]
 \centering
@@ -84,142 +88,114 @@ Never add complexity you don't need. Never remove complexity the physics require
 \label{fig:joint_primitives}
 \end{figure}
 
-\label{sec:joint_types}
+\subsection{Revolute (1 DOF)}\label{revolute-1-dof}
 
-\index{revolute joint}
-\index{prismatic joint}
-\index{spherical joint}
-\index{universal joint}
+A revolute joint permits rotation about one common axis. Let \(u_A\) and \(u_B\) be its axis directions fixed in the respective bodies. Its constraints are
 
-Roboticists have standardized a small set of joint primitives. Each is characterized by:
-\begin{itemize}
-\item Number of degrees of freedom ($f$)
-\item Number of constraints imposed ($c = 6 - f$)
-\item Constraint Jacobian structure
-\item Symbolic notation
-\end{itemize}
+\[
+p=0,\qquad R u_B=u_A.
+\]
 
-Let's enumerate them.
+The first equation gives three translational constraints. The equality of two unit axis directions gives two independent rotational constraints: its three written components have differential rank two at a compatible orientation. The total is five, leaving one freedom. With coincident, aligned reference frames and the axis denoted by \(u\), one convenient parameterization is \(R(\theta)=\exp(\theta[u]_\times)\). A general reference orientation introduces a constant rotation factor.
 
-\subsection{Revolute (1 DOF)}
+For an arbitrary segment-fixed point with offset \(a\) from the joint, its relative position is \(Ra\). Thus a hinge does not prevent every point of one body from translating relative to the other. It prevents separation of the chosen joint origins. A knee hinge is a possible reduction of biological motion; its adequacy must be assessed for the target output rather than inferred from the primitive's name.
 
-A revolute joint allows one rotation about a fixed axis. Symbol: R.
+\subsection{Prismatic (1 DOF)}\label{prismatic-1-dof}
 
-\textbf{Degrees of freedom:} $f = 1$. The joint variable is $\theta$.
+A prismatic joint permits sliding along a unit axis \(u\). Choose orthonormal \(e_1,e_2\) perpendicular to \(u\). In aligned reference frames,
 
-\textbf{Constraints:} $c = 5$. The joint prevents translation in all directions and rotation about the other two axes.
+\[
+R=I_3,\qquad e_1^T p=0,\qquad e_2^T p=0,
+\qquad p=d u.
+\]
 
-\textbf{Constraint equation:} If the axis is $\bm{u}$ in frame A, and bodies are at relative orientation $\bm{R}$, the constraints on relative position and non-axis rotations prevent unwanted motion:
-\begin{align}
-\bm{p}_{AB} &= 0 \quad \text{(position is zero at joint frame)}\\
-\bm{R}_{AB}(:, 1) \cdot \bm{u} &= \bm{u} \quad \text{(rotation axis preserved)}\\
-\bm{R}_{AB}(:, 2) \cdot \bm{u} &= 0 \quad \text{(perpendicular to axis)}\\
-\bm{R}_{AB}(:, 3) \cdot \bm{u} &= 0 \quad \text{(perpendicular to axis)}
-\end{align}
+Fixed orientation imposes three independent conditions on \(SO(3)\), not nine. The two scalar position conditions remove both transverse translations, leaving the distance \(d\). One unspecified perpendicular vector would remove only one transverse direction. A sliding rail is a literal engineering example; a translation coordinate can also be useful in a biological model without implying that an anatomical joint is a perfect rail.
 
-\textbf{Example in golf:} The knee is modeled as a revolute joint: the tibia rotates about a horizontal axis through the knee.
+\subsection{Spherical (3 DOF)}\label{spherical-3-dof}
 
-\subsection{Prismatic (1 DOF)}
+A spherical joint imposes \(p=0\) and permits any \(R\in SO(3)\) before anatomical limits or other loads are added. It has three rotational freedoms. A unit quaternion uses four components with one normalization constraint, and the two signs represent the same orientation; it does not add a fourth rotational freedom.
 
-A prismatic joint allows translation along a fixed axis. Symbol: P.
+One local representation is the ZYX sequence
 
-\textbf{Degrees of freedom:} $f = 1$. The joint variable is $d$, the translation distance.
+\[
+R=R_z(\phi)R_y(\theta)R_x(\psi).
+\]
 
-\textbf{Constraints:} $c = 5$. All rotations are prevented, and translations perpendicular to the axis are blocked.
+The rotations act about successive axes, whose spatial directions depend on preceding rotations. They are not three fixed, mutually orthogonal axes throughout the motion. At \(\theta=\pm\pi/2\), this Euler coordinate chart loses rank. The ideal spherical joint still has three physical rotational freedoms. A physical three-axis gimbal, in contrast, has a mechanism Jacobian whose rank can fall when its outer and inner axes coincide. A coordinate singularity, a mechanism singularity, a joint limit and loss of task controllability require different analyses.
 
-\textbf{Constraint equation:} If the axis is $\bm{u}$:
-\begin{align}
-\bm{R}_{AB} &= \bm{I} \quad \text{(no relative rotation)}\\
-\bm{p}_{AB} \cdot \bm{u}^\perp &= 0 \quad \text{(translation only along } \bm{u}\text{)}
-\end{align}
+The hip is often reduced to a spherical joint with an admissible configuration envelope. The primitive's unrestricted orientation set is not a claim that a biological hip can attain every orientation.
 
-\textbf{Example in golf:} Prismatic joints don't appear in the human body. They appear in golf machines---a robot that extends its arm along a rail.
+\subsection{Universal (2 DOF)}\label{universal-2-dof}
 
-\subsection{Spherical (3 DOF)}
+An ideal universal joint consists of two intersecting revolute axes held perpendicular by the intermediate member. Let \(u_A\) be the first axis fixed in A and \(u_B\) the second axis fixed in B. Its finite constraints are
 
-A spherical joint (ball-and-socket) allows rotation about a point in all directions. Symbol: S or sometimes 3R.
+\[
+p=0,\qquad u_A^T R u_B=0.
+\]
 
-\textbf{Degrees of freedom:} $f = 3$. The joint variables are three rotation angles (e.g., Euler angles $\phi, \theta, \psi$, or a quaternion $\bm{q}$).
+The scalar orthogonality condition supplies one rotational constraint; together with the three position constraints it leaves two freedoms. It does not require a fixed third axis to remain unchanged by \(R\).
 
-\textbf{Constraints:} $c = 3$. The joint prevents all translation but allows free rotation.
+For reference axes \(u_A=e_x\), \(u_B=e_y\), use
 
-\textbf{Constraint equation:}
-$$\bm{p}_{AB} = 0 \quad \text{(position coincident)}$$
+\[
+R=R_x(\alpha)R_y(\beta),\qquad
+\omega=W(\alpha)\dot q,
+\qquad \dot q=(\dot\alpha,\dot\beta)^T,
+\]
 
-No constraint on $\bm{R}_{AB}$: any orientation is allowed.
+\[
+W(\alpha)=\begin{bmatrix}1&0\\0&\cos\alpha\\0&\sin\alpha\end{bmatrix},
+\qquad W(\alpha)^T W(\alpha)=I_2.
+\]
 
-\textbf{Internal representation:} A spherical joint is often modeled as three sequential revolute joints with orthogonal axes:
-$$\bm{R}_{AB} = \text{Rot}(z, \phi) \cdot \text{Rot}(y, \theta) \cdot \text{Rot}(x, \psi)$$
+Both columns remain orthogonal for every \(\alpha\). The ideal two-axis joint therefore does not lock because its own axes align. A driveshaft assembled using a Cardan joint has additional shaft-axis and transmission geometry; its operating limits are not a proof that this two-coordinate joint loses rank. Likewise, a wrist--club task map can be singular even when the local joint rate map has rank two.
 
-This is called an Euler angle decomposition (or ZYX convention). The order matters.
+The forbidden instantaneous angular-velocity direction is the moving normal \(n=e_x\times R_x(\alpha)e_y\). For example, at \(\alpha=\pi/2\), the allowed second-axis velocity points along A's \(z\) direction. A rule that permanently forbids rotation around A's \(z\) direction would reject legitimate universal-joint motion. At \(\alpha=\pi/2,\beta=0\), \(R e_z=-e_y\), directly disproving the earlier fixed-normal constraint.
 
-\textbf{Example in golf:} The hip is modeled as a spherical joint: the femoral head rotates freely in the acetabular socket.
+This rate map also determines which moment components drive the coordinates. If \(m\) is an applied relative moment expressed in A, virtual power gives
 
-\subsection{Universal (2 DOF)}
+\[
+Q=W^T m,\qquad Q^T\dot q=m^T\omega.
+\]
 
-A universal joint (Cardan joint or Hooke's coupling) allows rotation about two perpendicular axes. Symbol: U.
+The generalized moments are projections onto the current axes; they are not arbitrary fixed Cartesian components. An ideal reaction moment along \(n\) does no relative work because \(n^T\omega=0\), although it can transmit load. This distinction matters when interpreting wrist torques, grip reactions and clubhead acceleration.
 
-\textbf{Degrees of freedom:} $f = 2$.
+\subsection{Cylindrical (2 DOF)}\label{cylindrical-2-dof}
 
-\textbf{Constraints:} $c = 4$. Prevents translation and rotation about one axis.
+A cylindrical joint permits translation and rotation along the same axis. With aligned reference frames, \(p=d u\) and \(Ru=u\) impose two translational and two rotational constraints. The coordinates are \(d\) and \(\theta\). This is a kinematic idealization, not an assertion that one biological joint realizes an exact cylinder.
 
-\textbf{Constraint equation:} If the two axes are $\bm{u}_1$ and $\bm{u}_2$ (perpendicular):
-\begin{align}
-\bm{p}_{AB} &= 0\\
-\bm{R}_{AB} \cdot (\bm{u}_1 \times \bm{u}_2) &= \bm{u}_1 \times \bm{u}_2 \quad \text{(no rotation perpendicular to plane)}
-\end{align}
+\subsection{Planar (3 DOF)}\label{planar-3-dof}
 
-\textbf{Important property:} Unlike a spherical joint, a universal joint can introduce \emph{kinematic singularities}. When the two rotation axes align, the joint locks and loses controllability. This is why steering joints in cars use a universal joint with careful geometry to avoid the steering axis aligning with the input shaft axis.
+A planar joint permits two translations in a plane and rotation about its normal. For a fixed unit normal \(n\), aligned reference normals give \(n^T p=0\) and \(Rn=n\): one translational and two independent rotational constraints. A foot kept flat on a plane can be modeled this way only within that assumed mode. The primitive alone imposes neither friction nor nonnegative normal force. Sticking, slipping, edge contact and lift-off require additional contact laws and feasibility checks.
 
-\textbf{Example in golf:} The wrist is approximated as a universal joint: flexion/extension about one axis, radial/ulnar deviation about a perpendicular axis.
+\subsection{6-DOF (Free, Floating)}\label{dof-free-floating}
 
-\subsection{Cylindrical (2 DOF)}
+A free body has three translational and three rotational freedoms relative to ground. A floating-base model uses those freedoms to represent overall pose; it does not assert absence of gravity, muscle forces or contact reactions. Quaternion storage may require seven position entries for this six-dimensional pose. Position-array length, velocity dimension and actuator count need not agree.
 
-A cylindrical joint allows translation and rotation along the same axis.
+\subsection{Constraint Counting}\label{constraint-counting}
 
-\textbf{Degrees of freedom:} $f = 2$: translation distance $d$ and rotation angle $\theta$.
+For a spatial linkage with \(N\) bodies including ground and joints whose constraints are independent, the mobility estimate is
 
-\textbf{Constraints:} $c = 4$.
+\[
+d=6(N-1)-\sum_j(6-f_j).
+\]
 
-\textbf{Example in golf:} Doesn't appear in human anatomy.
+Count three moving links attached in series to a fixed base. If the base is merged with ground, \(N=4\) and there are three revolute joints:
 
-\subsection{Planar (3 DOF)}
+\[
+d=6(4-1)-3(6-1)=3.
+\]
 
-A planar joint allows motion within a plane: two translations (in-plane) and one rotation (perpendicular to plane).
+If the fixed base is kept as a separate body, \(N=5\) and its weld to ground must be counted as a fourth joint with \(f=0\). Then \(d=24-(6+15)=3\). Omitting that weld gives nine freedoms, which describes the floating chain, not the intended fixed-base arm. The error is missing topology, not the use of a spatial formula on a planar example. The formula can be applied to trees as well as loops when its assumptions hold.
 
-\textbf{Degrees of freedom:} $f = 3$.
+For a fixed-base tree, independent joint coordinates give \(d=\sum_j f_j\); a floating base adds six. In a loop, let \(q\in\mathbb R^{n_q}\) be local tree coordinates and \(c(q)=0\) the closure equations. At a regular configuration,
 
-\textbf{Constraints:} $c = 3$: out-of-plane translation is zero, rotation about the two in-plane axes is zero.
+\[
+d=n_q-\operatorname{rank}J_c,\qquad J_c=\frac{\partial c}{\partial q}.
+\]
 
-\textbf{Example in golf:} The foot-ground interface can be modeled as planar if we assume the foot stays in contact with the ground and slides.
+Redundant constraints cannot each remove another freedom. At a singular configuration, the linearized tangent space may be larger than the set of realizable finite motions, so a pointwise rank loss must be checked against the nonlinear closure. For a two-handed golf grip, specify the relative hand--club transforms and evaluate that closure rank; do not simply subtract a number called ``the loop.'' Mobility is also distinct from the number of independently controlled inputs and the dimension of a chosen hand or clubhead task.
 
-\subsection{6-DOF (Free, Floating)}
-
-No constraint. The two bodies move independently relative to each other.
-
-\textbf{Degrees of freedom:} $f = 6$: three translations and three rotations (orientation).
-
-\textbf{Constraints:} $c = 0$.
-
-\textbf{Example in golf:} A club in flight between shots has a 6-DOF joint to the ground (it's not touching).
-
-\begin{example}{Constraint Counting}{constraint_count}
-A robot arm with:
-\begin{itemize}
-\item Base (1 link) fixed to ground
-\item Three revolute joints connecting four links
-\end{itemize}
-
-Using the full Gr\"ubler formula with $N = 5$ links (including ground) and $J = 3$ revolute joints:
-$$\text{DOF} = 6(N-1) - \sum(6-f_i) = 6 \times 4 - 3 \times 5 = 24 - 15 = 9$$
-
-This answer ($9$~DOF) is incorrect for a 3-revolute chain. The discrepancy arises because the Gr\"ubler formula counts spatial DOF, but this is a \textbf{planar} mechanism with implicit constraints that eliminate out-of-plane motion.
-
-\textbf{The correct approach for a tree structure (no loops)} is simply the sum of joint freedoms:
-$$\text{DOF} = \sum_{i=1}^{J} f_i = 1 + 1 + 1 = 3$$
-
-Three revolutes in series give 3~DOF. The full Gr\"ubler formula is needed only when the mechanism contains \textbf{closed loops}.
-\end{example}
 
 \section{The Knee --- A Revolute (Mostly)}
 \label{sec:knee_joint}

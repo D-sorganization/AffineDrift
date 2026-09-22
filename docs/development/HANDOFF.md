@@ -1,3 +1,16 @@
+# Current Technical Review Checkpoint — #4412
+
+The user resumed the full technical review on 2026-09-22. Canonical technical
+review continuation is in `AGENT_HANDOFF.md`, section Technical Content Review,
+and `docs/development/DEVELOPMENT_LOG.md`, DL-#4412. Branch
+`fix/technical-review-resume`, commit SELF, PR not created. This intermediate
+commit corrects paired Chapter 22 joint mathematics; anatomy/clinical sections,
+exercises and full rendered acceptance remain underway. See
+`reports/technical-review/anatomy-joint-review.md` for evidence and next steps.
+
+The following previously merged persona-work handoff is retained for its
+separate scope; it is not the active technical-review task.
+
 # Implementation Handoff — #4409
 
 - Repository: `D-sorganization/AffineDrift`
