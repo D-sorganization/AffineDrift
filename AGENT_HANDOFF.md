@@ -1,10 +1,11 @@
 # Agent Handoff — AffineDrift
 
-Current technical review: paired IAA issue4425 is fully rewritten and locally
-rendered; eight findings are bound to06c948b7 with verified bibliography
-dependency carry-forward. Force is live; putting merged asded63640 and
-deployment35792227837 is pending. See docs/development/HANDOFF.md
-for exact checks, disk recovery and force/putting publication dependencies.
+Current technical review: issue4427 rewrites both Chapter6 editions and the
+canonical zero-torque article. Independent mechanics and contract tests pass;
+print/browser qualification and evidence binding remain pending. Putting is
+live960/960; IAA4426 has protected auto-merge enabled. Read
+`docs/development/HANDOFF.md` and `technical-review/zero-torque-preparation.md`
+for the reproducible derivation and publication dependencies.
 
 ## Deferred Impact Evidence - 2026-09-22
 

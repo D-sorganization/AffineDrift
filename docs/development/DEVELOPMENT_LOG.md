@@ -18,6 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4427 · Zero-Torque Counterfactual Mechanics and Interpretation
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4427 (Physics #4054; core #4058; corpus #4021; epic #4009)
+- **Branch:** `fix/zero-torque-counterfactual-rigor`
+- **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; full three-source rewrite; eleven new checks and twelve existing contract tests pass; published-source regression failed before correction)
+- **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
+- **Next step:** Render and inspect the isolated chapter PDF and both public routes before binding acceptance evidence.
+
 ### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 
 - **State:** in_review
@@ -33,16 +45,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4422 (measurement #4059; corpus #4021; epic #4009)
 - **PR:** #4424
 - **Branch:** `fix/putting-roll-rigor`
 - **Paths:** `articles/putting-roll-models.qmd`, `tests/test_putting_roll_rigor.py`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
+- **Last verified:** 2026-09-22 (SELF; live publication verified; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
 - **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
-- **Next step:** Protected merge ded63640 is tree-identical to checked head cd55cce8. Verify deployment35792227837 and live artifact, then mark shipped; source evidence remains a17f5ded.
+- **Next step:** Publication verified at ded63640 via deployment35792227837 and live artifact10722988337;960/960 and all four putting cases pass. Preserve frozen evidence a17f5ded.
 
 ### DL-#4253 - Deferred Impact Evidence Planning
 

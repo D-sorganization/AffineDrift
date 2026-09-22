@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-22 | #4427 | Reconcile zero-torque mechanics and intervention meaning across canonical article and paired chapter with independent energy, coupling and authority checks. |
 | 2026-09-22 | #4426 | Reconcile paired induced-acceleration chapter mechanics, task projection, coupling, history and literature with worked checks and explicit evidence limits. |
 | 2026-09-22 | #4424 | Review and correct putting launch, skid, rolling calibration, slope and capture derivations with independent checks and explicit evidence boundaries. |
 | 2026-09-22 | #4423 | Added repo-owned future impact-evidence planning with preserved source, Board/resource prerequisites and active numerical/theory scope. No article or empirical qualification changes. |

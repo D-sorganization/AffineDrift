@@ -1,3 +1,20 @@
+# Current Technical Review Checkpoint — #4427
+
+Branch `fix/zero-torque-counterfactual-rigor` starts at03db46ff. All three
+zero-torque sources are rewritten; ten independent mechanics checks plus the
+published-source regression and twelve existing contract checks pass. The
+source regression was red before correction. Two routes are temporarily
+deferred until complete print/browser QA and committed evidence binding.
+Read technical-review/zero-torque-preparation.md for findings, exact worked
+values, source access and limitations. No adapter, schema or fixture changed.
+
+Putting is shipped: ded63640, deployment35792227837, live960/960 and all four
+putting cases pass. Receipt reports/technical-review/putting-roll-publication.json.
+IAA regular PR4426 head03db46ff has protected auto-merge enabled; all checks
+except pending e2e were green when enabled. Verify its main/live result before
+merging this successor. The goal remains active; no draft PRs. Updated entries:
+DL-#4427 and DL-#4422. Next: isolated print and both public-route render review.
+
 # Current Technical Review Checkpoint — #4425
 
 Branch `fix/induced-acceleration-rigor` now contains the complete paired Chapter30b
