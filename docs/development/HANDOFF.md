@@ -5,8 +5,10 @@ The user resumed the full review on September 22. Canonical continuation is in
 Anatomy PR #4414 is awaiting final protected checks. The separate
 `fix/physics-preface-rigor` branch contains the complete paired preface revision,
 source comparison and print/browser verification. Source/report f8bda7c3 is
-committed and bound. Merge remote main into it after #4414 lands, then create
-a regular PR. #4415 tracks the next paired ground-reaction chapter review. Broader
+committed and bound. Regular PR #4416 is open; merge remote main into it after
+#4414 lands and inspect the final diff before merging #4416. SELF records
+the PR registration without changing scientific evidence. #4415 tracks the next
+paired ground-reaction chapter review. Broader
 scientific review remains active under #4009/#4021/#4054.
 
 The following previously merged persona-work handoff is retained for its

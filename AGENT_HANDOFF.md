@@ -88,7 +88,7 @@
   CI exposed stale figure counts after the documented sketch removal; those
   were corrected and 58 combined focused checks pass. Protected CI/publication
   acceptance is pending; inspect the exact PR head before merging.
-- **Current work:** #4413, branch `fix/physics-preface-rigor`, based on the
+- **Current work:** #4413, regular PR #4416, branch `fix/physics-preface-rigor`, based on the
   anatomy branch while its checks finish. Source/report checkpoint
   `f8bda7c33083542bb90efaa9a2a8608e741d1a25` is committed and bound; SELF records
   three corrected findings with exact source/render evidence. Paired prefaces now define the affine
@@ -103,7 +103,8 @@
   broken anchors. Both pages of the final isolated preface PDF were inspected;
   no overfull box or unresolved reference remains. This is not full-book QA.
 - **Next action:** finish and merge #4414, then merge remote main into the preface
-  branch. Open a regular PR for the committed and bound preface revision, pass
+  branch and inspect #4416's final diff. The regular preface PR is open while
+  its parent checks finish; do not merge the dependent PR first. Pass its
   checks, merge and verify exact-main
   deployment. Next long-form target is #4415: paired ground-reaction-force
   chapter, whose print edition retains momentum, COP and inference errors.
