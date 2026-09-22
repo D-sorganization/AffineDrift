@@ -75,62 +75,57 @@
 
 ## Technical Content Review
 
-- **Active:** the user resumed the comprehensive review September 22. Continue
-  long sources and paired editions under #4009/#4021/#4054; use regular PRs only.
-- **Anatomy:** #4414 merged green as 4ac3a34a5d0895a075105f8d0235398881613a8b.
-  All protected checks passed (5323 Python tests, 92.85% coverage, eight book
-  builds, browser/axe). Deploy 35771389008 passed its pre-deploy checks and deployed, but live
-  verification was superseded by preface main; verify both routes in successor
-  deploy 35774559003 before marking DL-#4412 shipped. Scientific checkpoint is 14f1c148.
-- **Preface:** regular PR #4416 at 053f88a55722822c5daa5d6bc785b8d3a53b15a6
-  contains the paired revision and evidence bound to f8bda7c3. Anatomy main was
-  merged normally, final diff checked and 19 evidence-boundary tests passed.
-  Merged with all protected checks green as 581857cb248164564bf66f09d9b132ce8eea6365.
-  Exact-main publication is running in deploy 35774559003.
-- **Current:** #4415, branch `fix/ground-reaction-rigor`, based on the published
-  preface branch. Scientific source e0ce6133 and complete report/render checkpoint dfe90fed are
-  pushed; regular PR #4417 is open. SELF records PR tracking; all six findings bind
-  at dfe90fed2658ab8b43b6e26a8208591aca150e9d.
-  Both original sources were read completely. Print's third-law/sign mistakes,
-  omitted club boundary, unconditional work claims, drift-only reaction,
-  shoulder-to-GRF shortcut and universal coaching waveform have been replaced.
-  Web now derives offset-surface COP, transported wrench power, conditional COM
-  work, reaction/input coupling, contact-feasibility and moving-support limits.
-  Both editions include eight worked solutions and honest validation design.
-- **Bibliography:** primary publication records correct Joo, Sturdy and Werling
-  authors in textbook and shared proximal-distal databases. This is metadata
-  correction only. Chapter 16/22 do not cite those keys; exact diffs and all their
-  other evidence were verified byte-identical. Their dependency records now bind
-  to e0ce6133 without claiming a new chapter scientific review.
-- **Validation:** 11 independent balance/KKT/wrench/contact checks plus five
-  existing chapter contract tests pass; Black100/Ruff pass. Title audit638 and
-  citation audit pass. All 13 final print pages were inspected, with no overflow
-  or unresolved references. All 118 paired math expressions match. Four public
-  browser cases pass with clean axe; settled math has no clipping, errors or
-  broken anchors after four display groups were split. Final 19 inventory and
-  deployment-boundary tests pass; the chapter route is reviewed and source-bound.
-  Publication is still pending; this is not whole-book acceptance.
-- **Integration:** SELF merges protected preface main581857cb normally. Its
-  complete tree was verified identical to our existing preface parent053f88a5;
-  conflict resolution preserves the later GRF records and all peer sections.
-- **CI follow-up:** test checkpoint8feeaa11 names the existing gravity value GRAVITY_M_S2 for the
-  repository quality gate; no equations or values changed. All 29 mechanics/inventory checks and the tracked-Python quality gate pass.
-  Evidence binds the unchanged science/render plus test naming to 8feeaa11.
-  SELF fixes a Windows CRLF-versus-committed-LF digest mismatch exposed by CI;
-  all seven evidence bytes are compared with the committed checkpoint. Superposition #4418 is leased; its
-  uncommitted next-article draft is saved in local QA/superposition-4418-working.qmd.
-- **Next:** pass regular PR #4417 protected checks and merge; verify successor
-  main publication before marking delivery shipped. Verify anatomy/preface publication in parallel. Preserve
-  broad parent issues as active; source-only metadata does not complete a book.
-- **Coordination:** session `technical-review-20260922-anatomy`; #4415 lease
-  5782334386 expires21:05Z; presence2aacab03 expires21:08Z September22. Inbox has
-  no reported conflicts but incomplete unrelated board evidence. Preserve peer
-  sections, immutable archives and authority pins. Stage explicitly: three
-  Geometry stat/line-ending entries and extensive old QA artifacts are unrelated.
-- **QA pointers:** local `docs/development/technical-review/grf-*` files,
-  `convert_grf_print.py`, `build_grf_print.py` and `grf-initial-reading.md` retain
-  preparation. Conversion preserves the print chapter/section targets and uses
-  unique heading labels. Review both canonical editions after any conversion.
+- **Active:** resumed comprehensive review under #4009/#4021. Long articles and
+  paired sources first; regular PRs only. Do not equate route metadata with
+  whole-book or corpus completion.
+- **Shipped:** anatomy #4414 at4ac3a34a and preface #4416 at581857cb passed all
+  protected checks. Successor deploy35774559003 passed960/960 live cases on main
+  581857cb; downloaded artifact10716514261 and checked all eight route cases.
+  SELF records publication in anatomy-preface-publication.json. The original
+  anatomy live check was superseded; only the successor is claimed complete.
+- **GRF delivery:** regular PR #4417 passed all protected checks and merged as
+  a6774e33 on September 22 at 20:15:56 UTC; deployment/live verification is pending.
+  Paired science/render checkpointdfe90fed, updated test checkpoint8feeaa11.
+  Six findings corrected, 13 print pages inspected,118 paired math expressions,
+  four browser cases. CI follow-ups named GRAVITY_M_S2 and corrected the Windows
+  CRLF-versus-committed-LF test digest. All seven evidence bytes now match8feeaa11;
+  29 mechanics/inventory checks,19 final boundary checks and tracked-Python
+  quality pass. No scientific content changed in those CI follow-ups.
+- **Current:** #4418 under foundations #4058; branch
+  `fix/superposition-feasible-inputs`, based on published GRF head7ee71416.
+  Source checkpointa2cb282d saves the complete reread and residual correction of the standalone
+  superposition article, retaining the earlier Newton–Euler/Lagrange/spatial/2R
+  corrections. Added feasible-reference sets, constrained inverse-mass derivation,
+  a circular-guide counterexample and task-acceleration distinction. Corrected
+  the null-space link description and three wide/doubly numbered math groups.
+- **Validation:** all11 article mechanics checks pass, including direct KKT,
+  reaction/curvature and task increments and independent general-2R body moments
+  and kinetic/potential power. Black100/Ruff/title638 and changed-file quality
+  pass. Final full-page scrolling renders416 math expressions in all four cases
+  with zero errors or broken anchors. All13 main-section mobile openings and
+  selected new-section/changed-equation views were inspected. All21 wide mobile
+  display containers scroll to their endpoints; desktop displays fit. SELF saves
+  the complete report/render record.
+  SELF binds four findings and all four evidence paths to47321eb8 after
+  verifying committed LF bytes. Route review is complete; publication is pending.
+- **PR:** regular #4419 is open. SELF integrates protected main a6774e33 by
+  ordinary merge after verifying its tree exactly equals prerequisite head
+  7ee71416. The four turnover conflicts retain the later superposition and
+  anatomy/preface publication records; the final diff excludes GRF science.
+- **Next:** verify the GRF live deployment before enabling #4419 auto-merge.
+  Keep delivery and publication gates separate.
+- **Queued:** #4420 under measurement #4059 will correct the long force-
+  measurement article. Primary-source preparation is saved in
+  docs/development/technical-review/force-measurement-preparation.md; no source
+  edits or completed review are claimed. Check claim and lease before editing.
+- **Coordination:** session `technical-review-20260922-anatomy`; #4418 lease
+  5782825163 and presencee4366cf4 expire21:40Z September22. Inbox has no reported
+  messages/conflicts but incomplete unrelated board evidence. Preserve peer
+  sections and authority pins; stage files explicitly. Old local QA is untracked.
+- **QA:** local `docs/development/technical-review/superposition-4418-*` contains
+  rendering helpers, browser metrics/captures and backups. Root render helper
+  temporarily changes \_quarto.yml and restores it; wait for it before hashes.
+  GRF records remain in reports/technical-review/ground-reaction-\*.
 
 ## Protected Authority
 

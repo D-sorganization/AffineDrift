@@ -52,7 +52,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 2 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
-| `/articles/superposition.html` | `articles/superposition.qmd` | 1 |
+| `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
 | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd` | 1 |
 | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.qmd` | 1 |
 | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html` | `articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.qmd` | 1 |
@@ -295,7 +295,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
-| `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 4 |
 | `ad-route-9d9393110de9` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | Reviewed | — | None | None | 0 |
 | `ad-route-fb32e03a3315` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-722f781e687e` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html` | Reviewed | — | None | None | 0 |

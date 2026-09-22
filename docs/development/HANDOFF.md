@@ -1,22 +1,27 @@
-# Current Technical Review Checkpoint — #4415
+# Current Technical Review Checkpoint — #4418
 
 Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
-`DEVELOPMENT_LOG.md`, DL-#4415/#4413/#4412. Branch `fix/ground-reaction-rigor`,
-checkpoint SELF, regular PR #4417. CI requested the named GRAVITY_M_S2
-constant in its numerical test; SELF changes only that identifier and refreshed
-evidence digests. Evidence binds to test checkpoint8feeaa11; SELF corrects its CRLF/LF hash
-difference and checks every evidence path against the committed bytes; all29
-mechanics/inventory tests and the tracked-Python quality gate pass. All six findings are source-bound to complete review
-checkpoint dfe90fed2658ab8b43b6e26a8208591aca150e9d. Final 19 audit/boundary tests
-pass. All 13 print pages and four public browser cases pass; 118 paired math
-expressions match with no final clipping or errors. Chapters 16/22 retain their
-original review scope through the verified metadata-only carry-forward.
-Anatomy #4414 and preface #4416 merged green. Anatomy deploy35771389008 deployed
-but live verification was superseded; verify both routes on successor preface
-main581857cb, deploy35774559003. SELF merges remote main normally after
-verifying its complete tree equals existing parent053f88a5; later GRF records
-and peer sections are retained. Pass PR #4417 checks and merge next. Preserve the broader active goal; this is not corpus
-completion.
+`docs/development/DEVELOPMENT_LOG.md`, DL-#4418/#4415/#4413/#4412.
+Branch `fix/superposition-feasible-inputs`, checkpoint SELF, regular PR #4419.
+The superposition reread, eleven mechanics checks and four-case render review
+are complete; four findings bind to committed LF checkpoint 47321eb8.
+
+GRF PR #4417 passed all protected checks and merged as a6774e33 on September 22
+at 20:15:56 UTC. SELF integrates that protected main by ordinary merge after
+verifying its tree exactly equals prerequisite head 7ee71416. Four turnover
+conflicts retain the later article/publication records; no scientific merge
+resolution was needed. Check the final diff and nineteen evidence/boundary
+tests, then push. Verify GRF live publication before enabling #4419 auto-merge.
+
+Anatomy and preface are shipped: successor deploy 35774559003 passed 960/960;
+eight relevant live cases are recorded in anatomy-preface-publication.json.
+Queued #4420 has detailed primary-source preparation in
+`docs/development/technical-review/force-measurement-preparation.md`, including
+both COP height-sign errors, standards, instrument physics and misattributed
+study statistics. No force-measurement source edits or completed review yet;
+check claim and post lease before implementation.
+
+Keep the broader goal active. No whole-book/corpus completion is claimed.
 
 The following previously merged persona-work handoff is retained for its
 separate scope; it is not the active technical-review task.

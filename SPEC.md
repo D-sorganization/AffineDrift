@@ -379,3 +379,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-22 | #4416 | Align print/web Physics prefaces on model-dependent drift, zero-input interventions, work, task authority and interconnected biomechanical inference. |
 
 | 2026-09-22 | #4417 | Reconcile paired ground-reaction mechanics, contact work, input attribution and admissible counterfactuals; verify evidence, bibliography and worked solutions. |
+
+| 2026-09-22 | #4419 | Complete the superposition reference review with feasible-input sets, constrained task authority, independent mechanics checks and equation-layout corrections. |

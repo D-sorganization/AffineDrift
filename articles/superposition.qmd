@@ -154,6 +154,21 @@ For acceleration $a=a_d+Hu$, subtraction gives $a-a_d=Hu$: the acceleration incr
 Finite trajectories generally do not add. For the specified linear system $\dot x=A(t)x+B(t)u+c(t)$, trajectories with the same initial state obey $x_{u_1+u_2}=x_{u_1}+x_{u_2}-x_0$, with the evolved zero-input baseline counted once. Making the columns of $G(x)$ linear in state is not enough: $\dot x=xu$ is bilinear and does not have that input-to-trajectory superposition property.
 
 
+### Admissible Inputs and a Feasible Reference
+
+The algebra extends to $u\in\mathbb R^m$, but a physical input set $\mathcal U(x)$ is generally not a vector space. Bounds, unilateral muscle force, friction and contact reactions may exclude negative inputs, sums of allowed inputs, or zero itself. A component in an algebraic decomposition need not be a separately executable command. For any feasible reference $u_\star\in\mathcal U(x)$,
+$$
+\begin{aligned}
+\mathcal F_x(u)-\mathcal F_x(u_\star)&=G(x)(u-u_\star),\\
+\Delta\dot{\mathcal X}_{u_\star}&=G(x)\bigl(\mathcal U(x)-u_\star\bigr).
+\end{aligned}
+$$
+The first identity is exact wherever the same model applies. The second is an attainable set relative to that reference, not generally a subspace. Convex combinations remain feasible only when the declared input set is convex; an arbitrary sum does not inherit that property.
+
+For example, let a scalar rotational model have $a(u)=3+2u$, with $a$ in rad/s², $u$ in N·m and gain $2$ in (rad/s²)/(N·m). Suppose $1\le u\le2$. Two commands of $1.5$ are allowed individually, but their sum $3$ is not. About $u_\star=1.5$, feasible acceleration increments span $[-1,1]$ rad/s² and total acceleration spans $[5,7]$ rad/s². The formal zero-input acceleration $3$ is outside this allowed set. It remains useful as an algebraic anchor, but is not a feasible experiment under these bounds.
+
+Thus affinity gives an exact same-state calculation; feasibility determines which calculations describe possible interventions. If changing an input makes a contact slip, open or impact, solve the new mode rather than extending the old affine formula through that event.
+
 The rest of this paper shows that **standard rigid-body dynamics models admit the structure (2.1)**, with the controls entering as generalized forces. In each formulation, the map from those applied loads to acceleration increments is linear at fixed state.
 
 ---
@@ -289,14 +304,17 @@ $$
 
 Solve (3.12) for $\ddot q$:
 
-\begin{align}
+$$
+\begin{aligned}
 \ddot q
-&= M(q)^{-1} \Big( \tau + J^\top(q) f^\text{ext} - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \Big) \\
-&= M(q)^{-1} \Big( - C(q,\dot q) \dot q - g(q) - d(q,\dot q) \Big) \\
-&\quad + M(q)^{-1}\tau \\
-&\quad + M(q)^{-1} J^\top(q) f^\text{ext}.
-  \tag{3.15}
-  \end{align}
+&= M(q)^{-1}\bigl[\tau+J^\top f^\text{ext}\\
+&\qquad -C\dot q-g-d\bigr]\\
+&= M(q)^{-1}(-C\dot q-g-d)\\
+&\quad +M(q)^{-1}\tau+M(q)^{-1}J^\top f^\text{ext}.
+\end{aligned}
+\tag{3.15}
+$$
+Here $C$, $J$, $g$ and $d$ are evaluated at the same configuration and velocity as in (3.12).
 
 Define
 
@@ -338,6 +356,34 @@ f(x) + G_\tau(x)\tau + G_f(x) f^\text{ext}.
 $$
 
 Again we see a **control-affine system** with $m = n + r$ input channels ($n$ joint torques and $r$ external wrench components). At fixed $x$, the map from $(\tau,f^\text{ext})$ to $\ddot q$ is *affine*, and its increment relative to zero input is linear.
+
+### What Changes When Contact Is a Constraint?
+
+For a stationary, smooth bilateral constraint $\phi(q)=0$, write $J_c=\partial\phi/\partial q$, $J_c\dot q=0$ and $\gamma=\dot J_c\dot q$. Here $h$ collects the declared input-independent generalized loads on the left of the dynamics:
+$$
+\begin{aligned}
+M\ddot q+h&=Bu+J_c^\top\lambda,\\
+J_c\ddot q&=-\gamma.
+\end{aligned}
+$$
+Assume $M$ is positive definite and $J_c$ has independent rows at this state. Eliminating $\lambda$ gives
+$$
+\begin{aligned}
+A&=J_cM^{-1}J_c^\top,\\
+W&=M^{-1}-M^{-1}J_c^\top A^{-1}J_cM^{-1},\\
+a_0&=-Wh-M^{-1}J_c^\top A^{-1}\gamma,\\
+\ddot q&=a_0+WBu.
+\end{aligned}
+$$
+This is the constrained analogue of the free-system input map, consistent with the [Modern Robotics constrained-dynamics derivation](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/). It applies within the specified regular mode. The inverse $A^{-1}$ is not available for redundant rows; one must reduce them or specify a consistent generalized solve and reaction allocation.
+
+Since $J_cW=0$, same-state acceleration **differences** lie in $\ker J_c$. Total acceleration need not: its constraint-normal component supplies $-\gamma$. Also $WJ_c^\top=0$: a load in the reaction-covector range can change $\lambda$ without changing acceleration. Ideal reactions do no virtual work on admissible virtual displacements, $(J_c^\top\lambda)^\top\delta q=0$ when $J_c\delta q=0$. They do not absorb hidden velocity components. The operator $W$ maps generalized loads to acceleration increments; it is not an ordinary Euclidean projection of arbitrary velocities.
+
+As a checked example, a 2 kg bead on an ideal stationary circular guide of radius 1 m has position $(1,0)$ m and velocity $(0,3)$ m/s. Use $\phi=(q^\top q-1\,\mathrm{m}^2)/2$, giving $J_c=(1,0)$ m and $\gamma=9$ m²/s². With no other loads, a prescribed force $(F_r,F_t)$ produces
+$$
+\ddot q=\left(-9\,\mathrm{m/s^2},\frac{F_t}{2\,\mathrm{kg}}\right).
+$$
+Changing $F_r$ changes the guide reaction, while the required inward acceleration stays $9$ m/s². Changing $F_t$ changes tangential acceleration. This example uses a bilateral frictionless guide; a shoe-ground contact must additionally satisfy its normal-force, friction and contact-patch conditions. Moving supports require their time-dependent bias terms and may do work. Impact requires an impulse/momentum model, not this smooth acceleration equation.
 
 ### Newton–Euler Superposition Theorem
 
@@ -644,27 +690,24 @@ with columns $B_i(q,\dot q) = \bar Q^{(i)}(q,\dot q)$.
 
 Substitute (4.13) into the Lagrange equations (4.7):
 
-\begin{align}
-M(q)\ddot q + C(q,\dot q)\dot q + g(q) &= B(q,\dot q) u, \\
-\ddot q &= - M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right) + M(q)^{-1}B(q,\dot q) u.
+$$
+\begin{aligned}
+M(q)\ddot q+C\dot q+g&=Bu,\\
+\ddot q&=-M(q)^{-1}(C\dot q+g)\\
+&\quad+M(q)^{-1}Bu.
+\end{aligned}
 \tag{4.14}
-\end{align}
+$$
+The argument dependence of $C$, $g$ and $B$ is unchanged from (4.7) and (4.13).
 
 Define state $x=(q,\dot q)$ and vector fields:
 
 $$
-f(x) :=
-\begin{bmatrix}
-\dot q \\
-- M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right)
-  \end{bmatrix},
-  \quad
-  G(x) :=
-  \begin{bmatrix}
-  0_{n\times m} \\
-  M(q)^{-1}B(q,\dot q)
-  \end{bmatrix}.
-  \tag{4.15}
+\begin{aligned}
+f(x)&:=\begin{bmatrix}\dot q\\-M(q)^{-1}(C\dot q+g)\end{bmatrix},\\
+G(x)&:=\begin{bmatrix}0_{n\times m}\\M(q)^{-1}B\end{bmatrix}.
+\end{aligned}
+\tag{4.15}
 $$
 
 Then
@@ -1062,7 +1105,7 @@ Velocity-quadratic inertial terms may become large in some configurations, but a
 
 - **Forward Zero Torque Counterfactual (ZTCF):** A trajectory generated from a declared initial state with the chosen applied torque input set to zero, including consistent reaction and contact-mode handling.
 - **Drift Independence:** In the specified affine representation $f$ has no direct input argument. This does not imply that its value along a trajectory is unaffected by earlier inputs. It also does not imply affinity by itself: $\dot x=f(x)+u^2$ has input-independent $f$ but nonlinear input response.
-- **Control Authority:** The feasible acceleration increments form $G(x)\mathcal U(x)$ in state coordinates. Their directional size depends on the input set and metric; finite-time influence additionally depends on how the dynamics transport perturbations. A scalar norm of $G$ is not a complete mobility or controllability description.
+- **Control Authority:** $G(x)\mathcal U(x)$ describes input contributions to the full state derivative relative to the formal zero-input drift. In a torque-driven state $x=(q,\dot q)$, only the lower block is mechanical acceleration: write $G=\begin{bmatrix}0\\H\end{bmatrix}$, with $H=M^{-1}B$ for independent coordinates or $H=WB$ for the constrained model above. Around a feasible $u_\star$, attainable acceleration differences are $H(\mathcal U-u_\star)$. For a task $y(q)$, the corresponding set is $J_yH(\mathcal U-u_\star)$; the common $\dot J_y\dot q$ bias cancels only in the same-state difference. Input directions can therefore change internal motion or reactions without changing the selected task acceleration. Directional size depends on units, the input set and a declared metric; finite-time influence also depends on transport by the dynamics. A scalar norm of $G$ is not a complete mobility or controllability description.
 
 ## Tests of the Argument
 
@@ -1095,7 +1138,7 @@ The derivations above use virtual work, rigid-body energy, and fixed-state linea
 
 - **[Tangent Hyperplanes II: Dynamics](tangent-hyperplanes-series/part-2-dynamics.html)** — Variational dynamics along a reference trajectory, where instantaneous superposition of perturbations is exact
 - **[Tangent Hyperplanes I: Geometry](tangent-hyperplanes-series/part-1-geometry.html)** — The exact infinitesimal linear structure on which the superposition argument rests
-- **[The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html)** — How constraint forces absorb the velocity components generalized coordinates cannot see
+- **[The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html)** — Admissible velocities, reaction covectors and the effect of constraints on input transmission
 - **[Force and Mobility Ellipsoids](force-mobility-matrices.html)** — The state-dependent input map $G(x)$ interpreted geometrically as mobility ellipsoids
 - **[Tangent-Space Series](../pages/tangent-hyperplanes.html)** — Series hub with the full reading order and provenance notes
 :::
