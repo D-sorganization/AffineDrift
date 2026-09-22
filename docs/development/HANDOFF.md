@@ -6,8 +6,9 @@ Canonical continuation: `AGENT_HANDOFF.md`, Technical Content Review, and
 standalone-article reread and remaining feasible-input/contact/task corrections
 are saved in source checkpointa2cb282d with11 passing mechanics checks. SELF
 saves the final report/render record: four cases,416 expressions,21 verified
-mobile math scrollers and selected visual inspections. Bind SELF to the route
-next; it remains deferred until binding.
+mobile math scrollers and selected visual inspections. SELF binds four findings
+and all four evidence paths to complete checkpoint47321eb8 using verified
+committed LF bytes. Save/push and open a regular PR after GRF delivery.
 GRF regular PR4417 at7ee71416 awaits protected CI after a gravity-constant naming
 fix and committed-LF evidence correction. Science/rendering is unchanged.
 Anatomy and preface merged; verify their live routes in successor deploy35774559003.

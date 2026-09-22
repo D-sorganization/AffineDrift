@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; complete article reread;11 independent/existing checks pass; Black100/Ruff/title638 and changed-file quality pass; final four browser cases and416 settled math expressions pass; all21 wide mobile math scrollers reach their endpoint; selected section/equation views inspected)
 - **Summary:** Retains earlier mechanics corrections and adds feasible-reference input sets, constrained inverse-mass and task maps, a circular-guide example and correct reaction/virtual-work language. Repairs three wide or spuriously numbered equation groups.
-- **Next step:** Bind SELF complete report/render checkpoint using committed LF evidence, then open a regular PR after GRF delivery.
+- **Next step:** SELF binds four findings to complete report/render checkpoint47321eb8 using committed LF evidence; open a regular PR after GRF delivery.
 
 ### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 

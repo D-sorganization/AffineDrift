@@ -104,9 +104,9 @@
   selected new-section/changed-equation views were inspected. All21 wide mobile
   display containers scroll to their endpoints; desktop displays fit. SELF saves
   the complete report/render record.
-  The route is deferred until final evidence is committed and bound.
-- **Next:** bind SELF complete source/report/render checkpoint using committed
-  LF bytes, then open a regular #4418 PR after
+  SELF binds four findings and all four evidence paths to47321eb8 after
+  verifying committed LF bytes. Route review is complete; publication is pending.
+- **Next:** save/push SELF, then open a regular #4418 PR after
   #4417 lands and main is merged normally. Keep delivery and publication gates
   separate; verify earlier live routes while their successor deployment runs.
 - **Coordination:** session `technical-review-20260922-anatomy`; #4418 lease
