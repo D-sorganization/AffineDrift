@@ -1,3 +1,23 @@
+# Current Technical Review Checkpoint — #4425
+
+Branch `fix/induced-acceleration-rigor` starts at putting PR head d3bc7d76.
+SELF saves complete reads of both Chapter30b sources, primary-source preparation
+and eight new independent checks (19 with existing superposition cases), all
+passing. Chapter sources are not edited yet. Issue4425 is a native subissue of
+4054; lease/presence expire23:44UTC September22. See technical-review/
+induced-acceleration-preparation.md for the intended derivations and access scope.
+
+Putting regular PR4424 is open at d3bc7d76; source/render evidence is frozen at
+a17f5ded. Preserve that binding. Force4421 merged as9ef76c6e; deployment35787101015
+is still building. Verify force live publication before enabling putting merge;
+then verify putting's own live result. Save successor publication evidence on
+this branch. Do not interrupt active publication by merging the successor early.
+
+Disk headroom was approximately96MB after removing six older untracked,
+reproducible research downloads. The complete putting checkpoint was preserved.
+Check headroom before downloading or rendering; do not discard user files.
+The comprehensive review remains active; regular PRs only.
+
 # Current Technical Review Checkpoint — #4422
 
 Branch `fix/putting-roll-rigor` begins at force head 4047d917. SELF saves

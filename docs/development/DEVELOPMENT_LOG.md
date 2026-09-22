@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4425 (Physics #4054; corpus #4021; epic #4009)
+- **PR:** Pending
+- **Branch:** `fix/induced-acceleration-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex`, `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd`, `tests/test_induced_acceleration_chapter_rigor.py`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (SELF; both original editions read completely; eight new numerical checks and eleven existing constrained/superposition cases pass; Black100/Ruff pass; rewrite and source qualification in progress)
+- **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
+- **Next step:** Complete primary-source checks, reconcile both editions, supply worked exercises and verify paired print/web output before evidence binding.
+
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
 - **State:** in_review

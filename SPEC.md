@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-22 | #4425 | Reconcile paired induced-acceleration chapter mechanics, task projection, coupling, history and literature with worked checks and explicit evidence limits. |
 | 2026-09-22 | #4424 | Review and correct putting launch, skid, rolling calibration, slope and capture derivations with independent checks and explicit evidence boundaries. |
 | 2026-09-21 | #4407 | Filter third-party YouTube embed localStorage SecurityError pageerrors in the every-page public-site verifier (Fixes #4406). |
 | 2026-09-13 | #4379 | Correct TOC highlighting for nested positioned article sections with document-relative offset calculations and Quarto scroll tracking compatibility (#4370). |

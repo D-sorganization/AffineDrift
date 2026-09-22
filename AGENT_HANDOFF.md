@@ -75,6 +75,11 @@
 
 ## Technical Content Review
 
+- **Current implementation:** paired Chapter30b review #4425, branch
+  `fix/induced-acceleration-rigor`, starts at d3bc7d76. Complete original source
+  reads and eight new/19 combined mechanics checks are saved; rewrite pending.
+  Current HANDOFF and induced-acceleration-preparation.md lead.
+
 - **Force merged:** #4421 passed protected checks and merged as 9ef76c6e;
   tree equals4047d917. Deployment35787101015 is pending.
 
