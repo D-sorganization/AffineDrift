@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; paired plain text matches, preamble/post-preface/TOC boundaries unchanged; 638 title-case sources and citation audit pass; public Quarto build and four browser cases pass, axe clean; seven settled math expressions per case; two print pages inspected with no overflow or unresolved references)
 - **Summary:** Replaces drift-as-flaccidity, momentum-as-force and unsupported skill/control inference with a shared model-conditioned preface connecting geometry, energy, inputs, task authority and evidence.
-- **Next step:** Move the unpushed branch onto main after #4414 merges, commit source/evidence, bind review, create regular PR and verify protected publication; continue the wider corpus.
+- **Next step:** Source/report f8bda7c3 is committed and bound; merge main after #4414 lands, open regular PR and verify protected publication. Continue the paired ground-reaction chapter under #4415.
 
 ### DL-#4412 · Anatomy and Joint Modeling Scientific Review
 

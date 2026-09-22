@@ -89,7 +89,9 @@
   were corrected and 58 combined focused checks pass. Protected CI/publication
   acceptance is pending; inspect the exact PR head before merging.
 - **Current work:** #4413, branch `fix/physics-preface-rigor`, based on the
-  anatomy branch while its checks finish. Paired prefaces now define the affine
+  anatomy branch while its checks finish. Source/report checkpoint
+  `f8bda7c33083542bb90efaa9a2a8608e741d1a25` is committed and bound; SELF records
+  three corrected findings with exact source/render evidence. Paired prefaces now define the affine
   state derivative, zero-input intervention, energy accounting and task-specific
   authority, and connect anatomy, contact, muscle and shaft choices. Print and
   web core prose match under Pandoc plain-text conversion. TOC, print preamble
@@ -100,9 +102,9 @@
   Full settled scroll checks render all seven expressions without overflow or
   broken anchors. Both pages of the final isolated preface PDF were inspected;
   no overfull box or unresolved reference remains. This is not full-book QA.
-- **Next action:** finish and merge #4414, then move the unpushed preface branch
-  onto remote main. Commit the preface source/report checkpoint, bind its review
-  to those exact bytes, open a regular PR, pass checks, merge and verify exact-main
+- **Next action:** finish and merge #4414, then merge remote main into the preface
+  branch. Open a regular PR for the committed and bound preface revision, pass
+  checks, merge and verify exact-main
   deployment. Next long-form target is #4415: paired ground-reaction-force
   chapter, whose print edition retains momentum, COP and inference errors.
   Preserve broad #4054/#4021/#4009 as active.
