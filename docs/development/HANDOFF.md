@@ -8,7 +8,9 @@ scroll endpoints. SELF saves the complete scientific/render checkpoint before bi
 Lease/presence expire 23:09 UTC September 22. Inbox has no reported messages
 or conflicts but is incomplete because of unrelated malformed board records.
 See `technical-review/putting-roll-preparation.md` for derivations, source
-access limits and the next steps. The route is deferred pending final evidence binding; no completed acceptance is claimed.
+access limits and the next steps. The route is reviewed with seven findings bound to complete checkpoint
+a17f5ded. All five evidence paths match committed LF bytes; zero-deferred census
+is restored. Run final audit checks and open a regular PR.
 
 Delivery: superposition #4419 is shipped at 31cdc615; deploy 35782578807
 and live artifact 10720600549 passed 960/960 cases. Publication record saved. Force #4421 merged as 9ef76c6e after all protected checks passed. Its tree
@@ -18,6 +20,12 @@ is pending. Save its publication record independently of frozen scientific evide
 force-bound files at 99d1653c; the putting article may reuse its scoped CSS.
 
 The comprehensive review goal remains active. No draft PRs.
+
+A disk-full event interrupted the first audit binding attempt. The committed
+inventory was restored, six untracked reproducible research PDF downloads were
+removed within this worktree, and binding was repeated with an atomic file
+replacement. No tracked source or frozen evidence was lost. Disk headroom
+remains low; monitor before additional rendering.
 
 The following previously merged persona-work handoff is retained for its
 separate scope; it is not the active technical-review task.

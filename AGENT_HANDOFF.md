@@ -81,8 +81,8 @@
 - **Superposition shipped:** deploy 35782578807 succeeded at 31cdc615; 960/960 live cases and all four article cases passed. Durable publication record is saved.
 
 - **Current successor:** putting issue #4422, branch `fix/putting-roll-rigor`,
-  starts at force head 4047d917. Fifteen independent checks and four production browser cases pass; detailed
-  rendered validation and evidence binding remain. Preparation notes and current HANDOFF lead.
+  starts at force head 4047d917. Fifteen independent checks and four production browser cases pass; final
+  rendered review passes and seven findings are bound to a17f5ded. Preparation notes and current HANDOFF lead.
   Prior force implementation details below remain valid for PR #4421.
 
 - **Active:** comprehensive review #4009/#4021; long articles and paired sources
