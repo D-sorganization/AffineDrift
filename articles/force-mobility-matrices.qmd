@@ -1,6 +1,6 @@
 ---
-title: "Force and Mobility Ellipsoids in the Golf Swing: A Geometric Interpretation Using the Double Pendulum"
-description: "Force and mobility ellipsoid analysis for the golf swing, providing geometric insights into directional strength and movement capabilities."
+title: "Force and Mobility Ellipsoids in the Golf Swing"
+description: "What Jacobian ellipsoids reveal about motion and force, and why inertia, constraints, compliance and actuator limits must be treated separately."
 author: "Dieter Olson"
 date: "2025-11-28"
 format:
@@ -9,6 +9,9 @@ format:
     toc-depth: 3
     number-sections: false
     code-fold: true
+    css:
+      - /css/technical-explanations.css
+      - /css/force-mobility.css
 categories:
 - theory-core
 ---
@@ -16,122 +19,114 @@ categories:
 ::: {.abstract-section}
 ## Abstract
 
-In a specified golf-swing model, the force ellipsoid and mobility ellipsoid
-provide a geometric description of how easily the club can move and how
-strongly the modeled linkage can resist or transmit force at an instant.
-These ellipsoids are derived from the Jacobian of the multibody system and identify
-model-dependent directions of high mobility, low mobility, high force capability, and low
-force capability.  
-This article presents a clear, self-contained explanation of these concepts using 
-the classical double pendulum and the mechanical advantage of an inclined plane 
-as intuition-building analogies.
+A small joint rotation can move the clubhead a considerable distance. The
+same lever arm means that a force at the clubhead can demand a large joint
+moment. These are two views of a geometric map, but neither determines
+acceleration, stiffness, tissue strength or the response to impact.
+
+This article derives the velocity and load mappings with explicit units and
+budgets, examines a two-link example, and connects the result to dynamics,
+constraints and compliance. The worked cases are illustrative mechanics,
+not measurements of a golfer or proof of a swing technique.
 
 :::
 
 ```{=html}
-<!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+<details class="technical-explanation">
+<summary>Critics' Comments</summary>
+<p>
+        These questions separate what the geometric construction proves from what a swing model must still establish:
       </p>
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Kinematic Limitation:</span>
-          <h3>The Static Fallacy (Kinematic vs. Dynamic)</h3>
-        </div>
-        <p class="critic-argument">
-          Skeptics argue that force and mobility ellipsoids are derived solely from the kinematic Jacobian (<em>J</em>), which describes velocity mappings. However, in a high-speed ballistic motion like the golf swing, <em>dynamic</em> manipulability (which accounts for the Mass Matrix <em>M</em> and inertia) is far more relevant. A direction might have high kinematic mobility but extreme inertial resistance. Relying on <em>J</em> alone risks confusing "geometric ease of motion" with "dynamic ease of acceleration."
-        </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We agree that <em>J</em> is not the whole story. However, <em>J</em> defines the geometric "Effective Plant" through which all forces must pass. The force ellipsoid describes the structural capacity of the skeleton to resist load, which is a necessary prerequisite for handling high dynamic loads. We address dynamic inertia explicitly in the "Drift-Control Ratio" (DCR) framework, which superimposes <em>M</em> onto the geometric foundation of <em>J</em>.
-        </div>
-      </div>
+<p>Kinematic Limitation:</p>
+<h3>The Static Fallacy (Kinematic vs. Dynamic)</h3>
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Biological Reality:</span>
-          <h3>The Biological Actuator Problem</h3>
-        </div>
-        <p class="critic-argument">
-          The duality relation <em>&tau;</em> = <em>J</em><sup>T</sup><em>F</em> assumes ideal torque generators that can produce force equally well in any configuration. Muscles are not ideal motors; they have non-linear force-length and force-velocity properties. Critics point out that a "strong" direction in the theoretical Force Ellipsoid might be biologically weak if the primary driving muscles are at a mechanical disadvantage or are contracting at high speeds where their force output drops precipitously.
+<p>
+          Does a large velocity radius imply that a small torque will quickly move the club? No. The velocity map answers a joint-rate question. Acceleration also depends on inertia, current motion, applied inputs, retained loads and constraints. The appropriate map depends on the outcome being investigated.
         </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a valid distinction. The AffineDrift framework separates <em>Mechanical Advantage</em> (geometric leverage) from <em>Physiological Capability</em> (neural/muscular output). The ellipsoids describe the leverage available to the actuator, effectively defining the "efficiency multiplier" for whatever force the muscles can generate. Future physiological layers of the model will map the "Feasible Input Set" <em>U</em>(<em>x</em>) onto these geometric capabilities.
-        </div>
-      </div>
 
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Model Fidelity:</span>
-          <h3>Planar Reductionism vs. 3D Reality</h3>
-        </div>
-        <p class="critic-argument">
-          The article relies heavily on the double-pendulum analogy, which is a planar (2D) system. Critics argue that the most critical stability issues in golf—such as "coming over the top," shaft droop, and face closure—are inherently 3D phenomena involving out-of-plane forces. Planar ellipsoids fail to capture the cross-coupling terms (e.g., how arm elevation affects wrist radial/ulnar deviation leverage) that are essential for a complete understanding of the swing.
+<p><strong>Our Response:</strong> The article derives the input-to-acceleration map separately and gives a counterexample where the preferred direction reverses. A force ellipsoid is a generalized-load budget mapped into task space; structural strength, stiffness and impact response require further models. DCR does not supply those missing quantities automatically.</p>
+
+<p>Biological Reality:</p>
+<h3>The Biological Actuator Problem</h3>
+
+<p>
+          Which force and rate budgets represent the golfer? Muscles have state-dependent force capacity, moment arms and activation dynamics. A conveniently chosen unit ball is not a measurement of those capabilities, and independently selected physiological force and velocity limits need not be reciprocal.
         </p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge the limits of 2D analogies. This is a pedagogical planar model chosen to make the Jacobian and ellipsoids visible; it omits out-of-plane motion, spatial coupling, face orientation, and three-dimensional hand--club constraints. Spatial Jacobians and ellipsoids can be constructed, but this projection does not establish a quantitative fidelity percentage for a three-dimensional golf swing. Any such percentage requires a governed three-dimensional comparison with a declared dataset, cohort, coordinates, phase window, energy definition, task-relevant outcome metrics, and uncertainty. Spatial interactions must therefore be analyzed and validated explicitly rather than inferred from the planar picture.
-        </div>
-      </div>
 
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding by defining the boundaries of the model.
-      </div>
-    </div>
-  </div>
-</section>
+<p><strong>Our Response:</strong> Jacobian-transpose load mapping follows from the power pairing regardless of actuator physiology. The restriction lies in the chosen feasible load set and in interpreting its image. The derivation makes those budgets explicit; it does not infer muscle forces from net joint loads or treat mechanical advantage as an efficiency multiplier.</p>
+
+<p>Model Fidelity:</p>
+<h3>Planar Reductionism vs. 3D Reality</h3>
+
+<p>
+          What does the planar example omit? It cannot represent general clubface orientation, spatial shaft motion or all coupled upper-limb degrees of freedom. A two-dimensional projection cannot establish the relative importance of those omitted effects in a measured swing.
+        </p>
+
+<p><strong>Our Response:</strong> We acknowledge the limits of 2D analogies. This is a pedagogical planar model chosen to make the Jacobian and ellipsoids visible; it omits out-of-plane motion, spatial coupling, face orientation, and three-dimensional hand--club constraints. Spatial Jacobians and ellipsoids can be constructed, but this projection does not establish a quantitative fidelity percentage for a three-dimensional golf swing. Any such percentage requires a governed three-dimensional comparison with a declared dataset, cohort, coordinates, phase window, energy definition, task-relevant outcome metrics, and uncertainty. Spatial interactions must therefore be analyzed and validated explicitly rather than inferred from the planar picture.</p>
+
+<p><strong>Note:</strong> These are model checks, not peer-review endorsements or completed human validation.</p>
+</details>
 ```
 
 ## Introduction
 
-Think of a bicycle chain. When you push on the pedal, force travels through the chain to the wheel. But here's the key question: how much of your pushing force actually moves the wheel forward? Some of it gets "lost" in friction, in the geometry of the system, in the mechanical advantage. The force mobility matrix tells you exactly this—it's the "transfer function" of a mechanism, showing how forces at one point create motions at another.
+A transmission exchanges force and motion through a geometric ratio. In an
+ideal transmission, that ratio conserves power; geometry is not an energy
+loss. Friction and other dissipative mechanisms require additional terms.
+A kinematic Jacobian maps **joint velocity to task velocity**, not force to
+motion. In vibration analysis, "mobility" can instead mean a frequency-dependent
+velocity/force response. That different quantity requires a dynamic model and
+a specified frequency.
 
 The golf swing is the same. Your hands are one point, the clubhead is another. The geometry of your arms and the club acts like a transmission. At any instant during the swing, the configuration of these linked bodies (torso, arms, hands, club) imposes constraints on how the clubhead can move and how forces applied to the clubhead propagate back through the joints.
 
 These instantaneous capabilities are captured compactly by two geometric objects:
 
-- the **mobility ellipsoid**, describing directions in which motion 
-    of the clubhead is easiest, and
-    
-- the **force ellipsoid**, describing directions in which the golfer 
-    can generate or resist the greatest reaction forces.
+- the **mobility ellipsoid**, the task velocities produced by a specified
+  joint-rate budget; and
+- the **force ellipsoid**, or more generally force preimage, the task loads
+  compatible with a specified generalized-load budget in an idealized
+  balance calculation.
 
-Both ellipsoids arise directly from the Jacobian matrix of the system, and they 
-are geometric duals of one another.  
-Understanding these ellipsoids helps explain why certain modeled configurations offer stronger
-mechanical leverage than others.
+Reciprocal radii require compatible dual budgets, not merely the same
+Jacobian. Inertia, actuator capacity, contact and compliance must be added
+before drawing conclusions about a golfer's motion or load resistance.
 
 ::: {.callout-note}
 ## Connection to AffineDrift Framework: The "Effective Plant"
 
-In the broader context of nonlinear control, these ellipsoids describe one part of the instantaneous "Effective Plant": the modeled mechanical pathway through which intent is expressed as force or motion. The shape of the **mobility ellipsoid** can inform **Drift-Control Ratio (DCR)** analysis because high-mobility directions are often directions where small joint motion produces large task-space motion. Conversely, the **force ellipsoid** identifies directions where the linkage can transmit larger reaction forces in the model. Whether golfers exploit a specific ellipsoid alignment at impact is a hypothesis that requires measured swing data.
+Geometry determines how joint motion appears at a selected task and how task
+loads appear in generalized coordinates. Inertia determines acceleration;
+compliance and preload determine deformation; actuators and contacts restrict
+the feasible loads. The AffineDrift investigation needs these pieces together.
+An ellipsoid based on joint rates is not the torque-input map in a full
+control-affine state equation, and it does not measure drift dominance or
+biological intent. Whether a particular alignment helps a golfer is a separate
+empirical question.
 :::
 
 ## The Jacobian: The Mapping Between Joint Space and Club Motion
 
-Let $q \in \mathbb{R}^n$ denote the joint coordinates of the upper body, arms, 
-wrists, and club.  
-Let $x \in \mathbb{R}^6$ denote the instantaneous pose (position and orientation) 
-of the clubhead.
+Start with independent joint coordinates $q$ and a selected Cartesian point
+$p(q)$ in a stated inertial frame. Its velocity satisfies
 
-The kinematic map is
 $$
-    x = f(q) ,
+v_p=J_p(q)\dot q,
+\qquad J_p=\frac{\partial p}{\partial q}.
 $$
-and the differential relationship is
-$$
-    \dot{x} = J(q)\, \dot{q},
-$$
-where $J(q)$ is the $6 \times n$ Jacobian matrix.
+
+For a spatial task, one consistent ordering is $V=(v_p,\omega)$, paired with
+the wrench $W=(F,m_p)$ at the **same point** and in the **same frame**. Their
+pairing is power: $W^TV=F^Tv_p+m_p^T\omega$. Moment must be shifted when the
+reference point changes. Body or spatial twist conventions are equally usable
+when their velocity, Jacobian and wrench definitions match throughout.
+
+A pose is not globally a vector in $\mathbb R^6$. A local orientation-chart
+derivative generally differs from angular velocity; its dual generalized
+moment must be transformed accordingly. Do not pair an analytic pose-coordinate
+Jacobian directly with a physical wrench without that conversion. Below,
+$V=J\dot q$ always denotes a consistent task velocity/load pairing.
 
 Each column of $J$ describes the infinitesimal motion of the clubhead resulting 
 from a unit velocity in a single joint.  
@@ -140,160 +135,209 @@ entire body at that moment.
 
 ## The Mobility Ellipsoid
 
-The **mobility ellipsoid** is formed by mapping a unit ball of joint 
-velocities through the Jacobian:
+Write a joint-rate budget as $\dot q^T H\dot q\leq1$, where $H$ is positive
+definite and includes the scales needed to make the expression dimensionless.
+A diagonal choice can normalize coordinates by selected rate limits. This
+avoids arbitrarily treating one radian per second as equivalent to one metre
+per second when revolute and prismatic coordinates coexist.
+
+The allowed velocity set and its shape matrix are
+
 $$
-    \mathcal{E}_{\text{mob}} = \left\{\, \dot{x} = J\dot{q} 
-    \; \bigg| \; \|\dot{q}\| = 1 \,\right\}.
+\mathcal E_v=\{J\dot q:\dot q^T H\dot q\leq1\},
+\qquad S_v=JH^{-1}J^T.
 $$
 
-This produces an ellipsoid in task space whose principal axes represent:
-- directions of high mobility (large end-effector motion for a small 
-    joint motion),
-    
-- directions of low mobility (joint motion produces little club motion).
+For full row rank, the set is $V^T S_v^{-1}V\leq1$. At deficient rank it lies
+in $\operatorname{range}(J)$: a pseudoinverse inequality without that range
+condition would incorrectly admit null-direction velocities. Use a ball
+including its interior. With redundant joints, the surface of a joint-rate
+sphere can map into the interior of the task image.
 
-In the context of the control-affine derivation ($\dot{x} = f(x) + G(x)u$) presented in Part 1, this ellipsoid is a geometric representation of input efficacy in the chosen model. The principal axes of the mobility ellipsoid correspond to directions where the input map can produce larger task-space motion for a given joint-rate constraint. They should not be interpreted as a complete measure of biological agency, because muscle capacity, timing, noise, and inertia are not fully captured by the kinematic Jacobian alone.
+Before taking Euclidean eigenvalues of a six-component twist, choose a task
+normalization or analyze linear and angular components separately. Scaling
+metres to millimetres changes raw singular values, not the mechanism. Under
+$\widehat V=T V$, the dual load transforms as $\widehat W=T^{-T}W$ and the
+shape as $\widehat S_v=T S_vT^T$. Power is preserved; Euclidean principal axes
+depend on the metric and are not coordinate-free anatomical properties.
 
-These directions change continuously throughout the golf swing.  
-Near impact, the model predicts high tangential mobility,
-which is one reason small joint motions can have large task-space effects.
-
-**Synthesis: Drift Dominance**
-This geometric mobility is one kinematic contributor to **Drift Dominance** in the model. As the mobility ellipsoid elongates along the tangential path, accumulated momentum can become large relative to available control. The resulting "steering" limit is a model prediction that should be separated from direct claims about a golfer's perception or intent.
+A large semi-axis means a large instantaneous task velocity **per declared
+rate budget**. It does not mean low inertia, low effort, a large reachable
+region by impact or high attained clubhead speed. Actual joint rates can point
+away from the largest axis. The current rates and momentum depend on earlier
+inputs and constraints; neither their values nor drift dominance follow from
+the Jacobian alone.
 
 ## The Force Ellipsoid
 
-Reaction forces at the clubhead map back to joint torques via the transpose of 
-the Jacobian:
+A wrench **on the modeled system** produces the generalized load $Q_W=J^TW$.
+The identity does not assume ideal motors or muscle force–velocity behavior.
+Actuator load equals neither every external load nor the entire inertial
+load: gravity, inertia, passive loads and other contacts remain in the dynamics.
+To balance an external wrench $-W$ while preserving an otherwise specified
+motion, an ideal fully actuated model needs the additional actuator load
+$+J^TW$. This is the sign convention used in the publisher's
+[Modern Robotics statics treatment](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-2-statics-of-open-chains/).
+
+If the balancing actuator-load increment is constrained by
+$\tau^T R\tau\leq1$, its task-wrench preimage is
+
 $$
-    \tau = J^\top F.
+\mathcal E_F=\{W:W^T J R J^TW\leq1\}.
 $$
 
-The **force ellipsoid** is defined as
-$$
-    \mathcal{E}_{\text{force}} = 
-    \left\{\, F \in \mathbb{R}^6 \; \bigg|
-    \|J^\top F\| = 1 \,\right\},
-$$
-which describes all end-effector force directions that correspond to unit joint 
-torque outputs.
+This is a static or prescribed-motion transmission calculation. A contact
+environment must provide the balancing wrench; the set is not an arbitrary
+free-space force generator or a measure of structural stiffness.
 
-Its principal axes represent:
-- directions in which the system can generate large force or resist 
-    external load (high constraint),
-    
-- directions in which very little force can be produced or resisted 
-    (low constraint).
+The familiar reciprocal plot requires **dual joint budgets**. In consistently
+normalized coordinates with a common power scale, take $R=H^{-1}$. Then the
+force quadratic form equals $S_v$: eigenvalues $\lambda_i$ give velocity
+radii $\sqrt{\lambda_i}$ and force radii $1/\sqrt{\lambda_i}$. This is a
+polar-set construction, with maximum normalized load–velocity pairing one.
+The [standard manipulability construction](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-4-manipulability/)
+must retain its stated joint budgets and task-unit conventions.
 
-**Synthesis: Intentional Constraint Collapse**
-The duality of these ellipsoids offers one possible mechanical interpretation of **Intentional Constraint Collapse**. If a body-club configuration aligns high force-transmission directions with impact-relevant loads, the model predicts greater passive resistance in those directions. Whether elite golfers reliably create this alignment, and whether it stabilizes the clubface in measured swings, remains an empirical question.
+Physical force and velocity have different units; their normalizations contain
+the power scale. Actual torque capacities are not generally reciprocals of
+the selected rate limits. For independent budgets, $JH^{-1}J^T$ and $JRJ^T$
+need not share eigenvectors or reciprocal radii.
+
+For the normalized map $J=\operatorname{diag}(2,1)$, a unit rate ball gives
+velocity radii $(2,1)$. With $R=\operatorname{diag}(0.01,1)$, the force radii
+are $(5,1)$. The same direction has the larger radius in both sets because
+different physical allowances were supplied. This does not claim simultaneous
+maximal torque and speed; their feasible joint combinations require an
+actuator model.
+
+### Baseline Loads and Other Feasible Sets
+
+If supporting gravity already requires an actuator load $b$, the budget is
+$(b+J^TW)^TR(b+J^TW)\leq1$. The permitted load set can be offset or empty.
+For $J=2$, $b=1$ and $|\tau|\leq3$ in consistent scalar units, the admissible
+wrench interval is $[-2,1]$, rather than the zero-bias interval $[-1.5,1.5]$.
+
+Velocity boxes map to zonotopes; torque boxes give intersections of slabs in
+wrench space. Unilateral muscle tension, activation history, torque-rate
+limits, friction and contact mode impose additional constraints. If an
+ellipsoid approximates these sets, disclose its fitting method and whether
+it bounds from inside or outside. No joint-load budget alone certifies tissue
+loads or a golfer's resistance to impact.
 
 ## Algorithm: Computing the Ellipsoids {#sec-ellipsoid-algorithm}
 
-Given a Jacobian $J \in \mathbb{R}^{m \times n}$ (task-space dimension $m$, joint-space dimension $n$), the singular-value decomposition
+Let $A$ be the normalized rate-to-task map, with Euclidean balls and dual
+load coordinates after the chosen metric transformations. Its full
+singular-value decomposition is
 $$
-    J = U\,\Sigma\,V^\top,
-    \qquad
-    \Sigma = \operatorname{diag}(\sigma_1, \sigma_2, \dots, \sigma_r), \quad \sigma_1 \geq \sigma_2 \geq \dots \geq \sigma_r > 0,
+    A=U\Sigma V^T.
 $$
-provides the principal-axis decomposition for both ellipsoids:
+The matrix $\Sigma$ is rectangular when the task and joint dimensions differ.
+For numerical rank $r$, its retained singular values are positive. The first
+$r$ columns of $U$ span the retained task range; the remaining columns complete
+the task basis.
 
 | Ellipsoid | Defining set | Principal axes | Semi-axes |
 |---|---|---|---|
-| **Mobility** $\{\dot{x} = J\dot{q} : \lVert\dot{q}\rVert \leq 1\}$ | image of joint unit ball | columns of $U$ | $\sigma_i$ |
-| **Force** $\{F : \lVert J^\top F\rVert \leq 1\}$ | dual via $J^\top$ | columns of $U$ | $1/\sigma_i$ |
+| **Mobility** | Image of normalized rate ball | Retained columns of $U$ | $\sigma_i$ |
+| **Force** | Preimage of normalized load ball | Same retained directions | $1/\sigma_i$ |
 
-The two ellipsoids share the *same* principal axes (columns of $U$) but their semi-axes are reciprocals --- this is the origin of the mobility-vs-force trade-off. (Strictly, the reciprocal-semi-axis picture describes a *bounded* force ellipsoid only when $J$ has full row rank. If $J$ is rank-deficient or has more task dimensions than independent joint contributions, $J^\top F$ has a nontrivial null space and the set $\{F : \lVert J^\top F\rVert \le 1\}$ is an unbounded cylinder along those uncontrollable force directions; the $1/\sigma_i$ description then applies only within the range of $U$.) A direction with a large $\sigma_i$ is a direction of easy motion and weak force resistance; a direction with a small $\sigma_i$ is the reverse. At a **singular configuration** ($\sigma_r \to 0$), the mobility ellipsoid flattens (motion in that direction becomes unachievable) and the force ellipsoid blows up (infinite reaction force required to maintain joint-torque bound).
+At deficient rank, the velocity image has zero radius in the remaining task
+directions and the force preimage is unbounded along $\ker(A^T)$. This is a
+cylinder, not a bounded force ellipsoid. It says the ideal generalized-load
+budget imposes no bound there. It does **not** say that infinite force is
+required, that infinite load is safe, or that arbitrary force can be commanded.
+
+A reduced SVD of a tall matrix omits some ambient null directions. The example
+below returns all task directions and pads the radii. The relative tolerance
+$10^{-10}$ is an illustrative numerical choice, not a material or physiological
+threshold. Inspect the raw singular values and vary the tolerance according to
+model/data uncertainty. Truncating a small nonzero singular value changes the
+approximate model; it does not prove an exact physical singularity.
 
 ```python
 import numpy as np
 
-def ellipsoid_axes(J):
-    """Compute principal axes and semi-axes of mobility / force ellipsoids.
+def ellipsoid_axes(A, rtol=1e-10):
+    """Return full task axes, raw singular values and truncated dual radii."""
+    A = np.asarray(A, dtype=float)
+    if A.ndim != 2 or min(A.shape) == 0 or not np.isfinite(A).all():
+        raise ValueError("A must be a finite, nonempty matrix")
+    if not np.isfinite(rtol) or not 0 <= rtol < 1:
+        raise ValueError("rtol must lie in [0, 1)")
+    U, sigma, _ = np.linalg.svd(A, full_matrices=True)
+    mobility = np.zeros(A.shape[0])
+    mobility[:sigma.size] = np.where(sigma > rtol * sigma[0], sigma, 0)
+    force = np.full(A.shape[0], np.inf)
+    np.divide(1, mobility, out=force, where=mobility > 0)
+    return U, sigma, mobility, force
 
-    Returns (U, sigma, mobility_semiaxes, force_semiaxes).
-    force_semiaxes is np.inf at singular directions (sigma == 0).
-    """
-    U, sigma, _Vt = np.linalg.svd(J, full_matrices=False)
-    with np.errstate(divide="ignore"):
-        force_semiaxes = np.where(sigma > 0, 1.0 / sigma, np.inf)
-    return U, sigma, sigma.copy(), force_semiaxes
-
-
-# Example: 2-link planar arm, L1 = L2 = 1, elbow angle theta2.
-def planar_2link_J(theta1, theta2, L1=1.0, L2=1.0):
-    c1, s1 = np.cos(theta1), np.sin(theta1)
-    c12, s12 = np.cos(theta1 + theta2), np.sin(theta1 + theta2)
-    return np.array([
-        [-L1*s1 - L2*s12, -L2*s12],
-        [ L1*c1 + L2*c12,  L2*c12],
-    ])
-
-
-J = planar_2link_J(theta1=0.3, theta2=1.2)
-U, sigma, mob, force = ellipsoid_axes(J)
-# sigma ~ [1.86, 0.50] at this posture: mobility ellipsoid stretches ~1.86 along u_1
-# and shrinks to 0.50 along u_2; the force ellipsoid is the reciprocal.
 ```
 
-Near the fully extended configuration ($\theta_2 \to 0$), $\sigma_2 \to 0$: the arm becomes singular and the force ellipsoid degenerates to an infinite strip along $u_2$ (the axis of the straightened links). This recovers the planar intuition from the next section.
+For the zero matrix, every velocity radius is zero and the force preimage is
+unbounded in all task directions. Singular vectors can flip sign or rotate
+within a repeated-value subspace without changing the set. Report metrics,
+scales, rank and null subspaces alongside an ellipsoid figure.
 
-## The Double Pendulum Analogy
+## A Specified Two-Link Example
 
-The golf swing is often modeled as a double pendulum: an upper arm segment of 
-length $L_1$ and a club segment of length $L_2$ connected by hinged joints.
+Take a fixed-base planar chain with two one-metre links, ideal revolute joints
+and an endpoint translation task. Angle $q_1$ is counterclockwise from the
+horizontal; $q_2$ is the second link's angle relative to the first. Trigonometric
+arguments and joint rates use radians. Then
 
-When the two links are nearly collinear, the system exhibits characteristic 
-features:
-
-### High Mobility Perpendicular to the Links
-
-A small rotation at the proximal joint produces a large transverse motion of the 
-clubhead.  
-This corresponds to a *large* principal axis of the mobility ellipsoid 
-pointing perpendicular to the aligned links.
-
-Mathematically, when the links are collinear, the moment arm between joint 
-rotation and distal motion is maximized:
 $$
-    v_\perp \propto (L_1 + L_2)\, \dot{\theta}.
+p=\begin{bmatrix}
+\cos q_1+\cos(q_1+q_2)\\
+\sin q_1+\sin(q_1+q_2)
+\end{bmatrix}\ \mathrm m,
 $$
 
-### Low Force Capability in the Same Perpendicular Direction
-
-However, the ability to resist external force *in that same perpendicular 
-direction* is very poor.  
-Because joint torques must react forces through long, nearly straight lever arms, 
-a modest force at the clubhead creates a large torque at the joint:
 $$
-    \tau \approx (L_1 + L_2)\, F_\perp.
+J_p=\begin{bmatrix}
+-\sin q_1-\sin(q_1+q_2)&-\sin(q_1+q_2)\\
+\cos q_1+\cos(q_1+q_2)&\cos(q_1+q_2)
+\end{bmatrix}\ \mathrm{m/rad}.
 $$
 
-Thus, the system has:
-- **high mobility** transverse to the links, and
-    
-- **low force capability** in that very same direction.
+At $(q_1,q_2)=(0.3,1.2)$, the singular values are approximately
+$1.864057$ and $0.500006\ \mathrm{m/rad}$. A Euclidean rate ball of radius
+$1\ \mathrm{rad/s}$ gives velocity radii $1.864057$ and
+$0.500006\ \mathrm{m/s}$. A separate torque ball of radius
+$1\ \mathrm{N\,m}$ gives balancing-force radii $0.536464$ and
+$1.999978\ \mathrm N$. These chosen scales give reciprocal numerical values;
+they are not measured human capacities.
 
-This is exactly what the mobility and force ellipsoids reveal.
+At complete extension along the horizontal,
 
-### High Force Capability Along the Axis of the Links
+$$
+J_p=\begin{bmatrix}0&0\\2&1\end{bmatrix}\ \mathrm{m/rad}.
+$$
 
-Conversely, when an external force is applied along the axis of the aligned 
-links, the moment arm is tiny.  
-A substantial axial force produces only a small joint torque.  
-This direction becomes a principal axis of the *force ellipsoid*.
+The largest velocity radius under that rate ball is $\sqrt5\ \mathrm{m/s}$,
+not $2\ \mathrm{m/s}$: the maximizing rate uses both joints. The simpler
+relation $v_y=2\dot q_1$ fixes the second relative joint rate at zero.
+The tip-force load is $(2F_y,F_y)$ in consistent SI units. Under the unit
+torque ball, $|F_y|\leq1/\sqrt5\ \mathrm N$; $F_x$ is absent from that
+torque constraint.
 
-Thus:
-- motions along the axis have low mobility, but
-    
-- the system can generate or resist large forces along that axis.
+An axial force lies in $\ker(J_p^T)$ at this ideal posture. It still loads
+links and bearings. Material stress, deformation, contact slip and buckling
+limits have not disappeared; the rigid-joint model simply does not bound them.
 
-### The Key Insight
+### Lost Instantaneous Motion Is Not Permanent Immobility
 
-The directions of high mobility and high force resistance are *orthogonal*:  
-what the system can move easily, it cannot push against strongly;  
-what the system can push against strongly, it cannot move easily.
+Every endpoint velocity is transverse at extension. Nevertheless, if
+$q_1(t)=t$ and $q_2(t)=0$, then $p(t)=(2\cos t,2\sin t)\ \mathrm m$.
+At zero time, axial velocity is zero but axial acceleration is
+$-2\ \mathrm{m/s^2}$. This is the $\dot J_p\dot q$ term: the curved path has
+second-order axial displacement. It does not restore first-order axial
+velocity authority at the singular point.
+
+Poor Jacobian conditioning does not prove dynamic instability. Stability
+requires a specified equilibrium or trajectory, loads, constraints and
+perturbation model. The same singular geometry can have different stability
+properties under different constitutive laws or loading conditions.
 
 ## Connection to the Inclined Plane
 
@@ -306,60 +350,166 @@ $$
     F_{\perp} = mg \cos\theta.
 $$
 
-As the ramp becomes shallow ($\theta \to 0$):
-- motion (mobility) along the ramp becomes easy,
-    
-- required force along the ramp becomes small,
-    
-- resistance perpendicular to the ramp becomes large.
+These are the gravity components for a frictionless fixed ramp with no other
+normal loads. Quasistatic ascent needs the opposing tangential force; the ramp
+supplies the normal support. A shallower ramp reduces the ascent force but
+increases distance for the same height: $Fs=mgh$ in the ideal limit. Geometry
+has not dissipated energy.
 
-The ramp is simply a constraint surface, and its geometry dictates both the ease 
-of motion and the availability of resistive reaction forces.  
-Likewise, the kinematic configuration of the golf swing imposes geometric 
-constraints that shape the mobility and force ellipsoids.
+The normal reaction is not a measured stiffness or a force-ellipsoid radius.
+Its physical capacity depends on the support and material. The analogy helps
+explain leverage and ideal constraint work, but it cannot establish passive
+stability of a golfer's low-mobility direction.
 
 ## Why Force and Mobility Ellipsoids Are Duals
 
-The force and mobility ellipsoids are duals because the Jacobian and its 
-transpose are linked by instantaneous power conservation:
+The velocity and load mappings preserve the same instantaneous power pairing:
 $$
-    F^\top \dot{x} = \tau^\top \dot{q}.
-$$
-
-Substituting $\dot{x} = J\dot{q}$ gives
-$$
-    F^\top J \dot{q} = (J^\top F)^\top \dot{q}.
+    W^T V=Q_W^T\dot q.
 $$
 
-Since this holds for all $\dot{q}$, we obtain $\tau = J^\top F$ and the 
-fundamental duality between motion and force mappings.  
-This duality guarantees that:
+Substituting $V=J\dot q$ gives
+$$
+    W^TJ\dot q=(J^TW)^T\dot q.
+$$
 
-- directions of high mobility are directions of low force capability,
-    
-- directions of low mobility are directions of high force capability.
+This identity holds for every allowed joint rate. Reciprocal **ellipsoids**
+add the dual-budget assumptions above; independently chosen physiological
+force and velocity limits need not be reciprocal.
 
-This relationship is not an empirical observation but a geometric consequence of 
-the system constraints.
+Duality is not orthogonality of force and motion. Corresponding ellipsoids
+share principal directions. In a two-dimensional anisotropic case, their
+longest reciprocal axes happen to be orthogonal eigenvectors. In an isotropic
+case, the extreme direction is not unique. Aligned force and velocity can
+produce nonzero power; the transpose identity does not prohibit them.
 
 ### Synthesis: Null Space and Parallel Mechanisms
-While the double pendulum models the arm-club system as a serial chain, the two hands on the grip technically form a **Parallel Mechanism** (a closed loop). This creates an "over-constrained" system where internal forces can exist in the **Null Space** of the Jacobian. These internal forces (co-contraction between the hands) do not produce motion (mobility) but do reshape the stiffness of the joint, effectively inflating the Force Ellipsoid in specific directions without changing the kinematic configuration. This allows the golfer to modulate the "Effective Plant" impedance independent of the trajectory.
+Two hands attached to a club can close a kinematic loop when the arms and torso
+are included. Closure does not automatically mean redundant constraints or an
+overconstrained model. Count independent constraints and state which contacts
+permit slip, rotation or separation.
 
-## Video Demonstration
+For fixed ideal bilateral constraints $C(q)\dot q=0$, let $N$ span
+$\ker C$. Then $\dot q=Nv$ and the reduced task map is $JN$. A reduced
+rate metric must be obtained consistently; it is not generally the identity.
+Constraint reactions lie in $\operatorname{range}(C^T)$ and do no work on
+the allowed rates. They are not the joint-velocity null space $\ker J$.
 
-The following video provides a visual demonstration of mobility and force ellipses in action:
+For contact forces $f_c$ mapped to a net club wrench by a grasp map
+$W_c=G_c f_c$, internal contact-force distributions lie in $\ker G_c$.
+Their feasibility still depends on friction, compressive contact and the
+hands' ability to supply them. A zero resultant on the club does not imply
+zero load, muscle activity or deformation in the hands and arms. This map
+must be distinguished from both $J$ and the constraint matrix $C$.
 
-```{=html}
-<div class="youtube-embed" style="margin: 2rem 0;">
-  <iframe src="https://www.youtube.com/embed/8VSrYDi_cs0" 
-          title="YouTube Video Player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-  </iframe>
-</div>
-```
+Co-contraction can change impedance or capacity in an appropriate physiological
+model. At fixed $J$ and fixed load metric $R$, however, the quadratic form
+$JRJ^T$ is unchanged. A stiffness change does not literally inflate that
+force ellipsoid. A capacity change instead requires an updated admissible
+load set, whose values need evidence.
 
-[Watch on YouTube](https://www.youtube.com/watch?v=8VSrYDi_cs0)
+## Dynamics, Compliance and Impact Need Additional Models
+
+### Acceleration Authority and Apparent Inertia
+
+For an unconstrained mechanical model with positive-definite inertia $M$,
+velocity/gravity bias $h$, declared input $u$, input map $B$ and retained loads
+$Q_{\rm ext}$,
+
+$$
+M\ddot q+h=Bu+Q_{\rm ext},
+$$
+
+$$
+\ddot p=JM^{-1}(Bu+Q_{\rm ext}-h)+\dot J\dot q.
+$$
+
+The same-state input contribution is $JM^{-1}Bu$, not $J u$. Torque-box or
+torque-ellipsoid bounds therefore generate an acceleration set through a
+different map, translated by the retained acceleration. A full control-affine
+state map also includes the configuration-rate equations and any internal
+states. The instantaneous acceleration set is not a reachable set at impact.
+
+As an algebraic counterexample in consistently normalized coordinates, take
+$J=\operatorname{diag}(2,1)$, $B=I$ and
+$M=\operatorname{diag}(100,0.25)$. Kinematic gain is larger in the first
+direction, while input-to-acceleration gains are $(0.02,4)$: the second
+direction now has much larger gain. These specified matrices illustrate why
+kinematic leverage alone cannot rank dynamic authority; they are not an
+identified human model.
+
+An additional applied task wrench changes acceleration through $JM^{-1}J^T$.
+For full row rank, the apparent task inertia is
+
+$$
+\Lambda=(JM^{-1}J^T)^{-1}.
+$$
+
+The square invertible case follows directly from
+[task-space dynamics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-6-dynamics-in-the-task-space/).
+For a rectangular full-row-rank map, the same positive quadratic form gives
+the instantaneous wrench-to-acceleration relation, but does not eliminate
+internal joint dynamics. Velocity and bias terms remain; an inertia ellipsoid
+is not a velocity-budget ellipsoid.
+
+Under ideal contact constraints the free inverse inertia must be replaced by
+the response of the constrained equations. For independent active constraints,
+one formulation is
+
+$$
+\begin{bmatrix}M&-C^T\\C&0\end{bmatrix}
+\begin{bmatrix}\ddot q\\\lambda\end{bmatrix}
+=\begin{bmatrix}Bu+Q_{\rm ext}-h\\-\dot C\dot q\end{bmatrix}.
+$$
+
+This fixed-contact mode still requires feasible reactions, friction and
+contact-maintenance conditions. Constraint changes require explicit mode
+transitions. See the publisher's
+[constrained-dynamics treatment](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/)
+for the separation of motion and ideal reaction loads.
+
+For a selected translational direction $n$, an ideal frozen-configuration
+impulse model without additional constraints gives
+$m_{\rm eff}=1/(n^TJM^{-1}J^Tn)$ for a unit vector $n$ and a positive denominator.
+For independent ideal constraints that remain active through the impulse,
+replace $M^{-1}$ by
+$$
+D_C=M^{-1}-M^{-1}C^T(CM^{-1}C^T)^{-1}CM^{-1}.
+$$
+This projects the velocity response into the permitted motion; an impending
+contact or a changing contact mode requires its own impulse balance. This scalar can be
+useful in contact analysis, but a force ellipsoid alone supplies neither it
+nor restitution, contact duration, dissipated energy or shaft vibration.
+
+### Small-Displacement Compliance
+
+At an unloaded equilibrium, suppose joint springs have positive-definite
+stiffness $K_q$. Neglecting preload terms and using the same small-displacement
+Jacobian, an applied load increment gives
+
+$$
+\delta p=J K_q^{-1}J^T\delta W.
+$$
+
+This **compliance** matrix has different units and inputs from the force
+budget's quadratic form. With $J=\operatorname{diag}(2,1)$, joint stiffness
+matrices $\operatorname{diag}(4,1)$ and $\operatorname{diag}(16,1)$ give
+task compliances $\operatorname{diag}(1,1)$ and $\operatorname{diag}(0.25,1)$
+in consistent units. Holding the torque budget fixed leaves its force
+ellipsoid unchanged while compliance changes by a factor of four.
+
+Preload can add geometric stiffness. For a conservative dead load with
+potential $-W^T p(q)$, the tangent stiffness includes
+$-\sum_i W_i\nabla^2 p_i$. For the scalar example $p=q^2$, spring stiffness
+$10$ and dead load $3$, the local tangent stiffness is $10-2(3)=4$ in the
+corresponding normalized units. Using the unloaded spring value would miss
+the load's contribution. Nonconservative loads, damping, feedback and contact
+compliance require their own linearization and stability analysis.
+
+The practical connection is therefore conditional: posture changes geometric
+leverage; activation and material behavior can change load capacity and
+impedance; motion changes inertial and velocity-dependent effects. Their
+interaction must be modeled and checked, rather than inferred from one ellipse.
 
 ## Connection to Drift-Control Decomposition
 
@@ -367,95 +517,79 @@ The force and mobility ellipsoids are more than geometric curiosities: they desc
 
 Near impact, a model may combine high task-space mobility with large velocity-dependent drift. Whether the available control is small or large relative to that drift is an empirical model result, not a consequence of the ellipsoid alone. The [hand-path attribution study](proximal-distal-energy-transfer.html#force-along-the-hand-path) defines the same-state comparison needed to test it.
 
-Conversely, in low-mobility directions, the force ellipsoid bulges outward: the model predicts greater structural resistance but less ease of motion. This is where passive stability may arise. The stronger claim that elite golfers deliberately exploit a particular ellipsoid alignment should be treated as a testable hypothesis, not as a conclusion established by this article.
+Under the dual-budget construction, a small velocity radius pairs with a large
+force radius. That geometric result is not a passive-stability certificate.
+Testing a golf interpretation requires a declared state, model, reference
+point, actuator/contact bounds, load or disturbance direction, and outcome
+horizon. Compare both the kinematic and dynamic sets, then assess sensitivity
+to measurement errors, coordinate scaling and plausible capacity models.
 
 ## Conclusion
 
-The mobility and force ellipsoids provide a precise geometric language for
-understanding the instantaneous capabilities of the golf swing.
-Using the double pendulum analogy, we see that when the club and lead arm are
-aligned, the system moves easily in a direction perpendicular to the links but
-resists force most strongly along the links.
-This illustrates the universal rule: mobility and force capabilities are
-geometric duals arising from the Jacobian and its constraints.  
+The Jacobian gives a precise connection between task velocity and generalized
+load. Ellipsoids add a chosen metric and feasible budget to that map. Their
+reciprocal construction is useful precisely because its assumptions can be
+stated and tested; it should not be extended into a universal physiological
+trade-off.
 
-These ellipsoids help explain why release, impact loading, and mechanically strong or weak positions can appear in a modeled swing. They do not replace physiological analysis: muscle capacity, tissue compliance, timing, and measurement uncertainty still determine what motions and forces are possible for a real golfer.
+For the golf investigation, keep the chain of reasoning explicit: specify the
+task and reference point; derive the geometric map; add inertia, retained
+loads and contacts; model capacity and compliance; then evaluate the selected
+outcome over the relevant time interval. The two-link example explains a
+transmission geometry. Evidence about real release strategies, tissue loading,
+clubface stabilization or impact performance must come from that fuller model
+and appropriate measurements.
 
 :::{.callout-warning}
 ## Scope and Limitations
 
-- **This analysis assumes rigid body dynamics.** The Jacobian $J(q)$ describes how rigid segments connected by ideal joints transform motion. But real bodies are not rigid: the shaft flexes, the wrist ligaments stretch, bone deforms under load. These compliances shift the effective "point of rotation" and couple dynamics between segments in ways the rigid-body Jacobian misses. For high-speed impacts, compliance becomes substantial, and the elegant geometry of ellipsoids becomes muddied by elastic effects we have ignored.
+- **The example is a rigid linkage.** Flexible coordinates and their rates can be included in a more complete kinematic map. Compliance is not a breakdown of Jacobian mathematics; it changes the state, constitutive law and load response that must be modeled. The size of elastic effects requires evidence for the actual shaft, joints, loading and time scale.
 
-- **Mobility ellipsoid conditioning degrades near singularities.** When the links approach a singular configuration (nearly straight line for a 2-link system), the Jacobian's numerical conditioning worsens and the ellipsoid becomes arbitrarily thin. Mathematically this is correct—mobility vanishes in singular directions. But numerically and biologically, systems near singularity are unstable and difficult to control, so the prediction that "you can move freely perpendicular to the singular direction" becomes practically irrelevant. The mathematics is honest; the practical implication is that singular-adjacent regions are simply fragile.
+- **Singular limits need a physical interpretation.** Exact rank loss, numerical ill-conditioning and dynamic instability are different questions. Small singular values can make inversion sensitive; they do not erase the remaining task directions or prove a particular biological failure. An unbounded force preimage exposes omitted load limits rather than certifying unlimited support.
 
-- **Static analysis does not capture dynamic coupling effects.** The force and mobility ellipsoids are based on the Jacobian alone, which encodes instantaneous kinematics. But in a dynamic system, inertia ($M(q)$) and Coriolis forces ($C(q,\dot{q})$) create coupling that the kinematic ellipsoids do not show. A direction might have high kinematic mobility but extreme inertial resistance—you can move there kinematically but your inertia won't let you accelerate in that direction quickly. The ellipsoids tell you the skeleton's geometric possibilities, not the body's dynamic capabilities. We call this the "effective plant," but we measure only half of it.
+- **A capability picture is conditional.** State uncertainty, task scaling, load offsets and admissible inputs affect the result. Compare sensitivity to these choices and disclose whether an ellipsoid is exact, fitted, projected or numerically truncated. No numerical human validation or ideal-posture recommendation is supplied here.
 
 :::
 
 ```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        The golf swing is a trade-off between moving fast and resisting force. This article explains the geometry of that trade-off.
+<details class="technical-explanation">
+<summary>In Layman's Terms</summary>
+<p>
+        A long lever can turn a small angular motion into a large tip motion while a force at its tip demands a substantial joint moment. Ellipsoids picture that geometry under specified budgets; they do not impose a universal choice between speed and strength.
       </p>
 
-      <div class="laymans-item">
-        <h3>Mobility (The Speed Zone)</h3>
-        <p>
-          "Mobility" describes the directions where a small movement of your joints creates a huge movement of the clubhead. This is what you want for speed.
+<h3>A Velocity Budget</h3>
+<p>
+          The mobility picture contains the tip velocities allowed by a chosen joint-rate budget at a posture. Its longest axis is not necessarily the direction of the actual swing, and it does not tell us how much torque is needed to reach that motion.
         </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> A whip. A small flick of the wrist creates a massive motion at the tip. That's high mobility.
-        </div>
-      </div>
 
-      <div class="laymans-item">
-        <h3>Force (The Power Zone)</h3>
-        <p>
-          "Force" describes the directions where your body is stiff and strong, capable of withstanding the violence of impact.
+<p><strong>Think of it like:</strong> Moving the end of a long ruler with a small rotation. The displacement ratio is geometric; accelerating the ruler also depends on its mass and how it is driven.</p>
+
+<h3>A Load Budget</h3>
+<p>
+          The force picture describes which balanced tip loads fit within a stated joint-effort allowance. Stiffness asks how much the system deforms under load; strength asks which loads it can tolerate. Neither is specified by this force picture alone.
         </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> A pillar. It can support a heavy roof (force) but you can't easily wiggle it (mobility).
-        </div>
-      </div>
 
-      <div class="laymans-item">
-        <h3>The Great Trade-off</h3>
-        <p>
-          You can't be fast and strong in the same direction at the same time. Math shows these two qualities are opposites. If you are set up to move the club fast (high mobility), you are weak against recoil (low force).
+<p><strong>Think of it like:</strong> A force through an ideal hinge produces no turning moment about that hinge. The bearing still carries the load, and its material limits still matter.</p>
+
+<h3>When Reciprocity Applies</h3>
+<p>
+          Familiar reciprocal ellipses use matching mathematical budgets. Real rate and torque capacities can differ, so a direction can have large radii in both separately defined sets. Whether the corresponding force and speed can occur simultaneously is another actuator-capability question.
         </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> A car's transmission. You can be in First Gear (high power, low speed) or Fifth Gear (high speed, low power). You can't be in both at once. The golf swing is a rapid shift from "speed gears" to "power gears".
-        </div>
-      </div>
 
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> Elite golfers arrange their bodies to have "high speed" mobility during the downswing, but instantly shift to "high force" stability at the moment of impact.
-      </div>
+<p><strong>Think of it like:</strong> An ideal gear exchanges torque for speed while preserving power. Changing the motor's capacity changes what the complete machine can do; a gear ratio alone does not specify its power, stiffness or stability.</p>
 
-      <div class="laymans-item">
-        <h3>Real-World Analogies: Configuration-Dependent Behavior</h3>
-        <p>
-          The force-mobility matrix reveals something profound: the relationship between input (force) and output (motion) depends entirely on your current configuration. Here's how this appears in everyday life:
+<p><strong>Key Takeaway:</strong> Declare the task, posture, units and budgets before interpreting an ellipse. These examples do not establish that elite golfers instantly switch from a speed posture to an impact-stability posture.</p>
+
+<h3>Real-World Analogies: Configuration-Dependent Behavior</h3>
+<p>
+          Posture changes the geometric map. Motion and force capacity also depend on state, inertia, actuator behavior, contact and compliance. Two systems with the same geometry can therefore have different acceleration and load responses.
         </p>
-        <div class="analogy">
-          <strong>A car's steering wheel at different speeds:</strong> When you're driving slowly, a tiny turn of the steering wheel creates a sharp change in direction (high control authority). But at highway speed, the same small turn barely curves the car—the inertia dominates, and steering is sluggish (low control authority). The steering wheel hasn't changed, but the relationship between your input (hand angle) and output (car direction) is completely different depending on the car's state (speed). The force-mobility matrix is exactly this: how your input effectiveness changes with configuration.
-        </div>
-        <div class="analogy">
-          <strong>A puppet's strings and poses:</strong> Consider a puppet made of rigid segments (arms, legs) connected by hinges. The strings are your forces; the puppet's limb motions are the output. But here's the key: pulling a string has very different effects depending on the puppet's current pose. When the arm is bent, pulling the string creates a big motion (high mobility). When the arm is fully extended and locked straight, pulling the same string creates almost no motion—all your force goes into compressing joints rather than moving the limb (low mobility). The puppet's ability to respond to your input depends on its geometry at that instant.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
+<p><strong>The same ruler with a different mass:</strong> Its rotation-to-tip-motion ratio can remain the same, while the torque needed for a selected acceleration changes. A motion ellipse cannot reveal that mass change by itself.</p>
+
+<p><strong>The same linkage with different springs:</strong> Changing spring stiffness changes its deformation under load without necessarily changing its geometric motion map or the chosen torque budget. To understand the swing, evaluate these quantities together while keeping their meanings separate.</p>
+</details>
 ```
 
 ## Related Articles
@@ -463,12 +597,11 @@ These ellipsoids help explain why release, impact loading, and mechanically stro
 ::: {.callout-note}
 ## See Also
 
-- **[Drift-Control Ratio](controllability-drift-ratio.html)** — How mobility ellipsoids quantify the battle between passive inertia and active control
+- **[Drift-Control Ratio](controllability-drift-ratio.html)** — Why drift comparison also needs state, input bounds, direction and a declared norm
 - **[Screw Theory Reference](screw-theory-reference.html)** — Twists, wrenches, and the spatial force-torque duality underlying mobility mapping
-- **[Intentional Constraint Collapse](intentional-constraint-collapse.html)** — The strategy of aligning the force ellipsoid's major axis with impact loads
-- **The Effective Plant** — How geometry dictates the baseline mechanical impedance
-- **[The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html)** — The mathematical home of internal forces in parallel mechanisms
-- **[Superposition in Affine Control Systems](superposition.html)** — The fixed-state linear input map whose geometry the mobility ellipsoid describes
-- **[Tangent Hyperplanes II: Dynamics](tangent-hyperplanes-series/part-2-dynamics.html)** — The linearized input map that mobility ellipsoids visualize at each state
+- **[Intentional Constraint Collapse](intentional-constraint-collapse.html)** — Separate geometric restriction, impedance and hypotheses about impact
+- **[The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html)** — Distinguish allowable velocities, reaction loads and grasp internal forces
+- **[Superposition in Affine Control Systems](superposition.html)** — Declared fixed-state input contributions and their interpretation limits
+- **[Tangent Hyperplanes II: Dynamics](tangent-hyperplanes-series/part-2-dynamics.html)** — Connect local dynamics to geometric maps without equating joint rates and torque inputs
 - **[Tangent-Space Series](../pages/tangent-hyperplanes.html)** — Series hub with the full reading order and provenance notes
 :::

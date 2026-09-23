@@ -7,14 +7,14 @@
   - **Manipulability Ellipsoid**: Geometric representation of kinematic capability ($\dot{x} = J\dot{q}$).
   - **Force Ellipsoid**: Geometric representation of static force transmission ($\tau = J^\top F$).
   - **Singular Value Decomposition (SVD)**: Mathematical tool to extract principal axes ($\sigma_i$) of the Jacobian.
-  - **Duality**: The orthogonal relationship between motion and force capabilities ($F^\top v = \tau^\top \dot{q}$).
+  - **Duality**: The power pairing ($F^\top v = Q_F^\top \dot{q}$); reciprocal ellipsoid radii additionally require dual normalized budgets. Duality does not mean orthogonality.
 
 - **Multibody Dynamics**
 
   - **Jacobian Matrix ($J$)**: The linear mapping from joint space velocities to task space velocities.
   - **Kinematic Singularity**: Configurations where rank($J$) drops, losing mobility in certain directions.
   - **Double Pendulum**: Canonical planar linkage model for the golf swing.
-  - **Constraint Surfaces**: Manifolds restricting motion, trading mobility for reaction force potential.
+  - **Constraint Surfaces**: Restrictions on permitted velocities; ideal reactions do no work on those velocities. Reaction feasibility and structural load limits require additional models.
 
 - **Biomechanics**
   - **Mechanical Advantage**: Leverage ratios changing with configuration.
@@ -22,6 +22,11 @@
   - **Intersegmental Dynamics**: Coupling between proximal (torso/arm) and distal (club) segments.
 
 ## B) Bibliography (YAML)
+
+This is a reading-candidate catalog, not a claim that every full text was
+reviewed. `related_ids` are editorial topic connections. No outgoing citation
+edges are asserted without checking the cited work's reference list.
+The verified source access for this correction is listed after the catalog.
 
 ```yaml
 - id: yoshikawa1985manipulability
@@ -34,7 +39,7 @@
   clusters: ["robotics", "kinematics", "geometric analysis"]
   concepts: ["manipulability ellipsoid", "jacobian", "singularity"]
   related_ids: ["chiu1988task", "salisbury1982articulated"]
-  references_out_ids: ["murray1994mathematical"]
+  references_out_ids: []
 
 - id: salisbury1982articulated
   title: "Articulated hands: Force control and kinematic issues"
@@ -71,7 +76,7 @@
   clusters: ["robotics", "control"]
   concepts: ["operational space", "effective inertia", "kinetic energy matrix"]
   related_ids: ["hogan1985impedance"]
-  references_out_ids: ["featherstone2008rigid"]
+  references_out_ids: []
 
 - id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
@@ -117,6 +122,7 @@
   title: "Work and power analysis of the golf swing"
   authors:
     - "Steven M. Nesbit"
+    - "Monika Serrano"
   year: 2005
   venue: "Journal of Sports Science and Medicine"
   scholar_link: "https://scholar.google.com/scholar?q=Work+and+power+analysis+of+the+golf+swing+Nesbit"
@@ -186,36 +192,32 @@
   references_out_ids: []
 ```
 
-## C) Reading Paths
+## C) Verified Sources and Reading Sequence
 
-### Path 1: Fast Ramp (The Geometric Intuition)
+The correction consulted the publisher's Modern Robotics transcripts for
+[statics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-2-statics-of-open-chains/),
+[manipulability](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-4-manipulability/),
+[task-space dynamics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-6-dynamics-in-the-task-space/)
+and [constrained dynamics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/).
+These establish the starting conventions; the article's weighted budgets,
+rank-deficient cases and numerical counterexamples are explicit derivations.
+The task-dynamics transcript assumes a square invertible Jacobian; the
+rectangular extension must retain internal dynamics and bias terms.
 
-_Target: Understand the core concept of mobility vs. force without heavy math._
+Read the statics and manipulability treatments together, keeping the chosen
+rate and load budgets visible. Then use task and constrained dynamics to see
+why inertia and contact change acceleration without changing the underlying
+power identity. Compliance needs a constitutive law as well as geometry.
 
-1.  **Lynch & Park (2017)** - _Modern Robotics_ (Chapter 5). Read the section on Manipulability Ellipsoids.
-2.  **Yoshikawa (1985)** - _Manipulability of robotic mechanisms_. The original paper defining the concept; surprisingly readable.
-3.  **Sprigings & Neal (2000)** - _Insight into wrist torque_. Applies these kinetic concepts specifically to the golf swing double pendulum.
-4.  **Hogan (1985)** - _Impedance Control_. Introduces the idea that "stiffness" (resistance to motion) is geometry-dependent.
-5.  **Strang (2016)** - _Linear Algebra_. Review the section on SVD to understand the principal axes of the ellipse.
+The [NumPy SVD documentation](https://numpy.org/doc/stable/reference/generated/numpy.linalg.svd.html)
+specifies full and reduced matrix shapes. The published example uses the full
+task basis so that a tall matrix does not hide ambient null directions. Its
+relative numerical threshold is a declared approximation, not a physical
+singularity test. Independent regression checks cover rectangular and zero
+maps, scaling, power pairing and mechanical counterexamples.
 
-### Path 2: Deep Technical (Rigorous Formulation)
-
-_Target: Master the linear algebra and Jacobian mechanics._
-
-1.  **Murray, Li, Sastry (1994)** - _Mathematical Introduction_. Chapter 3 covers the Jacobian and static forces in depth.
-2.  **Khatib (1987)** - _Operational Space Formulation_. Extends Jacobian analysis to "Effective Inertia," the dynamic counterpart to kinematic manipulability.
-3.  **Chiu (1988)** - _Task Compatibility_. Discusses how to align the manipulability ellipsoid with the task requirements (e.g., impact).
-4.  **Salisbury & Craig (1982)** - _Articulated Hands_. Defines the Force Ellipsoid in the context of grasping (applying forces).
-5.  **Featherstone (2008)** - _Rigid Body Dynamics_. Provides the most efficient algorithms for computing these matrices in complex chains.
-6.  **Nesbit (2005)** - _Work and Power_. A detailed kinetic breakdown of the golf swing that implicitly relies on these mappings.
-7.  **Zatsiorsky (2002)** - _Kinetics of Human Motion_. Bridges the gap between robotic Jacobians and human joint complexes.
-
-### Path 3: Implementation (Calculating the Ellipsoids)
-
-_Target: Code the SVD and visualize the ellipses._
-
-1.  **Peter Corke's Robotics Toolbox** - MATLAB/Python tools that have built-in `manipulability` functions.
-2.  **Pinocchio Library** - High-performance C++ formulation for Jacobians (`computeJointJacobians`).
-3.  **NumPy (`numpy.linalg.svd`)** - The core tool for extracting singular values $\sigma$ and vectors $U, V$.
-4.  **SciPy (`scipy.spatial`)** - For convex hull and geometric operations.
-5.  **Matplotlib (`patches.Ellipse`)** - For plotting the resulting 2D projections of the 6D ellipsoids.
+The [journal's Nesbit and Serrano record](https://www.jssm.org/hfabst.php?id=jssm-04-520.xml)
+confirms both authors of the 2005 work-and-power paper. Only its metadata and
+abstract were checked for this correction; no new empirical golf conclusion
+is inferred from that access. The other catalog items are further-reading
+candidates, not substitutes for verified sources or measured human capacities.

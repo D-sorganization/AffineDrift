@@ -390,3 +390,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-22 | #4419 | Complete the superposition reference review with feasible-input sets, constrained task authority, independent mechanics checks and equation-layout corrections. |
 
 | 2026-09-22 | #4421 | Reconcile force-measurement geometry, instrument physics, uncertainty, standards and golf evidence with independently checked examples. |
+
+| 2026-09-23 | #4436 | Correct force–mobility metrics, singular limits, constrained dynamics, compliance and biomechanical inference; verify the published SVD and independent examples with source/render evidence. |

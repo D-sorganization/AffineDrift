@@ -15,14 +15,84 @@
   feature rows and three pending decisions. Every original planning byte is
   unchanged. Title-case (637 sources) and SPEC changelog checks pass; normal
   docs commit and pre-push hooks pass. No executable source changes.
-- This scoped fleet-planning rollout does not resume the independent paused
-  technical-review campaign below.
+- This scoped fleet-planning rollout preserves the independent technical-review
+  campaign below.
+- Merge sync: incoming force-mobility PR #4437 is preserved exactly from main
+  7664a390; both development-log entries and handoff histories are retained.
 - Next: validate and publish through a regular protected PR; verify default-branch
   content and live dashboard projection after cache refresh. The new feature-detail
   UI is Runner_Dashboard#1251; shared discovery is RM PR #1717. Full fleet rollout
-  remains open. Preserve the independent paused technical-review state below.
+  remains open. Preserve the independent technical-review state below.
 
 ---
+
+# Final Force–Mobility Release Checkpoint — #4436
+
+The user requested a stopping checkpoint on September 23. Finish only the
+force–mobility correction already in progress, publish through a regular
+protected PR, verify remote main and its live deployment, then pause the goal.
+Do not start another article, issue or rewrite. Never create draft PRs.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/force-mobility-rigor`; source/render checkpoint: `d032cb0fd65c3674a0ba7c950c5e4b41962288b0`; scientific source `981e8d34`. Turnover: `SELF`.
+- Base: remote main `96c703c2da90e1b0b15ef803c6a7ce8d64461f28`.
+- Issue #4436 is a native child of #4021 under epic #4009. Historical route
+  batch #4058 stays closed; the full review supersedes its limited evidence.
+- Session: `technical-review-20260923-mobility`; lease receipt `5798813017`,
+  presence `5798813259`, both expire September 23 at approximately 18:42 UTC.
+- The inbox reported no conflicts, one historical broadcast and six rejected
+  identity warnings. Its warning state does not establish absence of peers.
+
+## Completed Scientific Work
+
+Complete source, companion bibliography, algorithm, critics and lay summaries
+are reconciled. Six finding groups distinguish matched power coordinates,
+weighted budget duality, singular limits, dynamics/compliance, constraints and
+human interpretation, and SVD/source provenance. Numerical checks demonstrate
+where kinematic leverage, acceleration and stiffness differ. No physical or
+human validation is claimed. The missing legacy TeX source is not regenerated.
+
+The source report is `reports/technical-review/force-mobility-review.md`.
+The browser report is `reports/technical-review/force-mobility-render-verification.json`.
+The new test module executes the actual published SVD example and checks
+independent mechanics. Twenty new numerical cases plus two existing planar
+scope cases pass. Four original algorithm failures were reproduced first.
+The page-local CSS keeps equations readable; no global stylesheet changes.
+
+The initial scientific commit is `981e8d346cbc8fec68588cd7a466826e8057e86f`.
+This checkpoint corrects local CRLF-versus-committed-LF hashes inside the
+render report; the scientific source and browser results are unchanged.
+
+## Release Gate and Exact Evidence
+
+All six findings and eight evidence paths bind to source/render commit
+`d032cb0fd65c3674a0ba7c950c5e4b41962288b0`; every digest matches its committed
+bytes. The 240-route inventory has 237 reviewed and three exempt routes again;
+the full corpus is still unfinished. Local production and expanded keyboard/axe checks pass 4/4, with
+133 rendered expressions, 16 displays, no math errors and no document overflow.
+Mobile displays remain 17.78px and four wide equations scroll to their ends.
+Ruff, Black (720 files), mypy (91 files), titles (638), bibliography and links
+pass. Content lint passes 131 with four existing skips. The full Python run
+passes 5,422 with 29 skips, 132 deselections and 92.88% coverage; its three
+failures were the temporary route deferment and two root-hygiene checks on
+local scratch artifacts. These artifacts are preserved under
+`docs/development/technical-review/checkpoint-4436-local-artifacts/`.
+All 56 selected audit, root-hygiene and scientific checks now pass after
+binding and cleanup. Protected CI and publication remain pending. Do not equate local acceptance with a merged release.
+
+## Stop Boundary
+
+The broader 405-source program is unfinished. The corpus index and historical
+reports retain the unreviewed work; #4429 remains outside this release. No next
+task is assigned. At the completed release, save the publication receipt,
+release this session's lease/presence and pause the goal at the user's request.
+Further scientific work requires an explicit resume.
+
+Stage explicit paths; many untracked local QA artifacts predate this release.
+GitHub operations use the documented Codex App bootstrap; never print tokens
+or substitute a human identity. Do not push directly to main.
+
+# Previous Checkpoints
 
 # Paused Technical Review Checkpoint
 
