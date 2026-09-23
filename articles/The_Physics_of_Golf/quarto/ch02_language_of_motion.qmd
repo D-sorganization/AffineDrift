@@ -1,410 +1,375 @@
 ---
-description: "One way is Cartesian coordinates. Point your finger at the club head. In space, you can describe its location with three numbers: its distance east, its..."
+pagetitle: "The Language of Motion"
+description: "Define coordinates, state and constraints consistently, derive two-link endpoint kinematics, and distinguish a mathematical swing model from measured human motion."
+css:
+  - ../../../css/articulated-body.css
+  - ../../../css/computational-brain.css
 ---
 
 # The Language of Motion {#sec-02_language_of_motion}
 
+[]{#ch-02_language_of_motion}
+
 ::: {.callout-tip}
 ## Why We Need a Language
 
-Before you can apply physics to the golf swing, you need a precise way to describe it. Not in words—in mathematics.
+A statement such as "the hips turn early" leaves several questions open: which body rotates relative to which frame, which angle describes that rotation, and early relative to what event? Mathematics helps us answer those questions only after we define the quantities. An equation with an unspecified angle can be just as ambiguous as a coaching phrase.
 
-When a coach says "you're rotating your hips too early," that's imprecise. Rotate how much? At what point in the swing? How fast? A physicist would ask: what is the hip rotation angle at this instant? How is it changing with time?
-
-This chapter introduces the language physicists use to describe motion: **coordinates**, **state**, and **state space**. It looks abstract at first, but it's essential. Once you can describe a swing precisely, you can predict what will happen next, diagnose what went wrong, and understand the forces that shaped the motion.
-
+This chapter builds a description of motion from configuration, velocity and state. We then connect joint motion to the motion of a distal endpoint. These distinctions matter because a useful golf model must explain both how the body moves and what the club delivers at impact. A precise motion description is the beginning of that investigation; it does not by itself identify the forces or the control strategy.
 :::
 
 ## Coordinates: Measuring Position
 
-The simplest place to start: how do we describe where your body is?
+### Cartesian Coordinates and Body Orientation
 
-### Cartesian Coordinates
+[]{#cartesian-coordinates}
 
-One way is Cartesian coordinates. Point your finger at the club head. In space, you can describe its location with three numbers: its distance east, its distance north, and its distance up (or any three perpendicular directions). These are $(x, y, z)$ coordinates.
+A point in space has Cartesian coordinates $(x,y,z)$ relative to a stated origin and three perpendicular axes. These describe that point's location. They do not describe an entire club: two clubs can put the same point at the same location with different face orientations. A rigid body's configuration generally needs both position and orientation.
 
-This works. But it's clumsy for describing a golf swing. Why? Because the club head is constrained by your arm. It can't move independently. You can't move it 10 feet to the left without moving your shoulder.
+Coordinates are descriptions, not physical causes. Changing from laboratory coordinates to joint coordinates does not change the motion. It changes the numbers and the equations used to describe it. Mixing numbers from different frames or angle conventions does change the calculation, usually incorrectly.
 
-### Generalized Coordinates
+### Generalized Coordinates and Degrees of Freedom
 
-Instead, physicists use **generalized coordinates**: a minimal set of numbers that fully describe the configuration of a system.
+[]{#generalized-coordinates}
 
-::: {.callout-note}
-## Generalized Coordinates
+A configuration specifies the positions and orientations of the modeled bodies, without their velocities. In a regular local description, **independent generalized coordinates** $\bm q=(q_1,\ldots,q_n)$ parameterize that configuration using $n$ variables. This local number is the configuration's number of degrees of freedom (DOF).
 
-A set of independent variables $\bm{q} = [q_1, q_2, \ldots, q_n]$ such that:
-1. Every possible position of the system can be described by choosing a value for each $q_i$.
-2. Each $q_i$ is independent—you can change one without automatically changing the others.
-3. The number of variables $n$ equals the number of **degrees of freedom** (DOF; see [Degrees of Freedom and the Curse of Dimensionality](../../degrees-of-freedom-and-dimensionality.html) for a cross-cutting analysis of dimensionality reduction in human motor control).
+A single coordinate chart need not cover every configuration without a seam or singularity. An angle and that angle plus $2\pi$ describe the same orientation of an ideal revolute hinge. We can unwrap an angle along a motion, but the unwrapped number also records turns. Alternatively, redundant coordinates can be useful if their constraints are enforced; Cartesian coordinates are not an inferior choice.
 
+For an ideal planar pendulum with a fixed pivot and rigid link of length $L$,
+
+$$
+x=L\sin\theta,\qquad y=-L\cos\theta,\qquad x^2+y^2=L^2.
+$$
+
+One angle suffices even though we wrote two position components. This assumes motion confined to a plane. A spherical pendulum free to swing in space has two configuration DOF. A string gives a fixed-distance constraint only while taut; it cannot supply the compressive force a rigid rod can. These are different physical models.
+
+### A Declared Two-Link Model
+
+We will use the same geometric model as [Chapter 3](ch03_double_pendulum.html): two rigid links in a fixed inertial plane, a fixed base pivot $O$, a connecting hinge $H$, and distal endpoint $P$. There are two ideal revolute joints and no joint limits in this baseline.
+
+The labels "shoulder" and "elbow" can be helpful analogies, but they do not make this an anatomical arm model. Interpreting the hinge as an elbow differs from interpreting it as an arm–club connection. We therefore use link 1, link 2 and hinge throughout. A real swing adds moving supports, three-dimensional orientation, both arms, compliant structures and contact.
+
+Use horizontal $x$ positive to the right and vertical $y$ positive upward. The first angle $\theta_1$ increases counterclockwise from downward vertical. The second angle $\theta_2$ is the counterclockwise **relative** angle from link 1 to link 2. Thus
+
+$$
+\bm q=\begin{bmatrix}\theta_1\\\theta_2\end{bmatrix},
+\qquad \alpha_1=\theta_1,\qquad \alpha_2=\theta_1+\theta_2.
+$$
+
+The $\alpha_i$ are absolute link angles in the plane. Earlier notation $\theta_s,\theta_e$ corresponds to $\theta_1,\theta_2$ only under this declared idealization; it is not a pair of measured anatomical rotations. At $\bm q=(0,0)$ both links hang downward. Zero does not mean pointing toward a golf target.
+
+On narrow screens, scroll the figure or [open it at full size](../figures/double_pendulum_verified.svg).
+
+::: {#fig-ch02_arm_diagram}
+::: {.aba-diagram-scroll role="region" aria-label="Declared two-link geometry and angle directions; scroll horizontally" tabindex="0"}
+<img src="../figures/double_pendulum_verified.svg" alt="Two rigid links with a fixed pivot O, hinge H and endpoint P. The first angle is positive 55 degrees from downward vertical and the relative second angle is negative 65 degrees. Centers of mass are separate from the hinge and endpoint.">
 :::
 
-
-**Example: A Simple Pendulum**
-
-A mass hanging from a string can only move on a circle (the string doesn't stretch). Its position is completely described by one number: the angle $\theta$ from vertical.
-
-$\bm{q} = [\theta]$. There is 1 DOF.
-
-If you use Cartesian coordinates, you need two numbers: the $x$ and $y$ position of the mass. But these two numbers are not independent. If you change $x$, then $y$ must change too (to keep the string length fixed). Generalized coordinates eliminate this redundancy.
-
-For the golf swing, the natural choice is **joint angles** (see the [Mathematical Notation Reference](../../../pages/notation.html) for normative conventions across the site).
-
-::: {.callout-note}
-## Joint Angles in the Golf Swing
-
-- $q_1 = \theta_s$: the angle of the upper arm at the shoulder, measured from some reference (e.g., vertical).
-- $q_2 = \theta_e$: the angle of the forearm + club at the elbow, measured from the upper arm.
-
-For a two-link model (the double pendulum), we need exactly two numbers to describe the configuration.
-
-$$\bm{q} = \begin{bmatrix} \theta_s \\ \theta_e \end{bmatrix}$$
-
+Two-Link Coordinate Convention. The Computed Geometry Is Shared With Chapter 3; It Illustrates a Model, Not Measured Golf Anatomy.
 :::
 
-::: {.callout-tip}
-## From Angles to Positions
+## Configuration Space and Constraints
 
-Once you've chosen generalized coordinates, you can compute the Cartesian position of any point.
+[]{#configuration-space-the-space-of-positions}
 
-Suppose the upper arm has length $L_1$ and the forearm+club has length $L_2$. If the shoulder is at the origin:
+### A Map of Configurations
+
+For unrestricted revolute joints, the two angles each lie on a circle. Their product is a torus. A square plot of angles is a useful map of this configuration space, provided opposite edges are identified: crossing an angle seam is not a physical jump.
+
+Joint limits or collision exclusions remove configurations from this ideal space. A rectangular angle window can illustrate chosen independent limits; it is not a universal map of human shoulder and elbow motion. Anatomical limits depend on the joint definition, other joint positions, loading and the individual. We do not infer them from the ideal model.
+
+This distinction between a space and its coordinates is developed in the [Modern Robotics configuration-space treatment](https://modernrobotics.northwestern.edu/nu-gm-book-resource/2-3-1-configuration-space-topology/). The important practical question is what the chosen coordinates represent and where that representation remains valid.
+
+### Admissibility Is Not Reachability
+
+[]{#constraints-not-all-configurations-are-allowed}
+
+A configuration can satisfy geometric constraints yet be unreachable from a specified starting state with the available torques, time and contact conditions. **Admissibility** concerns the declared constraints. **Dynamic reachability** also depends on the initial state, equations, input bounds and elapsed time.
+
+For example, a link arrangement may be geometrically possible while a requested transition to it in 20 ms exceeds the model's actuator bounds. The number 20 ms here defines a hypothetical request, not a measured human capability. Configuration space alone cannot decide whether the transition can be performed.
+
+### Position, Velocity and Contact Constraints
+
+[]{#constraints-in-the-double-pendulum-model}
+[]{#box:ch02_golf_constraints}
+
+A smooth equality constraint $h(\bm q)=0$ whose Jacobian has independent rows restricts configuration. Differentiating it gives the compatible velocity condition
+
+$$
+\bm H(\bm q)\dot{\bm q}=0,\qquad
+\bm H=\frac{\partial h}{\partial\bm q}.
+$$
+
+Some velocity constraints cannot be integrated into position constraints. Rolling without slipping is a standard example. It limits instantaneous motion without necessarily reducing configuration dimension. The [Modern Robotics constraint treatment](https://modernrobotics.northwestern.edu/nu-gm-book-resource/2-4-configuration-and-velocity-constraints/) distinguishes these holonomic and nonholonomic cases.
+
+For the two-link baseline, using hinge angles already enforces rigid attachment; we need not add another equation to hold the hinge together. If instead we modeled each body's free Cartesian pose, attachment would appear as explicit constraints. The same physical reaction can therefore be implicit in one formulation and explicit in another.
+
+Real grip and ground contacts require a declared contact mode. Sticking is possible only when the required contact forces and moments lie within the model's admissible contact set. Feet remaining in place do not freeze every torso coordinate, and a held club does not eliminate wrist motion. Slip, separation and changing contact patches can change the equations.
+
+### What a Constraint Reaction Means
+
+[]{#box:ch02_constraints_walls}
+
+In an ideal constrained model, a reaction is solved together with the acceleration to enforce compatible motion. It is not generally a freely chosen actuator input. Nevertheless, changing muscle or actuator forces can change that reaction. Mathematical classification as a reaction does not identify which tissues carry the physical load.
+
+A hard joint stop is one possible idealization. Biological resistance can involve passive tissue deformation, active muscle forces and rate-dependent effects before a nominal range limit is reached. Replacing that response with an impenetrable wall does not predict tissue loading or injury. The [constraint-force chapter](ch07_constraint_forces.html) develops the force balance and work assumptions more carefully.
+
+## State: What Is Needed to Predict Motion?
+
+[]{#state-position-and-velocity}
+
+### Velocity and Its Units
+
+[]{#angular-velocity}
+[]{#ref-Nesbit2005}
+[]{#ref-Hume2005}
+
+The generalized velocity is the time derivative $\dot{\bm q}$. For an angle, its units are radians per second. Degrees may be useful for reporting values, but differentiation of sine and cosine in the formulas below assumes radians.
+
+For illustration, a planar link rotating at $500^\circ/\mathrm{s}$ has angular speed $500\pi/180\approx8.727$ rad/s. At fixed radius 0.35 m, a point on that link has speed about 3.054 m/s. This is a unit conversion and rigid-link calculation, not a typical measured shoulder rate.
+
+In this planar model, $\omega_1=\dot\theta_1$ and $\omega_2=\dot\theta_1+\dot\theta_2$. In a general three-dimensional model, the derivatives of three orientation coordinates are not simply the three components of angular velocity; a representation-dependent map is required.
+
+### A State Belongs to a Specified Model
+
+For a smooth, unconstrained, second-order mechanical model with independent coordinates, a convenient state is
+
+$$
+\bm x=
+\begin{bmatrix}\bm q\\\dot{\bm q}\end{bmatrix},
+\qquad
+\dot{\bm x}=
+\begin{bmatrix}\dot{\bm q}\\\bm a(t,\bm q,\dot{\bm q},\bm u)\end{bmatrix}.
+$$
+
+The acceleration function $\bm a$ comes from a declared dynamic model; $\bm u$ denotes its inputs. An initial state, model parameters and future input history or feedback rule define an initial-value problem. Standard regularity and existence assumptions are also needed for a unique solution. Knowing only the instantaneous forces supplies instantaneous acceleration, not all future commands.
+
+Position alone cannot distinguish passing through a configuration quickly from resting there. Conversely, zero velocity at one instant does not tell us whether motion will reverse, remain at rest or accelerate onward; the model and inputs decide.
+
+The $2n$ state dimension is appropriate to this mechanical model, not to every biological model. Muscle activation, tendon or shaft deformation, controller memory and other internal variables may require additional states. Delay models can require a history rather than a finite list of instantaneous values. Contacts add modes and compatibility conditions. A video-derived joint configuration is therefore not automatically a complete predictive state.
+
+::: {.callout-note}
+## A State Is More Than a Pose
+
+Imagine two swings with the same visible link arrangement. Different rates already make their futures different. Even matching those rates may be insufficient if stored elastic deformation, muscle activation or the upcoming control inputs differ. State selection is a modeling commitment about what information is enough to advance the equations.
+:::
+
+## Phase Space and Trajectories
+
+[]{#phase-space-where-every-swing-lives}
+
+For the unconstrained two-link baseline, $\bm x=(\theta_1,\theta_2,\dot\theta_1,\dot\theta_2)$ has four components locally. The velocity at a configuration can take many values: configuration does not assign one unique velocity arrow. A tangent vector $(\dot\theta_1,\dot\theta_2)$ lies in the tangent space at a configuration; the full state-space direction is $(\dot{\bm q},\ddot{\bm q})$.
+
+Here phase space means the position–velocity state space (the tangent bundle of configuration space). Hamiltonian mechanics instead uses positions and conjugate momenta; a nonsingular mechanical Legendre map relates these descriptions. Neither convention adds a new physical motion.
+
+A **trajectory** is a time-parameterized state history. Its configuration projection forgets the velocities. A plot of $(\theta_1,\dot\theta_1)$ forgets the second joint, so it is a projection, not a slice fixing the omitted variables. Projected curves can cross without the full states being equal. Even full-state uniqueness concerns the same time-dependent model and input rule; different commands need not produce the same continuation.
+
+For smooth motion, configuration and velocity evolve continuously. An ideal impulsive impact can leave position continuous while resetting velocity. Hybrid state histories are then piecewise smooth with jumps, rather than one everywhere-smooth curve. The moment at which the club reaches a ball also matters: comparing two swings at the same clock time differs from comparing them at their respective impact events.
+
+## From Joint Motion to Endpoint Motion
+
+### Positions and Centers of Mass
+
+[]{#position-kinematics}
+
+Write the radial and tangent directions as
+
+$$
+\bm e(\alpha)=\begin{bmatrix}\sin\alpha\\-\cos\alpha\end{bmatrix},
+\qquad
+\bm t(\alpha)=\frac{d\bm e}{d\alpha}
+=\begin{bmatrix}\cos\alpha\\\sin\alpha\end{bmatrix}.
+$$
+
+With link lengths $L_1,L_2$ and COM distances $r_1,r_2$ from their proximal hinges,
 
 $$
 \begin{aligned}
-x_{\text{elbow}} &= L_1 \sin(\theta_s) \\
-y_{\text{elbow}} &= -L_1 \cos(\theta_s) \\
-x_{\text{clubhead}} &= L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\
-y_{\text{clubhead}} &= -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+\bm r_H&=L_1\bm e(\theta_1),\\
+\bm r_P&=L_1\bm e(\theta_1)+L_2\bm e(\theta_1+\theta_2),\\
+\bm r_{\mathrm{COM},1}&=r_1\bm e(\theta_1),\\
+\bm r_{\mathrm{COM},2}&=L_1\bm e(\theta_1)+r_2\bm e(\theta_1+\theta_2).
 \end{aligned}
 $$
 
-So from two numbers $[\theta_s, \theta_e]$ you can compute the full 3D position of every point on the arm. The constraint (that the links are rigid) is automatically satisfied.
+These are planar positions in the declared fixed frame. A specified embedding can place that plane in three-dimensional space; two coordinates still do not reconstruct unrestricted spatial arm or club motion. The COM need not be at half the link length, and the distal endpoint need not be the COM.
 
-:::
+For the examples here use $L_1=0.35$ m, $L_2=1.0$ m, $r_1=0.175$ m and $r_2=0.5$ m. These are the manufactured geometric parameters of Chapter 3. Kinematics does not require masses. When dynamics is added, that chapter supplies masses 2.5 kg and 0.4 kg and separate centroidal inertias. These numbers do not calibrate a golfer.
 
-## State: Position and Velocity
+### The Jacobian Is a Directional Map
 
-Knowing where your arm is right now doesn't tell you what will happen next. You also need to know how fast it's moving.
+[]{#velocity-kinematics}
 
-::: {.callout-note}
-## Velocity in Generalized Coordinates
-
-The velocity of a joint angle is its time derivative:
-
-$$\dot{q}_i = \frac{dq_i}{dt}$$
-
-For example, $\dot{\theta}_s$ is the rate of rotation of the shoulder (in radians per second).
-
-:::
-
-**Example: Shoulder Rotation Speed**
-
-During the downswing, a golfer's shoulder might be rotating at $\dot{\theta}_s = 600 \text{ degrees/second} = 10.5 \text{ rad/s}$ [@Nesbit2005; @Hume2005] (illustrative; typical values vary across skill levels and swing styles).
-
-What does this mean physically? If the shoulder could hold this rotation rate steady, the golfer would rotate a full 360 degrees in $360 \text{ degrees} / 600 \text{ deg/s} = 0.6 \text{ seconds}$.
-
-Actually, $\dot{\theta}_s$ varies throughout the swing—it's slow at the top (backswing winding up), then accelerates during transition, reaches peak during the downswing, and decreases toward impact. But at any given instant, $\dot{\theta}_s$ tells you the instantaneous rotation rate.
-
-Now we can define the full state:
-
-::: {.callout-note}
-## State of a System
-
-The **state** $\bm{x}$ is the complete information needed to predict the future motion. It includes both position and velocity:
-
-$$\bm{x} = \begin{bmatrix} \bm{q} \\ \dot{\bm{q}} \end{bmatrix} = \begin{bmatrix} q_1 \\ q_2 \\ \vdots \\ q_n \\ \dot{q}_1 \\ \dot{q}_2 \\ \vdots \\ \dot{q}_n \end{bmatrix}$$
-
-For a double pendulum, the state has 4 components:
-
-$$\bm{x} = \begin{bmatrix} \theta_s \\ \theta_e \\ \dot{\theta}_s \\ \dot{\theta}_e \end{bmatrix}$$
-
-:::
-
-::: {.callout-tip}
-## Why State Is Necessary
-
-Imagine you're at the top of the backswing. Your shoulder angle is $\theta_s = 90°$ (horizontal). That's your $\bm{x}$ position. But is the downswing about to begin? You can't tell from position alone.
-
-If $\dot{\theta}_s = 0$ (you're not rotating), you're just about to start. If $\dot{\theta}_s = 500 \text{ deg/s}$ (you're already rotating fast), the downswing is well underway.
-
-Physics has a rule: the future motion is determined by the current *state*, not by the current position alone. Given $\bm{x}$ at this instant and the forces acting on the system, you can predict where you'll be a tiny fraction of a second later. Then use the new state to predict the next moment. And so on.
-
-:::
-
-## Phase Space: Where Every Swing Lives
-
-Once we have the concept of state, we can visualize it geometrically.
-
-::: {.callout-note}
-## Phase Space
-
-The space of all possible states. If there are $n$ degrees of freedom, phase space has $2n$ dimensions: $n$ for position and $n$ for velocity.
-
-For a double pendulum: 4 dimensions (2 angles, 2 angular velocities).
-
-:::
-
-At any instant during your swing, your arm is at some point in this 4D phase space. As you swing, that point traces out a path—a **trajectory**.
-
-::: {.callout-tip}
-## Thinking in 4 Dimensions
-
-Four dimensions is hard to visualize. But you can think of it as a 2D surface (the position, $\theta_s$ and $\theta_e$) with a velocity attached to each point.
-
-Imagine a piece of paper with $\theta_s$ on the horizontal axis and $\theta_e$ on the vertical axis. Every point on this paper is a possible configuration. Now, at each point, imagine a vector showing $[\dot{\theta}_s, \dot{\theta}_e]$—the direction and speed you're moving in state space.
-
-During the backswing, you might follow a path from $(90°, 0°)$ to $(150°, -50°)$ (shoulder opens, elbow closes relative to arm). As you move along this path, your velocity vector changes. At the top, you're still for a moment. Then you start the downswing.
-
-An entire golf swing is one continuous curve in this 4D space.
-
-:::
-
-Here's a key insight: **if you know the forces, you can predict the trajectory**.
-
-Given any state $\bm{x}$, the forces determine $\ddot{\bm{q}}$ (the acceleration). Newton's second law says: $\bm{F} = m \bm{a}$. So if you know the forces, you know the acceleration. And if you know the acceleration, you can predict where the state will be a moment later. This is how physicists predict motion.
-
-## Configuration Space: The Space of Positions
-
-Sometimes it's useful to focus just on position, ignoring velocity. This is called configuration space.
-
-::: {.callout-note}
-## Configuration Space
-
-The space of all possible positions (configurations) of the system. For $n$ degrees of freedom, configuration space has $n$ dimensions.
-
-For a double pendulum: 2 dimensions ($\theta_s, \theta_e$).
-
-:::
-
-During a golf swing, your configuration traces a path in configuration space. Your backswing, transition, downswing, and follow-through are all portions of this path.
-
-**Example: Configuration Space of a Double Pendulum**
-
-Imagine a plot with $\theta_s$ on the $x$-axis (from $-90°$ to $+150°$, full range of shoulder motion) and $\theta_e$ on the $y$-axis (from $-80°$ to $+80°$, full range of elbow angle).
-
-A typical golf swing path in this space might look like:
-- **Address**: $(\theta_s, \theta_e) = (0°, 0°)$ (arms at rest, pointing toward target).
-- **Backswing**: move to $(120°, -50°)$ (shoulder rotates, elbow closes).
-- **Top**: $(\theta_s, \theta_e) = (150°, -70°)$ (maximum wind-up).
-- **Downswing**: move through $(100°, -40°), (50°, -20°), \ldots$
-- **Impact**: $(0°, 0°)$ (back to address position).
-- **Follow-through**: $(−90°, +60°)$ (extended, relaxed position).
-
-This path is unique to each golfer. Tour professionals have slightly different paths. But all paths respect physical laws.
-
-## Constraints: Not All Configurations Are Allowed
-
-Here's an important limitation: not every point in configuration space is reachable.
-
-::: {.callout-note}
-## Constraints
-
-Physical limitations that restrict which configurations are possible. Common constraints in golf:
-- **Range of motion**: your shoulder can only rotate so far, your elbow can only bend so much.
-- **Rigidity**: your arm bones are rigid, so the elbow and shoulder positions are not independent.
-- **Friction**: your grip prevents the club from slipping relative to your hand.
-
-:::
-
-The set of reachable configurations forms a region in configuration space. Your swing must stay within this region. If you try to force your arm into an impossible configuration, something breaks (injury).
-
-### Constraints as Walls in Space {#box:ch02_constraints_walls}
-Think of configuration space as a room. Some regions are forbidden (your arm can't hyperextend). The boundary of the forbidden regions are the constraints.
-
-When you hit the boundary—when you reach maximum shoulder turn, for instance—a **constraint force** appears. Your arm doesn't magically go past the limit; instead, the tissues (muscles, tendons, bone) exert a force that keeps you at the boundary.
-
-This is crucial: constraint forces are not muscle forces. They're reactive. They appear automatically to enforce the constraint. We'll see later that they contribute to the total force in the equation of motion, but they're not part of your **control**.
-
-For the double-pendulum model used below:
-- Upper arm has length $L_1 = 0.5$ m and mass $M_1 = 2$ kg. Its center of mass is at distance $L_{1,\text{cm}} = 0.25$ m from the shoulder.
-- Forearm + club has length $L_2 = 1$ m and mass $M_2 = 1$ kg. Its center of mass is at distance $L_{2,\text{cm}} = 0.5$ m from the elbow.
-- Generalized coordinates: $q_1 = \theta_s$ (shoulder angle from vertical, in radians), $q_2 = \theta_e$ (elbow angle from horizontal, in radians).
-
-### Position Kinematics
-
-The position of the elbow relative to the shoulder:
+Differentiating the endpoint position gives
 
 $$
-\bm{r}_{\text{elbow}} =
+\dot{\bm r}_P=\bm J_P(\bm q)\dot{\bm q},
+$$
+
+$$
+\bm J_P=
 \begin{bmatrix}
-L_1 \sin(\theta_s) \\
--L_1 \cos(\theta_s)
-\end{bmatrix}
+L_1\cos\theta_1+L_2\cos(\theta_1+\theta_2)&L_2\cos(\theta_1+\theta_2)\\
+L_1\sin\theta_1+L_2\sin(\theta_1+\theta_2)&L_2\sin(\theta_1+\theta_2)
+\end{bmatrix}.
 $$
 
-The position of the clubhead relative to the shoulder:
+Each column gives endpoint velocity per unit rate of one coordinate while the other rate is zero. The columns add with their signed rates. Describing a matrix as "large" is incomplete: specify the input-rate direction and norm, and the output direction or speed being compared.
+
+At $\bm q=(0,0)$,
 
 $$
-\bm{r}_{\text{club}} =
-\begin{bmatrix}
-L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\
--L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
-\end{bmatrix}
+\bm J_P=\begin{bmatrix}1.35&1.0\\0&0\end{bmatrix}.
 $$
 
-The center of mass of link 1:
+Rates $(1,-1.35)$ rad/s give zero instantaneous endpoint velocity; $(1,1.35)$ rad/s give 2.7 m/s to the right. The same geometry can produce cancellation or reinforcement. Neither calculation alone measures mechanical advantage, required torque or available power.
+
+The determinant is $L_1L_2\sin\theta_2$. At aligned links the endpoint velocity map loses rank, although both joint coordinates still exist. This task singularity does not by itself make the mass matrix singular. Angular-rate addition is kinematics; inertial coupling depends on the mass distribution and kinetic energy derived in Chapter 3.
+
+### Acceleration and a Moving Support
+
+Another derivative introduces a term even when joint accelerations vanish:
 
 $$
-\bm{r}_{\text{cm},1} =
-\begin{bmatrix}
-L_{1,\text{cm}} \sin(\theta_s) \\
--L_{1,\text{cm}} \cos(\theta_s)
-\end{bmatrix}
-$$
-
-The center of mass of link 2:
-
-$$
-\bm{r}_{\text{cm},2} =
-\begin{bmatrix}
-L_1 \sin(\theta_s) + L_{2,\text{cm}} \sin(\theta_s + \theta_e) \\
--L_1 \cos(\theta_s) - L_{2,\text{cm}} \cos(\theta_s + \theta_e)
-\end{bmatrix}
-$$
-
-### Velocity Kinematics
-
-To find velocity, differentiate the positions:
-
-$$
-\dot{\bm{r}}_{\text{elbow}} =
-\begin{bmatrix}
-L_1 \cos(\theta_s) \dot{\theta}_s \\
-L_1 \sin(\theta_s) \dot{\theta}_s
-\end{bmatrix}
-=
-L_1 \dot{\theta}_s
-\begin{bmatrix}
-\cos(\theta_s) \\
-\sin(\theta_s)
-\end{bmatrix}
+\ddot{\bm r}_P=\bm J_P\ddot{\bm q}+\dot{\bm J}_P\dot{\bm q},
 $$
 
 $$
-\dot{\bm{r}}_{\text{club}} =
-\begin{bmatrix}
-L_1 \cos(\theta_s) \dot{\theta}_s + L_2 \cos(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e) \\
-L_1 \sin(\theta_s) \dot{\theta}_s + L_2 \sin(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e)
-\end{bmatrix}
+\dot{\bm J}_P\dot{\bm q}
+=-L_1\dot\theta_1^2\bm e(\theta_1)
+-L_2(\dot\theta_1+\dot\theta_2)^2\bm e(\theta_1+\theta_2).
 $$
 
-::: {.callout-tip}
-## Jacobian Intuition
+These terms account for the changing velocity directions as links rotate. They are accelerations, not individual muscle forces. The [MIT multibody derivation](https://underactuated.mit.edu/multibody.html) provides the corresponding relative-angle kinematics and mechanical formulation.
 
-There's a beautiful relationship here. The velocities are linear in the angular velocities$\dot{\theta}_s$and$\dot{\theta}_e$. This relationship can be written compactly using the **Jacobian** matrix$\bm{J}(\bm{q})$:
+If the pivot translates while the plane's axes remain inertially fixed, add $\dot{\bm r}_O$ to endpoint velocity and $\ddot{\bm r}_O$ to endpoint acceleration. If the coordinate frame also rotates, differentiating that frame adds further terms. A fixed-pivot model cannot silently represent the effects of a moving hand path or turning torso.
 
-$$\dot{\bm{r}} = \bm{J}(\bm{q}) \dot{\bm{q}}$$
+## A Consistent Manufactured Trajectory
 
-The Jacobian depends on the current configuration $\bm{q}$. It maps angular velocities (the changes in angles) to linear velocities (the changes in Cartesian positions).
+[]{#phase-space-portrait-of-a-swing}
 
-This is why golfers talk about "leverage": at certain positions, small changes in $\dot{\theta}_s$ (shoulder rotation) produce large changes in the clubhead velocity. That's a large Jacobian. At other positions, the leverage is lower.
-
-:::
-
-### Angular Velocity
-
-The angular velocities are simpler—they're just the derivatives of the angles:
+Replace an assumed "typical swing" table with a differentiable example whose signs can be checked. Let $T=0.5$ s and $s=t/T$ for $0\leq t\leq T$:
 
 $$
-\begin{aligned}
-\omega_1 &= \dot{\theta}_s \quad \text{(rotation rate of the upper arm)} \\
-\omega_2 &= \dot{\theta}_s + \dot{\theta}_e \quad \text{(rotation rate of the forearm + club)}
-\end{aligned}
+\theta_1=\frac{\pi}{2}(1-s^2),\qquad
+\theta_2=-\frac{\pi}{4}(1-s).
 $$
 
-Notice that $\omega_2$ depends on both $\dot{\theta}_s$ and $\dot{\theta}_e$. The forearm rotates at the shoulder rate plus the elbow rate. This is why the two joints are coupled.
+$$
+\dot\theta_1=-\frac{\pi}{T}s,\qquad
+\dot\theta_2=\frac{\pi}{4T},\qquad
+\ddot\theta_1=-\frac{\pi}{T^2},\qquad \ddot\theta_2=0.
+$$
 
-## Constraints in the Double Pendulum Model
-
-For the idealized double pendulum, there are no constraints other than rigidity (the links don't stretch). But in reality, the golf swing has constraints:
-
-### Real Constraints in Golf {#box:ch02_golf_constraints}
-- **Range limits**: $\theta_s \in [-90°, 150°]$, $\theta_e \in [-80°, 80°]$ (approximate).
-- **Grip constraint**: the club doesn't rotate freely at the wrist; it's held firmly. This reduces effective DOF.
-- **Friction at ground**: if you're standing (not moving), your feet don't slip. This constrains torso rotation.
-- **Inextensibility**: your arm length doesn't change (the links are rigid).
-
-For a first model, we ignore most of these. The double pendulum assumes rigid links and no joint limits. This makes the math tractable. Later, we'd add constraints back in.
-
-When a constraint is active (e.g., you hit the range limit of shoulder rotation), it creates a **constraint force**—a reactive force that prevents you from exceeding the limit. We'll see this in the force equations later.
-
-## Phase Space Portrait of a Swing
-
-Let's put this together and visualize what a swing looks like in phase space.
-
-**Example: A Swing Trajectory in Phase Space**
-
-Consider a golf swing with the double pendulum. At each instant $t$, the state is:
-
-$$\bm{x}(t) = \begin{bmatrix} \theta_s(t) \\ \theta_e(t) \\ \dot{\theta}_s(t) \\ \dot{\theta}_e(t) \end{bmatrix}$$
-
-The swing evolves in time:
-
-| **Phase** | $\theta_s$ | $\theta_e$ | $\dot{\theta}_s$ | $\dot{\theta}_e$ |
+| Time (s) | $\theta_1$ (deg) | $\theta_2$ (deg) | $\dot\theta_1$ (deg/s) | $\dot\theta_2$ (deg/s) |
 | --- | --- | --- | --- | --- |
-| Address | $0°$ | $0°$ | $0$ | $0$ |
-| Backswing (mid) | $60°$ | $-30°$ | $50°/s$ | $0°/s$ |
-| Top | $150°$ | $-70°$ | $0°/s$ | $0°/s$ |
-| Transition | $140°$ | $-65°$ | $150°/s$ | $0°/s$ |
-| Downswing (mid) | $80°$ | $-30°$ | $500°/s$ | $100°/s$ |
-| Impact | $0°$ | $0°$ | $600°/s$ | $500°/s$ |
-| Follow-through | $-60°$ | $+30°$ | $200°/s$ | $100°/s$ |
+| 0 | 90 | -45 | 0 | 90 |
+| 0.25 | 67.5 | -22.5 | -180 | 90 |
+| 0.5 | 0 | 0 | -360 | 90 |
 
-This swing is a path in 4D phase space. Notice:
-- At the top, both velocities are (nearly) zero. The swing is paused.
-- As the downswing progresses, both angular velocities increase dramatically.
-- At impact, the shoulder and elbow angles have returned to their starting position, but the velocities are massive.
-- After impact, the velocities decrease (energy is transferred to the ball).
+This is an illustrative segment, not measured golf data or a full address-to-follow-through swing. At its start, the first coordinate has a turning point while the second link is already rotating. At its end, both links point downward, but the state differs from rest. There is no assumed ball collision at that endpoint.
 
-If you know the forces at each point in this trajectory, you can predict what the next instant will be.
+The same values can be reproduced directly:
 
-## From Coordinates to Forces
+```python
+# Manufactured Chapter 2 trajectory
+import numpy as np
 
-Now that we have a language for describing motion (coordinates, state, phase space), we can ask the big question: what forces determine how the state evolves?
+duration_s = 0.5
+time_s = np.array([0.0, 0.25, 0.5])
+phase = time_s / duration_s
+q_deg = np.column_stack((90 * (1 - phase**2), -45 * (1 - phase)))
+rate_deg_s = np.column_stack((-180 * phase / duration_s, np.full(3, 45 / duration_s)))
+q_rad = np.deg2rad(q_deg)
+rate_rad_s = np.deg2rad(rate_deg_s)
+```
 
-That's the subject of the next chapters. But the setup is in place. We have:
-- A generalized coordinate system $\bm{q}$ that describes positions.
-- A state $\bm{x} = [\bm{q}, \dot{\bm{q}}]$ that describes position and velocity.
-- A phase space where every possible state lives.
-- A trajectory that traces the swing through phase space.
+At $t=T$, substitution into the Jacobian gives
 
-From here, physics says: given the forces, the trajectory is determined. And given the trajectory, we can work backward to infer the forces.
+$$
+\dot{\bm r}_P=
+\begin{bmatrix}-2.2\pi\\0\end{bmatrix}\ \mathrm{m/s}
+\approx\begin{bmatrix}-6.912\\0\end{bmatrix}\ \mathrm{m/s}.
+$$
+
+The acceleration is $(-5.4\pi,\,3.65\pi^2)$ m/s$^2$: leftward tangential and upward normal components. This makes the interplay explicit: configuration sets the velocity map, signed rates set the current motion and curvature terms, and joint accelerations supply the remaining acceleration.
+
+A fully actuated ideal model with invertible inertia and unrestricted input moments can realize this smooth segment by inverse dynamics. That statement supplies no evidence that a human can realize it with physiological limits, contact constraints or the intended impact task. Those are additional questions.
+
+## From Motion to Forces and Golf Outcomes
+
+[]{#from-coordinates-to-forces}
+
+Forward dynamics uses the model, state and inputs to compute acceleration. Inverse dynamics uses a sufficiently differentiated motion, inertial parameters and external-load assumptions to compute required net generalized forces. It generally does not determine a unique set of individual muscle, grip or ground forces. Multiple load distributions can produce the same generalized effect.
+
+For a useful golf investigation, define the task as well as the state. Clubhead position and speed do not specify face orientation, contact location or ball launch. Earlier forces and energy exchanges influence the state arriving near impact; posture and rates determine the instantaneous kinematic map; inertia and feasible inputs constrain what can change before contact. Ground and grip conditions influence those feasible inputs. A contact model then relates the arriving club and ball states to the collision outcome.
+
+This is why the aspects must be studied together. Kinematics supplies the geometry of motion; dynamics supplies the force and energy balance; control specifies how inputs are chosen; measurements test whether the chosen model and explanations match a golfer. None of these layers can substitute for the others.
 
 ::: {.callout-important}
 ## Key Takeaways
 
-1. **Generalized coordinates** $\bm{q}$ are the minimal set of numbers needed to describe the configuration of your system. For the golf swing, these are naturally joint angles.
-2. **Velocity** $\dot{\bm{q}}$ is the rate of change of position. High angular velocities at impact (e.g., $\dot{\theta}_s = 600°/s$) are huge and create large inertial forces.
-3. **State** $\bm{x} = [\bm{q}, \dot{\bm{q}}]$ is the complete information needed to predict future motion. It lives in phase space, a $2n$-dimensional space.
-4. **Configuration space** is the space of positions alone (dimension $n$). A golf swing is a path in configuration space.
-5. **Constraints** are limitations on which configurations are allowed. Constraint forces appear automatically to enforce them.
-6. **The Jacobian** relates changes in joint angles to changes in Cartesian positions. It varies with configuration, which is why "leverage" varies through the swing.
-7. Every swing, at every instant, is a point in phase space. The forces determine how that point moves.
-
+1. Declare the body, frame, angle reference and sign before interpreting a coordinate.
+2. Configuration dimension, admissible velocity dimension and predictive state dimension are different questions.
+3. A complete state is complete for a specified model and future input rule.
+4. The Jacobian maps signed rates to task velocity; acceleration also includes changing-geometry terms.
+5. Constraint reactions depend on the equations and loading. Their mathematical role does not identify individual tissues or guarantee feasible contact.
+6. A consistent synthetic example checks reasoning; it does not establish human performance or a coaching prescription.
 :::
 
-::: {.callout-note}
+## Chapter Exercises With Worked Answers
+
+[]{#chapter-exercises}
+
+### 1. Count the Configuration and Velocity Dimensions
+
+Consider a planar rigid pendulum, a spherical rigid pendulum, an unrestricted planar two-link chain, and an oriented sphere rolling without slipping on a horizontal plane. State the assumptions.
+
+**Answer.** Their configuration dimensions are 1, 2, 2 and 5 respectively. For the sphere, two numbers locate the center in the plane and three specify orientation. With radius $R$ and angular velocity $\bm\omega$, zero velocity at the contact point gives
+
+$$
+v_x=R\omega_y,\qquad v_y=-R\omega_x.
+$$
+
+There are three freely selectable instantaneous velocity components, not five: two independent no-slip conditions constrain the five configuration rates. Spin $\omega_z$ remains allowed by this ideal point-contact condition. Forbidding spin is an additional assumption. Ignoring orientation changes the question to locating the center rather than describing the full rigid-body configuration.
+
+A human upper-body count cannot be inferred from the words "shoulder, elbow and wrist" alone. A declared open chain with a 3-DOF shoulder, 1-DOF elbow and 2-DOF wrist has six configuration DOF at a fixed base. Adding forearm rotation, a second arm or closed grasp constraints changes that model and requires a new count.
+
+### 2. Draw the Configuration Map
+
+Draw a square $(-\pi,\pi]\times(-\pi,\pi]$ for the ideal two-link chain and identify opposite edges. Add an illustrative restriction $|\theta_2|\leq\pi/2$.
+
+**Answer.** The unrestricted square represents a torus, not four physical walls. The added restriction removes configurations with larger relative angles; it does not establish a human range limit or guarantee that every remaining point is reachable within a prescribed time and torque budget.
+
+### 3. Calculate a Point Speed
+
+For $L_1=0.35$ m and $\dot\theta_1=500^\circ/\mathrm{s}$, find hinge speed with the base fixed.
+
+**Answer.** Convert to radians first: $|\dot{\bm r}_H|=0.35(500\pi/180)\approx3.054$ m/s. At $\theta_1=0$ the positive-rate velocity points right; at $\theta_1=\pi/2$ it points up. These are signs in the declared frame, not target-relative swing directions.
+
+### 4. Distinguish Endpoint Velocity From Acceleration
+
+At $\bm q=(0,0)$ and rates $(1,0)$ rad/s, set both joint accelerations to zero.
+
+**Answer.** Endpoint velocity is $(1.35,0)$ m/s, but acceleration is $(0,1.35)$ m/s$^2$. Zero joint angular acceleration does not mean zero Cartesian acceleration. The velocity direction is changing.
+
+### 5. Interpret a Phase Projection
+
+Can two points with identical $(\theta_1,\dot\theta_1)$ have different endpoint velocities?
+
+**Answer.** Yes. With rates $(1,0)$ rad/s, configurations $(0,0)$ and $(0,\pi/2)$ give endpoint velocities $(1.35,0)$ and $(0.35,1)$ m/s. The projection has discarded the second angle. In the manufactured trajectory, a zero first-coordinate rate at $t=0$ likewise does not imply a motionless endpoint: its speed is $\pi/2$ m/s.
+
+### 6. Interpret a Limit Without Inventing Physiology
+
+A model imposes a rigid joint stop. What changes if tissue compliance is modeled instead?
+
+**Answer.** An ideal reaction enforces the stop's compatibility conditions, potentially with an impact law at engagement. A compliant model allows deformation and requires a force–deformation–rate law and any internal states it uses. Actuation can affect the load in either formulation. Neither formulation alone establishes a person's safe range or predicts injury.
+
 ## On This Site
 
-- **[Rotation Representations Reference](../../rotation-representations-reference.html)** — SO(3) conventions for three-dimensional swing kinematics
-- **[Lagrangian Mechanics Reference](../../lagrangian-reference.html)** — Energy-based equations of motion used from Chapter 3 onward
-:::
+[]{#related-reading}
 
-## Chapter Exercises
+[]{#quarto-bibliography}
 
-1. **Degrees of Freedom**. For each of the following systems, count the degrees of freedom.
-
-2. A golf ball rolling on a table (assume no slipping).
-3. A single pendulum (one mass on a massless string).
-4. A double pendulum (two masses, two hinges).
-5. Your upper body during a golf swing (shoulder, elbow, wrist, assume torso is fixed).
-
-- **Configuration Space**. Sketch the configuration space of a double pendulum. On the axes, put $\theta_s$ (shoulder, horizontal axis) from $-90°$ to $+150°$ and $\theta_e$ (elbow, vertical axis) from $-80°$ to $+80°$. Mark the regions that are reachable (physically possible) and unreachable. Then sketch a typical golf swing path in this space.
-
-- **Velocity Calculation**. A golfer's shoulder rotates at $\dot{\theta}_s = 500°/s = 8.7 \text{ rad/s}$. The upper arm has length $L_1 = 0.5$ m. What is the linear speed of the elbow? (Hint: $v = r \omega$.)
-
-- **Jacobian Intuition**. At address, your shoulder angle is $\theta_s = 0°$ (arm vertical). At this position, is the clubhead moving mostly up/down or mostly left/right when you rotate your shoulder? What about when $\theta_s = 90°$ (arm horizontal)? Explain in terms of the Jacobian.
-
-- **Phase Space Trajectory**. Sketch a 2D "slice" of phase space: the $(\theta_s, \dot{\theta}_s)$ plane (ignoring the elbow for simplicity). Mark the location of address, top of backswing, and impact. Draw the swing trajectory connecting them. What does the trajectory look like? Does it ever loop back on itself?
-
-- **Constraints and Range**. Your shoulder can rotate from $\theta_s = -90°$ (fully across your body) to $\theta_s = +150°$ (fully behind you). What happens if you try to force $\theta_s = +160°$? Where does the force come from? Is it a muscle force or a constraint force?
+Continue with [the double-pendulum dynamics](ch03_double_pendulum.html), [constraint forces and boundary work](ch07_constraint_forces.html), and [inverse dynamics and its limits](ch18_inverse_dynamics_parallel.html). For spatial descriptions, see [rotation representations](../../rotation-representations-reference.html); for model size, see [degrees of freedom and dimensionality](../../degrees-of-freedom-and-dimensionality.html). The site's [notation reference](../../../pages/notation.html) supplies the broader conventions; each model must still declare its particular frame and input definitions.

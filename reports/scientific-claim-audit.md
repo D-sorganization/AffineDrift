@@ -4,12 +4,13 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 237
-- Deferred: 0
+- Reviewed: 236
+- Deferred: 1
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
+- [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 1 routes
 
 ## Reviewed Evidence
 
@@ -101,7 +102,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | `articles/The_Geometry_of_Motion/quarto/volume1.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | `articles/The_Geometry_of_Motion/quarto/volume2.qmd` | 2 |
 | `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | `articles/The_Physics_of_Golf/quarto/ch01_why_physics.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | `articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | `articles/The_Physics_of_Golf/quarto/ch05_affine_structure.qmd` | 1 |
@@ -344,7 +344,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-555d7d5b4797` | `/articles/The_Geometry_of_Motion/quarto/volume1.html` | Reviewed | — | None | None | 0 |
 | `ad-route-df931687d016` | `/articles/The_Geometry_of_Motion/quarto/volume2.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e6426572da2d` | `/articles/The_Physics_of_Golf/quarto/ch01_why_physics.html` | Reviewed | — | None | None | 0 |
-| `ad-route-6c2a1c1053d6` | `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | Reviewed | — | None | None | 0 |
+| `ad-route-6c2a1c1053d6` | `/articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 0 |
 | `ad-route-6e5a4acf5112` | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f5006c4e6a60` | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | Reviewed | — | None | None | 0 |
 | `ad-route-a5c8f4c49401` | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | Reviewed | — | None | None | 0 |
