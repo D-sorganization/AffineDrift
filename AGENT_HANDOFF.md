@@ -1,3 +1,29 @@
+# Deferred Impact Project Projection — #4438
+
+- Repository/worktree: AffineDrift,
+  `C:/Users/diete/Repositories/Worktrees/AffineDrift-deferred-project`.
+- Branch: `docs/4438-deferred-project-projection`; base `96c703c2`; commit `SELF`;
+  PR: not created. Development entry DL-#4438; fleet parent RM#1687 / RD#1248.
+- Adds initial `docs/project/CHARTER.md` and `STATUS.md` for the existing impact
+  program. #4253 stays active for theory/source/numerical work; DV-4253 is parked
+  with its original owner-plan link and pending Board/prerequisite decisions.
+- The charter explicitly limits its feature counts to this initial program slice.
+  Source README/SPEC and current open epic were inspected; original catalog,
+  plan and source snapshot are preserved. No measurements, approval, scheduled
+  Staff Hub run or full-program completion are claimed.
+- Validation: central catalog valid; central/dashboard parsers agree on both
+  feature rows and three pending decisions. Every original planning byte is
+  unchanged. Title-case (637 sources) and SPEC changelog checks pass; normal
+  docs hooks pass. No executable source changes.
+- This scoped fleet-planning rollout does not resume the independent paused
+  technical-review campaign below.
+- Next: validate and publish through a regular protected PR; verify default-branch
+  content and live dashboard projection after cache refresh. The new feature-detail
+  UI is Runner_Dashboard#1251; shared discovery is RM PR #1717. Full fleet rollout
+  remains open. Preserve the independent paused technical-review state below.
+
+---
+
 # Paused Technical Review Checkpoint
 
 The user requested a stopping checkpoint. The current technical releases are

@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4438 · Deferred Impact Project Projection
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4438; fleet RM#1687 / RD#1248
+- **Branch:** `docs/4438-deferred-project-projection`
+- **PR:** not created
+- **Paths:** `docs/project/CHARTER.md`, `docs/project/STATUS.md`
+- **Started:** 2026-09-23
+- **Last verified:** 2026-09-23 (base 96c703c2; source catalog/plan/README/SPEC inspected; #4253 verified open; catalog and both charter parsers pass; original planning bytes unchanged; title-case/SPEC pass; docs hooks pass)
+- **Summary:** Initial charter separates active theory/numerical synthesis from parked DV-4253 and exposes pending resource/evidence decisions. Original scientific obligations remain authoritative in the plan.
+- **Next step:** Validate, publish and verify owner projection; keep fleet rollout acceptance open.
+
 ### DL-#4431 · Nonlinear Control Insights and Physical Coupling
 
 - **State:** shipped
