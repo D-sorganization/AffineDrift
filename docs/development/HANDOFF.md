@@ -1,3 +1,57 @@
+# Current Technical Review Checkpoint — #4428
+
+Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
+`fix/manifesto-notation-units`; commit `SELF`; regular PR #4432:
+https://github.com/D-sorganization/AffineDrift/pull/4432.
+PR4432 now targets main. PR4430 merged as4fe70151c4e6c7e9e86f38db02a70db5dd50447e;
+its tree exactly equals checked head86ac900f (949d5fa81471776ca185b79f9b77ad3df4c09d7d).
+Normal integration deaecd6b preserves the complete42f10e6f tree: six turnover/
+audit conflicts retain the newer manifesto records, with no source or evidence
+change. Its auto-merge is not enabled; wait for4430 live publication before
+allowing the successor merge. Never create draft PRs.
+
+Issue4428 is a native child of4063 under4021/4009. Our codex lease receipt
+5786396346 expires01:49UTC Sep23. The coordination inbox returned incomplete
+board evidence with malformed-comment/identity warnings; the issue claim still
+identifies our active codex lease. No peer message or ownership transfer was
+inferred from the incomplete result.
+
+Complete manifesto index reread and correction are saved with review/render
+reports. The source distinguishes Bu, inverse-inertia acceleration and full-state
+Gu, retained flexible coordinates, state ordering, input-affinity and
+memory/contact rules. Part5 describes the actual numerical verification
+protocol; Part4 matches its current beam/pendulum scope. Eleven expressions
+render in four browser cases; production4/4, title638 and internal links pass.
+Page-local CSS restores reading-size display math in raw HTML. No model or
+solver changed. Source/render remain frozen at2250d07f; all five findings bind
+to it. Aggregate review binds to31664586. All13 route evidence maps match their
+committed bytes. Twelve unchanged dependencies are carried forward only for the
+shared audit/report update; #4429 preserves their historical provenance issues.
+The28 inventory/site-audit tests pass again before opening4432.
+
+PR4430 passed every required check, including the full browser/accessibility
+job, and merged through protected auto-merge at00:37:21UTC Sep23. Deployment
+35802860809 is in progress at4fe70151. Verify its live artifact (expected960/960
+and eight corrected-route cases) before recording4427 shipped. No check was
+bypassed. The manifesto branch includes its figure/glossary CI fixes. IAA4426 is
+shipped at99aa5835 with live960/960. Active entries DL-#4428 and DL-#4427.
+The whole development-log validator has pre-existing WIP/older-record defects;
+do not claim a clean whole-log result.
+
+The broader goal remains active. Next long article #4431 has not been claimed
+or edited. Its issue now preserves checked physical replacement values, the
+finite-difference energy balance and explicit control counterexamples. The
+entire linked critique was read and has its own unsupported full-actuation,
+reachability and necessary-efficiency claims; do not adopt those as facts or
+silently close the governed critique. Primary transcript/source access and the
+unavailable geometric-phase full preprint are recorded on4431. Claim and lease
+before implementation after the current releases.
+
+Disk headroom recovered to about1.9GB after earlier exhaustion. Previous
+cleanup removed only verified untracked duplicate QA PNGs, preserving source,
+PDFs, equation/endpoint images and JSON receipts. Stage explicit task paths;
+many unrelated untracked QA helpers remain. Preserve unrelated planning records.
+
 # Current Technical Review Checkpoint — #4427
 
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch

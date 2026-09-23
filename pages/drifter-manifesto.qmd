@@ -2,6 +2,7 @@
 title: "The Drifter Manifesto — Series Index"
 description: "The Drifter Manifesto - An editorial theory series on control-affine systems in biomechanics"
 page-layout: full
+css: ../css/manifesto.css
 categories:
 - critique
 ---
@@ -27,7 +28,22 @@ categories:
           <strong>Provenance:</strong> The smooth control-affine form \(\dot{x}=f(x)+G(x)u\) and drift vector fields are established nonlinear-control tools (Isidori 1995; Bullo and Lewis 2004). ZTCF family, ZVCF, and the weighted drift-control ratio \(\mathrm{DCR}_{W}\) are AffineDrift diagnostics layered on that foundation. Treat golf-specific ratios and phase labels as model-dependent claims, not peer-reviewed invariants. See <a href="../critiques/index.html">Critiques &amp; Responses</a> for documented limitations.
         </aside>
         <aside class="provenance-note">
-          <strong>Notation baseline:</strong> The series uses \(x=(q,\dot{q})\), \(f(x)\) for unforced smooth dynamics, \(G(x)u\) for actuated generalized forces, and \(\mathrm{DCR}_{W}\) only after stating the norm, weighting matrix, torque bound, and model parameters (see the <a href="notation.html">Mathematical Notation Reference</a>). Counterfactual simulations are valid only within the assumptions stated in each article. Impacts, switching contact, and tissue deformation require separate hybrid or compliant models.
+          <p><strong>Notation baseline:</strong> Collect independent rigid and retained flexible coordinates in \(z\), set \(v=\dot z\), and stack the mechanical state as \(x=(z,v)\). Parts 1 and 3 interleave rigid and flexible components; that ordering represents the same state only when every vector and matrix is permuted consistently. In a smooth model with invertible inertia and no additional internal states, write</p>
+          \[
+          M(z)\dot v+h(z,v)=\mathcal B(z)u.
+          \]
+          <p>Here \(\mathcal B u\) is the applied generalized load. Solving the force balance gives the acceleration contribution \(M^{-1}\mathcal B u\). In the full-state equation,</p>
+          \[
+          \begin{aligned}
+          f(x)&=\begin{bmatrix}v\\-M^{-1}h\end{bmatrix},\\
+          G(x)u&=\begin{bmatrix}0\\M^{-1}\mathcal B u\end{bmatrix}.
+          \end{aligned}
+          \]
+          <p>Thus \(G(x)u\) contributes to the <em>state derivative</em>, not directly to generalized force. Its lower block has acceleration units; generalized loads have the units conjugate to the chosen coordinates, such as force for a displacement or torque for an angle. The drift retains the model's specified gravity, elastic, dissipative and external-load effects at zero declared input. Earlier inputs change the state at which this drift is evaluated.</p>
+          <p>This affine form requires the displayed coefficients to be independent of the instantaneous declared input at fixed state. Physiological memory needs additional state equations; dependent coordinates need constraint equations; impacts and changing contact need event and mode rules. State the complete model and input convention before constructing a counterfactual. See <a href="../articles/theory-part2.html">Theory Part 2</a> and the <a href="notation.html">Mathematical Notation Reference</a>.</p>
+        </aside>
+        <aside class="provenance-note">
+          <strong>Ratio interpretation:</strong> Use \(\mathrm{DCR}_{W}\) only after declaring the norm, task weighting or projection, admissible input set, model parameters and denominator convention. A magnitude ratio does not by itself specify the direction of an available correction or establish finite-time reachability. The <a href="../articles/controllability-drift-ratio.html">DCR article</a> and <a href="../articles/zero-torque-counterfactual.html">zero-torque treatment</a> distinguish those questions.
         </aside>
         <aside class="provenance-note">
           <strong>Evidence standard:</strong> Treat each ratio, phase label, and counterfactual conclusion as a modeling claim until the source gives the model, parameter values, sensitivity check, and data source. The manifesto states the research program; it does not by itself establish a clinical, coaching, or universal biomechanical rule.
@@ -87,24 +103,24 @@ categories:
         </aside>
 
         <div class="article-card">
-          <h2><a href="../articles/theory-part1.html">Theory Part 1 &mdash; State definition and affine derivation</a></h2>
-          <p>Establishes the multibody coordinates, derives the control-affine structure, and sets the notation used in every subsequent article.</p>
+          <h2><a href="../articles/theory-part1.html">Theory Part 1 &mdash; State Definition and Affine Derivation</a></h2>
+          <p>Declares rigid and flexible coordinates, derives the control-affine structure, and states the model and attribution limits used by the series.</p>
         </div>
         <div class="article-card">
-          <h2><a href="../articles/theory-part2.html">Theory Part 2 &mdash; Drift/input decomposition, ZTCF, ZVCF</a></h2>
+          <h2><a href="../articles/theory-part2.html">Theory Part 2 &mdash; Drift/Input Decomposition, ZTCF, ZVCF</a></h2>
           <p>Defines model-conditioned zero-input and zero-velocity interventions. These simulations do not uniquely separate passive dynamics from deliberate muscular torque or identify neural intent.</p>
         </div>
         <div class="article-card">
-          <h2><a href="../articles/theory-part3.html">Theory Part 3 &mdash; Drift invariance and taxonomy</a></h2>
+          <h2><a href="../articles/theory-part3.html">Theory Part 3 &mdash; Drift Invariance and Taxonomy</a></h2>
           <p>Examines transformation conditions, introduces a force taxonomy, and discusses limitations of the affine assumption; any invariance claim is limited to its declared coordinates and transformation class.</p>
         </div>
         <div class="article-card">
-          <h2><a href="../articles/theory-part4.html">Theory Part 4 &mdash; Modal Approximation, Wrenches, and Pendulum Dynamics</a></h2>
-          <p>Collects derivations, modal approximations, and pendulum examples that support the main theory.</p>
+          <h2><a href="../articles/theory-part4.html">Theory Part 4 &mdash; Beam Reduction and Reproducible Pendulum Dynamics</a></h2>
+          <p>Derives coupled rigid/flexible mechanics, beam reduction and pendulum examples with explicit load, boundary and validation conventions.</p>
         </div>
         <div class="article-card">
-          <h2><a href="../articles/theory-part5.html">Theory Part 5 &mdash; Simulink Model Documentation</a></h2>
-          <p>Documents the Simulink implementation, numerical routines, and supporting technical notes.</p>
+          <h2><a href="../articles/theory-part5.html">Theory Part 5 &mdash; Numerical Verification Protocol</a></h2>
+          <p>Sets out force-balance, branch, convergence and reproducibility checks for a declared model. It distinguishes numerical verification from human validation and does not supply a revision-bound package for the historical Simulink results.</p>
         </div>
         <div class="article-card">
           <h2><a href="../articles/drifter-manifesto.html">Single-File Edition</a></h2>
