@@ -27,7 +27,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/manifesto-notation-units`
 - **Paths:** `pages/drifter-manifesto.qmd`, `css/manifesto.css`, `reports/technical-review/manifesto-notation-review.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (2250d07f source/render; five findings bound; aggregate31664586; SELF twelve dependency carry-forwards verified; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
+- **Last verified:** 2026-09-22 (2250d07f source/render; five findings bound; aggregate31664586; SELF twelve dependency carry-forwards verified and predecessor86ac900f integrated;28 audit tests pass; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
 - **Summary:** Distinguishes generalized input load, acceleration contribution and full-state rate; includes retained flexible coordinates and memory/constraint boundaries; corrects Part5 capability and Part4 orientation. Scientific source and model runs remain unchanged.
 - **Next step:** Open the regular manifesto correction PR after integrating merged predecessor main.
 
@@ -40,7 +40,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/zero-torque-counterfactual-rigor`
 - **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; PR4430 Python CI found stale counts after timeline removal; exact figure census corrected and23 parity tests pass; all eight full-book builds pass; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
+- **Last verified:** 2026-09-22 (SELF; c5ed3344 figure correction passes; three obsolete glossary phrase assertions updated and full content_lint selection passes with four documented skips; exact figure census corrected and23 parity tests pass; all eight full-book builds pass; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
 - **Next step:** Complete protected CI and merge regular PR4430.
 

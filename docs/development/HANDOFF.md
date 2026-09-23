@@ -3,7 +3,7 @@
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
 `fix/manifesto-notation-units`; commit `SELF`; PR not created. Issue4428 is a
 native child of4063 under4021/4009. Lease receipt5786396346 expires01:49UTC Sep23.
-Base includes PR4430 final figure-census correction c5ed3344. Complete index
+Base includes PR4430 figure/glossary CI corrections through86ac900f. Complete index
 reread and source correction are saved with review/render reports. The source
 distinguishes Bu, inverse-inertia acceleration and full-state Gu, retained
 flexible coordinates, state ordering, input-affinity and memory/contact rules.
@@ -26,8 +26,9 @@ css/ evidence paths. No schema or validation gate was weakened. All #4427 scient
 
 PR4430 remains open with protected auto-merge enabled. Eight full-book builds
 passed on the prior head; Python CI exposed obsolete figure counts after the
-deliberate diagram removal. c5ed3344 updates exact counts; all23 figure tests
-pass, normal push checks passed, and final CI is rerunning. Watch4430 and verify
+deliberate diagram removal. c5ed3344 updates exact figure counts;86ac900f aligns glossary contracts with
+the corrected text. All23 figure tests and the complete content_lint selection
+pass locally; normal push checks passed and final CI is rerunning. Watch4430 and verify
 its main/live deployment before merging the manifesto successor. IAA4426 is
 shipped with live960/960. Active entries DL-#4428 and DL-#4427. Goal remains active.
 The central development-log validator reports pre-existing WIP/older-record
@@ -76,6 +77,13 @@ Regular PR4430 is open. Python CI exposed two stale figure-census expectations a
 unsupported timeline removal; the corpus now has27 figured chapters,36 figures,
 five TikZ figures and four unpaired figures. The23 figure-audit tests pass after
 updating exact counts; no source or frozen scientific evidence changed.
+The separate content_lint CI phase then exposed three old phrase assertions.
+They now require the corrected capacity expression, retained activation and
+feasible instantaneous ZVCF reset. The complete content_lint selection passes
+locally with four skips (three unavailable Streamlit modules and the existing
+missing latex-release workflow). No scientific source or frozen evidence changed.
+Disk headroom fell below4MB: removed80 untracked duplicate ZTCF section
+screenshots, retaining all equation/endpoints, overview/title, PDF and JSON evidence.
 Next complete protected CI, merge it, and verify its
 main deployment/live artifact before recording the zero-torque release as shipped.
 No draft PRs. Goal remains active; entries advanced DL-#4427 and DL-#4425.
