@@ -1,3 +1,42 @@
+# Current Technical Review Checkpoint — #4431
+
+The user requested a stopping checkpoint while this rewrite was in progress.
+Finish only the current nonlinear-control rewrite4431 and regular manifesto
+PR4432, verify the day's releases on remote main/live, save turnover records,
+then pause the broader goal. Do not start another article, rewrite or issue.
+The corpus remains incomplete; pausing is not completion of the overall audit.
+
+Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
+`fix/nonlinear-control-insights-rigor`; base c7cec8ea; checkpoint SELF; no PR yet.
+Issue4431 under4058/4021/4009. Codex lease receipt5786996527 and presence
+5786998192 expire02:41UTC Sep23; session technical-review-20260923-nonlinear.
+The complete article and linked critique were read; the new argument connects
+acceleration, energy, intervention, finite-time control and identification.
+The critique remains visibly open; its source/ledger are unchanged.
+
+The rewrite uses the independently checked Chapter6 Cartesian rod functions;
+no production solver, registered fixture or physiology model changed. Sixteen
+new checks and11 existing checks pass. All106 expressions initially rendered
+in four cases,22 displays inspected; visual review rejected undersized mobile
+math. Page-local CSS now preserves reading size with horizontal scrolling and
+reduces the long mobile title. Final production4/4 and expanded keyboard/axe4/4 pass. All22 displays and
+six mobile wide endpoints in both themes were inspected; no inline overflow
+remains. Commit the accepted source/render checkpoint, then bind exact evidence.
+The route is temporarily deferred rather than claiming its old review covers
+the rewrite; restore reviewed status after binding and before PR creation.
+
+Reports: reports/technical-review/nonlinear-control-insights-review.md;
+QA files: docs/development/technical-review/nonlinear-4431-*.
+Source-access limits and checked preparation remain on issue4431. Do not claim
+full-paper/video access or human validation. Stage only explicit task paths.
+
+PR4430 merged4fe70151 after every required check; deployment35802860809 is
+running. PR4432 targets main atc7cec8ea; all checks except its final browser job
+have passed. Auto-merge remains off until4430 live publication is verified.
+Do not overwrite the remote manifesto branch with this successor's changes.
+Normal main integration deaecd6b preserved the complete manifesto evidence;
+source2250d07f, aggregate31664586 remain frozen. IAA4426 is shipped960/960.
+
 # Current Technical Review Checkpoint — #4428
 
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch

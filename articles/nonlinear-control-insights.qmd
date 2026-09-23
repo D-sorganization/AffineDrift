@@ -1,6 +1,6 @@
 ---
 title: "Nonlinear Control Theory Insights, Drift Causality, and Future Research Directions"
-description: "Insights from nonlinear control theory on drift causality in golf biomechanics, with future research directions for the control-affine framework."
+description: "A rigorous guide to coupling, energy, counterfactuals, finite-time control and identifiability in golf-swing models."
 author: "Dieter Olson"
 date: "2025-11-28"
 format:
@@ -9,475 +9,693 @@ format:
     toc-depth: 3
     number-sections: false
     code-fold: true
-    css: /css/technical-explanations.css
+    css:
+      - /css/technical-explanations.css
+      - /css/nonlinear-control.css
 categories:
 - motor-control
 ---
 
 {{< include _generated/trust/critique-annotations/nonlinear-control-insights.qmd >}}
 
-## Introduction
+## Introduction: Five Questions About a Coupled Swing
 
-A golfer swings a club that weighs less than a kilogram, yet the ball can travel over 250 yards. The kinetic energy at impact far exceeds what the muscles alone can produce in the roughly 0.3 seconds of the downswing. The mechanism is energy accumulation through the kinetic chain: gravitational potential energy, elastic energy, and inertial coupling amplify the muscular input.
+A golfer's earlier actions establish the posture, velocities, activation and
+elastic deformation from which later motion develops. Current muscle forces,
+gravity, contact reactions and equipment dynamics then act on that evolving
+state. The scientific question is how these contributions interact to produce
+an impact state, and which changes remain feasible before impact.
 
-The mathematical language for this is the control-affine system:
+Nonlinear control theory helps organize that question, but several different
+claims must be kept separate:
 
-$$
-\dot{x} = f(x) + G(x)u.
-$$
+1. **Acceleration:** How does a specified input change the instantaneous state
+   derivative or clubhead acceleration at a common state?
+2. **Energy:** Which mechanisms add, remove, store or redistribute mechanical
+   energy over a declared system boundary?
+3. **Intervention:** What trajectory follows from changing one input while
+   retaining the stated plant, internal states, contacts and external loads?
+4. **Finite-Time Control:** Which impact states can bounded inputs actually
+   reach within the available time?
+5. **Identification:** Which of those quantities can the available measurements
+   distinguish, and with what uncertainty?
 
-Here, $f(x)$ is the **drift**---the autonomous dynamics arising from gravity, momentum, elastic energy, and Coriolis/centrifugal coupling. And $G(x)u$ is the **input**---the torques the golfer actively generates through muscular contraction. The key structural property is that these two contributions are *additively separable*: the drift field and the input field combine linearly in the state derivative. This additive structure provides the mathematical justification for the **Skeletal Baseline** and validates the Zero Torque Counterfactual (ZTCF) family as the system's natural trajectory from which all active deviation must be produced.
+These questions are intertwined. An earlier torque changes a later state, and
+therefore the later drift and torque effectiveness. A contact constraint changes
+both acceleration and reaction forces. A model that reproduces a trajectory can
+still misattribute the forces that produced it. A locally effective torque may
+have little time to change clubhead position, and a large local acceleration
+contribution need not add energy to the system.
 
-This control-theoretic perspective transforms how we understand the swing. In traditional biomechanics, we measure a total force and ask: "How hard did the golfer work?" In the control-affine framework, we ask a more powerful question: "How much of this force is the golfer supplying, and how much is the system providing for free?"
+The purpose of the affine formulation is to make such distinctions calculable.
+It does not establish that the golf swing is universally drift dominated, that
+muscles supply only small corrections, or that proximal braking is an optimal
+coaching strategy. The examples below are analytical illustrations, not fitted
+human-swing results.
 
-Having established this structure and the decomposition of total forces into drift and input components, we now draw on nonlinear control theory to understand what this structure implies about the nature of the control problem faced by a golfer. This section expands significantly on classical insights from nonlinear systems, control geometry, and optimal control to interpret the swing as a drift-dominated dynamic maneuver that integrates complex mechanical coupling, underactuation, and state-dependent torque effectiveness.
+## From Mechanical Loads to State Rates
 
-::: {.callout-note}
-## Implicit Assumption: Drift Invariance
-The validity of these insights relies on the **Drift Invariance** condition (detailed in Part 3): the passive dynamics $f(x)$ must be independent of the instantaneous input $u$. If muscular activation were to instantaneously alter the passive stiffness or damping properties of the system (beyond the affine torque contribution), the causal separation of drift and input would collapse.
-:::
-
-## Drift as the Causal Result of Prior Dynamics
-
-The drift vector field $f(x)$ represents the instantaneous derivative of the system's evolution under zero input. Formally, let $\Phi_0(t, t_0, x_0)$ denote the flow of the system under $u(t) \equiv 0$. Then
-
-$$
-f(x) = \left.\frac{d}{dt}\Phi_0(t, t_0, x_0)\right|_t,
-$$
-
-showing that drift is the local derivative of the entire zero-input evolution. This confers a strictly causal nature to drift: it represents the accumulated result of all prior states, motions, and stored energies in the system. The state variables $(q, \dot{q}, x_s, \dot{x}_s)$ encode position history, velocity history, shaft deflection history, and loading rates. Drift expresses this entire mechanical past as present-time forces.
-
-This causal dependence gives drift its characteristic behaviors: inertial forces arising from accumulated segment velocities, elastic forces reflecting stored shaft energy, and geometric force interactions determined by the evolving athletic posture. Drift is not instantaneous; it is the residue of past configurations expressed through instantaneous mechanical laws.
-
-In the context of the AffineDrift framework, this causality is what allows the **Zero Velocity Counterfactual (ZVCF)** to function as a "state-dependent load cell." Because $f(x)$ depends only on the current state $(q, \dot{q})$ and not on the instantaneous input $u$, the drift vector field objectively quantifies the inertial and elastic burdens the golfer must overcome at any instant, regardless of their intent.
-
-## Nonlinear Control-Theoretic Insights
-
-### Underactuation and Drift Dominance
-
-Underactuated systems are characterized by fewer control inputs than degrees of freedom, which is the case for the human--club system. Movements such as swinging, throwing, and dynamic manipulation rely heavily on exploiting passive dynamics rather than directly imposing motion. Nonlinear control theory clarifies that in such systems, the drift field is generally large, and inputs primarily shape rather than dictate the motion.
-
-This implies that a golfer cannot directly impose an arbitrary acceleration on the club or body segments. Instead, they influence the geometry, energy distribution, and coordination among segments, effectively steering the system's underlying passive dynamics toward a desired terminal state.
-
-### On the Uniqueness of the Zero-Torque Counterfactual
-
-A legitimate concern is whether the Zero Torque Counterfactual (ZTCF) is unique. Different choices of coordinate systems or input/output partitions might seem to yield different ZTCFs. We address this directly.
-
-In our formulation, the ZTCF is **mathematically unique** and **mechanically unambiguous**. Here's why:
-
-1. **Actuated joints are physically identified.** The ZTCF corresponds to setting all generalized torques at the actuated joints to zero while preserving the constraint structure. The actuated joints are not abstract mathematical concepts; they correspond to anatomical joints where muscles cross (e.g., shoulder, elbow, wrist, hip, knee). This set is fixed by the biomechanics of the system, not by our choice of variables.
-
-2. **The constraint structure is fixed by mechanism topology.** The kinematic chain of the human body—how segments are connected, which joints are free and which are constrained—is fixed by anatomy. The resulting drift field $f(x)$ is uniquely determined by the Lagrangian and dissipation function applied to this topology.
-
-3. **The forward ZTCF describes a declared model intervention.** In simulation, the applied generalized-control channel is set to zero and the effective plant is integrated from a stated initial state. The result remains conditional on the plant, parameters, contacts, internal states, and frozen schedules.
-
-**What IS non-unique** is the *interpretation* of the ZTCF in terms of muscle activations. Setting $\tau = 0$ at a joint could mean: (a) all muscles relaxed (zero activation), (b) antagonist muscles balanced in co-contraction (equal and opposite activation), or (c) passive viscoelastic equilibrium.
-
-Our convention is interpretation (a): **no muscular torque of any kind**. This is the physiologically simplest and mathematically cleanest definition. Activation levels required to achieve other interpretations (e.g., balanced co-contraction) would appear as modifications to the input $u$, altering the counterfactual trajectory. In the ZTCF, no such modifications apply.
-
-This definition is valid and unambiguous because it corresponds to a well-defined physical experiment in simulation: remove all muscle activation and observe what happens.
-
-### Coordinate Invariance of the ZTCF
-
-A deeper concern is whether the ZTCF trajectory depends on the choice of generalized coordinates. Suppose two analysts model the same golfer using different coordinate conventions: analyst A uses Denavit-Hartenberg parameters $q_A$, while analyst B uses natural body-frame angles $q_B$. Is their ZTCF the same physical motion?
-
-**Yes, and here is why.** Let $\psi: q_A \mapsto q_B$ be the diffeomorphism relating the two coordinate systems. The equations of motion transform covariantly:
+For a smooth mechanical model in independent local coordinates, take
+$v=\dot q$ and write
 
 $$
-M_B(q_B)\ddot{q}_B + C_B(q_B, \dot{q}_B)\dot{q}_B + g_B(q_B) = B_B \tau
+M(q)\dot v+h(q,v,t)=B(q,t)u.
 $$
 
-Setting $\tau = 0$ in either coordinate system yields the same physical motion, because:
+The coordinates include every retained rigid and flexible mechanical degree of
+freedom. The inertia matrix $M$ is positive definite on these independent
+coordinates. The term $h$ groups the loads moved to the left of the equation:
+velocity-dependent terms, gravity, retained elastic and dissipative terms, and
+any specified external loading with the appropriate sign. The input convention
+is part of the model. In an effective joint-torque model, $u$ contains the
+selected generalized actuator torques and $B$ maps them into the force balance.
 
-1. The Lagrangian $L = T - V$ is a scalar — it does not depend on the choice of coordinates.
-2. The Euler-Lagrange equations are covariant under coordinate changes (this is the foundational result of analytical mechanics, proven by Lagrange himself).
-3. Therefore, the solution curve $q_A(t)$ under $\tau = 0$ and the solution curve $q_B(t) = \psi(q_A(t))$ under $\tau = 0$ describe the *same physical trajectory* in configuration space.
-
-The ZTCF is **geometrically intrinsic**: it is the geodesic of the kinetic energy metric on configuration space, modified by potential forces. Geodesics are coordinate-independent objects. Two analysts will compute different *numbers* for the generalized coordinates, but the physical motion of every body segment will be identical.
-
-**What IS coordinate-dependent** is the *decomposition of forces* into specific generalized force components. The torque required at "shoulder flexion" vs "shoulder abduction" depends on how you define these coordinates. But the ZTCF itself — the trajectory of the physical system under zero applied torque — is unique.
-
-### State-Dependent Effectiveness of Torques
-
-In affine nonlinear systems, the influence of control inputs is encoded in the input matrix $G(x)$, which varies with configuration and velocity. Thus, the same applied torque can have drastically different effects depending on posture, joint angles, shaft deflection, or motion history. This state-dependent input effectiveness is central to nonlinear control and directly relevant to analyzing and interpreting the dynamics of the golf swing.
-
-### The Golf Swing as an Optimal Control Problem
-
-Given a desired terminal clubhead state at impact---speed, orientation, path, and alignment---the swing can be viewed as a constrained optimal control problem:
+When this mechanical state is complete, stacking $x=(q,v)$ gives
 
 $$
-\min_u \; J(x(t),u(t)) \qquad
-\text{s.t.} \qquad \dot{x} = f(x) + G(x)u.
+\begin{aligned}
+f(x,t)&=\begin{bmatrix}v\\-M^{-1}h\end{bmatrix},\\
+G(x,t)u&=\begin{bmatrix}0\\M^{-1}Bu\end{bmatrix},\\
+\dot x&=f(x,t)+G(x,t)u.
+\end{aligned}
 $$
 
-Nonlinear optimal control predicts that in underactuated systems with strong drift dynamics, optimal motions exploit natural dynamics, rely on energy transfer, and use torques as perturbative mechanisms that shape momentum flows. This perspective aligns with modern robotics and dynamic manipulation literature and provides a rigorous interpretation of coordinated joint actions.
+Thus $Bu$ is a generalized load, $M^{-1}Bu$ is an acceleration contribution,
+and $G(x,t)u$ is a **state-rate contribution**. They cannot be substituted for
+one another. Force and torque are conjugate to displacement and angle;
+position-rate and acceleration blocks also have different units. Any norm that
+mixes those blocks needs an explicit scaling convention.
 
-## Expanded Nonlinear Control Tools and Their Relevance
+The displayed state is insufficient when retained physics has memory. Muscle
+activation, tendon history variables, controller states or hysteresis variables
+must then be included in $x=(q,v,z)$ with their evolution equations. The enlarged
+system is control affine only if its full derivative is affine in the declared
+instantaneous input at fixed complete state. An excitation input can enter an
+activation equation while the existing activation continues to generate muscle
+force. Conversely, a model with input-dependent stiffness at fixed state may
+fail to admit the stated affine split. An additive equation is an assumption to
+justify, not a physiological validation result.
 
-### Inertial Energy Transfer: The "Sequencing" Mechanism and Inertial Harvesting
+Generalized velocities need not equal coordinate derivatives globally; other
+representations require $\dot q=N(q)v$. Redundant coordinates require constraint
+handling. The equations in this section use the stated independent-coordinate
+chart, rather than treating it as a universal human-body parameterization.
 
-While often described in coaching as "sequencing," the proximal-to-distal transfer of energy is rigorously explained by the off-diagonal terms of the mass matrix ($M_{ij}$) and the velocity-dependent Coriolis forces ($C(q,\dot{q})$). This section develops the mechanism rigorously and provides concrete magnitudes.
+### Contact Changes the Acceleration Map
 
-#### The Mass Matrix Coupling Mechanism
-
-In a linked chain, the kinetic energy is $T = \frac{1}{2} \dot{x}^T M(q) \dot{x}$. When we expand this with block structure:
+For a stationary ideal holonomic constraint with Jacobian $J(q)$, a redundant
+coordinate description instead solves
 
 $$
-T = \frac{1}{2} \begin{bmatrix} \dot{q}_{\text{prox}} \\ \dot{q}_{\text{distal}} \end{bmatrix}^T \begin{bmatrix} M_{pp} & M_{pd} \\ M_{dp} & M_{dd} \end{bmatrix} \begin{bmatrix} \dot{q}_{\text{prox}} \\ \dot{q}_{\text{distal}} \end{bmatrix},
+\begin{aligned}
+M\dot v+h&=Bu+J^T\lambda,\\
+J\dot v+\dot Jv&=0.
+\end{aligned}
 $$
 
-the off-diagonal blocks $M_{pd}$ (and its transpose $M_{dp}$) represent **inertial coupling**. When the proximal segment accelerates, it imparts an inertial force on the distal segment—not through direct contact, but through their shared kinetic energy structure. The equation of motion for the distal segment is:
+The reaction $\lambda$ is solved together with acceleration. After solving this
+system in a feasible fixed mode, the input-to-acceleration map generally differs
+from the unconstrained $M^{-1}B$. Moving supports need the corresponding explicit
+time terms. Unilateral contact also requires checking the sign of the normal
+reaction, friction feasibility and the appropriate transition when the assumed
+mode ceases to apply.
+
+A ground reaction is consequently not automatically an independently commanded
+input. In a whole-body contact model it can be an output of the constrained
+dynamics. In a reduced segment model a measured ground or grip wrench may be a
+prescribed external load. Both are possible conventions, but they answer
+different intervention questions. The [force-measurement article](technology-force-measurement.qmd)
+and [induced-acceleration chapter](The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd)
+develop these boundaries.
+
+## Drift Is Instantaneous; the State Reflects Earlier Action
+
+Let $\Phi_0(t,t_0,x_0)$ be the solution of the declared zero-input system. Along
+that solution,
 
 $$
-M_{dd} \ddot{q}_{\text{distal}} + C_d = -M_{dp} \ddot{q}_{\text{prox}} + \tau_{\text{active,distal}}.
+\frac{d}{dt}\Phi_0(t,t_0,x_0)
+=f\bigl(\Phi_0(t,t_0,x_0),t\bigr).
 $$
 
-The term $-M_{dp} \ddot{q}_{\text{prox}}$ is the **reaction torque** transmitted from proximal deceleration to the distal joint. This is the mechanism of energy transfer.
+The right-hand side must be evaluated at the evolving state. To recover
+$f(x_0,t_0)$, evaluate the derivative at the initial time. Drift is an
+instantaneous vector field; the forward zero-input trajectory is its evolution
+through time. A complete state summarizes the information needed to predict
+future evolution under the model. It need not encode a recoverable record of
+the entire past, and different histories can lead to the same state.
 
-#### Worked Example: The Torso-to-Club Chain
+Earlier muscle action can increase velocity, stretch a tendon or bend a shaft.
+Those changes alter the state at which the later drift is evaluated. Hence
+independence from the **current** input at fixed state does not imply
+independence from previous inputs along a trajectory. This is the precise sense
+in which preparation and later natural motion are connected.
 
-Consider a simplified two-segment system:
-- **Segment 1 (Proximal):** Torso with moment of inertia $I_p = 3.5$ kg·m² rotating at $\omega_p$.
-- **Segment 2 (Distal):** Club (shaft + head) with moment of inertia $I_d = 0.15$ kg·m² rotating at $\omega_d$.
-- **Inertial coupling coefficient:** $M_{pd} = 0.8$ kg·m² (representing the fraction of proximal inertia transmitted through skeletal geometry).
+Writing $F$ for the full state derivative, input affinity at a common state gives
+the identity
 
-Initially: $\omega_p = 900$ deg/s, $\omega_d = 500$ deg/s (both still accelerating).
+$$
+F(x,u,t)-F(x,0,t)=G(x,t)u.
+$$
 
-**Scenario 1: Constant proximal torque** (no sequencing)
-- The proximal segment continues to accelerate at $\alpha_p = +50$ deg/s².
-- The distal segment experiences coupling torque: $\tau_{\text{couple}} = -M_{dp} \alpha_p = -0.8 \times 50 = -40$ N·m (a retarding torque).
-- Result: The distal segment decelerates.
+If a reference and a zero-input branch have reached different states, their
+rate difference additionally contains the difference between their drift
+fields. Subtracting two separated trajectories is therefore a finite
+intervention comparison, not a pointwise isolation of the current input term.
+The [canonical ZTCF treatment](zero-torque-counterfactual.qmd) distinguishes
+pointwise evaluations, stitched evaluations along a reference, forward branches
+and velocity-reset diagnostics.
 
-**Scenario 2: Proximal deceleration** (active sequencing)
-- The golfer applies a large negative torque to the proximal segment: $\alpha_p = -200$ deg/s² (dramatic braking).
-- The distal segment now receives coupling torque: $\tau_{\text{couple}} = -M_{dp} \alpha_p = -0.8 \times (-200) = +160$ N·m (an accelerating torque). This is the **instantaneous** coupling contribution to the distal torque balance; the resulting distal angular acceleration depends on the distal link's inertia *and* any competing torques (gravity, shaft elasticity, active wrist torque), and is **not** simply $160 / I_d$.
-- Result: The distal segment **accelerates** despite the proximal segment slowing. Angular momentum is not conserved (the golfer inputs negative work to the proximal segment), but that mechanical energy is redirected to the distal segment via the inertial coupling.
+### Zero Input Is a Declared Intervention
 
-The energy is not "lost" from the proximal deceleration; it is **harvested** and redirected to the distal segment through the mass matrix structure.
+A forward counterfactual is reproducible only after specifying the plant,
+parameters, complete initial state, input channels, retained schedules,
+constraints, external loads and event rules. Within a smooth mode, suitable
+regularity such as local Lipschitz continuity in the state supplies local
+uniqueness. It does not guarantee global existence or feasible continuation
+through every possible contact event.
 
-#### Dynamic Efficiency vs. Reachability
+Zero generalized joint torque, zero muscle excitation and zero activation are
+three different interventions. Zero net joint torque does not imply absent
+antagonistic muscle forces. Setting a new excitation command to zero does not
+instantaneously erase activation or tendon strain. A torque-level model cannot
+identify that underlying physiological decomposition without further modeling
+and evidence.
 
-This is **not** a reachability argument (as in nonholonomic steering, where a car must perform maneuvers to reach sideways). Rather, it is a **dynamic efficiency** argument: proximal braking amplifies distal speed. The mass matrix coupling ratio $M_{pd}/I_d$ quantifies this amplification. In a human swing with long arm segments and a light club, this ratio can be 5–10:1, meaning a deceleration of the torso by 100 deg/s² can impart an acceleration of 500–1000 deg/s² to the club.
+The zero-velocity counterfactual is similarly a model evaluation after a stated
+reset of selected velocity variables, usually combined with zero selected input.
+It is not an instrument or an independent measurement of load. Gravity, retained
+elastic forces, activation and scheduled external loads can remain. A reset must
+also satisfy constraints; setting velocity to zero may be incompatible with a
+moving support. Its value is a defined comparison, not a universal passive-force
+or muscle-effort reading.
 
-This confirms that "sequencing" is fundamentally a mechanism of **energy redirection through inertial coupling**, enabling the golfer to achieve high distal speeds without requiring enormous muscular power output.
+### Coordinate Changes Preserve an Intervention; Input Offsets Change It
+
+For a smooth invertible state transformation $y=\Psi(x)$, held within its chart
+and suppressing explicit time arguments,
+
+$$
+\dot y=D\Psi(x)f(x)+D\Psi(x)G(x)u.
+$$
+
+If the same physical input and all other model choices are preserved, the
+zero-input solution transforms to the same physical motion. This covariance
+does not select a unique physiological baseline. It also does not equate models
+with different constraints, flexible states, parameters or omitted forces.
+
+For a configuration transformation $y=\psi(q)$, acceleration contains an
+additional term:
+
+$$
+\ddot y=D\psi(q)\ddot q+D^2\psi(q)[v,v].
+$$
+
+For example, $y=q^2$ on the chart $q>0$ gives
+$\ddot y=2q\ddot q+2v^2$. Transforming only the acceleration vector by the
+Jacobian would miss the velocity-squared term.
+
+Changing the input origin is a different operation. If
+$u=\alpha(x)+\beta(x)w$, then
+
+$$
+\dot x=\bigl(f+G\alpha\bigr)+G\beta w.
+$$
+
+Zero $w$ generally applies a nonzero physical $u=\alpha(x)$. Feedback
+linearization or an equilibrium torque offset can therefore change what a
+"zero-input" trajectory means. A free system with a purely kinetic Lagrangian has
+geodesic motion under its kinetic metric; adding gravity, dissipation, elastic
+loads or contacts requires the corresponding forced or constrained dynamics.
+The general human-club baseline should not be called a geodesic without those
+qualifications.
+
+## Underactuation, Coupling and Local Authority
+
+Underactuation concerns the accelerations that a declared input map can
+produce, not the visual complexity of a motion. In the unconstrained mechanical
+model, the acceleration set at a fixed state is
+
+$$
+\mathcal A(x,t)
+=\left\{-M^{-1}h+M^{-1}Bu:\ u\in\mathcal U(x,t)\right\}.
+$$
+
+With unrestricted inputs, rank deficiency of $B$ relative to the independent
+mechanical degrees of freedom prevents arbitrary instantaneous accelerations.
+Counting inputs is sufficient to detect some deficiencies but is not the full
+criterion: extra channels can be dependent, and contact can change the relevant
+space. Even a full-rank map with bounded inputs produces a limited acceleration
+set. Human muscle redundancy, a floating base, foot contacts and flexible
+coordinates must be assessed within a specific model.
+
+MIT's [underactuation introduction](https://underactuated.mit.edu/intro.html)
+formulates the issue through achievable acceleration and input constraints.
+That framework does not imply that drift must be large. A horizontal two-DOF
+inertial model with only its first coordinate actuated is underactuated, yet at
+rest with no other loads its drift is zero. Conversely, a fully actuated system
+can have large gravitational or velocity-dependent loads relative to its
+actuator bounds.
+
+For a task point with position $r(q)$ and Jacobian $J_r$, unconstrained
+acceleration is
+
+$$
+\ddot r=J_r\bigl(-M^{-1}h+M^{-1}Bu\bigr)+\dot J_rv.
+$$
+
+The local torque-to-task-acceleration map is $J_rM^{-1}B$; the complete drift
+part also includes $\dot J_rv$. In a rigid torque-driven model, $M$ and $B$ may
+depend only on configuration, even though the drift depends strongly on
+velocity. Broader muscle or flexible models can introduce additional state
+dependence. The same torque can then affect different task directions and
+magnitudes as posture changes.
+
+A drift-control ratio can summarize a specified projected magnitude relative
+to a declared input set. It does not retain every directional property of
+$\mathcal A$, and it does not specify how the set evolves before impact. A large
+ratio is neither a proof of lost control nor a measurement of the muscular
+share of effort. See the [DCR treatment](controllability-drift-ratio.qmd).
+
+## Inertial Coupling Without Energy Amplification
+
+### A Coupled Acceleration Balance
+
+Partition independent coordinates into proximal and distal groups. The distal
+row of the unconstrained mechanical equation is
+
+$$
+M_{dd}\ddot q_d
+=(Bu)_d-h_d-M_{dp}\ddot q_p.
+$$
+
+All gravity, velocity-dependent, elastic and other retained bias terms belong
+in $h_d$. The term $-M_{dp}\ddot q_p$ explains a coupling contribution after
+rearranging the equation; it is not by itself a separately measured anatomical
+joint reaction or proof of a particular amount of energy transfer. The complete
+proximal and distal equations must be solved together.
+
+For a two-coordinate positive-definite inertia matrix,
+$M_{pp}>0$, $M_{dd}>0$ and $M_{pp}M_{dd}-M_{pd}^2>0$. An arbitrary large coupling
+coefficient can violate this requirement and permit negative kinetic energy.
+Moreover, inertias in kg m² multiply angular accelerations expressed in rad/s²,
+not unconverted numerical values in deg/s².
+
+Physical interactions between connected segments are transmitted through their
+joint forces and moments. The mass matrix encodes that mechanical geometry in
+the chosen coordinates. Its off-diagonal entries can change under coordinate
+transformations; an individual entry or ratio is not a coordinate-independent
+energy-transfer efficiency.
+
+### Worked Example: A Braking Torque in the Two-Rod Teaching Model
+
+Use the illustrative two uniform rods from the
+[Chapter 6 worked example](The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd):
+$m=(2,0.2)$ kg, $L=(0.4,0.3)$ m, COMs at $L/2$, COM inertias $mL^2/12$, and
+$g=9.81$ m/s². The fixed base lies in a vertical plane; $q_1$ is measured
+counterclockwise from horizontal and $q_2$ is the second rod's angle relative to
+the first. There are no elastic, frictional or moving-support loads in this
+example. These are teaching parameters, not identified torso or club inertias.
+
+At $q=(45,70)$ degrees and $v=(8,12)$ rad/s, the coupled inertia is
+
+$$
+M\approx
+\begin{bmatrix}
+0.152875150&0.010104242\\
+0.010104242&0.006000000
+\end{bmatrix}\ \mathrm{kg\,m^2}.
+$$
+
+Its eigenvalues are approximately $0.005308140$ and $0.153567010$ kg m², both
+positive. The complete zero-input acceleration, including velocity and gravity
+bias, is
+
+$$
+\ddot q_0\approx
+\begin{bmatrix}11.699484\\-119.253631\end{bmatrix}
+\ \mathrm{rad/s^2}.
+$$
+
+Apply a proximal braking torque $u=(-2,0)$ N m at that same state. Solving the
+full matrix equation gives
+
+$$
+\begin{aligned}
+\Delta\ddot q=M^{-1}u
+&\approx\begin{bmatrix}-14.721123\\24.790964\end{bmatrix},\\
+\ddot q=\ddot q_0+\Delta\ddot q
+&\approx\begin{bmatrix}-3.021639\\-94.462667\end{bmatrix}
+\quad\mathrm{rad/s^2}.
+\end{aligned}
+$$
+
+The distal acceleration **increment** is positive, while its total relative
+acceleration remains negative. A positive contribution is not the same as
+positive total acceleration. Nor is $q_2$ the absolute distal orientation:
+$\theta_2=q_1+q_2$. Its input acceleration increment is the sum of the two
+components, $10.069841$ rad/s². Declaring relative versus absolute
+angles matters even in this small model.
+
+This calculation establishes a local effect at one state. It does not show
+that braking increases distal speed at a later impact. That requires a complete
+trajectory comparison with matched initial conditions, bounded inputs and a
+declared endpoint or event rule. Calling a torque "braking" also refers to its
+power at the current velocity; its sign alone is insufficient.
+
+### The Energy Ledger
+
+For a time-independent mechanical model with conservative potential $V$,
+viscous or other dissipative generalized force $d$, and external generalized
+load $Q_{\rm ext}$, write
+
+$$
+M\dot v+C v+\nabla V+d=Bu+Q_{\rm ext}.
+$$
+
+With a consistent Coriolis representation satisfying the mechanical energy
+identity, $E=\tfrac12v^TMv+V$ obeys
+
+$$
+\dot E=v^TBu+v^TQ_{\rm ext}-v^Td.
+$$
+
+Stationary ideal constraint reactions do no work on admissible velocities.
+Moving supports, contact slip, impacts and internal energy states require their
+own power or event accounting. The equation is a balance across a stated
+boundary, not a declaration that all biological work is measured by net joint
+power.
+
+In the two-rod example, the sole actuator power is
+$v^Tu=8(-2)+12(0)=-16$ W. An independent finite difference of the complete kinetic
+plus gravitational energy along the calculated state derivative also gives
+$-16$ W. The braking input removes mechanical energy while changing the distal
+acceleration contribution. There is no energy amplification by the coupling
+matrix. Gravity or stored elasticity can release previously stored potential
+energy, while muscles or external actuators can supply new work.
+
+A segment-level energy balance additionally includes powers of forces and
+moments crossing that segment's boundary. Coordinate-wise kinetic-energy terms
+are not automatically segment energies, because the quadratic form contains
+cross terms. To identify energy flowing into the club, use its physical body
+energy and interface wrench powers in consistent frames.
+
+Angular momentum has a separate balance involving external moments about a
+specified point. Negative actuator power alone does not establish whether total
+angular momentum is conserved; a support reaction can affect momentum even when
+it does no work. Consequently, correlated proximal slowing and distal speeding
+cannot by themselves identify the source, amount or efficiency of energy
+transfer.
+
+## Geometry and Control Before Impact
+
+### Accessibility Is Different From Small-Time Local Controllability
+
+Accessibility asks whether a locally reachable set has an interior. Small-time
+local controllability requires the starting state to lie inside the locally
+reachable set for arbitrarily short positive horizons while remaining in a
+sufficiently small neighborhood. The input set and permitted motions matter.
+An algebraic span of vector fields is not, by itself, a finite-time performance
+result for a system with drift and bounded actuators.
+
+A scalar counterexample makes the distinction explicit:
+
+$$
+\dot x=1+u,\qquad |u|\le\tfrac12.
+$$
+
+Its vector fields span the one-dimensional state space, and reachable intervals
+have nonempty interiors. Nevertheless, $\dot x\ge1/2$, so no admissible input
+moves the state left from its starting value. It is not small-time locally
+controllable there. A large enough opposite input would change the conclusion,
+which is why the actuator set belongs in the claim.
+
+For a driftless system with reversible inputs, noncommuting control flows can
+generate additional directions. For instance, let
+$g_1=(1,0)$ and $g_2=(0,x)$ on a plane. The sequence $+g_1,+g_2,-g_1,-g_2$, each
+applied for time $\epsilon$, returns the first coordinate to its start and
+changes the second by $\epsilon^2$. With the convention
+
+$$
+[g_1,g_2]=Dg_2\,g_1-Dg_1\,g_2,
+$$
+
+the bracket is $(0,1)$. This example shows a direction generated by a sequence,
+with a second-order displacement and a total time $4\epsilon$. It does not
+provide an instantaneous independent actuator in that direction. A system with
+drift that cannot be reversed does not automatically permit the same four-flow argument.
+
+The publisher-hosted *Modern Robotics* treatments of
+[local reachable sets](https://modernrobotics.northwestern.edu/nu-gm-book-resource/13-3-2-controllability-of-wheeled-mobile-robots-part-2-of-4/)
+and the
+[driftless rank condition](https://modernrobotics.northwestern.edu/nu-gm-book-resource/13-3-2-controllability-of-wheeled-mobile-robots-part-4-of-4/)
+make the admissible controls explicit. Applying such tools to a golf model
+requires its actual fields, constraints and bounds. Lie brackets can be useful
+in studying controllability, but their existence does not prove that a named
+proximal-to-distal sequence is necessary or improves impact speed.
+
+### Instantaneous Gain Is Only One Ingredient of a Finite-Time Effect
+
+Linearize a smooth control-affine model along a feasible reference
+$(\bar x(t),\bar u(t))$. For small perturbations within the same mode,
+
+$$
+\delta\dot x=A(t)\delta x+G(\bar x(t),t)\delta u,
+$$
+
+where $A$ includes both the state derivative of $f$ and the derivatives of the
+input fields weighted by the reference inputs. If $\Phi(T,t)$ is the transition
+matrix of this variational system, then
+
+$$
+\delta x(T)=\Phi(T,t_0)\delta x(t_0)
++\int_{t_0}^{T}\Phi(T,s)G(\bar x(s),s)\delta u(s)\,ds.
+$$
+
+This expression connects present authority to later outcomes through the
+intervening dynamics. MIT's
+[trajectory-linearization discussion](https://underactuated.mit.edu/lqr.html)
+uses a moving reference, not just a stationary equilibrium. The approximation
+must be checked against nonlinear trajectories; contact events require event
+and reset sensitivity, and an impact-defined endpoint can shift in time.
+
+Even the double integrator illustrates the importance of duration. For
+$\ddot q=u$, $|u|\le a$, compare trajectories with equal initial position and
+velocity against zero input. At a fixed horizon $T$,
+
+$$
+|\Delta q(T)|
+=\left|\int_0^T(T-s)u(s)\,ds\right|
+\le\tfrac12aT^2.
+$$
+
+A saturated constant input attains this bound. Halving the available time
+quarters the possible position correction, despite unchanged instantaneous
+acceleration authority. High speed does not make geometry irrelevant; it makes
+actual horizons, bounds, delays and the evolving state indispensable.
+
+### Geometric Phase Is a Specific Mechanism
+
+A geometric-phase claim needs a specified symmetry or group motion, shape
+variables and a reconstruction rule connecting a shape cycle to net motion.
+Kelly and Murray's
+[author-hosted abstract](https://murray.cds.caltech.edu/Geometric_Phases_and_Robotic_Locomotion)
+describes that framework for robotic locomotion. It does not demonstrate a golf
+sequencing effect. A swing is not automatically a closed shape cycle, and a
+change in clubhead position is not sufficient evidence of geometric phase.
+
+Inertial coupling already explains how joint accelerations interact in a
+mechanical model. A phase-based explanation may add insight for an appropriately
+specified model, but it must identify what it predicts beyond that force
+balance. The linked governed critique remains open: its concern about conflating
+coupling with nonholonomic steering is relevant, while its own categorical
+full-actuation and efficiency statements also need model-specific support.
+
+## What the Other Control Tools Can Establish
 
 ### Partial Feedback Linearization
 
-Feedback linearization transforms nonlinear dynamics into locally linear systems by canceling nonlinearities where possible. Although not intended for real-time control of the golf swing, it provides insight into:
-- which specific accelerations are effectively controllable,
+For a selected smooth position output $y=r(q)$, one can often write
+$\ddot y=b_y(x)+A_y(x)u$ within a fixed mode. Prescribing an output acceleration
+requires the relevant rank condition on $A_y$, a feasible input solution and
+attention to the internal dynamics left after controlling the output.
+Saturation, singular postures and model error can prevent the intended
+cancellation. The
+[MIT cart-pole and Acrobot treatment](https://underactuated.mit.edu/acrobot.html)
+illustrates why collocated and noncollocated outputs have different conditions.
+This tool helps analyze a chosen task; it does not establish that a golfer's
+nervous system implements exact nonlinear cancellation.
 
-- how torque effectiveness varies across posture and shaft deflection,
+### Optimal Control and Energy Shaping
 
-- the sensitivity of clubhead acceleration to joint torques at different times.
+An optimal-control study must state a terminal objective, a running cost,
+initial conditions, duration, dynamics and admissible trajectories. For example,
 
-### Geometric Phase and Dynamic Coupling
+$$
+\min_{u(\cdot)}\left[
+\phi(x(T))+\int_{t_0}^{T}\ell(x(t),u(t),t)\,dt
+\right]
+$$
 
-Geometric phase effects arise in systems with cyclic shape changes. Coordinated joint rotations produce net motion at the clubhead through inertial and geometric coupling. This explains emergent sequencing without invoking coaching prescriptions. It clarifies how phase relationships in torso, arm, and wrist motion contribute to dynamic amplification.
+is incomplete until input, state and contact constraints are supplied. Different
+weights on impact speed, accuracy, effort or tissue loading can produce
+different policies. Squared net joint torque is a chosen penalty, not generally
+a metabolic-energy measurement. A numerical local optimum is not automatically
+a global optimum or a description of human behavior.
 
-### Energy Shaping
+Energy shaping is a particular feedback-design idea: the controller changes
+closed-loop dynamics to obtain a desired energy structure. It is not synonymous
+with any redistribution of energy in a swing. Neither underactuation nor an
+optimal-control formulation guarantees that optimal inputs are small
+perturbations. Feasibility, actuator limits and the chosen objective can require
+substantial input throughout a maneuver.
 
-In underactuated systems, inputs often modify the energy landscape rather than directly impose motion. This concept extends to understanding how torques alter energy storage in body segments and the shaft. It provides a framework for analyzing energy buildup and transfer through the swing, including elastic recoil interactions.
+### Observability and Unknown-Input Identification
 
-### Nonlinear Observability
+Classical observability asks whether internal states can be distinguished from
+outputs over time under a specified model and known input. An unknown torque is
+an input unless a model explicitly augments it as a state with dynamics. Adding
+that state is an additional assumption, not a free reconstruction of a missing
+measurement.
 
-Observability theory determines whether internal states such as torques or shaft modes can be inferred from external measurements like hand forces or joint kinematics. This is directly relevant to ZTCF and ZVCF torque reconstruction and to understanding what measured quantities can reveal about underlying mechanics.
+For example, if only $\dot x=d+u$ is observed and both $d$ and $u$ are unknown,
+the same measured derivative can be explained by increasing $d$ and decreasing
+$u$ equally. A control-affine label does not resolve this ambiguity. In a swing,
+kinematics may constrain effective joint torques only after inertial properties,
+external loads, contact and derivative estimation are specified. Net torque
+still does not uniquely determine individual muscle forces or co-contraction.
 
-### Robust Control
+Sensor selection should therefore be linked to an explicit distinguishability
+question. Ground forces, grip wrenches, kinematics and shaft measurements observe
+different boundaries and states. Noise, timing offsets, parameter uncertainty
+and derivative filtering can further limit an otherwise identifiable model.
 
-Robust control examines sensitivity to parameter variations. This is significant for understanding:
-- the influence of shaft stiffness variations,
+### Robustness and Data-Driven Identification
 
-- anthropometric differences across golfers,
+A sensitivity calculation asks how a prediction changes with parameters or
+perturbations. A robust guarantee requires a defined uncertainty set and a
+specified property, such as feasibility or an impact-error bound, across that
+set. A stable nominal linearization does not establish robustness throughout a
+nonlinear swing or across a contact transition.
 
-- timing sensitivity and perturbation amplification.
+Learning $f$ and $G$ from data likewise requires sufficient input information
+and variation. If only one unknown-input trajectory is observed, different
+splits can fit it. Physics constraints, calibrated inputs, held-out interventions
+and uncertainty analysis can reduce ambiguity; they must be evaluated for the
+quantity the article interprets. Good trajectory fit alone is insufficient
+evidence of correct force attribution.
 
-### Data-Driven Identification Under Affine Structure
+## A Research Program That Connects the Questions
 
-The control-affine structure facilitates physics-aware machine learning:
-- drift learning via regression or neural networks,
+A useful study starts with a falsifiable question, such as whether a specified
+proximal torque change increases a declared clubhead speed component at a
+specified event. The following sequence connects mechanics to evidence:
 
-- torque reconstruction by isolating input contributions,
+1. **Declare the Plant and Boundary.** Specify coordinates, retained flexible
+   and physiological states, input channels, contacts and measurement frames.
+   Document which loads are measured, modeled, prescribed or solved reactions.
+2. **Verify the Mechanics.** Check inertia definiteness, units, complete force
+   balance, energy and momentum accounting, and convergence. Preserve the same
+   physical intervention under coordinate changes.
+3. **Compare Defined Interventions.** Match initial complete states and retained
+   schedules. Report both pointwise acceleration differences and forward
+   trajectory outcomes, including event timing and feasibility failures.
+4. **Assess Finite-Time Alternatives.** Apply input, rate, delay and state bounds.
+   Examine the task directions that remain reachable and the sensitivity to
+   uncertain parameters, rather than inferring authority from one scalar ratio.
+5. **Test Identification and Prediction.** Determine whether the sensors can
+   distinguish the proposed mechanisms. Compare against independent measurements
+   or held-out interventions with uncertainty and alternative explanations.
 
-- latent representation learning for torque profiles.
+Equipment comparisons must also specify what is held fixed. Replaying identical
+torque, imposing identical kinematics and allowing an adapted control policy
+are different experiments when shaft properties change. A conserved quantity
+under zero input must be derived for the declared loads and constraints; a
+learned near-constant on one trajectory is only a candidate invariant.
 
-## Future Research Directions
-
-### Reachability at Impact
-
-Reachability analysis can identify which combinations of clubhead speed and orientation are dynamically feasible. This is important for understanding the constraints imposed by the nonlinear dynamics of the system.
-
-### Minimal-Effort Torque Synthesis
-
-Solving optimal control problems to minimize torque effort can reveal natural motion patterns and clarify how drift dynamics support or hinder certain swing strategies.
-
-### Equipment Variation Studies
-
-The affine formulation allows controlled studies of shaft stiffness and geometry. Future research can quantify how drift contributions change with equipment modifications.
-
-### Sequencing as a Drift--Input Coupling Phenomenon
-
-Lie bracket and geometric phase analyses can be used to study how coordinated joint action influences drift dynamics and amplifies clubhead speed.
-
-### Observability-Based Torque Reconstruction
-
-Observability analysis can help determine the minimum sensor set required for accurately reconstructing torques or drift states from limited measurements.
-
-### Stability and Perturbation Robustness
-
-Nonlinear stability analysis can quantify how sensitive different swing phases are to perturbations, revealing structural properties of transition events.
-
-### Discovery of Drift Invariants
-
-Data-driven identification can reveal conserved quantities under drift, offering new insights into the mechanics of the swing.
-
-## Conclusion
-
-Nonlinear control theory provides a rigorous conceptual and analytical framework for understanding the structure and dynamics of the golfer--club--shaft system. The affine decomposition motivates a large set of future research directions that can greatly enhance biomechanical understanding, experimental measurement, and data-driven modeling of the golf swing.
+Hybrid motion can be studied, but requires explicit modes, guards, reset maps
+and a well-posed continuation rule. Counterfactual branches may encounter
+different events. A fixed-contact calculation should stop or change mode when
+its contact assumptions fail, rather than extrapolating an impossible reaction.
+No physical participant test or golf-specific optimal policy is established by
+this article's analytical examples.
 
 <details class="technical-explanation">
 <summary>In Layman's Terms</summary>
 
-A golfer prepares motion and stored energy before impact. Later muscle action,
-inertia, gravity, elastic forces and contact constraints act together. A useful
-model asks how the club would move from a specified state under a specified
-change in input. That comparison can reveal sensitivity to an intervention;
-it does not measure a universal percentage of work supplied by muscles.
+Earlier action prepares the moving body and club. Later action then works with
+that moving state. A mathematical baseline asks what a specified model would do
+if a specified input were changed. It does not erase the effort that prepared
+the state, and it does not measure a universal percentage of the swing supplied
+by muscles.
 
-**Drift and input.** In a declared model, drift is the instantaneous evolution
-when the selected input is zero. Existing velocity, muscle activation and tissue
-state do not disappear merely because a new command is set to zero. Zero joint
-torque, zero excitation and zero activation define different interventions.
+A braking torque can change how the links accelerate while removing energy from
+the entire system. That is why "the torso slowed while the club sped up" is an
+observation to explain, not proof of a beneficial braking strategy. The complete
+motion, the forces crossing segment boundaries and the time left before impact
+all matter.
 
-**Underactuation.** Having fewer independent inputs than modeled motions can
-limit immediate acceleration choices. Coupling and time can still allow useful
-motion. A flexible club adds dynamics; a human wrist is not automatically a
-passive hinge with no active torque.
-
-**Energy transfer.** Joint forces and moments can redistribute energy between
-segments while muscles add work and tissue stores or dissipates energy. A
-slowing torso and accelerating club do not, by themselves, establish the source
-or amount of that transfer. Deliberately stopping the torso is not a conclusion
-of the mass-matrix equations.
-
-**Practical meaning.** Compare clearly defined models against measurements,
-including timing and uncertainty. Coordinated motion is a question to explain,
-not proof that most effort is unnecessary or that one sequence is optimal.
+The same reasoning applies to control. A torque that strongly affects
+acceleration may arrive too late to change position much. A model that predicts
+motion well may still assign the wrong causes when inputs or contact forces are
+unknown. Carefully defined comparisons and independent measurements connect
+these pieces into a testable explanation.
 
 </details>
-
-
-:::{.callout-warning}
-## Scope and Limitations
-
-- **The Zero-Torque Counterfactual requires a smooth drift field.** The entire logic of ZTCF—that setting $u=0$ reveals the system's natural trajectory—breaks down if the system has impacts, switching (like ground contact changing), or discontinuous friction transitions. In a real swing, the golfer's feet lose and regain contact with the ground, introducing hybrid dynamics. Our analysis assumes the system smoothly evolves without such discrete events, which is a useful simplification but incomplete.
-
-- **Control cone analysis is fundamentally local.** The control Lie algebra (generated by $f$ and the $g_i$ fields) tells you which directions you *can* influence with arbitrarily slow motions. But at high speed, this local geometric picture is irrelevant. The club is moving so fast that the Lie bracket (which involves nested commutators) operates on time scales much slower than the swing itself. What matters is instantaneous gain, not asymptotic reachability. We describe the geometry beautifully but leave the finite-time, high-speed reality somewhat in shadow.
-
-- **Inertial harvesting quantification depends on precise model fidelity.** The claim that "proximal deceleration transfers 5–10× energy amplification to the distal segment" rests entirely on accurate mass matrix identification. Small errors in anthropometric estimates (segment length, mass distribution) compound into significant errors in $M_{pd}$ and hence in the coupling ratio. Field measurements cannot easily validate this because you cannot directly measure $M$ from biomechanical data—only estimate it from models. We present specific numbers (5–10:1) with more confidence than our measurement uncertainty warrants.
-
-:::
 
 <details class="technical-explanation">
 <summary>Critics' Comments</summary>
 
-**Does the model represent activation-dependent mechanics?** Muscle force,
-stiffness and damping can depend on activation, length and velocity. A joint-
-torque model is an abstraction whose input definition and omitted states must
-be stated. An additive input equation alone does not validate that abstraction.
-This article does not establish a 95% accuracy result for a skeletal baseline.
+**Does a torque-level model establish physiology?** No. It can be useful for a
+declared mechanical question while omitting activation-dependent stiffness,
+co-contraction and tissue history. Its predictions need validation at the
+level being interpreted; a net-torque result is not an individual-muscle result.
 
-**What does the mathematics add to coaching?** It can make assumptions and
-counterfactual comparisons testable. It cannot establish that a cue improves
-performance without an appropriate comparison, nor infer an optimal golf swing
-from the general existence of an optimal-control formulation. Prediction,
-explanation and intervention efficacy are different standards of evidence.
+**Does the coupled example establish a sequencing prescription?** No. It verifies
+one local input effect and its energy accounting in a specified two-rod model.
+A useful golf intervention requires a matched finite-time comparison and
+appropriate empirical evidence. Neither coupling nor Lie brackets alone supply
+that result.
 
-**Is zero torque the only objective baseline?** No. A baseline is objective
-only in the sense that its model, initial state and intervention are reproducible.
-Holding a specified physical intervention fixed under a smooth change of
-coordinates preserves its physical trajectory. That invariance does not select
-a unique physiological intervention, measure muscular effort, or make another
-clearly specified baseline invalid.
+**Does qualification make the framework unfalsifiable?** It should do the
+opposite. Declare the model and predicted output before comparison, preserve
+failed and null results, and test alternatives. A model-dependent claim can be
+precise; an unrestricted assertion about all swings cannot be rescued by moving
+its assumptions after observing the outcome.
 
-These questions remain part of the research program. Resolving them requires
-explicit system boundaries, feasible interventions, mechanical work accounting
-and independent validation of the output being interpreted.
+**Does this rewrite resolve the governed critique?** The existing critique stays
+visible and open. Correcting the exposition is distinct from adjudicating a
+scientific claim against its required evidence. This article does not claim a
+95% skeletal-baseline accuracy result or a uniquely physiological zero input.
 
 </details>
 
+## Related Theory and Source Access
 
-## Related Theoretical Sections
+- [Part 1: State Definition and Affine Derivation](theory-part1.qmd) establishes
+  the model and notation conventions.
+- [Part 2: Model-Conditioned Counterfactuals](theory-part2.qmd) distinguishes
+  pointwise and forward interventions.
+- [Part 3: Drift Invariance and Its Limits](theory-part3.qmd) examines which
+  transformations preserve a declared interpretation.
+- [Part 4: Beam Reduction and Pendulum Dynamics](theory-part4.qmd) develops
+  explicit mechanical examples and boundary conditions.
+- [Part 5: Numerical Verification Protocol](theory-part5.qmd) defines checks; it
+  does not supply a revision-bound package for historical Simulink outcomes.
 
-*   **[Part 1: Affine Control Interpretation](theory-part1.html):** Establishes the fundamental $\dot{x} = f(x) + G(x)u$ equation.
-*   **[Part 2: Counterfactual Trajectories](theory-part2.html):** Defines the **ZTCF** and **ZVCF** counterfactuals derived from this structure.
-*   **[Part 3: Drift Invariance](theory-part3.html):** Proves the **Drift Invariance** property essential for causal attribution.
-*   **[Part 5: Skeletal Baseline Numerical Validation](theory-part5.html):** Provides the numerical **Skeletal Baseline** validation of these control-theoretic concepts.
-
-## Recommended Resources
-
-```{=html}
-<div class="resource-grid">
-  <div class="resource-card video-card has-media">
-    <div class="resource-media">
-      <div class="youtube-embed">
-        <iframe src="https://www.youtube.com/embed/MaOGHQjz3fI"
-                title="Nonlinear Dynamical Systems - Part 1"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-      </div>
-    </div>
-    <div class="resource-content">
-      <h3>Primer: Nonlinear Dynamics (Steve Brunton)</h3>
-      <p class="resource-description">
-        An accessible introduction to why nonlinear systems cannot be fully understood through
-        linear approximations. Prof. Brunton explains the fundamental differences in behavior,
-        setting the stage for understanding drift fields.
-      </p>
-      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
-        <strong>Prerequisites:</strong>
-        <ul style="margin-bottom: 0.5rem;">
-            <li>Basic Linear Algebra (Eigenvalues/Eigenvectors)</li>
-            <li>Differential Equations (Linear Systems)</li>
-        </ul>
-        <strong>Seek Timestamps:</strong>
-        <ul>
-            <li>04:30 - Limitations of linearization near fixed points</li>
-            <li>12:15 - Multiple equilibria and basins of attraction</li>
-            <li>22:00 - Global vs. Local dynamics</li>
-        </ul>
-      </div>
-      <a href="https://www.youtube.com/watch?v=MaOGHQjz3fI"
-         class="resource-link"
-         target="_blank"
-         rel="noopener">
-        Watch Lecture →
-      <span class="sr-only">(opens in a new tab)</span></a>
-    </div>
-  </div>
-
-  <div class="resource-card video-card has-media">
-    <div class="resource-media">
-      <div class="youtube-embed">
-        <iframe src="https://www.youtube.com/embed/uyyBT-MHhLE"
-                title="Underactuated Robotics - Lecture 1"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-      </div>
-    </div>
-    <div class="resource-content">
-      <h3>Deep Technical: Underactuated Robotics (Russ Tedrake)</h3>
-      <p class="resource-description">
-        The canonical introduction to "Drift-Dominated" systems. Prof. Tedrake (MIT) defines the
-        standard form $\dot{x} = f(x) + G(x)u$ and explains how to exploit passive dynamics
-        rather than canceling them—the core philosophy of the Affine Drift framework.
-      </p>
-      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
-        <strong>Prerequisites:</strong>
-        <ul style="margin-bottom: 0.5rem;">
-            <li>Lagrangian Mechanics</li>
-            <li>Control Theory (Feedback, Stability)</li>
-        </ul>
-        <strong>Seek Timestamps:</strong>
-        <ul>
-            <li>15:45 - Definition of Underactuation ($dim(u) < dim(q)$)</li>
-            <li>32:10 - The Control-Affine Form derivation</li>
-            <li>45:00 - Input Coupling vs. Passive Dynamics</li>
-        </ul>
-      </div>
-      <a href="https://www.youtube.com/watch?v=uyyBT-MHhLE"
-         class="resource-link"
-         target="_blank"
-         rel="noopener">
-        Watch Lecture 1 →
-      <span class="sr-only">(opens in a new tab)</span></a>
-    </div>
-  </div>
-
-  <div class="resource-card video-card has-media">
-    <div class="resource-media">
-      <div class="youtube-embed">
-        <iframe src="https://www.youtube.com/embed/videoseries?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx"
-                title="Modern Robotics - Chapter 13"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-      </div>
-    </div>
-    <div class="resource-content">
-      <h3>Deep Technical: Nonlinear Controllability (Kevin Lynch)</h3>
-      <p class="resource-description">
-        Chapter 13 of "Modern Robotics" covers nonholonomic constraints and Lie Bracket analysis.
-        These concepts provide the mathematical tools to understand "Sequencing" as a
-        geometric control problem rather than just a timing issue.
-      </p>
-      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
-        <strong>Prerequisites:</strong>
-        <ul style="margin-bottom: 0.5rem;">
-            <li>Rigid Body Kinematics (Twists/Wrenches)</li>
-            <li>Vector Fields</li>
-        </ul>
-        <strong>Seek Timestamps (Playlist):</strong>
-        <ul>
-            <li>Video 13.3.2 (Part 3) - The Lie Bracket and Noncommutativity</li>
-            <li>Video 13.3.2 (Part 4) - Small-time Local Controllability</li>
-            <li>Video 13.3.1 - Nonholonomic Constraints</li>
-        </ul>
-      </div>
-      <a href="https://www.youtube.com/playlist?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx"
-         class="resource-link"
-         target="_blank"
-         rel="noopener">
-        Watch Chapter 13 Videos →
-      <span class="sr-only">(opens in a new tab)</span></a>
-    </div>
-  </div>
-
-  <div class="resource-card video-card has-media">
-    <div class="resource-media">
-      <div class="youtube-embed">
-        <iframe src="https://www.youtube.com/embed/PGXxuAS1Scg"
-                title="Ground Reaction Forces (Dr. Kwon)"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-      </div>
-    </div>
-    <div class="resource-content">
-      <h3>Applied: Ground Reaction Forces (Dr. Kwon)</h3>
-      <p class="resource-description">
-        Dr. Young-Hoo Kwon (TWU) bridges the gap between theoretical mechanics and actual
-        golf swings. This lecture on Ground Reaction Forces (GRF) illustrates how the
-        "input" $u$ (via the feet) interacts with the system's mass matrix.
-      </p>
-      <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
-        <strong>Prerequisites:</strong>
-        <ul style="margin-bottom: 0.5rem;">
-            <li>Basic Newtonian Mechanics ($F=ma$)</li>
-            <li>Moment Arms and Torque</li>
-        </ul>
-        <strong>Seek Timestamps:</strong>
-        <ul>
-            <li>05:20 - Definition of Center of Pressure (COP)</li>
-            <li>12:45 - GRF Vectors vs. Body Mass Center</li>
-            <li>18:30 - Creating Moment about the COM</li>
-        </ul>
-      </div>
-      <a href="https://www.youtube.com/watch?v=PGXxuAS1Scg"
-         class="resource-link"
-         target="_blank"
-         rel="noopener">
-        Watch Analysis →
-      <span class="sr-only">(opens in a new tab)</span></a>
-    </div>
-  </div>
-</div>
-```
+The linked MIT notes and publisher-hosted *Modern Robotics* transcripts were
+consulted for the stated control concepts. Kelly and Murray's linked abstract
+was accessible; its full preprint was unavailable during this review. No video
+timestamp or video-content claim is made here. The two-rod values and the
+control counterexamples are independently checked analytical examples, not
+reproductions of a published human dataset.
 
 ## Related Articles
 
-- [Degrees of Freedom and the Curse of Dimensionality](degrees-of-freedom-and-dimensionality.html) — Why few inputs can steer a high-dimensional drift-dominated system
-- [Passive Distributed Control: Frans Bosch Framework](passive-distributed-control.html) — Exploiting passive dynamics rather than canceling them
-- [Ideomotor Theory and the Predictive Brain Model](ideomotor-theory-and-predictive-brain.html) — Forward-model prediction and sensory error minimization in motor control
-- [The Physics of Golf: Chapter 24 Motor Control I](The_Physics_of_Golf/quarto/ch24_motor_control_brain.html) — The brain as controller: delayed estimation, actuation limits, and control-affine formulation
-- [The Physics of Golf: Chapter 27 Passive and Distributed Control](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html) — Mechanics, distributed feedback, and stability in golf dynamics
-- [Volume IV: Human Motor Control](../books/human-motor-control.html) — Book volume on neural architecture, internal models, and computational movement intelligence
-- [Learning Path: Biomechanics & Motor Control](../resources/learning-path-biomechanics.html) — Comprehensive 14-week learning path through biomechanics and motor control
-
+- [Degrees of Freedom and the Curse of Dimensionality](degrees-of-freedom-and-dimensionality.qmd) — Model dimension, constraints and actuation
+- [Passive Distributed Control: Frans Bosch Framework](passive-distributed-control.qmd) — Mechanical effects, feedback and the limits of a coaching interpretation
+- [Ideomotor Theory and the Predictive Brain Model](ideomotor-theory-and-predictive-brain.qmd) — Prediction and sensory information in motor control
+- [The Physics of Golf: Chapter 24 Motor Control I](The_Physics_of_Golf/quarto/ch24_motor_control_brain.qmd) — Delayed estimation and actuation limits
+- [The Physics of Golf: Chapter 27 Passive and Distributed Control](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.qmd) — Mechanics, distributed feedback and stability
+- [Volume IV: Human Motor Control](../books/human-motor-control.qmd) — Neural architecture, internal models and movement computation
+- [Learning Path: Biomechanics & Motor Control](../resources/learning-path-biomechanics.qmd) — A guided route through the surrounding material

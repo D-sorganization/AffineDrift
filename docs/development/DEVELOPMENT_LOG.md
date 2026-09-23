@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4431 · Nonlinear Control Insights and Physical Coupling
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4431 (core #4058; corpus #4021; epic #4009)
+- **Branch:** `fix/nonlinear-control-insights-rigor`
+- **Paths:** `articles/nonlinear-control-insights.qmd`, `css/nonlinear-control.css`, `tests/test_nonlinear_control_insights_rigor.py`, `reports/technical-review/nonlinear-control-insights-review.md`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (base c7cec8ea; SELF complete article rewrite; 16 new and 11 shared mechanics checks pass; title638 and internal links pass; local production4/4; all22 displays and six mobile endpoints inspected;106 expressions in four cases; expanded keyboard/axe4/4 pass; exact revision binding next)
+- **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. Governed critique stays open; primary-source access limits recorded.
+- **Next step:** Finish visual acceptance and bind exact committed evidence, open a regular PR after predecessor integration, pass protected CI and verify live publication. User requested no further work after4431 and4432 ship; update turnover and pause the goal then.
+
 ### DL-#4428 · Manifesto State-Rate Units and Verification Scope
 
 - **State:** in_review

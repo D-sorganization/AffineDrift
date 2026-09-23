@@ -1,5 +1,15 @@
 # Agent Handoff — AffineDrift
 
+Current issue4431 on `fix/nonlinear-control-insights-rigor`, checkpoint SELF,
+no PR yet. Complete nonlinear-control article rewrite and27 mechanics checks
+are saved; final visual acceptance/evidence binding is next. See the current
+section of docs/development/HANDOFF.md and the nonlinear-control review report.
+
+**User stopping instruction:** finish4431 and already-open4432, verify remote
+main/live, update turnover and pause the goal. No new tasks or rewrites.
+This does not mark the broader corpus audit complete. Preserve frozen prior
+evidence and keep the governed sequencing critique open.
+
 Issue4428 on `fix/manifesto-notation-units`, commit `SELF`, regular PR #4432.
 PR4432 now targets main after normal integration deaecd6b. PR4430 merged
 as4fe70151; its tree equals checked head86ac900f. Integration preserves all

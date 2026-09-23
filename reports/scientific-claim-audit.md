@@ -4,12 +4,13 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 237
-- Deferred: 0
+- Reviewed: 236
+- Deferred: 1
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
+- [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058): 1 routes
 
 ## Reviewed Evidence
 
@@ -34,7 +35,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/lagrangian-reference.html` | `articles/lagrangian-reference.qmd` | 1 |
 | `/articles/launch-monitor-vendor-reference.html` | `articles/launch-monitor-vendor-reference.qmd` | 1 |
 | `/articles/markerless-mocap-camera-selection.html` | `articles/markerless-mocap-camera-selection.qmd` | 1 |
-| `/articles/nonlinear-control-insights.html` | `articles/nonlinear-control-insights.qmd` | 2 |
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
@@ -277,7 +277,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Reviewed | — | None | None | 0 |
-| `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Reviewed | — | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
+| `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Deferred | [#4058](https://github.com/D-sorganization/AffineDrift/issues/4058) | None | `crit-sequencing-lie-bracket-fallacy` | 0 |
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |

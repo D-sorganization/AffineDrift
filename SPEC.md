@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-22 | #4431 | Rebuild nonlinear-control insights around physical coupling, energy accounting, declared interventions, finite-time authority and identifiable evidence. |
 | 2026-09-22 | #4428 | Correct manifesto load/acceleration/state-rate units and align series cards with bounded numerical verification. |
 | 2026-09-22 | #4427 | Reconcile zero-torque mechanics and intervention meaning across canonical article and paired chapter with independent energy, coupling and authority checks. |
 | 2026-09-22 | #4426 | Reconcile paired induced-acceleration chapter mechanics, task projection, coupling, history and literature with worked checks and explicit evidence limits. |
