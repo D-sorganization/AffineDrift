@@ -136,3 +136,14 @@ checkpoint; CI, main merge and live publication are separate release gates.
 The user requested a stopping checkpoint while this rewrite was in progress.
 Finish #4431 and the already-open manifesto PR #4432, verify publication and
 save turnover records, then pause the broader goal. Do not start new reviews.
+
+## Release Link Correction
+
+PR #4433 CI identified 17 internal links using source `.qmd` suffixes.
+Changed only those suffixes to the required published `.html` routes; no
+scientific statement, formula, CSS or numerical test changed. The initial
+source/render checkpoint remains 3053bb71; final link validation and rendering
+passed (site gate; warning-free Quarto render; production 4/4, zero serious or
+critical axe violations) and are recorded before rebinding the final evidence. The full content
+lint suite passed: 131 passed, four existing skips. The issue record now names
+the new regression module as well as the reused mechanics helper module.
