@@ -607,7 +607,6 @@ The standard, the schema and the per-role instructions are in
 
 <!-- END FLEET-MANAGED: deferred-validation -->
 
-
 ---
 
 <!-- BEGIN FLEET-MANAGED: pr-queue-consolidation -->
@@ -695,7 +694,6 @@ branch, plus one re-run if `main` moved) instead of at least N cycles under a
 `strict` protection, and the runner pool is freed for other repositories.
 
 <!-- END FLEET-MANAGED: pr-queue-consolidation -->
-
 
 ## Specification
 
