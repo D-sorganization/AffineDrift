@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4431 · Nonlinear Control Insights and Physical Coupling
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4433
 - **Issue:** #4431 (core #4058; corpus #4021; epic #4009)
 - **Branch:** `fix/nonlinear-control-insights-rigor`
 - **Paths:** `articles/nonlinear-control-insights.qmd`, `css/nonlinear-control.css`, `tests/test_nonlinear_control_insights_rigor.py`, `reports/technical-review/nonlinear-control-insights-review.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (3053bb71 source/render; SELF eight findings and nine evidence paths bound;55 checks pass; complete article rewrite; 16 new and 11 shared mechanics checks pass; title638 and internal links pass; local production4/4; all22 displays and six mobile endpoints inspected;106 expressions in four cases; expanded keyboard/axe4/4 pass; exact revision binding saved)
+- **Last verified:** 2026-09-22 (3053bb71 source/render; SELF regular PR4433 opened after normal main integration7677b3fd; eight findings and nine evidence paths bound;55 checks pass; complete article rewrite; 16 new and 11 shared mechanics checks pass; title638 and internal links pass; local production4/4; all22 displays and six mobile endpoints inspected;106 expressions in four cases; expanded keyboard/axe4/4 pass; exact revision binding saved)
 - **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. Governed critique stays open; primary-source access limits recorded.
-- **Next step:** Integrate merged manifesto main2ef5c908 and open a regular PR; complete protected CI and live publication. User requested no further work after4431 and4432 ship; update turnover and pause the goal then.
+- **Next step:** Complete4433 protected CI; verify manifesto deployment35805142089 before enabling merge, then verify4433 live publication and finish turnover before pausing. User requested no further work after4431 and4432 ship; update turnover and pause the goal then.
 
 ### DL-#4428 · Manifesto State-Rate Units and Verification Scope
 

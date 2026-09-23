@@ -7,7 +7,10 @@ then pause the broader goal. Do not start another article, rewrite or issue.
 The corpus remains incomplete; pausing is not completion of the overall audit.
 
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
-`fix/nonlinear-control-insights-rigor`; base c7cec8ea; checkpoint SELF; no PR yet.
+`fix/nonlinear-control-insights-rigor`; checkpoint SELF; regular PR #4433:
+https://github.com/D-sorganization/AffineDrift/pull/4433. Normal main integration
+7677b3fd preserves the completec2019269 tree; three turnover conflicts kept the
+newer records. No source, frozen evidence or other SPEC row changed.
 Issue4431 under4058/4021/4009. Codex lease receipt5786996527 and presence
 5786998192 expire02:41UTC Sep23; session technical-review-20260923-nonlinear.
 The complete article and linked critique were read; the new argument connects
@@ -25,8 +28,8 @@ remains. Exact source/render binding is saved.
 Source/render frozen at3053bb710c8ff1217f0c49474492a06a00519572. Eight findings
 and nine evidence paths bind exactly to that commit. Reviewed status is restored;
 all55 numerical, inventory and site-audit checks pass. The219-route census is
-not a full-corpus completion claim. Next integrate predecessor main and open
-a regular PR for4431; do not start other development.
+not a full-corpus completion claim. Next complete protected CI for4433 and
+verify publication; do not start other development.
 
 Reports: reports/technical-review/nonlinear-control-insights-review.md;
 QA files: docs/development/technical-review/nonlinear-4431-*.
@@ -37,7 +40,8 @@ PR4430 is shipped at4fe70151: deployment35802860809 succeeded, live artifact
 10727276644 passes960/960 and all eight corrected-route cases. Receipt saved
 in reports/technical-review/zero-torque-publication.json. PR4432 passed all
 required gates and merged2ef5c908; its tree equals checked headc7cec8ea.
-Verify the manifesto deployment/live gate before merging4431.
+Manifesto deployment35805142089 is running. Verify its live gate before
+enabling4433 merge. Auto-merge is currently off for4433.
 Do not overwrite the remote manifesto branch with this successor's changes.
 Normal main integration deaecd6b preserved the complete manifesto evidence;
 source2250d07f, aggregate31664586 remain frozen. IAA4426 is shipped960/960.
