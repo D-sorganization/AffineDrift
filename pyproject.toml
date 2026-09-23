@@ -150,6 +150,9 @@ max-complexity = 10
 "src/tools/**/*.py" = ["E501", "S603", "S607"]
 "scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901", "S310", "S314"]
 "shared_scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901"]
+# Canonical fleet copies: assertions narrow types after runtime checks; SELF is a commit marker.
+"shared_scripts/deferred_planning.py" = ["S101"]
+"shared_scripts/handoff_validator.py" = ["S105"]
 "src/affine_control/swing_optimizer.py" = ["S101"]
 "articles/**/*.py" = ["S603", "S607"]
 "docs/**/*.py" = ["E501"]
@@ -170,7 +173,8 @@ target-version = ['py312']
 # campaign's rollout script compares bytes and re-copies on drift, so a local
 # reformat would be undone on every sync and then fail this check. Formatting
 # them is upstream's job.
-extend-exclude = '''
+# Also exclude explicitly named pre-commit inputs to preserve canonical bytes.
+force-exclude = '''
 (
   ^/shared_scripts/
   | ^/scripts/spec_rows_merge_driver\.py$

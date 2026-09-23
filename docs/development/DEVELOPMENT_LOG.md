@@ -31,6 +31,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Reconciles coordinate signs, state closure, constraints, directional kinematics and worked examples with Chapter 3; replaces unsupported human interpretations with a checked synthetic trajectory and shared geometry.
 - **Next step:** Run the full required repository validation for this source revision.
 
+### DL-#4445 - Deferred Catalog Enforcement
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4445; central Repository_Management#1687
+- **Branch:** `chore/4445-deferred-catalog-guard`
+- **PR:** #4446
+- **Paths:** `shared_scripts/`, `.pre-commit-config.yaml`, `pyproject.toml`, `tests/test_deferred_catalog_hook.py`, `docs/development/deferred-catalog-bundle.json`, `AGENTS.md`, `CLAUDE.md`, `AGENT_HANDOFF.md`, `SPEC.md`
+- **Started:** 2026-09-23
+- **Last verified:** SELF (RED four missing-hook failures; GREEN four integration controls, actual pre-commit hook, canonical hashes, root Ruff, Black, three-module mypy and 91-source CI mypy; broad 5483 passes/26 skips with transient coverage-file hygiene failures; final 30 focused controls and five digest/catalog controls pass)
+- **Summary:** Deploys the canonical validator and fail-closed catalog hook, preserving v1 plans and separating pending resources from approval or measurement.
+- **Next step:** Central #1723 merged as a59cb194. Publish through protected CI, then verify owner default-branch enforcement; peer #4443 is preserved from main 6036629e.
+
 ### DL-#4441 · Contraction Lay Article
 
 - **State:** shipped
@@ -46,7 +59,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4438 · Deferred Impact Project Projection
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4438; fleet RM#1687 / RD#1248
 - **Branch:** `docs/4438-deferred-project-projection`
@@ -55,7 +68,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-23
 - **Last verified:** 2026-09-23 (implementation 1c129d52; merge sync preserves main 7664a390; source catalog/plan/README/SPEC inspected; #4253 verified open; catalog and both charter parsers pass; original planning bytes unchanged; title-case/SPEC pass; commit/pre-push hooks pass)
 - **Summary:** Initial charter separates active theory/numerical synthesis from parked DV-4253 and exposes pending resource/evidence decisions. Original scientific obligations remain authoritative in the plan.
-- **Next step:** Validate, publish and verify owner projection; keep fleet rollout acceptance open.
+- **Next step:** #4439 merged as c169bbd9; live parked DV-4253 is verified. Enforcement continues in DL-#4445.
 
 
 ### DL-#4436 · Force and Mobility Ellipsoids
