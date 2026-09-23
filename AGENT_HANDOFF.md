@@ -8,8 +8,9 @@
   The new always-run pre-commit hook invokes the portable entry point directly.
   Other hooks and original DV-4253 planning/source bytes are preserved.
 - Syncs only the central deferred-validation managed block from RM PR #1723,
-  source `198c2baea626b311d8bf3c01db5ccb80dc3c495b`. That central source must merge
-  before this consumer PR; its deployed-v1 fields are distinct from new adopters.
+  source `198c2baea626b311d8bf3c01db5ccb80dc3c495b`, now merged unchanged in
+  central `a59cb194fe9a04c8ecc655c112539356a268a45d`. Its deployed-v1 fields
+  are distinct from new adopters.
 - TDD: four integration tests fail for the absent hook, then all four pass.
   They execute the configured hook on the actual catalog and on isolated invalid
   activation, missing-checker and competing-catalog copies. Actual pre-commit
@@ -44,8 +45,9 @@ tests/test_spec_changelog.py -q -o addopts=''`; root Ruff/Black and the exact
   Its portfolio warning remains. Existing peer entries are preserved.
 - Preserve both live scientific-review agents' handoff/log/SPEC entries. Coordination
   notice: RM mailbox 5802259806. No article, model, approval or measurement changes.
-- Next: finish validation, record the approved central revision, publish through
-  protected CI and verify default-branch bundle/hook/rule bytes. Continue the
+- Merge sync preserves scientific peer #4443 from main `6036629e`, including
+  its complete development entry, SPEC row and source/evidence bytes.
+- Next: publish through protected CI and verify default-branch bundle/hook/rule bytes. Continue the
   other nine owner installations and deployment audit under the central goal.
 
 ---
@@ -75,6 +77,60 @@ tests/test_spec_changelog.py -q -o addopts=''`; root Ruff/Black and the exact
   content and live dashboard projection after cache refresh. The new feature-detail
   UI is Runner_Dashboard#1251; shared discovery is RM PR #1717. Full fleet rollout
   remains open. Preserve the independent technical-review state below.
+
+---
+
+# Resumed Technical Review — Contraction Lay Article #4441
+
+The user explicitly resumed the broader review after the published #4437 and
+checkpoint #4440. The goal remains incomplete. Continue substantive reviews,
+prioritizing long pending sources, and use regular protected PRs to main.
+Never create draft PRs. Previous pause records below are historical.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/contraction-lay-rigor`; base main `585f700b`.
+- Regular PR: #4443. Local validation complete; protected checks and publication pending.
+- Current source/render checkpoint: `65e74e9ac43d8cf93205cdddd238e1d02c7e7094`; issue #4441, native child of #4021
+  under epic #4009. Historical route batch #4056 remains closed; its limited
+  route acceptance does not certify all article content.
+- Complete lay article and corrected technical companion read. Corrected
+  incremental-stability examples, Riccati rates and normalization, finite-horizon
+  interpretation, unsupported benchmarks/software, optimization assumptions,
+  physical impedance and golf outcome/event sensitivity. No new human data.
+- Full local run: 5,490 passed, 29 skipped, 132 deselected; 92.88% src coverage
+  and 79.19% including scripts. The broader default lane also collects benchmark
+  correctness cases; no comparative runtime claim. Test-generated date/format
+  changes were verified and restored. Fleet policy sync #4442 from main
+  `438bd9c1` changes only AGENTS/CLAUDE and is preserved.
+- Twenty new regression/numerical cases; 56 focused cases pass. Red baseline:
+  nine expected failures. All 638 source titles pass; content lint 131 passed
+  with four existing skips; Ruff, Black (721 files), mypy (91 files),
+  bibliography (169 entries), display math and the site link gate pass.
+- Quarto HTML and production browser gate pass 4/4. Expanded keyboard/axe
+  checks pass 4/4. All 78 expressions and nine displays render without errors;
+  two wide equations scroll on mobile at 17.78px, desktop font is 18px.
+- Review: `reports/technical-review/contraction-lay-review.md`; machine evidence:
+  `reports/technical-review/contraction-lay-render-verification.json`.
+- Initial raw HTML contained the known legacy polyfill; production sanitization
+  removes it. No unrelated global styling, CSP, numerical module or workflow
+  change. Reused existing disclosure and reading-size CSS.
+
+## Next Release Steps
+
+The review and all six findings now bind ten evidence paths to the immutable
+source/render checkpoint above. All committed hashes match the declared bytes.
+Local full validation passed. Publish a regular PR, pass protected CI, verify merged bytes
+and live deployment, and update the turnover/corpus records. Do not count the
+405-source corpus or whole-book consistency as complete from this one page.
+
+## Coordination
+
+Session `technical-review-20260923-contraction-lay`, agent codex. Lease receipt
+5801562142 and presence 5801562442 expire at approximately 21:34 UTC September 23.
+The startup inbox was complete with no conflicts and six rejected historical
+identity warnings; independent project-planning records are preserved.
+Stage explicit paths; scratch renders, captures, scripts and logs remain under
+`docs/development/technical-review/`. Do not stage older untracked artifacts.
 
 ---
 

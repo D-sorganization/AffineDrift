@@ -393,3 +393,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-22 | #4421 | Reconcile force-measurement geometry, instrument physics, uncertainty, standards and golf evidence with independently checked examples. |
 
 | 2026-09-23 | #4436 | Correct force–mobility metrics, singular limits, constrained dynamics, compliance and biomechanical inference; verify the published SVD and independent examples with source/render evidence. |
+
+| 2026-09-23 | #4441 | Correct the full contraction lay article: incremental stability, normalized Riccati rates, optimizer evidence, mechanical impedance and golf event sensitivity; verify numerical and accessible rendered examples. |

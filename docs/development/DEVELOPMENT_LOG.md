@@ -29,7 +29,20 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-23
 - **Last verified:** SELF (RED four missing-hook failures; GREEN four integration controls, actual pre-commit hook, canonical hashes, root Ruff, Black, three-module mypy and 91-source CI mypy; broad 5483 passes/26 skips with transient coverage-file hygiene failures; final 30 focused controls and five digest/catalog controls pass)
 - **Summary:** Deploys the canonical validator and fail-closed catalog hook, preserving v1 plans and separating pending resources from approval or measurement.
-- **Next step:** Publish the checkpoint branch; wait for central rule PR #1723 to merge before opening/merging the protected consumer PR.
+- **Next step:** Central #1723 merged as a59cb194. Publish through protected CI, then verify owner default-branch enforcement; peer #4443 is preserved from main 6036629e.
+
+### DL-#4441 · Contraction Lay Article
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4443
+- **Issue:** #4441 (corpus #4021; epic #4009)
+- **Branch:** `fix/contraction-lay-rigor`
+- **Paths:** `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd`, `tests/test_contraction_lay_rigor.py`, `reports/technical-review/contraction-lay-review.md`, `reports/technical-review/contraction-lay-render-verification.json`
+- **Started:** 2026-09-23
+- **Last verified:** 2026-09-23 (5,490 full-run passes, 29 skips, 132 deselections; 92.88% src coverage / 79.19% including scripts. Source/render 65e74e9a binds six findings and ten paths. Nine expected red checks; 20 new cases and 56 focused cases pass; Ruff, Black, mypy, titles, content lint, bibliography and site gate pass. Production and expanded keyboard/axe pass 4/4; all 78 math containers and nine displays render. Two mobile displays scroll at reading size.)
+- **Summary:** Corrects stability/metric/Riccati interpretation, removes unsupported results, and connects feasible feedback and mechanical impedance to finite-time strike and event sensitivity. No comparative solver or human-performance claim.
+- **Next step:** Publish a regular protected PR with completed source binding and local validation; continue the incomplete corpus after publication.
 
 ### DL-#4438 · Deferred Impact Project Projection
 
