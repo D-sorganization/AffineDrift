@@ -39,6 +39,13 @@ Regular PR4430 is open. Python CI exposed two stale figure-census expectations a
 unsupported timeline removal; the corpus now has27 figured chapters,36 figures,
 five TikZ figures and four unpaired figures. The23 figure-audit tests pass after
 updating exact counts; no source or frozen scientific evidence changed.
+The separate content_lint CI phase then exposed three old phrase assertions.
+They now require the corrected capacity expression, retained activation and
+feasible instantaneous ZVCF reset. The complete content_lint selection passes
+locally with four skips (three unavailable Streamlit modules and the existing
+missing latex-release workflow). No scientific source or frozen evidence changed.
+Disk headroom fell below4MB: removed80 untracked duplicate ZTCF section
+screenshots, retaining all equation/endpoints, overview/title, PDF and JSON evidence.
 Next complete protected CI, merge it, and verify its
 main deployment/live artifact before recording the zero-torque release as shipped.
 No draft PRs. Goal remains active; entries advanced DL-#4427 and DL-#4425.
