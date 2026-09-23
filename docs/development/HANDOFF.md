@@ -13,12 +13,16 @@ cases; production4/4, title638 and internal links pass. The page-local CSS
 restores reading-size display math in raw HTML. No model or solver changed.
 
 Source/render frozen at2250d07f; five manifesto findings (three new, two
-rechecked) and source/render revisions bind exactly to it. Next commit these
-records and bind aggregate dependencies, run audit tests, and open
+rechecked) bind exactly to it. Aggregate review binds to31664586; all13 route
+review evidence maps match committed bytes exactly. Twelve unchanged route
+reviews are carried forward only for the shared audit/report update. Next run
+audit tests, normally integrate merged predecessor main, and open
 a regular PR after normal main integration. Do not re-review unrelated pages
 implicitly; #4429 preserves their historical provenance discrepancies.
-Current evidence digests are refreshed for hooks, but final revision binding
-is pending and must precede PR creation. All #4427 scientific bytes stay frozen.
+Final revision binding is saved; the site-audit schema requires parent4063
+issue URLs on findings, with child4428 recorded in their rationale. The CSS
+is bound in the inventory review because the older site-audit schema excludes
+css/ evidence paths. No schema or validation gate was weakened. All #4427 scientific bytes stay frozen.
 
 PR4430 remains open with protected auto-merge enabled. Eight full-book builds
 passed on the prior head; Python CI exposed obsolete figure counts after the

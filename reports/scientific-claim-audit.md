@@ -219,7 +219,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/contact.html` | `pages/contact.qmd` | 3 |
 | `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
-| `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 3 |
+| `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 6 |
 | `/pages/notation.html` | `pages/notation.qmd` | 4 |
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |

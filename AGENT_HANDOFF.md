@@ -1,8 +1,9 @@
 # Agent Handoff — AffineDrift
 
 Current issue4428 on `fix/manifesto-notation-units`, commit `SELF`, PR not created.
-Complete manifesto index correction and browser4/4 saved; final evidence binding
-is next. Predecessor regular PR4430 has protected auto-merge enabled; figure
+Complete manifesto index correction and browser4/4 bind to2250d07f; aggregate
+review and twelve dependency carry-forwards bind to31664586. Next integrate
+predecessor main and open a regular PR. Predecessor regular PR4430 has protected auto-merge enabled; figure
 census fix c5ed3344 passes23 local tests and final CI is running. Wait for its
 main/live gate before merging this successor. IAA4426 is already shipped960/960.
 Read docs/development/HANDOFF.md and manifesto-notation review/render reports.
