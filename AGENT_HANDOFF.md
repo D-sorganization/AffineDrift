@@ -1,4 +1,27 @@
+# Final PR #4433 Release Correction
+
+Final source/render checkpoint a424ead9e985bb6e47e658c4497bf1460af70c0c. CI link corrections change only
+17 `.qmd` link suffixes to published `.html` targets. Site-wide link gate, fresh
+Quarto render and production 4/4 pass. Eight findings and nine evidence paths
+are rebound to this exact commit; 3053bb71 remains the initial scientific
+checkpoint. The issue now identifies the new regression module, resolving the
+path guard without modifying reused helpers. Full content lint: 131 passed,
+four existing skips. Finish protected CI and live publication, save final
+turnover, then stop as requested. No new development.
+
 # Agent Handoff — AffineDrift
+
+Current issue4431 on `fix/nonlinear-control-insights-rigor`, checkpoint SELF,
+regular PR #4433. Complete nonlinear-control source/render frozen3053bb71; eight findings and
+nine exact evidence paths bound. All55 scientific/audit checks and browser4/4
+plus expanded keyboard/axe4/4 pass. Normal integration7677b3fd preserves all evidence. Finish4433 protected
+CI and verify publication. PR4430 is shipped960/960;4432 merged and needs live verification. See the current
+section of docs/development/HANDOFF.md and the nonlinear-control review report.
+
+**User stopping instruction:** finish4431 and already-open4432, verify remote
+main/live, update turnover and pause the goal. No new tasks or rewrites.
+This does not mark the broader corpus audit complete. Preserve frozen prior
+evidence and keep the governed sequencing critique open.
 
 Issue4428 on `fix/manifesto-notation-units`, commit `SELF`, regular PR #4432.
 PR4432 now targets main after normal integration deaecd6b. PR4430 merged

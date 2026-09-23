@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4431 · Nonlinear Control Insights and Physical Coupling
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4433
+- **Issue:** #4431 (core #4058; corpus #4021; epic #4009)
+- **Branch:** `fix/nonlinear-control-insights-rigor`
+- **Paths:** `articles/nonlinear-control-insights.qmd`, `css/nonlinear-control.css`, `tests/test_nonlinear_control_insights_rigor.py`, `reports/technical-review/nonlinear-control-insights-review.md`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (a424ead9 final source/render after 17 link suffix corrections; site gate and fresh production4/4 pass; content_lint131 passed/four existing skips; initial3053bb71 scientific checkpoint retained; SELF regular PR4433 opened after normal main integration7677b3fd; eight findings and nine evidence paths bound;55 checks pass; complete article rewrite; 16 new and 11 shared mechanics checks pass; title638 and internal links pass; local production4/4; all22 displays and six mobile endpoints inspected;106 expressions in four cases; expanded keyboard/axe4/4 pass; exact revision binding saved)
+- **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. Governed critique stays open; primary-source access limits recorded.
+- **Next step:** Complete4433 protected CI; verify manifesto deployment35805142089 before enabling merge, then verify4433 live publication and finish turnover before pausing. User requested no further work after4431 and4432 ship; update turnover and pause the goal then.
+
 ### DL-#4428 · Manifesto State-Rate Units and Verification Scope
 
 - **State:** in_review
@@ -27,22 +40,22 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/manifesto-notation-units`
 - **Paths:** `pages/drifter-manifesto.qmd`, `css/manifesto.css`, `reports/technical-review/manifesto-notation-review.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (2250d07f source/render; five findings bound; aggregate31664586; SELF regular PR4432 targets main; predecessor4fe70151 tree equals86ac900f; normal merge deaecd6b preserves all evidence; source/render and aggregate bytes preserved;28 audit tests pass; predecessor4430 passed every required gate and merged; deployment35802860809 pending; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
+- **Last verified:** 2026-09-22 (2250d07f source/render; five findings bound; aggregate31664586; SELF PR4432 passed all required checks and merged2ef5c908; tree equalsc7cec8ea; predecessor4fe70151 tree equals86ac900f; normal merge deaecd6b preserves all evidence; source/render and aggregate bytes preserved;28 audit tests pass; predecessor4430 passed every required gate and merged; deployment35802860809 pending; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
 - **Summary:** Distinguishes generalized input load, acceleration contribution and full-state rate; includes retained flexible coordinates and memory/constraint boundaries; corrects Part5 capability and Part4 orientation. Scientific source and model runs remain unchanged.
-- **Next step:** Complete4432 protected CI; verify4430 live publication before enabling successor merge.
+- **Next step:** Verify manifesto deployment/live publication at merged main2ef5c908;4430 is shipped960/960.
 
 ### DL-#4427 · Zero-Torque Counterfactual Mechanics and Interpretation
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4430
 - **Issue:** #4427 (Physics #4054; core #4058; corpus #4021; epic #4009)
 - **Branch:** `fix/zero-torque-counterfactual-rigor`
 - **Paths:** `articles/zero-torque-counterfactual.qmd`, `articles/The_Physics_of_Golf/chapters/ch06_zero_torque_counterfactual.tex`, `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd`, `tests/test_zero_torque_chapter_rigor.py`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; PR4430 merged as4fe70151 after all required checks; deployment35802860809 pending; c5ed3344 figure correction passes; three obsolete glossary phrase assertions updated and full content_lint selection passes with four documented skips; exact figure census corrected and23 parity tests pass; all eight full-book builds pass; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
+- **Last verified:** 2026-09-22 (SELF; PR4430 merged as4fe70151 after all required checks; deployment35802860809 succeeded; live artifact10727276644 passes960/960 and eight route cases; c5ed3344 figure correction passes; three obsolete glossary phrase assertions updated and full content_lint selection passes with four documented skips; exact figure census corrected and23 parity tests pass; all eight full-book builds pass; 14 findings/11 evidence paths bound to e7d8c688; 13 dependency carry-forwards at457dbba2; historical discrepancies tracked #4429; 51 targeted tests pass; complete three-source rewrite; 23 scientific/contract checks pass; 128 paired math expressions; nine print pages and 42 web displays inspected; local production 8/8 and expanded overview 4/4 pass)
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
-- **Next step:** Verify deployment35802860809 and its live artifact at main4fe70151 before recording shipped.
+- **Next step:** Preserve frozen scientific checkpoint e7d8c688 and publication receipt at main4fe70151.
 
 ### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 

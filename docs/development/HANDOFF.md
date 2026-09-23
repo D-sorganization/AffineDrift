@@ -1,3 +1,62 @@
+# Final PR #4433 Release Correction
+
+Final source/render checkpoint a424ead9e985bb6e47e658c4497bf1460af70c0c. CI link corrections change only
+17 `.qmd` link suffixes to published `.html` targets. Site-wide link gate, fresh
+Quarto render and production 4/4 pass. Eight findings and nine evidence paths
+are rebound to this exact commit; 3053bb71 remains the initial scientific
+checkpoint. The issue now identifies the new regression module, resolving the
+path guard without modifying reused helpers. Full content lint: 131 passed,
+four existing skips. Finish protected CI and live publication, save final
+turnover, then stop as requested. No new development.
+
+# Current Technical Review Checkpoint — #4431
+
+The user requested a stopping checkpoint while this rewrite was in progress.
+Finish only the current nonlinear-control rewrite4431 and regular manifesto
+PR4432, verify the day's releases on remote main/live, save turnover records,
+then pause the broader goal. Do not start another article, rewrite or issue.
+The corpus remains incomplete; pausing is not completion of the overall audit.
+
+Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
+`fix/nonlinear-control-insights-rigor`; checkpoint SELF; regular PR #4433:
+https://github.com/D-sorganization/AffineDrift/pull/4433. Normal main integration
+7677b3fd preserves the completec2019269 tree; three turnover conflicts kept the
+newer records. No source, frozen evidence or other SPEC row changed.
+Issue4431 under4058/4021/4009. Codex lease receipt5786996527 and presence
+5786998192 expire02:41UTC Sep23; session technical-review-20260923-nonlinear.
+The complete article and linked critique were read; the new argument connects
+acceleration, energy, intervention, finite-time control and identification.
+The critique remains visibly open; its source/ledger are unchanged.
+
+The rewrite uses the independently checked Chapter6 Cartesian rod functions;
+no production solver, registered fixture or physiology model changed. Sixteen
+new checks and11 existing checks pass. All106 expressions initially rendered
+in four cases,22 displays inspected; visual review rejected undersized mobile
+math. Page-local CSS now preserves reading size with horizontal scrolling and
+reduces the long mobile title. Final production4/4 and expanded keyboard/axe4/4 pass. All22 displays and
+six mobile wide endpoints in both themes were inspected; no inline overflow
+remains. Exact source/render binding is saved.
+Source/render frozen at3053bb710c8ff1217f0c49474492a06a00519572. Eight findings
+and nine evidence paths bind exactly to that commit. Reviewed status is restored;
+all55 numerical, inventory and site-audit checks pass. The219-route census is
+not a full-corpus completion claim. Next complete protected CI for4433 and
+verify publication; do not start other development.
+
+Reports: reports/technical-review/nonlinear-control-insights-review.md;
+QA files: docs/development/technical-review/nonlinear-4431-*.
+Source-access limits and checked preparation remain on issue4431. Do not claim
+full-paper/video access or human validation. Stage only explicit task paths.
+
+PR4430 is shipped at4fe70151: deployment35802860809 succeeded, live artifact
+10727276644 passes960/960 and all eight corrected-route cases. Receipt saved
+in reports/technical-review/zero-torque-publication.json. PR4432 passed all
+required gates and merged2ef5c908; its tree equals checked headc7cec8ea.
+Manifesto deployment35805142089 is running. Verify its live gate before
+enabling4433 merge. Auto-merge is currently off for4433.
+Do not overwrite the remote manifesto branch with this successor's changes.
+Normal main integration deaecd6b preserved the complete manifesto evidence;
+source2250d07f, aggregate31664586 remain frozen. IAA4426 is shipped960/960.
+
 # Current Technical Review Checkpoint — #4428
 
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
