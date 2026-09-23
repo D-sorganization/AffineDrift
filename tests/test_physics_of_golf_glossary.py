@@ -36,7 +36,8 @@ def test_committed_glossary_matches_canonical_usage() -> None:
     assert "same acceleration or task-projected space" in glossary_text
     assert "admissible control set" in glossary_text
     assert "drift / (drift + control)" in glossary_text
-    assert "admissible torque bound" in chapter_text
+    assert "admissible input set" in chapter_text
+    assert r"\sup_{u\in\mathcal U(x)}\|WH(x)u\|" in chapter_text
     assert "ratio of passive to active torques" not in chapter_text
 
 
@@ -51,14 +52,19 @@ def test_counterfactuals_do_not_claim_zero_control_means_zero_muscle() -> None:
     )
     for phrase in forbidden:
         assert phrase not in chapter_text
-    assert "does not imply zero muscle activation" in chapter_text
+    assert "does not automatically reset activation" in chapter_text
+    assert "Zero generalized torque can coexist with substantial antagonistic muscle forces" in (
+        chapter_text
+    )
 
 
 def test_zvcf_is_an_instantaneous_zero_control_acceleration() -> None:
     """ZVCF is an evaluation, not a released or control-preserving trajectory."""
     chapter_text = ZERO_TORQUE_CHAPTER.read_text(encoding="utf-8")
-    assert "instantaneous acceleration" in chapter_text
-    assert "with both velocity and declared control set to zero" in chapter_text
+    assert "instantaneous Zero-Velocity Counterfactual (ZVCF)" in chapter_text
+    assert "specified velocities reset and declared input zero" in chapter_text
+    assert r"a_{\mathrm{ZVCF}}(q,z,t)=-M(q)^{-1}h(q,0,z,t)" in chapter_text
+    assert "first check that the reset is feasible" in chapter_text
     assert "then release" not in chapter_text
 
 

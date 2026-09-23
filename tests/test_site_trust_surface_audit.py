@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.claim_audit_evidence import validate_digest_map, validate_review_evidence
 from scripts.site_trust_surface_audit import (
     SiteAuditContractError,
     build_report,
@@ -102,7 +103,9 @@ def test_scoped_inventory_is_reviewed_and_matches_audit_findings() -> None:
         assert inventory_record["status"] == "reviewed"
         assert "deferment" not in inventory_record
         review = inventory_record["review"]
-        assert review["review_commit"] == audit_record["source_revision"]
+        # A linked evidence refresh can postdate an unchanged source review.
+        assert re.fullmatch(r"[0-9a-f]{40}", review["review_commit"])
+        validate_review_evidence(inventory_record, ROOT)
         assert "data/trust/site_trust_surface_audit.json" in review["evidence_paths"]
         assert inventory_record["findings"] == audit_record["findings"]
 
@@ -114,7 +117,13 @@ def test_p0_p1_findings_are_corrected_or_publication_blocked() -> None:
             if finding["priority"] in {"p0", "p1"}:
                 assert finding["disposition"] in allowed
                 assert finding["evidence_paths"]
-                assert finding["verification_commit"] == record["source_revision"]
+                assert re.fullmatch(r"[0-9a-f]{40}", finding["verification_commit"])
+                validate_digest_map(
+                    ROOT,
+                    finding["evidence_paths"],
+                    finding["evidence_sha256"],
+                    label=str(finding["finding_id"]),
+                )
 
 
 def test_declared_source_digests_match_exact_scoped_source_bytes() -> None:

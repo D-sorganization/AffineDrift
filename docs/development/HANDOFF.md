@@ -1,3 +1,60 @@
+# Current Technical Review Checkpoint — #4427
+
+Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
+`fix/zero-torque-counterfactual-rigor`; commit `SELF`; regular PR #4430 open:
+https://github.com/D-sorganization/AffineDrift/pull/4430.
+Issue #4427 under Physics #4054/core #4058, corpus #4021 and epic #4009.
+Complete chapter print/web and canonical article rewrite is qualified and saved.
+Scientific/render evidence is frozen at e7d8c6885550ed2731843ff7d9e581d36b69788e:
+14 findings, 11 exact committed evidence paths, 128 paired math expressions,
+nine print pages, 26/16 web displays, 25/eight mobile scroll endpoints, local
+production 8/8 and expanded overview four theme/width cases pass. Both routes
+are reviewed again; the 219 original-route census is restored.
+
+Thirteen site-audit dependencies are carried forward to457dbba2 after verifying
+all unrelated evidence is unchanged from the accepted03db46ff baseline. The
+changed manifesto intervention finding alone is rebound toe7d8c688. Historical
+source/finding SHA discrepancies predate this work and are explicitly listed
+in reports/technical-review/zero-torque-dependency-carry-forward.json, tracked
+as #4429 under #4063. This is not a new review of those thirteen pages.
+Manifesto notation units are separately tracked in #4428. Audit tests now check
+exact bytes and valid separate revisions rather than requiring every finding,
+source and aggregate review to share one historical SHA. Both old equality
+assertions failed on this valid dependency refresh; replacement contracts pass.
+
+Validation: 51 selected mechanics, ZTCF, inventory and site-audit tests pass;
+Black100 and Ruff pass for all three affected test modules; title audit638 passes.
+Use py -3.12 -X utf8 -m pytest tests/test_zero_torque_chapter_rigor.py
+tests/test_ztcf_intervention_contract.py tests/test_claim_audit_inventory.py
+tests/test_site_trust_surface_audit.py -q --no-cov. Normal hooks remain mandatory.
+No adapter, fixture, schema, existing shared CSS or predecessor science changed.
+
+IAA #4426 is shipped at99aa58356f45f4ff2bf15dd90dc735460dc8d3b4. Deployment35796355561
+succeeded; artifact10725510305 passes960/960 and all four IAA chapter cases.
+Receipt: reports/technical-review/induced-acceleration-publication.json. Putting is
+shipped atded63640 with live960/960. Normal merge of origin/main99aa5835 preserves the complete fc5745ea tree;
+the main tree equals our IAA parent03db46ff, so four turnover/index conflicts
+retain the newer zero-torque records. No source or SPEC row changes.
+Regular PR4430 is open. Python CI exposed two stale figure-census expectations after the deliberate
+unsupported timeline removal; the corpus now has27 figured chapters,36 figures,
+five TikZ figures and four unpaired figures. The23 figure-audit tests pass after
+updating exact counts; no source or frozen scientific evidence changed.
+The separate content_lint CI phase then exposed three old phrase assertions.
+They now require the corrected capacity expression, retained activation and
+feasible instantaneous ZVCF reset. The complete content_lint selection passes
+locally with four skips (three unavailable Streamlit modules and the existing
+missing latex-release workflow). No scientific source or frozen evidence changed.
+Disk headroom fell below4MB: removed80 untracked duplicate ZTCF section
+screenshots, retaining all equation/endpoints, overview/title, PDF and JSON evidence.
+Next complete protected CI, merge it, and verify its
+main deployment/live artifact before recording the zero-torque release as shipped.
+No draft PRs. Goal remains active; entries advanced DL-#4427 and DL-#4425.
+
+Disk headroom is very low due external activity. Removed seven untracked
+counterfactual-spread draft PNGs only after confirming each final replacement;
+final QA, source and evidence remain. Many older untracked QA files exist;
+stage explicit task paths only. Preserve unrelated deferred-planning records.
+
 # Current Technical Review Checkpoint — #4425
 
 Branch `fix/induced-acceleration-rigor` now contains the complete paired Chapter30b

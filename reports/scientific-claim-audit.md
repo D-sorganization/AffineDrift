@@ -105,7 +105,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | `articles/The_Physics_of_Golf/quarto/ch05_affine_structure.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | `articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.qmd` | 11 |
 | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | `articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.qmd` | 1 |
@@ -143,7 +143,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/theory-part5.html` | `articles/theory-part5.qmd` | 3 |
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
-| `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 1 |
+| `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 11 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
@@ -348,7 +348,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-6e5a4acf5112` | `/articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f5006c4e6a60` | `/articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html` | Reviewed | — | None | None | 0 |
 | `ad-route-a5c8f4c49401` | `/articles/The_Physics_of_Golf/quarto/ch05_affine_structure.html` | Reviewed | — | None | None | 0 |
-| `ad-route-40db0921f425` | `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | Reviewed | — | None | None | 0 |
+| `ad-route-40db0921f425` | `/articles/The_Physics_of_Golf/quarto/ch06_zero_torque_counterfactual.html` | Reviewed | — | None | None | 8 |
 | `ad-route-b47203d9a15a` | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c3f8f28d515e` | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | Reviewed | — | None | None | 0 |
 | `ad-route-084d047d81cc` | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | Reviewed | — | None | None | 0 |
@@ -386,7 +386,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-125d93f57874` | `/articles/theory-part5.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Reviewed | — | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
-| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | None | 0 |
+| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | None | 6 |
 | `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 1 |
 | `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Reviewed | — | None | None | 1 |
 | `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 1 |

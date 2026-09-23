@@ -1,10 +1,11 @@
 # Agent Handoff — AffineDrift
 
-Current technical review: paired IAA issue4425 is fully rewritten and locally
-rendered; eight findings are bound to06c948b7 with verified bibliography
-dependency carry-forward. Force is live; putting merged asded63640 and
-deployment35792227837 is pending. See docs/development/HANDOFF.md
-for exact checks, disk recovery and force/putting publication dependencies.
+Current #4427 branch `fix/zero-torque-counterfactual-rigor`, commit `SELF`; regular PR #4430
+is open. Complete three-source review is bound to e7d8c688; 51 selected tests,
+128 paired expressions, nine print pages and local browser8/8 pass. Census219
+restored. Thirteen dependency carry-forwards record historical discrepancies
+separately under #4429; manifesto units are #4428. Next finish protected CI and merge4430. IAA4426 is shipped at99aa5835;
+deployment35796355561 and live960/960 pass. Publication receipt saved. Full continuation in docs/development/HANDOFF.md. Goal active.
 
 ## Deferred Impact Evidence - 2026-09-22
 
