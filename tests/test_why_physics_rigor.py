@@ -8,6 +8,7 @@ import pytest
 
 ROOT = Path(__file__).parents[1]
 BOOK = ROOT / "articles/The_Physics_of_Golf"
+GRAVITY_M_S2 = 9.81  # Independent fixture value in m/s^2, not imported from the generator.
 EDITIONS = ("quarto/ch01_why_physics.qmd", "chapters/ch01_why_physics.tex")
 
 
@@ -39,10 +40,10 @@ def test_figure_retains_radius_and_conserves_energy(figure):
     # Cartesian finite differences independently check the integrated angular model.
     velocity = np.gradient(position, data["time"], axis=0, edge_order=2)
     kinetic = 0.5 * 0.2 * np.sum(velocity**2, axis=1)
-    total = kinetic + 0.2 * 9.81 * position[:, 1]
+    total = kinetic + 0.2 * GRAVITY_M_S2 * position[:, 1]
     np.testing.assert_allclose(total[2:-2], 157.5475, atol=0.002)
     # A unilateral tether remains feasible: it never needs to push the mass.
-    tension = 0.2 * (np.sum(velocity**2, axis=1) / 1.25 - 9.81 * position[:, 1] / 1.25)
+    tension = 0.2 * (np.sum(velocity**2, axis=1) / 1.25 - GRAVITY_M_S2 * position[:, 1] / 1.25)
     assert np.min(tension) > 0
 
 
@@ -63,13 +64,13 @@ def test_figure_starts_at_same_state_but_release_changes_acceleration(figure):
         np.gradient(data["released"], data["time"], axis=0), data["time"], axis=0
     )
     np.testing.assert_allclose(free_acceleration[2:-2, 0], 0, atol=1e-6)
-    np.testing.assert_allclose(free_acceleration[2:-2, 1], -9.81, atol=1e-6)
+    np.testing.assert_allclose(free_acceleration[2:-2, 1], -GRAVITY_M_S2, atol=1e-6)
     assert data["retained"][-1, 1] > 0
     assert data["released"][-1, 1] < -1.25
 
 
 def test_bottom_force_balance_has_large_normal_acceleration_and_zero_power():
-    mass, speed, radius, gravity = 0.2, 40.0, 1.25, 9.81
+    mass, speed, radius, gravity = 0.2, 40.0, 1.25, GRAVITY_M_S2
     tension = mass * (speed**2 / radius + gravity)
     force = np.array([0, tension - mass * gravity])
     assert tension == pytest.approx(257.962)
@@ -79,7 +80,7 @@ def test_bottom_force_balance_has_large_normal_acceleration_and_zero_power():
 
 
 def test_gravity_budget_depends_on_height_not_a_drift_percentage():
-    mass, gravity, height = 0.2, 9.81, 1.0
+    mass, gravity, height = 0.2, GRAVITY_M_S2, 1.0
     work = mass * gravity * height
     assert work == pytest.approx(1.962)
     assert np.sqrt(2 * work / mass) == pytest.approx(4.429446918)

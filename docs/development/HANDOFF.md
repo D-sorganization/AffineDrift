@@ -38,10 +38,17 @@
 - Coordination session: `technical-review-20260923-why-physics`; lease 5804272169,
   presence 5804272400, expiry 2026-09-24 00:51 UTC. Inbox complete with no conflicts;
   seven historical identity warnings and two already-landed informational notices.
+- CI correction: static job 107425724858 required the conventional
+  `GRAVITY_M_S2` name. The generator and independent tests now use that name
+  with the same 9.81 value. Published source, figures and frozen render reports
+  remain unchanged; live evidence digests track the revised Python files.
+  All 63 mechanics/figure/audit cases pass, as does the code-quality checker
+  on all 754 tracked Python files. Every trajectory array and both regenerated
+  vector files exactly match the frozen output.
 - Next: push this final validation/PR handoff; arm auto-merge only through central
   `scripts/automerge_guard.py`; verify checks on the final PR head, merge tree and
   live deployment. Record publication/corpus/turnover through regular PRs. Then
-  continue long pending sources from remote main with a fresh ownership check.
+  stop at the requested checkpoint; do not start another review or rewrite.
 - Validation commands: `py -3.12 -X utf8 -m pytest --cov --cov-report=term:skip-covered`;
   `py -3.12 -X utf8 -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120`;
   `npx --no-install jest --runInBand`; `python -m scripts.regenerate_claim_audit_evidence --check`.

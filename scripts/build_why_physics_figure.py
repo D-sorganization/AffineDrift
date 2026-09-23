@@ -14,7 +14,7 @@ from scipy.integrate import solve_ivp
 # This high-speed example separates normal acceleration from power; it is not a golfer fit.
 RADIUS = 1.25  # m
 SPEED = 40.0  # m/s
-GRAVITY = 9.81  # m/s^2
+GRAVITY_M_S2 = 9.81  # m/s^2
 DURATION = 0.06  # s
 SAMPLES = 601
 
@@ -27,7 +27,7 @@ def trajectory_data() -> dict[str, NDArray[np.float64]]:
     """
     time = np.linspace(0.0, DURATION, SAMPLES)
     solution = solve_ivp(
-        lambda _time, state: [state[1], -GRAVITY / RADIUS * np.sin(state[0])],
+        lambda _time, state: [state[1], -GRAVITY_M_S2 / RADIUS * np.sin(state[0])],
         (0.0, DURATION),
         [0.0, SPEED / RADIUS],
         t_eval=time,
@@ -38,7 +38,7 @@ def trajectory_data() -> dict[str, NDArray[np.float64]]:
         raise RuntimeError(solution.message)
     angle = solution.y[0]
     retained = RADIUS * np.column_stack((np.sin(angle), -np.cos(angle)))
-    released = np.column_stack((SPEED * time, -RADIUS - GRAVITY * time**2 / 2))
+    released = np.column_stack((SPEED * time, -RADIUS - GRAVITY_M_S2 * time**2 / 2))
     return {"time": time, "retained": retained, "released": released}
 
 
