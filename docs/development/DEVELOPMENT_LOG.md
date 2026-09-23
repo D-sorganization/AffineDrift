@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4441 · Contraction Lay Article
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** Pending regular PR
+- **Issue:** #4441 (corpus #4021; epic #4009)
+- **Branch:** `fix/contraction-lay-rigor`
+- **Paths:** `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd`, `tests/test_contraction_lay_rigor.py`, `reports/technical-review/contraction-lay-review.md`, `reports/technical-review/contraction-lay-render-verification.json`
+- **Started:** 2026-09-23
+- **Last verified:** 2026-09-23 (nine expected red checks; 20 new cases and 56 focused cases pass; Ruff, Black, mypy, titles, content lint, bibliography and site gate pass. Production and expanded keyboard/axe pass 4/4; all 78 math containers and nine displays render. Two mobile displays scroll at reading size.)
+- **Summary:** Corrects stability/metric/Riccati interpretation, removes unsupported results, and connects feasible feedback and mechanical impedance to finite-time strike and event sensitivity. No comparative solver or human-performance claim.
+- **Next step:** Freeze source/render bytes, bind audit evidence, run full validation and publish a regular protected PR; continue the incomplete corpus after publication.
+
 ### DL-#4438 · Deferred Impact Project Projection
 
 - **State:** in_review

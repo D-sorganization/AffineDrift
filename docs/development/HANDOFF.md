@@ -1,3 +1,51 @@
+# Resumed Technical Review — Contraction Lay Article #4441
+
+The user explicitly resumed the broader review after the published #4437 and
+checkpoint #4440. The goal remains incomplete. Continue substantive reviews,
+prioritizing long pending sources, and use regular protected PRs to main.
+Never create draft PRs. Previous pause records below are historical.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/contraction-lay-rigor`; base main `585f700b`.
+- Current source/render checkpoint: `SELF`; issue #4441, native child of #4021
+  under epic #4009. Historical route batch #4056 remains closed; its limited
+  route acceptance does not certify all article content.
+- Complete lay article and corrected technical companion read. Corrected
+  incremental-stability examples, Riccati rates and normalization, finite-horizon
+  interpretation, unsupported benchmarks/software, optimization assumptions,
+  physical impedance and golf outcome/event sensitivity. No new human data.
+- Twenty new regression/numerical cases; 56 focused cases pass. Red baseline:
+  nine expected failures. All 638 source titles pass; content lint 131 passed
+  with four existing skips; Ruff, Black (721 files), mypy (91 files),
+  bibliography (169 entries), display math and the site link gate pass.
+- Quarto HTML and production browser gate pass 4/4. Expanded keyboard/axe
+  checks pass 4/4. All 78 expressions and nine displays render without errors;
+  two wide equations scroll on mobile at 17.78px, desktop font is 18px.
+- Review: `reports/technical-review/contraction-lay-review.md`; machine evidence:
+  `reports/technical-review/contraction-lay-render-verification.json`.
+- Initial raw HTML contained the known legacy polyfill; production sanitization
+  removes it. No unrelated global styling, CSP, numerical module or workflow
+  change. Reused existing disclosure and reading-size CSS.
+
+## Next Release Steps
+
+Commit this source/render checkpoint while its route review is explicitly
+transitional, then bind the review and six findings to that immutable commit.
+Run the full suite and protected CI, publish a regular PR, verify merged bytes
+and live deployment, and update the turnover/corpus records. Do not count the
+405-source corpus or whole-book consistency as complete from this one page.
+
+## Coordination
+
+Session `technical-review-20260923-contraction-lay`, agent codex. Lease receipt
+5801562142 and presence 5801562442 expire at approximately 21:34 UTC September 23.
+The startup inbox was complete with no conflicts and six rejected historical
+identity warnings; independent project-planning records are preserved.
+Stage explicit paths; scratch renders, captures, scripts and logs remain under
+`docs/development/technical-review/`. Do not stage older untracked artifacts.
+
+---
+
 # Paused Technical Review Checkpoint — #4437
 
 The user requested a stopping checkpoint. All current scientific changes are

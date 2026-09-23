@@ -1,709 +1,303 @@
 ---
 title: "In Layman's Terms: Contraction Theory Meets Tangent Spaces"
-description: "A non-technical explanation of contraction theory and tangent spaces in control theory."
+description: "How error recovery, optimal feedback, mechanical impedance and impact sensitivity connect—and what the mathematics can establish about a golf swing."
 categories:
 - tangent-space
+format:
+  html:
+    css:
+      - /css/technical-explanations.css
+      - /css/force-mobility.css
 ---
 
-**Target Audience:** Non-technical readers, practitioners, students
-**Source:** Contraction_Tangent_Unification.qmd
-**Date:** January 18, 2026
-
----
+**Audience:** Readers who want an intuitive explanation with checkable mathematical examples. This is the companion to [the technical contraction reference](Contraction_Tangent_Unification.html).
 
 ## The Big Idea in One Sentence
 
-**"In some local control problems, the same calculation that prices errors can also help design feedback that reduces nearby errors."**
+A controller can sometimes use the same calculation to price a mistake and to prove that nearby mistakes will shrink—but the proof concerns a specified model, feedback law, measure of error and region of motion.
 
----
+For a golf swing, the interesting question goes further: **which disturbances change the delivered strike, and how do mechanics and feasible corrections limit those changes before impact?** Returning every joint to one prescribed trajectory is only one possible strategy. Some joint variation may scarcely affect the strike, while a small error in another direction may matter greatly.
 
 ## The Core Problem
 
-Imagine you're designing a robot arm to paint intricate patterns on pottery. You face two completely different challenges:
+Imagine a robot painting a line on a moving piece of pottery. Planning chooses a feasible brush motion and its cost. Feedback changes the commands when the measured state differs from the plan. Verification checks what that implemented combination does under a stated class of errors.
 
-1. **Optimality:** Plan an efficient motion for the brushstroke
-2. **Stability:** Ensure tiny vibrations or bumps don't ruin the painting
+These jobs interact. A cheap trajectory may pass close to a torque limit, leaving little room for correction. A controller that recovers position quickly may demand unavailable torque. A smooth-looking trace may conceal velocity error that becomes important later. Conversely, allowing motion along the painted line may be harmless even when motion across it is not.
 
-Traditionally, these were treated as separate problems requiring separate solutions. Control engineers would:
-- First optimize the trajectory
-- Then add stabilizing feedback (make it "robust")
-
-**The useful observation:** In certain linearized or LQR-like settings, these problems can share the same mathematical object. That does not make them identical in every nonlinear system, but it gives engineers a way to design and check them together.
-
-This article explains that local relationship and why its assumptions matter.
-
----
+Optimal control and stability analysis have long shared tools. The useful connection here is not a newly discovered equivalence between the two fields. It is a way to ask precise questions about the same candidate motion: what does it optimize, which errors does it suppress, and where are the two claims valid?
 
 ## What Is Contraction Theory?
 
-Before we can talk about the unification, we need to understand what "contraction" means.
+### Compare Two Motions Under the Same Rule
 
-### The Rubber Band Analogy
+Run two copies of a model from slightly different states. Give them the same feedback rule and the same prescribed external signal. Because feedback depends on state, their actual control commands may differ. Contraction asks whether their separation shrinks, measured with a specified mathematical ruler called a **metric**.
 
-Think of a rubber band stretched between your fingers. What happens when you release one end?
+A simple example is the error equation $\dot e=-2e$, with time in seconds. Two solutions have separation
 
-**It snaps back.** The rubber band wants to return to its natural, unstretched state. The farther you stretch it, the harder it pulls back.
+$$
+\Delta e(t)=e^{-2t}\Delta e(0).
+$$
 
-**Contraction theory says:** *Some dynamical systems behave like rubber bands—errors naturally shrink over time.*
+After half a second, the separation is about 37% of its starting value. The length-decay rate is $2\ \mathrm{s}^{-1}$; the squared separation decays at twice that rate. This is a calculation for an ideal equation, not a measured golf recovery time. Exponential decay is not an oscillation, so its rate should not be reported as a frequency in cycles per second.
 
-### Everyday Examples
+The reference motion must itself be a solution of the model under that feedback rule. Shrinking the separation between solutions does not make an infeasible reference trackable or keep those solutions within safe position and load limits.
 
-**1. Your car's cruise control:**
-- If you go a bit too fast, the system reduces throttle
-- If you go a bit too slow, it increases throttle
-- Either way, you **converge** back to the target speed
-- The system is "contracting" toward the setpoint
+### Why a Rubber Band or Pendulum Is Not Enough
 
-**2. A swinging pendulum with friction:**
-- No matter where you release it, it eventually stops at the bottom
-- All trajectories **converge** to the same resting state
-- The friction makes the system contracting
+A stretched spring pulls back, but a mass on an ideal spring oscillates indefinitely. Restoring force does not by itself dissipate the difference between two motions. Position can temporarily approach the target while velocity carries it straight past.
 
-**3. A thermostat:**
-- Room too hot? Turn on AC
-- Room too cold? Turn on heat
-- Temperature naturally drifts toward the setpoint
+A pendulum with viscous friction loses mechanical energy, but the perfectly upright, stationary configuration is still an equilibrium of the ideal equations. It does not converge to the bottom unless perturbed. Near the upright position, one disturbance direction grows. Thus friction does not prove global contraction of the pendulum. A local result near the downward equilibrium requires its own metric and domain.
 
-### The Mathematical Definition (Simplified)
+Cruise control and thermostats are also examples of feedback, not automatic examples of contraction. Saturation, delay, switching and the plant dynamics affect whether a particular model satisfies the test. The analogy is useful only after the actual error dynamics are specified.
 
-A system is **contracting** if:
-- Any two nearby states get **closer together** over time
-- This happens **exponentially fast**—like compound interest in reverse
-- The rate of convergence can be bounded when the required assumptions hold
+### The Ruler and the Region Matter
 
-**Physical meaning:** In a certified region, small errors can shrink at a rate estimated from the local dynamics and metric.
+A state may contain joint angles, angular velocities, muscle activation and shaft deformation. Adding the squares of their raw numerical values would mix units. A metric supplies declared scales and cross terms; it can assign different lengths to perturbations in different directions.
 
----
+The ruler must remain positive and bounded. If its markings shrink to zero, an apparently shrinking error might only mean that we stopped counting it. To translate metric distances into physical coordinate bounds, its smallest and largest weights must be controlled.
+
+A calculation on one nominal trajectory also does not prove recovery from all surrounding states. The intervening trajectories must stay within the region where the inequality is valid. An invariant tube around the reference is one way to establish that containment. The [original contraction analysis by Lohmiller and Slotine](https://web.mit.edu/nsl/www/preprints/contraction.pdf) develops the differential-distance argument and its regional conditions.
 
 ## What Are Tangent Spaces?
 
-Now the second piece of the puzzle.
+### A Local Map of Possible Changes
 
-### The Curved Road Analogy (Revisited)
+At one state, a tangent vector describes an infinitesimal change. For a mechanical system with constraints, admissible changes must respect those constraints. A tangent vector is not necessarily a displacement in ordinary three-dimensional space; it can describe changes in a much larger state.
 
-From the main thesis, you learned that nonlinear systems admit an exact linear *approximation* at any instant — the dynamics follow simple, linear rules on a **tangent plane** to first order (with error growing as the square of the step size).
+Differentiating a smooth dynamics model gives an exact equation for its infinitesimal variations. Using that equation for a finite displacement is an approximation. A quadratic remainder requires adequate second-derivative bounds; differentiability alone does not guarantee a quadratic bound. The relevant small quantity is the state or input perturbation, not automatically the elapsed integration step.
 
-**This article's new insight:** That tangent plane isn't just a crude approximation. It's the **natural geometry** where both optimality and stability live — and in that geometry, contraction and optimality coincide. (The approximation caveat from the main thesis still applies: finite-step predictions on the tangent plane incur curvature error; contraction theory handles this by ensuring errors shrink rather than accumulate.)
+Contraction controls the growth of variations under verified conditions. It does not erase an unmodeled force or make a large finite perturbation obey the tangent equation exactly. The local model, its remainder and the region over which the bound holds remain part of the analysis.
 
-### The Optimal Control Connection
+### A Metric Measures; the Dynamics Move
 
-When you solve an optimal control problem (like planning a robot's motion), you get two things:
+A metric can be visualized as an ellipsoidal ruler: a displacement in one direction counts more than a displacement of the same coordinate magnitude in another. This does not create a physical slope that pulls the system toward a goal. Forces and the feedback law determine motion; the metric helps us assess it.
 
-1. **A trajectory:** The path the robot should follow
-2. **Feedback gains:** How hard to push if you drift off the path
+A spatially constant positive-definite matrix gives a flat metric, even if its weights differ by direction or change with time. It need not create Riemannian curvature. The simple equation $\dot e=-2e$ contracts in an ordinary flat ruler. A Riccati matrix, an inertia matrix and a stiffness matrix are different objects, with different domains and units.
 
-**The feedback gains define a metric**—a way of measuring "distance" from the optimal path. And here's the kicker:
+## The Optimal Control Connection
 
-**That metric can sometimes also serve as a contraction metric.**
+### Pricing a Mistake
 
-In other words:
-- The optimal controller makes errors expensive (optimality)
-- Under the right assumptions, the same controller can make local errors shrink exponentially (stability)
+Linear-quadratic regulation, or LQR, chooses feedback for linear dynamics and a specified quadratic cost. State weights price errors; input weights price the declared control signal. A torque-squared penalty, for example, is a design choice rather than a direct measurement of muscle effort or metabolic energy.
 
-**These can be two compatible readings of the same local calculation.**
+For a perturbation state $\xi$, let the remaining optimal cost be $V=\xi^\top S\xi$. The symmetric matrix $S$ is obtained from a Riccati equation; it is not the feedback gain itself. With this convention, the Hessian of $V$ is $2S$. Calling $S$ the Hessian without declaring the factor-of-two convention causes avoidable confusion.
 
----
+An open-loop trajectory optimizer need not provide a feedback law. LQR supplies one for its problem; other methods may supply local gains, a receding-horizon policy, or only a sequence of inputs. Each resulting closed loop needs its own stability assessment. The [MIT LQR chapter](https://underactuated.mit.edu/lqr.html) explains the cost and feedback construction.
 
-## The Duality Revealed
+### When the Cost Matrix Also Measures Shrinking Errors
 
-Here's the heart of the unification:
+For $\dot\xi=A\xi+Bv$, with no state-input cross cost, the LQR feedback is $v=-K\xi$. Its closed-loop matrix is $A_c=A-BK$. The Riccati equation gives the identity
 
-### Two Perspectives, One Reality
+$$
+\dot S+A_c^\top S+SA_c=-W,
+\qquad W=Q+K^\top RK.
+$$
 
-**Optimality perspective:**
-- "If I deviate from the plan, it costs me this much (measured by the Riccati matrix)"
-- Focus: Minimizing cost
+Here $Q$ and $R$ are the state and input cost weights. If $S$ stays uniformly positive definite and bounded, and $W\succeq2\lambda S$ throughout the stated interval, $S$ is a valid contraction metric for that linear closed loop. The comparison includes both state and input costs and measures them relative to $S$.
 
-**Stability perspective:**
-- "If I deviate from the plan, I'll converge back this fast (measured by the contraction metric)"
-- Focus: Guaranteeing convergence
+Positive semidefinite is not enough for a full-state ruler: it can give zero length to a nonzero error. A finite-horizon solution may become singular at the terminal time, especially with zero terminal cost. Furthermore, a result on a finite interval says nothing by itself about behavior after that interval.
 
-**The key point:** In LQR-like cases, the Riccati matrix from optimal control can be used as a contraction metric for the local closed-loop system.
+Consider the uncontrolled unstable equation $\dot\xi=\xi$, running cost $\xi^2$ and zero terminal cost at $T$. Then
 
-That relationship is useful, but it depends on the model, boundary conditions, and the region where the local approximation remains valid.
+$$
+S(t)=\frac{e^{2(T-t)}-1}{2},
+\qquad S(T)=0.
+$$
 
-### The Rubber Band Is Optimal
+Its remaining cost decreases even as $|\xi|$ grows. There is less future time over which to charge for the error. This is why decreasing cost-to-go and decreasing physical error cannot be treated as interchangeable statements.
 
-Going back to the rubber band:
+### A Small Example You Can Check
 
-- **Stability view:** The rubber band pulls you back (contraction rate)
-- **Optimality view:** The rubber band's tension measures how far off you are (cost-to-go)
+Take the normalized scalar model $\dot e=e+u$ and infinite-horizon cost $\int_0^\infty(3e^2+u^2)\,dt$. Time is measured in seconds and the state, input and cost scales are fixed for this illustration. The stabilizing Riccati solution is $S=3$, giving $u=-3e$ and hence $\dot e=-2e$.
 
-**Physical interpretation:** The "springiness" of the optimal feedback is exactly what's needed to make the system self-correcting.
+The cost derivative uses $W=3+3^2=12$. Dividing by twice the metric gives the length-decay rate $12/(2\times3)=2\ \mathrm{s}^{-1}$. Multiplying the entire cost by seven gives $S=21$ and $W=84$, but leaves the controller and rate unchanged. Changing the units used to report cost cannot change the same physical motion.
 
----
+This executable example uses the existing pointwise calculator in the [AffineDrift repository](https://github.com/D-sorganization/AffineDrift). Run it from that repository with its Python dependencies installed:
 
-## Why This Matters: Real-World Applications
+```python
+import numpy as np
+from src.tools.contraction_examples import local_contraction_rate
 
-### 1. Robot Arms That Self-Stabilize
+value_weight = 3.0
+input_weight = 1.0
+gain = value_weight / input_weight
+closed_loop = np.array([[1.0 - gain]])
+metric = np.array([[value_weight]])
+rate = local_contraction_rate(closed_loop, metric, np.zeros((1, 1)))
+assert np.isclose(rate, 2.0)
+```
 
-**The old way:**
-1. Plan optimal trajectory
-2. Design separate stabilizing controller
-3. Hope they don't interfere with each other
-
-**The new way (contraction-aware control):**
-1. Plan trajectory **with contraction constraints** built in
-2. Check whether the resulting feedback gives a certified local region of attraction
-
-**What would need to be shown:** A credible robot-arm example should report the model, disturbance tests, baseline controller, sample size, and whether the contraction certificate predicts the observed tracking behavior.
-
-**Why it could work:** The controller does not just steer toward the goal; it is also checked for local error-shrinking behavior.
-
-### 2. Golf Swings With Safety Margins
-
-**The problem:** Professional golfers swing faster than amateurs but **maintain control** better. Why?
-
-**What contraction analysis could test:**
-- Whether a measured swing has regions where perturbations are locally damped
-- Whether stability margins differ across golfers, clubs, or phases of the swing
-- Whether the model remains valid near impact and contact transitions
-
-**Interpretation:** A measured stability margin would be evidence about a specific model and data set, not a general proof that professional swings are globally contracting.
-
-**Training implication:** Any coaching claim would need direct data showing that a drill improves measured robustness, not only path accuracy.
-
-### 3. Spacecraft Docking With Guarantees
-
-**Challenge:** Docking with the ISS requires centimeter-level precision. Orbital mechanics are nonlinear. Fuel is limited.
-
-**Contraction-based approach:**
-1. Plan trajectory using DDP (differential dynamic programming)
-2. Add contraction penalty to ensure exponential convergence
-3. Result: A candidate basin of attraction that still needs verification against model error and disturbances
-
-**Benefit:** If the disturbance stays inside the certified region and the model assumptions remain valid, contraction analysis can support a recovery claim.
-
-Safety-critical systems need explicit margins, independent verification, and failure-mode analysis; contraction theory can be one part of that evidence.
-
----
-
-## The Geometric Picture
-
-### Curved Space and Metrics
-
-Here's where it gets beautiful (and a bit abstract).
-
-**Traditional view:** State space is flat. Distance is measured with a ruler (Euclidean metric).
-
-**Contraction view:** State space is **curved**. Distance is measured with a **Riemannian metric**—like measuring distance on Earth's surface using latitude/longitude.
-
-**The Riccati matrix defines that curvature.**
-
-### What This Means Physically
-
-Imagine you're walking on a trampoline:
-- Near the center (the goal), the trampoline curves steeply downward
-- The curvature creates a "bowl" that pulls you toward the center
-- The steeper the bowl, the faster you slide to the center
-
-**The optimal controller shapes the "bowl"** (the metric) to make errors decay at the desired rate.
-
-**Analogy to gravity:** Optimal control doesn't push you toward the goal. It **bends spacetime** so that the goal is "downhill" from everywhere.
-
----
+This is an algebraic example, not a contraction-DDP implementation, optimizer benchmark or human experiment. The [technical companion](Contraction_Tangent_Unification.html#worked-double-integrator-certificate) gives a multivariable example where the rate in the Riccati metric differs from the asymptotic rate inferred from the closed-loop eigenvalues.
 
 ## The Math (Simplified)
 
-You don't need to understand the equations to appreciate the beauty, but here's the executive summary:
+The complete smooth-system test can be kept in one place. Write the implemented dynamics, including feedback, as $\dot x=F(x,t)$, and their Jacobian as $A_c=\partial F/\partial x$. For a metric $M(x,t)$, define
 
-### The Riccati Equation
+$$
+\begin{aligned}
+H&=A_c^\top M+MA_c+\dot M,\\
+\dot M&=\partial_tM+\sum_iF_i\partial_{x_i}M.
+\end{aligned}
+$$
 
-**What it is:** A differential equation that describes how the "cost-to-go" (value function) changes along a trajectory.
+The second line follows the ruler as both time and state change. The condition is $H\preceq-2\lambda M$. For a fixed metric, $\dot M=0$; omitting it when the metric changes tests a different statement. A positive pointwise candidate rate is
 
-**Standard form:**
-```
--dS/dt = A^T S + S A - S B R^(-1) B^T S + Q
-```
+$$
+\lambda_M=-\frac12\lambda_{\max}
+\!\left(M^{-1/2}HM^{-1/2}\right).
+$$
 
-**What it says:** The value function S(t) satisfies a nonlinear differential equation.
+To claim a uniform rate, take a justified positive lower bound over the whole certified domain and time interval. For the Riccati identity above, the same expression becomes
 
-### The Contraction Condition
+$$
+\lambda_S=\frac12\lambda_{\min}
+\!\left(S^{-1/2}WS^{-1/2}\right).
+$$
 
-**What it is:** A requirement that ensures errors shrink exponentially.
+These are symmetric, metric-normalized eigenvalue tests. Eigenvalues of $A_c$ alone are not a substitute: for example, $A_c=\left[\begin{smallmatrix}-1&4\\0&-1\end{smallmatrix}\right]$ has both eigenvalues $-1$, yet some Euclidean errors grow initially. A suitable different metric can certify contraction, with its own conversion bounds to Euclidean error.
 
-**Standard form:**
-```
-A^T M + M A < -2λ M
-```
+For a sampled closed-loop update with Jacobian $D_k$, use the discrete condition
 
-**What it says:** If the metric M satisfies this inequality, trajectories converge with rate λ.
+$$
+D_k^\top M_{k+1}D_k\preceq\rho M_k,
+\qquad 0<\rho<1,
+$$
 
-### The Duality
-
-**The conditional fact:** In the linear-quadratic setting, setting M = S (metric equals value Hessian) can satisfy both the optimal-control and contraction interpretations.
-
-In other words:
-- Solving the optimal control problem gives you S
-- That S can be tested as a contraction metric
-- The contraction rate comes from the eigenvalues of the closed-loop system
-
-The connection is useful, but it still has to be checked outside the linear-quadratic case.
-
----
+with the next metric evaluated at the next state. The corresponding length-decay rate at step size $h$ is $-\log(\rho)/(2h)$. The implemented update matters: for $\dot e=u$ with $u_k=-2e_k$ held between samples, $e_{k+1}=(1-2h)e_k$. It contracts for $0<h<1$ seconds; at $h=0.5$ the ideal scalar update eliminates the error in one step. At $h=1.25$ seconds it expands. The continuously updated law $u=-2e$ would contract. A continuous-time proof cannot simply be assigned to its sampled implementation.
 
 ## Contraction-Constrained Optimization
 
-Once the local link between optimality and stability is explicit, we can design algorithms that optimize a trajectory and check its stability region.
+### What Can Be Designed Together?
 
-### The Idea: Optimize With Stability Guarantees
+One can optimize a motion while imposing explicit stability constraints. A finite penalty on violating those constraints is different: an optimizer may accept a violation to reduce another part of the objective. A requested rate is a target until the actual inequality meets it, with numerical margin.
 
-**Standard trajectory optimization:**
-- Minimize cost (fuel, time, error)
-- Hope the result is stable
+For a fixed linear closed loop and fixed desired rate, searching for a constant metric with declared positive lower and upper bounds is a convex semidefinite feasibility problem. Jointly optimizing a nonlinear trajectory, controller and state-dependent metric is not generally convex in those variables. Special formulations and changes of variables can help; naming a solver does not supply their assumptions.
 
-**Contraction-aware trajectory optimization:**
-- Minimize cost **subject to** contraction constraints
-- Get a stability certificate as part of the solution, if the verification conditions hold
+DDP, differential dynamic programming, uses local expansions of both cost and dynamics, including second derivatives of dynamics in its quadratic model. iLQR omits those dynamics-Hessian terms. Neither method is simply a guarantee that repeated linearization will find a globally optimal, contracting policy. Regularization, control bounds and line search affect what it actually returns. See [MIT's trajectory-optimization treatment](https://underactuated.mit.edu/trajopt.html) for the distinction.
 
-**Mathematical form:**
-```
-Minimize: trajectory cost
-Subject to:
-  - Dynamics constraints
-  - Contraction rate ≥ λ (user-specified)
-  - Control limits
-```
+### What Would Count as Evidence?
 
-**Output:**
-- Optimal trajectory
-- Feedback gains
-- **Estimated or certified basin of attraction**--the region where convergence has been verified under the stated assumptions
+A credible comparison would specify the model, units, cost, input limits, integrator, initialization, perturbation distribution, seeds, failure criterion and code revision. It would report failed runs as well as successful ones. A probability of success depends on the tested distribution; it is not a worst-case certificate. A sampled capture region over a finite horizon is not automatically an asymptotic basin of attraction or the set reachable using all possible controls.
 
-### The Cartpole Example
+This article reports no measured cart-pole success percentages, basin-volume improvements, solver iteration counts or runtime overhead. The former numerical comparison had no reproducible experiment attached and has been withdrawn. For a conventional four-state cart-pole, a full-state volume also needs four declared coordinate scales; a three-dimensional slice must be explicitly identified. Arbitrary “units cubed” do not define a reproducible robustness measure.
 
-**Problem:** Swing up an inverted pendulum on a cart from hanging down to upright.
-
-**Comparison:**
-
-| Metric                  | Classical DDP | Contraction-DDP | Improvement |
-|-------------------------|---------------|-----------------|-------------|
-| Success rate (σ=0.1)    | 94%           | 100%            | +6%         |
-| Success rate (σ=0.2)    | 71%           | 98%             | +38%        |
-| Success rate (σ=0.3)    | 42%           | 89%             | +112%       |
-| Basin of attraction     | 14.3 units³   | 28.7 units³     | **2× larger** |
-| Convergence consistency | High variance | Low variance    | More reliable |
-
-**σ = initial state perturbation (noise in starting position/velocity)**
-
-**Takeaway:** By explicitly enforcing contraction, you get:
-- Larger basin of attraction (more robust to disturbances)
-- More consistent convergence (predictable behavior)
-- Modest computational cost (+60% with warm-starting)
-
----
+The actionable sequence is to verify trajectory feasibility, define the metric throughout a proposed region, differentiate the actual feedback implementation, check the inequality and containment, then assess model uncertainty and task outcomes. Automatic differentiation computes derivatives of the supplied model; it does not establish that the model describes a human correctly. A sampled check is useful evidence, but a continuum certificate additionally needs justified bounds between samples.
 
 ## Applications to Biomechanics
 
-This is where the control-theory framework becomes a biological hypothesis rather than an established result.
+### Inertia, Stiffness and Damping Play Different Roles
 
-### Muscle Synergies Explained
+A small displacement near a mechanical operating state may satisfy a model of the form
 
-**The puzzle:** Humans have many shoulder, elbow, wrist, and hand muscles, but the task-level movement often has far fewer spatial degrees of freedom. This redundancy raises a modeling question: which muscle combinations are used, and why?
+$$
+D\,\delta\ddot q+C\,\delta\dot q+K\,\delta q
+=\delta\tau_{\mathrm{external}}.
+$$
 
-**Old hypothesis:** "The brain simplifies by grouping muscles into synergies."
+Here $D$ represents inertia; in this simplified local model, $C$ is damping and $K$ is stiffness. During a swing, linearization can add time-dependent, velocity-dependent and coupling terms; the matrices above are not a complete generic human model.
 
-**Contraction-based hypothesis:** "Some measured synergies may be organized to improve local error recovery or impedance in task-relevant directions."
+Stiffness redirects displacement into restoring load. Damping dissipates energy. Inertia relates load to acceleration. A contraction metric instead measures perturbations of the full state, including both displacement and velocity. Replacing that metric with the stiffness matrix loses half of this mechanical state and changes the units.
 
-### What This Means
+For the scalar oscillator $\ddot q+0.2\dot q+kq=0$, both $k=1$ and $k=4$ have eigenvalue real parts $-0.1\ \mathrm{s}^{-1}$. Increased stiffness changes the oscillation frequency but not this underdamped envelope rate. Thus “stiffer” does not automatically mean “faster error recovery.” Without damping, the corresponding oscillator conserves energy.
 
-If this hypothesis is correct, measured synergies should align with contraction or impedance directions predicted by a specified musculoskeletal model. That is a testable claim, not something established by the equations alone.
+Mechanical impedance describes the dynamic relationship between motion and load; stiffness is one contribution. Muscle activation, tendon state, reflex pathways, delays, grip conditions and contact constraints can change that relationship. A force response already generated by tissue does not wait for a newly computed visual correction, but it still depends on the tissue's current state. Mechanical and neural effects must be represented together rather than assigned a single universal response time.
 
-**Analogy:** Imagine you're steering a ship with 50 ropes. You could pull them randomly, but it's smarter to:
-- Group ropes by their effect (e.g., "left turn bundle", "right turn bundle")
-- Pull bundles, not individual ropes
+### What Muscle Synergies Might Mean
 
-**Contraction theory would predict:** The useful groupings are those that help the system self-correct when perturbed, after the model, task, and stability metric are specified.
+A low-dimensional pattern in muscle recordings can be a useful description. It does not uniquely identify neural modules or show that the brain minimizes an LQR cost. Muscle-pattern coefficients live in a different space from joint-state errors. Linking them requires muscle force laws, moment arms, inertia and constraints.
 
-**Evidence status:** Studies showing that muscle synergies change with task demands are compatible with this view, but they are not direct evidence that the nervous system optimizes a contraction metric. Direct support would require perturbation, EMG, impedance, and motion-capture data compared against model-predicted metrics.
+The narrower empirical result is informative: [Burdet, Osu, Franklin, Milner and Kawato (2001)](https://www.nature.com/articles/35106566) reported adaptation of arm impedance in an unstable environment generated by a robotic interface. That supports investigation of task-dependent mechanical stabilization. It does not measure a golf contraction metric, establish a universal synergy objective, or demonstrate a particular neural algorithm. This summary uses the publisher's abstract and accessible supporting material; it is not a reanalysis of the participant data.
 
-### Impedance Control
+A golf study could compare measured perturbation responses with predictions from competing activation and impedance models. EMG alone does not determine muscle force, and reaching a target alone does not prove optimality. No general prediction about brain injury or diagnosis follows from this article's equations.
 
-**What it is:** The nervous system adjusts muscle stiffness (impedance) to control motion.
+## Golf Swings With Safety Margins
 
-**Contraction view:** Impedance can sometimes be interpreted as a task-dependent weighting of errors. Treating it as a contraction metric requires a model that links muscle activation, endpoint stiffness, and error decay.
+### Start With the Delivered Strike
 
-**Example:** Holding a full coffee cup:
-- High stiffness in vertical direction (don't spill!)
-- Low stiffness in horizontal direction (allow smooth motion)
+Choose the actual outcome: clubhead velocity, face orientation, contact point or ball-launch variables. Then define when it is measured. Comparing two swings at the same clock time differs from comparing each swing at its own impact. A phase-shifted motion can reach the same contact state later, even while showing a sizeable error at a shared time.
 
-The cautious interpretation is that the nervous system may shape stiffness and damping to prioritize stability where errors are costly. Calling that a contraction metric is a model claim that needs measurement.
+The mechanisms are intertwined. Posture changes inertia and the directions in which joint loads affect motion. Earlier muscle work and elastic storage set part of the later state. Grip and ground constraints redirect load and restrict admissible motion. Tissue impedance changes the response to perturbations. Feedback adds corrections that must respect activation dynamics, sensing, delays and available force. None of these contributions can be inferred from a single contraction rate.
 
----
+For a smooth fixed-time outcome $y=g(x(T))$, the first-order relation is
 
-## The Algorithms: How to Actually Use This
+$$
+\delta y\approx G\Phi(T,t)\delta x(t),
+\qquad G=Dg(x(T)).
+$$
 
-### Contraction-DDP Algorithm
+$\Phi$ propagates a small state error through the implemented closed loop; $G$ converts the terminal error into the chosen outcome. This relation explains why a small full-state error need not imply the smallest task error. With outcome $y=x_1$, an error $(0,1)$ is invisible at that instant, whereas the much smaller error $(0.1,0)$ is not. Subsequent dynamics can make a previously invisible direction matter, so the full propagation cannot be skipped.
 
-**Input:**
-- Initial trajectory
-- Desired contraction rate λ
-- Penalty weight μ (how much to prioritize stability)
+A contraction estimate can bound this propagation, but also needs the metric's conditioning, the outcome sensitivity, and the remaining time. A high nominal rate over a very short interval need not provide much recovery. A technique could improve strike consistency by reducing outcome sensitivity instead of making every joint trajectory converge faster. These are distinct hypotheses that can be tested with matched perturbations and outcome definitions.
 
-**Repeat until convergence:**
+### Impact Adds an Event-Time Question
 
-1. **Forward pass:** Simulate dynamics
-2. **Metric optimization:** Solve for optimal contraction metric M (convex optimization)
-3. **Backward pass:** Compute feedback gains using an augmented cost or constraint set that includes a contraction term
-4. **Line search:** Update trajectory with step size α
+Impact is a change in dynamics and often an abrupt change in velocity. A disturbed club may also reach the ball at a different time. Differentiating only the velocity reset misses that timing effect. For a regular, non-grazing event, a **saltation matrix** combines reset and timing sensitivities; [Kong and colleagues](https://arxiv.org/abs/2306.06862) explain this construction and its assumptions.
 
-**Output:**
-- Optimal trajectory
-- Time-varying feedback gains
-- Verified or estimated contraction-rate bound, if the assumptions hold
+Contraction during the approach does not by itself control the jump. As a simple counterexample, a scalar flow $\dot e=-e$ with a scheduled reset $e^+=2e^-$ every half second multiplies error by $2e^{-1/2}>1$ over each cycle. Shrinkage between events is outweighed by expansion at the event. This is an illustrative hybrid equation, not a golf-impact law. Actual contact needs its own geometry, compliance or impulse model, event sequence and uncertainty analysis.
 
-**Computational cost:** Metric optimization adds solver cost. The size of that cost and the strength of the resulting certificate are implementation-dependent.
+### Disturbances and Noise Leave Residual Error
 
-### Practical Implementation (JAX)
+A one-time disturbance and continuing disturbances are different tests. In $\dot e=-2e+0.2$, the error approaches $0.1$, despite the contracting homogeneous dynamics. A bound on ongoing forcing generally gives a residual error bound, not exact return to the undisturbed trajectory.
 
-**Why JAX?**
-- Automatic differentiation (compute derivatives of the implemented model, within numerical precision)
-- JIT compilation (fast execution)
-- Batching (vectorize over time steps)
+Random variability likewise requires a noise model. Differences between two copies driven by identical additive noise can behave differently from differences under independent noise. A compact cloud of repeated swings could reflect small disturbances, low output sensitivity or corrective feedback; it does not identify which explanation is responsible.
 
-**Key steps:**
-1. Define dynamics function
-2. Use `jacfwd` to compute linearization matrices A, B
-3. Solve Riccati equation backward in time
-4. Verify contraction condition
-
-**Example output (pendulum swing-up):**
-```
-Solving with classical DDP...
-Converged in 12 iterations
-
-Solving with contraction-DDP...
-Converged in 18 iterations
-Final contraction rate: 1.94 Hz (target: 2.0 Hz)
-```
-
-**Trade-off:** More iterations and solver complexity, with a local stability certificate only when the contraction condition, model assumptions, and numerical tolerances have been verified.
-
----
+To investigate golfers, compare the same task, phase or event definition, state scales, feasible inputs and uncertainty treatment. Record perturbation direction and size, repeated trials, force and motion measurements, model alternatives and predictions on withheld trials. Training claims require evidence that the intervention improves the defined outcome under those conditions. The mathematics supplies questions and conditional predictions; it supplies no coaching prescription by itself.
 
 ## Common Questions
 
-### **"Isn't This Just LQR?"**
+### Does a Stable Motion Have to Be Contracting?
 
-**Almost, but with a twist.**
+No. Contraction in a uniformly bounded positive metric is a strong incremental property: it compares neighboring solutions under the same rule. A motion may be useful, locally stable or accurate at impact without a verified full-state contraction certificate. Autonomous periodic motions retain a phase direction; studying convergence toward their orbit requires a transverse or orbital formulation.
 
-LQR (Linear Quadratic Regulator) gives optimal feedback for linear systems. For nonlinear systems, you need to:
-- Linearize at every point along the trajectory (time-varying LQR)
-- This is what DDP does
+### Does Choosing the Identity Metric Preserve Stability?
 
-**What's useful:** In linear-quadratic settings, the Riccati matrix can serve both as a value-function Hessian and as a local Lyapunov or contraction candidate. That connection can support a stability certificate, but only after the closed-loop conditions and bounds are checked.
+It only restricts the proposed ruler. If the required inequality holds with $M=I$, that supplies a certificate in the declared coordinate scaling. If it fails, the system might still contract in another metric. Choosing $I$ neither proves stability nor guarantees that an optimization retains its former performance.
 
-### **"Does This Work for Discontinuous Systems?"**
+### Can a Model Certificate Establish Safety?
 
-**Not directly.** Standard contraction arguments require smooth dynamics (at least C^1--continuously differentiable) within the region being analyzed.
+A verified recovery region can support a safety argument, but does not alone enforce tissue-load, contact, actuator or environmental limits. Disturbance magnitude and model error must also fit the argument. A loss of golf performance is not, by itself, proof of leaving a contraction region or evidence for a particular neurological mechanism.
 
-For systems with:
-- Impacts (e.g., walking, bouncing)
-- Switches (e.g., mode changes)
-- Friction (stick-slip)
+### Does the Brain Have to Solve These Equations?
 
-You need hybrid system techniques. **But:** You can use contraction within each mode, then analyze switching separately.
+No. These equations describe candidate mechanisms and observable consequences. An equivalent input-output behavior need not come from the same internal computation. Neural implementation, physiological cost and learning rules require additional evidence.
 
-### **"What's the Computational Bottleneck?"**
+## In Layman's Terms
 
-**Metric optimization.** Finding a contraction metric M may require solving a semidefinite program (SDP) or another constrained optimization problem at each time step.
+<details class="technical-explanation">
+<summary>Read the Short Explanation</summary>
 
-**Scaling:** The cost depends on the metric parameterization and solver. Dense interior-point SDP methods can become expensive quickly, while structured or fixed-metric approaches trade certificate strength for tractability.
+A good plan describes a motion we want and can produce. A feedback rule describes the corrections we will actually make. A contraction calculation checks whether nearby motions under that rule draw closer, using a ruler whose scaling and domain are explicit.
 
-**Mitigation:**
-- Warm-starting (use previous solution as initial guess)
-- Sparsity (exploit block structure)
-- Approximation (use fixed metric M = I, lose optimality but retain stability)
+The ruler does not pull the body or club anywhere. Inertia, muscle and tissue forces, constraints and feedback create the motion. In certain LQR problems, the matrix used to price errors can also certify their decay. That is a useful connection, not an identity between good performance, low effort and stability.
 
-**Practical limit:** There is no single state-count threshold. Real-time feasibility depends on model dimension, sparsity, warm starts, solver choice, hardware, and how strong a certificate is required.
+For golf, ask whether a perturbation changes the strike, how much time remains to influence it, and what corrections the body can supply. Some harmless variation may persist; small variations in a sensitive direction may deserve more attention. Impact timing and continuing disturbances belong in the comparison.
 
----
+</details>
 
-## Why Two Fields Seemed Separate
+## Critics' Comments
 
-### Historical Accident
+<details class="technical-explanation">
+<summary>Read the Objections and Responses</summary>
 
-**Optimal control** (1960s): Focus on minimizing cost functionals, Pontryagin's maximum principle, dynamic programming.
+### Does a Local Proof Say Anything About a Full Swing?
 
-**Stability theory** (1890s-present): Focus on Lyapunov functions, convergence analysis, robustness.
+Only to the extent of its verified domain. A trajectory-level calculation is a starting point. A neighborhood claim needs a metric throughout that neighborhood, containment, feasible controls and uncertainty bounds. A swing-wide claim must also account for contact transitions and the delivered outcome. The scope cannot be enlarged by relabeling an estimated region as a certified basin.
 
-**Different communities, different journals, different notation.**
+### Could the Observed Stability Have Another Explanation?
 
-**Example:** The Riccati equation appears in both fields but was called:
-- "Value function propagation" in optimal control
-- "Lyapunov function candidate" in stability theory
+Yes. Low disturbance, mechanical impedance, task-insensitive variability, state estimation and active correction can produce overlapping observations. Perturbation experiments and alternative models help discriminate them. A fitted contraction rate or muscle factorization alone cannot establish a neural objective.
 
-The same Riccati and Lyapunov objects appear in both traditions, but the conditions under which they carry the same interpretation must be stated.
+### Are the Examples Evidence of a Better Controller?
 
-### The Conceptual Barrier
+The scalar example proves an identity for its declared model. It is not comparative performance evidence. A better-controller claim needs reproducible baselines, equal constraints, failure reporting and outcome uncertainty. The withdrawn benchmark numbers must not be used to infer a benefit.
 
-**Optimal control asks:** "What's the best thing to do?"
+</details>
 
-**Stability theory asks:** "Will the system behave predictably?"
+## Related Articles
 
-These can be related questions in restricted problem classes. In linear-quadratic systems, value functions, feedback gains, and Lyapunov functions can share the same matrices. Outside those settings, the relationship is conditional and may be non-unique.
+- [Contraction Theory Meets Tangent Spaces: Technical Reference](Contraction_Tangent_Unification.html) derives the general metric, Riccati, discrete-time and hybrid conditions.
+- [Tangent Spaces in Layman's Terms](../LAYMANS_TERMS_SUMMARY.html) introduces the broader series; its explanations have their own review scope.
+- [Force and Mobility Ellipsoids](../../force-mobility-matrices.html) distinguishes kinematic directions, force budgets, inertia and compliance.
+- [Critiques and Responses](../../../critiques/index.html) records the framework's wider open questions and responses.
 
----
-
-## The Broader Impact
-
-### 1. Unified Design Tools
-
-**Before:** Design trajectory with one tool, analyze stability with another, iterate until both work.
-
-**After:** A single optimization can include both performance objectives and stability constraints, if the assumptions needed for the certificate are satisfied.
-
-**Example:** Satellite trajectory planning:
-- Old: Optimize fuel, then check if stable, then re-optimize, repeat
-- New: Optimize fuel with a contraction constraint, then verify the resulting local stability certificate
-
-### 2. Interpretability
-
-**Machine learning controllers** can perform well, but their closed-loop behavior is often difficult to certify without additional analysis.
-
-**Contraction-aware control:**
-- Transparent: The metric gives an auditable stability argument when the assumptions are met
-- Certifiable: The basin of attraction may be estimated or bounded under specified conditions
-- Reviewable: The certificate can be compared with safety requirements rather than treated as empirical performance alone
-
-**Use case:** Safety-critical autonomy needs explicit evidence about failure modes and operating regions, not only aggregate success rates.
-
-### 3. Biomechanical Insights
-
-**Neuroscience puzzle:** How does the brain control 600+ muscles without getting tangled?
-
-**Contraction hypothesis:** Some motor strategies may favor robust, self-correcting motions rather than only energetic efficiency.
-
-**Testable prediction:** Brain-damaged patients should show:
-- Preserved optimality (can still reach targets)
-- Degraded contraction (unstable motions, more corrections)
-
-This is a proposed experimental test. Support would require comparing patient movement data with model-predicted contraction or impedance structure, not only observing that movements are unstable.
-
----
-
-## The Key Equations (For the Curious)
-
-If you want to dig deeper, here are the core equations:
-
-### 1. Contraction Condition
-```
-A^T M + M A + dM/dt ≤ -2λ M
-```
-**Says:** Metric M makes errors decay with rate λ.
-
-### 2. Differential Riccati Equation
-```
--dS/dt = Q + A^T S + S A - S B R^(-1) B^T S
-```
-**Says:** Value function S propagates backward in time.
-
-### 3. Duality
-```
-M = S
-```
-**Says:** In the restricted linear-quadratic case, the metric can be identified with the value-function Hessian.
-
-### 4. Closed-Loop Dynamics
-```
-dx/dt = (A - B K) x,   K = R^(-1) B^T S
-```
-**Says:** Under appropriate conditions, optimal feedback can render the local closed-loop system contracting.
-
-### 5. Contraction Rate
-```
-λ = (1/2) λ_min(S B R^(-1) B^T S)
-```
-**Says:** A contraction-rate bound can be related to eigenvalue margins after the assumptions and units are specified.
-
-The point is not that these equations are universally interchangeable. It is that, in specific problem classes, they expose the same local stability and cost geometry.
-
----
-
-## Philosophical Takeaway
-
-### When Cost and Stability Align
-
-In a well-specified control problem:
-- The chosen cost can reward stable behavior
-- Stability constraints can be part of the design objective
-- The "cost of error" and "rate of error decay" may be represented by related local quadratic forms
-
-**Engineering lesson:** Do not assume that performance and robustness are automatically aligned. State the cost, constraints, model class, and certificate before claiming that an optimal design is robust.
-
----
-
-## Who Should Care?
-
-### Researchers
-- Unified framework for analyzing nonlinear control
-- New connections between geometry, optimization, and dynamics
-
-### Engineers
-- Design controllers with verifiable local stability certificates
-- Compute basins of attraction for safety certification
-
-### Neuroscientists
-- Test whether contraction or impedance metrics explain measured motor-control structure
-- Compare predicted synergy structure with task-specific data
-
-### Coaches/Trainers
-- Treat mechanical stability as a hypothesis to compare with measured technique
-- Use model predictions to identify which training claims need empirical validation
-
----
-
-## What's Next?
-
-### Open Problems
-
-1. **Stochastic systems:** Extend to noisy dynamics (partially done, see stochastic Riccati equation)
-2. **Learning metrics:** Use machine learning to discover optimal contraction metrics from data
-3. **Hybrid systems:** Handle impacts and mode switches
-4. **High dimensions:** Scale to 100+ states (requires faster SDP solvers)
-
-### Practical Tools
-
-All code examples available at:
-```
-https://github.com/AffineDrift/contraction-tangent-unification
-```
-
-Includes:
-- JAX implementation of Contraction-DDP
-- CVXPY metric optimization
-- Benchmark problems (cartpole, pendulum, robot arm)
-- Visualization tools
-
----
-
-## The Bottom Line
-
-Optimal control and contraction theory are not the same theory in general, but they can share the same local mathematical objects in important restricted settings.
-
-In linear-quadratic and closely related local problems, the Riccati matrix can function as both a cost-to-go Hessian and a stability metric. Extending that interpretation to nonlinear, stochastic, hybrid, or biological systems requires additional assumptions and validation.
-
-**Practical impact:**
-- Design controllers whose stability claims can be checked
-- Compare basin estimates under explicitly stated model assumptions
-- Convergence-rate bounds when the model and certificate assumptions hold
-- A design methodology that keeps performance and stability checks in the same workflow
-
-**Conceptual impact:**
-- Optimality and stability can share local quadratic structure in restricted settings
-- Dynamics may require geometry-aware local models
-- The chosen metric determines which errors are emphasized
-
-This is a useful way of seeing some control problems: performance and robustness may be linked by the same local model, but the link must be checked rather than assumed.
-
-The practical value is the discipline it imposes: state the local model, state the metric, and state the region where the certificate applies.
-
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        Here is a simplified breakdown of how local planning and local error correction can be linked.
-      </p>
-
-      <div class="laymans-item">
-        <h3>Self-Correcting Systems</h3>
-        <p>This is about machines or motions whose nearby errors shrink under a verified feedback law. If a small bump stays inside the certified region, the system is designed to move back toward the reference path.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Dropping a marble near the bottom of a smooth bowl. Close to the bottom, the slope points the marble back inward; far away, the shape may be different.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Efficient Plans vs. Checked Plans</h3>
-        <p>Finding an efficient path and proving local stability are different tasks, but they can share calculations in some control problems. The point is to design the path and the feedback law together, then verify the region where the certificate applies.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Riding a bicycle at a steady pace. Some corrections that keep you efficient also help you stay balanced, but the claim depends on speed, steering, road conditions, and rider response.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Shaping the Environment</h3>
-        <p>Instead of using one flat measure of distance, this approach uses a metric shaped by the model and task. That metric tells the controller which errors matter most and how local corrections should be weighted.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A map that stretches dangerous regions and compresses harmless ones, so the route planner treats different mistakes differently.
-        </div>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> Some control designs can connect performance and local error correction, but the certificate is only as strong as its model, assumptions, and verified basin.
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="critics-comments">
-  <h2>
-  <button type="button" class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon" aria-hidden="true">💬</span>
-  </button>
-</h2>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        The main objections identify where the simplified story can fail:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Real-World Systems are Rarely Smooth</h3>
-        </div>
-        <p class="critic-argument">The mathematical link between optimality and stability through Riccati-style equations relies heavily on smooth, continuous dynamics and specific cost structures. Critics argue that biomechanical motions—like a golf swing—are inherently hybrid, characterized by sudden impacts, friction, and discrete transitions. Relying on continuous contraction metrics may fail to capture the true complexity of these non-smooth events.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a valid limitation. The continuous portion of a movement may be analyzable with contraction tools, but impact and contact transitions require hybrid-system analysis before any certificate can be trusted across the full motion.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>The Brain Doesn't Solve Riccati Equations</h3>
-        </div>
-        <p class="critic-argument">Neuroscientists caution against taking the computational framework too literally. Solving complex semidefinite programs or Riccati equations is computationally expensive. It is highly unlikely the human nervous system computes optimal contraction metrics in real-time. Instead, the brain likely relies on learned motor primitives or simple heuristics that only approximate these metrics.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> The control model should not be read as a literal neural algorithm. At most, it offers a mathematical lens for comparing observed movement with local stability and optimality hypotheses.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Ignoring the "Catastrophic Failure" Reality</h3>
-        </div>
-        <p class="critic-argument">Contraction theory emphasizes graceful, exponential recovery from errors. However, sports biomechanics often features catastrophic failures—like the "yips" or suddenly shanking a ball—where a small perturbation leads to a complete breakdown in form, rather than a return to the optimal path. A purely contracting model doesn't account for these sudden losses of stability.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is exactly why the basin of attraction matters. A contraction certificate is local unless the analysis proves otherwise, and performance breakdowns may indicate that the movement left the certified region or that the model omitted relevant state variables.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> These critiques mark the assumptions that must be verified before the simplified explanation becomes an engineering claim.
-      </div>
-    </div>
-  </div>
-</section>
-
----
-
-**For the full technical details:** See [Contraction_Tangent_Unification.qmd](Contraction_Tangent_Unification.html)
-
-**For the main tangent space framework:** See [LAYMANS_TERMS_SUMMARY.qmd](../LAYMANS_TERMS_SUMMARY.html)
-
-**For critical analysis:** See [Critiques and Responses](../../../critiques/index.html)
-
----
-
-*Created by AffineDrift Framework, January 18, 2026*
-*Target word count: ~2,800 words (achieved: ~2,950)*
+The useful connection is from a declared physical model to feasible feedback, from feedback to a bounded perturbation response, and from that response to the outcome being investigated. Each step supplies information the others cannot replace.
