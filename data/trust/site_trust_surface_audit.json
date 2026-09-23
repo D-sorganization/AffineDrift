@@ -523,7 +523,9 @@
           "Measured motion can arise from unmodeled contact, tissue, reflex, or actuator effects not represented by a selected input intervention."
         ],
         "counterexamples": [
-          "A zero-generalized-input simulation need not reproduce a real person's passive motion and cannot uniquely reveal deliberate muscular torque."
+          "A zero-generalized-input simulation need not reproduce a real person's passive motion and cannot uniquely reveal deliberate muscular torque.",
+          "A generalized force cannot be added directly to a full-state derivative; inverse inertia and the correct state blocks are required.",
+          "A reproducibility protocol is not evidence that its historical Simulink runs have a revision-bound result package."
         ],
         "remaining_disagreements": [
           "Golf-specific diagnostics remain hypotheses until parameter identification, uncertainty analysis, and experimental replication are supplied."
@@ -595,7 +597,7 @@
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4063",
           "priority": "p1",
           "rationale": "A series card said ZTCF separates passive dynamics from deliberate torque, exceeding the protected intervention contract. It now describes model-conditioned interventions and rejects unique muscular or intent inference.",
-          "verification_commit": "e7d8c6885550ed2731843ff7d9e581d36b69788e"
+          "verification_commit": "2250d07fc564a70525224d6b2d2765385448bd55"
         },
         {
           "claim_ids": [],
@@ -613,16 +615,76 @@
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4063",
           "priority": "p1",
           "rationale": "The page description called the bounded editorial program a comprehensive theory series. It now identifies the series as editorial without implying exhaustive theoretical coverage.",
-          "verification_commit": "0d2bd503a226cbbf7da1e87ce558952efe797d33"
+          "verification_commit": "2250d07fc564a70525224d6b2d2765385448bd55"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "pages/drifter-manifesto.qmd",
+            "reports/technical-review/manifesto-notation-review.md",
+            "reports/technical-review/manifesto-notation-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "pages/drifter-manifesto.qmd": "74577701f411acad950a9ecade929337499f59b3918ad8f6bb644d740863c8b5",
+            "reports/technical-review/manifesto-notation-render-verification.json": "c9627edf421f78c60bec0a6fb5b16ce8535733f32139aa54353cbfa77c5f15a6",
+            "reports/technical-review/manifesto-notation-review.md": "bb94ab057518cdffe431535d66b9a0f8190e31717469935b55d65095606ecc5b"
+          },
+          "finding_id": "ad-finding-manifesto-state-rate-units",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4063",
+          "priority": "p1",
+          "rationale": "#4428: Correct full-state Gu units, include retained flexible coordinates, distinguish state ordering and declare input-affinity, internal-state and constraint/event assumptions.",
+          "verification_commit": "2250d07fc564a70525224d6b2d2765385448bd55"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "pages/drifter-manifesto.qmd",
+            "reports/technical-review/manifesto-notation-review.md",
+            "reports/technical-review/manifesto-notation-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "pages/drifter-manifesto.qmd": "74577701f411acad950a9ecade929337499f59b3918ad8f6bb644d740863c8b5",
+            "reports/technical-review/manifesto-notation-render-verification.json": "c9627edf421f78c60bec0a6fb5b16ce8535733f32139aa54353cbfa77c5f15a6",
+            "reports/technical-review/manifesto-notation-review.md": "bb94ab057518cdffe431535d66b9a0f8190e31717469935b55d65095606ecc5b"
+          },
+          "finding_id": "ad-finding-manifesto-verification-protocol",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4063",
+          "priority": "p1",
+          "rationale": "#4428: Replace an implemented-Simulink capability claim with the actual numerical verification protocol and its absent historical run-package boundary.",
+          "verification_commit": "2250d07fc564a70525224d6b2d2765385448bd55"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "pages/drifter-manifesto.qmd",
+            "reports/technical-review/manifesto-notation-review.md",
+            "reports/technical-review/manifesto-notation-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "pages/drifter-manifesto.qmd": "74577701f411acad950a9ecade929337499f59b3918ad8f6bb644d740863c8b5",
+            "reports/technical-review/manifesto-notation-render-verification.json": "c9627edf421f78c60bec0a6fb5b16ce8535733f32139aa54353cbfa77c5f15a6",
+            "reports/technical-review/manifesto-notation-review.md": "bb94ab057518cdffe431535d66b9a0f8190e31717469935b55d65095606ecc5b"
+          },
+          "finding_id": "ad-finding-manifesto-series-orientation",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4063",
+          "priority": "p2",
+          "rationale": "#4428: Align Part4 with its beam/pendulum treatment, preserve canonical precedence and scope, and inspect the index in four browser cases with legible equations.",
+          "verification_commit": "2250d07fc564a70525224d6b2d2765385448bd55"
         }
       ],
       "included_source_sha256": {},
-      "render_revision": "0d2bd503a226cbbf7da1e87ce558952efe797d33",
-      "reviewed_on": "2026-08-29",
-      "reviewer": "codex-4063-20260829T092627Z",
+      "render_revision": "2250d07fc564a70525224d6b2d2765385448bd55",
+      "reviewed_on": "2026-09-22",
+      "reviewer": "codex-technical-review-20260922-manifesto; complete index reread",
       "route": "/pages/drifter-manifesto.html",
       "source_path": "pages/drifter-manifesto.qmd",
-      "source_revision": "0d2bd503a226cbbf7da1e87ce558952efe797d33",
+      "source_revision": "2250d07fc564a70525224d6b2d2765385448bd55",
       "source_sha256": "74577701f411acad950a9ecade929337499f59b3918ad8f6bb644d740863c8b5"
     },
     {

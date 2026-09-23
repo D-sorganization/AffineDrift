@@ -12,8 +12,9 @@ its current beam/pendulum scope. Eleven expressions render in four browser
 cases; production4/4, title638 and internal links pass. The page-local CSS
 restores reading-size display math in raw HTML. No model or solver changed.
 
-Next: commit this source/render checkpoint, bind the manifesto source/findings
-and aggregate dependencies to exact committed bytes, run audit tests, and open
+Source/render frozen at2250d07f; five manifesto findings (three new, two
+rechecked) and source/render revisions bind exactly to it. Next commit these
+records and bind aggregate dependencies, run audit tests, and open
 a regular PR after normal main integration. Do not re-review unrelated pages
 implicitly; #4429 preserves their historical provenance discrepancies.
 Current evidence digests are refreshed for hooks, but final revision binding
