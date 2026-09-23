@@ -1,3 +1,31 @@
+# Deferred Impact Project Projection — #4438
+
+- Repository/worktree: AffineDrift,
+  `C:/Users/diete/Repositories/Worktrees/AffineDrift-deferred-project`.
+- Branch: `docs/4438-deferred-project-projection`; base `96c703c2`; commit `SELF`;
+  PR: [#4439](https://github.com/D-sorganization/AffineDrift/pull/4439), open with protected auto-merge armed. Development entry DL-#4438; fleet parent RM#1687 / RD#1248.
+- Adds initial `docs/project/CHARTER.md` and `STATUS.md` for the existing impact
+  program. #4253 stays active for theory/source/numerical work; DV-4253 is parked
+  with its original owner-plan link and pending Board/prerequisite decisions.
+- The charter explicitly limits its feature counts to this initial program slice.
+  Source README/SPEC and current open epic were inspected; original catalog,
+  plan and source snapshot are preserved. No measurements, approval, scheduled
+  Staff Hub run or full-program completion are claimed.
+- Validation: central catalog valid; central/dashboard parsers agree on both
+  feature rows and three pending decisions. Every original planning byte is
+  unchanged. Title-case (637 sources) and SPEC changelog checks pass; normal
+  docs commit and pre-push hooks pass. No executable source changes.
+- This scoped fleet-planning rollout preserves the independent technical-review
+  campaign below.
+- Merge sync: incoming force-mobility PR #4437 is preserved exactly from main
+  7664a390; both development-log entries and handoff histories are retained.
+- Next: validate and publish through a regular protected PR; verify default-branch
+  content and live dashboard projection after cache refresh. The new feature-detail
+  UI is Runner_Dashboard#1251; shared discovery is RM PR #1717. Full fleet rollout
+  remains open. Preserve the independent technical-review state below.
+
+---
+
 # Final Force–Mobility Release Checkpoint — #4436
 
 The user requested a stopping checkpoint on September 23. Finish only the

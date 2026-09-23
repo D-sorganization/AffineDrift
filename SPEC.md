@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-23 | #4438 | Project charter/status expose DV-4253 as parked with pending resource decisions while theory issue #4253 remains active. |
 | 2026-09-22 | #4431 | Rebuild nonlinear-control insights around physical coupling, energy accounting, declared interventions, finite-time authority and identifiable evidence. |
 | 2026-09-22 | #4428 | Correct manifesto load/acceleration/state-rate units and align series cards with bounded numerical verification. |
 | 2026-09-22 | #4427 | Reconcile zero-torque mechanics and intervention meaning across canonical article and paired chapter with independent energy, coupling and authority checks. |
