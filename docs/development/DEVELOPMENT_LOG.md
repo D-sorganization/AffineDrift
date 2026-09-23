@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4428 · Manifesto State-Rate Units and Verification Scope
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4428 (site surfaces #4063; corpus #4021; epic #4009)
+- **Branch:** `fix/manifesto-notation-units`
+- **Paths:** `pages/drifter-manifesto.qmd`, `css/manifesto.css`, `reports/technical-review/manifesto-notation-review.md`
+- **Started:** 2026-09-22
+- **Last verified:** 2026-09-22 (base c5ed3344; SELF source checkpoint; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
+- **Summary:** Distinguishes generalized input load, acceleration contribution and full-state rate; includes retained flexible coordinates and memory/constraint boundaries; corrects Part5 capability and Part4 orientation. Scientific source and model runs remain unchanged.
+- **Next step:** Bind the reviewed index and dependent audit records to the committed source/render checkpoint.
+
 ### DL-#4427 · Zero-Torque Counterfactual Mechanics and Interpretation
 
 - **State:** in_review

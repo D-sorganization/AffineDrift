@@ -1,3 +1,35 @@
+# Current Technical Review Checkpoint — #4428
+
+Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
+`fix/manifesto-notation-units`; commit `SELF`; PR not created. Issue4428 is a
+native child of4063 under4021/4009. Lease receipt5786396346 expires01:49UTC Sep23.
+Base includes PR4430 final figure-census correction c5ed3344. Complete index
+reread and source correction are saved with review/render reports. The source
+distinguishes Bu, inverse-inertia acceleration and full-state Gu, retained
+flexible coordinates, state ordering, input-affinity and memory/contact rules.
+Part5 now describes the actual numerical verification protocol; Part4 matches
+its current beam/pendulum scope. Eleven expressions render in four browser
+cases; production4/4, title638 and internal links pass. The page-local CSS
+restores reading-size display math in raw HTML. No model or solver changed.
+
+Next: commit this source/render checkpoint, bind the manifesto source/findings
+and aggregate dependencies to exact committed bytes, run audit tests, and open
+a regular PR after normal main integration. Do not re-review unrelated pages
+implicitly; #4429 preserves their historical provenance discrepancies.
+Current evidence digests are refreshed for hooks, but final revision binding
+is pending and must precede PR creation. All #4427 scientific bytes stay frozen.
+
+PR4430 remains open with protected auto-merge enabled. Eight full-book builds
+passed on the prior head; Python CI exposed obsolete figure counts after the
+deliberate diagram removal. c5ed3344 updates exact counts; all23 figure tests
+pass, normal push checks passed, and final CI is rerunning. Watch4430 and verify
+its main/live deployment before merging the manifesto successor. IAA4426 is
+shipped with live960/960. Active entries DL-#4428 and DL-#4427. Goal remains active.
+The central development-log validator reports pre-existing WIP/older-record
+metadata defects; this new entry explicitly records PR-not-created and base SHA.
+Do not claim that whole-log validation passes. Disk space is low; preserve
+source/receipts and stage only explicit task paths.
+
 # Current Technical Review Checkpoint — #4427
 
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch

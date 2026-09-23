@@ -1,11 +1,12 @@
 # Agent Handoff — AffineDrift
 
-Current #4427 branch `fix/zero-torque-counterfactual-rigor`, commit `SELF`; regular PR #4430
-is open. Complete three-source review is bound to e7d8c688; 51 selected tests,
-128 paired expressions, nine print pages and local browser8/8 pass. Census219
-restored. Thirteen dependency carry-forwards record historical discrepancies
-separately under #4429; manifesto units are #4428. Next finish protected CI and merge4430. IAA4426 is shipped at99aa5835;
-deployment35796355561 and live960/960 pass. Publication receipt saved. Full continuation in docs/development/HANDOFF.md. Goal active.
+Current issue4428 on `fix/manifesto-notation-units`, commit `SELF`, PR not created.
+Complete manifesto index correction and browser4/4 saved; final evidence binding
+is next. Predecessor regular PR4430 has protected auto-merge enabled; figure
+census fix c5ed3344 passes23 local tests and final CI is running. Wait for its
+main/live gate before merging this successor. IAA4426 is already shipped960/960.
+Read docs/development/HANDOFF.md and manifesto-notation review/render reports.
+Historical evidence mismatches remain tracked #4429. Goal active; never draft PRs.
 
 ## Deferred Impact Evidence - 2026-09-22
 
