@@ -6,7 +6,9 @@
   Governing issue #4450 is a native child of corpus #4021 under epic #4009.
 - Frozen source/render revision: `787fb5819204d637b2e5eeb5ad9b589fba07b389`.
   Six findings bind twelve paths, independently checked against committed bytes.
-  Binding commit: `966d3187785c2e9cb9c6f13af38f423236be1dc1`.
+  Initial binding: `966d3187785c2e9cb9c6f13af38f423236be1dc1`.
+  Final twelve-path verification: `95b5c738aaf9aded51530c1383da484ee9b1267f`; the only
+  later scientific-evidence change is the CI-required Python constant naming.
 - Both complete Chapter 1 editions now distinguish force, acceleration, work and
   power; define the input baseline and actuator mapping; retain feasible constraint
   reactions; separate drive-torque removal, attachment removal and muscle relaxation.
