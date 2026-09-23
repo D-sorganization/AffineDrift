@@ -6,7 +6,7 @@ protected PR, verify remote main and its live deployment, then pause the goal.
 Do not start another article, issue or rewrite. Never create draft PRs.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
-- Branch: `fix/force-mobility-rigor`; source/render checkpoint: `SELF`; scientific source `981e8d34`.
+- Branch: `fix/force-mobility-rigor`; source/render checkpoint: `d032cb0fd65c3674a0ba7c950c5e4b41962288b0`; scientific source `981e8d34`. Turnover: `SELF`.
 - Base: remote main `96c703c2da90e1b0b15ef803c6a7ce8d64461f28`.
 - Issue #4436 is a native child of #4021 under epic #4009. Historical route
   batch #4058 stays closed; the full review supersedes its limited evidence.
@@ -37,13 +37,20 @@ render report; the scientific source and browser results are unchanged.
 
 ## Release Gate and Exact Evidence
 
-The changed route is temporarily deferred while this source/render commit is
-created. Before opening the PR, bind six corrected findings and the exact
-source/report/test/style hashes to this commit and restore reviewed status.
-Do not silently refresh previous review claims. Other route evidence remains
-unchanged. Then run the audit contracts, finish required validation and merge
-only after protected checks pass. Record the actual merge SHA and live gate
-in the final turnover. The route census does not establish full-corpus review.
+All six findings and eight evidence paths bind to source/render commit
+`d032cb0fd65c3674a0ba7c950c5e4b41962288b0`; every digest matches its committed
+bytes. The 240-route inventory has 237 reviewed and three exempt routes again;
+the full corpus is still unfinished. Local production and expanded keyboard/axe checks pass 4/4, with
+133 rendered expressions, 16 displays, no math errors and no document overflow.
+Mobile displays remain 17.78px and four wide equations scroll to their ends.
+Ruff, Black (720 files), mypy (91 files), titles (638), bibliography and links
+pass. Content lint passes 131 with four existing skips. The full Python run
+passes 5,422 with 29 skips, 132 deselections and 92.88% coverage; its three
+failures were the temporary route deferment and two root-hygiene checks on
+local scratch artifacts. These artifacts are preserved under
+`docs/development/technical-review/checkpoint-4436-local-artifacts/`.
+All 56 selected audit, root-hygiene and scientific checks now pass after
+binding and cleanup. Protected CI and publication remain pending. Do not equate local acceptance with a merged release.
 
 ## Stop Boundary
 

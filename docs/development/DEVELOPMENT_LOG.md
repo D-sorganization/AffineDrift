@@ -20,14 +20,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4436 · Force and Mobility Ellipsoids
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **PR:** Pending regular PR
 - **Issue:** #4436 (corpus #4021; epic #4009)
 - **Branch:** `fix/force-mobility-rigor`
 - **Paths:** `articles/force-mobility-matrices.qmd`, `articles/force-mobility-matrices-bibliography.md`, `css/force-mobility.css`, `tests/test_force_mobility_rigor.py`, `reports/technical-review/force-mobility-review.md`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (20 new mechanics/algorithm cases and two planar-scope checks pass; content lint 131 passed, four existing skips; all 638 source titles pass. Source and render evidence are being frozen before exact-commit binding.)
+- **Last verified:** 2026-09-23 (20 new mechanics/algorithm cases and two planar-scope checks pass; content lint 131 passed, four existing skips; all 638 source titles pass. Six findings and eight evidence paths bind to d032cb0f; original science 981e8d34. Production and expanded keyboard/axe pass 4/4 with 133 expressions; Ruff, Black, mypy, bibliography and links pass. Full run: 5,422 passed, 29 skipped, 132 deselected, 92.88% coverage; all 56 selected audit/root/scientific checks pass after binding and scratch cleanup.)
 - **Summary:** Reconciles rate/load metrics and power pairing, rank loss, dynamic authority, constrained impact, compliance and preload, grasp/constraint maps, and unsupported human interpretations. Corrects the rectangular SVD example and bibliography provenance. No empirical or physiological validation is claimed.
 - **Next step:** Finish only this release: bind evidence, pass protected checks, merge a regular PR, verify exact-main live publication, save turnover and pause. No next development task.
 
