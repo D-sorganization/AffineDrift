@@ -1,56 +1,54 @@
-# Active Paired Chapter 1 Review — #4450
+# Paired Chapter 1 Review in CI — #4450 / PR #4451
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
-- Branch: `fix/why-physics-rigor`; base main `bdf47374`; commit `SELF`.
-- Frozen source/render revision: `787fb5819204d637b2e5eeb5ad9b589fba07b389`; six findings bind twelve verified paths.
-- PR: not created. Issue #4450 is a native child of corpus #4021 under epic #4009.
-- Latest explicit active-goal instruction resumes the full corpus review. Never
-  create draft PRs. The previous Chapter 2 and contraction corrections and turnover
-  are merged (#4448, #4443, #4449); their frozen evidence/receipts remain historical.
-- Both complete Chapter 1 sources were reviewed and corrected. Separate force,
-  acceleration, power and work; define chosen-input drift and input mapping;
-  distinguish torque removal, constraint removal and muscle relaxation. Connect
-  feasible mechanics to finite-time delivery/impact without asserting skill or
-  metabolic conclusions from an acceleration ratio.
-- New reproducible SVG/PDF compares a retained unforced pendulum with a released
-  point mass. The example is manufactured, not measured golf anatomy. Independent
-  finite-difference energy and release checks accompany six worked answers.
-- RED: nine content regressions fail, three absent-generator setup errors, eight
-  independent checks pass. Initial GREEN: 55 focused cases pass. All ten physical
-  print pages 32–41 inspected in the 529-page book; final wording/numbering refinements
-  reread on pages 36, 40 and 41. Root HTML: 103/103 math expressions; final production
-  gate 4/4, no serious/critical axe issues; six mobile equations and diagram scroll
-  by keyboard. Ruff, Black and mypy pass. After immutable binding, all 47
-  mechanics/audit/deployment-boundary/hygiene checks pass; content lint 131 passed
-  with four existing skips. The final full suite is running.
-- Changed paths: paired `ch01_why_physics` sources, `main.pdf`, paired
-  `figures/why_physics_release` vectors, `scripts/build_why_physics_figure.py`,
-  `tests/test_why_physics_rigor.py`, figure census test and claim-audit inventory.
-  The completed route now binds the new immutable evidence; the old limited route
-  review is superseded. Final acceptance and publication remain pending.
-- Coordination: session `technical-review-20260923-why-physics`; lease 5804272169,
-  presence 5804272400, expiry 2026-09-24 00:51 UTC. Inbox complete, no conflicts;
+- Branch: `fix/why-physics-rigor`; base main `bdf47374`; current commit `SELF`.
+- Regular PR: [#4451](https://github.com/D-sorganization/AffineDrift/pull/4451), open.
+  Governing issue #4450 is a native child of corpus #4021 under epic #4009.
+- Frozen source/render revision: `787fb5819204d637b2e5eeb5ad9b589fba07b389`.
+  Six findings bind twelve paths, independently checked against committed bytes.
+  Binding commit: `966d3187785c2e9cb9c6f13af38f423236be1dc1`.
+- Both complete Chapter 1 editions now distinguish force, acceleration, work and
+  power; define the input baseline and actuator mapping; retain feasible constraint
+  reactions; separate drive-torque removal, attachment removal and muscle relaxation.
+  Connect these mechanics to finite-time delivery/impact without inferring skill,
+  metabolism or human anatomy from manufactured model results.
+- New reproducible SVG/PDF compares retained and released point-mass trajectories;
+  six worked answers and 22 independent mechanics/regression cases accompany it.
+  Figure output uses LF on Windows so Git preserves its frozen evidence bytes.
+- Final full Python suite: 5,538 passed, 29 skipped, 132 deselected; 92.9% src
+  coverage, 79.22% including scripts. All 47 focused audit/boundary/hygiene/mechanics
+  cases pass. Content lint: 131 passed/four existing skips. Jest: 25 suites,
+  420 passed/19 skipped. Ruff, Black, mypy (91 existing targets plus the new figure
+  script), title case, bibliography, display math, size/style and site-link gates pass.
+- Rebuilt 529-page PDF; physical Chapter 1 pages 32–41 inspected, final refinements
+  reread. Other chapters are not certified. Production browser gate 4/4 with zero
+  serious/critical axe issues. All 103 expressions render in both themes at desktop
+  and mobile sizes; six wide equations and the diagram support keyboard scrolling.
+- Reports: `reports/technical-review/why-physics-review.md` and
+  `reports/technical-review/why-physics-render-verification.json`. Preserve these
+  frozen reports during merge/live publication; use a separate publication receipt.
+- Initial broad-run failures were the temporary deferred route, changing PDF digests
+  during rendering and local browser captures at the root. Final bindings and
+  capture relocation fix all five without weakening tests. An initial push hook
+  also caught concurrent test-generated changes; the clean retry passed all hooks.
+  Test-only generated timestamps/format changes were verified and restored.
+- Corpus index marks both sources fully reviewed; 167 source entries still require
+  a full technical audit, plus whole-book reconciliation. The user explicitly resumed
+  the full active goal; never create drafts or report the corpus complete prematurely.
+- Coordination session: `technical-review-20260923-why-physics`; lease 5804272169,
+  presence 5804272400, expiry 2026-09-24 00:51 UTC. Inbox complete with no conflicts;
   seven historical identity warnings and two already-landed informational notices.
-- Full suite completed: 5,533 passed, 29 skipped, 132 deselected; five failures
-  were the deferred route, two stale audit/PDF digest checks while the render ran,
-  and two root-hygiene checks for this session's browser capture directory. Captures
-  are now under the development QA directory; 28 mechanics/hygiene checks pass.
-  All five affected gates now pass after immutable binding and cleanup. Thresholds
-  and assertions are unchanged; a final full run verifies the combined state.
-- SVG output now uses LF on Windows; a RED/GREEN test prevents Git newline
-  normalization from changing frozen evidence bytes. Figure geometry is unchanged.
-- Next: finish the final full suite; publish a regular protected PR, verify merged
-  bytes and live release. Corpus index records both editions reviewed; 167 entries
-  remain Full Technical Audit Pending, plus whole-book reconciliation.
-- Commands: `py -3.12 -X utf8 -m scripts.build_why_physics_figure
-  articles/The_Physics_of_Golf/figures`; `py -3.12 -X utf8 -m pytest
-  tests/test_why_physics_rigor.py tests/test_double_pendulum_chapter_rigor.py
-  tests/test_language_motion_rigor.py -q -o addopts=''`; `python -m
-  scripts.regenerate_claim_audit_evidence`. Print uses pdflatex/bibtex/makeindex/
-  two pdflatex passes; root render helper is under `docs/development/technical-review`.
-- Stage explicit paths only. Existing untracked captures and helpers are local QA.
-  Preserve peer handoffs/SPEC/log entries and all earlier frozen scientific reports.
-  Remaining corpus and whole-book work are not complete.
+- Next: push this final validation/PR handoff; arm auto-merge only through central
+  `scripts/automerge_guard.py`; verify checks on the final PR head, merge tree and
+  live deployment. Record publication/corpus/turnover through regular PRs. Then
+  continue long pending sources from remote main with a fresh ownership check.
+- Validation commands: `py -3.12 -X utf8 -m pytest --cov --cov-report=term:skip-covered`;
+  `py -3.12 -X utf8 -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120`;
+  `npx --no-install jest --runInBand`; `python -m scripts.regenerate_claim_audit_evidence --check`.
+  Browser and print recipes/results are in the frozen verification report.
+- Stage explicit paths only. Preserve peer handoff/log/SPEC records and old frozen
+  evidence. Existing untracked captures and helpers are local QA. Local HTTP server
+  session 70076 serves docs on port 8770; Playwright session is `why-physics`.
 
 ---
 

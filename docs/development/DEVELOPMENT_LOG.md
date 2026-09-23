@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4450 · Why Physics Matters
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4451
 - **Issue:** #4450 (corpus #4021; epic #4009)
 - **Branch:** `fix/why-physics-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch01_why_physics.tex`, `articles/The_Physics_of_Golf/quarto/ch01_why_physics.qmd`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/why_physics_release.svg`, `articles/The_Physics_of_Golf/figures/why_physics_release.pdf`, `scripts/build_why_physics_figure.py`, `tests/test_why_physics_rigor.py`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (SELF; 22 Chapter 1 cases pass; ten print pages reviewed with final refinements checked; production browser 4/4 and 103/103 math expressions, six keyboard-scrollable mobile displays and diagram. Full suite 5533 passed/29 skipped/132 deselected with five explained audit/hygiene failures pending final binding; hygiene is now clean.)
+- **Last verified:** 2026-09-23 (SELF; frozen source/render 787fb581 binds twelve paths and six findings. Full Python 5538 passed/29 skipped/132 deselected, 92.9% src coverage and 79.22% including scripts; 47 focused, content 131/four skips, Jest 420/19 skips. Ten print pages inspected; browser 4/4, 103/103 math expressions, accessible keyboard scrolling. All lint/type/content/evidence gates pass. Regular PR #4451 open; final CI/merge/live verification pending.)
 - **Summary:** Replaces unsupported force/energy and expertise claims with a defined input baseline, explicit constraints, checked manufactured work/release examples and six worked answers; connects mechanics to finite-time club delivery and impact.
-- **Next step:** Finish final print/web QA and repository gates, freeze and bind evidence, publish regular PR and verify main/live deployment.
+- **Next step:** Pass protected CI on the final head; verify merged bytes and live deployment, then publish separate receipt and turnover updates. Broader corpus remains active.
 
 ### DL-#4444 · Language of Motion
 
