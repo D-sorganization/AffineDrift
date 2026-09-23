@@ -6,7 +6,7 @@ protected PR, verify remote main and its live deployment, then pause the goal.
 Do not start another article, issue or rewrite. Never create draft PRs.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
-- Branch: `fix/force-mobility-rigor`; source/render checkpoint: `SELF`.
+- Branch: `fix/force-mobility-rigor`; source/render checkpoint: `SELF`; scientific source `981e8d34`.
 - Base: remote main `96c703c2da90e1b0b15ef803c6a7ce8d64461f28`.
 - Issue #4436 is a native child of #4021 under epic #4009. Historical route
   batch #4058 stays closed; the full review supersedes its limited evidence.
@@ -30,6 +30,10 @@ The new test module executes the actual published SVD example and checks
 independent mechanics. Twenty new numerical cases plus two existing planar
 scope cases pass. Four original algorithm failures were reproduced first.
 The page-local CSS keeps equations readable; no global stylesheet changes.
+
+The initial scientific commit is `981e8d346cbc8fec68588cd7a466826e8057e86f`.
+This checkpoint corrects local CRLF-versus-committed-LF hashes inside the
+render report; the scientific source and browser results are unchanged.
 
 ## Release Gate and Exact Evidence
 
