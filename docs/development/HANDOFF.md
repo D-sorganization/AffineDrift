@@ -5,7 +5,10 @@ regular protected PRs; never create drafts. Do not begin another rewrite before
 this work is merged and the turnover records are complete.
 
 - Worktree: C:/Users/diete/Repositories/AffineDrift-technical-review.
-- Branch: fix/language-motion-rigor. Issue #4444 is a child of #4021/#4009.
+- PR #4448 merged at 9d72e2c2124730a8642be45e837c9069b2484368.
+  Its tree 0456ddf11b27f3a38900a36eda328bd5b7488a85 matches checked head
+  8ccf6f664f63ff5c5fc6e2810e00209237e36809. Issue #4444 is closed.
+- Turnover branch: docs/language-motion-checkpoint; no new scientific work.
 - Source/render checkpoint: 0aa07cf70e074dfe6b3d6ee32767d0096418f734; six findings bind twelve verified evidence paths.
 - Corrected both complete Chapter 2 editions: coordinate signs, planar model,
   configuration/velocity/state dimensions, constraint rank and reactions,
@@ -18,24 +21,27 @@ this work is merged and the turnover records are complete.
   site link gate pass. Figure census: four TikZ, 32 print graphics, 33 web
   figures; three unpaired figures elsewhere remain outside this acceptance.
 - Root-site browser gate: 4/4; 89 expressions and 15 displays render. Eight
-  mobile displays scroll at 17.78px; desktop uses 18px. Full-suite validation
-  and protected publication remain pending after source binding. The first full
-  run had 5,510 passes and one evidence-boundary failure: a legacy figure helper
-  under deployment output was improperly bound. Bind the retained Chapter 3
-  mechanics tests instead; the frozen report retains the helper provenance.
-  No source, rendering or scientific evidence was changed by that correction.
-- PR #4443 merged at 6036629ea2ae3c50dea088543ccefa0ab360a37f at 20:32:28 UTC
-  September 23. Every required check passed. Merge and checked head d4e54612
-  have the same tree: 38b1f49db57f9c45d8e9e62017f0cd3f930d8293.
-  Deployment 35916642728 was superseded by main 35c36cd6 deployment
-  35919356461; live verification is pending. Source/render 65e74e9a is frozen.
+  mobile displays scroll at 17.78px; desktop uses 18px. Final local suite:
+  5,516 passed, 29 skipped, 132 deselected, 92.88% src coverage. CI: 5,468
+  passed, 32 skipped, 132 deselected, 92.85% coverage. The first full-run
+  evidence-boundary failure was corrected by binding retained Chapter 3 tests
+  instead of a helper under deployment output; source/render bytes stayed fixed.
+- Every required PR check passed. Browser retry: 134 tests, visual158/158 and
+  route240/240. Attempt 1 had an unchanged-homepage navigation timeout before
+  its heading assertion; that test passed three local runs and the CI retry.
+- Chapter 2 deployment35925227535 at main9d72e2c2 is pending live verification.
+- PR #4443 merged at6036629e. Deployment35919998778 at f9fe1b29 succeeded:
+  live960/960, all four article cases, zero serious/critical axe violations.
+  All ten frozen evidence paths match source/render65e74e9a. Separate receipt:
+  reports/technical-review/contraction-lay-publication.json. Earlier runs
+  35916642728 and35919356461 were superseded, not successful.
 - The #4441 lease/presence were released. Current #4444 session:
   technical-review-20260923-language-motion; lease renewed as 5802891697 through 23:03 UTC September 23.
 - Peer codex-deferred-affine-guard-20260923 owns disjoint #4445 work. Preserve
   both handoff, development-log and SPEC rows when syncing main; the board
   message was acknowledged.
-- Next: freeze/bind #4444 evidence, complete required checks and publish a
-  regular PR. Preserve #4441 live verification in the turnover stream.
+- Next: verify Chapter 2 deployment, commit its separate publication receipt,
+  merge the regular turnover PR, and stop at the checkpoint.
   Stage explicit paths; older untracked QA files are excluded.
 - The corpus and whole-book reconciliation remain incomplete.
 

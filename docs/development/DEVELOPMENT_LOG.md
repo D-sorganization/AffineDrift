@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4444 · Language of Motion
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4448
 - **Issue:** #4444 (corpus #4021; epic #4009)
 - **Branch:** `fix/language-motion-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch02_language_of_motion.tex`, `articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.qmd`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_language_motion_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `reports/technical-review/language-motion-review.md`, `reports/technical-review/language-motion-render-verification.json`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (source/render 0aa07cf7 binds six findings and twelve evidence paths: 12 expected red failures; 21 new and 58 combined mechanics/figure checks pass; 638 titles, Ruff and site gate pass; complete 527-page PDF rebuilt and ten Chapter 2 pages inspected; local browser 4/4 with 89 expressions and 15 displays. Full-suite and protected publication pending.)
+- **Last verified:** 2026-09-23 (PR4448 merged at9d72e2c2; checked head8ccf6f66 has the same tree0456ddf1. Every required check passed: CI5468 passes/32 skips, 92.85% coverage; local5516 passes/29 skips, 92.88% src coverage. Browser retry134 pass, visual158/158, routes240/240. Source/render0aa07cf7 and all twelve bound paths remain unchanged. Deployment35925227535 live verification pending.)
 - **Summary:** Reconciles coordinate signs, state closure, constraints, directional kinematics and worked examples with Chapter 3; replaces unsupported human interpretations with a checked synthetic trajectory and shared geometry.
-- **Next step:** Run the full required repository validation for this source revision.
+- **Next step:** Verify the merged chapter deployment, publish its receipt through the regular turnover PR, and stop at the checkpoint.
 
 ### DL-#4445 - Deferred Catalog Enforcement
 
@@ -53,9 +53,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/contraction-lay-rigor`
 - **Paths:** `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd`, `tests/test_contraction_lay_rigor.py`, `reports/technical-review/contraction-lay-review.md`, `reports/technical-review/contraction-lay-render-verification.json`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (PR #4443 merged at 6036629e with every required check green; tree matches checked head d4e54612. Live deployment verification remains pending. 5,490 full-run passes, 29 skips, 132 deselections; 92.88% src coverage / 79.19% including scripts. Source/render 65e74e9a binds six findings and ten paths. Nine expected red checks; 20 new cases and 56 focused cases pass; Ruff, Black, mypy, titles, content lint, bibliography and site gate pass. Production and expanded keyboard/axe pass 4/4; all 78 math containers and nine displays render. Two mobile displays scroll at reading size.)
+- **Last verified:** 2026-09-23 (PR4443 merged at6036629e; deployment35919998778 atf9fe1b29 succeeded with live960/960, four article cases and zero serious/critical axe findings. Artifact10777777652. All ten frozen paths match65e74e9a; reports/technical-review/contraction-lay-publication.json retains exact evidence. Cancelled original runs are explicitly superseded.)
 - **Summary:** Corrects stability/metric/Riccati interpretation, removes unsupported results, and connects feasible feedback and mechanical impedance to finite-time strike and event sensitivity. No comparative solver or human-performance claim.
-- **Next step:** Verify deployment 35916642728 and preserve its exact-revision live evidence.
+- **Next step:** None for the article. Preserve its publication receipt in the final turnover checkpoint.
 
 ### DL-#4438 · Deferred Impact Project Projection
 
