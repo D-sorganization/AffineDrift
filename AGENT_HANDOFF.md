@@ -35,7 +35,7 @@ Never create draft PRs. Previous pause records below are historical.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
 - Branch: `fix/contraction-lay-rigor`; base main `585f700b`.
-- Current source/render checkpoint: `SELF`; issue #4441, native child of #4021
+- Current source/render checkpoint: `65e74e9ac43d8cf93205cdddd238e1d02c7e7094`; issue #4441, native child of #4021
   under epic #4009. Historical route batch #4056 remains closed; its limited
   route acceptance does not certify all article content.
 - Complete lay article and corrected technical companion read. Corrected
@@ -57,8 +57,8 @@ Never create draft PRs. Previous pause records below are historical.
 
 ## Next Release Steps
 
-Commit this source/render checkpoint while its route review is explicitly
-transitional, then bind the review and six findings to that immutable commit.
+The review and all six findings now bind ten evidence paths to the immutable
+source/render checkpoint above. All committed hashes match the declared bytes.
 Run the full suite and protected CI, publish a regular PR, verify merged bytes
 and live deployment, and update the turnover/corpus records. Do not count the
 405-source corpus or whole-book consistency as complete from this one page.

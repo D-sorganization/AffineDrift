@@ -4,13 +4,12 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 236
-- Deferred: 1
+- Reviewed: 237
+- Deferred: 0
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
-- [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056): 1 routes
 
 ## Reviewed Evidence
 
@@ -54,6 +53,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
+| `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd` | 10 |
 | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.qmd` | 1 |
 | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html` | `articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.qmd` | 1 |
 | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html` | `articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.qmd` | 1 |
@@ -296,7 +296,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
 | `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 4 |
-| `ad-route-9d9393110de9` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | Deferred | [#4056](https://github.com/D-sorganization/AffineDrift/issues/4056) | None | None | 0 |
+| `ad-route-9d9393110de9` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html` | Reviewed | — | None | None | 6 |
 | `ad-route-fb32e03a3315` | `/articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-722f781e687e` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html` | Reviewed | — | None | None | 0 |
 | `ad-route-6b6f5d461ae3` | `/articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html` | Reviewed | — | None | None | 0 |
