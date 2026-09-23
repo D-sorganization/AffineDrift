@@ -1,4 +1,8 @@
-# Paired Chapter 1 Review in CI — #4450 / PR #4451
+# Paused Handoff Checkpoint — #4450 / PR #4451
+
+The user requested a committed PR handoff and an immediate stop after pushing
+this checkpoint. Do not start additional reviews or rewrites. The next agent
+should finish CI, merge and publication verification for the existing correction.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
 - Branch: `fix/why-physics-rigor`; base main `bdf47374`; current commit `SELF`.
@@ -35,11 +39,13 @@
   also caught concurrent test-generated changes; the clean retry passed all hooks.
   Test-only generated timestamps/format changes were verified and restored.
 - Corpus index marks both sources fully reviewed; 167 source entries still require
-  a full technical audit, plus whole-book reconciliation. The user explicitly resumed
-  the full active goal; never create drafts or report the corpus complete prematurely.
-- Coordination session: `technical-review-20260923-why-physics`; lease 5804272169,
-  presence 5804272400, expiry 2026-09-24 00:51 UTC. Inbox complete with no conflicts;
-  seven historical identity warnings and two already-landed informational notices.
+  a full technical audit, plus whole-book reconciliation. The broader goal is
+  paused at the user's request; never report the corpus complete prematurely.
+- Coordination session: `technical-review-20260923-why-physics`. Previous lease
+  5804272169 and presence 5804272400 expire 2026-09-24 00:51 UTC; release at
+  this handoff. A successor must check ownership and acquire a fresh lease.
+  Inbox was complete with no conflicts; seven historical identity warnings
+  and two already-landed informational notices remain nonblocking.
 - CI correction: static job 107425724858 required the conventional
   `GRAVITY_M_S2` name. The generator and independent tests now use that name
   with the same 9.81 value. Published source, figures and frozen render reports
@@ -47,17 +53,35 @@
   All 63 mechanics/figure/audit cases pass, as does the code-quality checker
   on all 754 tracked Python files. Every trajectory array and both regenerated
   vector files exactly match the frozen output.
-- Next: push this final validation/PR handoff; arm auto-merge only through central
-  `scripts/automerge_guard.py`; verify checks on the final PR head, merge tree and
-  live deployment. Record publication/corpus/turnover through regular PRs. Then
-  stop at the requested checkpoint; do not start another review or rewrite.
+- GitHub CI on `570252198f3361006944a25b6cf9066c57a181ce`:
+  CI Standard run 35934522768; static, JavaScript and website lint passed.
+  Python job 107428571259 passed: 5,490 tests, 32 skips, 132 deselections,
+  92.85% coverage; content lint 131 passed/four skips. E2E job 107428571258
+  was still rendering the full site at the last snapshot. No review comments
+  or requested changes were present. This handoff-only push creates a new CI
+  head: inspect PR #4451's actual head rather than reusing an older success.
+- Protected squash auto-merge is already armed through central
+  `scripts/automerge_guard.py`. Leave branch protection intact. The PR may merge
+  after this handoff; check current state before any further push.
+- Successor steps: verify final-head checks and reviews; allow protected merge;
+  fetch main and compare its tree to the checked head; verify all twelve evidence
+  paths against `95b5c738aaf9aded51530c1383da484ee9b1267f`. Follow the exact main
+  CI/deployment (or a verified descendant carrying those same bytes). Inspect
+  the live revision manifest and live-every-page artifact: 240 routes × four
+  viewport/theme cases, all four Chapter 1 results, zero serious/critical axe
+  violations. Do not count a cancelled deployment as successful publication.
+- Then create `reports/technical-review/why-physics-publication.json`, update
+  DL-#4450 to shipped and both corpus rows, and merge a regular documentation
+  PR. Preserve original source/render reports. No additional content work is
+  authorized at this checkpoint. Never create a draft PR.
 - Validation commands: `py -3.12 -X utf8 -m pytest --cov --cov-report=term:skip-covered`;
   `py -3.12 -X utf8 -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120`;
   `npx --no-install jest --runInBand`; `python -m scripts.regenerate_claim_audit_evidence --check`.
   Browser and print recipes/results are in the frozen verification report.
 - Stage explicit paths only. Preserve peer handoff/log/SPEC records and old frozen
-  evidence. Existing untracked captures and helpers are local QA. Local HTTP server
-  session 70076 serves docs on port 8770; Playwright session is `why-physics`.
+  evidence. Existing untracked captures, helpers and logs are local QA, not
+  unpublished product changes. The CI watcher and local preview are stopped
+  for handoff; restart the preview only if another validation requires it.
 
 ---
 
