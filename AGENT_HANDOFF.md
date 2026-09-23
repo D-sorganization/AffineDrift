@@ -35,6 +35,7 @@ Never create draft PRs. Previous pause records below are historical.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
 - Branch: `fix/contraction-lay-rigor`; base main `585f700b`.
+- Regular PR: #4443. Local validation complete; protected checks and publication pending.
 - Current source/render checkpoint: `65e74e9ac43d8cf93205cdddd238e1d02c7e7094`; issue #4441, native child of #4021
   under epic #4009. Historical route batch #4056 remains closed; its limited
   route acceptance does not certify all article content.

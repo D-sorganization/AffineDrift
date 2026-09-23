@@ -22,7 +22,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** Pending regular PR
+- **PR:** #4443
 - **Issue:** #4441 (corpus #4021; epic #4009)
 - **Branch:** `fix/contraction-lay-rigor`
 - **Paths:** `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd`, `tests/test_contraction_lay_rigor.py`, `reports/technical-review/contraction-lay-review.md`, `reports/technical-review/contraction-lay-render-verification.json`
