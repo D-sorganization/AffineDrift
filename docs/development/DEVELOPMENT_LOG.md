@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4444 · Language of Motion
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4448
 - **Issue:** #4444 (corpus #4021; epic #4009)
 - **Branch:** `fix/language-motion-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch02_language_of_motion.tex`, `articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.qmd`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_language_motion_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `reports/technical-review/language-motion-review.md`, `reports/technical-review/language-motion-render-verification.json`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (source/render 0aa07cf7 binds six findings and twelve evidence paths: 12 expected red failures; 21 new and 58 combined mechanics/figure checks pass; 638 titles, Ruff and site gate pass; complete 527-page PDF rebuilt and ten Chapter 2 pages inspected; local browser 4/4 with 89 expressions and 15 displays. Full-suite and protected publication pending.)
+- **Last verified:** 2026-09-23 (Local 5516 passed/29 skipped/132 deselected, 92.88% src coverage; CI 5468 passed/32 skipped/132 deselected, 92.85% coverage. PR #4448 merged at `9d72e2c2124730a8642be45e837c9069b2484368` with every required check green; its tree matches checked head `8ccf6f664f63ff5c5fc6e2810e00209237e36809`. Deployment 35925227535 succeeded: live 960/960, all four cases for each reviewed route, and zero serious/critical axe violations. Artifact 10779298519.)
 - **Summary:** Reconciles coordinate signs, state closure, constraints, directional kinematics and worked examples with Chapter 3; replaces unsupported human interpretations with a checked synthetic trajectory and shared geometry.
-- **Next step:** Run the full required repository validation for this source revision.
+- **Next step:** None for this correction. Merge the documentation-only turnover checkpoint; the broader corpus/whole-book review remains active under the latest explicit resume.
 
 ### DL-#4445 - Deferred Catalog Enforcement
 
@@ -53,9 +53,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/contraction-lay-rigor`
 - **Paths:** `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd`, `tests/test_contraction_lay_rigor.py`, `reports/technical-review/contraction-lay-review.md`, `reports/technical-review/contraction-lay-render-verification.json`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (PR #4443 merged at 6036629e with every required check green; tree matches checked head d4e54612. Live deployment verification remains pending. 5,490 full-run passes, 29 skips, 132 deselections; 92.88% src coverage / 79.19% including scripts. Source/render 65e74e9a binds six findings and ten paths. Nine expected red checks; 20 new cases and 56 focused cases pass; Ruff, Black, mypy, titles, content lint, bibliography and site gate pass. Production and expanded keyboard/axe pass 4/4; all 78 math containers and nine displays render. Two mobile displays scroll at reading size.)
+- **Last verified:** 2026-09-23 (Corrective PR4443 merged at6036629e; its ten frozen paths are unchanged. PR #4448 merged at `9d72e2c2124730a8642be45e837c9069b2484368` with every required check green; its tree matches checked head `8ccf6f664f63ff5c5fc6e2810e00209237e36809`. Deployment 35925227535 succeeded: live 960/960, all four cases for each reviewed route, and zero serious/critical axe violations. Artifact 10779298519.)
 - **Summary:** Corrects stability/metric/Riccati interpretation, removes unsupported results, and connects feasible feedback and mechanical impedance to finite-time strike and event sensitivity. No comparative solver or human-performance claim.
-- **Next step:** Verify deployment 35916642728 and preserve its exact-revision live evidence.
+- **Next step:** None for this correction. Merge the documentation-only turnover checkpoint; the broader corpus/whole-book review remains active under the latest explicit resume.
 
 ### DL-#4438 · Deferred Impact Project Projection
 

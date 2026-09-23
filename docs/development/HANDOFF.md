@@ -1,43 +1,48 @@
-# Active Technical Review — Language of Motion #4444
+# Completed Technical Review Checkpoint — #4444
 
-Finish the current Chapter 2 correction and publication checkpoints through
-regular protected PRs; never create drafts. Do not begin another rewrite before
-this work is merged and the turnover records are complete.
+This checkpoint completes the existing Chapter 2 correction and publication
+verification. No additional article or textbook rewrite was started. The broader
+corpus review remains incomplete: 169 source entries still require a full
+technical audit, plus the recorded whole-book reconciliation work.
 
-- Worktree: C:/Users/diete/Repositories/AffineDrift-technical-review.
-- Branch: fix/language-motion-rigor. Issue #4444 is a child of #4021/#4009.
-- Source/render checkpoint: 0aa07cf70e074dfe6b3d6ee32767d0096418f734; six findings bind twelve verified evidence paths.
-- Corrected both complete Chapter 2 editions: coordinate signs, planar model,
-  configuration/velocity/state dimensions, constraint rank and reactions,
-  reachability, endpoint kinematics, signed synthetic trajectory and six answers.
-- Reused Chapter 3's shared geometry, helper and parameters. No shared numerical
-  or CSS changes. The complete 527-page PDF is regenerated; Chapter 2 pages
-  41–50 inspected, with five changed pages reread after refinements.
-- Red baseline: 12 expected failures and nine passes. All 21 new cases and
-  58 combined mechanics/figure cases now pass. All 638 titles, Ruff and the
-  site link gate pass. Figure census: four TikZ, 32 print graphics, 33 web
-  figures; three unpaired figures elsewhere remain outside this acceptance.
-- Root-site browser gate: 4/4; 89 expressions and 15 displays render. Eight
-  mobile displays scroll at 17.78px; desktop uses 18px. Full-suite validation
-  and protected publication remain pending after source binding. The first full
-  run had 5,510 passes and one evidence-boundary failure: a legacy figure helper
-  under deployment output was improperly bound. Bind the retained Chapter 3
-  mechanics tests instead; the frozen report retains the helper provenance.
-  No source, rendering or scientific evidence was changed by that correction.
-- PR #4443 merged at 6036629ea2ae3c50dea088543ccefa0ab360a37f at 20:32:28 UTC
-  September 23. Every required check passed. Merge and checked head d4e54612
-  have the same tree: 38b1f49db57f9c45d8e9e62017f0cd3f930d8293.
-  Deployment 35916642728 was superseded by main 35c36cd6 deployment
-  35919356461; live verification is pending. Source/render 65e74e9a is frozen.
-- The #4441 lease/presence were released. Current #4444 session:
-  technical-review-20260923-language-motion; lease renewed as 5802891697 through 23:03 UTC September 23.
-- Peer codex-deferred-affine-guard-20260923 owns disjoint #4445 work. Preserve
-  both handoff, development-log and SPEC rows when syncing main; the board
-  message was acknowledged.
-- Next: freeze/bind #4444 evidence, complete required checks and publish a
-  regular PR. Preserve #4441 live verification in the turnover stream.
-  Stage explicit paths; older untracked QA files are excluded.
-- The corpus and whole-book reconciliation remain incomplete.
+- Regular correction PR: #4448; issue #4444 under #4021/#4009.
+- Frozen source/render revision: `0aa07cf70e074dfe6b3d6ee32767d0096418f734`.
+  Six findings bind twelve retained evidence paths. The legacy development
+  figure helper remains documented as provenance, while the deployed evidence
+  binding uses the retained Chapter 3 mechanics tests.
+- Corrected both full Chapter 2 editions: frames and angle signs, configuration
+  versus predictive state, constraint rank and reachability, directional endpoint
+  velocity/acceleration, synthetic examples and six worked answers. The 527-page
+  PDF was rebuilt; physical Chapter 2 pages 41–50 were inspected. Other chapters
+  were not certified by rebuilding the book.
+- Final local suite: 5,516 passed, 29 skipped, 132 deselected; 92.88% src coverage
+  and 79.19% including scripts. All 59 focused/boundary cases and 131 content-lint
+  cases pass (four existing content skips). Ruff, Black, mypy and repository
+  content/evidence gates pass. All book compilation jobs passed in CI.
+- Local browser gate: 4/4; 89 expressions and 15 displays render. Eight wide
+  mobile equations, the table, diagram and code support keyboard scrolling at
+  reading size. Frozen scientific/render reports were preserved through release.
+- CI attempt 1 had one homepage navigation timeout before its assertion and
+  133 browser passes. The unchanged heading test passed three local runs;
+  the protected retry passed all 134 Chromium tests, visual158/158 and
+  route240/240. No timeout or assertion was weakened.
+- PR #4448 merged at `9d72e2c2124730a8642be45e837c9069b2484368` with every required check green; its tree matches checked head `8ccf6f664f63ff5c5fc6e2810e00209237e36809`. Deployment 35925227535 succeeded: live 960/960, all four cases for each reviewed route, and zero serious/critical axe violations. Artifact 10779298519.
+- PR #4443 corrected the complete contraction lay article. Its frozen revision
+  `65e74e9ac43d8cf93205cdddd238e1d02c7e7094` and ten evidence paths remain
+  unchanged. Its separate publication receipt records verified carry-forward
+  after superseded deployments; cancellation is not reported as success.
+- Publication receipts: `reports/technical-review/language-motion-publication.json`
+  and `reports/technical-review/contraction-lay-publication.json`.
+- Independent #4445/#4446 and #4447 changes, handoff sections and SPEC rows are
+  preserved. Do not treat other agents' work or historical records as this
+  checkpoint's remaining development scope.
+- This release does not complete the broader corpus/epic. The latest explicit
+  instruction resumes the full goal. Merge the regular turnover PR first;
+  subsequent review starts from remote main, checks live ownership, prioritizes
+  long pending sources, and uses the corpus index and frozen reports.
+  Never create draft PRs. Earlier pause records are historical.
+- Older untracked browser captures, rendered previews and analysis scratch files
+  are local QA, not unpublished source changes. Stage explicit paths only.
 
 ---
 
