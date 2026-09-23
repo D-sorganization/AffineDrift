@@ -28,12 +28,13 @@
 
 # Active Technical Review — Language of Motion #4444
 
-The user resumed the broad review. Continue long-form reviews and regular
-protected PRs; never create drafts. Historical pause records below are superseded.
+Finish the current Chapter 2 correction and publication checkpoints through
+regular protected PRs; never create drafts. Do not begin another rewrite before
+this work is merged and the turnover records are complete.
 
 - Worktree: C:/Users/diete/Repositories/AffineDrift-technical-review.
 - Branch: fix/language-motion-rigor. Issue #4444 is a child of #4021/#4009.
-- Source/render checkpoint: SELF; route temporarily deferred until rebinding.
+- Source/render checkpoint: 0aa07cf70e074dfe6b3d6ee32767d0096418f734; six findings bind twelve verified evidence paths.
 - Corrected both complete Chapter 2 editions: coordinate signs, planar model,
   configuration/velocity/state dimensions, constraint rank and reactions,
   reachability, endpoint kinematics, signed synthetic trajectory and six answers.
@@ -46,14 +47,18 @@ protected PRs; never create drafts. Historical pause records below are supersede
   figures; three unpaired figures elsewhere remain outside this acceptance.
 - Root-site browser gate: 4/4; 89 expressions and 15 displays render. Eight
   mobile displays scroll at 17.78px; desktop uses 18px. Full-suite validation
-  and protected publication remain pending after source binding.
+  and protected publication remain pending after source binding. The first full
+  run had 5,510 passes and one evidence-boundary failure: a legacy figure helper
+  under deployment output was improperly bound. Bind the retained Chapter 3
+  mechanics tests instead; the frozen report retains the helper provenance.
+  No source, rendering or scientific evidence was changed by that correction.
 - PR #4443 merged at 6036629ea2ae3c50dea088543ccefa0ab360a37f at 20:32:28 UTC
   September 23. Every required check passed. Merge and checked head d4e54612
   have the same tree: 38b1f49db57f9c45d8e9e62017f0cd3f930d8293.
-  Deployment 35916642728 verification is pending; source/render 65e74e9a is frozen.
+  Deployment 35916642728 was superseded by main 35c36cd6 deployment
+  35919356461; live verification is pending. Source/render 65e74e9a is frozen.
 - The #4441 lease/presence were released. Current #4444 session:
-  technical-review-20260923-language-motion; lease 5802216447 and presence
-  5802216769 expire approximately 22:15 UTC September 23.
+  technical-review-20260923-language-motion; lease renewed as 5802891697 through 23:03 UTC September 23.
 - Peer codex-deferred-affine-guard-20260923 owns disjoint #4445 work. Preserve
   both handoff, development-log and SPEC rows when syncing main; the board
   message was acknowledged.

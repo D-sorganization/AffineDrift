@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/language-motion-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch02_language_of_motion.tex`, `articles/The_Physics_of_Golf/quarto/ch02_language_of_motion.qmd`, `articles/The_Physics_of_Golf/main.pdf`, `tests/test_language_motion_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `reports/technical-review/language-motion-review.md`, `reports/technical-review/language-motion-render-verification.json`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (base 8a18696a plus working-tree correction: 12 expected red failures; 21 new and 58 combined mechanics/figure checks pass; 638 titles, Ruff and site gate pass; complete 527-page PDF rebuilt and ten Chapter 2 pages inspected; local browser 4/4 with 89 expressions and 15 displays. Full-suite and protected publication pending.)
+- **Last verified:** 2026-09-23 (source/render 0aa07cf7 binds six findings and twelve evidence paths: 12 expected red failures; 21 new and 58 combined mechanics/figure checks pass; 638 titles, Ruff and site gate pass; complete 527-page PDF rebuilt and ten Chapter 2 pages inspected; local browser 4/4 with 89 expressions and 15 displays. Full-suite and protected publication pending.)
 - **Summary:** Reconciles coordinate signs, state closure, constraints, directional kinematics and worked examples with Chapter 3; replaces unsupported human interpretations with a checked synthetic trajectory and shared geometry.
-- **Next step:** Commit and bind the final source/render evidence to an immutable revision.
+- **Next step:** Run the full required repository validation for this source revision.
 
 ### DL-#4441 · Contraction Lay Article
 
