@@ -34,16 +34,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4436 · Force and Mobility Ellipsoids
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** Pending regular PR
+- **PR:** #4437
 - **Issue:** #4436 (corpus #4021; epic #4009)
 - **Branch:** `fix/force-mobility-rigor`
 - **Paths:** `articles/force-mobility-matrices.qmd`, `articles/force-mobility-matrices-bibliography.md`, `css/force-mobility.css`, `tests/test_force_mobility_rigor.py`, `reports/technical-review/force-mobility-review.md`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (20 new mechanics/algorithm cases and two planar-scope checks pass; content lint 131 passed, four existing skips; all 638 source titles pass. Six findings and eight evidence paths bind to d032cb0f; original science 981e8d34. Production and expanded keyboard/axe pass 4/4 with 133 expressions; Ruff, Black, mypy, bibliography and links pass. Full run: 5,422 passed, 29 skipped, 132 deselected, 92.88% coverage; all 56 selected audit/root/scientific checks pass after binding and scratch cleanup.)
+- **Last verified:** 2026-09-23 (PR #4437 passed every required check and merged at 7664a390, whose tree exactly matches checked head cacba18b. CI: 5,422 passed, 32 skipped, 132 deselected, 92.85% coverage; content 131 passed/four skips. All 56 selected local checks pass. Source/render d032cb0f binds six findings and eight paths; original science 981e8d34. Local production and expanded keyboard/axe pass 4/4 with 133 expressions and 16 displays. Deployment 35900025138 at c169bbd9 succeeded with live 960/960, including four article cases and zero serious/critical axe violations; artifact 10769877887. Independent planning PR #4439 superseded run 35898481011 without changing scientific/evidence bytes. Publication receipt: reports/technical-review/force-mobility-publication.json.)
 - **Summary:** Reconciles rate/load metrics and power pairing, rank loss, dynamic authority, constrained impact, compliance and preload, grasp/constraint maps, and unsupported human interpretations. Corrects the rectangular SVD example and bibliography provenance. No empirical or physiological validation is claimed.
-- **Next step:** Finish only this release: bind evidence, pass protected checks, merge a regular PR, verify exact-main live publication, save turnover and pause. No next development task.
+- **Next step:** None for this scientific release. Merge the documentation-only checkpoint, release this session and pause the broader goal at the user's request. No new tasks or rewrites.
 
 ### DL-#4431 · Nonlinear Control Insights and Physical Coupling
 

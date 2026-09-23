@@ -1,68 +1,93 @@
-# Final Force–Mobility Release Checkpoint — #4436
+# Paused Technical Review Checkpoint — #4437
 
-The user requested a stopping checkpoint on September 23. Finish only the
-force–mobility correction already in progress, publish through a regular
-protected PR, verify remote main and its live deployment, then pause the goal.
-Do not start another article, issue or rewrite. Never create draft PRs.
+The user requested a stopping checkpoint. All current scientific changes are
+merged on remote main and verified live. Merge this final documentation-only
+closeout through a regular PR, then pause. No new article, issue or rewrite is
+authorized until the user explicitly resumes. Never create draft PRs.
 
+- Scientific release: regular PR #4437, merged September 23 at 17:51:25 UTC.
+- Remote-main source: `7664a39026811e19d23abd72b9b5638ebe88996b`.
+- Checked PR head: `cacba18b677457c4460234894e702fa1646dbe3a`.
+- Their trees match exactly: `c97e2382aa6043c0985c7eb337e871b4a3ef70fc`.
+- Deployment `35898481011` was superseded by the independent project-docs
+  merge #4439. Current publication run `35900025138` targets main
+  `c169bbd93a262d0bb48cf3024977f6869a559c28`, which retains every scientific
+  source and frozen evidence byte. It succeeded with live 960/960, including
+  all four article cases and zero serious/critical axe violations.
+- Closeout branch: `docs/force-mobility-pause-checkpoint`; commit `SELF`.
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
-- Branch: `fix/force-mobility-rigor`; source/render checkpoint: `d032cb0fd65c3674a0ba7c950c5e4b41962288b0`; scientific source `981e8d34`. Turnover: `SELF`.
-- Base: remote main `96c703c2da90e1b0b15ef803c6a7ce8d64461f28`.
-- Issue #4436 is a native child of #4021 under epic #4009. Historical route
-  batch #4058 stays closed; the full review supersedes its limited evidence.
-- Session: `technical-review-20260923-mobility`; lease receipt `5798813017`,
-  presence `5798813259`, both expire September 23 at approximately 18:42 UTC.
-- The inbox reported no conflicts, one historical broadcast and six rejected
-  identity warnings. Its warning state does not establish absence of peers.
 
-## Completed Scientific Work
+Publication receipt: `reports/technical-review/force-mobility-publication.json`.
+Live artifact `10769877887` retains the complete gate summary, four article
+cases and its GitHub SHA-256 digest. The live manifest was independently
+confirmed at `c169bbd9`. One transient response recovered under the standard
+retry policy; no retries were exhausted.
 
-Complete source, companion bibliography, algorithm, critics and lay summaries
-are reconciled. Six finding groups distinguish matched power coordinates,
-weighted budget duality, singular limits, dynamics/compliance, constraints and
-human interpretation, and SVD/source provenance. Numerical checks demonstrate
-where kinematic leverage, acceleration and stiffness differ. No physical or
-human validation is claimed. The missing legacy TeX source is not regenerated.
+## Completed Correction and Evidence
 
-The source report is `reports/technical-review/force-mobility-review.md`.
-The browser report is `reports/technical-review/force-mobility-render-verification.json`.
-The new test module executes the actual published SVD example and checks
-independent mechanics. Twenty new numerical cases plus two existing planar
-scope cases pass. Four original algorithm failures were reproduced first.
-The page-local CSS keeps equations readable; no global stylesheet changes.
+Issue #4436 is closed by PR #4437. The complete article and bibliography now
+separate rate/load metrics, conditional reciprocity, singular geometry,
+constrained dynamics, impact and compliance. Independent counterexamples
+connect these quantities without asserting unmeasured human capacities.
+The rectangular SVD is corrected, mobile math remains readable, and the
+corrected lay and critics' text uses visible native disclosures.
 
-The initial scientific commit is `981e8d346cbc8fec68588cd7a466826e8057e86f`.
-This checkpoint corrects local CRLF-versus-committed-LF hashes inside the
-render report; the scientific source and browser results are unchanged.
+Six findings and eight evidence paths bind to exact source/render commit
+`d032cb0fd65c3674a0ba7c950c5e4b41962288b0`. Initial science is `981e8d34`;
+the later source checkpoint corrects CRLF/LF hashes inside the render record.
+Do not refresh these frozen records during this documentation-only closeout.
+The technical review and browser reports are under `reports/technical-review/`.
 
-## Release Gate and Exact Evidence
+## Validation
 
-All six findings and eight evidence paths bind to source/render commit
-`d032cb0fd65c3674a0ba7c950c5e4b41962288b0`; every digest matches its committed
-bytes. The 240-route inventory has 237 reviewed and three exempt routes again;
-the full corpus is still unfinished. Local production and expanded keyboard/axe checks pass 4/4, with
-133 rendered expressions, 16 displays, no math errors and no document overflow.
-Mobile displays remain 17.78px and four wide equations scroll to their ends.
-Ruff, Black (720 files), mypy (91 files), titles (638), bibliography and links
-pass. Content lint passes 131 with four existing skips. The full Python run
-passes 5,422 with 29 skips, 132 deselections and 92.88% coverage; its three
-failures were the temporary route deferment and two root-hygiene checks on
-local scratch artifacts. These artifacts are preserved under
+All required PR checks passed, including full-site browser/accessibility,
+Python, JavaScript, links, static checks and the aggregate quality gate.
+CI Python: 5,422 passed, 32 skipped, 132 deselected, 92.85% coverage.
+Content lint: 131 passed, four existing skips. All 56 local audit/root/scientific
+checks pass after resolving the temporary audit deferral and scratch hygiene.
+Twenty new mechanics/algorithm cases and two planar-scope checks pass.
+Local production and expanded keyboard/axe each pass four device/theme cases;
+all 133 expressions render, 16 displays were inspected, and four wide mobile
+equations scroll at 17.78px without document overflow.
+
+The advisory benchmark workflow reported no executed benchmarks because its
+environment lacked the timeout plugin; its job nevertheless returned success.
+No performance result is claimed. This unrelated tooling limitation was not
+expanded into a new task or workflow change during the requested closeout.
+
+## Stop Boundary and Remaining Scope
+
+The broader review is paused after this release, not complete. The 405-source
+index has 172 entries still marked Full Technical Audit Pending, plus a
+whole-book consistency pass. The 240-route inventory (237 reviewed, three
+exempt) is a coverage census, not full-corpus technical acceptance. Historical
+provenance follow-up #4429 stays open and outside today's work.
+
+No next development task is assigned. At a future explicit resume, read the
+corpus index, epic #4009 and the relevant child issue before selecting work.
+Preserve the distinction between model identities, illustrative calculations
+and empirical evidence.
+
+## Coordination and Workspace
+
+Session `technical-review-20260923-mobility` owns the release closeout.
+Its original issue lease is receipt `5798813017` (expires 18:42 UTC);
+closeout presence `5800030166` expires 19:52 UTC. Release both at the final pause.
+The inbox reported no conflicts and six rejected identity warnings. The other
+active project-planning session was informed at receipt `5800266364` that this
+release is closing out. Its #4438 handoff and development-log entries are
+preserved exactly; its planning work is independent of this paused review.
+
+Local scratch files were preserved under
 `docs/development/technical-review/checkpoint-4436-local-artifacts/`.
-All 56 selected audit, root-hygiene and scientific checks now pass after
-binding and cleanup. Protected CI and publication remain pending. Do not equate local acceptance with a merged release.
+Stage explicit paths; many older untracked QA artifacts remain. The final diff
+must contain only turnover/log/index records and the publication receipt.
+For GitHub auth, use the documented Codex App bootstrap. If its cached token
+fails, the same setup helper with `-SkipGhLogin` refreshes it; suppress setup
+output and never expose credential values or switch identities.
 
-## Stop Boundary
-
-The broader 405-source program is unfinished. The corpus index and historical
-reports retain the unreviewed work; #4429 remains outside this release. No next
-task is assigned. At the completed release, save the publication receipt,
-release this session's lease/presence and pause the goal at the user's request.
-Further scientific work requires an explicit resume.
-
-Stage explicit paths; many untracked local QA artifacts predate this release.
-GitHub operations use the documented Codex App bootstrap; never print tokens
-or substitute a human identity. Do not push directly to main.
+A routine deployment triggered by the final documentation-only merge does not
+require another receipt commit or a restart of development.
 
 # Previous Checkpoints
 
