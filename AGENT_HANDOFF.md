@@ -1,3 +1,55 @@
+# Active Paired Chapter 1 Review — #4450
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/why-physics-rigor`; base main `bdf47374`; commit `SELF`.
+- PR: not created. Issue #4450 is a native child of corpus #4021 under epic #4009.
+- Latest explicit active-goal instruction resumes the full corpus review. Never
+  create draft PRs. The previous Chapter 2 and contraction corrections and turnover
+  are merged (#4448, #4443, #4449); their frozen evidence/receipts remain historical.
+- Both complete Chapter 1 sources were reviewed and corrected. Separate force,
+  acceleration, power and work; define chosen-input drift and input mapping;
+  distinguish torque removal, constraint removal and muscle relaxation. Connect
+  feasible mechanics to finite-time delivery/impact without asserting skill or
+  metabolic conclusions from an acceleration ratio.
+- New reproducible SVG/PDF compares a retained unforced pendulum with a released
+  point mass. The example is manufactured, not measured golf anatomy. Independent
+  finite-difference energy and release checks accompany six worked answers.
+- RED: nine content regressions fail, three absent-generator setup errors, eight
+  independent checks pass. Initial GREEN: 55 focused cases pass. All ten physical
+  print pages 32–41 inspected in the 529-page book; final wording/numbering refinements
+  reread on pages 36, 40 and 41. Root HTML: 103/103 math expressions; final production
+  gate 4/4, no serious/critical axe issues; six mobile equations and diagram scroll
+  by keyboard. Ruff, Black and mypy pass. Full-suite evidence gates currently detect
+  the intentionally deferred route; freeze/bind it before the final acceptance run.
+- Changed paths: paired `ch01_why_physics` sources, `main.pdf`, paired
+  `figures/why_physics_release` vectors, `scripts/build_why_physics_figure.py`,
+  `tests/test_why_physics_rigor.py`, figure census test and claim-audit inventory.
+  The route is temporarily deferred under historical batch #4054 while #4450 is
+  finalized; no changed content is falsely certified by its old route review.
+- Coordination: session `technical-review-20260923-why-physics`; lease 5804272169,
+  presence 5804272400, expiry 2026-09-24 00:51 UTC. Inbox complete, no conflicts;
+  seven historical identity warnings and two already-landed informational notices.
+- Full suite completed: 5,533 passed, 29 skipped, 132 deselected; five failures
+  were the deferred route, two stale audit/PDF digest checks while the render ran,
+  and two root-hygiene checks for this session's browser capture directory. Captures
+  are now under the development QA directory; 28 mechanics/hygiene checks pass.
+  Preserve thresholds and rerun the audit checks after immutable review binding.
+- SVG output now uses LF on Windows; a RED/GREEN test prevents Git newline
+  normalization from changing frozen evidence bytes. Figure geometry is unchanged.
+- Next: finish the full-suite run; freeze these source/render reports; bind findings to that immutable commit; update
+  corpus index; publish a regular protected PR, verify merged bytes and live release.
+- Commands: `py -3.12 -X utf8 -m scripts.build_why_physics_figure
+articles/The_Physics_of_Golf/figures`; `py -3.12 -X utf8 -m pytest
+tests/test_why_physics_rigor.py tests/test_double_pendulum_chapter_rigor.py
+tests/test_language_motion_rigor.py -q -o addopts=''`; `python -m
+scripts.regenerate_claim_audit_evidence`. Print uses pdflatex/bibtex/makeindex/
+  two pdflatex passes; root render helper is under `docs/development/technical-review`.
+- Stage explicit paths only. Existing untracked captures and helpers are local QA.
+  Preserve peer handoffs/SPEC/log entries and all earlier frozen scientific reports.
+  Remaining corpus and whole-book work are not complete.
+
+---
+
 # Deferred Catalog Enforcement - #4445
 
 - Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-deferred-guard`.

@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4450 · Why Physics Matters
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4450 (corpus #4021; epic #4009)
+- **Branch:** `fix/why-physics-rigor`
+- **Paths:** `articles/The_Physics_of_Golf/chapters/ch01_why_physics.tex`, `articles/The_Physics_of_Golf/quarto/ch01_why_physics.qmd`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/why_physics_release.svg`, `articles/The_Physics_of_Golf/figures/why_physics_release.pdf`, `scripts/build_why_physics_figure.py`, `tests/test_why_physics_rigor.py`
+- **Started:** 2026-09-23
+- **Last verified:** 2026-09-23 (SELF; 22 Chapter 1 cases pass; ten print pages reviewed with final refinements checked; production browser 4/4 and 103/103 math expressions, six keyboard-scrollable mobile displays and diagram. Full suite 5533 passed/29 skipped/132 deselected with five explained audit/hygiene failures pending final binding; hygiene is now clean.)
+- **Summary:** Replaces unsupported force/energy and expertise claims with a defined input baseline, explicit constraints, checked manufactured work/release examples and six worked answers; connects mechanics to finite-time club delivery and impact.
+- **Next step:** Finish final print/web QA and repository gates, freeze and bind evidence, publish regular PR and verify main/live deployment.
+
 ### DL-#4444 · Language of Motion
 
 - **State:** shipped
