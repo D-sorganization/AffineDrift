@@ -33,8 +33,14 @@ its main/live deployment before merging the manifesto successor. IAA4426 is
 shipped with live960/960. Active entries DL-#4428 and DL-#4427. Goal remains active.
 The central development-log validator reports pre-existing WIP/older-record
 metadata defects; this new entry explicitly records PR-not-created and base SHA.
-Do not claim that whole-log validation passes. Disk space is low; preserve
-source/receipts and stage only explicit task paths.
+Do not claim that whole-log validation passes. Disk space reached zero. Removed768 untracked duplicate section PNGs from
+older dof-urdf, nonlinearity, contraction, articulated-body and machine-learning
+web QA after verifying committed review reports and untracked status. No source,
+PDF, equation image, JSON receipt or tracked file was removed; about95MiB freed.
+Stage explicit task paths only. The next long-article candidate is #4431 under
+#4058: complete nonlinear-control-insights reread found an indefinite inertia
+example, degree/radian errors and unsupported energy/physiology/control claims.
+The issue records the findings; implementation has not started.
 
 # Current Technical Review Checkpoint — #4427
 

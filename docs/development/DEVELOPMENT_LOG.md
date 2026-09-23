@@ -55,7 +55,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-22
 - **Last verified:** 2026-09-22 (SELF; PR4426 merged as99aa5835; deployment35796355561 succeeded with live artifact10725510305,960/960 and four chapter cases pass; CI gravity constant naming corrected without numerical change; all eight full textbook builds and Python3.12 CI pass; complete paired rewrite; 20 numerical checks and 14 attribution contracts pass; 128 matching body expressions; all ten print pages and 18 desktop displays inspected; four production browser cases pass, 139 rendered expressions per case and 11 complete mobile scroll endpoints)
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
-- **Next step:** Preserve the frozen scientific evidence and publication receipt at main99aa5835.
+- **Next step:** Preserve the frozen scientific evidence and publication receipt at main 99aa5835.
 
 ### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
