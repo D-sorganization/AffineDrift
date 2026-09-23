@@ -290,11 +290,12 @@ class TestAuditBookPhysicsOfGolf:
         # #4349 pairs a computed reduced drift field and proved optimal-control examples.
         # #4351 replaces the dimensionally incorrect hinge sketch with verified trajectories.
         # #4369 replaces the muscle sketch with a shared feasibility/power figure.
-        assert res.total_latex_tikz == 5
-        assert res.total_latex_includegraphics == 31
+        # #4444 replaces Chapter 2's incorrect angle arcs with the shared verified geometry.
+        assert res.total_latex_tikz == 4
+        assert res.total_latex_includegraphics == 32
         assert res.total_latex_fig_labels == 36
-        assert res.total_quarto_figures == 32
-        assert res.missing_figures_count == 4
+        assert res.total_quarto_figures == 33
+        assert res.missing_figures_count == 3
         assert res.is_in_full_parity is False
         muscle = next(
             chapter

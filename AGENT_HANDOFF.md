@@ -81,6 +81,49 @@ tests/test_spec_changelog.py -q -o addopts=''`; root Ruff/Black and the exact
 
 ---
 
+# Active Technical Review — Language of Motion #4444
+
+Finish the current Chapter 2 correction and publication checkpoints through
+regular protected PRs; never create drafts. Do not begin another rewrite before
+this work is merged and the turnover records are complete.
+
+- Worktree: C:/Users/diete/Repositories/AffineDrift-technical-review.
+- Branch: fix/language-motion-rigor. Issue #4444 is a child of #4021/#4009.
+- Source/render checkpoint: 0aa07cf70e074dfe6b3d6ee32767d0096418f734; six findings bind twelve verified evidence paths.
+- Corrected both complete Chapter 2 editions: coordinate signs, planar model,
+  configuration/velocity/state dimensions, constraint rank and reactions,
+  reachability, endpoint kinematics, signed synthetic trajectory and six answers.
+- Reused Chapter 3's shared geometry, helper and parameters. No shared numerical
+  or CSS changes. The complete 527-page PDF is regenerated; Chapter 2 pages
+  41–50 inspected, with five changed pages reread after refinements.
+- Red baseline: 12 expected failures and nine passes. All 21 new cases and
+  58 combined mechanics/figure cases now pass. All 638 titles, Ruff and the
+  site link gate pass. Figure census: four TikZ, 32 print graphics, 33 web
+  figures; three unpaired figures elsewhere remain outside this acceptance.
+- Root-site browser gate: 4/4; 89 expressions and 15 displays render. Eight
+  mobile displays scroll at 17.78px; desktop uses 18px. Full-suite validation
+  and protected publication remain pending after source binding. The first full
+  run had 5,510 passes and one evidence-boundary failure: a legacy figure helper
+  under deployment output was improperly bound. Bind the retained Chapter 3
+  mechanics tests instead; the frozen report retains the helper provenance.
+  No source, rendering or scientific evidence was changed by that correction.
+- PR #4443 merged at 6036629ea2ae3c50dea088543ccefa0ab360a37f at 20:32:28 UTC
+  September 23. Every required check passed. Merge and checked head d4e54612
+  have the same tree: 38b1f49db57f9c45d8e9e62017f0cd3f930d8293.
+  Deployment 35916642728 was superseded by main 35c36cd6 deployment
+  35919356461; live verification is pending. Source/render 65e74e9a is frozen.
+- The #4441 lease/presence were released. Current #4444 session:
+  technical-review-20260923-language-motion; lease renewed as 5802891697 through 23:03 UTC September 23.
+- Peer codex-deferred-affine-guard-20260923 owns disjoint #4445 work. Preserve
+  both handoff, development-log and SPEC rows when syncing main; the board
+  message was acknowledged.
+- Next: freeze/bind #4444 evidence, complete required checks and publish a
+  regular PR. Preserve #4441 live verification in the turnover stream.
+  Stage explicit paths; older untracked QA files are excluded.
+- The corpus and whole-book reconciliation remain incomplete.
+
+---
+
 # Resumed Technical Review — Contraction Lay Article #4441
 
 The user explicitly resumed the broader review after the published #4437 and
@@ -90,7 +133,7 @@ Never create draft PRs. Previous pause records below are historical.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
 - Branch: `fix/contraction-lay-rigor`; base main `585f700b`.
-- Regular PR: #4443. Local validation complete; protected checks and publication pending.
+- Regular PR: #4443 merged at 6036629e; protected checks passed. Live deployment 35916642728 verification is pending.
 - Current source/render checkpoint: `65e74e9ac43d8cf93205cdddd238e1d02c7e7094`; issue #4441, native child of #4021
   under epic #4009. Historical route batch #4056 remains closed; its limited
   route acceptance does not certify all article content.
