@@ -1,55 +1,54 @@
 # Current Technical Review Checkpoint — #4428
 
-Latest release status: PR4430 head86ac900f passes all eight textbook builds,
-static checks and the complete Python CI job. Only e2e-tests remains in progress
-(site build stage); protected auto-merge stays enabled. No check was bypassed.
-The manifesto branch is pushed; PR not created yet. After4430 merges, fetch
-main, verify its tree against86ac900f, merge normally, open the regular manifesto
-PR, and wait for4430 live publication before enabling the successor merge.
-The broader goal remains active; #4431 is recorded for the next long article
-and has not been claimed or implemented.
-
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
-`fix/manifesto-notation-units`; commit `SELF`; PR not created. Issue4428 is a
-native child of4063 under4021/4009. Lease receipt5786396346 expires01:49UTC Sep23.
-Base includes PR4430 figure/glossary CI corrections through86ac900f. Complete index
-reread and source correction are saved with review/render reports. The source
-distinguishes Bu, inverse-inertia acceleration and full-state Gu, retained
-flexible coordinates, state ordering, input-affinity and memory/contact rules.
-Part5 now describes the actual numerical verification protocol; Part4 matches
-its current beam/pendulum scope. Eleven expressions render in four browser
-cases; production4/4, title638 and internal links pass. The page-local CSS
-restores reading-size display math in raw HTML. No model or solver changed.
+`fix/manifesto-notation-units`; commit `SELF`; regular PR #4432:
+https://github.com/D-sorganization/AffineDrift/pull/4432.
+The focused dependent PR currently targets `fix/zero-torque-counterfactual-rigor`.
+After PR4430 merges, fetch main, verify the predecessor tree against86ac900f,
+merge main normally and retarget4432 to main. Do not merge4432 into the topic
+branch. Its auto-merge is not enabled; wait for4430 live publication before
+allowing the successor merge. Never create draft PRs.
 
-Source/render frozen at2250d07f; five manifesto findings (three new, two
-rechecked) bind exactly to it. Aggregate review binds to31664586; all13 route
-review evidence maps match committed bytes exactly. Twelve unchanged route
-reviews are carried forward only for the shared audit/report update. Next run
-audit tests, normally integrate merged predecessor main, and open
-a regular PR after normal main integration. Do not re-review unrelated pages
-implicitly; #4429 preserves their historical provenance discrepancies.
-Final revision binding is saved; the site-audit schema requires parent4063
-issue URLs on findings, with child4428 recorded in their rationale. The CSS
-is bound in the inventory review because the older site-audit schema excludes
-css/ evidence paths. No schema or validation gate was weakened. All #4427 scientific bytes stay frozen.
+Issue4428 is a native child of4063 under4021/4009. Our codex lease receipt
+5786396346 expires01:49UTC Sep23. The coordination inbox returned incomplete
+board evidence with malformed-comment/identity warnings; the issue claim still
+identifies our active codex lease. No peer message or ownership transfer was
+inferred from the incomplete result.
 
-PR4430 remains open with protected auto-merge enabled. Eight full-book builds
-passed on the prior head; Python CI exposed obsolete figure counts after the
-deliberate diagram removal. c5ed3344 updates exact figure counts;86ac900f aligns glossary contracts with
-the corrected text. All23 figure tests and the complete content_lint selection
-pass locally; normal push checks passed and final CI is rerunning. Watch4430 and verify
-its main/live deployment before merging the manifesto successor. IAA4426 is
-shipped with live960/960. Active entries DL-#4428 and DL-#4427. Goal remains active.
-The central development-log validator reports pre-existing WIP/older-record
-metadata defects; this new entry explicitly records PR-not-created and base SHA.
-Do not claim that whole-log validation passes. Disk space reached zero. Removed768 untracked duplicate section PNGs from
-older dof-urdf, nonlinearity, contraction, articulated-body and machine-learning
-web QA after verifying committed review reports and untracked status. No source,
-PDF, equation image, JSON receipt or tracked file was removed; about95MiB freed.
-Stage explicit task paths only. The next long-article candidate is #4431 under
-#4058: complete nonlinear-control-insights reread found an indefinite inertia
-example, degree/radian errors and unsupported energy/physiology/control claims.
-The issue records the findings; implementation has not started.
+Complete manifesto index reread and correction are saved with review/render
+reports. The source distinguishes Bu, inverse-inertia acceleration and full-state
+Gu, retained flexible coordinates, state ordering, input-affinity and
+memory/contact rules. Part5 describes the actual numerical verification
+protocol; Part4 matches its current beam/pendulum scope. Eleven expressions
+render in four browser cases; production4/4, title638 and internal links pass.
+Page-local CSS restores reading-size display math in raw HTML. No model or
+solver changed. Source/render remain frozen at2250d07f; all five findings bind
+to it. Aggregate review binds to31664586. All13 route evidence maps match their
+committed bytes. Twelve unchanged dependencies are carried forward only for the
+shared audit/report update; #4429 preserves their historical provenance issues.
+The28 inventory/site-audit tests pass again before opening4432.
+
+PR4430 head86ac900f passes all eight textbook builds, Python, static checks,
+Chromium E2E and visual layout checks. Its final every-route accessibility scan
+is running; protected auto-merge stays enabled. No check was bypassed. The
+manifesto branch already includes its figure/glossary CI fixes. IAA4426 is
+shipped at99aa5835 with live960/960. Active entries DL-#4428 and DL-#4427.
+The whole development-log validator has pre-existing WIP/older-record defects;
+do not claim a clean whole-log result.
+
+The broader goal remains active. Next long article #4431 has not been claimed
+or edited. Its issue now preserves checked physical replacement values, the
+finite-difference energy balance and explicit control counterexamples. The
+entire linked critique was read and has its own unsupported full-actuation,
+reachability and necessary-efficiency claims; do not adopt those as facts or
+silently close the governed critique. Primary transcript/source access and the
+unavailable geometric-phase full preprint are recorded on4431. Claim and lease
+before implementation after the current releases.
+
+Disk headroom recovered to about1.9GB after earlier exhaustion. Previous
+cleanup removed only verified untracked duplicate QA PNGs, preserving source,
+PDFs, equation/endpoint images and JSON receipts. Stage explicit task paths;
+many unrelated untracked QA helpers remain. Preserve unrelated planning records.
 
 # Current Technical Review Checkpoint — #4427
 

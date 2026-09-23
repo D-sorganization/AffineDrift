@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4428 · Manifesto State-Rate Units and Verification Scope
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4432 (dependent base; retarget main after #4430 merges)
 - **Issue:** #4428 (site surfaces #4063; corpus #4021; epic #4009)
 - **Branch:** `fix/manifesto-notation-units`
 - **Paths:** `pages/drifter-manifesto.qmd`, `css/manifesto.css`, `reports/technical-review/manifesto-notation-review.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (2250d07f source/render; five findings bound; aggregate31664586; SELF source/render and aggregate bytes preserved;28 audit tests pass; branch saved remotely; predecessor86ac900f passes Python/books/static CI with only e2e pending; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
+- **Last verified:** 2026-09-22 (2250d07f source/render; five findings bound; aggregate31664586; SELF regular PR4432 opened; source/render and aggregate bytes preserved;28 audit tests pass; predecessor86ac900f passes Python/books/static/Chromium CI with final accessibility scan pending; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
 - **Summary:** Distinguishes generalized input load, acceleration contribution and full-state rate; includes retained flexible coordinates and memory/constraint boundaries; corrects Part5 capability and Part4 orientation. Scientific source and model runs remain unchanged.
-- **Next step:** Open the regular manifesto correction PR after integrating merged predecessor main.
+- **Next step:** Integrate merged predecessor main and retarget4432 to main; verify4430 live publication before enabling successor merge.
 
 ### DL-#4427 · Zero-Torque Counterfactual Mechanics and Interpretation
 

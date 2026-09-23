@@ -1,13 +1,16 @@
 # Agent Handoff — AffineDrift
 
-Current issue4428 on `fix/manifesto-notation-units`, commit `SELF`, PR not created.
-Complete manifesto index correction and browser4/4 bind to2250d07f; aggregate
-review and twelve dependency carry-forwards bind to31664586. Next integrate
-predecessor main and open a regular PR. Predecessor regular PR4430 has protected auto-merge enabled; figure
-census fix c5ed3344 passes23 local tests and final CI is running. Wait for its
-main/live gate before merging this successor. IAA4426 is already shipped960/960.
-Read docs/development/HANDOFF.md and manifesto-notation review/render reports.
-Historical evidence mismatches remain tracked #4429. Goal active; never draft PRs.
+Issue4428 on `fix/manifesto-notation-units`, commit `SELF`, regular PR #4432.
+It targets the predecessor topic branch for a focused diff; after4430 merges,
+merge main normally and retarget4432 to main. Never merge into the topic branch.
+No auto-merge enabled for4432; first verify4430 main/live publication.
+Manifesto source/render and browser4/4 bind to2250d07f; aggregate review and
+12 unchanged dependency carry-forwards bind to31664586. All28 audit tests pass.
+PR4430 has protected auto-merge enabled and only its final accessibility scan
+pending. IAA4426 is shipped960/960. Read docs/development/HANDOFF.md and the
+manifesto review/render reports. Historical provenance issues remain #4429.
+Next article4431 contains checked replacement arithmetic and primary-source
+access notes; it is unclaimed and unedited. Goal active; never draft PRs.
 
 ## Deferred Impact Evidence - 2026-09-22
 
