@@ -1,8 +1,10 @@
 # Agent Handoff — AffineDrift
 
 Current issue4431 on `fix/nonlinear-control-insights-rigor`, checkpoint SELF,
-no PR yet. Complete nonlinear-control article rewrite and27 mechanics checks
-are saved; final visual acceptance/evidence binding is next. See the current
+no PR yet. Complete nonlinear-control source/render frozen3053bb71; eight findings and
+nine exact evidence paths bound. All55 scientific/audit checks and browser4/4
+plus expanded keyboard/axe4/4 pass. Next integrate main2ef5c908 and open a
+regular PR. PR4430 is shipped960/960;4432 merged and needs live verification. See the current
 section of docs/development/HANDOFF.md and the nonlinear-control review report.
 
 **User stopping instruction:** finish4431 and already-open4432, verify remote

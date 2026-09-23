@@ -21,18 +21,23 @@ in four cases,22 displays inspected; visual review rejected undersized mobile
 math. Page-local CSS now preserves reading size with horizontal scrolling and
 reduces the long mobile title. Final production4/4 and expanded keyboard/axe4/4 pass. All22 displays and
 six mobile wide endpoints in both themes were inspected; no inline overflow
-remains. Commit the accepted source/render checkpoint, then bind exact evidence.
-The route is temporarily deferred rather than claiming its old review covers
-the rewrite; restore reviewed status after binding and before PR creation.
+remains. Exact source/render binding is saved.
+Source/render frozen at3053bb710c8ff1217f0c49474492a06a00519572. Eight findings
+and nine evidence paths bind exactly to that commit. Reviewed status is restored;
+all55 numerical, inventory and site-audit checks pass. The219-route census is
+not a full-corpus completion claim. Next integrate predecessor main and open
+a regular PR for4431; do not start other development.
 
 Reports: reports/technical-review/nonlinear-control-insights-review.md;
 QA files: docs/development/technical-review/nonlinear-4431-*.
 Source-access limits and checked preparation remain on issue4431. Do not claim
 full-paper/video access or human validation. Stage only explicit task paths.
 
-PR4430 merged4fe70151 after every required check; deployment35802860809 is
-running. PR4432 targets main atc7cec8ea; all checks except its final browser job
-have passed. Auto-merge remains off until4430 live publication is verified.
+PR4430 is shipped at4fe70151: deployment35802860809 succeeded, live artifact
+10727276644 passes960/960 and all eight corrected-route cases. Receipt saved
+in reports/technical-review/zero-torque-publication.json. PR4432 passed all
+required gates and merged2ef5c908; its tree equals checked headc7cec8ea.
+Verify the manifesto deployment/live gate before merging4431.
 Do not overwrite the remote manifesto branch with this successor's changes.
 Normal main integration deaecd6b preserved the complete manifesto evidence;
 source2250d07f, aggregate31664586 remain frozen. IAA4426 is shipped960/960.
