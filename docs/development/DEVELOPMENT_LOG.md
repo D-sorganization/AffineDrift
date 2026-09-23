@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4436 · Force and Mobility Ellipsoids
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** Pending regular PR
+- **Issue:** #4436 (corpus #4021; epic #4009)
+- **Branch:** `fix/force-mobility-rigor`
+- **Paths:** `articles/force-mobility-matrices.qmd`, `articles/force-mobility-matrices-bibliography.md`, `css/force-mobility.css`, `tests/test_force_mobility_rigor.py`, `reports/technical-review/force-mobility-review.md`
+- **Started:** 2026-09-23
+- **Last verified:** 2026-09-23 (20 new mechanics/algorithm cases and two planar-scope checks pass; content lint 131 passed, four existing skips; all 638 source titles pass. Source and render evidence are being frozen before exact-commit binding.)
+- **Summary:** Reconciles rate/load metrics and power pairing, rank loss, dynamic authority, constrained impact, compliance and preload, grasp/constraint maps, and unsupported human interpretations. Corrects the rectangular SVD example and bibliography provenance. No empirical or physiological validation is claimed.
+- **Next step:** Finish only this release: bind evidence, pass protected checks, merge a regular PR, verify exact-main live publication, save turnover and pause. No next development task.
+
 ### DL-#4431 · Nonlinear Control Insights and Physical Coupling
 
 - **State:** shipped

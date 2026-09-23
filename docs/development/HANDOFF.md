@@ -1,3 +1,60 @@
+# Final Force–Mobility Release Checkpoint — #4436
+
+The user requested a stopping checkpoint on September 23. Finish only the
+force–mobility correction already in progress, publish through a regular
+protected PR, verify remote main and its live deployment, then pause the goal.
+Do not start another article, issue or rewrite. Never create draft PRs.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/force-mobility-rigor`; source/render checkpoint: `SELF`.
+- Base: remote main `96c703c2da90e1b0b15ef803c6a7ce8d64461f28`.
+- Issue #4436 is a native child of #4021 under epic #4009. Historical route
+  batch #4058 stays closed; the full review supersedes its limited evidence.
+- Session: `technical-review-20260923-mobility`; lease receipt `5798813017`,
+  presence `5798813259`, both expire September 23 at approximately 18:42 UTC.
+- The inbox reported no conflicts, one historical broadcast and six rejected
+  identity warnings. Its warning state does not establish absence of peers.
+
+## Completed Scientific Work
+
+Complete source, companion bibliography, algorithm, critics and lay summaries
+are reconciled. Six finding groups distinguish matched power coordinates,
+weighted budget duality, singular limits, dynamics/compliance, constraints and
+human interpretation, and SVD/source provenance. Numerical checks demonstrate
+where kinematic leverage, acceleration and stiffness differ. No physical or
+human validation is claimed. The missing legacy TeX source is not regenerated.
+
+The source report is `reports/technical-review/force-mobility-review.md`.
+The browser report is `reports/technical-review/force-mobility-render-verification.json`.
+The new test module executes the actual published SVD example and checks
+independent mechanics. Twenty new numerical cases plus two existing planar
+scope cases pass. Four original algorithm failures were reproduced first.
+The page-local CSS keeps equations readable; no global stylesheet changes.
+
+## Release Gate and Exact Evidence
+
+The changed route is temporarily deferred while this source/render commit is
+created. Before opening the PR, bind six corrected findings and the exact
+source/report/test/style hashes to this commit and restore reviewed status.
+Do not silently refresh previous review claims. Other route evidence remains
+unchanged. Then run the audit contracts, finish required validation and merge
+only after protected checks pass. Record the actual merge SHA and live gate
+in the final turnover. The route census does not establish full-corpus review.
+
+## Stop Boundary
+
+The broader 405-source program is unfinished. The corpus index and historical
+reports retain the unreviewed work; #4429 remains outside this release. No next
+task is assigned. At the completed release, save the publication receipt,
+release this session's lease/presence and pause the goal at the user's request.
+Further scientific work requires an explicit resume.
+
+Stage explicit paths; many untracked local QA artifacts predate this release.
+GitHub operations use the documented Codex App bootstrap; never print tokens
+or substitute a human identity. Do not push directly to main.
+
+# Previous Checkpoints
+
 # Paused Technical Review Checkpoint
 
 The user requested a stopping checkpoint. The current technical releases are
