@@ -3,10 +3,11 @@
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
 `fix/manifesto-notation-units`; commit `SELF`; regular PR #4432:
 https://github.com/D-sorganization/AffineDrift/pull/4432.
-The focused dependent PR currently targets `fix/zero-torque-counterfactual-rigor`.
-After PR4430 merges, fetch main, verify the predecessor tree against86ac900f,
-merge main normally and retarget4432 to main. Do not merge4432 into the topic
-branch. Its auto-merge is not enabled; wait for4430 live publication before
+PR4432 now targets main. PR4430 merged as4fe70151c4e6c7e9e86f38db02a70db5dd50447e;
+its tree exactly equals checked head86ac900f (949d5fa81471776ca185b79f9b77ad3df4c09d7d).
+Normal integration deaecd6b preserves the complete42f10e6f tree: six turnover/
+audit conflicts retain the newer manifesto records, with no source or evidence
+change. Its auto-merge is not enabled; wait for4430 live publication before
 allowing the successor merge. Never create draft PRs.
 
 Issue4428 is a native child of4063 under4021/4009. Our codex lease receipt
@@ -28,10 +29,11 @@ committed bytes. Twelve unchanged dependencies are carried forward only for the
 shared audit/report update; #4429 preserves their historical provenance issues.
 The28 inventory/site-audit tests pass again before opening4432.
 
-PR4430 head86ac900f passes all eight textbook builds, Python, static checks,
-Chromium E2E and visual layout checks. Its final every-route accessibility scan
-is running; protected auto-merge stays enabled. No check was bypassed. The
-manifesto branch already includes its figure/glossary CI fixes. IAA4426 is
+PR4430 passed every required check, including the full browser/accessibility
+job, and merged through protected auto-merge at00:37:21UTC Sep23. Deployment
+35802860809 is in progress at4fe70151. Verify its live artifact (expected960/960
+and eight corrected-route cases) before recording4427 shipped. No check was
+bypassed. The manifesto branch includes its figure/glossary CI fixes. IAA4426 is
 shipped at99aa5835 with live960/960. Active entries DL-#4428 and DL-#4427.
 The whole development-log validator has pre-existing WIP/older-record defects;
 do not claim a clean whole-log result.
