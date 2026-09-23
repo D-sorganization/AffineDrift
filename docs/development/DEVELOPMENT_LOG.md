@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4431 · Nonlinear Control Insights and Physical Coupling
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4433
 - **Issue:** #4431 (core #4058; corpus #4021; epic #4009)
 - **Branch:** `fix/nonlinear-control-insights-rigor`
 - **Paths:** `articles/nonlinear-control-insights.qmd`, `css/nonlinear-control.css`, `tests/test_nonlinear_control_insights_rigor.py`, `reports/technical-review/nonlinear-control-insights-review.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (PR #4433 merged main66f63f87 after every required check; exact tree equals af8347f3; deployment35807652744 pending; a424ead9 final source/render after 17 link suffix corrections; site gate and fresh production4/4 pass; content_lint131 passed/four existing skips; initial3053bb71 scientific checkpoint retained; SELF regular PR4433 opened after normal main integration7677b3fd; eight findings and nine evidence paths bound;55 checks pass; complete article rewrite; 16 new and 11 shared mechanics checks pass; title638 and internal links pass; local production4/4; all22 displays and six mobile endpoints inspected;106 expressions in four cases; expanded keyboard/axe4/4 pass; exact revision binding saved)
-- **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. Governed critique stays open; primary-source access limits recorded.
-- **Next step:** Verify deployment `35807652744` and live publication, merge the final documentation-only checkpoint, then pause. No further development is authorized.
+- **Last verified:** 2026-09-22 (main `66f63f87` exactly matches checked head `af8347f3`; all required checks passed; deployment `35807652744` succeeded; live artifact `10729736031` passes 960/960, including four article cases, with zero serious/critical axe violations. Final source/render `a424ead9` binds eight findings and nine evidence paths; initial scientific checkpoint `3053bb71` is retained. All 55 selected checks and 131 content-lint tests pass, with four existing skips. Local production and expanded keyboard/axe checks each pass 4/4; all 106 expressions, 22 displays and six wide mobile endpoints were inspected.)
+- **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. The governed critique stays open; primary-source access limits are recorded. Final CI corrections fixed 17 published-link suffixes and issue/test scope metadata. Publication receipt: `reports/technical-review/nonlinear-control-insights-publication.json`.
+- **Next step:** None for this release. Finish the documentation-only closeout and pause the broader goal at the user's request. No new tasks or rewrites.
 
 ### DL-#4428 · Manifesto State-Rate Units and Verification Scope
 
