@@ -24,7 +24,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** codex
 - **Issue:** #4445; central Repository_Management#1687
 - **Branch:** `chore/4445-deferred-catalog-guard`
-- **PR:** not created
+- **PR:** #4446
 - **Paths:** `shared_scripts/`, `.pre-commit-config.yaml`, `pyproject.toml`, `tests/test_deferred_catalog_hook.py`, `docs/development/deferred-catalog-bundle.json`, `AGENTS.md`, `CLAUDE.md`, `AGENT_HANDOFF.md`, `SPEC.md`
 - **Started:** 2026-09-23
 - **Last verified:** SELF (RED four missing-hook failures; GREEN four integration controls, actual pre-commit hook, canonical hashes, root Ruff, Black, three-module mypy and 91-source CI mypy; broad 5483 passes/26 skips with transient coverage-file hygiene failures; final 30 focused controls and five digest/catalog controls pass)
