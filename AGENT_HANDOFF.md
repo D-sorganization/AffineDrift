@@ -1,39 +1,103 @@
-# Final PR #4433 Release Correction
+# Paused Technical Review Checkpoint
 
-Final source/render checkpoint a424ead9e985bb6e47e658c4497bf1460af70c0c. CI link corrections change only
-17 `.qmd` link suffixes to published `.html` targets. Site-wide link gate, fresh
-Quarto render and production 4/4 pass. Eight findings and nine evidence paths
-are rebound to this exact commit; 3053bb71 remains the initial scientific
-checkpoint. The issue now identifies the new regression module, resolving the
-path guard without modifying reused helpers. Full content lint: 131 passed,
-four existing skips. Finish protected CI and live publication, save final
-turnover, then stop as requested. No new development.
+The user requested a stopping checkpoint. The current technical releases are
+merged and verified live. Merge this final documentation-only closeout through
+a regular PR, then stop. No new article, issue or rewrite is authorized until
+the user explicitly resumes the broader goal. Never create draft PRs.
 
-# Agent Handoff — AffineDrift
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Turnover branch: `docs/technical-review-pause-checkpoint`; commit `SELF`.
+- Published source checkpoint on remote main:
+  `66f63f873ce05d441189816825c31888fb87af38` (regular PR #4433).
+- All protected checks passed. The merged main tree exactly equals checked
+  PR head `af8347f380cb1b592ca157185c4a45d6b1360ec2`.
+- This closeout changes only handoff/log/index records and publication receipts.
+  Scientific sources, tests, styles and frozen audit evidence remain unchanged.
+  A routine deployment triggered by the documentation merge does not require
+  another receipt commit or restart of development.
 
-Current issue4431 on `fix/nonlinear-control-insights-rigor`, checkpoint SELF,
-regular PR #4433. Complete nonlinear-control source/render frozen3053bb71; eight findings and
-nine exact evidence paths bound. All55 scientific/audit checks and browser4/4
-plus expanded keyboard/axe4/4 pass. Normal integration7677b3fd preserves all evidence. Finish4433 protected
-CI and verify publication. PR4430 is shipped960/960;4432 merged and needs live verification. See the current
-section of docs/development/HANDOFF.md and the nonlinear-control review report.
+## Completed Releases
 
-**User stopping instruction:** finish4431 and already-open4432, verify remote
-main/live, update turnover and pause the goal. No new tasks or rewrites.
-This does not mark the broader corpus audit complete. Preserve frozen prior
-evidence and keep the governed sequencing critique open.
+| Work                       | Regular PR | Published Main | Deployment    | Live Result |
+| -------------------------- | ---------- | -------------- | ------------- | ----------- |
+| Putting Roll               | #4424      | `ded63640`     | `35792227837` | 960/960     |
+| Induced Acceleration       | #4426      | `99aa5835`     | `35796355561` | 960/960     |
+| Zero-Torque Counterfactual | #4430      | `4fe70151`     | `35802860809` | 960/960     |
+| Manifesto Units and Scope  | #4432      | `2ef5c908`     | `35805142089` | 960/960     |
+| Nonlinear Control Insights | #4433      | `66f63f87`     | `35807652744` | 960/960     |
 
-Issue4428 on `fix/manifesto-notation-units`, commit `SELF`, regular PR #4432.
-PR4432 now targets main after normal integration deaecd6b. PR4430 merged
-as4fe70151; its tree equals checked head86ac900f. Integration preserves all
-manifesto source/evidence bytes. No auto-merge enabled for4432; first verify
-4430 live publication from deployment35802860809.
-Manifesto source/render and browser4/4 bind to2250d07f; aggregate review and
-12 unchanged dependency carry-forwards bind to31664586. All28 audit tests pass.
-PR4430 passed all required checks and merged through protected auto-merge. IAA4426 is shipped960/960. Read docs/development/HANDOFF.md and the
-manifesto review/render reports. Historical provenance issues remain #4429.
-Next article4431 contains checked replacement arithmetic and primary-source
-access notes; it is unclaimed and unedited. Goal active; never draft PRs.
+Publication receipts are under `reports/technical-review/`. The final two are
+`manifesto-notation-publication.json` and
+`nonlinear-control-insights-publication.json`. They retain full source SHAs,
+run URLs, artifact IDs/digests, complete gate summaries and the reviewed route
+cases. Each final release passes all four mobile/desktop and light/dark route
+cases and the whole-site serious/critical accessibility gate.
+
+## Technical Decisions and Frozen Evidence
+
+Nonlinear-control final source/render checkpoint:
+`a424ead9e985bb6e47e658c4497bf1460af70c0c`. The initial scientific checkpoint
+is `3053bb71`; only 17 published-link suffixes changed afterward. Eight findings
+and nine evidence paths bind to the final committed bytes. The review report
+records derivations, independent checks and primary-source access limits.
+
+The argument connects instantaneous acceleration, energy accounting, declared
+interventions, finite-time control and measurement identifiability. The physical
+two-rod example uses unchanged Cartesian mechanics helpers. A positive distal
+acceleration increment can coexist with negative total distal acceleration and
+negative actuator power. Accessibility does not establish practical control
+or human sequencing benefits. The governed sequencing critique remains open;
+this rewrite does not adjudicate it or supply new human validation.
+
+Manifesto source/render `2250d07f` and aggregate `31664586` remain frozen.
+Zero-torque scientific evidence remains at `e7d8c688`. Preserve the distinctions
+between model identities, illustrative calculations and empirical evidence.
+
+## Validation
+
+- All required checks passed before PR #4433 merged, including Python,
+  JavaScript, end-to-end, accessibility, links and the aggregate quality gate.
+- All 55 selected scientific/audit checks passed; full content lint passed
+  131 tests with four existing skips. The new article contributes 16 checks
+  and reuses 11 existing Cartesian-mechanics checks.
+- Local production and keyboard-expanded summary checks each passed 4/4.
+  All 106 math expressions rendered in each case; all 22 displays and six
+  wide mobile endpoints in both themes were inspected.
+- Both releases passed live 960/960. Nonlinear artifact `10729736031` and
+  manifesto artifact `10727234915` report zero serious/critical axe violations.
+- The two initial PR failures were resolved: published `.html` link targets
+  replaced `.qmd` targets, and issue #4431 identified the actual new test module.
+
+## Remaining Scope and Resume Instructions
+
+The broader audit is paused, not complete. The corpus index contains 173
+sources marked Full Technical Audit Pending, plus a whole-book consistency
+pass. The 219-route census does not establish full-corpus technical acceptance.
+Historical provenance follow-up #4429 remains open and was not taken on during
+this closeout. Older publication-pending wording in historical records should
+be interpreted against the corresponding immutable publication receipts.
+
+No next development task is assigned. On an explicit future resume, read this
+checkpoint, the corpus index, epic #4009 and the relevant child issue before
+selecting work. Preserve frozen source/evidence relationships and record any
+future carry-forward explicitly rather than silently refreshing old claims.
+
+## Coordination and Workspace
+
+Completed issue #4431 belongs to #4058/#4021/#4009. Session
+`technical-review-20260923-nonlinear` registered the documentation closeout at
+receipt `5787749290`; release its issue lease and presence at the final pause.
+The last inbox had no messages or conflicts, but remained incomplete due to
+pre-existing malformed/identity-rejected board comments. This is not evidence
+that no other agent exists. At a future resume, check claims and the inbox.
+
+Stage explicit paths: this worktree contains many untracked local QA artifacts.
+No scratch screenshots, logs, downloaded artifacts or temporary scripts belong
+in the final closeout commit. Do not push directly to main.
+
+# Historical Checkpoints
+
+The records below describe earlier states. The current checkpoint above controls.
 
 ## Deferred Impact Evidence - 2026-09-22
 

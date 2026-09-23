@@ -20,29 +20,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4431 · Nonlinear Control Insights and Physical Coupling
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4433
 - **Issue:** #4431 (core #4058; corpus #4021; epic #4009)
 - **Branch:** `fix/nonlinear-control-insights-rigor`
 - **Paths:** `articles/nonlinear-control-insights.qmd`, `css/nonlinear-control.css`, `tests/test_nonlinear_control_insights_rigor.py`, `reports/technical-review/nonlinear-control-insights-review.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (a424ead9 final source/render after 17 link suffix corrections; site gate and fresh production4/4 pass; content_lint131 passed/four existing skips; initial3053bb71 scientific checkpoint retained; SELF regular PR4433 opened after normal main integration7677b3fd; eight findings and nine evidence paths bound;55 checks pass; complete article rewrite; 16 new and 11 shared mechanics checks pass; title638 and internal links pass; local production4/4; all22 displays and six mobile endpoints inspected;106 expressions in four cases; expanded keyboard/axe4/4 pass; exact revision binding saved)
-- **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. Governed critique stays open; primary-source access limits recorded.
-- **Next step:** Complete4433 protected CI; verify manifesto deployment35805142089 before enabling merge, then verify4433 live publication and finish turnover before pausing. User requested no further work after4431 and4432 ship; update turnover and pause the goal then.
+- **Last verified:** 2026-09-22 (main `66f63f87` exactly matches checked head `af8347f3`; all required checks passed; deployment `35807652744` succeeded; live artifact `10729736031` passes 960/960, including four article cases, with zero serious/critical axe violations. Final source/render `a424ead9` binds eight findings and nine evidence paths; initial scientific checkpoint `3053bb71` is retained. All 55 selected checks and 131 content-lint tests pass, with four existing skips. Local production and expanded keyboard/axe checks each pass 4/4; all 106 expressions, 22 displays and six wide mobile endpoints were inspected.)
+- **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. The governed critique stays open; primary-source access limits are recorded. Final CI corrections fixed 17 published-link suffixes and issue/test scope metadata. Publication receipt: `reports/technical-review/nonlinear-control-insights-publication.json`.
+- **Next step:** None for this release. Finish the documentation-only closeout and pause the broader goal at the user's request. No new tasks or rewrites.
 
 ### DL-#4428 · Manifesto State-Rate Units and Verification Scope
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** #4432 (main)
+- **PR:** #4432
 - **Issue:** #4428 (site surfaces #4063; corpus #4021; epic #4009)
 - **Branch:** `fix/manifesto-notation-units`
 - **Paths:** `pages/drifter-manifesto.qmd`, `css/manifesto.css`, `reports/technical-review/manifesto-notation-review.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (2250d07f source/render; five findings bound; aggregate31664586; SELF PR4432 passed all required checks and merged2ef5c908; tree equalsc7cec8ea; predecessor4fe70151 tree equals86ac900f; normal merge deaecd6b preserves all evidence; source/render and aggregate bytes preserved;28 audit tests pass; predecessor4430 passed every required gate and merged; deployment35802860809 pending; complete index reread; source/card corrections; local production4/4; all11 expressions rendered in four cases; title638 and internal links pass)
-- **Summary:** Distinguishes generalized input load, acceleration contribution and full-state rate; includes retained flexible coordinates and memory/constraint boundaries; corrects Part5 capability and Part4 orientation. Scientific source and model runs remain unchanged.
-- **Next step:** Verify manifesto deployment/live publication at merged main2ef5c908;4430 is shipped960/960.
+- **Last verified:** 2026-09-22 (main `2ef5c908` exactly matches checked head `c7cec8ea`; all protected checks passed; deployment `35805142089` succeeded; live artifact `10727234915` passes 960/960 checks, including all four manifesto cases, with zero serious/critical axe violations. Source/render `2250d07f` and aggregate `31664586` remain frozen; five findings, local browser 4/4, all 11 expressions and 28 audit tests verified.)
+- **Summary:** Distinguishes generalized input load, acceleration contribution and full-state rate; includes retained flexible coordinates and memory/constraint boundaries; corrects Part 5 capability and Part 4 orientation. Scientific model runs remain unchanged. Publication receipt: `reports/technical-review/manifesto-notation-publication.json`.
+- **Next step:** None for this release. Preserve its evidence at the requested stopping checkpoint.
 
 ### DL-#4427 · Zero-Torque Counterfactual Mechanics and Interpretation
 
