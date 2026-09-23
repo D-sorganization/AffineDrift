@@ -597,13 +597,299 @@
       "audit_id": "ad-route-6906c62a8783",
       "claim_ids": [],
       "critique_ids": ["crit-sequencing-lie-bracket-fallacy"],
-      "findings": [],
+      "findings": [
+        {
+          "finding_id": "ad-finding-nonlinear-state-and-units",
+          "priority": "p1",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Derive generalized load, acceleration and state-rate contributions; state completeness, input affinity and the correctly evaluated instantaneous flow.",
+          "claim_ids": [],
+          "critique_ids": [],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        },
+        {
+          "finding_id": "ad-finding-nonlinear-intervention-contact",
+          "priority": "p1",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Replace unique no-activation and load-cell claims with complete-state model interventions, retained loads, feasible resets and well-posed hybrid continuation.",
+          "claim_ids": [],
+          "critique_ids": [],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        },
+        {
+          "finding_id": "ad-finding-nonlinear-coordinate-input-origin",
+          "priority": "p1",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Distinguish state covariance from shifted input zero; include the acceleration Hessian term and limit the geodesic statement to a purely kinetic free model.",
+          "claim_ids": [],
+          "critique_ids": [],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        },
+        {
+          "finding_id": "ad-finding-nonlinear-actuation-authority",
+          "priority": "p1",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Use input rank, bounds and task maps; counterexample disproves necessary drift dominance, and a scalar magnitude ratio does not establish direction or horizon.",
+          "claim_ids": [],
+          "critique_ids": [],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        },
+        {
+          "finding_id": "ad-finding-nonlinear-coupling-energy",
+          "priority": "p1",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Replace indefinite inertia and degree/radian arithmetic with a physical coupled example; verify negative actuator power, positive distal acceleration increment and negative total acceleration without energy amplification.",
+          "claim_ids": [],
+          "critique_ids": [],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        },
+        {
+          "finding_id": "ad-finding-nonlinear-geometry-horizon",
+          "priority": "p1",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Separate accessibility, STLC, reversible driftless commutators, geometric phase and finite-time authority; integrate counterexamples and state event sensitivity limits.",
+          "claim_ids": [],
+          "critique_ids": ["crit-sequencing-lie-bracket-fallacy"],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        },
+        {
+          "finding_id": "ad-finding-nonlinear-tools-identification",
+          "priority": "p1",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Bound feedback linearization, optimal control, energy shaping, observability, unknown-input inference, robustness and learned dynamics by their actual assumptions.",
+          "claim_ids": [],
+          "critique_ids": [],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        },
+        {
+          "finding_id": "ad-finding-nonlinear-resources-evidence",
+          "priority": "p2",
+          "disposition": "corrected",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4431",
+          "rationale": "Remove unverified video timestamps/attributions; correct Part5 protocol capability; record primary-source access limits and preserve the open governed critique.",
+          "claim_ids": [],
+          "critique_ids": [],
+          "evidence_paths": [
+            "articles/nonlinear-control-insights.qmd",
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+            "css/nonlinear-control.css",
+            "tests/test_nonlinear_control_insights_rigor.py",
+            "tests/test_zero_torque_chapter_rigor.py::_mass",
+            "tests/test_zero_torque_chapter_rigor.py::_bias",
+            "tests/test_zero_torque_chapter_rigor.py::_potential",
+            "reports/technical-review/nonlinear-control-insights-review.md",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+            "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+            "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+            "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+            "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+            "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+            "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+            "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+            "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+          },
+          "verification_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c"
+        }
+      ],
       "route": "/articles/nonlinear-control-insights.html",
-      "status": "deferred",
-      "deferment": {
-        "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4058",
-        "rationale": "Complete correction #4431 and local numerical/browser review are saved; the prior limited review does not cover the rewritten source. Exact committed evidence binding is pending.",
-        "next_gate": "Commit the accepted source/render checkpoint, bind all corrected findings and review evidence to its exact bytes, and restore reviewed status before a regular PR."
+      "status": "reviewed",
+      "review": {
+        "dimensions": [
+          "evidence",
+          "uncertainty",
+          "falsifiers",
+          "audience_framing"
+        ],
+        "evidence_paths": [
+          "articles/nonlinear-control-insights.qmd",
+          "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd",
+          "css/nonlinear-control.css",
+          "tests/test_nonlinear_control_insights_rigor.py",
+          "tests/test_zero_torque_chapter_rigor.py::_mass",
+          "tests/test_zero_torque_chapter_rigor.py::_bias",
+          "tests/test_zero_torque_chapter_rigor.py::_potential",
+          "reports/technical-review/nonlinear-control-insights-review.md",
+          "reports/technical-review/nonlinear-control-insights-render-verification.json"
+        ],
+        "evidence_sha256": {
+          "articles/_generated/trust/critique-annotations/nonlinear-control-insights.qmd": "dda67559a269e8508b5b661b2b23a5419ab28ebc09901a3fbda7b6887e5e8b14",
+          "articles/nonlinear-control-insights.qmd": "1ed7775e4caf80b3f1340d98b8260a173170d94e7ba0300062061c524921269c",
+          "css/nonlinear-control.css": "ca659d9c1cc888e9af5c9990f7fa04000429be99769303961278c7d8cd0353fa",
+          "reports/technical-review/nonlinear-control-insights-render-verification.json": "2249d525faa91f51545ff342261845acb749a48b439a619428f6a8b933bcbd98",
+          "reports/technical-review/nonlinear-control-insights-review.md": "7b19252b3612d431a67a993de772171740a776a6f81ed230af0f44b6741b40a9",
+          "tests/test_nonlinear_control_insights_rigor.py": "56898624dae4b2798af3ca7caab2f4b808216e82f31c12c3a639e2e5da0c164a",
+          "tests/test_zero_torque_chapter_rigor.py::_bias": "dc64856d967af2b5c5a1d6348313b75ed6a3449df1cccf382dfc49b450b9470c",
+          "tests/test_zero_torque_chapter_rigor.py::_mass": "6ff973243b5b8ab64ea03cb50964c8607e5f6b2f2e75ffd686bcd64125da3486",
+          "tests/test_zero_torque_chapter_rigor.py::_potential": "573b1e80d4b74c2499a7c619e5cb8d067dbb166b45938caee623ea489de22c71"
+        },
+        "review_commit": "a424ead9e985bb6e47e658c4497bf1460af70c0c",
+        "reviewed_on": "2026-09-22",
+        "reviewer": "codex-technical-review-20260923-nonlinear; complete article and linked critique reread; 27 checks and four browser cases; critique remains open; final published-link correction and four-case production recheck",
+        "source_path": "articles/nonlinear-control-insights.qmd"
       }
     },
     {

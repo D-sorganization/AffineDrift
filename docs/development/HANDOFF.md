@@ -1,3 +1,14 @@
+# Final PR #4433 Release Correction
+
+Final source/render checkpoint a424ead9e985bb6e47e658c4497bf1460af70c0c. CI link corrections change only
+17 `.qmd` link suffixes to published `.html` targets. Site-wide link gate, fresh
+Quarto render and production 4/4 pass. Eight findings and nine evidence paths
+are rebound to this exact commit; 3053bb71 remains the initial scientific
+checkpoint. The issue now identifies the new regression module, resolving the
+path guard without modifying reused helpers. Full content lint: 131 passed,
+four existing skips. Finish protected CI and live publication, save final
+turnover, then stop as requested. No new development.
+
 # Current Technical Review Checkpoint — #4431
 
 The user requested a stopping checkpoint while this rewrite was in progress.
