@@ -1,3 +1,55 @@
+# Deferred Catalog Enforcement - #4445
+
+- Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-deferred-guard`.
+  Branch `chore/4445-deferred-catalog-guard`; commit `SELF`; PR not created.
+- Governing issue #4445; full fleet rollout Repository_Management#1687 remains open.
+- Installs the registered three-file validator bundle unchanged from central
+  `0a1041018e737173e49ff97ed4b82283e3cb672f`; every SHA-256 matches its manifest.
+  The new always-run pre-commit hook invokes the portable entry point directly.
+  Other hooks and original DV-4253 planning/source bytes are preserved.
+- Syncs only the central deferred-validation managed block from RM PR #1723,
+  source `198c2baea626b311d8bf3c01db5ccb80dc3c495b`. That central source must merge
+  before this consumer PR; its deployed-v1 fields are distinct from new adopters.
+- TDD: four integration tests fail for the absent hook, then all four pass.
+  They execute the configured hook on the actual catalog and on isolated invalid
+  activation, missing-checker and competing-catalog copies. Actual pre-commit
+  hook passes. No validation implementation is duplicated in the tests.
+- Root Ruff passes; Black reports 721 files unchanged (optional notebook formatter
+  unavailable); three copied modules pass mypy; title audit checks 637 sources.
+  CI-equivalent mypy passes 91 source files. The broad Python run records 5,483
+  passes, 26 skips, 132 deselections and two hygiene failures caused solely by
+  transient .coverage.OGLaptop.\* subprocess files; coverage is 77.27% (floor 75%).
+  After coverage combines, all 30 hygiene/catalog/SPEC controls pass. Test-created
+  generated date changes were restored; no allowlist or threshold was changed.
+- A fifth RED test requires the pinned bundle receipt; all five catalog/digest
+  controls now pass after the real hooks. Explicit-file Black reproduced drift in
+  all three canonical files; changing the existing vendored-path policy from
+  extend-exclude to force-exclude preserves its intended exact bytes for hook
+  inputs too. The receipt lives in docs/development/deferred-catalog-bundle.json.
+- Validation commands: `python -m pytest --cov --cov-report=term:skip-covered`;
+  `python -m pytest tests/test_root_hygiene.py tests/test_deferred_catalog_hook.py
+tests/test_spec_changelog.py -q -o addopts=''`; root Ruff/Black and the exact
+  CI mypy command; explicit `pre_commit run --files` passes all configured hooks.
+- Narrow per-file lint exceptions retain the canonical code: S101 only in the
+  checker whose assertions narrow types after runtime checks; S105 only in the
+  handoff checker where SELF is a commit marker, not a password. No gate bypass.
+- The optional standalone handoff-validator CLI reports missing legacy sections
+  in docs/development/HANDOFF.md because it does not recognize this repository's
+  prose override to AGENT_HANDOFF.md. The catalog gate imports only its secret
+  patterns and passes; the actual canonical root handoff is updated here. This
+  deployment does not introduce a new handoff-format gate or rewrite peer history.
+- The central development-log checker also reports ten pre-existing metadata
+  findings (missing historical verification SHAs/fields); comparison with unchanged
+  baseline HEAD reproduces the identical findings, with none introduced here.
+  Its portfolio warning remains. Existing peer entries are preserved.
+- Preserve both live scientific-review agents' handoff/log/SPEC entries. Coordination
+  notice: RM mailbox 5802259806. No article, model, approval or measurement changes.
+- Next: finish validation, record the approved central revision, publish through
+  protected CI and verify default-branch bundle/hook/rule bytes. Continue the
+  other nine owner installations and deployment audit under the central goal.
+
+---
+
 # Deferred Impact Project Projection — #4438
 
 - Repository/worktree: AffineDrift,
