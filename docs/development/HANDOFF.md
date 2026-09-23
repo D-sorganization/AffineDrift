@@ -1,5 +1,14 @@
 # Current Technical Review Checkpoint — #4428
 
+Latest release status: PR4430 head86ac900f passes all eight textbook builds,
+static checks and the complete Python CI job. Only e2e-tests remains in progress
+(site build stage); protected auto-merge stays enabled. No check was bypassed.
+The manifesto branch is pushed; PR not created yet. After4430 merges, fetch
+main, verify its tree against86ac900f, merge normally, open the regular manifesto
+PR, and wait for4430 live publication before enabling the successor merge.
+The broader goal remains active; #4431 is recorded for the next long article
+and has not been claimed or implemented.
+
 Worktree C:/Users/diete/Repositories/AffineDrift-technical-review; branch
 `fix/manifesto-notation-units`; commit `SELF`; PR not created. Issue4428 is a
 native child of4063 under4021/4009. Lease receipt5786396346 expires01:49UTC Sep23.
