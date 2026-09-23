@@ -14,6 +14,11 @@ Never create draft PRs. Previous pause records below are historical.
   incremental-stability examples, Riccati rates and normalization, finite-horizon
   interpretation, unsupported benchmarks/software, optimization assumptions,
   physical impedance and golf outcome/event sensitivity. No new human data.
+- Full local run: 5,490 passed, 29 skipped, 132 deselected; 92.88% src coverage
+  and 79.19% including scripts. The broader default lane also collects benchmark
+  correctness cases; no comparative runtime claim. Test-generated date/format
+  changes were verified and restored. Fleet policy sync #4442 from main
+  `438bd9c1` changes only AGENTS/CLAUDE and is preserved.
 - Twenty new regression/numerical cases; 56 focused cases pass. Red baseline:
   nine expected failures. All 638 source titles pass; content lint 131 passed
   with four existing skips; Ruff, Black (721 files), mypy (91 files),
@@ -31,7 +36,7 @@ Never create draft PRs. Previous pause records below are historical.
 
 The review and all six findings now bind ten evidence paths to the immutable
 source/render checkpoint above. All committed hashes match the declared bytes.
-Run the full suite and protected CI, publish a regular PR, verify merged bytes
+Local full validation passed. Publish a regular PR, pass protected CI, verify merged bytes
 and live deployment, and update the turnover/corpus records. Do not count the
 405-source corpus or whole-book consistency as complete from this one page.
 
