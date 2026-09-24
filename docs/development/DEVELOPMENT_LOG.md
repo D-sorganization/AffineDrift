@@ -18,18 +18,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4429 · Site-Surface Audit Provenance Reconciliation
+
+- **State:** in_progress
+- **Owner:** local
+- **PR:** 
+- **Issue:** #4429 (site-surface audit #4063; corpus #4021; epic #4009)
+- **Branch:** `feat/4429-reconcile-audit-provenance`
+- **Paths:** `data/trust/site_trust_surface_audit.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/site-trust-surface-audit.md`, `reports/technical-review/site-surface-provenance-review.md`, `reports/technical-review/site-surface-provenance-reconciliation.json`, `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, `docs/development/HANDOFF.md`
+- **Started:** 2026-09-24
+- **Last verified:** 2026-09-24 (SELF; 10/10 site trust surface audit tests pass; 18/18 claim audit inventory tests pass; regenerate_claim_audit_evidence --check passes; 11 routes audited for non-scientific link-gate additions; source revisions bound to committed checkpoint 63d98d19; render revision 0d2bd503 preserved; #4428 and homepage preserved)
+- **Summary:** Reconciles historical provenance of site-surface audit evidence across 12 canonical routes, binds exact source bytes to committed checkpoint 63d98d19, resolves test symbol provenance for ad-finding-notation-render-integrity, and preserves render history.
+- **Next step:** Commit, open PR, pass CI, auto-merge, and verify live publication.
+
 ### DL-#4450 · Why Physics Matters
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4451
 - **Issue:** #4450 (corpus #4021; epic #4009)
 - **Branch:** `fix/why-physics-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch01_why_physics.tex`, `articles/The_Physics_of_Golf/quarto/ch01_why_physics.qmd`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/why_physics_release.svg`, `articles/The_Physics_of_Golf/figures/why_physics_release.pdf`, `scripts/build_why_physics_figure.py`, `tests/test_why_physics_rigor.py`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (SELF; frozen source/render 787fb581 binds twelve paths and six findings. Full Python 5538 passed/29 skipped/132 deselected, 92.9% src coverage and 79.22% including scripts; 47 focused, content 131/four skips, Jest 420/19 skips. Ten print pages inspected; browser 4/4, 103/103 math expressions, accessible keyboard scrolling. All lint/type/content/evidence gates pass. Regular PR #4451 open; CI found the required GRAVITY_M_S2 naming convention in the new generator/tests. Corrected without changing values or publication bytes; CI head 57025219 passed static, JavaScript, website lint and Python: 5490 passed/32 skipped/132 deselected, 92.85% coverage; content 131/four skips. Full-site E2E was still rendering; this handoff-only push needs final-head CI. Merge/live publication remain unverified.)
+- **Last verified:** 2026-09-23 (PR #4451 merged as 530778ef after all required checks passed; deployment succeeded; frozen source/render 787fb581 binds twelve paths and six findings.)
 - **Summary:** Replaces unsupported force/energy and expertise claims with a defined input baseline, explicit constraints, checked manufactured work/release examples and six worked answers; connects mechanics to finite-time club delivery and impact.
-- **Next step:** User requested a committed PR handoff and pause. Successor: inspect PR #4451 current head/state, finish protected CI/merge, verify live deployment, and publish the separate receipt plus shipped turnover. Auto-merge is armed. Broader corpus is paused; no new review or rewrite.
+- **Next step:** None for this correction. Merged to main.
 
 ### DL-#4444 · Language of Motion
 
@@ -46,16 +59,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4445 - Deferred Catalog Enforcement
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4445; central Repository_Management#1687
 - **Branch:** `chore/4445-deferred-catalog-guard`
 - **PR:** #4446
 - **Paths:** `shared_scripts/`, `.pre-commit-config.yaml`, `pyproject.toml`, `tests/test_deferred_catalog_hook.py`, `docs/development/deferred-catalog-bundle.json`, `AGENTS.md`, `CLAUDE.md`, `AGENT_HANDOFF.md`, `SPEC.md`
 - **Started:** 2026-09-23
-- **Last verified:** SELF (RED four missing-hook failures; GREEN four integration controls, actual pre-commit hook, canonical hashes, root Ruff, Black, three-module mypy and 91-source CI mypy; broad 5483 passes/26 skips with transient coverage-file hygiene failures; final 30 focused controls and five digest/catalog controls pass)
+- **Last verified:** 2026-09-23 (PR #4446 merged to main; pre-commit hook and validator deployed; canonical hashes and integration controls pass.)
 - **Summary:** Deploys the canonical validator and fail-closed catalog hook, preserving v1 plans and separating pending resources from approval or measurement.
-- **Next step:** Central #1723 merged as a59cb194. Publish through protected CI, then verify owner default-branch enforcement; peer #4443 is preserved from main 6036629e.
+- **Next step:** None. Merged to main.
 
 ### DL-#4441 · Contraction Lay Article
 
