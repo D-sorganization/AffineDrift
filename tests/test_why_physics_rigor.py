@@ -106,7 +106,8 @@ def test_radial_retraction_can_supply_power_without_pivot_torque():
 
 def test_zero_net_joint_torque_does_not_identify_muscle_forces():
     moment_arms = np.array([0.03, -0.03])
-    assert moment_arms @ [0, 0] == moment_arms @ [100, 100] == 0
+    assert moment_arms @ [0, 0] == pytest.approx(0.0)
+    assert moment_arms @ [100, 100] == pytest.approx(0.0)
 
 
 def test_build_figure_writes_both_vector_formats(figure, tmp_path):
