@@ -1,8 +1,18 @@
-# Paused Handoff Checkpoint — #4450 / PR #4451
+# Current Technical Review Checkpoint — #4429
 
-The user requested a committed PR handoff and an immediate stop after pushing
-this checkpoint. Do not start additional reviews or rewrites. The next agent
-should finish CI, merge and publication verification for the existing correction.
+- Worktree: `C:/Users/diete/Repositories/AffineDrift/Worktrees/AffineDrift-4429`.
+- Branch: `feat/4429-reconcile-audit-provenance`; base `origin/main` (`7a39e169`).
+- Governing issue: #4429 (site-surface audit #4063; corpus #4021; epic #4009).
+- Reconciles historical provenance of site-surface audit evidence across 12 canonical routes documented in `reports/technical-review/zero-torque-dependency-carry-forward.json`.
+- Intervening diffs between baseline `0d2bd503a226cbbf7da1e87ce558952efe797d33` and HEAD across the 11 affected canonical routes were audited and verified as non-scientific link-gate additions (categories and related articles). Zero lines of scientific claims, derivations, or authority boundaries changed.
+- Source revisions bound to committed checkpoint `63d98d19203049d3f52d44d071862fcbb1685147` where exact file bytes match HEAD.
+- Render revisions preserved at `0d2bd503a226cbbf7da1e87ce558952efe797d33`.
+- `ad-finding-notation-render-integrity` test symbol provenance verified; verification commit bound to `63d98d19203049d3f52d44d071862fcbb1685147` where all evidence paths and test symbols exist and pass.
+- Manifesto notation correction #4428 and homepage #4063 preserved unchanged.
+- Validation: 10/10 site trust surface audit tests pass; 18/18 claim audit inventory tests pass; `regenerate_claim_audit_evidence --check` passes.
+- Reports: `reports/technical-review/site-surface-provenance-review.md` and `reports/technical-review/site-surface-provenance-reconciliation.json`.
+
+# Prior Handoff Checkpoint — #4450 / PR #4451
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
 - Branch: `fix/why-physics-rigor`; base main `bdf47374`; current commit `SELF`.
