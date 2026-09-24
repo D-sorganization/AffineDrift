@@ -1,3 +1,16 @@
+# Project Steward Pass — 2026-09-24
+
+- Role: `project-steward`; run ID `52cddb048024`; branch `staff/project-steward-task-b97a81`.
+- Updated `docs/project/STATUS.md` to reflect 2026-09-24: IA-THEORY progress notes
+  chapters 1–2 correction, audit provenance merge (#4453), CI green, no open PRs.
+- DV-4253 board decision still pending (2 days since first appearance; 14-day
+  Board-proposal threshold not yet reached).
+- Noted DL-#4429 development log entry shows `in_progress` despite PR #4453 merge;
+  a follow-on session should update it to `shipped`.
+- No Board proposals submitted. No source changes.
+
+---
+
 # Current Technical Review Checkpoint — #4429
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift/Worktrees/AffineDrift-4429`.
