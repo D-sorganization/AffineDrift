@@ -1,234 +1,289 @@
 ---
-description: "If you've ever taken a golf lesson, you've heard variations of the same advice: - Swing on a plane. - The downswing begins with the lower body. - Keep..."
+pagetitle: "Why Physics Matters in Golf"
+description: "Connect motion, forces, work, constraints and chosen inputs to golf impact, with checked examples and clear boundaries between model predictions and human evidence."
+css:
+  - ../../../css/articulated-body.css
+  - ../../../css/computational-brain.css
+bibliography: ../golf_physics.bib
 ---
 
 # Why Physics Matters in Golf {#sec-why_physics}
 
+[]{#sec-01_why_physics}
+[]{#ch-01_why_physics}
+
 ::: {.callout-tip}
 ## The Central Mystery
 
-You've hit a thousand golf balls. Some days your swing feels effortless and the ball soars straight. Other days you're "thinking" through every motion and the ball veers wildly. What changed? Your clubs didn't. The grass didn't. Yet something profound shifted.
+A swing can feel easy while transmitting large forces. A large joint moment can occur while the club barely speeds up. Two swings can reach similar positions and then produce different strikes. To understand these possibilities, we must connect the motion we see to the forces, energy and constraints that make it possible.
 
-Traditional golf instruction says: "Keep your head still. Rotate your hips. Follow through." These cues sometimes help, but they're incomplete. They describe *what* you should do, not *why* those motions produce the desired ball flight, and crucially, they don't explain why the same mental cue works for one golfer but sabotages another.
-
-This book offers a different lens: a physical one. The golf swing is not primarily a puzzle of choreography—it's a puzzle of **forces and torques**.
-
+Our central question is: **how does a golfer organize a coupled mechanical system to deliver the club to a useful impact state?** That question includes speed, orientation, contact location and timing. It also includes the body's ability to produce forces, tolerate loads and respond to disturbances. No single angle, force peak or ratio answers it.
 :::
 
 ## What We Actually Know About Swings
 
-If you've ever taken a golf lesson, you've heard variations of the same advice:
-- Swing on a plane.
-- The downswing begins with the lower body.
-- Keep your trailing arm bent.
-- Rotate your shoulders more than your hips.
-- Stay behind the ball.
+Video and motion capture describe how the body and club move. Force plates measure external contact forces and moments. Other instruments can observe club delivery, ball launch or muscle electrical activity. Each observes a different part of the process. A useful explanation connects these observations through a model whose assumptions can be inspected and whose predictions can be tested.
 
-These observations are useful. Tour professionals do exhibit these patterns. But notice what's missing: *cause*. Why does rotating the shoulders more than the hips produce a straighter shot? What physical principle makes a wider swing arc more forgiving?
+For example, an observed increase in clubhead speed establishes a change in motion. It does not identify which muscles supplied the energy. An inverse-dynamics calculation can estimate net joint forces and moments, given suitable kinematics, inertial parameters and external loads. It still does not uniquely determine the forces of individual muscles. Several muscles, tendons and passive tissues can contribute to the same net result.
 
-Consider a simpler question: when you release a golf club at the top of your backswing and let it fall (don't actually try this—yet), what trajectory does it take? How fast is it moving when it reaches the bottom? How much does gravity contribute versus the acceleration of your arm?
-
-Most golfers have never asked these questions. Coaches rarely frame them in physical terms. Yet much of the answer can be found in the physics of rigid bodies in motion.
+We will distinguish three kinds of statement throughout this book: an identity derived within a declared model, a prediction that depends on fitted or assumed parameters, and an empirical claim about golfers. The first can be checked mathematically; the second needs numerical and model checks; the third needs relevant measurements. Moving from one category to another requires evidence.
 
 ## Two Incomplete Stories
 
 ### The Kinematic Story
 
-Much of modern golf instruction—especially on video—focuses on **kinematics**: the description of motion. In this illustrative coaching example, "the hips have rotated 45 degrees and the shoulders 90 degrees. The club is on-plane."
+Kinematics describes positions, orientations and their time derivatives. It is indispensable: geometry determines where the club can reach, and velocity determines how it approaches the ball. A pose alone, however, omits velocity and any internal state needed to predict what follows. A measured hip angle is also meaningless without its reference frame, rotation convention and point in the swing.
 
-This is useful for pattern recognition. In this illustrative framing, tour professionals do exhibit consistent kinematic patterns. But kinematics is *descriptive*, not *causal*. Knowing that Rory McIlroy's hips rotate 45 degrees at lag doesn't tell you why your hips should rotate 45 degrees, or what happens if they rotate 40 degrees, or 50 degrees. And it does not, on its own, explain what your muscles are actually doing to create that rotation.
+Dynamics links the motion to applied forces and moments, mass distribution and constraints. The relation works in both directions: forces change motion, while configuration and velocity change the response to those forces. The same wrist moment can have different effects when the arm–club geometry differs. This dependence is one reason a coaching cue cannot be translated into a universal torque prescription.
 
 ### The Strength and Flexibility Story
 
-Another narrative dominates fitness and instruction: the golf swing is limited by strength, flexibility, and athletic capacity. "Stronger core = faster swing. More flexible shoulders = wider arc."
+Force capacity, range of motion and coordination restrict the movements a person can produce. They do not select a unique swing. Even an ideal actuator has limits on torque and speed; a muscle's response also depends on activation and mechanical history. A model that prescribes arbitrary joint torques has abstracted away those physiological restrictions.
 
-There's truth here. A weak golfer swings slower. A stiff golfer can't reach certain positions. But strength and flexibility are permitting conditions, not determining ones. Plenty of strong golfers have poor swings. Plenty of flexible golfers are terrible. Why?
+A useful analysis therefore asks both whether a motion produces desirable impact conditions and whether the body can generate it under the relevant loading and contact conditions. More available strength need not produce greater clubhead speed in every swing. Less visible motion or less net joint torque need not mean less muscular activity.
 
-## The Missing Story: Forces
+## The Missing Story: Forces, Motion and Work {#the-missing-story-forces}
 
-Here's what both stories miss: **at every instant of the swing, your body generates forces and torques. These forces determine where the club goes and how fast it moves.**
+For a point mass in an inertial frame, Newton's equation is $m\bm a=\sum\bm F$. Momentum $\bm p=m\bm v$ describes its motion; force is the rate of change of momentum. Momentum is not an additional applied force. In rotating coordinates, centrifugal and Coriolis terms help express the same dynamics, but they must not be added again as physical external forces in an inertial-frame force balance.
 
-The shape of your swing—the kinematics—is the *consequence* of these forces, not the cause. Similarly, your strength merely sets a upper limit on the forces you can generate; it doesn't dictate which forces you generate at each moment.
+Acceleration changes the velocity vector. It can change speed, direction, or both. For a smooth path with nonzero speed $v$ and local curvature radius $\rho$,
 
-When a coach says "rotate your hips," what they mean is: "generate a torque around your vertical axis that accelerates your hip rotation." When they say "release the club," they mean: "stop generating a torque at your wrist, allowing gravity and the club's momentum to accelerate it downward and forward."
+$$
+\bm a=\dot v\,\bm t+\frac{v^2}{\rho}\bm n.
+$$
 
-Physics lets us quantify exactly this. It gives us a language to say:
-- This torque comes from your muscles pulling (what we'll call **control**).
-- This torque comes from gravity doing work (what we'll call **drift**).
-- This torque comes from your arm moving fast, creating **centrifugal effects** (drift again).
-- This force is **state-dependent**—it depends on where your arms are and how fast they're moving.
+Here $\bm t$ is the unit tangent and $\bm n$ points toward the center of curvature. The normal term $v^2/\rho$ is not the full acceleration unless the tangential term vanishes. A real clubhead does not generally follow a circle about a fixed shoulder, so arm length alone does not determine $\rho$.
 
-Once you can attribute each force to its source, you can understand what you're actually trying to control.
+For that point mass, power and kinetic energy obey
 
-::: {.callout-tip}
+$$
+P=\sum\bm F\cdot\bm v=\frac{dK}{dt},\qquad
+K=\frac12mv^2.
+$$
+
+A force perpendicular to velocity can turn the path without changing kinetic energy. Work is power integrated over time, or force integrated along displacement. Thus a large force, a large acceleration, a large power and a large accumulated work are four different claims.
+
+A rigid club adds rotation. Its kinetic energy includes COM translation and rotation about the COM. A force applied at a moving grip does work at the grip's velocity, and an applied couple does work at the club's angular velocity. Clubhead speed by itself is insufficient to compute either total club energy or the work of each applied load.
+
+::: {.callout-note}
 ## Why Attribution Matters
 
-Here's a concrete example: suppose your club is moving at 100 mph at impact. In this illustrative scenario, the acceleration of the clubhead is enormous—roughly 179 times the acceleration due to gravity ($179g$). Your wrists are creating that acceleration, right?
+Consider a manufactured point mass of $m=0.20$ kg on a massless tether of fixed length $L=1.25$ m, attached to a fixed pivot. Gravity is $g=9.81$ m/s$^2$; there is no drag or hinge friction. At the bottom, the mass moves horizontally at $v=40$ m/s. These values are chosen to expose a mechanical distinction, not to represent a measured golfer.
 
-Wrong. Or rather, not entirely. Some of that centripetal acceleration comes from the **tension in your arm**—a constraint force that has nothing to do with muscle contraction. Some comes from gravity. Some comes from the high-speed rotation of your arm (a **velocity-dependent inertial force**). Your wrist torque contributes, yes, but quantifying *how much* is a physics problem.
+The required upward normal acceleration is $v^2/L=1280$ m/s$^2$, about $130.48g$. Upward tension $T$ and downward gravity give
 
-Until you can attribute each force to its source—gravity, muscle, constraint, or momentum—you're flying blind.
+$$
+T-mg=m\frac{v^2}{L},\qquad T=257.962\ \mathrm N.
+$$
 
+Both forces are perpendicular to the velocity at that instant, so their instantaneous powers are zero. The mass nevertheless has $K=160$ J of kinetic energy supplied before this instant. Large tension does not establish that the support is currently adding energy, nor does it tell us what a human hand would expend to sustain the load.
 :::
 
-## Two Kinds of Forces: A Preview
+## Two Kinds of Terms: A Preview {#two-kinds-of-forces-a-preview}
 
-This entire book pivots on a single insight: **all forces in your swing come from one of two sources**.
+The book uses a **drift–input decomposition** to ask a precise question: at a given state, what motion rate would a chosen model predict at zero selected input, and how does changing that input alter the prediction? This is a mathematical split of a model's state derivative. It is not a universal division of physical forces into effortless effects and muscular effort.
 
-### Drift: The Physics You Can't Control
+### Drift: Evolution at the Chosen Input Zero {#drift-the-physics-you-cant-control}
 
-In this illustrative analogy, when you're driving a car at 60 mph and you lift your hands off the wheel for a moment, the car doesn't stop turning just because you stopped steering. The **momentum and the road** keep the car moving in its curved path.
+Drift depends on the model, its state and the definition of input zero. It can include motion resulting from energy supplied earlier. For example, a fast unforced pendulum already contains kinetic energy; inertia shapes its evolution but does not create energy. If elastic tissues or a flexible shaft are modeled, their stored energy and internal state also matter.
 
-In your golf swing, similar "passive" physics is constantly at work. If you swung your arm and then just let go of the club, gravity would pull it down. The rotation of your arm would carry the club in a curved path. These are **dynamics** that happen whether you "think" about them or not.
+A past control changes the state at which future drift is evaluated. Consequently, saying that an instantaneous acceleration is attributed to drift does not mean that earlier muscle action was unimportant. Nor does it mean that the trajectory is unavoidable: a feasible future input can alter it.
 
-We call this component **drift**. It's what the system does on autopilot, determined by the laws of physics given your body's current state (positions and velocities).
+### Control: The Selected Model Input {#control-what-your-muscles-add}
 
-### Control: What Your Muscles Add
+In our first rigid-link models, the input is an applied generalized actuator torque. A detailed human model might instead use muscle excitation and include activation and contraction dynamics. These are different input choices. A muscle command is not generally an instantaneous, unconstrained joint-torque command.
 
-On top of drift, you actively generate torques by contracting muscles. These are what we call **control** forces. They add to (or subtract from) the passive drift, steering the system toward your desired outcome.
-
-Here's the profound insight: **elite golfers don't fight drift. They ride it.** They understand their body's passive dynamics deeply enough that they add minimal muscular control, just enough to navigate the drift toward the target.
-
-Novice golfers do the opposite. They fight their own physics. They generate excessive muscular force to cancel out the drift effects, then generate more force to make the swing they want. It's exhausting, inconsistent, and why golfers talking about the swing often say "trust" and "let it happen." In our framework, this translates to: let the drift happen.
+Antagonist muscles can exert opposing moments with a small or zero net joint moment. Such co-contraction can change joint stiffness and tissue loads. Therefore **zero net torque is not muscle relaxation**, and net mechanical work is not metabolic expenditure. Claims about effort require measurements or an additional physiological model.
 
 ::: {.callout-important}
 ## Drift vs. Control in a Simple Fall
 
-Imagine your arm holding a 1 lb weight at shoulder height. You're exerting an upward force equal to the weight's weight (call it $W = 1 \text{ lb}$). This is control—your muscle generating force to hold the weight steady.
+A freely falling point mass, released from rest through a height $h$ in uniform gravity without air resistance, gains $mgh$ in kinetic energy. At $h=1$ m and $m=0.20$ kg, this is $1.962$ J and the final speed is $\sqrt{2gh}=4.429$ m/s. To reach $40$ m/s from rest using only gravity in this model would require a drop of $81.55$ m.
 
-Now you release it. What happens? drift takes over. Gravity pulls downward. The weight accelerates at $g = 32 \text{ ft/s}^2$. You're not doing anything—physics is.
-
-In a golf swing: when your arm is at the top of the backswing holding the club in a specific position, you're exerting control. During the downswing, you release—and drift (gravity plus the rotational momentum of your arm) does most of the work of accelerating the club toward impact. Your muscles then add small corrections to steer that accelerating club toward the target.
-
-In simplified double-pendulum models, gravity and passive dynamics account for a substantial majority of the work --- on the order of 70--80% in some parameter regimes [@Jorgensen1994; @MacKenzie2009]. Your muscles contribute the remainder, mostly steering.
-
+This comparison is an energy check for the specified mass, not a percentage of a golfer's energy budget. A golfer's segments have different height changes, initial velocities, muscular work and elastic storage. A quantitative attribution must identify the system boundary and time interval and balance all relevant energy flows. There is no general rule here that passive dynamics supplies most downswing work or that muscles mainly steer.
 :::
 
 ## The Central Equation
 
-By the end of this book, you'll understand and be able to write this equation:
+For independent local coordinates $q$ of an ideal rigid mechanical model, with no additional external loads or unresolved constraints, write
 
 $$
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+M(q)\ddot q+c(q,\dot q)+g(q)=B(q)u.
+$$
+[]{#eq-ch01_euler_lagrange}
+
+The symmetric positive-definite mass matrix $M$ describes inertia. The vector $c$ is the velocity-dependent inertial bias. We define $g=\nabla_q V$ using gravitational potential $V$, so the gravitational generalized force is $-g$. The matrix $B$ maps the selected inputs into generalized forces. When each independent angular coordinate has its own conjugate actuator torque, $B$ can be the identity. A factorization $c=C\dot q$ is common but the matrix $C$ is not unique. These conventions follow standard multibody mechanics [@TedrakeMultibodyEnergy].
+
+Solving for acceleration gives
+
+$$
+\ddot q=\underbrace{-M^{-1}(c+g)}_{a_0}
+       +\underbrace{M^{-1}Bu}_{a_u}.
 $$
 
-This is the **manipulator equation**. Don't be intimidated. It says:
-- $\bm{M}(\bm{q})$: the inertia of your body and the club (depends on position).
-- $\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}$: velocity-dependent forces (Coriolis, centrifugal) that arise when you move fast.
-- $\bm{g}(\bm{q})$: gravity's torque on your body.
-- $\bm{\tau}$: the *applied* torques—what your muscles generate.
+The inverse is analytical notation; numerical implementations solve a linear system. The term $M\ddot q$ is part of the force balance, not itself a drift force. For $x=(q,\dot q)$, the corresponding state equation is
 
-The left side is passive dynamics: what your body and the physics do on their own.
-The right side is control: what you're actively commanding.
+$$
+\dot x=f(x)+G(x)u,\qquad
+f(x)=\begin{bmatrix}\dot q\\a_0\end{bmatrix},\quad
+G(x)=\begin{bmatrix}0\\M^{-1}B\end{bmatrix}.
+$$
+[]{#eq-ch01_affine}
 
-This equation is the spine of the book. Everything flows from understanding its pieces.
+Drift includes the kinematic block $\dot q$. This state closes the ideal rigid model; it does not claim that pose and rate fully specify a human. Generalized velocities may also differ from coordinate rates in spatial representations, as Chapter 2 explains.
+
+### Constraints and Energy Complete the Interpretation
+
+When coordinates retain an ideal, stationary holonomic constraint $h(q)=0$, its reaction appears as $J^T\lambda$, where $J=\partial h/\partial q$. The dynamics and the differentiated constraint must be solved together:
+
+$$
+M\ddot q+c+g=Bu+J^T\lambda,\qquad
+J\ddot q+\dot J\dot q=0.
+$$
+
+For independent constraint rows and nonsingular $M$, these equations determine acceleration and reaction. Changing $u$ generally changes $\lambda$ too; one cannot remove an actuator torque while arbitrarily freezing the old reaction. Foot contact additionally requires feasible normal forces and friction. A foot cannot pull on an ordinary floor; a model may need to change contact mode when a constraint ceases to be feasible.
+
+For ideal stationary constraints, $J\dot q=0$ and their total power is $\lambda^TJ\dot q=0$. They can nevertheless transmit forces and transfer energy between connected bodies. A moving support can supply power. For the simple rigid system with stationary ideal constraints, no dissipation and no other loads,
+
+$$
+E=\frac12\dot q^TM\dot q+V(q),\qquad
+\dot E=\dot q^TBu.
+$$
+
+Gravity exchanges potential and kinetic energy; internal inertial coupling redistributes motion. Neither creates total mechanical energy. Modeling the club alone places hand forces outside its boundary, whereas modeling body and club together makes their contact internal. This boundary change must be stated when comparing energy accounts.
+
+### The Input Baseline Matters
+
+If $u=\bar u(x)+w$, then exactly the same dynamics can be written
+
+$$
+\dot x=\bigl[f(x)+G(x)\bar u(x)\bigr]+G(x)w.
+$$
+
+The new drift contains the selected baseline input. As a scalar illustration, let angular acceleration be $a=-2+0.5u$, with $a$ measured in rad/s$^2$, torque $u$ in N m and the gain $0.5$ in (rad/s$^2$)/(N m). Take $u=6$. The total is $a=1$. With baseline $\bar u=4$, the zero-residual acceleration is $0$ and $w=2$ supplies the same $a=1$. A ratio of drift magnitude to input-induced magnitude changes from $2/3$ to $0$ although the physical acceleration is unchanged. The admissible input set must be shifted with the baseline as well.
+
+A Drift-Control Ratio (DCR) therefore requires a declared input zero, state or task quantity, norm, units and treatment of small denominators. It measures the stated decomposition; it does not alone measure energetic efficiency, tissue load or expertise. Comparing skill groups or prescribing a swing from it requires separate validation. Affine dependence on inputs at one fixed state also does not imply that complete nonlinear swing trajectories can be superposed.
+
+[]{#why-physics-matters}
 
 ## Why a Physics Textbook for Golfers?
 
-You might ask: *physicists have written about golf before [@Jorgensen1970]. Why do we need another book?*
+The purpose is to connect useful observations to mechanisms and testable questions. Existing research already combines motion analysis, inverse dynamics, forward simulation and energy analysis. Our contribution should be a clear account of how those perspectives fit together, with enough detail to reproduce an argument and understand its limitations.
 
-Because nearly all existing physics of golf is written **for physicists**, not **for golfers**. It buries the intuition under pages of equations. Worse, it treats the golf swing as an optimization problem to be solved in hindsight: "What swing parameters maximize distance?" [@Penner2001] That's useful for equipment design, but it's not actionable for a player.
+For example, Nesbit and Serrano used kinematically driven body and club models to estimate work and power for one selected swing from each of four amateur golfers [@Nesbit2005b]. That supports an explicit energy accounting approach. Model-derived joint work in four swings is not a direct measurement of muscle metabolism or a population law relating skill to passivity.
 
-This book is different. We're asking: **what is the structure of the forces and torques that make a swing possible?** Once you understand that structure, you can:
-- Diagnose why a particular swing flaw produces a specific miss (crooked shot, thin strike, lack of distance).
-- Understand why a coach's cue works or doesn't work (it's because of how the cue changes your control relative to the drift).
-- Build intuition about what your body can and can't easily do (based on the passive dynamics).
-- Improve faster, because you're working with physics, not against it.
+MacKenzie and Sprigings developed a three-dimensional forward model with a flexible shaft and torque generators, fitted aspects of its motion to a golfer and optimized a clubhead-speed objective [@MacKenzie2009]. Its methods include actuation and timing; it is not evidence that a universal passive-work percentage applies to golf. A result optimized for one objective within one model must be tested before being used as individual coaching advice.
 
-::: {.callout-important}
-## Why Physics Matters
+### Connecting the Swing to the Shot
 
-The golf swing is fundamentally a problem of forces and torques. Every aspect of your swing—the path, the speed, the consistency, the distance—is determined by the forces you generate and how those forces interact with gravity, inertia, and constraints.
+A useful chain of reasoning starts with feasible body and club states, then computes the effects of inputs and contacts over time, then evaluates the delivered club state at impact. Ball launch requires a collision model or measurements of the collision. Flight then depends on the ball's launch velocity, spin and aerodynamic environment. Optimizing one joint moment or maximizing clubhead speed is not equivalent to optimizing the final shot.
 
-Traditional coaching describes *what* you should do (kinematics). Physics explains *why* that motion produces the result it does, and what forces generate that motion (dynamics).
+Timing is part of the mechanics. Changing a torque earlier in the downswing changes later geometry, velocity and the forces needed to preserve contact. It can also change when and where impact occurs. A comparison at the same clock time may therefore answer a different question from a comparison at each swing's actual impact. This is why later chapters distinguish local acceleration attribution from finite-time trajectory and impact sensitivity.
 
-Understanding the forces lets you:
-- Separate passive dynamics (drift) from active control.
-- Diagnose and fix flaws.
-- Improve consistency by riding the natural physics of your swing.
+A coaching cue can be investigated through this chain: measure how the player's motion changes, estimate loads under declared assumptions, predict delivery, and check the result against observed impact and ball flight. The mechanics does not guarantee that the cue produces the intended change, or that the same cue acts identically on another golfer.
 
-Everything in this book flows from the manipulator equation: $\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$.
-
-:::
+[]{#the-double-pendulum}
 
 ## The Double Pendulum: Your Guide
 
-Throughout this book, we'll use a simple model: **the double pendulum**.
+Chapter 3 uses two effective rigid links joined by planar hinges, with a fixed proximal pivot. Its coordinates describe one link's absolute angle and the second link's relative angle. It exposes inertial coupling, energy transfer and the distinction between joint acceleration and endpoint acceleration in a model small enough to derive and check completely.
 
-::: {.callout-note}
-## The Double Pendulum
+These are effective links, not a unique anatomical map. An arm–club interpretation and an upper-arm–forearm interpretation are different models. The baseline omits bilateral grasp, torso translation, three-dimensional face orientation, shaft deformation and ball contact. It is a starting point for a model hierarchy, not proof that those omitted effects are small.
 
-Two rigid rods ("links") connected by a hinge. The first rod is hinged at a fixed point and can rotate freely. The second rod is hinged to the end of the first and can also rotate freely. Each rod has mass and length.
+Some unforced double pendulums exhibit chaotic dynamics in some regimes. Nonlinearity alone does not establish chaos, and a sensitive impact result over a short interval is not a demonstration of long-time chaotic behavior. Feedback can reduce some disturbances under suitable conditions; its presence alone does not guarantee stability. The relevant question for a swing is how plausible initial-state, input and model uncertainty affects the outcome over the swing interval.
 
-In golf terms: the first rod is your **upper arm** (shoulder to elbow). The second rod is your **forearm + club** (elbow to club head).
+### What Happens If You Let Go Mid-Swing?
 
+Three interventions must be kept separate. Setting an ideal hinge's drive torque to zero retains the hinge and its reaction forces. Removing the attachment changes the constraint and hence the equations. Asking a person to relax changes an evolving physiological system; it is not automatically either of those mathematical operations. The coaching word “release” must therefore be operationally defined before a model can test it.
+
+Return to the manufactured tethered point mass. Choose an inertial plane with horizontal coordinate $X$ and upward $Y$, with the pivot at the origin. Let $\theta$ increase from downward vertical toward positive $X$. Retaining the hinge with zero drive torque gives
+
+$$
+\ddot\theta=-\frac{g}{L}\sin\theta,\qquad
+(X,Y)=(L\sin\theta,-L\cos\theta).
+$$
+
+Start at $\theta(0)=0$ and $\dot\theta(0)=32$ rad/s. Removing the tether without an impulse instead preserves initial position and velocity but gives
+
+$$
+(X,Y)=(40t,-1.25-\tfrac12gt^2).
+$$
+
+The first trajectory curves upward initially because the retained tether supplies tension; the second falls below the horizontal tangent. Both have zero drive torque. Their different accelerations demonstrate why “zero torque” does not specify a trajectory without the retained constraints and initial state.
+
+On narrow screens, scroll the figure or [open it at full size](../figures/why_physics_release.svg).
+
+::: {#fig-ch01_drift_control_schematic}
+::: {.aba-diagram-scroll role="region" aria-label="Retained pendulum and released point-mass trajectories; scroll horizontally" tabindex="0"}
+<img src="../figures/why_physics_release.svg" alt="Computed trajectories from the same bottom position and rightward velocity. With a fixed tether the point mass follows a circular arc upward; after tether removal it follows a downward parabola. Markers are separated by 10 milliseconds from zero to 60 milliseconds.">
 :::
 
-This is a toy model. Real golfers have two arms, a rotating torso, hip and knee joints, and many more degrees of freedom. But here's the remarkable thing: **almost all of the essential physics appears in the double pendulum**.
+Same Initial State, Different Constraints. Manufactured Point-Mass Example With L = 1.25 m, Initial Speed 40 m/s and g = 9.81 m/s². Markers Are 10 ms Apart Through 60 ms. The Retained Hinge Has Zero Drive Torque; the Released Mass Has No Tether Force. Neither Trajectory Is a Measured Golf Swing.
+:::
 
-The equations are complicated enough to be interesting but simple enough to solve (sometimes exactly, often numerically). The physics of gravity, inertia, velocity-dependent forces, and control all show up. And crucially, the double pendulum exhibits chaotic behavior—meaning small changes in control can produce wildly different outcomes, just like the golf swing.
+For a released rigid club under uniform gravity and no aerodynamic force, it is the **center of mass** that follows a ballistic path. The clubhead also moves because the club rotates. Zero external moment about the COM conserves angular momentum; it does not generally keep a three-dimensional body's angular velocity constant.
 
-**Example: What Happens If You Let Go Mid-Swing?**
-
-Imagine you're mid-swing with your double-pendulum arms. You're generating muscular torques at the shoulder and elbow. Then, midway through the downswing, you simply stop contracting those muscles and let your arms fall freely.
-
-- **What will happen?** Your arms will not continue in a straight path. Instead, gravity will pull the club downward, and the rotational momentum of your arm will curve its path. The club will accelerate, but not in the direction you were controlling.
-- **Why?** Because your control disappeared. Only drift remains—gravity, inertia, and the constraint that your arm is hinged at the shoulder. That drift is perfectly well-defined by the physics. It's deterministic. But it's not the path you wanted.
-- **What does this tell us?** It tells us that your brain is constantly solving a control problem. Even in a "smooth, automatic" swing, your nervous system is generating muscular torques at every instant to steer the passive drift toward impact. Elite golfers make this look effortless because they've learned to use small, efficient control signals to ride the drift. Novices fight the drift because they're not aware of it.
-
-In [Chapter 3](./ch03_double_pendulum.qmd#sec-03_double_pendulum), we'll actually solve the equations for what happens if you let go mid-swing in a double-pendulum model with realistic golf parameters. The answer will surprise you.
+The retained example also disproves a supposed need for nonzero drive torque at every instant of a predictable motion. A specified initial state and zero-input dynamics already define a trajectory. Whether that trajectory reaches a particular target, remains feasible or is robust to uncertainty is a further question. Chapter 3 computes such model trajectories with declared, manufactured parameters.
 
 ## A Road Map
 
-Here's what unfolds in the following chapters:
+[Chapter 2](ch02_language_of_motion.html#sec-02_language_of_motion) defines frames, coordinates, configuration, velocity and predictive state. It explains why a pose is not a complete description of an evolving system.
 
-### [Chapter 2](./ch02_language_of_motion.qmd#sec-02_language_of_motion): The Language of Motion
-Before we can talk about forces, we need a language for describing where your body is and how fast it's moving. We'll introduce **generalized coordinates**—a way to describe the configuration of your body (e.g., shoulder angle, elbow angle). We'll define **state space**—the combination of position and velocity. Every swing, at every instant, is a point in this state space.
+[Chapter 3](ch03_double_pendulum.html#sec-03_double_pendulum) derives the two-link equations, checks their energy balance and separates mathematical coupling from claims about anatomy or chaotic behavior.
 
-### [Chapter 3](./ch03_double_pendulum.qmd#sec-03_double_pendulum): The Double Pendulum
-We'll set up the full equations of motion for the double pendulum using **Lagrangian mechanics**. You'll see exactly where the mass matrix $\bm{M}(\bm{q})$ comes from (it measures inertia), where the Coriolis and centrifugal terms come from (they're what it means for your arm to move fast), and where gravity comes from. We'll compute all of this step-by-step, with golf numbers.
-
-### [Chapter 4](./ch04_forces_and_torques.qmd#sec-04_forces_and_torques): Forces and Torques
-We'll unpack the manipulator equation, term by term. What does each term do? How big are the forces? At impact, your clubhead accelerates at $179g$. Where does that come from? We'll attribute every force to its source: muscle, gravity, constraint, or momentum.
-
-### [Chapter 5](./ch05_affine_structure.qmd#sec-05_affine_structure): Drift and Control
-Finally, we'll write the equation in its most useful form:
-
-$$
-\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
-$$
-
-where $\bm{f}(\bm{x})$ is the drift and $\bm{G}(\bm{x}) \bm{u}$ is your control. We'll understand exactly which parts of your swing are passive (drift) and which parts require active muscular command (control). We'll introduce the **Drift-Control Ratio** (DCR)—a diagnostic tool that tells you whether a particular swing phase is drift-dominated or control-dominated.
-
-Elite golfers, we'll find, have high DCR in the critical phases. They let drift do the work. Novices have low DCR—they're fighting physics with muscle.
+[Chapter 4](ch04_forces_and_torques.html#sec-04_forces_and_torques) examines applied loads, generalized moments and directional acceleration. [Chapter 5](ch05_affine_structure.html#sec-05_affine_structure) develops the chosen-input affine form and its limits. Together these tools support later treatments of constraints, inverse dynamics, control, uncertainty and impact.
 
 ::: {.callout-important}
 ## Key Takeaways
 
-1. **Physics is causal**. The shape of your swing (kinematics) is a consequence of the forces and torques you generate (dynamics).
-2. **Forces come from sources**. Every force in your swing is either drift (gravity, momentum, inertia) or control (your muscles) or a constraint (the hinge at your elbow).
-3. **Attribution is power**. Once you understand which forces come from which source, you can diagnose problems and improve systematically.
-4. **The manipulator equation is the spine of the book**:
-   $$
-   \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
-   $$
-   Left side = drift. Right side = control.
-5. **The double pendulum is your guide**. It's simple enough to understand fully, complex enough to be realistic. Use it to build intuition.
-
+1. Motion, forces and constraints must be interpreted together. Geometry changes force response, and forces change future geometry.
+2. Normal acceleration can be large while instantaneous power is zero. Momentum and inertia are not new sources of energy.
+3. Drift is a model's evolution at a specified input zero. It can reflect earlier work and retained internal state.
+4. Net torque, muscle activation, contact force, mechanical work and metabolic effort are distinct quantities.
+5. A useful model carries its assumptions through to finite-time impact predictions and is tested against the observations relevant to its claim.
 :::
 
 ::: {.callout-note}
 ## On This Site
 
-- **[The Affine Nature of the Golf Swing](../../affine-nature-golf-swing.html)** — Site overview of drift–control modeling in the swing
-- **[Part 1: Control-Affine Framework](../../theory-part1.html)** — Derivation of the drift–input decomposition used throughout the book
-- **[Superposition in Control-Affine Systems](../../superposition.html)** — How local perturbations combine in multibody golf models
+- **[The Affine Nature of the Golf Swing](../../affine-nature-golf-swing.html)** — Overview of drift–input modeling in the swing.
+- **[Part 1: Control-Affine Framework](../../theory-part1.html)** — Derivation of the chosen-input decomposition.
+- **[Superposition in Control-Affine Systems](../../superposition.html)** — Fixed-state attribution and local perturbations in multibody models.
 :::
 
 ## Chapter Exercises
 
-1. **The Free Fall**. Hold a golf ball at arm's length. Release it. How long until it hits the ground? How fast is it moving when it hits? (Use $g = 32 \text{ ft/s}^2$.) Now do the same with a heavier ball (baseball). Does it hit the ground faster or slower? Why? (Hint: think about forces.)
-2. **The Spinning Ball**. Spin a golf ball on a table (give it backspin). Watch it slow down and stop. What forces are acting on it? What forces are not acting on it? Try the same on a frictionless surface (ice). What's different?
-3. **The Pendulum**. Hang a weight from a string at arm's length. Lift it to one side and release. Describe the path it takes. Now, while it's swinging, pull on the string to make it swing faster. What torque are you applying? Does the weight swing in a different direction?
-4. **The Mystery of Cues**. You've heard a coach say: "Rotate your hips faster." In terms of forces and torques, what is that coach asking you to do? Where should that torque come from (muscle, gravity, constraint)? What happens if you generate that torque at the wrong time in the swing?
-5. **Drift vs. Control**. Throw a baseball as hard as you can. Now throw it at half speed but with perfect aim. In which throw do you need to generate more muscular force? In which throw is drift (gravity) doing more work? Explain.
+1. **Free Fall.** A point mass is released from rest 1 m above a horizontal floor. Ignore air resistance and use $g=9.81$ m/s$^2$. Find flight time and speed immediately before contact. Does doubling mass change them?
+2. **The Spinning Ball.** Contrast a sphere spinning about a vertical axis at an ideal point contact with a sphere initially backspinning about a horizontal axis while its center is stationary. What does tangential contact friction do in each idealization? Why can real balls eventually stop?
+3. **The Retracting Tether.** A mass moves in a horizontal plane without gravity or friction. An inward tension acts along a tether through a fixed hole, while tether length $r$ decreases. Is there torque about the hole? Can tension do positive work?
+4. **The Mystery of Cues.** Does “rotate your hips faster” specify a unique joint torque? What additional observations and assumptions would an inverse-dynamics calculation require?
+5. **Two Throws.** The same ball starts from rest at the same initial height in two trials and leaves the hand at the same final height, at speeds $v$ and $2v$. Neglect air resistance during the throws. Compare the changes in kinetic energy and gravitational work. Can peak muscle force be inferred from those speeds?
+6. **Drift and the Baseline.** Recompute the scalar example $a=-2+0.5u$ at $u=6$ using baseline $\bar u=4$. Explain why the changed attribution does not demonstrate improved skill.
+
+## Worked Answers
+
+### 1. Free Fall
+
+The displacement is $h=gt^2/2$, so $t=\sqrt{2h/g}=0.4515$ s and the final speed is $gt=4.429$ m/s. Both are independent of mass in this model: doubling gravitational force also doubles inertia. Contact deceleration at the floor is outside this calculation.
+
+### 2. The Spinning Ball
+
+For pure vertical-axis spin, the ideal bottom point lies on the spin axis and has no tangential slip. A point-contact model with tangential Coulomb friction alone has no torsional resistance about that normal. A real finite contact patch can develop a resisting torsional moment.
+
+For horizontal-axis backspin with a stationary center, the contact point slips. Tangential friction changes both translation and spin and dissipates mechanical energy while slipping. Once ideal rolling without slip is reached on a rigid level surface, rolling can persist without dissipative friction. Real deformation, rolling resistance and air drag can remove energy. Ice is not an exactly frictionless model.
+
+### 3. The Retracting Tether
+
+The tension has zero moment about the hole because its line of action passes through it. Yet its power is $P=-T\dot r$, which is positive during retraction. With no external torque about the hole, angular momentum $mr^2\dot\theta$ is conserved even as energy increases through work done by the puller. For $T=5$ N and $\dot r=-0.3$ m/s, power is $1.5$ W. “Pulling harder” is therefore not synonymous with applying a larger pivot torque.
+
+### 4. The Mystery of Cues
+
+The cue names a desired change in motion, not an actuator command. We need a defined coordinate and reference frame, time-resolved motion and its derivatives, inertial properties, external loads and a feasible contact model. Even then, inferred net joint torques do not uniquely identify muscle forces or establish which coaching cue would produce them.
+
+### 5. Two Throws
+
+The kinetic-energy changes are $mv^2/2$ and $2mv^2$, so the second is four times the first. With the same initial and final heights, gravitational work is identical: $mg(Y_{\rm initial}-Y_{\rm final})$. Under the stated assumptions the larger final energy requires more non-gravitational work on the ball, but peak force depends on the path and force-time history. Muscle forces further depend on body mechanics; ball speed alone does not determine them.
+
+### 6. Drift and the Baseline
+
+The original terms are $-2$ and $3$, summing to $1$. The shifted terms are $-2+0.5(4)=0$ and $0.5(6-4)=1$. Nothing about the motion or body has changed. Only the definition of the zero-input comparison changed, so a different ratio cannot by itself demonstrate a physiological or coaching improvement.

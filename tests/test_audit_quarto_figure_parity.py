@@ -291,11 +291,12 @@ class TestAuditBookPhysicsOfGolf:
         # #4351 replaces the dimensionally incorrect hinge sketch with verified trajectories.
         # #4369 replaces the muscle sketch with a shared feasibility/power figure.
         # #4444 replaces Chapter 2's incorrect angle arcs with the shared verified geometry.
-        assert res.total_latex_tikz == 4
-        assert res.total_latex_includegraphics == 32
+        # #4450 replaces Chapter 1's force sketch with a checked retained/released pair.
+        assert res.total_latex_tikz == 3
+        assert res.total_latex_includegraphics == 33
         assert res.total_latex_fig_labels == 36
-        assert res.total_quarto_figures == 33
-        assert res.missing_figures_count == 3
+        assert res.total_quarto_figures == 34
+        assert res.missing_figures_count == 2
         assert res.is_in_full_parity is False
         muscle = next(
             chapter

@@ -1,3 +1,90 @@
+# Paused Handoff Checkpoint — #4450 / PR #4451
+
+The user requested a committed PR handoff and an immediate stop after pushing
+this checkpoint. Do not start additional reviews or rewrites. The next agent
+should finish CI, merge and publication verification for the existing correction.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/why-physics-rigor`; base main `bdf47374`; current commit `SELF`.
+- Regular PR: [#4451](https://github.com/D-sorganization/AffineDrift/pull/4451), open.
+  Governing issue #4450 is a native child of corpus #4021 under epic #4009.
+- Frozen source/render revision: `787fb5819204d637b2e5eeb5ad9b589fba07b389`.
+  Six findings bind twelve paths, independently checked against committed bytes.
+  Initial binding: `966d3187785c2e9cb9c6f13af38f423236be1dc1`.
+  Final twelve-path verification: `95b5c738aaf9aded51530c1383da484ee9b1267f`; the only
+  later scientific-evidence change is the CI-required Python constant naming.
+- Both complete Chapter 1 editions now distinguish force, acceleration, work and
+  power; define the input baseline and actuator mapping; retain feasible constraint
+  reactions; separate drive-torque removal, attachment removal and muscle relaxation.
+  Connect these mechanics to finite-time delivery/impact without inferring skill,
+  metabolism or human anatomy from manufactured model results.
+- New reproducible SVG/PDF compares retained and released point-mass trajectories;
+  six worked answers and 22 independent mechanics/regression cases accompany it.
+  Figure output uses LF on Windows so Git preserves its frozen evidence bytes.
+- Final full Python suite: 5,538 passed, 29 skipped, 132 deselected; 92.9% src
+  coverage, 79.22% including scripts. All 47 focused audit/boundary/hygiene/mechanics
+  cases pass. Content lint: 131 passed/four existing skips. Jest: 25 suites,
+  420 passed/19 skipped. Ruff, Black, mypy (91 existing targets plus the new figure
+  script), title case, bibliography, display math, size/style and site-link gates pass.
+- Rebuilt 529-page PDF; physical Chapter 1 pages 32–41 inspected, final refinements
+  reread. Other chapters are not certified. Production browser gate 4/4 with zero
+  serious/critical axe issues. All 103 expressions render in both themes at desktop
+  and mobile sizes; six wide equations and the diagram support keyboard scrolling.
+- Reports: `reports/technical-review/why-physics-review.md` and
+  `reports/technical-review/why-physics-render-verification.json`. Preserve these
+  frozen reports during merge/live publication; use a separate publication receipt.
+- Initial broad-run failures were the temporary deferred route, changing PDF digests
+  during rendering and local browser captures at the root. Final bindings and
+  capture relocation fix all five without weakening tests. An initial push hook
+  also caught concurrent test-generated changes; the clean retry passed all hooks.
+  Test-only generated timestamps/format changes were verified and restored.
+- Corpus index marks both sources fully reviewed; 167 source entries still require
+  a full technical audit, plus whole-book reconciliation. The broader goal is
+  paused at the user's request; never report the corpus complete prematurely.
+- Coordination session: `technical-review-20260923-why-physics`. Previous lease
+  5804272169 and presence 5804272400 expire 2026-09-24 00:51 UTC; release at
+  this handoff. A successor must check ownership and acquire a fresh lease.
+  Inbox was complete with no conflicts; seven historical identity warnings
+  and two already-landed informational notices remain nonblocking.
+- CI correction: static job 107425724858 required the conventional
+  `GRAVITY_M_S2` name. The generator and independent tests now use that name
+  with the same 9.81 value. Published source, figures and frozen render reports
+  remain unchanged; live evidence digests track the revised Python files.
+  All 63 mechanics/figure/audit cases pass, as does the code-quality checker
+  on all 754 tracked Python files. Every trajectory array and both regenerated
+  vector files exactly match the frozen output.
+- GitHub CI on `570252198f3361006944a25b6cf9066c57a181ce`:
+  CI Standard run 35934522768; static, JavaScript and website lint passed.
+  Python job 107428571259 passed: 5,490 tests, 32 skips, 132 deselections,
+  92.85% coverage; content lint 131 passed/four skips. E2E job 107428571258
+  was still rendering the full site at the last snapshot. No review comments
+  or requested changes were present. This handoff-only push creates a new CI
+  head: inspect PR #4451's actual head rather than reusing an older success.
+- Protected squash auto-merge is already armed through central
+  `scripts/automerge_guard.py`. Leave branch protection intact. The PR may merge
+  after this handoff; check current state before any further push.
+- Successor steps: verify final-head checks and reviews; allow protected merge;
+  fetch main and compare its tree to the checked head; verify all twelve evidence
+  paths against `95b5c738aaf9aded51530c1383da484ee9b1267f`. Follow the exact main
+  CI/deployment (or a verified descendant carrying those same bytes). Inspect
+  the live revision manifest and live-every-page artifact: 240 routes × four
+  viewport/theme cases, all four Chapter 1 results, zero serious/critical axe
+  violations. Do not count a cancelled deployment as successful publication.
+- Then create `reports/technical-review/why-physics-publication.json`, update
+  DL-#4450 to shipped and both corpus rows, and merge a regular documentation
+  PR. Preserve original source/render reports. No additional content work is
+  authorized at this checkpoint. Never create a draft PR.
+- Validation commands: `py -3.12 -X utf8 -m pytest --cov --cov-report=term:skip-covered`;
+  `py -3.12 -X utf8 -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120`;
+  `npx --no-install jest --runInBand`; `python -m scripts.regenerate_claim_audit_evidence --check`.
+  Browser and print recipes/results are in the frozen verification report.
+- Stage explicit paths only. Preserve peer handoff/log/SPEC records and old frozen
+  evidence. Existing untracked captures, helpers and logs are local QA, not
+  unpublished product changes. The CI watcher and local preview are stopped
+  for handoff; restart the preview only if another validation requires it.
+
+---
+
 # Deferred Catalog Enforcement - #4445
 
 - Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-deferred-guard`.

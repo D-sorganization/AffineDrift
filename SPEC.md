@@ -397,3 +397,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-23 | #4441 | Correct the full contraction lay article: incremental stability, normalized Riccati rates, optimizer evidence, mechanical impedance and golf event sensitivity; verify numerical and accessible rendered examples. |
 
 | 2026-09-23 | #4444 | Reconcile paired Language of Motion coordinates, state closure, constraints and directional kinematics; replace unsupported swing examples with checked trajectory and worked answers, and rebuild the print edition. |
+
+| 2026-09-23 | #4450 | Correct paired opening-chapter force, energy, constraint and input-baseline arguments; add checked release trajectories and worked answers with explicit golf-evidence boundaries. |
