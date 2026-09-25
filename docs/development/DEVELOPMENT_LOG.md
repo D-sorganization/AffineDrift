@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4429 · Site-Surface Audit Provenance Reconciliation
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** local
-- **PR:** 
+- **PR:** #4453
 - **Issue:** #4429 (site-surface audit #4063; corpus #4021; epic #4009)
 - **Branch:** `feat/4429-reconcile-audit-provenance`
 - **Paths:** `data/trust/site_trust_surface_audit.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/site-trust-surface-audit.md`, `reports/technical-review/site-surface-provenance-review.md`, `reports/technical-review/site-surface-provenance-reconciliation.json`, `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, `docs/development/HANDOFF.md`
 - **Started:** 2026-09-24
-- **Last verified:** 2026-09-24 (SELF; 10/10 site trust surface audit tests pass; 18/18 claim audit inventory tests pass; regenerate_claim_audit_evidence --check passes; 11 routes audited for non-scientific link-gate additions; source revisions bound to committed checkpoint 63d98d19; render revision 0d2bd503 preserved; #4428 and homepage preserved)
+- **Last verified:** 2026-09-24 (PR #4453 merged cdd0044c; issue #4429 closed; 10/10 site trust surface audit tests and 18/18 claim audit inventory tests passed in CI.)
 - **Summary:** Reconciles historical provenance of site-surface audit evidence across 12 canonical routes, binds exact source bytes to committed checkpoint 63d98d19, resolves test symbol provenance for ad-finding-notation-render-integrity, and preserves render history.
-- **Next step:** Commit, open PR, pass CI, auto-merge, and verify live publication.
+- **Next step:** None. PR #4453 merged 2026-09-24; issue #4429 closed.
 
 ### DL-#4450 · Why Physics Matters
 
@@ -177,16 +177,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4253 - Deferred Impact Evidence Planning
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex (planning migration)
 - **Issue:** #4253
 - **Branch:** `docs/deferred-validation-planning`
 - **PR:** #4423
 - **Paths:** `docs/development/planning/`, `README.md`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (`b09301bd` plus integration of main `9ef76c6e`; catalog, three heavy-hit controls and 637-file title audit pass)
+- **Last verified:** 2026-09-22 (PR #4423 merged 2026-09-22T21:53:38Z as `docs(planning): separate empirical impact evidence from synthesis`; catalog, three heavy-hit controls and 637-file title audit passed in CI.)
 - **Summary:** Separates unavailable empirical/perceptual obligations from active qualified theory synthesis. Existing source issues and scientific acceptance criteria are preserved.
-- **Next step:** Publish the planning PR and link the verified scope split on #4253.
+- **Next step:** None. PR #4423 merged 2026-09-22; planning docs deployed. Epic #4253 remains open as a deferred impact research item.
 
 ### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
@@ -258,16 +258,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4406 · Deploy Website Public-Site Verification Gate
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** local
 - **Issue:** #4406 (fleet-main-health Deploy Website)
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4407
+- **PR:** #4407
 - **Branch:** `fix/issue-4406-deploy-website-local-storage-pageerrors-local`
 - **Paths:** `scripts/verify-public-site.js`, `scripts/public-site-browser-noise.js`, `tests/public-site-verifier.test.js`
 - **Started:** 2026-09-21
-- **Last verified:** 2026-09-21 (SELF; CI artifact run 35619994945 shows one failed cell on `/resources/resources-videos.html` mobile/light from third-party YouTube iframe localStorage SecurityError; node smoke test for `isActionablePageError` passes)
+- **Last verified:** 2026-09-21 (PR #4407 merged 2026-09-21T21:47:01Z as `fix(deploy): ignore third-party embed localStorage pageerrors (#4406)`; issue #4406 closed.)
 - **Summary:** Ignore non-actionable cross-origin embed pageerrors in the every-page verifier so Deploy Website stays green without weakening first-party regression detection.
-- **Next step:** Open PR with Fixes #4406, drive Deploy Website and CI Standard green, merge, and tear down the worktree.
+- **Next step:** None. PR #4407 merged 2026-09-21; issue #4406 closed.
 
 ### DL-#4375 · Curious Golfer Mechanics and Evidence Reasoning
 
@@ -310,16 +310,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#1595 · Mermaid C4 Architecture Map Contract
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** local
 - **Issue:** D-sorganization/Repository_Management#1595 (epic #1594)
-- **PR:** not created
+- **PR:** #4363
 - **Branch:** `feat/1595-c4-architecture-map`
 - **Paths:** `docs/architecture/C4.md`, `scripts/architecture_map_contract.py`, `tests/test_architecture_map_contract.py`, `.github/workflows/architecture-map-contract.yml`
 - **Started:** 2026-09-10
-- **Last verified:** 2026-09-10 (`SELF`; all contract tests passed; C4Context and C4Container validated)
+- **Last verified:** 2026-09-10 (PR #4363 merged as `docs(architecture): adopt maintainable Mermaid C4 architecture-map contract (#1595)`; SPEC.md change log row added 2026-09-10 #4363.)
 - **Summary:** Adopts the maintainable Mermaid C4 architecture-map contract for AffineDrift, providing C4Context, C4Container, Feature Map, and Architecture Change Log.
-- **Next step:** Push branch, open PR referencing Fixes D-sorganization/Repository_Management#1595, and verify CI passes.
+- **Next step:** None. PR #4363 merged; RM#1595 addressed.
 
 ### DL-#4369 · Muscle Geometry, Torque Feasibility and Inference
 

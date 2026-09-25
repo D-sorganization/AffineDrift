@@ -1,13 +1,22 @@
-# Project Steward Pass — 2026-09-24
+# Issue Remediator Pass — 2026-09-24
 
-- Role: `project-steward`; run ID `52cddb048024`; branch `staff/project-steward-task-b97a81`.
-- Updated `docs/project/STATUS.md` to reflect 2026-09-24: IA-THEORY progress notes
-  chapters 1–2 correction, audit provenance merge (#4453), CI green, no open PRs.
-- DV-4253 board decision still pending (2 days since first appearance; 14-day
-  Board-proposal threshold not yet reached).
-- Noted DL-#4429 development log entry shows `in_progress` despite PR #4453 merge;
-  a follow-on session should update it to `shipped`.
-- No Board proposals submitted. No source changes.
+- Role: `issue-remediator`; run ID `fc83f2189fe2`; branch `staff/issue-remediator-task-467858`.
+- Resolved four stale `in_progress`/`in_review` development log entries whose
+  corresponding PRs had already merged:
+  - DL-#4429 → `shipped` (PR #4453 merged 2026-09-24; issue #4429 closed)
+  - DL-#4253 → `shipped` (PR #4423 merged 2026-09-22; epic #4253 open/deferred)
+  - DL-#4406 → `shipped` (PR #4407 merged 2026-09-21; issue #4406 closed)
+  - DL-#1595 → `shipped` (PR #4363 merged ~2026-09-10; RM#1595 addressed)
+- Previous steward note about DL-#4429 is now resolved.
+- No source, test, or article changes. Documentation maintenance only.
+- Draft PR opened on branch `staff/issue-remediator-task-467858` targeting `main`.
+
+## Next Steps
+
+- A follow-on session may audit the remaining development log for any further
+  stale entries as the corpus review advances.
+- Open issues: all 8 remaining are epics or complex content audits — no
+  low/medium complexity code issues are currently open.
 
 ---
 
