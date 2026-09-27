@@ -1,3 +1,32 @@
+# Cartographer Pass — 2026-09-27
+
+- Role: `cartographer`; branch `staff/cartographer-task-afa7bc`.
+- Scheduled codemap-freshness pass (re-run after the 2026-09-27 CLI upgrade).
+  Audited codemap posture against the playbook checklist:
+  - `AGENTS.md` existed and already referenced `docs/codemap.md` and the
+    freshness runbook, but neither existed — a dead-end for agents following
+    the documented discovery path.
+  - `docs/architecture/C4.md` was already present and CI-enforced
+    (`architecture-map-contract.yml` + `scripts/architecture_map_contract.py`),
+    last updated 2026-09-10 (#1595/#4363) — no gap there.
+  - `.codemap/` was not in `.gitignore`.
+- Added `docs/codemap.md` (points to `C4.md`, directory table, refresh
+  mechanism, agent discovery path) and a `.codemap/` entry in `.gitignore`.
+- Logged both the fix and a follow-up suggestion (staleness check for
+  `docs/codemap.md` itself, best done with the shared
+  `codemap-refresh-workflow.yml` template) in
+  `docs/operations/cartographer-suggestions.md` — no bulk issues filed.
+- No source, test, or article changes. Documentation/navigation maintenance
+  only. Draft PR opened on branch `staff/cartographer-task-afa7bc` targeting
+  `main`.
+
+## Next Steps
+
+- A follow-on pass could wire the drift check described in the cartographer
+  suggestion log rather than re-deriving it from scratch.
+
+---
+
 # Issue Remediator Pass — 2026-09-24
 
 - Role: `issue-remediator`; run ID `fc83f2189fe2`; branch `staff/issue-remediator-task-467858`.
