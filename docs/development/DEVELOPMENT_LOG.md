@@ -18,11 +18,24 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4473 · Club-Fitting Mechanics and Evidence
+### DL-#4475 · Green Simulation Mechanics and Implementation Evidence
 
 - **State:** in_progress
 - **Owner:** codex
 - **PR:** pending
+- **Issue:** #4475 (corpus #4021; epic #4009)
+- **Branch:** `fix/4475-green-rigor`
+- **Paths:** `articles/green-simulation.qmd`, `tests/test_green_simulation_rigor.py`, `reports/technical-review/green-provider-source-index.json`
+- **Started:** 2026-09-28
+- **Last verified:** 2026-09-28 (All 16 focused checks pass; full suite 5,609 passed/29 skipped/132 deselected, 92.88% coverage. Content 131 passed/four skipped; static checks pass. Four browser cases pass, zero severe axe findings; eight display equations visually inspected.)
+- **Summary:** Corrects rolling/sliding dynamics and probability claims, qualifies numerical/surface/capture choices, and documents actual provider discrepancies without changing provider code.
+- **Next step:** Frozen source 460a0192 and five evidence paths 9f603f37; publish regular protected PR after #4474, then verify exact deployed revision.
+
+### DL-#4473 · Club-Fitting Mechanics and Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4474
 - **Issue:** #4473 (corpus #4021; epic #4009)
 - **Branch:** `fix/4473-fitting-rigor`
 - **Paths:** `articles/technology-club-fitting.qmd`, `references/club-fitting.bib`, `tests/test_club_fitting_rigor.py`
