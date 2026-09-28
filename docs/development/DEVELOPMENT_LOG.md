@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/4463-biology-model-selection`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_III/`, `books/biomechanics-biology-to-systems.qmd`, `tests/test_biology_model_selection_rigor.py`
 - **Started:** 2026-09-27
-- **Last verified:** 2026-09-27 (14 focused tests pass after six source RED failures; full PDF compiles; introduction and nine chapter pages visually inspected; Ruff, Black, title audit and mypy pass. Broader validation and publication remain pending.)
+- **Last verified:** 2026-09-27 (14 focused tests pass after six source RED failures; full PDF compiles; introduction and nine chapter pages visually inspected; Ruff, Black, title audit and mypy pass. Final full suite: 5,507 passed, 29 skipped, 132 deselected; 92.88% src coverage. Content lint: 131 passed, four skipped. Four local browser cases pass with zero serious/critical axe violations. Seven scientific evidence files match source checkpoint 9df52f26. Publication remains pending.)
 - **Summary:** Connects model assumptions to golf delivery and biological inference; corrects modal dynamics, force/power pairing, redundancy, inertial accounting and excitation affinity without asserting empirical human parameters.
-- **Next step:** Finish public-page rendering, evidence binding and validation; open regular PR, protected merge, then verify live publication.
+- **Next step:** Open regular PR, protected merge, then verify live publication. Historical book review provenance is preserved in the separate dependency carry-forward receipt.
 
 ### DL-#4429 · Site-Surface Audit Provenance Reconciliation
 

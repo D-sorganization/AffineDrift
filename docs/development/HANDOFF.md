@@ -14,8 +14,9 @@ The user has resumed the complete corpus goal. Never create draft PRs.
   accounting example; the replacement exercise is synthetic, not de Leva data.
 - RED: six source failures and eight passing numerical fixtures. GREEN: 14 focused
   checks. Root Ruff, Black (726 files), title audit (638 sources), and CI-equivalent
-  mypy (91 sources) pass. Full Python run: 5,503 passed and four stale audit-record failures; after
-  refreshing records all 67 focused checks pass. Final full run remains pending.
+  mypy (91 sources) pass. Final full Python run: 5,507 passed, 29 skipped,
+  132 deselected, 92.88% src coverage. Content lint: 131 passed, four skipped.
+  Initial audit-record failures were repaired; 67 focused checks also pass.
 - Full Volume III PDF compiles (66 pages). Introduction page 3 and chapter pages
   9-17 visually inspected; title and long exercise equation repaired. Zero chapter
   overfull boxes or undefined references. Existing warnings elsewhere remain.
@@ -25,9 +26,12 @@ The user has resumed the complete corpus goal. Never create draft PRs.
   was supplied by those agents; dispatcher issue #1800 still blocks unattended tools.
 - Source/PDF freeze: `3875b82d18d27078d6d0aa22fcfa4ca4acf65a58`. The
   public book map pins this freeze and passes four local browser cases with zero
-  serious/critical axe violations. Next: finish the full suite and bind evidence to committed
-  bytes while preserving historical provenance, update corpus and development log,
-  open a regular PR, protected merge, and verify live publication. Continue the
+  serious/critical axe violations. Seven scientific evidence files are byte-verified
+  at `9df52f26f4b0fa4b5cccd30f267774c130096d8e`. The dependency carry-forward
+  receipt preserves all six prior book records; only the biology route received
+  a new technical/browser review. Generated audit metadata follows that source
+  checkpoint. Next: open a regular PR, protected merge, and verify live publication.
+  Continue the
   remaining corpus afterward; 165 full technical audits remain, plus whole-book reconciliation.
 - Stage explicit files only. Old untracked QA is not product content. Fresh QA is
   under `docs/development/technical-review/biology-*` and `flash-biology-*`.
