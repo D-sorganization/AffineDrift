@@ -1,3 +1,51 @@
+# Paused After Merged Checkpoint — 2026-09-28
+
+The user requested finishing the existing edits, merging to remote main and
+pausing. All content edits are merged. Do not start another audit, rewrite or
+issue unless the user resumes. Never create draft PRs. This section supersedes
+historical continuation instructions below.
+
+- Camera #4472, fitting #4474, green #4476 and ledger #4478 are merged.
+  All edits are on main `e2cc43616f31993eea8173ebcbdd9fc6bb90217f`; ledger checked head
+  `cfaa84c7` passed required CI 36400072252, including full-site browser,
+  layout, visual-evidence and accessibility checks.
+- Camera, fitting and green publication is verified at `1a8dd00b`: deployment
+  36397339440 and CI 36397339445 passed; all 960 site cases and twelve reviewed
+  route cases pass, zero severe axe findings. Exact evidence and the live
+  camera-registry download match. Earlier cancelled camera deployment is not
+  counted as success.
+- Ledger deployment 36402704961 and post-merge CI 36402704969 were still
+  running when this checkpoint was recorded. Ledger live publication is not
+  claimed. The documentation merge may supersede those runs; if publication
+  verification is later requested, inspect the latest inclusive deployment and
+  compare the live PDF with the canonical committed bytes. No new audit is needed.
+- Exact record: `reports/technical-review/2026-09-28-stop-checkpoint.json`.
+- Ledger source/PDF: `aac4dbfd`; twelve canonical review paths and nine findings
+  bound at `ad94b93f`. Complete Chapters 1 and 29 and wrapper own content were
+  reviewed. Other 28 chapters are unchanged dependencies; historical review
+  reports, dates and scientific scope are preserved.
+- Final local suite: 5,626 passed, 29 skipped, 132 deselected, 92.88% coverage.
+  Seventeen focused checks; 38 final boundary/hierarchy checks; content 131
+  passed/four skipped; static and citation checks pass. Four browser cases pass;
+  six display equations and 23 PDF pages visually inspected. Identical canonical
+  PDFs contain 207 pages and all thirty numbered chapters.
+- The first remote ledger test run found a deployment-output PDF wrongly listed
+  as canonical review evidence. Removed the duplicate registry entry, retained
+  the canonical PDF and both-copy receipt, and reran the full suite successfully.
+- Four supplied-text-only agy Gemini 3.8 Flash calls supported this ledger review;
+  lead independently adjudicated all suggestions. No delegated tools or bypass.
+- The optional benchmark wrapper did not execute benchmarks because its
+  environment lacked the configured timeout plugin. Its wrapper status is not
+  measured performance evidence. No unrelated tooling task was started.
+- Remaining: 144 sources awaiting full technical audit, plus whole-book
+  reconciliation. Epic #4009 / corpus #4021 remains incomplete and paused.
+- All intended product/review changes are committed. Preserve untracked local
+  QA. Owned preview 8770 and Playwright camera-rigor are closed. After this
+  documentation checkpoint merges, release ledger lease/presence and stop;
+  do not create another checkpoint task or pursue deployment work unprompted.
+
+---
+
 # Current Stop Checkpoint — Ledger Review #4477
 
 The user's latest instruction is to finish the existing edits, merge them and
