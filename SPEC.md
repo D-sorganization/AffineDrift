@@ -408,3 +408,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-27 | #4467 | Correct secondary-axis putter mechanics and both critiques: free/forced spin, inertia origins, gravity, impulse response and evidence-limited design comparisons with independent numerical checks. |
 
 | 2026-09-27 | #4469 | Correct Volume I notation and reference appendices: controlled Jacobians, rotation branches, dual wrench maps, geometric versus flow transport, metric scaling and numerical solver hypotheses; verify printed examples and bounded publication evidence. |
+| 2026-09-27 | #4471 | Correct markerless camera modes and registry evidence; distinguish payload capacity, clock/exposure timing, reconstruction uncertainty and downstream golf-swing inference with numerical checks. |

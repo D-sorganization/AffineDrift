@@ -18,22 +18,35 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4469 · Volume I Mathematical Reference
+### DL-#4471 · Markerless Camera Measurement Rigor
 
 - **State:** in_progress
 - **Owner:** codex
 - **PR:** pending
+- **Issue:** #4471 (corpus #4021; epic #4009)
+- **Branch:** `fix/4471-camera-rigor`
+- **Paths:** `articles/markerless-mocap-camera-selection.qmd`, `data/markerless_mocap/camera_evidence_registry_v1.json`, `tests/test_camera_selection_rigor.py`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (Full article and 57 registry claims inspected. RED: ten numerical passes, six source failures; GREEN: all 16 plus 14 registry contracts pass. Manufacturer modes and study transfer corrected.)
+- **Summary:** Connects exposure, timing, payload, geometry and differentiation to the limits of golf-swing inference; preserves unavailable prices/licenses and unmeasured physical qualification.
+- **Next step:** Thirty focused checks, full suite 5,577 passed/29 skipped/132 deselected, 92.88% coverage and 131 content checks pass. Four browser cases and visual math/table inspection pass. Bind exact evidence and complete protected regular PR publication.
+
+### DL-#4469 · Volume I Mathematical Reference
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4470
 - **Issue:** #4469 (corpus #4021; epic #4009)
 - **Branch:** `fix/4469-volume-one-reference`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_I/main.tex`, `books/tangent-space-methods.qmd`, `tests/test_volume_one_reference_rigor.py`
 - **Started:** 2026-09-27
 - **Last verified:** 2026-09-27 (21 focused; 52 reference/audit contracts; full suite 5,561 passed, 29 skipped, 132 deselected, 92.88% coverage; 131 content checks passed/four skipped. Static checks pass. Full 149-page PDF compiles; affected pages visually inspected. Public map 4/4 browser cases, zero severe axe findings. Source/PDF 14b8f183; six-path evidence 782dc161. Four parallel supplied-text Flash reviews adjudicated.)
 - **Summary:** Reconciles notation and mathematical reference material with corrected chapter assumptions; separates geometry, flow sensitivity and control certification.
-- **Next step:** Open regular PR after merging remote main; complete protected CI/merge and verify live publication and pinned downloads.
+- **Next step:** PR #4470 merged at 24c77a55 on 2026-09-28 UTC; verify deployment, live publication and pinned downloads.
 
 ### DL-#4467 · Secondary-Axis Mechanics and Putter Design
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4468
 - **Issue:** #4467 (corpus #4021; epic #4009)
@@ -42,7 +55,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-27
 - **Last verified:** 2026-09-27 (19 focused mechanics/source checks; full Python suite 5,540 passed, 29 skipped, 132 deselected, 92.88% src coverage; 80 final mechanics/audit contracts pass. Three final Quarto routes, 12/12 light/dark mobile/desktop cases, zero serious/critical axe violations. All 117 math expressions loaded; 17 display equations visually checked at both widths. Ruff, Black 728 files, title audit 638 sources and mypy 91 sources pass. Eight exact evidence paths bound to 919f6d18; terminology scope correction and repeated 12-case browser gate pass. Final static CI passes after naming the unchanged gravity test constant.)
 - **Summary:** Separates free spin, supported motion, gravity and collision; supplies checked inertia-rate and moment comparisons; removes unsupported equipment and neural claims from article and critiques.
-- **Next step:** PR #4468 merged at 54d73e39 with all checks green; verify deployment and live publication.
+- **Next step:** Published at 54d73e39; deployment 36386984016 and post-merge CI pass. Revision-bound live gate passes all 960 site cases and 12 reviewed-route cases with zero severe axe findings. Eight evidence hashes match. Receipt: reports/technical-review/secondary-axis-publication.json.
 
 ### DL-#4465 · Contraction Development Workspace
 
