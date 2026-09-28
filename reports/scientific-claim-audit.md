@@ -24,7 +24,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 2 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
-| `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 1 |
+| `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
 | `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 1 |
 | `/articles/impact-mechanics-and-ball-flight.html` | `articles/impact-mechanics-and-ball-flight.qmd` | 1 |
 | `/articles/impact-optimality-and-model-limits.html` | `articles/impact-optimality-and-model-limits.qmd` | 1 |
@@ -267,7 +267,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 0 |
 | `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
 | `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 6 |
-| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
 | `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Reviewed | — | None | None | 0 |
