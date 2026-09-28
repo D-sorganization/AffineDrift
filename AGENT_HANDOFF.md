@@ -13,11 +13,14 @@ this section supersedes their instructions to continue corpus development.
 - Seventeen focused checks pass; seven archived provider hashes and NPZ
   consistency verified. Four supplied-text-only agy Flash calls completed;
   lead independently adjudicated findings. No delegated tool execution.
-- Source/PDF frozen at aac4dbfd; thirteen evidence paths and nine findings
+- Source/PDF frozen at aac4dbfd; twelve canonical evidence paths and nine findings
   bound to ad94b93f. Full suite 5,626 passed, 92.88% coverage; content
   131 passed/four skipped. Static checks pass. Four browser cases pass with
   zero severe axe findings; six display equations visually reviewed. The
-  207-page PDF preserves all thirty chapters. Next open a regular protected PR. Then verify inclusive deployment of camera #4472, fitting #4474,
+  207-page PDF preserves all thirty chapters. Regular PR #4478 is open. The first remote Python run exposed a duplicate
+  deployment-output PDF in the route evidence paths; removed that duplicate,
+  keeping the canonical PDF and both-copy hashes in the frozen render receipt.
+  Verify inclusive deployment of camera #4472, fitting #4474,
   green #4476 and this ledger correction; update this turnover before pausing.
 - Current pending corpus count: 144 after binding three reviewed sources, plus whole-book reconciliation. Do not claim the
   broader goal is complete.
