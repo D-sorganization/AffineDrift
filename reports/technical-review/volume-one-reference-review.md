@@ -123,3 +123,14 @@ No overfull boxes or undefined references remain in the final log. Existing
 header-height warnings in Chapter 4 and a list-width warning elsewhere remain
 outside this bounded scientific review. The linked chapters retain their
 independent review histories; a successful build is not whole-book acceptance.
+
+## Public Reading Page
+
+The complete book map was read and rendered with Quarto 1.8.26. Its new
+reference guide distinguishes geometry, flow sensitivity and certification,
+with immutable source/PDF links at 14b8f1838be96e066a631ad68d111d09c84b984c.
+Existing chapter/notebook snapshots and notebook-scaffold limits are preserved.
+The production browser gate passes four mobile/desktop, light/dark cases with
+zero serious/critical axe findings. The new section was inspected through
+mobile scroll captures and a desktop dark capture after theme/layout settled.
+These are local rendering checks; publication is verified separately after merge.
