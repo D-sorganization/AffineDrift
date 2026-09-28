@@ -69,7 +69,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/tangent-hyperplanes-series/part-5-contraction.html` | `articles/tangent-hyperplanes-series/part-5-contraction.qmd` | 1 |
 | `/articles/tangent-hyperplanes-series/part-6-hybrid.html` | `articles/tangent-hyperplanes-series/part-6-hybrid.qmd` | 1 |
 | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | `articles/tangent-hyperplanes-series/part-7-residual-aware.qmd` | 1 |
-| `/articles/technology-club-fitting.html` | `articles/technology-club-fitting.qmd` | 1 |
+| `/articles/technology-club-fitting.html` | `articles/technology-club-fitting.qmd` | 5 |
 | `/articles/technology-force-measurement.html` | `articles/technology-force-measurement.qmd` | 5 |
 | `/articles/technology-heavy-hit-impact-coupling.html` | `articles/technology-heavy-hit-impact-coupling.qmd` | 3 |
 | `/articles/technology-launch-monitors.html` | `articles/technology-launch-monitors.qmd` | 1 |
@@ -312,7 +312,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-31b16f695fea` | `/articles/tangent-hyperplanes-series/part-5-contraction.html` | Reviewed | — | None | None | 0 |
 | `ad-route-1c198098e00c` | `/articles/tangent-hyperplanes-series/part-6-hybrid.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d231d447846d` | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | Reviewed | — | None | None | 0 |
-| `ad-route-4abf3e223d5f` | `/articles/technology-club-fitting.html` | Reviewed | — | None | None | 0 |
+| `ad-route-4abf3e223d5f` | `/articles/technology-club-fitting.html` | Reviewed | — | None | None | 9 |
 | `ad-route-76402cb90d52` | `/articles/technology-force-measurement.html` | Reviewed | — | None | None | 8 |
 | `ad-route-88598cd32ba2` | `/articles/technology-heavy-hit-impact-coupling.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8a80ab38a564` | `/articles/technology-launch-monitors.html` | Reviewed | — | None | None | 0 |

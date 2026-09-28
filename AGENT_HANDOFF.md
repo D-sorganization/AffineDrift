@@ -1,3 +1,41 @@
+# Club-Fitting Review — #4473
+
+Current branch: `fix/4473-fitting-rigor`, based on camera PR #4472.
+Full corpus goal remains resumed. Never create draft PRs.
+
+- Complete club-fitting article corrected under #4473, child of #4021 / epic
+  #4009. Nine grouped findings connect spatial conventions, model interventions,
+  shaft dynamics, mass identification and uncertainty to fitting decisions.
+- Fixed the point-shift sign, mesh factors, centrifugal-load dimensions and
+  bending/rotation coupling. Removed neural-causality and engine-interchange
+  guarantees; all three JSON records are explicitly synthetic proposals.
+- Four supplied-text-only agy Gemini 3.8 Flash jobs ran in two parallel pairs.
+  Lead tested/adjudicated every finding; no delegated tools or permission bypass.
+- Sixteen focused checks pass (RED: nine numerical passes, seven source/example
+  failures). Full suite: 5,593 passed, 29 skipped, 132 deselected, 92.88% coverage.
+  Content: 131 passed, four skipped. Ruff, Black 723 files, mypy 91 sources,
+  title audit 638, tracked quality 760 and bibliography/citation checks pass.
+- Quarto: four mobile/desktop light/dark browser cases pass; zero severe axe
+  findings. All 89 math expressions and ten display equations load. Display
+  equations visually inspected at both widths; JSON scrolls within code blocks.
+- Review: reports/technical-review/club-fitting-review.md. Source frozen at 692b5a68; five evidence paths and nine findings bound
+  to 4ec7a679. Render receipt: club-fitting-render-verification.json. Next complete
+  a regular protected PR after merging remote main. No fitting PR yet.
+- Camera PR #4472: source 98b37ee5, six-path evidence 40a26284, final head
+  eaefc499. Merged at 5fd2f8ab on 2026-09-28 UTC. Deployment 36392177929
+  and post-merge CI 36392177961 are running; publication verification pending.
+- Volume I PR #4470 is verified published at 24c77a55. Deployment, CI and
+  Compile pass. Live gate: 960/960 site cases and four reviewed-route cases,
+  zero severe axe findings. Both immutable source/PDF downloads and all six
+  evidence hashes match. Receipt: volume-one-reference-publication.json.
+- Secondary-axis PR #4468 is verified published at 54d73e39; receipt committed.
+- Corpus: 148 pending full audits, plus whole-book reconciliation. No whole-corpus completion claimed.
+- Fitting lease technical-review-20260928-fitting expires 09:14 UTC. Camera
+  and reference leases released. Preserve all untracked QA.
+- Owned preview 8770 and Playwright camera-rigor are active for fitting QA.
+
+---
+
 # Camera Selection Review — #4471
 
 Current branch: `fix/4471-camera-rigor`. Full corpus goal remains resumed.
