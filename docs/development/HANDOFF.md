@@ -1,30 +1,35 @@
 # Secondary-Axis Review — #4467
 
 Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
-Branch: `fix/4467-secondary-axis`, includes remote main e48c9e00.
+Branch: `fix/4467-secondary-axis`, including remote main e48c9e00.
 The complete corpus goal is resumed; never create draft PRs.
 
-- Biology #4463 is published: PR #4464, merge 855b6fa6, successful deployment
-  36378430500. Artifact 10952174815 SHA-256 verified; 960/960 site cases and all
-  four biology route cases pass, zero serious/critical axe findings. Three pinned
-  source/PDF downloads and seven frozen evidence paths match. See the separate
-  biology-model-selection-publication.json receipt.
-- Contraction #4465 merged through regular PR #4466 at e48c9e0039ce7bab9acea27a69aea5551ee44ddd.
-  Both metadata entries and the excluded-route publication boundary are preserved.
-- #4467 corrects the full secondary-axis article and both critique companions.
-  19 focused tests pass after six source RED failures; 46 combined audit/book/
-  article checks pass. Three routes rendered; production polyfill cleanup and
-  browser QA are in progress. No empirical equipment advantage is asserted.
-- Four supplied-text-only agy Gemini 3.8 Flash calls handled inventory/arithmetic
-  and fixture proposals in parallel pairs. Parent independently adjudicated all
-  suggestions, rejecting invented product facts and erroneous constants.
-- Active lease/session: technical-review-20260927-secondary, expiry 07:05 UTC.
-  Source report: reports/technical-review/secondary-axis-review.md. QA and detailed
-  derivation notes are under docs/development/technical-review/secondary-*.
-- Next complete source/render evidence, governed critique response, full validation
-  and a regular PR. Preserve old untracked QA and stage explicit files only.
-  The broader corpus remains unfinished; #4465's index records 154 full audits
-  pending plus whole-book reconciliation before this three-source correction.
+- Biology #4463 is published through PR #4464 at 855b6fa6. Its publication
+  receipt verifies deployment 36378430500, artifact 10952174815, 960/960 site
+  cases and frozen source/PDF downloads.
+- Contraction #4465 merged through PR #4466 at e48c9e00; lease/presence released.
+  Excluded development routes remain excluded/redirected.
+- #4467 corrects the complete article and both critiques: free/forced spin,
+  moving origins, inertia, gravity, impulse response and unsupported equipment
+  inference. Both critiques are responded, without empirical resolution.
+- Source/annotation checkpoint 3a136679; evidence checkpoint ed573560 binds
+  seven exact paths for three full route reviews and ten findings. Reports are
+  secondary-axis-review.md and secondary-axis-render-verification.json under
+  reports/technical-review/. The atlas authority hash changes but its projection
+  is unchanged; the derived research-release digest follows that dependency.
+  Other generated critique headers change without new unrelated-page reviews.
+- Validation: 19 mechanics/source checks; full suite 5,540 passed, 29 skipped,
+  132 deselected, 92.88% src coverage; 80 final audit/mechanics contracts pass.
+  Browser 12/12, axe severe findings zero; 117 math expressions loaded and all
+  17 display equations checked at both widths. Ruff, Black, titles and mypy pass.
+- Six supplied-text-only agy Gemini 3.8 Flash calls ran in three parallel pairs.
+  Lead adjudicated every suggestion; no tool/permission bypass. Dispatcher #1800
+  still blocks unattended agy tool access.
+- Active session technical-review-20260927-secondary; lease expires 07:05 UTC.
+  Next open a regular PR, complete protected CI/merge, and verify live publication.
+  Stage explicit files; preserve old untracked QA and close owned preview sessions.
+- Corpus index: 152 full audits remain, plus whole-book reconciliation.
+  Continue after this batch; the complete goal is not achieved.
 
 ---
 
