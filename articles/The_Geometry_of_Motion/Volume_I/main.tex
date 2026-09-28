@@ -191,6 +191,12 @@
   {\chaptertitlename\ \thechapter}{20pt}{\Huge}
 \titlespacing*{\chapter}{0pt}{-20pt}{30pt}
 
+% Reserve space for multi-digit chapter/section numbers in the contents.
+\makeatletter
+\renewcommand*{\l@section}{\@dottedtocline{1}{1.5em}{3.6em}}
+\renewcommand*{\l@subsection}{\@dottedtocline{2}{5.1em}{4.2em}}
+\makeatother
+
 %% ==========================================================================
 \hypersetup{colorlinks=true, linkcolor=chapblue, filecolor=magenta, urlcolor=chapblue, citecolor=accentred}
 
@@ -294,14 +300,14 @@ A complete model needs explicit states, units, reference frames, actuator conven
 \toprule
 \textbf{Symbol} & \textbf{Meaning} \\
 \midrule
-$\x = (\q, \dot\q)$ & State vector (generalized coordinates and velocities) \\
+$\x = (\q, \dot\q)$ & Mechanical example state in independent coordinates \\
 $\uvec \in \R^m$ & Control input vector \\
-$f(\x)$ & Drift vector field (passive dynamics) \\
+$f(\x)$ & Zero-input drift for the declared actuator model \\
 $G(\x)$ or $g_i(\x)$ & Input (control) vector fields \\
-$\mat{A}(t)$ & State Jacobian $\partial f/\partial x$ along nominal trajectory \\
-$\mat{B}(t)$ & Input Jacobian $\partial(Gu)/\partial u$ along nominal trajectory \\
-$\mat{M}(\x,t) \succ 0$ & Contraction metric (positive definite) \\
-$\mat{S}_t$ & Riccati (cost-to-go curvature) matrix \\
+$\mat{A}(t)$ & State Jacobian $D_x[f+G\bar u]$ along the nominal pair \\
+$\mat{B}(t)$ & Input Jacobian $G(\bar x)$ along the nominal pair \\
+$\mat{M}(\x,t) \succ 0$ & Candidate differential metric; positivity alone is insufficient \\
+$\mat{S}_t$ & Riccati matrix of a declared local quadratic value model \\
 $\mat{K}_t$ & Feedback gain matrix \\
 $\mat{Q}_t \succeq 0$ & State cost weight \\
 $\mat{R}_t \succ 0$ & Input cost weight \\
@@ -321,14 +327,25 @@ $\mat{L}(t)$ & Observer (Kalman) gain \\
 $\mathcal{W}_o$ & Observability Gramian \\
 $H(\x)$ & Hamiltonian (total energy) \\
 $J(\x), R(\x)$ & Port-Hamiltonian interconnection and dissipation matrices \\
-$\rho(t)$ & Drift--control ratio \\
+$\rho(t)$ & Drift--control ratio with declared partition and norm \\
 $\varphi(t)$ & Funnel boundary \\
 \bottomrule
 \end{tabular}
 \end{center}
 
+The governing model is $F(x,u)=f(x)+\sum_i g_i(x)u_i$. For a prescribed nominal input,
+$A(t)=D_xf(\bar x)+\sum_i\bar u_iD_xg_i(\bar x)$ and $B(t)=G(\bar x)$.
+Feedback $u=\kappa(x,t)$ adds $G D_x\kappa$ to the closed-loop derivative.
+For example, $\dot x=-x+xu$ at $\bar u=2$ has state derivative $+1$, although
+its drift derivative is $-1$. The omitted term changes the stability conclusion.
+Zero input also retains whatever gravity, passive forces and internal actuator
+states the declared model assigns to $f$; it is not an anatomical measurement.
 
 %% ---------- Appendices ----------
+% Resume numbered chapters without resetting the physical page sequence.
+\makeatletter
+\@mainmattertrue
+\makeatother
 \appendix
 
 \chapter{Differential Geometry Primer}
@@ -340,50 +357,62 @@ do~Carmo~\cite{doCarmo1992} or Abraham and Marsden~\cite{AbrahamMarsden1978}.
 
 \section{Smooth Manifolds}
 
-A \emph{smooth manifold} $\mathcal{M}$ of dimension $n$ is a topological space that locally
-looks like $\R^n$. Formally, it is equipped with an atlas of charts $\{(U_\alpha, \phi_\alpha)\}$
-where each $U_\alpha \subset \mathcal{M}$ is open and $\phi_\alpha: U_\alpha \to \R^n$ is a
-homeomorphism, with smooth transition maps $\phi_\beta \circ \phi_\alpha^{-1}$ on overlaps.
+A smooth $n$-manifold $\mathcal M$ is a Hausdorff, second-countable topological
+space covered by compatible charts $\phi_\alpha:U_\alpha\to V_\alpha$, where
+$V_\alpha\subset\R^n$ is open. Each chart is a homeomorphism onto its image;
+transition maps on overlaps are smooth with smooth inverses. Here manifolds
+have no boundary unless stated otherwise.
 
-\textbf{Examples used in this book:}
-\begin{itemize}
-\item $\R^n$ (state space of most control systems)
-\item $S^1$ (circle; configuration space of a revolute joint)
-\item $\mathbb{T}^n = (S^1)^n$ (torus; configuration space of an $n$-joint robot)
-\item $\SO(3)$ (rotation group; attitude of a rigid body)
-\item $\SE(3)$ (rigid-body pose: rotation + translation)
-\end{itemize}
+Examples include $\R^n$, the joint-angle circle $S^1$, the product torus
+$\mathbb T^n=(S^1)^n$, the attitude group $\SO(3)$ and the pose group $\SE(3)$.
+A torus models independent unrestricted revolute angles. Joint limits, closed
+chains and changing contacts require additional domains or constraints; they
+are not captured by naming a configuration manifold alone.
 
 \section{Tangent Spaces and Tangent Bundles}
 
-The \emph{tangent space} $T_p\mathcal{M}$ at a point $p \in \mathcal{M}$ is the vector space
-of all tangent vectors at $p$. It can be defined as the set of equivalence classes of curves
-through $p$, or as the set of derivations on smooth functions at $p$. In either case,
-$T_p\mathcal{M} \cong \R^n$.
+The tangent space $T_p\mathcal M$ consists of velocities of curves through $p$,
+with curves identified when their first derivatives agree in a chart. Equivalently,
+its elements act as derivations on smooth functions. It is an $n$-dimensional
+vector space; identifying it with $\R^n$ requires a basis, not a preferred global
+coordinate system.
 
-The \emph{tangent bundle} $T\mathcal{M} = \bigcup_{p \in \mathcal{M}} T_p\mathcal{M}$ is itself
-a smooth manifold of dimension $2n$. A point in $T\mathcal{M}$ is a pair $(p, v)$ with
-$p \in \mathcal{M}$ and $v \in T_p\mathcal{M}$. For mechanical systems, $T\mathcal{M}$ is the
-\emph{state space} $(\q, \dot\q)$.
+The tangent bundle is the disjoint union $T\mathcal M=\coprod_pT_p\mathcal M$,
+a smooth $2n$-manifold whose elements are pairs $(p,v)$. For a regular mechanical
+model with configuration space $Q$, the position--velocity state lies in $TQ$.
+In a coordinate chart this is $(q,\dot q)$. Rotational velocity parameters need
+not equal coordinate rates: a kinematic map may relate them. Activation, memory
+or flexible modes augment the state; constraints and impacts need their declared
+reduction or mode description.
 
 \section{Vector Fields and Flows}
 
-A \emph{vector field} $f$ on $\mathcal{M}$ assigns a tangent vector $f(p) \in T_p\mathcal{M}$
-to each point $p$. In coordinates, $f = (f_1(\x), \ldots, f_n(\x))^T$. The ODE
-$\dot\x = f(\x)$ defines the \emph{flow} $\varphi_t: \mathcal{M} \to \mathcal{M}$, which maps
-initial conditions to their time-$t$ images.
+A smooth vector field $f$ assigns $f(p)\in T_p\mathcal M$. The autonomous ODE
+$\dot x=f(x)$ defines a local flow $\varphi_t$ where the solution exists. It is a
+global flow for every real time only when the field is complete. Even a smooth
+scalar field can escape in finite time: $\dot x=x^2$ gives
+$x(t)=x_0/(1-x_0t)$, which ceases to exist at $t=1/x_0$ for $x_0>0$.
+
+A prescribed time-varying input gives a two-time evolution map
+$\varphi(t,t_0,x_0)$. Its state derivative is a map between the tangent spaces at
+the initial and final states. This derivative, not an arbitrary geometric
+transport rule, predicts first-order trajectory sensitivity while the smooth
+model and its contact mode remain valid.
 
 \section{Riemannian Metrics}
 
-A \emph{Riemannian metric} on $\mathcal{M}$ is a smoothly varying inner product
-$\langle \cdot, \cdot \rangle_p$ on each tangent space $T_p\mathcal{M}$. In coordinates,
-it is represented by a positive-definite matrix $\mat{G}(p)$:
+A Riemannian metric is a smooth positive-definite inner product on each tangent
+space. In coordinates,
 \[
-\langle v, w \rangle_p = v^T \mat{G}(p) w.
+ \langle v,w\rangle_p=v^\T G(p)w.
 \]
-For mechanical systems, the mass matrix $M(\q)$ is a Riemannian metric on configuration space.
-The contraction metric $\mat{M}(\x)$ of Chapter~\ref{ch:contraction} is a Riemannian metric on
-state space.
+Under a coordinate change $q=\psi(z)$ with Jacobian $J$, its components transform
+as $G_z=J^\T G_qJ$. This keeps the inner product invariant while changing its
+matrix entries. A regular mass matrix in independent coordinates defines a
+kinetic-energy metric on configuration space. A positive-definite differential
+metric on state space is only a candidate for contraction: its derivative along
+the specified dynamics must satisfy the required decay inequality. Uniform
+bounds, the domain and the comparison norm matter for finite-distance claims.
 
 \section{Lie Groups and Lie Algebras}
 
@@ -397,7 +426,7 @@ a smooth manifold and a group, with smooth multiplication and inversion.
 Their Lie algebras are tangent spaces at identity:
 \[
 \mathfrak{so}(3)=\{\mat{\Omega}\in\R^{3\times 3}:\mat{\Omega}^T=-\mat{\Omega}\},\quad
-\mathfrak{se}(3)=\left\{\begin{bmatrix}\mat{\Omega}&\vec{v}\\\vec{0}^T&0\end{bmatrix}\right\}.
+\mathfrak{se}(3)=\left\{\begin{bmatrix}\mat{\Omega}&\vec{v}\\\vec{0}^T&0\end{bmatrix}:\mat{\Omega}^T=-\mat{\Omega},\ \vec v\in\R^3\right\}.
 \]
 Using the hat map $\widehat{\omega}$, angular velocity vectors become algebra elements. This is
 the algebraic backbone of variational dynamics in Chapter~\ref{ch:variational} and motion
@@ -405,88 +434,154 @@ composition in Chapter~\ref{ch:applications}.
 
 \section{Exponential and Logarithmic Maps}
 
-The exponential map converts tangent directions into finite motions. For $\SO(3)$:
+For a rotation vector $\phi\in\R^3$, let $\theta=\|\phi\|$ and let
+$\widehat\phi v=\phi\times v$. Rodrigues' formula is
 \[
-\exp(\widehat{\omega}\theta)=\mat{I}
-+\frac{\sin\theta}{\theta}\widehat{\omega}\theta
-+\frac{1-\cos\theta}{\theta^2}(\widehat{\omega}\theta)^2.
+ \exp(\widehat\phi)=I+\frac{\sin\theta}{\theta}\widehat\phi
+       +\frac{1-\cos\theta}{\theta^2}\widehat\phi^2.
 \]
-Given $\mat{R}\in\SO(3)$ with $\theta=\cos^{-1}\!\left(\frac{\trace(\mat{R})-1}{2}\right)$, the
-log map recovers axis-angle:
-\[
-\log(\mat{R})=\frac{\theta}{2\sin\theta}(\mat{R}-\mat{R}^T).
-\]
-For $\SE(3)$, the exponential combines rotation with translated screw motion and is used directly
-in product-of-exponentials kinematics and geodesic interpolation.
+The coefficients have limits $1$ and $1/2$ at zero. Equivalently,
+$\phi=\theta a$ with a \emph{unit} axis $a$. An arbitrary angular-velocity vector
+cannot be substituted for $a$ while retaining $\theta$ as the rotation angle.
+For constant body or spatial angular velocity, the corresponding exponential
+integrates the declared generator over time; varying, noncommuting generators
+require ordered integration.
 
-\begin{example}{Python Example: SO(3) Exp/Log}{app-so3-exp-log}
+For $0<\theta<\pi$, where
+$\theta=\arccos((\trace R-1)/2)$, one branch is
+\[
+ \log R=\frac{\theta}{2\sin\theta}(R-R^T).
+\]
+Near zero use a stable limit. At a half-turn, $R-R^T=0$ and this formula cannot
+recover the axis. Instead recover a unit eigenvector with $Ra=a$, or use
+$R+I=2aa^T$, with a branch convention for the sign. Exponentiation is many-to-one;
+there is no single globally smooth inverse. Clamp roundoff in the trace argument
+only after checking that the input is a valid rotation. A generic complex matrix
+logarithm followed by discarding its imaginary part is not a branch-safe rotation
+logarithm. See Lynch and Park~\cite{Lynch2017}, Chapter~3.
+
+\noindent\begin{minipage}{\linewidth}
+\begin{example}[Python Example: SO(3) Exp/Log]\label{app-so3-exp-log}
+\leavevmode\par
 \begin{lstlisting}[language=Python]
 import numpy as np
-from scipy.linalg import expm, logm
+from scipy.linalg import expm
+from scipy.spatial.transform import Rotation
+
 
 def hat(w: np.ndarray) -> np.ndarray:
-    return np.array([[0, -w[2], w[1]],
-                     [w[2], 0, -w[0]],
-                     [-w[1], w[0], 0]], dtype=float)
+    return np.array([[0.0, -w[2], w[1]],
+                     [w[2], 0.0, -w[0]],
+                     [-w[1], w[0], 0.0]])
 
-w = np.array([0.3, -0.2, 0.5])
-R = expm(hat(w))              # exp map to SO(3)
-w_hat = logm(R).real          # log map back to so(3)
+
+w = np.array([0.3, -0.2, 0.5])  # Rotation vector, radians.
+R = expm(hat(w))
+w_recovered = Rotation.from_matrix(R).as_rotvec()
+assert np.allclose(R.T @ R, np.eye(3))
+assert np.isclose(np.linalg.det(R), 1.0)
+assert np.allclose(w_recovered, w)  # This vector has norm < pi.
+assert np.allclose(expm(hat(w_recovered)), R)
 \end{lstlisting}
 \end{example}
+\end{minipage}
+
+The code recovers the rotation vector with a library routine and reconstructs
+its matrix; it does not implement the closed-form logarithm above. The round
+trip checks a manufactured rotation, not measured club orientation.
+The SciPy rotation-vector interface is described in its
+\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.as_rotvec.html}{official documentation}.
+For $\SE(3)$, the group exponential couples rotation and translation into a screw
+motion. A one-parameter subgroup is not automatically a geodesic of an arbitrary
+chosen Riemannian metric. Specify the metric before interpreting interpolation
+as a shortest or dynamically preferred motion.
 
 \section{Adjoint Representation}
 
-Adjoint operators transport twists and wrenches across frames:
+Let $T_{ab}=(R,p)$ map coordinates from frame $b$ to frame $a$, and order twists
+as $V=(\omega,v)$. The finite frame map is
 \[
-\mathrm{Ad}_{(\mat{R},\vec{p})}
-=\begin{bmatrix}
-\mat{R} & \vec{0}\\
-[\vec{p}]_\times\mat{R} & \mat{R}
-\end{bmatrix},\quad
-\mathrm{ad}_{(\omega,v)}=
-\begin{bmatrix}
-[\omega]_\times & \vec{0}\\
-[v]_\times & [\omega]_\times
-\end{bmatrix}.
+ V_a=\operatorname{Ad}_{T_{ab}}V_b,\qquad
+ \operatorname{Ad}_{T_{ab}}=
+ \begin{bmatrix}R&0\\ {[p]_\times R}&R\end{bmatrix}.
 \]
-In Chapter~\ref{ch:applications}, this map explains why equivalent perturbations look different
-between body-fixed and world-fixed coordinates.
+Order the dual wrench as $W=(m,f)$, with moment about the corresponding frame
+origin. Power invariance $W_a^\T V_a=W_b^\T V_b$ requires
+\[
+ W_a=\operatorname{Ad}_{T_{ab}}^{-\T}W_b.
+\]
+Thus $f_a=Rf_b$ and $m_a=Rm_b+p\times Rf_b$. Applying the twist map to a wrench
+would create spurious force from a pure couple. These dual rules are derived in
+Lynch and Park~\cite{Lynch2017}, Section~3.4.
+
+The infinitesimal operator
+\[
+ \operatorname{ad}_{(\omega,v)}=
+ \begin{bmatrix}[\omega]_\times&0\\ {[v]_\times}&[\omega]_\times\end{bmatrix}
+\]
+acts by the Lie bracket, $\operatorname{ad}_V U=[V,U]$; it is not another finite
+frame transformation. For golf modeling, name the frame, origin and vector
+ordering before combining a measured grip wrench with head or shaft velocities.
 
 \section{Fiber Bundles}
 
-Tangent and cotangent bundles are canonical fiber bundles:
+Tangent and cotangent bundles have projections
 \[
-\pi_T:T\mathcal{M}\to\mathcal{M},\quad \pi_T(p,v)=p,\qquad
-\pi_{T^*}:T^*\mathcal{M}\to\mathcal{M}.
+ \pi_T:TQ\to Q,\quad(q,v)\mapsto q,\qquad
+ \pi_{T^*}:T^*Q\to Q,\quad(q,p)\mapsto q.
 \]
-The base point is configuration; the fiber stores admissible velocities ($T\mathcal{M}$) or
-covectors/momenta ($T^*\mathcal{M}$). This viewpoint clarifies why state and costate evolve on
-different but coupled geometric objects in Chapters~\ref{ch:optimal-control}
-and~\ref{ch:duality}.
+Velocities are tangent vectors; generalized momenta are covectors. A regular
+Lagrangian relates them by $p=\partial L/\partial\dot q$; they are not identical
+objects simply because both have $n$ components. A mass metric can identify
+these spaces, but that is additional model structure. In first-order optimal
+control on a state manifold $X$, the costate instead lies in $T_x^*X$. When
+$X=TQ$, a costate has components conjugate to both position and velocity; it is
+not just mechanical momentum in $T_q^*Q$.
 
 \section{Connections and Parallel Transport}
 
-A connection specifies how to compare tangent vectors at different points. In local coordinates,
-the Levi-Civita connection of metric $\mat{G}$ has Christoffel symbols
-$\Gamma^k_{ij}$. Covariant acceleration is
+A connection specifies differentiation of vector fields along a curve. For the
+Levi-Civita connection of a metric, covariant acceleration has components
 \[
-\frac{D\dot{q}^k}{dt}=\ddot{q}^k+\Gamma^k_{ij}\dot{q}^i\dot{q}^j.
+ \frac{D\dot q^k}{dt}=\ddot q^k+\Gamma^k_{ij}\dot q^i\dot q^j.
 \]
-Parallel transport ($D v/dt=0$ along a curve) is the right way to carry perturbations when
-curvature is nonzero. This geometric correction underlies stable trajectory tracking on curved
-configuration manifolds.
+Parallel transport solves $Dv/dt=0$ and preserves metric inner products. It lets
+us compare tangent vectors geometrically; it does not generally propagate a
+physical perturbation. For a smooth prescribed vector field $F$, the actual
+flow variation satisfies $D\delta x/dt=\nabla_{\delta x}F$ with this torsion-free
+connection. In coordinates this is the usual variational equation. Feedback,
+input perturbations and mode transitions must be included in their own models.
+
+Even flat Euclidean space distinguishes the two operations: for
+$\dot x=\operatorname{diag}(2,-1)x$, a perturbation along the first axis grows by
+$e^{2t}$ while parallel transport preserves its length. Curvature is neither
+necessary for trajectory sensitivity nor a substitute for the dynamics.
 
 \section{Curvature and Trajectory Sensitivity}
 
-Curvature quantifies how geodesics separate. Sectional curvature $K(u,v)$ for a 2-plane
-$\Span\{u,v\}\subset T_p\mathcal{M}$ predicts local sensitivity:
-\begin{itemize}
-\item $K>0$: geodesics tend to reconverge (spherical-like geometry)
-\item $K<0$: geodesics diverge faster (hyperbolic-like sensitivity)
-\end{itemize}
-Contraction analysis in Chapter~\ref{ch:contraction} can be interpreted as enforcing metric
-dynamics that dominate this geometric divergence.
+For a geodesic family of a specified metric, the separation field $J$ satisfies
+\[
+ \frac{D^2J}{dt^2}+\mathcal R(J,\dot\gamma)\dot\gamma=0,
+\]
+with the curvature-sign convention for which a unit sphere has positive
+sectional curvature. Initial separation and its derivative matter. On a
+constant-curvature surface, a normal Jacobi field along a unit-speed geodesic
+has scalar equation $j''+Kj=0$. For $j(0)=0$, $j'(0)=1$, the $K=1,0,-1$
+solutions are $\sin t$, $t$ and $\sinh t$. Positive curvature does not mean
+monotone convergence: $\sin t$ first increases, then returns to zero.
+The \href{https://people.math.ethz.ch/~afigalli/lecture-notes-pdf/Optimal-Transport-and-Curvature.pdf}{Figalli--Villani geometry notes},
+Sections~1.11--1.12, discuss geodesic variations and the Jacobi equation.
+
+A forced, actuated swing need not be a geodesic. Its sensitivity is governed by
+the full variational dynamics, not the sign of one sectional curvature. In a
+state chart, contraction tests instead examine
+\[
+ \dot M+A^\T M+MA\preceq-2\lambda M,
+\]
+for the specified flow Jacobian $A$ and total metric derivative along that flow.
+Regional invariance, admissible inputs, uniform metric bounds and any hybrid
+reset conditions remain separate requirements. A geometric picture can motivate
+a model, but cannot by itself establish stable face delivery or human control.
 
 
 \chapter{Linear Algebra for Control}
@@ -502,13 +597,16 @@ For symmetric matrices $\mat{A}, \mat{B} \in \R^{n \times n}$, we write:
 \end{itemize}
 
 \textbf{Key property:} The set of positive semidefinite matrices forms a \emph{convex cone}.
-This is why LMI-based searches for contraction metrics (Chapter~\ref{ch:contraction}) are
-convex optimization problems.
+An affine preimage of this cone is convex. A contraction-metric search becomes
+a convex problem only when its parameterization, constraints and objective have
+the required convex structure. Jointly unknown feedback, metric and decay rate
+can introduce products of decision variables. Positivity of the metric alone
+does not remove that nonlinearity.
 
 \section{Schur Complement}
 
 For a block matrix $\mat{M} = \begin{bmatrix} \mat{A} & \mat{B} \\ \mat{B}^T & \mat{C} \end{bmatrix}$
-with $\mat{C} \succ 0$:
+with symmetric $\mat A$, symmetric $\mat C\succ0$, and compatible block sizes:
 \begin{equation}
 \mat{M} \succ 0 \quad \Leftrightarrow \quad \mat{A} - \mat{B}\mat{C}^{-1}\mat{B}^T \succ 0.
 \end{equation}
@@ -519,17 +617,21 @@ for flexible systems (Chapter~\ref{ch:applications}).
 
 \section{Singular Value Decomposition}
 
-Every matrix $\mat{A} \in \R^{m \times n}$ has an SVD: $\mat{A} = \mat{U}\mat{\Sigma}\mat{V}^T$,
-where $\mat{U}$ and $\mat{V}$ are orthogonal and $\mat{\Sigma}$ is diagonal with non-negative
-entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$. The SVD is used in this book for:
-\begin{itemize}
-\item Analyzing the STM $\Phi(t_1, t_0)$: singular values quantify amplification of
-      perturbations (Chapter~\ref{ch:variational}).
-\item Impact sensitivity analysis: singular values of $J_{\text{impact}} \cdot C \cdot \Phi$
-      reveal the most sensitive perturbation directions (Chapter~\ref{ch:applications}).
-\item Condition number $\kappa(\mat{A}) = \sigma_1/\sigma_n$: measures sensitivity to
-      perturbations.
-\end{itemize}
+Every real $m\times n$ matrix has an SVD $A=U\Sigma V^\T$, with orthogonal
+$U,V$ and rectangular diagonal $\Sigma$. There are $p=\min(m,n)$ listed singular
+values $\sigma_1\geq\cdots\geq\sigma_p\geq0$. For a nonsingular square matrix,
+the 2-norm inverse-problem condition number is $\kappa_2(A)=\sigma_1/\sigma_n$.
+Rectangular systems additionally require a rank and nullspace specification:
+$[\operatorname{diag}(2,1)\;0]$ has two positive singular values but still leaves
+one input direction unobservable. A pseudoinverse ratio alone does not certify
+unique state or force identification.
+
+For an STM or a task-sensitivity map $H$, unweighted singular values describe
+Euclidean amplification in the chosen coordinates. Mixed angle, velocity and
+length units make that choice consequential. If input and output metrics are
+$G_i\succ0,G_o\succ0$, the corresponding norm gain is the largest singular value
+of $G_o^{1/2}HG_i^{-1/2}$. State uncertainty, contact timing and output definition
+must also be declared before calling a direction a golf-performance sensitivity.
 
 \section{Matrix Exponential}
 
@@ -541,13 +643,18 @@ It satisfies $\frac{\dd}{\dd t} e^{\mat{A}t} = \mat{A} e^{\mat{A}t}$ and is the 
 transition matrix for LTI systems: $\Phi(t, t_0) = e^{\mat{A}(t-t_0)}$.
 
 \textbf{Caution:} For time-varying $\mat{A}(t)$, $\Phi(t, t_0) \neq e^{\int_{t_0}^t \mat{A}(s)\,\dd s}$
-in general. Equality holds only when $[\mat{A}(t_1), \mat{A}(t_2)] = 0$ for all $t_1, t_2$
-(the commutativity condition for matrix exponentials).
+in general. Pairwise commutation,
+$[A(t_1),A(t_2)]=0$ for all relevant times, is sufficient for equality.
+It is not necessary for accidental equality at one endpoint. For example, four
+unit intervals with generators $A,B,-B,-A$ give
+$e^{-A}e^{-B}e^Be^A=I=e^{A+B-B-A}$ even when $AB\ne BA$.
+In general integrate $\dot\Phi=A(t)\Phi$, $\Phi(t_0,t_0)=I$, with numerical
+error control. A changing contact mode needs its own event-sensitivity map.
 
 \section{Kronecker Products}
 
-The Kronecker product $\mat{A}\otimes\mat{B}$ expands block structure and is essential for
-vectorized Lyapunov/Riccati equations:
+The Kronecker product $\mat{A}\otimes\mat{B}$ expands block structure. With
+$\operatorname{vec}$ defined by stacking columns, compatible matrices obey:
 \[
 \mathrm{vec}(\mat{A}\mat{X}\mat{B})
 =(\mat{B}^T\otimes\mat{A})\mathrm{vec}(\mat{X}).
@@ -555,9 +662,14 @@ vectorized Lyapunov/Riccati equations:
 For $\mat{A}^T\mat{P}+\mat{P}\mat{A}+\mat{Q}=0$, vectorization yields
 \[
 \big(\mat{I}\otimes\mat{A}^T+\mat{A}^T\otimes\mat{I}\big)\mathrm{vec}(\mat{P})
-=-\mathrm{vec}(\mat{Q}),
+=-\mathrm{vec}(\mat{Q}).
 \]
-which is directly useful in Chapter~\ref{ch:duality}.
+A unique solution for arbitrary right-hand sides requires this operator to be
+invertible, equivalently no eigenvalue pair of $A$ sums to zero. Hurwitz $A$
+ensures that condition; with $Q\succ0$ its Lyapunov solution is positive definite.
+Explicit Kronecker matrices can be much larger than the original problem; use
+structured solvers when appropriate. The Riccati equation additionally contains
+a quadratic term and is not turned into a linear solve merely by vectorization.
 
 \section{Matrix Calculus}
 
@@ -566,45 +678,107 @@ Control derivations repeatedly require gradients with respect to vectors and mat
 \frac{\partial}{\partial x}(x^T\mat{A}x)=(\mat{A}+\mat{A}^T)x,\quad
 \frac{\partial}{\partial \mat{X}}\trace(\mat{A}^T\mat{X})=\mat{A}.
 \]
-These identities support second-order expansions in DDP and local quadratic models in
+The first gradient is a column vector; the second uses the Frobenius matrix
+inner product. Ordinary Hessian components need not transform tensorially under
+a nonlinear coordinate change away from a stationary point. These conventions
+are needed for second-order expansions and local quadratic models in
 Chapter~\ref{ch:optimal-control}.
 
 \section{Generalized Eigenvalue Problems}
 
-Many stability questions appear as matrix pencils:
-\[
-\mat{A}v=\lambda \mat{B}v,\quad \det(\mat{A}-\lambda\mat{B})=0.
-\]
-Generalized eigenanalysis is required when constraints, descriptor dynamics, or mass matrices
-lead to non-identity state weighting.
+For square matrices $A,B$ of the same size, a finite generalized eigenpair has
+$Av=\lambda Bv$ with $v\ne0$. The determinant equation describes the finite roots
+only for a regular pencil: $\det(A-\lambda B)$ must not be identically zero.
+If $B$ is singular, a regular pencil can also have infinite eigenvalues. For
+$A=I_2$, $B=\operatorname{diag}(1,0)$, the finite root is $1$ and the other
+mode is infinite. Homogeneous pairs satisfy $\beta Av=\alpha Bv$;
+$\lambda=\alpha/\beta$ is finite when $\beta\ne0$.
+
+A singular pencil needs a more detailed constraint analysis. In descriptor
+mechanics, algebraic consistency, index and impulse behavior cannot be inferred
+from the finite eigenvalues alone. For symmetric $A$ and $B\succ0$, the problem
+instead reduces to the symmetric matrix $B^{-1/2}AB^{-1/2}$ and has real
+eigenvalues, a useful special case for metric-weighted rates.
 
 \section{Perturbation Theory and Pseudospectra}
 
-Eigenvalues can be highly sensitive in non-normal systems. The $\varepsilon$-pseudospectrum is
+For $\varepsilon>0$, define the closed 2-norm pseudospectrum by
 \[
-\Lambda_\varepsilon(\mat{A})=
-\{z\in\mathbb{C}: \|(z\mat{I}-\mat{A})^{-1}\|>1/\varepsilon\}.
+ \Lambda_\varepsilon(A)=
+ \{z\in\mathbb C:\sigma_{\min}(zI-A)\leq\varepsilon\}.
 \]
-This captures transient growth that eigenvalues alone miss, which is directly relevant to
-``small perturbation, large excursion'' behavior in Chapter~\ref{ch:variational}.
+It includes the spectrum. Away from eigenvalues it is equivalently the set
+where $\|(zI-A)^{-1}\|_2\geq1/\varepsilon$; assign infinite resolvent norm at
+eigenvalues. It is also the union of spectra of $A+E$ with $\|E\|_2\leq\varepsilon$.
+These equivalences are stated in the
+\href{https://www.cs.ox.ac.uk/pseudospectra/thms/thm1.pdf}{Embree--Trefethen Pseudospectra Gateway theorem}.
+
+For the nonnormal matrix $A=\bigl[\begin{smallmatrix}0&10\\0&0\end{smallmatrix}\bigr]$,
+a perturbation $E_{21}=0.001$ moves its two zero eigenvalues to $\pm0.1$.
+Nonnormality can also permit transient amplification even when all eigenvalues
+have negative real part. Pseudospectra bound particular perturbation questions;
+they are not a complete transient response or a measured biological uncertainty
+model. Norm, units, time scale and allowed perturbation structure must match the
+question being asked.
 
 \section{Sparse Matrix Methods}
 
-Large-scale discretizations produce sparse operators. Storing sparse matrices in CSR/CSC formats
-reduces memory and enables scalable iterative solvers (CG, GMRES, MINRES). This matters for
-trajectory optimization and model predictive control where linear solves dominate runtime.
+CSR/CSC storage can reduce the cost of sparse linear algebra, but sparsity alone
+does not guarantee an inexpensive solve. Conditioning, fill-in and preconditioning
+matter. Conjugate gradients (CG) requires a symmetric positive-definite operator
+in the real case. MINRES is suited to symmetric indefinite systems under its
+preconditioner assumptions; GMRES treats general nonsymmetric systems. A KKT
+saddle-point matrix is generally indefinite and cannot be handed to CG solely
+because it is sparse. Check solver status and the actual residual.
+
+\noindent\begin{minipage}{\linewidth}
+\begin{example}[Python Example: Sparse Solve with SciPy]\label{app-sparse-solve}
+\leavevmode\par
+\begin{lstlisting}[language=Python]
+import numpy as np
+from scipy.sparse import diags
+from scipy.sparse.linalg import cg
+
+A = diags([-np.ones(2), np.array([4.0, 5.0, 6.0]),
+           -np.ones(2)], [-1, 0, 1], format="csr")
+b = np.array([2.0, 6.0, 16.0])
+x, info = cg(A, b, rtol=1e-12, atol=0.0, maxiter=30)
+if info != 0:
+    raise RuntimeError(f"CG did not converge: {info}")
+assert np.linalg.norm(A @ x - b) < 1e-10
+assert np.allclose(x, [1.0, 2.0, 3.0])
+\end{lstlisting}
+\end{example}
+\end{minipage}
+
+This symmetric strictly diagonally dominant matrix with positive diagonal is
+positive definite. The example verifies a manufactured linear solve, not a
+trajectory optimizer or an SDP. The
+\href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html}{SciPy CG documentation}
+defines the matrix hypotheses, stopping criterion and return status.
 
 \section{LMI Fundamentals}
 
-Linear Matrix Inequalities (LMIs) take the form $\mat{A}_0 + \sum_i x_i \mat{A}_i \prec 0$.
-These are convex constraints. Tools like cvxpy and SciPy can solve LMI optimization problems
-efficiently.
+An LMI is an affine symmetric-matrix inequality
+$F(x)=A_0+\sum_i x_iA_i\succeq0$, with fixed symmetric coefficients $A_i$.
+Its feasible set is convex; a convex objective and other convex constraints
+produce a convex optimization problem. A matrix inequality with products of
+unknown coefficients is not automatically an LMI. For a fixed system and decay
+rate, a linear parameterization of a contraction metric may yield LMIs; jointly
+optimizing feedback and metric generally needs an additional reformulation or
+a nonconvex method. A grid check still needs a between-sample argument to certify
+a continuous domain. Boyd et al.~\cite{Boyd1994}, Chapter~2, develop the LMI and
+Schur-complement framework.
 
-\begin{example}{Python Example: Sparse Solve with SciPy}{app-sparse-solve}
-\begin{lstlisting}[language=Python]
-import nu
-\end{lstlisting}
-\end{example}
+Numerical conic solvers work with non-strict inequalities and tolerances. A
+condition such as $F(x)\succeq\epsilon I$ uses a declared positive margin and
+scaling; inspect the returned eigenvalue/residual margins rather than equating
+a success status with a physical certificate. CVXPY can express semidefinite
+constraints when paired with a suitable solver; see its
+\href{https://www.cvxpy.org/tutorial/constraints/index.html}{semidefinite-constraint documentation}.
+The SciPy sparse solve above solves a different problem. In a golf model, even a
+valid mathematical certificate remains conditional on the model, domain,
+actuation, contacts and uncertainty represented in its assumptions.
 
 \bibliographystyle{alpha}
 \bibliography{../geometry_of_motion}

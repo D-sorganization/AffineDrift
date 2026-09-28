@@ -1,3 +1,28 @@
+# Volume I Reference Review — #4469
+
+Current branch: `fix/4469-volume-one-reference`, based on PR #4468 head 03846ceb.
+The full goal is resumed; no draft PRs. PR #4468 remains in protected CI after
+its terminology and named-constant fixes; final static checks pass. Do not claim it merged or published yet.
+
+- Read the complete Volume I main source, including front matter, notation and
+  both appendices. Chapter inputs remain outside this bounded correction.
+- New issue #4469 is a native child of #4021, under epic #4009. Active lease and
+  presence: technical-review-20260927-volume-one-reference, expires 07:50 UTC.
+- Two supplied-text-only agy Gemini 3.8 Flash inventories completed in parallel.
+  Parent retains mathematical judgment; reject unsupported necessity claims and
+  invented solver/physical implications. No agent tool or permission bypass.
+- RED: 13 independent numerical cases pass; eight source/example failures expose
+  omitted controlled-Jacobian terms, wrong transport scope, exp/log limitations,
+  a missing executable sparse example and overbroad matrix/solver claims.
+- Corrected the complete main reference source; all 21 tests now pass.
+  The full 149-page PDF compiles and affected front matter, contents, reference
+  and bibliography pages pass visual QA. No overfull or undefined references.
+- Next update the immutable public source/PDF links and bind bounded evidence.
+- Preserve all older untracked QA. Secondary preview server and CLI sessions
+  are stopped. Resume PR #4468 checks at meaningful intervals while reviewing.
+
+---
+
 # Secondary-Axis Review — #4467
 
 Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
