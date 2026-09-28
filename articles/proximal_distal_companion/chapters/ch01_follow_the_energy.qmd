@@ -25,14 +25,14 @@ The first discipline of this book is therefore simple to state and surprisingly
 hard to maintain: follow the complete energy ledger, not just the visible order
 of speed peaks.
 
-![A Five-Stage Map Follows Mechanical Energy From the Ground Through the Body and Hands to the Club and Ball.](figures/proximal_distal_companion/fig_companion_follow_energy.svg){#fig-lay-energy-route width=100% fig-alt="A flow map links the ground, body, hands, club, and ball, emphasizing that each interface can transfer power, store elastic energy, dissipate energy, or redirect a force."}
+![A Five-Stage Map Connects Ground Contact, Body, Hands, Club, and Ball Without Treating Every Interaction as an Energy Supply.](figures/proximal_distal_companion/fig_companion_follow_energy.svg){#fig-lay-energy-route width=100% fig-alt="An interaction map links ground, body, hands, club, and ball; stationary ideal ground contact can redirect momentum without supplying work."}
 
 The familiar phrase *proximal to distal* means, roughly, from nearer the center
 of the body toward farther-away segments. In golf, researchers often describe a
 sequence in which pelvis speed peaks, then trunk speed, then arm or hand speed,
-and finally club speed. That ordering is real enough to be measured and useful
-enough to study [@putnam1993; @tinmark2010]. But it is an observation about
-motion. It is not yet an explanation of energy flow. The explanation requires
+and finally club speed. Ordered peaks have been reported, but the reported order depends on which
+segments and angular-velocity quantities are measured [@tinmark2010; @marsan2019].
+It is an observation about motion. It is not yet an explanation of energy flow. The explanation requires
 forces, moments, velocities, and the boundaries across which power is computed.
 
 ## How the Mechanism Works
@@ -41,16 +41,19 @@ Begin with a modest definition. Mechanical energy is a bookkeeping quantity for
 a chosen system. A moving rigid body has translational and rotational kinetic
 energy. A raised body has gravitational potential energy. A bent shaft or
 stretched tendon may have elastic potential energy. When external forces do
-work, the system's mechanical energy can change. When internal forces act
-between parts of a larger chosen system, they redistribute energy among those
-parts even though they do not create energy for the whole system.
+work, the system's mechanical energy can change. Internal interactions can redistribute mechanical energy, convert elastic
+storage to kinetic energy, or dissipate mechanical energy into heat. Internal
+muscles can convert chemical energy into mechanical work. Conservation of total
+energy does not imply that the mechanical energy of a golfer-plus-club system
+can increase only through external work.
 
 That last sentence is the heart of the matter. Suppose we draw one boundary
 around the golfer and club together. The forces between a hand and the grip are
-internal to that combined system. Their positive work on the club is paired
-with an equal-and-opposite interaction on the hands, although the two powers
-need not cancel if the contact points and compliant elements are represented
-differently. Now draw a smaller boundary around the club alone. The same hand
+internal to that combined system. The forces are equal and opposite. At an ideal shared no-slip contact their
+material-point velocities agree, so the two contact powers cancel in the combined
+ledger. If slip, deformation or an intervening compliant element is retained,
+its power, storage and dissipation require explicit accounting. Merely reporting
+the same physical contact in two ways cannot create an unexplained power gap. Now draw a smaller boundary around the club alone. The same hand
 forces become external inputs to the club. They can change its kinetic energy,
 bend its shaft, or redirect its motion. Neither boundary is more correct. They
 answer different questions.
@@ -62,12 +65,20 @@ $$
 P_F = \mathbf F \mathbin{\cdot} \mathbf v.
 $$
 
-For a moment $\boldsymbol\tau$ acting on a body with angular velocity
-$\boldsymbol\omega$, rotational power is
+For an applied free moment $\boldsymbol\tau$ acting on a rigid body with angular
+velocity $\boldsymbol\omega$ in the chosen observer frame, moment power is
 
 $$
 P_\tau = \boldsymbol\tau \mathbin{\cdot} \boldsymbol\omega.
 $$
+
+For several forces on one rigid body, reduce their resultant force and moment
+to one declared point. Pair the force with the rigid velocity field evaluated
+at that point and the moment with the body's angular velocity.
+The total power is the sum of the two terms; a moment arm must not be counted
+again. A deforming club instead needs its contact/deformation velocities.
+At a rotational joint, paired moment power uses relative angular velocity
+between the bodies. Net joint power is not identified individual-muscle power.
 
 These dot products are more informative than force or torque magnitude alone.
 When force points generally with velocity, power is positive. When it points
@@ -79,8 +90,10 @@ to the curved path, yet its dot product with tangential velocity is zero.
 This gives us several distinct verbs for the swing. An actuator can **supply**
 energy by positive work. An interaction can **transport** energy across a chosen
 boundary. A spring can **store** and later **return** energy. Damping can
-**dissipate** it. A perpendicular force can **redirect** motion. A changing
-constraint can **repartition** kinetic energy among coordinates. Saying only
+**dissipate** it. A perpendicular force can **redirect** motion. Constraint reactions can **redirect** motion or exchange power between
+subsystems. A prescribed moving constraint can also supply external power; its
+actuator must be included when the accounting boundary includes the mechanism
+that moves it. Saying only
 that energy “flows down the chain” compresses all those verbs into one and can
 hide the mechanism we most need to understand.
 
@@ -97,8 +110,9 @@ can overlap. In a double-pendulum model, shoulder torque can add energy while
 the arm-club interaction redistributes it. In the two-hand model, a pair of
 opposed hand forces can create a club moment even when their net force is small.
 In the flexible-shaft model, interface power can move into elastic storage and
-return later. In a full-body constrained model, ground reactions enforce the
-motion and may transmit power through the feet. The ledger asks each contribution
+return later. In an ideal stationary no-slip ground contact, reactions constrain motion
+and provide impulse while doing zero boundary work. Deforming, slipping or
+moving contacts require a different power calculation. The ledger asks each contribution
 to identify itself rather than accepting one story for all of them.
 
 ### A Small Numerical Ledger
@@ -107,18 +121,21 @@ Suppose a simplified club receives $500$ watts of positive hand power for
 $0.10$ seconds. If the power were constant, the hands would deliver $50$ joules
 of work. During the same interval, imagine gravity contributes $3$ joules,
 damping removes $5$ joules, and the shaft finishes with $8$ joules more elastic
-energy than it began. The remaining increase in rigid-body kinetic energy is
+energy than it began. Treat these as synthetic values and include all retained club kinetic modes
+in $K$. Count gravity as external work here, rather than also including its
+potential-energy change. The remaining increase in total kinetic energy is
 
 $$
 \Delta K = 50 + 3 - 5 - 8 = 40\ \text{J}.
 $$
 
 Nothing here says the shaft “lost” eight joules. At the chosen final time, those
-joules are stored rather than expressed as rigid-body kinetic energy. If the
-shaft later straightens and returns six joules while dissipating two, the ledger
-still closes. Timing decides which account holds the energy near impact.
+joules are stored rather than expressed as total kinetic energy. If the shaft subsequently loses eight joules of storage, two are dissipated
+and there is no other work or storage change, total kinetic energy rises by six
+joules. This does not say that all six reach the clubhead. Timing and interface
+powers decide which part holds the energy near impact.
 
-![A Worked Energy Ledger Separates Hand Work, Gravity, Shaft Storage, Damping Loss, and the Remaining Kinetic-Energy Gain.](figures/proximal_distal_companion/fig_companion_energy_ledger.svg){#fig-lay-energy-ledger width=94% fig-alt="A bar chart balances fifty joules of hand work and three joules from gravity against eight joules stored in the shaft, five joules dissipated, and forty joules of rigid kinetic-energy gain."}
+![A Worked Energy Ledger Separates Hand Work, Gravity, Shaft Storage, Damping Loss, and the Remaining Kinetic-Energy Gain.](figures/proximal_distal_companion/fig_companion_energy_ledger.svg){#fig-lay-energy-ledger width=94% fig-alt="A bar chart balances fifty joules of hand work and three joules from gravity against eight joules stored in the shaft, five joules dissipated, and forty joules of total kinetic-energy gain."}
 
 The same care is needed when a proximal segment slows. A slowing arm may be
 losing kinetic energy, but that loss is not automatically equal to the club's
@@ -128,15 +145,17 @@ also depend on configuration because the inertia matrix of a linked system is
 not a set of independent constants. The only safe claim comes from a closed
 balance in a declared model or from measurements rich enough to estimate one.
 
-**Model Result:** In the open proximal-distal experiments, work-energy residuals
-are checked under timestep refinement. This supports the internal consistency
-of those simulations; it does not prove that every biological pathway has been
-modeled.
+**Model Result:** The [archived forward two-hand study](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/forward_two_arm_study.json)
+reports decreasing, nonzero work-energy residuals under timestep refinement.
+Those numerical checks support bounded internal consistency, not exact
+trajectories or biological validation. Chapter 29 distinguishes these residuals
+from tighter algebraic wrench-power identities.
 
-**Human Evidence:** Skilled golfers often exhibit ordered segment-speed peaks,
-and joint-work studies show substantial work throughout the body. These
-measurements motivate the ledger, but peak order alone does not identify the
-route of transfer [@putnam1993; @tinmark2010].
+**Human Evidence:** Tinmark and colleagues reported ordered pelvis, torso and
+hand peak angular-speed magnitudes in their 45-golfer study [@tinmark2010].
+Marsan and colleagues found strong dependence of the identified sequence on
+angular-velocity definition [@marsan2019]. These kinematic results do not measure
+joint work or identify a causal energy-transfer route.
 
 **Hypothesis:** A useful late-downswing strategy may depend on arranging the
 state so passive and interaction terms assist the club while direct distal
@@ -149,10 +168,11 @@ storing, returning, dissipating, or redirecting mechanical energy.
 
 ### A Swing-Phase Walkthrough
 
-At address, almost none of the mechanical story has happened. The club is held
-above the ground, so gravity has already given the golfer--club system potential
-energy, but the important fact is not the precise number. The important fact is
-that every later claim must name its ledger. During the backswing, muscles do
+At address, the club already has a state and a preparation history. Its
+gravitational potential energy is defined relative to a chosen reference height.
+Raising it requires work against gravity; gravity has not supplied that positive
+energy change. Holding a pose may require muscle activity even when the net
+mechanical work is zero. Every later claim must name its ledger. During the backswing, muscles do
 work to raise and rotate body segments and the club. Some of that work becomes
 gravitational potential energy, some becomes kinetic energy, some is stored in
 deformed tissue or the shaft, and some is dissipated. Saying that the backswing
@@ -168,8 +188,10 @@ club is still largely being carried. The club's own speed need not immediately
 mirror the rate at which energy enters elsewhere.
 
 In the middle and late downswing, the ledger becomes especially interesting.
-The club can gain kinetic energy through power crossing the hands, through the
-return of shaft energy, and through coupling with the moving body. At the same
+For the whole club, hand power and gravity are external entries, while shaft
+return is internal conversion from stored energy. Coupling to the body shapes
+the hand power and trajectory; it is not a third external power to add to the
+same ledger. At the same
 time, one generalized torque can have negative power and still participate in a
 state evolution that produces greater later club speed. Near impact, energy in
 translation, rotation, and shaft deformation all affect the collision. After
@@ -179,12 +201,17 @@ ball never receives the entire pre-impact system energy.
 ### A Numerical Thought Experiment
 
 Suppose two simulated swings both deliver a clubhead at 45 metres per second.
-In Swing A, the club's effective moving mass for a chosen comparison is 0.20
-kilograms; in Swing B it is 0.22 kilograms. The corresponding translational
-kinetic-energy estimates are about 203 and 223 joules. Equal speed has not meant
-equal energy. Now suppose Swing A reaches that speed with 400 watts crossing an
+For a deliberately reduced example, represent each head as a point mass moving
+at that speed: 0.20 kg in Swing A and 0.22 kg in Swing B. Their kinetic energies
+are $\tfrac12mv^2=202.5$ J and 222.75 J. These are not whole-club energy estimates.
+A rigid head requires center-of-mass speed and a separate rotational term; a
+flexible club also carries distributed motion. Impact effective mass is a
+directional contact-response property and must not be substituted for physical
+mass in this energy calculation. Equal speed need not mean equal energy. Now suppose Swing A reaches that speed with 400 watts crossing an
 interface for half a second, while Swing B has a 1,000-watt peak lasting only a
-few hundredths of a second. Peak power alone still does not say which boundary
+few hundredths of a second. The 200 J of interface work in Swing A is only one
+ledger entry; initial energy, gravity, storage changes and losses must close
+its complete balance. Peak power alone still does not say which boundary
 supplied more work. Integrating the complete histories does.
 
 The numbers are illustrative, not measurements of a golfer. Their job is to
@@ -211,8 +238,10 @@ Those images help us remember conservation and boundaries, but they can mislead
 us into imagining a material substance with a unique route. In a multibody
 system, the decomposition itself depends on coordinates and system boundaries.
 Some internal transfers can be described in more than one mathematically valid
-way. What must remain invariant is the whole-system balance and the observable
-motion, not every narrative label attached to an internal term.
+way. Equivalent coordinate descriptions must recover the same physical motion and
+consistent whole-system balance in the same observer frame. Moving to another
+observer can change kinetic energy and power values without violating mechanics.
+Individual coordinate-term labels are not invariant physical transfers.
 
 The railway picture also makes couplings look sequential. In a swing, forces
 act throughout the system at the same time. The distal club can influence the
@@ -227,9 +256,9 @@ separate question requiring measured motion, wrenches, shaft deformation,
 ground reactions, and uncertainty.
 
 **Go Deeper:** Read the scientific monograph's
-[mechanics chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch02_mechanics.qmd),
+[mechanics chapter](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch02_mechanics.qmd),
 the detailed
-[interaction-force decomposition](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
+[interaction-force decomposition](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
 and Robertson and Winter's segment-energy framework [@robertson1980]. The
-[open evidence directory](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer/data)
+[open evidence directory](https://github.com/D-sorganization/UpstreamDrift/tree/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data)
 contains the machine-readable ledgers used by the technical study.
