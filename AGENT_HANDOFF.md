@@ -5,18 +5,21 @@ pause the goal. Do not start another article, chapter, issue or rewrite.
 Never create draft PRs. Historical sections below record earlier checkpoints;
 this section supersedes their instructions to continue corpus development.
 
-- Current branch: `fix/4477-ledger-rigor`, based on green PR #4476.
+- Current branch: `fix/4477-ledger-rigor`. Green PR #4476 merged at
+  1a8dd00b; its protected checks pass and its lease/presence are released.
 - Scope: complete Chapters 1 and 29, wrapper's own opening/glossary and shared
   opening figure. Other 28 chapter sources and historical review reports remain
   unchanged. Full-book scientific reconciliation is still pending.
 - Seventeen focused checks pass; seven archived provider hashes and NPZ
   consistency verified. Four supplied-text-only agy Flash calls completed;
   lead independently adjudicated findings. No delegated tool execution.
-- Finish HTML/PDF visual review, full validation, evidence binding and regular
-  protected PR. Then verify inclusive deployment of camera #4472, fitting #4474,
+- Source/PDF frozen at aac4dbfd; thirteen evidence paths and nine findings
+  bound to ad94b93f. Full suite 5,626 passed, 92.88% coverage; content
+  131 passed/four skipped. Static checks pass. Four browser cases pass with
+  zero severe axe findings; six display equations visually reviewed. The
+  207-page PDF preserves all thirty chapters. Next open a regular protected PR. Then verify inclusive deployment of camera #4472, fitting #4474,
   green #4476 and this ledger correction; update this turnover before pausing.
-- Current pending corpus count: 147 before binding three reviewed sources;
-  expected 144 afterward, plus whole-book reconciliation. Do not claim the
+- Current pending corpus count: 144 after binding three reviewed sources, plus whole-book reconciliation. Do not claim the
   broader goal is complete.
 - Preserve all untracked QA. Owned preview 8770 / Playwright camera-rigor are
   temporary review services; close them at final pause.

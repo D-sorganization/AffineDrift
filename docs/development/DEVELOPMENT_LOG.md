@@ -27,7 +27,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/4477-ledger-rigor`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch01_follow_the_energy.qmd`, `articles/proximal_distal_companion/chapters/ch29_whole_swing_ledger.qmd`, `articles/proximal-distal-a-journey-through-the-swing.qmd`
 - **Started:** 2026-09-28
-- **Last verified:** 2026-09-28 (17 focused checks pass; archived NPZ consistency and seven provider hashes verified. Final render and full checks in progress.)
+- **Last verified:** 2026-09-28 (17 focused checks; full suite 5,626 passed/29 skipped/132 deselected, 92.88% coverage. Content 131 passed/four skipped; static checks pass. Four browser cases and 207-page PDF verified; archived NPZ consistency and seven provider hashes verified.)
 - **Summary:** Reconciles ground impulse/work, rigid/flexible wrench power, shaft storage, physical mass, state and intervention semantics across the opening and synthesis; preserves the remaining chapter sources and historical review scope.
 - **Next step:** Finish current edits, regular PR, protected merge, inclusive publication verification and turnover; then pause at the user's request. No new audits.
 
