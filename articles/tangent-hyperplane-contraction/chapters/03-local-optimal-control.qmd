@@ -1,72 +1,44 @@
 ---
 title: "Chapter 3 - Local Optimal Control: LQR and DDP"
-description: "Imagine a robot has drifted slightly off its planned path. You have one control action to correct it. What should you do? Push as hard as possible toward..."
+description: "Derive the Bellman correction and distinguish finite-horizon LQR from nonlinear DDP and stability certification."
 bibliography: ../references.bib
 ---
 
-## If You Have Only Today to Correct a Trajectory, What Is Your Best Move?
+## Optimize the Remaining Motion
 
-Imagine a robot has drifted slightly off its planned path. You have one control action to correct it. What should you do? Push as hard as possible toward the plan? No—doing so might overshoot tomorrow. Instead, you pick a control that balances two things: getting back on track, and not using too much energy. Solve this one-step problem optimally. Then solve it again tomorrow from the new state. This backward-in-time recursion is the Riccati equation: arguably the simplest optimal control law anyone has ever discovered.
-
-## Introduction and Qualitative Purpose
-
-This chapter develops finite-horizon local quadratic control and the Riccati recursion used in trajectory optimization.
-
-## In Laymans Terms
-
-Solve the best local correction repeatedly, and you get an effective nonlinear control strategy.
-
-## Geometric Intuition
-
-Riccati matrices define local quadratic curvature of cost over perturbations.
-
-## Canonical Recursion
+A backward Riccati recursion minimizes a stage cost **plus the optimal remaining cost**. Repeatedly choosing the cheapest current action is a different, generally greedy procedure. For linear dynamics $\delta x_{k+1}=A_k\delta x_k+B_k\delta u_k$, use
 
 $$
-S_k = Q_k + A_k^\top S_{k+1}A_k - A_k^\top S_{k+1}B_k(R_k+B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k.
+\begin{aligned}
+J&=\frac12\delta x_N^\top Q_N\delta x_N+\sum_{k=0}^{N-1}\ell_k,\\
+\ell_k&=\frac12(\delta x_k^\top Q_k\delta x_k+\delta u_k^\top R_k\delta u_k).
+\end{aligned}
 $$
 
-::: {.callout-note}
-## Proof Sketch (Riccati Recursion)
+where $Q_k,Q_N\succeq0$, $R_k\succ0$, and no state/input constraints are imposed. The state has dimension $n$ and input dimension $m$; the weights must match their units or declared scaling.
 
-This recursion is derived by minimizing the one-step cost $\ell_k(\delta x_k, \delta u_k) = \delta x_k^\top Q_k \delta x_k + \delta u_k^\top R_k \delta u_k$ subject to the linear dynamics $\delta x_{k+1} = A_k \delta x_k + B_k \delta u_k$. Completing the square in $\delta u_k$ yields the optimal gain:
+## Complete the Bellman Square
 
-$$K_k = (R_k + B_k^\top S_{k+1} B_k)^{-1} B_k^\top S_{k+1} A_k$$
+Set $S_N=Q_N$. The quadratic in $\delta u_k$ has positive definite Hessian $H_k=R_k+B_k^\top S_{k+1}B_k$. Minimization gives
 
-and substituting back gives the recursion above. Full proof: Anderson & Moore (1989) *Optimal Control: Linear Quadratic Methods*, §2.3; Bertsekas (2005) *Dynamic Programming and Optimal Control*, Vol. 1, §4.1. The infinite-horizon limit (LQR) is the steady-state solution of this recursion when $(A_k, B_k)$ is time-invariant; see Khalil (2002), §14.3.
-:::
+$$
+K_k=H_k^{-1}B_k^\top S_{k+1}A_k,\qquad \delta u_k=-K_k\delta x_k,
+$$
 
-## Link to DDP
+$$
+S_k=Q_k+A_k^\top S_{k+1}A_k-K_k^\top H_kK_k.
+$$
 
-DDP extends local quadratic value propagation with dynamics second derivatives and nonlinear forward rollout. Solving a finite-horizon subproblem does not by itself establish stability [@jacobson1970ddp; @todorov2002optimal].
+Induction gives $S_k\succeq0$ and invertible $H_k$. Solve the linear system numerically instead of forming an explicit inverse. This is the exact global optimum of the stated linear-quadratic problem. It is a local model of a nonlinear problem, and its value matrix need not be positive definite.
 
-## Prior Art and What Is New Here
+## DDP Uses More Than This Recursion
 
-The control-affine structure and its implications for feedback design are well-established in control theory. The decomposition of dynamics into drift (uncontrolled) and control (actuation) channels is standard in robotics:
+For nonlinear transition $F$ and stage cost $\ell$, expand $\mathcal Q(x,u)=\ell(x,u)+V^+(F(x,u))$. Its second derivatives contain both $F_a^\top V^+_{xx}F_b$ and $\sum_i(V_x^+)_iD^2_{ab}F_i$, for $a,b\in\{x,u\}$. Full DDP keeps the latter dynamics-curvature terms; iLQR commonly drops them. Linear cost terms, mixed derivatives and a feedforward update also matter [@tassa2014control].
 
-- **Classical references:** Isidori (1995), Khalil (2002), Nijmeijer & van der Schaft (1990) establish the theory of control-affine systems and their geometric properties.
-- **Robotics foundations:** Spong (1994), Murray/Li/Sastry (1994) developed the mechanical systems framework that makes drift and control forces explicit.
-- **Trajectory optimization:** The Riccati recursion here is the backbone of DDP, which originated in Jacobson (1970) and has been widely adopted in robotics.
+When $\mathcal Q_{uu}\succ0$, the unconstrained local step is $\delta u=-\mathcal Q_{uu}^{-1}\mathcal Q_u-\mathcal Q_{uu}^{-1}\mathcal Q_{ux}\delta x$. A nonlinear forward rollout and line search test improvement. Regularization changes the step; control bounds require a constrained subproblem. None of these algorithmic operations alone certifies contraction.
 
-What is **new** in this textbook is not the mathematics, but the systematic pedagogical organization:
-
-1. **Unified framework:** Using contraction metrics and tangent-space geometry to unify stability analysis and optimal control design in one language.
-2. **Trajectory-centric perspective:** Organizing all results around how errors evolve along nominal paths, rather than equilibrium stability alone.
-3. **Interpretability through decomposition:** Explicitly connecting control-affine structure to counterfactual analysis—asking "what happens without actuation?"—for model interpretability.
-
-This pedagogical reframing makes the tools accessible to practitioners who need both *performance* and *certainty* simultaneously.
-
----
-
-:::{.callout-warning}
 ## Scope and Limitations
 
-- **Separate the linear problem from its nonlinear application.** Under positive-semidefinite state costs, positive-definite input costs, and no constraints, finite-horizon LQR is globally optimal for the specified linear model. A trajectory linearization supplies only a local approximation to a nonlinear system. This chapter does not prove a neighborhood of nonlinear optimality or stability. DDP generally seeks a local stationary solution; its quality depends on initialization, derivatives, constraints, and termination checks.
+**Finite-horizon LQR does not require controllability.** With $Q,Q_N\succeq0$ and $R\succ0$, the recursion remains well defined even for $B=0$. The continuous scalar problem $\dot x=x$, $B=0$, $Q=1$, zero terminal cost has $S(t)=(e^{2(T-t)}-1)/2$, finite on every finite horizon. Infinite-horizon stabilization is a separate question: stabilizability and detectability are standard sufficient assumptions for the time-invariant stabilizing solution. A hard endpoint constraint can be infeasible despite a well-posed unconstrained problem.
 
-- **Finite-horizon LQR does not require controllability.** With $Q,Q_T\succeq0$ and $R\succ0$, the Riccati recursion remains well defined even for $B=0$. For example, $\dot x=x$, $B=0$, $Q=1$, and zero terminal cost give $S(t)=(e^{2(T-t)}-1)/2$, finite on every finite horizon. Infinite-horizon stabilization is a different question: stabilizability and detectability are standard sufficient assumptions for the time-invariant stabilizing solution. For time-varying endpoint reachability, inspect $W_c=\int_{t_0}^T\Phi(T,s)B(s)B(s)^T\Phi(T,s)^T\,ds$, where $\Phi$ is the state-transition matrix. A hard terminal constraint can be infeasible even when unconstrained LQR is well posed.
-
-- **The cost specifies the question.** Choose state and input scales, connect weights to measurable objectives, and report sensitivity to alternative weights. Squared torque, mechanical work, impact accuracy, and injury-related loading are distinct quantities. A model optimum is not proof that the nervous system uses that cost or that it is clinically safe.
-
-:::
-
----
+**Cost is not automatically energy.** Squared torque, mechanical work, impact accuracy and tissue loading measure different things. A modeled optimum does not establish a human neural objective or clinical safety. Report weight sensitivity, actuator feasibility and the evidence behind the underlying mechanics.
