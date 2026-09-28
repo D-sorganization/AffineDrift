@@ -18,11 +18,24 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4471 · Markerless Camera Measurement Rigor
+### DL-#4473 · Club-Fitting Mechanics and Evidence
 
 - **State:** in_progress
 - **Owner:** codex
 - **PR:** pending
+- **Issue:** #4473 (corpus #4021; epic #4009)
+- **Branch:** `fix/4473-fitting-rigor`
+- **Paths:** `articles/technology-club-fitting.qmd`, `references/club-fitting.bib`, `tests/test_club_fitting_rigor.py`
+- **Started:** 2026-09-28
+- **Last verified:** 2026-09-28 (Complete article corrected; seven source/example failures reproduced; all 16 checks pass. Full suite 5,593 passed/29 skipped/132 deselected, 92.88% coverage; content 131 passed/four skipped; static checks pass. Four browser cases pass, zero severe axe findings; all ten display equations visually reviewed.)
+- **Summary:** Separates model interventions and causal inference, corrects spatial/beam/mass mechanics and replaces nonexistent wire guarantees with explicit synthetic proposals.
+- **Next step:** Complete source review, full validation and browser inspection; freeze evidence and publish through a regular protected PR after #4472.
+
+### DL-#4471 · Markerless Camera Measurement Rigor
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4472
 - **Issue:** #4471 (corpus #4021; epic #4009)
 - **Branch:** `fix/4471-camera-rigor`
 - **Paths:** `articles/markerless-mocap-camera-selection.qmd`, `data/markerless_mocap/camera_evidence_registry_v1.json`, `tests/test_camera_selection_rigor.py`

@@ -1,3 +1,40 @@
+# Club-Fitting Review — #4473
+
+Current branch: `fix/4473-fitting-rigor`, based on camera PR #4472.
+Full corpus goal remains resumed. Never create draft PRs.
+
+- Complete club-fitting article corrected under #4473, child of #4021 / epic
+  #4009. Nine grouped findings connect spatial conventions, model interventions,
+  shaft dynamics, mass identification and uncertainty to fitting decisions.
+- Fixed the point-shift sign, mesh factors, centrifugal-load dimensions and
+  bending/rotation coupling. Removed neural-causality and engine-interchange
+  guarantees; all three JSON records are explicitly synthetic proposals.
+- Four supplied-text-only agy Gemini 3.8 Flash jobs ran in two parallel pairs.
+  Lead tested/adjudicated every finding; no delegated tools or permission bypass.
+- Sixteen focused checks pass (RED: nine numerical passes, seven source/example
+  failures). Full suite: 5,593 passed, 29 skipped, 132 deselected, 92.88% coverage.
+  Content: 131 passed, four skipped. Ruff, Black 723 files, mypy 91 sources,
+  title audit 638, tracked quality 760 and bibliography/citation checks pass.
+- Quarto: four mobile/desktop light/dark browser cases pass; zero severe axe
+  findings. All 89 math expressions and ten display equations load. Display
+  equations visually inspected at both widths; JSON scrolls within code blocks.
+- Review: reports/technical-review/club-fitting-review.md. Next freeze source,
+  record render receipt, bind nine findings/corpus index and complete a regular
+  protected PR after camera PR #4472 merges. No fitting PR yet.
+- Camera PR #4472: source 98b37ee5, six-path evidence 40a26284, final head
+  eaefc499. Protected auto-merge armed; final browser CI still running.
+- Volume I PR #4470 merged at 24c77a55. Deployment 36389665569 and CI
+  36389665580 are still running; Compile 36389665540 passed. Verify live
+  revision and pinned main source/PDF 14b8f183; evidence freeze 782dc161.
+- Secondary-axis PR #4468 is verified published at 54d73e39; receipt committed.
+- Corpus remains 149 pending full audits until fitting evidence is bound, then
+  148, plus whole-book reconciliation. No whole-corpus completion claimed.
+- Fitting lease technical-review-20260928-fitting expires 09:14 UTC; camera
+  lease expires 08:40 UTC. Reference lease released. Preserve all untracked QA.
+- Owned preview 8770 and Playwright camera-rigor are active for fitting QA.
+
+---
+
 # Camera Selection Review — #4471
 
 Current branch: `fix/4471-camera-rigor`. Full corpus goal remains resumed.
