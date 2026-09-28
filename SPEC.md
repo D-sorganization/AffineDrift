@@ -402,3 +402,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-23 | #4450 | Correct paired opening-chapter force, energy, constraint and input-baseline arguments; add checked release trajectories and worked answers with explicit golf-evidence boundaries. |
 
 | 2026-09-24 | #4429 | Reconcile historical provenance of site-surface audit evidence across 12 canonical routes, bind exact source bytes to committed checkpoint 63d98d19, and preserve render history. |
+
+| 2026-09-27 | #4463 | Correct Volume III biological model selection, compliance, muscle power, constrained redundancy, inertial accounting and excitation-affine assumptions with independent numerical and print verification. |
