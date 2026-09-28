@@ -1,25 +1,42 @@
 # Volume I Reference Review — #4469
 
-Current branch: `fix/4469-volume-one-reference`, based on PR #4468 head 03846ceb.
-The full goal is resumed; no draft PRs. PR #4468 remains in protected CI after
-its terminology and named-constant fixes; final static checks pass. Do not claim it merged or published yet.
+Current branch: `fix/4469-volume-one-reference`. The full corpus goal is resumed;
+never create draft PRs. Preceding PR #4468 merged at 54d73e39 on 2026-09-28 UTC
+with every check green; deployment and post-merge verification remain pending.
 
-- Read the complete Volume I main source, including front matter, notation and
-  both appendices. Chapter inputs remain outside this bounded correction.
-- New issue #4469 is a native child of #4021, under epic #4009. Active lease and
-  presence: technical-review-20260927-volume-one-reference, expires 07:50 UTC.
-- Two supplied-text-only agy Gemini 3.8 Flash inventories completed in parallel.
-  Parent retains mathematical judgment; reject unsupported necessity claims and
-  invented solver/physical implications. No agent tool or permission bypass.
-- RED: 13 independent numerical cases pass; eight source/example failures expose
-  omitted controlled-Jacobian terms, wrong transport scope, exp/log limitations,
-  a missing executable sparse example and overbroad matrix/solver claims.
-- Corrected the complete main reference source; all 21 tests now pass.
-  The full 149-page PDF compiles and affected front matter, contents, reference
-  and bibliography pages pass visual QA. No overfull or undefined references.
-- Next update the immutable public source/PDF links and bind bounded evidence.
-- Preserve all older untracked QA. Secondary preview server and CLI sessions
-  are stopped. Resume PR #4468 checks at meaningful intervals while reviewing.
+- Issue #4469 is a native child of #4021, under epic #4009. Session:
+  technical-review-20260927-volume-one-reference; lease expires 07:50 UTC.
+- Complete Volume I main source and public book map reviewed. Chapter inputs
+  are unchanged; this is a bounded reference correction, not whole-book approval.
+- Corrected controlled Jacobians, transport versus flow sensitivity, rotation
+  branches, twist/wrench duality, coordinate/metric conventions, matrix and
+  optimization hypotheses, and both executable examples. Fixed appendix labels,
+  contents spacing and code placement in the 149-page PDF.
+- Frozen source/PDF: 14b8f183. Six exact evidence paths: 782dc161. Reports:
+  reports/technical-review/volume-one-reference-review.md,
+  volume-one-reference-render-verification.json and
+  volume-one-reference-dependency-carry-forward.json in that same directory.
+  Other books retain historical scientific review dates and render revisions;
+  shared dependency refreshes are recorded separately from new findings.
+- Validation: 21 focused checks; 52 reference/audit contracts; full suite 5,561
+  passed, 29 skipped, 132 deselected, 92.88% src coverage. Content: 131 passed,
+  four skipped. Ruff, Black (729 files), mypy (91), titles (638) and quality
+  checks across 758 tracked Python files pass. Changed print regions inspected;
+  remaining header/enumitem warnings are outside the changed reference material.
+- Public book map: four mobile/desktop light/dark cases, zero serious/critical
+  axe findings. Immutable main-source and PDF links use the frozen source commit;
+  older chapter/notebook links retain their explicitly separate snapshot.
+- Four supplied-text-only agy Gemini 3.8 Flash calls ran in two parallel pairs;
+  parent adjudicated all suggestions. Dispatcher #1800 still blocks unattended
+  tool access. No tool/permission bypass; no fabricated physical validation.
+- Next: merge remote main, open a regular PR, complete protected CI/merge and
+  verify deployment, full site receipt and frozen downloads. Also record #4468
+  publication after deployment. Latest secondary evidence is 919f6d18.
+- Corpus: 150 full audits remain, plus whole-book reconciliation. Next read-only
+  triage identified camera-specification discrepancies in the markerless mocap
+  article; no new issue or implementation has started for that article.
+- Preserve older untracked QA and stage explicit paths only. Owned browser and
+  preview sessions are stopped.
 
 ---
 

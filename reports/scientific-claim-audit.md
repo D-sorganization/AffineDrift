@@ -149,7 +149,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
 | `/books/index.html` | `books/index.qmd` | 3 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
-| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 3 |
+| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 8 |
 | `/critiques/01_muscle_physiology.html` | `critiques/01_muscle_physiology.md` | 1 |
 | `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
 | `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |
