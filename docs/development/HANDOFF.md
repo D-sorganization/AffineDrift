@@ -20,17 +20,19 @@ Full corpus goal remains resumed. Never create draft PRs.
   and eight display equations load; every display visually inspected at mobile
   and desktop widths. Tables scroll inside their wrappers; no document overflow.
 - Review: reports/technical-review/green-simulation-review.md. Source frozen at 460a0192;
-  five evidence paths and nine findings bound to 9f603f37. Next merge
-  remote main after #4474 and open a regular protected PR. No green PR yet.
-- Club-fitting PR #4474 is open at 428a4561 with protected auto-merge armed.
-  Frozen source 692b5a68; five evidence paths 4ec7a679. Required e2e check running.
-- Camera PR #4472 merged at 5fd2f8ab. Deployment 36392177929 and CI
-  36392177961 still running; verify exact live revision and registry bytes.
+  five evidence paths and nine findings bound to 9f603f37. Remote main 994cd2be
+  incorporated; next open a regular protected PR. No green PR yet.
+- Club-fitting PR #4474 merged at 994cd2be (checked head 428a4561).
+  Source 692b5a68; five evidence paths 4ec7a679. Deployment 36394993854
+  and CI 36394993725 running. Fitting lease/presence released.
+- Camera PR #4472 merged at 5fd2f8ab; CI 36392177961 passed. Its
+  deployment 36392177929 was cancelled by the fitting merge. Verify both
+  camera and fitting against the newer inclusive deployment before publication.
 - Volume I PR #4470 and secondary-axis PR #4468 verified published; receipts
   are committed. No whole-book or whole-corpus completion claimed.
 - Corpus: 147 pending full audits, plus whole-book reconciliation.
-- Green lease technical-review-20260928-green expires 09:39 UTC; fitting lease
-  expires 09:14 UTC. Release fitting after merge. Preserve all untracked QA.
+- Green lease technical-review-20260928-green expires 09:39 UTC. Preserve
+  all untracked QA.
 - Owned preview 8770 and Playwright camera-rigor remain active for green QA.
 
 ---
