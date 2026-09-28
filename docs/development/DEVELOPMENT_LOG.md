@@ -18,18 +18,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4463 · Biological Model Selection
+### DL-#4467 · Secondary-Axis Mechanics and Putter Design
 
 - **State:** in_progress
 - **Owner:** codex
 - **PR:** pending
+- **Issue:** #4467 (corpus #4021; epic #4009)
+- **Branch:** `fix/4467-secondary-axis`
+- **Paths:** `articles/secondary-axis-stability.qmd`, `critiques/intermediate_axis_fallacy.md`, `critiques/misattribution_of_stability_gravity.md`, `tests/test_secondary_axis_rigor.py`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (19 focused cases pass after six source RED failures; 46 combined article/audit/book checks pass; title audit and focused Ruff/Black pass. Three public routes rendered. Production polyfill cleanup and full browser review are in progress.)
+- **Summary:** Separates free spin, supported motion, gravity and collision; supplies checked inertia-rate and moment comparisons; removes unsupported equipment and neural claims from article and critiques.
+- **Next step:** Complete the three-route browser review and bind its source evidence.
+
+### DL-#4463 · Biological Model Selection
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4464
 - **Issue:** #4463 (corpus #4021; epic #4009)
 - **Branch:** `fix/4463-biology-model-selection`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_III/`, `books/biomechanics-biology-to-systems.qmd`, `tests/test_biology_model_selection_rigor.py`
 - **Started:** 2026-09-27
-- **Last verified:** 2026-09-27 (14 focused tests pass after six source RED failures; full PDF compiles; introduction and nine chapter pages visually inspected; Ruff, Black, title audit and mypy pass. Final full suite: 5,507 passed, 29 skipped, 132 deselected; 92.88% src coverage. Content lint: 131 passed, four skipped. Four local browser cases pass with zero serious/critical axe violations. Seven scientific evidence files match source checkpoint 9df52f26. Publication remains pending.)
+- **Last verified:** 2026-09-27 (PR #4464 merged at 855b6fa6; deployment 36378430500 succeeded. Downloaded artifact 10952174815 verified by SHA-256: 960/960 site cases pass, all four biology cases and three pinned source/PDF downloads verified; zero serious/critical axe violations. Seven scientific evidence paths match their checkpoint and deployed merge. Prior numerical/render validation retained in review receipts.)
 - **Summary:** Connects model assumptions to golf delivery and biological inference; corrects modal dynamics, force/power pairing, redundancy, inertial accounting and excitation affinity without asserting empirical human parameters.
-- **Next step:** Open regular PR, protected merge, then verify live publication. Historical book review provenance is preserved in the separate dependency carry-forward receipt.
+- **Next step:** Preserve the source and publication receipts for this completed chapter correction.
+
 
 ### DL-#4429 · Site-Surface Audit Provenance Reconciliation
 

@@ -1,3 +1,34 @@
+# Secondary-Axis Review — #4467
+
+Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+Branch: `fix/4467-secondary-axis`, based on remote main 855b6fa6.
+The complete corpus goal is resumed; never create draft PRs.
+
+- Biology #4463 is published: PR #4464, merge 855b6fa6, successful deployment
+  36378430500. Artifact 10952174815 SHA-256 verified; 960/960 site cases and all
+  four biology route cases pass, zero serious/critical axe findings. Three pinned
+  source/PDF downloads and seven frozen evidence paths match. See the separate
+  biology-model-selection-publication.json receipt.
+- Contraction #4465 merged through regular PR #4466 at e48c9e0039ce7bab9acea27a69aea5551ee44ddd.
+  Merge that remote-main result into this branch after the source checkpoint,
+  preserving both metadata entries and the excluded-route publication boundary.
+- #4467 corrects the full secondary-axis article and both critique companions.
+  19 focused tests pass after six source RED failures; 46 combined audit/book/
+  article checks pass. Three routes rendered; production polyfill cleanup and
+  browser QA are in progress. No empirical equipment advantage is asserted.
+- Four supplied-text-only agy Gemini 3.8 Flash calls handled inventory/arithmetic
+  and fixture proposals in parallel pairs. Parent independently adjudicated all
+  suggestions, rejecting invented product facts and erroneous constants.
+- Active lease/session: technical-review-20260927-secondary, expiry 07:05 UTC.
+  Source report: reports/technical-review/secondary-axis-review.md. QA and detailed
+  derivation notes are under docs/development/technical-review/secondary-*.
+- Next complete source/render evidence, governed critique response, full validation
+  and a regular PR. Preserve old untracked QA and stage explicit files only.
+  The broader corpus remains unfinished; #4465's index records 154 full audits
+  pending plus whole-book reconciliation before this three-source correction.
+
+---
+
 # Biology Model Selection: Source Checkpoint for #4463
 
 Current branch: `fix/4463-biology-model-selection`; worktree:

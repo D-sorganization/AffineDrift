@@ -404,3 +404,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-24 | #4429 | Reconcile historical provenance of site-surface audit evidence across 12 canonical routes, bind exact source bytes to committed checkpoint 63d98d19, and preserve render history. |
 
 | 2026-09-27 | #4463 | Correct Volume III biological model selection, compliance, muscle power, constrained redundancy, inertial accounting and excitation-affine assumptions with independent numerical and print verification. |
+| 2026-09-27 | #4467 | Correct secondary-axis putter mechanics and both critiques: free/forced spin, inertia origins, gravity, impulse response and evidence-limited design comparisons with independent numerical checks. |
