@@ -33,7 +33,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/inverse-dynamics.html` | `articles/inverse-dynamics.qmd` | 4 |
 | `/articles/lagrangian-reference.html` | `articles/lagrangian-reference.qmd` | 1 |
 | `/articles/launch-monitor-vendor-reference.html` | `articles/launch-monitor-vendor-reference.qmd` | 1 |
-| `/articles/markerless-mocap-camera-selection.html` | `articles/markerless-mocap-camera-selection.qmd` | 1 |
+| `/articles/markerless-mocap-camera-selection.html` | `articles/markerless-mocap-camera-selection.qmd` | 6 |
 | `/articles/nonlinear-control-insights.html` | `articles/nonlinear-control-insights.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
@@ -276,7 +276,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Reviewed | — | None | None | 0 |
-| `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Reviewed | — | None | None | 0 |
+| `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Reviewed | — | None | None | 9 |
 | `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Reviewed | — | None | `crit-sequencing-lie-bracket-fallacy` | 8 |
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |

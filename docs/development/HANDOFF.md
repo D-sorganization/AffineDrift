@@ -14,17 +14,16 @@ Never create draft PRs. Issue #4471 is a native child of #4021 under epic #4009.
 - Four mobile/desktop light/dark browser cases pass, zero serious/critical axe
   findings. All 36 math expressions loaded; seven display equations visually
   inspected at both widths. Tables scroll horizontally within their wrappers.
-- Review: reports/technical-review/camera-selection-review.md. Next freeze the
-  source, bind the render receipt and nine findings, refresh the corpus index,
-  merge remote main and open a regular protected PR. No camera PR yet.
+- Review: reports/technical-review/camera-selection-review.md. Frozen source 98b37ee5; six exact evidence paths and nine findings
+  bound to 40a26284. Render receipt: camera-selection-render-verification.json.
+  Next merge remote main and open a regular protected PR. No camera PR yet.
 - PR #4470 merged at 24c77a55; live publication and immutable reference/PDF
   downloads still require verification. Source/PDF 14b8f183, six-path evidence
   782dc161. PR #4468 is verified published at 54d73e39: all 960 site cases pass,
   12 reviewed-route cases pass, eight hashes match; secondary-axis-publication.json.
-- Corpus remains 150 pending full audits until the camera evidence is bound,
-  then 149, plus whole-book reconciliation. Do not claim whole-corpus completion.
+- Corpus: 149 pending full audits, plus whole-book reconciliation. Do not claim whole-corpus completion.
 - Camera lease technical-review-20260927-camera expires 08:40 UTC; reference
-  lease technical-review-20260927-volume-one-reference can now be released.
+  lease technical-review-20260927-volume-one-reference has been released.
 - Preserve untracked QA. Stage explicit paths only. Preview 8770 and browser
   camera-rigor are owned by this session and still active.
 
