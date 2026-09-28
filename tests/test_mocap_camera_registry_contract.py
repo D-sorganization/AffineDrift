@@ -122,16 +122,20 @@ def test_price_scoping_contracts_distinguish_camera_body_from_system_cost(
     article = ARTICLE_PATH.read_text(encoding="utf-8")
 
     flir_price = claims_by_id["flir-price"]
-    assert flir_price["status"] == "current"
-    assert flir_price["evidence_class"] == "vendor_spec"
-    assert "371" in str(flir_price["value"])
+    assert flir_price["status"] == "unavailable"
+    assert flir_price["evidence_class"] == "unavailable"
+    assert flir_price["value"] is None
+    assert "Historical" in flir_price["limitations"]
+    assert "371" in flir_price["limitations"]
     assert "camera body only" in flir_price["limitations"].lower()
 
     zed_price = claims_by_id["zed-price"]
-    assert zed_price["status"] == "current"
-    assert zed_price["evidence_class"] == "vendor_spec"
-    assert "399" in str(zed_price["value"])
-    assert "424" in str(zed_price["value"])
+    assert zed_price["status"] == "unavailable"
+    assert zed_price["evidence_class"] == "unavailable"
+    assert zed_price["value"] is None
+    assert "Historical" in zed_price["limitations"]
+    assert "399" in zed_price["limitations"]
+    assert "424" in zed_price["limitations"]
     assert "camera body only" in zed_price["limitations"].lower()
 
     basler_price = claims_by_id["basler-price"]
