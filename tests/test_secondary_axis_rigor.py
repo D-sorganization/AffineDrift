@@ -7,6 +7,7 @@ import pytest
 from numpy.typing import NDArray
 
 ROOT = Path(__file__).resolve().parents[1]
+GRAVITY_M_S2 = 9.81  # Manufactured terrestrial-gravity example, in m/s².
 SPECTRA = np.array([[0.00023, 0.00113, 0.00133], [0.00023, 0.00062, 0.00072]])
 
 
@@ -133,7 +134,7 @@ def test_moving_body_point_balance_matches_particle_accelerations() -> None:
 
 def test_zero_gravity_moment_does_not_determine_stability_or_damping() -> None:
     """Two zero-moment poses have opposite potential curvature; neither dissipates."""
-    mass, gravity, length, pivot_inertia = 0.35, 9.81, 0.02, 0.002
+    mass, gravity, length, pivot_inertia = 0.35, GRAVITY_M_S2, 0.02, 0.002
     scale = mass * gravity * length
     angles = np.array([0.0, np.pi])
     assert -scale * np.sin(angles) == pytest.approx([0.0, 0.0], abs=1e-16)

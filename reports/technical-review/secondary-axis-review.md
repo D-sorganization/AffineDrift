@@ -112,3 +112,7 @@ reviewer's invented shaft lie angle and club dimensions: the pendulum parameters
 are synthetic and never identified as measured putter geometry. Gravity may be
 a zero term about the COM; its explicit separation does not require a nonzero
 moment. The impulse paragraph already declares and bounds other impulses.
+
+The final CI follow-up names the unchanged 9.81 m/s² test parameter
+`GRAVITY_M_S2`. All 19 cases pass again; this is a test-style correction,
+with no source, numerical value, rendered output or scientific conclusion change.
