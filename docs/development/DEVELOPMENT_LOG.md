@@ -20,33 +20,33 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4478
 - **Issue:** #4477 (corpus #4021; epic #4009)
 - **Branch:** `fix/4477-ledger-rigor`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch01_follow_the_energy.qmd`, `articles/proximal_distal_companion/chapters/ch29_whole_swing_ledger.qmd`, `articles/proximal-distal-a-journey-through-the-swing.qmd`
 - **Started:** 2026-09-28
 - **Last verified:** 2026-09-28 (17 focused checks; full suite 5,626 passed/29 skipped/132 deselected, 92.88% coverage. Content 131 passed/four skipped; static checks pass. Four browser cases and 207-page PDF verified; archived NPZ consistency and seven provider hashes verified.)
 - **Summary:** Reconciles ground impulse/work, rigid/flexible wrench power, shaft storage, physical mass, state and intervention semantics across the opening and synthesis; preserves the remaining chapter sources and historical review scope.
-- **Next step:** Finish current edits, regular PR, protected merge, inclusive publication verification and turnover; then pause at the user's request. No new audits.
+- **Next step:** Merged with required CI passing; deployment pending at the user-requested remote-main stop checkpoint. No further development.
 
 ### DL-#4475 · Green Simulation Mechanics and Implementation Evidence
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4476
 - **Issue:** #4475 (corpus #4021; epic #4009)
 - **Branch:** `fix/4475-green-rigor`
 - **Paths:** `articles/green-simulation.qmd`, `tests/test_green_simulation_rigor.py`, `reports/technical-review/green-provider-source-index.json`
 - **Started:** 2026-09-28
 - **Last verified:** 2026-09-28 (All 16 focused checks pass; full suite 5,609 passed/29 skipped/132 deselected, 92.88% coverage. Content 131 passed/four skipped; static checks pass. Four browser cases pass, zero severe axe findings; eight display equations visually inspected.)
 - **Summary:** Corrects rolling/sliding dynamics and probability claims, qualifies numerical/surface/capture choices, and documents actual provider discrepancies without changing provider code.
-- **Next step:** Frozen source 460a0192 and five evidence paths 9f603f37; publish regular protected PR after #4474, then verify exact deployed revision.
+- **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
 
 ### DL-#4473 · Club-Fitting Mechanics and Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4474
 - **Issue:** #4473 (corpus #4021; epic #4009)
@@ -55,11 +55,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-28
 - **Last verified:** 2026-09-28 (Complete article corrected; seven source/example failures reproduced; all 16 checks pass. Full suite 5,593 passed/29 skipped/132 deselected, 92.88% coverage; content 131 passed/four skipped; static checks pass. Four browser cases pass, zero severe axe findings; all ten display equations visually reviewed.)
 - **Summary:** Separates model interventions and causal inference, corrects spatial/beam/mass mechanics and replaces nonexistent wire guarantees with explicit synthetic proposals.
-- **Next step:** Complete source review, full validation and browser inspection; freeze evidence and publish through a regular protected PR after #4472.
+- **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
 
 ### DL-#4471 · Markerless Camera Measurement Rigor
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4472
 - **Issue:** #4471 (corpus #4021; epic #4009)
@@ -68,7 +68,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-27
 - **Last verified:** 2026-09-27 (Full article and 57 registry claims inspected. RED: ten numerical passes, six source failures; GREEN: all 16 plus 14 registry contracts pass. Manufacturer modes and study transfer corrected.)
 - **Summary:** Connects exposure, timing, payload, geometry and differentiation to the limits of golf-swing inference; preserves unavailable prices/licenses and unmeasured physical qualification.
-- **Next step:** PR #4472 merged at 5fd2f8ab with all required checks green. Six evidence paths frozen at 40a26284. Verify deployment 36392177929, post-merge CI 36392177961 and live registry/page.
+- **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
 
 ### DL-#4469 · Volume I Mathematical Reference
 
