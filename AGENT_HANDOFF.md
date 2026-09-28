@@ -14,7 +14,8 @@ The user has resumed the complete corpus goal. Never create draft PRs.
   accounting example; the replacement exercise is synthetic, not de Leva data.
 - RED: six source failures and eight passing numerical fixtures. GREEN: 14 focused
   checks. Root Ruff, Black (726 files), title audit (638 sources), and CI-equivalent
-  mypy (91 sources) pass. Full Python suite is running; do not claim it passed yet.
+  mypy (91 sources) pass. Full Python run: 5,503 passed and four stale audit-record failures; after
+  refreshing records all 67 focused checks pass. Final full run remains pending.
 - Full Volume III PDF compiles (66 pages). Introduction page 3 and chapter pages
   9-17 visually inspected; title and long exercise equation repaired. Zero chapter
   overfull boxes or undefined references. Existing warnings elsewhere remain.
@@ -22,11 +23,12 @@ The user has resumed the complete corpus goal. Never create draft PRs.
   numerical-test/exercise preparation, and consistency review. Lead checked every
   adopted change. No permission bypass, file/tool delegation, or empirical evidence
   was supplied by those agents; dispatcher issue #1800 still blocks unattended tools.
-- Next: pin the public book-map source/PDF to this source checkpoint, render/check
-  the book page, finish the full suite, bind current audit evidence to committed
+- Source/PDF freeze: `3875b82d18d27078d6d0aa22fcfa4ca4acf65a58`. The
+  public book map pins this freeze and passes four local browser cases with zero
+  serious/critical axe violations. Next: finish the full suite and bind evidence to committed
   bytes while preserving historical provenance, update corpus and development log,
   open a regular PR, protected merge, and verify live publication. Continue the
-  remaining corpus afterward; its 167 pending entries are not yet decremented.
+  remaining corpus afterward; 165 full technical audits remain, plus whole-book reconciliation.
 - Stage explicit files only. Old untracked QA is not product content. Fresh QA is
   under `docs/development/technical-review/biology-*` and `flash-biology-*`.
 
