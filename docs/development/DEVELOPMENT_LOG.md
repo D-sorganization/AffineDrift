@@ -42,11 +42,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-27
 - **Last verified:** 2026-09-27 (Full article and 57 registry claims inspected. RED: ten numerical passes, six source failures; GREEN: all 16 plus 14 registry contracts pass. Manufacturer modes and study transfer corrected.)
 - **Summary:** Connects exposure, timing, payload, geometry and differentiation to the limits of golf-swing inference; preserves unavailable prices/licenses and unmeasured physical qualification.
-- **Next step:** Thirty focused checks, full suite 5,577 passed/29 skipped/132 deselected, 92.88% coverage and 131 content checks pass. Four browser cases and visual math/table inspection pass. Bind exact evidence and complete protected regular PR publication.
+- **Next step:** PR #4472 merged at 5fd2f8ab with all required checks green. Six evidence paths frozen at 40a26284. Verify deployment 36392177929, post-merge CI 36392177961 and live registry/page.
 
 ### DL-#4469 · Volume I Mathematical Reference
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4470
 - **Issue:** #4469 (corpus #4021; epic #4009)
@@ -55,7 +55,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-27
 - **Last verified:** 2026-09-27 (21 focused; 52 reference/audit contracts; full suite 5,561 passed, 29 skipped, 132 deselected, 92.88% coverage; 131 content checks passed/four skipped. Static checks pass. Full 149-page PDF compiles; affected pages visually inspected. Public map 4/4 browser cases, zero severe axe findings. Source/PDF 14b8f183; six-path evidence 782dc161. Four parallel supplied-text Flash reviews adjudicated.)
 - **Summary:** Reconciles notation and mathematical reference material with corrected chapter assumptions; separates geometry, flow sensitivity and control certification.
-- **Next step:** PR #4470 merged at 24c77a55 on 2026-09-28 UTC; verify deployment, live publication and pinned downloads.
+- **Next step:** Published at 24c77a55. Deployment 36389665569, CI 36389665580 and Compile 36389665540 pass. Live gate 960/960; four reviewed-route cases, zero severe axe findings; both pinned source/PDF downloads and six hashes verified. Receipt: volume-one-reference-publication.json.
 
 ### DL-#4467 · Secondary-Axis Mechanics and Putter Design
 

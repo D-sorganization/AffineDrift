@@ -18,19 +18,20 @@ Full corpus goal remains resumed. Never create draft PRs.
 - Quarto: four mobile/desktop light/dark browser cases pass; zero severe axe
   findings. All 89 math expressions and ten display equations load. Display
   equations visually inspected at both widths; JSON scrolls within code blocks.
-- Review: reports/technical-review/club-fitting-review.md. Next freeze source,
-  record render receipt, bind nine findings/corpus index and complete a regular
-  protected PR after camera PR #4472 merges. No fitting PR yet.
+- Review: reports/technical-review/club-fitting-review.md. Source frozen at 692b5a68; five evidence paths and nine findings bound
+  to 4ec7a679. Render receipt: club-fitting-render-verification.json. Next complete
+  a regular protected PR after merging remote main. No fitting PR yet.
 - Camera PR #4472: source 98b37ee5, six-path evidence 40a26284, final head
-  eaefc499. Protected auto-merge armed; final browser CI still running.
-- Volume I PR #4470 merged at 24c77a55. Deployment 36389665569 and CI
-  36389665580 are still running; Compile 36389665540 passed. Verify live
-  revision and pinned main source/PDF 14b8f183; evidence freeze 782dc161.
+  eaefc499. Merged at 5fd2f8ab on 2026-09-28 UTC. Deployment 36392177929
+  and post-merge CI 36392177961 are running; publication verification pending.
+- Volume I PR #4470 is verified published at 24c77a55. Deployment, CI and
+  Compile pass. Live gate: 960/960 site cases and four reviewed-route cases,
+  zero severe axe findings. Both immutable source/PDF downloads and all six
+  evidence hashes match. Receipt: volume-one-reference-publication.json.
 - Secondary-axis PR #4468 is verified published at 54d73e39; receipt committed.
-- Corpus remains 149 pending full audits until fitting evidence is bound, then
-  148, plus whole-book reconciliation. No whole-corpus completion claimed.
-- Fitting lease technical-review-20260928-fitting expires 09:14 UTC; camera
-  lease expires 08:40 UTC. Reference lease released. Preserve all untracked QA.
+- Corpus: 148 pending full audits, plus whole-book reconciliation. No whole-corpus completion claimed.
+- Fitting lease technical-review-20260928-fitting expires 09:14 UTC. Camera
+  and reference leases released. Preserve all untracked QA.
 - Owned preview 8770 and Playwright camera-rigor are active for fitting QA.
 
 ---
