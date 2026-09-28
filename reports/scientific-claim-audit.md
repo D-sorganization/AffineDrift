@@ -49,7 +49,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/rotation-induced-spin.html` | `articles/rotation-induced-spin.qmd` | 1 |
 | `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
 | `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 1 |
-| `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 7 |
+| `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
@@ -166,9 +166,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/index.html` | `critiques/index.qmd` | 2 |
 | `/critiques/input_dependent_boundary_conditions.html` | `critiques/input_dependent_boundary_conditions.md` | 1 |
 | `/critiques/intentional_constraint_collapse.html` | `critiques/intentional_constraint_collapse.md` | 1 |
-| `/critiques/intermediate_axis_fallacy.html` | `critiques/intermediate_axis_fallacy.md` | 7 |
+| `/critiques/intermediate_axis_fallacy.html` | `critiques/intermediate_axis_fallacy.md` | 8 |
 | `/critiques/lie_bracket_formalism_overreach.html` | `critiques/lie_bracket_formalism_overreach.md` | 1 |
-| `/critiques/misattribution_of_stability_gravity.html` | `critiques/misattribution_of_stability_gravity.md` | 7 |
+| `/critiques/misattribution_of_stability_gravity.html` | `critiques/misattribution_of_stability_gravity.md` | 8 |
 | `/critiques/normative_ambiguity_drift-bibliography.html` | `critiques/normative_ambiguity_drift-bibliography.md` | 1 |
 | `/critiques/normative_ambiguity_drift.html` | `critiques/normative_ambiguity_drift.md` | 1 |
 | `/critiques/nullspace_interpretation.html` | `critiques/nullspace_interpretation.md` | 1 |

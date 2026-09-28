@@ -12,12 +12,15 @@ The complete corpus goal is resumed; never create draft PRs.
 - #4467 corrects the complete article and both critiques: free/forced spin,
   moving origins, inertia, gravity, impulse response and unsupported equipment
   inference. Both critiques are responded, without empirical resolution.
-- Source/annotation checkpoint 3a136679; evidence checkpoint ed573560 binds
-  seven exact paths for three full route reviews and ten findings. Reports are
+- Source/annotation checkpoint 3a136679; evidence checkpoint 33a8c83a binds
+  eight exact paths for three full route reviews and ten findings. Reports are
   secondary-axis-review.md and secondary-axis-render-verification.json under
   reports/technical-review/. The atlas authority hash changes but its projection
   is unchanged; the derived research-release digest follows that dependency.
   Other generated critique headers change without new unrelated-page reviews.
+  Static CI identified an unqualified related-reading ZTCF acronym; the caption
+  now declares pointwise/forward scope. Its separate navigation receipt verifies
+  that this is the only source change since the full mathematical/render review.
 - Validation: 19 mechanics/source checks; full suite 5,540 passed, 29 skipped,
   132 deselected, 92.88% src coverage; 80 final audit/mechanics contracts pass.
   Browser 12/12, axe severe findings zero; 117 math expressions loaded and all
