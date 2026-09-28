@@ -90,8 +90,8 @@ models. Neither source supplies empirical support for putter superiority.
 
 ## Delegation and Adjudication
 
-Four supplied-text-only agy `gemini-3.8-flash-high` calls ran in parallel pairs
-for claim/arithmetic inventory and numerical-test proposals. The lead wrote and
+Six supplied-text-only agy `gemini-3.8-flash-high` calls ran in parallel pairs
+for claim/arithmetic inventory, numerical-test proposals and final consistency. The lead wrote and
 checked the adopted mathematics and tests. Reject the invented conformance limit,
 commercial mass/MOI statements, alleged impossibility of unchanged minimum inertia,
 and assumed mappings from principal moments to head axes. Correct the fixture
@@ -104,3 +104,11 @@ No agent accessed files/network or bypassed permissions. The broader unattended
 agy tool mode remains unavailable under Repository_Management#1800. The governed
 critique disposition must distinguish a mathematical response from unresolved
 empirical equipment claims; the review does not turn either into observed results.
+
+Final review clarified the impact arm as center-of-mass referenced, used
+“off-diagonal matrix entry” to avoid product-of-inertia sign conventions, and
+made the fixed horizontal pivot and common gravity frame explicit. Reject the
+reviewer's invented shaft lie angle and club dimensions: the pendulum parameters
+are synthetic and never identified as measured putter geometry. Gravity may be
+a zero term about the COM; its explicit separation does not require a nonzero
+moment. The impulse paragraph already declares and bounds other impulses.

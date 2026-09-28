@@ -24,9 +24,9 @@ $$
 \tau_{g,O}=r_{G/O}\times m g_B.
 $$
 
-Its magnitude and projection onto a chosen axis depend on geometry and pose. About the center of mass $G$, uniform gravity has no moment; support forces still contribute moments there. A torque balance cannot mix those origins. A moving support introduces additional acceleration terms, while a flexible shaft may require its own states.
+Here $g_B$ is gravitational acceleration expressed in the same body frame as $r_{G/O}$. Its magnitude and projection onto a chosen axis depend on geometry and pose. About the center of mass $G$, uniform gravity has no moment; support forces still contribute moments there. A torque balance cannot mix those origins. A moving support introduces additional acceleration terms, while a flexible shaft may require its own states.
 
-About the center of mass or a fixed body point, a rigid body with constant body-frame inertia satisfies
+About the center of mass or a body point held fixed in an inertial frame, a rigid body with constant body-frame inertia satisfies
 
 $$
 I\dot\omega+\omega\times(I\omega)=\tau_{\rm external}.
@@ -36,14 +36,14 @@ If gravity is separated from other moments about an appropriate fixed origin, it
 
 ## Why This Is a Problem
 
-Use an illustrative fixed-pivot scalar model with angle measured from downward vertical. For $m=0.35\ \mathrm{kg}$, $\ell=0.02\ \mathrm m$ and $g=9.81\ \mathrm{m/s^2}$,
+Use an illustrative scalar model about a fixed horizontal pivot axis with angle measured from downward vertical. For $m=0.35\ \mathrm{kg}$, $\ell=0.02\ \mathrm m$ and $g=9.81\ \mathrm{m/s^2}$,
 
 $$
 \tau_g=-mg\ell\sin\theta,
 \qquad mg\ell=0.06867\ \mathrm{N\,m}.
 $$
 
-A cross-inertia term with $I_{xy}=10^{-4}\ \mathrm{kg\,m^2}$ and acceleration $5\ \mathrm{rad/s^2}$ has magnitude $0.0005\ \mathrm{N\,m}$. The former number is a **maximum over angle**. Its ratio to the latter is 137.34 when $|\sin\theta|=1$ and zero when $\sin\theta=0$. A valid comparison also matches the reference point and moment component. These synthetic values do not justify a universal statement about all putting strokes, and the ratio alone does not predict delivered face error.
+A cross-inertia term with $I_{xy}=10^{-4}\ \mathrm{kg\,m^2}$ and angular acceleration $5\ \mathrm{rad/s^2}$ has magnitude $0.0005\ \mathrm{N\,m}$. The former number is a **maximum over angle**. Its ratio to the latter is 137.34 when $|\sin\theta|=1$ and zero when $\sin\theta=0$. A valid comparison also matches the reference point and moment component. These synthetic values do not justify a universal statement about all putting strokes, and the ratio alone does not predict delivered face error.
 
 A zero gravitational moment is not a stability certificate. At both the downward and upward pendulum equilibria the moment is zero; its slope has opposite signs. With positive pivot inertia, the lower equilibrium is restoring and the upper one destabilizing in the unforced ideal model. Without dissipation, restoring motion need not settle. Finite grip stiffness, damping and feedback can alter this result and must be specified rather than inferred.
 

@@ -119,7 +119,7 @@ This follows by substituting the acceleration of $G$ into the COM balance and tr
 
 At zero angular velocity, a rigid body's angular acceleration obeys $I_G\dot\omega=\tau_G$. A torque along a nonprincipal direction can produce acceleration with transverse components. This is inertial coupling, a dynamical effect, and it does not require a nonzero gyroscopic term.
 
-For example, rotate $\operatorname{diag}(0.001,0.002,0.0025)\ \mathrm{kg\,m^2}$ by $45^\circ$ about its third axis. Its first two diagonal entries become $0.0015$ and its product entry becomes $-0.0005$. A moment $(0.001,0,0)\ \mathrm{N\,m}$ gives acceleration $(0.75,0.25,0)\ \mathrm{rad/s^2}$. This is a manufactured mapping, not an estimate for a putter.
+For example, rotate $\operatorname{diag}(0.001,0.002,0.0025)\ \mathrm{kg\,m^2}$ by $45^\circ$ about its third axis. Its first two diagonal entries become $0.0015$ and its off-diagonal matrix entry becomes $-0.0005$. A moment $(0.001,0,0)\ \mathrm{N\,m}$ gives acceleration $(0.75,0.25,0)\ \mathrm{rad/s^2}$. This is a manufactured mapping, not an estimate for a putter.
 
 Rotating the **coordinates** also rotates moment and acceleration components and leaves the physical result unchanged. Rotating a body's mass distribution relative to a fixed applied moment is a different experiment. Principal-axis coordinates always diagonalize a symmetric inertia tensor; writing fewer off-diagonal entries does not demonstrate improved equipment.
 
@@ -141,7 +141,7 @@ I_G\,\Delta\omega=r\times P,
 \Delta\omega=I_G^{-1}(r\times P),
 $$
 
-where $P$ is the impulse **on the head** and $r$ runs from its center to contact. Orientation is treated as fixed over this idealized impulse. Significant shaft/hand impulses must be added. The scalar relation
+where $P$ is the impulse **on the head** and $r$ runs from its center of mass $G$ to contact. Orientation is treated as fixed over this idealized impulse. Significant shaft/hand impulses must be added. The scalar relation
 
 $$
 \Delta\omega_z=\frac{(r\times P)_z}{I_{zz}}
@@ -204,7 +204,7 @@ Now $\sigma_B/\sigma_A\approx1.15303$: B's rate is 15.3% higher. This reversal i
 
 For a prescribed motion, an aligned mass distribution may reduce a particular transverse moment requirement. For a prescribed disturbing moment, the response may differ. These are hypotheses about specified inputs and outputs; they should be tested under matched conditions rather than presented as established improvements in closure or consistency.
 
-Gravity needs its own comparison. About a fixed pivot a scalar illustrative pendulum satisfies
+Gravity needs its own comparison. About a fixed horizontal pivot axis, a scalar illustrative pendulum satisfies
 
 $$
 J\ddot\theta+b\dot\theta+mg\ell\sin\theta=\tau,
@@ -212,7 +212,7 @@ $$
 
 with $\theta$ measured from downward vertical, $J>0$, and viscous damping $b\geq0$. Gravity provides restoring stiffness near $\theta=0$ and destabilizing stiffness near $\theta=\pi$, even though its moment is zero at both poses. With $b=0$ and $\tau=0$, total mechanical energy is conserved; a restoring moment alone does not damp oscillations.
 
-For synthetic $m=0.35\ \mathrm{kg}$, $\ell=0.02\ \mathrm m$ and $g=9.81\ \mathrm{m/s^2}$, the maximum gravitational moment is $0.06867\ \mathrm{N\,m}$. A cross-inertia term with $I_{xy}=10^{-4}\ \mathrm{kg\,m^2}$ and acceleration $5\ \mathrm{rad/s^2}$ has magnitude $0.0005\ \mathrm{N\,m}$. Their magnitude ratio is 137.34 when the sine factor is one and zero when it is zero. Compare the same reference point and moment component. These assumed values do not establish universal gravity dominance, and taking angular velocity to zero does not also set angular acceleration to zero.
+For synthetic $m=0.35\ \mathrm{kg}$, $\ell=0.02\ \mathrm m$ and $g=9.81\ \mathrm{m/s^2}$, the maximum gravitational moment is $0.06867\ \mathrm{N\,m}$. A cross-inertia term with $I_{xy}=10^{-4}\ \mathrm{kg\,m^2}$ and angular acceleration $5\ \mathrm{rad/s^2}$ has magnitude $0.0005\ \mathrm{N\,m}$. Their magnitude ratio is 137.34 when the sine factor is one and zero when it is zero. Compare the same reference point and moment component. These assumed values do not establish universal gravity dominance, and taking angular velocity to zero does not also set angular acceleration to zero.
 
 ### Tradeoffs and Missing Quantities {#disadvantages}
 
