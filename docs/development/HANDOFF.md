@@ -1,3 +1,10 @@
+No material handoff change — sanitation pass (branch/worktree hygiene, see
+`docs/operations/sanitation/sanitation-2026-09-28.md`) is a separate fleet
+lane from the corpus-review checkpoint below and does not alter its
+continuation state.
+
+---
+
 # Paused After Merged Checkpoint — 2026-09-28
 
 The user requested finishing the existing edits, merging to remote main and
