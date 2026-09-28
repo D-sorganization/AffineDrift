@@ -37,15 +37,16 @@
 \newcommand{\dx}{\delta\mathbf{x}}
 \newcommand{\du}{\delta\mathbf{u}}
 
-\title{Contraction Metrics and Tangent-Space Optimal Control\\\large A Repaired Working Draft for Ongoing Development}
+\title{Contraction Metrics and Tangent-Space Optimal Control\\\large Performance, Error Decay, and the Golf Swing}
 \author{AffineDrift Working Notes}
 \date{\today}
 
 \begin{document}
 \maketitle
+\setcounter{tocdepth}{1}
 
 \begin{abstract}
-This document develops a unified viewpoint for nonlinear stability and local optimal control through tangent-space dynamics. The central idea is that contraction analysis and Riccati-based trajectory optimization act on the same infinitesimal perturbations. This repaired draft is intentionally organized as a writing-ready technical manuscript: each section includes (i) an introductory qualitative framing, (ii) an ``In Laymans Terms'' explanation, and (iii) a ``Geometric Intuition'' explanation, followed by detailed equations and interpretation. The article is designed to be edited further into textbook or paper form.
+Contraction analysis and local optimal control study the evolution of perturbations, but answer different questions. An optimizer selects motion for a declared cost; a contraction inequality bounds how neighboring executions separate under a declared dynamics and feedback law. This manuscript derives the conditional connection through Riccati identities, distinguishes finite-horizon bounds from asymptotic stability, and tests common failures with manufactured examples. For a golf swing, the relevant chain runs from mechanical and actuator assumptions through state estimation, delivery objectives, admissible feedback, and robustness to disturbances. None of the numerical examples identifies a human neural policy or validates a physiological model.
 \end{abstract}
 
 \tableofcontents
@@ -54,18 +55,18 @@ This document develops a unified viewpoint for nonlinear stability and local opt
 \section{Roadmap and Scope}
 
 \subsection{Introduction and Qualitative Purpose}
-The purpose of this manuscript is to make one technical claim precise: local optimal control and contraction-based stability certificates can be interpreted using the same tangent-space objects. Rather than presenting independent threads, we build a common language first (variational dynamics and metrics), then show how Lyapunov-style and Riccati-style arguments become different projections of the same geometry.
+The purpose is to establish when a quadratic value function can also measure error decay. Sharing tangent-space notation is not sufficient: the quadratic form must be positive definite, the decay inequality must be strict with suitable bounds, and its domain must match the claim. A calculation along one nominal swing is not a certificate for every nearby swing.
 
 The practical purpose of the calculations is equally important. In high-dimensional systems, equations are not written only for proof elegance; they are written to answer engineering questions: Which perturbations grow fastest? Which control channels are most effective? Which local model remains trustworthy over a finite horizon? Each derivation below is accompanied by a qualitative statement of what that equation buys you in design or diagnostics.
 
-\subsection{In Laymans Terms}
-This article is about how to keep complex motions both \emph{good} and \emph{repeatable}. ``Good'' means performance with respect to a goal (for example, tracking, energy use, impact quality). ``Repeatable'' means small disturbances do not derail the motion. The main message is that both goals can be addressed by studying how tiny errors evolve over time.
+\subsection{In Plain Language}
+This article asks how motion can be effective and repeatable. Effectiveness is specified by a cost, such as delivery error and actuator effort. Repeatability requires examining how errors propagate. A cheap motion need not reject disturbances, and an error-rejecting controller need not achieve a useful impact. The two questions must be connected explicitly.
 
 \subsection{Geometric Intuition}
 A trajectory is a curve on a state-space surface. Around each point on that curve, there is a tangent plane that captures first-order motion of nearby trajectories. All local stability and local optimality calculations are happening in these moving tangent planes. A metric is a local ruler on those planes; changing the metric changes which perturbation directions are considered large or small.
 
 \subsection{Article Structure}
-The manuscript is organized into ten technical sections and one conclusion:
+The remaining sections follow this sequence:
 \begin{enumerate}[label=\arabic*.]
 \item Contraction theory fundamentals.
 \item Tangent-space dynamics and local linearization.
@@ -82,18 +83,18 @@ The manuscript is organized into ten technical sections and one conclusion:
 \section{Contraction Theory Primer}
 
 \subsection{Introduction and Qualitative Purpose}
-Contraction theory answers a trajectory-to-trajectory question: if two trajectories start near each other, do they converge exponentially? This is a stronger statement than local equilibrium stability when the behavior of interest is a moving trajectory rather than a fixed point.
+Contraction theory asks whether trajectories of the same time-varying vector field converge toward each other. Regional contraction controls all admissible connecting perturbations in that region, which is more information than a linearization at one equilibrium. It is useful for moving references, provided the feedback law, inputs, domain and time interval are specified \citep{LohmillerSlotine1998,ForniSepulchre2014}.
 
-Qualitatively, contraction calculations provide a disturbance-forgetting certificate. If a region is contracting, the system attenuates uncertainty and initialization mismatch at a quantifiable rate. In practice this gives a robust foundation for planning and control over families of trajectories rather than single nominal motions.
+Initial-condition differences decay under a contraction certificate. Continuing mismatched disturbances generally leave a nonzero error bound; they do not disappear merely because the nominal dynamics contracts. Parameter uncertainty also requires a bound on its effect or a certificate covering the uncertainty set.
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 Imagine running the same robot motion twice with tiny initial differences. If the system is contracting, those two runs quickly become almost identical. That means small mistakes do not snowball.
 
 \subsection{Geometric Intuition}
 Contraction checks whether tangent vectors between nearby trajectories shrink under the flow. If all tangent vectors shrink in a chosen metric, geodesic distance between trajectories also shrinks. So contraction is local shrinking that integrates into global convergence behavior on a region.
 
 \subsection{Differential Dynamics and Metric Condition}
-Consider
+Use a fixed coordinate chart, $x\in\mathcal D\subset\mathbb R^n$, with a vector field continuously differentiable in $x$, and assume unique solutions exist on the stated interval. Here $f$ denotes the complete closed-loop field (or a field with the same prescribed input in both executions). Consider
 \begin{equation}
 \dot{\x} = f(\x,t), \quad \x \in \R^n.
 \label{eq:nonlinear-system}
@@ -121,8 +122,8 @@ A^\top\M + \M A + \dot{\M} \preceq -2\lambda\M.
 \label{eq:contraction-lmi}
 \end{equation}
 
-\begin{theorem}[Standard contraction implication]
-Assume $\mathcal{D}$ is forward invariant and geodesically convex in the metric $\M(\x,t)$. Assume also that there exist constants $0<\underline{m}\leq \overline{m}<\infty$ such that
+\begin{theorem}[Standard Contraction Implication]
+Assume $\mathcal{D}$ is forward invariant and any two points can be joined by piecewise smooth curves contained in $\mathcal D$. Define $d_{M,t}$ as the infimum of $\int_0^1\sqrt{\gamma_s^\top M(\gamma(s),t)\gamma_s}\,ds$ over these curves. Assume forward existence and a continuously differentiable metric, with constants $0<\underline{m}\leq \overline{m}<\infty$ such that
 \begin{equation}
 \underline{m}I \preceq \M(\x,t) \preceq \overline{m}I
 \quad \text{for all } (\x,t)\in\mathcal{D}\times[0,\infty).
@@ -134,7 +135,7 @@ d_{\M,t}\!\left(\x_1(t),\x_2(t)\right)
 \le e^{-\lambda t}\,d_{\M,0}\!\left(\x_1(0),\x_2(0)\right).
 \label{eq:geodesic-decay}
 \end{equation}
-Moreover, Euclidean separation satisfies
+If $\mathcal D$ is also Euclidean convex, Euclidean separation satisfies
 \begin{equation}
 \norm{\x_1(t)-\x_2(t)}
 \le \sqrt{\frac{\overline{m}}{\underline{m}}}\,e^{-\lambda t}
@@ -143,19 +144,30 @@ Moreover, Euclidean separation satisfies
 \end{equation}
 \end{theorem}
 
+\begin{proof}
+Transport any admissible initial connecting curve through the common flow. Each tangent length decays at least as $e^{-\lambda t}$ by the differential inequality; invariance keeps the transported curve in the domain. Integrate its length and take the infimum over initial curves. The lower metric bound gives $\|x_1-x_2\|\leq d_{M,t}/\sqrt{\underline m}$. The upper bound gives $d_{M,0}\leq\sqrt{\overline m}\|x_1(0)-x_2(0)\|$ only when the initial straight segment is admissible, as in a convex domain. Otherwise retain the initial intrinsic distance. Geodesic convexity alone does not supply this straight-segment bound.
+\end{proof}
+
+For a fixed Euclidean metric and a convex invariant region with symmetric Jacobian bounded above by $-\lambda I$, two executions with additive disturbance difference of norm at most $\bar d$ satisfy
+\[
+\|e(t)\|\leq e^{-\lambda t}\|e(0)\|
+ +\frac{\bar d}{\lambda}(1-e^{-\lambda t}).
+\]
+This follows from the segment-integrated Jacobian and $D^+\|e\|\leq-\lambda\|e\|+\bar d$. Both executions and connecting segments must remain in the certified region. The residual term explains why repeatability under ongoing disturbances is a bounded-error question.
+
 \subsection{Why This Matters for Design}
-The condition in \eqref{eq:contraction-lmi} provides an engineering lever: select or optimize a metric $\M$ that makes the symmetric part of the Jacobian sufficiently negative. This creates a direct bridge to convex and non-convex metric synthesis methods discussed later.
+The condition in \eqref{eq:contraction-lmi} suggests searching for a positive metric whose full transport expression $A^\top M+MA+\dot M$ has a negative margin. For a state-dependent metric, the raw symmetric Jacobian alone is not that expression. Metric and feedback synthesis can then be studied under the appropriate convex or nonconvex formulation.
 
 \section{Tangent-Space Dynamics and Local Linearization}
 
 \subsection{Introduction and Qualitative Purpose}
 Most nonlinear control algorithms repeatedly linearize along a nominal trajectory. This is not merely approximation convenience; it is the correct infinitesimal description of how perturbations propagate. The qualitative role of tangent-space equations is to separate \emph{what the nominal motion does} from \emph{how deviations evolve around it}.
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 At each instant, pretend the nonlinear system is locally linear around what it is currently doing. Use that local linear model to predict whether tiny errors will grow or shrink.
 
 \subsection{Geometric Intuition}
-A tangent vector is a local displacement direction. Linearization gives a map from one tangent space to the next along the trajectory. In discrete time this map is a matrix $A_t$; in continuous time it is a Jacobian field $A(x,t)$.
+A tangent vector is a local displacement direction. Linearization gives a map from one tangent space to the next along the trajectory. In discrete time this map is a matrix $A_k$; in continuous time it is a Jacobian field $A(x,t)$.
 
 \subsection{Control-Affine Model and Discrete Perturbation System}
 For control-affine dynamics,
@@ -163,31 +175,33 @@ For control-affine dynamics,
 \dot x = f(x,t) + B(x,t)u,
 \label{eq:affine-dynamics}
 \end{equation}
-the continuous-time variational model is
+write $B=[b_1,\ldots,b_m]$ and choose a feasible nominal solution $(x^\star(t),u^\star(t))$. With $A(t)=D_xf(x^\star,t)+\sum_{j=1}^m u_j^\star D_xb_j(x^\star,t)$ and $B(t)=B(x^\star,t)$, the continuous-time variational model is
 \begin{equation}
 \dot{\dx} = A(t)\dx + B(t)\du.
 \label{eq:ct-variational-control-affine}
 \end{equation}
 For sampled-data implementations with sampling period $h$ and zero-order-hold input, define the discrete flow map
 \begin{equation}
-x_{t+1} = f_d(x_t,u_t) := \Phi_h(x_t,u_t),
+x_{k+1} = f_{d,k}(x_k,u_k) := \Phi(t_k+h;t_k,x_k,u_k),\quad t_k=kh,
 \label{eq:discrete-flow-map}
 \end{equation}
-where $\Phi_h$ is the time-$h$ solution operator induced by \eqref{eq:affine-dynamics}. Linearization along $(x_t^\star,u_t^\star)$ then yields
+where $\Phi$ integrates \eqref{eq:affine-dynamics} with input held constant during the step. Absolute start time matters for nonautonomous dynamics. A feasible discrete nominal path obeys $x_{k+1}^\star=f_{d,k}(x_k^\star,u_k^\star)$. Here $k$ is the discrete stage and $t_k$ is continuous time. Linearization then yields
 \begin{equation}
-\dx_{t+1} = A_t\,\dx_t + B_t\,\du_t,
+\dx_{k+1} = A_k\,\dx_k + B_k\,\du_k,
 \label{eq:discrete-perturbation}
 \end{equation}
 with Jacobians
 \begin{equation}
-A_t = \left.\frac{\partial f_d}{\partial x}\right|_{(x_t^\star,u_t^\star)},
+A_k = \left.\frac{\partial f_{d,k}}{\partial x}\right|_{(x_k^\star,u_k^\star)},
 \qquad
-B_t = \left.\frac{\partial f_d}{\partial u}\right|_{(x_t^\star,u_t^\star)}.
+B_k = \left.\frac{\partial f_{d,k}}{\partial u}\right|_{(x_k^\star,u_k^\star)}.
 \label{eq:ab-jacobians}
 \end{equation}
 
 \subsection{Qualitative Interpretation of the Matrices}
-$A_t$ is local state sensitivity; it tells which perturbation modes naturally amplify or contract. $B_t$ is local control authority; it tells which perturbation directions can be corrected efficiently. Many practical failures in optimization-based control are actually poor conditioning of these local maps, not failure of the nominal planner itself.
+$A_k\in\mathbb R^{n\times n}$ transports state perturbations across one sample; $B_k\in\mathbb R^{n\times m}$ maps held-input perturbations into endpoint changes. Neither one instantaneous eigenvalue nor the rank of one $B_k$ decides finite-horizon correction authority. Propagation, input bounds, units and the chosen state/input costs matter. First variation is exact for the derivative of the flow; finite deviations have a nonlinear remainder, generally beginning at second order for a twice differentiable field. There is no universal percentage threshold for neglecting it.
+
+For example, $\dot x=x^2+xu$ has $A=2x^\star+u^\star$, not $2x^\star$. For $\dot x=tu$, a held input gives $x_{k+1}=x_k+u_k(t_kh+h^2/2)$. Omitting start time changes its input Jacobian.
 
 \section{LQR and Differential Dynamic Programming}
 
@@ -196,50 +210,63 @@ LQR and DDP solve local optimal correction problems in tangent coordinates. Thei
 
 In the trajectory setting, DDP repeatedly refreshes the local model and local quadratic cost. That loop can be viewed as ``fit local geometry, solve local optimization, update base curve.''
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 Take the current best motion guess. Zoom in so the system looks linear and the cost looks quadratic. Solve that simpler problem exactly. Update the guess and repeat.
 
 \subsection{Geometric Intuition}
-The Riccati matrix is a time-varying quadratic form on perturbations. Geometrically, each step assigns local curvature to the value landscape in tangent space. Steep curvature means errors in that direction are expensive and should be corrected aggressively.
+The Riccati matrix is a time-varying quadratic form on perturbations. Geometrically, each step assigns local curvature to the value landscape in tangent space. Large curvature makes deviations expensive in the chosen coordinates and cost; the feasible correction also depends on dynamics, actuation and input penalties.
 
 \subsection{Finite-Horizon LQR Subproblem}
 Given \eqref{eq:discrete-perturbation}, minimize
 \begin{equation}
 J = \frac{1}{2}\dx_T^\top Q_T\dx_T
- + \frac{1}{2}\sum_{t=0}^{T-1}
-\left(\dx_t^\top Q_t\dx_t + \du_t^\top R_t\du_t\right),
+ + \frac{1}{2}\sum_{k=0}^{T-1}
+\left(\dx_k^\top Q_k\dx_k + \du_k^\top R_k\du_k\right),
 \label{eq:lqr-cost}
 \end{equation}
-with $Q_t\succeq0$, $R_t\succ0$. The optimal local law is
+with $Q_k,Q_T\succeq0$, $R_k\succ0$, no state/input constraints, and stages $k=0,\ldots,T-1$. These are specified quadratic penalties, not automatically energy or tissue load. The terminal weight is $Q_T$. The exact optimal law for this linear-quadratic problem is
 \begin{equation}
-\du_t = -K_t\dx_t,
+\du_k = -K_k\dx_k,
 \label{eq:feedback-law}
 \end{equation}
 where
 \begin{equation}
 \begin{aligned}
 S_T &= Q_T,\\
-K_t &= (R_t + B_t^\top S_{t+1}B_t)^{-1} B_t^\top S_{t+1}A_t,\\
-S_t &= Q_t + A_t^\top S_{t+1}A_t \\
-&\quad - A_t^\top S_{t+1}B_t(R_t + B_t^\top S_{t+1}B_t)^{-1}B_t^\top S_{t+1}A_t.
+K_k &= (R_k + B_k^\top S_{k+1}B_k)^{-1} B_k^\top S_{k+1}A_k,\\
+S_k &= Q_k + A_k^\top S_{k+1}A_k \\
+&\quad - A_k^\top S_{k+1}B_k(R_k + B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k.
 \end{aligned}
 \label{eq:discrete-riccati}
 \end{equation}
 An equivalent identity, useful for Lyapunov and contraction arguments, is
 \begin{equation}
-S_t = Q_t + K_t^\top R_tK_t + (A_t-B_tK_t)^\top S_{t+1}(A_t-B_tK_t).
+S_k = Q_k + K_k^\top R_kK_k + (A_k-B_kK_k)^\top S_{k+1}(A_k-B_kK_k).
 \label{eq:riccati-equivalent}
 \end{equation}
 
 \subsection{DDP Interpretation}
-DDP augments this with second-order model updates and forward rollouts, but the local stabilizing core remains the same: each backward pass computes a curvature object $S_t$ and a gain $K_t$ that shape local error dynamics.
+Induction gives $S_k\succeq0$ and $R_k+B_k^\top S_{k+1}B_k\succ0$; controllability is not required for this unconstrained finite-horizon solve. Positive definiteness of $S_k$ and stability do not follow automatically.
+
+For nonlinear dynamics $F$ and stage cost $\ell$, DDP expands the Bellman expression $\mathcal Q(x,u)=\ell(x,u)+V^+(F(x,u))$ at the nominal pair. Let $p^+=D_xV^+$ and $P^+=D_x^2V^+$. For $a,b\in\{x,u\}$,
+\[
+\mathcal Q_a=\ell_a+F_a^\top p^+,\qquad
+\mathcal Q_{ab}=\ell_{ab}+F_a^\top P^+F_b
+ +\sum_i p_i^+ D^2_{ab}F_i.
+\]
+If $\mathcal Q_{uu}\succ0$, the unconstrained quadratic step is
+\[
+\delta u=-\mathcal Q_{uu}^{-1}\mathcal Q_u
+ -\mathcal Q_{uu}^{-1}\mathcal Q_{ux}\delta x.
+\]
+The first term is a feedforward update. iLQR commonly omits the dynamics-Hessian terms; full DDP retains them. A line search, regularization and nonlinear rollout are part of the algorithm, not a proof of contraction. Input bounds require a constrained subproblem and can change the local gain. A nonlinear value Hessian can be indefinite \citep{Tassa2014}.
 
 \section{Stability-Optimality Duality}
 
 \subsection{Introduction and Qualitative Purpose}
 This section states the central bridge: under linear-quadratic assumptions, the Riccati matrix from optimal control can serve as a contraction metric for closed-loop tangent dynamics. The qualitative benefit is unification: one matrix sequence can certify both performance (value) and local convergence (stability).
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 The same matrix used by LQR to score future cost can also be used as a ruler proving that small errors shrink under the feedback law.
 
 \subsection{Geometric Intuition}
@@ -248,37 +275,47 @@ Optimal control builds a local quadratic ``cost bowl''; contraction checks shrin
 \subsection{Main Statement (Discrete-Time Form)}
 Closed-loop perturbations satisfy
 \begin{equation}
-\dx_{t+1} = (A_t-B_tK_t)\dx_t.
+\dx_{k+1} = (A_k-B_kK_k)\dx_k.
 \label{eq:closed-loop-perturbation}
 \end{equation}
-Define $V_t = \dx_t^\top S_t\dx_t$ with $S_t$ from \eqref{eq:discrete-riccati}. Then
+Define $V_k = \dx_k^\top S_k\dx_k$, twice the optimal remaining cost, with $S_k$ from \eqref{eq:discrete-riccati}. Then
 \begin{equation}
-V_{t+1} - V_t
-= -\dx_t^\top(Q_t + K_t^\top R_t K_t)\dx_t.
+V_{k+1} - V_k
+= -\dx_k^\top(Q_k + K_k^\top R_k K_k)\dx_k.
 \label{eq:value-drop}
 \end{equation}
-Hence, if there exist constants $\alpha,\underline{s},\overline{s}>0$ such that for all $t$,
+Hence, if there exist constants $\alpha,\underline{s},\overline{s}>0$ such that on the stated stages,
 \begin{equation}
-Q_t + K_t^\top R_t K_t \succeq \alpha I,
+Q_k + K_k^\top R_k K_k \succeq \alpha I,
 \qquad
-\underline{s}I \preceq S_t \preceq \overline{s}I,
+\underline{s}I \preceq S_k \preceq \overline{s}I,
 \label{eq:duality-bounds}
 \end{equation}
-and $0<\alpha<\overline{s}$, one obtains exponential decay
+with the metric bounds for $k=0,\ldots,T$, stage-loss bounds for $k=0,\ldots,T-1$, and $0<\alpha<\overline{s}$, one obtains finite-horizon exponential decay
 \begin{equation}
-V_{t+1} \le \left(1-\frac{\alpha}{\overline{s}}\right)V_t.
+V_{k+1} \le \left(1-\frac{\alpha}{\overline{s}}\right)V_k.
 \label{eq:discrete-exp-decay}
 \end{equation}
 and therefore
 \begin{equation}
-\norm{\dx_t}^2
+\norm{\dx_k}^2
 \le
 \frac{\overline{s}}{\underline{s}}
-\left(1-\frac{\alpha}{\overline{s}}\right)^t
+\left(1-\frac{\alpha}{\overline{s}}\right)^k
 \norm{\dx_0}^2.
 \label{eq:state-norm-decay}
 \end{equation}
-This is a contraction-style inequality in the metric induced by $S_t$, with an explicit Euclidean-norm consequence.
+This bound holds for $0\leq k\leq T$ in the linear perturbation model. It says nothing about times after the horizon. Regional nonlinear contraction additionally requires a smooth positive metric and the appropriate closed-loop inequality throughout a forward-invariant region, not just along the nominal path. Uniform continuation is needed for an asymptotic claim.
+
+\subsection{A Value Drop That Does Not Contract State}
+Take scalar $A=2$, $B=1$, $Q=R=1$, one step and $Q_T=0$. Then $S_0=1$, $K_0=0$, and $S_1=0$. Starting at $\delta x_0=1$ gives $\delta x_1=2$, while $V_0=1$ and $V_1=0$. The value-drop identity is correct, but the terminal quadratic form is not a metric. State error doubles. This is why a falling cost-to-go cannot alone establish repeatability.
+
+\subsection{A Checked Finite-Horizon Bound}
+For scalar $A=B=Q=R=1$, two steps and $Q_2=1$, the recursion gives
+\[
+(S_0,S_1,S_2)=(1.6,1.5,1),\qquad (K_0,K_1)=(0.6,0.5).
+\]
+From $\delta x_0=1$, states are $(1,0.4,0.2)$ and $V=(1.6,0.24,0.04)$. Stage losses are $1+K_k^2=(1.36,1.25)$. Thus $\underline s=1$, $\overline s=1.6$, $\alpha=1.25$ give $V_{k+1}\leq0.21875V_k$ on the two steps. The example verifies an algebraic bound, not a physiological model or an infinite-horizon guarantee.
 
 \subsection{Design Implication}
 Instead of treating trajectory optimization and contraction verification as separate pipelines, one can interpret Riccati outputs as candidate metrics, then verify robustness margins under model error and constraints.
@@ -288,11 +325,11 @@ Instead of treating trajectory optimization and contraction verification as sepa
 \subsection{Introduction and Qualitative Purpose}
 Continuous-time analysis clarifies rate interpretations and provides links to classical control design equations. Infinite-horizon limits further reduce transient complexity and expose steady-state structure used in synthesis and certification.
 
-\subsection{In Laymans Terms}
-If the task and dynamics do not change too much over time, the ``best local ruler'' and ``best local feedback law'' settle to steady matrices.
+\subsection{In Plain Language}
+A steady feedback solution needs specific assumptions. Slowly changing data alone do not establish that a Riccati solution converges or that the resulting controller stabilizes the system.
 
 \subsection{Geometric Intuition}
-The differential Riccati equation evolves a time-varying metric tensor on perturbations. In the infinite-horizon limit that tensor can converge to a fixed geometric object, giving constant local curvature of value and contraction.
+The differential Riccati equation propagates a quadratic value form backward from a terminal cost. It is a metric candidate only where it is positive definite. A constant stabilizing solution can exist for a time-invariant infinite-horizon problem.
 
 \subsection{Differential and Algebraic Riccati Equations}
 For
@@ -305,7 +342,7 @@ with local quadratic density $\frac12\dx^\top Q\dx + \frac12\du^\top R\du$, the 
 -\dot S = Q + A^\top S + SA - SBR^{-1}B^\top S.
 \label{eq:dre}
 \end{equation}
-For time-invariant data, the infinite-horizon matrix $S\succeq0$ solves the algebraic Riccati equation (ARE)
+The finite-horizon equation has terminal condition $S(T)=Q_T$; time-varying $Q(t)\succeq0$, $R(t)\succ0$ are allowed. For constant data, stabilizability of $(A,B)$ and detectability of $(Q^{1/2},A)$ are standard sufficient conditions for the stabilizing infinite-horizon solution $S\succeq0$ of the algebraic Riccati equation (ARE) \citep{TedrakeLQR}
 \begin{equation}
 Q + A^\top S + SA - SBR^{-1}B^\top S = 0.
 \label{eq:are}
@@ -316,7 +353,7 @@ Closed-loop dynamics $\dot{\dx} = (A-BK)\dx$ with $K=R^{-1}B^\top S$ satisfy
 \quad V=\dx^\top S\dx,
 \label{eq:ct-value-drop}
 \end{equation}
-which is the continuous-time analogue of the duality argument.
+The same identity holds for the time-varying Riccati solution when the total derivative $\dot S$ is included. Semidefinite $S$ can still occur under the stated infinite-horizon conditions: $A=-1$, $B=0$, $Q=0$, $R=1$ gives $S=0$ although the uncontrolled system is stable. A separate positive definite Lyapunov form can then prove stability. To obtain the strict metric rate above from $S$, verify $S\succ0$ and $Q+K^\top RK\succeq2\lambda S$; do not infer them from the word ``optimal.''
 
 \section{Coordinate-Free and Riemannian Formulation}
 
@@ -325,7 +362,7 @@ Many systems of interest naturally live on manifolds (orientation, rigid body po
 
 Qualitatively, this section explains how to interpret local quadratic forms as metric tensors, and why pullbacks are the correct way to move task penalties into configuration coordinates.
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 Some state spaces are curved, not flat. The math still works if we replace ordinary dot products with local curved-space rulers.
 
 \subsection{Geometric Intuition}
@@ -344,13 +381,13 @@ For a task map $y=h(x)$ with Jacobian $J(x)$ and task metric $W(y)\succ0$, the p
 M(x) = J(x)^\top W(h(x))J(x).
 \label{eq:pullback-metric}
 \end{equation}
-If $J(x)$ has full column rank, \eqref{eq:pullback-metric} is positive definite and defines a true Riemannian metric. If $J(x)$ is rank-deficient, \eqref{eq:pullback-metric} is positive semidefinite; in that case a common regularization is
+If $J(x)$ has full column rank, \eqref{eq:pullback-metric} is positive definite and defines a true Riemannian metric. If $J(x)$ fails to have full column rank, the form is singular positive semidefinite, including when a wide Jacobian has full row rank. A possible completion is
 \begin{equation}
-M_\varepsilon(x) = J(x)^\top W(h(x))J(x) + \varepsilon I,
+M_\varepsilon(x) = J(x)^\top W(h(x))J(x) + \varepsilon M_0(x),
 \quad \varepsilon>0,
 \label{eq:pullback-regularized}
 \end{equation}
-or an equivalent nullspace completion. These constructions preserve the same physical interpretation: penalize error where the task lives, then pull that penalty back to generalized coordinates.
+where $M_0$ is a declared positive background metric with compatible units. This adds a penalty on directions that the task does not measure; it is a new modeling choice, not the same task-only geometry. A nullspace completion need not penalize observable directions in the same way. A configuration-only task leaves velocity directions unmeasured in the full state $(q,\dot q)$.
 
 \subsection{Coordinate Change Consistency}
 Under a smooth reparameterization $z=\phi(x)$ with Jacobian $T=\partial x/\partial z$, metric matrices transform as
@@ -360,39 +397,60 @@ M_z(z) = T(z)^\top M_x(x(z))T(z),
 \end{equation}
 ensuring geometric statements remain invariant.
 
+An identity matrix is a valid background metric in one declared, scaled chart, but transforms to $T^\top T$ in another. With $J_x=(1,0)$, $M_{0,x}=I$, $\varepsilon=0.1$, and $T=\operatorname{diag}(2,3)$, the transformed metric is $\operatorname{diag}(4.4,0.9)$. Reusing $I$ in the new chart instead gives $\operatorname{diag}(4.1,0.1)$ and changes the penalty.
+
+The ordinary Hessian of a scalar value is not generally a tensor:
+\[
+D_z^2 V=T^\top D_x^2V\,T+\sum_i (D_xV)_i D_z^2x_i.
+\]
+For $V=x^2/2$, $x=\log z$, the Hessian in $z$ is $(1-\log z)/z^2$, whereas the pullback of the positive form $1$ is $1/z^2$. At $z=e^2$ their signs differ. At a stationary point the extra term vanishes; more generally a covariant Hessian requires a chosen connection and still need not be positive. Transforming an already specified quadratic form is different from recomputing a coordinate Hessian.
+
+Coordinate formulas for first variation remain legitimate on a chart. The differential of the flow maps between tangent spaces; no arbitrary subtraction of vectors at unrelated base points is required. Under time-varying chart Jacobians, the transformed dynamics includes the corresponding derivative term, which cancels with the transformed metric derivative in the contraction inequality \citep{ForniSepulchre2014}.
+
 \section{Contraction-Constrained Design and Computation}
 
 \subsection{Introduction and Qualitative Purpose}
 This section focuses on synthesis: how to compute metrics and feedback laws that are not only performance-optimal locally but also satisfy explicit contraction margins. The qualitative theme is to turn robustness requirements into optimization constraints.
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 Do not only ask for a controller that performs well in simulation. Also require a mathematical shrinking margin for small errors, and solve for both at once.
 
 \subsection{Geometric Intuition}
 Optimization chooses a local ruler and local control directions so the flow bends perturbation vectors back toward the nominal trajectory while still achieving task objectives.
 
 \subsection{Representative Optimization Programs}
-\paragraph{LTI case (convex).}
+\paragraph{LTI Case (Convex).}
 Given $(A,B)$, one can search for $M\succ0$ and gain $K$ such that
 \begin{equation}
 (A-BK)^\top M + M(A-BK) \preceq -2\lambda M.
 \label{eq:lti-contraction-synthesis}
 \end{equation}
-With suitable variable substitutions, this can be posed as an LMI and solved using semidefinite programming \citep{Boyd1994}.
+For fixed $\lambda$, set $X=M^{-1}\succ0$ and $Y=KX$. Congruence by $X$ gives
+\[
+AX+XA^\top-BY-Y^\top B^\top+2\lambda X\preceq0.
+\]
+This is an LMI in $(X,Y)$, with $K=YX^{-1}$ \citep{Boyd1994}. Joint optimization of $\lambda$ and $X$ introduces a product; rate feasibility can instead be tested at fixed candidate rates. Conditioning, gain and actuator limits need their own constraints and checks.
 
-\paragraph{Trajectory case (time-varying).}
-Given nominal $(A_t,B_t)$ from rollouts, solve stage-wise or horizon-coupled programs for $(S_t,K_t)$ with additional inequalities enforcing a minimum contraction rate.
+\paragraph{Trajectory Case (Time-Varying).}
+For a feasible sampled nominal path, use $(A_k,B_k)$ and horizon-coupled discrete metric inequalities. Joint trajectory, gain and metric optimization is generally nonconvex; verify the resulting candidate against the intended domain and input constraints.
 
-\paragraph{Nonlinear case (sampled).}
-Sample points along candidate trajectories; enforce discretized versions of \eqref{eq:contraction-lmi}; optimize a parameterized metric ansatz (for example neural or polynomial) using autodiff and constrained optimization.
+\paragraph{Nonlinear Case (Sampled).}
+For an actual discrete closed-loop map $F_k$, the residual is
+\[
+R_k(x)=D F_k(x)^\top M(F_k(x),k+1)D F_k(x)-\rho M(x,k),
+\qquad 0<\rho<1.
+\]
+This is different from substituting discrete Jacobians into a continuous-time inequality. A sampled nonlinear search produces a candidate: the continuous residual $A_{\rm cl}^\top M+MA_{\rm cl}+\dot M+2\lambda M$ must be nonpositive throughout the asserted domain, with $A_{\rm cl}$ the Jacobian of the complete implemented feedback field and $\dot M$ evaluated along that field. For control contraction metric synthesis, integrability and regularity conditions are additional requirements; the amendment to the original result matters when input rank changes \citep{ManchesterSlotine2017,ManchesterChaffey2017}.
+
+For example, $\dot x=x-\frac43x^3$ has derivative $-3$ at $x=\pm1$ but $+1$ at zero. Successful endpoint checks miss an expanding interior. A validated Lipschitz bound $L$ on a symmetric residual, a covering radius $r$, and sampled margins $R_i\preceq-\mu I$ can extend a sampled result when $Lr<\mu$, with numerical error also included. Without such coverage or another domain proof, report sampled evidence only.
 
 \subsection{Practical Numerical Workflow}
 \begin{enumerate}[label=\arabic*.]
-\item Generate a nominal trajectory and linearization data $(A_t,B_t)$.
-\item Solve a baseline Riccati recursion for $(K_t,S_t)$.
-\item Evaluate contraction residuals from \eqref{eq:contraction-lmi} or \eqref{eq:lti-contraction-synthesis}.
+\item Generate a nominal trajectory and linearization data $(A_k,B_k)$.
+\item Solve a baseline Riccati recursion for $(K_k,S_k)$.
+\item For the discrete model, evaluate $A_{c,k}^\top S_{k+1}A_{c,k}-\rho S_k$ with $A_{c,k}=A_k-B_kK_k$. Use the corresponding continuous residual only for continuous dynamics.
 \item If margins are weak, re-optimize weights/metrics and repeat.
-\item Validate decay rates by Monte Carlo perturbation rollouts.
+\item Challenge predicted bounds with perturbation rollouts; retain a separate domain proof for certification. Successful Monte Carlo trials cannot rule out all unsampled failures.
 \end{enumerate}
 
 \section{Applications in Biomechanics and Robotics}
@@ -400,7 +458,7 @@ Sample points along candidate trajectories; enforce discretized versions of \eqr
 \subsection{Introduction and Qualitative Purpose}
 Applications motivate why this unification matters. In biomechanics and robotics, motions are high-dimensional, contact-sensitive, and strongly coupled. A useful theory must say both how to optimize movement and why nearby executions remain coherent under disturbances.
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 For a golf swing, manipulation task, or gait, you want two properties: high performance and repeatability. The tangent-space framework gives a way to tune both with the same local models.
 
 \subsection{Geometric Intuition}
@@ -409,10 +467,12 @@ Complex multi-joint motion is a trajectory on a high-dimensional manifold. Muscl
 \subsection{Biomechanics Pattern}
 For multibody dynamics
 \begin{equation}
-H(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau + J_c(q)^\top\lambda,
+H(q)\ddot q + C(q,\dot q)\dot q + g(q) = B_\tau(q)u_\tau + J_c(q)^\top f_c,
 \label{eq:multibody}
 \end{equation}
-where $H(q)$ is the inertia matrix (using $H$ avoids notational conflict with contraction metrics $M$), the perturbation model reveals sensitivity to inertial coupling and contact terms. Metric shaping can prioritize perturbation suppression in joint combinations associated with outcome variables (club-head speed, impact orientation, etc.).
+where $H$ is inertia, $B_\tau$ maps actuator commands into generalized forces, and $f_c$ is a contact-force vector, distinct from contraction rate $\lambda$. With $x=(q,\dot q)$ this becomes a first-order system only after contact constraints and actuator dynamics are closed. For a smooth sticking mode, include $c(q)=0$, $J_c\dot q=0$ and the acceleration constraint; use compatible reduced coordinates or constrained variations. Impacts require reset and event-timing sensitivity, not merely the smooth Jacobian on either side. If excitation is the input, activation and tendon states may be required. Muscle force is not categorically passive, and input affinity depends on the chosen actuator equations.
+
+For golf delivery, define an output $y=h(x(T))$ at a stated time or event. Then $\delta y=Dh\,\delta x(T)$ for a fixed-time output. At an impact event, timing variation must also enter. A terminal penalty $Dh^\top WDh$ emphasizes measured delivery errors but can leave a large nullspace; it does not prove every joint deviation is harmless or that the nervous system implements the selected weights. Mechanical work, squared torque, speed, accuracy and tissue loading are different objectives. The state estimator, delay, saturation and contact uncertainty belong in the implemented-loop analysis.
 
 \subsection{Robotics Pattern}
 In operational space control, a task Jacobian $J(q)$ maps joint perturbations to task perturbations. Pullback metrics from task coordinates (Equation \eqref{eq:pullback-metric}) provide a direct way to encode anisotropic task priorities while preserving coordinate consistency.
@@ -422,7 +482,7 @@ In operational space control, a task Jacobian $J(q)$ maps joint perturbations to
 \item Local decay rate of perturbation norm in chosen metric.
 \item Cost-to-go decrease consistency with Riccati predictions.
 \item Sensitivity of contraction margin under parameter mismatch.
-\item Basin size estimates from perturbation ensembles.
+\item The tested initial-condition set and observed failures; do not call its sampled extent a certified basin.
 \end{itemize}
 
 \section{Implementation Checklist for Ongoing Work}
@@ -430,7 +490,7 @@ In operational space control, a task Jacobian $J(q)$ maps joint perturbations to
 \subsection{Introduction and Qualitative Purpose}
 This section is a practical editing and validation scaffold so the document can evolve without losing mathematical consistency. The qualitative goal is repeatable development: every new derivation should map to a tangible diagnostic and a clear geometric interpretation.
 
-\subsection{In Laymans Terms}
+\subsection{In Plain Language}
 Use this as a quality checklist while extending the paper. Every new formula should answer ``what does it mean physically?'' and ``how would we test it?''
 
 \subsection{Geometric Intuition}
@@ -443,13 +503,13 @@ Treat every section as a map from equations to geometry: identify the tangent ob
 \item Pair each theorem with an engineering interpretation paragraph.
 \item Add one ``failure mode'' paragraph where assumptions can break.
 \item Include a reproducibility note for any numerical claim.
-\item Preserve the three explanatory blocks in every section.
+\item Connect the formal claim to its model assumptions and measured task.
 \end{enumerate}
 
 \subsection{Computation Checklist}
 \begin{enumerate}[label=\arabic*.]
 \item Verify linearization accuracy against finite differences.
-\item Track condition numbers of $R_t + B_t^\top S_{t+1}B_t$.
+\item Track condition numbers of $R_k + B_k^\top S_{k+1}B_k$.
 \item Log contraction residual eigenvalues along trajectories.
 \item Validate predicted decay rates in closed-loop rollouts.
 \item Stress-test against model perturbations and contact changes.
@@ -458,23 +518,23 @@ Treat every section as a map from equations to geometry: identify the tangent ob
 \section{Conclusion and Forward Path}
 
 \subsection{Introduction and Qualitative Purpose}
-The repaired draft establishes a coherent narrative where contraction and local optimal control share a tangent-space foundation. The immediate purpose is to provide a stable base for deeper theorem proofs, richer case studies, and code-linked reproducibility appendices.
+The useful connection is conditional: Riccati identities provide candidate quadratic forms and exact value drops for their specified subproblems; contraction requires a positive metric and a verified decay inequality over the claimed states and times. For a swing, the purpose is to determine which deviations change delivery and which feasible feedback or mechanical changes reduce those deviations under declared uncertainty.
 
-\subsection{In Laymans Terms}
-The key message is simple: the same local mathematics can help you make motions better and more reliable. This document is now clean enough to keep building on.
+\subsection{In Plain Language}
+A proposed controller can improve a modeled swing without proving that a golfer uses it. A regional stability proof can bound error without proving that the chosen impact is desirable. A technically useful account reports both the objective and the evidence supporting robustness.
 
 \subsection{Geometric Intuition}
 A trajectory, its tangent perturbations, and a metric-defined ruler form a minimal geometric toolkit. Stability and optimality are two questions asked of that same toolkit.
 
 \subsection{Near-Term Expansion Targets}
 \begin{enumerate}[label=\arabic*.]
-\item Add a full proof section for discrete and continuous duality conditions.
-\item Add one complete worked example with numeric matrices and plots.
-\item Add a short appendix on implementation details (autodiff, SDP, and sampling).
-\item Add explicit robustness margins under bounded modeling error.
+\item Test a specified mechanical model against measured delivery and perturbation responses.
+\item Evaluate actuator, sensing and contact uncertainty over a declared domain.
+\item Publish reproducible numerical settings and separate sampled observations from regional proofs.
+\item Compare competing costs and internal-state histories before drawing biological conclusions.
 \end{enumerate}
 
-\section*{References}
+\phantomsection
 \addcontentsline{toc}{section}{References}
 \bibliographystyle{plainnat}
 \begin{thebibliography}{99}
@@ -484,70 +544,38 @@ Lohmiller, W. and Slotine, J. J. E. (1998).
 On contraction analysis for non-linear systems.
 \emph{Automatica}, 34(6), 683--696.
 
-\bibitem[Jouffroy and Slotine(2004)]{JouffroySlotine2004}
-Jouffroy, J. and Slotine, J. J. E. (2004).
-Methodological remarks on contraction theory.
-In \emph{Proceedings of the 43rd IEEE Conference on Decision and Control}, 2537--2543.
-
 \bibitem[Manchester and Slotine(2017)]{ManchesterSlotine2017}
 Manchester, I. R. and Slotine, J. J. E. (2017).
-Control contraction metrics and model-based control of nonlinear systems.
-\emph{IEEE Transactions on Automatic Control}, 62(9), 4506--4521.
+Control contraction metrics: Convex and intrinsic criteria for nonlinear feedback design.
+\emph{IEEE Transactions on Automatic Control}, 62(6), 3046--3053.
+\url{https://arxiv.org/abs/1503.03144}.
 
-\bibitem[Bullo(2024)]{BulloContraction}
-Bullo, F. (2024).
-\emph{Contraction Theory for Dynamical Systems}.
-Manuscript.
+\bibitem[Manchester and Chaffey(2017)]{ManchesterChaffey2017}
+Manchester, I. R. and Chaffey, T. L. (2017).
+An amendment to ``Control contraction metrics: Convex and intrinsic criteria for nonlinear feedback design.''
+\url{https://arxiv.org/abs/1711.08128}.
 
-\bibitem[Khalil(2002)]{Khalil2002}
-Khalil, H. K. (2002).
-\emph{Nonlinear Systems} (3rd ed.).
-Prentice Hall.
+\bibitem[Forni and Sepulchre(2014)]{ForniSepulchre2014}
+Forni, F. and Sepulchre, R. (2014).
+A differential Lyapunov framework for contraction analysis.
+\emph{IEEE Transactions on Automatic Control}, 59(3), 614--628.
+\url{https://arxiv.org/abs/1208.2943}.
 
-\bibitem[Sastry(1999)]{Sastry1999}
-Sastry, S. (1999).
-\emph{Nonlinear Systems: Analysis, Stability, and Control}.
-Springer.
-
-\bibitem[Slotine and Li(1991)]{SlotineLi1991}
-Slotine, J. J. E. and Li, W. (1991).
-\emph{Applied Nonlinear Control}.
-Prentice Hall.
-
-\bibitem[Isidori(1995)]{Isidori1995}
-Isidori, A. (1995).
-\emph{Nonlinear Control Systems} (3rd ed.).
-Springer.
-
-\bibitem[Mayne(1966)]{Mayne1966}
-Mayne, D. Q. (1966).
-A second-order gradient method for determining optimal trajectories of non-linear discrete-time systems.
-\emph{International Journal of Control}, 3(1), 85--95.
-
-\bibitem[Todorov and Jordan(2002)]{TodorovJordan2002}
-Todorov, E. and Jordan, M. I. (2002).
-Optimal feedback control as a theory of motor coordination.
-\emph{Nature Neuroscience}, 5(11), 1226--1235.
-
-\bibitem[Tedrake(2009)]{Tedrake2009}
-Tedrake, R. (2009).
-LQR-Trees: Feedback motion planning on sparse randomized trees.
-In \emph{Robotics: Science and Systems}.
-
-\bibitem[Spong et~al.(2006)]{Spong2006}
-Spong, M. W., Hutchinson, S., and Vidyasagar, M. (2006).
-\emph{Robot Modeling and Control}.
-Wiley.
-
-\bibitem[Khatib(1987)]{Khatib1987}
-Khatib, O. (1987).
-A unified approach for motion and force control of robot manipulators: The operational space formulation.
-\emph{IEEE Journal on Robotics and Automation}, 3(1), 43--53.
+\bibitem[Tassa et~al.(2014)]{Tassa2014}
+Tassa, Y., Mansard, N., and Todorov, E. (2014).
+Control-limited differential dynamic programming.
+In \emph{IEEE International Conference on Robotics and Automation}, 1168--1175.
+\url{https://roboti.us/lab/papers/TassaICRA14.pdf}.
 
 \bibitem[Boyd et~al.(1994)]{Boyd1994}
 Boyd, S., El Ghaoui, L., Feron, E., and Balakrishnan, V. (1994).
 \emph{Linear Matrix Inequalities in System and Control Theory}.
 SIAM.
+
+\bibitem[Tedrake(2026)]{TedrakeLQR}
+Tedrake, R. (2026).
+Linear quadratic regulators. In \emph{Underactuated Robotics}.
+\url{https://underactuated.mit.edu/lqr.html}. Accessed 2026-09-27.
 
 \end{thebibliography}
 

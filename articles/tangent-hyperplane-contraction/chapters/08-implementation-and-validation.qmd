@@ -1,36 +1,23 @@
 ---
 title: "Chapter 8 - Implementation and Validation Checklist"
-description: "Theory is beautiful. Simulations are convincing. But a control law that works perfectly in a linearized model can catastrophically fail on hardware if one..."
+description: "Keep derivation, numerical verification, regional certification, and empirical validation as distinct evidence steps."
 bibliography: ../references.bib
 ---
 
-::: {.callout-warning}
-## Chapter Outline — In Progress
+## Match Each Claim to Its Evidence
 
-This chapter is currently a **structural outline**. The key concepts are identified and the geometric intuition is sketched, but full mathematical development, proofs, and worked examples are in progress. Treat the content below as a detailed table of contents rather than a complete chapter.
-:::
+Mathematical identities need derivations; numerical implementations need checks; regional guarantees need domain arguments; statements about golfers need suitable observations. These steps support each other without replacing one another.
 
+1. **Declare the system.** Record states, units, coordinate charts, actuator model, contact modes, nominal trajectory and actual feedback law. Distinguish fixed-time and event-time delivery.
+2. **Verify derivatives.** Compare analytic or automatic derivatives with converged finite differences and finite perturbation rollouts. Use feasible perturbations for constraints; include event sensitivity where applicable.
+3. **Verify the optimization.** Check Bellman identities, terminal conditions, stationarity, input bounds and nonlinear rollout improvement. Track conditioning of $R+B^\top S^+B$ and any regularized DDP Hessian.
+4. **Verify the proposed certificate.** Check positive lower/upper metric bounds and residual eigenvalues with declared numerical error. Distinguish continuous from discrete residuals and a finite interval from an infinite-horizon claim.
+5. **Establish the domain.** Document invariance, solution existence and a regional proof or coverage bound. Record sampled failures and successes separately; finite trials do not certify an entire basin.
+6. **Test robustness.** Include disturbances, parameter uncertainty, state estimation, delay, saturation and contact changes. Continuing disturbance generally permits a residual error, not exact trajectory coincidence.
+7. **Test empirical relevance.** State the population, measurements and held-out outcomes supporting a human claim. Manufactured arithmetic and simulator behavior cannot establish a neural control law or injury risk.
 
-## If You Cannot Test It, You Cannot Claim It Works
+## Reproducible Counterexamples
 
-Theory is beautiful. Simulations are convincing. But a control law that works perfectly in a linearized model can catastrophically fail on hardware if one number is wrong. The only honest way forward is to *measure* every claim: Does the linearization actually approximate the nonlinear flow? Is the contraction margin really there, or did numerical error eat it? Do real trajectories actually stay within the predicted envelope under worst-case disturbances? This chapter is a checklist for answering these questions.
+The repository test module `tests/test_contraction_workspace_rigor.py` independently checks finite-horizon value/state divergence, a valid two-step metric bound, coordinate-Hessian and regularization transformations, a sampling gap, input-dependent linearization, nonautonomous sampling and the LTI congruence. These fixtures verify the manuscript's mathematics. They contain no participant data.
 
-## Introduction and Qualitative Purpose
-
-This chapter defines reproducibility and validation standards required for a textbook-quality treatment.
-
-## In Laymans Terms
-
-Every equation should be testable, and every claim should have a measurable check.
-
-## Geometric Intuition
-
-For each derivation, identify the perturbation object, metric object, and decay/optimality claim being made.
-
-## Minimum Validation Checklist
-
-1. Finite-difference check for all linearizations.
-2. Conditioning audit for Riccati factors and metric matrices.
-3. Residual spectrum logs for contraction inequalities.
-4. Monte Carlo perturbation rollouts against predicted decay.
-5. Sensitivity sweeps under parameter and contact-model mismatch.
+For a result to be reproducible, retain source revision, model parameters, solver settings, tolerances, initial conditions and evaluation outputs. A reader should be able to distinguish what was derived, what was run, what was visually inspected and what remains untested.

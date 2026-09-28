@@ -1,3 +1,43 @@
+# Contraction Workspace Review and Biology Publication Follow-Up
+
+Current branch: `fix/4465-contraction-workspace`; worktree:
+`C:/Users/diete/Repositories/AffineDrift-technical-review`.
+The user resumed the complete corpus goal and authorized parallel agy Gemini
+3.8 Flash assistance. Never create draft PRs. No pause is currently requested.
+
+- Biology PR #4464 merged to remote main at
+  `855b6fa6e3e7c2eeb764452ac77b45b1fe24e926`; all required PR checks passed.
+  Deployment 36378430500 is still building. Verify its live manifest, artifact
+  digest and four biology route cases before recording publication as complete.
+- #4465 corrects the complete contraction development manuscript, consolidated
+  QMD, all eight chapters and hub. These eleven indexed sources are excluded
+  from production rendering; their old routes redirect to the newer series.
+  No route activation, destination-series clearance or new public PDF is claimed.
+- Scientific corrections cover regional contraction, control-affine Jacobians,
+  finite-horizon LQR/DDP, strict metric bounds, coordinate Hessians, task-rank
+  deficiencies, LMI signs, sampling gaps and biological/contact assumptions.
+  All 32 LaTeX equation labels are preserved.
+- Fourteen focused tests pass after six source RED failures. Full suite: 5,519
+  passed, two temporary root-hygiene failures, 29 skipped, 132 deselected; 92.88%
+  src coverage. Moving Playwright logs under development QA resolves both;
+  all six hygiene tests pass. Content lint: 131 passed/four skipped. Ruff,
+  Black (727 files), title audit (638 sources), mypy (91 sources) pass.
+- Native MiKTeX builds a 15-page preview with no overfull/undefined-reference
+  warnings; all pages visually checked. Built-in compiler unavailable due to
+  host standard-directory error. Ten Quarto previews and twenty light-theme
+  mobile/desktop cases pass. No dark-theme or axe claim for these local previews.
+- Six supplied-text-only agy Gemini 3.8 Flash calls handled inventory, arithmetic
+  and final consistency in parallel pairs. The lead adjudicated all suggestions.
+  No permission bypass; dispatcher #1800 still blocks unattended tool access.
+- Reports: `reports/technical-review/contraction-workspace-review.md` and
+  `contraction-workspace-render-verification.json`. Local PDF/screenshots/logs
+  remain in `docs/development/technical-review/`; stage explicit product paths.
+- Next: commit and open a regular #4465 PR, protected CI/merge, then continue the
+  corpus. The current CSV count is 154 full audits pending, plus whole-book
+  reconciliation. Do not infer completion from this batch or a passing site gate.
+
+---
+
 # Biology Model Selection: Source Checkpoint for #4463
 
 Current branch: `fix/4463-biology-model-selection`; worktree:
