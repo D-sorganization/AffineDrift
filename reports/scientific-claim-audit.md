@@ -144,7 +144,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 11 |
-| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
+| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 9 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
 | `/books/index.html` | `books/index.qmd` | 3 |

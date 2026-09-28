@@ -1,591 +1,491 @@
-\chapter{How Biology Differs From Engineering}
+\chapter[How Biology Differs From Engineering]{How Biology Differs\\From Engineering}
 \label{ch:bio-vs-eng}
 
-\epigraph{%
-  Nature does not build machines. It grows organisms.
-  The engineer's model of the body is a useful fiction---but it is fiction.
-}{--- Adapted from D'Arcy Wentworth Thompson}
+The golf swing connects neural excitation, muscle and tendon dynamics, joint
+motion, ground contact, and club deformation. A model can represent selected
+parts of this chain accurately while leaving others unresolved. Reproducing
+clubhead motion does not, by itself, establish which muscles generated it;
+reproducing net joint moments does not establish local tissue stress. This
+chapter develops the assumptions needed for a particular question and the
+corresponding tests of those assumptions.
 
-\vspace{0.5cm}
+The mathematical tools of the preceding volumes remain useful. Their
+application depends on the chosen state, input, constraints, and output.
+Biology changes those choices; it does not suspend mechanics. Numerical
+examples in this chapter are manufactured checks of equations, not measured
+human parameters or recommendations for a golfer.
 
 \section{The Rigid-Body Assumption and Its Limits}
 
-Every model in Volumes~0--II rested on a fundamental assumption: the moving
-system consists of \emph{rigid bodies} connected by \emph{ideal joints}. A rigid body
-has a fixed mass distribution; its shape does not change under load. An ideal revolute
-joint constrains five of six relative degrees of freedom, permitting only rotation
-about a single axis. These assumptions are extraordinarily productive for engineering
-systems---robot arms, spacecraft, mechanisms---where components are designed to
-approximate rigidity.
+A rigid body has a fixed mass distribution in its own frame. A revolute joint
+permits one relative rotation and constrains the other five relative motions.
+Both are idealizations useful in biological and engineered systems. Bones
+deform, but their deformation need not be resolved for every movement question.
+Engineered shafts, transmissions, and sensors can also have compliance,
+backlash, noise, delay, and temperature dependence. The relevant distinction
+is between a declared approximation and the behavior it must explain.
 
-In biological systems, these assumptions fail at every level:
+For a golf model, declare the segment inventory, coordinate frames, joint
+constraints, and external contacts before selecting actuators. A shoulder
+rotation model may suffice for an endpoint-kinematics question while being
+inadequate for joint-contact loading. A hand--club constraint can transmit
+forces and moments even when its constrained coordinates are not actuated.
+Calling an anatomical joint ``six degree of freedom'' also requires care:
+relative pose has six components, but constraints and tissue mechanics may
+couple or strongly resist some motions. Coordinate count is not a count of
+independently controllable directions.
 
-\begin{enumerate}[label=(\roman*)]
-  \item \textbf{Bones are not rigid.} Long bones (femur, humerus, tibia) have measurable
-        compliance under dynamic loading \cite{nigg2007biomechanics}. A golf club shaft
-        deflects by several centimeters and several degrees during a swing; a human femur
-        deflects by millimeters during running. The deflection is small in absolute terms
-        but can have significant effects on end-effector accuracy.
-
-  \item \textbf{Joints are not revolutes.} The knee, for example, combines rolling,
-        sliding, and rotation in a coupled manner that changes with flexion angle
-        \cite{komistek2003invivo}. The glenohumeral (shoulder)
-        joint permits motion in three rotational axes but also allows several millimeters
-        of translation. The intervertebral joints of the spine have six degrees of
-        freedom each, all coupled through the disc and ligament mechanics.
-
-  \item \textbf{Actuators are not torque sources.} Muscles produce force, not torque.
-        Force is generated through the contraction of sarcomeres, transmitted through
-        tendons, and converted to joint torque via moment arms that vary with joint angle.
-        The force a muscle can produce depends on its length, its contraction velocity,
-        and its activation history---dependencies that have no analog in electric motors.
-
-  \item \textbf{Sensors are noisy, delayed, and multimodal.} Proprioceptors (muscle
-        spindles, Golgi tendon organs, joint receptors) provide state information with
-        significant noise and delays of 30--100~ms \cite{scott2004optimal}. The central
-        nervous system must fuse information from proprioceptive, visual, and vestibular
-        sources to estimate the body's state.
-
-  \item \textbf{The system adapts.} Unlike a robot, the human body changes over
-        time---muscles fatigue, connective tissue remodels, neural pathways strengthen
-        or weaken. A complete model must account for adaptation on timescales from seconds
-        (fatigue) to years (training).
-\end{enumerate}
-
-\begin{comparison}{The Fundamental Differences}{rigid-vs-bio}
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}lll@{}}
-\toprule
-\textbf{Property} & \textbf{Engineering System} & \textbf{Biological System} \\
-\midrule
-Links & Rigid bodies & Viscoelastic, deformable \\
-Joints & 1-DOF revolute/prismatic & Multi-DOF, coupled, with laxity \\
-Actuators & Motors (torque on command) & Muscles (force via excitation-contraction) \\
-Transmission & Gears, belts (rigid) & Tendons (elastic, energy-storing) \\
-Sensors & Encoders (precise, fast) & Proprioceptors (noisy, delayed) \\
-Parameters & Fixed (by design) & Variable (fatigue, adaptation, growth) \\
-Redundancy & Minimal (cost-driven) & Massive (evolution-driven) \\
-Failure mode & Brittle (sudden) & Graceful (degradation) \\
-\bottomrule
-\end{tabular}
-\end{center}
+\begin{comparison}{Modeling Assumptions to Test}{rigid-vs-bio}
+\begin{description}[leftmargin=0.6em,style=nextline]
+ \item[Structure] Choose rigid segments, compliant modes, or a continuum
+ description according to the deformation that affects the target output.
+ \item[Actuation] Specify actuator states and force, velocity, power, delay,
+ and saturation limits where they matter.
+ \item[Sensing] Identify observed quantities, error, sampling, filtering,
+ and latency. A reconstructed state is not itself a sensor reading.
+ \item[Adaptation] State the time horizon over which parameters are fixed.
+ Fatigue, learning, and material changes require additional hypotheses.
+ \item[Redundancy] Establish the rank of the relevant map and its feasible
+ domain before claiming alternative solutions or compensation.
+\end{description}
 \end{comparison}
 
-These differences reflect fundamentally distinct design philosophies. Engineering systems are designed
-for precise, repeatable control of pre-specified outputs. Biological systems are evolved for robustness,
-adaptability, and efficiency under uncertain conditions. Neither approach is superior; rather, they
-optimize for different objectives. Understanding which differences are essential for your particular
-biomechanical question is crucial for successful modeling.
+Motor torque can depend on speed, current dynamics, and thermal limits;
+muscle force can depend on activation, fibre length, velocity, and history.
+An ideal torque source deliberately suppresses these dependencies. It can
+be a useful first model of either actuator, provided conclusions remain about
+net loads and motion. A richer biological model should earn its added
+complexity through improved, independently tested predictions.
 
-\begin{center}
-\begin{tikzpicture}[scale=0.9, node distance=2.5cm]
-  % Left side: Engineering system
-  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=blue!10] (eng-body) at (0, 0) {Rigid Body};
-  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=blue!10] (eng-joint) at (0, -1.5) {Ideal Joint};
-  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=blue!10] (eng-motor) at (0, -3) {Motor};
+\section{Compliance, Timescales, and the Chosen Output}
+\subsection{Adding Deformation Requires Adding Dynamics}
 
-  \draw[->, thick] (eng-body) -- (eng-joint);
-  \draw[->, thick] (eng-joint) -- (eng-motor);
-
-  \node[above] at (0, 0.8) {\textbf{Engineering System}};
-  \node[right] at (1.2, 0) {Fixed shape};
-  \node[right] at (1.2, -1.5) {1-DOF};
-  \node[right] at (1.2, -3) {Torque input};
-
-  % Right side: Biological system
-  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=red!10] (bio-body) at (5, 0) {Bone + Tissue};
-  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=red!10] (bio-joint) at (5, -1.5) {Real Joint};
-  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=red!10] (bio-muscle) at (5, -3) {Muscle};
-
-  \draw[->, thick] (bio-body) -- (bio-joint);
-  \draw[->, thick] (bio-joint) -- (bio-muscle);
-
-  \node[above] at (5, 0.8) {\textbf{Biological System}};
-  \node[right] at (6.2, 0) {Deformable};
-  \node[right] at (6.2, -1.5) {Multi-DOF, coupled};
-  \node[right] at (6.2, -3) {Force + state};
-\end{tikzpicture}
-\end{center}
-
-\section{Why the Differences Matter for Control}
-
-The differences enumerated above are not merely academic. They fundamentally change
-the control problem in ways that Volumes~I and~II must now accommodate.
-
-\subsection{Compliance Creates Hidden Dynamics}
-
-When a link is compliant, its deformation adds internal degrees of freedom to the system.
-A golf club shaft, modeled as rigid, has one degree of freedom (the grip angle). Modeled
-as a flexible beam, it has \emph{infinitely many} degrees of freedom, though practical
-models truncate to the first 2--3 bending modes. The equation of motion becomes:
+A free rigid club has six pose coordinates locally, not one grip angle.
+A one-angle club is a constrained planar abstraction. Flexible modes add
+coordinates to the selected rigid model. Write $\bm z=(\bm q,\bm\eta)$,
+where $\bm q\in\mathbb R^n$ describes the rigid coordinates and
+$\bm\eta\in\mathbb R^r$ the retained deformation amplitudes.
+The selector $E=[0_{r\times n}\ I_r]$ gives $E\bm z=\bm\eta$.
+In a local chart with $\dot{\bm z}$ as
+its generalized velocity, an illustrative model is
 \begin{equation}
-  \underbrace{M(\bm{q})\ddot{\bm{q}} + C(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + g(\bm{q})}_{\text{rigid-body dynamics}}
-  + \underbrace{K_{\text{stiff}} \bm{q}_{\text{flex}} + D_{\text{damp}} \dot{\bm{q}}_{\text{flex}}}_{\text{flexibility terms}}
-  = \bm{\tau},
-  \label{eq:ch1:flexible-eom}
+ M(\bm z)\ddot{\bm z}+h(\bm z,\dot{\bm z})
+ +E^T(K\bm\eta+D\dot{\bm\eta})
+ =B(\bm z)\bm\tau+J_c(\bm z)^T\bm\lambda .
+ \label{eq:ch1:flexible-eom}
 \end{equation}
-where $\bm{q}_{\text{flex}}$ represents the modal coordinates of the flexible modes,
-$K_{\text{stiff}}$ is the stiffness matrix, and $D_{\text{damp}}$ is the structural
-damping matrix.
+All terms are generalized forces in the same augmented coordinate space.
+$M$ includes rigid--flexible inertial coupling; $h$ contains remaining
+inertial and gravitational terms. Constant $K,D$ describe a local linear
+elastic and viscous approximation, not arbitrary tissue behavior.
+$B$ maps actuator loads $\bm\tau$ into the augmented coordinates, while
+$J_c$ is the constraint Jacobian and $\bm\lambda$ its conjugate reaction
+loads. Contact equations complete the model. Adding an unprojected modal spring force
+to a rigid-body equation would omit both dimensions and coupling.
+
+The shaft's relevance depends on the output: small deformation can matter
+for clubface orientation while contributing little to whole-body motion.
+Ground contact and grip loads determine modal excitation; controller
+bandwidth alone does not describe that loading spectrum.
+
+\subsection{A Frequency Comparison With a Checkable Meaning}
+
+For a linear mode, let
+\[
+ m\ddot\eta+d\dot\eta+k\eta=F(t),\qquad
+ \omega_n=\sqrt{k/m},\qquad\zeta=\frac{d}{2\sqrt{km}}.
+\]
+For a harmonic load of angular frequency $\Omega$, steady-state displacement
+per unit force is
+\[
+ H(\Omega)=\frac{1}{k-m\Omega^2+\mathrm i d\Omega},\qquad
+ kH(\Omega)=\frac{1}{1-(\Omega/\omega_n)^2+2\mathrm i\zeta\Omega/\omega_n}.
+\]
+At low frequency, $H\simeq1/k$: quasi-static compliance can still produce
+important deflection. Near resonance, damping and coupling matter. Far above
+the mode's frequency, inertia dominates the forced response; that does not
+establish rigidity during a transient with initial deformation and broadband
+loads.
 
 \begin{principle}{The Timescale Separation Principle}{timescale}
-  In many biological systems, the flexible dynamics are \emph{fast} relative to the
-  rigid-body dynamics. If the natural frequency of the flexible modes is much higher
-  than the bandwidth of the controller, the flexibility can be modeled as a
-  quasi-static compliance rather than a dynamic mode. Specifically, if the $k$-th
-  flexible mode has natural frequency $\omega_k$ and the controller bandwidth is
-  $\omega_c$, then:
-  \begin{itemize}
-    \item $\omega_k \gg \omega_c$: quasi-static (flexibility ``follows'' the rigid motion)
-    \item $\omega_k \approx \omega_c$: resonance risk (flexibility must be modeled dynamically)
-    \item $\omega_k \ll \omega_c$: the system is effectively another rigid body (the
-          flexible mode is so slow it acts like a separate DOF)
-  \end{itemize}
+Compare the relevant load spectrum and initial transients with modal
+frequencies and damping, then propagate omitted deformation to the output.
+Quasi-static reduction requires negligible dynamic error over that spectrum;
+a rigid approximation additionally requires negligible deformation error for
+the task. Neither follows from controller bandwidth alone.
 \end{principle}
 
-The timescale separation principle is critical for model selection. For different body
-regions and different movement speeds, the applicability of the rigid-body approximation varies.
-For the human body during locomotion, empirical measurements suggest that long bones have natural
-frequencies sufficiently high that the rigid-body assumption is justified. For the spine and
-soft tissues, particularly during rapid movements, the separation is less clean, and dynamic
-flexibility effects may contribute meaningfully to the system behavior. The choice of whether to
-include flexibility as explicit state variables or treat it as a quasi-static effect should be
-guided by both the timescale analysis above and by quantitative comparison of model predictions
-to experimental data.
+For a manufactured translational mode with $m=1$~kg, $k=100$~N/m, and
+$d=1$~N\,s/m, $\omega_n=10$~rad/s and $\zeta=0.05$.
+At $\Omega=1,10,100$~rad/s, the amplitude relative to static compliance,
+$|kH|$, is approximately $1.010$, $10$, and $0.0101$. The high-frequency
+response is nearly opposite in phase to the force. A constant static gain
+cannot reproduce all three regimes. These are illustrative parameters,
+not measurements of a golf shaft.
 
-\subsection{Muscle Force Production Is State-Dependent}
+\section{From Excitation to Joint Power}
+\subsection{Force Definitions and Units}
 
-The most striking difference between engineered and biological actuators is that muscle
-force depends on the \emph{state of the muscle itself}. An electric motor produces torque
-proportional to current, regardless of shaft angle or angular velocity (to first
-approximation). A muscle's maximum force depends on:
-
-\begin{enumerate}
-  \item \textbf{Muscle length} (force-length relationship): maximum isometric force
-        occurs at an intermediate ``optimal'' length $\ell_0$, with force decreasing
-        at shorter and longer lengths.
-  \item \textbf{Contraction velocity} (force-velocity relationship): concentric
-        (shortening) contractions produce less force at higher velocities; eccentric
-        (lengthening) contractions can produce forces approximately 30--50\% above
-        isometric, depending on the specific model (see
-        \cite{Thelen2003,millard2013flexing} and Chapter~3).
-  \item \textbf{Activation level}: the fraction of motor units recruited and their
-        firing rates, which follows its own first-order dynamics with time constants
-        of 10--50~ms for activation and 40--200~ms for deactivation.
-\end{enumerate}
-
-The combined force production model (Hill model, Chapter~3) is:
+A common Hill-type idealization separates activation, normalized active
+force--length and force--velocity curves, and parallel passive force
+\cite{millard2013flexing}. With positive fibre velocity denoting lengthening,
+write the illustrative undamped fibre force as
 \begin{equation}
-  F_{\text{muscle}} = a(t) \cdot f_L(\tilde{\ell}) \cdot f_V(\tilde{v}) \cdot F_0
-  + f_{\text{PE}}(\tilde{\ell}),
-  \label{eq:ch1:hill-overview}
+ F_M=F_0\left[a f_L(\ell_M/\ell_0)f_V(\dot\ell_M/v_0)
+                         +f_{PE}(\ell_M/\ell_0)\right].
+ \label{eq:ch1:hill-overview}
 \end{equation}
-where $a(t) \in [0,1]$ is the activation level, $f_L$ and $f_V$ are the normalized
-force-length and force-velocity curves, $F_0$ is the maximum isometric force,
-$\tilde{\ell} = \ell/\ell_0$ and $\tilde{v} = v/v_0$ are normalized length and velocity,
-and $f_{\text{PE}}$ is the passive elastic force.
+$\ell_M$ is fibre length, $\ell_0$ its optimal reference length, and
+$a\in[0,1]$ the activation state. $F_0$ is the maximum active isometric
+fibre-force scale at optimal length; the curve values are dimensionless.
+$v_0>0$ is a declared velocity scale, not a universal human shortening speed.
+The parallel-elastic term $f_{PE}$ is scaled by the same outside factor $F_0$.
+Other models
+add damping or history dependence and use different normalizations.
+
+Fibre force is not automatically tendon force. In a massless, ideal pennated
+equilibrium model, $F_T=F_M\cos\alpha$, where $\alpha$ is the pennation angle
+between fibres and tendon. This relation requires a tendon constitutive
+law and compatible fibre--tendon geometry. A compliant tendon can change
+length while the whole musculotendon path length changes little. Joint
+angular velocity therefore does not by itself determine fibre shortening
+velocity. Model-specific equilibrium, slack, and regularization conditions
+must be checked before solving for fibre velocity.
+
+\subsection{Moment Arms Must Preserve Power}
+
+For differentiable, time-independent musculotendon routing
+$\bm\ell_{MT}(\bm q)$, define
+\begin{equation}
+ R_{ji}=-\frac{\partial\ell_{MT,i}}{\partial q_j},\qquad
+ \bm\tau_M=R(\bm q)\bm F_T .
+ \label{eq:ch1:muscle-torque}
+\end{equation}
+For rotational coordinates, $R_{ji}$ has length units and the conjugate
+load is a moment. Translational coordinates instead have force as the
+conjugate load. Virtual work gives the sign-sensitive check
+\[
+ \dot{\bm\ell}_{MT}=-R^T\dot{\bm q},\qquad
+ \bm\tau_M^T\dot{\bm q}=-\bm F_T^T\dot{\bm\ell}_{MT}.
+\]
+A positive tensile force delivers positive skeletal power when its path
+shortens. Fibre power can differ from path power because tendon energy storage
+and other internal processes intervene. For constrained coordinates or speeds
+distinct from $\dot{\bm q}$, apply the velocity map before comparing power.
+
+For a numerical check, take rotational coordinates and
+\[
+ R=\begin{bmatrix}0.03&-0.03&0\\0&0.02&-0.02\end{bmatrix}\ \mathrm m,
+ \quad\bm F_T=\begin{bmatrix}100\\80\\60\end{bmatrix}\ \mathrm N,
+ \quad\dot{\bm q}=\begin{bmatrix}2\\-1\end{bmatrix}\ \mathrm{s}^{-1}.
+\]
+Then $\bm\tau_M=(0.6,0.4)^T$~N\,m and
+$\dot{\bm\ell}_{MT}=(-0.06,0.08,-0.02)^T$~m/s. Both expressions for
+skeletal power give $0.8$~W. A moment-arm sign error can look plausible in
+a torque plot while failing energy accounting immediately.
 
 \begin{principle}{Force-Velocity Asymmetry in Multi-Joint Tasks}{fv-asymmetry-task}
-  In any task where joints undergo different phases of contraction (some concentric,
-  others eccentric), the force-velocity relationship creates an asymmetry in joint
-  torque capacity. This asymmetry can be quantified through the Hill force-velocity
-  function applied to each muscle group. The engineering consequence is that a model
-  assuming constant or task-invariant joint torque limits systematically misrepresents
-  the instantaneous torque capacity of biological joints, particularly during rapid
-  multi-joint movements.
+Force capacity depends on each muscle's fibre state, activation, parameters,
+and constitutive curves. A biarticular muscle couples multiple joint motions
+through its routing and tendon dynamics. Evaluate those states before
+classifying its contraction or constructing the feasible joint-load set;
+joint rotation alone does not specify eccentric or concentric fibre contraction.
 \end{principle}
 
-\subsection{Redundancy Is a Feature, Not a Bug}
+In a downswing, the same visible wrist motion can be compatible with different
+tendon strains, activation histories, and antagonist forces. Muscle modeling
+makes those alternatives calculable under assumptions; it does not make video
+sufficient to identify which alternative occurred.
 
-The human body has approximately 630 skeletal muscles controlling approximately 240
-joint degrees of freedom \cite{Zatsiorsky2002}. Even for a simple task like reaching for a cup (which
-constrains only 6 degrees of freedom---3 position + 3 orientation of the hand),
-there are vastly more muscles and joints than constraints. This \emph{motor redundancy}
-means that infinitely many muscle activation patterns can produce the same hand
-trajectory.
+\section{Two Different Kinds of Redundancy}
 
-In engineering, redundancy is minimized to reduce cost. In biology, redundancy is
-\emph{the solution to robustness}:
+Let the task be $\bm y=\phi(\bm q)$, with
+Jacobian $J_y=\partial\phi/\partial\bm q$. For $n$
+independent local configuration coordinates, infinitesimal motions preserving
+$\bm y$ satisfy $J_y\delta\bm q=0$, with dimension
+$n-\operatorname{rank}J_y$. A three-joint planar arm controlling a
+2D endpoint position has a one-dimensional local nullspace only where the
+Jacobian has rank two. At singular configurations the rank changes. A finite
+displacement requires following the nonlinear level set, not extrapolating
+one tangent direction indefinitely.
 
-\begin{itemize}
-  \item If one muscle is fatigued, others can compensate.
-  \item If a joint is injured, the task can be accomplished through alternative
-        kinematic chains.
-  \item Variability in execution---far from being noise to be eliminated---allows
-        the system to explore the space of solutions and find robust attractors
-        (see Volume~IV for the motor control implications).
-\end{itemize}
+Muscle-force redundancy concerns a different map. At fixed geometry, an
+instantaneous force-allocation model solves
+$R\bm F_T=\bm\tau_{\mathrm{req}}$, with a linear equality solution space
+of dimension $p-\operatorname{rank}R$ when nonempty, for $p$ muscle paths.
+Nonnegative tensile forces and state-dependent capacities restrict this space.
+In the dimensionless algebraic example
+\[
+ R=\begin{bmatrix}1&0&1\\0&1&1\end{bmatrix},\qquad
+ \bm\tau_{\mathrm{req}}=\begin{bmatrix}3\\3\end{bmatrix},
+\]
+all equality solutions are $(3-t,3-t,t)^T$. Bounds $0\leq F_i\leq3$
+leave $0\leq t\leq3$. Other loads or capacities can leave a point or no
+solution. This is an allocation example, not a human moment-arm model. It
+shows why a nullspace count cannot guarantee compensation for a fatigued muscle.
+These candidate forces must still satisfy muscle dynamics: if every internal
+state is already fixed, a constitutive model may fix tendon force as well.
+An allocation equality alone does not supply a realizable excitation history.
 
-This connects directly to the \emph{uncontrolled manifold hypothesis}
-\cite{ScholzSchoner1999}: task-irrelevant variability is not suppressed by the
-nervous system, only task-relevant variability is. The biological control
-system does not solve the full redundancy problem; it projects the problem
-onto the task-relevant subspace.
+Even equal nullity does not identify equal physical freedom. The task map
+$J_y=\left[\begin{smallmatrix}1&1&0\\0&1&1\end{smallmatrix}\right]$
+has null vector $(1,-1,1)^T$, whereas the example $R$ has null vector
+$(-1,-1,1)^T$. Their domains also represent different quantities:
+configuration changes and muscle forces. Matching hand position does not
+guarantee matching velocity, joint loading, energy use, or future motion.
 
-\section{Modeling Strategies}
+The uncontrolled manifold hypothesis tests whether variability is preferentially
+organized along directions preserving a selected task variable
+\cite{ScholzSchoner1999}. Its original sit-to-stand analysis supports a
+task-dependent interpretation of joint variability. It is not a direct
+measurement of a neural projection operator or proof that all task-null
+directions are left uncontrolled. Coordinate scaling, task choice, noise,
+and dynamics influence interpretation. In golf, variability preserving
+clubhead position at one instant can still change face orientation, impact
+timing, or the subsequent response to a perturbation.
 
-Given the complexity of biological systems, modelers must choose their level of
-abstraction carefully. Three broad strategies exist, listed in order of increasing
-fidelity:
+\section{Choosing the Model by the Question}
+\subsection{Rigid Segments With Generalized-Load Actuators}
 
-\subsection{Strategy 1: Rigid-Body With Torque Actuators}
+This model examines motion, power, momentum, and net loads without resolving
+individual muscles. Inverse dynamics requires kinematics, inertial parameters,
+external loads, and constraints; it does not identify individual muscle forces
+from motion alone. Add actuator bounds when testing trajectory feasibility.
+An unconstrained optimal torque history is a mathematical result, not evidence
+that a golfer can execute it.
 
-The simplest approach: treat biological segments as rigid bodies and joints as
-ideal revolutes, with ``joint torques'' as the control input. This is the model
-assumed throughout Volumes~I--II.
+For clubhead speed, this level can clarify how mass distribution, segment
+motion, and external forces interact. A sensitivity calculation can ask
+whether plausible parameter changes or shaft deformation alter the conclusion.
+If they do, examine the omitted physics before interpreting the result as a
+mechanism of a human swing.
 
-\textbf{Advantages:}
-\begin{itemize}
-  \item Mathematically tractable (standard Lagrangian mechanics)
-  \item Sufficient for gross motion analysis
-  \item Compatible with all control-theoretic tools from Volumes~I--II
-\end{itemize}
+\subsection{Rigid Segments With Muscle and Tendon States}
 
-\textbf{Limitations:}
-\begin{itemize}
-  \item Cannot predict muscle activation patterns
-  \item Cannot account for muscle force-length-velocity constraints
-  \item Cannot predict injury mechanisms
-  \item Cannot capture bi-articular muscle effects
-\end{itemize}
+This adds routing, activation, and constitutive assumptions. A forward
+simulation requires excitations and initial states. Estimating excitation
+from observed motion requires further data, a control hypothesis, or an
+optimization criterion. Multiple solutions may fit the same motion. Report
+residual forces, reserve actuators, parameter sensitivity, and objective
+sensitivity rather than presenting one optimum as an observed neural strategy.
 
-\textbf{When to use:} Trajectory optimization, gross motion planning, initial
-controller design.
+OpenSim supports musculoskeletal modeling and simulation; a typical model
+combines rigid bodies, joints, and force elements \cite{Delp2007}. Such a
+model is not automatically a finite-element model of deforming bone or soft
+tissue. Joint reactions are resultant loads conditional on modeled actuators
+and constraints, not local stress fields.
 
-\subsection{Strategy 2: Rigid-Body With Muscle Actuators}
+\subsection{Deformation or Tissue Stress as an Output}
 
-Replace torque actuators with Hill-type muscle models (Chapter~3). Joint torques
-become \emph{outputs} of the model, computed from muscle forces and moment arms:
-\begin{equation}
-  \tau_j = \sum_{i \in \mathcal{M}_j} r_{ij}(\bm{q}) \cdot F_{\text{muscle},i},
-  \label{eq:ch1:muscle-torque}
-\end{equation}
-where $\mathcal{M}_j$ is the set of muscles crossing joint $j$ and $r_{ij}(\bm{q})$
-is the moment arm of muscle $i$ about joint $j$.
+Flexible modes, continuum models, or coupled multibody--finite-element models
+resolve deformation when the question requires it. Local stress requires
+geometry, constitutive properties, boundary conditions, and loading; numerical
+resolution and constitutive validation are separate checks. A resultant force
+and moment constrain integrals of traction without uniquely determining its
+spatial distribution. A calculated stress field is not an injury probability
+without a validated injury or failure model.
 
-\textbf{Advantages:}
-\begin{itemize}
-  \item Predicts muscle activation patterns
-  \item Captures force-length-velocity constraints
-  \item Accounts for bi-articular coupling
-  \item Can predict co-contraction and joint stiffness modulation
-\end{itemize}
+These choices are not a universal fidelity ranking. Extra parameters can
+increase uncertainty when measurements cannot identify them. Real-time
+feasibility depends on model, algorithm, hardware, accuracy, and update rate;
+a fixed degree-of-freedom threshold cannot select the method. State an output
+tolerance, compare simpler and richer models against independent observations,
+and retain the least complexity that supports the claim.
 
-\textbf{Limitations:}
-\begin{itemize}
-  \item Significant increase in model complexity (typically 2--3 states per muscle)
-  \item Muscle parameters are difficult to measure in vivo
-  \item Still assumes rigid segments and ideal joints
-\end{itemize}
+\section{Mass Properties Need Accounting and Frames}
+\subsection{A Complete Segment Inventory}
 
-\textbf{When to use:} Detailed motion analysis, muscle force prediction, clinical
-biomechanics, prosthetic design.
+Anthropometric coefficients require a population, segmentation scheme,
+landmarks, and parameter conventions. De~Leva's study adjusts landmark
+references of Zatsiorsky--Seluyanov segment parameters \cite{deLeva1996};
+it is not a generic update of Dempster cadaver coefficients. Mixing
+incompatible segmentations can double-count or omit mass. Scaling population
+estimates also does not make them subject-specific measurements.
 
-\subsection{Strategy 3: Flexible Multi-Body With Muscle Actuators}
+An inconsistent inventory illustrates the danger: central fractions $0.081$
+and $0.497$ combined with six
+unilateral fractions $0.0271$, $0.0162$, $0.0061$, $0.1416$, $0.0433$, and
+$0.0137$. Their one-row sum is $0.826$; counting both sides gives $1.074$.
+Neither accounts for one body. Renormalizing conceals the provenance problem.
+No empirical replacement table is asserted here without verification of its
+source, landmarks, and segment definitions.
 
-The most complete approach: flexible bodies (beam or FEM models) with muscle
-actuators and realistic joint models. This is the domain of software platforms
-like OpenSim and AnyBody.
+For a synthetic accounting exercise, use central fractions $0.10,0.40$ and
+six paired fractions $(0.05,0.03,0.02,0.09,0.04,0.02)$ per side. Their
+bilateral sum is one. For $75$~kg, the central masses are $7.5,30$~kg and
+each side has $(3.75,2.25,1.50,6.75,3.00,1.50)$~kg. This tests bookkeeping
+only; it provides neither human lengths nor centres of mass or inertias.
 
-\textbf{Advantages:}
-\begin{itemize}
-  \item Highest fidelity
-  \item Can predict stress distributions in bones and soft tissues
-  \item Can capture coupled joint kinematics
-\end{itemize}
+\subsection{Centre of Mass and Spatial Inertia}
 
-\textbf{Limitations:}
-\begin{itemize}
-  \item Computationally expensive
-  \item Many parameters, often poorly known
-  \item Too complex for real-time control applications
-\end{itemize}
+Let a segment's local centre of mass be $\bm c_i$, its local-to-world rotation
+matrix $Q_i\in SO(3)$, and its world origin $\bm p_i$. Then
+\[
+ \bm r_i=\bm p_i+Q_i\bm c_i,\qquad
+ \bm r_{COM}=\frac{\sum_i m_i\bm r_i}{\sum_i m_i}.
+\]
+Body mass and height alone cannot specify these world positions. A pose and
+kinematic model are needed, with separate left and right instances. For
+masses $2,1$~kg at $(0.2,0,0),(0.4,0.15,0)$~m, respectively, the centre
+is $(4/15,0.05,0)$~m. Translating both positions translates the centre by
+the same amount, a useful frame-consistency check.
 
-\textbf{When to use:} Injury prediction, surgical planning, detailed structural
-analysis.
+A scalar $I=m(\rho L)^2$ describes inertia about a specified axis when
+$\rho L$ is its radius of gyration. General 3D dynamics needs a symmetric
+tensor $I_C$ about the centre of mass in declared axes. For an angular-first
+twist $V=(\bm\omega,\bm v_O)$, all expressed in one frame, let $\bm c$
+point from origin $O$ to the centre and $C=[\bm c]_\times$. Then
+\[
+ \mathcal I_O=\begin{bmatrix}I_C-mCC&mC\\-mC&mI_3\end{bmatrix}.
+\]
+The signs follow from
+$\bm v_C=\bm v_O+\bm\omega\times\bm c=\bm v_O-C\bm\omega$, giving
+\[
+ \tfrac12 V^T\mathcal I_OV
+ =\tfrac12\bm\omega^TI_C\bm\omega
+  +\tfrac12m\|\bm v_O+\bm\omega\times\bm c\|^2.
+\]
+Positive mass and positive-definite $I_C$ make this form positive definite.
+Physical inertia tensors also satisfy principal moment triangle inequalities;
+positive eigenvalues alone are not a complete realizability test. Point or
+ideal line masses can have singular rotational inertia. Declare which case
+an implementation accepts.
 
-\begin{lstlisting}[language=Python, caption={Choosing a modeling strategy based on application requirements.}]
-import numpy as np
+\section{When the Control-Affine Framework Applies}
+\subsection{Choose the Input Before Splitting Drift and Control}
 
-def select_modeling_strategy(
-    need_muscle_forces: bool,
-    need_tissue_stress: bool,
-    real_time_required: bool,
-    n_dof: int
-) -> str:
-    """Select the appropriate biomechanical modeling strategy.
-
-    Parameters
-    ----------
-    need_muscle_forces : bool
-        Whether individual muscle forces are needed.
-    need_tissue_stress : bool
-        Whether stress/strain in tissues is needed.
-    real_time_required : bool
-        Whether the model must run in real-time.
-    n_dof : int
-        Number of degrees of freedom in the model.
-
-    Returns
-    -------
-    str
-        Recommended modeling strategy.
-    """
-    if need_tissue_stress:
-        return "Strategy 3: Flexible multi-body + muscles (OpenSim/FEM)"
-    elif need_muscle_forces:
-        if real_time_required and n_dof > 20:
-            return ("Strategy 2 (reduced): Muscle model with "
-                    "synergy-based dimensionality reduction")
-        return "Strategy 2: Rigid-body + Hill-type muscles (OpenSim)"
-    else:
-        if real_time_required:
-            return "Strategy 1: Rigid-body + torque actuators (fastest)"
-        return ("Strategy 1 or 2 depending on available data "
-                "and analysis goals")
-\end{lstlisting}
-
-\section{A Quantitative Tour of the Human Body}
-
-Before diving into the detailed modeling chapters, we present a quantitative overview
-of the key biomechanical properties that any model must capture. All values in this
-section are drawn from published anthropometric studies and are cited in the relevant
-subsections.
-
-\subsection{Segment Inertial Properties}
-
-The human body can be decomposed into 15--20 segments for modeling purposes. The
-standard segmentation and mass fractions are based on cadaver studies, most notably
-those of Dempster (1955), updated by de~Leva (1996) \cite{deLeva1996}.
-
-\begin{center}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{@{}lccc@{}}
-\toprule
-\textbf{Segment} & \textbf{Mass (\% body)} & \textbf{Length (cm, 180cm male)} & \textbf{CoM (\% proximal)} \\
-\midrule
-Head + neck & 8.1 & 25.4 & 50.0 \\
-Trunk & 49.7 & 53.0 & 44.9 \\
-Upper arm & 2.7 & 28.2 & 57.7 \\
-Forearm & 1.6 & 26.9 & 45.7 \\
-Hand & 0.6 & 19.0 & 36.2 \\
-Thigh & 14.2 & 42.2 & 40.9 \\
-Shank & 4.3 & 43.4 & 43.4 \\
-Foot & 1.4 & 25.8 & 44.2 \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\begin{lstlisting}[language=Python, caption={Computing segment inertial properties from body measurements.}]
-import numpy as np
-from dataclasses import dataclass
-
-@dataclass
-class SegmentProperties:
-    """Inertial properties of a body segment."""
-    name: str
-    mass: float          # kg
-    length: float        # m
-    com_proximal: float  # fraction from proximal end
-    I_com: float         # moment of inertia about CoM, kg*m^2
-
-def de_leva_male_segments(
-    body_mass: float,
-    body_height: float
-) -> list[SegmentProperties]:
-    """Compute segment properties using de Leva (1996) regression.
-
-    Parameters
-    ----------
-    body_mass : float
-        Total body mass in kg.
-    body_height : float
-        Total body height in m.
-
-    Returns
-    -------
-    list[SegmentProperties]
-        List of segment inertial properties.
-
-    References
-    ----------
-    de Leva, P. (1996). Adjustments to Zatsiorsky-Seluyanov's
-    segment inertia parameters. J. Biomechanics, 29(9), 1223-1230.
-    """
-    # Mass fractions, length fractions, CoM fractions, RoG fractions
-    # (proximal reference, male data from de Leva 1996 Table 4)
-    data = {
-        'head_neck':  (0.0810, 0.1414, 0.5002, 0.3030),
-        'trunk':      (0.4970, 0.2946, 0.4486, 0.3271),
-        'upper_arm':  (0.0271, 0.1566, 0.5772, 0.2850),
-        'forearm':    (0.0162, 0.1494, 0.4574, 0.2760),
-        'hand':       (0.0061, 0.1057, 0.3624, 0.2880),
-        'thigh':      (0.1416, 0.2321, 0.4095, 0.3290),
-        'shank':      (0.0433, 0.2411, 0.4340, 0.2550),
-        'foot':       (0.0137, 0.1527, 0.4415, 0.2570),
-    }
-
-    segments = []
-    for name, (mass_frac, len_frac, com_frac, rog_frac) in data.items():
-        seg_mass = mass_frac * body_mass
-        seg_length = len_frac * body_height
-        seg_com = com_frac
-        # Moment of inertia: I = m * (rog * length)^2
-        seg_I = seg_mass * (rog_frac * seg_length) ** 2
-        segments.append(SegmentProperties(
-            name=name, mass=seg_mass, length=seg_length,
-            com_proximal=seg_com, I_com=seg_I
-        ))
-
-    return segments
-
-
-# Example usage
-if __name__ == "__main__":
-    segments = de_leva_male_segments(body_mass=80.0, body_height=1.80)
-    print(f"{'Segment':<15} {'Mass (kg)':>10} {'Length (m)':>10} "
-          f"{'I_com (kg*m^2)':>14}")
-    print("-" * 52)
-    for seg in segments:
-        print(f"{seg.name:<15} {seg.mass:>10.2f} {seg.length:>10.3f} "
-              f"{seg.I_com:>14.4f}")
-\end{lstlisting}
-
-\subsection{Joint Ranges of Motion}
-
-Each joint has characteristic ranges of motion that define the configuration space
-$\mathcal{Q}$ of the body. Unlike robot joints, which can be modeled as
-$q_i \in [\underline{q}_i, \overline{q}_i]$, biological joints have \emph{soft limits}:
-resistance increases gradually as the joint approaches its anatomical limit, governed
-by the elasticity of ligaments and joint capsule.
-
-\subsection{Muscle Properties}
-
-The human body contains approximately 630 skeletal muscles. Each is characterized by
-several anatomical and physiological parameters that determine its force production capacity.
-The standard parameters are:
-
-\begin{itemize}
-  \item \textbf{Maximum isometric force} $F_0$: the force a muscle produces at optimal
-        length with full activation and zero velocity. Values vary widely by muscle size,
-        composition, and fiber type.
-  \item \textbf{Optimal fiber length} $\ell_0$: the length at which maximum isometric force
-        is produced, determined by the sarcomere length ($\sim$2.6 $\mu$m per sarcomere at
-        $\ell_0$).
-  \item \textbf{Maximum contraction velocity} $v_0$: the velocity at which a muscle produces
-        zero force under concentric contraction, measured in fiber lengths per second (typically
-        $0.5$--$3$ fiber lengths per second for slow-twitch fibers, $5$--$15$ for fast-twitch).
-  \item \textbf{Tendon slack length} $\ell_T^s$: the length of the tendon at which it begins to
-        transmit force (below this length, the tendon is slack and carries no load).
-  \item \textbf{Pennation angle} $\alpha_0$: the angle between muscle fiber direction and the
-        tendon line of action at optimal fiber length. Ranges from approximately $0^\circ$ for
-        parallel-fibered muscles to $30^\circ$ or more for highly pennate muscles.
-\end{itemize}
-
-These properties have been systematically measured and catalogued through:
-\begin{enumerate}
-  \item \cite{Zajac1989}: foundational review of muscle mechanics and parameter estimation
-  \item \cite{Delp2007}: comprehensive OpenSim musculoskeletal model with measured parameters for major muscles
-  \item \cite{Arnold2010}: lower-limb muscle morphometry from imaging and cadaver studies
-\item \cite{Holzbaur2005}: the corresponding upper-extremity model, and the source of the
-biceps parameters used in Chapter~3
-\end{enumerate}
-
-Values for specific muscles are provided in software platforms (OpenSim 4.x, AnyBody) and should
-be obtained from published measurements rather than estimated.
-
-\section{Connecting to the Control Framework}
-
-Despite the added complexity, the control framework of Volumes~I and~II remains
-applicable---with modifications. The key insight is:
+Torque-driven and excitation-driven models describe different interventions.
+For a smooth fixed-contact model in independent coordinates, let $\bm s$
+collect muscle states, with composite state $\state=(\bm q,\bm v,\bm s)$.
+Assume $M$ is invertible on the domain under analysis. A possible description is
+\[
+ \dot{\bm q}=N(\bm q)\bm v,\qquad
+ M(\bm q)\dot{\bm v}=\bm f_{\mathrm{mech}}(\bm q,\bm v,\bm s),
+ \qquad\dot{\bm s}=h_s(\bm q,\bm v,\bm s,\bm u).
+\]
+$N$ accounts for representations whose coordinate derivatives differ from
+generalized speeds. Reactions must be solved consistently or eliminated on
+the constraint manifold. Here excitation acts through muscle states, with
+no separate direct excitation term in mechanics. Input affinity depends on
+$h_s$ and any other input-dependent equations.
 
 \begin{principle}{The Extended Affine Structure}{affine-bio}
-  A musculoskeletal system can be written in control-affine form as
-  \begin{equation}
-    \dot{\state} = f(\state) + G(\state) \bm{u},
-    \label{eq:ch1:affine-bio}
-  \end{equation}
-  where the state $\state$ now includes muscle states (activation, fiber length)
-  in addition to joint coordinates and velocities, the drift field $f$ includes
-  passive muscle and tendon forces, and $G(\state)$ maps neural excitation signals
-  $\bm{u}$ to state derivatives through the muscle activation and contraction dynamics.
-  The dimensions expand---from $2n$ states with $n$ joints and $m$ torque actuators
-  to $2n + 2p$ states with $p$ muscles---but the \emph{structure} of the problem
-  (drift + control) is preserved.
+A declared model is control-affine in its chosen input if
+\begin{equation}
+ \dot{\state}=f(\state)+G(\state)\bm u.
+ \label{eq:ch1:affine-bio}
+\end{equation}
+Nonlinear state dependence in $f,G$ is permitted. For example,
+$\dot a=(u-a)/T$ with constant $T>0$ is affine in excitation. If remaining
+muscle-state equations depend on activation and mechanics but not directly
+on excitation, their nonlinearity does not invalidate this structure.
+Establish these assumptions for the selected model; do not infer them from
+the word ``musculoskeletal.''
 \end{principle}
 
+Consider instead the branch-dependent law documented for OpenSim's
+\href{https://opensim-org.github.io/opensim-moco-site/docs/1.3.0/html_user/classOpenSim_1_1MuscleFirstOrderActivationDynamicModel.html}{first-order activation model}:
+\[
+ \dot a=\frac{u-a}{T(u,a)},\qquad
+ T(u,a)=\begin{cases}
+ T_{act}(0.5+1.5a),&u>a,\\
+ T_{deact}/(0.5+1.5a),&u\leq a.
+ \end{cases}
+\]
+For a manufactured evaluation without an activation floor, choose $a=0.5$,
+$T_{act}=0.01$~s, and $T_{deact}=0.04$~s. The rates at $u=0,0.5,1$ are
+$-15.625,0,40$~s$^{-1}$. An affine input map would give the midpoint rate
+$(-15.625+40)/2=12.1875$~s$^{-1}$, not zero. Each branch is affine in
+$u$ for fixed state, but the full map is not. The rate is continuous at $u=a$,
+with generally unequal one-sided slopes. Activation floors and clamping in
+an implementation need their own treatment; this arithmetic does not
+reproduce every software variant.
+
 \begin{remark}{Dimensional Expansion of the State Space}{expanded_manifold}
-  Recall from Volumes~0 and~I that the state manifold $\mathcal{M}$ has dimension $2n$ for a system
-  with $n$ joint degrees of freedom (tracking positions and velocities). When muscles are included,
-  the state space expands: for each of $p$ muscles, we add two dimensions to track activation $a_i$
-  and fiber length $\ell_i^M$, yielding a state space of dimension $2n + 2p$. The system still evolves
-  according to $\dot{\state} = f(\state) + G(\state) \bm{u}$, but the ambient manifold is now much
-  higher-dimensional. All differential geometry tools (Lie brackets, contraction metrics, etc.)\ from
-  Volumes~I--II apply without modification, though computational complexity scales with dimension.
+For $n$ independent coordinates, $p$ activations, and $p$ independent fibre
+length states, a local state dimension is $2n+2p$. A rigid-tendon model may
+omit fibre-length states; fatigue or history states increase the count.
+Algebraic constraints and redundant pose representations change the distinction
+between stored variables and independent states. Derive dimension from the
+equations rather than a universal number of states per muscle.
 \end{remark}
 
-This means:
-\begin{itemize}
-  \item The tangent-space analysis of Volume~I applies to the expanded state space
-  \item Contraction theory (Volume~I, Chapter~4) can assess stability of the
-        muscle-driven system
-  \item Trajectory optimization (Volume~I, Chapter~5) extends to find optimal
-        neural excitation patterns
-  \item The counterfactual analysis (Volume~I, Chapter~7) can distinguish which
-        aspects of muscle force production contribute to the motion
-\end{itemize}
+Lie-bracket calculations require appropriate smooth vector fields and a
+specified admissible input set. Contraction arguments also require a suitable
+metric, invariant domain, and the theorem's differential conditions. Input
+bounds, contact transitions, and nonsmooth force laws can limit conclusions.
+Smooth analysis within a contact mode is not a proof across impacts or
+changes in contact. Dimensionality is a computational challenge; validity of
+the mathematical hypotheses comes first.
 
-The challenge is \emph{dimensionality}: a 20-DOF body with 100 muscles has a
-state space of dimension $2 \times 20 + 2 \times 100 = 240$. This is precisely
-the ``curse of dimensionality'' that Volume~IV addresses through the lens of
-motor control and neural architecture.
+Zero excitation does not instantly erase activation or tendon strain. With
+constant $T$, activation subsequently decays as $a(t)=a(0)e^{-t/T}$ while
+other states evolve. Zero-input drift can thus include force associated with
+prior excitation. It is not synonymous with anatomically passive force,
+zero joint torque, or zero power. A golf counterfactual must specify what is
+removed and which initial states, contacts, and feedback rules are retained.
 
-\section*{Exercises}
+\section{Connecting the Parts of the Swing Argument}
 
+The choices form a chain of inference. Kinematics and external loads, with
+mass properties and contacts, constrain net dynamics. Routing and constitutive
+assumptions map candidate muscle states into those loads. Activation dynamics
+connect states to candidate excitations. Compliance changes both transmission
+and the output being controlled. Redundancy leaves alternatives that an
+objective or further measurement may restrict. Every added explanation
+introduces a corresponding test.
+
+A claim that a golfer increases clubhead speed through a particular muscle
+action requires more than a faster clubhead trajectory. Test whether the
+conclusion persists across plausible inertial parameters, grip constraints,
+tendon properties, allocation objectives, and shaft models. Separate an
+instantaneous power identity from a finite-time causal intervention:
+removing one torque or excitation changes later states and may change loads
+supplied by feedback. Report the intervention and its uncertainty alongside
+the predicted effect.
+
+The resulting explanation should distinguish measured quantities, mechanical
+calculations, biologically conditioned inferences, and hypotheses about
+control or coaching. That distinction lets a simple model provide strong
+insight while identifying what remains unresolved about the swing.
+
+\section*{Exercises With Verification Targets}
 \begin{enumerate}
-  \item \textbf{Segment Properties.}
-        Using the \texttt{de\_leva\_male\_segments()} function, compute the total
-        mass and center of mass of a 75-kg, 1.75-m male in the anatomical position.
-        Verify that the total mass sums to the body mass.
-
-  \item \textbf{Compliance Effects.}
-        A golf club shaft has a first bending mode at approximately 5~Hz. If the
-        downswing takes 0.25~s, how many oscillation cycles of the shaft occur during
-        the downswing? Does the timescale separation principle (Principle~\ref{princ:timescale})
-        justify neglecting shaft flexibility? Discuss.
-
-  \item \textbf{Redundancy Quantification.}
-        A planar model of the arm has 3 joints (shoulder, elbow, wrist) and 6 muscles.
-        If the task is to place the fingertip at a given $(x, y)$ position, what is the
-        dimension of the null space? How many independent muscle patterns produce the same
-        fingertip position?
-
-  \item \textbf{Force-Velocity Impact.}
-        During a golf downswing, the wrist extensors lengthen at approximately 5 fiber
-        lengths per second. Using the Hill force-velocity relationship (Equation~\ref{eq:ch1:hill-overview}),
-        estimate the ratio of eccentric force to maximum isometric force at this velocity.
-        Compare this with the force available during a slow concentric contraction.
-
-  \item \textbf{Modeling Strategy Selection.}
-        For each of the following applications, select the appropriate modeling strategy
-        and justify your choice:
-        \begin{enumerate}[label=(\alph*)]
-          \item Real-time control of a prosthetic knee during walking
-          \item Predicting ACL stress during a cutting maneuver in soccer
-          \item Optimizing a sprinter's start to minimize 10-m time
-          \item Understanding how the golf swing generates clubhead speed
-        \end{enumerate}
-
-  \item \textbf{(Programming.)} Implement a function that computes the total gravitational
-        potential energy of a multi-segment body given segment properties and joint angles.
-        Test it for a 2-segment (upper arm + forearm) model in different configurations.
-
-  \item \textbf{(Programming.)} Extend the segment properties code to compute the full
-        $6 \times 6$ spatial inertia matrix (in the Park and Lynch spatial algebra
-        notation) for each segment. Verify that the matrices are positive definite.
-
-  \item \textbf{(Research.)} Compare the de~Leva (1996) segment parameters with at least
-        one other source (e.g., Winter 2009, Dempster 1955). Quantify the differences in
-        mass fractions and discuss the implications for inverse dynamics calculations.
+ \item \textbf{Mass Accounting.} Reproduce both erroneous inventory sums and
+ the synthetic $75$-kg inventory. Explain why a unit sum cannot validate
+ anatomical provenance or supply missing centre-of-mass locations.
+ \item \textbf{Compliance.} Reproduce the three values of $|kH|$ above.
+ A hypothetical $5$-Hz mode completes $5(0.25)=1.25$ cycles in $0.25$~s.
+ Explain why this count supplies neither excitation amplitude nor output
+ error and cannot decide whether shaft deformation is negligible.
+ \item \textbf{Power.} Verify the $0.8$-W example by both routes. Identify
+ the energy-storage terms needed to equate skeletal and contractile-element
+ power for a compliant tendon.
+ \item \textbf{Redundancy.} Derive both null vectors and the interval
+ $0\leq t\leq3$. For three joints and six muscle paths, state the ranks
+ needed for task nullity one and force nullity three. Explain why neither
+ number counts identifiable neural excitation histories.
+ \item \textbf{Mass Frames.} Reproduce the two-mass centre of mass and its
+ translation covariance. With upward $y$ and gravity magnitude $g$, compute
+ $U=\sum_i m_i g y_i=0.15g$. State the reference level and why mass
+ fractions alone cannot determine potential energy.
+ \item \textbf{Spatial Inertia.} Use $m=2$~kg and
+ \[
+ \bm c=(0.1,-0.2,0.3)\ \mathrm m,\qquad
+ I_C=\operatorname{diag}(0.02,0.03,0.04)\ \mathrm{kg\,m^2}.
+ \]
+ Check symmetry,
+ positivity, principal moment inequalities, and both energy expressions for
+ $\bm\omega=(1.5,-2,0.5)$~s$^{-1}$ and $\bm v_O=(-1.2,0.8,-0.4)$~m/s.
+ Nonzero translation tests the cross-block signs.
+ \item \textbf{Input Affinity.} Compare the branch-dependent example with
+ the constant-$T$ model, $T=0.02$~s, giving rates $(-25,0,25)$~s$^{-1}$
+ at the same inputs and activation. Explain
+ why nonlinear activation dependence alone does not disprove input affinity,
+ and why zero excitation is not an instantaneous relaxed state.
+ \item \textbf{Model Selection.} Specify separate evidence requirements for
+ clubface pose, net wrist moment, individual tendon force, and local stress.
+ For a force--velocity calculation, identify the missing curve, normalization,
+ fibre state, activation, and tendon assumptions before assigning an
+ eccentric-to-isometric force ratio.
 \end{enumerate}

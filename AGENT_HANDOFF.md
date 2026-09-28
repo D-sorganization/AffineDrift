@@ -1,3 +1,43 @@
+# Biology Model Selection: Source Checkpoint for #4463
+
+Current branch: `fix/4463-biology-model-selection`; worktree:
+`C:/Users/diete/Repositories/AffineDrift-technical-review`.
+The user has resumed the complete corpus goal. Never create draft PRs.
+
+- Publication metadata PR #4462 merged at `f3593142cef875a2e43372fa712998a2a4c6d637`.
+  The branch includes remote main. The parent #4021 lease was released; child
+  #4463/session `technical-review-20260927-biology` owns this correction.
+- Complete Volume III Chapter 1 and its contradictory introduction are corrected:
+  augmented flexibility, power-consistent muscle forces, task/force redundancy,
+  feasible dynamics, mass accounting and spatial inertia, conditional input affinity.
+- Existing anthropometric coefficients are retained only as an explicit erroneous
+  accounting example; the replacement exercise is synthetic, not de Leva data.
+- RED: six source failures and eight passing numerical fixtures. GREEN: 14 focused
+  checks. Root Ruff, Black (726 files), title audit (638 sources), and CI-equivalent
+  mypy (91 sources) pass. Final full Python run: 5,507 passed, 29 skipped,
+  132 deselected, 92.88% src coverage. Content lint: 131 passed, four skipped.
+  Initial audit-record failures were repaired; 67 focused checks also pass.
+- Full Volume III PDF compiles (66 pages). Introduction page 3 and chapter pages
+  9-17 visually inspected; title and long exercise equation repaired. Zero chapter
+  overfull boxes or undefined references. Existing warnings elsewhere remain.
+- Six supplied-text-only Gemini 3.8 Flash calls via agy assisted extraction,
+  numerical-test/exercise preparation, and consistency review. Lead checked every
+  adopted change. No permission bypass, file/tool delegation, or empirical evidence
+  was supplied by those agents; dispatcher issue #1800 still blocks unattended tools.
+- Source/PDF freeze: `3875b82d18d27078d6d0aa22fcfa4ca4acf65a58`. The
+  public book map pins this freeze and passes four local browser cases with zero
+  serious/critical axe violations. Seven scientific evidence files are byte-verified
+  at `9df52f26f4b0fa4b5cccd30f267774c130096d8e`. The dependency carry-forward
+  receipt preserves all six prior book records; only the biology route received
+  a new technical/browser review. Generated audit metadata follows that source
+  checkpoint. Next: open a regular PR, protected merge, and verify live publication.
+  Continue the
+  remaining corpus afterward; 165 full technical audits remain, plus whole-book reconciliation.
+- Stage explicit files only. Old untracked QA is not product content. Fresh QA is
+  under `docs/development/technical-review/biology-*` and `flash-biology-*`.
+
+---
+
 # Resumed Corpus Review and Verified Chapter 1 Publication
 
 The user resumed the complete scientific-review goal on 2026-09-27 and authorized
