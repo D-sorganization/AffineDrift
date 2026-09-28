@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4467 · Secondary-Axis Mechanics and Putter Design
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4468
 - **Issue:** #4467 (corpus #4021; epic #4009)
 - **Branch:** `fix/4467-secondary-axis`
 - **Paths:** `articles/secondary-axis-stability.qmd`, `critiques/intermediate_axis_fallacy.md`, `critiques/misattribution_of_stability_gravity.md`, `tests/test_secondary_axis_rigor.py`
 - **Started:** 2026-09-27
 - **Last verified:** 2026-09-27 (19 focused mechanics/source checks; full Python suite 5,540 passed, 29 skipped, 132 deselected, 92.88% src coverage; 80 final mechanics/audit contracts pass. Three final Quarto routes, 12/12 light/dark mobile/desktop cases, zero serious/critical axe violations. All 117 math expressions loaded; 17 display equations visually checked at both widths. Ruff, Black 728 files, title audit 638 sources and mypy 91 sources pass. Seven exact evidence paths bound to ed573560.)
 - **Summary:** Separates free spin, supported motion, gravity and collision; supplies checked inertia-rate and moment comparisons; removes unsupported equipment and neural claims from article and critiques.
-- **Next step:** Open the regular PR and complete protected CI and publication verification.
+- **Next step:** Complete protected PR #4468 CI/merge and verify live publication.
 
 ### DL-#4465 · Contraction Development Workspace
 

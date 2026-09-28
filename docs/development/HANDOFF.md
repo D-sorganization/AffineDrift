@@ -26,7 +26,8 @@ The complete corpus goal is resumed; never create draft PRs.
   Lead adjudicated every suggestion; no tool/permission bypass. Dispatcher #1800
   still blocks unattended agy tool access.
 - Active session technical-review-20260927-secondary; lease expires 07:05 UTC.
-  Next open a regular PR, complete protected CI/merge, and verify live publication.
+  Regular PR #4468 is open with protected auto-merge armed.
+  Next complete CI/merge and verify live publication.
   Stage explicit files; preserve old untracked QA and close owned preview sessions.
 - Corpus index: 152 full audits remain, plus whole-book reconciliation.
   Continue after this batch; the complete goal is not achieved.
