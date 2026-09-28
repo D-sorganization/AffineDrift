@@ -1,3 +1,45 @@
+# Volume I Reference Review — #4469
+
+Current branch: `fix/4469-volume-one-reference`. The full corpus goal is resumed;
+never create draft PRs. Preceding PR #4468 merged at 54d73e39 on 2026-09-28 UTC
+with every check green; deployment and post-merge verification remain pending.
+
+- Issue #4469 is a native child of #4021, under epic #4009. Session:
+  technical-review-20260927-volume-one-reference; lease expires 07:50 UTC.
+- Complete Volume I main source and public book map reviewed. Chapter inputs
+  are unchanged; this is a bounded reference correction, not whole-book approval.
+- Corrected controlled Jacobians, transport versus flow sensitivity, rotation
+  branches, twist/wrench duality, coordinate/metric conventions, matrix and
+  optimization hypotheses, and both executable examples. Fixed appendix labels,
+  contents spacing and code placement in the 149-page PDF.
+- Frozen source/PDF: 14b8f183. Six exact evidence paths: 782dc161. Reports:
+  reports/technical-review/volume-one-reference-review.md,
+  volume-one-reference-render-verification.json and
+  volume-one-reference-dependency-carry-forward.json in that same directory.
+  Other books retain historical scientific review dates and render revisions;
+  shared dependency refreshes are recorded separately from new findings.
+- Validation: 21 focused checks; 52 reference/audit contracts; full suite 5,561
+  passed, 29 skipped, 132 deselected, 92.88% src coverage. Content: 131 passed,
+  four skipped. Ruff, Black (729 files), mypy (91), titles (638) and quality
+  checks across 758 tracked Python files pass. Changed print regions inspected;
+  remaining header/enumitem warnings are outside the changed reference material.
+- Public book map: four mobile/desktop light/dark cases, zero serious/critical
+  axe findings. Immutable main-source and PDF links use the frozen source commit;
+  older chapter/notebook links retain their explicitly separate snapshot.
+- Four supplied-text-only agy Gemini 3.8 Flash calls ran in two parallel pairs;
+  parent adjudicated all suggestions. Dispatcher #1800 still blocks unattended
+  tool access. No tool/permission bypass; no fabricated physical validation.
+- Next: merge remote main, open a regular PR, complete protected CI/merge and
+  verify deployment, full site receipt and frozen downloads. Also record #4468
+  publication after deployment. Latest secondary evidence is 919f6d18.
+- Corpus: 150 full audits remain, plus whole-book reconciliation. Next read-only
+  triage identified camera-specification discrepancies in the markerless mocap
+  article; no new issue or implementation has started for that article.
+- Preserve older untracked QA and stage explicit paths only. Owned browser and
+  preview sessions are stopped.
+
+---
+
 # Secondary-Axis Review — #4467
 
 Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.

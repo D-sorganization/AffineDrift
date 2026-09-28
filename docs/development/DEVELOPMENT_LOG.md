@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4469 · Volume I Mathematical Reference
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending
+- **Issue:** #4469 (corpus #4021; epic #4009)
+- **Branch:** `fix/4469-volume-one-reference`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/main.tex`, `books/tangent-space-methods.qmd`, `tests/test_volume_one_reference_rigor.py`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (21 focused; 52 reference/audit contracts; full suite 5,561 passed, 29 skipped, 132 deselected, 92.88% coverage; 131 content checks passed/four skipped. Static checks pass. Full 149-page PDF compiles; affected pages visually inspected. Public map 4/4 browser cases, zero severe axe findings. Source/PDF 14b8f183; six-path evidence 782dc161. Four parallel supplied-text Flash reviews adjudicated.)
+- **Summary:** Reconciles notation and mathematical reference material with corrected chapter assumptions; separates geometry, flow sensitivity and control certification.
+- **Next step:** Open regular PR after merging remote main; complete protected CI/merge and verify live publication and pinned downloads.
+
 ### DL-#4467 · Secondary-Axis Mechanics and Putter Design
 
 - **State:** in_review
@@ -27,9 +40,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/4467-secondary-axis`
 - **Paths:** `articles/secondary-axis-stability.qmd`, `critiques/intermediate_axis_fallacy.md`, `critiques/misattribution_of_stability_gravity.md`, `tests/test_secondary_axis_rigor.py`
 - **Started:** 2026-09-27
-- **Last verified:** 2026-09-27 (19 focused mechanics/source checks; full Python suite 5,540 passed, 29 skipped, 132 deselected, 92.88% src coverage; 80 final mechanics/audit contracts pass. Three final Quarto routes, 12/12 light/dark mobile/desktop cases, zero serious/critical axe violations. All 117 math expressions loaded; 17 display equations visually checked at both widths. Ruff, Black 728 files, title audit 638 sources and mypy 91 sources pass. Eight exact evidence paths bound to 33a8c83a; terminology scope correction and repeated 12-case browser gate pass.)
+- **Last verified:** 2026-09-27 (19 focused mechanics/source checks; full Python suite 5,540 passed, 29 skipped, 132 deselected, 92.88% src coverage; 80 final mechanics/audit contracts pass. Three final Quarto routes, 12/12 light/dark mobile/desktop cases, zero serious/critical axe violations. All 117 math expressions loaded; 17 display equations visually checked at both widths. Ruff, Black 728 files, title audit 638 sources and mypy 91 sources pass. Eight exact evidence paths bound to 919f6d18; terminology scope correction and repeated 12-case browser gate pass. Final static CI passes after naming the unchanged gravity test constant.)
 - **Summary:** Separates free spin, supported motion, gravity and collision; supplies checked inertia-rate and moment comparisons; removes unsupported equipment and neural claims from article and critiques.
-- **Next step:** Complete protected PR #4468 CI/merge and verify live publication.
+- **Next step:** PR #4468 merged at 54d73e39 with all checks green; verify deployment and live publication.
 
 ### DL-#4465 · Contraction Development Workspace
 
