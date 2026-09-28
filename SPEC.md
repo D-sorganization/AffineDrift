@@ -405,3 +405,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-27 | #4463 | Correct Volume III biological model selection, compliance, muscle power, constrained redundancy, inertial accounting and excitation-affine assumptions with independent numerical and print verification. |
 | 2026-09-27 | #4465 | Correct the contraction development manuscript and eight companion chapters: finite-horizon Riccati bounds, coordinate metrics, sampled certification and golf-model assumptions; verify source math and excluded-route local previews. |
+| 2026-09-27 | #4467 | Correct secondary-axis putter mechanics and both critiques: free/forced spin, inertia origins, gravity, impulse response and evidence-limited design comparisons with independent numerical checks. |

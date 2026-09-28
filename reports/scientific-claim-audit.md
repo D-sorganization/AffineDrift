@@ -49,7 +49,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/rotation-induced-spin.html` | `articles/rotation-induced-spin.qmd` | 1 |
 | `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
 | `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 1 |
-| `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 2 |
+| `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
@@ -166,9 +166,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/index.html` | `critiques/index.qmd` | 2 |
 | `/critiques/input_dependent_boundary_conditions.html` | `critiques/input_dependent_boundary_conditions.md` | 1 |
 | `/critiques/intentional_constraint_collapse.html` | `critiques/intentional_constraint_collapse.md` | 1 |
-| `/critiques/intermediate_axis_fallacy.html` | `critiques/intermediate_axis_fallacy.md` | 1 |
+| `/critiques/intermediate_axis_fallacy.html` | `critiques/intermediate_axis_fallacy.md` | 8 |
 | `/critiques/lie_bracket_formalism_overreach.html` | `critiques/lie_bracket_formalism_overreach.md` | 1 |
-| `/critiques/misattribution_of_stability_gravity.html` | `critiques/misattribution_of_stability_gravity.md` | 1 |
+| `/critiques/misattribution_of_stability_gravity.html` | `critiques/misattribution_of_stability_gravity.md` | 8 |
 | `/critiques/normative_ambiguity_drift-bibliography.html` | `critiques/normative_ambiguity_drift-bibliography.md` | 1 |
 | `/critiques/normative_ambiguity_drift.html` | `critiques/normative_ambiguity_drift.md` | 1 |
 | `/critiques/nullspace_interpretation.html` | `critiques/nullspace_interpretation.md` | 1 |
@@ -292,7 +292,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Reviewed | — | None | None | 0 |
 | `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 0 |
-| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 6 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
 | `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 4 |
@@ -409,9 +409,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-6a44de6b950d` | `/critiques/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0ab621690d62` | `/critiques/input_dependent_boundary_conditions.html` | Reviewed | — | None | `crit-input-dependent-boundary-conditions` | 0 |
 | `ad-route-79c31d3309d2` | `/critiques/intentional_constraint_collapse.html` | Reviewed | — | None | `crit-intentional-constraint-collapse` | 0 |
-| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy` | 0 |
+| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy` | 2 |
 | `ad-route-3ec6541286cf` | `/critiques/lie_bracket_formalism_overreach.html` | Reviewed | — | None | `crit-lie-bracket-formalism-overreach` | 0 |
-| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Reviewed | — | None | `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Reviewed | — | None | `crit-misattribution-stability-gravity` | 2 |
 | `ad-route-604586932847` | `/critiques/normative_ambiguity_drift-bibliography.html` | Reviewed | — | None | None | 0 |
 | `ad-route-822a7bae7977` | `/critiques/normative_ambiguity_drift.html` | Reviewed | — | None | `crit-normative-ambiguity-drift` | 0 |
 | `ad-route-250a52029db1` | `/critiques/nullspace_interpretation.html` | Reviewed | — | None | `crit-nullspace-interpretation` | 0 |

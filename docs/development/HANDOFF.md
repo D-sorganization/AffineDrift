@@ -1,3 +1,42 @@
+# Secondary-Axis Review — #4467
+
+Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+Branch: `fix/4467-secondary-axis`, including remote main e48c9e00.
+The complete corpus goal is resumed; never create draft PRs.
+
+- Biology #4463 is published through PR #4464 at 855b6fa6. Its publication
+  receipt verifies deployment 36378430500, artifact 10952174815, 960/960 site
+  cases and frozen source/PDF downloads.
+- Contraction #4465 merged through PR #4466 at e48c9e00; lease/presence released.
+  Excluded development routes remain excluded/redirected.
+- #4467 corrects the complete article and both critiques: free/forced spin,
+  moving origins, inertia, gravity, impulse response and unsupported equipment
+  inference. Both critiques are responded, without empirical resolution.
+- Source/annotation checkpoint 3a136679; evidence checkpoint 33a8c83a binds
+  eight exact paths for three full route reviews and ten findings. Reports are
+  secondary-axis-review.md and secondary-axis-render-verification.json under
+  reports/technical-review/. The atlas authority hash changes but its projection
+  is unchanged; the derived research-release digest follows that dependency.
+  Other generated critique headers change without new unrelated-page reviews.
+  Static CI identified an unqualified related-reading ZTCF acronym; the caption
+  now declares pointwise/forward scope. Its separate navigation receipt verifies
+  that this is the only source change since the full mathematical/render review.
+- Validation: 19 mechanics/source checks; full suite 5,540 passed, 29 skipped,
+  132 deselected, 92.88% src coverage; 80 final audit/mechanics contracts pass.
+  Browser 12/12, axe severe findings zero; 117 math expressions loaded and all
+  17 display equations checked at both widths. Ruff, Black, titles and mypy pass.
+- Six supplied-text-only agy Gemini 3.8 Flash calls ran in three parallel pairs.
+  Lead adjudicated every suggestion; no tool/permission bypass. Dispatcher #1800
+  still blocks unattended agy tool access.
+- Active session technical-review-20260927-secondary; lease expires 07:05 UTC.
+  Regular PR #4468 is open with protected auto-merge armed.
+  Next complete CI/merge and verify live publication.
+  Stage explicit files; preserve old untracked QA and close owned preview sessions.
+- Corpus index: 152 full audits remain, plus whole-book reconciliation.
+  Continue after this batch; the complete goal is not achieved.
+
+---
+
 # Contraction Workspace Review and Biology Publication Follow-Up
 
 Current branch: `fix/4465-contraction-workspace`; worktree:
@@ -7,8 +46,7 @@ The user resumed the complete corpus goal and authorized parallel agy Gemini
 
 - Biology PR #4464 merged to remote main at
   `855b6fa6e3e7c2eeb764452ac77b45b1fe24e926`; all required PR checks passed.
-  Deployment 36378430500 is still building. Verify its live manifest, artifact
-  digest and four biology route cases before recording publication as complete.
+  Deployment 36378430500 succeeded; the publication receipt above verifies it.
 - #4465 corrects the complete contraction development manuscript, consolidated
   QMD, all eight chapters and hub. These eleven indexed sources are excluded
   from production rendering; their old routes redirect to the newer series.
@@ -32,12 +70,13 @@ The user resumed the complete corpus goal and authorized parallel agy Gemini
 - Reports: `reports/technical-review/contraction-workspace-review.md` and
   `contraction-workspace-render-verification.json`. Local PDF/screenshots/logs
   remain in `docs/development/technical-review/`; stage explicit product paths.
-- Regular PR #4466 is open with protected auto-merge armed. Citation keys were
+- Regular PR #4466 merged at e48c9e00; its lease/presence are released. Citation keys were
   aligned with the shared bibliography after the structural CI gate found five
   uses it could not resolve. Native compilation and the structural gate pass (excluding an old untracked generated LaTeX preview).
-- Next: complete protected CI/merge, then continue the
+- Next: continue the
   corpus. The current CSV count is 154 full audits pending, plus whole-book
   reconciliation. Do not infer completion from this batch or a passing site gate.
+
 
 ---
 
