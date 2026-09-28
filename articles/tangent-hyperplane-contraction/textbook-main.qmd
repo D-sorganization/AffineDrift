@@ -1,7 +1,7 @@
 ---
 title: "Contraction Metrics and Tangent-Space Optimal Control"
-description: "This manuscript develops a unified framework for nonlinear control based on tangent-space dynamics, contraction metrics, and Riccati-based local optimal..."
-subtitle: "A Geometry-First Textbook Draft for High-Dimensional Nonlinear Control"
+subtitle: "Performance, Error Decay, and the Golf Swing"
+description: "A conditional bridge between optimal-control value, perturbation decay, and finite-time club delivery."
 author: "Dieter Olson"
 date: last-modified
 bibliography: references.bib
@@ -13,264 +13,210 @@ categories:
 - tangent-space
 ---
 
-::: {.callout-warning}
-### Draft Document
+::: {.callout-note}
+## Development Status
 
-This is a working draft textbook manuscript. Content is incomplete, proofs may be sketched rather than complete, and sections are actively revised. This document is published for transparency and collaborative development, not as a finished reference.
+This source workspace is excluded from the site's current render list. The [chapter hub](index.html) and [long LaTeX manuscript](manuscript/tangent-hyperplane-contraction.tex) organize the same argument at different levels of detail. Mathematical examples below are manufactured checks, not observations of golfers or claims of empirical validation.
 :::
-
-### Abstract
-
-This manuscript develops a unified framework for nonlinear control based on tangent-space dynamics, contraction metrics, and Riccati-based local optimal control. The central claim is that local stability certificates and local optimality recursions act on the same infinitesimal objects. The document is structured for textbook development: every major section includes qualitative framing, non-technical explanation, geometric interpretation, and mathematical details.
 
 ## Roadmap and Scope
 
-### Introduction and Qualitative Purpose
+A fast, accurate modeled swing and a repeatable swing are different achievements. An objective specifies desirable delivery; a robustness analysis asks how nearby executions respond to initial differences, disturbances and modeling error. Local optimal control and contraction theory share first-variation dynamics, but a shared notation is not a proof that their guarantees coincide.
 
-The purpose is to establish a mathematically coherent and physically interpretable bridge between contraction analysis and trajectory optimization. The practical objective is not only proof-level correctness but usable design guidance for complex, many-dimensional systems.
-
-### In Laymans Terms
-
-We want controllers that do two things at once: make motion good and make motion reliable. This draft shows that both goals can be addressed through one set of local error equations.
-
-### Geometric Intuition
-
-The dynamics evolve on a manifold, but perturbations evolve in tangent spaces. A metric defines local distances in those tangent spaces. Contraction and optimal control each shape how these tangent vectors evolve.
+The chain matters: mechanical and actuator assumptions determine the state dynamics; observations constrain the estimated state and parameters; an output map defines delivery; weights and limits define the optimization; the implemented feedback and uncertainty determine whether a stability claim is justified. Inferring a neural strategy from a successful optimization skips several of these steps.
 
 ## Contraction Theory Primer
 
-### Introduction and Qualitative Purpose
+### A Differential Inequality With a Domain
 
-Contraction theory asks whether nearby trajectories converge to each other exponentially. This trajectory-to-trajectory perspective is especially useful for time-varying motions and underactuated tasks where equilibrium-only analysis is too narrow [@lohmiller1998contraction; @forni2014contraction].
-
-### In Laymans Terms
-
-If you run the same movement twice with tiny differences, contraction says those differences should fade quickly.
-
-### Geometric Intuition
-
-Contraction is local shrinking of tangent vectors under a metric, integrated along trajectories into global distance decay.
-
-### Differential Condition
-
-For
+Let $\dot x=F(x,t)$ be the complete closed-loop field in a fixed chart, continuously differentiable in $x$, with unique solutions on the interval of interest. Let $A=D_xF$ and let the differentiable metric satisfy $0<\underline m I\preceq M(x,t)\preceq\overline m I$. For a first variation $\delta x$,
 
 $$
-\dot x = f(x,t),
+V=\delta x^\top M\delta x,\qquad
+\dot M=\partial_tM+\sum_i F_i\partial_{x_i}M,
 $$
 
-with variational dynamics
-
 $$
-\dot{\delta x} = A(x,t)\,\delta x, \qquad A(x,t)=\frac{\partial f}{\partial x}(x,t),
+\dot V=\delta x^\top(A^\top M+MA+\dot M)\delta x.
 $$
 
-a metric $M(x,t)\succ0$ is contracting with rate $\lambda>0$ if
+If $A^\top M+MA+\dot M\preceq-2\lambda M$ for $\lambda>0$ throughout a forward-invariant, path-connected region, transporting admissible connecting curves through the common flow gives
 
 $$
-A^\top M + MA + \dot M \preceq -2\lambda M.
+d_{M,t}(x_1(t),x_2(t))\leq e^{-\lambda t}d_{M,0}(x_1(0),x_2(0)).
 $$
 
-A rigorous trajectory-distance result also requires forward invariance, geodesic regularity, and uniform bounds on $M$.
+Here $d_{M,t}$ is the infimum of metric lengths over piecewise smooth curves contained in the region. The comparison concerns the same field and feedback policy, or the same prescribed input [@lohmiller1998contraction; @forni2014contraction].
+
+### What the Metric Bound Does and Does Not Imply
+
+The initial intrinsic distance is at most $\sqrt{\overline m}$ times the initial Euclidean separation if the straight connecting segment lies in the region, for example when it is Euclidean convex. Under that extra condition, define $e(t)=x_1(t)-x_2(t)$ to obtain
+
+$$
+\|e(t)\|\leq\sqrt{\overline m/\underline m}\,e^{-\lambda t}\|e(0)\|.
+$$
+
+Geodesic convexity alone does not justify this straight-segment step. Without it, retain the intrinsic initial distance.
+
+A continuing disturbance difference also changes the conclusion. In a fixed Euclidean metric on a convex region with symmetric Jacobian at most $-\lambda I$, additive mismatch bounded by $\bar d$ gives
+
+$$
+\|e(t)\|\leq e^{-\lambda t}\|e(0)\|+
+\frac{\bar d}{\lambda}(1-e^{-\lambda t}),
+$$
+
+provided the executions and connecting segments remain in the region. Contraction can bound residual error; it does not erase ongoing disturbances.
 
 ## Tangent-Space Dynamics and Local Linearization
 
-### Introduction and Qualitative Purpose
-
-Local linearization is the exact infinitesimal description of deviation dynamics, not merely a computational trick. It separates nominal motion from perturbation behavior.
-
-### In Laymans Terms
-
-At each instant, we zoom in enough that nonlinear behavior looks linear for tiny errors.
-
-### Geometric Intuition
-
-Linearization defines a map between neighboring tangent spaces along a nominal trajectory.
-
-### Continuous-to-Discrete Convention
-
-For sampled-data control, define
+For $\dot x=f(x,t)+\sum_j b_j(x,t)u_j$ and feasible nominal $(x^\star,u^\star)$,
 
 $$
-x_{k+1}=f_d(x_k,u_k)=\Phi_h(x_k,u_k),
+\begin{aligned}
+\dot{\delta x}&=A(t)\delta x+B(t)\delta u,\\
+A&=D_xf+\sum_j u_j^\star D_xb_j,\\
+B&=[b_1,\ldots,b_m].
+\end{aligned}
 $$
 
-where $\Phi_h$ is the time-$h$ flow map. Linearization along $(x_k^\star,u_k^\star)$ yields
+evaluated on the nominal solution. With feedback, differentiate the composed field as well. A state-dependent input field contributes to the state Jacobian: $\dot x=x^2+xu$ has $A=2x^\star+u^\star$.
+
+For sampling interval $h$ and zero-order hold, define $t_k=kh$ and $F_k(x,u)=\Phi(t_k+h;t_k,x,u)$. Then
 
 $$
-\delta x_{k+1}=A_k\delta x_k+B_k\delta u_k,
+\begin{aligned}
+x_{k+1}&=F_k(x_k,u_k),\\
+\delta x_{k+1}&=A_k\delta x_k+B_k\delta u_k.
+\end{aligned}
 $$
 
-with Jacobians of $f_d$.
+where $A_k=D_xF_k$, $B_k=D_uF_k$. Absolute time is essential for nonautonomous dynamics: integrating $\dot x=tu$ gives $F_k=x+u(t_kh+h^2/2)$. Derivatives are exact first variations; finite deviations incur higher-order remainder, generally starting at second order. No universal percentage threshold controls that remainder.
 
 ## Local Optimal Control: LQR and DDP
 
-### Introduction and Qualitative Purpose
+### The Finite-Horizon Problem
 
-LQR and DDP use tangent dynamics to compute feedback corrections that balance state error and control effort.
-
-### In Laymans Terms
-
-Take a hard nonlinear problem, solve a local linear-quadratic version, update, and repeat.
-
-### Geometric Intuition
-
-The Riccati matrix is local curvature of cost-to-go in tangent space.
-
-### Canonical Riccati Recursion
-
-Given $\delta x_{k+1}=A_k\delta x_k+B_k\delta u_k$, minimize
+For linear perturbation dynamics, positive-semidefinite $Q_k,Q_N$, positive-definite $R_k$, and no state/input constraints, minimize
 
 $$
-J=\frac{1}{2}\delta x_T^\top Q_T\delta x_T + \frac{1}{2}\sum_{k=0}^{T-1}
-\left(\delta x_k^\top Q_k\delta x_k + \delta u_k^\top R_k\delta u_k\right).
+\begin{aligned}
+J&=\frac12\delta x_N^\top Q_N\delta x_N+\sum_{k=0}^{N-1}\ell_k,\\
+\ell_k&=\frac12(\delta x_k^\top Q_k\delta x_k+\delta u_k^\top R_k\delta u_k).
+\end{aligned}
 $$
 
 The backward recursion is
 
 $$
 \begin{aligned}
-S_T &= Q_T,\\
-K_k &= (R_k+B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k,\\
-S_k &= Q_k + A_k^\top S_{k+1}A_k - A_k^\top S_{k+1}B_k(R_k+B_k^\top S_{k+1}B_k)^{-1}B_k^\top S_{k+1}A_k.
+S_N&=Q_N,\\
+H_k&=R_k+B_k^\top S_{k+1}B_k,\\
+K_k&=H_k^{-1}B_k^\top S_{k+1}A_k,\\
+S_k&=Q_k+A_k^\top S_{k+1}A_k-K_k^\top H_kK_k.
 \end{aligned}
 $$
 
+The optimum is $\delta u_k=-K_k\delta x_k$. Induction gives $S_k\succeq0$ and $H_k\succ0$, without requiring controllability for the unconstrained finite horizon. Positive definiteness of $S_k$ is a separate matter. Numerical implementations should solve linear systems instead of explicitly inverting $H_k$.
+
+The Bellman step includes future cost. Repeating a greedy one-step minimization is not the backward recursion. Likewise, squared input effort is not automatically mechanical work or physiological expenditure.
+
+### The Nonlinear Algorithm Has Additional Terms
+
+DDP expands $\mathcal Q(x,u)=\ell(x,u)+V^+(F(x,u))$. The quadratic contains cost gradients, cross derivatives, propagated value curvature and contractions of the value gradient with dynamics Hessians. If $\mathcal Q_{uu}\succ0$, the local step has both a feedforward term $-\mathcal Q_{uu}^{-1}\mathcal Q_u$ and a feedback term $-\mathcal Q_{uu}^{-1}\mathcal Q_{ux}\delta x$. Full DDP retains dynamics curvature; iLQR commonly omits it. Input constraints, regularization and nonlinear line-search rollouts change the implemented procedure [@tassa2014control]. A successful backward pass is not a stability certificate.
+
 ## Stability-Optimality Duality
 
-### Introduction and Qualitative Purpose
+### The Exact Identity and Its Conditions
 
-In linear-quadratic settings, the Riccati matrix can be interpreted both as value-function curvature and as a contraction metric candidate for closed-loop tangent dynamics.
-
-### In Laymans Terms
-
-The same matrix that tells you future cost can also prove errors shrink.
-
-### Geometric Intuition
-
-Optimization and contraction both specify a quadratic geometry on perturbations; duality occurs when those geometries coincide.
-
-### Decay Statement
-
-For closed-loop perturbations $\delta x_{k+1}=(A_k-B_kK_k)\delta x_k$ and $V_k=\delta x_k^\top S_k\delta x_k$,
+For $A_{c,k}=A_k-B_kK_k$, completing the square gives
 
 $$
-V_{k+1}-V_k = -\delta x_k^\top(Q_k+K_k^\top R_kK_k)\delta x_k.
+S_k=Q_k+K_k^\top R_kK_k+A_{c,k}^\top S_{k+1}A_{c,k}.
 $$
 
-Under uniform bounds
+Thus, with $V_k=\delta x_k^\top S_k\delta x_k$ (twice the optimal cost),
 
 $$
-Q_k+K_k^\top R_kK_k\succeq \alpha I,\quad \underline s I\preceq S_k\preceq \overline s I,
+\begin{aligned}
+V_{k+1}-V_k&=-\delta x_k^\top L_k\delta x_k,\\
+L_k&=Q_k+K_k^\top R_kK_k.
+\end{aligned}
 $$
 
-we obtain exponential decay in both $V_k$ and Euclidean norm.
+If $\underline s I\preceq S_k\preceq\overline s I$ with $\underline s>0$ on $0\leq k\leq N$, and $L_k\succeq\alpha I$ on $0\leq k<N$, where $0<\alpha<\overline s$, then
+
+$$
+\begin{aligned}
+V_{k+1}&\leq\rho V_k,\quad \rho=1-\alpha/\overline s<1,\\
+\|\delta x_k\|^2&\leq\frac{\overline s}{\underline s}\rho^k\|\delta x_0\|^2.
+\end{aligned}
+$$
+
+The bound ends at the horizon. Infinite-time conclusions require a suitable continuation. Regional nonlinear contraction requires an inequality throughout the asserted domain, not only the linearized trajectory. These distinctions are especially relevant to the short, event-terminated downswing.
+
+### A Counterexample and a Valid Bound
+
+Take scalar $A=2$, $B=1$, $Q=R=1$, one step and $Q_1=0$. Then $S_0=1$, $K_0=0$, $S_1=0$. Starting from one, state error doubles while $V$ drops from one to zero. The value identity holds, but the terminal form is not a metric.
+
+For a contrasting manufactured case, take $A=B=Q=R=1$, two steps and $Q_2=1$. The solution is $S=(1.6,1.5,1)$, $K=(0.6,0.5)$. Initial error one yields states $(1,0.4,0.2)$ and $V=(1.6,0.24,0.04)$. The uniform choices $\underline s=1$, $\overline s=1.6$, $\alpha=1.25$ give $\rho=0.21875$. The actual ratios $0.15$ and $1/6$ satisfy this conservative bound.
+
+### Continuous and Infinite Horizons
+
+The differential Riccati equation is $-\dot S=Q+A^\top S+SA-SBR^{-1}B^\top S$, with a specified terminal cost. It yields $\dot V=-\delta x^\top(Q+K^\top RK)\delta x$ when the $\dot S$ term is included. For constant data, stabilizability and detectability are standard sufficient assumptions for a stabilizing algebraic solution. That solution can be semidefinite: $A=-1$, $B=0$, $Q=0$, $R=1$ gives $S=0$ despite stable dynamics. To use $S$ as a strict contraction metric, verify positivity and a strict relative decay bound separately.
 
 ## Coordinate-Free and Riemannian Formulation
 
-### Introduction and Qualitative Purpose
+For a task $y=h(x)$ with Jacobian $J$ and $W\succ0$, the pullback $J^\top WJ$ is positive definite exactly when $J$ has full column rank. A low-dimensional delivery output generally leaves a nullspace in the full mechanical state. That can be appropriate for task optimization but does not supply a full-state metric.
 
-High-dimensional mechanical and robotic systems often evolve on manifolds. Coordinate-free statements avoid misleading chart artifacts.
+A completion $M=J^\top WJ+\varepsilon M_0$ adds a declared background metric with compatible units. It penalizes additional directions and changes the objective. Under $x=x(z)$ and $T=D_zx$, transform both parts by $M_z=T^\top M_xT$. Reusing an identity matrix in every chart silently changes this geometry.
 
-### In Laymans Terms
-
-Some state spaces are curved, and we need rulers that respect that curvature.
-
-### Geometric Intuition
-
-A metric assigns an inner product to each tangent space; pullbacks transfer task-space priorities into configuration space.
-
-### Pullback Metric Caveat
-
-For task map $y=h(x)$,
+An ordinary coordinate Hessian is a different object:
 
 $$
-M(x)=J(x)^\top W(h(x))J(x).
+D_z^2V=T^\top D_x^2V\,T+\sum_i(D_xV)_iD_z^2x_i.
 $$
 
-This is positive definite only if $J$ has full column rank. Otherwise, use regularization or nullspace completion to obtain a true metric.
+For $V=x^2/2$ and $x=\log z$, the Hessian $(1-\log z)/z^2$ is negative at $z=e^2$, while the pullback of the positive form $1$ is $1/z^2$. At a stationary point the extra term vanishes. A covariant Hessian requires a chosen connection and still need not be positive. A nonlinear value Hessian cannot simply be called a Riemannian metric.
 
 ## Contraction-Constrained Computation
 
-### Introduction and Qualitative Purpose
+### State the Actual Convex Problem
 
-Controller synthesis can be framed as optimization under contraction inequalities, turning robustness goals into explicit constraints.
+For a fixed LTI model, negative feedback and fixed rate $\lambda$, the substitution $X=M^{-1}\succ0$, $Y=KX$ transforms the metric inequality into
 
-### In Laymans Terms
+$$
+AX+XA^\top-BY-Y^\top B^\top+2\lambda X\preceq0.
+$$
 
-Do not only optimize performance. Also require a mathematical shrinking guarantee.
+It is an LMI in $X,Y$; recover $K=YX^{-1}$ [@boyd1994]. Joint optimization of rate and metric is not this fixed-rate convex problem. Actuator and conditioning limits need additional checks.
 
-### Geometric Intuition
+### Distinguish Sampled Residuals From a Certificate
 
-The optimizer selects both control action and local measurement geometry that bends perturbations toward the target trajectory.
+The continuous residual includes the total metric derivative along the implemented field. For a discrete closed-loop map $F_k$, the condition instead uses $DF_k^\top M(F_k(x),k+1)DF_k-\rho M(x,k)\preceq0$.
 
-### Representative Programs
-
-- LTI metric-gain synthesis via LMIs [@boyd1994].
-- Time-varying trajectory synthesis with stage-wise constraints.
-- Sampled nonlinear metric search with autodiff and constrained optimization.
+Sampling either residual supplies observations at those samples. The polynomial $f(x)=x-\tfrac43x^3$ has derivative $-3$ at both endpoints of $[-1,1]$ but $+1$ at zero. A certificate needs regional coverage, for example a validated residual Lipschitz bound with sampling radius and margin, or another domain proof. Monte Carlo success cannot substitute for it. Control contraction metric synthesis also needs regularity and differential-feedback integrability; consult the original conditions and their amendment, especially for changing input rank [@manchester2017ccm; @manchester2017amendment].
 
 ## High-Dimensional Applications
 
-### Introduction and Qualitative Purpose
-
-Applications in biomechanics and robotics motivate the framework by coupling strong performance demands with disturbance rejection requirements.
-
-### In Laymans Terms
-
-In complex motions, you need speed and precision without losing repeatability.
-
-### Geometric Intuition
-
-Many-dimensional motion is a curve in a large state manifold. Metrics encode which deviation directions matter most for success.
-
-### Example Mechanical Form
+A mechanical model
 
 $$
-H(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau + J_c(q)^\top\lambda.
+\begin{aligned}
+&H(q)\ddot q+C(q,\dot q)\dot q+g(q)\\
+&\qquad=B_\tau(q)u_\tau+J_c(q)^\top f_c
+\end{aligned}
 $$
 
-This structure supports physically grounded tangent-space analysis and task-relevant metric shaping.
+must be closed with actuator and contact equations before forming the state dynamics. The state includes $(q,\dot q)$ and possibly activation, tendon, filter or estimator states. Fixed contact modes permit compatible constrained variations; impacts require reset and event-time sensitivity. Muscle dynamics is not categorically passive, and model dimension is not a count of segment masses.
+
+For golf, select a delivery map with a clear event convention, propagate uncertainty through it, and report which input changes are feasible. Cost weights, mechanical energy, task stiffness and contraction metrics are distinct quantities. A sequence of segment speed peaks does not by itself establish power transfer. A modeled optimum does not identify a golfer's neural feedback law.
+
+Computational cost depends on dimensions, horizon, structure, derivatives, solver and hardware. There is no universal real-time cutoff at ten or twenty degrees of freedom. Report a benchmark for the actual implementation and distinguish numerical feasibility from empirical model accuracy.
 
 ## Implementation and Validation Checklist
 
-### Introduction and Qualitative Purpose
-
-A textbook treatment must be reproducible. This section defines minimum standards for derivation quality, numerics, and verification.
-
-### In Laymans Terms
-
-Every new equation should answer: what does it mean physically, and how would we test it?
-
-### Geometric Intuition
-
-For each contribution, identify the tangent object, the metric, and the claimed decay/optimality property.
-
-### Checklist
-
-1. Verify linearization against finite differences.
-2. Track conditioning of Riccati factors.
-3. Log contraction residual spectra along trajectories.
-4. Stress-test under model mismatch and contact variation.
-5. State assumptions explicitly before every theorem-level claim.
+Verify the derivative implementation, Bellman identities, matrix conditioning, terminal conditions, feasible inputs and nonlinear rollout. Then verify metric bounds, residual margins, invariance and the stated domain. Finally compare meaningful measured perturbation and delivery responses, including uncertainty and held-out outcomes. The companion [validation chapter](chapters/08-implementation-and-validation.html) makes these evidence steps explicit.
 
 ## Conclusion
 
-### Introduction and Qualitative Purpose
-
-This draft establishes the core architecture for a full textbook on nonlinear control via tangent-space and contraction perspectives.
-
-### In Laymans Terms
-
-The same local error geometry can guide design and certify stability.
-
-### Geometric Intuition
-
-Trajectory, tangent perturbations, and metric are the minimal geometric triad for unifying nonlinear stability and optimality.
-
-### Next Expansion Targets
-
-1. Full proof chapter for discrete and continuous duality.
-2. Worked numerical chapter with complete reproducible experiments.
-3. Hybrid/contact chapter with mode-dependent metrics.
-4. Extended chapter on estimation and identification under affine structure.
+The useful bridge is conditional: a value calculation may provide a metric candidate, and a verified inequality may turn it into an error bound. Mechanics determines the dynamics, task choice determines the cost, and uncertainty determines how far the conclusion can be trusted. Keeping those links explicit strengthens the argument about the golf swing without turning an elegant mathematical model into an unsupported claim about human control.

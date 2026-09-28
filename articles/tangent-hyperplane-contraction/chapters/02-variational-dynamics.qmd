@@ -1,52 +1,49 @@
 ---
 title: "Chapter 2 - Variational Dynamics and Linearization"
-description: "When completed, this chapter will include proofs for the following claims. Standard references in the interim:"
+description: "Define full input-dependent Jacobians, feasible nominal paths, and sampled flow maps before analyzing perturbations."
 bibliography: ../references.bib
 ---
 
-::: {.callout-warning}
-## Chapter Outline — In Progress
+## Which Dynamics Are Being Differentiated?
 
-This chapter is currently a **structural outline**. The key concepts are identified and the geometric intuition is sketched, but full mathematical development, proofs, and worked examples are in progress. Treat the content below as a detailed table of contents rather than a complete chapter.
-
-::: {.callout-note}
-## Proof References for Key Results
-
-When completed, this chapter will include proofs for the following claims. Standard references in the interim:
-
-- **Euler-Lagrange equations from variational principle:** Goldstein (2002) *Classical Mechanics*, §2.1; Abraham & Marsden (1978) *Foundations of Mechanics*, §3.4.
-- **Tangent-space variational equations:** Agrachev & Sachkov (2004) *Control Theory from the Geometric Viewpoint*, §4.1.
-- **Metric evolution under feedback:** Lohmiller & Slotine (1998) §2; Manchester & Slotine (2017) "Control Contraction Metrics," *IEEE Trans. Automat. Control* 62(6).
-:::
-:::
-
-
-## What Happens to a Small Perturbation as It Flows Along a Nominal Path?
-
-A skier carves a perfect line down a mogul field. Now imagine a friend starts one meter to the left. Does the sideways distance grow, shrink, or stay constant? The answer depends on the slope's curvature. The curvature at each point is captured by a single matrix—the Jacobian of the vector field with respect to the state. This is the bridge from "what the full system does" to "how small deviations behave." This chapter formalizes that intuition.
-
-## Introduction and Qualitative Purpose
-
-This chapter formalizes infinitesimal dynamics and shows how continuous and discrete local models are constructed around nominal trajectories.
-
-## In Laymans Terms
-
-Even if the full system is nonlinear, tiny errors evolve according to a linear rule that we can compute and exploit.
-
-## Geometric Intuition
-
-Linearization gives the local transport rule between tangent spaces along a curve.
-
-## Key Equations
+In a local state chart, let $x\in\mathbb R^n$, $u\in\mathbb R^m$ and
 
 $$
-\dot{\delta x} = A(x,t)\delta x + B(x,t)\delta u,
+\dot x=F(x,u,t)=f(x,t)+\sum_{j=1}^m b_j(x,t)u_j.
 $$
 
+Choose a feasible nominal solution $(x^\star(t),u^\star(t))$. The first variation is
+
 $$
-\delta x_{k+1} = A_k\delta x_k + B_k\delta u_k.
+\begin{aligned}
+\dot{\delta x}&=A(t)\delta x+B(t)\delta u,\\
+A&=D_xf+\sum_j u_j^\star D_xb_j,\\
+B&=[b_1,\ldots,b_m].
+\end{aligned}
 $$
 
-## Design Relevance
+with every derivative evaluated on that nominal solution. State-dependent input fields contribute to $A$. For $\dot x=x^2+xu$, the correct scalar Jacobian is $2x^\star+u^\star$; at $(x^\star,u^\star)=(2,3)$ it is $7$, not $4$.
 
-The local maps $A$ and $B$ quantify sensitivity and control authority, and they are the immediate inputs to LQR, DDP, and contraction checks.
+If the implemented command is $u=\pi(x,t)$, differentiate the complete field $F(x,\pi(x,t),t)$. Delays, filters and actuator states can require an augmented state; the nominal open-loop Jacobian is not automatically the feedback Jacobian.
+
+## Sampling Is a Modeling Choice
+
+For period $h>0$, start time $t_k=kh$, and a zero-order hold,
+
+$$
+x_{k+1}=F_k(x_k,u_k)=\Phi(t_k+h;t_k,x_k,u_k).
+$$
+
+Then $A_k=D_xF_k$ and $B_k=D_uF_k$ give
+
+$$
+\delta x_{k+1}=A_k\delta x_k+B_k\delta u_k.
+$$
+
+A nonautonomous flow retains absolute start time. For $\dot x=tu$, exact integration yields $F_k=x_k+u_k(t_kh+h^2/2)$. With $h=0.2$, $u_k=3$, the increments are $0.06$ at start time zero and $0.66$ at start time one. These are synthetic arithmetic examples.
+
+## From First Variation to Finite Error
+
+The differential of the flow maps one tangent space into another. In charts the displayed matrices represent that map; they need not be interpreted as subtracting vectors at unrelated base points. Finite state differences incur a remainder. Check numerical derivatives over a useful range of step sizes and compare finite perturbations against nonlinear rollout. A derivative check verifies implementation locally; it does not establish a region of validity.
+
+For golf, event timing matters. Comparing both swings at the same clock time and comparing both at impact are different output maps. Include event sensitivity before attributing a difference in club delivery to a particular state or command.
