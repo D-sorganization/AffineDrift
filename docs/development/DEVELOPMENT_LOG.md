@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4465 · Contraction Development Workspace
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4466
 - **Issue:** #4465 (corpus #4021; epic #4009)
 - **Branch:** `fix/4465-contraction-workspace`
 - **Paths:** `articles/tangent-hyperplane-contraction/`, `tests/test_contraction_workspace_rigor.py`, `reports/technical-review/contraction-workspace-*`
 - **Started:** 2026-09-27
 - **Last verified:** 2026-09-27 (14 focused checks pass after six source RED failures; 5,519 full-suite passes with two temporary Playwright root-hygiene failures, resolved and all six hygiene tests pass; 92.88% src coverage. Content lint 131 passed/four skipped. Ruff, Black, title audit and mypy pass. Native 15-page PDF visually checked; ten standalone renders and twenty browser cases pass.)
 - **Summary:** Corrects the full development manuscript, consolidated QMD, eight chapters and hub; separates optimal cost from contraction, supplies counterexamples and explicit domain/coordinate/contact assumptions. Existing production exclusions and redirects remain intact.
-- **Next step:** Open regular PR and complete protected CI/merge. Review and render receipts preserve source hashes; eleven indexed sources have full source review, with 154 full technical audits still pending plus whole-book reconciliation.
+- **Next step:** Complete protected CI/merge for #4466. Citation keys now match shared BibTeX entries; native compilation and the structural gate pass (excluding an old untracked generated LaTeX preview). Review and render receipts preserve source hashes; eleven indexed sources have full source review, with 154 full technical audits still pending plus whole-book reconciliation.
 
 ### DL-#4463 · Biological Model Selection
 

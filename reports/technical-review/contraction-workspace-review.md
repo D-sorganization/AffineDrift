@@ -125,3 +125,9 @@ without overfull boxes or undefined-reference warnings. The built-in editor
 compiler was unavailable (platform standard-directory error); native compilation
 is the evidence. PDF, screenshots and raw logs remain local QA, not a new public
 download. Production render exclusions and redirects remain unchanged.
+
+The first CI static gate could not resolve five uses of local inline-bibliography
+keys. Aligned all seven LaTeX reference keys with the shared BibTeX entries and
+added the checked LQR entry. Native compilation and the baseline-aware
+structural gate pass with the old untracked proximal-distal generated LaTeX
+preview excluded; the argument and displayed references are unchanged.

@@ -32,7 +32,10 @@ The user resumed the complete corpus goal and authorized parallel agy Gemini
 - Reports: `reports/technical-review/contraction-workspace-review.md` and
   `contraction-workspace-render-verification.json`. Local PDF/screenshots/logs
   remain in `docs/development/technical-review/`; stage explicit product paths.
-- Next: commit and open a regular #4465 PR, protected CI/merge, then continue the
+- Regular PR #4466 is open with protected auto-merge armed. Citation keys were
+  aligned with the shared bibliography after the structural CI gate found five
+  uses it could not resolve. Native compilation and the structural gate pass (excluding an old untracked generated LaTeX preview).
+- Next: complete protected CI/merge, then continue the
   corpus. The current CSV count is 154 full audits pending, plus whole-book
   reconciliation. Do not infer completion from this batch or a passing site gate.
 

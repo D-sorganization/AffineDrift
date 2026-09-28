@@ -83,7 +83,7 @@ The remaining sections follow this sequence:
 \section{Contraction Theory Primer}
 
 \subsection{Introduction and Qualitative Purpose}
-Contraction theory asks whether trajectories of the same time-varying vector field converge toward each other. Regional contraction controls all admissible connecting perturbations in that region, which is more information than a linearization at one equilibrium. It is useful for moving references, provided the feedback law, inputs, domain and time interval are specified \citep{LohmillerSlotine1998,ForniSepulchre2014}.
+Contraction theory asks whether trajectories of the same time-varying vector field converge toward each other. Regional contraction controls all admissible connecting perturbations in that region, which is more information than a linearization at one equilibrium. It is useful for moving references, provided the feedback law, inputs, domain and time interval are specified \citep{lohmiller1998contraction,forni2014contraction}.
 
 Initial-condition differences decay under a contraction certificate. Continuing mismatched disturbances generally leave a nonzero error bound; they do not disappear merely because the nominal dynamics contracts. Parameter uncertainty also requires a bound on its effect or a certificate covering the uncertainty set.
 
@@ -259,7 +259,7 @@ If $\mathcal Q_{uu}\succ0$, the unconstrained quadratic step is
 \delta u=-\mathcal Q_{uu}^{-1}\mathcal Q_u
  -\mathcal Q_{uu}^{-1}\mathcal Q_{ux}\delta x.
 \]
-The first term is a feedforward update. iLQR commonly omits the dynamics-Hessian terms; full DDP retains them. A line search, regularization and nonlinear rollout are part of the algorithm, not a proof of contraction. Input bounds require a constrained subproblem and can change the local gain. A nonlinear value Hessian can be indefinite \citep{Tassa2014}.
+The first term is a feedforward update. iLQR commonly omits the dynamics-Hessian terms; full DDP retains them. A line search, regularization and nonlinear rollout are part of the algorithm, not a proof of contraction. Input bounds require a constrained subproblem and can change the local gain. A nonlinear value Hessian can be indefinite \citep{tassa2014control}.
 
 \section{Stability-Optimality Duality}
 
@@ -342,7 +342,7 @@ with local quadratic density $\frac12\dx^\top Q\dx + \frac12\du^\top R\du$, the 
 -\dot S = Q + A^\top S + SA - SBR^{-1}B^\top S.
 \label{eq:dre}
 \end{equation}
-The finite-horizon equation has terminal condition $S(T)=Q_T$; time-varying $Q(t)\succeq0$, $R(t)\succ0$ are allowed. For constant data, stabilizability of $(A,B)$ and detectability of $(Q^{1/2},A)$ are standard sufficient conditions for the stabilizing infinite-horizon solution $S\succeq0$ of the algebraic Riccati equation (ARE) \citep{TedrakeLQR}
+The finite-horizon equation has terminal condition $S(T)=Q_T$; time-varying $Q(t)\succeq0$, $R(t)\succ0$ are allowed. For constant data, stabilizability of $(A,B)$ and detectability of $(Q^{1/2},A)$ are standard sufficient conditions for the stabilizing infinite-horizon solution $S\succeq0$ of the algebraic Riccati equation (ARE) \citep{tedrake2026lqr}
 \begin{equation}
 Q + A^\top S + SA - SBR^{-1}B^\top S = 0.
 \label{eq:are}
@@ -405,7 +405,7 @@ D_z^2 V=T^\top D_x^2V\,T+\sum_i (D_xV)_i D_z^2x_i.
 \]
 For $V=x^2/2$, $x=\log z$, the Hessian in $z$ is $(1-\log z)/z^2$, whereas the pullback of the positive form $1$ is $1/z^2$. At $z=e^2$ their signs differ. At a stationary point the extra term vanishes; more generally a covariant Hessian requires a chosen connection and still need not be positive. Transforming an already specified quadratic form is different from recomputing a coordinate Hessian.
 
-Coordinate formulas for first variation remain legitimate on a chart. The differential of the flow maps between tangent spaces; no arbitrary subtraction of vectors at unrelated base points is required. Under time-varying chart Jacobians, the transformed dynamics includes the corresponding derivative term, which cancels with the transformed metric derivative in the contraction inequality \citep{ForniSepulchre2014}.
+Coordinate formulas for first variation remain legitimate on a chart. The differential of the flow maps between tangent spaces; no arbitrary subtraction of vectors at unrelated base points is required. Under time-varying chart Jacobians, the transformed dynamics includes the corresponding derivative term, which cancels with the transformed metric derivative in the contraction inequality \citep{forni2014contraction}.
 
 \section{Contraction-Constrained Design and Computation}
 
@@ -429,7 +429,7 @@ For fixed $\lambda$, set $X=M^{-1}\succ0$ and $Y=KX$. Congruence by $X$ gives
 \[
 AX+XA^\top-BY-Y^\top B^\top+2\lambda X\preceq0.
 \]
-This is an LMI in $(X,Y)$, with $K=YX^{-1}$ \citep{Boyd1994}. Joint optimization of $\lambda$ and $X$ introduces a product; rate feasibility can instead be tested at fixed candidate rates. Conditioning, gain and actuator limits need their own constraints and checks.
+This is an LMI in $(X,Y)$, with $K=YX^{-1}$ \citep{boyd1994}. Joint optimization of $\lambda$ and $X$ introduces a product; rate feasibility can instead be tested at fixed candidate rates. Conditioning, gain and actuator limits need their own constraints and checks.
 
 \paragraph{Trajectory Case (Time-Varying).}
 For a feasible sampled nominal path, use $(A_k,B_k)$ and horizon-coupled discrete metric inequalities. Joint trajectory, gain and metric optimization is generally nonconvex; verify the resulting candidate against the intended domain and input constraints.
@@ -440,7 +440,7 @@ For an actual discrete closed-loop map $F_k$, the residual is
 R_k(x)=D F_k(x)^\top M(F_k(x),k+1)D F_k(x)-\rho M(x,k),
 \qquad 0<\rho<1.
 \]
-This is different from substituting discrete Jacobians into a continuous-time inequality. A sampled nonlinear search produces a candidate: the continuous residual $A_{\rm cl}^\top M+MA_{\rm cl}+\dot M+2\lambda M$ must be nonpositive throughout the asserted domain, with $A_{\rm cl}$ the Jacobian of the complete implemented feedback field and $\dot M$ evaluated along that field. For control contraction metric synthesis, integrability and regularity conditions are additional requirements; the amendment to the original result matters when input rank changes \citep{ManchesterSlotine2017,ManchesterChaffey2017}.
+This is different from substituting discrete Jacobians into a continuous-time inequality. A sampled nonlinear search produces a candidate: the continuous residual $A_{\rm cl}^\top M+MA_{\rm cl}+\dot M+2\lambda M$ must be nonpositive throughout the asserted domain, with $A_{\rm cl}$ the Jacobian of the complete implemented feedback field and $\dot M$ evaluated along that field. For control contraction metric synthesis, integrability and regularity conditions are additional requirements; the amendment to the original result matters when input rank changes \citep{manchester2017ccm,manchester2017amendment}.
 
 For example, $\dot x=x-\frac43x^3$ has derivative $-3$ at $x=\pm1$ but $+1$ at zero. Successful endpoint checks miss an expanding interior. A validated Lipschitz bound $L$ on a symmetric residual, a covering radius $r$, and sampled margins $R_i\preceq-\mu I$ can extend a sampled result when $Lr<\mu$, with numerical error also included. Without such coverage or another domain proof, report sampled evidence only.
 
@@ -539,40 +539,40 @@ A trajectory, its tangent perturbations, and a metric-defined ruler form a minim
 \bibliographystyle{plainnat}
 \begin{thebibliography}{99}
 
-\bibitem[Lohmiller and Slotine(1998)]{LohmillerSlotine1998}
+\bibitem[Lohmiller and Slotine(1998)]{lohmiller1998contraction}
 Lohmiller, W. and Slotine, J. J. E. (1998).
 On contraction analysis for non-linear systems.
 \emph{Automatica}, 34(6), 683--696.
 
-\bibitem[Manchester and Slotine(2017)]{ManchesterSlotine2017}
+\bibitem[Manchester and Slotine(2017)]{manchester2017ccm}
 Manchester, I. R. and Slotine, J. J. E. (2017).
 Control contraction metrics: Convex and intrinsic criteria for nonlinear feedback design.
 \emph{IEEE Transactions on Automatic Control}, 62(6), 3046--3053.
 \url{https://arxiv.org/abs/1503.03144}.
 
-\bibitem[Manchester and Chaffey(2017)]{ManchesterChaffey2017}
+\bibitem[Manchester and Chaffey(2017)]{manchester2017amendment}
 Manchester, I. R. and Chaffey, T. L. (2017).
 An amendment to ``Control contraction metrics: Convex and intrinsic criteria for nonlinear feedback design.''
 \url{https://arxiv.org/abs/1711.08128}.
 
-\bibitem[Forni and Sepulchre(2014)]{ForniSepulchre2014}
+\bibitem[Forni and Sepulchre(2014)]{forni2014contraction}
 Forni, F. and Sepulchre, R. (2014).
 A differential Lyapunov framework for contraction analysis.
 \emph{IEEE Transactions on Automatic Control}, 59(3), 614--628.
 \url{https://arxiv.org/abs/1208.2943}.
 
-\bibitem[Tassa et~al.(2014)]{Tassa2014}
+\bibitem[Tassa et~al.(2014)]{tassa2014control}
 Tassa, Y., Mansard, N., and Todorov, E. (2014).
 Control-limited differential dynamic programming.
 In \emph{IEEE International Conference on Robotics and Automation}, 1168--1175.
 \url{https://roboti.us/lab/papers/TassaICRA14.pdf}.
 
-\bibitem[Boyd et~al.(1994)]{Boyd1994}
+\bibitem[Boyd et~al.(1994)]{boyd1994}
 Boyd, S., El Ghaoui, L., Feron, E., and Balakrishnan, V. (1994).
 \emph{Linear Matrix Inequalities in System and Control Theory}.
 SIAM.
 
-\bibitem[Tedrake(2026)]{TedrakeLQR}
+\bibitem[Tedrake(2026)]{tedrake2026lqr}
 Tedrake, R. (2026).
 Linear quadratic regulators. In \emph{Underactuated Robotics}.
 \url{https://underactuated.mit.edu/lqr.html}. Accessed 2026-09-27.
