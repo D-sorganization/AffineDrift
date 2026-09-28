@@ -114,7 +114,7 @@ def make_follow_energy() -> tuple[Path, Path]:
     axis.text(
         5.5,
         3.65,
-        "Follow the Transfer, Not Just the Speed Peaks",
+        "Follow the Interactions and the Energy Ledger",
         ha="center",
         fontsize=16,
         fontweight="bold",
@@ -123,7 +123,8 @@ def make_follow_energy() -> tuple[Path, Path]:
     axis.text(
         5.5,
         0.8,
-        "Each connection can carry power, store energy, dissipate energy, or redirect the load.",
+        "Ground contact can redirect momentum without supplying work.\n"
+        "Other interfaces may transfer, store or dissipate mechanical energy.",
         ha="center",
         color=GRAY,
     )
