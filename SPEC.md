@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
 | 2026-09-29 | #4617 | Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617). |
 | 2026-09-24 | #4458 | Mark four stale development-log entries (DL-#4429, DL-#4253, DL-#4406, DL-#1595) as shipped after their PRs merged. |
 | 2026-09-23 | #4445 | Enforce the published deferred catalog through the canonical validator bundle and hook; sync format-specific agent guidance. |

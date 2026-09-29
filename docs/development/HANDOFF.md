@@ -1,62 +1,59 @@
-# Implementation Handoff — Deploy Website Verification Fix (#4617)
+# Implementation Handoff — Use One Equation-Numbering Scheme (#4580)
 
 ## Identity
 
-- Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/issue-4617-deploy-website-resources-books-error
-- Baseline commit: d53290cd92d8c90acd33ae91945c643bb9531296
-- Implementation commit: SELF
-- Pull request: not created
-- Governing issue/epic: #4617
+- Repository: `D-sorganization/AffineDrift`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift`
+- Branch: `fix/web-11-1-one-equation-numbering-scheme-4580`
+- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
+- Implementation commit: `SELF`
+- Pull request: #4611
+- Governing issue/epic: #4580 (epic #4586)
 
 ## Objective and Status
 
-- Objective: Fix Deploy Website failure on route /resources/resources-books.html and prevent non-first-party network errors from failing verification.
-- Status: in progress
-- Completed: Removed 18 fragile external book covers and fallback onerror 404 handler from resources-books.qmd; updated scripts/public-site-browser-noise.js to filter Failed to load resource: net::ERR_ console noise; added test coverage in tests/public-site-verifier.test.js.
-- Remaining: Verification suite completion, PR creation, and agent lease release.
+- Objective: Standardize equation numbering on Quarto `{#eq-}` syntax and disable MathJax auto-numbering tags (#4580).
+- Status: ready for review / auto-merge
+- Completed: Converted raw `\label{eq:...}` across 5 files (`ch05_optimal_control.qmd`, `ch09_parallel_mechanisms_constrained_dynamics.qmd`, `ch03b_induced_acceleration_biomechanics.qmd`, `volume2_content.qmd`, `superposition.qmd`) to Quarto `{#eq-}` syntax, configured `tags: 'none'` in `_includes/mathjax-loader.html`, added regression test suite `tests/test_equation_cross_references.py`, merged main, and updated `SPEC.md`.
+- Remaining: Push to origin and monitor PR #4611 CI / auto-merge.
 
 ## Files and Decisions
 
 - Files changed:
-  - `resources/resources-books.qmd`: Removed fragile external book cover media slots and fallback onerror handlers from all 18 cards to make all 31 book cards uniform text cards and prevent network and 404 failures.
-  - `scripts/public-site-browser-noise.js`: Added filter for `Failed to load resource: net::ERR_` in `isActionableConsoleError` to prevent third-party network flakiness from failing verification.
-  - `tests/public-site-verifier.test.js`: Added test assertions verifying `isActionableConsoleError` ignores `net::ERR_` noise while preserving actionable errors.
-  - `data/trust/claim_audit_inventory.json` & generated trust registries: Regenerated claim audit evidence digests following resource book source update.
-  - `SPEC.md`: Added change-log row for #4617.
+  - `_includes/mathjax-loader.html`: Changed `tags: 'ams'` to `tags: 'none'`.
+  - `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`: Converted equations to `{#eq-}`.
+  - `articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd`: Converted equations to `{#eq-}`.
+  - `articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.qmd`: Converted equations to `{#eq-}`.
+  - `articles/The_Geometry_of_Motion/quarto/volume2_content.qmd`: Converted equations to `{#eq-}`.
+  - `articles/superposition.qmd`: Converted equations to `{#eq-}`.
+  - `tests/test_equation_cross_references.py`: Added test suite verifying no raw LaTeX `\label{eq:}` or `\ref{eq:}` remain and `tags: 'none'` is set.
+  - `SPEC.md`: Added change-log row for #4611.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: First-party network failures remain caught by `onRequestFailed` and `navigateWithRetry`, so filtering Chromium console's `net::ERR_` does not hide first-party regressions while protecting the verification gate against intermittent external timeouts or unreachable CDNs.
+- Key decisions: Using Quarto's native `{#eq-...}` syntax enables consistent equation numbering across HTML, PDF, and EPUB targets while preventing MathJax collision when rendering client-side.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
-- `npx jest` — PASS (25 suites passed, 420 passed)
-- `python -m ruff check .` — PASS (All checks passed)
-- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
-- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
-- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
-- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
-- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `pytest tests/test_equation_cross_references.py` — PASS (4 passed)
+- `python -m ruff check tests/test_equation_cross_references.py` — PASS
+- `python -m black --check --line-length 100 tests/test_equation_cross_references.py` — PASS
 - `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\handoff_validator.py` — PASS
 
 ## Blockers and Risks
 
 - Blockers: none
-- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+- Risks/assumptions: none
 
 ## Next Steps
 
-1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
-2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
-3. Release agent lease for #4617.
+1. Push commit to origin.
+2. Verify PR #4611 checks pass and auto-merge merges into main.
 
 ## Change Log
 
-- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
-- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+- `SELF` — Add SPEC.md and HANDOFF.md updates to pass spec freshness on PR #4611 (#4580).
+- `994cd2be` — Standardize equation numbering on Quarto {#eq-} syntax and disable MathJax auto-tags (#4580).
 
 ---
 
