@@ -58,6 +58,21 @@
   violations across other stylesheets unrelated to this change; `resources.css`
   itself has zero.
 
+- Unrelated fix required to push at all: this host's global Python had a
+  broken `PySide6` install (`ImportError: DLL load failed while importing
+  QtCore`). `pytest-qt`'s autodetection (`qt_compat.py::_guess_qt_api`) only
+  catches `ModuleNotFoundError`, not `ImportError`, so probing PySide6 crashed
+  `pytest_configure` with an uncaught `INTERNALERROR`, which failed the
+  `pytest-unit` pre-push hook for every push attempt — reproduced directly with
+  `python -m pytest tests/unit -x -q --tb=short -m "not slow and not
+  integration"` outside the hook too, so it is not hook-specific. Fixed with a
+  one-line addition to `tests/conftest.py`
+  (`os.environ.setdefault("PYTEST_QT_API", "pyqt6")`), next to the existing
+  `QT_QPA_PLATFORM` line, pinning to the binding this repo actually installs
+  and skipping the crashing autodetection entirely. This is a pre-existing,
+  host-environment issue unrelated to the datasets page; called out here and
+  in the PR body rather than silently folded into the feature diff.
+
 ## Next Steps
 
 1. None outstanding for #4549 from this session.
