@@ -1,3 +1,80 @@
+# Implementation Handoff — Contributor and Reviewer Guide (#4607)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4607
+- Branch: claude/issue-4607
+- Baseline commit: 46df5059
+- Implementation commit: SELF
+- Pull request: not created (draft PR to be opened this session)
+- Governing issue/epic: #4607 (part of #4610)
+
+## Objective and Status
+
+- Objective: Add a reader-facing "Contributor and Reviewer Guide" page covering how to propose a
+  correction, critique a claim, contribute a dataset, or review a chapter, linked from Collaborate.
+- Status: in_review
+- Completed: New page `pages/contributor-guide.qmd` routing each of the four paths to its GitHub
+  issue template; linked from `pages/collaborate.qmd` (intro sentence + Related Articles); pytest
+  coverage added.
+- Remaining: Open the draft PR.
+
+## Files and Decisions
+
+- Files changed:
+  - `pages/contributor-guide.qmd` (new): Reader-facing guide with four sections (correction,
+    critique, dataset, chapter review), each linking a GitHub issue template via
+    `issues/new?template=<name>.md` plus the relevant supporting doc (Rigor Guide, Critiques index,
+    Datasets page, Content Review Protocol).
+  - `pages/collaborate.qmd`: Added a link to the new guide in the "Collaborate on the Repository"
+    card and a Related Articles entry.
+  - `tests/test_contributor_reviewer_guide.py` (new): Verifies the guide exists, links each issue
+    template, the referenced templates exist in `.github/ISSUE_TEMPLATE/`, and that Collaborate
+    links to the guide.
+  - `tests/test_page_style_discipline.py`: Added `pages/contributor-guide.qmd` to `CLEAN_PAGES`.
+  - `SPEC.md`: Added change-log row for #4607.
+- Key decisions: WEB-03.4 ("What This Shows / What It Does Not Show" block, `tier:strong`) does not
+  exist anywhere in the codebase yet, so the acceptance criterion "linked from every WEB-03.4 block"
+  is not yet actionable — only the "linked from Collaborate" half is implemented. No navbar entry
+  was added; the page follows the existing convention of orphan pages (e.g.
+  `pages/development-roadmap.qmd`) reached only via inbound content links, keeping the diff
+  surgical. Reused existing `.article-section` / `.article-category` / `.article-card` /
+  `.provenance-note` CSS primitives already used by `pages/tools.qmd` — no new CSS.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `python3 -m pytest tests/test_contributor_reviewer_guide.py -v` — PASS (7 passed)
+- `python3 -m pytest tests/test_page_style_discipline.py -q` — PASS (133 passed)
+- `python3 -m ruff check tests/test_contributor_reviewer_guide.py tests/test_page_style_discipline.py` — PASS
+- `python3 -m black --check --line-length 100 tests/test_contributor_reviewer_guide.py tests/test_page_style_discipline.py` — PASS
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 -m pytest --cov -q` — full-suite run in progress at handoff time; see PR body for final counts.
+
+## Blockers and Risks
+
+- Blockers: none. The "linked from every WEB-03.4 block" acceptance criterion cannot be satisfied
+  because WEB-03.4 has not been implemented by any repository yet (separate `tier:strong` issue);
+  noted in the PR body as a forward-looking follow-up rather than blocking this PR.
+- Risks/assumptions: GitHub's `issues/new?template=<file>.md` query parameter is assumed stable
+  (documented GitHub behavior); no site-wide link checker was found that needed updating (confirmed
+  via `scripts/check_quarto_render_coverage.py` glob-based rendering).
+
+## Next Steps
+
+1. Confirm the full `pytest --cov` run passes at or above the coverage floor.
+2. Commit, push `claude/issue-4607`, and open the draft PR with a `Blocked:`-style note about the
+   deferred WEB-03.4 linkage.
+3. Release agent lease for #4607 once the draft PR is open (per session instructions, lease
+   handling is external to this session).
+
+## Change Log
+
+- SELF — Add reader-facing Contributor and Reviewer Guide page, linked from Collaborate (#4607).
+
+---
+
 # Implementation Handoff — Deploy Website Verification Fix (#4617)
 
 ## Identity

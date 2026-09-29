@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4607 · Contributor and Reviewer Guide on the Site
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4607 (part of #4610)
+- **Branch:** `claude/issue-4607`
+- **Paths:** `pages/contributor-guide.qmd`, `pages/collaborate.qmd`, `tests/test_contributor_reviewer_guide.py`, `tests/test_page_style_discipline.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (`pytest tests/test_contributor_reviewer_guide.py tests/test_page_style_discipline.py` — 140 passed; `ruff check` and `black --check` clean on changed files.)
+- **Summary:** Adds a reader-facing guide routing corrections, claim critiques, dataset contributions, and chapter reviews to their GitHub issue templates, linked from Collaborate. The "linked from every WEB-03.4 block" acceptance criterion is deferred because WEB-03.4 does not exist yet.
+- **Next step:** Open the draft PR.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped

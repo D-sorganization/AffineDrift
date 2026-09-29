@@ -29,6 +29,7 @@ CLEAN_PAGES: tuple[str, ...] = (
     "pages/about.qmd",
     "pages/collaborate.qmd",
     "pages/contact.qmd",
+    "pages/contributor-guide.qmd",
     "pages/overview.qmd",
     "pages/tools.qmd",
     "pages/book-reviews.qmd",
