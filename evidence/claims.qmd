@@ -1,0 +1,60 @@
+---
+title: "Claim Ledger"
+description: "Every registered AffineDrift scientific claim in one place: its plain-language statement, its formal statement, its evidence rung, its falsifiers, its open critiques, and the pages that make it."
+categories:
+  - critique
+---
+
+The rest of the site states scientific claims inline, in running prose, on the
+page that needs them. This page instead collects every claim registered in the
+governed [claim registry](../data/trust/claim_registry.json) in one readable
+ledger: what it says in plain language, what it says formally, which evidence
+rung it currently occupies, what would falsify it, which critiques target it
+and their disposition, and which pages make the claim. It replaces reading the
+raw registry JSON to answer "what does AffineDrift actually claim, and how
+solid is it?"
+
+::: {.callout-warning title="Scientific Authority Boundary"}
+Presentation cannot promote a claim or infer human, coaching, clinical,
+equipment, design, causal, or population authority. A claim's evidence rung
+describes what its declared model and evidence class currently support — not
+that the claim is true of any golfer, population, or real-world outcome.
+:::
+
+## How to Read a Claim Card
+
+Each card below carries a human-readable anchor (for example `#claim-ad-dcr-001`)
+so it can be linked to directly. The **plain-language statement** is a
+non-amplifying summary; the **formal statement** is the exact governed claim
+text and its modal strength (`hypothesis`, `bounded`, `supported`, or
+`established`); the **evidence rung** is the same tier ladder used across the
+site's [evidence presentation summary](../models/research-protocol-readiness.html);
+**falsifiers** are the declared conditions that would refute or materially
+narrow the claim; **critiques** lists every entry in the
+[critique ledger](../critiques/index.html) whose `related_claim_ids` names this
+claim, with its current disposition; and **pages making this claim** lists
+every page that authors or cites it.
+
+{{< include ../_includes/generated/claims-ledger.qmd >}}
+
+## Add or Revise a Claim
+
+Claims are governed data, not prose. Add or revise an entry in
+[`data/trust/claim_registry.json`](../data/trust/claim_registry.json) against
+its [strict schema](../schemas/trust-metadata-v1.schema.json), link any
+critique that concerns it in
+[`data/trust/claim_critique_ledger.json`](../data/trust/claim_critique_ledger.json),
+then regenerate this page and its per-page links:
+
+```powershell
+python -m scripts.generate_claims_ledger
+python -m scripts.generate_claims_ledger --check
+python -m pytest tests/test_claims_ledger.py
+```
+
+## Related Articles
+
+- [Drift, Control Capacity and Golf-Swing Correction](../articles/controllability-drift-ratio.html) — The page that authors claim `ad-dcr-001`.
+- [Critiques & Responses](../critiques/index.html) — Every public critique and its adjudication status.
+- [Research Protocol and Data-Readiness Library](../models/research-protocol-readiness.html) — The companion evidence-readiness ladder for E1–E8 research programs.
+- [Resources Hub](../resources/resources.html) — Bibliography, learning paths, and curated external resources.
