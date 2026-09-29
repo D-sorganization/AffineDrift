@@ -6,8 +6,8 @@
 - Working directory: C:/Users/diete/Repositories/AffineDrift
 - Branch: feat/web-03-3-summary-and-key-takeaways-4508
 - Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
-- Implementation commit: SELF
-- Pull request: #TBD
+- Implementation commit: e7fd6342
+- Pull request: #4631
 - Governing issue/epic: #4508 (epic #4514)
 
 ## Objective and Status
