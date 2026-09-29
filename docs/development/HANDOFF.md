@@ -1,3 +1,56 @@
+# Manifesto Consolidation — #4592
+
+- Repository: `D-sorganization/AffineDrift`, working directory: this worktree (`claude-4592`).
+- Branch `claude/issue-4592`, commit `SELF`; pull request: not created yet at this commit
+  (opening a draft PR immediately after).
+- Governing issue: #4592 (WEB-12.6, part of epic #4594; `tier:cli`, `complexity:routine`).
+- Objective: consolidate `pages/drifter-manifesto.qmd` ("Series Index") and
+  `articles/drifter-manifesto.qmd` ("Single-File Edition") per WEB-02.4: declare
+  one canonical page, correct the miscategorised `critique` label, and clearly
+  label both pages Opinion.
+- Completed work:
+  - Added `opinion` to the controlled category vocabulary
+    (`config/categories.yml`) and changed both pages' `categories:` from
+    `critique` to `opinion`.
+  - `pages/drifter-manifesto.qmd` (the navbar target and Series Index) now
+    carries an explicit "Canonical page" note declaring it the canonical entry
+    point for the Manifesto; `articles/drifter-manifesto.qmd`'s existing
+    "Canonical Version" callout now explicitly says it is a non-canonical
+    companion and labels itself Opinion, matching the "State: Opinion..."
+    banner already on the series index.
+  - Regenerated claim-audit evidence digests
+    (`python -m scripts.regenerate_claim_audit_evidence`) for the files whose
+    bytes changed; `--check` passes.
+  - New test: `tests/test_editorial_and_consistency.py::test_manifesto_is_categorised_opinion_with_one_canonical_page`.
+- Scope decision (recorded for the reviewing frontier agent): full physical
+  retirement of `articles/drifter-manifesto.qmd` (redirects, deleting the
+  duplicate single-file content) is WEB-02.4's own acceptance criterion, and
+  WEB-02.4 itself is `tier:strong`/`judgement:contested`, requiring an
+  owner-approved ADR per family. Retiring the file would also require
+  rewriting roughly ten test files that assert directly against its content
+  (`test_control_affine_scientific_trust.py`,
+  `test_counterfactual_invariance_rigor.py`,
+  `test_manifesto_flexible_foundations.py`, `test_mechanical_claim_contract.py`,
+  `test_modal_pendulum_rigor.py`, `test_longform_mechanics_rigor.py`) plus the
+  site's redirect/sitemap machinery (WEB-02.9). That is out of scope for this
+  `tier:cli`/`complexity:routine` issue. This PR instead formalizes the
+  canonical/non-canonical declaration already implicit in the site's internal
+  linking (every other page already links to `pages/drifter-manifesto.qmd` as
+  the entry point) without deleting content.
+- Validation:
+  - `python3 -m pytest tests/test_editorial_and_consistency.py -q` — 6 passed.
+  - `python3 -m pytest tests/test_site_trust_surface_audit.py tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py tests/test_page_style_discipline.py -q` — all passed.
+  - `python3 -m pytest tests/test_control_affine_scientific_trust.py tests/test_counterfactual_invariance_rigor.py tests/test_manifesto_flexible_foundations.py tests/test_mechanical_claim_contract.py tests/test_modal_pendulum_rigor.py tests/test_longform_mechanics_rigor.py tests/test_formatting_lints.py tests/test_site_link_gate.py -q` — all passed.
+  - `python3 -m pytest -q` (full suite) — all passed (only pre-existing skips).
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` — clean.
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` — passes.
+  - `src.tools.site_link_gate.run_site_gate` — 0 errors, including the new `opinion` category.
+- Next steps: none outstanding for this issue. If the reviewing frontier agent
+  wants full retirement/redirect of the single-file edition, track that as
+  WEB-02.4's per-family ADR work rather than folding it into this issue.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.

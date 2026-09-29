@@ -3,6 +3,8 @@
 import re
 from pathlib import Path
 
+from src.tools.site_page_scan import parse_front_matter
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -150,3 +152,28 @@ def test_editorial_residue_resolved():
     # Unifying geometry phrasing
     tech = (REPO_ROOT / "pages" / "technology.qmd").read_text(encoding="utf-8")
     assert "These three instruments measure dual halves" not in tech
+
+
+def test_manifesto_is_categorised_opinion_with_one_canonical_page():
+    """The Manifesto series index and single-file edition are opinion, not
+    critique, and the site declares one of them canonical (Issue #4592)."""
+    index_path = REPO_ROOT / "pages" / "drifter-manifesto.qmd"
+    single_file_path = REPO_ROOT / "articles" / "drifter-manifesto.qmd"
+    index_text = index_path.read_text(encoding="utf-8")
+    single_file_text = single_file_path.read_text(encoding="utf-8")
+
+    index_front_matter = parse_front_matter(index_text)
+    single_file_front_matter = parse_front_matter(single_file_text)
+    assert index_front_matter["categories"] == ["opinion"]
+    assert single_file_front_matter["categories"] == ["opinion"]
+
+    # The Series Index is the canonical entry point; it says so explicitly
+    # and is clearly labelled Opinion.
+    assert "canonical entry point" in index_text
+    assert "State: Opinion" in index_text
+
+    # The single-file edition explicitly defers to the Series Index as
+    # canonical and is itself labelled Opinion.
+    assert "is a non-canonical companion" in single_file_text
+    assert "../pages/drifter-manifesto.html" in single_file_text
+    assert "opinion piece" in single_file_text.lower()

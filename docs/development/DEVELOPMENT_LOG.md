@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4592 · Consolidate the Manifesto
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit; opening a draft PR immediately after
+- **Issue:** #4592 (WEB-12.6; epic #4594; `tier:cli`, `complexity:routine`)
+- **Branch:** `claude/issue-4592`
+- **Paths:** `pages/drifter-manifesto.qmd`, `articles/drifter-manifesto.qmd`, `config/categories.yml`, `tests/test_editorial_and_consistency.py`, `data/trust/site_trust_surface_audit.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/site-trust-surface-audit.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (focused suites pass: editorial/consistency, trust-surface/claim-audit, page-style, manifesto rigor, formatting lints, site link gate; full suite passes with no failures; ruff/black clean; `regenerate_claim_audit_evidence --check` passes.)
+- **Summary:** Adds `opinion` to the controlled category vocabulary and recategorises both Manifesto pages from `critique`; declares `pages/drifter-manifesto.qmd` the canonical entry point and `articles/drifter-manifesto.qmd` an explicitly non-canonical, Opinion-labelled companion, without deleting either page's content (full retirement is WEB-02.4's own `tier:strong` ADR work).
+- **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped
