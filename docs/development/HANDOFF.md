@@ -186,6 +186,44 @@
 - Blockers/risks: none known. No dependency section on the issue; no "Depends on" blocker.
 - Next steps: open the draft PR (`Fixes #4608`), report the exact full-suite pass count and
   coverage percentage in the PR body, and hand off for frontier review.
+# Standardise the DCR Name — #4583
+
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4583`.
+- Branch: `claude/issue-4583`; base `origin/main`; commit `SELF`; PR not created yet.
+- Governing issue: #4583 ("[WEB-11.5] Standardise the DCR Name"). DCR was
+  expanded three ways ("drift-control ratio", "controllability-drift ratio",
+  "drift-to-control ratio") while its slug (`controllability-drift-ratio`) did
+  not match either its title or its canonical expansion.
+- Completed: standardised every live expansion to "Drift-Control Ratio";
+  renamed `articles/controllability-drift-ratio.qmd` to
+  `articles/drift-control-ratio.qmd` (kept as an `aliases:` redirect target,
+  matching the WEB-02.9 alias pattern); updated all internal links across
+  articles, critiques, config, tests, and JS; updated the trust/audit
+  source-of-truth JSON (`claim_registry.json`, `claim_critique_ledger.json`,
+  `claim_audit_inventory.json` — including its sorted-route position and
+  recomputed `stable_audit_id`, `site_trust_surface_audit.json`); regenerated
+  all derived artifacts (critique annotations, `critique-status.qmd`,
+  `DEFENSE_STRATEGY.md`, `ad-dcr-reachability.qmd` trust panel, claim-audit
+  report, research-readiness library) via their `--check`-verified generator
+  scripts; hand-edited the single affected `sitemap.xml`/`feed.xml` entries
+  rather than doing a full regeneration (which would have touched all 240
+  URLs' unrelated stale `lastmod` dates); added both wrong expansions as
+  permanently banned patterns in `scripts/check_terminology.py` (the
+  "terminology baseline" acceptance criterion).
+- Historical/archival mentions of the old expansions or slug were
+  deliberately left unchanged: `CHANGELOG.md`,
+  `docs/development/terminology-decision-record.md`,
+  `docs/development/website-improvement-draft-issues-2026-09-29.md`,
+  `reports/textbook_editorial_review_2026-04-11.md`,
+  `docs/development/technical-review/REVIEW.md`, `assessments/*`, `.Jules/*`.
+- Validation: `ruff check .` and `black --check --line-length 100 .` clean;
+  targeted suite (11 files: DCR rigor/reachability/event-sensitivity,
+  editorial/consistency, publication markup, scientific trust metadata,
+  research protocol readiness, single-title, formatting lints, terminology,
+  claim audit inventory) — 149 passed; `regenerate_claim_audit_evidence
+--check`, `generate_claim_critique_ledger --check`, `generate_trust_panels
+--check`, and `check_spec_changelog` all pass.
+- Next steps: open the draft PR (`gh pr create --draft`, `Fixes #4583`).
 
 ---
 

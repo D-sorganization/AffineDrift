@@ -424,3 +424,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4576 | Add a Privacy Policy page covering local storage, the service worker, third-party embeds, and analytics per D6; link it from the site footer. |
 | 2026-09-29 | #4582 | Enforce uppercase G(x) for the control-affine input map across the home page, four textbook chapters and 12 critique files; add a baseline-gated pytest notation lint (scripts/check_notation.py). |
 | 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
+| 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |

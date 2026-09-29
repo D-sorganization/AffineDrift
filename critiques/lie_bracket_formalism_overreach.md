@@ -1,19 +1,19 @@
 ---
-title: "Critique: Controllability-Drift Ratio (Formalism Overreach)"
-description: "Critique and response context for Controllability-Drift Ratio (Formalism Overreach) in AffineDrift's control-affine golf-swing framework."
+title: "Critique: Drift-Control Ratio (Formalism Overreach)"
+description: "Critique and response context for Drift-Control Ratio (Formalism Overreach) in AffineDrift's control-affine golf-swing framework."
 ---
 
-## Critique: Controllability-Drift Ratio (Formalism Overreach)
+## Critique: Drift-Control Ratio (Formalism Overreach)
 
 ## Summary of Concern
 
-The article `articles/controllability-drift-ratio.qmd` invokes **Lie Bracket analysis**—a tool specifically designed for checking local accessibility in nonholonomic or underactuated systems—to describe the loss of control in a system that is modeled as **fully actuated** (3-link arm-forearm-club with 3 torques) but **input-saturated**.
+The article `articles/drift-control-ratio.qmd` invokes **Lie Bracket analysis**—a tool specifically designed for checking local accessibility in nonholonomic or underactuated systems—to describe the loss of control in a system that is modeled as **fully actuated** (3-link arm-forearm-club with 3 torques) but **input-saturated**.
 
 The text claims that "As drift increases... $\dim(\mathcal{V}(x)) \longrightarrow 1$". This is mathematically incorrect for a fully actuated system, where the rank of the control distribution (and thus the Lie algebra) remains constant. The loss of control is due to **finite-time reachability bounds** (saturation), not a collapse of the **geometric structure** of the manifold.
 
 ## Location
 
-- **Page:** `articles/controllability-drift-ratio.qmd`
+- **Page:** `articles/drift-control-ratio.qmd`
 - **Section:** 4. Nonlinear Controllability via Lie Brackets
 - **Claims:**
   - "control cannot access or excite these directions" (implies rank loss)
@@ -51,7 +51,7 @@ The text claims that "As drift increases... $\dim(\mathcal{V}(x)) \longrightarro
 ## Editorial Adjudication and Evidence Boundaries
 
 1. **Historical Versus Corrected State:**
-   The historical article text conflated instantaneous control vector fields with state-space rank conditions and made erroneous assertions that "dimension collapses" ($\dim(\mathcal{V}(x)) \to 1$). In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), the invalid claims regarding Lie bracket dimension collapse were excised. The text now distinguishes instantaneous acceleration input distributions from full-state controllability, double-integrator Lie bracket brackets, and reachable set geometries.
+   The historical article text conflated instantaneous control vector fields with state-space rank conditions and made erroneous assertions that "dimension collapses" ($\dim(\mathcal{V}(x)) \to 1$). In the corrected article (`articles/drift-control-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), the invalid claims regarding Lie bracket dimension collapse were excised. The text now distinguishes instantaneous acceleration input distributions from full-state controllability, double-integrator Lie bracket brackets, and reachable set geometries.
 
 2. **Critique Boundary and Counterexamples:**
    While the critique accurately flagged the category error of using local accessibility to model saturation, several assertions in the critique are themselves technically deficient:
