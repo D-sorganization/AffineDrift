@@ -7,7 +7,7 @@
 - Branch: fix/web-01-8-learning-path-contradictions-4493
 - Baseline commit: c72f59e19661f237583ee91e92d2740fffc4c94b
 - Implementation commit: SELF
-- Pull request: #4493
+- Pull request: #4634
 - Governing issue/epic: #4493
 
 ## Objective and Status
