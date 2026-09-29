@@ -10,7 +10,7 @@ AffineDrift/
 ├── articles/                    # Primary theory articles (canonical website content)
 │   ├── theory-part*.qmd         # Core 5-part theory series
 │   ├── affine-nature-golf-swing.qmd
-│   ├── controllability-drift-ratio.qmd
+│   ├── drift-control-ratio.qmd
 │   ├── tangent-hyperplane-articles/   # Tangent hyperplane series (legacy location)
 │   ├── tangent-hyperplane-contraction/ # THC textbook (structured chapters)
 │   └── The_Geometry_of_Motion/        # GoM textbook (LaTeX + Quarto mirror)

@@ -69,6 +69,16 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "Drift-Control Ratio",
     ),
     (
+        r"(?i)Controllability[-\s]Drift\s+Ratio",
+        "DCR expansion",
+        "Drift-Control Ratio",
+    ),
+    (
+        r"(?i)Drift[-\s]to[-\s]Control\s+Ratio",
+        "DCR expansion",
+        "Drift-Control Ratio",
+    ),
+    (
         r"ch:control_affine_decomposition",
         "dangling cross-reference",
         "ch:zero_torque_counterfactual",
