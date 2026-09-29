@@ -5,7 +5,7 @@
 - Repository: `D-sorganization/AffineDrift`
 - Working directory: `C:/Users/diete/Repositories/AffineDrift`
 - Branch: `fix/web-11-1-one-equation-numbering-scheme-4580`
-- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
 - Implementation commit: `SELF`
 - Pull request: #4611
 - Governing issue/epic: #4580 (epic #4586)
@@ -52,7 +52,7 @@
 
 ## Change Log
 
-- `SELF` — Add SPEC.md and HANDOFF.md updates to pass spec freshness on PR #4611 (#4580).
+- `SELF` — Merge main and update HANDOFF.md on PR #4611 (#4580).
 - `994cd2be` — Standardize equation numbering on Quarto {#eq-} syntax and disable MathJax auto-tags (#4580).
 
 ---

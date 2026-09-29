@@ -288,3 +288,84 @@ def test_every_affected_page_includes_its_generated_annotation() -> None:
         include = f"{{{{< include _generated/trust/critique-annotations/{slug}.qmd >}}}}"
         assert include in source
         assert (ANNOTATIONS / f"{slug}.qmd").is_file()
+
+
+def test_every_critique_maps_to_every_page_whose_claim_it_targets() -> None:
+    ledger = _canonical()
+    claims = json.loads(CLAIMS.read_text(encoding="utf-8"))
+    claim_to_page = {
+        claim["claim_id"]: page["source_path"]
+        for page in claims["pages"]
+        for claim in page["claims"]
+    }
+    critiques = _critiques(ledger)
+    targeting_critiques = [c for c in critiques if c.get("related_claim_ids")]
+    assert len(targeting_critiques) > 0
+
+    for critique in targeting_critiques:
+        related = critique.get("related_claim_ids")
+        assert isinstance(related, list)
+        affected = critique.get("affected_pages")
+        assert isinstance(affected, list)
+        for claim_id in related:
+            page_path = claim_to_page[str(claim_id)]
+            assert page_path in affected, (
+                f"{critique['critique_id']} targets claim {claim_id} from {page_path}, "
+                f"but {page_path} is missing from affected_pages"
+            )
+            slug = Path(page_path).stem
+            annotation_file = ANNOTATIONS / f"{slug}.qmd"
+            assert annotation_file.is_file()
+            assert str(critique["critique_id"]) in annotation_file.read_text(encoding="utf-8")
+            page_text = (ROOT / page_path).read_text(encoding="utf-8")
+            assert (
+                f"{{{{< include _generated/trust/critique-annotations/{slug}.qmd >}}}}" in page_text
+            )
+
+    # Negative test: fails closed if a registered claim's page is omitted from affected_pages
+    invalid_ledger = copy.deepcopy(ledger)
+    critique_with_claim = next(c for c in _critiques(invalid_ledger) if c.get("related_claim_ids"))
+    # Set to a valid existing page that is NOT the claim's registered page
+    critique_with_claim["affected_pages"] = ["articles/affine-nature-golf-swing.qmd"]
+    with pytest.raises(LedgerContractError, match="does not include .* in affected_pages"):
+        validate_ledger(invalid_ledger, SCHEMA, CLAIMS)
+
+
+def test_ztcf_and_proximal_distal_pages_carry_critique_annotations() -> None:
+    ledger = _canonical()
+    critique_map = {str(c["critique_id"]): c for c in _critiques(ledger)}
+
+    # ZTCF critiques must affect zero-torque-counterfactual.qmd and theory-part2.qmd
+    for critique_id in (
+        "crit-ztcf-identifiability",
+        "crit-static-fallacy-zvcf",
+        "crit-passive-overshoot-artifact",
+    ):
+        pages = critique_map[critique_id]["affected_pages"]
+        assert isinstance(pages, list)
+        assert "articles/zero-torque-counterfactual.qmd" in pages
+        assert "articles/theory-part2.qmd" in pages
+
+    # Proximal-distal critiques must affect proximal-distal-energy-transfer.qmd
+    for critique_id in (
+        "crit-control-causality-mechanical",
+        "crit-effective-plant-fallacy",
+        "crit-sequencing-lie-bracket-fallacy",
+        "crit-simulation-tautology",
+        "crit-stiffness-pulse-paradox",
+        "crit-ztcf-identifiability",
+    ):
+        pages = critique_map[critique_id]["affected_pages"]
+        assert isinstance(pages, list)
+        assert "articles/proximal-distal-energy-transfer.qmd" in pages
+
+    for slug in (
+        "zero-torque-counterfactual",
+        "theory-part2",
+        "proximal-distal-energy-transfer",
+    ):
+        page_source = (ROOT / f"articles/{slug}.qmd").read_text(encoding="utf-8")
+        assert (
+            f"{{{{< include _generated/trust/critique-annotations/{slug}.qmd >}}}}" in page_source
+        )
+        assert (ANNOTATIONS / f"{slug}.qmd").is_file()
