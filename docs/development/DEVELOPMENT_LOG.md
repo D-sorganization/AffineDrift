@@ -23,7 +23,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** claude
 - **Issue:** #4546 (epic #4552)
-- **PR:** [#TBD](https://github.com/D-sorganization/AffineDrift/pulls) (draft, opening this session)
+- **PR:** [#4618](https://github.com/D-sorganization/AffineDrift/pull/4618) (draft)
 - **Branch:** `claude/issue-4546`
 - **Paths:** `scripts/filters/schema-jsonld.lua`, `tests/test_schema_jsonld.py`, `_quarto.yml`, `_includes/article-schema.html` (deleted), `articles/affine-nature-golf-swing.qmd`, `articles/appendix-applications.qmd`, `books/control-is-motion.qmd`, `resources/resources-datasets.qmd`, `resources/resources-software.qmd`
 - **Started:** 2026-09-29

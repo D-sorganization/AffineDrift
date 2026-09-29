@@ -2,9 +2,8 @@
 
 - Repository: `D-sorganization/AffineDrift`, working directory
   `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4546` (git worktree).
-- Branch `claude/issue-4546`, commit `SELF`; pull request opening this session
-  as a **draft** (see `docs/development/DEVELOPMENT_LOG.md` DL-#4546 for the
-  URL once posted).
+- Branch `claude/issue-4546`, commit `SELF`; pull request
+  [#4618](https://github.com/D-sorganization/AffineDrift/pull/4618) (draft).
 - Governing issue: #4546 (epic #4552), `tier:cli`. Objective: `_includes/article-schema.html`
   was dead (referenced by no page) and broken (`{{< meta >}}` does not expand
   inside a raw HTML include, and its hardcoded author URL was wrong). Replace
