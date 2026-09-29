@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4545 | Enforce verified publication dates, zero date: today, date-source contract, and per-article revision history component (#4545). |
 | 2026-09-29 | #4631 | Implement Plain-Language Summary and Key Takeaways component driven by front matter and styled in print stylesheet (#4508). |
 | 2026-09-29 | #4630 | Align Physics of Golf nomenclature with NOTATION.md autonomous drift and control channel definitions (#4529). |
 | 2026-09-29 | #4524 | Extend critique annotations to ZTCF (zero-torque-counterfactual.qmd, theory-part2.qmd) and proximal-distal (proximal-distal-energy-transfer.qmd) pages, enforcing critique-to-claim page mappings and fail-closed contract (#4524). |

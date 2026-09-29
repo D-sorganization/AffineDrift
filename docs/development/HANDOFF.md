@@ -1,51 +1,59 @@
-# Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
+# Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/web-01-8-learning-path-contradictions-4493
-- Baseline commit: c72f59e19661f237583ee91e92d2740fffc4c94b
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: b6aa4baf87635c3451558596fc4c20f121d5c219
 - Implementation commit: SELF
-- Pull request: #4634
-- Governing issue/epic: #4493
+- Pull request: #4545
+- Governing issue/epic: #4545 (epic #4552)
 
 ## Objective and Status
 
-- Objective: Correct learning-path difficulty contradictions, prerequisites, and chapter references across AffineDrift learning path pages.
-- Status: ready for review / auto-merge
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
 - Completed:
-  - Created single source of truth in `config/learning_paths.yml` specifying duration, weeks, difficulty, and prerequisites.
-  - Aligned `resources/learning-paths.qmd` Quick Navigation table with individual path pages (Control Theory to Advanced, Golf Science to Introductory to Intermediate).
-  - Fixed prerequisite contradiction in `resources/learning-path-foundations.qmd` ("No prerequisites assumed" replaced with "Assumes only high school algebra and trigonometry").
-  - Consolidated duplicate 3Blue1Brown reading entry in Foundations Module 1.
-  - Linked Golf Science Module 1 to exact target chapters (ch28 impact, ch19 drag, ch31 launch) instead of generic "Chapters 1–3".
-  - Aligned Biomechanics schedule to 16 weeks and removed Module 7 / Module 8 week overlap.
-  - Added comprehensive test suite in `tests/test_learning_paths.py` (7 tests).
-  - Regenerated claim audit evidence in `data/trust/claim_audit_inventory.json` and verified with `python -m scripts.regenerate_claim_audit_evidence --check`.
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
   - Added change-log row in `SPEC.md`.
-- Remaining: Commit, create PR, arm auto-merge, and release lease.
+- Remaining: Commit, push, create PR, key SPEC.md row, arm auto-merge, and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `config/learning_paths.yml`: Created single source of truth for learning path metadata.
-  - `resources/learning-paths.qmd`: Updated Quick Navigation difficulty ratings to match detailed path pages.
-  - `resources/learning-path-foundations.qmd`: Fixed subtitle prerequisite contradiction and removed duplicate 3Blue1Brown entry.
-  - `resources/learning-path-golf-science.qmd`: Updated Module 1 reading to link to chapters 28, 19, and 31.
-  - `resources/learning-path-biomechanics.qmd`: Updated subtitle to 16 weeks and Module 8 to Weeks 15–16.
-  - `tests/test_learning_paths.py`: Added consistency and reference regression tests.
-  - `data/trust/claim_audit_inventory.json`: Updated review evidence digest for modified learning-path-biomechanics.qmd.
-  - `SPEC.md`: Added change-log entry for #4493.
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Single source of truth in YAML keeps hub table and individual path pages synchronized; hours/hrs format normalized in tests.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_learning_paths.py` — PASS (7 passed)
-- `python -m ruff check tests/test_learning_paths.py` — PASS
-- `python -m black --check --line-length 100 tests/test_learning_paths.py` — PASS
+- `pytest tests/test_dates_and_history.py` — PASS (16 passed)
+- `python -m scripts.derive_substantive_dates --check` — PASS
+- `python -m ruff check scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `python -m black --check --line-length 100 scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `npm run lint:css` — PASS
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_root_hygiene.py` — PASS
+- `python -m src.tools.site_link_gate` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -56,8 +64,9 @@
 
 ## Next Steps
 
-1. Verify PR #4634 mergeability and arm auto-merge.
-2. Release claim lease.
+1. Commit, push branch, and create PR.
+2. Update SPEC.md with PR number.
+3. Arm auto-merge and release lease.
 
 ## Change Log
 
