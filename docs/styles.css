@@ -272,6 +272,21 @@
  * - Letter spacing
  */
 
+/* Self-hosted heading font (issue #4557): replaces the Google Fonts CDN
+   request so no third-party font host is ever contacted. Single variable
+   woff2 file covering weights 400-700, latin subset (matches the weights
+   previously requested from fonts.googleapis.com). License: OFL, see
+   fonts/playfair-display/OFL.txt. */
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/playfair-display/playfair-display-latin-400-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   /* ========== Font Families ========== */
   --font-family-base: -apple-system, blinkmacsystemfont, "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif;
@@ -3260,6 +3275,65 @@ code span.va {
   margin-top: 0.5rem;
 }
 /* ===== end css/components/evidence-presentation.css ===== */
+/* ===== begin css/components/summary-takeaways.css ===== */
+/* Summary and Key Takeaways Component (WEB-03.3 #4508)
+   Unified block rendering summary-plain and key-takeaways from front matter. */
+
+.summary-takeaways-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-neutral-200);
+  border-left: 4px solid var(--color-primary-light);
+  border-radius: 6px;
+  color: var(--text-primary);
+}
+
+.summary-plain-block,
+.key-takeaways-block {
+  margin: 0;
+}
+
+.summary-plain-title,
+.key-takeaways-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-plain-block p,
+.summary-plain-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.key-takeaways-list,
+.key-takeaways-block ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.key-takeaways-list li,
+.key-takeaways-block li {
+  margin-bottom: 0.35rem;
+}
+
+.key-takeaways-list li:last-child,
+.key-takeaways-block li:last-child {
+  margin-bottom: 0;
+}
+/* ===== end css/components/summary-takeaways.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the
@@ -3745,6 +3819,16 @@ main.content .reading-time-estimate span,
 
 #quarto-content.page-layout-article main.content {
   max-width: 100%;
+}
+
+/* Constrain prose to a comfortable reading measure (60-75ch, issue #4557).
+   Quarto wraps each heading's content in <section class="level2"> (etc.) for
+   @sec- crossrefs, so a descendant selector is required here: a direct-child
+   selector would miss nearly all body paragraphs on long-form pages. */
+#quarto-content.page-layout-article #quarto-document-content p,
+#quarto-content.page-layout-article #quarto-document-content ul,
+#quarto-content.page-layout-article #quarto-document-content ol {
+  max-width: var(--prose-width);
 }
 
 /* Publication title shell. The title, description, and metadata stack in one

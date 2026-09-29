@@ -1,3 +1,137 @@
+# Implementation Handoff — Typography and Reading Comfort (#4557)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4557
+- Branch: claude/issue-4557
+- Baseline commit: 69f9f9b8
+- Implementation commit: SELF
+- Pull request: not created
+- Governing issue/epic: #4557 (epic #4560)
+
+## Objective and Status
+
+- Objective: Meet the two acceptance criteria on #4557 — (1) prose measured within a 60-75
+  character reading width at 1440px, and (2) no font requests to third parties.
+- Status: ready for PR
+- Completed:
+  - Found that the existing `--prose-width: 75ch` token only constrained a handful of
+    hand-authored full-layout pages (`.main-content-area > p`, `.article-body > p`); the
+    vast majority of long-form content (everything under `articles/**` and `books/**`, which
+    renders through Quarto's stock `#quarto-content.page-layout-article` template) had no
+    prose-width constraint at all, and the existing selectors used a direct-child combinator
+    that would have missed nested paragraphs anyway (Quarto wraps each heading's content in
+    `<section class="level2">` etc. for `@sec-` crossrefs).
+  - Added a new descendant-selector rule in `styles.css` targeting
+    `#quarto-content.page-layout-article #quarto-document-content p/ul/ol`, which covers
+    standard article/book pages without touching the existing full-layout page rules.
+  - Self-hosted the Playfair Display heading font: downloaded the OFL-licensed latin
+    variable-woff2 (weights 400-700) and its `OFL.txt` license from Google Fonts' own CDN
+    into `fonts/playfair-display/`, added a local `@font-face` in
+    `css/tokens/typography.css`, removed the `fonts.googleapis.com`/`fonts.gstatic.com`
+    `<link>` tags and CSP allowances from `_includes/site-head.html` and
+    `_templates/latex_article.html`, added a `<link rel="preload">` for the font, and
+    registered `fonts/` in `_quarto.yml` `resources:` so it is copied to `docs/fonts/` at
+    render time (mirrors the existing `js/` entry).
+  - Allowlisted the new top-level `fonts/` directory in `scripts/check_root_hygiene.py`.
+  - Regenerated `docs/styles.css` via `scripts/bundle_css.py` (it was already stale at
+    baseline from an earlier merge; this run picks up that pre-existing drift too, since the
+    bundle step is a whole-file regeneration, not something that can be applied partially).
+  - Added `tests/test_typography_reading_comfort.py` (7 tests, TDD: confirmed RED before the
+    fix, GREEN after) following the repo's established text-based source-contract pattern
+    (`tests/test_responsive_layout_contract.py`).
+- Remaining: Submit PR, arm auto-merge, release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `styles.css`: new prose-width descendant-selector rule for standard article pages.
+  - `css/tokens/typography.css`: local `@font-face` for Playfair Display.
+  - `_includes/site-head.html`: removed Google Fonts `<link>`s, tightened CSP, added font
+    preload.
+  - `_templates/latex_article.html`: removed Google Fonts `<link>`s (legacy LaTeX-to-HTML
+    generator template, used by `src/tools/latex_to_html.py`).
+  - `_quarto.yml`: added `fonts/` to `resources:`.
+  - `fonts/playfair-display/playfair-display-latin-400-700.woff2`,
+    `fonts/playfair-display/OFL.txt`: new self-hosted font + license.
+  - `scripts/check_root_hygiene.py`: allowlisted `fonts/`.
+  - `docs/styles.css`: regenerated bundle (includes the pre-existing stale
+    `summary-takeaways.css` component from an earlier merge, plus this issue's changes).
+  - `tests/test_typography_reading_comfort.py`: new TDD test suite.
+  - `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, `docs/development/HANDOFF.md`: PR
+    change-log row and durable state.
+- Key decisions:
+  - Scoped the new prose-width rule to `#quarto-content.page-layout-article` only (not a
+    blanket `#quarto-document-content p` rule) to avoid touching full-layout custom pages
+    (resources/models/home), which already have their own prose-width handling where the
+    page author opted in, and whose wider grid/card layouts I could not visually re-verify
+    (see Blockers/Risks).
+  - Left `--prose-width: 75ch` unchanged (it is the existing token, at the top of the
+    60-75ch target the issue specifies).
+  - Did not touch `tests/e2e/smoke.spec.js`'s `!request.url().includes("google")` failed-request
+    allowance — it's a broader existing exclusion not solely about fonts; flagged as a
+    follow-up below instead of changed in this surgical diff.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python3 -m pytest tests/test_typography_reading_comfort.py -v` — 7/7 PASS (confirmed RED
+  before the fix, GREEN after)
+- `python3 -m pytest tests/test_responsive_layout_contract.py tests/test_css_bundle.py tests/test_minify_deploy_assets.py tests/test_public_site_manifest.py -v` — 39/39 PASS
+- `python3 -m pytest tests/ -k "root_hygiene or hygiene"` — 6/6 PASS
+- `python3 -m scripts.check_css_architecture` — PASS
+- `python3 -m scripts.check_styles_budget` — PASS (3344/3400 lines, 46/212 `!important`)
+- `python3 scripts/bundle_css.py --check` — PASS (after regenerating)
+- `python3 -m scripts.check_root_hygiene` — PASS
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 -m ruff check scripts/check_root_hygiene.py tests/test_typography_reading_comfort.py` — PASS
+- `python3 -m black --check --line-length 100 scripts/check_root_hygiene.py tests/test_typography_reading_comfort.py` — PASS
+- `python3 -m pytest --cov` (full suite) — run in background; see PR for final pass count.
+- `npx jest` — could not run: `jest-environment-jsdom` is not installed in this sandbox
+  (pre-existing environment gap, unrelated to this change).
+- Playwright e2e / full-site render — could not run: the `quarto` CLI is blocked by this
+  sandbox's permission policy, and `docs/**/*.html` is gitignored (no locally rendered
+  pages to serve). The acceptance criteria are verified via the source-contract test above
+  instead; CI's e2e lane renders the full site and will exercise the real DOM.
+
+## Blockers and Risks
+
+- Blockers: none for the stated acceptance criteria.
+- Risks/assumptions:
+  - The new prose-width rule could not be visually verified in a rendered browser (see
+    Validation). It is a `max-width` cap only (never widens anything), scoped to
+    `#quarto-content.page-layout-article`, so the realistic worst case is unchanged
+    rendering on pages that don't use that layout class.
+  - Epic #4560's board note says WEB-08.6 has no listed dependency, but epic #4579 (E10)
+    separately notes "WEB-10.5 (embed and font vendor choice waits on the privacy policy
+    (D6))" as held back, unfiled. I read that hold as scoped to *choosing a font vendor for
+    new/changed embeds*, not to removing an existing third-party font dependency that #4557
+    explicitly lists as its own acceptance criterion — self-hosting only shrinks third-party
+    surface, it doesn't add a new vendor. Flagging this reasoning in case a reviewer reads
+    the board note differently.
+  - `tests/e2e/smoke.spec.js`'s "static assets load without errors" test excludes any failed
+    request whose URL contains `"google"` — that exclusion is now unnecessary for fonts
+    (there are none), but it wasn't scoped only to fonts, so I left it as a follow-up rather
+    than changing it in this diff.
+  - `docs/js/*.js` mirrors and `docs/css/print.css` were already drifted from their `css/`/`js/`
+    sources before this change (`scripts/sync_frontend_assets.py --check` fails at baseline,
+    confirmed via `git status`/`git diff` showing zero changes from me to those paths) —
+    pre-existing, unrelated gap, not fixed here.
+
+## Next Steps
+
+1. Push branch `claude/issue-4557` and open a draft PR referencing `Fixes #4557`.
+2. A reviewer should confirm the WEB-10.5 board-note reading above before merge.
+3. Release lease on #4557.
+
+## Change Log
+
+- `SELF` — Constrain prose to a 60-75ch reading measure and self-host the Playfair Display
+  heading font (#4557).
+
+---
+
 # Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
 
 ## Identity
