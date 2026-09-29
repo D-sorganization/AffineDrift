@@ -1,3 +1,63 @@
+# Implementation Handoff — Roll Out the Layered Page Template to Core Pages (#4513)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4513
+- Branch: `claude/issue-4513`
+- Baseline commit: ebced38f
+- Implementation commit: SELF
+- Pull request: not created yet (draft PR opens with this commit)
+- Governing issue/epic: #4513 (epic #4514)
+
+## Objective and Status
+
+- Objective: apply the layered page template (WEB-03.1 through WEB-03.5) to ≥30 core pages
+  (theory Parts 1-5, the consolidated edition, ZTCF, DCR, superposition, the tangent-series
+  parts, drift-components, inverse-dynamics, inverse-dynamics-inference, the proximal-distal
+  article, the technology articles, and the book landing pages), shrink the CI allowlist from
+  WEB-03.1 accordingly, and make no change to substantive technical content.
+- Status: **blocked before any implementation**.
+
+## Blocked
+
+The rollout depends on all five template components (WEB-03.1 through WEB-03.5) existing.
+Checked via `gh issue view` and `git grep`/file search of the working tree:
+
+- WEB-03.1 (#4506, article front-matter schema, `tier:strong`) — **open**, unmerged.
+  `schemas/article-front-matter-v1.schema.json` does not exist.
+- WEB-03.2 (#4507, page header card) — merged (`css/components/page-header-card.css`,
+  `scripts/filters/page-header-card.lua`, `tests/page-header-card.test.js` exist).
+- WEB-03.3 (#4508, plain-language summary and key-takeaways block) — merged
+  (`scripts/filters/summary-takeaways.lua`, `css/components/summary-takeaways.css` exist).
+- WEB-03.4 (#4509, "what this shows / what it does not show" block, `tier:strong`) — **open**,
+  unmerged. No such component exists anywhere in the tree.
+- WEB-03.5 (#4510, "where next" footer, `tier:cli`) — **open**, unmerged. No such component
+  exists anywhere in the tree.
+
+Two of the three missing pieces (#4506, #4509) are `tier:strong` design-judgement work reserved
+for frontier agents; a `tier:cli` agent must not guess at their schema or component design while
+rolling out the template. The third (#4510) is `tier:cli` but is simply not built yet. Applying
+"the template" to core pages is not possible while 3 of its 5 defining components do not exist,
+and doing so now would also make it impossible to verify the acceptance criterion "no change to
+the substantive technical content" against a stable target shape.
+
+No source, test, article, or CSS changes were made. Only this handoff and the paired
+development-log entry (`DL-#4513`) were updated to record the block.
+
+## Next Steps
+
+1. Wait for #4506, #4509, and #4510 to merge.
+2. Re-run the `git grep`/file-existence check above to confirm all five components are present
+   before starting the rollout on the ≥30 listed pages.
+3. Re-open or resume work on #4513 once the dependency check passes.
+
+## Change Log
+
+- `SELF` — Record the WEB-03.1/03.4/03.5 dependency block for #4513; no implementation attempted.
+
+---
+
 # Implementation Handoff — Build the Page Header Card Component (#4507)
 
 ## Identity

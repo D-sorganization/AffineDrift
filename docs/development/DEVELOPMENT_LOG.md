@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4513 · Roll Out the Layered Page Template to Core Pages
+
+- **State:** parked
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4513 (epic #4514)
+- **Branch:** `claude/issue-4513`
+- **Paths:** none yet
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: confirmed via `gh issue view` that #4506, #4509, #4510 are open and unmerged, and via `git grep`/file search that no front-matter schema, "what this shows/does not show" block, or "where next" footer component exists in the tree)
+- **Summary:** Blocked — the issue requires applying WEB-03.1 through WEB-03.5 to ≥30 core pages, but only WEB-03.2 (#4507, page header card) and WEB-03.3 (#4508, summary/key-takeaways block) are merged. WEB-03.1 (#4506, front-matter schema, `tier:strong`), WEB-03.4 (#4509, "what this shows/does not show" block, `tier:strong`), and WEB-03.5 (#4510, "where next" footer, `tier:cli`) are still open with no implementation in the tree, so there is no template to roll out yet.
+- **Next step:** Resume once #4506, #4509, and #4510 merge; re-check for their components before starting the rollout.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress
