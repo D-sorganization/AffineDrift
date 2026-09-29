@@ -1,3 +1,8 @@
+---
+title: "Bibliography: Screw Theory Reference for Control-Affine Multibody Dynamics"
+description: "Companion bibliography for the AffineDrift article on screw theory reference for control-affine multibody dynamics."
+---
+
 # Concept Map
 
 - **Lie Group SE(3)**: The configuration space of rigid bodies (rotation + translation), forming a smooth manifold.

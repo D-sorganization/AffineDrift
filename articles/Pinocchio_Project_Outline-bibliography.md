@@ -1,3 +1,8 @@
+---
+title: "Bibliography: Physics-Grounded Golfer Simulation Toolkit Roadmap"
+description: "Annotated bibliography for the full-body golfer simulation toolkit roadmap."
+---
+
 # A Comprehensive Roadmap for Building a Full-Body, Physics-Grounded, IK/Dynamics-Driven Golfer Simulation Toolkit
 
 # Bibliography

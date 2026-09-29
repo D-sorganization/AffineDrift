@@ -1,3 +1,8 @@
+---
+title: "Natural vs Active Forces and Torques in Affine Mechanical Systems"
+description: "Companion bibliography for the AffineDrift article on natural vs active forces and torques in affine mechanical systems."
+---
+
 # Natural vs Active Forces and Torques in Affine Mechanical Systems
 
 # Bibliography

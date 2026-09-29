@@ -1,3 +1,8 @@
+---
+title: "A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing"
+description: "Companion bibliography for the AffineDrift article on drift, control capacity and golf-swing correction."
+---
+
 # A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing
 
 # Bibliography

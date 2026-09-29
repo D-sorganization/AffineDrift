@@ -1,3 +1,8 @@
+---
+title: "Bibliographic Analysis: Force and Mobility Ellipsoids in the Golf Swing"
+description: "Companion bibliography for the AffineDrift article on force and mobility ellipsoids in the golf swing."
+---
+
 # Bibliographic Analysis: Force and Mobility Ellipsoids in the Golf Swing
 
 ## A) Concept Map

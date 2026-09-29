@@ -1,3 +1,8 @@
+---
+title: "Bibliographic Analysis: Nonlinear Control Insights & Drift Causality"
+description: "Companion bibliography for the AffineDrift article on nonlinear control theory insights and drift causality."
+---
+
 # Bibliographic Analysis: Nonlinear Control Insights & Drift Causality
 
 ## A) Concept Map

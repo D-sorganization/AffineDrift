@@ -1,3 +1,8 @@
+---
+title: "Bibliographic Analysis: Drift/Input Decomposition and Counterfactuals"
+description: "Companion bibliography for Part 2 of the AffineDrift theory series, on drift/input decomposition and counterfactuals."
+---
+
 # Bibliographic Analysis: Drift/Input Decomposition and Counterfactuals
 
 ## A) Concept Map

@@ -1,3 +1,8 @@
+---
+title: "Bibliographic Analysis: Superposition in Affine Control"
+description: "Companion bibliography for the AffineDrift article on superposition in affine control systems."
+---
+
 # Bibliographic Analysis: Superposition in Affine Control
 
 ## A) Concept Map

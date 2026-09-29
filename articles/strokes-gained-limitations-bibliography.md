@@ -1,3 +1,8 @@
+---
+title: "Bibliography: On the Limits of Strokes-Gained Inference"
+description: "Companion bibliography for the AffineDrift article on the limits of strokes-gained inference for individual golfers."
+---
+
 # Bibliography: On the Limits of Strokes-Gained Inference
 
 ## Scope and Evidence

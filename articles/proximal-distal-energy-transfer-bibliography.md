@@ -1,3 +1,8 @@
+---
+title: "Proximal-to-Distal Energy Transfer in the Golf Swing"
+description: "Companion bibliography for the AffineDrift article on proximal-to-distal energy transfer in the golf swing."
+---
+
 # Proximal-to-Distal Energy Transfer in the Golf Swing
 
 # Bibliography

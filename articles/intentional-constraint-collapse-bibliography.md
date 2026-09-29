@@ -1,3 +1,8 @@
+---
+title: "Intentional Constraint Collapse at Impact"
+description: "Companion bibliography for the AffineDrift article on intentional constraint collapse at impact."
+---
+
 # Intentional Constraint Collapse at Impact
 
 # Bibliography

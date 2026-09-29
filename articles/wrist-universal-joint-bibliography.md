@@ -1,3 +1,8 @@
+---
+title: "Evidence Map: Wrist Constraints, Grip Geometry and Face Control"
+description: "Companion bibliography for the AffineDrift article on constraint torques at the wrist."
+---
+
 # Evidence Map: Wrist Constraints, Grip Geometry and Face Control
 
 This companion to [the wrist article](wrist-universal-joint.qmd) separates
