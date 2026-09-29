@@ -1,3 +1,33 @@
+# Website Review and Draft Board Backlog — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
+- Branch `claude/ecstatic-darwin-latmzr`, commit `SELF`; the pull request is created after the push.
+- Objective: at the user's request, review the external "Comprehensive Technical & Architectural
+  Review Summary", do an independent source-level review of the website, and draft epics and
+  issues for Board review.
+- Deliverable: `reports/website-improvement-draft-issues-2026-09-29.md`, with 14 epics, 124 draft
+  issues, 10 Board decisions, sequencing, success measures, and a map to existing open work
+  (#4008/#4010/#4022-#4030, #4084-#4089, #4139/#4140 and others).
+- No GitHub issues were filed. The drafts await Board approval. No site source, content, or code
+  changed. The live site was not reachable from the review sandbox, so findings about rendered
+  behaviour are marked "verify on live site".
+- Validation:
+  - `prettier --write` applied to the report.
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` passes.
+  - `scripts/check_root_hygiene.py` passes.
+  - The report-scanning pytest subset passes: claim audit, trust surface, public-site manifest,
+    render coverage, and e2e paths (67 tests).
+- No development-log entry: this is planning only, with no governing issue yet. Entries should be
+  created per epic once the Board files the issues.
+
+## Next Steps
+
+1. The Board reviews §5 (decisions D1–D10) and approves, re-scopes, or rejects the epics.
+2. File the approved epics, then their child issues as sub-issues, and replace draft IDs with issue
+   numbers in the report.
+
+---
+
 # Cartographer Pass — 2026-09-27
 
 - Role: `cartographer`; branch `staff/cartographer-task-afa7bc`.
