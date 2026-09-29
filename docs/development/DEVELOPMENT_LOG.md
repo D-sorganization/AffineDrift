@@ -48,6 +48,15 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_schema_jsonld.py tests/test_companion_hierarchy.py -v` — 10 passed; `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` clean; manual `quarto render` of all five tagged sample pages confirmed valid per-type JSON-LD)
 - **Summary:** Replaced the dead, broken `_includes/article-schema.html` (unreferenced; `{{< meta >}}` does not expand inside raw HTML) with a Lua filter registered project-wide in `_quarto.yml` that emits Schema.org JSON-LD for any page declaring `schema-type: ScholarlyArticle|Book|Chapter|Dataset|SoftwareSourceCode`; pages without that field are untouched. Tagged one real sample page per type.
 - **Next step:** None outstanding for this scope; a frontier agent reviews the draft PR before merge.
+### DL-#4608 · Website & UX Issue Template
+
+- **PR:** not created (pending)
+- **Issue:** #4608 (epic #4610)
+- **Branch:** `claude/issue-4608`
+- **Paths:** `.github/ISSUE_TEMPLATE/website-ux-problem.md`, `tests/test_website_ux_issue_template.py`
+- **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_website_ux_issue_template.py -v`: 3 passed; `ruff check` and `black --check --line-length 100` clean on changed files)
+- **Summary:** Adds a GitHub issue template for website/UX problems capturing page URL, viewport, theme, browser, and expected versus actual behaviour, matching the style of the existing content/critique/textbook templates.
+- **Next step:** Open the draft PR and hand off for frontier review.
 
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 

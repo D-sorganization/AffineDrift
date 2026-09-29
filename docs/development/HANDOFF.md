@@ -162,6 +162,30 @@
 - None outstanding for this issue. A frontier agent reviews the draft PR
   before merge; it may choose additional sample pages or ask for the filter
   to cover more of the site.
+# Website & UX Issue Template — 2026-09-29
+
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4608`.
+- Branch `claude/issue-4608`, commit `SELF`; carried into the AffineDrift website consolidation PR
+- Governing issue: #4608 ("[WEB-14.6] Issue Template for Website and UX Problems", epic
+  #4610). Objective: add a `.github/ISSUE_TEMPLATE/` template for website/UX problem reports
+  covering page URL, viewport, theme, browser, and expected versus actual behaviour.
+- Completed work: added `.github/ISSUE_TEMPLATE/website-ux-problem.md` (frontmatter matches the
+  existing content/critique/textbook templates; labels `website, bug`, both confirmed to exist
+  in the repo via a single scoped `gh api repos/.../labels` lookup). Added
+  `tests/test_website_ux_issue_template.py`, which reuses `src/tools/utils/frontmatter.extract_frontmatter`
+  to assert the template exists, has the expected frontmatter keys, and its body prompts for
+  every acceptance-criterion field.
+- Compatibility constraints: no existing issue template, config, or Python module was changed;
+  this is an additive template plus its test.
+  - `python3 -m pytest tests/test_website_ux_issue_template.py -v` — 3 passed (written first
+    against the missing file, confirmed to fail for the right reason, then made to pass).
+  - `python3 -m ruff check tests/test_website_ux_issue_template.py` — clean.
+  - `python3 -m black --check --line-length 100 tests/test_website_ux_issue_template.py` — clean.
+  - `python3 -m pytest --cov -q` — full-suite run kicked off; see the commit for the final
+    pass/coverage numbers if this line has not been updated with them.
+- Blockers/risks: none known. No dependency section on the issue; no "Depends on" blocker.
+- Next steps: open the draft PR (`Fixes #4608`), report the exact full-suite pass count and
+  coverage percentage in the PR body, and hand off for frontier review.
 
 ---
 
