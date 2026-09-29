@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4520 · Content Freshness Report
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4520 (epic #4521)
+- **Branch:** `claude/issue-4520`
+- **Paths:** `scripts/generate_freshness_report.py`, `tests/test_generate_freshness_report.py`, `reports/content-freshness.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: 15/15 test_generate_freshness_report.py tests pass; ruff, black, mypy clean)
+- **Summary:** Generates an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old, deriving the review date only from front matter (never a build/publish date).
+- **Next step:** Commit changes, push branch, open PR referencing Closes #4520, and release lease.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress
