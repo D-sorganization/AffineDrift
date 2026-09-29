@@ -1,3 +1,98 @@
+# Implementation Handoff — #4602
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4602` (git worktree).
+- Branch `claude/issue-4602`, commit `SELF`; pull request not created yet (opened as a draft
+  immediately after this handoff commit; see the development log entry DL-#4602 for the URL once
+  filled in).
+- Governing issue: #4602 (epic #4604, "[WEB-13.8] Content Inventory and Ownership Map"), CLI tier.
+- Objective: generate a deterministic content inventory (word count, status, last-reviewed date,
+  canonical pointer, inbound links, outbound broken links) for every rendered page, as CSV/JSON
+  artifacts plus a dashboard page, with pages under 300 words and no Planned status flagged.
+
+## Completed Work
+
+- `scripts/generate_content_inventory.py`: builds the inventory from `src.tools.site_page_scan`
+  primitives (`find_content_pages`, `extract_links`, `_resolve_target`, `_target_exists`,
+  `expand_includes`, `page_body`, `parse_front_matter`, `strip_code`) — the same primitives the
+  existing site link gate (`src/tools/site_link_gate.py`) uses, so link resolution semantics match
+  exactly. Status is read from the existing `status-banner__title` HTML component (there is no
+  frontmatter `status:` convention in this repo); last-reviewed is read from frontmatter `date:`
+  (no dedicated last-reviewed field exists); canonical defaults to the page's own route and can be
+  overridden with a frontmatter `canonical:` field (no such field existed before this change).
+- Writes `data/content/inventory.json`, `data/content/inventory.csv`, and the generated dashboard
+  page `pages/content-inventory.qmd`, all verified via `--check` (same pattern as
+  `scripts/generate_companion_freshness.py`).
+- Added one line to `pages/development-roadmap.qmd` linking the new dashboard page (needed so it
+  is not an orphan under the site link gate); the dashboard page itself carries `categories:
+  site-information` and a `## Related Articles` section with 3 resolving links, per the site gate
+  contract in `src/tools/site_link_gate.py`.
+- `.github/workflows/ci-standard.yml` generates a fresh inventory every build and uploads it as the
+  `content-inventory` artifact. Reviewer change: this is not a `--check` staleness gate, because
+  word counts and inbound links change with every content edit, so a gate would fail unrelated PRs.
+  The committed snapshot is refreshed with the generator when needed.
+- `tests/test_content_page_inventory.py`: 10 new tests (word count/status flagging, inbound/broken
+  link tracking, canonical override, last-reviewed, deterministic JSON/CSV/dashboard rendering,
+  and `--check` staleness detection on a temp tree; the repo-wide snapshot-currency test was
+  dropped for the same reason as the CI gate). Named
+  distinctly from `tests/test_content_inventory.py`, which already existed for an unrelated
+  media-deduplication hygiene guard (IA cleanup #3222) — see below.
+- Ran `python3 -m scripts.regenerate_claim_audit_evidence` after editing
+  `pages/development-roadmap.qmd`: that file carries a pinned SHA-256 review-evidence digest in
+  `data/trust/claim_audit_inventory.json` (reviewed under #4429), and any edit to a reviewed file's
+  bytes must refresh the recorded digest through this script rather than by hand.
+
+## Known Behavior Worth Understanding
+
+- The generator is self-referential: once `pages/content-inventory.qmd` exists as a rendered page,
+  it is itself scanned on the next run, which changes the inbound-link counts of the pages it
+  links to from its own Related Articles section. This reaches a stable fixed point (verified by
+  regenerating repeatedly until byte-identical); it is not an infinite oscillation. Anyone adding
+  new inbound/outbound links to or from the dashboard page should regenerate at least twice locally
+  and confirm `--check` passes before relying on a single generation pass.
+- Pitfall hit and fixed this session: my first `Write` to `tests/test_content_inventory.py`
+  silently overwrote a pre-existing, unrelated test (the media-dedup guard above) because a
+  content grep for the new filename used a lowercase pattern and missed the existing file's
+  capitalized docstring ("Content-inventory hygiene guards"). Restored from `git show HEAD:` and
+  moved the new tests to `tests/test_content_page_inventory.py`. Anyone naming a new file in this
+  repo should `git log --oneline -- <path>` first, not just grep file contents.
+- Running the broader test suite (`pytest -m "not e2e and not slow"`) regenerates
+  `data/trust/generated/reader_validation_study.json` and
+  `data/trust/generated/evidence_presentation_registry.json` in place with today's date and
+  reformatted JSON, as a pre-existing side effect unrelated to this change (their generators write
+  to the real repo path rather than a fixture path during some test). Both were reverted with
+  `git checkout HEAD --` before committing; do the same if a future run touches them again.
+- `tests/test_claim_audit_output_boundary.py::test_review_evidence_survives_deployment_pruning` is
+  slow in this environment (>60s hashing evidence files) and trips the default 60s per-test
+  pytest-timeout; it passes at 180s. Pre-existing, unrelated to this change.
+
+## Validation (Local)
+
+- `python3 -m pytest tests/test_content_page_inventory.py tests/test_content_inventory.py tests/test_site_link_gate.py -q` — 45 passed.
+- `python3 -m ruff check scripts/generate_content_inventory.py tests/test_content_page_inventory.py` — clean.
+- `python3 -m black --check --line-length 100 scripts/generate_content_inventory.py tests/test_content_page_inventory.py` — clean.
+- `python3 -m mypy scripts/generate_content_inventory.py` — no errors in the new file (2 pre-existing
+  errors surface transitively from `scripts/public_site_manifest.py`, unrelated to this change).
+- `src.tools.site_link_gate.run_site_gate` on the full repo — 0 new (non-baseline) errors touching
+  `pages/content-inventory.qmd` or `pages/development-roadmap.qmd`.
+- `python3 scripts/check_title_case.py`, `python3 scripts/check_terminology.py`,
+  `python3 scripts/check_root_hygiene.py`, `python3 -m scripts.check_dry_adoption`,
+  `python3 -m scripts.check_module_size_budget`, `python3 scripts/check_quarto_xrefs.py`,
+  `python3 scripts/link-checker.py --root . --internal-only`, `python3 -m scripts.check_spec_changelog`,
+  `python3 -m scripts.regenerate_claim_audit_evidence --check` — all pass.
+- Broader `pytest -q -m "not e2e and not slow"` was run for regression coverage; see the PR
+  description for its final pass count and the two pre-existing issues noted above.
+
+## Next Steps
+
+1. Open the draft PR and record its URL here and in DEVELOPMENT_LOG.md DL-#4602 (a small follow-up
+   commit is expected for this).
+2. A frontier reviewer should confirm the word-count heuristic (regex tokenization over
+   HTML/Markdown-stripped body text) and the `date:`-as-last-reviewed proxy are acceptable, since
+   neither is an existing repo convention — this issue introduced both.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
