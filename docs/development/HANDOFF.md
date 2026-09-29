@@ -2,9 +2,8 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `AffineDrift-worktrees/claude-4566`.
-- Branch `claude/issue-4566`, commit `SELF`; pull request: not yet created
-  (opened as a draft immediately after this commit; see the follow-up commit
-  or the PR itself for its number/URL).
+- Branch `claude/issue-4566`, commit `SELF`; pull request:
+  [#4624](https://github.com/D-sorganization/AffineDrift/pull/4624) (draft).
 - Governing issue: #4566 (`tier:cli`), a child of epic #4569 (E9 —
   Accessibility Conformance). Objective: the skip-to-content link was
   injected by `js/navigation.js::initSkipToContent` and risked duplicating
@@ -78,8 +77,7 @@
   2. Once `pages/start-here.qmd` ships under WEB-01.1, replace
      `/pages/overview.html` in `SKIP_LINK_ROUTES`
      (`tests/e2e/accessibility.spec.js`) with the real Start Here route.
-  3. After the PR is opened, record its number/URL here and in
-     `docs/development/DEVELOPMENT_LOG.md` (`DL-#4566`).
+  3. Address any review feedback on PR #4624 and watch its `e2e-tests` run.
 
 ---
 

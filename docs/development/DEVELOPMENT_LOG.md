@@ -22,7 +22,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** not yet created
+- **PR:** #4624
 - **Issue:** #4566 (epic #4569 — E9 Accessibility Conformance)
 - **Branch:** `claude/issue-4566`
 - **Paths:** `_includes/skip-link.html`, `_quarto.yml`, `js/navigation.js`, `js/main.js`, `tests/navigation.test.js`, `tests/e2e/accessibility.spec.js`
