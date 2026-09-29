@@ -1,3 +1,69 @@
+# Datasets Page Rebuild — #4549 (WEB-07.7)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4549`.
+- Branch `claude/issue-4549`, commit `SELF`; pull request: see PR opened by this
+  session (draft, targets `main`).
+- Governing issue: #4549 (WEB-07.7, child of epic #4552). Objective: rebuild the
+  Datasets resource page with real licence/access/schema/checksum metadata for
+  third-party datasets and AffineDrift's own `data/`/`schemas/` artefacts, and
+  drop the third-party `mini.s-shot.ru` thumbnail host.
+- Added `data/datasets.yml` as the single source of truth (4 third-party
+  datasets: GolfDB, CaddieSet, SportsPose, MoVi; 3 AffineDrift artefact groups:
+  `data/ztcf`, `data/research_protocols`, `schemas`). Licence/access/size fields
+  for the third-party entries were verified against each dataset's own GitHub
+  repository or paper (WebFetch), not guessed; SportsPose has no licence stated
+  by its publisher, and the page says so rather than inventing one. AffineDrift's
+  own artefacts have no declared data licence yet — tracked separately as
+  WEB-07.8 — so their `licence` field says "not yet declared" instead of picking
+  MIT or all-rights-reserved.
+- Added `src/tools/datasets_catalog.py` (load/validate `data/datasets.yml`,
+  compute real SHA-256 checksums per file, render HTML cards) and
+  `scripts/generate_datasets_catalog.py` (CLI wrapper with `--check`), following
+  the existing `generate_programming_catalog.py` generated-page pattern.
+  `resources/resources-datasets.qmd` now has a
+  `<!-- GENERATED:BEGIN/END datasets-catalog -->` block that the generator
+  owns; hand-edit `data/datasets.yml` and regenerate instead.
+- Wired `python3 -m scripts.generate_datasets_catalog --check` into
+  `.github/workflows/ci-standard.yml` next to the Programming Companion catalog
+  check, so a stale page or a hand edit fails CI.
+- Added `.resource-meta`/`.resource-checksums` styles to `css/resources.css`
+  (mirrored to `docs/css/resources.css` via `scripts/sync_frontend_assets.py`)
+  and dropped `.resource-card.has-media`/`<img>` thumbnails from this page —
+  no self-hosted screenshot images were fabricated; the rest of the resources
+  section (Papers, Websites, etc.) already uses plain cards without thumbnails.
+- Tests: `tests/test_generate_datasets_catalog.py` (14 cases) — DbC field
+  validation, real-SHA-256 checksum computation, marker-block replacement
+  preserving surrounding content, and each of the four issue acceptance
+  criteria (no truncated text, no third-party thumbnail host, every entry has
+  licence/access, artefacts listed with checksums).
+- Validation commands run in this worktree:
+  - `python3 -m pytest tests/test_generate_datasets_catalog.py -q` → 14 passed.
+  - `python3 -m scripts.generate_datasets_catalog --check` → up to date.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → 736 files unchanged.
+  - `python3 -m mypy src/tools/datasets_catalog.py scripts/generate_datasets_catalog.py`
+    → no issues.
+  - `python3 scripts/check_quarto_render_coverage.py`,
+    `python3 scripts/scan_quarto_syntax.py`, `python3 scripts/check_quarto_xrefs.py`,
+    `python3 scripts/check_single_title.py resources/resources-datasets.qmd`,
+    `python3 scripts/check_title_case.py`, `python3 -m scripts.check_module_size_budget`
+    → all pass.
+  - Full `python3 -m pytest --cov` suite: see the PR description for the run
+    started from this worktree (long-running; results attached there).
+- Not done / deferred: no `_quarto.yml` resource-publishing change was made, so
+  schema filenames in the AffineDrift cards are shown as plain text, not links
+  (`schemas/` is only partially published as a site resource today). No CSS
+  `check_style_discipline.py` fixes were made — it reports 248 pre-existing
+  violations across other stylesheets unrelated to this change; `resources.css`
+  itself has zero.
+
+## Next Steps
+
+1. None outstanding for #4549 from this session.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
