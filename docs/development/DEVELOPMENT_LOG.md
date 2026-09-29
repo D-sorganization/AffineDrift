@@ -31,6 +31,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** The catalog generator read a nonexistent `title` key for programs and engines (the manifest field is `name`), so every program and engine row rendered its ID as its title; fixed to read `name` (and `engine_id` for the programs' Engine column), dropped the Engines page's fabricated Maturity column (no such field exists in the manifest schema), and regenerated the committed pages. Labelled the 16 unpinned `repositories/*.qmd` UpstreamDrift root links as "navigation only" per the acceptance criteria, since they point at the live repository rather than a reviewed commit.
 - **Next step:** Open the draft PR and record its number here; awaiting frontier-agent review.
 
+### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
+
+- **State:** in_progress
+- **Owner:** local
+- **PR:** not created
+- **Issue:** #4524
+- **Branch:** `fix/web-05-3-critique-annotations-4524`
+- **Paths:** `scripts/generate_claim_critique_ledger.py`, `data/trust/claim_critique_ledger.json`, `articles/zero-torque-counterfactual.qmd`, `articles/theory-part2.qmd`, `articles/proximal-distal-energy-transfer.qmd`, `data/trust/claim_audit_inventory.json`, `data/trust/proximal_distal_falsification_atlas.json`, `tests/test_claim_critique_ledger.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (d53290cd / SELF: 19/19 test_claim_critique_ledger.py tests pass, 18/18 test_claim_audit_inventory.py pass, 17/17 test_proximal_distal_falsification_atlas.py pass, all ledgers and reports verified)
+- **Summary:** Enforces that every critique maps to every page whose claim it targets and extends critique annotations to the ZTCF, Theory Part 2, and Proximal-Distal pages.
+- **Next step:** Commit changes, push branch, open PR referencing Closes #4524, and release lease.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped
