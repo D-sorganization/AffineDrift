@@ -1,3 +1,67 @@
+# Implementation Handoff
+
+Keep this file current and concise.
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift`
+- Branch: `fix/web-05-3-critique-annotations-4524`
+- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
+- Implementation commit: `SELF`
+- Pull request: not created
+- Governing issue/epic: #4524 (epic #4521)
+
+## Objective and Status
+
+- Objective: Extend critique annotations to ZTCF and Proximal–Distal pages (#4524).
+- Status: ready for review
+- Completed: Enforced that every critique maps to every page whose claim it targets; added critique annotations to zero-torque-counterfactual.qmd, theory-part2.qmd, and proximal-distal-energy-transfer.qmd; verified 18 generated surfaces and 2 audit reports.
+- Remaining: Commit, push, open PR, and release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/generate_claim_critique_ledger.py`: Added claim-to-page mapping and strict validation rule in `validate_ledger()`.
+  - `data/trust/claim_critique_ledger.json`: Extended 8 critiques with affected target pages.
+  - `articles/zero-torque-counterfactual.qmd`, `articles/theory-part2.qmd`, `articles/proximal-distal-energy-transfer.qmd`: Included generated critique annotations callout partials.
+  - `data/trust/claim_audit_inventory.json`: Added critique IDs and evidence paths for affected routes.
+  - `data/trust/proximal_distal_falsification_atlas.json`: Updated SHA-256 digest of `claim_critique_ledger.json`.
+  - `tests/test_claim_critique_ledger.py`: Added contract tests and page annotation presence tests.
+  - `SPEC.md`: Added change-log row for #4524.
+  - `docs/development/DEVELOPMENT_LOG.md`: Added DL-#4524.
+  - `docs/development/HANDOFF.md`: Updated canonical handoff.
+- Key decisions: Fail closed if any critique does not include all affected pages for its related claims.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `python -m scripts.generate_claim_critique_ledger --check` — passed (18 surfaces verified)
+- `python -m scripts.generate_claim_audit_inventory --check` — passed (2 reports verified)
+- `python -m scripts.generate_proximal_distal_falsification_atlas --check` — passed
+- `python -m scripts.regenerate_claim_audit_evidence --check` — passed
+- `pytest tests/test_claim_critique_ledger.py tests/test_claim_audit_inventory.py tests/test_proximal_distal_falsification_atlas.py` — passed (54 passed in 16s)
+- `ruff check scripts/generate_claim_critique_ledger.py tests/test_claim_critique_ledger.py` — passed
+- `black --check --line-length 100 scripts/generate_claim_critique_ledger.py tests/test_claim_critique_ledger.py` — passed
+- `fleet_hooks.py spec-changelog` — passed
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Push branch `fix/web-05-3-critique-annotations-4524` to origin.
+2. Open PR referencing Closes #4524.
+3. Release agent lease in Repository_Management.
+
+## Change Log
+
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
