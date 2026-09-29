@@ -5,7 +5,7 @@
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
 - Branch: fix/web-05-9-passive-active-nomenclature-4529
-- Baseline commit: 785d165f973007077a94ddf2252a1ba2eef69bb3
+- Baseline commit: 31572bc386154687007da85b376f92fb2b876403
 - Implementation commit: SELF
 - Pull request: #4630
 - Governing issue/epic: #4529
@@ -13,9 +13,9 @@
 ## Objective and Status
 
 - Objective: Resolve passive/active nomenclature conflict in The Physics of Golf nomenclature.tex by aligning definitions with NOTATION.md and enforcing via check_terminology gate.
-- Status: in progress
+- Status: ready for review / auto-merge
 - Completed: Updated articles/The_Physics_of_Golf/nomenclature.tex subscript, force, vector field, and power definitions to reference autonomous plant evolution (u=0) and declared control channels; extended scripts/check_terminology.py with banned patterns for drift passivity and active muscular overclaims; added unit test coverage in tests/test_check_terminology.py; added change-log row in SPEC.md.
-- Remaining: Pre-commit verification suite completion, PR creation, auto-merge arming, and agent lease release.
+- Remaining: Monitor PR #4630 CI and auto-merge into main.
 
 ## Files and Decisions
 
@@ -23,38 +23,34 @@
   - `articles/The_Physics_of_Golf/nomenclature.tex`: Aligned drift and control subscript conventions, generalized drift and control force definitions, drift and control vector field definitions, and drift and control power definitions with NOTATION.md autonomous plant mechanics.
   - `scripts/check_terminology.py`: Added banned patterns banning equating drift with passivity or control input with muscular activations, and tightened qualifiers typing.
   - `tests/test_check_terminology.py`: Added parameterized unit test cases for the new banned terminology rules.
-  - `SPEC.md`: Added change-log row for #4529.
+  - `SPEC.md`: Added change-log row for #4630.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
 - Key decisions: Drift is strictly defined as the complete autonomous evolution of the declared effective plant with zero applied control (u=0), never equating drift to passivity or unassisted movement; control is defined as the declared control channel (B u), avoiding direct biological/muscular overclaims.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
-- `npx jest` — PASS (25 suites passed, 420 passed)
-- `python -m ruff check .` — PASS (All checks passed)
-- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
-- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
-- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
-- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
+- `python scripts/check_terminology.py --baseline config/terminology-baseline.json` — PASS
+- `pytest -m content_lint tests/test_check_terminology.py` — PASS (33 passed)
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check scripts/check_terminology.py tests/test_check_terminology.py` — PASS
+- `python -m black --check --line-length 100 scripts/check_terminology.py tests/test_check_terminology.py` — PASS
+- `python -m mypy scripts/check_terminology.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+- Fleet pre-push hooks (secrets, ruff, black, bandit, pytest, etc.) — PASS
 
 ## Blockers and Risks
 
 - Blockers: none
-- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+- Risks/assumptions: none
 
 ## Next Steps
 
-1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
-2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
-3. Release agent lease for #4617.
+1. Monitor PR #4630 CI and auto-merge into main.
 
 ## Change Log
 
-- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
 - 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
