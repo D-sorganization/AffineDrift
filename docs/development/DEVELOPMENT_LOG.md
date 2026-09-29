@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4568 · Accessibility Statement Page
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** see this session's draft PR
+- **Issue:** #4568 (epic #4569 — E9 Accessibility Conformance)
+- **Branch:** `claude/issue-4568`
+- **Paths:** `pages/accessibility.qmd`, `_quarto.yml`, `tests/test_accessibility_statement_page.py`, `tests/test_page_style_discipline.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (6/6 new-test-file checks pass; 248 passed across the focused content/link-gate/style-discipline suite; ruff and black clean; `check_title_case.py` clean.)
+- **Summary:** Publishes an accessibility statement stating the WCAG 2.1 Level AA conformance target, summarizing the known-issues inventory tracked in #4139, and giving a contact route (GitHub Issues, email) for reporting barriers; linked from the site footer.
+- **Next step:** Awaiting frontier-agent review of the draft PR.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped
