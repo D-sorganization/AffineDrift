@@ -7,13 +7,13 @@
 - Branch: feat/web-01-3-extend-personas-4488
 - Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
 - Implementation commit: SELF
-- Pull request: #4488
+- Pull request: #4638
 - Governing issue/epic: #4488 (epic #4496)
 
 ## Objective and Status
 
 - Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
-- Status: ready for review / auto-merge
+- Status: PR #4638 created, awaiting auto-merge
 - Completed:
   - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
   - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
@@ -23,8 +23,8 @@
   - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
   - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
   - Regenerated claim audit evidence digests and verified all checks pass.
-  - Added change-log row in `SPEC.md`.
-- Remaining: Commit, submit PR, arm auto-merge, and release lease.
+  - Keyed change-log row in `SPEC.md` to #4638.
+- Remaining: Arm auto-merge and release lease.
 
 ## Files and Decisions
 
