@@ -51,45 +51,53 @@
      seven `claude-<issue>` worktrees.
 # Implementation Handoff — Deploy Website Verification Fix (#4617)
 # Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
+# Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/web-05-9-passive-active-nomenclature-4529
-- Baseline commit: 31572bc386154687007da85b376f92fb2b876403
-- Implementation commit: SELF
-- Pull request: #4630
-- Governing issue/epic: #4529
+- Branch: feat/web-03-3-summary-and-key-takeaways-4508
+- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
+- Implementation commit: e7fd6342
+- Pull request: #4631
+- Governing issue/epic: #4508 (epic #4514)
 
 ## Objective and Status
 
-- Objective: Resolve passive/active nomenclature conflict in The Physics of Golf nomenclature.tex by aligning definitions with NOTATION.md and enforcing via check_terminology gate.
-- Status: ready for review / auto-merge
-- Completed: Updated articles/The_Physics_of_Golf/nomenclature.tex subscript, force, vector field, and power definitions to reference autonomous plant evolution (u=0) and declared control channels; extended scripts/check_terminology.py with banned patterns for drift passivity and active muscular overclaims; added unit test coverage in tests/test_check_terminology.py; added change-log row in SPEC.md.
-- Remaining: Monitor PR #4630 CI and auto-merge into main.
+- Objective: Render plain-language summary and key takeaways from front matter beneath page header, visible without interaction, printed in print stylesheet, and suppressing legacy lay blocks.
+- Status: ready for PR
+- Completed:
+  - Created `scripts/filters/summary-takeaways.lua` Pandoc Lua filter extracting `summary-plain` and `key-takeaways` from front matter and suppressing duplicate legacy lay blocks.
+  - Created `css/components/summary-takeaways.css` component stylesheet and registered in `styles.css`.
+  - Added print rules in `css/print.css`.
+  - Registered Lua filter in `_quarto.yml`.
+  - Added TDD integration and unit tests in `tests/test_summary_takeaways.py` (7 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all pre-commit checks.
+- Remaining: Submit PR, key row in `SPEC.md`, arm auto-merge, release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `articles/The_Physics_of_Golf/nomenclature.tex`: Aligned drift and control subscript conventions, generalized drift and control force definitions, drift and control vector field definitions, and drift and control power definitions with NOTATION.md autonomous plant mechanics.
-  - `scripts/check_terminology.py`: Added banned patterns banning equating drift with passivity or control input with muscular activations, and tightened qualifiers typing.
-  - `tests/test_check_terminology.py`: Added parameterized unit test cases for the new banned terminology rules.
-  - `SPEC.md`: Added change-log row for #4630.
+  - `scripts/filters/summary-takeaways.lua`: Component Lua filter.
+  - `css/components/summary-takeaways.css`: Modern card styles with accessible contrast and semantic layout.
+  - `css/print.css`: Print rules preventing page breaks inside the takeaways card.
+  - `styles.css`: Component `@import`.
+  - `_quarto.yml`: Filter registration.
+  - `tests/test_summary_takeaways.py`: TDD test suite.
+  - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Drift is strictly defined as the complete autonomous evolution of the declared effective plant with zero applied control (u=0), never equating drift to passivity or unassisted movement; control is defined as the declared control channel (B u), avoiding direct biological/muscular overclaims.
+- Key decisions: Single component driven by front matter; no collapsible state or JS toggle required; cleanly replaces legacy HTML raw lay blocks when front matter is defined.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `python scripts/check_terminology.py --baseline config/terminology-baseline.json` — PASS
-- `pytest -m content_lint tests/test_check_terminology.py` — PASS (33 passed)
+- `pytest tests/test_summary_takeaways.py` — PASS (7 passed in 14s)
+- `python scripts/check_css_architecture.py` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check scripts/check_terminology.py tests/test_check_terminology.py` — PASS
-- `python -m black --check --line-length 100 scripts/check_terminology.py tests/test_check_terminology.py` — PASS
-- `python -m mypy scripts/check_terminology.py` — PASS
+- `python -m ruff check tests/test_summary_takeaways.py` — PASS
+- `python -m black --check --line-length 100 tests/test_summary_takeaways.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- Fleet pre-push hooks (secrets, ruff, black, bandit, pytest, etc.) — PASS
 
 ## Blockers and Risks
 
@@ -98,7 +106,10 @@
 
 ## Next Steps
 
-1. Monitor PR #4630 CI and auto-merge into main.
+1. Create pull request referencing `Closes #4508` with label `agent:local`.
+2. Update row in `SPEC.md` to reference PR number.
+3. Arm auto-merge (`--squash`).
+4. Release lease on #4508 in `Repository_Management`.
 
 ## Change Log
 
