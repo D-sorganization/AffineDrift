@@ -114,63 +114,74 @@
 ---
 
 
+# Implementation Handoff — Build the Page Header Card Component (#4507)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/issue-4617-deploy-website-resources-books-error
-- Baseline commit: d53290cd92d8c90acd33ae91945c643bb9531296
-- Implementation commit: SELF
-- Pull request: not created
-- Governing issue/epic: #4617
+- Branch: feat/web-03-2-page-header-card-4507
+- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
+- Implementation commit: c945531c
+- Pull request: #4633
+- Governing issue/epic: #4507 (epic #4514)
 
 ## Objective and Status
 
-- Objective: Fix Deploy Website failure on route /resources/resources-books.html and prevent non-first-party network errors from failing verification.
-- Status: in progress
-- Completed: Removed 18 fragile external book covers and fallback onerror 404 handler from resources-books.qmd; updated scripts/public-site-browser-noise.js to filter Failed to load resource: net::ERR_ console noise; added test coverage in tests/public-site-verifier.test.js.
-- Remaining: Verification suite completion, PR creation, and agent lease release.
+- Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
+- Status: ready for review / auto-merge
+- Completed:
+  - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
+  - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
+  - Added print styling in `css/print.css`.
+  - Registered Lua filter in `_quarto.yml`.
+  - Resolved reading-time estimate policy conflict in `books/roadmap.qmd` and `js/accessibility.js`.
+  - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
+  - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
+  - Regenerated claim audit evidence digests and verified all pre-commit checks.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Monitor PR #4633 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
-  - `resources/resources-books.qmd`: Removed fragile external book cover media slots and fallback onerror handlers from all 18 cards to make all 31 book cards uniform text cards and prevent network and 404 failures.
-  - `scripts/public-site-browser-noise.js`: Added filter for `Failed to load resource: net::ERR_` in `isActionableConsoleError` to prevent third-party network flakiness from failing verification.
-  - `tests/public-site-verifier.test.js`: Added test assertions verifying `isActionableConsoleError` ignores `net::ERR_` noise while preserving actionable errors.
-  - `data/trust/claim_audit_inventory.json` & generated trust registries: Regenerated claim audit evidence digests following resource book source update.
-  - `SPEC.md`: Added change-log row for #4617.
+  - `scripts/filters/page-header-card.lua`: Component Lua filter.
+  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
+  - `css/print.css`: Print rules avoiding page breaks inside header card.
+  - `styles.css`: Component `@import`.
+  - `_quarto.yml`: Filter registration.
+  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
+  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
+  - `tests/page-header-card.test.js`: Jest unit test suite.
+  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
+  - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: First-party network failures remain caught by `onRequestFailed` and `navigateWithRetry`, so filtering Chromium console's `net::ERR_` does not hide first-party regressions while protecting the verification gate against intermittent external timeouts or unreachable CDNs.
+- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
-- `npx jest` — PASS (25 suites passed, 420 passed)
-- `python -m ruff check .` — PASS (All checks passed)
-- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
-- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
-- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
-- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
+- `npm test tests/page-header-card.test.js` — PASS (5 passed)
+- `pytest tests/test_page_header_card.py` — PASS (11 passed)
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check tests/test_page_header_card.py` — PASS
+- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks
 
 - Blockers: none
-- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+- Risks/assumptions: none
 
 ## Next Steps
 
-1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
-2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
-3. Release agent lease for #4617.
+1. Monitor PR #4633 CI and auto-merge into main.
 
 ## Change Log
 
-- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
 - 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---

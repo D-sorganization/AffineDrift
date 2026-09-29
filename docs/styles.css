@@ -3260,6 +3260,191 @@ code span.va {
   margin-top: 0.5rem;
 }
 /* ===== end css/components/evidence-presentation.css ===== */
+/* ===== begin css/components/page-header-card.css ===== */
+/* Page Header Card Component (WEB-03.2 #4507)
+   Standardized metadata block rendering maturity, audience, reading time,
+   prerequisites, publication/review dates, and citation links. */
+
+.page-header-card {
+  display: block;
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-neutral-200);
+  border-left: 4px solid var(--color-primary-light);
+  border-radius: 6px;
+  color: var(--text-primary);
+}
+
+.page-header-metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.25rem 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.page-header-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.page-header-label {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.page-header-value {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+/* Accessible text-carrying badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--color-neutral-300);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.badge--maturity {
+  border-color: var(--color-primary-light);
+  background: var(--bg-primary);
+}
+
+.badge--canonical {
+  border-color: #2e7d32;
+  color: #1b5e20;
+  background: rgba(46, 125, 50, 0.08);
+}
+
+.badge--reviewed {
+  border-color: #1976d2;
+  color: #0d47a1;
+  background: rgba(25, 118, 210, 0.08);
+}
+
+.badge--draft {
+  border-color: #ed6c02;
+  color: #e65100;
+  background: rgba(237, 108, 2, 0.08);
+}
+
+.badge--exploratory {
+  border-color: #7b1fa2;
+  color: #4a148c;
+  background: rgba(123, 31, 162, 0.08);
+}
+
+.badge--audience {
+  border-color: var(--color-neutral-300);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.reading-time-text {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+.page-header-prereq-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.page-header-cite-link {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-link);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.page-header-cite-link:hover,
+.page-header-cite-link:focus-visible {
+  color: var(--color-primary-dark);
+}
+/* ===== end css/components/page-header-card.css ===== */
+/* ===== begin css/components/summary-takeaways.css ===== */
+/* Summary and Key Takeaways Component (WEB-03.3 #4508)
+   Unified block rendering summary-plain and key-takeaways from front matter. */
+
+.summary-takeaways-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-neutral-200);
+  border-left: 4px solid var(--color-primary-light);
+  border-radius: 6px;
+  color: var(--text-primary);
+}
+
+.summary-plain-block,
+.key-takeaways-block {
+  margin: 0;
+}
+
+.summary-plain-title,
+.key-takeaways-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-plain-block p,
+.summary-plain-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.key-takeaways-list,
+.key-takeaways-block ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.key-takeaways-list li,
+.key-takeaways-block li {
+  margin-bottom: 0.35rem;
+}
+
+.key-takeaways-list li:last-child,
+.key-takeaways-block li:last-child {
+  margin-bottom: 0;
+}
+/* ===== end css/components/summary-takeaways.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the
