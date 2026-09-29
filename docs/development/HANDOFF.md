@@ -55,7 +55,8 @@
 
 ## Change Log
 
-- SELF — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
 
