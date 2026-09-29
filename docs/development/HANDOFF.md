@@ -1,49 +1,43 @@
-# Implementation Handoff — Extend Critique Annotations (#4524)
-
-Keep this file current and concise.
+# Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
 
 ## Identity
 
-- Repository: `D-sorganization/AffineDrift`
-- Working directory: `C:/Users/diete/Repositories/AffineDrift`
-- Branch: `fix/web-05-3-critique-annotations-4524`
-- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
-- Implementation commit: `SELF`
-- Pull request: #4619
-- Governing issue/epic: #4524 (epic #4521)
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-05-9-passive-active-nomenclature-4529
+- Baseline commit: 31572bc386154687007da85b376f92fb2b876403
+- Implementation commit: SELF
+- Pull request: #4630
+- Governing issue/epic: #4529
 
 ## Objective and Status
 
-- Objective: Extend critique annotations to ZTCF and Proximal–Distal pages (#4524).
-- Status: ready for review
-- Completed: Enforced that every critique maps to every page whose claim it targets; added critique annotations to zero-torque-counterfactual.qmd, theory-part2.qmd, and proximal-distal-energy-transfer.qmd; verified 18 generated surfaces and 2 audit reports.
-- Remaining: Merge main, run pre-commit checks, push to origin, verify CI.
+- Objective: Resolve passive/active nomenclature conflict in The Physics of Golf nomenclature.tex by aligning definitions with NOTATION.md and enforcing via check_terminology gate.
+- Status: ready for review / auto-merge
+- Completed: Updated articles/The_Physics_of_Golf/nomenclature.tex subscript, force, vector field, and power definitions to reference autonomous plant evolution (u=0) and declared control channels; extended scripts/check_terminology.py with banned patterns for drift passivity and active muscular overclaims; added unit test coverage in tests/test_check_terminology.py; added change-log row in SPEC.md.
+- Remaining: Monitor PR #4630 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
-  - `scripts/generate_claim_critique_ledger.py`: Added claim-to-page mapping and strict validation rule in `validate_ledger()`.
-  - `data/trust/claim_critique_ledger.json`: Extended 8 critiques with affected target pages.
-  - `articles/zero-torque-counterfactual.qmd`, `articles/theory-part2.qmd`, `articles/proximal-distal-energy-transfer.qmd`: Included generated critique annotations callout partials.
-  - `data/trust/claim_audit_inventory.json`: Added critique IDs and evidence paths for affected routes.
-  - `data/trust/proximal_distal_falsification_atlas.json`: Updated SHA-256 digest of `claim_critique_ledger.json`.
-  - `tests/test_claim_critique_ledger.py`: Added contract tests and page annotation presence tests.
-  - `SPEC.md`: Added change-log row for #4524.
-  - `docs/development/DEVELOPMENT_LOG.md`: Added DL-#4524.
-  - `docs/development/HANDOFF.md`: Updated canonical handoff.
-- Key decisions: Fail closed if any critique does not include all affected pages for its related claims.
+  - `articles/The_Physics_of_Golf/nomenclature.tex`: Aligned drift and control subscript conventions, generalized drift and control force definitions, drift and control vector field definitions, and drift and control power definitions with NOTATION.md autonomous plant mechanics.
+  - `scripts/check_terminology.py`: Added banned patterns banning equating drift with passivity or control input with muscular activations, and tightened qualifiers typing.
+  - `tests/test_check_terminology.py`: Added parameterized unit test cases for the new banned terminology rules.
+  - `SPEC.md`: Added change-log row for #4630.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Drift is strictly defined as the complete autonomous evolution of the declared effective plant with zero applied control (u=0), never equating drift to passivity or unassisted movement; control is defined as the declared control channel (B u), avoiding direct biological/muscular overclaims.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `python -m scripts.generate_claim_critique_ledger --check` — passed (18 surfaces verified)
-- `python -m scripts.generate_claim_audit_inventory --check` — passed (2 reports verified)
-- `python -m scripts.generate_proximal_distal_falsification_atlas --check` — passed
-- `python -m scripts.regenerate_claim_audit_evidence --check` — passed
-- `pytest tests/test_claim_critique_ledger.py tests/test_claim_audit_inventory.py tests/test_proximal_distal_falsification_atlas.py` — passed (54 passed in 16s)
-- `ruff check scripts/generate_claim_critique_ledger.py tests/test_claim_critique_ledger.py` — passed
-- `black --check --line-length 100 scripts/generate_claim_critique_ledger.py tests/test_claim_critique_ledger.py` — passed
-- `fleet_hooks.py spec-changelog` — passed
+- `python scripts/check_terminology.py --baseline config/terminology-baseline.json` — PASS
+- `pytest -m content_lint tests/test_check_terminology.py` — PASS (33 passed)
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check scripts/check_terminology.py tests/test_check_terminology.py` — PASS
+- `python -m black --check --line-length 100 scripts/check_terminology.py tests/test_check_terminology.py` — PASS
+- `python -m mypy scripts/check_terminology.py` — PASS
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- Fleet pre-push hooks (secrets, ruff, black, bandit, pytest, etc.) — PASS
 
 ## Blockers and Risks
 
@@ -52,10 +46,7 @@ Keep this file current and concise.
 
 ## Next Steps
 
-1. Merge main and verify clean test suite.
-2. Push branch `fix/web-05-3-critique-annotations-4524` to origin.
-3. Verify all checks pass on PR #4619 and auto-merge completes.
-4. Release agent lease in Repository_Management.
+1. Monitor PR #4630 CI and auto-merge into main.
 
 ## Change Log
 
