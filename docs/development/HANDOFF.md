@@ -2,8 +2,9 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4549`.
-- Branch `claude/issue-4549`, commit `SELF`; pull request: see PR opened by this
-  session (draft, targets `main`).
+- Branch `claude/issue-4549`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4632 (draft, targets
+  `main`).
 - Governing issue: #4549 (WEB-07.7, child of epic #4552). Objective: rebuild the
   Datasets resource page with real licence/access/schema/checksum metadata for
   third-party datasets and AffineDrift's own `data/`/`schemas/` artefacts, and
