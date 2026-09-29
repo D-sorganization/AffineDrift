@@ -9,7 +9,7 @@ categories:
 ```{=html}
 <section class="resources-section">
   <div class="ad-page-container">
-    <div class="standard-page-layout">
+    <div class="standard-page-layout standard-page-layout--single">
       <!-- Left Sidebar: Table of Contents -->
       <div class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -118,83 +118,9 @@ categories:
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Datasets History -->
-      <div class="right-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Datasets</h3>
-          <ul class="sidebar-links" id="datasets-history-list">
-            <li class="history-empty">No recent datasets yet</li>
-          </ul>
-        </nav>
-      </div>
-      </div>
     </div>
   </div>
 </section>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const datasetsHistoryList = document.getElementById('datasets-history-list');
-  if (!datasetsHistoryList) return;
-
-  function updateDatasetsHistory() {
-    let history = [];
-    try {
-      const raw = localStorage.getItem('affinedrift_datasets_history');
-      if (raw) history = JSON.parse(raw);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      localStorage.removeItem('affinedrift_datasets_history');
-    }
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-datasets.html'
-    };
-
-    if (currentPage.url === 'resources-datasets.html') {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_datasets_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      datasetsHistoryList.textContent = '';
-      const li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'No recent datasets yet';
-      datasetsHistoryList.appendChild(li);
-      return;
-    }
-
-    datasetsHistoryList.textContent = '';
-    const fragment = document.createDocumentFragment();
-    history.forEach((item) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      let safeUrl = "#";
-      if (typeof item.url === "string") {
-        try {
-          const parsed = new URL(item.url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-      }
-      a.href = safeUrl;
-      a.textContent = item.title;
-      li.appendChild(a);
-      fragment.appendChild(li);
-    });
-    datasetsHistoryList.appendChild(fragment);
-  }
-
-  updateDatasetsHistory();
-});
-</script>
 ```
 
 ## Related Articles

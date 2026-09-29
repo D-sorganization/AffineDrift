@@ -21,6 +21,52 @@ function parseStoredHistory(key) {
 }
 
 /**
+ * Build a sanitized <li><a></a></li> entry for a history item, rejecting
+ * any url whose resolved protocol isn't http(s).
+ */
+function createHistoryListItem(item, { truncateAt } = {}) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    let safeUrl = "#";
+    if (typeof item.url === "string") {
+        try {
+            const parsed = new URL(item.url, window.location.origin);
+            if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+                safeUrl = parsed.href;
+            }
+        } catch (_error) {
+            // Malformed URL: fall back to "#".
+        }
+    }
+    a.href = safeUrl;
+    a.textContent =
+        truncateAt && item.title.length > truncateAt
+            ? item.title.substring(0, truncateAt) + "..."
+            : item.title;
+    li.appendChild(a);
+    return li;
+}
+
+/**
+ * Build the "No recent articles yet" empty state, with a link back to the
+ * articles index, shared by the global and per-article history sidebars.
+ */
+function createExploreArticlesEmptyState() {
+    const li = document.createElement("li");
+    li.className = "history-empty";
+    const span = document.createElement("span");
+    span.setAttribute("role", "status");
+    span.setAttribute("aria-live", "polite");
+    span.textContent = "No recent articles yet. ";
+    li.appendChild(span);
+    const a = document.createElement("a");
+    a.href = "/resources/articles.html";
+    a.textContent = "Explore articles";
+    li.appendChild(a);
+    return li;
+}
+
+/**
  * Update the history sidebar with recently visited pages
  */
 export function updateHistorySidebar() {
@@ -82,40 +128,13 @@ export function updateHistorySidebar() {
 
     historyList.textContent = "";
     if (displayHistory.length === 0) {
-        const li = document.createElement("li");
-        li.className = "history-empty";
-        const span = document.createElement("span");
-        span.setAttribute("role", "status");
-        span.setAttribute("aria-live", "polite");
-        span.textContent = "No recent articles yet. ";
-        li.appendChild(span);
-        const a = document.createElement("a");
-        a.href = "/resources/articles.html";
-        a.textContent = "Explore articles";
-        li.appendChild(a);
-        historyList.appendChild(li);
+        historyList.appendChild(createExploreArticlesEmptyState());
     } else {
         const fragment = document.createDocumentFragment();
         for (const item of displayHistory) {
-            const li = document.createElement("li");
-            const a = document.createElement("a");
-            let safeUrl = "#";
-            if (typeof item.url === "string") {
-                try {
-                    const parsed = new URL(item.url, window.location.origin);
-                    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                        safeUrl = parsed.href;
-                    }
-                } catch (e) {}
-            }
-            a.href = safeUrl;
-            const displayTitle =
-                item.title.length > MAX_HISTORY_TITLE_LENGTH
-                    ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + "..."
-                    : item.title;
-            a.textContent = displayTitle;
-            li.appendChild(a);
-            fragment.appendChild(li);
+            fragment.appendChild(
+                createHistoryListItem(item, { truncateAt: MAX_HISTORY_TITLE_LENGTH })
+            );
         }
         historyList.appendChild(fragment);
     }
@@ -176,38 +195,60 @@ export function initArticleHistory() {
         const history = parseStoredHistory(STORAGE_KEY);
         articlesHistoryList.textContent = "";
         if (!history || history.length === 0) {
-            const li = document.createElement("li");
-            li.className = "history-empty";
-            const span = document.createElement("span");
-            span.setAttribute("role", "status");
-            span.setAttribute("aria-live", "polite");
-            span.textContent = "No recent articles yet. ";
-            li.appendChild(span);
-            const a = document.createElement("a");
-            a.href = "/resources/articles.html";
-            a.textContent = "Explore articles";
-            li.appendChild(a);
-            articlesHistoryList.appendChild(li);
+            articlesHistoryList.appendChild(createExploreArticlesEmptyState());
         } else {
             const fragment = document.createDocumentFragment();
             for (const item of history) {
-                const li = document.createElement("li");
-                const a = document.createElement("a");
-                let safeUrl = "#";
-                if (typeof item.url === "string") {
-                    try {
-                        const parsed = new URL(item.url, window.location.origin);
-                        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                            safeUrl = parsed.href;
-                        }
-                    } catch (e) {}
-                }
-                a.href = safeUrl;
-                a.textContent = item.title;
-                li.appendChild(a);
-                fragment.appendChild(li);
+                fragment.appendChild(createHistoryListItem(item));
             }
             articlesHistoryList.appendChild(fragment);
         }
     }
+}
+
+/**
+ * Initialize a category-scoped "recently viewed" sidebar (e.g. "Recent
+ * Models"), shared by pages that track visits across a small, fixed set of
+ * sibling pages within one section.
+ *
+ * @param {Object} options
+ * @param {string} options.listElementId - id of the <ul> to populate
+ * @param {string} options.storageKey - localStorage key for this category
+ * @param {string} options.emptyMessage - text shown when history is empty
+ * @param {string[]} options.pages - filenames tracked for this category
+ * @param {string} options.fallbackUrl - url used when the pathname has no segment
+ */
+export function initCategoryHistory({ listElementId, storageKey, emptyMessage, pages, fallbackUrl }) {
+    const listEl = document.getElementById(listElementId);
+    if (!listEl) return;
+
+    let history = parseStoredHistory(storageKey);
+
+    const path = window.location.pathname;
+    const currentPage = {
+        title: document.title.replace(" - AffineDrift", "").replace("AffineDrift - ", ""),
+        url: path.substring(path.lastIndexOf("/") + 1) || fallbackUrl,
+    };
+
+    if (pages.includes(currentPage.url)) {
+        history = history.filter((item) => item.url !== currentPage.url);
+        history.unshift(currentPage);
+        history = history.slice(0, MAX_HISTORY_ITEMS);
+        localStorage.setItem(storageKey, JSON.stringify(history));
+    }
+
+    listEl.textContent = "";
+    if (history.length === 0) {
+        const li = document.createElement("li");
+        li.className = "history-empty";
+        li.textContent = emptyMessage;
+        listEl.appendChild(li);
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+    for (const item of history) {
+        fragment.appendChild(createHistoryListItem(item));
+    }
+    listEl.appendChild(fragment);
 }
