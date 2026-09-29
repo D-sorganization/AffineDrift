@@ -225,7 +225,12 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
-| 2026-09-29 | #4548 | Render the 21 orphaned per-article companion bibliographies via a new `articles/*-bibliography.md` render rule, fix their two broken links, retire the one with no matching article, and document the pattern. |
+| 2026-09-29 | #4548 | Render the 22 orphaned per-article companion bibliographies via a new `articles/*-bibliography.md` render rule, add front matter, fix their two broken links, and document the pattern. |
+| 2026-09-29 | #4576 | Add a Privacy Policy page covering local storage, the service worker, third-party embeds, and analytics per D6; link it from the site footer. |
+| 2026-09-29 | #4582 | Enforce uppercase G(x) for the control-affine input map across the home page, four textbook chapters and 12 critique files; add a baseline-gated pytest notation lint (scripts/check_notation.py). |
+| 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
+| 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
+| 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
 | 2026-09-24 | #4458 | Mark four stale development-log entries (DL-#4429, DL-#4253, DL-#4406, DL-#1595) as shipped after their PRs merged. |
 | 2026-09-23 | #4445 | Enforce the published deferred catalog through the canonical validator bundle and hook; sync format-specific agent guidance. |
 | 2026-09-23 | #4438 | Project charter/status expose DV-4253 as parked with pending resource decisions while theory issue #4253 remains active. |
@@ -421,9 +426,3 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
-
-| 2026-09-29 | #4576 | Add a Privacy Policy page covering local storage, the service worker, third-party embeds, and analytics per D6; link it from the site footer. |
-| 2026-09-29 | #4582 | Enforce uppercase G(x) for the control-affine input map across the home page, four textbook chapters and 12 critique files; add a baseline-gated pytest notation lint (scripts/check_notation.py). |
-| 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
-| 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
-| 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |

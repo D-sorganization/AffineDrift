@@ -1,335 +1,54 @@
-# Privacy Policy Page — 2026-09-29
+# Website Consolidation (Seven Web Issues) — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
-  `AffineDrift-worktrees/claude-4576`.
-- Branch `claude/issue-4576`, commit `SELF`; pull request not created yet (opened
-  as part of this same session; see the PR list for the resulting number).
-- Governing issue: #4576 (`[WEB-10.8] Privacy Policy Page`, epic #4579,
-  `tier:cli`). Objective: `metrics.js` stores usage data only in
-  `localStorage`, but nothing told readers what is and is not collected;
-  add a page covering local storage, the service worker, embeds, and
-  analytics (per D6), linked from the footer.
-- Completed work:
-  - Added `pages/privacy-policy.qmd`: covers the `js/metrics.js` local-storage
-    usage widget, `service-worker.js` offline caching, third-party embeds
-    (YouTube video players, Google Fonts, jsDelivr CDN for MathJax), and the
-    current no-third-party-analytics state per Board decision D6
-    (`docs/development/website-improvement-draft-issues-2026-09-29.md`).
-  - Added a "Privacy Policy" link to `website.page-footer.right` in
-    `_quarto.yml`, pointing at `pages/privacy-policy.html`.
-  - Added `tests/test_privacy_policy_page.py` (TDD: written first, confirmed
-    failing before the page/footer link existed) asserting the page exists
-    with frontmatter metadata, covers all four required topics, and is linked
-    from the footer.
-  - Extended the existing footer-contract test in `tests/test_navbar_ia.py`
-    (`test_page_footer_links_publication_and_executable_companions`) to assert
-    the new Privacy Policy link.
-  - Added the `DL-#4576` entry to `docs/development/DEVELOPMENT_LOG.md`.
-  - Ran `python -m scripts.regenerate_claim_audit_evidence` to refresh the
-    `_quarto.yml` digest in `data/trust/claim_audit_inventory.json` (and its
-    derived `data/trust/generated/claim_audit_report.json`) for the two
-    unrelated claim reviews that list it as evidence, after the footer-link
-    edit changed that file's bytes.
-- Compatibility constraints: no navbar changes (the issue only requires a
-  footer link); no changes to `js/metrics.js` or `service-worker.js` behavior,
-  this is documentation only.
-- Validation commands and outcomes:
-  - `python3 -m pytest tests/test_privacy_policy_page.py -v -m content_lint` —
-    3 passed.
-  - `python3 -m pytest tests/test_navbar_ia.py tests/test_public_site_manifest.py -v` —
-    29 passed.
-  - `python3 -m pytest tests/test_page_style_discipline.py tests/test_site_trust_surface_audit.py tests/test_editorial_and_consistency.py -v` —
-    144 passed.
-  - `python3 -m ruff check tests/test_privacy_policy_page.py tests/test_navbar_ia.py` —
-    clean.
-  - `python3 -m black --check --line-length 100 tests/test_privacy_policy_page.py tests/test_navbar_ia.py` —
-    clean.
-  - `python3 -m scripts.check_spec_changelog` — passed.
-- Blockers/risks/assumptions: none known. The page describes the current
-  (local-only) analytics state; if a future site-wide analytics change lands
-  per D6, this page's Analytics section should be updated in the same PR.
-- Next steps: push the branch, open the draft PR (`Fixes #4576`), and confirm
-  the fleet lease is released by the delegating agent per its own process.
-# Notation Lint for the G(x) Input Map — Issue #4582
+  `AffineDrift-worktrees/w-ad-web-consolidated`.
+- Branch `claude/website-consolidated-0929`, commit `SELF`; one consolidated
+  draft pull request (see the PR list) supersedes drafts #4615, #4616 and #4618
+  and the unpushed branches for #4608, #4583, #4568 and #4548.
+- Objective: land seven Sonnet 5 CLI-tier website issues in one CI cycle under
+  the PR-queue consolidation rule (RM#1691).
 
-- Repository: `D-sorganization/AffineDrift`, worktree
-  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4582`.
-- Branch `claude/issue-4582`, commit `SELF`; pull request: not created yet (opened
-  as a draft in the same turn this entry lands).
-- Governing issue: #4582 ("[WEB-11.4] Enforce $G(x)$ Notation and Add a Notation
-  Lint"), native child of epic #4586 (E11 — Mathematical Typesetting and Notation).
-- Objective: `NOTATION.md:342-346` makes uppercase $G(x)$ normative for the
-  control-affine input map and forbids lowercase $g(x)$ (reserved for gravity).
-  Fix every occurrence that means the input map, and add a regression lint so a
-  reintroduced lowercase $g(x)$ fails CI.
-  - Fixed lowercase `g(x)` -> `G(x)` (input-map meaning only) in `index.qmd`
-    (home page), `articles/motion-control/chapter8.tex`,
-    `articles/motion-control/Control_Is_Motion_Complete.tex`,
-    `articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd` (and its
-    `Volume_I/chapters/ch03_superposition.tex` mirror, including the Lie-bracket
-    line `Dg(x)` -> `DG(x)`), `articles/The_Geometry_of_Motion/quarto/volume2_content.qmd`
-    and `Volume_II/chapters/ch08_phase_variable_control.tex`, `models/models-drake.qmd`,
-    and all 12 `critiques/*.md` files that stated the project's own dynamics form.
-  - Left `articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd` and its
-    `Volume_I/chapters/ch05_optimal_control.tex` mirror unchanged: their $g(x)$ is
-    an unrelated inequality-constraint function ($g(x) \le 0$ barrier/penalty), not
-    the input map, so rewriting it to $G(x)$ would misrepresent the math. Both are
-    allowlisted in `config/notation-baseline.json`.
-  - `articles/superposition.qmd` was already correct (uses $G(x)$); no change needed.
-  - Added `scripts/check_notation.py` (baseline-gated scan of `.tex`/`.qmd`/`.md`
-    under `articles/`, `books/`, `content/`, `critiques/`, `models/`, `pages/`,
-    `resources/`, and root `index.qmd`), mirroring `scripts/check_terminology.py`'s
-    design (issue #3526).
-  - Added `tests/test_check_notation.py`, marked `content_lint`: fixture-based unit
-    tests for `scan()`/baseline behavior, plus `test_real_corpus_matches_notation_baseline`,
-    which scans the actual repository tree and is the live enforcement for #4582.
-    It runs via the existing "Run Content Lint Tests" CI step
-    (`pytest tests/ -m content_lint`); no workflow file was changed.
-- Compatibility constraints: did not touch `docs/development/*.md` (meta/dev-process
-  docs, e.g. `code-style-guide.md`, `writing-style-guide.md`,
-  `website-improvement-draft-issues-2026-09-29.md`) or `reports/*.md`
-  (historical audit reports) — out of the lint's search roots and out of the
-  issue's explicit scope, so they still contain historical/illustrative
-  lowercase `g(x)` mentions unrelated to the corpus content itself.
-- Validation:
-  - `python3 -m black --check --line-length 100 scripts/check_notation.py tests/test_check_notation.py` passes.
-  - `python3 -m ruff check scripts/check_notation.py tests/test_check_notation.py` passes.
-  - `python -m pytest --override-ini addopts= tests/test_check_notation.py -m content_lint -o qt_api=pyqt6 -v`:
-    17 passed (the `-o qt_api=pyqt6` works around an unrelated local pytest-qt/PyQt6
-    DLL probe failure in this sandbox; not needed in CI).
-  - `python3 scripts/check_notation.py --baseline config/notation-baseline.json` exits 0.
-- Next Steps
-  1. Open the draft PR for #4582 (`Fixes #4582`), including the test commands/pass
-     counts above.
-  2. A frontier reviewer should confirm the `ch05_optimal_control` allowlist
-     rationale (distinct constraint-function symbol, not the input map) before
-     merge.
-# ScholarlyArticle and Book JSON-LD — #4546
+| Issue | Branch              | Change                                                                   |
+| ----- | ------------------- | ------------------------------------------------------------------------ |
+| #4576 | `claude/issue-4576` | Privacy Policy page (`pages/privacy-policy.qmd`) plus footer link.       |
+| #4582 | `claude/issue-4582` | Uppercase `G(x)` notation; `scripts/check_notation.py` baseline lint.    |
+| #4546 | `claude/issue-4546` | `scripts/filters/schema-jsonld.lua` JSON-LD filter; deletes dead include. |
+| #4608 | `claude/issue-4608` | Website/UX problem issue template plus contract test.                    |
+| #4583 | `claude/issue-4583` | "Drift-Control Ratio" naming; slug `drift-control-ratio` with alias.     |
+| #4568 | `claude/issue-4568` | Accessibility statement page (WCAG 2.1 AA target, #4139 inventory).      |
+| #4548 | `claude/issue-4548` | Render rule plus front matter for all 22 companion bibliographies.       |
 
-  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4546` (git worktree).
-- Branch `claude/issue-4546`, commit `SELF`; pull request
-  [#4618](https://github.com/D-sorganization/AffineDrift/pull/4618) (draft).
-- Governing issue: #4546 (epic #4552), `tier:cli`. Objective: `_includes/article-schema.html`
-  was dead (referenced by no page) and broken (`{{< meta >}}` does not expand
-  inside a raw HTML include, and its hardcoded author URL was wrong). Replace
-  it with per-page Schema.org JSON-LD generated through a Lua filter, covering
-  `ScholarlyArticle`, `Book`, `Chapter`, `Dataset`, and `SoftwareSourceCode`.
-  - Added `scripts/filters/schema-jsonld.lua`: a Pandoc/Quarto Lua filter that
-    reads a `schema-type` frontmatter field and, only when it names one of the
-    five supported types, builds the matching JSON-LD object from already-resolved
-    metadata (`title`, `description`, `author`, `date`, plus a few type-specific
-    fields) and injects it into `<head>` via `quarto.doc.include_text`. Pages
-    without `schema-type` are untouched, so registering it project-wide in
-    `_quarto.yml` (`filters:`) is a no-op for the rest of the site.
-  - `date` is only passed through as `datePublished` when it still matches
-    `YYYY-MM-DD`: Quarto's HTML format reformats `date` into a display string
-    (e.g. "January 15, 2026") before Lua filters run, and emitting that would
-    be a wrong-format `datePublished` rather than a missing one.
-  - Deleted the dead `_includes/article-schema.html` (satisfies the issue's
-    second acceptance criterion).
-  - Tagged one real, already-published page per type with `schema-type` (and
-    the relevant type-specific fields) so the first acceptance criterion has
-    concrete pages to check: `articles/affine-nature-golf-swing.qmd`
-    (ScholarlyArticle), `books/control-is-motion.qmd` (Book),
-    `articles/appendix-applications.qmd` (Chapter, `isPartOf` the article
-    above), `resources/resources-datasets.qmd` (Dataset),
-    `resources/resources-software.qmd` (SoftwareSourceCode).
-- Compatibility: the filter is additive and opt-in; no existing page's output
-  changes unless it declares `schema-type`. The prior JSON-LD in
-  `_includes/site-head.html` (site-wide `WebSite` schema) is untouched and
-  keeps rendering alongside the new per-page block.
-  - `python3 -m pytest tests/test_schema_jsonld.py tests/test_companion_hierarchy.py -v`
-    — 10 passed (integration tests that render synthetic pages through the real
-    `quarto render` + filter pipeline and assert on the parsed JSON-LD; see the
-    test file's module docstring for why `quarto render`, not `quarto pandoc`,
-    is required here).
-  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .`
-    — clean.
-  - `python3 -m scripts.validate_frontmatter` — 242 files checked, passed.
-  - `python3 -m scripts.check_spec_changelog` — passed (added the 2026-09-29
-    `#4546` row).
-  - Manually rendered all five tagged sample pages with `quarto render` from
-    the project root and confirmed each produced one well-formed, correctly
-    typed JSON-LD `<script>` block in addition to the existing site-wide one
-    (verified via a scratch script, not committed).
-  - Did not run the full Python/Jest/Playwright suites or a full-site
-    `quarto render` (out of scope for this change and prohibitively slow per
-    `CLAUDE.md`); the targeted commands above cover every acceptance criterion.
-- No blockers.
-
-## Next Steps
-
-- None outstanding for this issue. A frontier agent reviews the draft PR
-  before merge; it may choose additional sample pages or ask for the filter
-  to cover more of the site.
-# Website & UX Issue Template — 2026-09-29
-
-  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4608`.
-- Branch `claude/issue-4608`, commit `SELF`; carried into the AffineDrift website consolidation PR
-- Governing issue: #4608 ("[WEB-14.6] Issue Template for Website and UX Problems", epic
-  #4610). Objective: add a `.github/ISSUE_TEMPLATE/` template for website/UX problem reports
-  covering page URL, viewport, theme, browser, and expected versus actual behaviour.
-- Completed work: added `.github/ISSUE_TEMPLATE/website-ux-problem.md` (frontmatter matches the
-  existing content/critique/textbook templates; labels `website, bug`, both confirmed to exist
-  in the repo via a single scoped `gh api repos/.../labels` lookup). Added
-  `tests/test_website_ux_issue_template.py`, which reuses `src/tools/utils/frontmatter.extract_frontmatter`
-  to assert the template exists, has the expected frontmatter keys, and its body prompts for
-  every acceptance-criterion field.
-- Compatibility constraints: no existing issue template, config, or Python module was changed;
-  this is an additive template plus its test.
-  - `python3 -m pytest tests/test_website_ux_issue_template.py -v` — 3 passed (written first
-    against the missing file, confirmed to fail for the right reason, then made to pass).
-  - `python3 -m ruff check tests/test_website_ux_issue_template.py` — clean.
-  - `python3 -m black --check --line-length 100 tests/test_website_ux_issue_template.py` — clean.
-  - `python3 -m pytest --cov -q` — full-suite run kicked off; see the commit for the final
-    pass/coverage numbers if this line has not been updated with them.
-- Blockers/risks: none known. No dependency section on the issue; no "Depends on" blocker.
-- Next steps: open the draft PR (`Fixes #4608`), report the exact full-suite pass count and
-  coverage percentage in the PR body, and hand off for frontier review.
-# Standardise the DCR Name — #4583
-
-  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4583`.
-- Branch: `claude/issue-4583`; base `origin/main`; commit `SELF`; PR not created yet.
-- Governing issue: #4583 ("[WEB-11.5] Standardise the DCR Name"). DCR was
-  expanded three ways ("drift-control ratio", "controllability-drift ratio",
-  "drift-to-control ratio") while its slug (`controllability-drift-ratio`) did
-  not match either its title or its canonical expansion.
-- Completed: standardised every live expansion to "Drift-Control Ratio";
-  renamed `articles/controllability-drift-ratio.qmd` to
-  `articles/drift-control-ratio.qmd` (kept as an `aliases:` redirect target,
-  matching the WEB-02.9 alias pattern); updated all internal links across
-  articles, critiques, config, tests, and JS; updated the trust/audit
-  source-of-truth JSON (`claim_registry.json`, `claim_critique_ledger.json`,
-  `claim_audit_inventory.json` — including its sorted-route position and
-  recomputed `stable_audit_id`, `site_trust_surface_audit.json`); regenerated
-  all derived artifacts (critique annotations, `critique-status.qmd`,
-  `DEFENSE_STRATEGY.md`, `ad-dcr-reachability.qmd` trust panel, claim-audit
-  report, research-readiness library) via their `--check`-verified generator
-  scripts; hand-edited the single affected `sitemap.xml`/`feed.xml` entries
-  rather than doing a full regeneration (which would have touched all 240
-  URLs' unrelated stale `lastmod` dates); added both wrong expansions as
-  permanently banned patterns in `scripts/check_terminology.py` (the
-  "terminology baseline" acceptance criterion).
-- Historical/archival mentions of the old expansions or slug were
-  deliberately left unchanged: `CHANGELOG.md`,
-  `docs/development/terminology-decision-record.md`,
-  `docs/development/website-improvement-draft-issues-2026-09-29.md`,
-  `reports/textbook_editorial_review_2026-04-11.md`,
-  `docs/development/technical-review/REVIEW.md`, `assessments/*`, `.Jules/*`.
-- Validation: `ruff check .` and `black --check --line-length 100 .` clean;
-  targeted suite (11 files: DCR rigor/reachability/event-sensitivity,
-  editorial/consistency, publication markup, scientific trust metadata,
-  research protocol readiness, single-title, formatting lints, terminology,
-  claim audit inventory) — 149 passed; `regenerate_claim_audit_evidence
---check`, `generate_claim_critique_ledger --check`, `generate_trust_panels
---check`, and `check_spec_changelog` all pass.
-- Next steps: open the draft PR (`gh pr create --draft`, `Fixes #4583`).
-# Accessibility Statement Page — 2026-09-29
-
-  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4568`.
-- Branch `claude/issue-4568`, commit `SELF`; pull request: see this session's draft PR (opened
-  against `main`).
-- Governing issue: #4568 (`WEB-09.8`, part of epic #4569 — E9 Accessibility Conformance).
-  Objective: publish an accessibility statement page stating the conformance target, known
-  issues (linked to #4139), and a contact route for reporting barriers.
-  - Added `pages/accessibility.qmd` (category `site-information`): states a WCAG 2.1 Level AA
-    conformance target, summarizes the known-issues inventory from #4139 (247 serious/critical
-    axe-core violations on 163/238 routes, CI axe check currently report-only), and gives two
-    barrier-reporting routes (GitHub Issues, email) plus a link to the Contact page. Includes a
-    `## Related Articles` section (Contact, About, Development Roadmap) to satisfy the site link
-    gate's related-coverage and orphan checks.
-  - Added a footer link (`Accessibility` → `pages/accessibility.html`) in `_quarto.yml` so the
-    page is discoverable and not an orphan per `src/tools/site_link_gate.py`.
-  - Added `tests/test_accessibility_statement_page.py` (TDD: written first, confirmed failing,
-    then made to pass) asserting the category, conformance-target text, the #4139 link, the
-    contact route, related-links count, and the footer entry.
-  - Added `pages/accessibility.qmd` to `CLEAN_PAGES` in `tests/test_page_style_discipline.py`
-    (no inline styles, gradients, or hardcoded hex) as a regression guard.
-  - No API or generated-client changes; no schema changes.
-  - `python3 -m pytest tests/test_accessibility_statement_page.py -q` — 6 passed.
-  - `python3 -m pytest tests/test_accessibility_statement_page.py tests/test_page_style_discipline.py tests/test_navbar_ia.py tests/test_site_link_gate.py tests/test_content_inventory.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py -q` — 248 passed.
-  - `python3 -m ruff check .` — all checks passed.
-  - `python3 -m black --check --line-length 100 .` — all files unchanged.
-  - `python3 scripts/check_title_case.py` — 638 files checked, all title case.
-  - Deliberately not run: `quarto render` and Playwright/axe e2e (no Quarto/browser binaries in
-    this environment); the new page reuses only existing CSS classes (`ad-page-container`,
-    `page-section`, `section-heading`, `page-subtitle`, `page-note`, `sr-only`) already exercised
-    by `pages/contact.qmd` and `pages/about.qmd`, so no new CSS surface is introduced.
-- Risks/assumptions: the #4139 violation counts (247/163/238) are copied verbatim from that
-  issue's body as a historical scan snapshot; if a newer full-site scan lands, this page's
-  numbers should be refreshed in the same PR that updates the CI axe gate.
-- Next steps: none outstanding for #4568. A follow-up (not in this issue's scope) could flip the
-  CI axe-core check from `warn` to `fail` once the #4139 backlog is cleared, per the TODO in
-  `.github/workflows/ci-standard.yml`.
-# Render or Retire Orphaned Per-Article Bibliography Files — 2026-09-29
-
-  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4548` (git worktree).
-- Branch `claude/issue-4548`, commit `SELF`; pull request not created yet (opening as draft
-  immediately after this handoff commit).
-- Governing issue: #4548 ("[WEB-07.6] Render or Retire the Orphaned Per-Article Bibliography
-  Files", epic #4552). Objective: every `articles/*-bibliography.md` companion bibliography
-  either renders and its links resolve, or is removed if it adds nothing; document the single
-  pattern used.
-  - Added the `articles/*-bibliography.md` render rule to `_quarto.yml` (mirrors the pre-existing
-    `critiques/*.md` rule) and to `REQUIRED_RENDER_RULES` in
-    `scripts/check_quarto_render_coverage.py`, so the rule can't silently regress.
-  - Added minimal `title`/`description` YAML front matter to the 21 companion bibliography files
-    that have a matching article (`inverse-dynamics-bibliography.md` already had front matter);
-    left each file's body untouched.
-  - Kept `articles/Pinocchio_Project_Outline-bibliography.md` (227 lines of annotated sources, no
-    matching article) and gave it front matter so it renders under the same rule; reviewer judged
-    it substantive, so deleting it would lose content.
-  - Fixed the two existing links: `articles/proximal-distal-energy-transfer.qmd:1461` pointed at
-    the raw `.md` source (Quarto never copies unrendered markdown into `docs/`, so it would 404
-    once deployed); `articles/wrist-universal-joint.qmd:756` pointed at an absolute GitHub blob
-    URL. Both now use a local relative `.html` link to the rendered page.
-  - Documented the pattern in `docs/development/content-architecture.md` (new "Companion
-    Bibliography Pattern" section), including why these `.md` companions are exempt from the site
-    link gate's Related-Articles/orphan/category checks (only `*.qmd` files under `CONTENT_DIRS`
-    are scanned by `src/tools/site_page_scan.py::find_content_pages`) and that
-    `null-space-constraint-jacobian-bibliography.qmd` is a grandfathered narrative-page exception,
-    not a second sanctioned pattern.
-  - Added two parametrized regression tests to `tests/test_check_quarto_render_coverage.py`
-    (`test_orphaned_bibliography_md_is_now_rendered_and_linked_locally`) covering the two fixed
-    links, mirroring the existing null-space test.
-- Decision not to also add new inbound links from the other 19 matched articles to their
-  companion bibliography: the acceptance criteria require existing links to resolve and a
-  documented single pattern, not new cross-links from every article; adding those would be a much
-  larger, separately-reviewable content change. Noted as a possible follow-up in the PR body.
-  - `python3 -m pytest tests/test_check_quarto_render_coverage.py tests/test_companion_pins.py
-    tests/test_site_link_gate.py tests/test_root_hygiene.py tests/test_formatting_lints.py
-    tests/test_check_links.py tests/test_check_links_additional.py tests/test_check_tree_parity.py
-    tests/test_generate_sitemap.py tests/test_navbar_ia.py tests/test_page_style_discipline.py
-    tests/test_reference_audit.py -q` — 127 passed.
-  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` — both clean.
-  - `python3 -m scripts.check_quarto_render_coverage` — passes (240 sitemap URLs reconciled).
-  - `python3 -m scripts.link-checker --site-gate --root .` — "Site gate passed!" against the real
-    repository (no orphan/related-coverage/category regressions from the new `.md` files, since
-    they are outside the gate's `*.qmd`-only content-page scan).
-  - `python3 -m scripts.regenerate_claim_audit_evidence` — the frontmatter added to
-    `articles/force-mobility-matrices-bibliography.md` changed its SHA-256, which broke the
-    reviewed-evidence pin recorded for that route (`tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current`
-    failed with a digest mismatch). Ran `--check` first to confirm scope (only that one file), then
-    regenerated; `data/trust/claim_audit_inventory.json` and `data/trust/generated/claim_audit_report.json`
-    now carry the refreshed digest. `reports/technical-review/force-mobility-render-verification.json`
-    (the frozen point-in-time review snapshot) was intentionally left untouched — it is historical
-    record, not the live gate. `python3 -m pytest tests/test_claim_audit_inventory.py -q` — 18
-    passed after the regeneration.
-  - `python3 -m pytest -q` (full suite) — passed after the evidence regeneration above; re-run to
-    confirm before opening the PR.
-  - Did not run `quarto render` (the `quarto` CLI is unavailable in this sandbox); front matter
-    YAML was verified by hand and via the render-coverage/site-gate checks above.
-- Blockers/risks: none known.
-- Development log: `DL-#4548` added to `docs/development/DEVELOPMENT_LOG.md`, state `in_review`.
-
-
-1. Open the draft PR (`gh pr create --draft`) for issue #4548.
-2. A reviewing frontier agent should confirm the `.md`-render-rule pattern (vs. converting to
-   `.qmd`) is the intended long-term convention, since it trades richer per-page authoring
-   (categories, Related Articles) for exemption from the site link gate's content-page checks —
-   the same trade-off the pre-existing `critiques/*.md` rule already makes.
-
----
+- Key decisions:
+  - `data/trust/claim_audit_inventory.json` was merged by hand: #4583's route
+    rename (`/articles/drift-control-ratio.html`, audit id
+    `ad-route-4a8ccbe60039`) applied, routes re-sorted, then
+    `python -m scripts.regenerate_claim_audit_evidence` after every merge.
+  - `articles/Pinocchio_Project_Outline-bibliography.md` is kept (given front
+    matter) rather than deleted; it holds 194 lines of substantive references.
+  - `articles/controllability-drift-ratio-bibliography.md` keeps its filename;
+    #4583 renamed only the article.
+  - The privacy page's related section was renamed to `## Related Articles`
+    and given a third link so the site gate's related-coverage rule passes.
+- Validation on the consolidated branch:
+  - `python -m pytest -o addopts= tests/test_privacy_policy_page.py
+    tests/test_check_notation.py tests/test_schema_jsonld.py
+    tests/test_companion_hierarchy.py tests/test_website_ux_issue_template.py
+    tests/test_accessibility_statement_page.py
+    tests/test_check_quarto_render_coverage.py tests/test_navbar_ia.py
+    tests/test_public_site_manifest.py tests/test_claim_audit_inventory.py
+    tests/test_site_link_gate.py tests/test_dcr_reachability_contract.py
+    tests/test_dcr_article_rigor.py tests/test_scientific_trust_metadata.py`
+    — 165 passed.
+  - `python -m scripts.link-checker --site-gate --root .` — passed.
+  - `python -m scripts.regenerate_claim_audit_evidence --check` — current.
+  - `python -m scripts.check_spec_changelog` — passed.
+  - Full render and Playwright/axe run in CI only.
+- Blockers/risks: none known. Rendered output is not committed.
+- Next steps:
+  1. Wait for CI on the consolidated PR; fix any failure on this branch.
+  2. Mark ready, verify the remote head, arm via `automerge_guard.py`.
+  3. After merge, close #4615, #4616 and #4618 as superseded and remove the
+     seven `claude-<issue>` worktrees.
 
 # Website Review and Draft Board Backlog — 2026-09-29
 
