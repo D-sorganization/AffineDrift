@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4608 · Website & UX Issue Template
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created (pending)
+- **Issue:** #4608 (epic #4610)
+- **Branch:** `claude/issue-4608`
+- **Paths:** `.github/ISSUE_TEMPLATE/website-ux-problem.md`, `tests/test_website_ux_issue_template.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_website_ux_issue_template.py -v`: 3 passed; `ruff check` and `black --check --line-length 100` clean on changed files)
+- **Summary:** Adds a GitHub issue template for website/UX problems capturing page URL, viewport, theme, browser, and expected versus actual behaviour, matching the style of the existing content/critique/textbook templates.
+- **Next step:** Open the draft PR and hand off for frontier review.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped
