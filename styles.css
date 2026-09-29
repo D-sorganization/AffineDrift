@@ -143,6 +143,20 @@ footer.footer a,
   color: var(--text-secondary);
 }
 
+/* The footer's right-hand link group (About, Privacy Policy, Accessibility,
+   source links) is wider than a phone viewport; wrap it rather than
+   overflowing the page horizontally, and keep each link a 44px touch target. */
+.nav-footer .footer-items {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-footer .footer-items .nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 /* Full-layout hubs own their visible H1 in authored page markup. Every such
    source is checked by tests/title-block-semantics.test.js, so the generated
    Quarto title is always the redundant copy and is hidden consistently. */
