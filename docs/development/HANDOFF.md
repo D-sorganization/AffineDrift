@@ -1,3 +1,156 @@
+# Implementation Handoff — Deploy Website Verification Fix (#4617)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/issue-4617-deploy-website-resources-books-error
+- Baseline commit: d53290cd92d8c90acd33ae91945c643bb9531296
+- Implementation commit: SELF
+- Pull request: not created
+- Governing issue/epic: #4617
+
+## Objective and Status
+
+- Objective: Fix Deploy Website failure on route /resources/resources-books.html and prevent non-first-party network errors from failing verification.
+- Status: in progress
+- Completed: Removed 18 fragile external book covers and fallback onerror 404 handler from resources-books.qmd; updated scripts/public-site-browser-noise.js to filter Failed to load resource: net::ERR_ console noise; added test coverage in tests/public-site-verifier.test.js.
+- Remaining: Verification suite completion, PR creation, and agent lease release.
+
+## Files and Decisions
+
+- Files changed:
+  - `resources/resources-books.qmd`: Removed fragile external book cover media slots and fallback onerror handlers from all 18 cards to make all 31 book cards uniform text cards and prevent network and 404 failures.
+  - `scripts/public-site-browser-noise.js`: Added filter for `Failed to load resource: net::ERR_` in `isActionableConsoleError` to prevent third-party network flakiness from failing verification.
+  - `tests/public-site-verifier.test.js`: Added test assertions verifying `isActionableConsoleError` ignores `net::ERR_` noise while preserving actionable errors.
+  - `data/trust/claim_audit_inventory.json` & generated trust registries: Regenerated claim audit evidence digests following resource book source update.
+  - `SPEC.md`: Added change-log row for #4617.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: First-party network failures remain caught by `onRequestFailed` and `navigateWithRetry`, so filtering Chromium console's `net::ERR_` does not hide first-party regressions while protecting the verification gate against intermittent external timeouts or unreachable CDNs.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
+- `npx jest` — PASS (25 suites passed, 420 passed)
+- `python -m ruff check .` — PASS (All checks passed)
+- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
+- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
+- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
+- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+
+## Next Steps
+
+1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
+2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
+3. Release agent lease for #4617.
+
+## Change Log
+
+- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+
+---
+
+# Website Review and Draft Board Backlog — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
+- Branch `claude/ecstatic-darwin-latmzr`, commit `SELF`; pull request #4485 (open).
+- Objective: at the user's request, review the external "Comprehensive Technical & Architectural
+  Review Summary", do an independent source-level review of the website, and draft epics and
+  issues for Board review.
+- Deliverable: `docs/development/website-improvement-draft-issues-2026-09-29.md` (moved from `reports/` per the AGENTS.md rule that development plans live in `docs/development/`), with 14 epics, 124 draft
+  issues, 10 Board decisions, sequencing, success measures, and a map to existing open work
+  (#4008/#4010/#4022-#4030, #4084-#4089, #4139/#4140 and others).
+- No GitHub issues were filed. The drafts await Board approval. No site source, content, or code
+  changed. The live site was not reachable from the review sandbox, so findings about rendered
+  behaviour are marked "verify on live site".
+- Validation:
+  - `prettier --write` applied to the report.
+  - Headings title-cased with `scripts.check_title_case.expected_title`.
+  - Review follow-up: the WEB-06.2 packaging scope includes `src.core`, the WEB-06.10 viewer is planar-first, and WEB-07.3 dates must be verified by the owner rather than taken from Git.
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` passes.
+  - `scripts/check_root_hygiene.py` passes.
+  - The report-scanning pytest subset passes: claim audit, trust surface, public-site manifest,
+    render coverage, and e2e paths (67 tests).
+- No development-log entry: this is planning only, with no governing issue yet. Entries should be
+  created per epic once the Board files the issues.
+
+## Next Steps
+
+1. Done 2026-09-29: the Board accepted all 14 epics (#4496, #4505, #4514, #4521, #4530, #4543,
+   #4552, #4560, #4569, #4579, #4586, #4594, #4604, #4610). 111 children are filed and 13 are held;
+   the report's §6 records the epic numbers and the held items.
+2. The owner decides D4 (canonical versions, one ADR per family), D7 (content licence) and D8
+   (external review model) to release the 13 held items.
+
+---
+
+# Night Watch Pass — 2026-09-28
+
+- Role: `night-watch`; branch `staff/night-watch-task-587ee0`.
+- No open PRs and no simple-tier issues on AffineDrift this pass (all 6 open
+  issues are epics/subepics — out of overnight scope per playbook).
+- Docs compliance checklist: found two `DEVELOPMENT_LOG.md` entries stuck at
+  `in_review` well past their PRs' merges — DL-#3904 (PR #4271, merged
+  2026-09-08 as `c088f9d0`) and DL-#3903 (PR #4267, merged 2026-09-08 as
+  `5aedc884`). Confirmed both squash-merge commits are ancestors of `main`,
+  then flipped both entries to `shipped` with refreshed `Last verified` and
+  `Next step`.
+- No source, test, or article changes. Documentation currency maintenance
+  only. Draft PR opened on branch `staff/night-watch-task-587ee0` targeting
+  `main`.
+
+## Next Steps
+
+- None outstanding from this pass.
+
+---
+
+# Cartographer Pass — 2026-09-27
+
+- Role: `cartographer`; branch `staff/cartographer-task-afa7bc`.
+- Scheduled codemap-freshness pass (re-run after the 2026-09-27 CLI upgrade).
+  Audited codemap posture against the playbook checklist:
+  - `AGENTS.md` existed and already referenced `docs/codemap.md` and the
+    freshness runbook, but neither existed — a dead-end for agents following
+    the documented discovery path.
+  - `docs/architecture/C4.md` was already present and CI-enforced
+    (`architecture-map-contract.yml` + `scripts/architecture_map_contract.py`),
+    last updated 2026-09-10 (#1595/#4363) — no gap there.
+  - `.codemap/` was not in `.gitignore`.
+- Added `docs/codemap.md` (points to `C4.md`, directory table, refresh
+  mechanism, agent discovery path) and a `.codemap/` entry in `.gitignore`.
+- Logged both the fix and a follow-up suggestion (staleness check for
+  `docs/codemap.md` itself, best done with the shared
+  `codemap-refresh-workflow.yml` template) in
+  `docs/operations/cartographer-suggestions.md` — no bulk issues filed.
+- No source, test, or article changes. Documentation/navigation maintenance
+  only. Draft PR opened on branch `staff/cartographer-task-afa7bc` targeting
+  `main`.
+
+## Next Steps
+
+- A follow-on pass could wire the drift check described in the cartographer
+  suggestion log rather than re-deriving it from scratch.
+
+---
+
+No material handoff change — sanitation pass (branch/worktree hygiene, see
+`docs/operations/sanitation/sanitation-2026-09-28.md`) is a separate fleet
+lane from the corpus-review checkpoint below and does not alter its
+continuation state.
+
+---
+
 # Paused After Merged Checkpoint — 2026-09-28
 
 The user requested finishing the existing edits, merging to remote main and

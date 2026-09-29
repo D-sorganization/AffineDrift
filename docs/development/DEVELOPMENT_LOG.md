@@ -715,10 +715,10 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#3904 · Series navigation and tangent-space cluster integration
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude (wave-8 agent W8_3904)
 - **Issue:** `#3904` (epic `#3896`)
-- **PR:** not created (opens against `main` immediately after push)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4271 (merged)
 - **Branch:** `claude/issue-3904-series-nav`
 - **Paths:** `_quarto.yml`, `pages/tangent-hyperplanes.qmd`,
   `articles/superposition.qmd`,
@@ -729,7 +729,7 @@ reachable from any live state and `abandoned` from `parked`.
   `articles/theory-part5.qmd`, `articles/appendix-applications.qmd`,
   `articles/affine-nature-golf-swing.qmd`, `tests/test_series_navigation.py`
 - **Started:** 2026-09-08
-- **Last verified:** 2026-09-08 (`f094080`)
+- **Last verified:** 2026-09-28 (`c088f9d0`)
 - **Summary:** Added three series sidebar groups (theory, tangent-space,
   Geometry of Motion volumes) for prev/next and breadcrumbs; wired the four
   isolated geometry articles into the tangent-space cluster with the canonical
@@ -737,8 +737,8 @@ reachable from any live state and `abandoned` from `parked`.
   from tangent parts 1–7; chained appendix-applications and
   affine-nature-golf-swing into the theory sequence. Contract test:
   60 passed. All relative link targets verified to exist.
-- **Next step:** Merge the PR, then spot-check prev/next and breadcrumbs on
-  one page per series in the deployed site.
+- **Next step:** No further delivery work for this batch; PR #4271 merged as
+  `c088f9d0`.
 
 ### DL-0035 · Impact Dynamics and Acoustics Review
 
@@ -1333,16 +1333,17 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#3903 · Close cluster gaps: proximal–distal, impact/putting, technology
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** claude (wave-6 agent W6_3903)
 - **Issue:** `#3903` (epic `#3896`)
-- **PR:** [#4267](https://github.com/D-sorganization/AffineDrift/pull/4267) (against `main`)
+- **PR:** [#4267](https://github.com/D-sorganization/AffineDrift/pull/4267) (merged)
 - **Branch:** `claude/issue-3903-cluster-gaps`
 - **Paths:** `articles/intentional-constraint-collapse.qmd`, `articles/passive-distributed-control.qmd`, `articles/proximal-distal-a-journey-through-the-swing.qmd`, `articles/proximal-distal-energy-transfer.qmd`, `resources/research-review-induced-acceleration-analysis.qmd`, `resources/research-review-interaction-forces.qmd`, `articles/secondary-axis-stability.qmd`, `articles/strokes-gained-limitations.qmd`, `articles/impact-mechanics-and-ball-flight.qmd`, `articles/rotation-induced-spin.qmd`, `articles/putting-roll-models.qmd`, `articles/green-simulation.qmd`, `articles/technology-club-fitting.qmd`, `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/technology-launch-monitors.qmd`, `articles/technology-force-measurement.qmd`, `articles/technology-motion-capture.qmd`
 - **Started:** 2026-09-07
-- **Last verified:** 2026-09-08 (`SELF`)
+- **Last verified:** 2026-09-28 (`5aedc884`)
 - **Summary:** Wired the three measured cluster gaps from issue #3903: intentional-constraint-collapse and passive-distributed-control joined to the proximal-distal program (companion, monograph, summary, workbench); the two research reviews linked back into the article cluster they review; secondary-axis-stability and strokes-gained-limitations wired into the impact/putting cluster both ways; club-fitting and heavy-hit given the canonical Related Concepts component with reference-point-problem, vendor-reference, and model-interchange targets; unlinked backtick-path and bare-chapter items in the existing technology Related Concepts blocks converted to real links. The pinned `proximal_distal_energy_transfer/index.qmd` hunk was reverted to preserve immutable trust pins.
-- **Next step:** Merge the PR.
+- **Next step:** No further delivery work for this batch; PR #4267 merged as
+  `5aedc884`.
 
 ### DL-#3902 · Wire lateral links into Build pages: models, repositories, tools
 
