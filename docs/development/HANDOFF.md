@@ -1,3 +1,88 @@
+# Skip Link and Focus Order Without JavaScript — Issue #4566
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `AffineDrift-worktrees/claude-4566`.
+- Branch `claude/issue-4566`, commit `SELF`; pull request: not yet created
+  (opened as a draft immediately after this commit; see the follow-up commit
+  or the PR itself for its number/URL).
+- Governing issue: #4566 (`tier:cli`), a child of epic #4569 (E9 —
+  Accessibility Conformance). Objective: the skip-to-content link was
+  injected by `js/navigation.js::initSkipToContent` and risked duplicating
+  or simply not existing before JS ran; make exactly one skip link present
+  in the static HTML and verify focus order without JavaScript.
+- Completed work:
+  - Added `_includes/skip-link.html` (a static `<a class="skip-to-content"
+    href="#quarto-document-content">` before-body partial) and wired it via
+    `format.html.include-before-body` in `_quarto.yml`, so the link renders
+    for every page and is the first element in `<body>`.
+  - Rewrote `js/navigation.js::initSkipToContent` to stop creating/inserting
+    a link (previous behavior) and instead only attach a click handler to
+    the existing static `.skip-to-content` link that sets `tabindex="-1"`
+    on the href target (if it doesn't already declare one) and focuses it —
+    this is a progressive enhancement only; the link and its basic jump
+    work without JavaScript via native same-document fragment navigation.
+    `js/main.js`'s call site is unchanged.
+  - Added Jest coverage in `tests/navigation.test.js` (4 new cases: no link
+    created when none exists in static HTML, no duplication when one does,
+    click focuses the href target and sets tabindex, an existing tabindex
+    on the target is preserved).
+  - Added Playwright E2E coverage in `tests/e2e/accessibility.spec.js`
+    (`test.use({ javaScriptEnabled: false })`) asserting exactly one
+    `.skip-to-content` element and that it is first in Tab focus order with
+    a resolvable href target, on three routes: `/` (home page),
+    `/pages/overview.html`, and one article
+    (`/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html`).
+  - Removed the old, weak "should have skip to main content link" test that
+    only asserted *something* was focusable after one Tab press.
+- Key decision / open question for review: the acceptance criteria ask for
+  focus order to be verified on "the home page, Start Here, and one
+  article." `pages/start-here.qmd` does not exist yet — it is proposed by
+  WEB-01.1, a separate `tier:strong` issue that has not been built. I used
+  `pages/overview.qmd` (`/pages/overview.html`) as the closest existing
+  entry-style page instead; this is called out in the test file and should
+  be swapped to the real Start Here route once WEB-01.1 ships.
+- Compatibility constraint / assumption to verify: the static skip link
+  targets `#quarto-document-content` unconditionally. The JS code this PR
+  removes previously hedged that full-layout pages (e.g. the home page,
+  `page-layout: full`) "may not" expose that id and fell back to `main` or
+  `#quarto-content`. I could not run `quarto render` in this session (the
+  `quarto` CLI is blocked by this environment's tool permissions) to verify
+  directly, so I reasoned from Quarto's website-format template (the id is
+  set on the `<main>` wrapper regardless of `page-layout`) and from this
+  repo's own `styles.css`, which already keys many rules off
+  `#quarto-document-content` without page-layout qualification. **The new
+  Playwright test will fail loudly in CI's full-site render if this
+  assumption is wrong** (it asserts the href target actually exists in the
+  DOM), which is the reviewing frontier agent's signal to check.
+- Validation commands and outcomes:
+  - `npx jest tests/navigation.test.js` — 13 passed (4 new).
+  - `npx jest` (full suite) — 25 suites, 424 passed, 19 skipped, 0 failed.
+  - `npx html-validate "_includes/skip-link.html" --config .htmlvalidate.json`
+    — 0 errors.
+  - `npx playwright test` — **not run**. `playwright.config.js`'s
+    `webServer` serves the pre-rendered `docs/` directory, which requires
+    `quarto render` (~14 min per `CLAUDE.md`) first; the `quarto` CLI is
+    blocked from this session's Bash tool. CI's `e2e-tests` lane renders
+    the full site and will run this suite.
+- Blockers / risks:
+  - Start Here route substitution (above) — cosmetic/naming risk only, the
+    underlying fix is route-agnostic.
+  - `#quarto-document-content` assumption on the home page (above) —
+    correctness risk, but self-verifying via the new E2E test in CI.
+- Next steps for a continuing agent or reviewer:
+  1. Watch the draft PR's `e2e-tests` CI run; if the new
+     `tests/e2e/accessibility.spec.js` skip-link tests fail on `/`, the home
+     page's rendered main wrapper does not carry `id="quarto-document-content"`
+     — inspect the rendered `docs/index.html` and adjust the `href` in
+     `_includes/skip-link.html` (and the JS comment) accordingly.
+  2. Once `pages/start-here.qmd` ships under WEB-01.1, replace
+     `/pages/overview.html` in `SKIP_LINK_ROUTES`
+     (`tests/e2e/accessibility.spec.js`) with the real Start Here route.
+  3. After the PR is opened, record its number/URL here and in
+     `docs/development/DEVELOPMENT_LOG.md` (`DL-#4566`).
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.

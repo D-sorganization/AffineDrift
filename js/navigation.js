@@ -621,48 +621,25 @@ export function initScrollSpy() {
 
 
 /**
- * Initialize skip to content link for accessibility
+ * Enhance the skip-to-content link's focus behavior.
+ *
+ * The link itself lives in the static HTML (_includes/skip-link.html, wired
+ * in via _quarto.yml's include-before-body) so skipping to content works
+ * without JavaScript. This only makes the jump target reliably focusable
+ * for browsers that don't already do so on same-document navigation.
  */
 export function initSkipToContent() {
-    if (document.querySelector(".skip-to-content")) return;
+    const skipLink = document.querySelector(".skip-to-content");
+    if (!skipLink) return;
 
-    // Resolve the best available main-content target. Standard article pages
-    // expose #quarto-document-content, but full-layout pages (e.g. the home
-    // page) may not, so fall back to the <main> element or #quarto-content.
-    const candidates = ["#quarto-document-content", "main", "#quarto-content"];
-    let target = null;
-    for (const selector of candidates) {
-        const el = document.querySelector(selector);
-        if (el) {
-            target = el;
-            break;
-        }
-    }
-    if (target && !target.id) {
-        target.id = "main-content";
-    }
-    const targetId = target ? target.id : "quarto-document-content";
-
-    const skipLink = document.createElement("a");
-    skipLink.href = `#${targetId}`;
-    skipLink.className = "skip-to-content";
-    skipLink.textContent = "Skip to main content";
-    skipLink.setAttribute("aria-label", "Skip to main content");
-
-    skipLink.addEventListener("click", (e) => {
+    skipLink.addEventListener("click", () => {
         const targetId = skipLink.getAttribute("href").substring(1);
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
-            if (!targetElement.getAttribute("tabindex")) {
+            if (!targetElement.hasAttribute("tabindex")) {
                 targetElement.setAttribute("tabindex", "-1");
             }
             targetElement.focus({ preventScroll: true });
         }
     });
-
-    if (document.body.firstChild) {
-        document.body.insertBefore(skipLink, document.body.firstChild);
-    } else {
-        document.body.appendChild(skipLink);
-    }
 }
