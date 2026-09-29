@@ -7,7 +7,7 @@
 - Branch: feat/web-07-2-citation-metadata-and-cite-block-4544
 - Baseline commit: ef8bc5f7
 - Implementation commit: SELF
-- Pull request: #4544
+- Pull request: #4646
 - Governing issue/epic: #4544 (epic #4552)
 
 ## Objective and Status
