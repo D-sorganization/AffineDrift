@@ -1,3 +1,62 @@
+# Fix Programming-Companion Metadata and Repository Links — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4542`.
+- Branch `claude/issue-4542`, commit `SELF`; pull request not yet created.
+- Governing issue: #4542 (`tier:cli`, epic #4543). Objective: no Programming Companion
+  program or engine record renders its ID as its title, and every UpstreamDrift link in
+  `repositories/*.qmd` is either SHA-pinned or explicitly labelled "navigation only".
+- Root cause: `CatalogGenerator.generate_programs`/`generate_engines` read a `title` key
+  that does not exist in the pinned UpstreamDrift companion manifest schema (the real
+  field is `name`); every row silently fell back to the record's `id`. The programs
+  table's `Engine` column had the same bug against a nonexistent `engine` key (real field
+  `engine_id`). The engines table's `Maturity` column has no backing schema field at all
+  (engines only carry `support_tier`), so it always printed "Unspecified"; removed it
+  rather than inventing data.
+- Completed work:
+  - `src/affine_control/programming_companion/catalog_generator.py`: read `name` (not
+    `title`) for program and engine rows; read `engine_id` (not `engine`) for the
+    programs' Engine column; dropped the Engines page's fabricated Maturity column.
+  - Regenerated `models/programming/programs.qmd` and `models/programming/engines.qmd`
+    via `python -m scripts.generate_programming_catalog` (source: the active provider
+    lock) so the committed pages match the fixed generator.
+  - Labelled all 16 unpinned UpstreamDrift repository-root links across
+    `repositories/*.qmd` (`repositories.qmd`, `repositories-2d-model.qmd`,
+    `repositories-3d-model.qmd`, `repositories-drake.qmd`, `repositories-models.qmd`,
+    `repositories-pinocchio.qmd`) with a visible "(navigation only; not pinned to a
+    specific commit)" note, since these send readers to browse the live repository
+    rather than citing a reviewed revision. Left existing `tree`/`blob`/`commit`
+    SHA-pinned links untouched.
+  - Refreshed the claim-audit evidence ledgers (`data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`) with
+    `python -m scripts.regenerate_claim_audit_evidence` so their pinned digests match the
+    edited files.
+- Not in scope (flagged for follow-up, not fixed here): the programs table's `Kind`
+  column reads a nonexistent `kind` key (real field `type`) and always prints `program`;
+  the `Surfaces` column has no direct schema field at all (would need to be derived from
+  cross-referencing each program's `feature_ids` against feature `surfaces`). Neither is
+  named in #4542's acceptance criteria and both need a design call rather than a
+  mechanical field-name fix.
+- Validation:
+  - `pytest tests/test_programming_companion_catalog_generator.py
+    tests/test_repository_links_pinned.py tests/test_companion_pins.py
+    tests/test_claim_audit_inventory.py -q` — all pass (new tests
+    `test_program_titles_use_the_manifest_name_not_the_id`,
+    `test_engine_names_use_the_manifest_name_not_the_id`,
+    `test_every_bare_upstreamdrift_link_is_labelled_navigation_only`,
+    `test_repositories_directory_has_at_least_the_known_bare_links` added).
+  - Full `pytest` run: passes (exit 0; no failures or errors).
+  - `ruff check` and `black --check --line-length 100` clean on every touched Python file.
+- Blockers/risks: none known. Draft PR not yet opened as of this handoff; will update
+  this entry's PR line once it exists.
+
+## Next Steps
+
+1. Open the draft PR (`gh pr create --draft`) and record its number/URL here.
+2. Await frontier-agent review per the `tier:cli` lane.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
