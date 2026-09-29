@@ -62,6 +62,8 @@ import {
     initFocusManagement,
 } from "./accessibility.js";
 
+import { initPageFeedback } from "./page-feedback.js";
+
 // Main initialization
 runOnDomReady(function () {
     // Update offset values from CSS
@@ -101,6 +103,9 @@ runOnDomReady(function () {
 
     // --- Forms ---
     initContactFormFeedback();
+
+    // --- Per-Page Feedback ---
+    initPageFeedback();
 
     // --- Reading Time (articles only) ---
     initReadingTime();

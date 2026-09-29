@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4605 · Per-Page "Was This Helpful? / Report a Problem" Control
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4605 (epic #4610)
+- **Branch:** `claude/issue-4605`
+- **Paths:** `js/page-feedback.js`, `js/main.js`, `css/components/page-feedback.css`, `styles.css`, `tests/page-feedback.test.js`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: 10/10 tests/page-feedback.test.js pass; full Jest suite 434 passed/19 skipped; stylelint clean; `check_styles_budget`, `check_spec_changelog`, and `regenerate_claim_audit_evidence --check` pass)
+- **Summary:** Adds a footer control appended to `#quarto-document-content` on every rendered page: a local "Was this helpful?" Yes/No toggle, plus a "Report a problem" link that opens the content-correction GitHub issue template prefilled with the page URL and build revision (fetched same-origin from `public-site-manifest.json`), with a mailto fallback for readers without a GitHub account.
+- **Next step:** Push branch, open draft PR referencing Fixes #4605, and release lease.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress

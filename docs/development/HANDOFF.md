@@ -1,3 +1,77 @@
+# Implementation Handoff — Per-Page "Was This Helpful? / Report a Problem" Control (#4605)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4605
+- Branch: claude/issue-4605
+- Baseline commit: b6aa4baf
+- Implementation commit: SELF
+- Pull request: not created
+- Governing issue/epic: #4605 (epic #4610)
+
+## Objective and Status
+
+- Objective: Add a footer control that opens a prefilled content-correction GitHub issue with the page URL and revision, with a fallback email link for readers without a GitHub account, and no third-party tracking.
+- Status: implementation complete, ready to open draft PR
+- Completed:
+  - Added `js/page-feedback.js` exporting `initPageFeedback()`, wired into `js/main.js`'s DOM-ready sequence.
+  - The widget appends to `#quarto-document-content` (the same content-anchor convention as `initReadingTime`/`initResponsiveTables`) on every rendered page: a local "Was this helpful?" Yes/No toggle (no data leaves the browser) and a "Report a problem" action.
+  - "Report a problem" opens `github.com/D-sorganization/AffineDrift/issues/new` prefilled with the `content-correction.md` template, the current page URL, and the build revision.
+  - The revision is fetched same-origin from `/public-site-manifest.json` (`source_revision`, already produced by `scripts/public_site_manifest.py` at deploy time); falls back to `"unknown"` if the fetch fails or the manifest isn't present (e.g. local preview).
+  - A `mailto:` fallback link (reusing the existing `dieterolson@gmail.com` "report it" pattern from `404.qmd`) carries the same page URL and revision for readers without a GitHub account.
+  - Added `css/components/page-feedback.css`, imported from `styles.css`, reusing the existing `.site-button.site-button--ghost` primitive for the report action.
+  - Added `tests/page-feedback.test.js` (10 tests, written first/RED before the implementation).
+  - Added `SPEC.md` change-log row and this handoff/development-log entry (`DL-#4605`).
+  - Regenerated stale claim-audit evidence digests for `styles.css` with `python -m scripts.regenerate_claim_audit_evidence` (required by the pre-commit `claim-audit-evidence` hook after editing a file bound in `data/trust/*.json`, #4124).
+- Remaining: Commit, push branch, open draft PR referencing `Fixes #4605`, release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `js/page-feedback.js`: New module implementing the widget.
+  - `js/main.js`: Imports and calls `initPageFeedback()` alongside the other per-page init calls.
+  - `css/components/page-feedback.css`: New component stylesheet.
+  - `styles.css`: One new `@import` line for the component stylesheet.
+  - `tests/page-feedback.test.js`: New Jest suite.
+  - `SPEC.md`: Added change-log row for #4605.
+  - `docs/development/DEVELOPMENT_LOG.md`: Added `DL-#4605`.
+  - `docs/development/HANDOFF.md`: This entry.
+  - `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `data/trust/site_trust_surface_audit.json`: Refreshed `styles.css` evidence digest (content unchanged otherwise).
+- Key decisions:
+  - Reused the already-deployed `public-site-manifest.json`'s `source_revision` field for the build commit instead of inventing a new build-time injection mechanism (DRY); this only resolves on the deployed site or after a full `quarto render` + manifest generation, so the link is built synchronously with `"unknown"` first and updated once the fetch resolves — the control is always usable even if the fetch never completes.
+  - "Was this helpful?" intentionally has no backend: it only shows a local thank-you message and announces it via the existing `announce()` screen-reader helper from `js/accessibility.js`. The issue's proposal offered this as an alternative to a "privacy-safe form," and the acceptance criteria settled on a mailto fallback instead, so no form was built.
+  - Did not add `page-feedback.js` to `scripts/sync_frontend_assets.py`'s `CANONICAL_JS_NAMES`: that list only tracks byte-identical pre-render mirrors for a legacy set of files; `_quarto.yml`'s `resources: js/` already copies the whole `js/` directory into `docs/js/` on every `quarto render`, so the new module reaches `docs/` automatically without editing that script.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `npx jest tests/page-feedback.test.js` — PASS (10/10)
+- `npx jest` (full suite) — PASS (434 passed, 19 skipped, 0 failed)
+- `npx stylelint css/components/page-feedback.css` — PASS (no output)
+- `python3 -m scripts.check_styles_budget` — PASS (3335/3400 lines, 46/212 `!important`)
+- `python3 -m scripts.check_style_discipline` — pre-existing 253 violations, all in `styles.css` lines unrelated to this change (none in the new `@import` line or `css/components/page-feedback.css`)
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python3 -m ruff check .` — PASS (no Python changed)
+- Not run: `quarto render` / Playwright E2E (full-site render, ~14 min per `CLAUDE.md`) — not executed locally; deferred to CI's `e2e-tests` lane.
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: `public-site-manifest.json` is only generated by the deploy workflow (`scripts/public_site_manifest.py`), not by a bare `quarto render`, so the revision shows `"unknown"` in local previews and possibly in CI's E2E full-site render; this degrades gracefully (page URL is still included, the GitHub issue and mailto links still work) and does not block the acceptance criteria on the deployed site.
+
+## Next Steps
+
+1. Commit, push `claude/issue-4605`, and open a draft PR referencing `Fixes #4605`.
+2. Release the fleet lease for #4605.
+
+## Change Log
+
+- `SELF` — Add per-page "Was this helpful? / Report a problem" footer control (#4605).
+
+---
+
 # Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 
 ## Identity
