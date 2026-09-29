@@ -30,8 +30,8 @@ interaction.
 
 **Guard:** `tests/e2e/article.spec.js` ("should load MathJax assistive
 MathML without duplicate state errors") renders a real article page and
-asserts exactly one `tex-mml-chtml` MathJax bundle script and no duplicate
-MathJax state errors. `.quarto-version` is listed in
+asserts exactly one MathJax `/es5/tex-*` bundle script, no separately
+loaded assistive-MML script, and no duplicate MathJax state errors. `.quarto-version` is listed in
 `scripts/e2e_relevant_paths.py`'s `EXACT_PATHS`, so bumping the pinned
 Quarto version always forces the full-site E2E render lane in CI
 (`e2e-tests` in `.github/workflows/ci-standard.yml`), which runs that spec
