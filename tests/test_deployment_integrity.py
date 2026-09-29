@@ -81,11 +81,12 @@ def test_only_live_every_page_verification_opts_into_bounded_document_retries() 
     assert "--document-retry-delay-ms 500" in live_step
 
 
-def test_live_verifier_targets_the_direct_canonical_pages_host() -> None:
-    """Hosted verification must avoid the cacheable apex-to-www redirect."""
+def test_live_verifier_targets_the_canonical_apex_host() -> None:
+    """Post-deploy verification must use the same canonical host as CNAME/site-url (#4573)."""
     content = WORKFLOW_PATH.read_text(encoding="utf-8")
 
-    assert 'PUBLIC_SITE_URL: "https://www.affinedrift.com"' in content
+    assert 'PUBLIC_SITE_URL: "https://affinedrift.com"' in content
+    assert "www.affinedrift.com" not in content
 
 
 def test_ci_and_deploy_use_the_locally_qualified_quarto_version() -> None:

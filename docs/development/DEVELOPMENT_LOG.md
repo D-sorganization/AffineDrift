@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4573 · Use One Canonical Host
+
+- **State:** in_review
+- **Owner:** claude
+- **Issue:** #4573 (epic #4579 — E10 Performance, SEO, and Privacy)
+- **PR:** not created yet
+- **Branch:** `claude/issue-4573`
+- **Paths:** `.github/workflows/deploy-website.yml`, `tests/test_deployment_integrity.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_deployment_integrity.py -m content_lint`: 15 passed, 1 skipped, unrelated)
+- **Summary:** `CNAME` and Quarto `site-url` already use the apex domain (`affinedrift.com`); the deploy workflow's `PUBLIC_SITE_URL` diverged to `www.affinedrift.com`. Aligned `PUBLIC_SITE_URL` to the apex host so all repo config agrees on one canonical host.
+- **Next step:** Open the draft PR and report the resolved HEAD SHA.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped

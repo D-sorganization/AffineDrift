@@ -1,3 +1,38 @@
+# Use One Canonical Host — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4573` (git worktree).
+- Branch `claude/issue-4573`, commit `SELF`; pull request not created yet.
+- Governing issue: #4573 (`[WEB-10.4] Use One Canonical Host`, part of epic #4579 —
+  E10 Performance, SEO, and Privacy).
+- Objective: `CNAME` and Quarto `site-url` already declared the apex domain
+  (`affinedrift.com`) canonical; `.github/workflows/deploy-website.yml`
+  `PUBLIC_SITE_URL` diverged to `www.affinedrift.com` (introduced in PR #4007 to
+  dodge a redirect the live post-deploy verifier was hitting at the time).
+  Every other host reference in the repo (`robots.txt`, `sitemap.xml`,
+  `scripts/generate_sitemap.py`, `scripts/generate_feed.py`,
+  `scripts/check_quarto_render_coverage.py`) already uses the apex host.
+- Completed work: changed `PUBLIC_SITE_URL` to `https://affinedrift.com` in
+  `.github/workflows/deploy-website.yml`; updated the test that pinned the old
+  `www` expectation (`tests/test_deployment_integrity.py::test_live_verifier_targets_the_canonical_apex_host`,
+  renamed from `test_live_verifier_targets_the_direct_canonical_pages_host`) to
+  assert the apex host and the absence of the `www` host string.
+- Compatibility/risk note for the reviewer: the GitHub Pages/DNS-level 301
+  redirect from `www.affinedrift.com` to the apex host (the second acceptance
+  criterion) is an infrastructure setting outside this repository and was not
+  changed here — verify it holds in the live DNS/Pages custom-domain
+  configuration.
+- Validation: `python3 -m pytest tests/test_deployment_integrity.py -m
+  content_lint` — 15 passed, 1 skipped (unrelated, pre-existing:
+  `latex-release-volumes.yml not yet created`). `python3 -m black --check
+  --line-length 100 tests/test_deployment_integrity.py` — clean.
+  `python3 -m scripts.check_spec_changelog` — passed.
+- Blockers: none. Ready for review.
+- Next steps: open the draft PR; a frontier reviewer confirms the DNS-level
+  redirect is configured for the non-canonical host.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
