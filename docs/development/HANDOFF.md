@@ -56,9 +56,8 @@
 
 ## Next Steps
 
-1. Create PR with label `agent:local` closing #4493.
-2. Arm auto-merge (squash).
-3. Release claim lease.
+1. Verify PR #4634 mergeability and arm auto-merge.
+2. Release claim lease.
 
 ## Change Log
 
