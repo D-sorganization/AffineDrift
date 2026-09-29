@@ -5,7 +5,7 @@
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
 - Branch: fix/web-07-3-real-dates-and-change-history-4545
-- Baseline commit: b6aa4baf87635c3451558596fc4c20f121d5c219
+- Baseline commit: ebced38fbe6908492e5c8e2ff08866516f5691c0
 - Implementation commit: SELF
 - Pull request: #4640
 - Governing issue/epic: #4545 (epic #4552)
@@ -26,11 +26,12 @@
   - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
   - Regenerated claim audit evidence digests and verified all contracts pass.
   - Added change-log row in `SPEC.md`.
-- Remaining: Commit, push, create PR, key SPEC.md row, arm auto-merge, and release lease.
+- Remaining: Monitor PR #4640 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
+<<<<<<< HEAD
   - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
   - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
   - `css/components/revision-history.css`: Component styling.
@@ -42,10 +43,25 @@
   - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
 - Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
+=======
+  - `scripts/filters/page-header-card.lua`: Component Lua filter.
+  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
+  - `css/print.css`: Print rules avoiding page breaks inside header card.
+  - `styles.css`: Component `@import`.
+  - `_quarto.yml`: Filter registration.
+  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
+  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
+  - `tests/page-header-card.test.js`: Jest unit test suite.
+  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
+>>>>>>> origin/main
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
+<<<<<<< HEAD
 - `pytest tests/test_dates_and_history.py` — PASS (16 passed)
 - `python -m scripts.derive_substantive_dates --check` — PASS
 - `python -m ruff check scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
@@ -54,6 +70,14 @@
 - `python scripts/check_css_architecture.py` — PASS
 - `python scripts/check_root_hygiene.py` — PASS
 - `python -m src.tools.site_link_gate` — PASS
+=======
+- `npm test tests/page-header-card.test.js` — PASS (5 passed)
+- `pytest tests/test_page_header_card.py` — PASS (11 passed)
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check tests/test_page_header_card.py` — PASS
+- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
+>>>>>>> origin/main
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -64,9 +88,13 @@
 
 ## Next Steps
 
+<<<<<<< HEAD
 1. Commit, push branch, and create PR.
 2. Update SPEC.md with PR number.
 3. Arm auto-merge and release lease.
+=======
+1. Monitor PR #4633 CI and auto-merge into main.
+>>>>>>> origin/main
 
 ## Change Log
 
