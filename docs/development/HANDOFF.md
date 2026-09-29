@@ -1,4 +1,4 @@
-# Implementation Handoff
+# Implementation Handoff — Extend Critique Annotations (#4524)
 
 Keep this file current and concise.
 
@@ -9,7 +9,7 @@ Keep this file current and concise.
 - Branch: `fix/web-05-3-critique-annotations-4524`
 - Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
 - Implementation commit: `SELF`
-- Pull request: not created
+- Pull request: #4619
 - Governing issue/epic: #4524 (epic #4521)
 
 ## Objective and Status
@@ -17,7 +17,7 @@ Keep this file current and concise.
 - Objective: Extend critique annotations to ZTCF and Proximal–Distal pages (#4524).
 - Status: ready for review
 - Completed: Enforced that every critique maps to every page whose claim it targets; added critique annotations to zero-torque-counterfactual.qmd, theory-part2.qmd, and proximal-distal-energy-transfer.qmd; verified 18 generated surfaces and 2 audit reports.
-- Remaining: Commit, push, open PR, and release lease.
+- Remaining: Merge main, run pre-commit checks, push to origin, verify CI.
 
 ## Files and Decisions
 
@@ -52,13 +52,15 @@ Keep this file current and concise.
 
 ## Next Steps
 
-1. Push branch `fix/web-05-3-critique-annotations-4524` to origin.
-2. Open PR referencing Closes #4524.
-3. Release agent lease in Repository_Management.
+1. Merge main and verify clean test suite.
+2. Push branch `fix/web-05-3-critique-annotations-4524` to origin.
+3. Verify all checks pass on PR #4619 and auto-merge completes.
+4. Release agent lease in Repository_Management.
 
 ## Change Log
 
 - `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
 
