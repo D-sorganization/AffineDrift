@@ -39,6 +39,15 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (`black --check`, `ruff check` on the new script/test pass; `pytest tests/test_check_notation.py -m content_lint` 17 passed, including a real-corpus scan of `.tex`/`.qmd`/`.md` sources; `python3 scripts/check_notation.py --baseline config/notation-baseline.json` exits 0.)
 - **Summary:** Replaces lowercase `g(x)` with uppercase `G(x)` for the control-affine input map everywhere it carries that meaning (home page, four textbook chapters and their LaTeX mirrors, 12 critique files), per `NOTATION.md:342-346`. Adds a baseline-gated pytest lint (`scripts/check_notation.py` + `tests/test_check_notation.py`) so a reintroduced lowercase `g(x)` fails CI; the two `ch05_optimal_control` files keep their unrelated inequality-constraint `g(x)` via an explicit baseline allowlist rather than a misleading rewrite.
 - **Next step:** Open the draft PR for #4582 and flip this entry to `shipped` once it merges.
+### DL-#4546 · ScholarlyArticle and Book JSON-LD
+
+- **Issue:** #4546 (epic #4552)
+- **PR:** [#4618](https://github.com/D-sorganization/AffineDrift/pull/4618) (draft)
+- **Branch:** `claude/issue-4546`
+- **Paths:** `scripts/filters/schema-jsonld.lua`, `tests/test_schema_jsonld.py`, `_quarto.yml`, `_includes/article-schema.html` (deleted), `articles/affine-nature-golf-swing.qmd`, `articles/appendix-applications.qmd`, `books/control-is-motion.qmd`, `resources/resources-datasets.qmd`, `resources/resources-software.qmd`
+- **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_schema_jsonld.py tests/test_companion_hierarchy.py -v` — 10 passed; `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` clean; manual `quarto render` of all five tagged sample pages confirmed valid per-type JSON-LD)
+- **Summary:** Replaced the dead, broken `_includes/article-schema.html` (unreferenced; `{{< meta >}}` does not expand inside raw HTML) with a Lua filter registered project-wide in `_quarto.yml` that emits Schema.org JSON-LD for any page declaring `schema-type: ScholarlyArticle|Book|Chapter|Dataset|SoftwareSourceCode`; pages without that field are untouched. Tagged one real sample page per type.
+- **Next step:** None outstanding for this scope; a frontier agent reviews the draft PR before merge.
 
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
