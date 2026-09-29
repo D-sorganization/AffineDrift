@@ -18,6 +18,111 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4477 · Companion Opening and Whole-Swing Ledger
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4478
+- **Issue:** #4477 (corpus #4021; epic #4009)
+- **Branch:** `fix/4477-ledger-rigor`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch01_follow_the_energy.qmd`, `articles/proximal_distal_companion/chapters/ch29_whole_swing_ledger.qmd`, `articles/proximal-distal-a-journey-through-the-swing.qmd`
+- **Started:** 2026-09-28
+- **Last verified:** 2026-09-28 (17 focused checks; full suite 5,626 passed/29 skipped/132 deselected, 92.88% coverage. Content 131 passed/four skipped; static checks pass. Four browser cases and 207-page PDF verified; archived NPZ consistency and seven provider hashes verified.)
+- **Summary:** Reconciles ground impulse/work, rigid/flexible wrench power, shaft storage, physical mass, state and intervention semantics across the opening and synthesis; preserves the remaining chapter sources and historical review scope.
+- **Next step:** Merged with required CI passing; deployment pending at the user-requested remote-main stop checkpoint. No further development.
+
+### DL-#4475 · Green Simulation Mechanics and Implementation Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4476
+- **Issue:** #4475 (corpus #4021; epic #4009)
+- **Branch:** `fix/4475-green-rigor`
+- **Paths:** `articles/green-simulation.qmd`, `tests/test_green_simulation_rigor.py`, `reports/technical-review/green-provider-source-index.json`
+- **Started:** 2026-09-28
+- **Last verified:** 2026-09-28 (All 16 focused checks pass; full suite 5,609 passed/29 skipped/132 deselected, 92.88% coverage. Content 131 passed/four skipped; static checks pass. Four browser cases pass, zero severe axe findings; eight display equations visually inspected.)
+- **Summary:** Corrects rolling/sliding dynamics and probability claims, qualifies numerical/surface/capture choices, and documents actual provider discrepancies without changing provider code.
+- **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
+
+### DL-#4473 · Club-Fitting Mechanics and Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4474
+- **Issue:** #4473 (corpus #4021; epic #4009)
+- **Branch:** `fix/4473-fitting-rigor`
+- **Paths:** `articles/technology-club-fitting.qmd`, `references/club-fitting.bib`, `tests/test_club_fitting_rigor.py`
+- **Started:** 2026-09-28
+- **Last verified:** 2026-09-28 (Complete article corrected; seven source/example failures reproduced; all 16 checks pass. Full suite 5,593 passed/29 skipped/132 deselected, 92.88% coverage; content 131 passed/four skipped; static checks pass. Four browser cases pass, zero severe axe findings; all ten display equations visually reviewed.)
+- **Summary:** Separates model interventions and causal inference, corrects spatial/beam/mass mechanics and replaces nonexistent wire guarantees with explicit synthetic proposals.
+- **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
+
+### DL-#4471 · Markerless Camera Measurement Rigor
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4472
+- **Issue:** #4471 (corpus #4021; epic #4009)
+- **Branch:** `fix/4471-camera-rigor`
+- **Paths:** `articles/markerless-mocap-camera-selection.qmd`, `data/markerless_mocap/camera_evidence_registry_v1.json`, `tests/test_camera_selection_rigor.py`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (Full article and 57 registry claims inspected. RED: ten numerical passes, six source failures; GREEN: all 16 plus 14 registry contracts pass. Manufacturer modes and study transfer corrected.)
+- **Summary:** Connects exposure, timing, payload, geometry and differentiation to the limits of golf-swing inference; preserves unavailable prices/licenses and unmeasured physical qualification.
+- **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
+
+### DL-#4469 · Volume I Mathematical Reference
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4470
+- **Issue:** #4469 (corpus #4021; epic #4009)
+- **Branch:** `fix/4469-volume-one-reference`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/main.tex`, `books/tangent-space-methods.qmd`, `tests/test_volume_one_reference_rigor.py`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (21 focused; 52 reference/audit contracts; full suite 5,561 passed, 29 skipped, 132 deselected, 92.88% coverage; 131 content checks passed/four skipped. Static checks pass. Full 149-page PDF compiles; affected pages visually inspected. Public map 4/4 browser cases, zero severe axe findings. Source/PDF 14b8f183; six-path evidence 782dc161. Four parallel supplied-text Flash reviews adjudicated.)
+- **Summary:** Reconciles notation and mathematical reference material with corrected chapter assumptions; separates geometry, flow sensitivity and control certification.
+- **Next step:** Published at 24c77a55. Deployment 36389665569, CI 36389665580 and Compile 36389665540 pass. Live gate 960/960; four reviewed-route cases, zero severe axe findings; both pinned source/PDF downloads and six hashes verified. Receipt: volume-one-reference-publication.json.
+
+### DL-#4467 · Secondary-Axis Mechanics and Putter Design
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4468
+- **Issue:** #4467 (corpus #4021; epic #4009)
+- **Branch:** `fix/4467-secondary-axis`
+- **Paths:** `articles/secondary-axis-stability.qmd`, `critiques/intermediate_axis_fallacy.md`, `critiques/misattribution_of_stability_gravity.md`, `tests/test_secondary_axis_rigor.py`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (19 focused mechanics/source checks; full Python suite 5,540 passed, 29 skipped, 132 deselected, 92.88% src coverage; 80 final mechanics/audit contracts pass. Three final Quarto routes, 12/12 light/dark mobile/desktop cases, zero serious/critical axe violations. All 117 math expressions loaded; 17 display equations visually checked at both widths. Ruff, Black 728 files, title audit 638 sources and mypy 91 sources pass. Eight exact evidence paths bound to 919f6d18; terminology scope correction and repeated 12-case browser gate pass. Final static CI passes after naming the unchanged gravity test constant.)
+- **Summary:** Separates free spin, supported motion, gravity and collision; supplies checked inertia-rate and moment comparisons; removes unsupported equipment and neural claims from article and critiques.
+- **Next step:** Published at 54d73e39; deployment 36386984016 and post-merge CI pass. Revision-bound live gate passes all 960 site cases and 12 reviewed-route cases with zero severe axe findings. Eight evidence hashes match. Receipt: reports/technical-review/secondary-axis-publication.json.
+
+### DL-#4465 · Contraction Development Workspace
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4466
+- **Issue:** #4465 (corpus #4021; epic #4009)
+- **Branch:** `fix/4465-contraction-workspace`
+- **Paths:** `articles/tangent-hyperplane-contraction/`, `tests/test_contraction_workspace_rigor.py`, `reports/technical-review/contraction-workspace-*`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (14 focused checks pass after six source RED failures; 5,519 full-suite passes with two temporary Playwright root-hygiene failures, resolved and all six hygiene tests pass; 92.88% src coverage. Content lint 131 passed/four skipped. Ruff, Black, title audit and mypy pass. Native 15-page PDF visually checked; ten standalone renders and twenty browser cases pass.)
+- **Summary:** Corrects the full development manuscript, consolidated QMD, eight chapters and hub; separates optimal cost from contraction, supplies counterexamples and explicit domain/coordinate/contact assumptions. Existing production exclusions and redirects remain intact.
+- **Next step:** Preserve the excluded-route review receipt after protected PR #4466 merged at e48c9e00.
+
+### DL-#4463 · Biological Model Selection
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4464
+- **Issue:** #4463 (corpus #4021; epic #4009)
+- **Branch:** `fix/4463-biology-model-selection`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_III/`, `books/biomechanics-biology-to-systems.qmd`, `tests/test_biology_model_selection_rigor.py`
+- **Started:** 2026-09-27
+- **Last verified:** 2026-09-27 (PR #4464 merged at 855b6fa6; deployment 36378430500 succeeded. Downloaded artifact 10952174815 verified by SHA-256: 960/960 site cases pass, all four biology cases and three pinned source/PDF downloads verified; zero serious/critical axe violations. Seven scientific evidence paths match their checkpoint and deployed merge. Prior numerical/render validation retained in review receipts.)
+- **Summary:** Connects model assumptions to golf delivery and biological inference; corrects modal dynamics, force/power pairing, redundancy, inertial accounting and excitation affinity without asserting empirical human parameters.
+- **Next step:** Preserve the source and publication receipts for this completed chapter correction.
+
+
 ### DL-#4429 · Site-Surface Audit Provenance Reconciliation
 
 - **State:** shipped
@@ -40,7 +145,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/why-physics-rigor`
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch01_why_physics.tex`, `articles/The_Physics_of_Golf/quarto/ch01_why_physics.qmd`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/why_physics_release.svg`, `articles/The_Physics_of_Golf/figures/why_physics_release.pdf`, `scripts/build_why_physics_figure.py`, `tests/test_why_physics_rigor.py`
 - **Started:** 2026-09-23
-- **Last verified:** 2026-09-23 (PR #4451 merged as 530778ef after all required checks passed; deployment succeeded; frozen source/render 787fb581 binds twelve paths and six findings.)
+- **Last verified:** 2026-09-27 (checked head 82b1a904 and merge 530778ef have identical trees; all twelve evidence paths unchanged on deployed bf78cb2a. CI 35938311583 and post-merge CI 35940168938 succeeded. Deployment 36298955953 succeeded; SHA-256-verified live artifact 10925830179 passed 960/960, including four Chapter 1 cases, with zero serious/critical axe violations. Separate publication receipt retained.)
 - **Summary:** Replaces unsupported force/energy and expertise claims with a defined input baseline, explicit constraints, checked manufactured work/release examples and six worked answers; connects mechanics to finite-time club delivery and impact.
 - **Next step:** None for this correction. Merged to main.
 

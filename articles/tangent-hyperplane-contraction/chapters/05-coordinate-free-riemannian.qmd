@@ -1,36 +1,33 @@
 ---
 title: "Chapter 5 - Coordinate-Free and Riemannian Formulation"
-description: "Write a control law on a sphere in spherical coordinates, then transform to Cartesian—do you get the same closed-loop behavior? Of course you should. Yet..."
+description: "Transform metrics consistently and distinguish task penalties, background geometry, and coordinate Hessians."
 bibliography: ../references.bib
 ---
 
-::: {.callout-warning}
-## Chapter Outline — In Progress
+## A Change of Labels Must Preserve the Measured Quantity
 
-This chapter is currently a **structural outline**. The key concepts are identified and the geometric intuition is sketched, but full mathematical development, proofs, and worked examples are in progress. Treat the content below as a detailed table of contents rather than a complete chapter.
-:::
+For a smooth invertible local coordinate change $x=x(z)$ with $T=D_zx$, perturbations obey $\delta x=T\delta z$. A specified quadratic form transforms as $M_z=T^\top M_xT$, preserving $\delta x^\top M_x\delta x$. This statement applies between charts of the same dimension. A task map or an embedding in a higher-dimensional ambient space is not generally an invertible change of coordinates.
 
+The differential flow transports tangent vectors between their base points. Coordinate expressions for its derivative are valid; under changing charts, the dynamics and the metric derivative must transform together [@forni2014contraction].
 
-## Does a Control Law Depend on How You Label the Coordinates?
+## Task Pullback and Unmeasured Directions
 
-Write a control law on a sphere in spherical coordinates, then transform to Cartesian—do you get the same closed-loop behavior? Of course you should. Yet naive implementations break. A metric—a rule for measuring distance—is the tool that makes control laws *coordinate-free*: they say the same thing no matter how you write the state. This is not pedantry; it is essential for systems like robots where natural coordinates (joint angles, end-effector positions) are related by nonlinear transformations.
-
-## Introduction and Qualitative Purpose
-
-This chapter reformulates tangent-space control and contraction statements on manifolds to avoid chart-dependent confusion.
-
-## In Laymans Terms
-
-We should describe control laws in a way that does not depend on arbitrary coordinate choices.
-
-## Geometric Intuition
-
-A Riemannian metric gives each tangent space its own inner product, and pullbacks transport task priorities into system coordinates.
-
-## Pullback Construction
+For $y=h(x)$, $J=Dh\in\mathbb R^{p\times n}$ and $W\succ0$, the task penalty is
 
 $$
-M(x)=J(x)^\top W(h(x))J(x).
+M_{\rm task}=J^\top WJ.
 $$
 
-If $J$ is rank-deficient, this is semidefinite; practical synthesis uses regularization or nullspace completion for strict positive definiteness.
+It is positive definite exactly when $J$ has full column rank. When $p<n$, that is impossible. A position-only task also misses velocity directions in a mechanical state. This rank deficiency can express a legitimate output objective; it cannot certify full-state contraction by itself.
+
+A completion $M=M_{\rm task}+\varepsilon M_0$, with $\varepsilon>0$ and a declared positive background metric $M_0$, changes the objective by penalizing other directions. Specify units and scaling. Adding an identity in every chart does not preserve one physical metric: for $J=(1,0)$, $\varepsilon=0.1$, $M_0=I$, $T=\operatorname{diag}(2,3)$, transformation gives $\operatorname{diag}(4.4,0.9)$, whereas adding $0.1I$ after transforming $J$ gives $\operatorname{diag}(4.1,0.1)$.
+
+## A Hessian Is Not Automatically a Metric
+
+Under a nonlinear coordinate change,
+
+$$
+D_z^2V=T^\top D_x^2V\,T+\sum_i(D_xV)_iD_z^2x_i.
+$$
+
+For $V(x)=x^2/2$ and $x=\log z$, the coordinate Hessian is $(1-\log z)/z^2$. At $z=e^2$ it is negative, while the pullback of the positive form $1$ is $1/z^2>0$. The extra term vanishes at stationary points. A covariant Hessian requires a chosen connection and is still not guaranteed positive. Transforming a Riccati quadratic form and recomputing a nonlinear value Hessian are therefore different operations.

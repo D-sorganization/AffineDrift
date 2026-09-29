@@ -402,3 +402,18 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-23 | #4450 | Correct paired opening-chapter force, energy, constraint and input-baseline arguments; add checked release trajectories and worked answers with explicit golf-evidence boundaries. |
 
 | 2026-09-24 | #4429 | Reconcile historical provenance of site-surface audit evidence across 12 canonical routes, bind exact source bytes to committed checkpoint 63d98d19, and preserve render history. |
+
+| 2026-09-27 | #4463 | Correct Volume III biological model selection, compliance, muscle power, constrained redundancy, inertial accounting and excitation-affine assumptions with independent numerical and print verification. |
+| 2026-09-27 | #4465 | Correct the contraction development manuscript and eight companion chapters: finite-horizon Riccati bounds, coordinate metrics, sampled certification and golf-model assumptions; verify source math and excluded-route local previews. |
+| 2026-09-27 | #4467 | Correct secondary-axis putter mechanics and both critiques: free/forced spin, inertia origins, gravity, impulse response and evidence-limited design comparisons with independent numerical checks. |
+
+| 2026-09-27 | #4469 | Correct Volume I notation and reference appendices: controlled Jacobians, rotation branches, dual wrench maps, geometric versus flow transport, metric scaling and numerical solver hypotheses; verify printed examples and bounded publication evidence. |
+| 2026-09-27 | #4471 | Correct markerless camera modes and registry evidence; distinguish payload capacity, clock/exposure timing, reconstruction uncertainty and downstream golf-swing inference with numerical checks. |
+
+| 2026-09-28 | #4473 | Correct club-fitting twist shifts, equipment intervention and event semantics, flexible-shaft units/coupling, signed mesh moments and explicitly proposed reporting examples; bind independent numerical and publication evidence. |
+
+| 2026-09-28 | #4475 | Correct green-simulation rolling inertia, signed slip, events, surface and uncertainty claims; distinguish the derived model from pinned provider implementations and bind independent numerical/browser evidence. |
+
+| 2026-09-28 | #4477 | Correct companion opening and whole-swing ledger accounting, state, wrench transport and inference; preserve book scope and verify archived examples plus rebuilt HTML/PDF. |
+
+| 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |

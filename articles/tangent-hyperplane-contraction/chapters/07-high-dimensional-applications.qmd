@@ -1,62 +1,44 @@
 ---
 title: "Chapter 7 - High-Dimensional Applications"
-description: "Watch a gymnast swing on uneven bars—fluid, natural, robust to small bumps. Watch a robot arm do the same task—jerky, fragile, falls apart if the model is..."
+description: "Connect actuator and contact assumptions to finite-time delivery and robustness without inferring a human control law."
 bibliography: ../references.bib
 ---
 
-## Why Do Humans Make It Look Easy and Robots Make It Look Hard?
+## Start With the Mechanical Question
 
-Watch a gymnast swing on uneven bars—fluid, natural, robust to small bumps. Watch a robot arm do the same task—jerky, fragile, falls apart if the model is slightly wrong. The difference is that the human's nervous system is optimized for *coupled* motion with *active feedback*, while robots are often controlled piece-by-piece. Biomechanics and robotics teach us that when everything is coupled together (masses connected through joints, actuation competing with gravity), your control law must respect the coupling. The framework in this textbook was built for exactly this setting.
+Human and robotic motion both involve coupled mechanics, actuator limits and imperfect observations. Neither category has a universal advantage in smoothness or robustness. A useful model states what is measured, what is commanded, what is inferred, and which errors matter to the task.
 
-## Introduction and Qualitative Purpose
-
-This chapter transfers the framework into biomechanics and robotics, where coupling, constraints, and contact make purely heuristic tuning fragile.
-
-## In Laymans Terms
-
-For complex systems, we need controllers that stay reliable when everything is coupled.
-
-## Geometric Intuition
-
-Metrics reshape local error geometry so the controller can prioritize directions that matter for outcome quality and robustness.
-
-## Mechanical Backbone
+For generalized coordinates $q\in\mathbb R^d$, a mechanical model can be written
 
 $$
-H(q)\ddot q + C(q,\dot q)\dot q + g(q)=\tau+J_c(q)^\top\lambda.
+\begin{aligned}
+&H(q)\ddot q+C(q,\dot q)\dot q+g(q)\\
+&\qquad=B_\tau(q)u_\tau+J_c(q)^\top f_c.
+\end{aligned}
 $$
 
-The tangent model around this dynamics is the bridge to both contraction and local optimal-control design.
+Here $H$ is inertia, $B_\tau$ maps actuator forces, and $f_c$ denotes constraint reactions. The mechanical state is $(q,\dot q)$, of dimension $2d$ in independent coordinates, before adding actuator or estimator states. A degree of freedom is not one segment mass. Inertia and a contraction metric are different objects, generally with different dimensions and units.
 
-## Application Domains
+## Close Actuation and Contact Before Linearizing
 
-### Quadrotor Trajectory Tracking
+An ideal torque model can be input-affine. If the commanded input is excitation, activation and muscle-tendon dynamics must be specified; muscle force contains active and passive contributions. Zero excitation can leave nonzero force because internal states persist. The exact model variant decides input affinity and smoothness.
 
-A quadrotor's thrust and moment commands couple all degrees of freedom: vertical thrust supports weight and accelerates the center of mass, while tilting the body trades vertical thrust for horizontal acceleration. The control-affine structure is natural: drift is gravity and inertia, control channels are the four thrust commands. The framework directly addresses how to design attitude and position gains that respect this coupling while tracking aggressive trajectories.
+For a fixed sticking contact mode, include position, velocity and acceleration constraints and use compatible reduced coordinates or constrained perturbations. During a true flight phase there is no ground contact. Underactuation depends on the actuator map and constrained motion, not simply a count of contact points. Impacts and switches require event/reset sensitivity. Stability of a walking cycle can concern transverse or return-map errors, rather than convergence of every state at the same clock time.
 
-### Bipedal Walking and Underactuated Locomotion
+## Delivery Is a Finite-Time Output
 
-A biped has many degrees of freedom but only two point contacts (or one during flight). This *underactuated* structure means some directions cannot be directly commanded. The decomposition into drift (unactuated passive dynamics) and controlled directions is essential. Contraction metrics help design step-to-step stability: a controller that guarantees each footstep is closer to the nominal gait than the previous one, independent of initial conditions.
+For a golf swing, define $y=h(x(T))$ using explicit outputs, units and an impact convention. A fixed-time first variation gives $\delta y=Dh\,\delta x(T)$. If impact time changes, include that event-time contribution. Propagating initial and command perturbations to this output can identify sensitivity directions in the specified model.
 
-### Robotic Manipulation and Impedance Control
+A terminal penalty $Dh^\top WDh$ can emphasize face orientation or velocity while ignoring other state directions. Those ignored directions are not necessarily physiologically safe, controllable, or dynamically realizable. A fitted swing trajectory does not uniquely determine muscle forces or neural feedback; competing internal histories can produce similar delivery.
 
-Dexterous manipulation often involves *compliant* interaction: the robot touches, presses, and slides on objects. Purely rigid control (exact end-effector tracking) is fragile; it breaks with small model errors. Impedance control—shaping the robot's apparent stiffness and damping in the task frame—is the standard approach. The Riemannian metric formulation in Chapter 5 directly models how task-space stiffness priorities pullback into joint-space control gains, and the duality in Chapter 4 ensures that impedance gains also certify stability margins.
+Mechanical power transfer is force or torque paired with velocity. A sequence of segment speed peaks alone does not prove an energy-transfer mechanism. Use a declared system boundary, signed power, storage terms and contact work before connecting coupled motion to performance.
 
-### Golf Swing Mechanics (Biomechanics)
+## Other Tasks Expose the Same Boundaries
 
-A skilled golfer translates power from the lower body (large muscles, slow) through the trunk and shoulders (medium muscles, medium speed) to the arms and club (small mass, high speed)—a kinetic chain. Coupled biomechanics and neural latency make the timing subtle. The framework applies by treating the biomechanical chain as a high-dimensional system with passive (muscle) and active (neural command) dynamics, using metrics to prioritize which joints should be tightly controlled versus allowed to swing freely.
+A quadrotor model may be affine in rotor thrusts while differing from a model driven by rotor speed or voltage. A manipulator's task stiffness is not automatically a state-space contraction metric. Impedance stability also depends on inertia, damping, constraints and environment coupling. A Riccati identity does not certify arbitrary impedance gains.
 
----
+Dense linear algebra often has cubic factors in state dimension, but runtime depends on horizon, input dimension, sparsity, derivative evaluation, solver and hardware. There is no universal cutoff at a particular number of degrees of freedom. Report measured timings for a specified implementation rather than inventing a physiological or computational threshold [@tassa2014control].
 
-:::{.callout-warning}
-## Scope and Limitations
+## Evidence Needed for the Swing Claim
 
-- **Computational scaling with dimension becomes prohibitive beyond moderate dimension.** The tangent space linearization and Riccati recursion require storing and factoring matrices of dimension $n \times n$ and $n \times m$ where $n$ is the system dimension (e.g., 20 DOF for the human arm). Computing contraction metrics and solving differential Riccati equations scales as $O(n^3)$ per time step. For real-time control, this becomes infeasible beyond $n \sim 10$—$15$ dimensions. We present the framework as scalable and "suitable for high-dimensional systems," but "high-dimensional" means "up to about 20 DOF," not "thousands of DOF" like neural networks routinely handle. The framework is elegant in theory but dimensionality-limited in practice.
-
-- **Model fidelity requirements grow with dimension, making the framework fragile.** A 20-DOF model of the human swing requires accurate estimates of 20 segment masses, 20+ moment-arm functions, contact stiffnesses, friction coefficients, and neural delays. Small errors in any of these parameters corrupt the linearized dynamics and the subsequent Riccati solution. The control law derived from a slightly-wrong model may be destabilizing on the real system. For low-dimensional systems (3–5 DOF), you can often hand-tune parameters from basic biomechanical intuition. For 20 DOF, you are relying entirely on model identification, and identification error propagates directly into control failure.
-
-- **Real-time certification of nonlinear stability is hard despite claims of "guarantees."** We can certify that the linearized system is stable (via Lyapunov or contraction metrics). But certifying stability of the actual nonlinear system requires checking second-order and higher-order derivatives, solving large-scale matrix inequalities, or performing trajectory sampling over high-dimensional perturbation spaces. In practice, you test on simulation or real hardware and hope the linearization was faithful. The word "guarantee" in our framework means "guarantee if the linearization is accurate," which is a substantial if.
-
-:::
-
----
+Use measured kinematics and external forces to constrain the mechanical model, report parameter and measurement uncertainty, and test held-out delivery and perturbation responses. A model robustness certificate remains conditional on those model assumptions. Agreement with a trajectory, successful optimization, or lower simulated cost alone does not identify a golfer's neural objective.

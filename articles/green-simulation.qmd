@@ -8,164 +8,219 @@ categories:
 ---
 
 ```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
+  <h2><button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
     <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        A putting simulator has three jobs: describe the shape of the ground, describe how a rolling ball loses speed on it, and be honest about everything it left out. This article is about how those jobs are actually done — from the four-line differential equation at the core, to the digital elevation maps that make a green "break", to the coin-flip layer that decides whether a putt that should drop actually does.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The green is a landscape, the ball is a marble</h3>
-        <p>
-          Simulators store the green as a height map — the same structure as a topographic map — and at every point the map's local tilt tells the ball which way gravity is nudging it. Add a steady braking force for the grass, a rule for the skid at the start, and a geometry test at the hole, and you have the whole deterministic machine. Everything else is refinement.
-        </p>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The deterministic part of putting simulation is essentially solved physics — the hard and interesting part is the noise: grain, dew, footprints, and imperfect surfaces. Those are exactly the things most simulators (including ours) do not model, which is why a simulator's make percentages are ceilings, not predictions.
-      </div>
-
-      <div class="laymans-item">
-        <h3>Why you run the putt a thousand times</h3>
-        <p>
-          A single simulated putt tells you what a perfect machine would do. Running the same putt a thousand times with small random wobbles in start line, speed, and surface tells you what a human on a real green should expect — a cloud of outcomes rather than a line. The shape of that cloud against the effective size of the hole is where make probability actually comes from.
-        </p>
-        <div class="analogy">
-          <strong>A weather forecast, not a photograph:</strong> Meteorologists stopped trying to compute <em>the</em> future of the atmosphere and started computing thousands of slightly-perturbed futures, reporting the fraction that rain. Putting dispersion works identically — the forecast is the ensemble, and a make percentage is "the fraction that rain".
-        </div>
-      </div>
-    </div>
-  </div>
+  </button></h2>
+  <div class="laymans-terms-content"><div class="laymans-terms-inner">
+    <p class="laymans-terms-intro">A putting simulator connects the stroke, the ground and the hole. Each connection needs a model: how the ball starts sliding and rolling, how the green changes its motion, and which arrivals count as captured. A convincing animation does not establish that those models predict a real putt.</p>
+    <div class="laymans-item"><h3>A Map Is Part of the Physics</h3>
+      <p>The local tilt of the green steers the ball, while turf resistance reduces its speed. The ball also spins, so some gravitational energy changes rotation. A model that ignores that rotational motion can draw the wrong break even when its elevation map is accurate.</p></div>
+    <div class="key-takeaway"><strong>Key Takeaway:</strong> A simulated make percentage describes a particular model and a particular set of uncertain inputs. More simulated putts reduce sampling error; they cannot repair the wrong slope equation, a poor hole model or unrealistic stroke variability.</div>
+    <div class="laymans-item"><h3>Why Run Many Putts?</h3>
+      <p>A single run answers what happens for one specified input. An ensemble asks how outcomes change when start line, speed or surface conditions vary. Those variations can turn a modeled make into a miss, or a modeled miss into a make. To predict a player, the distributions and the physical model need independent measurement checks.</p></div>
+  </div></div>
 </section>
 ```
 
 ## Scope and Intent
 
-The companion article, [The Physics of the Rolling Putt](putting-roll-models.html), derives the roll model itself: skid, the five-sevenths transition, the stimpmeter deceleration map, slope as a gravity component, and the capture bound at the hole. This article is about **turning that model into software**: the representational choices a green simulator must make, the numerical machinery that integrates the model on a real surface, the stochastic layer that separates a physics demo from a useful predictor, and a plain statement of what the project's own implementation does and does not contain.
+[The Physics of the Rolling Putt](putting-roll-models.html) develops the mechanical assumptions behind skid, rolling resistance and hole capture. This companion asks how to implement such a model, how surface and stroke uncertainty interact, and what the project's existing software actually computes. The distinction matters: agreement between two programs can establish reproducibility of an approximation while both programs retain the same physical error.
 
-The survey is organised around the three decisions every green simulator takes, whether or not its authors noticed taking them:
-
-1. **How the ball is modelled** — the roll ODE and its phase structure.
-2. **How the surface is modelled** — analytic planes, meshes, gradient fields.
-3. **How uncertainty is modelled** — usually not at all, occasionally well.
+The objective is an intelligible chain from **delivery → contact → launch → surface motion → capture or leave → scoring consequences**. A change upstream alters the input to every later stage. Improving one stage therefore requires checking its interfaces, not merely making that stage more elaborate.
 
 ::: {.callout-note}
-## Conventions
+## Conventions and Model Boundary
 
-Frames and constants follow the [roll-model article](putting-roll-models.html): $x$ along the intended start line, $y$ up, $z$ right; ball and hole dimensions are the openly published equipment and Rules specifications; stimp $S$ maps to rolling deceleration $a = 5.49/S$ m/s². Claims about specific software below are confined to this project's own repositories, which are public and linkable; commercial simulators are discussed only in terms of the modelling choices any implementation must make, since their internals are not publicly documented and this site does not cite what cannot be verified.
+Use a world frame with $x$ forward along the target line, $y$ up and $z$ right. Bold vectors below are three-dimensional unless a horizontal heightfield coordinate is specified. Let $R$ be ball radius, $m$ mass, $I=\alpha mR^2$ its isotropic inertia and $\mathbf n$ the upward plane normal. The illustrative homogeneous sphere has $\alpha=2/5$; a real ball's inertia is a property to identify.
+
+The measured level-green roll-out calibration is $a_0=v_s^2/(2L_s)$, assuming pure rolling and constant deceleration over distance $L_s$. With the conventional $v_s=1.83$ m/s and a reading $S$ in feet, $a_0\approx5.49/S$ m/s². This is a conditional calibration, not an exact release-speed derivation from ramp geometry. The companion distinguishes the groove geometry and the empirical convention. The fixed-plane derivations below assume continuous contact and neglect aerodynamic loading, spin about the normal, and deformation except through an effective resistance law.
 :::
 
-## 1. The Ball Model: A Hybrid ODE With Two Phases and an Event
+## 1. Ball Dynamics and Mode Changes
 
-Strip the [roll-model derivation](putting-roll-models.html) to its computational skeleton and what remains is a **hybrid dynamical system** — two smooth vector fields separated by a discrete transition:
+### 1.1 Sliding Requires a Contact-Point Velocity
 
-**Skid phase** (contact point sliding at $\mathbf{u} = \mathbf{v} - \omega R\,\hat{\mathbf v}_{\text{spin}}$):
-
-$$
-\dot{\mathbf v} = -\mu_k g\,\hat{\mathbf u} + g\,\mathbf s(\mathbf x),
-\qquad
-\dot\omega = \frac{5\mu_k g}{2R}
-$$
-
-**Roll phase** (slip exhausted, $v = \omega R$):
+On a fixed plane, the slip at the contact point is
 
 $$
-\dot{\mathbf v} = -a\,\hat{\mathbf v} + g\,\mathbf s(\mathbf x)
+\mathbf u=\mathbf v-R\boldsymbol\omega\times\mathbf n,
+\qquad \mathbf g_\parallel=\mathbf g-(\mathbf g\cdot\mathbf n)\mathbf n.
 $$
 
-where $\mathbf s(\mathbf x)$ is the local in-plane slope vector supplied by the surface model of §2. The transition is an **event**, not a time: it fires when the slip speed crosses zero, and on level ground it lands at exactly $\tfrac57$ of a spinless launch speed. Three implementation notes carry most of the practical difficulty:
+For $\mathbf u\ne\mathbf0$, an ideal Coulomb sliding model is
 
-**Event detection, not fixed stepping.** The skid–roll switch and the hole-capture test both occur at states, not times. An integrator that only samples on a fixed grid will step over the transition and inherit a velocity error of order the step size — small per putt, systematic over an ensemble. The standard remedy is any root-finding event locator on top of an RK4/RK45 stepper; the transition variable (slip speed) is smooth and monotone near the crossing, so bisection to machine tolerance costs a few extra function evaluations.
+$$
+\begin{aligned}
+\mathbf F_t&=-\mu_kN\frac{\mathbf u}{\|\mathbf u\|},\\
+m\dot{\mathbf v}&=m\mathbf g_\parallel+\mathbf F_t,\\
+I\dot{\boldsymbol\omega}&=(-R\mathbf n)\times\mathbf F_t,
+\qquad N=mg\cos\beta .
+\end{aligned}
+$$
 
-**The stopping problem.** $\dot{\mathbf v} = -a\hat{\mathbf v}$ is non-Lipschitz at $\mathbf v = \mathbf 0$: the ball reaches rest in finite time and the unit vector $\hat{\mathbf v}$ is undefined there. Naive integrators oscillate or creep at the end of the putt — visible as a ball that "shivers" to a stop. The clean fix is a stopping event ($v$ below tolerance with in-plane gravity below the static threshold $\mu_s g$), after which the state is clamped. On slopes steeper than the runaway grade derived in the companion article ($\approx a/g$), the stopping event never fires, and correctly so.
+Here $\beta$ is the plane's inclination. Friction opposes **slip**, which need not point along the center velocity. For a straight level putt, define signed forward spin speed $s=R\omega$ and signed slip $u=v-s$. Positive slip slows translation and increases forward spin; overspin, $u<0$, reverses both changes. Treating every $s\ge v$ state as pure rolling loses this distinction.
 
-**Capture as geometry, not collision.** The capture test from the roll-model article — chord length against the free-fall drop, $b_{\max}(v) = \sqrt{r_h^2 - v^2R/2g}$ — is evaluated when the ball's path crosses the hole disc. Simulators that instead model the hole as a mesh depression and rely on the general contact solver to "discover" capture buy realism in lip-out animation at the price of extreme sensitivity to mesh resolution and restitution parameters at the lip edge; the hybrid-model test is deterministic, cheap, and matches the derived bound by construction.
+With constant sliding friction, no other tangential loads and no reversal of the travel direction during the transition,
 
-## 2. The Surface Model: From a Tilted Plane to a Gradient Field
+$$
+\begin{aligned}
+t_r&=\frac{|v_0-s_0|}{\mu_k g(1+1/\alpha)},\\
+v_r=s_r&=\frac{v_0+\alpha s_0}{1+\alpha}.
+\end{aligned}
+$$
 
-### 2.1 The Hierarchy
+The familiar $v_r=5v_0/7$ follows only for the homogeneous sphere with zero initial spin on level ground. It is not a universal transition speed on a side slope. A vector contact law is needed when the slip and travel directions separate.
 
-Green representations form a ladder of fidelity, and the right rung depends on the question being asked:
+### 1.2 Rolling Couples Translation to Rotation
 
-| Representation | Slope field $\mathbf s(\mathbf x)$ | Good for | Fails at |
-|---|---|---|---|
-| Tilted plane | Constant vector | Closed-form study, unit tests | Any real green |
-| Analytic patch (low-order polynomial) | Exact gradient | Controlled experiments, tier/crown features | Local detail |
-| Heightfield grid $h(x_i, z_j)$ | Finite-difference or interpolated gradient | Scanned real greens, general simulators | Sharp features between nodes |
-| Triangulated mesh | Per-face constant gradient | Irregular boundaries, fringe/collar | Gradient discontinuities at edges |
+No-slip rolling requires sufficient contact traction. Gravity's tangential component accelerates translational **and** rotational motion. To specify resistance, use an illustrative opposing rolling couple with magnitude
 
-The physics consumes only two things from any of these: the local **slope vector** $\mathbf s = -\nabla h$ (to first order in slope) for the gravity term, and — in refined models — the local surface normal for the contact frame. Everything else is data structure.
+$$
+\tau_r=m(1+\alpha)R a_0\cos\beta.
+$$
 
-### 2.2 Heightfields and Their Derivatives
+This normal-load scaling is a modeling assumption chosen to reproduce the level deceleration $a_0$. For nonzero rolling speed on a fixed plane it gives
 
-The workhorse is the heightfield: elevations on a regular grid, bilinear or bicubic interpolation between nodes. The subtlety that separates careful implementations from casual ones is that **the ball responds to the gradient, not the height**. Bilinear interpolation yields a slope field that is discontinuous across cell boundaries; a ball crossing a cell edge feels a step change in break, and on long lag putts the accumulated kinks are visible as faceted trajectories. Bicubic (or B-spline) interpolation gives a continuously differentiable surface at modest cost, and for gradient-driven dynamics it is the correct default. The same consideration governs mesh sources: a laser-scanned or photogrammetric green imported as raw triangles should be resampled onto a smooth interpolant before the ODE ever sees it, or the noise floor of the scan is injected directly into the break.
+$$
+\boxed{\dot{\mathbf v}
+=\frac{\mathbf g_\parallel}{1+\alpha}
+-a_0\cos\beta\,\hat{\mathbf v}.}
+$$
 
-Grid resolution buys detail linearly and costs memory quadratically, and the relevant scale is set by the physics: features narrower than a few ball diameters are traversed in a few milliseconds and average out of the trajectory; features at the half-metre scale and above are what players read as borrow. A decimetre-class grid with smooth interpolation captures everything the deterministic model can honestly use — finer structure belongs to the stochastic layer of §3, not the mesh.
+Replacing the first term by $\mathbf g_\parallel$ treats gravity as if it accelerated a sliding point mass. For $\alpha=2/5$, it overstates the isolated gravitational acceleration by 40%. That percentage does not describe the error in a whole trajectory: resistance, direction and event timing also change.
 
-### 2.3 What the Slope Field Feeds
+An energy check makes the coupling visible. Along a downhill line at speed $v$, the kinetic energy is $K=\tfrac12m(1+\alpha)v^2$ and
 
-With $\mathbf s(\mathbf x)$ in hand, the simulator's deterministic loop is complete: integrate the hybrid ODE of §1 through the field, fire the capture test at the hole. Two derived products fall out nearly free, and both are more useful than single trajectories:
+$$
+\dot K=mgv\sin\beta-\tau_r v/R.
+$$
 
-- **Reachability and runaway maps.** Evaluating $\lVert \mathbf s \rVert$ against $a/g$ over the whole green marks every point from which a downhill putt cannot stop — the simulator's version of the hole-location constraint derived in the companion article.
-- **Aim-and-pace charts.** Sweeping launch angle and speed for a fixed ball–hole pair and recording outcomes yields the make-region in the (aim, pace) plane, whose area is the deterministic difficulty of the putt. Its shrinkage with green speed and slope reproduces, quantitatively, the difficulty orderings players describe qualitatively.
+Under this particular couple law, a moving downhill ball accelerates when $\tan\beta>(1+\alpha)a_0/g$. For $S=12$ and the conventional calibration, the threshold is approximately 6.5%, rather than 4.7%. A 5% downhill plane still decelerates the moving ball in this model. These are conditional calculations, not a hole-placement standard.
 
-## 3. The Stochastic Layer: Grain, Imperfection, and Dispersion
+### 1.3 Events, Rest and Capture Need Separate Rules
 
-### 3.1 Why the Deterministic Model Is a Ceiling
+**Locate transitions within steps.** Fixed-step and adaptive integrators can both use event localization. In the straight sliding reduction, a signed $u=v-s$ can supply a sign-changing event. The norm $\|\mathbf u\|$ is nonnegative and nonsmooth at zero; ordinary sign-change bisection cannot automatically locate its zero. General sliding-to-sticking transitions require a declared contact algorithm, tolerance and feasibility check, not an unexplained scalar crossing.
 
-The deterministic machine of §1–§2 answers "what would this putt do on the modelled surface". It cannot answer "what fraction of well-struck putts go in", because the gap between those questions is precisely the unmodelled variability: launch execution noise, surface structure below mesh resolution, and slow environmental drift. Three stochastic treatments appear in simulation practice, in increasing order of ambition:
+An event root can be accurate relative to an interpolated trajectory while the trajectory itself remains inaccurate. Refine the integration and event tolerances together. A small root tolerance alone gives no machine-precision physical event time. Standard sign-change detection may also miss tangencies or multiple crossings within one step; these limitations are stated in the [SciPy event documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html). A putt can cross into and out of a hole disc between two outside samples. Bound the step length relative to the feature, inspect the swept path, or otherwise establish that the event cannot be skipped.
 
-**Input dispersion (execution noise).** Perturb launch speed and start line with small zero-mean errors and propagate each sample through the deterministic model. This is a direct transplant of the Monte Carlo methodology used elsewhere on this site for [swing-parameter variation studies](../models/models.html): the model is the function, the stroke errors are the input distribution, and make probability is the pushforward measure of the capture set. It requires no new physics, and it already reproduces the dominant structure of real make-rate curves — in particular the interaction between pace dispersion and the speed-dependent effective hole width $b_{\max}(v)$: aggressive pace narrows the target *and* widens the miss cost simultaneously.
+**Rest is an equilibrium decision.** The unit vector $\hat{\mathbf v}$ is undefined at zero speed. A low-speed numerical threshold is useful for detecting a candidate stop, but permanent rest requires force and moment balance under a separately declared static traction and rolling-resistance law. Sliding static friction by itself does not define the maximum resisting rolling couple. An uphill ball may momentarily reach zero speed and reverse; variable terrain may later flatten. The moving-downhill threshold above therefore neither proves rest stability nor maps all points from which a putt can never stop. Report a time-limit exit separately from rest.
 
-**Parameter noise (surface statistics).** Let the friction constants and the slope field carry spatial noise — $a(\mathbf x)$ and $\mathbf s(\mathbf x)$ as random fields with short correlation lengths — representing footprints, repair marks, mowing bands, and the general granularity of living turf. The physical footprint of such noise is well defined even where its parameters are not: perturbations act on the trajectory in proportion to the *remaining time to the hole*, so late-path noise deflects the ball more than early-path noise for a given amplitude, and slow-arriving putts integrate more surface noise precisely when they are most capturable. That trade-off — dying speed maximises effective hole width but also maximises exposure to surface noise — is the honest formulation of the pace-past-the-hole folklore discussed in the [roll-model article](putting-roll-models.html), and it only exists in a model that carries a stochastic layer at all.
+**Capture is another approximation.** The companion compares a finite-ball free-fall geometry with a separate historical capture fit. In its central, straight-path finite-ball construction, the horizontal budget is $D-R$, where $D$ is hole diameter, giving $v_c=(D-R)\sqrt{g/(2R)}\approx1.31$ m/s for the declared dimensions. This does not establish a universal capture threshold: off-center geometry, rim contact, spin and deformation change the outcome. The full-domain and off-center assumptions are in the companion.
 
-**Directional bias (grain).** Grass with a lie direction resists rolling anisotropically: deceleration is larger into the grain than down-grain, and a cross-grain component deflects the ball independently of gravity. Structurally this is a small modification — $a$ becomes a function of the angle between $\hat{\mathbf v}$ and a grain field $\hat{\mathbf g}(\mathbf x)$ — but calibrating the anisotropy honestly requires paired stimpmeter readings with and against grain on the actual turf, and generic constants are folklore until so measured. The model slot exists; the public data to fill it does not.
+Do not substitute a point-chord formula and call it the same finite-ball calculation. Nor does choosing a lower central speed threshold establish conservative classification for every off-center arrival. A binary capture proxy can miss a true capture and accept an implausible one. A three-dimensional contact simulation offers a different model, whose rim shape, contact law and discretization also need verification and measurement validation. Neither a detailed animation nor a convenient inequality settles lip-outs by itself.
 
-### 3.2 Reporting Discipline
+## 2. The Surface Is an Input to the Dynamics
 
-A dispersion study is only as honest as its input distributions, and the reporting rules this site applies to swing simulation apply unchanged: state the perturbation model and its parameters next to every make-probability figure; report ensemble sizes and confidence intervals; and never present a deterministic capture boundary as a make rate. The single most common overstatement in putting content — simulated or otherwise — is quoting probabilities whose noise model is undisclosed, which makes the number unreproducible in exactly the way the rigor standard of this project (`content-development/RIGOR_GUIDE.md`) forbids.
+### 2.1 Geometry and Approximation Level
 
-## 4. What Our Implementation Contains
+| Representation | Useful Role | Main Qualification |
+|---|---|---|
+| Tilted plane | Analytic checks and local approximations | Cannot represent changing slope |
+| Analytic curved patch | Controlled crowns, tiers and sensitivity studies | Selected shape need not match a measured green |
+| Heightfield grid | Measured elevations on a defined domain | Derivatives, measurement error and unresolved features matter |
+| Triangular surface | Irregular sampling and boundaries | Piecewise planar gradients jump at edges |
 
-The putting vertical of the project's [Tools golf suite](https://github.com/D-sorganization/Tools) implements the model of §1–§2 as specified by the [roll-model derivation](putting-roll-models.html), as part of the broader shared-tools putting simulation program:
+For a small-slope heightfield $y=h(x,z)$, the horizontal component of gravity projected into the tangent plane is approximately $-g\nabla h$. Insert the rolling-inertia factor when using this in the rolling equation. Applying the fixed-plane equation locally on a curved surface is an additional reduction. A more complete model accounts for the changing contact frame, the center's radius-offset surface and curvature-dependent normal acceleration; $N=mg\cos\beta$ alone need not hold at speed. Sharp features can also violate continuous contact.
 
-- **Hybrid skid–roll ODE** with the event-detected five-sevenths transition, stimp-parameterised rolling deceleration, and the static-friction stopping condition — with the skid initial condition taken from a low-speed putter impact model (loft-dominated, near-zero launch spin).
-- **Slope and break** as in-plane gravity components over the surface model, including the runaway-grade check for hole and start positions.
-- **Geometric capture test** using the speed-dependent effective hole width, applied on hole-disc crossing.
-- **Deterministic roll-out visualisation** — trajectory, phase boundaries (skid end, capture or stop), and pace/aim sweeps.
-- **Dual implementations under shared numeric tests**, following the project's parity convention: the same model in the Python engine and the TypeScript front end, pinned together by a shared test suite so the two cannot drift apart silently — the same discipline used for the [rate-of-closure explorer](https://github.com/D-sorganization/rate-of-closure-explorer).
-- **Interactive web companion** — the [Rate of Closure Impact Explorer's putting tab](https://d-sorganization.github.io/rate-of-closure-explorer/) (live site) runs the same roll model in the browser under the same parity discipline, including an "Import green…" action that loads a heightfield green — including greens authored in the project's `putting_green` engine — rather than only the built-in example surfaces.
+The right representation depends on the required output accuracy. A local plane can be useful on a real green. A finer mesh can be less useful if its derivatives mainly express survey noise.
 
-### What It Honestly Does Not Contain
+### 2.2 Interpolation Is Not Measurement Correction
 
-- **Grain.** The anisotropic-deceleration slot of §3.1 is not populated: no public calibration data meets the project's sourcing bar, and shipping invented anisotropy constants would be worse than shipping none.
-- **Dew, moisture, and diurnal drift.** Green speed varies through a day; the model treats $a$ as constant per scenario. Users model a slow green in the morning by changing the stimp input, not by a moisture model.
-- **Surface imperfection statistics.** The deterministic surface is smooth at mesh scale; the random-field layer of §3.1 is methodology the project endorses but has not yet implemented, so simulated make regions are **ceilings on real make rates**, and the interface says so.
-- **Lip dynamics.** Capture is the geometric bound, not an edge-collision model; near-threshold outcomes (horseshoes, lip-outs) are classified conservatively rather than animated physically.
-- **Wind.** Negligible for the ball on the ground at putting speeds relative to the terms retained, and excluded.
+Bilinear interpolation makes height continuous on a consistent grid, but generally leaves gradient jumps at cell boundaries. In a one-dimensional slice with heights 0, 0.01 and 0.03 m at 0.1 m spacing, the adjacent slopes are 0.1 and 0.2 although the shared height agrees. A piecewise model can be integrated, but boundary crossings and observed convergence need attention.
 
-This list is maintained deliberately in public view: each item is a falsifiable absence, and promoting any of them into the model requires the same derivation-or-source standard the rest of the pipeline meets.
+Bicubic patches do not automatically produce a globally $C^1$ surface: neighboring derivatives must be constructed consistently. Suitable splines can provide smoother derivatives, but can also overshoot measured heights. Smoothness alone neither removes noise nor proves a numerical method's advertised order across interfaces. Check the actual interpolant, surface boundaries and outputs under refinement instead of declaring one interpolation family universally correct.
 
-## 5. Where This Sits on the Site
+Exact interpolation preserves measurement errors at the nodes. A simple height-difference slope estimate magnifies independent elevation uncertainty approximately as $\sqrt{2}\sigma_h/\Delta$, for spacing $\Delta$ and node error standard deviation $\sigma_h$. Correlated survey errors require their covariance. Smoothing or regularized fitting can reduce noise at the cost of bias and lost features; document that trade-off and retain an uncertainty estimate.
 
-The putting material now forms a closed loop with the impact-mechanics corpus. The [impact article](impact-mechanics-and-ball-flight.html) establishes the collision physics and the face-dominance of the start line; the [reference-point article](reference-point-problem.html) explains why delivered direction must name its reference point — a caution that applies verbatim to putter deliveries, where a degree of start-line error is a missed three-metre putt; the [rotation-induced-spin supplement](rotation-induced-spin.html) derives the sphere impulse partition whose surface-side twin is the skid phase; the [roll-model article](putting-roll-models.html) carries that partition across the turf to the hole; and this article turns the assembled physics into software with a stated error budget. The unifying habit is the same one the [technology section](../pages/technology.html) applies to instruments: say what is measured, what is derived, and what is assumed — and keep the three lists separate.
+There is no universal decimetre grid that captures every relevant feature. A narrow imperfection can change contact or an arrival near the rim, especially at low speed. Conversely, unresolved texture can be represented statistically if that representation is calibrated. Compare predicted path, arrival speed and classification while varying grid spacing, smoothing, integration tolerance and plausible elevation errors. Declare what happens outside the measured domain; a flat continuation is a computational boundary condition, not measured terrain.
 
-Two companions round out the loop from the putter side: [secondary-axis stability](secondary-axis-stability.html) constrains the inertial design of the delivery state this software simulates, and the [strokes-gained critique](strokes-gained-limitations.html) prices what the simulated shots are worth in score terms.
+### 2.3 Useful Maps Have Defined Meanings
 
-## References
+A map of local downhill acceleration under a chosen resistance law is a **local diagnostic**. Global reachability depends on launch state, direction, later terrain, boundaries and the stopping rule. It requires trajectory or reachability analysis.
 
-- Companion derivation: [The Physics of the Rolling Putt](putting-roll-models.html) — all physical constants and closed forms used here, with their assumption ledger.
-- Project repositories: [D-sorganization/Tools](https://github.com/D-sorganization/Tools) (putting vertical; shared-tools putting simulation suite); [D-sorganization/rate-of-closure-explorer](https://github.com/D-sorganization/rate-of-closure-explorer) (the dual-implementation parity pattern).
-- R&A and USGA. *Rules of Golf* and *Equipment Rules* — hole and ball specifications; USGA *Stimpmeter Instruction Booklet* — the green-speed measurement the deceleration map calibrates against.
+An aim-and-pace chart records the input set that the model classifies as captured. Its raw area has units such as degrees·m/s and changes by $180/\pi$ when angle units change from radians to degrees. Calling that area intrinsic difficulty is therefore incomplete. Define a common normalized measure or integrate a specified player's joint input distribution over the capture set. Pace and aim can be correlated; independent spreads are an assumption, not a consequence of the chart.
 
----
+## 3. Uncertainty Changes the Question
+
+### 3.1 From Capture Sets to Conditional Probabilities
+
+Let $\boldsymbol\theta$ collect uncertain launch inputs and declared surface parameters, and let $C(\boldsymbol\theta)$ be the model's capture indicator. For a joint density $f$, the conditional modeled make probability and an independent Monte Carlo estimate are
+
+$$
+\begin{aligned}
+p_{\rm model}&=\int C(\boldsymbol\theta)f(\boldsymbol\theta)\,d\boldsymbol\theta,\\
+\hat p&=\frac1N\sum_{i=1}^{N}C(\boldsymbol\theta_i).
+\end{aligned}
+$$
+
+A nominal deterministic result is not a universal probability ceiling. In a synthetic one-dimensional capture interval $[-1,1]$, a nominal input of 1.5 misses. Equal-probability perturbations of $-1$ and $+1$ have zero mean but yield a 50% make rate. Conversely, noise can spoil a nominal make. An omitted disturbance has no guaranteed direction of bias.
+
+Sampling launch speed and start line requires no new trajectory physics, but it does require defensible distributions. A stroke-level model can instead perturb face, path, speed and strike location, then propagate their joint effect through impact. Do not perturb both a cause and its downstream consequence independently unless that is the intended uncertainty model. A green-speed parameter shared across a session is different from a fresh independent error on every shot; a fixed footprint is different from newly randomized turf on every numerical time step.
+
+For independent Bernoulli trials with a fixed model and input distribution, the estimated sampling standard error is $\sqrt{\hat p(1-\hat p)/N}$. At $\hat p=0.5$ and $N=1000$, that is about 1.58 percentage points. It excludes uncertainty in the physical model and in the estimated input distribution. Near zero or one, use an appropriate binomial interval rather than treating the zero plug-in standard error as certainty. Correlated samples need a different uncertainty calculation. More runs do not convert illustrative distributions into measured player performance.
+
+### 3.2 Perturbation Timing Depends on the Mechanism
+
+A simple counterexample corrects an easy intuition trap. For a free transverse double integrator at a fixed terminal time $T$,
+
+$$
+\delta z(T)=\int_0^T(T-t)\,\delta a_z(t)\,dt.
+$$
+
+A transverse velocity impulse $\Delta v_z$ at time $t$ contributes $(T-t)\Delta v_z$. With $T=4$ s and $\Delta v_z=0.05$ m/s, an impulse at 0.5 s gives 0.175 m, while one at 3.9 s gives 0.005 m: the early impulse produces **35 times** the terminal displacement. Earlier impulses have more time to change position in this example.
+
+A dissipative rolling putt is not this double integrator. Its linearized response depends on the trajectory's state-transition matrix; comparing arrivals at an event also requires event-time sensitivity. A spatial defect acts during a speed-dependent residence time. Its direction, correlation length, amplitude and local contact effect matter. A small late perturbation can change a near-boundary capture decision even when its effect on final position is small. These distinctions prevent a universal claim that either early noise or late noise always dominates.
+
+Slow arrival can enlarge a model's capture window, but its effect on perturbation exposure is conditional on the disturbance law. The resulting pace choice should compare make probability and leave consequences under stated assumptions. Deterministic sensitivity analysis can expose the trade-off; stochastic simulation is needed when the desired answer is a probability under a distribution. Neither method supplies an empirically optimal pace without validation.
+
+### 3.3 Directional Resistance Needs a Vector Law
+
+Changing a scalar $a$ with heading in $-a\hat{\mathbf v}$ changes speed but supplies no instantaneous force transverse to $\mathbf v$. On a sloped trajectory it can still change later break through the time history. To represent a direct transverse resistance component, specify a vector law.
+
+For illustration, $\mathbf a_r=-D\mathbf v$ with a symmetric positive-semidefinite tensor $D$ guarantees $\mathbf v^T\mathbf a_r\le0$ while allowing transverse acceleration. With $D=\left[\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right]$ s$^{-1}$ and $\mathbf v=(1,0)$ m/s, the acceleration is $(-2,-1)$ m/s². This is a synthetic dissipative example, not a calibrated grass model. Moreover, this tensor law is symmetric under velocity reversal: it cannot alone represent different with-grain and against-grain resistance. That requires a richer directional law and supporting data.
+
+Paired roll distances can constrain part of a directional model; they cannot identify all cross-grain forces, speed dependence and spatial variation. Measurements in additional directions and at relevant speeds, together with slope correction and held-out trajectories, would be needed. No absence of a calibration in this article establishes that the wider literature contains no such data.
+
+## 4. What the Pinned Implementations Actually Do
+
+This source inspection is dated **2026-09-28**. It covers Tools at [`96ab281e`](https://github.com/D-sorganization/Tools/tree/96ab281ef0af185640e93571dd4bf2b94ff761a5/src/shared/python/swing_sim/putting) and the explorer at [`af7f2682`](https://github.com/D-sorganization/rate-of-closure-explorer/tree/af7f2682213f57bb2e95052fed6d5b0740596cbd/src/model). These versions do **not** implement every corrected equation and event treatment above. This is a source audit, not a new execution, deployment or physical-validation claim for either provider.
+
+Their ground-plane coordinates use $x$ forward and $y$ left. To compare them with this article's horizontal coordinates, use $(x,z)_{\rm article}=(x,-y)_{\rm code}$. Their positive start azimuth is rightward, so a positive azimuth produces negative code $y$ velocity. Import and comparison must preserve this convention as well as units.
+
+| Part | Observed Behavior at the Pins | Consequence for Interpretation |
+|---|---|---|
+| Motion and transitions | Python `green.py` and TypeScript `puttingGreen.ts` use fixed 2 ms RK4 steps, holding the mode during each step and switching afterward | They do not implement within-step root localization. The scalar spin-speed reduction does not resolve general vector slip or overspin |
+| Slope term | Both add the full small-slope gravity term during rolling | They omit the $1/(1+\alpha)$ rolling-inertia factor derived above |
+| Level resistance | `roll.py` and its mirror derive a release speed using a groove contact fraction 0.87, then invert roll-out distance | This differs from the companion's declared groove geometry; an empirical 1.83 m/s convention should not be presented as that exact geometry derivation |
+| Stopping | The loop exits when speed is at most 0.005 m/s, or its 60 s cap is reached | It contains no static-equilibrium feasibility test there; a capped trajectory is not necessarily a resting ball |
+| Surface | Plane or bilinear heightfield; zero slope acceleration outside the grid, with edge-clamped height queries | The mesh is not globally smooth, and the out-of-domain behavior is an extrapolation policy |
+| Capture | Sampled-position tests; the surface API uses an effective-radius proxy, while legacy planar calls retain a speed-threshold proxy | Neither is the companion's finite-ball derivation or a resolved rim-contact calculation |
+| Input dispersion | Python `variation.py` perturbs clubhead speed, face angle, path angle, toe strike offset and read/aim angle through the shared seeded sampler | Execution variability is implemented. It should not be confused with stochastic surface fields or empirical player calibration |
+| Browser dispersion | `puttingDispersion.ts` implements summary statistics and the report wire; its documentation keeps Monte Carlo execution Python-authoritative | A report reader is not an independent browser implementation of the sampler |
+| Import | `PuttingControls.tsx` calls `puttingGreenImport.ts`, selecting the Tools wire or UpstreamDrift topography reader | The source contains an import path; this review has not qualified every producer/export combination or the live explorer deployment |
+
+The implemented capture proxy uses $R_h=0.054$ m and $v_c=R_h\sqrt{g/(2R)}\approx0.819$ m/s, with $R_{\rm eff}=R_h\sqrt{1-(v/v_c)^2}$ below $v_c$ and zero above it. The code tests distance from a sampled position to the hole center against that radius. This is neither a continuously localized impact parameter nor Penner's separate historical fit. At zero speed its effective radius reaches the full hole radius; the finite-ball clearance and lip-contact qualifications remain relevant. The lower central threshold does not justify calling every prediction conservative.
+
+The [Python integrator](https://github.com/D-sorganization/Tools/blob/96ab281ef0af185640e93571dd4bf2b94ff761a5/src/shared/python/swing_sim/putting/green.py), [capture module](https://github.com/D-sorganization/Tools/blob/96ab281ef0af185640e93571dd4bf2b94ff761a5/src/shared/python/swing_sim/putting/capture.py) and [TypeScript integrator](https://github.com/D-sorganization/rate-of-closure-explorer/blob/af7f2682213f57bb2e95052fed6d5b0740596cbd/src/model/puttingGreen.ts) make these differences inspectable. The [TypeScript reference tests](https://github.com/D-sorganization/rate-of-closure-explorer/blob/af7f2682213f57bb2e95052fed6d5b0740596cbd/src/model/puttingGreen.test.ts) pin selected Python-derived results. Passing those fixtures can catch regressions within their coverage; it cannot show that the physical assumptions are correct or guarantee that all future versions agree.
+
+In these inspected motion and surface paths, resistance is isotropic and scenario-constant; there is no resolved moisture evolution, calibrated spatial imperfection field, rim-contact dynamics or aerodynamic force. This is a bounded statement about these modules, not a survey of every component or commercial simulator. Omitting wind does not establish that wind is negligible for every condition or accuracy target. An unimplemented effect should enter the model's limitation statement and validation plan, rather than acquire invented constants.
+
+## 5. Connecting the Layers to a Useful Decision
+
+The [impact treatment](impact-mechanics-and-ball-flight.html) connects putter delivery and contact to launch. The [reference-point discussion](reference-point-problem.html) explains why a velocity or direction must identify its point and frame. A one-degree straight-line direction change gives about 52 mm lateral displacement over 3 m; whether that putt misses depends on the original aim, break, arrival speed and capture model. It is not an unconditional miss theorem.
+
+The [rotation-induced-spin treatment](rotation-induced-spin.html) and [rolling-putt companion](putting-roll-models.html) connect impulse partition to subsequent slip and roll. [Secondary-axis stability](secondary-axis-stability.html) addresses rigid-body design ideas under explicit torque and constraint assumptions; it does not establish measured putting benefit. The [strokes-gained critique](strokes-gained-limitations.html) explains why a make/leave distribution also needs a declared scoring benchmark before it becomes a value claim.
+
+For a useful comparison, carry these dependencies through the whole chain. A changed shaft or head can alter delivery variability; altered launch changes both path and arrival speed; a different capture law changes the success set; a different player distribution changes its probability; a different scoring benchmark changes which leaves matter. Holding one layer fixed is a legitimate experiment if that choice is named. It is not evidence that the layer is irrelevant.
+
+A reproducible result should identify the code and surface revision, coordinates and units, inertia and resistance assumptions, event and boundary rules, uncertainty distributions and correlations, sample count and sampling interval method, and convergence checks for the reported outputs. Physical qualification then compares held-out measured paths, speeds and capture outcomes with predictions at the required accuracy. The analytical and synthetic tests accompanying this article check internal consistency; they supply no new turf, player or hardware measurements.
+
+## References and Evidence Scope
+
+- [The Physics of the Rolling Putt](putting-roll-models.html): the assumption ledger, conventional Stimpmeter calibration, groove distinction, finite-ball construction and separate historical capture model. This review leaves that audited companion unchanged.
+- [SciPy `solve_ivp` documentation](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.solve_ivp.html): event functions and limitations of sign-change detection. No SciPy runtime dependency is added by this article.
+- [Pinned Python putting source](https://github.com/D-sorganization/Tools/tree/96ab281ef0af185640e93571dd4bf2b94ff761a5/src/shared/python/swing_sim/putting) and [pinned browser model source](https://github.com/D-sorganization/rate-of-closure-explorer/tree/af7f2682213f57bb2e95052fed6d5b0740596cbd/src/model): implementation evidence, including their explicit limits. Source inspection does not confer empirical qualification.
 
 *Implementation companion to [The Physics of the Rolling Putt](putting-roll-models.html).*

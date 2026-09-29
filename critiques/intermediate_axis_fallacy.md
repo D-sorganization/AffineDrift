@@ -1,5 +1,5 @@
 ---
-title: "Critique: Secondary Axis Stability in Golf Clubs"
+title: "Critique: Free-Body Stability and Putter Claims"
 description: "Critique and response context for Secondary Axis Stability in Golf Clubs in AffineDrift's control-affine golf-swing framework."
 ---
 
@@ -7,61 +7,46 @@ description: "Critique and response context for Secondary Axis Stability in Golf
 
 ## Summary of Concern
 
-The article applies the **Intermediate Axis Theorem** (a phenomenon of torque-free rigid body dynamics driven by quadratic velocity terms) to the dynamics of **putting**. This is a scaling failure. The angular velocities ($\omega$) in putting are too low for the gyroscopic instability term ($\omega \times I \omega$) to manifest significantly over the duration of a stroke, especially when compared to the dominant control torques and gravitational forces.
+The intermediate-axis theorem concerns a torque-free rigid body spinning near a principal-axis motion. It does not establish increased grip effort, poorer face control, or superiority of a central-spine putter in a supported stroke. The original article repeatedly made those inferences without a forced club–shaft–hand model or equipment measurements.
+
+This critique's original response went too far in the other direction: it called the effect necessarily negligible at putting speeds and mixed torque with force units. The defensible objection is the missing model and evidence, not a universal conclusion that inertia-driven effects cannot matter.
 
 ## Location
 
-- **File:** `articles/secondary-axis-stability.qmd`
-- **Section:** "Background: Principal Axes and Rotational Stability" & "Quantitative Estimate of the Stability–MOI Tradeoff"
-- **Claim:** That the "intermediate-axis instability" is a relevant design driver for putters and justifies sacrificing vertical MOI ($I_z$).
+- [Secondary Axis Stability](../articles/secondary-axis-stability.html): free-body theorem, hypothetical inertia comparison, practical design claims and control-theory synthesis.
+- The article's accessible summary and critic/author dialogue previously repeated stronger performance claims than the mechanics supported.
 
 ## Nature of the Issue
 
-- **Dimensional/Scaling Failure:** The magnitude of the unstable term scales with $\omega^2$. In putting, $\omega$ is negligible (~1-3 rad/s) compared to full swings (~20-30 rad/s).
-- **Boundary Condition Violation:** The Intermediate Axis Theorem applies to _free_ rigid bodies. A putter is a constrained system (pinned by hands, subject to gravity). The stiffness of the grip and the pendulum dynamics of the swing likely overwhelm the weak inertial instability.
-- **Trade-off Miscalculation:** The article advises reducing $I_z$ (Static Stability, linear in $\dot{\omega}$) to mitigate Intermediate Axis Instability (Dynamic Stability, quadratic in $\omega$). At low speeds, this trades a first-order dominant effect for a second-order negligible one.
+For distinct principal moments $I_1<I_2<I_3$, linearization of torque-free rotation about axis 2 gives the transverse growth rate
+
+$$
+\sigma=|\Omega|\sqrt{
+\frac{(I_3-I_2)(I_2-I_1)}{I_1I_3}}.
+$$
+
+The relevant finite-interval quantity is $\sigma T$, with the initial perturbation and validity of the linear model also specified. The quadratic scaling of $\omega\times I\omega$ does not make this first-order growth rate quadratic in nominal spin. Nor is its time constant simply $1/|\Omega|$ independent of inertia ratios.
+
+An attached club has applied forces and couples, support motion and potentially flexible states. The corresponding perturbation system can differ from the free-body one. Grip stiffness and damping should be modeled or measured; their dominance cannot be asserted from a low angular speed alone. Conversely, the presence of a hand constraint does not automatically prove every possible forced mode stable.
 
 ## Why This Is a Problem
 
-A reviewer with a background in dynamics will immediately spot that the "Book Flip" effect requires time and speed to develop.
+The original design ranking used $I_3-I_2$ as an instability indicator and treated its halving as a stability improvement. The actual rate contains both moment gaps and the product $I_1I_3$. Using the article's hypothetical spectra, the rate coefficient is about 0.76709 for A and 0.48529 for B. B has 36.7% lower growth at equal spin rate, but 15.3% higher growth at equal angular momentum along the respective intermediate axes. Neither condition alone represents a measured putting stroke.
 
-- **Time Constant:** The time constant for the instability divergence is roughly $\tau \approx 1/\omega$. If $\omega = 2$ rad/s, $\tau \approx 0.5$s. The instability barely has time to start before the stroke ends.
-- **Force Magnitude:** The gyroscopic torque is $\tau_{gyro} \approx (I_1 - I_3)\omega_1\omega_3$. For typical putter inertias ($500 \text{ g cm}^2$) and low speeds, this torque is in the range of milli-Newtons. The user's grip torque is in Newtons. The "instability" is easily clamped by the lightest grip pressure.
+The original grid-model attribution lacks a reproducible geometry or calculation. The corrected article labels these numbers hypothetical and separates principal moments from physical head-axis orientation. A smaller moment gap does not identify a mass layout or show that a player will deliver the face more consistently.
 
-By suggesting that $I_z$ (impact forgiveness) should be sacrificed for this phantom stability, the article provides **harmful engineering advice**.
+Torque comparisons require **N·m**, a common reference point and the same component. Statements comparing a gyroscopic moment in millinewtons with a grip torque in newtons are dimensionally invalid. Collision effects are often usefully expressed as angular impulses, in N·m·s; comparing them with pre-impact torque amplitudes additionally requires the time history.
 
 ## Evidence / References
 
-- **Euler's Equations:** $\tau_{net} = I \dot{\omega} + \omega \times I \omega$.
-  - Regime 1 (Putting): $\omega \to 0$. $\tau_{net} \approx I \dot{\omega}$. (Linear inertia dominates).
-  - Regime 2 (Full Swing): $\omega \text{ large}$. $\omega \times I \omega$ becomes significant.
-- **Goldstein, Classical Mechanics:** The theorem is derived for $N=0$ (torque free).
-- **Tennis Racket Theorem:** Instability is observed in _flight_, not while held.
+[MIT's rigid-body chapter, §2.4](https://ocw.mit.edu/courses/8-09-classical-mechanics-iii-fall-2014/6fe39e8d5ce4ce746ca256dfea665eda_MIT8_09F14_Chapter_2.pdf) derives the Euler balance and free principal-axis perturbation result. It does not validate a putter design. The revised article supplies the explicit table arithmetic and connects the free model to the externally forced balance. Repository tests independently compare component growth rates with finite-difference Jacobians and check the fixed-spin/fixed-momentum reversal.
 
 ## Severity
 
-- **High** (The central thesis for putters is dynamically invalid).
+**High for the original inference.** The error changes the article's central engineering conclusion. Correcting it does not establish that any particular architecture is beneficial or harmful to golfers.
 
 ## Suggested Remedies
 
-### 1. Scope Restriction
+Retain the free-body derivation as a bounded mechanical example. State the support, actuation, deformation and comparison conditions needed for the stroke. Remove unsupported benefits, neural explanations and equipment recommendations. Evaluate impact response and pre-impact delivery together, using specified outputs and uncertainty.
 
-Explicitly state that the Intermediate Axis instability is likely negligible for putting speeds and is primarily a "Full Swing" consideration.
-
-> "While the intermediate axis theorem provides a theoretical upper bound on stability, its effects scale quadratically with velocity. In putting, these forces are likely dominated by grip stiffness, whereas in the driver swing, they become structural."
-
-### 2. Reframe as "Inertial Alignment" (Tensor Diagonalization)
-
-Instead of claiming "Stability" (which implies dynamics), frame the "Central Spine" benefit as **Tensor Diagonalization**.
-
-> "Aligning the principal axes with the stroke frame decouples the user's applied torque from off-axis accelerations. This reduces the 'fight' required to keep the face square, independent of the instability."
-
-### 3. Dimensional Analysis
-
-Add a section quantifying the magnitude of the effect.
-
-> "For a stroke speed of 2 rad/s, the gyroscopic couple is approximately X Nm, which is Y% of the torque generated by an off-center hit. Thus, we prioritize MOI for impact, but Alignment for stroke feel."
-
-### 4. Remove the Trade-off Recommendation
-
-Do not suggest sacrificing $I_z$ for this. Suggest maximizing $I_z$ _subject to_ the constraint of aligned axes.
+Diagonalizing a tensor by changing coordinates does not improve the physical club. Physically aligning principal directions with a selected motion or load can alter a response, but requires a declared experiment. Do not substitute “inertial alignment” for “stability” and retain the same unverified performance conclusion. The corrected article addresses the mathematical overreach; comparative player outcomes remain unestablished.

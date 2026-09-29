@@ -19,7 +19,9 @@ accelerate. A force can be large while doing little work because it is nearly
 perpendicular to the point velocity. A shaft can store energy during one
 interval and return it during another. Two hands can create the same net club
 wrench with very different internal loads. None of those statements is a
-contradiction. They become confusing only when the ledger columns are mixed.
+contradiction. These are mechanical possibilities under specified states and
+loads, not measurements of the imagined golfer. They become confusing when
+the ledger columns are mixed.
 
 This chapter follows one imagined swing from preparation to impact. It does not
 claim that this is the unique swing of a skilled player. Instead, it shows how
@@ -44,17 +46,34 @@ The observer also declares a laboratory frame, a club-attached frame, the grip
 center as the main wrench reference point, and positive angular directions.
 This sounds fussy until a force is transported from one hand to the grip
 center. The force remains the same physical interaction, but its reported
-moment changes with the reference point. Power remains invariant only when the
-wrench and velocity are transformed consistently. A persuasive diagram cannot
-repair inconsistent bookkeeping.
+moment changes with the reference point. For a rigid grip region in the same observer frame,
+the paired reduction is $P=\mathbf F\cdot\mathbf v_A+\mathbf M_A\cdot\boldsymbol\omega$.
+For $\mathbf r=\mathbf r_B-\mathbf r_A$, use
+
+$$
+\begin{aligned}
+\mathbf v_B&=\mathbf v_A+\boldsymbol\omega\times\mathbf r,\\
+\mathbf M_B&=\mathbf M_A-\mathbf r\times\mathbf F.
+\end{aligned}
+$$
+
+The two evaluations give the same total power, although their force and moment
+parts change. This transports the same physical velocity field; changing to a
+moving observer is a different operation and generally changes power. A
+deforming grip cannot be reduced to one rigid twist without retaining the
+missing deformation power. Its individual contact forces need their actual
+material-point velocities. A persuasive diagram cannot repair inconsistent
+bookkeeping.
 
 Finally, the observer lists the state variables available in the chosen model:
 segment angles and angular velocities for the simplest pendulum; pelvis and
 trunk motion for a moving-base model; shaft deflection and deflection rate for
 a flexible club; activation and series-force histories for a muscle-driven
-model. If a stored state is omitted, the same visible pose can hide different
-futures. The state list therefore determines which timing questions the model
-is capable of answering.
+model. With specified future inputs or input laws, the retained state determines
+the model evolution. If an internal state is omitted, the same visible pose can
+hide different futures. Activation is a state, not an energy quantity; an
+activation history does not itself measure elastic storage or metabolic cost.
+The state list determines which timing questions the model can answer.
 
 **Practical Interpretation:** Before asking which body part “caused” speed,
 ask what objects are inside the accounting boundary, what instant or interval
@@ -79,13 +98,20 @@ internal transmission state at the command transition.
 Consider the two allocation extremes developed earlier. In one, a proximal
 push--pull contribution remains directionally loaded while the wrists provide
 an opposing contribution. In the other, the modeled roles reverse across the
-transition. Both programs can produce the same net club-level moment before
-and after the change. They differ in the route taken by their internal states.
-If a declared transmission has a dead zone or finite force-development time,
-crossing through zero can create a temporary loss or delay of transmitted
-moment. If the transmission has no dead zone, that specific advantage largely
-disappears. The result is conditional on the element, not a universal verdict
-about wrists or scapulae.
+transition. Both command programs can match the same net desired moment before and after
+the change while taking different routes through internal transmission states.
+That does not establish the same transmitted moment or club trajectory throughout
+transition. The [archived allocation study](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/torque_allocation_preload_study.json)
+reports an advantage for persistent direction in nine positive-dead-zone cases,
+and equivalence of the chosen net error-impulse metric in three zero-width cases.
+The equivalence threshold is $10^{-10}$ N m s within that numerical study.
+
+Removing a dead zone does not remove finite force-development time or make every
+internal trajectory equal. Two linear channels with the same time constant and
+matching summed commands can have the same summed output while their individual
+forces reverse at different times. The result is conditional on the transmission,
+initialization and metric. It neither identifies a human wrist dead zone nor
+selects a universal wrist or scapular strategy.
 
 ### Transition: Replace the Magic Instant With a Neighborhood
 
@@ -100,7 +126,8 @@ Our observer therefore records a transition neighborhood. The ledger contains
 configuration, velocity, applied generalized moments, constraint reactions,
 hand wrenches, shaft state, ground-reaction wrench, and the power of each
 declared interaction. If the observer wants to discuss preactivation, activation
-must be measured or represented by a biological model. If the observer wants
+must be estimated from declared measurements or represented by a biological
+model; an EMG signal is not a direct measurement of every muscle force. If the observer wants
 to discuss slack, the word is replaced by a quantity such as contact gap,
 tangent stiffness, low force, series strain, or force-development delay.
 
@@ -114,12 +141,27 @@ side “connected” and the other “slack.”
 ### Early Downswing: The Ground and Moving Base Join the Story
 
 As the downswing begins, the golfer pushes on the ground and the ground pushes
-back. The ground-reaction wrench is external to the golfer-plus-club system,
-but it is not a packet of energy that travels up the body like water through a
-pipe. It changes linear and angular momentum according to its impulse and does
-work according to the velocity of its application point and the chosen model.
-Some force components can be mechanically important by redirecting motion or
-satisfying constraints even when their instantaneous power is small.
+back. This ground wrench contributes to the golfer-plus-club momentum balance,
+together with gravity and any other external loads. Integrate all external
+forces for linear momentum and all external moments about a fixed inertial
+point for angular momentum. A moving angular-momentum reference requires the
+appropriate transport terms.
+
+Impulse and work answer different questions. At an ideal stationary no-slip contact,
+material-point velocity is zero, so the contact force does zero work despite
+supplying impulse. A synthetic 100 N force maintained for 0.1 s has impulse
+10 N s; at zero contact velocity its work is zero. Multiplying that force by
+center-of-mass velocity gives a different quantity used in center-of-mass
+kinetic accounting, not the contact's boundary power. The moving center of
+pressure is also not a material point whose migration speed can simply be
+multiplied by the ground force.
+
+Real shoe/turf deformation, slip or a moving support can change this idealization.
+Their power requires the actual distributed tractions and contact velocities
+or a justified equivalent model. The ground can make a swing mechanically
+possible without serving as its source of mechanical energy. Muscle conversion
+of chemical energy and changes in gravitational or elastic storage remain
+separate entries.
 
 Pelvis and trunk motion make the arm base move. In a prescribed-base pendulum,
 that motion is supplied as an input trajectory; the model does not pay the
@@ -136,10 +178,15 @@ joint moments, and changing geometry can produce the ordered peaks. A peak-speed
 sequence alone cannot tell us which term did work or whether deliberately
 slowing one segment would improve the final outcome.
 
-**Human Evidence:** Measured golfers often display ordered segment-speed peaks,
-but timing varies with task, participant, club, event definition, and filtering.
-The observation motivates a mechanism test; it does not select one universal
-control strategy.
+**Human Evidence:** Tinmark and colleagues studied 45 elite golfers and reported
+proximal-to-distal timing of peak angular-speed magnitudes for the pelvis,
+upper torso and hands across their partial/full-shot conditions [@tinmark2010].
+That result does not establish a universal pelvis–trunk–arm–club sequence or its
+cause. Marsan and colleagues compared seven angular-velocity definitions in
+13 golfers' driver swings and found that the identified sequence depended
+strongly on the selected component [@marsan2019]. Define the segments, measured
+quantity, processing and event rule before comparing peak times; observations
+motivate mechanism tests rather than prescribe one control strategy.
 
 ### Mid-Downswing: Geometry Changes What the Same Force Can Do
 
@@ -168,32 +215,54 @@ rerunning the rest of the swing without the moment.
 ### Delivery: Two Hands Can Produce Force and Couple Simultaneously
 
 Near delivery, reducing the hands to a single point hides an important degree
-of freedom. The resultant of the two hand forces translates the club. Their
-separation can also create a couple about the grip center. Direct wrist moments
-add another rotational contribution. Many combinations can yield the same net
-club wrench.
+of freedom. The resultant hand force contributes to center-of-mass acceleration together
+with the other external forces. Its moment about the club center of mass also
+matters. For hand separation $\mathbf d=\mathbf r_R-\mathbf r_L$ and the midpoint
+$G$ of the two hand contacts (not the club center of mass), the force-generated moment is
 
-This is the setting in which a negative grip couple may coexist with increasing
-clubhead speed. “Negative” refers to the sign about a declared axis. The couple
-power is its moment multiplied by club angular velocity. Meanwhile, resultant
-force power, shaft energy return, gravity, and already acquired kinetic energy
-remain in the ledger. A negative couple can regulate release or reshape the
-trajectory without making the total club power negative. Conversely, a
-positive moment is not automatically beneficial if it acts at the wrong state
-or worsens impact geometry.
+$$
+\mathbf M_G^{\rm force}
+=\tfrac12\mathbf d\times(\mathbf F_R-\mathbf F_L).
+$$
 
-The two-hand planar model demonstrates a plausible passive late negative
-force-couple mechanism: after a coupled state has been created, the constraint
-forces needed to maintain both hand contacts can retain a negative couple even
-when a selected applied command is removed in a same-state or forward
-intervention. That is a model result about constraint dynamics. It does not
-show that the golfer's muscles are inactive, nor does it identify scapular
-retraction as the source. The body can remain active while a particular net
-club-couple component emerges from the linked dynamics.
+Equal and opposite forces form a pure couple, independent of reduction point.
+For a nonzero resultant, the reduced moment is point-dependent. To obtain the
+moment about the club center of mass $C$, add
+$(\mathbf r_G-\mathbf r_C)\times(\mathbf F_R+\mathbf F_L)$ to $\mathbf M_G^{\rm force}$.
+Direct applied
+moments add to this wrench; they are not hidden inside the force moment. Many
+hand-load combinations can yield the same rigid-club wrench, while internal
+loads and compliant-contact power can differ.
 
-**Model Result:** The executed two-hand models separate resultant force, the
-force-generated hand couple, direct wrist moment, and internal shaft moment.
-Their power and wrench identities close numerically under the declared model.
+This is the setting in which a negative grip-moment component may coexist with
+increasing clubhead speed. “Negative” refers to an oriented axis, and spatial
+moment power is the dot product $\mathbf M\cdot\boldsymbol\omega$, not one
+component's sign. On a rigid club, hand power is the sum of the force and moment
+terms at one consistent point. At an anatomical rotational joint, the paired
+moment contribution instead uses the relative angular velocity of its two
+bodies. Neither net quantity uniquely identifies individual muscle work.
+
+Gravity and other external loads can supply power while one component absorbs
+it. Elastic release can convert stored energy into kinetic energy within a
+flexible club; already acquired kinetic energy is part of the state, not an
+additional power source. These distinctions explain coexistence without showing
+that an opposing moment improves a particular task. That requires an intervention
+and an objective.
+
+**Model Result:** In the [archived forward two-hand study](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/forward_two_arm_study.json),
+a branch inherits the baseline state at 0.20 s and sets its applied ideal joint
+torques to zero. The force-generated moment about the study's declared club
+reference remains negative at all stored samples over the next 0.05 s. Gravity,
+fixed-shoulder constraints and ideal bilateral hand contacts remain. This is
+archived model evidence, not a new run, a finding that human muscles are inactive,
+or identification of scapular retraction.
+
+The archive separately reports near-machine-level wrench-power identities and
+nonzero integration work-energy residuals that decrease under step refinement.
+An algebraic identity closing tightly does not make the trajectory exact.
+Changing geometry, contact laws or actuator dynamics requires another scoped
+test; removing neural excitation with activation retained is a different
+intervention from removing ideal applied torque.
 
 ### The Shaft: A Short Memory With Direction and Timing
 
@@ -205,11 +274,26 @@ free energy. Its return comes from energy previously supplied to the club-body
 system, and its practical effect depends on timing, mode shape, damping,
 geometry, and impact conditions.
 
-In our ledger, shaft strain energy is internal when the whole flexible club is
-the system. It becomes an exchange term when the club is divided into proximal
-and distal parts. Both descriptions are valid if the boundary is declared.
-The shaft can also make two visually similar delivery poses dynamically
-different because their bend and bend-rate states differ.
+In our ledger, strain energy remains stored energy even when the shaft is
+partitioned. Choose material subdomains and a named cut section: each part has
+its own kinetic and strain energy, while traction power across the cut is an
+exchange term. Storage is measured in joules and power in watts; one does not
+turn into the other merely because the boundary moves on a diagram. A spatially
+moving cut additionally needs transport accounting.
+
+For the whole flexible club, one useful convention is
+
+$$
+\frac{d}{dt}(K+U_{\rm shaft}+V_g)=P_{\rm hands}-P_{\rm diss},
+$$
+
+with no other external power, gravity included once through $V_g$, and all
+retained translational, rotational and deformation kinetic energy in $K$.
+If $U_{\rm shaft}$ decreases, kinetic energy may rise without an extra external
+shaft-return term. The distribution of that rise among head, shaft and proximal
+parts depends on their interface powers; release need not all help the head.
+The shaft also makes two visually similar delivery poses dynamically different
+because bend and bend-rate states can differ.
 
 This gives “late release” a more careful meaning. A delayed visible angle does
 not, by itself, reveal whether the shaft is storing energy, whether wrists are
@@ -241,24 +325,43 @@ ball contact model.
 
 Now the observer rewinds. First comes a pointwise decomposition: at selected
 states, set one declared control input to zero and recompute acceleration or
-constraint force without advancing time. This shows local sensitivity under
-the same state. Next comes a forward intervention: remove or alter the input
-and integrate, allowing the trajectory to diverge. This answers a different
-question about consequences over time.
+constraint force without advancing time. This is a finite same-state comparison, not necessarily a derivative.
+For the illustrative nonlinear input map $a(u)=u^2$, changing $u=2$ to zero
+changes $a$ by $-4$, while the local derivative predicts $2u\Delta u=-8$.
+In a fixed-mode control-affine model, the input derivative gives the finite
+change exactly; contact switches, saturation and actuator dynamics can invalidate
+that simplification. Recompute constraint reactions consistently.
 
-The observer also runs negative controls. Coincident hand points should remove
-the force-generated couple. Consistent frame and reference-point changes should
-preserve power. Timestep refinement should not reverse the main result.
-Residuals should remain below declared thresholds. A mechanism that disappears
-under these controls is not rescued by a compelling animation.
+Next comes a forward intervention: declare which command or policy changes,
+retain compatible configuration, velocity and internal state, and integrate.
+Input removal at each baseline state does not recreate this divergent path.
+Compare a declared diagnostic time or each branch's own impact event, and report
+a branch that misses the ball. These answer different questions about consequences
+over time.
+
+The observer distinguishes model controls from numerical verification.
+With bounded hand forces, collapsing separation removes the force moment about
+the common contact point; it does not remove a direct free moment or the
+resultant's moment about a different point. Demanding a fixed nonzero couple as
+separation shrinks instead requires unbounded forces. Any geometry intervention
+must initialize a compatible state and check constraint rank.
+
+Consistent coordinate representation and rigid-point transport should preserve
+the same observer's total power. Timestep refinement checks numerical stability
+and convergence of the particular outcome; track constraint, equation and
+work-energy residuals with units and declared tolerances. A change under a real
+intervention can be the predicted effect, whereas failure of a representation
+identity indicates an implementation or convention problem. None of these checks
+alone validates the mechanism in a golfer.
 
 Finally, the observer moves up the model ladder. Does the double-pendulum result
 survive a two-hand constrained model? Does it survive a moving base and flexible
 shaft? Does it survive spatial motion and parameter uncertainty? Do measured
 bilateral wrenches, kinematics, shaft strain, ground reactions, and activation
-timing show the predicted relationships in held-out participants? Each rung
-earns a narrower uncertainty reduction. None grants permission to skip the
-next rung.
+timing show the predicted relationships in held-out participants? Adding complexity does not guarantee reduced uncertainty; it can introduce
+new unidentified parameters. Advance when a new tier answers the declared
+question and survives its verification and measurement tests. No earlier rung
+licenses skipping evidence needed for the eventual claim.
 
 ### Read the Finished Ledger in Plain Language
 
@@ -297,7 +400,7 @@ not a weakness. It is the beginning of the next experiment.
 
 The whole-swing story remains coherent only when the accounting rules stay
 visible. Preparation creates state. Transition is an interval. The ground
-changes momentum and can do work. Geometry changes leverage. Two hands create
+contributes impulse; its boundary work depends on actual contact motion. Geometry changes leverage. Two hands create
 both resultant force and couple. The shaft stores and returns energy. Impact
 adds a new contact problem. Counterfactuals separate local contributions from
 forward consequences. Human evidence is required before a model allocation is
@@ -314,6 +417,6 @@ accurate. Parameters, soft-tissue motion, muscle forces, contact behavior, and
 individual objectives remain uncertain. The synthesis earns a research
 program, not a swing prescription.
 
-**Go Deeper:** Compare the complete [scientific monograph](https://raw.githubusercontent.com/D-sorganization/UpstreamDrift/main/docs/research/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf),
-the machine-readable [transmission robustness evidence](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/data/transmission_robustness_study.json),
-and the [reviewer workbench](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md).
+**Go Deeper:** Compare the complete [scientific monograph](https://raw.githubusercontent.com/D-sorganization/UpstreamDrift/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf),
+the machine-readable [transmission robustness evidence](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data/transmission_robustness_study.json),
+and the [reviewer workbench](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md).

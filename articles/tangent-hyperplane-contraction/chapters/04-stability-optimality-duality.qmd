@@ -1,60 +1,47 @@
 ---
 title: "Chapter 4 - Stability-Optimality Duality"
-description: "Imagine a pendulum. The \"cost-to-go\" from any position is like a potential energy: higher positions cost more to reach equilibrium. The stability..."
+description: "A Riccati value drop becomes a finite-horizon metric bound only under explicit definiteness and decay assumptions."
 bibliography: ../references.bib
 ---
 
-## Can the Same Matrix Measure Both Cost and Stability?
+## When Can Cost Curvature Measure Error Decay?
 
-Imagine a pendulum. The "cost-to-go" from any position is like a potential energy: higher positions cost more to reach equilibrium. The stability certificate—a proof that perturbations shrink—can be encoded in a different "metric": a custom notion of distance that shrinks as perturbations evolve. Here is the astonishing fact: under optimal control, these two matrices are *exactly the same*. The penalty on deviations is perfectly aligned with the natural contraction rate of the closed-loop system. This is the stability-optimality duality.
-
-## Introduction and Qualitative Purpose
-
-This chapter states the duality principle: Riccati value matrices can be interpreted as contraction metrics under suitable assumptions.
-
-## In Laymans Terms
-
-The matrix used to price errors can also prove those errors shrink.
-
-## Geometric Intuition
-
-Both contraction and optimal control define a local quadratic geometry on the same perturbation vectors.
-
-## Discrete Decay Identity
-
-With closed-loop perturbations $\delta x_{k+1}=(A_k-B_kK_k)\delta x_k$,
+The connection is an identity with additional conditions, not a universal equivalence between optimization and stability. Write $A_{c,k}=A_k-B_kK_k$ and use the Riccati solution from Chapter 3. Completing the square also gives
 
 $$
-V_{k+1}-V_k = -\delta x_k^\top(Q_k+K_k^\top R_k K_k)\delta x_k,
-\quad V_k=\delta x_k^\top S_k\delta x_k.
+S_k=Q_k+K_k^\top R_kK_k+A_{c,k}^\top S_{k+1}A_{c,k}.
 $$
 
-Under uniform coercivity and boundedness assumptions, this yields exponential decay.
+For $V_k=\delta x_k^\top S_k\delta x_k$ this implies
 
-::: {.callout-note}
-## Proof Sketch (Discrete Decay Identity)
+$$
+\begin{aligned}
+V_{k+1}-V_k&=-\delta x_k^\top L_k\delta x_k,\\
+L_k&=Q_k+K_k^\top R_kK_k.
+\end{aligned}
+$$
 
-**Derivation:** Expand $V_{k+1} = \delta x_{k+1}^\top S_{k+1} \delta x_{k+1}$ using $\delta x_{k+1} = (A_k - B_k K_k)\delta x_k$:
+Here $V_k$ is twice the optimal remaining cost under Chapter 3's one-half convention. Its decrease can reflect the shrinking remaining horizon, rather than shrinking state error.
 
-$$V_{k+1} = \delta x_k^\top (A_k - B_k K_k)^\top S_{k+1} (A_k - B_k K_k) \delta x_k.$$
+## The Missing Conditions
 
-Subtract $V_k = \delta x_k^\top S_k \delta x_k$ and apply the Riccati identity (Chapter 3 recursion) with optimal gain $K_k$. The key identity $S_k = Q_k + A_k^\top S_{k+1} A_k - K_k^\top (R_k + B_k^\top S_{k+1} B_k) K_k$ simplifies the expression to give $V_{k+1} - V_k = -\delta x_k^\top(Q_k + K_k^\top R_k K_k)\delta x_k$.
+Require $0<\underline s I\preceq S_k\preceq\overline s I$ for $0\leq k\leq N$, and $L_k\succeq\alpha I$ for $0\leq k<N$, with $0<\alpha<\overline s$. Then
 
-**Exponential decay:** If $S_k \geq \alpha I$ (coercivity, $\alpha > 0$) and $Q_k + K_k^\top R_k K_k \geq \beta I$ ($\beta > 0$) uniformly in $k$, then $V_{k+1} \leq (1 - \beta/\|S_k\|) V_k$, giving exponential contraction. Full proof: Lohmiller & Slotine (1998) §III; Crouch & Lamnabhi-Lagarrigue (1988) for continuous-time analogues.
-:::
+$$
+\begin{aligned}
+V_{k+1}&\leq\rho V_k,\quad \rho=1-\alpha/\overline s<1,\\
+\|\delta x_k\|^2&\leq\frac{\overline s}{\underline s}\rho^k\|\delta x_0\|^2.
+\end{aligned}
+$$
 
+This is a finite-horizon bound for the specified linear perturbation system. Uniform continuation is needed for an asymptotic conclusion. A regional nonlinear contraction claim needs a positive metric and an inequality for the actual closed-loop field throughout that region, with invariance and solution existence. Checking only the nominal trajectory does not supply those conditions [@forni2014contraction].
 
-## Scope and Limitations: When Does the Duality Hold?
+## Two Manufactured Examples
 
-This duality is most transparent for **linear systems**, where it is exact. For nonlinear systems, we must carefully track what is and is not guaranteed:
+With $A=2$, $B=1$, $Q=R=1$, one step and $Q_1=0$, the optimum has $K_0=0$, $S_0=1$, $S_1=0$. From $\delta x_0=1$, state error doubles to $2$ while $V$ falls from $1$ to $0$. The terminal form is not a metric.
 
-**Where it holds rigorously:**
-- In the **tangent space** (local linearization) around a nominal trajectory, the Riccati value matrix *exactly* defines a contraction metric for perturbation dynamics.
-- For **finite-horizon LQR problems**, the optimal gain $K_k$ and value matrix $S_k$ solve the Riccati recursion exactly, and contraction is guaranteed locally.
+With $A=B=Q=R=1$, two steps and $Q_2=1$, the backward result is $S=(1.6,1.5,1)$ and $K=(0.6,0.5)$. Starting at one gives states $(1,0.4,0.2)$ and $V=(1.6,0.24,0.04)$. Taking $\alpha=1.25$, $\overline s=1.6$, $\underline s=1$ yields the conservative common bound $\rho=0.21875$. The exact step ratios are $0.15$ and $1/6$, both smaller. A bound need not equal the observed ratio.
 
-**Where it breaks down or requires care:**
-- The duality holds **locally** in tangent space, not globally. If a perturbation grows large, the linear approximation fails and nonlinear effects dominate.
-- For **strongly nonlinear systems** far from the nominal trajectory, additional tools (global Lyapunov functions, sum-of-squares programming, or sampling-based methods) are required.
-- The duality assumes the **linearization is valid** along the trajectory. Near discontinuities (contact, mode switches), this assumption breaks.
+## What This Means for a Swing
 
-**Practical takeaway:** Use the duality to design controllers and obtain *local* stability certificates. For systems with large uncertainties or operating far from the nominal trajectory, validate with Monte Carlo rollouts or formal reachability analysis before deployment.
+A delivery-weighted optimizer can tolerate deviations in directions that do not affect the chosen terminal output. A semidefinite task cost may be appropriate for that objective while being unsuitable as a full-state contraction metric. Distinguish output repeatability, full-state convergence and physiological plausibility; they are different claims.

@@ -1,87 +1,405 @@
-# Paused Handoff Checkpoint — #4450 / PR #4451
+# Paused After Merged Checkpoint — 2026-09-28
 
-The user requested a committed PR handoff and an immediate stop after pushing
-this checkpoint. Do not start additional reviews or rewrites. The next agent
-should finish CI, merge and publication verification for the existing correction.
+The user requested finishing the existing edits, merging to remote main and
+pausing. All content edits are merged. Do not start another audit, rewrite or
+issue unless the user resumes. Never create draft PRs. This section supersedes
+historical continuation instructions below.
+
+- Camera #4472, fitting #4474, green #4476 and ledger #4478 are merged.
+  All edits are on main `e2cc43616f31993eea8173ebcbdd9fc6bb90217f`; ledger checked head
+  `cfaa84c7` passed required CI 36400072252, including full-site browser,
+  layout, visual-evidence and accessibility checks.
+- Camera, fitting and green publication is verified at `1a8dd00b`: deployment
+  36397339440 and CI 36397339445 passed; all 960 site cases and twelve reviewed
+  route cases pass, zero severe axe findings. Exact evidence and the live
+  camera-registry download match. Earlier cancelled camera deployment is not
+  counted as success.
+- Ledger deployment 36402704961 and post-merge CI 36402704969 were still
+  running when this checkpoint was recorded. Ledger live publication is not
+  claimed. The documentation merge may supersede those runs; if publication
+  verification is later requested, inspect the latest inclusive deployment and
+  compare the live PDF with the canonical committed bytes. No new audit is needed.
+- Exact record: `reports/technical-review/2026-09-28-stop-checkpoint.json`.
+- Ledger source/PDF: `aac4dbfd`; twelve canonical review paths and nine findings
+  bound at `ad94b93f`. Complete Chapters 1 and 29 and wrapper own content were
+  reviewed. Other 28 chapters are unchanged dependencies; historical review
+  reports, dates and scientific scope are preserved.
+- Final local suite: 5,626 passed, 29 skipped, 132 deselected, 92.88% coverage.
+  Seventeen focused checks; 38 final boundary/hierarchy checks; content 131
+  passed/four skipped; static and citation checks pass. Four browser cases pass;
+  six display equations and 23 PDF pages visually inspected. Identical canonical
+  PDFs contain 207 pages and all thirty numbered chapters.
+- The first remote ledger test run found a deployment-output PDF wrongly listed
+  as canonical review evidence. Removed the duplicate registry entry, retained
+  the canonical PDF and both-copy receipt, and reran the full suite successfully.
+- Four supplied-text-only agy Gemini 3.8 Flash calls supported this ledger review;
+  lead independently adjudicated all suggestions. No delegated tools or bypass.
+- The optional benchmark wrapper did not execute benchmarks because its
+  environment lacked the configured timeout plugin. Its wrapper status is not
+  measured performance evidence. No unrelated tooling task was started.
+- Remaining: 144 sources awaiting full technical audit, plus whole-book
+  reconciliation. Epic #4009 / corpus #4021 remains incomplete and paused.
+- All intended product/review changes are committed. Preserve untracked local
+  QA. Owned preview 8770 and Playwright camera-rigor are closed. After this
+  documentation checkpoint merges, release ledger lease/presence and stop;
+  do not create another checkpoint task or pursue deployment work unprompted.
+
+---
+
+# Current Stop Checkpoint — Ledger Review #4477
+
+The user's latest instruction is to finish the existing edits, merge them and
+pause the goal. Do not start another article, chapter, issue or rewrite.
+Never create draft PRs. Historical sections below record earlier checkpoints;
+this section supersedes their instructions to continue corpus development.
+
+- Current branch: `fix/4477-ledger-rigor`. Green PR #4476 merged at
+  1a8dd00b; its protected checks pass and its lease/presence are released.
+- Scope: complete Chapters 1 and 29, wrapper's own opening/glossary and shared
+  opening figure. Other 28 chapter sources and historical review reports remain
+  unchanged. Full-book scientific reconciliation is still pending.
+- Seventeen focused checks pass; seven archived provider hashes and NPZ
+  consistency verified. Four supplied-text-only agy Flash calls completed;
+  lead independently adjudicated findings. No delegated tool execution.
+- Source/PDF frozen at aac4dbfd; twelve canonical evidence paths and nine findings
+  bound to ad94b93f. Full suite 5,626 passed, 92.88% coverage; content
+  131 passed/four skipped. Static checks pass. Four browser cases pass with
+  zero severe axe findings; six display equations visually reviewed. The
+  207-page PDF preserves all thirty chapters. Regular PR #4478 is open. The first remote Python run exposed a duplicate
+  deployment-output PDF in the route evidence paths; removed that duplicate,
+  keeping the canonical PDF and both-copy hashes in the frozen render receipt.
+  Verify inclusive deployment of camera #4472, fitting #4474,
+  green #4476 and this ledger correction; update this turnover before pausing.
+- Current pending corpus count: 144 after binding three reviewed sources, plus whole-book reconciliation. Do not claim the
+  broader goal is complete.
+- Preserve all untracked QA. Owned preview 8770 / Playwright camera-rigor are
+  temporary review services; close them at final pause.
+
+---
+
+# Green Simulation Review — #4475
+
+Current branch: `fix/4475-green-rigor`, based on club-fitting PR #4474.
+Full corpus goal remains resumed. Never create draft PRs.
+
+- Complete green-simulation article corrected under #4475, native child of
+  #4021 / epic #4009. Nine grouped findings cover signed slip, rolling inertia,
+  event/rest/capture semantics, surface geometry, probability, noise timing,
+  anisotropic resistance, actual provider behavior and downstream inference.
+- Sixteen exact provider source snapshots are indexed by revision and SHA-256.
+  Tools 96ab281e and explorer af7f2682 retain discrepancies explicitly described
+  in the article. No provider code or audited rolling-putt companion was changed.
+- Four supplied-text-only agy Gemini 3.8 Flash calls completed in two pairs.
+  Lead independently adjudicated every finding. No delegated tools or bypass.
+- Sixteen focused checks pass (RED: ten numerical passes, six source failures).
+  Final full suite: 5,609 passed, 29 skipped, 132 deselected, 92.88% coverage.
+  Initial stale audit-digest failures were corrected and the full suite rerun. Content 131 passed/four skipped. Ruff,
+  Black 724 files, mypy 91, tracked quality 761, citation/title checks pass.
+- Four browser cases pass, zero severe axe findings. All 83 math expressions
+  and eight display equations load; every display visually inspected at mobile
+  and desktop widths. Tables scroll inside their wrappers; no document overflow.
+- Review: reports/technical-review/green-simulation-review.md. Source frozen at 460a0192;
+  five evidence paths and nine findings bound to 9f603f37. Remote main 994cd2be
+  incorporated; next open a regular protected PR. No green PR yet.
+- Club-fitting PR #4474 merged at 994cd2be (checked head 428a4561).
+  Source 692b5a68; five evidence paths 4ec7a679. Deployment 36394993854
+  and CI 36394993725 running. Fitting lease/presence released.
+- Camera PR #4472 merged at 5fd2f8ab; CI 36392177961 passed. Its
+  deployment 36392177929 was cancelled by the fitting merge. Verify both
+  camera and fitting against the newer inclusive deployment before publication.
+- Volume I PR #4470 and secondary-axis PR #4468 verified published; receipts
+  are committed. No whole-book or whole-corpus completion claimed.
+- Corpus: 147 pending full audits, plus whole-book reconciliation.
+- Green lease technical-review-20260928-green expires 09:39 UTC. Preserve
+  all untracked QA.
+- Owned preview 8770 and Playwright camera-rigor remain active for green QA.
+
+---
+
+# Club-Fitting Review — #4473
+
+Current branch: `fix/4473-fitting-rigor`, based on camera PR #4472.
+Full corpus goal remains resumed. Never create draft PRs.
+
+- Complete club-fitting article corrected under #4473, child of #4021 / epic
+  #4009. Nine grouped findings connect spatial conventions, model interventions,
+  shaft dynamics, mass identification and uncertainty to fitting decisions.
+- Fixed the point-shift sign, mesh factors, centrifugal-load dimensions and
+  bending/rotation coupling. Removed neural-causality and engine-interchange
+  guarantees; all three JSON records are explicitly synthetic proposals.
+- Four supplied-text-only agy Gemini 3.8 Flash jobs ran in two parallel pairs.
+  Lead tested/adjudicated every finding; no delegated tools or permission bypass.
+- Sixteen focused checks pass (RED: nine numerical passes, seven source/example
+  failures). Full suite: 5,593 passed, 29 skipped, 132 deselected, 92.88% coverage.
+  Content: 131 passed, four skipped. Ruff, Black 723 files, mypy 91 sources,
+  title audit 638, tracked quality 760 and bibliography/citation checks pass.
+- Quarto: four mobile/desktop light/dark browser cases pass; zero severe axe
+  findings. All 89 math expressions and ten display equations load. Display
+  equations visually inspected at both widths; JSON scrolls within code blocks.
+- Review: reports/technical-review/club-fitting-review.md. Source frozen at 692b5a68; five evidence paths and nine findings bound
+  to 4ec7a679. Render receipt: club-fitting-render-verification.json. Next complete
+  a regular protected PR after merging remote main. No fitting PR yet.
+- Camera PR #4472: source 98b37ee5, six-path evidence 40a26284, final head
+  eaefc499. Merged at 5fd2f8ab on 2026-09-28 UTC. Deployment 36392177929
+  and post-merge CI 36392177961 are running; publication verification pending.
+- Volume I PR #4470 is verified published at 24c77a55. Deployment, CI and
+  Compile pass. Live gate: 960/960 site cases and four reviewed-route cases,
+  zero severe axe findings. Both immutable source/PDF downloads and all six
+  evidence hashes match. Receipt: volume-one-reference-publication.json.
+- Secondary-axis PR #4468 is verified published at 54d73e39; receipt committed.
+- Corpus: 148 pending full audits, plus whole-book reconciliation. No whole-corpus completion claimed.
+- Fitting lease technical-review-20260928-fitting expires 09:14 UTC. Camera
+  and reference leases released. Preserve all untracked QA.
+- Owned preview 8770 and Playwright camera-rigor are active for fitting QA.
+
+---
+
+# Camera Selection Review — #4471
+
+Current branch: `fix/4471-camera-rigor`. Full corpus goal remains resumed.
+Never create draft PRs. Issue #4471 is a native child of #4021 under epic #4009.
+
+- Complete article and all 57 registry claims reviewed; corrected vendor modes,
+  throughput assumptions, clock/exposure distinctions, geometric uncertainty,
+  derivative noise and study-transfer limits. Prices and licenses remain
+  unavailable where exact current evidence is missing. No hardware qualification.
+- Four supplied-text-only agy Gemini 3.8 Flash calls completed in two review
+  pairs; lead adjudicated suggestions. No delegated tools or permission bypass.
+- Thirty focused checks pass. Full suite: 5,577 passed, 29 skipped, 132 deselected,
+  92.88% coverage. Content: 131 passed, four skipped. Static checks pass.
+- Four mobile/desktop light/dark browser cases pass, zero serious/critical axe
+  findings. All 36 math expressions loaded; seven display equations visually
+  inspected at both widths. Tables scroll horizontally within their wrappers.
+- Review: reports/technical-review/camera-selection-review.md. Frozen source 98b37ee5; six exact evidence paths and nine findings
+  bound to 40a26284. Render receipt: camera-selection-render-verification.json.
+  Next merge remote main and open a regular protected PR. No camera PR yet.
+- PR #4470 merged at 24c77a55; live publication and immutable reference/PDF
+  downloads still require verification. Source/PDF 14b8f183, six-path evidence
+  782dc161. PR #4468 is verified published at 54d73e39: all 960 site cases pass,
+  12 reviewed-route cases pass, eight hashes match; secondary-axis-publication.json.
+- Corpus: 149 pending full audits, plus whole-book reconciliation. Do not claim whole-corpus completion.
+- Camera lease technical-review-20260927-camera expires 08:40 UTC; reference
+  lease technical-review-20260927-volume-one-reference has been released.
+- Preserve untracked QA. Stage explicit paths only. Preview 8770 and browser
+  camera-rigor are owned by this session and still active.
+
+---
+
+# Volume I Reference Review — #4469
+
+Current branch: `fix/4469-volume-one-reference`. The full corpus goal is resumed;
+never create draft PRs. Preceding PR #4468 merged at 54d73e39 on 2026-09-28 UTC
+with every check green; deployment and post-merge verification remain pending.
+
+- Issue #4469 is a native child of #4021, under epic #4009. Session:
+  technical-review-20260927-volume-one-reference; lease expires 07:50 UTC.
+- Complete Volume I main source and public book map reviewed. Chapter inputs
+  are unchanged; this is a bounded reference correction, not whole-book approval.
+- Corrected controlled Jacobians, transport versus flow sensitivity, rotation
+  branches, twist/wrench duality, coordinate/metric conventions, matrix and
+  optimization hypotheses, and both executable examples. Fixed appendix labels,
+  contents spacing and code placement in the 149-page PDF.
+- Frozen source/PDF: 14b8f183. Six exact evidence paths: 782dc161. Reports:
+  reports/technical-review/volume-one-reference-review.md,
+  volume-one-reference-render-verification.json and
+  volume-one-reference-dependency-carry-forward.json in that same directory.
+  Other books retain historical scientific review dates and render revisions;
+  shared dependency refreshes are recorded separately from new findings.
+- Validation: 21 focused checks; 52 reference/audit contracts; full suite 5,561
+  passed, 29 skipped, 132 deselected, 92.88% src coverage. Content: 131 passed,
+  four skipped. Ruff, Black (729 files), mypy (91), titles (638) and quality
+  checks across 758 tracked Python files pass. Changed print regions inspected;
+  remaining header/enumitem warnings are outside the changed reference material.
+- Public book map: four mobile/desktop light/dark cases, zero serious/critical
+  axe findings. Immutable main-source and PDF links use the frozen source commit;
+  older chapter/notebook links retain their explicitly separate snapshot.
+- Four supplied-text-only agy Gemini 3.8 Flash calls ran in two parallel pairs;
+  parent adjudicated all suggestions. Dispatcher #1800 still blocks unattended
+  tool access. No tool/permission bypass; no fabricated physical validation.
+- Next: merge remote main, open a regular PR, complete protected CI/merge and
+  verify deployment, full site receipt and frozen downloads. Also record #4468
+  publication after deployment. Latest secondary evidence is 919f6d18.
+- Corpus: 150 full audits remain, plus whole-book reconciliation. Next read-only
+  triage identified camera-specification discrepancies in the markerless mocap
+  article; no new issue or implementation has started for that article.
+- Preserve older untracked QA and stage explicit paths only. Owned browser and
+  preview sessions are stopped.
+
+---
+
+# Secondary-Axis Review — #4467
+
+Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+Branch: `fix/4467-secondary-axis`, including remote main e48c9e00.
+The complete corpus goal is resumed; never create draft PRs.
+
+- Biology #4463 is published through PR #4464 at 855b6fa6. Its publication
+  receipt verifies deployment 36378430500, artifact 10952174815, 960/960 site
+  cases and frozen source/PDF downloads.
+- Contraction #4465 merged through PR #4466 at e48c9e00; lease/presence released.
+  Excluded development routes remain excluded/redirected.
+- #4467 corrects the complete article and both critiques: free/forced spin,
+  moving origins, inertia, gravity, impulse response and unsupported equipment
+  inference. Both critiques are responded, without empirical resolution.
+- Source/annotation checkpoint 3a136679; evidence checkpoint 33a8c83a binds
+  eight exact paths for three full route reviews and ten findings. Reports are
+  secondary-axis-review.md and secondary-axis-render-verification.json under
+  reports/technical-review/. The atlas authority hash changes but its projection
+  is unchanged; the derived research-release digest follows that dependency.
+  Other generated critique headers change without new unrelated-page reviews.
+  Static CI identified an unqualified related-reading ZTCF acronym; the caption
+  now declares pointwise/forward scope. Its separate navigation receipt verifies
+  that this is the only source change since the full mathematical/render review.
+- Validation: 19 mechanics/source checks; full suite 5,540 passed, 29 skipped,
+  132 deselected, 92.88% src coverage; 80 final audit/mechanics contracts pass.
+  Browser 12/12, axe severe findings zero; 117 math expressions loaded and all
+  17 display equations checked at both widths. Ruff, Black, titles and mypy pass.
+- Six supplied-text-only agy Gemini 3.8 Flash calls ran in three parallel pairs.
+  Lead adjudicated every suggestion; no tool/permission bypass. Dispatcher #1800
+  still blocks unattended agy tool access.
+- Active session technical-review-20260927-secondary; lease expires 07:05 UTC.
+  Regular PR #4468 is open with protected auto-merge armed.
+  Next complete CI/merge and verify live publication.
+  Stage explicit files; preserve old untracked QA and close owned preview sessions.
+- Corpus index: 152 full audits remain, plus whole-book reconciliation.
+  Continue after this batch; the complete goal is not achieved.
+
+---
+
+# Contraction Workspace Review and Biology Publication Follow-Up
+
+Current branch: `fix/4465-contraction-workspace`; worktree:
+`C:/Users/diete/Repositories/AffineDrift-technical-review`.
+The user resumed the complete corpus goal and authorized parallel agy Gemini
+3.8 Flash assistance. Never create draft PRs. No pause is currently requested.
+
+- Biology PR #4464 merged to remote main at
+  `855b6fa6e3e7c2eeb764452ac77b45b1fe24e926`; all required PR checks passed.
+  Deployment 36378430500 succeeded; the publication receipt above verifies it.
+- #4465 corrects the complete contraction development manuscript, consolidated
+  QMD, all eight chapters and hub. These eleven indexed sources are excluded
+  from production rendering; their old routes redirect to the newer series.
+  No route activation, destination-series clearance or new public PDF is claimed.
+- Scientific corrections cover regional contraction, control-affine Jacobians,
+  finite-horizon LQR/DDP, strict metric bounds, coordinate Hessians, task-rank
+  deficiencies, LMI signs, sampling gaps and biological/contact assumptions.
+  All 32 LaTeX equation labels are preserved.
+- Fourteen focused tests pass after six source RED failures. Full suite: 5,519
+  passed, two temporary root-hygiene failures, 29 skipped, 132 deselected; 92.88%
+  src coverage. Moving Playwright logs under development QA resolves both;
+  all six hygiene tests pass. Content lint: 131 passed/four skipped. Ruff,
+  Black (727 files), title audit (638 sources), mypy (91 sources) pass.
+- Native MiKTeX builds a 15-page preview with no overfull/undefined-reference
+  warnings; all pages visually checked. Built-in compiler unavailable due to
+  host standard-directory error. Ten Quarto previews and twenty light-theme
+  mobile/desktop cases pass. No dark-theme or axe claim for these local previews.
+- Six supplied-text-only agy Gemini 3.8 Flash calls handled inventory, arithmetic
+  and final consistency in parallel pairs. The lead adjudicated all suggestions.
+  No permission bypass; dispatcher #1800 still blocks unattended tool access.
+- Reports: `reports/technical-review/contraction-workspace-review.md` and
+  `contraction-workspace-render-verification.json`. Local PDF/screenshots/logs
+  remain in `docs/development/technical-review/`; stage explicit product paths.
+- Regular PR #4466 merged at e48c9e00; its lease/presence are released. Citation keys were
+  aligned with the shared bibliography after the structural CI gate found five
+  uses it could not resolve. Native compilation and the structural gate pass (excluding an old untracked generated LaTeX preview).
+- Next: continue the
+  corpus. The current CSV count is 154 full audits pending, plus whole-book
+  reconciliation. Do not infer completion from this batch or a passing site gate.
+
+---
+
+# Biology Model Selection: Source Checkpoint for #4463
+
+Current branch: `fix/4463-biology-model-selection`; worktree:
+`C:/Users/diete/Repositories/AffineDrift-technical-review`.
+The user has resumed the complete corpus goal. Never create draft PRs.
+
+- Publication metadata PR #4462 merged at `f3593142cef875a2e43372fa712998a2a4c6d637`.
+  The branch includes remote main. The parent #4021 lease was released; child
+  #4463/session `technical-review-20260927-biology` owns this correction.
+- Complete Volume III Chapter 1 and its contradictory introduction are corrected:
+  augmented flexibility, power-consistent muscle forces, task/force redundancy,
+  feasible dynamics, mass accounting and spatial inertia, conditional input affinity.
+- Existing anthropometric coefficients are retained only as an explicit erroneous
+  accounting example; the replacement exercise is synthetic, not de Leva data.
+- RED: six source failures and eight passing numerical fixtures. GREEN: 14 focused
+  checks. Root Ruff, Black (726 files), title audit (638 sources), and CI-equivalent
+  mypy (91 sources) pass. Final full Python run: 5,507 passed, 29 skipped,
+  132 deselected, 92.88% src coverage. Content lint: 131 passed, four skipped.
+  Initial audit-record failures were repaired; 67 focused checks also pass.
+- Full Volume III PDF compiles (66 pages). Introduction page 3 and chapter pages
+  9-17 visually inspected; title and long exercise equation repaired. Zero chapter
+  overfull boxes or undefined references. Existing warnings elsewhere remain.
+- Six supplied-text-only Gemini 3.8 Flash calls via agy assisted extraction,
+  numerical-test/exercise preparation, and consistency review. Lead checked every
+  adopted change. No permission bypass, file/tool delegation, or empirical evidence
+  was supplied by those agents; dispatcher issue #1800 still blocks unattended tools.
+- Source/PDF freeze: `3875b82d18d27078d6d0aa22fcfa4ca4acf65a58`. The
+  public book map pins this freeze and passes four local browser cases with zero
+  serious/critical axe violations. Seven scientific evidence files are byte-verified
+  at `9df52f26f4b0fa4b5cccd30f267774c130096d8e`. The dependency carry-forward
+  receipt preserves all six prior book records; only the biology route received
+  a new technical/browser review. Generated audit metadata follows that source
+  checkpoint. Next: open a regular PR, protected merge, and verify live publication.
+  Continue the
+  remaining corpus afterward; 165 full technical audits remain, plus whole-book reconciliation.
+- Stage explicit files only. Old untracked QA is not product content. Fresh QA is
+  under `docs/development/technical-review/biology-*` and `flash-biology-*`.
+
+---
+
+# Resumed Corpus Review and Verified Chapter 1 Publication
+
+The user resumed the complete scientific-review goal on 2026-09-27 and authorized
+parallel Gemini 3.8 Flash assistance through agy for routine work. Prior pause
+instructions are superseded. Never create draft PRs.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
-- Branch: `fix/why-physics-rigor`; base main `bdf47374`; current commit `SELF`.
-- Regular PR: [#4451](https://github.com/D-sorganization/AffineDrift/pull/4451), open.
-  Governing issue #4450 is a native child of corpus #4021 under epic #4009.
-- Frozen source/render revision: `787fb5819204d637b2e5eeb5ad9b589fba07b389`.
-  Six findings bind twelve paths, independently checked against committed bytes.
-  Initial binding: `966d3187785c2e9cb9c6f13af38f423236be1dc1`.
-  Final twelve-path verification: `95b5c738aaf9aded51530c1383da484ee9b1267f`; the only
-  later scientific-evidence change is the CI-required Python constant naming.
-- Both complete Chapter 1 editions now distinguish force, acceleration, work and
-  power; define the input baseline and actuator mapping; retain feasible constraint
-  reactions; separate drive-torque removal, attachment removal and muscle relaxation.
-  Connect these mechanics to finite-time delivery/impact without inferring skill,
-  metabolism or human anatomy from manufactured model results.
-- New reproducible SVG/PDF compares retained and released point-mass trajectories;
-  six worked answers and 22 independent mechanics/regression cases accompany it.
-  Figure output uses LF on Windows so Git preserves its frozen evidence bytes.
-- Final full Python suite: 5,538 passed, 29 skipped, 132 deselected; 92.9% src
-  coverage, 79.22% including scripts. All 47 focused audit/boundary/hygiene/mechanics
-  cases pass. Content lint: 131 passed/four existing skips. Jest: 25 suites,
-  420 passed/19 skipped. Ruff, Black, mypy (91 existing targets plus the new figure
-  script), title case, bibliography, display math, size/style and site-link gates pass.
-- Rebuilt 529-page PDF; physical Chapter 1 pages 32–41 inspected, final refinements
-  reread. Other chapters are not certified. Production browser gate 4/4 with zero
-  serious/critical axe issues. All 103 expressions render in both themes at desktop
-  and mobile sizes; six wide equations and the diagram support keyboard scrolling.
-- Reports: `reports/technical-review/why-physics-review.md` and
-  `reports/technical-review/why-physics-render-verification.json`. Preserve these
-  frozen reports during merge/live publication; use a separate publication receipt.
-- Initial broad-run failures were the temporary deferred route, changing PDF digests
-  during rendering and local browser captures at the root. Final bindings and
-  capture relocation fix all five without weakening tests. An initial push hook
-  also caught concurrent test-generated changes; the clean retry passed all hooks.
-  Test-only generated timestamps/format changes were verified and restored.
-- Corpus index marks both sources fully reviewed; 167 source entries still require
-  a full technical audit, plus whole-book reconciliation. The broader goal is
-  paused at the user's request; never report the corpus complete prematurely.
-- Coordination session: `technical-review-20260923-why-physics`. Previous lease
-  5804272169 and presence 5804272400 expire 2026-09-24 00:51 UTC; release at
-  this handoff. A successor must check ownership and acquire a fresh lease.
-  Inbox was complete with no conflicts; seven historical identity warnings
-  and two already-landed informational notices remain nonblocking.
-- CI correction: static job 107425724858 required the conventional
-  `GRAVITY_M_S2` name. The generator and independent tests now use that name
-  with the same 9.81 value. Published source, figures and frozen render reports
-  remain unchanged; live evidence digests track the revised Python files.
-  All 63 mechanics/figure/audit cases pass, as does the code-quality checker
-  on all 754 tracked Python files. Every trajectory array and both regenerated
-  vector files exactly match the frozen output.
-- GitHub CI on `570252198f3361006944a25b6cf9066c57a181ce`:
-  CI Standard run 35934522768; static, JavaScript and website lint passed.
-  Python job 107428571259 passed: 5,490 tests, 32 skips, 132 deselections,
-  92.85% coverage; content lint 131 passed/four skips. E2E job 107428571258
-  was still rendering the full site at the last snapshot. No review comments
-  or requested changes were present. This handoff-only push creates a new CI
-  head: inspect PR #4451's actual head rather than reusing an older success.
-- Protected squash auto-merge is already armed through central
-  `scripts/automerge_guard.py`. Leave branch protection intact. The PR may merge
-  after this handoff; check current state before any further push.
-- Successor steps: verify final-head checks and reviews; allow protected merge;
-  fetch main and compare its tree to the checked head; verify all twelve evidence
-  paths against `95b5c738aaf9aded51530c1383da484ee9b1267f`. Follow the exact main
-  CI/deployment (or a verified descendant carrying those same bytes). Inspect
-  the live revision manifest and live-every-page artifact: 240 routes × four
-  viewport/theme cases, all four Chapter 1 results, zero serious/critical axe
-  violations. Do not count a cancelled deployment as successful publication.
-- Then create `reports/technical-review/why-physics-publication.json`, update
-  DL-#4450 to shipped and both corpus rows, and merge a regular documentation
-  PR. Preserve original source/render reports. No additional content work is
-  authorized at this checkpoint. Never create a draft PR.
-- Validation commands: `py -3.12 -X utf8 -m pytest --cov --cov-report=term:skip-covered`;
-  `py -3.12 -X utf8 -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120`;
-  `npx --no-install jest --runInBand`; `python -m scripts.regenerate_claim_audit_evidence --check`.
-  Browser and print recipes/results are in the frozen verification report.
-- Stage explicit paths only. Preserve peer handoff/log/SPEC records and old frozen
-  evidence. Existing untracked captures, helpers and logs are local QA, not
-  unpublished product changes. The CI watcher and local preview are stopped
-  for handoff; restart the preview only if another validation requires it.
+- Branch: `review/corpus-resume-20260927`; base main `bf78cb2a`; commit `SELF`.
+- Corpus #4021 under epic #4009 remains open: 167 indexed source entries await
+  complete technical audit, plus whole-book reconciliation. Do not infer completion
+  from a passing publication gate or the shipped state of one chapter.
+- PR #4451 merged at `530778efe12948d51b16fd96e7959e78ff0fb933`.
+  Its checked final head `82b1a90410cc13e50d20c69a5d699f5a282953a4` and merge share
+  tree `8398d0407f957d4dd395e86cfb8aee084098f305`. Every required workflow passed;
+  CI Standard 35938311583 and post-merge CI 35940168938 succeeded.
+- Source/render freeze `787fb5819204d637b2e5eeb5ad9b589fba07b389` remains intact.
+  Final CI added explicit SI gravity naming and tolerant floating-point zero checks.
+  The prior handoff's twelve-path comparison against 95b5c738 must therefore be
+  superseded by final evidence revision 82b1a904, which matches all twelve current
+  ledger digests at the merge and deployed descendant. No published argument changed.
+- Successful deployment 36298955953 carries all twelve paths unchanged at
+  `bf78cb2a537f851630199e26725687a1b95b21c9`. The live manifest matches that revision.
+  Artifact 10925830179 archive SHA-256 was verified: live 960/960 across 240 routes,
+  all four Chapter 1 viewport/theme cases, zero serious/critical axe violations.
+  Receipt: `reports/technical-review/why-physics-publication.json`.
+- Prior validation: local Python 5,538 passed; 92.9% src coverage and 79.22% with
+  scripts; final correction 63 focused and seven output-boundary/hygiene checks.
+  Paired print/web review inspected Chapter 1 pages 32–41 of the 529-page PDF;
+  103 expressions rendered, with keyboard-accessible wide math and figure.
+  Preserve original frozen scientific and render reports.
+- Parent session `technical-review-20260927-resume` holds corpus #4021 lease
+  5862741342 and presence 5862741553 through 2026-09-28 05:25 UTC. Startup inbox
+  was complete, without active peers/conflicts; nine historical warnings remain.
+- Delegation: agy reports `gemini-3.8-flash-high` available. The fleet issue dispatcher
+  currently refuses unattended agy tool use (#1800: no working permission allowlist).
+  No permission bypass was used. Two parallel plan-mode, supplied-text-only Flash
+  calls completed: longest-pending-source grouping and biology-chapter claim extraction.
+  They had no filesystem/network tasks or editing authority. Their prompts/results
+  are local QA under `docs/development/technical-review/flash-*.txt`; their assertions
+  are advisory and require independent verification. In particular, nonlinear state
+  dependence alone does not disprove input-affine dynamics.
+- Next scientific candidate: Volume III Chapter 1, How Biology Differs From
+  Engineering (3,891 indexed words). Complete source reading found mixed anthropometric
+  coefficients, missing bilateral duplication, underdefined COM/inertia exercises,
+  incomplete flexible-coordinate dynamics, unconditional excitation-affine claims,
+  and unsupported engineering/biology generalizations. Confirm publication surfaces
+  and primary sources, create a bounded child issue and fresh claim before editing.
+- First publish this metadata closeout through a regular PR. Continue the full review
+  afterward, prioritizing long substantive sources; preserve peer SPEC/log/history.
+  Use Black 100, not Ruff format. Stage explicit paths only; old untracked helpers,
+  render captures and logs are QA, not missing product commits. No local preview
+  or CI watcher remains running from the previous session.
 
 ---
 

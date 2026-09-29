@@ -1,36 +1,49 @@
 ---
 title: "Chapter 6 - Computation and Certification"
-description: "You have designed a controller and tested it on a simulator. It looks good. But what about real hardware, sensor noise, model mismatch? The answer is not..."
+description: "Separate convex LTI synthesis, sampled nonlinear candidates, and verified regional contraction certificates."
 bibliography: ../references.bib
 ---
 
-::: {.callout-warning}
-## Chapter Outline — In Progress
+## What Has the Solver Actually Established?
 
-This chapter is currently a **structural outline**. The key concepts are identified and the geometric intuition is sketched, but full mathematical development, proofs, and worked examples are in progress. Treat the content below as a detailed table of contents rather than a complete chapter.
-:::
+A feasible numerical optimization result is meaningful only relative to its constraints, tolerances and domain. Failure can mean an inadequate metric family, numerical trouble or actual infeasibility; it does not by itself prove the system cannot be stabilized.
 
+## A Precise LTI Program
 
-## How Do You Actually Compute a Proof That Your Controller Works?
-
-You have designed a controller and tested it on a simulator. It looks good. But what about real hardware, sensor noise, model mismatch? The answer is not "try it and see"—that's expensive. Instead, you formulate *finding* the metric itself as an optimization: choose a metric and feedback gains simultaneously such that the closed-loop system is *provably* contracting. If the optimization succeeds, you have a certificate. If it fails, you know to design differently.
-
-## Introduction and Qualitative Purpose
-
-This chapter presents optimization-based workflows for obtaining metrics and gains with explicit contraction margins.
-
-## In Laymans Terms
-
-Do not trust performance alone; compute a stability certificate too.
-
-## Geometric Intuition
-
-Optimization chooses a local ruler and feedback direction fields so perturbations contract while task cost stays low.
-
-## Representative Program
+For $\dot x=Ax+Bu$, negative feedback $u=-Kx$, and fixed desired rate $\lambda>0$, seek $M\succ0$ with
 
 $$
-(A-BK)^\top M + M(A-BK) \preceq -2\lambda M,\quad M\succ0.
+(A-BK)^\top M+M(A-BK)+2\lambda M\preceq0.
 $$
 
-With variable substitutions, this admits LMI-based synthesis in important cases [@boyd1994].
+This is bilinear in $M,K$. With $X=M^{-1}$ and $Y=KX$, congruence gives the LMI
+
+$$
+\begin{gathered}
+AX+XA^\top-BY\\
+-Y^\top B^\top+2\lambda X\preceq0,\qquad X\succ0.
+\end{gathered}
+$$
+
+Recover $K=YX^{-1}$. The rate is fixed for this convex feasibility problem; optimizing $\lambda X$ jointly is not an LMI. Test candidate rates separately, and verify residuals and conditioning after numerical recovery [@boyd1994].
+
+## Continuous and Discrete Residuals Differ
+
+For a continuous closed-loop field, evaluate $R=A^\top M+MA+\dot M+2\lambda M$, with the total derivative along that field. For a discrete map $F_k$, put $A_{c,k}=DF_k(x)$ and $M^+=M(F_k(x),k+1)$. Evaluate
+
+$$
+\begin{aligned}
+R_k(x)&=A_{c,k}^\top M^+A_{c,k}-\rho M(x,k),\\
+&\qquad 0<\rho<1.
+\end{aligned}
+$$
+
+Do not substitute sampled-map Jacobians into a continuous-time inequality. Feedback derivatives, actuator saturation and additional states must match the implementation.
+
+## Samples Are Evidence, Not Coverage
+
+The scalar field $f(x)=x-\tfrac43x^3$ has $f'(\pm1)=-3$ and $f'(0)=1$. Endpoint checks miss an expanding interior. Monte Carlo rollouts likewise cannot exclude unsampled failures.
+
+A coverage argument can bridge the gap: if a symmetric residual is Lipschitz with a validated constant $L$, every point lies within radius $r$ of a sample, and each sampled residual satisfies $R_i\preceq-\mu I$, then $Lr<\mu$ preserves negativity throughout the covered set. Numerical error must be included in the margin; metric definiteness and invariance remain separate requirements.
+
+Control contraction metric synthesis also requires conditions for constructing a finite controller from differential feedback. The original theorem's integrability amendment is relevant when input rank changes [@manchester2017ccm; @manchester2017amendment]. A trajectory-wise gain or sampled inequality alone does not establish that theorem's hypotheses.

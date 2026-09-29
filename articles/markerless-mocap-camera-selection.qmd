@@ -1,7 +1,7 @@
 ---
 title: "Markerless Mocap Camera Selection"
 description: "A source-bounded, camera-agnostic guide to selecting and qualifying cameras for a flexible markerless motion-capture lab."
-date: "2026-08-27"
+date: "2026-09-27"
 toc: true
 toc-depth: 3
 categories:
@@ -16,7 +16,9 @@ The provisional first candidate is the color Teledyne FLIR Blackfly S
 `BFS-U3-16S2C-CS`; the Basler ace 2 `a2A1920-160ucBAS` is the matched alternate.
 Both are global-shutter industrial cameras with hardware-trigger support and replaceable lenses.
 The FLIR candidate trades resolution for a higher vendor-specified maximum rate (226 frames per
-second at 1440 by 1080); the Basler candidate supplies 1920 by 1200 at 160 frames per second.
+second at 1440 by 1080 in BayerRG8 with a 10-bit ADC setting); Basler documents 164 frames per
+second at its default 1920-by-1200 settings. Resolution, pixel format, exposure and firmware must
+be recorded together: a model name or headline maximum is not a complete acquisition mode.
 
 The distributed eight-camera reference-rig evaluation hypothesis remains the Allied Vision Alvium
 G5-203 (`Alvium G5-203c`), with the LUCID Triton2 `TRT016S-CC` as an Ethernet/PTP challenger.
@@ -28,21 +30,21 @@ The Stereolabs ZED X One GS remains an evaluation candidate for spaces where syn
 GMSL2 cabling is valuable. It is not the default fast-motion choice: its full-resolution mode is
 60 frames per second, its 120-frame-per-second mode is binned to 960 by 600, its vendor dual-camera
 hardware synchronization claim is 15 microseconds, and the complete topology adds capture-card,
-NVIDIA, fixed-lens, and proprietary-SDK constraints.
+NVIDIA, fixed-lens, and SDK-version constraints.
 
 This recommendation is deliberately provisional. Camera specifications alone cannot establish
 pose, joint-angle, or C3D accuracy. A successful two-camera USB pilot does not establish an
 eight-camera distributed topology, and an attractive camera-body specification does not qualify the
-complete lab. Buy two cameras for the pilot, measure the whole acquisition chain, and evaluate the
-distributed Ethernet candidates separately for the full room.
-In operational terms: buy two cameras for the pilot and make the larger purchase conditional on
-the recorded qualification evidence.
+complete lab. First define the intended output and its error budget, obtain comparable quotes,
+and qualify a matched pair. Evaluate distributed Ethernet candidates separately for the full room.
+A conditional decision to buy two cameras for the pilot requires the lens, host and software review
+below; no candidate has already earned that decision through a physical test.
 
 ::: {.callout-warning title="No Procurement Approval & Price Scoping"}
-No listed camera is approved for a full deployment. Observed vendor list prices (such as FLIR US list
-USD 371.00 and Stereolabs store USD 399/424) cover **camera body only** and do not represent total
-system cost. Complete system costs remain unavailable until formal quotes include lenses, GPIO/trigger
-hardware, host controllers, multi-gigabit PoE switches, Cat6A cabling, mounting, lighting, storage,
+No listed camera is approved for a full deployment. The earlier camera-body price observations
+are historical, not current quotes. Current comparable regional prices are unavailable.
+Complete system costs remain unavailable until formal quotes include lenses, GPIO/trigger
+hardware, host controllers, topology-specific power/network equipment, cabling, mounting, lighting, storage,
 spares, taxes, and shipping. The machine-readable registry defaults procurement to deny.
 :::
 
@@ -51,9 +53,10 @@ spares, taxes, and shipping. The machine-readable registry defaults procurement 
 The canonical dataset is the
 [camera evidence registry](../data/markerless_mocap/camera_evidence_registry_v1.json). Its schema is
 `affinedrift/mocap-camera-evidence-registry/v1`, and
-`scripts/verify_mocap_camera_registry.py` rejects missing sources, stale reviews, unknown links,
-cross-camera claims, incomplete purchasing attributes, and any claim that silently turns an
-engineering inference into an approved fact.
+`scripts/verify_mocap_camera_registry.py` rejects missing sources, review dates expired relative to the registry date, unknown source IDs,
+cross-camera claim ownership, incomplete purchasing attributes, and status inconsistencies.
+Those checks establish structural consistency; they cannot establish that a source supports a value.
+The incorrect camera modes corrected in this review previously passed those checks.
 
 Evidence classes have intentionally different authority:
 
@@ -73,40 +76,45 @@ duplicate either runtime.
 
 | Candidate | Shutter | Vendor-Specified Video Mode | Synchronization | Optics | Data Path | Camera Body List Price | Current Role |
 |---|---|---|---|---|---|---|---|
-| Teledyne FLIR BFS-U3-16S2C-CS | Global | 1440 by 1080 at up to 226 frames per second | Hardware or software trigger; action command | CS mount; documented removable C adapter | USB 3.1 Gen 1 | USD 371.00 (camera body only; US list) | Preferred fast-motion pilot candidate |
-| Basler a2A1920-160ucBAS | Global | 1920 by 1200 at up to 160 frames per second | Hardware trigger; programmable API | C mount | USB 3.0 | Quote required (unavailable) | Higher-resolution fast-motion alternate |
-| Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 fps; 960 by 600 at up to 120 fps | External synchronization; vendor claim within 15 microseconds | Fixed narrow, wide, or fisheye variant | GMSL2 plus capture hardware | USD 399 base / USD 424 wide (camera body only) | Long-cable topology evaluation |
-| Allied Vision Alvium G5-203c | Global | 1620 by 1220 at up to 231 frames per second | Hardware trigger; IEEE 1588 PTP; Action Commands | C mount | 5GigE (PoE) | Quote required (unavailable) | Distributed reference-rig evaluation hypothesis |
-| LUCID Triton2 TRT016S-CC | Global | 1440 by 1080 at up to 226 frames per second | Hardware trigger; IEEE 1588 PTP; Action Commands | C mount | 2.5GigE (PoE) | Quote required (unavailable) | Distributed Ethernet/PTP challenger |
+| Teledyne FLIR BFS-U3-16S2C-CS | Global | 1440 by 1080 at up to 226 fps; BayerRG8, 10-bit ADC | Hardware or software trigger | CS mount; verify any C-mount adapter | USB 3.1 Gen 1 | Current regional quote unavailable | Preferred fast-motion pilot candidate |
+| Basler a2A1920-160ucBAS | Global | 1920 by 1200 at 164 fps (default settings) | Hardware trigger; programmable API | C mount | USB 3.0 | Quote required (unavailable) | Higher-resolution fast-motion alternate |
+| Stereolabs ZED X One GS | Global | 1920 by 1200 at up to 60 fps; 960 by 600 at up to 120 fps | External synchronization; vendor claim within 15 microseconds | Fixed narrow or wide GS variant | GMSL2 plus capture hardware | Current regional quote unavailable | Long-cable topology evaluation |
+| Allied Vision Alvium G5-203c | Global | 1632 by 1248 at up to 225 fps; datasheet specifies Mono8 | Hardware trigger; IEEE 1588 PTP; Action Commands | C mount | 5GigE (PoE) | Quote required (unavailable) | Distributed reference-rig evaluation hypothesis |
+| LUCID Triton2 TRT016S-CC | Global | 1440 by 1080 at up to 166.3 fps; mode-dependent | Hardware trigger; IEEE 1588 PTP; check action support | C mount | 2.5GigE (PoE) | Quote required (unavailable) | Distributed Ethernet/PTP challenger |
 
 Primary product evidence is available from:
 
 - [FLIR Blackfly S product page](https://www.teledynevisionsolutions.com/en-ca/products/blackfly-s-usb3/?model=BFS-U3-16S2C-CS&segment=iis&vertical=machine+vision) and [US pricing page](https://www.teledynevisionsolutions.com/products/blackfly-s-usb3/)
 - [FLIR technical reference](https://softwareservices.flir.com/BFS-U3-16S2/latest/Model/spec.html)
-- [Basler product page](https://www.baslerweb.com/en-sg/shop/a2a1920-160ucbas/)
-- [ZED X One product page](https://www.stereolabs.com/en-si/products/zed-x-one) and [Stereolabs Store listing](https://store.stereolabs.com/products/zed-x-one-gs)
+- [Basler model documentation](https://docs.baslerweb.com/a2a1920-160ucbas)
+- [ZED X One specifications](https://docs.stereolabs.com/docs/products/cameras/zedxone/specifications) and [Stereolabs Store listing](https://store.stereolabs.com/products/zed-x-one-gs)
 - [Stereolabs Dual-Camera Sync Guide](https://docs.stereolabs.com/docs/products/cameras/zedxone/dual-camera-stereo-vision) and [ZED Box Connectivity Guide](https://docs.stereolabs.com/docs/products/embedded/zed-box-mini/connectivity)
-- [Allied Vision Alvium G5-203c product page](https://www.alliedvision.com/en/camera-selector/detail/alvium-g5/203c/) and [Technical Documentation](https://docs.alliedvision.com/hardware/alvium_g5_g5x/)
-- [LUCID Triton2 TRT016S-CC product page](https://thinklucid.com/product/triton2-2-5gige-trt016s-cc/) and [Technical Downloads](https://thinklucid.com/downloads-hub/)
+- [Allied Vision Alvium G5-203c datasheet (v1.2.4, 2025-05-23)](https://www.alliedvision.com/fileadmin/pdf/en/Alvium_G5-203c_Closed-Housing_C-Mount_DataSheet_en.pdf) and [Technical Documentation](https://docs.alliedvision.com/hardware/alvium_g5_g5x/)
+- [LUCID Triton2 TRT016S-CC product page](https://thinklucid.com/product/triton2-16-mp-imx273/) and [Technical Downloads](https://thinklucid.com/downloads-hub/)
 
-These pages were accessed on 2026-08-26 and 2026-08-27. Product pages can change; the registry therefore
-carries review dates and does not treat a URL as an immutable specification.
+The original review dates were 2026-08-26 and 2026-08-27; corrected specifications were checked
+on 2026-09-27. The registry preserves claim-level dates and source limitations. In particular,
+Basler now documents a 1936-by-1216 full sensor region and a 1920-by-1200 default region; do not
+combine the larger region with the default-rate claim. The Allied color-model datasheet itself
+labels its 225-fps condition Mono8; verify Bayer/RGB performance separately. Its RGB8 default
+does not mean that three-byte color output runs at the one-byte benchmark rate.
 
 ### Teledyne FLIR Fast-Motion Pilot Candidate
 
 The FLIR candidate leads the two-camera pilot because temporal sampling is the first screen for rapid
-motion. The vendor lists a global shutter, 226 frames per second at full 1440-by-1080 Bayer output, a
+motion. The vendor lists a global shutter, 226 frames per second at full 1440-by-1080 BayerRG8 output with 10-bit ADC, a
 CS-mount lens interface, and hardware trigger support. The separate I/O documentation describes the
 physical input and its propagation specification. None of these statements proves exposure alignment
 between two assembled cameras, reliable eight-camera streaming, or pose accuracy.
 
-The Spinnaker SDK is a vendor component under a restrictive EULA, not the licensing authority for the
-open core. A camera adapter must remain optional and satisfy the public Tools camera protocol. Synthetic
+The cited [Spinnaker agreement](https://intecore.teledynevisionsolutions.com/globalassets/support/iis/knowledge-base/flir-spinnaker-sdk-eula-2018.pdf)
+contains camera-use restrictions and separate terms for open-source components. It does not
+establish the license of a future SDK build or change the license of the open core. A camera adapter must remain optional and satisfy the public Tools camera protocol. Synthetic
 and prerecorded drivers must continue to work when Spinnaker is absent.
 
 ### Basler Higher-Resolution Alternate
 
-The Basler candidate offers 2.3 megapixels at 160 frames per second, global shutter, C-mount optics, a
+The Basler candidate offers 2.3 megapixels at 164 frames per second under default settings, global shutter, C-mount optics, a
 hardware-trigger input, and GenICam-facing pylon APIs. Its additional pixels may improve keypoint
 localization when the person occupies a smaller portion of the image; that possible benefit is an
 inference to test, not a result. The lower maximum frame rate may be immaterial for some body segments
@@ -118,7 +126,7 @@ this summary.
 
 ### Stereolabs Long-Cable Evaluation
 
-The ZED X One GS offers a synchronized, locking GMSL2 topology and fixed lens variants. Stereolabs
+The ZED X One GS offers a synchronized, locking GMSL2 topology and fixed narrow or wide GS lens variants. Stereolabs
 technical documentation states that dual ZED X One hardware synchronization is accurate to **15 microseconds**,
 and multi-device ZED Box documentation states approximately **15 microseconds**. This makes the system
 interesting where USB cable length and connector reliability dominate. It does not remove the need to
@@ -131,30 +139,32 @@ and redistribution terms remain separate review gates.
 
 ### Allied Vision Distributed Reference-Rig Hypothesis
 
-The Allied Vision Alvium G5-203 (`Alvium G5-203c`) is the reference-rig hypothesis for an eight-camera
-distributed capture lab. It pairs a Sony IMX422 global-shutter sensor (1620 by 1220 at up to 231 frames
-per second) with a 5GBASE-T (5GigE) interface, Power-over-Ethernet (PoE), and hardware IEEE 1588 PTP
-(Precision Time Protocol) synchronization.
+The Alvium G5-203c remains an Ethernet candidate, with a Sony IMX422 global-shutter sensor,
+1632-by-1248 output, 5GBASE-T and PoE. Its model-specific datasheet lists 225 fps at a
+525-MByte/s setting in Mono8. Treat that mode condition as part of the specification, including
+for this color variant. The datasheet lists hardware triggering, action commands and PTP.
 
-Ethernet transport decouples camera placement from host PC proximity, enabling shielded Cat6A cable
-runs up to 100 meters without active USB repeaters. PTP synchronization allows microsecond-level clock
-distribution over the Ethernet switch fabric. However, eight cameras streaming at 5 Gbit/s require
-dedicated multi-gigabit switch backplanes, multi-port host NICs, and high-performance packet capture
-drivers to prevent packet drops and buffer overflows.
+Longer Ethernet runs can simplify placement, subject to the selected cable, connectors and
+vendor link qualification. A 5-Gbit/s interface is a capacity, not the traffic of every mode.
+Size each shared link, switch egress, host bus and recording path from the actual payload and
+measured overhead. Synchronized acquisition may create bursts even when average traffic fits.
 
-The Vimba X SDK provides GenICam and GenTL producer support. As with all candidates, the open Tools core
-must access the camera through an optional adapter, maintaining full independence from proprietary
-Vimba runtime binaries.
+Vimba X is the vendor SDK. Its [licensing information](https://docs.alliedvision.com/legalInformation.html)
+identifies vendor terms and component licenses. Preserve the optional adapter boundary and
+review the exact deployed components; protocol compatibility alone does not grant redistribution rights.
 
 ### LUCID Triton2 Distributed Ethernet Challenger
 
 The LUCID Triton2 `TRT016S-CC` provides an Ethernet/PTP challenger for the distributed reference rig.
-Featuring a Sony IMX296 global-shutter sensor (1440 by 1080 at up to 226 frames per second), it utilizes
-a 2.5GBASE-T (2.5GigE) interface with PoE and IEEE 1588 PTP support.
+Its Sony IMX273 global-shutter sensor provides 1440-by-1080 output at a stated maximum of
+166.3 fps, with 2.5GBASE-T, PoE and PTP. The vendor states a 10% device-link reserve for resend;
+record the actual pixel format and reserve in the capture configuration.
 
-The 2.5GigE data path reduces per-camera bandwidth demand compared to 5GigE while maintaining full 226
-fps capture, easing switch throughput and host CPU load in an eight-camera configuration. The Arena SDK
-provides GenICam/GenTL compliance under a proprietary vendor license.
+The previous 226-fps claim was incorrect: even uncompressed eight-bit pixels would need
+2.812 Gbit/s, exceeding 2.5 Gbit/s before overhead. A slower link does not reduce the bytes of
+a fixed acquisition mode or guarantee lower CPU load. The [Arena SDK](https://thinklucid.com/arena-software-development-kit/)
+provides vendor camera APIs and GenICam access; verify the intended integration path and
+release-specific license rather than assuming a GenTL producer or redistribution permission.
 
 ## Topology Comparison
 
@@ -162,25 +172,25 @@ provides GenICam/GenTL compliance under a proprietary vendor license.
 |---|---|---|---|
 | **Representative Models** | FLIR BFS-U3-16S2C-CS, Basler a2A1920-160ucBAS | Allied Vision Alvium G5-203c, LUCID Triton2 TRT016S-CC | Stereolabs ZED X One GS |
 | **Physical Transport** | USB 3.0 / USB 3.1 Gen 1 | 5GBASE-T / 2.5GBASE-T Ethernet (PoE) | GMSL2 with FAKRA connectors |
-| **Max Distance** | 3–5 meters (passive) | Up to 100 meters (Cat6A) | Up to 15 meters |
-| **Synchronization** | Direct opto-isolated GPIO trigger lines | IEEE 1588 PTP / Action Commands / GPIO | Hardware sync pin / ZED Link (15 µs claim) |
+| **Cable Qualification** | Qualify the exact passive or active cable and controller | Qualify cable category, length, connector and link speed | Qualify camera, coax cable and capture-card combination |
+| **Synchronization** | Compatible common hardware trigger; measure exposure skew | PTP clock alignment plus verified trigger/scheduling support | Vendor 15 µs hardware-sync claim for supported topology |
 | **Power Distribution** | USB bus power (host controller dependent) | Power-over-Ethernet (802.3af/at switch) | Power over Coax / capture card |
-| **Host Interface** | Dedicated PCIe USB host controllers | Multi-port 10GbE/5GbE NIC & PoE switch | Deserializer capture card (PCIe / Jetson) |
-| **Driver Interface** | GenICam / Vendor SDK (Spinnaker, pylon) | GenICam / GenTL (Vimba X, Arena) | Stereolabs SDK / V4L2 kernel driver |
+| **Host Interface** | Qualified controller groups and host buses | NICs and switches sized for aggregate traffic | Supported deserializer/capture hardware and compute |
+| **Driver Interface** | Qualified Spinnaker or pylon adapter | Qualified Vimba X or Arena adapter | Supported ZED SDK or lower-level driver path |
 | **Lab Role** | Initial fast-motion screening (2 cameras) | Full-room distributed rig (8 cameras) | Fixed-lens long-cable evaluation |
 
 ## Scoped Pricing vs Total System Cost
 
-Observed vendor list prices establish camera-body baseline figures but do not represent total system cost:
-
-- **Teledyne FLIR BFS-U3-16S2C-CS**: US model table lists the camera body at **USD 371.00**.
-- **Stereolabs ZED X One GS**: Stereolabs store lists the base camera body at **USD 399.00** and wide configured listing at **USD 424.00**.
-- **Basler, Allied Vision, LUCID**: Official regional list prices were not established in this audit and remain marked `unavailable`.
+Earlier records contained USD 371 for FLIR and USD 399/424 for ZED camera bodies. Those
+observations are not current offers. On rechecking, the FLIR listing showed a different dollar
+amount and the old ZED store URL redirected without a matching configuration price. The registry
+now marks current regional prices unavailable and preserves the historical amounts only in its
+limitations. Obtain dated, configuration-specific quotes for all five candidates.
 
 A complete mocap lab requires extensive infrastructure beyond the camera body:
 
-1. **Optics**: High-resolution C/CS-mount lenses with manual focus/aperture locks (USD 150–400 per camera).
-2. **Synchronization & I/O**: Shielded trigger breakout cables, opto-isolated distribution amplifiers, or PTP grandmaster hardware.
+1. **Optics**: High-resolution C/CS-mount lenses with manual focus/aperture locks with a dated quote for the chosen lens.
+2. **Synchronization & I/O**: Shielded trigger breakout cables, opto-isolated distribution amplifiers, or a qualified PTP topology; a separate grandmaster is not universally required.
 3. **Cabling**: High-flex locking USB cables, Cat6A shielded Ethernet cables, or FAKRA GMSL2 cables.
 4. **Host & Ingest**: Multi-channel PCIe host controllers, multi-Gigabit PoE switches, dedicated NVMe scratch arrays.
 5. **Mounting & Structure**: Rigid wall/truss mounts, vibration dampeners, protective enclosures.
@@ -194,13 +204,16 @@ quoted for each candidate topology.
 
 ### Temporal Sampling
 
-For a point moving at image speed $v_{px}$ pixels per second and a camera rate $f_s$, the nominal
+For locally constant image speed $v_{px}$ in pixels per second and a camera rate $f_s$, the nominal
 inter-frame displacement is
 
 $$
 \Delta p = \frac{v_{px}}{f_s}.
 $$ {#eq-inter-frame-displacement}
 
+For varying motion, displacement is the integral of image velocity over the actual frame
+interval; the expression is a local screen. It is not a Nyquist criterion or an impact-duration
+measurement. Pixel speed must be evaluated after choosing field of view and resolution.
 This equation does not choose a universal frame rate. Measure $v_{px}$ for the intended body,
 club, implement, or tool region, then set a task-specific maximum displacement. A body-pose model
 may tolerate a displacement that is unacceptable for a fast implement. The registry's
@@ -221,7 +234,8 @@ t_e \leq \frac{b_{max}}{v_{px}}.
 $$ {#eq-exposure-contract}
 
 A high frame rate does not automatically create a short exposure. Lighting, aperture, gain,
-sensor response, and flicker determine whether the required exposure is usable. The pilot must
+sensor response, and flicker determine whether the required exposure is usable. A global shutter
+aligns rows within an image but does not eliminate motion blur or synchronize different cameras. The pilot must
 record exposure, gain, illumination, and observed blur for every camera.
 
 ### Raw Payload Screen
@@ -233,49 +247,135 @@ $$
 R_{raw} = W H f_s q.
 $$ {#eq-raw-payload}
 
-At eight delivered bits per pixel, one FLIR stream at the vendor maximum is approximately
-2.81 gigabits per second before protocol overhead. One Basler stream is approximately 2.95
-gigabits per second. One Allied Vision Alvium G5-203c stream is approximately 3.65 gigabits per
-second. One LUCID Triton2 stream is approximately 2.81 gigabits per second. Eight such streams
-would represent 22.5 to 29.2 gigabits per second in aggregate. These are arithmetic screens, not
-measured network payloads. They demonstrate why distributed Ethernet architectures with dedicated
-switch infrastructure are required for full eight-camera rigs.
+Here $q$ is the **delivered bits per pixel**, including color channels and packing, not the ADC
+setting. Bayer8 uses 8 bits (one byte) per pixel; RGB8 uses 24 bits (three bytes). A 12-bit sample stored in a 16-bit
+container consumes two bytes; packed 12-bit output uses 1.5 bytes before row padding. Debayering
+on the host increases downstream memory traffic even when the camera link carries Bayer8.
+Use the driver's actual payload size when chunks, padding or compression are present.
+
+| Arithmetic Screen | Pixels and Rate | One Stream (Gbit/s) | Eight Streams (Gbit/s) |
+|---|---|---:|---:|
+| FLIR BayerRG8, 10-bit ADC | 1440 × 1080 at 226 fps | 2.812 | 22.494 |
+| Basler eight-bit default-region screen | 1920 × 1200 at 164 fps | 3.023 | 24.183 |
+| Allied datasheet Mono8 condition | 1632 × 1248 at 225 fps | 3.666 | 29.329 |
+| LUCID eight-bit maximum-rate screen | 1440 × 1080 at 166.3 fps | 2.069 | 16.552 |
+
+These are decimal payload rates, excluding transport overhead, resend, file headers and copies.
+They are not measured sustained modes. In particular, confirm the Basler and LUCID format/rate
+combination at the driver, and do not transfer Allied's Mono8 rate to RGB8. FLIR's own table
+reduces full-resolution BayerRG8 from 226 to 165 fps when its ADC changes from 10 to 12 bits.
+An eight-camera Allied screen needs about 3.666 GB/s of image storage before overhead; interface
+capacity, PCIe sharing, buffer bursts and sustained disk writes all require separate checks.
+
+Ethernet is one possible architecture, not a requirement imposed by camera count. Independent
+USB controller groups or multiple acquisition hosts are alternatives if the complete timing and
+throughput contract passes. Conversely, one nominal 10GbE uplink cannot carry the eight-camera
+payloads above uncompressed at these rates. A topology diagram must identify every shared bottleneck.
 
 The acquisition contract must measure successful payload, dropped and duplicate frames, buffer
 occupancy, host-controller/NIC assignment, CPU load, storage write rate, and graceful recovery. A
 nominal interface bandwidth label is not a per-camera end-to-end guarantee.
 
+### Clock Alignment, Exposure Timing and Reconstruction
+
+PTP aligns clocks. A common hardware trigger or supported scheduled action determines when
+acquisition begins; trigger latency and exposure duration then determine the image's effective
+time. Packet arrival time is a different quantity. [LUCID's synchronization example](https://support.thinklucid.com/app-note-multi-camera-synchronization-using-ptp-and-scheduled-action-commands/)
+configures PTP and trigger actions separately, and schedules transfer to manage bursts. That
+example uses other models; confirm equivalent nodes and firmware on the candidate TRT016S-CC.
+
+For uniform integration during locally constant motion, use the exposure midpoint as a first
+approximation to image time. Two equal start times with unequal exposures have unequal midpoints.
+At image speed $v_{px}$ and midpoint mismatch $\delta t$, the correspondence displacement is
+approximately $|v_{px}\delta t|$. Clock offset, clock drift, trigger jitter and exposure timing
+must therefore be measured separately under load. A timing figure is not itself a 3D error bound.
+
+For an explicitly illustrative $10{,}000$ pixels/s point, 200 fps gives 50 pixels between frames;
+100 microseconds exposure gives approximately one pixel of blur; 50 microseconds midpoint skew
+gives approximately half a pixel of cross-view mismatch. Increasing frame rate fixes neither of
+the latter two quantities automatically. A 40 m/s point travels 0.6 mm in 15 microseconds, but
+triangulation may amplify that inconsistency and motion direction matters. These are constructed
+examples, not measurements of a golfer or any camera.
+
 ### Triangulation Geometry
 
-For two calibrated rays separated by angle $\theta$, depth sensitivity becomes poor as the rays
-approach parallel. A useful first-order relationship is
+For calibrated, rectified stereo with parallel optical axes, focal length $f$ in pixels,
+baseline $B$ and positive horizontal disparity $d$, the ideal pinhole relation is
 
 $$
-\sigma_z \propto \frac{\sigma_{px} z^2}{f B},
+z=\frac{fB}{d}, \qquad
+\sigma_z\approx\frac{z^2}{fB}\sigma_d.
 $$ {#eq-depth-sensitivity}
 
-where $\sigma_{px}$ is keypoint uncertainty, $z$ is working distance, $f$ is focal length in
-pixel units, and $B$ is baseline. This proportionality explains why baseline and resolution
-matter, but it is not a complete uncertainty model. Wider baselines can also increase occlusion
-and viewpoint-dependent pose failures. Camera placement must be learned and qualified from
-observations, residuals, covariance, visibility, ray angles, and task coverage rather than a
-fixed room diagram.
+This is a first-order standard-deviation estimate with fixed calibration and small disparity
+error. If left and right localization errors $e_L,e_R$ have standard deviations $\sigma_L,\sigma_R$,
+then $\sigma_d^2=\sigma_L^2+\sigma_R^2-2\operatorname{Cov}(e_L,e_R)$.
+Equal independent errors give $\sigma_d=\sqrt{2}\sigma_{px}$; correlated errors do not.
+With $f=1000$ pixels, $B=1$ m, $z=4$ m and independent 0.5-pixel errors, the estimate is
+11.3 mm. A positive ten-pixel disparity bias instead changes the reconstructed depth from 4 m
+to approximately 3.846 m. Random localization precision and systematic timing bias are distinct.
+
+For arbitrary camera placement, linearize the actual calibrated projections. If $J$ maps a
+3D point perturbation to stacked image-coordinate perturbations and image covariance $\Sigma_u$
+is positive definite, a locally identifiable weighted least-squares point estimate has
+
+$$
+\Sigma_X\approx\left(J^\mathsf{T}\Sigma_u^{-1}J\right)^{-1}.
+$$ {#eq-multiview-covariance}
+
+This conditional estimate requires full column rank and a valid local noise model. Include
+calibration uncertainty and timing parameters in a joint model or propagate them separately;
+the formula alone omits them. Near-parallel rays make depth poorly conditioned. Wider baselines
+can improve geometry while increasing occlusion and appearance differences. More cameras help
+only when their observations add usable information; repeated biased detections are not
+independent evidence. Detector confidence is not automatically a calibrated variance.
+
+### From Image Error to Golf-Swing Inference
+
+Camera selection affects the argument we can make about a swing. Exposure blur changes landmark
+localization; timing mismatch combines different poses; calibration and view geometry transform
+those image errors into anisotropic 3D errors. Fitting a skeleton adds joint definitions,
+anthropometry and constraints. Filtering trades noise against temporal detail and may shift
+estimated events. A smooth reconstruction can therefore hide uncertainty rather than remove it.
+
+Differentiation is especially sensitive. For independent zero-mean position noise with standard
+deviation $\sigma_X$ in one coordinate, sampled every $\Delta t$, the unfiltered central-difference
+velocity and acceleration noise are
+
+$$
+\sigma_v=\frac{\sigma_X}{\sqrt{2}\Delta t}, \qquad
+\sigma_a=\frac{\sqrt{6}\sigma_X}{\Delta t^2}.
+$$ {#eq-differentiation-noise}
+
+At 200 Hz and $\sigma_X=1$ mm, these are about 0.141 m/s and 98.0 m/s². These values describe
+those stencils and an independent-noise model, not a calibrated mocap system. Correlated noise
+and filtering change the result. They explain why a position error acceptable for visualization
+may be unacceptable for acceleration or a brief sequencing claim.
+
+Finally, inverse dynamics needs acceleration, segment inertial properties and external loads
+in addition to pose. Camera data alone do not uniquely measure muscle forces or identify neural
+commands. State which load measurements, contact assumptions and regularization supply missing
+information. Validate positions, joint definitions, derivatives and force estimates at their
+own level before using them to argue for a mechanism of the golf swing.
 
 ## What the Research Establishes
 
 [Nakano and colleagues](https://doi.org/10.3389/fspor.2020.00050) evaluated five synchronized
 cameras at 1920 by 1080 and 120 hertz and reported task- and keypoint-dependent markerless error.
-The paper supports synchronized multi-view capture and explicit error analysis; it does not
-qualify any industrial camera listed here.
+Its two participants performed walking, jumping and throwing; it also tested 3840-by-2160
+video at 30 Hz. Resolution and rate changed together, so this is not an isolated frame-rate
+experiment. The study does not qualify any industrial camera or golf-swing endpoint here.
 
-[OpenCap](https://doi.org/10.1371/journal.pcbi.1011462) demonstrated useful movement analysis from
-synchronized 720-by-1280 smartphone videos at 60 hertz. It is an important accessible baseline,
+[OpenCap](https://doi.org/10.1371/journal.pcbi.1011462) used 720-by-1280 smartphone videos at 60 hertz and synchronized
+keypoints in processing using cross-correlations of their velocities. This is software temporal
+alignment, not evidence of hardware-synchronized exposure. It is an important accessible baseline,
 not evidence that 60 hertz is sufficient for every shop task or that its accuracy transfers to a
 different camera, detector, skeleton, or calibration pipeline.
 
 [Song and colleagues](https://pubmed.ncbi.nlm.nih.gov/37552921/) compared markerless and
-marker-based estimates across eight movements and reported larger differences for some hip
-quantities, particularly during rapid movement. This reinforces a central rule: qualification is
+marker-based estimates across eight movements and reported larger hip differences, especially for rapid movement such as running, in ten
+participants. That abstract-level observation does not establish a universal speed-error law.
+Agreement with marker-based estimates also is not proof of absolute anatomical accuracy. This reinforces a central rule: qualification is
 task-, joint-, model-, and protocol-specific.
 
 ## Two-Camera Pilot Protocol
@@ -294,8 +394,9 @@ task-, joint-, model-, and protocol-specific.
    and motions. Keep detector confidence separate from geometric uncertainty.
 7. Compare triangulated points and derived joint quantities against a declared reference. Report
    all unavailable and failed keypoints; never interpolate them silently.
-8. Repeat at the worst intended capture-volume locations. Only then decide whether FLIR's rate or
-   Basler's resolution is materially better.
+8. Repeat at the worst intended capture-volume locations. If the intended output includes club
+   motion, derivatives or dynamics, validate those outputs and their required load/model inputs
+   as well as body pose. Only then compare rate and resolution against the declared task budget.
 9. Add cameras in stages. Re-run synchronization, bandwidth, calibration, visibility, thermal,
    storage, and pose tests before scaling to an eight-camera distributed topology.
 
@@ -306,7 +407,7 @@ The full-rig decision remains blocked until the following evidence exists:
 - a dated bill of materials and exact license review;
 - a camera capability record from the real driver rather than a product-name switch;
 - sustained stream results at every supported camera count and mixed-capability case;
-- common-trigger and PTP exposure timing, drift, drop, duplicate, and recovery measurements;
+- exposure timing for the chosen trigger/clock architecture, plus drift, drop, duplicate, and recovery measurements;
 - intrinsic and extrinsic calibration observations, residuals, covariance, and validity state;
 - task-volume visibility and ray-angle maps with occlusion and lighting challenges;
 - reference comparisons for the actual pose model, skeleton, filtering, and biomechanical outputs;
@@ -338,7 +439,7 @@ complete camera assembled from missing or cross-model claims.
 - The cited studies bound only their own cameras, participants, models, tasks, and protocols.
 - This document does not approve human-subject recording, public release, or biomechanical use.
 
-The correct next hardware action is therefore small and reversible: quote the two fast-motion
-candidates, buy one matched pair after license and host-topology review, and make the pilot earn
-the larger purchase.
+Begin with a declared measurement target and complete quotes. Select a matched pilot pair only
+after its mode, optics, timing, software and host requirements are supportable; expand after
+the measured results satisfy that target. No specification table can substitute for this chain.
 

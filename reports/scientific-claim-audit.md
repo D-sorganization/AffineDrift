@@ -24,7 +24,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 2 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
-| `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 1 |
+| `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
 | `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 1 |
 | `/articles/impact-mechanics-and-ball-flight.html` | `articles/impact-mechanics-and-ball-flight.qmd` | 1 |
 | `/articles/impact-optimality-and-model-limits.html` | `articles/impact-optimality-and-model-limits.qmd` | 1 |
@@ -33,12 +33,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/inverse-dynamics.html` | `articles/inverse-dynamics.qmd` | 4 |
 | `/articles/lagrangian-reference.html` | `articles/lagrangian-reference.qmd` | 1 |
 | `/articles/launch-monitor-vendor-reference.html` | `articles/launch-monitor-vendor-reference.qmd` | 1 |
-| `/articles/markerless-mocap-camera-selection.html` | `articles/markerless-mocap-camera-selection.qmd` | 1 |
+| `/articles/markerless-mocap-camera-selection.html` | `articles/markerless-mocap-camera-selection.qmd` | 6 |
 | `/articles/nonlinear-control-insights.html` | `articles/nonlinear-control-insights.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
-| `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 31 |
+| `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 40 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 1 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 1 |
@@ -49,7 +49,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/rotation-induced-spin.html` | `articles/rotation-induced-spin.qmd` | 1 |
 | `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
 | `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 1 |
-| `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 2 |
+| `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
 | `/articles/superposition.html` | `articles/superposition.qmd` | 4 |
@@ -69,7 +69,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/tangent-hyperplanes-series/part-5-contraction.html` | `articles/tangent-hyperplanes-series/part-5-contraction.qmd` | 1 |
 | `/articles/tangent-hyperplanes-series/part-6-hybrid.html` | `articles/tangent-hyperplanes-series/part-6-hybrid.qmd` | 1 |
 | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | `articles/tangent-hyperplanes-series/part-7-residual-aware.qmd` | 1 |
-| `/articles/technology-club-fitting.html` | `articles/technology-club-fitting.qmd` | 1 |
+| `/articles/technology-club-fitting.html` | `articles/technology-club-fitting.qmd` | 5 |
 | `/articles/technology-force-measurement.html` | `articles/technology-force-measurement.qmd` | 5 |
 | `/articles/technology-heavy-hit-impact-coupling.html` | `articles/technology-heavy-hit-impact-coupling.qmd` | 3 |
 | `/articles/technology-launch-monitors.html` | `articles/technology-launch-monitors.qmd` | 1 |
@@ -144,12 +144,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 11 |
-| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 3 |
+| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 9 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
 | `/books/index.html` | `books/index.qmd` | 3 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
-| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 3 |
+| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 8 |
 | `/critiques/01_muscle_physiology.html` | `critiques/01_muscle_physiology.md` | 1 |
 | `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
 | `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |
@@ -166,9 +166,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/index.html` | `critiques/index.qmd` | 2 |
 | `/critiques/input_dependent_boundary_conditions.html` | `critiques/input_dependent_boundary_conditions.md` | 1 |
 | `/critiques/intentional_constraint_collapse.html` | `critiques/intentional_constraint_collapse.md` | 1 |
-| `/critiques/intermediate_axis_fallacy.html` | `critiques/intermediate_axis_fallacy.md` | 1 |
+| `/critiques/intermediate_axis_fallacy.html` | `critiques/intermediate_axis_fallacy.md` | 8 |
 | `/critiques/lie_bracket_formalism_overreach.html` | `critiques/lie_bracket_formalism_overreach.md` | 1 |
-| `/critiques/misattribution_of_stability_gravity.html` | `critiques/misattribution_of_stability_gravity.md` | 1 |
+| `/critiques/misattribution_of_stability_gravity.html` | `critiques/misattribution_of_stability_gravity.md` | 8 |
 | `/critiques/normative_ambiguity_drift-bibliography.html` | `critiques/normative_ambiguity_drift-bibliography.md` | 1 |
 | `/critiques/normative_ambiguity_drift.html` | `critiques/normative_ambiguity_drift.md` | 1 |
 | `/critiques/nullspace_interpretation.html` | `critiques/nullspace_interpretation.md` | 1 |
@@ -267,7 +267,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 0 |
 | `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
 | `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 6 |
-| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
 | `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Reviewed | — | None | None | 0 |
@@ -276,12 +276,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Reviewed | — | None | None | 0 |
-| `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Reviewed | — | None | None | 0 |
+| `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Reviewed | — | None | None | 9 |
 | `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Reviewed | — | None | `crit-sequencing-lie-bracket-fallacy` | 8 |
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
-| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 9 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | None | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 0 |
@@ -292,7 +292,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Reviewed | — | None | None | 0 |
 | `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 0 |
-| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 6 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |
 | `ad-route-0cd531e060c5` | `/articles/superposition.html` | Reviewed | — | None | None | 4 |
@@ -312,7 +312,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-31b16f695fea` | `/articles/tangent-hyperplanes-series/part-5-contraction.html` | Reviewed | — | None | None | 0 |
 | `ad-route-1c198098e00c` | `/articles/tangent-hyperplanes-series/part-6-hybrid.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d231d447846d` | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | Reviewed | — | None | None | 0 |
-| `ad-route-4abf3e223d5f` | `/articles/technology-club-fitting.html` | Reviewed | — | None | None | 0 |
+| `ad-route-4abf3e223d5f` | `/articles/technology-club-fitting.html` | Reviewed | — | None | None | 9 |
 | `ad-route-76402cb90d52` | `/articles/technology-force-measurement.html` | Reviewed | — | None | None | 8 |
 | `ad-route-88598cd32ba2` | `/articles/technology-heavy-hit-impact-coupling.html` | Reviewed | — | None | None | 0 |
 | `ad-route-8a80ab38a564` | `/articles/technology-launch-monitors.html` | Reviewed | — | None | None | 0 |
@@ -409,9 +409,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-6a44de6b950d` | `/critiques/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0ab621690d62` | `/critiques/input_dependent_boundary_conditions.html` | Reviewed | — | None | `crit-input-dependent-boundary-conditions` | 0 |
 | `ad-route-79c31d3309d2` | `/critiques/intentional_constraint_collapse.html` | Reviewed | — | None | `crit-intentional-constraint-collapse` | 0 |
-| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy` | 0 |
+| `ad-route-9a1e28a64fc5` | `/critiques/intermediate_axis_fallacy.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy` | 2 |
 | `ad-route-3ec6541286cf` | `/critiques/lie_bracket_formalism_overreach.html` | Reviewed | — | None | `crit-lie-bracket-formalism-overreach` | 0 |
-| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Reviewed | — | None | `crit-misattribution-stability-gravity` | 0 |
+| `ad-route-edc19cca4f23` | `/critiques/misattribution_of_stability_gravity.html` | Reviewed | — | None | `crit-misattribution-stability-gravity` | 2 |
 | `ad-route-604586932847` | `/critiques/normative_ambiguity_drift-bibliography.html` | Reviewed | — | None | None | 0 |
 | `ad-route-822a7bae7977` | `/critiques/normative_ambiguity_drift.html` | Reviewed | — | None | `crit-normative-ambiguity-drift` | 0 |
 | `ad-route-250a52029db1` | `/critiques/nullspace_interpretation.html` | Reviewed | — | None | `crit-nullspace-interpretation` | 0 |
