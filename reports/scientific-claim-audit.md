@@ -39,7 +39,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
 | `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 40 |
-| `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 1 |
+| `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 1 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
@@ -137,13 +137,13 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/glossary.html` | `articles/The_Physics_of_Golf/quarto/glossary.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/index.html` | `articles/The_Physics_of_Golf/quarto/index.qmd` | 4 |
 | `/articles/theory-part1.html` | `articles/theory-part1.qmd` | 3 |
-| `/articles/theory-part2.html` | `articles/theory-part2.qmd` | 4 |
+| `/articles/theory-part2.html` | `articles/theory-part2.qmd` | 5 |
 | `/articles/theory-part3.html` | `articles/theory-part3.qmd` | 3 |
 | `/articles/theory-part4.html` | `articles/theory-part4.qmd` | 2 |
 | `/articles/theory-part5.html` | `articles/theory-part5.qmd` | 3 |
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
-| `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 11 |
+| `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 12 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 9 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
@@ -282,7 +282,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 9 |
-| `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | None | 0 |
+| `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Reviewed | — | None | None | 0 |
@@ -380,13 +380,13 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-b276ab63f84a` | `/articles/The_Physics_of_Golf/quarto/glossary.html` | Reviewed | — | None | None | 0 |
 | `ad-route-49de2185f401` | `/articles/The_Physics_of_Golf/quarto/index.html` | Reviewed | — | None | None | 3 |
 | `ad-route-2ab75008e28e` | `/articles/theory-part1.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-normative-ambiguity-drift`, `crit-stretch-shortening-blindspot`, `crit-tip-mass-omission` | 0 |
-| `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Reviewed | — | None | None | 0 |
+| `ad-route-9fb316bfc4b7` | `/articles/theory-part2.html` | Reviewed | — | None | `crit-passive-overshoot-artifact`, `crit-static-fallacy-zvcf`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-850c4cf3057b` | `/articles/theory-part3.html` | Reviewed | — | None | `crit-coulomb-friction-violation`, `crit-effective-plant-fallacy`, `crit-stiffness-pulse-paradox` | 0 |
 | `ad-route-b1cfbbbc95cb` | `/articles/theory-part4.html` | Reviewed | — | None | `crit-input-dependent-boundary-conditions` | 0 |
 | `ad-route-125d93f57874` | `/articles/theory-part5.html` | Reviewed | — | None | `crit-flaccid-drift-contradiction`, `crit-simulation-tautology`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Reviewed | — | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
-| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | None | 6 |
+| `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | `crit-passive-overshoot-artifact`, `crit-static-fallacy-zvcf`, `crit-ztcf-identifiability` | 6 |
 | `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 1 |
 | `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Reviewed | — | None | None | 1 |
 | `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 1 |

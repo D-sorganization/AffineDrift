@@ -50,63 +50,59 @@
   3. After merge, close #4615, #4616 and #4618 as superseded and remove the
      seven `claude-<issue>` worktrees.
 # Implementation Handoff — Deploy Website Verification Fix (#4617)
+# Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/issue-4617-deploy-website-resources-books-error
-- Baseline commit: d53290cd92d8c90acd33ae91945c643bb9531296
+- Branch: fix/web-05-9-passive-active-nomenclature-4529
+- Baseline commit: 31572bc386154687007da85b376f92fb2b876403
 - Implementation commit: SELF
-- Pull request: not created
-- Governing issue/epic: #4617
+- Pull request: #4630
+- Governing issue/epic: #4529
 
 ## Objective and Status
 
-- Objective: Fix Deploy Website failure on route /resources/resources-books.html and prevent non-first-party network errors from failing verification.
-- Status: in progress
-- Completed: Removed 18 fragile external book covers and fallback onerror 404 handler from resources-books.qmd; updated scripts/public-site-browser-noise.js to filter Failed to load resource: net::ERR_ console noise; added test coverage in tests/public-site-verifier.test.js.
-- Remaining: Verification suite completion, PR creation, and agent lease release.
+- Objective: Resolve passive/active nomenclature conflict in The Physics of Golf nomenclature.tex by aligning definitions with NOTATION.md and enforcing via check_terminology gate.
+- Status: ready for review / auto-merge
+- Completed: Updated articles/The_Physics_of_Golf/nomenclature.tex subscript, force, vector field, and power definitions to reference autonomous plant evolution (u=0) and declared control channels; extended scripts/check_terminology.py with banned patterns for drift passivity and active muscular overclaims; added unit test coverage in tests/test_check_terminology.py; added change-log row in SPEC.md.
+- Remaining: Monitor PR #4630 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
-  - `resources/resources-books.qmd`: Removed fragile external book cover media slots and fallback onerror handlers from all 18 cards to make all 31 book cards uniform text cards and prevent network and 404 failures.
-  - `scripts/public-site-browser-noise.js`: Added filter for `Failed to load resource: net::ERR_` in `isActionableConsoleError` to prevent third-party network flakiness from failing verification.
-  - `tests/public-site-verifier.test.js`: Added test assertions verifying `isActionableConsoleError` ignores `net::ERR_` noise while preserving actionable errors.
-  - `data/trust/claim_audit_inventory.json` & generated trust registries: Regenerated claim audit evidence digests following resource book source update.
-  - `SPEC.md`: Added change-log row for #4617.
+  - `articles/The_Physics_of_Golf/nomenclature.tex`: Aligned drift and control subscript conventions, generalized drift and control force definitions, drift and control vector field definitions, and drift and control power definitions with NOTATION.md autonomous plant mechanics.
+  - `scripts/check_terminology.py`: Added banned patterns banning equating drift with passivity or control input with muscular activations, and tightened qualifiers typing.
+  - `tests/test_check_terminology.py`: Added parameterized unit test cases for the new banned terminology rules.
+  - `SPEC.md`: Added change-log row for #4630.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: First-party network failures remain caught by `onRequestFailed` and `navigateWithRetry`, so filtering Chromium console's `net::ERR_` does not hide first-party regressions while protecting the verification gate against intermittent external timeouts or unreachable CDNs.
+- Key decisions: Drift is strictly defined as the complete autonomous evolution of the declared effective plant with zero applied control (u=0), never equating drift to passivity or unassisted movement; control is defined as the declared control channel (B u), avoiding direct biological/muscular overclaims.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
-- `npx jest` — PASS (25 suites passed, 420 passed)
-- `python -m ruff check .` — PASS (All checks passed)
-- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
-- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
-- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
-- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
+- `python scripts/check_terminology.py --baseline config/terminology-baseline.json` — PASS
+- `pytest -m content_lint tests/test_check_terminology.py` — PASS (33 passed)
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check scripts/check_terminology.py tests/test_check_terminology.py` — PASS
+- `python -m black --check --line-length 100 scripts/check_terminology.py tests/test_check_terminology.py` — PASS
+- `python -m mypy scripts/check_terminology.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+- Fleet pre-push hooks (secrets, ruff, black, bandit, pytest, etc.) — PASS
 
 ## Blockers and Risks
 
 - Blockers: none
-- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+- Risks/assumptions: none
 
 ## Next Steps
 
-1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
-2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
-3. Release agent lease for #4617.
+1. Monitor PR #4630 CI and auto-merge into main.
 
 ## Change Log
 
-- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
 - 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---

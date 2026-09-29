@@ -114,6 +114,26 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "unresolved citation marker",
         "a real citation, a derivation, or an explicit 'this is a modelling assumption'",
     ),
+    (
+        r"(?i)\bdrift\s*\(\s*passive\s*\)",
+        "drift passivity equation",
+        "autonomous generalized drift force (u = 0) without equating drift to passivity",
+    ),
+    (
+        r"(?i)\bactive\s*\(\s*muscular\s*\)",
+        "active muscular input equation",
+        "declared control channel (B u) without equating input to muscular activation",
+    ),
+    (
+        r"(?i)passive\s*/\s*natural",
+        "passive/natural drift equation",
+        "autonomous components (u = 0)",
+    ),
+    (
+        r"(?i)active\s*/\s*muscular",
+        "active/muscular input equation",
+        "declared control channel components",
+    ),
 )
 
 COMPILED = tuple((re.compile(pattern), rule, fix) for pattern, rule, fix in BANNED)
@@ -218,7 +238,12 @@ def _ztcf_first_use_finding(
         return None
     line = text.count("\n", 0, match.start()) + 1
     window = _normalize_words(text[max(0, match.start() - 120) : match.end() + 40])
-    qualifiers = tuple(str(item) for item in entry["qualifiers"])
+    raw_qualifiers = entry.get("qualifiers")
+    qualifiers = (
+        tuple(str(item) for item in raw_qualifiers)
+        if isinstance(raw_qualifiers, (tuple, list))
+        else ()
+    )
     if any(re.search(rf"\b{re.escape(qualifier)}\b", window) for qualifier in qualifiers):
         return None
     return {
