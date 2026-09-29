@@ -1,3 +1,24 @@
+# Night Watch Pass — 2026-09-28
+
+- Role: `night-watch`; branch `staff/night-watch-task-587ee0`.
+- No open PRs and no simple-tier issues on AffineDrift this pass (all 6 open
+  issues are epics/subepics — out of overnight scope per playbook).
+- Docs compliance checklist: found two `DEVELOPMENT_LOG.md` entries stuck at
+  `in_review` well past their PRs' merges — DL-#3904 (PR #4271, merged
+  2026-09-08 as `c088f9d0`) and DL-#3903 (PR #4267, merged 2026-09-08 as
+  `5aedc884`). Confirmed both squash-merge commits are ancestors of `main`,
+  then flipped both entries to `shipped` with refreshed `Last verified` and
+  `Next step`.
+- No source, test, or article changes. Documentation currency maintenance
+  only. Draft PR opened on branch `staff/night-watch-task-587ee0` targeting
+  `main`.
+
+## Next Steps
+
+- None outstanding from this pass.
+
+---
+
 # Cartographer Pass — 2026-09-27
 
 - Role: `cartographer`; branch `staff/cartographer-task-afa7bc`.
