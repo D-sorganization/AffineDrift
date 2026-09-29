@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4581 · Remove Duplicate Math Overflow Rules
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (opened as part of this delivery)
+- **Issue:** #4581 (epic #4586, E11 — Mathematical Typesetting and Notation)
+- **Branch:** `claude/issue-4581`
+- **Paths:** `custom.scss`, `styles.css`, `docs/styles.css`, `tests/test_math_overflow_rules.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (new regression test: 3 passed; full `pytest -q` suite passes; `ruff check` and `black --check` clean; `scripts.check_css_architecture` passes.)
+- **Summary:** Display-math overflow was defined independently in `custom.scss` and in two conflicting blocks in `styles.css`. Consolidated to a single canonical rule (base + two responsive breakpoints) that reproduces the previously-effective cascade-resolved values exactly, so mobile math rendering is unchanged.
+- **Next step:** Open the draft PR and release the agent lease for #4581.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped

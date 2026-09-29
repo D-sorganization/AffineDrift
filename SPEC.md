@@ -420,3 +420,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
+
+| 2026-09-29 | #4581 | Consolidate duplicate display-math overflow rules from custom.scss and two conflicting blocks in styles.css into one canonical rule set, preserving the previously-effective computed values. |

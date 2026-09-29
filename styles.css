@@ -965,30 +965,8 @@ nav .container {
 /* ---
    Math & Code
    --- */
-.math.display {
-  overflow-x: auto;
-  overflow-y: visible;
-  max-width: 100%;
-  padding: 1rem 0;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-}
-
-/* Mobile-optimized MathJax containers */
-@media (max-width: 768px) {
-  .math.display {
-    font-size: clamp(0.85rem, 2vw, 1rem);
-    padding: 0.75rem 0;
-  }
-
-  /* Reduce font size for complex equations on very small screens */
-  @media (max-width: 480px) {
-    .math.display {
-      font-size: clamp(0.75rem, 1.5vw, 0.9rem);
-      padding: 0.5rem 0;
-    }
-  }
-}
+/* Display-math overflow/scaling: see the consolidated rule set below
+   (issue #4581), which is the single canonical definition. */
 
 /* Inline math on mobile */
 .math.inline {
@@ -3281,7 +3259,10 @@ input:focus:not(:focus-visible) {
   }
 }
 
-/* 1. MathJax container overflow handling */
+/* 1. MathJax container overflow handling (issue #4581): single canonical
+   rule set for display-math overflow — previously duplicated with
+   conflicting overflow-y/padding/font-size values in custom.scss and in a
+   second block earlier in this file. */
 mjx-container[jax="CHTML"][display="true"],
 .MathJax_Display,
 .math.display {
@@ -3291,9 +3272,11 @@ mjx-container[jax="CHTML"][display="true"],
   max-width: 100%;
   /* Touch-friendly scrolling */
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
   /* Visual scrollbar for affordance on touch devices */
   scrollbar-width: thin;
-  padding-bottom: 0.5rem; /* Space for scrollbar */
+  padding: 1rem 0 0.5rem; /* space for scrollbar */
+  margin-bottom: 1rem;
 }
 
 /* Custom scrollbar for math containers */
@@ -3315,6 +3298,7 @@ mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb,
   .MathJax_Display,
   .math.display {
     font-size: 0.9em !important;
+    padding-top: 0.75rem;
   }
 }
 
@@ -3323,6 +3307,7 @@ mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb,
   .MathJax_Display,
   .math.display {
     font-size: 0.85em !important;
+    padding-top: 0.5rem;
   }
 
   /* Smart line-breaking for inline math */

@@ -1,4 +1,119 @@
-# Implementation Handoff — Deploy Website Verification Fix (#4617)
+# Implementation Handoff — Remove Duplicate Math Overflow Rules (#4581)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4581
+- Branch: claude/issue-4581
+- Baseline commit: 46df5059
+- Implementation commit: SELF
+- Pull request: not created yet (opened as part of this delivery)
+- Governing issue/epic: #4581 (part of epic #4586, E11 — Mathematical Typesetting and Notation)
+
+## Objective and Status
+
+- Objective: Display-math overflow was independently defined in `custom.scss`
+  and in two separate, conflicting blocks in `styles.css` (different
+  `overflow-y`, `padding` and mobile `font-size` values depending on cascade
+  order). Consolidate to one canonical rule set without changing the
+  currently-rendered mobile math layout.
+- Status: in progress (implementation complete, PR pending)
+- Completed: Removed the duplicate rule from `custom.scss`; removed the older
+  of the two conflicting blocks in `styles.css`; folded the properties that
+  were only taking effect via cascade order (`margin-bottom`, `scroll-behavior`,
+  the base/tablet `padding-top` values) into the single surviving rule so the
+  effective computed styles at every breakpoint — including 390/375px mobile —
+  are unchanged. Added `tests/test_math_overflow_rules.py` to lock down "one
+  rule set" and the preserved computed values.
+- Remaining: PR creation and agent lease release.
+
+## Files and Decisions
+
+- Files changed:
+  - `custom.scss`: Removed the "MathJax Layout & Overflow Control" rule and
+    its mobile media query (previously duplicated `.math.display`,
+    `.MathJax_Display`, `mjx-container[display="true"]`), leaving a short
+    note pointing to the consolidated rule in `styles.css`.
+  - `styles.css`: Removed the older, independently-conflicting `.math.display`
+    base rule and its two nested media queries (the "Math & Code" section).
+    Extended the surviving `mjx-container[jax="CHTML"][display="true"],
+    .MathJax_Display, .math.display` rule (previously added for issue #4063)
+    with `margin-bottom: 1rem` and `scroll-behavior: smooth` (previously only
+    in effect because nothing overrode them) and a `padding-top` cascade
+    (`1rem` base / `0.75rem` @768px / `0.5rem` @480px) that reproduces exactly
+    what the old three-block cascade resolved to, so mobile rendering is
+    byte-for-byte equivalent to before.
+  - `docs/styles.css`: Regenerated via `python3 scripts/bundle_css.py` to keep
+    the deploy bundle in sync with the source `styles.css`.
+  - `tests/test_math_overflow_rules.py` (new): Regression test asserting (a)
+    `custom.scss` defines no math-overflow rule, (b) exactly one base rule +
+    two responsive breakpoints remain in `styles.css` (down from six
+    overlapping/conflicting rules across the two files), and (c) the merged
+    rule preserves every previously-effective computed value.
+  - `data/trust/site_trust_surface_audit.json`,
+    `data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`: Editing `styles.css`
+    changed its bytes, which invalidated the SHA-256 evidence pin recorded
+    against finding `ad-finding-notation-render-integrity` (and, transitively,
+    the pin on `site_trust_surface_audit.json` itself recorded in every
+    route's review evidence). Recomputed and updated both digests; regenerated
+    the derived report JSON via `python3 -m scripts.generate_claim_audit_inventory`.
+    No scoped-route source content changed — this is a hash refresh, not a
+    re-review; `.table-wrapper` (the substance of that finding) was not touched.
+  - `SPEC.md`: Added change-log row for #4581.
+  - `docs/development/HANDOFF.md`: Added this section.
+  - `docs/development/DEVELOPMENT_LOG.md`: Added/updated `DL-#4581`.
+- Key decisions:
+  - Determined the currently-*effective* computed CSS by hand-resolving the
+    cascade (later same-specificity rule wins; `!important` beats normal
+    weight) across all three previously-duplicated blocks, then wrote the
+    single consolidated rule to reproduce those exact resolved values —
+    rather than picking one of the three blocks arbitrarily — so the mobile
+    math snapshots stay unchanged per the issue's acceptance criterion.
+  - Left the `::-webkit-scrollbar` cosmetic sub-rules (present in both the
+    removed and surviving `styles.css` blocks with different thumb colors)
+    untouched: the issue's stated problem is specifically the overflow/
+    padding/font-size definition, not scrollbar cosmetics, and changing them
+    was not necessary to satisfy "one rule set" for the overflow behavior.
+    Spotted-but-not-fixed, noted in the PR body as a possible follow-up.
+- User-owned or unrelated worktree changes: none observed. Note: running the
+  full `pytest -q` suite regenerates `_includes/generated/*-summary.qmd` and
+  three `data/trust/generated/*_registry.json`/`reader_validation_study.json`
+  files with today's date and different JSON formatting, as an apparent
+  side effect of some test writing to the real repo path instead of a
+  `tmp_path` fixture. This is unrelated to #4581; reverted with
+  `git checkout --` before committing each time it recurred. Flagging as a
+  spotted-but-not-fixed pre-existing test-suite issue for a follow-up.
+
+## Validation
+
+- `python3 -m pytest tests/test_math_overflow_rules.py -v` — PASS (3 passed;
+  confirmed RED before the fix with the pre-fix rule content, then GREEN after)
+- `python3 -m pytest tests/test_css_bundle.py tests/test_check_display_math.py -q` — PASS (34 passed)
+- `python3 -m pytest tests/test_site_trust_surface_audit.py tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current -q` — PASS (11 passed)
+- `python3 -m pytest -q` — PASS (full suite, exit code 0)
+- `python3 -m scripts.check_css_architecture` — PASS (57 files scanned)
+- `python3 -m ruff check .` — PASS (All checks passed)
+- `python3 -m black --check --line-length 100 .` — PASS (734 files would be left unchanged)
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: No committed Playwright pixel-snapshot baselines exist
+  for mobile math yet (`tests/e2e/visual.spec.js`'s "matches visual snapshot"
+  tests are explicitly excluded from CI per issue #4140 pending platform
+  baselines), so "390px mobile math snapshots are unchanged" was verified by
+  hand-resolving the CSS cascade to confirm the merged rule reproduces the
+  prior effective computed values exactly, not by an automated pixel diff.
+
+## Next Steps
+
+1. Open the draft PR for #4581.
+2. Release the agent lease for #4581.
+
+---
+
+
 
 ## Identity
 
