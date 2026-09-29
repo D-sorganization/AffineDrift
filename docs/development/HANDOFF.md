@@ -1,3 +1,58 @@
+# Privacy Policy Page — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `AffineDrift-worktrees/claude-4576`.
+- Branch `claude/issue-4576`, commit `SELF`; pull request not created yet (opened
+  as part of this same session; see the PR list for the resulting number).
+- Governing issue: #4576 (`[WEB-10.8] Privacy Policy Page`, epic #4579,
+  `tier:cli`). Objective: `metrics.js` stores usage data only in
+  `localStorage`, but nothing told readers what is and is not collected;
+  add a page covering local storage, the service worker, embeds, and
+  analytics (per D6), linked from the footer.
+- Completed work:
+  - Added `pages/privacy-policy.qmd`: covers the `js/metrics.js` local-storage
+    usage widget, `service-worker.js` offline caching, third-party embeds
+    (YouTube video players, Google Fonts, jsDelivr CDN for MathJax), and the
+    current no-third-party-analytics state per Board decision D6
+    (`docs/development/website-improvement-draft-issues-2026-09-29.md`).
+  - Added a "Privacy Policy" link to `website.page-footer.right` in
+    `_quarto.yml`, pointing at `pages/privacy-policy.html`.
+  - Added `tests/test_privacy_policy_page.py` (TDD: written first, confirmed
+    failing before the page/footer link existed) asserting the page exists
+    with frontmatter metadata, covers all four required topics, and is linked
+    from the footer.
+  - Extended the existing footer-contract test in `tests/test_navbar_ia.py`
+    (`test_page_footer_links_publication_and_executable_companions`) to assert
+    the new Privacy Policy link.
+  - Added the `DL-#4576` entry to `docs/development/DEVELOPMENT_LOG.md`.
+  - Ran `python -m scripts.regenerate_claim_audit_evidence` to refresh the
+    `_quarto.yml` digest in `data/trust/claim_audit_inventory.json` (and its
+    derived `data/trust/generated/claim_audit_report.json`) for the two
+    unrelated claim reviews that list it as evidence, after the footer-link
+    edit changed that file's bytes.
+- Compatibility constraints: no navbar changes (the issue only requires a
+  footer link); no changes to `js/metrics.js` or `service-worker.js` behavior,
+  this is documentation only.
+- Validation commands and outcomes:
+  - `python3 -m pytest tests/test_privacy_policy_page.py -v -m content_lint` —
+    3 passed.
+  - `python3 -m pytest tests/test_navbar_ia.py tests/test_public_site_manifest.py -v` —
+    29 passed.
+  - `python3 -m pytest tests/test_page_style_discipline.py tests/test_site_trust_surface_audit.py tests/test_editorial_and_consistency.py -v` —
+    144 passed.
+  - `python3 -m ruff check tests/test_privacy_policy_page.py tests/test_navbar_ia.py` —
+    clean.
+  - `python3 -m black --check --line-length 100 tests/test_privacy_policy_page.py tests/test_navbar_ia.py` —
+    clean.
+  - `python3 -m scripts.check_spec_changelog` — passed.
+- Blockers/risks/assumptions: none known. The page describes the current
+  (local-only) analytics state; if a future site-wide analytics change lands
+  per D6, this page's Analytics section should be updated in the same PR.
+- Next steps: push the branch, open the draft PR (`Fixes #4576`), and confirm
+  the fleet lease is released by the delegating agent per its own process.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
