@@ -1,50 +1,53 @@
-# Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+# Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-03-3-summary-and-key-takeaways-4508
-- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
-- Implementation commit: e7fd6342
-- Pull request: #4631
-- Governing issue/epic: #4508 (epic #4514)
+- Branch: fix/web-01-8-learning-path-contradictions-4493
+- Baseline commit: c72f59e19661f237583ee91e92d2740fffc4c94b
+- Implementation commit: SELF
+- Pull request: #4634
+- Governing issue/epic: #4493
 
 ## Objective and Status
 
-- Objective: Render plain-language summary and key takeaways from front matter beneath page header, visible without interaction, printed in print stylesheet, and suppressing legacy lay blocks.
-- Status: ready for PR
+- Objective: Correct learning-path difficulty contradictions, prerequisites, and chapter references across AffineDrift learning path pages.
+- Status: ready for review / auto-merge
 - Completed:
-  - Created `scripts/filters/summary-takeaways.lua` Pandoc Lua filter extracting `summary-plain` and `key-takeaways` from front matter and suppressing duplicate legacy lay blocks.
-  - Created `css/components/summary-takeaways.css` component stylesheet and registered in `styles.css`.
-  - Added print rules in `css/print.css`.
-  - Registered Lua filter in `_quarto.yml`.
-  - Added TDD integration and unit tests in `tests/test_summary_takeaways.py` (7 tests, all passing).
-  - Regenerated claim audit evidence digests and verified all pre-commit checks.
-- Remaining: Submit PR, key row in `SPEC.md`, arm auto-merge, release lease.
+  - Created single source of truth in `config/learning_paths.yml` specifying duration, weeks, difficulty, and prerequisites.
+  - Aligned `resources/learning-paths.qmd` Quick Navigation table with individual path pages (Control Theory to Advanced, Golf Science to Introductory to Intermediate).
+  - Fixed prerequisite contradiction in `resources/learning-path-foundations.qmd` ("No prerequisites assumed" replaced with "Assumes only high school algebra and trigonometry").
+  - Consolidated duplicate 3Blue1Brown reading entry in Foundations Module 1.
+  - Linked Golf Science Module 1 to exact target chapters (ch28 impact, ch19 drag, ch31 launch) instead of generic "Chapters 1–3".
+  - Aligned Biomechanics schedule to 16 weeks and removed Module 7 / Module 8 week overlap.
+  - Added comprehensive test suite in `tests/test_learning_paths.py` (7 tests).
+  - Regenerated claim audit evidence in `data/trust/claim_audit_inventory.json` and verified with `python -m scripts.regenerate_claim_audit_evidence --check`.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, create PR, arm auto-merge, and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `scripts/filters/summary-takeaways.lua`: Component Lua filter.
-  - `css/components/summary-takeaways.css`: Modern card styles with accessible contrast and semantic layout.
-  - `css/print.css`: Print rules preventing page breaks inside the takeaways card.
-  - `styles.css`: Component `@import`.
-  - `_quarto.yml`: Filter registration.
-  - `tests/test_summary_takeaways.py`: TDD test suite.
-  - `SPEC.md`: PR change-log row.
+  - `config/learning_paths.yml`: Created single source of truth for learning path metadata.
+  - `resources/learning-paths.qmd`: Updated Quick Navigation difficulty ratings to match detailed path pages.
+  - `resources/learning-path-foundations.qmd`: Fixed subtitle prerequisite contradiction and removed duplicate 3Blue1Brown entry.
+  - `resources/learning-path-golf-science.qmd`: Updated Module 1 reading to link to chapters 28, 19, and 31.
+  - `resources/learning-path-biomechanics.qmd`: Updated subtitle to 16 weeks and Module 8 to Weeks 15–16.
+  - `tests/test_learning_paths.py`: Added consistency and reference regression tests.
+  - `data/trust/claim_audit_inventory.json`: Updated review evidence digest for modified learning-path-biomechanics.qmd.
+  - `SPEC.md`: Added change-log entry for #4493.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Single component driven by front matter; no collapsible state or JS toggle required; cleanly replaces legacy HTML raw lay blocks when front matter is defined.
+- Key decisions: Single source of truth in YAML keeps hub table and individual path pages synchronized; hours/hrs format normalized in tests.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_summary_takeaways.py` — PASS (7 passed in 14s)
-- `python scripts/check_css_architecture.py` — PASS
-- `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check tests/test_summary_takeaways.py` — PASS
-- `python -m black --check --line-length 100 tests/test_summary_takeaways.py` — PASS
+- `pytest tests/test_learning_paths.py` — PASS (7 passed)
+- `python -m ruff check tests/test_learning_paths.py` — PASS
+- `python -m black --check --line-length 100 tests/test_learning_paths.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks
 
@@ -53,10 +56,8 @@
 
 ## Next Steps
 
-1. Create pull request referencing `Closes #4508` with label `agent:local`.
-2. Update row in `SPEC.md` to reference PR number.
-3. Arm auto-merge (`--squash`).
-4. Release lease on #4508 in `Repository_Management`.
+1. Verify PR #4634 mergeability and arm auto-merge.
+2. Release claim lease.
 
 ## Change Log
 
