@@ -1,43 +1,53 @@
-# Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
+# Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/web-05-9-passive-active-nomenclature-4529
-- Baseline commit: 31572bc386154687007da85b376f92fb2b876403
+- Branch: fix/web-01-8-learning-path-contradictions-4493
+- Baseline commit: c72f59e19661f237583ee91e92d2740fffc4c94b
 - Implementation commit: SELF
-- Pull request: #4630
-- Governing issue/epic: #4529
+- Pull request: #4493
+- Governing issue/epic: #4493
 
 ## Objective and Status
 
-- Objective: Resolve passive/active nomenclature conflict in The Physics of Golf nomenclature.tex by aligning definitions with NOTATION.md and enforcing via check_terminology gate.
+- Objective: Correct learning-path difficulty contradictions, prerequisites, and chapter references across AffineDrift learning path pages.
 - Status: ready for review / auto-merge
-- Completed: Updated articles/The_Physics_of_Golf/nomenclature.tex subscript, force, vector field, and power definitions to reference autonomous plant evolution (u=0) and declared control channels; extended scripts/check_terminology.py with banned patterns for drift passivity and active muscular overclaims; added unit test coverage in tests/test_check_terminology.py; added change-log row in SPEC.md.
-- Remaining: Monitor PR #4630 CI and auto-merge into main.
+- Completed:
+  - Created single source of truth in `config/learning_paths.yml` specifying duration, weeks, difficulty, and prerequisites.
+  - Aligned `resources/learning-paths.qmd` Quick Navigation table with individual path pages (Control Theory to Advanced, Golf Science to Introductory to Intermediate).
+  - Fixed prerequisite contradiction in `resources/learning-path-foundations.qmd` ("No prerequisites assumed" replaced with "Assumes only high school algebra and trigonometry").
+  - Consolidated duplicate 3Blue1Brown reading entry in Foundations Module 1.
+  - Linked Golf Science Module 1 to exact target chapters (ch28 impact, ch19 drag, ch31 launch) instead of generic "Chapters 1–3".
+  - Aligned Biomechanics schedule to 16 weeks and removed Module 7 / Module 8 week overlap.
+  - Added comprehensive test suite in `tests/test_learning_paths.py` (7 tests).
+  - Regenerated claim audit evidence in `data/trust/claim_audit_inventory.json` and verified with `python -m scripts.regenerate_claim_audit_evidence --check`.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, create PR, arm auto-merge, and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `articles/The_Physics_of_Golf/nomenclature.tex`: Aligned drift and control subscript conventions, generalized drift and control force definitions, drift and control vector field definitions, and drift and control power definitions with NOTATION.md autonomous plant mechanics.
-  - `scripts/check_terminology.py`: Added banned patterns banning equating drift with passivity or control input with muscular activations, and tightened qualifiers typing.
-  - `tests/test_check_terminology.py`: Added parameterized unit test cases for the new banned terminology rules.
-  - `SPEC.md`: Added change-log row for #4630.
+  - `config/learning_paths.yml`: Created single source of truth for learning path metadata.
+  - `resources/learning-paths.qmd`: Updated Quick Navigation difficulty ratings to match detailed path pages.
+  - `resources/learning-path-foundations.qmd`: Fixed subtitle prerequisite contradiction and removed duplicate 3Blue1Brown entry.
+  - `resources/learning-path-golf-science.qmd`: Updated Module 1 reading to link to chapters 28, 19, and 31.
+  - `resources/learning-path-biomechanics.qmd`: Updated subtitle to 16 weeks and Module 8 to Weeks 15–16.
+  - `tests/test_learning_paths.py`: Added consistency and reference regression tests.
+  - `data/trust/claim_audit_inventory.json`: Updated review evidence digest for modified learning-path-biomechanics.qmd.
+  - `SPEC.md`: Added change-log entry for #4493.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Drift is strictly defined as the complete autonomous evolution of the declared effective plant with zero applied control (u=0), never equating drift to passivity or unassisted movement; control is defined as the declared control channel (B u), avoiding direct biological/muscular overclaims.
+- Key decisions: Single source of truth in YAML keeps hub table and individual path pages synchronized; hours/hrs format normalized in tests.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `python scripts/check_terminology.py --baseline config/terminology-baseline.json` — PASS
-- `pytest -m content_lint tests/test_check_terminology.py` — PASS (33 passed)
-- `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check scripts/check_terminology.py tests/test_check_terminology.py` — PASS
-- `python -m black --check --line-length 100 scripts/check_terminology.py tests/test_check_terminology.py` — PASS
-- `python -m mypy scripts/check_terminology.py` — PASS
+- `pytest tests/test_learning_paths.py` — PASS (7 passed)
+- `python -m ruff check tests/test_learning_paths.py` — PASS
+- `python -m black --check --line-length 100 tests/test_learning_paths.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- Fleet pre-push hooks (secrets, ruff, black, bandit, pytest, etc.) — PASS
+- `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks
 
@@ -46,7 +56,9 @@
 
 ## Next Steps
 
-1. Monitor PR #4630 CI and auto-merge into main.
+1. Create PR with label `agent:local` closing #4493.
+2. Arm auto-merge (squash).
+3. Release claim lease.
 
 ## Change Log
 
