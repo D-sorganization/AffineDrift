@@ -1,50 +1,53 @@
-# Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-03-3-summary-and-key-takeaways-4508
-- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
-- Implementation commit: e7fd6342
-- Pull request: #4631
-- Governing issue/epic: #4508 (epic #4514)
+- Branch: feat/web-01-3-extend-personas-4488
+- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
+- Implementation commit: SELF
+- Pull request: #4488
+- Governing issue/epic: #4488 (epic #4496)
 
 ## Objective and Status
 
-- Objective: Render plain-language summary and key takeaways from front matter beneath page header, visible without interaction, printed in print stylesheet, and suppressing legacy lay blocks.
-- Status: ready for PR
+- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
+- Status: ready for review / auto-merge
 - Completed:
-  - Created `scripts/filters/summary-takeaways.lua` Pandoc Lua filter extracting `summary-plain` and `key-takeaways` from front matter and suppressing duplicate legacy lay blocks.
-  - Created `css/components/summary-takeaways.css` component stylesheet and registered in `styles.css`.
-  - Added print rules in `css/print.css`.
-  - Registered Lua filter in `_quarto.yml`.
-  - Added TDD integration and unit tests in `tests/test_summary_takeaways.py` (7 tests, all passing).
-  - Regenerated claim audit evidence digests and verified all pre-commit checks.
-- Remaining: Submit PR, key row in `SPEC.md`, arm auto-merge, release lease.
+  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
+  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
+  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
+  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
+  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
+  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
+  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all checks pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, submit PR, arm auto-merge, and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `scripts/filters/summary-takeaways.lua`: Component Lua filter.
-  - `css/components/summary-takeaways.css`: Modern card styles with accessible contrast and semantic layout.
-  - `css/print.css`: Print rules preventing page breaks inside the takeaways card.
-  - `styles.css`: Component `@import`.
-  - `_quarto.yml`: Filter registration.
-  - `tests/test_summary_takeaways.py`: TDD test suite.
-  - `SPEC.md`: PR change-log row.
+  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
+  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
+  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
+  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
+  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
+  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
+  - `SPEC.md`: Added change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Single component driven by front matter; no collapsible state or JS toggle required; cleanly replaces legacy HTML raw lay blocks when front matter is defined.
+- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_summary_takeaways.py` — PASS (7 passed in 14s)
-- `python scripts/check_css_architecture.py` — PASS
-- `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check tests/test_summary_takeaways.py` — PASS
-- `python -m black --check --line-length 100 tests/test_summary_takeaways.py` — PASS
+- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
+- `python -m src.tools.site_link_gate` — PASS (0 errors)
+- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks
 
@@ -53,10 +56,10 @@
 
 ## Next Steps
 
-1. Create pull request referencing `Closes #4508` with label `agent:local`.
+1. Create PR with label `agent:local` closing #4488.
 2. Update row in `SPEC.md` to reference PR number.
 3. Arm auto-merge (`--squash`).
-4. Release lease on #4508 in `Repository_Management`.
+4. Release lease on #4488 in `Repository_Management`.
 
 ## Change Log
 
