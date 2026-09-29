@@ -35,7 +35,7 @@ The text claims that "As drift increases... $\dim(\mathcal{V}(x)) \longrightarro
 
 - **Murray, Li, Sastry (1994):** _A Mathematical Introduction to Robotic Manipulation_. Lie brackets are used to analyze **nonholonomic** constraints (rolling without slipping). A robot arm is holonomic.
 - **Isidori (1995):** _Nonlinear Control Systems_. Controllability rank conditions are discrete (full rank or not).
-- **Article Text:** Section 2 defines $q \in \mathbb{R}^3$ and $\tau \in \mathbb{R}^3$ (implied). Section 2.2 defines $g(x)u = [0; M^{-1}\tau]$. Since $M^{-1}$ is full rank, $g(x)$ spans the acceleration space.
+- **Article Text:** Section 2 defines $q \in \mathbb{R}^3$ and $\tau \in \mathbb{R}^3$ (implied). Section 2.2 defines $G(x)u = [0; M^{-1}\tau]$. Since $M^{-1}$ is full rank, $G(x)$ spans the acceleration space.
 
 ## Severity
 
@@ -44,7 +44,7 @@ The text claims that "As drift increases... $\dim(\mathcal{V}(x)) \longrightarro
 ## Suggested Remedies
 
 1.  **Remove Section 4** ("Nonlinear Controllability via Lie Brackets") entirely if the system is fully actuated.
-2.  **Replace with "Reachability Analysis":** Frame the "Control Cone" in terms of the **Hamiltonian** $H(x,p,u) = p^T (f(x) + g(x)u)$ and the reachable set boundary, rather than Lie Algebra rank.
+2.  **Replace with "Reachability Analysis":** Frame the "Control Cone" in terms of the **Hamiltonian** $H(x,p,u) = p^T (f(x) + G(x)u)$ and the reachable set boundary, rather than Lie Algebra rank.
 3.  **Correct the Dimensionality Claim:** Instead of "dim -> 1", state "The **volume** of the reachable set (relative to drift displacement) shrinks."
 4.  **Clarify Actuation:** If the wrist is considered passive (flexible hinge) in this specific derivation, state it clearly. But Section 2 says "q3: wrist/club hinge", implying actuation.
 

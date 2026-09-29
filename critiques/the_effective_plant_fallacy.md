@@ -7,7 +7,7 @@ description: "Critique and response context for The Effective Plant Fallacy (Tas
 
 ## Summary of Concern
 
-The AffineDrift framework relies on "Drift Invariance" ($\nabla_u f(x) \equiv 0$) to justify the separation of passive dynamics ($f(x)$) from active input ($g(x)u$). However, the defense against "Input-Dependent Boundary Conditions" invokes the concept of the **"Effective Plant"**—a model where passive stiffness/damping parameters ($K, D$) are tuned to represent the "structural impedance" required for the task.
+The AffineDrift framework relies on "Drift Invariance" ($\nabla_u f(x) \equiv 0$) to justify the separation of passive dynamics ($f(x)$) from active input ($G(x)u$). However, the defense against "Input-Dependent Boundary Conditions" invokes the concept of the **"Effective Plant"**—a model where passive stiffness/damping parameters ($K, D$) are tuned to represent the "structural impedance" required for the task.
 
 **This is a fundamental contradiction.** If the "passive" parameters ($K, D$) are determined by the task (which is defined by the input strategy), then $f(x)$ is implicitly a function of $u$. The "Zero Torque Counterfactual" ($u=0$) then simulates a physical impossibility: a system with the high stiffness of maximal activation but zero drive. This "Zombie Golfer" baseline violates the physiology of recruitment (Henneman's Size Principle) and renders the causal decomposition circular.
 
