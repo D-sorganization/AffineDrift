@@ -56,10 +56,7 @@
 
 ## Next Steps
 
-1. Create PR with label `agent:local` closing #4488.
-2. Update row in `SPEC.md` to reference PR number.
-3. Arm auto-merge (`--squash`).
-4. Release lease on #4488 in `Repository_Management`.
+1. Monitor PR #4638 CI and auto-merge into main.
 
 ## Change Log
 
