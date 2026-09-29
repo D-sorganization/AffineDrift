@@ -1,3 +1,8 @@
+---
+title: "Bibliography: Inference from Inverse Dynamics"
+description: "Companion bibliography for the AffineDrift article on inference from inverse dynamics in a nonlinear affine system."
+---
+
 # Bibliography: Inference from Inverse Dynamics
 
 ## Concept Map

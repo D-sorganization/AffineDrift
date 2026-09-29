@@ -1,3 +1,8 @@
+---
+title: "Bibliographic Analysis: Secondary Axis Stability in Golf Clubs"
+description: "Companion bibliography for the AffineDrift article on secondary-axis stability and putter design."
+---
+
 # Bibliographic Analysis: Secondary Axis Stability in Golf Clubs
 
 ## A) Concept Map

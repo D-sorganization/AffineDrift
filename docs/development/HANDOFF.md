@@ -1,3 +1,77 @@
+# Render or Retire Orphaned Per-Article Bibliography Files — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4548` (git worktree).
+- Branch `claude/issue-4548`, commit `SELF`; pull request not created yet (opening as draft
+  immediately after this handoff commit).
+- Governing issue: #4548 ("[WEB-07.6] Render or Retire the Orphaned Per-Article Bibliography
+  Files", epic #4552). Objective: every `articles/*-bibliography.md` companion bibliography
+  either renders and its links resolve, or is removed if it adds nothing; document the single
+  pattern used.
+- Completed work:
+  - Added the `articles/*-bibliography.md` render rule to `_quarto.yml` (mirrors the pre-existing
+    `critiques/*.md` rule) and to `REQUIRED_RENDER_RULES` in
+    `scripts/check_quarto_render_coverage.py`, so the rule can't silently regress.
+  - Added minimal `title`/`description` YAML front matter to the 21 companion bibliography files
+    that have a matching article (`inverse-dynamics-bibliography.md` already had front matter);
+    left each file's body untouched.
+  - Kept `articles/Pinocchio_Project_Outline-bibliography.md` (227 lines of annotated sources, no
+    matching article) and gave it front matter so it renders under the same rule; reviewer judged
+    it substantive, so deleting it would lose content.
+  - Fixed the two existing links: `articles/proximal-distal-energy-transfer.qmd:1461` pointed at
+    the raw `.md` source (Quarto never copies unrendered markdown into `docs/`, so it would 404
+    once deployed); `articles/wrist-universal-joint.qmd:756` pointed at an absolute GitHub blob
+    URL. Both now use a local relative `.html` link to the rendered page.
+  - Documented the pattern in `docs/development/content-architecture.md` (new "Companion
+    Bibliography Pattern" section), including why these `.md` companions are exempt from the site
+    link gate's Related-Articles/orphan/category checks (only `*.qmd` files under `CONTENT_DIRS`
+    are scanned by `src/tools/site_page_scan.py::find_content_pages`) and that
+    `null-space-constraint-jacobian-bibliography.qmd` is a grandfathered narrative-page exception,
+    not a second sanctioned pattern.
+  - Added two parametrized regression tests to `tests/test_check_quarto_render_coverage.py`
+    (`test_orphaned_bibliography_md_is_now_rendered_and_linked_locally`) covering the two fixed
+    links, mirroring the existing null-space test.
+- Decision not to also add new inbound links from the other 19 matched articles to their
+  companion bibliography: the acceptance criteria require existing links to resolve and a
+  documented single pattern, not new cross-links from every article; adding those would be a much
+  larger, separately-reviewable content change. Noted as a possible follow-up in the PR body.
+- Validation:
+  - `python3 -m pytest tests/test_check_quarto_render_coverage.py tests/test_companion_pins.py
+    tests/test_site_link_gate.py tests/test_root_hygiene.py tests/test_formatting_lints.py
+    tests/test_check_links.py tests/test_check_links_additional.py tests/test_check_tree_parity.py
+    tests/test_generate_sitemap.py tests/test_navbar_ia.py tests/test_page_style_discipline.py
+    tests/test_reference_audit.py -q` — 127 passed.
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` — both clean.
+  - `python3 -m scripts.check_quarto_render_coverage` — passes (240 sitemap URLs reconciled).
+  - `python3 -m scripts.link-checker --site-gate --root .` — "Site gate passed!" against the real
+    repository (no orphan/related-coverage/category regressions from the new `.md` files, since
+    they are outside the gate's `*.qmd`-only content-page scan).
+  - `python3 -m scripts.regenerate_claim_audit_evidence` — the frontmatter added to
+    `articles/force-mobility-matrices-bibliography.md` changed its SHA-256, which broke the
+    reviewed-evidence pin recorded for that route (`tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current`
+    failed with a digest mismatch). Ran `--check` first to confirm scope (only that one file), then
+    regenerated; `data/trust/claim_audit_inventory.json` and `data/trust/generated/claim_audit_report.json`
+    now carry the refreshed digest. `reports/technical-review/force-mobility-render-verification.json`
+    (the frozen point-in-time review snapshot) was intentionally left untouched — it is historical
+    record, not the live gate. `python3 -m pytest tests/test_claim_audit_inventory.py -q` — 18
+    passed after the regeneration.
+  - `python3 -m pytest -q` (full suite) — passed after the evidence regeneration above; re-run to
+    confirm before opening the PR.
+  - Did not run `quarto render` (the `quarto` CLI is unavailable in this sandbox); front matter
+    YAML was verified by hand and via the render-coverage/site-gate checks above.
+- Blockers/risks: none known.
+- Development log: `DL-#4548` added to `docs/development/DEVELOPMENT_LOG.md`, state `in_review`.
+
+## Next Steps
+
+1. Open the draft PR (`gh pr create --draft`) for issue #4548.
+2. A reviewing frontier agent should confirm the `.md`-render-rule pattern (vs. converting to
+   `.qmd`) is the intended long-term convention, since it trades richer per-page authoring
+   (categories, Related Articles) for exemption from the site link gate's content-page checks —
+   the same trade-off the pre-existing `critiques/*.md` rule already makes.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.

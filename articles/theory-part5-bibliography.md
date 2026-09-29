@@ -1,3 +1,8 @@
+---
+title: "Bibliography for Affine Control Interpretation of the Golf Swing — Part 5: Simulink Model"
+description: "Companion bibliography for Part 5 of the AffineDrift theory series, on the Simulink model."
+---
+
 # Bibliography for Affine Control Interpretation of the Golf Swing — Part 5: Simulink Model
 
 ## A) Concept Map

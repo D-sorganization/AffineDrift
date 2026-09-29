@@ -48,6 +48,39 @@ The theoretical material on tangent hyperplanes, contraction, and golf swing dyn
 - **`content/`**: Legacy draft content, visualizations, and working materials. This directory is **not** part of the Quarto render pipeline and is not served to the website. It serves as a working archive.
 - **`books/`**: Marketing/landing pages for the book series. These link to the relevant article or textbook chapters but do not duplicate the content.
 
+## Companion Bibliography Pattern (issue #4548)
+
+Per-article bibliographies live beside the article they support, named
+`<article-slug>-bibliography.md`, and render through the
+`articles/*-bibliography.md` rule in `_quarto.yml` (`scripts/check_quarto_render_coverage.py`
+enforces this rule stays present via `REQUIRED_RENDER_RULES`). This mirrors
+the pre-existing `critiques/*.md` rule for critique bibliographies.
+
+- The companion file needs only minimal YAML front matter — `title` and a
+  one-line `description` — prepended above its existing body; the body itself
+  is left as authored.
+- Because these are plain `.md` files (not `.qmd`), they are outside
+  `src/tools/site_page_scan.py`'s `find_content_pages()` scan (which only
+  globs `*.qmd` under `CONTENT_DIRS`), so they are not subject to the site
+  link gate's Related-Articles-coverage, orphan, or controlled-category
+  requirements — the same exemption `critiques/*.md` already has.
+- An article that links to its companion bibliography must use a local
+  relative `.html` link (e.g. `[annotated bibliography](my-article-bibliography.html)`),
+  never a raw `.md` link (Quarto does not copy unrendered markdown source into
+  `docs/`, so it 404s once deployed) and never an absolute GitHub blob URL.
+  Linking to the companion bibliography from its article is not required —
+  only articles that already do so must use this link form.
+- `articles/null-space-constraint-jacobian-bibliography.qmd` predates this
+  pattern and stays a `.qmd` narrative page (it already satisfies the site
+  link gate's content-page requirements). It is a grandfathered exception,
+  not a second sanctioned pattern — new companion bibliographies should
+  follow the `.md` rule above.
+- A companion bibliography with no corresponding article is still rendered by
+  the same rule rather than deleted when it carries substantive annotated
+  content (for example `articles/Pinocchio_Project_Outline-bibliography.md`,
+  whose outline article was never published). Delete only files that are
+  empty or duplicate another bibliography.
+
 ## Known Issues
 
 - `content/` contains some material that overlaps with `articles/` — migration of usable content from `content/` to `articles/` is desirable but not yet prioritized.

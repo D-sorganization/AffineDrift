@@ -1,3 +1,8 @@
+---
+title: "Bibliography: Lagrangian Reference for Control-Affine Multibody Dynamics"
+description: "Companion bibliography for the AffineDrift article on the Lagrangian reference for control-affine multibody dynamics."
+---
+
 # Bibliography: Lagrangian Reference for Control-Affine Multibody Dynamics
 
 ## Concept Map

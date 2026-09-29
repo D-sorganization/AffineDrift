@@ -1,3 +1,8 @@
+---
+title: "Bibliographic Analysis: Affine Control Interpretation of the Golf Swing (Part 1)"
+description: "Companion bibliography for Part 1 of the AffineDrift theory series, Affine Control Interpretation of the Golf Swing."
+---
+
 # Bibliographic Analysis: Affine Control Interpretation of the Golf Swing
 
 ## A) Concept Map

@@ -1,3 +1,8 @@
+---
+title: "Bibliography: Applications of the Control-Affine Framework"
+description: "Companion bibliography for the AffineDrift article on applications of the control-affine framework."
+---
+
 # Bibliography: Applications of the Control-Affine Framework
 
 ## Concept Map
