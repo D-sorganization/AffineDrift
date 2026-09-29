@@ -5,7 +5,7 @@
 - Repository: `D-sorganization/AffineDrift`
 - Working directory: `C:/Users/diete/Repositories/AffineDrift`
 - Branch: `fix/web-10-2-fix-robots-txt-4571`
-- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
 - Implementation commit: `SELF`
 - Pull request: #4612
 - Governing issue/epic: #4571 (epic #4579)
@@ -48,7 +48,7 @@
 
 ## Change Log
 
-- `SELF` — Add SPEC.md and HANDOFF.md updates to pass spec freshness on PR #4612 (#4571).
+- `SELF` — Merge main and update HANDOFF.md on PR #4612 (#4571).
 - `e68049cb` — Remove crawl-delay and site_libs disallow from robots.txt (#4571).
 
 ---
