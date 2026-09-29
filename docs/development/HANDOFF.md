@@ -5,7 +5,7 @@
 - Repository: `D-sorganization/AffineDrift`
 - Working directory: `C:/Users/diete/Repositories/AffineDrift`
 - Branch: `fix/web-02-3-theory-series-name-4499`
-- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
 - Implementation commit: `SELF`
 - Pull request: #4614
 - Governing issue/epic: #4499 (epic #4498)

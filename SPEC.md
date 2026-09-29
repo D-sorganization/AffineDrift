@@ -225,6 +225,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-09-29 | #4614 | Adopt unified Theory Series naming across navbar, sidebar, titles, Article Index, and home page, retitle affine-nature-golf-swing as Consolidated Edition, and enforce title patterns from series metadata (#4499). |
+| 2026-09-29 | #4524 | Extend critique annotations to ZTCF (zero-torque-counterfactual.qmd, theory-part2.qmd) and proximal-distal (proximal-distal-energy-transfer.qmd) pages, enforcing critique-to-claim page mappings and fail-closed contract (#4524). |
 | 2026-09-29 | #4617 | Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617). |
 | 2026-09-24 | #4458 | Mark four stale development-log entries (DL-#4429, DL-#4253, DL-#4406, DL-#1595) as shipped after their PRs merged. |
 | 2026-09-23 | #4445 | Enforce the published deferred catalog through the canonical validator bundle and hook; sync format-specific agent guidance. |
