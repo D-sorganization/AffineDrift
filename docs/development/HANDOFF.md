@@ -224,6 +224,43 @@
 --check`, `generate_claim_critique_ledger --check`, `generate_trust_panels
 --check`, and `check_spec_changelog` all pass.
 - Next steps: open the draft PR (`gh pr create --draft`, `Fixes #4583`).
+# Accessibility Statement Page — 2026-09-29
+
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4568`.
+- Branch `claude/issue-4568`, commit `SELF`; pull request: see this session's draft PR (opened
+  against `main`).
+- Governing issue: #4568 (`WEB-09.8`, part of epic #4569 — E9 Accessibility Conformance).
+  Objective: publish an accessibility statement page stating the conformance target, known
+  issues (linked to #4139), and a contact route for reporting barriers.
+  - Added `pages/accessibility.qmd` (category `site-information`): states a WCAG 2.1 Level AA
+    conformance target, summarizes the known-issues inventory from #4139 (247 serious/critical
+    axe-core violations on 163/238 routes, CI axe check currently report-only), and gives two
+    barrier-reporting routes (GitHub Issues, email) plus a link to the Contact page. Includes a
+    `## Related Articles` section (Contact, About, Development Roadmap) to satisfy the site link
+    gate's related-coverage and orphan checks.
+  - Added a footer link (`Accessibility` → `pages/accessibility.html`) in `_quarto.yml` so the
+    page is discoverable and not an orphan per `src/tools/site_link_gate.py`.
+  - Added `tests/test_accessibility_statement_page.py` (TDD: written first, confirmed failing,
+    then made to pass) asserting the category, conformance-target text, the #4139 link, the
+    contact route, related-links count, and the footer entry.
+  - Added `pages/accessibility.qmd` to `CLEAN_PAGES` in `tests/test_page_style_discipline.py`
+    (no inline styles, gradients, or hardcoded hex) as a regression guard.
+  - No API or generated-client changes; no schema changes.
+  - `python3 -m pytest tests/test_accessibility_statement_page.py -q` — 6 passed.
+  - `python3 -m pytest tests/test_accessibility_statement_page.py tests/test_page_style_discipline.py tests/test_navbar_ia.py tests/test_site_link_gate.py tests/test_content_inventory.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py -q` — 248 passed.
+  - `python3 -m ruff check .` — all checks passed.
+  - `python3 -m black --check --line-length 100 .` — all files unchanged.
+  - `python3 scripts/check_title_case.py` — 638 files checked, all title case.
+  - Deliberately not run: `quarto render` and Playwright/axe e2e (no Quarto/browser binaries in
+    this environment); the new page reuses only existing CSS classes (`ad-page-container`,
+    `page-section`, `section-heading`, `page-subtitle`, `page-note`, `sr-only`) already exercised
+    by `pages/contact.qmd` and `pages/about.qmd`, so no new CSS surface is introduced.
+- Risks/assumptions: the #4139 violation counts (247/163/238) are copied verbatim from that
+  issue's body as a historical scan snapshot; if a newer full-site scan lands, this page's
+  numbers should be refreshed in the same PR that updates the CI axe gate.
+- Next steps: none outstanding for #4568. A follow-up (not in this issue's scope) could flip the
+  CI axe-core check from `warn` to `fail` once the #4139 backlog is cleared, per the TODO in
+  `.github/workflows/ci-standard.yml`.
 
 ---
 
