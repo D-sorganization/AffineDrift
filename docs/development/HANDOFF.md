@@ -1,7 +1,7 @@
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
-- Branch `claude/ecstatic-darwin-latmzr`, commit `SELF`; the pull request is created after the push.
+- Branch `claude/ecstatic-darwin-latmzr`, commit `SELF`; pull request #4485 (open).
 - Objective: at the user's request, review the external "Comprehensive Technical & Architectural
   Review Summary", do an independent source-level review of the website, and draft epics and
   issues for Board review.
@@ -27,6 +27,27 @@
 1. The Board reviews §5 (decisions D1–D10) and approves, re-scopes, or rejects the epics.
 2. File the approved epics, then their child issues as sub-issues, and replace draft IDs with issue
    numbers in the report.
+
+---
+
+# Night Watch Pass — 2026-09-28
+
+- Role: `night-watch`; branch `staff/night-watch-task-587ee0`.
+- No open PRs and no simple-tier issues on AffineDrift this pass (all 6 open
+  issues are epics/subepics — out of overnight scope per playbook).
+- Docs compliance checklist: found two `DEVELOPMENT_LOG.md` entries stuck at
+  `in_review` well past their PRs' merges — DL-#3904 (PR #4271, merged
+  2026-09-08 as `c088f9d0`) and DL-#3903 (PR #4267, merged 2026-09-08 as
+  `5aedc884`). Confirmed both squash-merge commits are ancestors of `main`,
+  then flipped both entries to `shipped` with refreshed `Last verified` and
+  `Next step`.
+- No source, test, or article changes. Documentation currency maintenance
+  only. Draft PR opened on branch `staff/night-watch-task-587ee0` targeting
+  `main`.
+
+## Next Steps
+
+- None outstanding from this pass.
 
 ---
 
