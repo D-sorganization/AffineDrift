@@ -5,7 +5,7 @@
 - Repository: `D-sorganization/AffineDrift`
 - Working directory: `C:/Users/diete/Repositories/AffineDrift`
 - Branch: `fix/web-06-2-make-src-installable-4532`
-- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
 - Implementation commit: `SELF`
 - Pull request: #4613
 - Governing issue/epic: #4532 (epic #4543)

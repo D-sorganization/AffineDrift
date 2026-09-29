@@ -67,22 +67,27 @@ def _checked_repo_file(root: Path, raw_path: str, missing_message: str) -> Path:
     return candidate
 
 
-def _claim_ids(claims_path: Path) -> set[str]:
+def _claim_page_map(claims_path: Path) -> dict[str, str]:
     claims = _json(claims_path)
     if not isinstance(claims, dict) or not isinstance(claims.get("pages"), list):
         raise LedgerContractError("Claim registry pages must be a list")
-    result: set[str] = set()
+    result: dict[str, str] = {}
     for page in claims["pages"]:
         if not isinstance(page, dict) or not isinstance(page.get("claims"), list):
             raise LedgerContractError("Claim registry page is invalid")
+        page_source = str(page.get("source_path", ""))
         for claim in page["claims"]:
             if not isinstance(claim, dict):
                 raise LedgerContractError("Claim registry claim is invalid")
             claim_id = str(claim.get("claim_id", ""))
             if not claim_id or claim_id in result:
                 raise LedgerContractError(f"Duplicate or empty claim ID: {claim_id}")
-            result.add(claim_id)
+            result[claim_id] = page_source
     return result
+
+
+def _claim_ids(claims_path: Path) -> set[str]:
+    return set(_claim_page_map(claims_path))
 
 
 def _public_critiques(root: Path) -> set[str]:
@@ -119,7 +124,8 @@ def validate_ledger(
     if not isinstance(critiques, list):
         raise LedgerContractError("Ledger critiques must be a list")
 
-    known_claims = _claim_ids(claims_path)
+    claim_pages = _claim_page_map(claims_path)
+    known_claims = set(claim_pages)
     critique_ids: set[str] = set()
     sources: set[str] = set()
     for raw in critiques:
@@ -153,6 +159,13 @@ def validate_ledger(
             raise LedgerContractError(
                 f"{critique_id} has dangling claim ID(s): {', '.join(dangling)}"
             )
+        for claim_id in related:
+            expected_page = claim_pages[str(claim_id)]
+            if expected_page not in affected:
+                raise LedgerContractError(
+                    f"{critique_id} targets claim {claim_id} from {expected_page}, "
+                    f"but does not include {expected_page} in affected_pages"
+                )
 
         status = normalized_status(raw["disposition"])
         adjudication = raw.get("adjudication")
