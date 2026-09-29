@@ -1,3 +1,92 @@
+# Implementation Handoff — Harden the MathJax Integration Against Quarto Upgrades (#4585)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4585 (git worktree)
+- Branch: claude/issue-4585
+- Baseline commit: 69f9f9b8
+- Implementation commit: SELF
+- Pull request: not yet created (opening as draft in this session)
+- Governing issue/epic: #4585 (epic #4586)
+
+## Objective and Status
+
+- Objective: `html-math-method` in `_quarto.yml` points at an inert,
+  comment-only `js/equation-runtime-gate.js`, while the real MathJax runtime
+  configuration/injection lives in `_includes/mathjax-loader.html`. This split
+  is undocumented and untested against a Quarto version bump, so a future
+  Quarto upgrade that changes how it interprets `html-math-method.url` could
+  silently break the single-runtime guarantee.
+- Status: ready for PR (draft).
+- Completed:
+  - Found that `.quarto-version` was absent from `scripts/e2e_relevant_paths.py`'s
+    `EXACT_PATHS`, so bumping the pinned Quarto version does not force the
+    full-site E2E render lane (`e2e-tests` in `.github/workflows/ci-standard.yml`),
+    meaning the existing `tests/e2e/article.spec.js` assertion of exactly one
+    `tex-mml-chtml` MathJax bundle script never actually runs against an
+    upgraded Quarto's real rendered output on a version bump.
+  - Added `.quarto-version` to `EXACT_PATHS`, with a RED test first
+    (`tests/test_e2e_relevant_paths.py`) confirming the gap, then GREEN after
+    the fix.
+  - Documented the `html-math-method` / `mathjax-loader.html` split, why it is
+    fragile across Quarto upgrades, and how the E2E lane now guards it, in a
+    new "Runtime Integration" section of `docs/MATHJAX-MOBILE.md`.
+- Remaining: open the draft PR, none further.
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/e2e_relevant_paths.py`: added `.quarto-version` to `EXACT_PATHS`.
+  - `tests/test_e2e_relevant_paths.py`: parametrized `.quarto-version` into the
+    "always trigger E2E" contract test.
+  - `docs/MATHJAX-MOBILE.md`: new "Runtime Integration" section documenting
+    the mechanism and its CI guard.
+  - `docs/development/DEVELOPMENT_LOG.md`: new `DL-#4585` entry.
+  - `docs/development/HANDOFF.md`: this entry.
+- Key decisions: did not touch `_quarto.yml`, `js/equation-runtime-gate.js`,
+  or `_includes/mathjax-loader.html` themselves — the mechanism they implement
+  already renders a single, correctly-typeset MathJax runtime today (per the
+  existing `tests/e2e/article.spec.js` assertion); the actual gap was that a
+  Quarto version bump never *exercised* that assertion against real upgraded
+  output. Closing that CI-detection gap plus documenting the mechanism
+  satisfies both acceptance criteria without touching production rendering
+  code (LoD/DRY: reused the existing `article.spec.js` assertion and the
+  existing `e2e_relevant_paths` contract test rather than adding new ones).
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python3 -m pytest tests/test_e2e_relevant_paths.py -q` — PASS (21 passed;
+  RED beforehand on the new `.quarto-version` case, GREEN after the fix)
+- `python3 -m pytest tests/test_e2e_relevant_paths.py tests/test_deployment_integrity.py tests/test_single_source_pins.py -q` — PASS (27 passed)
+- `python3 -m ruff check scripts/e2e_relevant_paths.py tests/test_e2e_relevant_paths.py` — PASS
+- `python3 -m black --check --line-length 100 scripts/e2e_relevant_paths.py tests/test_e2e_relevant_paths.py` — PASS
+- `python3 -m pytest --cov -q` (full suite) — exited 0 in this environment;
+  the background-task log only captured progress dots up to 36% before the
+  process exited, so the final pass/coverage line is not in the saved log,
+  but the return code was 0 and the pre-existing suite already passes at
+  this environment's coverage floor per prior handoff entries.
+- Jest was not run: this worktree has no `node_modules` installed
+  (pre-existing environment state, unrelated to this change), and no
+  JavaScript source was touched by this change.
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: assumes CI's fleet runner has `node_modules` installed
+  (via `npm ci`) so Jest and Playwright actually run there; this local
+  worktree does not, which only affects local verification, not CI.
+
+## Next Steps
+
+1. Push branch `claude/issue-4585` and open a draft PR referencing
+   `Fixes #4585` with label `agent:claude`.
+2. Add the SPEC.md change-log row keyed by that PR/issue.
+3. Await frontier-agent review; do not merge or enable auto-merge.
+
+---
+
 # Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
 
 ## Identity

@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4585 · Harden the MathJax Integration Against Quarto Upgrades
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4585
+- **Branch:** `claude/issue-4585`
+- **Paths:** `scripts/e2e_relevant_paths.py`, `tests/test_e2e_relevant_paths.py`, `docs/MATHJAX-MOBILE.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: 21/21 tests/test_e2e_relevant_paths.py pass; ruff check and black --check clean on changed files)
+- **Summary:** `.quarto-version` now forces the full-site E2E render lane on a Quarto bump so `tests/e2e/article.spec.js`'s single-MathJax-runtime assertion actually runs against the upgraded Quarto's output instead of being skipped by the file-diff heuristic; documents the `html-math-method` / `mathjax-loader.html` split in `docs/MATHJAX-MOBILE.md`.
+- **Next step:** Push branch, open draft PR referencing Fixes #4585, and await frontier review.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress

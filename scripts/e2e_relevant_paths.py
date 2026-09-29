@@ -10,6 +10,7 @@ EXACT_PATHS = frozenset(
     {
         ".github/workflows/ci-standard.yml",
         ".github/workflows/deploy-website.yml",
+        ".quarto-version",
         "_quarto.yml",
         "custom.scss",
         "package-lock.json",
