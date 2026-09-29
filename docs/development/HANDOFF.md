@@ -52,6 +52,7 @@
 - `python -m ruff check tests/test_page_header_card.py` — PASS
 - `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks
 

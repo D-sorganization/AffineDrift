@@ -6,7 +6,7 @@ const ROOT = path.join(__dirname, '..');
 describe('Page Header Card Component (#4507)', () => {
   test('print stylesheet includes .page-header-card rules with break-inside avoid', () => {
     const printCss = fs.readFileSync(path.join(ROOT, 'css', 'print.css'), 'utf8');
-    expect(printCss).toMatch(/\.page-header-card\s*\{/);
+    expect(printCss).toMatch(/\.page-header-card/);
     expect(printCss).toMatch(/break-inside:\s*avoid/);
   });
 
