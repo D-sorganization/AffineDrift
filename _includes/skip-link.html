@@ -1,5 +1,6 @@
 <!-- Static skip link (issue #4566): present in the rendered HTML so it works
-     without JavaScript. Must stay the first element in <body> for focus
-     order; js/navigation.js::initSkipToContent only enhances its click
+     without JavaScript. Quarto places this include inside <main>, so the
+     post-render step scripts/move_skip_link.py moves it to be the first child
+     of <body>; js/navigation.js::initSkipToContent only enhances its click
      behavior and never creates or duplicates this element. -->
 <a href="#quarto-document-content" class="skip-to-content">Skip to main content</a>

@@ -1,6 +1,10 @@
 project:
   type: website
   output-dir: docs
+  # Moves the static skip link ahead of the navbar (#4566); Quarto places
+  # include-before-body content inside <main>.
+  post-render:
+    - scripts/move_skip_link.py
   render:
     - "*.qmd"
     - "pages/**/*.qmd"

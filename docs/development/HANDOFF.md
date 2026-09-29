@@ -40,19 +40,13 @@
   `pages/overview.qmd` (`/pages/overview.html`) as the closest existing
   entry-style page instead; this is called out in the test file and should
   be swapped to the real Start Here route once WEB-01.1 ships.
-- Compatibility constraint / assumption to verify: the static skip link
-  targets `#quarto-document-content` unconditionally. The JS code this PR
-  removes previously hedged that full-layout pages (e.g. the home page,
-  `page-layout: full`) "may not" expose that id and fell back to `main` or
-  `#quarto-content`. I could not run `quarto render` in this session (the
-  `quarto` CLI is blocked by this environment's tool permissions) to verify
-  directly, so I reasoned from Quarto's website-format template (the id is
-  set on the `<main>` wrapper regardless of `page-layout`) and from this
-  repo's own `styles.css`, which already keys many rules off
-  `#quarto-document-content` without page-layout qualification. **The new
-  Playwright test will fail loudly in CI's full-site render if this
-  assumption is wrong** (it asserts the href target actually exists in the
-  DOM), which is the reviewing frontier agent's signal to check.
+- Review correction (Opus, same PR): a local `quarto render index.qmd`
+  showed the home page does carry `id="quarto-document-content"`, but Quarto
+  places `include-before-body` inside `<main>`, after the navbar, so the link
+  was not first in focus order. Added `scripts/move_skip_link.py`, registered as
+  `project.post-render` in `_quarto.yml`, which moves the single static link to
+  be the first child of `<body>` (idempotent; rejects duplicates). Verified on
+  the rendered `docs/index.html`; `tests/test_move_skip_link.py` — 8 passed.
 - Validation commands and outcomes:
   - `npx jest tests/navigation.test.js` — 13 passed (4 new).
   - `npx jest` (full suite) — 25 suites, 424 passed, 19 skipped, 0 failed.
@@ -66,14 +60,8 @@
 - Blockers / risks:
   - Start Here route substitution (above) — cosmetic/naming risk only, the
     underlying fix is route-agnostic.
-  - `#quarto-document-content` assumption on the home page (above) —
-    correctness risk, but self-verifying via the new E2E test in CI.
 - Next steps for a continuing agent or reviewer:
-  1. Watch the draft PR's `e2e-tests` CI run; if the new
-     `tests/e2e/accessibility.spec.js` skip-link tests fail on `/`, the home
-     page's rendered main wrapper does not carry `id="quarto-document-content"`
-     — inspect the rendered `docs/index.html` and adjust the `href` in
-     `_includes/skip-link.html` (and the JS comment) accordingly.
+  1. Watch the draft PR's `e2e-tests` CI run for the new skip-link specs.
   2. Once `pages/start-here.qmd` ships under WEB-01.1, replace
      `/pages/overview.html` in `SKIP_LINK_ROUTES`
      (`tests/e2e/accessibility.spec.js`) with the real Start Here route.
