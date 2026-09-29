@@ -7,7 +7,7 @@
 - Branch: fix/web-05-9-passive-active-nomenclature-4529
 - Baseline commit: 785d165f973007077a94ddf2252a1ba2eef69bb3
 - Implementation commit: SELF
-- Pull request: not created
+- Pull request: #4630
 - Governing issue/epic: #4529
 
 ## Objective and Status
