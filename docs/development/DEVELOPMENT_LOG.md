@@ -22,7 +22,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** #4523 (draft, pending open)
+- **PR:** #4637 (draft) — https://github.com/D-sorganization/AffineDrift/pull/4637
 - **Issue:** #4523 (epic #4530)
 - **Branch:** `claude/issue-4523`
 - **Paths:** `evidence/claims.qmd`, `scripts/generate_claims_ledger.py`, `tests/test_claims_ledger.py`, `_includes/generated/claims-ledger.qmd`, `_includes/generated/claims-ledger/controllability-drift-ratio.qmd`, `articles/controllability-drift-ratio.qmd`, `_quarto.yml`, `src/tools/site_page_scan.py`, `tests/test_site_link_gate.py`, `scripts/check_root_hygiene.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`

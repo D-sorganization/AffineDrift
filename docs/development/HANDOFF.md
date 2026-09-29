@@ -6,8 +6,8 @@
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4523
 - Branch: claude/issue-4523
 - Baseline commit: 46df5059
-- Implementation commit: SELF
-- Pull request: not created
+- Implementation commit: c090f480
+- Pull request: #4637 (draft) — https://github.com/D-sorganization/AffineDrift/pull/4637
 - Governing issue/epic: #4523 (epic #4530)
 
 ## Objective and Status
@@ -16,7 +16,7 @@
   claim registry, with one accessible card per claim (plain statement, formal
   statement, evidence rung, falsifiers, related critiques, and the pages making the
   claim), and link every claim-making page back to its ledger entry.
-- Status: implementation complete; draft PR not yet opened.
+- Status: implementation complete; draft PR #4637 opened.
 - Completed: New `scripts/generate_claims_ledger.py` generator (reusing
   `generate_trust_panels.load_registry`, `generate_claim_critique_ledger.load_ledger`,
   and the `evidence_presentation` projector/renderer for the evidence-rung badge);
@@ -105,11 +105,11 @@
 
 ## Next Steps
 
-1. Open the draft PR for #4523 with `Fixes #4523`.
-2. Frontier review; if `quarto render` + Playwright axe-core surfaces an accessibility
-   issue on `evidence/claims.html`, fix the markup in `scripts/generate_claims_ledger.py`.
-3. Release agent lease for #4523.
+1. Frontier review of draft PR #4637; if `quarto render` + Playwright axe-core surfaces
+   an accessibility issue on `evidence/claims.html`, fix the markup in
+   `scripts/generate_claims_ledger.py`.
+2. Release agent lease for #4523.
 
 ## Change Log
 
-- SELF — Add the reader-facing Claim Ledger page, its generator, and per-page links (#4523).
+- c090f480 — Add the reader-facing Claim Ledger page, its generator, and per-page links (#4523).
