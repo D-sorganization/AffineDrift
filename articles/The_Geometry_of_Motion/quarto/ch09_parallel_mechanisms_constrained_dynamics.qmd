@@ -1,7 +1,7 @@
 ---
 title: "Parallel Mechanisms, Constrained Dynamics, and Geometric Control"
 ---
-\label{ch:parallel-mechanisms}
+[]{#ch-parallel-mechanisms}
 
 ## What the Geometry Explains
 
@@ -12,22 +12,20 @@ We develop that question in a smooth, fixed contact mode. Let $q$ have $n$ local
 The mechanics below follows the vector/covector and virtual-work treatment of constrained systems [@BulloLewis2004; @Murray1994]. Its worked examples are mathematical checks, not measurements of a golfer. The final sections explain what measurements would be needed to turn the framework into an empirical account of a swing.
 
 ## Configuration, Constraints, and Regularity
-\label{sec:ch9:config-manifolds}
+[]{#sec-ch9-config-manifolds}
 
 ### Configuration Is Different From State
 
 For $N$ unconstrained spatial rigid bodies, $Q_{\mathrm{free}}=SE(3)^N$ has dimension $6N$; planar bodies contribute three configuration dimensions each. Joint coordinates reduce this description before contact constraints are imposed. Angles have periodic topology: a pair of revolute angles lives on $S^1\times S^1$, with intervals used only as coordinate charts. The mechanical state is in the tangent bundle $TQ$, with local coordinates $(q,v)$ and twice the configuration dimension. Activation and flexible coordinates may enlarge it further.
 
 If $J_c$ has rank $c$ on the level set, the regular level-set theorem gives
-\begin{equation}
+$$
  Q_c=\{q:\Phi(q)=0\},\qquad \dim Q_c=n-c=:d,\qquad T_qQ_c=\ker J_c(q).
- \label{eq:ch9:tangent-constraint}
-\end{equation}
+$$ {#eq-ch9:tangent-constraint}
 The admissible state satisfies both $\Phi(q)=0$ and $J_cv=0$. A configuration constraint does not imply $J_c\dot v=0$: differentiating again gives
-\begin{equation}
+$$
  J_c\dot v+\dot J_cv=0.
- \label{eq:ch9:accel-constraint}
-\end{equation}
+$$ {#eq-ch9:accel-constraint}
 Thus admissible velocities form a linear tangent space at fixed $q$, whereas admissible coordinate accelerations form an affine set at fixed $(q,v)$.
 
 Rank loss invalidates the regular-level-set argument; it does not by itself prove that the physical set is singular or unstabilizable. The equation $x^2=0$ has zero derivative at its solution, although its solution set is the smooth zero-dimensional set $\{0\}$. Redundant constraint equations can also lose rank without a change in physical mobility. At a true mechanism singularity, inspect independent coordinates, higher-order compatibility, actuator directions, and contact inequalities before drawing a control conclusion.
@@ -35,10 +33,12 @@ Rank loss invalidates the regular-level-set argument; it does not by itself prov
 ### A Movable Planar Closed Chain
 
 Take a two-link arm based at the origin and a third link based at $(a,b)$. Let all three angles be absolute angles from the same horizontal axis. Loop closure is
-\begin{align}
+$$
+\begin{aligned}
  \Phi_1&=\ell_1\cos\theta_1+\ell_2\cos\theta_2-\ell_3\cos\theta_3-a,\\
  \Phi_2&=\ell_1\sin\theta_1+\ell_2\sin\theta_2-\ell_3\sin\theta_3-b.
-\end{align}
+\end{aligned}
+$$
 The Jacobian has columns $\ell_1(-\sin\theta_1,\cos\theta_1)^\top$, $\ell_2(-\sin\theta_2,\cos\theta_2)^\top$, and $\ell_3(\sin\theta_3,-\cos\theta_3)^\top$. At rank two, three free angles minus two independent constraints leave one local degree of freedom. If instead there were only two grounded links meeting at their tips, two angles minus two regular closure constraints would leave isolated configurations. Equal link lengths alone would not establish a movable chain; coincident bases and compatible geometry would matter too.
 
 For the two-grounded-link Jacobian with columns $\ell_1(-\sin\theta_1,\cos\theta_1)^\top$ and $\ell_2(\sin\theta_2,-\cos\theta_2)^\top$, its determinant is $\ell_1\ell_2\sin(\theta_1-\theta_2)$. This detects first-order rank loss when the links align, but finite mobility still requires examination of the closure equations.
@@ -54,27 +54,26 @@ For a nonvanishing one-form $\alpha=\sum_i a_i(q)dq_i$, the velocity constraint 
 A wheel with planar heading $\theta$ has the lateral no-slip constraint $-\sin\theta\,\dot x+\cos\theta\,\dot y=0$. Its distribution is nonintegrable. Rolling on a fixed straight track can instead give $x-r\varphi=\mathrm{constant}$. Rolling is therefore not universally nonholonomic. Sliding friction, unilateral joint limits, and contact opening are different phenomena again; they are not all smooth equality constraints.
 
 ## Mass Metric, Forces, and Inertial Terms
-\label{sec:ch9:lagrangian}
+[]{#sec-ch9-lagrangian}
 
 ### Vectors and Covectors Have Different Roles
 
 Velocity $v\in T_qQ$ is a vector. A generalized load $F\in T_q^*Q$ is a covector: $F^\top v$ is power. The mass matrix maps velocity to momentum and defines $\langle a,b\rangle_M=a^\top Mb$. Ideal stationary constraint reactions are covectors in $\operatorname{range}J_c^\top$, because
-\begin{equation}
+$$
  (J_c^\top\lambda)^\top v=\lambda^\top J_cv=0.
-\end{equation}
+$$
 Their associated mass-metric normal vectors are in a different space:
-\begin{equation}
+$$
  (\ker J_c)^{\perp_M}=\operatorname{range}(M^{-1}J_c^\top).
- \label{eq:ch9:orthogonal-complement}
-\end{equation}
+$$ {#eq-ch9:orthogonal-complement}
 Indeed $v^\top M(M^{-1}J_c^\top\lambda)=0$ for every tangent $v$. With $M=\operatorname{diag}(2,1)$ and $J_c=(1,1)$, the vector $(1,-1)$ is tangent. Its mass inner product with $(1,1)$ is one, but its mass inner product with $(1/2,1)$ is zero. Omitting $M^{-1}$ changes the orthogonality claim.
 
 ### Constructing the Mass Matrix
 
 For rigid link $k$, let $J_{v,k}$ map generalized rates to center-of-mass velocity in a fixed spatial frame, and let $J_{\omega,k}$ map them to angular velocity in that same frame. If $R_k$ maps body coordinates to that frame and $I_{b,k}$ is inertia about the center of mass in body coordinates, then
-\begin{equation}
+$$
  M(q)=\sum_k\left(m_kJ_{v,k}^\top J_{v,k}+J_{\omega,k}^\top R_kI_{b,k}R_k^\top J_{\omega,k}\right).
-\end{equation}
+$$
 Every summand is an $n\times n$ matrix. Positive definiteness requires a nondegenerate model with independent coordinates and positive inertias in its physical directions. Redundant orientation parameters require their own constraints; one cannot assume an unconstrained positive-definite mass matrix in arbitrary redundant coordinates.
 
 With upward height $z_k$ and downward gravity of magnitude $g>0$, use $V=\sum_km_kgz_k$. Kinetic energy is $T=\tfrac12v^\top Mv$. It measures energy at a velocity, not an unspecified physiological cost of acceleration.
@@ -82,132 +81,135 @@ With upward height $z_k$ and downward gravity of magnitude $g>0$, use $V=\sum_km
 ### Coriolis Loads and the Energy Identity
 
 Write the forced equations as
-\begin{equation}
+$$
  M\dot v+h(q,v)=Bu+J_c^\top\lambda,\qquad h=c(q,v)+\nabla V,
- \label{eq:ch9:euler-lagrange-constrained}
-\end{equation}
+$$ {#eq-ch9:euler-lagrange-constrained}
 with any additional known nonconservative loads added explicitly on the right. The inertial velocity load is
-\begin{align}
+$$
+\begin{aligned}
  c_i&=\sum_{j,k}\Gamma_{ijk}v_jv_k,\\
  \Gamma_{ijk}&=\tfrac12\left(\partial_kM_{ij}+\partial_jM_{ik}-\partial_iM_{jk}\right).
- \label{eq:ch9:christoffel}
-\end{align}
+\end{aligned}
+$$ {#eq-ch9:christoffel}
 One valid matrix representation is $C_{ij}=\sum_k\Gamma_{ijk}v_k$, so $c=Cv$. It satisfies $\dot M-2C$ skew-symmetric and
-\begin{equation}
+$$
  v^\top c=\tfrac12v^\top\dot Mv.
-\end{equation}
+$$
 In general $C\ne\dot M$. The matrix representation is not unique, while the load $c$ for the specified coordinates is fixed. The second-kind connection coefficients are $\Gamma^i_{jk}=\sum_\ell(M^{-1})_{i\ell}\Gamma_{\ell jk}$, giving $M^{-1}c$ component $\sum_{j,k}\Gamma^i_{jk}v_jv_k$. There is no extra minus sign in this identity; the minus appears when solving the force-free equation for acceleration.
 
 For a simple abstract two-coordinate metric, introduce a length scale $\ell$ so the entries have angular inertia units:
-\begin{equation}
+$$
  M=\ell^2\begin{bmatrix}m_1+m_2&m_2\cos q_2\\m_2\cos q_2&m_2\end{bmatrix},\qquad m_1,m_2>0.
-\end{equation}
+$$
 Its determinant is $\ell^4(m_1m_2+m_2^2\sin^2q_2)>0$. Direct differentiation gives $c=(-\ell^2m_2\sin q_2\,v_2^2,0)^\top$. Thus $\Gamma^1_{22}=-m_2^2\sin q_2/(m_1m_2+m_2^2\sin^2q_2)$ and $\Gamma^1_{12}=0$. Substitution verifies the energy identity. This is a metric example, not a derived anthropometric two-link arm.
 
 Connection coefficients can be nonzero in curvilinear coordinates on a flat space. Their presence does not establish nonzero intrinsic curvature. Coordinate-free equations retain covariant acceleration; they do not eliminate the physical inertial coupling. Curvature concerns how covariant differentiation fails to commute, a separate question from whether a coordinate expression contains centrifugal terms.
 
 ## Eliminating Reactions Without Losing Their Input Dependence
-\label{sec:ch9:control-affine}
+[]{#sec-ch9-control-affine}
 
 Define $K_c=J_cM^{-1}J_c^\top\succ0$ and $\gamma=\dot J_cv$. The acceleration constraint and force balance give
-\begin{equation}
+$$
  \lambda=-K_c^{-1}\left[J_cM^{-1}(Bu-h)+\gamma\right].
- \label{eq:ch9:multiplier}
-\end{equation}
+$$ {#eq-ch9:multiplier}
 The reaction changes when the input changes, even at the same $(q,v)$. It cannot be held at its measured value and called an input-independent drift.
 
 Define a vector projector and its dual force projector:
-\begin{equation}
+$$
  P_v=I-M^{-1}J_c^\top K_c^{-1}J_c,\qquad P_F=P_v^\top.
-\end{equation}
+$$
 These projectors act on different spaces. They satisfy $P_v^2=P_v$, $J_cP_v=0$, $P_v^\top M=MP_v$, and $P_FJ_c^\top=0$. A load decomposes as $F=P_FF+(I-P_F)F$; the second part belongs to the reaction covector space. This algebraic partition is not a label for useful versus wasted physiological effort.
 
 The reduced acceleration equation is
-\begin{align}
- \dot v&=f(q,v)+G(q)u,\\
- f&=-P_vM^{-1}h-M^{-1}J_c^\top K_c^{-1}\gamma,\label{eq:ch9:drift}\\
- G&=P_vM^{-1}B.\label{eq:ch9:input-field}
-\end{align}
+$$
+ \dot v=f(q,v)+G(q)u,
+$$
+$$
+ f=-P_vM^{-1}h-M^{-1}J_c^\top K_c^{-1}\gamma,
+$$ {#eq-ch9:drift}
+$$
+ G=P_vM^{-1}B.
+$$ {#eq-ch9:input-field}
 Here $f$ is an acceleration function in a coordinate chart. The first-order vector fields on $TQ_c$ are $F_0(q,v)=(v,f)$ and $F_i(q,v)=(0,G_i)$. This distinction matters for Lie brackets and state dimension. All columns of $G$ are tangent, while $J_cf=-\gamma$ supplies the normal acceleration required by the changing tangent plane.
 
 For $\Phi(q)=\tfrac12(q^\top q-R^2)$ on a circle with $M=I$, $J_c=q^\top$ and $\gamma=v^\top v$. The admissible acceleration for an unconstrained candidate $a_0$ is
-\begin{equation}
+$$
  a=P_va_0-\frac{q}{R^2}\|v\|^2.
-\end{equation}
+$$
 At $q=(1,0)$ and $v=(0,2)$, its radial component must be $-4$. Projecting $a_0$ onto the tangent line alone gives radial component zero and violates the acceleration constraint. Acceleration-level satisfaction also does not guarantee that an ordinary numerical integrator preserves position and velocity constraints.
 
 A zero-input counterfactual evaluates $u=0$ with the chosen constitutive model and contact mode, then evolves its own state. The drift includes the zero-input reaction computed above. If a computed reaction violates a friction cone or requires tensile ground contact, the assumed mode is infeasible and must change. A prescribed measured base motion is an external boundary intervention, not an isolated passive swing.
 
 ## Three Different Forms of Redundancy
-\label{sec:ch9:null-space}
+[]{#sec-ch9-null-space}
 
 ### Constraint Freedom, Task Freedom, and Input Freedom
 
 Constraint-compatible velocity freedom is $\ker J_c$. For a task map $y=\psi(q)$ with Jacobian $J_t$, task-preserving velocity freedom is $\ker J_c\cap\ker J_t$. Neither is automatically an unactuated direction. Input redundancy is the kernel of the effective acceleration map $G$; its elements change input without changing instantaneous acceleration in this ideal model, though reactions can change.
 
 For desired acceleration $a_d$, let $b=a_d-f$. Exact instantaneous tracking requires $b\in\operatorname{range}G$ and some feasible $u\in\mathcal U$ with $Gu=b$. At rank $r$, the unconstrained algebraic solution family is
-\begin{equation}
+$$
  u=G^+b+(I-G^+G)z,\qquad z\in\mathbb R^m,
- \label{eq:ch9:general-control}
-\end{equation}
+$$ {#eq-ch9:general-control}
 provided the range condition holds. Its input redundancy dimension is $m-r$. If $m<d$ and $G$ has full column rank, the system is instantaneously underactuated and each feasible $b$ has a unique input. Fewer inputs do not create an infinite family of solutions. Bounds, force signs, actuator rates, and friction restrictions can eliminate an otherwise algebraically feasible solution.
 
 If reduced coordinates give a full-row-rank acceleration map $\bar G\in\mathbb R^{d\times m}$ and the objective is $\tfrac12u^\top Wu$, $W\succ0$, Lagrange multipliers give
-\begin{equation}
+$$
  u_W=W^{-1}\bar G^\top(\bar G W^{-1}\bar G^\top)^{-1}\bar b.
- \label{eq:ch9:optimal-null-space}
-\end{equation}
+$$ {#eq-ch9:optimal-null-space}
 For $\bar G=(1,1)$, $\bar b=1$, and $W=\operatorname{diag}(1,4)$, this is $(0.8,0.2)$, not the Euclidean minimum-norm allocation $(0.5,0.5)$. Differentiating $W$ with respect to posture is not a substitute for solving this fixed-state allocation problem. State planning and instantaneous input allocation are distinct optimizations.
 
 ### Minimum-Energy Velocity and Muscle Allocation
 
 To find a velocity with task rate $\dot y_d$ while preserving the constraint, stack $A=(J_c^\top,J_t^\top)^\top$ and $b_y=(0,\dot y_d)^\top$. With independent rows, the minimizer of $\tfrac12v^\top Mv$ subject to $Av=b_y$ is
-\begin{equation}
+$$
  v_*=M^{-1}A^\top(AM^{-1}A^\top)^{-1}b_y.
-\end{equation}
+$$
 The Euclidean pseudoinverse minimizes Euclidean norm; it minimizes kinetic energy only under the corresponding metric choice. Position-level feasibility and finite-time task execution still require integration and input checks.
 
 Muscle allocation is another inverse problem. If a signed moment-arm matrix $R(q)$ maps muscle forces $s$ to required joint load $\tau$, one may solve $Rs=\tau$ with $0\le s\le s_{\max}$ and a chosen objective such as $\sum_i(s_i/A_i)^p$. For $p=2$ and fixed positive areas this is a convex quadratic objective with linear constraints. A nonzero-load solution is not in $\ker R$; differences between unconstrained solutions lie in $\ker R$. Capacity limits and activation dynamics can remove that freedom. Selecting one solution with an objective supplies a modeling assumption, not a measurement of the nervous system's objective [@Zajac1989].
 
 ## Twists, Wrenches, and a Two-Hand Grip
-\label{sec:ch9:screw-theory}
+[]{#sec-ch9-screw-theory}
 
 ### Consistent Frame Transformations
 
 Let $g_{AB}=(R,p)$ map coordinates in frame $B$ into frame $A$. Use twist ordering $\xi=(\omega,v)$, where $v$ is the linear component associated with the chosen frame origin. Then
-\begin{equation}
+$$
  \xi_A=\operatorname{Ad}_{g_{AB}}\xi_B,\qquad
  \operatorname{Ad}_{g_{AB}}=\begin{bmatrix}R&0\\{}[p]_\times R&R\end{bmatrix}.
-\end{equation}
+$$
 In particular $v_A=Rv_B+p\times R\omega_B$. The equivalent matrix identity is $\widehat\xi_A=g_{AB}\widehat\xi_Bg_{AB}^{-1}$. The translation term must be retained. A six-dimensional twist cannot be transformed by a four-dimensional homogeneous matrix acting directly on its column of components.
 
 For wrench ordering $W=(\tau,F)$, invariance of $W^\top\xi$ requires
-\begin{equation}
+$$
  W_A=\operatorname{Ad}_{g_{AB}}^{-\top}W_B
  =\begin{bmatrix}R\tau_B+p\times RF_B\\RF_B\end{bmatrix}.
-\end{equation}
+$$
 The reverse transformation is $W_B=\operatorname{Ad}_{g_{AB}}^\top W_A$. Stating the direction of the frame map avoids ambiguous uses of the word coadjoint. Screw reciprocity between a wrench and an admissible twist means $W^\top\xi=0$, not $\xi^\top M\eta=0$ between two velocities.
 
 For integrated twist coordinates $\zeta=(\omega,v)$ and $\theta=\|\omega\|$, the exponential is
-\begin{align}
+$$
+\begin{aligned}
  \exp\widehat\zeta&=\begin{bmatrix}e^{[\omega]_\times}&J(\omega)v\\0&1\end{bmatrix},\\
  J(\omega)&=I+\frac{1-\cos\theta}{\theta^2}[\omega]_\times
  +\frac{\theta-\sin\theta}{\theta^3}[\omega]_\times^2.
-\end{align}
+\end{aligned}
+$$
 Use the continuous limit $J(0)=I$, with series evaluation for small $\theta$. The last coefficient has denominator $\theta^3$ because $\omega$ already contains the rotation magnitude; mixing unit-axis and integrated-coordinate formulas changes the translation. A time-varying twist generally requires an ordered integration, not the exponential of its simple time integral [@Murray1994].
 
 ### Different Contact Points Have Different Velocities
 
 At hand contact $i$, let $r_i$ be the vector from the club reference point $O$ to that contact, expressed in one spatial frame. No translational slip imposes
-\begin{equation}
+$$
  J_{h,i}(q)\dot q=v_O+\omega_c\times r_i.
-\end{equation}
+$$
 The left and right hand point velocities are generally unequal when the club rotates. Full rigid attachment also constrains relative angular velocity; point-contact and soft-finger models constrain fewer components. If limb Jacobians are converted to the same club reference point and frame, equality of their full twists can be used. Equating unshifted velocities at different grip points is incorrect.
 
 For two point forces on the club, the resultant wrench at $O$ is
-\begin{equation}
+$$
  F=f_L+f_R,\qquad \tau_O=r_L\times f_L+r_R\times f_R.
-\end{equation}
+$$
 Adding $\delta f_L=a(r_L-r_R)$ and $\delta f_R=-\delta f_L$ changes neither resultant component. An internal squeeze along the hand separation can therefore be invisible to a measured resultant wrench. Distributed contact moments, compliance, and friction alter the admissible internal-load set, but they do not make bilateral force inference unique without further evidence. Internal grip loading may affect stiffness and future contact behavior even when its instantaneous net wrench is zero.
 
 ### Singular Values Need Physical Scaling
@@ -217,7 +219,7 @@ For a task Jacobian, $\sqrt{\det(J_tJ_t^\top)}$ measures the volume of its Eucli
 A rank-$k$ screw span defines a point of $\operatorname{Gr}(k,6)$. When the spanning matrix loses rank, it ceases to represent a $k$-plane; the rank-deficient set is not a collection of points inside that same Grassmannian with reduced dimension. Rank-loss codimension depends on the matrix family. Neither arm alignment nor a small manipulability determinant by itself proves high geometric curvature, loss of feedback stabilizability, or beneficial energy transfer.
 
 ## Ground Contact, Momentum, and Power
-\label{sec:ch9:grf}
+[]{#sec-ch9-grf}
 
 ### Count the Floating Base Before Subtracting Constraints
 
@@ -228,22 +230,22 @@ A rigid bilateral contact model remains admissible only while its calculated wre
 ### Center of Pressure and Reference-Point Conventions
 
 Express the force exerted by the plate on the body in a right-handed frame with $z$ upward, and shift its measured moment to an origin in the contact plane. For $F_z\ne0$, a resultant applied at $(x_c,y_c,0)$ with a remaining vertical free moment gives
-\begin{equation}
+$$
  x_c=-\frac{M_y}{F_z},\qquad y_c=\frac{M_x}{F_z},\qquad
  M_{z,\mathrm{free}}=M_z-x_cF_y+y_cF_x.
-\end{equation}
+$$
 These signs follow from $r_c\times F=(y_cF_z,-x_cF_z,x_cF_y-y_cF_x)$. A plate origin below the surface requires a moment shift first; a manufacturer may report the opposite action-reaction convention. Near zero normal load the ratios become ill-conditioned. A center of pressure does not replace the complete wrench, especially its free moment.
 
 ### Inverse Dynamics With All Loads Declared
 
 For a body-fixed offset $r$ from a moving reference point to the center of mass, expressed spatially,
-\begin{equation}
+$$
  a_C=a_O+\alpha\times r+\omega\times(\omega\times r).
-\end{equation}
+$$
 The last term has a plus sign; its double cross product already points inward for circular motion. Sum all applied forces and all moments about the center of mass:
-\begin{equation}
+$$
  \sum F=m a_C,\qquad \sum\tau_C=I_C\alpha+\omega\times(I_C\omega),
-\end{equation}
+$$
 with $I_C$ represented in the same frame. Gravity, measured contact loads, distal and proximal joint loads, and their moment arms belong in these sums. A backward Newton--Euler recursion is a systematic application of these balances with explicit action-reaction signs and frame shifts. Kinematic accelerations come from the motion model or measurements; measured ground force is a load boundary condition, not an acceleration measurement.
 
 Inverse dynamics gives the required net generalized load after known loads are accounted for. Unknown bilateral load sharing and muscle redundancy remain inverse problems. Recursive inverse dynamics is linear in the number of links for a tree of fixed-size joints; recursive forward-dynamics algorithms can also avoid assembling and inverting a dense mass matrix. Closed loops add constraint solves and cannot be assigned the same computational cost without specifying the solver.
@@ -255,14 +257,13 @@ With matching reference point and frame, contact power is $P_c=F_c^\top v_c+\tau
 Nevertheless, the ground can change total linear and angular momentum. About a fixed inertial origin, $\dot H_O$ equals the total external moment, including ground reactions and gravity where applicable. Zero work does not imply zero impulse or zero angular impulse. This is central to the golf swing: support reactions can redirect motion and enable muscles to do work elsewhere without being an independent source of mechanical energy.
 
 For stationary ideal constraints, stored mechanical energy $E=T+V$ obeys
-\begin{equation}
+$$
  \dot E=u^\top y+P_{\mathrm{other}}-D,\qquad y=B^\top v,\qquad D\ge0,
- \label{eq:ch9:passivity}
-\end{equation}
+$$ {#eq-ch9:passivity}
 when dissipation is modeled by $D$ and all other power sources are declared. Passivity is a storage inequality, $E(t)-E(0)\le\int u^\top y\,dt$ for the chosen port when other sources are absent and storage is bounded below. Equality is the lossless special case. Torque dotted with torque is not power. Muscle activation can maintain force with nonzero metabolic cost even at zero joint power. Mechanical work, squared torque, metabolic expenditure, and fatigue therefore define different optimization problems.
 
 ## Reachability and Optimal Control
-\label{sec:ch9:optimal-control}
+[]{#sec-ch9:optimal-control}
 
 ### Instantaneous Rank Does Not Decide Finite-Time Motion
 
@@ -275,10 +276,10 @@ As a driftless example, car kinematics have $g_1=(\cos\theta,\sin\theta,\tan\var
 ### Necessary Conditions in Independent State Coordinates
 
 Use a local chart of $TQ_c$ with independent state $z\in\mathbb R^{2d}$ and dynamics $\dot z=\mathcal F(z,u)$. This avoids silently treating dependent ambient position and velocity coordinates as independent. For fixed final time, terminal cost $\phi(z(T))$, and running cost $\ell$, define the normal minimization Hamiltonian
-\begin{equation}
+$$
  H=\ell+p^\top\mathcal F,\qquad \dot p=-H_z,\qquad
  u_*\in\arg\min_{u\in\mathcal U}H.
-\end{equation}
+$$
 For a free terminal state, $p(T)=\nabla\phi$; endpoint constraints change transversality. These are necessary conditions under the usual regularity assumptions, not a general sufficient certificate. Abnormal extremals need the cost multiplier formulation. Ambient formulations must handle both position and velocity consistency and cannot obtain all costate conditions by adding one unexplained position multiplier.
 
 For a control-linear Hamiltonian $H=H_0+\sigma^\top u$ on a box, minimization selects $u_i=u_{i,\min}$ when $\sigma_i>0$ and $u_i=u_{i,\max}$ when $\sigma_i<0$. A switching function that vanishes on an interval requires higher-order conditions and may admit a singular arc. With $\ell=\ell_0+u^\top Ru$, $R\succ0$, the unconstrained minimizer is $-\tfrac12R^{-1}\mathcal G^\top p$ for $\mathcal F=\mathcal F_0+\mathcal G u$. Under bounds, solve the resulting convex quadratic program. Componentwise clipping is exact for a separable diagonal $R$ and independent box bounds, not for an arbitrary coupled $R$.
@@ -288,16 +289,16 @@ Torque input, muscle force input, excitation input, and activation state are dif
 ### Value Functions and Local Numerical Methods
 
 Where differentiable, the finite-horizon value $\mathcal V(z,t)$ satisfies
-\begin{equation}
+$$
  -\mathcal V_t=\min_{u\in\mathcal U}\left(\ell+\nabla\mathcal V^\top\mathcal F\right),\qquad
  \mathcal V(z,T)=\phi(z).
-\end{equation}
+$$
 Nonsmooth value functions need an appropriate generalized, typically viscosity, solution. Autonomous dynamics do not remove finite-horizon time dependence. A stationary HJB equation belongs to a separately specified infinite-horizon or stationary problem. A grid with ten values in each of 28 independent state dimensions has $10^{28}$ nodes, illustrating why direct grids become impractical; the dimension must come from the chosen constrained model.
 
 For a discrete full-state transition $z_{k+1}=F_k(z_k,u_k)$, iLQR uses $\delta z_{k+1}=A_k\delta z_k+B_k\delta u_k$ and second-order cost terms. Its backward pass produces both a feedforward step and feedback gain, and its forward pass rolls out $u_k^{\mathrm{new}}=u_k+\alpha k_k+K_k(z_k^{\mathrm{new}}-z_k)$. DDP additionally retains value-gradient-weighted second derivatives of the dynamics. Both need regularization, step acceptance, feasibility handling, and convergence checks. Projecting a cost gradient alone does not enforce a nonlinear contact constraint. The [optimal-control chapter](ch05_optimal_control.html) derives the Riccati and local quadratic calculations; neither algorithm automatically proves a global nonlinear optimum.
 
 ## What Measurements Can Identify
-\label{sec:ch9:observability}
+[]{#sec-ch9-observability}
 
 With known parameters and an explicit zero-input contact model, $f(q,v)$ is computable from an estimated state. That is model evaluation, not a theorem that kinematics alone identify the physical drift. The acceleration constraint supplies $c$ equations for $n$ accelerations and generally leaves $d$ tangent directions undetermined. Actual reactions additionally depend on applied inputs. Unknown inertias, tendon state, compliance, and loads cannot be made known by writing them as functions of $q$.
 
@@ -310,47 +311,45 @@ Motion capture and force plates can constrain inverse dynamics when synchronized
 For the two-hand grip, report which sensors constrain the net club wrench and which constrain the internal hand-load family. For the feet, report separate contact wrenches rather than assuming a unique bilateral distribution from a combined resultant. Compare alternative parameter sets and input allocations that fit the same observations; test whether the proposed conclusion survives that ambiguity.
 
 ## Symmetry, Mechanical Connections, and Geometric Phase
-\label{sec:ch9:connections}
+[]{#sec-ch9-connections}
 
 ### Momentum Conservation Has a Boundary Condition
 
 A cyclic coordinate has conserved conjugate momentum only when the Lagrangian is independent of that coordinate and its generalized applied force vanishes. Constraints and external loads must respect the symmetry. A grounded golfer generally receives external angular impulse, so total angular momentum of the golfer-plus-club subsystem is not automatically conserved. Conservation in a freely floating model cannot be asserted for the grounded experiment.
 
 For a local planar symmetry coordinate $\theta$ and shape $s$, consider
-\begin{equation}
+$$
  T=\tfrac12I(s)\dot\theta^2+\dot\theta\,a(s)^\top\dot s
  +\tfrac12\dot s^\top H(s)\dot s.
-\end{equation}
+$$
 The conjugate momentum is $p_\theta=I\dot\theta+a^\top\dot s$. If it is conserved, reconstruction gives
-\begin{equation}
+$$
  \dot\theta=I^{-1}p_\theta-A(s)\dot s,\qquad A=I^{-1}a^\top.
- \label{eq:ch9:mechanical-connection}
-\end{equation}
+$$ {#eq-ch9:mechanical-connection}
 The locked inertia is $I=\partial^2T/\partial\dot\theta^2$; there is no additional factor of one half. The connection needs the group--shape cross block $a$, not the derivative of $I$ alone. At fixed momentum, a conventional Routhian is $L-p_\theta\dot\theta$ with $\dot\theta$ eliminated; forced or noncyclic systems require a modified reduction [@BulloLewis2004].
 
 ### Separate Dynamic and Geometric Contributions
 
 For a closed shape loop in this planar model,
-\begin{equation}
+$$
  \Delta\theta=\int_0^T I(s(t))^{-1}p_\theta\,dt-\oint A(s)\,ds.
- \label{eq:ch9:berry-phase-formula}
-\end{equation}
+$$ {#eq-ch9:berry-phase-formula}
 The first term is a dynamic phase and the second a geometric contribution with the sign fixed by the reconstruction equation. At zero momentum, only the latter remains. On a suitable planar shape patch, Stokes' theorem converts $\oint A$ to an integral of $dA$. General noncommuting spatial rotations require a group reconstruction and ordered transport; a scalar area formula does not directly apply.
 
 For a checkable example, choose $I=1$, $a=(0,k s_1)^\top$, and $H=I_2+aa^\top$. The full kinetic metric is positive definite because its Schur complement is $I_2$. At zero momentum, $\dot\theta=-k s_1\dot s_2$. A counterclockwise rectangular shape loop of side lengths $a_0,b_0$ gives $\Delta\theta=-k a_0b_0$. This proves a geometric effect in the specified model. It does not identify an analogous contribution in a golf swing until the inertia blocks, external moment, and measured shape trajectory have been established.
 
 ## Numerical Methods That Preserve the Stated Problem
-\label{sec:ch9:numerics}
+[]{#sec-ch9-numerics}
 
 The position-constrained first-order mechanical DAE is ordinarily differentiation index three under regularity assumptions. Differentiating position once yields velocity consistency and twice yields an algebraic equation for $\lambda$; differentiating that relation yields a differential equation for the multiplier. Position to velocity to acceleration is two differentiations, not three. This terminology does not make a twice-differentiated constraint automatically stable under time stepping.
 
 Baumgarte stabilization replaces the acceleration equation by $J_c\dot v+\gamma+2\alpha J_cv+\beta^2\Phi=0$. In continuous arithmetic the violation obeys $\ddot\Phi+2\alpha\dot\Phi+\beta^2\Phi=0$. Positive gains damp errors, but $\alpha$ and $\beta$ have inverse-time units, and large gains can make integration stiff. Constraint scaling and time-step studies are necessary. Stabilization introduces corrective forces and does not guarantee exact energy conservation.
 
 A local Newton correction for position may use
-\begin{equation}
+$$
  q^{j+1}=q^j-M(q^j)^{-1}J_c(q^j)^\top
  \left[J_c(q^j)M(q^j)^{-1}J_c(q^j)^\top\right]^{-1}\Phi(q^j).
-\end{equation}
+$$
 It requires a suitable initial guess and stopping criterion. After correcting position, velocity projection is $v=P_v(q)v_{\mathrm{pred}}$. These are projection operations; by themselves they do not specify SHAKE or RATTLE. Those methods combine particular constrained position/momentum updates with an underlying integration scheme. Their symplectic properties require their actual assumptions and solve tolerances; arbitrary after-step projection is not equivalent [@HairerLubichWanner2006].
 
 For constant mass, a RATTLE-style velocity-Verlet step first computes a half-step momentum with a constraint impulse along $J_c(q_n)^\top$, chooses its multiplier so the updated position satisfies $\Phi(q_{n+1})=0$, then updates momentum with the new applied force and a second multiplier so $J_c(q_{n+1})M^{-1}p_{n+1}=0$. The half-step factors, old/new Jacobians, and both multipliers are part of the method. Configuration-dependent inertia and velocity-dependent forces require an appropriate generalized scheme, not a direct substitution into that separable formula.
@@ -360,7 +359,7 @@ SVD can reveal the numerical rank of a scaled $J_c$ and supply a tangent basis $
 Validation should report position, velocity, and acceleration residuals separately; input/reaction feasibility; changes under tighter solve tolerances and smaller time steps; and the energy balance including applied work and dissipation. Energy constancy is a test for an isolated lossless model, not for every passive, driven, or damped system. Good energy behavior is not proof of correct contact geometry or scientifically valid parameters.
 
 ## Connecting the Pieces in a Golf Investigation
-\label{sec:ch9:integration}
+[]{#sec-ch9-integration}
 
 Begin with a measurable outcome, such as delivered clubhead speed and face orientation at the model's own impact event. Specify the body/club model, coordinate frames, grip model, foot contact modes, and inputs. Estimate state and parameter uncertainty before decomposing effects. A useful same-state calculation compares the drift acceleration and individual projected input contributions; a forward intervention branches the state and recomputes reactions and contact events.
 

@@ -2,7 +2,7 @@
 title: "Induced Acceleration Analysis: Superposition in the Biomechanics Literature"
 ---
 
-\label{ch:iaa_biomechanics}
+[]{#ch-iaa_biomechanics}
 
 ::: {.callout-note}
 
@@ -21,7 +21,7 @@ equivalent.
 
 ## Historical Context and Motivation
 
-\label{sec:iaa_history}
+[]{#sec-iaa_history}
 
 The study of human movement has long grappled with an attribution problem: given a mechanically coupled chain, how should a declared model partition its acceleration ledger? Inverse dynamics can estimate net generalized forces under stated assumptions, but it does not identify individual muscle forces or a unique causal relationship. IAA adds a forward-model term calculation, not the missing identifiability contract.
 
@@ -31,32 +31,29 @@ This observation motivated a research program spanning more than three decades, 
 
 ## The Formal Framework
 
-\label{sec:iaa_formal}
+[]{#sec-iaa_formal}
 
 ### Equations of Motion and the Forward Problem
 
 Consider a mechanical system with $n$ generalized coordinates $\bm{q} \in \mathbb{R}^n$. The equations of motion take the standard form:
 
-\begin{equation}
+$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
-\label{eq:ch3b:eom}
-\end{equation}
+$$ {#eq-ch3b:eom}
 
 where $\bm{M}(\bm{q}) \succ 0$ assumes independent minimal coordinates and a regular kinetic-energy metric. Redundant coordinates or active constraints require a declared constrained solve. The generalized-force vector is a model partition; anatomical muscle labels require an actuator map and identifiability contract.
 
 Solving for accelerations:
 
-\begin{equation}
+$$
 \ddot{\bm{q}} = \bm{M}^{-1}(\bm{q}) \left[ \bm{\tau} - \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q}) \right]
-\label{eq:ch3b:forward}
-\end{equation}
+$$ {#eq-ch3b:forward}
 
 In the biomechanics literature, the convention is to move the velocity-dependent and gravity terms to the right side as positive contributions:
 
-\begin{equation}
+$$
 \ddot{\bm{q}} = \bm{M}^{-1}(\bm{q}) \left[ \bm{\tau}_{\text{muscle}} + \bm{V}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) \right]
-\label{eq:ch3b:biomech_convention}
-\end{equation}
+$$ {#eq-ch3b:biomech_convention}
 
 where $\bm{V}(\bm{q}, \dot{\bm{q}}) = -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$ collects the velocity-dependent torques (note the sign convention difference) and $\bm{g}(\bm{q})$ now represents the gravitational contribution with appropriate sign.
 
@@ -64,17 +61,16 @@ where $\bm{V}(\bm{q}, \dot{\bm{q}}) = -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$
 
 The core operation of induced acceleration analysis is the decomposition of the total acceleration into contributions from individual force sources:
 
-\begin{equation}
+$$
 \ddot{\bm{q}} = \underbrace{\sum_{k=1}^{m} \bm{M}^{-1}(\bm{q}) \bm{\tau}_k}_{\text{muscle-induced}} + \underbrace{\bm{M}^{-1}(\bm{q}) \bm{V}(\bm{q}, \dot{\bm{q}})}_{\text{velocity-induced}} + \underbrace{\bm{M}^{-1}(\bm{q}) \bm{g}(\bm{q})}_{\text{gravity-induced}}
-\label{eq:ch3b:iaa_decomp}
-\end{equation}
+$$ {#eq-ch3b:iaa_decomp}
 
 where $\bm{\tau}_k$ is the $k$-th declared generalized-force channel. Each mapped term is part of the frozen-state ledger; it is not a physical observation of a muscle acting alone.
 
 ::: {.callout-important}
 
 #### Compatibility With Control-Affine Superposition
-\label{thm:iaa_equivalence}
+[]{#thm-iaa_equivalence}
 
 The induced-acceleration ledger and a control-affine input decomposition can share a linear operator, but their terms are comparable only when plant, state, coordinates, actuator map, constraints, contact, residual treatment, solver qualification, and output match.
 
@@ -93,7 +89,7 @@ Both frameworks exploit the fact that $\bm{M}^{-1}(\bm{q})$ is a *linear* operat
 
 ## Instantaneous Effects, Cumulative Effects, and the Drift Field
 
-\label{sec:iaa_inst_cum}
+[]{#sec-iaa_inst_cum}
 
 One of the most significant conceptual contributions of the induced acceleration literature is the distinction between **instantaneous effects** and **cumulative effects**, developed most clearly by @Hirashima2008kinetic and @Hirashima2011application.
 
@@ -124,7 +120,7 @@ A model-reported term-magnitude comparison requires a declared norm, partition, 
 
 ## Applications of Induced Acceleration Analysis
 
-\label{sec:iaa_applications}
+[]{#sec-iaa_applications}
 
 ### Walking: The Zajac–Neptune Framework
 
@@ -156,9 +152,9 @@ The throwing studies reported a model-bounded shift in term balances from proxim
 
 @Challis2011 introduced the **induced acceleration index** (IAI), a dimensionless quantity that captures the configuration-dependent coupling potential between joints:
 
-\begin{equation}
+$$
 \text{IAI}_{j \to k} = \left| \bm{M}_{kk}^{-1} \bm{M}_{kj} \right|
-\end{equation}
+$$
 
 For a declared two-joint quiet-standing model, @Challis2011 reported an ankle-to-hip IAI more than 12 times the reverse. This model-reported coordinate ratio does not identify the dominant neural strategy, necessity, or sufficiency.
 
@@ -176,7 +172,7 @@ IAA has been applied to clinical gait models, where it can generate individualiz
 
 ## Methodological Considerations
 
-\label{sec:iaa_methods}
+[]{#sec-iaa_methods}
 
 ### Ground Contact and Constraint Forces
 
@@ -190,7 +186,7 @@ IAA results depend on model topology, coordinates, force partition, constraints,
 
 ## Synthesis: Two Communities, One Mathematical Structure
 
-\label{sec:iaa_synthesis}
+[]{#sec-iaa_synthesis}
 
 IAA and control-affine analysis can share a frozen-state linear map. Their answers are not mathematically identical unless their plant, coordinates, force and input partitions, constraints, contact mode, residual treatment, solver qualification, and output are identical.
 
