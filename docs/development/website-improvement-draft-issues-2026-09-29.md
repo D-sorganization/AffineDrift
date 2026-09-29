@@ -1,9 +1,11 @@
 # AffineDrift Website: Critical Review and Draft Improvement Backlog
 
 Date: 2026-09-29
-Status: **Draft for Board review.** Nothing in this document has been filed as
-a GitHub issue. Every epic and issue below is a proposal awaiting approval,
-re-scoping, or rejection.
+Status: **Board-accepted 2026-09-29.** All 14 epics were accepted and filed.
+111 child issues are filed and linked to their epics, and 13 are held pending
+owner decisions D4, D7 and D8. See §6 for the epic issue numbers. The draft
+text below is kept as the source record; each filed issue is authoritative
+once it exists.
 Repository revision reviewed: `main` at `9af8faa`.
 
 ---
@@ -365,24 +367,30 @@ These decisions gate the epics shown. Each should be recorded as an ADR in
 
 ## 6. Epic and Issue Index
 
+The Board disposition was recorded on PR #4485 on 2026-09-29. Child issue
+numbers are listed in each epic's body. Held items wait on owner decisions:
+D4 (canonical versions, one ADR per family), D7 (content licence) and D8
+(external review model). Preparatory work for WEB-05.8 may proceed; sending
+invitations and posting a preprint remain the owner's call.
+
 <!-- prettier-ignore -->
-| Epic | Title | Issues | Priority | Primary audience |
-| --- | --- | --- | --- | --- |
-| E1 | Audience routing and onboarding funnel | 10 | P0 | Lay, student, golfer |
-| E2 | Information architecture, naming, and consolidation | 10 | P0 | All |
-| E3 | Layered page template (progressive disclosure) | 8 | P0 | All |
-| E4 | Unified maturity and evidence signalling | 6 | P1 | All |
-| E5 | Claims, critiques, and the validation roadmap | 10 | P1 | Researcher, reviewer |
-| E6 | Interactive models and reproducibility | 13 | P1 | Learner, researcher, integrator |
-| E7 | Researcher infrastructure: citation, identity, data | 11 | P1 | Researcher |
-| E8 | Visual explanation and design system | 8 | P1 | All |
-| E9 | Accessibility conformance | 8 | P1 | All |
-| E10 | Performance, SEO, and privacy | 10 | P2 | All |
-| E11 | Mathematical typesetting and notation | 7 | P2 | Researcher, student |
-| E12 | Editorial voice and plain-language standard | 7 | P1 | All |
-| E13 | Build, reliability, and maintainability | 9 | P2 | Maintainer |
-| E14 | Reader validation, feedback, and community | 7 | P2 | All |
-|   | **Total** | **124** |   |   |
+| Epic | Title | Issues | Priority | Primary audience | GitHub epic | Held by the Board |
+| --- | --- | --- | --- | --- | --- | --- |
+| E1 | Audience routing and onboarding funnel | 10 | P0 | Lay, student, golfer | #4496 | — |
+| E2 | Information architecture, naming, and consolidation | 10 | P0 | All | #4505 | WEB-02.4, WEB-02.5 |
+| E3 | Layered page template (progressive disclosure) | 8 | P0 | All | #4514 | — |
+| E4 | Unified maturity and evidence signalling | 6 | P1 | All | #4521 | — |
+| E5 | Claims, critiques, and the validation roadmap | 10 | P1 | Researcher, reviewer | #4530 | WEB-05.8, WEB-05.10 |
+| E6 | Interactive models and reproducibility | 13 | P1 | Learner, researcher, integrator | #4543 | WEB-06.11 |
+| E7 | Researcher infrastructure: citation, identity, data | 11 | P1 | Researcher | #4552 | WEB-07.1, WEB-07.8, WEB-07.11 |
+| E8 | Visual explanation and design system | 8 | P1 | All | #4560 | WEB-08.3 |
+| E9 | Accessibility conformance | 8 | P1 | All | #4569 | — |
+| E10 | Performance, SEO, and privacy | 10 | P2 | All | #4579 | WEB-10.5 |
+| E11 | Mathematical typesetting and notation | 7 | P2 | Researcher, student | #4586 | WEB-11.3 |
+| E12 | Editorial voice and plain-language standard | 7 | P1 | All | #4594 | — |
+| E13 | Build, reliability, and maintainability | 9 | P2 | Maintainer | #4604 | — |
+| E14 | Reader validation, feedback, and community | 7 | P2 | All | #4610 | WEB-14.1, WEB-14.3 |
+|   | **Total** | **124** |   |   | 14 filed | 13 held (111 filed) |
 
 ---
 

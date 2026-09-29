@@ -24,9 +24,11 @@
 
 ## Next Steps
 
-1. The Board reviews §5 (decisions D1–D10) and approves, re-scopes, or rejects the epics.
-2. File the approved epics, then their child issues as sub-issues, and replace draft IDs with issue
-   numbers in the report.
+1. Done 2026-09-29: the Board accepted all 14 epics (#4496, #4505, #4514, #4521, #4530, #4543,
+   #4552, #4560, #4569, #4579, #4586, #4594, #4604, #4610). 111 children are filed and 13 are held;
+   the report's §6 records the epic numbers and the held items.
+2. The owner decides D4 (canonical versions, one ADR per family), D7 (content licence) and D8
+   (external review model) to release the 13 held items.
 
 ---
 
