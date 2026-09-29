@@ -1,7 +1,7 @@
 # Consolidate Inline "Recent" History Scripts — #4599
 
 - Repository: `D-sorganization/AffineDrift`, working directory: worktree `AffineDrift-worktrees/claude-4599`.
-- Branch `claude/issue-4599`, commit `SELF`; pull request: opened as draft in this session (see PR link in the issue/PR record).
+- Branch `claude/issue-4599`, commit `SELF`; pull request: [draft #4625](https://github.com/D-sorganization/AffineDrift/pull/4625).
 - Governing issue: #4599 (`WEB-13.5`, child of epic #4604 / E13), labeled `tier:cli`.
 - Objective: replace the 15 duplicated inline localStorage "Recent X" history
   scripts across `models/models-*.qmd` and `resources/resources-*.qmd` with a
