@@ -13,7 +13,7 @@
 ## Objective and Status
 
 - Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
-- Status: ready for PR
+- Status: ready for review / auto-merge
 - Completed:
   - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
   - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
@@ -23,7 +23,8 @@
   - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
   - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
   - Regenerated claim audit evidence digests and verified all pre-commit checks.
-- Remaining: Submit PR, key row in `SPEC.md`, arm auto-merge, release lease.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Monitor PR #4633 CI and auto-merge into main.
 
 ## Files and Decisions
 
@@ -59,10 +60,7 @@
 
 ## Next Steps
 
-1. Create pull request referencing `Closes #4507` with label `agent:local`.
-2. Update row in `SPEC.md` to reference PR number.
-3. Arm auto-merge (`--squash`).
-4. Release lease on #4507 in `Repository_Management`.
+1. Monitor PR #4633 CI and auto-merge into main.
 
 ## Change Log
 
