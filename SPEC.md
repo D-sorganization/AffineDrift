@@ -231,6 +231,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
 | 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
 | 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
+| 2026-09-29 | #4617 | Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617). |
 | 2026-09-24 | #4458 | Mark four stale development-log entries (DL-#4429, DL-#4253, DL-#4406, DL-#1595) as shipped after their PRs merged. |
 | 2026-09-23 | #4445 | Enforce the published deferred catalog through the canonical validator bundle and hook; sync format-specific agent guidance. |
 | 2026-09-23 | #4438 | Project charter/status expose DV-4253 as parked with pending resource decisions while theory issue #4253 remains active. |
