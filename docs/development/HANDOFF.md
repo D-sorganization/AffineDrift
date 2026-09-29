@@ -5,7 +5,7 @@
 - Objective: at the user's request, review the external "Comprehensive Technical & Architectural
   Review Summary", do an independent source-level review of the website, and draft epics and
   issues for Board review.
-- Deliverable: `reports/website-improvement-draft-issues-2026-09-29.md`, with 14 epics, 124 draft
+- Deliverable: `docs/development/website-improvement-draft-issues-2026-09-29.md` (moved from `reports/` per the AGENTS.md rule that development plans live in `docs/development/`), with 14 epics, 124 draft
   issues, 10 Board decisions, sequencing, success measures, and a map to existing open work
   (#4008/#4010/#4022-#4030, #4084-#4089, #4139/#4140 and others).
 - No GitHub issues were filed. The drafts await Board approval. No site source, content, or code
@@ -13,6 +13,8 @@
   behaviour are marked "verify on live site".
 - Validation:
   - `prettier --write` applied to the report.
+  - Headings title-cased with `scripts.check_title_case.expected_title`.
+  - Review follow-up: the WEB-06.2 packaging scope includes `src.core`, the WEB-06.10 viewer is planar-first, and WEB-07.3 dates must be verified by the owner rather than taken from Git.
   - `python3 -m scripts.regenerate_claim_audit_evidence --check` passes.
   - `scripts/check_root_hygiene.py` passes.
   - The report-scanning pytest subset passes: claim audit, trust surface, public-site manifest,

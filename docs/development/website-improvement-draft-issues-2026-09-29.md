@@ -146,7 +146,7 @@ very high. Checked against the source, however, it:
 Findings are grouped by the reader's journey. Severity: **H**igh, **M**edium,
 **L**ow.
 
-### 3.1 First Contact (a Lay Visitor or Golfer)
+### 3.1 First Contact (A Lay Visitor or Golfer)
 
 - **H: The first call to action is a textbook.** The only primary CTA is
   "Start with The Physics of Golf" (`index.qmd:24`), and that book's preface
@@ -342,7 +342,7 @@ Findings are grouped by the reader's journey. Severity: **H**igh, **M**edium,
 
 ---
 
-## 5. Decisions Required from the Board
+## 5. Decisions Required From the Board
 
 These decisions gate the epics shown. Each should be recorded as an ADR in
 `docs/adr/`.
@@ -404,7 +404,7 @@ they are not prepared for.
 
 **Depends on:** D1, D2.
 
-#### WEB-01.1 — Add a "Start Here" page
+#### WEB-01.1 — Add a "Start Here" Page
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:routine`, `judgement:design`, `tier:strong`
 - **Problem:**
@@ -427,7 +427,7 @@ they are not prepared for.
         page's navbar.
 - **Depends on:** WEB-02.1, WEB-08.2.
 
-#### WEB-01.2 — Redesign the home page around audiences, not publication state
+#### WEB-01.2 — Redesign the Home Page Around Audiences, Not Publication State
 
 - **Priority:** P0 · **Labels:** `type:feature`, `judgement:design`, `tier:strong`
 - **Problem:**
@@ -453,7 +453,7 @@ they are not prepared for.
   - [ ] The page `<title>` is not "Home" (WEB-10.7).
 - **Depends on:** WEB-01.1, WEB-04.1, WEB-07.3.
 
-#### WEB-01.3 — Extend personas to include curious golfer/coach and student, and render them site-wide
+#### WEB-01.3 — Extend Personas to Include Curious Golfer/Coach and Student, and Render Them Site-Wide
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -475,7 +475,7 @@ they are not prepared for.
   - [ ] The golfer/coach persona states plainly that the site does not give
         swing instruction.
 
-#### WEB-01.4 — Write "The Big Idea in Five Minutes" explainer
+#### WEB-01.4 — Write "The Big Idea in Five Minutes" Explainer
 
 - **Priority:** P0 · **Labels:** `type:content`, `judgement:design`, `tier:strong`
 - **Problem:** No page explains drift vs control, ZTCF, or DCR to a
@@ -496,7 +496,7 @@ they are not prepared for.
         a "where the analogy breaks" note.
   - [ ] Linked from Start Here, the home page, and the top of Theory Part 1.
 
-#### WEB-01.5 — Build a site-wide glossary with hover definitions
+#### WEB-01.5 — Build a Site-Wide Glossary With Hover Definitions
 
 - **Priority:** P1 · **Labels:** `type:feature`, `complexity:complex`, `tier:strong`
 - **Problem:**
@@ -519,7 +519,7 @@ they are not prepared for.
   - [ ] The book glossary links to the site glossary; the two are not
         duplicated.
 
-#### WEB-01.6 — Create a "How to Read This Site" guide
+#### WEB-01.6 — Create a "How to Read This Site" Guide
 
 - **Priority:** P1 · **Labels:** `type:content`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -540,7 +540,7 @@ they are not prepared for.
   - [ ] Every badge component links to it.
   - [ ] Both existing inline definitions are removed.
 
-#### WEB-01.7 — Add short on-ramp learning paths (5 minutes, 30 minutes, and 3 hours)
+#### WEB-01.7 — Add Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, and 3 Hours)
 
 - **Priority:** P1 · **Labels:** `type:content`, `complexity:routine`, `tier:cli`
 - **Problem:** The lightest current path is 40–80 hours
@@ -553,7 +553,7 @@ they are not prepared for.
   - [ ] Each path ends with one reflective question and its answer.
 - **Depends on:** WEB-01.4, WEB-12.4.
 
-#### WEB-01.8 — Correct learning-path contradictions and wrong chapter references
+#### WEB-01.8 — Correct Learning-Path Contradictions and Wrong Chapter References
 
 - **Priority:** P0 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:**
@@ -580,7 +580,7 @@ they are not prepared for.
   - [ ] Levels come from one YAML source shared by the hub and the path pages.
   - [ ] A pytest asserts that the hub and path levels match.
 
-#### WEB-01.9 — Make "In Layman's Terms" blocks open by default, rewrite them in plain language, and cover every core page
+#### WEB-01.9 — Make "In Layman's Terms" Blocks Open by Default, Rewrite Them in Plain Language, and Cover Every Core Page
 
 - **Priority:** P1 · **Labels:** `type:content`, `judgement:design`, `tier:strong`
 - **Problem:**
@@ -602,7 +602,7 @@ they are not prepared for.
   - [ ] The existing `LAYMAN` tangent-series variants are either merged into
         these blocks or linked from them.
 
-#### WEB-01.10 — Make the 404 page and empty states useful
+#### WEB-01.10 — Make the 404 Page and Empty States Useful
 
 - **Priority:** P3 · **Labels:** `type:feature`, `complexity:simple`, `tier:cli`
 - **Problem:**
@@ -635,7 +635,7 @@ they are not prepared for.
 
 **Depends on:** D4, D10.
 
-#### WEB-02.1 — Restructure the navbar into single-purpose menus
+#### WEB-02.1 — Restructure the Navbar Into Single-Purpose Menus
 
 - **Priority:** P0 · **Labels:** `type:feature`, `judgement:design`, `tier:strong`
 - **Problem:** "Read" has 11 mixed items, "Connect" mixes about and resources,
@@ -657,7 +657,7 @@ they are not prepared for.
         three clicks from the navbar; an E2E crawl asserts this.
   - [ ] The mobile menu passes the #4140 mobile-menu test.
 
-#### WEB-02.2 — Resolve the "Volume II" collision and the Geometry of Motion volume pages
+#### WEB-02.2 — Resolve the "Volume II" Collision and the Geometry of Motion Volume Pages
 
 - **Priority:** P0 · **Labels:** `type:bug`, `judgement:design`, `tier:strong`
 - **Problem:** Two different works are both called "Volume II".
@@ -682,7 +682,7 @@ they are not prepared for.
   - [ ] No rendered volume page has fewer than 200 words unless it is marked
         Planned.
 
-#### WEB-02.3 — Give the theory series a single name
+#### WEB-02.3 — Give the Theory Series a Single Name
 
 - **Priority:** P0 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:** The series goes by three names.
@@ -700,7 +700,7 @@ they are not prepared for.
         Index, and home page.
   - [ ] A pytest enforces the title pattern from `series:` metadata.
 
-#### WEB-02.4 — Consolidation plan for duplicated bodies of work
+#### WEB-02.4 — Consolidation Plan for Duplicated Bodies of Work
 
 - **Priority:** P1 · **Labels:** `type:epic-child`, `judgement:contested`, `tier:strong`
 - **Problem:** The same material exists in several renditions with no
@@ -724,7 +724,7 @@ they are not prepared for.
 rel="canonical">` to the canon where appropriate.
   - [ ] Retired URLs redirect (WEB-02.9).
 
-#### WEB-02.5 — Turn on series prev/next links and breadcrumbs for hub pages
+#### WEB-02.5 — Turn on Series Prev/Next Links and Breadcrumbs for Hub Pages
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:**
@@ -740,7 +740,7 @@ rel="canonical">` to the canon where appropriate.
         correct order.
   - [ ] Breadcrumbs render on every page except the home page.
 
-#### WEB-02.6 — Hide, mark, or retire stub hubs
+#### WEB-02.6 — Hide, Mark, or Retire Stub Hubs
 
 - **Priority:** P1 · **Labels:** `type:content`, `complexity:simple`, `tier:cli`
 - **Problem:**
@@ -759,7 +759,7 @@ rel="canonical">` to the canon where appropriate.
   - [ ] Scaffolding pages never use success styling; a lint rule enforces
         this.
 
-#### WEB-02.7 — Drive category listings from front matter
+#### WEB-02.7 — Drive Category Listings From Front Matter
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -776,7 +776,7 @@ rel="canonical">` to the canon where appropriate.
   - [ ] Its filters work with keyboard navigation.
   - [ ] A pytest rejects categories outside the vocabulary.
 
-#### WEB-02.8 — Align page titles, navigation labels, and descriptions
+#### WEB-02.8 — Align Page Titles, Navigation Labels, and Descriptions
 
 - **Priority:** P2 · **Labels:** `type:bug`, `complexity:simple`, `tier:ollama`
 - **Problem:** Many pages go by different names in different places.
@@ -799,7 +799,7 @@ rel="canonical">` to the canon where appropriate.
         target page `title`, or an allowlisted short form.
   - [ ] Every description is 70–160 characters.
 
-#### WEB-02.9 — URL stability and redirect policy
+#### WEB-02.9 — URL Stability and Redirect Policy
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:** Consolidation and renaming will move URLs. External citations
@@ -814,7 +814,7 @@ rel="canonical">` to the canon where appropriate.
         alias.
   - [ ] The redirect ledger is documented in `CONTRIBUTING.md`.
 
-#### WEB-02.10 — Configure search, and include maturity in results
+#### WEB-02.10 — Configure Search, and Include Maturity in Results
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -847,7 +847,7 @@ content.
 - The template is adopted on all pages listed in WEB-03.8.
 - A front-matter schema is validated in CI.
 
-#### WEB-03.1 — Define and validate the article front-matter schema
+#### WEB-03.1 — Define and Validate the Article Front-Matter Schema
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:complex`, `judgement:design`, `tier:strong`
 - **Problem:**
@@ -875,7 +875,7 @@ content.
   - [ ] An allowlist, burned down over time, covers the remaining pages.
   - [ ] No new page may use `date: today`.
 
-#### WEB-03.2 — Build the page header card component
+#### WEB-03.2 — Build the Page Header Card Component
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:complex`, `tier:cli`
 - **Problem:**
@@ -900,7 +900,7 @@ content.
   - [ ] The reading-time policy conflict is resolved and recorded in
         `books/roadmap.qmd`.
 
-#### WEB-03.3 — Plain-language summary and key takeaways block
+#### WEB-03.3 — Plain-Language Summary and Key Takeaways Block
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:** "Key takeaways" are essentially absent across the site.
@@ -914,7 +914,7 @@ content.
   - [ ] Visible without interaction.
   - [ ] Printed in the PDF/print stylesheet.
 
-#### WEB-03.4 — Standard "What This Shows / What It Does Not Show" block
+#### WEB-03.4 — Standard "What This Shows / What It Does Not Show" Block
 
 - **Priority:** P0 · **Labels:** `type:feature`, `judgement:design`, `tier:strong`
 - **Problem:** Caveats are scattered through running prose ("does not
@@ -933,7 +933,7 @@ content.
   - [ ] Every limitation that is deleted from the prose is retained in the
         block, verified by a before/after diff review recorded in the PR.
 
-#### WEB-03.5 — Standard "Where Next" footer
+#### WEB-03.5 — Standard "Where Next" Footer
 
 - **Priority:** P1 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -950,7 +950,7 @@ content.
   - [ ] Each core page has at least one "simpler" and one "deeper" link.
   - [ ] Coordinated with #3900/#3901 so the two efforts do not duplicate.
 
-#### WEB-03.6 — Worked-example callout convention
+#### WEB-03.6 — Worked-Example Callout Convention
 
 - **Priority:** P2 · **Labels:** `type:content`, `complexity:routine`, `tier:cli`
 - **Problem:** Formal derivations rarely include a numerical worked example
@@ -965,7 +965,7 @@ content.
   - [ ] ≥ 8 worked examples.
   - [ ] Each is tested by a pytest that recomputes its numbers from `src/`.
 
-#### WEB-03.7 — "What this means for golfers and coaches" box, with guardrails
+#### WEB-03.7 — "What This Means for Golfers and Coaches" Box, With Guardrails
 
 - **Priority:** P2 · **Labels:** `type:content`, `judgement:contested`, `tier:strong`
 - **Problem:** Lay readers want practical meaning, but the site correctly
@@ -981,7 +981,7 @@ content.
   - [ ] Every box carries the evidence-rung badge.
   - [ ] Used on no more than the pages the owner approves.
 
-#### WEB-03.8 — Roll out the template to core pages
+#### WEB-03.8 — Roll Out the Template to Core Pages
 
 - **Priority:** P1 · **Labels:** `type:content`, `complexity:routine`, `tier:cli`
 - **Proposal:** Apply WEB-03.1 to WEB-03.5 to these pages:
@@ -1012,7 +1012,7 @@ how strong its evidence is, applied everywhere a work is shown.
 **Coordinate with:** #4085 and #4086 (shared evidence semantics). This epic is
 the reader-presentation layer over that work, not a replacement for it.
 
-#### WEB-04.1 — Consolidate maturity vocabulary into a single enum
+#### WEB-04.1 — Consolidate Maturity Vocabulary Into a Single Enum
 
 - **Priority:** P0 · **Labels:** `type:feature`, `judgement:design`, `tier:strong`
 - **Problem:** Pages use many labels outside the six-state key:
@@ -1031,7 +1031,7 @@ the reader-presentation layer over that work, not a replacement for it.
         or badge includes.
   - [ ] A migration table is recorded in the PR.
 
-#### WEB-04.2 — Badge component used on cards, headers, listings, and search
+#### WEB-04.2 — Badge Component Used on Cards, Headers, Listings, and Search
 
 - **Priority:** P1 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:** Only five `.qmd` files use banners or pills. The styles vary
@@ -1047,7 +1047,7 @@ the reader-presentation layer over that work, not a replacement for it.
   - [ ] Visual prominence never implies a higher state; this is checked in
         design review.
 
-#### WEB-04.3 — Evidence ladder
+#### WEB-04.3 — Evidence Ladder
 
 - **Priority:** P1 · **Labels:** `type:feature`, `judgement:design`, `tier:strong`
 - **Problem:** The 2026-08-29 review proposed an evidence ladder, but no issue
@@ -1063,7 +1063,7 @@ the reader-presentation layer over that work, not a replacement for it.
   - [ ] Validation: no page may claim a rung above "qualified simulation"
         without a linked measured-data record.
 
-#### WEB-04.4 — Remove duplicated state keys from the home and roadmap pages
+#### WEB-04.4 — Remove Duplicated State Keys From the Home and Roadmap Pages
 
 - **Priority:** P2 · **Labels:** `type:content`, `complexity:simple`, `tier:ollama`
 - **Proposal:**
@@ -1072,7 +1072,7 @@ the reader-presentation layer over that work, not a replacement for it.
 - **Acceptance criteria:**
   - [ ] Exactly one definition of each state on the site.
 
-#### WEB-04.5 — Show maturity in the Article Index and on Books hub cards
+#### WEB-04.5 — Show Maturity in the Article Index and on Books Hub Cards
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:simple`, `tier:cli`
 - **Problem:** The Article Index shows no per-entry status.
@@ -1081,7 +1081,7 @@ the reader-presentation layer over that work, not a replacement for it.
         matter.
 - **Depends on:** WEB-02.7.
 
-#### WEB-04.6 — Freshness indicator
+#### WEB-04.6 — Freshness Indicator
 
 - **Priority:** P3 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Proposal:**
@@ -1109,7 +1109,7 @@ the reader-presentation layer over that work, not a replacement for it.
 measurement work follows the deferred-validation rule: it is never simulated
 as complete.
 
-#### WEB-05.1 — Register core theses in the claim registry
+#### WEB-05.1 — Register Core Theses in the Claim Registry
 
 - **Priority:** P0 · **Labels:** `type:content`, `complexity:research`, `tier:strong`
 - **Problem:** `data/trust/claim_registry.json` contains one claim
@@ -1131,7 +1131,7 @@ as complete.
   - [ ] Schema-valid.
   - [ ] Owner sign-off recorded per claim.
 
-#### WEB-05.2 — Readable claim ledger page
+#### WEB-05.2 — Readable Claim Ledger Page
 
 - **Priority:** P1 · **Labels:** `type:feature`, `complexity:complex`, `tier:cli`
 - **Problem:**
@@ -1153,7 +1153,7 @@ as complete.
 - **Coordinate with:** #4084 (explorer); this page may be its first
   increment.
 
-#### WEB-05.3 — Extend critique annotations to the ZTCF and proximal–distal pages
+#### WEB-05.3 — Extend Critique Annotations to the ZTCF and Proximal–Distal Pages
 
 - **Priority:** P0 · **Labels:** `type:bug`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -1169,7 +1169,7 @@ as complete.
   - [ ] A pytest fails if a registered claim's page lacks an annotation for a
         critique that targets that claim.
 
-#### WEB-05.4 — Triage critique severity and publish response timelines
+#### WEB-05.4 — Triage Critique Severity and Publish Response Timelines
 
 - **Priority:** P1 · **Labels:** `type:content`, `judgement:contested`, `tier:strong`
 - **Problem:**
@@ -1188,7 +1188,7 @@ as complete.
   - [ ] The Critical critique has a published response or a dated plan.
   - [ ] The file is renamed and the old URL redirects.
 
-#### WEB-05.5 — Publish the model-to-human validation roadmap
+#### WEB-05.5 — Publish the Model-to-Human Validation Roadmap
 
 - **Priority:** P1 · **Labels:** `type:content`, `complexity:research`, `tier:strong`
 - **Problem:**
@@ -1210,7 +1210,7 @@ as complete.
   - [ ] Contains no fabricated or simulated result presented as measurement.
   - [ ] Linked from the core theory pages.
 
-#### WEB-05.6 — Scientific (not process) falsifiers for the research protocols
+#### WEB-05.6 — Scientific (Not Process) Falsifiers for the Research Protocols
 
 - **Priority:** P2 · **Labels:** `type:content`, `complexity:research`, `tier:strong`
 - **Problem:**
@@ -1227,7 +1227,7 @@ as complete.
   - [ ] Every protocol has ≥ 1 scientific falsifier and a named modality.
   - [ ] The schema is extended in a backward-compatible way.
 
-#### WEB-05.7 — Falsification atlases for ZTCF and DCR
+#### WEB-05.7 — Falsification Atlases for ZTCF and DCR
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:complex`, `tier:strong`
 - **Problem:** Only proximal–distal has a per-claim alternative/falsifier
@@ -1240,7 +1240,7 @@ as complete.
         discriminating measurement.
 - **Coordinate with:** #4087.
 
-#### WEB-05.8 — External review pathway
+#### WEB-05.8 — External Review Pathway
 
 - **Priority:** P1 · **Labels:** `type:process`, `judgement:design`, `tier:strong`
 - **Problem:**
@@ -1259,7 +1259,7 @@ as complete.
         (the outcome depends on the reviewer, not this issue).
 - **Depends on:** D8.
 
-#### WEB-05.9 — Resolve the "passive/active" nomenclature conflict in The Physics of Golf
+#### WEB-05.9 — Resolve the "Passive/Active" Nomenclature Conflict in The Physics of Golf
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:** `articles/The_Physics_of_Golf/nomenclature.tex:15,41-42`
@@ -1269,7 +1269,7 @@ as complete.
   - [ ] Nomenclature aligned with `NOTATION.md`.
   - [ ] A terminology-baseline check (`config/`) extended to `.tex` sources.
 
-#### WEB-05.10 — Preprint or archival release of the theory series
+#### WEB-05.10 — Preprint or Archival Release of the Theory Series
 
 - **Priority:** P2 · **Labels:** `type:process`, `judgement:contested`, `tier:strong`
 - **Proposal:**
@@ -1297,7 +1297,7 @@ output". They are not governed reproductions and must never be presented as
 such.
 **Depends on:** D3.
 
-#### WEB-06.1 — ADR: interactive technology stack
+#### WEB-06.1 — ADR: Interactive Technology Stack
 
 - **Priority:** P0 · **Labels:** `type:adr`, `judgement:design`, `tier:strong`
 - **Problem:** No `{ojs}`, Pyodide, or Shinylive is in use. The one widget
@@ -1314,23 +1314,31 @@ such.
   - [ ] Performance budget per widget.
   - [ ] Parity-test strategy defined.
 
-#### WEB-06.2 — Make `src/` installable and version it
+#### WEB-06.2 — Make `src/` Installable and Version It
 
 - **Priority:** P0 · **Labels:** `type:build`, `complexity:routine`, `tier:cli`
 - **Problem:** `pyproject.toml:7` has `packages = []`, so readers cannot
   `pip install` the models the site describes.
 - **Proposal:**
   - Configure packaging for `affine_control`, `golf_simulation`, and
-    `tangent_models`.
+    `tangent_models`, together with the shared `core` package they depend
+    on. Modules such as `src/affine_control/residuals.py`,
+    `src/golf_simulation/round_simulator.py`, and
+    `src/tangent_models/examples.py` import `src.core`.
+  - Either package the `src` namespace as a whole, or migrate the `src.*`
+    imports to a proper top-level package name in the same change. Record
+    the choice in the PR.
   - Build a wheel in CI.
   - Tag releases.
 - **Acceptance criteria:**
   - [ ] `pip install .` works in a clean Python 3.12 environment.
   - [ ] A wheel is attached to releases.
-  - [ ] Import smoke tests pass.
+  - [ ] Import smoke tests run from outside the repository root, against the
+        installed wheel. They import every public module, including those
+        that depend on `src.core`, and pass.
   - [ ] The coverage floor is unchanged.
 
-#### WEB-06.3 — "Drift vs Control" double-pendulum sandbox
+#### WEB-06.3 — "Drift vs Control" Double-Pendulum Sandbox
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:complex`, `tier:strong`
 - **Problem:** The core theory pages have no figures, and the central idea is
@@ -1354,7 +1362,7 @@ such.
   - [ ] Within the WEB-06.1 budget.
   - [ ] Embedded on theory Part 1 and the Big Idea page.
 
-#### WEB-06.4 — ZTCF counterfactual explorer
+#### WEB-06.4 — ZTCF Counterfactual Explorer
 
 - **Priority:** P1 · **Labels:** `type:feature`, `complexity:complex`, `tier:strong`
 - **Proposal:**
@@ -1369,7 +1377,7 @@ such.
   - [ ] Critique links shown in the widget.
   - [ ] Embedded on the ZTCF page.
 
-#### WEB-06.5 — DCR visualiser
+#### WEB-06.5 — DCR Visualiser
 
 - **Priority:** P1 · **Labels:** `type:feature`, `complexity:complex`, `tier:cli`
 - **Proposal:**
@@ -1381,7 +1389,7 @@ such.
   - [ ] A parity test.
   - [ ] Embedded on the DCR page, with the registered claim linked.
 
-#### WEB-06.6 — Figures for core theory pages
+#### WEB-06.6 — Figures for Core Theory Pages
 
 - **Priority:** P0 · **Labels:** `type:content`, `complexity:routine`, `tier:cli`
 - **Problem:** `controllability-drift-ratio`, `zero-torque-counterfactual`,
@@ -1396,7 +1404,7 @@ such.
   - [ ] Alt text and long descriptions.
   - [ ] Within the image budget.
 
-#### WEB-06.7 — Fill or hide the 42 stub notebooks
+#### WEB-06.7 — Fill or Hide the 42 Stub Notebooks
 
 - **Priority:** P0 · **Labels:** `type:bug`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -1411,7 +1419,7 @@ such.
   - [ ] No Colab button links to a notebook with fewer than 5 code cells.
   - [ ] Filled notebooks execute top to bottom in CI (`nbclient`).
 
-#### WEB-06.8 — Reader run environment (Binder, devcontainer, downloads)
+#### WEB-06.8 — Reader Run Environment (Binder, Devcontainer, Downloads)
 
 - **Priority:** P1 · **Labels:** `type:build`, `complexity:routine`, `tier:cli`
 - **Problem:** There is no Binder, Codespaces, devcontainer, or notebook
@@ -1425,7 +1433,7 @@ such.
   - [ ] The devcontainer builds in CI.
   - [ ] Download links are present on code pages.
 
-#### WEB-06.9 — Resolve the stray executable cell
+#### WEB-06.9 — Resolve the Stray Executable Cell
 
 - **Priority:** P2 · **Labels:** `type:bug`, `complexity:trivial`, `tier:ollama`
 - **Problem:** `articles/drift-components-wrench-double-pendulum.qmd:510` is a
@@ -1436,20 +1444,34 @@ such.
 - **Acceptance criteria:**
   - [ ] The site's execution state matches the CI documentation.
 
-#### WEB-06.10 — 3D swing kinematics viewer
+#### WEB-06.10 — Swing Kinematics Viewer (Planar First, 3D When a 3D Model Exists)
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:deep`, `tier:strong`
+- **Constraint:** `src/affine_control/golf_model.py` is a planar three-link
+  teaching model with 2D Jacobians. Its flexible shaft is only an
+  instantaneous, zero-deflection inertia example, not a flexible simulation
+  (see the module docstring). It cannot drive a genuine 3D or shaft-bending
+  animation.
 - **Proposal:**
-  - A viewer on a self-hosted Three.js (r150+ ES modules, with SRI).
-  - Driven by `src/affine_control/golf_model.py` kinematics (three-link plus
-    shaft mode).
-  - Colour-codes drift and input contributions on the segments.
+  - **Phase 1:** a planar swing viewer (SVG, Canvas, or Three.js in an
+    orthographic view) driven by the rigid three-link trajectory, with drift
+    and input contributions colour-coded on the segments. Label it plainly
+    as a planar rigid model.
+  - **Phase 2 (only after a separate issue delivers genuine 3D, and if
+    wanted, flexible-shaft kinematics in `src/` or a pinned provider):** a 3D
+    viewer on self-hosted Three.js (r150+ ES modules, with SRI).
+  - Never extrude or animate shaft deflection that the model does not
+    compute.
 - **Acceptance criteria:**
+  - [ ] Phase 1: a parity test on the planar joint trajectories against
+        `golf_model.py`.
+  - [ ] The viewer's label states the model dimension and states that the
+        shaft is rigid.
   - [ ] Reduced-motion and non-WebGL fallbacks.
   - [ ] Within the performance budget.
-  - [ ] A parity test on joint trajectories.
+  - [ ] Phase 2 is blocked on a named 3D-kinematics issue, filed separately.
 
-#### WEB-06.11 — Modernise and self-host the rotation converter and grip simulator dependencies
+#### WEB-06.11 — Modernise and Self-Host the Rotation Converter and Grip Simulator Dependencies
 
 - **Priority:** P2 · **Labels:** `type:chore`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -1463,7 +1485,7 @@ such.
   - [ ] They work offline via the service worker.
   - [ ] The simulator is listed in `resources:` and passes an E2E smoke test.
 
-#### WEB-06.12 — Fixture and dataset explorer
+#### WEB-06.12 — Fixture and Dataset Explorer
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:complex`, `tier:cli`
 - **Proposal:**
@@ -1475,7 +1497,7 @@ such.
   - [ ] Download buttons with SHA-256.
   - [ ] Accessible data tables.
 
-#### WEB-06.13 — Fix programming-companion metadata and repository links
+#### WEB-06.13 — Fix Programming-Companion Metadata and Repository Links
 
 - **Priority:** P2 · **Labels:** `type:bug`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -1502,7 +1524,7 @@ identifier, see real version dates, obtain data with a licence, and trust
 bibliographic metadata.
 **Depends on:** D5, D7.
 
-#### WEB-07.1 — CITATION.cff, Zenodo integration, and DOIs
+#### WEB-07.1 — `CITATION.cff`, Zenodo Integration, and DOIs
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:** No `CITATION.cff`, `.zenodo.json`, DOI, or ORCID exists. #3604
@@ -1518,7 +1540,7 @@ bibliographic metadata.
   - [ ] The ORCID of the author is in the metadata.
   - [ ] #3604 is referenced and the gap it left is explained.
 
-#### WEB-07.2 — Per-page citation metadata and a "Cite this page" block
+#### WEB-07.2 — Per-Page Citation Metadata and a "Cite This Page" Block
 
 - **Priority:** P0 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Proposal:**
@@ -1526,25 +1548,37 @@ bibliographic metadata.
     so each page emits `citation_*` meta tags and a BibTeX/CSL download.
   - The header card (WEB-03.2) links the block.
 - **Acceptance criteria:**
-  - [ ] Every article emits `citation_title`, `citation_author`, and
-        `citation_publication_date`.
+  - [ ] Every article emits `citation_title` and `citation_author`.
+  - [ ] `citation_publication_date` is emitted only for owner-verified dates
+        (WEB-07.3).
+  - [ ] Unverified pages omit it rather than fall back to a build or Git
+        date.
   - [ ] BibTeX download works.
   - [ ] Validated with a Google Scholar metadata checker on three sample
         pages.
 
-#### WEB-07.3 — Real dates and per-article change history
+#### WEB-07.3 — Real Dates and Per-Article Change History
 
 - **Priority:** P0 · **Labels:** `type:bug`, `complexity:routine`, `tier:cli`
 - **Problem:** Ten articles use `date: today`, including theory Parts 1–5,
   the manifesto, and rotation-representations. The date shown is therefore
   the build date. There is no per-article changelog.
 - **Proposal:**
-  - Backfill `date` from the git first-commit date.
-  - Derive `date-modified` from the last substantive change, via a script.
+  - The owner supplies each article's true first-publication date and records
+    its source. Git history is only a **candidate** for the owner to confirm,
+    because first-commit dates can predate or postdate public release (for
+    example, imports and migrations).
+  - Where no verified date exists, show "Date unverified" and emit no
+    `citation_publication_date` (WEB-07.2). Never emit a Git-derived date as
+    scholarly metadata.
+  - Derive `date-modified` from the last substantive change, via a script,
+    and label it "last updated" rather than "published".
   - Add an optional `changes:` front-matter list rendered as a "Revision
     history" section.
 - **Acceptance criteria:**
   - [ ] Zero `date: today` in rendered sources, enforced by pytest.
+  - [ ] Every emitted `date` has a recorded verification source, for example a
+        `date-source:` front-matter field; a pytest fails otherwise.
   - [ ] Revision history appears on core pages.
 - **Enables:** "What's new" (WEB-01.2).
 
@@ -1563,7 +1597,7 @@ bibliographic metadata.
   - [ ] Valid in the Schema.org validator for sample pages of each type.
   - [ ] The dead include is removed.
 
-#### WEB-07.5 — Deduplicate and reconcile bibliography databases
+#### WEB-07.5 — Deduplicate and Reconcile Bibliography Databases
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:complex`, `tier:cli`
 - **Problem:**
@@ -1581,7 +1615,7 @@ bibliographic metadata.
   - [ ] The rendered citations are unchanged in meaning, verified by diffing
         the rendered bibliographies.
 
-#### WEB-07.6 — Render or retire the orphaned per-article bibliography files
+#### WEB-07.6 — Render or Retire the Orphaned Per-Article Bibliography Files
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:**
@@ -1594,7 +1628,7 @@ bibliographic metadata.
   - [ ] A single pattern is documented.
   - [ ] Files that add nothing are removed.
 
-#### WEB-07.7 — Rebuild the Datasets page with licences, schemas, and the site's own data
+#### WEB-07.7 — Rebuild the Datasets Page With Licences, Schemas, and the Site's Own Data
 
 - **Priority:** P1 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -1614,7 +1648,7 @@ bibliographic metadata.
   - [ ] Every entry has licence and access fields.
   - [ ] The site's own artefacts are listed with checksums.
 
-#### WEB-07.8 — Content and data licensing
+#### WEB-07.8 — Content and Data Licensing
 
 - **Priority:** P1 · **Labels:** `type:process`, `judgement:design`, `tier:strong`
 - **Problem:** `LICENSE` is MIT (code). `COPYRIGHT.md` separates content
@@ -1625,7 +1659,7 @@ bibliographic metadata.
   - [ ] SPDX identifiers in dataset metadata.
   - [ ] Licence shown on the Cite page.
 
-#### WEB-07.9 — Print and PDF editions for books and core series
+#### WEB-07.9 — Print and PDF Editions for Books and Core Series
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:complex`, `tier:cli`
 - **Problem:**
@@ -1642,7 +1676,7 @@ bibliographic metadata.
   - [ ] One print stylesheet.
   - [ ] Print includes typeset math (see WEB-11.3).
 
-#### WEB-07.10 — Render `PARAMETERS.md` and a notation quick-reference card
+#### WEB-07.10 — Render `PARAMETERS.md` and a Notation Quick-Reference Card
 
 - **Priority:** P2 · **Labels:** `type:content`, `complexity:simple`, `tier:cli`
 - **Problem:**
@@ -1656,7 +1690,7 @@ bibliographic metadata.
   - [ ] Every core page links notation from its header card.
   - [ ] Duplicate heading and table of contents removed.
 
-#### WEB-07.11 — Author authority page
+#### WEB-07.11 — Author Authority Page
 
 - **Priority:** P1 · **Labels:** `type:content`, `judgement:design`, `tier:strong`
 - **Problem:** `pages/about.qmd` has 318 words: no photo, CV, publications,
@@ -1681,7 +1715,7 @@ bibliographic metadata.
 explanatory graphics carrying the core ideas to every audience.
 **Depends on:** D9.
 
-#### WEB-08.1 — Design system audit and token consolidation
+#### WEB-08.1 — Design System Audit and Token Consolidation
 
 - **Priority:** P1 · **Labels:** `type:design`, `complexity:complex`, `tier:strong`
 - **Problem:**
@@ -1700,7 +1734,7 @@ explanatory graphics carrying the core ideas to every audience.
   - [ ] Visual-regression snapshots approved.
   - [ ] The reset is removed with no regression.
 
-#### WEB-08.2 — Signature explanatory graphic: "drift plus control"
+#### WEB-08.2 — Signature Explanatory Graphic: "Drift Plus Control"
 
 - **Priority:** P0 · **Labels:** `type:design`, `judgement:design`, `tier:strong`
 - **Proposal:**
@@ -1714,7 +1748,7 @@ explanatory graphics carrying the core ideas to every audience.
         both themes and at 390 px.
   - [ ] The owner confirms its physical accuracy.
 
-#### WEB-08.3 — Concept diagram set for core ideas
+#### WEB-08.3 — Concept Diagram Set for Core Ideas
 
 - **Priority:** P1 · **Labels:** `type:design`, `complexity:complex`, `tier:strong`
 - **Proposal:** 10–15 diagrams, including:
@@ -1733,7 +1767,7 @@ explanatory graphics carrying the core ideas to every audience.
   - [ ] Source files are kept in the repository.
   - [ ] Each is placed on its canonical page and in the glossary entry.
 
-#### WEB-08.4 — Short animated explainers
+#### WEB-08.4 — Short Animated Explainers
 
 - **Priority:** P2 · **Labels:** `type:design`, `complexity:complex`, `tier:strong`
 - **Proposal:**
@@ -1745,7 +1779,7 @@ explanatory graphics carrying the core ideas to every audience.
   - [ ] `prefers-reduced-motion` respected.
   - [ ] Each video under 3 MB, served as MP4/WebM with a poster image.
 
-#### WEB-08.5 — Adopt Quarto dark theme support
+#### WEB-08.5 — Adopt Quarto Dark Theme Support
 
 - **Priority:** P2 · **Labels:** `type:chore`, `complexity:complex`, `tier:cli`
 - **Problem:**
@@ -1759,7 +1793,7 @@ explanatory graphics carrying the core ideas to every audience.
   - [ ] No layout shift from the toggle (CLS contribution 0).
   - [ ] Existing Jest dark-mode tests pass.
 
-#### WEB-08.6 — Typography and reading comfort
+#### WEB-08.6 — Typography and Reading Comfort
 
 - **Priority:** P2 · **Labels:** `type:design`, `complexity:routine`, `tier:cli`
 - **Proposal:**
@@ -1771,7 +1805,7 @@ explanatory graphics carrying the core ideas to every audience.
   - [ ] Measured prose width within the target at 1440 px.
   - [ ] No font requests to third parties.
 
-#### WEB-08.7 — Replace heavy GIFs with video and optimise images
+#### WEB-08.7 — Replace Heavy GIFs With Video and Optimise Images
 
 - **Priority:** P3 · **Labels:** `type:chore`, `complexity:simple`, `tier:ollama`
 - **Problem:** `static/images/A-Dead-Fish-Swims.gif` is 1.78 MB.
@@ -1779,7 +1813,7 @@ explanatory graphics carrying the core ideas to every audience.
   - [ ] GIFs over 300 KB converted to MP4/WebM.
   - [ ] Images served as responsive `srcset` or WebP where applicable.
 
-#### WEB-08.8 — Home and Start Here visual QA across viewports and themes
+#### WEB-08.8 — Home and Start Here Visual QA Across Viewports and Themes
 
 - **Priority:** P2 · **Labels:** `type:test`, `complexity:routine`, `tier:cli`
 - **Acceptance criteria:**
@@ -1797,7 +1831,7 @@ enforced by CI.
 **Coordinate with:** #4139 (the axe violations) and #4140 (excluded browser
 tests). This epic adds the scope #4139 lacks; it does not replace it.
 
-#### WEB-09.1 — Make the axe scan fail on serious and critical findings
+#### WEB-09.1 — Make the axe Scan Fail on Serious and Critical Findings
 
 - **Priority:** P0 · **Labels:** `type:ci`, `complexity:complex`, `tier:cli`
 - **Problem:** `ci-standard.yml:623-640` runs with `--axe warn` over 247
@@ -1807,7 +1841,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
   - [ ] The step is switched to `--axe fail`.
   - [ ] No per-rule suppressions without a linked issue.
 
-#### WEB-09.2 — Scan dark theme and mobile viewports
+#### WEB-09.2 — Scan Dark Theme and Mobile Viewports
 
 - **Priority:** P1 · **Labels:** `type:ci`, `complexity:routine`, `tier:cli`
 - **Problem:** The scan uses `--viewports desktop-small --themes light` only.
@@ -1815,7 +1849,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
   - [ ] The axe matrix includes dark theme and a 390 px viewport.
   - [ ] New violations are triaged into #4139 or new issues.
 
-#### WEB-09.3 — Restore the ten excluded browser tests
+#### WEB-09.3 — Restore the Ten Excluded Browser Tests
 
 - **Priority:** P1 · **Labels:** `type:test`, `complexity:complex`, `tier:cli`
 - **Problem:** `ci-standard.yml:591` uses `--grep-invert` to exclude tests,
@@ -1826,7 +1860,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
   - [ ] The `--grep-invert` list is removed.
   - [ ] The underlying defects are fixed, never the tests loosened.
 
-#### WEB-09.4 — Cross-browser coverage
+#### WEB-09.4 — Cross-Browser Coverage
 
 - **Priority:** P2 · **Labels:** `type:ci`, `complexity:routine`, `tier:cli`
 - **Problem:** CI runs Chromium only. Firefox, WebKit, and mobile projects in
@@ -1835,7 +1869,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
   - [ ] A nightly job runs Firefox and WebKit on a representative route set.
   - [ ] Failures open issues automatically, deduplicated by title.
 
-#### WEB-09.5 — Math accessibility verification
+#### WEB-09.5 — Math Accessibility Verification
 
 - **Priority:** P1 · **Labels:** `type:test`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -1849,7 +1883,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
         self-hosted.
   - [ ] Findings are filed.
 
-#### WEB-09.6 — Skip link and focus order without JavaScript
+#### WEB-09.6 — Skip Link and Focus Order Without JavaScript
 
 - **Priority:** P2 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:** The skip link is injected by JS (`js/navigation.js:627-648`),
@@ -1858,7 +1892,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
   - [ ] Exactly one skip link, present in the static HTML.
   - [ ] Focus order verified on the home page, Start Here, and one article.
 
-#### WEB-09.7 — Wire alt-text and long-description validation into CI
+#### WEB-09.7 — Wire Alt-Text and Long-Description Validation Into CI
 
 - **Priority:** P2 · **Labels:** `type:ci`, `complexity:simple`, `tier:cli`
 - **Problem:** `scripts/validate_accessibility.py` exists but is not wired
@@ -1867,7 +1901,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
   - [ ] The check runs in `quality-gate`.
   - [ ] Complex figures and diagrams (E8) require a long description.
 
-#### WEB-09.8 — Accessibility statement page
+#### WEB-09.8 — Accessibility Statement Page
 
 - **Priority:** P3 · **Labels:** `type:content`, `complexity:simple`, `tier:cli`
 - **Acceptance criteria:**
@@ -1883,7 +1917,7 @@ tests). This epic adds the scope #4139 lacks; it does not replace it.
 engines and scholarly indexes, and no unnecessary third-party exposure of
 readers.
 
-#### WEB-10.1 — Runtime performance budget (Lighthouse CI or equivalent)
+#### WEB-10.1 — Runtime Performance Budget (Lighthouse CI or Equivalent)
 
 - **Priority:** P1 · **Labels:** `type:ci`, `complexity:routine`, `tier:cli`
 - **Problem:** No runtime budget exists; the existing budgets are static-source
@@ -1894,7 +1928,7 @@ readers.
   - [ ] Budgets committed in `config/`.
   - [ ] CI fails when a budget regresses beyond the committed threshold.
 
-#### WEB-10.2 — Fix robots.txt
+#### WEB-10.2 — Fix `robots.txt`
 
 - **Priority:** P0 · **Labels:** `type:bug`, `complexity:trivial`, `tier:ollama`
 - **Problem:** `robots.txt` has `Disallow: /site_libs/` (render-critical CSS
@@ -1903,7 +1937,7 @@ readers.
   - [ ] Both lines removed.
   - [ ] The page is confirmed renderable in a search-console URL inspection.
 
-#### WEB-10.3 — Remove stale root sitemap.xml and feed.xml
+#### WEB-10.3 — Remove Stale Root `sitemap.xml` and `feed.xml`
 
 - **Priority:** P2 · **Labels:** `type:chore`, `complexity:trivial`, `tier:ollama`
 - **Problem:** Deploy regenerates both into `docs/`. The root copies are stale
@@ -1913,7 +1947,7 @@ readers.
   - [ ] The generators are documented.
   - [ ] The feed carries real article dates (after WEB-07.3).
 
-#### WEB-10.4 — Use one canonical host
+#### WEB-10.4 — Use One Canonical Host
 
 - **Priority:** P2 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:** `CNAME` and `site-url` use the apex domain, while
@@ -1922,7 +1956,7 @@ readers.
   - [ ] One host is used in all configuration.
   - [ ] The other host 301-redirects.
 
-#### WEB-10.5 — Self-host fonts and use privacy-preserving embeds
+#### WEB-10.5 — Self-Host Fonts and Use Privacy-Preserving Embeds
 
 - **Priority:** P1 · **Labels:** `type:privacy`, `complexity:simple`, `tier:cli`
 - **Problem:** Google Fonts (Playfair Display) and YouTube frames expose
@@ -1932,7 +1966,7 @@ readers.
   - [ ] YouTube embeds use `youtube-nocookie.com`, or a click-to-load facade.
   - [ ] The CSP is updated accordingly.
 
-#### WEB-10.6 — Remove the unused metrics.js preload
+#### WEB-10.6 — Remove the Unused `metrics.js` Preload
 
 - **Priority:** P3 · **Labels:** `type:bug`, `complexity:trivial`, `tier:ollama`
 - **Problem:** `_includes/site-head.html` preloads `/js/metrics.js` on every
@@ -1940,7 +1974,7 @@ readers.
 - **Acceptance criteria:**
   - [ ] No unused-preload console warnings on any route.
 
-#### WEB-10.7 — Titles and meta descriptions for every page
+#### WEB-10.7 — Titles and Meta Descriptions for Every Page
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:simple`, `tier:ollama`
 - **Problem:** The home page title is "Home", and many descriptions are too
@@ -1950,7 +1984,7 @@ readers.
   - [ ] A pytest enforces both.
 - **Related:** WEB-02.8.
 
-#### WEB-10.8 — Privacy policy page
+#### WEB-10.8 — Privacy Policy Page
 
 - **Priority:** P2 · **Labels:** `type:content`, `complexity:simple`, `tier:cli`
 - **Problem:** `metrics.js` stores data only in localStorage and is
@@ -1960,7 +1994,7 @@ readers.
         analytics (per D6).
   - [ ] Linked from the footer.
 
-#### WEB-10.9 — Performance of MathJax-heavy pages
+#### WEB-10.9 — Performance of MathJax-Heavy Pages
 
 - **Priority:** P2 · **Labels:** `type:perf`, `complexity:complex`, `tier:cli`
 - **Proposal:** Evaluate a smaller MathJax component build (the TeX input and
@@ -1970,7 +2004,7 @@ readers.
   - [ ] Measured before and after on the three heaviest chapters.
   - [ ] No change in rendering or accessibility (see WEB-09.5).
 
-#### WEB-10.10 — Social cards per page
+#### WEB-10.10 — Social Cards per Page
 
 - **Priority:** P3 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Proposal:** Generate per-series or per-book OG images (title, badge, and
@@ -1987,7 +2021,7 @@ readers.
 **Goal:** Consistent, cross-referenceable, accessible mathematics that obeys
 `NOTATION.md` everywhere.
 
-#### WEB-11.1 — Use one equation-numbering scheme
+#### WEB-11.1 — Use One Equation-Numbering Scheme
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:complex`, `tier:cli`
 - **Problem:**
@@ -2002,7 +2036,7 @@ readers.
   - [ ] `tags` set to `'none'`.
   - [ ] Cross-references verified by a pytest over the sources.
 
-#### WEB-11.2 — Remove duplicate math overflow rules
+#### WEB-11.2 — Remove Duplicate Math Overflow Rules
 
 - **Priority:** P3 · **Labels:** `type:chore`, `complexity:simple`, `tier:cli`
 - **Problem:** Display-math overflow is defined in both `custom.scss` and
@@ -2011,7 +2045,7 @@ readers.
   - [ ] One rule set.
   - [ ] The 390 px mobile math snapshots are unchanged.
 
-#### WEB-11.3 — Verify lazy typesetting for print and in-page find
+#### WEB-11.3 — Verify Lazy Typesetting for Print and In-Page Find
 
 - **Priority:** P2 · **Labels:** `type:test`, `complexity:routine`, `tier:cli`
 - **Problem:** `loader.load: ['ui/lazy']` leaves off-screen math as raw TeX
@@ -2021,7 +2055,7 @@ readers.
   - [ ] If it fails, typesetting is forced before print (`beforeprint`
         handler).
 
-#### WEB-11.4 — Enforce $G(x)$ notation and add a notation lint
+#### WEB-11.4 — Enforce $G(x)$ Notation and Add a Notation Lint
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:** Lowercase $g(x)$ appears on the home page (`index.qmd:44`),
@@ -2032,7 +2066,7 @@ readers.
         external notation.
   - [ ] A pytest lint over `.qmd`, `.md`, and `.tex` sources.
 
-#### WEB-11.5 — Standardise the DCR name
+#### WEB-11.5 — Standardise the DCR Name
 
 - **Priority:** P1 · **Labels:** `type:bug`, `complexity:simple`, `tier:cli`
 - **Problem:** DCR is expanded three ways: "drift-control ratio" (28 files),
@@ -2044,7 +2078,7 @@ readers.
   - [ ] Slug aligned with an alias (WEB-02.9).
   - [ ] Term added to the terminology baseline.
 
-#### WEB-11.6 — Symbol hover references
+#### WEB-11.6 — Symbol Hover References
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:complex`, `tier:strong`
 - **Proposal:**
@@ -2056,7 +2090,7 @@ readers.
   - [ ] Opt-in per page.
   - [ ] No effect on MathJax performance beyond the budget.
 
-#### WEB-11.7 — Harden the MathJax integration against Quarto upgrades
+#### WEB-11.7 — Harden the MathJax Integration Against Quarto Upgrades
 
 - **Priority:** P3 · **Labels:** `type:chore`, `complexity:routine`, `tier:cli`
 - **Problem:** `html-math-method` points to an inert, comment-only
@@ -2076,7 +2110,7 @@ readers.
 limits are stated once, in structured form, and repository-internal
 vocabulary is kept out of reader text.
 
-#### WEB-12.1 — Write the editorial style guide
+#### WEB-12.1 — Write the Editorial Style Guide
 
 - **Priority:** P0 · **Labels:** `type:process`, `judgement:design`, `tier:strong`
 - **Proposal:** `docs/development/editorial-style-guide.md` covering:
@@ -2091,7 +2125,7 @@ vocabulary is kept out of reader text.
   - [ ] Guide approved by the owner.
   - [ ] Referenced from `CONTRIBUTING.md` and the new-article issue template.
 
-#### WEB-12.2 — Keep internal governance vocabulary out of reader prose
+#### WEB-12.2 — Keep Internal Governance Vocabulary Out of Reader Prose
 
 - **Priority:** P1 · **Labels:** `type:content`, `complexity:routine`, `tier:cli`
 - **Problem:** Reader-facing pages use "governed" (72 occurrences),
@@ -2105,7 +2139,7 @@ vocabulary is kept out of reader text.
   - [ ] At least a 75 % reduction on reader pages.
   - [ ] The lint runs in CI in warning mode, then blocks.
 
-#### WEB-12.3 — Caveat consolidation pass on core pages
+#### WEB-12.3 — Caveat Consolidation Pass on Core Pages
 
 - **Priority:** P1 · **Labels:** `type:content`, `judgement:contested`, `tier:strong`
 - **Problem:** "Does not establish" appears 122 times, and scope caveats
@@ -2117,7 +2151,7 @@ vocabulary is kept out of reader text.
   - [ ] A measurable reduction in inline caveat phrases on each converted
         page.
 
-#### WEB-12.4 — Plain-language rewrite of entry pages
+#### WEB-12.4 — Plain-Language Rewrite of Entry Pages
 
 - **Priority:** P1 · **Labels:** `type:content`, `judgement:design`, `tier:strong`
 - **Proposal:** Rewrite the home page, Start Here, Overview, About, Tools,
@@ -2127,7 +2161,7 @@ vocabulary is kept out of reader text.
   - [ ] Owner approval.
   - [ ] No loss of scope statements.
 
-#### WEB-12.5 — Readability measurement tool
+#### WEB-12.5 — Readability Measurement Tool
 
 - **Priority:** P2 · **Labels:** `type:tooling`, `complexity:routine`, `tier:cli`
 - **Proposal:** `scripts/check_readability.py` computes the grade level for
@@ -2137,7 +2171,7 @@ vocabulary is kept out of reader text.
   - [ ] Advisory in CI, with a report artefact.
   - [ ] Thresholds from WEB-12.1.
 
-#### WEB-12.6 — Consolidate the manifesto
+#### WEB-12.6 — Consolidate the Manifesto
 
 - **Priority:** P2 · **Labels:** `type:content`, `complexity:simple`, `tier:cli`
 - **Problem:**
@@ -2150,7 +2184,7 @@ vocabulary is kept out of reader text.
   - [ ] Category corrected to `opinion` or `editorial`.
   - [ ] Clearly labelled Opinion.
 
-#### WEB-12.7 — Unify the contact channel and split About from Contact
+#### WEB-12.7 — Unify the Contact Channel and Split About From Contact
 
 - **Priority:** P2 · **Labels:** `type:bug`, `complexity:trivial`, `tier:ollama`
 - **Problem:** Contact is `@AffineDrift.com` on About and Contact but a Gmail
@@ -2169,7 +2203,7 @@ vocabulary is kept out of reader text.
 **Goal:** Faster feedback, fewer stale artefacts, and a site that one
 maintainer can sustain.
 
-#### WEB-13.1 — Cache Quarto renders in CI
+#### WEB-13.1 — Cache Quarto Renders in CI
 
 - **Priority:** P2 · **Labels:** `type:ci`, `complexity:complex`, `tier:cli`
 - **Problem:** The ≈14-minute full render runs in both the PR end-to-end job
@@ -2180,7 +2214,7 @@ maintainer can sustain.
   - [ ] Median PR end-to-end time reduced by ≥ 30 %.
   - [ ] Deploy still does a clean full render.
 
-#### WEB-13.2 — Report broken external links as issues
+#### WEB-13.2 — Report Broken External Links as Issues
 
 - **Priority:** P2 · **Labels:** `type:ci`, `complexity:routine`, `tier:cli`
 - **Problem:**
@@ -2193,7 +2227,7 @@ maintainer can sustain.
   - [ ] DOI links are checked through doi.org.
   - [ ] archive.org fallbacks are suggested for dead links.
 
-#### WEB-13.3 — Separate internal documentation from the Quarto output directory
+#### WEB-13.3 — Separate Internal Documentation From the Quarto Output Directory
 
 - **Priority:** P2 · **Labels:** `type:chore`, `complexity:complex`, `tier:cli`
 - **Problem:**
@@ -2208,7 +2242,7 @@ maintainer can sustain.
   - [ ] The CLAUDE.md and AGENTS.md sources updated in Repository_Management
         where the managed sections mention paths.
 
-#### WEB-13.4 — Remove legacy cruft
+#### WEB-13.4 — Remove Legacy Cruft
 
 - **Priority:** P3 · **Labels:** `type:chore`, `complexity:simple`, `tier:ollama`
 - **Items:**
@@ -2224,7 +2258,7 @@ maintainer can sustain.
   - [ ] The root allowlist (#4128) updated.
   - [ ] No broken references.
 
-#### WEB-13.5 — Consolidate the 15 inline "Recent" history scripts
+#### WEB-13.5 — Consolidate the 15 Inline "Recent" History Scripts
 
 - **Priority:** P3 · **Labels:** `type:chore`, `complexity:routine`, `tier:cli`
 - **Problem:** Fifteen `.qmd` files carry inline copies of a localStorage
@@ -2235,7 +2269,7 @@ maintainer can sustain.
         where it adds nothing.
   - [ ] Jest tests for `history.js` and `home.js`.
 
-#### WEB-13.6 — Service-worker cache busting by content hash
+#### WEB-13.6 — Service-Worker Cache Busting by Content Hash
 
 - **Priority:** P3 · **Labels:** `type:chore`, `complexity:routine`, `tier:cli`
 - **Problem:** The content-hash cache-busting note (#1459) in `service-worker.js` is unresolved. The offline test is
@@ -2244,7 +2278,7 @@ maintainer can sustain.
   - [ ] Content-hash precache manifest.
   - [ ] The offline test re-enabled and passing.
 
-#### WEB-13.7 — Align Node versions
+#### WEB-13.7 — Align Node Versions
 
 - **Priority:** P3 · **Labels:** `type:chore`, `complexity:trivial`, `tier:ollama`
 - **Problem:** The `Dockerfile` uses `NODE_MAJOR=20`; CI uses 22.
@@ -2253,7 +2287,7 @@ maintainer can sustain.
   - [ ] One Node version, pinned in one file (for example `.nvmrc`) and read
         by both CI and the Dockerfile.
 
-#### WEB-13.8 — Content inventory and ownership map
+#### WEB-13.8 — Content Inventory and Ownership Map
 
 - **Priority:** P2 · **Labels:** `type:process`, `complexity:routine`, `tier:cli`
 - **Proposal:**
@@ -2267,7 +2301,7 @@ maintainer can sustain.
   - [ ] A dashboard page, internal or public.
   - [ ] Pages with fewer than 300 words and no Planned badge are flagged.
 
-#### WEB-13.9 — Content deprecation and archive policy
+#### WEB-13.9 — Content Deprecation and Archive Policy
 
 - **Priority:** P3 · **Labels:** `type:process`, `judgement:design`, `tier:strong`
 - **Proposal:**
@@ -2289,7 +2323,7 @@ have low-friction ways to respond, follow, and contribute.
 **Coordinate with:** #4088 (reader validation protocols). This epic supplies
 the site surfaces those protocols need.
 
-#### WEB-14.1 — Run the #4088 usability study against the new onboarding
+#### WEB-14.1 — Run the #4088 Usability Study Against the New Onboarding
 
 - **Priority:** P1 · **Labels:** `type:research`, `complexity:research`, `tier:strong`
 - **Proposal:**
@@ -2304,7 +2338,7 @@ the site surfaces those protocols need.
   - [ ] Results published, including negative findings.
   - [ ] Never presented as scientific validation.
 
-#### WEB-14.2 — Per-page "Was this helpful? / Report a problem" control
+#### WEB-14.2 — Per-Page "Was This Helpful? / Report a Problem" Control
 
 - **Priority:** P2 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Proposal:**
@@ -2317,7 +2351,7 @@ the site surfaces those protocols need.
   - [ ] Keyboard accessible.
   - [ ] The template receives the page URL and commit.
 
-#### WEB-14.3 — Privacy-preserving navigation analytics
+#### WEB-14.3 — Privacy-Preserving Navigation Analytics
 
 - **Priority:** P3 · **Labels:** `type:feature`, `judgement:contested`, `tier:strong`
 - **Proposal:** Implement per D6: cookieless, aggregate, self-hosted counts
@@ -2327,7 +2361,7 @@ the site surfaces those protocols need.
   - [ ] No personal data is collected.
   - [ ] Results are treated as interface evidence only.
 
-#### WEB-14.4 — "What's new" feed and optional newsletter
+#### WEB-14.4 — "What's New" Feed and Optional Newsletter
 
 - **Priority:** P3 · **Labels:** `type:feature`, `complexity:routine`, `tier:cli`
 - **Proposal:**
@@ -2339,7 +2373,7 @@ the site surfaces those protocols need.
   - [ ] The RSS feed validates.
   - [ ] Items link to revision history.
 
-#### WEB-14.5 — Contributor and reviewer guide on the site
+#### WEB-14.5 — Contributor and Reviewer Guide on the Site
 
 - **Priority:** P2 · **Labels:** `type:content`, `complexity:routine`, `tier:cli`
 - **Problem:** `pages/collaborate.qmd` offers GitHub issues only.
@@ -2349,7 +2383,7 @@ the site surfaces those protocols need.
 - **Acceptance criteria:**
   - [ ] Linked from Collaborate and from every WEB-03.4 block.
 
-#### WEB-14.6 — Issue template for website and UX problems
+#### WEB-14.6 — Issue Template for Website and UX Problems
 
 - **Priority:** P2 · **Labels:** `type:process`, `complexity:simple`, `tier:cli`
 - **Problem:** `.github/ISSUE_TEMPLATE/` has content, critique, article,
@@ -2358,7 +2392,7 @@ the site surfaces those protocols need.
   - [ ] A template with page URL, viewport, theme, browser, and expected
         versus actual behaviour.
 
-#### WEB-14.7 — Educator resources
+#### WEB-14.7 — Educator Resources
 
 - **Priority:** P3 · **Labels:** `type:content`, `judgement:design`, `tier:strong`
 - **Proposal:**
@@ -2384,7 +2418,7 @@ the site surfaces those protocols need.
 | **4: Show it** | Visuals and interactivity | WEB-06.2, WEB-06.3, WEB-06.6, WEB-08.3, WEB-06.4, WEB-06.5, WEB-06.8 | The central idea becomes visible and runnable |
 | **5: Researcher grade** | Citation and evidence | WEB-07.1, WEB-07.2, WEB-07.4–07.8, WEB-07.11, WEB-05.1–05.5 | Citable, dated, licensed, with claims registered |
 | **6: Harden** | Enforcement | WEB-09.1–09.3, WEB-10.1, WEB-10.5, WEB-11.1, WEB-13.1–13.3 | Turns quality into gates so improvements do not regress |
-| **7: Validate and extend** | Reader evidence and growth | WEB-14.1, WEB-05.7, WEB-05.8, WEB-05.10, WEB-06.10, WEB-08.4, WEB-14.* | Measure, then invest further where the data says to |
+| **7: Validate and extend** | Reader evidence and growth | WEB-14.1, WEB-05.7, WEB-05.8, WEB-05.10, WEB-06.10 (Phase 1), WEB-08.4, WEB-14.* | Measure, then invest further where the data says to |
 
 Phases 5 and 6 can run in parallel with Phases 3 and 4 if capacity allows.
 The fleet WIP limit for this repository is 2 (`DEVELOPMENT_LOG.md`), so the
