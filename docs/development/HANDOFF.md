@@ -1,61 +1,65 @@
-# Implementation Handoff — Deploy Website Verification Fix (#4617)
+# Implementation Handoff — Extend Critique Annotations (#4524)
+
+Keep this file current and concise.
 
 ## Identity
 
-- Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/issue-4617-deploy-website-resources-books-error
-- Baseline commit: d53290cd92d8c90acd33ae91945c643bb9531296
-- Implementation commit: SELF
-- Pull request: not created
-- Governing issue/epic: #4617
+- Repository: `D-sorganization/AffineDrift`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift`
+- Branch: `fix/web-05-3-critique-annotations-4524`
+- Baseline commit: `d53290cd4cf81c3b17c2f0f46c374944d1565551`
+- Implementation commit: `SELF`
+- Pull request: #4619
+- Governing issue/epic: #4524 (epic #4521)
 
 ## Objective and Status
 
-- Objective: Fix Deploy Website failure on route /resources/resources-books.html and prevent non-first-party network errors from failing verification.
-- Status: in progress
-- Completed: Removed 18 fragile external book covers and fallback onerror 404 handler from resources-books.qmd; updated scripts/public-site-browser-noise.js to filter Failed to load resource: net::ERR_ console noise; added test coverage in tests/public-site-verifier.test.js.
-- Remaining: Verification suite completion, PR creation, and agent lease release.
+- Objective: Extend critique annotations to ZTCF and Proximal–Distal pages (#4524).
+- Status: ready for review
+- Completed: Enforced that every critique maps to every page whose claim it targets; added critique annotations to zero-torque-counterfactual.qmd, theory-part2.qmd, and proximal-distal-energy-transfer.qmd; verified 18 generated surfaces and 2 audit reports.
+- Remaining: Merge main, run pre-commit checks, push to origin, verify CI.
 
 ## Files and Decisions
 
 - Files changed:
-  - `resources/resources-books.qmd`: Removed fragile external book cover media slots and fallback onerror handlers from all 18 cards to make all 31 book cards uniform text cards and prevent network and 404 failures.
-  - `scripts/public-site-browser-noise.js`: Added filter for `Failed to load resource: net::ERR_` in `isActionableConsoleError` to prevent third-party network flakiness from failing verification.
-  - `tests/public-site-verifier.test.js`: Added test assertions verifying `isActionableConsoleError` ignores `net::ERR_` noise while preserving actionable errors.
-  - `data/trust/claim_audit_inventory.json` & generated trust registries: Regenerated claim audit evidence digests following resource book source update.
-  - `SPEC.md`: Added change-log row for #4617.
-  - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: First-party network failures remain caught by `onRequestFailed` and `navigateWithRetry`, so filtering Chromium console's `net::ERR_` does not hide first-party regressions while protecting the verification gate against intermittent external timeouts or unreachable CDNs.
+  - `scripts/generate_claim_critique_ledger.py`: Added claim-to-page mapping and strict validation rule in `validate_ledger()`.
+  - `data/trust/claim_critique_ledger.json`: Extended 8 critiques with affected target pages.
+  - `articles/zero-torque-counterfactual.qmd`, `articles/theory-part2.qmd`, `articles/proximal-distal-energy-transfer.qmd`: Included generated critique annotations callout partials.
+  - `data/trust/claim_audit_inventory.json`: Added critique IDs and evidence paths for affected routes.
+  - `data/trust/proximal_distal_falsification_atlas.json`: Updated SHA-256 digest of `claim_critique_ledger.json`.
+  - `tests/test_claim_critique_ledger.py`: Added contract tests and page annotation presence tests.
+  - `SPEC.md`: Added change-log row for #4524.
+  - `docs/development/DEVELOPMENT_LOG.md`: Added DL-#4524.
+  - `docs/development/HANDOFF.md`: Updated canonical handoff.
+- Key decisions: Fail closed if any critique does not include all affected pages for its related claims.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
-- `npx jest` — PASS (25 suites passed, 420 passed)
-- `python -m ruff check .` — PASS (All checks passed)
-- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
-- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
-- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
-- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
-- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+- `python -m scripts.generate_claim_critique_ledger --check` — passed (18 surfaces verified)
+- `python -m scripts.generate_claim_audit_inventory --check` — passed (2 reports verified)
+- `python -m scripts.generate_proximal_distal_falsification_atlas --check` — passed
+- `python -m scripts.regenerate_claim_audit_evidence --check` — passed
+- `pytest tests/test_claim_critique_ledger.py tests/test_claim_audit_inventory.py tests/test_proximal_distal_falsification_atlas.py` — passed (54 passed in 16s)
+- `ruff check scripts/generate_claim_critique_ledger.py tests/test_claim_critique_ledger.py` — passed
+- `black --check --line-length 100 scripts/generate_claim_critique_ledger.py tests/test_claim_critique_ledger.py` — passed
+- `fleet_hooks.py spec-changelog` — passed
 
 ## Blockers and Risks
 
 - Blockers: none
-- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+- Risks/assumptions: none
 
 ## Next Steps
 
-1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
-2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
-3. Release agent lease for #4617.
+1. Merge main and verify clean test suite.
+2. Push branch `fix/web-05-3-critique-annotations-4524` to origin.
+3. Verify all checks pass on PR #4619 and auto-merge completes.
+4. Release agent lease in Repository_Management.
 
 ## Change Log
 
-- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
 - 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
