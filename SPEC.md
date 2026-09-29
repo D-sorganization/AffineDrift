@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4617 | Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617). |
 | 2026-09-24 | #4458 | Mark four stale development-log entries (DL-#4429, DL-#4253, DL-#4406, DL-#1595) as shipped after their PRs merged. |
 | 2026-09-23 | #4445 | Enforce the published deferred catalog through the canonical validator bundle and hook; sync format-specific agent guidance. |
 | 2026-09-23 | #4438 | Project charter/status expose DV-4253 as parked with pending resource decisions while theory issue #4253 remains active. |
@@ -415,3 +416,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4475 | Correct green-simulation rolling inertia, signed slip, events, surface and uncertainty claims; distinguish the derived model from pinned provider implementations and bind independent numerical/browser evidence. |
 
 | 2026-09-28 | #4477 | Correct companion opening and whole-swing ledger accounting, state, wrench transport and inference; preserve book scope and verify archived examples plus rebuilt HTML/PDF. |
+
+| 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
+
+| 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
