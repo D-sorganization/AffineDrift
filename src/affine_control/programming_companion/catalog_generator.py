@@ -345,10 +345,11 @@ categories:
         for prog in sorted(self._programs, key=lambda p: str(p.get("id", ""))):
             pid = prog.get("id", "")
             title = prog.get("name", pid)
-            kind = prog.get("kind", "program")
+            kind = prog.get("type", "program")
             engine = prog.get("engine_id") or "core"
             maturity = prog.get("maturity", "unspecified")
-            surfaces = ", ".join(prog.get("surfaces", [])) or "cli"
+            # The manifest publishes no surface list; say so rather than guess.
+            surfaces = ", ".join(prog.get("surfaces", [])) or "not published"
             rows.append(
                 f"| `{pid}` | {title} | `{kind}` | `{engine}` | `{maturity}` | {surfaces} |"
             )

@@ -207,6 +207,19 @@ def test_program_titles_use_the_manifest_name_not_the_id(
 
 
 @pytest.mark.unit
+def test_program_kind_and_surfaces_come_from_the_manifest(
+    manifest_data: dict[str, object],
+) -> None:
+    """AffineDrift #4542: Kind is the manifest `type`; absent surfaces are not invented."""
+    programs = CatalogGenerator(manifest_data).generate_programs()
+
+    row = next(line for line in programs.splitlines() if line.startswith("| `aip` |"))
+    cells = [cell.strip() for cell in row.strip("|").split("|")]
+    assert cells[2] != "`program`"
+    assert cells[5] == "not published"
+
+
+@pytest.mark.unit
 def test_engine_names_use_the_manifest_name_not_the_id(
     manifest_data: dict[str, object],
 ) -> None:
