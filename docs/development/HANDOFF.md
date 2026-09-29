@@ -1,3 +1,37 @@
+# Website Review and Draft Board Backlog — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
+- Branch `claude/ecstatic-darwin-latmzr`, commit `SELF`; pull request #4485 (open).
+- Objective: at the user's request, review the external "Comprehensive Technical & Architectural
+  Review Summary", do an independent source-level review of the website, and draft epics and
+  issues for Board review.
+- Deliverable: `docs/development/website-improvement-draft-issues-2026-09-29.md` (moved from `reports/` per the AGENTS.md rule that development plans live in `docs/development/`), with 14 epics, 124 draft
+  issues, 10 Board decisions, sequencing, success measures, and a map to existing open work
+  (#4008/#4010/#4022-#4030, #4084-#4089, #4139/#4140 and others).
+- No GitHub issues were filed. The drafts await Board approval. No site source, content, or code
+  changed. The live site was not reachable from the review sandbox, so findings about rendered
+  behaviour are marked "verify on live site".
+- Validation:
+  - `prettier --write` applied to the report.
+  - Headings title-cased with `scripts.check_title_case.expected_title`.
+  - Review follow-up: the WEB-06.2 packaging scope includes `src.core`, the WEB-06.10 viewer is planar-first, and WEB-07.3 dates must be verified by the owner rather than taken from Git.
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` passes.
+  - `scripts/check_root_hygiene.py` passes.
+  - The report-scanning pytest subset passes: claim audit, trust surface, public-site manifest,
+    render coverage, and e2e paths (67 tests).
+- No development-log entry: this is planning only, with no governing issue yet. Entries should be
+  created per epic once the Board files the issues.
+
+## Next Steps
+
+1. Done 2026-09-29: the Board accepted all 14 epics (#4496, #4505, #4514, #4521, #4530, #4543,
+   #4552, #4560, #4569, #4579, #4586, #4594, #4604, #4610). 111 children are filed and 13 are held;
+   the report's §6 records the epic numbers and the held items.
+2. The owner decides D4 (canonical versions, one ADR per family), D7 (content licence) and D8
+   (external review model) to release the 13 held items.
+
+---
+
 # Night Watch Pass — 2026-09-28
 
 - Role: `night-watch`; branch `staff/night-watch-task-587ee0`.
