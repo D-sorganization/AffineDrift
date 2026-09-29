@@ -1,43 +1,56 @@
-# Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
+# Implementation Handoff — Build the Page Header Card Component (#4507)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/web-05-9-passive-active-nomenclature-4529
-- Baseline commit: 31572bc386154687007da85b376f92fb2b876403
+- Branch: feat/web-03-2-page-header-card-4507
+- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
 - Implementation commit: SELF
-- Pull request: #4630
-- Governing issue/epic: #4529
+- Pull request: #TBD
+- Governing issue/epic: #4507 (epic #4514)
 
 ## Objective and Status
 
-- Objective: Resolve passive/active nomenclature conflict in The Physics of Golf nomenclature.tex by aligning definitions with NOTATION.md and enforcing via check_terminology gate.
-- Status: ready for review / auto-merge
-- Completed: Updated articles/The_Physics_of_Golf/nomenclature.tex subscript, force, vector field, and power definitions to reference autonomous plant evolution (u=0) and declared control channels; extended scripts/check_terminology.py with banned patterns for drift passivity and active muscular overclaims; added unit test coverage in tests/test_check_terminology.py; added change-log row in SPEC.md.
-- Remaining: Monitor PR #4630 CI and auto-merge into main.
+- Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
+- Status: ready for PR
+- Completed:
+  - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
+  - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
+  - Added print styling in `css/print.css`.
+  - Registered Lua filter in `_quarto.yml`.
+  - Resolved reading-time estimate policy conflict in `books/roadmap.qmd` and `js/accessibility.js`.
+  - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
+  - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
+  - Regenerated claim audit evidence digests and verified all pre-commit checks.
+- Remaining: Submit PR, key row in `SPEC.md`, arm auto-merge, release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `articles/The_Physics_of_Golf/nomenclature.tex`: Aligned drift and control subscript conventions, generalized drift and control force definitions, drift and control vector field definitions, and drift and control power definitions with NOTATION.md autonomous plant mechanics.
-  - `scripts/check_terminology.py`: Added banned patterns banning equating drift with passivity or control input with muscular activations, and tightened qualifiers typing.
-  - `tests/test_check_terminology.py`: Added parameterized unit test cases for the new banned terminology rules.
-  - `SPEC.md`: Added change-log row for #4630.
+  - `scripts/filters/page-header-card.lua`: Component Lua filter.
+  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
+  - `css/print.css`: Print rules avoiding page breaks inside header card.
+  - `styles.css`: Component `@import`.
+  - `_quarto.yml`: Filter registration.
+  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
+  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
+  - `tests/page-header-card.test.js`: Jest unit test suite.
+  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
+  - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Drift is strictly defined as the complete autonomous evolution of the declared effective plant with zero applied control (u=0), never equating drift to passivity or unassisted movement; control is defined as the declared control channel (B u), avoiding direct biological/muscular overclaims.
+- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `python scripts/check_terminology.py --baseline config/terminology-baseline.json` — PASS
-- `pytest -m content_lint tests/test_check_terminology.py` — PASS (33 passed)
+- `npm test tests/page-header-card.test.js` — PASS (5 passed)
+- `pytest tests/test_page_header_card.py` — PASS (11 passed)
+- `python scripts/check_css_architecture.py` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check scripts/check_terminology.py tests/test_check_terminology.py` — PASS
-- `python -m black --check --line-length 100 scripts/check_terminology.py tests/test_check_terminology.py` — PASS
-- `python -m mypy scripts/check_terminology.py` — PASS
+- `python -m ruff check tests/test_page_header_card.py` — PASS
+- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- Fleet pre-push hooks (secrets, ruff, black, bandit, pytest, etc.) — PASS
 
 ## Blockers and Risks
 
@@ -46,7 +59,10 @@
 
 ## Next Steps
 
-1. Monitor PR #4630 CI and auto-merge into main.
+1. Create pull request referencing `Closes #4507` with label `agent:local`.
+2. Update row in `SPEC.md` to reference PR number.
+3. Arm auto-merge (`--squash`).
+4. Release lease on #4507 in `Repository_Management`.
 
 ## Change Log
 
