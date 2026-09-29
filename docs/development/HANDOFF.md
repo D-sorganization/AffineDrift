@@ -1,60 +1,53 @@
-# Implementation Handoff — Real Dates and Per-Article Change History (#4545)
+# Implementation Handoff — Per-Page Citation Metadata and "Cite This Page" Block (#4544)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/web-07-3-real-dates-and-change-history-4545
-- Baseline commit: ebced38fbe6908492e5c8e2ff08866516f5691c0
+- Branch: feat/web-07-2-citation-metadata-and-cite-block-4544
+- Baseline commit: ef8bc5f7
 - Implementation commit: SELF
-- Pull request: #4640
-- Governing issue/epic: #4545 (epic #4552)
+- Pull request: #4544
+- Governing issue/epic: #4544 (epic #4552)
 
 ## Objective and Status
 
-- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Objective: Emit per-page citation metadata (citation_title, citation_author), omit publication date for unverified dates (WEB-07.3), provide a "Cite this page" block with standalone BibTeX download, print stylesheet handling, and validate with Google Scholar metadata checker on sample pages.
 - Status: ready for commit / PR
 - Completed:
-  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
-  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
-  - Derived `date-modified` from substantive commit history and latest changes.
-  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
-  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
-  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
-  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
-  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
-  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
-  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Configured `_quarto.yml` with top-level `citation: true`, `format.html.google-scholar: true`, and registered post-render script `scripts/post_render_citations.py`.
+  - Implemented `scripts/post_render_citations.py` to strip Quarto's `NaN` date meta tags on unverified pages, extract BibTeX to a standalone `<stem>.bib` file alongside `.html`, inject an accessible download button into the citation block, and anchor `#citation`.
+  - Implemented `scripts/check_google_scholar_metadata.py` validator enforcing Google Scholar title, author, and verified publication date rules, plus BibTeX download presence.
+  - Updated `css/print.css` with `#quarto-citation { break-inside: avoid; border-top: 1px solid #000 !important; margin-top: 2rem !important; }` and hid `.quarto-citation-bibtex-download` in print.
+  - Added missing `author: "Dieter Olson"` and unverified date metadata to 5 article sources.
+  - Implemented comprehensive TDD suite `tests/test_citation_metadata.py` (7 tests covering config, frontmatter, rendering, unverified date omission, and 3 sample pages).
+  - Regenerated claim audit evidence digests and verified all pre-commit checks pass.
   - Added change-log row in `SPEC.md`.
-- Remaining: Monitor PR #4640 CI and auto-merge into main.
+- Remaining: Commit, push, create PR, re-key SPEC.md to PR number, arm auto-merge, and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
-  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
-  - `css/components/revision-history.css`: Component styling.
-  - `css/print.css`: Print styling avoiding page breaks inside revision history.
-  - `styles.css`: Component import.
-  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
-  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
-  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `_quarto.yml`: Top-level citation: true, format.html.google-scholar: true, project.post-render hook.
+  - `scripts/post_render_citations.py`: Post-render citation cleaner and BibTeX download link injector.
+  - `scripts/check_google_scholar_metadata.py`: Google Scholar tag and BibTeX validator.
+  - `css/print.css`: Print styling for citation block.
+  - `articles/*.qmd`: Added author and unverified date metadata where missing.
+  - `tests/test_citation_metadata.py`: Unit and integration test suite.
   - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
+- Key decisions: Post-render Python processing cleanly resolves Quarto's internal JS NaN date evaluation; standalone .bib files generated alongside HTML for simple HTTP downloads; unverified pages strictly omit citation_publication_date.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_dates_and_history.py` — PASS (16 passed)
-- `python -m scripts.derive_substantive_dates --check` — PASS
-- `python -m ruff check scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
-- `python -m black --check --line-length 100 scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `pytest tests/test_citation_metadata.py` — PASS (7 passed)
+- `python -m ruff check scripts/post_render_citations.py scripts/check_google_scholar_metadata.py tests/test_citation_metadata.py` — PASS
+- `python -m black --check --line-length 100 scripts/post_render_citations.py scripts/check_google_scholar_metadata.py tests/test_citation_metadata.py` — PASS
 - `npm run lint:css` — PASS
-- `python scripts/check_css_architecture.py` — PASS
-- `python scripts/check_root_hygiene.py` — PASS
-- `python -m src.tools.site_link_gate` — PASS
+- `python -m scripts.derive_substantive_dates --check` — PASS (330 files scanned)
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python -m scripts.check_terminology --baseline config/terminology-baseline.json` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks

@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  post-render:
+    - python3 scripts/post_render_citations.py
   render:
     - "*.qmd"
     - "pages/**/*.qmd"
@@ -253,9 +255,11 @@ bibliography:
   - articles/proximal_distal_energy_transfer/references.bib
 csl: references/chicago-author-date.csl
 link-citations: true
+citation: true
 
 format:
   html:
+    google-scholar: true
     theme:
       light: [cosmo, custom.scss]
     css:
