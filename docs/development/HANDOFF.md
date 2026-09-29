@@ -50,6 +50,60 @@
   per D6, this page's Analytics section should be updated in the same PR.
 - Next steps: push the branch, open the draft PR (`Fixes #4576`), and confirm
   the fleet lease is released by the delegating agent per its own process.
+# Notation Lint for the G(x) Input Map — Issue #4582
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4582`.
+- Branch `claude/issue-4582`, commit `SELF`; pull request: not created yet (opened
+  as a draft in the same turn this entry lands).
+- Governing issue: #4582 ("[WEB-11.4] Enforce $G(x)$ Notation and Add a Notation
+  Lint"), native child of epic #4586 (E11 — Mathematical Typesetting and Notation).
+- Objective: `NOTATION.md:342-346` makes uppercase $G(x)$ normative for the
+  control-affine input map and forbids lowercase $g(x)$ (reserved for gravity).
+  Fix every occurrence that means the input map, and add a regression lint so a
+  reintroduced lowercase $g(x)$ fails CI.
+  - Fixed lowercase `g(x)` -> `G(x)` (input-map meaning only) in `index.qmd`
+    (home page), `articles/motion-control/chapter8.tex`,
+    `articles/motion-control/Control_Is_Motion_Complete.tex`,
+    `articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd` (and its
+    `Volume_I/chapters/ch03_superposition.tex` mirror, including the Lie-bracket
+    line `Dg(x)` -> `DG(x)`), `articles/The_Geometry_of_Motion/quarto/volume2_content.qmd`
+    and `Volume_II/chapters/ch08_phase_variable_control.tex`, `models/models-drake.qmd`,
+    and all 12 `critiques/*.md` files that stated the project's own dynamics form.
+  - Left `articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd` and its
+    `Volume_I/chapters/ch05_optimal_control.tex` mirror unchanged: their $g(x)$ is
+    an unrelated inequality-constraint function ($g(x) \le 0$ barrier/penalty), not
+    the input map, so rewriting it to $G(x)$ would misrepresent the math. Both are
+    allowlisted in `config/notation-baseline.json`.
+  - `articles/superposition.qmd` was already correct (uses $G(x)$); no change needed.
+  - Added `scripts/check_notation.py` (baseline-gated scan of `.tex`/`.qmd`/`.md`
+    under `articles/`, `books/`, `content/`, `critiques/`, `models/`, `pages/`,
+    `resources/`, and root `index.qmd`), mirroring `scripts/check_terminology.py`'s
+    design (issue #3526).
+  - Added `tests/test_check_notation.py`, marked `content_lint`: fixture-based unit
+    tests for `scan()`/baseline behavior, plus `test_real_corpus_matches_notation_baseline`,
+    which scans the actual repository tree and is the live enforcement for #4582.
+    It runs via the existing "Run Content Lint Tests" CI step
+    (`pytest tests/ -m content_lint`); no workflow file was changed.
+- Compatibility constraints: did not touch `docs/development/*.md` (meta/dev-process
+  docs, e.g. `code-style-guide.md`, `writing-style-guide.md`,
+  `website-improvement-draft-issues-2026-09-29.md`) or `reports/*.md`
+  (historical audit reports) — out of the lint's search roots and out of the
+  issue's explicit scope, so they still contain historical/illustrative
+  lowercase `g(x)` mentions unrelated to the corpus content itself.
+- Validation:
+  - `python3 -m black --check --line-length 100 scripts/check_notation.py tests/test_check_notation.py` passes.
+  - `python3 -m ruff check scripts/check_notation.py tests/test_check_notation.py` passes.
+  - `python -m pytest --override-ini addopts= tests/test_check_notation.py -m content_lint -o qt_api=pyqt6 -v`:
+    17 passed (the `-o qt_api=pyqt6` works around an unrelated local pytest-qt/PyQt6
+    DLL probe failure in this sandbox; not needed in CI).
+  - `python3 scripts/check_notation.py --baseline config/notation-baseline.json` exits 0.
+- Next Steps
+  1. Open the draft PR for #4582 (`Fixes #4582`), including the test commands/pass
+     counts above.
+  2. A frontier reviewer should confirm the `ch05_optimal_control` allowlist
+     rationale (distinct constraint-function symbol, not the input map) before
+     merge.
 
 ---
 

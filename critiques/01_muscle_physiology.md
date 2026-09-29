@@ -7,7 +7,7 @@ description: 'Critique and response context for The Fallacy of Passive Drift and
 
 ## Summary of Concern
 
-The AffineDrift theory separates dynamics into "passive drift" ($f(x)$) and "active input" ($g(x)u$), assuming drift is input-invariant.
+The AffineDrift theory separates dynamics into "passive drift" ($f(x)$) and "active input" ($G(x)u$), assuming drift is input-invariant.
 However, muscle activation ($u$) fundamentally alters joint impedance (stiffness/damping). The "Skeletal Drift" defense (Assumption 5) argues that $f(x)$ represents the "skeletal baseline".
 **The Weakness:** This "Skeletal Baseline" corresponds to a flaccid/cadaveric state, which is mechanically irrelevant to the high-stiffness regime of a power swing. Using a "cadaver baseline" to quantify "passive contributions" during a 115 mph swing provides a mathematically rigorous but biologically meaningless counterfactual.
 
