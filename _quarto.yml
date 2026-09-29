@@ -34,6 +34,12 @@ project:
     - content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py
     - src/tools/wrist_universal_joint/grip_angle_polynomial_evaluator.js
 
+# Emits Schema.org JSON-LD for pages that opt in with a `schema-type`
+# frontmatter field (see scripts/filters/schema-jsonld.lua). A no-op for
+# every other page, so it is safe to register project-wide.
+filters:
+  - scripts/filters/schema-jsonld.lua
+
 website:
   title: "AffineDrift"
   site-url: "https://affinedrift.com"

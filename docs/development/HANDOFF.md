@@ -1,3 +1,68 @@
+# ScholarlyArticle and Book JSON-LD — #4546
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4546` (git worktree).
+- Branch `claude/issue-4546`, commit `SELF`; pull request opening this session
+  as a **draft** (see `docs/development/DEVELOPMENT_LOG.md` DL-#4546 for the
+  URL once posted).
+- Governing issue: #4546 (epic #4552), `tier:cli`. Objective: `_includes/article-schema.html`
+  was dead (referenced by no page) and broken (`{{< meta >}}` does not expand
+  inside a raw HTML include, and its hardcoded author URL was wrong). Replace
+  it with per-page Schema.org JSON-LD generated through a Lua filter, covering
+  `ScholarlyArticle`, `Book`, `Chapter`, `Dataset`, and `SoftwareSourceCode`.
+- Completed work:
+  - Added `scripts/filters/schema-jsonld.lua`: a Pandoc/Quarto Lua filter that
+    reads a `schema-type` frontmatter field and, only when it names one of the
+    five supported types, builds the matching JSON-LD object from already-resolved
+    metadata (`title`, `description`, `author`, `date`, plus a few type-specific
+    fields) and injects it into `<head>` via `quarto.doc.include_text`. Pages
+    without `schema-type` are untouched, so registering it project-wide in
+    `_quarto.yml` (`filters:`) is a no-op for the rest of the site.
+  - `date` is only passed through as `datePublished` when it still matches
+    `YYYY-MM-DD`: Quarto's HTML format reformats `date` into a display string
+    (e.g. "January 15, 2026") before Lua filters run, and emitting that would
+    be a wrong-format `datePublished` rather than a missing one.
+  - Deleted the dead `_includes/article-schema.html` (satisfies the issue's
+    second acceptance criterion).
+  - Tagged one real, already-published page per type with `schema-type` (and
+    the relevant type-specific fields) so the first acceptance criterion has
+    concrete pages to check: `articles/affine-nature-golf-swing.qmd`
+    (ScholarlyArticle), `books/control-is-motion.qmd` (Book),
+    `articles/appendix-applications.qmd` (Chapter, `isPartOf` the article
+    above), `resources/resources-datasets.qmd` (Dataset),
+    `resources/resources-software.qmd` (SoftwareSourceCode).
+- Compatibility: the filter is additive and opt-in; no existing page's output
+  changes unless it declares `schema-type`. The prior JSON-LD in
+  `_includes/site-head.html` (site-wide `WebSite` schema) is untouched and
+  keeps rendering alongside the new per-page block.
+- Validation:
+  - `python3 -m pytest tests/test_schema_jsonld.py tests/test_companion_hierarchy.py -v`
+    — 10 passed (integration tests that render synthetic pages through the real
+    `quarto render` + filter pipeline and assert on the parsed JSON-LD; see the
+    test file's module docstring for why `quarto render`, not `quarto pandoc`,
+    is required here).
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .`
+    — clean.
+  - `python3 -m scripts.validate_frontmatter` — 242 files checked, passed.
+  - `python3 -m scripts.check_spec_changelog` — passed (added the 2026-09-29
+    `#4546` row).
+  - Manually rendered all five tagged sample pages with `quarto render` from
+    the project root and confirmed each produced one well-formed, correctly
+    typed JSON-LD `<script>` block in addition to the existing site-wide one
+    (verified via a scratch script, not committed).
+  - Did not run the full Python/Jest/Playwright suites or a full-site
+    `quarto render` (out of scope for this change and prohibitively slow per
+    `CLAUDE.md`); the targeted commands above cover every acceptance criterion.
+- No blockers.
+
+## Next Steps
+
+- None outstanding for this issue. A frontier agent reviews the draft PR
+  before merge; it may choose additional sample pages or ask for the filter
+  to cover more of the site.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
