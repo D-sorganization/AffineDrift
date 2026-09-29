@@ -1,3 +1,76 @@
+# Parameters Page and Notation Quick-Reference Card — #4551
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4551`.
+- Branch `claude/issue-4551`, commit `SELF`; PR: not yet created (opening as a
+  draft immediately after this handoff commit).
+- Governing issue: #4551 (`[WEB-07.10]`, part of epic #4552), development log
+  `DL-#4551`.
+- Objective: render `PARAMETERS.md`, add a one-page printable notation
+  quick-reference card, link core pages to notation from their header card,
+  and remove `pages/notation.qmd`'s duplicate heading/manual table of contents.
+- Completed:
+  - `pages/parameters.qmd` (new): includes `../PARAMETERS.md`, `categories:
+[reference]`, a Related Articles section.
+  - `pages/notation-quick-reference.qmd` (new): condensed one-page printable
+    card (control-affine form, canonical acronyms, core physical-quantity
+    symbols, axis convention) that points back to `notation.html` as the
+    normative source rather than duplicating its full prose definitions.
+  - `NOTATION.md`: removed the redundant `## Mathematical Notation Reference`
+    heading and manual `## Table of Contents` (the wrapper page already
+    supplies the title and Quarto's sitewide `toc: true` already renders one).
+  - `PARAMETERS.md`: removed the redundant top-level `# Canonical Parameters
+    Reference` heading for the same reason, so the new wrapper page does not
+    reintroduce the defect it was created to avoid.
+  - `pages/notation.qmd`: added the two new pages to its Related Articles
+    section (also gives both new pages an inbound link so the site link
+    gate's orphan check passes).
+  - `sitemap.xml`: added `pages/notation-quick-reference.html` and
+    `pages/parameters.html` entries (hand-inserted at the existing
+    alphabetical position; the `generate_sitemap.py` tool resorts and
+    re-dates every entry, which would have produced a large unrelated diff).
+  - `tests/test_notation_and_parameters_pages.py` (new): pins the four
+    behaviors above.
+  - Ran `python -m scripts.regenerate_claim_audit_evidence` (NOTATION.md and
+    pages/notation.qmd are bound evidence for the `/pages/notation.html`
+    trust-surface route) and committed the digest-only diff.
+- **Blocked:** "Every core page links notation from its header card" is not
+  implemented. The header card component (issue #4507 / WEB-03.2 "Build the
+  Page Header Card Component") is itself open and unimplemented — there is no
+  header card on any page yet to add a link to. Hand-editing the ~20
+  `theory-core` pages with an ad hoc substitute would create rework once
+  #4507 lands and would be a parallel, competing design to a component
+  explicitly scoped as its own `tier:cli`/`complexity:complex` issue. Left
+  for the reviewer/owner to decide: accept the PR with 3 of 4 criteria met
+  now, or hold this issue until #4507 ships.
+- Validation:
+  - `python -m pytest tests/test_notation_and_parameters_pages.py tests/test_site_link_gate.py tests/test_site_trust_surface_audit.py tests/test_claim_audit_inventory.py tests/test_check_terminology.py tests/test_root_hygiene.py tests/test_validate_frontmatter.py tests/test_check_tree_parity.py -q` — all pass.
+  - `python -m scripts.link-checker --site-gate` — "Site gate passed!" (no new
+    orphans, broken links, missing categories, or missing Related Articles
+    coverage).
+  - `python -m scripts.check_terminology` — "Terminology consistent."
+  - `python -m scripts.check_root_hygiene` — passes.
+  - `python -m scripts.check_quarto_render_coverage` — passes (242 sitemap
+    URLs, bidirectional coverage).
+  - `python -m scripts.check_title_case` — 639 sources, all title case.
+  - `python -m scripts.regenerate_claim_audit_evidence --check` — current
+    after regeneration.
+  - `python -m ruff check .` and `python -m black --check --line-length 100 .`
+    — both clean.
+  - Not run: `quarto render` (not available in this sandbox) and the Jest/
+    Playwright suites (no JS/browser behavior changed). No UI/browser
+    verification was performed; the print-card layout is untested in an
+    actual browser print preview.
+- Next steps:
+  1. Open the draft PR with a `Blocked:` section covering the header-card
+     dependency above.
+  2. Owner/reviewer decides whether to merge the 3-of-4 scope or wait for
+     #4507, and whether the quick-reference card's condensed content is the
+     right shape.
+  3. Once merged, flip `DL-#4551` to `shipped`.
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.

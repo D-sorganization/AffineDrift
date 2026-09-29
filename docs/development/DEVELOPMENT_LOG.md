@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4551 · Parameters Page and Notation Quick-Reference Card
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #TBD (draft, not yet opened)
+- **Issue:** #4551 (epic #4552)
+- **Branch:** `claude/issue-4551`
+- **Paths:** `pages/parameters.qmd`, `pages/notation-quick-reference.qmd`, `pages/notation.qmd`, `NOTATION.md`, `PARAMETERS.md`, `sitemap.xml`, `tests/test_notation_and_parameters_pages.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (new page-contract tests pass; site link gate, terminology, root hygiene, render-coverage, trust-surface/claim-audit, title-case, ruff and black all pass locally.)
+- **Summary:** Renders `PARAMETERS.md` via a new `pages/parameters.qmd`, adds a condensed one-page printable `pages/notation-quick-reference.qmd`, and removes the duplicate heading/manual table of contents that `pages/notation.qmd` inherited from `NOTATION.md`. The acceptance criterion "every core page links notation from its header card" is not implemented: the header-card component (#4507 / WEB-03.2) does not exist yet, so there is nothing to link from; see the PR's Blocked section.
+- **Next step:** Owner/reviewer decides whether to accept the interim scope (3 of 4 criteria) or hold for #4507, then mark shipped once the PR merges.
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped
