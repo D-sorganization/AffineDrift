@@ -415,3 +415,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4475 | Correct green-simulation rolling inertia, signed slip, events, surface and uncertainty claims; distinguish the derived model from pinned provider implementations and bind independent numerical/browser evidence. |
 
 | 2026-09-28 | #4477 | Correct companion opening and whole-swing ledger accounting, state, wrench transport and inference; preserve book scope and verify archived examples plus rebuilt HTML/PDF. |
+
+| 2026-09-29 | #4532 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
