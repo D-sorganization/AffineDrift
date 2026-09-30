@@ -132,53 +132,61 @@
 
 ---
 
-# Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+# Implementation Handoff — Build the Page Header Card Component (#4507)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-03-3-summary-and-key-takeaways-4508
+- Branch: feat/web-03-2-page-header-card-4507
 - Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
-- Implementation commit: e7fd6342
-- Pull request: #4631
-- Governing issue/epic: #4508 (epic #4514)
+- Implementation commit: c945531c
+- Pull request: #4633
+- Governing issue/epic: #4507 (epic #4514)
 
 ## Objective and Status
 
-- Objective: Render plain-language summary and key takeaways from front matter beneath page header, visible without interaction, printed in print stylesheet, and suppressing legacy lay blocks.
-- Status: ready for PR
+- Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
+- Status: ready for review / auto-merge
 - Completed:
-  - Created `scripts/filters/summary-takeaways.lua` Pandoc Lua filter extracting `summary-plain` and `key-takeaways` from front matter and suppressing duplicate legacy lay blocks.
-  - Created `css/components/summary-takeaways.css` component stylesheet and registered in `styles.css`.
-  - Added print rules in `css/print.css`.
+  - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
+  - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
+  - Added print styling in `css/print.css`.
   - Registered Lua filter in `_quarto.yml`.
-  - Added TDD integration and unit tests in `tests/test_summary_takeaways.py` (7 tests, all passing).
+  - Resolved reading-time estimate policy conflict in `books/roadmap.qmd` and `js/accessibility.js`.
+  - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
+  - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
   - Regenerated claim audit evidence digests and verified all pre-commit checks.
-- Remaining: Submit PR, key row in `SPEC.md`, arm auto-merge, release lease.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Monitor PR #4633 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
-  - `scripts/filters/summary-takeaways.lua`: Component Lua filter.
-  - `css/components/summary-takeaways.css`: Modern card styles with accessible contrast and semantic layout.
-  - `css/print.css`: Print rules preventing page breaks inside the takeaways card.
+  - `scripts/filters/page-header-card.lua`: Component Lua filter.
+  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
+  - `css/print.css`: Print rules avoiding page breaks inside header card.
   - `styles.css`: Component `@import`.
   - `_quarto.yml`: Filter registration.
-  - `tests/test_summary_takeaways.py`: TDD test suite.
+  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
+  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
+  - `tests/page-header-card.test.js`: Jest unit test suite.
+  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
   - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Single component driven by front matter; no collapsible state or JS toggle required; cleanly replaces legacy HTML raw lay blocks when front matter is defined.
+- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_summary_takeaways.py` — PASS (7 passed in 14s)
+- `npm test tests/page-header-card.test.js` — PASS (5 passed)
+- `pytest tests/test_page_header_card.py` — PASS (11 passed)
 - `python scripts/check_css_architecture.py` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check tests/test_summary_takeaways.py` — PASS
-- `python -m black --check --line-length 100 tests/test_summary_takeaways.py` — PASS
+- `python -m ruff check tests/test_page_header_card.py` — PASS
+- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks
 
@@ -187,10 +195,7 @@
 
 ## Next Steps
 
-1. Create pull request referencing `Closes #4508` with label `agent:local`.
-2. Update row in `SPEC.md` to reference PR number.
-3. Arm auto-merge (`--squash`).
-4. Release lease on #4508 in `Repository_Management`.
+1. Monitor PR #4633 CI and auto-merge into main.
 
 ## Change Log
 

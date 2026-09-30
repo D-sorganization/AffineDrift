@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4633 | Build Page Header Card component driven by front matter and styled in print stylesheet (#4507). |
 | 2026-09-29 | #4631 | Implement Plain-Language Summary and Key Takeaways component driven by front matter and styled in print stylesheet (#4508). |
 | 2026-09-29 | #4630 | Align Physics of Golf nomenclature with NOTATION.md autonomous drift and control channel definitions (#4529). |
 | 2026-09-29 | #4524 | Extend critique annotations to ZTCF (zero-torque-counterfactual.qmd, theory-part2.qmd) and proximal-distal (proximal-distal-energy-transfer.qmd) pages, enforcing critique-to-claim page mappings and fail-closed contract (#4524). |
@@ -424,3 +425,5 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 | 2026-09-29 | #4557 | Constrain prose to a 60-75ch reading measure on standard article/book pages and self-host the Playfair Display heading font, removing the Google Fonts CDN request and its CSP allowances. |
+
+| 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
