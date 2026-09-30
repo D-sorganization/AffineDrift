@@ -125,7 +125,7 @@ describe("search-maturity-badge", () => {
 
       const started = init({ fetch: fetchMock });
       expect(started).toBe(true);
-      expect(fetchMock).toHaveBeenCalledWith("/search-maturity.json");
+      expect(fetchMock).toHaveBeenCalledWith("/data/search-maturity.json");
 
       // Flush the fetch/json promise chain (a macrotask tick reliably
       // drains it regardless of how many microtasks it's chained through).

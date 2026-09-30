@@ -102,7 +102,7 @@ class TestGenerateSearchMaturityIndexMain:
         monkeypatch.setattr(
             generate_search_maturity_index.argparse.ArgumentParser,
             "parse_args",
-            lambda self: SimpleNamespace(output="public/search-maturity.json"),
+            lambda self: SimpleNamespace(output="public/search-maturity.json", check=False),
         )
 
         generate_search_maturity_index.main()
@@ -113,12 +113,17 @@ class TestGenerateSearchMaturityIndexMain:
         assert generated == {"articles/reviewed.html": {"label": "Reviewed", "variant": "reviewed"}}
 
 
-class TestDeployWorkflowWiring:
-    """The deploy workflow must invoke the search maturity index generator."""
+class TestCommittedIndexFreshness:
+    """The committed data/search-maturity.json must match a fresh generation."""
 
-    def test_workflow_runs_search_maturity_generator(self):
+    def test_committed_index_is_current(self):
         repo_root = Path(__file__).resolve().parent.parent
-        workflow = (repo_root / ".github" / "workflows" / "deploy-website.yml").read_text(
+        committed = (repo_root / generate_search_maturity_index.DEFAULT_OUTPUT).read_text(
             encoding="utf-8"
         )
-        assert "scripts/generate_search_maturity_index.py" in workflow
+        fresh = generate_search_maturity_index.render_index(
+            generate_search_maturity_index.build_index(
+                generate_search_maturity_index.SEARCH_MATURITY_CONTENT_DIRS
+            )
+        )
+        assert committed == fresh

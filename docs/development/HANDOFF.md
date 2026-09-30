@@ -7,24 +7,27 @@
   Quarto `search:` block, fix or remove the unverified `SearchAction` JSON-LD, and show the
   page-header-card maturity badge on matching search results.
 - Completed work:
-  - `_quarto.yml`: added an explicit `website.search` block (`type: overlay`, `limit: 10`,
+  - `_quarto.yml`: added an explicit `website.search` block (`type: overlay`, `limit: 20` — Quarto's default, so deep
+    monograph results stay reachable —
     `keyboard-shortcut: ["/", "s"]`) — search previously ran on unconfigured Quarto defaults.
   - `_includes/site-head.html`: removed the JSON-LD `SearchAction` sub-object, which pointed at
     `https://affinedrift.com/?q={search_term_string}` — a target the site does not implement
     (Quarto's search is a client-side overlay, not a query-string-driven page). The rest of the
     `WebSite` JSON-LD schema is unchanged.
   - `js/search-maturity-badge.js` (new): a self-initializing client module that fetches a
-    generated `/search-maturity.json` map and annotates matching `.search-result-doc` entries
+    committed `/data/search-maturity.json` map and annotates matching `.search-result-doc` entries
     with the same `.badge.badge--maturity.badge--<variant>` markup
     `scripts/filters/page-header-card.lua` renders on the page itself, using a
     `MutationObserver` since Quarto's search overlay renders results asynchronously.
   - `scripts/generate_search_maturity_index.py` (new): scans `status`/`maturity` front matter
     across the same content directories as `generate_sitemap.py` and writes the href → 
-    `{label, variant}` map consumed by the JS module above; wired into
-    `.github/workflows/deploy-website.yml` right after the RSS feed generation step.
+    `{label, variant}` map consumed by the JS module above to the committed
+    `data/search-maturity.json` (a Quarto resource). `--check` and a freshness pytest keep it
+    current; no deploy-workflow change (the file is `{}` until pages declare a maturity).
   - `css/search-metrics.css`: appended badge placement/spacing rules for the injected badge
     inside `.search-result-title-container`.
-  - `articles/zero-torque-counterfactual.qmd`: added the literal acronym "(ZTCF)" to the title
+  - `articles/zero-torque-counterfactual.qmd`: titled it "Zero-Torque Counterfactual (ZTCF) Family" (the family
+    qualifier satisfies the ZTCF first-use rule)
     so the page ranks first for a "ZTCF" search query (many other pages mention ZTCF in body
     headings, but none had it in the title). No maturity status was added: no page carries a
     `status`/`maturity` field yet, and assigning one is an editorial decision, not a test fixture.

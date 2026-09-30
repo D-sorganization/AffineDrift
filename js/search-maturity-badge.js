@@ -6,7 +6,7 @@
     module.exports = api
   }
 })(typeof window !== 'undefined' ? window : globalThis, function (root) {
-  const MATURITY_INDEX_URL = '/search-maturity.json'
+  const MATURITY_INDEX_URL = '/data/search-maturity.json'
   const RESULT_LINK_SELECTOR = '.search-result-doc .search-result-link[href]'
   const TITLE_CONTAINER_SELECTOR = '.search-result-title-container'
   const BADGE_CLASS = 'badge--maturity'

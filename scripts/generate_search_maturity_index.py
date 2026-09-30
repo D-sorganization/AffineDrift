@@ -53,6 +53,9 @@ def qmd_path_to_url_path(filepath: Path) -> str:
     return url_path
 
 
+DEFAULT_OUTPUT = "data/search-maturity.json"
+
+
 def build_index(content_dirs: list[str]) -> dict[str, dict[str, str]]:
     """Map each page's URL path to its maturity badge label and CSS variant."""
     index: dict[str, dict[str, str]] = {}
@@ -78,17 +81,33 @@ def main() -> None:
     )
     parser.add_argument(
         "--output",
-        default="docs/search-maturity.json",
-        help="Output path for the generated index (default: docs/search-maturity.json)",
+        default=DEFAULT_OUTPUT,
+        help=f"Output path for the generated index (default: {DEFAULT_OUTPUT})",
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Fail if the committed index differs from a fresh generation",
     )
     args = parser.parse_args()
 
-    index = build_index(SEARCH_MATURITY_CONTENT_DIRS)
-
+    rendered = render_index(build_index(SEARCH_MATURITY_CONTENT_DIRS))
     output_path = Path(args.output)
+    if args.check:
+        current = output_path.read_text(encoding="utf-8") if output_path.is_file() else None
+        if current != rendered:
+            raise SystemExit(
+                f"{output_path} is stale; run python -m scripts.generate_search_maturity_index"
+            )
+        return
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(index, indent=2, sort_keys=True), encoding="utf-8")
-    logger.info("Wrote %d maturity entries to %s", len(index), output_path)
+    output_path.write_bytes(rendered.encode("utf-8"))
+    logger.info("Wrote %s", output_path)
+
+
+def render_index(index: dict[str, dict[str, str]]) -> str:
+    """Serialize the index deterministically (sorted keys, LF, trailing newline)."""
+    return json.dumps(index, indent=2, sort_keys=True) + "\n"
 
 
 if __name__ == "__main__":
