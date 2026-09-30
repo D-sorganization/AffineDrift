@@ -9,7 +9,7 @@ categories:
 ```{=html}
 <section class="resources-section">
   <div class="ad-page-container">
-    <div class="standard-page-layout">
+    <div class="standard-page-layout standard-page-layout--single">
       <!-- Left Sidebar: Table of Contents -->
       <div class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -40,6 +40,12 @@ categories:
         <div class="resources-intro">
           <p>
             These notebooks use <a href="https://notebooklm.google.com/">Google NotebookLM</a> to organize reading notes and Q&A around complex technical texts. Source publications remain authoritative.
+          </p>
+          <p class="page-subtitle">
+            How to use them: NotebookLM summaries and answers are machine-generated from the uploaded
+            sources and can be incomplete or wrong, so check any equation, definition, or citation
+            against the original text before relying on it. Each link opens Google's NotebookLM
+            service, which is outside AffineDrift and governed by Google's own terms and privacy policy.
           </p>
         </div>
 
@@ -177,84 +183,9 @@ categories:
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent History -->
-      <div class="right-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent NotebookLM</h3>
-          <ul class="sidebar-links" id="notebooklm-history-list">
-            <li class="history-empty">No recent notebooklm yet</li>
-          </ul>
-        </nav>
-      </div>
-      </div>
-
     </div>
   </div>
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const historyList = document.getElementById('notebooklm-history-list');
-  if (!historyList) return;
-
-  function updateHistory() {
-    let history = [];
-    try {
-      const raw = localStorage.getItem('affinedrift_notebooklm_history');
-      if (raw) history = JSON.parse(raw);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      localStorage.removeItem('affinedrift_notebooklm_history');
-    }
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-notebooklm.html'
-    };
-
-    if (currentPage.url === 'resources-notebooklm.html') {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_notebooklm_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      historyList.textContent = '';
-      const li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'No recent notebooklm yet';
-      historyList.appendChild(li);
-      return;
-    }
-
-    historyList.textContent = '';
-    const fragment = document.createDocumentFragment();
-    history.forEach((item) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      let safeUrl = "#";
-      if (typeof item.url === "string") {
-        try {
-          const parsed = new URL(item.url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-      }
-      a.href = safeUrl;
-      a.textContent = item.title;
-      li.appendChild(a);
-      fragment.appendChild(li);
-    });
-    historyList.appendChild(fragment);
-  }
-
-  updateHistory();
-});
-</script>
-
 ```
 
 ## Related Articles
