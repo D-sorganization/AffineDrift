@@ -28,7 +28,8 @@
   `node-version-file: .nvmrc` (every one follows a full checkout, so the file is
   present), and replaced the drift check with
   `test_workflows_read_node_version_from_nvmrc`. Because it changes workflows,
-  this PR ships alone. `pytest tests/test_single_source_pins.py`: 10 passed.
+  this PR ships alone. Added `.nvmrc` to the root-hygiene allowlist.
+  `pytest tests/test_single_source_pins.py tests/test_root_hygiene.py`: all pass.
 
 # Reader Run Environment (Binder, Devcontainer, Downloads) — #4538 (WEB-06.8)
 

@@ -31,16 +31,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds `.nvmrc` (Node 22) as the single-source Node version pin, updates `Dockerfile`'s `ARG NODE_MAJOR` and `CLAUDE.md`'s Docker section to match it, and switches all six `actions/setup-node` steps (`ci-standard.yml` x3, `cross-browser-nightly.yml`, `deploy-website.yml` x2) to `node-version-file: .nvmrc`. `tests/test_single_source_pins.py` checks the Dockerfile, CLAUDE.md, and that every setup-node step reads `.nvmrc` with no hard-coded `node-version`.
 - **Next step:** Merge the draft PR once CI (which now reads `.nvmrc`) is green.
 
-- **State:** in_review
-- **Owner:** claude
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
-- **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
-- **Branch:** `claude/issue-4606`
-- **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
-- **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
-- **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
 - **State:** in_review
@@ -61,6 +51,18 @@ Entries stay here for 90 days after merge, then move to the archive.
 ## Archive
 
 Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
+### DL-#4606 · "What's New" Feed RSS Validation
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
+- **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
+- **Branch:** `claude/issue-4606`
+- **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
+- **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
+- **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
 ### DL-#4592 · Consolidate the Manifesto
 
 - **State:** in_review

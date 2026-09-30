@@ -26,6 +26,7 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         ".htmlvalidate.json",
         ".htmlvalidateignore",
         ".nojekyll",
+        ".nvmrc",
         ".pre-commit-config.yaml",
         ".pre-commit-hooks.yaml",
         ".prettierignore",
