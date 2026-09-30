@@ -23,7 +23,7 @@ from src.affine_control.reachability import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-ARTICLE = REPO_ROOT / "articles/controllability-drift-ratio.qmd"
+ARTICLE = REPO_ROOT / "articles/drift-control-ratio.qmd"
 JS_MODULE = REPO_ROOT / "js/dcr-visualizer.js"
 JS_UI = REPO_ROOT / "js/dcr-visualizer-ui.js"
 FIXTURE = json.loads(

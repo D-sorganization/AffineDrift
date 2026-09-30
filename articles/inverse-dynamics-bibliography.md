@@ -4,7 +4,7 @@ description: "- Inverse Dynamics Limitations: The core theme, decomposing the am
 editor: source
 ---
 
-# Concept Map
+## Concept Map
 
 - **Inverse Dynamics Limitations**: The core theme, decomposing the ambiguity in calculating forces from motion.
 - **Equivalent Couple Problem**: The inherent spatial ambiguity of reducing distributed forces to a single force-couple pair at a reference point.
@@ -15,7 +15,7 @@ editor: source
 - **Newton-Euler Equations**: The foundational equations of motion for rigid body dynamics.
 - **Drift Vector Field**: The passive dynamics of the system (gravity, Coriolis, centrifugal, stiffness) that exist independent of input.
 
-# Bibliography
+## Bibliography
 
 ```yaml
 references:
@@ -147,9 +147,9 @@ references_out_ids:
   - "bullo2004geometric"
 ```
 
-# Reading Paths
+## Reading Paths
 
-## Path 1: The Interpretation Basics (Fast Ramp)
+### Path 1: The Interpretation Basics (Fast Ramp)
 
 Understanding the "Interpretive Gap" requires seeing both the standard method and its critiques. Start here to understand why "Torque" is ambiguous.
 
@@ -159,7 +159,7 @@ Understanding the "Interpretive Gap" requires seeing both the standard method an
 - **tutelman2021opening**: An accessible yet rigorous meta-analysis of the instrumented grip literature, explaining the "Closed Loop" problem clearly.
 - **mackenzie2009three**: Contrasts the inverse approach with forward dynamics, highlighting the need for a predictive model to establish causality.
 
-## Path 2: Deep Technical & Theoretical
+### Path 2: Deep Technical & Theoretical
 
 For those building the math: how to formalize the ambiguity using control theory and rigid body mechanics.
 
@@ -170,7 +170,7 @@ For those building the math: how to formalize the ambiguity using control theory
 - **murray1994mathematical**: Foundational robotics text that treats manipulation systems as control systems, bridging the gap between mechanics and control.
 - **isidori1995nonlinear**: Advanced nonlinear control reference for understanding "drift" in a formal Lie algebraic sense.
 
-## Path 3: Implementation & Validation
+### Path 3: Implementation & Validation
 
 Tools and datasets for calculating these quantities yourself.
 
