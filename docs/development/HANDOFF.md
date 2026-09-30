@@ -31,7 +31,7 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
 - `iaa-biomechanics-review.md`, `iaa-biomechanics-final-render-verification.json`, prior
   records and dependency carry-forward under `reports/technical-review/` explain
   source access limits, numerical cases, exact bytes and preserved historical scope.
-- Eight findings bound to `2f32c8d4`; book metadata carries forward the changed PDF
+- Eight findings bound through quote-only checkpoint `3a6d7fcd`; book metadata carries forward the changed PDF
   without renewing other scientific or book-map browser reviews. Corpus pending
   count: 142 sources. Whole-book and whole-corpus acceptance remain incomplete.
 - Final qualification: nominal acceleration integrals require absolutely continuous
@@ -39,7 +39,7 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
   Main Binder update #4682 was integrated at `766b0603`; final browser evidence
   includes its article code-tools metadata. Final dependency receipt preserves
   prior book scopes, dates and render revisions.
-- Next: bind the web quotation fix, update validation evidence on PR #4709,
+- Next: inspect final validation evidence on PR #4709,
   inspect final CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
 - Coordination: session `technical-review-20260930-resume`, issue #4706; development
   log DL-#4706. Existing web-feature consolidations remain under their live owners.
