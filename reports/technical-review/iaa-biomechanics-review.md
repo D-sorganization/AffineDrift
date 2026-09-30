@@ -24,7 +24,9 @@ This is a chapter review, not completion of whole-book scientific reconciliation
    when the constrained lower blocks share an affine operator.
 3. **P1: History.** Replace cumulative-effect equals drift with three distinct
    operations: instantaneous partition, nominal trajectory integrals, and
-   forward interventions. Retain valid nominal integration; give the variational
+   forward interventions. Retain valid nominal integration for absolutely
+   continuous velocity and add impact-law velocity jumps across impulsive events;
+   give the variational
    equation and a nonunique-history counterexample. Do not claim earlier inputs
    uniquely determine later force labels.
 4. **P1: Coupling index.** Replace ambiguous inverse-element notation with an
@@ -114,7 +116,11 @@ horizontal scrolling; both ends and their numbers were checked. Title views were
 inspected in both themes. The initial browser session retained stale content via
 a service worker and is excluded from accepted evidence.
 
-Source checkpoint `f30e64cbcbef1b68692b5b5a7a92f0966a840d97` contains the paired
-sources and rebuilt PDF. The render receipt records exact digests and the local
-gate output. Repository-wide checks and protected publication are tracked in the
-current turnover and development log; this report does not certify other chapters.
+Initial source checkpoint `f30e64cbcbef1b68692b5b5a7a92f0966a840d97` and the first
+render receipt preserve the initial review. The final source adds the explicit
+impact qualification after integrating main's separate Binder update (#4682).
+`iaa-biomechanics-final-render-verification.json` records the final source/PDF
+digests and post-integration browser checks. The PDF remains 149 pages with the
+same chapter range; reflowed physical pages 60–63 were visually reinspected.
+Repository-wide checks and protected publication are tracked in the current
+turnover and development log; this report does not certify other chapters.
