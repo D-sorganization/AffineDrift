@@ -2877,6 +2877,16 @@ a.status-pill:focus {
   border-radius: 8px;
 }
 
+/* Worked-example callout convention (issue #4511): `.callout-example` marks a
+ * hand-followable numerical example (given data, steps, result) whose numbers
+ * are recomputed from src/ by a pytest. Quarto renders unknown callout types
+ * with the generic callout structure but no color/icon, so the accent border
+ * is defined here; the existing dark-mode `.callout-style-default` rules
+ * above already retheme its header/body regardless of type. */
+.callout.callout-example {
+  border-left-color: var(--color-success);
+}
+
 /* In dark mode the very light brand tint (--color-primary-lightest is a fixed
  * light blue) would be light-on-light, so remap the tinted boxes to the dark
  * surface tokens. The semantic accent borders remain legible. */

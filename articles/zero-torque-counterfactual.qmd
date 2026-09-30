@@ -112,6 +112,21 @@ The **drift vector field** $f:\mathcal{X}\rightarrow T\mathcal{X}$ is the state-
 Articles must qualify the construction on first use and either link to this definition or state the local convention explicitly.
 :::
 
+::: {.callout-example}
+## Worked Example: Evaluating a Pointwise Sample
+
+**Given:** the default three-link `GolfModel()` (masses $(10,5,0.81)$ kg, lengths $(0.3,0.35,1.15)$ m) at rest, $q=(0,0,0)$, $\dot q=(0,0,0)$.
+
+**Steps:**
+
+1. Call `GolfModel().drift_acceleration(q, qd)` with `q = qd = (0, 0, 0)`.
+2. This solves $M(q)\ddot q=-h(q,\dot q)$ for the bias load $h$ (gravity plus Coriolis), giving the pointwise sample $f(x(t_b))$ from item 1 above.
+
+**Result:** $f(x)\approx(-31.40,\ 29.98,\ 1.57)$ rad/s$^2$ — one pointwise sample at one achieved state. It is not integrated forward and does not by itself predict the freely evolving forward ZTCF trajectory of item 3 above.
+
+Computed by `src/affine_control/golf_model.py::GolfModel.drift_acceleration`; checked against this page by `tests/test_worked_example_callouts.py::test_ztcf_pointwise_sample_at_rest`.
+:::
+
 ## Normative Intervention and Interpretation Contract {#sec-ztcf-contract}
 
 Every executable or quantitative ZTCF result must conform to

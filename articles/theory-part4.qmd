@@ -201,6 +201,21 @@ $$ {#eq-pendulum_planar}
 
 Thus $\dot x=(\dot\theta,-g\sin\theta/L)+(0,1/(mL^2))u$. At the same state, the acceleration difference for two inputs is $(u_1-u_2)/(mL^2)$. At different states the sine term can differ. A spatial point-mass pendulum has configuration $S^2$; it does not acquire an independent axial orientation merely by writing a three-component angular velocity.
 
+::: {.callout-example}
+## Worked Example: Drift and Linearization of the Rigid Pendulum
+
+**Given:** $m=1$ kg, $L=1$ m, $g=9.81$ m/s$^2$, state $\theta=0.5$ rad, $\dot\theta=0$ rad/s, zero applied torque.
+
+**Steps:**
+
+1. Call `SimplePendulum(m=1.0, L=1.0, g=9.81).dynamics(x=[0.5, 0.0], u=[0.0])` to evaluate $\dot x=(\dot\theta,-g\sin\theta/L)$ from @eq-pendulum_planar at $u=0$.
+2. Call `.linearize(x=[0.5, 0.0], u=[0.0])` for the Jacobians of the same equation at the same state.
+
+**Result:** $\dot x=(0,\ -4.7032)$, with respective units rad/s and rad/s$^2$ for the two components; linearizing gives $A=\begin{bmatrix}0&1\\-8.6091&0\end{bmatrix}$, $B=\begin{bmatrix}0\\1\end{bmatrix}$.
+
+Computed by `src/tangent_models/examples.py::SimplePendulum`; checked against this page by `tests/test_worked_example_callouts.py::test_theory_part4_rigid_pendulum`.
+:::
+
 ### A Fully Specified Flexible Pendulum
 
 For a separate illustrative model, let the supporting body have positive pivot inertia $I_0$ and its center of mass at the pivot. Attach a distributed shaft with density $\mu$, a point head mass $m_H$ at the tip, and one dimensionless assumed shape $\phi(s)=(s/L)^2$. This example neglects head rotary inertia and offset; the previous foundational example retains both. Neither is calibrated golf equipment.

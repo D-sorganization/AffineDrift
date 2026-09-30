@@ -138,6 +138,21 @@ $$
 
 The fixed-state change in $\dot Jv$ is zero. The projected inverse inertia ensures $J\delta a=0$; using the unconstrained $M^{-1}\mathcal B$ can predict inadmissible acceleration. For $M=\operatorname{diag}(2,1)$, $J=(1,1)$ and a unit force in the first coordinate, the unconstrained response is $(1/2,0)$ while the constrained response is $(1/3,-1/3)$. Internal reaction changes are part of the response.
 
+::: {.callout-example}
+## Worked Example: The Constrained Acceleration Map
+
+**Given:** $M=\operatorname{diag}(2,1)$, full-row-rank constraint Jacobian $J=(1,1)$ with $\dot Jv=0$, input matrix $B=I_2$, and a unit force $\delta u=(1,0)$.
+
+**Steps:**
+
+1. Call `constrained_affine_fields(mass_matrix=M, bias=[0,0], input_matrix=B, constraint_jacobian=J, constraint_bias=[0])`, which returns the constrained drift and the projected input field $P_M B$.
+2. Apply the field to $\delta u=(1,0)$: $\delta a=P_MB\,\delta u$.
+
+**Result:** drift $=(0,0)$, projected field $P_MB=\begin{bmatrix}1/3&-1/3\\-1/3&1/3\end{bmatrix}$, so $\delta a=(1/3,-1/3)$ — matching the constrained response above and differing from the naive unconstrained $(1/2,0)$.
+
+Computed by `src/affine_control/dynamics.py::constrained_affine_fields`; checked against this page by `tests/test_worked_example_callouts.py::test_theory_part3_constrained_acceleration_map`.
+:::
+
 For a task point $p(z)$, acceleration is $J_p a+\dot J_pv$, and its same-state input contribution is $J_pP_M\mathcal B\,\delta u$. A measured hand wrench needs a corresponding reaction/output map in a declared frame and reference point. Fixed feet can transmit substantial reaction forces while an ideal stationary support performs no mechanical work. Fixed-base coordinates do not set those reactions to zero or model realistic pressure redistribution automatically.
 
 ### Instantaneous Contributions, Recorded-Trajectory Analyses and Forward Experiments
