@@ -19,6 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 ## Active
 
 ### DL-#4541 · Fixture and Dataset Explorer
+### DL-#4550 · Print and PDF Editions for Books and Core Series
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** draft (see HANDOFF.md for link)
+- **Issue:** #4550 (WEB-07.9; epic #4552)
+- **Branch:** `claude/issue-4550`
+- **Paths:** `css/print.css`, `styles.css`, `js/pdf.js`, `js/main.js`, `tests/test_print_stylesheet_consolidation.py`, `tests/pdf.test.js`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_print_stylesheet_consolidation.py` 4/4 pass; `npx jest` 27 suites, 437 passed/19 skipped; `ruff check .` and `black --check --line-length 100 .` clean)
+- **Summary:** Consolidates the two competing `@media print` blocks into `css/print.css` as the single print stylesheet, drops the A4-only forced `@page` size (now `auto`) so both Letter and A4 print via the printer/OS choice, and adds a `beforeprint` handler forcing MathJax to typeset lazy-loaded off-screen math before any print (native Ctrl+P or the export-to-PDF button). The "PDFs built in CI and linked from the header card" criterion is deliberately not implemented this session — see HANDOFF.md Blocked section.
+- **Next step:** Owner/frontier decision on the deferred PDF-header-card-link scope (see HANDOFF.md Blocked), then implement or split into a follow-up issue.
 ### DL-#4565 · Math Accessibility Verification
 
 - **State:** in_review
