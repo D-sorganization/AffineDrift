@@ -11,7 +11,7 @@ The definition of the Drift-Control Ratio (DCR) relies on the Euclidean norm of 
 
 ## Location
 
-- **Page:** `articles/controllability-drift-ratio.qmd`
+- **Page:** `articles/drift-control-ratio.qmd`
 - **Section:** 3. Drift–Control Ratio (DCR)
 - **Claim or Equation:** $\mathrm{DCR}(t) = \frac{\|f(x(t))\|}{\|g(x(t))u(t)\|}$ and the approximation $\|f\| \sim a\|\dot{q}\| + b\|\dot{q}\|^2$.
 
@@ -54,7 +54,7 @@ If the time unit is changed from seconds to milliseconds:
 ## Editorial Adjudication and Evidence Boundaries
 
 1. **Historical Versus Corrected State:**
-   The historical article formulation mixed velocity and acceleration components in Euclidean norms across the state derivative $\dot{x}$. In the corrected canonical article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md` under PR #4339), DCR is strictly defined as an acceleration-space magnitude ratio $\frac{\|a_{\text{drift}}(x)\|_H}{\|a_{\text{ctrl}}(x, u)\|_H}$ evaluated under an explicitly declared metric tensor $H$ and declared control capacity.
+   The historical article formulation mixed velocity and acceleration components in Euclidean norms across the state derivative $\dot{x}$. In the corrected canonical article (`articles/drift-control-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md` under PR #4339), DCR is strictly defined as an acceleration-space magnitude ratio $\frac{\|a_{\text{drift}}(x)\|_H}{\|a_{\text{ctrl}}(x, u)\|_H}$ evaluated under an explicitly declared metric tensor $H$ and declared control capacity.
 
 2. **Critique Boundary and Counterexamples:**
    While the critique correctly identified dimensional inhomogeneity in the unweighted state derivative, its suggested remedy to define DCR on the "dynamic fiber" and equate unweighted generalized forces to accelerations is physically and geometrically flawed:
