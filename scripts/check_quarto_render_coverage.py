@@ -16,7 +16,6 @@ REQUIRED_RENDER_RULES = frozenset(
     {
         "*.qmd",
         "articles/**/*.qmd",
-        "articles/*-bibliography.md",
         "pages/**/*.qmd",
         "reports/scientific-claim-audit.md",
         "resources/**/*.qmd",
