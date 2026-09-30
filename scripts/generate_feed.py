@@ -23,13 +23,20 @@ import shutil
 import subprocess
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from pathlib import Path
+from xml.etree import ElementTree
 from xml.sax.saxutils import escape
 
 from src.tools.utils import setup_logging
 from src.tools.utils.content_utils import collect_qmd_files, read_qmd_with_frontmatter
 
 logger = setup_logging(__name__)
+
+
+class FeedValidationError(ValueError):
+    """Raised when a generated RSS feed fails RSS 2.0 structural validation."""
+
 
 BASE_URL = "https://affinedrift.com"
 CHANNEL_TITLE = "AffineDrift"
@@ -193,6 +200,76 @@ def build_feed_xml(
     return "\n".join(lines) + "\n"
 
 
+def validate_feed_xml(xml: str) -> list[str]:
+    """Validate an RSS 2.0 document, returning structural errors (empty if valid).
+
+    Checks well-formedness, required ``<rss version="2.0">``/``<channel>``
+    elements, and per-item ``link``/``guid``/``pubDate`` shape (absolute URL,
+    unique guid, RFC-822 date) so an invalid feed is caught before it is
+    published, not discovered by a reader's feed client.
+    """
+    errors: list[str] = []
+    try:
+        root = ElementTree.fromstring(xml)
+    except ElementTree.ParseError as exc:
+        return [f"XML is not well-formed: {exc}"]
+
+    if root.tag != "rss":
+        return [f"root element must be <rss>, got <{root.tag}>"]
+    if root.get("version") != "2.0":
+        errors.append(f"rss version must be '2.0', got {root.get('version')!r}")
+
+    channel = root.find("channel")
+    if channel is None:
+        return [*errors, "missing required <channel> element"]
+
+    for required in ("title", "link", "description"):
+        element = channel.find(required)
+        if element is None or not (element.text or "").strip():
+            errors.append(f"channel missing required <{required}>")
+
+    guids: list[str] = []
+    for index, item in enumerate(channel.findall("item")):
+        title = item.find("title")
+        description = item.find("description")
+        has_title = title is not None and (title.text or "").strip()
+        has_description = description is not None and (description.text or "").strip()
+        if not has_title and not has_description:
+            errors.append(f"item {index}: must have a <title> or <description>")
+
+        link = item.find("link")
+        link_text = (link.text or "").strip() if link is not None else ""
+        if not link_text:
+            errors.append(f"item {index}: missing required <link>")
+        elif not link_text.startswith(("http://", "https://")):
+            errors.append(
+                f"item {index}: <link> must be an absolute http(s) URL, got {link_text!r}"
+            )
+
+        guid = item.find("guid")
+        guid_text = (guid.text or "").strip() if guid is not None else ""
+        if not guid_text:
+            errors.append(f"item {index}: missing required <guid>")
+        else:
+            guids.append(guid_text)
+
+        pub_date = item.find("pubDate")
+        pub_date_text = (pub_date.text or "").strip() if pub_date is not None else ""
+        if not pub_date_text:
+            errors.append(f"item {index}: missing required <pubDate>")
+        else:
+            try:
+                parsedate_to_datetime(pub_date_text)
+            except (TypeError, ValueError) as exc:
+                errors.append(f"item {index}: <pubDate> {pub_date_text!r} is not RFC-822: {exc}")
+
+    duplicate_guids = sorted({g for g in guids if guids.count(g) > 1})
+    if duplicate_guids:
+        errors.append(f"duplicate <guid> values: {duplicate_guids}")
+
+    return errors
+
+
 def main() -> int:
     """Generate the feed and write it to the output path(s)."""
     parser = argparse.ArgumentParser(description="Generate RSS feed.xml")
@@ -206,6 +283,13 @@ def main() -> int:
     items = collect_items()
     build_date = datetime.now(tz=UTC).replace(microsecond=0)
     xml = build_feed_xml(items, build_date=build_date)
+
+    errors = validate_feed_xml(xml)
+    if errors:
+        raise FeedValidationError(
+            "Generated feed.xml failed RSS 2.0 validation:\n"
+            + "\n".join(f"  - {error}" for error in errors)
+        )
 
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
