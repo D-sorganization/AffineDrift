@@ -3,9 +3,9 @@ title: "Bibliographic Analysis: Force and Mobility Ellipsoids in the Golf Swing"
 description: "Companion bibliography for the AffineDrift article on force and mobility ellipsoids in the golf swing."
 ---
 
-# Bibliographic Analysis: Force and Mobility Ellipsoids in the Golf Swing
+## Bibliographic Analysis: Force and Mobility Ellipsoids in the Golf Swing
 
-## A) Concept Map
+### A) Concept Map
 
 - **Geometric Analysis**
 
@@ -26,7 +26,7 @@ description: "Companion bibliography for the AffineDrift article on force and mo
   - **Effective Inertia**: The apparent mass felt at the end-effector.
   - **Intersegmental Dynamics**: Coupling between proximal (torso/arm) and distal (club) segments.
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 This is a reading-candidate catalog, not a claim that every full text was
 reviewed. `related_ids` are editorial topic connections. No outgoing citation
@@ -197,7 +197,7 @@ The verified source access for this correction is listed after the catalog.
   references_out_ids: []
 ```
 
-## C) Verified Sources and Reading Sequence
+### C) Verified Sources and Reading Sequence
 
 The correction consulted the publisher's Modern Robotics transcripts for
 [statics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-2-statics-of-open-chains/),

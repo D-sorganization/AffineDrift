@@ -3,11 +3,11 @@ title: "A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analys
 description: "Companion bibliography for the AffineDrift article on drift, control capacity and golf-swing correction."
 ---
 
-# A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing
+## A Control-Theoretic, Multibody Dynamics, and Relativistic-Analogy Analysis of the Drift–Control Ratio in the Golf Swing
 
-# Bibliography
+## Bibliography
 
-## Concept Map
+### Concept Map
 
 - **Drift–Control Ratio (DCR)**: The scalar metric $\|f(x)\| / \|G(x)u\|$ quantifying the dominance of passive dynamics over active control authority.
 - **Control-Affine System**: A dynamical system of the form $\dot{x} = f(x) + G(x)u$, separating passive drift $f(x)$ from input channels $G(x)$.
@@ -17,7 +17,7 @@ description: "Companion bibliography for the AffineDrift article on drift, contr
 - **Coriolis Dominance**: The phenomenon where quadratic velocity terms ($\dot{q}^2$) in the drift field grow faster than the linear input torque limits.
 - **Impact Sensitivity**: The exponential amplification of state perturbations ($\delta x$) by the drift dynamics ($e^{A_f t}$) near impact.
 
-## References
+### References
 
 bibliography:
 
@@ -219,9 +219,9 @@ bibliography:
   related_ids: ["isidori1995nonlinear"]
   references_out_ids: []
 
-## Reading Paths
+### Reading Paths
 
-### Fast ramp (The essentials)
+#### Fast ramp (The essentials)
 
 1. [mackenzie2009three] - The canonical forward dynamics model of the golf swing.
 2. [harris1998signal] - Understanding why high forces/velocities lead to high variance (noise).
@@ -229,7 +229,7 @@ bibliography:
 4. [nesbit2005work] - Empirical foundation for work and power in the swing.
 5. [todorov2004optimality] - Why "letting it go" (minimal intervention) is optimal in drift-dominated phases.
 
-### Deep technical (Control theory & Physics)
+#### Deep technical (Control theory & Physics)
 
 1. [isidori1995nonlinear] - The bible of nonlinear control systems; defines the affine structure $\dot{x}=f(x)+G(x)u$.
 2. [bullo2005geometric] - Rigorous treatment of mechanical systems on manifolds and their controllability.
@@ -240,7 +240,7 @@ bibliography:
 7. [spong2005robot] - Standard text for robot dynamics, bridging linear and nonlinear control.
 8. [nijmeijer1990nonlinear] - Additional perspective on nonlinear dynamics and geometric methods.
 
-### Implementation (Simulation & Modeling)
+#### Implementation (Simulation & Modeling)
 
 1. [mackenzie2009three] - Parameters and equations of motion for the 3-link model.
 2. [zajac1989muscle] - Implementing realistic actuator limits (torque-velocity curves).

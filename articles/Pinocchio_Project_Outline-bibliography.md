@@ -3,11 +3,11 @@ title: "Bibliography: Physics-Grounded Golfer Simulation Toolkit Roadmap"
 description: "Annotated bibliography for the full-body golfer simulation toolkit roadmap."
 ---
 
-# A Comprehensive Roadmap for Building a Full-Body, Physics-Grounded, IK/Dynamics-Driven Golfer Simulation Toolkit
+## A Comprehensive Roadmap for Building a Full-Body, Physics-Grounded, IK/Dynamics-Driven Golfer Simulation Toolkit
 
-# Bibliography
+## Bibliography
 
-## Concept Map
+### Concept Map
 
 - **Canonical Model Specification**: A single source of truth (YAML) for kinematics and dynamics that generates backend-specific formats (URDF, MJCF).
 - **Control-Affine Dynamics**: Modeling the system as $\dot{x} = f(x) + G(x)u$ to enable counterfactual analysis.
@@ -19,7 +19,7 @@ description: "Annotated bibliography for the full-body golfer simulation toolkit
 - **Holonomic Constraints**: Modeling closed chains (e.g., two hands on a club) as rigid constraints.
 - **Multibody Simulation**: Integrating equations of motion with contact and constraints (MuJoCo, Pinocchio).
 
-## References
+### References
 
 bibliography:
 
@@ -204,9 +204,9 @@ bibliography:
     related_ids: ["murray1994mathematical"]
     references_out_ids: ["nijmeijer1990nonlinear", "sastry1999nonlinear"]
 
-## Reading Paths
+### Reading Paths
 
-### Path 1: Fast ramp (Software & Tools)
+#### Path 1: Fast ramp (Software & Tools)
 
 1.  **Pinocchio (Carpentier et al., 2019)** - The core library for rigid body dynamics algorithms.
 2.  **MuJoCo (Todorov et al., 2012)** - The physics engine for contact and realistic simulation.
@@ -214,7 +214,7 @@ bibliography:
 4.  **MeshCat (Deits, 2019)** - The tool for lightweight, browser-based 3D visualization.
 5.  **Modern Robotics (Lynch & Park, 2017)** - Chapter 8 (Dynamics of Open Chains) provides the theoretical basis for these tools.
 
-### Path 2: Deep technical (Dynamics & Algorithms)
+#### Path 2: Deep technical (Dynamics & Algorithms)
 
 1.  **Rigid Body Dynamics Algorithms (Featherstone, 2008)** - The bible for the recursive algorithms (RNEA, ABA) implemented in Pinocchio.
 2.  **Dynamics of Multibody Systems (Shabana, 2020)** - Essential for understanding constrained systems and flexible bodies.
@@ -223,7 +223,7 @@ bibliography:
 5.  **Nonlinear Control Systems (Isidori, 1995)** - Theory for the affine control structure ($\dot{x} = f(x) + G(x)u$) and drift fields.
 6.  **Mathematical Introduction to Robotic Manipulation (Murray et al., 1994)** - Rigorous treatment of geometric mechanics.
 
-### Path 3: Implementation (Golf Biomechanics)
+#### Path 3: Implementation (Golf Biomechanics)
 
 1.  **MacKenzie & Sprigings (2009)** - The baseline 3D forward dynamics model to replicate.
 2.  **Pinocchio Documentation** - Tutorials on loading URDFs and computing Jacobians.

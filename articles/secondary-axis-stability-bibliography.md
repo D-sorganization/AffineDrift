@@ -3,9 +3,9 @@ title: "Bibliographic Analysis: Secondary Axis Stability in Golf Clubs"
 description: "Companion bibliography for the AffineDrift article on secondary-axis stability and putter design."
 ---
 
-# Bibliographic Analysis: Secondary Axis Stability in Golf Clubs
+## Bibliographic Analysis: Secondary Axis Stability in Golf Clubs
 
-## A) Concept Map
+### A) Concept Map
 
 - **Rigid Body Dynamics**
 
@@ -26,7 +26,7 @@ description: "Companion bibliography for the AffineDrift article on secondary-ax
   - **Perturbation Sensitivity**: How small deviations in initial conditions ($\omega$) grow over time.
   - **Forced Dynamics**: Extension of free-body stability to the case with input torques (golfer's hands).
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: goldstein2002classical
@@ -171,9 +171,9 @@ description: "Companion bibliography for the AffineDrift article on secondary-ax
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (Conceptual)
+#### Path 1: Fast Ramp (Conceptual)
 
 _Target: Understand the basic physics of why things flip and how it applies to putting._
 
@@ -183,7 +183,7 @@ _Target: Understand the basic physics of why things flip and how it applies to p
 4.  **Karlsen et al. (2008)** - _Balance point and MOI_ (`karlsen2008balance`). Empirical data on putter properties.
 5.  **Veritasium (Video)** - _The Dzhanibekov Effect_. (Search online). Excellent visual intuition for the intermediate axis instability.
 
-### Path 2: Deep Technical (Mathematical Rigor)
+#### Path 2: Deep Technical (Mathematical Rigor)
 
 _Target: Derive the stability conditions and Euler equations._
 
@@ -196,7 +196,7 @@ _Target: Derive the stability conditions and Euler equations._
 7.  **Kane & Levinson (1985)** - _Dynamics: Theory and Applications_ (`kane1985dynamics`). Alternative rigorous formulation.
 8.  **Shabana (2020)** - _Dynamics of Multibody Systems_ (`shabana2020dynamics`). Flexible body context.
 
-### Path 3: Implementation (Simulation)
+#### Path 3: Implementation (Simulation)
 
 _Target: Simulate the tumbling behavior or analyze putter design._
 

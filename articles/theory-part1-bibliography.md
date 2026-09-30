@@ -3,9 +3,9 @@ title: "Bibliographic Analysis: Affine Control Interpretation of the Golf Swing 
 description: "Companion bibliography for Part 1 of the AffineDrift theory series, Affine Control Interpretation of the Golf Swing."
 ---
 
-# Bibliographic Analysis: Affine Control Interpretation of the Golf Swing
+## Bibliographic Analysis: Affine Control Interpretation of the Golf Swing
 
-## A) Concept Map
+### A) Concept Map
 
 - **System Modeling**
 
@@ -31,7 +31,7 @@ description: "Companion bibliography for Part 1 of the AffineDrift theory series
   - **Golf Swing Mechanics**: High-speed, large range-of-motion, constrained system.
   - **Passive vs. Active Control**: Exploiting natural dynamics (drift) vs. forcing the system (input).
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: murray1994mathematical
@@ -270,9 +270,9 @@ description: "Companion bibliography for Part 1 of the AffineDrift theory series
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (Conceptual Foundation)
+#### Path 1: Fast Ramp (Conceptual Foundation)
 
 _Target: Quickly understand the physics and biomechanics context._
 
@@ -282,7 +282,7 @@ _Target: Quickly understand the physics and biomechanics context._
 4.  **Nesbit (2005)** - _A 3D kinematic and kinetic study_. Shows how inverse dynamics is applied to golf.
 5.  **Zajac (1993)** - _Muscle coordination..._. Introduces the complexity of attributing motion to muscles in multibody systems.
 
-### Path 2: Deep Technical (The Theoretical Core)
+#### Path 2: Deep Technical (The Theoretical Core)
 
 _Target: Master the math needed to implement the Drift/Input decomposition._
 
@@ -295,7 +295,7 @@ _Target: Master the math needed to implement the Drift/Input decomposition._
 7.  **Hogan (1985)** - _Impedance Control_. Foundation for passivity and interaction control.
 8.  **MacKenzie & Sprigings (2009)** - _Forward dynamics model_. The state-of-the-art in predictive golf modeling.
 
-### Path 3: Implementation (Software & Data)
+#### Path 3: Implementation (Software & Data)
 
 _Target: Building the simulator._
 

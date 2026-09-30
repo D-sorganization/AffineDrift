@@ -3,9 +3,9 @@ title: "Bibliography: Applications of the Control-Affine Framework"
 description: "Companion bibliography for the AffineDrift article on applications of the control-affine framework."
 ---
 
-# Bibliography: Applications of the Control-Affine Framework
+## Bibliography: Applications of the Control-Affine Framework
 
-## Concept Map
+### Concept Map
 
 - **Counterfactual Analysis (ZTCF)**: Isolating passive mechanical contributions by simulating the system with zero active input ($u=0$).
 - **Inverse Dynamics & Torque Estimation**: Reconstructing input forces ($F_{\text{input}}$) by subtracting calculated passive drift ($F_{\text{drift}}$) from total measured forces.
@@ -13,7 +13,7 @@ description: "Companion bibliography for the AffineDrift article on applications
 - **Passive Dynamics**: The evolution of the system driven solely by inertia, gravity, and stiffness (the "Drift Field").
 - **Physics-Informed Machine Learning**: Using physical priors (Lagrangian structure, conservation laws) to constrain data-driven models of the swing.
 
-## Bibliography
+### Bibliography
 
 ```yaml
 - id: nesbit2005work
@@ -272,9 +272,9 @@ description: "Companion bibliography for the AffineDrift article on applications
     - pinocchio_lib
 ```
 
-## Reading Paths
+### Reading Paths
 
-### Path 1: Fast Ramp (Biomechanics Focus)
+#### Path 1: Fast Ramp (Biomechanics Focus)
 
 Essential reading for understanding the application of mechanical principles to the golf swing.
 
@@ -284,7 +284,7 @@ Essential reading for understanding the application of mechanical principles to 
 - **McGeer (1990)**: A classic example of "passive dynamics" doing the heavy lifting, analogous to the drift field.
 - **Todorov (2002)**: Bridges the gap between mechanics and the nervous system's control strategy.
 
-### Path 2: Deep Technical (Dynamics & Control)
+#### Path 2: Deep Technical (Dynamics & Control)
 
 Rigorous mathematical and algorithmic foundations for the simulation framework.
 
@@ -294,7 +294,7 @@ Rigorous mathematical and algorithmic foundations for the simulation framework.
 - **Raibert (1986)**: Early, impactful work on dynamic balance and active control of unstable systems.
 - **Karniadakis (2021)**: Modern techniques for blending physics (ODEs) with neural networks (PINNs).
 
-### Path 3: Implementation (Simulation & ML)
+#### Path 3: Implementation (Simulation & ML)
 
 Tools and methods for building the simulators and data pipelines.
 

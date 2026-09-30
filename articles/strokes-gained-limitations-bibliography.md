@@ -3,9 +3,9 @@ title: "Bibliography: On the Limits of Strokes-Gained Inference"
 description: "Companion bibliography for the AffineDrift article on the limits of strokes-gained inference for individual golfers."
 ---
 
-# Bibliography: On the Limits of Strokes-Gained Inference
+## Bibliography: On the Limits of Strokes-Gained Inference
 
-## Scope and Evidence
+### Scope and Evidence
 
 This companion supports the revised `strokes-gained-limitations.qmd`. It is a
 source guide, not a citation network. The previous list included unverified
@@ -13,7 +13,7 @@ authorship, dates, and supposed reference edges; those assertions are withdrawn.
 The numerical counterexamples are independently constructed and reproducible in
 `docs/development/technical-review/build_strokes_gained_examples.py`.
 
-## Concept Map
+### Concept Map
 
 | Concept                     | Meaning and Boundary                                                                                                    |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -27,7 +27,7 @@ The numerical counterexamples are independently constructed and reproducible in
 | Partial Pooling             | A method for sharing information across players; predictive benefits require validation and do not establish causality. |
 | Time Variation              | A forecasting issue distinct from both population heterogeneity and algebraic score reconciliation.                     |
 
-## Verified Core References
+### Verified Core References
 
 1. **Broadie, Mark (2012).** “Assessing Golfer Performance on the PGA TOUR.”
    _Interfaces_ 42(2), 146–165.
@@ -64,21 +64,21 @@ The numerical counterexamples are independently constructed and reproducible in
    coverage. A citation to this framework is not empirical evidence that a golf
    intervention works.
 
-## Reading Paths
+### Reading Paths
 
-### Accounting and Decisions
+#### Accounting and Decisions
 
 Read Broadie's Section 2 alongside the article's complete-hole and category
 examples. Then compare policy evaluation and optimality in Sutton and Barto.
 Check which state, policy, and cost convention each equation uses.
 
-### Prediction and Intervention
+#### Prediction and Intervention
 
 Read Gelman's prediction and causal-inference sections, then the identification
 conditions in Hernán and Robins. Ask which data support a player's predictive
 surface and which assumptions support changing an action or practice protocol.
 
-## Withdrawn Inferences
+### Withdrawn Inferences
 
 The former generic “Optimal Strategy in Golf” entry had unresolved authorship
 and publication metadata and is not retained as a source. The former

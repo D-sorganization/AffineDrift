@@ -3,11 +3,11 @@ title: "Intentional Constraint Collapse at Impact"
 description: "Companion bibliography for the AffineDrift article on intentional constraint collapse at impact."
 ---
 
-# Intentional Constraint Collapse at Impact
+## Intentional Constraint Collapse at Impact
 
-# Bibliography
+## Bibliography
 
-## Concept Map
+### Concept Map
 
 - **Constraint Jacobian**: The linear mapping between joint velocities and constraint violations.
 - **Nullspace**: The subspace of joint configurations or velocities that do not affect the primary task (clubhead motion).
@@ -15,7 +15,7 @@ description: "Companion bibliography for the AffineDrift article on intentional 
 - **Redundancy**: Having more degrees of freedom than required for the task.
 - **Anisotropy**: Direction-dependent properties (e.g., stiff in one direction, compliant in another).
 
-## References
+### References
 
 bibliography:
 
@@ -226,9 +226,9 @@ bibliography:
     related_ids: []
     references_out_ids: []
 
-## Reading Paths
+### Reading Paths
 
-### Fast ramp (Start here)
+#### Fast ramp (Start here)
 
 1.  [hogan1985] - Foundational text on impedance control in biological systems, explaining how stiffness is modulated.
 2.  [mackenzie2009three] - Key golf-specific forward dynamics model to understand the baseline system.
@@ -236,7 +236,7 @@ bibliography:
 4.  [nesbit2005three] - Empirical background on forces and torques in the golf swing.
 5.  [todorov2004optimality] - Connects control theory to biological optimality, relevant for "intentional" collapse.
 
-### Deep technical (The math)
+#### Deep technical (The math)
 
 1.  [yoshikawa1990] - Standard reference for redundancy, manipulability ellipsoids, and dynamic manipulability.
 2.  [murray1994mathematical] - Rigorous mathematical treatment of constraints, Lagrangians, and nullspaces.
@@ -247,7 +247,7 @@ bibliography:
 7.  [shabana2020dynamics] - (From general list) For understanding flexible body dynamics if expanding on shaft effects.
 8.  [lynch2017modern] - (From general list) Modern geometric approach to robotics dynamics.
 
-### Implementation (How to simulate)
+#### Implementation (How to simulate)
 
 1.  [latash2010] - Detailed discussion on muscle synergies and redundancy, useful for biological plausibility.
 2.  [featherstone2008rigid] - Algorithms for implementing the constraint dynamics in simulation.

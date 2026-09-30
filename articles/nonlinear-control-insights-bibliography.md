@@ -3,9 +3,9 @@ title: "Bibliographic Analysis: Nonlinear Control Insights & Drift Causality"
 description: "Companion bibliography for the AffineDrift article on nonlinear control theory insights and drift causality."
 ---
 
-# Bibliographic Analysis: Nonlinear Control Insights & Drift Causality
+## Bibliographic Analysis: Nonlinear Control Insights & Drift Causality
 
-## A) Concept Map
+### A) Concept Map
 
 - **Nonlinear Control Foundations**
 
@@ -26,7 +26,7 @@ description: "Companion bibliography for the AffineDrift article on nonlinear co
   - **Energy Shaping**: Controlling the Hamiltonian rather than the trajectory directly.
   - **Impedance Control**: Managing stiffness/damping rather than force/position.
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: murray1994mathematical
@@ -253,9 +253,9 @@ description: "Companion bibliography for the AffineDrift article on nonlinear co
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (The Core Argument)
+#### Path 1: Fast Ramp (The Core Argument)
 
 _Target: Quickly grasp the connection between nonlinear control and biomechanical strategy._
 
@@ -265,7 +265,7 @@ _Target: Quickly grasp the connection between nonlinear control and biomechanica
 4.  **Murray, Li, Sastry (1994)** - _Mathematical Introduction_ (`murray1994mathematical`). Chapter 1-2 for the rigid body basics.
 5.  **Isidori (1995)** - _Nonlinear Control Systems_ (`isidori1995nonlinear`). For the definition of the drift vector field $f(x)$.
 
-### Path 2: Deep Technical (Geometric Mechanics)
+#### Path 2: Deep Technical (Geometric Mechanics)
 
 _Target: Master the "Sequencing as Lie Bracket" interpretation._
 
@@ -277,7 +277,7 @@ _Target: Master the "Sequencing as Lie Bracket" interpretation._
 6.  **Slotine & Li (1991)** - _Applied Nonlinear Control_ (`slotine1991applied`). Practical stability tools (Lyapunov).
 7.  **Khalil (2002)** - _Nonlinear Systems_ (`khalil2002nonlinear`). Standard reference for analysis.
 
-### Path 3: Implementation & Computation
+#### Path 3: Implementation & Computation
 
 _Target: Numerical methods for solving these systems._
 

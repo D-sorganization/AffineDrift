@@ -3,7 +3,7 @@ title: "Evidence Map: Wrist Constraints, Grip Geometry and Face Control"
 description: "Companion bibliography for the AffineDrift article on constraint torques at the wrist."
 ---
 
-# Evidence Map: Wrist Constraints, Grip Geometry and Face Control
+## Evidence Map: Wrist Constraints, Grip Geometry and Face Control
 
 This companion to [the wrist article](wrist-universal-joint.qmd) separates
 mechanical identities, software definitions and empirical observations. A
@@ -11,7 +11,7 @@ reference that explains a method does not establish that a particular golf
 model implements it correctly. A simulation alone does not establish a human
 performance advantage.
 
-## Mechanics and Software Definitions
+### Mechanics and Software Definitions
 
 | Source                                                                                                                                  | Reviewed Material and Supported Use                                                   | Boundary                                                                                                        |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
@@ -27,7 +27,7 @@ checks its phase convention by differentiating the angle relation and
 integrating the speed ratio over a revolution. Multiplication by a deliberately
 defined reciprocal is only an internal consistency check.
 
-## Anatomical and Motor-Control Evidence
+### Anatomical and Motor-Control Evidence
 
 | Source                                                                                                                                                           | Evidence Reviewed and Appropriate Use                                                        | What It Does Not Establish                                                    |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -40,7 +40,7 @@ Uncontrolled-manifold analysis does not prove that the nervous system ignores
 all variation in a task Jacobian's instantaneous null space. Such directions
 can also influence the task later through the dynamics.
 
-## Golf Evidence and Validation Scope
+### Golf Evidence and Validation Scope
 
 | Source                                                                                                                                                                                                                          | Evidence Reviewed and Appropriate Use                                                 | Remaining Limit                                                                                                                                                |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -52,7 +52,7 @@ can also influence the task later through the dynamics.
 Publication dates follow the cited journal records. No numerical example in
 the wrist article is presented as a measured result from an abstract-only review.
 
-## Reading Sequence
+### Reading Sequence
 
 1. Define independent joint coordinates and allowed relative velocities. Two
    coordinates with two independent inputs can be fully actuated. Removing a
@@ -67,7 +67,7 @@ the wrist article is presented as a measured result from an abstract-only review
 5. Use anatomical and golf evidence to choose calibration and measurements.
    Separate fixed-input, fixed-motion and reoptimized-control comparisons.
 
-## Bibliographic Integrity
+### Bibliographic Integrity
 
 The previous bibliography included speculative citation-network edges, with
 older sources purportedly citing later publications. Those edges have been

@@ -3,9 +3,9 @@ title: "Bibliographic Analysis: Affine Control Interpretation of the Golf Swing"
 description: "Companion bibliography for the AffineDrift article on the affine control interpretation of the golf swing."
 ---
 
-# Bibliographic Analysis: Affine Control Interpretation of the Golf Swing
+## Bibliographic Analysis: Affine Control Interpretation of the Golf Swing
 
-## A) Concept Map
+### A) Concept Map
 
 - **System Modeling**
 
@@ -40,7 +40,7 @@ description: "Companion bibliography for the AffineDrift article on the affine c
   - **Nesbit / MacKenzie**: Golf biomechanics baselines (Inverse/Forward dynamics).
   - **Todorov / Hogan**: Optimal control and Impedance control in biological systems.
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: cochran1968search
@@ -327,9 +327,9 @@ description: "Companion bibliography for the AffineDrift article on the affine c
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (Conceptual Overview)
+#### Path 1: Fast Ramp (Conceptual Overview)
 
 _Target: Grasp the core mechanical vs. biological distinction and the golf context._
 
@@ -339,7 +339,7 @@ _Target: Grasp the core mechanical vs. biological distinction and the golf conte
 4.  **McGeer (1990)** - _Passive Dynamic Walking_ (`mcgeer1990passive`). Inspiration for "drift" as a useful driver of motion.
 5.  **Todorov (2004)** - _Optimality principles_ (`todorov2004optimality`). Understanding control cost vs. mechanical task.
 
-### Path 2: Deep Technical (Theory & Derivation)
+#### Path 2: Deep Technical (Theory & Derivation)
 
 _Target: Understand the affine decomposition and flexible body math._
 
@@ -353,7 +353,7 @@ _Target: Understand the affine decomposition and flexible body math._
 8.  **MacKenzie & Sprigings (2009)** - _Forward dynamics model_ (`mackenzie2009three`). Specific application to golf.
 9.  **Lynch & Park (2017)** - _Modern Robotics_ (`lynch2017modern`). Modern geometric treatment.
 
-### Path 3: Implementation (Simulation & Analysis)
+#### Path 3: Implementation (Simulation & Analysis)
 
 _Target: Reproducing the results or building a simulator._
 

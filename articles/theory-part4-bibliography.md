@@ -3,9 +3,9 @@ title: "Bibliographic Analysis: Affine Control Interpretation of the Golf Swing 
 description: "Companion bibliography for Part 4 of the AffineDrift theory series."
 ---
 
-# Bibliographic Analysis: Affine Control Interpretation of the Golf Swing — Part 4
+## Bibliographic Analysis: Affine Control Interpretation of the Golf Swing — Part 4
 
-## A) Concept Map
+### A) Concept Map
 
 - **Mathematical Physics**
 
@@ -26,7 +26,7 @@ description: "Companion bibliography for Part 4 of the AffineDrift theory series
   - **Underactuation**: The condition where the dimension of inputs $u$ is less than the dimension of the configuration space (due to the passive shaft).
   - **Input-Output Decoupling**: Separation of active torque effects from passive drift.
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: shabana2020dynamics
@@ -238,9 +238,9 @@ description: "Companion bibliography for Part 4 of the AffineDrift theory series
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (The Theoretical Basics)
+#### Path 1: Fast Ramp (The Theoretical Basics)
 
 _Target: Understand the equation $\dot{x} = f(x) + G(x)u$ and where it comes from._
 
@@ -250,7 +250,7 @@ _Target: Understand the equation $\dot{x} = f(x) + G(x)u$ and where it comes fro
 4.  **Lynch & Park (2017)** - _Modern Robotics_. A comprehensive modern reference.
 5.  **Meirovitch (2001)** - _Fundamentals of Vibrations_. Intro to modes (the $\eta$ coordinates).
 
-### Path 2: Deep Technical (Derivation Verification)
+#### Path 2: Deep Technical (Derivation Verification)
 
 _Target: Verify the block matrix inversions and modal approximations._
 
@@ -262,7 +262,7 @@ _Target: Verify the block matrix inversions and modal approximations._
 6.  **Hughes (1986)** - _Spacecraft Attitude Dynamics_. Canonical text for coupled rigid-flexible systems (like a satellite with solar panels... or a golfer with a club).
 7.  **Isidori (1995)** - _Nonlinear Control Systems_. For the strict definition of drift invariance and input decoupling.
 
-### Path 3: Implementation (Simulation Engines)
+#### Path 3: Implementation (Simulation Engines)
 
 _Target: Numerical implementation of the equations._
 

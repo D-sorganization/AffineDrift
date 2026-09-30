@@ -3,7 +3,7 @@ title: "Bibliography: Screw Theory Reference for Control-Affine Multibody Dynami
 description: "Companion bibliography for the AffineDrift article on screw theory reference for control-affine multibody dynamics."
 ---
 
-# Concept Map
+## Concept Map
 
 - **Lie Group SE(3)**: The configuration space of rigid bodies (rotation + translation), forming a smooth manifold.
 - **Twist ($\mathcal{V}$)**: An element of the Lie algebra $\mathfrak{se}(3)$ representing instantaneous motion (angular velocity + linear velocity) as a 6-vector.
@@ -14,7 +14,7 @@ description: "Companion bibliography for the AffineDrift article on screw theory
 - **Reciprocal Screws**: Two screws whose virtual work product is zero, fundamental for defining kinematic constraints.
 - **Chasles' Theorem**: States that any general rigid body displacement can be produced by a translation along an axis and a rotation about that same axis (a screw motion).
 
-# Bibliography
+## Bibliography
 
 - id: murray1994mathematical
   title: "A Mathematical Introduction to Robotic Manipulation"
@@ -329,9 +329,9 @@ description: "Companion bibliography for the AffineDrift article on screw theory
     references_out_ids:
   - "lynch2017modern"
 
-# Reading Paths
+## Reading Paths
 
-## Fast ramp
+### Fast ramp
 
 1.  **Modern Robotics (Ch 3-4)**: The most accessible and comprehensive modern introduction to Screw Theory and $SE(3)$.
     - Ref: `lynch2017modern`
@@ -344,7 +344,7 @@ description: "Companion bibliography for the AffineDrift article on screw theory
 5.  **Mechanics of Robotic Manipulation (Ch 2)**: Excellent intuition on the geometry of twists and wrenches.
     - Ref: `mason2001mechanics`
 
-## Deep technical
+### Deep technical
 
 1.  **A Treatise on the Theory of Screws**: The original 1900 masterpiece by Sir Robert Ball; verbose but profoundly geometric.
     - Ref: `ball1900treatise`
@@ -363,7 +363,7 @@ description: "Companion bibliography for the AffineDrift article on screw theory
 8.  **Modeling and IPC Control**: Advanced coordinate-free modeling using Port-Hamiltonian systems and spatial vectors.
     - Ref: `stramigioli2001modeling`
 
-## Implementation
+### Implementation
 
 1.  **Pinocchio Library**: The state-of-the-art rigid body dynamics library using Featherstone's spatial algebra.
     - Ref: `pinocchio_lib`

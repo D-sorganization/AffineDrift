@@ -3,9 +3,9 @@ title: "Bibliographic Analysis: Drift/Input Decomposition and Counterfactuals"
 description: "Companion bibliography for Part 2 of the AffineDrift theory series, on drift/input decomposition and counterfactuals."
 ---
 
-# Bibliographic Analysis: Drift/Input Decomposition and Counterfactuals
+## Bibliographic Analysis: Drift/Input Decomposition and Counterfactuals
 
-## A) Concept Map
+### A) Concept Map
 
 - **Decomposition Frameworks**
 
@@ -29,7 +29,7 @@ description: "Companion bibliography for Part 2 of the AffineDrift theory series
   - **Muscle Synergy**: Coordinated activation to manage degrees of freedom.
   - **Inverse Dynamics Interpretation**: The danger of interpreting net torque as "effort".
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: mcgeer1990passive
@@ -236,9 +236,9 @@ description: "Companion bibliography for Part 2 of the AffineDrift theory series
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (The "Why" of Drift)
+#### Path 1: Fast Ramp (The "Why" of Drift)
 
 _Target: Understand why we separate active and passive forces._
 
@@ -248,7 +248,7 @@ _Target: Understand why we separate active and passive forces._
 4.  **Todorov & Jordan (2002)** - _Optimal feedback control..._. Introduces the "minimum intervention" principle (only control what matters, let drift handle the rest).
 5.  **Pearl (2009)** - _Causality_ (Introductory chapters). The logic of "Intervention" ($do(u=0)$) which is the basis for the ZTCF.
 
-### Path 2: Deep Technical (Geometric & Control Theory)
+#### Path 2: Deep Technical (Geometric & Control Theory)
 
 _Target: The mathematical machinery for $\dot{x} = f(x) + G(x)u$._
 
@@ -261,7 +261,7 @@ _Target: The mathematical machinery for $\dot{x} = f(x) + G(x)u$._
 7.  **Latash (2008)** - _Synergy_. Deep dive into the "Uncontrolled Manifold" hypothesis which aligns with drift.
 8.  **Harris & Wolpert (1998)** - _Signal-dependent noise_. Theoretical justification for why brains minimize active torque (input minimization).
 
-### Path 3: Implementation (Simulation & Analysis)
+#### Path 3: Implementation (Simulation & Analysis)
 
 _Target: Tools for calculating these counterfactuals._
 
