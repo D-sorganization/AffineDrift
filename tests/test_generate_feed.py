@@ -102,6 +102,20 @@ class TestResolveItemLink:
         link = resolve_item_link({"changes": []}, "https://affinedrift.com/articles/a.html")
         assert link == "https://affinedrift.com/articles/a.html"
 
+    def test_guid_stays_on_page_url_when_link_targets_revision_history(self):
+        """The guid is the stable page URL, so gaining a ``changes:`` entry never re-publishes an item."""
+        page = "https://affinedrift.com/articles/a.html"
+        item = FeedItem(
+            title="A",
+            link=resolve_item_link({"changes": [{"date": "2026-09-10"}]}, page),
+            description="d",
+            pub_date=datetime(2026, 9, 10, tzinfo=UTC),
+            guid=page,
+        )
+        xml = build_feed_xml([item], build_date=datetime(2026, 9, 30, tzinfo=UTC))
+        assert f"<link>{page}#revision-history</link>" in xml
+        assert f'<guid isPermaLink="true">{page}</guid>' in xml
+
 
 class TestToRfc822:
     """Tests for RFC-822 date formatting."""

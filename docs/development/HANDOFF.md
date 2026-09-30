@@ -51,6 +51,10 @@
 - Next: open the draft PR; the email-digest open decision above needs a human
   call before any further work on it.
 
+- Review fix: `<guid>` stays the canonical page URL (`FeedItem.guid`) while `<link>` may target
+  `#revision-history`, so an article gaining its first `changes:` entry is not re-published to
+  subscribers as a new item. Test: `test_guid_stays_on_page_url_when_link_targets_revision_history`.
+
 # Implementation Handoff — on-ramp "3 Hours" totals (#4695)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4695`.

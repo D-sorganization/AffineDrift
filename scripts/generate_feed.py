@@ -60,6 +60,8 @@ class FeedItem:
     link: str
     description: str
     pub_date: datetime
+    # Stable identity: the canonical page URL, even when ``link`` targets #revision-history.
+    guid: str = ""
 
 
 def get_git_last_modified(filepath: str) -> str:
@@ -191,6 +193,7 @@ def collect_items() -> list[FeedItem]:
                 link=resolve_item_link(frontmatter, page_url),
                 description=frontmatter.get("description", "").strip(),
                 pub_date=pub_date,
+                guid=page_url,
             )
         )
     # Sort newest first; tie-break on link for determinism.
@@ -231,7 +234,7 @@ def build_feed_xml(
                 f"      <link>{escape(item.link)}</link>",
                 f"      <description>{escape(item.description)}</description>",
                 f"      <pubDate>{to_rfc822(item.pub_date)}</pubDate>",
-                f'      <guid isPermaLink="true">{escape(item.link)}</guid>',
+                f'      <guid isPermaLink="true">{escape(item.guid or item.link)}</guid>',
                 "    </item>",
             ]
         )
