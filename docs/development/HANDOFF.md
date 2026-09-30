@@ -98,6 +98,8 @@
 1. Push `claude/issue-4492` with this fix round.
 2. Awaiting frontier-agent re-review of PR #4677.
 
+# Implementation Handoff — Social Cards per Page (#4578)
+# Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -182,6 +184,46 @@
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4578
+- Branch: claude/issue-4578
+- Governing issue/epic: #4578 (WEB-10.10, part of epic #4579 "E10 — Performance, SEO, and Privacy")
+- Pull request: opened as a draft by this session (see PR link in the commit that follows)
+
+## Objective and Status
+
+- Objective: generate per-book/per-series Open Graph social card images (title,
+  badge, and the site signature graphic) at build time instead of relying on
+  one site-wide card for every page.
+- Status: **complete for the two stated acceptance criteria within this
+  issue's scope**, with one caveat noted below.
+- Completed:
+  - TDD: `tests/test_social_cards.py` (7 tests, written first, RED confirmed
+    against the missing module before implementation).
+  - `scripts/generate_social_cards.py`: renders one 1200x630 PNG per
+    configured book/series (badge pill + wrapped title + the existing
+    `logo/logo-icon-512.png` signature graphic), following the same
+    checked-in-asset + `--check` pattern as `scripts/optimize_images.py`'s
+    existing site-wide `logo/og-card.png`.
+  - `logo/social-cards/{physics-of-golf,geometry-of-motion,proximal-distal-energy-transfer}.png`:
+    the three generated cards, checked in.
+  - Per-page `open-graph`/`twitter-card` `image` overrides added to the three
+    representative book/series landing pages
+    (`articles/The_Physics_of_Golf/quarto/index.qmd`,
+    `articles/The_Geometry_of_Motion/quarto/index.qmd`,
+    `articles/proximal_distal_energy_transfer/index.qmd`), overriding the
+    site-wide default set in `_quarto.yml`.
+  - `.github/workflows/deploy-website.yml`: new "Verify Per-Book/Series Social
+    Cards" step (`scripts/generate_social_cards.py --check`), mirroring the
+    existing "Verify Optimized Image Derivatives" step.
+- Caveat: the issue's second acceptance criterion ("Validated with a
+  social-card debugger on three pages") requires a public, deployed URL for
+  each page — social-card debugger tools (Facebook Sharing Debugger, Twitter
+  Card Validator, opengraph.xyz, etc.) fetch the live page over HTTP and
+  cannot be run against an unmerged branch or a local render. This PR
+  implements and tests the generation and per-page wiring (the three chosen
+  pages render valid, correctly sized OG/Twitter images with distinct
+  title/badge per book), but the live debugger pass itself must happen after
+  merge and deploy to `https://affinedrift.com`.
 - Branch: fix/web-01-6-how-to-read-this-site-4491
 - Baseline commit: fc36109d (origin/main)
 - Implementation commit: dd961a63
@@ -227,6 +269,28 @@
   - Replaced legacy `.status-pill` elements across `pages/tools.qmd`, `pages/book-reviews.qmd`, `pages/daydreams-doodles.qmd`, `pages/drifter-manifesto.qmd`, `resources/research-reviews.qmd`, and updated `CONTRIBUTING.md`.
   - Added unit test suite `tests/test_status_badge.py` (15 tests) verifying all 6 states, icons, labels, aliases, link resolution, and contrast requirements.
   - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
+---
+
+# Implementation Handoff — Deploy Website Claim-Audit Route Coverage (#4666)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/main-is-red-deploy-website-4666
+- Baseline commit: 45d9fca0 (origin/main)
+- Governing issue: #4666 (main is red: Deploy Website, fleet-main-health)
+
+## Objective and Status
+
+- Objective: Restore green `Deploy Website` on `main` by adding newly created pages (`pages/glossary.html` and `pages/how-to-read.html`) to `data/trust/claim_audit_inventory.json` so that `--enforce-publication` coverage check succeeds during production website build.
+- Status: Implementation complete, test suites passing; opening PR.
+- Completed:
+  - Added reviewed route entries for `/pages/glossary.html` and `/pages/how-to-read.html` to `data/trust/claim_audit_inventory.json` with self-contained byte evidence (SHA-256 digests).
+  - Updated `DEFERRED_AUDIT_SCOPE_COUNTS` in `scripts/claim_audit_ids.py` for issue 4063 (from 13 to 15) to account for the two new pages.
+  - Updated route partition test in `tests/test_claim_audit_inventory.py`.
+  - Regenerated `data/trust/generated/claim_audit_report.json` and `reports/scientific-claim-audit.md`.
+  - Verified with `scripts.generate_claim_audit_inventory --check --enforce-publication`.
 
 ---
 
@@ -293,6 +357,18 @@
 ## Files and Decisions
 
 - Key decisions:
+  - Three representative landing pages (the two textbooks with dedicated
+    `index.qmd` pages plus the one monograph) were chosen to satisfy "on three
+    pages" concretely rather than generating cards for every book/series in
+    the sidebar, which the issue did not ask for.
+  - `ImageFont.load_default(size=...)` (Pillow >= 10.1) is used instead of a
+    vendored or system TrueType font, so card rendering is deterministic
+    across the Windows dev environment and the Linux CI runner without adding
+    a new font asset.
+  - Per-page `open-graph:`/`twitter-card:` YAML blocks (matching the same keys
+    already used site-wide in `_quarto.yml`) were used for the override,
+    rather than the generic Quarto `image:` field, to make the override
+    explicit and symmetric with the site-level config it replaces.
   - Cache path is `docs` + `.quarto` (not `_freeze/`): this site has no executable code cells
     (per the existing "Build site for E2E" comment), so Quarto's freeze mechanism buys nothing;
     the actual expensive artifact is the rendered HTML output itself.
@@ -307,6 +383,33 @@
 - User-owned or unrelated worktree changes: none observed.
 
 ## Validation
+
+- `python -m pytest tests/test_social_cards.py tests/test_image_budget.py -q` — 13 passed.
+- `python -m ruff check scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
+- `python -m black --check --line-length 100 scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
+- `python scripts/generate_social_cards.py --check` — PASS.
+- `python -m scripts.check_module_size_budget` — PASS.
+- `python -m scripts.check_tech_debt_budget` — PASS.
+- YAML frontmatter of the three edited `.qmd` files and the edited workflow
+  file validated with `yaml.safe_load`.
+
+## Blockers and Risks
+
+- Blocker: none for the generation/wiring work in this PR.
+- Risk: the live social-card-debugger validation (acceptance criterion 2)
+  cannot be executed by an agent pre-merge; it needs a human or a follow-up
+  automated check to run post-deploy against the three live URLs.
+
+## Next Steps
+
+1. After merge and the next site deploy, run a social-card debugger against
+   the three pages' live URLs to close out acceptance criterion 2.
+
+## Change Log
+
+- `SELF` — Generate per-book/series Open Graph social cards at build time and wire three landing pages to use them (#4578).
+
+---
 
 - `python -m pytest tests/test_deployment_integrity.py` — 16 passed, 1 skipped.
 - `python -m pytest tests/test_workflow_action_pins.py` — 2 passed.
@@ -398,6 +501,26 @@
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4567
+- Branch: claude/issue-4567
+- Baseline commit: 02507aac
+- Implementation commit: SELF
+- Pull request: not created yet (draft PR opened this session)
+- Governing issue/epic: #4567 (epic #4569)
+
+## Objective and Status
+
+- Objective: Wire `scripts/validate_accessibility.py` into `quality-gate` and add a check requiring complex E8 SVG diagrams to carry a long description.
+- Status: Implementation complete; draft PR pending.
+- Completed:
+  - Added `check_long_description_for_diagrams()` to `scripts/validate_accessibility.py`: flags an SVG image reference in a QMD file unless the file also has an `aria-describedby` resolved to an in-page element, or a `<details>` "long description" disclosure.
+  - Fixed a pre-existing latent bug: the QMD loop in `validate_accessibility()` called `qmd_file.relative_to(repo_root)`, but `collect_qmd_files()` returns CWD-relative paths, not absolute ones, so any real finding crashed the script (previously dormant because every existing check found zero issues repo-wide). Now uses the path as-is, matching `seo_audit.py`'s convention.
+  - Discovered the new check would flag 39 pre-existing QMD files whose SVG figures are matplotlib-generated data plots that predate the E8 diagram work, not the hand-authored explanatory diagrams E8 specifies. Added `config/accessibility-long-description-baseline.json` (same `_comment`/`accepted` shape as `tree-parity-baseline.json`/`terminology-baseline.json`) to grandfather them, so the new check only blocks new/changed content.
+  - Discovered the script's existing CSS colorblind-safe-color and JS ARIA-label checks also have unrelated pre-existing findings (dozens of CSS colors, `js/main.js`) with no baseline. Added a `--qmd-only` flag to `validate_accessibility()`/`main()` so CI wires only the in-scope checks (alt text, heading hierarchy, long descriptions); the CSS/JS checks stay unwired pending their own baseline/cleanup work (out of #4567's scope; flagged in the PR body).
+  - Added `.github/workflows/ci-standard.yml` step "Verify Alt Text and Long Descriptions" running `python3 scripts/validate_accessibility.py --qmd-only` in the `static-checks` job that feeds `quality-gate`.
+  - Added tests in `tests/test_validate_accessibility.py` for the new check (non-SVG images ignored, missing long description flagged, `aria-describedby` pass, `<details>` disclosure pass, dangling `aria-describedby` still flagged).
+  - Added a `SPEC.md` change-log row keyed to #4567.
+- Remaining: Open the draft PR.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4596 (worktree)
 - Branch: claude/issue-4596
 - Baseline commit: 02507aac (origin/main)
@@ -440,6 +563,16 @@
 ## Files and Decisions
 
 - Files changed:
+  - `scripts/validate_accessibility.py`: new `check_long_description_for_diagrams()`, baseline loader, `qmd_only` param, `--qmd-only` CLI flag, `relative_to` bugfix.
+  - `config/accessibility-long-description-baseline.json`: new baseline of 39 pre-existing files.
+  - `tests/test_validate_accessibility.py`: new `TestLongDescriptionForDiagrams` class.
+  - `.github/workflows/ci-standard.yml`: new CI step in `static-checks`.
+  - `SPEC.md`: change-log row.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
+- Key decisions:
+  - "Complex diagram" is scoped to SVG image references, matching E8's stated format (WEB-08.2/08.3 specify SVG diagrams with a long description); PNG/JPEG figures are unaffected.
+  - The long-description check is file-wide (permissive), matching this module's existing style (`check_colorblind_safe_colors`'s docstring states the same rationale) rather than requiring a 1:1 image-to-description mapping.
+  - CSS/JS checks are deliberately left out of the CI step rather than baselined, since remediating dozens of CSS color findings and the JS ARIA gap is unrelated scope; this is called out as a known gap in the PR body rather than silently fixed or silently wired in as a failure.
   - `scripts/link-checker.py`: DOI-aware redirect handling, archive.org suggestions,
     structured warnings, `--json-report`.
   - `.github/workflows/link-checker.yml`: weekly schedule, `issues: write`, tracking-issue
@@ -497,6 +630,14 @@
 
 ## Validation
 
+- `python -m pytest tests/test_validate_accessibility.py` — PASS (20 passed)
+- `python -m ruff check scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python -m black --check --line-length 100 scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python3 scripts/validate_accessibility.py --qmd-only` (PYTHONPATH=.) — exit 0 across the full repo
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 scripts/check_module_size_budget.py` — PASS
+- `python3 scripts/check_root_hygiene.py` — PASS
+- `python3 scripts/check_workflow_action_pins.py` — PASS
 - `pytest tests/test_link_checker_script.py` — PASS (12 passed)
 - `pytest tests/test_link_checker_script.py tests/test_check_links.py tests/test_check_links_additional.py tests/test_link_utils.py` — PASS (79 passed)
 - `python -m ruff check scripts/link-checker.py tests/test_link_checker_script.py` — PASS
@@ -506,6 +647,15 @@
 ## Blockers and Risks
 
 - Blockers: none.
+- Risks/assumptions: the 39-file baseline is a one-time grandfather; new SVG diagrams added anywhere (including under E8) must supply a long description or add themselves to the baseline (not recommended) to pass CI. The CSS/JS checks remaining unwired is a known gap, not a defect introduced by this change.
+
+## Next Steps
+
+1. Open the draft PR for #4567 and note the unwired CSS/JS checks as follow-up scope in its body.
+
+---
+
+
 - Risks/assumptions: the tracking-issue step is exercised only via the workflow's scheduled/
   manual trigger in production GitHub Actions; it is not covered by a live integration test
   (no local GitHub API to test against). The JSON-report plumbing and issue-body construction
