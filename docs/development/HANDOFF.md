@@ -1,3 +1,49 @@
+# Service-Worker Cache Busting by Content Hash — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4600`.
+- Branch `claude/issue-4600`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4600 (epic #4604, E13 — Build, Reliability, and Maintainability).
+  Objective: resolve the unresolved content-hash cache-busting note (#1459, closed) in
+  `service-worker.js` and re-enable the excluded offline Playwright test (#4140).
+- Completed work:
+  - `service-worker.js`: removed the stale `TODO #1459` comment. Content-hash cache busting
+    is already implemented by `scripts/update_sw_cache_version.py`, which hashes the precached
+    CSS/JS assets into `CACHE_NAME`'s suffix (well covered by
+    `tests/test_update_sw_cache_version.py`, 12 tests, all passing); the comment now documents
+    that instead of pointing at a closed issue asking for it.
+  - `tests/e2e/offline.spec.js`: replaced the `should serve cached homepage when offline` test's
+    hardcoded `page.waitForTimeout(3000)` with a deterministic
+    `await page.evaluate(() => navigator.serviceWorker.ready)` wait, so the assertion no longer
+    races the service worker's install/precache step under CI load.
+  - `.github/workflows/ci-standard.yml`: dropped `should serve cached homepage when offline` from
+    the full-site E2E `--grep-invert` exclusion list added for #4140. The other eight excluded
+    titles are unrelated to this issue and left untouched.
+- Key decision: acceptance criterion "Content-hash precache manifest" is satisfied by the
+  existing `update_sw_cache_version.py` mechanism (a single content-hash-derived `CACHE_NAME`
+  covering all precached assets) rather than a per-file manifest — that mechanism already has
+  full test coverage, so the only unresolved half of the acceptance criteria was the stale
+  comment and the CI exclusion.
+- Compatibility constraints: none — no public API or cache-key format changed; `CACHE_NAME`
+  values still follow the pre-existing `affinedrift-v5-<hash>` shape.
+- Validation commands and outcomes:
+  - `npx jest` → 25 suites, 420 passed, 19 skipped, 0 failed.
+  - `python3 -m pytest tests/test_update_sw_cache_version.py -q` → 12 passed.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → 733 files unchanged, no diffs.
+  - `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` → OK
+    (workflow YAML still parses after the exclusion-list edit).
+  - **Not run locally:** `quarto render` (blocked in this sandbox — ~14 min full-site render is
+    out of policy for this session) and `npx playwright test`. The re-enabled offline spec was
+    reasoned through by code inspection (SW registers on `window.load` in
+    `_includes/site-after-body.html`, activates via `self.clients.claim()`, and
+    `navigator.serviceWorker.ready` resolves once an active SW is present) but has not been
+    executed against a real rendered site. CI's `e2e-tests` job (full-site Playwright run) is the
+    first actual execution of the un-excluded test — check its result on the opened PR.
+- Blockers/risks: none identified beyond the above. If CI's `e2e-tests` job still fails the
+  re-enabled title, the next step is to inspect that job's trace/video artifact rather than
+  re-guess a timing fix.
+- Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
 # Implementation Handoff — Report Broken External Links as Issues (#4596)
 # Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
 
