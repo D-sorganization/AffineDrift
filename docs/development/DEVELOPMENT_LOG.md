@@ -31,6 +31,42 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds a footer control appended to `#quarto-document-content` on every rendered page: a "Report a problem" link that opens the content-correction GitHub issue template prefilled with the page URL and build revision (fetched same-origin from `public-site-manifest.json`), with a mailto fallback for readers without a GitHub account. The "Was this helpful?" Yes/No vote was removed per PR review — it recorded nothing yet claimed "Thanks for the feedback!", which was outside the issue's acceptance criteria and misled readers.
 - **Next step:** Verify CI, then release lease.
 
+### DL-#4606 · "What's New" Feed RSS Validation
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
+- **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
+- **Branch:** `claude/issue-4606`
+- **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
+- **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
+- **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
+### DL-#4550 · Print and PDF Editions for Books and Core Series
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** draft (see HANDOFF.md for link)
+- **Issue:** #4550 (WEB-07.9; epic #4552)
+- **Branch:** `claude/issue-4550`
+- **Paths:** `css/print.css`, `styles.css`, `js/pdf.js`, `js/main.js`, `tests/test_print_stylesheet_consolidation.py`, `tests/pdf.test.js`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_print_stylesheet_consolidation.py` 4/4 pass; `npx jest` 27 suites, 437 passed/19 skipped; `ruff check .` and `black --check --line-length 100 .` clean)
+- **Summary:** Consolidates the two competing `@media print` blocks into `css/print.css` as the single print stylesheet, drops the A4-only forced `@page` size (now `auto`) so both Letter and A4 print via the printer/OS choice, and adds a `beforeprint` handler forcing MathJax to typeset lazy-loaded off-screen math before any print (native Ctrl+P or the export-to-PDF button). The "PDFs built in CI and linked from the header card" criterion is deliberately not implemented this session — see HANDOFF.md Blocked section.
+- **Next step:** Owner/frontier decision on the deferred PDF-header-card-link scope (see HANDOFF.md Blocked), then implement or split into a follow-up issue.
+### DL-#4565 · Math Accessibility Verification
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** see PR opened from `claude/issue-4565` against `main` (draft)
+- **Issue:** #4565 (WEB-09.5; epic #4569 / E9)
+- **Branch:** `claude/issue-4565`
+- **Paths:** `tests/mathjax-loader.test.js`, `tests/e2e/accessibility.spec.js`, `docs/development/math-accessibility-verification-4565.md`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `npx jest` 26 suites passed, 432 passed/19 skipped, 0 failed; `npx playwright test tests/e2e/accessibility.spec.js --list` registers the new test across all 5 browser projects; YAML-validated `ci-standard.yml`; full Playwright run deferred to CI's `e2e-tests` job since Quarto is not installed in this worktree)
+- **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches — finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today — and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
+- **Next step:** A human tester runs the manual NVDA/VoiceOver protocol in the findings doc and records results on #4565.
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review
