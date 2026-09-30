@@ -66,11 +66,59 @@ async function scanWithAxe(page) {
   return summarizeAxeViolations(outcome.violations);
 }
 
+function isBaselineAxeCell(item) {
+  if (!item) return false;
+  const viewportId = item.viewport?.id ?? item.viewport;
+  return viewportId === 'desktop-small' && item.theme === 'light';
+}
+
+function axeCellFailures(item, axeViolations, options = {}) {
+  if (!axeViolations || options.axe !== 'fail') return [];
+  if (!isBaselineAxeCell(item)) return [];
+  return axeViolations.map((v) => `axe ${v.impact}: ${v.id} (${v.node_count} nodes) ${v.help}`);
+}
+
+function applyAxeResult(item, axeViolations, options = {}) {
+  const failures = [...(item.failures ?? [])];
+  const axeFailures = axeCellFailures(item, axeViolations, options);
+  failures.push(...axeFailures);
+  return {
+    ...item,
+    passed: failures.length === 0,
+    failures,
+    ...(axeViolations ? { axe_violations: axeViolations } : {}),
+  };
+}
+
+function logAxeReport(report) {
+  const axe = report?.axe_policy;
+  if (!axe || axe.mode === 'off') return;
+  console.log(
+    `axe-core (${axe.mode}): ${axe.scanned_route_count} routes scanned, ` +
+    `${axe.violation_count} serious/critical violations on ${axe.routes_with_violations.length} routes`,
+  );
+  if (axe.mode === 'warn' && axe.violation_count > 0) {
+    console.log(`::warning::axe-core found ${axe.violation_count} serious/critical violations (warn-only, #4126)`);
+  }
+  const nonBaselineViolations = (report.results ?? [])
+    .filter((r) => !isBaselineAxeCell(r))
+    .reduce((sum, r) => sum + (r.axe_violations?.length ?? 0), 0);
+  if (nonBaselineViolations > 0) {
+    console.log(
+      `::warning::axe-core found ${nonBaselineViolations} violations on non-baseline matrix cells (dark/mobile); triaged into follow-up issues (#4562)`,
+    );
+  }
+}
+
 module.exports = {
   AXE_FAILING_IMPACTS,
   AXE_MODES,
+  applyAxeResult,
+  axeCellFailures,
   axeMode,
   axePolicyEvidence,
+  isBaselineAxeCell,
+  logAxeReport,
   markAxeCells,
   scanWithAxe,
   summarizeAxeViolations,

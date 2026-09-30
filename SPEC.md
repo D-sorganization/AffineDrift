@@ -225,10 +225,11 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-09-30 | #4657 | Scan dark theme and 390px mobile viewports in axe accessibility quality gate (#4562). |
-| 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
-| 2026-09-29 | #4599 | Consolidate the 7 cross-page "Recent Models" inline history scripts into a shared `initCategoryHistory()` in `js/history.js`; remove the 8 single-page "Recent X" history widgets on resources pages that only ever recorded the page itself; add Jest coverage for `history.js` and `home.js`. |
-| 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
+| 2026-09-30 | #4538 | Add a Binder `environment.yml` installing from `requirements.txt` so it opens the notebook scaffolds in JupyterLab (Binder build unverified), a shared Binder-launch include on every book's Notebook Workflow section and the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` for per-page source downloads; the devcontainer half is blocked, see the PR's Blocked section. |
 | 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
+| 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
+| 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
+| 2026-09-29 | #4599 | Consolidate the 7 cross-page "Recent Models" inline history scripts into a shared `initCategoryHistory()` in `js/history.js`; remove the 8 single-page "Recent X" history widgets on resources pages that only ever recorded the page itself; add Jest coverage for `history.js` and `home.js`. |
 | 2026-09-30 | #4492 | Add `resources/on-ramp-paths.qmd`: 5-minute, 30-minute, and 3-hour on-ramp reading sequences per persona, built from existing pages, each ending in a self-check question and answer (#4492). |
 | 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
 | 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
@@ -461,6 +462,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4495 | Unify the 404 page's contact address with About/Contact (WEB-01.10); Start Here and Library links deferred pending #4486 and the WEB-02.1 navbar restructure. |
 | 2026-09-30 | #4565 | Verify MathJax's assistive-MathML layer is not blocked by the connect-src 'self' CSP (the SRE explorer component is never loaded) and add regression/E2E tests across three math-heavy pages (WEB-09.5); the NVDA/VoiceOver human trial is deferred with a recorded manual protocol. |
 | 2026-09-30 | #4535 | Add an interactive DCR-through-phase widget (WEB-06.5) comparing an additive- and a state-dependent-drift system with equal instantaneous DCR but different reachable-interval widths, linking claim ad-dcr-001 on the DCR page. |
+| 2026-09-30 | #4697 | Allowlist SHA-256 evidence digests keyed by repository paths in `.gitleaks.toml` so claim-audit ledgers stop tripping gitleaks generic-api-key. |
 | 2026-09-30 | #4666 | Enforce 100% claim-audit route coverage for pages/glossary and pages/how-to-read, restoring green Deploy Website on main. |
 | 2026-09-30 | #4577 | Switch the gated MathJax loader to the smaller tex-chtml.js component build (TeX input + CHTML output only, no unused MathML input jax) on every math-bearing page (WEB-10.9). |
 | 2026-09-30 | #4678 | Implement standard Where Next footer component with 30 core pages mapping, no self-links, accessible nav card, and cross-cluster coordination (#4510). |

@@ -12,13 +12,19 @@ const {
 const {
   AXE_FAILING_IMPACTS,
   AXE_MODES,
+  applyAxeResult,
+  axeCellFailures,
   axeMode,
   axePolicyEvidence,
+  isBaselineAxeCell,
+  logAxeReport,
   markAxeCells,
   scanWithAxe,
   summarizeAxeViolations,
 } = require('./public-site-axe.js');
 const {
+  fixedElementCanObscureHeading,
+  headingBeginsWithinViewport,
   isActionableConsoleError,
   isActionablePageError,
 } = require('./public-site-browser-noise.js');
@@ -162,23 +168,6 @@ function parseArgs(argv) {
     else throw new TypeError(`unknown argument: ${arg}`);
   }
   return options;
-}
-
-function fixedElementCanObscureHeading(style) {
-  const zIndex = Number.parseInt(style.zIndex, 10);
-  return style.pointerEvents !== 'none' && (Number.isNaN(zIndex) || zIndex >= 0);
-}
-
-function headingBeginsWithinViewport(rect, viewport) {
-  return Boolean(
-    rect &&
-    rect.width > 0 &&
-    rect.height > 0 &&
-    rect.top < viewport.height &&
-    rect.bottom > 0 &&
-    rect.left < viewport.width &&
-    rect.right > 0
-  );
 }
 
 async function inspectRenderedPage(page, item) {
@@ -551,7 +540,7 @@ async function verifyItem(page, item, options) {
     }
   }
   if (axeViolations && options.axe === 'fail') {
-    failures.push(...axeViolations.map((v) => `axe ${v.impact}: ${v.id} (${v.node_count} nodes) ${v.help}`));
+    failures.push(...axeCellFailures(item, axeViolations, options));
   }
   return {
     ...item,
@@ -655,40 +644,34 @@ async function main() {
     `Public site verification: ${report.evidence_count}/${report.expected_evidence_count} evidence items, ` +
     `${report.failure_count} failed -> ${options.outputPath}`,
   );
-  const axe = report.axe_policy;
-  if (axe.mode !== 'off') {
-    console.log(
-      `axe-core (${axe.mode}): ${axe.scanned_route_count} routes scanned, ` +
-      `${axe.violation_count} serious/critical violations on ${axe.routes_with_violations.length} routes`,
-    );
-    if (axe.mode === 'warn' && axe.violation_count > 0) {
-      console.log(`::warning::axe-core found ${axe.violation_count} serious/critical violations (warn-only, #4126)`);
-    }
-  }
+  logAxeReport(report);
   if (!report.passed) process.exitCode = 1;
 }
 
 module.exports = {
   AXE_FAILING_IMPACTS,
   AXE_MODES,
+  applyAxeResult,
   assertManifest,
+  axeCellFailures,
   axePolicyEvidence,
-  markAxeCells,
-  summarizeAxeViolations,
   buildEvidencePlan,
   canonicalPathMatches,
   fixedElementCanObscureHeading,
   headingBeginsWithinViewport,
   isActionableConsoleError,
   isActionablePageError,
+  isBaselineAxeCell,
+  markAxeCells,
   navigateWithRetry,
   navigationRetryPolicyEvidence,
   parseArgs,
   RETRYABLE_STATUS_CODES,
-  summarizeNavigationAttempts,
-  screenshotOptions,
-  screenshotName,
   runVerification,
+  screenshotName,
+  screenshotOptions,
+  summarizeAxeViolations,
+  summarizeNavigationAttempts,
 };
 
 if (require.main === module) {

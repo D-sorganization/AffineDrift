@@ -376,7 +376,10 @@ describe('public-site verifier contracts (WEB-D)', () => {
 describe('axe-core policy (ISSUE-4126)', () => {
   const {
     AXE_FAILING_IMPACTS,
+    applyAxeResult,
+    axeCellFailures,
     axePolicyEvidence,
+    isBaselineAxeCell,
     markAxeCells,
     summarizeAxeViolations,
   } = require('../scripts/verify-public-site.js');
@@ -491,5 +494,43 @@ describe('axe-core policy (ISSUE-4126)', () => {
       routes_with_violations: ['/articles/example.html'],
       violation_count: 2,
     });
+  });
+
+  test('baseline desktop-small, light violations cause cell failure under options.axe === fail (#4562)', () => {
+    const item = { route: '/', viewport: { id: 'desktop-small' }, theme: 'light', failures: [] };
+    const violations = [
+      { id: 'color-contrast', impact: 'serious', node_count: 1, help: 'Elements must have sufficient color contrast' },
+    ];
+    const failures = axeCellFailures(item, violations, { axe: 'fail' });
+    expect(failures).toHaveLength(1);
+    expect(failures[0]).toContain('axe serious: color-contrast (1 nodes)');
+
+    const result = applyAxeResult(item, violations, { axe: 'fail' });
+    expect(result.passed).toBe(false);
+    expect(result.failures).toHaveLength(1);
+    expect(result.failures[0]).toContain('axe serious: color-contrast (1 nodes)');
+    expect(result.axe_violations).toEqual(violations);
+  });
+
+  test('matrix cells with dark or mobile record violations without causing cell failure under options.axe === fail (#4562)', () => {
+    const matrixCells = [
+      { route: '/', viewport: { id: 'desktop-small' }, theme: 'dark', failures: [] },
+      { route: '/', viewport: { id: 'mobile' }, theme: 'light', failures: [] },
+      { route: '/', viewport: { id: 'mobile' }, theme: 'dark', failures: [] },
+    ];
+    const violations = [
+      { id: 'color-contrast', impact: 'serious', node_count: 3, help: 'Elements must have sufficient color contrast' },
+    ];
+
+    for (const cell of matrixCells) {
+      expect(isBaselineAxeCell(cell)).toBe(false);
+      const failures = axeCellFailures(cell, violations, { axe: 'fail' });
+      expect(failures).toEqual([]);
+
+      const result = applyAxeResult(cell, violations, { axe: 'fail' });
+      expect(result.passed).toBe(true);
+      expect(result.failures).toEqual([]);
+      expect(result.axe_violations).toEqual(violations);
+    }
   });
 });
