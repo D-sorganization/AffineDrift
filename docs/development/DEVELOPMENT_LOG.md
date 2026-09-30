@@ -18,18 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4710 · Two-Hand Wrench Chapter Review
+### DL-#4712 · Two-Hand Wrench Chapter Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4712 (regular)
 - **Issue:** #4710 (corpus #4021; epic #4009)
 - **Branch:** `fix/two-hand-wrench-rigor-4710`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (base 9cf8f600; fifteen focused checks and source gates pass; exact pinned arrays and source hashes checked; render validation pending)
+- **Last verified:** 2026-09-30 (142 affected checks pass; 209-page PDF and eight browser cases verified; full combined-main validation pending)
 - **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
-- **Next step:** Finish PDF/web inspection and full validation, preserve historical audit scope, bind committed evidence, and deliver a regular PR after integrating #4709.
+- **Next step:** Integrate merged #4709 at 984552e17, complete combined-main validation and protected delivery of regular PR #4712. Provider citation follow-up #4711 remains open.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 

@@ -4,15 +4,12 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 243
-- Deferred: 3
+- Reviewed: 246
+- Deferred: 0
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
-- [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 1 routes
-- [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 1 routes
-- [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 1 routes
 
 ## Reviewed Evidence
 
@@ -43,6 +40,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
 | `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 51 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
+| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 23 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 1 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
 | `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 5 |
@@ -215,6 +213,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/programming/programs.html` | `models/programming/programs.qmd` | 4 |
 | `/models/programming/provenance.html` | `models/programming/provenance.qmd` | 4 |
 | `/models/programming/workflows.html` | `models/programming/workflows.qmd` | 4 |
+| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 35 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/accessibility.html` | `pages/accessibility.qmd` | 1 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
@@ -254,6 +253,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/resources/research-review-shaft-flexibility.html` | `resources/research-review-shaft-flexibility.qmd` | 1 |
 | `/resources/research-reviews.html` | `resources/research-reviews.qmd` | 1 |
 | `/resources/resources-books.html` | `resources/resources-books.qmd` | 1 |
+| `/resources/resources-datasets.html` | `resources/resources-datasets.qmd` | 7 |
 | `/resources/resources-notebooklm.html` | `resources/resources-notebooklm.qmd` | 1 |
 | `/resources/resources-papers.html` | `resources/resources-papers.qmd` | 1 |
 | `/resources/resources-researchers.html` | `resources/resources-researchers.qmd` | 1 |
@@ -292,7 +292,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 16 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
-| `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
+| `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Reviewed | — | None | None | 7 |
@@ -465,7 +465,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-a0016096eed0` | `/models/programming/programs.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c9d7d2a37313` | `/models/programming/provenance.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d285e928b413` | `/models/programming/workflows.html` | Reviewed | — | None | None | 0 |
-| `ad-route-7bb2e5fcbb84` | `/models/research-protocol-readiness.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-7bb2e5fcbb84` | `/models/research-protocol-readiness.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | None | None | 0 |
 | `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | — | None | None | 1 |
 | `ad-route-ae3941a3e7eb` | `/pages/accessibility.html` | Reviewed | — | None | None | 1 |
@@ -507,7 +507,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-c3b127d902e9` | `/resources/research-review-shaft-flexibility.html` | Reviewed | — | None | None | 0 |
 | `ad-route-709386b02ebe` | `/resources/research-reviews.html` | Reviewed | — | None | None | 0 |
 | `ad-route-9d49aa3310be` | `/resources/resources-books.html` | Reviewed | — | None | None | 0 |
-| `ad-route-7eda67a2b1fa` | `/resources/resources-datasets.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
+| `ad-route-7eda67a2b1fa` | `/resources/resources-datasets.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5019066bbd63` | `/resources/resources-notebooklm.html` | Reviewed | — | None | None | 0 |
 | `ad-route-560f2c6efddd` | `/resources/resources-papers.html` | Reviewed | — | None | None | 0 |
 | `ad-route-eba20bb8729f` | `/resources/resources-researchers.html` | Reviewed | — | None | None | 0 |
