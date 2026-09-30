@@ -17,4 +17,8 @@ description = "SHA-256 evidence digests keyed by repository file path"
 regexTarget = "match"
 regexes = [
   '''[A-Za-z0-9_./-]+\.(qmd|md|json|py|bib|yml|yaml|tex|csv|js|css|html)"\s*:\s*"[0-9a-f]{64}''',
+  # Public SHA-256 of the unchanged protocol-boundary test at b60805a9 (#4712).
+  # Its ::symbol contains "authoritative", which the generic rule matches.
+  # Permit this exact digest only; do not exempt arbitrary 64-hex credentials.
+  '''19d823bd859b335b62820d5b799ba1215273b3eedf039d83ea055f8234fc9645''',
 ]

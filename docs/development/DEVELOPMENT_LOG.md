@@ -29,21 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (21 impact checks; 46 post-binding audit/numerical/hygiene checks; 179 content passes; full Windows 6036 passes and three audit/snapshot failures subsequently resolved; 92.88% coverage; Ruff/Black/mypy and 12 content gates; final 12 browser cases and 74 math expressions)
 - **Summary:** Bound the instantaneous theorem, inertia reduction and historical solver evidence; correct primary-study and human-objective inference; reconcile two linked public summaries without renewing their other review scope.
-- **Next step:** Scientific source/evidence committed at 3ff93eda0/fdec68157. Integrate main and deliver a regular protected PR; keep corpus goal active. Provider follow-up Tools #5393. Live deployment separately blocked by #4688 dataset-explorer coverage.
-
-### DL-#4706 · Induced Acceleration Biomechanics Review
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4709 (regular PR)
-- **Issue:** #4706 (corpus #4021; epic #4009)
-- **Branch:** `fix/induced-acceleration-rigor-20260930`
-- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (final source d7cf1af8; final render evidence 2f32c8d4; integrated main 59c0cc2d: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; Linux CI 41e075ef: 5962 passed, 92.83% coverage; 179 content checks; eight book builds; Windows 6005 passed, two snapshot-location failures resolved and six hygiene checks pass; quotation gate passes; CI requires named gravity constant in one test, corrected without changing assertions)
-- **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
-- **Next step:** Main 4f798475 integrated with both turnover records; 57 combined chapter/audit/trust/packaging checks pass; test-style checkpoint 2be29ec3 unchanged; finish validation and protected-merge #4709; keep goal active for the remaining 142 source reviews.
-
+- **Next step:** Scientific source/evidence committed at 3ff93eda0/fdec68157. Integrated remote main be263f9cd; deliver a regular protected PR; keep corpus goal active. Provider follow-up Tools #5393. Live deployment separately blocked by #4688 dataset-explorer coverage.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -61,6 +47,45 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4712 · Two-Hand Wrench Chapter Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4712 (regular)
+- **Issue:** #4710 (corpus #4021; epic #4009)
+- **Branch:** `fix/two-hand-wrench-rigor-4710`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (combined-main suite: 6,034 passed, 29 skipped, 92.88% coverage; final content: 180 passed/four skipped; 39 protocol/history/audit checks; 209-page PDF and 20 browser cases verified)
+- **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
+- **Next step:** Merged to remote main be263f9cd946a6aa8b4a97b086af9eab399c3ac6 at 23:32:17 UTC; all protected CI checks passed (36786787125). Lease and presence released. Provider citation follow-up #4711 remains open.
+
+### DL-#4715 · Quarto Script-Action Link Classification
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4716 (regular PR)
+- **Issue:** #4715 (related deployment health #4688)
+- **Branch:** `fix/quarto-script-links-4715`
+- **Paths:** `src/tools/check_site_health.py`, `tests/test_site_health_script_actions.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (ten RED regressions; 98 focused checks GREEN; full Windows suite 6,028 passed, 29 skipped, 92.95% coverage; 179 content checks passed, four skipped; Ruff/Black/mypy/SPEC/evidence checks pass)
+- **Summary:** Ignore JavaScript action URLs during filesystem target resolution so Quarto code-menu controls no longer block deployment; retain failures for missing article links.
+- **Next step:** Merged #4716 to remote main 5e1a11059 at 22:27:52 UTC; lease released. Preserve #4688's separate audit work and verify a later main deployment.
+
+### DL-#4706 · Induced Acceleration Biomechanics Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4709 (regular PR)
+- **Issue:** #4706 (corpus #4021; epic #4009)
+- **Branch:** `fix/induced-acceleration-rigor-20260930`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (final source d7cf1af8; final render evidence 2f32c8d4; integrated main 59c0cc2d: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; Linux CI 41e075ef: 5962 passed, 92.83% coverage; 179 content checks; eight book builds; Windows 6005 passed, two snapshot-location failures resolved and six hygiene checks pass; quotation gate passes; CI requires named gravity constant in one test, corrected without changing assertions)
+- **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
+- **Next step:** Complete. PR #4709 merged at 984552e17 with CI Standard 36773428069 green; issue lease and presence released. Corpus continues in regular PR #4712.
 
 ## Archive
 
@@ -1814,6 +1839,19 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4712 · Two-Hand Wrench Chapter Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4712 (regular)
+- **Issue:** #4710 (corpus #4021; epic #4009)
+- **Branch:** `fix/two-hand-wrench-rigor-4710`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (combined-main suite: 6,034 passed, 29 skipped, 92.88% coverage; final content: 180 passed/four skipped; 39 protocol/history/audit checks; 209-page PDF and 20 browser cases verified)
+- **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
+- **Next step:** Merged to remote main be263f9cd946a6aa8b4a97b086af9eab399c3ac6 at 23:32:17 UTC; all protected CI checks passed (36786787125). Lease and presence released. Provider citation follow-up #4711 remains open.
 
 ## Archive
 

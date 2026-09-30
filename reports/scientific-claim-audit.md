@@ -38,9 +38,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
-| `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 40 |
+| `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 51 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
-| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
+| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 23 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 4 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
 | `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 5 |
@@ -115,7 +115,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | `articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | `articles/The_Physics_of_Golf/quarto/ch14_complete_swing.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd` | 7 |
+| `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd` | 10 |
 | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
 | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | `articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.qmd` | 1 |
@@ -192,7 +192,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/ztcf_identifiability.html` | `critiques/ztcf_identifiability.md` | 1 |
 | `/evidence/claims.html` | `evidence/claims.qmd` | 2 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
-| `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
+| `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 18 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
 | `/models/hybrid-impact-contact.html` | `models/hybrid-impact-contact.qmd` | 6 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
@@ -213,7 +213,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/programming/programs.html` | `models/programming/programs.qmd` | 4 |
 | `/models/programming/provenance.html` | `models/programming/provenance.qmd` | 4 |
 | `/models/programming/workflows.html` | `models/programming/workflows.qmd` | 4 |
-| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 28 |
+| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 35 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/accessibility.html` | `pages/accessibility.qmd` | 1 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
@@ -253,7 +253,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/resources/research-review-shaft-flexibility.html` | `resources/research-review-shaft-flexibility.qmd` | 1 |
 | `/resources/research-reviews.html` | `resources/research-reviews.qmd` | 1 |
 | `/resources/resources-books.html` | `resources/resources-books.qmd` | 1 |
-| `/resources/resources-datasets.html` | `resources/resources-datasets.qmd` | 1 |
+| `/resources/resources-datasets.html` | `resources/resources-datasets.qmd` | 7 |
 | `/resources/resources-notebooklm.html` | `resources/resources-notebooklm.qmd` | 1 |
 | `/resources/resources-papers.html` | `resources/resources-papers.qmd` | 1 |
 | `/resources/resources-researchers.html` | `resources/resources-researchers.qmd` | 1 |
@@ -290,7 +290,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
-| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 9 |
+| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 16 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 1 |

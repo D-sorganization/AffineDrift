@@ -93,7 +93,10 @@ def deferred_issue_urls(route: str) -> tuple[str, ...]:
         matches.append(f"{ISSUE_ROOT}/4057")
     if route in CORE_ARTICLE_ROUTES:
         matches.append(f"{ISSUE_ROOT}/4058")
-    if route in APPLIED_ARTICLE_ROUTES:
+    # Later companions can reopen without rewriting the original 227-route census.
+    if route in APPLIED_ARTICLE_ROUTES or route == (
+        "/articles/proximal-distal-falsification-atlas.html"
+    ):
         matches.append(f"{ISSUE_ROOT}/4059")
     if route.startswith(("/models/", "/repositories/")):
         matches.append(f"{ISSUE_ROOT}/4060")
