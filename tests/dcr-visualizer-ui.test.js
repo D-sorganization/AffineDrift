@@ -11,7 +11,7 @@ function setValue(id, value) {
 beforeEach(() => {
   jest.resetModules();
   const source = fs.readFileSync(
-    path.join(__dirname, '../articles/controllability-drift-ratio.qmd'), 'utf8');
+    path.join(__dirname, '../articles/drift-control-ratio.qmd'), 'utf8');
   const block = [...source.matchAll(/```\{=html\}\s*([\s\S]*?)```/g)]
     .map(match => match[1]).find(html => html.includes('dcrviz-app'));
   document.body.innerHTML = block;
