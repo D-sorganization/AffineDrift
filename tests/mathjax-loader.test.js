@@ -86,11 +86,31 @@ describe('gated MathJax loader (#3332-A)', () => {
     expect(script.crossOrigin).toBe('anonymous');
   });
 
+  test('loads the smaller TeX-input + CHTML-output component build (#4577)', async () => {
+    // Quarto only ever emits TeX delimiters into `.math` spans, never raw
+    // MathML, so `tex-mml-chtml.js`'s bundled MathML *input* jax is dead
+    // weight on every math-bearing page. `tex-chtml.js` ships the same TeX
+    // input and CHTML output actually used, without it.
+    document.body.innerHTML = '<main><span class="math">x</span></main>';
+    await runLoader();
+    const script = document.querySelector('script[src*="mathjax"]');
+    expect(script.src).toBe('https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js');
+    expect(script.integrity).toBe(
+      'sha384-AHAnt9ZhGeHIrydA1Kp1L7FN+2UosbF7RQg6C+9Is/a7kDpQ1684C2iH2VWil6r4'
+    );
+  });
+
   test('enables assistive MathML without explicitly loading it twice', () => {
     const source = readLoaderSource();
     expect(source).toContain('enableAssistiveMml: true');
     expect(source).not.toContain('[a11y]/assistive-mml');
     expect(source).not.toMatch(/paths:\s*{\s*a11y:/);
+  });
+
+  test('does not load the SRE-backed explorer module, which would need locale fetches the connect-src \'self\' CSP blocks (#4565)', () => {
+    const source = readLoaderSource();
+    expect(source).not.toContain('[a11y]/explorer');
+    expect(source).not.toMatch(/speech-?rule-?engine|sre-locales|a11y\/(explorer|speech|semantic-enrich)/i);
   });
 
   test('publishes a deterministic ready state after initial typesetting', () => {

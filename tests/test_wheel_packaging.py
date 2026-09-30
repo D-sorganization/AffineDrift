@@ -25,12 +25,15 @@ def _get_or_build_wheel() -> Path:
     wheels = list(dist_dir.glob("affinedrift-*.whl")) if dist_dir.exists() else []
     if not wheels:
         dist_dir.mkdir(exist_ok=True)
-        subprocess.run(
-            [sys.executable, "-m", "build", "--wheel", "--outdir", str(dist_dir)],
-            cwd=REPO_ROOT,
-            check=True,
-            capture_output=True,
-        )
+        cmd = [sys.executable, "-m", "pip", "wheel", "--no-deps", "-w", str(dist_dir), "."]
+        res = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, check=False)
+        if res.returncode != 0:
+            fb = [sys.executable, "-m", "build", "--wheel", "--outdir", str(dist_dir)]
+            res_fb = subprocess.run(fb, cwd=REPO_ROOT, capture_output=True, text=True, check=False)
+            if res_fb.returncode != 0:
+                raise RuntimeError(
+                    f"Failed to build wheel:\npip: {res.stderr}\nbuild: {res_fb.stderr}"
+                )
     return find_latest_wheel(dist_dir)
 
 
