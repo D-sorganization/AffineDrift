@@ -29,7 +29,7 @@ WORKED_EXAMPLE_PAGES = (
     "theory-part3.qmd",
     "theory-part4.qmd",
     "theory-part5.qmd",
-    "controllability-drift-ratio.qmd",
+    "drift-control-ratio.qmd",
     "zero-torque-counterfactual.qmd",
     "superposition.qmd",
 )

@@ -26,15 +26,12 @@ test.describe('Touch Target Compliance (WCAG 2.5.5)', () => {
     for (const element of elements) {
       const boundingBox = await element.boundingBox();
 
+      // Playwright returns null only when the element has no layout box
+      // (e.g. display: none, such as a collapsed navbar toggler at a
+      // desktop viewport). WCAG 2.5.5 target size applies to visible,
+      // operable targets, so a hidden element is not a compliance
+      // violation in the current viewport and is skipped, not flagged.
       if (!boundingBox) {
-        results.push({
-          element: elementName,
-          selector: selector,
-          compliant: false,
-          error: 'Element not visible/no bounding box',
-          height: null,
-          width: null,
-        });
         continue;
       }
 
