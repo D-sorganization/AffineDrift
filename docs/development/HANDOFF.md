@@ -113,11 +113,82 @@
   diff was performed.
 - Next steps: reworked draft PR #4676 is open with the honest remaining-scope disclosure in its
   body; awaiting owner/frontier review.
+# Implementation Handoff — Real Dates and Per-Article Change History (#4545)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: b6aa4baf87635c3451558596fc4c20f121d5c219
+- Implementation commit: SELF
+- Pull request: #4640
+- Governing issue/epic: #4545 (epic #4552)
+
+## Objective and Status
+
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
+- Completed:
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, push, create PR, key SPEC.md row, arm auto-merge, and release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
+- User-owned or unrelated worktree changes: none observed
+
+---
+
+# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
+
+- Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
+- Baseline commit: fc36109d (origin/main)
+- Implementation commit: 67256799
+- Pull request: #4664 (https://github.com/D-sorganization/AffineDrift/pull/4664)
+- Governing issue: #4500 (WEB-02.6)
+
+## Objective and Status
+
+- Objective: Hide, mark, or retire stub hubs and enforce scaffolding styling policy:
+  1. Scaffolding/stub pages must never use success styling (`status-banner--success`, `callout-success`, etc.).
+  2. No hub card links to a page under 300 words unless it carries a Planned badge.
+- Status: Merged to main in PR #4664.
+- Completed:
+  - Added `.status-pill--planned` and `.status-badge--planned` CSS styles in `css/components/status-banner.css` and bundled to `docs/styles.css`.
+  - Replaced misleading success status styling on scaffolding pages (`resources/research-reviews.qmd`, `pages/book-reviews.qmd`, individual review stubs, `pages/daydreams-doodles.qmd`) with warning status styling indicating planned / scaffolding phase expected 2026-Q4.
+  - Replaced promoted stub card on `resources/resources.qmd` with Research Reviews hub card carrying `Planned` badge.
+  - Added `Planned` badges to all 4 review entries on `resources/research-reviews.qmd`, to `Dead Fish Swimming Upstream` on `pages/tools.qmd`, and `(Planned)` marks to inward links on `resources/resources-books.qmd`, `resources/resources-papers.qmd`, and `resources/resources-researchers.qmd`.
+  - Implemented `scripts/check_scaffolding_styling.py` to enforce that scaffolding pages never use success styling and that hub cards linking to stubs (< 300 words) carry a Planned badge.
+  - Added comprehensive test suite `tests/test_check_scaffolding_styling.py` (13 tests) and wired check into `.github/workflows/ci-standard.yml`.
+  - Regenerated claim audit evidence digests (`data/trust/` and `reports/`).
 
 ---
 
 # Implementation Handoff — Social Cards per Page (#4578)
 # Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -197,6 +268,9 @@
 ## Next Steps
 
 1. None outstanding for #4549 from this session.
+
+---
+
 # Implementation Handoff — Create "How to Read This Site" Guide (#4491)
 
 ## Identity
@@ -260,6 +334,7 @@
   - Integrated `How to Read This Site` into `_quarto.yml` navbar Read menu and footer navigation.
   - Added unit test suite `tests/test_how_to_read.py` (6 tests).
   - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
 
 ---
 
@@ -466,7 +541,6 @@
 
 ---
 
->>>>>>> origin/main
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -513,6 +587,7 @@
   re-enabled title, the next step is to inspect that job's trace/video artifact rather than
   re-guess a timing fix.
 - Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
+
 # Implementation Handoff — Report Broken External Links as Issues (#4596)
 # Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
 
@@ -848,53 +923,62 @@
 3. No further implementation is planned from this session pending review feedback.
 # Implementation Handoff — Build the Page Header Card Component (#4507)
 # Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
+>>>>>>> origin/main
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-01-3-extend-personas-4488
-- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: ebced38fbe6908492e5c8e2ff08866516f5691c0
 - Implementation commit: SELF
-- Pull request: #4638
-- Governing issue/epic: #4488 (epic #4496)
+- Pull request: #4640
+- Governing issue/epic: #4545 (epic #4552)
 
 ## Objective and Status
 
-- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
-- Status: PR #4638 created, awaiting auto-merge
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
 - Completed:
-  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
-  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
-  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
-  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
-  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
-  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
-  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
-  - Regenerated claim audit evidence digests and verified all checks pass.
-  - Keyed change-log row in `SPEC.md` to #4638.
-- Remaining: Arm auto-merge and release lease.
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Monitor PR #4640 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
-  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
-  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
-  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
-  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
-  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
-  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
-  - `SPEC.md`: Added change-log row.
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
-- `python -m src.tools.site_link_gate` — PASS (0 errors)
-- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
-- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `pytest tests/test_dates_and_history.py` — PASS (16 passed)
+- `python -m scripts.derive_substantive_dates --check` — PASS
+- `python -m ruff check scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `python -m black --check --line-length 100 scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `npm run lint:css` — PASS
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_root_hygiene.py` — PASS
+- `python -m src.tools.site_link_gate` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -905,12 +989,13 @@
 
 ## Next Steps
 
-1. Monitor PR #4638 CI and auto-merge into main.
+1. Monitor PR #4640 CI and auto-merge into main.
 
 ## Change Log
 
+- 02507aac — Extend personas to include curious golfer/coach and student (#4488) (#4638).
+- ebced38f — Build the page header card component (#4507) (#4633).
 - `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
-- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
 
