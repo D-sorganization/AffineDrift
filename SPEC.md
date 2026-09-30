@@ -436,3 +436,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
 | 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
 | 2026-09-30 | #4516 | Implement unified publication status badge component (WEB-04.2) with Quarto shortcode {{< status >}}, accessible SVG icons and text, WCAG AA contrast, and depth-aware links to publication states. |
+| 2026-09-30 | #4495 | Unify the 404 page's contact address with About/Contact (WEB-01.10); Start Here and Library links deferred pending #4486 and the WEB-02.1 navbar restructure. |
