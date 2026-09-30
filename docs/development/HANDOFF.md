@@ -88,6 +88,254 @@
 
 ---
 
+# Datasets Page Rebuild — #4549 (WEB-07.7)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4549`.
+- Branch `claude/issue-4549`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4632 (draft, targets
+  `main`).
+- Governing issue: #4549 (WEB-07.7, child of epic #4552). Objective: rebuild the
+  Datasets resource page with real licence/access/schema/checksum metadata for
+  third-party datasets and AffineDrift's own `data/`/`schemas/` artefacts, and
+  drop the third-party `mini.s-shot.ru` thumbnail host.
+- Added `data/datasets.yml` as the single source of truth (4 third-party
+  datasets: GolfDB, CaddieSet, SportsPose, MoVi; 3 AffineDrift artefact groups:
+  `data/ztcf`, `data/research_protocols`, `schemas`). Licence/access/size fields
+  for the third-party entries were verified against each dataset's own GitHub
+  repository or paper (WebFetch), not guessed; SportsPose has no licence stated
+  by its publisher, and the page says so rather than inventing one. AffineDrift's
+  own artefacts have no declared data licence yet — tracked separately as
+  WEB-07.8 — so their `licence` field says "not yet declared" instead of picking
+  MIT or all-rights-reserved.
+- Added `src/tools/datasets_catalog.py` (load/validate `data/datasets.yml`,
+  compute real SHA-256 checksums per file, render HTML cards) and
+  `scripts/generate_datasets_catalog.py` (CLI wrapper with `--check`), following
+  the existing `generate_programming_catalog.py` generated-page pattern.
+  `resources/resources-datasets.qmd` now has a
+  `<!-- GENERATED:BEGIN/END datasets-catalog -->` block that the generator
+  owns; hand-edit `data/datasets.yml` and regenerate instead.
+- Wired `python3 -m scripts.generate_datasets_catalog --check` into
+  `.github/workflows/ci-standard.yml` next to the Programming Companion catalog
+  check, so a stale page or a hand edit fails CI.
+- Added `.resource-meta`/`.resource-checksums` styles to `css/resources.css`
+  (mirrored to `docs/css/resources.css` via `scripts/sync_frontend_assets.py`)
+  and dropped `.resource-card.has-media`/`<img>` thumbnails from this page —
+  no self-hosted screenshot images were fabricated; the rest of the resources
+  section (Papers, Websites, etc.) already uses plain cards without thumbnails.
+- Tests: `tests/test_generate_datasets_catalog.py` (14 cases) — DbC field
+  validation, real-SHA-256 checksum computation, marker-block replacement
+  preserving surrounding content, and each of the four issue acceptance
+  criteria (no truncated text, no third-party thumbnail host, every entry has
+  licence/access, artefacts listed with checksums).
+- Validation commands run in this worktree:
+  - `python3 -m pytest tests/test_generate_datasets_catalog.py -q` → 14 passed.
+  - `python3 -m scripts.generate_datasets_catalog --check` → up to date.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → 736 files unchanged.
+  - `python3 -m mypy src/tools/datasets_catalog.py scripts/generate_datasets_catalog.py`
+    → no issues.
+  - `python3 scripts/check_quarto_render_coverage.py`,
+    `python3 scripts/scan_quarto_syntax.py`, `python3 scripts/check_quarto_xrefs.py`,
+    `python3 scripts/check_single_title.py resources/resources-datasets.qmd`,
+    `python3 scripts/check_title_case.py`, `python3 -m scripts.check_module_size_budget`
+    → all pass.
+  - Full `python3 -m pytest --cov` suite: see the PR description for the run
+    started from this worktree (long-running; results attached there).
+- Not done / deferred: no `_quarto.yml` resource-publishing change was made, so
+  schema filenames in the AffineDrift cards are shown as plain text, not links
+  (`schemas/` is only partially published as a site resource today). No CSS
+  `check_style_discipline.py` fixes were made — it reports 248 pre-existing
+  violations across other stylesheets unrelated to this change; `resources.css`
+  itself has zero.
+
+- Unrelated fix required to push at all: this host's global Python had a
+  broken `PySide6` install (`ImportError: DLL load failed while importing
+  QtCore`). `pytest-qt`'s autodetection (`qt_compat.py::_guess_qt_api`) only
+  catches `ModuleNotFoundError`, not `ImportError`, so probing PySide6 crashed
+  `pytest_configure` with an uncaught `INTERNALERROR`, which failed the
+  `pytest-unit` pre-push hook for every push attempt — reproduced directly with
+  `python -m pytest tests/unit -x -q --tb=short -m "not slow and not
+  integration"` outside the hook too, so it is not hook-specific. Fixed with a
+  one-line addition to `tests/conftest.py`
+  (`os.environ.setdefault("PYTEST_QT_API", "pyqt6")`), next to the existing
+  `QT_QPA_PLATFORM` line, pinning to the binding this repo actually installs
+  and skipping the crashing autodetection entirely. This is a pre-existing,
+  host-environment issue unrelated to the datasets page; called out here and
+  in the PR body rather than silently folded into the feature diff.
+
+## Next Steps
+
+1. None outstanding for #4549 from this session.
+# Implementation Handoff — Create "How to Read This Site" Guide (#4491)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-01-6-how-to-read-this-site-4491
+- Baseline commit: fc36109d (origin/main)
+- Implementation commit: dd961a63
+- Pull request: #4665 (https://github.com/D-sorganization/AffineDrift/pull/4665)
+- Governing issue: #4491 (WEB-01.6, epic #4496)
+
+## Objective and Status
+
+- Objective: Create a canonical "How to Read This Site" guide explaining the content layers, publication maturity states, the evidence ladder, critique records, and citation standards. Consolidate publication states to be single-sourced.
+- Status: Implementation complete, tests and static checks passing; opening PR.
+- Completed:
+  - Created `pages/how-to-read.qmd` covering site architecture, the six canonical publication states (`Available`, `Validated`, `Experimental`, `Planned`, `Deprecated`, `Opinion`), the 4-level evidence ladder, how to read critique records, and citation standards.
+  - Replaced inline publication-state definitions in `index.qmd` and `pages/development-roadmap.qmd` with links to `how-to-read.html#publication-states`.
+  - Linked status pills in `pages/tools.qmd` to `how-to-read.html#publication-states` and normalized non-canonical `EXPLORATORY` to `EXPERIMENTAL`.
+  - Added link styles for `a.status-pill` and `.status-banner__title a` in `css/components/status-banner.css` and compiled bundle to `docs/styles.css`.
+  - Integrated `How to Read This Site` into `_quarto.yml` navbar Read menu and footer navigation.
+  - Added unit test suite `tests/test_how_to_read.py` (6 tests).
+  - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
+---
+
+# Implementation Handoff — Unified Publication Status Badge Component (#4516)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-04-2-status-badge-component-4516
+- Baseline commit: b000cfee (origin/main)
+- Implementation commit: 8623636f, 8a5b6b98
+- Pull request: to be opened
+- Governing issue: #4516 (WEB-04.2, epic #4499)
+
+## Objective and Status
+
+- Objective: Implement a unified publication status badge component used on cards, headers, listings, and search, rendering an inline SVG icon and accessible text for all 6 canonical states, meeting WCAG AA contrast in light and dark themes, and linking to the publication state definition.
+- Status: Implementation complete, test suites passing (Python tests, link checker, Jest/npm tests); opening PR.
+- Completed:
+  - Created Quarto shortcode `{{< status >}}` (`_extensions/status/_extension.yml`, `_extensions/status/status.lua`) supporting front matter detection (`status`, `maturity`, `publication-state`) and explicit parameters (`{{< status available >}}`, `{{< status "planned" "In Planning" >}}`).
+  - Added SVG icons and textual labels for all 6 canonical states (`available`, `validated`, `experimental`, `planned`, `deprecated`, `opinion`) plus normalization for legacy aliases (`canonical`, `reviewed`, `exploratory`, etc.).
+  - Implemented high-contrast theme-aware styling in `css/components/status-badge.css` meeting WCAG AA contrast (≥ 4.5:1, achieving ≥ 8:1) for both light and dark (`body.quarto-dark`) themes.
+  - Linked status badges by default to `pages/how-to-read.html#publication-states` with depth-aware relative path computation (`quarto.project.offset` and source path handling).
+  - Integrated with `scripts/filters/page-header-card.lua` to render status badges on page headers when metadata contains a publication state.
+  - Replaced legacy `.status-pill` elements across `pages/tools.qmd`, `pages/book-reviews.qmd`, `pages/daydreams-doodles.qmd`, `pages/drifter-manifesto.qmd`, `resources/research-reviews.qmd`, and updated `CONTRIBUTING.md`.
+  - Added unit test suite `tests/test_status_badge.py` (15 tests) verifying all 6 states, icons, labels, aliases, link resolution, and contrast requirements.
+  - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
+---
+
+# Implementation Handoff — Cache Quarto Renders in CI (#4595)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4595
+- Branch: claude/issue-4595
+- Baseline commit: 382446d0dafee32930744c7f2aabb8a4915fb757
+- Implementation commit: `SELF`
+- Pull request: to be opened as a draft by this session
+- Governing issue/epic: #4595 (WEB-13.1, part of epic #4604 "[E13] Build, Reliability, and Maintainability")
+
+## Objective and Status
+
+- Objective: stop the ~14-minute full Quarto render running unconditionally on every PR's
+  `e2e-tests` job in `ci-standard.yml`, per the issue's acceptance criteria (cache `.quarto/`
+  keyed on source hashes, or render incrementally for PRs; reduce median PR end-to-end time by
+  ≥ 30 %; deploy keeps doing a clean full render).
+- Status: **partial / honest-scope**. Implemented the safe half of criterion 1 (an
+  `actions/cache` step over `docs/` + `.quarto/`, keyed by `hashFiles()` on every
+  Quarto-render-relevant source pattern) and left criterion 3 untouched by construction
+  (`deploy-website.yml` was not edited). Criterion 2 (≥ 30 % median reduction) cannot be
+  confirmed from this session — it needs real CI timing history after this merges, which is not
+  fabricable — so it is not checked off.
+- Why the scope stops here: a true "render incrementally for PRs" implementation (rendering only
+  the changed `.qmd` files while reusing a restored `docs/` for the rest) was built first, but
+  `tests/test_deployment_integrity.py::test_ci_captures_revision_bound_representative_visual_evidence`
+  already guards, with an explicit #4126 rationale, that the E2E lane always does
+  `run: quarto render --to html` (the whole site) — "so every representative route family is
+  present without a hand-maintained per-file render list" — and never a per-file invocation. A
+  partial render would restore a `docs/` tree that mixes this PR's changed pages with an older
+  cached snapshot of every other page, undermining that guarantee for the governed
+  representative-visual-evidence and per-route axe-core steps later in the same job. Overriding a
+  deliberate existing safety invariant to hit a performance target is exactly the kind of
+  contested design decision CLI-tier agents are asked not to guess on (`tier:strong` territory,
+  not `tier:cli`), so the implementation was scoped back to the option that cannot regress
+  correctness: skip the render only on an **exact** hash match (nothing Quarto-render-relevant
+  changed at all since a previous cached run), and fall through to the identical, unconditional
+  full render otherwise. No `restore-keys` fallback is configured, specifically so an inexact
+  match can never restore a stale/incomplete `docs/`.
+- Completed:
+  - `.github/workflows/ci-standard.yml` (`e2e-tests` job): new "Restore cached Quarto render" step
+    (`actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0`, pinned per
+    `scripts/check_workflow_action_pins.py`), caching `docs` + `.quarto`, keyed on
+    `hashFiles()` over every `*.qmd` render root plus `_quarto.yml`, `.quarto-version`,
+    `custom.scss`, `styles.css`, `css/**`, `js/**`, `data/**`, `schemas/**`, `references/*.bib`,
+    and the other `_quarto.yml` `resources:` entries. "Build site for E2E" now runs only when
+    `steps.quarto_cache.outputs.cache-hit != 'true'`.
+  - TDD: `tests/test_deployment_integrity.py::test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match`
+    (written first, confirmed RED against the pre-change workflow, then GREEN).
+- Remaining (recommended follow-up issue, `tier:strong` — a design decision, not mechanical):
+  1. Decide whether to relax the #4126 "always full render" invariant to allow a bounded
+     incremental render (e.g., only when a `docs/` snapshot restored from the base branch's last
+     successful render is fresh, and the changed-file set excludes anything in this PR's new
+     `GLOBAL_*` classification) without weakening the representative-evidence/axe-core coverage
+     guarantee, or find another path to the ≥ 30 % target.
+  2. Once real CI history exists on this branch's pattern (a run or two after merge), measure the
+     actual median PR end-to-end time delta and check off criterion 2 if it clears 30 %, or open
+     the follow-up above if it does not.
+
+## Files and Decisions
+
+- Key decisions:
+  - Cache path is `docs` + `.quarto` (not `_freeze/`): this site has no executable code cells
+    (per the existing "Build site for E2E" comment), so Quarto's freeze mechanism buys nothing;
+    the actual expensive artifact is the rendered HTML output itself.
+  - No `restore-keys`: an exact-match-only cache is strictly safer than a fallback that could
+    restore a `docs/` tree from an unrelated prior commit. This trades away some of the potential
+    speedup (a cache miss on any relevant change always pays the full 14 minutes, unchanged from
+    before this PR) for a guarantee that a cache hit can only ever replay a `docs/` tree that
+    this exact source state would have produced anyway.
+  - Deploy workflow untouched: criterion 3 ("deploy still does a clean full render") is satisfied
+    by construction rather than by a new check, since the cache step only exists in
+    `ci-standard.yml`.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest tests/test_deployment_integrity.py` — 16 passed, 1 skipped.
+- `python -m pytest tests/test_workflow_action_pins.py` — 2 passed.
+- `python -m ruff check .` and `python -m black --check --line-length 100 .` — both clean
+  repo-wide.
+- `python scripts/check_workflow_action_pins.py` — PASS (new `actions/cache` reference pinned to
+  a full 40-char commit SHA).
+- CI workflow YAML validated with
+  `python -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` — OK.
+- `scripts/check_dry_adoption.py`, `scripts/check_module_size_budget.py`,
+  `scripts/check_changed_file_size_budget.py` — all PASS, no new violations.
+- Known pre-existing failure outside this change's scope: `python -m pytest tests/` errors
+  during collection on ~70 unrelated `*_rigor.py`/benchmark test modules with
+  `ValueError: numpy.dtype size changed, may indicate binary incompatibility` (a
+  scipy-compiled-against-a-different-NumPy-ABI mismatch in this local Anaconda environment).
+  Confirmed pre-existing and unrelated: reproduces in isolation for
+  `tests/test_manifold_mechanics_rigor.py`, a file this PR never touches.
+
+## Blockers and Risks
+
+- Blocker: criterion 2 (≥ 30 % median PR end-to-end time reduction) is not verifiable from this
+  session; it requires observing real CI run durations after this merges.
+- Risk: none to render correctness — the cache can only ever replay output for a source state
+  that is byte-identical (by hash) to a state that already produced it; any other source state
+  always takes the pre-existing full-render path unchanged.
+
+## Next Steps
+
+1. After merge, watch a handful of real PR `e2e-tests` run durations; if the median reduction is
+   short of 30 %, open the `tier:strong` follow-up above to decide on a bounded incremental-render
+   design that preserves the #4126 full-coverage guarantee.
+
+## Change Log
+
+- `SELF` — Cache the PR E2E Quarto render on an exact source-hash match; deploy is untouched (#4595).
+
+---
+
+>>>>>>> origin/main
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -281,6 +529,102 @@
 ## Change Log
 
 - `SELF` — Keep internal governance vocabulary out of reader prose; add warn-mode CI lint (#4588).
+
+---
+
+# Restore the Ten Excluded Browser Tests — Issue #4563
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4563`.
+- Branch: `claude/issue-4563`, commit `SELF`. Pull request: to be opened as a draft by this session.
+- Governing issue: #4563 (WEB-09.3, part of epic #4569 / E9 — Accessibility Conformance).
+
+## Objective and Status
+
+- Objective: `ci-standard.yml`'s Chromium E2E step `--grep-invert`-excludes ten test titles (added in
+  #4126/#4141, diagnosed in #4140); remove the exclusion for every title whose defect is actually fixed,
+  fix any defect that isn't, and never loosen a test to make CI green.
+- Investigation found the ten titles split three ways:
+  1. Two of the ten (`should render desktop home layout as a three-column grid`, `should toggle mobile
+     sidebar sections`) no longer match any test title at all — PR #4200 already renamed/rewrote those
+     tests for the single-column home redesign, so these two clauses in the exclusion regex have been
+     dead weight (matching nothing) since 2026-09-05.
+  2. Seven of the ten (`should meet WCAG AA text contrast in both themes`, `should show entry details
+     when clicked`, `should navigate to articles page`, `should serve cached homepage when offline`,
+     `should validate mobile menu button`, `should provide summary of all compliant elements`, `should
+     allow a user to navigate from home to article and back to top`) have defects that were fixed in
+     source by PR #4200 (dark-theme link/button contrast tokens, bibliography detail-panel class,
+     back-to-top touch target, stale navigation/user-journey selectors) — confirmed by reading
+     PR #4200's diff and the current state of `styles.css`, `css/tokens/colors.css`, `js/bibliography.js`,
+     `service-worker.js`, and the three rewritten spec files, plus three subsequent site-wide a11y
+     remediation PRs (#4139/#4206, #4207/#4208, #4209/#4210) that further extended contrast/axe fixes
+     across every route. PR #4200 never removed the CI exclusion, so none of this was ever confirmed by
+     an actual CI run of these tests.
+  3. One of the seven above (`should validate mobile menu button`) had a second, independent defect in
+     the *test* itself, found by reading `tests/e2e/touch-targets.spec.js`'s shared `checkTouchTarget`
+     helper: at a desktop-width viewport, Bootstrap's `.navbar-toggler` is legitimately CSS-hidden
+     (`display: none` above the `lg` breakpoint), so `elementHandle.boundingBox()` returns `null`; the
+     helper counted that as a non-compliant 0×0 touch target rather than treating a non-rendered element
+     as not applicable. This same bug is almost certainly the actual cause of the `55 non-compliant
+     elements` reported by #4140's diagnosis for `should provide summary of all compliant elements`
+     (that test walks every `button`/`a`/`input` on the homepage, many of which are legitimately hidden
+     at any single viewport). Fixed by skipping null-bounding-box elements instead of flagging them;
+     this can only turn existing false failures into skips, since a real 0-size *visible* element still
+     returns a real (non-null) zero-size box and is still caught.
+  4. The tenth (`matches visual snapshot`, 60 parametrized pixel-comparison cases in `visual.spec.js`)
+     stays excluded. No baseline PNGs are committed anywhere in the repository (confirmed via `git
+     ls-files` / `Glob`), so `toHaveScreenshot()` fails with "no baseline found" on every run regardless
+     of whether the rendered site is correct. Generating correct baselines needs a `playwright test
+     --update-snapshots` run on the actual fleet CI runner — this sandbox has neither `quarto` nor
+     `docker` (both denied by this session's permission policy), and even if it did, this is a Windows
+     sandbox, so locally generated screenshots would not byte-match the Linux runner's font metrics and
+     would just fail immediately for a different reason. This is left excluded with an updated,
+     accurate comment instead of guessed at.
+- Status: draft PR to be opened with a `Blocked:` section covering item 4 above.
+
+## Files and Decisions
+
+- `.github/workflows/ci-standard.yml`: replaced the ten-title `--grep-invert` value with just `"matches
+  visual snapshot"`, and rewrote the adjacent comment/TODO (which pointed at #4140, already closed) to
+  explain the current state and point at #4563.
+- `tests/e2e/touch-targets.spec.js`: `checkTouchTarget` now `continue`s (skips) on a `null` bounding box
+  instead of pushing a `compliant: false` result, with a comment explaining why (see point 3 above).
+- Deliberately did not touch `js/bibliography.js`, `styles.css`, `css/tokens/colors.css`,
+  `service-worker.js`, or the already-rewritten `homepage.spec.js` / `navigation.spec.js` /
+  `user_journey.spec.js` — their fixes are already on `main` from PR #4200 and later a11y PRs; re-editing
+  them would not trace to anything this issue still needs.
+
+## Validation
+
+- `npx jest`: 429 passed, 19 skipped, 26 suites — unaffected by this change, run to confirm no
+  regression from touching a `tests/e2e/*.spec.js` file (Jest does not execute `tests/e2e/`).
+- `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"`: parses cleanly.
+- **Not run: the actual Playwright suite.** This sandboxed worktree has no Quarto-rendered `docs/`
+  (`docs/**/*.html` is gitignored, built only by `quarto render`), and both `quarto` and `docker` are
+  denied by this session's permission policy, so there is no way to render the site and run
+  `npx playwright test --project=chromium` locally. Every claim above about which tests now pass is
+  based on reading source and the merged PR #4200 diff, not on an observed pass. CI's own `e2e-tests`
+  job (which does render the full site) is the first real execution of the restored tests — treat its
+  result as the actual acceptance evidence for this issue, not this handoff.
+
+## Blockers and Risks
+
+- Blocker: cannot render the Quarto site locally (`quarto`/`docker` both denied), so this PR's core
+  claim — that the nine restored tests pass — is unverified by this session. See `Validation` above.
+- Risk: if CI's `e2e-tests` run turns up a real remaining failure among the nine, the fix belongs in the
+  same area PR #4200 touched (contrast tokens, touch targets, bibliography JS, or the three rewritten
+  spec files) — do not re-add the title to `--grep-invert` to make CI green.
+
+## Next Steps
+
+1. Push the branch and open the draft PR with `Fixes #4563` and a `Blocked:` section for the
+   pixel-snapshot baselines (item 4 above), which need a follow-up on the fleet CI runner, not more
+   source changes here.
+2. Frontier review reads CI's `e2e-tests` result as the real pass/fail evidence for the nine restored
+   titles, since this session could not run them.
+3. If CI does turn up a genuine failure, fix it at the source named in `Risks` above and keep the
+   exclusion removed rather than reverting it.
 
 ---
 
