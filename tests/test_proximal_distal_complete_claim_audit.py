@@ -370,7 +370,9 @@ def test_article_exposes_the_complete_audit_without_promoting_it() -> None:
 def test_grip_and_shaft_companions_state_the_limits_with_the_results() -> None:
     grip = " ".join(GRIP_COMPANION.read_text(encoding="utf-8").split())
     assert "One Point per Hand Is Itself a Modeling Choice" in grip
-    assert "77% of the load" in grip
+    assert "maximum concentration of 0.77" in grip
+    assert "largest station-force norm divided by the sum of all station-force norms" in grip
+    assert "total per-hand" in grip
     assert "held fixed at 1800 N/m" in grip
     assert "A number of stations is not a set of fingers" in grip
     assert "does not measure grip pressure" in grip
