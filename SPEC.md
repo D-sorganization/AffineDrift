@@ -224,6 +224,9 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
+| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
+| 2026-09-30 | #4716 | Classify Quarto JavaScript action URLs outside filesystem link checks while retaining missing-file failures. |
 | 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
 | 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
 | 2026-09-30 | #4538 | Add a Binder `environment.yml` installing from `requirements.txt` so it opens the notebook scaffolds in JupyterLab (Binder build unverified), a shared Binder-launch include on every book's Notebook Workflow section and the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` for per-page source downloads; the devcontainer half is blocked, see the PR's Blocked section. |
@@ -248,8 +251,6 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |
 | 2026-09-29 | #4633 | Build Page Header Card component driven by front matter and styled in print stylesheet (#4507). |
 | 2026-09-29 | #4631 | Implement Plain-Language Summary and Key Takeaways component driven by front matter and styled in print stylesheet (#4508). |
-| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
-| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
 | 2026-09-29 | #4630 | Align Physics of Golf nomenclature with NOTATION.md autonomous drift and control channel definitions (#4529). |
 | 2026-09-29 | #4524 | Extend critique annotations to ZTCF (zero-torque-counterfactual.qmd, theory-part2.qmd) and proximal-distal (proximal-distal-energy-transfer.qmd) pages, enforcing critique-to-claim page mappings and fail-closed contract (#4524). |
 | 2026-09-29 | #4617 | Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617). |

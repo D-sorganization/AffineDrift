@@ -1,3 +1,14 @@
+# Quarto Code-Menu Link Health — #4715
+
+- Regular PR [#4716](https://github.com/D-sorganization/AffineDrift/pull/4716); source commit `7776d908c`.
+- Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health`; branch `fix/quarto-script-links-4715`, base `984552e17`.
+- Main deployment `36778620671` rendered successfully, then rejected three `javascript:void(0)` code-menu controls as missing files. The shared target resolver now classifies JavaScript action URLs before filesystem resolution, preserving actual missing-link failures.
+- Ten regression cases failed before the fix; all 98 focused site-health/link tests pass afterward. Full Windows suite: 6,028 passed, 29 skipped, 180 deselected, 92.95% coverage; content: 179 passed, four skipped. Ruff, Black, mypy, SPEC and claim-audit evidence checks pass. Protected delivery remains pending.
+- Gemini 3.8 Flash supplied a textual patch/test proposal; lead applied the source fix and adapted tests to remove redundant mocking and exercise both the candidate API and real CLI. No unattended agent tools or edits: the fleet dispatcher refuses agy tool execution without a permission bypass (Repository_Management #1800).
+- Session `technical-review-20260930-link-health`, issue #4715, lease/presence expire 2026-10-01 00:00 UTC. Only regular PRs.
+- This does not take over #4688 / PR #4713's separate dataset-explorer audit work. Keep that issue with its owner and verify deployment after all required repairs merge.
+- Technical-review PR #4712 remains separate; it has passed final-head Python/content/static checks and is waiting for the full-site browser job. The corpus goal remains active; next scientific scope #4714 is planned under epic #4009, with no source edits yet.
+
 # Resumed Technical Review — Induced Acceleration #4706
 
 The user explicitly resumed the corpus goal on 2026-09-30. This supersedes the

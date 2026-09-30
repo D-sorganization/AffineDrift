@@ -18,6 +18,44 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4715 · Quarto Script-Action Link Classification
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4716 (regular PR)
+- **Issue:** #4715 (related deployment health #4688)
+- **Branch:** `fix/quarto-script-links-4715`
+- **Paths:** `src/tools/check_site_health.py`, `tests/test_site_health_script_actions.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (ten RED regressions; 98 focused checks GREEN; full Windows suite 6,028 passed, 29 skipped, 92.95% coverage; 179 content checks passed, four skipped; Ruff/Black/mypy/SPEC/evidence checks pass)
+- **Summary:** Ignore JavaScript action URLs during filesystem target resolution so Quarto code-menu controls no longer block deployment; retain failures for missing article links.
+- **Next step:** Complete protected merge #4716; preserve #4688's separate audit work and verify a later main deployment.
+
+### DL-#4706 · Induced Acceleration Biomechanics Review
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4709 (regular PR)
+- **Issue:** #4706 (corpus #4021; epic #4009)
+- **Branch:** `fix/induced-acceleration-rigor-20260930`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (final source d7cf1af8; final render evidence 2f32c8d4; integrated main 59c0cc2d: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; Linux CI 41e075ef: 5962 passed, 92.83% coverage; 179 content checks; eight book builds; Windows 6005 passed, two snapshot-location failures resolved and six hygiene checks pass; quotation gate passes; CI requires named gravity constant in one test, corrected without changing assertions)
+- **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
+- **Next step:** Main 4f798475 integrated with both turnover records; 57 combined chapter/audit/trust/packaging checks pass; test-style checkpoint 2be29ec3 unchanged; finish validation and protected-merge #4709; keep goal active for the remaining 142 source reviews.
+
+### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4682 (draft)
+- **Issue:** #4538 (WEB-06.8; epic #4543)
+- **Branch:** `claude/issue-4538`
+- **Paths:** `environment.yml`, `articles/_metadata.yml`, `_includes/notebook-binder-launch.qmd`, `books/tangent-space-methods.qmd`, `books/control-is-motion.qmd`, `books/biomechanics-biology-to-systems.qmd`, `books/human-motor-control.qmd`, `notebooks/geometry_of_motion/README.md`, `scripts/check_root_hygiene.py`, `tests/test_reader_run_environment.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 7/7 `tests/test_reader_run_environment.py` pass; `check_root_hygiene.py`, `check_quarto_render_coverage.py`, `check_quarto_xrefs.py`, `check_single_title.py`, `check_title_case.py`, `check_terminology.py`, `check_dry_adoption.py`, `check_contract_coverage.py` all pass; ruff/black clean on changed Python files)
+- **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment that opens the notebook scaffolds, installing from `requirements.txt` (not `requirements-docker.lock`, which pins a Windows-only `pywinpty` wheel that fails on Binder's Linux image and is stale relative to `requirements.txt`), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked — see HANDOFF.md. The Binder build itself is unverified (repo2docker was never run).
+- **Next step:** A session with permission to write under a path named `.devcontainer` must add the file (content given in the PR's Blocked section) and a CI build step; then this entry's state can move to `shipped`.
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
