@@ -1,0 +1,15 @@
+# Binder environment for the reader run environment (#4538).
+#
+# mybinder.org (repo2docker) builds this file's conda environment and launches
+# JupyterLab against it. Python dependencies are not restated here: they are
+# installed from requirements-docker.lock, the repo's single source of pinned
+# Python dependencies (Dockerfile `dev`/`builder` stages, #4126), so Binder
+# cannot drift from the Docker dev environment.
+name: affinedrift
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - -r requirements-docker.lock

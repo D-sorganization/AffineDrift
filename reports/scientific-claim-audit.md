@@ -144,12 +144,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 12 |
-| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 9 |
-| `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
-| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
+| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 10 |
+| `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 4 |
+| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 4 |
 | `/books/index.html` | `books/index.qmd` | 3 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
-| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 8 |
+| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 9 |
 | `/critiques/01_muscle_physiology.html` | `critiques/01_muscle_physiology.md` | 1 |
 | `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
 | `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |

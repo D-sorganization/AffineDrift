@@ -53,6 +53,7 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "babel.config.js",
         "custom.scss",
         "docker-compose.yml",
+        "environment.yml",
         "favicon.ico",
         "feed.xml",
         "index.qmd",

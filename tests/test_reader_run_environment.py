@@ -1,0 +1,98 @@
+"""Reader run environment contracts: Binder and source downloads (#4538).
+
+Before this issue, a reader could not run the textbook's notebooks anywhere
+other than their own machine: no Binder environment, and `code-tools: false`
+hid the source-download menu on every page, including the pages that show
+Python reference implementations. Each check below pins one piece of that run
+environment to a single file so it cannot silently regress.
+
+The devcontainer half of #4538 is not implemented here: this session's
+sandbox denies every write under a path named `.devcontainer` (tested via
+both the Write and Bash tools, as a directory and as a root `.devcontainer.json`
+file), so the file could not be created. See the PR's "Blocked" section for
+the exact `devcontainer.json` content to add.
+"""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+import yaml
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+BOOK_FILES = (
+    "books/tangent-space-methods.qmd",
+    "books/control-is-motion.qmd",
+    "books/biomechanics-biology-to-systems.qmd",
+    "books/human-motor-control.qmd",
+)
+BINDER_INCLUDE = "_includes/notebook-binder-launch.qmd"
+
+
+def _read(relative: str) -> str:
+    return (REPO_ROOT / relative).read_text(encoding="utf-8")
+
+
+def test_environment_yml_reuses_the_single_pinned_lock_file() -> None:
+    """Binder's environment.yml must not fork a second Python dependency set.
+
+    requirements-docker.lock is the repo's single source of pinned Python
+    dependencies (Dockerfile `dev`/`builder` stages, #4126). Binder's
+    environment.yml must install from it rather than declaring its own list,
+    which would drift the moment one side is updated.
+    """
+    config = yaml.safe_load(_read("environment.yml"))
+    pip_section = next(dep["pip"] for dep in config["dependencies"] if isinstance(dep, dict))
+    assert any("requirements-docker.lock" in entry for entry in pip_section)
+
+
+def test_articles_code_tools_enabled_for_source_download() -> None:
+    """`articles/` carries the reference Python implementations, so its pages
+    need the source-download menu Quarto's `code-tools` provides. The site
+    default is `code-tools: false` (_quarto.yml); this override must apply to
+    the one directory that actually shows code.
+    """
+    config = yaml.safe_load(_read("articles/_metadata.yml"))
+    assert config["format"]["html"]["code-tools"] is True
+
+
+def test_root_quarto_default_is_still_code_tools_false() -> None:
+    """The site-wide default stays off; only `articles/` opts in."""
+    text = _read("_quarto.yml")
+    assert re.search(r"^\s*code-tools:\s*false\s*$", text, flags=re.M)
+
+
+def test_binder_launch_include_targets_the_notebooks_directory() -> None:
+    """The shared Binder launch fragment must link mybinder.org at the
+    notebook series directory so every chapter notebook is reachable.
+    """
+    fragment = _read(BINDER_INCLUDE)
+    assert "mybinder.org" in fragment
+    assert "notebooks/geometry_of_motion" in fragment
+
+
+def test_every_book_includes_the_binder_launch_fragment() -> None:
+    """Every book's Notebook Workflow section links the shared Binder launch,
+    rather than each book duplicating its own copy of the URL.
+    """
+    for book in BOOK_FILES:
+        text = _read(book)
+        assert "{{< include ../_includes/notebook-binder-launch.qmd >}}" in text, book
+
+
+def test_notebooks_readme_links_binder() -> None:
+    """The notebooks series README is the other reader entry point besides
+    the rendered book pages; it must offer the same Binder launch.
+    """
+    readme = _read("notebooks/geometry_of_motion/README.md")
+    assert "mybinder.org" in readme
+
+
+def test_root_hygiene_allows_the_new_environment_file() -> None:
+    """The root-hygiene allowlist must be updated in the same change, or the
+    new `environment.yml` file will fail `check_root_hygiene.py` in CI.
+    """
+    from scripts.check_root_hygiene import ALLOWED_TRACKED_ROOT_FILES
+
+    assert "environment.yml" in ALLOWED_TRACKED_ROOT_FILES

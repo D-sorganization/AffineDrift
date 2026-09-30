@@ -1472,6 +1472,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-07
 - **Summary:** Added the canonical markdown `## Related Articles` component to all 8 `models/*.qmd` and all 6 `repositories/*.qmd` pages plus `pages/tools.qmd` and three isolated articles; 177 new relative markdown content links, every model↔repository pair bidirectional.
 
+### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4538 (WEB-06.8; epic #4543)
+- **Branch:** `claude/issue-4538`
+- **Paths:** `environment.yml`, `articles/_metadata.yml`, `_includes/notebook-binder-launch.qmd`, `books/tangent-space-methods.qmd`, `books/control-is-motion.qmd`, `books/biomechanics-biology-to-systems.qmd`, `books/human-motor-control.qmd`, `notebooks/geometry_of_motion/README.md`, `scripts/check_root_hygiene.py`, `tests/test_reader_run_environment.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 7/7 `tests/test_reader_run_environment.py` pass; `check_root_hygiene.py`, `check_quarto_render_coverage.py`, `check_quarto_xrefs.py`, `check_single_title.py`, `check_title_case.py`, `check_terminology.py`, `check_dry_adoption.py`, `check_contract_coverage.py` all pass; ruff/black clean on changed Python files)
+- **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment for the notebook series by installing from `requirements-docker.lock` (the repo's single pinned Python dependency set), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked — see HANDOFF.md.
+- **Next step:** A session with permission to write under a path named `.devcontainer` must add the file (content given in the PR's Blocked section) and a CI build step; then this entry's state can move to `shipped`.
+
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
