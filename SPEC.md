@@ -430,4 +430,5 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
+| 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
