@@ -22,14 +22,15 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** not created yet (opened as part of this delivery)
+- **PR:** #4644 (draft), https://github.com/D-sorganization/AffineDrift/pull/4644
 - **Issue:** #4581 (epic #4586, E11 — Mathematical Typesetting and Notation)
 - **Branch:** `claude/issue-4581`
 - **Paths:** `custom.scss`, `styles.css`, `docs/styles.css`, `tests/test_math_overflow_rules.py`
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (new regression test: 3 passed; full `pytest -q` suite passes; `ruff check` and `black --check` clean; `scripts.check_css_architecture` passes.)
-- **Summary:** Display-math overflow was defined independently in `custom.scss` and in two conflicting blocks in `styles.css`. Consolidated to a single canonical rule (base + two responsive breakpoints) that reproduces the previously-effective cascade-resolved values exactly, so mobile math rendering is unchanged.
-- **Next step:** Open the draft PR and release the agent lease for #4581.
+- **Last verified:** 2026-09-30 (review-fix round: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_math_overflow_rules.py` confirmed RED against the over-merged rule, then 4 passed GREEN after the fix; `python scripts/bundle_css.py --check` passes after regenerating `docs/styles.css`; `ruff check .` and `black --check --line-length 100 .` clean.)
+- **Summary:** Display-math overflow was defined independently in `custom.scss` and in two conflicting blocks in `styles.css`. Consolidated to a single canonical rule set (one shared rule plus a `.math.display`-only rule per scope, base + two responsive breakpoints) that reproduces the previously-effective cascade-resolved values exactly, so mobile math rendering is unchanged. Review fix on draft PR #4644 corrected an over-merge that had put `padding-top`/`scroll-behavior` on the shared selector list instead of `.math.display` alone, which would have doubled the top gap on every display equation.
+- **Next step:** Push the review-fix commit to draft PR #4644 and release the agent lease for #4581.
+
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review

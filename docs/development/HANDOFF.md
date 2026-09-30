@@ -1,4 +1,161 @@
 # Implementation Handoff — Remove Duplicate Math Overflow Rules (#4581)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4581
+- Branch: claude/issue-4581
+- Baseline commit: 46df5059
+- Implementation commit: SELF
+- Pull request: #4644 (draft), https://github.com/D-sorganization/AffineDrift/pull/4644
+- Governing issue/epic: #4581 (part of epic #4586, E11 — Mathematical Typesetting and Notation)
+
+## Objective and Status
+
+- Objective: Display-math overflow was independently defined in `custom.scss`
+  and in two separate, conflicting blocks in `styles.css` (different
+  `overflow-y`, `padding` and mobile `font-size` values depending on cascade
+  order). Consolidate to one canonical rule set without changing the
+  currently-rendered mobile math layout.
+- Status: in progress (draft PR #4644 open; review-fix round applied)
+- Completed: Removed the duplicate rule from `custom.scss`; removed the older
+  of the two conflicting blocks in `styles.css`; folded the properties that
+  were only taking effect via cascade order (`margin-bottom`, `scroll-behavior`,
+  the base/tablet `padding-top` values) into the single surviving rule so the
+  effective computed styles at every breakpoint — including 390/375px mobile —
+  are unchanged. Added `tests/test_math_overflow_rules.py` to lock down "one
+  rule set" and the preserved computed values.
+- **Review fix (Opus review on #4644):** the first consolidation pass
+  over-merged: it put `padding-top`/`scroll-behavior` on the *shared*
+  `mjx-container[jax="CHTML"][display="true"], .MathJax_Display, .math.display`
+  selector list, but on `origin/main` only the bare `.math.display` wrapper
+  span ever had those two declarations — `mjx-container`/`.MathJax_Display`
+  never did. Since MathJax renders `mjx-container` *inside*
+  `span.math.display`, sharing `padding-top` doubled the visible top gap on
+  every display equation (would have moved the 390px mobile snapshots).
+  Fixed by moving `padding-top` (base `1rem`, `0.75rem` @768px, `0.5rem`
+  @480px) and `scroll-behavior: smooth` out of the shared rule into a
+  `.math.display`-only rule at each of the three scopes, keeping the
+  overflow/scrollbar declarations that are genuinely common to all three
+  selectors in the shared rule. Strengthened
+  `tests/test_math_overflow_rules.py` first (new
+  `test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only`,
+  confirmed RED against the over-merged rule) and updated
+  `test_styles_css_has_exactly_one_rule_set`'s expected count from 3 to 6
+  (one shared + one `.math.display`-only rule, per scope) to match the
+  corrected structure, then applied the CSS fix. Verified every selector's
+  final declarations against `git show origin/main:styles.css` by hand-
+  resolving the cascade.
+- Remaining: PR creation and agent lease release.
+
+## Files and Decisions
+
+- Files changed:
+  - `custom.scss`: Removed the "MathJax Layout & Overflow Control" rule and
+    its mobile media query (previously duplicated `.math.display`,
+    `.MathJax_Display`, `mjx-container[display="true"]`), leaving a short
+    note pointing to the consolidated rule in `styles.css`.
+  - `styles.css`: Removed the older, independently-conflicting `.math.display`
+    base rule and its two nested media queries (the "Math & Code" section).
+    Extended the surviving `mjx-container[jax="CHTML"][display="true"],
+    .MathJax_Display, .math.display` rule (previously added for issue #4063)
+    with `margin-bottom: 1rem` (previously only in effect because nothing
+    overrode them). **Review-fix round:** `scroll-behavior: smooth` and the
+    `padding-top` cascade (`1rem` base / `0.75rem` @768px / `0.5rem` @480px)
+    moved out of that shared rule into a separate `.math.display`-only rule
+    at each of the three scopes — on `origin/main` those two declarations
+    only ever applied to `.math.display`, never to `mjx-container`/
+    `.MathJax_Display`, and MathJax renders `mjx-container` *inside*
+    `span.math.display`, so sharing them doubled the top padding. Each
+    selector's final resolved declarations now match `origin/main` exactly
+    (verified by hand-resolving the cascade against
+    `git show origin/main:styles.css`).
+  - `docs/styles.css`: Regenerated via `python3 scripts/bundle_css.py` to keep
+    the deploy bundle in sync with the source `styles.css` (both the initial
+    consolidation and the review-fix round).
+  - `tests/test_math_overflow_rules.py`: Regression test asserting (a)
+    `custom.scss` defines no math-overflow rule, (b) exactly one shared rule
+    plus one `.math.display`-only rule remain per scope (base + 2
+    breakpoints) in `styles.css` — 6 rules total, down from six
+    overlapping/conflicting rules across the two files pre-consolidation —
+    (c) the merged rules preserve every previously-effective computed value,
+    and (d, added in the review-fix round)
+    `test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only`
+    asserts per-selector that `padding-top`/`scroll-behavior` land on
+    `.math.display` alone, never on `mjx-container`/`.MathJax_Display`, at
+    every scope.
+  - `data/trust/site_trust_surface_audit.json`,
+    `data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`: Editing `styles.css`
+    changed its bytes, which invalidated the SHA-256 evidence pin recorded
+    against finding `ad-finding-notation-render-integrity` (and, transitively,
+    the pin on `site_trust_surface_audit.json` itself recorded in every
+    route's review evidence). Recomputed and updated both digests; regenerated
+    the derived report JSON via `python3 -m scripts.generate_claim_audit_inventory`.
+    No scoped-route source content changed — this is a hash refresh, not a
+    re-review; `.table-wrapper` (the substance of that finding) was not touched.
+  - `SPEC.md`: Added change-log row for #4581.
+  - `docs/development/HANDOFF.md`: Added this section.
+  - `docs/development/DEVELOPMENT_LOG.md`: Added/updated `DL-#4581`.
+- Key decisions:
+  - Determined the currently-*effective* computed CSS by hand-resolving the
+    cascade (later same-specificity rule wins; `!important` beats normal
+    weight) across all three previously-duplicated blocks, then wrote the
+    single consolidated rule to reproduce those exact resolved values —
+    rather than picking one of the three blocks arbitrarily — so the mobile
+    math snapshots stay unchanged per the issue's acceptance criterion.
+  - Left the `::-webkit-scrollbar` cosmetic sub-rules (present in both the
+    removed and surviving `styles.css` blocks with different thumb colors)
+    untouched: the issue's stated problem is specifically the overflow/
+    padding/font-size definition, not scrollbar cosmetics, and changing them
+    was not necessary to satisfy "one rule set" for the overflow behavior.
+    Spotted-but-not-fixed, noted in the PR body as a possible follow-up.
+- User-owned or unrelated worktree changes: none observed. Note: running the
+  full `pytest -q` suite regenerates `_includes/generated/*-summary.qmd` and
+  three `data/trust/generated/*_registry.json`/`reader_validation_study.json`
+  files with today's date and different JSON formatting, as an apparent
+  side effect of some test writing to the real repo path instead of a
+  `tmp_path` fixture. This is unrelated to #4581; reverted with
+  `git checkout --` before committing each time it recurred. Flagging as a
+  spotted-but-not-fixed pre-existing test-suite issue for a follow-up.
+
+## Validation
+
+- Initial consolidation: `python3 -m pytest tests/test_math_overflow_rules.py -v` — PASS (3 passed;
+  confirmed RED before the fix with the pre-fix rule content, then GREEN after)
+- `python3 -m pytest tests/test_css_bundle.py tests/test_check_display_math.py -q` — PASS (34 passed)
+- `python3 -m pytest tests/test_site_trust_surface_audit.py tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current -q` — PASS (11 passed)
+- `python3 -m pytest -q` — PASS (full suite, exit code 0)
+- `python3 -m scripts.check_css_architecture` — PASS (57 files scanned)
+- `python3 -m ruff check .` — PASS (All checks passed)
+- `python3 -m black --check --line-length 100 .` — PASS (734 files would be left unchanged)
+- **Review-fix round:** `python -m pytest -q -o addopts= -p no:cacheprovider
+  tests/test_math_overflow_rules.py` — confirmed RED (2 of 4 failed:
+  `test_styles_css_has_exactly_one_rule_set` expected-count and the new
+  `test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only`)
+  against the over-merged rule before applying the CSS fix, then GREEN (4
+  passed) after. `python scripts/bundle_css.py --check` — failed (stale)
+  before regenerating; passed after `python scripts/bundle_css.py`. No page
+  or source under review evidence was touched by this round, so
+  `regenerate_claim_audit_evidence` was not re-run.
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: No committed Playwright pixel-snapshot baselines exist
+  for mobile math yet (`tests/e2e/visual.spec.js`'s "matches visual snapshot"
+  tests are explicitly excluded from CI per issue #4140 pending platform
+  baselines), so "390px mobile math snapshots are unchanged" was verified by
+  hand-resolving the CSS cascade to confirm the merged rule reproduces the
+  prior effective computed values exactly, not by an automated pixel diff.
+
+## Next Steps
+
+1. Push the review-fix commit to draft PR #4644.
+2. Release the agent lease for #4581.
+
+---
+
 # Implementation Handoff — Print and PDF Editions for Books and Core Series (#4550)
 # Math Accessibility Verification — #4565 (WEB-09.5)
 
@@ -293,50 +450,6 @@
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4581
-- Branch: claude/issue-4581
-- Baseline commit: 46df5059
-- Implementation commit: SELF
-- Pull request: #4644 (draft), https://github.com/D-sorganization/AffineDrift/pull/4644
-- Governing issue/epic: #4581 (part of epic #4586, E11 — Mathematical Typesetting and Notation)
-
-## Objective and Status
-
-- Objective: Display-math overflow was independently defined in `custom.scss`
-  and in two separate, conflicting blocks in `styles.css` (different
-  `overflow-y`, `padding` and mobile `font-size` values depending on cascade
-  order). Consolidate to one canonical rule set without changing the
-  currently-rendered mobile math layout.
-- Status: in progress (draft PR #4644 open; review-fix round applied)
-- Completed: Removed the duplicate rule from `custom.scss`; removed the older
-  of the two conflicting blocks in `styles.css`; folded the properties that
-  were only taking effect via cascade order (`margin-bottom`, `scroll-behavior`,
-  the base/tablet `padding-top` values) into the single surviving rule so the
-  effective computed styles at every breakpoint — including 390/375px mobile —
-  are unchanged. Added `tests/test_math_overflow_rules.py` to lock down "one
-  rule set" and the preserved computed values.
-- **Review fix (Opus review on #4644):** the first consolidation pass
-  over-merged: it put `padding-top`/`scroll-behavior` on the *shared*
-  `mjx-container[jax="CHTML"][display="true"], .MathJax_Display, .math.display`
-  selector list, but on `origin/main` only the bare `.math.display` wrapper
-  span ever had those two declarations — `mjx-container`/`.MathJax_Display`
-  never did. Since MathJax renders `mjx-container` *inside*
-  `span.math.display`, sharing `padding-top` doubled the visible top gap on
-  every display equation (would have moved the 390px mobile snapshots).
-  Fixed by moving `padding-top` (base `1rem`, `0.75rem` @768px, `0.5rem`
-  @480px) and `scroll-behavior: smooth` out of the shared rule into a
-  `.math.display`-only rule at each of the three scopes, keeping the
-  overflow/scrollbar declarations that are genuinely common to all three
-  selectors in the shared rule. Strengthened
-  `tests/test_math_overflow_rules.py` first (new
-  `test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only`,
-  confirmed RED against the over-merged rule) and updated
-  `test_styles_css_has_exactly_one_rule_set`'s expected count from 3 to 6
-  (one shared + one `.math.display`-only rule, per scope) to match the
-  corrected structure, then applied the CSS fix. Verified every selector's
-  final declarations against `git show origin/main:styles.css` by hand-
-  resolving the cascade.
-- Remaining: PR creation and agent lease release.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4550
 - Branch: claude/issue-4550
 - Baseline commit: 047fc82b (origin/main)
@@ -468,113 +581,6 @@
 ## Files and Decisions
 
 - Files changed:
-  - `custom.scss`: Removed the "MathJax Layout & Overflow Control" rule and
-    its mobile media query (previously duplicated `.math.display`,
-    `.MathJax_Display`, `mjx-container[display="true"]`), leaving a short
-    note pointing to the consolidated rule in `styles.css`.
-  - `styles.css`: Removed the older, independently-conflicting `.math.display`
-    base rule and its two nested media queries (the "Math & Code" section).
-    Extended the surviving `mjx-container[jax="CHTML"][display="true"],
-    .MathJax_Display, .math.display` rule (previously added for issue #4063)
-    with `margin-bottom: 1rem` (previously only in effect because nothing
-    overrode them). **Review-fix round:** `scroll-behavior: smooth` and the
-    `padding-top` cascade (`1rem` base / `0.75rem` @768px / `0.5rem` @480px)
-    moved out of that shared rule into a separate `.math.display`-only rule
-    at each of the three scopes — on `origin/main` those two declarations
-    only ever applied to `.math.display`, never to `mjx-container`/
-    `.MathJax_Display`, and MathJax renders `mjx-container` *inside*
-    `span.math.display`, so sharing them doubled the top padding. Each
-    selector's final resolved declarations now match `origin/main` exactly
-    (verified by hand-resolving the cascade against
-    `git show origin/main:styles.css`).
-  - `docs/styles.css`: Regenerated via `python3 scripts/bundle_css.py` to keep
-    the deploy bundle in sync with the source `styles.css` (both the initial
-    consolidation and the review-fix round).
-  - `tests/test_math_overflow_rules.py`: Regression test asserting (a)
-    `custom.scss` defines no math-overflow rule, (b) exactly one shared rule
-    plus one `.math.display`-only rule remain per scope (base + 2
-    breakpoints) in `styles.css` — 6 rules total, down from six
-    overlapping/conflicting rules across the two files pre-consolidation —
-    (c) the merged rules preserve every previously-effective computed value,
-    and (d, added in the review-fix round)
-    `test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only`
-    asserts per-selector that `padding-top`/`scroll-behavior` land on
-    `.math.display` alone, never on `mjx-container`/`.MathJax_Display`, at
-    every scope.
-  - `data/trust/site_trust_surface_audit.json`,
-    `data/trust/claim_audit_inventory.json`,
-    `data/trust/generated/claim_audit_report.json`: Editing `styles.css`
-    changed its bytes, which invalidated the SHA-256 evidence pin recorded
-    against finding `ad-finding-notation-render-integrity` (and, transitively,
-    the pin on `site_trust_surface_audit.json` itself recorded in every
-    route's review evidence). Recomputed and updated both digests; regenerated
-    the derived report JSON via `python3 -m scripts.generate_claim_audit_inventory`.
-    No scoped-route source content changed — this is a hash refresh, not a
-    re-review; `.table-wrapper` (the substance of that finding) was not touched.
-  - `SPEC.md`: Added change-log row for #4581.
-  - `docs/development/HANDOFF.md`: Added this section.
-  - `docs/development/DEVELOPMENT_LOG.md`: Added/updated `DL-#4581`.
-- Key decisions:
-  - Determined the currently-*effective* computed CSS by hand-resolving the
-    cascade (later same-specificity rule wins; `!important` beats normal
-    weight) across all three previously-duplicated blocks, then wrote the
-    single consolidated rule to reproduce those exact resolved values —
-    rather than picking one of the three blocks arbitrarily — so the mobile
-    math snapshots stay unchanged per the issue's acceptance criterion.
-  - Left the `::-webkit-scrollbar` cosmetic sub-rules (present in both the
-    removed and surviving `styles.css` blocks with different thumb colors)
-    untouched: the issue's stated problem is specifically the overflow/
-    padding/font-size definition, not scrollbar cosmetics, and changing them
-    was not necessary to satisfy "one rule set" for the overflow behavior.
-    Spotted-but-not-fixed, noted in the PR body as a possible follow-up.
-- User-owned or unrelated worktree changes: none observed. Note: running the
-  full `pytest -q` suite regenerates `_includes/generated/*-summary.qmd` and
-  three `data/trust/generated/*_registry.json`/`reader_validation_study.json`
-  files with today's date and different JSON formatting, as an apparent
-  side effect of some test writing to the real repo path instead of a
-  `tmp_path` fixture. This is unrelated to #4581; reverted with
-  `git checkout --` before committing each time it recurred. Flagging as a
-  spotted-but-not-fixed pre-existing test-suite issue for a follow-up.
-
-## Validation
-
-- Initial consolidation: `python3 -m pytest tests/test_math_overflow_rules.py -v` — PASS (3 passed;
-  confirmed RED before the fix with the pre-fix rule content, then GREEN after)
-- `python3 -m pytest tests/test_css_bundle.py tests/test_check_display_math.py -q` — PASS (34 passed)
-- `python3 -m pytest tests/test_site_trust_surface_audit.py tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current -q` — PASS (11 passed)
-- `python3 -m pytest -q` — PASS (full suite, exit code 0)
-- `python3 -m scripts.check_css_architecture` — PASS (57 files scanned)
-- `python3 -m ruff check .` — PASS (All checks passed)
-- `python3 -m black --check --line-length 100 .` — PASS (734 files would be left unchanged)
-- **Review-fix round:** `python -m pytest -q -o addopts= -p no:cacheprovider
-  tests/test_math_overflow_rules.py` — confirmed RED (2 of 4 failed:
-  `test_styles_css_has_exactly_one_rule_set` expected-count and the new
-  `test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only`)
-  against the over-merged rule before applying the CSS fix, then GREEN (4
-  passed) after. `python scripts/bundle_css.py --check` — failed (stale)
-  before regenerating; passed after `python scripts/bundle_css.py`. No page
-  or source under review evidence was touched by this round, so
-  `regenerate_claim_audit_evidence` was not re-run.
-
-## Blockers and Risks
-
-- Blockers: none.
-- Risks/assumptions: No committed Playwright pixel-snapshot baselines exist
-  for mobile math yet (`tests/e2e/visual.spec.js`'s "matches visual snapshot"
-  tests are explicitly excluded from CI per issue #4140 pending platform
-  baselines), so "390px mobile math snapshots are unchanged" was verified by
-  hand-resolving the CSS cascade to confirm the merged rule reproduces the
-  prior effective computed values exactly, not by an automated pixel diff.
-
-## Next Steps
-
-1. Push the review-fix commit to draft PR #4644.
-2. Release the agent lease for #4581.
-
----
-
-
-# Implementation Handoff — Build the Page Header Card Component (#4507)
   - `css/print.css`: `@page` size `a4` → `auto`; added the merged-in "In Layman's Terms" print
     rules.
   - `styles.css`: removed its competing `@media print` block, replaced with a pointer comment.
