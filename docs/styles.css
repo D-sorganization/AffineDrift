@@ -2088,6 +2088,52 @@ Dark mode (separate concern):
   margin-bottom: 1rem;
 }
 
+.resource-meta {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+}
+
+.resource-meta__row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.5rem;
+}
+
+.resource-meta__row dt {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.resource-meta__row dd {
+  margin: 0;
+  color: var(--text-main);
+  word-break: break-word;
+}
+
+.resource-checksums {
+  width: 100%;
+  margin: 0 0 1rem;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.resource-checksums caption {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.resource-checksums th,
+.resource-checksums td {
+  padding: 0.25rem 0.5rem 0.25rem 0;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  word-break: break-all;
+}
+
 .resource-link {
   color: var(--color-link);
   font-weight: 600;
@@ -2704,6 +2750,7 @@ Dark mode (separate concern):
 
 /* Inline status pill — a small chip-like label next to a heading.
    Replaces inline ``style="display: inline-block; padding…"`` blobs. */
+a.status-pill,
 .status-pill {
   display: inline-block;
   margin-left: 0.5rem;
@@ -2715,6 +2762,12 @@ Dark mode (separate concern):
   font-weight: 600;
   letter-spacing: 0.04em;
   vertical-align: middle;
+  text-decoration: none;
+}
+
+a.status-pill:hover,
+a.status-pill:focus {
+  text-decoration: underline;
 }
 
 .status-pill--exploratory { background: var(--color-neutral-100); }
@@ -2723,6 +2776,17 @@ Dark mode (separate concern):
   color: var(--color-link);
 }
 .status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }
+.status-banner__title a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.status-banner__title a:hover,
+.status-banner__title a:focus {
+  text-decoration-style: solid;
+}
+
 /* ===== end css/components/status-banner.css ===== */
 /* ===== begin css/components/not-found.css ===== */
 /* Branded 404 page (issue #3330).
@@ -3445,6 +3509,238 @@ code span.va {
   margin-bottom: 0;
 }
 /* ===== end css/components/summary-takeaways.css ===== */
+/* ===== begin css/components/status-badge.css ===== */
+/* css/components/status-badge.css
+ * Unified Publication Status Badge Component (WEB-04.2 #4516)
+ *
+ * Provides accessible, high-contrast badges for the six canonical publication states:
+ * available, validated, experimental, planned, deprecated, opinion.
+ *
+ * Requirements:
+ * - Uses both icon and text (meaning does not depend on colour alone).
+ * - Meets WCAG AA contrast (>= 4.5:1) in both light and dark themes.
+ * - Links to how-to-read.html#publication-states (WEB-01.6).
+ * - Visual prominence never implies a higher state.
+ */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  transition: opacity 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.status-badge:hover,
+.status-badge:focus-visible {
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+.status-badge:focus-visible {
+  outline: 2px solid var(--color-primary, #1e40af);
+  outline-offset: 2px;
+}
+
+.status-badge__icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  width: 0.85em;
+  height: 0.85em;
+}
+
+.status-badge__text {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ==========================================================================
+   Canonical State Variants — Light Theme (Default)
+   All combinations satisfy WCAG AA contrast (>= 4.5:1) against background
+   ========================================================================== */
+
+/* Available: Text complete, inspectable, open for review */
+.status-badge--available {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+.status-badge--available:hover {
+  background-color: #dbeafe;
+}
+
+/* Validated: Specific empirical evidence, calibration dataset, bounded error */
+.status-badge--validated {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+.status-badge--validated:hover {
+  background-color: #dcfce7;
+}
+
+/* Experimental: Exploratory modeling, sensitivity testing, open conjecture */
+.status-badge--experimental {
+  background-color: #faf5ff;
+  color: #6b21a8;
+  border-color: #e9d5ff;
+}
+.status-badge--experimental:hover {
+  background-color: #f3e8ff;
+}
+
+/* Planned: Scaffolding, specification, reserved chapter */
+.status-badge--planned {
+  background-color: #fffbeb;
+  color: #854d0e;
+  border-color: #fde68a;
+}
+.status-badge--planned:hover {
+  background-color: #fef3c7;
+}
+
+/* Deprecated: Historical archive, superseded derivation */
+.status-badge--deprecated {
+  background-color: #fff1f2;
+  color: #9f1239;
+  border-color: #fecdd3;
+}
+.status-badge--deprecated:hover {
+  background-color: #ffe4e6;
+}
+
+/* Opinion: Editorial synthesis, philosophical orientation */
+.status-badge--opinion {
+  background-color: #f0fdfa;
+  color: #115e59;
+  border-color: #99f6e4;
+}
+.status-badge--opinion:hover {
+  background-color: #ccfbf1;
+}
+
+/* ==========================================================================
+   Dark Theme Overrides (body.quarto-dark & media query)
+   Maintains WCAG AA contrast (>= 4.5:1) on dark backgrounds (#18181b / #121212)
+   ========================================================================== */
+
+body.quarto-dark .status-badge--available {
+  background-color: rgba(30, 64, 175, 0.25);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.4);
+}
+body.quarto-dark .status-badge--available:hover {
+  background-color: rgba(30, 64, 175, 0.35);
+}
+
+body.quarto-dark .status-badge--validated {
+  background-color: rgba(22, 101, 52, 0.25);
+  color: #86efac;
+  border-color: rgba(134, 239, 172, 0.4);
+}
+body.quarto-dark .status-badge--validated:hover {
+  background-color: rgba(22, 101, 52, 0.35);
+}
+
+body.quarto-dark .status-badge--experimental {
+  background-color: rgba(107, 33, 168, 0.25);
+  color: #d8b4fe;
+  border-color: rgba(216, 180, 254, 0.4);
+}
+body.quarto-dark .status-badge--experimental:hover {
+  background-color: rgba(107, 33, 168, 0.35);
+}
+
+body.quarto-dark .status-badge--planned {
+  background-color: rgba(133, 77, 14, 0.25);
+  color: #fde047;
+  border-color: rgba(253, 224, 71, 0.4);
+}
+body.quarto-dark .status-badge--planned:hover {
+  background-color: rgba(133, 77, 14, 0.35);
+}
+
+body.quarto-dark .status-badge--deprecated {
+  background-color: rgba(159, 18, 57, 0.25);
+  color: #fca5a5;
+  border-color: rgba(253, 164, 175, 0.4);
+}
+body.quarto-dark .status-badge--deprecated:hover {
+  background-color: rgba(159, 18, 57, 0.35);
+}
+
+body.quarto-dark .status-badge--opinion {
+  background-color: rgba(17, 94, 89, 0.25);
+  color: #5eead4;
+  border-color: rgba(94, 234, 212, 0.4);
+}
+body.quarto-dark .status-badge--opinion:hover {
+  background-color: rgba(17, 94, 89, 0.35);
+}
+
+/* ==========================================================================
+   Backward Compatibility for legacy .status-pill
+   ========================================================================== */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  text-decoration: none;
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+.status-pill--exploratory,
+.status-pill--experimental {
+  background-color: #faf5ff;
+  color: #6b21a8;
+  border-color: #e9d5ff;
+}
+.status-pill--warning,
+.status-pill--planned {
+  background-color: #fffbeb;
+  color: #854d0e;
+  border-color: #fde68a;
+}
+.status-pill--info {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+
+body.quarto-dark .status-pill {
+  background-color: rgba(30, 64, 175, 0.25);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.4);
+}
+body.quarto-dark .status-pill--exploratory,
+body.quarto-dark .status-pill--experimental {
+  background-color: rgba(107, 33, 168, 0.25);
+  color: #d8b4fe;
+  border-color: rgba(216, 180, 254, 0.4);
+}
+body.quarto-dark .status-pill--warning,
+body.quarto-dark .status-pill--planned {
+  background-color: rgba(133, 77, 14, 0.25);
+  color: #fde047;
+  border-color: rgba(253, 224, 71, 0.4);
+}
+/* ===== end css/components/status-badge.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the

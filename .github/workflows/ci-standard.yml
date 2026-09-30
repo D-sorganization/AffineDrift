@@ -146,6 +146,10 @@ jobs:
         # models/programming/*.qmd are generated; hand edits or generator changes
         # without regeneration must fail here, not on the live site (#4123, RM #1507).
         run: python3 -m scripts.generate_programming_catalog --check
+      - name: Verify Datasets Catalog Is Current
+        # resources/resources-datasets.qmd is generated from data/datasets.yml;
+        # hand edits or a stale checksum must fail here, not on the live site (#4549).
+        run: python3 -m scripts.generate_datasets_catalog --check
       - name: Verify UpstreamDrift Pins Are Reconciled
         # Every UpstreamDrift tree/blob/commit SHA linked from a rendered source
         # must be in data/companion/pins.json and the active lock must be the
@@ -250,6 +254,12 @@ jobs:
             --baseline config/latex-structure-baseline.json
       - name: Validate Article Frontmatter
         run: python3 scripts/validate_frontmatter.py
+      - name: Verify Alt Text and Long Descriptions
+        # Scoped to QMD content (alt text, heading hierarchy, long
+        # descriptions for E8 SVG diagrams) via --qmd-only; the same script's
+        # CSS colorblind-safe-color and JS ARIA-label checks have pre-existing
+        # findings not yet tracked by a baseline and stay unwired (#4567).
+        run: python3 scripts/validate_accessibility.py --qmd-only
       - name: Verify CSS Budget
         run: python3 scripts/check_styles_budget.py
       - name: Verify UI/UX Anti-Pattern Budget
@@ -268,6 +278,10 @@ jobs:
         run: python3 scripts/check_changed_file_size_budget.py
       - name: Verify Technical Debt Budget
         run: python3 scripts/check_tech_debt_budget.py
+      - name: Verify Scaffolding Styling and Stub Hub Cards
+        # Scaffolding pages must never use success styling; hub cards to stubs
+        # under 300 words must carry a Planned badge (WEB-02.6 / #4500).
+        run: python3 scripts/check_scaffolding_styling.py
       - name: Verify generated agent automation artifacts
         run: python3 scripts/check_agent_automation_artifacts.py
       - name: Verify SPEC.md Change Log Is PR-Keyed
@@ -504,6 +518,30 @@ jobs:
             printf "%s\n" "$relevant_files"
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Compute Quarto render cache key
+        # WEB-13.1 (#4595): the key is the content hash (git blob ids) of every
+        # tracked file except tests, workflows and developer docs. A hand-listed
+        # glob set silently misses render inputs (Lua filters, _includes/
+        # partials, JS resources under src/), which would restore a stale site.
+        id: quarto_cache_key
+        if: steps.e2e_changes.outputs.run == 'true'
+        shell: bash
+        run: |
+          key=$(git ls-files -s -- . ':(exclude)tests/**' ':(exclude).github/**' ':(exclude)docs/development/**' | sha256sum | cut -c1-64)
+          echo "key=quarto-render-v2-${key}" >> "$GITHUB_OUTPUT"
+      - name: Restore cached Quarto render
+        # Skip the render only on an exact key match. There is no restore-keys
+        # fallback -- an inexact match must never restore a docs/ tree that does
+        # not reflect this commit, so any changed render input falls through to
+        # the full render below, unchanged from before this cache existed.
+        id: quarto_cache
+        if: steps.e2e_changes.outputs.run == 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            docs
+            .quarto
+          key: ${{ steps.quarto_cache_key.outputs.key }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         if: steps.e2e_changes.outputs.run == 'true'
         with:
@@ -592,7 +630,9 @@ jobs:
         # 2026-09-03 deploy) so the E2E baseline is the real site rather than
         # 14 hand-listed pages (#4126). The site has no executable cells, so a
         # Quarto freeze cache would buy nothing; the render is pure Pandoc.
-        if: steps.e2e_changes.outputs.run == 'true'
+        # WEB-13.1 (#4595): skipped only when the cache step above restored an
+        # exact match, so docs/ already is what this render would produce.
+        if: steps.e2e_changes.outputs.run == 'true' && steps.quarto_cache.outputs.cache-hit != 'true'
         run: quarto render --to html
       - name: Sync Frontend Assets
         if: steps.e2e_changes.outputs.run == 'true'
@@ -601,18 +641,25 @@ jobs:
           python3 scripts/bundle_css.py
 
       - name: Run Playwright E2E Suite (Chromium)
-        # Every spec under tests/e2e against the full render (130 tests).
-        # Pixel-snapshot tests are excluded (they need platform baselines; see
-        # the visual invariants step below). Firefox/WebKit/mobile stay local.
-        # TODO(2026-09-03, #4140): the nine titles below failed on the first
-        # full-site run (stale home-layout tests + real contrast/touch-target/
-        # bibliography/offline defects); drop the exclusions when #4140 closes.
+        # Every spec under tests/e2e against the full render.
+        # Pixel-snapshot tests ("matches visual snapshot") are excluded: they
+        # compare against per-platform baseline PNGs that have never been
+        # committed (playwright test --update-snapshots on the fleet runner
+        # would need to generate them), so they fail with "no baseline found"
+        # regardless of the rendered site's correctness. The deterministic
+        # layout assertions from the same file run below without needing a
+        # baseline. Restoring the pixel-snapshot tests is tracked in #4563.
+        # Seven of the nine other titles previously excluded here (#4140) now
+        # pass and run with the rest of the suite. Two still fail on real site
+        # defects and stay excluded until fixed (TODO #4563): the dark-theme
+        # home page has 24 WCAG AA contrast failures, and 20 interactive
+        # elements are below the WCAG 2.5.5 touch-target size.
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           npx playwright test \
             --project=chromium \
             --retries=0 \
-            --grep-invert "matches visual snapshot|should meet WCAG AA text contrast in both themes|should show entry details when clicked|should render desktop home layout as a three-column grid|should toggle mobile sidebar sections|should navigate to articles page|should serve cached homepage when offline|should validate mobile menu button|should provide summary of all compliant elements|should allow a user to navigate from home to article and back to top"
+            --grep-invert "matches visual snapshot|should meet WCAG AA text contrast in both themes|should provide summary of all compliant elements"
       - name: Run Visual Layout Invariants (no-overflow / column collapse)
         # Runs the deterministic layout assertions from visual.spec.js (issue
         # #3328) — these need no committed image baselines and fail the build on
