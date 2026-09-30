@@ -148,6 +148,102 @@
 
 ---
 
+# Restore the Ten Excluded Browser Tests — Issue #4563
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4563`.
+- Branch: `claude/issue-4563`, commit `SELF`. Pull request: to be opened as a draft by this session.
+- Governing issue: #4563 (WEB-09.3, part of epic #4569 / E9 — Accessibility Conformance).
+
+## Objective and Status
+
+- Objective: `ci-standard.yml`'s Chromium E2E step `--grep-invert`-excludes ten test titles (added in
+  #4126/#4141, diagnosed in #4140); remove the exclusion for every title whose defect is actually fixed,
+  fix any defect that isn't, and never loosen a test to make CI green.
+- Investigation found the ten titles split three ways:
+  1. Two of the ten (`should render desktop home layout as a three-column grid`, `should toggle mobile
+     sidebar sections`) no longer match any test title at all — PR #4200 already renamed/rewrote those
+     tests for the single-column home redesign, so these two clauses in the exclusion regex have been
+     dead weight (matching nothing) since 2026-09-05.
+  2. Seven of the ten (`should meet WCAG AA text contrast in both themes`, `should show entry details
+     when clicked`, `should navigate to articles page`, `should serve cached homepage when offline`,
+     `should validate mobile menu button`, `should provide summary of all compliant elements`, `should
+     allow a user to navigate from home to article and back to top`) have defects that were fixed in
+     source by PR #4200 (dark-theme link/button contrast tokens, bibliography detail-panel class,
+     back-to-top touch target, stale navigation/user-journey selectors) — confirmed by reading
+     PR #4200's diff and the current state of `styles.css`, `css/tokens/colors.css`, `js/bibliography.js`,
+     `service-worker.js`, and the three rewritten spec files, plus three subsequent site-wide a11y
+     remediation PRs (#4139/#4206, #4207/#4208, #4209/#4210) that further extended contrast/axe fixes
+     across every route. PR #4200 never removed the CI exclusion, so none of this was ever confirmed by
+     an actual CI run of these tests.
+  3. One of the seven above (`should validate mobile menu button`) had a second, independent defect in
+     the *test* itself, found by reading `tests/e2e/touch-targets.spec.js`'s shared `checkTouchTarget`
+     helper: at a desktop-width viewport, Bootstrap's `.navbar-toggler` is legitimately CSS-hidden
+     (`display: none` above the `lg` breakpoint), so `elementHandle.boundingBox()` returns `null`; the
+     helper counted that as a non-compliant 0×0 touch target rather than treating a non-rendered element
+     as not applicable. This same bug is almost certainly the actual cause of the `55 non-compliant
+     elements` reported by #4140's diagnosis for `should provide summary of all compliant elements`
+     (that test walks every `button`/`a`/`input` on the homepage, many of which are legitimately hidden
+     at any single viewport). Fixed by skipping null-bounding-box elements instead of flagging them;
+     this can only turn existing false failures into skips, since a real 0-size *visible* element still
+     returns a real (non-null) zero-size box and is still caught.
+  4. The tenth (`matches visual snapshot`, 60 parametrized pixel-comparison cases in `visual.spec.js`)
+     stays excluded. No baseline PNGs are committed anywhere in the repository (confirmed via `git
+     ls-files` / `Glob`), so `toHaveScreenshot()` fails with "no baseline found" on every run regardless
+     of whether the rendered site is correct. Generating correct baselines needs a `playwright test
+     --update-snapshots` run on the actual fleet CI runner — this sandbox has neither `quarto` nor
+     `docker` (both denied by this session's permission policy), and even if it did, this is a Windows
+     sandbox, so locally generated screenshots would not byte-match the Linux runner's font metrics and
+     would just fail immediately for a different reason. This is left excluded with an updated,
+     accurate comment instead of guessed at.
+- Status: draft PR to be opened with a `Blocked:` section covering item 4 above.
+
+## Files and Decisions
+
+- `.github/workflows/ci-standard.yml`: replaced the ten-title `--grep-invert` value with just `"matches
+  visual snapshot"`, and rewrote the adjacent comment/TODO (which pointed at #4140, already closed) to
+  explain the current state and point at #4563.
+- `tests/e2e/touch-targets.spec.js`: `checkTouchTarget` now `continue`s (skips) on a `null` bounding box
+  instead of pushing a `compliant: false` result, with a comment explaining why (see point 3 above).
+- Deliberately did not touch `js/bibliography.js`, `styles.css`, `css/tokens/colors.css`,
+  `service-worker.js`, or the already-rewritten `homepage.spec.js` / `navigation.spec.js` /
+  `user_journey.spec.js` — their fixes are already on `main` from PR #4200 and later a11y PRs; re-editing
+  them would not trace to anything this issue still needs.
+
+## Validation
+
+- `npx jest`: 429 passed, 19 skipped, 26 suites — unaffected by this change, run to confirm no
+  regression from touching a `tests/e2e/*.spec.js` file (Jest does not execute `tests/e2e/`).
+- `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"`: parses cleanly.
+- **Not run: the actual Playwright suite.** This sandboxed worktree has no Quarto-rendered `docs/`
+  (`docs/**/*.html` is gitignored, built only by `quarto render`), and both `quarto` and `docker` are
+  denied by this session's permission policy, so there is no way to render the site and run
+  `npx playwright test --project=chromium` locally. Every claim above about which tests now pass is
+  based on reading source and the merged PR #4200 diff, not on an observed pass. CI's own `e2e-tests`
+  job (which does render the full site) is the first real execution of the restored tests — treat its
+  result as the actual acceptance evidence for this issue, not this handoff.
+
+## Blockers and Risks
+
+- Blocker: cannot render the Quarto site locally (`quarto`/`docker` both denied), so this PR's core
+  claim — that the nine restored tests pass — is unverified by this session. See `Validation` above.
+- Risk: if CI's `e2e-tests` run turns up a real remaining failure among the nine, the fix belongs in the
+  same area PR #4200 touched (contrast tokens, touch targets, bibliography JS, or the three rewritten
+  spec files) — do not re-add the title to `--grep-invert` to make CI green.
+
+## Next Steps
+
+1. Push the branch and open the draft PR with `Fixes #4563` and a `Blocked:` section for the
+   pixel-snapshot baselines (item 4 above), which need a follow-up on the fleet CI runner, not more
+   source changes here.
+2. Frontier review reads CI's `e2e-tests` result as the real pass/fail evidence for the nine restored
+   titles, since this session could not run them.
+3. If CI does turn up a genuine failure, fix it at the source named in `Risks` above and keep the
+   exclusion removed rather than reverting it.
+
+---
+
 # Readability Measurement Tool — Issue #4591
 
 - Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4591`.
