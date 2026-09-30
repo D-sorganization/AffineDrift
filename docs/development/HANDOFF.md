@@ -1,3 +1,20 @@
+# Implementation Handoff — Linux-safe `requirements-docker.lock`
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-wt-docker-lock`
+- Branch: `fix/docker-lock-linux`; commit SELF; PR: see branch (draft)
+- Objective: the lock pinned Windows-only `pywinpty==3.0.3` with no marker (Linux
+  `pip install --require-hashes` falls back to its sdist and fails) and had drifted from
+  `requirements.txt` (numpy 2.4.4 vs 2.5.3; sympy, pypdf and others missing).
+- Fix: regenerated with `uv pip compile requirements.txt --universal --python-version 3.12
+  --generate-hashes` (command recorded in the lock header and in the security-guidelines and
+  troubleshooting docs). `pywinpty` now has `; os_name == 'nt'`.
+- Guard: `tests/test_docker_lock.py` — known Windows-only pins must carry a Windows marker; every
+  `requirements.txt` entry is locked at its pinned version; a `requires_network` variant checks
+  every unmarked pin against PyPI wheel tags.
+- Validation: `pytest tests/test_docker_lock.py tests/test_container_config.py -m ""` (9 passed);
+  pip install of the lock in the pinned `python:3.12-slim` image via WSL Docker (see PR body).
+- Next: after merge, rerun the Docker `dev` build in CI or locally to confirm end-to-end.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
