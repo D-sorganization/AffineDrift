@@ -6,8 +6,10 @@ test.describe('Offline Mode (Service Worker)', () => {
     await page.goto('/');
     await expect(page).toHaveTitle(/AffineDrift/);
 
-    // Wait a bit for SW to install and cache
-    await page.waitForTimeout(3000);
+    // Wait for the SW to activate (deterministic; a fixed delay was flaky
+    // under CI load against the full-site render, see #4140) so the
+    // install-time precache of the homepage has actually completed.
+    await page.evaluate(() => navigator.serviceWorker.ready);
 
     // 2. Go Offline
     await context.setOffline(true);
