@@ -24,13 +24,33 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** codex-luna-affine4688-20260930
 - **PR:** not created; local candidate awaits root review
 - **Issue:** #4688 (red main deployment route coverage)
-- **Branch:** `fix/luna-deploy-route-4688`
+- **Branch:** `fix/luna-deploy-route-4688` (integrated current main `4f798475c2b086ed147d1932429a8cc750f0f645`)
 - **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; focused audit/public-manifest contracts 44 passed; preserved deployment-shaped output pruned and revision-bound 250-page manifest publication audit passed; historical native Quarto exit remains unknown)
+- **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; focused audit/public-manifest contracts 44 passed; latest-main merge preserves all 249 main inventory records and adds the missing route; focused contracts, source coverage, canonical freshness, and local publication checks pass; preserved v2 manifest audit applies only to old revision 3471f7d; current-main render pending; historical native exit remains unknown)
 - **Summary:** Adds a reviewed record for the already-public `/models/dataset-explorer.html` route and a regression asserting exact source-derived route coverage. The record treats JSON schema checks as structural, population inputs as manufactured synthetic, and ZTCF/proximal-distal artifacts as model-level; it makes no human/population validation claim and preserves open finding #4695. The separate #4694 workflow publication-gate design is out of scope.
-- **Next step:** Root review and required PR CI deployment render/publication gates; do not close #4688 before merged-main deploy evidence.
+- **Next step:** Root publication decision after green PR CI render and root-verified manifest-bound publication evidence for this exact candidate; then verify merged-main deploy before closing #4688.
 
+### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4682 (draft)
+- **Issue:** #4538 (WEB-06.8; epic #4543)
+- **Branch:** `claude/issue-4538`
+- **Paths:** `environment.yml`, `articles/_metadata.yml`, `_includes/notebook-binder-launch.qmd`, `books/tangent-space-methods.qmd`, `books/control-is-motion.qmd`, `books/biomechanics-biology-to-systems.qmd`, `books/human-motor-control.qmd`, `notebooks/geometry_of_motion/README.md`, `scripts/check_root_hygiene.py`, `tests/test_reader_run_environment.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 7/7 `tests/test_reader_run_environment.py` pass; `check_root_hygiene.py`, `check_quarto_render_coverage.py`, `check_quarto_xrefs.py`, `check_single_title.py`, `check_title_case.py`, `check_terminology.py`, `check_dry_adoption.py`, `check_contract_coverage.py` all pass; ruff/black clean on changed Python files)
+- **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment that opens the notebook scaffolds, installing from `requirements.txt` (not `requirements-docker.lock`, which pins a Windows-only `pywinpty` wheel that fails on Binder's Linux image and is stale relative to `requirements.txt`), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked — see HANDOFF.md. The Binder build itself is unverified (repo2docker was never run).
+- **Next step:** A session with permission to write under a path named `.devcontainer` must add the file (content given in the PR's Blocked section) and a CI build step; then this entry's state can move to `shipped`.
+
+## Shipped (Last 90 Days)
+
+Entries stay here for 90 days after merge, then move to the archive.
+
+## Archive
+
+Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review

@@ -3,6 +3,8 @@
 Provides pointwise Hessian estimates, conditional flow-remainder bounds,
 and tracking-discrepancy monitoring. These utilities alone do not certify
 optimizer convergence, controller stability, or a physical source of error.
+
+Available as part of the installable `affinedrift` distribution package (#4532).
 """
 
 import logging
