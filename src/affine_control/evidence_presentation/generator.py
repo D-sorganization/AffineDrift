@@ -159,6 +159,11 @@ def build_evidence_presentation_registry(
     return registry, view_models
 
 
+def _without_generated_on(payload: dict[str, Any]) -> dict[str, Any]:
+    """Drop the run date so `--check` compares content, not the day it was generated."""
+    return {key: value for key, value in payload.items() if key != "generated_on"}
+
+
 def generate_evidence_presentation(
     *,
     check: bool = False,
@@ -183,7 +188,8 @@ def generate_evidence_presentation(
     if check:
         if not registry_path.is_file():
             raise FileNotFoundError(f"Missing evidence presentation registry: {registry_path}")
-        if json.loads(registry_path.read_text(encoding="utf-8")) != registry_dict:
+        committed = json.loads(registry_path.read_text(encoding="utf-8"))
+        if _without_generated_on(committed) != _without_generated_on(registry_dict):
             raise ValueError(f"Evidence presentation registry is stale: {registry_path}")
         if not partial_path.is_file():
             raise FileNotFoundError(f"Missing evidence presentation partial: {partial_path}")

@@ -226,6 +226,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-09-29 | #4605 | Add a per-page "Report a problem" footer control: opens a prefilled content-correction GitHub issue with the page URL and build revision, with a mailto fallback for readers without a GitHub account, and no third-party tracking (#4605). |
 | 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
+| 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
 | 2026-09-30 | #4538 | Add a Binder `environment.yml` installing from `requirements.txt` so it opens the notebook scaffolds in JupyterLab (Binder build unverified), a shared Binder-launch include on every book's Notebook Workflow section and the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` for per-page source downloads; the devcontainer half is blocked, see the PR's Blocked section. |
 | 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
 | 2026-09-29 | #4599 | Consolidate the 7 cross-page "Recent Models" inline history scripts into a shared `initCategoryHistory()` in `js/history.js`; remove the 8 single-page "Recent X" history widgets on resources pages that only ever recorded the page itself; add Jest coverage for `history.js` and `home.js`. |
@@ -443,7 +444,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4477 | Correct companion opening and whole-swing ledger accounting, state, wrench transport and inference; preserve book scope and verify archived examples plus rebuilt HTML/PDF. |
 
 | 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
-
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 | 2026-09-29 | #4557 | Constrain prose to a 60-75ch reading measure on standard article/book pages and self-host the Playfair Display heading font, removing the Google Fonts CDN request and its CSP allowances. |
 | 2026-09-29 | #4520 | Add `scripts/generate_freshness_report.py`, generating an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old without ever using a build date as a review date. |
@@ -485,3 +485,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |
 | 2026-09-29 | #4519 | Park [WEB-04.5] maturity badges for the Article Index and Books Hub as blocked: its dependency WEB-02.7 (#4501) and the maturity vocabulary (WEB-04.1 #4515) are still open; WEB-04.2 (#4516) has since merged. |
 | 2026-09-29 | #4513 | Record blocker: layered-page-template rollout deferred pending WEB-03.1/03.4 (#4506/#4509); WEB-03.5 (#4510) has since merged. |
+| 2026-09-30 | #4705 | Regenerate stale evidence-presentation and research-release trust artifacts, make generator `--check` ignore `generated_on`, and add a committed-artifact freshness test. |

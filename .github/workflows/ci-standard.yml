@@ -425,7 +425,7 @@ jobs:
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           python --version
-          pip install --upgrade pip setuptools wheel
+          pip install --upgrade pip setuptools wheel build
           pip install --no-cache-dir -r requirements.txt pytest-timeout pytest-cov PyQt6
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
       - name: Install Tool Requirements
@@ -455,6 +455,11 @@ jobs:
         run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
+      - name: Build Wheel and Run Smoke Test
+        run: |
+          pip install build
+          python -m build --wheel
+          python scripts/smoke_test_installed_wheel.py
       - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
