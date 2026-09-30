@@ -1,15 +1,21 @@
-# Persona start paths configuration (issue #4409).
+# Persona start paths configuration (issue #4409, extended in #4488).
 #
 # Each persona defines a user archetype with their primary goals,
-# mapped to content clusters (from categories.yml) and exact-commit
-# workflow pages (from models/programming/workflows.qmd).
+# mapped to content clusters (from categories.yml), exact-commit
+# workflow pages (from models/programming/workflows.qmd), and structured
+# route recommendations:
+# - first_page: The initial page to start reading
+# - route_30min: A focused 30-minute introduction
+# - route_deep: A comprehensive deep-dive sequence
 #
-# This file is validated by tests/test_persona_start_paths.py.
+# This file is validated by tests/test_persona_start_paths.py and used to generate
+# _includes/generated/persona-cards.qmd via scripts/generate_persona_cards.py.
 
 personas:
   learner:
     name: "Learner"
-    description: "New to control theory or biomechanics, building foundational knowledge"
+    tagline: "New to control theory or biomechanics"
+    description: "Build foundational knowledge from first principles. Start with the mathematics and physics before diving into applications."
     icon: "📚"
     content_clusters:
       - theory-core
@@ -18,11 +24,21 @@ personas:
     workflows:
       - installation-verification
     primary_path: "learning-path-foundations.html"
+    first_page:
+      title: "Foundations Learning Path"
+      path: "resources/learning-path-foundations.html"
+    route_30min:
+      title: "Lagrangian Mechanics Reference"
+      path: "articles/lagrangian-reference.html"
+    route_deep:
+      title: "Volume I: The Geometry of Motion"
+      path: "articles/The_Geometry_of_Motion/quarto/index.html"
     goal: "Understand the mathematical and physical foundations"
 
   researcher:
     name: "Researcher"
-    description: "Academic or scientific focus on theory and methodology"
+    tagline: "Academic or scientific focus"
+    description: "Deep-dive into theoretical foundations, research methods, and peer-reviewed analysis techniques."
     icon: "🔬"
     content_clusters:
       - theory-core
@@ -33,11 +49,21 @@ personas:
       - reference-double-pendulum-analysis
       - reference-simulation-report
     primary_path: "learning-path-control-theory.html"
+    first_page:
+      title: "Control Theory Learning Path"
+      path: "resources/learning-path-control-theory.html"
+    route_30min:
+      title: "Theory Part 1 — Control-Affine Derivation"
+      path: "articles/theory-part1.html"
+    route_deep:
+      title: "Tangent Space Series"
+      path: "pages/tangent-hyperplanes.html"
     goal: "Deep-dive into theoretical foundations and research methods"
 
   integrator:
     name: "Integrator"
-    description: "Software developer integrating AffineDrift tools and APIs"
+    tagline: "Software developer integrating tools"
+    description: "Integrate AffineDrift computational tools and APIs into your own projects."
     icon: "🔧"
     content_clusters:
       - tools
@@ -47,11 +73,21 @@ personas:
       - installation-verification
       - program-catalog-export
     primary_path: "../models/programming/index.html"
+    first_page:
+      title: "Programming Hub"
+      path: "models/programming/index.html"
+    route_30min:
+      title: "Software Tools Catalog"
+      path: "resources/resources-software.html"
+    route_deep:
+      title: "Governed Workflows"
+      path: "models/programming/workflows.html"
     goal: "Integrate computational tools into your own projects"
 
   experimentalist:
     name: "Experimentalist"
-    description: "Hands-on simulation, modeling, and data analysis"
+    tagline: "Hands-on simulation and modeling"
+    description: "Run simulations, analyze experimental data, and explore computational models."
     icon: "🧪"
     content_clusters:
       - models
@@ -63,11 +99,21 @@ personas:
       - reference-simulation-plot
       - launch-monitor-import-export
     primary_path: "../models/programming/programs.html"
+    first_page:
+      title: "Programs & Models"
+      path: "models/programming/programs.html"
+    route_30min:
+      title: "Model Ladder"
+      path: "models/model-ladder.html"
+    route_deep:
+      title: "Governed Workflows"
+      path: "models/programming/workflows.html"
     goal: "Run simulations and analyze experimental data"
 
   reviewer:
     name: "Reviewer"
-    description: "Critical evaluation of claims, methodologies, and evidence"
+    tagline: "Critical evaluation of claims"
+    description: "Evaluate scientific claims, review methodologies, and contribute critical analysis."
     icon: "🔍"
     content_clusters:
       - critique
@@ -76,11 +122,21 @@ personas:
       - companion-export
       - zero-torque-counterfactual
     primary_path: "research-reviews.html"
+    first_page:
+      title: "Research Reviews"
+      path: "resources/research-reviews.html"
+    route_30min:
+      title: "Critiques & Responses"
+      path: "critiques/index.html"
+    route_deep:
+      title: "Scientific Claim Audit"
+      path: "reports/scientific-claim-audit.md"
     goal: "Evaluate scientific claims and contribute critical reviews"
 
   contributor:
     name: "Contributor"
-    description: "Contributing to the project: code, content, or community"
+    tagline: "Contributing to the project"
+    description: "Join the community and contribute code, content, or critical reviews."
     icon: "🤝"
     content_clusters:
       - site-information
@@ -90,4 +146,64 @@ personas:
       - program-catalog-export
       - companion-export
     primary_path: "../pages/collaborate.html"
+    first_page:
+      title: "Collaborate"
+      path: "pages/collaborate.html"
+    route_30min:
+      title: "About & Authority"
+      path: "pages/about.html"
+    route_deep:
+      title: "Development Roadmap"
+      path: "pages/development-roadmap.html"
     goal: "Join the community and contribute to the project"
+
+  golfer-coach:
+    name: "Curious Golfer / Coach"
+    tagline: "Physics, equipment, and swing mechanics"
+    description: "Explore the mechanics, shaft dynamics, and impact physics of the golf swing from a scientific perspective. Notice: AffineDrift is a scientific and theoretical mechanics resource; it does not provide swing instruction or swing coaching."
+    icon: "⛳"
+    content_clusters:
+      - impact-ball-flight
+      - technology
+      - putting
+      - resources
+    workflows:
+      - launch-monitor-import-export
+      - zero-torque-counterfactual
+    primary_path: "learning-path-golf-science.html"
+    first_page:
+      title: "Golf Science Learning Path"
+      path: "resources/learning-path-golf-science.html"
+    route_30min:
+      title: "Impact Dynamics & Oblique Collision"
+      path: "articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html"
+    route_deep:
+      title: "The Physics of Golf Monograph"
+      path: "articles/The_Physics_of_Golf/quarto/index.html"
+    instruction_disclaimer: "Notice: AffineDrift is a scientific and theoretical mechanics resource. It does not provide swing instruction, swing fixes, or personal coaching."
+    goal: "Understand the physics and mechanics of the swing and equipment"
+
+  student:
+    name: "Student"
+    tagline: "Coursework, robotics, and biomechanics"
+    description: "Study rigid-body mechanics, optimal control, and human movement dynamics with open code and reproducible examples."
+    icon: "🎓"
+    content_clusters:
+      - theory-core
+      - motor-control
+      - reference
+      - resources
+    workflows:
+      - installation-verification
+      - reference-double-pendulum-simulation
+    primary_path: "learning-path-foundations.html"
+    first_page:
+      title: "Foundations Learning Path"
+      path: "resources/learning-path-foundations.html"
+    route_30min:
+      title: "Lagrangian Mechanics Reference"
+      path: "articles/lagrangian-reference.html"
+    route_deep:
+      title: "Biomechanics & Motor Control Path"
+      path: "resources/learning-path-biomechanics.html"
+    goal: "Learn mathematical modeling of movement and robotic systems"
