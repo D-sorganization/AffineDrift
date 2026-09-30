@@ -7,7 +7,7 @@ description: "Critique and response context for Causal Masking in Drift Superpos
 
 ## Summary of Concern
 
-The framework relies on the "Superposition of Drift and Input" ($\dot{x} = f(x) + g(x)u$) to attribute causality. It labels $f(x)$ as "Passive Drift" and $g(x)u$ as "Input". While this is algebraically true _at an instant_, it is causally misleading _over time_.
+The framework relies on the "Superposition of Drift and Input" ($\dot{x} = f(x) + G(x)u$) to attribute causality. It labels $f(x)$ as "Passive Drift" and $G(x)u$ as "Input". While this is algebraically true _at an instant_, it is causally misleading _over time_.
 
 A significant portion of $f(x)$ (specifically the velocity-dependent terms: Coriolis, Centrifugal, Damping) is directly "induced" by the magnitude of previous inputs. For example, a high centrifugal force (Drift) exists only because the golfer previously applied torque (Input) to accelerate the system. By categorizing these forces as "Drift" (and implying they are "Passive" or "Free"), the framework obscures the fact that the golfer _paid_ for them energetically in the past.
 
