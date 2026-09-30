@@ -27,11 +27,11 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
   Three mobile equations use contained scrolling; both ends and numbers inspected.
 - The first standalone render and persistent cached browser session are excluded
   from accepted evidence. Root configuration was restored; fresh `iaa-final`
-  browser confirmed revised text. Preview 8770 remains an owned temporary service.
+  browser confirmed revised text. Preview 8770 stopped; later Windows localhost binds were refused. Accepted render evidence predates this environment limitation.
 - `iaa-biomechanics-review.md`, `iaa-biomechanics-final-render-verification.json`, prior
   records and dependency carry-forward under `reports/technical-review/` explain
   source access limits, numerical cases, exact bytes and preserved historical scope.
-- Eight findings bound through quote-only checkpoint `3a6d7fcd`; book metadata carries forward the changed PDF
+- Eight findings bound through test-style checkpoint `2be29ec3`; book metadata carries forward the changed PDF
   without renewing other scientific or book-map browser reviews. Corpus pending
   count: 142 sources. Whole-book and whole-corpus acceptance remain incomplete.
 - Final qualification: nominal acceleration integrals require absolutely continuous
@@ -40,9 +40,10 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
   includes its article code-tools metadata. Final dependency receipt preserves
   prior book scopes, dates and render revisions.
 - CI follow-up: name the test gravity constant; scientific sources and PDF unchanged.
-  Preserve the publication receipt; bind the test-only correction before push.
+  Test-only checkpoint `2be29ec3` preserves all scientific sources and assertions; 821 tracked Python files pass the complete quality check.
 - Next: inspect final validation evidence on PR #4709,
   inspect final CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
+- Next corpus scope: #4710 records verified two-hand wrench/contact evidence defects; no article edits yet. Two Flash inventories completed and independently checked.
 - Coordination: session `technical-review-20260930-resume`, issue #4706; development
   log DL-#4706. Existing web-feature consolidations remain under their live owners.
 
