@@ -31,6 +31,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Unifies the 404 page's contact address with About/Contact (`dieterolson@AffineDrift.com`, not the personal Gmail address it previously pointed to). The page's search-box mention and its five suggested-destination links were already present. The other half of the acceptance criteria — explicit "Start Here" and "Library" links — is blocked: neither target exists yet (`pages/start-here.qmd` is #4486, tier:strong, still open; the "Library" navbar grouping is part of the unmerged WEB-02.1 navbar restructure, also tier:strong). See the PR's Blocked section.
 - **Next step:** Once #4486 (Start Here page) and WEB-02.1 (Library navbar grouping) land, add the two links to `404.qmd` and close out the remainder of this issue's acceptance criteria.
 
+### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
@@ -81,6 +82,14 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** claude
 - **PR:** not created
+- **Issue:** #4567 (epic #4569)
+- **Branch:** `claude/issue-4567`
+- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass)
+- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
+- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
+
 - **Issue:** #4588 (epic #4594)
 - **Branch:** `claude/issue-4588`
 - **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
