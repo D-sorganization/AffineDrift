@@ -34,6 +34,11 @@ Verbose output (shows found references/URLs):
 python scripts/link-checker.py --verbose
 ```
 
+Write broken-link warnings (file, url, reason, archive.org suggestion) as JSON:
+```bash
+python scripts/link-checker.py --external-only --json-report report.json
+```
+
 ### Exit Codes
 
 - `0`: All checks passed
@@ -44,8 +49,17 @@ python scripts/link-checker.py --verbose
 
 The workflow runs automatically on:
 - **Pull requests**: Changes to .md, .qmd, or link-checker itself
-- **Scheduled**: Daily at 2 AM UTC (detects broken external URLs)
+- **Scheduled**: Weekly, Monday at 2 AM UTC (detects broken external URLs)
 - **Manual**: Trigger via workflow_dispatch
+
+On the scheduled and manual runs, broken external links are reported to a
+single open tracking issue titled "Weekly external link report" (labels
+`ci`, `report`, `automation`) — the issue body is updated in place on each
+run, not duplicated, and is closed automatically once all links resolve
+again. DOI links (`doi.org`, `dx.doi.org`) are checked by following their
+redirect to the resolved page, since a DOI resolves to its target through an
+HTTP redirect by design. Each reported broken link includes a suggested
+[Wayback Machine](https://web.archive.org) fallback URL.
 
 ### Pre-commit Hooks
 

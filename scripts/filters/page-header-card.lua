@@ -30,6 +30,69 @@ local function escape_html(str)
   return (str:gsub("[&<>'\"']", map))
 end
 
+local function normalize_state(raw)
+  if raw == nil then return nil end
+  local s = stringify(raw):lower():gsub("^%s+", ""):gsub("%s+$", "")
+  if s == "" then return nil end
+
+  if s == "available" or s == "avail" or s == "canonical" then
+    return "available"
+  elseif s == "validated" or s == "valid" or s == "verified" or s == "reviewed" then
+    return "validated"
+  elseif s == "experimental" or s == "experiment" or s == "exploratory" or s == "draft" then
+    return "experimental"
+  elseif s == "planned" or s == "scaffold" or s == "scaffolding" or s:match("^in%s*progress") then
+    return "planned"
+  elseif s == "deprecated" or s == "retired" or s == "archived" or s == "obsolete" then
+    return "deprecated"
+  elseif s == "opinion" or s == "editorial" or s == "speculative" then
+    return "opinion"
+  else
+    return s:gsub("%s+", "-"):gsub("[^%w%-]", "")
+  end
+end
+
+local ICONS = {
+  ["available"] = '<svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+  ["validated"] = '<svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>',
+  ["experimental"] = '<svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31L4.1 19.34A2 2 0 0 0 5.8 22h12.4a2 2 0 0 0 1.7-2.66L14 9.31V2"></path><path d="M8.5 2h7"></path><path d="M7 16h10"></path></svg>',
+  ["planned"] = '<svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
+  ["deprecated"] = '<svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>',
+  ["opinion"] = '<svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>'
+}
+
+local function compute_how_to_read_path()
+  local input_file = ""
+  if PANDOC_STATE and PANDOC_STATE.input_files and #PANDOC_STATE.input_files > 0 then
+    input_file = PANDOC_STATE.input_files[1] or ""
+  end
+
+  input_file = input_file:gsub("\\", "/")
+  local repo_rel = input_file:match(".*AffineDrift/(.*)$")
+  if repo_rel then
+    input_file = repo_rel
+  end
+
+  local dir = input_file:match("^(.*)/[^/]+$") or ""
+  if dir == "" or dir == "." then
+    return "pages/how-to-read.html#publication-states"
+  end
+  if dir == "pages" then
+    return "how-to-read.html#publication-states"
+  end
+  if dir:match("^pages/") then
+    local _, count = dir:gsub("/", "/")
+    return string.rep("../", count) .. "how-to-read.html#publication-states"
+  end
+
+  dir = dir:gsub("^[A-Za-z]:/", ""):gsub("^%./", "")
+  local count = 1
+  for _ in dir:gmatch("/") do
+    count = count + 1
+  end
+  return string.rep("../", count) .. "pages/how-to-read.html#publication-states"
+end
+
 function Pandoc(doc)
   local meta = doc.meta
 
@@ -118,12 +181,16 @@ function Pandoc(doc)
 
   if has_status then
     local variant = status_str:lower():gsub("%s+", "-"):gsub("[^%w%-]", "")
+    local canonical = normalize_state(status_str) or variant
+    local icon = ICONS[canonical] or ""
+    local href = compute_how_to_read_path()
+    local title_attr = escape_html(status_str .. " — Click to Read Publication State Definition")
     table.insert(items,
       '    <div class="page-header-item page-header-item--maturity">\n' ..
       '      <dt class="page-header-label">Status</dt>\n' ..
       '      <dd class="page-header-value">\n' ..
-      '        <span class="badge badge--maturity badge--' .. escape_html(variant) .. '">' ..
-      escape_html(status_str) .. '</span>\n' ..
+      '        <a href="' .. escape_html(href) .. '" class="badge badge--maturity status-badge status-badge--' .. escape_html(canonical) .. ' badge--' .. escape_html(variant) .. '" title="' .. title_attr .. '">' ..
+      icon .. '<span class="status-badge__text">' .. escape_html(status_str) .. '</span></a>\n' ..
       '      </dd>\n' ..
       '    </div>'
     )
