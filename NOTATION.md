@@ -1,21 +1,4 @@
-## Mathematical Notation Reference
-
-**Unified notation conventions for AffineDrift documentation**
-
 This document serves as the authoritative reference for all mathematical symbols, notation conventions, and sign conventions used across Physics of Golf, Geometry of Motion, and all articles.
-
----
-
-## Table of Contents
-
-1. [Canonical Control-Affine Terminology](#canonical-control-affine-terminology)
-2. [Coordinate Systems & Rotation](#coordinate-systems--rotation)
-3. [Group Theory Notation](#group-theory-notation)
-4. [Vectors & Tensors](#vectors--tensors)
-5. [Physical Quantities](#physical-quantities)
-6. [Sign Conventions](#sign-conventions)
-7. [Symbol Overloading Reference](#symbol-overloading-reference)
-8. [Component Notation](#component-notation)
 
 ---
 

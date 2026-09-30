@@ -348,4 +348,5 @@ def test_content_dirs_constant() -> None:
         "models",
         "repositories",
         "books",
+        "evidence",
     )
