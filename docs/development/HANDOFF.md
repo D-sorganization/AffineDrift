@@ -140,6 +140,73 @@
 
 ---
 
+# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: feat/web-01-3-extend-personas-4488
+- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
+- Implementation commit: SELF
+- Pull request: #4638
+- Governing issue/epic: #4488 (epic #4496)
+
+## Objective and Status
+
+- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
+- Status: PR #4638 created, awaiting auto-merge
+- Completed:
+  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
+  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
+  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
+  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
+  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
+  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
+  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all checks pass.
+  - Keyed change-log row in `SPEC.md` to #4638.
+- Remaining: Arm auto-merge and release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
+  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
+  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
+  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
+  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
+  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
+  - `SPEC.md`: Added change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
+- `python -m src.tools.site_link_gate` — PASS (0 errors)
+- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Monitor PR #4638 CI and auto-merge into main.
+
+## Change Log
+
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+
+---
+
 # Website Review and Draft Board Backlog — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory `/home/user/AffineDrift`.
@@ -538,7 +605,6 @@ The user resumed the complete corpus goal and authorized parallel agy Gemini
 - Next: continue the
   corpus. The current CSV count is 154 full audits pending, plus whole-book
   reconciliation. Do not infer completion from this batch or a passing site gate.
-
 
 ---
 

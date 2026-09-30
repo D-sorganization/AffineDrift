@@ -358,7 +358,7 @@ export function initReadingTime() {
     svgClock.append(path1Clock, path2Clock);
 
     const spanText = document.createElement("span");
-    spanText.textContent = `${minutes} min read`;
+    spanText.textContent = `${minutes} min read (estimate)`;
 
     timeDiv.append(svgClock, spanText);
 
