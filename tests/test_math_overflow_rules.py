@@ -68,6 +68,61 @@ def _math_display_overflow_rules(css: str) -> list[tuple[str, str]]:
     ]
 
 
+def _iter_rules_with_media(css: str):
+    """Yield (media_query_or_None, selector, body) for every leaf rule.
+
+    Unlike `_iter_rules`, this keeps track of which `@media` block (if any)
+    encloses each rule, so callers can tell a base-level declaration apart
+    from its responsive breakpoint override for the *same* selector.
+    """
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.DOTALL)
+    media_stack: list[str] = []
+    header_start = 0
+    i = 0
+    while i < len(css):
+        char = css[i]
+        if char == "{":
+            header = css[header_start:i].strip()
+            if header.startswith("@"):
+                media_stack.append(header)
+                header_start = i + 1
+            else:
+                close = css.index("}", i)
+                body = css[i + 1 : close].strip()
+                if header:
+                    yield (media_stack[-1] if media_stack else None), header, body
+                i = close
+                header_start = i + 1
+        elif char == "}":
+            if media_stack:
+                media_stack.pop()
+            header_start = i + 1
+        i += 1
+
+
+def _bodies_for_selector(css: str, selector_token: str, *, media_contains: str | None) -> list[str]:
+    """Bodies of rules whose selector list contains exactly `selector_token`.
+
+    `media_contains` selects the scope: `None` for base (non-media) rules, or
+    a substring like `"768px"` to scope to that breakpoint's `@media` block.
+    """
+    out = []
+    for media, selector, body in _iter_rules_with_media(css):
+        if "webkit-scrollbar" in selector:
+            continue
+        parts = {part.strip() for part in selector.split(",")}
+        if selector_token not in parts:
+            continue
+        if media_contains is None:
+            if media is not None:
+                continue
+        else:
+            if media is None or media_contains not in media:
+                continue
+        out.append(body)
+    return out
+
+
 class TestNoDuplicateMathOverflowRules:
     def test_custom_scss_defines_no_math_overflow_rule(self):
         """The duplicate rule set must be removed from custom.scss entirely.
@@ -82,16 +137,29 @@ class TestNoDuplicateMathOverflowRules:
         assert "mjx-container" not in code_only
 
     def test_styles_css_has_exactly_one_rule_set(self):
-        """Exactly one base rule plus its two responsive breakpoints remain.
+        """One shared rule set plus one `.math.display`-only rule, per breakpoint.
 
-        Before the fix, styles.css alone had two independent base rules (plus
-        their own breakpoints), on top of the duplicate in custom.scss — six
-        overlapping rules in total defining conflicting overflow-y/padding/
-        font-size values for the same elements.
+        Before the *first* fix, styles.css alone had two independent base
+        rules (plus their own breakpoints), on top of the duplicate in
+        custom.scss — six overlapping rules in total defining conflicting
+        overflow-y/padding/font-size values for the same elements.
+
+        The shared rule (`mjx-container[jax="CHTML"][display="true"]`,
+        `.MathJax_Display`, `.math.display`) carries the overflow/scrollbar
+        declarations common to all three. `padding-top` and `scroll-behavior`
+        must stay on a `.math.display`-only rule instead of joining the
+        shared one, because MathJax renders `mjx-container` *inside*
+        `span.math.display` — giving both elements the same top padding
+        doubles the visible gap above every display equation. That is one
+        shared rule + one `.math.display`-only rule, per scope (base + 2
+        breakpoints) = 6 rules.
         """
         css = _read("styles.css")
         rules = _math_display_overflow_rules(css)
-        assert len(rules) == 3, f"expected 1 base rule + 2 breakpoints, got: {rules}"
+        assert len(rules) == 6, (
+            f"expected 3 shared rules (base + 2 breakpoints) plus 3 "
+            f".math.display-only rules (base + 2 breakpoints), got: {rules}"
+        )
 
     def test_consolidated_rule_preserves_effective_computed_values(self):
         """The merged rule must reproduce exactly what the old cascade rendered.
@@ -114,3 +182,49 @@ class TestNoDuplicateMathOverflowRules:
         assert "-webkit-overflow-scrolling: touch" in bodies
         assert "font-size: 0.9em !important" in bodies
         assert "font-size: 0.85em !important" in bodies
+
+    def test_padding_top_and_scroll_behavior_are_scoped_to_math_display_only(self):
+        """`padding-top`/`scroll-behavior` must apply to `.math.display` alone.
+
+        Before the PR (origin/main), only the bare `.math.display` wrapper
+        span carried `padding-top`/`scroll-behavior` — MathJax's own
+        `mjx-container`/`.MathJax_Display` never did. The consolidation must
+        preserve that split rather than folding all three selectors into one
+        rule, or `mjx-container` (rendered *inside* `span.math.display`)
+        picks up a second `padding-top` and every display equation gets a
+        doubled top gap, moving the 390px mobile math snapshots.
+        """
+        css = _read("styles.css")
+
+        math_display_base = " ".join(
+            _bodies_for_selector(css, ".math.display", media_contains=None)
+        )
+        assert "padding-top: 1rem" in math_display_base
+        assert "scroll-behavior: smooth" in math_display_base
+
+        mobile_padding = {"768px": "0.75rem", "480px": "0.5rem"}
+        for breakpoint, expected in mobile_padding.items():
+            mobile_body = " ".join(
+                _bodies_for_selector(css, ".math.display", media_contains=breakpoint)
+            )
+            assert f"padding-top: {expected}" in mobile_body, (
+                f"expected .math.display padding-top: {expected} at {breakpoint}, "
+                f"got: {mobile_body}"
+            )
+
+        for other_selector in (".MathJax_Display", 'mjx-container[jax="CHTML"][display="true"]'):
+            other_base = " ".join(_bodies_for_selector(css, other_selector, media_contains=None))
+            assert "padding-top" not in other_base, (
+                f"{other_selector} must not get padding-top (doubles the top gap "
+                f"MathJax already gets from its `.math.display` wrapper): {other_base}"
+            )
+            assert (
+                "scroll-behavior" not in other_base
+            ), f"{other_selector} must not get scroll-behavior: {other_base}"
+            for breakpoint in mobile_padding:
+                other_mobile = " ".join(
+                    _bodies_for_selector(css, other_selector, media_contains=breakpoint)
+                )
+                assert (
+                    "padding-top" not in other_mobile
+                ), f"{other_selector} must not get padding-top at {breakpoint}: {other_mobile}"
