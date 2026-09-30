@@ -32,6 +32,8 @@ CANONICAL_JS_NAMES = (
     "accessibility.js",
     "bibliography.js",
     "dark-mode-toggle.js",
+    "dataset-explorer.js",
+    "dataset-explorer-ui.js",
     "dcr-visualizer.js",
     "dcr-visualizer-ui.js",
     "equation-runtime-gate.js",

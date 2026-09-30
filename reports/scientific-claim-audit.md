@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 243
+- Reviewed: 247
 - Deferred: 0
 - Exempt: 3
 
@@ -21,7 +21,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
 | `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` | 1 |
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 2 |
-| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 7 |
+| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 8 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
@@ -190,6 +190,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/tip_mass_omission.html` | `critiques/tip_mass_omission.md` | 1 |
 | `/critiques/validation_dimensionality_gap.html` | `critiques/validation_dimensionality_gap.md` | 1 |
 | `/critiques/ztcf_identifiability.html` | `critiques/ztcf_identifiability.md` | 1 |
+| `/evidence/claims.html` | `evidence/claims.qmd` | 2 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
@@ -219,13 +220,16 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
 | `/pages/contact.html` | `pages/contact.qmd` | 3 |
 | `/pages/content-inventory.html` | `pages/content-inventory.qmd` | 3 |
+| `/pages/contributor-guide.html` | `pages/contributor-guide.qmd` | 1 |
 | `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
 | `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 6 |
 | `/pages/glossary.html` | `pages/glossary.qmd` | 1 |
 | `/pages/how-to-read.html` | `pages/how-to-read.qmd` | 1 |
+| `/pages/notation-quick-reference.html` | `pages/notation-quick-reference.qmd` | 2 |
 | `/pages/notation.html` | `pages/notation.qmd` | 4 |
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
+| `/pages/parameters.html` | `pages/parameters.qmd` | 2 |
 | `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` | 1 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
@@ -439,6 +443,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Reviewed | — | None | `crit-tip-mass-omission` | 0 |
 | `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Reviewed | — | None | `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Reviewed | — | None | `crit-ztcf-identifiability` | 0 |
+| `ad-route-3de14a21ce3c` | `/evidence/claims.html` | Reviewed | — | None | None | 1 |
 | `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |
@@ -469,13 +474,16 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Reviewed | — | None | None | 1 |
 | `ad-route-6e4e4be935a4` | `/pages/contact.html` | Reviewed | — | None | None | 1 |
 | `ad-route-f0c3cff4bc42` | `/pages/content-inventory.html` | Reviewed | — | None | None | 1 |
+| `ad-route-1678ef51a577` | `/pages/contributor-guide.html` | Reviewed | — | None | None | 0 |
 | `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Reviewed | — | None | None | 1 |
 | `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | — | None | None | 1 |
 | `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | — | None | None | 5 |
 | `ad-route-39185f792b9a` | `/pages/glossary.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c15406d82939` | `/pages/how-to-read.html` | Reviewed | — | None | None | 0 |
+| `ad-route-842027bd7c5a` | `/pages/notation-quick-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | — | None | None | 2 |
 | `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
+| `ad-route-dad0b4221d85` | `/pages/parameters.html` | Reviewed | — | None | None | 0 |
 | `ad-route-223cd7be3af2` | `/pages/privacy-policy.html` | Reviewed | — | None | None | 1 |
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
