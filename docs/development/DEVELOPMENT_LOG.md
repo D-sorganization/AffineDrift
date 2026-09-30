@@ -104,6 +104,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** The catalog generator read a nonexistent `title` key for programs and engines (the manifest field is `name`), so every program and engine row rendered its ID as its title; fixed to read `name` (and `engine_id` for the programs' Engine column), dropped the Engines page's fabricated Maturity column (no such field exists in the manifest schema), and regenerated the committed pages. Labelled the 16 unpinned `repositories/*.qmd` UpstreamDrift root links as "navigation only" per the acceptance criteria, since they point at the live repository rather than a reviewed commit.
 - **Next step:** Open the draft PR and record its number here; awaiting frontier-agent review.
 
+### DL-#4551 · Parameters Page and Notation Quick-Reference Card
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4627 (draft)
+- **Issue:** #4551 (epic #4552)
+- **Branch:** `claude/issue-4551`
+- **Paths:** `pages/parameters.qmd`, `pages/notation-quick-reference.qmd`, `pages/notation.qmd`, `NOTATION.md`, `PARAMETERS.md`, `sitemap.xml`, `tests/test_notation_and_parameters_pages.py`, `data/trust/claim_audit_inventory.json`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (merged origin/main; added reviewed claim-audit records for `/pages/parameters.html` and `/pages/notation-quick-reference.html`.)
+- **Summary:** Renders `PARAMETERS.md` via a new `pages/parameters.qmd`, adds a condensed one-page printable `pages/notation-quick-reference.qmd`, and removes the duplicate heading/manual table of contents that `pages/notation.qmd` inherited from `NOTATION.md`. The acceptance criterion "every core page links notation from its header card" is not implemented: the header-card component (#4507 / WEB-03.2) does not exist yet, so there is nothing to link from; see the PR's Blocked section.
+- **Next step:** Owner/reviewer decides whether to accept the interim scope (3 of 4 criteria) or hold for #4507, then mark shipped once the PR merges.
+
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review

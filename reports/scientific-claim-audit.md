@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 242
+- Reviewed: 244
 - Deferred: 0
 - Exempt: 3
 
@@ -224,8 +224,10 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 6 |
 | `/pages/glossary.html` | `pages/glossary.qmd` | 1 |
 | `/pages/how-to-read.html` | `pages/how-to-read.qmd` | 1 |
+| `/pages/notation-quick-reference.html` | `pages/notation-quick-reference.qmd` | 2 |
 | `/pages/notation.html` | `pages/notation.qmd` | 4 |
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
+| `/pages/parameters.html` | `pages/parameters.qmd` | 2 |
 | `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` | 1 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
@@ -473,8 +475,10 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | — | None | None | 5 |
 | `ad-route-39185f792b9a` | `/pages/glossary.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c15406d82939` | `/pages/how-to-read.html` | Reviewed | — | None | None | 0 |
+| `ad-route-842027bd7c5a` | `/pages/notation-quick-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | — | None | None | 2 |
 | `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
+| `ad-route-dad0b4221d85` | `/pages/parameters.html` | Reviewed | — | None | None | 0 |
 | `ad-route-223cd7be3af2` | `/pages/privacy-policy.html` | Reviewed | — | None | None | 1 |
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
