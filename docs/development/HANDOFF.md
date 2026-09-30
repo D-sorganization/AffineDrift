@@ -1,3 +1,38 @@
+# Implementation Handoff — Align Node Versions (#4601)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `AffineDrift-worktrees/claude-4601`.
+- Branch `claude/issue-4601`, commit `SELF`; pull request: not created yet.
+- Governing issue: #4601 (WEB-13.7, epic #4604 / E13 — Build, Reliability, and
+  Maintainability). Acceptance criterion: "One Node version, pinned in one
+  file (for example `.nvmrc`) and read by both CI and the Dockerfile."
+- **Status: partial.** `.nvmrc` now pins Node 22 as the single authority.
+  `Dockerfile`'s `ARG NODE_MAJOR` and `CLAUDE.md`'s Docker section now match
+  it, and `tests/test_single_source_pins.py` gained four checks (nvmrc format,
+  Dockerfile-matches-nvmrc, every workflow's `node-version` matches nvmrc,
+  CLAUDE.md documents the pinned version) that fail on any future drift.
+- **Not done — needs a `.github/workflows/**` edit, out of scope for this
+  session:** CI still hard-codes `node-version: "22"` in six `actions/setup-node`
+  steps across `ci-standard.yml`, `cross-browser-nightly.yml`, and
+  `deploy-website.yml` rather than reading `.nvmrc` via that action's
+  `node-version-file` input. The new test only asserts the hard-coded values
+  stay consistent with `.nvmrc`; it does not make CI read the file, so the
+  acceptance criterion's "read by ... CI" half is not literally satisfied yet
+  (it happens to already be correct because CI already used 22, which is why
+  the Dockerfile/CLAUDE.md were the stale side, not CI).
+- Validation: `pytest tests/test_single_source_pins.py` (10 passed, confirmed
+  RED before the fix with 4 failures, GREEN after);
+  `python -m scripts.check_spec_changelog` (passed).
+
+## Next Steps
+
+1. In a session allowed to touch `.github/workflows/**`, change each of the
+   6 `actions/setup-node@...` steps in `ci-standard.yml` (x3),
+   `cross-browser-nightly.yml` (x1), and `deploy-website.yml` (x2) from
+   `with: node-version: "22"` to `with: node-version-file: .nvmrc`.
+2. Re-run `tests/test_single_source_pins.py` to confirm it still passes once
+   CI reads the file directly.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`

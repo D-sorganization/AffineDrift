@@ -48,7 +48,7 @@ quarto render                                          # build the site
 
 ## Docker (Reproducible Environment)
 
-Use Docker to get an environment that exactly matches CI — Python 3.12, Quarto, and Node.js 20 pre-installed.
+Use Docker to get an environment that exactly matches CI — Python 3.12, Quarto, and Node.js 22 pre-installed.
 
 ```bash
 # Build the dev image (includes all Python + JS deps)
@@ -732,7 +732,6 @@ branch, plus one re-run if `main` moved) instead of at least N cycles under a
 
 <!-- END FLEET-MANAGED: pr-queue-consolidation -->
 
-
 ---
 
 <!-- BEGIN FLEET-MANAGED: agent-tiers -->
@@ -783,7 +782,6 @@ The full guide is in
 [`docs/agents/AGENT_TIER_ROUTING.md`](https://github.com/D-sorganization/Repository_Management/blob/main/docs/agents/AGENT_TIER_ROUTING.md).
 
 <!-- END FLEET-MANAGED: agent-tiers -->
-
 
 ## Specification
 
