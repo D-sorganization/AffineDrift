@@ -4,15 +4,12 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 243
-- Deferred: 3
+- Reviewed: 246
+- Deferred: 0
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
-- [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054): 1 routes
-- [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 1 routes
-- [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060): 1 routes
 
 ## Reviewed Evidence
 
@@ -41,8 +38,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
+| `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 52 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
-| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
+| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 18 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 1 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
 | `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 5 |
@@ -117,6 +115,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | `articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | `articles/The_Physics_of_Golf/quarto/ch14_complete_swing.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | `articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.qmd` | 10 |
 | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | `articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.qmd` | 9 |
 | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | `articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | `articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.qmd` | 1 |
@@ -193,6 +192,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/ztcf_identifiability.html` | `critiques/ztcf_identifiability.md` | 1 |
 | `/evidence/claims.html` | `evidence/claims.qmd` | 2 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
+| `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 8 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
 | `/models/hybrid-impact-contact.html` | `models/hybrid-impact-contact.qmd` | 6 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
@@ -213,7 +213,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/programming/programs.html` | `models/programming/programs.qmd` | 4 |
 | `/models/programming/provenance.html` | `models/programming/provenance.qmd` | 4 |
 | `/models/programming/workflows.html` | `models/programming/workflows.qmd` | 4 |
-| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 28 |
+| `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 29 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/accessibility.html` | `pages/accessibility.qmd` | 1 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
@@ -290,7 +290,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
-| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 9 |
+| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 16 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 0 |
@@ -367,7 +367,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d7bbf52529cb` | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4b5f92354a9e` | `/articles/The_Physics_of_Golf/quarto/ch13_interdisciplinary.html` | Reviewed | — | None | None | 0 |
 | `ad-route-17268df76f0d` | `/articles/The_Physics_of_Golf/quarto/ch14_complete_swing.html` | Reviewed | — | None | None | 0 |
-| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Deferred | [#4054](https://github.com/D-sorganization/AffineDrift/issues/4054) | None | None | 6 |
+| `ad-route-7af4b117f3ec` | `/articles/The_Physics_of_Golf/quarto/ch15_ground_reaction_forces.html` | Reviewed | — | None | None | 6 |
 | `ad-route-a9e0bb2b2321` | `/articles/The_Physics_of_Golf/quarto/ch16_muscle_to_joint_torques.html` | Reviewed | — | None | None | 5 |
 | `ad-route-0c1fc851ee95` | `/articles/The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-80ef06755aaa` | `/articles/The_Physics_of_Golf/quarto/ch18_inverse_dynamics_parallel.html` | Reviewed | — | None | None | 0 |
@@ -444,7 +444,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Reviewed | — | None | `crit-ztcf-identifiability` | 0 |
 | `ad-route-3de14a21ce3c` | `/evidence/claims.html` | Reviewed | — | None | None | 1 |
 | `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
-| `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Deferred | [#4060](https://github.com/D-sorganization/AffineDrift/issues/4060) | None | None | 0 |
+| `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cd5e133fe28e` | `/models/hybrid-impact-contact.html` | Reviewed | — | None | None | 0 |
 | `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | — | None | None | 0 |
