@@ -3,6 +3,9 @@ project:
   output-dir: docs
   post-render:
     - python3 scripts/post_render_citations.py
+    # Moves the static skip link ahead of the navbar (#4566); Quarto places
+    # include-before-body content inside <main>.
+    - python3 scripts/move_skip_link.py
   render:
     - "*.qmd"
     - "pages/**/*.qmd"
@@ -312,6 +315,8 @@ format:
     include-in-header:
       - _includes/site-head.html
       - _includes/mathjax-loader.html
+    include-before-body:
+      - _includes/skip-link.html
     include-after-body:
       - _includes/site-after-body.html
 

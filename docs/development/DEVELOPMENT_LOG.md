@@ -182,6 +182,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds a reader-facing guide routing corrections, claim critiques, dataset contributions, and chapter reviews to their GitHub issue templates, linked from Collaborate. The "linked from every WEB-03.4 block" acceptance criterion is deferred because WEB-03.4 does not exist yet.
 - **Next step:** Owner/frontier review of the draft PR.
 
+### DL-#4566 · Skip Link and Focus Order Without JavaScript
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4624
+- **Issue:** #4566 (epic #4569 — E9 Accessibility Conformance)
+- **Branch:** `claude/issue-4566`
+- **Paths:** `_includes/skip-link.html`, `_quarto.yml`, `js/navigation.js`, `js/main.js`, `tests/navigation.test.js`, `tests/e2e/accessibility.spec.js`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (Jest: 25 suites, 424 passed/19 skipped, 0 failed. New Playwright E2E coverage added for `/`, `/pages/overview.html` — a stand-in for the not-yet-built `pages/start-here.qmd` from WEB-01.1 — and one article; not run locally because it requires a full Quarto site render, which this session's tooling does not permit invoking, so CI will exercise it.)
+- **Summary:** Moves the skip-to-content link into static HTML via a new `include-before-body` partial so it works without JavaScript and is never duplicated by the JS injector; `initSkipToContent` now only enhances the existing static link's click-focus behavior instead of creating the element.
+- **Next step:** Reviewing frontier agent confirms `#quarto-document-content` is present on the full-layout home page in the CI site render (the removed JS fallback previously hedged that it might not be).
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review

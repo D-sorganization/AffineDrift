@@ -997,6 +997,106 @@
   (citation sample pages, generated-reports currency) pass in isolation.
 - Next: after merge, close the nine originals as superseded by the consolidated PR.
 
+# Skip Link and Focus Order Without JavaScript — Issue #4566
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `AffineDrift-worktrees/claude-4566`.
+- Branch `claude/issue-4566`, commit `SELF`; pull request:
+  [#4624](https://github.com/D-sorganization/AffineDrift/pull/4624) (draft).
+- Governing issue: #4566 (`tier:cli`), a child of epic #4569 (E9 —
+  Accessibility Conformance). Objective: the skip-to-content link was
+  injected by `js/navigation.js::initSkipToContent` and risked duplicating
+  or simply not existing before JS ran; make exactly one skip link present
+  in the static HTML and verify focus order without JavaScript.
+- Completed work:
+  - Added `_includes/skip-link.html` (a static `<a class="skip-to-content"
+    href="#quarto-document-content">` before-body partial) and wired it via
+    `format.html.include-before-body` in `_quarto.yml`, so the link renders
+    for every page and is the first element in `<body>`.
+  - Rewrote `js/navigation.js::initSkipToContent` to stop creating/inserting
+    a link (previous behavior) and instead only attach a click handler to
+    the existing static `.skip-to-content` link that sets `tabindex="-1"`
+    on the href target (if it doesn't already declare one) and focuses it —
+    this is a progressive enhancement only; the link and its basic jump
+    work without JavaScript via native same-document fragment navigation.
+    `js/main.js`'s call site is unchanged.
+  - Added Jest coverage in `tests/navigation.test.js` (4 new cases: no link
+    created when none exists in static HTML, no duplication when one does,
+    click focuses the href target and sets tabindex, an existing tabindex
+    on the target is preserved).
+  - Added Playwright E2E coverage in `tests/e2e/accessibility.spec.js`
+    (`test.use({ javaScriptEnabled: false })`) asserting exactly one
+    `.skip-to-content` element and that it is first in Tab focus order with
+    a resolvable href target, on three routes: `/` (home page),
+    `/pages/overview.html`, and one article
+    (`/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html`).
+  - Removed the old, weak "should have skip to main content link" test that
+    only asserted *something* was focusable after one Tab press.
+- Key decision / open question for review: the acceptance criteria ask for
+  focus order to be verified on "the home page, Start Here, and one
+  article." `pages/start-here.qmd` does not exist yet — it is proposed by
+  WEB-01.1, a separate `tier:strong` issue that has not been built. I used
+  `pages/overview.qmd` (`/pages/overview.html`) as the closest existing
+  entry-style page instead; this is called out in the test file and should
+  be swapped to the real Start Here route once WEB-01.1 ships.
+- Review correction (Opus, same PR): a local `quarto render index.qmd`
+  showed the home page does carry `id="quarto-document-content"`, but Quarto
+  places `include-before-body` inside `<main>`, after the navbar, so the link
+  was not first in focus order. Added `scripts/move_skip_link.py`, registered as
+  `project.post-render` in `_quarto.yml`, which moves the single static link to
+  be the first child of `<body>` (idempotent; rejects duplicates). Verified on
+  the rendered `docs/index.html`; `tests/test_move_skip_link.py` — 8 passed.
+- Validation commands and outcomes:
+  - `npx jest tests/navigation.test.js` — 13 passed (4 new).
+  - `npx jest` (full suite) — 25 suites, 424 passed, 19 skipped, 0 failed.
+  - `npx html-validate "_includes/skip-link.html" --config .htmlvalidate.json`
+    — 0 errors.
+  - `npx playwright test` — **not run**. `playwright.config.js`'s
+    `webServer` serves the pre-rendered `docs/` directory, which requires
+    `quarto render` (~14 min per `CLAUDE.md`) first; the `quarto` CLI is
+    blocked from this session's Bash tool. CI's `e2e-tests` lane renders
+    the full site and will run this suite.
+- Blockers / risks:
+  - Start Here route substitution (above) — cosmetic/naming risk only, the
+    underlying fix is route-agnostic.
+- Review round 2 (Opus, same PR): reviewer flagged that pages built by
+  `src/tools/latex_to_html.py` from `_templates/latex_article.html` (which
+  loads `js/main.js` at line 183) used to get a skip link injected by the old
+  `initSkipToContent()` and now get none, since that function only enhances
+  an existing static link (see above) and `_templates/latex_article.html` has
+  no static one. Investigated whether that pipeline is still live: `grep` for
+  `latex_to_html`/`latex_article.html` across `scripts/`,
+  `.github/workflows/`, `_quarto.yml`, `Makefile`, and `package.json` returns
+  no matches — no automated build, CI, or deploy step invokes
+  `latex_to_html.py`, `convert_all_latex.py`, or the template. The only two
+  entries in `convert_all_latex.py::CONVERSIONS`
+  (`content/wrist-as-universal-joint/Wrist_Universal_Claude.html`,
+  `content/inverse-dynamics-analysis/.../inverse_dynamics_article.html`) are,
+  in the committed tree today, hand-authored redirect/reading-guide stub
+  pages that do not use `_templates/latex_article.html` or load
+  `js/main.js` at all — so no page currently shipped on the site was built by
+  this pipeline either. `latex_to_html.py` remains a real, documented,
+  manually-invoked developer tool (`src/tools/README.md`,
+  `src/tools/CONVERSION_GUIDE.md`), so it was not deleted, but per the
+  reviewer's own branching instruction ("if it is provably unused, do not
+  change code; report the evidence instead") `_templates/latex_article.html`
+  was left unchanged — no static skip link was added there, and no new test
+  was added for it. **Open follow-up (not fixed here):** if a developer runs
+  this tool again to publish a new page, that page will still ship without a
+  skip link; consider adding the static markup preemptively or filing a
+  tracked issue before the tool is next used.
+  Also updated PR #4624's body to mention the new `project.post-render` step
+  `scripts/move_skip_link.py`.
+- Next steps for a continuing agent or reviewer:
+  1. Watch the draft PR's `e2e-tests` CI run for the new skip-link specs.
+  2. Once `pages/start-here.qmd` ships under WEB-01.1, replace
+     `/pages/overview.html` in `SKIP_LINK_ROUTES`
+     (`tests/e2e/accessibility.spec.js`) with the real Start Here route.
+  3. Address any review feedback on PR #4624 and watch its `e2e-tests` run.
+  4. If `src/tools/latex_to_html.py` is ever wired into an automated build or
+     used to publish a new page, add the same static skip-link markup as
+     `_includes/skip-link.html` to `_templates/latex_article.html` (with a
+     matching `id` on its `<main class="main-content">`) first.
 # Implementation Handoff — Deploy Website route coverage (#4548 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-route-coverage`

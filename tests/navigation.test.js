@@ -4,8 +4,64 @@ const {
   initSmoothScroll,
   getDocumentOffsetTop,
   patchTocSectionsOffsetTop,
+  initSkipToContent,
 } = require('../js/navigation.js');
 
+
+describe('skip to content link (issue #4566)', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  test('does not create a skip link when the static HTML has none', () => {
+    document.body.innerHTML = '<main id="quarto-document-content"></main>';
+
+    initSkipToContent();
+
+    expect(document.querySelectorAll('.skip-to-content')).toHaveLength(0);
+  });
+
+  test('does not duplicate the skip link already present in the static HTML', () => {
+    document.body.innerHTML = `
+      <a href="#quarto-document-content" class="skip-to-content">Skip to main content</a>
+      <main id="quarto-document-content"></main>
+    `;
+
+    initSkipToContent();
+
+    expect(document.querySelectorAll('.skip-to-content')).toHaveLength(1);
+  });
+
+  test('focuses the href target when the static skip link is activated', () => {
+    document.body.innerHTML = `
+      <a href="#quarto-document-content" class="skip-to-content">Skip to main content</a>
+      <main id="quarto-document-content"></main>
+    `;
+
+    initSkipToContent();
+    document.querySelector('.skip-to-content').dispatchEvent(
+      new MouseEvent('click', { bubbles: true, cancelable: true }),
+    );
+
+    const target = document.getElementById('quarto-document-content');
+    expect(target.getAttribute('tabindex')).toBe('-1');
+    expect(document.activeElement).toBe(target);
+  });
+
+  test('preserves a target that already declares a tabindex', () => {
+    document.body.innerHTML = `
+      <a href="#main" class="skip-to-content">Skip to main content</a>
+      <main id="main" tabindex="0"></main>
+    `;
+
+    initSkipToContent();
+    document.querySelector('.skip-to-content').dispatchEvent(
+      new MouseEvent('click', { bubbles: true, cancelable: true }),
+    );
+
+    expect(document.getElementById('main').getAttribute('tabindex')).toBe('0');
+  });
+});
 
 describe('generated table of contents', () => {
   beforeEach(() => {
