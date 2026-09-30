@@ -13,7 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 FIGURES_DIR = REPO_ROOT / "articles/figures/core_theory"
 
 ARTICLE_FIGURE_MAP = {
-    "articles/controllability-drift-ratio.qmd": [
+    "articles/drift-control-ratio.qmd": [
         "fig_dcr_vector_decomposition.svg",
         "fig_dcr_swing_phases.svg",
         "fig_dcr_reachability_tubes.svg",

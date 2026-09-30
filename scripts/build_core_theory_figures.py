@@ -1,7 +1,7 @@
 """Deterministic figure generator for Core Theory pages.
 
 Generates 9 high-resolution, lightweight SVG figures across:
-- articles/controllability-drift-ratio.qmd (3 figures)
+- articles/drift-control-ratio.qmd (3 figures)
 - articles/zero-torque-counterfactual.qmd (3 figures)
 - articles/superposition.qmd (3 figures)
 """
