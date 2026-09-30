@@ -231,6 +231,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
 | 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
 | 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
+| 2026-09-30 | #4563 | Remove nine of the ten `--grep-invert` E2E exclusions from `ci-standard.yml` whose defects were already fixed (#4200) but never actually re-run in CI; fix a touch-target test bug that miscounted CSS-hidden elements as non-compliant; leave the tenth (pixel-snapshot baselines) excluded pending a fleet-runner `--update-snapshots` pass. |
 | 2026-09-29 | #4588 | Add warn-mode CI lint and plain-language glossary keeping internal governance vocabulary out of reader-facing prose; partial reduction on hub/entry pages pending #4587 (#4588). |
 | 2026-09-29 | #4591 | Add `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages against the WEB-12.1 threshold. |
 | 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |
@@ -435,6 +436,9 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 
+| 2026-09-29 | #4549 | Rebuild the Datasets resource page as a generated catalogue from `data/datasets.yml` with verified licence/access/schema/checksum fields for third-party datasets and an "AffineDrift Data Artefacts" section for `data/ztcf`, `data/research_protocols`, and `schemas`, dropping the `mini.s-shot.ru` thumbnail host. |
 | 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
+| 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
+| 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
