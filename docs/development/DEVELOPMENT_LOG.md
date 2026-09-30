@@ -68,6 +68,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_metrics_preload_removed.py` 2/2 pass)
 - **Summary:** Removes the sitewide `<link rel="preload" href="/js/metrics.js" as="script">` from `_includes/site-head.html`; only `resources/bibliography.qmd` loads `metrics.js`, so every other route paid for an unused preload that triggers a console warning.
 - **Next step:** Open the draft PR for review.
+### DL-#4572 · Remove Stale Root `sitemap.xml` and `feed.xml`
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4572 (WEB-10.3; epic #4579 / E10)
+- **Branch:** `claude/issue-4572`
+- **Paths:** `scripts/generate_sitemap.py`, `scripts/generate_feed.py`, `scripts/check_quarto_render_coverage.py`, `scripts/check_root_hygiene.py`, `scripts/README.md`, `CONTRIBUTING.md`, `.gitignore`, `tests/test_generate_sitemap.py`, `tests/test_generate_feed.py`, `tests/test_page_titles_and_descriptions.py`, `tests/test_research_readiness_content.py`, `sitemap.xml` (deleted), `feed.xml` (deleted)
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_sitemap.py tests/test_generate_feed.py tests/test_check_quarto_render_coverage.py tests/test_page_titles_and_descriptions.py tests/test_research_readiness_content.py` 85/85 pass; `python scripts/check_quarto_render_coverage.py` and `python scripts/check_root_hygiene.py --check` both pass against the live tree with the root files gone; ruff and black --line-length 100 clean)
+- **Summary:** The root `sitemap.xml`/`feed.xml` were tracked files only refreshed when someone manually ran the generators and committed the result, so they drifted stale (feed dated 10 Jun 2026 while `main` had moved on). Both generators previously also wrote an unconditional root copy alongside their `--output` target; that write is removed, so they now write only the requested path (`docs/` by default). Three consumers read the root `sitemap.xml` as a page registry — `check_quarto_render_coverage.py` (a CI gate in `ci-standard.yml`/`deploy-website.yml`, which ran *before* the workflow's own sitemap-regeneration step, so it was validating against the stale committed snapshot), `tests/test_page_titles_and_descriptions.py`, and `tests/test_research_readiness_content.py` — all three now call `generate_sitemap.build_pages()` (extracted from the generator's `main()`) directly, so there is no persisted file left to go stale. The tracked root copies are deleted (`git rm`) and `/sitemap.xml`/`/feed.xml` added to `.gitignore` as a backstop; `check_root_hygiene.py`'s allowlist no longer lists them. Both generators are documented in `scripts/README.md` (output path corrected; `generate_feed.py` was previously undocumented there) and `CONTRIBUTING.md`. The feed's real-article-dates criterion remains blocked on the still-open #4545 (WEB-07.3), consistent with #4606/DL-#4606.
+- **Next step:** Open the PR for review.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review

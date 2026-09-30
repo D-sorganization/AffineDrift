@@ -12,7 +12,7 @@ build time. Output is deterministic for a given content state because undated
 
 Usage::
 
-    python3 scripts/generate_feed.py                      # writes docs/feed.xml + feed.xml
+    python3 scripts/generate_feed.py                      # writes docs/feed.xml
     python3 scripts/generate_feed.py --output docs/feed.xml
 """
 
@@ -296,11 +296,6 @@ def main() -> int:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(xml, encoding="utf-8")
     logger.info("Wrote %d feed items to %s", min(len(items), DEFAULT_CAP), output)
-
-    # Also write a root copy so Quarto resource-copying stays consistent with
-    # sitemap.xml behaviour.
-    root_copy = Path("feed.xml")
-    root_copy.write_text(xml, encoding="utf-8")
     return 0
 
 
