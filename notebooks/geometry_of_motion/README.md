@@ -4,11 +4,12 @@ This directory hosts executable companion notebooks for the textbook series.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/D-sorganization/AffineDrift/main?urlpath=lab/tree/notebooks/geometry_of_motion)
 
-Launch the badge above to run every scaffolded notebook in this directory in
-a browser-based JupyterLab session, with no local install required. Binder
-builds the environment from the repository's `environment.yml`, which
-installs from `requirements-docker.lock` (the same pinned dependency set used
-by the project's Docker dev image).
+Launch the badge above to open the notebook scaffolds in this directory in a
+browser-based JupyterLab session, with no local install required. Each
+scaffold currently only establishes its chapter title cell (see "Bridge
+contract" below); it does not yet contain the chapter's executable content.
+Binder builds the environment from the repository's `environment.yml`, which
+installs from `requirements.txt`.
 
 ## Bridge contract
 

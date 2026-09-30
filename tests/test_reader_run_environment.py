@@ -34,17 +34,18 @@ def _read(relative: str) -> str:
     return (REPO_ROOT / relative).read_text(encoding="utf-8")
 
 
-def test_environment_yml_reuses_the_single_pinned_lock_file() -> None:
+def test_environment_yml_installs_from_requirements_txt() -> None:
     """Binder's environment.yml must not fork a second Python dependency set.
 
-    requirements-docker.lock is the repo's single source of pinned Python
-    dependencies (Dockerfile `dev`/`builder` stages, #4126). Binder's
-    environment.yml must install from it rather than declaring its own list,
-    which would drift the moment one side is updated.
+    It must install from requirements.txt rather than declaring its own list.
+    It must NOT install from requirements-docker.lock: that lock pins
+    `pywinpty==3.0.3` with no platform marker, a Windows-only wheel with no
+    source distribution, which fails to build on Binder's Linux image.
     """
     config = yaml.safe_load(_read("environment.yml"))
     pip_section = next(dep["pip"] for dep in config["dependencies"] if isinstance(dep, dict))
-    assert any("requirements-docker.lock" in entry for entry in pip_section)
+    assert any("requirements.txt" in entry for entry in pip_section)
+    assert not any("requirements-docker.lock" in entry for entry in pip_section)
 
 
 def test_articles_code_tools_enabled_for_source_download() -> None:

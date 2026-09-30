@@ -75,17 +75,24 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4538`.
-- Branch `claude/issue-4538`, commit `SELF`; pull request: to be opened as a
-  draft by this session.
+- Branch `claude/issue-4538`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4682 (draft, targets
+  `main`).
 - Governing issue: #4538 (WEB-06.8, child of epic #4543 "[E6] Interactive
   Models and Reproducibility"). Objective: give readers a Binder environment
   and a devcontainer to run the textbook's notebooks, plus source-download
   links on pages that show code.
 - Completed:
   - `environment.yml` (root): Binder/repo2docker conda environment. Installs
-    Python dependencies from `requirements-docker.lock` (`pip: [-r
-    requirements-docker.lock]`) instead of restating them, so Binder cannot
-    drift from the Docker `dev`/`builder` stages' pinned set (#4126).
+    Python dependencies from `requirements.txt` (`pip: [-r
+    requirements.txt]`). Does **not** install from `requirements-docker.lock`
+    (the Docker `dev`/`builder` stages' pinned set, #4126): that lock pins
+    `pywinpty==3.0.3` with no platform marker, a Windows-only wheel with no
+    source distribution, which fails to build on Binder's Linux image, and it
+    is stale relative to `requirements.txt`. `requirements.txt` is
+    cross-platform and already covers what the notebooks import (numpy,
+    scipy, sympy, matplotlib, jupyter). The Dockerfile and
+    `requirements-docker.lock` are intentionally untouched by this PR.
   - `_includes/notebook-binder-launch.qmd`: one shared resource-link fragment
     pointing `mybinder.org` at `notebooks/geometry_of_motion` (JupyterLab file
     browser), included via `{{< include ../_includes/notebook-binder-launch.qmd >}}`
@@ -168,25 +175,32 @@
   - Full `python3 -m pytest tests/ --cov=src --timeout=120` suite: started in
     this worktree; see the PR description for the completed run (long-running
     — see Next Steps if it is still in flight when the PR is opened).
-- Not verified (cannot be, from this session): the Binder launch link itself
-  was not clicked against a live mybinder.org build (this sandbox has no
-  outbound access to mybinder.org's build service), so "Launch Binder works
-  for the filled notebooks" is verified by construction (a valid
-  `environment.yml` that installs the same pinned dependencies the Docker dev
-  image already uses successfully) rather than by an observed successful
-  Binder build. The PR reviewer or a follow-up should click the badge once
-  this branch is on `main` (Binder builds from a branch/ref that must already
+- Not verified (cannot be, from this session): repo2docker was never actually
+  run against `environment.yml`, and the Binder launch link was not clicked
+  against a live mybinder.org build (this sandbox has no outbound access to
+  mybinder.org's build service). The Binder build is **unverified**, not
+  "verified by construction" — that overclaim in an earlier revision of this
+  handoff was wrong and has been corrected. The PR reviewer or a follow-up
+  should actually click the badge (or run `repo2docker .` locally) once this
+  branch is on `main` (Binder builds from a branch/ref that must already
   contain `environment.yml`, which is why the link targets `main` rather than
   a historical pinned commit SHA, unlike the existing per-chapter Colab/GitHub
-  links).
+  links). Also note the notebooks the badge opens are scaffolds — each
+  currently contains only a title cell (`from __future__ import annotations`
+  plus a `CHAPTER` string), not the chapter's executable content — so "opens
+  the notebook scaffolds in JupyterLab" is the accurate claim, not "run the
+  notebooks."
 
 ## Next Steps
 
 1. A session with permission to write under `.devcontainer/` adds the file
    given above and a CI build step, per the Blocked section.
-2. Open the draft PR with a `Blocked:` section covering the devcontainer gap.
-3. Once merged to `main`, click the Binder badge to confirm a real build
-   succeeds (first build will be slow; subsequent ones are cached by Binder).
+2. Actually run `repo2docker .` or click the Binder badge once this branch is
+   on `main` to confirm the build succeeds (first build will be slow;
+   subsequent ones are cached by Binder) — this has not been done yet.
+3. Once the notebook scaffolds gain real executable content (separate,
+   unscoped work), revisit whether `requirements.txt` still covers their
+   imports.
 
 ---
 

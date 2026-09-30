@@ -2,9 +2,11 @@
 #
 # mybinder.org (repo2docker) builds this file's conda environment and launches
 # JupyterLab against it. Python dependencies are not restated here: they are
-# installed from requirements-docker.lock, the repo's single source of pinned
-# Python dependencies (Dockerfile `dev`/`builder` stages, #4126), so Binder
-# cannot drift from the Docker dev environment.
+# installed from requirements.txt instead of requirements-docker.lock, because
+# the lock file pins pywinpty==3.0.3 with no platform marker -- a Windows-only
+# wheel that has no source distribution, so it fails to build on Binder's
+# Linux image. requirements.txt is cross-platform and already covers what the
+# scaffolded notebooks import (numpy, scipy, sympy, matplotlib, jupyter).
 name: affinedrift
 channels:
   - conda-forge
@@ -12,4 +14,4 @@ dependencies:
   - python=3.12
   - pip
   - pip:
-      - -r requirements-docker.lock
+      - -r requirements.txt
