@@ -1,43 +1,44 @@
-# Implementation Handoff — Make src/ Installable and Version It (#4532)
+# Implementation Handoff — Consolidate Web PRs and Wave Reduction (#4704)
 
 ## Identity
 
 - Repository: `D-sorganization/AffineDrift`
-- Working directory: `C:/Users/diete/Repositories/AffineDrift`
-- Branch: `fix/web-06-2-make-src-installable-4532`
-- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-consolidated-2`
+- Branch: `chore/web-consolidated-2-2026-09-30`
+- Baseline commit: `4f798475`
 - Implementation commit: `SELF`
-- Pull request: #4613
-- Governing issue/epic: #4532 (epic #4543)
+- Pull request: #4704
+- Governing goal: Reduce open PR count below 10 by consolidating reviewed PRs and redundant drafts
 
 ## Objective and Status
 
-- Objective: Make `src/` installable via standard packaging tools (`pip install .`), build wheel in CI, attach wheel to releases, and verify external module imports outside repo root (#4532).
+- Objective: Consolidate reviewed web PRs, test stability fixes, docker lock fixes, and verifier improvements into PR #4704, merge origin/main, resolve conflicts, verify test suites, update HANDOFF.md, and close superseded PRs to achieve open PR count < 10.
 - Status: ready for review / auto-merge
-- Completed: Added PEP 621 metadata to `pyproject.toml`, configured package discovery for `src*`, added `src/py.typed`, created isolated external smoke test `scripts/smoke_test_installed_wheel.py`, added packaging unit test suite `tests/test_wheel_packaging.py`, updated CI workflows (`ci-standard.yml`, `release.yml`), merged main, and updated `SPEC.md`.
-- Remaining: Push to origin and monitor PR #4613 CI / auto-merge.
+- Completed:
+  - Merged latest `origin/main` (including #4705 and #4613).
+  - Merged `chore/web-consolidated-4-2026-09-30` (incorporating #4707 and #4708).
+  - Merged `fix/web-09-2-axe-dark-mobile-matrix-4562` (#4657).
+  - Merged `fix/web-11-1-one-equation-numbering-scheme-4580` (#4611).
+  - Merged `fix/web-10-2-fix-robots-txt-4571` (#4612).
+  - Merged `fix/verify-waitforfunction-timeouts` (#4699).
+  - Merged `fix/docker-lock-linux` (#4700).
+  - Merged `fix/wrist-sim-moi-hypothesis` (#4702).
+  - Merged `claude/doc-union-repair` (#4703).
+  - Re-generated and verified claim-audit evidence digests and reports.
+  - Confirmed spec change-log integrity and hygiene checks pass.
+- Remaining: Push consolidation branch to origin and verify CI / auto-merge.
 
 ## Files and Decisions
 
-- Files changed:
-  - `pyproject.toml`: Added PEP 621 `[project]` metadata, setuptools package discovery, and dependencies.
-  - `src/py.typed`: Added PEP 561 marker.
-  - `scripts/smoke_test_installed_wheel.py`: Isolated wheel install and external import test.
-  - `tests/test_wheel_packaging.py`: Unit test coverage for wheel packaging, version alignment, and wheel contents.
-  - `.github/workflows/ci-standard.yml`: Added wheel build and smoke test step in CI.
-  - `.github/workflows/release.yml`: Added automated release wheel build and asset upload.
-  - `SPEC.md`: Added change-log row for #4613.
-  - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Packaged `src` namespace as a whole to preserve existing internal and test imports without tree-wide import churn.
+- Files changed: Consolidated commits across the merged branches (SPEC.md, trust inventories, documentation, testing harnesses, Docker lock, and web components).
+- Key decisions: Merged reviewed PRs without force-pushing, resolved conflicts in SPEC.md and claim-audit inventories by preserving all entries and re-running `scripts.regenerate_claim_audit_evidence`.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_wheel_packaging.py` — PASS (4 passed)
-- `python -m ruff check tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
-- `python -m black --check --line-length 100 tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
-- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\handoff_validator.py` — PASS
+- `python -m scripts.check_spec_changelog` — PASS
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- Pre-commit hooks passed on all merge commits.
 
 ## Blockers and Risks
 
@@ -47,7 +48,8 @@
 ## Next Steps
 
 1. Push commit to origin.
-2. Verify PR #4613 checks pass and auto-merge merges into main.
+2. Close superseded PRs with reference to #4704.
+3. Monitor PR #4704 checks and auto-merge.
 
 ## Change Log
 
