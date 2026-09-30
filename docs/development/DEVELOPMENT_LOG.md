@@ -18,6 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4593 · Unify the Contact Channel and Split About From Contact
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit; opening a draft PR immediately after
+- **Issue:** #4593 (WEB-12.7; epic #4594; `tier:ollama`, `complexity:trivial`)
+- **Branch:** `claude/issue-4593`
+- **Paths:** `pages/about.qmd`, `resources/on-ramp-paths.qmd`, `tests/test_contact_channel_unification.py`, `tests/test_404_page.py`, `data/trust/site_trust_surface_audit.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/site-trust-surface-audit.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_contact_channel_unification.py tests/test_404_page.py tests/test_public_site_content_hygiene.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py tests/test_on_ramp_paths.py` 74/74 pass; ruff and black --line-length 100 clean; `scripts.check_spec_changelog` passed.)
+- **Summary:** Retitles `pages/about.qmd` from "About & Contact" to "About" and removes its own `mailto:` link, pointing readers to the Contact page instead, so Contact is the site's single contact page. The contact-address-unification criterion was already satisfied on `main` (fixed by #4495); this closes the remaining two criteria.
+- **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
