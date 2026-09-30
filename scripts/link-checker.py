@@ -38,7 +38,7 @@ class SafeRedirectHandler(HTTPRedirectHandler):
     they must follow it (unlike other external links) to be checked at all.
     """
 
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
+    def redirect_request(self, req, fp, code, msg, headers, newurl) -> "Request | None":
         if not is_safe_url(newurl):
             return None
         return super().redirect_request(req, fp, code, msg, headers, newurl)
