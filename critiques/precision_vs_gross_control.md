@@ -7,11 +7,11 @@ description: 'Critique and response context for Precision vs. Gross Control (The
 
 ## Summary of Concern
 
-The article `articles/controllability-drift-ratio.qmd` argues that because the Drift-Control Ratio (DCR) exceeds 100 in the late downswing, the system becomes effectively uncontrollable ("locked in a drift tube"). It implies that "No meaningful correction is possible." This conflates **Gross Trajectory Control** (reversing or reshaping the swing) with **Fine Outcome Control** (adjusting impact parameters by millimeters or degrees). A 1% control authority on a high-energy system is insufficient to stop the swing, but potentially sufficient to alter the impact location or face angle by the small margins required for error.
+The article `articles/drift-control-ratio.qmd` argues that because the Drift-Control Ratio (DCR) exceeds 100 in the late downswing, the system becomes effectively uncontrollable ("locked in a drift tube"). It implies that "No meaningful correction is possible." This conflates **Gross Trajectory Control** (reversing or reshaping the swing) with **Fine Outcome Control** (adjusting impact parameters by millimeters or degrees). A 1% control authority on a high-energy system is insufficient to stop the swing, but potentially sufficient to alter the impact location or face angle by the small margins required for error.
 
 ## Location
 
-- **Article:** `articles/controllability-drift-ratio.qmd`
+- **Article:** `articles/drift-control-ratio.qmd`
 - **Section:** 5 (Control Authority Collapse), 6.5 (Application to the Golf Swing)
 - **Claim:** "Late Downswing — Cone Collapse... Only the ballistic trajectory remains reachable. No meaningful correction is possible."
 
@@ -64,7 +64,7 @@ Change "Practical Controllability collapses" to "Gross Trajectory Authority coll
 ## Editorial Adjudication and Evidence Boundaries
 
 1. **Historical Versus Corrected State:**
-   The historical article asserted that late in the downswing "no meaningful correction is possible" and claimed that the golfer becomes "locked into a ballistic trajectory". In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), these claims were removed. The article explicitly specifies that instantaneous acceleration ratios do not quantify finite-horizon reachability sets, task-space clubhead delivery tolerances, or terminal impact sensitivity.
+   The historical article asserted that late in the downswing "no meaningful correction is possible" and claimed that the golfer becomes "locked into a ballistic trajectory". In the corrected article (`articles/drift-control-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), these claims were removed. The article explicitly specifies that instantaneous acceleration ratios do not quantify finite-horizon reachability sets, task-space clubhead delivery tolerances, or terminal impact sensitivity.
 
 2. **Critique Boundary and Counterexamples:**
    While the critique properly distinguishes gross kinetic deflection from fine terminal adjustments, the critique itself oversteps its evidence boundaries:

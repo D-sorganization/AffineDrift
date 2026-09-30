@@ -1,67 +1,58 @@
-# Implementation Handoff — Per-Page Citation Metadata and "Cite This Page" Block (#4544)
+# Website Consolidation (Seven Web Issues) — 2026-09-29
 
-## Identity
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `AffineDrift-worktrees/w-ad-web-consolidated`.
+- Branch `claude/website-consolidated-0929`, commit `SELF`; one consolidated
+  draft pull request (see the PR list) supersedes drafts #4615, #4616 and #4618
+  and the unpushed branches for #4608, #4583, #4568 and #4548.
+- Objective: land seven Sonnet 5 CLI-tier website issues in one CI cycle under
+  the PR-queue consolidation rule (RM#1691).
 
-- Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-07-2-citation-metadata-and-cite-block-4544
-- Baseline commit: ef8bc5f7
-- Implementation commit: SELF
-- Pull request: #4646
-- Governing issue/epic: #4544 (epic #4552)
+| Issue | Branch              | Change                                                                   |
+| ----- | ------------------- | ------------------------------------------------------------------------ |
+| #4576 | `claude/issue-4576` | Privacy Policy page (`pages/privacy-policy.qmd`) plus footer link.       |
+| #4582 | `claude/issue-4582` | Uppercase `G(x)` notation; `scripts/check_notation.py` baseline lint.    |
+| #4546 | `claude/issue-4546` | `scripts/filters/schema-jsonld.lua` JSON-LD filter; deletes dead include. |
+| #4608 | `claude/issue-4608` | Website/UX problem issue template plus contract test.                    |
+| #4583 | `claude/issue-4583` | "Drift-Control Ratio" naming; slug `drift-control-ratio` with alias.     |
+| #4568 | `claude/issue-4568` | Accessibility statement page (WCAG 2.1 AA target, #4139 inventory).      |
+| #4548 | `claude/issue-4548` | Render rule plus front matter for all 22 companion bibliographies.       |
 
-## Objective and Status
-
-- Objective: Emit per-page citation metadata (citation_title, citation_author), omit publication date for unverified dates (WEB-07.3), provide a "Cite this page" block with standalone BibTeX download, print stylesheet handling, and validate with Google Scholar metadata checker on sample pages.
-- Status: ready for commit / PR
-- Completed:
-  - Configured `_quarto.yml` with top-level `citation: true`, `format.html.google-scholar: true`, and registered post-render script `scripts/post_render_citations.py`.
-  - Implemented `scripts/post_render_citations.py` to strip Quarto's `NaN` date meta tags on unverified pages, extract BibTeX to a standalone `<stem>.bib` file alongside `.html`, inject an accessible download button into the citation block, and anchor `#citation`.
-  - Implemented `scripts/check_google_scholar_metadata.py` validator enforcing Google Scholar title, author, and verified publication date rules, plus BibTeX download presence.
-  - Updated `css/print.css` with `#quarto-citation { break-inside: avoid; border-top: 1px solid #000 !important; margin-top: 2rem !important; }` and hid `.quarto-citation-bibtex-download` in print.
-  - Added missing `author: "Dieter Olson"` and unverified date metadata to 5 article sources.
-  - Implemented comprehensive TDD suite `tests/test_citation_metadata.py` (7 tests covering config, frontmatter, rendering, unverified date omission, and 3 sample pages).
-  - Regenerated claim audit evidence digests and verified all pre-commit checks pass.
-  - Added change-log row in `SPEC.md`.
-- Remaining: Commit, push, create PR, re-key SPEC.md to PR number, arm auto-merge, and release lease.
-
-## Files and Decisions
-
-- Files changed:
-  - `_quarto.yml`: Top-level citation: true, format.html.google-scholar: true, project.post-render hook.
-  - `scripts/post_render_citations.py`: Post-render citation cleaner and BibTeX download link injector.
-  - `scripts/check_google_scholar_metadata.py`: Google Scholar tag and BibTeX validator.
-  - `css/print.css`: Print styling for citation block.
-  - `articles/*.qmd`: Added author and unverified date metadata where missing.
-  - `tests/test_citation_metadata.py`: Unit and integration test suite.
-  - `SPEC.md`: PR change-log row.
-  - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Post-render Python processing cleanly resolves Quarto's internal JS NaN date evaluation; standalone .bib files generated alongside HTML for simple HTTP downloads; unverified pages strictly omit citation_publication_date.
-- User-owned or unrelated worktree changes: none observed
-
-## Validation
-
-- `pytest tests/test_citation_metadata.py` — PASS (7 passed)
-- `python -m ruff check scripts/post_render_citations.py scripts/check_google_scholar_metadata.py tests/test_citation_metadata.py` — PASS
-- `python -m black --check --line-length 100 scripts/post_render_citations.py scripts/check_google_scholar_metadata.py tests/test_citation_metadata.py` — PASS
-- `npm run lint:css` — PASS
-- `python -m scripts.derive_substantive_dates --check` — PASS (330 files scanned)
-- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- `python -m scripts.check_terminology --baseline config/terminology-baseline.json` — PASS
-- `python scripts/check_spec_changelog.py` — PASS
-
-## Blockers and Risks
-
-- Blockers: none
-- Risks/assumptions: none
-
-## Next Steps
-
-1. Monitor PR #4640 CI and auto-merge into main.
-
----
-
-
+- Key decisions:
+  - `data/trust/claim_audit_inventory.json` was merged by hand: #4583's route
+    rename (`/articles/drift-control-ratio.html`, audit id
+    `ad-route-4a8ccbe60039`) applied, routes re-sorted, then
+    `python -m scripts.regenerate_claim_audit_evidence` after every merge.
+  - `articles/Pinocchio_Project_Outline-bibliography.md` is kept (given front
+    matter) rather than deleted; it holds 194 lines of substantive references.
+  - `articles/controllability-drift-ratio-bibliography.md` keeps its filename;
+    #4583 renamed only the article.
+  - The privacy page's related section was renamed to `## Related Articles`
+    and given a third link so the site gate's related-coverage rule passes.
+- Validation on the consolidated branch:
+  - `python -m pytest -o addopts= tests/test_privacy_policy_page.py
+    tests/test_check_notation.py tests/test_schema_jsonld.py
+    tests/test_companion_hierarchy.py tests/test_website_ux_issue_template.py
+    tests/test_accessibility_statement_page.py
+    tests/test_check_quarto_render_coverage.py tests/test_navbar_ia.py
+    tests/test_public_site_manifest.py tests/test_claim_audit_inventory.py
+    tests/test_site_link_gate.py tests/test_dcr_reachability_contract.py
+    tests/test_dcr_article_rigor.py tests/test_scientific_trust_metadata.py`
+    — 165 passed.
+  - `python -m scripts.link-checker --site-gate --root .` — passed.
+  - `python -m scripts.regenerate_claim_audit_evidence --check` — current.
+  - `python -m scripts.check_spec_changelog` — passed.
+  - Full render and Playwright/axe run in CI only.
+- Blockers/risks: none known. Rendered output is not committed.
+- Next steps:
+  1. Wait for CI on the consolidated PR; fix any failure on this branch.
+  2. Mark ready, verify the remote head, arm via `automerge_guard.py`.
+  3. After merge, close #4615, #4616 and #4618 as superseded and remove the
+     seven `claude-<issue>` worktrees.
+# Implementation Handoff — Deploy Website Verification Fix (#4617)
+# Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
+# Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+# Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 # Configure Search, and Include Maturity in Results — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -152,9 +143,6 @@
   unrelated to this change.
 - Next steps: push the branch, open the draft PR, and watch CI's `e2e-tests` job for the new
   ZTCF search spec.
-
----
-
 # DCR Visualiser Widget — #4535 (WEB-06.5)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -1085,8 +1073,81 @@
 2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
    different threshold than lay blocks.
 3. No further implementation is planned from this session pending review feedback.
-# Implementation Handoff — Build the Page Header Card Component (#4507)
-# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
+
+# Implementation Handoff — Real Publication Dates and Per-Article Change History (#4545)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: ebced38fbe6908492e5c8e2ff08866516f5691c0
+- Implementation commit: SELF
+- Pull request: #4640
+- Governing issue/epic: #4545 (epic #4552)
+
+## Objective and Status
+
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
+- Completed:
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Monitor PR #4640 CI and auto-merge into main.
+
+## Files and Decisions
+
+- Files changed:
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_dates_and_history.py` — PASS (16 passed)
+- `python -m scripts.derive_substantive_dates --check` — PASS
+- `python -m ruff check scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `python -m black --check --line-length 100 scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `npm run lint:css` — PASS
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_root_hygiene.py` — PASS
+- `python -m src.tools.site_link_gate` — PASS
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Monitor PR #4640 CI and auto-merge into main.
+
+## Change Log
+
+- 02507aac — Extend personas to include curious golfer/coach and student (#4488) (#4638).
+- ebced38f — Build the page header card component (#4507) (#4633).
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+
 ---
 
 # Website Review and Draft Board Backlog — 2026-09-29
