@@ -35,6 +35,19 @@ def test_page_links_known_issues_to_the_tracking_issue() -> None:
     assert KNOWN_ISSUES_URL in text
 
 
+def test_page_does_not_present_the_closed_tracking_issue_as_the_live_status() -> None:
+    """Issue #4139 closed as remediated on 2026-09-06; the page must not point
+    readers to it as the current remediation tracker without saying so, and
+    must state the CI axe check's actual current mode (issue #4691)."""
+    text = PAGE.read_text(encoding="utf-8")
+    lowered = text.casefold()
+
+    assert "closed as remediated" in lowered
+    assert "report-only" in lowered
+    assert "https://github.com/D-sorganization/AffineDrift/issues/4561" in text
+    assert "https://github.com/D-sorganization/AffineDrift/issues/4656" in text
+
+
 def test_page_provides_a_contact_route_for_barriers() -> None:
     text = PAGE.read_text(encoding="utf-8")
     assert "contact.html" in text

@@ -92,6 +92,21 @@ def test_privacy_policy_describes_report_a_problem_control_as_click_only() -> No
     assert "nothing is sent automatically" in text.casefold()
 
 
+def test_privacy_policy_csp_claim_matches_img_src_scope() -> None:
+    """The CSP's `img-src` directive allows any HTTPS host (issue #4691), so the
+    page must not claim the Content Security Policy limits external domains
+    without qualifying that images are exempt from that restriction."""
+    text = " ".join(PRIVACY_POLICY.read_text(encoding="utf-8").split())
+    lowered = text.casefold()
+
+    assert "img-src" in text
+    assert "any https host" in lowered
+    assert (
+        "limits which external domains a page is allowed to load resources from or embed"
+        not in lowered
+    )
+
+
 def test_privacy_policy_is_linked_from_the_site_footer() -> None:
     website = yaml.safe_load(QUARTO_CONFIG.read_text(encoding="utf-8"))["website"]
     footer = website["page-footer"]

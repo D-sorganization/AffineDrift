@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4691 | Qualify the Privacy Policy's Content Security Policy sentence (scripts/styles/fonts/frames are restricted to an allowlist; `img-src` permits any HTTPS host) and point the Accessibility Statement's Known Issues section at the closed #4139 scan's actual status instead of citing it as the live tracker (#4691). |
 | 2026-09-29 | #4605 | Add a per-page "Report a problem" footer control: opens a prefilled content-correction GitHub issue with the page URL and build revision, with a mailto fallback for readers without a GitHub account, and no third-party tracking (#4605). |
 | 2026-09-30 | #4695 | Rename six of eight on-ramp-paths.qmd "3 Hours" headings to "2–3 Hours" where the listed steps summed to 120-160 minutes, not 180; add a test summing each tier's `~N min` steps against its heading (#4695). |
 | 2026-09-30 | #4574 | Remove the sitewide `/js/metrics.js` preload from `_includes/site-head.html`; only `resources/bibliography.qmd` loads the script directly, so preloading it on every other route triggered an unused-preload console warning (#4574). |
