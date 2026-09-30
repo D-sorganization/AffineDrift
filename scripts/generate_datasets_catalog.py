@@ -47,7 +47,9 @@ def main(argv: list[str] | None = None) -> int:
             "Datasets catalog is stale; run `python3 -m scripts.generate_datasets_catalog`."
         )
         return 1
-    QMD_PATH.write_text(updated, encoding="utf-8")
+    # LF on every platform: the claim audit pins this file's digest, and a
+    # Windows CRLF write would not match the LF blob git commits.
+    QMD_PATH.write_text(updated, encoding="utf-8", newline="\n")
     logger.info("Regenerated %s", QMD_PATH)
     return 0
 
