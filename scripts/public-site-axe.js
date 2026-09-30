@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /* axe-core accessibility policy for the every-route verifier (ISSUE-4126). */
 
-// axe-core policy (ISSUE-4126): one scan per route on the first evidence cell,
-// reporting only serious/critical impacts. `warn` records violations in the
+// axe-core policy (ISSUE-4126, ISSUE-4562): scan accessibility on the planned
+// evidence matrix cells (including dark theme and mobile viewports), reporting
+// only serious/critical impacts. `warn` records violations in the
 // evidence artifact without failing; `fail` turns them into cell failures.
 // Defaults to 'fail' now that AffineDrift #4139 has closed.
 const AXE_MODES = Object.freeze(['off', 'warn', 'fail']);
@@ -35,8 +36,10 @@ function summarizeAxeViolations(violations) {
 function markAxeCells(plan, mode) {
   const seen = new Set();
   return plan.map((item) => {
-    const scan = mode !== 'off' && !seen.has(item.route);
-    if (scan) seen.add(item.route);
+    const viewportId = item.viewport?.id ?? item.viewport ?? 'default';
+    const key = `${item.route}::${viewportId}::${item.theme}`;
+    const scan = mode !== 'off' && !seen.has(key);
+    if (scan) seen.add(key);
     return { ...item, axe: scan };
   });
 }
@@ -47,8 +50,9 @@ function axePolicyEvidence(options, results) {
   return {
     mode: options.axe,
     impacts: [...AXE_FAILING_IMPACTS],
-    scanned_route_count: scanned.length,
-    routes_with_violations: flagged.map((result) => result.route).sort(),
+    scanned_route_count: new Set(scanned.map((result) => result.route)).size,
+    scanned_cell_count: scanned.length,
+    routes_with_violations: [...new Set(flagged.map((result) => result.route))].sort(),
     violation_count: flagged.reduce((sum, result) => sum + result.axe_violations.length, 0),
   };
 }

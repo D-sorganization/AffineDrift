@@ -409,15 +409,24 @@ describe('axe-core policy (ISSUE-4126)', () => {
     expect(() => summarizeAxeViolations(null)).toThrow(TypeError);
   });
 
-  test('scans each route exactly once unless axe is off', () => {
+  test('scans every matrix cell unless axe is off (#4562)', () => {
     const plan = buildEvidencePlan(fixtureManifest());
     const marked = markAxeCells(plan, 'warn');
-    expect(marked.filter((item) => item.axe).map((item) => item.route)).toEqual([
-      '/',
-      '/articles/example.html',
-    ]);
+    expect(marked.filter((item) => item.axe)).toHaveLength(plan.length);
+    expect(new Set(marked.filter((item) => item.axe).map((item) => item.route))).toEqual(
+      new Set(['/', '/articles/example.html']),
+    );
     expect(markAxeCells(plan, 'off').some((item) => item.axe)).toBe(false);
-    expect(marked).toHaveLength(plan.length);
+  });
+
+  test('deduplicates duplicate cells in the plan if any (#4562)', () => {
+    const plan = [
+      { route: '/', viewport: { id: 'mobile' }, theme: 'light' },
+      { route: '/', viewport: { id: 'mobile' }, theme: 'light' },
+    ];
+    const marked = markAxeCells(plan, 'warn');
+    expect(marked[0].axe).toBe(true);
+    expect(marked[1].axe).toBe(false);
   });
 
   test('summarizes scanned routes and violations without hiding warn-mode findings', () => {
@@ -431,6 +440,7 @@ describe('axe-core policy (ISSUE-4126)', () => {
       mode: 'warn',
       impacts: ['serious', 'critical'],
       scanned_route_count: 3,
+      scanned_cell_count: 3,
       routes_with_violations: ['/a.html', '/b.html'],
       violation_count: 3,
     });
@@ -445,8 +455,41 @@ describe('axe-core policy (ISSUE-4126)', () => {
       mode: 'fail',
       impacts: ['serious', 'critical'],
       scanned_route_count: 2,
+      scanned_cell_count: 2,
       routes_with_violations: [],
       violation_count: 0,
+    });
+  });
+
+  test('supports multi-cell matrix scanning across viewports and themes (#4562)', () => {
+    const plan = buildEvidencePlan(fixtureManifest(), {
+      viewportIds: ['desktop', 'mobile'],
+      themes: ['light', 'dark'],
+    });
+    const marked = markAxeCells(plan, 'fail');
+    expect(marked.filter((item) => item.axe)).toHaveLength(8);
+    expect(new Set(marked.map((item) => `${item.viewport.id}:${item.theme}`))).toEqual(
+      new Set([
+        'desktop:light',
+        'desktop:dark',
+        'mobile:light',
+        'mobile:dark',
+      ]),
+    );
+
+    const results = [
+      { route: '/', axe_violations: [] },
+      { route: '/', axe_violations: [] },
+      { route: '/articles/example.html', axe_violations: [{ id: 'color-contrast' }] },
+      { route: '/articles/example.html', axe_violations: [{ id: 'color-contrast' }] },
+    ];
+    expect(axePolicyEvidence({ axe: 'fail' }, results)).toEqual({
+      mode: 'fail',
+      impacts: ['serious', 'critical'],
+      scanned_route_count: 2,
+      scanned_cell_count: 4,
+      routes_with_violations: ['/articles/example.html'],
+      violation_count: 2,
     });
   });
 });
