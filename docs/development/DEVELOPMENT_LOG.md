@@ -19,6 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 ## Active
 
 ### DL-#4557 · Typography and Reading Comfort
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4557 (epic #4560)
+- **Branch:** `claude/issue-4557`
+- **Paths:** `styles.css`, `css/tokens/typography.css`, `_includes/site-head.html`, `_templates/latex_article.html`, `_quarto.yml`, `fonts/playfair-display/`, `scripts/check_root_hygiene.py`, `tests/test_typography_reading_comfort.py`, `pages/privacy-policy.qmd`, `tests/test_privacy_policy_page.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: 7/7 test_typography_reading_comfort.py pass; test_responsive_layout_contract.py, test_css_bundle.py, test_minify_deploy_assets.py, test_public_site_manifest.py, test_root_hygiene.py all pass; check_css_architecture, check_styles_budget, check_root_hygiene, check_spec_changelog, bundle_css --check all pass; ruff/black clean; review-fix round: test_privacy_policy_font_claim_matches_mathjax_loader added to tests/test_privacy_policy_page.py, confirmed RED then GREEN; claim-audit evidence regenerated for pages/privacy-policy.qmd)
+- **Summary:** Constrains prose to a 60-75ch reading measure on standard article/book pages (`#quarto-document-content`, via descendant selector since Quarto wraps headed content in `<section class="level*">`) and self-hosts the Playfair Display heading font (removes the Google Fonts CDN request and its CSP allowances). Review fix: reworded the privacy page's font-host claim to correctly scope it around MathJax's own jsDelivr-hosted math fonts on math pages.
+- **Next step:** Push branch, open draft PR referencing `Fixes #4557`.
+
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review
@@ -226,14 +238,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created
-- **Issue:** #4557 (epic #4560)
-- **Branch:** `claude/issue-4557`
-- **Paths:** `styles.css`, `css/tokens/typography.css`, `_includes/site-head.html`, `_templates/latex_article.html`, `_quarto.yml`, `fonts/playfair-display/`, `scripts/check_root_hygiene.py`, `tests/test_typography_reading_comfort.py`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: 7/7 test_typography_reading_comfort.py pass; test_responsive_layout_contract.py, test_css_bundle.py, test_minify_deploy_assets.py, test_public_site_manifest.py, test_root_hygiene.py all pass; check_css_architecture, check_styles_budget, check_root_hygiene, check_spec_changelog, bundle_css --check all pass; ruff/black clean)
-- **Summary:** Constrains prose to a 60-75ch reading measure on standard article/book pages (`#quarto-document-content`, via descendant selector since Quarto wraps headed content in `<section class="level*">`) and self-hosts the Playfair Display heading font (removes the Google Fonts CDN request and its CSP allowances).
-- **Next step:** Push branch, open draft PR referencing `Fixes #4557`.
-
 - **Issue:** #4548 (epic #4552)
 - **Branch:** `claude/issue-4548`
 - **Paths:** `_quarto.yml`, `articles/*-bibliography.md` (21 files), `articles/proximal-distal-energy-transfer.qmd`, `articles/wrist-universal-joint.qmd`, `scripts/check_quarto_render_coverage.py`, `tests/test_check_quarto_render_coverage.py`, `docs/development/content-architecture.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
