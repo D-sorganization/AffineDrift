@@ -117,6 +117,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Renders `PARAMETERS.md` via a new `pages/parameters.qmd`, adds a condensed one-page printable `pages/notation-quick-reference.qmd`, and removes the duplicate heading/manual table of contents that `pages/notation.qmd` inherited from `NOTATION.md`. The acceptance criterion "every core page links notation from its header card" is not implemented: the header-card component (#4507 / WEB-03.2) does not exist yet, so there is nothing to link from; see the PR's Blocked section.
 - **Next step:** Owner/reviewer decides whether to accept the interim scope (3 of 4 criteria) or hold for #4507, then mark shipped once the PR merges.
 
+### DL-#4607 · Contributor and Reviewer Guide on the Site
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4636 (draft)
+- **Issue:** #4607 (part of #4610)
+- **Branch:** `claude/issue-4607`
+- **Paths:** `pages/contributor-guide.qmd`, `pages/collaborate.qmd`, `tests/test_contributor_reviewer_guide.py`, `tests/test_page_style_discipline.py`, `data/trust/claim_audit_inventory.json`, `scripts/claim_audit_ids.py`, `tests/test_claim_audit_inventory.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (merged origin/main; added reviewed claim-audit record for `/pages/contributor-guide.html`; `pytest tests/test_contributor_reviewer_guide.py tests/test_page_style_discipline.py tests/test_claim_audit_inventory.py tests/test_check_quarto_render_coverage.py` pass; `ruff check` and `black --check` clean on changed files.)
+- **Summary:** Adds a reader-facing guide routing corrections, claim critiques, dataset contributions, and chapter reviews to their GitHub issue templates, linked from Collaborate. The "linked from every WEB-03.4 block" acceptance criterion is deferred because WEB-03.4 does not exist yet.
+- **Next step:** Owner/frontier review of the draft PR.
+
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review

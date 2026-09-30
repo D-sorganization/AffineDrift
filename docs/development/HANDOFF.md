@@ -706,6 +706,83 @@
      right shape.
   3. Once merged, flip `DL-#4551` to `shipped`.
 
+# Implementation Handoff — Contributor and Reviewer Guide (#4607)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4607
+- Branch: claude/issue-4607
+- Baseline commit: 46df5059
+- Implementation commit: SELF
+- Pull request: https://github.com/D-sorganization/AffineDrift/pull/4636 (draft)
+- Governing issue/epic: #4607 (part of #4610)
+
+## Objective and Status
+
+- Objective: Add a reader-facing "Contributor and Reviewer Guide" page covering how to propose a
+  correction, critique a claim, contribute a dataset, or review a chapter, linked from Collaborate.
+- Status: in_review
+- Completed: New page `pages/contributor-guide.qmd` routing each of the four paths to its GitHub
+  issue template; linked from `pages/collaborate.qmd` (intro sentence + Related Articles); pytest
+  coverage added. Merged `origin/main` (which had advanced ~85 commits, including PRs #4491, #4666,
+  #4692-equivalent privacy-policy/glossary pages) and added the missing claim-audit inventory record
+  for the new `/pages/contributor-guide.html` route that `scripts.generate_claim_audit_inventory
+  --enforce-publication` requires for Deploy Website.
+- Remaining: none known; awaiting frontier review.
+
+## Files and Decisions
+
+- Files changed (this session, beyond the original PR content):
+  - `data/trust/claim_audit_inventory.json`: added one reviewed record for
+    `/pages/contributor-guide.html` (route audit, no findings — the page's four claims about
+    GitHub issue templates were checked against `.github/ISSUE_TEMPLATE/` and all resolve).
+  - `scripts/claim_audit_ids.py`: bumped `DEFERRED_AUDIT_SCOPE_COUNTS` for issue 4063 by 1
+    (one new `/pages/` route).
+  - `tests/test_claim_audit_inventory.py`: bumped the `reviewed_completed_batches` count assertion
+    by 1 to match.
+  - `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, `docs/development/HANDOFF.md`: merge
+    conflict resolution — kept `origin/main`'s content and re-added this branch's own row/section.
+  - Regenerated `data/trust/generated/claim_audit_report.json`, `data/trust/site_trust_surface_audit.json`,
+    `reports/site-trust-surface-audit.md` via `python -m scripts.regenerate_claim_audit_evidence`
+    after taking `origin/main`'s copies and merging in this branch's new record.
+- Key decisions: WEB-03.4 ("What This Shows / What It Does Not Show" block, `tier:strong`) does not
+  exist anywhere in the codebase yet, so the acceptance criterion "linked from every WEB-03.4 block"
+  is not yet actionable — only the "linked from Collaborate" half is implemented. No navbar entry
+  was added; the page follows the existing convention of orphan pages (e.g.
+  `pages/development-roadmap.qmd`) reached only via inbound content links, keeping the diff
+  surgical. Reused existing `.article-section` / `.article-category` / `.article-card` /
+  `.provenance-note` CSS primitives already used by `pages/tools.qmd` — no new CSS.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `python3 -m pytest -q -o addopts= tests/test_claim_audit_inventory.py tests/test_check_quarto_render_coverage.py tests/test_contributor_reviewer_guide.py tests/test_page_style_discipline.py` — see PR/commit for exact pass counts recorded at commit time.
+- `python3 -m scripts.check_quarto_render_coverage` — PASS (sitemap lists the new route).
+- `python3 -m scripts.check_spec_changelog` — PASS.
+- `python3 -m ruff check .` / `python3 -m black --check --line-length 100 .` on changed files — PASS.
+
+## Blockers and Risks
+
+- Blockers: none. The "linked from every WEB-03.4 block" acceptance criterion cannot be satisfied
+  because WEB-03.4 has not been implemented by any repository yet (separate `tier:strong` issue);
+  noted in the PR body as a forward-looking follow-up rather than blocking this PR.
+- Risks/assumptions: GitHub's `issues/new?template=<file>.md` query parameter is assumed stable
+  (documented GitHub behavior); no site-wide link checker was found that needed updating (confirmed
+  via `scripts/check_quarto_render_coverage.py` glob-based rendering).
+
+## Next Steps
+
+1. Owner/frontier review of the draft PR #4636.
+2. Mark ready and merge once approved.
+
+## Change Log
+
+- SELF — Add reader-facing Contributor and Reviewer Guide page, linked from Collaborate (#4607);
+  merge `origin/main` and add the required claim-audit inventory record for the new route.
+
+---
+
 # Implementation Handoff — Short On-Ramp Learning Paths (#4492)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
