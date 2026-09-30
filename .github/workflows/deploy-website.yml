@@ -144,6 +144,9 @@ jobs:
       - name: Generate RSS feed.xml
         run: python3 scripts/generate_feed.py --output docs/feed.xml
 
+      - name: Generate search-maturity.json
+        run: python3 scripts/generate_search_maturity_index.py --output docs/search-maturity.json
+
       - name: Bundle CSS (flatten @import waterfall)
         # Flattens the canonical css/ @import graph into a single render-blocking
         # docs/styles.css bundle, then validates docs/css/ mirrors match css/.

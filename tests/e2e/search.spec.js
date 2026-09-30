@@ -103,4 +103,25 @@ test.describe("Search Functionality", () => {
       .first();
     await expect(monographResult).toBeVisible();
   });
+
+  test("finds the ZTCF page first, with its maturity badge (#4504)", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const searchButton = page
+      .locator(
+        '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
+      )
+      .first();
+    await searchButton.click();
+
+    const searchInput = page.locator(".aa-Input, input[type=search]").first();
+    await expect(searchInput).toBeVisible();
+    await searchInput.fill("ZTCF");
+
+    const firstResult = page.locator(".search-result-doc .search-result-link").first();
+    await expect(firstResult).toHaveAttribute("href", /zero-torque-counterfactual/);
+    await expect(firstResult.locator(".badge--maturity")).toHaveText("Reviewed");
+  });
 });
