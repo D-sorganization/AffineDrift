@@ -103,6 +103,7 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "data",
         "docs",
         "evidence",
+        "fonts",
         "js",
         "legacy-pages",
         "logo",

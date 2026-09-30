@@ -301,6 +301,16 @@ main.content .reading-time-estimate span,
   max-width: 100%;
 }
 
+/* Constrain prose to a comfortable reading measure (60-75ch, issue #4557).
+   Quarto wraps each heading's content in <section class="level2"> (etc.) for
+   @sec- crossrefs, so a descendant selector is required here: a direct-child
+   selector would miss nearly all body paragraphs on long-form pages. */
+#quarto-content.page-layout-article #quarto-document-content p,
+#quarto-content.page-layout-article #quarto-document-content ul,
+#quarto-content.page-layout-article #quarto-document-content ol {
+  max-width: var(--prose-width);
+}
+
 /* Publication title shell. The title, description, and metadata stack in one
    readable flow at every viewport; they never compete for narrow flex tracks. */
 #quarto-content.page-layout-article #title-block-header.quarto-title-block {

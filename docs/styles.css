@@ -272,6 +272,21 @@
  * - Letter spacing
  */
 
+/* Self-hosted heading font (issue #4557): replaces the Google Fonts CDN
+   request so no third-party font host is ever contacted. Single variable
+   woff2 file covering weights 400-700, latin subset (matches the weights
+   previously requested from fonts.googleapis.com). License: OFL, see
+   fonts/playfair-display/OFL.txt. */
+@font-face {
+  font-family: "Playfair Display";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/playfair-display/playfair-display-latin-400-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   /* ========== Font Families ========== */
   --font-family-base: -apple-system, blinkmacsystemfont, "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif;
@@ -4469,6 +4484,16 @@ main.content .reading-time-estimate span,
 
 #quarto-content.page-layout-article main.content {
   max-width: 100%;
+}
+
+/* Constrain prose to a comfortable reading measure (60-75ch, issue #4557).
+   Quarto wraps each heading's content in <section class="level2"> (etc.) for
+   @sec- crossrefs, so a descendant selector is required here: a direct-child
+   selector would miss nearly all body paragraphs on long-form pages. */
+#quarto-content.page-layout-article #quarto-document-content p,
+#quarto-content.page-layout-article #quarto-document-content ul,
+#quarto-content.page-layout-article #quarto-document-content ol {
+  max-width: var(--prose-width);
 }
 
 /* Publication title shell. The title, description, and metadata stack in one

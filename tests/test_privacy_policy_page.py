@@ -19,6 +19,7 @@ pytestmark = pytest.mark.content_lint
 ROOT_DIR = Path(__file__).resolve().parent.parent
 PRIVACY_POLICY = ROOT_DIR / "pages" / "privacy-policy.qmd"
 QUARTO_CONFIG = ROOT_DIR / "_quarto.yml"
+MATHJAX_LOADER = ROOT_DIR / "_includes" / "mathjax-loader.html"
 
 
 def _frontmatter(path: Path) -> dict[str, object]:
@@ -50,13 +51,35 @@ def test_privacy_policy_covers_local_storage_service_worker_embeds_and_analytics
     # Service worker / offline caching coverage.
     assert "service worker" in text.casefold()
 
-    # Third-party embeds (YouTube video embeds, Google Fonts, jsDelivr CDN).
+    # Third-party embeds (YouTube video embeds, jsDelivr CDN). Fonts are
+    # self-hosted since #4557, so the page must not list a font CDN.
     assert "YouTube" in text
-    assert "Google Fonts" in text or "fonts.googleapis.com" in text
+    assert "fonts.googleapis.com" not in text
+    assert "fonts.gstatic.com" not in text
+    assert "self-hosted" in text.casefold()
 
     # Analytics coverage per D6: no third-party analytics is currently used.
     assert "analytics" in text.casefold()
     assert "third-party" in text.casefold() or "third party" in text.casefold()
+
+
+def test_privacy_policy_font_claim_matches_mathjax_loader() -> None:
+    """The heading typeface is self-hosted, but MathJax's CHTML output still
+    fetches its own math fonts from jsDelivr on any page with math (issue
+    #4557 self-hosted the heading font only; MathJax stays on the CDN per
+    #4679). The page must not claim no third-party font host is contacted
+    while the loader still references cdn.jsdelivr.net.
+    """
+    loader_text = MATHJAX_LOADER.read_text(encoding="utf-8")
+    assert "cdn.jsdelivr.net" in loader_text, (
+        "test assumption stale: MathJax loader no longer references jsDelivr; "
+        "update this test and the privacy policy wording together"
+    )
+
+    text = " ".join(PRIVACY_POLICY.read_text(encoding="utf-8").split())
+    assert "no third-party font host is contacted" not in text.casefold()
+    assert "math font" in text.casefold()
+    assert "jsdelivr" in text.casefold()
 
 
 def test_privacy_policy_is_linked_from_the_site_footer() -> None:
