@@ -3,7 +3,10 @@
 // bumped by scripts/update_sw_cache_version.py (run in deploy-website.yml during
 // the CSS bundle step), and the human-readable comment is derived from it below
 // rather than tracked separately, so the two can no longer drift.
-// TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline
+// Content-hash cache busting (issue #1459, closed): CACHE_NAME's suffix is a
+// sha256 hash of the precached CSS/JS assets, computed by
+// scripts/update_sw_cache_version.py, so any asset edit rotates the cache
+// automatically without a manually-bumped version number.
 importScripts('/js/service-worker-utils.js');
 
 const {

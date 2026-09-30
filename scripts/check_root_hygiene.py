@@ -88,6 +88,7 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         ".github",
         ".jules",
         ".vscode",
+        "_extensions",
         "_includes",
         "_templates",
         "articles",

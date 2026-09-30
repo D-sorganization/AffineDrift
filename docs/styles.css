@@ -2103,6 +2103,52 @@ Dark mode (separate concern):
   margin-bottom: 1rem;
 }
 
+.resource-meta {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+}
+
+.resource-meta__row {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.5rem;
+}
+
+.resource-meta__row dt {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.resource-meta__row dd {
+  margin: 0;
+  color: var(--text-main);
+  word-break: break-word;
+}
+
+.resource-checksums {
+  width: 100%;
+  margin: 0 0 1rem;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.resource-checksums caption {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.resource-checksums th,
+.resource-checksums td {
+  padding: 0.25rem 0.5rem 0.25rem 0;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  word-break: break-all;
+}
+
 .resource-link {
   color: var(--color-link);
   font-weight: 600;
@@ -2719,6 +2765,7 @@ Dark mode (separate concern):
 
 /* Inline status pill — a small chip-like label next to a heading.
    Replaces inline ``style="display: inline-block; padding…"`` blobs. */
+a.status-pill,
 .status-pill {
   display: inline-block;
   margin-left: 0.5rem;
@@ -2730,6 +2777,12 @@ Dark mode (separate concern):
   font-weight: 600;
   letter-spacing: 0.04em;
   vertical-align: middle;
+  text-decoration: none;
+}
+
+a.status-pill:hover,
+a.status-pill:focus {
+  text-decoration: underline;
 }
 
 .status-pill--exploratory { background: var(--color-neutral-100); }
@@ -2738,6 +2791,17 @@ Dark mode (separate concern):
   color: var(--color-link);
 }
 .status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }
+.status-banner__title a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.status-banner__title a:hover,
+.status-banner__title a:focus {
+  text-decoration-style: solid;
+}
+
 /* ===== end css/components/status-banner.css ===== */
 /* ===== begin css/components/not-found.css ===== */
 /* Branded 404 page (issue #3330).
@@ -3460,6 +3524,457 @@ code span.va {
   margin-bottom: 0;
 }
 /* ===== end css/components/summary-takeaways.css ===== */
+/* ===== begin css/components/revision-history.css ===== */
+/* Revision History Component (WEB-07.3 #4545)
+   Section rendering per-article change history from front-matter `changes`. */
+
+.revision-history {
+  margin-top: 2.5rem;
+  margin-bottom: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+.revision-history-title {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.revision-history ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.revision-history li {
+  margin-bottom: 0.5rem;
+}
+
+.revision-history li:last-child {
+  margin-bottom: 0;
+}
+
+.revision-history-date {
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+/* ===== end css/components/revision-history.css ===== */
+/* ===== begin css/components/status-badge.css ===== */
+/* css/components/status-badge.css
+ * Unified Publication Status Badge Component (WEB-04.2 #4516)
+ *
+ * Provides accessible, high-contrast badges for the six canonical publication states:
+ * available, validated, experimental, planned, deprecated, opinion.
+ *
+ * Requirements:
+ * - Uses both icon and text (meaning does not depend on colour alone).
+ * - Meets WCAG AA contrast (>= 4.5:1) in both light and dark themes.
+ * - Links to how-to-read.html#publication-states (WEB-01.6).
+ * - Visual prominence never implies a higher state.
+ */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  transition: opacity 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.status-badge:hover,
+.status-badge:focus-visible {
+  text-decoration: none;
+  opacity: 0.9;
+}
+
+.status-badge:focus-visible {
+  outline: 2px solid var(--color-primary, #1e40af);
+  outline-offset: 2px;
+}
+
+.status-badge__icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  width: 0.85em;
+  height: 0.85em;
+}
+
+.status-badge__text {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ==========================================================================
+   Canonical State Variants — Light Theme (Default)
+   All combinations satisfy WCAG AA contrast (>= 4.5:1) against background
+   ========================================================================== */
+
+/* Available: Text complete, inspectable, open for review */
+.status-badge--available {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+.status-badge--available:hover {
+  background-color: #dbeafe;
+}
+
+/* Validated: Specific empirical evidence, calibration dataset, bounded error */
+.status-badge--validated {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+.status-badge--validated:hover {
+  background-color: #dcfce7;
+}
+
+/* Experimental: Exploratory modeling, sensitivity testing, open conjecture */
+.status-badge--experimental {
+  background-color: #faf5ff;
+  color: #6b21a8;
+  border-color: #e9d5ff;
+}
+.status-badge--experimental:hover {
+  background-color: #f3e8ff;
+}
+
+/* Planned: Scaffolding, specification, reserved chapter */
+.status-badge--planned {
+  background-color: #fffbeb;
+  color: #854d0e;
+  border-color: #fde68a;
+}
+.status-badge--planned:hover {
+  background-color: #fef3c7;
+}
+
+/* Deprecated: Historical archive, superseded derivation */
+.status-badge--deprecated {
+  background-color: #fff1f2;
+  color: #9f1239;
+  border-color: #fecdd3;
+}
+.status-badge--deprecated:hover {
+  background-color: #ffe4e6;
+}
+
+/* Opinion: Editorial synthesis, philosophical orientation */
+.status-badge--opinion {
+  background-color: #f0fdfa;
+  color: #115e59;
+  border-color: #99f6e4;
+}
+.status-badge--opinion:hover {
+  background-color: #ccfbf1;
+}
+
+/* ==========================================================================
+   Dark Theme Overrides (body.quarto-dark & media query)
+   Maintains WCAG AA contrast (>= 4.5:1) on dark backgrounds (#18181b / #121212)
+   ========================================================================== */
+
+body.quarto-dark .status-badge--available {
+  background-color: rgba(30, 64, 175, 0.25);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.4);
+}
+body.quarto-dark .status-badge--available:hover {
+  background-color: rgba(30, 64, 175, 0.35);
+}
+
+body.quarto-dark .status-badge--validated {
+  background-color: rgba(22, 101, 52, 0.25);
+  color: #86efac;
+  border-color: rgba(134, 239, 172, 0.4);
+}
+body.quarto-dark .status-badge--validated:hover {
+  background-color: rgba(22, 101, 52, 0.35);
+}
+
+body.quarto-dark .status-badge--experimental {
+  background-color: rgba(107, 33, 168, 0.25);
+  color: #d8b4fe;
+  border-color: rgba(216, 180, 254, 0.4);
+}
+body.quarto-dark .status-badge--experimental:hover {
+  background-color: rgba(107, 33, 168, 0.35);
+}
+
+body.quarto-dark .status-badge--planned {
+  background-color: rgba(133, 77, 14, 0.25);
+  color: #fde047;
+  border-color: rgba(253, 224, 71, 0.4);
+}
+body.quarto-dark .status-badge--planned:hover {
+  background-color: rgba(133, 77, 14, 0.35);
+}
+
+body.quarto-dark .status-badge--deprecated {
+  background-color: rgba(159, 18, 57, 0.25);
+  color: #fca5a5;
+  border-color: rgba(253, 164, 175, 0.4);
+}
+body.quarto-dark .status-badge--deprecated:hover {
+  background-color: rgba(159, 18, 57, 0.35);
+}
+
+body.quarto-dark .status-badge--opinion {
+  background-color: rgba(17, 94, 89, 0.25);
+  color: #5eead4;
+  border-color: rgba(94, 234, 212, 0.4);
+}
+body.quarto-dark .status-badge--opinion:hover {
+  background-color: rgba(17, 94, 89, 0.35);
+}
+
+/* ==========================================================================
+   Backward Compatibility for legacy .status-pill
+   ========================================================================== */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+  text-decoration: none;
+  background-color: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+.status-pill--exploratory,
+.status-pill--experimental {
+  background-color: #faf5ff;
+  color: #6b21a8;
+  border-color: #e9d5ff;
+}
+.status-pill--warning,
+.status-pill--planned {
+  background-color: #fffbeb;
+  color: #854d0e;
+  border-color: #fde68a;
+}
+.status-pill--info {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+
+body.quarto-dark .status-pill {
+  background-color: rgba(30, 64, 175, 0.25);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.4);
+}
+body.quarto-dark .status-pill--exploratory,
+body.quarto-dark .status-pill--experimental {
+  background-color: rgba(107, 33, 168, 0.25);
+  color: #d8b4fe;
+  border-color: rgba(216, 180, 254, 0.4);
+}
+body.quarto-dark .status-pill--warning,
+body.quarto-dark .status-pill--planned {
+  background-color: rgba(133, 77, 14, 0.25);
+  color: #fde047;
+  border-color: rgba(253, 224, 71, 0.4);
+}
+/* ===== end css/components/status-badge.css ===== */
+/* ===== begin css/components/where-next.css ===== */
+/* css/components/where-next.css
+   Standard "Where Next" Footer component (WEB-03.5 #4510).
+   Accessible, responsive card for post-article navigation and exploration. */
+
+.where-next-card {
+  display: block;
+  margin: 3.5rem 0 2.5rem;
+  padding: 1.5rem 1.75rem;
+  background: var(--bg-secondary, #f8f9fa);
+  border: 1px solid var(--color-neutral-200, #e2e8f0);
+  border-top: 4px solid var(--accent-blue, #0d6efd);
+  border-radius: 8px;
+  color: var(--text-primary, #1e293b);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.where-next-title {
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.6rem;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary, #1e293b);
+  border-bottom: 1px solid var(--color-neutral-200, #e2e8f0);
+}
+
+/* Series navigation banner */
+.where-next-series {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--color-neutral-200, #e2e8f0);
+}
+
+.where-next-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.6rem 0.9rem;
+  background: var(--bg-primary, #fff);
+  border: 1px solid var(--color-neutral-200, #e2e8f0);
+  border-radius: 6px;
+  text-decoration: none;
+  min-width: 220px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.where-next-link:hover,
+.where-next-link:focus {
+  border-color: var(--accent-blue, #0d6efd);
+  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.12);
+}
+
+.where-next-link--next {
+  margin-left: auto;
+  text-align: right;
+}
+
+.where-next-direction {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #64748b);
+}
+
+.where-next-link-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+}
+
+/* Multi-column exploration grid */
+.where-next-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.where-next-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.where-next-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary, #1e293b);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.where-next-icon {
+  font-size: 0.95rem;
+  color: var(--accent-blue, #0d6efd);
+}
+
+.where-next-column--simpler .where-next-icon {
+  color: #16a34a;
+}
+
+.where-next-column--deeper .where-next-icon {
+  color: #2563eb;
+}
+
+.where-next-column--evidence .where-next-icon {
+  color: #7c3aed;
+}
+
+.where-next-column--try-it .where-next-icon {
+  color: #d97706;
+}
+
+.where-next-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.where-next-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.where-next-item-link {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--link-color, var(--color-primary-dark, #0f172a));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.where-next-item-link:hover,
+.where-next-item-link:focus {
+  color: var(--accent-blue, #0d6efd);
+}
+
+.where-next-blurb {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-secondary, #475569);
+}
+
+@media (max-width: 640px) {
+  .where-next-card {
+    padding: 1.25rem 1rem;
+    margin: 2.5rem 0 1.5rem;
+  }
+
+  .where-next-series {
+    flex-direction: column;
+  }
+
+  .where-next-link--next {
+    margin-left: 0;
+    text-align: left;
+  }
+
+  .where-next-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+/* ===== end css/components/where-next.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the
@@ -3806,6 +4321,20 @@ footer.footer,
 footer.footer a,
 .nav-footer a {
   color: var(--text-secondary);
+}
+
+/* The footer's right-hand link group (About, Privacy Policy, Accessibility,
+   source links) is wider than a phone viewport; wrap it rather than
+   overflowing the page horizontally, and keep each link a 44px touch target. */
+.nav-footer .footer-items {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-footer .footer-items .nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 /* Full-layout hubs own their visible H1 in authored page markup. Every such

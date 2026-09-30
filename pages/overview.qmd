@@ -37,7 +37,7 @@ In this notation, $x$ denotes the modeled state, $f(x)$ collects state-dependent
 On this site, **drift** refers to the state-dependent dynamics represented by $f(x)$, and **control** refers to the modeled input contribution $G(x)u$. That distinction can be analytically useful, but its interpretation depends on the chosen coordinates, the multibody model, the treatment of constraints, and the level at which actuation is represented. The [Mathematical Notation Reference](notation.html) is the normative source for drift, control, the ZTCF family, ZVCF, DCR, DgCR, and symbol conventions.
 
 ::: {.callout-note}
-## Provenance
+## Where This Framework Comes From
 
 The control-affine formulation itself is standard nonlinear-systems material. The site's use of drift/input decomposition, zero-torque counterfactuals, and related golf-specific interpretations is original AffineDrift synthesis built on top of that standard machinery.
 :::
@@ -54,7 +54,7 @@ The control-affine formulation itself is standard nonlinear-systems material. Th
 - [Drifter Manifesto](../pages/drifter-manifesto.html): canonical AffineDrift series on control-affine modeling of the golf swing.
 - [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html): textbook-scale golf application of the site's mechanics framework.
 - [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html): broader mathematical and computational series.
-- [Tangent Hyperplanes](../pages/tangent-hyperplanes.html): exploratory tangent-space series with explicit provenance and scope notes.
+- [Tangent Hyperplanes](../pages/tangent-hyperplanes.html): exploratory tangent-space series with explicit sourcing and scope notes.
 - [Research Reviews](../resources/research-reviews.html): literature-review hub; the current review pages are still incomplete.
 - [Models](../models/models.html): modeling and simulation resources across several software stacks.
 - [UpstreamDrift](#upstreamdrift-the-software): the site's primary modeling software — web UI, REST API, and analysis tools (see the section below).
@@ -63,7 +63,7 @@ The control-affine formulation itself is standard nonlinear-systems material. Th
 
 [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) is the separate
 runtime and computational repository that AffineDrift accompanies. The statements
-below are an **UpstreamDrift authority snapshot** pinned to protected commit
+below are an **UpstreamDrift authority snapshot** pinned to [protected](glossary.html) commit
 [`8cc236c6879e7535bb6bd15aecbe3396fb6dbb36`](https://github.com/D-sorganization/UpstreamDrift/tree/8cc236c6879e7535bb6bd15aecbe3396fb6dbb36),
 reviewed on 2026-08-29. The upstream repository remains the live authority.
 
@@ -83,13 +83,13 @@ and the [Models page](../models/models.html) for the AffineDrift link map.
 ### Quick Start
 
 The pinned package metadata declares `requires-python = ">=3.11"`, which is an
-installation lower bound rather than an open-ended compatibility qualification.
+installation lower bound rather than an open-ended compatibility claim.
 Python 3.11 and 3.12 are the tested interpreter minors at that revision. The
 metadata declaration does not establish support for untested interpreter minors
 such as Python 3.13.
 
 ```bash
-# Clone the protected public repository
+# Clone the public repository
 git clone https://github.com/D-sorganization/UpstreamDrift.git
 cd UpstreamDrift
 
