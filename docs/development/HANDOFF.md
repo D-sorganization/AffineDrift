@@ -5,8 +5,8 @@
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4597
 - Branch: claude/issue-4597
-- Implementation commit: `SELF`
-- Pull request: to be opened as a draft by this session
+- Implementation commit: `0be6774ea058f7508f00499d3752a9f27c3f7fbb`
+- Pull request: [#4683](https://github.com/D-sorganization/AffineDrift/pull/4683) (draft, `Refs #4597` — criterion 4 not attempted from this worktree, see PR body)
 - Governing issue: #4597 (WEB-13.3)
 
 ## Objective and Status
@@ -206,10 +206,14 @@ docs` → `output-dir: _site`) rather than moving the internal docs to
 
 ## Next Steps
 
-1. Push `claude/issue-4597` and open the draft PR (`Fixes #4597`).
-2. Owner/frontier review, including a decision on whether
-   `Repository_Management/CLAUDE.md`/`AGENTS.md` need updating for criterion 4,
-   and confirmation from CI's full `pytest --cov` run in `quality-gate`.
+1. Draft PR [#4683](https://github.com/D-sorganization/AffineDrift/pull/4683)
+   is open (`Refs #4597`). Owner/frontier review, including a decision on
+   whether `Repository_Management/CLAUDE.md`/`AGENTS.md` need updating for
+   criterion 4, and confirmation from CI's full `pytest --cov` run in
+   `quality-gate`.
+2. Once criterion 4 is resolved (either judged not applicable, or a companion
+   `Repository_Management` PR lands), mark the PR ready for review and switch
+   its closing keyword to `Fixes #4597`.
 
 ## Change Log
 
