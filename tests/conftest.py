@@ -22,6 +22,13 @@ os.environ.setdefault("MPLBACKEND", "Agg")
 # Qt headless backend, for repos that import PyQt/PySide indirectly.
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+# Pin pytest-qt to the binding this repo actually installs (PyQt6). Without
+# this, pytest-qt's autodetection probes bindings in a fixed order and only
+# catches ModuleNotFoundError, not ImportError; a broken/absent PySide6 DLL
+# on the host (common on Windows, unrelated to this repo) crashes
+# pytest_configure with an uncaught INTERNALERROR before any test runs.
+os.environ.setdefault("PYTEST_QT_API", "pyqt6")
+
 from collections.abc import (  # noqa: E402 -- reason: thread-safety env vars must be set before these heavy imports
     Callable,
     Generator,
