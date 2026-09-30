@@ -194,6 +194,251 @@
 
 ---
 
+# Implementation Handoff — "What's New" Feed Revision-History Links (#4606)
+
+- Repository: D-sorganization/AffineDrift; worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4606b`.
+- Branch `claude/issue-4606-revision-links`, commit SELF; pull request: not
+  created (headless worker; lead arms/merges).
+- Governing issue: #4606 (WEB-14.4, epic #4610 / E14 — Reader Validation,
+  Feedback, and Community). Acceptance criteria: "The RSS feed validates" and
+  "Items link to revision history."
+- Verified against the tree first: criterion 1 ("The RSS feed validates") was
+  already delivered by #4675 — `scripts/generate_feed.py` has
+  `validate_feed_xml()` wired into `main()`, confirmed still present and
+  passing. The prerequisite this issue was previously blocked on, #4545
+  (WEB-07.3), is now delivered: `scripts/filters/revision-history.lua` renders
+  a `<section id="revision-history">` from front-matter `changes:`, and
+  `tests/test_dates_and_history.py` confirms core pages carry `changes:`.
+- Implemented criterion 2 ("Items link to revision history"):
+  - Added `resolve_item_link(frontmatter, page_url) -> str` to
+    `scripts/generate_feed.py`: appends `#revision-history` to an item's link
+    when the article's front matter has a non-empty `changes:` list, else
+    returns the plain page URL. Wired into `collect_items()`.
+  - Also improved item dates ("real item dates", part of the same proposal):
+    added `resolve_pub_date(frontmatter, fallback) -> datetime`, which prefers
+    `date-modified` (the last substantive change per WEB-07.3), then the
+    newest `changes:` entry's date, then the plain `date` field, before
+    falling back to the git-modified date. Previously the feed used only the
+    plain `date` field (often `"Date unverified"` on core pages, e.g.
+    `articles/theory-part1.qmd:6`) plus the git fallback, ignoring the
+    genuinely verified `date-modified`/`changes:` metadata WEB-07.3 added.
+  - Confirmed against a live generator run: 6 of 30 feed items (the articles
+    carrying `changes:`) now link to `#revision-history`; all other items are
+    unaffected; `validate_feed_xml()` still reports zero errors.
+- TDD: added `TestResolvePubDate` and `TestResolveItemLink` to
+  `tests/test_generate_feed.py` (8 new tests). Confirmed RED
+  (`ImportError: cannot import name 'resolve_item_link'`) before
+  implementation, then GREEN (34/34 in the file) after.
+- **Open decision, not resolved here:** the issue's proposal also lists "An
+  optional email digest through a privacy-respecting provider." This needs an
+  explicit provider decision (which privacy-respecting ESP, opt-in flow, data
+  retention) that the issue text does not settle, so nothing was implemented
+  for it — left for a follow-up/ADR.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider
+  tests/test_generate_feed.py` (34 passed); `python -m
+  scripts.check_spec_changelog` (passed). Pre-existing, unrelated failure
+  confirmed on the baseline (reproduced identically before my change via a
+  temporary stash):
+  `tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section`
+  — the installed Pandoc renders the Lua filter's section as `<div
+  id="revision-history">` rather than `<section id="revision-history">`; not
+  touched by this change and out of scope for #4606.
+- Next: open the draft PR; the email-digest open decision above needs a human
+  call before any further work on it.
+
+- Review fix: `<guid>` stays the canonical page URL (`FeedItem.guid`) while `<link>` may target
+  `#revision-history`, so an article gaining its first `changes:` entry is not re-published to
+  subscribers as a new item. Test: `test_guid_stays_on_page_url_when_link_targets_revision_history`.
+
+# Implementation Handoff — Privacy/Accessibility claim-audit accuracy nits (#4691)
+
+- Repository: D-sorganization/AffineDrift; worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4691`.
+- Branch: `claude/issue-4691`; commit SELF; PR: not created (headless worker; lead arms/merges).
+- Governing issue: #4691 (`tier:cli`). Acceptance: both sentences are accurate against the current
+  repo, and the two open findings in `data/trust/claim_audit_inventory.json` are marked
+  `corrected` with evidence digests and a verification commit.
+- Verified against the tree first: neither nit was already fixed.
+  1. `pages/privacy-policy.qmd`'s Third-Party Embeds section claimed the CSP "limits which
+     external domains a page is allowed to load resources from or embed frames from at all."
+     `_includes/site-head.html:34` shows `img-src 'self' data: https:`, which permits images from
+     any HTTPS host — the unqualified claim was too broad.
+  2. `pages/accessibility.qmd`'s Known Issues section pointed readers at issue #4139 for "the full
+     inventory and remediation status", but #4139 closed as `COMPLETED` on 2026-09-06 (verified via
+     `gh issue view 4139`), so it no longer functions as a live tracker.
+- Fix:
+  1. Reworded the CSP sentence to name what actually is restricted (scripts/styles/fonts to
+     `cdn.jsdelivr.net`, frames to `youtube.com`) and explicitly state that `img-src` permits any
+     HTTPS host.
+  2. Reworded the Known Issues paragraph to state #4139 closed as remediated on 2026-09-06, that
+     the CI axe-core check still runs in report-only (`warn`) mode (confirmed live in
+     `.github/workflows/ci-standard.yml:715`, `--axe warn`), and linked #4561/#4656 — the
+     fail-on-serious policy work — noting the site verifier has not yet been switched over to it.
+- TDD: added `test_privacy_policy_csp_claim_matches_img_src_scope` to
+  `tests/test_privacy_policy_page.py` and `test_page_does_not_present_the_closed_tracking_issue_as_the_live_status`
+  to `tests/test_accessibility_statement_page.py`. Both assert the corrected wording; confirmed RED
+  against the unmodified pages (old CSP sentence lacked "any https host"; old Known Issues
+  paragraph lacked "closed as remediated"/"report-only" and the #4561/#4656 links), then GREEN
+  after the edits.
+- Refreshed claim-audit evidence via `python -m scripts.regenerate_claim_audit_evidence` (updated
+  the `pages/accessibility.qmd` and `pages/privacy-policy.qmd` digests in both the route review and
+  the finding records in `data/trust/claim_audit_inventory.json`, and the derived
+  `data/trust/generated/claim_audit_report.json`).
+- **Open decision, not resolved here:** the issue asks to mark findings
+  `ad-finding-accessibility-closed-tracker` and `ad-finding-privacy-csp-image-scope` `corrected`.
+  Per `schemas/claim-audit-inventory-v1.schema.json` and the semantic check in
+  `scripts/generate_claim_audit_inventory.py`, a `corrected` finding must carry a real 40-hex
+  `verification_commit` — which would have to be this very commit's own hash, unknowable before
+  the commit is made (the same self-reference problem #4695's handoff entry above hit, and the
+  same pattern the fleet used for evidence/claims.qmd: fix commit c2bd47af landed the content with
+  the finding left `open`, then a separate follow-up commit 428a201d set
+  `verification_commit: c2bd47af...` and flipped the disposition). Left both findings'
+  `disposition: "open"` unchanged; the lead/reviewer should flip them to `corrected` with
+  `verification_commit` set to this branch's landed commit SHA once known.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_privacy_policy_page.py
+  tests/test_accessibility_statement_page.py tests/test_claim_audit_inventory.py` (31 passed);
+  `python -m scripts.check_spec_changelog` (passed).
+
+- Lead follow-up (2026-09-30): after merging main (#4656 set `--axe fail`), the page states the
+  enforced mode and the test reads the mode from `ci-standard.yml`. Both findings are now
+  `corrected`: `ad-finding-privacy-csp-image-scope` verified at `0864602d`, and
+  `ad-finding-accessibility-closed-tracker` verified at `492e7a6e`.
+
+# Implementation Handoff — on-ramp "3 Hours" totals (#4695)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4695`.
+- Branch: `claude/issue-4695`; commit SELF; PR: not created (headless worker; lead arms/merges).
+- Governing issue: #4695 (tier:cli). Acceptance: each on-ramp's "3 Hours" step estimates should
+  add up to about three hours (or the tier heading should be renamed to match its real total),
+  and a test should sum each tier's `~N min` steps against its heading.
+- Verified against the tree first: 6 of 8 personas' "3 Hours" tiers summed to 120-160 minutes
+  (Learner/Reviewer/Student 120, Experimentalist 140, Researcher/Contributor 160); Integrator and
+  Curious Golfer/Coach already summed to exactly 180. Estimates must stay honest to the linked
+  pages' length, so rebalanced nothing; instead renamed the six short headings from "3 Hours" to
+  "2–3 Hours" in `resources/on-ramp-paths.qmd`, which is honest for all six (120-160 min falls in
+  2-3 hours) and matches the range-style time estimates already used elsewhere in this repo's
+  learning-path pages.
+- TDD: added `test_three_hour_tier_totals_match_heading` to `tests/test_on_ramp_paths.py`, which
+  parses each `### N Hours` / `### A–B Hours {#onramp-<persona>-3hr}` heading, sums that section's
+  `— ~N min` steps, and asserts the total falls within the heading's implied range. Confirmed RED
+  against the unmodified file (120 min vs. the then-universal 180-180 expectation), then GREEN
+  after the heading renames.
+- Refreshed the stale claim-audit evidence digest for `resources/on-ramp-paths.qmd` via
+  `python -m scripts.regenerate_claim_audit_evidence` (both the route review digest and finding
+  `ad-finding-on-ramp-three-hour-totals`'s own digest in `data/trust/claim_audit_inventory.json`).
+- **Open decision, not resolved here:** the issue asks to mark finding
+  `ad-finding-on-ramp-three-hour-totals` `corrected`. The schema
+  (`schemas/claim-audit-inventory-v1.schema.json`) requires a `corrected` finding to carry a real
+  40-hex `verification_commit`, which would have to be this very commit's own hash — unknowable
+  before the commit is made, and CLAUDE.md's `SELF` placeholder policy (adopted for HANDOFF commit
+  SHAs) explicitly rules out amending a commit to embed a self-referential SHA. Left
+  `disposition: "open"` unchanged; the lead/reviewer should flip it to `corrected` with
+  `verification_commit` set to this branch's landed commit SHA once known.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_on_ramp_paths.py
+  tests/test_claim_audit_inventory.py tests/test_learning_paths.py` (36 passed);
+  `python -m scripts.check_spec_changelog` (passed).
+
+# Implementation Handoff — Remove the Unused `metrics.js` Preload (#4574)
+
+- Repository: D-sorganization/AffineDrift; worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4574`.
+- Branch `claude/issue-4574`, commit SELF; pull request: not created.
+- Governing issue: #4574 (WEB-10.6, part of epic #4579 — E10 Performance, SEO,
+  and Privacy). Acceptance criterion: "No unused-preload console warnings on
+  any route."
+- Problem: `_includes/site-head.html` preloaded `/js/metrics.js`
+  (`<link rel="preload" href="/js/metrics.js" as="script">`) sitewide via
+  Quarto's `include-in-header`, but only `resources/bibliography.qmd:76`
+  loads the script. Every other route paid for an unused preload and Chrome
+  DevTools flags this with a console warning.
+- Fix: removed the two-line preload (and its explanatory comment) from
+  `_includes/site-head.html`. `resources/bibliography.qmd:76` already loads
+  `metrics.js` directly via `<script src="../js/metrics.js"></script>`
+  ahead of `bibliography.js`, so the one page that needs it is unaffected.
+- TDD: `tests/test_metrics_preload_removed.py` — two tests: site-head.html
+  must not reference `metrics.js` at all, and bibliography.qmd must still
+  load it directly. Confirmed RED against the pre-change tree (`assert
+  "metrics.js" not in content` failed with the preload line present), then
+  GREEN after the edit.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider
+  tests/test_metrics_preload_removed.py` — 2 passed. Manual grep for
+  `metrics.js` confirms it now appears only in `resources/bibliography.qmd`,
+  `pages/privacy-policy.qmd` (documentation text), `scripts/sync_frontend_assets.py`,
+  and `tests/metrics.test.js`/`tests/test_privacy_policy_page.py` (existing
+  coverage, untouched). No full-site Quarto render was run (not required for
+  this change; the edit is a two-line HTML removal with no rendering-logic
+  impact).
+- Next: none — this closes the issue's stated acceptance criterion.
+
+# Implementation Handoff — Resolve the Stray Executable Cell (#4539)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4539`.
+- Branch: `claude/issue-4539`; commit SELF; PR: not created yet.
+- Governing issue: #4539 (WEB-06.9, part of epic #4543 / E6). `articles/drift-components-wrench-double-pendulum.qmd:511`
+  had a `{python}` executable cell (imports-only, never a complete implementation per its own
+  prose) that contradicted `ci-standard.yml`'s E2E-render comment ("The site has no executable
+  cells, so a Quarto freeze cache would buy nothing").
+- Fix: converted the fence from `` ```{python} `` to a plain `` ```python `` (non-executing),
+  matching the convention already used for illustrative-only Python snippets elsewhere in
+  `articles/` (e.g. `force-mobility-matrices.qmd`, `sources-of-nonlinearity.qmd`). No change was
+  needed to the CI comment, since it is now accurate again.
+- Added `tests/test_no_executable_quarto_cells.py`, which parses `_quarto.yml`'s
+  `project.render` include/exclude globs (via `scripts/check_quarto_render_coverage.load_render_rules`)
+  to enumerate every `.qmd` file Quarto actually renders, and asserts none contain an executable
+  cell fence (`{python}`/`{r}`/`{javascript}`/`{ojs}`/`{julia}`). Confirmed RED against the
+  pre-fix cell, GREEN after. `content/drift-ratio-visualizations/time-cone-analogy.md` has its
+  own `{python}` cell but is out of scope: it is not part of `_quarto.yml`'s render list, so it
+  is not part of "the site" the CI comment describes.
+- Validation: `pytest tests/test_no_executable_quarto_cells.py` (1 passed); `ruff check
+  tests/test_no_executable_quarto_cells.py` and `black --check --line-length 100
+  tests/test_no_executable_quarto_cells.py` clean; `python -m scripts.check_spec_changelog` clean.
+- Next: none — this closes the issue's single acceptance criterion.
+
+# Implementation Handoff — Unify the Contact Channel and Split About From Contact (#4593)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4593`.
+- Branch `claude/issue-4593`, commit `SELF`; pull request: not created yet at
+  this commit (worker task; the lead opens the PR).
+- Governing issue: #4593 (WEB-12.7, epic #4594 / E12 — Editorial Voice and
+  Plain-Language Standard). Acceptance criteria: (1) one contact address
+  everywhere, (2) About retitled, (3) Contact is the single contact page.
+- Verified before implementing: criterion (1) was already satisfied on
+  `origin/main` — `pages/about.qmd`, `pages/contact.qmd`, `pages/accessibility.qmd`,
+  and `404.qmd` all already used `dieterolson@AffineDrift.com` (unified in
+  #4495). Only criteria (2) and (3) were outstanding.
+- Completed:
+  - Retitled `pages/about.qmd` from `"About & Contact"` (YAML `title:` and body
+    `<h1>`) to `"About"`.
+  - Removed About's own `mailto:` contact paragraph and replaced it with a
+    link to the Contact page, so Contact is now the site's single contact
+    page (About no longer publishes a contact address of its own).
+  - Updated `resources/on-ramp-paths.qmd`'s link text and self-check prose,
+    which quoted the old "About & Contact" title verbatim.
+  - Added `tests/test_contact_channel_unification.py` (written first, RED
+    against the pre-change `pages/about.qmd`) asserting the retitle, the
+    absent `mailto:` on About, the link to Contact, and that Contact/404
+    still agree on a single address.
+  - Updated `tests/test_404_page.py`: removed
+    `test_404_contact_address_matches_about_page`, since About intentionally
+    no longer carries a `mailto:` link to compare against (Contact is now the
+    sole source of the address).
+  - Re-ran `python -m scripts.regenerate_claim_audit_evidence` after editing
+    `pages/about.qmd` (it is a claim-audit-reviewed source); this cascaded
+    digest updates through `data/trust/site_trust_surface_audit.json`,
+    `data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`, and
+    `reports/site-trust-surface-audit.md`.
+- Status: **done**. All three acceptance criteria are met.
+- Validation commands run in this worktree:
+  - `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_contact_channel_unification.py tests/test_404_page.py tests/test_public_site_content_hygiene.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py tests/test_on_ramp_paths.py` — 74 passed.
+  - `python -m ruff check .` — clean.
+  - `python -m black --check --line-length 100 .` — clean.
+  - `python -m scripts.check_spec_changelog` — passed.
+- Next steps: none outstanding for this issue; open a draft PR and await
+  frontier review.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
@@ -347,6 +592,88 @@
 
 - SELF — Add the content freshness report generator and tests (#4520).
 - SELF — Fix `--check` to compare against the as-of date recorded in the committed report instead of the wall clock (#4520 review).
+# Implementation Handoff — Remove Stale Root `sitemap.xml`/`feed.xml` (#4572)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4572`.
+- Branch `claude/issue-4572`, commit SELF; pull request: not created.
+- Governing issue: #4572 (WEB-10.3, epic #4579 / E10 — Performance, SEO, and
+  Privacy). Acceptance criteria: "Root copies deleted or git-ignored", "The
+  generators are documented", and "The feed carries real article dates (after
+  WEB-07.3)".
+- **Status: partial.** Criteria 1 and 2 are done. Criterion 3 stays blocked on
+  the still-open prerequisite #4545 (WEB-07.3), exactly as recorded for
+  #4606/DL-#4606 below — no date-source work exists to attach real dates to
+  yet.
+- Completed:
+  - The root `sitemap.xml`/`feed.xml` were tracked files that the deploy
+    workflow never wrote back (it only writes `docs/sitemap.xml` and
+    `docs/feed.xml`), so they only got refreshed when a contributor manually
+    ran the generator and committed the result — hence the feed found dated
+    10 Jun 2026 while `main` had moved well past that.
+  - `scripts/generate_sitemap.py`: extracted the page-collection loop out of
+    `main()` into `build_pages() -> list[dict[str, str]]`, the reusable
+    source of truth for "what is currently published." Removed the
+    unconditional `Path("sitemap.xml").write_text(...)` root copy at the end
+    of `main()`; it now writes only `--output` (default `docs/sitemap.xml`).
+  - `scripts/generate_feed.py`: removed the equivalent unconditional
+    `Path("feed.xml").write_text(...)` root copy; writes only `--output`
+    (default `docs/feed.xml`). Docstring usage example updated.
+  - `scripts/check_quarto_render_coverage.py`: this script is a CI gate
+    (`ci-standard.yml` "Verify Quarto Render Coverage", and it also runs in
+    `deploy-website.yml` *before* that workflow's own "Generate sitemap.xml"
+    step) that validates every sitemap URL has a backing source file and vice
+    versa. It previously read the tracked root `sitemap.xml` from disk —
+    i.e., in both workflows it was checking the stale committed snapshot, not
+    live content. It now calls `generate_sitemap.build_pages()` directly, so
+    the check is always against current content regardless of whether a root
+    file exists. `load_sitemap_paths()` is unchanged and still covered by its
+    own direct tests (it parses an arbitrary sitemap XML file, e.g. for
+    `docs/sitemap.xml` post-render if ever needed); it is just no longer
+    `main()`'s source.
+  - `tests/test_page_titles_and_descriptions.py` and
+    `tests/test_research_readiness_content.py` also read the root
+    `sitemap.xml` as the published-page registry; both now call
+    `generate_sitemap.build_pages()` instead, so there is no persisted file
+    left anywhere in the tree for staleness to hide in.
+  - `git rm sitemap.xml feed.xml`; added `/sitemap.xml` and `/feed.xml` to
+    `.gitignore` as a backstop (mirrors the existing `docs/sitemap.xml`/
+    `docs/feed.xml` entries). Removed both filenames from
+    `check_root_hygiene.py`'s `ALLOWED_TRACKED_ROOT_FILES` — confirmed
+    `python scripts/check_root_hygiene.py --check` passes with the files
+    gone.
+  - Documented both generators in `scripts/README.md` (the existing
+    `generate_sitemap.py` entry's stated output path was wrong — it said
+    "sitemap.xml in the project root", corrected to `docs/sitemap.xml`;
+    `generate_feed.py` had no entry at all, added one) and added
+    `generate_feed.py` alongside the existing `generate_sitemap.py` line in
+    `CONTRIBUTING.md`'s "Running Scripts" section.
+  - Regenerated claim-audit evidence digests
+    (`python -m scripts.regenerate_claim_audit_evidence`) for
+    `tests/test_research_readiness_content.py`'s changed byte content, per
+    its own recursive exact-byte review check.
+- TDD: extended `tests/test_generate_sitemap.py`'s end-to-end `main()` test
+  (renamed `test_main_writes_sorted_sitemap_without_a_root_copy`) to assert
+  no `sitemap.xml` is written outside `--output`; confirmed it would have
+  failed against the pre-change generator (root copy existed) and passes
+  now. Added `test_build_pages_matches_main_output`. Added
+  `tests/test_generate_feed.py::TestMainWritesOnlyRequestedOutput` with the
+  same shape for the feed generator.
+- Validation:
+  `pytest tests/test_generate_sitemap.py tests/test_generate_feed.py tests/test_check_quarto_render_coverage.py tests/test_page_titles_and_descriptions.py tests/test_research_readiness_content.py`
+  (85 passed); `python scripts/check_quarto_render_coverage.py` (249 URLs,
+  bidirectional coverage passed); `python scripts/check_root_hygiene.py --check`
+  (passed); `python -m scripts.check_spec_changelog` (passed); ruff and
+  `black --check --line-length 100` clean on every changed file.
+- Open decision: none for the unambiguous scope above. Criterion 3 (real
+  article dates) is not a decision this issue can make — it is explicitly
+  gated on #4545 landing first, matching the precedent already recorded in
+  #4606/DL-#4606's Blocked note.
+- Next: open the PR; once #4545 (WEB-07.3) lands, re-check whether the feed's
+  dates need any further work (likely none — `generate_feed.py` already
+  parses frontmatter `date:` and falls back to git history, so this may
+  already be satisfied once articles carry real `date:` values).
+
 # "What's New" Feed RSS Validation — #4606 (WEB-14.4)
 
 - Repository: `D-sorganization/AffineDrift`, worktree

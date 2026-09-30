@@ -128,8 +128,9 @@ def main() -> int:
     for rule in render_rules:
         logger.info("- %s", rule)
 
-    sitemap_path = repo_root / "sitemap.xml"
-    sitemap_locs = load_sitemap_paths(sitemap_path)
+    from scripts.generate_sitemap import build_pages
+
+    sitemap_locs = [page["loc"] for page in build_pages()]
     missing_sources = find_missing_sitemap_sources(sitemap_locs, repo_root)
     if missing_sources:
         logger.error("Sitemap URLs missing source pages:")

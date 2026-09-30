@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4691 · Privacy/Accessibility Claim-Audit Accuracy Nits
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit (headless worker; lead arms/merges)
+- **Issue:** #4691 (`tier:cli`)
+- **Branch:** `claude/issue-4691`
+- **Paths:** `pages/privacy-policy.qmd`, `pages/accessibility.qmd`, `tests/test_privacy_policy_page.py`, `tests/test_accessibility_statement_page.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_privacy_policy_page.py tests/test_accessibility_statement_page.py tests/test_claim_audit_inventory.py` 31/31 pass; `python -m scripts.check_spec_changelog` passes)
+- **Summary:** Qualified the Privacy Policy's CSP sentence, which claimed the policy "limits which external domains" a page may load from "at all" — `img-src 'self' data: https:` actually permits images from any HTTPS host, so only scripts/styles/fonts/frames are allowlisted. Reworded the Accessibility Statement's Known Issues section, which pointed readers at #4139 (closed as remediated 2026-09-06) as the live remediation tracker; it now states that closure, states that the CI axe check fails the build on any serious or critical finding (`--axe fail`, #4561/#4656; the test reads the mode from `ci-standard.yml`), and links #4561/#4656. Both claim-audit findings are `corrected`: `ad-finding-privacy-csp-image-scope` verified at `0864602d`, `ad-finding-accessibility-closed-tracker` at `492e7a6e`.
+- **Next step:** Merge the consolidated PR that carries this branch.
+
 ### DL-#4605 · Per-Page "Report a Problem" Control
 
 - **State:** in_progress
@@ -57,25 +70,80 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment that opens the notebook scaffolds, installing from `requirements.txt` (not `requirements-docker.lock`, which pins a Windows-only `pywinpty` wheel that fails on Binder's Linux image and is stale relative to `requirements.txt`), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked — see HANDOFF.md. The Binder build itself is unverified (repo2docker was never run).
 - **Next step:** A session with permission to write under a path named `.devcontainer` must add the file (content given in the PR's Blocked section) and a CI build step; then this entry's state can move to `shipped`.
 
-## Shipped (Last 90 Days)
-
-Entries stay here for 90 days after merge, then move to the archive.
-
-## Archive
-
-Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
-### DL-#4606 · "What's New" Feed RSS Validation
+### DL-#4695 · On-Ramp "3 Hours" Totals
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
+- **PR:** not created yet at this commit (headless worker; lead arms/merges)
+- **Issue:** #4695 (`tier:cli`)
+- **Branch:** `claude/issue-4695`
+- **Paths:** `resources/on-ramp-paths.qmd`, `tests/test_on_ramp_paths.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_on_ramp_paths.py tests/test_claim_audit_inventory.py tests/test_learning_paths.py` 36/36 pass; `python -m scripts.check_spec_changelog` passes)
+- **Summary:** Six of eight personas' "3 Hours" on-ramp tiers summed to 120-160 listed minutes instead of 180; renamed those headings to "2–3 Hours" (honest given each total and consistent with the range-style estimates already used in this repo's full learning-path pages), left the two that already summed to 180 unchanged, and added a test that sums each tier's `~N min` steps against its own heading. Left claim-audit finding `ad-finding-on-ramp-three-hour-totals` at `disposition: "open"` — flipping it to `corrected` needs a `verification_commit` this commit cannot supply for itself; see HANDOFF.md.
+- **Next step:** Lead/reviewer sets `verification_commit` and flips the finding to `corrected` once this branch's commit SHA is known.
+### DL-#4574 · Remove the Unused `metrics.js` Preload
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit
+- **Issue:** #4574 (WEB-10.6; epic #4579 / E10)
+- **Branch:** `claude/issue-4574`
+- **Paths:** `_includes/site-head.html`, `tests/test_metrics_preload_removed.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_metrics_preload_removed.py` 2/2 pass)
+- **Summary:** Removes the sitewide `<link rel="preload" href="/js/metrics.js" as="script">` from `_includes/site-head.html`; only `resources/bibliography.qmd` loads `metrics.js`, so every other route paid for an unused preload that triggers a console warning.
+- **Next step:** Open the draft PR for review.
+### DL-#4572 · Remove Stale Root `sitemap.xml` and `feed.xml`
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4572 (WEB-10.3; epic #4579 / E10)
+- **Branch:** `claude/issue-4572`
+- **Paths:** `scripts/generate_sitemap.py`, `scripts/generate_feed.py`, `scripts/check_quarto_render_coverage.py`, `scripts/check_root_hygiene.py`, `scripts/README.md`, `CONTRIBUTING.md`, `.gitignore`, `tests/test_generate_sitemap.py`, `tests/test_generate_feed.py`, `tests/test_page_titles_and_descriptions.py`, `tests/test_research_readiness_content.py`, `sitemap.xml` (deleted), `feed.xml` (deleted)
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_sitemap.py tests/test_generate_feed.py tests/test_check_quarto_render_coverage.py tests/test_page_titles_and_descriptions.py tests/test_research_readiness_content.py` 85/85 pass; `python scripts/check_quarto_render_coverage.py` and `python scripts/check_root_hygiene.py --check` both pass against the live tree with the root files gone; ruff and black --line-length 100 clean)
+- **Summary:** The root `sitemap.xml`/`feed.xml` were tracked files only refreshed when someone manually ran the generators and committed the result, so they drifted stale (feed dated 10 Jun 2026 while `main` had moved on). Both generators previously also wrote an unconditional root copy alongside their `--output` target; that write is removed, so they now write only the requested path (`docs/` by default). Three consumers read the root `sitemap.xml` as a page registry — `check_quarto_render_coverage.py` (a CI gate in `ci-standard.yml`/`deploy-website.yml`, which ran *before* the workflow's own sitemap-regeneration step, so it was validating against the stale committed snapshot), `tests/test_page_titles_and_descriptions.py`, and `tests/test_research_readiness_content.py` — all three now call `generate_sitemap.build_pages()` (extracted from the generator's `main()`) directly, so there is no persisted file left to go stale. The tracked root copies are deleted (`git rm`) and `/sitemap.xml`/`/feed.xml` added to `.gitignore` as a backstop; `check_root_hygiene.py`'s allowlist no longer lists them. Both generators are documented in `scripts/README.md` (output path corrected; `generate_feed.py` was previously undocumented there) and `CONTRIBUTING.md`. The feed's real-article-dates criterion remains blocked on the still-open #4545 (WEB-07.3), consistent with #4606/DL-#4606.
+- **Next step:** Open the PR for review.
+
+### DL-#4539 · Resolve the Stray Executable Cell
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit
+- **Issue:** #4539 (WEB-06.9; epic #4543 / E6)
+- **Branch:** `claude/issue-4539`
+- **Paths:** `articles/drift-components-wrench-double-pendulum.qmd`, `tests/test_no_executable_quarto_cells.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_no_executable_quarto_cells.py` 1/1 pass; ruff and black --line-length 100 clean; `python -m scripts.check_spec_changelog` clean)
+- **Summary:** Converts the stray `{python}` executable cell (imports-only, never a complete implementation) in `articles/drift-components-wrench-double-pendulum.qmd` to a non-executing `python` fence, matching the site convention and making `ci-standard.yml`'s "the site has no executable cells" comment accurate again. Adds a regression test enumerating every Quarto-rendered `.qmd` file (via `_quarto.yml`'s `project.render` globs) and asserting none contain an executable cell fence.
+- **Next step:** Open the draft PR; no further development expected.
+
+### DL-#4593 · Unify the Contact Channel and Split About From Contact
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit; opening a draft PR immediately after
+- **Issue:** #4593 (WEB-12.7; epic #4594; `tier:ollama`, `complexity:trivial`)
+- **Branch:** `claude/issue-4593`
+- **Paths:** `pages/about.qmd`, `resources/on-ramp-paths.qmd`, `tests/test_contact_channel_unification.py`, `tests/test_404_page.py`, `data/trust/site_trust_surface_audit.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/site-trust-surface-audit.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_contact_channel_unification.py tests/test_404_page.py tests/test_public_site_content_hygiene.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py tests/test_on_ramp_paths.py` 74/74 pass; ruff and black --line-length 100 clean; `scripts.check_spec_changelog` passed.)
+- **Summary:** Retitles `pages/about.qmd` from "About & Contact" to "About" and removes its own `mailto:` link, pointing readers to the Contact page instead, so Contact is the site's single contact page. The contact-address-unification criterion was already satisfied on `main` (fixed by #4495); this closes the remaining two criteria.
+- **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
+### DL-#4606 · "What's New" Feed RSS Validation and Revision-History Links
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit (headless worker; lead arms/merges)
 - **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
-- **Branch:** `claude/issue-4606`
+- **Branch:** `claude/issue-4606-revision-links`
 - **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
-- **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
-- **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 34/34 pass; `python -m scripts.check_spec_changelog` passes; live generator run against real repo content produces 30 items, 6 of them linking to `#revision-history`, with zero validation errors)
+- **Summary:** Criterion 1 ("The RSS feed validates") shipped previously in #4675. This entry closes criterion 2 ("Items link to revision history"), which was blocked on prerequisite #4545 (WEB-07.3) — now delivered (`scripts/filters/revision-history.lua` renders a `#revision-history` section from front-matter `changes:`). `generate_feed.py` gained `resolve_item_link()` (appends `#revision-history` to an item's link when the article has `changes:`) and `resolve_pub_date()` (prefers `date-modified`, then the latest `changes:` entry, then the plain `date` field, over the git-modified fallback), so feed item dates and links now reflect real substantive content updates rather than the original/unverified publication date.
+- **Next step:** Open the draft PR and await frontier review; the optional email digest from the issue's proposal needs a provider decision not made here (see HANDOFF.md).
 ### DL-#4592 · Consolidate the Manifesto
 
 - **State:** in_review
