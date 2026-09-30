@@ -9,10 +9,11 @@ on:
       - ".github/workflows/link-checker.yml"
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *" # Daily at 2 AM UTC
+    - cron: "0 2 * * 1" # Weekly, Monday at 2 AM UTC
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: link-checker-${{ github.ref }}
@@ -51,9 +52,81 @@ jobs:
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         timeout-minutes: 5
         run: |
-          python3 scripts/link-checker.py --root . --external-only --verbose
+          python3 scripts/link-checker.py --root . --external-only --verbose \
+            --json-report link-checker-external-report.json
         continue-on-error: true
         id: external-urls
+
+      - name: Report broken external links as a tracking issue
+        if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && always()
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require('fs');
+
+            const marker = '<!-- link-checker:external-report -->';
+            const reportPath = 'link-checker-external-report.json';
+            const warnings = fs.existsSync(reportPath)
+              ? JSON.parse(fs.readFileSync(reportPath, 'utf8'))
+              : [];
+
+            const { data: openIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'ci,report,automation',
+            });
+            const trackingIssue = openIssues.find((issue) => issue.body?.includes(marker));
+
+            if (warnings.length === 0) {
+              if (trackingIssue) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: trackingIssue.number,
+                  body: 'All previously reported external links now resolve. Closing.',
+                });
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: trackingIssue.number,
+                  state: 'closed',
+                });
+              }
+              return;
+            }
+
+            const rows = warnings
+              .map((w) => `| ${w.file} | ${w.url} | ${w.reason} | [archive.org](${w.archive_suggestion}) |`)
+              .join('\n');
+            const body = [
+              marker,
+              `${warnings.length} broken external link(s) found by the scheduled link checker.`,
+              '',
+              '| File | URL | Reason | Archive.org fallback |',
+              '| --- | --- | --- | --- |',
+              rows,
+              '',
+              `_Last updated: ${new Date().toISOString()}_`,
+            ].join('\n');
+
+            if (trackingIssue) {
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: trackingIssue.number,
+                body,
+                state: 'open',
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'Weekly external link report',
+                body,
+                labels: ['ci', 'report', 'automation'],
+              });
+            }
 
       - name: Report results
         if: always()
