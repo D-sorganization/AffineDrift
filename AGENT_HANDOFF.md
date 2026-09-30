@@ -1,5 +1,6 @@
 # Quarto Code-Menu Link Health — #4715
 
+- Regular PR [#4716](https://github.com/D-sorganization/AffineDrift/pull/4716); source commit `7776d908c`.
 - Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health`; branch `fix/quarto-script-links-4715`, base `984552e17`.
 - Main deployment `36778620671` rendered successfully, then rejected three `javascript:void(0)` code-menu controls as missing files. The shared target resolver now classifies JavaScript action URLs before filesystem resolution, preserving actual missing-link failures.
 - Ten regression cases failed before the fix; all 98 focused site-health/link tests pass afterward. Full Windows suite: 6,028 passed, 29 skipped, 180 deselected, 92.95% coverage; content: 179 passed, four skipped. Ruff, Black, mypy, SPEC and claim-audit evidence checks pass. Protected delivery remains pending.
