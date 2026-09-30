@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4567 (epic #4569)
+- **Branch:** `claude/issue-4567`
+- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass)
+- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
+- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress

@@ -240,6 +240,12 @@ jobs:
             --baseline config/latex-structure-baseline.json
       - name: Validate Article Frontmatter
         run: python3 scripts/validate_frontmatter.py
+      - name: Verify Alt Text and Long Descriptions
+        # Scoped to QMD content (alt text, heading hierarchy, long
+        # descriptions for E8 SVG diagrams) via --qmd-only; the same script's
+        # CSS colorblind-safe-color and JS ARIA-label checks have pre-existing
+        # findings not yet tracked by a baseline and stay unwired (#4567).
+        run: python3 scripts/validate_accessibility.py --qmd-only
       - name: Verify CSS Budget
         run: python3 scripts/check_styles_budget.py
       - name: Verify UI/UX Anti-Pattern Budget
