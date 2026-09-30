@@ -2,8 +2,9 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4551`.
-- Branch `claude/issue-4551`, commit `SELF`; PR: not yet created (opening as a
-  draft immediately after this handoff commit).
+- Branch `claude/issue-4551`, commit `SELF`; PR:
+  https://github.com/D-sorganization/AffineDrift/pull/4627 (draft, targets
+  `main`).
 - Governing issue: #4551 (`[WEB-07.10]`, part of epic #4552), development log
   `DL-#4551`.
 - Objective: render `PARAMETERS.md`, add a one-page printable notation
@@ -34,6 +35,40 @@
   - Ran `python -m scripts.regenerate_claim_audit_evidence` (NOTATION.md and
     pages/notation.qmd are bound evidence for the `/pages/notation.html`
     trust-surface route) and committed the digest-only diff.
+  - **2026-09-30 follow-up (Deploy Website route-coverage fix):** merged
+    `origin/main` (32 commits; `d53290cd` → `0ec2c7f1`), resolving conflicts in
+    `SPEC.md`, `docs/development/{HANDOFF,DEVELOPMENT_LOG}.md` (kept `main`'s
+    content, re-added this branch's own row/entry once) and taking `main`'s
+    copy of every generated file (`data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`,
+    `data/trust/site_trust_surface_audit.json`,
+    `reports/site-trust-surface-audit.md`, `sitemap.xml`), then re-applying
+    this branch's own `sitemap.xml` entries and regenerating. Added two
+    `reviewed` claim-audit inventory records (`/pages/parameters.html`,
+    `/pages/notation-quick-reference.html`) with `evidence_sha256` computed
+    from the actual page/source files after the merge, `review_commit` set to
+    `origin/main`'s HEAD (`0ec2c7f1`), and `findings: []` — the content review
+    (below) found no inaccuracies. Bumped `DEFERRED_AUDIT_SCOPE_COUNTS` for
+    issue #4063 in `scripts/claim_audit_ids.py` from 15 to 17 and
+    `tests/test_claim_audit_inventory.py`'s
+    `reviewed_completed_batches`/route-partition assertion from 221 to 223 to
+    match the two new `/pages/` routes. This closes the Deploy Website gap:
+    `scripts.generate_claim_audit_inventory --check --enforce-publication`
+    would otherwise fail on `main` once these two routes render, because they
+    had no claim-audit record at all.
+  - **Content review performed (evidence/uncertainty/falsifiers/audience_framing):**
+    verified the control-affine form, ZTCF/ZVCF/DCR/DgCR acronym expansions,
+    core physical-quantity symbols/units, and axis convention in
+    `pages/notation-quick-reference.qmd` against `NOTATION.md`'s terminology
+    contract and Coordinate Frame Conventions table — all match exactly. The
+    card's simplified $\dot x = f(x)+G(x)u$ (vs. `NOTATION.md`'s
+    $\dot x = f_p(x) + G_p(x)u$) is a stated simplification, not an error — the
+    card explicitly defers to `notation.html` as the normative source.
+    Verified `pages/parameters.qmd`'s include of `../PARAMETERS.md` and that
+    both pages' Related Articles links (`notation.html`,
+    `notation-quick-reference.html`, `parameters.html`, `theory-part1.html`,
+    `lagrangian-reference.html`) resolve to existing source files. No
+    inaccuracies found; no findings recorded.
 - **Blocked:** "Every core page links notation from its header card" is not
   implemented. The header card component (issue #4507 / WEB-03.2 "Build the
   Page Header Card Component") is itself open and unimplemented — there is no
@@ -44,26 +79,24 @@
   for the reviewer/owner to decide: accept the PR with 3 of 4 criteria met
   now, or hold this issue until #4507 ships.
 - Validation:
-  - `python -m pytest tests/test_notation_and_parameters_pages.py tests/test_site_link_gate.py tests/test_site_trust_surface_audit.py tests/test_claim_audit_inventory.py tests/test_check_terminology.py tests/test_root_hygiene.py tests/test_validate_frontmatter.py tests/test_check_tree_parity.py -q` — all pass.
-  - `python -m scripts.link-checker --site-gate` — "Site gate passed!" (no new
-    orphans, broken links, missing categories, or missing Related Articles
-    coverage).
-  - `python -m scripts.check_terminology` — "Terminology consistent."
-  - `python -m scripts.check_root_hygiene` — passes.
-  - `python -m scripts.check_quarto_render_coverage` — passes (242 sitemap
-    URLs, bidirectional coverage).
-  - `python -m scripts.check_title_case` — 639 sources, all title case.
-  - `python -m scripts.regenerate_claim_audit_evidence --check` — current
-    after regeneration.
+  - `python -m pytest tests/test_notation_and_parameters_pages.py tests/test_site_link_gate.py tests/test_site_trust_surface_audit.py tests/test_claim_audit_inventory.py tests/test_check_terminology.py tests/test_root_hygiene.py tests/test_validate_frontmatter.py tests/test_check_tree_parity.py tests/test_check_quarto_render_coverage.py -q` — 152 passed (2026-09-30, post-merge).
+  - `python -m scripts.check_quarto_render_coverage` — passes (247 sitemap
+    URLs, bidirectional coverage, 2026-09-30 post-merge).
+  - `python -m scripts.regenerate_claim_audit_evidence` — "already current"
+    after the merge + new records (2026-09-30).
   - `python -m ruff check .` and `python -m black --check --line-length 100 .`
-    — both clean.
+    — both clean (2026-09-30, full tree post-merge).
+  - Merge commit's own pre-commit hooks (gitleaks/detect-secrets, ruff, black,
+    deferred-validation catalog, claim-audit evidence freshness, prettier) all
+    passed; no `.gitleaksignore` addition was needed for the new sha256
+    digests.
   - Not run: `quarto render` (not available in this sandbox) and the Jest/
-    Playwright suites (no JS/browser behavior changed). No UI/browser
-    verification was performed; the print-card layout is untested in an
-    actual browser print preview.
+    Playwright suites (no JS/browser behavior changed by this branch). No
+    UI/browser verification was performed; the print-card layout is untested
+    in an actual browser print preview.
 - Next steps:
-  1. Open the draft PR with a `Blocked:` section covering the header-card
-     dependency above.
+  1. Push this merge commit and confirm the PR's CI (including the merged-in
+     `main` changes) is green.
   2. Owner/reviewer decides whether to merge the 3-of-4 scope or wait for
      #4507, and whether the quick-reference card's condensed content is the
      right shape.
