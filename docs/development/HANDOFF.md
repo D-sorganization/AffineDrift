@@ -1,33 +1,40 @@
 # Resumed Technical Review — Induced Acceleration #4706
 
 The user explicitly resumed the corpus goal on 2026-09-30. This supersedes the
-September 28 pause instruction below. Never create draft PRs.
+September 28 pause instruction below. Never create draft PRs. Goal remains active.
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
-- Branch: `fix/induced-acceleration-rigor-20260930`; source checkpoint `SELF`;
-  PR not created. Base `bac8bedb`; epic #4009 / corpus #4021 / issue #4706.
-- Complete paired Geometry of Motion Chapter 3b corrected: signs, full affine
-  state, activation, nominal integration, normalized coupling, constrained
-  reactions, point outputs, coordinate transport and primary-study boundaries.
-- Two agy Gemini 3.8 Flash supplied-text inventories completed in parallel.
-  Lead independently adjudicated; no delegated tools or edits.
-- Five numerical checks passed before edits; fourteen source regressions failed.
-  All nineteen new checks now pass, plus nine existing numerical IAA checks and
-  fourteen content-lint attribution contracts. New test Ruff/Black pass.
-- Full Volume I PDF builds to 149 pages; physical pages 58–64 visually reviewed.
-  Other chapter sources remain unchanged; whole-book scientific review pending.
-- First standalone Quarto render did not use the website configuration. Root
-  selected-route rendering and browser verification are in progress. Do not
-  treat the earlier stale docs/ page as evidence for the revised article.
-- Next: complete root-site rendering and browser QA, save exact source evidence,
-  carry forward the changed PDF dependency without renewing other scientific
-  reviews, bind chapter review, run full gates, open regular PR and protected-merge.
-- Review inventory still has 144 pending sources until verified binding; this
-  pair will reduce it to 142. Preserve all untracked QA. No whole-corpus closure.
-- Coordination: session `technical-review-20260930-resume`, issue #4706. Owned
-  preview 8770 and browser `iaa-biomechanics` are temporary review services.
-- Development log entry: DL-#4706. Other agents' route-inventory/workflow work
-  is separate; preserve their records and unrelated changes during integration.
+- Branch: `fix/induced-acceleration-rigor-20260930`; base `bac8bedb`.
+  Source checkpoint `f30e64cb`; evidence checkpoint `a6c5d1cf`.
+  Regular PR pending; epic #4009 / corpus #4021 / issue #4706.
+- Complete paired Geometry of Motion Chapter 3b corrected: force signs, full
+  affine state/input map, activation, nominal integration, normalized coupling,
+  constrained reactions, physical outputs, coordinate transport and study evidence.
+- Two parallel agy Gemini 3.8 Flash supplied-text inventories completed; lead
+  independently adjudicated all suggestions. No delegated tools or edits.
+- Nineteen new checks (five numerical, fourteen source boundaries), nine prior
+  IAA numerical checks and fourteen attribution contracts pass. Full-tree Ruff,
+  Black (791 files) and configured mypy (93 files) pass. Full test lanes pending.
+- Full Volume I PDF: 149 pages; physical 58–64 visually reviewed; final log has
+  no overfull boxes or undefined/multiply-defined labels. Other chapters retain
+  their independent review status; their committed source hashes are preserved.
+- Root website gate: 4/4 desktop/mobile and light/dark passes; one route axe scan,
+  zero serious/critical findings. Fresh browser: all 126 math expressions rendered,
+  twelve displays visually checked at 1440/390 px, no math errors or broken anchors.
+  Three mobile equations use contained scrolling; both ends and numbers inspected.
+- The first standalone render and persistent cached browser session are excluded
+  from accepted evidence. Root configuration was restored; fresh `iaa-final`
+  browser confirmed revised text. Preview 8770 remains an owned temporary service.
+- `iaa-biomechanics-review.md`, `iaa-biomechanics-render-verification.json`, prior
+  records and dependency carry-forward under `reports/technical-review/` explain
+  source access limits, numerical cases, exact bytes and preserved historical scope.
+- Eight findings bound to `a6c5d1cf`; book metadata carries forward the changed PDF
+  without renewing other scientific or book-map browser reviews. Corpus pending
+  count: 142 sources. Whole-book and whole-corpus acceptance remain incomplete.
+- Next: finish full test/content lanes, commit metadata, open a regular PR, inspect
+  CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
+- Coordination: session `technical-review-20260930-resume`, issue #4706; development
+  log DL-#4706. Existing web-feature consolidations remain under their live owners.
 
 ---
 

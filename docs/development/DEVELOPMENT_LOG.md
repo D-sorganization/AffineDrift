@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/induced-acceleration-rigor-20260930`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (base bac8bedb; working tree SELF: 19 new checks, nine existing IAA numerical checks, fourteen attribution contracts; Ruff/Black; 149-page book build and complete changed-chapter visual inspection)
+- **Last verified:** 2026-09-30 (source f30e64cb; evidence a6c5d1cf: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; full pytest/content lanes pending)
 - **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
-- **Next step:** Complete root-website browser verification and immutable evidence binding.
+- **Next step:** Finish full validation, publish regular PR and protected-merge; keep goal active for the remaining 142 source reviews.
 
 ### DL-#4606 · "What's New" Feed RSS Validation
 
