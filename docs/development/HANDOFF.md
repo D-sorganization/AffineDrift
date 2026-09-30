@@ -1,4 +1,4 @@
-# Implementation Handoff — Per-Page "Was This Helpful? / Report a Problem" Control (#4605)
+# Implementation Handoff — Per-Page "Report a Problem" Control (#4605)
 
 ## Identity
 
@@ -16,12 +16,12 @@
 - Status: implementation complete, ready to open draft PR
 - Completed:
   - Added `js/page-feedback.js` exporting `initPageFeedback()`, wired into `js/main.js`'s DOM-ready sequence.
-  - The widget appends to `#quarto-document-content` (the same content-anchor convention as `initReadingTime`/`initResponsiveTables`) on every rendered page: a local "Was this helpful?" Yes/No toggle (no data leaves the browser) and a "Report a problem" action.
+  - The widget appends to `#quarto-document-content` (the same content-anchor convention as `initReadingTime`/`initResponsiveTables`) on every rendered page: a "Report a problem" action only (no vote/toggle control — see Key decisions).
   - "Report a problem" opens `github.com/D-sorganization/AffineDrift/issues/new` prefilled with the `content-correction.md` template, the current page URL, and the build revision.
   - The revision is fetched same-origin from `/public-site-manifest.json` (`source_revision`, already produced by `scripts/public_site_manifest.py` at deploy time); falls back to `"unknown"` if the fetch fails or the manifest isn't present (e.g. local preview).
   - A `mailto:` fallback link (reusing the existing `dieterolson@gmail.com` "report it" pattern from `404.qmd`) carries the same page URL and revision for readers without a GitHub account.
   - Added `css/components/page-feedback.css`, imported from `styles.css`, reusing the existing `.site-button.site-button--ghost` primitive for the report action.
-  - Added `tests/page-feedback.test.js` (10 tests, written first/RED before the implementation).
+  - Added `tests/page-feedback.test.js` (8 tests, written first/RED before the implementation).
   - Added `SPEC.md` change-log row and this handoff/development-log entry (`DL-#4605`).
   - Regenerated stale claim-audit evidence digests for `styles.css` with `python -m scripts.regenerate_claim_audit_evidence` (required by the pre-commit `claim-audit-evidence` hook after editing a file bound in `data/trust/*.json`, #4124).
 - Remaining: Commit, push branch, open draft PR referencing `Fixes #4605`, release lease.
@@ -40,7 +40,7 @@
   - `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `data/trust/site_trust_surface_audit.json`: Refreshed `styles.css` evidence digest (content unchanged otherwise).
 - Key decisions:
   - Reused the already-deployed `public-site-manifest.json`'s `source_revision` field for the build commit instead of inventing a new build-time injection mechanism (DRY); this only resolves on the deployed site or after a full `quarto render` + manifest generation, so the link is built synchronously with `"unknown"` first and updated once the fetch resolves — the control is always usable even if the fetch never completes.
-  - "Was this helpful?" intentionally has no backend: it only shows a local thank-you message and announces it via the existing `announce()` screen-reader helper from `js/accessibility.js`. The issue's proposal offered this as an alternative to a "privacy-safe form," and the acceptance criteria settled on a mailto fallback instead, so no form was built.
+  - Removed the "Was this helpful?" Yes/No vote entirely (PR review, 2026-09-29): the issue's acceptance criteria only asked for a "Report a problem" control (prefilled GitHub issue + mailto fallback, keyboard accessible, no tracking). The vote recorded nothing yet displayed "Thanks for the feedback!", which misleads readers into thinking their input was captured. The widget now contains only the report/email control.
   - Did not add `page-feedback.js` to `scripts/sync_frontend_assets.py`'s `CANONICAL_JS_NAMES`: that list only tracks byte-identical pre-render mirrors for a legacy set of files; `_quarto.yml`'s `resources: js/` already copies the whole `js/` directory into `docs/js/` on every `quarto render`, so the new module reaches `docs/` automatically without editing that script.
 - User-owned or unrelated worktree changes: none observed.
 
@@ -68,7 +68,7 @@
 
 ## Change Log
 
-- `SELF` — Add per-page "Was this helpful? / Report a problem" footer control (#4605).
+- `SELF` — Add per-page "Report a problem" footer control (#4605); removed the "Was this helpful?" vote per PR review.
 
 ---
 

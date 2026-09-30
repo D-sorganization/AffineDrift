@@ -1,16 +1,13 @@
 /**
  * AffineDrift - Page Feedback Module
- * Per-page "Was this helpful? / Report a problem" footer control (#4605).
+ * Per-page "Report a problem" footer control (#4605).
  *
- * "Was this helpful?" is a local, unsent UI toggle — no analytics call is
- * made. "Report a problem" opens a prefilled GitHub issue from the
+ * "Report a problem" opens a prefilled GitHub issue from the
  * content-correction template with the page URL and build revision; a
  * mailto fallback covers readers without a GitHub account. The only
  * network request this module makes is a same-origin fetch for the build
  * revision, so no third-party tracking is involved.
  */
-
-import { announce } from "./accessibility.js";
 
 const GITHUB_REPO = "D-sorganization/AffineDrift";
 const FALLBACK_EMAIL = "dieterolson@gmail.com";
@@ -70,43 +67,6 @@ async function fetchRevision() {
     }
 }
 
-function createVoteButton(vote, label) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "page-feedback__vote";
-    button.dataset.vote = vote;
-    button.setAttribute("aria-label", label);
-    button.textContent = vote === "yes" ? "Yes" : "No";
-    return button;
-}
-
-function attachVoteHandlers(prompt, yesButton, noButton) {
-    const onVote = () => {
-        prompt.textContent = "Thanks for the feedback!";
-        yesButton.disabled = true;
-        noButton.disabled = true;
-        announce("Thanks for the feedback!");
-    };
-    yesButton.addEventListener("click", onVote);
-    noButton.addEventListener("click", onVote);
-}
-
-function createHelpfulSection() {
-    const section = document.createElement("div");
-    section.className = "page-feedback__helpful";
-
-    const prompt = document.createElement("span");
-    prompt.className = "page-feedback__prompt";
-    prompt.textContent = "Was this page helpful?";
-
-    const yesButton = createVoteButton("yes", "Yes, this page was helpful");
-    const noButton = createVoteButton("no", "No, this page was not helpful");
-    attachVoteHandlers(prompt, yesButton, noButton);
-
-    section.append(prompt, yesButton, noButton);
-    return section;
-}
-
 function createReportSection(pageUrl) {
     const section = document.createElement("div");
     section.className = "page-feedback__report";
@@ -128,7 +88,7 @@ function createReportSection(pageUrl) {
 }
 
 /**
- * Initialize the per-page "Was this helpful? / Report a problem" control.
+ * Initialize the per-page "Report a problem" control.
  */
 export function initPageFeedback() {
     const container = document.getElementById("quarto-document-content");
@@ -138,8 +98,8 @@ export function initPageFeedback() {
     const pageUrl = window.location.href;
     const widget = document.createElement("section");
     widget.className = "page-feedback";
-    widget.setAttribute("aria-label", "Page feedback");
-    widget.append(createHelpfulSection(), createReportSection(pageUrl));
+    widget.setAttribute("aria-label", "Report a page problem");
+    widget.append(createReportSection(pageUrl));
     container.appendChild(widget);
 
     fetchRevision().then((revision) => {

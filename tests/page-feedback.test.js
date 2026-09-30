@@ -1,6 +1,6 @@
 /**
  * Tests for js/page-feedback.js — issue #4605.
- * Per-page "Was this helpful? / Report a problem" footer control.
+ * Per-page "Report a problem" footer control.
  */
 
 import { initPageFeedback } from '../js/page-feedback.js';
@@ -52,21 +52,15 @@ describe('page-feedback.js', () => {
   test('renders keyboard-accessible native controls', async () => {
     initPageFeedback();
     await flushMicrotasks();
-    const yes = document.querySelector('[data-vote="yes"]');
-    const no = document.querySelector('[data-vote="no"]');
     const report = document.querySelector('.page-feedback__report-link');
     const email = document.querySelector('.page-feedback__email-link');
 
-    expect(yes.tagName).toBe('BUTTON');
-    expect(yes.getAttribute('type')).toBe('button');
-    expect(no.tagName).toBe('BUTTON');
-    expect(no.getAttribute('type')).toBe('button');
     expect(report.tagName).toBe('A');
     expect(report.hasAttribute('href')).toBe(true);
     expect(email.tagName).toBe('A');
     expect(email.getAttribute('href')).toMatch(/^mailto:/);
 
-    for (const el of [yes, no, report, email]) {
+    for (const el of [report, email]) {
       expect(el.getAttribute('tabindex')).not.toBe('-1');
     }
   });
@@ -103,35 +97,6 @@ describe('page-feedback.js', () => {
     expect(decoded).toContain(window.location.href);
     expect(decoded).toContain('abc1234');
     expect(email.getAttribute('href')).not.toContain('+');
-  });
-
-  test('clicking "Yes" announces thanks and disables both vote buttons', async () => {
-    initPageFeedback();
-    await flushMicrotasks();
-    const yes = document.querySelector('[data-vote="yes"]');
-    const no = document.querySelector('[data-vote="no"]');
-
-    yes.click();
-
-    expect(yes.disabled).toBe(true);
-    expect(no.disabled).toBe(true);
-    const liveRegion = document.querySelector('[aria-live="polite"]');
-    expect(liveRegion).not.toBeNull();
-    expect(liveRegion.textContent).toMatch(/thanks/i);
-  });
-
-  test('clicking "No" announces thanks and disables both vote buttons', async () => {
-    initPageFeedback();
-    await flushMicrotasks();
-    const yes = document.querySelector('[data-vote="yes"]');
-    const no = document.querySelector('[data-vote="no"]');
-
-    no.click();
-
-    expect(no.disabled).toBe(true);
-    expect(yes.disabled).toBe(true);
-    const liveRegion = document.querySelector('[aria-live="polite"]');
-    expect(liveRegion.textContent).toMatch(/thanks/i);
   });
 
   test('never calls a third-party endpoint — only same-origin fetch', async () => {
