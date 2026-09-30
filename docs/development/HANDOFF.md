@@ -32,6 +32,38 @@
   tests/test_claim_audit_inventory.py tests/test_learning_paths.py` (36 passed);
   `python -m scripts.check_spec_changelog` (passed).
 
+# Implementation Handoff — Remove the Unused `metrics.js` Preload (#4574)
+
+- Repository: D-sorganization/AffineDrift; worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4574`.
+- Branch `claude/issue-4574`, commit SELF; pull request: not created.
+- Governing issue: #4574 (WEB-10.6, part of epic #4579 — E10 Performance, SEO,
+  and Privacy). Acceptance criterion: "No unused-preload console warnings on
+  any route."
+- Problem: `_includes/site-head.html` preloaded `/js/metrics.js`
+  (`<link rel="preload" href="/js/metrics.js" as="script">`) sitewide via
+  Quarto's `include-in-header`, but only `resources/bibliography.qmd:76`
+  loads the script. Every other route paid for an unused preload and Chrome
+  DevTools flags this with a console warning.
+- Fix: removed the two-line preload (and its explanatory comment) from
+  `_includes/site-head.html`. `resources/bibliography.qmd:76` already loads
+  `metrics.js` directly via `<script src="../js/metrics.js"></script>`
+  ahead of `bibliography.js`, so the one page that needs it is unaffected.
+- TDD: `tests/test_metrics_preload_removed.py` — two tests: site-head.html
+  must not reference `metrics.js` at all, and bibliography.qmd must still
+  load it directly. Confirmed RED against the pre-change tree (`assert
+  "metrics.js" not in content` failed with the preload line present), then
+  GREEN after the edit.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider
+  tests/test_metrics_preload_removed.py` — 2 passed. Manual grep for
+  `metrics.js` confirms it now appears only in `resources/bibliography.qmd`,
+  `pages/privacy-policy.qmd` (documentation text), `scripts/sync_frontend_assets.py`,
+  and `tests/metrics.test.js`/`tests/test_privacy_policy_page.py` (existing
+  coverage, untouched). No full-site Quarto render was run (not required for
+  this change; the edit is a two-line HTML removal with no rendering-logic
+  impact).
+- Next: none — this closes the issue's stated acceptance criterion.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
