@@ -31,6 +31,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches — finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today — and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
 - **Next step:** A human tester runs the manual NVDA/VoiceOver protocol in the findings doc and records results on #4565.
 
+### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
@@ -81,6 +82,14 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** claude
 - **PR:** not created
+- **Issue:** #4567 (epic #4569)
+- **Branch:** `claude/issue-4567`
+- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass)
+- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
+- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
+
 - **Issue:** #4588 (epic #4594)
 - **Branch:** `claude/issue-4588`
 - **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`

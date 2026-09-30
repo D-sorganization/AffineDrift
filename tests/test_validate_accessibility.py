@@ -6,6 +6,7 @@ from scripts.validate_accessibility import (
     check_aria_labels_in_js,
     check_colorblind_safe_colors,
     check_heading_hierarchy,
+    check_long_description_for_diagrams,
 )
 
 
@@ -171,6 +172,61 @@ class TestHeadingHierarchy:
 
         issues = check_heading_hierarchy(test_file)
         assert len(issues) == 0
+
+
+class TestLongDescriptionForDiagrams:
+    """Test long-description validation for complex SVG figures (E8/E9)."""
+
+    def test_non_svg_image_not_flagged(self, tmp_path):
+        """Test that non-SVG images are not treated as complex diagrams."""
+        test_file = tmp_path / "test.qmd"
+        test_file.write_text("![A photo](photo.png)")
+
+        issues = check_long_description_for_diagrams(test_file)
+        assert len(issues) == 0
+
+    def test_svg_without_long_description_flagged(self, tmp_path):
+        """Test that an SVG diagram with no long description is flagged."""
+        test_file = tmp_path / "test.qmd"
+        test_file.write_text("![The vector field](diagram.svg)")
+
+        issues = check_long_description_for_diagrams(test_file)
+        assert len(issues) == 1
+        assert "missing a long description" in issues[0]
+
+    def test_svg_with_aria_describedby_passes(self, tmp_path):
+        """Test that an aria-describedby link to an in-page element passes."""
+        test_file = tmp_path / "test.qmd"
+        test_file.write_text(
+            '<img src="diagram.svg" alt="Vector field" aria-describedby="diagram-desc">\n'
+            '<p id="diagram-desc">The arrows show drift decaying toward the target.</p>'
+        )
+
+        issues = check_long_description_for_diagrams(test_file)
+        assert len(issues) == 0
+
+    def test_svg_with_details_long_description_passes(self, tmp_path):
+        """Test that a <details> long-description disclosure passes."""
+        test_file = tmp_path / "test.qmd"
+        test_file.write_text(
+            "![The vector field](diagram.svg)\n\n"
+            "<details><summary>Long description</summary>\n"
+            "The arrows show drift decaying toward the target.\n"
+            "</details>"
+        )
+
+        issues = check_long_description_for_diagrams(test_file)
+        assert len(issues) == 0
+
+    def test_svg_with_dangling_aria_describedby_flagged(self, tmp_path):
+        """Test that aria-describedby pointing to a missing id is still flagged."""
+        test_file = tmp_path / "test.qmd"
+        test_file.write_text(
+            '<img src="diagram.svg" alt="Vector field" aria-describedby="missing">'
+        )
+
+        issues = check_long_description_for_diagrams(test_file)
+        assert len(issues) == 1
 
 
 class TestIntegration:
