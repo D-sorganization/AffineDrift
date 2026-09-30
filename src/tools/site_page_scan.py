@@ -30,6 +30,7 @@ CONTENT_DIRS: tuple[str, ...] = (
     "models",
     "repositories",
     "books",
+    "evidence",
 )
 
 #: Book trees whose .qmd files (except their index pages) are book chapters.

@@ -291,12 +291,11 @@ categories:
         rows: list[str] = []
         for engine in self._engines:
             eid = engine.get("id", "")
-            title = engine.get("title", eid)
+            name = engine.get("name", eid)
             tier = engine.get("support_tier", "unspecified").capitalize()
-            status = engine.get("maturity", "unspecified").capitalize()
             notes = engine.get("notes", "None")
-            rows.append(f"| `{eid}` | **{title}** | {tier} | {status} | {notes} |")
-        engine_table = "\n".join(rows) if rows else "| None | - | - | - | - |"
+            rows.append(f"| `{eid}` | **{name}** | {tier} | {notes} |")
+        engine_table = "\n".join(rows) if rows else "| None | - | - | - |"
 
         req_py = self._compatibility.get("requires_python", ">=3.11")
         minors = ", ".join(self._compatibility.get("supported_python_minors", ["3.11", "3.12"]))
@@ -329,8 +328,8 @@ categories:
 
 ## Physics Engines & Support Tiers
 
-| Engine ID | Engine Name | Support Tier | Maturity | Operational Notes |
-| :--- | :--- | :--- | :--- | :--- |
+| Engine ID | Engine Name | Support Tier | Operational Notes |
+| :--- | :--- | :--- | :--- |
 {engine_table}
 
 ### Support Tier Definitions
@@ -345,11 +344,12 @@ categories:
         rows: list[str] = []
         for prog in sorted(self._programs, key=lambda p: str(p.get("id", ""))):
             pid = prog.get("id", "")
-            title = prog.get("title", pid)
-            kind = prog.get("kind", "program")
-            engine = prog.get("engine", "core")
+            title = prog.get("name", pid)
+            kind = prog.get("type", "program")
+            engine = prog.get("engine_id") or "core"
             maturity = prog.get("maturity", "unspecified")
-            surfaces = ", ".join(prog.get("surfaces", [])) or "cli"
+            # The manifest publishes no surface list; say so rather than guess.
+            surfaces = ", ".join(prog.get("surfaces", [])) or "not published"
             rows.append(
                 f"| `{pid}` | {title} | `{kind}` | `{engine}` | `{maturity}` | {surfaces} |"
             )

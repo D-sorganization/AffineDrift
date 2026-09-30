@@ -128,76 +128,26 @@ categories:
 </section>
 
 
-<script>
+<script type="module">
+import { initCategoryHistory } from '/js/history.js';
+
 document.addEventListener('DOMContentLoaded', function() {
-  const modelsHistoryList = document.getElementById('models-history-list');
-  if (!modelsHistoryList) return;
-
-  const MODEL_PAGES = [
-    'models.html',
-    'models-simulink.html',
-    'models-mujoco.html',
-    'models-drake.html',
-    'models-pinocchio.html',
-    'models-pendulum.html',
-    'models-opensim.html',
-    'models-myosim.html'
-  ];
-
-  function updateModelsHistory() {
-    let history = [];
-    try {
-      const raw = localStorage.getItem('affinedrift_models_history');
-      if (raw) history = JSON.parse(raw);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      localStorage.removeItem('affinedrift_models_history');
-    }
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'models-mujoco.html'
-    };
-
-    if (MODEL_PAGES.includes(currentPage.url)) {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_models_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      modelsHistoryList.textContent = '';
-      const li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'No recent models yet';
-      modelsHistoryList.appendChild(li);
-      return;
-    }
-
-    modelsHistoryList.textContent = '';
-    const fragment = document.createDocumentFragment();
-    history.forEach((item) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      let safeUrl = "#";
-      if (typeof item.url === "string") {
-        try {
-          const parsed = new URL(item.url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-      }
-      a.href = safeUrl;
-      a.textContent = item.title;
-      li.appendChild(a);
-      fragment.appendChild(li);
-    });
-    modelsHistoryList.appendChild(fragment);
-  }
-
-  updateModelsHistory();
+  initCategoryHistory({
+    listElementId: 'models-history-list',
+    storageKey: 'affinedrift_models_history',
+    emptyMessage: 'No recent models yet',
+    pages: [
+      'models.html',
+      'models-simulink.html',
+      'models-mujoco.html',
+      'models-drake.html',
+      'models-pinocchio.html',
+      'models-pendulum.html',
+      'models-opensim.html',
+      'models-myosim.html'
+    ],
+    fallbackUrl: 'models-mujoco.html'
+  });
 });
 </script>
 ```

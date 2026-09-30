@@ -9,7 +9,7 @@ categories:
 ```{=html}
 <section class="resources-section">
   <div class="ad-page-container">
-    <div class="standard-page-layout">
+    <div class="standard-page-layout standard-page-layout--single">
       <!-- Left Sidebar: Table of Contents -->
       <div class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -355,83 +355,9 @@ categories:
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Websites History -->
-      <div class="right-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Websites</h3>
-          <ul class="sidebar-links" id="websites-history-list">
-            <li class="history-empty">No recent websites yet</li>
-          </ul>
-        </nav>
-      </div>
-      </div>
     </div>
   </div>
 </section>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const websitesHistoryList = document.getElementById('websites-history-list');
-  if (!websitesHistoryList) return;
-
-  function updateWebsitesHistory() {
-    let history = [];
-    try {
-      const raw = localStorage.getItem('affinedrift_websites_history');
-      if (raw) history = JSON.parse(raw);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      localStorage.removeItem('affinedrift_websites_history');
-    }
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-websites.html'
-    };
-
-    if (currentPage.url === 'resources-websites.html') {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_websites_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      websitesHistoryList.textContent = '';
-      const li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'No recent websites yet';
-      websitesHistoryList.appendChild(li);
-      return;
-    }
-
-    websitesHistoryList.textContent = '';
-    const fragment = document.createDocumentFragment();
-    history.forEach((item) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      let safeUrl = "#";
-      if (typeof item.url === "string") {
-        try {
-          const parsed = new URL(item.url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-      }
-      a.href = safeUrl;
-      a.textContent = item.title;
-      li.appendChild(a);
-      fragment.appendChild(li);
-    });
-    websitesHistoryList.appendChild(fragment);
-  }
-
-  updateWebsitesHistory();
-});
-</script>
 ```
 
 ## Related Articles
