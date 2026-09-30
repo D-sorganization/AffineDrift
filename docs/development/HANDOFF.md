@@ -51,6 +51,11 @@
 ## Next Steps
 
 1. None outstanding — acceptance criteria are met; awaiting reviewer merge.
+- Removing the inline history script dropped `resources/resources-notebooklm.qmd` to 258 prose
+  words, under the 300-word scaffolding threshold the script's text had been masking. Added a
+  short, accurate usage caveat (machine-generated notes; external Google service) rather than a
+  Planned badge, since the page is live content.
+
 # Implementation Handoff — Deploy Website route coverage (#4548 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-route-coverage`
