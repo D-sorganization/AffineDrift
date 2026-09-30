@@ -1,6 +1,11 @@
-# Bibliography: Lagrangian Reference for Control-Affine Multibody Dynamics
+---
+title: "Bibliography: Lagrangian Reference for Control-Affine Multibody Dynamics"
+description: "Companion bibliography for the AffineDrift article on the Lagrangian reference for control-affine multibody dynamics."
+---
 
-## Concept Map
+## Bibliography: Lagrangian Reference for Control-Affine Multibody Dynamics
+
+### Concept Map
 
 - **Lagrangian Mechanics**: The fundamental framework deriving dynamics from energy ($\mathcal{L} = T - V$).
 - **Control-Affine Systems**: The structural form $\dot{x} = f(x) + G(x)u$ central to the AffineDrift theory.
@@ -11,7 +16,7 @@
 - **Flexible Multibody Dynamics**: Extension of rigid body theory to include deformations (shaft modes).
 - **Geometric Control**: Analysis of mechanical systems using differential geometry (connections, curvature).
 
-## References
+### References
 
 ```yaml
 - id: goldstein2002classical
@@ -249,9 +254,9 @@
   references_out_ids: []
 ```
 
-## Reading Paths
+### Reading Paths
 
-### Fast ramp (Foundations)
+#### Fast ramp (Foundations)
 
 1.  [spong2020robot] - Accessible introduction to derivation of Euler-Lagrange equations for robots.
 2.  [murray1994mathematical] - The standard reference connecting mechanics to control theory (Chapters 4 & 6).
@@ -259,7 +264,7 @@
 4.  [slotine1991applied] - Explicitly bridges Lagrangian dynamics to the $\dot{x} = f(x) + G(x)u$ form.
 5.  [sympy_lib] - Tool for verifying your manual derivations symbolically.
 
-### Deep technical (Geometric & Flexible)
+#### Deep technical (Geometric & Flexible)
 
 1.  [bullo2004geometric] - Rigorous treatment of mechanics on manifolds ($T\mathcal{Q}$).
 2.  [arnold1989mathematical] - Deep insight into the symplectic geometry underlying the physics.
@@ -270,7 +275,7 @@
 7.  [lanczos2012variational] - A philosophical deep dive into why the variational principles work.
 8.  [udwadia2007analytical] - Modern approach to constraints using generalized inverses.
 
-### Implementation (Simulation & Computation)
+#### Implementation (Simulation & Computation)
 
 1.  [featherstone2008rigid] - How to actually compute these terms efficiently ($O(N)$) without symbolic explosion.
 2.  [pinocchio_lib] - State-of-the-art C++/Python library implementing Featherstone's algorithms.

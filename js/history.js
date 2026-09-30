@@ -136,7 +136,7 @@ export function initArticleHistory() {
         "nonlinear-control-insights.html",
         "drift-components-wrench-double-pendulum.html",
         "secondary-axis-stability.html",
-        "controllability-drift-ratio.html",
+        "drift-control-ratio.html",
         "strokes-gained-limitations.html",
         "superposition.html",
         "screw-theory-reference.html",

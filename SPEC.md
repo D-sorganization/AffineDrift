@@ -225,6 +225,13 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
+| 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
+| 2026-09-29 | #4548 | Render the 22 orphaned per-article companion bibliographies via a new `articles/*-bibliography.md` render rule, add front matter, fix their two broken links, and document the pattern. |
+| 2026-09-29 | #4576 | Add a Privacy Policy page covering local storage, the service worker, third-party embeds, and analytics per D6; link it from the site footer. |
+| 2026-09-29 | #4582 | Enforce uppercase G(x) for the control-affine input map across the home page, four textbook chapters and 12 critique files; add a baseline-gated pytest notation lint (scripts/check_notation.py). |
+| 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
+| 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
+| 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
 | 2026-09-29 | #4640 | Enforce verified publication dates, zero date: today, date-source contract, and per-article revision history component (#4545). |
 | 2026-09-30 | #4658 | Enforce unique titles and 70-160 character meta descriptions across all pages (#4575). |
 | 2026-09-30 | #4563 | Remove nine of the ten `--grep-invert` E2E exclusions from `ci-standard.yml` whose defects were already fixed (#4200) but never actually re-run in CI; fix a touch-target test bug that miscounted CSS-hidden elements as non-compliant; leave the tenth (pixel-snapshot baselines) excluded pending a fleet-runner `--update-snapshots` pass. |
