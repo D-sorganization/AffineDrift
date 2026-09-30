@@ -1,3 +1,102 @@
+# Implementation Handoff — Short On-Ramp Learning Paths (#4492)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4492`.
+- Branch `claude/issue-4492`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4677 (draft, targets
+  `main`).
+- Governing issue: #4492 (WEB-01.7, part of epic #4496 — Audience Routing and
+  Onboarding Funnel). Objective: add short on-ramp learning paths (5 minutes,
+  30 minutes, 3 hours) per persona, each a curated sequence of existing
+  sections with a goal statement and a self-check question.
+- Dependencies listed on the issue (WEB-01.4 "Big Idea in Five Minutes"
+  explainer, #4489; WEB-12.4 plain-language entry-page rewrite, #4590) are
+  both still open. Neither blocks this issue: the acceptance criteria require
+  curating *existing* sections, and no on-ramp here depends on content those
+  issues would add — each links only to pages that already exist on `main`.
+- Added `resources/on-ramp-paths.qmd`: for each of the 8 personas in
+  `config/personas.yml` (learner, researcher, integrator, experimentalist,
+  reviewer, contributor, golfer-coach, student), a 5-minute, 30-minute, and
+  3-hour on-ramp. Each tier lists existing pages in order with a per-page time
+  estimate, a one-line goal statement, and ends with one self-check question
+  and its answer grounded in the linked page's actual body content. Every
+  link resolves under the site link gate; anchors use the
+  `{#onramp-<persona>-<tier>}` convention.
+- Linked the new page from `resources/learning-paths.qmd` (an intro pointer
+  plus a Path Index entry) so it is not orphaned by the link gate; no
+  `_quarto.yml` navigation change was needed, matching how the existing
+  per-path pages (`learning-path-foundations.qmd`, etc.) are already wired.
+- **Fix round (review of draft PR #4677):** the reviewer found the first pass's
+  self-check questions were mostly front-matter-description recall ("per its
+  own description...") rather than reflective questions, plus several factual
+  errors. Fixed in this commit:
+  - A lowercase `g(x)u` in one self-check answer, against `NOTATION.md`'s
+    uppercase $G(x)$ convention for the control-affine input map — the
+    question that contained it was replaced.
+  - A self-check that called the Zero Velocity Counterfactual (ZVCF) a
+    "trajectory"; per `articles/theory-part2.qmd` only ZTCF integrates
+    forward into a trajectory, ZVCF is a single-state evaluation — reworded.
+  - Two self-checks (Researcher 3hr, Student 3hr) that claimed Theory Part 4
+    supplies an "independently checkable double-pendulum benchmark."
+    `articles/theory-part4.qmd` never mentions a double pendulum — it derives
+    beam and pendulum (shaft-flexibility) dynamics. Both were rewritten using
+    `articles/theory-part5.qmd`'s own phrase, "independently checkable
+    mathematical examples," and the Student 3hr item line and time estimate
+    were corrected to match.
+  - A factual error found during the required broader verification pass (not
+    itself cited by the reviewer): the Researcher and Reviewer 5-minute
+    on-ramps described the `resources/research-review-*.qmd` pages as
+    finished, evidence-graded reviews. Those pages are explicitly marked
+    "Planned (Scaffolding Phase)" / "source-collection stub" with an Evidence
+    Status warning that they do not yet establish claims — both on-ramps now
+    say so.
+  - All 24 self-check questions were rewritten (21 of 24 were previously
+    shallow recall) to test a real distinction or mechanism from the linked
+    page's body text, with the answer grounded in that text.
+  - Theory Part 1's time estimate (appeared at 90/30/60/90 minutes across four
+    on-ramps) is now ~30 minutes everywhere, matching the pre-existing,
+    already-vetted "30-Minute Route" convention for that article in
+    `config/personas.yml`.
+  - The page subtitle's "40–160 hours" claim didn't match
+    `resources/learning-paths.qmd`'s own stated range (10–80 / 80–160 / 160+
+    hours); changed to "10–160+ hours."
+- Tests: `tests/test_on_ramp_paths.py`, now 10 cases (5 original + 5 added
+  this round as regression guards for the fixes above): front-matter
+  validity, all 24 persona/tier anchors present, every tier has a timed page
+  link plus a self-check question and answer, all internal links resolve, the
+  page is linked from the learning-paths hub, no unqualified lowercase
+  `g(x)u`, Theory Part 1's time estimate is consistent everywhere it appears,
+  Theory Part 4 is never described with "double pendulum" wording, no
+  "per its own description" recall phrasing remains, and the subtitle matches
+  the learning-paths hub's stated hour range.
+- Validation commands run in this worktree (this fix round):
+  - `python -m pytest tests/test_on_ramp_paths.py -v` → 10 passed.
+  - `python -m pytest tests/test_site_link_gate.py tests/test_how_to_read.py
+    tests/test_persona_start_paths.py tests/test_check_links.py
+    tests/test_check_site_health.py -v` → 98 passed.
+  - Site gate (invoked via `scripts/link-checker.py`'s `main(["--site-gate"])`
+    with the repo root on `sys.path`, working around a `ModuleNotFoundError`
+    when the script is run directly without `PYTHONPATH`) → "Site gate
+    passed!".
+  - `python -m ruff check tests/test_on_ramp_paths.py` → all checks passed.
+  - `python -m black --check --line-length 100 tests/test_on_ramp_paths.py`
+    → clean after one auto-format pass for the new assertion's line wrap.
+  - Full `python -m pytest --cov` suite: still fails at collection on ~75
+    unrelated test modules (`tests/test_screw_examples.py`,
+    `benchmarks/test_core_benchmarks.py`, etc.) with
+    `ImportError: A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.2.6`. Confirmed pre-existing and unrelated to this change in the
+    original pass; unchanged this round. Not fixed here; out of scope for a
+    WEB-01.7 content change.
+- Not done / deferred: none for the issue's own acceptance criteria. The two
+  open dependency issues (#4489, #4590) may eventually add content (a "Big
+  Idea in Five Minutes" explainer, plain-language entry-page rewrites) that a
+  future pass could fold into these on-ramps, but nothing here requires it.
+
+## Next Steps
+
+1. Push `claude/issue-4492` with this fix round.
+2. Awaiting frontier-agent re-review of PR #4677.
 # Deduplicate and Reconcile Bibliography Databases — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, worktree
