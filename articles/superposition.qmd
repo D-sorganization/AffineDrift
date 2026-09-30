@@ -160,9 +160,23 @@ $$
 
 **This is the basic superposition statement:** at a fixed state $x$, the *incremental effect of each input component* on $\dot x$ is linear and additively separable.
 
+![Parallelogram Superposition of Instantaneous Acceleration Increments at a Fixed State Snapshot, Showing That Input Channels Produce Linearly Additive Acceleration Contributions Relative to the Drift Baseline.](figures/core_theory/fig_superposition_decomposition.svg){#fig-superposition-decomposition width=95% fig-alt="Vector diagram showing joint acceleration space where channel 1 and channel 2 acceleration increments form a closed parallelogram with the combined response relative to the drift origin."}
+
+<details>
+<summary>Long description</summary>
+The vector diagram illustrates vector addition of instantaneous accelerations in joint coordinate space at a single fixed state snapshot. The zero-input drift acceleration vector establishes the baseline coordinate origin. From this point, acceleration increments $\Delta a_1 = M^{-1}B_1 u_1$ and $\Delta a_2 = M^{-1}B_2 u_2$ form adjacent sides of a vector parallelogram. The combined acceleration from simultaneous inputs $u_1 + u_2$ coincides exactly with the diagonal vertex, geometrically proving that state-affine dynamics obey strict additive superposition instantaneously across input channels.
+</details>
+
 For acceleration $a=a_d+Hu$, subtraction gives $a-a_d=Hu$: the acceleration increment, not a unique input. Recovering $u$ also requires a known $H$, a range-consistent observation, and enough independent input information. If $H$ has a nontrivial kernel, several inputs give the same increment. Input bounds and noise can further limit inversion. The sign matters: subtracting total acceleration from drift gives $-Hu$.
 
 Finite trajectories generally do not add. For the specified linear system $\dot x=A(t)x+B(t)u+c(t)$, trajectories with the same initial state obey $x_{u_1+u_2}=x_{u_1}+x_{u_2}-x_0$, with the evolved zero-input baseline counted once. Making the columns of $G(x)$ linear in state is not enough: $\dot x=xu$ is bilinear and does not have that input-to-trajectory superposition property.
+
+![Divergence Between Exact Nonlinear Forward Integration and Naive Linear Trajectory Superposition Over Time Horizons, Demonstrating Quadratic Error Growth as Velocity-Dependent Coriolis Coupling Compounds.](figures/core_theory/fig_superposition_breakdown_boundary.svg){#fig-superposition-breakdown-boundary width=95% fig-alt="Line plot comparing exact nonlinear trajectory with naive linear trajectory superposition, showing rapid error divergence beyond 50 ms due to velocity-squared Coriolis coupling."}
+
+<details>
+<summary>Long description</summary>
+The trajectory divergence plot contrasts exact numerical integration of the nonlinear multibody equations against naive addition of independent single-actuator trajectories over time. For short durations under 20 ms, the linear trajectory approximation remains close. Beyond 50 ms, the trajectories diverge sharply because velocities induced by one input alter the centrifugal and Coriolis accelerations that act on the other input channels, causing quadratic and exponential error growth that violates trajectory-level superposition.
+</details>
 
 
 ### Admissible Inputs and a Feasible Reference
@@ -958,6 +972,13 @@ Choose the model level for the question: torque-level equations can analyze load
 ---
 
 ## Applications and Worked Examples Across Formulations
+
+![Cross-Channel Acceleration Coupling via Mass Matrix Inverse $M^{-1}(q)$, Showing Direct and Reaction Accelerations Induced Across Proximal and Distal Coordinates by Separate Actuator Inputs.](figures/core_theory/fig_superposition_modal_response.svg){#fig-superposition-modal-response width=95% fig-alt="Grouped bar chart showing direct joint acceleration alongside induced reaction accelerations across proximal and distal links for unit torques at each joint."}
+
+<details>
+<summary>Long description</summary>
+The cross-channel coupling chart details the induced accelerations across joints under individual unit actuator torques. Applying torque solely at the proximal joint produces a direct positive acceleration on the proximal link along with an induced reaction acceleration on the distal link through the off-diagonal mass matrix term $M_{12}^{-1}$. Conversely, distal torque accelerates the clubhead while exerting an opposing reaction on the proximal segment. This coupling demonstrates why superposition holds per instantaneous force channel even when inertial coordinates are strongly coupled.
+</details>
 
 To make the parallels concrete, we now present two more worked examples: a planar 2R manipulator and a brief screw-theoretic example.
 
