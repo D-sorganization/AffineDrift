@@ -25,8 +25,9 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from xml.etree import ElementTree
 from xml.sax.saxutils import escape
+
+from defusedxml import ElementTree
 
 from src.tools.utils import setup_logging
 from src.tools.utils.content_utils import collect_qmd_files, read_qmd_with_frontmatter
