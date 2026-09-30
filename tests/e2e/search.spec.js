@@ -103,4 +103,27 @@ test.describe("Search Functionality", () => {
       .first();
     await expect(monographResult).toBeVisible();
   });
+
+  // No page carries a `status`/`maturity` front-matter field yet, so the
+  // badge annotation is covered by tests/search-maturity-badge.test.js
+  // fixtures; assert here only that ZTCF ranks first (#4504).
+  test("finds the ZTCF page first (#4504)", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const searchButton = page
+      .locator(
+        '#quarto-search button, button.search-trigger, button[aria-label*="search" i]',
+      )
+      .first();
+    await searchButton.click();
+
+    const searchInput = page.locator(".aa-Input, input[type=search]").first();
+    await expect(searchInput).toBeVisible();
+    await searchInput.fill("ZTCF");
+
+    const firstResult = page.locator(".search-result-doc .search-result-link").first();
+    await expect(firstResult).toHaveAttribute("href", /zero-torque-counterfactual/);
+  });
 });

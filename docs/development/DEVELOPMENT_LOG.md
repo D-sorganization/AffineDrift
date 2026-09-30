@@ -19,6 +19,31 @@ reachable from any live state and `abandoned` from `parked`.
 ## Active
 
 ### DL-#4602 · Content Inventory and Ownership Map
+### DL-#4504 · Configure Search, and Include Maturity in Results
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4504 (WEB-02.10; epic #4514)
+- **Branch:** `claude/issue-4504`
+- **Paths:** `_quarto.yml`, `_includes/site-head.html`, `js/search-maturity-badge.js`, `scripts/generate_search_maturity_index.py`, `css/search-metrics.css`, `articles/zero-torque-counterfactual.qmd`, `.github/workflows/deploy-website.yml`, `tests/e2e/search.spec.js`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: `npx jest` 441 passed/19 skipped; `pytest --timeout=120 -q` all passed; ruff/black clean; `check_spec_changelog` and `regenerate_claim_audit_evidence --check` pass. Full-site Playwright E2E not run locally — `quarto render` is blocked in this sandbox; CI's `e2e-tests` job validates the new ZTCF search spec.)
+- **Summary:** Configures an explicit Quarto `search:` block (overlay, limit 10, `/`/`s` shortcut), removes the unverified `SearchAction` JSON-LD (its target was never implemented), and injects the page-header-card maturity badge into matching search results via a generated `search-maturity.json` index and a client-side DOM-annotation module.
+- **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job confirm the new "ZTCF" search spec passes against the real full-site render.
+### DL-#4535 · DCR Visualiser Widget
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (opened by the orchestrator, not this session)
+- **Issue:** #4535 (WEB-06.5; epic #4543)
+- **Branch:** `claude/issue-4535`
+- **Paths:** `articles/controllability-drift-ratio.qmd`, `js/dcr-visualizer.js`, `js/dcr-visualizer-ui.js`, `css/dcr-visualizer.css`, `tests/dcr-visualizer.test.js`, `tests/dcr-visualizer-ui.test.js`, `tests/test_dcr_visualizer_parity.py`, `tests/fixtures/dcr_visualizer_parity.json`, `scripts/sync_frontend_assets.py`, `data/research_protocols/library.json`, `data/research_protocols/public_summary.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (review response: `npx jest tests/dcr-visualizer.test.js tests/dcr-visualizer-ui.test.js tests/rotation-converter-ui.test.js` 36 passed; targeted `pytest` incl. `test_dcr_visualizer_parity.py`, `test_sync_frontend_assets.py`, `test_deployment_integrity.py`, `test_check_css_architecture.py`, `test_research_protocol_readiness.py`, `test_claim_audit_inventory.py` all passed; `ruff check .` and `black --check --line-length 100 .` clean)
+- **Summary:** Adds an interactive DCR-through-swing-phase widget to the DCR article, built on a pure-JS mirror of `src/affine_control/reachability.py`'s `LinearScalarSystem`/`instantaneous_scalar_dcr`/`scalar_linear_reachable_interval`. It compares an additive-drift and a state-dependent-drift system that share one instantaneous DCR at the phase start but different reachable-interval widths (the same fixture governed by `tests/test_dcr_event_sensitivity_protocol.py`), explicitly demonstrating claim `ad-dcr-001`, and links that claim from the widget. Review response: relabeled the phase slider and heading to remove the golf-specific "swing phase" framing, added a `<thead>`/`scope="col"` header row to the results table, added a `<noscript>` fallback with the default example's values, moved all inline styles and hex literals into `css/dcr-visualizer.css` (theme-variable-driven, with a dark-mode override for the two series accent colors, and registered in `scripts/sync_frontend_assets.py`'s deploy mirror map alongside the two JS modules, which had been missing from it), and centralized the shared parity numbers into `tests/fixtures/dcr_visualizer_parity.json` read by both the pytest and Jest suites. Regenerated the claim-audit and research-readiness digests that pin the article's SHA-256 after editing it.
+- **Next step:** Let CI's Jest/E2E/quality-gate confirm the widget renders, mirrors correctly into `docs/`, and passes axe-core on the DCR page.
+
 ### DL-#4578 · Social Cards per Page
 
 - **State:** in_review
