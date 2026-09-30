@@ -1,62 +1,156 @@
-# Implementation Handoff — Figures for Core Theory Pages (#4536)
+# Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4588
+- Branch: claude/issue-4588
+- Governing issue/epic: #4588 (epic #4594 "[E12] Editorial Voice and Plain-Language Standard")
+- Pull request: not yet created at the time this section was written (draft PR opened in the same session; see PR link in the commit that follows)
+
+## Objective and Status
+
+- Objective: keep the five internal governance/critique-apparatus words ("governed", "qualified", "provenance", "protected", "fail-closed") out of reader-facing prose — replace with plain language or a glossary link — and add a CI lint that warns (then eventually blocks) on new occurrences outside the evidence/developer surfaces.
+- Status: **partial / Blocked**. Infrastructure (lint + glossary) is complete and CI-wired in warn mode. Content remediation is complete on the hub/entry reader pages (`pages/`, `resources/`, `books/`, and the non-`programming/` `models/` boilerplate) but **not** on the bulk of the deep scientific-chapter corpus under `articles/` (roughly 90+ files, ~180 remaining occurrences) or on a cluster of evidence/protocol-specification pages under `models/` (`active-impedance-identification.qmd`, `bilateral-hand-wrench-validation.qmd`, `hybrid-impact-contact.qmd`, `model-ladder.qmd`, `equipment-individual-response.qmd`, `research-protocol-readiness.qmd`, `neural-timing-feedback.qmd`, `population-generalization.qmd`) that read as evidence-tier documents despite their directory location.
+- Why partial: the issue's acceptance criterion ("at least a 75% reduction on reader pages") requires rewriting dense, precise scientific/methodological prose across the textbook chapter corpus. Doing that correctly needs a consistent plain-language standard, which is the explicit subject of the still-open prerequisite issue **#4587 "[WEB-12.1] Write the Editorial Style Guide"** (listed first in the epic, `tier:strong`/`judgement:design`). Rewriting ~180 occurrences across ~90 chapter files without that standard risks inconsistent terminology and, more importantly, risks silently changing precise methodological claims in peer-review-style scientific prose — exactly the kind of judgment call CLI-tier agents are asked not to guess on. Measured against the lint's own scope (reader-facing `.qmd` under `articles/`, `books/`, `models/`, `pages/`, `resources/`, excluding `articles/_generated/` and `models/programming/`), occurrences dropped from 303 to 252 (~17%); within just `pages/` + `resources/` + `books/` + top-level `models/` (excluding the evidence-tier protocol cluster above), the reduction is close to 100% (`resources/` and `books/` are now fully clean; `pages/` only retains the glossary page itself and CSS class-attribute mentions, both deliberate).
+- Completed:
+  - TDD: `tests/test_check_governance_vocabulary.py` (19 tests, written first, RED confirmed against the missing module before implementation).
+  - `scripts/check_governance_vocabulary.py`: scans `articles/`, `books/`, `models/`, `pages/`, `resources/` (`.qmd` only), excluding `articles/_generated/` and `models/programming/`, for the five terms; baseline-gated like the existing `scripts/check_terminology.py`.
+  - `config/governance-vocabulary-baseline.json`: grandfathers the 252 remaining occurrences (the deep chapter corpus, the evidence-tier `models/` protocol cluster, the glossary page itself, and incidental CSS-class/URL matches that are not reader-visible prose).
+  - `pages/glossary.qmd`: new plain-language glossary for the five terms, linked from `pages/notation.qmd`.
+  - Content edits reducing or removing the five terms on: `pages/overview.qmd`, `pages/collaborate.qmd`, `pages/tools.qmd`, `pages/tangent-hyperplanes.qmd`, `pages/technology.qmd`, `pages/development-roadmap.qmd`, `pages/drifter-manifesto.qmd`, `pages/notation.qmd`, `resources/articles.qmd`, `resources/learning-path-golf-science.qmd`, `resources/learning-path-biomechanics.qmd`, `resources/learning-paths.qmd`, `resources/research-review-induced-acceleration-analysis.qmd`, `resources/resources-software.qmd`, `books/index.qmd`, `books/roadmap.qmd`, `books/human-motor-control.qmd`, `models/models.qmd`, `models/models-opensim.qmd`, `models/models-myosim.qmd`, `models/models-pinocchio.qmd`, `models/models-mujoco.qmd`, `models/models-drake.qmd`, `models/models-simulink.qmd`.
+  - `.github/workflows/ci-standard.yml`: new "Verify Governance Vocabulary Stays Out of Reader Prose" step, `continue-on-error: true` (warn mode per the acceptance criterion), matching the existing MATLAB Quality Check warn-mode precedent.
+- Remaining (recommended follow-up, likely as one or more new issues once #4587 lands):
+  1. Write the editorial style guide (#4587) — a prerequisite for consistent chapter-level rewrites.
+  2. Rewrite the `articles/` chapter corpus (proximal-distal energy-transfer/companion chapters, tangent-hyperplanes series, Geometry of Motion / Physics of Golf textbook chapters) against that standard, removing baseline entries as each file is cleaned.
+  3. Decide whether the `models/` evidence-tier protocol cluster listed above should be reclassified as an evidence surface (like `critiques/`/`reports/`) and excluded from this lint's scope, or rewritten — a scope decision, not a mechanical one.
+  4. Once the reader surfaces are clean, remove `continue-on-error: true` from the CI step to make the gate blocking, per the issue's second acceptance criterion.
+
+## Files and Decisions
+
+- Key decisions:
+  - Reader-page scope = `articles/`, `books/`, `models/`, `pages/`, `resources/` per `docs/development/repository_inventory.md`'s existing reader/process split; evidence/developer exclusions = `articles/_generated/` (generated trust/critique annotations) and `models/programming/` (the programming-companion consumer docs), matching the issue's own "evidence and developer surfaces" language.
+  - "Warn mode" implemented via the CI step's `continue-on-error: true` (the repo's existing precedent for MATLAB Quality Check), not a script-level flag, so promoting to blocking later is a one-line diff.
+  - Baseline mechanism copied from `scripts/check_terminology.py` (`path::term` keys, no line number) rather than inventing a new grandfathering scheme.
+  - Did not rename the `provenance-note` CSS component (`css/components/provenance-note.css`, used in `pages/tools.qmd`, `pages/drifter-manifesto.qmd`, `index.qmd`, tested in `tests/tools/test_design_primitives.py` and `tests/test_home_page_layout.py`, documented in `CONTRIBUTING.md`) — a CSS class name is not reader-visible prose, and renaming it is a separate CSS/design-system refactor outside this issue's scope.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest tests/test_check_governance_vocabulary.py tests/test_check_terminology.py -m content_lint` — 52 passed.
+- `python -m ruff check scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
+- `python -m black --check --line-length 100 scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
+- `python scripts/check_governance_vocabulary.py --root . --baseline config/governance-vocabulary-baseline.json` — PASS (0 new violations; 252 baselined).
+- CI workflow YAML validated with `python -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` — OK.
+- `python -m ruff check .` and `python -m black --check --line-length 100 .` — both clean repo-wide.
+- `python scripts/check_root_hygiene.py` and `python -m scripts.check_spec_changelog` — both pass.
+- Known pre-existing failure outside this change's scope: `python -m pytest -m content_lint` errors during collection on ~75 unrelated `*_rigor.py`/benchmark test modules with `ImportError: numpy.core.multiarray failed to import` (a scipy-compiled-against-NumPy-1.x vs. installed NumPy 2.x ABI mismatch in this local environment). Confirmed pre-existing and unrelated: none of those files are touched by this change, and the same import fails in isolation for a file this PR never edited (`tests/test_swing_plane_launch_rigor.py`).
+
+## Blockers and Risks
+
+- Blocker: full 75% reduction depends on the not-yet-written editorial style guide (#4587) for consistent chapter-level plain-language replacements, and on a scope decision about the `models/` evidence-tier protocol cluster. See "Objective and Status" above.
+- Risk: none to existing functionality — all edits are prose/link-text changes plus new, additive tooling; no existing behavior was removed.
+
+## Next Steps
+
+1. Land #4587 (editorial style guide), then use it to drive chapter-by-chapter rewrites of the `articles/` corpus, removing baseline entries as each file is cleaned.
+
+## Change Log
+
+- `SELF` — Keep internal governance vocabulary out of reader prose; add warn-mode CI lint (#4588).
+
+---
+
+# Readability Measurement Tool — Issue #4591
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4591`.
+- Branch `claude/issue-4591`, commit `SELF`; pull request: to be opened as a draft by this session.
+- Governing issue: #4591 (WEB-12.5, part of epic #4594 / E12 — Editorial Voice and Plain-Language Standard).
+- Objective: `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for
+  lay blocks (`<section class="laymans-terms">` content), the `summary-plain` frontmatter field,
+  and hub pages, excluding math/code/Markdown/HTML markup from the scoring text.
+- Threshold: grade 10, taken from WEB-12.1's stated readability target ("lay block <= grade 10")
+  and WEB-12.4's hub-page acceptance criterion, applied uniformly via `--threshold`. WEB-12.1
+  itself (`docs/development/editorial-style-guide.md`) is still open (`tier:strong`, unmerged);
+  this issue only needed the numeric target already stated in its issue body, not the finished
+  guide document, so implementation proceeded rather than blocking on #4587.
+- `summary-plain` and most named WEB-12.4 hub pages (a dedicated "Start Here" page, for example)
+  do not exist yet; the checker is forward-compatible — it silently finds nothing for absent
+  frontmatter fields or hub-page paths rather than erroring, and `--hub-page`/`ReadabilityConfig`
+  let a later pass add pages as they're created.
+- CI wiring mirrors the existing MATLAB Quality Check pattern in `ci-standard.yml`:
+  `continue-on-error: true` plus an `upload-artifact` step (`readability-report.json`), so the
+  check is advisory rather than blocking, per the acceptance criteria.
+- Validation:
+  - `python3 -m pytest tests/tools/test_check_readability.py --no-cov -q`: 33 passed.
+  - `python3 -m ruff check scripts/check_readability.py tests/tools/test_check_readability.py`: clean.
+  - `python3 -m black --check --line-length 100 scripts/check_readability.py tests/tools/test_check_readability.py`: clean (after one auto-format pass).
+  - `python3 -m mypy scripts/check_readability.py --ignore-missing-imports --allow-untyped-decorators --disable-error-code no-any-unimported --disable-error-code misc --disable-error-code unused-ignore --disable-error-code no-any-return`: clean.
+  - Manual run against the live repo (`python3 -m scripts.check_readability`) found 16/22 existing
+    lay-block/hub-page passages currently over grade 10 — expected, since WEB-12.4's rewrite pass
+    (the issue that will actually bring prose under the threshold) hasn't happened yet.
+- Full project suite (`pytest --cov`, `npx jest`, `npx playwright test`) was not run in this
+  session; the change touches only a new script, its test file, and one CI workflow step, with no
+  behavioral change to any existing module.
+
+## Next Steps
+
+1. Open the draft PR (`Fixes #4591`) and let the frontier review pass judge the hub-page default
+   list and the shared grade-10 threshold across all three layers, since WEB-12.1 only states the
+   lay-block number explicitly.
+2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
+   different threshold than lay blocks.
+3. No further implementation is planned from this session pending review feedback.
+# Implementation Handoff — Build the Page Header Card Component (#4507)
+# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-06-6-figures-for-core-theory-pages-4536
-- Baseline commit: 84b8737e
+- Branch: feat/web-01-3-extend-personas-4488
+- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
 - Implementation commit: SELF
-- Pull request: #4651
-- Governing issue/epic: #4536 (epic #4543)
+- Pull request: #4638
+- Governing issue/epic: #4488 (epic #4496)
 
 ## Objective and Status
 
-- Objective: Provide static, script-generated SVG figures for core theory pages (`controllability-drift-ratio.qmd`, `zero-torque-counterfactual.qmd`, and `superposition.qmd`), with $\ge 3$ figures per page, accessible alt text, long descriptions, fallback/print utility, and within image budget.
-- Status: ready for commit / PR
+- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
+- Status: PR #4638 created, awaiting auto-merge
 - Completed:
-  - Implemented `scripts/build_core_theory_figures.py` with deterministic SVG generation (Agg backend, svg.fonttype: none, clean normalized output) and `--check` CLI mode.
-  - Generated 9 publication-grade SVGs in `articles/figures/core_theory/`:
-    - `fig_dcr_vector_decomposition.svg` (phase-space drift vs control authority)
-    - `fig_dcr_swing_phases.svg` (acceleration evolution and DCR across downswing phases)
-    - `fig_dcr_reachability_tubes.svg` (finite-horizon reachable set envelopes vs countdown to impact)
-    - `fig_ztcf_trajectory_divergence.svg` (planar clubhead path divergence across release events)
-    - `fig_ztcf_clubhead_speed_loss.svg` (velocity profiles for active vs counterfactual branches)
-    - `fig_ztcf_passive_dynamics_attribution.svg` (acceleration attribution: active muscular vs interaction/Coriolis flail)
-    - `fig_superposition_decomposition.svg` (parallelogram superposition of instantaneous acceleration increments)
-    - `fig_superposition_modal_response.svg` (cross-channel acceleration coupling via mass matrix inverse)
-    - `fig_superposition_breakdown_boundary.svg` (trajectory divergence vs naive superposition error growth)
-  - Embedded 3 figures in each of the three target pages with captions, figure labels, and accessible `fig-alt` descriptions.
-  - Created automated test suite `tests/test_core_theory_figures.py` asserting figure existence, image budget adherence (< 500 KB), `--check` pass, $\ge 3$ references per page, and non-empty alt text and captions.
-  - Verified `tests/test_image_budget.py` and `tests/test_core_theory_figures.py` pass cleanly.
-  - Regenerated claim audit evidence digests and verified all pre-commit checks pass.
-  - Added change-log row in `SPEC.md`.
-- Remaining: Commit, push, create PR, re-key SPEC.md to PR number, arm auto-merge, and release lease.
+  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
+  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
+  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
+  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
+  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
+  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
+  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all checks pass.
+  - Keyed change-log row in `SPEC.md` to #4638.
+- Remaining: Arm auto-merge and release lease.
 
 ## Files and Decisions
 
-- Files changed/created:
-  - `scripts/build_core_theory_figures.py`: Deterministic figure generator.
-  - `articles/figures/core_theory/*.svg`: 9 generated SVG figures.
-  - `articles/controllability-drift-ratio.qmd`: Embedded 3 figures.
-  - `articles/zero-torque-counterfactual.qmd`: Embedded 3 figures.
-  - `articles/superposition.qmd`: Embedded 3 figures.
-  - `tests/test_core_theory_figures.py`: Test suite for core theory figures.
-  - `data/trust/claim_audit_inventory.json` & `site_trust_surface_audit.json`: Regenerated evidence digests.
-  - `SPEC.md`: Change-log entry.
+- Files changed:
+  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
+  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
+  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
+  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
+  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
+  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
+  - `SPEC.md`: Added change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Pure SVG format with deterministic XML formatting and no text path outlines (`svg.fonttype: none`) keeps file size under 65 KB each (total < 400 KB across all 9 figures), well within the 500 KB per-image budget and optimizing vector sharpness for print and web fallbacks.
+- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_core_theory_figures.py tests/test_image_budget.py` — PASS (14 passed)
-- `python scripts/build_core_theory_figures.py --check` — PASS (9 verified)
-- `python -m ruff check scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
-- `python -m black --check --line-length 100 scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
-- `mypy scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
+- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
+- `python -m src.tools.site_link_gate` — PASS (0 errors)
+- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- `python -m scripts.check_terminology --baseline config/terminology-baseline.json` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
 ## Blockers and Risks
@@ -66,14 +160,12 @@
 
 ## Next Steps
 
-1. Commit, push branch, open PR with `agent:local` label.
-2. Re-key `SPEC.md` and `HANDOFF.md` to PR number, push, arm auto-merge, and release lease for #4536.
+1. Monitor PR #4638 CI and auto-merge into main.
 
 ## Change Log
 
-- 02507aac — Extend personas to include curious golfer/coach and student (#4488) (#4638).
-- ebced38f — Build the page header card component (#4507) (#4633).
 - `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
 
