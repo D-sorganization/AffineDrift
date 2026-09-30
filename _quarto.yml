@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  post-render:
+    - python3 scripts/post_render_citations.py
   render:
     - "*.qmd"
     - "pages/**/*.qmd"
@@ -34,6 +36,12 @@ project:
     - content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py
     - src/tools/wrist_universal_joint/grip_angle_polynomial_evaluator.js
 
+# Emits Schema.org JSON-LD for pages that opt in with a `schema-type`
+# frontmatter field (see scripts/filters/schema-jsonld.lua). A no-op for
+# every other page, so it is safe to register project-wide.
+filters:
+  - scripts/filters/schema-jsonld.lua
+
 website:
   title: "AffineDrift"
   site-url: "https://affinedrift.com"
@@ -43,8 +51,14 @@ website:
     border: true
     left: "AffineDrift — independent open research and governed technical publication"
     right:
+      - text: "How to Read This Site"
+        href: pages/how-to-read.html
       - text: "About & Authority"
         href: pages/about.html
+      - text: "Privacy Policy"
+        href: pages/privacy-policy.html
+      - text: "Accessibility"
+        href: pages/accessibility.html
       - text: "AffineDrift Source"
         href: https://github.com/D-sorganization/AffineDrift
       - text: "UpstreamDrift Programs"
@@ -57,6 +71,13 @@ website:
   twitter-card:
     card-style: summary_large_image
     image: "https://affinedrift.com/logo/og-card.png"
+
+  # Explicit search config (issue #4504): was previously running on
+  # unconfigured Quarto defaults.
+  search:
+    type: overlay
+    limit: 20
+    keyboard-shortcut: ["/", "s"]
 
   sidebar:
     - id: books-nav
@@ -253,9 +274,11 @@ bibliography:
   - articles/proximal_distal_energy_transfer/references.bib
 csl: references/chicago-author-date.csl
 link-citations: true
+citation: true
 
 format:
   html:
+    google-scholar: true
     theme:
       light: [cosmo, custom.scss]
     css:
@@ -264,6 +287,8 @@ format:
     filters:
       - scripts/filters/page-header-card.lua
       - scripts/filters/summary-takeaways.lua
+      - scripts/filters/revision-history.lua
+      - scripts/filters/where-next.lua
     toc: true
     toc-depth: 3
     # Use Quarto's title-block renderer so Pandoc does not emit a second

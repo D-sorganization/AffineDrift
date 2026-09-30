@@ -7,7 +7,7 @@ import numpy as np
 import pytest
 import sympy as sp
 
-ARTICLE = Path(__file__).resolve().parents[1] / "articles/controllability-drift-ratio.qmd"
+ARTICLE = Path(__file__).resolve().parents[1] / "articles/drift-control-ratio.qmd"
 
 
 def test_lagrangian_example_has_potential_velocity_cancellation() -> None:
@@ -141,7 +141,7 @@ def test_readiness_evidence_names_the_actual_route_reviewer() -> None:
     route = next(
         item
         for item in inventory["routes"]
-        if item["route"] == "/articles/controllability-drift-ratio.html"
+        if item["route"] == "/articles/drift-control-ratio.html"
     )
     library = build_manufactured_library(root)
     protocol = next(

@@ -37,7 +37,7 @@ from src.affine_control.reachability_protocol import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-ARTICLE = REPO_ROOT / "articles" / "controllability-drift-ratio.qmd"
+ARTICLE = REPO_ROOT / "articles" / "drift-control-ratio.qmd"
 
 
 def _declared_protocol() -> ReachabilityProtocol:
