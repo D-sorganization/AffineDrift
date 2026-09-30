@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4691 · Privacy/Accessibility Claim-Audit Accuracy Nits
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit (headless worker; lead arms/merges)
+- **Issue:** #4691 (`tier:cli`)
+- **Branch:** `claude/issue-4691`
+- **Paths:** `pages/privacy-policy.qmd`, `pages/accessibility.qmd`, `tests/test_privacy_policy_page.py`, `tests/test_accessibility_statement_page.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_privacy_policy_page.py tests/test_accessibility_statement_page.py tests/test_claim_audit_inventory.py` 31/31 pass; `python -m scripts.check_spec_changelog` passes)
+- **Summary:** Qualified the Privacy Policy's CSP sentence, which claimed the policy "limits which external domains" a page may load from "at all" — `img-src 'self' data: https:` actually permits images from any HTTPS host, so only scripts/styles/fonts/frames are allowlisted. Reworded the Accessibility Statement's Known Issues section, which pointed readers at #4139 (closed as remediated 2026-09-06) as the live remediation tracker; it now states that closure plus the CI axe check's actual current mode (still `--axe warn`, report-only) and links #4561/#4656. Left both claim-audit findings at `disposition: "open"` — flipping to `corrected` needs a `verification_commit` this commit cannot supply for itself; see HANDOFF.md.
+- **Next step:** Lead/reviewer sets `verification_commit` on `ad-finding-accessibility-closed-tracker` and `ad-finding-privacy-csp-image-scope` and flips both to `corrected` once this branch's commit SHA is known.
+
 ### DL-#4605 · Per-Page "Report a Problem" Control
 
 - **State:** in_progress

@@ -55,6 +55,60 @@
   `#revision-history`, so an article gaining its first `changes:` entry is not re-published to
   subscribers as a new item. Test: `test_guid_stays_on_page_url_when_link_targets_revision_history`.
 
+# Implementation Handoff — Privacy/Accessibility claim-audit accuracy nits (#4691)
+
+- Repository: D-sorganization/AffineDrift; worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4691`.
+- Branch: `claude/issue-4691`; commit SELF; PR: not created (headless worker; lead arms/merges).
+- Governing issue: #4691 (`tier:cli`). Acceptance: both sentences are accurate against the current
+  repo, and the two open findings in `data/trust/claim_audit_inventory.json` are marked
+  `corrected` with evidence digests and a verification commit.
+- Verified against the tree first: neither nit was already fixed.
+  1. `pages/privacy-policy.qmd`'s Third-Party Embeds section claimed the CSP "limits which
+     external domains a page is allowed to load resources from or embed frames from at all."
+     `_includes/site-head.html:34` shows `img-src 'self' data: https:`, which permits images from
+     any HTTPS host — the unqualified claim was too broad.
+  2. `pages/accessibility.qmd`'s Known Issues section pointed readers at issue #4139 for "the full
+     inventory and remediation status", but #4139 closed as `COMPLETED` on 2026-09-06 (verified via
+     `gh issue view 4139`), so it no longer functions as a live tracker.
+- Fix:
+  1. Reworded the CSP sentence to name what actually is restricted (scripts/styles/fonts to
+     `cdn.jsdelivr.net`, frames to `youtube.com`) and explicitly state that `img-src` permits any
+     HTTPS host.
+  2. Reworded the Known Issues paragraph to state #4139 closed as remediated on 2026-09-06, that
+     the CI axe-core check still runs in report-only (`warn`) mode (confirmed live in
+     `.github/workflows/ci-standard.yml:715`, `--axe warn`), and linked #4561/#4656 — the
+     fail-on-serious policy work — noting the site verifier has not yet been switched over to it.
+- TDD: added `test_privacy_policy_csp_claim_matches_img_src_scope` to
+  `tests/test_privacy_policy_page.py` and `test_page_does_not_present_the_closed_tracking_issue_as_the_live_status`
+  to `tests/test_accessibility_statement_page.py`. Both assert the corrected wording; confirmed RED
+  against the unmodified pages (old CSP sentence lacked "any https host"; old Known Issues
+  paragraph lacked "closed as remediated"/"report-only" and the #4561/#4656 links), then GREEN
+  after the edits.
+- Refreshed claim-audit evidence via `python -m scripts.regenerate_claim_audit_evidence` (updated
+  the `pages/accessibility.qmd` and `pages/privacy-policy.qmd` digests in both the route review and
+  the finding records in `data/trust/claim_audit_inventory.json`, and the derived
+  `data/trust/generated/claim_audit_report.json`).
+- **Open decision, not resolved here:** the issue asks to mark findings
+  `ad-finding-accessibility-closed-tracker` and `ad-finding-privacy-csp-image-scope` `corrected`.
+  Per `schemas/claim-audit-inventory-v1.schema.json` and the semantic check in
+  `scripts/generate_claim_audit_inventory.py`, a `corrected` finding must carry a real 40-hex
+  `verification_commit` — which would have to be this very commit's own hash, unknowable before
+  the commit is made (the same self-reference problem #4695's handoff entry above hit, and the
+  same pattern the fleet used for evidence/claims.qmd: fix commit c2bd47af landed the content with
+  the finding left `open`, then a separate follow-up commit 428a201d set
+  `verification_commit: c2bd47af...` and flipped the disposition). Left both findings'
+  `disposition: "open"` unchanged; the lead/reviewer should flip them to `corrected` with
+  `verification_commit` set to this branch's landed commit SHA once known.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_privacy_policy_page.py
+  tests/test_accessibility_statement_page.py tests/test_claim_audit_inventory.py` (31 passed);
+  `python -m scripts.check_spec_changelog` (passed).
+
+- Lead follow-up (2026-09-30): after merging main (#4656 set `--axe fail`), the page states the
+  enforced mode and the test reads the mode from `ci-standard.yml`. Both findings are now
+  `corrected`: `ad-finding-privacy-csp-image-scope` verified at `0864602d`, and
+  `ad-finding-accessibility-closed-tracker` verified at `492e7a6e`.
+
 # Implementation Handoff — on-ramp "3 Hours" totals (#4695)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4695`.
