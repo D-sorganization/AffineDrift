@@ -630,15 +630,17 @@ jobs:
         # Every spec under tests/e2e against the full render (130 tests).
         # Pixel-snapshot tests are excluded (they need platform baselines; see
         # the visual invariants step below). Firefox/WebKit/mobile stay local.
-        # TODO(2026-09-03, #4140): the nine titles below failed on the first
+        # TODO(2026-09-03, #4140): the eight titles below failed on the first
         # full-site run (stale home-layout tests + real contrast/touch-target/
-        # bibliography/offline defects); drop the exclusions when #4140 closes.
+        # bibliography defects); drop the exclusions when #4140 closes.
+        # "should serve cached homepage when offline" was re-enabled by #4600
+        # (flaky fixed-delay wait replaced with a deterministic SW-ready wait).
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           npx playwright test \
             --project=chromium \
             --retries=0 \
-            --grep-invert "matches visual snapshot|should meet WCAG AA text contrast in both themes|should show entry details when clicked|should render desktop home layout as a three-column grid|should toggle mobile sidebar sections|should navigate to articles page|should serve cached homepage when offline|should validate mobile menu button|should provide summary of all compliant elements|should allow a user to navigate from home to article and back to top"
+            --grep-invert "matches visual snapshot|should meet WCAG AA text contrast in both themes|should show entry details when clicked|should render desktop home layout as a three-column grid|should toggle mobile sidebar sections|should navigate to articles page|should validate mobile menu button|should provide summary of all compliant elements|should allow a user to navigate from home to article and back to top"
       - name: Run Visual Layout Invariants (no-overflow / column collapse)
         # Runs the deterministic layout assertions from visual.spec.js (issue
         # #3328) — these need no committed image baselines and fail the build on
