@@ -455,7 +455,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4549 | Rebuild the Datasets resource page as a generated catalogue from `data/datasets.yml` with verified licence/access/schema/checksum fields for third-party datasets and an "AffineDrift Data Artefacts" section for `data/ztcf`, `data/research_protocols`, and `schemas`, dropping the `mini.s-shot.ru` thumbnail host. |
 | 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
 | 2026-09-29 | #4651 | Add deterministic, publication-grade SVG figures and accessible descriptions to core theory pages (DCR, ZTCF, Superposition) (#4536). |
-| 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
 | 2026-09-29 | #4511 | Adopt the `.callout-example` worked-example convention and add eight src/-backed worked examples across the theory parts, DCR, ZTCF, and superposition pages. |
 | 2026-09-30 | #4578 | Generate per-book/series Open Graph social cards at build time instead of one site-wide card. |
 | 2026-09-30 | #4567 | Wire `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate`, add a long-description check for complex SVG diagrams (E8/E9), and baseline pre-existing figures. |
