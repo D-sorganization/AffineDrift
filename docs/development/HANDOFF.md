@@ -1,3 +1,44 @@
+# Readability Measurement Tool — Issue #4591
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4591`.
+- Branch `claude/issue-4591`, commit `SELF`; pull request: to be opened as a draft by this session.
+- Governing issue: #4591 (WEB-12.5, part of epic #4594 / E12 — Editorial Voice and Plain-Language Standard).
+- Objective: `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for
+  lay blocks (`<section class="laymans-terms">` content), the `summary-plain` frontmatter field,
+  and hub pages, excluding math/code/Markdown/HTML markup from the scoring text.
+- Threshold: grade 10, taken from WEB-12.1's stated readability target ("lay block <= grade 10")
+  and WEB-12.4's hub-page acceptance criterion, applied uniformly via `--threshold`. WEB-12.1
+  itself (`docs/development/editorial-style-guide.md`) is still open (`tier:strong`, unmerged);
+  this issue only needed the numeric target already stated in its issue body, not the finished
+  guide document, so implementation proceeded rather than blocking on #4587.
+- `summary-plain` and most named WEB-12.4 hub pages (a dedicated "Start Here" page, for example)
+  do not exist yet; the checker is forward-compatible — it silently finds nothing for absent
+  frontmatter fields or hub-page paths rather than erroring, and `--hub-page`/`ReadabilityConfig`
+  let a later pass add pages as they're created.
+- CI wiring mirrors the existing MATLAB Quality Check pattern in `ci-standard.yml`:
+  `continue-on-error: true` plus an `upload-artifact` step (`readability-report.json`), so the
+  check is advisory rather than blocking, per the acceptance criteria.
+- Validation:
+  - `python3 -m pytest tests/tools/test_check_readability.py --no-cov -q`: 33 passed.
+  - `python3 -m ruff check scripts/check_readability.py tests/tools/test_check_readability.py`: clean.
+  - `python3 -m black --check --line-length 100 scripts/check_readability.py tests/tools/test_check_readability.py`: clean (after one auto-format pass).
+  - `python3 -m mypy scripts/check_readability.py --ignore-missing-imports --allow-untyped-decorators --disable-error-code no-any-unimported --disable-error-code misc --disable-error-code unused-ignore --disable-error-code no-any-return`: clean.
+  - Manual run against the live repo (`python3 -m scripts.check_readability`) found 16/22 existing
+    lay-block/hub-page passages currently over grade 10 — expected, since WEB-12.4's rewrite pass
+    (the issue that will actually bring prose under the threshold) hasn't happened yet.
+- Full project suite (`pytest --cov`, `npx jest`, `npx playwright test`) was not run in this
+  session; the change touches only a new script, its test file, and one CI workflow step, with no
+  behavioral change to any existing module.
+
+## Next Steps
+
+1. Open the draft PR (`Fixes #4591`) and let the frontier review pass judge the hub-page default
+   list and the shared grade-10 threshold across all three layers, since WEB-12.1 only states the
+   lay-block number explicitly.
+2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
+   different threshold than lay blocks.
+3. No further implementation is planned from this session pending review feedback.
+# Implementation Handoff — Build the Page Header Card Component (#4507)
 # Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
 
 ## Identity
