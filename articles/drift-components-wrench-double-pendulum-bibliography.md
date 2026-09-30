@@ -1,8 +1,13 @@
-# Natural vs Active Forces and Torques in Affine Mechanical Systems
+---
+title: "Natural vs Active Forces and Torques in Affine Mechanical Systems"
+description: "Companion bibliography for the AffineDrift article on natural vs active forces and torques in affine mechanical systems."
+---
 
-# Bibliography
+## Natural vs Active Forces and Torques in Affine Mechanical Systems
 
-## Concept Map
+## Bibliography
+
+### Concept Map
 
 - **Affine Control System**: Modeling the system as $\dot{x} = f(x) + G(x)u$, separating drift from input.
 - **Natural Torque Field**: The set of forces arising purely from system state (inertia, Coriolis, gravity, damping) and environment.
@@ -14,7 +19,7 @@
 - **Power Transfer**: Analyzing energy flow ($\vec{F} \cdot \vec{v}$) to distinguish between passive geometric transfer and active work.
 - **Schur Complement**: (Implicit context) Often used in block matrix inversions for underactuated systems.
 
-## References
+### References
 
 bibliography:
 
@@ -216,9 +221,9 @@ bibliography:
   related_ids: ["murray1994mathematical"]
   references_out_ids: []
 
-## Reading Paths
+### Reading Paths
 
-### Fast ramp (Foundations)
+#### Fast ramp (Foundations)
 
 1.  [jorgensen1970dynamics] - The classic physicist's analysis of the golf swing as a double pendulum.
 2.  [cochran1968search] - The "bible" of golf science, establishing the planar double pendulum model.
@@ -226,7 +231,7 @@ bibliography:
 4.  [nesbit2005work] - Application of work-energy principles to the golf swing, critical for understanding "active" vs "natural" contributions.
 5.  [isidori1995nonlinear] - (Introduction) The rigorous definition of affine control systems ($\dot{x} = f(x) + G(x)u$).
 
-### Deep technical (Advanced Mechanics)
+#### Deep technical (Advanced Mechanics)
 
 1.  [featherstone2008rigid] - The gold standard for implementing rigid body dynamics algorithms efficiently (recursive methods).
 2.  [lynch2017modern] - Modern treatment of robotics dynamics using screw theory and geometric mechanics.
@@ -237,7 +242,7 @@ bibliography:
 7.  [kaner1985dynamics] - Kane's method offers an alternative, highly efficient formulation for complex multibody systems.
 8.  [bullo2005geometric] - Advanced geometric control theory for underactuated mechanical systems.
 
-### Implementation (Simulation & Analysis)
+#### Implementation (Simulation & Analysis)
 
 1.  [jorgensen1970dynamics] - Provides the basic equations of motion for the double pendulum model.
 2.  [scipy_lib] - The core library for solving the differential equations (`solve_ivp`) derived in the article.

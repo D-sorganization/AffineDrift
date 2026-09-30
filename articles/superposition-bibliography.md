@@ -1,6 +1,11 @@
-# Bibliographic Analysis: Superposition in Affine Control
+---
+title: "Bibliographic Analysis: Superposition in Affine Control"
+description: "Companion bibliography for the AffineDrift article on superposition in affine control systems."
+---
 
-## A) Concept Map
+## Bibliographic Analysis: Superposition in Affine Control
+
+### A) Concept Map
 
 - **Mathematical Foundations**
 
@@ -28,7 +33,7 @@
   - **Zajac & Gordon**: Induced acceleration analysis in biomechanics.
   - **Udwadia & Kalaba**: Analytical dynamics and constraint forces.
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: featherstone2008rigid
@@ -215,9 +220,9 @@
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (Foundations of Superposition)
+#### Path 1: Fast Ramp (Foundations of Superposition)
 
 _Target: Understand why "forces add up" but "motions don't"._
 
@@ -227,7 +232,7 @@ _Target: Understand why "forces add up" but "motions don't"._
 4.  **Zajac & Gordon (1989)** - _Determining muscle's force..._ (`zajac1989determining`). The classic biomechanics "induced acceleration" paper.
 5.  **Koike et al. (2019)** - [Direct and indirect effects of joint torque inputs during an induced speed analysis of a swinging motion](https://doi.org/10.1016/j.jbiomech.2019.01.032) (`koike2019dynamic`). Rugby-kicking application; distinguish its recorded-motion recurrence from a freely evolving golf counterfactual.
 
-### Path 2: Deep Technical (Geometric & Algebraic Structure)
+#### Path 2: Deep Technical (Geometric & Algebraic Structure)
 
 _Target: Master the fiber-linear structure and spatial operator algebra._
 
@@ -238,7 +243,7 @@ _Target: Master the fiber-linear structure and spatial operator algebra._
 5.  **Khatib (1987)** - _Operational Space Formulation_ (`khatib1987unified`). Projection matrices and dynamic consistency.
 6.  **Aghili (2005)** - _Unified Approach for Constrained Systems_ (`aghili2005unified`). Null-space projections for closed loops.
 
-### Path 3: Implementation (Computation)
+#### Path 3: Implementation (Computation)
 
 _Target: Compute these terms numerically._
 

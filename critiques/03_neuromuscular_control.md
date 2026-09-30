@@ -18,7 +18,7 @@ Reflex loops (monosynaptic stretch reflexes, etc.) mean that "passive" motion ($
 
 If the clubhead pulls the hands away (drift), the muscles stretch, and the stretch reflex generates a restoring torque (input). This happens within tens of milliseconds.
 
-Therefore, the "Input" $u$ is not causally independent of the "Drift" $f(x)$. The drift causes input. By separating them into additive terms $\dot{x} = f(x) + g(x)u$, the theory obscures this causality. It treats the golfer as an open-loop controller executing a pre-planned tape, ignoring the continuous interplay between mechanics and sensory feedback.
+Therefore, the "Input" $u$ is not causally independent of the "Drift" $f(x)$. The drift causes input. By separating them into additive terms $\dot{x} = f(x) + G(x)u$, the theory obscures this causality. It treats the golfer as an open-loop controller executing a pre-planned tape, ignoring the continuous interplay between mechanics and sensory feedback.
 
 ## The "Zero Torque" Impossibility
 

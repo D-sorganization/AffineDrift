@@ -27,8 +27,10 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 CLEAN_PAGES: tuple[str, ...] = (
     "index.qmd",
     "pages/about.qmd",
+    "pages/accessibility.qmd",
     "pages/collaborate.qmd",
     "pages/contact.qmd",
+    "pages/contributor-guide.qmd",
     "pages/overview.qmd",
     "pages/tools.qmd",
     "pages/book-reviews.qmd",

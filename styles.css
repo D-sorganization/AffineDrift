@@ -25,6 +25,9 @@
 @import url("css/components/evidence-presentation.css");
 @import url("css/components/page-header-card.css");
 @import url("css/components/summary-takeaways.css");
+@import url("css/components/revision-history.css");
+@import url("css/components/status-badge.css");
+@import url("css/components/where-next.css");
 @import url("css/utilities/spacing.css");
 
 /* Native cross-document view transitions (issue #3334): a free same-origin
@@ -143,6 +146,20 @@ footer.footer,
 footer.footer a,
 .nav-footer a {
   color: var(--text-secondary);
+}
+
+/* The footer's right-hand link group (About, Privacy Policy, Accessibility,
+   source links) is wider than a phone viewport; wrap it rather than
+   overflowing the page horizontally, and keep each link a 44px touch target. */
+.nav-footer .footer-items {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav-footer .footer-items .nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 /* Full-layout hubs own their visible H1 in authored page markup. Every such
@@ -1793,32 +1810,8 @@ h3:hover .anchor-link,
   }
 }
 
-/* In Layman's Terms - Print */
-@media print {
-  .laymans-terms {
-    border: 1px solid #17a2b8;
-    break-inside: avoid;
-  }
-
-  .laymans-terms-content {
-    max-height: none;
-    overflow: visible;
-  }
-
-  .laymans-terms-icon {
-    display: none;
-  }
-
-  .laymans-terms-header {
-    background: #e3f6f8;
-    color: #17a2b8;
-  }
-
-  .laymans-terms-header h2,
-  .laymans-terms-header .laymans-terms-header-title {
-    color: #17a2b8;
-  }
-}
+/* In Layman's Terms print rules moved to css/print.css -- one print
+   stylesheet, not two competing print media blocks (#4550). */
 
 /* ---
    Contact Page Layout

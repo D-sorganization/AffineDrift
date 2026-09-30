@@ -9,7 +9,7 @@ categories:
 ```{=html}
 <section class="resources-section">
   <div class="ad-page-container">
-    <div class="standard-page-layout">
+    <div class="standard-page-layout standard-page-layout--single">
       <!-- Left Sidebar: Table of Contents -->
       <div class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -200,7 +200,7 @@ categories:
              class="resource-link u-inline-action"
              target="_blank"
              rel="noopener">
-            Research Review: Interaction Forces →
+            Research Review: Interaction Forces (Planned) →
           <span class="sr-only">(opens in a new tab)</span></a>
         </div>
       </div>
@@ -227,7 +227,7 @@ categories:
              class="resource-link u-inline-action"
              target="_blank"
              rel="noopener">
-            Research Review: Induced Acceleration Analysis →
+            Research Review: Induced Acceleration Analysis (Planned) →
           <span class="sr-only">(opens in a new tab)</span></a>
         </div>
       </div>
@@ -275,7 +275,7 @@ categories:
              class="resource-link u-inline-action"
              target="_blank"
              rel="noopener">
-            Research Review: Baseball Pitching →
+            Research Review: Baseball Pitching (Planned) →
           <span class="sr-only">(opens in a new tab)</span></a>
         </div>
       </div>
@@ -309,83 +309,9 @@ categories:
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Researchers History -->
-      <div class="right-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Researchers</h3>
-          <ul class="sidebar-links" id="researchers-history-list">
-            <li class="history-empty">No recent researchers yet</li>
-          </ul>
-        </nav>
-      </div>
-      </div>
     </div>
   </div>
 </section>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const researchersHistoryList = document.getElementById('researchers-history-list');
-  if (!researchersHistoryList) return;
-
-  function updateResearchersHistory() {
-    let history = [];
-    try {
-      const raw = localStorage.getItem('affinedrift_researchers_history');
-      if (raw) history = JSON.parse(raw);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      localStorage.removeItem('affinedrift_researchers_history');
-    }
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-researchers.html'
-    };
-
-    if (currentPage.url === 'resources-researchers.html') {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_researchers_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      researchersHistoryList.textContent = '';
-      const li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'No recent researchers yet';
-      researchersHistoryList.appendChild(li);
-      return;
-    }
-
-    researchersHistoryList.textContent = '';
-    const fragment = document.createDocumentFragment();
-    history.forEach((item) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      let safeUrl = "#";
-      if (typeof item.url === "string") {
-        try {
-          const parsed = new URL(item.url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-      }
-      a.href = safeUrl;
-      a.textContent = item.title;
-      li.appendChild(a);
-      fragment.appendChild(li);
-    });
-    researchersHistoryList.appendChild(fragment);
-  }
-
-  updateResearchersHistory();
-});
-</script>
 ```
 
 ## Related Articles
