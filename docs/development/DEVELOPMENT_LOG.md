@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4706 · Induced Acceleration Biomechanics Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4706 (corpus #4021; epic #4009)
+- **Branch:** `fix/induced-acceleration-rigor-20260930`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (base bac8bedb; working tree SELF: 19 new checks, nine existing IAA numerical checks, fourteen attribution contracts; Ruff/Black; 149-page book build and complete changed-chapter visual inspection)
+- **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
+- **Next step:** Complete root-website browser verification and immutable evidence binding.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review

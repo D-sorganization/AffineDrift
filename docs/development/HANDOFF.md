@@ -1,3 +1,36 @@
+# Resumed Technical Review — Induced Acceleration #4706
+
+The user explicitly resumed the corpus goal on 2026-09-30. This supersedes the
+September 28 pause instruction below. Never create draft PRs.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/induced-acceleration-rigor-20260930`; source checkpoint `SELF`;
+  PR not created. Base `bac8bedb`; epic #4009 / corpus #4021 / issue #4706.
+- Complete paired Geometry of Motion Chapter 3b corrected: signs, full affine
+  state, activation, nominal integration, normalized coupling, constrained
+  reactions, point outputs, coordinate transport and primary-study boundaries.
+- Two agy Gemini 3.8 Flash supplied-text inventories completed in parallel.
+  Lead independently adjudicated; no delegated tools or edits.
+- Five numerical checks passed before edits; fourteen source regressions failed.
+  All nineteen new checks now pass, plus nine existing numerical IAA checks and
+  fourteen content-lint attribution contracts. New test Ruff/Black pass.
+- Full Volume I PDF builds to 149 pages; physical pages 58–64 visually reviewed.
+  Other chapter sources remain unchanged; whole-book scientific review pending.
+- First standalone Quarto render did not use the website configuration. Root
+  selected-route rendering and browser verification are in progress. Do not
+  treat the earlier stale docs/ page as evidence for the revised article.
+- Next: complete root-site rendering and browser QA, save exact source evidence,
+  carry forward the changed PDF dependency without renewing other scientific
+  reviews, bind chapter review, run full gates, open regular PR and protected-merge.
+- Review inventory still has 144 pending sources until verified binding; this
+  pair will reduce it to 142. Preserve all untracked QA. No whole-corpus closure.
+- Coordination: session `technical-review-20260930-resume`, issue #4706. Owned
+  preview 8770 and browser `iaa-biomechanics` are temporary review services.
+- Development log entry: DL-#4706. Other agents' route-inventory/workflow work
+  is separate; preserve their records and unrelated changes during integration.
+
+---
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
