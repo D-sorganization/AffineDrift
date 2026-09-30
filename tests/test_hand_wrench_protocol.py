@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from scripts.claim_audit_evidence import validate_review_evidence
 from src.affine_control.hand_wrench_evidence import HumanTierGate
 from src.affine_control.hand_wrench_fixtures import (
     manufactured_bandwidth_samples,
@@ -35,7 +36,22 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = REPO_ROOT / "models" / "bilateral-hand-wrench-validation.qmd"
 MODELS_HUB = REPO_ROOT / "models" / "models.qmd"
 AUDIT_INVENTORY = REPO_ROOT / "data" / "trust" / "claim_audit_inventory.json"
-REVIEW_COMMIT = "8d0649f9fb5da9c65364f76161abe22379dcded3"
+REVIEW_COMMIT = "b60805a9c1923efa735c977d7a03d4f1958db2aa"
+PRIOR_REVIEW = REPO_ROOT / "reports/technical-review/two-hand-wrench-prior-reviews.json"
+# Bind the unchanged scientific checks, excluding this ledger's own metadata assertions.
+SCIENTIFIC_EVIDENCE_TESTS = (
+    "test_preregistration_freezes_sources_measurement_and_analysis_contracts",
+    "test_literal_domains_and_preregistration_joins_fail_closed",
+    "test_net_wrench_observability_does_not_identify_bilateral_allocation",
+    "test_point_force_map_preserves_the_axial_internal_null_mode",
+    "test_cross_talk_calibration_recovers_only_the_declared_sensor_wrench",
+    "test_bandwidth_qualification_requires_nyquist_and_complete_passband_evidence",
+    "test_lead_and_trail_frames_transport_wrenches_to_one_club_frame",
+    "test_synchronization_inertial_compensation_and_contact_assumptions_fail_closed",
+    "test_result_ledger_separates_load_tiers_uncertainty_and_adverse_outcomes",
+    "test_human_tier_remains_ineligible_without_every_governance_gate",
+    "test_public_protocol_is_source_bounded_and_non_authoritative",
+)
 
 
 def test_preregistration_freezes_sources_measurement_and_analysis_contracts() -> None:
@@ -267,6 +283,29 @@ def test_public_protocol_has_exact_reviewed_claim_audit_evidence() -> None:
         "src/affine_control/hand_wrench_evidence.py",
         "src/affine_control/hand_wrench_fixtures.py",
         "src/affine_control/hand_wrench_protocol.py",
+        "reports/technical-review/two-hand-wrench-render-verification.json",
+        "reports/technical-review/two-hand-wrench-dependency-carry-forward.json",
+        "reports/technical-review/two-hand-wrench-prior-reviews.json",
+    } | {f"tests/test_hand_wrench_protocol.py::{name}" for name in SCIENTIFIC_EVIDENCE_TESTS}
+    assert set(review["evidence_sha256"]) == set(review["evidence_paths"])
+    validate_review_evidence(record, REPO_ROOT)
+
+
+@pytest.mark.content_lint
+def test_protocol_citation_update_preserves_the_original_review_record() -> None:
+    history = json.loads(PRIOR_REVIEW.read_text(encoding="utf-8"))
+    original = next(
+        record
+        for record in history["records"]
+        if record["route"] == "/models/bilateral-hand-wrench-validation.html"
+    )
+    assert original["status"] == "reviewed"
+    assert original["findings"] == []
+    assert original["review"]["review_commit"] == "8d0649f9fb5da9c65364f76161abe22379dcded3"
+    assert set(original["review"]["evidence_paths"]) == {
+        "models/bilateral-hand-wrench-validation.qmd",
+        "src/affine_control/hand_wrench_evidence.py",
+        "src/affine_control/hand_wrench_fixtures.py",
+        "src/affine_control/hand_wrench_protocol.py",
         "tests/test_hand_wrench_protocol.py",
     }
-    assert set(review["evidence_sha256"]) == set(review["evidence_paths"])
