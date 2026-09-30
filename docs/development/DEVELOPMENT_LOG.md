@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4596 · Report Broken External Links as Issues
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4596 (epic #4604)
+- **Branch:** `claude/issue-4596`
+- **Paths:** `scripts/link-checker.py`, `.github/workflows/link-checker.yml`, `docs/LINK-CHECKER.md`, `tests/test_link_checker_script.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 79/79 relevant link-checker tests pass, ruff/black clean, SPEC changelog check passes)
+- **Summary:** Scheduled external-link check now upserts a single tracking issue (find-or-update, close on all-clear) instead of only logging, checks DOI links through their doi.org redirect, and attaches an archive.org fallback suggestion to each dead link.
+- **Next step:** Push branch, open draft PR referencing Closes #4596, and release the fleet lease.
+
 ### DL-#4588 · Keep Internal Governance Vocabulary Out of Reader Prose
 
 - **State:** in_progress
