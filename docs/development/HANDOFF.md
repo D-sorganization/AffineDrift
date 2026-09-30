@@ -34,6 +34,7 @@
   - `css/components/page-feedback.css`: New component stylesheet.
   - `styles.css`: One new `@import` line for the component stylesheet.
   - `tests/page-feedback.test.js`: New Jest suite.
+  - `scripts/sync_frontend_assets.py`: Added `page-feedback.js` to `CANONICAL_JS_NAMES` (PR review).
   - `SPEC.md`: Added change-log row for #4605.
   - `docs/development/DEVELOPMENT_LOG.md`: Added `DL-#4605`.
   - `docs/development/HANDOFF.md`: This entry.
@@ -41,7 +42,7 @@
 - Key decisions:
   - Reused the already-deployed `public-site-manifest.json`'s `source_revision` field for the build commit instead of inventing a new build-time injection mechanism (DRY); this only resolves on the deployed site or after a full `quarto render` + manifest generation, so the link is built synchronously with `"unknown"` first and updated once the fetch resolves — the control is always usable even if the fetch never completes.
   - Removed the "Was this helpful?" Yes/No vote entirely (PR review, 2026-09-29): the issue's acceptance criteria only asked for a "Report a problem" control (prefilled GitHub issue + mailto fallback, keyboard accessible, no tracking). The vote recorded nothing yet displayed "Thanks for the feedback!", which misleads readers into thinking their input was captured. The widget now contains only the report/email control.
-  - Did not add `page-feedback.js` to `scripts/sync_frontend_assets.py`'s `CANONICAL_JS_NAMES`: that list only tracks byte-identical pre-render mirrors for a legacy set of files; `_quarto.yml`'s `resources: js/` already copies the whole `js/` directory into `docs/js/` on every `quarto render`, so the new module reaches `docs/` automatically without editing that script.
+  - Added `page-feedback.js` to `scripts/sync_frontend_assets.py`'s `CANONICAL_JS_NAMES` (PR review, 2026-09-29): `tests/test_sync_frontend_assets.py::test_every_canonical_javascript_module_has_a_deploy_sync_map` requires every `js/*.js` module to have a deploy sync-map entry; the file was missing it, which failed the full pytest run. `_quarto.yml`'s `resources: js/` still copies the whole `js/` directory into `docs/js/` on every `quarto render`, so this only closes the explicit-contract gap the test enforces.
 - User-owned or unrelated worktree changes: none observed.
 
 ## Validation
