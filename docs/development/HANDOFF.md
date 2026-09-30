@@ -11,7 +11,7 @@
 - PR #4709 merged `984552e17`; checker repair #4716 merged `5e1a11059` and its lease released. PR #4712 merged to remote main `be263f9cd946a6aa8b4a97b086af9eab399c3ac6` at 23:32:17 UTC after all protected checks passed (CI 36786787125). Its lease/presence were released; this branch integrates that main revision.
 - Main deploy 36785717927 failed missing dataset-explorer audit coverage, tracked separately by #4688 / another agent's #4713. Do not take over its lease or claim the site is deployed.
 - Combined main integration: 197 targeted checks pass (178 default-selected plus 19 audit/protocol cases); 180 content checks pass, four skipped. Evidence regeneration and SPEC checks pass; all three impact-reviewed sources are unchanged.
-- Next: finish regular PR delivery for #4714 and verify protected CI/merge; keep the broader goal active. Next longest pending source is launch-monitor screw-kinematics appendix, claimed as #4717 in `AffineDrift-screw-review`, branch `fix/radar-screw-rigor-4717`. Primary-source research and two adjudicated agy inventories are preserved; no published-source edit or review completion yet.
+- Regular PR [#4718](https://github.com/D-sorganization/AffineDrift/pull/4718) is open and protected auto-merge is armed. Next: verify final protected CI/merge; keep the broader goal active. Next longest pending source is launch-monitor screw-kinematics appendix, claimed as #4717 in `AffineDrift-screw-review`, branch `fix/radar-screw-rigor-4717`. Primary-source research and two adjudicated agy inventories are preserved; no published-source edit or review completion yet.
 
 ## Preserved Prior Delivery Records
 
