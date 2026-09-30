@@ -31,12 +31,15 @@ interaction.
 **Guard:** `tests/e2e/article.spec.js` ("should load MathJax assistive
 MathML without duplicate state errors") renders a real article page and
 asserts exactly one MathJax `/es5/tex-*` bundle script, no separately
-loaded assistive-MML script, and no duplicate MathJax state errors. `.quarto-version` is listed in
-`scripts/e2e_relevant_paths.py`'s `EXACT_PATHS`, so bumping the pinned
-Quarto version always forces the full-site E2E render lane in CI
-(`e2e-tests` in `.github/workflows/ci-standard.yml`), which runs that spec
-against the upgraded Quarto's actual output. A Quarto upgrade that breaks
-this mechanism fails CI instead of shipping silently.
+loaded assistive-MML script, and no duplicate MathJax state errors.
+`scripts/e2e_relevant_paths.py` forces this full-site E2E render lane in CI
+(`e2e-tests` in `.github/workflows/ci-standard.yml`) on two independent
+triggers: `.quarto-version` is listed in its `EXACT_PATHS`, so bumping the
+pinned Quarto version always forces the lane; and `_includes/` is listed in
+its `PATH_PREFIXES`, so any change to `_includes/mathjax-loader.html` — the
+file that owns the real MathJax runtime — forces it too. Either a Quarto
+upgrade or a loader edit that breaks this mechanism fails CI instead of
+shipping silently.
 
 ## Features Implemented
 

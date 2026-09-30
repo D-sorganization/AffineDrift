@@ -32,6 +32,7 @@ EXACT_PATHS = frozenset(
     }
 )
 PATH_PREFIXES = (
+    "_includes/",
     "books/",
     "critiques/",
     "css/",
