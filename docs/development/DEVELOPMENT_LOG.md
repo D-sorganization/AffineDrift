@@ -106,18 +106,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_contact_channel_unification.py tests/test_404_page.py tests/test_public_site_content_hygiene.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py tests/test_on_ramp_paths.py` 74/74 pass; ruff and black --line-length 100 clean; `scripts.check_spec_changelog` passed.)
 - **Summary:** Retitles `pages/about.qmd` from "About & Contact" to "About" and removes its own `mailto:` link, pointing readers to the Contact page instead, so Contact is the site's single contact page. The contact-address-unification criterion was already satisfied on `main` (fixed by #4495); this closes the remaining two criteria.
 - **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
-### DL-#4606 · "What's New" Feed RSS Validation
+### DL-#4606 · "What's New" Feed RSS Validation and Revision-History Links
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
+- **PR:** not created yet at this commit (headless worker; lead arms/merges)
 - **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
-- **Branch:** `claude/issue-4606`
+- **Branch:** `claude/issue-4606-revision-links`
 - **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
-- **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
-- **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 34/34 pass; `python -m scripts.check_spec_changelog` passes; live generator run against real repo content produces 30 items, 6 of them linking to `#revision-history`, with zero validation errors)
+- **Summary:** Criterion 1 ("The RSS feed validates") shipped previously in #4675. This entry closes criterion 2 ("Items link to revision history"), which was blocked on prerequisite #4545 (WEB-07.3) — now delivered (`scripts/filters/revision-history.lua` renders a `#revision-history` section from front-matter `changes:`). `generate_feed.py` gained `resolve_item_link()` (appends `#revision-history` to an item's link when the article has `changes:`) and `resolve_pub_date()` (prefers `date-modified`, then the latest `changes:` entry, then the plain `date` field, over the git-modified fallback), so feed item dates and links now reflect real substantive content updates rather than the original/unverified publication date.
+- **Next step:** Open the draft PR and await frontier review; the optional email digest from the issue's proposal needs a provider decision not made here (see HANDOFF.md).
 ### DL-#4592 · Consolidate the Manifesto
 
 - **State:** in_review
