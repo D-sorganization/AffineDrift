@@ -211,7 +211,7 @@ Thus $\dot x=(\dot\theta,-g\sin\theta/L)+(0,1/(mL^2))u$. At the same state, the 
 1. Call `SimplePendulum(m=1.0, L=1.0, g=9.81).dynamics(x=[0.5, 0.0], u=[0.0])` to evaluate $\dot x=(\dot\theta,-g\sin\theta/L)$ from @eq-pendulum_planar at $u=0$.
 2. Call `.linearize(x=[0.5, 0.0], u=[0.0])` for the Jacobians of the same equation at the same state.
 
-**Result:** $\dot x=(0,\ -4.7032)$ rad/s$^2$; linearizing gives $A=\begin{bmatrix}0&1\\-8.6091&0\end{bmatrix}$, $B=\begin{bmatrix}0\\1\end{bmatrix}$.
+**Result:** $\dot x=(0,\ -4.7032)$, with respective units rad/s and rad/s$^2$ for the two components; linearizing gives $A=\begin{bmatrix}0&1\\-8.6091&0\end{bmatrix}$, $B=\begin{bmatrix}0\\1\end{bmatrix}$.
 
 Computed by `src/tangent_models/examples.py::SimplePendulum`; checked against this page by `tests/test_worked_example_callouts.py::test_theory_part4_rigid_pendulum`.
 :::

@@ -463,14 +463,14 @@ This theorem is the precise incremental superposition statement: **for fixed sta
 ::: {.callout-example}
 ## Worked Example: Superposition on a Point-Mass Double Pendulum
 
-**Given:** a planar point-mass double pendulum, $m_1=m_2=l_1=l_2=1$, state $q=(0.5,-0.3)$ rad, $\dot q=(1.0,0.5)$ rad/s, and two torque vectors $\tau_1=(2,0)$, $\tau_2=(0,1)$ N m.
+**Given:** a planar point-mass double pendulum, $m_1=m_2=l_1=l_2=1$, state $q=(0.5,-0.3)$ rad, $\dot q=(1.0,0.5)$ rad/s, and two torque vectors $\tau_1=(2,0)$, $\tau_2=(0,1)$ N m; gravity is omitted from this pendulum model.
 
 **Steps:**
 
 1. Compute $M(q)$ via `double_pendulum_mass_matrix` and the Coriolis bias $C(q,\dot q)\dot q$ via `double_pendulum_coriolis`.
 2. Define $\Phi(\tau)=M(q)^{-1}\big(\tau-C(q,\dot q)\dot q\big)$ and evaluate it at $\tau=0,\ \tau_1,\ \tau_2,\ \tau_1+\tau_2$.
 
-**Result:** $\Phi(0)=(-0.7709,\,2.5089)$, $\Phi(\tau_1)=(1.8448,\,-1.1359)$, $\Phi(\tau_2)=(-2.5933,\,9.0483)$, $\Phi(\tau_1+\tau_2)=(0.0224,\,5.4035)$. Indeed $\Phi(\tau_1)+\Phi(\tau_2)-\Phi(0)=\Phi(\tau_1+\tau_2)$ to machine precision — the theorem's linear-in-increments statement, confirmed numerically.
+**Result:** $\Phi(0)=(-0.7709,\,2.5089)$, $\Phi(\tau_1)=(1.8448,\,-1.1359)$, $\Phi(\tau_2)=(-2.5933,\,9.0483)$, $\Phi(\tau_1+\tau_2)=(0.0224,\,5.4035)$, so $\Phi(\tau_1)+\Phi(\tau_2)-\Phi(0)=\Phi(\tau_1+\tau_2)$ to machine precision. Because $\Phi(\tau)=M(q)^{-1}(\tau-C(q,\dot q)\dot q)$ is affine in $\tau$ by construction, this identity cannot fail; the numbers above illustrate the theorem's linear-in-increments statement rather than test it.
 
 Computed by `src/affine_control/dynamics.py::double_pendulum_mass_matrix` and `::double_pendulum_coriolis`; checked against this page by `tests/test_worked_example_callouts.py::test_superposition_theorem_double_pendulum`.
 :::

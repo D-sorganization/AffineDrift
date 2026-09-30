@@ -297,7 +297,7 @@
 - Branch: claude/issue-4511
 - Baseline commit: ebced38fbe6908492e5c8e2ff08866516f5691c0
 - Implementation commit: SELF
-- Pull request: not created (opening as draft in this session)
+- Pull request: https://github.com/D-sorganization/AffineDrift/pull/4650 (draft)
 - Governing issue/epic: #4511 (epic #4514)
 
 ## Objective and Status
@@ -321,7 +321,7 @@
     - `articles/theory-part4.qmd` — `SimplePendulum.dynamics`/`.linearize`.
     - `articles/theory-part5.qmd` — `GolfModel.ztcf_trajectory` (integrated
       clubhead-speed change), sharing its input state with Part 2's example.
-    - `articles/controllability-drift-ratio.qmd` —
+    - `articles/drift-control-ratio.qmd` —
       `constant_additive_drift_interval` (reachable width independent of drift).
     - `articles/zero-torque-counterfactual.qmd` — `GolfModel.drift_acceleration`
       at rest (pointwise-sample definition example).
@@ -333,7 +333,23 @@
     at least 8 pages carry a `{.callout-example}` block (9 tests total, all
     passing).
   - Added `SPEC.md` change-log row.
-- Remaining: push branch, open draft PR referencing `Fixes #4511`.
+- Review-fix round (Opus review on #4650): `tests/test_worked_example_callouts.py`
+  no longer compares against constants hard-coded in the test; each test now
+  parses its callout's own Given/Result lines out of the .qmd source (via
+  regex helpers `_callout_block`/`_field`/`_capture`) and compares the
+  recomputed `src/` values against those parsed tokens at their displayed
+  precision, so page and test cannot drift apart — verified by temporarily
+  editing one page number and confirming the corresponding test failed, then
+  reverting. `articles/superposition.qmd`'s callout now states gravity is
+  omitted from the point-mass double-pendulum model and reads as an
+  illustration of the (constructively affine) superposition identity rather
+  than a numerical test of it. `articles/theory-part4.qmd`'s callout now
+  gives `rad/s` for the first `\dot x` component and `rad/s^2` for the
+  second, instead of `rad/s^2` for both. PR title/body corrected: the body
+  named the nonexistent `controllability-drift-ratio.qmd`; the real file is
+  `articles/drift-control-ratio.qmd` (also fixed above, same typo existed
+  here).
+- Remaining: none identified; awaiting further review.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4550
 - Branch: claude/issue-4550
 - Baseline commit: 047fc82b (origin/main)
