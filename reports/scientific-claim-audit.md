@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 237
+- Reviewed: 246
 - Deferred: 0
 - Exempt: 3
 
@@ -19,9 +19,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/affine-nature-golf-swing.html` | `articles/affine-nature-golf-swing.qmd` | 7 |
 | `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` | 1 |
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
-| `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` | 7 |
 | `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` | 1 |
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 2 |
+| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 8 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
@@ -144,12 +144,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 12 |
-| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 9 |
-| `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 3 |
-| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 3 |
+| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 10 |
+| `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 4 |
+| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 4 |
 | `/books/index.html` | `books/index.qmd` | 3 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
-| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 8 |
+| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 9 |
 | `/critiques/01_muscle_physiology.html` | `critiques/01_muscle_physiology.md` | 1 |
 | `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
 | `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |
@@ -190,6 +190,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/tip_mass_omission.html` | `critiques/tip_mass_omission.md` | 1 |
 | `/critiques/validation_dimensionality_gap.html` | `critiques/validation_dimensionality_gap.md` | 1 |
 | `/critiques/ztcf_identifiability.html` | `critiques/ztcf_identifiability.md` | 1 |
+| `/evidence/claims.html` | `evidence/claims.qmd` | 2 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
@@ -214,14 +215,21 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/programming/workflows.html` | `models/programming/workflows.qmd` | 4 |
 | `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 28 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
+| `/pages/accessibility.html` | `pages/accessibility.qmd` | 1 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
 | `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
 | `/pages/contact.html` | `pages/contact.qmd` | 3 |
+| `/pages/contributor-guide.html` | `pages/contributor-guide.qmd` | 1 |
 | `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
 | `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 6 |
+| `/pages/glossary.html` | `pages/glossary.qmd` | 1 |
+| `/pages/how-to-read.html` | `pages/how-to-read.qmd` | 1 |
+| `/pages/notation-quick-reference.html` | `pages/notation-quick-reference.qmd` | 2 |
 | `/pages/notation.html` | `pages/notation.qmd` | 4 |
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
+| `/pages/parameters.html` | `pages/parameters.qmd` | 2 |
+| `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` | 1 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
@@ -237,7 +245,8 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/resources/learning-path-control-theory.html` | `resources/learning-path-control-theory.qmd` | 1 |
 | `/resources/learning-path-foundations.html` | `resources/learning-path-foundations.qmd` | 1 |
 | `/resources/learning-path-golf-science.html` | `resources/learning-path-golf-science.qmd` | 1 |
-| `/resources/learning-paths.html` | `resources/learning-paths.qmd` | 1 |
+| `/resources/learning-paths.html` | `resources/learning-paths.qmd` | 2 |
+| `/resources/on-ramp-paths.html` | `resources/on-ramp-paths.qmd` | 11 |
 | `/resources/research-review-baseball-pitching.html` | `resources/research-review-baseball-pitching.qmd` | 1 |
 | `/resources/research-review-induced-acceleration-analysis.html` | `resources/research-review-induced-acceleration-analysis.qmd` | 2 |
 | `/resources/research-review-interaction-forces.html` | `resources/research-review-interaction-forces.qmd` | 1 |
@@ -262,9 +271,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-2cd844057893` | `/articles/affine-nature-golf-swing.html` | Reviewed | — | None | `crit-aerodynamics`, `crit-control-causality-mechanical`, `crit-drift-superposition`, `crit-effective-plant-fallacy`, `crit-geometric-stiffness-omission`, `crit-impact-evasion`, `crit-input-dependent-boundary-conditions`, `crit-muscle-physiology`, `crit-neuromuscular-control`, `crit-nullspace-interpretation`, `crit-parameter-causality-leakage`, `crit-passive-active-boundary-ambiguity`, `crit-passive-overshoot-artifact`, `crit-simulation-tautology`, `crit-static-fallacy-zvcf`, `crit-stretch-shortening-blindspot`, `crit-teleological-blindness`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-f6e740c6e376` | `/articles/appendix-applications.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3953a6c17747` | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | Reviewed | — | None | None | 0 |
-| `ad-route-cb2afdfef800` | `/articles/controllability-drift-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 0 |
 | `ad-route-746e90148b98` | `/articles/degrees-of-freedom-and-dimensionality.html` | Reviewed | — | None | None | 0 |
 | `ad-route-97190aef16b4` | `/articles/drift-components-wrench-double-pendulum.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 0 |
+| `ad-route-4a8ccbe60039` | `/articles/drift-control-ratio.html` | Reviewed | — | `ad-dcr-001` | `crit-dimensional-inconsistency-dcr`, `crit-lie-bracket-formalism-overreach`, `crit-normative-ambiguity-drift`, `crit-planar-dcr-blindness`, `crit-precision-gross-control` | 0 |
 | `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
 | `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 6 |
 | `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
@@ -433,6 +442,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Reviewed | — | None | `crit-tip-mass-omission` | 0 |
 | `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Reviewed | — | None | `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Reviewed | — | None | `crit-ztcf-identifiability` | 0 |
+| `ad-route-3de14a21ce3c` | `/evidence/claims.html` | Reviewed | — | None | None | 1 |
 | `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |
@@ -458,14 +468,21 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-7bb2e5fcbb84` | `/models/research-protocol-readiness.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | None | None | 0 |
 | `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | — | None | None | 1 |
+| `ad-route-ae3941a3e7eb` | `/pages/accessibility.html` | Reviewed | — | None | None | 1 |
 | `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | — | None | None | 1 |
 | `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Reviewed | — | None | None | 1 |
 | `ad-route-6e4e4be935a4` | `/pages/contact.html` | Reviewed | — | None | None | 1 |
+| `ad-route-1678ef51a577` | `/pages/contributor-guide.html` | Reviewed | — | None | None | 0 |
 | `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Reviewed | — | None | None | 1 |
 | `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | — | None | None | 1 |
 | `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | — | None | None | 5 |
+| `ad-route-39185f792b9a` | `/pages/glossary.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c15406d82939` | `/pages/how-to-read.html` | Reviewed | — | None | None | 0 |
+| `ad-route-842027bd7c5a` | `/pages/notation-quick-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | — | None | None | 2 |
 | `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
+| `ad-route-dad0b4221d85` | `/pages/parameters.html` | Reviewed | — | None | None | 0 |
+| `ad-route-223cd7be3af2` | `/pages/privacy-policy.html` | Reviewed | — | None | None | 1 |
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
@@ -483,6 +500,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-0ad68343def0` | `/resources/learning-path-foundations.html` | Reviewed | — | None | None | 0 |
 | `ad-route-aa192df4ba01` | `/resources/learning-path-golf-science.html` | Reviewed | — | None | None | 0 |
 | `ad-route-da7c073ff90f` | `/resources/learning-paths.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a12a2a3f75fd` | `/resources/on-ramp-paths.html` | Reviewed | — | None | None | 1 |
 | `ad-route-397b07989cb1` | `/resources/research-review-baseball-pitching.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b34fc06b00e9` | `/resources/research-review-induced-acceleration-analysis.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cb426ba8f0be` | `/resources/research-review-interaction-forces.html` | Reviewed | — | None | None | 0 |

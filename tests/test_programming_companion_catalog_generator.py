@@ -190,6 +190,53 @@ def test_features_page_renders_structured_fields_not_dict_literals(
 
 
 @pytest.mark.unit
+def test_program_titles_use_the_manifest_name_not_the_id(
+    manifest_data: dict[str, object],
+) -> None:
+    """AffineDrift #4542: the manifest's `name` field is the title, not `id` repeated."""
+    programs = CatalogGenerator(manifest_data).generate_programs()
+
+    row = next(line for line in programs.splitlines() if line.startswith("| `aip` |"))
+    assert "| `aip` | AI Protocol (AIP) |" in row
+    for line in programs.splitlines():
+        if not line.startswith("| `"):
+            continue
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        pid, title = cells[0].strip("`"), cells[1]
+        assert title != pid, f"program {pid!r} has a title equal to its ID"
+
+
+@pytest.mark.unit
+def test_program_kind_and_surfaces_come_from_the_manifest(
+    manifest_data: dict[str, object],
+) -> None:
+    """AffineDrift #4542: Kind is the manifest `type`; absent surfaces are not invented."""
+    programs = CatalogGenerator(manifest_data).generate_programs()
+
+    row = next(line for line in programs.splitlines() if line.startswith("| `aip` |"))
+    cells = [cell.strip() for cell in row.strip("|").split("|")]
+    assert cells[2] != "`program`"
+    assert cells[5] == "not published"
+
+
+@pytest.mark.unit
+def test_engine_names_use_the_manifest_name_not_the_id(
+    manifest_data: dict[str, object],
+) -> None:
+    """AffineDrift #4542: engine rows must show the real name, not the lowercase ID."""
+    engines = CatalogGenerator(manifest_data).generate_engines()
+
+    row = next(line for line in engines.splitlines() if line.startswith("| `drake` |"))
+    assert "**Drake**" in row
+    for line in engines.splitlines():
+        if not line.startswith("| `"):
+            continue
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        eid, name = cells[0].strip("`"), cells[1].strip("*")
+        assert name != eid, f"engine {eid!r} has a name equal to its ID"
+
+
+@pytest.mark.unit
 def test_committed_catalog_matches_source_manifest() -> None:
     """Ensure the committed catalog in models/programming does not drift from source."""
     from scripts.generate_programming_catalog import build_generator, resolve_source

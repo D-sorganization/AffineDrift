@@ -1,6 +1,6 @@
 ---
 title: "Videos"
-description: "Video resources on robotics, control theory, biomechanics, and golf"
+description: "Curated video lectures, demonstrations, and technical talks on robotics, nonlinear control theory, biomechanics, and golf."
 page-layout: full
 categories:
 - resources
@@ -9,7 +9,7 @@ categories:
 ```{=html}
 <section class="resources-section">
   <div class="ad-page-container">
-    <div class="standard-page-layout">
+    <div class="standard-page-layout standard-page-layout--single">
       <!-- Left Sidebar: Table of Contents / Categories -->
       <div class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -442,88 +442,9 @@ categories:
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Videos History -->
-      <div class="right-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Videos</h3>
-          <ul class="sidebar-links" id="videos-history-list">
-            <li class="history-empty">No recent videos yet</li>
-          </ul>
-        </nav>
-      </div>
-      </div>
     </div>
   </div>
 </section>
-
-
-<script>
-// Track video history in localStorage
-document.addEventListener('DOMContentLoaded', function() {
-  const videosHistoryList = document.getElementById('videos-history-list');
-  if (!videosHistoryList) return;
-
-  const VIDEO_PAGES = [
-    'resources-videos.html'
-  ];
-
-  function updateVideosHistory() {
-    let history = [];
-    try {
-      const raw = localStorage.getItem('affinedrift_videos_history');
-      if (raw) history = JSON.parse(raw);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      localStorage.removeItem('affinedrift_videos_history');
-    }
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-videos.html'
-    };
-
-    if (VIDEO_PAGES.includes(currentPage.url)) {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_videos_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      videosHistoryList.textContent = '';
-      const li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'No recent videos yet';
-      videosHistoryList.appendChild(li);
-      return;
-    }
-
-    videosHistoryList.textContent = '';
-    const fragment = document.createDocumentFragment();
-    history.forEach((item) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      let safeUrl = "#";
-      if (typeof item.url === "string") {
-        try {
-          const parsed = new URL(item.url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-      }
-      a.href = safeUrl;
-      a.textContent = item.title;
-      li.appendChild(a);
-      fragment.appendChild(li);
-    });
-    videosHistoryList.appendChild(fragment);
-  }
-
-  updateVideosHistory();
-});
-</script>
 ```
 
 ## Related Articles

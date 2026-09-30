@@ -48,7 +48,7 @@ def test_books_hub_treats_the_monograph_as_a_distinct_long_form_reference() -> N
     """The Books hub should give the monograph equal prominence without calling it a textbook."""
     books = _read("books/index.qmd")
 
-    assert "two rendered textbook collections and one governed technical monograph" in books
+    assert "two rendered textbook collections and one version-pinned technical monograph" in books
     assert "### Proximal-to-Distal Energy Transfer in the Golf Swing" in books
     assert f"../{MONOGRAPH_ROUTE}" in books
     assert "## Proximal-to-Distal Study Library" in books
@@ -90,7 +90,7 @@ def test_article_catalog_uses_current_monograph_scope_and_long_form_orientation(
 
     assert "full 37-chapter mathematical monograph" in catalog
     assert "34-chapter" not in catalog
-    assert "two textbooks and the governed technical monograph" in catalog
+    assert "two textbooks and the version-pinned technical monograph" in catalog
 
 
 def test_learning_paths_link_the_study_library_at_the_point_of_use() -> None:
@@ -139,5 +139,5 @@ def test_search_e2e_requires_the_canonical_monograph_result() -> None:
     """The browser contract should search for and select the canonical monograph route."""
     search_spec = _read("tests/e2e/search.spec.js")
 
-    assert "finds the governed proximal-distal technical monograph" in search_spec
+    assert "finds the version-pinned proximal-distal technical monograph" in search_spec
     assert MONOGRAPH_ROUTE in search_spec

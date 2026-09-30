@@ -181,7 +181,7 @@ class TestIsBookPath:
         assert is_book_path(Path("articles/proximal_distal_energy_transfer/index.qmd"))
 
     def test_standalone_article_is_not_book(self) -> None:
-        assert not is_book_path(Path("articles/controllability-drift-ratio.qmd"))
+        assert not is_book_path(Path("articles/drift-control-ratio.qmd"))
         assert not is_book_path(Path("pages/about.qmd"))
 
 

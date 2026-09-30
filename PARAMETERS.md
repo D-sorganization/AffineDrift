@@ -1,5 +1,3 @@
-# Canonical Parameters Reference
-
 This document serves as the single source of truth for parameter definitions across _The Physics of Golf_ (Ch 1-31) and _The Geometry of Motion_ (Vol 0-1).
 
 | Parameter                  | Symbol     | Unit | Definition                                                                                                              | Range/Example            | Context/Chapter |

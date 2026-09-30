@@ -1,21 +1,4 @@
-## Mathematical Notation Reference
-
-**Unified notation conventions for AffineDrift documentation**
-
 This document serves as the authoritative reference for all mathematical symbols, notation conventions, and sign conventions used across Physics of Golf, Geometry of Motion, and all articles.
-
----
-
-## Table of Contents
-
-1. [Canonical Control-Affine Terminology](#canonical-control-affine-terminology)
-2. [Coordinate Systems & Rotation](#coordinate-systems--rotation)
-3. [Group Theory Notation](#group-theory-notation)
-4. [Vectors & Tensors](#vectors--tensors)
-5. [Physical Quantities](#physical-quantities)
-6. [Sign Conventions](#sign-conventions)
-7. [Symbol Overloading Reference](#symbol-overloading-reference)
-8. [Component Notation](#component-notation)
 
 ---
 
@@ -255,7 +238,7 @@ $(1-\mathrm{COR})/(1+\mathrm{COR})$ and must never use the bare DCR acronym.
 | **α**    | Launch angle                   | Angle above horizontal                                                                                                        | degrees (°) or radians    |
 | **β**    | Spin rate                      | Revolutions per minute (RPM) or rad/s                                                                                         | RPM or rad/s              |
 
-**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/controllability-drift-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
+**Acronym note (DCR):** The bare acronym **DCR** is reserved site-wide for the **Drift–Control Ratio**, the load-bearing controllability quantity defined in [Controllability & the Drift-Control Ratio](../articles/drift-control-ratio.html). The aerodynamic drag–curve ratio (formerly also abbreviated "DCR") is written **DgCR** to avoid the collision.
 
 **DgCR (Drag–curve ratio) Sign Convention:** Always positive
 

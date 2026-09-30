@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -114,6 +115,24 @@ SUPPLEMENTAL_SCENARIOS = (
 )
 
 
+QUARTO_ALIAS_SCRIPT = re.compile(r"var redirects\s*=\s*\{.*?window\.location\.replace\(", re.S)
+
+
+def _is_quarto_alias_stub(path: Path) -> bool:
+    """Return whether ``path`` is the redirect stub Quarto writes for an ``aliases:`` entry.
+
+    The stub has no content of its own (an empty body, a script that replaces
+    the location), so it is not a public page and carries no H1 to verify.
+    """
+    soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
+    body = soup.body
+    return (
+        _nonempty_text(soup.title) == "Redirect"
+        and (body is None or not body.find(True))
+        and any(QUARTO_ALIAS_SCRIPT.search(script.get_text()) for script in soup.find_all("script"))
+    )
+
+
 def _html_paths(docs_dir: Path) -> list[Path]:
     """Return public HTML paths relative to ``docs_dir`` in stable order."""
     if not docs_dir.is_dir():
@@ -123,6 +142,7 @@ def _html_paths(docs_dir: Path) -> list[Path]:
         path.relative_to(docs_dir)
         for path in docs_dir.rglob("*.html")
         if not any(part in IGNORED_HTML_DIRECTORIES for part in path.relative_to(docs_dir).parts)
+        and not _is_quarto_alias_stub(path)
     ]
     if not paths:
         raise ValueError(f"rendered public HTML directory contains no pages: {docs_dir}")

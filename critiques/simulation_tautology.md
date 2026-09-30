@@ -7,7 +7,7 @@ description: "Critique and response context for The Simulation Tautology (Circul
 
 ## Summary of Concern
 
-The manuscript (specifically Part V and the Simulink documentation) claims that the numerical equality $F_{\text{total}} - F_{\text{ZTCF}} = F_{\text{input}}$ observed in simulation serves as a "strong validation" of the theory. This is a logical fallacy. Since the simulation is built using the exact same equations of motion ($\dot{x} = f(x) + g(x)u$) as the theory, this result validates only the _algebraic consistency_ of the code, not the physical validity of the AffineDrift framework. It proves the math was typed correctly into MATLAB, not that the math represents reality.
+The manuscript (specifically Part V and the Simulink documentation) claims that the numerical equality $F_{\text{total}} - F_{\text{ZTCF}} = F_{\text{input}}$ observed in simulation serves as a "strong validation" of the theory. This is a logical fallacy. Since the simulation is built using the exact same equations of motion ($\dot{x} = f(x) + G(x)u$) as the theory, this result validates only the _algebraic consistency_ of the code, not the physical validity of the AffineDrift framework. It proves the math was typed correctly into MATLAB, not that the math represents reality.
 
 ## Location
 

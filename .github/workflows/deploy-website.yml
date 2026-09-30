@@ -87,6 +87,10 @@ jobs:
         run: |
           python3 scripts/optimize_images.py --check
 
+      - name: Verify Per-Book/Series Social Cards
+        run: |
+          python3 scripts/generate_social_cards.py --check
+
       - name: Verify Image Budget
         run: python3 scripts/check_image_budget.py
 
