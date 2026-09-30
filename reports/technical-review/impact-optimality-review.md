@@ -115,8 +115,18 @@ error, inertia arithmetic and origin shifts. Eight article-boundary cases and
 one workbench-summary case failed before their respective corrections; all
 21 checks now pass. Ruff, Black and the 651-source title-case gate pass.
 
-Initial root-project HTML render succeeds. Complete browser inspection,
-revision-bound evidence, full repository validation and protected delivery
-remain pending. The corpus row must not be marked complete until the bounded
-review and publication checks finish. Other sources retain their independent
-review status.
+Final root-project HTML renders succeed for all three affected routes. The
+public-site gate passes all twelve desktop/mobile and light/dark cases, with
+three axe scans and no serious/critical violations. The article renders 74
+math expressions, including twelve displays, without lazy placeholders or
+math errors. All displays were visually checked at 390 and 1440 px. An earlier
+clipped-equation render was rejected; authored line breaks and the shorter
+title resolve the observed narrow-screen problem. Five table containers scroll
+horizontally without page overflow; representative rightmost columns were
+visually checked. Twelve content gates and the quotation gate pass.
+
+The revision-bound render receipt records exact source and HTML hashes, primary
+PDF access metadata, and the scope of inspection. Repository-wide validation
+and protected delivery are separate operational checks; record their final
+results before delivery. Only this article's corpus row can be completed by
+this review. Other sources retain their independent review status.
