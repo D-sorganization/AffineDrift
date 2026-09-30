@@ -428,3 +428,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
+| 2026-09-29 | #4536 | Add deterministic, publication-grade SVG figures and accessible descriptions to core theory pages (DCR, ZTCF, Superposition) (#4536). |

@@ -1,51 +1,60 @@
-# Implementation Handoff — Per-Page Citation Metadata and "Cite This Page" Block (#4544)
+# Implementation Handoff — Figures for Core Theory Pages (#4536)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-07-2-citation-metadata-and-cite-block-4544
-- Baseline commit: ef8bc5f7
+- Branch: feat/web-06-6-figures-for-core-theory-pages-4536
+- Baseline commit: 84b8737e
 - Implementation commit: SELF
-- Pull request: #4646
-- Governing issue/epic: #4544 (epic #4552)
+- Pull request: TBD (#4536)
+- Governing issue/epic: #4536 (epic #4543)
 
 ## Objective and Status
 
-- Objective: Emit per-page citation metadata (citation_title, citation_author), omit publication date for unverified dates (WEB-07.3), provide a "Cite this page" block with standalone BibTeX download, print stylesheet handling, and validate with Google Scholar metadata checker on sample pages.
+- Objective: Provide static, script-generated SVG figures for core theory pages (`controllability-drift-ratio.qmd`, `zero-torque-counterfactual.qmd`, and `superposition.qmd`), with $\ge 3$ figures per page, accessible alt text, long descriptions, fallback/print utility, and within image budget.
 - Status: ready for commit / PR
 - Completed:
-  - Configured `_quarto.yml` with top-level `citation: true`, `format.html.google-scholar: true`, and registered post-render script `scripts/post_render_citations.py`.
-  - Implemented `scripts/post_render_citations.py` to strip Quarto's `NaN` date meta tags on unverified pages, extract BibTeX to a standalone `<stem>.bib` file alongside `.html`, inject an accessible download button into the citation block, and anchor `#citation`.
-  - Implemented `scripts/check_google_scholar_metadata.py` validator enforcing Google Scholar title, author, and verified publication date rules, plus BibTeX download presence.
-  - Updated `css/print.css` with `#quarto-citation { break-inside: avoid; border-top: 1px solid #000 !important; margin-top: 2rem !important; }` and hid `.quarto-citation-bibtex-download` in print.
-  - Added missing `author: "Dieter Olson"` and unverified date metadata to 5 article sources.
-  - Implemented comprehensive TDD suite `tests/test_citation_metadata.py` (7 tests covering config, frontmatter, rendering, unverified date omission, and 3 sample pages).
+  - Implemented `scripts/build_core_theory_figures.py` with deterministic SVG generation (Agg backend, svg.fonttype: none, clean normalized output) and `--check` CLI mode.
+  - Generated 9 publication-grade SVGs in `articles/figures/core_theory/`:
+    - `fig_dcr_vector_decomposition.svg` (phase-space drift vs control authority)
+    - `fig_dcr_swing_phases.svg` (acceleration evolution and DCR across downswing phases)
+    - `fig_dcr_reachability_tubes.svg` (finite-horizon reachable set envelopes vs countdown to impact)
+    - `fig_ztcf_trajectory_divergence.svg` (planar clubhead path divergence across release events)
+    - `fig_ztcf_clubhead_speed_loss.svg` (velocity profiles for active vs counterfactual branches)
+    - `fig_ztcf_passive_dynamics_attribution.svg` (acceleration attribution: active muscular vs interaction/Coriolis flail)
+    - `fig_superposition_decomposition.svg` (parallelogram superposition of instantaneous acceleration increments)
+    - `fig_superposition_modal_response.svg` (cross-channel acceleration coupling via mass matrix inverse)
+    - `fig_superposition_breakdown_boundary.svg` (trajectory divergence vs naive superposition error growth)
+  - Embedded 3 figures in each of the three target pages with captions, figure labels, and accessible `fig-alt` descriptions.
+  - Created automated test suite `tests/test_core_theory_figures.py` asserting figure existence, image budget adherence (< 500 KB), `--check` pass, $\ge 3$ references per page, and non-empty alt text and captions.
+  - Verified `tests/test_image_budget.py` and `tests/test_core_theory_figures.py` pass cleanly.
   - Regenerated claim audit evidence digests and verified all pre-commit checks pass.
   - Added change-log row in `SPEC.md`.
 - Remaining: Commit, push, create PR, re-key SPEC.md to PR number, arm auto-merge, and release lease.
 
 ## Files and Decisions
 
-- Files changed:
-  - `_quarto.yml`: Top-level citation: true, format.html.google-scholar: true, project.post-render hook.
-  - `scripts/post_render_citations.py`: Post-render citation cleaner and BibTeX download link injector.
-  - `scripts/check_google_scholar_metadata.py`: Google Scholar tag and BibTeX validator.
-  - `css/print.css`: Print styling for citation block.
-  - `articles/*.qmd`: Added author and unverified date metadata where missing.
-  - `tests/test_citation_metadata.py`: Unit and integration test suite.
-  - `SPEC.md`: PR change-log row.
+- Files changed/created:
+  - `scripts/build_core_theory_figures.py`: Deterministic figure generator.
+  - `articles/figures/core_theory/*.svg`: 9 generated SVG figures.
+  - `articles/controllability-drift-ratio.qmd`: Embedded 3 figures.
+  - `articles/zero-torque-counterfactual.qmd`: Embedded 3 figures.
+  - `articles/superposition.qmd`: Embedded 3 figures.
+  - `tests/test_core_theory_figures.py`: Test suite for core theory figures.
+  - `data/trust/claim_audit_inventory.json` & `site_trust_surface_audit.json`: Regenerated evidence digests.
+  - `SPEC.md`: Change-log entry.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Post-render Python processing cleanly resolves Quarto's internal JS NaN date evaluation; standalone .bib files generated alongside HTML for simple HTTP downloads; unverified pages strictly omit citation_publication_date.
+- Key decisions: Pure SVG format with deterministic XML formatting and no text path outlines (`svg.fonttype: none`) keeps file size under 65 KB each (total < 400 KB across all 9 figures), well within the 500 KB per-image budget and optimizing vector sharpness for print and web fallbacks.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_citation_metadata.py` — PASS (7 passed)
-- `python -m ruff check scripts/post_render_citations.py scripts/check_google_scholar_metadata.py tests/test_citation_metadata.py` — PASS
-- `python -m black --check --line-length 100 scripts/post_render_citations.py scripts/check_google_scholar_metadata.py tests/test_citation_metadata.py` — PASS
-- `npm run lint:css` — PASS
-- `python -m scripts.derive_substantive_dates --check` — PASS (330 files scanned)
+- `pytest tests/test_core_theory_figures.py tests/test_image_budget.py` — PASS (14 passed)
+- `python scripts/build_core_theory_figures.py --check` — PASS (9 verified)
+- `python -m ruff check scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
+- `python -m black --check --line-length 100 scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
+- `mypy scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python -m scripts.check_terminology --baseline config/terminology-baseline.json` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
@@ -57,7 +66,8 @@
 
 ## Next Steps
 
-1. Monitor PR #4640 CI and auto-merge into main.
+1. Commit, push branch, open PR with `agent:local` label.
+2. Re-key `SPEC.md` and `HANDOFF.md` to PR number, push, arm auto-merge, and release lease for #4536.
 
 ## Change Log
 

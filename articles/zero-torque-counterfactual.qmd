@@ -209,6 +209,8 @@ Within the fixed declared plant, setting $u=0$ removes the term $G(x)u$. The two
 
 ## Geometric Interpretation
 
+![Planar Clubhead Paths Under Active Torque Baseline Versus Zero-Torque Counterfactuals Branched at Top of Downswing ($t_0=0$ ms), Mid-Downswing ($t_0=140$ ms), and Pre-Impact ($t_0=240$ ms).](figures/core_theory/fig_ztcf_trajectory_divergence.svg){#fig-ztcf-trajectory-divergence width=95% fig-alt="Diagram of clubhead spatial trajectories contrasting the active swing path against passive trajectories released at top of swing, mid-downswing, and late downswing."}
+
 When the initial-value problem is well posed, a forward ZTCF is an *integral curve* of the declared drift vector field $f$ through $x_0$ at time $t_0$.
 
 A model may retain the following effects when its record declares them; this list is broader than the registered rigid fixture:
@@ -224,6 +226,8 @@ What is absent from the forward ZTCF is the declared applied generalized-control
 - Within an exact fixed deterministic model, the paired difference follows from the specified intervention and retained protocols. Comparing a computed branch with human data additionally introduces state-estimation error, parameter uncertainty, omitted loads, contact mismatch and model discrepancy. Numerical error affects either comparison.
 
 ## Relationship to the Drift–Input Decomposition
+
+![Decomposition of Distal Club Acceleration Into Active Muscular Torque $M^{-1}\tau$, Passive Interaction/Coriolis Coupling $-M^{-1}C\dot{q}$, and Gravitational Acceleration $-M^{-1}g$ Across the Downswing.](figures/core_theory/fig_ztcf_passive_dynamics_attribution.svg){#fig-ztcf-passive-dynamics-attribution width=95% fig-alt="Stacked area chart displaying joint acceleration contributions over downswing time, showing active muscular dominance early shifting to passive centrifugal and interaction dominance late in the swing."}
 
 The drift--input decomposition used throughout this series is the algebraic identity:
 
@@ -270,6 +274,8 @@ task metric, uncertainty, and event definition documented in the corrected
 remains one model-conditioned intervention at every DCR value.
 
 ## Numerical Algorithm
+
+![Clubhead Velocity Profiles Comparing Active Execution With Zero-Torque Branches Initiated at Successive Downswing Milestones, Illustrating Terminal Speed Loss as a Function of Branch Timing.](figures/core_theory/fig_ztcf_clubhead_speed_loss.svg){#fig-ztcf-clubhead-speed-loss width=95% fig-alt="Line plot of clubhead speed versus time showing active trajectory reaching 48 m/s, contrasted with steep speed deficits when torque is removed early and minor deficit when removed 30 ms before impact."}
 
 This section describes the generic integration pattern. The only governed executable result published here is the Python golden fixture linked in @sec-ztcf-contract. No current MATLAB or Simulink model/version/input record or cross-engine parity artifact is registered, so results attributed to those engines are unavailable under this contract.
 

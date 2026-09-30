@@ -169,6 +169,8 @@ $$
 The drift and input effects are evaluated at the same state. $W$ selects/scales the coordinates or task directions; the norm and admissible input set $\mathcal U(x)$ are part of the definition. In the equations above, $a_{\mathrm{drift}}=a_d$. The denominator describes **available capacity**, not the current command. See the [Mathematical Notation Reference](../pages/notation.html).
 :::
 
+![Local Vector Decomposition of Phase Space State Derivative Into Zero-Input Drift Vector $f(x)$ and Bounded Control Authority Set $G(x)\mathcal{U}$, Showing How Control Spans Corrections Relative to a Shifting Drift Center.](figures/core_theory/fig_dcr_vector_decomposition.svg){#fig-dcr-vector-decomposition width=95% fig-alt="A 2D projection of phase space showing a trajectory curve, the unactuated drift vector pointing forward-downward, and an ellipsoidal reachable velocity region shifted by drift, showing how control acts relative to the drift baseline."}
+
 Let $d=\|Wa_d\|$, $c_{\max}=\sup_{u\in\mathcal U}\|WB_a u\|$ and $r=\|WB_a u_{\mathrm{used}}\|$. Assume the capacity is finite. The policy-dependent drift-to-realized-input ratio is
 
 $$
@@ -286,6 +288,8 @@ in the Hausdorff sense. Closure accounts for endpoint limits. A Taylor expansion
 Convexity cannot be silently dropped. In $\dot x=u$, with instantaneous inputs restricted to $\{-1,1\}$, half a short interval at each input produces zero net displacement. The rescaled endpoints therefore include zero, although the instantaneous velocity set does not. Arbitrarily fast switching gives the convexified leading-order set. Input-rate restrictions, a state-dependent input set or an active state boundary need their own analysis; the displayed assumptions do not cover them.
 
 Subtracting the nominal drift leaves the control-effect set at first order. A bounded set of this kind is generally not a cone. Earlier **control-cone**, **drift-tube** and **pancake** pictures can at most name possible finite-horizon anisotropy. They remain **unvalidated hypotheses** about golfer-club outcomes, not consequences of high DCR or counterparts of relativistic causal limits.
+
+![Finite-Horizon Reachable Set Envelopes Contracting as Time-to-Impact $\Delta t$ Decreases Under Bounded Control Authority, Contrasting Terminal Dispersion With Local DCR.](figures/core_theory/fig_dcr_reachability_tubes.svg){#fig-dcr-reachability-tubes width=95% fig-alt="Diagram showing reachable clubhead positions contracting from a broad reachable envelope at 100 ms before impact to a tight delivery window at 15 ms, illustrating that time horizon rather than DCR magnitude determines terminal controllability."}
 
 ### Accessibility, Actuation and Gramians {#sec-anisotropy}
 
@@ -457,6 +461,8 @@ This includes the changed event time. Holding the nominal time fixed instead wou
 If the resulting event-output Jacobian is $J_e$ and the relevant small perturbations have covariance $\Sigma$, a first-order covariance approximation is $J_e\Sigma J_e^T$. Include the dependence between state, input and parameter errors when forming that covariance; do not add correlated uncertainties as if independent. DCR contains neither this map nor the covariance. A large drift magnitude does not imply a large state Jacobian or exponential error growth. The previous claim that path drift enforces face error remains withdrawn pending an event-level uncertainty study.
 
 ## A Mechanical Counterexample to Monotone Growth {#schematic-illustration-drift-vs-control-magnitude}
+
+![Evolution of Drift Acceleration $\|a_d(t)\|$, Maximum Control Authority Capacity $\sup \|B_a u\|$, and the Resulting Instantaneous Drift-Control Ratio (DCR) Across the Four Biomechanical Phases of the Downswing.](figures/core_theory/fig_dcr_swing_phases.svg){#fig-dcr-swing-phases width=95% fig-alt="A multi-curve plot showing drift acceleration rising sharply after release, active torque capacity remaining bounded, and DCR increasing toward impact without implying loss of steering authority."}
 
 The earlier phase plot used arbitrary functions, and its description did not match their shapes. The following declared mechanical example replaces it with equations that can be checked exactly. **This is a manufactured model and a family of states, not a golfer trajectory or a downswing measurement.**
 
