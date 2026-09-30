@@ -18,6 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4632 (draft)
+- **Issue:** #4549 (WEB-07.7; epic #4552)
+- **Branch:** `claude/issue-4549`
+- **Paths:** `data/datasets.yml`, `src/tools/datasets_catalog.py`, `scripts/generate_datasets_catalog.py`, `resources/resources-datasets.qmd`, `css/resources.css`, `docs/css/resources.css`, `tests/test_generate_datasets_catalog.py`, `.github/workflows/ci-standard.yml`, `tests/conftest.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (`pytest tests/test_generate_datasets_catalog.py` 14 passed; `generate_datasets_catalog --check` up to date; ruff/black clean repo-wide; mypy clean on new modules; Quarto render-coverage/syntax/xref/single-title/title-case checks pass; full pre-push hook chain including `pytest-unit` passed; PR #4632 opened as draft)
+- **Summary:** Rebuilds the Datasets resource page as a generated catalogue from `data/datasets.yml`, replacing four truncated-looking third-party cards and the `mini.s-shot.ru` thumbnail host with verified licence/size/modality/access/citation fields, and adds an "AffineDrift Data Artefacts" section listing `data/ztcf`, `data/research_protocols`, and `schemas` with a real SHA-256 checksum per file.
+- **Next step:** Awaiting frontier-agent PR review.
 ### DL-#4595 · Cache Quarto Renders in CI
 ### DL-#4600 · Service-Worker Cache Busting by Content Hash
 
