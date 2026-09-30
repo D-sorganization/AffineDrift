@@ -1,7 +1,7 @@
 # Implementation Handoff — hermetic trust-generator tests
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-wt-hermetic`
-- Branch: `fix/hermetic-trust-generated-tests`; commit SELF; PR: draft, see branch
+- Branch: `fix/hermetic-trust-generated-tests`; commit SELF; PR: #4701 (draft)
 - Objective: `pytest tests -m "not slow" -n 8` rewrote the committed evidence-presentation,
   reader-validation and research-release artifacts (JSON + `_includes/generated` partials).
   The three generators gained `output_root`; their tests now generate into `tmp_path`.
