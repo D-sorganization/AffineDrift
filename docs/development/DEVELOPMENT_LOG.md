@@ -22,7 +22,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** not created yet (draft PR to be opened this session)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4680 (draft)
 - **Issue:** #4559 (WEB-08.8; epic #4560 / E8)
 - **Branch:** `claude/issue-4559`
 - **Paths:** `tests/e2e/visual.spec.js`

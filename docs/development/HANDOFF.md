@@ -2,8 +2,9 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4559`.
-- Branch `claude/issue-4559`, commit `SELF`; pull request: not created yet
-  (draft PR to be opened this session, targets `main`).
+- Branch `claude/issue-4559`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4680 (draft, targets
+  `main`).
 - Governing issue: #4559 (WEB-08.8, child of epic #4560 / E8: Visual
   Explanation and Design System). Acceptance criteria: approved visual
   snapshots at 390/768/1440 px in both themes for the Home and Start Here
