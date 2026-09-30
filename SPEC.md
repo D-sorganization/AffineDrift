@@ -224,8 +224,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
 | 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
+| 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
 | 2026-09-30 | #4492 | Add `resources/on-ramp-paths.qmd`: 5-minute, 30-minute, and 3-hour on-ramp reading sequences per persona, built from existing pages, each ending in a self-check question and answer (#4492). |
 | 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
 | 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
@@ -444,7 +444,7 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-29 | #4549 | Rebuild the Datasets resource page as a generated catalogue from `data/datasets.yml` with verified licence/access/schema/checksum fields for third-party datasets and an "AffineDrift Data Artefacts" section for `data/ztcf`, `data/research_protocols`, and `schemas`, dropping the `mini.s-shot.ru` thumbnail host. |
 | 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
-| 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
+| 2026-09-29 | #4651 | Add deterministic, publication-grade SVG figures and accessible descriptions to core theory pages (DCR, ZTCF, Superposition) (#4536). |
 | 2026-09-30 | #4578 | Generate per-book/series Open Graph social cards at build time instead of one site-wide card. |
 | 2026-09-30 | #4567 | Wire `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate`, add a long-description check for complex SVG diagrams (E8/E9), and baseline pre-existing figures. |
 | 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
