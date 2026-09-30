@@ -1,3 +1,56 @@
+# Implementation Handoff — "What's New" Feed Revision-History Links (#4606)
+
+- Repository: D-sorganization/AffineDrift; worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4606b`.
+- Branch `claude/issue-4606-revision-links`, commit SELF; pull request: not
+  created (headless worker; lead arms/merges).
+- Governing issue: #4606 (WEB-14.4, epic #4610 / E14 — Reader Validation,
+  Feedback, and Community). Acceptance criteria: "The RSS feed validates" and
+  "Items link to revision history."
+- Verified against the tree first: criterion 1 ("The RSS feed validates") was
+  already delivered by #4675 — `scripts/generate_feed.py` has
+  `validate_feed_xml()` wired into `main()`, confirmed still present and
+  passing. The prerequisite this issue was previously blocked on, #4545
+  (WEB-07.3), is now delivered: `scripts/filters/revision-history.lua` renders
+  a `<section id="revision-history">` from front-matter `changes:`, and
+  `tests/test_dates_and_history.py` confirms core pages carry `changes:`.
+- Implemented criterion 2 ("Items link to revision history"):
+  - Added `resolve_item_link(frontmatter, page_url) -> str` to
+    `scripts/generate_feed.py`: appends `#revision-history` to an item's link
+    when the article's front matter has a non-empty `changes:` list, else
+    returns the plain page URL. Wired into `collect_items()`.
+  - Also improved item dates ("real item dates", part of the same proposal):
+    added `resolve_pub_date(frontmatter, fallback) -> datetime`, which prefers
+    `date-modified` (the last substantive change per WEB-07.3), then the
+    newest `changes:` entry's date, then the plain `date` field, before
+    falling back to the git-modified date. Previously the feed used only the
+    plain `date` field (often `"Date unverified"` on core pages, e.g.
+    `articles/theory-part1.qmd:6`) plus the git fallback, ignoring the
+    genuinely verified `date-modified`/`changes:` metadata WEB-07.3 added.
+  - Confirmed against a live generator run: 6 of 30 feed items (the articles
+    carrying `changes:`) now link to `#revision-history`; all other items are
+    unaffected; `validate_feed_xml()` still reports zero errors.
+- TDD: added `TestResolvePubDate` and `TestResolveItemLink` to
+  `tests/test_generate_feed.py` (8 new tests). Confirmed RED
+  (`ImportError: cannot import name 'resolve_item_link'`) before
+  implementation, then GREEN (34/34 in the file) after.
+- **Open decision, not resolved here:** the issue's proposal also lists "An
+  optional email digest through a privacy-respecting provider." This needs an
+  explicit provider decision (which privacy-respecting ESP, opt-in flow, data
+  retention) that the issue text does not settle, so nothing was implemented
+  for it — left for a follow-up/ADR.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider
+  tests/test_generate_feed.py` (34 passed); `python -m
+  scripts.check_spec_changelog` (passed). Pre-existing, unrelated failure
+  confirmed on the baseline (reproduced identically before my change via a
+  temporary stash):
+  `tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section`
+  — the installed Pandoc renders the Lua filter's section as `<div
+  id="revision-history">` rather than `<section id="revision-history">`; not
+  touched by this change and out of scope for #4606.
+- Next: open the draft PR; the email-digest open decision above needs a human
+  call before any further work on it.
+
 # Implementation Handoff — on-ramp "3 Hours" totals (#4695)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4695`.

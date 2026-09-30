@@ -103,6 +103,44 @@ def parse_date(raw: str, fallback: str) -> datetime:
     return datetime.strptime(fallback[:10], "%Y-%m-%d").replace(tzinfo=UTC)
 
 
+def resolve_pub_date(frontmatter: dict, fallback: str) -> datetime:
+    """Resolve an item's real publication date from substantive-update metadata.
+
+    Prefers ``date-modified`` (the last substantive change, WEB-07.3), then
+    the most recent ``changes:`` entry, then the plain ``date`` field, and
+    finally the git-derived ``fallback`` so output stays deterministic. This
+    keeps feed dates tied to actual content updates rather than the original
+    (sometimes unverified) publication date.
+    """
+    date_modified = str(frontmatter.get("date-modified", "")).strip()
+    if date_modified:
+        return parse_date(date_modified, fallback)
+
+    changes = frontmatter.get("changes")
+    if isinstance(changes, list) and changes:
+        change_dates = [
+            str(entry.get("date", "")).strip()
+            for entry in changes
+            if isinstance(entry, dict) and str(entry.get("date", "")).strip()
+        ]
+        if change_dates:
+            return parse_date(max(change_dates), fallback)
+
+    return parse_date(str(frontmatter.get("date", "")), fallback)
+
+
+def resolve_item_link(frontmatter: dict, page_url: str) -> str:
+    """Return the feed item link, pointing at revision history when it exists.
+
+    Articles with a ``changes:`` front-matter list render a
+    ``#revision-history`` section (``scripts/filters/revision-history.lua``);
+    linking there lets readers see what substantively changed.
+    """
+    if frontmatter.get("changes"):
+        return f"{page_url}#revision-history"
+    return page_url
+
+
 def to_rfc822(dt: datetime) -> str:
     """Format a datetime as an RFC-822 date string in GMT.
 
@@ -145,11 +183,12 @@ def collect_items() -> list[FeedItem]:
         if not title:
             continue
         fallback = get_git_last_modified(str(filepath))
-        pub_date = parse_date(frontmatter.get("date", ""), fallback)
+        pub_date = resolve_pub_date(frontmatter, fallback)
+        page_url = qmd_path_to_url(filepath)
         items.append(
             FeedItem(
                 title=title,
-                link=qmd_path_to_url(filepath),
+                link=resolve_item_link(frontmatter, page_url),
                 description=frontmatter.get("description", "").strip(),
                 pub_date=pub_date,
             )
