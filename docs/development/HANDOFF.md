@@ -5,7 +5,7 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
 
 - Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
 - Branch: `fix/induced-acceleration-rigor-20260930`; base `bac8bedb`.
-  Source checkpoint `f30e64cb`; evidence checkpoint `a6c5d1cf`.
+  Final source checkpoint `d7cf1af8`; final render checkpoint `2f32c8d4`.
   Regular PR pending; epic #4009 / corpus #4021 / issue #4706.
 - Complete paired Geometry of Motion Chapter 3b corrected: force signs, full
   affine state/input map, activation, nominal integration, normalized coupling,
@@ -25,12 +25,17 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
 - The first standalone render and persistent cached browser session are excluded
   from accepted evidence. Root configuration was restored; fresh `iaa-final`
   browser confirmed revised text. Preview 8770 remains an owned temporary service.
-- `iaa-biomechanics-review.md`, `iaa-biomechanics-render-verification.json`, prior
+- `iaa-biomechanics-review.md`, `iaa-biomechanics-final-render-verification.json`, prior
   records and dependency carry-forward under `reports/technical-review/` explain
   source access limits, numerical cases, exact bytes and preserved historical scope.
-- Eight findings bound to `a6c5d1cf`; book metadata carries forward the changed PDF
+- Eight findings bound to `2f32c8d4`; book metadata carries forward the changed PDF
   without renewing other scientific or book-map browser reviews. Corpus pending
   count: 142 sources. Whole-book and whole-corpus acceptance remain incomplete.
+- Final qualification: nominal acceleration integrals require absolutely continuous
+  velocity; impulsive impacts add velocity jumps from the declared impact law.
+  Main Binder update #4682 was integrated at `766b0603`; final browser evidence
+  includes its article code-tools metadata. Final dependency receipt preserves
+  prior book scopes, dates and render revisions.
 - Next: finish full test/content lanes, commit metadata, open a regular PR, inspect
   CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
 - Coordination: session `technical-review-20260930-resume`, issue #4706; development
