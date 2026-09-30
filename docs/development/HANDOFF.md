@@ -2,8 +2,9 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4492`.
-- Branch `claude/issue-4492`, commit `SELF`; pull request: to be opened this
-  session (draft, targets `main`).
+- Branch `claude/issue-4492`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4677 (draft, targets
+  `main`).
 - Governing issue: #4492 (WEB-01.7, part of epic #4496 — Audience Routing and
   Onboarding Funnel). Objective: add short on-ramp learning paths (5 minutes,
   30 minutes, 3 hours) per persona, each a curated sequence of existing
@@ -18,38 +19,75 @@
   reviewer, contributor, golfer-coach, student), a 5-minute, 30-minute, and
   3-hour on-ramp. Each tier lists existing pages in order with a per-page time
   estimate, a one-line goal statement, and ends with one self-check question
-  and its answer drawn from the linked page's own front-matter description
-  (not invented). Every link resolves under the site link gate; anchors use
-  the `{#onramp-<persona>-<tier>}` convention.
+  and its answer grounded in the linked page's actual body content. Every
+  link resolves under the site link gate; anchors use the
+  `{#onramp-<persona>-<tier>}` convention.
 - Linked the new page from `resources/learning-paths.qmd` (an intro pointer
   plus a Path Index entry) so it is not orphaned by the link gate; no
   `_quarto.yml` navigation change was needed, matching how the existing
   per-path pages (`learning-path-foundations.qmd`, etc.) are already wired.
-- Tests: `tests/test_on_ramp_paths.py` (5 cases, written first and confirmed
-  RED before the page existed) — front-matter validity, all 24
-  persona/tier anchors present, every tier has a timed page link plus a
-  self-check question and answer, all internal links resolve, and the page
-  is linked from the learning-paths hub.
-- Validation commands run in this worktree:
-  - `python -m pytest tests/test_on_ramp_paths.py -v` → 5 passed.
+- **Fix round (review of draft PR #4677):** the reviewer found the first pass's
+  self-check questions were mostly front-matter-description recall ("per its
+  own description...") rather than reflective questions, plus several factual
+  errors. Fixed in this commit:
+  - A lowercase `g(x)u` in one self-check answer, against `NOTATION.md`'s
+    uppercase $G(x)$ convention for the control-affine input map — the
+    question that contained it was replaced.
+  - A self-check that called the Zero Velocity Counterfactual (ZVCF) a
+    "trajectory"; per `articles/theory-part2.qmd` only ZTCF integrates
+    forward into a trajectory, ZVCF is a single-state evaluation — reworded.
+  - Two self-checks (Researcher 3hr, Student 3hr) that claimed Theory Part 4
+    supplies an "independently checkable double-pendulum benchmark."
+    `articles/theory-part4.qmd` never mentions a double pendulum — it derives
+    beam and pendulum (shaft-flexibility) dynamics. Both were rewritten using
+    `articles/theory-part5.qmd`'s own phrase, "independently checkable
+    mathematical examples," and the Student 3hr item line and time estimate
+    were corrected to match.
+  - A factual error found during the required broader verification pass (not
+    itself cited by the reviewer): the Researcher and Reviewer 5-minute
+    on-ramps described the `resources/research-review-*.qmd` pages as
+    finished, evidence-graded reviews. Those pages are explicitly marked
+    "Planned (Scaffolding Phase)" / "source-collection stub" with an Evidence
+    Status warning that they do not yet establish claims — both on-ramps now
+    say so.
+  - All 24 self-check questions were rewritten (21 of 24 were previously
+    shallow recall) to test a real distinction or mechanism from the linked
+    page's body text, with the answer grounded in that text.
+  - Theory Part 1's time estimate (appeared at 90/30/60/90 minutes across four
+    on-ramps) is now ~30 minutes everywhere, matching the pre-existing,
+    already-vetted "30-Minute Route" convention for that article in
+    `config/personas.yml`.
+  - The page subtitle's "40–160 hours" claim didn't match
+    `resources/learning-paths.qmd`'s own stated range (10–80 / 80–160 / 160+
+    hours); changed to "10–160+ hours."
+- Tests: `tests/test_on_ramp_paths.py`, now 10 cases (5 original + 5 added
+  this round as regression guards for the fixes above): front-matter
+  validity, all 24 persona/tier anchors present, every tier has a timed page
+  link plus a self-check question and answer, all internal links resolve, the
+  page is linked from the learning-paths hub, no unqualified lowercase
+  `g(x)u`, Theory Part 1's time estimate is consistent everywhere it appears,
+  Theory Part 4 is never described with "double pendulum" wording, no
+  "per its own description" recall phrasing remains, and the subtitle matches
+  the learning-paths hub's stated hour range.
+- Validation commands run in this worktree (this fix round):
+  - `python -m pytest tests/test_on_ramp_paths.py -v` → 10 passed.
   - `python -m pytest tests/test_site_link_gate.py tests/test_how_to_read.py
     tests/test_persona_start_paths.py tests/test_check_links.py
-    tests/test_check_site_health.py -q` → 103 passed.
-  - `python scripts/link-checker.py --site-gate` → "Site gate passed!" (runs
-    the real gate — broken links, path style, Related Articles coverage,
-    orphans, categories — against the actual repo tree, including the new
-    page).
+    tests/test_check_site_health.py -v` → 98 passed.
+  - Site gate (invoked via `scripts/link-checker.py`'s `main(["--site-gate"])`
+    with the repo root on `sys.path`, working around a `ModuleNotFoundError`
+    when the script is run directly without `PYTHONPATH`) → "Site gate
+    passed!".
   - `python -m ruff check tests/test_on_ramp_paths.py` → all checks passed.
   - `python -m black --check --line-length 100 tests/test_on_ramp_paths.py`
-    → unchanged.
-  - Full `python -m pytest --cov` suite: fails at collection on ~75
+    → clean after one auto-format pass for the new assertion's line wrap.
+  - Full `python -m pytest --cov` suite: still fails at collection on ~75
     unrelated test modules (`tests/test_screw_examples.py`,
     `benchmarks/test_core_benchmarks.py`, etc.) with
     `ImportError: A module that was compiled using NumPy 1.x cannot be run in
-    NumPy 2.2.6`. Confirmed pre-existing and unrelated to this change by
-    collecting one of those modules in isolation — same error, no relation to
-    any file this PR touches (a content-only `.qmd` page plus a new test
-    file). Not fixed here; out of scope for a WEB-01.7 content change.
+    NumPy 2.2.6`. Confirmed pre-existing and unrelated to this change in the
+    original pass; unchanged this round. Not fixed here; out of scope for a
+    WEB-01.7 content change.
 - Not done / deferred: none for the issue's own acceptance criteria. The two
   open dependency issues (#4489, #4590) may eventually add content (a "Big
   Idea in Five Minutes" explainer, plain-language entry-page rewrites) that a
@@ -57,8 +95,8 @@
 
 ## Next Steps
 
-1. Push `claude/issue-4492` and open the draft PR.
-2. Awaiting frontier-agent PR review.
+1. Push `claude/issue-4492` with this fix round.
+2. Awaiting frontier-agent re-review of PR #4677.
 
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 

@@ -112,3 +112,48 @@ def test_internal_links_resolve() -> None:
 def test_page_is_linked_from_learning_paths_hub() -> None:
     learning_paths = (ROOT / "resources" / "learning-paths.qmd").read_text(encoding="utf-8")
     assert "on-ramp-paths.html" in learning_paths
+
+
+def test_no_unqualified_lowercase_input_map_notation() -> None:
+    """NOTATION.md fixes the control-affine input map as G(x), uppercase.
+
+    A lowercase g(x)u may appear only where a self-check explicitly names it
+    as the notation error to catch, never as the page's own notation.
+    """
+    content = PAGE_PATH.read_text(encoding="utf-8")
+    for line in content.splitlines():
+        if "g(x)u" in line:
+            assert "lowercase" in line.lower(), f"Unqualified lowercase g(x)u: {line!r}"
+
+
+def test_theory_part_1_time_estimate_is_consistent() -> None:
+    content = PAGE_PATH.read_text(encoding="utf-8")
+    estimates = re.findall(
+        r"Theory Part 1: Control-Affine Derivation\]\([^)]+\) — (~\d+\s*min)",
+        content,
+    )
+    assert len(estimates) >= 2, "Expected multiple Theory Part 1 links to check for consistency"
+    assert len(set(estimates)) == 1, f"Inconsistent Theory Part 1 time estimates: {estimates}"
+
+
+def test_theory_part_4_not_described_as_double_pendulum() -> None:
+    """theory-part4.qmd covers beam/pendulum derivations, not a double pendulum."""
+    content = PAGE_PATH.read_text(encoding="utf-8")
+    assert "double-pendulum benchmark" not in content.lower()
+    for line in content.splitlines():
+        if "Theory Part 4" in line:
+            assert (
+                "double" not in line.lower()
+            ), f"Theory Part 4 line wrongly mentions a double pendulum: {line!r}"
+
+
+def test_no_recall_trivia_self_checks() -> None:
+    """Self-checks must be reflective, not 'per its own description' recall."""
+    content = PAGE_PATH.read_text(encoding="utf-8")
+    assert "per its own description" not in content.lower()
+
+
+def test_subtitle_hours_match_learning_paths_hub() -> None:
+    content = PAGE_PATH.read_text(encoding="utf-8")
+    assert "10–160+ hours" in content
+    assert "40–160 hours" not in content

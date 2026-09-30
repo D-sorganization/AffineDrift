@@ -11,7 +11,7 @@ categories:
   <div class="ad-page-container">
     <div class="page-section">
       <h1 class="section-heading">Short On-Ramp Paths</h1>
-      <p class="page-subtitle">The full learning paths run 40–160 hours. These on-ramps don't — pick your persona and spend 5 minutes, 30 minutes, or 3 hours before deciding whether to commit to the full path.</p>
+      <p class="page-subtitle">The full learning paths run 10–160+ hours. These on-ramps don't — pick your persona and spend 5 minutes, 30 minutes, or 3 hours before deciding whether to commit to the full path.</p>
     </div>
   </div>
 </section>
@@ -42,19 +42,19 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [Lagrangian Reference](../articles/lagrangian-reference.html) — ~30 min
 
-**Self-check:** What two fields does the Lagrangian Reference bridge, per its own description?
-**Answer:** Classical mechanics and modern control theory.
+**Self-check:** Why does the Lagrangian Reference say energy-based mechanics is often easier than force-based (Newtonian) mechanics for a system like the golf swing?
+**Answer:** Energy is scalar, so you only add numbers; the Newtonian approach requires resolving vector forces in multiple directions for every coupled part — torso, arms, bending shaft, and clubhead.
 
 ### 3 Hours {#onramp-learner-3hr}
 
 **Goal:** Start the Foundations path for real and meet the drift/input framework twice.
 
 1. [Learning Path: Foundations](learning-path-foundations.html) — ~20 min (skim the module map, pick Module 1)
-2. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~90 min
+2. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~30 min
 3. [Theory Part 2: Counterfactual Diagnostics](../articles/theory-part2.html) — ~70 min
 
-**Self-check:** Theory Part 2 introduces two baseline "counterfactual" trajectories used to diagnose drift versus input. Name them.
-**Answer:** The zero-torque and zero-velocity counterfactual baselines.
+**Self-check:** Theory Part 2 says the Zero Torque Counterfactual (ZTCF) "can define a future trajectory" while the Zero Velocity Counterfactual (ZVCF) "is a state evaluation." If you want to know how the swing would continue from right now, which one actually answers that, and why doesn't the other?
+**Answer:** ZTCF does — it integrates the drift dynamics forward from the current state, producing an actual forward trajectory. ZVCF only re-evaluates the model once at a single velocity-reset state, so it describes that one instant, not a continuation.
 
 ---
 
@@ -64,12 +64,12 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 ### 5 Minutes {#onramp-researcher-5min}
 
-**Goal:** See the review landscape before committing to deep reading.
+**Goal:** See how AffineDrift labels literature it hasn't reviewed yet, before you rely on any of it.
 
 1. [Research Reviews](research-reviews.html) — ~5 min
 
-**Self-check:** What three topic areas does the Research Reviews hub cover, per its own description?
-**Answer:** Biomechanics, motor control, and golf-science topics.
+**Self-check:** The Research Reviews hub is marked "Planned (Scaffolding Phase)." What do these pages actually contain right now, and what should you not treat them as?
+**Answer:** Source-collection stubs — review questions and links to search, not paper-by-paper summaries. They should not be treated as synthesized literature reviews yet.
 
 ### 30 Minutes {#onramp-researcher-30min}
 
@@ -77,8 +77,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~30 min
 
-**Self-check:** What two terms does Theory Part 1's control-affine equation split the dynamics into?
-**Answer:** Drift dynamics $f(x)$ and the control channel $g(x)u$.
+**Self-check:** Theory Part 1's Scope & Exclusions callout lists several things the model explicitly leaves out — name two, and explain why that matters for how you read the drift term $f(x)$.
+**Answer:** It excludes aerodynamic drag, compliant or changing foot contact, marker dynamics, muscle activation delays, and impacts (any two). It matters because $f(x)$ only captures what's inside the declared model — anything excluded doesn't vanish from the real swing, it just isn't attributed by the decomposition.
 
 ### 3 Hours {#onramp-researcher-3hr}
 
@@ -90,8 +90,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 4. [Theory Part 5: Numerical Verification Protocol](../articles/theory-part5.html) — ~15 min
 5. [Tangent-Space Series](../pages/tangent-hyperplanes.html) — ~20 min (preview only)
 
-**Self-check:** Which Theory Part supplies the independently checkable double-pendulum benchmark?
-**Answer:** Theory Part 4 (Worked Pendulum Dynamics).
+**Self-check:** Theory Part 5 says the worked pendulum in Part 4 supplies "independently checkable mathematical examples." What does "independently checkable" mean here, and why does it matter more than whether the example is specifically about golf?
+**Answer:** It means the beam/pendulum derivation can be verified on its own — the math is reproducible without trusting the golf application. That matters because it separates "is the calculation internally consistent" from "does the model predict a real golfer," which Part 4 explicitly says are different questions.
 
 ---
 
@@ -105,8 +105,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [Programming Companion Catalog](../models/programming/index.html) — ~5 min
 
-**Self-check:** What does the Programming Companion Catalog index, per its own description?
-**Answer:** Software facts, engines, programs, features, and workflows from UpstreamDrift.
+**Self-check:** The catalog is pinned to one exact UpstreamDrift commit hash rather than tracking "latest." What does pinning to an exact commit buy you that a moving-target catalog wouldn't?
+**Answer:** Every fact on the page stays checkable against one precise, unchanging, hash-verified snapshot — a "latest" catalog could describe software that's already changed underneath you.
 
 ### 30 Minutes {#onramp-integrator-30min}
 
@@ -114,8 +114,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [Software](resources-software.html) — ~30 min
 
-**Self-check:** What three activities does the Software catalog cover, and for which two fields?
-**Answer:** Modeling, simulation, and machine learning — applied to robotics and biomechanics.
+**Self-check:** The Software page lists Pinocchio, MuJoCo, and Drake alongside OpenSim/MyoSuite, which it marks experimental. If you needed the most mature, well-supported path for a new integration, which tier would you look for?
+**Answer:** The non-experimental engines — Pinocchio, MuJoCo, and Drake — rather than the OpenSim/MyoSuite integrations the page flags as experimental.
 
 ### 3 Hours {#onramp-integrator-3hr}
 
@@ -125,8 +125,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 2. [Governed Workflows and Verification Tasks](../models/programming/workflows.html) — ~20 min
 3. Install locally and run the `installation-verification` workflow documented on that page — ~140 min
 
-**Self-check:** What does the Governed Workflows catalog document, per its own description?
-**Answer:** 15 executable workflows and deterministic verification tasks.
+**Self-check:** The Workflow Registry has two kinds of rows: `workflow` and `failure-fixture`. What does a `failure-fixture` row verify, and why would a catalog of reference workflows deliberately include tests that are supposed to fail?
+**Answer:** A failure-fixture (for example "Reject Invalid Pendulum Parameters" or "Reject a Stale Companion Compatibility Version") verifies that the software correctly rejects bad input or an incompatible state. They're included so error handling gets the same exact-exit-code, SHA-256-verified rigor as the successful workflows, instead of going unchecked.
 
 ---
 
@@ -140,8 +140,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [Programs and Models Directory](../models/programming/programs.html) — ~5 min
 
-**Self-check:** Per its own description, how many UpstreamDrift simulation programs, solvers, and models does the directory inventory?
-**Answer:** 70.
+**Self-check:** Before you run any program from the 70-record directory, which column tells you whether its output is more than exploratory, and what does the Authority Boundary note explicitly say the inventory does not establish?
+**Answer:** The Maturity column (`stable` / `beta` / `experimental`); the Authority Boundary note says the inventory does not establish experimental validation or clinical applicability.
 
 ### 30 Minutes {#onramp-experimentalist-30min}
 
@@ -149,8 +149,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [Planar-to-Spatial Model Ladder](../models/model-ladder.html) — ~30 min
 
-**Self-check:** What four mechanics regimes does the Model Ladder protocol choose between, per its own description?
-**Answer:** Planar, spatial, closed-chain, or flexible-shaft mechanics.
+**Self-check:** The Model Ladder page says it asks one limited question when choosing a model level. What is that question, and what does it deliberately avoid doing?
+**Answer:** Which is the least complex declared level that satisfies a particular task metric; it deliberately avoids ranking whole models against each other with one overall fidelity score.
 
 ### 3 Hours {#onramp-experimentalist-3hr}
 
@@ -160,8 +160,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 2. Run the workflow and inspect its output — ~90 min
 3. [Datasets](resources-datasets.html) — ~30 min (compare against a real recorded dataset)
 
-**Self-check:** What does the Governed Workflows catalog document, per its own description?
-**Answer:** 15 executable workflows and deterministic verification tasks.
+**Self-check:** The Model Ladder's fixtures use manufactured, synthetic parameters, not participant data. Once you've run `reference-double-pendulum-simulation`, why is comparing its output against a recorded dataset a meaningfully different check than comparing it against another synthetic fixture?
+**Answer:** A synthetic fixture only confirms the code reproduces its own manufactured numbers — internal consistency. Comparing against a real recorded dataset checks whether the simulated behavior resembles an actual measured swing, which is a genuinely different, empirical kind of check.
 
 ---
 
@@ -171,13 +171,13 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 ### 5 Minutes {#onramp-reviewer-5min}
 
-**Goal:** See what a finished, evidence-graded research review looks like.
+**Goal:** See how AffineDrift labels literature it hasn't reviewed yet, before you rely on any of it.
 
 1. [Research Review: Baseball Pitching](research-review-baseball-pitching.html) — ~2 min
 2. [Research Review: Shaft Flexibility](research-review-shaft-flexibility.html) — ~3 min
 
-**Self-check:** What two topics do the reviews you just read cover?
-**Answer:** Baseball-pitching biomechanics and shaft flexibility.
+**Self-check:** Both review pages you just read carry an "Evidence Status" warning. What, specifically, do they say you should not do with the material they link to yet?
+**Answer:** Not treat the cross-sport pitching analogy or the shaft-flexibility source links as established claims about golf — they're source collections, not yet-reviewed conclusions, until the cited papers are engaged with directly.
 
 ### 30 Minutes {#onramp-reviewer-30min}
 
@@ -185,21 +185,21 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [Critiques & Responses](../critiques/index.html) — ~30 min
 
-**Self-check:** Per its own description, what does the Critiques & Responses directory document?
-**Answer:** Identified limitations, open questions, and counterarguments to the core framework, with responses where available.
+**Self-check:** The Critiques & Responses page says these are "working documents, not peer-reviewed assessments." What does that distinction change about how you should weigh an unresolved critique there versus a peer-reviewed one?
+**Answer:** An unresolved critique here is a transparently published, flagged concern under active engagement — not a vetted, externally adjudicated finding — so it should be read as an open question the framework hasn't necessarily answered yet, not as settled peer-reviewed criticism.
 
 ### 3 Hours {#onramp-reviewer-3hr}
 
 **Goal:** Understand the framework being critiqued, then read representative critiques across categories.
 
-1. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~60 min
+1. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~30 min
 2. [The Fallacy of Passive Drift and the Skeletal Baseline](../critiques/01_muscle_physiology.html) — ~10 min
 3. [ZTCF Identifiability](../critiques/ztcf_identifiability.html) — ~10 min
 4. [Scientific Claim-Audit Inventory](../reports/scientific-claim-audit.html) — ~60 min
 5. [Research Review: Interaction Forces](research-review-interaction-forces.html) — ~10 min
 
-**Self-check:** The ZTCF Identifiability critique raises a limitation about which counterfactual construct?
-**Answer:** The zero-torque counterfactual (ZTCF) — specifically its fundamental observability limitations.
+**Self-check:** Theory Part 1 explicitly excludes aerodynamic drag from the model. The ZTCF Identifiability critique argues this specific exclusion causes a concrete misattribution during a real analysis — what gets misattributed, and to whom?
+**Answer:** Because drag isn't in the drift model, its effect still shows up in the measured motion; inverse dynamics then computes a lower total torque than the model expects, and the residual (input = total − drift) reads as negative "braking" — so aerodynamic drag gets misattributed to the golfer as active braking effort.
 
 ---
 
@@ -214,8 +214,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 1. [Collaborate](../pages/collaborate.html) — ~3 min
 2. [Resources Hub](resources.html) — ~2 min
 
-**Self-check:** What does the Collaborate page describe, per its own description?
-**Answer:** How to collaborate with AffineDrift.
+**Self-check:** Collaborate says submitting an issue or pull request doesn't guarantee acceptance, endorsement, or scientific validation. What does a proposed claim actually have to pass before it counts as accepted?
+**Answer:** The repository's own evidence and review contracts — the same bar every other claim on the site has to clear, not just a maintainer's approval of the pull request.
 
 ### 30 Minutes {#onramp-contributor-30min}
 
@@ -223,8 +223,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 
 1. [About & Contact](../pages/about.html) — ~30 min
 
-**Self-check:** What does the About & Contact page cover, per its own description?
-**Answer:** Background on AffineDrift and how to get in touch.
+**Self-check:** About & Contact says the author's biography is "not independent evidence for the scientific claims published on the site." Why does the page bother saying that on its own about page?
+**Answer:** Because credentials or personal interest don't substitute for the site's evidence standards — who wrote something doesn't make a claim validated; only the cited sources, derivations, and review contracts do.
 
 ### 3 Hours {#onramp-contributor-3hr}
 
@@ -235,8 +235,8 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 3. [Governed Workflows and Verification Tasks](../models/programming/workflows.html) — ~20 min (find `program-catalog-export`)
 4. Run the `program-catalog-export` workflow and review the output — ~100 min
 
-**Self-check:** What does the Development Roadmap page track, per its own description?
-**Answer:** Evidence-bounded development states and live planning authorities for AffineDrift.
+**Self-check:** The Development Roadmap explicitly omits dates and percentages. What does it name as the actual authority for what's been delivered, instead of a hand-maintained forecast?
+**Answer:** Protected merge history on GitHub — the live issue tracker and pull requests, where "protected" means changes landed only through required review and checks.
 
 ---
 
@@ -254,8 +254,8 @@ Notice: AffineDrift is a scientific and theoretical mechanics resource. It does 
 
 1. [Technology](../pages/technology.html) — ~5 min
 
-**Self-check:** What four areas does the Technology page cover, per its own description?
-**Answer:** Biomechanics instruments, golf technology, simulation, and measurement.
+**Self-check:** The Technology page marks each linked article's state as "Available." What does "Available" actually promise, and what does it explicitly not promise?
+**Answer:** It promises the article can be read — nothing more. It does not promise every claim on that page is validated; each article still has to be checked for what's measured, derived, estimated, or simulated before you trust its conclusions.
 
 ### 30 Minutes {#onramp-golfer-coach-30min}
 
@@ -263,8 +263,8 @@ Notice: AffineDrift is a scientific and theoretical mechanics resource. It does 
 
 1. [Chapter 28: Impact and Launch](../articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html) — ~30 min
 
-**Self-check:** Per its own description, what five things does Chapter 28 relate the delivered swing state to?
-**Answer:** Momentum, restitution, effective mass, exact spin-loft geometry, and ball launch.
+**Self-check:** Chapter 28 says static loft plus attack angle does not determine dynamic loft, and that three scalars omitting speed and spin axis cannot determine ball flight. What has to be measured directly at impact that those simpler numbers can't substitute for?
+**Answer:** The actual face attitude and contact conditions at the moment of impact, plus the full spin vector and ball speed — dynamic loft and launch depend on the club's real state during contact, not on setup angles measured beforehand.
 
 ### 3 Hours {#onramp-golfer-coach-3hr}
 
@@ -275,8 +275,8 @@ Notice: AffineDrift is a scientific and theoretical mechanics resource. It does 
 3. [Chapter 1: Why Physics](../articles/The_Physics_of_Golf/quarto/ch01_why_physics.html) — ~80 min
 4. [Chapter 3: The Double Pendulum](../articles/The_Physics_of_Golf/quarto/ch03_double_pendulum.html) — ~70 min
 
-**Self-check:** Per its own description, what does Chapter 1 connect motion, forces, work, and constraints to?
-**Answer:** Golf impact — with checked examples and clear boundaries between model predictions and human evidence.
+**Self-check:** Chapter 1 distinguishes three kinds of statement: an identity derived within a model, a prediction from fitted parameters, and an empirical claim about golfers. Why can't a correctly derived identity alone tell you something true about a real golfer's swing?
+**Answer:** An identity is only checked mathematically, within the model's own declared assumptions — it says nothing about actual golfers until it's connected to relevant measurements, the way an empirical claim requires.
 
 ---
 
@@ -291,8 +291,8 @@ Notice: AffineDrift is a scientific and theoretical mechanics resource. It does 
 1. [Mathematical Notation and Terminology](../pages/notation.html) — ~2 min
 2. [Glossary](../pages/glossary.html) — ~3 min
 
-**Self-check:** Per its own description, what is the Notation page the normative source for?
-**Answer:** Normative mathematical notation and terminology for AffineDrift and conforming UpstreamDrift research outputs.
+**Self-check:** The Notation page fixes $G(x)$ as uppercase for the control-affine input map. If you see a lowercase $g(x)u$ term in a swing-dynamics equation on this site, what should you conclude?
+**Answer:** That it's a notation error against the site's own normative convention, not a different mathematical object — the input map is always $G(x)$, uppercase, throughout the control-affine equations.
 
 ### 30 Minutes {#onramp-student-30min}
 
@@ -300,20 +300,20 @@ Notice: AffineDrift is a scientific and theoretical mechanics resource. It does 
 
 1. [Lagrangian Reference](../articles/lagrangian-reference.html) — ~30 min
 
-**Self-check:** The Lagrangian Reference's own description names two fields it bridges together — what are they?
-**Answer:** Classical mechanics and modern control theory.
+**Self-check:** The Lagrangian Reference says the Newtonian approach requires resolving every force as a vector, while the Lagrangian approach works with scalar energy functions instead. Why does that make the Lagrangian approach easier for a system like a golf swing with many coupled moving parts?
+**Answer:** Because energy is a scalar, the parts combine by simple addition instead of having to resolve and sum force vectors in multiple directions for every rotating torso, arm, shaft, and clubhead segment — both approaches give the same equations of motion, but the bookkeeping is far simpler.
 
 ### 3 Hours {#onramp-student-3hr}
 
 **Goal:** Connect the math to a reproducible, hands-on example.
 
 1. [Learning Path: Biomechanics & Motor Control](learning-path-biomechanics.html) — ~20 min (skim the module map)
-2. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~90 min
-3. [Theory Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html) — ~50 min (reproduce the double-pendulum benchmark)
+2. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~30 min
+3. [Theory Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html) — ~50 min (work through the beam and pendulum derivations)
 4. Run the `reference-double-pendulum-simulation` workflow from [Governed Workflows](../models/programming/workflows.html) yourself — ~20 min
 
-**Self-check:** What does Theory Part 4 supply that lets you check your own derivation independently?
-**Answer:** An independently checkable double-pendulum benchmark and reduction derivations.
+**Self-check:** Theory Part 4's beam and pendulum derivations are checked by an executable test suite that independently integrates the kinetic energy, differentiates the potential, and verifies the power balance. Why does verifying a derivation this way matter more than just trusting the algebra on the page?
+**Answer:** Because an independent numerical check catches errors that a correct-looking derivation can hide — if the integrated energy balance and the written equations disagree, you know something is wrong even before you compare the model to any real golfer.
 
 ---
 

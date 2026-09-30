@@ -22,14 +22,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** not created yet (draft PR to be opened this session)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4677 (draft)
 - **Issue:** #4492 (WEB-01.7; epic #4496)
 - **Branch:** `claude/issue-4492`
 - **Paths:** `resources/on-ramp-paths.qmd`, `resources/learning-paths.qmd`, `tests/test_on_ramp_paths.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (`pytest tests/test_on_ramp_paths.py` 5 passed; `pytest tests/test_site_link_gate.py tests/test_how_to_read.py tests/test_persona_start_paths.py tests/test_check_links.py tests/test_check_site_health.py` 103 passed; `python scripts/link-checker.py --site-gate` passed; `ruff check .` and `black --check --line-length 100 .` clean)
-- **Summary:** Adds `resources/on-ramp-paths.qmd`, a new page with 5-minute, 30-minute, and 3-hour reading sequences for each of the 8 personas from `config/personas.yml`, built entirely from existing pages (no new prose content elsewhere), each ending in a self-check question with its answer; linked from `resources/learning-paths.qmd` so it isn't orphaned.
-- **Next step:** Push the branch and open the draft PR.
+- **Last verified:** 2026-09-29 (fix round for PR #4677 review: `pytest tests/test_on_ramp_paths.py` 10 passed; `pytest tests/test_site_link_gate.py tests/test_how_to_read.py tests/test_persona_start_paths.py tests/test_check_links.py tests/test_check_site_health.py` 98 passed; site gate passed; `ruff check tests/test_on_ramp_paths.py` and `black --check --line-length 100 tests/test_on_ramp_paths.py` clean)
+- **Summary:** Adds `resources/on-ramp-paths.qmd`, a new page with 5-minute, 30-minute, and 3-hour reading sequences for each of the 8 personas from `config/personas.yml`, built entirely from existing pages (no new prose content elsewhere), each ending in a self-check question with its answer grounded in the linked page's own body text; linked from `resources/learning-paths.qmd` so it isn't orphaned. Fix round corrected a notation error (lowercase `g(x)u`), a ZVCF/trajectory wording error, a fabricated "double-pendulum benchmark" claim about Theory Part 4, a mischaracterization of the research-review stub pages as finished reviews, an inconsistent Theory Part 1 time estimate, a subtitle hour-range mismatch, and rewrote all 24 self-checks from recall trivia to reflective questions.
+- **Next step:** Push the branch with this fix round and await re-review.
 
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
