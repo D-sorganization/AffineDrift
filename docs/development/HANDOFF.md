@@ -1,3 +1,29 @@
+# Implementation Handoff — Create "How to Read This Site" Guide (#4491)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-01-6-how-to-read-this-site-4491
+- Baseline commit: fc36109d (origin/main)
+- Implementation commit: dd961a63
+- Pull request: #4665 (https://github.com/D-sorganization/AffineDrift/pull/4665)
+- Governing issue: #4491 (WEB-01.6, epic #4496)
+
+## Objective and Status
+
+- Objective: Create a canonical "How to Read This Site" guide explaining the content layers, publication maturity states, the evidence ladder, critique records, and citation standards. Consolidate publication states to be single-sourced.
+- Status: Implementation complete, tests and static checks passing; opening PR.
+- Completed:
+  - Created `pages/how-to-read.qmd` covering site architecture, the six canonical publication states (`Available`, `Validated`, `Experimental`, `Planned`, `Deprecated`, `Opinion`), the 4-level evidence ladder, how to read critique records, and citation standards.
+  - Replaced inline publication-state definitions in `index.qmd` and `pages/development-roadmap.qmd` with links to `how-to-read.html#publication-states`.
+  - Linked status pills in `pages/tools.qmd` to `how-to-read.html#publication-states` and normalized non-canonical `EXPLORATORY` to `EXPERIMENTAL`.
+  - Added link styles for `a.status-pill` and `.status-banner__title a` in `css/components/status-banner.css` and compiled bundle to `docs/styles.css`.
+  - Integrated `How to Read This Site` into `_quarto.yml` navbar Read menu and footer navigation.
+  - Added unit test suite `tests/test_how_to_read.py` (6 tests).
+  - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
+---
+
 # Implementation Handoff — Cache Quarto Renders in CI (#4595)
 
 ## Identity
@@ -112,6 +138,7 @@
 - `SELF` — Cache the PR E2E Quarto render on an exact source-hash match; deploy is untouched (#4595).
 
 ---
+>>>>>>> origin/main
 
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
