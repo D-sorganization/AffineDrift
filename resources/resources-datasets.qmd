@@ -9,7 +9,7 @@ categories:
 ```{=html}
 <section class="resources-section">
   <div class="ad-page-container">
-    <div class="standard-page-layout standard-page-layout--single">
+    <div class="standard-page-layout">
       <!-- Left Sidebar: Table of Contents -->
       <div class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -152,10 +152,10 @@ categories:
             <thead><tr><th>File</th><th>SHA-256</th></tr></thead>
             <tbody>
               <tr><td><code>data_dictionary.json</code></td><td><code>a39b4ee56f9ecee321f2d2fe1612b351c201e1c813aaf258f99d6e087d4a1720</code></td></tr>
-              <tr><td><code>library.json</code></td><td><code>7e1a1eccf1e8a35886eb845b9f539d6fed800987a7ed3135945c439f32b50f6e</code></td></tr>
+              <tr><td><code>library.json</code></td><td><code>5e5edcabda4b9a3904885b039e2ffbcfc0ec95aa0b89da117e78de55c0260784</code></td></tr>
               <tr><td><code>manufactured_dry_runs.json</code></td><td><code>4f23dc9ac93900b364846adeefce69adb35543da0b911943ba9a13fe1edc5f5b</code></td></tr>
               <tr><td><code>protocol-template.json</code></td><td><code>fabd5025c75a158676527208f9a0e1125f59bf6bcf0b97c6979820f41712b31b</code></td></tr>
-              <tr><td><code>public_summary.json</code></td><td><code>ba359db7e8c19bf32a56f21d5e285fa2d99891ea1d3b5b5898ac26dd08f2c3ca</code></td></tr>
+              <tr><td><code>public_summary.json</code></td><td><code>aa5743cbde3327a0acc7eec1a2655c477fdabe91d7a55ec5b11b66faeb32a033</code></td></tr>
             </tbody>
           </table>
         </div>
@@ -197,9 +197,83 @@ categories:
 <!-- GENERATED:END datasets-catalog -->
       </main>
 
+      <!-- Right Sidebar: Recent Datasets History -->
+      <div class="right-sidebar">
+        <div class="sidebar-sticky-content">
+        <nav class="history-nav">
+          <h3 class="sidebar-heading">Recent Datasets</h3>
+          <ul class="sidebar-links" id="datasets-history-list">
+            <li class="history-empty">No recent datasets yet</li>
+          </ul>
+        </nav>
+      </div>
+      </div>
     </div>
   </div>
 </section>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const datasetsHistoryList = document.getElementById('datasets-history-list');
+  if (!datasetsHistoryList) return;
+
+  function updateDatasetsHistory() {
+    let history = [];
+    try {
+      const raw = localStorage.getItem('affinedrift_datasets_history');
+      if (raw) history = JSON.parse(raw);
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      localStorage.removeItem('affinedrift_datasets_history');
+    }
+    
+    const currentPage = {
+      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
+      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-datasets.html'
+    };
+
+    if (currentPage.url === 'resources-datasets.html') {
+      history = history.filter(item => item.url !== currentPage.url);
+      history.unshift(currentPage);
+      history = history.slice(0, 10);
+      localStorage.setItem('affinedrift_datasets_history', JSON.stringify(history));
+    }
+
+    if (history.length === 0) {
+      datasetsHistoryList.textContent = '';
+      const li = document.createElement('li');
+      li.className = 'history-empty';
+      li.textContent = 'No recent datasets yet';
+      datasetsHistoryList.appendChild(li);
+      return;
+    }
+
+    datasetsHistoryList.textContent = '';
+    const fragment = document.createDocumentFragment();
+    history.forEach((item) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      let safeUrl = "#";
+      if (typeof item.url === "string") {
+        try {
+          const parsed = new URL(item.url, window.location.origin);
+          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+            safeUrl = parsed.href;
+          }
+        } catch (e) {}
+      }
+      a.href = safeUrl;
+      a.textContent = item.title;
+      li.appendChild(a);
+      fragment.appendChild(li);
+    });
+    datasetsHistoryList.appendChild(fragment);
+  }
+
+  updateDatasetsHistory();
+});
+</script>
 ```
 
 ## Related Articles
