@@ -1,3 +1,66 @@
+# Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4588
+- Branch: claude/issue-4588
+- Governing issue/epic: #4588 (epic #4594 "[E12] Editorial Voice and Plain-Language Standard")
+- Pull request: not yet created at the time this section was written (draft PR opened in the same session; see PR link in the commit that follows)
+
+## Objective and Status
+
+- Objective: keep the five internal governance/critique-apparatus words ("governed", "qualified", "provenance", "protected", "fail-closed") out of reader-facing prose — replace with plain language or a glossary link — and add a CI lint that warns (then eventually blocks) on new occurrences outside the evidence/developer surfaces.
+- Status: **partial / Blocked**. Infrastructure (lint + glossary) is complete and CI-wired in warn mode. Content remediation is complete on the hub/entry reader pages (`pages/`, `resources/`, `books/`, and the non-`programming/` `models/` boilerplate) but **not** on the bulk of the deep scientific-chapter corpus under `articles/` (roughly 90+ files, ~180 remaining occurrences) or on a cluster of evidence/protocol-specification pages under `models/` (`active-impedance-identification.qmd`, `bilateral-hand-wrench-validation.qmd`, `hybrid-impact-contact.qmd`, `model-ladder.qmd`, `equipment-individual-response.qmd`, `research-protocol-readiness.qmd`, `neural-timing-feedback.qmd`, `population-generalization.qmd`) that read as evidence-tier documents despite their directory location.
+- Why partial: the issue's acceptance criterion ("at least a 75% reduction on reader pages") requires rewriting dense, precise scientific/methodological prose across the textbook chapter corpus. Doing that correctly needs a consistent plain-language standard, which is the explicit subject of the still-open prerequisite issue **#4587 "[WEB-12.1] Write the Editorial Style Guide"** (listed first in the epic, `tier:strong`/`judgement:design`). Rewriting ~180 occurrences across ~90 chapter files without that standard risks inconsistent terminology and, more importantly, risks silently changing precise methodological claims in peer-review-style scientific prose — exactly the kind of judgment call CLI-tier agents are asked not to guess on. Measured against the lint's own scope (reader-facing `.qmd` under `articles/`, `books/`, `models/`, `pages/`, `resources/`, excluding `articles/_generated/` and `models/programming/`), occurrences dropped from 303 to 252 (~17%); within just `pages/` + `resources/` + `books/` + top-level `models/` (excluding the evidence-tier protocol cluster above), the reduction is close to 100% (`resources/` and `books/` are now fully clean; `pages/` only retains the glossary page itself and CSS class-attribute mentions, both deliberate).
+- Completed:
+  - TDD: `tests/test_check_governance_vocabulary.py` (19 tests, written first, RED confirmed against the missing module before implementation).
+  - `scripts/check_governance_vocabulary.py`: scans `articles/`, `books/`, `models/`, `pages/`, `resources/` (`.qmd` only), excluding `articles/_generated/` and `models/programming/`, for the five terms; baseline-gated like the existing `scripts/check_terminology.py`.
+  - `config/governance-vocabulary-baseline.json`: grandfathers the 252 remaining occurrences (the deep chapter corpus, the evidence-tier `models/` protocol cluster, the glossary page itself, and incidental CSS-class/URL matches that are not reader-visible prose).
+  - `pages/glossary.qmd`: new plain-language glossary for the five terms, linked from `pages/notation.qmd`.
+  - Content edits reducing or removing the five terms on: `pages/overview.qmd`, `pages/collaborate.qmd`, `pages/tools.qmd`, `pages/tangent-hyperplanes.qmd`, `pages/technology.qmd`, `pages/development-roadmap.qmd`, `pages/drifter-manifesto.qmd`, `pages/notation.qmd`, `resources/articles.qmd`, `resources/learning-path-golf-science.qmd`, `resources/learning-path-biomechanics.qmd`, `resources/learning-paths.qmd`, `resources/research-review-induced-acceleration-analysis.qmd`, `resources/resources-software.qmd`, `books/index.qmd`, `books/roadmap.qmd`, `books/human-motor-control.qmd`, `models/models.qmd`, `models/models-opensim.qmd`, `models/models-myosim.qmd`, `models/models-pinocchio.qmd`, `models/models-mujoco.qmd`, `models/models-drake.qmd`, `models/models-simulink.qmd`.
+  - `.github/workflows/ci-standard.yml`: new "Verify Governance Vocabulary Stays Out of Reader Prose" step, `continue-on-error: true` (warn mode per the acceptance criterion), matching the existing MATLAB Quality Check warn-mode precedent.
+- Remaining (recommended follow-up, likely as one or more new issues once #4587 lands):
+  1. Write the editorial style guide (#4587) — a prerequisite for consistent chapter-level rewrites.
+  2. Rewrite the `articles/` chapter corpus (proximal-distal energy-transfer/companion chapters, tangent-hyperplanes series, Geometry of Motion / Physics of Golf textbook chapters) against that standard, removing baseline entries as each file is cleaned.
+  3. Decide whether the `models/` evidence-tier protocol cluster listed above should be reclassified as an evidence surface (like `critiques/`/`reports/`) and excluded from this lint's scope, or rewritten — a scope decision, not a mechanical one.
+  4. Once the reader surfaces are clean, remove `continue-on-error: true` from the CI step to make the gate blocking, per the issue's second acceptance criterion.
+
+## Files and Decisions
+
+- Key decisions:
+  - Reader-page scope = `articles/`, `books/`, `models/`, `pages/`, `resources/` per `docs/development/repository_inventory.md`'s existing reader/process split; evidence/developer exclusions = `articles/_generated/` (generated trust/critique annotations) and `models/programming/` (the programming-companion consumer docs), matching the issue's own "evidence and developer surfaces" language.
+  - "Warn mode" implemented via the CI step's `continue-on-error: true` (the repo's existing precedent for MATLAB Quality Check), not a script-level flag, so promoting to blocking later is a one-line diff.
+  - Baseline mechanism copied from `scripts/check_terminology.py` (`path::term` keys, no line number) rather than inventing a new grandfathering scheme.
+  - Did not rename the `provenance-note` CSS component (`css/components/provenance-note.css`, used in `pages/tools.qmd`, `pages/drifter-manifesto.qmd`, `index.qmd`, tested in `tests/tools/test_design_primitives.py` and `tests/test_home_page_layout.py`, documented in `CONTRIBUTING.md`) — a CSS class name is not reader-visible prose, and renaming it is a separate CSS/design-system refactor outside this issue's scope.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest tests/test_check_governance_vocabulary.py tests/test_check_terminology.py -m content_lint` — 52 passed.
+- `python -m ruff check scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
+- `python -m black --check --line-length 100 scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
+- `python scripts/check_governance_vocabulary.py --root . --baseline config/governance-vocabulary-baseline.json` — PASS (0 new violations; 252 baselined).
+- CI workflow YAML validated with `python -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` — OK.
+- `python -m ruff check .` and `python -m black --check --line-length 100 .` — both clean repo-wide.
+- `python scripts/check_root_hygiene.py` and `python -m scripts.check_spec_changelog` — both pass.
+- Known pre-existing failure outside this change's scope: `python -m pytest -m content_lint` errors during collection on ~75 unrelated `*_rigor.py`/benchmark test modules with `ImportError: numpy.core.multiarray failed to import` (a scipy-compiled-against-NumPy-1.x vs. installed NumPy 2.x ABI mismatch in this local environment). Confirmed pre-existing and unrelated: none of those files are touched by this change, and the same import fails in isolation for a file this PR never edited (`tests/test_swing_plane_launch_rigor.py`).
+
+## Blockers and Risks
+
+- Blocker: full 75% reduction depends on the not-yet-written editorial style guide (#4587) for consistent chapter-level plain-language replacements, and on a scope decision about the `models/` evidence-tier protocol cluster. See "Objective and Status" above.
+- Risk: none to existing functionality — all edits are prose/link-text changes plus new, additive tooling; no existing behavior was removed.
+
+## Next Steps
+
+1. Land #4587 (editorial style guide), then use it to drive chapter-by-chapter rewrites of the `articles/` corpus, removing baseline entries as each file is cleaned.
+
+## Change Log
+
+- `SELF` — Keep internal governance vocabulary out of reader prose; add warn-mode CI lint (#4588).
+
+---
+
 # Readability Measurement Tool — Issue #4591
 
 - Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4591`.
