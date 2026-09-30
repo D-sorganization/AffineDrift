@@ -23,13 +23,13 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** claude
 - **Issue:** #4573 (epic #4579 — E10 Performance, SEO, and Privacy)
-- **PR:** not created yet
+- **PR:** prior draft #4621 (same branch/commit) closed by owner; new draft being opened
 - **Branch:** `claude/issue-4573`
 - **Paths:** `.github/workflows/deploy-website.yml`, `tests/test_deployment_integrity.py`
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_deployment_integrity.py -m content_lint`: 15 passed, 1 skipped, unrelated)
-- **Summary:** `CNAME` and Quarto `site-url` already use the apex domain (`affinedrift.com`); the deploy workflow's `PUBLIC_SITE_URL` diverged to `www.affinedrift.com`. Aligned `PUBLIC_SITE_URL` to the apex host so all repo config agrees on one canonical host.
-- **Next step:** Open the draft PR and report the resolved HEAD SHA.
+- **Last verified:** 2026-09-30 (`python3 -m pytest tests/test_deployment_integrity.py -m content_lint`: 15 passed, 1 skipped, unrelated; live re-check: apex still 301s to `www`, `www` still 200 — unchanged since #4621 closed)
+- **Summary:** `CNAME` and Quarto `site-url` (and 385 other occurrences across the repo) already use the apex domain (`affinedrift.com`); the deploy workflow's `PUBLIC_SITE_URL` diverged to `www.affinedrift.com`. Aligned `PUBLIC_SITE_URL` to the apex host, but live GitHub Pages/DNS still serves `www` and 301s the apex, so the code and production disagree. Blocked on an owner decision: flip Pages/DNS to the apex, or authorize reverting the whole repo to `www` instead.
+- **Next step:** Owner records the host decision on #4573; no further code change until then.
 
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
