@@ -12,6 +12,7 @@ SOURCES = (
     BOOK / "quarto/ch03b_induced_acceleration_biomechanics.qmd",
     BOOK / "Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex",
 )
+GRAVITY_M_S2 = 9.81  # Illustrative terrestrial gravity for the unit-mass contact example.
 
 
 def test_coupling_ratio_is_not_equal_torque_mobility_or_muscle_action() -> None:
@@ -69,7 +70,7 @@ def test_small_force_error_can_survive_perfect_closure_and_amplify() -> None:
 
 def test_fixed_mode_increment_can_require_unilateral_contact_release() -> None:
     # Upward-positive unit mass at a stationary horizontal floor: a=F-g+lambda.
-    gravity = 9.81
+    gravity = GRAVITY_M_S2
     for upward_force in (0.0, 12.0):
         reaction = gravity - upward_force
         assert upward_force - gravity + reaction == pytest.approx(0)

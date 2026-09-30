@@ -4,12 +4,14 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 246
-- Deferred: 0
+- Reviewed: 244
+- Deferred: 2
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
+- [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055): 1 routes
+- [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062): 1 routes
 
 ## Reviewed Evidence
 
@@ -77,7 +79,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | `articles/The_Geometry_of_Motion/quarto/ch01_foundations.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | `articles/The_Geometry_of_Motion/quarto/ch02_variational.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | `articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd` | 12 |
 | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | `articles/The_Geometry_of_Motion/quarto/ch04_contraction.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | `articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | `articles/The_Geometry_of_Motion/quarto/ch06_duality.qmd` | 2 |
@@ -149,7 +150,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 4 |
 | `/books/index.html` | `books/index.qmd` | 3 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 3 |
-| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 9 |
 | `/critiques/01_muscle_physiology.html` | `critiques/01_muscle_physiology.md` | 1 |
 | `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
 | `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |
@@ -329,7 +329,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-72a9a6bbc151` | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | Reviewed | — | None | None | 0 |
 | `ad-route-121c2d553f4d` | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | Reviewed | — | None | None | 0 |
 | `ad-route-a4d65b536c60` | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | Reviewed | — | None | None | 0 |
-| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Reviewed | — | None | None | 8 |
+| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Deferred | [#4055](https://github.com/D-sorganization/AffineDrift/issues/4055) | None | None | 8 |
 | `ad-route-39e3dd6b6f46` | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | Reviewed | — | None | None | 0 |
 | `ad-route-08a4d449d5e0` | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3a38c1784447` | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | Reviewed | — | None | None | 0 |
@@ -401,7 +401,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c25ee250631d` | `/books/index.html` | Reviewed | — | None | None | 1 |
 | `ad-route-de682b77b431` | `/books/roadmap.html` | Reviewed | — | None | None | 1 |
-| `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Reviewed | — | None | None | 1 |
+| `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Deferred | [#4062](https://github.com/D-sorganization/AffineDrift/issues/4062) | None | None | 1 |
 | `ad-route-facdfe9adc19` | `/critiques/01_muscle_physiology.html` | Reviewed | — | None | `crit-muscle-physiology` | 0 |
 | `ad-route-f015ff569673` | `/critiques/02_aerodynamics.html` | Reviewed | — | None | `crit-aerodynamics` | 0 |
 | `ad-route-40420c57d407` | `/critiques/03_neuromuscular_control.html` | Reviewed | — | None | `crit-neuromuscular-control` | 0 |

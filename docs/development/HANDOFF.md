@@ -39,6 +39,8 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
   Main Binder update #4682 was integrated at `766b0603`; final browser evidence
   includes its article code-tools metadata. Final dependency receipt preserves
   prior book scopes, dates and render revisions.
+- CI follow-up: name the test gravity constant; scientific sources and PDF unchanged.
+  Preserve the publication receipt; bind the test-only correction before push.
 - Next: inspect final validation evidence on PR #4709,
   inspect final CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
 - Coordination: session `technical-review-20260930-resume`, issue #4706; development
