@@ -2704,6 +2704,7 @@ Dark mode (separate concern):
 
 /* Inline status pill — a small chip-like label next to a heading.
    Replaces inline ``style="display: inline-block; padding…"`` blobs. */
+a.status-pill,
 .status-pill {
   display: inline-block;
   margin-left: 0.5rem;
@@ -2715,6 +2716,12 @@ Dark mode (separate concern):
   font-weight: 600;
   letter-spacing: 0.04em;
   vertical-align: middle;
+  text-decoration: none;
+}
+
+a.status-pill:hover,
+a.status-pill:focus {
+  text-decoration: underline;
 }
 
 .status-pill--exploratory { background: var(--color-neutral-100); }
@@ -2723,6 +2730,17 @@ Dark mode (separate concern):
   color: var(--color-link);
 }
 .status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }
+
+.status-banner__title a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.status-banner__title a:hover,
+.status-banner__title a:focus {
+  text-decoration-style: solid;
+}
 /* ===== end css/components/status-banner.css ===== */
 /* ===== begin css/components/not-found.css ===== */
 /* Branded 404 page (issue #3330).
