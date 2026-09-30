@@ -17,7 +17,7 @@ DEFERRED_AUDIT_SCOPE_COUNTS = {
     f"{ISSUE_ROOT}/4060": 14,
     f"{ISSUE_ROOT}/4061": 21,
     f"{ISSUE_ROOT}/4062": 6,
-    f"{ISSUE_ROOT}/4063": 16,
+    f"{ISSUE_ROOT}/4063": 18,
 }
 
 CORE_ARTICLE_ROUTES = frozenset(
