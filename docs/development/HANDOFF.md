@@ -1,3 +1,61 @@
+# Implementation Handoff — Make src/ Installable and Version It (#4532)
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift`
+- Branch: `fix/web-06-2-make-src-installable-4532`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
+- Implementation commit: `SELF`
+- Pull request: #4613
+- Governing issue/epic: #4532 (epic #4543)
+
+## Objective and Status
+
+- Objective: Make `src/` installable via standard packaging tools (`pip install .`), build wheel in CI, attach wheel to releases, and verify external module imports outside repo root (#4532).
+- Status: ready for review / auto-merge
+- Completed: Added PEP 621 metadata to `pyproject.toml`, configured package discovery for `src*`, added `src/py.typed`, created isolated external smoke test `scripts/smoke_test_installed_wheel.py`, added packaging unit test suite `tests/test_wheel_packaging.py`, updated CI workflows (`ci-standard.yml`, `release.yml`), merged main, and updated `SPEC.md`.
+- Remaining: Push to origin and monitor PR #4613 CI / auto-merge.
+
+## Files and Decisions
+
+- Files changed:
+  - `pyproject.toml`: Added PEP 621 `[project]` metadata, setuptools package discovery, and dependencies.
+  - `src/py.typed`: Added PEP 561 marker.
+  - `scripts/smoke_test_installed_wheel.py`: Isolated wheel install and external import test.
+  - `tests/test_wheel_packaging.py`: Unit test coverage for wheel packaging, version alignment, and wheel contents.
+  - `.github/workflows/ci-standard.yml`: Added wheel build and smoke test step in CI.
+  - `.github/workflows/release.yml`: Added automated release wheel build and asset upload.
+  - `SPEC.md`: Added change-log row for #4613.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Packaged `src` namespace as a whole to preserve existing internal and test imports without tree-wide import churn.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_wheel_packaging.py` — PASS (4 passed)
+- `python -m ruff check tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
+- `python -m black --check --line-length 100 tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\handoff_validator.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Push commit to origin.
+2. Verify PR #4613 checks pass and auto-merge merges into main.
+
+## Change Log
+
+- `SELF` — Merge main, resolve SPEC.md conflicts, and update HANDOFF.md for PR #4613 (#4532).
+- `bc956ef5` — Make src/ installable and configure wheel packaging (#4532).
+
+---
+
 # Reader Run Environment (Binder, Devcontainer, Downloads) — #4538 (WEB-06.8)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
