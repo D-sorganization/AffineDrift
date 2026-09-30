@@ -405,12 +405,8 @@ async function waitForVisibleMath(page) {
   }, undefined, { timeout: 5000 });
 }
 
-// Playwright signature is waitForFunction(pageFunction, arg, options); the
-// timeout must be the third argument or it is silently ignored (30 s default).
 async function waitForSettledPage(page) {
   await page.evaluate(() => document.fonts?.ready);
-  // The gated MathJax request is injected after DOMContentLoaded. Wait for
-  // its explicit post-typeset contract before checking the visible fold.
   await page.waitForFunction(() => {
     const gate = window.AffineDriftMathJax;
     if (!gate) {
@@ -430,22 +426,16 @@ async function waitForSettledPage(page) {
     const bodyPadding = Number.parseFloat(getComputedStyle(document.body).paddingTop);
     return bodyPadding + 3 >= header.getBoundingClientRect().height;
   }, undefined, { timeout: 5000 });
-  // The shipped UI deliberately defers table/code wrappers to an idle task.
-  // Inspect the settled public page, not the transient pre-enhancement DOM.
   await page.waitForFunction(() => {
     const main = document.querySelector('#quarto-document-content, main.content, main');
     if (!main) return true;
-    const tablesReady = [...main.querySelectorAll('table')].every((table) => {
-      const parent = table.parentElement;
-      return parent?.classList.contains('table-wrapper') ||
-        getComputedStyle(parent).overflowX === 'auto';
-    });
-    const codeReady = [...main.querySelectorAll('pre')].every((pre) => {
-      const parent = pre.parentElement;
-      return parent?.classList.contains('code-wrapper') ||
-        parent?.classList.contains('sourceCode') ||
-        getComputedStyle(pre).overflowX === 'auto' ||
-        getComputedStyle(parent).overflowX === 'auto';
+    const tablesReady = [...main.querySelectorAll('table')].every(
+      (t) => t.parentElement?.classList.contains('table-wrapper') || getComputedStyle(t.parentElement).overflowX === 'auto',
+    );
+    const codeReady = [...main.querySelectorAll('pre')].every((p) => {
+      const par = p.parentElement;
+      return par?.classList.contains('code-wrapper') || par?.classList.contains('sourceCode') ||
+        getComputedStyle(p).overflowX === 'auto' || getComputedStyle(par).overflowX === 'auto';
     });
     return tablesReady && codeReady;
   }, undefined, { timeout: 5000 });
