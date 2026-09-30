@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4597 · Separate Internal Documentation From the Quarto Output Directory
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4597 (WEB-13.3)
+- **Branch:** `claude/issue-4597`
+- **Paths:** `_quarto.yml`, `.gitignore`, `.github/workflows/deploy-website.yml`, `.github/workflows/ci-standard.yml`, `scripts/prune_internal_docs_from_deploy.py`, `scripts/sync_frontend_assets.py`, `scripts/bundle_css.py`, `scripts/minify_deploy_assets.py`, `scripts/check_css_architecture.py`, `scripts/e2e_relevant_paths.py`, `src/tools/check_site_health.py`, `src/tools/check_links.py`, `src/tools/utils/link_utils.py`, `src/tools/fix_html_validation.py`, `src/tools/publish_manual_article.py`, `src/tools/utils/file_utils.py`, `Dockerfile`, `Makefile`, `playwright.config.js`, `README.md`, `CONTRIBUTING.md`, `CLAUDE.md`, `AGENTS.md`, `data/trust/claim_audit_inventory.json` (regenerated), plus corresponding test files under `tests/`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: `ruff check .` clean; `black --check --line-length 100 .` clean; full Jest suite 26 suites / 431 passed / 19 skipped; targeted `pytest -q` on all 14 touched test files, 96 passed, after `python3 -m scripts.regenerate_claim_audit_evidence` fixed a `_quarto.yml` digest mismatch it caught; `check_module_size_budget`/`check_quarto_render_coverage`/`check_spec_changelog` all PASS)
+- **Summary:** Renames the Quarto `output-dir` from `docs/` to `_site/` so the git-ignored render output no longer shares a directory with tracked internal documentation (ADRs, dev logs, CSS plans), simplifies `prune_internal_docs_from_deploy.py` by removing the markdown-pruning path that existed only because raw `.md` files used to land in the deploy artifact, and untracks 12 build-output files (CSS/JS mirrors plus one PDF) that had been committed under `docs/` purely to keep pre-render tests green.
+- **Next step:** Push the branch and open the draft PR (Fixes #4597).
+
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review

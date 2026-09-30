@@ -142,6 +142,11 @@ class TestPathExistsInSearchRoots:
         (tmp_path / "docs" / "page.html").write_text("content")
         assert path_exists_in_search_roots(root=tmp_path, target=tmp_path / "page.html") is True
 
+    def test_finds_in_site_prefix(self, tmp_path: Path) -> None:
+        (tmp_path / "_site").mkdir()
+        (tmp_path / "_site" / "page.html").write_text("content")
+        assert path_exists_in_search_roots(root=tmp_path, target=tmp_path / "page.html") is True
+
     def test_returns_false_when_target_not_relative_to_root(self, tmp_path: Path) -> None:
         """path_exists_in_search_roots should return False when target is outside root."""
         # Use an absolute path outside root that doesn't exist

@@ -1,6 +1,6 @@
 """Verify site health by checking internal links and generating sitemap.
 
-This tool scans the generated HTML files in the docs/ directory to verify
+This tool scans the generated HTML files in the _site/ directory to verify
 that all internal links resolve to existing files, helping maintain site
 integrity after builds.
 
@@ -8,7 +8,7 @@ Usage:
     python check_site_health.py
 
 The script will:
-- Find all HTML files in docs/
+- Find all HTML files in _site/
 - Extract and validate internal links
 - Report broken or missing links
 - Optionally generate a sitemap
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 
-DOCS_DIR = Path("docs")
+DOCS_DIR = Path("_site")
 ENTRY_POINT_NAMES = {"index.html", "404.html", "daydreams-doodles.html", "offline.html"}
 ENTRY_POINT_PATHS = {"articles/ux-verification-test.html"}
 IGNORED_ARTIFACT_DIRS = {"coverage", "lcov-report"}
@@ -328,7 +328,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--docs-dir",
-        default="docs",
+        default="_site",
         help="Directory containing rendered HTML files to validate.",
     )
     return parser.parse_args(argv)

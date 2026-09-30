@@ -53,19 +53,19 @@ def test_minify_js_preserves_strings_while_removing_comments() -> None:
     assert "function run" in minified
 
 
-def test_minify_deploy_assets_touches_only_docs_assets(tmp_path: Path) -> None:
-    (tmp_path / "docs" / "js").mkdir(parents=True)
+def test_minify_deploy_assets_touches_only_site_assets(tmp_path: Path) -> None:
+    (tmp_path / "_site" / "js").mkdir(parents=True)
     (tmp_path / "js").mkdir()
-    (tmp_path / "docs" / "styles.css").write_text(".x { color: red; }\n", encoding="utf-8")
-    (tmp_path / "docs" / "js" / "app.js").write_text("const value = 1; // x\n", encoding="utf-8")
+    (tmp_path / "_site" / "styles.css").write_text(".x { color: red; }\n", encoding="utf-8")
+    (tmp_path / "_site" / "js" / "app.js").write_text("const value = 1; // x\n", encoding="utf-8")
     (tmp_path / "js" / "app.js").write_text("const value = 1; // x\n", encoding="utf-8")
 
     touched = minify_deploy_assets(tmp_path)
 
     assert {path.relative_to(tmp_path).as_posix() for path in touched} == {
-        "docs/styles.css",
-        "docs/js/app.js",
+        "_site/styles.css",
+        "_site/js/app.js",
     }
-    assert (tmp_path / "docs" / "styles.css").read_text(encoding="utf-8") == ".x{color:red}\n"
-    assert (tmp_path / "docs" / "js" / "app.js").read_text(encoding="utf-8") == "const value=1;\n"
+    assert (tmp_path / "_site" / "styles.css").read_text(encoding="utf-8") == ".x{color:red}\n"
+    assert (tmp_path / "_site" / "js" / "app.js").read_text(encoding="utf-8") == "const value=1;\n"
     assert (tmp_path / "js" / "app.js").read_text(encoding="utf-8") == "const value = 1; // x\n"

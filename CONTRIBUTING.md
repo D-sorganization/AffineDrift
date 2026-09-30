@@ -444,7 +444,7 @@ Examples of changes requiring ADRs:
    pytest
 
    # HTML validation
-   html-validate "docs/**/*.html"
+   html-validate "_site/**/*.html"
    ```
 
 2. **Build and verify the site**:
@@ -452,7 +452,7 @@ Examples of changes requiring ADRs:
    ```bash
    quarto render
    # Check for build errors
-   # Verify changes in docs/ directory
+   # Verify changes in _site/ directory
    ```
 
 3. **Check for common issues**:
@@ -590,7 +590,8 @@ Understanding the project layout:
 ```
 AffineDrift/
 ├── articles/              # Article source files (.qmd)
-├── docs/                  # Generated site (DO NOT edit directly)
+├── docs/                  # Internal documentation (ADRs, dev logs, CSS plans)
+├── _site/                 # Generated site (git-ignored; DO NOT edit directly)
 ├── scripts/               # Build and maintenance scripts
 ├── tools/                 # Utility tools
 ├── tests/                 # Test suites
@@ -903,7 +904,7 @@ Add styles in `custom.scss`:
 
 - `articles/drift-ratio-analysis.qmd` - New article
 - `_quarto.yml` - Updated navigation
-- `docs/` - Generated HTML
+- `_site/` - Generated HTML
 
 ## Testing
 

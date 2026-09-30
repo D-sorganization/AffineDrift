@@ -304,10 +304,10 @@ def write_manifest(manifest: dict[str, Any], output_path: Path) -> str:
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--docs-dir", type=Path, default=Path("docs"))
+    parser.add_argument("--docs-dir", type=Path, default=Path("_site"))
     parser.add_argument("--source-root", type=Path, default=Path("."))
     parser.add_argument("--source-revision")
-    parser.add_argument("--output", type=Path, default=Path("docs/public-site-manifest.json"))
+    parser.add_argument("--output", type=Path, default=Path("_site/public-site-manifest.json"))
     return parser.parse_args()
 
 

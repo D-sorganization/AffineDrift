@@ -11,7 +11,6 @@ ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = ROOT / "articles/proximal-distal-a-journey-through-the-swing.qmd"
 FIGURES = ROOT / "articles/figures/proximal_distal_companion"
 PDF_SOURCE = ROOT / "articles/proximal-distal-a-journey-through-the-swing.pdf"
-PDF_OUTPUT = ROOT / "docs/articles/proximal-distal-a-journey-through-the-swing.pdf"
 WORKBENCH = ROOT / "articles/proximal-distal-model-workbench.qmd"
 CHAPTERS = ROOT / "articles/proximal_distal_companion/chapters"
 # UpstreamDrift main artifact at merge b6a64e174423870f341991a7b8ba9465c84209b9.
@@ -36,12 +35,14 @@ def _book_source() -> str:
 
 
 def test_companion_pdf_has_a_stable_source_and_publication_path() -> None:
+    """The PDF ships to readers via the Quarto ``resources:`` copy at render time
+    (issue #4597), not a hand-maintained mirror committed under the tracked
+    docs/ tree, so only the source and its declaration are checked here.
+    """
     config = (ROOT / "_quarto.yml").read_text(encoding="utf-8")
     requirements = (ROOT / "requirements.txt").read_text(encoding="utf-8")
     assert PDF_SOURCE.is_file() and PDF_SOURCE.stat().st_size > 100_000
-    assert PDF_OUTPUT.is_file() and PDF_OUTPUT.read_bytes() == PDF_SOURCE.read_bytes()
     assert "- articles/proximal-distal-a-journey-through-the-swing.pdf" in config
-    assert "- docs/articles/proximal-distal-a-journey-through-the-swing.pdf" not in config
     assert "pypdf==6.19.0" in requirements
 
 

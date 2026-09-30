@@ -41,7 +41,6 @@ PATH_PREFIXES = (
     "src/js/",
     "tests/e2e/",
 )
-DOCS_DEPLOY_SUFFIXES = (".css", ".html", ".js", ".qmd")
 
 
 def normalize_path(path: str) -> str:
@@ -62,9 +61,7 @@ def is_e2e_relevant(path: str) -> bool:
         return True
     if normalized.endswith(".qmd"):
         return True
-    if normalized.startswith(PATH_PREFIXES):
-        return True
-    return normalized.startswith("docs/") and normalized.endswith(DOCS_DEPLOY_SUFFIXES)
+    return normalized.startswith(PATH_PREFIXES)
 
 
 def relevant_paths(paths: Iterable[str]) -> tuple[str, ...]:

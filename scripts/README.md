@@ -26,7 +26,7 @@ Creates the search index for the site's search functionality.
 python scripts/generate_search_index.py
 ```
 
-**Output:** `docs/search.json`
+**Output:** `_site/search.json`
 
 ### generate_bibliography_data.py
 

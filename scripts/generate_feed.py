@@ -12,8 +12,8 @@ build time. Output is deterministic for a given content state because undated
 
 Usage::
 
-    python3 scripts/generate_feed.py                      # writes docs/feed.xml + feed.xml
-    python3 scripts/generate_feed.py --output docs/feed.xml
+    python3 scripts/generate_feed.py                      # writes _site/feed.xml + feed.xml
+    python3 scripts/generate_feed.py --output _site/feed.xml
 """
 
 from __future__ import annotations
@@ -198,8 +198,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate RSS feed.xml")
     parser.add_argument(
         "--output",
-        default="docs/feed.xml",
-        help="Output path for the generated feed (default: docs/feed.xml)",
+        default="_site/feed.xml",
+        help="Output path for the generated feed (default: _site/feed.xml)",
     )
     args = parser.parse_args()
 

@@ -1,7 +1,7 @@
 """Governance tests for generated Quarto vendor artifacts (issue #3182).
 
 Quarto bundles its vendor JavaScript/CSS libraries into ``site_libs/`` inside the
-render output directory (``docs/site_libs/``, which is git-ignored). A stale copy
+render output directory (``_site/site_libs/``, which is git-ignored). A stale copy
 was previously committed at the repository root, where it inflated source-quality
 metrics and added ~13k lines of generated code to the tracked tree. These tests
 keep that artifact from creeping back in.

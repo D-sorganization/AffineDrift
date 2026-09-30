@@ -8,7 +8,7 @@ Usage:
     python build-html.py
 
 The script reads .qmd files from the current directory and generates
-corresponding HTML files in the docs/ directory.
+corresponding HTML files in the _site/ directory.
 """
 
 import re
@@ -112,11 +112,11 @@ def main() -> None:
     except subprocess.CalledProcessError as e:
         logger.warning("Failed to generate bibliography data: %s", e)
 
-    docs_dir = Path("docs")
+    docs_dir = Path("_site")
     docs_dir.mkdir(exist_ok=True)
 
     # Read template once at the start
-    template_path = Path("docs/articles.html")
+    template_path = Path("_site/articles.html")
     template_content = ""
     if template_path.exists():
         template_content = template_path.read_text()

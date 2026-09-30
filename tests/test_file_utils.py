@@ -154,26 +154,26 @@ def test_process_file_content_returns_false_when_file_not_found(tmp_path: Path) 
 
 
 def test_find_html_files_returns_empty_when_no_docs_dir(tmp_path: Path) -> None:
-    """find_html_files with docs_only=True returns [] when docs/ doesn't exist."""
+    """find_html_files with docs_only=True returns [] when _site/ doesn't exist."""
     result = file_utils.find_html_files(root_dir=tmp_path, docs_only=True)
     assert result == []
 
 
 def test_find_html_files_finds_html_in_docs(tmp_path: Path) -> None:
-    """find_html_files should discover .html files inside docs/."""
-    docs = tmp_path / "docs"
-    docs.mkdir()
-    (docs / "page.html").write_text("<html/>", encoding="utf-8")
+    """find_html_files should discover .html files inside _site/ (issue #4597)."""
+    site = tmp_path / "_site"
+    site.mkdir()
+    (site / "page.html").write_text("<html/>", encoding="utf-8")
     result = file_utils.find_html_files(root_dir=tmp_path, docs_only=True)
     assert any(f.name == "page.html" for f in result)
 
 
 def test_find_html_files_respects_limit(tmp_path: Path) -> None:
     """find_html_files should honor the limit parameter."""
-    docs = tmp_path / "docs"
-    docs.mkdir()
+    site = tmp_path / "_site"
+    site.mkdir()
     for i in range(5):
-        (docs / f"p{i}.html").write_text("<html/>", encoding="utf-8")
+        (site / f"p{i}.html").write_text("<html/>", encoding="utf-8")
     result = file_utils.find_html_files(root_dir=tmp_path, docs_only=True, limit=2)
     assert len(result) == 2
 

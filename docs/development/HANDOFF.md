@@ -1,3 +1,224 @@
+# Implementation Handoff — Separate Internal Documentation From the Quarto Output Directory (#4597)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4597
+- Branch: claude/issue-4597
+- Implementation commit: `SELF`
+- Pull request: to be opened as a draft by this session
+- Governing issue: #4597 (WEB-13.3)
+
+## Objective and Status
+
+- Objective: the Quarto render output and the tracked internal documentation
+  (ADRs, dev logs, CSS plans) shared the same `docs/` directory. The issue's
+  acceptance criteria: either the output directory or the internal docs move;
+  `scripts/prune_internal_docs_from_deploy.py` is retired or simplified; all
+  references and the CSS-mirror rule are updated; CLAUDE.md/AGENTS.md sources
+  in `Repository_Management` are updated where their managed sections mention
+  the old paths.
+- Design decision (made as a `tier:cli` agent, since the issue's explicit
+  `tier:cli` label overrides the `complexity:complex`-derived `tier:strong`):
+  chose to move the Quarto **output** directory (`_quarto.yml` `output-dir:
+docs` → `output-dir: _site`) rather than moving the internal docs to
+  `dev-docs/`. Rationale: (a) rendered HTML was already git-ignored — the real
+  problem was ~12 tracked build-output mirror files sharing the `docs/` tree
+  with genuine tracked content, not the bulk of the rendered site; (b) GitHub
+  Pages deploys via `actions/upload-pages-artifact`, not branch-serving, so no
+  external repository Settings change is needed either way; (c) this choice
+  leaves `docs/development/HANDOFF.md` and `docs/development/DEVELOPMENT_LOG.md`
+  — the paths the fleet-wide CLAUDE.md/AGENTS.md managed sections hardcode as
+  defaults — untouched, so the cross-repo Repository_Management update in
+  acceptance criterion 4 is very likely unnecessary under this option. This is
+  called out explicitly in the PR body for owner/frontier review rather than
+  assumed silently.
+- Status: implementation complete for this repository. The `Repository_Management`
+  cross-repo update is **not attempted** from this worktree (a separate repo
+  this session cannot edit); the PR body states the above rationale for why it
+  is likely not needed, but that determination is left to the owner/frontier
+  reviewer rather than closed unilaterally.
+
+## Files and Decisions
+
+- `_quarto.yml`: `output-dir: docs` → `output-dir: _site`.
+- `.gitignore`: replaced the `docs/`-ignore block (17 lines covering generated
+  HTML, `search.json`, `docs/data/`) with a single `/_site/` ignore plus the
+  pre-existing `/site_libs/` root-mirror guard (issue #3182), since `docs/` no
+  longer needs partial-ignore carve-outs once it holds only tracked content.
+- `.github/workflows/deploy-website.yml` and `ci-standard.yml`: every
+  `docs`-as-build-output reference updated to `_site` (sitemap/feed output,
+  CSS/JS bundling, the prune script's `--docs-dir`, `public_site_manifest.py`,
+  `http.server --directory`, the PR visual-evidence verifier manifests, the
+  E2E render cache path, `upload-pages-artifact`). Left unchanged: the
+  cache-key exclude `':(exclude)docs/development/**'` and the workflow trigger
+  `paths: - "docs/**"` — both still correct, since `docs/` still holds real
+  tracked content that should invalidate those caches/triggers.
+- `scripts/prune_internal_docs_from_deploy.py`: removed
+  `prune_internal_markdown_files()` entirely (TDD: new test
+  `test_prune_internal_deploy_artifacts_leaves_markdown_alone` written first,
+  confirmed RED, then GREEN) — raw markdown can no longer land in the deploy
+  artifact once Quarto never renders into a directory holding markdown source.
+  `main()`'s `--docs-dir` default changed from `"docs"` to `"_site"`.
+- **Scope-widening discovery**: `docs/css/*.css`, `docs/js/*.js`,
+  `docs/styles.css` (10 files) and `docs/articles/proximal-distal-a-journey-through-the-swing.pdf`
+  were tracked build-output mirrors — committed copies kept in sync by hand or
+  by `sync_frontend_assets.py`/`bundle_css.py` so pre-render tests had
+  something to assert against — not genuine "internal documentation" as the
+  issue's problem statement implied. Redirected `sync_frontend_assets.py`,
+  `bundle_css.py`, and `minify_deploy_assets.py` to write into `_site/` only,
+  `git rm`'d the 11 now-orphaned tracked files, and fixed every test that had
+  read the committed copy directly (`test_status_badge.py`,
+  `test_proximal_distal_companion_contract.py`) to instead call the generator
+  (`bundle_css.bundle()`) or drop the mirror-comparison assertion entirely
+  (Quarto's own `resources:` copy makes byte-identity automatic, so testing it
+  via a hand-synced mirror was redundant once the mirror is gone).
+- **Dockerfile regression caught and fixed**: the production image's `builder`
+  stage relied on `COPY . .` picking up the tracked CSS/JS mirrors, with no
+  explicit `bundle_css.py`/`sync_frontend_assets.py` call. Untracking those
+  mirrors would have shipped the production image without CSS/JS. Added both
+  script invocations to the `builder` stage before the provenance-hash step
+  (TDD: `tests/test_container_config.py` updated first, confirmed RED, then
+  GREEN).
+- **CI regression caught and fixed**: `tests/service-worker-precache.test.js`
+  reads the deployed `docs/styles.css` bundle directly, but the `js-tests` job
+  in `ci-standard.yml` never ran `quarto render` or `bundle_css.py` before
+  `npm test` — it only worked because the bundle used to be a tracked mirror.
+  Added an `actions/setup-python` step (reusing the SHA pin already used
+  elsewhere in this workflow, `5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0`)
+  and a `python3 scripts/bundle_css.py` step to `js-tests` before `npm test`
+  (`bundle_css.py` has no dependencies beyond the standard library, so no pip
+  install is needed).
+- `src/tools/*`, `scripts/*`, `tests/*`: updated every remaining hardcoded
+  `docs`-as-build-output default and test fixture to `_site` (see the PR diff
+  for the full file list — `check_site_health.py`, `check_links.py`,
+  `link_utils.py` (kept the `docs/` fallback too, since `docs/` legitimately
+  holds tracked cross-referencing content), `fix_html_validation.py`,
+  `publish_manual_article.py`, `file_utils.py`, plus their test files).
+- `CLAUDE.md`, `AGENTS.md` (this repo's own repo-local sections only — the
+  sections marked "managed centrally by Repository_Management" were left
+  untouched per their own header instruction): updated the key-directories
+  list and the three CSS-mirror-enforcement mentions from `docs/` to `_site/`.
+- **Left deliberately unchanged** (out of scope / pre-existing / generic
+  examples, not build-output references):
+  - `pyproject.toml`/`.pre-commit-config.yaml` `docs` excludes — these cover
+    `docs/development/technical-review/*.py` (16 real tracked Python files),
+    unrelated to the build-output rename.
+  - `config/ui_ux_budget.json`/`config/module_size_budget.json` `docs/`
+    exclude entries — dead/no-op, since their `include_roots` never scan
+    `docs/` or `_site/`.
+  - Generic `docs/...` example paths used as placeholder strings in
+    `tests/test_link_utils.py`, `tests/test_check_links.py`,
+    `tests/test_check_links_additional.py`, `tests/tools/test_check_links.py`,
+    `tests/test_budget_check_utils.py`, `tests/test_analyze_completist_data.py`
+    — these test generic path-filter/URL-normalization logic, not
+    docs-as-build-output semantics.
+  - `tests/tools/test_wrist_universal_joint_callers.py` and
+    `tests/tools/test_universal_joint_model_entrypoint.py` reference a legacy
+    `docs/content/Wrist as Universal Joint/...` path that already does not
+    exist and both tests `pytest.skip()` gracefully when it is absent — a
+    pre-existing dead path unrelated to this issue.
+  - `AGENT_HANDOFF.md` and historical narrative logs/reports under
+    `reports/technical-review/`, `content-development/`, `CHANGELOG.md` that
+    mention old `docs/articles/...` paths — frozen historical record, not live
+    logic.
+
+- `data/trust/claim_audit_inventory.json` and its four downstream generated
+  files (see Validation below): regenerated via
+  `python3 -m scripts.regenerate_claim_audit_evidence` because editing
+  `_quarto.yml` changed a file digest a scientific-claim review record pins as
+  evidence. Mechanical regeneration, not a content decision.
+
+## Spotted, Not Fixed
+
+- `docs/development/HANDOFF.md` already contained a stray, unresolved
+  `>>>>>>> origin/main` git-conflict marker as its literal last line, already
+  committed to `main` at `b000cfee4` (2026-09-29, predates this branch) — a
+  pre-existing content bug unrelated to #4597. Not fixed here per the
+  stay-surgical rule; flagged in the PR body and this handoff instead.
+
+## Validation
+
+- `python -m ruff check .` — all checks passed.
+- `python -m black --check --line-length 100 .` — clean (one pre-fix reformat
+  applied to `tests/test_container_config.py` for the shortened `_site/`
+  string; committed).
+- `npx jest` — 26 suites passed, 431 tests passed, 19 skipped, 0 failed (run
+  twice, foreground, after `python3 scripts/bundle_css.py` to populate
+  `_site/styles.css` for `service-worker-precache.test.js`).
+- Targeted `pytest -q` on every file this change touches — 96 passed:
+  `tests/test_prune_internal_docs_from_deploy.py`,
+  `tests/test_sync_frontend_assets.py`, `tests/test_minify_deploy_assets.py`,
+  `tests/test_css_bundle.py`, `tests/test_status_badge.py`,
+  `tests/test_file_utils.py`, `tests/tools/test_file_utils_extended.py`,
+  `tests/test_link_utils.py`, `tests/test_container_config.py`,
+  `tests/test_deployment_integrity.py`, `tests/test_claim_audit_inventory.py`,
+  `tests/test_generated_site_libs_untracked.py`,
+  `tests/test_proximal_distal_companion_contract.py`,
+  `tests/test_e2e_relevant_paths.py`.
+- `python -m pytest tests/test_check_quarto_render_coverage.py tests/test_evidence_presentation.py tests/test_reader_comprehension_validation.py`
+  — 22 passed (regression check on the trust-ledger regeneration below).
+- `python3 -m scripts.check_module_size_budget` — PASS (340 files scanned).
+- `python3 scripts/check_quarto_render_coverage.py` — PASS (242 URLs,
+  bidirectional sitemap/source coverage).
+- `python3 -m scripts.check_spec_changelog` — PASS.
+- **Trust ledger fix**: editing `_quarto.yml` invalidated a pinned digest in
+  `data/trust/claim_audit_inventory.json` (caught by
+  `tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current`,
+  which failed with `ReviewEvidenceError: /articles/proximal-distal-falsification-atlas.html
+  review evidence digest mismatch: _quarto.yml` before the fix). Ran
+  `python3 -m scripts.regenerate_claim_audit_evidence` per the CLAUDE.md trust-ledger
+  rule, which rewrote `data/trust/claim_audit_inventory.json` and, as its normal
+  downstream effect, regenerated `data/trust/generated/{claim_audit_report,
+  evidence_presentation_registry,reader_validation_study,research_releases_registry}.json`
+  and `_includes/generated/{evidence-presentation-summary,reader-validation-summary,
+  research-releases-summary}.qmd`; all listed test files above pass after the
+  regeneration. The regeneration also corrected one pre-existing, unrelated
+  digest drift it happened to notice on the same pass: the recorded SHA-256 for
+  `data/trust/proximal_distal_falsification_atlas.json` in
+  `research_releases_registry.json` did not match that file's actual on-disk
+  content (verified independently against the file's own git blob hash, not
+  just the working tree) — a stale value from before this session, now
+  corrected as a mechanical side effect of the same regeneration run, not a
+  content edit to that file.
+- The regeneration script's own JSON output reflows arrays onto multiple
+  lines; the repo's `prettier` pre-commit hook collapsed that back to the
+  committed single-line style, so `reader_validation_study.json`'s only real
+  diff against `HEAD` is its own `generated_on` date bump. The other touched
+  file, `evidence_presentation_registry.json` (and its paired
+  `evidence-presentation-summary.qmd`), showed no diff at all — byte-identical
+  regeneration.
+- A full repo-wide `pytest --cov` sweep was not run to completion in this
+  non-interactive session (this repo's suite is large and includes slow
+  PDF/rigor tests); every test file this change actually touches was run
+  directly instead, per the list above. The full sweep is left to CI's
+  `quality-gate`.
+- Targeted TDD RED→GREEN cycles confirmed for: `prune_internal_docs_from_deploy.py`,
+  `file_utils.find_html_files`, `test_container_config.py` (Dockerfile),
+  `test_proximal_distal_companion_contract.py` (PDF mirror removal).
+
+## Blockers and Risks
+
+- None blocking. The only open question — whether the
+  `Repository_Management` CLAUDE.md/AGENTS.md sources need a cross-repo update
+  for acceptance criterion 4 — is a judgment call left to the owner/frontier
+  reviewer in the PR body, not a blocker to merging this repo's change.
+
+## Next Steps
+
+1. Push `claude/issue-4597` and open the draft PR (`Fixes #4597`).
+2. Owner/frontier review, including a decision on whether
+   `Repository_Management/CLAUDE.md`/`AGENTS.md` need updating for criterion 4,
+   and confirmation from CI's full `pytest --cov` run in `quality-gate`.
+
+## Change Log
+
+- `SELF` — Move the Quarto output directory from `docs/` to `_site/`; simplify
+  the prune script; untrack build-output mirrors; update all references
+  (#4597).
+
+---
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree

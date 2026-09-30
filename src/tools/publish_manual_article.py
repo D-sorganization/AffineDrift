@@ -177,8 +177,8 @@ def wrap_in_article_section(body_html: str) -> str:
 def main() -> None:
     """Publish a manually-authored article."""
     qmd_path = Path("articles/intentional-constraint-collapse.qmd")
-    output_path = Path("docs/articles/intentional-constraint-collapse.html")
-    template_path = Path("docs/articles.html")
+    output_path = Path("_site/articles/intentional-constraint-collapse.html")
+    template_path = Path("_site/articles.html")
 
     if not qmd_path.exists():
         logger.error("Source file not found: %s", qmd_path)

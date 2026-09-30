@@ -20,7 +20,7 @@ def test_dockerfile_uses_multistage_python_312_runtime() -> None:
     assert "python -m pip install --require-hashes -r requirements-docker.lock" in dockerfile
     assert "quarto render . --to html" in dockerfile
     assert (
-        "COPY --from=builder --chown=affinedrift:affinedrift /workspace/docs/ /site/" in dockerfile
+        "COPY --from=builder --chown=affinedrift:affinedrift /workspace/_site/ /site/" in dockerfile
     )
 
 
