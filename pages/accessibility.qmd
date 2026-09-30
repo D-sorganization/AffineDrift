@@ -1,0 +1,64 @@
+---
+title: "Accessibility Statement"
+description: "AffineDrift's accessibility conformance target, known issues, and how to report a barrier"
+toc: false
+page-layout: full
+categories:
+- site-information
+---
+
+```{=html}
+<section class="accessibility-section">
+  <div class="ad-page-container">
+    <div class="page-section u-mb-3">
+      <h1 class="section-heading">Accessibility Statement</h1>
+      <p class="page-subtitle">Conformance target, known issues, and how to report a barrier</p>
+    </div>
+
+    <div class="page-section u-mb-3">
+      <h2>Conformance Target</h2>
+      <p>
+        AffineDrift targets <strong>WCAG 2.1 Level AA</strong> across the rendered site. Every route is
+        checked with an automated <code>@axe-core/playwright</code> scan (desktop-small viewport, light
+        theme) plus a hand-written WCAG AA text-contrast check in both the light and dark themes
+        (<code>tests/e2e/accessibility.spec.js</code>). This is a target we are actively working toward,
+        not a certification of full conformance.
+      </p>
+    </div>
+
+    <div class="page-section u-mb-3">
+      <h2>Known Issues</h2>
+      <p class="page-note">
+        <strong>Status: Partial conformance.</strong> The first full-site scan found 247 serious/critical
+        axe-core violations across 163 of 238 routes, concentrated in inline-text link contrast, ARIA
+        misuse on video embeds and collapsed accordions, and a scrollable table missing a
+        keyboard-focusable wrapper. The CI axe-core check currently runs in report-only mode while these
+        are remediated.
+      </p>
+      <p>
+        For the full inventory and remediation status, see
+        <a href="https://github.com/D-sorganization/AffineDrift/issues/4139" target="_blank" rel="noopener noreferrer">issue #4139<span class="sr-only">(opens in a new tab)</span></a>.
+      </p>
+    </div>
+
+    <div class="page-section u-mb-3">
+      <h2>Reporting a Barrier</h2>
+      <p>
+        If you encounter an accessibility barrier on this site, please report it through one of the
+        channels on the <a href="contact.html">Contact</a> page: open a
+        <a href="https://github.com/D-sorganization/AffineDrift/issues/new" target="_blank" rel="noopener noreferrer">GitHub Issue<span class="sr-only">(opens in a new tab)</span></a>
+        (preferred — public and trackable) or email
+        <a href="mailto:dieterolson@AffineDrift.com?subject=Accessibility%20Barrier">dieterolson@AffineDrift.com</a>.
+        Please include the page URL, the assistive technology or browser you were using, and a
+        description of the problem.
+      </p>
+    </div>
+  </div>
+</section>
+```
+
+## Related Articles
+
+- [Contact](contact.html) — Report a barrier or ask a question
+- [About](about.html) — About AffineDrift and how to get in touch
+- [Development Roadmap](development-roadmap.html) — Evidence-bounded development states, including accessibility remediation

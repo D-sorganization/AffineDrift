@@ -141,6 +141,8 @@ class TestScan:
             "zero-torque constraint force analysis",
             "Drift-Correction-Response",
             "Disturbance Rejection vs. Control",
+            "Controllability-Drift Ratio",
+            "Drift-to-Control Ratio",
         ],
     )
     def test_each_variant_is_detected(self, tmp_path: Path, variant: str) -> None:

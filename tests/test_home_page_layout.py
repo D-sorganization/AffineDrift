@@ -66,7 +66,7 @@ class TestContentFirstStructure:
 
     def test_core_framework_equation_present(self, home_text: str) -> None:
         # The control-affine system is the page's central artifact.
-        assert "f(x) + g(x)u" in home_text
+        assert "f(x) + G(x)u" in home_text
 
     def test_provenance_aside_present(self, home_text: str) -> None:
         assert "provenance-note" in home_text

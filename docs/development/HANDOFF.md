@@ -1,76 +1,58 @@
-# Implementation Handoff — Figures for Core Theory Pages (#4536)
+# Website Consolidation (Seven Web Issues) — 2026-09-29
 
-## Identity
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `AffineDrift-worktrees/w-ad-web-consolidated`.
+- Branch `claude/website-consolidated-0929`, commit `SELF`; one consolidated
+  draft pull request (see the PR list) supersedes drafts #4615, #4616 and #4618
+  and the unpushed branches for #4608, #4583, #4568 and #4548.
+- Objective: land seven Sonnet 5 CLI-tier website issues in one CI cycle under
+  the PR-queue consolidation rule (RM#1691).
 
-- Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-06-6-figures-for-core-theory-pages-4536
-- Baseline commit: 84b8737e
-- Implementation commit: SELF
-- Pull request: #4651
-- Governing issue/epic: #4536 (epic #4543)
+| Issue | Branch              | Change                                                                   |
+| ----- | ------------------- | ------------------------------------------------------------------------ |
+| #4576 | `claude/issue-4576` | Privacy Policy page (`pages/privacy-policy.qmd`) plus footer link.       |
+| #4582 | `claude/issue-4582` | Uppercase `G(x)` notation; `scripts/check_notation.py` baseline lint.    |
+| #4546 | `claude/issue-4546` | `scripts/filters/schema-jsonld.lua` JSON-LD filter; deletes dead include. |
+| #4608 | `claude/issue-4608` | Website/UX problem issue template plus contract test.                    |
+| #4583 | `claude/issue-4583` | "Drift-Control Ratio" naming; slug `drift-control-ratio` with alias.     |
+| #4568 | `claude/issue-4568` | Accessibility statement page (WCAG 2.1 AA target, #4139 inventory).      |
+| #4548 | `claude/issue-4548` | Render rule plus front matter for all 22 companion bibliographies.       |
 
-## Objective and Status
-
-- Objective: Provide static, script-generated SVG figures for core theory pages (`controllability-drift-ratio.qmd`, `zero-torque-counterfactual.qmd`, and `superposition.qmd`), with $\ge 3$ figures per page, accessible alt text, long descriptions, fallback/print utility, and within image budget.
-- Status: ready for commit / PR
-- Completed:
-  - Implemented `scripts/build_core_theory_figures.py` with deterministic SVG generation (Agg backend, svg.fonttype: none, clean normalized output) and `--check` CLI mode.
-  - Generated 9 publication-grade SVGs in `articles/figures/core_theory/`:
-    - `fig_dcr_vector_decomposition.svg` (phase-space drift vs control authority)
-    - `fig_dcr_swing_phases.svg` (acceleration evolution and DCR across downswing phases)
-    - `fig_dcr_reachability_tubes.svg` (finite-horizon reachable set envelopes vs countdown to impact)
-    - `fig_ztcf_trajectory_divergence.svg` (planar clubhead path divergence across release events)
-    - `fig_ztcf_clubhead_speed_loss.svg` (velocity profiles for active vs counterfactual branches)
-    - `fig_ztcf_passive_dynamics_attribution.svg` (acceleration attribution: active muscular vs interaction/Coriolis flail)
-    - `fig_superposition_decomposition.svg` (parallelogram superposition of instantaneous acceleration increments)
-    - `fig_superposition_modal_response.svg` (cross-channel acceleration coupling via mass matrix inverse)
-    - `fig_superposition_breakdown_boundary.svg` (trajectory divergence vs naive superposition error growth)
-  - Embedded 3 figures in each of the three target pages with captions, figure labels, and accessible `fig-alt` descriptions.
-  - Created automated test suite `tests/test_core_theory_figures.py` asserting figure existence, image budget adherence (< 500 KB), `--check` pass, $\ge 3$ references per page, and non-empty alt text and captions.
-  - Verified `tests/test_image_budget.py` and `tests/test_core_theory_figures.py` pass cleanly.
-  - Regenerated claim audit evidence digests and verified all pre-commit checks pass.
-  - Added change-log row in `SPEC.md`.
-- Remaining: Commit, push, create PR, re-key SPEC.md to PR number, arm auto-merge, and release lease.
-
-## Files and Decisions
-
-- Files changed/created:
-  - `scripts/build_core_theory_figures.py`: Deterministic figure generator.
-  - `articles/figures/core_theory/*.svg`: 9 generated SVG figures.
-  - `articles/controllability-drift-ratio.qmd`: Embedded 3 figures.
-  - `articles/zero-torque-counterfactual.qmd`: Embedded 3 figures.
-  - `articles/superposition.qmd`: Embedded 3 figures.
-  - `tests/test_core_theory_figures.py`: Test suite for core theory figures.
-  - `data/trust/claim_audit_inventory.json` & `site_trust_surface_audit.json`: Regenerated evidence digests.
-  - `SPEC.md`: Change-log entry.
-  - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Pure SVG format with deterministic XML formatting and no text path outlines (`svg.fonttype: none`) keeps file size under 65 KB each (total < 400 KB across all 9 figures), well within the 500 KB per-image budget and optimizing vector sharpness for print and web fallbacks.
-- User-owned or unrelated worktree changes: none observed
-
-## Validation
-
-- `pytest tests/test_core_theory_figures.py tests/test_image_budget.py` — PASS (14 passed)
-- `python scripts/build_core_theory_figures.py --check` — PASS (9 verified)
-- `python -m ruff check scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
-- `python -m black --check --line-length 100 scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
-- `mypy scripts/build_core_theory_figures.py tests/test_core_theory_figures.py` — PASS
-- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
-- `python -m scripts.check_terminology --baseline config/terminology-baseline.json` — PASS
-- `python scripts/check_spec_changelog.py` — PASS
-
-## Blockers and Risks
-
-- Blockers: none
-- Risks/assumptions: none
-
-## Next Steps
-
-1. Commit, push branch, open PR with `agent:local` label.
-2. Re-key `SPEC.md` and `HANDOFF.md` to PR number, push, arm auto-merge, and release lease for #4536.
-
----
-
+- Key decisions:
+  - `data/trust/claim_audit_inventory.json` was merged by hand: #4583's route
+    rename (`/articles/drift-control-ratio.html`, audit id
+    `ad-route-4a8ccbe60039`) applied, routes re-sorted, then
+    `python -m scripts.regenerate_claim_audit_evidence` after every merge.
+  - `articles/Pinocchio_Project_Outline-bibliography.md` is kept (given front
+    matter) rather than deleted; it holds 194 lines of substantive references.
+  - `articles/controllability-drift-ratio-bibliography.md` keeps its filename;
+    #4583 renamed only the article.
+  - The privacy page's related section was renamed to `## Related Articles`
+    and given a third link so the site gate's related-coverage rule passes.
+- Validation on the consolidated branch:
+  - `python -m pytest -o addopts= tests/test_privacy_policy_page.py
+    tests/test_check_notation.py tests/test_schema_jsonld.py
+    tests/test_companion_hierarchy.py tests/test_website_ux_issue_template.py
+    tests/test_accessibility_statement_page.py
+    tests/test_check_quarto_render_coverage.py tests/test_navbar_ia.py
+    tests/test_public_site_manifest.py tests/test_claim_audit_inventory.py
+    tests/test_site_link_gate.py tests/test_dcr_reachability_contract.py
+    tests/test_dcr_article_rigor.py tests/test_scientific_trust_metadata.py`
+    — 165 passed.
+  - `python -m scripts.link-checker --site-gate --root .` — passed.
+  - `python -m scripts.regenerate_claim_audit_evidence --check` — current.
+  - `python -m scripts.check_spec_changelog` — passed.
+  - Full render and Playwright/axe run in CI only.
+- Blockers/risks: none known. Rendered output is not committed.
+- Next steps:
+  1. Wait for CI on the consolidated PR; fix any failure on this branch.
+  2. Mark ready, verify the remote head, arm via `automerge_guard.py`.
+  3. After merge, close #4615, #4616 and #4618 as superseded and remove the
+     seven `claude-<issue>` worktrees.
+# Implementation Handoff — Deploy Website Verification Fix (#4617)
+# Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
+# Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+# Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 # Configure Search, and Include Maturity in Results — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -161,9 +143,6 @@
   unrelated to this change.
 - Next steps: push the branch, open the draft PR, and watch CI's `e2e-tests` job for the new
   ZTCF search spec.
-
----
-
 # DCR Visualiser Widget — #4535 (WEB-06.5)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -1094,8 +1073,8 @@
 2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
    different threshold than lay blocks.
 3. No further implementation is planned from this session pending review feedback.
-# Implementation Handoff — Build the Page Header Card Component (#4507)
-# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
+
+# Implementation Handoff — Real Publication Dates and Per-Article Change History (#4545)
 
 ## Identity
 

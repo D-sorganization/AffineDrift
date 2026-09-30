@@ -38,6 +38,7 @@ def test_page_footer_links_publication_and_executable_companions() -> None:
     assert links["AffineDrift Source"].endswith("/AffineDrift")
     assert links["UpstreamDrift Programs"].endswith("/UpstreamDrift")
     assert links["About & Authority"] == "pages/about.html"
+    assert links["Privacy Policy"] == "pages/privacy-policy.html"
 
 
 def _left_entries(navbar: dict) -> list[dict]:

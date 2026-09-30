@@ -7,7 +7,7 @@ description: "Critique and response context for Input-Dependent Boundary Conditi
 
 ## Summary of Concern
 
-The theoretical derivation of the control-affine form ($\dot{x} = f(x) + g(x)u$) relies on a finite-dimensional modal approximation of the golf shaft (Appendix B). This approximation explicitly assumes "clamped" boundary conditions at the grip end ($w(0,t)=0, w_s(0,t)=0$).
+The theoretical derivation of the control-affine form ($\dot{x} = f(x) + G(x)u$) relies on a finite-dimensional modal approximation of the golf shaft (Appendix B). This approximation explicitly assumes "clamped" boundary conditions at the grip end ($w(0,t)=0, w_s(0,t)=0$).
 However, physically, the "clamp" is the golfer's hands. The stiffness of this clamp (grip impedance) is not constant; it is directly modulated by muscle activation, which is part of the control input $u$.
 If the boundary conditions depend on $u$, then the mode shapes $\phi_i$ depend on $u$. Consequently, the mass matrix $M$ (which involves integrals of $\phi_i$) becomes a function of $u$, i.e., $M(x,u)$.
 If $M$ depends on $u$, the system is no longer control-affine ($\ddot{q} = M(u)^{-1}(\dots)$), and the "Drift Invariance" property fails mathematically.
