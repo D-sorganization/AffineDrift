@@ -1,3 +1,21 @@
+# Implementation Handoff — union-merge repair of DEVELOPMENT_LOG and HANDOFF (#4703)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-doc-union-repair`
+- Branch: `claude/doc-union-repair`; base main 3471f7d3; commit SELF; PR: #4703 (draft)
+- Objective: line-hunk union merges spliced concurrent PRs' entries into each other. Each
+  damaged DL entry (#4541, #4548, #4504, #4567, #4595, #4596, #4588) and HANDOFF section
+  (bodiless or with repeated `##` headings) was replaced by its own PR's non-merge version;
+  the duplicate "Hide, Mark, or Retire Stub Hubs (#4500)" H1 was dropped. Structural only.
+- Decisions: intact sections keep main's text, including later edits. The #4617, #4529, #4508
+  and #4493 H1s were bare headings (successor PRs overwrote each body in place); their bodies
+  are restored from their own PRs. #4567's own commit had overwritten the #4488 heading, so its
+  section is cut before the orphaned #4488 body. #4500 keeps main's "Merged to main" status.
+- Validation: every non-blank line on main is still present; the only new lines are those four
+  restored bodies. `pytest tests/test_development_docs_structure.py` fails 3/3 on main and
+  passes 3/3 here; `python -m scripts.check_spec_changelog` passes.
+- Next: owner review of the draft PR. The union merge policy in the fleet-managed
+  consolidation section will keep causing this; fix it upstream in Repository_Management.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
@@ -79,6 +97,7 @@
 3. Decide (frontier/owner) whether the optional email digest is still wanted
    for this issue or should be split into its own follow-up, since it is not
    one of the two checkbox acceptance criteria.
+
 # Manifesto Consolidation — #4592
 
 - Repository: `D-sorganization/AffineDrift`, working directory: this worktree (`claude-4592`).
@@ -129,6 +148,7 @@
 - Next steps: none outstanding for this issue. If the reviewing frontier agent
   wants full retirement/redirect of the single-file edition, track that as
   WEB-02.4's per-family ADR work rather than folding it into this issue.
+
 # Fixture and Dataset Explorer — 2026-09-30
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -230,7 +250,123 @@
   re-run `scripts/generate_dataset_explorer_manifest.py` to pick them up automatically.
 - Next steps: push the branch, open the draft PR (`Fixes #4541`), and watch CI's
   `quarto render`/Playwright lane and the full `pytest --cov` job for the new page and files.
+
 # Implementation Handoff — Print and PDF Editions for Books and Core Series (#4550)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4550
+- Branch: claude/issue-4550
+- Baseline commit: 047fc82b (origin/main)
+- Implementation commit: SELF
+- Pull request: to be opened as a draft by this session
+- Governing issue/epic: #4550 (WEB-07.9, part of epic #4552 "E7 — Researcher Infrastructure")
+
+## Objective and Status
+
+- Objective: three acceptance criteria — (1) PDFs built in CI and linked from the header card,
+  (2) one print stylesheet, (3) print includes typeset math.
+- Status: **partial / honest-scope**. Criteria (2) and (3) are implemented and tested. Criterion
+  (1) is deliberately not implemented — see Blocked below.
+- Completed:
+  - `css/print.css` / `styles.css`: merged the two competing `@media print` blocks (the
+    comprehensive one in `css/print.css` and the "In Layman's Terms" one at `styles.css:1788`)
+    into `css/print.css` alone, so exactly one print stylesheet exists.
+  - `css/print.css`: changed `@page { size: a4; }` to `size: auto`, so the browser honors the
+    printer/OS paper-size choice instead of forcing A4 — this is how a static CSS stylesheet
+    supports both Letter and A4 (there is no CSS construct to force "either A4 or Letter";
+    `auto` is the standard way to defer to the print dialog).
+  - `js/pdf.js`: new `initPrintMathTypesetting()`, wired from `main.js`, registers a
+    `beforeprint` listener that calls `MathJax.typesetPromise()`. The existing `.export-to-pdf`
+    button already delayed printing by `MATHJAX_RENDER_DELAY_MS` but never actually forced a
+    typeset, and neither path covered a native Ctrl+P print. Because MathJax here is
+    lazy-loaded (`loader.load: ['ui/lazy']`), off-screen math is left as raw TeX until scrolled
+    into view (the concern named by the referenced WEB-11.3), so this is the "typesetting is
+    forced before print" fallback WEB-11.3 itself describes.
+  - Tests: `tests/test_print_stylesheet_consolidation.py` (4 tests, written first, RED confirmed
+    against the pre-change two-block/A4-only state), plus new `tests/pdf.test.js` (2 tests) for
+    the `beforeprint` handler.
+- **Blocked:** criterion (1), "PDFs built in CI and linked from the header card," was not
+  implemented. Investigation found:
+  - The compiled book PDFs (`articles/The_Physics_of_Golf/main.pdf`,
+    `articles/The_Geometry_of_Motion/Volume_*/main.pdf`, `articles/Launch_Monitor_Technology_Review/main.pdf`)
+    are hand-committed binaries built from a separate LaTeX source tree
+    (`main.tex`/`chapters/`). `.github/workflows/compile-textbooks.yml` already compiles and
+    verifies them in CI on every push/PR that touches `.tex`/`.bib` sources, but only uploads
+    them as 14-day CI artifacts — it does not commit them back or publish them to `docs/`.
+  - The web-reading experience for those same two books is a **second, independent** Quarto
+    source tree (`articles/The_Physics_of_Golf/quarto/*.qmd`,
+    `articles/The_Geometry_of_Motion/quarto/*.qmd`), with no automated check that the two trees
+    stay in sync. Linking the committed PDF from every chapter's header card
+    (`scripts/filters/page-header-card.lua`) without a freshness guarantee risks silently
+    surfacing a stale/diverged "official" PDF next to the live HTML chapter — a correctness
+    problem this repository's own tooling (claim-audit gates, `check_quarto_render_coverage.py`)
+    treats seriously elsewhere.
+  - The issue's "Proposal" text ("attached to releases and covered by the DOI") names
+    infrastructure that does not exist in this repository at all: no `CITATION.cff`, no GitHub
+    Releases workflow, no Zenodo/DOI integration. Building that is an architecture decision
+    (which release mechanism, which DOI provider, concept vs. versioned DOI), not a mechanical
+    change — `tier:strong` territory under this repo's own Agent Tiers rule regardless of this
+    issue's `tier:cli` label (the issue also independently carries `complexity:complex`).
+  - Scope of "header card" and "core series" is also open: every chapter across two books, six
+    Geometry-of-Motion volumes, and the proximal-distal monograph, or only each book's/series's
+    landing page? Guessing wrong here either ships a misleading stale-PDF link or a change the
+    frontier reviewer has to unwind.
+  - Per this session's own instructions ("do not guess; push what you have, open the draft PR
+    with a Blocked section, and stop"), criterion (1) is left for an owner/frontier decision
+    rather than guessed at.
+
+## Files and Decisions
+
+- Files changed:
+  - `css/print.css`: `@page` size `a4` → `auto`; added the merged-in "In Layman's Terms" print
+    rules.
+  - `styles.css`: removed its competing `@media print` block, replaced with a pointer comment.
+  - `js/pdf.js`: new `initPrintMathTypesetting()`.
+  - `js/main.js`: imports and calls `initPrintMathTypesetting()` from `./pdf.js`.
+  - `tests/test_print_stylesheet_consolidation.py`: new file, 4 tests.
+  - `tests/pdf.test.js`: new file, 2 tests for `initPrintMathTypesetting`.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
+- Key decisions: see "Completed" and "Blocked" above.
+- User-owned or unrelated worktree changes: none observed. Note: this file
+  (`docs/development/HANDOFF.md`) already contained a pre-existing unresolved merge-conflict
+  marker (`>>>>>>> origin/main`) further down, from a prior session's edit — not introduced or
+  touched by this change; flagged in the PR body rather than fixed here (out of this issue's
+  scope).
+
+## Validation
+
+- `python3 -m pytest tests/test_print_stylesheet_consolidation.py -q` — 4 passed.
+- `python3 -m pytest tests/test_page_header_card.py::test_print_stylesheet_includes_page_header_card_rules tests/test_summary_takeaways.py -k print -q` — 2 passed (unaffected by the merge).
+- `npx jest` — 26 suites, 437 passed, 19 skipped, 0 failed.
+- `python3 -m ruff check .` — all checks passed.
+- `python3 -m black --check --line-length 100 .` — all files unchanged.
+- `python3 -m scripts.check_css_architecture` — PASS (62 files scanned).
+- `python3 -m scripts.check_styles_budget` — PASS (3,314 / 3,400 line budget).
+
+## Blockers and Risks
+
+- Blocker: criterion (1) needs an owner/frontier decision on CI-publication freshness, header-card
+  link scope, and (per the Proposal text) release/DOI infrastructure choice — see "Blocked" above.
+- Risk: none to existing print/PDF behavior — the CSS merge is a pure relocation (same selectors,
+  same declarations) plus the `a4` → `auto` page-size change, and the new `beforeprint` handler is
+  additive and no-ops when `MathJax` is undefined.
+
+## Next Steps
+
+1. Push the branch and open the draft PR with `Fixes #4550` and the Blocked section above.
+2. Owner/frontier decides the deferred scope for criterion (1); implement in this issue or split
+   into a follow-up.
+
+## Change Log
+
+- `SELF` — Consolidate print CSS into one stylesheet, support Letter and A4, force MathJax
+  typesetting before print; defer the PDF-build/header-card-link criterion pending a scope
+  decision (#4550).
+
+---
+
 # Make the 404 Page and Empty States Useful — #4495 (WEB-01.10)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -290,6 +426,7 @@
 1. Once #4486 ("Start Here" page) and WEB-02.1 (Library navbar grouping) merge,
    add the two links to `404.qmd`'s `<nav aria-label="Helpful links">` list and
    close out the remaining acceptance criterion.
+
 # Math Accessibility Verification — #4565 (WEB-09.5)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -348,6 +485,7 @@
   the manual protocol in `docs/development/math-accessibility-verification-4565.md`
   and records results as a comment on #4565 before that criterion can be
   checked off.
+
 # Consolidate Inline "Recent" History Scripts — #4599
 
 - Repository: `D-sorganization/AffineDrift`, working directory: worktree `AffineDrift-worktrees/claude-4599`.
@@ -906,6 +1044,7 @@
 
 1. Push `claude/issue-4492` with this fix round.
 2. Awaiting frontier-agent re-review of PR #4677.
+
 # Deduplicate and Reconcile Bibliography Databases — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -1021,71 +1160,12 @@
   diff was performed.
 - Next steps: reworked draft PR #4676 is open with the honest remaining-scope disclosure in its
   body; awaiting owner/frontier review.
+
 # Implementation Handoff — Cross-Browser Coverage (#4564)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4550
-- Branch: claude/issue-4550
-- Baseline commit: 047fc82b (origin/main)
-- Implementation commit: SELF
-- Pull request: to be opened as a draft by this session
-- Governing issue/epic: #4550 (WEB-07.9, part of epic #4552 "E7 — Researcher Infrastructure")
-
-## Objective and Status
-
-- Objective: three acceptance criteria — (1) PDFs built in CI and linked from the header card,
-  (2) one print stylesheet, (3) print includes typeset math.
-- Status: **partial / honest-scope**. Criteria (2) and (3) are implemented and tested. Criterion
-  (1) is deliberately not implemented — see Blocked below.
-- Completed:
-  - `css/print.css` / `styles.css`: merged the two competing `@media print` blocks (the
-    comprehensive one in `css/print.css` and the "In Layman's Terms" one at `styles.css:1788`)
-    into `css/print.css` alone, so exactly one print stylesheet exists.
-  - `css/print.css`: changed `@page { size: a4; }` to `size: auto`, so the browser honors the
-    printer/OS paper-size choice instead of forcing A4 — this is how a static CSS stylesheet
-    supports both Letter and A4 (there is no CSS construct to force "either A4 or Letter";
-    `auto` is the standard way to defer to the print dialog).
-  - `js/pdf.js`: new `initPrintMathTypesetting()`, wired from `main.js`, registers a
-    `beforeprint` listener that calls `MathJax.typesetPromise()`. The existing `.export-to-pdf`
-    button already delayed printing by `MATHJAX_RENDER_DELAY_MS` but never actually forced a
-    typeset, and neither path covered a native Ctrl+P print. Because MathJax here is
-    lazy-loaded (`loader.load: ['ui/lazy']`), off-screen math is left as raw TeX until scrolled
-    into view (the concern named by the referenced WEB-11.3), so this is the "typesetting is
-    forced before print" fallback WEB-11.3 itself describes.
-  - Tests: `tests/test_print_stylesheet_consolidation.py` (4 tests, written first, RED confirmed
-    against the pre-change two-block/A4-only state), plus new `tests/pdf.test.js` (2 tests) for
-    the `beforeprint` handler.
-- **Blocked:** criterion (1), "PDFs built in CI and linked from the header card," was not
-  implemented. Investigation found:
-  - The compiled book PDFs (`articles/The_Physics_of_Golf/main.pdf`,
-    `articles/The_Geometry_of_Motion/Volume_*/main.pdf`, `articles/Launch_Monitor_Technology_Review/main.pdf`)
-    are hand-committed binaries built from a separate LaTeX source tree
-    (`main.tex`/`chapters/`). `.github/workflows/compile-textbooks.yml` already compiles and
-    verifies them in CI on every push/PR that touches `.tex`/`.bib` sources, but only uploads
-    them as 14-day CI artifacts — it does not commit them back or publish them to `docs/`.
-  - The web-reading experience for those same two books is a **second, independent** Quarto
-    source tree (`articles/The_Physics_of_Golf/quarto/*.qmd`,
-    `articles/The_Geometry_of_Motion/quarto/*.qmd`), with no automated check that the two trees
-    stay in sync. Linking the committed PDF from every chapter's header card
-    (`scripts/filters/page-header-card.lua`) without a freshness guarantee risks silently
-    surfacing a stale/diverged "official" PDF next to the live HTML chapter — a correctness
-    problem this repository's own tooling (claim-audit gates, `check_quarto_render_coverage.py`)
-    treats seriously elsewhere.
-  - The issue's "Proposal" text ("attached to releases and covered by the DOI") names
-    infrastructure that does not exist in this repository at all: no `CITATION.cff`, no GitHub
-    Releases workflow, no Zenodo/DOI integration. Building that is an architecture decision
-    (which release mechanism, which DOI provider, concept vs. versioned DOI), not a mechanical
-    change — `tier:strong` territory under this repo's own Agent Tiers rule regardless of this
-    issue's `tier:cli` label (the issue also independently carries `complexity:complex`).
-  - Scope of "header card" and "core series" is also open: every chapter across two books, six
-    Geometry-of-Motion volumes, and the proximal-distal monograph, or only each book's/series's
-    landing page? Guessing wrong here either ships a misleading stale-PDF link or a change the
-    frontier reviewer has to unwind.
-  - Per this session's own instructions ("do not guess; push what you have, open the draft PR
-    with a Blocked section, and stop"), criterion (1) is left for an owner/frontier decision
-    rather than guessed at.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4564
 - Branch: claude/issue-4564
 - Baseline commit: 047fc82b (origin/main)
@@ -1157,50 +1237,6 @@
 ## Files and Decisions
 
 - Files changed:
-  - `css/print.css`: `@page` size `a4` → `auto`; added the merged-in "In Layman's Terms" print
-    rules.
-  - `styles.css`: removed its competing `@media print` block, replaced with a pointer comment.
-  - `js/pdf.js`: new `initPrintMathTypesetting()`.
-  - `js/main.js`: imports and calls `initPrintMathTypesetting()` from `./pdf.js`.
-  - `tests/test_print_stylesheet_consolidation.py`: new file, 4 tests.
-  - `tests/pdf.test.js`: new file, 2 tests for `initPrintMathTypesetting`.
-  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
-- Key decisions: see "Completed" and "Blocked" above.
-- User-owned or unrelated worktree changes: none observed. Note: this file
-  (`docs/development/HANDOFF.md`) already contained a pre-existing unresolved merge-conflict
-  marker (`>>>>>>> origin/main`) further down, from a prior session's edit — not introduced or
-  touched by this change; flagged in the PR body rather than fixed here (out of this issue's
-  scope).
-
-## Validation
-
-- `python3 -m pytest tests/test_print_stylesheet_consolidation.py -q` — 4 passed.
-- `python3 -m pytest tests/test_page_header_card.py::test_print_stylesheet_includes_page_header_card_rules tests/test_summary_takeaways.py -k print -q` — 2 passed (unaffected by the merge).
-- `npx jest` — 26 suites, 437 passed, 19 skipped, 0 failed.
-- `python3 -m ruff check .` — all checks passed.
-- `python3 -m black --check --line-length 100 .` — all files unchanged.
-- `python3 -m scripts.check_css_architecture` — PASS (62 files scanned).
-- `python3 -m scripts.check_styles_budget` — PASS (3,314 / 3,400 line budget).
-
-## Blockers and Risks
-
-- Blocker: criterion (1) needs an owner/frontier decision on CI-publication freshness, header-card
-  link scope, and (per the Proposal text) release/DOI infrastructure choice — see "Blocked" above.
-- Risk: none to existing print/PDF behavior — the CSS merge is a pure relocation (same selectors,
-  same declarations) plus the `a4` → `auto` page-size change, and the new `beforeprint` handler is
-  additive and no-ops when `MathJax` is undefined.
-
-## Next Steps
-
-1. Push the branch and open the draft PR with `Fixes #4550` and the Blocked section above.
-2. Owner/frontier decides the deferred scope for criterion (1); implement in this issue or split
-   into a follow-up.
-
-## Change Log
-
-- `SELF` — Consolidate print CSS into one stylesheet, support Letter and A4, force MathJax
-  typesetting before print; defer the PDF-build/header-card-link criterion pending a scope
-  decision (#4550).
   - `.github/workflows/cross-browser-nightly.yml`: new nightly workflow.
   - `scripts/report_e2e_browser_failures.py`: new issue-filing script.
   - `tests/test_report_e2e_browser_failures.py`: new pytest suite.
@@ -1310,10 +1346,266 @@
   2. Mark ready, verify the remote head, arm via `automerge_guard.py`.
   3. After merge, close #4615, #4616 and #4618 as superseded and remove the
      seven `claude-<issue>` worktrees.
+
 # Implementation Handoff — Deploy Website Verification Fix (#4617)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/issue-4617-deploy-website-resources-books-error
+- Baseline commit: d53290cd92d8c90acd33ae91945c643bb9531296
+- Implementation commit: SELF
+- Pull request: not created
+- Governing issue/epic: #4617
+
+## Objective and Status
+
+- Objective: Fix Deploy Website failure on route /resources/resources-books.html and prevent non-first-party network errors from failing verification.
+- Status: in progress
+- Completed: Removed 18 fragile external book covers and fallback onerror 404 handler from resources-books.qmd; updated scripts/public-site-browser-noise.js to filter Failed to load resource: net::ERR_ console noise; added test coverage in tests/public-site-verifier.test.js.
+- Remaining: Verification suite completion, PR creation, and agent lease release.
+
+## Files and Decisions
+
+- Files changed:
+  - `resources/resources-books.qmd`: Removed fragile external book cover media slots and fallback onerror handlers from all 18 cards to make all 31 book cards uniform text cards and prevent network and 404 failures.
+  - `scripts/public-site-browser-noise.js`: Added filter for `Failed to load resource: net::ERR_` in `isActionableConsoleError` to prevent third-party network flakiness from failing verification.
+  - `tests/public-site-verifier.test.js`: Added test assertions verifying `isActionableConsoleError` ignores `net::ERR_` noise while preserving actionable errors.
+  - `data/trust/claim_audit_inventory.json` & generated trust registries: Regenerated claim audit evidence digests following resource book source update.
+  - `SPEC.md`: Added change-log row for #4617.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: First-party network failures remain caught by `onRequestFailed` and `navigateWithRetry`, so filtering Chromium console's `net::ERR_` does not hide first-party regressions while protecting the verification gate against intermittent external timeouts or unreachable CDNs.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
+- `npx jest` — PASS (25 suites passed, 420 passed)
+- `python -m ruff check .` — PASS (All checks passed)
+- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
+- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
+- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
+- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+
+## Next Steps
+
+1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
+2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
+3. Release agent lease for #4617.
+
+## Change Log
+
+- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+
+---
+
 # Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-05-9-passive-active-nomenclature-4529
+- Baseline commit: 785d165f973007077a94ddf2252a1ba2eef69bb3
+- Implementation commit: SELF
+- Pull request: #4630
+- Governing issue/epic: #4529
+
+## Objective and Status
+
+- Objective: Resolve passive/active nomenclature conflict in The Physics of Golf nomenclature.tex by aligning definitions with NOTATION.md and enforcing via check_terminology gate.
+- Status: in progress
+- Completed: Updated articles/The_Physics_of_Golf/nomenclature.tex subscript, force, vector field, and power definitions to reference autonomous plant evolution (u=0) and declared control channels; extended scripts/check_terminology.py with banned patterns for drift passivity and active muscular overclaims; added unit test coverage in tests/test_check_terminology.py; added change-log row in SPEC.md.
+- Remaining: Pre-commit verification suite completion, PR creation, auto-merge arming, and agent lease release.
+
+## Files and Decisions
+
+- Files changed:
+  - `articles/The_Physics_of_Golf/nomenclature.tex`: Aligned drift and control subscript conventions, generalized drift and control force definitions, drift and control vector field definitions, and drift and control power definitions with NOTATION.md autonomous plant mechanics.
+  - `scripts/check_terminology.py`: Added banned patterns banning equating drift with passivity or control input with muscular activations, and tightened qualifiers typing.
+  - `tests/test_check_terminology.py`: Added parameterized unit test cases for the new banned terminology rules.
+  - `SPEC.md`: Added change-log row for #4529.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Drift is strictly defined as the complete autonomous evolution of the declared effective plant with zero applied control (u=0), never equating drift to passivity or unassisted movement; control is defined as the declared control channel (B u), avoiding direct biological/muscular overclaims.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `npx jest tests/public-site-verifier.test.js` — PASS (27 passed)
+- `npx jest` — PASS (25 suites passed, 420 passed)
+- `python -m ruff check .` — PASS (All checks passed)
+- `python -m black --check --line-length 100 .` — PASS (733 files would be left unchanged)
+- `pytest tests/test_page_style_discipline.py` — PASS (129 passed)
+- `pytest tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py` — PASS (19 passed)
+- `pytest tests/test_root_hygiene.py` — PASS (6 passed)
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py handoff` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none; book cards render cleanly without image slots, consistent with the other 13 cards on the page.
+
+## Next Steps
+
+1. Complete `pytest -q` and `fleet_hooks.py handoff` verification.
+2. Commit changes, push branch, and submit PR closing #4617 with auto-merge armed.
+3. Release agent lease for #4617.
+
+## Change Log
+
+- SELF — Update claim audit evidence digests for normalized LF line endings (#4617).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+
+---
+
 # Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: feat/web-03-3-summary-and-key-takeaways-4508
+- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
+- Implementation commit: e7fd6342
+- Pull request: #4631
+- Governing issue/epic: #4508 (epic #4514)
+
+## Objective and Status
+
+- Objective: Render plain-language summary and key takeaways from front matter beneath page header, visible without interaction, printed in print stylesheet, and suppressing legacy lay blocks.
+- Status: ready for PR
+- Completed:
+  - Created `scripts/filters/summary-takeaways.lua` Pandoc Lua filter extracting `summary-plain` and `key-takeaways` from front matter and suppressing duplicate legacy lay blocks.
+  - Created `css/components/summary-takeaways.css` component stylesheet and registered in `styles.css`.
+  - Added print rules in `css/print.css`.
+  - Registered Lua filter in `_quarto.yml`.
+  - Added TDD integration and unit tests in `tests/test_summary_takeaways.py` (7 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all pre-commit checks.
+- Remaining: Submit PR, key row in `SPEC.md`, arm auto-merge, release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/filters/summary-takeaways.lua`: Component Lua filter.
+  - `css/components/summary-takeaways.css`: Modern card styles with accessible contrast and semantic layout.
+  - `css/print.css`: Print rules preventing page breaks inside the takeaways card.
+  - `styles.css`: Component `@import`.
+  - `_quarto.yml`: Filter registration.
+  - `tests/test_summary_takeaways.py`: TDD test suite.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Single component driven by front matter; no collapsible state or JS toggle required; cleanly replaces legacy HTML raw lay blocks when front matter is defined.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_summary_takeaways.py` — PASS (7 passed in 14s)
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check tests/test_summary_takeaways.py` — PASS
+- `python -m black --check --line-length 100 tests/test_summary_takeaways.py` — PASS
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Create pull request referencing `Closes #4508` with label `agent:local`.
+2. Update row in `SPEC.md` to reference PR number.
+3. Arm auto-merge (`--squash`).
+4. Release lease on #4508 in `Repository_Management`.
+
+## Change Log
+
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+
+---
+
 # Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-01-8-learning-path-contradictions-4493
+- Baseline commit: c72f59e19661f237583ee91e92d2740fffc4c94b
+- Implementation commit: SELF
+- Pull request: #4634
+- Governing issue/epic: #4493
+
+## Objective and Status
+
+- Objective: Correct learning-path difficulty contradictions, prerequisites, and chapter references across AffineDrift learning path pages.
+- Status: ready for review / auto-merge
+- Completed:
+  - Created single source of truth in `config/learning_paths.yml` specifying duration, weeks, difficulty, and prerequisites.
+  - Aligned `resources/learning-paths.qmd` Quick Navigation table with individual path pages (Control Theory to Advanced, Golf Science to Introductory to Intermediate).
+  - Fixed prerequisite contradiction in `resources/learning-path-foundations.qmd` ("No prerequisites assumed" replaced with "Assumes only high school algebra and trigonometry").
+  - Consolidated duplicate 3Blue1Brown reading entry in Foundations Module 1.
+  - Linked Golf Science Module 1 to exact target chapters (ch28 impact, ch19 drag, ch31 launch) instead of generic "Chapters 1–3".
+  - Aligned Biomechanics schedule to 16 weeks and removed Module 7 / Module 8 week overlap.
+  - Added comprehensive test suite in `tests/test_learning_paths.py` (7 tests).
+  - Regenerated claim audit evidence in `data/trust/claim_audit_inventory.json` and verified with `python -m scripts.regenerate_claim_audit_evidence --check`.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, create PR, arm auto-merge, and release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `config/learning_paths.yml`: Created single source of truth for learning path metadata.
+  - `resources/learning-paths.qmd`: Updated Quick Navigation difficulty ratings to match detailed path pages.
+  - `resources/learning-path-foundations.qmd`: Fixed subtitle prerequisite contradiction and removed duplicate 3Blue1Brown entry.
+  - `resources/learning-path-golf-science.qmd`: Updated Module 1 reading to link to chapters 28, 19, and 31.
+  - `resources/learning-path-biomechanics.qmd`: Updated subtitle to 16 weeks and Module 8 to Weeks 15–16.
+  - `tests/test_learning_paths.py`: Added consistency and reference regression tests.
+  - `data/trust/claim_audit_inventory.json`: Updated review evidence digest for modified learning-path-biomechanics.qmd.
+  - `SPEC.md`: Added change-log entry for #4493.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Single source of truth in YAML keeps hub table and individual path pages synchronized; hours/hrs format normalized in tests.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_learning_paths.py` — PASS (7 passed)
+- `python -m ruff check tests/test_learning_paths.py` — PASS
+- `python -m black --check --line-length 100 tests/test_learning_paths.py` — PASS
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Create PR with label `agent:local` closing #4493.
+2. Arm auto-merge (squash).
+3. Release claim lease.
+
+## Change Log
+
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
+
+---
+
 # Configure Search, and Include Maturity in Results — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -1404,6 +1696,7 @@
   unrelated to this change.
 - Next steps: push the branch, open the draft PR, and watch CI's `e2e-tests` job for the new
   ZTCF search spec.
+
 # DCR Visualiser Widget — #4535 (WEB-06.5)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -1526,6 +1819,33 @@
 ---
 
 # Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
+- Baseline commit: fc36109d (origin/main)
+- Implementation commit: 67256799
+- Pull request: #4664 (https://github.com/D-sorganization/AffineDrift/pull/4664)
+- Governing issue: #4500 (WEB-02.6)
+
+## Objective and Status
+
+- Objective: Hide, mark, or retire stub hubs and enforce scaffolding styling policy:
+  1. Scaffolding/stub pages must never use success styling (`status-banner--success`, `callout-success`, etc.).
+  2. No hub card links to a page under 300 words unless it carries a Planned badge.
+- Status: Merged to main in PR #4664.
+- Completed:
+  - Added `.status-pill--planned` and `.status-badge--planned` CSS styles in `css/components/status-banner.css` and bundled to `docs/styles.css`.
+  - Replaced misleading success status styling on scaffolding pages (`resources/research-reviews.qmd`, `pages/book-reviews.qmd`, individual review stubs, `pages/daydreams-doodles.qmd`) with warning status styling indicating planned / scaffolding phase expected 2026-Q4.
+  - Replaced promoted stub card on `resources/resources.qmd` with Research Reviews hub card carrying `Planned` badge.
+  - Added `Planned` badges to all 4 review entries on `resources/research-reviews.qmd`, to `Dead Fish Swimming Upstream` on `pages/tools.qmd`, and `(Planned)` marks to inward links on `resources/resources-books.qmd`, `resources/resources-papers.qmd`, and `resources/resources-researchers.qmd`.
+  - Implemented `scripts/check_scaffolding_styling.py` to enforce that scaffolding pages never use success styling and that hub cards linking to stubs (< 300 words) carry a Planned badge.
+  - Added comprehensive test suite `tests/test_check_scaffolding_styling.py` (13 tests) and wired check into `.github/workflows/ci-standard.yml`.
+  - Regenerated claim audit evidence digests (`data/trust/` and `reports/`).
+
+---
+
 # Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
 ## Identity
@@ -1571,31 +1891,6 @@
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
 - Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
 - User-owned or unrelated worktree changes: none observed
-
----
-
-# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
-
-- Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
-- Baseline commit: fc36109d (origin/main)
-- Implementation commit: 67256799
-- Pull request: #4664 (https://github.com/D-sorganization/AffineDrift/pull/4664)
-- Governing issue: #4500 (WEB-02.6)
-
-## Objective and Status
-
-- Objective: Hide, mark, or retire stub hubs and enforce scaffolding styling policy:
-  1. Scaffolding/stub pages must never use success styling (`status-banner--success`, `callout-success`, etc.).
-  2. No hub card links to a page under 300 words unless it carries a Planned badge.
-- Status: Merged to main in PR #4664.
-- Completed:
-  - Added `.status-pill--planned` and `.status-badge--planned` CSS styles in `css/components/status-banner.css` and bundled to `docs/styles.css`.
-  - Replaced misleading success status styling on scaffolding pages (`resources/research-reviews.qmd`, `pages/book-reviews.qmd`, individual review stubs, `pages/daydreams-doodles.qmd`) with warning status styling indicating planned / scaffolding phase expected 2026-Q4.
-  - Replaced promoted stub card on `resources/resources.qmd` with Research Reviews hub card carrying `Planned` badge.
-  - Added `Planned` badges to all 4 review entries on `resources/research-reviews.qmd`, to `Dead Fish Swimming Upstream` on `pages/tools.qmd`, and `(Planned)` marks to inward links on `resources/resources-books.qmd`, `resources/resources-papers.qmd`, and `resources/resources-researchers.qmd`.
-  - Implemented `scripts/check_scaffolding_styling.py` to enforce that scaffolding pages never use success styling and that hub cards linking to stubs (< 300 words) carry a Planned badge.
-  - Added comprehensive test suite `tests/test_check_scaffolding_styling.py` (13 tests) and wired check into `.github/workflows/ci-standard.yml`.
-  - Regenerated claim audit evidence digests (`data/trust/` and `reports/`).
 
 ---
 
@@ -1694,7 +1989,159 @@
 ---
 
 # Implementation Handoff — Social Cards per Page (#4578)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4578
+- Branch: claude/issue-4578
+- Governing issue/epic: #4578 (WEB-10.10, part of epic #4579 "E10 — Performance, SEO, and Privacy")
+- Pull request: opened as a draft by this session (see PR link in the commit that follows)
+
+## Objective and Status
+
+- Objective: generate per-book/per-series Open Graph social card images (title,
+  badge, and the site signature graphic) at build time instead of relying on
+  one site-wide card for every page.
+- Status: **complete for the two stated acceptance criteria within this
+  issue's scope**, with one caveat noted below.
+- Completed:
+  - TDD: `tests/test_social_cards.py` (7 tests, written first, RED confirmed
+    against the missing module before implementation).
+  - `scripts/generate_social_cards.py`: renders one 1200x630 PNG per
+    configured book/series (badge pill + wrapped title + the existing
+    `logo/logo-icon-512.png` signature graphic), following the same
+    checked-in-asset + `--check` pattern as `scripts/optimize_images.py`'s
+    existing site-wide `logo/og-card.png`.
+  - `logo/social-cards/{physics-of-golf,geometry-of-motion,proximal-distal-energy-transfer}.png`:
+    the three generated cards, checked in.
+  - Per-page `open-graph`/`twitter-card` `image` overrides added to the three
+    representative book/series landing pages
+    (`articles/The_Physics_of_Golf/quarto/index.qmd`,
+    `articles/The_Geometry_of_Motion/quarto/index.qmd`,
+    `articles/proximal_distal_energy_transfer/index.qmd`), overriding the
+    site-wide default set in `_quarto.yml`.
+  - `.github/workflows/deploy-website.yml`: new "Verify Per-Book/Series Social
+    Cards" step (`scripts/generate_social_cards.py --check`), mirroring the
+    existing "Verify Optimized Image Derivatives" step.
+- Caveat: the issue's second acceptance criterion ("Validated with a
+  social-card debugger on three pages") requires a public, deployed URL for
+  each page — social-card debugger tools (Facebook Sharing Debugger, Twitter
+  Card Validator, opengraph.xyz, etc.) fetch the live page over HTTP and
+  cannot be run against an unmerged branch or a local render. This PR
+  implements and tests the generation and per-page wiring (the three chosen
+  pages render valid, correctly sized OG/Twitter images with distinct
+  title/badge per book), but the live debugger pass itself must happen after
+  merge and deploy to `https://affinedrift.com`.
+
+## Files and Decisions
+
+- Key decisions:
+  - Three representative landing pages (the two textbooks with dedicated
+    `index.qmd` pages plus the one monograph) were chosen to satisfy "on three
+    pages" concretely rather than generating cards for every book/series in
+    the sidebar, which the issue did not ask for.
+  - `ImageFont.load_default(size=...)` (Pillow >= 10.1) is used instead of a
+    vendored or system TrueType font, so card rendering is deterministic
+    across the Windows dev environment and the Linux CI runner without adding
+    a new font asset.
+  - Per-page `open-graph:`/`twitter-card:` YAML blocks (matching the same keys
+    already used site-wide in `_quarto.yml`) were used for the override,
+    rather than the generic Quarto `image:` field, to make the override
+    explicit and symmetric with the site-level config it replaces.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest tests/test_social_cards.py tests/test_image_budget.py -q` — 13 passed.
+- `python -m ruff check scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
+- `python -m black --check --line-length 100 scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
+- `python scripts/generate_social_cards.py --check` — PASS.
+- `python -m scripts.check_module_size_budget` — PASS.
+- `python -m scripts.check_tech_debt_budget` — PASS.
+- YAML frontmatter of the three edited `.qmd` files and the edited workflow
+  file validated with `yaml.safe_load`.
+
+## Blockers and Risks
+
+- Blocker: none for the generation/wiring work in this PR.
+- Risk: the live social-card-debugger validation (acceptance criterion 2)
+  cannot be executed by an agent pre-merge; it needs a human or a follow-up
+  automated check to run post-deploy against the three live URLs.
+
+## Next Steps
+
+1. After merge and the next site deploy, run a social-card debugger against
+   the three pages' live URLs to close out acceptance criterion 2.
+
+## Change Log
+
+- `SELF` — Generate per-book/series Open Graph social cards at build time and wire three landing pages to use them (#4578).
+
+---
+
 # Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4567
+- Branch: claude/issue-4567
+- Baseline commit: 02507aac
+- Implementation commit: SELF
+- Pull request: not created yet (draft PR opened this session)
+- Governing issue/epic: #4567 (epic #4569)
+
+## Objective and Status
+
+- Objective: Wire `scripts/validate_accessibility.py` into `quality-gate` and add a check requiring complex E8 SVG diagrams to carry a long description.
+- Status: Implementation complete; draft PR pending.
+- Completed:
+  - Added `check_long_description_for_diagrams()` to `scripts/validate_accessibility.py`: flags an SVG image reference in a QMD file unless the file also has an `aria-describedby` resolved to an in-page element, or a `<details>` "long description" disclosure.
+  - Fixed a pre-existing latent bug: the QMD loop in `validate_accessibility()` called `qmd_file.relative_to(repo_root)`, but `collect_qmd_files()` returns CWD-relative paths, not absolute ones, so any real finding crashed the script (previously dormant because every existing check found zero issues repo-wide). Now uses the path as-is, matching `seo_audit.py`'s convention.
+  - Discovered the new check would flag 39 pre-existing QMD files whose SVG figures are matplotlib-generated data plots that predate the E8 diagram work, not the hand-authored explanatory diagrams E8 specifies. Added `config/accessibility-long-description-baseline.json` (same `_comment`/`accepted` shape as `tree-parity-baseline.json`/`terminology-baseline.json`) to grandfather them, so the new check only blocks new/changed content.
+  - Discovered the script's existing CSS colorblind-safe-color and JS ARIA-label checks also have unrelated pre-existing findings (dozens of CSS colors, `js/main.js`) with no baseline. Added a `--qmd-only` flag to `validate_accessibility()`/`main()` so CI wires only the in-scope checks (alt text, heading hierarchy, long descriptions); the CSS/JS checks stay unwired pending their own baseline/cleanup work (out of #4567's scope; flagged in the PR body).
+  - Added `.github/workflows/ci-standard.yml` step "Verify Alt Text and Long Descriptions" running `python3 scripts/validate_accessibility.py --qmd-only` in the `static-checks` job that feeds `quality-gate`.
+  - Added tests in `tests/test_validate_accessibility.py` for the new check (non-SVG images ignored, missing long description flagged, `aria-describedby` pass, `<details>` disclosure pass, dangling `aria-describedby` still flagged).
+  - Added a `SPEC.md` change-log row keyed to #4567.
+- Remaining: Open the draft PR.
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/validate_accessibility.py`: new `check_long_description_for_diagrams()`, baseline loader, `qmd_only` param, `--qmd-only` CLI flag, `relative_to` bugfix.
+  - `config/accessibility-long-description-baseline.json`: new baseline of 39 pre-existing files.
+  - `tests/test_validate_accessibility.py`: new `TestLongDescriptionForDiagrams` class.
+  - `.github/workflows/ci-standard.yml`: new CI step in `static-checks`.
+  - `SPEC.md`: change-log row.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
+- Key decisions:
+  - "Complex diagram" is scoped to SVG image references, matching E8's stated format (WEB-08.2/08.3 specify SVG diagrams with a long description); PNG/JPEG figures are unaffected.
+  - The long-description check is file-wide (permissive), matching this module's existing style (`check_colorblind_safe_colors`'s docstring states the same rationale) rather than requiring a 1:1 image-to-description mapping.
+  - CSS/JS checks are deliberately left out of the CI step rather than baselined, since remediating dozens of CSS color findings and the JS ARIA gap is unrelated scope; this is called out as a known gap in the PR body rather than silently fixed or silently wired in as a failure.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest tests/test_validate_accessibility.py` — PASS (20 passed)
+- `python -m ruff check scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python -m black --check --line-length 100 scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python3 scripts/validate_accessibility.py --qmd-only` (PYTHONPATH=.) — exit 0 across the full repo
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 scripts/check_module_size_budget.py` — PASS
+- `python3 scripts/check_root_hygiene.py` — PASS
+- `python3 scripts/check_workflow_action_pins.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: the 39-file baseline is a one-time grandfather; new SVG diagrams added anywhere (including under E8) must supply a long description or add themselves to the baseline (not recommended) to pass CI. The CSS/JS checks remaining unwired is a known gap, not a defect introduced by this change.
+
+## Next Steps
+
+1. Open the draft PR for #4567 and note the unwired CSS/JS checks as follow-up scope in its body.
+
+---
 
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
@@ -1783,46 +2230,6 @@
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4578
-- Branch: claude/issue-4578
-- Governing issue/epic: #4578 (WEB-10.10, part of epic #4579 "E10 — Performance, SEO, and Privacy")
-- Pull request: opened as a draft by this session (see PR link in the commit that follows)
-
-## Objective and Status
-
-- Objective: generate per-book/per-series Open Graph social card images (title,
-  badge, and the site signature graphic) at build time instead of relying on
-  one site-wide card for every page.
-- Status: **complete for the two stated acceptance criteria within this
-  issue's scope**, with one caveat noted below.
-- Completed:
-  - TDD: `tests/test_social_cards.py` (7 tests, written first, RED confirmed
-    against the missing module before implementation).
-  - `scripts/generate_social_cards.py`: renders one 1200x630 PNG per
-    configured book/series (badge pill + wrapped title + the existing
-    `logo/logo-icon-512.png` signature graphic), following the same
-    checked-in-asset + `--check` pattern as `scripts/optimize_images.py`'s
-    existing site-wide `logo/og-card.png`.
-  - `logo/social-cards/{physics-of-golf,geometry-of-motion,proximal-distal-energy-transfer}.png`:
-    the three generated cards, checked in.
-  - Per-page `open-graph`/`twitter-card` `image` overrides added to the three
-    representative book/series landing pages
-    (`articles/The_Physics_of_Golf/quarto/index.qmd`,
-    `articles/The_Geometry_of_Motion/quarto/index.qmd`,
-    `articles/proximal_distal_energy_transfer/index.qmd`), overriding the
-    site-wide default set in `_quarto.yml`.
-  - `.github/workflows/deploy-website.yml`: new "Verify Per-Book/Series Social
-    Cards" step (`scripts/generate_social_cards.py --check`), mirroring the
-    existing "Verify Optimized Image Derivatives" step.
-- Caveat: the issue's second acceptance criterion ("Validated with a
-  social-card debugger on three pages") requires a public, deployed URL for
-  each page — social-card debugger tools (Facebook Sharing Debugger, Twitter
-  Card Validator, opengraph.xyz, etc.) fetch the live page over HTTP and
-  cannot be run against an unmerged branch or a local render. This PR
-  implements and tests the generation and per-page wiring (the three chosen
-  pages render valid, correctly sized OG/Twitter images with distinct
-  title/badge per book), but the live debugger pass itself must happen after
-  merge and deploy to `https://affinedrift.com`.
 - Branch: fix/web-01-6-how-to-read-this-site-4491
 - Baseline commit: fc36109d (origin/main)
 - Implementation commit: dd961a63
@@ -1841,9 +2248,6 @@
   - Integrated `How to Read This Site` into `_quarto.yml` navbar Read menu and footer navigation.
   - Added unit test suite `tests/test_how_to_read.py` (6 tests).
   - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
-
-
----
 
 # Implementation Handoff — Unified Publication Status Badge Component (#4516)
 
@@ -1957,18 +2361,6 @@
 ## Files and Decisions
 
 - Key decisions:
-  - Three representative landing pages (the two textbooks with dedicated
-    `index.qmd` pages plus the one monograph) were chosen to satisfy "on three
-    pages" concretely rather than generating cards for every book/series in
-    the sidebar, which the issue did not ask for.
-  - `ImageFont.load_default(size=...)` (Pillow >= 10.1) is used instead of a
-    vendored or system TrueType font, so card rendering is deterministic
-    across the Windows dev environment and the Linux CI runner without adding
-    a new font asset.
-  - Per-page `open-graph:`/`twitter-card:` YAML blocks (matching the same keys
-    already used site-wide in `_quarto.yml`) were used for the override,
-    rather than the generic Quarto `image:` field, to make the override
-    explicit and symmetric with the site-level config it replaces.
   - Cache path is `docs` + `.quarto` (not `_freeze/`): this site has no executable code cells
     (per the existing "Build site for E2E" comment), so Quarto's freeze mechanism buys nothing;
     the actual expensive artifact is the rendered HTML output itself.
@@ -1983,33 +2375,6 @@
 - User-owned or unrelated worktree changes: none observed.
 
 ## Validation
-
-- `python -m pytest tests/test_social_cards.py tests/test_image_budget.py -q` — 13 passed.
-- `python -m ruff check scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
-- `python -m black --check --line-length 100 scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
-- `python scripts/generate_social_cards.py --check` — PASS.
-- `python -m scripts.check_module_size_budget` — PASS.
-- `python -m scripts.check_tech_debt_budget` — PASS.
-- YAML frontmatter of the three edited `.qmd` files and the edited workflow
-  file validated with `yaml.safe_load`.
-
-## Blockers and Risks
-
-- Blocker: none for the generation/wiring work in this PR.
-- Risk: the live social-card-debugger validation (acceptance criterion 2)
-  cannot be executed by an agent pre-merge; it needs a human or a follow-up
-  automated check to run post-deploy against the three live URLs.
-
-## Next Steps
-
-1. After merge and the next site deploy, run a social-card debugger against
-   the three pages' live URLs to close out acceptance criterion 2.
-
-## Change Log
-
-- `SELF` — Generate per-book/series Open Graph social cards at build time and wire three landing pages to use them (#4578).
-
----
 
 - `python -m pytest tests/test_deployment_integrity.py` — 16 passed, 1 skipped.
 - `python -m pytest tests/test_workflow_action_pins.py` — 2 passed.
@@ -2096,31 +2461,10 @@
 - Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
 
 # Implementation Handoff — Report Broken External Links as Issues (#4596)
-# Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
-- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4567
-- Branch: claude/issue-4567
-- Baseline commit: 02507aac
-- Implementation commit: SELF
-- Pull request: not created yet (draft PR opened this session)
-- Governing issue/epic: #4567 (epic #4569)
-
-## Objective and Status
-
-- Objective: Wire `scripts/validate_accessibility.py` into `quality-gate` and add a check requiring complex E8 SVG diagrams to carry a long description.
-- Status: Implementation complete; draft PR pending.
-- Completed:
-  - Added `check_long_description_for_diagrams()` to `scripts/validate_accessibility.py`: flags an SVG image reference in a QMD file unless the file also has an `aria-describedby` resolved to an in-page element, or a `<details>` "long description" disclosure.
-  - Fixed a pre-existing latent bug: the QMD loop in `validate_accessibility()` called `qmd_file.relative_to(repo_root)`, but `collect_qmd_files()` returns CWD-relative paths, not absolute ones, so any real finding crashed the script (previously dormant because every existing check found zero issues repo-wide). Now uses the path as-is, matching `seo_audit.py`'s convention.
-  - Discovered the new check would flag 39 pre-existing QMD files whose SVG figures are matplotlib-generated data plots that predate the E8 diagram work, not the hand-authored explanatory diagrams E8 specifies. Added `config/accessibility-long-description-baseline.json` (same `_comment`/`accepted` shape as `tree-parity-baseline.json`/`terminology-baseline.json`) to grandfather them, so the new check only blocks new/changed content.
-  - Discovered the script's existing CSS colorblind-safe-color and JS ARIA-label checks also have unrelated pre-existing findings (dozens of CSS colors, `js/main.js`) with no baseline. Added a `--qmd-only` flag to `validate_accessibility()`/`main()` so CI wires only the in-scope checks (alt text, heading hierarchy, long descriptions); the CSS/JS checks stay unwired pending their own baseline/cleanup work (out of #4567's scope; flagged in the PR body).
-  - Added `.github/workflows/ci-standard.yml` step "Verify Alt Text and Long Descriptions" running `python3 scripts/validate_accessibility.py --qmd-only` in the `static-checks` job that feeds `quality-gate`.
-  - Added tests in `tests/test_validate_accessibility.py` for the new check (non-SVG images ignored, missing long description flagged, `aria-describedby` pass, `<details>` disclosure pass, dangling `aria-describedby` still flagged).
-  - Added a `SPEC.md` change-log row keyed to #4567.
-- Remaining: Open the draft PR.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4596 (worktree)
 - Branch: claude/issue-4596
 - Baseline commit: 02507aac (origin/main)
@@ -2163,16 +2507,6 @@
 ## Files and Decisions
 
 - Files changed:
-  - `scripts/validate_accessibility.py`: new `check_long_description_for_diagrams()`, baseline loader, `qmd_only` param, `--qmd-only` CLI flag, `relative_to` bugfix.
-  - `config/accessibility-long-description-baseline.json`: new baseline of 39 pre-existing files.
-  - `tests/test_validate_accessibility.py`: new `TestLongDescriptionForDiagrams` class.
-  - `.github/workflows/ci-standard.yml`: new CI step in `static-checks`.
-  - `SPEC.md`: change-log row.
-  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
-- Key decisions:
-  - "Complex diagram" is scoped to SVG image references, matching E8's stated format (WEB-08.2/08.3 specify SVG diagrams with a long description); PNG/JPEG figures are unaffected.
-  - The long-description check is file-wide (permissive), matching this module's existing style (`check_colorblind_safe_colors`'s docstring states the same rationale) rather than requiring a 1:1 image-to-description mapping.
-  - CSS/JS checks are deliberately left out of the CI step rather than baselined, since remediating dozens of CSS color findings and the JS ARIA gap is unrelated scope; this is called out as a known gap in the PR body rather than silently fixed or silently wired in as a failure.
   - `scripts/link-checker.py`: DOI-aware redirect handling, archive.org suggestions,
     structured warnings, `--json-report`.
   - `.github/workflows/link-checker.yml`: weekly schedule, `issues: write`, tracking-issue
@@ -2196,6 +2530,36 @@
   - The tracking issue is identified by an HTML-comment marker in its body plus the existing
     `ci`/`report`/`automation` labels (all already used elsewhere in the repo), rather than
     minting a new label.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `pytest tests/test_link_checker_script.py` — PASS (12 passed)
+- `pytest tests/test_link_checker_script.py tests/test_check_links.py tests/test_check_links_additional.py tests/test_link_utils.py` — PASS (79 passed)
+- `python -m ruff check scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m black --check --line-length 100 scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m scripts.check_spec_changelog` — PASS
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: the tracking-issue step is exercised only via the workflow's scheduled/
+  manual trigger in production GitHub Actions; it is not covered by a live integration test
+  (no local GitHub API to test against). The JSON-report plumbing and issue-body construction
+  logic were reviewed by hand against the existing `github-script` patterns in
+  `ci-benchmarks.yml`/`spec-check.yml`.
+
+## Next Steps
+
+1. Push branch and open a draft PR referencing `Fixes #4596`; release the fleet lease.
+
+---
+
+# Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4588
 - Branch: claude/issue-4588
 - Governing issue/epic: #4588 (epic #4594 "[E12] Editorial Voice and Plain-Language Standard")
@@ -2229,44 +2593,6 @@
 - User-owned or unrelated worktree changes: none observed.
 
 ## Validation
-
-- `python -m pytest tests/test_validate_accessibility.py` — PASS (20 passed)
-- `python -m ruff check scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
-- `python -m black --check --line-length 100 scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
-- `python3 scripts/validate_accessibility.py --qmd-only` (PYTHONPATH=.) — exit 0 across the full repo
-- `python3 -m scripts.check_spec_changelog` — PASS
-- `python3 scripts/check_module_size_budget.py` — PASS
-- `python3 scripts/check_root_hygiene.py` — PASS
-- `python3 scripts/check_workflow_action_pins.py` — PASS
-- `pytest tests/test_link_checker_script.py` — PASS (12 passed)
-- `pytest tests/test_link_checker_script.py tests/test_check_links.py tests/test_check_links_additional.py tests/test_link_utils.py` — PASS (79 passed)
-- `python -m ruff check scripts/link-checker.py tests/test_link_checker_script.py` — PASS
-- `python -m black --check --line-length 100 scripts/link-checker.py tests/test_link_checker_script.py` — PASS
-- `python -m scripts.check_spec_changelog` — PASS
-
-## Blockers and Risks
-
-- Blockers: none.
-- Risks/assumptions: the 39-file baseline is a one-time grandfather; new SVG diagrams added anywhere (including under E8) must supply a long description or add themselves to the baseline (not recommended) to pass CI. The CSS/JS checks remaining unwired is a known gap, not a defect introduced by this change.
-
-## Next Steps
-
-1. Open the draft PR for #4567 and note the unwired CSS/JS checks as follow-up scope in its body.
-
----
-
-
-- Risks/assumptions: the tracking-issue step is exercised only via the workflow's scheduled/
-  manual trigger in production GitHub Actions; it is not covered by a live integration test
-  (no local GitHub API to test against). The JSON-report plumbing and issue-body construction
-  logic were reviewed by hand against the existing `github-script` patterns in
-  `ci-benchmarks.yml`/`spec-check.yml`.
-
-## Next Steps
-
-1. Push branch and open a draft PR referencing `Fixes #4596`; release the fleet lease.
-
----
 
 - `python -m pytest tests/test_check_governance_vocabulary.py tests/test_check_terminology.py -m content_lint` — 52 passed.
 - `python -m ruff check scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.

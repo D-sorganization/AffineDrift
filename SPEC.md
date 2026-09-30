@@ -471,3 +471,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4523 | Add a generated evidence/claims.qmd Claim Ledger page (one accessible card per claim: plain/formal statement, evidence rung, falsifiers, related critiques, pages making the claim) and link every claim-making page back to it. |
 | 2026-09-29 | #4551 | Render PARAMETERS.md and add a one-page notation quick-reference card; remove pages/notation.qmd's duplicate heading and manual table of contents. |
 | 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |
+| 2026-09-30 | #4703 | Restore DEVELOPMENT_LOG.md entries and HANDOFF.md sections spliced by line-hunk union merges to each PR's own contiguous block (structural only) and add a pytest guarding against stacked or duplicated headings. |
