@@ -49,7 +49,15 @@
       body.appendChild(tr);
     }
     table.append(captionEl, head, body);
-    return table;
+    // Tables built after load miss js/forms.js's one-time wrapping pass, so
+    // give them the same keyboard-scrollable region it applies.
+    const wrapper = document.createElement('div');
+    wrapper.className = 'table-wrapper';
+    wrapper.setAttribute('tabindex', '0');
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', caption);
+    wrapper.appendChild(table);
+    return wrapper;
   }
 
   function buildDownload(fixturePath, bytes, hash) {

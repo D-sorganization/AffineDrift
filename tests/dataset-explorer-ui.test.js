@@ -114,6 +114,16 @@ test('renders an accessible table with a caption and column headers', async () =
   expect(table.querySelector('tbody th').getAttribute('scope')).toBe('row');
 });
 
+test('wraps each table in the site scroll region, as js/forms.js does for static tables', async () => {
+  await ui.init();
+  const table = document.querySelector('.de-family:nth-of-type(1) table.de-table');
+  const wrapper = table.parentElement;
+  expect(wrapper.classList.contains('table-wrapper')).toBe(true);
+  expect(wrapper.getAttribute('role')).toBe('region');
+  expect(wrapper.getAttribute('tabindex')).toBe('0');
+  expect(wrapper.getAttribute('aria-label')).toMatch(/record\.json/);
+});
+
 test('a failed manifest fetch reports the problem instead of rendering nothing silently', async () => {
   global.fetch = jest.fn(async () => ({ ok: false, status: 500 }));
   await ui.init();
