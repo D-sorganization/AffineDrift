@@ -119,6 +119,65 @@
   wants full retirement/redirect of the single-file edition, track that as
   WEB-02.4's per-family ADR work rather than folding it into this issue.
 # Implementation Handoff — Print and PDF Editions for Books and Core Series (#4550)
+# Make the 404 Page and Empty States Useful — #4495 (WEB-01.10)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4495`.
+- Branch `claude/issue-4495`, commit `SELF`; pull request: to be opened as a draft
+  by this session.
+- Governing issue: #4495 (WEB-01.10, epic #4496 / E1 — Audience Routing and
+  Onboarding Funnel). Acceptance criteria: (1) the 404 page links Start Here,
+  search, and the Library; (2) the contact address matches the About and
+  Contact pages.
+- Completed: fixed `404.qmd`'s broken-link `mailto:` address, which pointed at
+  a personal Gmail account (`dieterolson@gmail.com`) while `pages/about.qmd`
+  and `pages/contact.qmd` both use `dieterolson@AffineDrift.com`. Added
+  `tests/test_404_page.py` (3 tests, written first and confirmed RED against
+  the Gmail address) asserting the 404 page's contact address matches both
+  pages and that no personal Gmail address appears on it.
+- Investigated the rest of acceptance criterion 1 before touching `404.qmd`
+  further:
+  - **Search** — already satisfied. Quarto's default website navbar search box
+    is enabled (no `search: false` override anywhere in `_quarto.yml`), and the
+    existing 404 prose already tells readers to "Use the search box in the
+    navigation bar".
+  - **Top five destinations** — already satisfied. `404.qmd`'s `<nav
+    aria-label="Helpful links">` already lists five links (Home, Article Index,
+    Books & Textbooks, The Physics of Golf, The Geometry of Motion).
+  - **"Start Here"** — not satisfiable yet. There is no `pages/start-here.qmd`
+    or equivalent page in this repository. It is proposed in a separate,
+    sibling issue, #4486 "[WEB-01.1] Add a 'Start Here' Page", which is
+    `tier:strong`/`judgement:design` and still open.
+  - **"the Library"** — not satisfiable yet. "Library" is not an existing page
+    or navbar section; it is a proposed navbar grouping (Books, Series, Article
+    Index, Companion Guides) from the unmerged WEB-02.1 "Restructure the Navbar
+    Into Single-Purpose Menus" issue (also `tier:strong`/`judgement:design`,
+    part of epic E2), per
+    `docs/development/website-improvement-draft-issues-2026-09-29.md`.
+  - Linking to either target now would mean fabricating a page or a navbar
+    section under a tier:strong design issue's name — exactly the kind of
+    judgment call CLI-tier agents are asked not to guess on. Substituting some
+    other existing page under those labels (e.g. `pages/overview.qmd` for
+    "Start Here") would be a silent, undocumented design decision, not a
+    mechanical fix, so it was not done either.
+- Status: **partial / Blocked**. Contact-address criterion is done. The
+  Start Here / Library links cannot be added without either building
+  `tier:strong` design work under this `tier:cli` issue or guessing at a
+  substitute target; see the PR's Blocked section.
+- Validation commands run in this worktree:
+  - `python3 -m pytest tests/test_404_page.py -v` → 3 passed.
+  - `python3 -m pytest tests/test_link_checker_script.py tests/test_check_links.py -q` → 31 passed (no broken-link regression from the edit).
+  - `python3 -m pytest tests/test_404_page.py tests/test_public_site_content_hygiene.py tests/test_editorial_and_consistency.py -q` → 8 passed.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → all checks passed (no diffs).
+- Not done / deferred: the "Start Here" and "the Library" links (see above);
+  they depend on #4486 and the WEB-02.1 navbar restructure landing first.
+
+## Next Steps
+
+1. Once #4486 ("Start Here" page) and WEB-02.1 (Library navbar grouping) merge,
+   add the two links to `404.qmd`'s `<nav aria-label="Helpful links">` list and
+   close out the remaining acceptance criterion.
 # Math Accessibility Verification — #4565 (WEB-09.5)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
