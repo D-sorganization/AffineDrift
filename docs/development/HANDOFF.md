@@ -61,8 +61,9 @@
 
 ## Change Log
 
+- 02507aac — Extend personas to include curious golfer/coach and student (#4488) (#4638).
+- ebced38f — Build the page header card component (#4507) (#4633).
 - `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
-- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
 

@@ -237,7 +237,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/resources/learning-path-control-theory.html` | `resources/learning-path-control-theory.qmd` | 1 |
 | `/resources/learning-path-foundations.html` | `resources/learning-path-foundations.qmd` | 1 |
 | `/resources/learning-path-golf-science.html` | `resources/learning-path-golf-science.qmd` | 1 |
-| `/resources/learning-paths.html` | `resources/learning-paths.qmd` | 1 |
+| `/resources/learning-paths.html` | `resources/learning-paths.qmd` | 2 |
 | `/resources/research-review-baseball-pitching.html` | `resources/research-review-baseball-pitching.qmd` | 1 |
 | `/resources/research-review-induced-acceleration-analysis.html` | `resources/research-review-induced-acceleration-analysis.qmd` | 2 |
 | `/resources/research-review-interaction-forces.html` | `resources/research-review-interaction-forces.qmd` | 1 |
