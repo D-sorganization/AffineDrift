@@ -490,6 +490,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (33/33 new pytest cases pass; ruff, black --line-length 100, and mypy clean on the new module.)
 - **Summary:** Advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages, wired into CI as a non-blocking step with a JSON report artifact; threshold (grade 10) taken from WEB-12.1's stated targets since the style guide itself (WEB-12.1) is still open.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
+### DL-#4519 · Show Maturity in the Article Index and on Books Hub Cards
+
+- **State:** parked
+- **Owner:** claude
+- **PR:** #TBD (draft, blocked)
+- **Issue:** #4519 (epic #4521)
+- **Branch:** `claude/issue-4519`
+- **Paths:** `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: no source change; confirmed via `gh issue view` that #4501 and #4515 are still open and #4516 is now closed, with `css/components/status-badge.css` present on `main`)
+- **Summary:** Blocked. The issue's own "Depends on: WEB-02.7" (#4501, open) means the Article Index is still hand-maintained prose (`resources/articles.qmd`), not a per-entry Quarto listing that a badge partial could attach to. The maturity enum (WEB-04.1, #4515) is also still open, so there is no `config/maturity.yml` vocabulary to source a badge from. WEB-04.2 "Badge Component Used on Cards, Headers, Listings, and Search" (#4516) has since merged — `css/components/status-badge.css` now exists on `main` — so that prerequisite is resolved.
+- **Next step:** Reopen and implement once #4501 and #4515 have merged; wire the existing `status-badge` component into `resources/articles.qmd` listing entries and `books/index.qmd` `.resource-card` entries.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress

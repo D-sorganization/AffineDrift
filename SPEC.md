@@ -480,3 +480,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4523 | Add a generated evidence/claims.qmd Claim Ledger page (one accessible card per claim: plain/formal statement, evidence rung, falsifiers, related critiques, pages making the claim) and link every claim-making page back to it. |
 | 2026-09-29 | #4551 | Render PARAMETERS.md and add a one-page notation quick-reference card; remove pages/notation.qmd's duplicate heading and manual table of contents. |
 | 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |
+| 2026-09-29 | #4519 | Park [WEB-04.5] maturity badges for the Article Index and Books Hub as blocked: its dependency WEB-02.7 (#4501) and the maturity vocabulary (WEB-04.1 #4515) are still open; WEB-04.2 (#4516) has since merged. |

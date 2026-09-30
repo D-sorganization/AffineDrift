@@ -2085,6 +2085,72 @@
 # Implementation Handoff — Deploy Website Verification Fix (#4617)
 # Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
 # Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+# Implementation Handoff — Show Maturity in the Article Index and on Books Hub Cards (#4519)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4519` (worktree)
+- Branch: `claude/issue-4519`
+- Baseline commit: b6aa4baf
+- Implementation commit: SELF
+- Pull request: draft, not yet created at time of writing
+- Governing issue/epic: #4519 (epic #4521, E4 — Unified Maturity and Evidence Signalling)
+
+## Objective and Status
+
+- Objective: Make every Article Index entry and Books Hub card show a maturity badge sourced from front matter.
+- Status: **blocked, parked**. No source or content changed.
+- Blocked because:
+  1. The issue's own "Depends on: WEB-02.7" (#4501, open) is unmet. `resources/articles.qmd` is still a hand-maintained
+     194-line prose/link page, not the per-entry Quarto listing WEB-02.7 is supposed to generate. There is no
+     structured "entry" to attach a badge to.
+  2. The epic (E4) that owns this issue defines WEB-04.1 "Consolidate Maturity Vocabulary Into a Single Enum"
+     (#4515) as a prerequisite, and it is also still open: no `config/maturity.yml` exists yet, so there is no
+     front-matter vocabulary to source a badge from.
+  3. `books/index.qmd` cards are hand-written `.resource-card` divs with no `maturity`/`status` front-matter field
+     on the linked book pages to source from either.
+- WEB-04.2 "Badge Component Used on Cards, Headers, Listings, and Search" (#4516) has since merged: the shared
+  badge component now exists at `css/components/status-badge.css` on `main`. That prerequisite is resolved; only
+  #4501 and #4515 still block this issue.
+- Per the repo's deferred-work policy, inventing an ad hoc maturity vocabulary here would preempt the `tier:strong`
+  design decision reserved for WEB-04.1, so this was not done.
+
+## Files and Decisions
+
+- Files changed: `SPEC.md` (change-log row), `docs/development/DEVELOPMENT_LOG.md` (new DL-#4519 entry, state
+  `parked`), `docs/development/HANDOFF.md` (this section).
+- Key decisions: Stop and report the blocker rather than guess at a maturity vocabulary/badge design; no site
+  source or content was touched.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- No test commands apply; no `src/`, `scripts/`, `.qmd`, or CSS files were changed.
+- `python scripts/check_spec_changelog.py` — run before commit to confirm the new SPEC.md row is well-formed.
+
+## Blockers and Risks
+
+- Blocker: dependency issues #4501 and #4515 are still open; #4516 has merged (see Objective and Status above).
+- Risks/assumptions: none beyond the blocker itself.
+
+## Next Steps
+
+1. Wait for #4501 (Article Index becomes a generated listing) and #4515 (maturity enum) to merge. #4516 (badge
+   component) has already merged.
+2. Re-open this issue's implementation: wire the existing `status-badge` component into the generated Article Index
+   listing entries and into `books/index.qmd` `.resource-card` entries, sourcing the badge from each page's front
+   matter.
+3. Release the fleet lease for #4519 if a frontier agent picks up the follow-on work under a different session.
+
+## Change Log
+
+- `SELF` — Park #4519 as blocked on WEB-02.7 (#4501), WEB-04.1 (#4515), and WEB-04.2 (#4516).
+- `SELF` (review fix) — Updated blocker list: WEB-04.2 (#4516) has merged; #4501 and #4515 remain open. Changed PR
+  body reference from `Fixes` to `Refs`.
+
+---
+
 # Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 # Configure Search, and Include Maturity in Results — 2026-09-29
 
