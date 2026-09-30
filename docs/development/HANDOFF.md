@@ -5,8 +5,8 @@
 - Repository: D-sorganization/AffineDrift
 - Branch: fix/web-01-6-how-to-read-this-site-4491
 - Baseline commit: fc36109d (origin/main)
-- Implementation commit: SELF
-- Pull request: TBD
+- Implementation commit: dd961a63
+- Pull request: #4665 (https://github.com/D-sorganization/AffineDrift/pull/4665)
 - Governing issue: #4491 (WEB-01.6, epic #4496)
 
 ## Objective and Status
