@@ -104,5 +104,17 @@ The complete 149-page Volume I PDF builds through LaTeX, BibTeX, index and two
 final LaTeX passes. Final log has no overfull boxes, undefined references or
 multiply defined labels. All six changed chapter pages (physical 58–63,
 printed 44–49) and the following chapter transition (physical 64) were visually
-inspected. Root-website browser checks, full repository validation, immutable
-evidence binding and protected publication are pending at this source checkpoint.
+inspected. The root-website production gate passes all four desktop/mobile and
+light/dark combinations; axe scans the route once with zero serious or critical
+violations. A fresh browser session renders all 126 math expressions, including
+twelve display equations, with zero math errors, unresolved lazy placeholders,
+broken internal anchors or document overflow. All display equations were visually
+inspected at 1440 and 390 pixels. Three numbered mobile equations use contained
+horizontal scrolling; both ends and their numbers were checked. Title views were
+inspected in both themes. The initial browser session retained stale content via
+a service worker and is excluded from accepted evidence.
+
+Source checkpoint `f30e64cbcbef1b68692b5b5a7a92f0966a840d97` contains the paired
+sources and rebuilt PDF. The render receipt records exact digests and the local
+gate output. Repository-wide checks and protected publication are tracked in the
+current turnover and development log; this report does not certify other chapters.
