@@ -226,6 +226,24 @@ class TestValidateFeedXml:
         assert any("duplicate" in e.lower() for e in errors)
 
 
+class TestMainWritesOnlyRequestedOutput:
+    """main() must not also write an unconditional root feed.xml copy (#4572).
+
+    That copy was only refreshed when someone remembered to run the
+    generator and commit the result, so it drifted stale.
+    """
+
+    def test_main_does_not_write_a_root_copy(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr("scripts.generate_feed.collect_items", lambda: [])
+        monkeypatch.setattr("sys.argv", ["generate_feed.py", "--output", "docs/feed.xml"])
+
+        main()
+
+        assert (tmp_path / "docs" / "feed.xml").exists()
+        assert not (tmp_path / "feed.xml").exists()
+
+
 class TestMainValidatesBeforeWriting:
     """``main()`` must fail loudly instead of writing an invalid feed (DbC)."""
 

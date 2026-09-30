@@ -8,12 +8,12 @@ from pathlib import Path
 
 import pytest
 
+from scripts.generate_sitemap import build_pages
 from src.affine_control.research_readiness import load_library
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTICLE = ROOT / "models/research-protocol-readiness.qmd"
 HUB = ROOT / "models/models.qmd"
-SITEMAP = ROOT / "sitemap.xml"
 AUDIT = ROOT / "data/trust/claim_audit_inventory.json"
 TEMPLATE = ROOT / "data/research_protocols/protocol-template.json"
 SCHEMA = ROOT / "schemas/research-protocol-readiness-v1.schema.json"
@@ -52,14 +52,14 @@ def test_public_route_explains_contract_gates_and_use() -> None:
 def test_catalog_and_machine_readable_resources_are_linked() -> None:
     article = ARTICLE.read_text(encoding="utf-8")
     hub = HUB.read_text(encoding="utf-8")
-    sitemap = SITEMAP.read_text(encoding="utf-8")
+    sitemap_locs = [page["loc"] for page in build_pages()]
 
     assert "research-readiness-library.qmd" in article
     assert "../schemas/research-protocol-readiness-v1.schema.json" in article
     assert "../data/research_protocols/library.json" in article
     assert "../data/research_protocols/protocol-template.json" in article
     assert "research-protocol-readiness.html" in hub
-    assert "https://affinedrift.com/models/research-protocol-readiness.html" in sitemap
+    assert "https://affinedrift.com/models/research-protocol-readiness.html" in sitemap_locs
 
 
 def test_schema_valid_concept_template_is_safe_to_copy() -> None:

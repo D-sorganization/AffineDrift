@@ -9,6 +9,88 @@
 - Validation: `pytest tests/test_claim_audit_inventory.py tests/test_check_quarto_render_coverage.py` (29 passed).
 - Next: confirm Deploy Website is green on main after merge; #4694 adds this gate to PR CI.
 
+# Implementation Handoff — Remove Stale Root `sitemap.xml`/`feed.xml` (#4572)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4572`.
+- Branch `claude/issue-4572`, commit SELF; pull request: not created.
+- Governing issue: #4572 (WEB-10.3, epic #4579 / E10 — Performance, SEO, and
+  Privacy). Acceptance criteria: "Root copies deleted or git-ignored", "The
+  generators are documented", and "The feed carries real article dates (after
+  WEB-07.3)".
+- **Status: partial.** Criteria 1 and 2 are done. Criterion 3 stays blocked on
+  the still-open prerequisite #4545 (WEB-07.3), exactly as recorded for
+  #4606/DL-#4606 below — no date-source work exists to attach real dates to
+  yet.
+- Completed:
+  - The root `sitemap.xml`/`feed.xml` were tracked files that the deploy
+    workflow never wrote back (it only writes `docs/sitemap.xml` and
+    `docs/feed.xml`), so they only got refreshed when a contributor manually
+    ran the generator and committed the result — hence the feed found dated
+    10 Jun 2026 while `main` had moved well past that.
+  - `scripts/generate_sitemap.py`: extracted the page-collection loop out of
+    `main()` into `build_pages() -> list[dict[str, str]]`, the reusable
+    source of truth for "what is currently published." Removed the
+    unconditional `Path("sitemap.xml").write_text(...)` root copy at the end
+    of `main()`; it now writes only `--output` (default `docs/sitemap.xml`).
+  - `scripts/generate_feed.py`: removed the equivalent unconditional
+    `Path("feed.xml").write_text(...)` root copy; writes only `--output`
+    (default `docs/feed.xml`). Docstring usage example updated.
+  - `scripts/check_quarto_render_coverage.py`: this script is a CI gate
+    (`ci-standard.yml` "Verify Quarto Render Coverage", and it also runs in
+    `deploy-website.yml` *before* that workflow's own "Generate sitemap.xml"
+    step) that validates every sitemap URL has a backing source file and vice
+    versa. It previously read the tracked root `sitemap.xml` from disk —
+    i.e., in both workflows it was checking the stale committed snapshot, not
+    live content. It now calls `generate_sitemap.build_pages()` directly, so
+    the check is always against current content regardless of whether a root
+    file exists. `load_sitemap_paths()` is unchanged and still covered by its
+    own direct tests (it parses an arbitrary sitemap XML file, e.g. for
+    `docs/sitemap.xml` post-render if ever needed); it is just no longer
+    `main()`'s source.
+  - `tests/test_page_titles_and_descriptions.py` and
+    `tests/test_research_readiness_content.py` also read the root
+    `sitemap.xml` as the published-page registry; both now call
+    `generate_sitemap.build_pages()` instead, so there is no persisted file
+    left anywhere in the tree for staleness to hide in.
+  - `git rm sitemap.xml feed.xml`; added `/sitemap.xml` and `/feed.xml` to
+    `.gitignore` as a backstop (mirrors the existing `docs/sitemap.xml`/
+    `docs/feed.xml` entries). Removed both filenames from
+    `check_root_hygiene.py`'s `ALLOWED_TRACKED_ROOT_FILES` — confirmed
+    `python scripts/check_root_hygiene.py --check` passes with the files
+    gone.
+  - Documented both generators in `scripts/README.md` (the existing
+    `generate_sitemap.py` entry's stated output path was wrong — it said
+    "sitemap.xml in the project root", corrected to `docs/sitemap.xml`;
+    `generate_feed.py` had no entry at all, added one) and added
+    `generate_feed.py` alongside the existing `generate_sitemap.py` line in
+    `CONTRIBUTING.md`'s "Running Scripts" section.
+  - Regenerated claim-audit evidence digests
+    (`python -m scripts.regenerate_claim_audit_evidence`) for
+    `tests/test_research_readiness_content.py`'s changed byte content, per
+    its own recursive exact-byte review check.
+- TDD: extended `tests/test_generate_sitemap.py`'s end-to-end `main()` test
+  (renamed `test_main_writes_sorted_sitemap_without_a_root_copy`) to assert
+  no `sitemap.xml` is written outside `--output`; confirmed it would have
+  failed against the pre-change generator (root copy existed) and passes
+  now. Added `test_build_pages_matches_main_output`. Added
+  `tests/test_generate_feed.py::TestMainWritesOnlyRequestedOutput` with the
+  same shape for the feed generator.
+- Validation:
+  `pytest tests/test_generate_sitemap.py tests/test_generate_feed.py tests/test_check_quarto_render_coverage.py tests/test_page_titles_and_descriptions.py tests/test_research_readiness_content.py`
+  (85 passed); `python scripts/check_quarto_render_coverage.py` (249 URLs,
+  bidirectional coverage passed); `python scripts/check_root_hygiene.py --check`
+  (passed); `python -m scripts.check_spec_changelog` (passed); ruff and
+  `black --check --line-length 100` clean on every changed file.
+- Open decision: none for the unambiguous scope above. Criterion 3 (real
+  article dates) is not a decision this issue can make — it is explicitly
+  gated on #4545 landing first, matching the precedent already recorded in
+  #4606/DL-#4606's Blocked note.
+- Next: open the PR; once #4545 (WEB-07.3) lands, re-check whether the feed's
+  dates need any further work (likely none — `generate_feed.py` already
+  parses frontmatter `date:` and falls back to git history, so this may
+  already be satisfied once articles carry real `date:` values).
+
 # "What's New" Feed RSS Validation — #4606 (WEB-14.4)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
