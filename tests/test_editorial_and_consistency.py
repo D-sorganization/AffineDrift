@@ -117,7 +117,7 @@ def test_editorial_residue_resolved():
     assert "experimental application..." not in theory3
 
     # Revision History callouts removed from reader prose
-    dcr = (REPO_ROOT / "articles" / "controllability-drift-ratio.qmd").read_text(encoding="utf-8")
+    dcr = (REPO_ROOT / "articles" / "drift-control-ratio.qmd").read_text(encoding="utf-8")
     assert "## Revision History" not in dcr
 
     sec_axis = (REPO_ROOT / "articles" / "secondary-axis-stability.qmd").read_text(encoding="utf-8")
