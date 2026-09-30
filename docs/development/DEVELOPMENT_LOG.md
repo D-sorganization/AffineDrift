@@ -31,6 +31,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Unifies the 404 page's contact address with About/Contact (`dieterolson@AffineDrift.com`, not the personal Gmail address it previously pointed to). The page's search-box mention and its five suggested-destination links were already present. The other half of the acceptance criteria — explicit "Start Here" and "Library" links — is blocked: neither target exists yet (`pages/start-here.qmd` is #4486, tier:strong, still open; the "Library" navbar grouping is part of the unmerged WEB-02.1 navbar restructure, also tier:strong). See the PR's Blocked section.
 - **Next step:** Once #4486 (Start Here page) and WEB-02.1 (Library navbar grouping) land, add the two links to `404.qmd` and close out the remainder of this issue's acceptance criteria.
 
+### DL-#4578 · Social Cards per Page
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** draft (see HANDOFF.md for link)
+- **Issue:** #4578 (WEB-10.10; epic #4579 / E10)
+- **Branch:** `claude/issue-4578`
+- **Paths:** `scripts/generate_social_cards.py`, `tests/test_social_cards.py`, `logo/social-cards/*.png`, `articles/The_Physics_of_Golf/quarto/index.qmd`, `articles/The_Geometry_of_Motion/quarto/index.qmd`, `articles/proximal_distal_energy_transfer/index.qmd`, `.github/workflows/deploy-website.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 13/13 tests pass across test_social_cards.py and test_image_budget.py; ruff and black --line-length 100 clean)
+- **Summary:** Generates one 1200x630 Open Graph card per book/series (title, badge, signature graphic) at build time instead of one site-wide card, checked in like the existing site-wide `logo/og-card.png`, and wires three representative landing pages to use theirs via per-page `open-graph`/`twitter-card` overrides.
+- **Next step:** After merge and deploy, run a social-card debugger against the three live page URLs to close out the issue's second acceptance criterion (see HANDOFF.md Blockers).
 ### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
