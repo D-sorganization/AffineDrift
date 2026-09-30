@@ -15,7 +15,7 @@ DEFERRED_AUDIT_SCOPE_COUNTS = {
     f"{ISSUE_ROOT}/4058": 29,
     f"{ISSUE_ROOT}/4059": 18,
     f"{ISSUE_ROOT}/4060": 14,
-    f"{ISSUE_ROOT}/4061": 21,
+    f"{ISSUE_ROOT}/4061": 22,
     f"{ISSUE_ROOT}/4062": 6,
     f"{ISSUE_ROOT}/4063": 17,
 }
