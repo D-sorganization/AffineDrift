@@ -31,6 +31,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
 - **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
 
+### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
@@ -81,6 +82,14 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** claude
 - **PR:** not created
+- **Issue:** #4567 (epic #4569)
+- **Branch:** `claude/issue-4567`
+- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass)
+- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
+- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
+
 - **Issue:** #4588 (epic #4594)
 - **Branch:** `claude/issue-4588`
 - **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
