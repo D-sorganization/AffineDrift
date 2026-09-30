@@ -44,7 +44,7 @@
   related_ids: ["featherstone2008rigid", "spong2005robot", "slotine1991applied"]
   references_out_ids: []
 
-- id: featherstone2008rigid
+- id: Featherstone2008
   title: "Rigid Body Dynamics Algorithms"
   authors:
     - "Roy Featherstone"
@@ -120,7 +120,7 @@
   related_ids: ["winter2009biomechanics", "hogan1985impedance"]
   references_out_ids: []
 
-- id: slotine1991applied
+- id: SlotineLi1991
   title: "Applied Nonlinear Control"
   authors:
     - "Jean-Jacques E. Slotine"

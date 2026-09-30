@@ -102,7 +102,7 @@ bibliography:
   related_ids: ["mackenzie2009three"]
   references_out_ids: []
 
-- id: featherstone2008rigid
+- id: Featherstone2008
   title: "Rigid Body Dynamics Algorithms"
   authors: "Featherstone, R."
   year: 2008
@@ -166,7 +166,7 @@ bibliography:
     related_ids: []
     references_out_ids: []
 
-- id: lynch2017modern
+- id: Lynch2017
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
 

@@ -66,7 +66,7 @@
   related_ids: ["lynch2017modern", "spong2005robot"]
   references_out_ids: ["featherstone2008rigid", "isidori1995nonlinear"]
 
-- id: lynch2017modern
+- id: Lynch2017
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - "Kevin M. Lynch"
@@ -79,7 +79,7 @@
   related_ids: ["murray1994mathematical"]
   references_out_ids: []
 
-- id: featherstone2008rigid
+- id: Featherstone2008
   title: "Rigid Body Dynamics Algorithms"
   authors:
     - "Roy Featherstone"
@@ -258,7 +258,7 @@
   related_ids: ["isidori1995nonlinear"]
   references_out_ids: []
 
-- id: penner2003physics
+- id: penner2003
   title: "The physics of golf"
   authors:
     - "A. Raymond Penner"

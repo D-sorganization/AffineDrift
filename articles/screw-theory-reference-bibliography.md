@@ -35,7 +35,7 @@
   - "bullo2005geometric"
   - "selig2005geometric"
 
-- id: lynch2017modern
+- id: Lynch2017
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors: "Lynch, K. M., & Park, F. C."
   year: 2017
@@ -58,7 +58,7 @@
   - "featherstone2008rigid"
   - "jain2011robot"
 
-- id: featherstone2008rigid
+- id: Featherstone2008
   title: "Rigid Body Dynamics Algorithms"
   authors: "Featherstone, R."
   year: 2008

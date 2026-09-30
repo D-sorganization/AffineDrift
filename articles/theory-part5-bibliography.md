@@ -141,7 +141,7 @@
     - hairer1996solving
     - mathworks2024simscape
 
-- id: featherstone2008rigid
+- id: Featherstone2008
   title: Rigid Body Dynamics Algorithms
   authors:
     - Roy Featherstone
@@ -193,7 +193,7 @@
   related_ids:
     - shabana2020dynamics
 
-- id: lynch2017modern
+- id: Lynch2017
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - Kevin M. Lynch

@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4547 · Deduplicate and Reconcile Bibliography Databases
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4547 (WEB-07.5)
+- **Branch:** `claude/issue-4547`
+- **Paths:** `references/affine-drift.bib`, `references/impact-acoustics.bib`, `references/proximal-distal-energy.bib`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `articles/tangent-hyperplane-articles/references.bib`, `articles/tangent-hyperplane-contraction/references.bib`, `articles/proximal_distal_energy_transfer/references.bib`, `scripts/check_bibliography_cross_file.py`, `tests/test_check_bibliography_cross_file.py`, `tests/test_geometry_reference_integrity.py`, `tests/test_constraint_forces_rigor.py`, plus citation-key updates across dependent `.qmd`/`.tex`/`*-bibliography.md` pages, and digest refreshes in `data/trust/claim_audit_inventory.json`/`data/trust/book_publication_audit.json`.
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: `python3 scripts/check_bibliography_cross_file.py` reports 0 disagreeing keys / 0 duplicate DOIs across the 8 bibliographies; `pytest tests/test_check_bibliography_cross_file.py` 18/18; full `pytest -q --ignore=benchmarks` clean except the pre-existing, unrelated `test_research_protocol_readiness.py`/`test_research_readiness_*.py`/`test_proximal_distal_projection_verifier.py` failures; `npx jest` 429 passed/19 skipped; `ruff check .` and `black --check --line-length 100 .` clean.)
+- **Summary:** Mechanically deduplicates the 8 root-loaded `.bib` files (Crossref-verified, citation-count-driven, zero-metadata-loss merge) and extends `check_bibliography_cross_file.py` with a duplicate-DOI check, exempting files that are the sole `bibliography:` of at least one page/book (a per-page override replaces rather than merges with the project-level list, so that file needs local self-sufficiency for every key its page(s) cite). Renamed citation keys were propagated across Quarto `@key`, LaTeX `\cite`-family commands, and reader-facing `*-bibliography.md` `- id:` listings — three separate citation surfaces sharing the same `.bib` files. Per-page-only bib files (`club-fitting.bib`, `nullspace-rigor.bib`, `strokes-gained-rigor.bib`), a literal `master.bib`/alias mechanism, and a full-site `quarto render` are out of scope; see the HANDOFF.md entry.
+- **Next step:** Push the branch and open the draft PR referencing `Fixes #4547`.
+
 ### DL-#4600 · Service-Worker Cache Busting by Content Hash
 
 - **State:** in_review

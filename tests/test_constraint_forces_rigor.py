@@ -160,7 +160,7 @@ def test_both_editions_preserve_scientific_boundaries(edition):
         "944.8",
         "6. Account for Energy During Capture",
         "not a typical golfer value",
-        "Choi2020GripKinetics",
+        "koike2020",
         "OpenSimJointReactions2019",
     ):
         assert phrase in text

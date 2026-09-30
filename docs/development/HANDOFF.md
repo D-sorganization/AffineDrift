@@ -1,3 +1,99 @@
+# Deduplicate and Reconcile Bibliography Databases — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4547`.
+- Branch `claude/issue-4547`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4547 (WEB-07.5). Objective: zero duplicate keys/DOIs across the site's
+  bibliography databases, with rendered citations unchanged in meaning.
+- Completed work:
+  - Mechanically deduplicated the 8 root-loaded `.bib` files (`references/affine-drift.bib`,
+    `references/impact-acoustics.bib`, `references/proximal-distal-energy.bib`,
+    `articles/The_Physics_of_Golf/golf_physics.bib`,
+    `articles/The_Geometry_of_Motion/geometry_of_motion.bib`,
+    `articles/tangent-hyperplane-articles/references.bib`,
+    `articles/tangent-hyperplane-contraction/references.bib`,
+    `articles/proximal_distal_energy_transfer/references.bib`) using a Crossref-verified,
+    citation-count-driven merge: the survivor key/entry for each duplicate group is the one with
+    the most citations, and any field only a losing entry carried was merged in before that
+    entry was deleted. Two Crossref-verified conflicting-metadata entries were corrected first
+    (`sprigings2000insight`, a `zheng2008` DOI) since a mechanical merge cannot resolve a
+    disagreement about what the paper actually is.
+  - Extended `scripts/check_bibliography_cross_file.py` with a `duplicate_dois()` check (a DOI
+    carried by more than one key across non-exempt files is a literal duplicate entry, not just a
+    citeproc first-wins hazard) and a `STANDALONE_LINKED` exemption set for files that are the
+    sole `bibliography:` of at least one page's or book's own front matter — a per-page override
+    *replaces* rather than merges with the project-level bibliography list, so that page can only
+    ever resolve a citation against its own file regardless of what any other file defines.
+    `STANDALONE_LINKED` ended up covering 6 of the 8 files (`golf_physics.bib` and
+    `geometry_of_motion.bib` are each also loaded by their own independent Quarto book project;
+    `proximal-distal-energy.bib`, `affine-drift.bib`, and both `tangent-hyperplane-*` files are
+    each the sole bibliography of at least one page). Only `impact-acoustics.bib` and
+    `articles/proximal_distal_energy_transfer/references.bib` remain non-exempt.
+  - Propagated every renamed citation key across all three citation surfaces that share these
+    `.bib` files: Quarto `@key` citations, LaTeX `\cite`/`\citep`/`\citet`/`\citeauthor`/
+    `\citeyear`/`\nocite` commands in 20 active `.tex` chapter files (27 keys; the unreferenced
+    `articles/bosch_integration/` staging directory was left untouched), and the `- id: <key>`
+    listings in 20 reader-facing `*-bibliography.md` "Concept Map" pages (49 lines).
+  - Restored 17 entries across `proximal-distal-energy.bib`, `affine-drift.bib`, and both
+    `tangent-hyperplane-*` files that the initial mechanical merge had removed without realizing
+    those files needed local self-sufficiency (discovered via a repo-wide scan for `bibliography:`
+    frontmatter overrides pointing at any of the 8 files).
+  - Fixed 4 case-fold key collisions the merge introduced within a single file (e.g.
+    `golf_physics.bib`'s `penner2003`/`Penner2003`) by renaming the lower-priority entry after
+    confirming by hand that the two entries are genuinely different papers.
+  - Added `tests/test_check_bibliography_cross_file.py::TestDuplicateDois` (6 tests) and two new
+    `TestEntries` cases for DOI parsing/normalization.
+  - Refreshed the byte-pinned evidence digests in `data/trust/claim_audit_inventory.json` (via the
+    sanctioned `python -m scripts.regenerate_claim_audit_evidence` tool, run twice — once for the
+    citation-rename content changes, once for a cascading invalidation caused by the second fix
+    below) and `data/trust/book_publication_audit.json` (no dedicated regenerate script exists for
+    this ledger; patched the one stale digest with a minimal string-replace reusing the same
+    `file_sha256` helper the validator itself uses, to avoid reformatting the file).
+- Key decisions:
+  - Per-page-only bib files not loaded by the project-level `_quarto.yml` at all
+    (`club-fitting.bib`, `nullspace-rigor.bib`, `strokes-gained-rigor.bib`) are out of scope —
+    they were never part of the "site loads these together" hazard this issue targets.
+  - No literal `master.bib`/alias mechanism was built; the exemption-based cross-file check is a
+    narrower, surgical fix for the actual failure mode (citeproc first-wins on a duplicated key,
+    and disagreeing metadata under a duplicated DOI).
+  - No full-site `quarto render` was performed to verify rendered citations directly (out of
+    policy for this session — full render is ~14 min); instead, unresolved-citation risk was
+    checked by construction (every renamed key was propagated to every surface that cites it, and
+    the standalone/self-sufficiency scan specifically checks for keys a page can no longer
+    resolve after a bib file's entries change).
+- Compatibility constraints: none — no public API changed; LaTeX PDF builds for
+  `golf_physics.bib`/`geometry_of_motion.bib` still resolve every citation (their `\cite`-family
+  commands were the surface most at risk of a silent, un-caught break, since the original
+  citation-rewrite pass only handled Quarto's `@key` syntax).
+- Validation commands and outcomes:
+  - `python3 scripts/check_bibliography_cross_file.py` → 8 bibliographies, 691 distinct keys, 0
+    disagreeing about the work, 0 duplicate DOIs.
+  - `python3 -m pytest tests/test_check_bibliography_cross_file.py -v` → 18 passed.
+  - `python3 -m pytest -q --timeout=120 --ignore=benchmarks` → clean except 46 pre-existing,
+    unrelated failures in `test_proximal_distal_projection_verifier.py`,
+    `test_research_protocol_readiness.py`, and `test_research_readiness_*.py` (none of those
+    files or their fixtures were touched by this change).
+  - `python3 -m pytest tests/test_book_publication_audit.py tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py -q`
+    → 28 passed.
+  - `npx jest` → 26 suites, 429 passed, 19 skipped.
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` → clean.
+  - `python3 -m scripts.check_spec_changelog` → passed.
+  - Reverted three unrelated files (`data/trust/generated/reader_validation_study.json`,
+    `research_releases_registry.json`, `evidence_presentation_registry.json`) that a pre-existing,
+    unrelated test-isolation issue modifies as a side effect of a full-suite run; confirmed via
+    grep that neither `regenerate_claim_audit_evidence.py` nor `book_publication_audit.py`
+    reference those paths, so they belong to unrelated generator modules and are not part of this
+    diff.
+- Blockers/risks: none identified. Two items worth a follow-up issue, out of this issue's scope
+  (per the "Spotted ≠ fix" fleet rule): (1) the pre-existing test-isolation bug above (some other
+  test's fixture teardown is missing, modifying generated JSON as a side effect of running the
+  full suite); (2) the pre-existing, unrelated failures in `test_research_protocol_readiness.py`/
+  `test_research_readiness_*.py`/`test_proximal_distal_projection_verifier.py`.
+- Next steps: open the draft PR referencing `Fixes #4547`, noting the scope limitations above in
+  the PR body.
+
+---
+
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory

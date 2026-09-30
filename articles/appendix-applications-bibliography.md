@@ -11,7 +11,7 @@
 ## Bibliography
 
 ```yaml
-- id: nesbit2005work
+- id: Nesbit2005b
   title: Work and Power Analysis of the Golf Swing
   authors: Nesbit, S. M.
   year: 2005
@@ -55,7 +55,7 @@
     - friswell1995updating
     - featherstone2008rigid
 
-- id: featherstone2008rigid
+- id: Featherstone2008
   title: Rigid Body Dynamics Algorithms
   authors: Featherstone, R.
   year: 2008
