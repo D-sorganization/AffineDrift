@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Implementation Handoff — Per-Page Citation Metadata and "Cite This Page" Block (#4544)
 
 ## Identity
