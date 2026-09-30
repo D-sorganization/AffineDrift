@@ -1,4 +1,5 @@
 # Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
+# Implementation Handoff — Report Broken External Links as Issues (#4596)
 # Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
 
 ## Identity
@@ -24,6 +25,44 @@
   - Added tests in `tests/test_validate_accessibility.py` for the new check (non-SVG images ignored, missing long description flagged, `aria-describedby` pass, `<details>` disclosure pass, dangling `aria-describedby` still flagged).
   - Added a `SPEC.md` change-log row keyed to #4567.
 - Remaining: Open the draft PR.
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4596 (worktree)
+- Branch: claude/issue-4596
+- Baseline commit: 02507aac (origin/main)
+- Implementation commit: SELF
+- Pull request: not created yet (opening as draft in this session)
+- Governing issue/epic: #4596 (epic #4604)
+
+## Objective and Status
+
+- Objective: In `.github/workflows/link-checker.yml`, make the scheduled external-link check
+  report to a single tracking issue instead of only job logs, check DOI links through their
+  doi.org redirect, and suggest an archive.org fallback for each dead link.
+- Status: Implementation complete, tests passing; opening draft PR.
+- Completed:
+  - `scripts/link-checker.py`: added `is_doi_url()` and a `SafeRedirectHandler` so DOI links
+    (which resolve via an HTTP redirect by design) are checked by following that redirect,
+    safety-checked per hop against SSRF instead of being flagged broken on the 30x response.
+  - Added `archive_org_suggestion()` and attached it to every external-URL warning.
+  - Changed `check_file`'s external warnings from plain strings to structured dicts
+    (`file`, `url`, `reason`, `archive_suggestion`).
+  - Added `--json-report PATH` to `scripts/link-checker.py` to emit those warnings as JSON.
+  - `.github/workflows/link-checker.yml`: changed the schedule from daily to weekly
+    (`0 2 * * 1`), added `issues: write` permission, wired `--json-report` into the
+    "Check external URLs" step, and added a "Report broken external links as a tracking
+    issue" step that finds-or-updates a single open issue (marker comment + `ci`/`report`/
+    `automation` labels) with the current broken-link table, and closes it once the report
+    is empty.
+  - Updated `docs/LINK-CHECKER.md` to document the weekly cadence, DOI handling, the
+    archive.org suggestion, the tracking-issue behavior, and `--json-report`.
+  - Added `tests/test_link_checker_script.py` (12 tests) covering DOI-domain detection, the
+    archive.org suggestion format, DOI redirect-following (including the SSRF-blocked
+    redirect case), the structured warning shape, and `--json-report` output.
+  - Keyed SPEC.md change-log row to #4596.
+- Remaining: none for this issue's acceptance criteria. The pre-existing "convoluted
+  continue-on-error" in the internal-refs step (named in the issue's Problem section) was
+  left untouched — it is not covered by an acceptance-criteria checkbox and changing CI
+  failure semantics for internal refs is out of scope for this surgical change; noted as a
+  follow-up opportunity in the PR body.
 
 ## Files and Decisions
 
@@ -38,6 +77,29 @@
   - "Complex diagram" is scoped to SVG image references, matching E8's stated format (WEB-08.2/08.3 specify SVG diagrams with a long description); PNG/JPEG figures are unaffected.
   - The long-description check is file-wide (permissive), matching this module's existing style (`check_colorblind_safe_colors`'s docstring states the same rationale) rather than requiring a 1:1 image-to-description mapping.
   - CSS/JS checks are deliberately left out of the CI step rather than baselined, since remediating dozens of CSS color findings and the JS ARIA gap is unrelated scope; this is called out as a known gap in the PR body rather than silently fixed or silently wired in as a failure.
+  - `scripts/link-checker.py`: DOI-aware redirect handling, archive.org suggestions,
+    structured warnings, `--json-report`.
+  - `.github/workflows/link-checker.yml`: weekly schedule, `issues: write`, tracking-issue
+    upsert/close step.
+  - `docs/LINK-CHECKER.md`: documented the new behavior and CLI flag.
+  - `tests/test_link_checker_script.py`: new test file (script is hyphenated, loaded via
+    `importlib`, mirroring the existing `tests/test_check_equations.py` pattern).
+  - `SPEC.md`: added change-log row.
+  - `docs/development/DEVELOPMENT_LOG.md`: added `DL-#4596`.
+  - `docs/development/HANDOFF.md`: this entry.
+- Key decisions:
+  - Only `doi.org`/`dx.doi.org` links follow redirects; all other external links keep the
+    existing `NoRedirectHandler` behavior (unrelated to this issue's acceptance criteria,
+    so left as-is rather than expanded into a general redirect-following change).
+  - The redirect handler re-validates every hop with the existing `is_safe_url` SSRF check
+    before following it, since DOI targets are otherwise attacker-influenceable indirection.
+  - The archive.org suggestion is a Wayback Machine lookup built as
+    `https://web.archive.org/web/*/` followed by the dead link, not a verified/availability-checked
+    snapshot — the acceptance criterion asks for a suggestion, not confirmed availability, and
+    adding a second network call per dead link would slow the scheduled job for no required benefit.
+  - The tracking issue is identified by an HTML-comment marker in its body plus the existing
+    `ci`/`report`/`automation` labels (all already used elsewhere in the repo), rather than
+    minting a new label.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4588
 - Branch: claude/issue-4588
 - Governing issue/epic: #4588 (epic #4594 "[E12] Editorial Voice and Plain-Language Standard")
@@ -80,6 +142,11 @@
 - `python3 scripts/check_module_size_budget.py` — PASS
 - `python3 scripts/check_root_hygiene.py` — PASS
 - `python3 scripts/check_workflow_action_pins.py` — PASS
+- `pytest tests/test_link_checker_script.py` — PASS (12 passed)
+- `pytest tests/test_link_checker_script.py tests/test_check_links.py tests/test_check_links_additional.py tests/test_link_utils.py` — PASS (79 passed)
+- `python -m ruff check scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m black --check --line-length 100 scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m scripts.check_spec_changelog` — PASS
 
 ## Blockers and Risks
 
@@ -92,6 +159,18 @@
 
 ---
 
+
+- Risks/assumptions: the tracking-issue step is exercised only via the workflow's scheduled/
+  manual trigger in production GitHub Actions; it is not covered by a live integration test
+  (no local GitHub API to test against). The JSON-report plumbing and issue-body construction
+  logic were reviewed by hand against the existing `github-script` patterns in
+  `ci-benchmarks.yml`/`spec-check.yml`.
+
+## Next Steps
+
+1. Push branch and open a draft PR referencing `Fixes #4596`; release the fleet lease.
+
+---
 
 - `python -m pytest tests/test_check_governance_vocabulary.py tests/test_check_terminology.py -m content_lint` — 52 passed.
 - `python -m ruff check scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
