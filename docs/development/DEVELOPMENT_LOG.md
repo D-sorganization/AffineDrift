@@ -101,7 +101,14 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (focused suites pass: editorial/consistency, trust-surface/claim-audit, page-style, manifesto rigor, formatting lints, site link gate; full suite passes with no failures; ruff/black clean; `regenerate_claim_audit_evidence --check` passes.)
 - **Summary:** Adds `opinion` to the controlled category vocabulary and recategorises both Manifesto pages from `critique`; declares `pages/drifter-manifesto.qmd` the canonical entry point and `articles/drifter-manifesto.qmd` an explicitly non-canonical, Opinion-labelled companion, without deleting either page's content (full retirement is WEB-02.4's own `tier:strong` ADR work).
 - **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
+
 ### DL-#4541 · Fixture and Dataset Explorer
+
+- **State:** in_review
+- **Issue:** #4541
+- **Summary:** Fixture and dataset explorer page and manifest; see HANDOFF.md “Fixture and Dataset Explorer — 2026-09-30”.
+- **Next step:** Open draft PR and merge when CI green.
+
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review
@@ -304,6 +311,12 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** Awaiting frontier-agent review of the draft PR.
 
 ### DL-#4548 · Render or Retire Orphaned Per-Article Bibliography Files
+
+- **State:** in_review
+- **Issue:** #4548
+- **Summary:** Companion bibliography render rule and link fixes; see open consolidation PR #4704 batch.
+- **Next step:** Merge via consolidation or standalone PR when CI green.
+
 ### DL-#4504 · Configure Search, and Include Maturity in Results
 
 - **State:** in_review
@@ -361,7 +374,14 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-30 (SELF: 13/13 tests pass across test_social_cards.py and test_image_budget.py; ruff and black --line-length 100 clean)
 - **Summary:** Generates one 1200x630 Open Graph card per book/series (title, badge, signature graphic) at build time instead of one site-wide card, checked in like the existing site-wide `logo/og-card.png`, and wires three representative landing pages to use theirs via per-page `open-graph`/`twitter-card` overrides.
 - **Next step:** After merge and deploy, run a social-card debugger against the three live page URLs to close out the issue's second acceptance criterion (see HANDOFF.md Blockers).
+
 ### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
+
+- **State:** in_review
+- **Issue:** #4567
+- **Summary:** Alt-text and long-description validation wired into CI; tracked on branch in web consolidation batch.
+- **Next step:** Land with consolidation PR or follow-up when checks pass.
+
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
@@ -374,7 +394,14 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (`pytest tests/test_generate_datasets_catalog.py` 14 passed; `generate_datasets_catalog --check` up to date; ruff/black clean repo-wide; mypy clean on new modules; Quarto render-coverage/syntax/xref/single-title/title-case checks pass; full pre-push hook chain including `pytest-unit` passed; PR #4632 opened as draft)
 - **Summary:** Rebuilds the Datasets resource page as a generated catalogue from `data/datasets.yml`, replacing four truncated-looking third-party cards and the `mini.s-shot.ru` thumbnail host with verified licence/size/modality/access/citation fields, and adds an "AffineDrift Data Artefacts" section listing `data/ztcf`, `data/research_protocols`, and `schemas` with a real SHA-256 checksum per file.
 - **Next step:** Awaiting frontier-agent PR review.
+
 ### DL-#4595 · Cache Quarto Renders in CI
+
+- **State:** in_review
+- **Issue:** #4595
+- **Summary:** Quarto render caching in CI; see consolidation PR #4704 turnover.
+- **Next step:** Merge when required checks pass.
+
 ### DL-#4600 · Service-Worker Cache Busting by Content Hash
 
 - **State:** in_review
