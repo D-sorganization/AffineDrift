@@ -461,6 +461,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4495 | Unify the 404 page's contact address with About/Contact (WEB-01.10); Start Here and Library links deferred pending #4486 and the WEB-02.1 navbar restructure. |
 | 2026-09-30 | #4565 | Verify MathJax's assistive-MathML layer is not blocked by the connect-src 'self' CSP (the SRE explorer component is never loaded) and add regression/E2E tests across three math-heavy pages (WEB-09.5); the NVDA/VoiceOver human trial is deferred with a recorded manual protocol. |
 | 2026-09-30 | #4535 | Add an interactive DCR-through-phase widget (WEB-06.5) comparing an additive- and a state-dependent-drift system with equal instantaneous DCR but different reachable-interval widths, linking claim ad-dcr-001 on the DCR page. |
+| 2026-09-30 | #4697 | Allowlist SHA-256 evidence digests keyed by repository paths in `.gitleaks.toml` so claim-audit ledgers stop tripping gitleaks generic-api-key. |
 | 2026-09-30 | #4666 | Enforce 100% claim-audit route coverage for pages/glossary and pages/how-to-read, restoring green Deploy Website on main. |
 | 2026-09-30 | #4577 | Switch the gated MathJax loader to the smaller tex-chtml.js component build (TeX input + CHTML output only, no unused MathML input jax) on every math-bearing page (WEB-10.9). |
 | 2026-09-30 | #4678 | Implement standard Where Next footer component with 30 core pages mapping, no self-links, accessible nav card, and cross-cluster coordination (#4510). |
