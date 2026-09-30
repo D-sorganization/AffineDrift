@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/two-hand-wrench-rigor-4710`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (142 affected checks pass; 209-page PDF and eight browser cases verified; full combined-main validation pending)
+- **Last verified:** 2026-09-30 (combined-main suite: 6,034 passed, 29 skipped, 92.88% coverage; final content: 180 passed/four skipped; 39 protocol/history/audit checks; 209-page PDF and 20 browser cases verified)
 - **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
-- **Next step:** Complete combined-main validation and protected delivery of regular PR #4712. Provider citation follow-up #4711 remains open.
+- **Next step:** Complete protected CI and delivery of regular PR #4712. Provider citation follow-up #4711 remains open.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
