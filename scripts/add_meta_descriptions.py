@@ -27,7 +27,7 @@ DESCRIPTION_OVERRIDES = {
     "articles/theory-part5.qmd": "Simulink implementation documentation for the control-affine golf swing model, including numerical routines and validation approaches.",
     "articles/affine-nature-golf-swing.qmd": "Comprehensive theoretical foundation establishing the golf swing as a control-affine system, with detailed analysis of drift dynamics, input superposition, and causal force decomposition.",
     "articles/superposition.qmd": "Rigorous derivation of input superposition in affine control systems using Newton-Euler, Lagrangian, and screw-theoretic formulations with applications to biomechanics.",
-    "articles/controllability-drift-ratio.qmd": "Analysis of the drift-to-control ratio in golf swings using control theory, multibody dynamics, and relativistic analogies to understand passive dynamics exploitation.",
+    "articles/drift-control-ratio.qmd": "Analysis of the drift-control ratio in golf swings using control theory, multibody dynamics, and relativistic analogies to understand passive dynamics exploitation.",
     "articles/drift-components-wrench-double-pendulum.qmd": "Decomposition of natural versus active forces and torques in affine mechanical systems, with applications to double pendulum golf swing models.",
     "articles/force-mobility-matrices.qmd": "Force and mobility ellipsoid analysis for the golf swing, providing geometric insights into directional strength and movement capabilities.",
     "articles/intentional-constraint-collapse.qmd": "Analysis of how golfers generate high impact forces while maintaining stable club motion through intentional constraint release at ball contact.",

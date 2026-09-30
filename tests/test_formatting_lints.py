@@ -87,7 +87,7 @@ class TestDoubleSectionNumbering:
         [
             "articles/sources-of-nonlinearity.qmd",
             "articles/superposition.qmd",
-            "articles/controllability-drift-ratio.qmd",
+            "articles/drift-control-ratio.qmd",
             "articles/intentional-constraint-collapse.qmd",
         ],
     )
@@ -157,7 +157,7 @@ class TestHeadingLevelProgression:
             "articles/wrist-universal-joint.qmd",
             "articles/drifter-manifesto.qmd",
             "articles/secondary-axis-stability.qmd",
-            "articles/controllability-drift-ratio.qmd",
+            "articles/drift-control-ratio.qmd",
         ],
     )
     def test_heading_levels_do_not_skip(self, rel_path: str) -> None:
