@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4559 · Home and Start Here Visual QA Across Viewports and Themes
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4559 (WEB-08.8; epic #4560 / E8)
+- **Branch:** `claude/issue-4559`
+- **Paths:** `tests/e2e/visual.spec.js`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `node --check tests/e2e/visual.spec.js` clean; `playwright test --list` confirms the 6 new titles are excluded from the main CI run by the existing `matches visual snapshot` grep-invert filter in `ci-standard.yml`, same as the pre-existing #4089 route matrix; full `npx jest` 431 passed / 19 skipped)
+- **Summary:** Adds Home-page visual-regression coverage at 390/768/1440 px in light and dark themes to `tests/e2e/visual.spec.js`, reusing the #4089 masking/screenshot conventions. Start Here coverage is out of scope for this PR: `pages/start-here.qmd` does not exist yet (#4486, WEB-01.1, tier:strong) and the Home redesign it pairs with also does not exist yet (#4487, WEB-01.2, tier:strong) — both are design issues outside CLI-tier scope. See HANDOFF.md Blocked section.
+- **Next step:** Once #4486/#4487 ship, add a Start Here block to this suite and generate/approve baseline PNGs via `playwright test --update-snapshots` (tracked repo-wide under #4563).
+
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review

@@ -1,3 +1,68 @@
+# Home and Start Here Visual QA — #4559 (WEB-08.8)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4559`.
+- Branch `claude/issue-4559`, commit `SELF`; pull request: not created yet
+  (draft PR to be opened this session, targets `main`).
+- Governing issue: #4559 (WEB-08.8, child of epic #4560 / E8: Visual
+  Explanation and Design System). Acceptance criteria: approved visual
+  snapshots at 390/768/1440 px in both themes for the Home and Start Here
+  pages, coordinated with the #4089 whole-site viewport contract.
+- **Blocked (partial completion):** the issue's own acceptance criteria refer
+  to "the new pages" (Home and Start Here). Neither exists in a form this
+  issue can snapshot:
+  - `pages/start-here.qmd` does not exist at all. It is the scope of #4486
+    (WEB-01.1 — Add a "Start Here" Page), labelled `tier:strong` /
+    `judgement:design`, currently OPEN, and itself depends on #4497
+    (WEB-02.1) and #4554 (WEB-08.2), both also OPEN.
+  - The redesigned Home page does not exist either; `index.qmd` is still the
+    pre-redesign page. The redesign is #4487 (WEB-01.2 — Redesign the Home
+    Page Around Audiences, Not Publication State), also `tier:strong` /
+    `judgement:design` and OPEN.
+  - Both #4486 and #4487 are frontier-agent design work — out of this
+    CLI-tier session's lane per the fleet's Agent Tiers policy ("A CLI-tier
+    agent never claims a `tier:strong` issue") — so this session did not
+    author either page or guess at their content/layout.
+  - Separately, "approved" baseline PNGs for pixel-snapshot tests are not
+    committed anywhere in this repo today: `ci-standard.yml` excludes every
+    `matches visual snapshot` title from the CI run because no baselines
+    exist for the pre-existing #4089 10-route matrix either (tracked under
+    #4563). Generating and reviewing real baselines needs a full
+    `quarto render` + `playwright test --update-snapshots` pass on a runner
+    with those tools installed, which this session's sandbox does not permit
+    (the `quarto` CLI is not invocable here).
+- **What this PR does instead:** adds Home-page visual-regression coverage —
+  the one of the two target pages that exists today — at exactly the
+  390/768/1440 px widths and light/dark themes #4559 specifies, to
+  `tests/e2e/visual.spec.js`. It reuses that file's existing `volatileMasks()`
+  helper and screenshot/mask conventions from the #4089 matrix, and sets
+  `data-theme`/`data-bs-theme` the same way `tests/e2e/accessibility.spec.js`
+  and `js/dark-mode-toggle.js` already do. The six new test titles all contain
+  "matches visual snapshot", so they fall under the same `--grep-invert`
+  exclusion as the rest of the file and do not affect `quality-gate`.
+- Tests / validation run in this worktree:
+  - `node --check tests/e2e/visual.spec.js` → syntax OK.
+  - `npx playwright test --list --project=chromium tests/e2e/visual.spec.js`
+    → 128 tests listed, including the 6 new Home titles.
+  - `npx playwright test --list --project=chromium --grep-invert "matches
+visual snapshot|should meet WCAG AA text contrast in both themes|should
+provide summary of all compliant elements" tests/e2e/visual.spec.js` → 0 of
+    the new titles present (correctly excluded, matching `ci-standard.yml`).
+  - `npx jest` → 431 passed, 19 skipped, 0 failed.
+  - No Python files were touched by this change, so `ruff`/`black`/`pytest`
+    were not re-run against new code; the repo's existing Python state is
+    unaffected.
+- Next steps for whoever picks this up after #4486/#4487 ship:
+  1. Add a Start Here block to `tests/e2e/visual.spec.js` mirroring the new
+     Home block (390/768/1440 px, light/dark).
+  2. Run `playwright test --update-snapshots` for both pages on a runner with
+     Quarto + Playwright installed, and have a reviewer approve the generated
+     PNGs (same step #4563 tracks for the other 10 routes).
+  3. Commit the approved baselines and drop the `matches visual snapshot`
+     titles for Home/Start Here out of the CI exclusion list once they exist.
+
+---
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
