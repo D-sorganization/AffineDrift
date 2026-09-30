@@ -1,5 +1,659 @@
 # Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
+# Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
+# Datasets Page Rebuild — #4549 (WEB-07.7)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4549`.
+- Branch `claude/issue-4549`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4632 (draft, targets
+  `main`).
+- Governing issue: #4549 (WEB-07.7, child of epic #4552). Objective: rebuild the
+  Datasets resource page with real licence/access/schema/checksum metadata for
+  third-party datasets and AffineDrift's own `data/`/`schemas/` artefacts, and
+  drop the third-party `mini.s-shot.ru` thumbnail host.
+- Added `data/datasets.yml` as the single source of truth (4 third-party
+  datasets: GolfDB, CaddieSet, SportsPose, MoVi; 3 AffineDrift artefact groups:
+  `data/ztcf`, `data/research_protocols`, `schemas`). Licence/access/size fields
+  for the third-party entries were verified against each dataset's own GitHub
+  repository or paper (WebFetch), not guessed; SportsPose has no licence stated
+  by its publisher, and the page says so rather than inventing one. AffineDrift's
+  own artefacts have no declared data licence yet — tracked separately as
+  WEB-07.8 — so their `licence` field says "not yet declared" instead of picking
+  MIT or all-rights-reserved.
+- Added `src/tools/datasets_catalog.py` (load/validate `data/datasets.yml`,
+  compute real SHA-256 checksums per file, render HTML cards) and
+  `scripts/generate_datasets_catalog.py` (CLI wrapper with `--check`), following
+  the existing `generate_programming_catalog.py` generated-page pattern.
+  `resources/resources-datasets.qmd` now has a
+  `<!-- GENERATED:BEGIN/END datasets-catalog -->` block that the generator
+  owns; hand-edit `data/datasets.yml` and regenerate instead.
+- Wired `python3 -m scripts.generate_datasets_catalog --check` into
+  `.github/workflows/ci-standard.yml` next to the Programming Companion catalog
+  check, so a stale page or a hand edit fails CI.
+- Added `.resource-meta`/`.resource-checksums` styles to `css/resources.css`
+  (mirrored to `docs/css/resources.css` via `scripts/sync_frontend_assets.py`)
+  and dropped `.resource-card.has-media`/`<img>` thumbnails from this page —
+  no self-hosted screenshot images were fabricated; the rest of the resources
+  section (Papers, Websites, etc.) already uses plain cards without thumbnails.
+- Tests: `tests/test_generate_datasets_catalog.py` (14 cases) — DbC field
+  validation, real-SHA-256 checksum computation, marker-block replacement
+  preserving surrounding content, and each of the four issue acceptance
+  criteria (no truncated text, no third-party thumbnail host, every entry has
+  licence/access, artefacts listed with checksums).
+- Validation commands run in this worktree:
+  - `python3 -m pytest tests/test_generate_datasets_catalog.py -q` → 14 passed.
+  - `python3 -m scripts.generate_datasets_catalog --check` → up to date.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → 736 files unchanged.
+  - `python3 -m mypy src/tools/datasets_catalog.py scripts/generate_datasets_catalog.py`
+    → no issues.
+  - `python3 scripts/check_quarto_render_coverage.py`,
+    `python3 scripts/scan_quarto_syntax.py`, `python3 scripts/check_quarto_xrefs.py`,
+    `python3 scripts/check_single_title.py resources/resources-datasets.qmd`,
+    `python3 scripts/check_title_case.py`, `python3 -m scripts.check_module_size_budget`
+    → all pass.
+  - Full `python3 -m pytest --cov` suite: see the PR description for the run
+    started from this worktree (long-running; results attached there).
+- Not done / deferred: no `_quarto.yml` resource-publishing change was made, so
+  schema filenames in the AffineDrift cards are shown as plain text, not links
+  (`schemas/` is only partially published as a site resource today). No CSS
+  `check_style_discipline.py` fixes were made — it reports 248 pre-existing
+  violations across other stylesheets unrelated to this change; `resources.css`
+  itself has zero.
+
+- Unrelated fix required to push at all: this host's global Python had a
+  broken `PySide6` install (`ImportError: DLL load failed while importing
+  QtCore`). `pytest-qt`'s autodetection (`qt_compat.py::_guess_qt_api`) only
+  catches `ModuleNotFoundError`, not `ImportError`, so probing PySide6 crashed
+  `pytest_configure` with an uncaught `INTERNALERROR`, which failed the
+  `pytest-unit` pre-push hook for every push attempt — reproduced directly with
+  `python -m pytest tests/unit -x -q --tb=short -m "not slow and not
+  integration"` outside the hook too, so it is not hook-specific. Fixed with a
+  one-line addition to `tests/conftest.py`
+  (`os.environ.setdefault("PYTEST_QT_API", "pyqt6")`), next to the existing
+  `QT_QPA_PLATFORM` line, pinning to the binding this repo actually installs
+  and skipping the crashing autodetection entirely. This is a pre-existing,
+  host-environment issue unrelated to the datasets page; called out here and
+  in the PR body rather than silently folded into the feature diff.
+
+## Next Steps
+
+1. None outstanding for #4549 from this session.
+# Implementation Handoff — Create "How to Read This Site" Guide (#4491)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-01-6-how-to-read-this-site-4491
+- Baseline commit: fc36109d (origin/main)
+- Implementation commit: dd961a63
+- Pull request: #4665 (https://github.com/D-sorganization/AffineDrift/pull/4665)
+- Governing issue: #4491 (WEB-01.6, epic #4496)
+
+## Objective and Status
+
+- Objective: Create a canonical "How to Read This Site" guide explaining the content layers, publication maturity states, the evidence ladder, critique records, and citation standards. Consolidate publication states to be single-sourced.
+- Status: Implementation complete, tests and static checks passing; opening PR.
+- Completed:
+  - Created `pages/how-to-read.qmd` covering site architecture, the six canonical publication states (`Available`, `Validated`, `Experimental`, `Planned`, `Deprecated`, `Opinion`), the 4-level evidence ladder, how to read critique records, and citation standards.
+  - Replaced inline publication-state definitions in `index.qmd` and `pages/development-roadmap.qmd` with links to `how-to-read.html#publication-states`.
+  - Linked status pills in `pages/tools.qmd` to `how-to-read.html#publication-states` and normalized non-canonical `EXPLORATORY` to `EXPERIMENTAL`.
+  - Added link styles for `a.status-pill` and `.status-banner__title a` in `css/components/status-banner.css` and compiled bundle to `docs/styles.css`.
+  - Integrated `How to Read This Site` into `_quarto.yml` navbar Read menu and footer navigation.
+  - Added unit test suite `tests/test_how_to_read.py` (6 tests).
+  - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
+---
+
+# Implementation Handoff — Unified Publication Status Badge Component (#4516)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-04-2-status-badge-component-4516
+- Baseline commit: b000cfee (origin/main)
+- Implementation commit: 8623636f, 8a5b6b98
+- Pull request: to be opened
+- Governing issue: #4516 (WEB-04.2, epic #4499)
+
+## Objective and Status
+
+- Objective: Implement a unified publication status badge component used on cards, headers, listings, and search, rendering an inline SVG icon and accessible text for all 6 canonical states, meeting WCAG AA contrast in light and dark themes, and linking to the publication state definition.
+- Status: Implementation complete, test suites passing (Python tests, link checker, Jest/npm tests); opening PR.
+- Completed:
+  - Created Quarto shortcode `{{< status >}}` (`_extensions/status/_extension.yml`, `_extensions/status/status.lua`) supporting front matter detection (`status`, `maturity`, `publication-state`) and explicit parameters (`{{< status available >}}`, `{{< status "planned" "In Planning" >}}`).
+  - Added SVG icons and textual labels for all 6 canonical states (`available`, `validated`, `experimental`, `planned`, `deprecated`, `opinion`) plus normalization for legacy aliases (`canonical`, `reviewed`, `exploratory`, etc.).
+  - Implemented high-contrast theme-aware styling in `css/components/status-badge.css` meeting WCAG AA contrast (≥ 4.5:1, achieving ≥ 8:1) for both light and dark (`body.quarto-dark`) themes.
+  - Linked status badges by default to `pages/how-to-read.html#publication-states` with depth-aware relative path computation (`quarto.project.offset` and source path handling).
+  - Integrated with `scripts/filters/page-header-card.lua` to render status badges on page headers when metadata contains a publication state.
+  - Replaced legacy `.status-pill` elements across `pages/tools.qmd`, `pages/book-reviews.qmd`, `pages/daydreams-doodles.qmd`, `pages/drifter-manifesto.qmd`, `resources/research-reviews.qmd`, and updated `CONTRIBUTING.md`.
+  - Added unit test suite `tests/test_status_badge.py` (15 tests) verifying all 6 states, icons, labels, aliases, link resolution, and contrast requirements.
+  - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
+---
+
+# Implementation Handoff — Deploy Website Claim-Audit Route Coverage (#4666)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/main-is-red-deploy-website-4666
+- Baseline commit: 45d9fca0 (origin/main)
+- Governing issue: #4666 (main is red: Deploy Website, fleet-main-health)
+
+## Objective and Status
+
+- Objective: Restore green `Deploy Website` on `main` by adding newly created pages (`pages/glossary.html` and `pages/how-to-read.html`) to `data/trust/claim_audit_inventory.json` so that `--enforce-publication` coverage check succeeds during production website build.
+- Status: Implementation complete, test suites passing; opening PR.
+- Completed:
+  - Added reviewed route entries for `/pages/glossary.html` and `/pages/how-to-read.html` to `data/trust/claim_audit_inventory.json` with self-contained byte evidence (SHA-256 digests).
+  - Updated `DEFERRED_AUDIT_SCOPE_COUNTS` in `scripts/claim_audit_ids.py` for issue 4063 (from 13 to 15) to account for the two new pages.
+  - Updated route partition test in `tests/test_claim_audit_inventory.py`.
+  - Regenerated `data/trust/generated/claim_audit_report.json` and `reports/scientific-claim-audit.md`.
+  - Verified with `scripts.generate_claim_audit_inventory --check --enforce-publication`.
+
+---
+
+# Implementation Handoff — Cache Quarto Renders in CI (#4595)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4595
+- Branch: claude/issue-4595
+- Baseline commit: 382446d0dafee32930744c7f2aabb8a4915fb757
+- Implementation commit: `SELF`
+- Pull request: to be opened as a draft by this session
+- Governing issue/epic: #4595 (WEB-13.1, part of epic #4604 "[E13] Build, Reliability, and Maintainability")
+
+## Objective and Status
+
+- Objective: stop the ~14-minute full Quarto render running unconditionally on every PR's
+  `e2e-tests` job in `ci-standard.yml`, per the issue's acceptance criteria (cache `.quarto/`
+  keyed on source hashes, or render incrementally for PRs; reduce median PR end-to-end time by
+  ≥ 30 %; deploy keeps doing a clean full render).
+- Status: **partial / honest-scope**. Implemented the safe half of criterion 1 (an
+  `actions/cache` step over `docs/` + `.quarto/`, keyed by `hashFiles()` on every
+  Quarto-render-relevant source pattern) and left criterion 3 untouched by construction
+  (`deploy-website.yml` was not edited). Criterion 2 (≥ 30 % median reduction) cannot be
+  confirmed from this session — it needs real CI timing history after this merges, which is not
+  fabricable — so it is not checked off.
+- Why the scope stops here: a true "render incrementally for PRs" implementation (rendering only
+  the changed `.qmd` files while reusing a restored `docs/` for the rest) was built first, but
+  `tests/test_deployment_integrity.py::test_ci_captures_revision_bound_representative_visual_evidence`
+  already guards, with an explicit #4126 rationale, that the E2E lane always does
+  `run: quarto render --to html` (the whole site) — "so every representative route family is
+  present without a hand-maintained per-file render list" — and never a per-file invocation. A
+  partial render would restore a `docs/` tree that mixes this PR's changed pages with an older
+  cached snapshot of every other page, undermining that guarantee for the governed
+  representative-visual-evidence and per-route axe-core steps later in the same job. Overriding a
+  deliberate existing safety invariant to hit a performance target is exactly the kind of
+  contested design decision CLI-tier agents are asked not to guess on (`tier:strong` territory,
+  not `tier:cli`), so the implementation was scoped back to the option that cannot regress
+  correctness: skip the render only on an **exact** hash match (nothing Quarto-render-relevant
+  changed at all since a previous cached run), and fall through to the identical, unconditional
+  full render otherwise. No `restore-keys` fallback is configured, specifically so an inexact
+  match can never restore a stale/incomplete `docs/`.
+- Completed:
+  - `.github/workflows/ci-standard.yml` (`e2e-tests` job): new "Restore cached Quarto render" step
+    (`actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0`, pinned per
+    `scripts/check_workflow_action_pins.py`), caching `docs` + `.quarto`, keyed on
+    `hashFiles()` over every `*.qmd` render root plus `_quarto.yml`, `.quarto-version`,
+    `custom.scss`, `styles.css`, `css/**`, `js/**`, `data/**`, `schemas/**`, `references/*.bib`,
+    and the other `_quarto.yml` `resources:` entries. "Build site for E2E" now runs only when
+    `steps.quarto_cache.outputs.cache-hit != 'true'`.
+  - TDD: `tests/test_deployment_integrity.py::test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match`
+    (written first, confirmed RED against the pre-change workflow, then GREEN).
+- Remaining (recommended follow-up issue, `tier:strong` — a design decision, not mechanical):
+  1. Decide whether to relax the #4126 "always full render" invariant to allow a bounded
+     incremental render (e.g., only when a `docs/` snapshot restored from the base branch's last
+     successful render is fresh, and the changed-file set excludes anything in this PR's new
+     `GLOBAL_*` classification) without weakening the representative-evidence/axe-core coverage
+     guarantee, or find another path to the ≥ 30 % target.
+  2. Once real CI history exists on this branch's pattern (a run or two after merge), measure the
+     actual median PR end-to-end time delta and check off criterion 2 if it clears 30 %, or open
+     the follow-up above if it does not.
+
+## Files and Decisions
+
+- Key decisions:
+  - Cache path is `docs` + `.quarto` (not `_freeze/`): this site has no executable code cells
+    (per the existing "Build site for E2E" comment), so Quarto's freeze mechanism buys nothing;
+    the actual expensive artifact is the rendered HTML output itself.
+  - No `restore-keys`: an exact-match-only cache is strictly safer than a fallback that could
+    restore a `docs/` tree from an unrelated prior commit. This trades away some of the potential
+    speedup (a cache miss on any relevant change always pays the full 14 minutes, unchanged from
+    before this PR) for a guarantee that a cache hit can only ever replay a `docs/` tree that
+    this exact source state would have produced anyway.
+  - Deploy workflow untouched: criterion 3 ("deploy still does a clean full render") is satisfied
+    by construction rather than by a new check, since the cache step only exists in
+    `ci-standard.yml`.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest tests/test_deployment_integrity.py` — 16 passed, 1 skipped.
+- `python -m pytest tests/test_workflow_action_pins.py` — 2 passed.
+- `python -m ruff check .` and `python -m black --check --line-length 100 .` — both clean
+  repo-wide.
+- `python scripts/check_workflow_action_pins.py` — PASS (new `actions/cache` reference pinned to
+  a full 40-char commit SHA).
+- CI workflow YAML validated with
+  `python -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` — OK.
+- `scripts/check_dry_adoption.py`, `scripts/check_module_size_budget.py`,
+  `scripts/check_changed_file_size_budget.py` — all PASS, no new violations.
+- Known pre-existing failure outside this change's scope: `python -m pytest tests/` errors
+  during collection on ~70 unrelated `*_rigor.py`/benchmark test modules with
+  `ValueError: numpy.dtype size changed, may indicate binary incompatibility` (a
+  scipy-compiled-against-a-different-NumPy-ABI mismatch in this local Anaconda environment).
+  Confirmed pre-existing and unrelated: reproduces in isolation for
+  `tests/test_manifold_mechanics_rigor.py`, a file this PR never touches.
+
+## Blockers and Risks
+
+- Blocker: criterion 2 (≥ 30 % median PR end-to-end time reduction) is not verifiable from this
+  session; it requires observing real CI run durations after this merges.
+- Risk: none to render correctness — the cache can only ever replay output for a source state
+  that is byte-identical (by hash) to a state that already produced it; any other source state
+  always takes the pre-existing full-render path unchanged.
+
+## Next Steps
+
+1. After merge, watch a handful of real PR `e2e-tests` run durations; if the median reduction is
+   short of 30 %, open the `tier:strong` follow-up above to decide on a bounded incremental-render
+   design that preserves the #4126 full-coverage guarantee.
+
+## Change Log
+
+- `SELF` — Cache the PR E2E Quarto render on an exact source-hash match; deploy is untouched (#4595).
+
+---
+
+>>>>>>> origin/main
+# Service-Worker Cache Busting by Content Hash — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4600`.
+- Branch `claude/issue-4600`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4600 (epic #4604, E13 — Build, Reliability, and Maintainability).
+  Objective: resolve the unresolved content-hash cache-busting note (#1459, closed) in
+  `service-worker.js` and re-enable the excluded offline Playwright test (#4140).
+- Completed work:
+  - `service-worker.js`: removed the stale `TODO #1459` comment. Content-hash cache busting
+    is already implemented by `scripts/update_sw_cache_version.py`, which hashes the precached
+    CSS/JS assets into `CACHE_NAME`'s suffix (well covered by
+    `tests/test_update_sw_cache_version.py`, 12 tests, all passing); the comment now documents
+    that instead of pointing at a closed issue asking for it.
+  - `tests/e2e/offline.spec.js`: replaced the `should serve cached homepage when offline` test's
+    hardcoded `page.waitForTimeout(3000)` with a deterministic
+    `await page.evaluate(() => navigator.serviceWorker.ready)` wait, so the assertion no longer
+    races the service worker's install/precache step under CI load.
+  - `.github/workflows/ci-standard.yml`: dropped `should serve cached homepage when offline` from
+    the full-site E2E `--grep-invert` exclusion list added for #4140. The other eight excluded
+    titles are unrelated to this issue and left untouched.
+- Key decision: acceptance criterion "Content-hash precache manifest" is satisfied by the
+  existing `update_sw_cache_version.py` mechanism (a single content-hash-derived `CACHE_NAME`
+  covering all precached assets) rather than a per-file manifest — that mechanism already has
+  full test coverage, so the only unresolved half of the acceptance criteria was the stale
+  comment and the CI exclusion.
+- Compatibility constraints: none — no public API or cache-key format changed; `CACHE_NAME`
+  values still follow the pre-existing `affinedrift-v5-<hash>` shape.
+- Validation commands and outcomes:
+  - `npx jest` → 25 suites, 420 passed, 19 skipped, 0 failed.
+  - `python3 -m pytest tests/test_update_sw_cache_version.py -q` → 12 passed.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → 733 files unchanged, no diffs.
+  - `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` → OK
+    (workflow YAML still parses after the exclusion-list edit).
+  - **Not run locally:** `quarto render` (blocked in this sandbox — ~14 min full-site render is
+    out of policy for this session) and `npx playwright test`. The re-enabled offline spec was
+    reasoned through by code inspection (SW registers on `window.load` in
+    `_includes/site-after-body.html`, activates via `self.clients.claim()`, and
+    `navigator.serviceWorker.ready` resolves once an active SW is present) but has not been
+    executed against a real rendered site. CI's `e2e-tests` job (full-site Playwright run) is the
+    first actual execution of the un-excluded test — check its result on the opened PR.
+- Blockers/risks: none identified beyond the above. If CI's `e2e-tests` job still fails the
+  re-enabled title, the next step is to inspect that job's trace/video artifact rather than
+  re-guess a timing fix.
+- Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
+# Implementation Handoff — Report Broken External Links as Issues (#4596)
+# Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4567
+- Branch: claude/issue-4567
+- Baseline commit: 02507aac
+- Implementation commit: SELF
+- Pull request: not created yet (draft PR opened this session)
+- Governing issue/epic: #4567 (epic #4569)
+
+## Objective and Status
+
+- Objective: Wire `scripts/validate_accessibility.py` into `quality-gate` and add a check requiring complex E8 SVG diagrams to carry a long description.
+- Status: Implementation complete; draft PR pending.
+- Completed:
+  - Added `check_long_description_for_diagrams()` to `scripts/validate_accessibility.py`: flags an SVG image reference in a QMD file unless the file also has an `aria-describedby` resolved to an in-page element, or a `<details>` "long description" disclosure.
+  - Fixed a pre-existing latent bug: the QMD loop in `validate_accessibility()` called `qmd_file.relative_to(repo_root)`, but `collect_qmd_files()` returns CWD-relative paths, not absolute ones, so any real finding crashed the script (previously dormant because every existing check found zero issues repo-wide). Now uses the path as-is, matching `seo_audit.py`'s convention.
+  - Discovered the new check would flag 39 pre-existing QMD files whose SVG figures are matplotlib-generated data plots that predate the E8 diagram work, not the hand-authored explanatory diagrams E8 specifies. Added `config/accessibility-long-description-baseline.json` (same `_comment`/`accepted` shape as `tree-parity-baseline.json`/`terminology-baseline.json`) to grandfather them, so the new check only blocks new/changed content.
+  - Discovered the script's existing CSS colorblind-safe-color and JS ARIA-label checks also have unrelated pre-existing findings (dozens of CSS colors, `js/main.js`) with no baseline. Added a `--qmd-only` flag to `validate_accessibility()`/`main()` so CI wires only the in-scope checks (alt text, heading hierarchy, long descriptions); the CSS/JS checks stay unwired pending their own baseline/cleanup work (out of #4567's scope; flagged in the PR body).
+  - Added `.github/workflows/ci-standard.yml` step "Verify Alt Text and Long Descriptions" running `python3 scripts/validate_accessibility.py --qmd-only` in the `static-checks` job that feeds `quality-gate`.
+  - Added tests in `tests/test_validate_accessibility.py` for the new check (non-SVG images ignored, missing long description flagged, `aria-describedby` pass, `<details>` disclosure pass, dangling `aria-describedby` still flagged).
+  - Added a `SPEC.md` change-log row keyed to #4567.
+- Remaining: Open the draft PR.
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4596 (worktree)
+- Branch: claude/issue-4596
+- Baseline commit: 02507aac (origin/main)
+- Implementation commit: SELF
+- Pull request: not created yet (opening as draft in this session)
+- Governing issue/epic: #4596 (epic #4604)
+
+## Objective and Status
+
+- Objective: In `.github/workflows/link-checker.yml`, make the scheduled external-link check
+  report to a single tracking issue instead of only job logs, check DOI links through their
+  doi.org redirect, and suggest an archive.org fallback for each dead link.
+- Status: Implementation complete, tests passing; opening draft PR.
+- Completed:
+  - `scripts/link-checker.py`: added `is_doi_url()` and a `SafeRedirectHandler` so DOI links
+    (which resolve via an HTTP redirect by design) are checked by following that redirect,
+    safety-checked per hop against SSRF instead of being flagged broken on the 30x response.
+  - Added `archive_org_suggestion()` and attached it to every external-URL warning.
+  - Changed `check_file`'s external warnings from plain strings to structured dicts
+    (`file`, `url`, `reason`, `archive_suggestion`).
+  - Added `--json-report PATH` to `scripts/link-checker.py` to emit those warnings as JSON.
+  - `.github/workflows/link-checker.yml`: changed the schedule from daily to weekly
+    (`0 2 * * 1`), added `issues: write` permission, wired `--json-report` into the
+    "Check external URLs" step, and added a "Report broken external links as a tracking
+    issue" step that finds-or-updates a single open issue (marker comment + `ci`/`report`/
+    `automation` labels) with the current broken-link table, and closes it once the report
+    is empty.
+  - Updated `docs/LINK-CHECKER.md` to document the weekly cadence, DOI handling, the
+    archive.org suggestion, the tracking-issue behavior, and `--json-report`.
+  - Added `tests/test_link_checker_script.py` (12 tests) covering DOI-domain detection, the
+    archive.org suggestion format, DOI redirect-following (including the SSRF-blocked
+    redirect case), the structured warning shape, and `--json-report` output.
+  - Keyed SPEC.md change-log row to #4596.
+- Remaining: none for this issue's acceptance criteria. The pre-existing "convoluted
+  continue-on-error" in the internal-refs step (named in the issue's Problem section) was
+  left untouched — it is not covered by an acceptance-criteria checkbox and changing CI
+  failure semantics for internal refs is out of scope for this surgical change; noted as a
+  follow-up opportunity in the PR body.
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/validate_accessibility.py`: new `check_long_description_for_diagrams()`, baseline loader, `qmd_only` param, `--qmd-only` CLI flag, `relative_to` bugfix.
+  - `config/accessibility-long-description-baseline.json`: new baseline of 39 pre-existing files.
+  - `tests/test_validate_accessibility.py`: new `TestLongDescriptionForDiagrams` class.
+  - `.github/workflows/ci-standard.yml`: new CI step in `static-checks`.
+  - `SPEC.md`: change-log row.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
+- Key decisions:
+  - "Complex diagram" is scoped to SVG image references, matching E8's stated format (WEB-08.2/08.3 specify SVG diagrams with a long description); PNG/JPEG figures are unaffected.
+  - The long-description check is file-wide (permissive), matching this module's existing style (`check_colorblind_safe_colors`'s docstring states the same rationale) rather than requiring a 1:1 image-to-description mapping.
+  - CSS/JS checks are deliberately left out of the CI step rather than baselined, since remediating dozens of CSS color findings and the JS ARIA gap is unrelated scope; this is called out as a known gap in the PR body rather than silently fixed or silently wired in as a failure.
+  - `scripts/link-checker.py`: DOI-aware redirect handling, archive.org suggestions,
+    structured warnings, `--json-report`.
+  - `.github/workflows/link-checker.yml`: weekly schedule, `issues: write`, tracking-issue
+    upsert/close step.
+  - `docs/LINK-CHECKER.md`: documented the new behavior and CLI flag.
+  - `tests/test_link_checker_script.py`: new test file (script is hyphenated, loaded via
+    `importlib`, mirroring the existing `tests/test_check_equations.py` pattern).
+  - `SPEC.md`: added change-log row.
+  - `docs/development/DEVELOPMENT_LOG.md`: added `DL-#4596`.
+  - `docs/development/HANDOFF.md`: this entry.
+- Key decisions:
+  - Only `doi.org`/`dx.doi.org` links follow redirects; all other external links keep the
+    existing `NoRedirectHandler` behavior (unrelated to this issue's acceptance criteria,
+    so left as-is rather than expanded into a general redirect-following change).
+  - The redirect handler re-validates every hop with the existing `is_safe_url` SSRF check
+    before following it, since DOI targets are otherwise attacker-influenceable indirection.
+  - The archive.org suggestion is a Wayback Machine lookup built as
+    `https://web.archive.org/web/*/` followed by the dead link, not a verified/availability-checked
+    snapshot — the acceptance criterion asks for a suggestion, not confirmed availability, and
+    adding a second network call per dead link would slow the scheduled job for no required benefit.
+  - The tracking issue is identified by an HTML-comment marker in its body plus the existing
+    `ci`/`report`/`automation` labels (all already used elsewhere in the repo), rather than
+    minting a new label.
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4588
+- Branch: claude/issue-4588
+- Governing issue/epic: #4588 (epic #4594 "[E12] Editorial Voice and Plain-Language Standard")
+- Pull request: not yet created at the time this section was written (draft PR opened in the same session; see PR link in the commit that follows)
+
+## Objective and Status
+
+- Objective: keep the five internal governance/critique-apparatus words ("governed", "qualified", "provenance", "protected", "fail-closed") out of reader-facing prose — replace with plain language or a glossary link — and add a CI lint that warns (then eventually blocks) on new occurrences outside the evidence/developer surfaces.
+- Status: **partial / Blocked**. Infrastructure (lint + glossary) is complete and CI-wired in warn mode. Content remediation is complete on the hub/entry reader pages (`pages/`, `resources/`, `books/`, and the non-`programming/` `models/` boilerplate) but **not** on the bulk of the deep scientific-chapter corpus under `articles/` (roughly 90+ files, ~180 remaining occurrences) or on a cluster of evidence/protocol-specification pages under `models/` (`active-impedance-identification.qmd`, `bilateral-hand-wrench-validation.qmd`, `hybrid-impact-contact.qmd`, `model-ladder.qmd`, `equipment-individual-response.qmd`, `research-protocol-readiness.qmd`, `neural-timing-feedback.qmd`, `population-generalization.qmd`) that read as evidence-tier documents despite their directory location.
+- Why partial: the issue's acceptance criterion ("at least a 75% reduction on reader pages") requires rewriting dense, precise scientific/methodological prose across the textbook chapter corpus. Doing that correctly needs a consistent plain-language standard, which is the explicit subject of the still-open prerequisite issue **#4587 "[WEB-12.1] Write the Editorial Style Guide"** (listed first in the epic, `tier:strong`/`judgement:design`). Rewriting ~180 occurrences across ~90 chapter files without that standard risks inconsistent terminology and, more importantly, risks silently changing precise methodological claims in peer-review-style scientific prose — exactly the kind of judgment call CLI-tier agents are asked not to guess on. Measured against the lint's own scope (reader-facing `.qmd` under `articles/`, `books/`, `models/`, `pages/`, `resources/`, excluding `articles/_generated/` and `models/programming/`), occurrences dropped from 303 to 252 (~17%); within just `pages/` + `resources/` + `books/` + top-level `models/` (excluding the evidence-tier protocol cluster above), the reduction is close to 100% (`resources/` and `books/` are now fully clean; `pages/` only retains the glossary page itself and CSS class-attribute mentions, both deliberate).
+- Completed:
+  - TDD: `tests/test_check_governance_vocabulary.py` (19 tests, written first, RED confirmed against the missing module before implementation).
+  - `scripts/check_governance_vocabulary.py`: scans `articles/`, `books/`, `models/`, `pages/`, `resources/` (`.qmd` only), excluding `articles/_generated/` and `models/programming/`, for the five terms; baseline-gated like the existing `scripts/check_terminology.py`.
+  - `config/governance-vocabulary-baseline.json`: grandfathers the 252 remaining occurrences (the deep chapter corpus, the evidence-tier `models/` protocol cluster, the glossary page itself, and incidental CSS-class/URL matches that are not reader-visible prose).
+  - `pages/glossary.qmd`: new plain-language glossary for the five terms, linked from `pages/notation.qmd`.
+  - Content edits reducing or removing the five terms on: `pages/overview.qmd`, `pages/collaborate.qmd`, `pages/tools.qmd`, `pages/tangent-hyperplanes.qmd`, `pages/technology.qmd`, `pages/development-roadmap.qmd`, `pages/drifter-manifesto.qmd`, `pages/notation.qmd`, `resources/articles.qmd`, `resources/learning-path-golf-science.qmd`, `resources/learning-path-biomechanics.qmd`, `resources/learning-paths.qmd`, `resources/research-review-induced-acceleration-analysis.qmd`, `resources/resources-software.qmd`, `books/index.qmd`, `books/roadmap.qmd`, `books/human-motor-control.qmd`, `models/models.qmd`, `models/models-opensim.qmd`, `models/models-myosim.qmd`, `models/models-pinocchio.qmd`, `models/models-mujoco.qmd`, `models/models-drake.qmd`, `models/models-simulink.qmd`.
+  - `.github/workflows/ci-standard.yml`: new "Verify Governance Vocabulary Stays Out of Reader Prose" step, `continue-on-error: true` (warn mode per the acceptance criterion), matching the existing MATLAB Quality Check warn-mode precedent.
+- Remaining (recommended follow-up, likely as one or more new issues once #4587 lands):
+  1. Write the editorial style guide (#4587) — a prerequisite for consistent chapter-level rewrites.
+  2. Rewrite the `articles/` chapter corpus (proximal-distal energy-transfer/companion chapters, tangent-hyperplanes series, Geometry of Motion / Physics of Golf textbook chapters) against that standard, removing baseline entries as each file is cleaned.
+  3. Decide whether the `models/` evidence-tier protocol cluster listed above should be reclassified as an evidence surface (like `critiques/`/`reports/`) and excluded from this lint's scope, or rewritten — a scope decision, not a mechanical one.
+  4. Once the reader surfaces are clean, remove `continue-on-error: true` from the CI step to make the gate blocking, per the issue's second acceptance criterion.
+
+## Files and Decisions
+
+- Key decisions:
+  - Reader-page scope = `articles/`, `books/`, `models/`, `pages/`, `resources/` per `docs/development/repository_inventory.md`'s existing reader/process split; evidence/developer exclusions = `articles/_generated/` (generated trust/critique annotations) and `models/programming/` (the programming-companion consumer docs), matching the issue's own "evidence and developer surfaces" language.
+  - "Warn mode" implemented via the CI step's `continue-on-error: true` (the repo's existing precedent for MATLAB Quality Check), not a script-level flag, so promoting to blocking later is a one-line diff.
+  - Baseline mechanism copied from `scripts/check_terminology.py` (`path::term` keys, no line number) rather than inventing a new grandfathering scheme.
+  - Did not rename the `provenance-note` CSS component (`css/components/provenance-note.css`, used in `pages/tools.qmd`, `pages/drifter-manifesto.qmd`, `index.qmd`, tested in `tests/tools/test_design_primitives.py` and `tests/test_home_page_layout.py`, documented in `CONTRIBUTING.md`) — a CSS class name is not reader-visible prose, and renaming it is a separate CSS/design-system refactor outside this issue's scope.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest tests/test_validate_accessibility.py` — PASS (20 passed)
+- `python -m ruff check scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python -m black --check --line-length 100 scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python3 scripts/validate_accessibility.py --qmd-only` (PYTHONPATH=.) — exit 0 across the full repo
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 scripts/check_module_size_budget.py` — PASS
+- `python3 scripts/check_root_hygiene.py` — PASS
+- `python3 scripts/check_workflow_action_pins.py` — PASS
+- `pytest tests/test_link_checker_script.py` — PASS (12 passed)
+- `pytest tests/test_link_checker_script.py tests/test_check_links.py tests/test_check_links_additional.py tests/test_link_utils.py` — PASS (79 passed)
+- `python -m ruff check scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m black --check --line-length 100 scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m scripts.check_spec_changelog` — PASS
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: the 39-file baseline is a one-time grandfather; new SVG diagrams added anywhere (including under E8) must supply a long description or add themselves to the baseline (not recommended) to pass CI. The CSS/JS checks remaining unwired is a known gap, not a defect introduced by this change.
+
+## Next Steps
+
+1. Open the draft PR for #4567 and note the unwired CSS/JS checks as follow-up scope in its body.
+
+---
+
+
+- Risks/assumptions: the tracking-issue step is exercised only via the workflow's scheduled/
+  manual trigger in production GitHub Actions; it is not covered by a live integration test
+  (no local GitHub API to test against). The JSON-report plumbing and issue-body construction
+  logic were reviewed by hand against the existing `github-script` patterns in
+  `ci-benchmarks.yml`/`spec-check.yml`.
+
+## Next Steps
+
+1. Push branch and open a draft PR referencing `Fixes #4596`; release the fleet lease.
+
+---
+
+- `python -m pytest tests/test_check_governance_vocabulary.py tests/test_check_terminology.py -m content_lint` — 52 passed.
+- `python -m ruff check scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
+- `python -m black --check --line-length 100 scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
+- `python scripts/check_governance_vocabulary.py --root . --baseline config/governance-vocabulary-baseline.json` — PASS (0 new violations; 252 baselined).
+- CI workflow YAML validated with `python -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` — OK.
+- `python -m ruff check .` and `python -m black --check --line-length 100 .` — both clean repo-wide.
+- `python scripts/check_root_hygiene.py` and `python -m scripts.check_spec_changelog` — both pass.
+- Known pre-existing failure outside this change's scope: `python -m pytest -m content_lint` errors during collection on ~75 unrelated `*_rigor.py`/benchmark test modules with `ImportError: numpy.core.multiarray failed to import` (a scipy-compiled-against-NumPy-1.x vs. installed NumPy 2.x ABI mismatch in this local environment). Confirmed pre-existing and unrelated: none of those files are touched by this change, and the same import fails in isolation for a file this PR never edited (`tests/test_swing_plane_launch_rigor.py`).
+
+## Blockers and Risks
+
+- Blocker: full 75% reduction depends on the not-yet-written editorial style guide (#4587) for consistent chapter-level plain-language replacements, and on a scope decision about the `models/` evidence-tier protocol cluster. See "Objective and Status" above.
+- Risk: none to existing functionality — all edits are prose/link-text changes plus new, additive tooling; no existing behavior was removed.
+
+## Next Steps
+
+1. Land #4587 (editorial style guide), then use it to drive chapter-by-chapter rewrites of the `articles/` corpus, removing baseline entries as each file is cleaned.
+
+## Change Log
+
+- `SELF` — Keep internal governance vocabulary out of reader prose; add warn-mode CI lint (#4588).
+
+---
+
+# Restore the Ten Excluded Browser Tests — Issue #4563
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4563`.
+- Branch: `claude/issue-4563`, commit `SELF`. Pull request: to be opened as a draft by this session.
+- Governing issue: #4563 (WEB-09.3, part of epic #4569 / E9 — Accessibility Conformance).
+
+## Objective and Status
+
+- Objective: `ci-standard.yml`'s Chromium E2E step `--grep-invert`-excludes ten test titles (added in
+  #4126/#4141, diagnosed in #4140); remove the exclusion for every title whose defect is actually fixed,
+  fix any defect that isn't, and never loosen a test to make CI green.
+- Investigation found the ten titles split three ways:
+  1. Two of the ten (`should render desktop home layout as a three-column grid`, `should toggle mobile
+     sidebar sections`) no longer match any test title at all — PR #4200 already renamed/rewrote those
+     tests for the single-column home redesign, so these two clauses in the exclusion regex have been
+     dead weight (matching nothing) since 2026-09-05.
+  2. Seven of the ten (`should meet WCAG AA text contrast in both themes`, `should show entry details
+     when clicked`, `should navigate to articles page`, `should serve cached homepage when offline`,
+     `should validate mobile menu button`, `should provide summary of all compliant elements`, `should
+     allow a user to navigate from home to article and back to top`) have defects that were fixed in
+     source by PR #4200 (dark-theme link/button contrast tokens, bibliography detail-panel class,
+     back-to-top touch target, stale navigation/user-journey selectors) — confirmed by reading
+     PR #4200's diff and the current state of `styles.css`, `css/tokens/colors.css`, `js/bibliography.js`,
+     `service-worker.js`, and the three rewritten spec files, plus three subsequent site-wide a11y
+     remediation PRs (#4139/#4206, #4207/#4208, #4209/#4210) that further extended contrast/axe fixes
+     across every route. PR #4200 never removed the CI exclusion, so none of this was ever confirmed by
+     an actual CI run of these tests.
+  3. One of the seven above (`should validate mobile menu button`) had a second, independent defect in
+     the *test* itself, found by reading `tests/e2e/touch-targets.spec.js`'s shared `checkTouchTarget`
+     helper: at a desktop-width viewport, Bootstrap's `.navbar-toggler` is legitimately CSS-hidden
+     (`display: none` above the `lg` breakpoint), so `elementHandle.boundingBox()` returns `null`; the
+     helper counted that as a non-compliant 0×0 touch target rather than treating a non-rendered element
+     as not applicable. This same bug is almost certainly the actual cause of the `55 non-compliant
+     elements` reported by #4140's diagnosis for `should provide summary of all compliant elements`
+     (that test walks every `button`/`a`/`input` on the homepage, many of which are legitimately hidden
+     at any single viewport). Fixed by skipping null-bounding-box elements instead of flagging them;
+     this can only turn existing false failures into skips, since a real 0-size *visible* element still
+     returns a real (non-null) zero-size box and is still caught.
+  4. The tenth (`matches visual snapshot`, 60 parametrized pixel-comparison cases in `visual.spec.js`)
+     stays excluded. No baseline PNGs are committed anywhere in the repository (confirmed via `git
+     ls-files` / `Glob`), so `toHaveScreenshot()` fails with "no baseline found" on every run regardless
+     of whether the rendered site is correct. Generating correct baselines needs a `playwright test
+     --update-snapshots` run on the actual fleet CI runner — this sandbox has neither `quarto` nor
+     `docker` (both denied by this session's permission policy), and even if it did, this is a Windows
+     sandbox, so locally generated screenshots would not byte-match the Linux runner's font metrics and
+     would just fail immediately for a different reason. This is left excluded with an updated,
+     accurate comment instead of guessed at.
+- Status: draft PR to be opened with a `Blocked:` section covering item 4 above.
+
+## Files and Decisions
+
+- `.github/workflows/ci-standard.yml`: replaced the ten-title `--grep-invert` value with just `"matches
+  visual snapshot"`, and rewrote the adjacent comment/TODO (which pointed at #4140, already closed) to
+  explain the current state and point at #4563.
+- `tests/e2e/touch-targets.spec.js`: `checkTouchTarget` now `continue`s (skips) on a `null` bounding box
+  instead of pushing a `compliant: false` result, with a comment explaining why (see point 3 above).
+- Deliberately did not touch `js/bibliography.js`, `styles.css`, `css/tokens/colors.css`,
+  `service-worker.js`, or the already-rewritten `homepage.spec.js` / `navigation.spec.js` /
+  `user_journey.spec.js` — their fixes are already on `main` from PR #4200 and later a11y PRs; re-editing
+  them would not trace to anything this issue still needs.
+
+## Validation
+
+- `npx jest`: 429 passed, 19 skipped, 26 suites — unaffected by this change, run to confirm no
+  regression from touching a `tests/e2e/*.spec.js` file (Jest does not execute `tests/e2e/`).
+- `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"`: parses cleanly.
+- **Not run: the actual Playwright suite.** This sandboxed worktree has no Quarto-rendered `docs/`
+  (`docs/**/*.html` is gitignored, built only by `quarto render`), and both `quarto` and `docker` are
+  denied by this session's permission policy, so there is no way to render the site and run
+  `npx playwright test --project=chromium` locally. Every claim above about which tests now pass is
+  based on reading source and the merged PR #4200 diff, not on an observed pass. CI's own `e2e-tests`
+  job (which does render the full site) is the first real execution of the restored tests — treat its
+  result as the actual acceptance evidence for this issue, not this handoff.
+
+## Blockers and Risks
+
+- Blocker: cannot render the Quarto site locally (`quarto`/`docker` both denied), so this PR's core
+  claim — that the nine restored tests pass — is unverified by this session. See `Validation` above.
+- Risk: if CI's `e2e-tests` run turns up a real remaining failure among the nine, the fix belongs in the
+  same area PR #4200 touched (contrast tokens, touch targets, bibliography JS, or the three rewritten
+  spec files) — do not re-add the title to `--grep-invert` to make CI green.
+
+## Next Steps
+
+1. Push the branch and open the draft PR with `Fixes #4563` and a `Blocked:` section for the
+   pixel-snapshot baselines (item 4 above), which need a follow-up on the fleet CI runner, not more
+   source changes here.
+2. Frontier review reads CI's `e2e-tests` result as the real pass/fail evidence for the nine restored
+   titles, since this session could not run them.
+3. If CI does turn up a genuine failure, fix it at the source named in `Risks` above and keep the
+   exclusion removed rather than reverting it.
+
+---
+
+# Readability Measurement Tool — Issue #4591
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4591`.
+- Branch `claude/issue-4591`, commit `SELF`; pull request: to be opened as a draft by this session.
+- Governing issue: #4591 (WEB-12.5, part of epic #4594 / E12 — Editorial Voice and Plain-Language Standard).
+- Objective: `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for
+  lay blocks (`<section class="laymans-terms">` content), the `summary-plain` frontmatter field,
+  and hub pages, excluding math/code/Markdown/HTML markup from the scoring text.
+- Threshold: grade 10, taken from WEB-12.1's stated readability target ("lay block <= grade 10")
+  and WEB-12.4's hub-page acceptance criterion, applied uniformly via `--threshold`. WEB-12.1
+  itself (`docs/development/editorial-style-guide.md`) is still open (`tier:strong`, unmerged);
+  this issue only needed the numeric target already stated in its issue body, not the finished
+  guide document, so implementation proceeded rather than blocking on #4587.
+- `summary-plain` and most named WEB-12.4 hub pages (a dedicated "Start Here" page, for example)
+  do not exist yet; the checker is forward-compatible — it silently finds nothing for absent
+  frontmatter fields or hub-page paths rather than erroring, and `--hub-page`/`ReadabilityConfig`
+  let a later pass add pages as they're created.
+- CI wiring mirrors the existing MATLAB Quality Check pattern in `ci-standard.yml`:
+  `continue-on-error: true` plus an `upload-artifact` step (`readability-report.json`), so the
+  check is advisory rather than blocking, per the acceptance criteria.
+- Validation:
+  - `python3 -m pytest tests/tools/test_check_readability.py --no-cov -q`: 33 passed.
+  - `python3 -m ruff check scripts/check_readability.py tests/tools/test_check_readability.py`: clean.
+  - `python3 -m black --check --line-length 100 scripts/check_readability.py tests/tools/test_check_readability.py`: clean (after one auto-format pass).
+  - `python3 -m mypy scripts/check_readability.py --ignore-missing-imports --allow-untyped-decorators --disable-error-code no-any-unimported --disable-error-code misc --disable-error-code unused-ignore --disable-error-code no-any-return`: clean.
+  - Manual run against the live repo (`python3 -m scripts.check_readability`) found 16/22 existing
+    lay-block/hub-page passages currently over grade 10 — expected, since WEB-12.4's rewrite pass
+    (the issue that will actually bring prose under the threshold) hasn't happened yet.
+- Full project suite (`pytest --cov`, `npx jest`, `npx playwright test`) was not run in this
+  session; the change touches only a new script, its test file, and one CI workflow step, with no
+  behavioral change to any existing module.
+
+## Next Steps
+
+1. Open the draft PR (`Fixes #4591`) and let the frontier review pass judge the hub-page default
+   list and the shared grade-10 threshold across all three layers, since WEB-12.1 only states the
+   lay-block number explicitly.
+2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
+   different threshold than lay blocks.
+3. No further implementation is planned from this session pending review feedback.
+# Implementation Handoff — Build the Page Header Card Component (#4507)
+# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
+>>>>>>> origin/main
+
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
