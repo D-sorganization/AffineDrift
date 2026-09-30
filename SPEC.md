@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4563 | Remove nine of the ten `--grep-invert` E2E exclusions from `ci-standard.yml` whose defects were already fixed (#4200) but never actually re-run in CI; fix a touch-target test bug that miscounted CSS-hidden elements as non-compliant; leave the tenth (pixel-snapshot baselines) excluded pending a fleet-runner `--update-snapshots` pass. |
 | 2026-09-29 | #4588 | Add warn-mode CI lint and plain-language glossary keeping internal governance vocabulary out of reader-facing prose; partial reduction on hub/entry pages pending #4587 (#4588). |
 | 2026-09-29 | #4591 | Add `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages against the WEB-12.1 threshold. |
 | 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |

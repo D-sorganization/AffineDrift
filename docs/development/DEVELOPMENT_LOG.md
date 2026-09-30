@@ -76,6 +76,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds a warn-mode CI lint for internal governance vocabulary ("governed", "qualified", "provenance", "protected", "fail-closed") in reader prose, a plain-language glossary page, and removes the vocabulary from the hub/entry reader pages. Full 75% corpus-wide reduction is blocked on the still-open prerequisite #4587 (editorial style guide) for the remaining `articles/` chapter corpus; see the HANDOFF.md Blocked section.
 - **Next step:** Land #4587, then use its standard to rewrite the `articles/` chapter corpus and shrink the baseline.
 
+### DL-#4563 · Restore the Ten Excluded Browser Tests
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** to be opened as a draft by this session
+- **Issue:** #4563 (WEB-09.3; epic #4569 / E9 — Accessibility Conformance)
+- **Branch:** `claude/issue-4563`
+- **Paths:** `.github/workflows/ci-standard.yml`, `tests/e2e/touch-targets.spec.js`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (statically, not by running Playwright — see Blocked note on the PR; `npx jest` 429/429 passing, unaffected)
+- **Summary:** Nine of the ten titles `--grep-invert`-excluded from the Chromium E2E job (#4140) were already fixed in source by PR #4200 (stale homepage/navigation/user-journey selectors, dark-theme contrast, back-to-top touch target, bibliography detail panel) but the exclusion list itself was never removed, so CI never actually validated those fixes; this issue removes the nine now-obsolete exclusions and fixes a tenth defect found by re-reading the suite (`touch-targets.spec.js`'s shared helper counted a CSS-hidden element, such as the collapsed `.navbar-toggler` at desktop width, as a non-compliant 0×0 touch target instead of skipping it). The tenth excluded title, `matches visual snapshot` (60 pixel-comparison cases in `visual.spec.js`), stays excluded: no baseline PNGs are committed anywhere in the repo, so it cannot pass regardless of site correctness; generating them needs a `playwright test --update-snapshots` run on the actual fleet CI runner (font metrics differ from this sandbox), which is out of reach here.
+- **Next step:** Frontier review of the draft PR's Blocked note (pixel-snapshot baselines) and CI's e2e-tests run, which is the only environment in this fleet that can actually execute the restored tests against a real Quarto render.
+
 ### DL-#4591 · Readability Measurement Tool
 
 - **State:** in_review
