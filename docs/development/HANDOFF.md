@@ -452,6 +452,19 @@
 1. Open the draft PR (`gh pr create --draft`) and record its number/URL here.
 2. Await frontier-agent review per the `tier:cli` lane.
 
+# Implementation Handoff — Consolidated web PRs (2026-09-30)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-consolidated`
+- Branch: `chore/web-consolidated-2026-09-30`; commit SELF; PR: see branch (opened after push)
+- Objective: land nine reviewed PRs (#4635, #4637, #4673, #4679, #4681, #4625, #4641, #4627,
+  #4636) in one CI cycle under the consolidation policy (Repository_Management#1691).
+- Decisions: HANDOFF/DEVELOPMENT_LOG merged by whole section; claim-audit counts summed
+  (`/pages/*` #4063 = 20, reviewed batches = 226); `pages/notation-quick-reference.qmd`
+  description shortened to 144 chars to meet main's 70-160 char rule (#4575).
+- Validation: full non-slow suite 6147 passed; the two other failures under xdist
+  (citation sample pages, generated-reports currency) pass in isolation.
+- Next: after merge, close the nine originals as superseded by the consolidated PR.
+
 # Implementation Handoff — Deploy Website route coverage (#4548 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-route-coverage`
