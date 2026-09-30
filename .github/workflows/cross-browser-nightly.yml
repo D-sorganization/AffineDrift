@@ -1,0 +1,124 @@
+name: Cross-Browser Nightly
+
+# WEB-09.4 (#4564): ci-standard.yml's e2e-tests job runs Chromium only.
+# Firefox and WebKit are configured in playwright.config.js but otherwise run
+# locally only. This job runs a representative route set (tests/e2e/smoke.spec.js)
+# against Firefox and WebKit nightly and files a deduplicated issue per failure.
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # nightly, 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: cross-browser-nightly-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  cross-browser-e2e:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Compute Quarto render cache key
+        # Same key as ci-standard.yml's e2e-tests job (#4595) so a render already
+        # produced for the current tree is reused instead of rebuilt nightly.
+        id: quarto_cache_key
+        shell: bash
+        run: |
+          key=$(git ls-files -s -- . ':(exclude)tests/**' ':(exclude).github/**' ':(exclude)docs/development/**' | sha256sum | cut -c1-64)
+          echo "key=quarto-render-v2-${key}" >> "$GITHUB_OUTPUT"
+      - name: Restore cached Quarto render
+        id: quarto_cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            docs
+            .quarto
+          key: ${{ steps.quarto_cache_key.outputs.key }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+      - name: Install Dependencies
+        run: npm ci
+      - name: Install Playwright Browser (${{ matrix.browser }})
+        run: |
+          if sudo -n true 2>/dev/null; then
+            npx playwright install --with-deps "${{ matrix.browser }}" || {
+              echo "::warning::Playwright system dependency install failed; retrying browser-only install"
+              npx playwright install "${{ matrix.browser }}"
+            }
+          else
+            echo "No passwordless sudo — installing browser binaries only."
+            npx playwright install "${{ matrix.browser }}"
+          fi
+      - name: Resolve pinned Quarto version
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        id: quarto
+        run: echo "version=$(tr -d '[:space:]' < .quarto-version)" >> "$GITHUB_OUTPUT"
+      - name: Set up Quarto
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          version: ${{ steps.quarto.outputs.version }}
+      - name: Remove .env.example
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        run: rm -f .env.example
+      - name: Build site for E2E
+        if: steps.quarto_cache.outputs.cache-hit != 'true'
+        run: quarto render --to html
+      - name: Sync Frontend Assets
+        run: |
+          python3 scripts/sync_frontend_assets.py
+          python3 scripts/bundle_css.py
+      - name: Run representative route set on ${{ matrix.browser }}
+        # tests/e2e/smoke.spec.js: the PR smoke suite already covers a
+        # representative set of public routes plus core behavioral invariants,
+        # so it doubles as the nightly cross-browser route set.
+        run: |
+          npx playwright test \
+            --project="${{ matrix.browser }}" \
+            --reporter=json \
+            tests/e2e/smoke.spec.js > "playwright-report-${{ matrix.browser }}.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: cross-browser-report-${{ matrix.browser }}
+          path: playwright-report-${{ matrix.browser }}.json
+          retention-days: 14
+
+  report-failures:
+    needs: cross-browser-e2e
+    if: always()
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: cross-browser-report-*
+          path: reports
+          merge-multiple: true
+      - name: File deduplicated issues for new failures
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/report_e2e_browser_failures.py \
+            --report reports/playwright-report-firefox.json \
+            --report reports/playwright-report-webkit.json \
+            --repo "${{ github.repository }}" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
