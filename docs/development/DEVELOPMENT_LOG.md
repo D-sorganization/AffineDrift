@@ -18,6 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4574 · Remove the Unused `metrics.js` Preload
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit
+- **Issue:** #4574 (WEB-10.6; epic #4579 / E10)
+- **Branch:** `claude/issue-4574`
+- **Paths:** `_includes/site-head.html`, `tests/test_metrics_preload_removed.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_metrics_preload_removed.py` 2/2 pass)
+- **Summary:** Removes the sitewide `<link rel="preload" href="/js/metrics.js" as="script">` from `_includes/site-head.html`; only `resources/bibliography.qmd` loads `metrics.js`, so every other route paid for an unused preload that triggers a console warning.
+- **Next step:** Open the draft PR for review.
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
