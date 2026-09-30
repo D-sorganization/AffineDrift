@@ -32,6 +32,8 @@ CANONICAL_JS_NAMES = (
     "accessibility.js",
     "bibliography.js",
     "dark-mode-toggle.js",
+    "dcr-visualizer.js",
+    "dcr-visualizer-ui.js",
     "equation-runtime-gate.js",
     "forms.js",
     "history.js",
@@ -55,6 +57,7 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
     SyncMap(source="css/rotation-converter.css", mirrors=("docs/css/rotation-converter.css",)),
     # css/ is the canonical source; docs/css/ is the Quarto-served mirror.
     # src/css/ has been removed (issue #1382); deploy_assets.py now reads from css/ directly.
+    SyncMap(source="css/dcr-visualizer.css", mirrors=("docs/css/dcr-visualizer.css",)),
     SyncMap(
         source="css/search-metrics.css",
         mirrors=("docs/css/search-metrics.css",),
