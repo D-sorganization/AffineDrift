@@ -226,6 +226,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-09-29 | #4631 | Implement Plain-Language Summary and Key Takeaways component driven by front matter and styled in print stylesheet (#4508). |
 | 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
+| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
 | 2026-09-29 | #4630 | Align Physics of Golf nomenclature with NOTATION.md autonomous drift and control channel definitions (#4529). |
 | 2026-09-29 | #4524 | Extend critique annotations to ZTCF (zero-torque-counterfactual.qmd, theory-part2.qmd) and proximal-distal (proximal-distal-energy-transfer.qmd) pages, enforcing critique-to-claim page mappings and fail-closed contract (#4524). |
 | 2026-09-29 | #4617 | Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617). |
