@@ -186,8 +186,8 @@ class TestRevisionHistoryRendering:
         )
 
         pandoc_bin = shutil.which("pandoc")
-        if not pandoc_bin:
-            pytest.skip("pandoc binary not installed in test environment")
+        if pandoc_bin is None:
+            pytest.skip("Pandoc is required for the revision-history rendering check")
         res = subprocess.run(
             [
                 pandoc_bin,

@@ -71,6 +71,176 @@
 
 ---
 
+# DCR Visualiser Widget — #4535 (WEB-06.5)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4535`.
+- Branch `claude/issue-4535`, commit `SELF`; pull request: not created by this session — the
+  orchestrator opens it.
+- Governing issue: #4535 (WEB-06.5, child of epic #4543 "[E6] Interactive Models and
+  Reproducibility"). Objective: an interactive widget, driven by
+  `src/affine_control/reachability.py::instantaneous_scalar_dcr`, showing how the DCR ratio
+  changes through a phase of a trajectory and explicitly demonstrating why DCR is not a
+  reachability certificate (claim `ad-dcr-001`), embedded on the DCR page with the claim
+  linked, plus a parity test.
+- Design: WEB-06.1 (the ADR deciding between `{ojs}`/Pyodide/Shinylive for interactive widgets)
+  is still open and `tier:strong`, so this widget follows the only existing precedent in the
+  repo — `articles/rotation-converter.qmd`'s plain hand-rolled JS engine plus a separate UI
+  script, loaded via `<script src="../js/...">` from a raw `{=html}` block, no new build
+  tooling.
+- Review response (this update): a human review of the initial implementation asked for four
+  fixes plus one optional DRY improvement, all applied:
+  1. Relabeled the phase slider from "Swing phase (fraction of horizon elapsed)" to "Phase
+     time $t$" (it displays elapsed time, not a fraction) and renamed the subsection heading
+     and internal wording from "Swing Phase"/"swing phase" to the neutral "Phase" — the widget
+     is a declared mathematical construction, not real golf-swing data, and the heading
+     shouldn't imply otherwise.
+  2. Added a `<thead>` with `<th scope="col">` headers ("Quantity", "Additive drift",
+     "State-dependent drift") to the numeric results table, which previously had no column
+     labels.
+  3. Added a `<noscript>` fallback (following `articles/proximal-distal-falsification-atlas.qmd:29`'s
+     pattern) stating the default scenario's values and linking claim `ad-dcr-001`, so the page
+     degrades gracefully without JavaScript.
+  4. Moved all ~20 inline `style=` attributes and the hard-coded `#2563eb`/`#dc2626` colors into
+     a new `css/dcr-visualizer.css`, using `var(--bg-secondary)`/`var(--border-color)`/
+     `var(--bg-primary)`/`var(--text-secondary)` design tokens for surfaces, and two
+     widget-scoped custom properties (`--dcrviz-additive`, `--dcrviz-state-dependent`) for the
+     two-series accent colors — the same scoping pattern `css/rotation-converter.css` uses for
+     `--rc-error`/`--rc-success` — with a `[data-theme="dark"]` / `prefers-color-scheme: dark`
+     override so the series colors adapt in dark mode. Registered the new stylesheet in
+     `scripts/sync_frontend_assets.py`'s `SYNC_MAPS` (mirrors to `docs/css/dcr-visualizer.css`)
+     so the deploy pipeline's `sync_frontend_assets.py --check` step covers it. While doing
+     this, found and fixed a real gap from the initial implementation: `js/dcr-visualizer.js`
+     and `js/dcr-visualizer-ui.js` had never been added to `CANONICAL_JS_NAMES`, so
+     `tests/test_sync_frontend_assets.py::test_every_canonical_javascript_module_has_a_deploy_sync_map`
+     was failing — the two JS modules were not registered for deploy-time mirroring to
+     `docs/js/`.
+  5. (Optional, applied) Centralized the shared parity numbers — the governed fixture's
+     $x_0=1$, $\bar u=1$, $T=1$, the two systems' drift parameters, and their expected
+     instantaneous-DCR/reachable-interval/width values — into
+     `tests/fixtures/dcr_visualizer_parity.json`, read by both
+     `tests/test_dcr_visualizer_parity.py` (Python) and `tests/dcr-visualizer.test.js` (JS)
+     instead of each suite hardcoding the same literals independently.
+- The widget compares two `LinearScalarSystem`s that share one instantaneous DCR at the start
+  of the phase — an additive-drift system (`gradient=0`) and a state-dependent-drift system
+  (`gradient=ubar/x0`) — and evolves each along its own zero-input drift trajectory as the
+  reader drags the phase slider. This is the exact scenario already governed by
+  `tests/test_dcr_event_sensitivity_protocol.py::test_state_dependent_drift_breaks_any_dcr_to_reachable_width_mapping`
+  (both systems: instantaneous DCR = 1; reachable-interval widths = 2 and 2(e−1)), which gives
+  both the Python and JS test suites the same anchored ground truth.
+- Added:
+  - `js/dcr-visualizer.js` — pure, DOM-free JS mirror of `LinearScalarSystem`,
+    `instantaneous_scalar_dcr`, `scalar_linear_reachable_interval`, and
+    `constant_additive_drift_interval`, plus the two zero-input drift trajectories
+    (`additiveDriftState`, `multiplicativeDriftState`) used to evolve state through the phase.
+  - `js/dcr-visualizer-ui.js` — DOM wiring: reads the `x0`/`ubar`/`horizon`/phase-slider inputs,
+    validates them (nonzero `x0`, positive `ubar`, nonnegative `horizon`) with the same
+    fail-loud contract as the Python dataclass, renders an inline SVG line chart of DCR across
+    the phase for both systems, an accessible data table of sampled values, and the computed
+    reachable intervals/widths.
+  - `css/dcr-visualizer.css` — the widget's styles (see review-response item 4 above), mirrored
+    to `docs/css/dcr-visualizer.css` at deploy time via `scripts/sync_frontend_assets.py`.
+  - Embedded the widget in `articles/controllability-drift-ratio.qmd`, in a new
+    "Interactive: DCR Through a Phase" subsection directly after the existing
+    "Executable Constant-Drift Counterexample" subsection, with
+    `<a data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">` linking the same registered
+    claim already cited earlier in the article (and again in the `<noscript>` fallback).
+  - `tests/dcr-visualizer.test.js` (17 cases) and `tests/dcr-visualizer-ui.test.js` (5 cases) —
+    Jest parity tests for the pure module and a DOM smoke test that extracts the actual
+    `{=html}` block from the `.qmd` file (mirroring `tests/rotation-converter-ui.test.js`'s
+    pattern) and exercises the live widget, including its two error paths (`x0 = 0`,
+    `ubar <= 0`).
+  - `tests/test_dcr_visualizer_parity.py` (5 cases) — recomputes the same governed fixture
+    directly from `src/affine_control/reachability.py`, asserts the widget's numeric defaults
+    in the article match that exact fixture, and asserts the claim link is present. Together
+    with the Jest suite (which computes the identical numbers from the JS implementation),
+    this is the "parity test" required by the acceptance criteria — there is no existing
+    cross-runtime (Python-calls-Node) execution harness in this repo to build a single
+    combined test on. Both suites now read `tests/fixtures/dcr_visualizer_parity.json` for the
+    shared scenario parameters and expected values (review-response item 5 above).
+  - Regenerated the pinned SHA-256/revision digests that reference
+    `articles/controllability-drift-ratio.qmd`'s bytes after editing it:
+    `python -m scripts.regenerate_claim_audit_evidence` (touches
+    `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`)
+    and `python -m scripts.generate_research_readiness_library` (touches
+    `data/research_protocols/library.json`, `data/research_protocols/public_summary.json`).
+    These two generators reference each other's output (the research-readiness library's own
+    digest is itself pinned as evidence for an unrelated route, `proximal-distal-falsification-atlas`),
+    so both were re-run until both `--check` invocations passed cleanly.
+- Validation commands run in this worktree:
+  - `npm install` (node_modules was not present in the worktree).
+  - `npx jest tests/dcr-visualizer.test.js tests/dcr-visualizer-ui.test.js tests/rotation-converter-ui.test.js` → 36 passed.
+  - `python3 -m pytest tests/test_dcr_visualizer_parity.py tests/test_dcr_reachability_contract.py tests/test_dcr_article_rigor.py tests/test_dcr_event_sensitivity_protocol.py tests/test_scientific_trust_metadata.py -q` → all passed.
+  - `python3 -m pytest tests/test_check_single_title.py tests/test_editorial_and_consistency.py tests/test_formatting_lints.py tests/test_publication_markup_contract.py tests/test_research_protocol_readiness.py tests/test_claim_audit_inventory.py tests/test_sync_frontend_assets.py tests/test_deployment_integrity.py tests/test_page_style_discipline.py tests/test_check_styles_budget.py tests/test_check_css_architecture.py tests/test_css_bundle.py -q` → all passed (after regenerating digests and registering the new CSS/JS sync maps).
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → clean.
+  - `npx prettier --check tests/fixtures/dcr_visualizer_parity.json css/dcr-visualizer.css` → clean.
+  - `python3 -m scripts.check_module_size_budget` → passes (`js/dcr-visualizer.js` 74 lines,
+    `js/dcr-visualizer-ui.js` 114 lines, `css/dcr-visualizer.css` well under budget).
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` and
+    `python3 -m scripts.generate_research_readiness_library --check` → both clean.
+  - `python3 -m scripts.sync_frontend_assets --check` → clean (after running it once without
+    `--check` to generate `docs/css/dcr-visualizer.css`, then reverting the unrelated
+    pre-existing drift it also surfaced in the already-tracked `docs/css/print.css` and the
+    untracked `docs/css/rotation-converter.css`/`docs/js/*.js` build artifacts — those mirrors
+    are generated by `quarto render` at deploy time, not committed, so they were left out of
+    this diff).
+  - **Not run:** `quarto render` and `npx playwright test` (full-site render out of scope for
+    this sandbox). The widget was reasoned through via the Jest DOM smoke test rather than a
+    rendered-page browser check; CI's `e2e-tests` job is the first real render/axe-core pass
+    over this page.
+
+---
+
+# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
+# Implementation Handoff — Real Dates and Per-Article Change History (#4545)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: b6aa4baf87635c3451558596fc4c20f121d5c219
+- Implementation commit: SELF
+- Pull request: #4640
+- Governing issue/epic: #4545 (epic #4552)
+
+## Objective and Status
+
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
+- Completed:
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, push, create PR, key SPEC.md row, arm auto-merge, and release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
+- User-owned or unrelated worktree changes: none observed
+
+---
+
 # Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
 
 - Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
@@ -838,48 +1008,56 @@
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-01-3-extend-personas-4488
-- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: ebced38fbe6908492e5c8e2ff08866516f5691c0
 - Implementation commit: SELF
-- Pull request: #4638
-- Governing issue/epic: #4488 (epic #4496)
+- Pull request: #4640
+- Governing issue/epic: #4545 (epic #4552)
 
 ## Objective and Status
 
-- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
-- Status: PR #4638 created, awaiting auto-merge
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
 - Completed:
-  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
-  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
-  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
-  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
-  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
-  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
-  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
-  - Regenerated claim audit evidence digests and verified all checks pass.
-  - Keyed change-log row in `SPEC.md` to #4638.
-- Remaining: Arm auto-merge and release lease.
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Monitor PR #4640 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
-  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
-  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
-  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
-  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
-  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
-  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
-  - `SPEC.md`: Added change-log row.
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
-- `python -m src.tools.site_link_gate` — PASS (0 errors)
-- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
-- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `pytest tests/test_dates_and_history.py` — PASS (16 passed)
+- `python -m scripts.derive_substantive_dates --check` — PASS
+- `python -m ruff check scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `python -m black --check --line-length 100 scripts/derive_substantive_dates.py tests/test_dates_and_history.py` — PASS
+- `npm run lint:css` — PASS
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_root_hygiene.py` — PASS
+- `python -m src.tools.site_link_gate` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -890,12 +1068,13 @@
 
 ## Next Steps
 
-1. Monitor PR #4638 CI and auto-merge into main.
+1. Monitor PR #4640 CI and auto-merge into main.
 
 ## Change Log
 
+- 02507aac — Extend personas to include curious golfer/coach and student (#4488) (#4638).
+- ebced38f — Build the page header card component (#4507) (#4633).
 - `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
-- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
 
