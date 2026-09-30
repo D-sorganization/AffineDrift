@@ -439,6 +439,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
 | 2026-09-30 | #4541 | Add the Fixture and Dataset Explorer: a browser page that validates ZTCF, population-generalization, and proximal-distal fixtures against their published schemas, lists every field in an accessible table, and offers a live SHA-256 download digest. |
+| 2026-09-29 | #4504 | Configure explicit Quarto search (overlay, limit, keyboard shortcut), remove the unverified SearchAction JSON-LD, and show the page-header-card maturity badge on matching search results. |
 | 2026-09-30 | #4664 | Hide, mark, or retire stub hubs, add Planned badges, and enforce scaffolding styling policy (#4500, WEB-02.6). |
 | 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
 | 2026-09-30 | #4516 | Implement unified publication status badge component (WEB-04.2) with Quarto shortcode {{< status >}}, accessible SVG icons and text, WCAG AA contrast, and depth-aware links to publication states. |
