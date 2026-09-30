@@ -4,12 +4,14 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 246
-- Deferred: 0
+- Reviewed: 243
+- Deferred: 3
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
+- [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 2 routes
+- [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061): 1 routes
 
 ## Reviewed Evidence
 
@@ -27,7 +29,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
 | `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 1 |
 | `/articles/impact-mechanics-and-ball-flight.html` | `articles/impact-mechanics-and-ball-flight.qmd` | 1 |
-| `/articles/impact-optimality-and-model-limits.html` | `articles/impact-optimality-and-model-limits.qmd` | 1 |
 | `/articles/intentional-constraint-collapse.html` | `articles/intentional-constraint-collapse.qmd` | 2 |
 | `/articles/inverse-dynamics-inference.html` | `articles/inverse-dynamics-inference.qmd` | 4 |
 | `/articles/inverse-dynamics.html` | `articles/inverse-dynamics.qmd` | 4 |
@@ -41,7 +42,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 40 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 17 |
-| `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 1 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
 | `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 5 |
 | `/articles/reference-point-problem.html` | `articles/reference-point-problem.qmd` | 1 |
@@ -239,7 +239,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/repositories/repositories-models.html` | `repositories/repositories-models.qmd` | 1 |
 | `/repositories/repositories-pinocchio.html` | `repositories/repositories-pinocchio.qmd` | 1 |
 | `/repositories/repositories.html` | `repositories/repositories.qmd` | 1 |
-| `/resources/articles.html` | `resources/articles.qmd` | 1 |
 | `/resources/bibliography.html` | `resources/bibliography.qmd` | 1 |
 | `/resources/learning-path-biomechanics.html` | `resources/learning-path-biomechanics.qmd` | 1 |
 | `/resources/learning-path-control-theory.html` | `resources/learning-path-control-theory.qmd` | 1 |
@@ -279,7 +278,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
 | `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Reviewed | — | None | None | 0 |
-| `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Reviewed | — | None | None | 0 |
+| `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-33941e46336a` | `/articles/intentional-constraint-collapse.html` | Reviewed | — | None | `crit-intentional-constraint-collapse`, `crit-stiffness-pulse-paradox` | 0 |
 | `ad-route-53f2549bc89f` | `/articles/inverse-dynamics-inference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Reviewed | — | None | None | 0 |
@@ -293,7 +292,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 9 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
-| `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 0 |
+| `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Reviewed | — | None | None | 7 |
 | `ad-route-85ac4b6d5e6d` | `/articles/reference-point-problem.html` | Reviewed | — | None | None | 0 |
@@ -493,7 +492,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-257639545452` | `/repositories/repositories-models.html` | Reviewed | — | None | None | 0 |
 | `ad-route-9220d15a31f4` | `/repositories/repositories-pinocchio.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7c9bece3a422` | `/repositories/repositories.html` | Reviewed | — | None | None | 0 |
-| `ad-route-32f17d5abbca` | `/resources/articles.html` | Reviewed | — | None | None | 0 |
+| `ad-route-32f17d5abbca` | `/resources/articles.html` | Deferred | [#4061](https://github.com/D-sorganization/AffineDrift/issues/4061) | None | None | 0 |
 | `ad-route-cf2f7797b649` | `/resources/bibliography.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e162f8e1f669` | `/resources/learning-path-biomechanics.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3b89c286bfae` | `/resources/learning-path-control-theory.html` | Reviewed | — | None | None | 0 |

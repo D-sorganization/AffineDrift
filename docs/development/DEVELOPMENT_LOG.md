@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4714 · Impact Optimality and Model Limits
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4714 (epic #4009; historical corpus #4021)
+- **Branch:** `fix/impact-optimality-rigor-4714`
+- **Paths:** `articles/impact-optimality-and-model-limits.qmd`, `articles/proximal-distal-model-workbench.qmd`, `resources/articles.qmd`, `tests/test_impact_optimality_review.py`, `reports/technical-review/impact-optimality-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (12 numerical checks; nine RED-to-GREEN source boundaries; all 21 pass; Ruff/Black/title case pass; initial HTML render succeeds)
+- **Summary:** Bound the instantaneous theorem, inertia reduction and historical solver evidence; correct primary-study and human-objective inference; reconcile two linked public summaries without renewing their other review scope.
+- **Next step:** Verify rendered publication, commit and bind evidence, finish full validation and regular PR delivery; keep the corpus goal active.
+
 ### DL-#4706 · Induced Acceleration Biomechanics Review
 
 - **State:** in_review

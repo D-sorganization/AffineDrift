@@ -1,3 +1,15 @@
+# Impact-Optimality Technical Review — #4714
+
+- Goal remains active under epic #4009; #4021 is the historical corpus umbrella. Only regular PRs.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`, branch `fix/impact-optimality-rigor-4714`, base `984552e17`.
+- Session `technical-review-20260930-impact`; issue lease expires 2026-10-01 00:20 UTC; presence expires 00:35 UTC. Renew before expiry.
+- Complete article revised: normalized energy bound, singular conditions, distributed inertia and realizability, coupling mismatch, grip-origin shift, historical solver limits, human-data boundaries, actuation and moving-pivot mechanics. Historical tables retained with provenance and no independent solver-rerun claim.
+- Workbench model-limit section and catalog description reconciled; remaining bytes independently compared with base. These are bounded linked corrections, not full new source reviews. Their original audit records and the article record are preserved under `reports/technical-review/impact-optimality-prior-reviews.json`.
+- Twelve numerical cases passed before editing. Eight article-boundary checks and one workbench-summary check failed before their corrections; all 21 pass now. Ruff, Black and 651-source title-case gate pass. Initial root HTML render succeeds; browser, immutable evidence and full-suite validation remain pending.
+- Two parallel agy Gemini 3.8 Flash supplied-text inventories completed; lead independently adjudicated. No unattended tool execution or delegated edits. Primary-paper read scopes and rejected suggestions are recorded in `reports/technical-review/impact-optimality-review.md`.
+- PR #4709 merged main `984552e17`; checker repair #4716 merged main `5e1a11059` at 22:27:52 UTC and its lease is released. PR #4712 passed complete CI at `f5e3bd0c6`; integration commit `f9d2a42b4` preserves both turnover histories and passes 144 combined checks, with final-head protected CI pending.
+- Current branch deliberately keeps the article's corpus row pending until final publication verification. Three audit routes are temporarily deferred for the source checkpoint; rebind after source commit and final render. Preserve unrelated scientific scopes and carry forward historical records.
+
 # Resumed Technical Review — Induced Acceleration #4706
 
 The user explicitly resumed the corpus goal on 2026-09-30. This supersedes the

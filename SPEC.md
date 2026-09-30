@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4714 | Bound impact energy optimality, inertia equivalence, solver evidence and golfer inference; reconcile linked summaries with preserved review history. |
 | 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
 | 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
 | 2026-09-30 | #4538 | Add a Binder `environment.yml` installing from `requirements.txt` so it opens the notebook scaffolds in JupyterLab (Binder build unverified), a shared Binder-launch include on every book's Notebook Workflow section and the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` for per-page source downloads; the devcontainer half is blocked, see the PR's Blocked section. |
