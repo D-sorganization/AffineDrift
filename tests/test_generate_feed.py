@@ -5,13 +5,18 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+
 from scripts.generate_feed import (
     CHANNEL_DESCRIPTION,
     CHANNEL_TITLE,
     FeedItem,
+    FeedValidationError,
     build_feed_xml,
+    main,
     parse_date,
     to_rfc822,
+    validate_feed_xml,
 )
 
 
@@ -134,6 +139,108 @@ class TestBuildFeedXml:
         xml1 = build_feed_xml(self._items(), build_date=build_date)
         xml2 = build_feed_xml(self._items(), build_date=build_date)
         assert xml1 == xml2
+
+
+class TestValidateFeedXml:
+    """Tests for RSS 2.0 structural validation (acceptance criterion: feed validates)."""
+
+    def _valid_xml(self) -> str:
+        items = [
+            FeedItem(
+                title="An Article",
+                link="https://affinedrift.com/articles/a.html",
+                description="Description.",
+                pub_date=datetime(2026, 1, 1, tzinfo=UTC),
+            )
+        ]
+        return build_feed_xml(items, build_date=datetime(2026, 6, 9, tzinfo=UTC))
+
+    def test_generated_feed_is_valid(self):
+        """The generator's own output passes validation with no errors."""
+        assert validate_feed_xml(self._valid_xml()) == []
+
+    def test_empty_item_list_is_valid(self):
+        """A feed with zero items (e.g. no dated content yet) is still valid RSS."""
+        assert (
+            validate_feed_xml(build_feed_xml([], build_date=datetime(2026, 6, 9, tzinfo=UTC))) == []
+        )
+
+    def test_rejects_malformed_xml(self):
+        """Unparseable XML is reported, not silently accepted."""
+        errors = validate_feed_xml("<rss><channel>")
+        assert errors
+        assert any("not well-formed" in e for e in errors)
+
+    def test_rejects_wrong_rss_version(self):
+        """A non-2.0 RSS version is flagged."""
+        xml = self._valid_xml().replace('version="2.0"', 'version="0.91"')
+        errors = validate_feed_xml(xml)
+        assert any("version" in e for e in errors)
+
+    def test_rejects_missing_channel_title(self):
+        """A channel missing its required <title> fails validation."""
+        xml = self._valid_xml().replace(f"<title>{CHANNEL_TITLE}</title>", "", 1)
+        errors = validate_feed_xml(xml)
+        assert any("title" in e for e in errors)
+
+    def test_rejects_item_missing_link(self):
+        """An item missing <link> fails validation."""
+        xml = self._valid_xml().replace(
+            "<link>https://affinedrift.com/articles/a.html</link>", "", 1
+        )
+        errors = validate_feed_xml(xml)
+        assert any("link" in e for e in errors)
+
+    def test_rejects_relative_item_link(self):
+        """An item <link> that is not an absolute http(s) URL fails validation."""
+        xml = self._valid_xml().replace(
+            "https://affinedrift.com/articles/a.html", "/articles/a.html"
+        )
+        errors = validate_feed_xml(xml)
+        assert any("absolute" in e for e in errors)
+
+    def test_rejects_unparseable_pubdate(self):
+        """A <pubDate> that is not RFC-822 fails validation."""
+        xml = self._valid_xml().replace("Thu, 01 Jan 2026 00:00:00 GMT", "not-a-date", 1)
+        errors = validate_feed_xml(xml)
+        assert any("pubDate" in e for e in errors)
+
+    def test_rejects_duplicate_guids(self):
+        """Two items sharing a <guid> fail validation (readers dedupe on guid)."""
+        items = [
+            FeedItem(
+                title="First",
+                link="https://affinedrift.com/articles/a.html",
+                description="d1",
+                pub_date=datetime(2026, 1, 1, tzinfo=UTC),
+            ),
+            FeedItem(
+                title="Second",
+                link="https://affinedrift.com/articles/a.html",
+                description="d2",
+                pub_date=datetime(2026, 2, 1, tzinfo=UTC),
+            ),
+        ]
+        xml = build_feed_xml(items, build_date=datetime(2026, 6, 9, tzinfo=UTC))
+        errors = validate_feed_xml(xml)
+        assert any("duplicate" in e.lower() for e in errors)
+
+
+class TestMainValidatesBeforeWriting:
+    """``main()`` must fail loudly instead of writing an invalid feed (DbC)."""
+
+    def test_invalid_feed_raises_and_writes_nothing(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(
+            "scripts.generate_feed.build_feed_xml", lambda *_args, **_kwargs: "<rss><channel>"
+        )
+        monkeypatch.setattr("sys.argv", ["generate_feed.py", "--output", "docs/feed.xml"])
+
+        with pytest.raises(FeedValidationError):
+            main()
+
+        assert not (tmp_path / "docs" / "feed.xml").exists()
+        assert not (tmp_path / "feed.xml").exists()
 
 
 class TestDeployWorkflowWiring:
