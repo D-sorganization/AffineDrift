@@ -504,13 +504,22 @@ jobs:
             printf "%s\n" "$relevant_files"
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Compute Quarto render cache key
+        # WEB-13.1 (#4595): the key is the content hash (git blob ids) of every
+        # tracked file except tests, workflows and developer docs. A hand-listed
+        # glob set silently misses render inputs (Lua filters, _includes/
+        # partials, JS resources under src/), which would restore a stale site.
+        id: quarto_cache_key
+        if: steps.e2e_changes.outputs.run == 'true'
+        shell: bash
+        run: |
+          key=$(git ls-files -s -- . ':(exclude)tests/**' ':(exclude).github/**' ':(exclude)docs/development/**' | sha256sum | cut -c1-64)
+          echo "key=quarto-render-v2-${key}" >> "$GITHUB_OUTPUT"
       - name: Restore cached Quarto render
-        # WEB-13.1 (#4595): skip the render only on an exact match of every
-        # Quarto-render-relevant source file's hash against a previous cached
-        # run. There is no restore-keys fallback -- an inexact match must
-        # never restore a docs/ tree that does not reflect this commit, so a
-        # single changed source file always falls through to the full render
-        # below, unchanged from before this cache existed.
+        # Skip the render only on an exact key match. There is no restore-keys
+        # fallback -- an inexact match must never restore a docs/ tree that does
+        # not reflect this commit, so any changed render input falls through to
+        # the full render below, unchanged from before this cache existed.
         id: quarto_cache
         if: steps.e2e_changes.outputs.run == 'true'
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -518,7 +527,7 @@ jobs:
           path: |
             docs
             .quarto
-          key: quarto-render-v1-${{ hashFiles('*.qmd', 'pages/**/*.qmd', 'resources/**/*.qmd', 'models/**/*.qmd', 'repositories/**/*.qmd', 'articles/**/*.qmd', 'books/**/*.qmd', 'critiques/**/*.qmd', 'critiques/*.md', 'reports/scientific-claim-audit.md', '_quarto.yml', '.quarto-version', 'custom.scss', 'styles.css', 'css/**', 'js/**', 'data/**', 'schemas/**', 'references/*.bib', 'manifest.json', 'service-worker.js', 'offline.html', 'listings.json', 'favicon.ico') }}
+          key: ${{ steps.quarto_cache_key.outputs.key }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         if: steps.e2e_changes.outputs.run == 'true'
         with:

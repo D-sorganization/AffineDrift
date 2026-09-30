@@ -194,12 +194,20 @@ def test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match
     """
     content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
 
-    assert "id: quarto_cache" in content
-    _, after_cache_id = content.split("id: quarto_cache", maxsplit=1)
+    # The key hashes every tracked file's blob id (minus tests, workflows and
+    # developer docs), so no render input -- Lua filter, _includes/ partial,
+    # JS resource -- can change without missing the cache.
+    _, after_key_id = content.split("id: quarto_cache_key\n", maxsplit=1)
+    key_step, _ = after_key_id.split("- name:", maxsplit=1)
+    assert "git ls-files -s" in key_step
+    assert "hashFiles(" not in key_step
+
+    assert "id: quarto_cache\n" in content
+    _, after_cache_id = content.split("id: quarto_cache\n", maxsplit=1)
     cache_step, render_step = after_cache_id.split("Build site for E2E", maxsplit=1)
 
     assert "actions/cache@" in cache_step
-    assert "hashFiles(" in cache_step
+    assert "key: ${{ steps.quarto_cache_key.outputs.key }}" in cache_step
     assert "restore-keys" not in cache_step
     assert "steps.quarto_cache.outputs.cache-hit != 'true'" in render_step
     assert "run: quarto render --to html" in render_step
