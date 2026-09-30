@@ -440,3 +440,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
 | 2026-09-30 | #4516 | Implement unified publication status badge component (WEB-04.2) with Quarto shortcode {{< status >}}, accessible SVG icons and text, WCAG AA contrast, and depth-aware links to publication states. |
 | 2026-09-30 | #4666 | Enforce 100% claim-audit route coverage for pages/glossary and pages/how-to-read, restoring green Deploy Website on main. |
+| 2026-09-30 | #4678 | Implement standard Where Next footer component with 30 core pages mapping, no self-links, accessible nav card, and cross-cluster coordination (#4510). |
