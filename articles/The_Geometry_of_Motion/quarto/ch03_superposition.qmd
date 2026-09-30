@@ -1,5 +1,6 @@
 ---
 title: "Superposition: From Linear to Affine"
+description: "Examines instantaneous input superposition in control-affine mechanical systems and distinguishes local acceleration addition from trajectory addition."
 css: ch03_superposition.css
 ---
 
@@ -390,7 +391,7 @@ Saturation composed with a raw command generally makes the raw-command map piece
 
 For smooth vector fields, use the convention
 $$
-[f,g](x)=Dg(x)f(x)-Df(x)g(x).
+[f,g](x)=DG(x)f(x)-Df(x)G(x).
 $$
 Comparing short flow compositions in opposite orders produces a second-order difference involving this bracket, with a sign determined by the chosen composition order. This describes how the directions change as the state changes. It does not mean that any signed field, especially the uncontrolled drift, is physically reversible on demand.
 
@@ -410,7 +411,7 @@ For a golf mechanism, a proposed transfer into an unactuated shaft mode must be 
 
 ## Feedback Linearization Has a Local Domain of Validity
 
-For a smooth single-input system $\dot x=f(x)+g(x)u$ with scalar output $y=h(x)$, a constant relative degree $r$ on a neighborhood requires $L_gL_f^kh=0$ there for $k=0,\ldots,r-2$, and $b(x)=L_gL_f^{r-1}h\ne0$. Then
+For a smooth single-input system $\dot x=f(x)+G(x)u$ with scalar output $y=h(x)$, a constant relative degree $r$ on a neighborhood requires $L_gL_f^kh=0$ there for $k=0,\ldots,r-2$, and $b(x)=L_gL_f^{r-1}h\ne0$. Then
 $$
 y^{(r)}=L_f^rh+b(x)u,\qquad
 u=\frac{\nu-L_f^rh}{b(x)}

@@ -102,6 +102,15 @@ class TestScan:
             ("The Zero-Velocity Control Force (ZVCF) is...\n", "ZVCF canonical expansion"),
             ("The Drift-to-Control Ratio (DCR) is...\n", "DCR canonical expansion"),
             ("The Drag Coefficient Ratio (DgCR) is...\n", "DgCR canonical expansion"),
+            ("Drift (passive) component of generalized force.\n", "drift passivity equation"),
+            ("Power delivered by drift (passive) forces.\n", "drift passivity equation"),
+            (
+                "Active (muscular) component of generalized force.\n",
+                "active muscular input equation",
+            ),
+            ("Power delivered by active (muscular) forces.\n", "active muscular input equation"),
+            ("Subscripts denote passive/natural components.\n", "passive/natural drift equation"),
+            ("Subscripts denote active/muscular components.\n", "active/muscular input equation"),
         ],
     )
     def test_other_enforced_acronyms_use_authoritative_expansions(
@@ -132,6 +141,8 @@ class TestScan:
             "zero-torque constraint force analysis",
             "Drift-Correction-Response",
             "Disturbance Rejection vs. Control",
+            "Controllability-Drift Ratio",
+            "Drift-to-Control Ratio",
         ],
     )
     def test_each_variant_is_detected(self, tmp_path: Path, variant: str) -> None:

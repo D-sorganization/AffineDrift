@@ -119,7 +119,7 @@ def test_editorial_residue_resolved():
     assert "experimental application..." not in theory3
 
     # Revision History callouts removed from reader prose
-    dcr = (REPO_ROOT / "articles" / "controllability-drift-ratio.qmd").read_text(encoding="utf-8")
+    dcr = (REPO_ROOT / "articles" / "drift-control-ratio.qmd").read_text(encoding="utf-8")
     assert "## Revision History" not in dcr
 
     sec_axis = (REPO_ROOT / "articles" / "secondary-axis-stability.qmd").read_text(encoding="utf-8")
@@ -170,7 +170,8 @@ def test_manifesto_is_categorised_opinion_with_one_canonical_page():
     # The Series Index is the canonical entry point; it says so explicitly
     # and is clearly labelled Opinion.
     assert "canonical entry point" in index_text
-    assert "State: Opinion" in index_text
+    assert "State:" in index_text
+    assert 'status-badge__text">Opinion</span>' in index_text
 
     # The single-file edition explicitly defers to the Series Index as
     # canonical and is itself labelled Opinion.
