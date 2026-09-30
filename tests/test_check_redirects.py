@@ -188,3 +188,27 @@ def test_main_skips_comparison_when_previous_manifest_is_unavailable(
         ],
     )
     assert main() == 0
+
+
+def test_main_skips_comparison_when_previous_manifest_is_not_json(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """An HTML error page saved as the previous manifest skips the check instead of crashing."""
+    previous_path = tmp_path / "previous.json"
+    previous_path.write_text("<html><body>404 Not Found</body></html>", encoding="utf-8")
+    current_path = tmp_path / "current.json"
+    current_path.write_text(json.dumps(_manifest("/")), encoding="utf-8")
+
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "check_redirects",
+            "--previous-manifest",
+            str(previous_path),
+            "--current-manifest",
+            str(current_path),
+            "--redirects",
+            str(tmp_path / "missing-redirects.yml"),
+        ],
+    )
+    assert main() == 0

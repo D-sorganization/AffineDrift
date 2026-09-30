@@ -120,7 +120,9 @@ jobs:
         # "nothing to compare" rather than failing the build (#4503).
         run: |
           mkdir -p "$RUNNER_TEMP/redirect-check"
-          curl --silent --show-error \
+          # --fail: an HTTP error must leave no file, not save the 404 page
+          # as the "previous manifest".
+          curl --fail --location --silent --show-error \
             --output "$RUNNER_TEMP/redirect-check/previous-public-site-manifest.json" \
             "$PUBLIC_SITE_URL/public-site-manifest.json" || true
 

@@ -101,7 +101,18 @@ def main() -> int:
         )
         return 0
 
-    previous_manifest = json.loads(args.previous_manifest.read_text(encoding="utf-8"))
+    try:
+        previous_manifest = json.loads(args.previous_manifest.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        # The fetch is best-effort; an unreadable response is treated like an
+        # absent one, but loudly, so a broken comparison is never silent.
+        logger.warning(
+            "::warning::Previous deploy manifest at %s is not valid JSON (%s); "
+            "skipping URL stability comparison.",
+            args.previous_manifest,
+            exc,
+        )
+        return 0
     current_manifest = json.loads(args.current_manifest.read_text(encoding="utf-8"))
     redirects = load_redirect_ledger(args.redirects)
 
