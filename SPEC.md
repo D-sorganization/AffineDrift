@@ -439,9 +439,11 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4567 | Wire `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate`, add a long-description check for complex SVG diagrams (E8/E9), and baseline pre-existing figures. |
 | 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
+| 2026-09-29 | #4504 | Configure explicit Quarto search (overlay, limit, keyboard shortcut), remove the unverified SearchAction JSON-LD, and show the page-header-card maturity badge on matching search results. |
 | 2026-09-30 | #4664 | Hide, mark, or retire stub hubs, add Planned badges, and enforce scaffolding styling policy (#4500, WEB-02.6). |
 | 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
 | 2026-09-30 | #4516 | Implement unified publication status badge component (WEB-04.2) with Quarto shortcode {{< status >}}, accessible SVG icons and text, WCAG AA contrast, and depth-aware links to publication states. |
+| 2026-09-30 | #4535 | Add an interactive DCR-through-phase widget (WEB-06.5) comparing an additive- and a state-dependent-drift system with equal instantaneous DCR but different reachable-interval widths, linking claim ad-dcr-001 on the DCR page. |
 | 2026-09-30 | #4666 | Enforce 100% claim-audit route coverage for pages/glossary and pages/how-to-read, restoring green Deploy Website on main. |
 | 2026-09-30 | #4678 | Implement standard Where Next footer component with 30 core pages mapping, no self-links, accessible nav card, and cross-cluster coordination (#4510). |
 | 2026-09-29 | #4655 | Remove stub Colab buttons from textbook pages and fill priority notebooks with verified dynamics (#4537). |
