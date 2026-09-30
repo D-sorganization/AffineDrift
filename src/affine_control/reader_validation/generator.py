@@ -407,6 +407,11 @@ def render_reader_validation_summary(study_dict: dict[str, Any], metrics: dict[s
     return "\n".join(lines) + "\n"
 
 
+def _without_generated_on(payload: dict[str, Any]) -> dict[str, Any]:
+    """Drop the run date so `--check` compares content, not the day it was generated."""
+    return {key: value for key, value in payload.items() if key != "generated_on"}
+
+
 def generate_reader_validation_study(
     *,
     check: bool = False,
@@ -424,7 +429,8 @@ def generate_reader_validation_study(
     if check:
         if not data_path.is_file():
             raise FileNotFoundError(f"Missing study dataset: {data_path}")
-        if json.loads(data_path.read_text(encoding="utf-8")) != study_dict:
+        committed = json.loads(data_path.read_text(encoding="utf-8"))
+        if _without_generated_on(committed) != _without_generated_on(study_dict):
             raise ValueError(f"Study dataset is stale: {data_path}")
         if not partial_path.is_file():
             raise FileNotFoundError(f"Missing study partial: {partial_path}")

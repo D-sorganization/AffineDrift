@@ -474,3 +474,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4523 | Add a generated evidence/claims.qmd Claim Ledger page (one accessible card per claim: plain/formal statement, evidence rung, falsifiers, related critiques, pages making the claim) and link every claim-making page back to it. |
 | 2026-09-29 | #4551 | Render PARAMETERS.md and add a one-page notation quick-reference card; remove pages/notation.qmd's duplicate heading and manual table of contents. |
 | 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |
+| 2026-09-30 | #4705 | Regenerate stale evidence-presentation and research-release trust artifacts, make generator `--check` ignore `generated_on`, and add a committed-artifact freshness test. |
