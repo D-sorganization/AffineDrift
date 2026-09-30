@@ -42,12 +42,14 @@ can only ever resolve a citation against this one file, regardless of what any
 other file defines: ``proximal-distal-energy.bib``
 (``articles/proximal-distal-a-journey-through-the-swing.qmd``),
 ``affine-drift.bib`` (``drifter-manifesto.qmd`` and the Theory Part 2-5
-chapters) and ``articles/tangent-hyperplane-articles/references.bib`` (its own
-thesis and CRITIC pages). In every case the same reference legitimately has
-its own local copy when both the exempt page/book and something else cite it.
-That is not the citeproc first-wins hazard this file exists to catch; removing
-any of those copies would leave a citation on the page or book that depends on
-it unresolved.
+chapters), ``articles/tangent-hyperplane-articles/references.bib`` (its own
+thesis and CRITIC pages) and ``articles/proximal_distal_energy_transfer/references.bib``
+(``index.qmd``'s own ``bibliography:`` override -- a locked publication source
+whose references are untouched by this file's changes). In every case the same
+reference legitimately has its own local copy when both the exempt page/book
+and something else cite it. That is not the citeproc first-wins hazard this
+file exists to catch; removing any of those copies would leave a citation on
+the page or book that depends on it unresolved.
 
 What it does **not** do: judge whether an entry is correct. That needs CrossRef
 and is what ``check_bibliography_metadata.py`` is for. This is the offline half
@@ -98,6 +100,7 @@ STANDALONE_LINKED = {
     "articles/tangent-hyperplane-articles/references.bib",
     "references/proximal-distal-energy.bib",
     "references/affine-drift.bib",
+    "articles/proximal_distal_energy_transfer/references.bib",
 }
 
 

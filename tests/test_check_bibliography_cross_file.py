@@ -146,14 +146,15 @@ class TestDuplicateDois:
         return {"title": title, "year": year, "doi": "10.1/x"}
 
     def test_two_non_standalone_files_is_a_violation(self) -> None:
+        # Neither label is in STANDALONE_LINKED, so both copies are avoidable.
+        # The second is a synthetic label rather than a real BIBS path: every
+        # file actually in BIBS except impact-acoustics.bib is someone's sole
+        # page/book bibliography, so no second real non-exempt file exists to
+        # name here.
         owners = {
             "10.1/x": [
                 ("references/impact-acoustics.bib", "keyA", self._fields()),
-                (
-                    "articles/proximal_distal_energy_transfer/references.bib",
-                    "keyB",
-                    self._fields(),
-                ),
+                ("some/other/non-exempt.bib", "keyB", self._fields()),
             ]
         }
         assert "10.1/x" in duplicate_dois(owners)
@@ -188,11 +189,7 @@ class TestDuplicateDois:
             "10.1/x": [
                 ("articles/The_Physics_of_Golf/golf_physics.bib", "A", self._fields()),
                 ("references/impact-acoustics.bib", "B", self._fields()),
-                (
-                    "articles/proximal_distal_energy_transfer/references.bib",
-                    "C",
-                    self._fields(),
-                ),
+                ("some/other/non-exempt.bib", "C", self._fields()),
             ]
         }
         assert "10.1/x" in duplicate_dois(owners)

@@ -27,7 +27,7 @@ bibliography:
   related_ids: [Lynch2017, Murray1994]
   references_out_ids: [PinocchioLib, RBDL]
 
-- id: winter2009
+- id: Winter2009
   title: "Biomechanics and Motor Control of Human Movement"
   authors: David A. Winter
   year: 2009

@@ -37,7 +37,7 @@ bibliography:
     related_ids: ["featherstone2008rigid", "caron2024pink"]
     references_out_ids: ["featherstone2008rigid", "mansard2018unified"]
 
-- id: todorov2012
+- id: todorov2012mujoco
   title: "MuJoCo: A physics engine for model-based control"
   authors:
 
@@ -65,7 +65,7 @@ bibliography:
     related_ids: ["carpentier2019pinocchio", "kanoun2011kinematic"]
     references_out_ids: ["kanoun2011kinematic", "escande2014hierarchical"]
 
-- id: Featherstone2008
+- id: featherstone2008rigid
   title: "Rigid Body Dynamics Algorithms"
   authors:
 
@@ -78,7 +78,7 @@ bibliography:
     related_ids: ["carpentier2019pinocchio", "lynch2017modern"]
     references_out_ids: ["jain2010robot", "murray1994mathematical"]
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
 

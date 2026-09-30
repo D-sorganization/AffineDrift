@@ -14,7 +14,7 @@
 ## References
 
 ```yaml
-- id: Goldstein2002
+- id: goldstein2002classical
   title: "Classical Mechanics"
   authors: "Goldstein, H., Poole, C., & Safko, J."
   year: 2002
@@ -37,7 +37,7 @@
   related_ids: ["bullo2004geometric", "spong2020robot"]
   references_out_ids: ["lynch2017modern"]
 
-- id: BulloLewis2004
+- id: bullo2004geometric
   title: "Geometric Control of Mechanical Systems"
   authors: "Bullo, F., & Lewis, A. D."
   year: 2004
@@ -94,7 +94,7 @@
   related_ids: ["murray1994mathematical", "siciliano2010robotics"]
   references_out_ids: ["siciliano2010robotics"]
 
-- id: Featherstone2008
+- id: featherstone2008rigid
   title: "Rigid Body Dynamics Algorithms"
   authors: "Featherstone, R."
   year: 2008
@@ -106,7 +106,7 @@
   related_ids: ["shabana2020dynamics"]
   references_out_ids: ["pinocchio_lib"]
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors: "Lynch, K. M., & Park, F. C."
   year: 2017
@@ -139,7 +139,7 @@
   related_ids: ["shabana2020dynamics"]
   references_out_ids: []
 
-- id: Arnold1989
+- id: arnold1989mathematical
   title: "Mathematical Methods of Classical Mechanics"
   authors: "Arnold, V. I."
   year: 1989
@@ -150,7 +150,7 @@
   related_ids: ["goldstein2002classical", "bullo2004geometric"]
   references_out_ids: []
 
-- id: SlotineLi1991
+- id: slotine1991applied
   title: "Applied Nonlinear Control"
   authors: "Slotine, J. J. E., & Li, W."
   year: 1991

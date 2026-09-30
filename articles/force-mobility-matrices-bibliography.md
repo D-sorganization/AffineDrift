@@ -78,7 +78,7 @@ The verified source access for this correction is listed after the catalog.
   related_ids: ["hogan1985impedance"]
   references_out_ids: []
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - "Kevin M. Lynch"
@@ -118,7 +118,7 @@ The verified source access for this correction is listed after the catalog.
   related_ids: ["nesbit2005work", "mackenzie2009three"]
   references_out_ids: []
 
-- id: Nesbit2005b
+- id: nesbit2005work
   title: "Work and power analysis of the golf swing"
   authors:
     - "Steven M. Nesbit"
@@ -167,7 +167,7 @@ The verified source access for this correction is listed after the catalog.
   related_ids: []
   references_out_ids: []
 
-- id: Featherstone2008
+- id: featherstone2008rigid
   title: "Rigid Body Dynamics Algorithms"
   authors:
     - "Roy Featherstone"

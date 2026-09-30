@@ -169,7 +169,7 @@ bibliography:
   clusters: ["biomechanical modeling", "optimal control"]
   concepts: ["6dof model", "direct collocation"]
 
-- id: Nesbit2005
+- id: nesbit2005kinematic
   title: "A kinematic and kinetic study of the golf swing using a full-body computer model"
   authors: "Nesbit, Steven M."
   year: 2005
@@ -178,7 +178,7 @@ bibliography:
   clusters: ["full-body kinetics", "inverse dynamics"]
   concepts: ["full-body model", "segment work"]
 
-- id: Nesbit2005b
+- id: nesbit2005work
   title: "Work and power analysis of the golf swing"
   authors: "Nesbit, Steven M., & Serrano, Monika"
   year: 2005

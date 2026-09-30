@@ -264,7 +264,7 @@ For example, a force-free particle with Cartesian coordinate $r>0$ and constant 
 These conventions follow the distinction between configuration curves, force covectors, and metric-raised forces in [Bullo and Lewis's geometric-mechanics workshop](https://motion.me.ucsb.edu/book-gcms/workshop/pdf/slides.pdf), especially the modeling discussion on PDF pages 18–22.
 
 ## Note on Constrained Subsystems (The Wrist)
-The two-axis universal-joint representation is a modeling approximation to the wrist; forearm pronation and supination arise primarily at the radioulnar joints. For ideal constraints $A(z)v=0$, reaction loads have the form $A(z)^\mathsf{T}\lambda$ and annihilate admissible virtual velocities: $v^\mathsf{T}A^\mathsf{T}\lambda=0$. They lie in the range of the constraint Jacobian transpose, not generally in a null space of the actuation map $B$. Constraint reactions, actuator redundancy and muscle co-contraction are different concepts [@Lynch2017, sec. 8.7]. See [Constraint Torques at the Wrist](wrist-universal-joint.html).
+The two-axis universal-joint representation is a modeling approximation to the wrist; forearm pronation and supination arise primarily at the radioulnar joints. For ideal constraints $A(z)v=0$, reaction loads have the form $A(z)^\mathsf{T}\lambda$ and annihilate admissible virtual velocities: $v^\mathsf{T}A^\mathsf{T}\lambda=0$. They lie in the range of the constraint Jacobian transpose, not generally in a null space of the actuation map $B$. Constraint reactions, actuator redundancy and muscle co-contraction are different concepts [@lynch2017modern, sec. 8.7]. See [Constraint Torques at the Wrist](wrist-universal-joint.html).
 
 The manifold $\mathcal{Q}$ and metric $M$ describe the model's configuration and kinetic-energy structure. To represent externally supplied generalized torque at the selected boundary, we now declare an input channel; this declaration does not identify intent or physiological origin.
 
@@ -305,7 +305,7 @@ $$
 H_c=M^{-1}-M^{-1}A^\mathsf{T}(AM^{-1}A^\mathsf{T})^{-1}AM^{-1},
 \qquad \left.\frac{\partial\ddot y}{\partial u}\right|_x=JH_c\bar B.
 $$
-The velocity-dependent constraint bias also belongs in drift. Rank changes, redundant constraints and changing contact modes require an appropriate constrained solve. Increased compliance or co-contraction can change finite-time response, and an ideal lock changes constraints, but neither is represented by simply adding stiffness to inertia [@Lynch2017, secs. 8.7 and 11.5].
+The velocity-dependent constraint bias also belongs in drift. Rank changes, redundant constraints and changing contact modes require an appropriate constrained solve. Increased compliance or co-contraction can change finite-time response, and an ideal lock changes constraints, but neither is represented by simply adding stiffness to inertia [@lynch2017modern, secs. 8.7 and 11.5].
 :::
 
 ### External Forces and Constraints

@@ -187,7 +187,7 @@ description: 'Bibliographic analysis supporting the AffineDrift critique of Norm
   related_ids: ["mcgeer1990passive", "tedrake2023underactuated"]
   references_out_ids: []
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - "Kevin M. Lynch"

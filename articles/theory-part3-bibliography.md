@@ -40,7 +40,7 @@
   related_ids: ["tedrake2023underactuated", "collins2005efficient"]
   references_out_ids: []
 
-- id: BulloLewis2004
+- id: bullo2004geometric
   title: "Geometric Control of Mechanical Systems"
   authors:
     - "Francesco Bullo"
@@ -116,7 +116,7 @@
   related_ids: ["slotine1991applied", "isidori1995nonlinear"]
   references_out_ids: []
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - "Kevin M. Lynch"

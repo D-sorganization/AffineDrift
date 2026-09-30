@@ -51,7 +51,7 @@ bibliography:
   related_ids: ["lynch2017modern"]
   references_out_ids: ["isidori1995nonlinear", "spong2005robot"]
 
-- id: Featherstone2008
+- id: featherstone2008rigid
   title: "Rigid Body Dynamics Algorithms"
   authors: "Featherstone, R."
   year: 2008
@@ -73,7 +73,7 @@ bibliography:
   related_ids: ["murray1994mathematical"]
   references_out_ids: []
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors: "Lynch, K. M., & Park, F. C."
   year: 2017
@@ -95,7 +95,7 @@ bibliography:
   related_ids: ["mackenzie2009three"]
   references_out_ids: ["mackenzie2009three"]
 
-- id: Nesbit2005b
+- id: nesbit2005work
   title: "Work and power analysis of the golf swing"
   authors: "Nesbit, S. M."
   year: 2005

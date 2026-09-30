@@ -140,7 +140,7 @@
   related_ids: ["lynch2017modern"]
   references_out_ids: []
 
-- id: SlotineLi1991
+- id: slotine1991applied
   title: "Applied Nonlinear Control"
   authors:
     - "Jean-Jacques E. Slotine"
@@ -165,7 +165,7 @@
   related_ids: ["junkins1993introduction"]
   references_out_ids: []
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - "Kevin M. Lynch"
@@ -192,7 +192,7 @@
   related_ids: ["murray1994mathematical"]
   references_out_ids: []
 
-- id: Featherstone2008
+- id: featherstone2008rigid
   title: "Rigid Body Dynamics Algorithms"
   authors:
     - "Roy Featherstone"
@@ -205,7 +205,7 @@
   related_ids: ["shabana2020dynamics"]
   references_out_ids: []
 
-- id: Goldstein2002
+- id: goldstein2002classical
   title: "Classical Mechanics"
   authors:
     - "Herbert Goldstein"

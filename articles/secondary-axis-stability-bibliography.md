@@ -24,7 +24,7 @@
 ## B) Bibliography (YAML)
 
 ```yaml
-- id: Goldstein2002
+- id: goldstein2002classical
   title: "Classical Mechanics"
   authors:
     - "Herbert Goldstein"

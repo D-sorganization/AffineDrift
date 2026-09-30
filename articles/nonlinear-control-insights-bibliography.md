@@ -73,7 +73,7 @@
   related_ids: ["tedrake2023underactuated", "bullo2004geometric"]
   references_out_ids: ["block2007control"]
 
-- id: BulloLewis2004
+- id: bullo2004geometric
   title: "Geometric Control of Mechanical Systems"
   authors:
     - "Francesco Bullo"
@@ -158,7 +158,7 @@
   related_ids: ["spong1998underactuated"]
   references_out_ids: ["manchester2017variational"]
 
-- id: SlotineLi1991
+- id: slotine1991applied
   title: "Applied Nonlinear Control"
   authors:
     - "Jean-Jacques E. Slotine"
@@ -208,7 +208,7 @@
   related_ids: ["flash1985coordination"]
   references_out_ids: []
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - "Kevin M. Lynch"

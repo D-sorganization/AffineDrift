@@ -31,7 +31,7 @@
 ## B) Bibliography (YAML)
 
 ```yaml
-- id: Featherstone2008
+- id: featherstone2008rigid
   title: "Rigid Body Dynamics Algorithms"
   authors:
     - "Roy Featherstone"
@@ -59,7 +59,7 @@
   related_ids: ["lynch2017modern", "bullo2004geometric"]
   references_out_ids: ["bullo2004geometric"]
 
-- id: Lynch2017
+- id: lynch2017modern
   title: "Modern Robotics: Mechanics, Planning, and Control"
   authors:
     - "Kevin M. Lynch"
@@ -72,7 +72,7 @@
   related_ids: ["murray1994mathematical"]
   references_out_ids: []
 
-- id: BulloLewis2004
+- id: bullo2004geometric
   title: "Geometric Control of Mechanical Systems"
   authors:
     - "Francesco Bullo"

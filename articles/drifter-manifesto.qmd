@@ -27,7 +27,7 @@ This is the **single-file edition** of the Drifter Manifesto, kept for readers w
 
 The Drifter Manifesto establishes the control-affine framework, introduces key concepts (ZTCF, ZVCF, Drift-Control Ratio), and provides the notation used throughout AffineDrift research. The same material is developed, and maintained, in the Theory Part 1-5 series linked above.
 
-**Provenance:** The control-affine form $\dot{x} = f(x) + G(x)u$ is established nonlinear-control material [@isidori1995nonlinear; @nijmeijer1990nonlinear; @khalil2002nonlinear]. The geometric treatment used here follows @BulloLewis2004 and @bloch2003nonholonomic, and the recursive multibody foundations follow @Featherstone2008, @murray1994mathematical, and @Lynch2017. The golf-oriented diagnostic terminology and synthesis are presented here as proposed research framing. The site does not establish priority or peer-reviewed validation of these applications. See [Critiques & Responses](../critiques/index.html) for documented limitations.
+**Provenance:** The control-affine form $\dot{x} = f(x) + G(x)u$ is established nonlinear-control material [@isidori1995nonlinear; @nijmeijer1990nonlinear; @khalil2002nonlinear]. The geometric treatment used here follows @bullo2004geometric and @bloch2003nonholonomic, and the recursive multibody foundations follow @featherstone2008rigid, @murray1994mathematical, and @lynch2017modern. The golf-oriented diagnostic terminology and synthesis are presented here as proposed research framing. The site does not establish priority or peer-reviewed validation of these applications. See [Critiques & Responses](../critiques/index.html) for documented limitations.
 :::
 
 
@@ -38,7 +38,7 @@ The Drifter Manifesto establishes the control-affine framework, introduces key c
 ::: {.callout-note}
 #### Novelty Status
 
-- **Established (textbook):** Control-affine system formulation $\dot{x} = f(x) + G(x)u$ [@isidori1995nonlinear; @nijmeijer1990nonlinear; @khalil2002nonlinear]; Lagrangian derivation of rigid-body multibody dynamics [@Goldstein2002; @lanczos2012variational; @Arnold1989]; tangent space linearization.
+- **Established (textbook):** Control-affine system formulation $\dot{x} = f(x) + G(x)u$ [@isidori1995nonlinear; @nijmeijer1990nonlinear; @khalil2002nonlinear]; Lagrangian derivation of rigid-body multibody dynamics [@goldstein2002classical; @lanczos2012variational; @arnold1989mathematical]; tangent space linearization.
 - **Proposed golf application:** Applying the drift/input decomposition to golf biomechanics; the "Frozen Strategy" assumption for biological impedance; defining ZTCF and ZVCF as diagnostic tools for swing analysis.
 - **Terminology:** The terms "drift" and "input" are standard in nonlinear control. "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' naming for these constructions in the golf context.
 :::
@@ -172,7 +172,7 @@ The aim of this manuscript is to establish a rigorous, strictly theoretical foun
 -   **Drift terms** in the autonomous, state-dependent dynamics, and
 -   **Input terms** produced by the declared generalized-torque channel.
 
-The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system* [@isidori1995nonlinear; @BulloLewis2004]. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels [@nijmeijer1990nonlinear, Ch.~2]. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model. The broader programme of using counterfactual reasoning to attribute causal structure to dynamical systems is laid out by @pearl2009causality; here we specialize that programme to the mechanical setting by exploiting the linear-in-input structure of the equations of motion.
+The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system* [@isidori1995nonlinear; @bullo2004geometric]. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels [@nijmeijer1990nonlinear, Ch.~2]. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model. The broader programme of using counterfactual reasoning to attribute causal structure to dynamical systems is laid out by @pearl2009causality; here we specialize that programme to the mechanical setting by exploiting the linear-in-input structure of the equations of motion.
 
 This foundational treatment provides a declared mechanical model and illustrative numerical consistency checks. It does not report calibrated golfer simulations or experimental validation. The linked counterfactual and application articles develop proposed analyses; successful prediction, physiological interpretation, and technique comparisons require their own data and evidence.
 
@@ -259,7 +259,7 @@ These conventions follow the distinction between configuration curves, force cov
 ::: callout-note
 #### Note on Constrained Subsystems (The Wrist)
 
-The two-axis universal-joint representation is a modeling approximation to the wrist; forearm pronation and supination arise primarily at the radioulnar joints. For ideal constraints $A(z)v=0$, reaction loads have the form $A(z)^\mathsf{T}\lambda$ and annihilate admissible virtual velocities: $v^\mathsf{T}A^\mathsf{T}\lambda=0$. They lie in the range of the constraint Jacobian transpose, not generally in a null space of the actuation map $B$. Constraint reactions, actuator redundancy and muscle co-contraction are different concepts [@Lynch2017, sec. 8.7]. See [Constraint Torques at the Wrist](wrist-universal-joint.html).
+The two-axis universal-joint representation is a modeling approximation to the wrist; forearm pronation and supination arise primarily at the radioulnar joints. For ideal constraints $A(z)v=0$, reaction loads have the form $A(z)^\mathsf{T}\lambda$ and annihilate admissible virtual velocities: $v^\mathsf{T}A^\mathsf{T}\lambda=0$. They lie in the range of the constraint Jacobian transpose, not generally in a null space of the actuation map $B$. Constraint reactions, actuator redundancy and muscle co-contraction are different concepts [@lynch2017modern, sec. 8.7]. See [Constraint Torques at the Wrist](wrist-universal-joint.html).
 :::
 
 ##### Torque Inputs and Actuation Mapping
