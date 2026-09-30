@@ -18,132 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4691 · Privacy/Accessibility Claim-Audit Accuracy Nits
+### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** not created yet at this commit (headless worker; lead arms/merges)
-- **Issue:** #4691 (`tier:cli`)
-- **Branch:** `claude/issue-4691`
-- **Paths:** `pages/privacy-policy.qmd`, `pages/accessibility.qmd`, `tests/test_privacy_policy_page.py`, `tests/test_accessibility_statement_page.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_privacy_policy_page.py tests/test_accessibility_statement_page.py tests/test_claim_audit_inventory.py` 31/31 pass; `python -m scripts.check_spec_changelog` passes)
-- **Summary:** Qualified the Privacy Policy's CSP sentence, which claimed the policy "limits which external domains" a page may load from "at all" — `img-src 'self' data: https:` actually permits images from any HTTPS host, so only scripts/styles/fonts/frames are allowlisted. Reworded the Accessibility Statement's Known Issues section, which pointed readers at #4139 (closed as remediated 2026-09-06) as the live remediation tracker; it now states that closure, states that the CI axe check fails the build on any serious or critical finding (`--axe fail`, #4561/#4656; the test reads the mode from `ci-standard.yml`), and links #4561/#4656. Both claim-audit findings are `corrected`: `ad-finding-privacy-csp-image-scope` verified at `0864602d`, `ad-finding-accessibility-closed-tracker` at `492e7a6e`.
-- **Next step:** Merge the consolidated PR that carries this branch.
-
-### DL-#4605 · Per-Page "Report a Problem" Control
-
-- **State:** in_progress
-- **Owner:** claude
-- **PR:** #4645 (draft)
-- **Issue:** #4605 (epic #4610)
-- **Branch:** `claude/issue-4605`
-- **Paths:** `js/page-feedback.js`, `js/main.js`, `css/components/page-feedback.css`, `styles.css`, `tests/page-feedback.test.js`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: tests/page-feedback.test.js and full Jest suite pass; `check_styles_budget`, `check_spec_changelog`, and `regenerate_claim_audit_evidence --check` pass)
-- **Summary:** Adds a footer control appended to `#quarto-document-content` on every rendered page: a "Report a problem" link that opens the content-correction GitHub issue template prefilled with the page URL and build revision (fetched same-origin from `public-site-manifest.json`), with a mailto fallback for readers without a GitHub account. The "Was this helpful?" Yes/No vote was removed per PR review — it recorded nothing yet claimed "Thanks for the feedback!", which was outside the issue's acceptance criteria and misled readers.
-- **Next step:** Verify CI, then release lease.
-
-### DL-#4520 · Content Freshness Report
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4648 (draft)
-- **Issue:** #4520 (epic #4521)
-- **Branch:** `claude/issue-4520`
-- **Paths:** `scripts/generate_freshness_report.py`, `tests/test_generate_freshness_report.py`, `reports/content-freshness.md`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-30 (SELF: 18/18 `test_generate_freshness_report.py` tests pass; ruff and black clean; `python3 -m scripts.generate_freshness_report --check` passes)
-- **Summary:** Generates an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old, deriving the review date only from front matter (never a build/publish date). `--check` now recomputes against the as-of date recorded in the already-committed report, so it only fails when a source page's review date actually changes, not merely because the calendar date has advanced.
-- **Next step:** Await CI on PR #4648, address any remaining review feedback, then merge and release the lease.
-
-### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4682 (draft)
-- **Issue:** #4538 (WEB-06.8; epic #4543)
-- **Branch:** `claude/issue-4538`
-- **Paths:** `environment.yml`, `articles/_metadata.yml`, `_includes/notebook-binder-launch.qmd`, `books/tangent-space-methods.qmd`, `books/control-is-motion.qmd`, `books/biomechanics-biology-to-systems.qmd`, `books/human-motor-control.qmd`, `notebooks/geometry_of_motion/README.md`, `scripts/check_root_hygiene.py`, `tests/test_reader_run_environment.py`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: 7/7 `tests/test_reader_run_environment.py` pass; `check_root_hygiene.py`, `check_quarto_render_coverage.py`, `check_quarto_xrefs.py`, `check_single_title.py`, `check_title_case.py`, `check_terminology.py`, `check_dry_adoption.py`, `check_contract_coverage.py` all pass; ruff/black clean on changed Python files)
-- **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment that opens the notebook scaffolds, installing from `requirements.txt` (not `requirements-docker.lock`, which pins a Windows-only `pywinpty` wheel that fails on Binder's Linux image and is stale relative to `requirements.txt`), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked — see HANDOFF.md. The Binder build itself is unverified (repo2docker was never run).
-- **Next step:** A session with permission to write under a path named `.devcontainer` must add the file (content given in the PR's Blocked section) and a CI build step; then this entry's state can move to `shipped`.
-
-### DL-#4695 · On-Ramp "3 Hours" Totals
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** not created yet at this commit (headless worker; lead arms/merges)
-- **Issue:** #4695 (`tier:cli`)
-- **Branch:** `claude/issue-4695`
-- **Paths:** `resources/on-ramp-paths.qmd`, `tests/test_on_ramp_paths.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_on_ramp_paths.py tests/test_claim_audit_inventory.py tests/test_learning_paths.py` 36/36 pass; `python -m scripts.check_spec_changelog` passes)
-- **Summary:** Six of eight personas' "3 Hours" on-ramp tiers summed to 120-160 listed minutes instead of 180; renamed those headings to "2–3 Hours" (honest given each total and consistent with the range-style estimates already used in this repo's full learning-path pages), left the two that already summed to 180 unchanged, and added a test that sums each tier's `~N min` steps against its own heading. Left claim-audit finding `ad-finding-on-ramp-three-hour-totals` at `disposition: "open"` — flipping it to `corrected` needs a `verification_commit` this commit cannot supply for itself; see HANDOFF.md.
-- **Next step:** Lead/reviewer sets `verification_commit` and flips the finding to `corrected` once this branch's commit SHA is known.
-### DL-#4574 · Remove the Unused `metrics.js` Preload
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** not created yet at this commit
-- **Issue:** #4574 (WEB-10.6; epic #4579 / E10)
-- **Branch:** `claude/issue-4574`
-- **Paths:** `_includes/site-head.html`, `tests/test_metrics_preload_removed.py`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_metrics_preload_removed.py` 2/2 pass)
-- **Summary:** Removes the sitewide `<link rel="preload" href="/js/metrics.js" as="script">` from `_includes/site-head.html`; only `resources/bibliography.qmd` loads `metrics.js`, so every other route paid for an unused preload that triggers a console warning.
-- **Next step:** Open the draft PR for review.
-### DL-#4572 · Remove Stale Root `sitemap.xml` and `feed.xml`
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** not created
-- **Issue:** #4572 (WEB-10.3; epic #4579 / E10)
-- **Branch:** `claude/issue-4572`
-- **Paths:** `scripts/generate_sitemap.py`, `scripts/generate_feed.py`, `scripts/check_quarto_render_coverage.py`, `scripts/check_root_hygiene.py`, `scripts/README.md`, `CONTRIBUTING.md`, `.gitignore`, `tests/test_generate_sitemap.py`, `tests/test_generate_feed.py`, `tests/test_page_titles_and_descriptions.py`, `tests/test_research_readiness_content.py`, `sitemap.xml` (deleted), `feed.xml` (deleted)
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_sitemap.py tests/test_generate_feed.py tests/test_check_quarto_render_coverage.py tests/test_page_titles_and_descriptions.py tests/test_research_readiness_content.py` 85/85 pass; `python scripts/check_quarto_render_coverage.py` and `python scripts/check_root_hygiene.py --check` both pass against the live tree with the root files gone; ruff and black --line-length 100 clean)
-- **Summary:** The root `sitemap.xml`/`feed.xml` were tracked files only refreshed when someone manually ran the generators and committed the result, so they drifted stale (feed dated 10 Jun 2026 while `main` had moved on). Both generators previously also wrote an unconditional root copy alongside their `--output` target; that write is removed, so they now write only the requested path (`docs/` by default). Three consumers read the root `sitemap.xml` as a page registry — `check_quarto_render_coverage.py` (a CI gate in `ci-standard.yml`/`deploy-website.yml`, which ran *before* the workflow's own sitemap-regeneration step, so it was validating against the stale committed snapshot), `tests/test_page_titles_and_descriptions.py`, and `tests/test_research_readiness_content.py` — all three now call `generate_sitemap.build_pages()` (extracted from the generator's `main()`) directly, so there is no persisted file left to go stale. The tracked root copies are deleted (`git rm`) and `/sitemap.xml`/`/feed.xml` added to `.gitignore` as a backstop; `check_root_hygiene.py`'s allowlist no longer lists them. Both generators are documented in `scripts/README.md` (output path corrected; `generate_feed.py` was previously undocumented there) and `CONTRIBUTING.md`. The feed's real-article-dates criterion remains blocked on the still-open #4545 (WEB-07.3), consistent with #4606/DL-#4606.
-- **Next step:** Open the PR for review.
-
-### DL-#4539 · Resolve the Stray Executable Cell
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** not created yet at this commit
-- **Issue:** #4539 (WEB-06.9; epic #4543 / E6)
-- **Branch:** `claude/issue-4539`
-- **Paths:** `articles/drift-components-wrench-double-pendulum.qmd`, `tests/test_no_executable_quarto_cells.py`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_no_executable_quarto_cells.py` 1/1 pass; ruff and black --line-length 100 clean; `python -m scripts.check_spec_changelog` clean)
-- **Summary:** Converts the stray `{python}` executable cell (imports-only, never a complete implementation) in `articles/drift-components-wrench-double-pendulum.qmd` to a non-executing `python` fence, matching the site convention and making `ci-standard.yml`'s "the site has no executable cells" comment accurate again. Adds a regression test enumerating every Quarto-rendered `.qmd` file (via `_quarto.yml`'s `project.render` globs) and asserting none contain an executable cell fence.
-- **Next step:** Open the draft PR; no further development expected.
-
-### DL-#4593 · Unify the Contact Channel and Split About From Contact
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** not created yet at this commit; opening a draft PR immediately after
-- **Issue:** #4593 (WEB-12.7; epic #4594; `tier:ollama`, `complexity:trivial`)
-- **Branch:** `claude/issue-4593`
-- **Paths:** `pages/about.qmd`, `resources/on-ramp-paths.qmd`, `tests/test_contact_channel_unification.py`, `tests/test_404_page.py`, `data/trust/site_trust_surface_audit.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/site-trust-surface-audit.md`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_contact_channel_unification.py tests/test_404_page.py tests/test_public_site_content_hygiene.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py tests/test_on_ramp_paths.py` 74/74 pass; ruff and black --line-length 100 clean; `scripts.check_spec_changelog` passed.)
-- **Summary:** Retitles `pages/about.qmd` from "About & Contact" to "About" and removes its own `mailto:` link, pointing readers to the Contact page instead, so Contact is the site's single contact page. The contact-address-unification criterion was already satisfied on `main` (fixed by #4495); this closes the remaining two criteria.
-- **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
-### DL-#4606 · "What's New" Feed RSS Validation and Revision-History Links
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** not created yet at this commit (headless worker; lead arms/merges)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
 - **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
-- **Branch:** `claude/issue-4606-revision-links`
+- **Branch:** `claude/issue-4606`
 - **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 34/34 pass; `python -m scripts.check_spec_changelog` passes; live generator run against real repo content produces 30 items, 6 of them linking to `#revision-history`, with zero validation errors)
-- **Summary:** Criterion 1 ("The RSS feed validates") shipped previously in #4675. This entry closes criterion 2 ("Items link to revision history"), which was blocked on prerequisite #4545 (WEB-07.3) — now delivered (`scripts/filters/revision-history.lua` renders a `#revision-history` section from front-matter `changes:`). `generate_feed.py` gained `resolve_item_link()` (appends `#revision-history` to an item's link when the article has `changes:`) and `resolve_pub_date()` (prefers `date-modified`, then the latest `changes:` entry, then the plain `date` field, over the git-modified fallback), so feed item dates and links now reflect real substantive content updates rather than the original/unverified publication date.
-- **Next step:** Open the draft PR and await frontier review; the optional email digest from the issue's proposal needs a provider decision not made here (see HANDOFF.md).
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
+- **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
+- **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
+
 ### DL-#4592 · Consolidate the Manifesto
 
 - **State:** in_review
@@ -156,45 +43,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (focused suites pass: editorial/consistency, trust-surface/claim-audit, page-style, manifesto rigor, formatting lints, site link gate; full suite passes with no failures; ruff/black clean; `regenerate_claim_audit_evidence --check` passes.)
 - **Summary:** Adds `opinion` to the controlled category vocabulary and recategorises both Manifesto pages from `critique`; declares `pages/drifter-manifesto.qmd` the canonical entry point and `articles/drifter-manifesto.qmd` an explicitly non-canonical, Opinion-labelled companion, without deleting either page's content (full retirement is WEB-02.4's own `tier:strong` ADR work).
 - **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
+
 ### DL-#4541 · Fixture and Dataset Explorer
-### DL-#4511 · Worked-Example Callout Convention
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** not created
-- **Issue:** #4511 (epic #4514)
-- **Branch:** `claude/issue-4511`
-- **Paths:** `css/components/callouts.css`, `articles/theory-part1.qmd`, `articles/theory-part2.qmd`, `articles/theory-part3.qmd`, `articles/theory-part4.qmd`, `articles/theory-part5.qmd`, `articles/controllability-drift-ratio.qmd`, `articles/zero-torque-counterfactual.qmd`, `articles/superposition.qmd`, `tests/test_worked_example_callouts.py`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: 9/9 `test_worked_example_callouts.py` tests pass; scoped run of 200+ affected `src/affine_control` and `tangent_models` tests pass; `ruff check .` and `black --check` pass repo-wide; `check_quarto_xrefs`, `check_styles_budget`, `check_module_size_budget` pass)
-- **Summary:** Adopts a `.callout-example` convention (given data, steps, result) and adds eight worked examples — one per theory part plus DCR, ZTCF, and superposition — each recomputed from a cited `src/` function and checked by a dedicated pytest.
-- **Next step:** Push the branch, open a draft PR referencing `Fixes #4511`, and release the lease.
-
-### DL-#4581 · Remove Duplicate Math Overflow Rules
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** #4644 (draft), https://github.com/D-sorganization/AffineDrift/pull/4644
-- **Issue:** #4581 (epic #4586, E11 — Mathematical Typesetting and Notation)
-- **Branch:** `claude/issue-4581`
-- **Paths:** `custom.scss`, `styles.css`, `docs/styles.css`, `tests/test_math_overflow_rules.py`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-30 (review-fix round: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_math_overflow_rules.py` confirmed RED against the over-merged rule, then 4 passed GREEN after the fix; `python scripts/bundle_css.py --check` passes after regenerating `docs/styles.css`; `ruff check .` and `black --check --line-length 100 .` clean.)
-- **Summary:** Display-math overflow was defined independently in `custom.scss` and in two conflicting blocks in `styles.css`. Consolidated to a single canonical rule set (one shared rule plus a `.math.display`-only rule per scope, base + two responsive breakpoints) that reproduces the previously-effective cascade-resolved values exactly, so mobile math rendering is unchanged. Review fix on draft PR #4644 corrected an over-merge that had put `padding-top`/`scroll-behavior` on the shared selector list instead of `.math.display` alone, which would have doubled the top gap on every display equation.
-- **Next step:** Push the review-fix commit to draft PR #4644 and release the agent lease for #4581.
-
-### DL-#4557 · Typography and Reading Comfort
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** not created
-- **Issue:** #4557 (epic #4560)
-- **Branch:** `claude/issue-4557`
-- **Paths:** `styles.css`, `css/tokens/typography.css`, `_includes/site-head.html`, `_templates/latex_article.html`, `_quarto.yml`, `fonts/playfair-display/`, `scripts/check_root_hygiene.py`, `tests/test_typography_reading_comfort.py`, `pages/privacy-policy.qmd`, `tests/test_privacy_policy_page.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-30 (SELF: 7/7 test_typography_reading_comfort.py pass; test_responsive_layout_contract.py, test_css_bundle.py, test_minify_deploy_assets.py, test_public_site_manifest.py, test_root_hygiene.py all pass; check_css_architecture, check_styles_budget, check_root_hygiene, check_spec_changelog, bundle_css --check all pass; ruff/black clean; review-fix round: test_privacy_policy_font_claim_matches_mathjax_loader added to tests/test_privacy_policy_page.py, confirmed RED then GREEN; claim-audit evidence regenerated for pages/privacy-policy.qmd)
-- **Summary:** Constrains prose to a 60-75ch reading measure on standard article/book pages (`#quarto-document-content`, via descendant selector since Quarto wraps headed content in `<section class="level*">`) and self-hosts the Playfair Display heading font (removes the Google Fonts CDN request and its CSP allowances). Review fix: reworded the privacy page's font-host claim to correctly scope it around MathJax's own jsDelivr-hosted math fonts on math pages.
-- **Next step:** Push branch, open draft PR referencing `Fixes #4557`.
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4541 (epic #4543, E6 — Interactive Models and Reproducibility)
+- **Branch:** `claude/issue-4541`
+- **Paths:** `models/dataset-explorer.qmd`, `js/dataset-explorer.js`, `js/dataset-explorer-ui.js`, `css/dataset-explorer.css`, `scripts/generate_dataset_explorer_manifest.py`, `data/dataset_explorer_manifest.json`, `tests/dataset-explorer.test.js`, `tests/dataset-explorer-ui.test.js`, `tests/test_generate_dataset_explorer_manifest.py`, `scripts/sync_frontend_assets.py` (registered the two new JS modules), `_quarto.yml` (navbar entry under Build → Datasets), `data/trust/claim_audit_inventory.json` (digests regenerated via `scripts/regenerate_claim_audit_evidence.py` after the `_quarto.yml` edit), `SPEC.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `npx jest` 28 suites/455 passed/19 skipped; targeted `pytest` across `test_generate_dataset_explorer_manifest.py`, `test_claim_audit_inventory.py`, `test_claim_audit_output_boundary.py`, `test_sync_frontend_assets.py`, `test_check_single_title.py`, `test_site_trust_surface_audit.py` — 84/84 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide; `stylelint css/dataset-explorer.css` clean; site link gate passes ("Site gate passed!"); `check_spec_changelog.py` passes)
+- **Summary:** New browser page listing every `data/ztcf/`, `data/population_generalization/`, and `data/proximal_distal_energy_transfer/` fixture from a generated manifest. A hand-written JSON Schema validator (draft 2020-12 keyword subset used by AffineDrift's fixture schemas) checks each fixture against its published schema client-side; only `data/ztcf/` has a published `*.schema.json` today, so the other two families are reported as "schema unavailable" rather than a fabricated pass. Each fixture gets an accessible data table (generic JSON flatten, capped at 500 rows) and a download button whose SHA-256 is computed in-browser from the exact fetched bytes. The page is linked only from `_quarto.yml`'s navbar (Build → Datasets), not from existing narrative articles: those articles' digests are pinned as claim-audit review evidence, so cross-linking them was reverted; `_quarto.yml` is pinned too, so its edit required running `scripts/regenerate_claim_audit_evidence.py` (the sanctioned in-place digest refresh) to keep `data/trust/claim_audit_inventory.json` current.
+- **Next step:** Push the branch, open the draft PR, and let CI's `quarto render`/Playwright lane confirm the page renders and passes axe-core (not run locally; see HANDOFF.md).
 
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
@@ -208,6 +69,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_print_stylesheet_consolidation.py` 4/4 pass; `npx jest` 27 suites, 437 passed/19 skipped; `ruff check .` and `black --check --line-length 100 .` clean)
 - **Summary:** Consolidates the two competing `@media print` blocks into `css/print.css` as the single print stylesheet, drops the A4-only forced `@page` size (now `auto`) so both Letter and A4 print via the printer/OS choice, and adds a `beforeprint` handler forcing MathJax to typeset lazy-loaded off-screen math before any print (native Ctrl+P or the export-to-PDF button). The "PDFs built in CI and linked from the header card" criterion is deliberately not implemented this session — see HANDOFF.md Blocked section.
 - **Next step:** Owner/frontier decision on the deferred PDF-header-card-link scope (see HANDOFF.md Blocked), then implement or split into a follow-up issue.
+
 ### DL-#4495 · Make the 404 Page and Empty States Useful
 
 - **State:** in_review
@@ -220,6 +82,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_404_page.py` 3 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide)
 - **Summary:** Unifies the 404 page's contact address with About/Contact (`dieterolson@AffineDrift.com`, not the personal Gmail address it previously pointed to). The page's search-box mention and its five suggested-destination links were already present. The other half of the acceptance criteria — explicit "Start Here" and "Library" links — is blocked: neither target exists yet (`pages/start-here.qmd` is #4486, tier:strong, still open; the "Library" navbar grouping is part of the unmerged WEB-02.1 navbar restructure, also tier:strong). See the PR's Blocked section.
 - **Next step:** Once #4486 (Start Here page) and WEB-02.1 (Library navbar grouping) land, add the two links to `404.qmd` and close out the remainder of this issue's acceptance criteria.
+
 ### DL-#4565 · Math Accessibility Verification
 
 - **State:** in_review
@@ -232,6 +95,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `npx jest` 26 suites passed, 432 passed/19 skipped, 0 failed; `npx playwright test tests/e2e/accessibility.spec.js --list` registers the new test across all 5 browser projects; YAML-validated `ci-standard.yml`; full Playwright run deferred to CI's `e2e-tests` job since Quarto is not installed in this worktree)
 - **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches — finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today — and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
 - **Next step:** A human tester runs the manual NVDA/VoiceOver protocol in the findings doc and records results on #4565.
+
 ### DL-#4599 · Consolidate Inline "Recent" History Scripts
 
 - **State:** in_review
@@ -244,6 +108,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (`npx jest`: 27 suites, 445 passed, 19 pre-existing skips; `ruff check .` clean; `black --check --line-length 100 .` clean.)
 - **Summary:** Replaces the 15 duplicated inline localStorage "Recent X" widgets with a shared `initCategoryHistory()` in `js/history.js` for the 7 `models-*` pages (which genuinely track visits across a shared page set) and removes the widget entirely on the 8 `resources-*` pages (each only ever recorded its own page, so the feature showed nothing useful); adds first-ever Jest coverage for `history.js` and `home.js`.
 - **Next step:** Awaiting reviewer merge of #4625.
+
 ### DL-#4542 · Programming-Companion Metadata and Repository Links
 
 - **State:** in_review
@@ -283,30 +148,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds a reader-facing guide routing corrections, claim critiques, dataset contributions, and chapter reviews to their GitHub issue templates, linked from Collaborate. The "linked from every WEB-03.4 block" acceptance criterion is deferred because WEB-03.4 does not exist yet.
 - **Next step:** Owner/frontier review of the draft PR.
 
-### DL-#4566 · Skip Link and Focus Order Without JavaScript
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** #4624
-- **Issue:** #4566 (epic #4569 — E9 Accessibility Conformance)
-- **Branch:** `claude/issue-4566`
-- **Paths:** `_includes/skip-link.html`, `_quarto.yml`, `js/navigation.js`, `js/main.js`, `tests/navigation.test.js`, `tests/e2e/accessibility.spec.js`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (Jest: 25 suites, 424 passed/19 skipped, 0 failed. New Playwright E2E coverage added for `/`, `/pages/overview.html` — a stand-in for the not-yet-built `pages/start-here.qmd` from WEB-01.1 — and one article; not run locally because it requires a full Quarto site render, which this session's tooling does not permit invoking, so CI will exercise it.)
-- **Summary:** Moves the skip-to-content link into static HTML via a new `include-before-body` partial so it works without JavaScript and is never duplicated by the JS injector; `initSkipToContent` now only enhances the existing static link's click-focus behavior instead of creating the element.
-- **Next step:** Reviewing frontier agent confirms `#quarto-document-content` is present on the full-layout home page in the CI site render (the removed JS fallback previously hedged that it might not be).
-### DL-#4585 · Harden the MathJax Integration Against Quarto Upgrades
-
-- **State:** in_review
-- **Owner:** claude
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4639 (draft)
-- **Issue:** #4585
-- **Branch:** `claude/issue-4585`
-- **Paths:** `scripts/e2e_relevant_paths.py`, `tests/test_e2e_relevant_paths.py`, `docs/MATHJAX-MOBILE.md`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-30 (SELF: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_e2e_relevant_paths.py` — 22 passed, covering both `.quarto-version` in `EXACT_PATHS` and `_includes/` in `PATH_PREFIXES`)
-- **Summary:** `.quarto-version` now forces the full-site E2E render lane on a Quarto bump so `tests/e2e/article.spec.js`'s single-MathJax-runtime assertion actually runs against the upgraded Quarto's output instead of being skipped by the file-diff heuristic; documents the `html-math-method` / `mathjax-loader.html` split in `docs/MATHJAX-MOBILE.md`. Review-fix round added `_includes/` to `PATH_PREFIXES` so a change to `_includes/mathjax-loader.html` (the file holding the real MathJax runtime) is itself E2E-relevant.
-- **Next step:** Await frontier review on draft PR #4639; do not merge or enable auto-merge.
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review
@@ -319,6 +160,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (fix round for PR #4677 review: `pytest tests/test_on_ramp_paths.py` 10 passed; `pytest tests/test_site_link_gate.py tests/test_how_to_read.py tests/test_persona_start_paths.py tests/test_check_links.py tests/test_check_site_health.py` 98 passed; site gate passed; `ruff check tests/test_on_ramp_paths.py` and `black --check --line-length 100 tests/test_on_ramp_paths.py` clean)
 - **Summary:** Adds `resources/on-ramp-paths.qmd`, a new page with 5-minute, 30-minute, and 3-hour reading sequences for each of the 8 personas from `config/personas.yml`, built entirely from existing pages (no new prose content elsewhere), each ending in a self-check question with its answer grounded in the linked page's own body text; linked from `resources/learning-paths.qmd` so it isn't orphaned. Fix round corrected a notation error (lowercase `g(x)u`), a ZVCF/trajectory wording error, a fabricated "double-pendulum benchmark" claim about Theory Part 4, a mischaracterization of the research-review stub pages as finished reviews, an inconsistent Theory Part 1 time estimate, a subtitle hour-range mismatch, and rewrote all 24 self-checks from recall trivia to reflective questions.
 - **Next step:** Push the branch with this fix round and await re-review.
+
 ### DL-#4547 · Deduplicate and Reconcile Bibliography Databases
 
 - **State:** in_review
@@ -331,6 +173,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (SELF: reworked after review blocked the original mechanical-merge draft. `python3 scripts/check_bibliography_cross_file.py` reports 163 keys shared across files, 0 disagreeing, 0 CI-flagged duplicate DOIs (82 raw shared-DOI groups exist pre-exemption, mostly legitimate per-book copies — see PR #4676 for the list); `pytest tests/test_check_bibliography_cross_file.py` 18/18; `python3 -m scripts.check_citation_resolution`, `python3 -m scripts.check_qmd_citation_keys`, and `scripts/check_latex_structure.py` (pre-existing, already CI-wired citation-resolution checks) all pass clean against the reverted tree; `ruff check .` and `black --check --line-length 100 .` clean.)
 - **Summary:** Reworked after review blocked the original mechanical dedupe: that merge broke the locked `proximal_distal_energy_transfer` article, touched an owner-sign-off-gated book audit ledger, deleted citation keys still in use, and silently renamed a key. All of that is reverted to `origin/main` byte-for-byte. What ships instead: `proximal_distal_energy_transfer/references.bib` added to `STANDALONE_LINKED` (it is `index.qmd`'s sole `bibliography:` override) and `clark2013whatever` fixed to the `@article`/*Behavioral and Brain Sciences*/Cambridge University Press record it actually is everywhere it appears. No new citation-resolution test was added: `scripts/check_citation_resolution.py`, `scripts/check_qmd_citation_keys.py`, and `scripts/check_latex_structure.py` already do exactly that (CI-gated, all currently passing), so writing a parallel implementation would have duplicated working infrastructure. The 82 raw duplicate-DOI groups the mechanical merge would have addressed are left in place; most are legitimate copies across `STANDALONE_LINKED` files, and the CI check does not flag any of them as violations.
 - **Next step:** Owner/frontier review of the reworked draft PR #4676; mark ready and merge once approved.
+
 ### DL-#4564 · Cross-Browser Coverage (Nightly Firefox/WebKit)
 
 - **State:** in_review
@@ -343,6 +186,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF, review feedback round 1: 29/29 tests in test_report_e2e_browser_failures.py pass via `python -m pytest -q -o addopts=`; ruff and black --line-length 100 clean on the changed files; no-new-labels, missing-report-handling, and issue-cap behaviors each landed test-first)
 - **Summary:** Adds a nightly workflow that runs `tests/e2e/smoke.spec.js` (the existing representative public-route + behavioral-invariant suite) against Firefox and WebKit — the two `playwright.config.js` projects `ci-standard.yml`'s PR-gated `e2e-tests` job never exercises — and files deduplicated-by-title GitHub issues via `scripts/report_e2e_browser_failures.py`: one per distinct (browser, test title) failure, using only the repo's existing `ci`/`automation` labels, rolling more than 5 new failures into a single dated summary issue, and treating a missing/empty/unparseable report as a failure of its own instead of crashing or vanishing.
 - **Next step:** Owner/frontier review of the draft PR; the schedule cannot be exercised end-to-end until it first fires on `main`, so verify the first nightly run once merged.
+
 ### DL-#4576 · Privacy Policy Page
 
 - **State:** in_review
@@ -422,18 +266,23 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Awaiting frontier-agent review of the draft PR.
 
 ### DL-#4548 · Render or Retire Orphaned Per-Article Bibliography Files
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4548 (epic #4552)
+- **Branch:** `claude/issue-4548`
+- **Paths:** `_quarto.yml`, `articles/*-bibliography.md` (21 files), `articles/proximal-distal-energy-transfer.qmd`, `articles/wrist-universal-joint.qmd`, `scripts/check_quarto_render_coverage.py`, `tests/test_check_quarto_render_coverage.py`, `docs/development/content-architecture.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (`python3 -m pytest -q` full suite passed after `python3 -m scripts.regenerate_claim_audit_evidence` refreshed the `force-mobility-matrices-bibliography.md` review-evidence digest the added frontmatter changed; `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` both clean; `python3 -m scripts.check_quarto_render_coverage` and `python3 -m scripts.link-checker --site-gate --root .` both pass against the real repo.)
+- **Summary:** Added the `articles/*-bibliography.md` Quarto render rule (mirroring the pre-existing `critiques/*.md` rule) and minimal title/description front matter to the 22 companion bibliography files, so they render instead of 404ing; fixed the two links that pointed at raw `.md`/GitHub-blob sources; kept and front-mattered the one orphan companion file (`Pinocchio_Project_Outline-bibliography.md`) because its annotated content is substantive; documented the pattern.
+- **Next step:** Open the draft PR for review.
+
 ### DL-#4504 · Configure Search, and Include Maturity in Results
 
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created yet (draft PR to be opened this session)
-- **Issue:** #4541 (epic #4543, E6 — Interactive Models and Reproducibility)
-- **Branch:** `claude/issue-4541`
-- **Paths:** `models/dataset-explorer.qmd`, `js/dataset-explorer.js`, `js/dataset-explorer-ui.js`, `css/dataset-explorer.css`, `scripts/generate_dataset_explorer_manifest.py`, `data/dataset_explorer_manifest.json`, `tests/dataset-explorer.test.js`, `tests/dataset-explorer-ui.test.js`, `tests/test_generate_dataset_explorer_manifest.py`, `scripts/sync_frontend_assets.py` (registered the two new JS modules), `_quarto.yml` (navbar entry under Build → Datasets), `data/trust/claim_audit_inventory.json` (digests regenerated via `scripts/regenerate_claim_audit_evidence.py` after the `_quarto.yml` edit), `SPEC.md`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `npx jest` 28 suites/455 passed/19 skipped; targeted `pytest` across `test_generate_dataset_explorer_manifest.py`, `test_claim_audit_inventory.py`, `test_claim_audit_output_boundary.py`, `test_sync_frontend_assets.py`, `test_check_single_title.py`, `test_site_trust_surface_audit.py` — 84/84 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide; `stylelint css/dataset-explorer.css` clean; site link gate passes ("Site gate passed!"); `check_spec_changelog.py` passes)
-- **Summary:** New browser page listing every `data/ztcf/`, `data/population_generalization/`, and `data/proximal_distal_energy_transfer/` fixture from a generated manifest. A hand-written JSON Schema validator (draft 2020-12 keyword subset used by AffineDrift's fixture schemas) checks each fixture against its published schema client-side; only `data/ztcf/` has a published `*.schema.json` today, so the other two families are reported as "schema unavailable" rather than a fabricated pass. Each fixture gets an accessible data table (generic JSON flatten, capped at 500 rows) and a download button whose SHA-256 is computed in-browser from the exact fetched bytes. The page is linked only from `_quarto.yml`'s navbar (Build → Datasets), not from existing narrative articles: those articles' digests are pinned as claim-audit review evidence, so cross-linking them was reverted; `_quarto.yml` is pinned too, so its edit required running `scripts/regenerate_claim_audit_evidence.py` (the sanctioned in-place digest refresh) to keep `data/trust/claim_audit_inventory.json` current.
-- **Next step:** Push the branch, open the draft PR, and let CI's `quarto render`/Playwright lane confirm the page renders and passes axe-core (not run locally; see HANDOFF.md).
 - **Issue:** #4504 (WEB-02.10; epic #4514)
 - **Branch:** `claude/issue-4504`
 - **Paths:** `_quarto.yml`, `_includes/site-head.html`, `js/search-maturity-badge.js`, `scripts/generate_search_maturity_index.py`, `css/search-metrics.css`, `articles/zero-torque-counterfactual.qmd`, `.github/workflows/deploy-website.yml`, `tests/e2e/search.spec.js`
@@ -441,6 +290,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (SELF: `npx jest` 441 passed/19 skipped; `pytest --timeout=120 -q` all passed; ruff/black clean; `check_spec_changelog` and `regenerate_claim_audit_evidence --check` pass. Full-site Playwright E2E not run locally — `quarto render` is blocked in this sandbox; CI's `e2e-tests` job validates the new ZTCF search spec.)
 - **Summary:** Configures an explicit Quarto `search:` block (overlay, limit 10, `/`/`s` shortcut), removes the unverified `SearchAction` JSON-LD (its target was never implemented), and injects the page-header-card maturity badge into matching search results via a generated `search-maturity.json` index and a client-side DOM-annotation module.
 - **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job confirm the new "ZTCF" search spec passes against the real full-site render.
+
 ### DL-#4535 · DCR Visualiser Widget
 
 - **State:** in_review
@@ -479,7 +329,20 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: 13/13 tests pass across test_social_cards.py and test_image_budget.py; ruff and black --line-length 100 clean)
 - **Summary:** Generates one 1200x630 Open Graph card per book/series (title, badge, signature graphic) at build time instead of one site-wide card, checked in like the existing site-wide `logo/og-card.png`, and wires three representative landing pages to use theirs via per-page `open-graph`/`twitter-card` overrides.
 - **Next step:** After merge and deploy, run a social-card debugger against the three live page URLs to close out the issue's second acceptance criterion (see HANDOFF.md Blockers).
+
 ### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4567 (epic #4569)
+- **Branch:** `claude/issue-4567`
+- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass)
+- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
+- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
+
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
@@ -492,7 +355,20 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (`pytest tests/test_generate_datasets_catalog.py` 14 passed; `generate_datasets_catalog --check` up to date; ruff/black clean repo-wide; mypy clean on new modules; Quarto render-coverage/syntax/xref/single-title/title-case checks pass; full pre-push hook chain including `pytest-unit` passed; PR #4632 opened as draft)
 - **Summary:** Rebuilds the Datasets resource page as a generated catalogue from `data/datasets.yml`, replacing four truncated-looking third-party cards and the `mini.s-shot.ru` thumbnail host with verified licence/size/modality/access/citation fields, and adds an "AffineDrift Data Artefacts" section listing `data/ztcf`, `data/research_protocols`, and `schemas` with a real SHA-256 checksum per file.
 - **Next step:** Awaiting frontier-agent PR review.
+
 ### DL-#4595 · Cache Quarto Renders in CI
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4595 (WEB-13.1; epic #4604 / E13)
+- **Branch:** `claude/issue-4595`
+- **Paths:** `.github/workflows/ci-standard.yml`, `tests/test_deployment_integrity.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 16/16 test_deployment_integrity.py pass + 1 skipped, 2/2 test_workflow_action_pins.py pass, ruff/black clean repo-wide)
+- **Summary:** Caches the PR `e2e-tests` Quarto render output (`docs/` + `.quarto/`) keyed on a hash of every render-relevant source file, skipping the ~14-minute render only on an exact hash match; deploy's clean full render is untouched. A true per-file incremental render was scoped out because it would conflict with the existing #4126 invariant guaranteeing the E2E lane always renders every route; see HANDOFF.md for the full reasoning.
+- **Next step:** Owner/frontier review of the draft PR, including the `tier:strong` follow-up proposed for reconciling incremental rendering with the #4126 full-coverage guarantee if the ≥30% median-time criterion is not met by the cache alone.
+
 ### DL-#4600 · Service-Worker Cache Busting by Content Hash
 
 - **State:** in_review
@@ -505,25 +381,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (Jest full suite 420 passed/19 skipped; `pytest tests/test_update_sw_cache_version.py` 12 passed; `ruff check .` and `black --check --line-length 100 .` clean. Full-site Playwright E2E not run locally — `quarto render` is out of scope for this session; CI's `e2e-tests` job validates the re-enabled offline spec.)
 - **Summary:** Removes the stale TODO in `service-worker.js` referencing closed issue #1459 (content-hash cache busting is already implemented by `scripts/update_sw_cache_version.py`, which hashes precached CSS/JS assets into `CACHE_NAME`), replaces the offline E2E test's flaky fixed 3s wait with a deterministic `navigator.serviceWorker.ready` wait, and drops that one title from the `ci-standard.yml` full-site E2E exclusion list.
 - **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job confirm the re-enabled offline spec passes against the real full-site render.
+
 ### DL-#4596 · Report Broken External Links as Issues
 
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created
-- **Issue:** #4548 (epic #4552)
-- **Branch:** `claude/issue-4548`
-- **Paths:** `_quarto.yml`, `articles/*-bibliography.md` (21 files), `articles/proximal-distal-energy-transfer.qmd`, `articles/wrist-universal-joint.qmd`, `scripts/check_quarto_render_coverage.py`, `tests/test_check_quarto_render_coverage.py`, `docs/development/content-architecture.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (`python3 -m pytest -q` full suite passed after `python3 -m scripts.regenerate_claim_audit_evidence` refreshed the `force-mobility-matrices-bibliography.md` review-evidence digest the added frontmatter changed; `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` both clean; `python3 -m scripts.check_quarto_render_coverage` and `python3 -m scripts.link-checker --site-gate --root .` both pass against the real repo.)
-- **Summary:** Added the `articles/*-bibliography.md` Quarto render rule (mirroring the pre-existing `critiques/*.md` rule) and minimal title/description front matter to the 22 companion bibliography files, so they render instead of 404ing; fixed the two links that pointed at raw `.md`/GitHub-blob sources; kept and front-mattered the one orphan companion file (`Pinocchio_Project_Outline-bibliography.md`) because its annotated content is substantive; documented the pattern.
-- **Next step:** Open the draft PR for review.
-- **Issue:** #4595 (WEB-13.1; epic #4604 / E13)
-- **Branch:** `claude/issue-4595`
-- **Paths:** `.github/workflows/ci-standard.yml`, `tests/test_deployment_integrity.py`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: 16/16 test_deployment_integrity.py pass + 1 skipped, 2/2 test_workflow_action_pins.py pass, ruff/black clean repo-wide)
-- **Summary:** Caches the PR `e2e-tests` Quarto render output (`docs/` + `.quarto/`) keyed on a hash of every render-relevant source file, skipping the ~14-minute render only on an exact hash match; deploy's clean full render is untouched. A true per-file incremental render was scoped out because it would conflict with the existing #4126 invariant guaranteeing the E2E lane always renders every route; see HANDOFF.md for the full reasoning.
-- **Next step:** Owner/frontier review of the draft PR, including the `tier:strong` follow-up proposed for reconciling incremental rendering with the #4126 full-coverage guarantee if the ≥30% median-time criterion is not met by the cache alone.
 - **Issue:** #4596 (epic #4604)
 - **Branch:** `claude/issue-4596`
 - **Paths:** `scripts/link-checker.py`, `.github/workflows/link-checker.yml`, `docs/LINK-CHECKER.md`, `tests/test_link_checker_script.py`
@@ -537,14 +400,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** claude
 - **PR:** not created
-- **Issue:** #4567 (epic #4569)
-- **Branch:** `claude/issue-4567`
-- **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: 20/20 `test_validate_accessibility.py` tests pass; ruff and black clean; `--qmd-only` exits 0 across the full repo; `check_spec_changelog`, `check_module_size_budget`, `check_root_hygiene`, `check_workflow_action_pins` all pass)
-- **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
-- **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
-
 - **Issue:** #4588 (epic #4594)
 - **Branch:** `claude/issue-4588`
 - **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
@@ -578,31 +433,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (33/33 new pytest cases pass; ruff, black --line-length 100, and mypy clean on the new module.)
 - **Summary:** Advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages, wired into CI as a non-blocking step with a JSON report artifact; threshold (grade 10) taken from WEB-12.1's stated targets since the style guide itself (WEB-12.1) is still open.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
-### DL-#4519 · Show Maturity in the Article Index and on Books Hub Cards
-
-- **State:** parked
-- **Owner:** claude
-- **PR:** #TBD (draft, blocked)
-- **Issue:** #4519 (epic #4521)
-- **Branch:** `claude/issue-4519`
-- **Paths:** `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-30 (SELF: no source change; confirmed via `gh issue view` that #4501 and #4515 are still open and #4516 is now closed, with `css/components/status-badge.css` present on `main`)
-- **Summary:** Blocked. The issue's own "Depends on: WEB-02.7" (#4501, open) means the Article Index is still hand-maintained prose (`resources/articles.qmd`), not a per-entry Quarto listing that a badge partial could attach to. The maturity enum (WEB-04.1, #4515) is also still open, so there is no `config/maturity.yml` vocabulary to source a badge from. WEB-04.2 "Badge Component Used on Cards, Headers, Listings, and Search" (#4516) has since merged — `css/components/status-badge.css` now exists on `main` — so that prerequisite is resolved.
-- **Next step:** Reopen and implement once #4501 and #4515 have merged; wire the existing `status-badge` component into `resources/articles.qmd` listing entries and `books/index.qmd` `.resource-card` entries.
-
-### DL-#4513 · Roll Out the Layered Page Template to Core Pages
-
-- **State:** parked
-- **Owner:** claude
-- **PR:** #4647
-- **Issue:** #4513 (epic #4514)
-- **Branch:** `claude/issue-4513`
-- **Paths:** none yet
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-30 (SELF: confirmed via `gh issue view` that #4510 is now CLOSED and merged — `css/components/where-next.css` and `scripts/filters/where-next.lua` exist on origin/main — while #4506 and #4509 are still open and unmerged)
-- **Summary:** Blocked — the issue requires applying WEB-03.1 through WEB-03.5 to ≥30 core pages, but only WEB-03.2 (#4507, page header card), WEB-03.3 (#4508, summary/key-takeaways block), and WEB-03.5 (#4510, "where next" footer) are merged. WEB-03.1 (#4506, front-matter schema, `tier:strong`) and WEB-03.4 (#4509, "what this shows/does not show" block, `tier:strong`) are still open with no implementation in the tree, so there is no complete template to roll out yet.
-- **Next step:** Resume once #4506 and #4509 merge; re-check for their components before starting the rollout.
 
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
@@ -734,7 +564,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Connects model assumptions to golf delivery and biological inference; corrects modal dynamics, force/power pairing, redundancy, inertial accounting and excitation affinity without asserting empirical human parameters.
 - **Next step:** Preserve the source and publication receipts for this completed chapter correction.
 
-
 ### DL-#4429 · Site-Surface Audit Provenance Reconciliation
 
 - **State:** shipped
@@ -812,7 +641,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-23 (implementation 1c129d52; merge sync preserves main 7664a390; source catalog/plan/README/SPEC inspected; #4253 verified open; catalog and both charter parsers pass; original planning bytes unchanged; title-case/SPEC pass; commit/pre-push hooks pass)
 - **Summary:** Initial charter separates active theory/numerical synthesis from parked DV-4253 and exposes pending resource/evidence decisions. Original scientific obligations remain authoritative in the plan.
 - **Next step:** #4439 merged as c169bbd9; live parked DV-4253 is verified. Enforcement continues in DL-#4445.
-
 
 ### DL-#4436 · Force and Mobility Ellipsoids
 
@@ -918,7 +746,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Corrects both COP height signs, central-axis/free-couple geometry, covariance reasoning, transducer and sampling claims, ASTM standard omission, pressure and bilateral identifiability, study-statistic attribution and causal overclaims. Prior source-only route acceptance is reopened.
 - **Next step:** None for this delivery; publication receipt saved separately from frozen scientific evidence. Continue corpus review.
 
-
 ### DL-#4418 · Superposition Feasibility and Constrained Task Authority
 
 - **State:** shipped
@@ -958,7 +785,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Replaces drift-as-flaccidity, momentum-as-force and unsupported skill/control inference with a shared model-conditioned preface connecting geometry, energy, inputs, task authority and evidence.
 - **Next step:** None for this delivery; broader corpus review continues.
 
-
 ### DL-#4412 · Anatomy and Joint Modeling Scientific Review
 
 - **State:** shipped
@@ -971,7 +797,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-22 (SELF; protected PR merged, successful successor deployment35774559003 at main581857cb; downloaded live artifact10716514261 passes960/960 cases; all eight anatomy/preface records independently inspected, HTTP200, no page overflow, no serious/critical axe violations; prior scientific/render validation retained in review reports)
 - **Summary:** Corrects all identified Chapter 22 geometry, anatomical, work, contact and injury-inference errors, with seven worked exercises and explicit primary-source boundaries. Reopens unsupported prior acceptance; review evidence is bound to 14f1c148. CI exposed two stale figure-census assertions after removing the documented unpaired sketch; the expected counts are corrected without weakening parity checks. Protected successor publication is verified.
 - **Next step:** None for this delivery; broader corpus review continues.
-
 
 ### DL-#4406 · Deploy Website Public-Site Verification Gate
 
@@ -1141,7 +966,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-10 (`8808f68ab8b7e39c5110ce260473d02dbff63c45`, successful deploy 34456863592; all 956 live records / 239 routes in artifact 10144974541 independently inspected with no failures or retries)
 - **Summary:** Defines one consistent planar model, derives complete inertia and Christoffel bias, computes a converged zero-torque counterexample and ideal lock release, separates segment power from local actuation, and bounds wrist-control claims with primary evidence. Six worked answers and historical destinations are preserved. Derivation and failure history are recorded in the audit.
 - **Next step:** Retain the published derivation while reviewing the remaining constraint and affine chapters.
-
 
 ### DL-#4342 · Durable Claim-Review Evidence Through Deployment
 
