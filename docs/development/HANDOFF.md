@@ -191,6 +191,11 @@
   the notebook scaffolds in JupyterLab" is the accurate claim, not "run the
   notebooks."
 
+- E2E fix: `code-tools: true` embeds each article's full source in a hidden
+  modal after `<main>`. On `inverse-dynamics` (no code cells) that modal was the
+  first `.sourceCode` match and failed `article.spec.js` "should handle code
+  blocks correctly". The test now scopes the lookup to `main`.
+
 ## Next Steps
 
 1. A session with permission to write under `.devcontainer/` adds the file
