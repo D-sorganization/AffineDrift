@@ -1,3 +1,65 @@
+# Implementation Handoff — Short On-Ramp Learning Paths (#4492)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4492`.
+- Branch `claude/issue-4492`, commit `SELF`; pull request: to be opened this
+  session (draft, targets `main`).
+- Governing issue: #4492 (WEB-01.7, part of epic #4496 — Audience Routing and
+  Onboarding Funnel). Objective: add short on-ramp learning paths (5 minutes,
+  30 minutes, 3 hours) per persona, each a curated sequence of existing
+  sections with a goal statement and a self-check question.
+- Dependencies listed on the issue (WEB-01.4 "Big Idea in Five Minutes"
+  explainer, #4489; WEB-12.4 plain-language entry-page rewrite, #4590) are
+  both still open. Neither blocks this issue: the acceptance criteria require
+  curating *existing* sections, and no on-ramp here depends on content those
+  issues would add — each links only to pages that already exist on `main`.
+- Added `resources/on-ramp-paths.qmd`: for each of the 8 personas in
+  `config/personas.yml` (learner, researcher, integrator, experimentalist,
+  reviewer, contributor, golfer-coach, student), a 5-minute, 30-minute, and
+  3-hour on-ramp. Each tier lists existing pages in order with a per-page time
+  estimate, a one-line goal statement, and ends with one self-check question
+  and its answer drawn from the linked page's own front-matter description
+  (not invented). Every link resolves under the site link gate; anchors use
+  the `{#onramp-<persona>-<tier>}` convention.
+- Linked the new page from `resources/learning-paths.qmd` (an intro pointer
+  plus a Path Index entry) so it is not orphaned by the link gate; no
+  `_quarto.yml` navigation change was needed, matching how the existing
+  per-path pages (`learning-path-foundations.qmd`, etc.) are already wired.
+- Tests: `tests/test_on_ramp_paths.py` (5 cases, written first and confirmed
+  RED before the page existed) — front-matter validity, all 24
+  persona/tier anchors present, every tier has a timed page link plus a
+  self-check question and answer, all internal links resolve, and the page
+  is linked from the learning-paths hub.
+- Validation commands run in this worktree:
+  - `python -m pytest tests/test_on_ramp_paths.py -v` → 5 passed.
+  - `python -m pytest tests/test_site_link_gate.py tests/test_how_to_read.py
+    tests/test_persona_start_paths.py tests/test_check_links.py
+    tests/test_check_site_health.py -q` → 103 passed.
+  - `python scripts/link-checker.py --site-gate` → "Site gate passed!" (runs
+    the real gate — broken links, path style, Related Articles coverage,
+    orphans, categories — against the actual repo tree, including the new
+    page).
+  - `python -m ruff check tests/test_on_ramp_paths.py` → all checks passed.
+  - `python -m black --check --line-length 100 tests/test_on_ramp_paths.py`
+    → unchanged.
+  - Full `python -m pytest --cov` suite: fails at collection on ~75
+    unrelated test modules (`tests/test_screw_examples.py`,
+    `benchmarks/test_core_benchmarks.py`, etc.) with
+    `ImportError: A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.2.6`. Confirmed pre-existing and unrelated to this change by
+    collecting one of those modules in isolation — same error, no relation to
+    any file this PR touches (a content-only `.qmd` page plus a new test
+    file). Not fixed here; out of scope for a WEB-01.7 content change.
+- Not done / deferred: none for the issue's own acceptance criteria. The two
+  open dependency issues (#4489, #4590) may eventually add content (a "Big
+  Idea in Five Minutes" explainer, plain-language entry-page rewrites) that a
+  future pass could fold into these on-ramps, but nothing here requires it.
+
+## Next Steps
+
+1. Push `claude/issue-4492` and open the draft PR.
+2. Awaiting frontier-agent PR review.
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
