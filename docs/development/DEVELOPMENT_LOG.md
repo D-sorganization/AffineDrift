@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4556 · Adopt Quarto Dark Theme Support
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4556 (epic #4560)
+- **Branch:** `claude/issue-4556`
+- **Paths:** `_quarto.yml`, `styles.css`, `tests/test_dark_theme_config.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_dark_theme_config.py` 3/3 pass; full `pytest -k "not integration"` 0 failures; `npx jest` 429 passed/19 skipped; `ruff check .` and `black --check --line-length 100 .` clean; `python3 -m scripts.check_styles_budget` within budget; `python3 -m scripts.regenerate_claim_audit_evidence --check` current. `quarto render` and Playwright E2E are unavailable in this sandbox — CI's `e2e-tests` job is the first real render of the dark bundle.)
+- **Summary:** Configures Quarto's native `theme.dark` (`[darkly, custom.scss]`) alongside the existing `theme.light`, closing the "only light declared" gap so Quarto compiles genuine light/dark Bootstrap and syntax-highlighting bundles instead of the site faking dark mode purely through post-hoc CSS overrides. Hides Quarto's auto-injected `.quarto-color-scheme-toggle` (added automatically once both variants are configured) because the site already ships a tested, accessible custom toggle (`js/dark-mode-toggle.js`, `#theme-toggle`) and two independent, out-of-sync controls would confuse readers. The existing accessible syntax-highlighting override (`css/components/code-theme.css` + `css/tokens/colors.css`) is unchanged and continues to govern code-block colors in both themes. `#theme-toggle` was already `position: fixed`, so its post-DOMContentLoaded insertion already contributed zero CLS; added a regression test guarding that invariant.
+- **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job (full-site Quarto render + per-route axe-core) confirm the dark bundle renders correctly and no duplicate toggle is visible.
+
 ### DL-#4600 · Service-Worker Cache Busting by Content Hash
 
 - **State:** in_review

@@ -1,3 +1,100 @@
+# Adopt Quarto Dark Theme Support — 2026-09-30
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4556`.
+- Branch `claude/issue-4556`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4556 (epic #4560, E8 — Visual Explanation and Design System).
+  Objective: give Quarto a real `theme.dark` instead of the site declaring only `theme.light`
+  and faking dark mode purely through a post-hoc CSS override, while keeping the existing
+  tested custom toggle and its syntax-highlighting accessibility work intact.
+- Completed work:
+  - `_quarto.yml`: added `dark: [darkly, custom.scss]` alongside the existing
+    `light: [cosmo, custom.scss]`. Reused `custom.scss` for both variants (it sets brand
+    Sass variables and Okabe-Ito CSS custom properties that are theme-agnostic; nothing in
+    it hard-codes light-only intent) rather than authoring a new, unverifiable dark SCSS file.
+  - `styles.css`: hid Quarto's auto-injected `.quarto-color-scheme-toggle` (Quarto adds this
+    switch to the navbar automatically once both `theme.light` and `theme.dark` are
+    configured — confirmed via Quarto's HTML theming docs, since `quarto render` could not be
+    run locally to observe it directly). The site already ships a tested, accessible custom
+    toggle (`js/dark-mode-toggle.js`, `#theme-toggle`, `affinedrift-theme` localStorage key),
+    and two independent, out-of-sync theme controls would confuse readers and were explicitly
+    out of scope to reconcile (see Key decisions below).
+  - `tests/test_dark_theme_config.py` (new): three tests — `_quarto.yml`'s `theme` declares
+    both `light` and `dark`; the native Quarto toggle is hidden via CSS; `#theme-toggle` stays
+    `position: fixed` (a regression guard for the "no layout shift from the toggle" acceptance
+    criterion — a fixed-position element contributes zero CLS regardless of when it is
+    inserted into the DOM, which was already true before this change).
+  - Regenerated pinned claim-audit evidence digests for `_quarto.yml` and `styles.css` via
+    `python3 -m scripts.regenerate_claim_audit_evidence` (mechanical digest refresh only, same
+    workflow as commit ebced38f; no claim/critique content was re-reviewed or altered —
+    `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`,
+    `data/trust/site_trust_surface_audit.json`).
+- Key decisions / explicitly out of scope:
+  - Did **not** touch `css/components/code-theme.css` or `css/tokens/colors.css`. Those already
+    override every Pandoc syntax-highlighting token class (`span.co`, `span.kw`, `span.st`, …)
+    via CSS custom properties gated on the site's own `[data-theme]`/`[data-bs-theme]`
+    attributes, and this already wins the cascade in production today (proven by light mode
+    already rendering correctly against Quarto's embedded highlight-style style block).
+    Declaring `theme.dark` does not change that selector structure, so this criterion
+    ("code highlighting correct in both themes") was already satisfied and needed no code
+    change — verified by re-reading the file, not by a render.
+  - Did **not** wire the custom toggle's click handler to Quarto's internal
+    `window.quartoToggleColorScheme()` / its `body.quarto-light`/`quarto-dark` class swap.
+    Hiding the native toggle means it is never clicked, so Quarto's own dark bundle stays at
+    whatever `prefers-color-scheme` determined at initial load — this is harmless because the
+    site's own CSS custom-property system already overrides essentially all visually relevant
+    Bootstrap output regardless of which Quarto bundle is active (this is the exact mechanism
+    that makes dark mode work at all today, pre-#4556). The already-present
+    `body.quarto-dark` selectors in `styles.css` (added ahead of this issue, e.g. the `#4140`
+    focus-ring and link-color blocks) remain redundant-but-harmless belt-and-suspenders: every
+    rule that lists `body.quarto-dark` also lists `[data-theme="dark"]`/`[data-bs-theme="dark"]`
+    in the same selector group, and the site's own JS is what actually sets those two.
+  - **Blocked on local verification, not on design**: `quarto render` and
+    `npx playwright test` are both unavailable in this sandbox (see Validation below). CI's
+    `e2e-tests` job is the first real render of the `theme.dark` bundle. If the rendered output
+    shows any of: a visible duplicate toggle, unreadable code blocks, or unstyled native form
+    controls/scrollbars, start by inspecting the rendered document head for the actual generated
+    `.quarto-color-scheme-toggle` markup and highlight-style link element ids rather than
+    re-guessing from documentation.
+- Compatibility constraints: none — `js/dark-mode-toggle.js` and its localStorage contract are
+  unchanged; all existing Jest dark-mode tests pass unmodified.
+- Validation commands and outcomes:
+  - `python3 -m pytest tests/test_dark_theme_config.py -v` → 3 passed.
+  - `python3 -m pytest -k "not integration"` (full suite) → 0 failed (benchmarks/skips aside).
+  - `npx jest` (full suite) → 26 suites, 429 passed, 19 skipped, 0 failed.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → 743 files unchanged, no diffs.
+  - `python3 -m scripts.check_styles_budget` → 3344/3400 lines, 47/212 `!important` (within
+    budget; both pre-existing baselines, not raised).
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` → "claim-audit evidence
+    digests and reports are current".
+  - **Not run locally:** `quarto render` and `npx playwright test` — both are blocked in this
+    sandbox (no shell access to the `quarto` binary; full-site render is also ~14 min and out
+    of policy for a CLI-tier session per repo `CLAUDE.md`). The dark-theme YAML/CSS behavior
+    was verified by code review, Quarto's published HTML-theming documentation (which the
+    session could reach via web search), and the precedent of the existing, tested custom
+    toggle's Jest coverage — not by an actual render. CI's `e2e-tests` job (full-site Quarto
+    render + Playwright + per-route axe-core) is the first real validation of the rendered
+    dark bundle; check its result on the opened PR.
+  - Note: running the full local `pytest` suite (without `-k`) also regenerates
+    `data/trust/generated/reader_validation_study.json`,
+    `data/trust/generated/research_releases_registry.json`, and their `_includes/generated/*`
+    summaries as a side effect, because
+    `tests/test_research_artifact_releases.py::test_full_release_generation_and_schema_validation`
+    calls its generator with `check=False` against the real repo root (`Path(__file__).parent.parent`)
+    instead of an isolated `tmp_path`. This is pre-existing and unrelated to #4556; those
+    incidental writes were reverted (`git checkout --`) before this commit rather than folded
+    in. Worth a follow-up issue: give that test a `tmp_path` fixture like its sibling
+    `test_reader_comprehension_validation.py::test_full_study_generation_and_schema_validation`
+    already has, so a routine local test run stops mutating checked-in generated files.
+- Blockers/risks: none blocking this PR. The two "did not touch" items above (highlight-style
+  cascade, native-toggle sync) are deliberate scope decisions with reasoning above, not
+  unfinished work — flag them for frontier review since they're judgment calls made without
+  the ability to render and visually confirm.
+- Next steps: open the draft PR; watch CI's `e2e-tests` job for the actual rendered dark bundle
+  and duplicate-toggle check; consider filing the `test_full_release_generation_and_schema_validation`
+  test-isolation bug noted above as a separate issue.
+
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
