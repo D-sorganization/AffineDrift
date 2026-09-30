@@ -223,6 +223,28 @@
 
 ---
 
+# Implementation Handoff — Deploy Website Claim-Audit Route Coverage (#4666)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/main-is-red-deploy-website-4666
+- Baseline commit: 45d9fca0 (origin/main)
+- Governing issue: #4666 (main is red: Deploy Website, fleet-main-health)
+
+## Objective and Status
+
+- Objective: Restore green `Deploy Website` on `main` by adding newly created pages (`pages/glossary.html` and `pages/how-to-read.html`) to `data/trust/claim_audit_inventory.json` so that `--enforce-publication` coverage check succeeds during production website build.
+- Status: Implementation complete, test suites passing; opening PR.
+- Completed:
+  - Added reviewed route entries for `/pages/glossary.html` and `/pages/how-to-read.html` to `data/trust/claim_audit_inventory.json` with self-contained byte evidence (SHA-256 digests).
+  - Updated `DEFERRED_AUDIT_SCOPE_COUNTS` in `scripts/claim_audit_ids.py` for issue 4063 (from 13 to 15) to account for the two new pages.
+  - Updated route partition test in `tests/test_claim_audit_inventory.py`.
+  - Regenerated `data/trust/generated/claim_audit_report.json` and `reports/scientific-claim-audit.md`.
+  - Verified with `scripts.generate_claim_audit_inventory --check --enforce-publication`.
+
+---
+
 # Implementation Handoff — Cache Quarto Renders in CI (#4595)
 
 ## Identity
