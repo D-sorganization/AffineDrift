@@ -96,8 +96,10 @@ jobs:
               return;
             }
 
+            // A URL or reason containing `|` would otherwise split its table cell.
+            const cell = (value) => String(value).replace(/\|/g, '\\|');
             const rows = warnings
-              .map((w) => `| ${w.file} | ${w.url} | ${w.reason} | [archive.org](${w.archive_suggestion}) |`)
+              .map((w) => `| ${cell(w.file)} | ${cell(w.url)} | ${cell(w.reason)} | [archive.org](${cell(w.archive_suggestion)}) |`)
               .join('\n');
             const body = [
               marker,
