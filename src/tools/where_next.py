@@ -90,6 +90,7 @@ def compute_relative_href(from_page: str, target_href: str) -> str:
 
 
 def _check_missing_core_pages(config: dict[str, Any]) -> list[str]:
+    """Check that all required core pages are present in configuration."""
     errors: list[str] = []
     for core_page in CORE_PAGES:
         norm_core = normalize_page_key(core_page)
@@ -101,6 +102,7 @@ def _check_missing_core_pages(config: dict[str, Any]) -> list[str]:
 def _check_core_page_completeness(
     page_key: str, page_norm: str, entry: dict[str, Any]
 ) -> list[str]:
+    """Verify that a core page has at least one simpler and one deeper link."""
     errors: list[str] = []
     core_norm_keys = [normalize_page_key(cp) for cp in CORE_PAGES]
     if page_norm in core_norm_keys:
@@ -116,6 +118,7 @@ def _check_core_page_completeness(
 def _parse_section_items(
     page_key: str, section: str, val: Any, errors: list[str]
 ) -> list[tuple[str, dict[str, Any]]]:
+    """Parse section value into a list of (section, link_dict) tuples."""
     if val is None:
         return []
     if isinstance(val, dict):
@@ -135,6 +138,7 @@ def _parse_section_items(
 def _collect_entry_links(
     page_key: str, entry: dict[str, Any], errors: list[str]
 ) -> list[tuple[str, dict[str, Any]]]:
+    """Collect all defined section links for a page entry."""
     links: list[tuple[str, dict[str, Any]]] = []
     all_sections = ("series-prev", "series-next", "simpler", "deeper", "evidence", "try-it")
     for section in all_sections:
@@ -149,6 +153,7 @@ def _validate_link_target(
     link_obj: dict[str, Any],
     repo_root: Path,
 ) -> list[str]:
+    """Validate that a link target exists, is well-formed, and is not a self-link."""
     errors: list[str] = []
     href = link_obj.get("href")
     if not href or not isinstance(href, str):
@@ -212,6 +217,7 @@ def validate_where_next_config(
 
 
 def _render_series_banner(entry: dict[str, Any], current_page: str) -> str | None:
+    """Render the series progression banner containing previous and next links."""
     series_prev = entry.get("series-prev")
     series_next = entry.get("series-next")
     if not series_prev and not series_next:
@@ -249,6 +255,7 @@ def _render_column_section(
     items_data: Any,
     current_page: str,
 ) -> str | None:
+    """Render a where-next column section (e.g., simpler, deeper, evidence, try-it)."""
     if not items_data:
         return None
     items = items_data if isinstance(items_data, list) else [items_data]
