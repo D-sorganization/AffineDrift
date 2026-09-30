@@ -465,3 +465,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4519 | Park [WEB-04.5] maturity badges for the Article Index and Books Hub as blocked: its dependency WEB-02.7 (#4501) and the maturity vocabulary (WEB-04.1 #4515) are still open; WEB-04.2 (#4516) has since merged. |
 | 2026-09-29 | #4513 | Record blocker: layered-page-template rollout deferred pending WEB-03.1/03.4 (#4506/#4509); WEB-03.5 (#4510) has since merged. |
 | 2026-09-30 | #4705 | Regenerate stale evidence-presentation and research-release trust artifacts, make generator `--check` ignore `generated_on`, and add a committed-artifact freshness test. |
+| 2026-09-30 | #4700 | Regenerate `requirements-docker.lock` as a universal uv lock with platform markers (Windows-only `pywinpty` no longer breaks the Linux Docker install) and guard it against `requirements.txt` drift. |

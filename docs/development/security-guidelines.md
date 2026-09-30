@@ -146,10 +146,12 @@ When updating dependencies:
 4. Update `requirements-docker.lock` if the Docker build is affected:
 
 ```powershell
-py -3.12 -m piptools compile --allow-unsafe --generate-hashes `
-  --resolver=backtracking `
-  --output-file requirements-docker.lock `
-  requirements.txt
+# --universal keeps platform markers (e.g. `pywinpty ; os_name == 'nt'`) so the
+# Linux image never tries to build a Windows-only sdist; guarded by
+# tests/test_docker_lock.py.
+uv pip compile requirements.txt --universal --python-version 3.12 `
+  --generate-hashes --output-file requirements-docker.lock `
+  --custom-compile-command "uv pip compile requirements.txt --universal --python-version 3.12 --generate-hashes --output-file requirements-docker.lock"
 ```
 
 ### JavaScript Dependencies
