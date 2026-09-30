@@ -19,6 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 ## Active
 
 ### DL-#4541 · Fixture and Dataset Explorer
+### DL-#4606 · "What's New" Feed RSS Validation
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
+- **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
+- **Branch:** `claude/issue-4606`
+- **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
+- **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
+- **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review
