@@ -225,6 +225,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-09-29 | #4605 | Add a per-page "Report a problem" footer control: opens a prefilled content-correction GitHub issue with the page URL and build revision, with a mailto fallback for readers without a GitHub account, and no third-party tracking (#4605). |
+| 2026-09-30 | #4695 | Rename six of eight on-ramp-paths.qmd "3 Hours" headings to "2–3 Hours" where the listed steps summed to 120-160 minutes, not 180; add a test summing each tier's `~N min` steps against its heading (#4695). |
 | 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
 | 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
 | 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |

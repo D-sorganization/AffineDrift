@@ -1,3 +1,37 @@
+# Implementation Handoff — on-ramp "3 Hours" totals (#4695)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4695`.
+- Branch: `claude/issue-4695`; commit SELF; PR: not created (headless worker; lead arms/merges).
+- Governing issue: #4695 (tier:cli). Acceptance: each on-ramp's "3 Hours" step estimates should
+  add up to about three hours (or the tier heading should be renamed to match its real total),
+  and a test should sum each tier's `~N min` steps against its heading.
+- Verified against the tree first: 6 of 8 personas' "3 Hours" tiers summed to 120-160 minutes
+  (Learner/Reviewer/Student 120, Experimentalist 140, Researcher/Contributor 160); Integrator and
+  Curious Golfer/Coach already summed to exactly 180. Estimates must stay honest to the linked
+  pages' length, so rebalanced nothing; instead renamed the six short headings from "3 Hours" to
+  "2–3 Hours" in `resources/on-ramp-paths.qmd`, which is honest for all six (120-160 min falls in
+  2-3 hours) and matches the range-style time estimates already used elsewhere in this repo's
+  learning-path pages.
+- TDD: added `test_three_hour_tier_totals_match_heading` to `tests/test_on_ramp_paths.py`, which
+  parses each `### N Hours` / `### A–B Hours {#onramp-<persona>-3hr}` heading, sums that section's
+  `— ~N min` steps, and asserts the total falls within the heading's implied range. Confirmed RED
+  against the unmodified file (120 min vs. the then-universal 180-180 expectation), then GREEN
+  after the heading renames.
+- Refreshed the stale claim-audit evidence digest for `resources/on-ramp-paths.qmd` via
+  `python -m scripts.regenerate_claim_audit_evidence` (both the route review digest and finding
+  `ad-finding-on-ramp-three-hour-totals`'s own digest in `data/trust/claim_audit_inventory.json`).
+- **Open decision, not resolved here:** the issue asks to mark finding
+  `ad-finding-on-ramp-three-hour-totals` `corrected`. The schema
+  (`schemas/claim-audit-inventory-v1.schema.json`) requires a `corrected` finding to carry a real
+  40-hex `verification_commit`, which would have to be this very commit's own hash — unknowable
+  before the commit is made, and CLAUDE.md's `SELF` placeholder policy (adopted for HANDOFF commit
+  SHAs) explicitly rules out amending a commit to embed a self-referential SHA. Left
+  `disposition: "open"` unchanged; the lead/reviewer should flip it to `corrected` with
+  `verification_commit` set to this branch's landed commit SHA once known.
+- Validation: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_on_ramp_paths.py
+  tests/test_claim_audit_inventory.py tests/test_learning_paths.py` (36 passed);
+  `python -m scripts.check_spec_changelog` (passed).
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
