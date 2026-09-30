@@ -1018,9 +1018,8 @@
 2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
    different threshold than lay blocks.
 3. No further implementation is planned from this session pending review feedback.
-# Implementation Handoff — Build the Page Header Card Component (#4507)
-# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
->>>>>>> origin/main
+
+# Implementation Handoff — Real Publication Dates and Per-Article Change History (#4545)
 
 ## Identity
 
