@@ -48,6 +48,17 @@
 - Next steps: none outstanding for this issue. If the reviewing frontier agent
   wants full retirement/redirect of the single-file edition, track that as
   WEB-02.4's per-family ADR work rather than folding it into this issue.
+# Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
+- Branch: `claude/audit-on-ramp-paths`; commit SELF; PR: see branch
+- Objective: Deploy Website failed after #4677 because `/resources/on-ramp-paths.html` had no
+  claim-audit record. Added a reviewed record; every self-check quote was checked against its
+  linked page. Open p3 finding (four "3 Hours" on-ramps sum to 120-140 min) tracked in #4695.
+- A scan of every render-selected source (`_is_site_source`) found no other unrecorded route.
+- Validation: `pytest tests/test_claim_audit_inventory.py tests/test_check_quarto_render_coverage.py` (29 passed).
+- Next: confirm Deploy Website is green on main after merge; #4694 adds this gate to PR CI.
+
 # "What's New" Feed RSS Validation — #4606 (WEB-14.4)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
