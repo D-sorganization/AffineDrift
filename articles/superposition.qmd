@@ -207,21 +207,25 @@ We start from the most classical picture: Newton–Euler equations for rigid bod
 Place the body frame at the center of mass. Let $p$ be its position in a fixed inertial frame, $R$ map body components into that frame, $v^B=R^\top\dot p$, and $\omega^B$ be body angular velocity. Let $I_B$ be the constant inertia about the center of mass, expressed in body axes. Applied force $f^{\mathrm{ext},B}$ and moment $n^{\mathrm{ext},B}$ below exclude gravity; the moment is about the center of mass. Write $g^B=R^\top g^0$.
 
 The consistent body-frame equations are
-\begin{align}
+$$
+\begin{aligned}
 m(\dot v^B+\omega^B\times v^B)&=mg^B+f^{\mathrm{ext},B},\tag{3.1a}\\
 I_B\dot\omega^B+\omega^B\times(I_B\omega^B)&=n^{\mathrm{ext},B}.\tag{3.1b}
-\end{align}
+\end{aligned}
+$$
 The transport term in the first equation comes from differentiating $v^B=R^\top\dot p$. A body moving with constant spatial velocity can have a changing body-frame velocity when its axes rotate. At a reference point away from the center of mass, translation and rotation couple through the spatial inertia described below; the decoupled equations above must not simply be reused there.
 
 #### Identification of Inputs
 
 Choose $u=(f^{\mathrm{ext},B},n^{\mathrm{ext},B})\in\mathbb R^6$ and state $x=(p,R,v^B,\omega^B)$. Its kinematics and dynamics are
-\begin{align}
+$$
+\begin{aligned}
 \dot p&=Rv^B,\tag{3.3a}\\
 \dot R&=R\widehat\omega^B,\tag{3.3b}\\
 \dot v^B&=g^B-\omega^B\times v^B+f^{\mathrm{ext},B}/m,\tag{3.4a}\\
 \dot\omega^B&=-I_B^{-1}\bigl(\omega^B\times I_B\omega^B\bigr)+I_B^{-1}n^{\mathrm{ext},B}.\tag{3.4b}
-\end{align}
+\end{aligned}
+$$
 The drift is the tuple of right-hand sides at $u=0$, and the input contribution is
 $$
 G(x)u=\left(0_{\mathbb R^3},0_{3\times3},f^{\mathrm{ext},B}/m,I_B^{-1}n^{\mathrm{ext},B}\right).\tag{3.5}
