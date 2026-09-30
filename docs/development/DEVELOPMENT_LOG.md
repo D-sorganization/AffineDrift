@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4715 · Quarto Script-Action Link Classification
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4716 (regular PR)
+- **Issue:** #4715 (related deployment health #4688)
+- **Branch:** `fix/quarto-script-links-4715`
+- **Paths:** `src/tools/check_site_health.py`, `tests/test_site_health_script_actions.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (ten RED regressions; 98 focused checks GREEN; full Windows suite 6,028 passed, 29 skipped, 92.95% coverage; 179 content checks passed, four skipped; Ruff/Black/mypy/SPEC/evidence checks pass)
+- **Summary:** Ignore JavaScript action URLs during filesystem target resolution so Quarto code-menu controls no longer block deployment; retain failures for missing article links.
+- **Next step:** Complete protected merge #4716; preserve #4688's separate audit work and verify a later main deployment.
+
 ### DL-#4706 · Induced Acceleration Biomechanics Review
 
 - **State:** in_review
