@@ -1,8 +1,13 @@
-# Proximal-to-Distal Energy Transfer in the Golf Swing
+---
+title: "Proximal-to-Distal Energy Transfer in the Golf Swing"
+description: "Companion bibliography for the AffineDrift article on proximal-to-distal energy transfer in the golf swing."
+---
 
-# Bibliography
+## Proximal-to-Distal Energy Transfer in the Golf Swing
 
-## Concept Map
+## Bibliography
+
+### Concept Map
 
 - **Proximal-to-Distal (P→D) Energy Transfer**: Energy passing between defined segments through interface force and moment power. Peak-speed order alone does not measure this flux; segment energy can also change through actuator work, gravity and dissipation.
 - **Zero Torque Counterfactual (ZTCF)**: Specify whether the term means a same-state zero-command acceleration, its values sampled along the achieved trajectory, or a new forward trajectory with zero modeled actuator torque. These are different objects. Gravity, passive impedance and contact remain according to the declared model.
@@ -12,7 +17,7 @@
 - **Early Release / Casting**: A descriptive timing pattern to test against a specified delivery objective. Early relative rotation does not necessarily imply negative wrist work, energy transfer, or reduced speed. Those claims require torque–velocity products and a matched program comparison.
 - **Force Along the Hand Path**: The signed projection of the equivalent net golfer-applied grip force onto the instantaneous hand-path tangent. This net mechanical quantity is not a measure of muscle activation or biological effort.
 
-## References
+### References
 
 bibliography:
 

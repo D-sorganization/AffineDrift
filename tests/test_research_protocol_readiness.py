@@ -314,7 +314,7 @@ def test_evidence_paths_and_digests_are_repository_bounded() -> None:
             [
                 {
                     "path": "scripts/missing.py",
-                    "route_audit_id": "ad-route-cb2afdfef800",
+                    "route_audit_id": "ad-route-4a8ccbe60039",
                     "sha256": "0" * 64,
                     "source_revision": "0" * 40,
                 }
@@ -448,7 +448,7 @@ def test_artifact_and_route_audit_links_are_exact_byte_joined() -> None:
     dangling_links["route_audits"] = [
         {
             "audit_id": "ad-route-000000000000",
-            "route": "/articles/controllability-drift-ratio.html",
+            "route": "/articles/drift-control-ratio.html",
         }
     ]
     _reseal(_protocol(dangling))

@@ -160,11 +160,11 @@ The tip speed decreases from $35.37$ to $21.66$ m/s in this particular calculati
 
 At a fixed state of a torque-driven rigid model, acceleration separates exactly as $\ddot q=a_0(q,\dot q)+M_r^{-1}u$. This is additivity in the input at one state. It does not imply that the trajectories produced by two different input histories add, because their evolving states change both terms.
 
-A dimensionless drift-to-control ratio can be defined for a chosen acceleration output:
+A dimensionless drift-control ratio can be defined for a chosen acceleration output:
 $$
 \rho_a=\frac{\|W_a a_0\|_2}{\|W_a M_r^{-1}u\|_2}.
 $$
-Here $W_a$ specifies component scales or a declared projection and normalization. If the denominator is zero and the numerator is nonzero, the ratio is infinite; if both vanish, it is undefined. A numerical epsilon changes the definition and must be reported. The unforced trajectory above therefore cannot be assigned a finite drift-to-control ratio from its acceleration norm alone.
+Here $W_a$ specifies component scales or a declared projection and normalization. If the denominator is zero and the numerator is nonzero, the ratio is infinite; if both vanish, it is undefined. A numerical epsilon changes the definition and must be reported. The unforced trajectory above therefore cannot be assigned a finite drift-control ratio from its acceleration norm alone.
 
 The full first-order drift $f=(\dot q,a_0)$ combines rates and accelerations. Its Euclidean norm is not $\|a_0\|$, and its comparison with $(0,M_r^{-1}u)$ depends on arbitrary units unless a state metric is specified. A metric-based ratio of full vector fields is a different quantity. Even acceleration itself changes nontrivially under nonlinear coordinates: for $z=\psi(q)$,
 $$
@@ -413,7 +413,7 @@ For the golf swing, an informative progression is to verify rigid-body energy ac
 1. Assemble the beam's three inertia blocks from the same material-point velocity. Repeat with twice the beam mass. Show which rigid-coordinate diagonal term gains $m_s l_3^2/3$, and test the complete kinetic energy rather than only a matrix determinant.
 1. Change the sign of the second mode and transform its amplitude and coupling consistently. Show that physical displacement and kinetic energy are unchanged. Explain why assigning two arbitrary frequencies does not identify a uniform beam's $EI$.
 1. Verify the two block acceleration equations by substituting the Schur solution. Include a nonzero modal bias so an omitted elastic term cannot pass the check. Distinguish this test from integrating the rigid six-state counterfactual.
-1. Refine the rigid zero-torque integration step and report both endpoint convergence and mechanical-energy error. Explain why the displayed acceleration norm is not a finite drift-to-control ratio or an estimate of muscular effort.
+1. Refine the rigid zero-torque integration step and report both endpoint convergence and mechanical-energy error. Explain why the displayed acceleration norm is not a finite drift-control ratio or an estimate of muscular effort.
 1. Construct a motion with decreasing proximal angular speed but no positive distal energy transfer across the chosen joint. State the external powers and show the segment energy balance. Identify the extra measurements required to interpret a human speed-peak sequence.
 1. For two shaft stiffnesses, compare identical prescribed grip motion, identical applied force histories, and an adapting controller. State which causal question each comparison addresses and which output would distinguish the hypotheses.
 1. Reconstruct the robot circle using the given inverse kinematics. Compute the nullspace of $J_p$ and compare position and pose pullbacks. Test whether adding $\epsilon I$ imposes any obstacle or joint-limit constraint.
