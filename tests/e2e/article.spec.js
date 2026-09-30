@@ -110,8 +110,10 @@ test.describe('Article Pages', () => {
   test('should handle code blocks correctly', async ({ page }) => {
     await page.goto('/articles/inverse-dynamics.html');
 
-    // Look for code blocks
-    const codeBlocks = page.locator('pre code, .sourceCode');
+    // Look for code blocks in the article body. `code-tools` (#4538) also
+    // embeds the page's full source in a hidden modal outside <main>; that is
+    // not article content, so scope the lookup to main.
+    const codeBlocks = page.locator('main').locator('pre code, .sourceCode');
     const count = await codeBlocks.count();
 
     // Code blocks should be styled
