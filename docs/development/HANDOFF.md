@@ -1,3 +1,27 @@
+# Implementation Handoff — Resolve the Stray Executable Cell (#4539)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4539`.
+- Branch: `claude/issue-4539`; commit SELF; PR: not created yet.
+- Governing issue: #4539 (WEB-06.9, part of epic #4543 / E6). `articles/drift-components-wrench-double-pendulum.qmd:511`
+  had a `{python}` executable cell (imports-only, never a complete implementation per its own
+  prose) that contradicted `ci-standard.yml`'s E2E-render comment ("The site has no executable
+  cells, so a Quarto freeze cache would buy nothing").
+- Fix: converted the fence from `` ```{python} `` to a plain `` ```python `` (non-executing),
+  matching the convention already used for illustrative-only Python snippets elsewhere in
+  `articles/` (e.g. `force-mobility-matrices.qmd`, `sources-of-nonlinearity.qmd`). No change was
+  needed to the CI comment, since it is now accurate again.
+- Added `tests/test_no_executable_quarto_cells.py`, which parses `_quarto.yml`'s
+  `project.render` include/exclude globs (via `scripts/check_quarto_render_coverage.load_render_rules`)
+  to enumerate every `.qmd` file Quarto actually renders, and asserts none contain an executable
+  cell fence (`{python}`/`{r}`/`{javascript}`/`{ojs}`/`{julia}`). Confirmed RED against the
+  pre-fix cell, GREEN after. `content/drift-ratio-visualizations/time-cone-analogy.md` has its
+  own `{python}` cell but is out of scope: it is not part of `_quarto.yml`'s render list, so it
+  is not part of "the site" the CI comment describes.
+- Validation: `pytest tests/test_no_executable_quarto_cells.py` (1 passed); `ruff check
+  tests/test_no_executable_quarto_cells.py` and `black --check --line-length 100
+  tests/test_no_executable_quarto_cells.py` clean; `python -m scripts.check_spec_changelog` clean.
+- Next: none — this closes the issue's single acceptance criterion.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`

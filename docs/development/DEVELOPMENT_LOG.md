@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4539 · Resolve the Stray Executable Cell
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit
+- **Issue:** #4539 (WEB-06.9; epic #4543 / E6)
+- **Branch:** `claude/issue-4539`
+- **Paths:** `articles/drift-components-wrench-double-pendulum.qmd`, `tests/test_no_executable_quarto_cells.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_no_executable_quarto_cells.py` 1/1 pass; ruff and black --line-length 100 clean; `python -m scripts.check_spec_changelog` clean)
+- **Summary:** Converts the stray `{python}` executable cell (imports-only, never a complete implementation) in `articles/drift-components-wrench-double-pendulum.qmd` to a non-executing `python` fence, matching the site convention and making `ci-standard.yml`'s "the site has no executable cells" comment accurate again. Adds a regression test enumerating every Quarto-rendered `.qmd` file (via `_quarto.yml`'s `project.render` globs) and asserting none contain an executable cell fence.
+- **Next step:** Open the draft PR; no further development expected.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
