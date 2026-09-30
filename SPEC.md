@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4712 | Reconcile companion two-hand wrench geometry, identifiability, power and archived contact/sensor evidence; correct mutable instrumented-grip citations while preserving immutable source scope. |
 | 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
 | 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
 | 2026-09-30 | #4716 | Classify Quarto JavaScript action URLs outside filesystem link checks while retaining missing-file failures. |

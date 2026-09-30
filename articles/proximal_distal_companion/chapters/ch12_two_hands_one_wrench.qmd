@@ -32,27 +32,47 @@ $$
 \mathbf r_R\times\mathbf F_R.
 $$
 
-The club-level equations need this combined wrench. They do not uniquely need
-the four individual terms. Many allocations can produce the same sum.
+All components use the same orthonormal axes at the same instant; each position
+vector points from $O$ to its contact. The moments are contact moments exerted
+on the club, not automatically anatomical wrist joint torques. For a rigid club
+with known inertia and all other loads specified, the combined wrench determines
+the hands' contribution to acceleration. Many allocations produce the same sum.
+A flexible club also has deformation modes that a single resultant does not describe.
 
 ### Common and Differential Modes
 
-It is helpful to reorganize the hand forces into a common mode and a differential
-mode. The common mode resembles their average and largely determines resultant
-force. The differential mode resembles half their difference and can create a
-couple or internal squeeze.
+Define $\mathbf F_c=(\mathbf F_L+\mathbf F_R)/2$ and
+$\mathbf F_d=(\mathbf F_L-\mathbf F_R)/2$. Let $\mathbf r_c$ locate the contact midpoint
+relative to $O$, and $\mathbf d=\mathbf r_L-\mathbf r_R$ point from the right
+contact to the left. Then, exactly,
+
+$$
+\begin{aligned}
+\mathbf F_O&=2\mathbf F_c,\\
+\mathbf M_O&=\mathbf M_L+\mathbf M_R
+ +2\mathbf r_c\times\mathbf F_c+\mathbf d\times\mathbf F_d.
+\end{aligned}
+$$
+
+About the midpoint, the common force has no moment. About another point it
+usually does. Only the part of $\mathbf F_d$ perpendicular to $\mathbf d$
+creates the differential force couple. Its axial part changes internal loading
+without changing the wrench.
 
 If we add $+\boldsymbol\eta$ to one hand and
 $-\boldsymbol\eta$ to the other, resultant force stays unchanged. Depending on
 contact geometry, moment may change or remain unchanged along certain null-space
 directions. This is the mathematical source of hidden internal loading.
 
-### A Wrench Is Observable; Allocation May Not Be
+### What Inverse Dynamics Can Identify
 
-If club motion and inertia are known well enough, inverse dynamics can estimate
-the net external wrench required. It cannot decide whether a moment came from a
-direct wrist couple or separated hand forces unless contact is measured or an
-allocation criterion is imposed.
+If full club motion and inertia are known well enough, inverse dynamics can
+estimate the required net external wrench. Isolating the hands requires
+subtracting gravity, aerodynamic loads and any ball-contact load using the same
+boundary and reference point. Impact may require an impulse balance rather than
+a smoothly differentiated acceleration. Clubhead position alone does not supply
+the complete rigid-body state or flexible-shaft motion. Even a perfectly known
+hand resultant cannot identify its split without additional measurements or assumptions.
 
 A minimum-norm allocation is a reproducible mathematical choice. It is not a
 measurement of how a golfer used the arms. A muscle-effort optimization is still
@@ -61,14 +81,24 @@ most direct route to individual hand wrenches.
 
 ### The Invisible Axial Push--Pull Mode
 
-The ambiguity can now be stated exactly for two point forces. Six force
-components map to the six entries of net force and moment, yet the map has rank
-five, not six. Equal and opposite forces directed along the line between the
-hands produce neither net force nor net moment. That axial push--pull mode is
-therefore invisible to the net club wrench.
+For two point forces at distinct locations, with no free contact moments, the map is
 
-An independent measurement of that one internal axial scalar is sufficient to
-close the point-force rank gap in the idealized model. It is not sufficient if
+$$
+G=\begin{bmatrix}I&I\\\left[\mathbf r_L\right]_\times&\left[\mathbf r_R\right]_\times\end{bmatrix},
+\qquad [\mathbf r]_\times\mathbf f=\mathbf r\times\mathbf f.
+$$
+
+Zero resultant force requires opposite force increments. Zero moment then requires
+$\mathbf d\times\boldsymbol\eta=0$: the increment lies along the contact line.
+The null space has dimension one, so the map has rank five. Equivalently, the
+moment about the midpoint cannot have a component along $\mathbf d$ in this
+point-force model. If the locations coincide, the rank drops to three and every
+opposite force pair is invisible.
+
+For distinct known contacts, an added scalar measurement sensitive to the axial
+null direction closes the structural rank gap. A redundant measurement does not.
+Short separation also amplifies force errors associated with transverse moment
+noise, so full rank does not ensure reliable estimation. One scalar is insufficient if
 each hand can also apply its own three-dimensional contact moment: the full
 12-to-6 bilateral-wrench map retains a six-dimensional invisible family. The
 calculation is a sensor-design result, not an anatomical result. It does not
@@ -76,13 +106,21 @@ identify wrist action, scapular action, muscle recruitment, or intentionality,
 and calibrated noise, cross-talk, and moving contact centers still require
 separate qualification.
 
+These dimensions concern unconstrained linear maps. Friction, unilateral contact,
+finite grip strength and allowable moments restrict physically possible loads.
+Their intersection with an algebraic solution family need not have the same
+dimension or contain any solution.
+
 ### Internal Force Can Matter Without Moving the Club
 
-Hidden squeeze may change grip stability, friction margin, joint compression,
-muscle activation, and effective stiffness. It can increase biological cost
-while leaving club-level work nearly unchanged. Conversely, a low-squeeze
-allocation may demand larger direct wrist moment. There is no single internal
-metric called “effort” that settles the trade.
+Hidden loading may change grip stability, friction margin, joint compression,
+muscle activation and effective stiffness. The axial point-force null mode is
+not itself a measurement of normal grip pressure. At a fixed state, a zero-wrench
+load increment does zero power against a rigid velocity field, exactly. Its
+metabolic cost and tissue loading can still be nonzero. With deformation or slip,
+equal resultants can also conceal different mechanical power. There is no single
+internal metric called “effort” that settles these trades. Reducing an axial null
+load does not algebraically require increasing a contact moment.
 
 This is why the technical article refuses to infer scapular recruitment from a
 club couple. A proximal generalized-torque subspace can be labeled and tested in
@@ -91,38 +129,68 @@ unique.
 
 ### Action-Reaction Must Close
 
-The force each hand applies to the club has an equal and opposite club force on
-the hand. A two-hand forward model solves both arms and club under closure
-constraints. The summed contact wrench on the club must equal the negative of
-the wrench returned to the body side after consistent transformation. Power and
-energy residuals provide further checks.
+At a common physical interface, each force has an equal and opposite reaction.
+Transform moments to the same point and axes before summing both sides. An ideal
+rigid grasp uses closure constraints; a compliant grasp needs a constitutive
+law with stored-energy and dissipation terms. Opposite forces do not make
+contact-pair power vanish when the two sides have different velocities.
 
-The spatial cross-engine test implements paired compliant contacts independently
-in MuJoCo and Pinocchio. Agreement on the common observables is stronger than
-repeating one code path, but it still validates a reduced mechanism rather than
-human anatomy.
+For loads on one rigid club,
+
+$$
+P_{\mathrm{hands}}=\sum_i
+ (\mathbf F_i\cdot\mathbf v_i+\mathbf M_i\cdot\boldsymbol\omega)
+ =\mathbf F_O\cdot\mathbf v_O+\mathbf M_O\cdot\boldsymbol\omega.
+$$
+
+Here $\mathbf v_i=\mathbf v_O+\boldsymbol\omega\times\mathbf r_i$ is the club's
+velocity field in one inertial observer. Changing the reference point transports
+both wrench and velocity; changing observer is a different operation. For a
+deforming grip or shaft, use actual local velocities and rotations. A single
+rigid-body power formula is insufficient. Power and energy residuals test these
+ledgers separately from action-reaction closure.
+
+The [archived spatial contact test](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/spatial_forward_contact_study.json)
+uses MuJoCo and Pinocchio for independent kinematics and forward dynamics, but
+shares the contact law and time-stepping scheme. Agreement tests those engine
+implementations under shared assumptions; it cannot independently validate the
+shared law. The hands are finite-mass translational carriages, not anatomical arms.
 
 ### Why Two Hands Can Create Negative Coupling
 
-Near the late downswing, hand reactions need not be parallel. Their separated
-swing-normal components can produce a net couple whose sign opposes club rotation.
-This negative couple may coexist with positive club kinetic-energy growth because
-other powers and inertial terms remain. The model asks where the couple comes
-from geometrically and whether it survives forward integration.
+Near the late downswing, separated hand forces can produce a couple with a
+negative projection onto a declared swing-plane normal. The forces need not
+themselves point along that normal. Couple power is the full dot product with
+angular velocity: one negative component alone does not establish negative power.
+Even negative moment power can coexist with increasing club kinetic energy when
+force power and other external powers outweigh it. Inertial coordinate terms are
+not an extra energy source. The model asks where the couple comes from and
+whether the mechanism persists in a specified forward intervention.
 
-Coincident-contact and reversed-moment-arm controls are decisive. Collapse the
-hand separation and the force-generated couple vanishes. Reverse the moment arms
-and its sign reverses. Those predictions distinguish a geometric mechanism from
-a plot-label artifact.
+At fixed bounded forces, collapsing hand separation eliminates the differential
+force couple; reversing $\mathbf d$ with $\mathbf F_d$ fixed reverses its sign.
+Free contact moments do not vanish in either control. These geometric checks are
+not predictions for a newly integrated swing: moving contacts can change forces,
+constraints, commands and motion. Keeping a nonzero force couple as separation
+tends to zero would require unbounded perpendicular differential force.
 
-**Model Result:** The two-hand reconstructions close equivalent wrenches while
-revealing nonunique internal modes. A reduced spatial forward test retains a
-negative swing-normal contact couple for a declared late interval and passes the
-geometry controls.
+**Model Result:** Wrench reconstruction reveals nonunique internal modes. In the
+pinned reduced spatial test, switching off the declared driver at 0.18 s retains
+a negative swing-normal force couple for 0.0375 s, with minimum about
+$-0.4093$ N m in both engines. This is a model-time interval, not a measured phase
+of a golfer's downswing. Coincident and reversed geometry checks transport the
+same achieved forces; they are algebraic controls, distinct from the integrated
+driver-switch experiment. Stored energy and initial motion remain after the switch.
 
-**Human Evidence:** Bilateral grip sensors have demonstrated that individual
-forces can be measured, but the present model results are not measurements from
-golfers [@koike2020; @koike2016].
+**Human Evidence:** Instrumented grips add information that club motion lacks,
+but sensor signals and inferred hand loads must be distinguished. Koike's example
+used one professional instructor and statically calibrated strain gauges, with
+fixed hand reference points and neglected handle-piece inertia [@koike2016instrumented].
+Choi and Park studied nine right-handed male professional golfers using a
+six-axis sensor between two grip segments and inverse dynamics. Their heavier
+grip, possible hand-to-hand load bypass and foam-ball impacts limit interpretation
+[@koike2020]. Neither study identifies muscle recruitment or validates the present
+synthetic model's hand allocation.
 
 **Hypothesis:** Opposed arm-chain actions can generate a useful club couple while
 wrists supply resistance or impedance, but only synchronized bilateral wrench
@@ -136,22 +204,24 @@ two hands experience a much richer internal negotiation.
 Each hand can apply three force components and three moment components at its
 contact reference frame. Transform both six-dimensional wrenches to one club
 frame, including the moment created by each position offset, then add them. The
-resultant club wrench determines rigid-body acceleration together with gravity,
-aerodynamics, shaft forces, and inertia. This sum is observable in principle,
+resultant hand wrench contributes to rigid-body acceleration together with all
+other external loads and inertia. Shaft forces are internal to a whole-club
+boundary; they become boundary loads when a shaft or clubhead subsystem is cut
+out. Count them once at the chosen boundary. This sum is estimable in principle,
 but its split between hands is not determined by club motion alone.
 
 In a planar simplification, the arithmetic is easier: two two-dimensional forces
 at separated points create a net force and an out-of-plane moment. Even there,
 multiple pairs yield the same resultant. Adding equal and opposite force to the
 two hands changes internal loading while leaving net force unchanged; depending
-on direction, it can change the couple. In three dimensions the unobservable
-allocation space is larger.
+on direction, it can change the couple. Distinct point-force contacts have one
+axial null direction in either two or three dimensions. Allowing full contact
+wrenches increases the nullity from three in the planar model to six in space.
 
-### Common and Differential Modes
+### Interpreting Push--Pull
 
-Write each hand force as a common component plus or minus a differential
-component. The common mode tends to dominate net force. The differential mode
-often dominates the pure couple. This coordinate change does not claim the
+The exact midpoint decomposition separates resultant force from the differential
+force couple and free contact moments. This coordinate change does not claim the
 nervous system controls those modes explicitly. It is a clean way to see which
 parts of bilateral loading are visible at the club and which can cancel.
 
@@ -167,8 +237,9 @@ Near impact, proximal motion, club inertia, grip constraints, and contact
 geometry determine the reactions required at the hands. A differential force
 component acting through hand separation may project onto the swing-plane
 normal with negative sign even when neither hand is commanded with an explicit
-negative club torque. In a model this is a passive interaction contribution:
-it follows from state, drivers, and constraints.
+negative club torque. Calling a reaction “passive” requires a declared partition:
+the same contact force can depend on active proximal commands, stored elastic
+energy and inertia. State dependence alone does not establish muscular passivity.
 
 That statement is narrower than “the scapulae passively torque the club.” The
 generalized drivers can stand for many body actions. Reconstructing a negative
@@ -180,8 +251,10 @@ wrenches; anatomy remains a separate inference problem.
 
 Let the hands be separated by 0.20 metres. Suppose they apply opposite 50-newton
 forces perpendicular to that separation. Net force is zero and couple magnitude
-is 10 newton-metres. Add a 100-newton common force and net force becomes 200
-newtons while the ideal differential couple remains 10 newton-metres. If
+is 10 newton-metres. Add the same 100-newton vector to each hand: net force becomes
+200 newtons and moment about the contact midpoint remains 10 newton-metres when
+free contact moments are zero. About an offset reference, include the additional
+moment of the common force. If
 separation drops to 0.10 metres, the same opposing forces make 5 newton-metres.
 
 Real force vectors are not perfectly perpendicular, contact points are
@@ -219,18 +292,26 @@ position and sensor orientation should propagate to couple sign and magnitude.
 
 ### Why Closure Is Not Calibration
 
-A synthetic trajectory qualification makes the distinction quantitative. A
-net-wrench-only inverse can reproduce the net club wrench to numerical tolerance
-while missing the individual point-force allocation by 11.86 N RMSE and the
-invisible axial mode by 29.05 N RMSE. Closure therefore verifies the resultant,
-not the bilateral allocation.
+A [pinned synthetic sensor qualification](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/bilateral_wrench_sensor_qualification.json)
+makes the distinction quantitative. Its net-wrench-only inverse closes the
+resultant to numerical tolerance while giving 11.86 N component-wise RMSE across
+the six hand-force components and 29.05 N RMSE for its declared axial scalar.
+These are errors against synthetic ground truth. Closure tests consistency with
+the supplied resultant; it does not establish that either the resultant or
+allocation is physically correct.
 
 The same controlled study separates practical measurement errors. Correcting a
 declared cross-talk matrix reduces allocation RMSE from 0.94 N to 0.15 N; a 10%
-residual calibration error raises it to 0.18 N. Holding contact centers fixed
-through an 8-mm migration causes 2.02 N RMSE, whereas tracking those centers
-removes that modeled bias. The combined registered case yields 1.02 N RMSE and
-3.87 N 95th-percentile error over 32 seeded trials and 301 samples.
+error in the cross-talk correction amplitude raises it to 0.18 N; this is not
+ten-percent device accuracy. Holding contact centers fixed
+with the migration amplitude parameter set to 8 mm causes 2.02 N RMSE; this
+parameter scales prescribed sinusoidal coordinates, not total travel. Tracking those centers
+removes that modeled bias in the idealized migration case. The combined case,
+with noise, residual cross-talk error and untracked migration amplitude set to 4 mm, gives
+1.02 N component-wise RMSE and 3.87 N at the 95th percentile of the
+six-component error-vector norm over 32 seeded trials with 301 samples each.
+The percentile and RMSE use different aggregations; they are not two statistics
+of one scalar hand-force error. The 8-mm and 4-mm settings are different cases.
 
 These values come from a synthetic point-force sensor qualification, not a
 physical transducer, distributed-pressure experiment, or participant study.
@@ -257,26 +338,45 @@ benefit is unsupported. A feeling of connection is not yet a measured state.
 ### One Point per Hand Is Itself a Modeling Choice
 
 Treating each hand as a single contact point is convenient, and the natural
-worry is that the convenience is doing the work. That worry has been tested
-directly.
+worry is that the convenience is doing the work. A
+[registered reduced-model comparison](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/articulated_distributed_grip_atlas.json)
+examines one part of that question.
 
 Each hand was replaced by one, three, or five tension fibers spread across a
-30 mm band, while **total** grip stiffness and damping were held fixed at
-1800 N/m and 18 N$\cdot$s/m. That control matters: adding contact points without
+30 mm band, while **total per-hand** stiffness and damping were held fixed at
+1800 N/m and 18 N$\cdot$s/m, divided equally among that hand's stations. That control matters: adding contact points without
 holding the total constant would silently stiffen the grip, and any change could
 then be blamed on stiffness rather than on distribution.
 
-Across 288 trajectories nested at 4, 10, 25, and 50 ms, the peak force on a
-single station reached 4.03 N, and the most loaded station carried **77% of the
-load** — distribution is not uniform, which is exactly why a single point can
-mislead about local loading. No contact opened during these runs. Going from
-three fibers to five changed the answer by 0.00355 at the fine timestep, so the
-description is converging rather than drifting with resolution.
+The archived design contains 288 trajectories: twelve initial states, three
+station counts, two velocity branches, two integration steps and two engines.
+The 4, 10, 25 and 50 ms outputs are nested observation horizons within each
+50 ms trajectory, not integration timesteps or separate trials. The steps are
+1 and 0.5 ms. Initial motion supplies the starting condition; this experiment
+does not use active joint drivers.
 
-What this earns is narrow and worth stating precisely: grip discretization can
-now be **compared fairly**, and the comparison is stable. It does not measure
-grip pressure, identify finger anatomy, or model friction or soft tissue. A
-number of stations is not a set of fingers.
+Peak single-station force reached 4.03 N. The maximum concentration of 0.77 is
+the largest station-force norm divided by the sum of all station-force norms
+at an instant. It is neither pressure nor a named finger's share. The summary
+also reports zero transitions of whether **any station is active**. That counter
+does not track every station's engagement. Indeed, the maximum fraction of
+samples with fewer than all stations active is 1.0. Zero recorded global
+on/off transitions therefore cannot establish that every contact stayed closed.
+
+The maximum three-to-five-station comparison at the fine step is 0.00355. Its
+implementation compares final coordinate arrays using maximum absolute component
+difference divided by the larger of one and the two maximum coordinate
+magnitudes. This is a registered coordinate-dependent diagnostic, not a unit-
+invariant physical error or proof of convergence of forces, energy and contact
+events. The stored coordinates mix translations and rotations; units and
+parameterization affect the comparison. The worst normalized work-energy residual
+also falls from 0.03119 to 0.01560 on timestep refinement. Passing these particular
+checks supports a bounded comparison, not universal discretization convergence.
+
+Holding total stiffness and damping fixed makes the comparison interpretable.
+It does not measure grip pressure, identify finger anatomy, or model friction
+or soft tissue. A number of stations is not a set of fingers. These statements
+describe the pinned archive, not a new solver run or current-human validation.
 
 ### Minimum Evidence for a Human Claim
 
@@ -330,4 +430,6 @@ Technique claims need participant-level evidence.
 **Go Deeper:** Read the complete
 [two-hand wrench mechanics](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
 the [forward constrained model](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
-and the instrumented-grip literature [@koike2020; @koike2016].
+and the instrumented-grip literature [@koike2020; @koike2016instrumented]. The technical
+chapter links follow upstream development; numerical claims above use the
+explicitly pinned artifacts so their definitions remain inspectable.
