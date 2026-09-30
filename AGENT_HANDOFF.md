@@ -39,11 +39,12 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
   Main Binder update #4682 was integrated at `766b0603`; final browser evidence
   includes its article code-tools metadata. Final dependency receipt preserves
   prior book scopes, dates and render revisions.
+- Main integration: trust freshness #4705 and packaging #4613 through `4f798475` are preserved; both turnover sections retained. All 57 combined chapter/audit/trust/packaging checks pass; chapter, PDF and numerical-test bytes remain exactly at `2be29ec3`.
 - CI follow-up: name the test gravity constant; scientific sources and PDF unchanged.
   Test-only checkpoint `2be29ec3` preserves all scientific sources and assertions; 821 tracked Python files pass the complete quality check.
 - Next: inspect final validation evidence on PR #4709,
   inspect final CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
-- Next corpus scope: #4710 records verified two-hand wrench/contact evidence defects; no article edits yet. Two Flash inventories completed and independently checked.
+- Next corpus scope: #4710 is implemented and under validation in separate worktree `Worktrees/AffineDrift-two-hand-review`; branch `fix/two-hand-wrench-rigor-4710`.
 - Coordination: session `technical-review-20260930-resume`, issue #4706; development
   log DL-#4706. Existing web-feature consolidations remain under their live owners.
 

@@ -39,13 +39,72 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
   Main Binder update #4682 was integrated at `766b0603`; final browser evidence
   includes its article code-tools metadata. Final dependency receipt preserves
   prior book scopes, dates and render revisions.
+- Main integration: trust freshness #4705 and packaging #4613 through `4f798475` are preserved; both turnover sections retained. All 57 combined chapter/audit/trust/packaging checks pass; chapter, PDF and numerical-test bytes remain exactly at `2be29ec3`.
 - CI follow-up: name the test gravity constant; scientific sources and PDF unchanged.
   Test-only checkpoint `2be29ec3` preserves all scientific sources and assertions; 821 tracked Python files pass the complete quality check.
 - Next: inspect final validation evidence on PR #4709,
   inspect final CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
-- Next corpus scope: #4710 records verified two-hand wrench/contact evidence defects; no article edits yet. Two Flash inventories completed and independently checked.
+- Next corpus scope: #4710 is implemented and under validation in separate worktree `Worktrees/AffineDrift-two-hand-review`; branch `fix/two-hand-wrench-rigor-4710`.
 - Coordination: session `technical-review-20260930-resume`, issue #4706; development
   log DL-#4706. Existing web-feature consolidations remain under their live owners.
+
+# Implementation Handoff — Make src/ Installable and Version It (#4532)
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift`
+- Branch: `fix/web-06-2-make-src-installable-4532`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
+- Implementation commit: `SELF`
+- Pull request: #4613
+- Governing issue/epic: #4532 (epic #4543)
+
+## Objective and Status
+
+- Objective: Make `src/` installable via standard packaging tools (`pip install .`), build wheel in CI, attach wheel to releases, and verify external module imports outside repo root (#4532).
+- Status: ready for review / auto-merge
+- Completed: Added PEP 621 metadata to `pyproject.toml`, configured package discovery for `src*`, added `src/py.typed`, created isolated external smoke test `scripts/smoke_test_installed_wheel.py`, added packaging unit test suite `tests/test_wheel_packaging.py`, updated CI workflows (`ci-standard.yml`, `release.yml`), merged main, and updated `SPEC.md`.
+- Remaining: Push to origin and monitor PR #4613 CI / auto-merge.
+
+## Files and Decisions
+
+- Files changed:
+  - `pyproject.toml`: Added PEP 621 `[project]` metadata, setuptools package discovery, and dependencies.
+  - `src/py.typed`: Added PEP 561 marker.
+  - `scripts/smoke_test_installed_wheel.py`: Isolated wheel install and external import test.
+  - `tests/test_wheel_packaging.py`: Unit test coverage for wheel packaging, version alignment, and wheel contents.
+  - `.github/workflows/ci-standard.yml`: Added wheel build and smoke test step in CI.
+  - `.github/workflows/release.yml`: Added automated release wheel build and asset upload.
+  - `SPEC.md`: Added change-log row for #4613.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Packaged `src` namespace as a whole to preserve existing internal and test imports without tree-wide import churn.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_wheel_packaging.py` — PASS (4 passed)
+- `python -m ruff check tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
+- `python -m black --check --line-length 100 tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\handoff_validator.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Push commit to origin.
+2. Verify PR #4613 checks pass and auto-merge merges into main.
+
+## Change Log
+
+- `SELF` — Merge main, resolve SPEC.md conflicts, and update HANDOFF.md for PR #4613 (#4532).
+- `bc956ef5` — Make src/ installable and configure wheel packaging (#4532).
+
+---
 
 # Reader Run Environment (Binder, Devcontainer, Downloads) — #4538 (WEB-06.8)
 

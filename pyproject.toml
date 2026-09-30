@@ -2,12 +2,46 @@
 requires = ["setuptools>=84.0.0", "defusedxml>=0.7.1"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "affinedrift"
+version = "1.0.9"
+description = "Scientific writing and modeling portfolio covering golf mechanics, multibody dynamics, and nonlinear control."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "AffineDrift Authors" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "numpy>=2.0.0",
+    "scipy>=1.12.0",
+    "matplotlib>=3.8.0",
+    "pydantic>=2.5.0",
+    "pyyaml>=6.0.0",
+    "jsonschema>=4.20.0",
+    "simpleeval>=1.0.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "defusedxml>=0.7.1",
+]
+
 [tool.setuptools]
-# This is not a Python package - exclude all directories from package discovery
-packages = []
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
 
 [tool.setuptools.package-data]
-"*" = []
+"*" = ["py.typed"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

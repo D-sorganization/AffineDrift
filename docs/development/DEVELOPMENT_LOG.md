@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (final source d7cf1af8; final render evidence 2f32c8d4; integrated main 59c0cc2d: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; Linux CI 41e075ef: 5962 passed, 92.83% coverage; 179 content checks; eight book builds; Windows 6005 passed, two snapshot-location failures resolved and six hygiene checks pass; quotation gate passes; CI requires named gravity constant in one test, corrected without changing assertions)
 - **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
-- **Next step:** Test-style checkpoint 2be29ec3 bound; 821 tracked Python quality checks pass; finish validation and protected-merge #4709; keep goal active for the remaining 142 source reviews.
+- **Next step:** Main 4f798475 integrated with both turnover records; 57 combined chapter/audit/trust/packaging checks pass; test-style checkpoint 2be29ec3 unchanged; finish validation and protected-merge #4709; keep goal active for the remaining 142 source reviews.
 
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
