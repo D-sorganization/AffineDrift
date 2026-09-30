@@ -57,6 +57,22 @@
   the manual protocol in `docs/development/math-accessibility-verification-4565.md`
   and records results as a comment on #4565 before that criterion can be
   checked off.
+# Implementation Handoff — Gitleaks allowlist for evidence digests
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-gitleaks`
+- Branch: `claude/gitleaks-digest-allowlist`; commit SELF; PR: see branch (draft at open)
+- Objective: the pre-commit gitleaks hook's generic-api-key rule flags the public SHA-256
+  digest pinned for `pages/accessibility.qmd` ("access" is a rule keyword) in
+  `data/trust/claim_audit_inventory.json` and `reports/scientific-claim-audit.md`, so every
+  branch that syncs past #4692 fails its merge commit. Line-keyed `.gitleaksignore`
+  fingerprints break whenever the ledger shifts.
+- Decisions: `.gitleaks.toml` extends the default rules and allowlists only a repository
+  file path followed by a lowercase 64-hex digest; all other content is still scanned.
+- Validation: the merge commit on `claude/issue-4538` that re-pinned the accessibility digest
+  passed the gitleaks hook with this config (failed without it).
+- Next: after merge, drop the per-branch copies of `.gitleaks.toml` from open sync branches
+  only if they diverge from this file.
+
 # Implementation Handoff — Deploy Website route coverage (#4548 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-route-coverage`
