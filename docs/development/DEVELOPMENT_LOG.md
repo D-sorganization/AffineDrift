@@ -31,6 +31,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches — finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today — and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
 - **Next step:** A human tester runs the manual NVDA/VoiceOver protocol in the findings doc and records results on #4565.
 
+### DL-#4578 · Social Cards per Page
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** draft (see HANDOFF.md for link)
+- **Issue:** #4578 (WEB-10.10; epic #4579 / E10)
+- **Branch:** `claude/issue-4578`
+- **Paths:** `scripts/generate_social_cards.py`, `tests/test_social_cards.py`, `logo/social-cards/*.png`, `articles/The_Physics_of_Golf/quarto/index.qmd`, `articles/The_Geometry_of_Motion/quarto/index.qmd`, `articles/proximal_distal_energy_transfer/index.qmd`, `.github/workflows/deploy-website.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 13/13 tests pass across test_social_cards.py and test_image_budget.py; ruff and black --line-length 100 clean)
+- **Summary:** Generates one 1200x630 Open Graph card per book/series (title, badge, signature graphic) at build time instead of one site-wide card, checked in like the existing site-wide `logo/og-card.png`, and wires three representative landing pages to use theirs via per-page `open-graph`/`twitter-card` overrides.
+- **Next step:** After merge and deploy, run a social-card debugger against the three live page URLs to close out the issue's second acceptance criterion (see HANDOFF.md Blockers).
 ### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
