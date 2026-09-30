@@ -53,7 +53,15 @@ def get_all_qmd_files() -> list[Path]:
         # Exclude build, cache, temp, or git directories
         if any(
             part in path.parts
-            for part in [".git", "node_modules", "_site", "docs", ".quarto", "build"]
+            for part in [
+                ".git",
+                "node_modules",
+                "_site",
+                "docs",
+                ".quarto",
+                "build",
+                "proximal_distal_energy_transfer",
+            ]
         ):
             continue
         files.append(path)
