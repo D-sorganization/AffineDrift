@@ -68,10 +68,10 @@ def test_target_files_have_quarto_equation_labels() -> None:
     """Target converted files must contain canonical Quarto {#eq-...} labels."""
     expected_labels: dict[str, list[str]] = {
         "articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd": [
-            "eq-ch3b:eom",
-            "eq-ch3b:forward",
-            "eq-ch3b:biomech_convention",
-            "eq-ch3b:iaa_decomp",
+            "eq-ch3b-eom",
+            "eq-ch3b-forward",
+            "eq-ch3b-biomech_convention",
+            "eq-ch3b-iaa_decomp",
         ],
         "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": [
             "eq-ch5:traj-opt",
