@@ -22,14 +22,28 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex-luna-affine4688-20260930
-- **PR:** #4713 (draft); blocked by current-main #4709 merge conflicts; root review/decision pending
+- **PR:** #4713 (draft); last observed remote head `ddf725a5e5e96449c21dc24679a47771e595d1b8`, base `984552e`; dirty and no head-SHA workflow runs at last pre-hold check; root review pending
 - **Issue:** #4688 (red main deployment route coverage)
-- **Branch:** `fix/luna-deploy-route-4688` (based on `4f798475c2b086ed147d1932429a8cc750f0f645`; target main advanced to `984552e` with #4709)
+- **Branch:** `fix/luna-deploy-route-4688` (local offline integration of main `984552e178b3f075290e44565a6f4514152e3dd9` / #4709; remote branch update awaits root review and network release)
 - **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; focused audit/public-manifest contracts 44 passed; latest-main merge preserves all 249 main inventory records and adds the missing route; focused contracts, source coverage, canonical freshness, and local publication checks pass; preserved v2 manifest audit applies only to old revision 3471f7d; current-main render pending; historical native exit remains unknown)
+- **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; local #4709 merge preserves all 249 main route records and hashes plus the reviewed route; 51 route/audit/trust tests and 19 #4709 review tests pass; canonical freshness, source coverage, and local publication checks pass without hash regeneration; old v2 manifest applies only to 3471f7d; current-main render pending and historical native exit unknown)
 - **Summary:** Adds a reviewed record for the already-public `/models/dataset-explorer.html` route and a regression asserting exact source-derived route coverage. The record treats JSON schema checks as structural, population inputs as manufactured synthetic, and ZTCF/proximal-distal artifacts as model-level; it makes no human/population validation claim and preserves open finding #4695. The separate #4694 workflow publication-gate design is out of scope.
-- **Next step:** Root direction on draft PR #4713 current-main conflict/no-run state; then green candidate render plus root-verified manifest-bound publication evidence and merged-main deploy before closing #4688.
+- **Next step:** Root review local offline merge; after network release, update draft #4713 only with root direction. Require green exact-head render plus root-verified manifest-bound publication audit and merged-main deploy before closing #4688.
+
+### DL-#4706 · Induced Acceleration Biomechanics Review
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4709 (regular PR)
+- **Issue:** #4706 (corpus #4021; epic #4009)
+- **Branch:** `fix/induced-acceleration-rigor-20260930`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (final source d7cf1af8; final render evidence 2f32c8d4; integrated main 59c0cc2d: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; Linux CI 41e075ef: 5962 passed, 92.83% coverage; 179 content checks; eight book builds; Windows 6005 passed, two snapshot-location failures resolved and six hygiene checks pass; quotation gate passes; CI requires named gravity constant in one test, corrected without changing assertions)
+- **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
+- **Next step:** Main 4f798475 integrated with both turnover records; 57 combined chapter/audit/trust/packaging checks pass; test-style checkpoint 2be29ec3 unchanged; finish validation and protected-merge #4709; keep goal active for the remaining 142 source reviews.
+
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 

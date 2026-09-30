@@ -1,17 +1,70 @@
 # Dataset Explorer Deployment Route Audit — #4688
 
-- Repository: D-sorganization/AffineDrift; worktree `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`, integrated with protected main `4f798475c2b086ed147d1932429a8cc750f0f645` (five commits beyond prior base).
+- Repository: D-sorganization/AffineDrift; worktree `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`, accepted commits `f0b1ada406eb2e34fc7d483031c8270534f4219e` and `ddf725a5e5e96449c21dc24679a47771e595d1b8` are integrated with protected main `984552e178b3f075290e44565a6f4514152e3dd9` in local merge commit `SELF`; exact HEAD and parent order are recorded in the external final-review report.
 - Commit: `SELF` (local review commit; exact current HEAD is recorded in the external final-review report).
 - PR: #4713 (draft), https://github.com/D-sorganization/AffineDrift/pull/4713; no readiness or merge decision.
 - Objective: restore the truthful claim-audit record for `/models/dataset-explorer.html`, which the deployment render emitted but the manually maintained route inventory omitted.
 - Diagnosis: `_quarto.yml` selects `models/**/*.qmd` and the navbar links this source. The deployment render included `models/dataset-explorer.qmd` at [141/249], producing a 250-page manifest; the existing exact manifest/inventory gate correctly rejected the missing route. Earlier tests exercised generic coverage mismatch behavior but did not assert that this canonical source-derived route was represented. The on-ramp repair added its own route but did not reconcile this separate render-selected source.
 - Current-main integration: fetched and merged only `origin/main` at `4f798475c2b086ed147d1932429a8cc750f0f645`, preserving the five main commits and their changes (#4697, #4656, #4682, #4705, #4613). Fresh main still had 249 inventory routes and no `/models/dataset-explorer.html`; integration preserves every one of those 249 route records and all their hashes/source rows exactly, then adds the reviewed dataset-explorer record (250 total). The old v2 render/manifest is bound to `3471f7d30245b688a62429726a3b2916442000d2` and does not validate this updated candidate.
+- Latest-main offline integration: root authorized merging the already-fetched `984552e178b3f075290e44565a6f4514152e3dd9` (#4709). All 249 #4709 inventory route records and evidence hashes are preserved exactly; the accepted dataset-explorer route record is unchanged. The two induced-acceleration scientific source blobs match fetched main exactly. #4709 keyed development-log and handoff content remains alongside this section. The historical v2 render still does not validate this source tree.
+- Draft/hold status: before the network hold, PR #4713 was last observed as draft at head `ddf725a5e5e96449c21dc24679a47771e595d1b8`, base `984552e178b3f075290e44565a6f4514152e3dd9`, dirty with zero runs found for that head. Network operations and coordination refresh are paused through 22:26:08 UTC by root; the existing lease is retained through 23:22 UTC. This local merge awaits root review and must not be pushed during the hold.
+- Latest offline checks: 51 route/audit/trust tests and 19 #4709 review tests passed; canonical evidence check and local inventory publication check passed without hash regeneration. Current-main render/manifest remain absent.
 - Review boundary: one route record is `reviewed`, with no direct claim IDs or critique IDs. This records an audit of the page's bounded content and evidence, not scientific validation. Dataset schema checks establish JSON structure only; population-generalization evidence is manufactured synthetic and does not authorize population claims; ZTCF and proximal-distal materials remain model-level/educational evidence, with human validation unclaimed. No new exemption, deferment, or finding was introduced. Existing open finding #4695 remains preserved; separate publication-gate follow-up #4694 remains outside this content repair.
 - TDD: `test_canonical_inventory_covers_dataset_explorer_quarto_route` failed before the inventory update with `missing=['/models/dataset-explorer.html']`, then passed after the truthful record was added.
 - Validation: pre-integration focused route/audit contracts passed 44 tests. After integrating current main, `regenerate_claim_audit_evidence --check` and local `generate_claim_audit_inventory --check --enforce-publication` pass; the current-main focused inventory, trust-freshness, output-boundary, markdown-source, dataset-manifest, and public-manifest suite passes (exact count and command in external report). The preserved v2 artifact audit (27 internal artifacts pruned; 250-page manifest at old revision `3471f7d30245b688a62429726a3b2916442000d2`; manifest-bound publication audit passed) validates only that old rendered output. Its historical native Quarto exit remains unknown (`exit_code: null`), and it does not audit the updated-main render. No third render was run.
 - Publication gate status: #4694 remains a separate follow-up. Its current design establishes PR E2E render and manifest generation but does not yet enforce the claim-audit publication check automatically.
 - Render inputs changed on current main include `_includes/generated/research-releases-summary.qmd`, `_includes/notebook-binder-launch.qmd`, four book `.qmd` pages, `articles/_metadata.yml`, `scripts/post_render_citations.py`, and shared CSS. There is no fresh render/manifest for these inputs.
-- Next: root publication decision after green PR CI render and root-verified manifest-bound publication evidence for this exact candidate; verify merged-main deploy before closing #4688. #4694 remains separate and its proposed PR design does not automatically enforce claim-audit publication. No workflow changes, push, PR, or closure were made by this worker.
+- Next: root review the completed local merge. After root releases the network hold, decide whether to update draft PR #4713. Require green exact-head PR render and root-verified revision-bound manifest publication audit before merge; verify merged-main deploy before closing #4688. #4694 remains separate and its proposed PR design does not automatically enforce claim-audit publication. No workflow changes, PR readiness/merge, or issue closure occurred.
+
+# Resumed Technical Review — Induced Acceleration #4706
+
+The user explicitly resumed the corpus goal on 2026-09-30. This supersedes the
+September 28 pause instruction below. Never create draft PRs. Goal remains active.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/induced-acceleration-rigor-20260930`; base `bac8bedb`.
+  Final source checkpoint `d7cf1af8`; final render checkpoint `2f32c8d4`.
+  Regular PR [#4709](https://github.com/D-sorganization/AffineDrift/pull/4709); epic #4009 / corpus #4021 / issue #4706.
+- Complete paired Geometry of Motion Chapter 3b corrected: force signs, full
+  affine state/input map, activation, nominal integration, normalized coupling,
+  constrained reactions, physical outputs, coordinate transport and study evidence.
+- Two parallel agy Gemini 3.8 Flash supplied-text inventories completed; lead
+  independently adjudicated all suggestions. No delegated tools or edits.
+- Nineteen new checks (five numerical, fourteen source boundaries), nine prior
+  IAA numerical checks and fourteen attribution contracts pass. Full-tree Ruff,
+  Black (791 files) and configured mypy (93 files) pass. Linux CI at `41e075ef`: 5,962 tests passed (92.83% coverage),
+  179 content checks passed; all eight book builds passed. Windows: 6,005 passed;
+  two root-hygiene failures resolved by preserving snapshots under docs/development;
+  all six hygiene checks then passed. Publication receipt records the two quote pairs.
+- Full Volume I PDF: 149 pages; physical 58–64 visually reviewed; final log has
+  no overfull boxes or undefined/multiply-defined labels. Other chapters retain
+  their independent review status; their committed source hashes are preserved.
+- Root website gate: 4/4 desktop/mobile and light/dark passes; one route axe scan,
+  zero serious/critical findings. Fresh browser: all 126 math expressions rendered,
+  twelve displays visually checked at 1440/390 px, no math errors or broken anchors.
+  Three mobile equations use contained scrolling; both ends and numbers inspected.
+- The first standalone render and persistent cached browser session are excluded
+  from accepted evidence. Root configuration was restored; fresh `iaa-final`
+  browser confirmed revised text. Preview 8770 stopped; later Windows localhost binds were refused. Accepted render evidence predates this environment limitation.
+- `iaa-biomechanics-review.md`, `iaa-biomechanics-final-render-verification.json`, prior
+  records and dependency carry-forward under `reports/technical-review/` explain
+  source access limits, numerical cases, exact bytes and preserved historical scope.
+- Eight findings bound through test-style checkpoint `2be29ec3`; book metadata carries forward the changed PDF
+  without renewing other scientific or book-map browser reviews. Corpus pending
+  count: 142 sources. Whole-book and whole-corpus acceptance remain incomplete.
+- Final qualification: nominal acceleration integrals require absolutely continuous
+  velocity; impulsive impacts add velocity jumps from the declared impact law.
+  Main Binder update #4682 was integrated at `766b0603`; final browser evidence
+  includes its article code-tools metadata. Final dependency receipt preserves
+  prior book scopes, dates and render revisions.
+- Main integration: trust freshness #4705 and packaging #4613 through `4f798475` are preserved; both turnover sections retained. All 57 combined chapter/audit/trust/packaging checks pass; chapter, PDF and numerical-test bytes remain exactly at `2be29ec3`.
+- CI follow-up: name the test gravity constant; scientific sources and PDF unchanged.
+  Test-only checkpoint `2be29ec3` preserves all scientific sources and assertions; 821 tracked Python files pass the complete quality check.
+- Next: inspect final validation evidence on PR #4709,
+  inspect final CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
+- Next corpus scope: #4710 is implemented and under validation in separate worktree `Worktrees/AffineDrift-two-hand-review`; branch `fix/two-hand-wrench-rigor-4710`.
+- Coordination: session `technical-review-20260930-resume`, issue #4706; development
+  log DL-#4706. Existing web-feature consolidations remain under their live owners.
 
 # Implementation Handoff — Make src/ Installable and Version It (#4532)
 

@@ -77,7 +77,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | `articles/The_Geometry_of_Motion/quarto/ch01_foundations.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | `articles/The_Geometry_of_Motion/quarto/ch02_variational.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | `articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd` | 2 |
+| `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd` | 13 |
 | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | `articles/The_Geometry_of_Motion/quarto/ch04_contraction.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | `articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | `articles/The_Geometry_of_Motion/quarto/ch06_duality.qmd` | 2 |
@@ -330,7 +330,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-72a9a6bbc151` | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | Reviewed | — | None | None | 0 |
 | `ad-route-121c2d553f4d` | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | Reviewed | — | None | None | 0 |
 | `ad-route-a4d65b536c60` | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | Reviewed | — | None | None | 0 |
-| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Reviewed | — | None | None | 0 |
+| `ad-route-bd8b0f7e7253` | `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | Reviewed | — | None | None | 8 |
 | `ad-route-39e3dd6b6f46` | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | Reviewed | — | None | None | 0 |
 | `ad-route-08a4d449d5e0` | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-3a38c1784447` | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | Reviewed | — | None | None | 0 |
