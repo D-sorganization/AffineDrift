@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 242
+- Reviewed: 243
 - Deferred: 0
 - Exempt: 3
 
@@ -243,6 +243,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/resources/learning-path-foundations.html` | `resources/learning-path-foundations.qmd` | 1 |
 | `/resources/learning-path-golf-science.html` | `resources/learning-path-golf-science.qmd` | 1 |
 | `/resources/learning-paths.html` | `resources/learning-paths.qmd` | 2 |
+| `/resources/on-ramp-paths.html` | `resources/on-ramp-paths.qmd` | 11 |
 | `/resources/research-review-baseball-pitching.html` | `resources/research-review-baseball-pitching.qmd` | 1 |
 | `/resources/research-review-induced-acceleration-analysis.html` | `resources/research-review-induced-acceleration-analysis.qmd` | 2 |
 | `/resources/research-review-interaction-forces.html` | `resources/research-review-interaction-forces.qmd` | 1 |
@@ -493,6 +494,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-0ad68343def0` | `/resources/learning-path-foundations.html` | Reviewed | — | None | None | 0 |
 | `ad-route-aa192df4ba01` | `/resources/learning-path-golf-science.html` | Reviewed | — | None | None | 0 |
 | `ad-route-da7c073ff90f` | `/resources/learning-paths.html` | Reviewed | — | None | None | 0 |
+| `ad-route-a12a2a3f75fd` | `/resources/on-ramp-paths.html` | Reviewed | — | None | None | 1 |
 | `ad-route-397b07989cb1` | `/resources/research-review-baseball-pitching.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b34fc06b00e9` | `/resources/research-review-induced-acceleration-analysis.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cb426ba8f0be` | `/resources/research-review-interaction-forces.html` | Reviewed | — | None | None | 0 |
