@@ -199,6 +199,22 @@ class TestGoogleScholarAndCitationRendering:
         # Ensure no NaN exists anywhere in meta tags
         assert "NaN" not in updated_content[:1500]
 
+    @pytest.mark.integration
+    def test_citation_section_meets_accessibility_requirements(self) -> None:
+        html_file = _render_quarto_page(
+            'date: "2026-03-10"\n' 'date-source: "initial-publication-record"\n'
+        )
+        content = html_file.read_text(encoding="utf-8")
+        updated_content, _ = process_html_content(content, html_file)
+
+        # 1. Standalone citeas div must NOT carry role="listitem" without an enclosing role="list"
+        assert 'class="csl-entry quarto-appendix-citeas" role="listitem"' not in updated_content
+        assert "quarto-appendix-citeas" in updated_content
+
+        # 2. BibTeX download button must have accessible high-contrast styles
+        assert "quarto-citation-bibtex-download" in updated_content
+        assert "color: var(--text-primary)" in updated_content
+
 
 class TestGoogleScholarValidatorOnSamplePages:
     """Validate on 3 representative sample pages matching acceptance criteria."""
