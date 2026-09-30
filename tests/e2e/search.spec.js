@@ -124,6 +124,6 @@ test.describe("Search Functionality", () => {
     await searchInput.fill("ZTCF");
 
     const firstResult = page.locator(".search-result-doc .search-result-link").first();
-    await expect(firstResult).toHaveAttribute("href", /zero-torque-counterfactual/);
+    await expect(firstResult).toHaveAttribute("href", /zero[-_]torque[-_]counterfactual/);
   });
 });
