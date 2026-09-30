@@ -1,0 +1,791 @@
+# config/where_next.yml
+# Source of truth for the Standard "Where Next" Footer component (WEB-03.5 #4510).
+#
+# Rules:
+# 1. No page links to itself (strictly validated).
+# 2. Each core page has at least one "simpler" and one "deeper" link.
+# 3. Coordinated with #3900 (reference cluster) and #3901 (motor-control / neuro cluster).
+# 4. Hrefs are expressed relative to repo root (e.g. articles/theory-part1.html).
+
+articles/theory-part1.qmd:
+  series-next:
+    href: articles/theory-part2.html
+    title: "Part 2: Lie Brackets & Differential Geometric Control"
+  simpler:
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Consolidated, accessible overview of the drift-control decomposition."
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy: A Journey Through the Swing"
+      blurb: "Narrative, intuitive walkthrough of how energy flows through the kinematic chain."
+  deeper:
+    - href: articles/lagrangian-reference.html
+      title: "Lagrangian Mechanics Reference"
+      blurb: "Formal derivations of manipulator dynamics, Christoffel symbols, and energy equations."
+    - href: pages/notation.html
+      title: "Mathematical Notation Reference"
+      blurb: "Standardized symbols, coordinate charts, and state-space conventions."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Formal audit ledger verifying mathematical proofs and empirical bounds."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Model"
+    blurb: "Interactive model exploring torque transmission across varying joint angles."
+
+articles/theory-part2.qmd:
+  series-prev:
+    href: articles/theory-part1.html
+    title: "Part 1: Control-Affine Framework"
+  series-next:
+    href: articles/theory-part3.html
+    title: "Part 3: Zero-Torque Counterfactuals & Dynamical Drift"
+  simpler:
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Intuitive explanation of drift vector fields and steering via control vector fields."
+    - href: articles/controllability-drift-ratio.html
+      title: "Controllability and the Drift-Control Ratio"
+      blurb: "Framework for evaluating the relative authority of control over passive drift."
+  deeper:
+    - href: articles/screw-theory-reference.html
+      title: "Screw Theory Reference"
+      blurb: "Twists, wrenches, and Lie algebra representations of spatial mechanisms."
+    - href: articles/tangent-hyperplanes-series/part-1-geometry.html
+      title: "Tangent Hyperplanes: Geometric Foundations"
+      blurb: "Differential-geometric formulation of swing manifolds and tangent spaces."
+  evidence:
+    href: critiques/index.html
+    title: "Critiques & Falsification Ledger"
+    blurb: "Methodological limits, counterarguments, and validation boundaries."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Representation Converter"
+    blurb: "Inspect SO(3) Lie group rotations, exponential coordinates, and Euler angles."
+
+articles/theory-part3.qmd:
+  series-prev:
+    href: articles/theory-part2.html
+    title: "Part 2: Lie Brackets & Differential Geometric Control"
+  series-next:
+    href: articles/theory-part4.html
+    title: "Part 4: Superposition & Perturbation Dynamics"
+  simpler:
+    - href: articles/zero-torque-counterfactual.html
+      title: "Zero-Torque Counterfactual (ZTCF)"
+      blurb: "Conceptual guide to decomposing active effort from passive mechanical momentum."
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Visual journey tracing the role of passive momentum and release dynamics."
+  deeper:
+    - href: articles/drift-components-wrench-double-pendulum.html
+      title: "Drift Components & Differential Geometry"
+      blurb: "Detailed geometric decomposition of Coriolis, centrifugal, and gravitational drift."
+    - href: articles/lagrangian-reference.html
+      title: "Lagrangian Mechanics Reference"
+      blurb: "Rigorous equations of motion for generalized coordinates and unactuated degrees of freedom."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Verification tests and simulation proofs for zero-torque counterfactuals."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Simulation"
+    blurb: "Observe passive kinematic coupling during simulated wrist release."
+
+articles/theory-part4.qmd:
+  series-prev:
+    href: articles/theory-part3.html
+    title: "Part 3: Zero-Torque Counterfactuals & Dynamical Drift"
+  series-next:
+    href: articles/theory-part5.html
+    title: "Part 5: Contraction Analysis & Exponential Stability"
+  simpler:
+    - href: articles/superposition.html
+      title: "Superposition in Control-Affine Systems"
+      blurb: "Intuitive exploration of when and why multi-segment perturbations additively combine."
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "High-level summary of the control-affine property and perturbation response."
+  deeper:
+    - href: articles/tangent-hyperplanes-series/part-4-residuals-curvature.html
+      title: "Tangent Hyperplanes: Residuals and Curvature"
+      blurb: "Higher-order variational terms, curvature corrections, and residual error bounds."
+    - href: articles/inverse-dynamics-inference.html
+      title: "Statistical Inverse Dynamics Inference"
+      blurb: "Bayesian perturbation analysis and parameter sensitivity estimation."
+  evidence:
+    href: critiques/index.html
+    title: "Critiques & Limitations"
+    blurb: "Discussion of linearization regimes and breakdown points in nonlinear dynamics."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter & Perturbation Tool"
+    blurb: "Examine perturbation behaviors across different rotational representations."
+
+articles/theory-part5.qmd:
+  series-prev:
+    href: articles/theory-part4.html
+    title: "Part 4: Superposition & Perturbation Dynamics"
+  simpler:
+    - href: articles/controllability-drift-ratio.html
+      title: "Controllability and the Drift-Control Ratio"
+      blurb: "Core metrics for assessing trajectory convergence and stability during the downswing."
+    - href: pages/drifter-manifesto.html
+      title: "Drifter Manifesto Overview"
+      blurb: "Executive summary and high-level principles behind contraction analysis in golf."
+  deeper:
+    - href: articles/tangent-hyperplanes-series/part-5-contraction.html
+      title: "Tangent Hyperplanes: Contraction and Convergence"
+      blurb: "Riemannian contraction metrics and transverse exponential stability proofs."
+    - href: articles/The_Geometry_of_Motion/quarto/volume1.html
+      title: "Foundations of Exact Linearization and Contraction"
+      blurb: "Comprehensive monograph treatment of contraction theory in mechanical systems."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Contraction metric proofs and convergence rate verifications."
+  try-it:
+    href: articles/proximal-distal-model-workbench.html
+    title: "Proximal-Distal Model Workbench"
+    blurb: "Inspect simulation models demonstrating phase-space contraction."
+
+articles/affine-nature-golf-swing.qmd:
+  series-next:
+    href: articles/theory-part1.html
+    title: "Theory Part 1: Control-Affine Framework"
+  simpler:
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Narrative, intuitive walkthrough of the biomechanical energy chain."
+    - href: pages/how-to-read.html
+      title: "How to Read This Site"
+      blurb: "Guide to reading paths, technical depth tiers, and publication states."
+  deeper:
+    - href: articles/theory-part1.html
+      title: "Theory Part 1: Control-Affine Framework"
+      blurb: "Full mathematical derivation of the control-affine equations of motion."
+    - href: articles/theory-part2.html
+      title: "Theory Part 2: Lie Brackets & Differential Geometric Control"
+      blurb: "Lie brackets, accessibility rank condition, and geometric steering."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Formal audit of claims made in the consolidated foundation paper."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Model"
+    blurb: "Test the 2-DOF universal joint model in your browser."
+
+articles/zero-torque-counterfactual.qmd:
+  simpler:
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "High-level overview of drift vs control in the swing."
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Intuitive walkthrough of how torque and passive dynamics interact."
+  deeper:
+    - href: articles/theory-part3.html
+      title: "Theory Part 3: Zero-Torque Counterfactuals & Dynamical Drift"
+      blurb: "Formal mathematical formulation of counterfactual branching trajectories."
+    - href: articles/controllability-drift-ratio.html
+      title: "Controllability and the Drift-Control Ratio"
+      blurb: "Quantifying the ratio of control authority to passive momentum."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Validation evidence for ZTCF counterfactual branching."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Simulation"
+    blurb: "Inspect passive drift versus applied torque in a simulated joint."
+
+articles/controllability-drift-ratio.qmd:
+  simpler:
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Conceptual overview of when muscular torques dominate vs passive drift."
+    - href: articles/zero-torque-counterfactual.html
+      title: "Zero-Torque Counterfactual"
+      blurb: "Understand how zero-torque baselines isolate control contributions."
+  deeper:
+    - href: articles/theory-part5.html
+      title: "Theory Part 5: Contraction Analysis & Exponential Stability"
+      blurb: "Contraction metrics and stability under low drift-control ratios."
+    - href: articles/drift-components-wrench-double-pendulum.html
+      title: "Drift Components & Differential Geometry"
+      blurb: "Mathematical breakdown of individual components constituting total drift."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Empirical bounds on drift-control ratios measured across swing phases."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Explore rotational coordinate singularities and sensitivity."
+
+articles/superposition.qmd:
+  simpler:
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "General introduction to control-affine properties and additive forces."
+    - href: articles/zero-torque-counterfactual.html
+      title: "Zero-Torque Counterfactual"
+      blurb: "Foundation for decomposing trajectories into baseline and control branches."
+  deeper:
+    - href: articles/theory-part4.html
+      title: "Theory Part 4: Superposition & Perturbation Dynamics"
+      blurb: "Rigorous proofs of variational superposition in control-affine multibody systems."
+    - href: articles/tangent-hyperplanes-series/part-3-control.html
+      title: "Tangent Hyperplanes: Control Synthesis"
+      blurb: "Linear quadratic and optimal control synthesis on tangent hyperplanes."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Mathematical checks on perturbation linearity and error bounds."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Dynamics Simulation"
+    blurb: "Test superposition of flexion and deviation torques."
+
+articles/tangent-hyperplanes-series/part-1-geometry.qmd:
+  series-next:
+    href: articles/tangent-hyperplanes-series/part-2-dynamics.html
+    title: "Tangent Hyperplanes Part 2: Dynamics & Acceleration Fields"
+  simpler:
+    - href: pages/tangent-hyperplanes.html
+      title: "Tangent Hyperplanes Series Overview"
+      blurb: "High-level executive overview and reading guide for the 7-part series."
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Foundational control-affine swing mechanics."
+  deeper:
+    - href: articles/screw-theory-reference.html
+      title: "Screw Theory Reference"
+      blurb: "Twist and wrench kinematics underpinning tangent coordinate projections."
+    - href: articles/The_Geometry_of_Motion/quarto/volume0.html
+      title: "The Mathematical Primer"
+      blurb: "Differential geometry, Riemannian metrics, and connections on smooth manifolds."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Geometric proofs and curvature error bounds."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Convert between SO(3) parameterizations and explore geometric charts."
+
+articles/tangent-hyperplanes-series/part-2-dynamics.qmd:
+  series-prev:
+    href: articles/tangent-hyperplanes-series/part-1-geometry.html
+    title: "Tangent Hyperplanes Part 1: Geometric Foundations"
+  series-next:
+    href: articles/tangent-hyperplanes-series/part-3-control.html
+    title: "Tangent Hyperplanes Part 3: Optimal Control"
+  simpler:
+    - href: pages/tangent-hyperplanes.html
+      title: "Tangent Hyperplanes Series Overview"
+      blurb: "Hub guide summarizing the role of acceleration fields."
+    - href: articles/drift-components-wrench-double-pendulum.html
+      title: "Drift Components & Differential Geometry"
+      blurb: "Overview of passive drift terms in the downswing."
+  deeper:
+    - href: articles/lagrangian-reference.html
+      title: "Lagrangian Mechanics Reference"
+      blurb: "Analytical dynamics and generalized inertia tensors."
+    - href: articles/The_Geometry_of_Motion/quarto/volume1.html
+      title: "Foundations of Exact Linearization and Contraction"
+      blurb: "Rigorous state-space linearizations on Riemannian manifolds."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Acceleration field validation across dynamic simulations."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Dynamics Simulation"
+    blurb: "Simulate dynamic acceleration coupling at the clubhead."
+
+articles/tangent-hyperplanes-series/part-3-control.qmd:
+  series-prev:
+    href: articles/tangent-hyperplanes-series/part-2-dynamics.html
+    title: "Tangent Hyperplanes Part 2: Dynamics & Acceleration Fields"
+  series-next:
+    href: articles/tangent-hyperplanes-series/part-4-residuals-curvature.html
+    title: "Tangent Hyperplanes Part 4: Residuals & Curvature"
+  simpler:
+    - href: pages/tangent-hyperplanes.html
+      title: "Tangent Hyperplanes Series Overview"
+      blurb: "Conceptual explanation of control synthesis on hyperplanes."
+    - href: articles/controllability-drift-ratio.html
+      title: "Controllability and the Drift-Control Ratio"
+      blurb: "Intuitive bounds on control authority."
+  deeper:
+    - href: articles/theory-part2.html
+      title: "Theory Part 2: Lie Brackets & Differential Geometric Control"
+      blurb: "Nonlinear controllability and accessibility rank conditions."
+    - href: articles/The_Geometry_of_Motion/quarto/volume2.html
+      title: "Transverse Control and the Architecture of Trajectories"
+      blurb: "Transverse dynamics and moving-horizon control architectures."
+  evidence:
+    href: critiques/index.html
+    title: "Critiques & Limitations"
+    blurb: "Limits of planar control approximations in 3D human motion."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Coordinate conversions for control vector fields."
+
+articles/tangent-hyperplanes-series/part-4-residuals-curvature.qmd:
+  series-prev:
+    href: articles/tangent-hyperplanes-series/part-3-control.html
+    title: "Tangent Hyperplanes Part 3: Optimal Control"
+  series-next:
+    href: articles/tangent-hyperplanes-series/part-5-contraction.html
+    title: "Tangent Hyperplanes Part 5: Contraction & Convergence"
+  simpler:
+    - href: pages/tangent-hyperplanes.html
+      title: "Tangent Hyperplanes Series Overview"
+      blurb: "Overview of manifold curvature and residual error tracking."
+    - href: articles/superposition.html
+      title: "Superposition in Control-Affine Systems"
+      blurb: "First-order perturbation validity regimes."
+  deeper:
+    - href: articles/theory-part4.html
+      title: "Theory Part 4: Superposition & Perturbation Dynamics"
+      blurb: "Second-order variational equations and nonlinear residual bounds."
+    - href: articles/The_Geometry_of_Motion/quarto/volume1.html
+      title: "Foundations of Exact Linearization and Contraction"
+      blurb: "Curvature tensors and connection forms on configuration manifolds."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Formal proofs of residual convergence under bounded curvature."
+  try-it:
+    href: articles/proximal-distal-model-workbench.html
+    title: "Proximal-Distal Model Workbench"
+    blurb: "Compare planar approximations against full multibody simulations."
+
+articles/tangent-hyperplanes-series/part-5-contraction.qmd:
+  series-prev:
+    href: articles/tangent-hyperplanes-series/part-4-residuals-curvature.html
+    title: "Tangent Hyperplanes Part 4: Residuals & Curvature"
+  series-next:
+    href: articles/tangent-hyperplanes-series/part-6-hybrid.html
+    title: "Tangent Hyperplanes Part 6: Hybrid & Impact Dynamics"
+  simpler:
+    - href: pages/tangent-hyperplanes.html
+      title: "Tangent Hyperplanes Series Overview"
+      blurb: "High-level summary of contraction and trajectory funneling."
+    - href: articles/controllability-drift-ratio.html
+      title: "Controllability and the Drift-Control Ratio"
+      blurb: "How drift-control balance enables late-swing stability."
+  deeper:
+    - href: articles/theory-part5.html
+      title: "Theory Part 5: Contraction Analysis & Exponential Stability"
+      blurb: "Finsler metrics and generalized contraction coefficients."
+    - href: articles/The_Geometry_of_Motion/quarto/volume1.html
+      title: "Foundations of Exact Linearization and Contraction"
+      blurb: "Monograph derivations of transverse contraction metrics."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Contraction rate bounds and numerical verification tests."
+  try-it:
+    href: articles/proximal-distal-model-workbench.html
+    title: "Proximal-Distal Model Workbench"
+    blurb: "Interactive phase portraits illustrating trajectory convergence."
+
+articles/tangent-hyperplanes-series/part-6-hybrid.qmd:
+  series-prev:
+    href: articles/tangent-hyperplanes-series/part-5-contraction.html
+    title: "Tangent Hyperplanes Part 5: Contraction & Convergence"
+  series-next:
+    href: articles/tangent-hyperplanes-series/part-7-residual-aware.html
+    title: "Tangent Hyperplanes Part 7: Residual-Aware Control"
+  simpler:
+    - href: pages/tangent-hyperplanes.html
+      title: "Tangent Hyperplanes Series Overview"
+      blurb: "Overview of impact transitions and post-impact dynamics."
+    - href: articles/technology-heavy-hit-impact-coupling.html
+      title: "Heavy Hit and Impact Coupling"
+      blurb: "Physical mechanics of clubhead-ball collision and momentum exchange."
+  deeper:
+    - href: articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html
+      title: "The Physics of Golf: Impact Dynamics"
+      blurb: "Restitution, impulse-momentum equations, and shaft reaction waves."
+    - href: articles/The_Geometry_of_Motion/quarto/volume2.html
+      title: "Transverse Control and the Architecture of Trajectories"
+      blurb: "Hybrid reset maps and saltation matrices for discontinuous flows."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Restitution model checks and energy balance audits."
+  try-it:
+    href: articles/green-simulation.html
+    title: "Green Simulation"
+    blurb: "Explore roll dynamics and surface interactions."
+
+articles/tangent-hyperplanes-series/part-7-residual-aware.qmd:
+  series-prev:
+    href: articles/tangent-hyperplanes-series/part-6-hybrid.html
+    title: "Tangent Hyperplanes Part 6: Hybrid & Impact Dynamics"
+  simpler:
+    - href: pages/tangent-hyperplanes.html
+      title: "Tangent Hyperplanes Series Overview"
+      blurb: "Summary of practical takeaways from the complete series."
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Foundational synthesis of control and drift."
+  deeper:
+    - href: articles/The_Geometry_of_Motion/quarto/volume2.html
+      title: "Transverse Control and the Architecture of Trajectories"
+      blurb: "Advanced residual-aware tracking and transverse feedback stabilization."
+    - href: articles/nonlinear-control-insights.html
+      title: "Nonlinear Control Insights"
+      blurb: "Connections to biological motor control and neural feedback loops."
+  evidence:
+    href: critiques/index.html
+    title: "Critiques & Limitations"
+    blurb: "Robustness discussions and open questions in human swing control."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Explore 3D kinematics and rotation conversions."
+
+articles/drift-components-wrench-double-pendulum.qmd:
+  simpler:
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Introductory overview of the drift term in golf kinematics."
+    - href: articles/zero-torque-counterfactual.html
+      title: "Zero-Torque Counterfactual"
+      blurb: "Isolating passive drift dynamics by removing active torque inputs."
+  deeper:
+    - href: articles/theory-part3.html
+      title: "Theory Part 3: Zero-Torque Counterfactuals & Dynamical Drift"
+      blurb: "Mathematical derivation of drift invariance and coordinate representations."
+    - href: articles/lagrangian-reference.html
+      title: "Lagrangian Mechanics Reference"
+      blurb: "Christoffel symbols and geometric acceleration decompositions."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Numerical verification of drift force components across benchmark swings."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Simulation"
+    blurb: "Observe passive Coriolis and centrifugal loads on the clubhead."
+
+articles/inverse-dynamics.qmd:
+  simpler:
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Intuitive understanding of joint torques and kinetic energy flow."
+    - href: articles/technology-force-measurement.html
+      title: "Force Measurement Technology"
+      blurb: "Ground reaction force measurement and experimental instrumentation."
+  deeper:
+    - href: articles/inverse-dynamics-inference.html
+      title: "Statistical Inverse Dynamics Inference"
+      blurb: "Bayesian uncertainty quantification and measurement noise propagation."
+    - href: articles/lagrangian-reference.html
+      title: "Lagrangian Mechanics Reference"
+      blurb: "Newton-Euler and Lagrangian algorithms for inverse dynamics."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Experimental validation of reconstructed joint torques against force plates."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Transform kinematic measurements across anatomical joint reference frames."
+
+articles/inverse-dynamics-inference.qmd:
+  simpler:
+    - href: articles/inverse-dynamics.html
+      title: "Inverse Dynamics in Biomechanical Systems"
+      blurb: "Deterministic foundations of joint torque reconstruction."
+    - href: articles/technology-motion-capture.html
+      title: "Motion Capture Technology"
+      blurb: "Optical marker sets, soft-tissue artifacts, and tracking precision."
+  deeper:
+    - href: articles/theory-part4.html
+      title: "Theory Part 4: Superposition & Perturbation Dynamics"
+      blurb: "Perturbation theory for state and parameter estimation."
+    - href: articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.html
+      title: "The Physics of Golf: Forces and Torques"
+      blurb: "Book chapter detailing generalized loads and inverse estimation."
+  evidence:
+    href: critiques/index.html
+    title: "Critiques & Limitations"
+    blurb: "Uncertainty bounds and ill-posedness in human biomechanical inference."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Evaluate sensitivity of rotation algorithms to marker noise."
+
+articles/proximal-distal-energy-transfer.qmd:
+  simpler:
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy: A Journey Through the Swing"
+      blurb: "Narrative, intuitive walkthrough of the energy transfer sequence."
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "High-level summary of the kinetic chain and segmental energy transfer."
+  deeper:
+    - href: articles/proximal_distal_energy_transfer/index.html
+      title: "Proximal-to-Distal Technical Monograph"
+      blurb: "Exhaustive mathematical monograph on energy flow through open kinematic chains."
+    - href: articles/lagrangian-reference.html
+      title: "Lagrangian Mechanics Reference"
+      blurb: "Power flow identities, virtual work, and kinetic energy derivatives."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Rigorous verification of power transfer claims and energy conservation."
+  try-it:
+    href: articles/proximal-distal-model-workbench.html
+    title: "Proximal-Distal Model Workbench"
+    blurb: "Interactive energy flow diagnostics across multi-link pendulum models."
+
+articles/proximal-distal-a-journey-through-the-swing.qmd:
+  simpler:
+    - href: pages/how-to-read.html
+      title: "How to Read This Site"
+      blurb: "Overview of learning paths for golfers, coaches, and researchers."
+    - href: pages/about.html
+      title: "About AffineDrift"
+      blurb: "Mission, methodology, and philosophy of the research program."
+  deeper:
+    - href: articles/proximal-distal-energy-transfer.html
+      title: "Proximal-to-Distal Energy Transfer"
+      blurb: "Formal biomechanical analysis of power transmission along the kinematic chain."
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Mathematical formulation of the control-affine swing dynamics."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Audit and evidence ledger for energy transfer claims."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Model"
+    blurb: "Interactive mechanical simulation demonstrating distal energy release."
+
+articles/technology-force-measurement.qmd:
+  simpler:
+    - href: pages/technology.html
+      title: "Technology Overview Hub"
+      blurb: "Survey of experimental measurement technologies and equipment."
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Conceptual role of ground reaction forces in initiating the swing."
+  deeper:
+    - href: articles/inverse-dynamics.html
+      title: "Inverse Dynamics in Biomechanical Systems"
+      blurb: "Transforming measured force plate data into joint torques and moments."
+    - href: articles/screw-theory-reference.html
+      title: "Screw Theory Reference"
+      blurb: "Spatial wrenches, center of pressure, and wrench axis definitions."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Instrumentation precision and ground reaction force calibration records."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Transform force vectors between plate and body coordinate systems."
+
+articles/technology-launch-monitors.qmd:
+  simpler:
+    - href: pages/technology.html
+      title: "Technology Overview Hub"
+      blurb: "Introduction to radar, optical, and hybrid launch tracking systems."
+    - href: articles/technology-club-fitting.html
+      title: "Club Fitting Technology"
+      blurb: "Practical application of launch metrics to equipment optimization."
+  deeper:
+    - href: articles/inverse-dynamics-inference.html
+      title: "Statistical Inverse Dynamics Inference"
+      blurb: "Bayesian state reconstruction and launch monitor uncertainty models."
+    - href: articles/technology-heavy-hit-impact-coupling.html
+      title: "Heavy Hit and Impact Coupling"
+      blurb: "Collision dynamics governing ball launch parameters and spin generation."
+  evidence:
+    href: critiques/index.html
+    title: "Critiques & Limitations"
+    blurb: "Systematic bias and measurement limitations of optical vs radar monitors."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Convert between spin axis tilt, obliquity, and 3D angular velocity."
+
+articles/technology-motion-capture.qmd:
+  simpler:
+    - href: pages/technology.html
+      title: "Technology Overview Hub"
+      blurb: "Overview of optical marker systems and tracking pipelines."
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Connecting visual kinematic sequences to underlying physics."
+  deeper:
+    - href: articles/rotation-representations-reference.html
+      title: "Rotation Representations Reference"
+      blurb: "Mathematical treatment of 3D joint rotations and Gimbal lock."
+    - href: articles/inverse-dynamics.html
+      title: "Inverse Dynamics in Biomechanical Systems"
+      blurb: "Differentiating motion capture trajectories to yield joint forces."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Soft-tissue artifact benchmarks and residual marker tracking errors."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Representation Converter"
+    blurb: "Interactive tool to test Euler sequences and quaternion conversions."
+
+articles/technology-club-fitting.qmd:
+  simpler:
+    - href: pages/technology.html
+      title: "Technology Overview Hub"
+      blurb: "Survey of modern fitting methodologies and biomechanical metrics."
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "How shaft stiffness and club mass affect the golfer's energy delivery."
+  deeper:
+    - href: articles/technology-launch-monitors.html
+      title: "Launch Monitor Technology"
+      blurb: "In-depth analysis of launch monitor sensors and measurement uncertainty."
+    - href: articles/theory-part1.html
+      title: "Theory Part 1: Control-Affine Framework"
+      blurb: "Coupled equations of motion for flexible shaft and rigid body dynamics."
+  evidence:
+    href: critiques/index.html
+    title: "Critiques & Limitations"
+    blurb: "Critical review of industry fitting claims and empirical reproducibility."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Simulation"
+    blurb: "Test the impact of shaft lie and grip angle on torque transmission."
+
+articles/technology-heavy-hit-impact-coupling.qmd:
+  simpler:
+    - href: pages/technology.html
+      title: "Technology Overview Hub"
+      blurb: "Accessible overview of impact mechanics and momentum exchange."
+    - href: articles/technology-launch-monitors.html
+      title: "Launch Monitor Technology"
+      blurb: "How launch monitors register impact parameters and ball speed."
+  deeper:
+    - href: articles/tangent-hyperplanes-series/part-6-hybrid.html
+      title: "Tangent Hyperplanes Part 6: Hybrid Dynamics"
+      blurb: "Discontinuous collision models and restitution dynamics."
+    - href: articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html
+      title: "The Physics of Golf: Impact Dynamics"
+      blurb: "Full textbook chapter on impact waves, restitution, and gear effect."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Impact momentum verification and restitution coefficient proofs."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Analyze clubface orientation at impact."
+
+books/index.qmd:
+  simpler:
+    - href: pages/how-to-read.html
+      title: "How to Read This Site"
+      blurb: "Guide to reading paths, books, and article collections."
+    - href: pages/drifter-manifesto.html
+      title: "Drifter Manifesto Overview"
+      blurb: "Core philosophy and summary of the AffineDrift research fleet."
+  deeper:
+    - href: articles/The_Physics_of_Golf/quarto/index.html
+      title: "The Physics of Golf"
+      blurb: "Comprehensive 28-chapter online textbook on multibody golf physics."
+    - href: articles/The_Geometry_of_Motion/quarto/index.html
+      title: "The Geometry of Motion"
+      blurb: "Advanced mathematical treatise on geometric control and contraction."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Audit ledger documenting research readiness across all book volumes."
+  try-it:
+    href: articles/proximal-distal-model-workbench.html
+    title: "Proximal-Distal Model Workbench"
+    blurb: "Interactive simulation models accompanying the textbook chapters."
+
+articles/The_Physics_of_Golf/quarto/index.qmd:
+  simpler:
+    - href: books/index.html
+      title: "Books & Monographs Hub"
+      blurb: "Overview of all textbooks, monographs, and research volumes."
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Narrative companion providing intuition for the book's mechanics."
+  deeper:
+    - href: articles/The_Geometry_of_Motion/quarto/index.html
+      title: "The Geometry of Motion"
+      blurb: "Mathematical companion focusing on differential geometry and control theory."
+    - href: articles/theory-part1.html
+      title: "Theory Part 1: Control-Affine Framework"
+      blurb: "Rigorous derivation of the underlying equations of motion."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Formal claim verification for textbook assertions."
+  try-it:
+    href: articles/wrist-universal-joint.html
+    title: "Wrist Universal Joint Simulation"
+    blurb: "Interactive model accompanying Chapter 8 on wrist mechanics."
+
+articles/The_Geometry_of_Motion/quarto/index.qmd:
+  simpler:
+    - href: books/index.html
+      title: "Books & Monographs Hub"
+      blurb: "Overview of all textbooks and research volumes."
+    - href: articles/affine-nature-golf-swing.html
+      title: "The Affine Nature of the Golf Swing"
+      blurb: "Accessible introduction to control-affine systems and drift fields."
+  deeper:
+    - href: articles/The_Geometry_of_Motion/quarto/volume1.html
+      title: "Volume I: Exact Linearization and Contraction"
+      blurb: "In-depth treatment of Riemannian contraction and control geometry."
+    - href: articles/screw-theory-reference.html
+      title: "Screw Theory Reference"
+      blurb: "Lie algebras, twists, and coordinate-free spatial kinematics."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Formal verification of geometric control theorems and proofs."
+  try-it:
+    href: articles/rotation-converter.html
+    title: "Rotation Converter"
+    blurb: "Interactive Lie group calculator for SO(3) rotations and geodesics."
+
+articles/proximal_distal_energy_transfer/index.qmd:
+  simpler:
+    - href: articles/proximal-distal-a-journey-through-the-swing.html
+      title: "How a Golf Swing Carries Energy"
+      blurb: "Narrative, intuitive walkthrough of the biomechanical energy chain."
+    - href: books/index.html
+      title: "Books & Monographs Hub"
+      blurb: "Overview of all research volumes and publications."
+  deeper:
+    - href: articles/proximal-distal-energy-transfer.html
+      title: "Proximal-to-Distal Energy Transfer"
+      blurb: "Article synthesis of the core monograph proofs and power flows."
+    - href: articles/lagrangian-reference.html
+      title: "Lagrangian Mechanics Reference"
+      blurb: "Manipulator dynamics and analytical energy formulations."
+  evidence:
+    href: reports/scientific-claim-audit.html
+    title: "Scientific Claim Audit"
+    blurb: "Verification proofs for open kinematic chain power transfer."
+  try-it:
+    href: articles/proximal-distal-model-workbench.html
+    title: "Proximal-Distal Model Workbench"
+    blurb: "Interactive simulation models demonstrating proximal-to-distal sequencing."
