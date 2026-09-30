@@ -459,6 +459,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4678 | Implement standard Where Next footer component with 30 core pages mapping, no self-links, accessible nav card, and cross-cluster coordination (#4510). |
 | 2026-09-30 | #4550 | Consolidate print CSS into one stylesheet, support Letter and A4 page sizes, and force MathJax typesetting before print (WEB-07.9). |
 | 2026-09-30 | #4548 | Retire the 22 unaudited companion bibliographies from the render and audit the privacy and accessibility pages, restoring 100% claim-audit route coverage for Deploy Website. |
+| 2026-09-30 | #4492 | Add a reviewed claim-audit record for /resources/on-ramp-paths.html, restoring Deploy Website route coverage after #4677. |
 | 2026-09-29 | #4655 | Remove stub Colab buttons from textbook pages and fill priority notebooks with verified dynamics (#4537). |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
 | 2026-09-29 | #4656 | Make full-site axe scan fail on serious and critical violations and fix caption contrast (#4561). |
