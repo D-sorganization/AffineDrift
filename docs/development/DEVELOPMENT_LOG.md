@@ -42,6 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (focused suites pass: editorial/consistency, trust-surface/claim-audit, page-style, manifesto rigor, formatting lints, site link gate; full suite passes with no failures; ruff/black clean; `regenerate_claim_audit_evidence --check` passes.)
 - **Summary:** Adds `opinion` to the controlled category vocabulary and recategorises both Manifesto pages from `critique`; declares `pages/drifter-manifesto.qmd` the canonical entry point and `articles/drifter-manifesto.qmd` an explicitly non-canonical, Opinion-labelled companion, without deleting either page's content (full retirement is WEB-02.4's own `tier:strong` ADR work).
 - **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
+### DL-#4541 · Fixture and Dataset Explorer
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review
@@ -198,6 +199,13 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4541 (epic #4543, E6 — Interactive Models and Reproducibility)
+- **Branch:** `claude/issue-4541`
+- **Paths:** `models/dataset-explorer.qmd`, `js/dataset-explorer.js`, `js/dataset-explorer-ui.js`, `css/dataset-explorer.css`, `scripts/generate_dataset_explorer_manifest.py`, `data/dataset_explorer_manifest.json`, `tests/dataset-explorer.test.js`, `tests/dataset-explorer-ui.test.js`, `tests/test_generate_dataset_explorer_manifest.py`, `scripts/sync_frontend_assets.py` (registered the two new JS modules), `_quarto.yml` (navbar entry under Build → Datasets), `data/trust/claim_audit_inventory.json` (digests regenerated via `scripts/regenerate_claim_audit_evidence.py` after the `_quarto.yml` edit), `SPEC.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `npx jest` 28 suites/455 passed/19 skipped; targeted `pytest` across `test_generate_dataset_explorer_manifest.py`, `test_claim_audit_inventory.py`, `test_claim_audit_output_boundary.py`, `test_sync_frontend_assets.py`, `test_check_single_title.py`, `test_site_trust_surface_audit.py` — 84/84 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide; `stylelint css/dataset-explorer.css` clean; site link gate passes ("Site gate passed!"); `check_spec_changelog.py` passes)
+- **Summary:** New browser page listing every `data/ztcf/`, `data/population_generalization/`, and `data/proximal_distal_energy_transfer/` fixture from a generated manifest. A hand-written JSON Schema validator (draft 2020-12 keyword subset used by AffineDrift's fixture schemas) checks each fixture against its published schema client-side; only `data/ztcf/` has a published `*.schema.json` today, so the other two families are reported as "schema unavailable" rather than a fabricated pass. Each fixture gets an accessible data table (generic JSON flatten, capped at 500 rows) and a download button whose SHA-256 is computed in-browser from the exact fetched bytes. The page is linked only from `_quarto.yml`'s navbar (Build → Datasets), not from existing narrative articles: those articles' digests are pinned as claim-audit review evidence, so cross-linking them was reverted; `_quarto.yml` is pinned too, so its edit required running `scripts/regenerate_claim_audit_evidence.py` (the sanctioned in-place digest refresh) to keep `data/trust/claim_audit_inventory.json` current.
+- **Next step:** Push the branch, open the draft PR, and let CI's `quarto render`/Playwright lane confirm the page renders and passes axe-core (not run locally; see HANDOFF.md).
 - **Issue:** #4504 (WEB-02.10; epic #4514)
 - **Branch:** `claude/issue-4504`
 - **Paths:** `_quarto.yml`, `_includes/site-head.html`, `js/search-maturity-badge.js`, `scripts/generate_search_maturity_index.py`, `css/search-metrics.css`, `articles/zero-torque-counterfactual.qmd`, `.github/workflows/deploy-website.yml`, `tests/e2e/search.spec.js`
