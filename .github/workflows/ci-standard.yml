@@ -278,6 +278,10 @@ jobs:
         run: python3 scripts/check_changed_file_size_budget.py
       - name: Verify Technical Debt Budget
         run: python3 scripts/check_tech_debt_budget.py
+      - name: Verify Scaffolding Styling and Stub Hub Cards
+        # Scaffolding pages must never use success styling; hub cards to stubs
+        # under 300 words must carry a Planned badge (WEB-02.6 / #4500).
+        run: python3 scripts/check_scaffolding_styling.py
       - name: Verify generated agent automation artifacts
         run: python3 scripts/check_agent_automation_artifacts.py
       - name: Verify SPEC.md Change Log Is PR-Keyed
