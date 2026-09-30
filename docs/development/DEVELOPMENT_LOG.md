@@ -30,6 +30,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_404_page.py` 3 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide)
 - **Summary:** Unifies the 404 page's contact address with About/Contact (`dieterolson@AffineDrift.com`, not the personal Gmail address it previously pointed to). The page's search-box mention and its five suggested-destination links were already present. The other half of the acceptance criteria — explicit "Start Here" and "Library" links — is blocked: neither target exists yet (`pages/start-here.qmd` is #4486, tier:strong, still open; the "Library" navbar grouping is part of the unmerged WEB-02.1 navbar restructure, also tier:strong). See the PR's Blocked section.
 - **Next step:** Once #4486 (Start Here page) and WEB-02.1 (Library navbar grouping) land, add the two links to `404.qmd` and close out the remainder of this issue's acceptance criteria.
+### DL-#4535 · DCR Visualiser Widget
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (opened by the orchestrator, not this session)
+- **Issue:** #4535 (WEB-06.5; epic #4543)
+- **Branch:** `claude/issue-4535`
+- **Paths:** `articles/controllability-drift-ratio.qmd`, `js/dcr-visualizer.js`, `js/dcr-visualizer-ui.js`, `css/dcr-visualizer.css`, `tests/dcr-visualizer.test.js`, `tests/dcr-visualizer-ui.test.js`, `tests/test_dcr_visualizer_parity.py`, `tests/fixtures/dcr_visualizer_parity.json`, `scripts/sync_frontend_assets.py`, `data/research_protocols/library.json`, `data/research_protocols/public_summary.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (review response: `npx jest tests/dcr-visualizer.test.js tests/dcr-visualizer-ui.test.js tests/rotation-converter-ui.test.js` 36 passed; targeted `pytest` incl. `test_dcr_visualizer_parity.py`, `test_sync_frontend_assets.py`, `test_deployment_integrity.py`, `test_check_css_architecture.py`, `test_research_protocol_readiness.py`, `test_claim_audit_inventory.py` all passed; `ruff check .` and `black --check --line-length 100 .` clean)
+- **Summary:** Adds an interactive DCR-through-swing-phase widget to the DCR article, built on a pure-JS mirror of `src/affine_control/reachability.py`'s `LinearScalarSystem`/`instantaneous_scalar_dcr`/`scalar_linear_reachable_interval`. It compares an additive-drift and a state-dependent-drift system that share one instantaneous DCR at the phase start but different reachable-interval widths (the same fixture governed by `tests/test_dcr_event_sensitivity_protocol.py`), explicitly demonstrating claim `ad-dcr-001`, and links that claim from the widget. Review response: relabeled the phase slider and heading to remove the golf-specific "swing phase" framing, added a `<thead>`/`scope="col"` header row to the results table, added a `<noscript>` fallback with the default example's values, moved all inline styles and hex literals into `css/dcr-visualizer.css` (theme-variable-driven, with a dark-mode override for the two series accent colors, and registered in `scripts/sync_frontend_assets.py`'s deploy mirror map alongside the two JS modules, which had been missing from it), and centralized the shared parity numbers into `tests/fixtures/dcr_visualizer_parity.json` read by both the pytest and Jest suites. Regenerated the claim-audit and research-readiness digests that pin the article's SHA-256 after editing it.
+- **Next step:** Let CI's Jest/E2E/quality-gate confirm the widget renders, mirrors correctly into `docs/`, and passes axe-core on the DCR page.
 
 ### DL-#4578 · Social Cards per Page
 

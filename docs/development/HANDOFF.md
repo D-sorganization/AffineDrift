@@ -57,6 +57,128 @@
 1. Once #4486 ("Start Here" page) and WEB-02.1 (Library navbar grouping) merge,
    add the two links to `404.qmd`'s `<nav aria-label="Helpful links">` list and
    close out the remaining acceptance criterion.
+# DCR Visualiser Widget — #4535 (WEB-06.5)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4535`.
+- Branch `claude/issue-4535`, commit `SELF`; pull request: not created by this session — the
+  orchestrator opens it.
+- Governing issue: #4535 (WEB-06.5, child of epic #4543 "[E6] Interactive Models and
+  Reproducibility"). Objective: an interactive widget, driven by
+  `src/affine_control/reachability.py::instantaneous_scalar_dcr`, showing how the DCR ratio
+  changes through a phase of a trajectory and explicitly demonstrating why DCR is not a
+  reachability certificate (claim `ad-dcr-001`), embedded on the DCR page with the claim
+  linked, plus a parity test.
+- Design: WEB-06.1 (the ADR deciding between `{ojs}`/Pyodide/Shinylive for interactive widgets)
+  is still open and `tier:strong`, so this widget follows the only existing precedent in the
+  repo — `articles/rotation-converter.qmd`'s plain hand-rolled JS engine plus a separate UI
+  script, loaded via `<script src="../js/...">` from a raw `{=html}` block, no new build
+  tooling.
+- Review response (this update): a human review of the initial implementation asked for four
+  fixes plus one optional DRY improvement, all applied:
+  1. Relabeled the phase slider from "Swing phase (fraction of horizon elapsed)" to "Phase
+     time $t$" (it displays elapsed time, not a fraction) and renamed the subsection heading
+     and internal wording from "Swing Phase"/"swing phase" to the neutral "Phase" — the widget
+     is a declared mathematical construction, not real golf-swing data, and the heading
+     shouldn't imply otherwise.
+  2. Added a `<thead>` with `<th scope="col">` headers ("Quantity", "Additive drift",
+     "State-dependent drift") to the numeric results table, which previously had no column
+     labels.
+  3. Added a `<noscript>` fallback (following `articles/proximal-distal-falsification-atlas.qmd:29`'s
+     pattern) stating the default scenario's values and linking claim `ad-dcr-001`, so the page
+     degrades gracefully without JavaScript.
+  4. Moved all ~20 inline `style=` attributes and the hard-coded `#2563eb`/`#dc2626` colors into
+     a new `css/dcr-visualizer.css`, using `var(--bg-secondary)`/`var(--border-color)`/
+     `var(--bg-primary)`/`var(--text-secondary)` design tokens for surfaces, and two
+     widget-scoped custom properties (`--dcrviz-additive`, `--dcrviz-state-dependent`) for the
+     two-series accent colors — the same scoping pattern `css/rotation-converter.css` uses for
+     `--rc-error`/`--rc-success` — with a `[data-theme="dark"]` / `prefers-color-scheme: dark`
+     override so the series colors adapt in dark mode. Registered the new stylesheet in
+     `scripts/sync_frontend_assets.py`'s `SYNC_MAPS` (mirrors to `docs/css/dcr-visualizer.css`)
+     so the deploy pipeline's `sync_frontend_assets.py --check` step covers it. While doing
+     this, found and fixed a real gap from the initial implementation: `js/dcr-visualizer.js`
+     and `js/dcr-visualizer-ui.js` had never been added to `CANONICAL_JS_NAMES`, so
+     `tests/test_sync_frontend_assets.py::test_every_canonical_javascript_module_has_a_deploy_sync_map`
+     was failing — the two JS modules were not registered for deploy-time mirroring to
+     `docs/js/`.
+  5. (Optional, applied) Centralized the shared parity numbers — the governed fixture's
+     $x_0=1$, $\bar u=1$, $T=1$, the two systems' drift parameters, and their expected
+     instantaneous-DCR/reachable-interval/width values — into
+     `tests/fixtures/dcr_visualizer_parity.json`, read by both
+     `tests/test_dcr_visualizer_parity.py` (Python) and `tests/dcr-visualizer.test.js` (JS)
+     instead of each suite hardcoding the same literals independently.
+- The widget compares two `LinearScalarSystem`s that share one instantaneous DCR at the start
+  of the phase — an additive-drift system (`gradient=0`) and a state-dependent-drift system
+  (`gradient=ubar/x0`) — and evolves each along its own zero-input drift trajectory as the
+  reader drags the phase slider. This is the exact scenario already governed by
+  `tests/test_dcr_event_sensitivity_protocol.py::test_state_dependent_drift_breaks_any_dcr_to_reachable_width_mapping`
+  (both systems: instantaneous DCR = 1; reachable-interval widths = 2 and 2(e−1)), which gives
+  both the Python and JS test suites the same anchored ground truth.
+- Added:
+  - `js/dcr-visualizer.js` — pure, DOM-free JS mirror of `LinearScalarSystem`,
+    `instantaneous_scalar_dcr`, `scalar_linear_reachable_interval`, and
+    `constant_additive_drift_interval`, plus the two zero-input drift trajectories
+    (`additiveDriftState`, `multiplicativeDriftState`) used to evolve state through the phase.
+  - `js/dcr-visualizer-ui.js` — DOM wiring: reads the `x0`/`ubar`/`horizon`/phase-slider inputs,
+    validates them (nonzero `x0`, positive `ubar`, nonnegative `horizon`) with the same
+    fail-loud contract as the Python dataclass, renders an inline SVG line chart of DCR across
+    the phase for both systems, an accessible data table of sampled values, and the computed
+    reachable intervals/widths.
+  - `css/dcr-visualizer.css` — the widget's styles (see review-response item 4 above), mirrored
+    to `docs/css/dcr-visualizer.css` at deploy time via `scripts/sync_frontend_assets.py`.
+  - Embedded the widget in `articles/controllability-drift-ratio.qmd`, in a new
+    "Interactive: DCR Through a Phase" subsection directly after the existing
+    "Executable Constant-Drift Counterexample" subsection, with
+    `<a data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">` linking the same registered
+    claim already cited earlier in the article (and again in the `<noscript>` fallback).
+  - `tests/dcr-visualizer.test.js` (17 cases) and `tests/dcr-visualizer-ui.test.js` (5 cases) —
+    Jest parity tests for the pure module and a DOM smoke test that extracts the actual
+    `{=html}` block from the `.qmd` file (mirroring `tests/rotation-converter-ui.test.js`'s
+    pattern) and exercises the live widget, including its two error paths (`x0 = 0`,
+    `ubar <= 0`).
+  - `tests/test_dcr_visualizer_parity.py` (5 cases) — recomputes the same governed fixture
+    directly from `src/affine_control/reachability.py`, asserts the widget's numeric defaults
+    in the article match that exact fixture, and asserts the claim link is present. Together
+    with the Jest suite (which computes the identical numbers from the JS implementation),
+    this is the "parity test" required by the acceptance criteria — there is no existing
+    cross-runtime (Python-calls-Node) execution harness in this repo to build a single
+    combined test on. Both suites now read `tests/fixtures/dcr_visualizer_parity.json` for the
+    shared scenario parameters and expected values (review-response item 5 above).
+  - Regenerated the pinned SHA-256/revision digests that reference
+    `articles/controllability-drift-ratio.qmd`'s bytes after editing it:
+    `python -m scripts.regenerate_claim_audit_evidence` (touches
+    `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`)
+    and `python -m scripts.generate_research_readiness_library` (touches
+    `data/research_protocols/library.json`, `data/research_protocols/public_summary.json`).
+    These two generators reference each other's output (the research-readiness library's own
+    digest is itself pinned as evidence for an unrelated route, `proximal-distal-falsification-atlas`),
+    so both were re-run until both `--check` invocations passed cleanly.
+- Validation commands run in this worktree:
+  - `npm install` (node_modules was not present in the worktree).
+  - `npx jest tests/dcr-visualizer.test.js tests/dcr-visualizer-ui.test.js tests/rotation-converter-ui.test.js` → 36 passed.
+  - `python3 -m pytest tests/test_dcr_visualizer_parity.py tests/test_dcr_reachability_contract.py tests/test_dcr_article_rigor.py tests/test_dcr_event_sensitivity_protocol.py tests/test_scientific_trust_metadata.py -q` → all passed.
+  - `python3 -m pytest tests/test_check_single_title.py tests/test_editorial_and_consistency.py tests/test_formatting_lints.py tests/test_publication_markup_contract.py tests/test_research_protocol_readiness.py tests/test_claim_audit_inventory.py tests/test_sync_frontend_assets.py tests/test_deployment_integrity.py tests/test_page_style_discipline.py tests/test_check_styles_budget.py tests/test_check_css_architecture.py tests/test_css_bundle.py -q` → all passed (after regenerating digests and registering the new CSS/JS sync maps).
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → clean.
+  - `npx prettier --check tests/fixtures/dcr_visualizer_parity.json css/dcr-visualizer.css` → clean.
+  - `python3 -m scripts.check_module_size_budget` → passes (`js/dcr-visualizer.js` 74 lines,
+    `js/dcr-visualizer-ui.js` 114 lines, `css/dcr-visualizer.css` well under budget).
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` and
+    `python3 -m scripts.generate_research_readiness_library --check` → both clean.
+  - `python3 -m scripts.sync_frontend_assets --check` → clean (after running it once without
+    `--check` to generate `docs/css/dcr-visualizer.css`, then reverting the unrelated
+    pre-existing drift it also surfaced in the already-tracked `docs/css/print.css` and the
+    untracked `docs/css/rotation-converter.css`/`docs/js/*.js` build artifacts — those mirrors
+    are generated by `quarto render` at deploy time, not committed, so they were left out of
+    this diff).
+  - **Not run:** `quarto render` and `npx playwright test` (full-site render out of scope for
+    this sandbox). The widget was reasoned through via the Jest DOM smoke test rather than a
+    rendered-page browser check; CI's `e2e-tests` job is the first real render/axe-core pass
+    over this page.
+
+---
+
+# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
 # Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
 ## Identity
