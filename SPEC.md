@@ -445,6 +445,7 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 | 2026-09-29 | #4557 | Constrain prose to a 60-75ch reading measure on standard article/book pages and self-host the Playfair Display heading font, removing the Google Fonts CDN request and its CSP allowances. |
+| 2026-09-29 | #4520 | Add `scripts/generate_freshness_report.py`, generating an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old without ever using a build date as a review date. |
 
 
 | 2026-09-29 | #4542 | Fix the Programming Companion catalog generator reading a nonexistent `title` field (real field `name`) that made every program and engine row render its ID as its title; drop the Engines page's fabricated Maturity column; label the 16 unpinned repository UpstreamDrift links as navigation only. |

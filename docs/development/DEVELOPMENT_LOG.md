@@ -31,6 +31,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Adds a footer control appended to `#quarto-document-content` on every rendered page: a "Report a problem" link that opens the content-correction GitHub issue template prefilled with the page URL and build revision (fetched same-origin from `public-site-manifest.json`), with a mailto fallback for readers without a GitHub account. The "Was this helpful?" Yes/No vote was removed per PR review — it recorded nothing yet claimed "Thanks for the feedback!", which was outside the issue's acceptance criteria and misled readers.
 - **Next step:** Verify CI, then release lease.
 
+### DL-#4520 · Content Freshness Report
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4648 (draft)
+- **Issue:** #4520 (epic #4521)
+- **Branch:** `claude/issue-4520`
+- **Paths:** `scripts/generate_freshness_report.py`, `tests/test_generate_freshness_report.py`, `reports/content-freshness.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: 18/18 `test_generate_freshness_report.py` tests pass; ruff and black clean; `python3 -m scripts.generate_freshness_report --check` passes)
+- **Summary:** Generates an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old, deriving the review date only from front matter (never a build/publish date). `--check` now recomputes against the as-of date recorded in the already-committed report, so it only fails when a source page's review date actually changes, not merely because the calendar date has advanced.
+- **Next step:** Await CI on PR #4648, address any remaining review feedback, then merge and release the lease.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review

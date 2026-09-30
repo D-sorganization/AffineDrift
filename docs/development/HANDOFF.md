@@ -90,6 +90,67 @@
 
 ---
 
+# Implementation Handoff — Content Freshness Report (#4520)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4520
+- Branch: claude/issue-4520
+- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
+- Implementation commit: SELF
+- Pull request: https://github.com/D-sorganization/AffineDrift/pull/4648 (draft, targets `main`)
+- Governing issue/epic: #4520 (epic #4521)
+
+## Objective and Status
+
+- Objective: Generate an internal report listing pages whose `last-reviewed` front matter is missing or 12+ months old, without ever substituting a build/publish date for the review date.
+- Status: in_review — addressing frontier review feedback on PR #4648.
+- Completed:
+  - Added `scripts/generate_freshness_report.py`: scans every rendered content page (via `src.tools.site_page_scan.find_content_pages`) for a `last-reviewed` front-matter field, classifies each page as fresh / stale (12+ months) / never reviewed, and writes a deterministic Markdown report with `--check` support.
+  - Added `tests/test_generate_freshness_report.py` (TDD RED→GREEN): month-arithmetic edge cases, stale/fresh/never-reviewed classification, an explicit guard proving a `date:` (publish) field is never read as a review date, invalid-date error handling, and write/`--check` round-trips.
+  - Generated `reports/content-freshness.md` against the live repository: 196 rendered pages, all currently "Never Reviewed" — no page anywhere in the repo has adopted `last-reviewed` front matter yet (that field is introduced by WEB-03.1, still open).
+  - Fixed a review finding: `--check` previously re-derived its reference date from `dt.date.today()`, so it failed on any day after generation even with no source change. Added a `--as-of YYYY-MM-DD` option for generation (default: today) and changed `--check` to recompute against the as-of date recorded in the existing committed report's "Reference date:" line, so it only fails when a source page's review date actually changes.
+- Remaining: none for this issue's scope. WEB-03.1 (front-matter schema, `tier:strong`) still needs to land before any page can show a genuine reviewed date instead of "never reviewed".
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/generate_freshness_report.py`: report generator; adds `--as-of` and a recorded-reference-date lookup for `--check`.
+  - `tests/test_generate_freshness_report.py`: TDD test suite, including the `--check`-survives-a-later-today and `--check`-fails-when-a-source-changes cases.
+  - `reports/content-freshness.md`: generated report (internal artifact, not part of the Quarto render set — matches the existing `site-trust-surface-audit.md` / `book-publication-audit.md` precedent).
+  - `.prettierignore`: excludes `reports/content-freshness.md`, matching the existing `reports/scientific-claim-audit.md` entry — the report is deterministic and byte-checked by its own generator's `--check` mode, so prettier's column-padding would fight every regeneration.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`, `SPEC.md`: bookkeeping.
+- Key decisions:
+  - Reused `src.tools.site_page_scan.find_content_pages` / `parse_front_matter` rather than re-implementing site-source enumeration (DRY; the same helper backs `site_link_gate.py`).
+  - The review date is read only from a page's own `last-reviewed` front-matter key. No fallback to `date`, `date-modified`, file mtime, or git history exists anywhere in the module — this directly satisfies the issue's "No page shows a build date as a review date" acceptance criterion, locked in by `test_publish_date_is_never_used_as_a_review_date`.
+  - A page with no `last-reviewed` field is classified as stale ("Never Reviewed") rather than silently treated as fresh, since WEB-03.1 has not yet populated the field on any page — the report is honest today even though every page currently appears in it.
+  - `--check` reads its comparison reference date from the report file it is checking, not from the wall clock, so the report stays genuinely deterministic: unrelated day-to-day CI runs pass, and only an actual content change (a page's `last-reviewed` value, or the set of scanned pages) trips it.
+  - Not wired into CI `--check` gating: neither `site_trust_surface_audit.py` nor `book_publication_audit.py` (the closest existing precedents) are CI-gated either; this stays a manually-run/on-demand report, matching precedent and keeping the PR surgical.
+- Compatibility constraints: none; purely additive.
+
+## Validation
+
+- `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_generate_freshness_report.py` — PASS (18 passed, including 3 new tests for the `--as-of`/`--check` fix; all confirmed RED before implementation)
+- `python3 -m ruff check scripts/generate_freshness_report.py tests/test_generate_freshness_report.py` — PASS
+- `python3 -m black --check --line-length 100 scripts/generate_freshness_report.py tests/test_generate_freshness_report.py` — PASS
+- `python3 -m scripts.generate_freshness_report --check` — PASS (after regenerating `reports/content-freshness.md`, which had gone stale because five pages merged in from `main` since it was last generated — unrelated to the date bug, but discovered by the same `--check` run)
+
+## Blockers and Risks
+
+- Blockers: none for this issue. WEB-03.1 (the `last-reviewed` front-matter schema) is a separate open `tier:strong` issue; until it ships and pages adopt the field, every page will show as "Never Reviewed" here — that is the honest state, not a bug.
+- Risks/assumptions: none.
+
+## Next Steps
+
+1. Await CI on PR #4648 and address any remaining review feedback.
+2. Once WEB-03.1 lands and pages adopt `last-reviewed`, re-run `python3 -m scripts.generate_freshness_report` to refresh the report with real dates.
+3. Merge and release the #4520 lease.
+
+## Change Log
+
+- SELF — Add the content freshness report generator and tests (#4520).
+- SELF — Fix `--check` to compare against the as-of date recorded in the committed report instead of the wall clock (#4520 review).
 # "What's New" Feed RSS Validation — #4606 (WEB-14.4)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
