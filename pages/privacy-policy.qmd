@@ -58,12 +58,14 @@ categories:
             <a href="../resources/resources-videos.html">Resources: Videos</a> page load
             player frames from <code>youtube.com</code>. YouTube may set its own cookies and
             collect data per its privacy policy once a video is played.</li>
-          <li><strong>jsDelivr</strong> — the MathJax library used to render mathematical
-            notation is loaded from the <code>cdn.jsdelivr.net</code> CDN.</li>
+          <li><strong>jsDelivr</strong> — pages with mathematical notation load the MathJax
+            renderer, and the math fonts it uses for on-screen typesetting, from the
+            <code>cdn.jsdelivr.net</code> CDN.</li>
         </ul>
         <p>
-          Fonts are self-hosted: the heading typeface is served from AffineDrift itself, so no
-          third-party font host is contacted.
+          The heading typeface is self-hosted, served from AffineDrift itself. Pages without
+          math contact no third-party font host; pages with math still load MathJax's own math
+          fonts from jsDelivr as described above.
         </p>
         <p>
           The site's Content Security Policy limits which external domains a page is allowed to

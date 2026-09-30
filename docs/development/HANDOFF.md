@@ -2,6 +2,19 @@
 - Privacy page: with no font CDN left, `pages/privacy-policy.qmd` no longer lists Google Fonts
   and states fonts are self-hosted; `tests/test_privacy_policy_page.py` asserts that. When #4692
   (its claim-audit record) is on main, regenerate evidence digests after the next sync.
+- Review fix on PR #4649: the privacy page's "no third-party font host is contacted" claim was
+  false on math pages — `_includes/mathjax-loader.html` loads MathJax's CHTML renderer and its
+  own math fonts from `cdn.jsdelivr.net` (allow-listed in `font-src` in `_includes/site-head.html`),
+  and that loader is intentionally untouched here (PR #4679 is changing it separately). Reworded
+  `pages/privacy-policy.qmd` so the self-hosted claim is scoped to the heading typeface and pages
+  without math, while math pages are documented as still loading MathJax's math fonts from
+  jsDelivr. Added `test_privacy_policy_font_claim_matches_mathjax_loader` to
+  `tests/test_privacy_policy_page.py` (TDD: confirmed RED against the old wording, GREEN after).
+  Regenerated `data/trust/claim_audit_inventory.json` /
+  `data/trust/generated/claim_audit_report.json` evidence digests for the changed
+  `pages/privacy-policy.qmd` via `python -m scripts.regenerate_claim_audit_evidence`. PR body
+  updated: `Closes #4557` → `Refs #4557`, noting the "no third-party font requests" criterion
+  stays open for MathJax's math fonts until MathJax itself is self-hosted.
 
 # Implementation Handoff — Print and PDF Editions for Books and Core Series (#4550)
 # Math Accessibility Verification — #4565 (WEB-09.5)
