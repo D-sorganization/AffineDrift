@@ -11,7 +11,7 @@ The framework systematically frames "Drift Dominance" (High DCR) as a loss of co
 
 ## Location
 
-- **Article:** `articles/controllability-drift-ratio.qmd`
+- **Article:** `articles/drift-control-ratio.qmd`
 - **Section:** 5. Control Authority Collapse
 - **Article:** `articles/theory-part1.qmd`
 - **Section:** ZTCF Introduction
@@ -51,7 +51,7 @@ Currently, DCR penalizes _all_ passive dynamics equally.
 ## Editorial Adjudication and Evidence Boundaries
 
 1. **Historical Versus Corrected State:**
-   The historical article used rhetorical flourishes ("passenger", "collapse") that suggested passive dynamics inherently signify motor failure. In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), normative interpretations have been removed. DCR is presented strictly as an unvalidated geometric scalar measuring the instantaneous ratio between uncontrolled acceleration and available control acceleration. The article explicitly notes that high drift acceleration is a natural characteristic of high-velocity passive mechanics rather than a pathology.
+   The historical article used rhetorical flourishes ("passenger", "collapse") that suggested passive dynamics inherently signify motor failure. In the corrected article (`articles/drift-control-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), normative interpretations have been removed. DCR is presented strictly as an unvalidated geometric scalar measuring the instantaneous ratio between uncontrolled acceleration and available control acceleration. The article explicitly notes that high drift acceleration is a natural characteristic of high-velocity passive mechanics rather than a pathology.
 
 2. **Critique Boundary and Counterexamples:**
    The critique correctly identifies that high passive drift is necessary for ball speed and that motor control exploits passive mechanics (e.g., Bernstein 1967). However, the critique introduces ungrounded conceptual leaps:

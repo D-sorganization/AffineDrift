@@ -25,7 +25,7 @@ CORE_PAGES: tuple[str, ...] = (
     "articles/theory-part5.qmd",
     "articles/affine-nature-golf-swing.qmd",
     "articles/zero-torque-counterfactual.qmd",
-    "articles/controllability-drift-ratio.qmd",
+    "articles/drift-control-ratio.qmd",
     "articles/superposition.qmd",
     "articles/tangent-hyperplanes-series/part-1-geometry.qmd",
     "articles/tangent-hyperplanes-series/part-2-dynamics.qmd",
