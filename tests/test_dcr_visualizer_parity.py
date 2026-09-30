@@ -10,8 +10,8 @@ verify that the Python and browser implementations agree.
 
 from __future__ import annotations
 
+import json
 import re
-from math import e
 from pathlib import Path
 
 import pytest
@@ -26,10 +26,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 ARTICLE = REPO_ROOT / "articles/controllability-drift-ratio.qmd"
 JS_MODULE = REPO_ROOT / "js/dcr-visualizer.js"
 JS_UI = REPO_ROOT / "js/dcr-visualizer-ui.js"
+FIXTURE = json.loads(
+    (REPO_ROOT / "tests/fixtures/dcr_visualizer_parity.json").read_text(encoding="utf-8")
+)
 
-DEFAULT_X0 = 1.0
-DEFAULT_UBAR = 1.0
-DEFAULT_HORIZON = 1.0
+DEFAULT_X0 = FIXTURE["initial_state"]
+DEFAULT_UBAR = FIXTURE["control_bound"]
+DEFAULT_HORIZON = FIXTURE["horizon"]
 
 
 def _default_input_value(article: str, element_id: str) -> str:
@@ -43,21 +46,35 @@ def _default_input_value(article: str, element_id: str) -> str:
 
 def test_default_scenario_matches_the_governed_equal_dcr_fixture() -> None:
     """The widget's default preset must reproduce the tested equal-DCR counterexample."""
-    gradient_b = DEFAULT_UBAR / DEFAULT_X0
-    additive = LinearScalarSystem(DEFAULT_X0, 0.0, DEFAULT_UBAR, DEFAULT_UBAR)
-    state_dependent = LinearScalarSystem(DEFAULT_X0, gradient_b, 0.0, DEFAULT_UBAR)
+    expected = FIXTURE["expected"]
+    additive = LinearScalarSystem(
+        DEFAULT_X0,
+        FIXTURE["additive_system"]["drift_gradient"],
+        FIXTURE["additive_system"]["drift_offset"],
+        DEFAULT_UBAR,
+    )
+    state_dependent = LinearScalarSystem(
+        DEFAULT_X0,
+        FIXTURE["state_dependent_system"]["drift_gradient"],
+        FIXTURE["state_dependent_system"]["drift_offset"],
+        DEFAULT_UBAR,
+    )
 
-    assert instantaneous_scalar_dcr(additive) == pytest.approx(1.0)
-    assert instantaneous_scalar_dcr(state_dependent) == pytest.approx(1.0)
+    assert instantaneous_scalar_dcr(additive) == pytest.approx(expected["instantaneous_dcr"])
+    assert instantaneous_scalar_dcr(state_dependent) == pytest.approx(expected["instantaneous_dcr"])
 
     additive_interval = scalar_linear_reachable_interval(additive, DEFAULT_HORIZON)
     state_dependent_interval = scalar_linear_reachable_interval(state_dependent, DEFAULT_HORIZON)
 
-    assert additive_interval == pytest.approx((1.0, 3.0))
-    assert state_dependent_interval == pytest.approx((1.0, 2.0 * e - 1.0))
-    assert additive_interval[1] - additive_interval[0] == pytest.approx(2.0)
+    assert additive_interval == pytest.approx(tuple(expected["additive_reachable_interval"]))
+    assert state_dependent_interval == pytest.approx(
+        tuple(expected["state_dependent_reachable_interval"])
+    )
+    assert additive_interval[1] - additive_interval[0] == pytest.approx(
+        expected["additive_reachable_width"]
+    )
     assert state_dependent_interval[1] - state_dependent_interval[0] == pytest.approx(
-        2.0 * (e - 1.0)
+        expected["state_dependent_reachable_width"]
     )
 
 

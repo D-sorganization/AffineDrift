@@ -1,5 +1,6 @@
 /** Parity checks against src/affine_control/reachability.py's closed-form formulas. */
 const DV = require('../js/dcr-visualizer');
+const FIXTURE = require('./fixtures/dcr_visualizer_parity.json');
 
 describe('instantaneousScalarDcr matches the declared scalar formula', () => {
   test.each([
@@ -47,23 +48,30 @@ describe('constantAdditiveDriftInterval matches the checked reachability contrac
 });
 
 describe('scalarLinearReachableInterval reproduces the governed equal-DCR counterexample', () => {
-  const additive = DV.linearScalarSystem(1, 0, 1, 1);
-  const stateDependent = DV.linearScalarSystem(1, 1, 0, 1);
+  const {initial_state: x0, control_bound: ubar, horizon} = FIXTURE;
+  const expected = FIXTURE.expected;
+  const additive = DV.linearScalarSystem(
+    x0, FIXTURE.additive_system.drift_gradient, FIXTURE.additive_system.drift_offset, ubar);
+  const stateDependent = DV.linearScalarSystem(
+    x0, FIXTURE.state_dependent_system.drift_gradient,
+    FIXTURE.state_dependent_system.drift_offset, ubar);
 
   test('both systems share the same instantaneous DCR at the initial state', () => {
-    expect(DV.instantaneousScalarDcr(additive)).toBeCloseTo(1, 12);
-    expect(DV.instantaneousScalarDcr(stateDependent)).toBeCloseTo(1, 12);
+    expect(DV.instantaneousScalarDcr(additive)).toBeCloseTo(expected.instantaneous_dcr, 12);
+    expect(DV.instantaneousScalarDcr(stateDependent)).toBeCloseTo(expected.instantaneous_dcr, 12);
   });
 
   test('their reachable-interval widths differ, so DCR does not fix reachability', () => {
-    const [loA, hiA] = DV.scalarLinearReachableInterval(additive, 1);
-    const [loB, hiB] = DV.scalarLinearReachableInterval(stateDependent, 1);
-    expect(loA).toBeCloseTo(1, 12);
-    expect(hiA).toBeCloseTo(3, 12);
-    expect(loB).toBeCloseTo(1, 12);
-    expect(hiB).toBeCloseTo(2 * Math.E - 1, 12);
-    expect(hiA - loA).toBeCloseTo(2, 12);
-    expect(hiB - loB).toBeCloseTo(2 * (Math.E - 1), 12);
+    const [loA, hiA] = DV.scalarLinearReachableInterval(additive, horizon);
+    const [loB, hiB] = DV.scalarLinearReachableInterval(stateDependent, horizon);
+    const [expLoA, expHiA] = expected.additive_reachable_interval;
+    const [expLoB, expHiB] = expected.state_dependent_reachable_interval;
+    expect(loA).toBeCloseTo(expLoA, 9);
+    expect(hiA).toBeCloseTo(expHiA, 9);
+    expect(loB).toBeCloseTo(expLoB, 9);
+    expect(hiB).toBeCloseTo(expHiB, 9);
+    expect(hiA - loA).toBeCloseTo(expected.additive_reachable_width, 9);
+    expect(hiB - loB).toBeCloseTo(expected.state_dependent_reachable_width, 9);
   });
 
   test('rejects a nonfinite or negative horizon', () => {

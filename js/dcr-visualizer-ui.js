@@ -44,7 +44,7 @@
     byId('dcrviz-line-b').setAttribute('points', polylinePoints(samplesB, maxValue, width, height));
     byId('dcrviz-chart-max').textContent = format(maxValue);
     svg.setAttribute('aria-label',
-      `Instantaneous DCR across the swing phase; vertical axis maximum ${format(maxValue)}. `
+      `Instantaneous DCR across the phase; vertical axis maximum ${format(maxValue)}. `
       + 'A full accessible table of sampled values follows.');
   }
 
