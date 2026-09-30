@@ -146,6 +146,10 @@ jobs:
         # models/programming/*.qmd are generated; hand edits or generator changes
         # without regeneration must fail here, not on the live site (#4123, RM #1507).
         run: python3 -m scripts.generate_programming_catalog --check
+      - name: Verify Datasets Catalog Is Current
+        # resources/resources-datasets.qmd is generated from data/datasets.yml;
+        # hand edits or a stale checksum must fail here, not on the live site (#4549).
+        run: python3 -m scripts.generate_datasets_catalog --check
       - name: Verify UpstreamDrift Pins Are Reconciled
         # Every UpstreamDrift tree/blob/commit SHA linked from a rendered source
         # must be in data/companion/pins.json and the active lock must be the
@@ -504,6 +508,30 @@ jobs:
             printf "%s\n" "$relevant_files"
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Compute Quarto render cache key
+        # WEB-13.1 (#4595): the key is the content hash (git blob ids) of every
+        # tracked file except tests, workflows and developer docs. A hand-listed
+        # glob set silently misses render inputs (Lua filters, _includes/
+        # partials, JS resources under src/), which would restore a stale site.
+        id: quarto_cache_key
+        if: steps.e2e_changes.outputs.run == 'true'
+        shell: bash
+        run: |
+          key=$(git ls-files -s -- . ':(exclude)tests/**' ':(exclude).github/**' ':(exclude)docs/development/**' | sha256sum | cut -c1-64)
+          echo "key=quarto-render-v2-${key}" >> "$GITHUB_OUTPUT"
+      - name: Restore cached Quarto render
+        # Skip the render only on an exact key match. There is no restore-keys
+        # fallback -- an inexact match must never restore a docs/ tree that does
+        # not reflect this commit, so any changed render input falls through to
+        # the full render below, unchanged from before this cache existed.
+        id: quarto_cache
+        if: steps.e2e_changes.outputs.run == 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            docs
+            .quarto
+          key: ${{ steps.quarto_cache_key.outputs.key }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         if: steps.e2e_changes.outputs.run == 'true'
         with:
@@ -592,7 +620,9 @@ jobs:
         # 2026-09-03 deploy) so the E2E baseline is the real site rather than
         # 14 hand-listed pages (#4126). The site has no executable cells, so a
         # Quarto freeze cache would buy nothing; the render is pure Pandoc.
-        if: steps.e2e_changes.outputs.run == 'true'
+        # WEB-13.1 (#4595): skipped only when the cache step above restored an
+        # exact match, so docs/ already is what this render would produce.
+        if: steps.e2e_changes.outputs.run == 'true' && steps.quarto_cache.outputs.cache-hit != 'true'
         run: quarto render --to html
       - name: Sync Frontend Assets
         if: steps.e2e_changes.outputs.run == 'true'

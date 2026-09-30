@@ -1,0 +1,154 @@
+---
+title: "How to Read This Site"
+description: "Guide to AffineDrift content architecture, publication maturity states, the evidence ladder, critique records, and citation standards."
+page-layout: article
+categories:
+- site-information
+---
+
+AffineDrift is an open technical notebook, research repository, and educational resource exploring golf swing mechanics, multibody dynamics, and control theory. Because the site brings together multi-volume textbooks, theoretical research monographs, diagnostic tools, and open critique dialogues, readers benefit from understanding how these materials are structured, what their publication status signifies, and where the boundaries of mathematical modeling meet empirical human measurement.
+
+This guide serves as the authoritative, single source of truth for understanding how content is organized, how publication maturity is signaled, how evidence is layered, and how to cite work published across the platform.
+
+## Site Architecture and Content Layers {#site-architecture}
+
+The platform organizes technical content into distinct publication tiers, each designed for a specific level of mathematical depth and reader inquiry:
+
+### 1. Textbooks and Extended Treatises
+
+The site hosts multi-volume, book-length treatments of golf dynamics and modern control:
+
+- **[The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html)**: A comprehensive textbook covering golf kinematics, multibody equations of motion, aerodynamic drag and lift, impact mechanics, and control-affine formulation.
+- **[The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html)**: An advanced mathematical treatise focusing on differential geometry, Lie groups, coordinate invariance, and contraction analysis for multibody systems.
+- **[Proximal-to-Distal Energy Transfer](../articles/proximal_distal_energy_transfer/index.html)**: A computational monograph providing detailed numerical models, state space analyses, and counterfactual evaluations of segmental energy flow during the golf swing.
+
+### 2. Core Theory Series
+
+A sequential, five-part pedagogical series introducing the foundational control-affine framework:
+
+- **[Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html)**: Derives the state vector, drift dynamics $f(x)$, and control channel $g(x)u$.
+- **[Theory Part 2: Counterfactual Diagnostics](../articles/theory-part2.html)**: Introduces baseline diagnostic trajectories, including zero-torque and zero-velocity evaluations.
+- **[Theory Part 3: Drift Invariance and Force Taxonomy](../articles/theory-part3.html)**: Examines transformation conditions and delineates coordinate-dependent from invariant quantities.
+- **[Theory Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html)**: Supplies independently checkable double-pendulum benchmarks and reduction derivations.
+- **[Theory Part 5: Numerical Verification Protocol](../articles/theory-part5.html)**: Establishes consistency protocols, simulation reproducibility boundaries, and solver checks.
+
+### 3. Specialized Monographs and Exploration
+
+- **[Tangent-Space Series](tangent-hyperplanes.html)**: A technical series examining local tangent-space linearization, contraction metrics, and transverse coordinates.
+- **[Daydreams & Doodles](daydreams-doodles.html)**: Informal exploratory sketches, early-stage geometric conjectures, and speculative mechanics notes.
+- **[Technology Articles](technology.html)**: Engineering reviews of measurement systems, markerless motion capture, force plates, and launch monitors.
+
+### 4. Critiques and Public Adjudication
+
+- **[Critiques & Responses](../critiques/index.html)**: Documented external and internal objections, technical critiques, and mathematical evaluations of AffineDrift models. Open critiques represent active intellectual inquiries rather than conceded errors or resolved debates.
+
+### 5. Interactive Models and Companion Software
+
+- **[Interactive Tools](tools.html)**: Web-based coordinate converters, universal joint kinematic evaluators, and visualization utilities.
+- **[Programming Companion](../models/models.html)**: Reproducible code listings and catalog bindings linking theoretical derivations to external computational engines ([UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift)).
+
+---
+
+## Canonical Publication States {#publication-states}
+
+To ensure complete transparency regarding scientific verification, every major section, tool, and listing on the site operates under an explicit publication state contract.
+
+These six states define what is currently established and—critically—what is not yet established:
+
+::: {.table-wrapper}
+| State Badge | Definition | What It Does Not Mean |
+|---|---|---|
+| **Available** | The text, code, or derivation is complete, readable, and open for inspection. | Does not imply independent peer review, clinical consensus, or empirical human validation. |
+| **Validated** | Specific claims name verifiable empirical evidence, calibration datasets, and exact error bounds. | Neighboring claims, untested swing regimes, or full-body extensions do not inherit validation. |
+| **Experimental** | Exploratory modeling or software available for discussion and sensitivity testing. | Does not guarantee numerical convergence, stable APIs, or verified real-world predictive fidelity. |
+| **Planned** | A formal specification or tracking issue exists, but the deliverable is not yet completed. | Does not imply active implementation in the current release cycle or guaranteed delivery dates. |
+| **Deprecated** | Material preserved strictly for historical context, backwards compatibility, or audit provenance. | Not recommended for current modeling, active research, or pedagogical study. |
+| **Opinion** | Editorial synthesis, philosophical positioning, or speculative research agendas. | Does not represent mathematical proof, empirical data, or institutional consensus. |
+:::
+
+### Status Scope Principle
+
+Publication status is strictly **claim-specific** and **model-conditioned**:
+
+1. A textbook chapter may be **Available** as an educational text while containing individual simulation protocols that are **Experimental**.
+2. An engineering model may be **Validated** within a planar laboratory swing robot regime while remaining unvalidated for three-dimensional human biomechanics.
+3. Readers must examine the specific limitation notes and evidence citations embedded within each document rather than assuming whole-page inheritance.
+
+---
+
+## The Evidence Ladder {#evidence-ladder}
+
+Scientific statements on AffineDrift respect a four-level evidence hierarchy. Claims are never permitted to claim a higher level on the ladder than their accompanying validation demonstrates:
+
+```
+  ▲  Level 3: Empirical Human Validation (Kinematic & kinetic measurements with human cohorts)
+  │  Level 2: Multibody Dynamics Simulation (Full 3D forward simulations, sensitivity testing)
+  │  Level 1: Numerical Solver Verification (Energy accounting, solver convergence, counterfactual checks)
+  │  Level 0: Analytical & Mathematical Identities (Equations of motion, Lie brackets, coordinate transformations)
+```
+
+- **Level 0 — Analytical Identities**: Equations derived from first-principles classical mechanics (Lagrangian or Hamiltonian mechanics). Verification requires only mathematical correctness and dimensional consistency.
+- **Level 1 — Numerical Verification**: Confirmation that software implementations solve the declared analytical equations consistently (e.g., energy conservation in unforced regimes, convergence under step-size reduction).
+- **Level 2 — Model-Conditioned Simulation**: Forward dynamic predictions under specified parameter sets (e.g., rigid-body segments, lumped elasticity). These establish what the mathematical model predicts, not necessarily how a human body functions.
+- **Level 3 — Empirical Human Validation**: Direct comparison against synchronized motion capture, force-plate kinetics, and electromyography across human golfer cohorts with quantified measurement uncertainty.
+
+---
+
+## How to Read Critique Records {#critiques}
+
+The [Critiques & Responses](../critiques/index.html) portal is a foundational part of AffineDrift's scientific commitment.
+
+Each critique document follows a structured format:
+
+1. **Objection Statement**: A precise summary of the mechanical, mathematical, or physiological limitation raised against a specific AffineDrift publication.
+2. **Analysis & Equations**: A formal evaluation analyzing whether the objection identifies an analytical error, a violation of coordinate invariance, or an unstated modeling assumption.
+3. **Response & Scope Concession**: An explicit record documenting whether model scope must be narrowed, equations corrected, or documentation revised.
+4. **Current Status**:
+   - **Open**: The objection is under active theoretical or empirical evaluation; open status indicates ongoing inquiry, not refutation or resolution.
+   - **Resolved**: Formal resolution has been integrated into the core text, accompanied by updated derivations or regression tests.
+
+---
+
+## Citing AffineDrift {#citation-standards}
+
+When citing materials from AffineDrift in academic papers, technical reports, or computational software, please observe the following standards:
+
+### Citing Textbooks and Monographs
+
+For multi-chapter textbooks, cite the specific volume and edition:
+
+```bibtex
+@book{olson2026physicsofgolf,
+  author    = {Olson, Dieter},
+  title     = {The Physics of Golf: Kinematics, Dynamics, and Control},
+  year      = {2026},
+  publisher = {AffineDrift Technical Publications},
+  url       = {https://affinedrift.com/articles/The_Physics_of_Golf/quarto/index.html}
+}
+```
+
+### Citing Articles and Notes
+
+For standalone articles, include the canonical URL and the access or publication date:
+
+```bibtex
+@article{olson2026controlaffine,
+  author  = {Olson, Dieter},
+  title   = {Affine Control Interpretation of the Golf Swing --- Part 1: State Definition and Control-Affine Derivation},
+  journal = {AffineDrift Scientific Notes},
+  year    = {2026},
+  url     = {https://affinedrift.com/articles/theory-part1.html}
+}
+```
+
+### Computational Reproducibility
+
+For software implementations and mathematical models, reference the immutable git commit hash or repository release tag recorded in the page footer or evidence ledger.
+
+## Related Articles
+
+- [Article Index](../resources/articles.html) — Comprehensive catalog of all technical articles
+- [Development Roadmap](development-roadmap.html) — Status authorities and live planning maps
+- [Critiques & Responses](../critiques/index.html) — Governed critique records and response evaluations
+- [Learning Paths](../resources/learning-paths.html) — Guided reading pathways by background and interest
+
