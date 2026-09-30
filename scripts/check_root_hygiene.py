@@ -21,7 +21,6 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         ".env.example",
         ".gitattributes",
         ".gitignore",
-        ".gitleaks.toml",
         ".gitleaksignore",
         ".htmlvalidate.json",
         ".htmlvalidateignore",
