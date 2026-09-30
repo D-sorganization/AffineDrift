@@ -22,7 +22,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** not created yet (draft PR to be opened this session)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4675 (draft)
 - **Issue:** #4606 (WEB-14.4; epic #4610 / E14)
 - **Branch:** `claude/issue-4606`
 - **Paths:** `scripts/generate_feed.py`, `tests/test_generate_feed.py`

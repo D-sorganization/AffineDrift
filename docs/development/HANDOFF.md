@@ -2,8 +2,9 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4606`.
-- Branch `claude/issue-4606`, commit `SELF`; pull request: to be opened as a
-  draft by this session.
+- Branch `claude/issue-4606`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4675 (draft, targets
+  `main`).
 - Governing issue: #4606 (WEB-14.4, epic #4610 / E14 — Reader Validation,
   Feedback, and Community). Acceptance criteria: "The RSS feed validates" and
   "Items link to revision history."
