@@ -8,6 +8,17 @@ const CONTRAST_ROUTES = [
   "/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html",
 ];
 
+// Three math-heavy pages for #4565 (WEB-09.5): the CSP `connect-src 'self'`
+// in _includes/site-head.html could block MathJax speech-rule locale fetches
+// if the a11y/explorer module were ever loaded. This guards that no such
+// CSP violation occurs and that the assistive MathML layer screen readers
+// rely on is actually present.
+const MATH_HEAVY_ROUTES = [
+  "/articles/theory-part1.html",
+  "/articles/affine-nature-golf-swing.html",
+  "/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html",
+];
+
 async function publishedRoutes(page) {
   const response = await page.request.get("/sitemap.xml");
   if (!response.ok()) return CONTRAST_ROUTES;
@@ -192,6 +203,41 @@ test.describe("Accessibility", () => {
     const lang = await page.locator("html").getAttribute("lang");
     expect(lang).toBeTruthy();
     expect(lang).toMatch(/^[a-z]{2}(-[A-Z]{2})?$/); // e.g., 'en' or 'en-US'
+  });
+
+  test("math pages expose assistive MathML with no CSP-blocked speech/locale requests (#4565)", async ({ page }) => {
+    test.setTimeout(2 * 60 * 1000);
+    const consoleErrors = [];
+    const failedRequests = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") consoleErrors.push(msg.text());
+    });
+    page.on("requestfailed", (request) => {
+      failedRequests.push(`${request.url()}: ${request.failure()?.errorText}`);
+    });
+
+    for (const route of MATH_HEAVY_ROUTES) {
+      consoleErrors.length = 0;
+      failedRequests.length = 0;
+      await page.goto(route, { waitUntil: "networkidle" });
+      await page.evaluate(() => window.scrollBy(0, 1000));
+      await page.waitForSelector("mjx-assistive-mml", {
+        state: "attached",
+        timeout: 15000,
+      });
+
+      const cspErrors = consoleErrors.filter((text) =>
+        /content security policy|refused to (connect|load)/i.test(text),
+      );
+      // net::ERR_ABORTED is routine navigation noise (a request Chromium
+      // cancels because the page moved on, e.g. lazy-loaded assets orphaned
+      // by scrollBy above) — not evidence of a CSP or asset failure.
+      const realFailedRequests = failedRequests.filter(
+        (text) => !/net::ERR_ABORTED/.test(text),
+      );
+      expect(cspErrors, `${route} CSP violations`).toEqual([]);
+      expect(realFailedRequests, `${route} failed asset requests`).toEqual([]);
+    }
   });
 
   test("should have skip to main content link", async ({ page }) => {
