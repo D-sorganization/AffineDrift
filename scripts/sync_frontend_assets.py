@@ -46,6 +46,7 @@ CANONICAL_JS_NAMES = (
     "rotation-converter.js",
     "rotation-converter-ui.js",
     "rotation-converter-viz.js",
+    "search-maturity-badge.js",
     "service-worker-updates.js",
     "service-worker-utils.js",
     "ui-components.js",
