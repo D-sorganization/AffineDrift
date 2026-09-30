@@ -1,3 +1,73 @@
+# "What's New" Feed RSS Validation — #4606 (WEB-14.4)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4606`.
+- Branch `claude/issue-4606`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4675 (draft, targets
+  `main`).
+- Governing issue: #4606 (WEB-14.4, epic #4610 / E14 — Reader Validation,
+  Feedback, and Community). Acceptance criteria: "The RSS feed validates" and
+  "Items link to revision history."
+- **Status: partial / Blocked.** Implemented and shipped criterion 1 (the RSS
+  feed validates). Criterion 2 (items link to revision history) is blocked on
+  the still-open prerequisite **#4545 "[WEB-07.3] Real Dates and Per-Article
+  Change History"**, which is the issue that introduces the `changes:`
+  front-matter field and the per-page "Revision history" section this
+  criterion's links would point to. Neither exists anywhere in the repository
+  today (confirmed by grep across `*.qmd` for `changes:` front matter and a
+  "Revision history" heading — zero matches). #4545 itself documents
+  "Enables: 'What's new'", i.e. this issue is the documented downstream
+  consumer of #4545, not an independent design decision this session can make
+  up (the `changes:` schema and the anchor id/heading the revision-history
+  section will render under are #4545's design, not #4606's).
+- Completed (criterion 1, "The RSS feed validates"):
+  - `scripts/generate_feed.py`: added `validate_feed_xml(xml: str) -> list[str]`,
+    a structural RSS 2.0 validator (well-formed XML; rss element with
+    version="2.0"; required channel title/link/description elements; every
+    item element has a title or description, an absolute http(s) link
+    element, a guid element, and an RFC-822-parseable pubDate element; no
+    duplicate guid values across items). `main()` now calls it after
+    building the XML and raises the new `FeedValidationError` instead of
+    writing an invalid feed to disk — DbC: fail loudly at the boundary
+    rather than silently publishing something a reader's feed client would
+    reject.
+  - This closes the actual gap: the generator already produced well-formed
+    output in practice, but nothing enforced it, so a future regression (e.g.
+    a frontmatter field with an unescaped value bypassing `escape()`, or a
+    future edit dropping a required element) would have shipped to
+    `docs/feed.xml`/`feed.xml` undetected. `deploy-website.yml` already
+    invokes `scripts/generate_feed.py` on every deploy, so this check is now
+    load-bearing in production without any workflow change.
+  - TDD: `tests/test_generate_feed.py` — wrote `TestValidateFeedXml` (9 cases:
+    valid-output, empty-item-list, malformed XML, wrong RSS version, missing
+    channel title, missing/relative item link, unparseable pubDate, duplicate
+    guids) and `TestMainValidatesBeforeWriting` (main() raises and writes
+    nothing on an invalid feed) against the pre-existing module first,
+    confirmed RED (`ImportError: cannot import name 'FeedValidationError'`),
+    then implemented until GREEN.
+  - Ran the generator against the real repository content
+    (module invocation with an output path under a scratch directory): 30
+    items, no validation errors — the live feed passes the new gate as-is.
+- Not done (criterion 2, blocked): no `changes:` front-matter reading, no
+  "Revision history" rendering, and no change to feed item link targets.
+  Guessing at #4545's unimplemented schema/anchor here risks a second,
+  conflicting implementation landing when #4545 itself ships. The optional
+  "email digest through a privacy-respecting provider" named in the issue's
+  Proposal (not one of its two checkbox acceptance criteria) was also not
+  started, for the same reason plus its own unresolved provider-choice design
+  question.
+
+## Next Steps
+
+1. Land #4545 (WEB-07.3): the `changes:` front-matter field and per-page
+   "Revision history" section.
+2. Once #4545's anchor/heading id is fixed, point each feed item's link
+   at that page's revision-history anchor (or add a second, changelog-scoped
+   feed sourced from `changes:` entries, per the issue's "dated changelog"
+   proposal) and re-check criterion 2.
+3. Decide (frontier/owner) whether the optional email digest is still wanted
+   for this issue or should be split into its own follow-up, since it is not
+   one of the two checkbox acceptance criteria.
 # Implementation Handoff — Print and PDF Editions for Books and Core Series (#4550)
 # Math Accessibility Verification — #4565 (WEB-09.5)
 

@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
 | 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
 | 2026-09-30 | #4492 | Add `resources/on-ramp-paths.qmd`: 5-minute, 30-minute, and 3-hour on-ramp reading sequences per persona, built from existing pages, each ending in a self-check question and answer (#4492). |
 | 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
