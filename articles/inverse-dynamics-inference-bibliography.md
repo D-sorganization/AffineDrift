@@ -1,6 +1,11 @@
-# Bibliography: Inference from Inverse Dynamics
+---
+title: "Bibliography: Inference from Inverse Dynamics"
+description: "Companion bibliography for the AffineDrift article on inference from inverse dynamics in a nonlinear affine system."
+---
 
-## Concept Map
+## Bibliography: Inference from Inverse Dynamics
+
+### Concept Map
 
 - **Inverse Dynamics (ID)**: The computational process of determining the forces and torques required to produce a given motion.
 - **Control-Affine System**: A dynamical system where the control input enters linearly: $\dot{x} = f(x) + G(x)u$.
@@ -12,7 +17,7 @@
 - **Static Optimization**: A method to resolve the muscle redundancy problem at each time step, often used after ID.
 - **Zero Dynamics**: The internal dynamics of a system when the output is constrained to zero (related to ZTCF).
 
-## Bibliography
+### Bibliography
 
 bibliography:
 
@@ -151,9 +156,9 @@ bibliography:
   concepts: [Stability Analysis, Nonlinear Dynamics]
   related_ids: [Slotine1991]
 
-## Reading Paths
+### Reading Paths
 
-### Path 1: Fast Ramp (Foundations)
+#### Path 1: Fast Ramp (Foundations)
 
 1.  **Winter2009**: The standard introduction to Inverse Dynamics in human movement.
 2.  **Featherstone2008**: The definitive guide to the algorithms (RNEA) used to compute it efficiently.
@@ -161,7 +166,7 @@ bibliography:
 4.  **OpenSim**: The primary tool used by the community to perform these analyses.
 5.  **Dumas2007**: Practical methods for dealing with the fact that measured forces and motions never perfectly match (residuals).
 
-### Path 2: Deep Technical (The Math of Affine Systems)
+#### Path 2: Deep Technical (The Math of Affine Systems)
 
 1.  **Murray1994**: Establishes the $\dot{x} = f(x) + G(x)u$ framework used in the AffineDrift theory.
 2.  **Lynch2017**: A modern, geometric treatment of multibody dynamics (Screw Theory).
@@ -172,7 +177,7 @@ bibliography:
 7.  **Zajac1989**: The link between the calculated torque and the actual biological actuator.
 8.  **Pandy2001**: Computer modeling and simulation of human movement (Canonical optimization review).
 
-### Path 3: Implementation (Solvers & Code)
+#### Path 3: Implementation (Solvers & Code)
 
 1.  **PinocchioLib**: State-of-the-art C++ / Python library for rigid body algorithms.
 2.  **OpenSim**: User-friendly GUI and API for biomechanics.

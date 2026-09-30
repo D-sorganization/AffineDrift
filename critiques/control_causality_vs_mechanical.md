@@ -39,6 +39,6 @@ Assumption 5 defends the model against reflex-loop objections by distinguishing 
 
 ## Suggested Remedies
 
-1.  **Impedance Term**: Ideally, split dynamics into $\dot{x} = f(x) + h(x, u_{stiffness}) + g(x)u_{torque}$.
+1.  **Impedance Term**: Ideally, split dynamics into $\dot{x} = f(x) + h(x, u_{stiffness}) + G(x)u_{torque}$.
 2.  **Reflex Admission**: Explicitly state that "Drift" includes _only_ physics, not reflexes. "Input" includes _all_ neural activity, reflexive or voluntary.
 3.  **Functional Grouping**: Acknowledge that for the _golfer_, high impedance feels like "Drift" (stability), even if the model labels it "Input" (cost). The taxonomy should perhaps distinguish **"Stabilizing Input"** vs **"Driving Input"**.

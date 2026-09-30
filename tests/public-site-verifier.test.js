@@ -149,11 +149,20 @@ describe('public-site verifier contracts (WEB-D)', () => {
     expect(fixedElementCanObscureHeading({ zIndex: '1000', pointerEvents: 'auto' })).toBe(true);
   });
 
-  test('filters the browser compute-pressure warning but keeps real console errors', () => {
+  test('filters browser compute-pressure and net::ERR_ noise but keeps real console errors', () => {
     expect(isActionableConsoleError(
       'Permissions policy violation: compute-pressure is not allowed in this document.',
     )).toBe(false);
+    expect(isActionableConsoleError(
+      'Failed to load resource: net::ERR_CONNECTION_REFUSED',
+    )).toBe(false);
+    expect(isActionableConsoleError(
+      'Failed to load resource: net::ERR_NAME_NOT_RESOLVED',
+    )).toBe(false);
     expect(isActionableConsoleError('ReferenceError: broken is not defined')).toBe(true);
+    expect(isActionableConsoleError(
+      'Failed to load resource: the server responded with a status of 404 (File not found)',
+    )).toBe(true);
   });
 
   test('filters third-party embed localStorage SecurityError but keeps real page errors', () => {

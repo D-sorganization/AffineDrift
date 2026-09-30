@@ -13,7 +13,7 @@ If the goal of the swing is to hit the ball, and the impact physics are non-smoo
 
 ## The Flaw
 
-Impact is a discontinuity (or effectively so). The force spikes are massive ($\sim 2000$ lbs), and the duration is micro-seconds ($\sim 400 \mu s$). The affine structure $\dot{x} = f(x) + g(x)u$ relies on smooth ordinary differential equations (ODEs). Including impact would require hybrid system dynamics or impulse-momentum mappings $x^+ = \Delta(x^-)$.
+Impact is a discontinuity (or effectively so). The force spikes are massive ($\sim 2000$ lbs), and the duration is micro-seconds ($\sim 400 \mu s$). The affine structure $\dot{x} = f(x) + G(x)u$ relies on smooth ordinary differential equations (ODEs). Including impact would require hybrid system dynamics or impulse-momentum mappings $x^+ = \Delta(x^-)$.
 
 By excluding it, the theory risks being a "Theory of Wasted Effort"—optimizing a path without verifying the destination. If the "Drift" delivers the club to a high-speed but misaligned state, the result is a bad shot. The theory lacks a "Cost Function" related to the ball.
 
