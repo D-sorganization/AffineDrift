@@ -7,7 +7,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 PUBLICATION_SOURCES = (
-    REPO_ROOT / "articles" / "controllability-drift-ratio.qmd",
+    REPO_ROOT / "articles" / "drift-control-ratio.qmd",
     REPO_ROOT
     / "articles"
     / "The_Physics_of_Golf"

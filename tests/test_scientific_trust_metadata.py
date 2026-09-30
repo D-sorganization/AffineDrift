@@ -169,7 +169,7 @@ def test_authored_lay_summary_cannot_amplify_the_governed_claim() -> None:
     claim = _first_claim(registry)
     technical = claim["technical_claim"]
     assert isinstance(technical, dict)
-    page = ROOT / "articles/controllability-drift-ratio.qmd"
+    page = ROOT / "articles/drift-control-ratio.qmd"
     source = page.read_text(encoding="utf-8")
     section = re.search(
         r'<details class="technical-explanation">(?P<body>.*?)</details>',
