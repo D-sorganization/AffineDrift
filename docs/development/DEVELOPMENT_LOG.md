@@ -19,6 +19,17 @@ reachable from any live state and `abandoned` from `parked`.
 ## Active
 
 ### DL-#4585 · Harden the MathJax Integration Against Quarto Upgrades
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4639 (draft)
+- **Issue:** #4585
+- **Branch:** `claude/issue-4585`
+- **Paths:** `scripts/e2e_relevant_paths.py`, `tests/test_e2e_relevant_paths.py`, `docs/MATHJAX-MOBILE.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_e2e_relevant_paths.py` — 22 passed, covering both `.quarto-version` in `EXACT_PATHS` and `_includes/` in `PATH_PREFIXES`)
+- **Summary:** `.quarto-version` now forces the full-site E2E render lane on a Quarto bump so `tests/e2e/article.spec.js`'s single-MathJax-runtime assertion actually runs against the upgraded Quarto's output instead of being skipped by the file-diff heuristic; documents the `html-math-method` / `mathjax-loader.html` split in `docs/MATHJAX-MOBILE.md`. Review-fix round added `_includes/` to `PATH_PREFIXES` so a change to `_includes/mathjax-loader.html` (the file holding the real MathJax runtime) is itself E2E-relevant.
+- **Next step:** Await frontier review on draft PR #4639; do not merge or enable auto-merge.
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review
@@ -229,14 +240,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** claude
 - **PR:** not created
-- **Issue:** #4585
-- **Branch:** `claude/issue-4585`
-- **Paths:** `scripts/e2e_relevant_paths.py`, `tests/test_e2e_relevant_paths.py`, `docs/MATHJAX-MOBILE.md`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: 21/21 tests/test_e2e_relevant_paths.py pass; ruff check and black --check clean on changed files)
-- **Summary:** `.quarto-version` now forces the full-site E2E render lane on a Quarto bump so `tests/e2e/article.spec.js`'s single-MathJax-runtime assertion actually runs against the upgraded Quarto's output instead of being skipped by the file-diff heuristic; documents the `html-math-method` / `mathjax-loader.html` split in `docs/MATHJAX-MOBILE.md`.
-- **Next step:** Push branch, open draft PR referencing Fixes #4585, and await frontier review.
-
 - **Issue:** #4567 (epic #4569)
 - **Branch:** `claude/issue-4567`
 - **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`
