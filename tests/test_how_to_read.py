@@ -67,9 +67,12 @@ def test_index_and_roadmap_consolidated_to_guide() -> None:
 
 
 def test_tools_status_pills_link_to_guide() -> None:
-    """Verify status-pill components in pages/tools.qmd link to publication states."""
+    """Verify status badge components in pages/tools.qmd link to publication states."""
     tools_content = (ROOT / "pages" / "tools.qmd").read_text(encoding="utf-8")
-    assert '<a href="how-to-read.html#publication-states" class="status-pill' in tools_content
+    assert (
+        '<a href="how-to-read.html#publication-states" class="status-badge' in tools_content
+        or '<a href="how-to-read.html#publication-states" class="status-pill' in tools_content
+    )
     # Non-canonical EXPLORATORY label should be gone
     assert "EXPLORATORY" not in tools_content
 
