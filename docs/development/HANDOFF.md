@@ -88,6 +88,50 @@
   tests/test_no_executable_quarto_cells.py` clean; `python -m scripts.check_spec_changelog` clean.
 - Next: none — this closes the issue's single acceptance criterion.
 
+# Implementation Handoff — Unify the Contact Channel and Split About From Contact (#4593)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4593`.
+- Branch `claude/issue-4593`, commit `SELF`; pull request: not created yet at
+  this commit (worker task; the lead opens the PR).
+- Governing issue: #4593 (WEB-12.7, epic #4594 / E12 — Editorial Voice and
+  Plain-Language Standard). Acceptance criteria: (1) one contact address
+  everywhere, (2) About retitled, (3) Contact is the single contact page.
+- Verified before implementing: criterion (1) was already satisfied on
+  `origin/main` — `pages/about.qmd`, `pages/contact.qmd`, `pages/accessibility.qmd`,
+  and `404.qmd` all already used `dieterolson@AffineDrift.com` (unified in
+  #4495). Only criteria (2) and (3) were outstanding.
+- Completed:
+  - Retitled `pages/about.qmd` from `"About & Contact"` (YAML `title:` and body
+    `<h1>`) to `"About"`.
+  - Removed About's own `mailto:` contact paragraph and replaced it with a
+    link to the Contact page, so Contact is now the site's single contact
+    page (About no longer publishes a contact address of its own).
+  - Updated `resources/on-ramp-paths.qmd`'s link text and self-check prose,
+    which quoted the old "About & Contact" title verbatim.
+  - Added `tests/test_contact_channel_unification.py` (written first, RED
+    against the pre-change `pages/about.qmd`) asserting the retitle, the
+    absent `mailto:` on About, the link to Contact, and that Contact/404
+    still agree on a single address.
+  - Updated `tests/test_404_page.py`: removed
+    `test_404_contact_address_matches_about_page`, since About intentionally
+    no longer carries a `mailto:` link to compare against (Contact is now the
+    sole source of the address).
+  - Re-ran `python -m scripts.regenerate_claim_audit_evidence` after editing
+    `pages/about.qmd` (it is a claim-audit-reviewed source); this cascaded
+    digest updates through `data/trust/site_trust_surface_audit.json`,
+    `data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`, and
+    `reports/site-trust-surface-audit.md`.
+- Status: **done**. All three acceptance criteria are met.
+- Validation commands run in this worktree:
+  - `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_contact_channel_unification.py tests/test_404_page.py tests/test_public_site_content_hygiene.py tests/test_check_single_title.py tests/test_site_trust_surface_audit.py tests/test_on_ramp_paths.py` — 74 passed.
+  - `python -m ruff check .` — clean.
+  - `python -m black --check --line-length 100 .` — clean.
+  - `python -m scripts.check_spec_changelog` — passed.
+- Next steps: none outstanding for this issue; open a draft PR and await
+  frontier review.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
