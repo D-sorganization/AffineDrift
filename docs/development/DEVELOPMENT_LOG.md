@@ -18,6 +18,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4595 · Cache Quarto Renders in CI
 ### DL-#4600 · Service-Worker Cache Busting by Content Hash
 
 - **State:** in_review
@@ -35,6 +36,13 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created
+- **Issue:** #4595 (WEB-13.1; epic #4604 / E13)
+- **Branch:** `claude/issue-4595`
+- **Paths:** `.github/workflows/ci-standard.yml`, `tests/test_deployment_integrity.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 16/16 test_deployment_integrity.py pass + 1 skipped, 2/2 test_workflow_action_pins.py pass, ruff/black clean repo-wide)
+- **Summary:** Caches the PR `e2e-tests` Quarto render output (`docs/` + `.quarto/`) keyed on a hash of every render-relevant source file, skipping the ~14-minute render only on an exact hash match; deploy's clean full render is untouched. A true per-file incremental render was scoped out because it would conflict with the existing #4126 invariant guaranteeing the E2E lane always renders every route; see HANDOFF.md for the full reasoning.
+- **Next step:** Owner/frontier review of the draft PR, including the `tier:strong` follow-up proposed for reconciling incremental rendering with the #4126 full-coverage guarantee if the ≥30% median-time criterion is not met by the cache alone.
 - **Issue:** #4596 (epic #4604)
 - **Branch:** `claude/issue-4596`
 - **Paths:** `scripts/link-checker.py`, `.github/workflows/link-checker.yml`, `docs/LINK-CHECKER.md`, `tests/test_link_checker_script.py`
