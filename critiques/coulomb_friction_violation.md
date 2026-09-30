@@ -10,7 +10,7 @@ description: "Critique and response context for Coulomb Friction Violation of Dr
 The central proof of **Drift Invariance** (Proposition 1) asserts that the drift vector field $f(x)$ is independent of the input $u$ ($\nabla_u f(x) \equiv 0$). This proof relies on the assumption that all passive forces (included in $h(x)$) depend only on state $(q, \dot{q})$.
 
 However, real mechanical systems contain **Coulomb friction** at joints, where $\tau_{fric} = \mu F_N \operatorname{sgn}(\dot{q})$. The normal force $F_N$ is a component of the constraint force vector, which depends explicitly on the applied acceleration and thus the input torque $u$ (via the Constraint Jacobian).
-Therefore, in the presence of realistic dry friction, the passive resistance $f(x)$ becomes a function of $u$, violating the affine structure $\dot{x} = f(x) + g(x)u$.
+Therefore, in the presence of realistic dry friction, the passive resistance $f(x)$ becomes a function of $u$, violating the affine structure $\dot{x} = f(x) + G(x)u$.
 
 ## Location
 
