@@ -9,7 +9,7 @@ categories:
 ```{=html}
 <section class="resources-section">
   <div class="ad-page-container">
-    <div class="standard-page-layout">
+    <div class="standard-page-layout standard-page-layout--single">
       <!-- Left Sidebar: Table of Contents -->
       <div class="left-sidebar">
         <div class="sidebar-sticky-content">
@@ -60,7 +60,7 @@ categories:
                class="resource-link u-inline-action"
                target="_blank"
                rel="noopener">
-              Research Review: Interaction Forces →
+              Research Review: Interaction Forces (Planned) →
             <span class="sr-only">(opens in a new tab)</span></a>
             <p class="resource-caption">
               See Research Review page for current coverage of Carol Putnam's work on interaction forces.
@@ -82,7 +82,7 @@ categories:
                class="resource-link u-inline-action"
                target="_blank"
                rel="noopener">
-              Research Review: Induced Acceleration Analysis →
+              Research Review: Induced Acceleration Analysis (Planned) →
             <span class="sr-only">(opens in a new tab)</span></a>
           </div>
 
@@ -120,7 +120,7 @@ categories:
                class="resource-link u-inline-action"
                target="_blank"
                rel="noopener">
-              Research Review: Baseball Pitching →
+              Research Review: Baseball Pitching (Planned) →
             <span class="sr-only">(opens in a new tab)</span></a>
           </div>
 
@@ -139,7 +139,7 @@ categories:
                class="resource-link u-inline-action"
                target="_blank"
                rel="noopener">
-              Research Review: Shaft Flexibility →
+              Research Review: Shaft Flexibility (Planned) →
             <span class="sr-only">(opens in a new tab)</span></a>
           </div>
 
@@ -170,83 +170,9 @@ categories:
         </div>
       </main>
 
-      <!-- Right Sidebar: Recent Papers History -->
-      <div class="right-sidebar">
-        <div class="sidebar-sticky-content">
-        <nav class="history-nav">
-          <h3 class="sidebar-heading">Recent Papers</h3>
-          <ul class="sidebar-links" id="papers-history-list">
-            <li class="history-empty">No recent papers yet</li>
-          </ul>
-        </nav>
-      </div>
-      </div>
     </div>
   </div>
 </section>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const papersHistoryList = document.getElementById('papers-history-list');
-  if (!papersHistoryList) return;
-
-  function updatePapersHistory() {
-    let history = [];
-    try {
-      const raw = localStorage.getItem('affinedrift_papers_history');
-      if (raw) history = JSON.parse(raw);
-      if (!Array.isArray(history)) history = [];
-    } catch (e) {
-      localStorage.removeItem('affinedrift_papers_history');
-    }
-    
-    const currentPage = {
-      title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-papers.html'
-    };
-
-    if (currentPage.url === 'resources-papers.html') {
-      history = history.filter(item => item.url !== currentPage.url);
-      history.unshift(currentPage);
-      history = history.slice(0, 10);
-      localStorage.setItem('affinedrift_papers_history', JSON.stringify(history));
-    }
-
-    if (history.length === 0) {
-      papersHistoryList.textContent = '';
-      const li = document.createElement('li');
-      li.className = 'history-empty';
-      li.textContent = 'No recent papers yet';
-      papersHistoryList.appendChild(li);
-      return;
-    }
-
-    papersHistoryList.textContent = '';
-    const fragment = document.createDocumentFragment();
-    history.forEach((item) => {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      let safeUrl = "#";
-      if (typeof item.url === "string") {
-        try {
-          const parsed = new URL(item.url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-      }
-      a.href = safeUrl;
-      a.textContent = item.title;
-      li.appendChild(a);
-      fragment.appendChild(li);
-    });
-    papersHistoryList.appendChild(fragment);
-  }
-
-  updatePapersHistory();
-});
-</script>
 ```
 
 ## Related Articles

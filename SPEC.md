@@ -224,6 +224,22 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
+| 2026-09-29 | #4599 | Consolidate the 7 cross-page "Recent Models" inline history scripts into a shared `initCategoryHistory()` in `js/history.js`; remove the 8 single-page "Recent X" history widgets on resources pages that only ever recorded the page itself; add Jest coverage for `history.js` and `home.js`. |
+| 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
+| 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
+| 2026-09-30 | #4492 | Add `resources/on-ramp-paths.qmd`: 5-minute, 30-minute, and 3-hour on-ramp reading sequences per persona, built from existing pages, each ending in a self-check question and answer (#4492). |
+| 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
+| 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
+| 2026-09-29 | #4548 | Render the 22 orphaned per-article companion bibliographies via a new `articles/*-bibliography.md` render rule, add front matter, fix their two broken links, and document the pattern. |
+| 2026-09-29 | #4576 | Add a Privacy Policy page covering local storage, the service worker, third-party embeds, and analytics per D6; link it from the site footer. |
+| 2026-09-29 | #4582 | Enforce uppercase G(x) for the control-affine input map across the home page, four textbook chapters and 12 critique files; add a baseline-gated pytest notation lint (scripts/check_notation.py). |
+| 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
+| 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
+| 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
+| 2026-09-29 | #4640 | Enforce verified publication dates, zero date: today, date-source contract, and per-article revision history component (#4545). |
+| 2026-09-30 | #4658 | Enforce unique titles and 70-160 character meta descriptions across all pages (#4575). |
+| 2026-09-30 | #4563 | Remove nine of the ten `--grep-invert` E2E exclusions from `ci-standard.yml` whose defects were already fixed (#4200) but never actually re-run in CI; fix a touch-target test bug that miscounted CSS-hidden elements as non-compliant; leave the tenth (pixel-snapshot baselines) excluded pending a fleet-runner `--update-snapshots` pass. |
 | 2026-09-29 | #4588 | Add warn-mode CI lint and plain-language glossary keeping internal governance vocabulary out of reader-facing prose; partial reduction on hub/entry pages pending #4587 (#4588). |
 | 2026-09-29 | #4591 | Add `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages against the WEB-12.1 threshold. |
 | 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |
@@ -427,8 +443,34 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
-
+| 2026-09-29 | #4542 | Fix the Programming Companion catalog generator reading a nonexistent `title` field (real field `name`) that made every program and engine row render its ID as its title; drop the Engines page's fabricated Maturity column; label the 16 unpinned repository UpstreamDrift links as navigation only. |
+| 2026-09-29 | #4549 | Rebuild the Datasets resource page as a generated catalogue from `data/datasets.yml` with verified licence/access/schema/checksum fields for third-party datasets and an "AffineDrift Data Artefacts" section for `data/ztcf`, `data/research_protocols`, and `schemas`, dropping the `mini.s-shot.ru` thumbnail host. |
 | 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
 | 2026-09-29 | #4503 | Add URL stability and redirect policy: `config/redirects.yml` ledger, `src/tools/check_redirects.py`, and a deploy-workflow gate that fails when a previously published route disappears without a documented, rendered redirect (#4503). |
+| 2026-09-29 | #4651 | Add deterministic, publication-grade SVG figures and accessible descriptions to core theory pages (DCR, ZTCF, Superposition) (#4536). |
+| 2026-09-30 | #4578 | Generate per-book/series Open Graph social cards at build time instead of one site-wide card. |
+| 2026-09-30 | #4567 | Wire `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate`, add a long-description check for complex SVG diagrams (E8/E9), and baseline pre-existing figures. |
+| 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
+| 2026-09-30 | #4541 | Add the Fixture and Dataset Explorer: a browser page that validates ZTCF, population-generalization, and proximal-distal fixtures against their published schemas, lists every field in an accessible table, and offers a live SHA-256 download digest. |
+| 2026-09-29 | #4547 | Restore the locked `proximal_distal_energy_transfer` article and audited book chapter untouched and fix `clark2013whatever`'s metadata; most of the mechanical bibliography merge was reverted on review, pre-existing CI citation-resolution checks already cover the regression risk, and 82 duplicate-DOI groups remain (see PR #4676). |
+| 2026-09-29 | #4504 | Configure explicit Quarto search (overlay, limit, keyboard shortcut), remove the unverified SearchAction JSON-LD, and show the page-header-card maturity badge on matching search results. |
+| 2026-09-30 | #4664 | Hide, mark, or retire stub hubs, add Planned badges, and enforce scaffolding styling policy (#4500, WEB-02.6). |
+| 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
+| 2026-09-30 | #4516 | Implement unified publication status badge component (WEB-04.2) with Quarto shortcode {{< status >}}, accessible SVG icons and text, WCAG AA contrast, and depth-aware links to publication states. |
+| 2026-09-30 | #4495 | Unify the 404 page's contact address with About/Contact (WEB-01.10); Start Here and Library links deferred pending #4486 and the WEB-02.1 navbar restructure. |
+| 2026-09-30 | #4565 | Verify MathJax's assistive-MathML layer is not blocked by the connect-src 'self' CSP (the SRE explorer component is never loaded) and add regression/E2E tests across three math-heavy pages (WEB-09.5); the NVDA/VoiceOver human trial is deferred with a recorded manual protocol. |
+| 2026-09-30 | #4535 | Add an interactive DCR-through-phase widget (WEB-06.5) comparing an additive- and a state-dependent-drift system with equal instantaneous DCR but different reachable-interval widths, linking claim ad-dcr-001 on the DCR page. |
+| 2026-09-30 | #4697 | Allowlist SHA-256 evidence digests keyed by repository paths in `.gitleaks.toml` so claim-audit ledgers stop tripping gitleaks generic-api-key. |
+| 2026-09-30 | #4666 | Enforce 100% claim-audit route coverage for pages/glossary and pages/how-to-read, restoring green Deploy Website on main. |
+| 2026-09-30 | #4577 | Switch the gated MathJax loader to the smaller tex-chtml.js component build (TeX input + CHTML output only, no unused MathML input jax) on every math-bearing page (WEB-10.9). |
+| 2026-09-30 | #4678 | Implement standard Where Next footer component with 30 core pages mapping, no self-links, accessible nav card, and cross-cluster coordination (#4510). |
+| 2026-09-30 | #4550 | Consolidate print CSS into one stylesheet, support Letter and A4 page sizes, and force MathJax typesetting before print (WEB-07.9). |
+| 2026-09-30 | #4548 | Retire the 22 unaudited companion bibliographies from the render and audit the privacy and accessibility pages, restoring 100% claim-audit route coverage for Deploy Website. |
+| 2026-09-30 | #4492 | Add a reviewed claim-audit record for /resources/on-ramp-paths.html, restoring Deploy Website route coverage after #4677. |
+| 2026-09-29 | #4655 | Remove stub Colab buttons from textbook pages and fill priority notebooks with verified dynamics (#4537). |
+| 2026-09-29 | #4656 | Make full-site axe scan fail on serious and critical violations and fix caption contrast (#4561). |
+| 2026-09-29 | #4523 | Add a generated evidence/claims.qmd Claim Ledger page (one accessible card per claim: plain/formal statement, evidence rung, falsifiers, related critiques, pages making the claim) and link every claim-making page back to it. |
+| 2026-09-29 | #4551 | Render PARAMETERS.md and add a one-page notation quick-reference card; remove pages/notation.qmd's duplicate heading and manual table of contents. |
+| 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |

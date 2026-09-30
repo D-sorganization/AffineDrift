@@ -7,7 +7,7 @@ description: "Critique and response context for Intentional Constraint Collapse 
 
 ## Summary of Concern
 
-The article "Intentional Constraint Collapse at Impact" conflates two distinct mechanical concepts: **Kinematic Singularity** (Rank Loss of the Jacobian) and **Variable Impedance Control** (Active Stiffness/Damping). It argues that golfers "collapse" the constraint Jacobian to gain stability, but the description describes increasing stiffness via internal forces (co-contraction). Furthermore, if the input $u$ (muscle activation) actually alters the kinematic constraints (changing the manifold topology), the system violates the **Control-Affine** form ($\dot{x} = f(x) + g(x)u$) that is central to the project's theoretical framework.
+The article "Intentional Constraint Collapse at Impact" conflates two distinct mechanical concepts: **Kinematic Singularity** (Rank Loss of the Jacobian) and **Variable Impedance Control** (Active Stiffness/Damping). It argues that golfers "collapse" the constraint Jacobian to gain stability, but the description describes increasing stiffness via internal forces (co-contraction). Furthermore, if the input $u$ (muscle activation) actually alters the kinematic constraints (changing the manifold topology), the system violates the **Control-Affine** form ($\dot{x} = f(x) + G(x)u$) that is central to the project's theoretical framework.
 
 ## Location
 
@@ -63,7 +63,7 @@ This article attempts to patch a core theoretical hole ("Input-Dependent Boundar
 **Concrete Edit:**
 
 > **Note on Control Structure:**
-> "Strictly speaking, if input $u$ alters the constraint manifold, the system dynamics $\dot{x} = f(x) + g(x)u$ become $\dot{x} = f(x, u) + g(x, u)u$, losing the affine structure. We assume here that the 'collapse' is a reconfiguration of the _parameters_ of $f(x)$ (via variable stiffness) rather than a topological change to the state space itself, preserving the affine approximation for short time horizons."
+> "Strictly speaking, if input $u$ alters the constraint manifold, the system dynamics $\dot{x} = f(x) + G(x)u$ become $\dot{x} = f(x, u) + G(x, u)u$, losing the affine structure. We assume here that the 'collapse' is a reconfiguration of the _parameters_ of $f(x)$ (via variable stiffness) rather than a topological change to the state space itself, preserving the affine approximation for short time horizons."
 
 ### 4. Clarify "Internal Forces"
 

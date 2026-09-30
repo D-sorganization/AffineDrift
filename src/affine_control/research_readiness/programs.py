@@ -30,7 +30,7 @@ PROGRAMS = (
         4033,
         "dcr-perturbation",
         "DCR and Finite-Horizon Reachability",
-        "/articles/controllability-drift-ratio.html",
+        "/articles/drift-control-ratio.html",
         "When does a declared DCR fail to predict bounded event-time reachability?",
         "reachable-set width and event-state sensitivity",
         "modeled bounded input perturbation",

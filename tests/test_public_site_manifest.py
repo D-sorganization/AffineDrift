@@ -183,6 +183,55 @@ def test_manifest_fails_closed_for_missing_or_empty_render(tmp_path: Path, missi
         build_manifest(docs, source_root=tmp_path, require_representative=False)
 
 
+# The stub Quarto writes for a front-matter `aliases:` entry (#4583 renamed
+# the DCR article and kept its old slug as an alias).
+QUARTO_ALIAS_STUB = """<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Redirect</title>
+  <script type="text/javascript">
+    var redirects = {"":"drift-control-ratio.html"};
+    var hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : window.location.hash;
+    var redirect = redirects[hash] || redirects[""] || "/";
+    window.location.replace(redirect);
+  </script>
+</head>
+<body>
+</body>
+</html>
+"""
+
+
+def test_manifest_skips_quarto_alias_redirect_stubs(tmp_path: Path) -> None:
+    docs = tmp_path / "docs"
+    _write_page(docs / "index.html", title="AffineDrift", h1="AffineDrift")
+    _write_page(docs / "articles/drift-control-ratio.html", title="DCR", h1="DCR")
+    stub = docs / "articles/controllability-drift-ratio.html"
+    stub.write_text(QUARTO_ALIAS_STUB, encoding="utf-8")
+
+    manifest = build_manifest(
+        docs, source_root=tmp_path, source_revision="abc123", require_representative=False
+    )
+
+    assert [page["route"] for page in manifest["pages"]] == [
+        "/",
+        "/articles/drift-control-ratio.html",
+    ]
+
+
+def test_manifest_still_rejects_an_empty_page_that_is_not_a_redirect(tmp_path: Path) -> None:
+    docs = tmp_path / "docs"
+    _write_page(docs / "index.html", title="AffineDrift", h1="AffineDrift")
+    (docs / "articles").mkdir(parents=True)
+    (docs / "articles/broken.html").write_text(
+        "<html><head><title>Redirect</title></head><body></body></html>", encoding="utf-8"
+    )
+
+    with pytest.raises(ValueError, match="no static H1 candidate"):
+        build_manifest(
+            docs, source_root=tmp_path, source_revision="abc123", require_representative=False
+        )
+
+
 def test_manifest_records_static_h1_count_for_browser_visibility_gate(tmp_path: Path) -> None:
     docs = tmp_path / "docs"
     _write_page(
