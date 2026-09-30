@@ -91,53 +91,54 @@
    HTML/Markdown-stripped body text) and the `date:`-as-last-reviewed proxy are acceptable, since
    neither is an existing repo convention — this issue introduced both.
 # Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
+# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/web-01-8-learning-path-contradictions-4493
-- Baseline commit: c72f59e19661f237583ee91e92d2740fffc4c94b
+- Branch: feat/web-01-3-extend-personas-4488
+- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
 - Implementation commit: SELF
-- Pull request: #4634
-- Governing issue/epic: #4493
+- Pull request: #4638
+- Governing issue/epic: #4488 (epic #4496)
 
 ## Objective and Status
 
-- Objective: Correct learning-path difficulty contradictions, prerequisites, and chapter references across AffineDrift learning path pages.
-- Status: ready for review / auto-merge
+- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
+- Status: PR #4638 created, awaiting auto-merge
 - Completed:
-  - Created single source of truth in `config/learning_paths.yml` specifying duration, weeks, difficulty, and prerequisites.
-  - Aligned `resources/learning-paths.qmd` Quick Navigation table with individual path pages (Control Theory to Advanced, Golf Science to Introductory to Intermediate).
-  - Fixed prerequisite contradiction in `resources/learning-path-foundations.qmd` ("No prerequisites assumed" replaced with "Assumes only high school algebra and trigonometry").
-  - Consolidated duplicate 3Blue1Brown reading entry in Foundations Module 1.
-  - Linked Golf Science Module 1 to exact target chapters (ch28 impact, ch19 drag, ch31 launch) instead of generic "Chapters 1–3".
-  - Aligned Biomechanics schedule to 16 weeks and removed Module 7 / Module 8 week overlap.
-  - Added comprehensive test suite in `tests/test_learning_paths.py` (7 tests).
-  - Regenerated claim audit evidence in `data/trust/claim_audit_inventory.json` and verified with `python -m scripts.regenerate_claim_audit_evidence --check`.
-  - Added change-log row in `SPEC.md`.
-- Remaining: Commit, create PR, arm auto-merge, and release lease.
+  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
+  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
+  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
+  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
+  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
+  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
+  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all checks pass.
+  - Keyed change-log row in `SPEC.md` to #4638.
+- Remaining: Arm auto-merge and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `config/learning_paths.yml`: Created single source of truth for learning path metadata.
-  - `resources/learning-paths.qmd`: Updated Quick Navigation difficulty ratings to match detailed path pages.
-  - `resources/learning-path-foundations.qmd`: Fixed subtitle prerequisite contradiction and removed duplicate 3Blue1Brown entry.
-  - `resources/learning-path-golf-science.qmd`: Updated Module 1 reading to link to chapters 28, 19, and 31.
-  - `resources/learning-path-biomechanics.qmd`: Updated subtitle to 16 weeks and Module 8 to Weeks 15–16.
-  - `tests/test_learning_paths.py`: Added consistency and reference regression tests.
-  - `data/trust/claim_audit_inventory.json`: Updated review evidence digest for modified learning-path-biomechanics.qmd.
-  - `SPEC.md`: Added change-log entry for #4493.
+  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
+  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
+  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
+  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
+  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
+  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
+  - `SPEC.md`: Added change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Single source of truth in YAML keeps hub table and individual path pages synchronized; hours/hrs format normalized in tests.
+- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_learning_paths.py` — PASS (7 passed)
-- `python -m ruff check tests/test_learning_paths.py` — PASS
-- `python -m black --check --line-length 100 tests/test_learning_paths.py` — PASS
+- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
+- `python -m src.tools.site_link_gate` — PASS (0 errors)
+- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -148,8 +149,7 @@
 
 ## Next Steps
 
-1. Verify PR #4634 mergeability and arm auto-merge.
-2. Release claim lease.
+1. Monitor PR #4638 CI and auto-merge into main.
 
 ## Change Log
 
