@@ -231,6 +231,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
 | 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
 | 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
+| 2026-09-29 | #4588 | Add warn-mode CI lint and plain-language glossary keeping internal governance vocabulary out of reader-facing prose; partial reduction on hub/entry pages pending #4587 (#4588). |
 | 2026-09-29 | #4591 | Add `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages against the WEB-12.1 threshold. |
 | 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |
 | 2026-09-29 | #4633 | Build Page Header Card component driven by front matter and styled in print stylesheet (#4507). |
@@ -434,3 +435,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
+| 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |

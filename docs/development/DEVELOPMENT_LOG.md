@@ -97,6 +97,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Awaiting frontier-agent review of the draft PR.
 
 ### DL-#4548 · Render or Retire Orphaned Per-Article Bibliography Files
+### DL-#4596 · Report Broken External Links as Issues
 
 - **State:** in_review
 - **Owner:** claude
@@ -108,6 +109,26 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (`python3 -m pytest -q` full suite passed after `python3 -m scripts.regenerate_claim_audit_evidence` refreshed the `force-mobility-matrices-bibliography.md` review-evidence digest the added frontmatter changed; `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` both clean; `python3 -m scripts.check_quarto_render_coverage` and `python3 -m scripts.link-checker --site-gate --root .` both pass against the real repo.)
 - **Summary:** Added the `articles/*-bibliography.md` Quarto render rule (mirroring the pre-existing `critiques/*.md` rule) and minimal title/description front matter to the 22 companion bibliography files, so they render instead of 404ing; fixed the two links that pointed at raw `.md`/GitHub-blob sources; kept and front-mattered the one orphan companion file (`Pinocchio_Project_Outline-bibliography.md`) because its annotated content is substantive; documented the pattern.
 - **Next step:** Open the draft PR for review.
+- **Issue:** #4596 (epic #4604)
+- **Branch:** `claude/issue-4596`
+- **Paths:** `scripts/link-checker.py`, `.github/workflows/link-checker.yml`, `docs/LINK-CHECKER.md`, `tests/test_link_checker_script.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 79/79 relevant link-checker tests pass, ruff/black clean, SPEC changelog check passes)
+- **Summary:** Scheduled external-link check now upserts a single tracking issue (find-or-update, close on all-clear) instead of only logging, checks DOI links through their doi.org redirect, and attaches an archive.org fallback suggestion to each dead link.
+- **Next step:** Push branch, open draft PR referencing Closes #4596, and release the fleet lease.
+
+### DL-#4588 · Keep Internal Governance Vocabulary Out of Reader Prose
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4588 (epic #4594)
+- **Branch:** `claude/issue-4588`
+- **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: 52/52 tests pass across test_check_governance_vocabulary.py and test_check_terminology.py; lint clean against baseline)
+- **Summary:** Adds a warn-mode CI lint for internal governance vocabulary ("governed", "qualified", "provenance", "protected", "fail-closed") in reader prose, a plain-language glossary page, and removes the vocabulary from the hub/entry reader pages. Full 75% corpus-wide reduction is blocked on the still-open prerequisite #4587 (editorial style guide) for the remaining `articles/` chapter corpus; see the HANDOFF.md Blocked section.
+- **Next step:** Land #4587, then use its standard to rewrite the `articles/` chapter corpus and shrink the baseline.
 
 ### DL-#4591 · Readability Measurement Tool
 
