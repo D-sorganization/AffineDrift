@@ -1,3 +1,137 @@
+# Implementation Handoff — Cross-Browser Coverage (#4564)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4564
+- Branch: claude/issue-4564
+- Baseline commit: 047fc82b (origin/main)
+- Implementation commit: SELF
+- Pull request: https://github.com/D-sorganization/AffineDrift/pull/4685 (draft)
+- Governing issue/epic: #4564 (WEB-09.4; epic #4569 / E9 — Accessibility Conformance)
+
+## Objective and Status
+
+- Objective: CI's `e2e-tests` job in `ci-standard.yml` only runs the Chromium
+  Playwright project on pull requests. `playwright.config.js` also defines
+  `firefox`, `webkit`, `Mobile Chrome`, and `Mobile Safari` projects that never
+  run in CI. The issue asks for (1) a nightly job that runs Firefox and WebKit
+  on a representative route set, and (2) failures that open issues
+  automatically, deduplicated by title.
+- Status: ready for commit / PR.
+- Completed:
+  - Added `.github/workflows/cross-browser-nightly.yml`: a scheduled
+    (`0 7 * * *` UTC) + `workflow_dispatch` workflow with a `[firefox, webkit]`
+    matrix job that builds the site (reusing the same Quarto render cache key
+    as `ci-standard.yml`'s `e2e-tests` job, #4595) and runs
+    `tests/e2e/smoke.spec.js` — the existing PR-smoke suite covering six
+    representative public routes plus dark-mode/back-to-top/no-splash
+    behavioral invariants — against each browser, uploading the Playwright
+    JSON report as an artifact per browser.
+  - Added a downstream `report-failures` job (`if: always()`) that downloads
+    both JSON reports and runs `scripts/report_e2e_browser_failures.py`.
+  - Added `scripts/report_e2e_browser_failures.py`: parses one or more
+    Playwright JSON reporter files, extracts tests whose final verdict was an
+    unexpected failure, builds one issue per distinct `(browser, test title)`
+    pair, and skips any pair already covered by an existing open issue with
+    the same title — the dedup-by-title acceptance criterion.
+  - Added `tests/test_report_e2e_browser_failures.py` (29 tests, TDD:
+    confirmed RED before implementing, both in the initial commit and for
+    each round of review feedback below) covering nested-suite JSON parsing,
+    the title-building dedup key, issue body content, and dedup selection
+    (including same-title-different-browser must NOT be deduped together).
+  - Review feedback round 1 — three behavior changes, each landed test-first:
+    1. **No new labels.** `ISSUE_LABELS` dropped the nonexistent
+       `cross-browser` label (now just `("ci", "automation")`, both of which
+       already exist in the repo). `fetch_existing_open_titles` no longer
+       filters by `--label`; it now uses
+       `gh issue list --search '"[Cross-Browser Nightly]" in:title'` and a new
+       pure `filter_cross_browser_titles()` helper keeps only titles that
+       actually start with the reporter's prefix (defends against `--search`
+       matching the phrase elsewhere in a title).
+    2. **Missing/unparseable/empty reports no longer crash or vanish
+       silently.** New `load_report_failures()` replaces the old
+       `load_report()`: a missing file, an empty file, or invalid JSON for a
+       given `--report` path now yields one synthetic failure entry (title
+       `"no test report produced (job failed before tests ran)"`, project
+       derived from the filename via `derive_project_from_report_path()`,
+       e.g. `playwright-report-webkit.json` -> `webkit`) instead of raising or
+       being skipped.
+    3. **Issue-creation cap.** When a run has more than
+       `MAX_INDIVIDUAL_ISSUES` (5) new (not-already-open) failures, one rollup
+       issue is opened instead — titled `"[Cross-Browser Nightly] "` followed
+       by the failure count, `" failures on "`, and today's UTC date in
+       `YYYY-MM-DD` form (`build_summary_issue_title` /
+       `build_summary_issue_body`) and listing every `(project, test, file)`
+       in a table. Per-failure dedup against
+       already-open issues still applies before the count is taken, and
+       `--dry-run` prints the rollup title the same way it prints individual
+       titles.
+  - Updated `docs/development/DEVELOPMENT_LOG.md` (`DL-#4564`) and this file.
+- Remaining: Commit, push, and post the review-feedback update to draft PR
+  #4685.
+
+## Files and Decisions
+
+- Files changed:
+  - `.github/workflows/cross-browser-nightly.yml`: new nightly workflow.
+  - `scripts/report_e2e_browser_failures.py`: new issue-filing script.
+  - `tests/test_report_e2e_browser_failures.py`: new pytest suite.
+  - `docs/development/DEVELOPMENT_LOG.md`: `DL-#4564` entry.
+  - `docs/development/HANDOFF.md`: this entry.
+  - `SPEC.md`: pending change-log row.
+- Key decisions:
+  - Chose `tests/e2e/smoke.spec.js` as the "representative route set" rather
+    than the full suite: it already exists precisely for this purpose (fast
+    PR smoke coverage across public routes + interactive behavior) and
+    keeps nightly runtime bounded instead of running visual-snapshot/axe
+    suites twice more per night.
+  - Issue dedup keys on the rendered issue title, built as
+    `[Cross-Browser Nightly] ` followed by the browser project name, a colon,
+    and the Playwright spec title, rather than a hidden marker, matching the
+    issue's literal "deduplicated by title" wording; a title search
+    (`gh issue list --search`) plus a prefix filter scopes the lookup instead
+    of a label, since the repo has no `cross-browser` label and this script
+    must not create one.
+  - The rollup-issue threshold (`MAX_INDIVIDUAL_ISSUES = 5`) is a plain
+    constant, not a CLI flag: nothing in the issue or the review feedback asks
+    for it to be tunable per run, and a flag nobody sets is just dead surface
+    area.
+  - Did not touch `ci-standard.yml`'s Chromium-only `e2e-tests` job: the issue
+    is additive (a new nightly job), not a change to the PR-gated lane.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest -q -o addopts= tests/test_report_e2e_browser_failures.py` —
+  29 passed (11 from the initial commit + 18 added for the three review-
+  feedback behaviors, all confirmed RED before implementation).
+- `python -m ruff check scripts/report_e2e_browser_failures.py tests/test_report_e2e_browser_failures.py` —
+  all checks passed.
+- `python -m black --check --line-length 100 scripts/report_e2e_browser_failures.py tests/test_report_e2e_browser_failures.py` —
+  both files unchanged.
+- `python3 -m pytest tests/ --cov=src --cov=scripts --cov-report=term-missing --timeout=120 -q` —
+  full suite passes at 79.11% coverage (floor 75%) as of the initial commit;
+  one pre-existing failure in
+  `tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section`
+  unrelated to this change (pandoc emits a `div` element with that id instead
+  of the expected `section` element in this environment).
+- `python3 -m scripts.check_workflow_action_pins` — all workflow actions
+  pinned to immutable SHAs (workflow file itself untouched by this round).
+- Not run: the nightly workflow itself (requires a scheduled/dispatched
+  Actions run on the fleet runner with real browser binaries; cannot execute
+  GitHub Actions locally).
+
+## Blockers / Risks
+
+- The workflow's actual behavior (browser install, site render, issue
+  creation via `gh`) is unverified end-to-end until it runs in GitHub
+  Actions — either via `workflow_dispatch` after merge or the first nightly
+  fire. A frontier review should consider triggering `workflow_dispatch` once
+  merged to confirm the full pipeline before relying on it.
+
+---
+
 # Website Consolidation (Seven Web Issues) — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
