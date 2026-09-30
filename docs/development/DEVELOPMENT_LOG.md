@@ -19,6 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 ## Active
 
 ### DL-#4520 · Content Freshness Report
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4648 (draft)
+- **Issue:** #4520 (epic #4521)
+- **Branch:** `claude/issue-4520`
+- **Paths:** `scripts/generate_freshness_report.py`, `tests/test_generate_freshness_report.py`, `reports/content-freshness.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: 18/18 `test_generate_freshness_report.py` tests pass; ruff and black clean; `python3 -m scripts.generate_freshness_report --check` passes)
+- **Summary:** Generates an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old, deriving the review date only from front matter (never a build/publish date). `--check` now recomputes against the as-of date recorded in the already-committed report, so it only fails when a source page's review date actually changes, not merely because the calendar date has advanced.
+- **Next step:** Await CI on PR #4648, address any remaining review feedback, then merge and release the lease.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
@@ -265,14 +277,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_progress
 - **Owner:** claude
 - **PR:** not created
-- **Issue:** #4520 (epic #4521)
-- **Branch:** `claude/issue-4520`
-- **Paths:** `scripts/generate_freshness_report.py`, `tests/test_generate_freshness_report.py`, `reports/content-freshness.md`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: 15/15 test_generate_freshness_report.py tests pass; ruff, black, mypy clean)
-- **Summary:** Generates an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old, deriving the review date only from front matter (never a build/publish date).
-- **Next step:** Commit changes, push branch, open PR referencing Closes #4520, and release lease.
-
 - **Issue:** #4567 (epic #4569)
 - **Branch:** `claude/issue-4567`
 - **Paths:** `scripts/validate_accessibility.py`, `config/accessibility-long-description-baseline.json`, `tests/test_validate_accessibility.py`, `.github/workflows/ci-standard.yml`

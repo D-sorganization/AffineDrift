@@ -7,10 +7,12 @@ from pathlib import Path
 
 import pytest
 
+import scripts.generate_freshness_report as freshness_report
 from scripts.generate_freshness_report import (
     STALE_MONTHS,
     FreshnessReportError,
     generate_report,
+    main,
     months_since,
     render_report,
     scan_pages,
@@ -120,3 +122,51 @@ class TestGenerateReport:
         output = tmp_path / "reports/content-freshness.md"
         generate_report(tmp_path, output, REFERENCE, check=False)
         assert generate_report(tmp_path, output, REFERENCE, check=True) == 0
+
+
+class TestCheckIsDeterministicAcrossDays:
+    """`--check` must compare against the as-of date recorded in the
+    committed report, not the wall clock, so it only fails when a source
+    page actually changes (#4520 review)."""
+
+    def _generate(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+        output = tmp_path / "reports/content-freshness.md"
+        monkeypatch.setattr(freshness_report, "_today", lambda: REFERENCE)
+        exit_code = main(["--root", str(tmp_path), "--output", str(output)])
+        assert exit_code == 0
+        return output
+
+    def test_check_passes_on_a_later_day_with_an_unchanged_tree(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _write_page(tmp_path, "pages/a.qmd", 'title: "A"\nlast-reviewed: "2026-01-01"')
+        output = self._generate(tmp_path, monkeypatch)
+
+        later = REFERENCE + dt.timedelta(days=30)
+        monkeypatch.setattr(freshness_report, "_today", lambda: later)
+        exit_code = main(["--root", str(tmp_path), "--output", str(output), "--check"])
+        assert exit_code == 0
+
+    def test_check_fails_after_a_source_page_review_date_changes(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        page = _write_page(tmp_path, "pages/a.qmd", 'title: "A"\nlast-reviewed: "2026-08-01"')
+        output = self._generate(tmp_path, monkeypatch)
+
+        later = REFERENCE + dt.timedelta(days=30)
+        monkeypatch.setattr(freshness_report, "_today", lambda: later)
+        page.write_text('---\ntitle: "A"\nlast-reviewed: "2020-01-01"\n---\n\n# Body\n')
+        exit_code = main(["--root", str(tmp_path), "--output", str(output), "--check"])
+        assert exit_code == 1
+
+    def test_as_of_option_overrides_today_when_generating(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        _write_page(tmp_path, "pages/a.qmd", 'title: "A"')
+        output = tmp_path / "reports/content-freshness.md"
+        monkeypatch.setattr(freshness_report, "_today", lambda: dt.date(2099, 1, 1))
+        exit_code = main(
+            ["--root", str(tmp_path), "--output", str(output), "--as-of", "2026-09-29"]
+        )
+        assert exit_code == 0
+        assert "Reference date: 2026-09-29." in output.read_text(encoding="utf-8")

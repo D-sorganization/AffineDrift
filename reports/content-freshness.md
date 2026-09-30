@@ -4,9 +4,9 @@
 
 Reference date: 2026-09-29. A page is stale when its `last-reviewed` front matter is missing or 12+ months old. This is never derived from a file's build date.
 
-- Pages scanned: 196
+- Pages scanned: 201
 - Stale (reviewed 12+ months ago): 0
-- Never reviewed: 196
+- Never reviewed: 201
 
 ## Never Reviewed
 
@@ -77,9 +77,9 @@ Reference date: 2026-09-29. A page is stale when its `last-reviewed` front matte
 | `/articles/affine-nature-golf-swing.html` | `articles/affine-nature-golf-swing.qmd` |
 | `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` |
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` |
-| `/articles/controllability-drift-ratio.html` | `articles/controllability-drift-ratio.qmd` |
 | `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` |
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` |
+| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` |
@@ -170,14 +170,18 @@ Reference date: 2026-09-29. A page is stale when its `last-reviewed` front matte
 | `/models/programming/workflows.html` | `models/programming/workflows.qmd` |
 | `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` |
 | `/pages/about.html` | `pages/about.qmd` |
+| `/pages/accessibility.html` | `pages/accessibility.qmd` |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` |
 | `/pages/collaborate.html` | `pages/collaborate.qmd` |
 | `/pages/contact.html` | `pages/contact.qmd` |
 | `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` |
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` |
 | `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` |
+| `/pages/glossary.html` | `pages/glossary.qmd` |
+| `/pages/how-to-read.html` | `pages/how-to-read.qmd` |
 | `/pages/notation.html` | `pages/notation.qmd` |
 | `/pages/overview.html` | `pages/overview.qmd` |
+| `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` |
 | `/pages/technology.html` | `pages/technology.qmd` |
 | `/pages/tools.html` | `pages/tools.qmd` |
@@ -194,6 +198,7 @@ Reference date: 2026-09-29. A page is stale when its `last-reviewed` front matte
 | `/resources/learning-path-foundations.html` | `resources/learning-path-foundations.qmd` |
 | `/resources/learning-path-golf-science.html` | `resources/learning-path-golf-science.qmd` |
 | `/resources/learning-paths.html` | `resources/learning-paths.qmd` |
+| `/resources/on-ramp-paths.html` | `resources/on-ramp-paths.qmd` |
 | `/resources/research-review-baseball-pitching.html` | `resources/research-review-baseball-pitching.qmd` |
 | `/resources/research-review-induced-acceleration-analysis.html` | `resources/research-review-induced-acceleration-analysis.qmd` |
 | `/resources/research-review-interaction-forces.html` | `resources/research-review-interaction-forces.qmd` |

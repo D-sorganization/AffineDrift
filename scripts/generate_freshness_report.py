@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -29,6 +30,20 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = ROOT / "reports/content-freshness.md"
 STALE_MONTHS = 12
 LAST_REVIEWED_KEY = "last-reviewed"
+_REFERENCE_DATE_LINE = re.compile(r"^Reference date: (\d{4}-\d{2}-\d{2})\.", re.MULTILINE)
+
+
+def _today() -> dt.date:
+    """Return today's date; a seam so tests can control "today" without mocking stdlib."""
+    return dt.date.today()
+
+
+def _recorded_reference_date(output: Path) -> dt.date | None:
+    """Return the reference date recorded in an already-generated report, if any."""
+    if not output.is_file():
+        return None
+    match = _REFERENCE_DATE_LINE.search(output.read_text(encoding="utf-8"))
+    return dt.date.fromisoformat(match.group(1)) if match else None
 
 
 class FreshnessReportError(ValueError):
@@ -164,10 +179,22 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n", maxsplit=1)[0])
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--as-of",
+        type=dt.date.fromisoformat,
+        default=None,
+        help="Reference date for generation, as YYYY-MM-DD (default: today).",
+    )
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args(argv)
+    if args.check:
+        # Compare against the as-of date the existing report was generated with, not
+        # today's date, so --check only fails when a source page actually changes.
+        reference_date = _recorded_reference_date(args.output) or args.as_of or _today()
+    else:
+        reference_date = args.as_of or _today()
     try:
-        return generate_report(args.root, args.output, dt.date.today(), check=args.check)
+        return generate_report(args.root, args.output, reference_date, check=args.check)
     except FreshnessReportError as exc:
         write_stderr(str(exc))
         return 1
