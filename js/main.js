@@ -40,6 +40,8 @@ import {
     initCriticsCommentsToggle,
 } from "./ui-components.js";
 
+import { initPrintMathTypesetting } from "./pdf.js";
+
 import { updateHistorySidebar, initArticleHistory } from "./history.js";
 
 import {
@@ -83,6 +85,7 @@ runOnDomReady(function () {
     initAccordions();
     initBackToTop();
     initExportToPdf();
+    initPrintMathTypesetting();
     initLightbox();
 
     // --- Phase 2 Accessibility ---

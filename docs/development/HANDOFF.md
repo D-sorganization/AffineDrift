@@ -57,6 +57,77 @@
 1. Once #4486 ("Start Here" page) and WEB-02.1 (Library navbar grouping) merge,
    add the two links to `404.qmd`'s `<nav aria-label="Helpful links">` list and
    close out the remaining acceptance criterion.
+# "What's New" Feed RSS Validation — #4606 (WEB-14.4)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4606`.
+- Branch `claude/issue-4606`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4675 (draft, targets
+  `main`).
+- Governing issue: #4606 (WEB-14.4, epic #4610 / E14 — Reader Validation,
+  Feedback, and Community). Acceptance criteria: "The RSS feed validates" and
+  "Items link to revision history."
+- **Status: partial / Blocked.** Implemented and shipped criterion 1 (the RSS
+  feed validates). Criterion 2 (items link to revision history) is blocked on
+  the still-open prerequisite **#4545 "[WEB-07.3] Real Dates and Per-Article
+  Change History"**, which is the issue that introduces the `changes:`
+  front-matter field and the per-page "Revision history" section this
+  criterion's links would point to. Neither exists anywhere in the repository
+  today (confirmed by grep across `*.qmd` for `changes:` front matter and a
+  "Revision history" heading — zero matches). #4545 itself documents
+  "Enables: 'What's new'", i.e. this issue is the documented downstream
+  consumer of #4545, not an independent design decision this session can make
+  up (the `changes:` schema and the anchor id/heading the revision-history
+  section will render under are #4545's design, not #4606's).
+- Completed (criterion 1, "The RSS feed validates"):
+  - `scripts/generate_feed.py`: added `validate_feed_xml(xml: str) -> list[str]`,
+    a structural RSS 2.0 validator (well-formed XML; rss element with
+    version="2.0"; required channel title/link/description elements; every
+    item element has a title or description, an absolute http(s) link
+    element, a guid element, and an RFC-822-parseable pubDate element; no
+    duplicate guid values across items). `main()` now calls it after
+    building the XML and raises the new `FeedValidationError` instead of
+    writing an invalid feed to disk — DbC: fail loudly at the boundary
+    rather than silently publishing something a reader's feed client would
+    reject.
+  - This closes the actual gap: the generator already produced well-formed
+    output in practice, but nothing enforced it, so a future regression (e.g.
+    a frontmatter field with an unescaped value bypassing `escape()`, or a
+    future edit dropping a required element) would have shipped to
+    `docs/feed.xml`/`feed.xml` undetected. `deploy-website.yml` already
+    invokes `scripts/generate_feed.py` on every deploy, so this check is now
+    load-bearing in production without any workflow change.
+  - TDD: `tests/test_generate_feed.py` — wrote `TestValidateFeedXml` (9 cases:
+    valid-output, empty-item-list, malformed XML, wrong RSS version, missing
+    channel title, missing/relative item link, unparseable pubDate, duplicate
+    guids) and `TestMainValidatesBeforeWriting` (main() raises and writes
+    nothing on an invalid feed) against the pre-existing module first,
+    confirmed RED (`ImportError: cannot import name 'FeedValidationError'`),
+    then implemented until GREEN.
+  - Ran the generator against the real repository content
+    (module invocation with an output path under a scratch directory): 30
+    items, no validation errors — the live feed passes the new gate as-is.
+- Not done (criterion 2, blocked): no `changes:` front-matter reading, no
+  "Revision history" rendering, and no change to feed item link targets.
+  Guessing at #4545's unimplemented schema/anchor here risks a second,
+  conflicting implementation landing when #4545 itself ships. The optional
+  "email digest through a privacy-respecting provider" named in the issue's
+  Proposal (not one of its two checkbox acceptance criteria) was also not
+  started, for the same reason plus its own unresolved provider-choice design
+  question.
+
+## Next Steps
+
+1. Land #4545 (WEB-07.3): the `changes:` front-matter field and per-page
+   "Revision history" section.
+2. Once #4545's anchor/heading id is fixed, point each feed item's link
+   at that page's revision-history anchor (or add a second, changelog-scoped
+   feed sourced from `changes:` entries, per the issue's "dated changelog"
+   proposal) and re-check criterion 2.
+3. Decide (frontier/owner) whether the optional email digest is still wanted
+   for this issue or should be split into its own follow-up, since it is not
+   one of the two checkbox acceptance criteria.
+# Implementation Handoff — Print and PDF Editions for Books and Core Series (#4550)
 # Math Accessibility Verification — #4565 (WEB-09.5)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -350,6 +421,66 @@
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4550
+- Branch: claude/issue-4550
+- Baseline commit: 047fc82b (origin/main)
+- Implementation commit: SELF
+- Pull request: to be opened as a draft by this session
+- Governing issue/epic: #4550 (WEB-07.9, part of epic #4552 "E7 — Researcher Infrastructure")
+
+## Objective and Status
+
+- Objective: three acceptance criteria — (1) PDFs built in CI and linked from the header card,
+  (2) one print stylesheet, (3) print includes typeset math.
+- Status: **partial / honest-scope**. Criteria (2) and (3) are implemented and tested. Criterion
+  (1) is deliberately not implemented — see Blocked below.
+- Completed:
+  - `css/print.css` / `styles.css`: merged the two competing `@media print` blocks (the
+    comprehensive one in `css/print.css` and the "In Layman's Terms" one at `styles.css:1788`)
+    into `css/print.css` alone, so exactly one print stylesheet exists.
+  - `css/print.css`: changed `@page { size: a4; }` to `size: auto`, so the browser honors the
+    printer/OS paper-size choice instead of forcing A4 — this is how a static CSS stylesheet
+    supports both Letter and A4 (there is no CSS construct to force "either A4 or Letter";
+    `auto` is the standard way to defer to the print dialog).
+  - `js/pdf.js`: new `initPrintMathTypesetting()`, wired from `main.js`, registers a
+    `beforeprint` listener that calls `MathJax.typesetPromise()`. The existing `.export-to-pdf`
+    button already delayed printing by `MATHJAX_RENDER_DELAY_MS` but never actually forced a
+    typeset, and neither path covered a native Ctrl+P print. Because MathJax here is
+    lazy-loaded (`loader.load: ['ui/lazy']`), off-screen math is left as raw TeX until scrolled
+    into view (the concern named by the referenced WEB-11.3), so this is the "typesetting is
+    forced before print" fallback WEB-11.3 itself describes.
+  - Tests: `tests/test_print_stylesheet_consolidation.py` (4 tests, written first, RED confirmed
+    against the pre-change two-block/A4-only state), plus new `tests/pdf.test.js` (2 tests) for
+    the `beforeprint` handler.
+- **Blocked:** criterion (1), "PDFs built in CI and linked from the header card," was not
+  implemented. Investigation found:
+  - The compiled book PDFs (`articles/The_Physics_of_Golf/main.pdf`,
+    `articles/The_Geometry_of_Motion/Volume_*/main.pdf`, `articles/Launch_Monitor_Technology_Review/main.pdf`)
+    are hand-committed binaries built from a separate LaTeX source tree
+    (`main.tex`/`chapters/`). `.github/workflows/compile-textbooks.yml` already compiles and
+    verifies them in CI on every push/PR that touches `.tex`/`.bib` sources, but only uploads
+    them as 14-day CI artifacts — it does not commit them back or publish them to `docs/`.
+  - The web-reading experience for those same two books is a **second, independent** Quarto
+    source tree (`articles/The_Physics_of_Golf/quarto/*.qmd`,
+    `articles/The_Geometry_of_Motion/quarto/*.qmd`), with no automated check that the two trees
+    stay in sync. Linking the committed PDF from every chapter's header card
+    (`scripts/filters/page-header-card.lua`) without a freshness guarantee risks silently
+    surfacing a stale/diverged "official" PDF next to the live HTML chapter — a correctness
+    problem this repository's own tooling (claim-audit gates, `check_quarto_render_coverage.py`)
+    treats seriously elsewhere.
+  - The issue's "Proposal" text ("attached to releases and covered by the DOI") names
+    infrastructure that does not exist in this repository at all: no `CITATION.cff`, no GitHub
+    Releases workflow, no Zenodo/DOI integration. Building that is an architecture decision
+    (which release mechanism, which DOI provider, concept vs. versioned DOI), not a mechanical
+    change — `tier:strong` territory under this repo's own Agent Tiers rule regardless of this
+    issue's `tier:cli` label (the issue also independently carries `complexity:complex`).
+  - Scope of "header card" and "core series" is also open: every chapter across two books, six
+    Geometry-of-Motion volumes, and the proximal-distal monograph, or only each book's/series's
+    landing page? Guessing wrong here either ships a misleading stale-PDF link or a change the
+    frontier reviewer has to unwind.
+  - Per this session's own instructions ("do not guess; push what you have, open the draft PR
+    with a Blocked section, and stop"), criterion (1) is left for an owner/frontier decision
+    rather than guessed at.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4564
 - Branch: claude/issue-4564
 - Baseline commit: 047fc82b (origin/main)
@@ -421,6 +552,50 @@
 ## Files and Decisions
 
 - Files changed:
+  - `css/print.css`: `@page` size `a4` → `auto`; added the merged-in "In Layman's Terms" print
+    rules.
+  - `styles.css`: removed its competing `@media print` block, replaced with a pointer comment.
+  - `js/pdf.js`: new `initPrintMathTypesetting()`.
+  - `js/main.js`: imports and calls `initPrintMathTypesetting()` from `./pdf.js`.
+  - `tests/test_print_stylesheet_consolidation.py`: new file, 4 tests.
+  - `tests/pdf.test.js`: new file, 2 tests for `initPrintMathTypesetting`.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
+- Key decisions: see "Completed" and "Blocked" above.
+- User-owned or unrelated worktree changes: none observed. Note: this file
+  (`docs/development/HANDOFF.md`) already contained a pre-existing unresolved merge-conflict
+  marker (`>>>>>>> origin/main`) further down, from a prior session's edit — not introduced or
+  touched by this change; flagged in the PR body rather than fixed here (out of this issue's
+  scope).
+
+## Validation
+
+- `python3 -m pytest tests/test_print_stylesheet_consolidation.py -q` — 4 passed.
+- `python3 -m pytest tests/test_page_header_card.py::test_print_stylesheet_includes_page_header_card_rules tests/test_summary_takeaways.py -k print -q` — 2 passed (unaffected by the merge).
+- `npx jest` — 26 suites, 437 passed, 19 skipped, 0 failed.
+- `python3 -m ruff check .` — all checks passed.
+- `python3 -m black --check --line-length 100 .` — all files unchanged.
+- `python3 -m scripts.check_css_architecture` — PASS (62 files scanned).
+- `python3 -m scripts.check_styles_budget` — PASS (3,314 / 3,400 line budget).
+
+## Blockers and Risks
+
+- Blocker: criterion (1) needs an owner/frontier decision on CI-publication freshness, header-card
+  link scope, and (per the Proposal text) release/DOI infrastructure choice — see "Blocked" above.
+- Risk: none to existing print/PDF behavior — the CSS merge is a pure relocation (same selectors,
+  same declarations) plus the `a4` → `auto` page-size change, and the new `beforeprint` handler is
+  additive and no-ops when `MathJax` is undefined.
+
+## Next Steps
+
+1. Push the branch and open the draft PR with `Fixes #4550` and the Blocked section above.
+2. Owner/frontier decides the deferred scope for criterion (1); implement in this issue or split
+   into a follow-up.
+
+## Change Log
+
+- `SELF` — Consolidate print CSS into one stylesheet, support Letter and A4, force MathJax
+  typesetting before print; defer the PDF-build/header-card-link criterion pending a scope
+  decision (#4550).
   - `.github/workflows/cross-browser-nightly.yml`: new nightly workflow.
   - `scripts/report_e2e_browser_failures.py`: new issue-filing script.
   - `tests/test_report_e2e_browser_failures.py`: new pytest suite.
