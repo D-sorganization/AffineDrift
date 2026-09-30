@@ -425,4 +425,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
-| 2026-09-29 | #4513 | Record blocker: layered-page-template rollout deferred pending WEB-03.1/03.4/03.5 (#4506/#4509/#4510), none of which are merged yet. |
+| 2026-09-29 | #4513 | Record blocker: layered-page-template rollout deferred pending WEB-03.1/03.4 (#4506/#4509); WEB-03.5 (#4510) has since merged. |

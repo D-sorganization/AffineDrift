@@ -7,7 +7,7 @@
 - Branch: `claude/issue-4513`
 - Baseline commit: ebced38f
 - Implementation commit: SELF
-- Pull request: not created yet (draft PR opens with this commit)
+- Pull request: #4647 (draft, open)
 - Governing issue/epic: #4513 (epic #4514)
 
 ## Objective and Status
@@ -32,22 +32,22 @@ Checked via `gh issue view` and `git grep`/file search of the working tree:
   (`scripts/filters/summary-takeaways.lua`, `css/components/summary-takeaways.css` exist).
 - WEB-03.4 (#4509, "what this shows / what it does not show" block, `tier:strong`) — **open**,
   unmerged. No such component exists anywhere in the tree.
-- WEB-03.5 (#4510, "where next" footer, `tier:cli`) — **open**, unmerged. No such component
-  exists anywhere in the tree.
+- WEB-03.5 (#4510, "where next" footer, `tier:cli`) — **closed and merged.**
+  `css/components/where-next.css` and `scripts/filters/where-next.lua` exist on `origin/main`.
 
-Two of the three missing pieces (#4506, #4509) are `tier:strong` design-judgement work reserved
+The remaining two missing pieces (#4506, #4509) are `tier:strong` design-judgement work reserved
 for frontier agents; a `tier:cli` agent must not guess at their schema or component design while
-rolling out the template. The third (#4510) is `tier:cli` but is simply not built yet. Applying
-"the template" to core pages is not possible while 3 of its 5 defining components do not exist,
-and doing so now would also make it impossible to verify the acceptance criterion "no change to
-the substantive technical content" against a stable target shape.
+rolling out the template. Applying "the template" to core pages is not possible while 2 of its 5
+defining components do not exist, and doing so now would also make it impossible to verify the
+acceptance criterion "no change to the substantive technical content" against a stable target
+shape.
 
 No source, test, article, or CSS changes were made. Only this handoff and the paired
 development-log entry (`DL-#4513`) were updated to record the block.
 
 ## Next Steps
 
-1. Wait for #4506, #4509, and #4510 to merge.
+1. Wait for #4506 and #4509 to merge.
 2. Re-run the `git grep`/file-existence check above to confirm all five components are present
    before starting the rollout on the ≥30 listed pages.
 3. Re-open or resume work on #4513 once the dependency check passes.
@@ -55,6 +55,8 @@ development-log entry (`DL-#4513`) were updated to record the block.
 ## Change Log
 
 - `SELF` — Record the WEB-03.1/03.4/03.5 dependency block for #4513; no implementation attempted.
+- `SELF` — Review fix on #4647: #4510 (WEB-03.5, "where next" footer) is now closed and merged;
+  update the dependency count to 2 of 5 missing (#4506, #4509) instead of 3.
 
 ---
 
