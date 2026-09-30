@@ -1,5 +1,34 @@
+# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
+- Baseline commit: fc36109d (origin/main)
+- Implementation commit: 67256799
+- Pull request: #4664 (https://github.com/D-sorganization/AffineDrift/pull/4664)
+- Governing issue: #4500 (WEB-02.6)
+
+## Objective and Status
+
+- Objective: Hide, mark, or retire stub hubs and enforce scaffolding styling policy:
+  1. Scaffolding/stub pages must never use success styling (`status-banner--success`, `callout-success`, etc.).
+  2. No hub card links to a page under 300 words unless it carries a Planned badge.
+- Status: Implementation complete, tests and static checks passing; opening PR.
+- Completed:
+  - Added `.status-pill--planned` and `.status-badge--planned` CSS styles in `css/components/status-banner.css` and bundled to `docs/styles.css`.
+  - Replaced misleading success status styling on scaffolding pages (`resources/research-reviews.qmd`, `pages/book-reviews.qmd`, individual review stubs, `pages/daydreams-doodles.qmd`) with warning status styling indicating planned / scaffolding phase expected 2026-Q4.
+  - Replaced promoted stub card on `resources/resources.qmd` with Research Reviews hub card carrying `Planned` badge.
+  - Added `Planned` badges to all 4 review entries on `resources/research-reviews.qmd`, to `Dead Fish Swimming Upstream` on `pages/tools.qmd`, and `(Planned)` marks to inward links on `resources/resources-books.qmd`, `resources/resources-papers.qmd`, and `resources/resources-researchers.qmd`.
+  - Implemented `scripts/check_scaffolding_styling.py` to enforce that scaffolding pages never use success styling and that hub cards linking to stubs (< 300 words) carry a Planned badge.
+  - Added comprehensive test suite `tests/test_check_scaffolding_styling.py` (13 tests) and wired check into `.github/workflows/ci-standard.yml`.
+  - Regenerated claim audit evidence digests (`data/trust/` and `reports/`).
+
+---
+
 # Implementation Handoff — Social Cards per Page (#4578)
 # Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -79,6 +108,9 @@
 ## Next Steps
 
 1. None outstanding for #4549 from this session.
+
+---
+
 # Implementation Handoff — Create "How to Read This Site" Guide (#4491)
 
 ## Identity
@@ -142,6 +174,7 @@
   - Integrated `How to Read This Site` into `_quarto.yml` navbar Read menu and footer navigation.
   - Added unit test suite `tests/test_how_to_read.py` (6 tests).
   - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
 
 ---
 
@@ -348,7 +381,6 @@
 
 ---
 
->>>>>>> origin/main
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -395,6 +427,7 @@
   re-enabled title, the next step is to inspect that job's trace/video artifact rather than
   re-guess a timing fix.
 - Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
+
 # Implementation Handoff — Report Broken External Links as Issues (#4596)
 # Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
 
