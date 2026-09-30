@@ -31,6 +31,31 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Scheduled external-link check now upserts a single tracking issue (find-or-update, close on all-clear) instead of only logging, checks DOI links through their doi.org redirect, and attaches an archive.org fallback suggestion to each dead link.
 - **Next step:** Push branch, open draft PR referencing Closes #4596, and release the fleet lease.
 
+### DL-#4588 · Keep Internal Governance Vocabulary Out of Reader Prose
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4588 (epic #4594)
+- **Branch:** `claude/issue-4588`
+- **Paths:** `scripts/check_governance_vocabulary.py`, `tests/test_check_governance_vocabulary.py`, `config/governance-vocabulary-baseline.json`, `pages/glossary.qmd`, `.github/workflows/ci-standard.yml`, plus prose edits across `pages/`, `resources/`, `books/`, and `models/`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: 52/52 tests pass across test_check_governance_vocabulary.py and test_check_terminology.py; lint clean against baseline)
+- **Summary:** Adds a warn-mode CI lint for internal governance vocabulary ("governed", "qualified", "provenance", "protected", "fail-closed") in reader prose, a plain-language glossary page, and removes the vocabulary from the hub/entry reader pages. Full 75% corpus-wide reduction is blocked on the still-open prerequisite #4587 (editorial style guide) for the remaining `articles/` chapter corpus; see the HANDOFF.md Blocked section.
+- **Next step:** Land #4587, then use its standard to rewrite the `articles/` chapter corpus and shrink the baseline.
+
+### DL-#4591 · Readability Measurement Tool
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4591 (draft)
+- **Issue:** #4591 (WEB-12.5; epic #4594 / E12)
+- **Branch:** `claude/issue-4591`
+- **Paths:** `scripts/check_readability.py`, `tests/tools/test_check_readability.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (33/33 new pytest cases pass; ruff, black --line-length 100, and mypy clean on the new module.)
+- **Summary:** Advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages, wired into CI as a non-blocking step with a JSON report artifact; threshold (grade 10) taken from WEB-12.1's stated targets since the style guide itself (WEB-12.1) is still open.
+- **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress
