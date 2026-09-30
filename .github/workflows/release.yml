@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pick-runner:
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Select runner
+        id: check
+        env:
+          REPO_VISIBILITY: ${{ github.event.repository.visibility }}
+          RUNNER_TARGET: ${{ vars.RUNNER_TARGET }}
+        run: |
+          mkdir -p "$(dirname "$GITHUB_OUTPUT")"
+          if [ "$REPO_VISIBILITY" != "public" ]; then
+            RUNNER=d-sorg-fleet
+            WHY="repository is '${REPO_VISIBILITY:-unknown}'; hosted runners are metered"
+          elif [ "$RUNNER_TARGET" = "local" ]; then
+            RUNNER=d-sorg-fleet
+            WHY="repository is public but RUNNER_TARGET=local"
+          else
+            RUNNER=ubuntu-latest
+            WHY="repository is public; hosted runners are free and keep fork PRs off the fleet"
+          fi
+          echo "runner=$RUNNER" >> "$GITHUB_OUTPUT"
+          echo "Routing to $RUNNER ($WHY)."
+
+  build-and-release:
+    name: Build wheel and create release
+    needs: pick-runner
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install build
+
+      - name: Build wheel
+        run: |
+          python -m build --wheel
+
+      - name: Run wheel smoke test
+        run: |
+          python scripts/smoke_test_installed_wheel.py
+
+      - name: Attach wheel to GitHub Release
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
+        with:
+          generate_release_notes: true
+          files: |
+            dist/*.whl
