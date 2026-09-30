@@ -115,14 +115,14 @@ def test_dockerfile_node_pin_matches_nvmrc() -> None:
     assert match.group(1) == pinned
 
 
-def test_workflows_node_version_matches_nvmrc() -> None:
-    """Every workflow's `node-version` matches the `.nvmrc` pin."""
-    pinned = _read(".nvmrc").strip()
+def test_workflows_read_node_version_from_nvmrc() -> None:
+    """Every setup-node step reads `.nvmrc` instead of hard-coding a version."""
     for workflow in NODE_VERSION_WORKFLOWS:
         text = _read(workflow)
-        versions = re.findall(r'node-version:\s*"(\d+)"', text)
-        assert versions, workflow
-        assert all(v == pinned for v in versions), (workflow, versions)
+        setup_steps = text.count("actions/setup-node@")
+        assert setup_steps, workflow
+        assert text.count("node-version-file: .nvmrc") == setup_steps, workflow
+        assert not re.search(r"^\s*node-version:", text, re.MULTILINE), workflow
 
 
 def test_claude_md_documents_the_pinned_node_version() -> None:

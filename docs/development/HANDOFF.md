@@ -24,14 +24,11 @@
   RED before the fix with 4 failures, GREEN after);
   `python -m scripts.check_spec_changelog` (passed).
 
-## Next Steps
-
-1. In a session allowed to touch `.github/workflows/**`, change each of the
-   6 `actions/setup-node@...` steps in `ci-standard.yml` (x3),
-   `cross-browser-nightly.yml` (x1), and `deploy-website.yml` (x2) from
-   `with: node-version: "22"` to `with: node-version-file: .nvmrc`.
-2. Re-run `tests/test_single_source_pins.py` to confirm it still passes once
-   CI reads the file directly.
+- Lead follow-up (2026-09-30): switched the 6 `actions/setup-node` steps to
+  `node-version-file: .nvmrc` (every one follows a full checkout, so the file is
+  present), and replaced the drift check with
+  `test_workflows_read_node_version_from_nvmrc`. Because it changes workflows,
+  this PR ships alone. `pytest tests/test_single_source_pins.py`: 10 passed.
 
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 

@@ -25,12 +25,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **PR:** not created yet at this commit; opening a draft PR immediately after
 - **Issue:** #4601 (WEB-13.7; epic #4604 / E13)
 - **Branch:** `claude/issue-4601`
-- **Paths:** `.nvmrc`, `Dockerfile`, `CLAUDE.md`, `tests/test_single_source_pins.py`
+- **Paths:** `.nvmrc`, `Dockerfile`, `CLAUDE.md`, `.github/workflows/{ci-standard,cross-browser-nightly,deploy-website}.yml`, `tests/test_single_source_pins.py`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_single_source_pins.py` 10/10 pass; `python -m scripts.check_spec_changelog` passed)
-- **Summary:** Adds `.nvmrc` (Node 22) as the single-source Node version pin, updates `Dockerfile`'s `ARG NODE_MAJOR` and `CLAUDE.md`'s Docker section to match it, and adds pytest consistency checks against the Dockerfile and every CI workflow's `node-version`. Partial: CI workflows still hard-code `node-version: "22"` rather than reading `.nvmrc` via `node-version-file`, which needs a `.github/workflows/**` edit out of scope for this session; see HANDOFF.md.
-- **Next step:** In a session allowed to edit workflows, switch the 6 `actions/setup-node` steps to `node-version-file: .nvmrc`.
-### DL-#4606 · "What's New" Feed RSS Validation
+- **Summary:** Adds `.nvmrc` (Node 22) as the single-source Node version pin, updates `Dockerfile`'s `ARG NODE_MAJOR` and `CLAUDE.md`'s Docker section to match it, and switches all six `actions/setup-node` steps (`ci-standard.yml` x3, `cross-browser-nightly.yml`, `deploy-website.yml` x2) to `node-version-file: .nvmrc`. `tests/test_single_source_pins.py` checks the Dockerfile, CLAUDE.md, and that every setup-node step reads `.nvmrc` with no hard-coded `node-version`.
+- **Next step:** Merge the draft PR once CI (which now reads `.nvmrc`) is green.
 
 - **State:** in_review
 - **Owner:** claude
