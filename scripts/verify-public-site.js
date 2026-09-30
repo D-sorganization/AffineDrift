@@ -657,11 +657,8 @@ async function main() {
   );
   const axe = report.axe_policy;
   if (axe.mode !== 'off') {
-    const cellSuffix = typeof axe.scanned_cell_count === 'number'
-      ? ` (${axe.scanned_cell_count} cells)`
-      : '';
     console.log(
-      `axe-core (${axe.mode}): ${axe.scanned_route_count} routes scanned${cellSuffix}, ` +
+      `axe-core (${axe.mode}): ${axe.scanned_route_count} routes scanned, ` +
       `${axe.violation_count} serious/critical violations on ${axe.routes_with_violations.length} routes`,
     );
     if (axe.mode === 'warn' && axe.violation_count > 0) {
