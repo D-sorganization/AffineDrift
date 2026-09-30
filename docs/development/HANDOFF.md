@@ -7,7 +7,7 @@
 - Branch: claude/issue-4564
 - Baseline commit: 047fc82b (origin/main)
 - Implementation commit: SELF
-- Pull request: not created yet (draft PR to be opened this session)
+- Pull request: https://github.com/D-sorganization/AffineDrift/pull/4685 (draft)
 - Governing issue/epic: #4564 (WEB-09.4; epic #4569 / E9 — Accessibility Conformance)
 
 ## Objective and Status
@@ -33,15 +33,43 @@
   - Added `scripts/report_e2e_browser_failures.py`: parses one or more
     Playwright JSON reporter files, extracts tests whose final verdict was an
     unexpected failure, builds one issue per distinct `(browser, test title)`
-    pair, and skips any pair already covered by an existing open issue in the
-    same title (query via `gh issue list --label cross-browser`) — the
-    dedup-by-title acceptance criterion.
-  - Added `tests/test_report_e2e_browser_failures.py` (11 tests, TDD:
-    confirmed RED before implementing) covering nested-suite JSON parsing,
+    pair, and skips any pair already covered by an existing open issue with
+    the same title — the dedup-by-title acceptance criterion.
+  - Added `tests/test_report_e2e_browser_failures.py` (29 tests, TDD:
+    confirmed RED before implementing, both in the initial commit and for
+    each round of review feedback below) covering nested-suite JSON parsing,
     the title-building dedup key, issue body content, and dedup selection
     (including same-title-different-browser must NOT be deduped together).
+  - Review feedback round 1 — three behavior changes, each landed test-first:
+    1. **No new labels.** `ISSUE_LABELS` dropped the nonexistent
+       `cross-browser` label (now just `("ci", "automation")`, both of which
+       already exist in the repo). `fetch_existing_open_titles` no longer
+       filters by `--label`; it now uses
+       `gh issue list --search '"[Cross-Browser Nightly]" in:title'` and a new
+       pure `filter_cross_browser_titles()` helper keeps only titles that
+       actually start with the reporter's prefix (defends against `--search`
+       matching the phrase elsewhere in a title).
+    2. **Missing/unparseable/empty reports no longer crash or vanish
+       silently.** New `load_report_failures()` replaces the old
+       `load_report()`: a missing file, an empty file, or invalid JSON for a
+       given `--report` path now yields one synthetic failure entry (title
+       `"no test report produced (job failed before tests ran)"`, project
+       derived from the filename via `derive_project_from_report_path()`,
+       e.g. `playwright-report-webkit.json` -> `webkit`) instead of raising or
+       being skipped.
+    3. **Issue-creation cap.** When a run has more than
+       `MAX_INDIVIDUAL_ISSUES` (5) new (not-already-open) failures, one rollup
+       issue is opened instead — titled `"[Cross-Browser Nightly] "` followed
+       by the failure count, `" failures on "`, and today's UTC date in
+       `YYYY-MM-DD` form (`build_summary_issue_title` /
+       `build_summary_issue_body`) and listing every `(project, test, file)`
+       in a table. Per-failure dedup against
+       already-open issues still applies before the count is taken, and
+       `--dry-run` prints the rollup title the same way it prints individual
+       titles.
   - Updated `docs/development/DEVELOPMENT_LOG.md` (`DL-#4564`) and this file.
-- Remaining: Add SPEC.md change-log row, commit, push, open the draft PR.
+- Remaining: Commit, push, and post the review-feedback update to draft PR
+  #4685.
 
 ## Files and Decisions
 
@@ -61,25 +89,35 @@
   - Issue dedup keys on the rendered issue title, built as
     `[Cross-Browser Nightly] ` followed by the browser project name, a colon,
     and the Playwright spec title, rather than a hidden marker, matching the
-    issue's literal "deduplicated by title" wording; the
-    `cross-browser` label scopes the `gh issue list` lookup so unrelated open
-    issues with coincidentally similar titles are not matched.
+    issue's literal "deduplicated by title" wording; a title search
+    (`gh issue list --search`) plus a prefix filter scopes the lookup instead
+    of a label, since the repo has no `cross-browser` label and this script
+    must not create one.
+  - The rollup-issue threshold (`MAX_INDIVIDUAL_ISSUES = 5`) is a plain
+    constant, not a CLI flag: nothing in the issue or the review feedback asks
+    for it to be tunable per run, and a flag nobody sets is just dead surface
+    area.
   - Did not touch `ci-standard.yml`'s Chromium-only `e2e-tests` job: the issue
     is additive (a new nightly job), not a change to the PR-gated lane.
 - User-owned or unrelated worktree changes: none observed.
 
 ## Validation
 
-- `python3 -m pytest tests/test_report_e2e_browser_failures.py -q` — 11 passed.
+- `python -m pytest -q -o addopts= tests/test_report_e2e_browser_failures.py` —
+  29 passed (11 from the initial commit + 18 added for the three review-
+  feedback behaviors, all confirmed RED before implementation).
+- `python -m ruff check scripts/report_e2e_browser_failures.py tests/test_report_e2e_browser_failures.py` —
+  all checks passed.
+- `python -m black --check --line-length 100 scripts/report_e2e_browser_failures.py tests/test_report_e2e_browser_failures.py` —
+  both files unchanged.
 - `python3 -m pytest tests/ --cov=src --cov=scripts --cov-report=term-missing --timeout=120 -q` —
-  full suite passes at 79.11% coverage (floor 75%); one pre-existing failure
-  in `tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section`
+  full suite passes at 79.11% coverage (floor 75%) as of the initial commit;
+  one pre-existing failure in
+  `tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section`
   unrelated to this change (pandoc emits a `div` element with that id instead
   of the expected `section` element in this environment).
-- `python3 -m ruff check .` — all checks passed.
-- `python3 -m black --check --line-length 100 .` — all files unchanged.
 - `python3 -m scripts.check_workflow_action_pins` — all workflow actions
-  pinned to immutable SHAs.
+  pinned to immutable SHAs (workflow file itself untouched by this round).
 - Not run: the nightly workflow itself (requires a scheduled/dispatched
   Actions run on the fleet runner with real browser binaries; cannot execute
   GitHub Actions locally).

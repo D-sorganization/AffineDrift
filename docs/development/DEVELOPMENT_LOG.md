@@ -22,13 +22,13 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** draft (see HANDOFF.md for link)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4685 (draft)
 - **Issue:** #4564 (WEB-09.4; epic #4569 / E9)
 - **Branch:** `claude/issue-4564`
 - **Paths:** `.github/workflows/cross-browser-nightly.yml`, `scripts/report_e2e_browser_failures.py`, `tests/test_report_e2e_browser_failures.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: 11/11 tests in test_report_e2e_browser_failures.py pass; full `pytest --cov=src --cov=scripts` 79.11% coverage, one pre-existing unrelated failure in test_dates_and_history.py; ruff and black --line-length 100 clean repo-wide; `python3 -m scripts.check_workflow_action_pins` clean)
-- **Summary:** Adds a nightly workflow that runs `tests/e2e/smoke.spec.js` (the existing representative public-route + behavioral-invariant suite) against Firefox and WebKit — the two `playwright.config.js` projects `ci-standard.yml`'s PR-gated `e2e-tests` job never exercises — and files one deduplicated GitHub issue per distinct (browser, test title) failure via `scripts/report_e2e_browser_failures.py`.
+- **Last verified:** 2026-09-30 (SELF, review feedback round 1: 29/29 tests in test_report_e2e_browser_failures.py pass via `python -m pytest -q -o addopts=`; ruff and black --line-length 100 clean on the changed files; no-new-labels, missing-report-handling, and issue-cap behaviors each landed test-first)
+- **Summary:** Adds a nightly workflow that runs `tests/e2e/smoke.spec.js` (the existing representative public-route + behavioral-invariant suite) against Firefox and WebKit — the two `playwright.config.js` projects `ci-standard.yml`'s PR-gated `e2e-tests` job never exercises — and files deduplicated-by-title GitHub issues via `scripts/report_e2e_browser_failures.py`: one per distinct (browser, test title) failure, using only the repo's existing `ci`/`automation` labels, rolling more than 5 new failures into a single dated summary issue, and treating a missing/empty/unparseable report as a failure of its own instead of crashing or vanishing.
 - **Next step:** Owner/frontier review of the draft PR; the schedule cannot be exercised end-to-end until it first fires on `main`, so verify the first nightly run once merged.
 
 ### DL-#4578 · Social Cards per Page
