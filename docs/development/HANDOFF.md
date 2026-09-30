@@ -1,3 +1,89 @@
+# DCR Visualiser Widget — #4535 (WEB-06.5)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4535`.
+- Branch `claude/issue-4535`, commit `SELF`; pull request: to be opened as a draft by this
+  session.
+- Governing issue: #4535 (WEB-06.5, child of epic #4543 "[E6] Interactive Models and
+  Reproducibility"). Objective: an interactive widget, driven by
+  `src/affine_control/reachability.py::instantaneous_scalar_dcr`, showing how the DCR ratio
+  changes through a swing phase and explicitly demonstrating why DCR is not a reachability
+  certificate (claim `ad-dcr-001`), embedded on the DCR page with the claim linked, plus a
+  parity test.
+- Design: WEB-06.1 (the ADR deciding between `{ojs}`/Pyodide/Shinylive for interactive widgets)
+  is still open and `tier:strong`, so this widget follows the only existing precedent in the
+  repo — `articles/rotation-converter.qmd`'s plain hand-rolled JS engine plus a separate UI
+  script, loaded via `<script src="../js/...">` from a raw `{=html}` block, no new build
+  tooling. No new CSS file was added; the widget uses inline styles matching
+  `rotation-converter.qmd`'s existing convention.
+- The widget compares two `LinearScalarSystem`s that share one instantaneous DCR at the start
+  of the phase — an additive-drift system (`gradient=0`) and a state-dependent-drift system
+  (`gradient=ubar/x0`) — and evolves each along its own zero-input drift trajectory as the
+  reader drags a swing-phase slider. This is the exact scenario already governed by
+  `tests/test_dcr_event_sensitivity_protocol.py::test_state_dependent_drift_breaks_any_dcr_to_reachable_width_mapping`
+  (both systems: instantaneous DCR = 1; reachable-interval widths = 2 and 2(e−1)), which gives
+  both the Python and JS test suites the same anchored ground truth.
+- Added:
+  - `js/dcr-visualizer.js` — pure, DOM-free JS mirror of `LinearScalarSystem`,
+    `instantaneous_scalar_dcr`, `scalar_linear_reachable_interval`, and
+    `constant_additive_drift_interval`, plus the two zero-input drift trajectories
+    (`additiveDriftState`, `multiplicativeDriftState`) used to evolve state through the phase.
+  - `js/dcr-visualizer-ui.js` — DOM wiring: reads the `x0`/`ubar`/`horizon`/phase-slider inputs,
+    validates them (nonzero `x0`, positive `ubar`, nonnegative `horizon`) with the same
+    fail-loud contract as the Python dataclass, renders an inline SVG line chart of DCR across
+    the phase for both systems, an accessible data table of sampled values, and the computed
+    reachable intervals/widths.
+  - Embedded the widget in `articles/controllability-drift-ratio.qmd`, in a new
+    "Interactive: DCR Through a Swing Phase" subsection directly after the existing
+    "Executable Constant-Drift Counterexample" subsection, with
+    `<a data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">` linking the same registered
+    claim already cited earlier in the article.
+  - `tests/dcr-visualizer.test.js` (17 cases) and `tests/dcr-visualizer-ui.test.js` (5 cases) —
+    Jest parity tests for the pure module and a DOM smoke test that extracts the actual
+    `{=html}` block from the `.qmd` file (mirroring `tests/rotation-converter-ui.test.js`'s
+    pattern) and exercises the live widget, including its two error paths (`x0 = 0`,
+    `ubar <= 0`).
+  - `tests/test_dcr_visualizer_parity.py` (5 cases) — recomputes the same governed fixture
+    directly from `src/affine_control/reachability.py`, asserts the widget's numeric defaults
+    in the article match that exact fixture, and asserts the claim link is present. Together
+    with the Jest suite (which computes the identical numbers from the JS implementation),
+    this is the "parity test" required by the acceptance criteria — there is no existing
+    cross-runtime (Python-calls-Node) execution harness in this repo to build a single
+    combined test on.
+  - Regenerated the pinned SHA-256/revision digests that reference
+    `articles/controllability-drift-ratio.qmd`'s bytes after editing it:
+    `python -m scripts.regenerate_claim_audit_evidence` (touches
+    `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`)
+    and `python -m scripts.generate_research_readiness_library` (touches
+    `data/research_protocols/library.json`, `data/research_protocols/public_summary.json`).
+    These two generators reference each other's output (the research-readiness library's own
+    digest is itself pinned as evidence for an unrelated route, `proximal-distal-falsification-atlas`),
+    so both were re-run until both `--check` invocations passed cleanly.
+- Validation commands run in this worktree:
+  - `npm install` (node_modules was not present in the worktree).
+  - `npx jest tests/dcr-visualizer.test.js tests/dcr-visualizer-ui.test.js` → 24 passed.
+  - `python3 -m pytest tests/test_dcr_visualizer_parity.py tests/test_dcr_reachability_contract.py tests/test_dcr_article_rigor.py tests/test_dcr_event_sensitivity_protocol.py tests/test_scientific_trust_metadata.py -q` → all passed.
+  - `python3 -m pytest tests/test_check_single_title.py tests/test_editorial_and_consistency.py tests/test_formatting_lints.py tests/test_publication_markup_contract.py tests/test_research_protocol_readiness.py -q` → all passed (after regenerating digests).
+  - Full `python3 -m pytest -q` repo suite → passed, exit code 0.
+  - `python3 -m ruff check tests/test_dcr_visualizer_parity.py` → all checks passed.
+  - `python3 -m black --check --line-length 100 tests/test_dcr_visualizer_parity.py` → clean.
+  - `python3 -m scripts.check_module_size_budget` → passes (`js/dcr-visualizer.js` 74 lines,
+    `js/dcr-visualizer-ui.js` 114 lines; both well under the 700-line `.js` budget).
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` and
+    `python3 -m scripts.generate_research_readiness_library --check` → both clean.
+  - **Not run:** `quarto render` and `npx playwright test` (full-site render out of scope for
+    this sandbox). The widget was reasoned through via the Jest DOM smoke test rather than a
+    rendered-page browser check; CI's `e2e-tests` job is the first real render/axe-core pass
+    over this page.
+- Not done / deferred: no new CSS file — the widget reuses inline styles rather than adding a
+  `css/dcr-visualizer.css` (and a matching `docs/css/` mirror), consistent with
+  `rotation-converter.qmd`'s own extensive inline-style usage, to keep the diff minimal. WEB-06.1
+  (the interactive-technology ADR) remains open; if it lands on a different stack (OJS/Pyodide),
+  this widget's plain-JS approach may need revisiting for consistency, but it is not blocked by
+  that ADR since it introduces no new dependency.
+
+---
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree

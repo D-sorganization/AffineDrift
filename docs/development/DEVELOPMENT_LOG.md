@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4535 · DCR Visualiser Widget
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4535 (WEB-06.5; epic #4543)
+- **Branch:** `claude/issue-4535`
+- **Paths:** `articles/controllability-drift-ratio.qmd`, `js/dcr-visualizer.js`, `js/dcr-visualizer-ui.js`, `tests/dcr-visualizer.test.js`, `tests/dcr-visualizer-ui.test.js`, `tests/test_dcr_visualizer_parity.py`, `data/research_protocols/library.json`, `data/research_protocols/public_summary.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (`npx jest tests/dcr-visualizer.test.js tests/dcr-visualizer-ui.test.js` 24 passed; `pytest tests/test_dcr_visualizer_parity.py tests/test_dcr_reachability_contract.py tests/test_dcr_event_sensitivity_protocol.py tests/test_dcr_article_rigor.py tests/test_scientific_trust_metadata.py` all passed; full `pytest -q` repo suite passed; `ruff check .` and `black --check --line-length 100 .` clean)
+- **Summary:** Adds an interactive DCR-through-swing-phase widget to the DCR article, built on a pure-JS mirror of `src/affine_control/reachability.py`'s `LinearScalarSystem`/`instantaneous_scalar_dcr`/`scalar_linear_reachable_interval`. It compares an additive-drift and a state-dependent-drift system that share one instantaneous DCR at the phase start but different reachable-interval widths (the same fixture governed by `tests/test_dcr_event_sensitivity_protocol.py`), explicitly demonstrating claim `ad-dcr-001`, and links that claim from the widget. Regenerated the claim-audit and research-readiness digests that pin the article's SHA-256 after editing it.
+- **Next step:** Push the branch, open the draft PR, and let CI's Jest/E2E/quality-gate confirm the widget renders and passes axe-core on the DCR page.
+
 ### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
