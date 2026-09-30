@@ -14,6 +14,220 @@
 - Next: after merge, confirm Deploy Website is green on main, then reopen #4548 to audit
   each bibliography route before re-adding the render rule.
 
+# Implementation Handoff — Short On-Ramp Learning Paths (#4492)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4492`.
+- Branch `claude/issue-4492`, commit `SELF`; pull request:
+  https://github.com/D-sorganization/AffineDrift/pull/4677 (draft, targets
+  `main`).
+- Governing issue: #4492 (WEB-01.7, part of epic #4496 — Audience Routing and
+  Onboarding Funnel). Objective: add short on-ramp learning paths (5 minutes,
+  30 minutes, 3 hours) per persona, each a curated sequence of existing
+  sections with a goal statement and a self-check question.
+- Dependencies listed on the issue (WEB-01.4 "Big Idea in Five Minutes"
+  explainer, #4489; WEB-12.4 plain-language entry-page rewrite, #4590) are
+  both still open. Neither blocks this issue: the acceptance criteria require
+  curating *existing* sections, and no on-ramp here depends on content those
+  issues would add — each links only to pages that already exist on `main`.
+- Added `resources/on-ramp-paths.qmd`: for each of the 8 personas in
+  `config/personas.yml` (learner, researcher, integrator, experimentalist,
+  reviewer, contributor, golfer-coach, student), a 5-minute, 30-minute, and
+  3-hour on-ramp. Each tier lists existing pages in order with a per-page time
+  estimate, a one-line goal statement, and ends with one self-check question
+  and its answer grounded in the linked page's actual body content. Every
+  link resolves under the site link gate; anchors use the
+  `{#onramp-<persona>-<tier>}` convention.
+- Linked the new page from `resources/learning-paths.qmd` (an intro pointer
+  plus a Path Index entry) so it is not orphaned by the link gate; no
+  `_quarto.yml` navigation change was needed, matching how the existing
+  per-path pages (`learning-path-foundations.qmd`, etc.) are already wired.
+- **Fix round (review of draft PR #4677):** the reviewer found the first pass's
+  self-check questions were mostly front-matter-description recall ("per its
+  own description...") rather than reflective questions, plus several factual
+  errors. Fixed in this commit:
+  - A lowercase `g(x)u` in one self-check answer, against `NOTATION.md`'s
+    uppercase $G(x)$ convention for the control-affine input map — the
+    question that contained it was replaced.
+  - A self-check that called the Zero Velocity Counterfactual (ZVCF) a
+    "trajectory"; per `articles/theory-part2.qmd` only ZTCF integrates
+    forward into a trajectory, ZVCF is a single-state evaluation — reworded.
+  - Two self-checks (Researcher 3hr, Student 3hr) that claimed Theory Part 4
+    supplies an "independently checkable double-pendulum benchmark."
+    `articles/theory-part4.qmd` never mentions a double pendulum — it derives
+    beam and pendulum (shaft-flexibility) dynamics. Both were rewritten using
+    `articles/theory-part5.qmd`'s own phrase, "independently checkable
+    mathematical examples," and the Student 3hr item line and time estimate
+    were corrected to match.
+  - A factual error found during the required broader verification pass (not
+    itself cited by the reviewer): the Researcher and Reviewer 5-minute
+    on-ramps described the `resources/research-review-*.qmd` pages as
+    finished, evidence-graded reviews. Those pages are explicitly marked
+    "Planned (Scaffolding Phase)" / "source-collection stub" with an Evidence
+    Status warning that they do not yet establish claims — both on-ramps now
+    say so.
+  - All 24 self-check questions were rewritten (21 of 24 were previously
+    shallow recall) to test a real distinction or mechanism from the linked
+    page's body text, with the answer grounded in that text.
+  - Theory Part 1's time estimate (appeared at 90/30/60/90 minutes across four
+    on-ramps) is now ~30 minutes everywhere, matching the pre-existing,
+    already-vetted "30-Minute Route" convention for that article in
+    `config/personas.yml`.
+  - The page subtitle's "40–160 hours" claim didn't match
+    `resources/learning-paths.qmd`'s own stated range (10–80 / 80–160 / 160+
+    hours); changed to "10–160+ hours."
+- Tests: `tests/test_on_ramp_paths.py`, now 10 cases (5 original + 5 added
+  this round as regression guards for the fixes above): front-matter
+  validity, all 24 persona/tier anchors present, every tier has a timed page
+  link plus a self-check question and answer, all internal links resolve, the
+  page is linked from the learning-paths hub, no unqualified lowercase
+  `g(x)u`, Theory Part 1's time estimate is consistent everywhere it appears,
+  Theory Part 4 is never described with "double pendulum" wording, no
+  "per its own description" recall phrasing remains, and the subtitle matches
+  the learning-paths hub's stated hour range.
+- Validation commands run in this worktree (this fix round):
+  - `python -m pytest tests/test_on_ramp_paths.py -v` → 10 passed.
+  - `python -m pytest tests/test_site_link_gate.py tests/test_how_to_read.py
+    tests/test_persona_start_paths.py tests/test_check_links.py
+    tests/test_check_site_health.py -v` → 98 passed.
+  - Site gate (invoked via `scripts/link-checker.py`'s `main(["--site-gate"])`
+    with the repo root on `sys.path`, working around a `ModuleNotFoundError`
+    when the script is run directly without `PYTHONPATH`) → "Site gate
+    passed!".
+  - `python -m ruff check tests/test_on_ramp_paths.py` → all checks passed.
+  - `python -m black --check --line-length 100 tests/test_on_ramp_paths.py`
+    → clean after one auto-format pass for the new assertion's line wrap.
+  - Full `python -m pytest --cov` suite: still fails at collection on ~75
+    unrelated test modules (`tests/test_screw_examples.py`,
+    `benchmarks/test_core_benchmarks.py`, etc.) with
+    `ImportError: A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.2.6`. Confirmed pre-existing and unrelated to this change in the
+    original pass; unchanged this round. Not fixed here; out of scope for a
+    WEB-01.7 content change.
+- Not done / deferred: none for the issue's own acceptance criteria. The two
+  open dependency issues (#4489, #4590) may eventually add content (a "Big
+  Idea in Five Minutes" explainer, plain-language entry-page rewrites) that a
+  future pass could fold into these on-ramps, but nothing here requires it.
+
+## Next Steps
+
+1. Push `claude/issue-4492` with this fix round.
+2. Awaiting frontier-agent re-review of PR #4677.
+# Deduplicate and Reconcile Bibliography Databases — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4547`.
+- Branch `claude/issue-4547`, commit `SELF`; pull request:
+  #4676 (draft), https://github.com/D-sorganization/AffineDrift/pull/4676.
+- Governing issue: #4547 (WEB-07.5). Objective: zero duplicate keys/DOIs across the site's
+  bibliography databases, with rendered citations unchanged in meaning.
+- **Reworked 2026-09-29 after review blocked the original mechanical-merge draft.** The review
+  found the merge had: broken the locked `articles/proximal_distal_energy_transfer/` publication
+  source (its `references.bib` dropped from 100 to 24 entries); touched
+  `data/trust/book_publication_audit.json`, an owner-sign-off-gated ledger, and the book chapter it
+  audits; deleted citation keys still cited on live pages (`Penner2003`, `zajac1989determining`,
+  `sprigings2000insight`, `opensim_lib`, `Khalil2002`, `harris1998signal`, `khatib1987unified`,
+  `mackenzie2009three`, `marsden1999introduction`, `nesbit2005three`, `winter2009biomechanics`,
+  `featherstone2008rigid`, and others); silently renamed the Choi & Park grip-kinetics key to
+  `koike2020`; and mistyped `clark2013whatever` as a book when it is a *Behavioral and Brain
+  Sciences* journal article. All of that is reverted; see "Completed work" below for what ships
+  instead.
+- Completed work (post-rework):
+  - Restored `articles/proximal_distal_energy_transfer/` and
+    `data/trust/book_publication_audit.json` (plus the audited
+    `articles/The_Geometry_of_Motion/Volume_III/chapters/ch01_biology_vs_engineering.tex`) to
+    `origin/main` byte-for-byte via `git checkout <branch-point> -- <path>`, and likewise reverted
+    every other file the original merge had touched (all 8 `.bib` files, every renamed citation
+    site across `.qmd`/`.tex`/`*-bibliography.md`, and the `claim_audit_inventory.json`/
+    `claim_audit_report.json` digest refreshes) — confirmed by an exhaustive
+    `git diff --stat <branch-point>` showing only the files listed below differ from the branch
+    point.
+  - Added `articles/proximal_distal_energy_transfer/references.bib` to `STANDALONE_LINKED` in
+    `scripts/check_bibliography_cross_file.py`: `index.qmd` uses it as its sole `bibliography:`
+    override, so — like the other `STANDALONE_LINKED` files — it needs local self-sufficiency for
+    every key its own pages cite, and a shared DOI there is not an avoidable duplicate.
+  - Fixed `clark2013whatever` (the only occurrence repo-wide, in
+    `articles/The_Physics_of_Golf/golf_physics.bib`) from `@book`/Oxford University Press to
+    `@article`/*Behavioral and Brain Sciences*/Cambridge University Press, volume 36, number 3,
+    pages 181–204 — sourced from `geometry_of_motion.bib`'s pre-existing, correctly-typed
+    `Clark2013` entry for the same paper.
+  - Confirmed the Choi & Park grip-kinetics key needed no further action: the full revert already
+    restored `golf_physics.bib`'s `Choi2020GripKinetics` (and `tests/test_constraint_forces_rigor.py:163`'s
+    reference to it). The two other `koike2020`-adjacent entries found while checking this
+    (`articles/proximal_distal_energy_transfer/references.bib` and
+    `references/proximal-distal-energy.bib`, each a distinct, pre-existing, unrelated paper) were
+    left untouched.
+  - Did **not** add a new citation-resolution test: the repo already has one, wired into CI
+    (`.github/workflows/ci-standard.yml`) and running today. `scripts/check_citation_resolution.py`
+    and `scripts/check_qmd_citation_keys.py` both walk every `.qmd` under `articles/`, `books/`,
+    `pages/`, `resources/` (plus root `index.qmd`), resolve each page's bibliography the same way
+    (per-page `bibliography:` frontmatter, else the nearest ancestor `_quarto.yml`'s default), and
+    fail on any `[@key]`/`@key` that does not resolve there; `scripts/check_latex_structure.py`
+    (`TestCitations` in `tests/test_check_latex_structure.py`) does the equivalent for LaTeX
+    `\cite`-family commands against a baseline
+    (`config/latex-structure-baseline.json`). Writing a fourth, parallel implementation of the same
+    check would have duplicated working, already-CI-gated infrastructure rather than fixed
+    anything — confirmed by running all three directly against the reverted tree:
+    `python3 -m scripts.check_citation_resolution` → "passed for 286 qmd files";
+    `python3 -m scripts.check_qmd_citation_keys` → "passed"; `python3 scripts/check_latex_structure.py
+    --root articles --baseline config/latex-structure-baseline.json` → "No new structural
+    problems." All three already confirm none of the reviewer's named keys (or any other citation)
+    are unresolved post-revert; that was the actual verification this issue's item 3 needed, and
+    existing infrastructure already provides it.
+  - Updated the two `TestDuplicateDois` fixtures in `tests/test_check_bibliography_cross_file.py`
+    that had used `articles/proximal_distal_energy_transfer/references.bib` as a "non-standalone"
+    example; they now use a synthetic label, since — after the `STANDALONE_LINKED` addition above —
+    `references/impact-acoustics.bib` is the only file among the 8 still fully non-exempt, and no
+    second real file remains to pair it with.
+- Key decisions:
+  - Reverting was chosen over attempting to selectively re-fix the blocked merge: the review's
+    findings spanned locked content, an audit ledger requiring owner sign-off, and silent renames,
+    and disentangling "which parts of the merge are still safe" file-by-file carried more risk of
+    missing another instance of the same problem than reverting wholesale and re-adding only the
+    two genuinely isolated, verified fixes (the `STANDALONE_LINKED` entry and the `clark2013whatever`
+    metadata correction).
+  - The 82 raw duplicate-DOI groups still in the 8 bibliographies (110 extra copies) are left in
+    place rather than mechanically merged again. Per the narrowed scope, only genuinely identical
+    duplicate entries should be consolidated, and distinguishing "the same work legitimately copied
+    into two `STANDALONE_LINKED` files" from "an avoidable duplicate" for each of the 82 groups by
+    hand is future work, not this PR's.
+  - No rendered-bibliography diff (`quarto render` before/after) was performed — out of policy for
+    this session (~14 min for a full-site render) and, since nothing in the reverted tree changed
+    relative to `origin/main` except the two isolated fixes above, not needed to establish that
+    rendered citations are unchanged in meaning for everything but `clark2013whatever`.
+- Compatibility constraints: none — no public API changed; the locked
+  `proximal_distal_energy_transfer` article and the audited book chapter are untouched, matching
+  the review's explicit requirement.
+- Validation commands and outcomes:
+  - `git diff --stat <branch-point>` (working tree vs. the commit this branch was created from) →
+    only `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, `docs/development/HANDOFF.md`,
+    `scripts/check_bibliography_cross_file.py`, `tests/test_check_bibliography_cross_file.py`, and
+    `articles/The_Physics_of_Golf/golf_physics.bib` differ; every other file the original merge
+    touched matches the branch point exactly.
+  - `python3 scripts/check_bibliography_cross_file.py` → 8 bibliographies, 770 distinct keys, 163
+    shared across files, 0 disagreeing, 0 CI-flagged duplicate DOIs (82 raw shared-DOI groups exist
+    before the `STANDALONE_LINKED` exemption is applied — see the PR body for the honest count).
+  - `python3 -m pytest tests/test_check_bibliography_cross_file.py -v` → 18 passed.
+  - `python3 -m scripts.check_citation_resolution` → passed for 286 qmd files.
+  - `python3 -m scripts.check_qmd_citation_keys` → passed.
+  - `python3 scripts/check_latex_structure.py --root articles --baseline config/latex-structure-baseline.json`
+    → no new structural problems.
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` → clean.
+- The `claim-audit-evidence` pre-commit hook caught a stale review-evidence digest for
+  `articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.qmd` — a
+  file with zero diff on this branch and no presence in this PR's changed-file list at any point,
+  so the staleness reflects drift already on `origin/main` since this branch's fork point, not this
+  change. Ran the sanctioned `python -m scripts.regenerate_claim_audit_evidence` (the same tool
+  used earlier in this issue) to refresh it, since the hook blocks the commit regardless of cause
+  and bypassing it is against repo policy. Confirmed via `git diff` that the regeneration touched
+  exactly two file digests: that pre-existing stale one, and `golf_physics.bib` (expected, from the
+  `clark2013whatever` content fix above) — no other entry moved.
+- Blockers/risks: none identified for the reworked scope. Two items remain out of scope and are
+  disclosed in the PR body rather than fixed here (per the "Spotted ≠ fix" fleet rule and the
+  explicit rework instructions): (1) the 82 raw duplicate-DOI groups; (2) no rendered-bibliography
+  diff was performed.
+- Next steps: reworked draft PR #4676 is open with the honest remaining-scope disclosure in its
+  body; awaiting owner/frontier review.
 # Implementation Handoff — Cross-Browser Coverage (#4564)
 
 ## Identity
