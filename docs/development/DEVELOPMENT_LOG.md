@@ -18,6 +18,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4600 · Service-Worker Cache Busting by Content Hash
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4600 (epic #4604)
+- **Branch:** `claude/issue-4600`
+- **Paths:** `service-worker.js`, `tests/e2e/offline.spec.js`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (Jest full suite 420 passed/19 skipped; `pytest tests/test_update_sw_cache_version.py` 12 passed; `ruff check .` and `black --check --line-length 100 .` clean. Full-site Playwright E2E not run locally — `quarto render` is out of scope for this session; CI's `e2e-tests` job validates the re-enabled offline spec.)
+- **Summary:** Removes the stale TODO in `service-worker.js` referencing closed issue #1459 (content-hash cache busting is already implemented by `scripts/update_sw_cache_version.py`, which hashes precached CSS/JS assets into `CACHE_NAME`), replaces the offline E2E test's flaky fixed 3s wait with a deterministic `navigator.serviceWorker.ready` wait, and drops that one title from the `ci-standard.yml` full-site E2E exclusion list.
+- **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job confirm the re-enabled offline spec passes against the real full-site render.
+### DL-#4596 · Report Broken External Links as Issues
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4596 (epic #4604)
+- **Branch:** `claude/issue-4596`
+- **Paths:** `scripts/link-checker.py`, `.github/workflows/link-checker.yml`, `docs/LINK-CHECKER.md`, `tests/test_link_checker_script.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: 79/79 relevant link-checker tests pass, ruff/black clean, SPEC changelog check passes)
+- **Summary:** Scheduled external-link check now upserts a single tracking issue (find-or-update, close on all-clear) instead of only logging, checks DOI links through their doi.org redirect, and attaches an archive.org fallback suggestion to each dead link.
+- **Next step:** Push branch, open draft PR referencing Closes #4596, and release the fleet lease.
+
 ### DL-#4588 · Keep Internal Governance Vocabulary Out of Reader Prose
 
 - **State:** in_progress
