@@ -1,6 +1,8 @@
 ---
 title: "Drift, Control Capacity and Golf-Swing Correction"
-description: "Derive the drift-control ratio with explicit coordinates, input bounds and metrics, then distinguish acceleration magnitude from finite-time club-delivery capability."
+description: "Derive the drift-control ratio with coordinates and input bounds, distinguishing acceleration magnitude from finite-time club-delivery capability."
+aliases:
+  - controllability-drift-ratio.html
 author:
   - name: "Dieter Olson"
     affiliations: "Affine Golf Swing Analysis Project"
@@ -17,7 +19,7 @@ categories:
   - theory-core
 ---
 
-{{< include _generated/trust/critique-annotations/controllability-drift-ratio.qmd >}}
+{{< include _generated/trust/critique-annotations/drift-control-ratio.qmd >}}
 
 ::: abstract
 The **drift-control ratio (DCR)** compares modeled acceleration under a declared zero-input baseline with the largest acceleration contribution available from a declared input set. It can help describe a state of the golfer-club model, but it does not establish that control has disappeared, that stored energy is being used efficiently, or that a shot can be corrected before impact. Those questions involve direction, time, activation, geometry, contact and the outcome being corrected.
@@ -27,7 +29,7 @@ This article derives the distinction between available capacity and realized inp
 
 {{< include _generated/trust/ad-dcr-reachability.qmd >}}
 
-{{< include ../_includes/generated/claims-ledger/controllability-drift-ratio.qmd >}}
+{{< include ../_includes/generated/claims-ledger/drift-control-ratio.qmd >}}
 
 <details class="technical-explanation">
 <summary>In Layman's Terms</summary>
@@ -265,6 +267,100 @@ $$
 Its center is $x_0+dT$ and its width is $2\bar uT$, independent of $d$. With $x_0=0$, $\bar u=1$ and $T=1$, zero drift gives $[-1,1]$ and $d=100$ gives $[99,101]$. The DCR-like first-order magnitude ratio rises from 0 to 100 while the reachable width remains 2. The checked implementation is `src/affine_control/reachability.py::constant_additive_drift_interval`, exercised by `tests/test_dcr_reachability_contract.py`.
 
 The word *like* matters: $x$ is a scalar first-order state here, whereas the canonical mechanical DCR is defined in an acceleration space. The example refutes the general inference from drift/input magnitude to reachable-set shrinkage. It does not claim that a golf swing has constant drift. A fixed target near the original center can become unreachable even though the width is unchanged; translation and loss of width are different effects.
+
+### Interactive: DCR Through a Phase {#dcr-visualiser}
+
+This widget compares two declared scalar systems that share **the same instantaneous DCR at the start of the phase**: an additive-drift system ($\dot x=b+u$) and a state-dependent-drift system ($\dot x=ax+u$), both built from `src/affine_control/reachability.py::LinearScalarSystem`. Dragging the phase slider evolves each system along its own zero-input drift trajectory and recomputes `instantaneous_scalar_dcr` at that state, so you can watch the ratio hold flat for one system and grow for the other. The reachable-interval width at the declared horizon, from `scalar_linear_reachable_interval`, is computed once from the starting state and does not track either curve.
+
+```{=html}
+<link rel="stylesheet" href="../css/dcr-visualizer.css">
+<div id="dcrviz-app">
+
+<noscript>
+<p>This widget needs JavaScript to be interactive. With its default example
+values ($x_0=1$, $\bar u=1$, $T=1$) at phase time $t=0$: the additive-drift
+system has instantaneous DCR $=1$ and reachable interval $[1,3]$ (width $2$);
+the state-dependent-drift system also has instantaneous DCR $=1$ but reachable
+interval $[1,\,2e-1]\approx[1,\,4.437]$ (width $2(e-1)\approx3.437$). See
+<a data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">claim ad-dcr-001</a>:
+the two systems share one instantaneous DCR while their reachable-interval
+widths differ.</p>
+</noscript>
+
+<div id="dcrviz-controls">
+  <div>
+    <label for="dcrviz-x0" class="dcrviz-label">Initial state $x_0$</label>
+    <input id="dcrviz-x0" type="number" step="0.1" value="1">
+  </div>
+  <div>
+    <label for="dcrviz-ubar" class="dcrviz-label">Control bound $\bar u$</label>
+    <input id="dcrviz-ubar" type="number" step="0.1" min="0.01" value="1">
+  </div>
+  <div>
+    <label for="dcrviz-horizon" class="dcrviz-label">Horizon $T$</label>
+    <input id="dcrviz-horizon" type="number" step="0.1" min="0" value="1">
+  </div>
+</div>
+
+<div class="dcrviz-phase-row">
+  <label for="dcrviz-phase" class="dcrviz-label">
+    Phase time $t$: <span id="dcrviz-phase-time">0</span>
+  </label>
+  <input id="dcrviz-phase" type="range" min="0" max="1" step="0.01" value="0">
+</div>
+
+<div id="dcrviz-status" role="status" aria-live="polite"></div>
+
+<svg id="dcrviz-chart" viewBox="0 0 560 180" role="img" class="dcrviz-chart">
+  <polyline id="dcrviz-line-a" class="dcrviz-line-additive" fill="none" stroke-width="2"></polyline>
+  <polyline id="dcrviz-line-b" class="dcrviz-line-state-dependent" fill="none" stroke-width="2"></polyline>
+</svg>
+<p class="dcrviz-legend">
+  <span class="dcrviz-legend-additive">■ Additive drift</span> ·
+  <span class="dcrviz-legend-state-dependent">■ State-dependent drift</span> ·
+  chart vertical axis maximum: <span id="dcrviz-chart-max">—</span>
+</p>
+
+<table class="dcrviz-results">
+  <thead>
+    <tr>
+      <th scope="col">Quantity</th>
+      <th scope="col">Additive drift</th>
+      <th scope="col">State-dependent drift</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Instantaneous DCR now</td>
+        <td id="dcrviz-dcr-a-now" class="dcrviz-mono">—</td>
+        <td id="dcrviz-dcr-b-now" class="dcrviz-mono">—</td></tr>
+    <tr><td>Reachable interval at $T$</td>
+        <td id="dcrviz-interval-a" class="dcrviz-mono">—</td>
+        <td id="dcrviz-interval-b" class="dcrviz-mono">—</td></tr>
+    <tr><td>Reachable-interval width</td>
+        <td id="dcrviz-width-a" class="dcrviz-mono">—</td>
+        <td id="dcrviz-width-b" class="dcrviz-mono">—</td></tr>
+  </tbody>
+</table>
+
+<p>
+<a data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">The two systems can share one instantaneous DCR while their reachable-interval widths differ: DCR alone does not determine finite-horizon reachability.</a>
+</p>
+
+<details>
+<summary>Sampled values across the phase (data table)</summary>
+<table class="dcrviz-samples">
+  <thead><tr><th scope="col">Phase time $t$</th><th scope="col">DCR, additive</th><th scope="col">DCR, state-dependent</th></tr></thead>
+  <tbody id="dcrviz-table-body"></tbody>
+</table>
+</details>
+
+</div>
+
+<script src="../js/dcr-visualizer.js"></script>
+<script src="../js/dcr-visualizer-ui.js"></script>
+```
+
+This is an **exploratory model output**, not a golfer measurement: the two systems are declared mathematical constructions chosen to hold DCR fixed at the start of the phase, the same construction checked in `tests/test_dcr_event_sensitivity_protocol.py::test_state_dependent_drift_breaks_any_dcr_to_reachable_width_mapping`.
 
 ### What a DCR Threshold Means {#what-a-dcr-threshold-means}
 

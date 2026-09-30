@@ -17,7 +17,7 @@ from scripts.generate_claims_ledger import (
 
 ROOT = Path(__file__).resolve().parents[1]
 CLAIMS_PAGE = ROOT / "evidence/claims.qmd"
-DCR_PAGE = ROOT / "articles/controllability-drift-ratio.qmd"
+DCR_PAGE = ROOT / "articles/drift-control-ratio.qmd"
 
 
 def _dcr_card() -> dict[str, object]:
@@ -66,7 +66,7 @@ def test_build_claim_cards_links_related_critiques() -> None:
 
 def test_build_claim_cards_lists_the_pages_that_make_the_claim() -> None:
     card = _dcr_card()
-    assert card["pages"] == ["articles/controllability-drift-ratio.qmd"]
+    assert card["pages"] == ["articles/drift-control-ratio.qmd"]
 
 
 def test_render_ledger_partial_is_keyboard_and_screen_reader_accessible() -> None:
@@ -79,7 +79,7 @@ def test_render_ledger_partial_is_keyboard_and_screen_reader_accessible() -> Non
     assert "DO NOT EDIT" in partial
     assert "reachable-interval width" in partial
     assert "crit-dimensional-inconsistency-dcr" in partial
-    assert "Controllability" in partial or "controllability-drift-ratio" in partial
+    assert "Drift, Control Capacity and Golf-Swing Correction" in partial
 
 
 def test_generate_produces_current_and_deterministic_artifacts() -> None:
@@ -94,7 +94,7 @@ def test_generate_produces_current_and_deterministic_artifacts() -> None:
 
 def test_generate_writes_a_link_partial_for_every_page_that_makes_a_claim() -> None:
     generate(check=False, root=ROOT)
-    link_partial = PAGE_LINKS_DIR / "controllability-drift-ratio.qmd"
+    link_partial = PAGE_LINKS_DIR / "drift-control-ratio.qmd"
     assert link_partial.is_file()
     content = link_partial.read_text(encoding="utf-8")
     assert "evidence/claims.html#claim-ad-dcr-001" in content
@@ -102,10 +102,7 @@ def test_generate_writes_a_link_partial_for_every_page_that_makes_a_claim() -> N
 
 def test_dcr_page_includes_its_generated_claim_ledger_link() -> None:
     source = DCR_PAGE.read_text(encoding="utf-8")
-    assert (
-        "{{< include ../_includes/generated/claims-ledger/controllability-drift-ratio.qmd >}}"
-        in source
-    )
+    assert "{{< include ../_includes/generated/claims-ledger/drift-control-ratio.qmd >}}" in source
 
 
 def test_claims_page_includes_the_generated_ledger_partial() -> None:
