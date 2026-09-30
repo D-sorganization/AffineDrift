@@ -147,3 +147,33 @@ def test_nullspace_linked_bibliography_is_selected_for_production_render() -> No
         encoding="utf-8"
     )
     assert "null-space-constraint-jacobian-bibliography.html" in article
+
+
+@pytest.mark.parametrize(
+    ("bibliography_source", "article_source"),
+    [
+        (
+            "articles/proximal-distal-energy-transfer-bibliography.md",
+            "articles/proximal-distal-energy-transfer.qmd",
+        ),
+        (
+            "articles/wrist-universal-joint-bibliography.md",
+            "articles/wrist-universal-joint.qmd",
+        ),
+    ],
+)
+def test_unaudited_companion_bibliography_is_retired_and_linked_to_source(
+    bibliography_source: str, article_source: str
+) -> None:
+    """Issue #4548: companion bibliographies stay out of the production render
+    until each passes the route-level claim audit (the deploy gate requires an
+    audit record for every rendered route). Articles link the GitHub source so
+    the link resolves instead of pointing at an unrendered page.
+    """
+    assert (REPO_ROOT / bibliography_source).is_file()
+    assert not _is_site_source(REPO_ROOT / bibliography_source, REPO_ROOT)
+    article = (REPO_ROOT / article_source).read_text(encoding="utf-8")
+    source_url = "https://github.com/D-sorganization/AffineDrift/blob/main/" + bibliography_source
+    assert source_url in article
+    html_name = bibliography_source.rsplit("/", 1)[-1].replace(".md", ".html")
+    assert f"]({html_name})" not in article

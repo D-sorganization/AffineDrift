@@ -1,6 +1,11 @@
-# Bibliographic Analysis: Affine Control Interpretation of the Golf Swing — Part 3
+---
+title: "Bibliographic Analysis: Affine Control Interpretation of the Golf Swing — Part 3"
+description: "Companion bibliography for Part 3 of the AffineDrift theory series."
+---
 
-## A) Concept Map
+## Bibliographic Analysis: Affine Control Interpretation of the Golf Swing — Part 3
+
+### A) Concept Map
 
 - **Theoretical Foundations**
 
@@ -25,7 +30,7 @@
   - **Input Constraints**: State-dependent limits on available torque ($\mathcal{U}(x)$).
   - **Passive vs. Active**: Fundamental separation in motor control.
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: mcgeer1990passive
@@ -308,9 +313,9 @@
   references_out_ids: []
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (The Core Physics)
+#### Path 1: Fast Ramp (The Core Physics)
 
 _Target: Understand why "drift" matters in swinging mechanics._
 
@@ -320,7 +325,7 @@ _Target: Understand why "drift" matters in swinging mechanics._
 4.  **Zajac & Gordon (1989)** - _Determining muscle's force..._. The biomechanics standard for figuring out "what force caused what motion".
 5.  **Sharp (2009)** - _Physical limitations..._. Real-world constraints on the math.
 
-### Path 2: Deep Technical (Rigorous Decomposition)
+#### Path 2: Deep Technical (Rigorous Decomposition)
 
 _Target: The advanced math of affine systems and geometric control._
 
@@ -333,7 +338,7 @@ _Target: The advanced math of affine systems and geometric control._
 7.  **Todorov & Jordan (2002)** - _Optimal feedback control..._. Moves from "mechanics" to "brain" – how the CNS exploits the drift we calculated.
 8.  **Bernstein (1967)** - _Coordination and regulation..._. The historical root of the "degrees of freedom problem" that drift invariance helps solve.
 
-### Path 3: Implementation (Simulation & Optimization)
+#### Path 3: Implementation (Simulation & Optimization)
 
 _Target: Tools to calculate the taxonomy._
 
