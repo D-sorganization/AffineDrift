@@ -18,6 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4695 · On-Ramp "3 Hours" Totals
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit (headless worker; lead arms/merges)
+- **Issue:** #4695 (`tier:cli`)
+- **Branch:** `claude/issue-4695`
+- **Paths:** `resources/on-ramp-paths.qmd`, `tests/test_on_ramp_paths.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_on_ramp_paths.py tests/test_claim_audit_inventory.py tests/test_learning_paths.py` 36/36 pass; `python -m scripts.check_spec_changelog` passes)
+- **Summary:** Six of eight personas' "3 Hours" on-ramp tiers summed to 120-160 listed minutes instead of 180; renamed those headings to "2–3 Hours" (honest given each total and consistent with the range-style estimates already used in this repo's full learning-path pages), left the two that already summed to 180 unchanged, and added a test that sums each tier's `~N min` steps against its own heading. Left claim-audit finding `ad-finding-on-ramp-three-hour-totals` at `disposition: "open"` — flipping it to `corrected` needs a `verification_commit` this commit cannot supply for itself; see HANDOFF.md.
+- **Next step:** Lead/reviewer sets `verification_commit` and flips the finding to `corrected` once this branch's commit SHA is known.
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
