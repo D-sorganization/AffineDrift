@@ -1,3 +1,49 @@
+# Math Accessibility Verification — #4565 (WEB-09.5)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4565`.
+- Branch `claude/issue-4565`, commit `SELF`; pull request: see PR opened from
+  this branch against `main` (draft).
+- Governing issue: #4565 (WEB-09.5, part of epic #4569 — E9 Accessibility
+  Conformance). Objective: verify the site's `connect-src 'self'` CSP
+  (`_includes/site-head.html`) does not block MathJax speech-rule locale
+  fetches, and that lazy typesetting does not break screen-reader access to
+  math, on three math-heavy pages.
+- **Automated finding:** `_includes/mathjax-loader.html` only sets
+  `enableAssistiveMml: true` — it never loads MathJax's `[a11y]/explorer`
+  component or `speech-rule-engine`, so there is no code path today that
+  fetches external SRE locale files for the CSP to block. Added a
+  regression test for this in `tests/mathjax-loader.test.js`.
+- Added an E2E test in `tests/e2e/accessibility.spec.js` ("math pages expose
+  assistive MathML with no CSP-blocked speech/locale requests (#4565)") that
+  loads `/articles/theory-part1.html`, `/articles/affine-nature-golf-swing.html`,
+  and `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html`, waits
+  for lazy MathJax typesetting, and asserts no CSP-violation console
+  messages and no failed asset requests. Runs in CI's E2E lane (needs the
+  full Quarto-rendered site); not run locally here because Quarto is not
+  installed in this worktree environment.
+- Filed findings and a manual test protocol at
+  `docs/development/math-accessibility-verification-4565.md`.
+- **Blocked:** the issue's first acceptance criterion requires an actual
+  NVDA or VoiceOver screen-reader run with recorded results — a
+  human-in-the-loop verification step (no screen reader installed here, no
+  human available to transcribe speech output). See "What Could Not Be
+  Verified" in the findings doc for the manual protocol a human tester
+  should follow to close it. No production code changed; this is a
+  `type:test` issue.
+- No production files changed. `_includes/site-head.html` and
+  `_includes/mathjax-loader.html` are unmodified.
+- Validation commands run in this worktree:
+  - `npm ci` (node_modules was absent in this worktree).
+  - `npx jest` → 26 suites passed, 432 passed / 19 skipped, 0 failed.
+  - `npx playwright test tests/e2e/accessibility.spec.js --list` → new test
+    registers correctly across all 5 configured browser projects (40 total
+    entries); full run deferred to CI (requires a full site render).
+- Next steps: a human (or a future session with NVDA/VoiceOver access) runs
+  the manual protocol in `docs/development/math-accessibility-verification-4565.md`
+  and records results as a comment on #4565 before that criterion can be
+  checked off.
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
