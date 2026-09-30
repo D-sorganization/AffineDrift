@@ -1,3 +1,99 @@
+# Implementation Handoff — Cross-Browser Coverage (#4564)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4564
+- Branch: claude/issue-4564
+- Baseline commit: 047fc82b (origin/main)
+- Implementation commit: SELF
+- Pull request: not created yet (draft PR to be opened this session)
+- Governing issue/epic: #4564 (WEB-09.4; epic #4569 / E9 — Accessibility Conformance)
+
+## Objective and Status
+
+- Objective: CI's `e2e-tests` job in `ci-standard.yml` only runs the Chromium
+  Playwright project on pull requests. `playwright.config.js` also defines
+  `firefox`, `webkit`, `Mobile Chrome`, and `Mobile Safari` projects that never
+  run in CI. The issue asks for (1) a nightly job that runs Firefox and WebKit
+  on a representative route set, and (2) failures that open issues
+  automatically, deduplicated by title.
+- Status: ready for commit / PR.
+- Completed:
+  - Added `.github/workflows/cross-browser-nightly.yml`: a scheduled
+    (`0 7 * * *` UTC) + `workflow_dispatch` workflow with a `[firefox, webkit]`
+    matrix job that builds the site (reusing the same Quarto render cache key
+    as `ci-standard.yml`'s `e2e-tests` job, #4595) and runs
+    `tests/e2e/smoke.spec.js` — the existing PR-smoke suite covering six
+    representative public routes plus dark-mode/back-to-top/no-splash
+    behavioral invariants — against each browser, uploading the Playwright
+    JSON report as an artifact per browser.
+  - Added a downstream `report-failures` job (`if: always()`) that downloads
+    both JSON reports and runs `scripts/report_e2e_browser_failures.py`.
+  - Added `scripts/report_e2e_browser_failures.py`: parses one or more
+    Playwright JSON reporter files, extracts tests whose final verdict was an
+    unexpected failure, builds one issue per distinct `(browser, test title)`
+    pair, and skips any pair already covered by an existing open issue in the
+    same title (query via `gh issue list --label cross-browser`) — the
+    dedup-by-title acceptance criterion.
+  - Added `tests/test_report_e2e_browser_failures.py` (11 tests, TDD:
+    confirmed RED before implementing) covering nested-suite JSON parsing,
+    the title-building dedup key, issue body content, and dedup selection
+    (including same-title-different-browser must NOT be deduped together).
+  - Updated `docs/development/DEVELOPMENT_LOG.md` (`DL-#4564`) and this file.
+- Remaining: Add SPEC.md change-log row, commit, push, open the draft PR.
+
+## Files and Decisions
+
+- Files changed:
+  - `.github/workflows/cross-browser-nightly.yml`: new nightly workflow.
+  - `scripts/report_e2e_browser_failures.py`: new issue-filing script.
+  - `tests/test_report_e2e_browser_failures.py`: new pytest suite.
+  - `docs/development/DEVELOPMENT_LOG.md`: `DL-#4564` entry.
+  - `docs/development/HANDOFF.md`: this entry.
+  - `SPEC.md`: pending change-log row.
+- Key decisions:
+  - Chose `tests/e2e/smoke.spec.js` as the "representative route set" rather
+    than the full suite: it already exists precisely for this purpose (fast
+    PR smoke coverage across public routes + interactive behavior) and
+    keeps nightly runtime bounded instead of running visual-snapshot/axe
+    suites twice more per night.
+  - Issue dedup keys on the rendered issue title, built as
+    `[Cross-Browser Nightly] ` followed by the browser project name, a colon,
+    and the Playwright spec title, rather than a hidden marker, matching the
+    issue's literal "deduplicated by title" wording; the
+    `cross-browser` label scopes the `gh issue list` lookup so unrelated open
+    issues with coincidentally similar titles are not matched.
+  - Did not touch `ci-standard.yml`'s Chromium-only `e2e-tests` job: the issue
+    is additive (a new nightly job), not a change to the PR-gated lane.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python3 -m pytest tests/test_report_e2e_browser_failures.py -q` — 11 passed.
+- `python3 -m pytest tests/ --cov=src --cov=scripts --cov-report=term-missing --timeout=120 -q` —
+  full suite passes at 79.11% coverage (floor 75%); one pre-existing failure
+  in `tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section`
+  unrelated to this change (pandoc emits a `div` element with that id instead
+  of the expected `section` element in this environment).
+- `python3 -m ruff check .` — all checks passed.
+- `python3 -m black --check --line-length 100 .` — all files unchanged.
+- `python3 -m scripts.check_workflow_action_pins` — all workflow actions
+  pinned to immutable SHAs.
+- Not run: the nightly workflow itself (requires a scheduled/dispatched
+  Actions run on the fleet runner with real browser binaries; cannot execute
+  GitHub Actions locally).
+
+## Blockers / Risks
+
+- The workflow's actual behavior (browser install, site render, issue
+  creation via `gh`) is unverified end-to-end until it runs in GitHub
+  Actions — either via `workflow_dispatch` after merge or the first nightly
+  fire. A frontier review should consider triggering `workflow_dispatch` once
+  merged to confirm the full pipeline before relying on it.
+
+---
+
 # Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
 ## Identity
