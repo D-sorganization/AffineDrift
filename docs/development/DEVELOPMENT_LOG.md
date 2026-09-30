@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `claude/issue-4519`
 - **Paths:** `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: no source change; confirmed via `gh issue view` that #4501, #4515, #4516 are all still open)
-- **Summary:** Blocked. The issue's own "Depends on: WEB-02.7" (#4501, open) means the Article Index is still hand-maintained prose (`resources/articles.qmd`), not a per-entry Quarto listing that a badge partial could attach to. The badge itself also has no substrate yet: the maturity enum (WEB-04.1, #4515) and the shared badge component (WEB-04.2, #4516) that this issue's own epic (E4) defines as prerequisites are both still open, so there is no `config/maturity.yml` vocabulary and no badge partial to source from front matter. Implementing ad hoc would preempt those `tier:strong` design decisions.
-- **Next step:** Reopen and implement once #4501, #4515, and #4516 have merged; wire the resulting badge partial into `resources/articles.qmd` listing entries and `books/index.qmd` `.resource-card` entries.
+- **Last verified:** 2026-09-30 (SELF: no source change; confirmed via `gh issue view` that #4501 and #4515 are still open and #4516 is now closed, with `css/components/status-badge.css` present on `main`)
+- **Summary:** Blocked. The issue's own "Depends on: WEB-02.7" (#4501, open) means the Article Index is still hand-maintained prose (`resources/articles.qmd`), not a per-entry Quarto listing that a badge partial could attach to. The maturity enum (WEB-04.1, #4515) is also still open, so there is no `config/maturity.yml` vocabulary to source a badge from. WEB-04.2 "Badge Component Used on Cards, Headers, Listings, and Search" (#4516) has since merged — `css/components/status-badge.css` now exists on `main` — so that prerequisite is resolved.
+- **Next step:** Reopen and implement once #4501 and #4515 have merged; wire the existing `status-badge` component into `resources/articles.qmd` listing entries and `books/index.qmd` `.resource-card` entries.
 
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 

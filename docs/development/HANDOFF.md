@@ -18,14 +18,16 @@
   1. The issue's own "Depends on: WEB-02.7" (#4501, open) is unmet. `resources/articles.qmd` is still a hand-maintained
      194-line prose/link page, not the per-entry Quarto listing WEB-02.7 is supposed to generate. There is no
      structured "entry" to attach a badge to.
-  2. The epic (E4) that owns this issue defines two direct prerequisites that are also still open: WEB-04.1
-     "Consolidate Maturity Vocabulary Into a Single Enum" (#4515) and WEB-04.2 "Badge Component Used on Cards,
-     Headers, Listings, and Search" (#4516). Neither `config/maturity.yml` nor a shared badge partial/Lua filter
-     exists yet, so there is no front-matter vocabulary to source a badge from and no component to render it.
+  2. The epic (E4) that owns this issue defines WEB-04.1 "Consolidate Maturity Vocabulary Into a Single Enum"
+     (#4515) as a prerequisite, and it is also still open: no `config/maturity.yml` exists yet, so there is no
+     front-matter vocabulary to source a badge from.
   3. `books/index.qmd` cards are hand-written `.resource-card` divs with no `maturity`/`status` front-matter field
      on the linked book pages to source from either.
-- Per the repo's deferred-work policy, inventing an ad hoc maturity vocabulary or badge markup here would preempt
-  the `tier:strong` design decisions reserved for WEB-04.1/WEB-04.2, so this was not done.
+- WEB-04.2 "Badge Component Used on Cards, Headers, Listings, and Search" (#4516) has since merged: the shared
+  badge component now exists at `css/components/status-badge.css` on `main`. That prerequisite is resolved; only
+  #4501 and #4515 still block this issue.
+- Per the repo's deferred-work policy, inventing an ad hoc maturity vocabulary here would preempt the `tier:strong`
+  design decision reserved for WEB-04.1, so this was not done.
 
 ## Files and Decisions
 
@@ -42,20 +44,23 @@
 
 ## Blockers and Risks
 
-- Blocker: dependency issues #4501, #4515, #4516 are all open (see Objective and Status above).
+- Blocker: dependency issues #4501 and #4515 are still open; #4516 has merged (see Objective and Status above).
 - Risks/assumptions: none beyond the blocker itself.
 
 ## Next Steps
 
-1. Wait for #4501 (Article Index becomes a generated listing), #4515 (maturity enum), and #4516 (badge component) to
-   merge.
-2. Re-open this issue's implementation: wire the resulting badge partial into the generated Article Index listing
-   entries and into `books/index.qmd` `.resource-card` entries, sourcing the badge from each page's front matter.
+1. Wait for #4501 (Article Index becomes a generated listing) and #4515 (maturity enum) to merge. #4516 (badge
+   component) has already merged.
+2. Re-open this issue's implementation: wire the existing `status-badge` component into the generated Article Index
+   listing entries and into `books/index.qmd` `.resource-card` entries, sourcing the badge from each page's front
+   matter.
 3. Release the fleet lease for #4519 if a frontier agent picks up the follow-on work under a different session.
 
 ## Change Log
 
 - `SELF` — Park #4519 as blocked on WEB-02.7 (#4501), WEB-04.1 (#4515), and WEB-04.2 (#4516).
+- `SELF` (review fix) — Updated blocker list: WEB-04.2 (#4516) has merged; #4501 and #4515 remain open. Changed PR
+  body reference from `Fixes` to `Refs`.
 
 ---
 
