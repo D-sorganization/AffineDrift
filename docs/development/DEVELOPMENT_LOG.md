@@ -503,6 +503,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Blocked. The issue's own "Depends on: WEB-02.7" (#4501, open) means the Article Index is still hand-maintained prose (`resources/articles.qmd`), not a per-entry Quarto listing that a badge partial could attach to. The maturity enum (WEB-04.1, #4515) is also still open, so there is no `config/maturity.yml` vocabulary to source a badge from. WEB-04.2 "Badge Component Used on Cards, Headers, Listings, and Search" (#4516) has since merged — `css/components/status-badge.css` now exists on `main` — so that prerequisite is resolved.
 - **Next step:** Reopen and implement once #4501 and #4515 have merged; wire the existing `status-badge` component into `resources/articles.qmd` listing entries and `books/index.qmd` `.resource-card` entries.
 
+### DL-#4513 · Roll Out the Layered Page Template to Core Pages
+
+- **State:** parked
+- **Owner:** claude
+- **PR:** #4647
+- **Issue:** #4513 (epic #4514)
+- **Branch:** `claude/issue-4513`
+- **Paths:** none yet
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: confirmed via `gh issue view` that #4510 is now CLOSED and merged — `css/components/where-next.css` and `scripts/filters/where-next.lua` exist on origin/main — while #4506 and #4509 are still open and unmerged)
+- **Summary:** Blocked — the issue requires applying WEB-03.1 through WEB-03.5 to ≥30 core pages, but only WEB-03.2 (#4507, page header card), WEB-03.3 (#4508, summary/key-takeaways block), and WEB-03.5 (#4510, "where next" footer) are merged. WEB-03.1 (#4506, front-matter schema, `tier:strong`) and WEB-03.4 (#4509, "what this shows/does not show" block, `tier:strong`) are still open with no implementation in the tree, so there is no complete template to roll out yet.
+- **Next step:** Resume once #4506 and #4509 merge; re-check for their components before starting the rollout.
+
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress
