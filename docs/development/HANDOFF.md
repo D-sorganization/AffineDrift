@@ -1,6 +1,79 @@
 # Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: b6aa4baf87635c3451558596fc4c20f121d5c219
+- Implementation commit: SELF
+- Pull request: #4640
+- Governing issue/epic: #4545 (epic #4552)
+
+## Objective and Status
+
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
+- Completed:
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, push, create PR, key SPEC.md row, arm auto-merge, and release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
+- User-owned or unrelated worktree changes: none observed
+
+---
+
+# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
+
+- Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
+- Baseline commit: fc36109d (origin/main)
+- Implementation commit: 67256799
+- Pull request: #4664 (https://github.com/D-sorganization/AffineDrift/pull/4664)
+- Governing issue: #4500 (WEB-02.6)
+
+## Objective and Status
+
+- Objective: Hide, mark, or retire stub hubs and enforce scaffolding styling policy:
+  1. Scaffolding/stub pages must never use success styling (`status-banner--success`, `callout-success`, etc.).
+  2. No hub card links to a page under 300 words unless it carries a Planned badge.
+- Status: Merged to main in PR #4664.
+- Completed:
+  - Added `.status-pill--planned` and `.status-badge--planned` CSS styles in `css/components/status-banner.css` and bundled to `docs/styles.css`.
+  - Replaced misleading success status styling on scaffolding pages (`resources/research-reviews.qmd`, `pages/book-reviews.qmd`, individual review stubs, `pages/daydreams-doodles.qmd`) with warning status styling indicating planned / scaffolding phase expected 2026-Q4.
+  - Replaced promoted stub card on `resources/resources.qmd` with Research Reviews hub card carrying `Planned` badge.
+  - Added `Planned` badges to all 4 review entries on `resources/research-reviews.qmd`, to `Dead Fish Swimming Upstream` on `pages/tools.qmd`, and `(Planned)` marks to inward links on `resources/resources-books.qmd`, `resources/resources-papers.qmd`, and `resources/resources-researchers.qmd`.
+  - Implemented `scripts/check_scaffolding_styling.py` to enforce that scaffolding pages never use success styling and that hub cards linking to stubs (< 300 words) carry a Planned badge.
+  - Added comprehensive test suite `tests/test_check_scaffolding_styling.py` (13 tests) and wired check into `.github/workflows/ci-standard.yml`.
+  - Regenerated claim audit evidence digests (`data/trust/` and `reports/`).
+
+---
+
+# Implementation Handoff — Social Cards per Page (#4578)
 # Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -80,11 +153,54 @@
 ## Next Steps
 
 1. None outstanding for #4549 from this session.
+
+---
+
 # Implementation Handoff — Create "How to Read This Site" Guide (#4491)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4578
+- Branch: claude/issue-4578
+- Governing issue/epic: #4578 (WEB-10.10, part of epic #4579 "E10 — Performance, SEO, and Privacy")
+- Pull request: opened as a draft by this session (see PR link in the commit that follows)
+
+## Objective and Status
+
+- Objective: generate per-book/per-series Open Graph social card images (title,
+  badge, and the site signature graphic) at build time instead of relying on
+  one site-wide card for every page.
+- Status: **complete for the two stated acceptance criteria within this
+  issue's scope**, with one caveat noted below.
+- Completed:
+  - TDD: `tests/test_social_cards.py` (7 tests, written first, RED confirmed
+    against the missing module before implementation).
+  - `scripts/generate_social_cards.py`: renders one 1200x630 PNG per
+    configured book/series (badge pill + wrapped title + the existing
+    `logo/logo-icon-512.png` signature graphic), following the same
+    checked-in-asset + `--check` pattern as `scripts/optimize_images.py`'s
+    existing site-wide `logo/og-card.png`.
+  - `logo/social-cards/{physics-of-golf,geometry-of-motion,proximal-distal-energy-transfer}.png`:
+    the three generated cards, checked in.
+  - Per-page `open-graph`/`twitter-card` `image` overrides added to the three
+    representative book/series landing pages
+    (`articles/The_Physics_of_Golf/quarto/index.qmd`,
+    `articles/The_Geometry_of_Motion/quarto/index.qmd`,
+    `articles/proximal_distal_energy_transfer/index.qmd`), overriding the
+    site-wide default set in `_quarto.yml`.
+  - `.github/workflows/deploy-website.yml`: new "Verify Per-Book/Series Social
+    Cards" step (`scripts/generate_social_cards.py --check`), mirroring the
+    existing "Verify Optimized Image Derivatives" step.
+- Caveat: the issue's second acceptance criterion ("Validated with a
+  social-card debugger on three pages") requires a public, deployed URL for
+  each page — social-card debugger tools (Facebook Sharing Debugger, Twitter
+  Card Validator, opengraph.xyz, etc.) fetch the live page over HTTP and
+  cannot be run against an unmerged branch or a local render. This PR
+  implements and tests the generation and per-page wiring (the three chosen
+  pages render valid, correctly sized OG/Twitter images with distinct
+  title/badge per book), but the live debugger pass itself must happen after
+  merge and deploy to `https://affinedrift.com`.
 - Branch: fix/web-01-6-how-to-read-this-site-4491
 - Baseline commit: fc36109d (origin/main)
 - Implementation commit: dd961a63
@@ -103,6 +219,7 @@
   - Integrated `How to Read This Site` into `_quarto.yml` navbar Read menu and footer navigation.
   - Added unit test suite `tests/test_how_to_read.py` (6 tests).
   - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
 
 ---
 
@@ -218,6 +335,18 @@
 ## Files and Decisions
 
 - Key decisions:
+  - Three representative landing pages (the two textbooks with dedicated
+    `index.qmd` pages plus the one monograph) were chosen to satisfy "on three
+    pages" concretely rather than generating cards for every book/series in
+    the sidebar, which the issue did not ask for.
+  - `ImageFont.load_default(size=...)` (Pillow >= 10.1) is used instead of a
+    vendored or system TrueType font, so card rendering is deterministic
+    across the Windows dev environment and the Linux CI runner without adding
+    a new font asset.
+  - Per-page `open-graph:`/`twitter-card:` YAML blocks (matching the same keys
+    already used site-wide in `_quarto.yml`) were used for the override,
+    rather than the generic Quarto `image:` field, to make the override
+    explicit and symmetric with the site-level config it replaces.
   - Cache path is `docs` + `.quarto` (not `_freeze/`): this site has no executable code cells
     (per the existing "Build site for E2E" comment), so Quarto's freeze mechanism buys nothing;
     the actual expensive artifact is the rendered HTML output itself.
@@ -232,6 +361,33 @@
 - User-owned or unrelated worktree changes: none observed.
 
 ## Validation
+
+- `python -m pytest tests/test_social_cards.py tests/test_image_budget.py -q` — 13 passed.
+- `python -m ruff check scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
+- `python -m black --check --line-length 100 scripts/generate_social_cards.py tests/test_social_cards.py` — PASS.
+- `python scripts/generate_social_cards.py --check` — PASS.
+- `python -m scripts.check_module_size_budget` — PASS.
+- `python -m scripts.check_tech_debt_budget` — PASS.
+- YAML frontmatter of the three edited `.qmd` files and the edited workflow
+  file validated with `yaml.safe_load`.
+
+## Blockers and Risks
+
+- Blocker: none for the generation/wiring work in this PR.
+- Risk: the live social-card-debugger validation (acceptance criterion 2)
+  cannot be executed by an agent pre-merge; it needs a human or a follow-up
+  automated check to run post-deploy against the three live URLs.
+
+## Next Steps
+
+1. After merge and the next site deploy, run a social-card debugger against
+   the three pages' live URLs to close out acceptance criterion 2.
+
+## Change Log
+
+- `SELF` — Generate per-book/series Open Graph social cards at build time and wire three landing pages to use them (#4578).
+
+---
 
 - `python -m pytest tests/test_deployment_integrity.py` — 16 passed, 1 skipped.
 - `python -m pytest tests/test_workflow_action_pins.py` — 2 passed.
@@ -270,7 +426,6 @@
 
 ---
 
->>>>>>> origin/main
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
@@ -317,6 +472,7 @@
   re-enabled title, the next step is to inspect that job's trace/video artifact rather than
   re-guess a timing fix.
 - Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
+
 # Implementation Handoff — Report Broken External Links as Issues (#4596)
 # Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
 
