@@ -132,6 +132,218 @@
 
 ---
 
+# Configure Search, and Include Maturity in Results — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4504`.
+- Branch `claude/issue-4504`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4504 (WEB-02.10, part of epic #4514). Objective: configure an explicit
+  Quarto `search:` block, fix or remove the unverified `SearchAction` JSON-LD, and show the
+  page-header-card maturity badge on matching search results.
+- Completed work:
+  - `_quarto.yml`: added an explicit `website.search` block (`type: overlay`, `limit: 20` — Quarto's default, so deep
+    monograph results stay reachable —
+    `keyboard-shortcut: ["/", "s"]`) — search previously ran on unconfigured Quarto defaults.
+  - `_includes/site-head.html`: removed the JSON-LD `SearchAction` sub-object, which pointed at
+    `https://affinedrift.com/?q={search_term_string}` — a target the site does not implement
+    (Quarto's search is a client-side overlay, not a query-string-driven page). The rest of the
+    `WebSite` JSON-LD schema is unchanged.
+  - `js/search-maturity-badge.js` (new): a self-initializing client module that fetches a
+    committed `/data/search-maturity.json` map and annotates matching `.search-result-doc` entries
+    with the same `.badge.badge--maturity.badge--<variant>` markup
+    `scripts/filters/page-header-card.lua` renders on the page itself, using a
+    `MutationObserver` since Quarto's search overlay renders results asynchronously.
+  - `scripts/generate_search_maturity_index.py` (new): scans `status`/`maturity` front matter
+    across the same content directories as `generate_sitemap.py` and writes the href → 
+    `{label, variant}` map consumed by the JS module above to the committed
+    `data/search-maturity.json` (a Quarto resource). `--check` and a freshness pytest keep it
+    current; no deploy-workflow change (the file is `{}` until pages declare a maturity).
+  - `css/search-metrics.css`: appended badge placement/spacing rules for the injected badge
+    inside `.search-result-title-container`.
+  - `articles/zero-torque-counterfactual.qmd`: titled it "Zero-Torque Counterfactual (ZTCF) Family" (the family
+    qualifier satisfies the ZTCF first-use rule)
+    so the page ranks first for a "ZTCF" search query (many other pages mention ZTCF in body
+    headings, but none had it in the title). No maturity status was added: no page carries a
+    `status`/`maturity` field yet, and assigning one is an editorial decision, not a test fixture.
+  - `scripts/sync_frontend_assets.py`: registered `search-maturity-badge.js` in
+    `CANONICAL_JS_NAMES`.
+  - `tests/e2e/search.spec.js`: added a Playwright test asserting a "ZTCF" search returns the
+    ZTCF page first. The "with its badge" half of acceptance criterion #1 stays open until the
+    owner assigns real maturity states; badge injection is covered by the Jest fixtures.
+  - `tests/search-config.test.js`, `tests/search-maturity-badge.test.js`,
+    `tests/test_generate_search_maturity_index.py` (all new): unit coverage for the search
+    config block, the SearchAction removal, the badge-injection module (9 tests), and the
+    index generator (7 tests).
+  - Regenerated pinned evidence digests in `data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`, and `data/trust/site_trust_surface_audit.json`
+    via `scripts/regenerate_claim_audit_evidence.py`, since editing `_quarto.yml` and the ZTCF
+    `.qmd` invalidated their previously-pinned SHA-256 evidence hashes.
+  - Keyed SPEC.md change-log row to #4504.
+- Key decisions:
+  - Removed the `SearchAction` rather than fixing its target, since the acceptance criterion
+    accepts either and Quarto's overlay search has no server-side query-string endpoint to
+    point it at; fabricating one would be a bigger, out-of-scope change.
+  - The maturity badge could not be added through Quarto's own search-result templating (no
+    such hook exists), so it is applied client-side against the search overlay's DOM, mirroring
+    the badge markup/CSS already shipped for page headers by #4507 rather than inventing new
+    badge styling.
+  - "Index the glossary" (issue's proposal bullet) needed no new mechanism: `pages/glossary.qmd`
+    already renders as a normal page with no search exclusions, so it is already indexed by
+    Quarto's default `search.json` generation.
+- Compatibility constraints: none — additive JSON-LD removal and new generated asset; no
+  existing route, API, or schema changed shape.
+- Validation commands and outcomes:
+  - `npx jest` → 28 suites, 441 passed, 19 skipped, 0 failed.
+  - `python3 -m pytest --timeout=120 -q` → all passed (only pre-existing environment skips).
+  - `python3 -m ruff check .` → clean.
+  - `python3 -m black --check --line-length 100 .` → clean.
+  - `python3 -m scripts.check_spec_changelog` → passed.
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` → "claim-audit evidence digests
+    and reports are current".
+  - `python3 -m scripts.check_css_architecture`, `check_module_size_budget`,
+    `check_tech_debt_budget`, `check_contract_coverage`, `check_js_dependency_boundaries` → all
+    passed.
+  - **Not run locally:** `quarto render` and `npx playwright test` (quarto CLI is blocked in
+    this sandbox). The new `tests/e2e/search.spec.js` case ("finds the ZTCF page first, with its
+    maturity badge") is reasoned through by code inspection against Quarto's search-overlay DOM
+    structure but has not executed against a real rendered site — CI's `e2e-tests` job is the
+    first actual execution; check its result on the opened PR.
+- Blockers/risks: none identified. If CI's `e2e-tests` job fails the new search spec, the next
+  step is to inspect the Playwright trace/video artifact — the DOM selectors used
+  (`.search-result-doc .search-result-link`, `.search-result-title-container`) were
+  reverse-engineered from git history of the vendored `quarto-search.js` and may need
+  adjustment if the installed Quarto version's search markup differs.
+- Spotted but not fixed (out of scope, per "Spotted ≠ fix"): running the full pytest suite
+  repeatedly regenerates unrelated drift in `_includes/generated/research-releases-summary.qmd`,
+  `data/trust/generated/research_releases_registry.json`, and
+  `data/trust/generated/reader_validation_study.json` (a `generated_on` timestamp bump plus
+  JSON reformatting) — reverted with `git checkout --` before committing so this PR's diff stays
+  surgical to #4504; this looks like a pre-existing non-determinism in one of those generators,
+  unrelated to this change.
+- Next steps: push the branch, open the draft PR, and watch CI's `e2e-tests` job for the new
+  ZTCF search spec.
+# DCR Visualiser Widget — #4535 (WEB-06.5)
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4535`.
+- Branch `claude/issue-4535`, commit `SELF`; pull request: not created by this session — the
+  orchestrator opens it.
+- Governing issue: #4535 (WEB-06.5, child of epic #4543 "[E6] Interactive Models and
+  Reproducibility"). Objective: an interactive widget, driven by
+  `src/affine_control/reachability.py::instantaneous_scalar_dcr`, showing how the DCR ratio
+  changes through a phase of a trajectory and explicitly demonstrating why DCR is not a
+  reachability certificate (claim `ad-dcr-001`), embedded on the DCR page with the claim
+  linked, plus a parity test.
+- Design: WEB-06.1 (the ADR deciding between `{ojs}`/Pyodide/Shinylive for interactive widgets)
+  is still open and `tier:strong`, so this widget follows the only existing precedent in the
+  repo — `articles/rotation-converter.qmd`'s plain hand-rolled JS engine plus a separate UI
+  script, loaded via `<script src="../js/...">` from a raw `{=html}` block, no new build
+  tooling.
+- Review response (this update): a human review of the initial implementation asked for four
+  fixes plus one optional DRY improvement, all applied:
+  1. Relabeled the phase slider from "Swing phase (fraction of horizon elapsed)" to "Phase
+     time $t$" (it displays elapsed time, not a fraction) and renamed the subsection heading
+     and internal wording from "Swing Phase"/"swing phase" to the neutral "Phase" — the widget
+     is a declared mathematical construction, not real golf-swing data, and the heading
+     shouldn't imply otherwise.
+  2. Added a `<thead>` with `<th scope="col">` headers ("Quantity", "Additive drift",
+     "State-dependent drift") to the numeric results table, which previously had no column
+     labels.
+  3. Added a `<noscript>` fallback (following `articles/proximal-distal-falsification-atlas.qmd:29`'s
+     pattern) stating the default scenario's values and linking claim `ad-dcr-001`, so the page
+     degrades gracefully without JavaScript.
+  4. Moved all ~20 inline `style=` attributes and the hard-coded `#2563eb`/`#dc2626` colors into
+     a new `css/dcr-visualizer.css`, using `var(--bg-secondary)`/`var(--border-color)`/
+     `var(--bg-primary)`/`var(--text-secondary)` design tokens for surfaces, and two
+     widget-scoped custom properties (`--dcrviz-additive`, `--dcrviz-state-dependent`) for the
+     two-series accent colors — the same scoping pattern `css/rotation-converter.css` uses for
+     `--rc-error`/`--rc-success` — with a `[data-theme="dark"]` / `prefers-color-scheme: dark`
+     override so the series colors adapt in dark mode. Registered the new stylesheet in
+     `scripts/sync_frontend_assets.py`'s `SYNC_MAPS` (mirrors to `docs/css/dcr-visualizer.css`)
+     so the deploy pipeline's `sync_frontend_assets.py --check` step covers it. While doing
+     this, found and fixed a real gap from the initial implementation: `js/dcr-visualizer.js`
+     and `js/dcr-visualizer-ui.js` had never been added to `CANONICAL_JS_NAMES`, so
+     `tests/test_sync_frontend_assets.py::test_every_canonical_javascript_module_has_a_deploy_sync_map`
+     was failing — the two JS modules were not registered for deploy-time mirroring to
+     `docs/js/`.
+  5. (Optional, applied) Centralized the shared parity numbers — the governed fixture's
+     $x_0=1$, $\bar u=1$, $T=1$, the two systems' drift parameters, and their expected
+     instantaneous-DCR/reachable-interval/width values — into
+     `tests/fixtures/dcr_visualizer_parity.json`, read by both
+     `tests/test_dcr_visualizer_parity.py` (Python) and `tests/dcr-visualizer.test.js` (JS)
+     instead of each suite hardcoding the same literals independently.
+- The widget compares two `LinearScalarSystem`s that share one instantaneous DCR at the start
+  of the phase — an additive-drift system (`gradient=0`) and a state-dependent-drift system
+  (`gradient=ubar/x0`) — and evolves each along its own zero-input drift trajectory as the
+  reader drags the phase slider. This is the exact scenario already governed by
+  `tests/test_dcr_event_sensitivity_protocol.py::test_state_dependent_drift_breaks_any_dcr_to_reachable_width_mapping`
+  (both systems: instantaneous DCR = 1; reachable-interval widths = 2 and 2(e−1)), which gives
+  both the Python and JS test suites the same anchored ground truth.
+- Added:
+  - `js/dcr-visualizer.js` — pure, DOM-free JS mirror of `LinearScalarSystem`,
+    `instantaneous_scalar_dcr`, `scalar_linear_reachable_interval`, and
+    `constant_additive_drift_interval`, plus the two zero-input drift trajectories
+    (`additiveDriftState`, `multiplicativeDriftState`) used to evolve state through the phase.
+  - `js/dcr-visualizer-ui.js` — DOM wiring: reads the `x0`/`ubar`/`horizon`/phase-slider inputs,
+    validates them (nonzero `x0`, positive `ubar`, nonnegative `horizon`) with the same
+    fail-loud contract as the Python dataclass, renders an inline SVG line chart of DCR across
+    the phase for both systems, an accessible data table of sampled values, and the computed
+    reachable intervals/widths.
+  - `css/dcr-visualizer.css` — the widget's styles (see review-response item 4 above), mirrored
+    to `docs/css/dcr-visualizer.css` at deploy time via `scripts/sync_frontend_assets.py`.
+  - Embedded the widget in `articles/controllability-drift-ratio.qmd`, in a new
+    "Interactive: DCR Through a Phase" subsection directly after the existing
+    "Executable Constant-Drift Counterexample" subsection, with
+    `<a data-trust-claim="ad-dcr-001" href="#claim-ad-dcr-001">` linking the same registered
+    claim already cited earlier in the article (and again in the `<noscript>` fallback).
+  - `tests/dcr-visualizer.test.js` (17 cases) and `tests/dcr-visualizer-ui.test.js` (5 cases) —
+    Jest parity tests for the pure module and a DOM smoke test that extracts the actual
+    `{=html}` block from the `.qmd` file (mirroring `tests/rotation-converter-ui.test.js`'s
+    pattern) and exercises the live widget, including its two error paths (`x0 = 0`,
+    `ubar <= 0`).
+  - `tests/test_dcr_visualizer_parity.py` (5 cases) — recomputes the same governed fixture
+    directly from `src/affine_control/reachability.py`, asserts the widget's numeric defaults
+    in the article match that exact fixture, and asserts the claim link is present. Together
+    with the Jest suite (which computes the identical numbers from the JS implementation),
+    this is the "parity test" required by the acceptance criteria — there is no existing
+    cross-runtime (Python-calls-Node) execution harness in this repo to build a single
+    combined test on. Both suites now read `tests/fixtures/dcr_visualizer_parity.json` for the
+    shared scenario parameters and expected values (review-response item 5 above).
+  - Regenerated the pinned SHA-256/revision digests that reference
+    `articles/controllability-drift-ratio.qmd`'s bytes after editing it:
+    `python -m scripts.regenerate_claim_audit_evidence` (touches
+    `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`)
+    and `python -m scripts.generate_research_readiness_library` (touches
+    `data/research_protocols/library.json`, `data/research_protocols/public_summary.json`).
+    These two generators reference each other's output (the research-readiness library's own
+    digest is itself pinned as evidence for an unrelated route, `proximal-distal-falsification-atlas`),
+    so both were re-run until both `--check` invocations passed cleanly.
+- Validation commands run in this worktree:
+  - `npm install` (node_modules was not present in the worktree).
+  - `npx jest tests/dcr-visualizer.test.js tests/dcr-visualizer-ui.test.js tests/rotation-converter-ui.test.js` → 36 passed.
+  - `python3 -m pytest tests/test_dcr_visualizer_parity.py tests/test_dcr_reachability_contract.py tests/test_dcr_article_rigor.py tests/test_dcr_event_sensitivity_protocol.py tests/test_scientific_trust_metadata.py -q` → all passed.
+  - `python3 -m pytest tests/test_check_single_title.py tests/test_editorial_and_consistency.py tests/test_formatting_lints.py tests/test_publication_markup_contract.py tests/test_research_protocol_readiness.py tests/test_claim_audit_inventory.py tests/test_sync_frontend_assets.py tests/test_deployment_integrity.py tests/test_page_style_discipline.py tests/test_check_styles_budget.py tests/test_check_css_architecture.py tests/test_css_bundle.py -q` → all passed (after regenerating digests and registering the new CSS/JS sync maps).
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → clean.
+  - `npx prettier --check tests/fixtures/dcr_visualizer_parity.json css/dcr-visualizer.css` → clean.
+  - `python3 -m scripts.check_module_size_budget` → passes (`js/dcr-visualizer.js` 74 lines,
+    `js/dcr-visualizer-ui.js` 114 lines, `css/dcr-visualizer.css` well under budget).
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` and
+    `python3 -m scripts.generate_research_readiness_library --check` → both clean.
+  - `python3 -m scripts.sync_frontend_assets --check` → clean (after running it once without
+    `--check` to generate `docs/css/dcr-visualizer.css`, then reverting the unrelated
+    pre-existing drift it also surfaced in the already-tracked `docs/css/print.css` and the
+    untracked `docs/css/rotation-converter.css`/`docs/js/*.js` build artifacts — those mirrors
+    are generated by `quarto render` at deploy time, not committed, so they were left out of
+    this diff).
+  - **Not run:** `quarto render` and `npx playwright test` (full-site render out of scope for
+    this sandbox). The widget was reasoned through via the Jest DOM smoke test rather than a
+    rendered-page browser check; CI's `e2e-tests` job is the first real render/axe-core pass
+    over this page.
+
+---
+
+# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
 # Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
 ## Identity
@@ -940,9 +1152,8 @@
 2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
    different threshold than lay blocks.
 3. No further implementation is planned from this session pending review feedback.
-# Implementation Handoff — Build the Page Header Card Component (#4507)
-# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
->>>>>>> origin/main
+
+# Implementation Handoff — Real Publication Dates and Per-Article Change History (#4545)
 
 ## Identity
 
