@@ -60,12 +60,44 @@
 - Blockers / risks:
   - Start Here route substitution (above) — cosmetic/naming risk only, the
     underlying fix is route-agnostic.
+- Review round 2 (Opus, same PR): reviewer flagged that pages built by
+  `src/tools/latex_to_html.py` from `_templates/latex_article.html` (which
+  loads `js/main.js` at line 183) used to get a skip link injected by the old
+  `initSkipToContent()` and now get none, since that function only enhances
+  an existing static link (see above) and `_templates/latex_article.html` has
+  no static one. Investigated whether that pipeline is still live: `grep` for
+  `latex_to_html`/`latex_article.html` across `scripts/`,
+  `.github/workflows/`, `_quarto.yml`, `Makefile`, and `package.json` returns
+  no matches — no automated build, CI, or deploy step invokes
+  `latex_to_html.py`, `convert_all_latex.py`, or the template. The only two
+  entries in `convert_all_latex.py::CONVERSIONS`
+  (`content/wrist-as-universal-joint/Wrist_Universal_Claude.html`,
+  `content/inverse-dynamics-analysis/.../inverse_dynamics_article.html`) are,
+  in the committed tree today, hand-authored redirect/reading-guide stub
+  pages that do not use `_templates/latex_article.html` or load
+  `js/main.js` at all — so no page currently shipped on the site was built by
+  this pipeline either. `latex_to_html.py` remains a real, documented,
+  manually-invoked developer tool (`src/tools/README.md`,
+  `src/tools/CONVERSION_GUIDE.md`), so it was not deleted, but per the
+  reviewer's own branching instruction ("if it is provably unused, do not
+  change code; report the evidence instead") `_templates/latex_article.html`
+  was left unchanged — no static skip link was added there, and no new test
+  was added for it. **Open follow-up (not fixed here):** if a developer runs
+  this tool again to publish a new page, that page will still ship without a
+  skip link; consider adding the static markup preemptively or filing a
+  tracked issue before the tool is next used.
+  Also updated PR #4624's body to mention the new `project.post-render` step
+  `scripts/move_skip_link.py`.
 - Next steps for a continuing agent or reviewer:
   1. Watch the draft PR's `e2e-tests` CI run for the new skip-link specs.
   2. Once `pages/start-here.qmd` ships under WEB-01.1, replace
      `/pages/overview.html` in `SKIP_LINK_ROUTES`
      (`tests/e2e/accessibility.spec.js`) with the real Start Here route.
   3. Address any review feedback on PR #4624 and watch its `e2e-tests` run.
+  4. If `src/tools/latex_to_html.py` is ever wired into an automated build or
+     used to publish a new page, add the same static skip-link markup as
+     `_includes/skip-link.html` to `_templates/latex_article.html` (with a
+     matching `id` on its `<main class="main-content">`) first.
 # Implementation Handoff — Deploy Website route coverage (#4548 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-route-coverage`
