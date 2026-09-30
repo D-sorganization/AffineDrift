@@ -231,6 +231,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
 | 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
 | 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
+| 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |
 | 2026-09-29 | #4633 | Build Page Header Card component driven by front matter and styled in print stylesheet (#4507). |
 | 2026-09-29 | #4631 | Implement Plain-Language Summary and Key Takeaways component driven by front matter and styled in print stylesheet (#4508). |
 | 2026-09-29 | #4630 | Align Physics of Golf nomenclature with NOTATION.md autonomous drift and control channel definitions (#4529). |

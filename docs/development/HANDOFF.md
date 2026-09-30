@@ -54,58 +54,54 @@
 # Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
 # Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 # Implementation Handoff — Build the Page Header Card Component (#4507)
+# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-03-2-page-header-card-4507
-- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
-- Implementation commit: c945531c
-- Pull request: #4633
-- Governing issue/epic: #4507 (epic #4514)
+- Branch: feat/web-01-3-extend-personas-4488
+- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
+- Implementation commit: SELF
+- Pull request: #4638
+- Governing issue/epic: #4488 (epic #4496)
 
 ## Objective and Status
 
-- Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
-- Status: ready for review / auto-merge
+- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
+- Status: PR #4638 created, awaiting auto-merge
 - Completed:
-  - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
-  - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
-  - Added print styling in `css/print.css`.
-  - Registered Lua filter in `_quarto.yml`.
-  - Resolved reading-time estimate policy conflict in `books/roadmap.qmd` and `js/accessibility.js`.
-  - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
-  - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
-  - Regenerated claim audit evidence digests and verified all pre-commit checks.
-  - Added change-log row in `SPEC.md`.
-- Remaining: Monitor PR #4633 CI and auto-merge into main.
+  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
+  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
+  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
+  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
+  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
+  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
+  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all checks pass.
+  - Keyed change-log row in `SPEC.md` to #4638.
+- Remaining: Arm auto-merge and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `scripts/filters/page-header-card.lua`: Component Lua filter.
-  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
-  - `css/print.css`: Print rules avoiding page breaks inside header card.
-  - `styles.css`: Component `@import`.
-  - `_quarto.yml`: Filter registration.
-  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
-  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
-  - `tests/page-header-card.test.js`: Jest unit test suite.
-  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
-  - `SPEC.md`: PR change-log row.
+  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
+  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
+  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
+  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
+  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
+  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
+  - `SPEC.md`: Added change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
+- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `npm test tests/page-header-card.test.js` — PASS (5 passed)
-- `pytest tests/test_page_header_card.py` — PASS (11 passed)
-- `python scripts/check_css_architecture.py` — PASS
-- `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check tests/test_page_header_card.py` — PASS
-- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
+- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
+- `python -m src.tools.site_link_gate` — PASS (0 errors)
+- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -116,7 +112,7 @@
 
 ## Next Steps
 
-1. Monitor PR #4633 CI and auto-merge into main.
+1. Monitor PR #4638 CI and auto-merge into main.
 
 ## Change Log
 
