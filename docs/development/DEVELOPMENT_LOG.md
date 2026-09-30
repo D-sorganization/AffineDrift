@@ -109,6 +109,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Added the `articles/*-bibliography.md` Quarto render rule (mirroring the pre-existing `critiques/*.md` rule) and minimal title/description front matter to the 22 companion bibliography files, so they render instead of 404ing; fixed the two links that pointed at raw `.md`/GitHub-blob sources; kept and front-mattered the one orphan companion file (`Pinocchio_Project_Outline-bibliography.md`) because its annotated content is substantive; documented the pattern.
 - **Next step:** Open the draft PR for review.
 
+### DL-#4591 · Readability Measurement Tool
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4591 (draft)
+- **Issue:** #4591 (WEB-12.5; epic #4594 / E12)
+- **Branch:** `claude/issue-4591`
+- **Paths:** `scripts/check_readability.py`, `tests/tools/test_check_readability.py`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (33/33 new pytest cases pass; ruff, black --line-length 100, and mypy clean on the new module.)
+- **Summary:** Advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages, wired into CI as a non-blocking step with a JSON report artifact; threshold (grade 10) taken from WEB-12.1's stated targets since the style guide itself (WEB-12.1) is still open.
+- **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 ### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress
