@@ -90,11 +90,123 @@
 
 ---
 
+# Service-Worker Cache Busting by Content Hash — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4600`.
+- Branch `claude/issue-4600`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4600 (epic #4604, E13 — Build, Reliability, and Maintainability).
+  Objective: resolve the unresolved content-hash cache-busting note (#1459, closed) in
+  `service-worker.js` and re-enable the excluded offline Playwright test (#4140).
+- Completed work:
+  - `service-worker.js`: removed the stale `TODO #1459` comment. Content-hash cache busting
+    is already implemented by `scripts/update_sw_cache_version.py`, which hashes the precached
+    CSS/JS assets into `CACHE_NAME`'s suffix (well covered by
+    `tests/test_update_sw_cache_version.py`, 12 tests, all passing); the comment now documents
+    that instead of pointing at a closed issue asking for it.
+  - `tests/e2e/offline.spec.js`: replaced the `should serve cached homepage when offline` test's
+    hardcoded `page.waitForTimeout(3000)` with a deterministic
+    `await page.evaluate(() => navigator.serviceWorker.ready)` wait, so the assertion no longer
+    races the service worker's install/precache step under CI load.
+  - `.github/workflows/ci-standard.yml`: dropped `should serve cached homepage when offline` from
+    the full-site E2E `--grep-invert` exclusion list added for #4140. The other eight excluded
+    titles are unrelated to this issue and left untouched.
+- Key decision: acceptance criterion "Content-hash precache manifest" is satisfied by the
+  existing `update_sw_cache_version.py` mechanism (a single content-hash-derived `CACHE_NAME`
+  covering all precached assets) rather than a per-file manifest — that mechanism already has
+  full test coverage, so the only unresolved half of the acceptance criteria was the stale
+  comment and the CI exclusion.
+- Compatibility constraints: none — no public API or cache-key format changed; `CACHE_NAME`
+  values still follow the pre-existing `affinedrift-v5-<hash>` shape.
+- Validation commands and outcomes:
+  - `npx jest` → 25 suites, 420 passed, 19 skipped, 0 failed.
+  - `python3 -m pytest tests/test_update_sw_cache_version.py -q` → 12 passed.
+  - `python3 -m ruff check .` → all checks passed.
+  - `python3 -m black --check --line-length 100 .` → 733 files unchanged, no diffs.
+  - `python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` → OK
+    (workflow YAML still parses after the exclusion-list edit).
+  - **Not run locally:** `quarto render` (blocked in this sandbox — ~14 min full-site render is
+    out of policy for this session) and `npx playwright test`. The re-enabled offline spec was
+    reasoned through by code inspection (SW registers on `window.load` in
+    `_includes/site-after-body.html`, activates via `self.clients.claim()`, and
+    `navigator.serviceWorker.ready` resolves once an active SW is present) but has not been
+    executed against a real rendered site. CI's `e2e-tests` job (full-site Playwright run) is the
+    first actual execution of the un-excluded test — check its result on the opened PR.
+- Blockers/risks: none identified beyond the above. If CI's `e2e-tests` job still fails the
+  re-enabled title, the next step is to inspect that job's trace/video artifact rather than
+  re-guess a timing fix.
+- Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
+# Implementation Handoff — Report Broken External Links as Issues (#4596)
 # Implementation Handoff — Keep Internal Governance Vocabulary Out of Reader Prose (#4588)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4596 (worktree)
+- Branch: claude/issue-4596
+- Baseline commit: 02507aac (origin/main)
+- Implementation commit: SELF
+- Pull request: not created yet (opening as draft in this session)
+- Governing issue/epic: #4596 (epic #4604)
+
+## Objective and Status
+
+- Objective: In `.github/workflows/link-checker.yml`, make the scheduled external-link check
+  report to a single tracking issue instead of only job logs, check DOI links through their
+  doi.org redirect, and suggest an archive.org fallback for each dead link.
+- Status: Implementation complete, tests passing; opening draft PR.
+- Completed:
+  - `scripts/link-checker.py`: added `is_doi_url()` and a `SafeRedirectHandler` so DOI links
+    (which resolve via an HTTP redirect by design) are checked by following that redirect,
+    safety-checked per hop against SSRF instead of being flagged broken on the 30x response.
+  - Added `archive_org_suggestion()` and attached it to every external-URL warning.
+  - Changed `check_file`'s external warnings from plain strings to structured dicts
+    (`file`, `url`, `reason`, `archive_suggestion`).
+  - Added `--json-report PATH` to `scripts/link-checker.py` to emit those warnings as JSON.
+  - `.github/workflows/link-checker.yml`: changed the schedule from daily to weekly
+    (`0 2 * * 1`), added `issues: write` permission, wired `--json-report` into the
+    "Check external URLs" step, and added a "Report broken external links as a tracking
+    issue" step that finds-or-updates a single open issue (marker comment + `ci`/`report`/
+    `automation` labels) with the current broken-link table, and closes it once the report
+    is empty.
+  - Updated `docs/LINK-CHECKER.md` to document the weekly cadence, DOI handling, the
+    archive.org suggestion, the tracking-issue behavior, and `--json-report`.
+  - Added `tests/test_link_checker_script.py` (12 tests) covering DOI-domain detection, the
+    archive.org suggestion format, DOI redirect-following (including the SSRF-blocked
+    redirect case), the structured warning shape, and `--json-report` output.
+  - Keyed SPEC.md change-log row to #4596.
+- Remaining: none for this issue's acceptance criteria. The pre-existing "convoluted
+  continue-on-error" in the internal-refs step (named in the issue's Problem section) was
+  left untouched — it is not covered by an acceptance-criteria checkbox and changing CI
+  failure semantics for internal refs is out of scope for this surgical change; noted as a
+  follow-up opportunity in the PR body.
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/link-checker.py`: DOI-aware redirect handling, archive.org suggestions,
+    structured warnings, `--json-report`.
+  - `.github/workflows/link-checker.yml`: weekly schedule, `issues: write`, tracking-issue
+    upsert/close step.
+  - `docs/LINK-CHECKER.md`: documented the new behavior and CLI flag.
+  - `tests/test_link_checker_script.py`: new test file (script is hyphenated, loaded via
+    `importlib`, mirroring the existing `tests/test_check_equations.py` pattern).
+  - `SPEC.md`: added change-log row.
+  - `docs/development/DEVELOPMENT_LOG.md`: added `DL-#4596`.
+  - `docs/development/HANDOFF.md`: this entry.
+- Key decisions:
+  - Only `doi.org`/`dx.doi.org` links follow redirects; all other external links keep the
+    existing `NoRedirectHandler` behavior (unrelated to this issue's acceptance criteria,
+    so left as-is rather than expanded into a general redirect-following change).
+  - The redirect handler re-validates every hop with the existing `is_safe_url` SSRF check
+    before following it, since DOI targets are otherwise attacker-influenceable indirection.
+  - The archive.org suggestion is a Wayback Machine lookup built as
+    `https://web.archive.org/web/*/` followed by the dead link, not a verified/availability-checked
+    snapshot — the acceptance criterion asks for a suggestion, not confirmed availability, and
+    adding a second network call per dead link would slow the scheduled job for no required benefit.
+  - The tracking issue is identified by an HTML-comment marker in its body plus the existing
+    `ci`/`report`/`automation` labels (all already used elsewhere in the repo), rather than
+    minting a new label.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4588
 - Branch: claude/issue-4588
 - Governing issue/epic: #4588 (epic #4594 "[E12] Editorial Voice and Plain-Language Standard")
@@ -128,6 +240,27 @@
 - User-owned or unrelated worktree changes: none observed.
 
 ## Validation
+
+- `pytest tests/test_link_checker_script.py` — PASS (12 passed)
+- `pytest tests/test_link_checker_script.py tests/test_check_links.py tests/test_check_links_additional.py tests/test_link_utils.py` — PASS (79 passed)
+- `python -m ruff check scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m black --check --line-length 100 scripts/link-checker.py tests/test_link_checker_script.py` — PASS
+- `python -m scripts.check_spec_changelog` — PASS
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: the tracking-issue step is exercised only via the workflow's scheduled/
+  manual trigger in production GitHub Actions; it is not covered by a live integration test
+  (no local GitHub API to test against). The JSON-report plumbing and issue-body construction
+  logic were reviewed by hand against the existing `github-script` patterns in
+  `ci-benchmarks.yml`/`spec-check.yml`.
+
+## Next Steps
+
+1. Push branch and open a draft PR referencing `Fixes #4596`; release the fleet lease.
+
+---
 
 - `python -m pytest tests/test_check_governance_vocabulary.py tests/test_check_terminology.py -m content_lint` — 52 passed.
 - `python -m ruff check scripts/check_governance_vocabulary.py tests/test_check_governance_vocabulary.py` — PASS.
