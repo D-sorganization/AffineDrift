@@ -330,6 +330,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Enforces that every critique maps to every page whose claim it targets and extends critique annotations to the ZTCF, Theory Part 2, and Proximal-Distal pages.
 - **Next step:** Commit changes, push branch, open PR referencing Closes #4524, and release lease.
 
+### DL-#4523 · Readable Claim Ledger Page
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4637 (draft) — https://github.com/D-sorganization/AffineDrift/pull/4637
+- **Issue:** #4523 (epic #4530)
+- **Branch:** `claude/issue-4523`
+- **Paths:** `evidence/claims.qmd`, `scripts/generate_claims_ledger.py`, `tests/test_claims_ledger.py`, `_includes/generated/claims-ledger.qmd`, `_includes/generated/claims-ledger/drift-control-ratio.qmd`, `articles/drift-control-ratio.qmd`, `_quarto.yml`, `src/tools/site_page_scan.py`, `tests/test_site_link_gate.py`, `scripts/check_root_hygiene.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: merged origin/main forward, fixed the stale `articles/controllability-drift-ratio.qmd` path left over from PR #4629's DCR rename, and reviewed/added claim-audit inventory records for the new `/evidence/claims.html` route.)
+- **Summary:** Generates a dedicated `evidence/claims.qmd` page from `data/trust/claim_registry.json` — one accessible card per claim with plain/formal statements, evidence rung, falsifiers, related critiques, and the pages making the claim — and links every claim-making page back to its ledger entry via a generated per-page include.
+- **Next step:** Open the draft PR for frontier review; `scripts/generate_sitemap.py`'s `SITEMAP_CONTENT_DIRS` does not yet include `evidence/` (noted as a follow-up, not blocking).
+
 ### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped

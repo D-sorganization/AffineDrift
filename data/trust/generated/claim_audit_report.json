@@ -2,11 +2,11 @@
   "counts": {
     "deferred": 0,
     "exempt": 3,
-    "reviewed": 241
+    "reviewed": 242
   },
   "deferred_issue_counts": {},
   "inventory_schema_version": "1.1.0",
-  "route_count": 244,
+  "route_count": 245,
   "routes": [
     {
       "audit_id": "ad-route-8a5edab28263",
@@ -274,11 +274,12 @@
       "deferment_issue_url": null,
       "findings": [],
       "review_evidence": {
-        "evidence_file_count": 7,
+        "evidence_file_count": 8,
         "evidence_sha256": {
+          "_includes/generated/claims-ledger/drift-control-ratio.qmd": "decb07e428b94bfcb647abd8a844eb8c0ae94be272ff373fd5ff863947069554",
           "articles/_generated/trust/ad-dcr-reachability.qmd": "bb06339a1ba65cd9eb61d08bbe17775da0c8574f89abcb983956df9a91bbb2f3",
           "articles/_generated/trust/critique-annotations/drift-control-ratio.qmd": "dc481eb671b8f4f824db58630f965069129890921f93c4c8226ffe5e24bbf8ac",
-          "articles/drift-control-ratio.qmd": "06bc220d37406a94cd0db187ab2a4617b2671a37b2c696d34877f5040ebd1dbe",
+          "articles/drift-control-ratio.qmd": "987a2b49b18323a006564688c37b1a2b29ccec094bc6fafe1bedc1d7b809453d",
           "reports/technical-review/dcr-complete-review.md": "a5117b0a55e8e8f48f1f32d16f3fbe0d460664563070608ca9bf89af012f87b9",
           "tests/test_dcr_article_rigor.py": "312e7a6e70251a0c8ff8f580d8686ac8f11ec15d0109ad21dd886524308ca9df",
           "tests/test_dcr_reachability_contract.py": "f61a7f97d32f212b5e0ecf2bb3cc1f51f81a618e9e3684903b6d3fa00fef3f9e",
@@ -2164,7 +2165,7 @@
       "review_evidence": {
         "evidence_file_count": 17,
         "evidence_sha256": {
-          "_quarto.yml": "c36c20d26a4fb41f21cdc904b36b5870ee304086513de1e0de52e601ee81d286",
+          "_quarto.yml": "fdc2ed651df8e83efb9be35f8d4c6f814ace0668b225e528c023e7a9000716ca",
           "articles/_generated/proximal-distal-falsification-atlas.qmd": "d60241c297a8bd1112cd9375e13f7c711527186849bceb101c77690d1bf26a51",
           "articles/proximal-distal-falsification-atlas.qmd": "a8d187f4dc3d79d74a83a001253fd0900bfb654b5c786d98166c4718cde8ce9b",
           "articles/proximal_distal_energy_transfer/data/claim_adjudication_summary.json": "21cd105216d53adb7706f1e21a7be5e0d37c0e2d061b3843fb17fd18fdfeb33a",
@@ -8391,6 +8392,40 @@
       "status": "reviewed"
     },
     {
+      "audit_id": "ad-route-3de14a21ce3c",
+      "claims": [],
+      "critiques": [],
+      "deferment_issue_url": null,
+      "findings": [
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "evidence/claims.qmd"
+          ],
+          "evidence_sha256": {
+            "evidence/claims.qmd": "8dac4e7e5345bc6e3a7ac1b0c76139336af17a7384c98f68311b112e373542d1"
+          },
+          "finding_id": "ad-finding-claims-ledger-rung-cross-reference",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4523",
+          "priority": "p3",
+          "rationale": "The 'How to Read a Claim Card' section claimed the evidence rung 'is the same tier ladder used across the site's evidence presentation summary' and linked that phrase to models/research-protocol-readiness.html. That page renders its own distinct 12-state readiness ladder (concept through published/superseded), not the claim evidence_presentation module's 9-level EvidenceTier ladder (Mathematical Identity through Superseded / Revoked); the generated _includes/generated/evidence-presentation-summary.qmd partial that does use that ladder is not included on any live page. Reworded to describe the ladder without the false cross-reference.",
+          "verification_commit": "c2bd47af819842b0406425d6c55fdcb920d51b4f"
+        }
+      ],
+      "review_evidence": {
+        "evidence_file_count": 2,
+        "evidence_sha256": {
+          "_includes/generated/claims-ledger.qmd": "439e9f65075d1510a2e62b648ecab5bac1923e2d3172aec764bd298b785b67cc",
+          "evidence/claims.qmd": "8dac4e7e5345bc6e3a7ac1b0c76139336af17a7384c98f68311b112e373542d1"
+        },
+        "source_path": "evidence/claims.qmd"
+      },
+      "route": "/evidence/claims.html",
+      "status": "reviewed"
+    },
+    {
       "audit_id": "ad-route-eb36645ba003",
       "claims": [],
       "critiques": [],
@@ -8832,7 +8867,7 @@
         "evidence_file_count": 28,
         "evidence_sha256": {
           "_includes/generated/research-readiness-library.qmd": "b58c86b19ed4b1ae4082b4fd5c3e31fe0483a7a3dbf7d8e41e70e751dd36ed90",
-          "_quarto.yml": "c36c20d26a4fb41f21cdc904b36b5870ee304086513de1e0de52e601ee81d286",
+          "_quarto.yml": "fdc2ed651df8e83efb9be35f8d4c6f814ace0668b225e528c023e7a9000716ca",
           "data/research_protocols/data_dictionary.json": "a39b4ee56f9ecee321f2d2fe1612b351c201e1c813aaf258f99d6e087d4a1720",
           "data/research_protocols/library.json": "dc1afda2581eb247e94232e5c5c6c2a966ac695c028a6e36612724c1cf91db8d",
           "data/research_protocols/manufactured_dry_runs.json": "4f23dc9ac93900b364846adeefce69adb35543da0b911943ba9a13fe1edc5f5b",

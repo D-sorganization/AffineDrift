@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 241
+- Reviewed: 242
 - Deferred: 0
 - Exempt: 3
 
@@ -21,7 +21,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
 | `/articles/degrees-of-freedom-and-dimensionality.html` | `articles/degrees-of-freedom-and-dimensionality.qmd` | 1 |
 | `/articles/drift-components-wrench-double-pendulum.html` | `articles/drift-components-wrench-double-pendulum.qmd` | 2 |
-| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 7 |
+| `/articles/drift-control-ratio.html` | `articles/drift-control-ratio.qmd` | 8 |
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
@@ -190,6 +190,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/tip_mass_omission.html` | `critiques/tip_mass_omission.md` | 1 |
 | `/critiques/validation_dimensionality_gap.html` | `critiques/validation_dimensionality_gap.md` | 1 |
 | `/critiques/ztcf_identifiability.html` | `critiques/ztcf_identifiability.md` | 1 |
+| `/evidence/claims.html` | `evidence/claims.qmd` | 2 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 5 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
@@ -437,6 +438,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-2e40c8ef19db` | `/critiques/tip_mass_omission.html` | Reviewed | — | None | `crit-tip-mass-omission` | 0 |
 | `ad-route-6369158192d8` | `/critiques/validation_dimensionality_gap.html` | Reviewed | — | None | `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-7d2a57c6ed8d` | `/critiques/ztcf_identifiability.html` | Reviewed | — | None | `crit-ztcf-identifiability` | 0 |
+| `ad-route-3de14a21ce3c` | `/evidence/claims.html` | Reviewed | — | None | None | 1 |
 | `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |

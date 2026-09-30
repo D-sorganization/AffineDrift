@@ -462,3 +462,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4550 | Consolidate print CSS into one stylesheet, support Letter and A4 page sizes, and force MathJax typesetting before print (WEB-07.9). |
 | 2026-09-30 | #4548 | Retire the 22 unaudited companion bibliographies from the render and audit the privacy and accessibility pages, restoring 100% claim-audit route coverage for Deploy Website. |
 | 2026-09-29 | #4655 | Remove stub Colab buttons from textbook pages and fill priority notebooks with verified dynamics (#4537). |
+| 2026-09-29 | #4523 | Add a generated evidence/claims.qmd Claim Ledger page (one accessible card per claim: plain/formal statement, evidence rung, falsifiers, related critiques, pages making the claim) and link every claim-making page back to it. |
