@@ -126,9 +126,11 @@
 ## Change Log
 
 - c090f480 — Add the reader-facing Claim Ledger page, its generator, and per-page links (#4523).
-- SELF — Merged `origin/main` forward (31 commits, incl. #4629's DCR rename), fixed
+- c2bd47af — Merged `origin/main` forward (31 commits, incl. #4629's DCR rename), fixed
   stale `controllability-drift-ratio` paths, and added a reviewed claim-audit
-  inventory record for `/evidence/claims.html` (#4523).
+  inventory record for `/evidence/claims.html` with one open finding (#4523).
+- SELF — Marked that finding `corrected` with `verification_commit: c2bd47af...`
+  now that c2bd47af is a real, landed commit containing the page fix (#4523).
 
 # Implementation Handoff — Short On-Ramp Learning Paths (#4492)
 
