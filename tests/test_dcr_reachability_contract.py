@@ -7,7 +7,7 @@ import pytest
 from src.affine_control.reachability import constant_additive_drift_interval
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-ARTICLE = REPO_ROOT / "articles" / "controllability-drift-ratio.qmd"
+ARTICLE = REPO_ROOT / "articles" / "drift-control-ratio.qmd"
 
 
 def test_constant_additive_drift_translates_without_shrinking_reachable_interval() -> None:

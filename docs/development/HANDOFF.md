@@ -1,3 +1,58 @@
+# Website Consolidation (Seven Web Issues) — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `AffineDrift-worktrees/w-ad-web-consolidated`.
+- Branch `claude/website-consolidated-0929`, commit `SELF`; one consolidated
+  draft pull request (see the PR list) supersedes drafts #4615, #4616 and #4618
+  and the unpushed branches for #4608, #4583, #4568 and #4548.
+- Objective: land seven Sonnet 5 CLI-tier website issues in one CI cycle under
+  the PR-queue consolidation rule (RM#1691).
+
+| Issue | Branch              | Change                                                                   |
+| ----- | ------------------- | ------------------------------------------------------------------------ |
+| #4576 | `claude/issue-4576` | Privacy Policy page (`pages/privacy-policy.qmd`) plus footer link.       |
+| #4582 | `claude/issue-4582` | Uppercase `G(x)` notation; `scripts/check_notation.py` baseline lint.    |
+| #4546 | `claude/issue-4546` | `scripts/filters/schema-jsonld.lua` JSON-LD filter; deletes dead include. |
+| #4608 | `claude/issue-4608` | Website/UX problem issue template plus contract test.                    |
+| #4583 | `claude/issue-4583` | "Drift-Control Ratio" naming; slug `drift-control-ratio` with alias.     |
+| #4568 | `claude/issue-4568` | Accessibility statement page (WCAG 2.1 AA target, #4139 inventory).      |
+| #4548 | `claude/issue-4548` | Render rule plus front matter for all 22 companion bibliographies.       |
+
+- Key decisions:
+  - `data/trust/claim_audit_inventory.json` was merged by hand: #4583's route
+    rename (`/articles/drift-control-ratio.html`, audit id
+    `ad-route-4a8ccbe60039`) applied, routes re-sorted, then
+    `python -m scripts.regenerate_claim_audit_evidence` after every merge.
+  - `articles/Pinocchio_Project_Outline-bibliography.md` is kept (given front
+    matter) rather than deleted; it holds 194 lines of substantive references.
+  - `articles/controllability-drift-ratio-bibliography.md` keeps its filename;
+    #4583 renamed only the article.
+  - The privacy page's related section was renamed to `## Related Articles`
+    and given a third link so the site gate's related-coverage rule passes.
+- Validation on the consolidated branch:
+  - `python -m pytest -o addopts= tests/test_privacy_policy_page.py
+    tests/test_check_notation.py tests/test_schema_jsonld.py
+    tests/test_companion_hierarchy.py tests/test_website_ux_issue_template.py
+    tests/test_accessibility_statement_page.py
+    tests/test_check_quarto_render_coverage.py tests/test_navbar_ia.py
+    tests/test_public_site_manifest.py tests/test_claim_audit_inventory.py
+    tests/test_site_link_gate.py tests/test_dcr_reachability_contract.py
+    tests/test_dcr_article_rigor.py tests/test_scientific_trust_metadata.py`
+    — 165 passed.
+  - `python -m scripts.link-checker --site-gate --root .` — passed.
+  - `python -m scripts.regenerate_claim_audit_evidence --check` — current.
+  - `python -m scripts.check_spec_changelog` — passed.
+  - Full render and Playwright/axe run in CI only.
+- Blockers/risks: none known. Rendered output is not committed.
+- Next steps:
+  1. Wait for CI on the consolidated PR; fix any failure on this branch.
+  2. Mark ready, verify the remote head, arm via `automerge_guard.py`.
+  3. After merge, close #4615, #4616 and #4618 as superseded and remove the
+     seven `claude-<issue>` worktrees.
+# Implementation Handoff — Deploy Website Verification Fix (#4617)
+# Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
+# Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
+# Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
 # Configure Search, and Include Maturity in Results — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
