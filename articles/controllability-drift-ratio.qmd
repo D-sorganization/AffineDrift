@@ -171,6 +171,11 @@ The drift and input effects are evaluated at the same state. $W$ selects/scales 
 
 ![Local Vector Decomposition of Phase Space State Derivative Into Zero-Input Drift Vector $f(x)$ and Bounded Control Authority Set $G(x)\mathcal{U}$, Showing How Control Spans Corrections Relative to a Shifting Drift Center.](figures/core_theory/fig_dcr_vector_decomposition.svg){#fig-dcr-vector-decomposition width=95% fig-alt="A 2D projection of phase space showing a trajectory curve, the unactuated drift vector pointing forward-downward, and an ellipsoidal reachable velocity region shifted by drift, showing how control acts relative to the drift baseline."}
 
+<details>
+<summary>Long description</summary>
+The vector diagram illustrates the decomposition of the instantaneous phase-space state derivative $\dot{x}$ into two additive components. The drift vector $f(x)$ represents the passive, unactuated evolution governed by velocity and Coriolis/centrifugal forces, pointing along a curved baseline. Centered at the tip of the drift vector is a bounded reachable set $G(x)\mathcal{U}$ representing the control authority envelope. Because control actions displace the state derivative relative to the drift velocity rather than from the origin, high drift speed shifts the center of achievable corrections without eliminating the reachability volume.
+</details>
+
 Let $d=\|Wa_d\|$, $c_{\max}=\sup_{u\in\mathcal U}\|WB_a u\|$ and $r=\|WB_a u_{\mathrm{used}}\|$. Assume the capacity is finite. The policy-dependent drift-to-realized-input ratio is
 
 $$
@@ -290,6 +295,11 @@ Convexity cannot be silently dropped. In $\dot x=u$, with instantaneous inputs r
 Subtracting the nominal drift leaves the control-effect set at first order. A bounded set of this kind is generally not a cone. Earlier **control-cone**, **drift-tube** and **pancake** pictures can at most name possible finite-horizon anisotropy. They remain **unvalidated hypotheses** about golfer-club outcomes, not consequences of high DCR or counterparts of relativistic causal limits.
 
 ![Finite-Horizon Reachable Set Envelopes Contracting as Time-to-Impact $\Delta t$ Decreases Under Bounded Control Authority, Contrasting Terminal Dispersion With Local DCR.](figures/core_theory/fig_dcr_reachability_tubes.svg){#fig-dcr-reachability-tubes width=95% fig-alt="Diagram showing reachable clubhead positions contracting from a broad reachable envelope at 100 ms before impact to a tight delivery window at 15 ms, illustrating that time horizon rather than DCR magnitude determines terminal controllability."}
+
+<details>
+<summary>Long description</summary>
+The schematic displays terminal reachable sets projected across time horizons before impact. At 100 ms before impact, the reachable set envelope is broad, providing wide positional authority to correct clubhead alignment. As time-to-impact decreases to 50 ms and 15 ms, the achievable positional set shrinks rapidly because double-integrating bounded control torque over a dwindling time interval $\Delta t$ scales correction capacity as $\mathcal{O}(\Delta t^2)$. This temporal boundary explains the narrowing delivery window without requiring the instantaneous control authority to vanish.
+</details>
 
 ### Accessibility, Actuation and Gramians {#sec-anisotropy}
 
@@ -463,6 +473,11 @@ If the resulting event-output Jacobian is $J_e$ and the relevant small perturbat
 ## A Mechanical Counterexample to Monotone Growth {#schematic-illustration-drift-vs-control-magnitude}
 
 ![Evolution of Drift Acceleration $\|a_d(t)\|$, Maximum Control Authority Capacity $\sup \|B_a u\|$, and the Resulting Instantaneous Drift-Control Ratio (DCR) Across the Four Biomechanical Phases of the Downswing.](figures/core_theory/fig_dcr_swing_phases.svg){#fig-dcr-swing-phases width=95% fig-alt="A multi-curve plot showing drift acceleration rising sharply after release, active torque capacity remaining bounded, and DCR increasing toward impact without implying loss of steering authority."}
+
+<details>
+<summary>Long description</summary>
+The four-phase plot traces drift acceleration, control capacity, and DCR across transition, early downswing, release, and pre-impact phases. Drift acceleration $\|a_d(t)\|$ starts low during early transition and climbs sharply following release as clubhead velocity and interaction accelerations peak. Maximum control authority $\sup \|B_a u\|$ remains bounded across all phases by physiological torque limits. Consequently, the ratio DCR grows as impact approaches, illustrating that high DCR is an expected signature of rapid ballistic acceleration rather than an indicator of system uncontrollability.
+</details>
 
 The earlier phase plot used arbitrary functions, and its description did not match their shapes. The following declared mechanical example replaces it with equations that can be checked exactly. **This is a manufactured model and a family of states, not a golfer trajectory or a downswing measurement.**
 

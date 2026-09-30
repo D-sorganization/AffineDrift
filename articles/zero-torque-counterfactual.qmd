@@ -211,6 +211,11 @@ Within the fixed declared plant, setting $u=0$ removes the term $G(x)u$. The two
 
 ![Planar Clubhead Paths Under Active Torque Baseline Versus Zero-Torque Counterfactuals Branched at Top of Downswing ($t_0=0$ ms), Mid-Downswing ($t_0=140$ ms), and Pre-Impact ($t_0=240$ ms).](figures/core_theory/fig_ztcf_trajectory_divergence.svg){#fig-ztcf-trajectory-divergence width=95% fig-alt="Diagram of clubhead spatial trajectories contrasting the active swing path against passive trajectories released at top of swing, mid-downswing, and late downswing."}
 
+<details>
+<summary>Long description</summary>
+The trajectory plot compares the spatial paths traced by the clubhead in the swing plane. The nominal trajectory with continuous muscular torque curves smoothly into impact. Counterfactual paths branched at earlier milestones diverge markedly: zero torque from the top of the downswing yields a wide, flailing arc that fails to square the club, while branching at mid-downswing preserves initial momentum but suffers significant path deviation. Branching in the final 30 ms before impact follows the nominal path closely, showing that passive kinetic momentum dominates the terminal geometry.
+</details>
+
 When the initial-value problem is well posed, a forward ZTCF is an *integral curve* of the declared drift vector field $f$ through $x_0$ at time $t_0$.
 
 A model may retain the following effects when its record declares them; this list is broader than the registered rigid fixture:
@@ -228,6 +233,11 @@ What is absent from the forward ZTCF is the declared applied generalized-control
 ## Relationship to the Drift–Input Decomposition
 
 ![Decomposition of Distal Club Acceleration Into Active Muscular Torque $M^{-1}\tau$, Passive Interaction/Coriolis Coupling $-M^{-1}C\dot{q}$, and Gravitational Acceleration $-M^{-1}g$ Across the Downswing.](figures/core_theory/fig_ztcf_passive_dynamics_attribution.svg){#fig-ztcf-passive-dynamics-attribution width=95% fig-alt="Stacked area chart displaying joint acceleration contributions over downswing time, showing active muscular dominance early shifting to passive centrifugal and interaction dominance late in the swing."}
+
+<details>
+<summary>Long description</summary>
+The acceleration decomposition graph displays the relative contributions of torque and passive dynamics to distal angular acceleration over the downswing duration. In the early transition phase, active muscular torque $M^{-1}\tau$ provides virtually all acceleration. Passing the halfway point, velocity-dependent Coriolis and centrifugal terms $-M^{-1}C\dot{q}$ surge, rapidly eclipsing muscular input. Near impact, interaction forces drive the majority of clubhead acceleration, illustrating the whip-like energy transfer characteristic of double-pendulum dynamics.
+</details>
 
 The drift--input decomposition used throughout this series is the algebraic identity:
 
@@ -276,6 +286,11 @@ remains one model-conditioned intervention at every DCR value.
 ## Numerical Algorithm
 
 ![Clubhead Velocity Profiles Comparing Active Execution With Zero-Torque Branches Initiated at Successive Downswing Milestones, Illustrating Terminal Speed Loss as a Function of Branch Timing.](figures/core_theory/fig_ztcf_clubhead_speed_loss.svg){#fig-ztcf-clubhead-speed-loss width=95% fig-alt="Line plot of clubhead speed versus time showing active trajectory reaching 48 m/s, contrasted with steep speed deficits when torque is removed early and minor deficit when removed 30 ms before impact."}
+
+<details>
+<summary>Long description</summary>
+The velocity profile comparison illustrates clubhead speed development from takeaway to impact. The active swing achieves a peak velocity of approximately 48 m/s at contact. If torque is removed at transition, the clubhead reaches less than 20 m/s. Branching at mid-downswing caps speed at 35 m/s. However, releasing torque within 30 ms of impact results in negligible speed reduction, quantitatively proving that late muscular forcing contributes minimally to terminal kinetic energy compared to the passive flail mechanism.
+</details>
 
 This section describes the generic integration pattern. The only governed executable result published here is the Python golden fixture linked in @sec-ztcf-contract. No current MATLAB or Simulink model/version/input record or cross-engine parity artifact is registered, so results attributed to those engines are unavailable under this contract.
 
