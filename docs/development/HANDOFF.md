@@ -7,7 +7,7 @@
 - Branch: feat/web-06-6-figures-for-core-theory-pages-4536
 - Baseline commit: 84b8737e
 - Implementation commit: SELF
-- Pull request: TBD (#4536)
+- Pull request: #4651
 - Governing issue/epic: #4536 (epic #4543)
 
 ## Objective and Status
