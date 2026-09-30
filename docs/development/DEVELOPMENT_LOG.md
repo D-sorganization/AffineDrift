@@ -30,6 +30,30 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (fix round for PR #4677 review: `pytest tests/test_on_ramp_paths.py` 10 passed; `pytest tests/test_site_link_gate.py tests/test_how_to_read.py tests/test_persona_start_paths.py tests/test_check_links.py tests/test_check_site_health.py` 98 passed; site gate passed; `ruff check tests/test_on_ramp_paths.py` and `black --check --line-length 100 tests/test_on_ramp_paths.py` clean)
 - **Summary:** Adds `resources/on-ramp-paths.qmd`, a new page with 5-minute, 30-minute, and 3-hour reading sequences for each of the 8 personas from `config/personas.yml`, built entirely from existing pages (no new prose content elsewhere), each ending in a self-check question with its answer grounded in the linked page's own body text; linked from `resources/learning-paths.qmd` so it isn't orphaned. Fix round corrected a notation error (lowercase `g(x)u`), a ZVCF/trajectory wording error, a fabricated "double-pendulum benchmark" claim about Theory Part 4, a mischaracterization of the research-review stub pages as finished reviews, an inconsistent Theory Part 1 time estimate, a subtitle hour-range mismatch, and rewrote all 24 self-checks from recall trivia to reflective questions.
 - **Next step:** Push the branch with this fix round and await re-review.
+### DL-#4547 · Deduplicate and Reconcile Bibliography Databases
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4676 (draft)
+- **Issue:** #4547 (WEB-07.5)
+- **Branch:** `claude/issue-4547`
+- **Paths:** `scripts/check_bibliography_cross_file.py`, `tests/test_check_bibliography_cross_file.py`, `articles/The_Physics_of_Golf/golf_physics.bib` (metadata fix only).
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: reworked after review blocked the original mechanical-merge draft. `python3 scripts/check_bibliography_cross_file.py` reports 163 keys shared across files, 0 disagreeing, 0 CI-flagged duplicate DOIs (82 raw shared-DOI groups exist pre-exemption, mostly legitimate per-book copies — see PR #4676 for the list); `pytest tests/test_check_bibliography_cross_file.py` 18/18; `python3 -m scripts.check_citation_resolution`, `python3 -m scripts.check_qmd_citation_keys`, and `scripts/check_latex_structure.py` (pre-existing, already CI-wired citation-resolution checks) all pass clean against the reverted tree; `ruff check .` and `black --check --line-length 100 .` clean.)
+- **Summary:** Reworked after review blocked the original mechanical dedupe: that merge broke the locked `proximal_distal_energy_transfer` article, touched an owner-sign-off-gated book audit ledger, deleted citation keys still in use, and silently renamed a key. All of that is reverted to `origin/main` byte-for-byte. What ships instead: `proximal_distal_energy_transfer/references.bib` added to `STANDALONE_LINKED` (it is `index.qmd`'s sole `bibliography:` override) and `clark2013whatever` fixed to the `@article`/*Behavioral and Brain Sciences*/Cambridge University Press record it actually is everywhere it appears. No new citation-resolution test was added: `scripts/check_citation_resolution.py`, `scripts/check_qmd_citation_keys.py`, and `scripts/check_latex_structure.py` already do exactly that (CI-gated, all currently passing), so writing a parallel implementation would have duplicated working infrastructure. The 82 raw duplicate-DOI groups the mechanical merge would have addressed are left in place; most are legitimate copies across `STANDALONE_LINKED` files, and the CI check does not flag any of them as violations.
+- **Next step:** Owner/frontier review of the reworked draft PR #4676; mark ready and merge once approved.
+### DL-#4564 · Cross-Browser Coverage (Nightly Firefox/WebKit)
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4685 (draft)
+- **Issue:** #4564 (WEB-09.4; epic #4569 / E9)
+- **Branch:** `claude/issue-4564`
+- **Paths:** `.github/workflows/cross-browser-nightly.yml`, `scripts/report_e2e_browser_failures.py`, `tests/test_report_e2e_browser_failures.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF, review feedback round 1: 29/29 tests in test_report_e2e_browser_failures.py pass via `python -m pytest -q -o addopts=`; ruff and black --line-length 100 clean on the changed files; no-new-labels, missing-report-handling, and issue-cap behaviors each landed test-first)
+- **Summary:** Adds a nightly workflow that runs `tests/e2e/smoke.spec.js` (the existing representative public-route + behavioral-invariant suite) against Firefox and WebKit — the two `playwright.config.js` projects `ci-standard.yml`'s PR-gated `e2e-tests` job never exercises — and files deduplicated-by-title GitHub issues via `scripts/report_e2e_browser_failures.py`: one per distinct (browser, test title) failure, using only the repo's existing `ci`/`automation` labels, rolling more than 5 new failures into a single dated summary issue, and treating a missing/empty/unparseable report as a failure of its own instead of crashing or vanishing.
+- **Next step:** Owner/frontier review of the draft PR; the schedule cannot be exercised end-to-end until it first fires on `main`, so verify the first nightly run once merged.
 ### DL-#4576 · Privacy Policy Page
 
 - **State:** in_review
