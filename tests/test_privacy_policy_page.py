@@ -59,6 +59,16 @@ def test_privacy_policy_covers_local_storage_service_worker_embeds_and_analytics
     assert "third-party" in text.casefold() or "third party" in text.casefold()
 
 
+def test_privacy_policy_describes_report_a_problem_control_as_click_only() -> None:
+    """The per-page "Report a problem" control (#4605) opens a GitHub issue or
+    mailto link only when clicked; nothing is sent automatically."""
+    text = " ".join(PRIVACY_POLICY.read_text(encoding="utf-8").split())
+
+    assert "report a problem" in text.casefold()
+    assert "only when" in text.casefold() and "click" in text.casefold()
+    assert "nothing is sent automatically" in text.casefold()
+
+
 def test_privacy_policy_is_linked_from_the_site_footer() -> None:
     website = yaml.safe_load(QUARTO_CONFIG.read_text(encoding="utf-8"))["website"]
     footer = website["page-footer"]
