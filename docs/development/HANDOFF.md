@@ -77,6 +77,75 @@
 ## Next Steps
 
 1. None outstanding for #4549 from this session.
+# Implementation Handoff — Build the Page Header Card Component (#4507)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: feat/web-03-2-page-header-card-4507
+- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
+- Implementation commit: c945531c
+- Pull request: #4633
+- Governing issue/epic: #4507 (epic #4514)
+
+## Objective and Status
+
+- Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
+- Status: ready for review / auto-merge
+- Completed:
+  - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
+  - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
+  - Added print styling in `css/print.css`.
+  - Registered Lua filter in `_quarto.yml`.
+  - Resolved reading-time estimate policy conflict in `books/roadmap.qmd` and `js/accessibility.js`.
+  - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
+  - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
+  - Regenerated claim audit evidence digests and verified all pre-commit checks.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Monitor PR #4633 CI and auto-merge into main.
+
+## Files and Decisions
+
+- Files changed:
+  - `scripts/filters/page-header-card.lua`: Component Lua filter.
+  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
+  - `css/print.css`: Print rules avoiding page breaks inside header card.
+  - `styles.css`: Component `@import`.
+  - `_quarto.yml`: Filter registration.
+  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
+  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
+  - `tests/page-header-card.test.js`: Jest unit test suite.
+  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `npm test tests/page-header-card.test.js` — PASS (5 passed)
+- `pytest tests/test_page_header_card.py` — PASS (11 passed)
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check tests/test_page_header_card.py` — PASS
+- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
+- `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Monitor PR #4633 CI and auto-merge into main.
+
+## Change Log
+
+- `SELF` — Extend critique annotations to ZTCF and Proximal-Distal pages (#4524).
+- 4c7a5d5f — Remove fragile third-party book cover media from resources-books and filter network ERR console noise (#4617).
 
 ---
 
