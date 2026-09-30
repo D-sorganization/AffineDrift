@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4710 · Two-Hand Wrench Chapter Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4710 (corpus #4021; epic #4009)
+- **Branch:** `fix/two-hand-wrench-rigor-4710`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (base 9cf8f600; fifteen focused checks and source gates pass; exact pinned arrays and source hashes checked; render validation pending)
+- **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
+- **Next step:** Finish PDF/web inspection and full validation, preserve historical audit scope, bind committed evidence, and deliver a regular PR after integrating #4709.
+
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
 - **State:** in_review

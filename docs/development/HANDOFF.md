@@ -1,3 +1,20 @@
+# Two-Hand Wrench Technical Review — #4710
+
+The corpus goal remains active under #4021 and epic #4009. Never create draft PRs.
+
+- Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-two-hand-review`.
+- Branch: `fix/two-hand-wrench-rigor-4710`; base `9cf8f600`.
+- Session/lease: `technical-review-20260930-wrench`, issue #4710, expires 2026-09-30 22:11 UTC; presence expires 22:12 UTC. Renew before expiry.
+- Complete Chapter 12 source read and corrected for wrench/rank/power/feasibility, observation versus intervention, shared-engine assumptions, sensor metrics and distributed-grip archive definitions. Its original figure is mathematically consistent and visually inspected.
+- Correct Koike's title using a new mutable citation key; migrate companion Chapters 6/9/24 and the bilateral-wrench protocol only for that citation. Correct Choi/Park author metadata. Immutable upstream source files remain unchanged.
+- Seven independent numerical checks passed before edits; eight source checks failed before edits; all fifteen now pass. Ruff/Black, title case, citations, bibliography cross-file, display-math and quotation checks pass.
+- Exact pinned archive arrays and aggregate metrics verified. One implementation file was refactored in the release commit; its recorded generating hash was recovered and verified at `055363b9`. See `two-hand-wrench-archive-checks.json` and review report. No upstream solver run or human validation claimed.
+- Two agy Gemini 3.8 Flash inventories completed in the original technical-review worktree; no tools or edits delegated. Lead rejected the delegate's confusion between 4-ms observation horizon and 0.5-ms fine step.
+- Rebuilt the 209-page PDF; inspected Chapter 12, boundary and references (14 pages). Both canonical PDFs match. All 30 chapters remain. Web: 29 math expressions, five displays, four theme/width combinations; eight route cases pass with zero serious/critical axe findings. Mobile power equation scrolls within its container; both ends inspected. Full tests, evidence binding and regular PR remain pending.
+- Three affected route records are preserved verbatim in `two-hand-wrench-prior-reviews.json` and temporarily deferred until exact committed evidence is bound. Dependency carry-forward proves three citation-only chapter edits and the protocol title/key change; unrelated ground-reaction bibliography entries and source are unchanged. Do not claim a new review of those sources or the whole book.
+- PR #4709 remains separate in `C:/Users/diete/Repositories/AffineDrift-technical-review`. It integrates main through `4f798475` (trust freshness and packaging) with both turnover sections preserved; 57 combined checks pass. Its scientific source/PDF/tests remain at `2be29ec3`. Finish protected merge there, then integrate remote main here preserving both records before publication.
+- Next: complete renders and independent visual inspection; validate the full source; commit exact evidence and bind affected audit routes. Advance corpus index only for Chapter 12 after complete validation, not citation-only edits. Preserve all other agents' work.
+
 # Reader Run Environment (Binder, Devcontainer, Downloads) — #4538 (WEB-06.8)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
