@@ -177,6 +177,9 @@ def _initial_orphaned_files(html_files: list[Path]) -> set[Path]:
 
 def _resolve_internal_target(*, source_file: Path, href: str, docs_dir: Path) -> Path | None:
     """Resolve internal href to a docs-relative path when possible."""
+    # Quarto code-menu controls are script actions, not files to resolve.
+    if href.lstrip().lower().startswith("javascript:"):
+        return None
     target_url, _anchor = urldefrag(href)
     if not target_url:
         return None
