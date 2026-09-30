@@ -68,10 +68,6 @@ def test_social_cards_checked_into_repository() -> None:
     [
         ("articles/The_Physics_of_Golf/quarto/index.qmd", "physics-of-golf"),
         ("articles/The_Geometry_of_Motion/quarto/index.qmd", "geometry-of-motion"),
-        (
-            "articles/proximal_distal_energy_transfer/index.qmd",
-            "proximal-distal-energy-transfer",
-        ),
     ],
 )
 def test_landing_page_overrides_open_graph_image(page_path: str, card_id: str) -> None:

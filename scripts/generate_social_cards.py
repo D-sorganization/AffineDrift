@@ -39,14 +39,12 @@ class SocialCard:
     badge: str
 
 
+# The proximal-to-distal monograph is omitted: its index.qmd is a locked
+# publication source (scripts/verify_proximal_distal_projection.py), so its
+# front matter cannot gain an Open Graph override outside a projection bump.
 SOCIAL_CARDS: tuple[SocialCard, ...] = (
     SocialCard("physics-of-golf", "The Physics of Golf", "Textbook"),
     SocialCard("geometry-of-motion", "The Geometry of Motion", "Book Series"),
-    SocialCard(
-        "proximal-distal-energy-transfer",
-        "Proximal-to-Distal Energy Transfer",
-        "Monograph",
-    ),
 )
 
 
