@@ -30,6 +30,30 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (focused suites pass: editorial/consistency, trust-surface/claim-audit, page-style, manifesto rigor, formatting lints, site link gate; full suite passes with no failures; ruff/black clean; `regenerate_claim_audit_evidence --check` passes.)
 - **Summary:** Adds `opinion` to the controlled category vocabulary and recategorises both Manifesto pages from `critique`; declares `pages/drifter-manifesto.qmd` the canonical entry point and `articles/drifter-manifesto.qmd` an explicitly non-canonical, Opinion-labelled companion, without deleting either page's content (full retirement is WEB-02.4's own `tier:strong` ADR work).
 - **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
+### DL-#4550 · Print and PDF Editions for Books and Core Series
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** draft (see HANDOFF.md for link)
+- **Issue:** #4550 (WEB-07.9; epic #4552)
+- **Branch:** `claude/issue-4550`
+- **Paths:** `css/print.css`, `styles.css`, `js/pdf.js`, `js/main.js`, `tests/test_print_stylesheet_consolidation.py`, `tests/pdf.test.js`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_print_stylesheet_consolidation.py` 4/4 pass; `npx jest` 27 suites, 437 passed/19 skipped; `ruff check .` and `black --check --line-length 100 .` clean)
+- **Summary:** Consolidates the two competing `@media print` blocks into `css/print.css` as the single print stylesheet, drops the A4-only forced `@page` size (now `auto`) so both Letter and A4 print via the printer/OS choice, and adds a `beforeprint` handler forcing MathJax to typeset lazy-loaded off-screen math before any print (native Ctrl+P or the export-to-PDF button). The "PDFs built in CI and linked from the header card" criterion is deliberately not implemented this session — see HANDOFF.md Blocked section.
+- **Next step:** Owner/frontier decision on the deferred PDF-header-card-link scope (see HANDOFF.md Blocked), then implement or split into a follow-up issue.
+### DL-#4565 · Math Accessibility Verification
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** see PR opened from `claude/issue-4565` against `main` (draft)
+- **Issue:** #4565 (WEB-09.5; epic #4569 / E9)
+- **Branch:** `claude/issue-4565`
+- **Paths:** `tests/mathjax-loader.test.js`, `tests/e2e/accessibility.spec.js`, `docs/development/math-accessibility-verification-4565.md`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `npx jest` 26 suites passed, 432 passed/19 skipped, 0 failed; `npx playwright test tests/e2e/accessibility.spec.js --list` registers the new test across all 5 browser projects; YAML-validated `ci-standard.yml`; full Playwright run deferred to CI's `e2e-tests` job since Quarto is not installed in this worktree)
+- **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches — finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today — and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
+- **Next step:** A human tester runs the manual NVDA/VoiceOver protocol in the findings doc and records results on #4565.
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review

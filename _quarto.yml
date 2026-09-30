@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  post-render:
+    - python3 scripts/post_render_citations.py
   render:
     - "*.qmd"
     - "pages/**/*.qmd"
@@ -15,7 +17,6 @@ project:
     - "!articles/tangent-hyperplane-articles/Advanced/*_CRITIC.qmd"
     - "!articles/proximal_distal_companion/chapters/**/*.qmd"
     - "!articles/The_Geometry_of_Motion/quarto/volume2_content.qmd"
-    - "articles/*-bibliography.md"
     - "books/**/*.qmd"
     - "critiques/index.qmd"
     - "critiques/*.md"
@@ -273,9 +274,11 @@ bibliography:
   - articles/proximal_distal_energy_transfer/references.bib
 csl: references/chicago-author-date.csl
 link-citations: true
+citation: true
 
 format:
   html:
+    google-scholar: true
     theme:
       light: [cosmo, custom.scss]
     css:
