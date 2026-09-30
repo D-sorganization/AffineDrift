@@ -60,7 +60,7 @@
 # Implementation Handoff — Gitleaks allowlist for evidence digests
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-gitleaks`
-- Branch: `claude/gitleaks-digest-allowlist`; commit SELF; PR: see branch (draft at open)
+- Branch: `claude/gitleaks-digest-allowlist`; commit SELF; PR: #4697
 - Objective: the pre-commit gitleaks hook's generic-api-key rule flags the public SHA-256
   digest pinned for `pages/accessibility.qmd` ("access" is a rule keyword) in
   `data/trust/claim_audit_inventory.json` and `reports/scientific-claim-audit.md`, so every
