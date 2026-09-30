@@ -82,7 +82,7 @@ test.describe("Search Functionality", () => {
     }
   });
 
-  test("finds the governed proximal-distal technical monograph", async ({
+  test("finds the version-pinned proximal-distal technical monograph", async ({
     page,
   }) => {
     await page.goto("/");

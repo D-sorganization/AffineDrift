@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4588 | Add warn-mode CI lint and plain-language glossary keeping internal governance vocabulary out of reader-facing prose; partial reduction on hub/entry pages pending #4587 (#4588). |
 | 2026-09-29 | #4591 | Add `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages against the WEB-12.1 threshold. |
 | 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |
 | 2026-09-29 | #4633 | Build Page Header Card component driven by front matter and styled in print stylesheet (#4507). |
@@ -426,5 +427,8 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
 
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
+
+| 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
 | 2026-09-29 | #4503 | Add URL stability and redirect policy: `config/redirects.yml` ledger, `src/tools/check_redirects.py`, and a deploy-workflow gate that fails when a previously published route disappears without a documented, rendered redirect (#4503). |
+| 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
