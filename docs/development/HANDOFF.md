@@ -1,7 +1,7 @@
 # Implementation Handoff — Linux-safe `requirements-docker.lock`
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-wt-docker-lock`
-- Branch: `fix/docker-lock-linux`; commit SELF; PR: see branch (draft)
+- Branch: `fix/docker-lock-linux`; commit SELF; PR: https://github.com/D-sorganization/AffineDrift/pull/4700 (draft)
 - Objective: the lock pinned Windows-only `pywinpty==3.0.3` with no marker (Linux
   `pip install --require-hashes` falls back to its sdist and fails) and had drifted from
   `requirements.txt` (numpy 2.4.4 vs 2.5.3; sympy, pypdf and others missing).

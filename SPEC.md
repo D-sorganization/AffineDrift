@@ -462,3 +462,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4548 | Retire the 22 unaudited companion bibliographies from the render and audit the privacy and accessibility pages, restoring 100% claim-audit route coverage for Deploy Website. |
 | 2026-09-30 | #4492 | Add a reviewed claim-audit record for /resources/on-ramp-paths.html, restoring Deploy Website route coverage after #4677. |
 | 2026-09-29 | #4655 | Remove stub Colab buttons from textbook pages and fill priority notebooks with verified dynamics (#4537). |
+| 2026-09-30 | #4700 | Regenerate `requirements-docker.lock` as a universal uv lock with platform markers (Windows-only `pywinpty` no longer breaks the Linux Docker install) and guard it against `requirements.txt` drift. |
