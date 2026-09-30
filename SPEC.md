@@ -224,6 +224,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4712 | Reconcile companion two-hand wrench geometry, identifiability, power and archived contact/sensor evidence; correct mutable instrumented-grip citations while preserving immutable source scope. |
+| 2026-09-30 | #4716 | Classify Quarto JavaScript action URLs outside filesystem link checks while retaining missing-file failures. |
 | 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
 | 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
 | 2026-09-30 | #4538 | Add a Binder `environment.yml` installing from `requirements.txt` so it opens the notebook scaffolds in JupyterLab (Binder build unverified), a shared Binder-launch include on every book's Notebook Workflow section and the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` for per-page source downloads; the devcontainer half is blocked, see the PR's Blocked section. |
@@ -476,4 +478,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4551 | Render PARAMETERS.md and add a one-page notation quick-reference card; remove pages/notation.qmd's duplicate heading and manual table of contents. |
 | 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |
 | 2026-09-30 | #4705 | Regenerate stale evidence-presentation and research-release trust artifacts, make generator `--check` ignore `generated_on`, and add a committed-artifact freshness test. |
-| 2026-09-30 | #4688 | Add the reviewed `/models/dataset-explorer.html` route to the claim-audit inventory and cover the source-derived route in the inventory regression test; preserve the open #4695 finding and model/synthetic evidence boundaries. |
+| 2026-09-30 | #4713 | For governing issue #4688, add the reviewed `/models/dataset-explorer.html` route to the claim-audit inventory and cover it in the source-derived regression; preserve open finding #4695 and model/synthetic evidence boundaries. |

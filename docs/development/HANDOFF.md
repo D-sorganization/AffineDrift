@@ -1,3 +1,14 @@
+# Dataset Explorer Deployment Route Audit — #4688 — Current Main Integration
+
+- Worktree: `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`.
+- Integration: accepted candidate `8c8eeebc205c9b21933f27265275a40ac3f80c2a` was normally merged with fetched main `be263f9cd946a6aa8b4a97b086af9eab399c3ac6`; merge commit and tree are recorded in the external integration report. No rebase, reset, or force operation was used.
+- Route preservation: all 249 route records from be263f9 compare structurally equal in the merged inventory. The only added route is `/models/dataset-explorer.html` (`ad-route-60ee227724f0`). All 16 recorded dataset evidence hashes still match the working-tree files. Open finding #4695 and all other main route findings remain structurally unchanged.
+- Validation boundary: the accepted exact-8c8 render had Quarto native exit 0 and a 250-page manifest bound to 8c8. Canonical pruning and manifest-bound publication audit passed for that revision only. That output does not validate be263f9 or this merge. The historical 3471 render native exit remains unknown. No new render was started for this integration.
+- PR #4713 remains a draft. Last remote observation was head `ddf725a5e5e96449c21dc24679a47771e595d1b8` on base `984552e`; no push or PR update occurred for this integration. Root review is required before any publication action.
+- #4695 remains open. #4694 workflow design remains out of scope. Green exact-candidate CI render plus root-verified revision-bound manifest/publication evidence and merged-main deployment verification remain required before #4688 closure.
+
+## Earlier #4688 Handoff Record (Preserved; Its Status Is Historical)
+
 # Dataset Explorer Deployment Route Audit — #4688
 
 - Repository: D-sorganization/AffineDrift; worktree `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`, accepted commits `f0b1ada406eb2e34fc7d483031c8270534f4219e` and `ddf725a5e5e96449c21dc24679a47771e595d1b8` are integrated with protected main `984552e178b3f075290e44565a6f4514152e3dd9` in local merge commit `SELF`; exact HEAD and parent order are recorded in the external final-review report.
@@ -15,6 +26,35 @@
 - Publication gate status: #4694 remains a separate follow-up. Its current design establishes PR E2E render and manifest generation but does not yet enforce the claim-audit publication check automatically.
 - Render inputs changed on current main include `_includes/generated/research-releases-summary.qmd`, `_includes/notebook-binder-launch.qmd`, four book `.qmd` pages, `articles/_metadata.yml`, `scripts/post_render_citations.py`, and shared CSS. There is no fresh render/manifest for these inputs.
 - Next: root review the completed local merge. After root releases the network hold, decide whether to update draft PR #4713. Require green exact-head PR render and root-verified revision-bound manifest publication audit before merge; verify merged-main deploy before closing #4688. #4694 remains separate and its proposed PR design does not automatically enforce claim-audit publication. No workflow changes, PR readiness/merge, or issue closure occurred.
+
+# Two-Hand Wrench Technical Review — #4710
+
+The corpus goal remains active under #4021 and epic #4009. Never create draft PRs.
+
+- Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-two-hand-review`.
+- Branch: `fix/two-hand-wrench-rigor-4710`; base `9cf8f600`.
+- Session/lease: `technical-review-20260930-wrench`, issue #4710, expires 2026-09-30 23:25 UTC; presence expires 23:25 UTC. Renew before expiry.
+- Complete Chapter 12 source read and corrected for wrench/rank/power/feasibility, observation versus intervention, shared-engine assumptions, sensor metrics and distributed-grip archive definitions. Its original figure is mathematically consistent and visually inspected.
+- Correct Koike's title using a new mutable citation key; migrate companion Chapters 6/9/24 and the bilateral-wrench protocol only for that citation. Correct Choi/Park author metadata. Immutable upstream source files remain unchanged.
+- Seven independent numerical checks passed before edits; eight source checks failed before edits; all fifteen now pass. Ruff/Black, title case, citations, bibliography cross-file, display-math and quotation checks pass.
+- Exact pinned archive arrays and aggregate metrics verified. One implementation file was refactored in the release commit; its recorded generating hash was recovered and verified at `055363b9`. See `two-hand-wrench-archive-checks.json` and review report. No upstream solver run or human validation claimed.
+- Two agy Gemini 3.8 Flash inventories completed in the original technical-review worktree; no tools or edits delegated. Lead rejected the delegate's confusion between 4-ms observation horizon and 0.5-ms fine step.
+- Rebuilt the 209-page PDF; inspected Chapter 12, boundary and references (14 pages). Both canonical PDFs match. All 30 chapters remain. Web: 29 math expressions, five displays, four theme/width combinations; eight route cases pass with zero serious/critical axe findings. Mobile power equation scrolls within its container; both ends inspected. All 142 affected chapter, audit, atlas, catalog, readiness and deployment-boundary checks pass. Regular PR #4712 is open; combined-main full suite passes (6,034 tests, 29 skipped, 92.88% coverage). Final content suite: 180 passed/four skipped; 39 protocol/history/audit checks pass. Linux CI at `f5e3bd0c6` passed 5,989 tests (92.85% coverage), 180 content checks and 68 wheel smoke tests; full-site browser validation is finishing. Integrated the independent #4716 checker repair and retained both turnover histories; final protected CI and merging remain pending.
+- Three source/publication route records are preserved verbatim in `two-hand-wrench-prior-reviews.json` and bound to `b60805a9`. Two further generated-readiness dependency routes preserve their original records in `reports/technical-review/two-hand-wrench-readiness-carry-forward.json`; final generated-publication bindings use `1a504d98d` and preserve additional history in `two-hand-wrench-publication-dependencies.json`. Dependency carry-forward proves three citation-only chapter edits and the protocol title/key change; unrelated ground-reaction bibliography entries and source are unchanged. Do not claim a new review of those sources or the whole book.
+- PR #4709 merged to remote main at `984552e178b3f075290e44565a6f4514152e3dd9` on 2026-09-30 21:18:51 UTC; CI Standard 36773428069 passed. Its scientific source/PDF/tests remain bound through `2be29ec3`. Integrated this main checkpoint here; both turnover histories and the packaging record are preserved.
+- Final CI correction: preserve the original protocol review and bind its eleven unchanged scientific tests by symbol at `b60805a9`; the obsolete whole-file metadata assertion is excluded from scientific evidence for itself. Every selected definition exactly matches that committed review. Final content tests verify current digests and original history. The generated release summary now carries the corrected atlas hash. See `two-hand-wrench-repository-validation.json`.
+- Chapter 12 is the only newly completed corpus row (141 sources pending after integrating #4709). Follow-up #4711 tracks the still-incorrect immutable provider citation through a governed release. Regular PR #4712 is open. Complete protected CI and merging. Preserve other agents' work.
+
+# Quarto Code-Menu Link Health — #4715
+
+- Regular PR [#4716](https://github.com/D-sorganization/AffineDrift/pull/4716); source commit `7776d908c`.
+- Worktree: `C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health`; branch `fix/quarto-script-links-4715`, base `984552e17`.
+- Main deployment `36778620671` rendered successfully, then rejected three `javascript:void(0)` code-menu controls as missing files. The shared target resolver now classifies JavaScript action URLs before filesystem resolution, preserving actual missing-link failures.
+- Ten regression cases failed before the fix; all 98 focused site-health/link tests pass afterward. Full Windows suite: 6,028 passed, 29 skipped, 180 deselected, 92.95% coverage; content: 179 passed, four skipped. Ruff, Black, mypy, SPEC and claim-audit evidence checks pass. Required CI passed; PR #4716 merged to remote main `5e1a11059` at 2026-09-30 22:27:52 UTC.
+- Gemini 3.8 Flash supplied a textual patch/test proposal; lead applied the source fix and adapted tests to remove redundant mocking and exercise both the candidate API and real CLI. No unattended agent tools or edits: the fleet dispatcher refuses agy tool execution without a permission bypass (Repository_Management #1800).
+- Session `technical-review-20260930-link-health`, issue #4715, lease/presence released after merge at 22:33 UTC. Only regular PRs.
+- This does not take over #4688 / PR #4713's separate dataset-explorer audit work. Keep that issue with its owner and verify deployment after all required repairs merge.
+- Technical-review PR #4712 remains separate; it has passed final-head Python/content/static checks and is waiting for the full-site browser job. The corpus goal remains active; next scientific scope #4714 is active in its separate impact-review worktree under epic #4009; twelve numerical checks and eight corrected source boundaries pass.
 
 # Resumed Technical Review — Induced Acceleration #4706
 
@@ -60,8 +100,7 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
 - Main integration: trust freshness #4705 and packaging #4613 through `4f798475` are preserved; both turnover sections retained. All 57 combined chapter/audit/trust/packaging checks pass; chapter, PDF and numerical-test bytes remain exactly at `2be29ec3`.
 - CI follow-up: name the test gravity constant; scientific sources and PDF unchanged.
   Test-only checkpoint `2be29ec3` preserves all scientific sources and assertions; 821 tracked Python files pass the complete quality check.
-- Next: inspect final validation evidence on PR #4709,
-  inspect final CI/reviews and protected-merge. Preserve all untracked QA and other agents' work.
+- Completed: PR #4709 merged at `984552e17`; CI Standard `36773428069` passed. Issue #4706 lease and presence were released at 21:21 UTC. Preserve untracked QA and other agents' work.
 - Next corpus scope: #4710 is implemented and under validation in separate worktree `Worktrees/AffineDrift-two-hand-review`; branch `fix/two-hand-wrench-rigor-4710`.
 - Coordination: session `technical-review-20260930-resume`, issue #4706; development
   log DL-#4706. Existing web-feature consolidations remain under their live owners.

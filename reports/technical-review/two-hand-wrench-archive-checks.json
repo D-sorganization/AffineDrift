@@ -1,0 +1,198 @@
+{
+  "issue": 4710,
+  "checked_on": "2026-09-30",
+  "provider_commit": "a1a613999eb0c744da96caa040941955eb210a21",
+  "method": "Read exact Git blobs, verify provenance hashes and recompute aggregate metrics from archived NPZ arrays. No engine imports or solver execution.",
+  "provider_sha256": {
+    "docs/research/proximal_distal_energy_transfer/data/articulated_distributed_grip_atlas.json": "557424bc183a113a0b7f4e2be7e6a12a81a94489ff854ca91fdafb5dfe2a5f08",
+    "docs/research/proximal_distal_energy_transfer/data/articulated_distributed_grip_atlas.npz": "1a9e59e0414ef00ffbe361af2d96e613930251385730003de5e55888b791cc4d",
+    "docs/research/proximal_distal_energy_transfer/data/bilateral_wrench_sensor_qualification.json": "61e68eb05146a29b85de1c196710d0492ad6fdb105f9d98ede4e60ae7c4193da",
+    "docs/research/proximal_distal_energy_transfer/data/spatial_forward_contact_study.json": "88eb01a46e06b55b7a36d57fb033cf85cc53cf8671ecfe297cbe2e251f333848"
+  },
+  "implementation_hashes_verified_against_provider_record": {
+    "scripts/research/proximal_distal_energy/articulated_distributed_atlas.py": {
+      "commit": "a1a613999eb0c744da96caa040941955eb210a21",
+      "sha256": "5a0b6eebb7041bc51ceadf633f13cde9b687601563f2faac8d0fb40f0c5dbb0f"
+    },
+    "scripts/research/proximal_distal_energy/articulated_distributed_forward.py": {
+      "commit": "a1a613999eb0c744da96caa040941955eb210a21",
+      "sha256": "f0bdb296956e51d7dda43d24f5215d67ccb6585562e2393ec0e8e5ce34d52664"
+    },
+    "scripts/research/proximal_distal_energy/articulated_distributed_grip.py": {
+      "commit": "055363b97d3c3f1c80a5222542e32e2cfa7bf87b",
+      "sha256": "1365d509011e88c1c96bf28874d43720098fd658679bfd40f46258c50b47dd78"
+    }
+  },
+  "trajectory_count": 288,
+  "time_steps_s": [0.001, 0.0005],
+  "horizons_s": [0.004, 0.01, 0.025, 0.05],
+  "maximum_open_fraction": 1.0,
+  "maximum_any_active_transition_count": 0,
+  "recomputed_station_coordinate_error": 0.003551801798156141,
+  "aggregate_checks": {
+    "maximum_peak_station_force_n": 4.0297582179260845,
+    "maximum_station_load_concentration": 0.7699527320407829,
+    "maximum_normalized_work_energy_residual": 0.031188832197237837
+  },
+  "sensor_metric_definitions": {
+    "rmse": "root mean squared component error across all samples/trials and six force components",
+    "p95": "95th percentile of six-component force-error vector norms",
+    "migration": "amplitude parameter of prescribed sinusoidal coordinate changes, not path length",
+    "cross_talk_residual": "multiplicative error in estimated cross-talk amplitude"
+  },
+  "sensor_combined_configuration": {
+    "sample_count": 301,
+    "trial_count": 32,
+    "normalized_noise_std": 0.002,
+    "normalized_cross_talk": 0.005,
+    "cross_talk_calibration_error_fraction": 0.1,
+    "contact_migration_m": 0.004,
+    "apply_cross_talk_correction": true,
+    "track_contact_centers": false,
+    "grip_span_m": 0.2,
+    "channel_scales": [100.0, 100.0, 100.0, 10.0, 10.0, 10.0, 100.0],
+    "seed": 20260814
+  },
+  "sensor_results": {
+    "ideal_augmented": {
+      "allocation_rmse_n": 2.8055465834482232e-14,
+      "allocation_p95_n": 9.223381159804355e-14,
+      "normalized_net_wrench_rmse": 3.8720774532368496e-16,
+      "axial_mode_rmse_n": 1.499199246195278e-14
+    },
+    "net_wrench_only": {
+      "allocation_rmse_n": 11.86029791643813,
+      "allocation_p95_n": 45.007002159572714,
+      "normalized_net_wrench_rmse": 1.476756273563415e-16,
+      "axial_mode_rmse_n": 29.051678092667895
+    },
+    "noise_only": {
+      "allocation_rmse_n": 0.1527657672459604,
+      "allocation_p95_n": 0.54605384599156,
+      "normalized_net_wrench_rmse": 0.0018241430793809969,
+      "axial_mode_rmse_n": 0.20049772724865003
+    },
+    "cross_talk_uncorrected": {
+      "allocation_rmse_n": 0.9420441752372323,
+      "allocation_p95_n": 3.0389420707502603,
+      "normalized_net_wrench_rmse": 0.010182916903777645,
+      "axial_mode_rmse_n": 1.4879279110606025
+    },
+    "cross_talk_calibrated": {
+      "allocation_rmse_n": 0.15278655375220523,
+      "allocation_p95_n": 0.5470314648599091,
+      "normalized_net_wrench_rmse": 0.0018243038082684123,
+      "axial_mode_rmse_n": 0.20054888306588503
+    },
+    "cross_talk_calibration_residual": {
+      "allocation_rmse_n": 0.17900735746746113,
+      "allocation_p95_n": 0.6424299754531048,
+      "normalized_net_wrench_rmse": 0.0020743078680605623,
+      "axial_mode_rmse_n": 0.2513547497461741
+    },
+    "contact_migration_fixed": {
+      "allocation_rmse_n": 2.02466477059944,
+      "allocation_p95_n": 7.876085646457221,
+      "normalized_net_wrench_rmse": 0.028312754878510964,
+      "axial_mode_rmse_n": 0.5509252117087544
+    },
+    "contact_migration_tracked": {
+      "allocation_rmse_n": 5.5405782556006865e-14,
+      "allocation_p95_n": 2.0907256681949505e-13,
+      "normalized_net_wrench_rmse": 5.875487178049741e-16,
+      "axial_mode_rmse_n": 8.807232199112645e-14
+    },
+    "combined_registered": {
+      "allocation_rmse_n": 1.0165968151127647,
+      "allocation_p95_n": 3.8695915597513704,
+      "normalized_net_wrench_rmse": 0.014200074221447785,
+      "axial_mode_rmse_n": 0.3513609152866456
+    }
+  },
+  "spatial_controls": {
+    "coincident_grips": "same achieved forces transported through club reference",
+    "reversed_geometry": "same achieved forces with both moment arms negated",
+    "same_state_driver_killswitch_s": 0.18
+  },
+  "spatial_mechanism_tests": {
+    "baseline_and_killswitch_trace_summaries": {
+      "mujoco_baseline": {
+        "action_reaction_force_residual_max_n": 0.0,
+        "club_axis_out_of_plane_range_deg": 10.427515028635518,
+        "club_long_axis_rotation_rate_peak_rad_s": 13.59268642502879,
+        "coincident_grip_couple_max_nm": 0.0,
+        "energy_balance_residual_max_j": 0.040992299663026754,
+        "ground_pathway_force_peak_n": 56.847106132504514,
+        "ground_pathway_moment_peak_nm": 62.61199074895842,
+        "interface_power_residual_max_w": 1.176836406102666e-14,
+        "minimum_post_killswitch_couple_nm": -0.9444009316468313,
+        "minimum_swing_normal_couple_nm": -0.9444009316468313,
+        "peak_long_axis_couple_abs_nm": 0.38475715692718915,
+        "post_killswitch_negative_duration_s": 0.06025,
+        "reversed_geometry_sign_residual_nm": 4.440892098500626e-16,
+        "wrench_power_residual_max_w": 5.1514348342607263e-14
+      },
+      "mujoco_killswitch": {
+        "action_reaction_force_residual_max_n": 0.0,
+        "club_axis_out_of_plane_range_deg": 7.5513081055699045,
+        "club_long_axis_rotation_rate_peak_rad_s": 13.59268642502879,
+        "coincident_grip_couple_max_nm": 0.0,
+        "energy_balance_residual_max_j": 0.03052322652525552,
+        "ground_pathway_force_peak_n": 56.847106132504514,
+        "ground_pathway_moment_peak_nm": 62.61199074895842,
+        "interface_power_residual_max_w": 1.176836406102666e-14,
+        "minimum_post_killswitch_couple_nm": -0.40928510003430885,
+        "minimum_swing_normal_couple_nm": -0.40928510003430885,
+        "peak_long_axis_couple_abs_nm": 0.24175208162485792,
+        "post_killswitch_negative_duration_s": 0.0375,
+        "reversed_geometry_sign_residual_nm": 8.326672684688674e-16,
+        "wrench_power_residual_max_w": 5.1514348342607263e-14
+      },
+      "pinocchio_baseline": {
+        "action_reaction_force_residual_max_n": 0.0,
+        "club_axis_out_of_plane_range_deg": 10.427515028635744,
+        "club_long_axis_rotation_rate_peak_rad_s": 13.592686425027559,
+        "coincident_grip_couple_max_nm": 0.0,
+        "energy_balance_residual_max_j": 0.04604122404740707,
+        "ground_pathway_force_peak_n": 56.84573667175397,
+        "ground_pathway_moment_peak_nm": 62.61124957637601,
+        "interface_power_residual_max_w": 1.199040866595169e-14,
+        "minimum_post_killswitch_couple_nm": -0.9451912709677512,
+        "minimum_swing_normal_couple_nm": -0.9451912709677512,
+        "peak_long_axis_couple_abs_nm": 0.3847571569271869,
+        "post_killswitch_negative_duration_s": 0.06025,
+        "reversed_geometry_sign_residual_nm": 4.440892098500626e-16,
+        "wrench_power_residual_max_w": 5.3290705182007514e-14
+      },
+      "pinocchio_killswitch": {
+        "action_reaction_force_residual_max_n": 0.0,
+        "club_axis_out_of_plane_range_deg": 7.551308105570124,
+        "club_long_axis_rotation_rate_peak_rad_s": 13.592686425027559,
+        "coincident_grip_couple_max_nm": 0.0,
+        "energy_balance_residual_max_j": 0.03494299323726624,
+        "ground_pathway_force_peak_n": 56.84573667175397,
+        "ground_pathway_moment_peak_nm": 62.61124957637601,
+        "interface_power_residual_max_w": 1.199040866595169e-14,
+        "minimum_post_killswitch_couple_nm": -0.40928396246487536,
+        "minimum_swing_normal_couple_nm": -0.40928396246487536,
+        "peak_long_axis_couple_abs_nm": 0.2417520816248798,
+        "post_killswitch_negative_duration_s": 0.0375,
+        "reversed_geometry_sign_residual_nm": 9.159339953157541e-16,
+        "wrench_power_residual_max_w": 5.3290705182007514e-14
+      }
+    },
+    "coincident_grip_couple_max_nm": 0.0,
+    "direct_club_force_or_torque_command": "none",
+    "reversed_geometry_sign_residual_max_nm": 9.159339953157541e-16,
+    "same_state_killswitch_minimum_couple_nm": -0.40928510003430885,
+    "same_state_killswitch_negative_duration_s": 0.0375,
+    "same_state_prebranch_max_state_difference": 0.0
+  },
+  "limits": [
+    "Aggregate any-active counter does not establish individual station closure.",
+    "Mixed-coordinate max norm is representation dependent; no universal convergence claim.",
+    "Shared law and stepper are not independently validated by engine agreement.",
+    "No participant or device measurements were performed.",
+    "The release commit refactored articulated_distributed_grip.py after the atlas was generated. Its recorded source hash was recovered at the earlier generating commit; the definitions inspected are unchanged."
+  ]
+}

@@ -21,29 +21,30 @@ reachable from any live state and `abandoned` from `parked`.
 ### DL-#4688 · Dataset Explorer Deployment Route Audit
 
 - **State:** in_review
-- **Owner:** codex-luna-affine4688-20260930
-- **PR:** #4713 (draft); last observed remote head `ddf725a5e5e96449c21dc24679a47771e595d1b8`, base `984552e`; dirty and no head-SHA workflow runs at last pre-hold check; root review pending
+- **Owner:** codex-luna-affine4688-handoff-20260930-2335
+- **PR:** #4713 (draft); last remote observation was head `ddf725a5e5e96449c21dc24679a47771e595d1b8`, base `984552e`; no remote update in this integration; root review pending
 - **Issue:** #4688 (red main deployment route coverage)
-- **Branch:** `fix/luna-deploy-route-4688` (local offline integration of main `984552e178b3f075290e44565a6f4514152e3dd9` / #4709; remote branch update awaits root review and network release)
+- **Branch:** `fix/luna-deploy-route-4688` (normal local merge of fetched main `be263f9cd946a6aa8b4a97b086af9eab399c3ac6`; pending local validation and root review; no push)
 - **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; local #4709 merge preserves all 249 main route records and hashes plus the reviewed route; 51 route/audit/trust tests and 19 #4709 review tests pass; canonical freshness, source coverage, and local publication checks pass without hash regeneration; old v2 manifest applies only to 3471f7d; current-main render pending and historical native exit unknown)
+- **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; local #4709 merge preserves all 249 main route records and hashes plus the reviewed route; 51 route/audit/trust tests and 19 #4709 review tests pass; canonical freshness, source coverage, and local publication checks pass without hash regeneration; old v2 manifest applies only to 3471f7d; accepted 8c8 render had native exit 0 and validates only 8c8; historical 3471 native exit remains unknown)
 - **Summary:** Adds a reviewed record for the already-public `/models/dataset-explorer.html` route and a regression asserting exact source-derived route coverage. The record treats JSON schema checks as structural, population inputs as manufactured synthetic, and ZTCF/proximal-distal artifacts as model-level; it makes no human/population validation claim and preserves open finding #4695. The separate #4694 workflow publication-gate design is out of scope.
-- **Next step:** Root review local offline merge; after network release, update draft #4713 only with root direction. Require green exact-head render plus root-verified manifest-bound publication audit and merged-main deploy before closing #4688.
+- **Next step:** Root review the be263f9 integration and exact local diff. No push or PR update until root decides. Require green exact-candidate render plus root-verified revision-bound manifest publication audit and merged-main deploy before closing #4688.
+- **Current integration check:** All 249 be263f9 route records compare structurally equal in the merged inventory; only `/models/dataset-explorer.html` was added (`ad-route-60ee227724f0`), and all 16 recorded evidence hashes still match. Combined validation is pending.
 
-### DL-#4706 · Induced Acceleration Biomechanics Review
+
+### DL-#4712 · Two-Hand Wrench Chapter Review
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4709 (regular PR)
-- **Issue:** #4706 (corpus #4021; epic #4009)
-- **Branch:** `fix/induced-acceleration-rigor-20260930`
-- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4712 (regular)
+- **Issue:** #4710 (corpus #4021; epic #4009)
+- **Branch:** `fix/two-hand-wrench-rigor-4710`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (final source d7cf1af8; final render evidence 2f32c8d4; integrated main 59c0cc2d: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; Linux CI 41e075ef: 5962 passed, 92.83% coverage; 179 content checks; eight book builds; Windows 6005 passed, two snapshot-location failures resolved and six hygiene checks pass; quotation gate passes; CI requires named gravity constant in one test, corrected without changing assertions)
-- **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
-- **Next step:** Main 4f798475 integrated with both turnover records; 57 combined chapter/audit/trust/packaging checks pass; test-style checkpoint 2be29ec3 unchanged; finish validation and protected-merge #4709; keep goal active for the remaining 142 source reviews.
-
+- **Last verified:** 2026-09-30 (combined-main suite: 6,034 passed, 29 skipped, 92.88% coverage; final content: 180 passed/four skipped; 39 protocol/history/audit checks; 209-page PDF and 20 browser cases verified)
+- **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
+- **Next step:** Complete protected CI and delivery of regular PR #4712. Provider citation follow-up #4711 remains open.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -61,6 +62,32 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4715 · Quarto Script-Action Link Classification
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4716 (regular PR)
+- **Issue:** #4715 (related deployment health #4688)
+- **Branch:** `fix/quarto-script-links-4715`
+- **Paths:** `src/tools/check_site_health.py`, `tests/test_site_health_script_actions.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (ten RED regressions; 98 focused checks GREEN; full Windows suite 6,028 passed, 29 skipped, 92.95% coverage; 179 content checks passed, four skipped; Ruff/Black/mypy/SPEC/evidence checks pass)
+- **Summary:** Ignore JavaScript action URLs during filesystem target resolution so Quarto code-menu controls no longer block deployment; retain failures for missing article links.
+- **Next step:** Merged #4716 to remote main 5e1a11059 at 22:27:52 UTC; lease released. Preserve #4688's separate audit work and verify a later main deployment.
+
+### DL-#4706 · Induced Acceleration Biomechanics Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4709 (regular PR)
+- **Issue:** #4706 (corpus #4021; epic #4009)
+- **Branch:** `fix/induced-acceleration-rigor-20260930`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex`, `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`, `articles/The_Geometry_of_Motion/Volume_I/main.pdf`, `tests/test_iaa_biomechanics_review.py`, `reports/technical-review/iaa-biomechanics-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (final source d7cf1af8; final render evidence 2f32c8d4; integrated main 59c0cc2d: 28 numerical/source checks, fourteen attribution contracts, full Ruff/Black and configured mypy; 149-page book and four browser combinations; Linux CI 41e075ef: 5962 passed, 92.83% coverage; 179 content checks; eight book builds; Windows 6005 passed, two snapshot-location failures resolved and six hygiene checks pass; quotation gate passes; CI requires named gravity constant in one test, corrected without changing assertions)
+- **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
+- **Next step:** Complete. PR #4709 merged at 984552e17 with CI Standard 36773428069 green; issue lease and presence released. Corpus continues in regular PR #4712.
 
 ## Archive
 
