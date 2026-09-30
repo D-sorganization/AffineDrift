@@ -1,3 +1,108 @@
+# Implementation Handoff — Worked-Example Callout Convention (#4511)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4511
+- Branch: claude/issue-4511
+- Baseline commit: ebced38fbe6908492e5c8e2ff08866516f5691c0
+- Implementation commit: SELF
+- Pull request: not created (opening as draft in this session)
+- Governing issue/epic: #4511 (epic #4514)
+
+## Objective and Status
+
+- Objective: Adopt a `.callout-example` worked-example convention (given data,
+  steps, result) and add at least one worked example to each theory part
+  (Parts 1-5), DCR, ZTCF, and superposition, with every example's numbers
+  reproducible from `src/` and checked by a pytest.
+- Status: implementation complete; opening draft PR for review.
+- Completed:
+  - Added `.callout-example` styling to `css/components/callouts.css`
+    (border-left accent using `--color-success`; the existing generic
+    `.callout-style-default` dark-mode rules already retheme its header/body).
+  - Added eight worked examples, one per target page, each citing the exact
+    `src/` function/method it recomputes:
+    - `articles/theory-part1.qmd` — `spatial_inertia` (parallel-axis assembly).
+    - `articles/theory-part2.qmd` — `GolfModel.drift_acceleration` (pointwise
+      ZTCF sample on the golf model).
+    - `articles/theory-part3.qmd` — `constrained_affine_fields` (constrained
+      vs. unconstrained acceleration map).
+    - `articles/theory-part4.qmd` — `SimplePendulum.dynamics`/`.linearize`.
+    - `articles/theory-part5.qmd` — `GolfModel.ztcf_trajectory` (integrated
+      clubhead-speed change), sharing its input state with Part 2's example.
+    - `articles/controllability-drift-ratio.qmd` —
+      `constant_additive_drift_interval` (reachable width independent of drift).
+    - `articles/zero-torque-counterfactual.qmd` — `GolfModel.drift_acceleration`
+      at rest (pointwise-sample definition example).
+    - `articles/superposition.qmd` — `double_pendulum_mass_matrix` /
+      `double_pendulum_coriolis` (numeric check of the Newton-Euler
+      superposition theorem proved immediately above it).
+  - Added `tests/test_worked_example_callouts.py`: one test per worked example
+    that recomputes its numbers directly from `src/`, plus a test asserting
+    at least 8 pages carry a `{.callout-example}` block (9 tests total, all
+    passing).
+  - Added `SPEC.md` change-log row.
+- Remaining: push branch, open draft PR referencing `Fixes #4511`.
+
+## Files and Decisions
+
+- Files changed:
+  - `css/components/callouts.css`: `.callout-example` accent-border rule.
+  - `articles/theory-part1.qmd` through `theory-part5.qmd`,
+    `articles/controllability-drift-ratio.qmd`,
+    `articles/zero-torque-counterfactual.qmd`, `articles/superposition.qmd`:
+    one `.callout-example` block each.
+  - `tests/test_worked_example_callouts.py`: new pytest file.
+  - `SPEC.md`: change-log row.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`:
+    this handoff and the `DL-#4511` entry.
+- Key decisions:
+  - Did not extend `scripts/generate_worked_examples.py` (a heavier macro
+    generator for the Volume I/0/V LaTeX+web dual-source chapters under
+    `articles/The_Geometry_of_Motion/`). The issue's acceptance criterion asks
+    for "tested by a pytest," which the existing `tests/test_*_rigor.py`
+    convention already satisfies directly; extending the generator would have
+    pulled in an unrelated `--check`/CI-gate architecture out of scope for
+    this issue.
+  - Reused already-published, already-tested `src/` inputs where they existed
+    (e.g., the `SEGMENTS` golf configuration also used by
+    `scripts/generate_worked_examples.py`'s chapter 8 fragment) rather than
+    inventing new fixtures, per the numbers being "reproducible from src/"
+    requirement.
+  - Every worked example's numeric result was independently computed by
+    running the cited `src/` function before it was written into the qmd or
+    the test, rather than transcribed by hand.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python3 -m pytest tests/test_worked_example_callouts.py -v` — PASS (9 passed)
+- `python3 -m pytest tests/test_worked_example_callouts.py tests/test_affine_control/ tests/test_tangent_examples.py tests/test_dcr_reachability_contract.py tests/test_ztcf_intervention_contract.py -q` — PASS (all passed)
+- `python3 -m ruff check .` — PASS
+- `python3 -m black --check --line-length 100 .` — PASS
+- `python3 -m scripts.check_quarto_xrefs` — PASS (1230 targets, 6 references, all resolved)
+- `python3 -m scripts.check_styles_budget` — PASS (3335/3400 lines, 46/212 `!important`)
+- `python3 -m scripts.check_module_size_budget` — PASS
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: the `.callout-example` accent color reuses
+  `--color-success` (green); no new CSS token was added. If a reviewer wants
+  a dedicated `--color-example` token, that is a one-line follow-up.
+
+## Next Steps
+
+1. Push `claude/issue-4511` and open a draft PR referencing `Fixes #4511`.
+
+## Change Log
+
+- `SELF` — Adopt the `.callout-example` worked-example convention and add
+  eight `src/`-backed worked examples (#4511).
+
+---
+
 # Implementation Handoff — Build the Page Header Card Component (#4507)
 
 ## Identity

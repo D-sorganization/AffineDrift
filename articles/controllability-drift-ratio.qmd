@@ -264,6 +264,20 @@ Its center is $x_0+dT$ and its width is $2\bar uT$, independent of $d$. With $x_
 
 The word *like* matters: $x$ is a scalar first-order state here, whereas the canonical mechanical DCR is defined in an acceleration space. The example refutes the general inference from drift/input magnitude to reachable-set shrinkage. It does not claim that a golf swing has constant drift. A fixed target near the original center can become unreachable even though the width is unchanged; translation and loss of width are different effects.
 
+::: {.callout-example}
+## Worked Example: Reachable Width Is Independent of Drift
+
+**Given:** $\dot x=d+u$, $x_0=0$, $|u(t)|\leq\bar u=1$, $T=1$; compare $d=0$ against $d=100$.
+
+**Steps:**
+
+1. Call `constant_additive_drift_interval(initial_state=0.0, drift=d, control_bound=1.0, horizon=1.0)` for $d=0$ and $d=100$.
+
+**Result:** $d=0\Rightarrow[-1,1]$; $d=100\Rightarrow[99,101]$ — the interval's width stays $2$ in both cases although the DCR-like magnitude ratio rises from $0$ to $100$.
+
+Computed by `src/affine_control/reachability.py::constant_additive_drift_interval`; checked against this page by `tests/test_worked_example_callouts.py::test_dcr_reachable_width_independent_of_drift`.
+:::
+
 ### What a DCR Threshold Means {#what-a-dcr-threshold-means}
 
 Without regularization, a DCR of 10 means the reported drift norm is ten times the largest input-effect norm in the selected acceleration metric. With positive regularization, the exact relation is $d=10(c_{\max}+\varepsilon)$. Nothing discontinuous occurs at that number. It is not an accessibility, saturation or reachable-set threshold.

@@ -30,6 +30,21 @@ The checks below are a reproducibility protocol. They do not report a newly exec
 
 {{< include ../_includes/mechanics-counterfactual-algorithm.qmd >}}
 
+::: {.callout-example}
+## Worked Example: Integrating the Forward ZTCF Trajectory
+
+**Given:** the same golf configuration as the [Part 2 pointwise example](theory-part2.html) — `SEGMENTS` at $q=(60^\circ,-30^\circ,-20^\circ)$, $\dot q=(12,-18,-25)$ rad/s — integrated forward under zero applied torque for $0.10$ s in $400$ steps (step 5 of the procedure above).
+
+**Steps:**
+
+1. Call `SEGMENTS.ztcf_trajectory(q0, qd0, duration=0.10, steps=400)`.
+2. Read the reported clubhead speed at the first and last sample.
+
+**Result:** clubhead speed falls from $35.37$ m/s at $t=0$ to $21.66$ m/s at $t=0.10$ s — a $-38.8\%$ change along this one declared zero-torque branch. This is the integrated counterpart of the instantaneous drift evaluated in Part 2; it is a property of this one model and branch, not a measurement of a golfer's passive contribution.
+
+Computed by `src/affine_control/golf_model.py::GolfModel.ztcf_trajectory`; checked against this page by `tests/test_worked_example_callouts.py::test_theory_part5_forward_ztcf_trajectory`.
+:::
+
 ## Related Articles
 
 ::: {.callout-note}
