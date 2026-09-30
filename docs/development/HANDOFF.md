@@ -1,3 +1,105 @@
+# Fixture and Dataset Explorer — 2026-09-30
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4541`.
+- Branch `claude/issue-4541`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4541 (epic #4543, E6 — Interactive Models and Reproducibility). Objective:
+  a browser viewer for `data/ztcf/*.json`, `data/population_generalization/`, and the
+  proximal-distal snapshots that validates each file against its published schema and shows an
+  accessible data table and a SHA-256 download.
+- Completed work:
+  - `scripts/generate_dataset_explorer_manifest.py` + `data/dataset_explorer_manifest.json`:
+    generates the list of browsable fixtures per family, recording each fixture's declared
+    `schema_version` and — only when a `*.schema.json` file actually exists in that family's
+    directory — the schema path. Neither `data/population_generalization/` nor
+    `data/proximal_distal_energy_transfer/` has a published schema today, so both are recorded
+    with `schema_path: null` rather than a guessed or fabricated reference.
+  - `js/dataset-explorer.js`: pure-logic engine — a dependency-free SHA-256 (FIPS 180-4) over
+    fetched bytes, a JSON Schema validator covering the 2020-12 keyword subset actually used by
+    `data/ztcf/ztcf_intervention_v1.schema.json` (type, const, enum, required/properties/
+    additionalProperties, pattern, minItems/maxItems/prefixItems, minimum/exclusiveMinimum,
+    anyOf/allOf/if-then-else, local $ref/$defs — not a general-purpose validator), a generic
+    JSON-to-table flattener capped at 500 rows, and `describeSchemaStatus()` which reports
+    `valid` / `invalid` / `unavailable` and never claims validation when no schema is published.
+  - `js/dataset-explorer-ui.js`: fetches the manifest, then per family fetches its schema (if
+    any) and each fixture, rendering a card per fixture with a status badge, an accessible
+    `<table>` (caption, `scope="col"`/`scope="row"`), and a download link whose `<code>` shows
+    the SHA-256 of the exact bytes served (computed once, reused for both the display and the
+    downloaded `Blob`).
+  - `css/dataset-explorer.css`, `models/dataset-explorer.qmd`: the page itself, with its own
+    `## Related Articles` section (site link gate requires this on every non-hub content page)
+    linking out to `models/population-generalization.qmd`, `articles/zero-torque-counterfactual.qmd`,
+    `articles/proximal-distal-energy-transfer.qmd`, and `models/models.qmd`. Reachability into the
+    page comes from a new `_quarto.yml` navbar entry (Build → Datasets → "Fixture and Dataset
+    Explorer") rather than an edit to any of those articles — see Key decisions.
+  - `scripts/sync_frontend_assets.py`: registered `dataset-explorer.js` and `dataset-explorer-ui.js`
+    in `CANONICAL_JS_NAMES` so `test_every_canonical_javascript_module_has_a_deploy_sync_map` covers
+    the two new modules.
+  - `SPEC.md`: one change-log row keyed `#4541` (section 12); verified with
+    `python3 -m scripts.check_spec_changelog`.
+- Key decisions:
+  - The issue's acceptance criteria ("validates ... against the published schemas") is honored
+    literally: only `data/ztcf/` has a published schema in this repository, so only that family
+    is validated; the other two families are explicitly labeled "schema unavailable" instead of
+    a fabricated schema being invented for them. This matches the epic's own stated goal ("No
+    button promises more than exists").
+  - No general JSON Schema library (e.g. ajv) is bundled into the browser bundle; a small
+    hand-rolled validator scoped to the keywords actually in use follows this repository's
+    existing convention (see `js/rotation-converter.js`'s hand-rolled rotation math) and avoids a
+    new third-party runtime dependency for a self-hosted light widget.
+  - SHA-256 is computed client-side from the fetched bytes (not precomputed into the manifest),
+    so the displayed digest can never drift from the file a reader actually downloads.
+  - The new page is not cross-linked from existing narrative articles. This repo's claim-audit
+    governance (`data/trust/claim_audit_inventory.json`) pins exact SHA-256 digests of
+    `articles/zero-torque-counterfactual.qmd`, `articles/proximal-distal-energy-transfer.qmd`, and
+    `models/population-generalization.qmd` as reviewed evidence for specific adjudicated claim
+    records; editing any of them (even to add an unrelated cross-link) breaks that pin and fails
+    `tests/test_claim_audit_inventory.py`. Those three edits were reverted. Instead, the site-gate
+    orphan check (`check_orphans` in `src/tools/site_link_gate.py`) was satisfied by adding the
+    page to `_quarto.yml`'s navbar (Build → Datasets). `_quarto.yml` is *also* pinned (as evidence
+    for `/articles/proximal-distal-falsification-atlas.html`), but unlike the narrative articles a
+    navbar-entry addition is not a scientific claim, and the repository has a sanctioned mechanism
+    for exactly this case: `python -m scripts.regenerate_claim_audit_evidence` recomputes every
+    pinned digest from the current tree and rewrites only the digest values in place (it never
+    touches evidence paths, rationales, reviewers, or commits — see the script's own docstring and
+    `tests/test_claim_audit_inventory.py::test_regenerate_patches_only_digest_values_and_keeps_ledger_formatting`).
+    It was run once after the `_quarto.yml` edit, rewriting `data/trust/claim_audit_inventory.json`
+    only.
+- Compatibility constraints: none — purely additive; no existing schema, API, or CI config
+  changed except the new manifest/generator, the `_quarto.yml` navbar entry, and the resulting
+  claim-audit digest refresh.
+- Validation commands and outcomes:
+  - `npx jest` → 28 suites, 455 passed, 19 skipped, 0 failed (includes the two new suites,
+    `tests/dataset-explorer.test.js` and `tests/dataset-explorer-ui.test.js`).
+  - `python3 -m pytest tests/test_generate_dataset_explorer_manifest.py tests/test_claim_audit_inventory.py
+    tests/test_claim_audit_output_boundary.py tests/test_sync_frontend_assets.py
+    tests/test_check_single_title.py tests/test_site_trust_surface_audit.py` → 84 passed.
+  - `python3 -m ruff check .` (repo-wide) → all checks passed.
+  - `python3 -m black --check --line-length 100 .` (repo-wide) → 744 files unchanged.
+  - `npx stylelint css/dataset-explorer.css` → clean.
+  - `python3 -m scripts.check_spec_changelog` → passed (one row added, keyed `#4541`).
+  - Site link gate (`scripts/link-checker.py --site-gate`) → "Site gate passed!" (orphan check now
+    satisfied by the `_quarto.yml` navbar entry; no Related Articles or path-style violations).
+  - **Not run locally:** `quarto render` and `npx playwright test` (14-minute full-site render is
+    out of scope for this session per repo policy). The new page's HTML/CSS/JS were validated by
+    the Jest suites and by reading the rendered `.qmd` structure against the existing
+    `rotation-converter.qmd`/`bibliography.qmd` conventions it follows; CI's `e2e-tests` job is
+    the first real render and axe-core pass for this page.
+  - Pre-existing, unrelated to this change: `python3 -m scripts.check_tree_parity` reports 2 "NEW"
+    LaTeX-only `glossary` divergences that `config/tree-parity-baseline.json` already documents as
+    an accepted structural difference; the baseline-matching logic appears not to recognize them,
+    but this predates and is untouched by this branch. Also pre-existing: `git status` shows
+    `_includes/generated/evidence-presentation-summary.qmd` and
+    `data/trust/generated/evidence_presentation_registry.json` as modified in this worktree from
+    before this session started (unrelated generated-report drift); they were left untouched and
+    are not part of this branch's staged diff.
+- Blockers/risks: none identified for the acceptance criteria. Two family schemas
+  (`population_generalization`, `proximal_distal_energy_transfer`) do not exist yet upstream; the
+  explorer is honest about that rather than blocked by it. If those schemas are published later,
+  re-run `scripts/generate_dataset_explorer_manifest.py` to pick them up automatically.
+- Next steps: push the branch, open the draft PR (`Fixes #4541`), and watch CI's
+  `quarto render`/Playwright lane and the full `pytest --cov` job for the new page and files.
+
 # Service-Worker Cache Busting by Content Hash — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory

@@ -431,3 +431,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
 | 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
+| 2026-09-30 | #4541 | Add the Fixture and Dataset Explorer: a browser page that validates ZTCF, population-generalization, and proximal-distal fixtures against their published schemas, lists every field in an accessible table, and offers a live SHA-256 download digest. |
