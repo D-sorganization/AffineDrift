@@ -15,7 +15,7 @@ By asserting that "late downswing is effectively uncontrollable" based on planar
 
 ## Location
 
-- **File:** `articles/controllability-drift-ratio.qmd`
+- **File:** `articles/drift-control-ratio.qmd`
 - **Section:** 2 (System Modeling) and 7 (Stability of Impact)
 - **Claim:** "High DCR implies... exponential amplification of small errors [in clubface angle]."
 - **Claim:** "Late downswing is effectively uncontrollable."
@@ -49,7 +49,7 @@ By asserting that "late downswing is effectively uncontrollable" based on planar
 ## Editorial Adjudication and Evidence Boundaries
 
 1. **Historical Versus Corrected State:**
-   The historical article extrapolated planar 2D/3-link DCR calculations to 3D clubface orientation and ball dispersion at impact. In the corrected article (`articles/controllability-drift-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), all unvalidated extensions to 3D shot dispersion, face squaring, or empirical golfer precision were excised. The article explicitly scopes its synthetic models and analytical calculations to declared planar coordinates and manufactured mechanical test cases, noting that spatial 3D kinematics require separate coordinate charts, inertia properties, and task-space mappings.
+   The historical article extrapolated planar 2D/3-link DCR calculations to 3D clubface orientation and ball dispersion at impact. In the corrected article (`articles/drift-control-ratio.qmd`, audited in `reports/technical-review/dcr-complete-review.md`), all unvalidated extensions to 3D shot dispersion, face squaring, or empirical golfer precision were excised. The article explicitly scopes its synthetic models and analytical calculations to declared planar coordinates and manufactured mechanical test cases, noting that spatial 3D kinematics require separate coordinate charts, inertia properties, and task-space mappings.
 
 2. **Critique Boundary and Counterexamples:**
    While the critique validly cautions against extending planar models to 3D orientation, the critique itself introduces unsupported assumptions:

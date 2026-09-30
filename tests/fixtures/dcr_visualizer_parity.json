@@ -1,0 +1,21 @@
+{
+  "description": "Shared parity fixture for the DCR swing-phase widget (issue #4535). Reproduces the governed equal-instantaneous-DCR, different-reachable-width counterexample from tests/test_dcr_event_sensitivity_protocol.py::test_state_dependent_drift_breaks_any_dcr_to_reachable_width_mapping. Both tests/test_dcr_visualizer_parity.py and tests/dcr-visualizer.test.js read this file so the two runtimes are checked against one set of numbers.",
+  "initial_state": 1.0,
+  "control_bound": 1.0,
+  "horizon": 1.0,
+  "additive_system": {
+    "drift_gradient": 0.0,
+    "drift_offset": 1.0
+  },
+  "state_dependent_system": {
+    "drift_gradient": 1.0,
+    "drift_offset": 0.0
+  },
+  "expected": {
+    "instantaneous_dcr": 1.0,
+    "additive_reachable_interval": [1.0, 3.0],
+    "additive_reachable_width": 2.0,
+    "state_dependent_reachable_interval": [1.0, 4.43656365691809],
+    "state_dependent_reachable_width": 3.43656365691809
+  }
+}
