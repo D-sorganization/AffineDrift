@@ -81,6 +81,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** The root `sitemap.xml`/`feed.xml` were tracked files only refreshed when someone manually ran the generators and committed the result, so they drifted stale (feed dated 10 Jun 2026 while `main` had moved on). Both generators previously also wrote an unconditional root copy alongside their `--output` target; that write is removed, so they now write only the requested path (`docs/` by default). Three consumers read the root `sitemap.xml` as a page registry — `check_quarto_render_coverage.py` (a CI gate in `ci-standard.yml`/`deploy-website.yml`, which ran *before* the workflow's own sitemap-regeneration step, so it was validating against the stale committed snapshot), `tests/test_page_titles_and_descriptions.py`, and `tests/test_research_readiness_content.py` — all three now call `generate_sitemap.build_pages()` (extracted from the generator's `main()`) directly, so there is no persisted file left to go stale. The tracked root copies are deleted (`git rm`) and `/sitemap.xml`/`/feed.xml` added to `.gitignore` as a backstop; `check_root_hygiene.py`'s allowlist no longer lists them. Both generators are documented in `scripts/README.md` (output path corrected; `generate_feed.py` was previously undocumented there) and `CONTRIBUTING.md`. The feed's real-article-dates criterion remains blocked on the still-open #4545 (WEB-07.3), consistent with #4606/DL-#4606.
 - **Next step:** Open the PR for review.
 
+### DL-#4539 · Resolve the Stray Executable Cell
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit
+- **Issue:** #4539 (WEB-06.9; epic #4543 / E6)
+- **Branch:** `claude/issue-4539`
+- **Paths:** `articles/drift-components-wrench-double-pendulum.qmd`, `tests/test_no_executable_quarto_cells.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (SELF: `pytest tests/test_no_executable_quarto_cells.py` 1/1 pass; ruff and black --line-length 100 clean; `python -m scripts.check_spec_changelog` clean)
+- **Summary:** Converts the stray `{python}` executable cell (imports-only, never a complete implementation) in `articles/drift-components-wrench-double-pendulum.qmd` to a non-executing `python` fence, matching the site convention and making `ci-standard.yml`'s "the site has no executable cells" comment accurate again. Adds a regression test enumerating every Quarto-rendered `.qmd` file (via `_quarto.yml`'s `project.render` globs) and asserting none contain an executable cell fence.
+- **Next step:** Open the draft PR; no further development expected.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
