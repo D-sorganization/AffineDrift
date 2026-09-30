@@ -152,7 +152,7 @@ def test_release_validator_detects_digest_mismatch(tmp_path: Path) -> None:
         validate_release_package(pkg, tmp_path)
 
 
-def test_full_release_generation_and_schema_validation() -> None:
+def test_full_release_generation_and_schema_validation(tmp_path: Path) -> None:
     """Verify live release package generation and schema conformance."""
     repo_root = Path(__file__).resolve().parent.parent
     releases = build_authoritative_releases(repo_root)
@@ -163,9 +163,17 @@ def test_full_release_generation_and_schema_validation() -> None:
     for rel in releases:
         jsonschema.validate(instance=rel.to_dict(), schema=schema)
 
-    reg_path, part_path = generate_research_releases(check=False, repo_root=repo_root)
+    # Generate into tmp_path; the committed artifacts must not be touched.
+    committed = repo_root / "data/trust/generated/research_releases_registry.json"
+    before = committed.read_bytes()
+    reg_path, part_path = generate_research_releases(
+        check=False, repo_root=repo_root, output_root=tmp_path
+    )
+    assert reg_path.is_relative_to(tmp_path)
+    assert part_path.is_relative_to(tmp_path)
     assert reg_path.is_file()
     assert part_path.is_file()
+    assert committed.read_bytes() == before
 
     # Verify check mode passes
-    generate_research_releases(check=True, repo_root=repo_root)
+    generate_research_releases(check=True, repo_root=repo_root, output_root=tmp_path)

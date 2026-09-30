@@ -177,10 +177,17 @@ def test_full_study_generation_and_schema_validation(tmp_path: Path) -> None:
     schema = json.loads(schema_file.read_text(encoding="utf-8"))
     jsonschema.validate(instance=study_dict, schema=schema)
 
-    # Test file generation
-    data_path, part_path = generate_reader_validation_study(check=False, repo_root=repo_root)
+    # Test file generation into tmp_path; the committed artifacts must not be touched.
+    committed = repo_root / "data/trust/generated/reader_validation_study.json"
+    before = committed.read_bytes()
+    data_path, part_path = generate_reader_validation_study(
+        check=False, repo_root=repo_root, output_root=tmp_path
+    )
+    assert data_path.is_relative_to(tmp_path)
+    assert part_path.is_relative_to(tmp_path)
     assert data_path.is_file()
     assert part_path.is_file()
+    assert committed.read_bytes() == before
 
     # Test check mode passes
-    generate_reader_validation_study(check=True, repo_root=repo_root)
+    generate_reader_validation_study(check=True, repo_root=repo_root, output_root=tmp_path)

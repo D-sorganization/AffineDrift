@@ -169,11 +169,17 @@ def generate_research_releases(
     *,
     check: bool = False,
     repo_root: Path | None = None,
+    output_root: Path | None = None,
 ) -> tuple[Path, Path]:
-    """Generate or verify research release artifacts."""
+    """Generate or verify research release artifacts.
+
+    Inputs are read from ``repo_root``; outputs are written under ``output_root``
+    (default: ``repo_root``) so tests can generate into a temporary directory.
+    """
     root = repo_root or Path(__file__).resolve().parent.parent.parent.parent
-    registry_path = root / "data/trust/generated/research_releases_registry.json"
-    partial_path = root / "_includes/generated/research-releases-summary.qmd"
+    out = output_root or root
+    registry_path = out / "data/trust/generated/research_releases_registry.json"
+    partial_path = out / "_includes/generated/research-releases-summary.qmd"
 
     releases = build_authoritative_releases(root)
     schema_path = root / "schemas/research-artifact-release-v1.schema.json"

@@ -411,11 +411,17 @@ def generate_reader_validation_study(
     *,
     check: bool = False,
     repo_root: Path | None = None,
+    output_root: Path | None = None,
 ) -> tuple[Path, Path]:
-    """Generate or check reader validation study artifacts."""
+    """Generate or check reader validation study artifacts.
+
+    Inputs are read from ``repo_root``; outputs are written under ``output_root``
+    (default: ``repo_root``) so tests can generate into a temporary directory.
+    """
     root = repo_root or Path(__file__).resolve().parent.parent.parent.parent
-    data_path = root / "data/trust/generated/reader_validation_study.json"
-    partial_path = root / "_includes/generated/reader-validation-summary.qmd"
+    out = output_root or root
+    data_path = out / "data/trust/generated/reader_validation_study.json"
+    partial_path = out / "_includes/generated/reader-validation-summary.qmd"
 
     study_dict, metrics = build_reader_validation_study(root)
     data_content = json.dumps(study_dict, indent=2, ensure_ascii=False) + "\n"

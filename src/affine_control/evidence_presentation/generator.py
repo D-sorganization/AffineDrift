@@ -163,11 +163,17 @@ def generate_evidence_presentation(
     *,
     check: bool = False,
     repo_root: Path | None = None,
+    output_root: Path | None = None,
 ) -> tuple[Path, Path]:
-    """Generate or check the presentation registry JSON and summary partial QMD."""
+    """Generate or check the presentation registry JSON and summary partial QMD.
+
+    Inputs are read from ``repo_root``; outputs are written under ``output_root``
+    (default: ``repo_root``) so tests can generate into a temporary directory.
+    """
     root = repo_root or Path(__file__).resolve().parent.parent.parent.parent
-    registry_path = root / "data/trust/generated/evidence_presentation_registry.json"
-    partial_path = root / "_includes/generated/evidence-presentation-summary.qmd"
+    out = output_root or root
+    registry_path = out / "data/trust/generated/evidence_presentation_registry.json"
+    partial_path = out / "_includes/generated/evidence-presentation-summary.qmd"
 
     registry_dict, view_models = build_evidence_presentation_registry(root)
     registry_content = json.dumps(registry_dict, indent=2, ensure_ascii=False) + "\n"

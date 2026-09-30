@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import os
 import socket
+from pathlib import Path
+from typing import Any
 
 # C-extension thread safety. Many "xdist worker crashed" failures come from
 # MKL/OpenBLAS forking under xdist. Pin to single-threaded for tests.
@@ -40,6 +42,11 @@ from src.core.contracts import (  # noqa: E402 -- reason: thread-safety env vars
     ContractLevel,
     get_contract_level,
     set_contract_level,
+)
+from tests._generated_artifact_guard import (  # noqa: E402 -- reason: thread-safety env vars must be set before these heavy imports
+    GUARDED_DIRS,
+    changed_generated_artifacts,
+    snapshot_generated_artifacts,
 )
 
 # A genuinely public IPv4 address, used to stub DNS in offline tests.
@@ -131,3 +138,44 @@ def _no_real_network_in_unit_lane(
                     monkeypatch.setattr(mod, attr, _refuse, raising=False)
         except ImportError:
             pass
+
+
+# --- Hermeticity guard for committed generated artifacts ---------------------
+# Runs on the xdist controller (or the single process) only, so the snapshot
+# brackets every worker's writes.
+_GENERATED_SNAPSHOT = pytest.StashKey[dict[str, str]]()
+_GENERATED_CHANGES = pytest.StashKey[list[str]]()
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _is_xdist_worker(config: pytest.Config) -> bool:
+    return hasattr(config, "workerinput")
+
+
+def pytest_sessionstart(session: pytest.Session) -> None:
+    if not _is_xdist_worker(session.config):
+        session.config.stash[_GENERATED_SNAPSHOT] = snapshot_generated_artifacts(_REPO_ROOT)
+
+
+def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
+    before = session.config.stash.get(_GENERATED_SNAPSHOT, None)
+    if before is None:
+        return
+    changes = changed_generated_artifacts(before, snapshot_generated_artifacts(_REPO_ROOT))
+    session.config.stash[_GENERATED_CHANGES] = changes
+    if changes and session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
+def pytest_terminal_summary(terminalreporter: Any, exitstatus: int, config: pytest.Config) -> None:
+    changes = config.stash.get(_GENERATED_CHANGES, None)
+    if not changes:
+        return
+    terminalreporter.section("committed generated artifacts changed", sep="=", red=True)
+    terminalreporter.write_line(
+        "Tests must write generator output to tmp_path (or use check mode); "
+        f"this run changed files under {', '.join(GUARDED_DIRS)}:",
+        red=True,
+    )
+    for change in changes:
+        terminalreporter.write_line(f"  {change}")

@@ -1,3 +1,20 @@
+# Implementation Handoff — hermetic trust-generator tests
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-wt-hermetic`
+- Branch: `fix/hermetic-trust-generated-tests`; commit SELF; PR: draft, see branch
+- Objective: `pytest tests -m "not slow" -n 8` rewrote the committed evidence-presentation,
+  reader-validation and research-release artifacts (JSON + `_includes/generated` partials).
+  The three generators gained `output_root`; their tests now generate into `tmp_path`.
+- Guard: `tests/conftest.py` snapshots `data/trust/generated` and `_includes/generated`
+  on the xdist controller and fails the session if any file changed
+  (`tests/_generated_artifact_guard.py`, tested by `tests/test_generated_artifact_guard.py`).
+- Found, not fixed: the committed artifacts are stale on main (input digests moved; the old
+  tests masked this by overwriting before `check=True`). Regenerating them is a follow-up.
+- `test_deferred_route_partition_is_exhaustive_and_exact` reads only
+  `data/trust/claim_audit_inventory.json` and constants; no test writes that file (mtime
+  unchanged across a full run), so its one-off -n 8 failure is not a mid-run rewrite.
+- Next: regenerate the three stale artifacts in a separate PR.
+
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`

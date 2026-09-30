@@ -170,10 +170,17 @@ def test_full_registry_generation(tmp_path: Path) -> None:
     schema = json.loads(schema_file.read_text(encoding="utf-8"))
     jsonschema.validate(instance=registry, schema=schema)
 
-    # Test file generation
-    reg_path, part_path = generate_evidence_presentation(check=False, repo_root=repo_root)
+    # Test file generation into tmp_path; the committed artifacts must not be touched.
+    committed = repo_root / "data/trust/generated/evidence_presentation_registry.json"
+    before = committed.read_bytes()
+    reg_path, part_path = generate_evidence_presentation(
+        check=False, repo_root=repo_root, output_root=tmp_path
+    )
+    assert reg_path.is_relative_to(tmp_path)
+    assert part_path.is_relative_to(tmp_path)
     assert reg_path.is_file()
     assert part_path.is_file()
+    assert committed.read_bytes() == before
 
     # Test check mode passes
-    generate_evidence_presentation(check=True, repo_root=repo_root)
+    generate_evidence_presentation(check=True, repo_root=repo_root, output_root=tmp_path)
