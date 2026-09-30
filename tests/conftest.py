@@ -131,3 +131,21 @@ def _no_real_network_in_unit_lane(
                     monkeypatch.setattr(mod, attr, _refuse, raising=False)
         except ImportError:
             pass
+
+
+def pytest_collection_finish(session: pytest.Session) -> None:
+    """Pre-warm Hypothesis's local-constants scan once per (xdist) process.
+
+    Hypothesis scans every imported local module for literals on the first
+    draw and bills that scan to the draw's timing. On Windows the scan is
+    slow (its site-packages fast path only matches ``/`` separators), so the
+    first ``@given`` test in each worker failed ``HealthCheck.too_slow``
+    intermittently. Paying the cost here, after collection has imported the
+    test modules, keeps the health check meaningful for the tests themselves.
+    See tests/test_hypothesis_warmup.py.
+    """
+    try:
+        from hypothesis.internal.conjecture.providers import _get_local_constants
+    except ImportError:  # Hypothesis absent, or a version without the scan.
+        return
+    _get_local_constants()
