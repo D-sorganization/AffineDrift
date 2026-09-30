@@ -3,9 +3,9 @@
 # mybinder.org (repo2docker) builds this file's conda environment and launches
 # JupyterLab against it. Python dependencies are not restated here: they are
 # installed from requirements.txt instead of requirements-docker.lock, because
-# the lock file pins pywinpty==3.0.3 with no platform marker -- a Windows-only
-# wheel that has no source distribution, so it fails to build on Binder's
-# Linux image. requirements.txt is cross-platform and already covers what the
+# the lock file pins pywinpty==3.0.3 with no platform marker -- it ships only
+# Windows wheels, so Binder's Linux image would have to compile its source
+# distribution, which is expected to fail. requirements.txt is cross-platform and already covers what the
 # scaffolded notebooks import (numpy, scipy, sympy, matplotlib, jupyter).
 name: affinedrift
 channels:
