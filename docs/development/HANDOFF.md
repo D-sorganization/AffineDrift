@@ -44,59 +44,95 @@
   re-enabled title, the next step is to inspect that job's trace/video artifact rather than
   re-guess a timing fix.
 - Next steps: open the draft PR; watch `e2e-tests` on the PR for the un-excluded offline test.
+# Readability Measurement Tool — Issue #4591
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4591`.
+- Branch `claude/issue-4591`, commit `SELF`; pull request: to be opened as a draft by this session.
+- Governing issue: #4591 (WEB-12.5, part of epic #4594 / E12 — Editorial Voice and Plain-Language Standard).
+- Objective: `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for
+  lay blocks (`<section class="laymans-terms">` content), the `summary-plain` frontmatter field,
+  and hub pages, excluding math/code/Markdown/HTML markup from the scoring text.
+- Threshold: grade 10, taken from WEB-12.1's stated readability target ("lay block <= grade 10")
+  and WEB-12.4's hub-page acceptance criterion, applied uniformly via `--threshold`. WEB-12.1
+  itself (`docs/development/editorial-style-guide.md`) is still open (`tier:strong`, unmerged);
+  this issue only needed the numeric target already stated in its issue body, not the finished
+  guide document, so implementation proceeded rather than blocking on #4587.
+- `summary-plain` and most named WEB-12.4 hub pages (a dedicated "Start Here" page, for example)
+  do not exist yet; the checker is forward-compatible — it silently finds nothing for absent
+  frontmatter fields or hub-page paths rather than erroring, and `--hub-page`/`ReadabilityConfig`
+  let a later pass add pages as they're created.
+- CI wiring mirrors the existing MATLAB Quality Check pattern in `ci-standard.yml`:
+  `continue-on-error: true` plus an `upload-artifact` step (`readability-report.json`), so the
+  check is advisory rather than blocking, per the acceptance criteria.
+- Validation:
+  - `python3 -m pytest tests/tools/test_check_readability.py --no-cov -q`: 33 passed.
+  - `python3 -m ruff check scripts/check_readability.py tests/tools/test_check_readability.py`: clean.
+  - `python3 -m black --check --line-length 100 scripts/check_readability.py tests/tools/test_check_readability.py`: clean (after one auto-format pass).
+  - `python3 -m mypy scripts/check_readability.py --ignore-missing-imports --allow-untyped-decorators --disable-error-code no-any-unimported --disable-error-code misc --disable-error-code unused-ignore --disable-error-code no-any-return`: clean.
+  - Manual run against the live repo (`python3 -m scripts.check_readability`) found 16/22 existing
+    lay-block/hub-page passages currently over grade 10 — expected, since WEB-12.4's rewrite pass
+    (the issue that will actually bring prose under the threshold) hasn't happened yet.
+- Full project suite (`pytest --cov`, `npx jest`, `npx playwright test`) was not run in this
+  session; the change touches only a new script, its test file, and one CI workflow step, with no
+  behavioral change to any existing module.
+
+## Next Steps
+
+1. Open the draft PR (`Fixes #4591`) and let the frontier review pass judge the hub-page default
+   list and the shared grade-10 threshold across all three layers, since WEB-12.1 only states the
+   lay-block number explicitly.
+2. Once WEB-12.1's style guide merges, revisit whether `summary-plain` or hub pages should get a
+   different threshold than lay blocks.
+3. No further implementation is planned from this session pending review feedback.
 # Implementation Handoff — Build the Page Header Card Component (#4507)
+# Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: feat/web-03-2-page-header-card-4507
-- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
-- Implementation commit: c945531c
-- Pull request: #4633
-- Governing issue/epic: #4507 (epic #4514)
+- Branch: feat/web-01-3-extend-personas-4488
+- Baseline commit: 69f9f9b8ee43c7cfd252ce1d7bd2f3ce9c5859a9
+- Implementation commit: SELF
+- Pull request: #4638
+- Governing issue/epic: #4488 (epic #4496)
 
 ## Objective and Status
 
-- Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
-- Status: ready for review / auto-merge
+- Objective: Extend config/personas.yml with golfer-coach and student personas, provide structured routes (first page, 30-minute route, go deeper), generate persona cards include, state plainly that the site does not give swing instruction, and eliminate duplicated grid on learning-paths.qmd.
+- Status: PR #4638 created, awaiting auto-merge
 - Completed:
-  - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
-  - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
-  - Added print styling in `css/print.css`.
-  - Registered Lua filter in `_quarto.yml`.
-  - Resolved reading-time estimate policy conflict in `books/roadmap.qmd` and `js/accessibility.js`.
-  - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
-  - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
-  - Regenerated claim audit evidence digests and verified all pre-commit checks.
-  - Added change-log row in `SPEC.md`.
-- Remaining: Monitor PR #4633 CI and auto-merge into main.
+  - Extended `config/personas.yml` to define 8 personas including `golfer-coach` and `student`.
+  - Added structured routes (`first_page`, `route_30min`, `route_deep`) for every persona with verified targets.
+  - Added plain disclaimer to `golfer-coach` that AffineDrift does not provide swing instruction or swing coaching.
+  - Created deterministic generator `scripts/generate_persona_cards.py` producing `_includes/generated/persona-cards.qmd`.
+  - Updated `resources/learning-paths.qmd` to include `_includes/generated/persona-cards.qmd` and removed the duplicated "Choose a path" grid.
+  - Updated `data/trust/claim_audit_inventory.json` evidence_paths to include the new include file.
+  - Added comprehensive test coverage in `tests/test_persona_start_paths.py` (20 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all checks pass.
+  - Keyed change-log row in `SPEC.md` to #4638.
+- Remaining: Arm auto-merge and release lease.
 
 ## Files and Decisions
 
 - Files changed:
-  - `scripts/filters/page-header-card.lua`: Component Lua filter.
-  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
-  - `css/print.css`: Print rules avoiding page breaks inside header card.
-  - `styles.css`: Component `@import`.
-  - `_quarto.yml`: Filter registration.
-  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
-  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
-  - `tests/page-header-card.test.js`: Jest unit test suite.
-  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
-  - `SPEC.md`: PR change-log row.
+  - `config/personas.yml`: Added golfer-coach and student personas, plus first_page, route_30min, and route_deep for all 8 personas.
+  - `scripts/generate_persona_cards.py`: Deterministic include generator with `--check` support.
+  - `_includes/generated/persona-cards.qmd`: Generated include file with persona cards and route links.
+  - `resources/learning-paths.qmd`: Included persona cards and eliminated duplicated path grid.
+  - `data/trust/claim_audit_inventory.json`: Added `_includes/generated/persona-cards.qmd` to evidence_paths.
+  - `tests/test_persona_start_paths.py`: Extended test suite covering all 8 personas, routes, existence, disclaimer, and include generation.
+  - `SPEC.md`: Added change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
+- Key decisions: Canonical root-relative paths in YAML; generator converts paths to context-relative paths for includes; golfer/coach persona explicitly disclaims swing instruction.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `npm test tests/page-header-card.test.js` — PASS (5 passed)
-- `pytest tests/test_page_header_card.py` — PASS (11 passed)
-- `python scripts/check_css_architecture.py` — PASS
-- `python scripts/check_spec_changelog.py` — PASS
-- `python -m ruff check tests/test_page_header_card.py` — PASS
-- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
+- `pytest tests/test_persona_start_paths.py` — PASS (20 passed)
+- `python -m src.tools.site_link_gate` — PASS (0 errors)
+- `python -m ruff check scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
+- `python -m black --check --line-length 100 scripts/generate_persona_cards.py tests/test_persona_start_paths.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -107,7 +143,7 @@
 
 ## Next Steps
 
-1. Monitor PR #4633 CI and auto-merge into main.
+1. Monitor PR #4638 CI and auto-merge into main.
 
 ## Change Log
 
