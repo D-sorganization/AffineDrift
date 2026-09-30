@@ -185,7 +185,9 @@ class TestRevisionHistoryRendering:
             "::: {#references}\n## References\n:::\n"
         )
 
-        pandoc_bin = shutil.which("pandoc") or "pandoc"
+        pandoc_bin = shutil.which("pandoc")
+        if not pandoc_bin:
+            pytest.skip("pandoc binary not installed in test environment")
         res = subprocess.run(
             [
                 pandoc_bin,
