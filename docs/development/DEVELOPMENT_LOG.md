@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/impact-optimality-rigor-4714`
 - **Paths:** `articles/impact-optimality-and-model-limits.qmd`, `articles/proximal-distal-model-workbench.qmd`, `resources/articles.qmd`, `tests/test_impact_optimality_review.py`, `reports/technical-review/impact-optimality-review.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (12 numerical checks; nine RED-to-GREEN source boundaries; all 21 pass; Ruff/Black/title case pass; initial HTML render succeeds)
+- **Last verified:** 2026-09-30 (21 impact checks; 46 post-binding audit/numerical/hygiene checks; 179 content passes; full Windows 6036 passes and three audit/snapshot failures subsequently resolved; 92.88% coverage; Ruff/Black/mypy and 12 content gates; final 12 browser cases and 74 math expressions)
 - **Summary:** Bound the instantaneous theorem, inertia reduction and historical solver evidence; correct primary-study and human-objective inference; reconcile two linked public summaries without renewing their other review scope.
-- **Next step:** Verify rendered publication, commit and bind evidence, finish full validation and regular PR delivery; keep the corpus goal active.
+- **Next step:** Scientific source/evidence committed at 3ff93eda0/fdec68157. Integrate main and deliver a regular protected PR; keep corpus goal active. Provider follow-up Tools #5393. Live deployment separately blocked by #4688 dataset-explorer coverage.
 
 ### DL-#4706 · Induced Acceleration Biomechanics Review
 
