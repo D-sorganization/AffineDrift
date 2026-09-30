@@ -10,6 +10,8 @@ This script checks for:
 - Keyboard navigation support
 """
 
+import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -18,6 +20,23 @@ from src.tools.utils import setup_logging
 from src.tools.utils.content_utils import collect_qmd_files
 
 logger = setup_logging(__name__)
+
+_LONG_DESCRIPTION_BASELINE = (
+    Path(__file__).parent.parent / "config" / "accessibility-long-description-baseline.json"
+)
+
+
+def _load_long_description_baseline() -> set[str]:
+    """Load the set of QMD paths grandfathered from the long-description check.
+
+    Mirrors check_terminology.py / check_tree_parity.py: a new check must not
+    fail on pre-existing content, so known gaps are tracked here and shrunk as
+    they're fixed rather than blocking `quality-gate` on unrelated debt.
+    """
+    if not _LONG_DESCRIPTION_BASELINE.is_file():
+        return set()
+    data = json.loads(_LONG_DESCRIPTION_BASELINE.read_text(encoding="utf-8"))
+    return set(data.get("accepted", []))
 
 
 def check_alt_text_in_qmd(file_path: Path) -> list[str]:
@@ -131,6 +150,44 @@ def check_colorblind_safe_colors(file_path: Path) -> list[str]:
     return issues
 
 
+def check_long_description_for_diagrams(file_path: Path) -> list[str]:
+    """Check that complex SVG diagrams provide a long description (E8/E9).
+
+    E8 (Visual Explanation and Design System) specifies that diagrams are SVG
+    with alt text *and* a long description, since alt text alone cannot carry
+    the explanation a vector-field or state-space diagram needs. An SVG image
+    reference is treated as a complex diagram; it passes if the file also
+    contains either an ``aria-describedby`` reference resolved to an in-page
+    element, or a "long description" disclosure. Checked file-wide rather
+    than per-image to stay permissive, matching this module's other checks.
+    """
+    issues = []
+    content = file_path.read_text(encoding="utf-8")
+
+    svg_images = re.findall(r"!\[.*?\]\(([^)]*\.svg[^)]*)\)", content, re.IGNORECASE)
+    svg_images += re.findall(
+        r'<img[^>]*src=["\']([^"\']*\.svg[^"\']*)["\'][^>]*>', content, re.IGNORECASE
+    )
+
+    if not svg_images:
+        return issues
+
+    element_ids = set(re.findall(r'id=["\']([^"\']+)["\']', content))
+    describedby_targets = set(re.findall(r'aria-describedby=["\']([^"\']+)["\']', content))
+    has_long_description_disclosure = bool(
+        re.search(r"<details>.*?long description", content, re.IGNORECASE | re.DOTALL)
+    )
+    has_long_description = (
+        bool(describedby_targets & element_ids) or has_long_description_disclosure
+    )
+
+    if not has_long_description:
+        for src in svg_images:
+            issues.append(f"Complex diagram missing a long description: {src}")
+
+    return issues
+
+
 def check_aria_labels_in_js(file_path: Path) -> list[str]:
     """Check if interactive elements have ARIA labels in JavaScript."""
     issues = []
@@ -176,25 +233,42 @@ def check_heading_hierarchy(file_path: Path) -> list[str]:
     return issues
 
 
-def validate_accessibility() -> tuple[int, dict[str, list[str]]]:
-    """Run all accessibility checks."""
+def validate_accessibility(*, qmd_only: bool = False) -> tuple[int, dict[str, list[str]]]:
+    """Run accessibility checks.
+
+    Args:
+        qmd_only: Only run the QMD content checks (alt text, heading
+            hierarchy, long descriptions). Skips the CSS colorblind-safe-color
+            and JS ARIA-label checks, which have known pre-existing findings
+            not yet tracked by a baseline (used by the `quality-gate` CI step
+            wired for #4567, scoped to alt text and long descriptions only).
+    """
     all_issues: dict[str, list[str]] = {}
     total_issues = 0
 
     repo_root = Path(__file__).parent.parent
+    long_description_baseline = _load_long_description_baseline()
 
     # Check QMD files for alt text and heading hierarchy
     # Uses collect_qmd_files() (DRY) instead of a hand-rolled glob with
     # inline exclusions, matching seo_audit.py and generate_sitemap.py.
-    logger.info("Checking QMD files for alt text and heading hierarchy...")
+    # collect_qmd_files() returns paths relative to the CWD (repo root, by the
+    # documented invocation), not absolute, so they are used as-is rather than
+    # through relative_to(repo_root) -- matching seo_audit.py's usage.
+    logger.info("Checking QMD files for alt text, headings, and long descriptions...")
     qmd_files = collect_qmd_files()
     for qmd_file in qmd_files:
         issues = check_alt_text_in_qmd(qmd_file)
         issues.extend(check_heading_hierarchy(qmd_file))
+        if qmd_file.as_posix() not in long_description_baseline:
+            issues.extend(check_long_description_for_diagrams(qmd_file))
 
         if issues:
-            all_issues[str(qmd_file.relative_to(repo_root))] = issues
+            all_issues[str(qmd_file)] = issues
             total_issues += len(issues)
+
+    if qmd_only:
+        return total_issues, all_issues
 
     # Check CSS/SCSS files for colorblind-safe colors
     logger.info("Checking CSS/SCSS files for colorblind-safe colors...")
@@ -229,9 +303,21 @@ def validate_accessibility() -> tuple[int, dict[str, list[str]]]:
 
 def main() -> int:
     """Main entry point."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--qmd-only",
+        action="store_true",
+        help=(
+            "Only check QMD content (alt text, heading hierarchy, long "
+            "descriptions); skip the CSS and JS checks, which are not yet "
+            "CI-clean."
+        ),
+    )
+    args = parser.parse_args()
+
     logger.info("Starting accessibility validation...")
 
-    total_issues, all_issues = validate_accessibility()
+    total_issues, all_issues = validate_accessibility(qmd_only=args.qmd_only)
 
     if total_issues == 0:
         logger.info("✓ All accessibility checks passed!")
