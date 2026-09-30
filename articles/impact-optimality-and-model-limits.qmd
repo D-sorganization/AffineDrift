@@ -1,6 +1,6 @@
 ---
-title: "When a Double Pendulum's Energy Optimum Stops Its Hands"
-subtitle: "Inertia, Reachable Motion, and the Limits of Inferring a Golfer's Objective"
+title: "When an Energy Optimum Stops the Hands"
+subtitle: "A Double Pendulum's Inertia, Reachable Motion, and the Limits of Inferring a Golfer's Objective"
 description: "Derives a bounded energy-optimal rate split and connects club inertia, actuation, solver evidence, and golfer-model validation."
 author: "Dieter Olson"
 date: "2026-08-27"
@@ -116,18 +116,29 @@ The kinetic energy is $T=\tfrac12\dot q^{\mathsf T}M(\phi)\dot q$, with
 $$
 M(\phi)=
 \begin{bmatrix}
-A+m_2L_1^2+\delta+2\mu\cos\phi & \delta+\mu\cos\phi\\
-\delta+\mu\cos\phi & \delta
+M_{11} & M_{12}\\
+M_{12} & \delta
 \end{bmatrix}.
 $$ {#eq-impact-model-inertia}
+
+Its entries are
+
+$$
+\begin{aligned}
+M_{11}&=A+m_2L_1^2+\delta+2\mu\cos\phi,\\
+M_{12}&=\delta+\mu\cos\phi.
+\end{aligned}
+$$
 
 At the **assumed collinear pose** $\phi=0$, choose the common forward tangent.
 The signed head velocity along it is
 
 $$
-v_h=(L_1+L_2)\omega_1+L_2\dot\phi=c^{\mathsf T}\dot q,
-\qquad
-c=\begin{bmatrix}L_1+L_2\\L_2\end{bmatrix}.
+\begin{aligned}
+v_h&=(L_1+L_2)\omega_1+L_2\dot\phi\\
+&=c^{\mathsf T}\dot q,
+\qquad c=\begin{bmatrix}L_1+L_2\\L_2\end{bmatrix}.
+\end{aligned}
 $$
 
 The signed hand velocity is $L_1\omega_1$; its speed is $L_1|\omega_1|$.
@@ -147,10 +158,10 @@ $$
 Equality in the forward direction gives the unique maximizing rate vector:
 
 $$
-\dot q^*=
-\sqrt{\frac{2E}{c^{\mathsf T}M^{-1}c}}\,M^{-1}c,
-\qquad
-v_h^*=\sqrt{2E\,c^{\mathsf T}M^{-1}c}.
+\begin{aligned}
+\dot q^*&=\sqrt{\frac{2E}{c^{\mathsf T}M^{-1}c}}\,M^{-1}c,\\
+v_h^*&=\sqrt{2E\,c^{\mathsf T}M^{-1}c}.
+\end{aligned}
 $$ {#eq-impact-energy-optimum}
 
 This is a fixed-pose, fixed-energy, signed-velocity result. It contains no
@@ -193,9 +204,10 @@ these assumptions. For the original article's illustrative tuple
 $(m_2,r_2,L_2,I_2)=(0.31,0.89,1.143,0.043)$ in SI units,
 
 $$
-B=-0.0268027\;\mathrm{kg\,m^2},
-\qquad
-I_{2,\mathrm{threshold}}=0.0698027\;\mathrm{kg\,m^2}.
+\begin{aligned}
+B&=-0.0268027\;\mathrm{kg\,m^2},\\
+I_{2,\mathrm{threshold}}&=0.0698027\;\mathrm{kg\,m^2}.
+\end{aligned}
 $$
 
 The formal zero-rate threshold is about **1.62 times** the specified COM
@@ -207,8 +219,10 @@ physically realizable body.
 For example, if all mass lies on the line segment $0\leq s\leq L_2$, then
 
 $$
-B=\int s^2\,dm-L_2\int s\,dm
-=-\int s(L_2-s)\,dm\leq0.
+\begin{aligned}
+B&=\int s^2\,dm-L_2\int s\,dm\\
+&=-\int s(L_2-s)\,dm\leq0.
+\end{aligned}
 $$
 
 Only endpoint-supported mass can attain equality; positive interior mass makes
@@ -229,8 +243,11 @@ $\mu=m_2L_1r_2$, while the replacement gives $\mu_e=m_eL_1L_2$. Their difference
 is tied to exactly the same bracket as the preceding theorem:
 
 $$
-\mu_e-\mu=\frac{L_1}{L_2}
-\left[I_2-m_2r_2(L_2-r_2)\right]=\frac{L_1}{L_2}B.
+\begin{aligned}
+\mu_e-\mu&=\frac{L_1}{L_2}
+\left[I_2-m_2r_2(L_2-r_2)\right]\\
+&=\frac{L_1}{L_2}B.
+\end{aligned}
 $$ {#eq-impact-coupling-mismatch}
 
 This connects the energy bound to model reduction: a nonzero $B$ means the tip
@@ -267,9 +284,10 @@ If the grip reference moves distance $a$ from the butt toward the head, use
 $r_{\mathrm{grip}}=r_{\mathrm{butt}}-a$ and
 
 $$
-\delta_{\mathrm{grip}}
-=I_2+m_2(r_{\mathrm{butt}}-a)^2
-=\delta_{\mathrm{butt}}-2am_2r_{\mathrm{butt}}+m_2a^2.
+\begin{aligned}
+\delta_{\mathrm{grip}}&=I_2+m_2(r_{\mathrm{butt}}-a)^2\\
+&=\delta_{\mathrm{butt}}-2am_2r_{\mathrm{butt}}+m_2a^2.
+\end{aligned}
 $$
 
 The head lever arm must change consistently too. Choosing the origin, club

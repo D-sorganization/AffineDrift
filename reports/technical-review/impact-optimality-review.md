@@ -95,7 +95,8 @@ Do not equate narrative provenance with independent reproduction.
 
 The provider prose still contains corresponding overclaims and a 0.31-versus-
 0.50 kg arithmetic typo. The AffineDrift correction does not silently modify
-that upstream implementation or claim its wording has been repaired.
+that upstream implementation or claim its wording has been repaired. The bounded
+provider follow-up is [Tools #5393](https://github.com/D-sorganization/Tools/issues/5393).
 
 ## Delegation and Adjudication
 
