@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Implementation Handoff — Per-Page Citation Metadata and "Cite This Page" Block (#4544)
 
 ## Identity
@@ -61,11 +62,56 @@
 
 ---
 
-# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
+# Implementation Handoff — Real Dates and Per-Article Change History (#4545)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift
+- Branch: fix/web-07-3-real-dates-and-change-history-4545
+- Baseline commit: b6aa4baf87635c3451558596fc4c20f121d5c219
+- Implementation commit: SELF
+- Pull request: #4640
+- Governing issue/epic: #4545 (epic #4552)
+
+## Objective and Status
+
+- Objective: Eliminate build-time `date: today` across all rendered sources, enforce verified `date-source:` metadata, add `date-modified:` derived from substantive changes, and build a front-matter driven `changes:` Revision History section for core pages.
+- Status: ready for commit / PR
+- Completed:
+  - Eliminated `date: today` across all 12 articles, marking unverified first-publication dates as `Date unverified` with `date-source: unverified`.
+  - Added `date-source: initial-publication-record` across all 35 articles with concrete publication dates.
+  - Derived `date-modified` from substantive commit history and latest changes.
+  - Added structured `changes:` revision history to the 10 core theory and foundational pages.
+  - Created Pandoc Lua filter `scripts/filters/revision-history.lua` rendering accessible semantic `<section id="revision-history">` before references.
+  - Created CSS component `css/components/revision-history.css` registered in `styles.css` with print styles in `css/print.css`.
+  - Registered `scripts/filters/revision-history.lua` in `_quarto.yml`.
+  - Created automated validator `scripts/derive_substantive_dates.py` supporting `--check`.
+  - Created comprehensive TDD test suite `tests/test_dates_and_history.py` (16 tests, all passing).
+  - Regenerated claim audit evidence digests and verified all contracts pass.
+  - Added change-log row in `SPEC.md`.
+- Remaining: Commit, push, create PR, key SPEC.md row, arm auto-merge, and release lease.
+
+## Files and Decisions
+
+- Files changed:
+  - `_quarto.yml`: Registered `scripts/filters/revision-history.lua`.
+  - `articles/*.qmd`: Replaced `date: today` with `Date unverified` and `unverified` source; added `date-source` and `date-modified`; added `changes:` to core pages.
+  - `css/components/revision-history.css`: Component styling.
+  - `css/print.css`: Print styling avoiding page breaks inside revision history.
+  - `styles.css`: Component import.
+  - `scripts/filters/revision-history.lua`: Pandoc filter for revision history rendering.
+  - `scripts/derive_substantive_dates.py`: Date metadata derivation and check script.
+  - `tests/test_dates_and_history.py`: Unit and contract tests for dates and revision history.
+  - `SPEC.md`: PR change-log row.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Unverified dates show 'Date unverified' and emit no citation date; verified dates require 'date-source'; revision history driven from 'changes:' front matter and placed before references by Lua filter.
+- User-owned or unrelated worktree changes: none observed
+
+---
+
+# Implementation Handoff — Hide, Mark, or Retire Stub Hubs (#4500)
+
 - Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
 - Baseline commit: fc36109d (origin/main)
 - Implementation commit: 67256799
@@ -77,7 +123,7 @@
 - Objective: Hide, mark, or retire stub hubs and enforce scaffolding styling policy:
   1. Scaffolding/stub pages must never use success styling (`status-banner--success`, `callout-success`, etc.).
   2. No hub card links to a page under 300 words unless it carries a Planned badge.
-- Status: Implementation complete, tests and static checks passing; opening PR.
+- Status: Merged to main in PR #4664.
 - Completed:
   - Added `.status-pill--planned` and `.status-badge--planned` CSS styles in `css/components/status-banner.css` and bundled to `docs/styles.css`.
   - Replaced misleading success status styling on scaffolding pages (`resources/research-reviews.qmd`, `pages/book-reviews.qmd`, individual review stubs, `pages/daydreams-doodles.qmd`) with warning status styling indicating planned / scaffolding phase expected 2026-Q4.
@@ -826,7 +872,6 @@
 3. No further implementation is planned from this session pending review feedback.
 # Implementation Handoff — Build the Page Header Card Component (#4507)
 # Implementation Handoff — Extend Personas to Include Curious Golfer/Coach and Student (#4488)
-
 ---
 
 # Website Review and Draft Board Backlog — 2026-09-29
