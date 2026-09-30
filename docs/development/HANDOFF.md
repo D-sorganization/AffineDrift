@@ -53,6 +53,7 @@
 # Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
 # Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
 # Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
+# Implementation Handoff — Wire Alt-Text and Long-Description Validation Into CI (#4567)
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
@@ -375,6 +376,26 @@
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4567
+- Branch: claude/issue-4567
+- Baseline commit: 02507aac
+- Implementation commit: SELF
+- Pull request: not created yet (draft PR opened this session)
+- Governing issue/epic: #4567 (epic #4569)
+
+## Objective and Status
+
+- Objective: Wire `scripts/validate_accessibility.py` into `quality-gate` and add a check requiring complex E8 SVG diagrams to carry a long description.
+- Status: Implementation complete; draft PR pending.
+- Completed:
+  - Added `check_long_description_for_diagrams()` to `scripts/validate_accessibility.py`: flags an SVG image reference in a QMD file unless the file also has an `aria-describedby` resolved to an in-page element, or a `<details>` "long description" disclosure.
+  - Fixed a pre-existing latent bug: the QMD loop in `validate_accessibility()` called `qmd_file.relative_to(repo_root)`, but `collect_qmd_files()` returns CWD-relative paths, not absolute ones, so any real finding crashed the script (previously dormant because every existing check found zero issues repo-wide). Now uses the path as-is, matching `seo_audit.py`'s convention.
+  - Discovered the new check would flag 39 pre-existing QMD files whose SVG figures are matplotlib-generated data plots that predate the E8 diagram work, not the hand-authored explanatory diagrams E8 specifies. Added `config/accessibility-long-description-baseline.json` (same `_comment`/`accepted` shape as `tree-parity-baseline.json`/`terminology-baseline.json`) to grandfather them, so the new check only blocks new/changed content.
+  - Discovered the script's existing CSS colorblind-safe-color and JS ARIA-label checks also have unrelated pre-existing findings (dozens of CSS colors, `js/main.js`) with no baseline. Added a `--qmd-only` flag to `validate_accessibility()`/`main()` so CI wires only the in-scope checks (alt text, heading hierarchy, long descriptions); the CSS/JS checks stay unwired pending their own baseline/cleanup work (out of #4567's scope; flagged in the PR body).
+  - Added `.github/workflows/ci-standard.yml` step "Verify Alt Text and Long Descriptions" running `python3 scripts/validate_accessibility.py --qmd-only` in the `static-checks` job that feeds `quality-gate`.
+  - Added tests in `tests/test_validate_accessibility.py` for the new check (non-SVG images ignored, missing long description flagged, `aria-describedby` pass, `<details>` disclosure pass, dangling `aria-describedby` still flagged).
+  - Added a `SPEC.md` change-log row keyed to #4567.
+- Remaining: Open the draft PR.
 - Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4596 (worktree)
 - Branch: claude/issue-4596
 - Baseline commit: 02507aac (origin/main)
@@ -417,6 +438,16 @@
 ## Files and Decisions
 
 - Files changed:
+  - `scripts/validate_accessibility.py`: new `check_long_description_for_diagrams()`, baseline loader, `qmd_only` param, `--qmd-only` CLI flag, `relative_to` bugfix.
+  - `config/accessibility-long-description-baseline.json`: new baseline of 39 pre-existing files.
+  - `tests/test_validate_accessibility.py`: new `TestLongDescriptionForDiagrams` class.
+  - `.github/workflows/ci-standard.yml`: new CI step in `static-checks`.
+  - `SPEC.md`: change-log row.
+  - `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`: this entry.
+- Key decisions:
+  - "Complex diagram" is scoped to SVG image references, matching E8's stated format (WEB-08.2/08.3 specify SVG diagrams with a long description); PNG/JPEG figures are unaffected.
+  - The long-description check is file-wide (permissive), matching this module's existing style (`check_colorblind_safe_colors`'s docstring states the same rationale) rather than requiring a 1:1 image-to-description mapping.
+  - CSS/JS checks are deliberately left out of the CI step rather than baselined, since remediating dozens of CSS color findings and the JS ARIA gap is unrelated scope; this is called out as a known gap in the PR body rather than silently fixed or silently wired in as a failure.
   - `scripts/link-checker.py`: DOI-aware redirect handling, archive.org suggestions,
     structured warnings, `--json-report`.
   - `.github/workflows/link-checker.yml`: weekly schedule, `issues: write`, tracking-issue
@@ -474,6 +505,14 @@
 
 ## Validation
 
+- `python -m pytest tests/test_validate_accessibility.py` — PASS (20 passed)
+- `python -m ruff check scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python -m black --check --line-length 100 scripts/validate_accessibility.py tests/test_validate_accessibility.py` — PASS
+- `python3 scripts/validate_accessibility.py --qmd-only` (PYTHONPATH=.) — exit 0 across the full repo
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 scripts/check_module_size_budget.py` — PASS
+- `python3 scripts/check_root_hygiene.py` — PASS
+- `python3 scripts/check_workflow_action_pins.py` — PASS
 - `pytest tests/test_link_checker_script.py` — PASS (12 passed)
 - `pytest tests/test_link_checker_script.py tests/test_check_links.py tests/test_check_links_additional.py tests/test_link_utils.py` — PASS (79 passed)
 - `python -m ruff check scripts/link-checker.py tests/test_link_checker_script.py` — PASS
@@ -483,6 +522,15 @@
 ## Blockers and Risks
 
 - Blockers: none.
+- Risks/assumptions: the 39-file baseline is a one-time grandfather; new SVG diagrams added anywhere (including under E8) must supply a long description or add themselves to the baseline (not recommended) to pass CI. The CSS/JS checks remaining unwired is a known gap, not a defect introduced by this change.
+
+## Next Steps
+
+1. Open the draft PR for #4567 and note the unwired CSS/JS checks as follow-up scope in its body.
+
+---
+
+
 - Risks/assumptions: the tracking-issue step is exercised only via the workflow's scheduled/
   manual trigger in production GitHub Actions; it is not covered by a live integration test
   (no local GitHub API to test against). The JSON-report plumbing and issue-body construction
