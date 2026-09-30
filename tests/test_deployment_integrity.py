@@ -184,6 +184,30 @@ def test_ci_captures_revision_bound_representative_visual_evidence() -> None:
     assert "python3 scripts/e2e_relevant_paths.py" in content
 
 
+def test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match() -> None:
+    """WEB-13.1 (#4595): skip the ~14-minute render only on an exact cache hit.
+
+    An inexact match (any rendered source changed) must still take the full,
+    unconditional `quarto render --to html` path that #4126 relies on for
+    complete route coverage -- a restore-keys fallback could restore a docs/
+    tree that does not reflect the current commit, so it must not be used.
+    """
+    content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "id: quarto_cache" in content
+    _, after_cache_id = content.split("id: quarto_cache", maxsplit=1)
+    cache_step, render_step = after_cache_id.split("Build site for E2E", maxsplit=1)
+
+    assert "actions/cache@" in cache_step
+    assert "hashFiles(" in cache_step
+    assert "restore-keys" not in cache_step
+    assert "steps.quarto_cache.outputs.cache-hit != 'true'" in render_step
+    assert "run: quarto render --to html" in render_step
+
+    # Deploy always does a clean full render; criterion 3 stays untouched.
+    assert "actions/cache@" not in WORKFLOW_PATH.read_text(encoding="utf-8")
+
+
 def test_requirements_integrity() -> None:
     """Ensure build dependencies are present."""
     assert REQUIREMENTS_PATH.exists()
