@@ -225,6 +225,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-09-30 | #4712 | Reconcile companion two-hand wrench geometry, identifiability, power and archived contact/sensor evidence; correct mutable instrumented-grip citations while preserving immutable source scope. |
+| 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
+| 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
 | 2026-09-30 | #4538 | Add a Binder `environment.yml` installing from `requirements.txt` so it opens the notebook scaffolds in JupyterLab (Binder build unverified), a shared Binder-launch include on every book's Notebook Workflow section and the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` for per-page source downloads; the devcontainer half is blocked, see the PR's Blocked section. |
 | 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
 | 2026-09-29 | #4599 | Consolidate the 7 cross-page "Recent Models" inline history scripts into a shared `initCategoryHistory()` in `js/history.js`; remove the 8 single-page "Recent X" history widgets on resources pages that only ever recorded the page itself; add Jest coverage for `history.js` and `home.js`. |
@@ -443,7 +445,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-28 | #4477 | Correct companion opening and whole-swing ledger accounting, state, wrench transport and inference; preserve book scope and verify archived examples plus rebuilt HTML/PDF. |
 
 | 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
-
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
 | 2026-09-29 | #4542 | Fix the Programming Companion catalog generator reading a nonexistent `title` field (real field `name`) that made every program and engine row render its ID as its title; drop the Engines page's fabricated Maturity column; label the 16 unpinned repository UpstreamDrift links as navigation only. |
 | 2026-09-29 | #4549 | Rebuild the Datasets resource page as a generated catalogue from `data/datasets.yml` with verified licence/access/schema/checksum fields for third-party datasets and an "AffineDrift Data Artefacts" section for `data/ztcf`, `data/research_protocols`, and `schemas`, dropping the `mini.s-shot.ru` thumbnail host. |

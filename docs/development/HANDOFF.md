@@ -12,8 +12,115 @@ The corpus goal remains active under #4021 and epic #4009. Never create draft PR
 - Two agy Gemini 3.8 Flash inventories completed in the original technical-review worktree; no tools or edits delegated. Lead rejected the delegate's confusion between 4-ms observation horizon and 0.5-ms fine step.
 - Rebuilt the 209-page PDF; inspected Chapter 12, boundary and references (14 pages). Both canonical PDFs match. All 30 chapters remain. Web: 29 math expressions, five displays, four theme/width combinations; eight route cases pass with zero serious/critical axe findings. Mobile power equation scrolls within its container; both ends inspected. All 142 affected chapter, audit, atlas, catalog, readiness and deployment-boundary checks pass. Regular PR #4712 is open; final combined-main validation and protected delivery remain pending.
 - Three source/publication route records are preserved verbatim in `two-hand-wrench-prior-reviews.json` and bound to `b60805a9`. Two further generated-readiness dependency routes preserve their original records in `reports/technical-review/two-hand-wrench-readiness-carry-forward.json`; final generated-publication bindings use `1a504d98d` and preserve additional history in `two-hand-wrench-publication-dependencies.json`. Dependency carry-forward proves three citation-only chapter edits and the protocol title/key change; unrelated ground-reaction bibliography entries and source are unchanged. Do not claim a new review of those sources or the whole book.
-- PR #4709 merged to remote main at `984552e178b3f075290e44565a6f4514152e3dd9` on 2026-09-30 21:18:51 UTC; CI Standard 36773428069 passed. Its scientific source/PDF/tests remain bound through `2be29ec3`. Integrate that main checkpoint here, preserving both turnover histories.
-- Chapter 12 is the only newly completed corpus row (143 pending on this branch before integrating #4709; expected 141 afterward). Follow-up #4711 tracks the still-incorrect immutable provider citation through a governed release. Regular PR #4712 is open. Complete combined-main validation and protected merging. Preserve other agents' work.
+- PR #4709 merged to remote main at `984552e178b3f075290e44565a6f4514152e3dd9` on 2026-09-30 21:18:51 UTC; CI Standard 36773428069 passed. Its scientific source/PDF/tests remain bound through `2be29ec3`. Integrated this main checkpoint here; both turnover histories and the packaging record are preserved.
+- Chapter 12 is the only newly completed corpus row (141 sources pending after integrating #4709). Follow-up #4711 tracks the still-incorrect immutable provider citation through a governed release. Regular PR #4712 is open. Complete combined-main validation and protected merging. Preserve other agents' work.
+
+# Resumed Technical Review — Induced Acceleration #4706
+
+The user explicitly resumed the corpus goal on 2026-09-30. This supersedes the
+September 28 pause instruction below. Never create draft PRs. Goal remains active.
+
+- Worktree: `C:/Users/diete/Repositories/AffineDrift-technical-review`.
+- Branch: `fix/induced-acceleration-rigor-20260930`; base `bac8bedb`.
+  Final source checkpoint `d7cf1af8`; final render checkpoint `2f32c8d4`.
+  Regular PR [#4709](https://github.com/D-sorganization/AffineDrift/pull/4709); epic #4009 / corpus #4021 / issue #4706.
+- Complete paired Geometry of Motion Chapter 3b corrected: force signs, full
+  affine state/input map, activation, nominal integration, normalized coupling,
+  constrained reactions, physical outputs, coordinate transport and study evidence.
+- Two parallel agy Gemini 3.8 Flash supplied-text inventories completed; lead
+  independently adjudicated all suggestions. No delegated tools or edits.
+- Nineteen new checks (five numerical, fourteen source boundaries), nine prior
+  IAA numerical checks and fourteen attribution contracts pass. Full-tree Ruff,
+  Black (791 files) and configured mypy (93 files) pass. Linux CI at `41e075ef`: 5,962 tests passed (92.83% coverage),
+  179 content checks passed; all eight book builds passed. Windows: 6,005 passed;
+  two root-hygiene failures resolved by preserving snapshots under docs/development;
+  all six hygiene checks then passed. Publication receipt records the two quote pairs.
+- Full Volume I PDF: 149 pages; physical 58–64 visually reviewed; final log has
+  no overfull boxes or undefined/multiply-defined labels. Other chapters retain
+  their independent review status; their committed source hashes are preserved.
+- Root website gate: 4/4 desktop/mobile and light/dark passes; one route axe scan,
+  zero serious/critical findings. Fresh browser: all 126 math expressions rendered,
+  twelve displays visually checked at 1440/390 px, no math errors or broken anchors.
+  Three mobile equations use contained scrolling; both ends and numbers inspected.
+- The first standalone render and persistent cached browser session are excluded
+  from accepted evidence. Root configuration was restored; fresh `iaa-final`
+  browser confirmed revised text. Preview 8770 stopped; later Windows localhost binds were refused. Accepted render evidence predates this environment limitation.
+- `iaa-biomechanics-review.md`, `iaa-biomechanics-final-render-verification.json`, prior
+  records and dependency carry-forward under `reports/technical-review/` explain
+  source access limits, numerical cases, exact bytes and preserved historical scope.
+- Eight findings bound through test-style checkpoint `2be29ec3`; book metadata carries forward the changed PDF
+  without renewing other scientific or book-map browser reviews. Corpus pending
+  count: 142 sources. Whole-book and whole-corpus acceptance remain incomplete.
+- Final qualification: nominal acceleration integrals require absolutely continuous
+  velocity; impulsive impacts add velocity jumps from the declared impact law.
+  Main Binder update #4682 was integrated at `766b0603`; final browser evidence
+  includes its article code-tools metadata. Final dependency receipt preserves
+  prior book scopes, dates and render revisions.
+- Main integration: trust freshness #4705 and packaging #4613 through `4f798475` are preserved; both turnover sections retained. All 57 combined chapter/audit/trust/packaging checks pass; chapter, PDF and numerical-test bytes remain exactly at `2be29ec3`.
+- CI follow-up: name the test gravity constant; scientific sources and PDF unchanged.
+  Test-only checkpoint `2be29ec3` preserves all scientific sources and assertions; 821 tracked Python files pass the complete quality check.
+- Completed: PR #4709 merged at `984552e17`; CI Standard `36773428069` passed. Issue #4706 lease and presence were released at 21:21 UTC. Preserve untracked QA and other agents' work.
+- Next corpus scope: #4710 is implemented and under validation in separate worktree `Worktrees/AffineDrift-two-hand-review`; branch `fix/two-hand-wrench-rigor-4710`.
+- Coordination: session `technical-review-20260930-resume`, issue #4706; development
+  log DL-#4706. Existing web-feature consolidations remain under their live owners.
+
+# Implementation Handoff — Make src/ Installable and Version It (#4532)
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift`
+- Branch: `fix/web-06-2-make-src-installable-4532`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
+- Implementation commit: `SELF`
+- Pull request: #4613
+- Governing issue/epic: #4532 (epic #4543)
+
+## Objective and Status
+
+- Objective: Make `src/` installable via standard packaging tools (`pip install .`), build wheel in CI, attach wheel to releases, and verify external module imports outside repo root (#4532).
+- Status: ready for review / auto-merge
+- Completed: Added PEP 621 metadata to `pyproject.toml`, configured package discovery for `src*`, added `src/py.typed`, created isolated external smoke test `scripts/smoke_test_installed_wheel.py`, added packaging unit test suite `tests/test_wheel_packaging.py`, updated CI workflows (`ci-standard.yml`, `release.yml`), merged main, and updated `SPEC.md`.
+- Remaining: Push to origin and monitor PR #4613 CI / auto-merge.
+
+## Files and Decisions
+
+- Files changed:
+  - `pyproject.toml`: Added PEP 621 `[project]` metadata, setuptools package discovery, and dependencies.
+  - `src/py.typed`: Added PEP 561 marker.
+  - `scripts/smoke_test_installed_wheel.py`: Isolated wheel install and external import test.
+  - `tests/test_wheel_packaging.py`: Unit test coverage for wheel packaging, version alignment, and wheel contents.
+  - `.github/workflows/ci-standard.yml`: Added wheel build and smoke test step in CI.
+  - `.github/workflows/release.yml`: Added automated release wheel build and asset upload.
+  - `SPEC.md`: Added change-log row for #4613.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: Packaged `src` namespace as a whole to preserve existing internal and test imports without tree-wide import churn.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_wheel_packaging.py` — PASS (4 passed)
+- `python -m ruff check tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
+- `python -m black --check --line-length 100 tests/test_wheel_packaging.py scripts/smoke_test_installed_wheel.py` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\handoff_validator.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Push commit to origin.
+2. Verify PR #4613 checks pass and auto-merge merges into main.
+
+## Change Log
+
+- `SELF` — Merge main, resolve SPEC.md conflicts, and update HANDOFF.md for PR #4613 (#4532).
+- `bc956ef5` — Make src/ installable and configure wheel packaging (#4532).
+
+---
 
 # Reader Run Environment (Binder, Devcontainer, Downloads) — #4538 (WEB-06.8)
 
