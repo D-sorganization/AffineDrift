@@ -6,6 +6,7 @@ known issues (linked to #4139), and a contact route for barriers.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import yaml
@@ -36,16 +37,22 @@ def test_page_links_known_issues_to_the_tracking_issue() -> None:
 
 
 def test_page_does_not_present_the_closed_tracking_issue_as_the_live_status() -> None:
-    """Issue #4139 closed as remediated on 2026-09-06; the page must not point
-    readers to it as the current remediation tracker without saying so, and
-    must state the CI axe check's actual current mode (issue #4691)."""
+    """Issue #4139 closed as remediated on 2026-09-06; the page must say so, and its
+    description of the CI axe check must match the mode ci-standard.yml actually runs
+    (issue #4691)."""
     text = PAGE.read_text(encoding="utf-8")
-    lowered = text.casefold()
+    lowered = " ".join(text.casefold().split())
+    workflow = (ROOT / ".github/workflows/ci-standard.yml").read_text(encoding="utf-8")
+    modes = set(re.findall(r"--axe (warn|fail)\b", workflow))
+    assert len(modes) == 1, f"expected one axe mode in ci-standard.yml, found {modes}"
 
     assert "closed as remediated" in lowered
-    assert "report-only" in lowered
     assert "https://github.com/D-sorganization/AffineDrift/issues/4561" in text
-    assert "https://github.com/D-sorganization/AffineDrift/issues/4656" in text
+    if modes == {"fail"}:
+        assert "fails the build on any serious or critical finding" in lowered
+        assert "report-only" not in lowered
+    else:
+        assert "report-only" in lowered
 
 
 def test_page_provides_a_contact_route_for_barriers() -> None:

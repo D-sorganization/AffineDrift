@@ -435,4 +435,18 @@ describe('axe-core policy (ISSUE-4126)', () => {
       violation_count: 3,
     });
   });
+
+  test('summarizes scanned routes and zero violations in fail mode (#4561)', () => {
+    const results = [
+      { route: '/', axe_violations: [] },
+      { route: '/articles/theory-part1.html', axe_violations: [] },
+    ];
+    expect(axePolicyEvidence({ axe: 'fail' }, results)).toEqual({
+      mode: 'fail',
+      impacts: ['serious', 'critical'],
+      scanned_route_count: 2,
+      routes_with_violations: [],
+      violation_count: 0,
+    });
+  });
 });

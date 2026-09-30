@@ -233,8 +233,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-09-30 | #4593 | Retitle `pages/about.qmd` from "About & Contact" to "About" and drop its own `mailto:` link so Contact is the site's single contact page; About now points to Contact instead. |
 | 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
 | 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
-| 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
 | 2026-09-29 | #4599 | Consolidate the 7 cross-page "Recent Models" inline history scripts into a shared `initCategoryHistory()` in `js/history.js`; remove the 8 single-page "Recent X" history widgets on resources pages that only ever recorded the page itself; add Jest coverage for `history.js` and `home.js`. |
+| 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
 | 2026-09-30 | #4492 | Add `resources/on-ramp-paths.qmd`: 5-minute, 30-minute, and 3-hour on-ramp reading sequences per persona, built from existing pages, each ending in a self-check question and answer (#4492). |
 | 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
 | 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
@@ -483,6 +483,8 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4548 | Retire the 22 unaudited companion bibliographies from the render and audit the privacy and accessibility pages, restoring 100% claim-audit route coverage for Deploy Website. |
 | 2026-09-30 | #4492 | Add a reviewed claim-audit record for /resources/on-ramp-paths.html, restoring Deploy Website route coverage after #4677. |
 | 2026-09-29 | #4655 | Remove stub Colab buttons from textbook pages and fill priority notebooks with verified dynamics (#4537). |
+| 2026-09-29 | #4634 | Correct learning-path difficulty contradictions, prerequisites, and chapter references (#4493). |
+| 2026-09-29 | #4656 | Make full-site axe scan fail on serious and critical violations and fix caption contrast (#4561). |
 | 2026-09-29 | #4523 | Add a generated evidence/claims.qmd Claim Ledger page (one accessible card per claim: plain/formal statement, evidence rung, falsifiers, related critiques, pages making the claim) and link every claim-making page back to it. |
 | 2026-09-29 | #4551 | Render PARAMETERS.md and add a one-page notation quick-reference card; remove pages/notation.qmd's duplicate heading and manual table of contents. |
 | 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |
