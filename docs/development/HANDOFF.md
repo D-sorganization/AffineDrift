@@ -47,6 +47,11 @@
   tests/test_accessibility_statement_page.py tests/test_claim_audit_inventory.py` (31 passed);
   `python -m scripts.check_spec_changelog` (passed).
 
+- Lead follow-up (2026-09-30): after merging main (#4656 set `--axe fail`), the page states the
+  enforced mode and the test reads the mode from `ci-standard.yml`. Both findings are now
+  `corrected`: `ad-finding-privacy-csp-image-scope` verified at `0864602d`, and
+  `ad-finding-accessibility-closed-tracker` verified at `492e7a6e`.
+
 # Implementation Handoff — on-ramp "3 Hours" totals (#4695)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-4695`.
