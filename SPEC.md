@@ -224,6 +224,29 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
+| 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
+| 2026-09-30 | #4538 | Add a Binder `environment.yml` installing from `requirements.txt` so it opens the notebook scaffolds in JupyterLab (Binder build unverified), a shared Binder-launch include on every book's Notebook Workflow section and the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` for per-page source downloads; the devcontainer half is blocked, see the PR's Blocked section. |
+| 2026-09-29 | #4592 | Recategorise the Drifter Manifesto series index and single-file edition from `critique` to a new controlled `opinion` category; declare the series index the canonical entry point and label the single-file edition an explicit non-canonical companion. |
+| 2026-09-29 | #4599 | Consolidate the 7 cross-page "Recent Models" inline history scripts into a shared `initCategoryHistory()` in `js/history.js`; remove the 8 single-page "Recent X" history widgets on resources pages that only ever recorded the page itself; add Jest coverage for `history.js` and `home.js`. |
+| 2026-09-29 | #4646 | Emit per-page citation metadata, Google Scholar tags, and Cite This Page block with BibTeX download (#4544). |
+| 2026-09-30 | #4675 | Add RSS 2.0 structural validation to `scripts/generate_feed.py`, failing the build on an invalid feed instead of publishing one; the "items link to revision history" criterion is blocked on the still-open #4545 (WEB-07.3) (#4606). |
+| 2026-09-30 | #4492 | Add `resources/on-ramp-paths.qmd`: 5-minute, 30-minute, and 3-hour on-ramp reading sequences per persona, built from existing pages, each ending in a self-check question and answer (#4492). |
+| 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
+| 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
+| 2026-09-29 | #4548 | Render the 22 orphaned per-article companion bibliographies via a new `articles/*-bibliography.md` render rule, add front matter, fix their two broken links, and document the pattern. |
+| 2026-09-29 | #4576 | Add a Privacy Policy page covering local storage, the service worker, third-party embeds, and analytics per D6; link it from the site footer. |
+| 2026-09-29 | #4582 | Enforce uppercase G(x) for the control-affine input map across the home page, four textbook chapters and 12 critique files; add a baseline-gated pytest notation lint (scripts/check_notation.py). |
+| 2026-09-29 | #4546 | Add a Lua filter emitting per-page ScholarlyArticle/Book/Chapter/Dataset/SoftwareSourceCode JSON-LD; delete the dead, broken `_includes/article-schema.html`. |
+| 2026-09-29 | #4583 | Standardize DCR expansion to "Drift-Control Ratio" everywhere, rename the article slug to `drift-control-ratio` with a redirect alias, and add the wrong expansions to the terminology baseline. |
+| 2026-09-29 | #4568 | Publish an accessibility statement page (WCAG 2.1 AA target, #4139 known issues, contact route for barriers) and link it from the site footer. |
+| 2026-09-29 | #4640 | Enforce verified publication dates, zero date: today, date-source contract, and per-article revision history component (#4545). |
+| 2026-09-30 | #4658 | Enforce unique titles and 70-160 character meta descriptions across all pages (#4575). |
+| 2026-09-30 | #4563 | Remove nine of the ten `--grep-invert` E2E exclusions from `ci-standard.yml` whose defects were already fixed (#4200) but never actually re-run in CI; fix a touch-target test bug that miscounted CSS-hidden elements as non-compliant; leave the tenth (pixel-snapshot baselines) excluded pending a fleet-runner `--update-snapshots` pass. |
+| 2026-09-29 | #4588 | Add warn-mode CI lint and plain-language glossary keeping internal governance vocabulary out of reader-facing prose; partial reduction on hub/entry pages pending #4587 (#4588). |
+| 2026-09-29 | #4591 | Add `scripts/check_readability.py`, an advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages against the WEB-12.1 threshold. |
+| 2026-09-29 | #4638 | Extend personas to include Curious Golfer/Coach and Student with structured routes and generated cards include (#4488). |
+| 2026-09-29 | #4633 | Build Page Header Card component driven by front matter and styled in print stylesheet (#4507). |
 | 2026-09-29 | #4631 | Implement Plain-Language Summary and Key Takeaways component driven by front matter and styled in print stylesheet (#4508). |
 | 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
 | 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
