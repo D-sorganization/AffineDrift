@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4688 · Dataset Explorer Deployment Route Audit
+
+- **State:** in_review
+- **Owner:** codex-luna-affine4688-20260930
+- **PR:** not created; local candidate awaits root review
+- **Issue:** #4688 (red main deployment route coverage)
+- **Branch:** `fix/luna-deploy-route-4688`
+- **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; focused audit/public-manifest contracts 44 passed; preserved deployment-shaped output pruned and revision-bound 250-page manifest publication audit passed; historical native Quarto exit remains unknown)
+- **Summary:** Adds a reviewed record for the already-public `/models/dataset-explorer.html` route and a regression asserting exact source-derived route coverage. The record treats JSON schema checks as structural, population inputs as manufactured synthetic, and ZTCF/proximal-distal artifacts as model-level; it makes no human/population validation claim and preserves open finding #4695. The separate #4694 workflow publication-gate design is out of scope.
+- **Next step:** Root review and required PR CI deployment render/publication gates; do not close #4688 before merged-main deploy evidence.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
