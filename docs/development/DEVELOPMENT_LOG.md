@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4503 · URL Stability and Redirect Policy
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4503 (draft)
+- **Issue:** #4503 (WEB-02.9; epic #4505 / E2)
+- **Branch:** `claude/issue-4503`
+- **Paths:** `src/tools/check_redirects.py`, `tests/test_check_redirects.py`, `tests/test_deployment_integrity.py`, `config/redirects.yml`, `.github/workflows/deploy-website.yml`, `CONTRIBUTING.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (13/13 new pytest cases in `test_check_redirects.py` pass; `test_deployment_integrity.py` 16 passed/1 skipped; ruff, black --line-length 100, and mypy clean on the new module.)
+- **Summary:** Compares the previously deployed site's public-site manifest against the new build's manifest and the `config/redirects.yml` ledger, failing the deploy workflow if a previously published route disappeared without a documented and actually-rendered redirect; ledger usage documented in CONTRIBUTING.md alongside Quarto `aliases:`.
+- **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
+
 ### DL-#4591 · Readability Measurement Tool
 
 - **State:** in_review

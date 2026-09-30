@@ -653,6 +653,38 @@ AffineDrift/
    quarto preview
    ```
 
+### Renaming or Moving a Page
+
+External citations and search rankings depend on published URLs staying
+reachable, so a rename or consolidation must never let an old URL go
+dead (#4503):
+
+1. Add a Quarto `aliases:` entry to the new page's frontmatter listing the
+   old path so Quarto renders a redirect at the old URL:
+
+   ```yaml
+   ---
+   title: "My New Article"
+   aliases:
+     - ../old-directory/old-article-name.html
+   ---
+   ```
+
+2. Record the move in the redirect ledger, `config/redirects.yml`:
+
+   ```yaml
+   redirects:
+     - from: /old-directory/old-article-name.html
+       to: /new-directory/my-new-article.html
+       issue: "#4503"
+       since: "2026-09-29"
+   ```
+
+3. `src/tools/check_redirects.py` runs during the deploy workflow and
+   compares the previous deploy's manifest against the new one: the
+   deploy fails if a previously published route disappeared without a
+   matching, rendered `redirects.yml` entry.
+
 ### Updating Styles
 
 1. Edit `custom.scss` (NOT `styles.css` directly)

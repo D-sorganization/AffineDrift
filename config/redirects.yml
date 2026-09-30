@@ -1,0 +1,16 @@
+# Redirect ledger for URL Stability and Redirect Policy (#4503).
+#
+# Whenever consolidation or renaming moves a previously published route,
+# record it here AND add a matching Quarto `aliases:` entry on the new
+# page so the old URL renders a working redirect. Documented in
+# CONTRIBUTING.md. Enforced by `src/tools/check_redirects.py` in the
+# deploy workflow: a route missing from the new build's manifest that is
+# not listed here fails the deploy.
+#
+# Schema:
+#   redirects:
+#     - from: <old route, absolute path, e.g. "/articles/old-name.html">
+#       to: <new route, absolute path>
+#       issue: <governing GitHub issue, e.g. "#4505">
+#       since: <YYYY-MM-DD>
+redirects: []

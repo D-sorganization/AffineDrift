@@ -200,6 +200,21 @@ def test_check_scripts_exist() -> None:
     """Ensure the check scripts actually exist."""
     assert (ROOT_DIR / "src" / "tools" / "check_links.py").exists()
     assert (ROOT_DIR / "src" / "tools" / "check_site_health.py").exists()
+    assert (ROOT_DIR / "src" / "tools" / "check_redirects.py").exists()
+
+
+def test_deploy_workflow_enforces_url_stability_and_redirect_policy() -> None:
+    """Deploy must fail if a previously published route disappears without a redirect (#4503)."""
+    content = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "src.tools.check_redirects" in content
+    assert "--previous-manifest" in content
+    assert "--current-manifest docs/public-site-manifest.json" in content
+    assert "--redirects config/redirects.yml" in content
+    assert content.index("Fetch previously deployed manifest") < content.index(
+        "Verify URL Stability and Redirect Policy"
+    )
+    assert (ROOT_DIR / "config" / "redirects.yml").exists()
 
 
 def test_ci_workflow_runs_content_lint_tests() -> None:

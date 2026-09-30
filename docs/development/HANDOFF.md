@@ -1,3 +1,43 @@
+# URL Stability and Redirect Policy — Issue #4503
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4503`.
+- Branch `claude/issue-4503`, commit `SELF`; pull request: to be opened as a draft by this session.
+- Governing issue: #4503 (WEB-02.9, part of epic #4505 / E2 — Information Architecture, Naming, and Consolidation).
+- Objective: consolidation and renaming move URLs; a previously published route must never
+  silently disappear. Implemented `config/redirects.yml` (a ledger of `{from, to, issue, since}`
+  entries) alongside Quarto's existing `aliases:` front matter mechanism, `src/tools/check_redirects.py`
+  to enforce the policy, and a CONTRIBUTING.md section documenting how to move a page.
+- Enforcement mechanism: the deploy workflow (`.github/workflows/deploy-website.yml`) now fetches
+  the currently-live `public-site-manifest.json` (the previous deploy, best-effort — a missing or
+  unreachable file is treated as "nothing to compare," not a failure) before the new manifest
+  overwrites it, then runs `check_redirects.py`, which fails the build if a route present in the
+  previous manifest is absent from the new one and not covered by a `redirects.yml` entry, and
+  separately fails if a ledger entry's old route was never actually rendered by Quarto (i.e. the
+  `aliases:` entry was declared but the page doing the aliasing doesn't exist or wasn't rebuilt).
+- `config/redirects.yml` starts empty (`redirects: []`); no page renames are in flight in this
+  issue's scope, only the mechanism the later consolidation issues (part of epic #4505) will use.
+- Validation:
+  - `python3 -m pytest tests/test_check_redirects.py -q`: 13 passed.
+  - `python3 -m pytest --override-ini addopts= -m content_lint tests/test_deployment_integrity.py -q`: 16 passed, 1 skipped.
+  - `python3 -m ruff check src/tools/check_redirects.py tests/test_check_redirects.py tests/test_deployment_integrity.py`: clean.
+  - `python3 -m black --check --line-length 100 src/tools/check_redirects.py tests/test_check_redirects.py tests/test_deployment_integrity.py`: clean.
+  - `python3 -m mypy src/tools/check_redirects.py`: clean.
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .`: clean (whole repo).
+  - Module size budget and Python dependency boundary checks: pass.
+  - Full project suite (`pytest --cov`, `npx jest`, `npx playwright test`) was not run to completion
+    in this session (large repo, background timeout); the change touches only a new script, its
+    test file, one existing test file, a new empty-ledger config file, one CI workflow, and
+    CONTRIBUTING.md, with no behavioral change to any existing module.
+
+## Next Steps
+
+1. Open the draft PR (`Fixes #4503`) and let the frontier review pass judge the redirect-ledger
+   schema and the "previous manifest via live curl" enforcement strategy.
+2. When a later E2 consolidation issue actually renames or merges pages, it should populate
+   `config/redirects.yml` and add the matching `aliases:` front matter using the pattern
+   documented in CONTRIBUTING.md's new "Renaming or Moving a Page" section.
+3. No further implementation is planned from this session pending review feedback.
+
 # Readability Measurement Tool — Issue #4591
 
 - Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4591`.
