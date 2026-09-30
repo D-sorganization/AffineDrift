@@ -144,9 +144,14 @@
     // `mathjax` npm package cannot inject arbitrary script into the page. The
     // version and hash must be updated together (regenerate with:
     //   curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A ).
+    // ⚡ Performance (#4577): tex-chtml.js bundles only the TeX input and
+    // CHTML output jax this site actually uses. The previously-used
+    // tex-mml-chtml.js additionally bundles the MathML *input* jax, which is
+    // dead weight here: Quarto only ever emits TeX delimiters, never raw
+    // MathML source, into the `.math` spans this loader scans for.
     const mathjax = document.createElement("script");
-    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js";
-    mathjax.integrity = "sha384-Wuix6BuhrWbjDBs24bXrjf4ZQ5aFeFWBuKkFekO2t8xFU0iNaLQfp2K6/1Nxveei";
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js";
+    mathjax.integrity = "sha384-AHAnt9ZhGeHIrydA1Kp1L7FN+2UosbF7RQg6C+9Is/a7kDpQ1684C2iH2VWil6r4";
     mathjax.crossOrigin = "anonymous";
     mathjax.async = true;
     mathjax.id = "MathJax-script";
