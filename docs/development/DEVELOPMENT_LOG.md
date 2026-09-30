@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4605 · Per-Page "Report a Problem" Control
+
+- **State:** in_progress
+- **Owner:** claude
+- **PR:** #4645 (draft)
+- **Issue:** #4605 (epic #4610)
+- **Branch:** `claude/issue-4605`
+- **Paths:** `js/page-feedback.js`, `js/main.js`, `css/components/page-feedback.css`, `styles.css`, `tests/page-feedback.test.js`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: tests/page-feedback.test.js and full Jest suite pass; `check_styles_budget`, `check_spec_changelog`, and `regenerate_claim_audit_evidence --check` pass)
+- **Summary:** Adds a footer control appended to `#quarto-document-content` on every rendered page: a "Report a problem" link that opens the content-correction GitHub issue template prefilled with the page URL and build revision (fetched same-origin from `public-site-manifest.json`), with a mailto fallback for readers without a GitHub account. The "Was this helpful?" Yes/No vote was removed per PR review — it recorded nothing yet claimed "Thanks for the feedback!", which was outside the issue's acceptance criteria and misled readers.
+- **Next step:** Verify CI, then release lease.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review

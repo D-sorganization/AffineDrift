@@ -9,6 +9,87 @@
 - Validation: `pytest tests/test_claim_audit_inventory.py tests/test_check_quarto_render_coverage.py` (29 passed).
 - Next: confirm Deploy Website is green on main after merge; #4694 adds this gate to PR CI.
 
+# Implementation Handoff — Per-Page "Report a Problem" Control (#4605)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4605
+- Branch: claude/issue-4605
+- Baseline commit: b6aa4baf
+- Implementation commit: SELF
+- Pull request: https://github.com/D-sorganization/AffineDrift/pull/4645 (draft)
+- Governing issue/epic: #4605 (epic #4610)
+
+## Objective and Status
+
+- Objective: Add a footer control that opens a prefilled content-correction GitHub issue with the page URL and revision, with a fallback email link for readers without a GitHub account, and no third-party tracking.
+- Status: implementation complete; addressed review feedback (HANDOFF duplication, PR title, privacy-policy disclosure), ready for CI.
+- Completed:
+  - Added `js/page-feedback.js` exporting `initPageFeedback()`, wired into `js/main.js`'s DOM-ready sequence.
+  - The widget appends to `#quarto-document-content` (the same content-anchor convention as `initReadingTime`/`initResponsiveTables`) on every rendered page: a "Report a problem" action only (no vote/toggle control — see Key decisions).
+  - "Report a problem" opens `github.com/D-sorganization/AffineDrift/issues/new` prefilled with the `content-correction.md` template, the current page URL, and the build revision.
+  - The revision is fetched same-origin from `/public-site-manifest.json` (`source_revision`, already produced by `scripts/public_site_manifest.py` at deploy time); falls back to `"unknown"` if the fetch fails or the manifest isn't present (e.g. local preview).
+  - A `mailto:` fallback link (reusing the existing `dieterolson@gmail.com` "report it" pattern from `404.qmd`) carries the same page URL and revision for readers without a GitHub account.
+  - Added `css/components/page-feedback.css`, imported from `styles.css`, reusing the existing `.site-button.site-button--ghost` primitive for the report action.
+  - Added `tests/page-feedback.test.js` (8 tests, written first/RED before the implementation).
+  - Added `SPEC.md` change-log row and this handoff/development-log entry (`DL-#4605`).
+  - Regenerated stale claim-audit evidence digests for `styles.css` with `python -m scripts.regenerate_claim_audit_evidence` (required by the pre-commit `claim-audit-evidence` hook after editing a file bound in `data/trust/*.json`, #4124).
+  - Review-fix round: de-duplicated `docs/development/HANDOFF.md` (a prior keep-both merge had spliced this section's content into the middle of the unrelated Cross-Browser Coverage #4564 section and re-added full #4493/#4488 sections that `main` no longer carries content for), retitled the PR to `chore(web): add per-page Report a problem control (#4605)` (anti-phantom guard — no `src/` changes), and added a `pages/privacy-policy.qmd` sentence clarifying the per-page links only act on click and send nothing automatically, with a matching test.
+- Remaining: none — ready for CI.
+
+## Files and Decisions
+
+- Files changed:
+  - `js/page-feedback.js`: New module implementing the widget.
+  - `js/main.js`: Imports and calls `initPageFeedback()` alongside the other per-page init calls.
+  - `css/components/page-feedback.css`: New component stylesheet.
+  - `styles.css`: One new `@import` line for the component stylesheet.
+  - `tests/page-feedback.test.js`: New Jest suite.
+  - `scripts/sync_frontend_assets.py`: Added `page-feedback.js` to `CANONICAL_JS_NAMES` (PR review).
+  - `SPEC.md`: Added change-log row for #4605.
+  - `docs/development/DEVELOPMENT_LOG.md`: Added `DL-#4605`.
+  - `docs/development/HANDOFF.md`: This entry; de-duplicated (review fix).
+  - `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `data/trust/site_trust_surface_audit.json`: Refreshed evidence digests (review fix regenerated again for the privacy-policy edit; content otherwise unchanged).
+  - `pages/privacy-policy.qmd`: Added a "Report a Problem" card stating the per-page report links are click-only and send nothing automatically (review fix).
+  - `tests/test_privacy_policy_page.py`: Added a test asserting that sentence exists (review fix, TDD: confirmed RED first).
+- Key decisions:
+  - Reused the already-deployed `public-site-manifest.json`'s `source_revision` field for the build commit instead of inventing a new build-time injection mechanism (DRY); this only resolves on the deployed site or after a full `quarto render` + manifest generation, so the link is built synchronously with `"unknown"` first and updated once the fetch resolves — the control is always usable even if the fetch never completes.
+  - Removed the "Was this helpful?" Yes/No vote entirely (PR review, 2026-09-29): the issue's acceptance criteria only asked for a "Report a problem" control (prefilled GitHub issue + mailto fallback, keyboard accessible, no tracking). The vote recorded nothing yet displayed "Thanks for the feedback!", which misleads readers into thinking their input was captured. The widget now contains only the report/email control.
+  - Added `page-feedback.js` to `scripts/sync_frontend_assets.py`'s `CANONICAL_JS_NAMES` (PR review, 2026-09-29): `tests/test_sync_frontend_assets.py::test_every_canonical_javascript_module_has_a_deploy_sync_map` requires every `js/*.js` module to have a deploy sync-map entry; the file was missing it, which failed the full pytest run. `_quarto.yml`'s `resources: js/` still copies the whole `js/` directory into `docs/js/` on every `quarto render`, so this only closes the explicit-contract gap the test enforces.
+  - De-duplicated the handoff rather than editing around the mess (review fix): a prior merge had both spliced this section's content mid-way into the unrelated Cross-Browser Coverage (#4564) section and re-added full #4493/#4488 sections that `main` no longer carries content for; restored the surrounding sections to match `main` byte-for-byte and moved this PR's own content into one contiguous block at the top of the file.
+
+## Validation
+
+- `npx jest tests/page-feedback.test.js` — PASS (10/10)
+- `npx jest` (full suite) — PASS (434 passed, 19 skipped, 0 failed)
+- `npx stylelint css/components/page-feedback.css` — PASS (no output)
+- `python3 -m scripts.check_styles_budget` — PASS (3335/3400 lines, 46/212 `!important`)
+- `python3 -m scripts.check_style_discipline` — pre-existing 253 violations, all in `styles.css` lines unrelated to this change (none in the new `@import` line or `css/components/page-feedback.css`)
+- `python3 -m scripts.check_spec_changelog` — PASS
+- `python3 -m scripts.regenerate_claim_audit_evidence --check` — PASS (rerun after the privacy-policy edit)
+- `python3 -m ruff check .` — PASS (no Python changed)
+- Review-fix round: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_privacy_policy_page.py` — 4 passed (confirmed RED for the new "click-only" test before adding the sentence).
+- Review-fix round: `python -m ruff check tests/test_privacy_policy_page.py` — PASS.
+- Not run: `quarto render` / Playwright E2E (full-site render, ~14 min per `CLAUDE.md`) — not executed locally; deferred to CI's `e2e-tests` lane.
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risks/assumptions: `public-site-manifest.json` is only generated by the deploy workflow (`scripts/public_site_manifest.py`), not by a bare `quarto render`, so the revision shows `"unknown"` in local previews and possibly in CI's E2E full-site render; this degrades gracefully (page URL is still included, the GitHub issue and mailto links still work) and does not block the acceptance criteria on the deployed site.
+
+## Next Steps
+
+1. Push the branch and confirm CI is green on the retitled PR #4645.
+2. Release the fleet lease for #4605.
+
+## Change Log
+
+- `SELF` — Add per-page "Report a problem" footer control (#4605); removed the "Was this helpful?" vote per PR review.
+- `SELF` — Review fix: de-duplicated `HANDOFF.md`, retitled the PR (anti-phantom guard — no `src/` changes), and added a privacy-policy click-only disclosure sentence plus a matching test.
+
+---
+
 # "What's New" Feed RSS Validation — #4606 (WEB-14.4)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
