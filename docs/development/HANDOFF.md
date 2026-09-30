@@ -66,6 +66,22 @@
      `/pages/overview.html` in `SKIP_LINK_ROUTES`
      (`tests/e2e/accessibility.spec.js`) with the real Start Here route.
   3. Address any review feedback on PR #4624 and watch its `e2e-tests` run.
+# Implementation Handoff — Deploy Website route coverage (#4548 follow-up)
+
+- Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-route-coverage`
+- Branch: `claude/claim-audit-route-coverage`; commit SELF; PR: see branch (draft at open)
+- Objective: Deploy Website's `--enforce-publication` gate failed on main after #4629 because
+  24 newly rendered routes had no claim-audit record (22 `articles/*-bibliography.md`
+  companions from #4548 plus `/pages/privacy-policy.html` and `/pages/accessibility.html`).
+- Decisions: the 22 companion bibliographies are retired from the render (not marked
+  reviewed: their `references_out_ids` are unverified and at least one repeats the ZTCF
+  "total passive drift" overclaim). Their two linking articles now point at the GitHub source.
+  The two policy pages were reviewed against the code and carry open p3 findings tracked in #4691.
+- Validation: `pytest tests/test_claim_audit_inventory.py tests/test_check_quarto_render_coverage.py`
+  (29 passed); `python -m scripts.check_quarto_render_coverage` passes.
+- Next: after merge, confirm Deploy Website is green on main, then reopen #4548 to audit
+  each bibliography route before re-adding the render rule.
+
 # Implementation Handoff — Short On-Ramp Learning Paths (#4492)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
