@@ -229,8 +229,14 @@ test.describe("Accessibility", () => {
       const cspErrors = consoleErrors.filter((text) =>
         /content security policy|refused to (connect|load)/i.test(text),
       );
+      // net::ERR_ABORTED is routine navigation noise (a request Chromium
+      // cancels because the page moved on, e.g. lazy-loaded assets orphaned
+      // by scrollBy above) — not evidence of a CSP or asset failure.
+      const realFailedRequests = failedRequests.filter(
+        (text) => !/net::ERR_ABORTED/.test(text),
+      );
       expect(cspErrors, `${route} CSP violations`).toEqual([]);
-      expect(failedRequests, `${route} failed asset requests`).toEqual([]);
+      expect(realFailedRequests, `${route} failed asset requests`).toEqual([]);
     }
   });
 

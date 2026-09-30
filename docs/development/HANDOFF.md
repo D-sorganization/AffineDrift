@@ -24,18 +24,31 @@
   installed in this worktree environment.
 - Filed findings and a manual test protocol at
   `docs/development/math-accessibility-verification-4565.md`.
+- **CI review found a real bug, fixed here:** the new E2E test's first CI run
+  failed for real — `/articles/theory-part1.html` (and the other math-heavy
+  pages) still had Pandoc's legacy `cdnjs.cloudflare.com` ES6 polyfill script
+  tag in `docs/`, which `script-src` blocks. `scripts/prune_internal_docs_from_deploy.py`
+  already strips that tag, but `ci-standard.yml`'s `e2e-tests` job only ran
+  the prune step *after* Playwright, so the un-pruned render is what
+  Playwright actually tested. Fixed by moving the prune call into the "Sync
+  Frontend Assets" step, before Playwright runs; the CSP was not widened.
+  Also fixed a dead regex in the new `mathjax-loader.test.js` test
+  (`speechrulengine` typo never matched anything) and made the new
+  Playwright test tolerate `net::ERR_ABORTED` navigation noise instead of
+  failing on any failed request.
 - **Blocked:** the issue's first acceptance criterion requires an actual
   NVDA or VoiceOver screen-reader run with recorded results — a
   human-in-the-loop verification step (no screen reader installed here, no
   human available to transcribe speech output). See "What Could Not Be
   Verified" in the findings doc for the manual protocol a human tester
-  should follow to close it. No production code changed; this is a
-  `type:test` issue.
-- No production files changed. `_includes/site-head.html` and
-  `_includes/mathjax-loader.html` are unmodified.
+  should follow to close it. This is a `type:test` issue.
+- `_includes/site-head.html` and `_includes/mathjax-loader.html` are
+  unmodified; the one production-adjacent change is the `ci-standard.yml`
+  step-ordering fix above.
 - Validation commands run in this worktree:
   - `npm ci` (node_modules was absent in this worktree).
   - `npx jest` → 26 suites passed, 432 passed / 19 skipped, 0 failed.
+  - `python -c "import yaml; yaml.safe_load(open('.github/workflows/ci-standard.yml'))"` → valid.
   - `npx playwright test tests/e2e/accessibility.spec.js --list` → new test
     registers correctly across all 5 configured browser projects (40 total
     entries); full run deferred to CI (requires a full site render).
