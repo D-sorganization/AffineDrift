@@ -53,53 +53,59 @@
 # Implementation Handoff — Resolve Passive/Active Nomenclature Conflict (#4529)
 # Implementation Handoff — Plain-Language Summary and Key Takeaways Block (#4508)
 # Implementation Handoff — Correct Learning-Path Contradictions and Chapter References (#4493)
+# Implementation Handoff — Build the Page Header Card Component (#4507)
 
 ## Identity
 
 - Repository: D-sorganization/AffineDrift
 - Working directory: C:/Users/diete/Repositories/AffineDrift
-- Branch: fix/web-01-8-learning-path-contradictions-4493
-- Baseline commit: c72f59e19661f237583ee91e92d2740fffc4c94b
-- Implementation commit: SELF
-- Pull request: #4634
-- Governing issue/epic: #4493
+- Branch: feat/web-03-2-page-header-card-4507
+- Baseline commit: c72f59e145bbb7623293ea5ba7410e12f7d077ee
+- Implementation commit: c945531c
+- Pull request: #4633
+- Governing issue/epic: #4507 (epic #4514)
 
 ## Objective and Status
 
-- Objective: Correct learning-path difficulty contradictions, prerequisites, and chapter references across AffineDrift learning path pages.
+- Objective: Build the Page Header Card Component driven purely from front matter (status/maturity, audience level, reading-time estimate, prerequisites, publication/review dates, and citation links), using accessible `<dl>` markup with text-carrying badges, print styling, and resolving the reading-time policy conflict.
 - Status: ready for review / auto-merge
 - Completed:
-  - Created single source of truth in `config/learning_paths.yml` specifying duration, weeks, difficulty, and prerequisites.
-  - Aligned `resources/learning-paths.qmd` Quick Navigation table with individual path pages (Control Theory to Advanced, Golf Science to Introductory to Intermediate).
-  - Fixed prerequisite contradiction in `resources/learning-path-foundations.qmd` ("No prerequisites assumed" replaced with "Assumes only high school algebra and trigonometry").
-  - Consolidated duplicate 3Blue1Brown reading entry in Foundations Module 1.
-  - Linked Golf Science Module 1 to exact target chapters (ch28 impact, ch19 drag, ch31 launch) instead of generic "Chapters 1–3".
-  - Aligned Biomechanics schedule to 16 weeks and removed Module 7 / Module 8 week overlap.
-  - Added comprehensive test suite in `tests/test_learning_paths.py` (7 tests).
-  - Regenerated claim audit evidence in `data/trust/claim_audit_inventory.json` and verified with `python -m scripts.regenerate_claim_audit_evidence --check`.
+  - Created `scripts/filters/page-header-card.lua` Pandoc Lua filter rendering accessible `<dl>` with `<dt>` and `<dd>` pairs and text-carrying badges.
+  - Created `css/components/page-header-card.css` component stylesheet and registered in `styles.css`.
+  - Added print styling in `css/print.css`.
+  - Registered Lua filter in `_quarto.yml`.
+  - Resolved reading-time estimate policy conflict in `books/roadmap.qmd` and `js/accessibility.js`.
+  - Added Jest test suite in `tests/page-header-card.test.js` (5 passed).
+  - Added TDD integration and unit tests in `tests/test_page_header_card.py` (11 passed).
+  - Regenerated claim audit evidence digests and verified all pre-commit checks.
   - Added change-log row in `SPEC.md`.
-- Remaining: Commit, create PR, arm auto-merge, and release lease.
+- Remaining: Monitor PR #4633 CI and auto-merge into main.
 
 ## Files and Decisions
 
 - Files changed:
-  - `config/learning_paths.yml`: Created single source of truth for learning path metadata.
-  - `resources/learning-paths.qmd`: Updated Quick Navigation difficulty ratings to match detailed path pages.
-  - `resources/learning-path-foundations.qmd`: Fixed subtitle prerequisite contradiction and removed duplicate 3Blue1Brown entry.
-  - `resources/learning-path-golf-science.qmd`: Updated Module 1 reading to link to chapters 28, 19, and 31.
-  - `resources/learning-path-biomechanics.qmd`: Updated subtitle to 16 weeks and Module 8 to Weeks 15–16.
-  - `tests/test_learning_paths.py`: Added consistency and reference regression tests.
-  - `data/trust/claim_audit_inventory.json`: Updated review evidence digest for modified learning-path-biomechanics.qmd.
-  - `SPEC.md`: Added change-log entry for #4493.
+  - `scripts/filters/page-header-card.lua`: Component Lua filter.
+  - `css/components/page-header-card.css`: Responsive grid card styles with accessible contrast and semantic badges.
+  - `css/print.css`: Print rules avoiding page breaks inside header card.
+  - `styles.css`: Component `@import`.
+  - `_quarto.yml`: Filter registration.
+  - `books/roadmap.qmd`: Policy resolution distinguishing heuristic reading-time estimates from empirical evidence.
+  - `js/accessibility.js`: Explicit "(estimate)" label on reading time.
+  - `tests/page-header-card.test.js`: Jest unit test suite.
+  - `tests/test_page_header_card.py`: Python Quarto integration test suite.
+  - `SPEC.md`: PR change-log row.
   - `docs/development/HANDOFF.md`: Updated durable handoff state.
-- Key decisions: Single source of truth in YAML keeps hub table and individual path pages synchronized; hours/hrs format normalized in tests.
+- Key decisions: Pure front-matter driven component; accessible `<dl>` structure; badges carry explicit text and never rely on color alone; reading-time explicitly qualified as an estimate.
 - User-owned or unrelated worktree changes: none observed
 
 ## Validation
 
-- `pytest tests/test_learning_paths.py` — PASS (7 passed)
-- `python -m ruff check tests/test_learning_paths.py` — PASS
-- `python -m black --check --line-length 100 tests/test_learning_paths.py` — PASS
+- `npm test tests/page-header-card.test.js` — PASS (5 passed)
+- `pytest tests/test_page_header_card.py` — PASS (11 passed)
+- `python scripts/check_css_architecture.py` — PASS
+- `python scripts/check_spec_changelog.py` — PASS
+- `python -m ruff check tests/test_page_header_card.py` — PASS
+- `python -m black --check --line-length 100 tests/test_page_header_card.py` — PASS
 - `python -m scripts.regenerate_claim_audit_evidence --check` — PASS
 - `python scripts/check_spec_changelog.py` — PASS
 
@@ -110,8 +116,7 @@
 
 ## Next Steps
 
-1. Verify PR #4634 mergeability and arm auto-merge.
-2. Release claim lease.
+1. Monitor PR #4633 CI and auto-merge into main.
 
 ## Change Log
 
