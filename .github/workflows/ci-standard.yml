@@ -339,6 +339,20 @@ jobs:
           name: matlab-quality-report
           path: matlab_quality_report.txt
 
+      - name: Readability Check (Advisory)
+        # WEB-12.5: Flesch-Kincaid grade level for lay blocks, summary-plain,
+        # and hub pages against the WEB-12.1 threshold. Non-blocking until
+        # WEB-12.4's rewrite pass brings hub pages under grade 10.
+        continue-on-error: true
+        run: python3 -m scripts.check_readability --report readability-report.json
+
+      - name: Upload Readability Report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: readability-report
+          path: readability-report.json
+
   tests:
     needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
