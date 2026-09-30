@@ -22,14 +22,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex-luna-affine4688-20260930
-- **PR:** not created; local candidate awaits root review
+- **PR:** #4713 (draft); blocked by current-main #4709 merge conflicts; root review/decision pending
 - **Issue:** #4688 (red main deployment route coverage)
-- **Branch:** `fix/luna-deploy-route-4688` (integrated current main `4f798475c2b086ed147d1932429a8cc750f0f645`)
+- **Branch:** `fix/luna-deploy-route-4688` (based on `4f798475c2b086ed147d1932429a8cc750f0f645`; target main advanced to `984552e` with #4709)
 - **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (source-derived route regression RED/GREEN; focused audit/public-manifest contracts 44 passed; latest-main merge preserves all 249 main inventory records and adds the missing route; focused contracts, source coverage, canonical freshness, and local publication checks pass; preserved v2 manifest audit applies only to old revision 3471f7d; current-main render pending; historical native exit remains unknown)
 - **Summary:** Adds a reviewed record for the already-public `/models/dataset-explorer.html` route and a regression asserting exact source-derived route coverage. The record treats JSON schema checks as structural, population inputs as manufactured synthetic, and ZTCF/proximal-distal artifacts as model-level; it makes no human/population validation claim and preserves open finding #4695. The separate #4694 workflow publication-gate design is out of scope.
-- **Next step:** Root publication decision after green PR CI render and root-verified manifest-bound publication evidence for this exact candidate; then verify merged-main deploy before closing #4688.
+- **Next step:** Root direction on draft PR #4713 current-main conflict/no-run state; then green candidate render plus root-verified manifest-bound publication evidence and merged-main deploy before closing #4688.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
