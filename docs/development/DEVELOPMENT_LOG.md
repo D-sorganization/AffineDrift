@@ -30,6 +30,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (SELF: reworked after review blocked the original mechanical-merge draft. `python3 scripts/check_bibliography_cross_file.py` reports 163 keys shared across files, 0 disagreeing, 0 CI-flagged duplicate DOIs (82 raw shared-DOI groups exist pre-exemption, mostly legitimate per-book copies — see PR #4676 for the list); `pytest tests/test_check_bibliography_cross_file.py` 18/18; `python3 -m scripts.check_citation_resolution`, `python3 -m scripts.check_qmd_citation_keys`, and `scripts/check_latex_structure.py` (pre-existing, already CI-wired citation-resolution checks) all pass clean against the reverted tree; `ruff check .` and `black --check --line-length 100 .` clean.)
 - **Summary:** Reworked after review blocked the original mechanical dedupe: that merge broke the locked `proximal_distal_energy_transfer` article, touched an owner-sign-off-gated book audit ledger, deleted citation keys still in use, and silently renamed a key. All of that is reverted to `origin/main` byte-for-byte. What ships instead: `proximal_distal_energy_transfer/references.bib` added to `STANDALONE_LINKED` (it is `index.qmd`'s sole `bibliography:` override) and `clark2013whatever` fixed to the `@article`/*Behavioral and Brain Sciences*/Cambridge University Press record it actually is everywhere it appears. No new citation-resolution test was added: `scripts/check_citation_resolution.py`, `scripts/check_qmd_citation_keys.py`, and `scripts/check_latex_structure.py` already do exactly that (CI-gated, all currently passing), so writing a parallel implementation would have duplicated working infrastructure. The 82 raw duplicate-DOI groups the mechanical merge would have addressed are left in place; most are legitimate copies across `STANDALONE_LINKED` files, and the CI check does not flag any of them as violations.
 - **Next step:** Owner/frontier review of the reworked draft PR #4676; mark ready and merge once approved.
+### DL-#4504 · Configure Search, and Include Maturity in Results
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet (draft PR to be opened this session)
+- **Issue:** #4504 (WEB-02.10; epic #4514)
+- **Branch:** `claude/issue-4504`
+- **Paths:** `_quarto.yml`, `_includes/site-head.html`, `js/search-maturity-badge.js`, `scripts/generate_search_maturity_index.py`, `css/search-metrics.css`, `articles/zero-torque-counterfactual.qmd`, `.github/workflows/deploy-website.yml`, `tests/e2e/search.spec.js`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: `npx jest` 441 passed/19 skipped; `pytest --timeout=120 -q` all passed; ruff/black clean; `check_spec_changelog` and `regenerate_claim_audit_evidence --check` pass. Full-site Playwright E2E not run locally — `quarto render` is blocked in this sandbox; CI's `e2e-tests` job validates the new ZTCF search spec.)
+- **Summary:** Configures an explicit Quarto `search:` block (overlay, limit 10, `/`/`s` shortcut), removes the unverified `SearchAction` JSON-LD (its target was never implemented), and injects the page-header-card maturity badge into matching search results via a generated `search-maturity.json` index and a client-side DOM-annotation module.
+- **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job confirm the new "ZTCF" search spec passes against the real full-site render.
 ### DL-#4535 · DCR Visualiser Widget
 
 - **State:** in_review

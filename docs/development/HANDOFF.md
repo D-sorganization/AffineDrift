@@ -113,6 +113,96 @@
   diff was performed.
 - Next steps: reworked draft PR #4676 is open with the honest remaining-scope disclosure in its
   body; awaiting owner/frontier review.
+# Configure Search, and Include Maturity in Results — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4504`.
+- Branch `claude/issue-4504`, commit `SELF`; pull request: to be opened this session (draft).
+- Governing issue: #4504 (WEB-02.10, part of epic #4514). Objective: configure an explicit
+  Quarto `search:` block, fix or remove the unverified `SearchAction` JSON-LD, and show the
+  page-header-card maturity badge on matching search results.
+- Completed work:
+  - `_quarto.yml`: added an explicit `website.search` block (`type: overlay`, `limit: 20` — Quarto's default, so deep
+    monograph results stay reachable —
+    `keyboard-shortcut: ["/", "s"]`) — search previously ran on unconfigured Quarto defaults.
+  - `_includes/site-head.html`: removed the JSON-LD `SearchAction` sub-object, which pointed at
+    `https://affinedrift.com/?q={search_term_string}` — a target the site does not implement
+    (Quarto's search is a client-side overlay, not a query-string-driven page). The rest of the
+    `WebSite` JSON-LD schema is unchanged.
+  - `js/search-maturity-badge.js` (new): a self-initializing client module that fetches a
+    committed `/data/search-maturity.json` map and annotates matching `.search-result-doc` entries
+    with the same `.badge.badge--maturity.badge--<variant>` markup
+    `scripts/filters/page-header-card.lua` renders on the page itself, using a
+    `MutationObserver` since Quarto's search overlay renders results asynchronously.
+  - `scripts/generate_search_maturity_index.py` (new): scans `status`/`maturity` front matter
+    across the same content directories as `generate_sitemap.py` and writes the href → 
+    `{label, variant}` map consumed by the JS module above to the committed
+    `data/search-maturity.json` (a Quarto resource). `--check` and a freshness pytest keep it
+    current; no deploy-workflow change (the file is `{}` until pages declare a maturity).
+  - `css/search-metrics.css`: appended badge placement/spacing rules for the injected badge
+    inside `.search-result-title-container`.
+  - `articles/zero-torque-counterfactual.qmd`: titled it "Zero-Torque Counterfactual (ZTCF) Family" (the family
+    qualifier satisfies the ZTCF first-use rule)
+    so the page ranks first for a "ZTCF" search query (many other pages mention ZTCF in body
+    headings, but none had it in the title). No maturity status was added: no page carries a
+    `status`/`maturity` field yet, and assigning one is an editorial decision, not a test fixture.
+  - `scripts/sync_frontend_assets.py`: registered `search-maturity-badge.js` in
+    `CANONICAL_JS_NAMES`.
+  - `tests/e2e/search.spec.js`: added a Playwright test asserting a "ZTCF" search returns the
+    ZTCF page first. The "with its badge" half of acceptance criterion #1 stays open until the
+    owner assigns real maturity states; badge injection is covered by the Jest fixtures.
+  - `tests/search-config.test.js`, `tests/search-maturity-badge.test.js`,
+    `tests/test_generate_search_maturity_index.py` (all new): unit coverage for the search
+    config block, the SearchAction removal, the badge-injection module (9 tests), and the
+    index generator (7 tests).
+  - Regenerated pinned evidence digests in `data/trust/claim_audit_inventory.json`,
+    `data/trust/generated/claim_audit_report.json`, and `data/trust/site_trust_surface_audit.json`
+    via `scripts/regenerate_claim_audit_evidence.py`, since editing `_quarto.yml` and the ZTCF
+    `.qmd` invalidated their previously-pinned SHA-256 evidence hashes.
+  - Keyed SPEC.md change-log row to #4504.
+- Key decisions:
+  - Removed the `SearchAction` rather than fixing its target, since the acceptance criterion
+    accepts either and Quarto's overlay search has no server-side query-string endpoint to
+    point it at; fabricating one would be a bigger, out-of-scope change.
+  - The maturity badge could not be added through Quarto's own search-result templating (no
+    such hook exists), so it is applied client-side against the search overlay's DOM, mirroring
+    the badge markup/CSS already shipped for page headers by #4507 rather than inventing new
+    badge styling.
+  - "Index the glossary" (issue's proposal bullet) needed no new mechanism: `pages/glossary.qmd`
+    already renders as a normal page with no search exclusions, so it is already indexed by
+    Quarto's default `search.json` generation.
+- Compatibility constraints: none — additive JSON-LD removal and new generated asset; no
+  existing route, API, or schema changed shape.
+- Validation commands and outcomes:
+  - `npx jest` → 28 suites, 441 passed, 19 skipped, 0 failed.
+  - `python3 -m pytest --timeout=120 -q` → all passed (only pre-existing environment skips).
+  - `python3 -m ruff check .` → clean.
+  - `python3 -m black --check --line-length 100 .` → clean.
+  - `python3 -m scripts.check_spec_changelog` → passed.
+  - `python3 -m scripts.regenerate_claim_audit_evidence --check` → "claim-audit evidence digests
+    and reports are current".
+  - `python3 -m scripts.check_css_architecture`, `check_module_size_budget`,
+    `check_tech_debt_budget`, `check_contract_coverage`, `check_js_dependency_boundaries` → all
+    passed.
+  - **Not run locally:** `quarto render` and `npx playwright test` (quarto CLI is blocked in
+    this sandbox). The new `tests/e2e/search.spec.js` case ("finds the ZTCF page first, with its
+    maturity badge") is reasoned through by code inspection against Quarto's search-overlay DOM
+    structure but has not executed against a real rendered site — CI's `e2e-tests` job is the
+    first actual execution; check its result on the opened PR.
+- Blockers/risks: none identified. If CI's `e2e-tests` job fails the new search spec, the next
+  step is to inspect the Playwright trace/video artifact — the DOM selectors used
+  (`.search-result-doc .search-result-link`, `.search-result-title-container`) were
+  reverse-engineered from git history of the vendored `quarto-search.js` and may need
+  adjustment if the installed Quarto version's search markup differs.
+- Spotted but not fixed (out of scope, per "Spotted ≠ fix"): running the full pytest suite
+  repeatedly regenerates unrelated drift in `_includes/generated/research-releases-summary.qmd`,
+  `data/trust/generated/research_releases_registry.json`, and
+  `data/trust/generated/reader_validation_study.json` (a `generated_on` timestamp bump plus
+  JSON reformatting) — reverted with `git checkout --` before committing so this PR's diff stays
+  surgical to #4504; this looks like a pre-existing non-determinism in one of those generators,
+  unrelated to this change.
+- Next steps: push the branch, open the draft PR, and watch CI's `e2e-tests` job for the new
+  ZTCF search spec.
 # DCR Visualiser Widget — #4535 (WEB-06.5)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
