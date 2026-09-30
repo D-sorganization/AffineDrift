@@ -1,3 +1,97 @@
+# Performance of MathJax-Heavy Pages — #4577 (WEB-10.9)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4577
+- Branch: claude/issue-4577
+- Baseline commit: 3bf09e7778aaf4e8f4e9ec99c0955f1f546c34e2
+- Implementation commit: `SELF`
+- Pull request: to be opened as a draft by this session
+- Governing issue/epic: #4577 (WEB-10.9, part of epic #4579 "[E10] Performance, SEO, and Privacy")
+
+## Objective and Status
+
+- Objective: the issue proposes evaluating either (a) a smaller MathJax component build (TeX
+  input + CHTML output only) or (b) build-time pre-rendering of static equations to SVG/MathML
+  for large chapters, measured before/after on the three heaviest chapters with no change in
+  rendering or accessibility.
+- Status: implemented option (a). Option (b) was evaluated and not implemented — see "Why
+  option (b) was not implemented" below.
+- Identified the three heaviest chapters by display/inline math delimiter density (`grep -c` over
+  `*.qmd` for `$$|\[|\(`, a reproducible proxy for MathJax rendering load per page):
+  `articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.qmd` (329),
+  `articles/The_Geometry_of_Motion/quarto/volume2_content.qmd` (284), and
+  `articles/superposition.qmd` (190).
+- Changed `_includes/mathjax-loader.html` (the single gated/lazy MathJax loader used by every
+  Quarto-rendered page per #3332-A) to request `tex-chtml.js` instead of `tex-mml-chtml.js`, with
+  a re-pinned SRI hash. `tex-mml-chtml.js` additionally bundles the MathML *input* jax; Quarto only
+  ever emits TeX delimiters into `.math` spans (confirmed by reading the loader's own
+  `adPageHasMath()` detection and every `.qmd` source's math syntax), so that input parser was
+  dead weight on every math-bearing page, including the three heaviest chapters above (they all
+  load the exact same shared script).
+- Measured before/after directly against the pinned jsDelivr CDN URLs (reproducible with
+  `curl -s -o /dev/null -w '%{size_download}'` against each URL for raw bytes, and the same
+  command with `--compressed` added for gzip transfer size):
+  - `tex-mml-chtml.js` (before): 1,173,007 bytes raw; 264,567 bytes gzip transfer.
+  - `tex-chtml.js` (after): 1,160,989 bytes raw; 261,828 bytes gzip transfer.
+  - Delta: −12,018 bytes raw (−1.0%), −2,739 bytes gzip transfer (−1.0%) on every page that loads
+    MathJax, cached after the first load site-wide.
+- No change in rendering or accessibility: both bundles include the `assistive-mml` a11y extension
+  (verified by string search on both downloaded bundles), which is what `enableAssistiveMml: true`
+  in the loader's `MathJax` config activates; the removed component is exclusively the MathML
+  *input* parser, which this site's TeX-only content never invokes. CHTML output, TeX input syntax,
+  macros, and the existing lazy-typesetting (`ui/lazy`) behavior are all unchanged.
+- **Why option (b) (build-time SVG/MathML pre-rendering) was not implemented:** it would need a new
+  build step (either a Quarto post-processor or swapping `html-math-method` for a subset of
+  "large" chapters), a definition of which chapters qualify, and re-verification that pre-rendered
+  markup preserves the existing `enableAssistiveMml` screen-reader behavior and the lazy lookup this
+  repo relies on (#3332-A, `ui/lazy`) — none of which the issue specifies, and getting any of it
+  wrong risks a real accessibility or rendering regression on the heaviest, most math-dense
+  chapters. That is a contested architecture/design decision (`tier:strong` territory per
+  `AGENTS.md`'s Agent Tiers matrix — "architecture ... anything unclear" — not the well-specified,
+  low-risk mechanical swap that `tier:cli` covers), not something to guess at. Recommended as a
+  follow-up issue if the ~1% savings from option (a) alone do not meet the epic's performance
+  budget (#4570, WEB-10.1).
+- Also spotted, not fixed (out of scope for this issue): `_templates/latex_article.html` (a
+  separate, unrelated ad hoc LaTeX→HTML conversion tool, not part of the Quarto site or the three
+  heaviest chapters) loads the same `tex-mml-chtml.js`/hash pair without the gating this loader has;
+  and the loader's `MathJax.svg: { fontCache: 'global' }` config block is currently unused dead
+  configuration since the output jax is CHTML, not SVG, in both the old and new bundle. Neither is
+  touched here since neither traces to this issue's acceptance criteria.
+
+## Validation
+
+- TDD: `tests/mathjax-loader.test.js` — added
+  `loads the smaller TeX-input + CHTML-output component build (#4577)`, confirmed RED against the
+  pre-change `tex-mml-chtml.js` source, then GREEN after the change.
+- `npx jest tests/mathjax-loader.test.js` — 10 passed.
+- `npx jest` (full suite) — 26 suites, 432 passed, 19 skipped, 0 failed.
+- `python3 -m ruff check .` — all checks passed.
+- `python3 -m black --check --line-length 100 .` — 748 files unchanged.
+- **Not run:** `quarto render` / Playwright E2E (blocked by this session's sandbox permission
+  policy, consistent with prior sessions' notes in this file) — the existing
+  `tests/e2e/article.spec.js` assertion `script[src*="mathjax"][src*="/es5/tex-"]` count === 1
+  already matches either bundle filename, so it is expected to keep passing under CI's real
+  Quarto-rendered E2E run, but that run is the first actual execution against a live page.
+
+## Blockers and Risks
+
+- Blockers: none.
+- Risk: none to rendering or accessibility — see "No change in rendering or accessibility" above.
+  The ~1% size reduction is modest; if the epic's performance budget needs more, the follow-up
+  above proposes the larger pre-rendering option as separate `tier:strong` work.
+
+## Next Steps
+
+1. Push the branch and open the draft PR referencing `Fixes #4577`; release the fleet lease.
+2. Frontier review reads CI's `e2e-tests` run as the real MathJax-rendering evidence for the three
+   heaviest chapters, since this session could not render the site locally.
+3. If the epic's performance budget (#4570) still isn't met after this lands, open the recommended
+   `tier:strong` follow-up for build-time SVG/MathML pre-rendering.
+
+---
+
 # Datasets Page Rebuild — #4549 (WEB-07.7)
 
 - Repository: `D-sorganization/AffineDrift`, worktree
