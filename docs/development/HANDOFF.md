@@ -5,8 +5,8 @@
 - Repository: D-sorganization/AffineDrift
 - Branch: fix/web-02-6-hide-mark-or-retire-stub-hubs-4500
 - Baseline commit: 543a9f02 (origin/main)
-- Implementation commit: SELF
-- Pull request: TBD
+- Implementation commit: 67256799
+- Pull request: #4664 (https://github.com/D-sorganization/AffineDrift/pull/4664)
 - Governing issue: #4500 (WEB-02.6)
 
 ## Objective and Status
