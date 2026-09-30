@@ -15,6 +15,7 @@ Exit codes:
 
 import argparse
 import ipaddress
+import json
 import re
 import socket
 import sys
@@ -30,6 +31,19 @@ class NoRedirectHandler(HTTPRedirectHandler):
         return None
 
 
+class SafeRedirectHandler(HTTPRedirectHandler):
+    """Follow redirects, but only to hosts that pass the SSRF safety check.
+
+    DOI links resolve to their target through an HTTP redirect by design, so
+    they must follow it (unlike other external links) to be checked at all.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl) -> "Request | None":
+        if not is_safe_url(newurl):
+            return None
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 # Configuration
 INTERNAL_REF_PATTERN = r"@(sec|fig|eq|tbl|lst|exr)-[\w-]+"
 EXTERNAL_URL_PATTERN = r"https?://[^\s\)\]\}]+"
@@ -38,6 +52,7 @@ KNOWN_FRAGILE_URLS = {
     "arxiv.org",
     "stackoverflow.com",
 }
+DOI_DOMAIN = "doi.org"
 TIMEOUT = 5
 MAX_RETRIES = 2
 RETRY_DELAY = 1
@@ -98,6 +113,17 @@ def find_ref_definitions(root_dir: str) -> set[str]:
     return defined_refs
 
 
+def is_doi_url(url: str) -> bool:
+    """Return True for DOI resolver links (doi.org, dx.doi.org, ...)."""
+    hostname = (urlparse(url).hostname or "").lower()
+    return hostname == DOI_DOMAIN or hostname.endswith(f".{DOI_DOMAIN}")
+
+
+def archive_org_suggestion(url: str) -> str:
+    """Build a Wayback Machine lookup link to suggest as a fallback for a dead URL."""
+    return f"https://web.archive.org/web/*/{url}"
+
+
 def is_safe_url(url: str) -> bool:
     """Check if a URL is safe from SSRF by validating the hostname."""
     try:
@@ -145,7 +171,12 @@ def validate_url(url: str, retries: int = MAX_RETRIES) -> tuple[bool, str]:
     # Fragile URLs get more lenient handling
     is_fragile = any(d in domain for d in KNOWN_FRAGILE_URLS)
 
-    opener = build_opener(NoRedirectHandler())
+    # DOI links resolve to their target via a redirect by design, so follow
+    # it (safety-checked hop by hop) instead of treating the 30x as broken.
+    if is_doi_url(url):
+        opener = build_opener(SafeRedirectHandler())
+    else:
+        opener = build_opener(NoRedirectHandler())
     for attempt in range(retries):
         try:
             req = Request(url, headers={"User-Agent": "Link-Checker/1.0"})  # nosec B310
@@ -182,10 +213,10 @@ def check_file(
     defined_refs: set[str],
     external_only: bool = False,
     internal_only: bool = False,
-) -> tuple[list[str], list[str]]:
+) -> tuple[list[str], list[dict[str, str]]]:
     """Check a single file for broken references and URLs."""
-    errors = []
-    warnings = []
+    errors: list[str] = []
+    warnings: list[dict[str, str]] = []
 
     try:
         with open(file_path, encoding="utf-8", errors="ignore") as f:
@@ -204,7 +235,14 @@ def check_file(
             for url in urls:
                 is_valid, reason = validate_url(url)
                 if not is_valid:
-                    warnings.append(f"{file_path}: Invalid URL: {url} ({reason})")
+                    warnings.append(
+                        {
+                            "file": str(file_path),
+                            "url": url,
+                            "reason": reason,
+                            "archive_suggestion": archive_org_suggestion(url),
+                        }
+                    )
 
     except Exception as e:
         errors.append(f"{file_path}: Error reading file: {e}")
@@ -232,6 +270,10 @@ def main() -> None:
         "--site-gate",
         action="store_true",
         help="Run the cross-page site gate (#3899): link resolution, related coverage, chapter bridges, orphans, path style, categories",
+    )
+    parser.add_argument(
+        "--json-report",
+        help="Write warnings (file, url, reason, archive_suggestion) as JSON to this path",
     )
     args = parser.parse_args()
 
@@ -286,6 +328,9 @@ def main() -> None:
         all_errors.extend(errors)
         all_warnings.extend(warnings)
 
+    if args.json_report:
+        Path(args.json_report).write_text(json.dumps(all_warnings, indent=2), encoding="utf-8")
+
     # Report results
     if all_errors:
         print("ERRORS (critical):", file=sys.stderr)
@@ -295,7 +340,10 @@ def main() -> None:
     if all_warnings:
         print("WARNINGS (non-critical):", file=sys.stderr)
         for warning in all_warnings[:10]:  # Limit to first 10
-            print(f"  WARN {warning}")
+            print(
+                f"  WARN {warning['file']}: Invalid URL: {warning['url']} "
+                f"({warning['reason']}) - archive.org: {warning['archive_suggestion']}"
+            )
         if len(all_warnings) > 10:
             print(f"  ... and {len(all_warnings) - 10} more warnings")
 

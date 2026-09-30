@@ -221,6 +221,16 @@ jobs:
         run: |
           python3 scripts/check_terminology.py \
             --baseline config/terminology-baseline.json
+      - name: Verify Governance Vocabulary Stays Out of Reader Prose
+        # Reader-facing pages borrowed internal governance jargon -- governed,
+        # qualified, provenance, protected, fail-closed -- from the site's own
+        # critique/adjudication apparatus (#4588). Warn-mode while the corpus is
+        # still being remediated: continue-on-error is removed once the reader
+        # surfaces are clean, promoting this to a blocking gate.
+        continue-on-error: true
+        run: |
+          python3 scripts/check_governance_vocabulary.py \
+            --baseline config/governance-vocabulary-baseline.json
       - name: Verify Generated Worked Examples Are Fresh
         # Textbook worked examples that carry numbers are solved by code and
         # written as LaTeX fragments the chapters \input. Fails if a committed
