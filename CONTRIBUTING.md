@@ -213,8 +213,8 @@ def process_file(file_path: Path) -> dict[str, str]:
 - `.entry-list` (with `__item`, `__title`, `__dek`) for typographic link lists
 - `.provenance-note` for citation / scope-limitation asides
 - `.home-hero` for the home page only
-- `.status-banner` (`--info`, `--success`, `--warning`, `--exploratory`) for page-status callouts
-- `.status-pill` for inline labels
+- `.status-banner` (`--info`, `--warning`, `--exploratory`) for page-status callouts
+- `.status-badge` (`--available`, `--validated`, `--experimental`, `--planned`, `--deprecated`, `--opinion`) and `{{< status [state] >}}` shortcode for publication state labels (replaces legacy `.status-pill`)
 
 **Example:**
 
