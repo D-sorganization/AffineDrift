@@ -79,6 +79,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `npx jest` 26 suites passed, 432 passed/19 skipped, 0 failed; `npx playwright test tests/e2e/accessibility.spec.js --list` registers the new test across all 5 browser projects; YAML-validated `ci-standard.yml`; full Playwright run deferred to CI's `e2e-tests` job since Quarto is not installed in this worktree)
 - **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches — finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today — and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
 - **Next step:** A human tester runs the manual NVDA/VoiceOver protocol in the findings doc and records results on #4565.
+### DL-#4599 · Consolidate Inline "Recent" History Scripts
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4625
+- **Issue:** #4599 (`WEB-13.5`; epic #4604)
+- **Branch:** `claude/issue-4599`
+- **Paths:** `js/history.js`, `models/models-drake.qmd`, `models/models-mujoco.qmd`, `models/models-myosim.qmd`, `models/models-opensim.qmd`, `models/models-pendulum.qmd`, `models/models-pinocchio.qmd`, `models/models-simulink.qmd`, `resources/resources-books.qmd`, `resources/resources-datasets.qmd`, `resources/resources-notebooklm.qmd`, `resources/resources-papers.qmd`, `resources/resources-researchers.qmd`, `resources/resources-software.qmd`, `resources/resources-videos.qmd`, `resources/resources-websites.qmd`, `tests/history.test.js`, `tests/home.test.js`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (`npx jest`: 27 suites, 445 passed, 19 pre-existing skips; `ruff check .` clean; `black --check --line-length 100 .` clean.)
+- **Summary:** Replaces the 15 duplicated inline localStorage "Recent X" widgets with a shared `initCategoryHistory()` in `js/history.js` for the 7 `models-*` pages (which genuinely track visits across a shared page set) and removes the widget entirely on the 8 `resources-*` pages (each only ever recorded its own page, so the feature showed nothing useful); adds first-ever Jest coverage for `history.js` and `home.js`.
+- **Next step:** Awaiting reviewer merge of #4625.
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review

@@ -337,6 +337,64 @@
   the manual protocol in `docs/development/math-accessibility-verification-4565.md`
   and records results as a comment on #4565 before that criterion can be
   checked off.
+# Consolidate Inline "Recent" History Scripts — #4599
+
+- Repository: `D-sorganization/AffineDrift`, working directory: worktree `AffineDrift-worktrees/claude-4599`.
+- Branch `claude/issue-4599`, commit `SELF`; pull request: [draft #4625](https://github.com/D-sorganization/AffineDrift/pull/4625).
+- Governing issue: #4599 (`WEB-13.5`, child of epic #4604 / E13), labeled `tier:cli`.
+- Objective: replace the 15 duplicated inline localStorage "Recent X" history
+  scripts across `models/models-*.qmd` and `resources/resources-*.qmd` with a
+  single shared implementation in `js/history.js`, or remove the widget where
+  it added nothing, per the issue's acceptance criteria.
+- What changed:
+  - `js/history.js`: added `initCategoryHistory()`, a shared category-scoped
+    "recently viewed" tracker; refactored `updateHistorySidebar()` and
+    `initArticleHistory()` to reuse new `createHistoryListItem()` /
+    `createExploreArticlesEmptyState()` helpers instead of duplicating list-item
+    and empty-state DOM construction.
+  - `models/models-{drake,mujoco,myosim,opensim,pendulum,pinocchio,simulink}.qmd`:
+    replaced each page's ~70-line duplicated inline `<script>` (all sharing the
+    `affinedrift_models_history` storage key and the same 8-page `MODEL_PAGES`
+    set) with a `<script type="module">` that imports and calls
+    `initCategoryHistory()`. Behavior is unchanged (same storage key, page set,
+    empty message, per-page fallback filename); only the implementation is
+    now shared.
+  - `resources/resources-{books,datasets,notebooklm,papers,researchers,software,videos,websites}.qmd`:
+    removed the "Recent X" sidebar widget and its inline script. Each of these
+    tracked only its own page under a page-unique storage key, so the widget
+    could never show anything but the page the visitor was already on — a
+    no-op feature, matching the issue's own diagnosis ("On the Datasets page
+    it records only the page itself"). Switched `.standard-page-layout` to the
+    existing `.standard-page-layout--single` two-column modifier (already
+    defined in `styles.css`, previously unused by any `.qmd`) so the grid
+    reflows to two columns instead of leaving an empty right column.
+  - Added `tests/history.test.js` (25 cases covering `updateHistorySidebar`,
+    `initArticleHistory`, `initCategoryHistory`) and `tests/home.test.js`
+    (covering `js/home.js`'s collapsible-sidebar toggle) — both modules
+    previously had zero Jest coverage, per the issue's second acceptance
+    criterion.
+- Validation:
+  - `npx jest` — 27 suites, 445 passed, 19 skipped (pre-existing, unrelated).
+  - `python3 -m ruff check .` — all checks passed (no Python changed).
+  - `python3 -m black --check --line-length 100 .` — no diffs.
+  - `python3 -m scripts.check_spec_changelog` — passed.
+  - Not run: `quarto render` / Playwright E2E / `verify-public-site-visual.js`
+    — full-site rendering is ~14 minutes per `CLAUDE.md` and wasn't required
+    to validate a markup/script consolidation; `verify-public-site-visual.js`'s
+    print-chrome check (`visible("#quarto-header, .left-sidebar, .right-sidebar")`)
+    is satisfied by any one of the three selectors matching, and `.left-sidebar`
+    is untouched on every affected page.
+- SPEC.md: added the `#4599` change-log row. No other SPEC/DEVELOPMENT_LOG
+  entries were touched besides `DL-#4599` below.
+
+## Next Steps
+
+1. None outstanding — acceptance criteria are met; awaiting reviewer merge.
+- Removing the inline history script dropped `resources/resources-notebooklm.qmd` to 258 prose
+  words, under the 300-word scaffolding threshold the script's text had been masking. Added a
+  short, accurate usage caveat (machine-generated notes; external Google service) rather than a
+  Planned badge, since the page is live content.
+
 # Implementation Handoff — Deploy Website route coverage (#4548 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-route-coverage`
