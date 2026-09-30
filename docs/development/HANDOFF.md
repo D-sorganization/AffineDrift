@@ -24,14 +24,15 @@
     `.github/workflows/deploy-website.yml` right after the RSS feed generation step.
   - `css/search-metrics.css`: appended badge placement/spacing rules for the injected badge
     inside `.search-result-title-container`.
-  - `articles/zero-torque-counterfactual.qmd`: added `status: reviewed` front matter (there was
-    no maturity value on this page before, so the badge had nothing to show) and added the
-    literal acronym "(ZTCF)" to the title so the page ranks first for a "ZTCF" search query
-    (many other pages mention ZTCF in body headings, but none had it in the title).
+  - `articles/zero-torque-counterfactual.qmd`: added the literal acronym "(ZTCF)" to the title
+    so the page ranks first for a "ZTCF" search query (many other pages mention ZTCF in body
+    headings, but none had it in the title). No maturity status was added: no page carries a
+    `status`/`maturity` field yet, and assigning one is an editorial decision, not a test fixture.
   - `scripts/sync_frontend_assets.py`: registered `search-maturity-badge.js` in
     `CANONICAL_JS_NAMES`.
   - `tests/e2e/search.spec.js`: added a Playwright test asserting a "ZTCF" search returns the
-    ZTCF page first with its "Reviewed" badge visible (issue's acceptance criterion #1).
+    ZTCF page first. The "with its badge" half of acceptance criterion #1 stays open until the
+    owner assigns real maturity states; badge injection is covered by the Jest fixtures.
   - `tests/search-config.test.js`, `tests/search-maturity-badge.test.js`,
     `tests/test_generate_search_maturity_index.py` (all new): unit coverage for the search
     config block, the SearchAction removal, the badge-injection module (9 tests), and the
