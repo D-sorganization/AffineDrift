@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-30 | #4492 | Add `resources/on-ramp-paths.qmd`: 5-minute, 30-minute, and 3-hour on-ramp reading sequences per persona, built from existing pages, each ending in a self-check question and answer (#4492). |
 | 2026-09-30 | #4564 | Add a nightly Firefox/WebKit E2E job running a representative route set, with deduplicated-by-title issue filing on failure (#4564). |
 | 2026-09-29 | #4608 | Add a website/UX problem GitHub issue template capturing page URL, viewport, theme, browser, and expected versus actual behaviour. |
 | 2026-09-29 | #4548 | Render the 22 orphaned per-article companion bibliographies via a new `articles/*-bibliography.md` render rule, add front matter, fix their two broken links, and document the pattern. |
@@ -447,6 +448,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
 | 2026-09-30 | #4541 | Add the Fixture and Dataset Explorer: a browser page that validates ZTCF, population-generalization, and proximal-distal fixtures against their published schemas, lists every field in an accessible table, and offers a live SHA-256 download digest. |
+| 2026-09-29 | #4547 | Restore the locked `proximal_distal_energy_transfer` article and audited book chapter untouched and fix `clark2013whatever`'s metadata; most of the mechanical bibliography merge was reverted on review, pre-existing CI citation-resolution checks already cover the regression risk, and 82 duplicate-DOI groups remain (see PR #4676). |
 | 2026-09-29 | #4504 | Configure explicit Quarto search (overlay, limit, keyboard shortcut), remove the unverified SearchAction JSON-LD, and show the page-header-card maturity badge on matching search results. |
 | 2026-09-30 | #4664 | Hide, mark, or retire stub hubs, add Planned badges, and enforce scaffolding styling policy (#4500, WEB-02.6). |
 | 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
