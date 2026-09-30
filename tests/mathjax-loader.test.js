@@ -93,6 +93,12 @@ describe('gated MathJax loader (#3332-A)', () => {
     expect(source).not.toMatch(/paths:\s*{\s*a11y:/);
   });
 
+  test('does not load the SRE-backed explorer module, which would need locale fetches the connect-src \'self\' CSP blocks (#4565)', () => {
+    const source = readLoaderSource();
+    expect(source).not.toContain('[a11y]/explorer');
+    expect(source).not.toMatch(/speech-?rule-?engine|sre-locales|a11y\/(explorer|speech|semantic-enrich)/i);
+  });
+
   test('publishes a deterministic ready state after initial typesetting', () => {
     const source = readLoaderSource();
     expect(source).toContain('defaultPageReady');
