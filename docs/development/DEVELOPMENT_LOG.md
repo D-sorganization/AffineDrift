@@ -30,6 +30,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
 - **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
 - **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
+### DL-#4592 · Consolidate the Manifesto
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created yet at this commit; opening a draft PR immediately after
+- **Issue:** #4592 (WEB-12.6; epic #4594; `tier:cli`, `complexity:routine`)
+- **Branch:** `claude/issue-4592`
+- **Paths:** `pages/drifter-manifesto.qmd`, `articles/drifter-manifesto.qmd`, `config/categories.yml`, `tests/test_editorial_and_consistency.py`, `data/trust/site_trust_surface_audit.json`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/site-trust-surface-audit.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (focused suites pass: editorial/consistency, trust-surface/claim-audit, page-style, manifesto rigor, formatting lints, site link gate; full suite passes with no failures; ruff/black clean; `regenerate_claim_audit_evidence --check` passes.)
+- **Summary:** Adds `opinion` to the controlled category vocabulary and recategorises both Manifesto pages from `critique`; declares `pages/drifter-manifesto.qmd` the canonical entry point and `articles/drifter-manifesto.qmd` an explicitly non-canonical, Opinion-labelled companion, without deleting either page's content (full retirement is WEB-02.4's own `tier:strong` ADR work).
+- **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review
