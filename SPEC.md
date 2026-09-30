@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-09-29 | #4640 | Enforce verified publication dates, zero date: today, date-source contract, and per-article revision history component (#4545). |
 | 2026-09-30 | #4658 | Enforce unique titles and 70-160 character meta descriptions across all pages (#4575). |
 | 2026-09-30 | #4563 | Remove nine of the ten `--grep-invert` E2E exclusions from `ci-standard.yml` whose defects were already fixed (#4200) but never actually re-run in CI; fix a touch-target test bug that miscounted CSS-hidden elements as non-compliant; leave the tenth (pixel-snapshot baselines) excluded pending a fleet-runner `--update-snapshots` pass. |
 | 2026-09-29 | #4588 | Add warn-mode CI lint and plain-language glossary keeping internal governance vocabulary out of reader-facing prose; partial reduction on hub/entry pages pending #4587 (#4588). |
@@ -438,6 +439,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
 | 2026-09-30 | #4596 | Report broken external links to a single weekly tracking issue, check DOI links through doi.org redirects, and suggest archive.org fallbacks for dead links. |
 | 2026-09-29 | #4504 | Configure explicit Quarto search (overlay, limit, keyboard shortcut), remove the unverified SearchAction JSON-LD, and show the page-header-card maturity badge on matching search results. |
+| 2026-09-30 | #4664 | Hide, mark, or retire stub hubs, add Planned badges, and enforce scaffolding styling policy (#4500, WEB-02.6). |
 | 2026-09-30 | #4665 | Create canonical How to Read This Site guide and consolidate publication states (#4491, WEB-01.6). |
 | 2026-09-30 | #4516 | Implement unified publication status badge component (WEB-04.2) with Quarto shortcode {{< status >}}, accessible SVG icons and text, WCAG AA contrast, and depth-aware links to publication states. |
 | 2026-09-30 | #4666 | Enforce 100% claim-audit route coverage for pages/glossary and pages/how-to-read, restoring green Deploy Website on main. |
