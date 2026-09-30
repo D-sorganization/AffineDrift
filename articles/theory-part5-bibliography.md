@@ -1,6 +1,11 @@
-# Bibliography for Affine Control Interpretation of the Golf Swing — Part 5: Simulink Model
+---
+title: "Bibliography for Affine Control Interpretation of the Golf Swing — Part 5: Simulink Model"
+description: "Companion bibliography for Part 5 of the AffineDrift theory series, on the Simulink model."
+---
 
-## A) Concept Map
+## Bibliography for Affine Control Interpretation of the Golf Swing — Part 5: Simulink Model
+
+### A) Concept Map
 
 - **Forward Dynamics Modeling**
 
@@ -24,7 +29,7 @@
   - **Numerical Identity**: $F_{\mathrm{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{input}}$ (at the freeze instant); the configuration-only slice is $F_{\mathrm{ZVCF}} = F_{\mathrm{drift}} - F_{\mathrm{vel.drift}}$.
   - **Trajectory Comparison**: Verifying that the model produces realistic clubhead speeds and kinematics.
 
-## B) Bibliography (YAML)
+### B) Bibliography (YAML)
 
 ```yaml
 - id: olson2024twohand
@@ -331,9 +336,9 @@
     - olson2024twohand
 ```
 
-## C) Reading Paths
+### C) Reading Paths
 
-### Path 1: Fast Ramp (Foundations)
+#### Path 1: Fast Ramp (Foundations)
 
 _Target: Understand the simulation context._
 
@@ -343,7 +348,7 @@ _Target: Understand the simulation context._
 4.  **Featherstone (2008)** - _Rigid Body Dynamics Algorithms_. The physics engine underlying the blocks.
 5.  **Spong et al. (2005)** - _Robot Modeling and Control_. The theoretical language.
 
-### Path 2: Deep Technical (Theory & Methods)
+#### Path 2: Deep Technical (Theory & Methods)
 
 _Target: Master the flexible MBD and stiff integration._
 
@@ -356,7 +361,7 @@ _Target: Master the flexible MBD and stiff integration._
 7.  **Lynch & Park (2017)** - _Modern Robotics_. Geometric insights.
 8.  **Meirovitch (2001)** - _Vibrations_. Modal analysis background.
 
-### Path 3: Implementation (Software & Validation)
+#### Path 3: Implementation (Software & Validation)
 
 _Target: Replicating the results._
 

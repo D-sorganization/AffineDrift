@@ -70,7 +70,7 @@ def test_provider_dependent_surfaces_fail_closed_with_governing_issues() -> None
         "AffineDrift/issues/4030",
     )
 
-    assert "Unavailable until governed evidence is pinned" in source
+    assert "Unavailable until reviewed evidence is pinned" in source
     for issue in (*provider_issues, *consumer_issues):
         assert issue in source, f"Missing governing issue link: {issue}"
 
