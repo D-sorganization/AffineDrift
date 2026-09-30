@@ -88,11 +88,29 @@ def process_html_content(content: str, html_path: Path) -> tuple[str, str | None
                 f"BibTeX citation: "
                 f'<a href="{bib_filename}" download="{bib_filename}" '
                 f'class="btn btn-sm btn-outline-secondary {download_marker}" '
-                f'style="margin-left: 0.5rem; text-decoration: none; font-size: 0.75rem;" '
+                f'style="margin-left: 0.5rem; text-decoration: none; font-size: 0.75rem; color: var(--text-primary); border-color: var(--color-neutral-400);" '
                 f'role="button">Download .bib</a>'
                 f"</div>"
             )
             content = BIBTEX_LABEL_PATTERN.sub(download_html, content, count=1)
+
+    # 5. Fix WCAG / axe-core aria-required-parent violation (WEB-09.1 #4561):
+    # Quarto emits <div id="ref-..." class="csl-entry quarto-appendix-citeas" role="listitem">
+    # without an enclosing element bearing role="list". Strip role="listitem" so the single
+    # standalone citation is a standard content container without an unsatisfied ARIA parent requirement.
+    if "quarto-appendix-citeas" in content and 'role="listitem"' in content:
+
+        def _strip_citeas_listitem(m: re.Match[str]) -> str:
+            tag = m.group(0)
+            return re.sub(r'\s+role="listitem"', "", tag, flags=re.IGNORECASE)
+
+        content = re.sub(
+            r'<div\s+[^>]*class="[^"]*quarto-appendix-citeas[^"]*"[^>]*>',
+            _strip_citeas_listitem,
+            content,
+            count=1,
+            flags=re.IGNORECASE,
+        )
 
     return content, bibtex_str
 
