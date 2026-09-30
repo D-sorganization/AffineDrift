@@ -1,3 +1,252 @@
+# Deduplicate and Reconcile Bibliography Databases — 2026-09-29
+
+- Repository: `D-sorganization/AffineDrift`, worktree
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4547`.
+- Branch `claude/issue-4547`, commit `SELF`; pull request:
+  #4676 (draft), https://github.com/D-sorganization/AffineDrift/pull/4676.
+- Governing issue: #4547 (WEB-07.5). Objective: zero duplicate keys/DOIs across the site's
+  bibliography databases, with rendered citations unchanged in meaning.
+- **Reworked 2026-09-29 after review blocked the original mechanical-merge draft.** The review
+  found the merge had: broken the locked `articles/proximal_distal_energy_transfer/` publication
+  source (its `references.bib` dropped from 100 to 24 entries); touched
+  `data/trust/book_publication_audit.json`, an owner-sign-off-gated ledger, and the book chapter it
+  audits; deleted citation keys still cited on live pages (`Penner2003`, `zajac1989determining`,
+  `sprigings2000insight`, `opensim_lib`, `Khalil2002`, `harris1998signal`, `khatib1987unified`,
+  `mackenzie2009three`, `marsden1999introduction`, `nesbit2005three`, `winter2009biomechanics`,
+  `featherstone2008rigid`, and others); silently renamed the Choi & Park grip-kinetics key to
+  `koike2020`; and mistyped `clark2013whatever` as a book when it is a *Behavioral and Brain
+  Sciences* journal article. All of that is reverted; see "Completed work" below for what ships
+  instead.
+- Completed work (post-rework):
+  - Restored `articles/proximal_distal_energy_transfer/` and
+    `data/trust/book_publication_audit.json` (plus the audited
+    `articles/The_Geometry_of_Motion/Volume_III/chapters/ch01_biology_vs_engineering.tex`) to
+    `origin/main` byte-for-byte via `git checkout <branch-point> -- <path>`, and likewise reverted
+    every other file the original merge had touched (all 8 `.bib` files, every renamed citation
+    site across `.qmd`/`.tex`/`*-bibliography.md`, and the `claim_audit_inventory.json`/
+    `claim_audit_report.json` digest refreshes) — confirmed by an exhaustive
+    `git diff --stat <branch-point>` showing only the files listed below differ from the branch
+    point.
+  - Added `articles/proximal_distal_energy_transfer/references.bib` to `STANDALONE_LINKED` in
+    `scripts/check_bibliography_cross_file.py`: `index.qmd` uses it as its sole `bibliography:`
+    override, so — like the other `STANDALONE_LINKED` files — it needs local self-sufficiency for
+    every key its own pages cite, and a shared DOI there is not an avoidable duplicate.
+  - Fixed `clark2013whatever` (the only occurrence repo-wide, in
+    `articles/The_Physics_of_Golf/golf_physics.bib`) from `@book`/Oxford University Press to
+    `@article`/*Behavioral and Brain Sciences*/Cambridge University Press, volume 36, number 3,
+    pages 181–204 — sourced from `geometry_of_motion.bib`'s pre-existing, correctly-typed
+    `Clark2013` entry for the same paper.
+  - Confirmed the Choi & Park grip-kinetics key needed no further action: the full revert already
+    restored `golf_physics.bib`'s `Choi2020GripKinetics` (and `tests/test_constraint_forces_rigor.py:163`'s
+    reference to it). The two other `koike2020`-adjacent entries found while checking this
+    (`articles/proximal_distal_energy_transfer/references.bib` and
+    `references/proximal-distal-energy.bib`, each a distinct, pre-existing, unrelated paper) were
+    left untouched.
+  - Did **not** add a new citation-resolution test: the repo already has one, wired into CI
+    (`.github/workflows/ci-standard.yml`) and running today. `scripts/check_citation_resolution.py`
+    and `scripts/check_qmd_citation_keys.py` both walk every `.qmd` under `articles/`, `books/`,
+    `pages/`, `resources/` (plus root `index.qmd`), resolve each page's bibliography the same way
+    (per-page `bibliography:` frontmatter, else the nearest ancestor `_quarto.yml`'s default), and
+    fail on any `[@key]`/`@key` that does not resolve there; `scripts/check_latex_structure.py`
+    (`TestCitations` in `tests/test_check_latex_structure.py`) does the equivalent for LaTeX
+    `\cite`-family commands against a baseline
+    (`config/latex-structure-baseline.json`). Writing a fourth, parallel implementation of the same
+    check would have duplicated working, already-CI-gated infrastructure rather than fixed
+    anything — confirmed by running all three directly against the reverted tree:
+    `python3 -m scripts.check_citation_resolution` → "passed for 286 qmd files";
+    `python3 -m scripts.check_qmd_citation_keys` → "passed"; `python3 scripts/check_latex_structure.py
+    --root articles --baseline config/latex-structure-baseline.json` → "No new structural
+    problems." All three already confirm none of the reviewer's named keys (or any other citation)
+    are unresolved post-revert; that was the actual verification this issue's item 3 needed, and
+    existing infrastructure already provides it.
+  - Updated the two `TestDuplicateDois` fixtures in `tests/test_check_bibliography_cross_file.py`
+    that had used `articles/proximal_distal_energy_transfer/references.bib` as a "non-standalone"
+    example; they now use a synthetic label, since — after the `STANDALONE_LINKED` addition above —
+    `references/impact-acoustics.bib` is the only file among the 8 still fully non-exempt, and no
+    second real file remains to pair it with.
+- Key decisions:
+  - Reverting was chosen over attempting to selectively re-fix the blocked merge: the review's
+    findings spanned locked content, an audit ledger requiring owner sign-off, and silent renames,
+    and disentangling "which parts of the merge are still safe" file-by-file carried more risk of
+    missing another instance of the same problem than reverting wholesale and re-adding only the
+    two genuinely isolated, verified fixes (the `STANDALONE_LINKED` entry and the `clark2013whatever`
+    metadata correction).
+  - The 82 raw duplicate-DOI groups still in the 8 bibliographies (110 extra copies) are left in
+    place rather than mechanically merged again. Per the narrowed scope, only genuinely identical
+    duplicate entries should be consolidated, and distinguishing "the same work legitimately copied
+    into two `STANDALONE_LINKED` files" from "an avoidable duplicate" for each of the 82 groups by
+    hand is future work, not this PR's.
+  - No rendered-bibliography diff (`quarto render` before/after) was performed — out of policy for
+    this session (~14 min for a full-site render) and, since nothing in the reverted tree changed
+    relative to `origin/main` except the two isolated fixes above, not needed to establish that
+    rendered citations are unchanged in meaning for everything but `clark2013whatever`.
+- Compatibility constraints: none — no public API changed; the locked
+  `proximal_distal_energy_transfer` article and the audited book chapter are untouched, matching
+  the review's explicit requirement.
+- Validation commands and outcomes:
+  - `git diff --stat <branch-point>` (working tree vs. the commit this branch was created from) →
+    only `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, `docs/development/HANDOFF.md`,
+    `scripts/check_bibliography_cross_file.py`, `tests/test_check_bibliography_cross_file.py`, and
+    `articles/The_Physics_of_Golf/golf_physics.bib` differ; every other file the original merge
+    touched matches the branch point exactly.
+  - `python3 scripts/check_bibliography_cross_file.py` → 8 bibliographies, 770 distinct keys, 163
+    shared across files, 0 disagreeing, 0 CI-flagged duplicate DOIs (82 raw shared-DOI groups exist
+    before the `STANDALONE_LINKED` exemption is applied — see the PR body for the honest count).
+  - `python3 -m pytest tests/test_check_bibliography_cross_file.py -v` → 18 passed.
+  - `python3 -m scripts.check_citation_resolution` → passed for 286 qmd files.
+  - `python3 -m scripts.check_qmd_citation_keys` → passed.
+  - `python3 scripts/check_latex_structure.py --root articles --baseline config/latex-structure-baseline.json`
+    → no new structural problems.
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` → clean.
+- The `claim-audit-evidence` pre-commit hook caught a stale review-evidence digest for
+  `articles/The_Geometry_of_Motion/quarto/ch09_parallel_mechanisms_constrained_dynamics.qmd` — a
+  file with zero diff on this branch and no presence in this PR's changed-file list at any point,
+  so the staleness reflects drift already on `origin/main` since this branch's fork point, not this
+  change. Ran the sanctioned `python -m scripts.regenerate_claim_audit_evidence` (the same tool
+  used earlier in this issue) to refresh it, since the hook blocks the commit regardless of cause
+  and bypassing it is against repo policy. Confirmed via `git diff` that the regeneration touched
+  exactly two file digests: that pre-existing stale one, and `golf_physics.bib` (expected, from the
+  `clark2013whatever` content fix above) — no other entry moved.
+- Blockers/risks: none identified for the reworked scope. Two items remain out of scope and are
+  disclosed in the PR body rather than fixed here (per the "Spotted ≠ fix" fleet rule and the
+  explicit rework instructions): (1) the 82 raw duplicate-DOI groups; (2) no rendered-bibliography
+  diff was performed.
+- Next steps: reworked draft PR #4676 is open with the honest remaining-scope disclosure in its
+  body; awaiting owner/frontier review.
+# Implementation Handoff — Cross-Browser Coverage (#4564)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Working directory: C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4564
+- Branch: claude/issue-4564
+- Baseline commit: 047fc82b (origin/main)
+- Implementation commit: SELF
+- Pull request: https://github.com/D-sorganization/AffineDrift/pull/4685 (draft)
+- Governing issue/epic: #4564 (WEB-09.4; epic #4569 / E9 — Accessibility Conformance)
+
+## Objective and Status
+
+- Objective: CI's `e2e-tests` job in `ci-standard.yml` only runs the Chromium
+  Playwright project on pull requests. `playwright.config.js` also defines
+  `firefox`, `webkit`, `Mobile Chrome`, and `Mobile Safari` projects that never
+  run in CI. The issue asks for (1) a nightly job that runs Firefox and WebKit
+  on a representative route set, and (2) failures that open issues
+  automatically, deduplicated by title.
+- Status: ready for commit / PR.
+- Completed:
+  - Added `.github/workflows/cross-browser-nightly.yml`: a scheduled
+    (`0 7 * * *` UTC) + `workflow_dispatch` workflow with a `[firefox, webkit]`
+    matrix job that builds the site (reusing the same Quarto render cache key
+    as `ci-standard.yml`'s `e2e-tests` job, #4595) and runs
+    `tests/e2e/smoke.spec.js` — the existing PR-smoke suite covering six
+    representative public routes plus dark-mode/back-to-top/no-splash
+    behavioral invariants — against each browser, uploading the Playwright
+    JSON report as an artifact per browser.
+  - Added a downstream `report-failures` job (`if: always()`) that downloads
+    both JSON reports and runs `scripts/report_e2e_browser_failures.py`.
+  - Added `scripts/report_e2e_browser_failures.py`: parses one or more
+    Playwright JSON reporter files, extracts tests whose final verdict was an
+    unexpected failure, builds one issue per distinct `(browser, test title)`
+    pair, and skips any pair already covered by an existing open issue with
+    the same title — the dedup-by-title acceptance criterion.
+  - Added `tests/test_report_e2e_browser_failures.py` (29 tests, TDD:
+    confirmed RED before implementing, both in the initial commit and for
+    each round of review feedback below) covering nested-suite JSON parsing,
+    the title-building dedup key, issue body content, and dedup selection
+    (including same-title-different-browser must NOT be deduped together).
+  - Review feedback round 1 — three behavior changes, each landed test-first:
+    1. **No new labels.** `ISSUE_LABELS` dropped the nonexistent
+       `cross-browser` label (now just `("ci", "automation")`, both of which
+       already exist in the repo). `fetch_existing_open_titles` no longer
+       filters by `--label`; it now uses
+       `gh issue list --search '"[Cross-Browser Nightly]" in:title'` and a new
+       pure `filter_cross_browser_titles()` helper keeps only titles that
+       actually start with the reporter's prefix (defends against `--search`
+       matching the phrase elsewhere in a title).
+    2. **Missing/unparseable/empty reports no longer crash or vanish
+       silently.** New `load_report_failures()` replaces the old
+       `load_report()`: a missing file, an empty file, or invalid JSON for a
+       given `--report` path now yields one synthetic failure entry (title
+       `"no test report produced (job failed before tests ran)"`, project
+       derived from the filename via `derive_project_from_report_path()`,
+       e.g. `playwright-report-webkit.json` -> `webkit`) instead of raising or
+       being skipped.
+    3. **Issue-creation cap.** When a run has more than
+       `MAX_INDIVIDUAL_ISSUES` (5) new (not-already-open) failures, one rollup
+       issue is opened instead — titled `"[Cross-Browser Nightly] "` followed
+       by the failure count, `" failures on "`, and today's UTC date in
+       `YYYY-MM-DD` form (`build_summary_issue_title` /
+       `build_summary_issue_body`) and listing every `(project, test, file)`
+       in a table. Per-failure dedup against
+       already-open issues still applies before the count is taken, and
+       `--dry-run` prints the rollup title the same way it prints individual
+       titles.
+  - Updated `docs/development/DEVELOPMENT_LOG.md` (`DL-#4564`) and this file.
+- Remaining: Commit, push, and post the review-feedback update to draft PR
+  #4685.
+
+## Files and Decisions
+
+- Files changed:
+  - `.github/workflows/cross-browser-nightly.yml`: new nightly workflow.
+  - `scripts/report_e2e_browser_failures.py`: new issue-filing script.
+  - `tests/test_report_e2e_browser_failures.py`: new pytest suite.
+  - `docs/development/DEVELOPMENT_LOG.md`: `DL-#4564` entry.
+  - `docs/development/HANDOFF.md`: this entry.
+  - `SPEC.md`: pending change-log row.
+- Key decisions:
+  - Chose `tests/e2e/smoke.spec.js` as the "representative route set" rather
+    than the full suite: it already exists precisely for this purpose (fast
+    PR smoke coverage across public routes + interactive behavior) and
+    keeps nightly runtime bounded instead of running visual-snapshot/axe
+    suites twice more per night.
+  - Issue dedup keys on the rendered issue title, built as
+    `[Cross-Browser Nightly] ` followed by the browser project name, a colon,
+    and the Playwright spec title, rather than a hidden marker, matching the
+    issue's literal "deduplicated by title" wording; a title search
+    (`gh issue list --search`) plus a prefix filter scopes the lookup instead
+    of a label, since the repo has no `cross-browser` label and this script
+    must not create one.
+  - The rollup-issue threshold (`MAX_INDIVIDUAL_ISSUES = 5`) is a plain
+    constant, not a CLI flag: nothing in the issue or the review feedback asks
+    for it to be tunable per run, and a flag nobody sets is just dead surface
+    area.
+  - Did not touch `ci-standard.yml`'s Chromium-only `e2e-tests` job: the issue
+    is additive (a new nightly job), not a change to the PR-gated lane.
+- User-owned or unrelated worktree changes: none observed.
+
+## Validation
+
+- `python -m pytest -q -o addopts= tests/test_report_e2e_browser_failures.py` —
+  29 passed (11 from the initial commit + 18 added for the three review-
+  feedback behaviors, all confirmed RED before implementation).
+- `python -m ruff check scripts/report_e2e_browser_failures.py tests/test_report_e2e_browser_failures.py` —
+  all checks passed.
+- `python -m black --check --line-length 100 scripts/report_e2e_browser_failures.py tests/test_report_e2e_browser_failures.py` —
+  both files unchanged.
+- `python3 -m pytest tests/ --cov=src --cov=scripts --cov-report=term-missing --timeout=120 -q` —
+  full suite passes at 79.11% coverage (floor 75%) as of the initial commit;
+  one pre-existing failure in
+  `tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section`
+  unrelated to this change (pandoc emits a `div` element with that id instead
+  of the expected `section` element in this environment).
+- `python3 -m scripts.check_workflow_action_pins` — all workflow actions
+  pinned to immutable SHAs (workflow file itself untouched by this round).
+- Not run: the nightly workflow itself (requires a scheduled/dispatched
+  Actions run on the fleet runner with real browser binaries; cannot execute
+  GitHub Actions locally).
+
+## Blockers / Risks
+
+- The workflow's actual behavior (browser install, site render, issue
+  creation via `gh`) is unverified end-to-end until it runs in GitHub
+  Actions — either via `workflow_dispatch` after merge or the first nightly
+  fire. A frontier review should consider triggering `workflow_dispatch` once
+  merged to confirm the full pipeline before relying on it.
+
+---
+
 # Website Consolidation (Seven Web Issues) — 2026-09-29
 
 - Repository: `D-sorganization/AffineDrift`, working directory
