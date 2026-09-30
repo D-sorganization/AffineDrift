@@ -19,6 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 ## Active
 
 ### DL-#4511 · Worked-Example Callout Convention
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** not created
+- **Issue:** #4511 (epic #4514)
+- **Branch:** `claude/issue-4511`
+- **Paths:** `css/components/callouts.css`, `articles/theory-part1.qmd`, `articles/theory-part2.qmd`, `articles/theory-part3.qmd`, `articles/theory-part4.qmd`, `articles/theory-part5.qmd`, `articles/controllability-drift-ratio.qmd`, `articles/zero-torque-counterfactual.qmd`, `articles/superposition.qmd`, `tests/test_worked_example_callouts.py`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (SELF: 9/9 `test_worked_example_callouts.py` tests pass; scoped run of 200+ affected `src/affine_control` and `tangent_models` tests pass; `ruff check .` and `black --check` pass repo-wide; `check_quarto_xrefs`, `check_styles_budget`, `check_module_size_budget` pass)
+- **Summary:** Adopts a `.callout-example` convention (given data, steps, result) and adds eight worked examples — one per theory part plus DCR, ZTCF, and superposition — each recomputed from a cited `src/` function and checked by a dedicated pytest.
+- **Next step:** Push the branch, open a draft PR referencing `Fixes #4511`, and release the lease.
+
 ### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review
@@ -226,14 +238,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created
-- **Issue:** #4511 (epic #4514)
-- **Branch:** `claude/issue-4511`
-- **Paths:** `css/components/callouts.css`, `articles/theory-part1.qmd`, `articles/theory-part2.qmd`, `articles/theory-part3.qmd`, `articles/theory-part4.qmd`, `articles/theory-part5.qmd`, `articles/controllability-drift-ratio.qmd`, `articles/zero-torque-counterfactual.qmd`, `articles/superposition.qmd`, `tests/test_worked_example_callouts.py`
-- **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: 9/9 `test_worked_example_callouts.py` tests pass; scoped run of 200+ affected `src/affine_control` and `tangent_models` tests pass; `ruff check .` and `black --check` pass repo-wide; `check_quarto_xrefs`, `check_styles_budget`, `check_module_size_budget` pass)
-- **Summary:** Adopts a `.callout-example` convention (given data, steps, result) and adds eight worked examples — one per theory part plus DCR, ZTCF, and superposition — each recomputed from a cited `src/` function and checked by a dedicated pytest.
-- **Next step:** Push the branch, open a draft PR referencing `Fixes #4511`, and release the lease.
-
 - **Issue:** #4548 (epic #4552)
 - **Branch:** `claude/issue-4548`
 - **Paths:** `_quarto.yml`, `articles/*-bibliography.md` (21 files), `articles/proximal-distal-energy-transfer.qmd`, `articles/wrist-universal-joint.qmd`, `scripts/check_quarto_render_coverage.py`, `tests/test_check_quarto_render_coverage.py`, `docs/development/content-architecture.md`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`
