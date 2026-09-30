@@ -104,6 +104,55 @@
 
 ---
 
+# Implementation Handoff — Unified Publication Status Badge Component (#4516)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/web-04-2-status-badge-component-4516
+- Baseline commit: b000cfee (origin/main)
+- Implementation commit: 8623636f, 8a5b6b98
+- Pull request: to be opened
+- Governing issue: #4516 (WEB-04.2, epic #4499)
+
+## Objective and Status
+
+- Objective: Implement a unified publication status badge component used on cards, headers, listings, and search, rendering an inline SVG icon and accessible text for all 6 canonical states, meeting WCAG AA contrast in light and dark themes, and linking to the publication state definition.
+- Status: Implementation complete, test suites passing (Python tests, link checker, Jest/npm tests); opening PR.
+- Completed:
+  - Created Quarto shortcode `{{< status >}}` (`_extensions/status/_extension.yml`, `_extensions/status/status.lua`) supporting front matter detection (`status`, `maturity`, `publication-state`) and explicit parameters (`{{< status available >}}`, `{{< status "planned" "In Planning" >}}`).
+  - Added SVG icons and textual labels for all 6 canonical states (`available`, `validated`, `experimental`, `planned`, `deprecated`, `opinion`) plus normalization for legacy aliases (`canonical`, `reviewed`, `exploratory`, etc.).
+  - Implemented high-contrast theme-aware styling in `css/components/status-badge.css` meeting WCAG AA contrast (≥ 4.5:1, achieving ≥ 8:1) for both light and dark (`body.quarto-dark`) themes.
+  - Linked status badges by default to `pages/how-to-read.html#publication-states` with depth-aware relative path computation (`quarto.project.offset` and source path handling).
+  - Integrated with `scripts/filters/page-header-card.lua` to render status badges on page headers when metadata contains a publication state.
+  - Replaced legacy `.status-pill` elements across `pages/tools.qmd`, `pages/book-reviews.qmd`, `pages/daydreams-doodles.qmd`, `pages/drifter-manifesto.qmd`, `resources/research-reviews.qmd`, and updated `CONTRIBUTING.md`.
+  - Added unit test suite `tests/test_status_badge.py` (15 tests) verifying all 6 states, icons, labels, aliases, link resolution, and contrast requirements.
+  - Regenerated claim audit evidence digests and updated `SPEC.md` changelog.
+
+---
+
+# Implementation Handoff — Deploy Website Claim-Audit Route Coverage (#4666)
+
+## Identity
+
+- Repository: D-sorganization/AffineDrift
+- Branch: fix/main-is-red-deploy-website-4666
+- Baseline commit: 45d9fca0 (origin/main)
+- Governing issue: #4666 (main is red: Deploy Website, fleet-main-health)
+
+## Objective and Status
+
+- Objective: Restore green `Deploy Website` on `main` by adding newly created pages (`pages/glossary.html` and `pages/how-to-read.html`) to `data/trust/claim_audit_inventory.json` so that `--enforce-publication` coverage check succeeds during production website build.
+- Status: Implementation complete, test suites passing; opening PR.
+- Completed:
+  - Added reviewed route entries for `/pages/glossary.html` and `/pages/how-to-read.html` to `data/trust/claim_audit_inventory.json` with self-contained byte evidence (SHA-256 digests).
+  - Updated `DEFERRED_AUDIT_SCOPE_COUNTS` in `scripts/claim_audit_ids.py` for issue 4063 (from 13 to 15) to account for the two new pages.
+  - Updated route partition test in `tests/test_claim_audit_inventory.py`.
+  - Regenerated `data/trust/generated/claim_audit_report.json` and `reports/scientific-claim-audit.md`.
+  - Verified with `scripts.generate_claim_audit_inventory --check --enforce-publication`.
+
+---
+
 # Implementation Handoff — Cache Quarto Renders in CI (#4595)
 
 ## Identity
