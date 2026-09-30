@@ -2,7 +2,8 @@
 
 - Repository: `D-sorganization/AffineDrift`, worktree
   `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4547`.
-- Branch `claude/issue-4547`, commit `SELF`; pull request: to be opened this session (draft).
+- Branch `claude/issue-4547`, commit `ee8f6603b085f893080cfbd7e1fb22f58931b142`; pull request:
+  #4676 (draft), https://github.com/D-sorganization/AffineDrift/pull/4676.
 - Governing issue: #4547 (WEB-07.5). Objective: zero duplicate keys/DOIs across the site's
   bibliography databases, with rendered citations unchanged in meaning.
 - Completed work:
@@ -89,8 +90,8 @@
   test's fixture teardown is missing, modifying generated JSON as a side effect of running the
   full suite); (2) the pre-existing, unrelated failures in `test_research_protocol_readiness.py`/
   `test_research_readiness_*.py`/`test_proximal_distal_projection_verifier.py`.
-- Next steps: open the draft PR referencing `Fixes #4547`, noting the scope limitations above in
-  the PR body.
+- Next steps: draft PR #4676 is open with the scope limitations above in its body; awaiting
+  owner/frontier review.
 
 ---
 
