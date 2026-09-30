@@ -194,6 +194,18 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-29 (Jest: 25 suites, 424 passed/19 skipped, 0 failed. New Playwright E2E coverage added for `/`, `/pages/overview.html` — a stand-in for the not-yet-built `pages/start-here.qmd` from WEB-01.1 — and one article; not run locally because it requires a full Quarto site render, which this session's tooling does not permit invoking, so CI will exercise it.)
 - **Summary:** Moves the skip-to-content link into static HTML via a new `include-before-body` partial so it works without JavaScript and is never duplicated by the JS injector; `initSkipToContent` now only enhances the existing static link's click-focus behavior instead of creating the element.
 - **Next step:** Reviewing frontier agent confirms `#quarto-document-content` is present on the full-layout home page in the CI site render (the removed JS fallback previously hedged that it might not be).
+### DL-#4585 · Harden the MathJax Integration Against Quarto Upgrades
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4639 (draft)
+- **Issue:** #4585
+- **Branch:** `claude/issue-4585`
+- **Paths:** `scripts/e2e_relevant_paths.py`, `tests/test_e2e_relevant_paths.py`, `docs/MATHJAX-MOBILE.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-30 (SELF: `python -m pytest -q -o addopts= -p no:cacheprovider tests/test_e2e_relevant_paths.py` — 22 passed, covering both `.quarto-version` in `EXACT_PATHS` and `_includes/` in `PATH_PREFIXES`)
+- **Summary:** `.quarto-version` now forces the full-site E2E render lane on a Quarto bump so `tests/e2e/article.spec.js`'s single-MathJax-runtime assertion actually runs against the upgraded Quarto's output instead of being skipped by the file-diff heuristic; documents the `html-math-method` / `mathjax-loader.html` split in `docs/MATHJAX-MOBILE.md`. Review-fix round added `_includes/` to `PATH_PREFIXES` so a change to `_includes/mathjax-loader.html` (the file holding the real MathJax runtime) is itself E2E-relevant.
+- **Next step:** Await frontier review on draft PR #4639; do not merge or enable auto-merge.
 ### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review
