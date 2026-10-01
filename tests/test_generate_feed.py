@@ -342,6 +342,18 @@ class TestDeployWorkflowWiring:
         """deploy-website.yml invokes generate_feed.py."""
         assert "scripts/generate_feed.py" in self._workflow_text()
 
+    def test_workflow_renders_then_generates_feed_before_source_link_check(self):
+        """Render first, then generate /feed.xml before the blocking source link check."""
+        workflow = self._workflow_text()
+        render = workflow.index("name: Render Website")
+        feed_generation = workflow.index("name: Generate RSS feed.xml")
+        source_link_check = workflow.index("name: Post-generation Link Check")
+
+        assert render < feed_generation < source_link_check
+        assert workflow.count("python3 scripts/generate_feed.py --output docs/feed.xml") == 1
+        assert workflow.count("python3 -m src.tools.check_links") == 1
+        assert "run: python3 -m src.tools.check_links" in workflow
+
     def test_workflow_runs_sitemap_generator(self):
         """deploy-website.yml invokes generate_sitemap.py."""
         assert "scripts/generate_sitemap.py" in self._workflow_text()
