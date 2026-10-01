@@ -1,3 +1,15 @@
+# Falsification Atlas Source Checkpoint — #4749
+
+- Goal active. Branch fix/atlas-rigor-4749; worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; checkpoint SELF; atlas PR not created.
+- Full six-card atlas and wrapper corrected: source/editorial evidence labels, endpoint versus complete-state intervention, force/wrench nullspace, coordinate metrics, support/compliance energy accounts and operational falsifier scope. Provider authorities remain verbatim; reports atlas-review.md, atlas-validation.json and atlas-prior-review.json preserve scope and history.
+- Five supplied-text agy Gemini3.8 Flash jobs completed (inventories, tests, notation, turnover); lead adjudicated. 25 focused tests including seven synthetic cases pass;12 gates;653 titles;Ruff;Black832. Browser four cases and axe pass after standard polyfill cleanup;37 MathJax expressions/no errors/no page overflow. Final multi-line equations and atlas-only font rule verified in mobile screenshot; final four browser cases pass. Full pytest --cov running; never claim it green before inspecting atlas-full-coverage.txt and atlas-full-exit.txt.
+- No corpus completion credit yet:129 pending full-source audits plus whole-book consistency. Both atlas wrapper AND generated-source rows are pending, so completing this review will reduce by two, not one. Do not follow the Flash handoff draft's one-row instruction; that draft used an incomplete supplied inventory.
+- PR4745 merged remote main a473831731989fce80f110bcc34745affe9ad837 at12:22:50UTC; exact muscle source/PDF/two-test parity verified, presence released. PR4741 and4748 still pending at last check; protected merge armed. Preserve their changes and normal merge remote main after this checkpoint; no deployment claim.
+- Next: finish regression/browser; commit/push source; bind six findings to source checkpoint preserving historical metadata; update both corpus rows; run bound checks; open regular main-target PR and verify protected delivery. No draft, force, direct-main or admin bypass.
+- Atlas lease technical-review-20261001-atlas expires14:11UTC. Prior critics13:37,Chapter9 13:03,Chapter10 13:12. Inbox remains incomplete, not evidence of no peers. Preserve QA and all previous records, including separate peer23ee826 in impact-review.
+
+## Preserved Earlier Checkpoints
+
 # Critics Corner Regular PR — #4748
 
 - Goal active; branch fix/critics-rigor-4746 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Source92f33d3101d304d46b984b7f8019193c5184089a is pushed. Integration7fb1ad8ddf0204b18c042408af451ef33245f1c9 is pushed. Regular main-target PR https://github.com/D-sorganization/AffineDrift/pull/4748 is open and attached; registration checkpoint SELF.

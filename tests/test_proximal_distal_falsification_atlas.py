@@ -219,17 +219,31 @@ def test_render_is_deterministic_static_and_complete() -> None:
     second = render_atlas(atlas)
     assert first == second
     assert '<section class="falsification-atlas-record"' in first
-    assert "This establishes" in first
-    assert "This does not establish" in first
-    assert "Workflow unavailable" in first
-    assert "Research readiness" in first
-    assert "Validation release" in first
+    assert "Source-Reported Claim Status" in first
+    assert "Source-Declared Model Domain" in first
+    assert "Source Uncertainty Boundary" in first
+    assert "Source-Reported Falsifier" in first
+    assert "Registered Workflow" in first
+    assert "Readiness Record" in first
+    assert "Registered Validation Release" in first
     assert "research-protocol-readiness.html#ad-protocol-" in first
     assert "<script" not in first
     for record in atlas.records:
         assert record.atlas_id in first
         assert record.claim_id in first
         assert record.critique_id in first
+
+
+def test_untested_claim_domain_is_not_rendered_as_an_established_result() -> None:
+    """Labels must preserve the authority's uncertainty without reversing negation."""
+    atlas = load_atlas(_paths())
+    hypothesis = next(record for record in atlas.records if record.claim_id == "PD-CLAIM-144")
+    rendered = render_atlas(replace(atlas, records=(hypothesis,)))
+    assert "<dt>Source-Reported Claim Status</dt><dd>untested</dd>" in rendered
+    assert "<dt>Source-Declared Model Domain</dt>" in rendered
+    assert "<dd>No general recoil benefit or negligibility is shown.</dd>" in rendered
+    assert "This establishes" not in rendered
+    assert "This does not establish" not in rendered
 
 
 def test_committed_projection_matches_generator() -> None:

@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4749 · Falsification Atlas Technical Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4749 (epic #4009)
+- **Branch:** fix/atlas-rigor-4749
+- **Paths:** articles/proximal-distal-falsification-atlas.qmd, articles/_generated/proximal-distal-falsification-atlas.qmd, data/trust/proximal_distal_falsification_atlas.json, src/affine_control/falsification_atlas/rendering.py, tests/test_falsification_atlas_identities.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (25 focused;12 gates;653 titles;Ruff/Black832;four browser/axe cases;full regression running)
+- **Summary:** Distinguish source adjudication from editorial comparisons; correct force/wrench, coordinate-metric and support/compliance comparisons with five Flash support jobs and lead adjudication.
+- **Next step:** Finish final mobile equation rendering and full regression, bind source review, then deliver a regular protected PR.
+
 ### DL-#4746 · Critics Corner Technical Review
 
 - **State:** in_review
