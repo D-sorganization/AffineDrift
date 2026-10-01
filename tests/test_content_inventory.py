@@ -2,8 +2,7 @@
 
 Prevents large duplicate media assets from re-accumulating in both
 ``content/`` and ``static/images/`` (only ``static/images/`` is referenced
-by the site). ``legacy-pages/`` is intentionally retained as archived
-tombstone stubs and is therefore NOT asserted against here.
+by the site).
 """
 
 from __future__ import annotations
