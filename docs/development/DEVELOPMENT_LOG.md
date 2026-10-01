@@ -29,20 +29,20 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (63 integrated;12 gates;Ruff/Black834;final browser4/4 and axe;218-page PDF/parity;full6385 pass/4 concurrent-artifact failures, all affected reruns pass)
 - **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Seven findings bound to final source899f35bb0 after exact Git-blob parity checks;41 historical findings preserved;126 full-source audits remain.
-- **Next step:** Regular PR4752 open;36 bound checks plus63 final typography checks and4 final browser/axe cases pass. Source/binding pushed and protected auto-merge armed. Normal integration of main4c1ddafa5 resolves documentation/corpus conflicts after4748 merged; all36 integrated ledger/boundary checks pass; push integration and verify PR4752 CI/main. Goal remains active.
+- **Next step:** Regular PR4752 open;36 bound checks plus63 final typography checks and4 final browser/axe cases pass. Source/binding pushed and protected auto-merge armed. Normal integration of main resolves documentation/corpus conflicts after4748 merged; all36 integrated ledger/boundary checks pass; push integration and verify PR4752 CI/main. Goal remains active.
 
 ### DL-#4749 · Falsification Atlas Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4750 (regular; main target)
 - **Issue:** #4749 (epic #4009)
 - **Branch:** fix/atlas-rigor-4749
 - **Paths:** articles/proximal-distal-falsification-atlas.qmd, articles/_generated/proximal-distal-falsification-atlas.qmd, data/trust/proximal_distal_falsification_atlas.json, src/affine_control/falsification_atlas/rendering.py, tests/test_falsification_atlas_identities.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (PR4750 open;seven findings bound;32 final binding checks pass;full6381 pass/one stale-registry failure/29 skips;unsupported release withdrawn;73 integrated checks pass;12 gates;653 titles;Ruff/Black832;four final browser/axe cases)
+- **Last verified:** 2026-10-01 (PR4750 merged;seven findings bound;32 final binding checks pass;unsupported release withdrawn;73 integrated checks pass;12 gates;653 titles;Ruff/Black832;four final browser/axe cases)
 - **Summary:** Distinguish source adjudication from editorial comparisons; correct force/wrench, coordinate-metric and support/compliance comparisons with five Flash support jobs and lead adjudication.
-- **Next step:** Push registration, arm protected auto-merge for4750, verify current-head CI/main and close superseded4741/4748 only after parity verification.
+- **Next step:** None for this feature; PR4750 merged on remote main on 2026-10-01.
 
 ### DL-#4746 · Critics Corner Technical Review
 
