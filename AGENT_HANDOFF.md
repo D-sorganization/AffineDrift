@@ -2,10 +2,10 @@
 
 - Epic #4009 / corpus #4021 remains active: 118 full-source audits and whole-book consistency remain.
 - Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health`, branch `fix/measured-golfers-rigor-4771`.
-- Regular PR #4772: source `f565c72885e73d9e463debc336322691f46ea11a` and binding `cb9e634d59327f4520e94ecd07b0be379d507963` are pushed. Nine new findings preserve 87 earlier records. Documentation correction `024bdc650` is pushed; `SELF` integrates the peer redirect and parent delivery update.
-- PR #4770 is the delivery prerequisite; protected auto-merge is waiting on CI for `e5e4bf456`. PR #4772 is open and auto-merge is not armed.
-- Next: verify PR #4770 on remote main, finish PR #4772 checks/review, use the protected automerge guard, verify delivered blobs and release both leases. Leases expire October 1 at 22:52 UTC.
-- Detailed continuation state and validation: [canonical handoff](docs/development/HANDOFF.md), [validation receipt](reports/technical-review/measured-golfers-validation.json), and [development log](docs/development/DEVELOPMENT_LOG.md).
+- Regular PR #4772: reviewed source `f565c72885e73d9e463debc336322691f46ea11a`, binding `cb9e634d5`, and nine new findings remain unchanged. Integration `SELF` reconciles the delivered predecessor and refreshes turnover.
+- PR #4770 merged as `099dc2cbfcf506941b3b0d306b43b7a1ccc5e767`; final-head CI passed and all 23 changed files match remote main. Its lease and presence are released.
+- Next: pass final-head CI and the protected merge guard for PR #4772, then verify its delivered blobs. Issue #4771 lease expires October 2 at 00:30 UTC. PR #4772 is not yet merged.
+- Six older owned review entries are reconciled to their verified main carriers; receipts and detailed continuation are in the [canonical handoff](docs/development/HANDOFF.md) and [development log](docs/development/DEVELOPMENT_LOG.md).
 - Preserve peer worktree `23ee826` and QA artifacts. No draft PRs, direct-main/force/admin pushes or hook bypass. Never change tracked files while push hooks run.
 
 ## Earlier Records Preserved From the Parent Branch

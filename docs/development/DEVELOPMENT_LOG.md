@@ -29,23 +29,22 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Why:** Wrong systematic-review attribution and overbroad instrument, EMG, statistical and validation claims.
 - **Change:** Full Chapter 24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Nine findings bind eight exact Git blobs at f565c72885e73d9e463debc336322691f46ea11a; 87 historical findings remain intact. Chapter audit credited; 118 corpus sources plus whole-book consistency remain.
-- **Last verified:** 2026-10-01; 6,389 full-regression passes, 29 skips and 187 configured deselections; 48 affected follow-up checks after final author wording, 12 publication gates and 67 post-binding checks. Final 223-page PDF/HTML and four browser profiles verified. Source and binding cb9e634d5 are pushed. See measured-golfers-validation.json for exact scope.
-- **Next step:** Documentation correction 024bdc650 is pushed and review thread resolved; integration SELF includes parent e5e4bf456 and peer redirect main 1b255c15a; verify PR #4770 delivery, final PR #4772 CI/review and protected merge; then verify remote-main blobs and release the lease. Twelve Flash jobs lead-adjudicated. Root turnover is a concise state map; detailed new checkpoints remain in docs/development/HANDOFF.md.
+- **Last verified:** 2026-10-01; 6,389 full-regression passes, 29 skips and 187 configured deselections; 48 affected follow-up checks after final author wording, 12 publication gates and 67 post-binding checks. Final 223-page PDF/HTML and four browser profiles verified. Source and binding cb9e634d5 are pushed. See measured-golfers-validation.json for exact scope. Predecessor4770 verified on remote main099dc2cbf; ancestry-only integration preserves all reviewed scientific content and evidence bindings;61 focused integration checks pass. Whole-log validation retains71 inherited findings, with none introduced or in the eight updated entries.
+- **Next step:** Verify final-head CI and protected remote-main delivery for PR #4772.
 
 ### DL-#4769 · Speed, Energy, and Power Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** #4770 (regular, attached)
+- **PR:** #4770 (regular; merged to main as099dc2cbf)
 - **Issue:** #4769 (epic #4009)
 - **Branch:** fix/speed-energy-rigor-4769
 - **Paths:** articles/proximal_distal_companion/chapters/ch05_speed_energy_power.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_speed_energy_review.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (6,382 full-regression passes;two temporary-root failures resolved, six root retests pass;12 gates;223-page PDF/HTML;4 browser profiles;8 findings bound to 4c80a4a26d060791b7d3505d0a27a5657c6a2eed;79 preserved;119 sources pending)
-- **Summary:** Correct point/body energy, power-conjugate motion and whole-club/shaft/head accounting; qualify evidence and counterfactual inference. Preserve79 earlier findings; Chapter5 complete;119 sources plus whole-book consistency remain.
-- **Next step:** Integration e5e4bf456 incorporates peer redirect PR #4773 at main 1b255c15a and the required YAML quote formatting. No scientific/publication changes. Require final-head CI and verify all 23 changed blobs on remote main before marking shipped.
+- **Last verified:** 2026-10-01 (6,382 full-regression passes;two temporary-root failures resolved, six root retests pass;12 gates;223-page PDF/HTML;4 browser profiles;8 findings bound to 4c80a4a26d060791b7d3505d0a27a5657c6a2eed;79 preserved;119 sources pending); final-head CI36929938103 passed, all23 changed blobs verified on remote main, lease/presence released; receipt reports/technical-review/speed-energy-remote-main-receipt.json.
+- **Summary:** Correct point/body energy, power-conjugate motion and whole-club/shaft/head accounting; qualify evidence and counterfactual inference. Preserve79 earlier findings; Chapter5 complete; the broader corpus and whole-book audits continue under epic #4009.
+- **Next step:** None for this delivered scope.
 
-- Main integration: preserve PR4761 changes at 37fa19fef352844ed0d3d3635bb7b36879c65c55; rebuild combined PDF and refresh evidence; no new scientific credit. Final-head CI pending.
 
 ### DL-#4766 · Patent Catalog Technical Review
 
@@ -102,30 +101,30 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4753 · Arm–Wrist Preload Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** [#4755](https://github.com/D-sorganization/AffineDrift/pull/4755)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4755 (verified main carrier)
 - **Issue:** #4753 (epic #4009)
 - **Branch:** fix/preload-rigor-4753
 - **Paths:** articles/proximal_distal_companion/chapters/ch14_arms_wrists_preload.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_preload_review.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (full default suite PASS/29 skips/78.8% configured coverage/93.0% src;63 integrated;36 bound;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases)
+- **Last verified:** 2026-10-01 (Delivery audit against main `1b255c15a089ab7ad97e508216bbfc281f4fa482`: Merged to main at394a7b40b; chapter and test still match fetched main. Receipt: reports/technical-review/prior-delivery-reconciliation.json. Historical validation retained: 2026-10-01 (full default suite PASS/29 skips/78.8% configured coverage/93.0% src;63 integrated;36 bound;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases))
 - **Summary:** Full chapter corrections distinguish moment/wrench, conditional dynamics, causal inference and human evidence; replace wrong command-only figure with archived transmission traces. Five Flash support jobs, lead-adjudicated.Seven findings bound to exact source8ffffbc7e;48 historical findings preserved;125 full-source audits plus whole-book consistency remain.
-- **Next step:** Source8ffffbc7e and binding3691417a4 pushed;regular PR4755 attached;36 binding checks pass. Full default regression passes. Registrationb00f94ad5 pushed;protected auto-merge enabled. Integrate main5b58cb68b after4741/4750 merged, validate documentation/ledgers, push and verify CI/main.
+- **Next step:** None for this delivered scope.
 
 
 ### DL-#4751 · Shaft Memory Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** [#4752](https://github.com/D-sorganization/AffineDrift/pull/4752)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4755 (verified main carrier)
 - **Issue:** #4751 (epic #4009)
 - **Branch:** fix/shaft-memory-rigor-4751
 - **Paths:** articles/proximal_distal_companion/chapters/ch15_shaft_memory.qmd, scripts/shaft_energy_illustration.py, tests/test_shaft_memory_review.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (63 integrated;12 gates;Ruff/Black834;final browser4/4 and axe;218-page PDF/parity;full6385 pass/4 concurrent-artifact failures, all affected reruns pass)
+- **Last verified:** 2026-10-01 (Delivery audit against main `1b255c15a089ab7ad97e508216bbfc281f4fa482`: Delivered through4755 at394a7b40b;4752 closed unmerged. Five dedicated predecessor blobs match the carrier and fetched main. Receipt: reports/technical-review/prior-delivery-reconciliation.json. Historical validation retained: 2026-10-01 (63 integrated;12 gates;Ruff/Black834;final browser4/4 and axe;218-page PDF/parity;full6385 pass/4 concurrent-artifact failures, all affected reruns pass))
 - **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Seven findings bound to final source899f35bb0 after exact Git-blob parity checks;41 historical findings preserved;126 full-source audits remain.
-- **Next step:** Regular PR4752 open;36 bound checks plus63 final typography checks and4 final browser/axe cases pass. Source/binding pushed and protected auto-merge armed. Normal integration of main4c1ddafa5 resolves documentation/corpus conflicts after4748 merged; all36 integrated ledger/boundary checks pass; push integration and verify PR4752 CI/main. Goal remains active.
+- **Next step:** None for this delivered scope.
 
 ### DL-#4749 · Falsification Atlas Technical Review
 
@@ -168,44 +167,44 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4742 · Force Direction and Reference Points
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4741 (carries merged topic PR #4744; main delivery pending)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4741 (verified main carrier)
 - **Issue:** #4742 (epic #4009)
 - **Branch:** `fix/force-direction-rigor-4742`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch09_force_direction.qmd`, `articles/figures/proximal_distal_companion/fig_companion_force_direction.svg`, `scripts/make_proximal_distal_companion_figures.py`, `tests/test_force_direction_review.py`, `reports/technical-review/force-direction-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (source52408; full6281 pass/one stale source-contract failure,93.04%; repaired;59 focused then79 bound-audit and88 integration checks pass;184 content/4 skips;216-page PDF and browser4/4 verified)
+- **Last verified:** 2026-10-01 (Delivery audit against main `1b255c15a089ab7ad97e508216bbfc281f4fa482`: Delivered through4741 atcf0d11368;4744 merged only into its topic branch. Four dedicated predecessor blobs match the main carrier and fetched main. Receipt: reports/technical-review/prior-delivery-reconciliation.json. Historical validation retained: 2026-10-01 (source52408; full6281 pass/one stale source-contract failure,93.04%; repaired;59 focused then79 bound-audit and88 integration checks pass;184 content/4 skips;216-page PDF and browser4/4 verified))
 - **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
-- **Next step:** Chapter9 merged externally into Chapter10 branch d9c21a9e5; PR4741 now carries both chapters to main. CI digest repaired;46 affected tests pass. Await protected checks and actual remote-main delivery.
+- **Next step:** None for this delivered scope.
 
 ### DL-#4739 · Force, Work, and Energy Boundaries
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4741 (regular)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4741 (verified main carrier)
 - **Issue:** #4739 (epic #4009)
 - **Branch:** `fix/force-work-rigor-4739`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch10_force_work_motion.qmd`, `articles/proximal-distal-a-journey-through-the-swing.pdf`, `tests/test_force_work_review.py`, `reports/technical-review/force-work-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (source803b58ecb; PDF/chapter browser verified; full6272 pass/one pin failure,93.04%; pin repaired;53 affected checks and184 content checks pass/4 skips;12 publication checks and freshness browser4/4 pass; final protected CI pending)
+- **Last verified:** 2026-10-01 (Delivery audit against main `1b255c15a089ab7ad97e508216bbfc281f4fa482`: Merged to main atcf0d11368; chapter and test still match fetched main. Nine head-to-merge differences concern the peer critics-corner integration and metadata. Receipt: reports/technical-review/prior-delivery-reconciliation.json. Historical validation retained: 2026-10-01 (source803b58ecb; PDF/chapter browser verified; full6272 pass/one pin failure,93.04%; pin repaired;53 affected checks and184 content checks pass/4 skips;12 publication checks and freshness browser4/4 pass; final protected CI pending))
 - **Summary:** Correct three-dimensional work, net impulse, internal mechanical-energy conversion, coordinate-force versus physical work and archive scope; preserve human-model limits and prior book findings.
-- **Next step:** Validate normal integration of peer4740/main019a; Chapter10 source/PDF and both branches findings preserved. Push and verify integrated-head protected CI and merge.
+- **Next step:** None for this delivered scope.
 
 
 
 ### DL-#4733 · Shallow-Wide Latency and Synergy Arguments
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (regular; main base; combined ground/shallow-wide delivery)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (verified main carrier)
 - **Issue:** #4733 (epic #4009)
 - **Branch:** `fix/shallow-wide-rigor-4733`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex`, `articles/The_Geometry_of_Motion/Volume_IV/main.pdf`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `books/human-motor-control.qmd`, `tests/test_shallow_wide_review.py`, `reports/technical-review/shallow-wide-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (SELF: CI failure reproduced and repaired;66 focused/184 content passes, four skips; audit/book/catalog freshness and Ruff/Black pass. CI36826515629 six failures retained in receipt. Historical full6265/93.04% at180cddda0 remains scoped to that checkpoint.)
+- **Last verified:** 2026-10-01 (Delivery audit against main `1b255c15a089ab7ad97e508216bbfc281f4fa482`: Merged to main at7eb87e3c9; VolumeIV Chapter4, PDF, human-motor-control source and test match reviewed head and fetched main. Receipt: reports/technical-review/prior-delivery-reconciliation.json. Historical validation retained: 2026-10-01 (SELF: CI failure reproduced and repaired;66 focused/184 content passes, four skips; audit/book/catalog freshness and Ruff/Black pass. CI36826515629 six failures retained in receipt. Historical full6265/93.04% at180cddda0 remains scoped to that checkpoint.))
 - **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
-- **Next step:** Push SELF and check protected CI for combined PR #4734.
+- **Next step:** None for this delivered scope.
 
 ### DL-#4688 · Dataset Explorer Route Audit and Main Feed Ordering
 
@@ -224,16 +223,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4730 · Ground-Reaction Boundaries and Matching Evidence
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4735 (regular consolidation; #4732 closed unmerged as superseded)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (verified main carrier)
 - **Issue:** #4730 (epic #4009)
 - **Branch:** `fix/ground-conversation-rigor-4730`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch16_ground_conversation.qmd`, `scripts/make_proximal_distal_companion_expanded_figures.py`, `tests/test_ground_conversation_review.py`, `reports/technical-review/ground-conversation-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (ground86ce488e4 source/PDF/test blobs and complete28-finding route record match consolidation0da91db1 exactly. Prior full6232/93.04% at feae3b872; latest ground55 focused/184 content passes. Protected consolidation merge pending.)
+- **Last verified:** 2026-10-01 (Delivery audit against main `1b255c15a089ab7ad97e508216bbfc281f4fa482`: Ground review delivered through4734 at7eb87e3c9;4732/4735 closed unmerged. Four dedicated ground blobs match the main carrier; later main changes only 'qualified model' to 'calibrated model' in this chapter. Receipt: reports/technical-review/prior-delivery-reconciliation.json. Historical validation retained: 2026-10-01 (ground86ce488e4 source/PDF/test blobs and complete28-finding route record match consolidation0da91db1 exactly. Prior full6232/93.04% at feae3b872; latest ground55 focused/184 content passes. Protected consolidation merge pending.))
 - **Summary:** Correct material contact power, internal/external wrench boundaries, ZVCF control convention and symmetric dissipation normalization; distinguish primary matching from total model contrasts and resolve post-hoc horizon counts.
-- **Next step:** Check protected merge status of PR #4735.
+- **Next step:** None for this delivered scope.
 
 ### DL-#4602 · Content Inventory and Ownership Map
 
