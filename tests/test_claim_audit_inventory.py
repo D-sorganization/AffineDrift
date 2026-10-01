@@ -23,6 +23,7 @@ from scripts.claim_audit_ids import (
     deferred_issue_urls,
 )
 from scripts.generate_claim_audit_inventory import (
+    MANIFEST_CONTRACT,
     AuditContractError,
     AuditSources,
     GenerationOptions,
@@ -284,6 +285,21 @@ def test_every_rendered_route_requires_exactly_one_inventory_record(tmp_path: Pa
     extra["routes"].append(_route("/pages/not-rendered.html", "deferred"))  # type: ignore[union-attr]
     with pytest.raises(AuditContractError, match="coverage mismatch"):
         validate_manifest_coverage(extra, manifest)
+
+
+def test_canonical_inventory_covers_dataset_explorer_quarto_route() -> None:
+    inventory = json.loads(INVENTORY.read_text(encoding="utf-8"))
+    audited_routes = {record["route"] for record in inventory["routes"]}
+    source = ROOT / "models/dataset-explorer.qmd"
+    rendered_route = f"/{source.relative_to(ROOT).with_suffix('.html').as_posix()}"
+    rendered_routes = sorted(audited_routes | {rendered_route})
+    manifest = {
+        "schema_version": MANIFEST_CONTRACT,
+        "page_count": len(rendered_routes),
+        "pages": [{"route": route} for route in rendered_routes],
+    }
+
+    validate_manifest_coverage(inventory, manifest)
 
 
 def test_initial_inventory_is_deterministic_and_fail_closed(tmp_path: Path) -> None:

@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import json
+from datetime import date, timedelta
 from pathlib import Path
 
 import jsonschema
 import pytest
 
+from src.affine_control.evidence_presentation import generator as evidence_presentation_generator
 from src.affine_control.evidence_presentation.generator import (
     build_evidence_presentation_registry,
     generate_evidence_presentation,
@@ -158,24 +160,53 @@ def test_rendering_components() -> None:
     assert "Test Heading" in table
 
 
-def test_full_registry_generation(tmp_path: Path, trust_generation_root: Path) -> None:
+def test_full_registry_generation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    trust_generation_root: Path,
+) -> None:
     """Verify live repository generation and schema validation."""
-    repo_root = trust_generation_root
-    registry, vms = build_evidence_presentation_registry(repo_root)
+    source_root = Path(__file__).resolve().parent.parent
+    registry, vms = build_evidence_presentation_registry(source_root)
 
     assert len(vms) > 0
     assert registry["schema_version"] == "affinedrift.evidence-presentation/v1"
 
-    schema_file = repo_root / "schemas/evidence-presentation-v1.schema.json"
+    schema_file = source_root / "schemas/evidence-presentation-v1.schema.json"
     schema = json.loads(schema_file.read_text(encoding="utf-8"))
     jsonschema.validate(instance=registry, schema=schema)
 
+    registry_path = source_root / "data/trust/generated/evidence_presentation_registry.json"
+    partial_path = source_root / "_includes/generated/evidence-presentation-summary.qmd"
+    reviewed_registry_bytes = registry_path.read_bytes()
+    reviewed_partial_bytes = partial_path.read_bytes()
+    next_day = date.fromisoformat(registry["generated_on"]) + timedelta(days=1)
+
+    class NextDayDate(date):
+        @classmethod
+        def today(cls) -> date:
+            return next_day
+
+    monkeypatch.setattr(evidence_presentation_generator, "date", NextDayDate)
+
+    assert trust_generation_root.resolve() == tmp_path.resolve()
+    assert trust_generation_root.resolve() != source_root.resolve()
+
     # Test file generation
-    reg_path, part_path = generate_evidence_presentation(check=False, repo_root=repo_root)
-    assert reg_path.is_relative_to(tmp_path)
-    assert part_path.is_relative_to(tmp_path)
+    reg_path, part_path = generate_evidence_presentation(
+        check=False, repo_root=trust_generation_root
+    )
     assert reg_path.is_file()
     assert part_path.is_file()
+    assert reg_path.resolve().is_relative_to(tmp_path.resolve())
+    assert part_path.resolve().is_relative_to(tmp_path.resolve())
+    assert json.loads(reg_path.read_text(encoding="utf-8"))["generated_on"] == next_day.isoformat()
 
     # Test check mode passes
-    generate_evidence_presentation(check=True, repo_root=repo_root)
+    checked_reg_path, checked_part_path = generate_evidence_presentation(
+        check=True, repo_root=trust_generation_root
+    )
+    assert checked_reg_path == reg_path
+    assert checked_part_path == part_path
+    assert registry_path.read_bytes() == reviewed_registry_bytes
+    assert partial_path.read_bytes() == reviewed_partial_bytes

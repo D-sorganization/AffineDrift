@@ -1,17 +1,21 @@
 # Shallow-Wide Chapter — #4733
 
 - Goal active under epic #4009; regular protected PRs only.
-- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `e6eec4ac10fc5167197bf9a8ad93e360754810d4`; audit binding `442b73d6f`; integration checkpoint `35684ed7c717c2cfcf1836d69fd240fdce178da3` is pushed; current receipt update `SELF`; PR not created. Integrated ground delivery feae3b872 and peer main 668de3a23; both chapter reviews and peer changes are retained.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `e6eec4ac10fc5167197bf9a8ad93e360754810d4`; audit binding `442b73d6f`; integration checkpoint `35684ed7c717c2cfcf1836d69fd240fdce178da3` is pushed; current receipt update `SELF`; PR not created. Integrated ground delivery2890e80cf and peer main03ea44ea7;85 focused and184 content checks pass (four skips); both chapter reviews and peer changes are retained.
 - Session `technical-review-20261001-shallow-wide`, lease/presence through 06:58 UTC. Full Chapter 4 corrected: conditional latency, anatomical versus computational layers, state compression, accurate parameter comparison, bounded synergy evidence and validated printed NMF. Three supplied-text agy Flash inventories adjudicated; no delegated tools/network/edits.
 - Durable rationale, exact primary scopes, old-code reproduction, prior audit snapshots and render evidence: `reports/technical-review/shallow-wide-*`. Historical notebook remains unreviewed/scaffolded.
 - Validation: 24 printed-example/counterexample tests; 46 combined focused/book-audit/hygiene passes; all twelve content gates; 651 title checks. Rebuilt Volume IV PDF 71 pages: all eight chapter pages, contents, following boundary and three bibliography pages visually inspected; final diagram enlarged and page24 reinspected. Public route four width/theme cases and axe pass. Three new findings are bound to the source checkpoint; the original finding retains its historical commit. Seven follow-up provenance/URL tests pass (46 combined focused checks), including rejection of trailing whitespace. Final complex-input rejection and PDF are committed; all three new findings are bound to that exact final source checkpoint. Integrated full suite completed: 6262 passed, one stale generated schema-checksum failure, 29 skips, 93.04% coverage. Catalog regenerated; all60 affected checks and184 content checks pass (four skips); final two-route browser8/8 plus axe pass. Scientific source/PDF unchanged.
 - Ground PR #4732 original head passed all CI 36815440996. Peer PR #4731 merged main `668de3a23b73c166936077ccdd6c4f869deb1c6c`, creating eleven shared digest/key-order conflict blocks. They are resolved in `AffineDrift-impact-review` on ground branch; all 28 findings preserved. Integrated ground suite passed 6232 tests with 93.04% coverage; 184 content checks and four browser cases passed. Ground lease renewed through 07:16 UTC. Do not mix worktrees or include Chapter4 in PR4732.
-- Next: integrate ground2890e80cf (including peer main03ea44ea7), then create a regular PR. The initial full run is retained in shallow-wide-integrated-full.txt; wheel artifacts preserved in shallow-wide-integrated-wheel-artifacts. Complete regular PR delivery after protected ground merge. Ground head feae3b872 is pushed, auto-merge armed, CI36821074418 running. Integrated chapter receipt: reports/technical-review/shallow-wide-integration-validation.json. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
+- Next: validate the integrated audit changes and create a regular PR stacked on ground4732; merge only after retargeting to main following ground delivery. The initial full run is retained in shallow-wide-integrated-full.txt; wheel artifacts preserved in shallow-wide-integrated-wheel-artifacts. Complete regular PR delivery after protected ground merge. Ground head2890e80cf is pushed and protected auto-merge is armed; latest CI is running. Integrated chapter receipt: reports/technical-review/shallow-wide-integration-validation.json. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
 - Development entries touched: DL-#4733; DL-#4730 delivery continues in the isolated checkout.
 
 ## Preserved Earlier Checkpoints
 
 Earlier pending statuses below are historical; current state is above.
+
+## Latest Ground Delivery Integration
+
+- SELF integrates peer PR #4713 at 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Ground source, PDF and all prior findings preserved; only handoff/log conflicts resolved. 43 focused and 184 content checks pass (four skips). Prior6232-pass full suite belongs to feae3b872. Receipt: reports/technical-review/ground-conversation-integration-4713.json. Next: push for protected PR4732 CI. No live deployment claim.
 
 # Ground-Reaction Chapter — #4730
 
@@ -26,6 +30,21 @@ Earlier pending statuses below are historical; current state is above.
 - Next longest source is queued as epic child #4733 (shallow-wide neural latency/synergies). Complete source read; original code defects reproduced; two supplied-text Flash inventories adjudicated. Read-only preparation and primary scopes are saved in docs/development/technical-review/shallow-wide-preparation.md and shallow-wide-correction-design.md. No #4733 lease, branch or source edits yet; finish #4732 first.
 
 - Parallel Chapter4 work is isolated on `fix/shallow-wide-rigor-4733` in `AffineDrift-screw-review`, source checkpoint b3410b4f040b73fa108a207b6d51e7233c75e919; do not include those edits in PR4732.
+
+## Preserved Peer Delivery Record
+
+PR #4713 merged as 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Its original record below is historical; main deployment is not verified here.
+
+# Dataset Explorer Deployment Route Audit — #4688 — Current Integration
+
+- Worktree: `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`.
+- PR #4713 is open and draft at remote head `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`, base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6`. The local branch integrates accepted candidate `046021164` with current main `fd508f04`; keep it unpushed until root review.
+- Structural checks confirm all 249 current-main route and report records/findings, inventory metadata, and main docs history are retained, with only the reviewed `/models/dataset-explorer.html` record (`ad-route-60ee227724f0`) added. Its 16 evidence hashes match source. Canonical generation yields 250 routes, 247 reviewed, 3 exempt, 0 deferred; enforced audit verifies two reports.
+- Focused audit/review tests: 46 passed. Pinned content-lint: 183 passed, 5 skipped, 6,211 deselected. Canonical evidence, inventory/publication, and SPEC checks pass. The 6,162-pass full suite is from prior tree `3c9572b6` and is not represented as full-suite validation of this integration.
+- The old `4b886599` full render, 250-page manifest and enforced audit validate `4b886599` only; the earlier interrupted `dccdceab` native exit is unknown.
+- Current-main reviewed Chapter 20 and reference-library source/audit records are preserved. Synthetic population inputs remain synthetic; ZTCF/proximal-distal evidence remains model-level/educational; no human/population validation is claimed. Keep #4695 open and #4694 separate.
+- Exact-candidate PR CI render and full revision-bound publication audit remain required; after merge, verify successful main deployment before closing #4688. Keep finding #4695 open and workflow follow-up #4694 separate.
+
 
 ## Earlier Checkpoints
 
