@@ -18,6 +18,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4771 — Measured Golfer Evidence
+
+- **Status:** in_progress
+- **Issue:** #4771; epic #4009 / corpus #4021
+- **Branch:** fix/measured-golfers-rigor-4771; regular PR pending
+- **Why:** Wrong systematic-review attribution and overbroad instrument, EMG, statistical and validation claims.
+- **Change:** Full Chapter24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Preserve87 historical findings.
+- **Last verified:** 2026-10-01;three covariance cases and two source contracts pass after RED,653 source titles. Final publication/regression/binding pending;no audit credit yet.
+- **Next:** Complete publication checks and regression, integrate PR4770/main, bind exact source bytes, regular PR and protected merge. Seven Flash drafts lead-adjudicated.
+
 ### DL-#4769 · Speed, Energy, and Power Review
 
 - **State:** in_review

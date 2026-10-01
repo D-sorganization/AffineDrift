@@ -1,0 +1,130 @@
+{
+  "issue": 4771,
+  "source": "articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd",
+  "status": "source_checkpoint; final publication checks pass; regression and binding pending",
+  "tests": {
+    "red": "3 covariance checks pass;2 source contracts fail before prose correction.",
+    "green": 5,
+    "focused": 48
+  },
+  "static_checks": {
+    "ruff": "pass",
+    "black_files": 840,
+    "mypy_ci_scope_files": 94,
+    "source_title_files": 653
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/measured-golfers-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "render": {
+    "pdf_pages": 223,
+    "canonical_public_pdf_equal": true,
+    "visual_pages": [163, 164, 165, 166, 167, 168, 169, 170, 171],
+    "mobile_figure": "Enlarged labels, wrapped detail lines and narrowed canvas. Final PDF page165 and390px browser screenshot inspected; no clipping. All other Chapter24 pages and boundaries were inspected before this figure-only adjustment."
+  },
+  "browser": {
+    "viewport_theme_cases": 4,
+    "failures": 0,
+    "axe_serious_critical": 0,
+    "math_containers": 19,
+    "display_equations": 2,
+    "math_errors": 0,
+    "unrendered_math": 0,
+    "page_overflow_px": 0,
+    "widths": [390, 1440]
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": [
+      "claim inventory",
+      "test drafting",
+      "grip methods",
+      "grip discussion",
+      "study register",
+      "figure draft",
+      "adversarial review"
+    ],
+    "authority": "Lead-adjudicated supplied-text drafts. Rejected errors documented in measured-golfers-review.md."
+  },
+  "remaining": [
+    "Integrate PR4770 and incoming main",
+    "Full regression",
+    "Exact committed-source finding binding",
+    "Regular PR and protected delivery"
+  ],
+  "corpus_pending": 119,
+  "whole_book_consistency_pending": true
+}

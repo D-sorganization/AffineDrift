@@ -1,3 +1,16 @@
+# Measured Golfer Evidence Source Checkpoint — #4771
+
+- Goal active under epic #4009/corpus #4021. Chapter24 source and figure revised; 119 pending sources plus whole-book consistency until full validation/binding. No completed-audit credit yet.
+- Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/measured-golfers-rigor-4771 starts at PR4770 registration head8779bd7. Regular PR not created yet. Do not add these changes to PR4770.
+- Seven supplied-text agy Gemini3.8 Flash jobs completed; lead adjudicated substantive errors and accepted power/work and variance wording clarifications. No live delegated jobs. Three independent covariance cases plus two source contracts pass after recorded RED;653 source titles pass.
+- New chapter: corrected Bourgain review attribution, ECU-specific EMG, sensor versus inverse-dynamics grip loads, scoped eight-study register, synthetic repeated-measure uncertainty, prediction/causation distinctions, synchronized mechanical accounting and bounded validation gap. Nine decisions and exact primary reading scopes in measured-golfers-review.md;87 prior route findings snapshotted.
+- 223-page PDF/HTML render and canonical/public parity pass; all Chapter24/boundary pages inspected, mobile figure improved. Four browser viewport/theme cases pass with zero serious/critical axe findings;19 math containers/two display equations, no errors/lazy math/overflow at390/1440. All12 publication gates,48 targeted tests,Ruff,Black840,mypy94 pass. Full regression, integration and exact Git-blob binding remain. Preserve QA and previous records.
+- PR4770 is separately integrating remote main37fa19fef (peer PR4761) in owned AffineDrift-speed-energy-integration checkout on fix/speed-energy-rigor-4769. Git merged without textual conflicts; rebuild combined PDF and refresh digests. Push with normal hooks, require final-head CI, verify delivery before recording merged. Do not use the old verify script unchanged: it hardcodes pre-integration head8779 and21paths.
+- Next: complete and push this source checkpoint; finish PR4770 integration/delivery; integrate verified remote main here, rerender if peer Chapter16 changes affect publication, validate and bind Chapter24, open regular PR with Fixes#4771, guarded merge.
+- Lease4771 technical-review-20261001-measured-golfers expires22:52UTC Oct1;4769lease22:52. Inbox incomplete/malformed, not proof no peers. Preserve peer23ee826. Never drafts, direct-main/force/admin pushes or bypass. No tracked mutation during push hooks.
+
+## Preserved Earlier Checkpoints
+
 # Speed, Energy, and Power Review — #4769
 
 - The goal remains active under epic #4009 and corpus #4021. Chapter 5 is reviewed and corrected; 119 full-source audits and whole-book consistency remain.
