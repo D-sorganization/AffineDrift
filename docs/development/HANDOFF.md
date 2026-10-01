@@ -6,7 +6,8 @@
 - Integrated (one CI cycle): **#4732** ground-reaction content (#4730), **#4667** Quarto `theme.dark` (#4556), **#4680** Home e2e visual QA (#4559).
 - Excluded from this batch: **#4683** (`docs/` → `_site/` output-dir, #4597) — extensive modify/delete conflicts with post-#4704 main; rebase in a dedicated lane. **#4659** (#4573 apex canonical host) — still blocked on GitHub Pages/DNS per PR notes; no code change.
 - Validation (local): `pytest tests/test_dark_theme_config.py tests/test_ground_conversation_review.py` — 15 passed; `scripts.regenerate_claim_audit_evidence --check` current after #4556 digest refresh.
-- Next: push consolidated branch, open/update PR, arm protected squash auto-merge; close superseded PRs **#4732**, **#4667**, **#4680** with `superseded by #<consolidated>`; leave **#4683** and **#4659** open.
+- Pull request: **#4735** — https://github.com/D-sorganization/AffineDrift/pull/4735
+- Next: monitor CI on #4735; arm protected squash auto-merge when green; close superseded PRs **#4732**, **#4667**, **#4680**; leave **#4683** and **#4659** open.
 
 ## Latest Ground Delivery Integration
 

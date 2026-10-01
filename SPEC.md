@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4735 | Consolidate wave 5: ground-reaction content (#4732/#4730), Quarto native dark theme (#4667/#4556), and Home e2e visual QA (#4680/#4559) after #4704/#4728; defers #4683/_site output-dir and excludes blocked #4659 apex-host deploy change. |
 | 2026-10-01 | #4728 | Rebalance on-ramp 3-hour tier estimates to 180 minutes, add duration contract tests, and mark audit findings corrected (#4695, #4691, RM#1879). |
 | 2026-10-01 | #4732 | Correct ground power and system boundaries, counterfactual reaction definitions, archived matching normalization and causal interpretation in companion Chapter 16. |
 | 2026-10-01 | #4725 | Qualify reference-library evidence, historical specifications, patent disclosures and launch-weight sensitivity; preserve prior chapter reviews. |
