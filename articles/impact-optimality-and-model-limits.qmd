@@ -1,7 +1,7 @@
 ---
-title: "Why an Optimized Double Pendulum Stops Its Hands"
-subtitle: "An Impact-Optimality Result, and the Structural Limit It Exposes"
-description: "Derives why optimal hand speed at impact is zero in point-mass double pendulums, examining distributed inertia, actuation limits, and model boundaries."
+title: "When an Energy Optimum Stops the Hands"
+subtitle: "A Double Pendulum's Inertia, Reachable Motion, and the Limits of Inferring a Golfer's Objective"
+description: "Derives a bounded energy-optimal rate split and connects club inertia, actuation, solver evidence, and golfer-model validation."
 author: "Dieter Olson"
 date: "2026-08-27"
 date-source: "initial-publication-record"
@@ -26,24 +26,24 @@ categories:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Ask a computer to find the golf swing that produces the fastest possible clubhead, and at first it hands back something no golfer has ever done: it swings the arms hard and then slams them to a complete stop right at the ball, flinging the club through. Real golfers still have their hands moving at about 7 m/s at impact. The simulation arrived at 0.36 m/s — essentially parked. It turned out the simulated club was wrong, and once that was fixed the computer's answer looked like a real golf swing after all.
+        A simplified swing optimizer once returned almost stationary hands at impact. That result raised a useful question: which parts came from mechanics, which came from the simulated club and its controls, and which could tell us something about golfers? Answering it requires keeping three different problems in view.
       </p>
       <div class="laymans-item">
-        <h3>The optimizer is not broken</h3>
+        <h3>An Energy Budget Gives a Bound</h3>
         <p>
-          There is a real effect underneath. If you pretend the whole clubhead is a single weight at the very end of the shaft, then all the energy in the club is the energy of that weight moving — and any energy left in your moving arms is energy that failed to reach the ball. In the perfect, unlimited case, stopping the arms really is optimal, and we can prove it exactly for every choice of arm and club weight. What that proof does <em>not</em> say is how close a real, constrained swing gets to that extreme.
+          Imagine straight arms and club, with all club mass concentrated at the head. If we can distribute a fixed amount of movement energy however we like, the fastest head leaves none in moving arms. That proves a result about this idealized instant. A swing still has to reach that instant using the available forces, time, and range of motion.
         </p>
       </div>
       <div class="laymans-item">
-        <h3>The club was twice as heavy as it should have been</h3>
+        <h3>The Club Changes the Whole Motion</h3>
         <p>
-          A real driver weighs about 310 grams, and most of that sits three quarters of the way down the shaft, not right at the end. The simulation had put 500 grams at the very tip. To a swinging arm that feels like a club with roughly <em>twice</em> the resistance to being whipped through, so the simulated golfer had to fight it by slamming on the brakes. Give the model a club with the right feel and the braking mostly disappears.
+          Reducing an excessive tip mass substantially changed the reported simulations: the hands kept moving through impact. Matching a real club's resistance to rotation about the grip is useful, but it preserves only one part of the equations. Where the mass sits also changes coupling, gravity, and the energy needed to move the hands.
         </p>
       </div>
       <div class="laymans-item">
-        <h3>What the corrected model says</h3>
+        <h3>A Plausible Result Is a Starting Point</h3>
         <p>
-          With the right club, the simulated swing reaches 111 mph with the hands still travelling at 7 m/s through the ball, matching measured golfers on five of the six things we can check. And it answers the question it was built for: swinging for pure clubhead speed, for the whip of the kinetic chain, or for power through the grip all produce the <em>same</em> swing. The one strategy that measurably costs you is holding the wrist angle for its own sake. The model still releases the club later than real golfers do, and that is the next thing to chase.
+          Several simulated objectives produced similar final speeds. That does not identify what a golfer optimizes, or establish that the paths and muscle actions were the same. The next step is to compare complete motions and independent measurements under clearly specified models and controls.
         </p>
       </div>
     </div>
@@ -51,244 +51,489 @@ categories:
 </section>
 ```
 
-::: {.callout-warning}
-## Correction, 27 August 2026
+::: {.callout-note}
+## Correction and Evidence Status
 
-**The conclusions in the later sections of the first published version of this
-article were wrong**, and the corrected results are folded in below.
+The 27 August 2026 correction identified an excessive lumped club mass in the
+original experiments. This technical review retains that history and its
+reported numerical results, while correcting the wider conclusions drawn from
+it. Matching one inertia does not make two clubs dynamically equivalent;
+failure to find a trajectory does not prove that no trajectory exists; and
+agreement with selected comparison bands does not identify a human objective.
 
-The cause was a mis-specified club, not a limit of the model. The simulation
-lumped 0.50 kg at the tip of a 1.10 m shaft; a real driver is 0.310 kg with its
-centre of mass 76% down. In a point-mass-at-tip model the quantity that governs
-the swing is inertia about the wrist, and that error overstated it — and the
-arm/club coupling that fights the release — by **2.1×**.
-
-With an inertia-matched club the *same* model produces **49.7 m/s of clubhead
-speed with 7.26 m/s of hand speed** and a club/arm rate ratio of 3.46: five of
-six measured observables inside their published bands, with no constraint
-imposed on the hands. The earlier claim that measured golfer hand speed was
-unreachable, and that a moving hub was required to fix it, was an artifact of
-the club.
-
-The impact-optimality result in the next section is **unaffected** — it concerns
-an unconstrained ideal, not where a constrained optimum lands. Tracked as
-[Tools#4785](https://github.com/D-sorganization/Tools/issues/4785).
+The historical results below come from
+[Tools #4785](https://github.com/D-sorganization/Tools/issues/4785), the archived
+article, and the
+[design contract at revision dcd4b2ae](https://github.com/D-sorganization/Tools/blob/dcd4b2ae9e0e3aa665280efb20769ea2b5d33948/docs/specs/SWING_ACTUATION_AND_REALISM.md).
+They have **not been independently rerun for this review**. The algebra and
+illustrative inertia calculations have been independently checked. These are
+different evidence levels.
 :::
 
-## The Observation
+## The Observation and the Three Questions
 
-The [interactive workbench](proximal-distal-model-workbench.html) now carries a
-**Swing Objective Lab**, which optimizes one downswing against five competing
-objectives — clubhead speed, centrifugal release impulse, Coriolis
-kinetic-chain transfer, grip-force energy transfer, grip-force impulse — under a
-single shared torque budget.
+The [model workbench](proximal-distal-model-workbench.html) compares downswing
+objectives involving clubhead speed, centrifugal release impulse, Coriolis
+transfer, grip-force work, and grip-force impulse. An early calculation with
+0.50 kg concentrated at the end of a 1.10 m club reported a clubhead speed of
+36.4 m/s and hand speed of about 0.36 m/s. A small dynamics residual accompanied
+the solution. The original article treated the almost stopped hands as evidence
+of a structural defect, then treated a revised club as resolving that defect.
 
-Every objective converged. Every trajectory satisfied the equations of motion to
-roughly $10^{-14}$. And every one of them was wrong in the same way:
+Three questions make the diagnosis more precise:
 
-| | Optimized | Measured golfer |
+1. **Energy bound:** at a specified pose and kinetic energy, which instantaneous
+   velocity maximizes a specified clubhead output?
+2. **Reachable swing:** which poses and velocities can the model reach from its
+   starting state under its actuator, duration, contact, and endpoint limits?
+3. **Human explanation:** which model and control hypotheses survive comparison
+   with independently measured golf swings?
+
+A correct answer to the first question constrains the second. It does not solve
+it, and neither answer alone settles the third. This distinction also explains
+why correcting a parameter can improve a finite-duration simulation without
+changing the energy-optimality theorem.
+
+## The Model and the Instantaneous Bound {#sec-energy-bound}
+
+Consider two rigid links moving in a plane about a fixed hub. The proximal link
+has length $L_1>0$ and inertia $A=I_1+m_1r_1^2$ about that hub. The distal body
+has mass $m_2>0$, axial center-of-mass distance $r_2$ from the wrist, and planar
+moment of inertia $I_2$ about its center of mass. The point called the head lies
+at distance $L_2>0$ from the wrist. These assumptions omit transverse COM offset,
+shaft flexibility, and a moving hub.
+
+Let $q=(\theta,\phi)$: $\theta$ is the proximal absolute angle and $\phi$ is the
+club's angle relative to it. Then $\omega_1=\dot\theta$ and the club's absolute
+angular rate is $\omega_2=\dot\theta+\dot\phi$. Define
+
+$$
+\delta=I_2+m_2r_2^2,\qquad \mu=m_2L_1r_2.
+$$
+
+The kinetic energy is $T=\tfrac12\dot q^{\mathsf T}M(\phi)\dot q$, with
+
+$$
+M(\phi)=
+\begin{bmatrix}
+M_{11} & M_{12}\\
+M_{12} & \delta
+\end{bmatrix}.
+$$ {#eq-impact-model-inertia}
+
+Its entries are
+
+$$
+\begin{aligned}
+M_{11}&=A+m_2L_1^2+\delta+2\mu\cos\phi,\\
+M_{12}&=\delta+\mu\cos\phi.
+\end{aligned}
+$$
+
+At the **assumed collinear pose** $\phi=0$, choose the common forward tangent.
+The signed head velocity along it is
+
+$$
+\begin{aligned}
+v_h&=(L_1+L_2)\omega_1+L_2\dot\phi\\
+&=c^{\mathsf T}\dot q,
+\qquad c=\begin{bmatrix}L_1+L_2\\L_2\end{bmatrix}.
+\end{aligned}
+$$
+
+The signed hand velocity is $L_1\omega_1$; its speed is $L_1|\omega_1|$.
+Collinearity is a model condition, not a general description of a golfer at
+impact. Away from it, head velocity is a two-component Jacobian output, and
+maximizing its magnitude is a different optimization problem.
+
+Assume $M=M(0)$ is positive-definite and $T=E>0$. The energy-metric
+Cauchy–Schwarz inequality gives
+
+$$
+(c^{\mathsf T}\dot q)^2
+\leq (c^{\mathsf T}M^{-1}c)(\dot q^{\mathsf T}M\dot q)
+=2E\,c^{\mathsf T}M^{-1}c.
+$$
+
+Equality in the forward direction gives the unique maximizing rate vector:
+
+$$
+\begin{aligned}
+\dot q^*&=\sqrt{\frac{2E}{c^{\mathsf T}M^{-1}c}}\,M^{-1}c,\\
+v_h^*&=\sqrt{2E\,c^{\mathsf T}M^{-1}c}.
+\end{aligned}
+$$ {#eq-impact-energy-optimum}
+
+This is a fixed-pose, fixed-energy, signed-velocity result. It contains no
+initial condition, muscle model, torque limit, swing duration, or collision law.
+At $E=0$ the only velocity is zero when $M$ is positive-definite. A singular
+mass matrix requires a separate treatment; the displayed inverse does not exist.
+
+### Why a Point Mass at the Head Stops the Hands
+
+For a tip mass $m_e$, set $r_2=L_2$ and $I_2=0$. At collinearity,
+
+$$
+T=\frac12 A\omega_1^2+\frac12 m_e v_h^2.
+$$
+
+With $A>0$, maximizing forward $v_h$ at fixed $E$ sets $\omega_1^*=0$ and
+$v_h^*=\sqrt{2E/m_e}$. The wrist is stationary at this ideal instant because
+any nonzero proximal motion consumes some of the specified energy.
+
+The positive-inertia condition matters. If $A=0$, the matrix is singular and
+many rate combinations can give the same head velocity and energy. Thus the
+unique zero-hand-rate conclusion is not valid for every conceivable parameter
+value. Nor does a zero terminal rate require that the optimizer apply a large
+braking torque: the theorem says nothing about the route to that state.
+
+### What Distributed Inertia Changes
+
+At $\phi=0$, direct inversion gives
+
+$$
+\begin{aligned}
+\det M&=A\delta+m_2L_1^2I_2,\\
+(M^{-1}c)_1&=\frac{L_1 B}{\det M},\\
+B&=I_2-m_2r_2(L_2-r_2).
+\end{aligned}
+$$ {#eq-impact-inertia-bracket}
+
+The sign of $B$ determines the sign of the energy-optimal proximal rate under
+these assumptions. For the original article's illustrative tuple
+$(m_2,r_2,L_2,I_2)=(0.31,0.89,1.143,0.043)$ in SI units,
+
+$$
+\begin{aligned}
+B&=-0.0268027\;\mathrm{kg\,m^2},\\
+I_{2,\mathrm{threshold}}&=0.0698027\;\mathrm{kg\,m^2}.
+\end{aligned}
+$$
+
+The formal zero-rate threshold is about **1.62 times** the specified COM
+inertia, not five times. Holding the other values fixed instead gives the
+outer COM root $r_2\approx1.005$ m, or about 88% of $L_2$. These are algebraic
+thresholds; independently varied mass, COM, and inertia need not describe a
+physically realizable body.
+
+For example, if all mass lies on the line segment $0\leq s\leq L_2$, then
+
+$$
+\begin{aligned}
+B&=\int s^2\,dm-L_2\int s\,dm\\
+&=-\int s(L_2-s)\,dm\leq0.
+\end{aligned}
+$$
+
+Only endpoint-supported mass can attain equality; positive interior mass makes
+$B<0$. A body with transverse extent or mass outside those endpoints requires
+a different realizability assessment. This prevents interpreting the formal
+positive-$B$ regime as an arbitrary design change to a slender club.
+
+The negative optimal hand velocity is a property of the declared instantaneous
+problem. It does **not** establish that distributed inertia worsens a realistic
+swing, or rule it out as a useful model refinement. It changes both the energy
+metric and the trajectory dynamics through which the final state is reached.
+
+## Matching One Inertia and Preserving the Dynamics {#sec-inertia-matching}
+
+A tip mass chosen as $m_e=\delta/L_2^2$ preserves the wrist-row diagonal inertia
+$M_{22}=\delta$. This matches **one coefficient**. The real coupling is
+$\mu=m_2L_1r_2$, while the replacement gives $\mu_e=m_eL_1L_2$. Their difference
+is tied to exactly the same bracket as the preceding theorem:
+
+$$
+\begin{aligned}
+\mu_e-\mu&=\frac{L_1}{L_2}
+\left[I_2-m_2r_2(L_2-r_2)\right]\\
+&=\frac{L_1}{L_2}B.
+\end{aligned}
+$$ {#eq-impact-coupling-mismatch}
+
+This connects the energy bound to model reduction: a nonzero $B$ means the tip
+replacement cannot preserve both $\delta$ and $\mu$. Even $B=0$ does not by
+itself preserve the $m_2L_1^2$ term in $M_{11}$, gravitational loading, or total
+mass. Endpoint-supported mass can be represented by masses at the wrist and
+head, but discarding the wrist mass loses its contribution to proximal motion.
+
+The provider's separate driver example uses $m_2=0.310$ kg, $r_2=0.867$ m,
+$I_2=0.0551$ kg·m² and overall length 1.143 m. These are the provider's declared
+example properties, not new measurements made for this article. Its
+[club specification](https://github.com/D-sorganization/Tools/blob/dcd4b2ae9e0e3aa665280efb20769ea2b5d33948/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/club_equivalence.py)
+measures COM distance from the **butt of the grip**. The model uses a 1.10 m
+second link. A butt-based inertia must not silently become an inertia about a
+different hand or wrist point.
+
+To make the arithmetic explicit, identify the example's reference point with
+the model wrist, use $L_1=0.65$ m and model $L_2=1.10$ m, and compare:
+
+| Quantity | Distributed Example | Old Tip Mass | Inertia-Matched Tip Mass |
+|---|---:|---:|---:|
+| Represented mass (kg) | 0.310 | 0.500 | 0.238119 |
+| COM distance from declared origin (m) | 0.867 | 1.100 | 1.100 |
+| $\delta$ (kg·m²) | 0.288124 | 0.605000 | 0.288124 |
+| $\mu$ (kg·m²) | 0.174701 | 0.357500 | 0.170255 |
+
+The old tip inertia is about 2.10 times the example's inertia. The equivalent
+mass substantially reduces that discrepancy, but its coupling is still about
+2.54% lower than the distributed example's, and the physical/model head lengths
+also differ. A 0.310 kg tip mass would give 0.3751 kg·m², not 0.605 kg·m²; the
+latter belongs to the 0.500 kg preset.
+
+If the grip reference moves distance $a$ from the butt toward the head, use
+$r_{\mathrm{grip}}=r_{\mathrm{butt}}-a$ and
+
+$$
+\begin{aligned}
+\delta_{\mathrm{grip}}&=I_2+m_2(r_{\mathrm{butt}}-a)^2\\
+&=\delta_{\mathrm{butt}}-2am_2r_{\mathrm{butt}}+m_2a^2.
+\end{aligned}
+$$
+
+The head lever arm must change consistently too. Choosing the origin, club
+geometry, and preserved coefficients is part of the model specification.
+
+## What the Historical Simulations Establish {#sec-legacy-experiments}
+
+The original mass sweep reported the following outputs. They are retained as
+historical simulation results, not as newly validated human measurements:
+
+| Lumped Tip Mass | Head Speed (m/s) | Hand Speed (m/s) | Club/Arm Rate Ratio | Reported Braking Fraction |
+|---|---:|---:|---:|---:|
+| 0.500 kg | 36.4 | 0.36 | 59.4 | 33% |
+| 0.320 kg | 45.3 | 6.01 | 3.86 | 24% |
+| 0.238 kg | 50.8 | 7.95 | 3.18 | 24% |
+
+The source reports dynamics defects no larger than $2\times10^{-13}$ for this
+sweep. The substantial change in terminal hand speed demonstrates sensitivity
+to the modeled mass. Braking did not disappear: the source still reports 24%
+for the two lighter cases. Other historical tables round or configure the old
+case differently, giving a ratio of 59.2 and braking fraction of 32%; those
+figures should not be treated as one precisely identified run.
+
+The reported hand-speed-floor experiment used the old club, a 0.36 s duration,
+and torque limits of ±250 N·m:
+
+| Hand-Speed Floor | Reported Solver Outcome | Head Speed (m/s) | Club/Arm Rate Ratio |
+|---|---|---:|---:|
+| None | Successful candidate | 36.4 | 59.2 |
+| 3 m/s | Successful candidate | 34.1 | 6.1 |
+| 5 m/s | Described as marginal | 29.6 | 2.9 |
+| 6 m/s | No feasible candidate reported | — | — |
+
+A local solver's **failure to find** a feasible trajectory is not an
+infeasibility certificate. The archived
+[analysis predicate](https://github.com/D-sorganization/Tools/blob/dcd4b2ae9e0e3aa665280efb20769ea2b5d33948/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/model_adequacy.py)
+classifies reachability using a dynamics-defect threshold. That predicate alone
+does not verify every endpoint or inequality constraint. A small collocation
+residual also does not establish global optimality, accuracy between grid
+points, independent reintegration agreement, or validity as a golfer model.
+
+The archived Hill-limit example reported 6.8 m/s hand speed, a rate ratio of
+2.8, and zero modeled braking, **but also dynamics defects near 1.0**. Those
+numbers cannot be presented as a feasible swing or as measured confirmation of
+the actuation model. The available narrative and implementation preserve useful
+leads, but a complete run manifest, solver settings, states, controls, and
+constraint residuals are needed before these tables support reproducible
+quantitative comparisons.
+
+## Actuation, Deceleration, and Muscle Inference
+
+A symmetric torque clamp allows driving and opposing moments of equal
+magnitude. Replacing it with velocity-dependent actuator capacity can change
+the reachable motions. Hill's force–shortening relation concerns active muscle
+under specified experimental conditions; converting it into a joint
+torque–velocity law adds assumptions about moment arms, muscle lengths,
+activation, tendon mechanics, and the contributing muscle groups [@Hill1938,
+pp. 160–163].
+
+Active muscle can absorb mechanical energy while lengthening. Such **eccentric**
+behavior is not ruled out by a shortening-force relation. The provider's
+[actuation implementation](https://github.com/D-sorganization/Tools/blob/dcd4b2ae9e0e3aa665280efb20769ea2b5d33948/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/actuation.py)
+explicitly allows a braking branch; its chosen capacity is a model parameter,
+not a universal physiological constant.
+
+For generalized hub and wrist actuator moments $\tau_h,\tau_w$, actuator power
+is $\tau_h\dot\theta+\tau_w\dot\phi$. A negative hub-power interval identifies
+energy absorbed through that modeled input. An anatomical joint's net moment,
+a segment's angular deceleration, and an individual muscle's activation are
+three different quantities. Antagonists can be active while their net moment
+is small; interaction forces can decelerate a segment while muscles remain
+active. The work-and-power study of four amateur golfers used kinematically
+driven models to estimate net joint work and club energy transfer. It does not
+establish zero active arm braking in humans [@nesbit2005work, pp. 521–523,
+527–531].
+
+MacKenzie and Sprigings used four aggregate torque generators with activation
+and force–velocity behavior in a three-dimensional forward model. Their
+comparison involved one male golfer with a three handicap, followed by a
+separate optimization. This provides a modeling precedent, rather than a
+universal joint law or proof that a particular two-link simulation reproduces
+human muscle action [@mackenzie2009, §§2.1, 2.3–2.5].
+
+### Why a Single Rollout Does Not Prove a Release Mechanism
+
+At a fixed state, a hub-moment increment alone contributes
+$-M_{12}\Delta\tau_h/\det M$ to relative angular acceleration. That local
+coupling helps explain why increasing proximal drive can initially increase
+lag under a chosen sign convention. The complete acceleration also includes
+wrist moment, gravity, velocity-dependent terms, and configuration.
+
+The historical full-drive rollout increased its cock-angle measure from 100°
+to 184°. This is an example for its stated input, not proof that every
+fixed-hub release requires hub-torque reversal. In particular, an independently
+actuated wrist changes the argument. Releasing the club, decelerating the
+proximal link, and applying a negative proximal actuator power need to be
+measured separately in each trajectory.
+
+## Comparing the Model With Golfers {#sec-reference-bands}
+
+The provider's six intervals are useful **heuristic comparison bands** until
+their exact numerical provenance and observable mappings are established.
+Calling all six directly measured ranges overstates the evidence. For example,
+Nesbit's study included 84 male and one female amateur golfers; Table 3 reports
+aggregate-group impact grip speed of 7.1–8.0 m/s, with mean 7.75 m/s, and impact
+head speed of 43–50 m/s. Those are not the implementation's 6–9 and 45–55 m/s
+intervals, and they are not a professional-tour cohort
+[@nesbit2005kinematic, pp. 503–504].
+
+| Implementation Observable | Historical Band | Evidence and Mapping Needed |
 |---|---|---|
-| Hand speed at impact | 0.36 m/s | 6–9 m/s |
-| Club / arm angular rate | 59× | 2.5–4× |
-| Downswing spent braking the arms | 32% | ≈0 (deceleration is passive) |
+| Head speed at impact | 45–55 m/s | Distinguish resultant speed from a target-direction component; the cited Table 3 reports 43–50 m/s. |
+| Hand speed at impact | 6–9 m/s | Define the measured grip point and compare it with the model wrist; Table 3 reports 7.1–8.0 m/s. |
+| Downswing duration | 0.23–0.32 s | The exact claimed interval has not been verified in the cited sources; define start and impact events consistently. |
+| Absolute club/proximal angular-rate ratio | 2.5–4 | This is a derived planar-model quantity, not an interchangeable ratio of arbitrary anatomical Euler rates; specify denominator behavior near zero. |
+| Wrist cock at impact | −5° to 20° | Match the angle convention, joint representation, and club reference; the exact empirical interval remains unverified here. |
+| Fraction of downswing before half release | 0.55–0.80 | The implementation uses the first grid index where cock angle falls to half its initial value, divided by $N-1$; the exact cited empirical interval remains unverified here. |
 
-Measured values from [Nesbit
-(2005)](https://www.jssm.org/jssm-04-499.xml.xml) and [Miura
-(2001)](https://doi.org/10.1007/BF02844309).
+The historical duration and release bands cite Jorgensen and
+Sprigings–Neal, respectively [@jorgensen1970; @sprigings2000]. Those citations
+are retained as provenance of the implementation, not as certification that
+these exact intervals were measured in those papers. A discretized crossing
+index also needs interpolation and time-grid checks before being compared to
+a continuous-time release measurement.
 
-The natural reading is that the optimizer is misbehaving. It is not.
+In the implementation, deviation outside each interval is normalized by its
+half-width, then summed. This is a declared scoring rule: it encodes relative
+weights and supplies neither a statistical likelihood nor uncertainty bounds.
+Being inside five intervals is therefore a limited descriptive result. It is
+not validation of all six observables, the complete trajectory, tissue loads,
+or a golfer's control objective.
 
-## The Impact-Optimality Result
+## What the Objective Comparison Can Tell Us
 
-At impact the club is in line with the arms, so both angular rates drive the
-clubhead along the same perpendicular:
+Tools #4785 describes the revised objective comparison as using the
+inertia-matched club and a **0.28 s** duration, distinct from the 0.36 s old-club
+frontier. The article's historical values are:
 
-$$v_{\text{head}} = (L_1 + L_2)\,\omega_1 + L_2\,\dot\phi$$
+| Objective | Deviation Score | Head Speed (m/s) | Hand Speed (m/s) | Club/Arm Rate Ratio |
+|---|---:|---:|---:|---:|
+| Head speed | 0.80 | 49.72 | 7.26 | 3.46 |
+| Coriolis transfer | 0.80 | 49.65 | 7.10 | 3.54 |
+| Grip-force energy transfer | 0.80 | 49.72 | 7.26 | 3.46 |
+| Grip-force impulse transfer | 0.80 | 49.72 | 7.26 | 3.46 |
+| Centrifugal release impulse | 0.93 | 48.71 | 6.14 | 4.10 |
 
-Maximising $v_{\text{head}}$ subject to a fixed kinetic energy
-$T = \tfrac12 \dot q^{\mathsf T} M \dot q$ is a linear objective on a quadratic
-form, so the optimum lies along $\dot q^\ast \propto M^{-1} c$ with
-$c = (L_1 + L_2,\; L_2)$. Writing $\delta = I_2 + m_2 r_2^2$ for the club's
-inertia about the wrist and $\mu = m_2 L_1 r_2$ for the coupling, the mass matrix
-at $\phi = 0$ has $M_{22} = \delta$ and $M_{12} = \delta + \mu$, and the arm
-component of $M^{-1}c$ reduces to
+These terminal summaries show close agreement for four objectives and a
+reported difference for the fifth. They do not show identical **whole
+trajectories**: even the listed Coriolis case differs in its endpoint values.
+Nor is maximizing centrifugal release impulse equivalent to deliberately
+holding a wrist angle. The roughly 1 m/s difference is a reported simulation
+comparison, not evidence that a coaching strategy costs a golfer that speed.
 
-$$\omega_1^\ast \;\propto\; L_1\left[\,I_2 - m_2 r_2 (L_2 - r_2)\,\right]$$
+The source also reports half-release near 90% of the downswing, later than its
+chosen 55–80% interval. Until the interval and observable are reconciled with
+measurements, this is a mismatch with the implementation's reference, not a
+quantified population error.
 
-This bracket decides everything.
+If different objectives generate indistinguishable predictions under a given
+model and experiment, the experiment cannot identify which objective a person
+uses. Discrimination requires observations on which the hypotheses differ,
+matched constraints and initial conditions, numerical convergence assessment,
+and independent data. A plausible endpoint is valuable, but its evidential
+role is smaller than the original article claimed.
 
-### Three Regimes
+## Hand Path, Moving Hubs, and Energy Transfer
 
-**A point-mass clubhead** — $r_2 = L_2$, $I_2 = 0$ — gives
-$0 - m_2 L_2 (L_2 - L_2) = 0$. **Identically zero, for every parameter value.**
-There is nothing to tune. With all of the club's mass at the tip, the club's
-kinetic energy *is* $\tfrac12 m_e v_{\text{head}}^2$, so energy in the moving arm
-is energy that never reached the head. The speed-optimal swing stops the hands
-because stopping them is optimal.
+Miura's modified model used a **moving pivot** driven by a linear actuator,
+while keeping the two link lengths fixed. An imposed 0.08 m pull over the final
+0.04 s increased modeled head speed from 46.8 to 50.1 m/s in the reported
+example. The paper distinguishes this emulation from direct simulation of a
+golfer's actual pull motion [@miura2001, pp. 82–83, Fig. 7 and Table 1]. It does
+not require $L_1$ to shorten, nor does it establish a unique cause of human arm
+deceleration.
 
-**A real driver** — $m_2 = 0.31$ kg, $r_2 = 0.89$ m, $L_2 = 1.143$ m,
-$I_2 = 0.043$ kg·m² — gives $-0.027$. Negative. The optimum wants the hands
-travelling *backward* through impact. Modelling the club properly makes the
-pathology worse, not better.
+The mechanical connection is power at a common grip reference,
+$P=\mathbf F\cdot\mathbf v_{\mathrm{grip}}
++\mathbf M_{\mathrm{grip}}\cdot\boldsymbol\omega$ for a rigid club. A force
+that is radial relative to one chosen center can do work when its application
+point moves. Changing the hand path changes the force–velocity alignment,
+while moving the model base adds a source of motion and potentially work that
+must be included in the energy budget. Inward motion is not, by itself, an
+energy source.
 
-**A forward optimum** requires $r_2 \approx 1.0$ m — a centre of mass at 88% of
-club length — or $I_2 \gtrsim 0.2$ kg·m², about five times a driver's. No club
-anyone swings lands there.
+A torso segment, prescribed base motion, and variable proximal length represent
+different model extensions. Each changes geometry, inertia, admissible forces,
+and the interpretation of the inputs. Their contributions cannot be inferred
+merely by adding one more coordinate or by transferring a fixed-hub result.
+Distributed club inertia likewise remains a legitimate refinement: the
+instantaneous theorem does not exclude its effects on reachable trajectories.
 
-So the intuitive repair, distributed club inertia, is ruled out analytically
-before any of it is built.
+## A Controlled Route to a Stronger Explanation
 
-## Why Actuation Limits Are Necessary but Not Sufficient
+First specify the club and grip origin, then compare the distributed model
+with the inertia-matched tip approximation under identical start states,
+durations, actuator laws, and endpoint requirements. Inspect the full mass
+matrix, gravity, energy balance, and resulting trajectories. This isolates the
+model reduction from changes in the experiment.
 
-The model gives the golfer a symmetric, velocity-independent torque budget, so
-braking the arms costs exactly what driving them costs. Two pieces of physiology
-are missing: torque capacity falls hyperbolically with joint speed ([Hill
-1938](https://doi.org/10.1098/rspb.1938.0050)), and the muscles that decelerate
-the arms are not the ones that drive them.
+Next compare actuator choices using their declared positive and negative power
+capacities. Report all constraint residuals, mesh refinement, multistart
+sensitivity, and independent forward integration. Distinguish a feasible
+candidate, a locally optimized result, and any certified global statement.
 
-Adding a Hill-type torque–velocity relation of the form used in golf
-forward-dynamics models since [Sprigings & Neal
-(2000)](https://doi.org/10.1123/jab.16.4.356) and [MacKenzie & Sprigings
-(2009)](https://doi.org/10.1007/s12283-009-0020-9) produces exactly the
-kinematics the literature reports — hands at 6.8 m/s, a club/arm ratio of 2.8,
-and **zero active braking**, with the arm deceleration arising passively from the
-club's interaction torque, which is what [Nesbit & Serrano
-(2005)](https://www.jssm.org/jssm-04-520.xml.xml) find in real swings.
+Then test geometric extensions with complete power accounting and observables
+that can be mapped to actual measurements. A moving hub may improve a hand
+path or release timing, but that is a hypothesis to test. It should be compared
+with parameter uncertainty, distributed inertia, actuator changes, and the
+measurement definition itself.
 
-Those trajectories are also **infeasible** *when the club is mis-specified*. The
-club never reaches the ball, because the overstated coupling keeps driving the
-wrist open. With a correct club that tension largely disappears.
-
-## The Club Correction
-
-`physics.mass_matrix` treats the club as a point mass at the tip. A real club is
-not that, so an equivalence is needed — and the invariant to preserve is
-**inertia about the wrist**, because it sets both the wrist-row mass term and
-the coupling $\mu = m_e L_1 L_2$ in every centrifugal and Coriolis term.
-
-| | Real driver | As simulated | Ratio |
-|---|---|---|---|
-| Club mass | 0.310 kg | 0.500 kg | 1.61× |
-| COM from wrist | 0.867 m | 1.100 m | 1.27× |
-| **Inertia about wrist** | **0.288 kg·m²** | **0.605 kg·m²** | **2.10×** |
-| **Coupling $\mu$** | **0.172 kg·m²** | **0.358 kg·m²** | **2.08×** |
-
-Matching the inertia gives an equivalent tip mass of $m_e = 0.238$ kg. Holding
-everything else fixed:
-
-| Lumped tip mass | Clubhead | Hands | Club/arm |
-|---|---|---|---|
-| 0.500 kg (as simulated) | 36.4 m/s | **0.36 m/s** | **59.4** |
-| 0.320 kg | 45.3 m/s | 6.01 m/s | 3.86 |
-| **0.238 kg (real driver)** | **50.8 m/s** | **7.95 m/s** | **3.18** |
-
-The equivalent mass is a modelling quantity, not a claim about club weight: it
-is the mass that, placed at the tip, swings like the real club.
-
-## The Structural Limit
-
-Hub torque does not only turn the arms. Through the off-diagonal mass term
-$M_{12}$ it also drives the wrist *open*. In a free rollout at full drive, the
-wrist cock angle grows from 100° to **184°** — the club does not release, it lags
-further.
-
-The only way this model brings the club through to $\phi = 0$ at impact is to
-cut, and then reverse, the hub torque, which necessarily decelerates the arms.
-
-> **Releasing the club costs some hand speed in a two-link fixed-hub model.**
-> With a correct club that cost is a few m/s; with the coupling overstated by
-> 2.1× it consumed all of it.
-
-Sweeping a floor on hand speed at impact measures the price directly:
-
-| Hand-speed floor | Feasible | Clubhead speed | Club / arm ratio |
-|---|---|---|---|
-| none | yes | 36.4 m/s | 59.2 |
-| 3 m/s | yes | 34.1 m/s | 6.1 |
-| 5 m/s | marginal | 29.6 m/s | 2.9 |
-| **6 m/s** (measured band) | **no** | — | — |
-
-That table characterises the **mis-specified** club. With the corrected club the
-unconstrained optimum already sits at 7.26 m/s — inside the measured band, with
-no floor imposed at all.
-
-## What This Means for the Objective Question
-
-The workbench was built to ask which mechanism a good golfer optimizes. With the
-club corrected, that question becomes answerable.
-
-| Objective | Deviation | Clubhead | Hands | Club/arm |
-|---|---|---|---|---|
-| Clubhead speed | 0.80 | 49.72 m/s | 7.26 | 3.46 |
-| Coriolis transfer | 0.80 | 49.65 m/s | 7.10 | 3.54 |
-| Energy transfer | 0.80 | 49.72 m/s | 7.26 | 3.46 |
-| Impulse transfer | 0.80 | 49.72 m/s | 7.26 | 3.46 |
-| **Centrifugal impulse** | **0.93** | **48.71 m/s** | **6.14** | **4.10** |
-
-**Optimizing for clubhead speed, Coriolis transfer, energy transfer or
-grip-force impulse produces the same swing** — and that swing matches measured
-golfers on five of six observables. The mechanisms and the outcome coincide.
-
-**Holding lag for its own sake is the one strategy that measurably costs you**,
-about 1 m/s of clubhead speed, with the club/arm ratio pushed to the edge of its
-measured band.
-
-The one observable still outside its band for every objective is the release
-timing: the model releases at roughly 90% of the downswing against a measured
-55–80%. That is the next thing worth chasing.
-
-## What Would Actually Change the Answer
-
-0. **Correct the club first.** Done, and it was the dominant term — everything
-   below is now an improvement rather than a prerequisite.
-1. **A moving hub — a torso segment.** Still the largest remaining gap, and the
-   most likely route to fixing the late release. Both
-   [Nesbit (2005)](https://www.jssm.org/jssm-04-499.xml.xml) and [MacKenzie &
-   Sprigings (2009)](https://doi.org/10.1007/s12283-009-0020-9) treat the torso
-   as a driven segment for exactly this reason. The triple-pendulum model in the
-   workbench is the natural home.
-2. **A variable hand radius.** [Miura (2001)](https://doi.org/10.1007/BF02844309)
-   measured the inward hand pull and named the resulting gain *parametric
-   acceleration*. It requires $L_1$ to shorten through impact, and it is the
-   measured mechanism for the hand deceleration this model fakes with torque
-   reversal.
-3. **Hill actuation, retained.** Necessary — it removes the impossible braking —
-   and sufficient only once the release no longer requires reversing the hub.
-4. **Not** distributed club inertia, for the reason derived above.
+Finally compare candidate objectives on held-out motions and outputs that
+actually discriminate between them. The connected argument is that **geometry
+sets the velocity map; inertia sets energy and coupling; actuation and history
+set reachability; measurement determines what can be tested; and the experiment
+determines what can be identified**. The simplified model is most useful when
+those relationships remain visible.
 
 ## Interpretation Boundary
 
-This is a planar two-link model with a point-mass arm and clubhead, a fixed hub,
-constant torque limits, no shaft flex, no ground reaction and no plane change.
-The proximal link's angular rate is not an anatomical shoulder or thorax
-velocity. Everything above describes a two-link chain under a torque budget. None
-of it is anatomical attribution, and none of it is coaching advice.
+The exact zero-hand-rate result applies to a collinear, fixed-hub, planar model
+with a point mass at the head, positive proximal inertia, and an instantaneous
+fixed kinetic-energy budget. The historical optimization outputs concern
+particular two-link implementations and settings. Neither supplies anatomical
+attribution, a muscle-activation measurement, a ball-flight optimum, or coaching
+advice. Impact performance also depends on delivered face orientation, contact
+location, effective collision dynamics, and ball properties.
 
-The result that a point-mass-clubhead model has $\omega_1^\ast = 0$ is exact and
-parameter-independent. Everything downstream of it — which repairs fail, what the
-frontier costs, how the objectives rank — is a statement about this model class,
-and is offered as a reason to change the model rather than as a claim about
-people.
+## Implementation and Review Evidence
 
-## Implementation
+The historical provider implementation is pinned to revision
+[dcd4b2ae9e0e3aa665280efb20769ea2b5d33948](https://github.com/D-sorganization/Tools/tree/dcd4b2ae9e0e3aa665280efb20769ea2b5d33948/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives).
+Its `impact_optimality.py`, `club_equivalence.py`, `actuation.py`,
+`reference_kinematics.py`, `model_adequacy.py`, and `objective_realism.py` preserve
+the implementation context. Their prose and reference labels are not
+independent scientific evidence. The current development branch may change.
+The review record and independent checks are tracked under
+[AffineDrift #4714](https://github.com/D-sorganization/AffineDrift/issues/4714).
 
-Derivation, measurements and regression tests live in the Tools
-`pendulum_simulator` package:
+## Related Articles
 
-- [`impact_optimality.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/impact_optimality.py) — the coefficient and the energy-optimal rate split
-- [`actuation.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/actuation.py) — Hill-type joint limits
-- [`reference_kinematics.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/reference_kinematics.py) — measured bands, each with its source
-- [`model_adequacy.py`](https://github.com/D-sorganization/Tools/blob/main/src/pendulum_simulator/src/double_pendulum_golf/swing_objectives/model_adequacy.py) — the feasibility frontier
-- [`SWING_ACTUATION_AND_REALISM.md`](https://github.com/D-sorganization/Tools/blob/main/docs/specs/SWING_ACTUATION_AND_REALISM.md) — the full design contract
+- [Proximal–Distal Energy Transfer](proximal-distal-energy-transfer.html) connects segment motion, work, and the choice of system boundary.
+- [Inverse Dynamics and Inference](inverse-dynamics-inference.html) explains what net mechanical estimates can identify.
+- [Two Hands, One Club Wrench](proximal-distal-a-journey-through-the-swing.html#sec-lay-ch12) separates contact loading, resultant wrenches, and power.
+- [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html) treats delivery and collision quantities beyond a terminal speed objective.
 
 ## References
 
-- Hill, A. V. (1938). [The heat of shortening and the dynamic constants of muscle](https://doi.org/10.1098/rspb.1938.0050). *Proc. R. Soc. Lond. B* 126, 136–195.
-- Jorgensen, T. (1970). [On the dynamics of the swing of a golf club](https://doi.org/10.1119/1.1976419). *Am. J. Phys.* 38(5), 644–651.
-- MacKenzie, S. J. & Sprigings, E. J. (2009). [A three-dimensional forward dynamics model of the golf swing](https://doi.org/10.1007/s12283-009-0020-9). *Sports Eng.* 11(4), 165–175.
-- Miura, K. (2001). [Parametric acceleration — the effect of inward pull of the golf club at impact stage](https://doi.org/10.1007/BF02844309). *Sports Eng.* 4, 75–86.
-- Nesbit, S. M. (2005). [A three dimensional kinematic and kinetic study of the golf swing](https://www.jssm.org/jssm-04-499.xml.xml). *J. Sports Sci. Med.* 4(4), 499–519.
-- Nesbit, S. M. & Serrano, M. (2005). [Work and power analysis of the golf swing](https://www.jssm.org/jssm-04-520.xml.xml). *J. Sports Sci. Med.* 4(4), 520–533.
-- Pickering, W. M. & Vickers, G. T. (1999). [On the double pendulum model of the golf swing](https://doi.org/10.1007/BF02844532). *Sports Eng.* 2(3), 161–172.
-- Sprigings, E. J. & Neal, R. J. (2000). [An insight into the importance of wrist torque in driving the golfball](https://doi.org/10.1123/jab.16.4.356). *J. Appl. Biomech.* 16(4), 356–366.
-- Williams, D. (1967). [The dynamics of the golf swing](https://doi.org/10.1093/qjmam/20.2.247). *Q. J. Mech. Appl. Math.* 20(2), 247–264.
+::: {#refs}
+:::
