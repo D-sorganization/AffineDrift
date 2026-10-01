@@ -62,9 +62,9 @@ ball away from the path.}
 \subsection{Face/Path Weighting of Launch Direction}
 \label{sec:facepathweighting}
 
-Robot and player data (TrackMan's 2009 ball-flight-laws
-analysis~\cite{trackmanballflightlaws}) give the canonical weighting of
-horizontal launch direction between face angle and club path:
+The filtered player data of Wood~et~al.~\cite{facepathstudy} give the
+following study-specific horizontal weights in an approximate model of
+launch direction between face angle and club path:
 \begin{equation}
 \label{eq:launchweight}
 \varphi_{\mathrm{launch}} \;\approx\;
@@ -80,22 +80,31 @@ w_f \approx
 
 \begin{warning}
 The values above are the \emph{horizontal} weights measured by
-Wood~et~al.~\cite{facepathstudy} across 157 golfers and 1{,}575 shots at
-720\,fps, filtered to strikes within 0.25\,in of face centre; a PING~Man
+Wood~et~al.~\cite{facepathstudy}. Their player data contain 1{,}575 shots
+before filtering, with 157 golfers testing driver/7-iron and ten also
+testing a wedge. Club motion was measured optically at 720\,fps and ball
+launch with a GC2. The horizontal means use strikes within 0.25\,in of
+face centre in each axis and at least $1.5\degs$ face-to-path separation:
+89 driver, 172 iron and 28 wedge shots remained. A separate 15-shot PING~Man
 robot test returned $0.63$ for the 7-iron.
 
 The familiar $0.85/0.15$ figure comes from TrackMan's \emph{Ten
-Fundamentals}, which asserts $85\%$ in \emph{both} planes---$85\%$ dynamic
-loft to launch angle, and $85\%$ face angle to initial direction. Against
-Wood's measurements the two claims fare differently: the vertical claim
-holds ($0.83 \pm 0.08$), the horizontal one does not ($0.76 \pm 0.08$).
-This is a live vendor-versus-measurement disagreement, not a rounding
-difference or a units error.
+Fundamentals}, which gives driver rules of thumb in both planes (and
+$75\%$ for irons). Wood's driver means are $0.83 \pm 0.08$ vertically
+and $0.76 \pm 0.08$ horizontally, reported with 95\% confidence intervals.
+The difference from 0.85 is a reason to retain the model's conditions,
+not a universal calibration correction. These are estimates from filtered
+samples, not individual-shot tolerance bands; protocol and measurand
+differences preclude treating the comparison as a definitive test of every
+application of the vendor rule.
 
 This matters directly for any radar-first system: inverting
 Eq.~\eqref{eq:launchweight} to recover face angle amplifies any bias in
-measured launch direction by $1/w_f$. At $w_f = 0.76$ that is $1.32$, not
-the $1.15$ implied by $0.85$---roughly twice the error sensitivity.
+measured launch direction by $1/w_f$ when path and weight are fixed.
+At $w_f=0.76$ the factor is $1.32$, versus $1.18$ at $w_f=0.85$:
+about 12\% greater sensitivity, not a factor of two. Path error and
+uncertainty in the weight contribute separately, so this derivative is
+not a complete uncertainty budget for inferred face angle.
 \end{warning}
 
 The weight is loft-dependent: more loft means a more oblique
@@ -149,10 +158,11 @@ $\theta_{\mathrm{axis}} \approx -2.5\times$ the horizontal launch angle.
 A radar-first system typically measures launch direction and club
 path. \Cref{eq:launchweight} then yields face angle by inversion:
 $\varphi_f = (\varphi_{\mathrm{launch}} - (1-w_f)\varphi_p)/w_f$. Because
-$1/w_f \approx 1.15$, any systematic launch-direction bias is
-\emph{amplified} $\sim$15\% in the reported face angle --- alignment
-calibration of the horizontal angle radar is the single most important
-accuracy investment for club data.
+$1/w_f$ depends on the assumed weight, launch-direction bias alone is
+amplified by about 18\% at $w_f=0.85$ or 32\% at $w_f=0.76$, with path
+and weight fixed. Alignment calibration matters, but its priority relative
+to path error, weight uncertainty and model discrepancy requires a complete
+uncertainty budget.
 \end{implication}
 
 \section{Ball Speed and Smash Factor}

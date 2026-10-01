@@ -1,3 +1,13 @@
+# Annotated Reference Library — #4725
+
+- Active branch `fix/reference-library-rigor-4725`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`; base `fb377e96dc33ee80b655284aef066f8acfb7caf1` includes heavy-hit #4723 and peer web #4704.
+- Complete Appendix A source review corrects median-centered agreement, return-rate interpretation, historical specification conditions, curvature, patent attribution and source roles. Bounded Chapter 3 launch-weight attribution/sensitivity corrections and Wood bibliography metadata are included; Chapter 3 remains pending for full review.
+- Durable evidence is in `reports/technical-review/reference-library-*`. Original link inventory and primary read scopes are explicit. Two supplied-text agy Gemini 3.8 Flash High inventories were adjudicated by the lead; no delegated tools/network/edits.
+- Eight new interpretation/geometry/source checks and thirteen prior radar-screw checks pass. Canonical PDF is rebuilt to 78 pages; all nine Appendix A pages and 20 total affected/contents/boundary/bibliography pages visually verified, with exact final-PNG equality and zero Appendix A overflows. Source checkpoint b694b319d. Full suite: 6178 passed/29 skipped, 78.37% src+scripts coverage, 92.95% src-only from the same execution. Subsequent content: 183 passed/four skipped, no evidence restoration. Broad mypy diagnostic reports nine errors in five unchanged production files; no successful strict type-check claim. Regular PR [#4729](https://github.com/D-sorganization/AffineDrift/pull/4729) is open with protected auto-merge armed. Commit/push hooks passed including Bandit/unit checks; configured changed-src mypy selected no files. Protected merge remains pending.
+- Session `technical-review-20261001-reference-library`; issue lease through 04:33 UTC, presence refreshed through 04:57 UTC. Preserve prior review receipts, parked provider synthesis #4253 and peer-owned deployment #4688/#4713.
+- Spatial review PR #4726 merged remote main `644bfd5bebb197ee03deb16877f189a0d772c403` at 03:23:14 UTC, all checks green (36807137602). Fetched and ancestor verified; lease/presence released 03:24 UTC (receipts 5924089418 / 5924090086). Integrated into this branch; combined validation pending.
+- Heavy-hit #4723 merged remote main `2a7c094070c5ebd7d16c95c332d5526931cc5ba0` at 02:10:27 UTC on 1 October; fetched/verified and lease/presence released. Older handoff sections below are historical checkpoints.
+
 # Plane-to-Space Technical Review — #4724
 
 - Goal active under epic #4009. Regular PRs only; complete current review and protected delivery, then continue longest unfinished sources.

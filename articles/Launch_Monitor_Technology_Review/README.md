@@ -43,7 +43,7 @@ club/ball parameter calculations — a vendor-neutral technical reference.
 10. Design guidance for implementers — capability tiers (radar hardening → optical spin/impact module → fusion → measured club delivery)
 11. Governed analytics and validation program — qualified-corpus limits, canonical statistics, Release A analytics, and the preregistered paired-device gate for Release B
 
-Appendix A — Live reference library: every source as a clickable link, organized by category (patents, FCC filings, manufacturer docs, peer-reviewed literature, engineering references, DIY projects, comparative testing)
+Appendix A — Annotated reference library: sources organized by evidential role, with historical vendor specifications, study conditions, patent-disclosure limits, and distinctions between accuracy, dispersion, and data availability
 
 Appendix C — Sensor hardware and integration reference: OPS243-A specs/API/rolling buffer + the AN-029 vendor golf recipe (a vendor-published golf configuration), K-LD7 datasheet + UART protocol, IWR6843 FMCW specifics, Pi Global Shutter XTR triggering, the full GSPro Open Connect schema, USGA equipment constants, and CFAR selection guidance
 
