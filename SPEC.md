@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4742 | Correct companion Chapter 9 force reference points, shaft-axis labels, coupled acceleration, two-hand geometric controls and power/measurement scope; regenerate its moment-arm illustration. |
 | 2026-10-01 | #4741 | Clarify companion Chapter 10 force/work/energy boundaries, rotational and wrench power, residual coordinate work, and archived grid scope; register immutable archive provenance. |
 | 2026-10-01 | #4734 | Deliver ground-reaction Chapter 16 rigor alongside Volume IV Chapter 4 latency, neural-layer, network-budget and EMG-synergy arguments with executable examples and bounded primary evidence; align evidence with Git bytes and isolate CI test inputs. |
 | 2026-10-01 | #4728 | Rebalance on-ramp 3-hour tier estimates to 180 minutes, add duration contract tests, and mark audit findings corrected (#4695, #4691, RM#1879). |

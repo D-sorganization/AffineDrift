@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4742 · Force Direction and Reference Points
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending (regular only)
+- **Issue:** #4742 (epic #4009)
+- **Branch:** `fix/force-direction-rigor-4742`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch09_force_direction.qmd`, `articles/figures/proximal_distal_companion/fig_companion_force_direction.svg`, `scripts/make_proximal_distal_companion_figures.py`, `tests/test_force_direction_review.py`, `reports/technical-review/force-direction-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (32 focused checks;184 content checks/4 skips;12 publication gates;216-page PDF scope and browser4/4 verified; full regression pending)
+- **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
+- **Next step:** Commit/push source checkpoint, run full regression, bind six findings preserving35 historical findings, and open a regular PR after resolving the Chapter 10 dependency.
+
 ### DL-#4739 · Force, Work, and Energy Boundaries
 
 - **State:** in_review

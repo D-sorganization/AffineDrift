@@ -1,3 +1,17 @@
+# Force Direction — Chapter 9 — #4742
+
+- Goal active under epic #4009. Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/force-direction-rigor-4742`, based on Chapter 10 delivery `39ae90999281574623b568b47c8d2f03ee60e8b6`. Source checkpoint SELF; no Chapter 9 completion credit yet.
+- Lease/presence session `technical-review-20261001-force-direction` through 11:22 UTC (receipts 5928540979 / 5928544350). Native epic child #4742, tier:strong. All PRs regular; no force, admin, direct-main or protection bypass.
+- Entire chapter reviewed; correct application-point versus center-of-mass moment, shaft/path axes, coupled acceleration, nonlinear-coordinate bias, observer versus reference-point power, two-hand common/differential/intrinsic moments, bounded geometry controls and sensor uncertainty. Full rationale and exact primary/provider scopes: `reports/technical-review/force-direction-review.md` and `force-direction-provider-checks.json`.
+- Five agy Gemini 3.8 Flash High supplied-text inventories completed; lead adjudication preserves scientific judgment. Two source tests RED, seven independent checks green; corrected combined suite 32 passed. Ruff/Black pass. Only `make_force_projection` has a changed body in the shared generator; two helper annotations now use explicit Axes; styled figure visually inspected and SVG normalized to LF.
+- Final216-page PDF/HTML pass. All8 chapter pages, contents and adjacent boundaries inspected;157 downstream pages retain identical extracted text excluding numeric footers after a one-page shift. Browser4/4 and axe pass, all74 chapter expressions render, three displays and figure inspected. Twelve publication checks and184 content tests pass (4 skips). Receipt force-direction-render-verification.json;73 prior evidence paths unchanged,3 intentionally changed with generator function scope documented. Preserve35 prior findings and verification commits. Full regression and audit/corpus binding remain; no completion credit yet.
+- Chapter 10 PR #4741 head39ae has all observed checks green except E2E still running, protected auto-merge armed. Separate impact-review checkout remains tracked-clean. Peer consolidation #4740 head32c07 retains the guide science and is likewise awaiting E2E. Do not reopen #4738; its lease was released for transfer, not merge.
+- Next: commit/push this source checkpoint, run stable-tree full regression, bind findings without changing historical provenance, update corpus and deliver a regular PR. Integrate main normally after verified protected merges. Preserve QA and parked provider synthesis #4253.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses below are historical; current state is above.
+
 # Force, Work, and Motion — PR #4741
 
 - Goal active under epic #4009. Only Chapter10 receives new completion credit;133 sources still pending on this main7eb-based branch, plus whole-book consistency passes. Regular protected PR https://github.com/D-sorganization/AffineDrift/pull/4741; no merge claim.

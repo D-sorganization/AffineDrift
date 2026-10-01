@@ -8,6 +8,7 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Arc, Circle, FancyArrowPatch, FancyBboxPatch
 
@@ -60,7 +61,7 @@ def _save(fig: Figure, stem: str) -> tuple[Path, Path]:
 
 
 def _arrow(
-    axis: plt.Axes,
+    axis: Axes,
     start: tuple[float, float],
     end: tuple[float, float],
     color: str,
@@ -75,9 +76,7 @@ def _arrow(
         axis.text(x, y + 0.12, label, ha="center", color=color, fontweight="bold")
 
 
-def _box(
-    axis: plt.Axes, xy: tuple[float, float], text: str, color: str, width: float = 2.0
-) -> None:
+def _box(axis: Axes, xy: tuple[float, float], text: str, color: str, width: float = 2.0) -> None:
     x, y = xy
     axis.add_patch(
         FancyBboxPatch(
@@ -205,44 +204,44 @@ def make_carry_release() -> tuple[Path, Path]:
 
 
 def make_force_projection() -> tuple[Path, Path]:
+    """Separate a grip force's application point from its moment reference."""
     fig, axis = plt.subplots(figsize=(8, 6))
     axis.set(xlim=(-1, 6), ylim=(-1, 5))
     axis.set_aspect("equal")
     axis.axis("off")
     hand = np.array([1.0, 1.0])
     head = np.array([4.8, 2.6])
+    # An illustrative straight-link COM, not a measured driver mass distribution.
+    center = hand + 0.7 * (head - hand)
     direction = (head - hand) / np.linalg.norm(head - hand)
     normal = np.array([-direction[1], direction[0]])
-    axis.plot([*hand[[0]], head[0]], [hand[1], head[1]], color=ORANGE, lw=8, solid_capstyle="round")
-    axis.scatter(*hand, s=100, color=GREEN)
-    axis.scatter(*head, s=130, color=INK)
-    _arrow(axis, tuple(hand), tuple(hand + 2.4 * direction), BLUE, "Along the Club")
-    _arrow(axis, tuple(hand), tuple(hand + 2.1 * normal), RED, "Across the Club")
-    axis.add_patch(
-        Arc(
-            tuple(hand),
-            1.4,
-            1.4,
-            theta1=np.degrees(np.arctan2(direction[1], direction[0])),
-            theta2=np.degrees(np.arctan2(normal[1], normal[0])),
-            color=VIOLET,
-            lw=2,
-        )
-    )
+    axis.plot([hand[0], head[0]], [hand[1], head[1]], color=ORANGE, lw=8, zorder=0.5)
+    axis.scatter(hand[0], hand[1], s=100, color=GREEN, zorder=5)
+    axis.scatter(head[0], head[1], s=130, color=INK)
+    axis.scatter(center[0], center[1], s=90, color=VIOLET, zorder=5)
+    axis.text(hand[0] - 0.6, hand[1] - 0.25, "$H$ (Hand)", color=GREEN)
+    axis.text(center[0] - 0.3, center[1] + 0.8, "$G$ (Center of Mass)", color=VIOLET)
+    _arrow(axis, tuple(hand), tuple(hand + 2.4 * direction), BLUE)
+    axis.text(2.1, 1.9, "Along Shaft", color=BLUE, ha="center", fontweight="bold")
+    _arrow(axis, tuple(hand), tuple(hand + 2.1 * normal), RED)
+    axis.text(-0.2, 2.2, "Transverse", color=RED, ha="center", fontweight="bold")
+    # Translate the free displacement vector below the shaft so it stays legible.
+    _arrow(axis, tuple(center - 0.6 * normal), tuple(hand - 0.6 * normal), VIOLET, "$r_{GH}$")
     axis.text(
         3.0,
         4.4,
-        "Direction Changes What a Force Can Do",
+        "Direction and Reference Point Set the Moment",
         ha="center",
-        fontsize=16,
+        fontsize=15,
         fontweight="bold",
         color=INK,
     )
     axis.text(
-        3.0,
-        -0.2,
-        "The same force magnitude can pull, redirect, or turn depending on geometry.",
+        2.5,
+        -0.4,
+        r"$M_H^{(F)}=0,\qquad M_G^{(F)}=r_{GH}\times F$",
         ha="center",
+        fontsize=14,
         color=GRAY,
     )
     return _save(fig, "fig_companion_force_direction")
