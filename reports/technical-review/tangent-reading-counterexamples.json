@@ -1,0 +1,40 @@
+{
+  "scope": "Independent manufactured counterexamples for guide issue4736; not evidence about human golf or a completion claim.",
+  "missing_propagator": {
+    "ode": "x_dot=x+x^2, nominal x=0, x(0)=0.01, horizon=1",
+    "exact_finite_error": 0.0004752434488700351,
+    "bound_without_transition": 0.0003259056584435149,
+    "integrated_propagated_remainder": 0.0004752434488700364,
+    "conclusion": "The unweighted integral is smaller than the actual error; retaining Phi=exp(t-s) restores equality."
+  },
+  "C1_not_quadratic": {
+    "field": "f(x)=abs(x)^1.5 at zero",
+    "epsilon": [0.01, 0.0001, 1e-6],
+    "remainder_over_epsilon_squared": [10, 100, 1000]
+  },
+  "stable_eigenvalues_not_euclidean_contraction": {
+    "A": [
+      [-1.0, 4.0],
+      [0.0, -1.0]
+    ],
+    "delta_x": [1.0, 1.0],
+    "eigenvalues": [-1.0, -1.0],
+    "V_dot": 4.0
+  },
+  "DDP_dynamics_curvature": {
+    "F": "u^2",
+    "next_value": "x",
+    "stage_cost": 0,
+    "nominal_u": 0,
+    "finite_difference_Q_uu": 2.0,
+    "iLQR_curvature": 0,
+    "full_DDP_curvature": 2
+  },
+  "reset_not_rotation": {
+    "velocity_reset": "v_plus=-e*v_minus",
+    "e": 0.5,
+    "derivative": -0.5,
+    "squared_norm_gain": 0.25
+  },
+  "limitations": "Scalar examples expose false universal claims; general bounds still need declared norm/scaling, joint domain, regularity, common existence horizon and hybrid event assumptions."
+}

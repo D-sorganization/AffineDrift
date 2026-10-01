@@ -4768,11 +4768,199 @@
       "claims": [],
       "critiques": [],
       "deferment_issue_url": null,
-      "findings": [],
+      "findings": [
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_foundation_rigor.py::test_continuous_derivative_does_not_imply_quadratic_remainder",
+            "tests/test_tangent_foundation_rigor.py::test_finite_perturbation_error_survives_exact_integration",
+            "tests/test_residual_flow_bounds.py::test_riccati_counterexample_and_conditional_bound",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_residual_flow_bounds.py::test_riccati_counterexample_and_conditional_bound": "171bb642226cdea486241f8ecb93ef8d9dab4c24d85a2956fad01abbf1ce12f6",
+            "tests/test_tangent_foundation_rigor.py::test_continuous_derivative_does_not_imply_quadratic_remainder": "3178662c5dfc7c8e92b61d8e88eae810ff2b667b962a14513845eeae265a386f",
+            "tests/test_tangent_foundation_rigor.py::test_finite_perturbation_error_survives_exact_integration": "e0ca10925baee1856bef76c6268e40fa93cd94390d224be2bd6a6ff80643bed7"
+          },
+          "finding_id": "ad-finding-tangent-guide-linearization-and-error-dynamics",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The glossary treated tangent-space dynamics as exactly linear and gave unqualified quadratic residual scaling; the lookup bound omitted transition-matrix propagation. Separate exact first variations from finite predictions, require bounded joint state/input Hessians for a quadratic remainder, and derive the propagated error equation with actual deviations. The scalar counterexample disproves the unweighted bound.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_control_rigor.py::test_ddp_retains_all_value_weighted_transition_hessians",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_tangent_control_rigor.py::test_ddp_retains_all_value_weighted_transition_hessians": "bba8acb7ff623284baaf6983cfb3c6d7538a8f567f50a2e698b0cc57a9ab1cbe"
+          },
+          "finding_id": "ad-finding-tangent-guide-ddp-curvature-and-ilqr",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The DDP lookup omitted value-gradient-weighted transition Hessians, while the pitfalls section implied repeated linearization preserves exactness and permits arbitrary reachability. Restore full discrete DDP curvature, distinguish iLQR and the continuous Hamiltonian, and retain local-model, feasibility and convergence conditions.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_contraction_reference_rigor.py::test_metric_derivative_requires_covariant_matrix_order",
+            "tests/test_contraction_reference_rigor.py::test_finite_horizon_metric_can_shrink_while_state_error_grows",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_contraction_reference_rigor.py::test_finite_horizon_metric_can_shrink_while_state_error_grows": "8cba5f28a148b8e4cc7a31f9d4be25418669ddd42fc267a2de0e184d76d31b6b",
+            "tests/test_contraction_reference_rigor.py::test_metric_derivative_requires_covariant_matrix_order": "10e58beca5524d2d7306ef86c601e6c9f60c2cc2651f73ab594235aa3930c49d"
+          },
+          "finding_id": "ad-finding-tangent-guide-contraction-metrics-and-convergence",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The contraction glossary reduced the condition to a uniformly negative-definite Jacobian, and the pitfalls section equated contraction with optimizer progress. Specify the actual closed-loop Jacobian, symmetric metric derivative, rate convention and regional/path conditions; distinguish physical time from optimization iterations. A Hurwitz-matrix counterexample illustrates why eigenvalues alone do not establish Euclidean contraction.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_hybrid_tangent_rigor.py::test_published_bounce_jacobian_matches_relocated_events",
+            "tests/test_hybrid_tangent_rigor.py::test_saltation_is_independent_of_guard_reset_extension",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_hybrid_tangent_rigor.py::test_published_bounce_jacobian_matches_relocated_events": "db7b393844b0e356e4ce885414eb85661dbe5cbc32561491aabdcda14e3a9f32",
+            "tests/test_hybrid_tangent_rigor.py::test_saltation_is_independent_of_guard_reset_extension": "db2ed2a22f50966564749cf791e1a4c4733b69d4bec916921d8edd9c946e111c"
+          },
+          "finding_id": "ad-finding-tangent-guide-hybrid-event-timing-and-saltation",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The guide equated guards with tangent-space jumps and described impact maps as instantaneous rotations. Separate guard, reset and common-time sensitivity; include the event-time contribution through saltation, with transverse isolated-event and fixed-sequence assumptions. Dissipative reset derivatives need not preserve norms, and grazing or Zeno behavior falls outside this formula's stated scope.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29"
+          },
+          "finding_id": "ad-finding-tangent-guide-coordinate-distinctions-vs-curvature",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "Residual-as-manifold-curvature wording, footstrike-as-curvature-spike and gimbal-lock-as-curvature-singularity examples conflated distinct objects. Distinguish model residuals, intrinsic curvature, coordinate-chart degeneracy and nonsmooth events; a residual depends on the model and coordinates and is not itself intrinsic curvature.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_foundation_rigor.py::test_feedback_sensitivity_uses_the_closed_loop_derivative"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_tangent_foundation_rigor.py::test_feedback_sensitivity_uses_the_closed_loop_derivative": "84961f307fe9d5bc62993092c037d5845e01c34d05b727aee8c0d49cf24f6479"
+          },
+          "finding_id": "ad-finding-tangent-guide-biomechanical-validation-and-control",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "The golf reading path promised a mathematical basis for coaching decomposition without specifying the model or empirical inference needed. Add the connections among complete model state, imposed inputs versus feedback, propagated uncertainty, event-time convention and task output. These qualifications explain what motion data and model calculations can establish without inferring a unique neural mechanism or human efficacy.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_series_links.py"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_tangent_series_links.py": "3f3553b694abfa5bb16c8218dc9cc338eac387820171fc757836f8659050596f"
+          },
+          "finding_id": "ad-finding-tangent-guide-navigation-boundaries-and-citations",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "Bare filenames and nonexistent review pointers obscured the usable reading path, and textbook chapter pointers were inaccurate. Prioritize the canonical seven-part hub, distinguish full manuscripts and retired drafts, and correct chapter locations from primary contents/front matter. Four excluded-target links introduced during revision failed the navigation regression and were replaced with published destinations. Linked-page descriptions do not claim new full reviews of those works.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "reports/technical-review/tangent-reading-validation.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "reports/technical-review/tangent-reading-validation.json": "89996cb55a430574e1548d17e0dd9217401a4d4d67e5a53f73d409d7f780c3f1"
+          },
+          "finding_id": "ad-finding-tangent-guide-pedagogical-claims-and-presentation",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "Reading outcomes promised expert understanding or a practical solution, novelty and internal-grade language overstated independent support, and proposed features were mixed with available material. Replace those claims with scoped study activities and verified resources. Remove the unnecessary Code button after mobile inspection and wrap long equations; bounded browser checks pass, with the shared smaller mobile math styling explicitly recorded.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        }
+      ],
       "review_evidence": {
-        "evidence_file_count": 1,
+        "evidence_file_count": 14,
         "evidence_sha256": {
-          "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "749cbda541529e1911666b3c5c9c46f9b6b2589abf9d9c3f51c79f2a60c5481d"
+          "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+          "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+          "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+          "reports/technical-review/tangent-reading-validation.json": "89996cb55a430574e1548d17e0dd9217401a4d4d67e5a53f73d409d7f780c3f1",
+          "tests/test_contraction_reference_rigor.py::test_finite_horizon_metric_can_shrink_while_state_error_grows": "8cba5f28a148b8e4cc7a31f9d4be25418669ddd42fc267a2de0e184d76d31b6b",
+          "tests/test_contraction_reference_rigor.py::test_metric_derivative_requires_covariant_matrix_order": "10e58beca5524d2d7306ef86c601e6c9f60c2cc2651f73ab594235aa3930c49d",
+          "tests/test_hybrid_tangent_rigor.py::test_published_bounce_jacobian_matches_relocated_events": "db7b393844b0e356e4ce885414eb85661dbe5cbc32561491aabdcda14e3a9f32",
+          "tests/test_hybrid_tangent_rigor.py::test_saltation_is_independent_of_guard_reset_extension": "db2ed2a22f50966564749cf791e1a4c4733b69d4bec916921d8edd9c946e111c",
+          "tests/test_residual_flow_bounds.py::test_riccati_counterexample_and_conditional_bound": "171bb642226cdea486241f8ecb93ef8d9dab4c24d85a2956fad01abbf1ce12f6",
+          "tests/test_tangent_control_rigor.py::test_ddp_retains_all_value_weighted_transition_hessians": "bba8acb7ff623284baaf6983cfb3c6d7538a8f567f50a2e698b0cc57a9ab1cbe",
+          "tests/test_tangent_foundation_rigor.py::test_continuous_derivative_does_not_imply_quadratic_remainder": "3178662c5dfc7c8e92b61d8e88eae810ff2b667b962a14513845eeae265a386f",
+          "tests/test_tangent_foundation_rigor.py::test_feedback_sensitivity_uses_the_closed_loop_derivative": "84961f307fe9d5bc62993092c037d5845e01c34d05b727aee8c0d49cf24f6479",
+          "tests/test_tangent_foundation_rigor.py::test_finite_perturbation_error_survives_exact_integration": "e0ca10925baee1856bef76c6268e40fa93cd94390d224be2bd6a6ff80643bed7",
+          "tests/test_tangent_series_links.py": "3f3553b694abfa5bb16c8218dc9cc338eac387820171fc757836f8659050596f"
         },
         "source_path": "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd"
       },
