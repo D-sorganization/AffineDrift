@@ -488,6 +488,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4535 | Add an interactive DCR-through-phase widget (WEB-06.5) comparing an additive- and a state-dependent-drift system with equal instantaneous DCR but different reachable-interval widths, linking claim ad-dcr-001 on the DCR page. |
 | 2026-09-30 | #4697 | Allowlist SHA-256 evidence digests keyed by repository paths in `.gitleaks.toml` so claim-audit ledgers stop tripping gitleaks generic-api-key. |
 | 2026-09-30 | #4666 | Enforce 100% claim-audit route coverage for pages/glossary and pages/how-to-read, restoring green Deploy Website on main. |
+| 2026-09-30 | #4559 | Add Home-page visual-regression coverage at 390/768/1440 px in light and dark themes (WEB-08.8), coordinated with the #4089 route/mask conventions; Start Here coverage is blocked on #4486/#4487. |
 | 2026-09-30 | #4577 | Switch the gated MathJax loader to the smaller tex-chtml.js component build (TeX input + CHTML output only, no unused MathML input jax) on every math-bearing page (WEB-10.9). |
 | 2026-09-30 | #4678 | Implement standard Where Next footer component with 30 core pages mapping, no self-links, accessible nav card, and cross-cluster coordination (#4510). |
 | 2026-09-30 | #4550 | Consolidate print CSS into one stylesheet, support Letter and A4 page sizes, and force MathJax typesetting before print (WEB-07.9). |
