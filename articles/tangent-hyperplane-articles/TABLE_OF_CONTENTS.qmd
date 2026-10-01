@@ -1,479 +1,253 @@
 ---
 title: "Tangent Hyperplane Framework: Reading Path"
-description: "A guided route through exploratory notes on nonlinear control and geometric intuition."
+description: "A guided route through local sensitivity, finite prediction error, optimal control, stability, and impact dynamics."
+code-tools: false
 categories:
 - tangent-space
 ---
 
-**A guided route through exploratory notes on nonlinear control and geometric intuition**
-
----
-
 ## Overview
 
-This collection presents an exploratory geometric framework for understanding nonlinear dynamical systems through local tangent-space structure. The central technical point is narrower than many of the draft pages suggest: at a fixed state, the first variation gives a linear map for infinitesimal perturbations. Finite-step prediction, accumulated error, and controller performance require residual bounds and validation.
+This collection investigates how local differential models help explain and control nonlinear motion. A derivative tells us how a small change in state or input affects a chosen model along a reference motion. To turn that sensitivity into a useful prediction, we must also know how discrepancies grow, what feedback changes, and what happens at contact events.
 
-**Target Audience:**
-- Graduate students in control theory, robotics, biomechanics
-- Practitioners in aerospace, robotics, sports science
-- Researchers seeking geometric intuition for optimization algorithms
-- Anyone curious about why LQR, MPC, and DDP actually work
+These questions are intertwined in a golf swing. A change in joint torque can alter the club's approach, the time of impact, and the contact state. A controller may reduce some deviations while leaving others important to strike location or clubface orientation. An accurate local derivative is one part of that argument; it does not establish finite-motion accuracy, a globally optimal swing, or the golfer's neural strategy.
 
-**Prerequisites:**
-- Linear algebra (matrices, eigenvalues, linear maps)
-- Multivariable calculus (partial derivatives, gradients)
-- Basic differential equations (first-order ODEs)
-- Introductory control (state-space representation helpful but not required)
+The pages combine established mathematics, worked examples, and proposals for investigation. Read each result with its assumptions and evidence. The contribution sought here is a useful synthesis for modeling and explanation; novelty, experimental performance, and coaching benefit require separate demonstrations.
 
----
+**Prerequisites:** Linear algebra, multivariable calculus, and ordinary differential equations support the technical route. State-space control is useful for the optimization articles; Lyapunov theory helps with contraction. The accessible companions offer intuition, but the technical pages supply the conditions that analogies omit.
+
+The [Tangent-Space Series hub](../../pages/tangent-hyperplanes.html) provides the canonical seven-part reading sequence. This guide supports deeper study of the full reference manuscript and advanced articles alongside that sequence.
 
 ## Learning Tracks
 
-We provide three learning paths depending on your goals:
+| Track | Reading and Activity | What to Check Before Moving On |
+|---|---|---|
+| **Conceptual Understanding** | Read an accessible companion, then its main article's introduction and limitations. | Explain the difference between a derivative and a finite prediction without claiming that nonlinear motion becomes linear. |
+| **Applied Practitioner** | Study the main derivation, reproduce a small example, then implement a model of your own system. | Declare state, inputs, units, constraints, numerical tolerances, and an independent prediction check. |
+| **Technical Review** | Read the main article with its limitations and relevant published critiques; derive equations and construct counterexamples. | Identify exactly which hypotheses support each bound, stability claim, and optimization result. |
 
-### Track 1: **Conceptual Understanding** (No Equations)
-*Goal: Understand "why" without "how"*
-- Start with Layman's Terms summaries
-- Read motivational sections only
-- Skip mathematical derivations
-- **Time:** 2-3 hours
+Reading time depends strongly on background and whether you reproduce the calculations. These are study routes, not promises of expertise after a fixed number of hours. Some articles contain executable examples and exercises; others contain pseudocode or proposed applications. Check the local description before treating an example as a complete implementation.
 
-### Track 2: **Applied Practitioner** (Implement Algorithms)
-*Goal: Use methods in your work*
-- Read main articles, skip proofs
-- Focus on algorithm pseudocode
-- Study case studies closely
-- Implement examples in Python/MATLAB
-- **Time:** 2-3 weeks
+## Part I: Foundations
 
-### Track 3: **Technical Review** (Full Derivations and Caveats)
-*Goal: Understand the claims well enough to evaluate or extend them*
-- Read the main pages, appendices, and critique pages together
-- Work through all derivations
-- Study critical reviews
-- Solve problem sets (future addition)
-- **Time:** 1-2 months
+### 1. Unified Thesis
 
----
+For the full derivations, consult the [Full Reference Manuscript](Tangent_Hyperplanes_Unified_Thesis.html) after the relevant compact series parts. Its central sequence is differential structure, propagation along a trajectory, and use of local models in control synthesis.
 
-## Part I: Foundations (Required for All)
+Focus on three distinctions:
 
-### 1. **Tangent_Hyperplanes_Unified_Thesis.qmd** 📘 CORE DOCUMENT
-**Prerequisite:** None (self-contained)
-**Difficulty:** ⭐⭐⭐ Moderate
-**Time:** 4-6 hours
+- A tangent space is a vector space attached to a point. The nonlinear vector field assigns a velocity at each point; the existence of tangent spaces does not make that field linear in a neighborhood.
+- The variational equation is linear along a fixed nominal trajectory. Its solutions superimpose; finite changes to nonlinear trajectories generally have an additional remainder.
+- A local quadratic optimization problem can be solved accurately while remaining an approximation to a constrained, nonlinear finite-horizon problem.
 
-**What You'll Learn:**
-- Part I: Where tangent spaces provide exact infinitesimal structure
-- Part II: How integration preserves superposition of variations
-- Part III: How DDP/iLQR/MPC exploit this structure
+The [introductory summary](LAYMANS_TERMS_SUMMARY.html) is an optional orientation. Its analogies should be checked against the technical derivations. Use the [published critiques](../../critiques/index.html) to identify competing explanations and open questions. Internal critique manuscripts are excluded from the rendered reading path; their existence is not independent peer review or proof that the issues they discuss are resolved. Read the assumptions and limitations in each current technical article.
 
-**Key Concepts:**
-- Fréchet derivative as exact infinitesimal structure
-- State transition operators
-- Residuals as manifold curvature
-- Hamiltonian formulation
-- Worked DDP/iLQR algorithm sketches with case studies
+### Following the Golf Swing Questions
 
-**Why Start Here:** This is the broadest reference in the package. Read it together with the critique pages before treating any finite-time or control-design claim as established.
+For biomechanics, choose a physical question before choosing an algorithm. Examples include how a torque perturbation changes club delivery, how feedback could reduce deviations, and how impact timing changes the measured outcome. Specify the intervention, observation time, task output, and quantities held fixed.
 
-**Supplementary Materials:**
-- `LAYMANS_TERMS_SUMMARY.qmd` - Non-technical overview (read first if intimidated)
-- `TECHNICAL_ASSESSMENT.md` - Quality evaluation (for advisors/reviewers)
-- `CRITICAL_REVIEW.md` - Known weaknesses and defenses
-- `CRITICS_CORNER.qmd` - Responses to harsh criticisms
+Use the [Unified Thesis](Tangent_Hyperplanes_Unified_Thesis.html) for the local model, [Residual-Aware Control](Advanced/Residual-Aware_Control.html) for finite prediction error, and [Hybrid Tangent Spaces](Advanced/Hybrid_Tangent_Spaces.html) when contact changes the dynamics. Read [Contraction Theory](Advanced/Contraction_Tangent_Unification.html) when the question concerns convergence under a specified input policy.
 
----
+The earlier golf-application manuscript is in the repository's draft archive. It is not a separate current prerequisite. A coaching decomposition can suggest hypotheses, but decomposing a motion into coordinates or basis functions does not show that independently changing those parts will produce additive effects in a golfer.
 
-### 2. **Tangent_Hyperplanes_Golf_Application.md** 🏌️ OPTIONAL SUPPLEMENT
-**Prerequisite:** Unified Thesis (Part I only)
-**Difficulty:** ⭐⭐ Easy
-**Time:** 1 hour
+## Part II: Advanced Theory
 
-**What You'll Learn:**
-- Application to biomechanics (golf swing)
-- Why coaching decomposition makes mathematical sense
-- Connection to sports science
+### 2. Residual-Aware Control
 
-**Why Read:** If you're interested in human movement, this makes the abstract concrete.
+[Residual-Aware Control](Advanced/Residual-Aware_Control.html) develops the relationship between a local Taylor remainder, its propagation, and the eventual task error. Read it after the variational and state-transition sections of the Unified Thesis.
 
----
+It distinguishes the mathematical remainder of a specified model from discrepancies caused by measurement noise, uncertain parameters, discretization, or omitted physics. Its scalar calculations illustrate bounds and interval choices. Proposed applications to golf, aerial vehicles, or walking still need system-specific evaluation; they are not evidence of a demonstrated performance improvement.
 
-## Part II: Advanced Theory (For Deep Understanding)
+A foot strike is an event in a rigid-impact model, not simply a large smooth Hessian. Gimbal lock is a degeneracy of an attitude parameterization, not an intrinsic curvature singularity of physical orientation space. Those situations call for an appropriate event model or coordinate representation before interpreting a large residual.
 
-*After mastering Part I, these articles extend the framework in specific directions.*
+Companion: [Accessible Explanation](Advanced/Residual-Aware_Control_LAYMAN.html). Use the main article's bound derivations and observation assumptions to evaluate its proposals.
 
-### 3. **Residual-Aware_Control.qmd** 📊 NEW
-**Prerequisite:** Unified Thesis (Parts I-III)
-**Difficulty:** ⭐⭐⭐⭐ Advanced
-**Time:** 3-4 hours
+### 3. Contraction Theory and Tangent Spaces
 
-**What You'll Learn:**
-- Quantitative residual bounds with explicit constants
-- Real-time residual monitoring for control switching
-- Curvature-adaptive timesteps in DDP
-- Tube MPC with geometric residual bounds
+[Contraction Theory Meets Tangent Spaces](Advanced/Contraction_Tangent_Unification.html) asks whether neighboring solutions approach one another under the same specified dynamics and input policy. It develops the metric conditions and conditional links to linear-quadratic value functions.
 
-**Working contribution:** Treats residuals as candidate diagnostics for when local models may be insufficient.
+This is different from asking whether successive DDP iterations reduce a cost. Physical time and optimizer iteration are different independent variables. A contraction condition can constrain a controller-design problem, but adding a penalty to an objective does not prove the resulting controller satisfies that condition throughout a region.
 
-**Applications:**
-- Quadrotor: Hover (low curvature) vs. aerobatics (high curvature)
-- Humanoid gait: Foot strike = curvature spike
-- Spacecraft: Gimbal lock = curvature singularity
+Study the actual closed-loop Jacobian, the metric's time dependence, and the region in which the inequalities hold. Then ask how the resulting state-distance statement relates to the task output. Stability alone does not establish desirable club delivery, low effort, contact feasibility, or a correct model of human control.
 
-**Why Read:** Connects the local theory to a practical question: when is a linearized prediction no longer reliable enough for the intended task?
+Companion: [Accessible Explanation](Advanced/Contraction_Tangent_LAYMAN.html). Check the main article's counterexamples and regional conditions before drawing stability conclusions.
 
-**Supplementary:**
-- `Residual-Aware_Control_LAYMAN.qmd` - Accessible explanation
-- `Residual-Aware_Control_CRITIC.qmd` - Technical objections answered
+### 4. Hybrid Tangent Spaces
 
----
+[Hybrid Tangent Spaces](Advanced/Hybrid_Tangent_Spaces.html) combines smooth evolution within a mode with guards and resets at events. It derives how an event-time shift contributes to sensitivity and explains when the saltation matrix is applicable.
 
-### 4. **Contraction_Tangent_Unification.qmd** 🔄 NEW
-**Prerequisite:** Unified Thesis + familiarity with Lyapunov stability
-**Difficulty:** ⭐⭐⭐⭐⭐ Expert
-**Time:** 4-5 hours
+A guard specifies an event condition; a reset specifies the change in state. Neither is generally a rotation. Dissipative impact can reduce velocity magnitude, and nearby motions can strike at different times. The resulting common-time sensitivity includes both reset derivatives and the time spent under different mode dynamics.
 
-**What You'll Learn:**
-- Contraction theory (Lohmiller & Slotine) via tangent-bundle language
-- Conditional links between stability analysis and optimal-control calculations
-- Contraction metrics as Riemannian geometry on tangent spaces
-- How contraction constraints can be added to trajectory optimization, and what must be checked before claiming convergence
+Read this article for rigid foot impacts, club–ball contact idealizations, or switching models. Smooth compliant contact, ideal rigid impact, and nonsmooth friction are different modeling choices. Grazing, simultaneous events, sticking, or an accumulation of infinitely many events require additional analysis; a formula for one isolated transverse event does not cover every contact regime.
 
-**Working contribution:** Frames contraction analysis and trajectory optimization as closely related local calculations, while leaving global or finite-time claims dependent on additional assumptions.
-
-**Applications:**
-- Checking DDP convergence conditions for specific systems
-- Designing controllers with explicit local stability certificates
-- Understanding when LQR assumptions are strong enough for the intended claim
-
-**Why Read:** If you know contraction theory, this shows a possible link to optimization. If you know DDP, this shows how stability certificates might be added and where the proof obligations enter.
-
-**Supplementary:**
-- `Contraction_Tangent_LAYMAN.qmd` - Why trajectories "forget" initial conditions
-- `Contraction_Tangent_CRITIC.qmd` - Comparison to standard contraction literature
-
----
-
-### 5. **Hybrid_Tangent_Spaces.qmd** 🔀 NEW
-**Prerequisite:** Unified Thesis + basic knowledge of hybrid systems
-**Difficulty:** ⭐⭐⭐⭐ Advanced
-**Time:** 3-4 hours
-
-**What You'll Learn:**
-- Extending tangent space framework to discontinuous systems
-- Each mode has smooth dynamics (tangent space applies)
-- Guard conditions = tangent space jumps
-- Impact maps as instantaneous rotations in tangent bundle
-- DDP for hybrid systems (mode-aware optimization)
-
-**Key Innovation:** Addresses "C¹ smoothness is unrealistic" criticism—shows framework extends to impacts, friction, switches.
-
-**Applications:**
-- Bipedal walking (foot strike = impact → discrete jump in tangent space)
-- Robotic grasping (contact = mode switch)
-- Chemical reactors (phase transitions = guard crossings)
-
-**Why Read:** Most real systems are hybrid (contact, switches, saturation). This makes the framework applicable to actual robots and biomechanics.
-
-**Supplementary:**
-- `Hybrid_Tangent_LAYMAN.qmd` - Hopping on one foot (intuitive hybrid example)
-- `Hybrid_Tangent_CRITIC.qmd` - Comparison to hybrid automata literature
-
----
+Companion: [Accessible Explanation](Advanced/Hybrid_Tangent_LAYMAN.html). Read the main article's sensitivity and Zeno-limit discussion with its worked event calculations.
 
 ## Recommended Reading Orders
 
-### Order 1: **Breadth-First (Survey Everything)**
+| Aim | Sequence | Useful Stopping Point |
+|---|---|---|
+| **Survey the Ideas** | Introductory summary → Unified Thesis → one advanced article with its limitations. | You can state a useful claim and the assumptions that limit it. |
+| **Investigate Prediction Error** | Unified Thesis variational dynamics → Residual-Aware Control → its scope conditions. | You can separate model remainder, propagation, observation error, and task sensitivity. |
+| **Design or Analyze Feedback** | Unified Thesis local control synthesis → Contraction Theory → its scope conditions. | You can distinguish numerical optimization progress from a stability certificate for the implemented controller. |
+| **Study Contact or Impact** | Unified Thesis sensitivity propagation → Hybrid Tangent Spaces → its scope conditions. | You can specify the event sequence, time convention, reset, and transversality condition. |
+| **Investigate a Golf Intervention** | Define a measurable outcome → local sensitivities → finite-error bounds → contact model → feedback and uncertainty analysis. | You can propose a prediction that distinguishes competing explanations and identify the measurements needed to test it. |
 
-1. LAYMANS_TERMS_SUMMARY.qmd (all summaries)
-2. Unified Thesis (skim, focus on examples)
-3. Residual-Aware Control (practical tool)
-4. Contraction (if stability-focused)
-5. Hybrid Systems (if working with contacts/impacts)
+The dependency is conceptual rather than a claim that every topic requires every preceding article. A reader familiar with variational ODEs can begin with the relevant advanced page. Return to the foundations when a derivation uses an unfamiliar object; check limitations and competing explanations before interpreting an example as a general result.
 
-**Outcome:** Broad understanding, can choose specialization
+## Key Equations Reference
 
----
+The notation below is local to this guide. Follow each article's definitions when switching between continuous and discrete time, physical and scaled coordinates, or different definitions of residual. Assume the relevant solutions exist on the stated interval.
 
-### Order 2: **Depth-First (Master One Topic)**
+### First Variations and Their Propagation
 
-1. Unified Thesis (read every word, work examples)
-2. CRITICAL_REVIEW.md + CRITICS_CORNER.qmd (understand limitations)
-3. Choose one advanced article based on interest:
-   - **Practitioner:** Residual-Aware Control
-   - **Theorist:** Contraction Unification
-   - **Roboticist:** Hybrid Systems
-4. Implement case studies in that article
-5. Read critic's corner for your chosen article
+For a differentiable family of solutions of $\dot x=f(t,x,u)$, let $\xi=\partial_\epsilon x_\epsilon|_0$ and $\nu=\partial_\epsilon u_\epsilon|_0$. Along the nominal trajectory,
 
-**Outcome:** Expert-level understanding of chosen subtopic
+$$
+\dot\xi=A(t)\xi+B(t)\nu,
+\qquad A=f_x,\quad B=f_u.
+$$
 
----
+If $\Phi(t,s)$ solves $\partial_t\Phi=A(t)\Phi$ with $\Phi(s,s)=I$, then
 
-### Order 3: **Application-Driven (Solve My Problem)**
+$$
+\begin{aligned}
+\xi(t)={}&\Phi(t,t_0)\xi(t_0)\\
+&+\int_{t_0}^{t}\Phi(t,s)B(s)\nu(s)\,ds.
+\end{aligned}
+$$
 
-1. Identify your problem domain:
-   - **Smooth systems (spacecraft, drones in free flight):** Unified Thesis Parts I-II, then Residual-Aware
-   - **High-speed motion (golf, baseball):** Golf Application + Unified Thesis + Residual-Aware
-   - **Legged robots, manipulation:** Unified Thesis + Hybrid Systems
-   - **Provable stability:** Contraction Unification first, then Unified Thesis Part III
+This is an exact equation for the derivative of the solution family under the required differentiability assumptions. It is not an exact finite-displacement rollout. For $C^1$ dynamics, the instantaneous Taylor remainder is little-o of the joint state/input displacement. A uniform quadratic estimate needs stronger regularity, such as a bounded Hessian on the relevant segments.
 
-2. Read only relevant sections
-3. Implement algorithms on your system
-4. Return to theory when implementation fails (use Critic's Corner for debugging)
+### Finite Prediction Error
 
-**Outcome:** Practical solution with theoretical backing
+In fixed, declared state/input scalings, write the continuous dynamics as $\dot z=g(t,z,v)$. Let $(\bar z,\bar v)$ be a nominal state/input trajectory satisfying these dynamics. Set $e=z-\bar z$, $\Delta v=v-\bar v$, and let $\eta$ solve the linear comparison model $\dot\eta=A\eta+B\Delta v$ with $\eta(t_0)=e(t_0)$, where now $A=g_z$ and $B=g_v$ along the nominal motion, and $\Phi$ is the state-transition matrix of this scaled $A$. Define
 
----
+$$
+\begin{aligned}
+N={}&g(t,\bar z+e,\bar v+\Delta v)\\
+&-g(t,\bar z,\bar v)-Ae-B\Delta v,\\
+r={}&e-\eta.
+\end{aligned}
+$$
 
-## Concept Dependencies (What Builds on What)
+Then $\dot r=Ar+N$ and $r(t_0)=0$. If the joint state/input Hessian has bilinear operator norm at most $K$ on every segment used in this expansion,
 
-```
-Unified Thesis (Part I: Geometry)
-    ├─→ Golf Application [optional sidebar]
-    ├─→ Unified Thesis (Part II: Integration)
-    │       └─→ Unified Thesis (Part III: Optimization)
-    │               ├─→ Residual-Aware Control
-    │               │       └─→ [Implements quantitative bounds]
-    │               ├─→ Contraction Unification
-    │               │       └─→ [Adds stability to optimization]
-    │               └─→ Hybrid Systems
-    │                       └─→ [Extends beyond C¹ assumption]
-    │
-    └─→ Contraction Unification
-            └─→ [Can be read independently if familiar with Lyapunov theory]
-```
+$$
+\begin{aligned}
+q(s)&=\|e(s)\|^2+\|\Delta v(s)\|^2,\\
+\|r(t)\|&\leq\frac{K}{2}\int_{t_0}^{t}\|\Phi(t,s)\|q(s)\,ds.
+\end{aligned}
+$$
 
-**Notation:** `A → B` means "A is prerequisite for B"
+The norm is Euclidean in the declared scaled coordinates, with induced matrix and bilinear norms. The bound contains the actual finite deviation $e$; replacing it by the linear prediction requires another bound. Dropping $\|\Phi(t,s)\|$ requires a justified nonexpansion estimate in that norm. The [residual derivation](Advanced/Residual-Aware_Control.html#hessian-based-residual-bounds) develops these conditions and the distinction from closed-loop propagation.
 
----
+A scalar counterexample exposes the missing factor. For $\dot x=x+x^2$, nominal $x=0$, and $x(0)=0.01$, the exact solution is $x(t)=0.01e^t/[1-0.01(e^t-1)]$. At $t=1$, its error relative to the linear prediction is about $0.00047524$. The unweighted integral $\int_0^1x(s)^2ds$ is only $0.00032591$; it cannot bound that error. For this scalar example, weighting by $e^{1-s}$ recovers the exact remainder. These are dimensionless manufactured values, not golf measurements.
 
-## Prerequisites by Document
+### Full DDP and the iLQR Approximation
 
-| Document | Math Level | Control Background | Programming | Time |
-|----------|------------|-------------------|-------------|------|
-| **Layman Summaries** | None | None | None | 30 min each |
-| **Unified Thesis** | Calculus, Linear Algebra | Helpful | Optional | 4-6 hrs |
-| **Golf Application** | Basic calculus | None | None | 1 hr |
-| **Residual-Aware** | Multivariable calculus | State-space | Python recommended | 3-4 hrs |
-| **Contraction** | Real analysis, ODEs | Lyapunov theory | MATLAB/Python | 4-5 hrs |
-| **Hybrid Systems** | ODEs, Measure theory (basic) | Hybrid automata (intro) | Python + simulation | 3-4 hrs |
+For a discrete transition $x_{k+1}=F_k(x_k,u_k)$, discrete stage cost $\ell_k$, and next-step value $V^+$, define $Q=\ell_k+V^+\circ F_k$. Suppress the time index $k$ in the derivatives below; $F_i$ denotes output component $i$, and the sum runs over those components. Where the derivatives exist, the chain rule gives
 
----
+$$
+\begin{aligned}
+Q_{uu}={}&\ell_{uu}+F_u^\top V^+_{xx}F_u\\
+&+\sum_i V^+_{x_i}(F_i)_{uu}.
+\end{aligned}
+$$
 
-## Key Equations Reference (Quick Lookup)
+Full DDP retains the last term; iLQR omits the value-gradient-weighted dynamics Hessians. For the scalar example $F(u)=u^2$, $V^+(x)=x$, and $\ell=0$, the exact $Q_{uu}$ is $2$ at $u=0$, while the iLQR curvature term is zero. This illustrates the derivative distinction, not a performance comparison. See the [local Q-function derivation](Tangent_Hyperplanes_Unified_Thesis.html#eq-q-derivatives) and [Tassa, Mansard, and Todorov, Section II](https://roboti.us/lab/papers/TassaICRA14.pdf). Constraints, regularization, and acceptance of an update remain separate parts of the algorithm.
 
-For when you need to remember "what was that formula?"
+### Contraction in a Specified Metric
 
-| Concept | Equation | Document | Section |
-|---------|----------|----------|---------|
-| **Fréchet Derivative** | $f(x_0 + \delta x) = f(x_0) + A\delta x + o(\|\delta x\|)$ | Unified Thesis | Part I, Ch. 1 |
-| **Variational Dynamics** | $\delta\dot{x} = A(t)\delta x + B(t)\delta u$ | Unified Thesis | Part I, Ch. 2 |
-| **State Transition** | $\delta x(t_1) = \Phi(t_1,t_0)\delta x(t_0) + \int \Phi(t_1,\tau)B(\tau)\delta u(\tau)d\tau$ | Unified Thesis | Part II, Ch. 6 |
-| **Residual Scaling** | $\|r\| = O(\epsilon^2)$ | Unified Thesis | Part I, Ch. 4 |
-| **Quantitative Residual** | $\|r(t_1)\| \leq \frac{1}{2}\|H\|_{\max}\int \|\delta x\|^2 dt$ | Residual-Aware | Part I, Theorem 1 |
-| **Hamiltonian** | $H = L + \lambda^T f$ | Unified Thesis | Part III, Ch. 9 |
-| **DDP Q-function** | $Q_{uu} = L_{uu} + B^T P B$ | Unified Thesis | Part III, Ch. 11 |
-| **Contraction Metric** | $\dot{V} \leq -\alpha V$ | Contraction | Part I, Def. 2 |
-| **Impact Map** | $\dot{x}^+ = \Delta(\dot{x}^-)$ | Hybrid Systems | Part II, Ch. 3 |
+Apply the differentiable feedback law $u=\pi(t,x)$ to $\dot x=f(t,x,u)$. Let $A_{\mathrm{cl}}=f_x+f_u\pi_x$. The first variation obeys $\dot\xi=A_{\mathrm{cl}}\xi$. A differential contraction certificate uses a smooth positive-definite metric $M(t,x)$ and the matrix inequality
 
----
+$$
+\begin{gathered}
+A_{\mathrm{cl}}^\top M+MA_{\mathrm{cl}}+\dot M\\
+\preceq-2\alpha M,\qquad\alpha>0.
+\end{gathered}
+$$
 
-## Glossary of Key Terms
+Here $\dot M$ is the material derivative along the closed-loop flow. The squared differential length $V=\xi^\top M\xi$ decays at rate at least $2\alpha$, and its square root at rate at least $\alpha$. Finite-distance conclusions require suitable connecting paths to remain in the certified region; uniform metric bounds support comparison with Euclidean distance. The identity-metric condition concerns the symmetric part of $A_{\mathrm{cl}}$, not merely its eigenvalues. Read the [contraction article](Advanced/Contraction_Tangent_Unification.html) with [Lohmiller and Slotine, Sections 3.1–3.4](https://web.mit.edu/nsl/www/preprints/contraction.pdf).
 
-**Fréchet Derivative:** The unique best linear approximation to a nonlinear function at a point. Not "an" approximation, but "the" exact derivative.
+### Events and Common-Time Sensitivity
 
-**Tangent Space ($T_x\mathcal{M}$):** The space of all velocity vectors at point $x$ on manifold $\mathcal{M}$. Locally looks like $\mathbb{R}^n$, where dynamics are exactly linear.
+Let $x^-$ and $x^+$ denote states immediately before and after an event. For an isolated event $h(t,x^-)=0$ with reset $x^+=R(t,x^-)$, nearby trajectories generally reach the guard at different times. In compatible local coordinates, their first variations at a common clock time satisfy
 
-**Residual ($r$):** The failure of superposition for finite perturbations. Quantifies how much tangent spaces vary. Scales as $O(\epsilon^2)$ (quadratic in perturbation size).
+$$
+\begin{aligned}
+\xi^+&=S\xi^-,\\
+S&=R_x+\frac{(f^+-R_xf^--R_t)h_x}{h_t+h_xf^-}.
+\end{aligned}
+$$
 
-**State Transition Operator ($\Phi(t_1,t_0)$):** Linear map transporting perturbations forward in time through varying tangent spaces. Fundamental solution of variational equation.
+Here $h_x$ is a row derivative; incoming and outgoing fields are evaluated on their respective sides of the event under the specified input policy. Smooth guards/resets, a nonzero denominator, and a locally consistent event sequence are essential. The reset derivative alone applies to an appropriate prescribed-time reset; it generally omits the timing effect for state-triggered events. See the [saltation derivation](Advanced/Hybrid_Tangent_Spaces.html#sec-tangent-jumps) and [Kong and colleagues, Section III](https://arxiv.org/html/2306.06862v2#S3). Neither $R_x$ nor $S$ is generally an orthogonal rotation.
 
-**Costate ($\lambda$):** Adjoint variable in optimal control. Represents marginal cost sensitivity. Evolves backward in time.
+## Glossary and Notation
 
-**Contraction:** Property where all trajectories exponentially converge to each other. Jacobian is uniformly negative definite.
+| Term | Meaning in This Guide |
+|---|---|
+| **Tangent Space** $T_x\mathcal M$ | An $n$-dimensional vector space at a point of an $n$-dimensional smooth manifold; coordinate representations identify it with $\mathbb R^n$. |
+| **Fréchet Derivative** | The linear map whose subtraction leaves a remainder little-o of the increment. The derivative is well defined; its finite affine prediction may have error. |
+| **State and Input** $x,u$ | Local coordinates in $\mathbb R^n$ and $\mathbb R^m$; $f(t,\cdot,\cdot)$ maps an appropriate domain in $\mathbb R^n\times\mathbb R^m$ to $\mathbb R^n$. |
+| **First Variation** $\xi,\nu$ | Derivatives of a family of states and inputs, distinguished here from finite differences $e,\Delta v$. |
+| **State Transition** $\Phi(t,s)$ | Fundamental matrix of the specified time-varying homogeneous variational equation. |
+| **Residual** | A discrepancy requiring an explicit definition: instantaneous Taylor remainder, accumulated prediction error, or measured mismatch are different objects. |
+| **Costate** $\lambda$ | An adjoint variable for a specified optimal-control problem, with terminal and possible event conditions. Its interpretation depends on the objective and constraints. |
+| **Hamiltonian** $H=L+\lambda^\top f$ | A continuous-time optimal-control expression under this sign convention, with running cost $L$; it is not automatically mechanical energy or the discrete DDP Q-function. |
+| **Contraction** | Decay of neighboring-solution separation in a declared metric under the same specified dynamics/policy and regional assumptions. |
+| **Hybrid System** | A model with continuous evolution and discrete modes or transitions; the model must specify solution and event conventions. |
 
-**Hybrid System:** Combines continuous dynamics (flows) with discrete events (jumps). Example: walking robot (swing phase = flow, foot strike = jump).
+Norms need units or explicit scaling. Combining radians, translational positions, velocities, and muscle activations in an unscaled Euclidean norm changes the meaning of an error threshold. Big-O and little-o describe limiting behavior with a declared small parameter; their constants and validity interval cannot silently be carried to arbitrary horizons.
 
-**DDP (Differential Dynamic Programming):** Trajectory optimization via iterated local quadratic approximations. Newton's method in function space.
+## Common Pitfalls
 
----
+### An Exact Derivative Does Not Make a Finite Rollout Exact
 
-## Common Pitfalls and How to Avoid Them
+Relinearization updates local information. It does not eliminate Taylor remainder, numerical integration error, parameter uncertainty, or sensor error. Special affine systems can have exact finite linear predictions; generic nonlinear systems require an error analysis.
 
-### Pitfall 1: "Linearization Is Approximate, so Results Are Approximate"
+### Local Steps Do Not Guarantee Global Reachability
 
-**Why it's wrong:** The tangent space (derivative) is **exact**. What's approximate is using it far from the linearization point. DDP/iLQR re-linearize constantly, maintaining exactness.
+Input bounds, obstacles, contact feasibility, and underactuation restrict reachable motions. An optimizer can converge to a local solution or fail. Repeated small updates do not prove that every target is reachable or that a global optimum will be found.
 
-**Where to learn more:** Unified Thesis Ch. 1, CRITICS_CORNER.qmd Criticism #2
+### A Residual Is Not Automatically Intrinsic Curvature
 
----
+Even a scalar nonlinear field on a flat Euclidean line can have a nonzero Taylor remainder. Coordinate and vector-field nonlinearities must be distinguished from intrinsic manifold curvature. A measured mismatch can also arise from noise or model error. Reducing a task-relevant residual can be useful; interpreting it requires knowing which discrepancy was measured.
 
-### Pitfall 2: "This Only Works for Small Perturbations"
+### Optimization Progress and Physical Stability Need Separate Arguments
 
-**Why it's misleading:** A single linearization only works locally. But **iterative methods** (DDP, MPC) keep taking small steps with fresh linearizations. You can reach anywhere via many small steps.
+A lower objective value across iterations does not imply that neighboring physical trajectories converge in time. Conversely, a contracting closed loop need not solve the desired optimization problem. A Riccati construction can connect the two under stated conditions; shared Jacobians alone do not establish a general duality.
 
-**Where to learn more:** Unified Thesis Ch. 10-11, Residual-Aware Control Part II
+### Smooth Analysis Must Be Matched to the Contact Model
 
----
+Apply variational dynamics within smooth modes and the appropriate event sensitivity at transitions. Event detection and event-time refinement matter alongside integration accuracy. A contact-sequence change can invalidate a derivative computed for the previous sequence.
 
-### Pitfall 3: "Residuals Are Errors I Need to Minimize"
+## How the Pieces Fit in a Golf or Humanoid Model
 
-**Why it's misleading:** Residuals are **geometric features** (curvature), not modeling errors. They're inevitable for nonlinear systems. Goal is to **understand and account for** them, not eliminate them.
+Begin with a measurable output, such as clubface orientation at first contact or foot placement after a disturbance. Include enough state to predict its evolution: configuration alone generally omits velocity, while muscle activation, flexible equipment, or a feedback controller can introduce additional state and memory. Decide which of those effects the current model resolves.
 
-**Where to learn more:** Unified Thesis Ch. 4, Residual-Aware Control Part I
+Next separate propagation from intervention. Open-loop sensitivity asks what happens when a specified input is perturbed. Closed-loop sensitivity also differentiates the controller's response to changed state; delayed or estimated feedback needs the corresponding model. Those two calculations can give different answers even for the same mechanical plant.
 
----
+Then propagate deviations to the observation. If the observation occurs at contact, a shift in event time can matter as much as a change in the incoming state. For a smooth output $y=\psi(t,x)$ evaluated at a variable event time, the first-order output change includes both the state effect and the time shift. Specify whether the state variation is measured at the event or at a common clock time before adding a timing term, so it is not counted twice.
 
-### Pitfall 4: "Contraction Is for Stability, Optimization Is Separate"
+Finally compare predicted task changes with uncertainty and observations. A small state-space norm does not automatically mean an acceptable strike; the output map can be sensitive in particular directions. A simulation can establish a consequence of its equations, but multiple neural strategies, parameter choices, or contact models may produce similar observed trajectories. Distinguishing them requires suitable measurements or interventions. This sequence links geometry, dynamics, control, and evidence without treating one calculation as proof of all four.
 
-**Why it's wrong:** Contraction and optimization are **dual perspectives**. Contraction = "trajectories converge," Optimization = "cost decreases." Both use Jacobians, both exploit tangent geometry.
+## External Resources
 
-**Where to learn more:** Contraction Unification, entire article
+Use these sources to check definitions and derivations, rather than treating the collection's own critiques as external validation.
 
----
+- **Khalil, *Nonlinear Systems*, Third Edition:** The [author's contents](https://www.egr.msu.edu/~khalil/NonlinearSystems/contents.html) locate sensitivity in Section 3.3, Lyapunov stability in Chapter 4, and feedback linearization in Chapter 13. Feedback linearization has its own hypotheses and is distinct from taking a first variation.
+- **Lee, *Introduction to Smooth Manifolds*, Second Edition:** The [author's front matter and contents](https://sites.math.washington.edu/~lee/Books/ISM/front-matter.pdf) place tangent vectors, differentials, and the tangent bundle in Chapter 3. Chapter 4 covers submersions, immersions, and embeddings.
+- **Sastry, *Nonlinear Systems: Analysis, Stability, and Control*:** Use the [publisher's contents](https://link.springer.com/book/10.1007/978-1-4757-3108-8) to locate Mathematical Background, Lyapunov Stability Theory, Basics of Differential Geometry, and Linearization by State Feedback.
+- **Lohmiller and Slotine:** Their [contraction analysis paper](https://web.mit.edu/nsl/www/preprints/contraction.pdf) develops differential length and metric conditions. Read the regional assumptions with the inequalities.
+- **Tassa, Mansard, and Todorov:** [Control-Limited Differential Dynamic Programming](https://roboti.us/lab/papers/TassaICRA14.pdf) develops the local quadratic model and a particular treatment of box control limits.
+- **Kong, Payne, Zhu, and Johnson:** [Saltation Matrices](https://arxiv.org/html/2306.06862v2) explains reset and timing contributions to hybrid sensitivity.
 
-### Pitfall 5: "Framework Fails for Impacts/Friction (Non-Smooth)"
+## Study and Contribution
 
-**Why it's misleading:** Framework applies **within each smooth segment**. Impacts/switches handled separately (impact maps, guard conditions). Hybrid Systems article shows how.
+For an initial session, choose one question and one main article. Write down the proposed conclusion, its assumptions, and a small example that could falsify an overly broad version of the claim. For deeper study, reproduce the example, change an assumption, and explain the outcome before extending it to a golf or humanoid model.
 
-**Where to learn more:** Hybrid Systems, Unified Thesis "Scope of Validity"
+The collection includes internal assessments and historical drafts. Their grades, defenses, and proposed future work are not independent evidence. A paper claiming a new result needs a specific statement and comparison with the relevant literature; a proposed application needs validation appropriate to its intended use. Availability of a derivation, code example, PDF, or reading path does not by itself establish that validation.
 
----
+Report errors or missing assumptions through the [AffineDrift repository](https://github.com/D-sorganization/AffineDrift). Useful contributions provide the exact claim, a derivation or counterexample, and the source or measurement needed to resolve it. Keep mathematical examples distinct from experimental results and identify unfinished implementations explicitly.
 
-## FAQ: Choosing What to Read
-
-**Q: I'm a mechanical engineering undergrad. Where do I start?**
-A: LAYMANS_TERMS_SUMMARY.qmd → Unified Thesis Parts I-II (skip proofs) → Golf Application
-
-**Q: I use MPC but don't understand why it works. Help?**
-A: Unified Thesis Part III (Chapters 10-11) → Residual-Aware Control Part II
-
-**Q: I need to prove my controller is stable. What do I read?**
-A: Unified Thesis Part I (Ch. 3: Lyapunov) → Contraction Unification
-
-**Q: I'm implementing a walking robot with foot impacts. Relevant article?**
-A: Unified Thesis Parts I-II → Hybrid Systems (all parts)
-
-**Q: I want to write a paper using this framework. What's novel?**
-A: Read CRITICAL_REVIEW.md and CRITICS_CORNER.qmd carefully. Novel aspects: geometric framing, residual-as-feature, unification across methods.
-
-**Q: I'm an advisor evaluating a student's thesis using this. Quality assessment?**
-A: TECHNICAL_ASSESSMENT.md (overall B+/A-) + CRITICAL_REVIEW.md (lists weaknesses)
-
-**Q: How does this compare to my textbook (Khalil, Sastry, Slotine)?**
-A: CRITICS_CORNER.qmd Criticism #7 has detailed comparison table
-
----
-
-## External Resources (Recommended Pairing)
-
-**Books to Read Alongside:**
-
-1. **H. K. Khalil, *Nonlinear Systems* (2002)**
-   - Chapter 4 (Lyapunov Stability) pairs with Unified Thesis Ch. 3
-   - Chapter 9 (Feedback Linearization) contrasts with our "embrace nonlinearity" approach
-
-2. **S. Sastry, *Nonlinear Systems: Analysis, Stability, and Control* (1999)**
-   - Chapter 2 (Mathematical Preliminaries) for differential geometry background
-   - Chapter 7 (Optimal Control) for Hamiltonian formalism
-
-3. **J. M. Lee, *Introduction to Smooth Manifolds* (2012)**
-   - Chapters 3-4 (Tangent Vectors, Tangent Bundle) for geometric foundations
-   - Advanced but clarifies "what is a tangent space really?"
-
-4. **V. I. Arnold, *Mathematical Methods of Classical Mechanics* (1989)**
-   - Chapter 8 (Hamiltonian Mechanics) for variational principles
-   - Beautiful geometric perspective, complements Part III
-
-5. **W. Lohmiller & J.-J. Slotine, "On Contraction Analysis..." (1998)**
-   - Original contraction theory paper
-   - Read before Contraction Unification article
-
-**Online Resources:**
-
-- **Underactuated Robotics** (Russ Tedrake, MIT): Pairs with Hybrid Systems article
-- **Steve Brunton YouTube** (Control Bootcamp): Intuitive videos for state-space concepts
-- **JAX Documentation**: For autodiff implementations of examples
-
----
-
-## Notation Conventions
-
-We use consistent notation across all articles:
-
-| Symbol | Meaning | Dimensionality |
-|--------|---------|----------------|
-| $x$ | State vector | $\mathbb{R}^n$ |
-| $u$ | Control input | $\mathbb{R}^m$ |
-| $f(x,u)$ | Vector field (dynamics) | $\mathbb{R}^n \to \mathbb{R}^n$ |
-| $A = \frac{\partial f}{\partial x}$ | State Jacobian | $\mathbb{R}^{n \times n}$ |
-| $B = \frac{\partial f}{\partial u}$ | Input Jacobian | $\mathbb{R}^{n \times m}$ |
-| $\delta x$, $\delta u$ | Infinitesimal perturbations | $\mathbb{R}^n$, $\mathbb{R}^m$ |
-| $\Phi(t_1, t_0)$ | State transition operator | $\mathbb{R}^{n \times n}$ |
-| $\lambda$ | Costate (adjoint) | $\mathbb{R}^n$ |
-| $H$ | Hamiltonian | $\mathbb{R}$ |
-| $L$ | Lagrangian (running cost) | $\mathbb{R}$ |
-| $r$ | Residual (superposition failure) | $\mathbb{R}^n$ |
-| $\epsilon$ | Perturbation magnitude | $\mathbb{R}_+$ |
-| $T_x\mathcal{M}$ | Tangent space at $x$ | Vector space $\cong \mathbb{R}^n$ |
-
-**Calculus notation:**
-- $o(\cdot)$: Little-o (vanishes faster than argument)
-- $O(\cdot)$: Big-O (grows no faster than argument)
-- $\|\cdot\|$: Euclidean norm (2-norm)
-- $\frac{\partial}{\partial x}$: Partial derivative
-- $\nabla_x$: Gradient with respect to $x$
-
----
-
-## Contribution and Future Directions
-
-This framework is actively evolving. Planned additions:
-
-1. **Interactive Visualizations:** Moving tangent spaces in 3D (WebGL)
-2. **Problem Sets:** Exercises with solutions for each article
-3. **Code Repository:** Full implementations of all case studies (Python/JAX)
-4. **Video Lectures:** Recorded walkthroughs of key concepts
-5. **Application Notes:** Domain-specific guides (aerospace, biomechanics, chemical eng.)
-
-**How to contribute:**
-- GitHub: [D-sorganization/AffineDrift](https://github.com/D-sorganization/AffineDrift)
-- Issues: Report errors, request clarifications
-- Discussions: Ask questions, share applications
-
----
-
-## Acknowledgments
-
-This framework synthesizes ideas from:
-- Differential geometry (Fréchet, Lee, Arnold)
-- Nonlinear control (Kalman, Jacobson, Mayne, Sastry, Khalil)
-- Contraction theory (Lohmiller, Slotine)
-- Trajectory optimization (Bryson, Ho, Tassa)
-- Biomechanics (McMahon, Alexander)
-
-We stand on the shoulders of giants. The contribution is **synthesis and geometric framing**, not invention of new mathematics.
-
----
-
-## Final Recommendation: Where to Start
-
-**If you have 30 minutes:** Read any LAYMANS summary
-**If you have 2 hours:** Read Unified Thesis Part I only
-**If you have 1 day:** Read the Unified Thesis with the critique pages open
-**If you have 1 week:** Read the Unified Thesis, one advanced article, and implement a small case study
-**If you have 1 month:** Read the full package, compare the critiques, and test one extension in your domain
-
-**Most important:** Do not read the draft pages as finished evidence summaries. Use the table above to check prerequisites and keep the limitation notes alongside the main claims.
-
-**The goal is not to memorize formulas; it is to develop geometric intuition while keeping the mathematical scope conditions visible.**
-
-The useful habit is to separate exact local statements from finite-time conclusions that require residual bounds, model checks, and validation.
-
----
-
-**Document Version:** 1.0
-**Last Updated:** January 18, 2026
-**Maintainer:** AffineDrift Team
+The useful habit is to connect a local statement to a finite prediction, then to a task outcome and the evidence that could test it.

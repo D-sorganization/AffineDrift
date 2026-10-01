@@ -20,7 +20,16 @@ test.describe('title semantics (#3445)', () => {
       const duplicateIds = await page.evaluate(() => {
         const seen = new Set();
         const duplicates = new Set();
+        // Quarto's upstream multi-theme architecture generates paired <link> elements
+        // in <head> for light/dark themes with matching IDs and distinct data-mode attributes.
+        const upstreamThemeLinkIds = new Set([
+          'quarto-bootstrap',
+          'quarto-text-highlighting-styles',
+        ]);
         for (const element of document.querySelectorAll('[id]')) {
+          if (upstreamThemeLinkIds.has(element.id)) {
+            continue;
+          }
           if (seen.has(element.id)) {
             duplicates.add(element.id);
           }

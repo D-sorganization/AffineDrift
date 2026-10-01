@@ -60,7 +60,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html` | `articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control.qmd` | 1 |
 | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control_LAYMAN.html` | `articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control_LAYMAN.qmd` | 1 |
 | `/articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.html` | `articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd` | 1 |
-| `/articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.html` | `articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd` | 1 |
+| `/articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.html` | `articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd` | 14 |
 | `/articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.html` | `articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.qmd` | 1 |
 | `/articles/tangent-hyperplanes-series/part-1-geometry.html` | `articles/tangent-hyperplanes-series/part-1-geometry.qmd` | 1 |
 | `/articles/tangent-hyperplanes-series/part-2-dynamics.html` | `articles/tangent-hyperplanes-series/part-2-dynamics.qmd` | 1 |
@@ -314,7 +314,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-47699ec9048b` | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-02cd806a8670` | `/articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control_LAYMAN.html` | Reviewed | — | None | None | 0 |
 | `ad-route-b1f99ee70b7d` | `/articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.html` | Reviewed | — | None | None | 0 |
-| `ad-route-e1d71575a068` | `/articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.html` | Reviewed | — | None | None | 0 |
+| `ad-route-e1d71575a068` | `/articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.html` | Reviewed | — | None | None | 8 |
 | `ad-route-81907b2b08ca` | `/articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.html` | Reviewed | — | None | None | 0 |
 | `ad-route-18a4b136fe99` | `/articles/tangent-hyperplanes-series/part-1-geometry.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e32542e3edd3` | `/articles/tangent-hyperplanes-series/part-2-dynamics.html` | Reviewed | — | None | None | 0 |

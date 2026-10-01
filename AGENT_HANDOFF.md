@@ -1,3 +1,11 @@
+# Force-Work Main Integration — PR #4741
+
+- Integrated remote main `019a25a4320cae03915b744b648c1a4de596d898` after peer4740 merged. Chapter10 source/PDF unchanged from39ae; guide and theme changes retained byte-for-byte. Every prior and main finding retains its metadata and verification commit. Only handoff narrative conflicted; both preserved. Receipt reports/technical-review/force-work-main-integration.json.
+- All CI passed on39ae before main advanced. 58 integrated focused checks pass and evidence digests are current; final integrated CI and protected merge remain; no remote-main Chapter10 claim. Session technical-review-20261001-force-work renewed through11:52UTC/presence11:53UTC.
+- Chapter9 continues separately in screw-review; do not include its edits here. Guide4736 delivered by4740; guide QA and prior checkouts retained. Regular PRs only; no protection bypass.
+
+## Preserved Earlier Checkpoints
+
 # Force, Work, and Motion — PR #4741
 
 - Goal active under epic #4009. Only Chapter10 receives new completion credit;133 sources still pending on this main7eb-based branch, plus whole-book consistency passes. Regular protected PR https://github.com/D-sorganization/AffineDrift/pull/4741; no merge claim.

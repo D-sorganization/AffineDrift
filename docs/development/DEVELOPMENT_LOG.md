@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (source803b58ecb; PDF/chapter browser verified; full6272 pass/one pin failure,93.04%; pin repaired;53 affected checks and184 content checks pass/4 skips;12 publication checks and freshness browser4/4 pass; final protected CI pending)
 - **Summary:** Correct three-dimensional work, net impulse, internal mechanical-energy conversion, coordinate-force versus physical work and archive scope; preserve human-model limits and prior book findings.
-- **Next step:** Push delivery metadata, verify exact-head protected CI and remote-main merge; preserve35 findings and historical provenance.
+- **Next step:** Validate normal integration of peer4740/main019a; Chapter10 source/PDF and both branches findings preserved. Push and verify integrated-head protected CI and merge.
 
 
 
