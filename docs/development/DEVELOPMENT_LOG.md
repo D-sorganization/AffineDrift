@@ -25,11 +25,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **PR:** not created
 - **Issue:** #4766 (epic #4009)
 - **Branch:** fix/patent-catalog-rigor-4766
-- **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/preamble.tex, articles/Launch_Monitor_Technology_Review/main.pdf, articles/Launch_Monitor_Technology_Review/research/patent-catalog-review-20261001.md
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (full lead source reads;173 record attempts/170 Google captures; official marking notices/Gazette;27 Flash jobs complete; selected first claims inspected;35 book/audit tests,653 titles,LaTeX structure pass;Biber exit0 with54 unchanged baseline warnings;83 unique BibTeX keys)
-- **Summary:** Partial corrections to identifiers, dates, radar-spin mechanism, product mapping and assignee attribution; broad catalog and FTO claims need full adjudication. No corpus completion credit;122 sources remain.
-- **Next step:** Finish per-entry and Chapter7 corrections, render/inspect, validate, bind findings and deliver regular PR. PR4765 CI remains live; preserve predecessor source history until main parity.
+- **Last verified:** 2026-10-01 (32 completed Flash jobs; selected primary first claims;111 leading indexed years and167 identifier preservation;80-page PDF and14 changed pages visually inspected;35 focused tests,653 titles,LaTeX structure pass)
+- **Summary:** Both patent chapters revised with mechanism, projection, attribution and evidence-scope corrections; unsupported legal/product shortcuts removed. Source dossier and rendered checkpoint saved; final per-entry audit still open. No corpus completion credit;122 sources remain.
+- **Next step:** Final per-entry/book consistency review, binding and regression, then regular PR. PR4755 merged on main394a7b40b; integrate it into conflicting4765/current source with preservation. CI4765 remains live.
 
 ### DL-#4763 · Geometry Technical Review
 

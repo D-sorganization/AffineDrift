@@ -1,208 +1,246 @@
 \chapter{Patent Landscape}
 \label{ch:patents}
 
-The strongest public documentation of proprietary launch-monitor methods
-is the patents themselves; they are cited throughout this review as
-technical sources. This chapter organizes them by assignee and closes
-with a freedom-to-operate (FTO) map. Expiry estimates follow the
-20-years-from-priority rule plus patent-term adjustment (PTA), using
-Google Patents' anticipated-expiration data where shown; \emph{none of
-this is legal advice, and claim-by-claim analysis by counsel is required
-before any commercial decision.}
+Patent publications expose proposed measurement architectures that can be hard to reconstruct from product brochures.
+Their technical value lies in the signal being observed, the calibration and inference steps, and the conditions under which an output is identifiable.
+A disclosure, a granted claim, a commercial implementation and an accuracy experiment are four different kinds of evidence.
+This chapter compares selected disclosures; \cref{app:patents} provides a wider catalog of document identifiers.
+
+Read an abstract as an overview, a description as a set of disclosed embodiments, and each claim as its own combination of limitations.
+An example camera count, exposure time or receiver arrangement in the specification is not automatically required by every claim.
+Conversely, a broad title such as ``spin measurement'' does not mean that a patent covers every method producing that output.
+Company groupings below aid navigation; they do not replace assignment records or establish which product implements a particular embodiment.
 
 \section{TrackMan A/S (Interactive Sports Games A/S) --- Fredrik Tuxen}
 \label{sec:patenttrackman}
 
-TrackMan's public patent list enumerates 45 US patents covering
-full-trajectory radar tracking, club delivery data, radar spin rate and
-spin axis, markerless impact location, and OERT
-fusion~\cite{trackmanpatents}.
+TrackMan's virtual-marking notice contains 47 distinct US patent numbers at the October 1, 2026 check~\cite{trackmanpatents}.
+That dated list is a route into its disclosures, not an exhaustive search of applications, foreign publications or the company's ownership history.
 
 \begin{description}
-\item[\patent{US8845442B2} --- ``Determination of spin parameters of a
-sports ball.''] Priority March 3, 2005; PTA-extended expiry
-$\sim$May 2029~\cite{us8845442}. \emph{The} radar-spin patent: harmonic
-sidebands equally spaced at the spin frequency around the central Doppler
-line, with the trace-tracking/qualification chain of
-\cref{sec:radarspin}; spin axis from the Magnus-lift orthogonality
-constraint (\cref{eq:liftextract}). The European sibling EP\,1\,698\,380
-was upheld by Germany's Federal Court of Justice and grounded TrackMan's
-2013 Düsseldorf win against FlightScope's distributor. Continuation
-\patent{US10393870B2} (same disclosure) expires December 2026.
-\item[\patent{US8085188B2} / \patent{US9857459B2} /
-\patent{US10473778B2} --- target-deviation family.] Priority July 2004.
-Camera rigidly mounted to the radar; user taps a target in the image;
-system reports launch-to-target deviation with automatic coordinate
-transforms. US9857459 lapsed 2022; the siblings expire 2026--27 --- a
-safe UX pattern to adopt shortly.
-\item[\patent{US10850179B2} (+ US11446546, US11938375) --- spin axis.]
-Direct spectral/interferometric spin-axis determination from
-per-receiver-pair phase differences; also documents the three-receiver
-monopulse architecture~\cite{us10850179}.
-\item[\patent{US10989791B2} / \patent{US11828867B2} --- radar+imager
-fused tracking; \patent{US11619708B2} / \patent{US12517218B2} ---
-inter-sensor calibration; \patent{US10953303B2} family --- markerless
-impact location.] The actual OERT-supporting families; active into the
-late 2030s. (Note: the frequently mis-cited ``radar + image data 3D
-tracking'' patents US10596416/US11697046/US12128275 belong to
-\textbf{Topgolf Sweden AB (Toptracer)}, not TrackMan --- see
-\cref{app:patents}.)
-\item[\patent{US10315093B2} --- trajectory illustration.] The broadcast
-``tracer'' overlay (radar track rendered into calibrated video); to 2030.
-\item[\patent{US11086005B2} --- multi-bay tracking.] Toptracer-style
-back-extrapolation of tracks to assign shots to bays; to $\sim$2036.
+\item[Spin Frequency and Trajectory-Based Axis.]
+\patent{US8845442B2}.
+The disclosure describes radar spectral spacings associated with spin
+and a separate trajectory-based approach to spin axis~\cite{us8845442}.
+Claim~1 concerns estimating spin frequency from a frequency distance
+in the modulated radar signal; it should not be paraphrased as requiring
+all the axis-inversion steps in the description. Spectral structure
+still needs a defensible mapping from the observed periodicity to ball
+rotation. Trajectory-based axis inference also depends on the aerodynamic
+model and the information present in the observed flight segment
+(\cref{sec:radarspin,eq:liftextract}).
+\item[Target-Referenced Measurements.]
+\patent{US8085188B2} / \patent{US9857459B2} /
+\patent{US10473778B2}.
+These documents concern relating launch or trajectory information to a
+target designated in an image. Sensor and image coordinates must be
+registered before a target-relative angle has a physical meaning. Their
+publication history does not by itself establish clearance for a
+particular target-selection interface.
+\item[A Radar View of Spin Axis.]
+\patent{US10850179B2}.
+Claim~1 separates the Doppler spectrum into components, determines their
+angular positions using a non-collinear receiver arrangement and identifies
+a \emph{projection} of the spin axis onto a plane perpendicular to the
+radar's line of sight~\cite{us10850179}. That projection is not, by itself,
+an unrestricted three-dimensional axis measurement. Motion compensation,
+receiver geometry and the distinction between a projected axis and a full
+axis belong in any explanation of the method. Related documents include
+\patent{US11446546B2} and \patent{US11938375B2}; their claims must be read
+separately.
+\item[Tracking, Calibration and Impact.]
+\patent{US10989791B2} and \patent{US11828867B2} concern radar/imager
+tracking; \patent{US11619708B2} and \patent{US12517218B2} address
+inter-sensor calibration; \patent{US10953303B2} describes estimating
+club impact information from image features. These are distinct inference
+problems, even when a product presents their outputs together. The
+similarly titled radar/image documents \patent{US10596416B2},
+\patent{US11697046B2} and \patent{US12128275B2} identify Topgolf Sweden AB,
+not TrackMan, in their publication records.
+\item[Display and Attribution.]
+Trajectory illustration appears in \patent{US10315093B2}.
+Associating tracked balls with launch locations is described in \patent{US11086005B2}. A convincing video overlay and a correct association with a
+player are separate requirements from accurate trajectory measurement.
 \end{description}
 
-\section{Foresight Sports (WAWGD) and the Wintriss Lineage}
+\section{Foresight Sports, WAWGD and Wintriss Disclosures}
 \label{sec:wintriss}
 
-Foresight Sports is WAWGD, Inc.; the foundational photometric patents it
-holds (via Wawgd Newco LLC) were invented at Wintriss Engineering by
-Christopher Kiraly (a Foresight co-founder) --- and these same numbers
-appear on Uneekor's license list following the September 2024
-Foresight--Uneekor license agreement~\cite{businesswireforesight}.
+The Wintriss/WAWGD documents provide examples of image-based launch measurement and integrated monitor operation.
+Uneekor's product marking notice lists several of the same numbers, and the companies announced a license agreement in 2024~\cite{uneekorpatents,businesswireforesight}.
+That evidence should not be expanded into an assertion that every Foresight or Uneekor device implements every disclosed feature.
 
 \begin{description}
-\item[\patent{US7292711B2} --- ``Flight parameter measurement system.'']
-Priority June 6, 2002; \textbf{expired April 2025}~\cite{us7292711}. The
-blueprint single-camera photometric monitor: factory per-pixel 3D
-calibration; accelerometer leveling; microphone + small radar horn joint
-trigger; strobe-lit sequential images; ball center/diameter with known
-ball size giving 3D position per frame; and \emph{markerless spin} by
-iterative rotation/correlation of natural surface features (dimples,
-blemishes) after glint removal and lighting normalization.
-\item[\patent{US7324663B2} --- sibling ``smart camera'' patent.]
-Same spec, self-triggering from in-FOV motion; \textbf{expired August
-2025}.
-\item[\patent{US7497780B2} / \patent{US7641565B2} --- integrated monitor
-and ball-placement detection.] Priority 2006; expire $\sim$2027. The
-GC2-style UX: optical ball-find, LED placement guidance, frame-differencing
-launch detection, mixed-mode capture, on-device display. Foresight
-enforced this portable-monitor family as recently as 2024 (Uneekor
-settlement).
-\item[Later WAWGD filings.] Applications on measuring club path and face
-orientation before/at/after impact --- the four-dot GCQuad fiducial system
---- remain active; treat quad-camera + reflective-dot face measurement as
-protected.
+\item[Surface Images.]
+\patent{US7292711B2} / \patent{US7324663B2}.
+The disclosures describe recovering ball motion from images of surface
+features, including dimples and non-precision marks~\cite{us7292711}.
+US7292711B2 claim~1 includes compensation for sensor misalignment relative
+to a calibrated orientation. US7324663B2 claim~1 describes a search over
+rotations, scaling and correlation scores, together with coordinate and
+alignment calculations. Here, ``markerless'' means that prescribed
+fiducials need not be applied; it does not mean that the measurement needs
+no resolvable texture, lighting control or calibration. Correlation
+quality and rotation ambiguity must be evaluated on the actual images.
+\item[Trigger and Placement.]
+\patent{US7497780B2} / \patent{US7641565B2}.
+The former integrates trigger-zone monitoring, capture, parameter
+calculation and output. The latter detects ball placement using images
+and physical attributes. Reliable triggering determines which frames
+reach a spin estimator; it is part of the measurement chain, rather than
+merely a display convenience.
+\item[Club Motion.]
+\patent{US8951138B2}.
+This disclosure addresses club path and face orientation around impact.
+Its inclusion supports discussion of club measurement methods, not a
+blanket assertion that four cameras or reflective face dots are
+universally protected, or that one patent identifies a particular
+commercial club-data system.
 \end{description}
 
 \section{FlightScope / EDH --- Henri Johnson}
 \label{sec:patentflightscope}
 
 \begin{description}
-\item[\patent{US9868044B2} --- ``Ball spin rate measurement.''] Priority
-January 2013; expires $\sim$2034~\cite{us9868044}. The engineered
-alternative to TrackMan's sidebands after the 2013 loss: the ball's cover
-acts as a \emph{dielectric lens} ($n\approx1.8$) magnifying far-side
-surface features in the microwave return; phase demodulation (PLL) yields
-repeating bipolar pulses as features sweep the magnification zone; an FFT
-extracts the periodicity (seam symmetry doubles the modulation rate,
-corrected in software).
-\item[\patent{US10775492B2} --- ``Golf ball spin axis measurement.'']
-Priority December 2013; expires $\sim$2035~\cite{us10775492}. Direct
-axis measurement from time delays between perpendicular receiver pairs:
-$\Phi = \arctan[S_H T_H/(S_V T_V)]$ --- works at short indoor flights
-where trajectory inversion fails.
-\item[\patent{US10338209B2} --- Fusion Tracking.] Priority 2015; expires
-$\sim$2037~\cite{us10338209}. Radar+camera fusion with checkerboard
-camera calibration, Doppler-simulator radar alignment, radar-steered
-image search windows, offset removal by error minimization.
+\item[Phase-Modulated Spin Signals.]
+\patent{US9868044B2}.
+Claim~1 derives spin from the period of a demodulated radar component
+whose portions correspond to apparent speeds above and below a nominal
+speed~\cite{us9868044}. The disclosure's dielectric-lens explanation and
+surface-feature examples should be distinguished from that claim's
+signal-processing requirements. Symmetry can cause a feature pattern to
+repeat more than once per revolution; a measured modulation frequency
+therefore needs interpretation before it becomes a spin rate.
+\item[Receiver-Pair Timing.]
+\patent{US10775492B2}.
+Claim~1 uses demodulated Doppler signals from receiver pairs in
+perpendicular planes, their relative time delays and receiver separations
+to calculate an axis relative to a receiver plane~\cite{us10775492}.
+This supplies rotation-related observations without first fitting a
+long curved trajectory. It does not establish unconditional indoor
+accuracy: signal quality, delay estimation, geometry and the stated axis
+convention remain part of the result. A ratio of delays also needs
+careful treatment near a vanishing denominator and when resolving angle
+quadrants; a bare one-argument arctangent is not a complete implementation.
+\item[Camera/Radar Tracking.]
+\patent{US10338209B2}.
+The document describes calibrated simultaneous tracking and combining
+camera and radar information~\cite{us10338209}. Claim~1 specifically
+includes using radar data to interpolate a three-dimensional camera
+trajectory when one sensor fails to supply usable measurements. Recovery
+through such a gap is an inference step whose uncertainty must be tested,
+not a second independent observation of the missing interval.
 \end{description}
 
-\section{Acushnet (Titleist) --- The Stereo Foundation}
+\section{Acushnet (Titleist) --- Optical Measurement Architectures}
 \label{sec:patentacushnet}
 
-The deepest prior art for camera-based monitors; the early family is
-entirely expired~\cite{us5501463,us6500073,us6758759}.
+These documents illustrate several ways to assemble an optical launch monitor~\cite{us5501463,us6500073,us6758759}.
+They do not reduce to one fixed camera-and-marker recipe.
 
 \begin{description}
-\item[\patent{US5501463A} (1992, expired).] Two shuttered cameras at
-$\sim$22$\degs$, double-strobed $\sim$800\,\si{\micro\second} apart;
-three retroreflective dots on the clubhead, six on the ball;
-triangulation yields 3D clubhead velocity, attack angle, path, face
-orientation, and \emph{contact location on the face}.
-\item[\patent{US6500073B1} (1992 priority, expired).] Stereo pair + sound
-trigger + six ball dots; position and orientation at two instants give
-velocity and angular velocity; numerical flight integration
-(drag/Magnus/gravity) gives carry and roll --- the classic tour package.
-\item[\patent{US6758759B2} (2001, expired 2022).] Dual two-camera
-monitors (club pre-impact, ball post-impact); magnetic fixture calibrates
-the head's geometric center; complete recipe for measured face angle and
-impact location with marker stickers.
-\item[\patent{US7143639B2} family (2004 priority; parent expired 2024).]
-Portable four-camera unit with speed-adaptive strobe timing via FPGA
-lookup, dichroic marker discrimination, optical club/ball fingerprinting;
-continuations \patent{US8500568B2}/\patent{US8556267B2} (hardware
-integration claims) run to $\sim$2030--31.
-\item[\patent{US10668350B2} (2017; to $\sim$2038).] ``True 3D''
-stereo/light-field capture at 1,000--10,000+\,fps with sub-10\,\si{\micro
-\second} exposures and per-frame $xyz$ measurement.
-\item[\patent{US6186002B1}.] USGA-adjacent method for extracting
-$C_D$/$C_L$ from measured trajectories --- a template for calibrating an
-open ball-flight model~\cite{us6186002}.
+\item[Marked Club and Ball.]
+\patent{US5501463A}.
+Claim~1 uses at least two cameras and repeated exposures of contrasting
+areas on both the striking instrument and the object. Image patterns
+support estimation of club path and orientation. The conversion from
+marker positions to a club-face quantity requires a defined relationship
+between those markers and the club geometry.
+\item[Launch Conditions to Trajectory.]
+\patent{US6500073B1}.
+Claim~1 obtains positions and orientations from images at different times,
+calculates launch conditions, then calculates a trajectory. Measured
+initial conditions and the resulting modeled flight must be distinguished:
+a predicted landing point is not an observed landing point.
+\item[Separate Club and Ball Capture.]
+\patent{US6758759B2}.
+The first claim places club and ball cameras in vertically separated
+planes and derives their motion data from repeated images. The minimum
+in that claim is one camera for each task; describing the entire patent
+as requiring two stereo pairs would confuse an embodiment with the claim.
+\item[Integrated Optical Hardware.]
+\patent{US7143639B2}.
+Claim~1 specifies a housing layout with a club camera, at least two ball
+cameras, illumination, triggering and a teeing aid, arranged for use by
+both handednesses through rotation of the apparatus. The first claim does not require four cameras.
+\item[Three-Dimensional Image Generation.]
+\patent{US10668350B2}.
+The disclosure discusses stereo and light-field approaches. Claim~1
+specifically includes a light-field camera that captures light intensity
+and ray direction, followed by reconstruction and kinematic processing.
+Example frame rates or exposures in a disclosure are design proposals;
+they do not demonstrate a product's achieved measurement error.
 \end{description}
+
+\section{United States Golf Association --- Aerodynamic Experiments}
+
+The United States Golf Association's \patent{US6186002B1} belongs outside the Acushnet grouping.
+It describes controlled launches and timed light-screen crossings for aerodynamic coefficient fitting (\cref{app:patents})~\cite{us6186002}.
+Its experimental setup matters: an arbitrary short trajectory need not contain enough information to separate initial spin, wind and uncertain aerodynamic coefficients.
 
 \section{Korean Ecosystem: Creatz/Uneekor and Golfzon}
 
-Uneekor's patent list mixes owned Creatz patents (US10247553, US9752875,
-US9605960, US9448067, US10587797, US10776929, US11191998, US12008770 ---
-including the Dimple Optix markerless-spin engine) with the licensed
-Foresight/Wintriss numbers~\cite{uneekorpatents}.
-\patent{US10247553B2} (Creatz; to $\sim$2032) claims a sectioned
-start-sensor detecting the actual ball starting position for simulation.
-Golfzon's \patent{US9242158B2} (to $\sim$2032) claims the latency-hiding
-two-stage pipeline --- start the simulated trajectory from fast
-``first ball information'' ($\sim$100\,ms), refine in flight when the
-slower spin estimate arrives ($\sim$200\,ms)~\cite{us9242158}.
+Uneekor's marking notice connects specific products with listed patent numbers~\cite{uneekorpatents}.
+The Creatz disclosures include \patent{US10247553B2}, which describes a start sensor for identifying ball placement and starting movement, and \patent{US12008770B2}, which concerns dimple-based spin estimation.
+A product's markerless-spin label does not specify its entire algorithm or establish performance across every ball surface.
 
-\section{Freedom-to-Operate Map}
+Golfzon's \patent{US9242158B2} describes beginning the displayed flight with a first set of ball information and updating it when a second set arrives~\cite{us9242158}.
+This separates feedback latency from completion of the measurement pipeline.
+Timing examples in a description are not measured latency guarantees.
+Readers comparing monitors should ask both when an output appears and when the final parameters become available.
+
+\section{Technical Research Map and Rights Boundaries}
 \label{sec:fto}
+
+The following map identifies engineering questions to investigate.
+It replaces a technique-wide ``free to use'' classification: the age or expiration of one document cannot establish clearance for every implementation bearing the same technique name.
+The USPTO describes a patent as a right to exclude, not permission to practice an invention.
+Term cannot be computed indiscriminately as twenty years from any date labeled ``priority''; the applicable filing basis and other term conditions matter.\footnote{USPTO, \emph{Patent Essentials}, \url{https://www.uspto.gov/patents/basics/essentials}.} A design-specific rights review requires the relevant claims, jurisdictions and current records.
+This technical catalog does not supply that determination.
 
 \begin{table}[htbp]
 \centering\small
-\caption{FTO summary for an open-source launch monitor (US perspective,
-mid-2026). Verify claim-by-claim with counsel before commercial use.}
+\caption{Selected Measurement Methods and Their Validation Questions}
 \label{tab:fto}
-\begin{tabular}{@{}p{7.6cm}p{3.4cm}p{3.2cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{4.1cm}>{\raggedright\arraybackslash}p{6.6cm}@{}}
 \toprule
-\textbf{Technique} & \textbf{Controlling patents} & \textbf{Status} \\
+\textbf{Method} & \textbf{Example Documents} & \textbf{Question to Test} \\
 \midrule
-CW Doppler speed measurement & --- & Ancient art; free \\
-Mono-camera photometric launch + markerless dimple-correlation spin &
-  US7292711 / US7324663 & \textbf{Expired 2025; free} \\
-Stereo + retroreflective dots: club face, path, impact location &
-  US5501463 / US6500073 / US6758759 / US7143639 & \textbf{Expired; free} \\
-Target-tap deviation UX & US8085188 family & Expires 2026--27 \\
-Radar spin via harmonic sidebands & US8845442 (US10393870) &
-  To $\sim$2029 (Dec 2026) \\
-Radar spin via dielectric-lens phase demodulation & US9868044 &
-  To $\sim$2034 \\
-Direct radar spin axis (perpendicular receiver pairs) & US10775492 &
-  To $\sim$2035 \\
-Radar+camera fusion tracking & US10338209; TrackMan OERT family &
-  To $\sim$2037+ \\
-Integrated ball-find/placement/trigger workflow & US7497780 / US7641565 &
-  To $\sim$2027 \\
-Video tracer overlay from sensor track & US10315093 & To $\sim$2030 \\
-Two-stage sim latency hiding & US9242158 & To $\sim$2032 \\
-Start-position sensing & US10247553 & To $\sim$2032 \\
-Light-field / true-3D capture claims & US10668350 & To $\sim$2038 \\
-Multi-bay back-extrapolation attribution & US11086005 & To $\sim$2036 \\
+Surface-image spin & US7292711B2; US7324663B2 &
+  Are texture, exposure and rotation matching sufficient to resolve ambiguity? \\
+Marked club/ball images & US5501463A; US6758759B2 &
+  Are calibration and marker-to-face geometry known at the reported time? \\
+Radar spin periodicity & US8845442B2; US9868044B2 &
+  Which spectral or temporal repeat corresponds to one revolution? \\
+Radar axis information & US10850179B2; US10775492B2 &
+  Is the result a projection or a full axis, and in which coordinate frame? \\
+Camera/radar fusion & US10338209B2; US10989791B2 &
+  Are clocks, coordinates, association and missing-data uncertainty controlled? \\
+Trajectory-informed spin & US12544624B2 &
+  How strongly does the result depend on club probabilities and the flight model? \\
+Placement and triggering & US7641565B2; US10247553B2 &
+  Does detection reliably capture the interval needed for the requested output? \\
+Staged display & US9242158B2 &
+  Which values are provisional, and when does the displayed trajectory change? \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{keypoint}
-Three strategic conclusions. (1)~A \emph{camera-first} open design has a
-wide-open, recently expired foundation (Wintriss + Acushnet) covering
-mono/stereo photometric launch measurement, markerless spin, and
-marker-based measured club-face data. (2)~\emph{Radar spin} is the most
-encumbered corner: the TrackMan sideband family runs to $\sim$2029 and
-FlightScope's alternatives to $\sim$2034--35; pure speed/launch-angle
-radar (the Garmin R10 recipe) is safe. (3)~\emph{Radar+camera fusion} is
-the most actively patented current frontier --- the two giants have
-litigated each other in both directions --- and warrants the most care
-for any hybrid radar-plus-camera roadmap. Note also that a non-commercial
-AGPL project is not immune: US patent infringement does not require
-sale, and downstream commercial users inherit the exposure.
+A launch monitor is a chain of observations and inferences. Radial speed,
+image displacement, surface rotation, launch conditions and predicted
+flight occupy different places in that chain. Combining sensors can add
+information, but only after timing, coordinates and object identity agree;
+it does not turn repeated use of the same data into independent evidence.
+
+For example, Topgolf's \patent{US12544624B2} uses trajectory observations, spin candidates and probabilities associated with a likely club.
+That approach differs from tracking rotating surface features.
+A plausible spin value may partly reflect the prior model, so evaluating both methods requires experiments that expose their different ambiguities.
+
+When using these outputs to investigate a swing, retain the measurement
+frame, time interval, calibration and model assumptions. Launch conditions
+constrain the ball's initial state; they alone do not identify the golfer's
+joint torques, force history or unique movement strategy. Technical rigor
+means carrying those information limits through the argument, rather
+than letting a precise display imply a uniquely determined cause.
 \end{keypoint}

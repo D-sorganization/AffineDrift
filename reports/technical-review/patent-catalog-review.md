@@ -5,8 +5,7 @@
 In progress under epic #4009 and corpus issue #4021. The lead read the complete
 patent compendium and linked patent-landscape chapter. The appendix contains
 167 distinct patent macros. Research capture covers those identifiers plus
-six verification records. Source editing has begun; no full-review credit,
-publication validation or legal determination is claimed.
+six verification records. Both chapters have been revised and the 80-page book rendered and inspected. Final per-entry adjudication and audit binding remain open; no full-review credit or legal determination is claimed.
 
 The review distinguishes the technical content of a publication from a
 commercial implementation, performance validation, ownership history, enforceable
@@ -36,12 +35,12 @@ requiring their own qualifications. Downloading a record is not reviewing it.
 5. **Dates and Catalog Limits.** Twelve leading table entries disagree with the
    retrieved indexed priority year. All twelve leading years have been corrected to explicitly indexed priority years; related-note dates remain separate.
    The current TrackMan marking notice contains 47 unique US numbers, including
-   US12702912B2; the original count of 45 and absent-from-page notes need updating.
+   US12702912B2; the original count of 45 and absent-from-page notes have been corrected or removed.
    A marking list is not an exhaustive estate search.
 6. **Rights and Mechanisms.** Both source files make unsupported whole-stack
    expiry and free-use claims. The USPTO explains that a patent provides a right
    to exclude, not permission to practice, and distinguishes nonprovisional
-   filing, maintenance and term adjustments. The technical review will replace
+   filing, maintenance and term adjustments. The technical review replaces
    the claimed freedom-to-operate map with a scoped research map, preserving
    useful mechanism descriptions and explicit evidence limits.
 
@@ -83,31 +82,27 @@ that a patent is absent from a marking page. Those are independent facts. Shared
 titles/abstracts do not establish a continuation relationship. The final catalog
 must check that relationship or use neutral related-document language.
 
+## Revised Chapter and Catalog Checkpoint
+
+Five further supplied-text agy Gemini 3.8 Flash jobs completed: a chapter mechanism comparison, three remaining-draft triage packets and a revised-chapter editorial check. The first oversized Windows invocations failed before launch; splitting packets below the command-line limit resolved the failure. Total completed patent jobs: 32. The lead inspected the results and selected primary first claims. Draft claims that an omitted assignee in a row contradicts its section heading, that a filing year must equal an explicitly labeled priority year, or that a missing abstract term disproves an embodiment were rejected.
+
+The revised chapter distinguishes spectral spin, receiver-pair timing, projected radar axes, image-based rotation, launch-to-flight models, staged display and probable-club spin inference. It replaces broad free-use claims with measurement validation questions and explains why ball outputs do not uniquely identify a golfer's force or joint-torque history. The table keeps its original cross-reference label.
+
+The appendix removes unverified expiry, product and continuation shorthand. US5333874A is a historical rebound-based inference entry with qualified assignment information. US12544624B2, US11964188B2 and US9162132B2 have separate mechanism descriptions rather than inheriting their former grouped rows. US12702912B2 links to the available USPTO Gazette. Sports Sensors' speed and swing-duration tasks, Rapsodo's radar-feature neural estimator, and Weibel's simultaneous CW/FMCW arrangement are distinguished.
+
+All 167 original macro identifiers remain represented after the two explicit B2-to-B1 corrections. The appendix now contains 168 unique macros plus the new Gazette link. All 111 leading table priority years agree with their captured index records. This checks transcriptions, not legal priority entitlement. The book-local research dossier links every macro publication and the institutional sources.
+
+EP1735637B1 contains 42 sequentially numbered English claims, not repeated translations; the earlier translation concern was a hypothesis and is rejected. WO2003032006A1 contains 21 numbered claims despite an absent declared-count field. Missing extracted abstracts do not prevent a claim-based technical summary.
+
+The company-authored September 30, 2024 license announcement was read through its Nasdaq syndication when the original Business Wire URL was unavailable. It concerns portable-monitor screen technology and expressly does not establish adoption of another company's ball-flight algorithm. The source URL and interpretation are retained in the book dossier.
+
 ## Remaining Work
 
-Finish every entry's technical and bibliographic comparison; resolve missing
-abstract/claim extraction for foreign documents; review targeted complete claims
-and descriptions; correct both source files and associated bibliography. Then
-render and inspect the book, run appropriate regression/publication checks, bind
-findings, update corpus/turnover records and deliver a regular PR. The 122 pending
-full-source audits and whole-book consistency requirement remain unchanged.
+Finish the final per-entry disposition for retained narrower details, including receiver geometry, commercial implementation labels that remain in other chapters, and the technical scope of secondary references. Compare the revised patent chapters against the rest of the launch-monitor book, without awarding completion to unreviewed chapters. Then run final publication/regression checks, bind findings, update the corpus and deliver a regular PR. The 122 pending full-source audits and whole-book consistency requirement remain unchanged.
 
-The collected inventory records 173 attempted identifiers, 170 successful Google
-Patents captures, two incorrect B2 identifiers corrected by B1 records, and the
-new TrackMan document verified separately through the USPTO Gazette. The full
-claim-count extraction remains incomplete for WO2003032006A1, and EP1735637B1 has
-no extracted abstract. These are retrieval/coverage limitations, not evidence
-about patent validity. The lead reviewed all captured title/date/assignee rows,
-selected full technical claims, the batch 00–04/07/15/17/18/23 drafts, and a
-cross-batch discrepancy extraction; remaining draft details need adjudication.
+PR #4755 is merged on remote main as 394a7b40bbff4327789e8d98dfcd5390dd845a0b. The later geometry PR #4765 remains open and conflicts with that update; its CI36893253026 was still running at the latest check. Integrate the delivered changes with source/evidence preservation before subsequent PR delivery. Do not close other predecessors merely from branch ancestry or an apparent duplicate title.
 
-Do not mistake a grouped row's leading identifier for an erroneous reference to
-its additional identifiers, as several Flash drafts did. Inventors, applicants,
-assignees and product brands also require separate treatment. US5333874A lists
-Kiraly and Wintriss among its inventors but its placement under a Foresight
-portfolio is not established by shared inventorship.
-
-## Partial-Checkpoint Validation
+## Earlier Checkpoint Validation (be207dfd0)
 
 The 35 book-publication/claim-inventory tests, 653-source title audit and LaTeX
 structure baseline check pass. Claim-audit digests were already current: this
@@ -123,3 +118,9 @@ confirms 83 unique entry keys and both changed marking-source access dates.
 The first direct bibliography-script invocation lacked the repository import
 path; the corrected module invocation passed. No full regression or newly
 rendered book is claimed for these partial patent edits.
+
+## Rendered-Checkpoint Validation
+
+The book build passed using its existing MiKTeX/Biber workflow with halt-on-error and undefined-reference checks. The final PDF has 80 pages. The lead visually inspected all Chapter 7 pages (PDF 26–30) and Appendix D pages (58–66), then rechecked the final two appendix pages after keeping the closing section together. Wider patent columns, ragged text cells and targeted heading-space reservations remove box warnings from both edited chapters; warnings elsewhere in the book are not claimed resolved. The shared preamble adds only the needed `needspace` package.
+
+The 35 focused book-publication/claim-inventory tests, 653-source title audit and LaTeX structure check pass. Claim-audit digests remain current; no finding is newly bound by this checkpoint. Identifier preservation and all 111 leading indexed priority years were checked. Optional Python `fitz` was unavailable; installed Poppler rendered the review images instead. No full regression or completed scientific audit is claimed yet. Source/PDF hashes and commands are in `patent-catalog-checkpoint-validation.json`.
