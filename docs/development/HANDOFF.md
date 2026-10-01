@@ -1,3 +1,15 @@
+# Muscle Models — Source Checkpoint — #4743
+
+- Goal active under epic #4009. Branch fix/muscle-model-rigor-4743 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; base9c6e29170. Full chapter first-pass source/PDF/test correction complete; source checkpoint SELF. No new completion credit or publication claim.
+- Corrected constitutive normalization/domains, parameter attribution, pennation, initialization, tendon identifiability, activation timing, power and curved-path stiffness. Full rationale and bounded primary reading: reports/technical-review/muscle-models-review.md.
+- Original28 failing/two passing tests; now38 focused tests pass. Twelve publication gates and653-source title audit pass. PDF68pages, all10 chapter pages plus boundaries, contents/preface and bibliography visually inspected. Existing unrelated volume warnings retained.
+- Supplied-text agy Gemini3.8 Flash agents handled inventories, test drafts, notation/checklist and turnover draft; lead adjudicated. No delegated repository edits or scientific authority.
+- Next: source commit/push, update public hub to immutable source/PDF revision, run full regression/browser checks, bind chapter findings and corpus row, create regular protected PR. 131 source audits and whole-book consistency remain on parent; do not reduce from this checkpoint alone.
+- External merge at11:02:53UTC combined4744 into Chapter10 branch asd9c21a9e5. PR4741 now carries both chapters and targets main; protected checks pending. This is not remote-main delivery. Preserve this combined branch, integrate normally after the source checkpoint, and verify protected main merge.
+- Lease session technical-review-20261001-muscle-models through12:33UTC. Coordination board unavailable/truncated, not proof of absent peers. Preserve historical findings/commits and QA; no draft PR, direct-main, force or protection bypass.
+
+## Preserved Earlier Checkpoints
+
 # Force-Direction Review — PR #4744
 
 - Regular PR: https://github.com/D-sorganization/AffineDrift/pull/4744, stacked on Chapter10 PR4741. Delivery161a3b662 is pushed. Do not merge into the topic base; retarget to main only after verified protected Chapter10 merge. PR4741 head eb288 is remote; all observed checks pass except E2E still running at10:29UTC. Protected auto-merge armed there only.

@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4743 · Muscle Models and Coupled Power
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending (regular only)
+- **Issue:** #4743 (epic #4009)
+- **Branch:** fix/muscle-model-rigor-4743
+- **Paths:** articles/The_Geometry_of_Motion/Volume_III/chapters/ch03_muscle_models.tex, articles/The_Geometry_of_Motion/geometry_of_motion.bib, tests/test_muscle_models_review.py, tests/test_muscle_model_identities.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (38 focused passes after28 original failures/two passes;12 publication gates;653-source title audit;68-page PDF and17 selected pages inspected)
+- **Summary:** Correct force curves and attribution; connect excitation, fiber state, series equilibrium, tendon storage, joint power and stiffness under explicit model/empirical boundaries.
+- **Next step:** Commit/push source checkpoint, publish immutable hub links after source commit, run full regression/browser checks, bind new chapter findings and create regular protected PR. No chapter completion or merge claim yet.
+
 ### DL-#4742 · Force Direction and Reference Points
 
 - **State:** in_review
