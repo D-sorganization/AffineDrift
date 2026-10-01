@@ -195,7 +195,6 @@ def test_ci_enforces_scientific_claim_audit_coverage_when_e2e_renders_site() -> 
     assert "--enforce-publication" in content
 
 
-
 def test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match() -> None:
     """WEB-13.1 (#4595): skip the ~14-minute render only on an exact cache hit.
 
