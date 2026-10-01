@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4736 · Tangent Reading Guide Technical Consistency
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4736 (epic #4009)
+- **Branch:** `fix/tangent-reading-rigor-4736`
+- **Paths:** `articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd`, `tests/test_tangent_series_links.py`, `reports/technical-review/tangent-reading-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (94 focused/184 content passes, four skips;653-source title check; final HTML render, four bounded browser cases/axe and math-layout checks pass; full suite/final binding pending)
+- **Summary:** Correct all guide claims and navigation; connect sensitivity, finite-error propagation, feedback and impact timing to measurable golf/humanoid questions. Preserve primary scopes and independent counterexamples.
+- **Next step:** Push SELF and run the full repository regression.
+
 ### DL-#4688 · Dataset Explorer Deployment Route Audit
 
 - **State:** in_review

@@ -1,3 +1,19 @@
+# Tangent Reading Guide — #4736
+
+- Goal active under epic #4009. Review all articles, longest unfinished first.134 sources remain pending on the integrated content branch; this guide has no completion credit yet. Use regular protected PRs and agy Gemini3.8 Flash for routine inventories/checks.
+- Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health reused from the clean merged4716 checkout; branch fix/tangent-reading-rigor-4736 based on main3e7d6958c20ffc01a3d35f1ae43d7ff527fe370f. Current source checkpoint SELF. PR not created.
+- Lease/presence technical-review-20261001-tangent-reading through09:07UTC. Entire TABLE_OF_CONTENTS.qmd corrected: variation versus finite error, propagated joint state/input residual, full DDP versus iLQR, closed-loop contraction, saltation/time conventions, golf outcome interpretation, reading scope and primary chapter pointers. Public navigation respects render exclusions and canonical seven-part hub.
+- Durable report: reports/technical-review/tangent-reading-review.md; counterexamples and original audit record alongside it. Four agy jobs (two original inventories/two draft checks) used supplied text only; lead adjudicated and independently derived/verified. Existing source review metadata remains historical until final source binding; do not infer full-corpus certification from prior reviewed labels.
+- Validation:94 focused theory/navigation tests pass; navigation RED exposed four excluded critique links now corrected. Title audit653 sources passes. HTML render succeeds. Final four width/theme browser cases and axe pass after equation line wrapping;86 math containers, zero errors/overflow at390/1440.184 content checks pass/four skipped. Mobile title Code button removed; long formulas split into readable lines. No published PDF changed. Full repository suite, final corpus/route findings binding and regular PR remain pending.
+- Local QA: docs/development/technical-review/tangent-reading-\*; preserve all untracked QA. Preview session44535 serves docs on127.0.0.1:17967. Final render session97819 completed successfully. The bounded manifest uses the official generator over one copied HTML file. Apply only normal polyfill-strip helper to generated article, not whole deploy pruning (would delete QA). Assets need sync_frontend_assets.py and bundle_css.py after render.
+- Next action: push SELF, then run full repository validation on the stable committed tree. Run full validation on stable committed tree; keep evidence receipts distinct by checkpoint. After source commit, bind final review/finding hashes and update only this corpus row. Preserve prior finding commits and other review scopes.
+- Separate delivery: PR4734 now targets main with both ground #4730 and shallow-wide #4733, head5f54d64b8bb38d8aef1972705e6c882c4b05b7a3; protected squash auto-merge armed. Check CI36829619394, then verify remote-main delivery before releasing those leases. Consolidation4735 is no longer a dependency: its unrelated dark-theme duplicate-ID failures and review comments remain peer-owned. Do not pull those theme changes into this guide or content delivery unless merged to main and revalidated.
+- Preserve original ground/shallow worktrees, all QA and parked provider synthesis #4253. No live deployment claim. No force/admin/direct-main/protection bypass.
+
+## Preserved Earlier Checkpoints
+
+Earlier statuses below are historical; current state is above.
+
 # Plane-to-Space Technical Review — #4724
 
 - Goal active under epic #4009. Regular PRs only; complete current review and protected delivery, then continue longest unfinished sources.
