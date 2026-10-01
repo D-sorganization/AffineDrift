@@ -22,14 +22,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (regular; ground review base retained; delivery dependency #4735)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (regular; main base; combined ground/shallow-wide delivery)
 - **Issue:** #4733 (epic #4009)
 - **Branch:** `fix/shallow-wide-rigor-4733`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex`, `articles/The_Geometry_of_Motion/Volume_IV/main.pdf`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `books/human-motor-control.qmd`, `tests/test_shallow_wide_review.py`, `reports/technical-review/shallow-wide-review.md`
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (SELF: CI failure reproduced and repaired;66 focused/184 content passes, four skips; audit/book/catalog freshness and Ruff/Black pass. CI36826515629 six failures retained in receipt. Historical full6265/93.04% at180cddda0 remains scoped to that checkpoint.)
 - **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
-- **Next step:** Push SELF to PR #4734 for protected CI.
+- **Next step:** Push SELF and check protected CI for combined PR #4734.
 
 ### DL-#4688 · Dataset Explorer Deployment Route Audit
 
