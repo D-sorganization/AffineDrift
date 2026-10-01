@@ -8,7 +8,7 @@ const PAGES = [
   [
     'article',
     '/articles/theory-part1.html',
-    'Affine Control Interpretation of the Golf Swing',
+    'Theory Series, Part 1: Control-Affine Foundations',
   ],
 ];
 
@@ -62,7 +62,7 @@ test.describe('title semantics (#3445)', () => {
     await expect(page.locator('header#title-block-header')).toHaveCount(1);
     await expect(page.locator('header#title-block-header')).toBeVisible();
     await expect(page.locator('header#title-block-header h1')).toHaveText(
-      'Affine Control Interpretation of the Golf Swing',
+      'Theory Series, Part 1: Control-Affine Foundations',
     );
   });
 });
