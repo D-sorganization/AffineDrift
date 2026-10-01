@@ -225,6 +225,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-10-01 | #4761 | Refresh content inventory and ownership map snapshot for 207 pages and replace governance vocabulary in companion Chapter 16 (#4602). |
+| 2026-10-01 | #4766 | Audit all 168 catalog references plus Gazette entry; correct patent mechanisms, attribution, dates and inference limits; preserve source-hashed dispositions and render revised book. |
 | 2026-10-01 | #4765 | Correct moment-arm geometry, wrench–power and Jacobian mappings, singularity/inertia interpretation and matched scalar allocation evidence in Chapter 4. |
 | 2026-10-01 | #4762 | Correct robust-speed risk, finite Pareto, provider sampling and selection claims; reproduce eight-program archived evidence and replace mismatched tradeoff figure. |
 | 2026-10-01 | #4758 | Correct complete-state prediction, velocity reversal, memory, intervention and measurement claims with independent counterexamples and scoped evidence. |
@@ -521,3 +522,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4559 | Add Home-page visual-regression coverage at 390/768/1440 px in light and dark themes (WEB-08.8), coordinated with the #4089 route/mask conventions; Start Here coverage is blocked on #4486/#4487. |
 | 2026-10-01 | #4598 | Remove legacy cruft files and directories (legacy-pages/, _includes/home-sidebar-content.html, js/pdf.js, listings.json, preview-articles.sh, start-preview.sh, duplicate .Jules/) and update root hygiene checks. |
 | 2026-10-01 | #4694 | Enforce scientific claim-audit coverage in PR CI e2e-tests when site-facing files are rendered, preventing un-audited routes from passing PR CI and breaking Deploy Website on main. |
+| 2026-10-01 | #4502 | Align navigation labels with page titles and add contract test (WEB-02.8). |

@@ -5,12 +5,15 @@ Enforces that:
 2. Every published page in sitemap.xml has a non-empty and globally unique title.
 3. Every published page in sitemap.xml has a meta description between 70 and 160 characters.
 4. Standalone status pages (e.g. 404.qmd) also carry valid titles and descriptions.
+5. Navigation labels match page titles or an explicit allowlist (WEB-02.8, #4502).
 """
 
 from __future__ import annotations
 
 import re
 from pathlib import Path
+
+import yaml
 
 from scripts.check_quarto_render_coverage import sitemap_loc_to_source_path
 from scripts.generate_sitemap import build_pages
@@ -117,3 +120,123 @@ def test_not_found_page_has_valid_title_and_description() -> None:
 
     assert title, "404.qmd must have a title"
     assert 70 <= len(desc) <= 160, f"404.qmd description length ({len(desc)}) must be 70-160 chars"
+
+
+ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
+    {
+        ("index.qmd", "Home"),
+        ("books/index.qmd", "Books & Textbooks"),
+        ("articles/theory-part1.qmd", "Part 1: Control-Affine Foundations"),
+        ("articles/theory-part2.qmd", "Part 2: Counterfactual Diagnostics"),
+        ("articles/theory-part3.qmd", "Part 3: Drift Invariance and Force Taxonomy"),
+        ("articles/theory-part4.qmd", "Part 4: Worked Pendulum Dynamics"),
+        ("articles/theory-part5.qmd", "Part 5: Numerical Consistency"),
+        ("articles/appendix-applications.qmd", "Applications Appendix"),
+        ("articles/affine-nature-golf-swing.qmd", "Consolidated Edition"),
+        ("pages/tangent-hyperplanes.qmd", "Series Overview"),
+        ("articles/tangent-hyperplanes-series/part-1-geometry.qmd", "Part 1: Geometry"),
+        ("articles/tangent-hyperplanes-series/part-2-dynamics.qmd", "Part 2: Dynamics"),
+        ("articles/tangent-hyperplanes-series/part-3-control.qmd", "Part 3: Control"),
+        (
+            "articles/tangent-hyperplanes-series/part-4-residuals-curvature.qmd",
+            "Part 4: Residuals and Curvature",
+        ),
+        ("articles/tangent-hyperplanes-series/part-5-contraction.qmd", "Part 5: Contraction"),
+        ("articles/tangent-hyperplanes-series/part-6-hybrid.qmd", "Part 6: Hybrid Systems"),
+        (
+            "articles/tangent-hyperplanes-series/part-7-residual-aware.qmd",
+            "Part 7: Residual-Aware Control",
+        ),
+        ("pages/accessibility.qmd", "Accessibility"),
+        ("books/tangent-space-methods.qmd", "Volume I: Tangent-Space Methods"),
+        ("books/biomechanics-biology-to-systems.qmd", "Volume III: Biomechanics"),
+        ("books/roadmap.qmd", "Roadmap & Curriculum"),
+        (
+            "articles/proximal_distal_energy_transfer/index.qmd",
+            "Proximal-to-Distal Energy Transfer",
+        ),
+        (
+            "articles/proximal_distal_energy_transfer/index.qmd",
+            "Proximal-to-Distal Technical Monograph",
+        ),
+        (
+            "articles/proximal-distal-falsification-atlas.qmd",
+            "Proximal–Distal Falsification Atlas",
+        ),
+        ("pages/drifter-manifesto.qmd", "Theory Series"),
+        ("resources/bibliography.qmd", "Bibliography"),
+        ("pages/technology.qmd", "Technology Overview"),
+        ("articles/technology-force-measurement.qmd", "Force Measurement"),
+        ("articles/technology-motion-capture.qmd", "Motion Capture"),
+        ("articles/technology-launch-monitors.qmd", "Launch Monitors"),
+        ("articles/technology-club-fitting.qmd", "Club Fitting Simulation"),
+        (
+            "articles/technology-heavy-hit-impact-coupling.qmd",
+            "Multibody Impact Coupling",
+        ),
+        ("articles/reference-point-problem.qmd", "The Reference-Point Problem"),
+    }
+)
+
+
+def extract_quarto_navigation_links(quarto_yml_path: Path) -> list[tuple[str, str]]:
+    """Extract all (text, href) navigation pairs from navbar, sidebar, and page-footer."""
+    config = yaml.safe_load(quarto_yml_path.read_text(encoding="utf-8")) or {}
+    website = config.get("website", {})
+
+    def _walk(node: object) -> list[tuple[str, str]]:
+        collected: list[tuple[str, str]] = []
+        if isinstance(node, dict):
+            if "text" in node and "href" in node:
+                collected.append((str(node["text"]).strip(), str(node["href"]).strip()))
+            for value in node.values():
+                collected.extend(_walk(value))
+        elif isinstance(node, list):
+            for item in node:
+                collected.extend(_walk(item))
+        return collected
+
+    links: list[tuple[str, str]] = []
+    for section_name in ("navbar", "sidebar", "page-footer"):
+        links.extend(_walk(website.get(section_name)))
+    return links
+
+
+def test_navigation_labels_match_page_titles_or_allowlist() -> None:
+    """Navigation labels in _quarto.yml must match page title or explicit short-form allowlist (#4502)."""
+    quarto_yml = REPO_ROOT / "_quarto.yml"
+    assert quarto_yml.exists(), "_quarto.yml must exist"
+
+    raw_links = extract_quarto_navigation_links(quarto_yml)
+    assert raw_links, "Expected to extract navigation links from _quarto.yml"
+
+    internal_links: list[tuple[str, str]] = [
+        (text, href)
+        for text, href in raw_links
+        if not href.startswith(("http://", "https://", "mailto:", "//"))
+        and href.split("#")[0].split("?")[0].endswith((".html", ".qmd"))
+    ]
+    assert (
+        len(internal_links) >= 50
+    ), f"Expected at least 50 internal navigation links, got {len(internal_links)}"
+
+    mismatches: list[str] = []
+    for text, href in internal_links:
+        clean_href = href.split("#")[0].split("?")[0].lstrip("/")
+        rel_qmd_str = clean_href.removesuffix(".html").removesuffix(".qmd") + ".qmd"
+        source_path = REPO_ROOT / rel_qmd_str
+        assert (
+            source_path.exists()
+        ), f"Navigation link href '{href}' points to non-existent source {source_path}"
+
+        rel_path = source_path.relative_to(REPO_ROOT).as_posix()
+        fm, body = split_frontmatter(source_path.read_text(encoding="utf-8"))
+        page_title = get_effective_page_title(fm, body)
+
+        if text != page_title and (rel_path, text) not in ALLOWLISTED_NAV_SHORT_FORMS:
+            mismatches.append(f"- ({rel_path!r}, nav={text!r}, page_title={page_title!r})")
+
+    assert not mismatches, (
+        f"Found {len(mismatches)} navigation label(s) diverging from page title (#4502):\n"
+        + "\n".join(mismatches)
+    )

@@ -41,12 +41,10 @@ windows (later trigger cutoff); cepstrum or harmonic-product comb estimation
 with equal-spacing qualification; marked-ball guidance for indoor use; and
 honest fallback --- report estimated spin from club type, speed and loft
 priors, clearly flagged, which is what Garmin does and documents.
-\emph{Patent caution:} the harmonic-sideband method is claimed by US8845442
-until $\sim$2029 in its US member (\cref{sec:fto}).
-\item \textbf{Spin axis} is out of reach of a short-flight radar
-installation: indoor flights are too short for trajectory inversion, and the
-direct receiver-pair method is patent-encumbered to $\sim$2035. The
-practical routes are optical, or a flagged model estimate from face-to-path.
+\emph{Disclosure reference:} US8845442 describes radar spin processing; the technical map in \cref{sec:fto} does not determine clearance or a technique-wide expiry date.
+\item \textbf{Spin axis}: short flight segments may provide too little trajectory information to separate axis, aerodynamic coefficients and launch-condition errors reliably.
+Rotation-related observations from receiver geometry provide another disclosed route (\cref{sec:patentflightscope}), but require suitable hardware and validated signal processing.
+Optical rotation estimates and explicitly labeled impact-model estimates are further options; their observation requirements and error sources differ.
 \end{enumerate}
 
 \section{Club Data}
@@ -73,12 +71,10 @@ launch-direction bias at the measured weight; see the caution in
 strikes once impact location is available. The D-plane forward model doubles
 as a simulator's launch generator, so one well-tested module serves both
 directions.
-\item \textbf{Impact location} requires optics. There is no radar route.
-The expired Acushnet stereo art (\cref{sec:patentacushnet}) and Wintriss
-mono-camera art (\cref{sec:wintriss}) provide complete public-domain
-recipes. Even a single overhead camera reading face fiducials converts face
-angle from \emph{derived} to \emph{measured}, which is the largest single
-jump available in \cref{tab:hierarchy}.
+\item \textbf{Impact location}: club and ball imaging offers a concrete route to locating contact relative to the face.
+The Acushnet and Wintriss disclosures (\cref{sec:patentacushnet,sec:wintriss}) illustrate measurement architectures, rather than complete validated implementations or blanket rights clearance.
+Face fiducials can constrain orientation through calibrated image geometry and a known marker-to-face relationship.
+Camera count alone does not establish three-dimensional observability, visibility at impact or achieved accuracy.
 \end{enumerate}
 
 \section{Capability Tiers}
@@ -93,14 +89,11 @@ honest fallback, D-plane-derived face data with provenance flags,
 smash-factor sanity gates, and a documented alignment-calibration procedure.
 This delivers the consumer-radar feature set. Everything club-face-related
 is inferred.
-\item \textbf{Tier 2 --- add an optical spin and impact module.} One or two
-global-shutter cameras with an IR strobe, at modest incremental cost. The
-camera measures launch angles, 3D spin by dimple registration, and impact
-location; the radar keeps trigger, speed, and outdoor robustness. This is
-the same fusion every commercial vendor converged on --- and it can be built
-entirely from the expired-art side of the patent map (\cref{ch:patents}).
-\emph{Care:} avoid still-active claims around integrated ball-find and LED
-guidance, and around radar-steered image search windows.
+\item \textbf{Tier 2 --- add optical spin, then impact imaging.} One or two
+global-shutter cameras with an IR strobe, at modest incremental cost.
+Calibrated image sequences can support launch-angle and surface-rotation estimation; impact-location capture additionally needs a suitable view of the club and ball.
+Radar may contribute triggering, speed and trajectory observations, depending on the sensor arrangement.
+The disclosures in \cref{ch:patents} supply design comparisons, not a guarantee that this combination is accurate or cleared for a particular implementation.
 \item \textbf{Tier 3 --- true fusion.} A single EKF consuming radar speed,
 radar angles and camera fixes with per-sensor covariances; a flight model
 per \cref{ch:flight} with versioned coefficients; and a validation protocol
@@ -115,7 +108,7 @@ smoothed on $SE(3)$, and projected into club speed at a declared reference
 point, measured path and attack angle, closure rate, and an ISA-defined
 swing plane. This moves path and attack angle from \emph{derived} to
 \emph{measured} in \cref{tab:hierarchy}. Face angle and impact location
-remain with the optical module --- no radar architecture reaches them.
+remain assigned to the optical module in this proposed architecture; the allocation is a design choice, not proof that every other sensing approach is impossible.
 \end{enumerate}
 
 \section{Reporting Honesty as a Design Feature}
