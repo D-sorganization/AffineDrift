@@ -1,3 +1,17 @@
+# Main Deploy Feed Ordering — #4688
+
+- **Repository / Working Directory:** `D-sorganization/AffineDrift`; `C:/Users/diete/Repositories/Worktrees/affine-4688-main-feed-order-20261001`.
+- **Branch / Commit:** `fix/issue-4688-main-feed-order-20261001` / `SELF` (local commit; exact SHA is resolved after commit).
+- **Pull Request:** Not created; root review is required before any push or PR.
+- **Governing Issue / Objective:** #4688, bounded repair of the current main deploy failure by generating the existing RSS feed before the existing source link check.
+- **Completed:** From exact parent `a473831731989fce80f110bcc34745affe9ad837`, moved only the existing `Generate RSS feed.xml` step earlier, retaining `docs/feed.xml`, the same link-check command, and all other workflow settings/steps. Added an order regression and updated the #4688 SPEC and development-log entries.
+- **Root Cause:** Scoped failed job `110366141215` reported `_includes/site-head.html:63 -> /feed.xml` under `Broken Links Found` and exited 1. Feed generation occurred later in the workflow.
+- **Validation:** Regression failed before the workflow edit, then passed. `python -m pytest tests/test_generate_feed.py::TestDeployWorkflowWiring tests/test_deployment_integrity.py -q` passed. `python scripts/generate_feed.py --output docs/feed.xml` wrote 30 items; subsequent `python -m src.tools.check_links` reported no broken internal links. `python scripts/check_spec_changelog.py`, `python scripts/check_title_case.py`, and `git diff --check` passed. `development_log.py` reports unrelated pre-existing issues (duplicate DL-#4712, stale/missing fields, and 3 in-progress items over the personal cap); no #4688-specific finding remains. Full deployment render and CI have not run on this head.
+- **Constraints / Assumptions:** No route migration, pruning, alias/schema/scientific content changes, inventory changes, or draft consolidation. Keep all other worktrees untouched. Issue lease remains with root's existing owner; no lease was claimed/released. Inbox/list was incomplete (`ok:false`) due malformed board comment and page limit, so roster status is unknown.
+- **Blockers / Worktree State:** Local changes are limited to `.github/workflows/deploy-website.yml`, `tests/test_generate_feed.py`, `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, and this handoff. `docs/feed.xml` is ignored generated output. No CI evidence or deployment-ready claim exists.
+- **Next Step:** Root reviews the local commit before deciding whether it may be pushed.
+- **Development Log:** `DL-#4688`.
+
 # Muscle Models — Regular PR #4745
 
 - Regular main-target PR: https://github.com/D-sorganization/AffineDrift/pull/4745. Pushed review/binding da493c5763121ff3a8b474395fca6ae6313ed09b; source d7be93d34322f2cbb73f8c933cf22991e604a2e5; evidence delivery46f71eda4eaf4965ffa12b5025544dce98f632b8. Current registration checkpoint SELF. Goal active.
