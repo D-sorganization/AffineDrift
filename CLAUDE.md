@@ -48,7 +48,7 @@ quarto render                                          # build the site
 
 ## Docker (Reproducible Environment)
 
-Use Docker to get an environment that exactly matches CI — Python 3.12, Quarto, and Node.js 20 pre-installed.
+Use Docker to get an environment that exactly matches CI — Python 3.12, Quarto, and Node.js 22 pre-installed.
 
 ```bash
 # Build the dev image (includes all Python + JS deps)
