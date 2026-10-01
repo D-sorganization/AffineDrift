@@ -45,13 +45,13 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 **Self-check:** Why does the Lagrangian Reference say energy-based mechanics is often easier than force-based (Newtonian) mechanics for a system like the golf swing?
 **Answer:** Energy is scalar, so you only add numbers; the Newtonian approach requires resolving vector forces in multiple directions for every coupled part — torso, arms, bending shaft, and clubhead.
 
-### 2–3 Hours {#onramp-learner-3hr}
+### 3 Hours {#onramp-learner-3hr}
 
 **Goal:** Start the Foundations path for real and meet the drift/input framework twice.
 
-1. [Learning Path: Foundations](learning-path-foundations.html) — ~20 min (skim the module map, pick Module 1)
+1. [Learning Path: Foundations](learning-path-foundations.html) — ~30 min (review the module map and select Module 1)
 2. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~30 min
-3. [Theory Part 2: Counterfactual Diagnostics](../articles/theory-part2.html) — ~70 min
+3. [Theory Part 2: Counterfactual Diagnostics](../articles/theory-part2.html) — ~120 min (work through the drift/input separation and both counterfactual diagnostics)
 
 **Self-check:** Theory Part 2 says the forward Zero Torque Counterfactual (ZTCF) "can define a future trajectory" while the Zero Velocity Counterfactual (ZVCF) "is a state evaluation." If you want to know how the swing would continue from right now, which one actually answers that, and why doesn't the other?
 **Answer:** ZTCF does — it integrates the drift dynamics forward from the current state, producing an actual forward trajectory. ZVCF only re-evaluates the model once at a single velocity-reset state, so it describes that one instant, not a continuation.
@@ -80,13 +80,13 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 **Self-check:** Theory Part 1's Scope & Exclusions callout lists several things the model explicitly leaves out — name two, and explain why that matters for how you read the drift term $f(x)$.
 **Answer:** It excludes aerodynamic drag, compliant or changing foot contact, marker dynamics, muscle activation delays, and impacts (any two). It matters because $f(x)$ only captures what's inside the declared model — anything excluded doesn't vanish from the real swing, it just isn't attributed by the decomposition.
 
-### 2–3 Hours {#onramp-researcher-3hr}
+### 3 Hours {#onramp-researcher-3hr}
 
 **Goal:** Finish the five-part Theory series and preview where the research continues.
 
-1. [Theory Part 2: Counterfactual Diagnostics](../articles/theory-part2.html) — ~35 min
-2. [Theory Part 3: Drift Invariance and Force Taxonomy](../articles/theory-part3.html) — ~40 min
-3. [Theory Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html) — ~50 min
+1. [Theory Part 2: Counterfactual Diagnostics](../articles/theory-part2.html) — ~40 min
+2. [Theory Part 3: Drift Invariance and Force Taxonomy](../articles/theory-part3.html) — ~45 min
+3. [Theory Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html) — ~60 min (work through the pendulum derivations)
 4. [Theory Part 5: Numerical Verification Protocol](../articles/theory-part5.html) — ~15 min
 5. [Tangent-Space Series](../pages/tangent-hyperplanes.html) — ~20 min (preview only)
 
@@ -152,13 +152,13 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 **Self-check:** The Model Ladder page says it asks one limited question when choosing a model level. What is that question, and what does it deliberately avoid doing?
 **Answer:** Which is the least complex declared level that satisfies a particular task metric; it deliberately avoids ranking whole models against each other with one overall fidelity score.
 
-### 2–3 Hours {#onramp-experimentalist-3hr}
+### 3 Hours {#onramp-experimentalist-3hr}
 
 **Goal:** Pick a reference workflow, run it, and check the result against real data.
 
 1. [Governed Workflows and Verification Tasks](../models/programming/workflows.html) — ~20 min (pick `reference-double-pendulum-simulation`)
-2. Run the workflow and inspect its output — ~90 min
-3. [Datasets](resources-datasets.html) — ~30 min (compare against a real recorded dataset)
+2. Run the workflow and inspect its output — ~120 min
+3. [Datasets](resources-datasets.html) — ~40 min (compare against a real recorded dataset)
 
 **Self-check:** The Model Ladder's fixtures use manufactured, synthetic parameters, not participant data. Once you've run `reference-double-pendulum-simulation`, why is comparing its output against a recorded dataset a meaningfully different check than comparing it against another synthetic fixture?
 **Answer:** A synthetic fixture only confirms the code reproduces its own manufactured numbers — internal consistency. Comparing against a real recorded dataset checks whether the simulated behavior resembles an actual measured swing, which is a genuinely different, empirical kind of check.
@@ -188,15 +188,15 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 **Self-check:** The Critiques & Responses page says these are "working documents, not peer-reviewed assessments." What does that distinction change about how you should weigh an unresolved critique there versus a peer-reviewed one?
 **Answer:** An unresolved critique here is a transparently published, flagged concern under active engagement — not a vetted, externally adjudicated finding — so it should be read as an open question the framework hasn't necessarily answered yet, not as settled peer-reviewed criticism.
 
-### 2–3 Hours {#onramp-reviewer-3hr}
+### 3 Hours {#onramp-reviewer-3hr}
 
 **Goal:** Understand the framework being critiqued, then read representative critiques across categories.
 
 1. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~30 min
-2. [The Fallacy of Passive Drift and the Skeletal Baseline](../critiques/01_muscle_physiology.html) — ~10 min
-3. [ZTCF Identifiability](../critiques/ztcf_identifiability.html) — ~10 min
-4. [Scientific Claim-Audit Inventory](../reports/scientific-claim-audit.html) — ~60 min
-5. [Research Review: Interaction Forces](research-review-interaction-forces.html) — ~10 min
+2. [The Fallacy of Passive Drift and the Skeletal Baseline](../critiques/01_muscle_physiology.html) — ~20 min
+3. [ZTCF Identifiability](../critiques/ztcf_identifiability.html) — ~20 min
+4. [Scientific Claim-Audit Inventory](../reports/scientific-claim-audit.html) — ~90 min
+5. [Research Review: Interaction Forces](research-review-interaction-forces.html) — ~20 min
 
 **Self-check:** Theory Part 1 explicitly excludes aerodynamic drag from the model. The ZTCF Identifiability critique argues this specific exclusion causes a concrete misattribution during a real analysis — what gets misattributed, and to whom?
 **Answer:** Because drag isn't in the drift model, its effect still shows up in the measured motion; inverse dynamics then computes a lower total torque than the model expects, and the residual (input = total − drift) reads as negative "braking" — so aerodynamic drag gets misattributed to the golfer as active braking effort.
@@ -226,14 +226,14 @@ Each persona below has three on-ramps of increasing depth. Every step links to a
 **Self-check:** About says the author's biography is "not independent evidence for the scientific claims published on the site." Why does the page bother saying that on its own about page?
 **Answer:** Because credentials or personal interest don't substitute for the site's evidence standards — who wrote something doesn't make a claim validated; only the cited sources, derivations, and review contracts do.
 
-### 2–3 Hours {#onramp-contributor-3hr}
+### 3 Hours {#onramp-contributor-3hr}
 
 **Goal:** Read the roadmap, then try exporting the program catalog yourself.
 
 1. [Development Roadmap](../pages/development-roadmap.html) — ~20 min
 2. [Programs and Models Directory](../models/programming/programs.html) — ~20 min
 3. [Governed Workflows and Verification Tasks](../models/programming/workflows.html) — ~20 min (find `program-catalog-export`)
-4. Run the `program-catalog-export` workflow and review the output — ~100 min
+4. Run the `program-catalog-export` workflow and review the output — ~120 min
 
 **Self-check:** The Development Roadmap explicitly omits dates and percentages. What does it name as the actual authority for what's been delivered, instead of a hand-maintained forecast?
 **Answer:** Protected merge history on GitHub — the live issue tracker and pull requests, where "protected" means changes landed only through required review and checks.
@@ -303,14 +303,14 @@ Notice: AffineDrift is a scientific and theoretical mechanics resource. It does 
 **Self-check:** The Lagrangian Reference says the Newtonian approach requires resolving every force as a vector, while the Lagrangian approach works with scalar energy functions instead. Why does that make the Lagrangian approach easier for a system like a golf swing with many coupled moving parts?
 **Answer:** Because energy is a scalar, the parts combine by simple addition instead of having to resolve and sum force vectors in multiple directions for every rotating torso, arm, shaft, and clubhead segment — both approaches give the same equations of motion, but the bookkeeping is far simpler.
 
-### 2–3 Hours {#onramp-student-3hr}
+### 3 Hours {#onramp-student-3hr}
 
 **Goal:** Connect the math to a reproducible, hands-on example.
 
 1. [Learning Path: Biomechanics & Motor Control](learning-path-biomechanics.html) — ~20 min (skim the module map)
 2. [Theory Part 1: Control-Affine Derivation](../articles/theory-part1.html) — ~30 min
-3. [Theory Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html) — ~50 min (work through the beam and pendulum derivations)
-4. Run the `reference-double-pendulum-simulation` workflow from [Governed Workflows](../models/programming/workflows.html) yourself — ~20 min
+3. [Theory Part 4: Worked Pendulum Dynamics](../articles/theory-part4.html) — ~70 min (work through the beam and pendulum derivations)
+4. Run the `reference-double-pendulum-simulation` workflow from [Governed Workflows](../models/programming/workflows.html) yourself — ~60 min
 
 **Self-check:** Theory Part 4's beam and pendulum derivations are checked by an executable test suite that independently integrates the kinetic energy, differentiates the potential, and verifies the power balance. Why does verifying a derivation this way matter more than just trusting the algebra on the page?
 **Answer:** Because an independent numerical check catches errors that a correct-looking derivation can hide — if the integrated energy balance and the written equations disagree, you know something is wrong even before you compare the model to any real golfer.
