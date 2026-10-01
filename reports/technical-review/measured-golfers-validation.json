@@ -1,7 +1,7 @@
 {
   "issue": 4771,
   "source": "articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd",
-  "status": "source_checkpoint; final publication checks pass; regression and binding pending",
+  "status": "final corrected source validated; binding and regular PR pending",
   "tests": {
     "red": "3 covariance checks pass;2 source contracts fail before prose correction.",
     "green": 5,
@@ -116,12 +116,14 @@
       "study register",
       "figure draft",
       "adversarial review",
-      "PR description draft"
+      "PR description draft",
+      "handoff checklist",
+      "attribution check",
+      "binding script draft"
     ],
-    "authority": "Lead-adjudicated supplied-text drafts. Rejected errors documented in measured-golfers-review.md."
+    "authority": "Lead-adjudicated supplied-text drafts. Rejected errors documented in measured-golfers-review.md. Lead removed unrelated exit-file fallback and preserves existing full-regression scope when binding."
   },
   "remaining": [
-    "Full regression",
     "Exact committed-source finding binding",
     "Regular PR and protected delivery"
   ],
@@ -136,5 +138,25 @@
     "passed": 546,
     "skipped": 19,
     "suites": 35
+  },
+  "full_regression": {
+    "passed": 6389,
+    "skipped": 29,
+    "deselected": 187,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/ --cov --cov-report=xml --timeout=120",
+    "scope": "Configured marker exclusions;src+scripts coverage. Before final single-author wording correction; affected and publication checks follow.",
+    "log": "docs\\development\\technical-review\\measured-golfers-full-coverage.txt",
+    "coverage_percent_src_and_scripts": 78.9736101713024,
+    "coverage_percent_src": 93.0430357662111
+  },
+  "final_followup": {
+    "affected_tests": 48,
+    "publication_gates": 12,
+    "browser_profiles": 4,
+    "axe_serious_critical": 0,
+    "pdf_pages": 223,
+    "visual_pages": [163, 164, 165, 166, 167, 168, 169, 170, 171],
+    "scope": "After final single-author wording correction; full6389-test run before that correction, not repeated."
   }
 }

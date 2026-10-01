@@ -7,7 +7,7 @@ measurements, pooled systematic review, or simulation rerun is claimed.
 
 ## Scientific Decisions
 
-1. **Correct the Review Attribution.** The 92-study systematic kinematics review is Bourgain et al. (2022), not McPhee et al.'s narrative review. Preserve both with distinct purposes and add the missing bibliography record. The human-study list is a selected register, not a systematic search performed by this project.
+1. **Correct the Review Attribution.** The 92-study systematic kinematics review is Bourgain et al. (2022), not McPhee's narrative review. Preserve both with distinct purposes and add the missing bibliography record. The human-study list is a selected register, not a systematic search performed by this project.
 2. **Bound the EMG Findings.** Use Kao et al.'s canonical authorship (Jobe is a coauthor), selected four scapular muscles, and 15 competitive male participants without inventing electrode type from the abstract. Robinson et al. measured bilateral extensor carpi ulnaris, not all wrist muscles, in 15 subelite right-handed men. Nonsignificance does not establish irrelevance or equivalence; EMG is not force.
 3. **Separate Sensor and Model Quantities.** Koike's calibrated strain-gauge handle reconstructs palm resultants under fixed-reference and negligible-handle-inertia assumptions. Choi/Park's single six-axis internal grip sensor supports inverse-dynamics estimates of separate hand and net joint loads. Their reported hand-torque ratio is model-derived; grip modification, fixed trial order, possible bypass, and foam/sponge balls limit interpretation.
 4. **Retain Study and Mechanical Boundaries.** Zheng's observational skill comparisons do not justify copying a professional's technique or injury prevention. Han's force plates and computed ground-interaction moments support associations, not identified energy pathways. Betzler's bounded shaft comparison does not establish universal stiffness effects. Peak sequence, force magnitude, and activation timing are not interchangeable measurements of energy transfer.
@@ -24,7 +24,7 @@ Primary records were checked on 2026-10-01. New bibliography metadata was cross-
 - Bourgain et al.: publisher/search-extracted abstract, methods, and results describing 92 studies and heterogeneous methods. https://www.mdpi.com/2075-4663/10/6/91 ; DOI 10.3390/sports10060091. Direct follow-up access returned rate limiting/captcha.
 - Kao et al.: primary PubMed abstract, 15 competitive men and bilateral four-muscle scapular EMG/cinematography. https://pubmed.ncbi.nlm.nih.gov/7726345/ . No electrode-type claim from this scope.
 - Robinson et al.: primary PubMed abstract and DOI metadata. https://pubmed.ncbi.nlm.nih.gov/37983261/ . ECU-specific measurements and nonsignificant reported association; no new full-paper reading claimed.
-- Koike et al.: complete four-page primary conference PDF, methods and results. https://ojs.ub.uni-konstanz.de/cpa/article/view/6828/6125 . The paper's inference from axial-force magnitude to speed contribution is not adopted without a dynamical or power calculation.
+- Koike: complete four-page primary conference PDF, methods and results. https://ojs.ub.uni-konstanz.de/cpa/article/view/6828/6125 . The paper's inference from axial-force magnitude to speed contribution is not adopted without a dynamical or power calculation.
 - Choi/Park: primary full-text XML through Europe PMC; complete Methods, Discussion, embedded results/equations and captions read. https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7374515/fullTextXML . Instrument/model distinction, nine participants, fixed order, inertia and grip limitations checked. Published equations were read, not reimplemented. The historical shared key koike2020 is retained to avoid unrelated citation renaming.
 - Zheng et al.: complete primary abstract. https://pubmed.ncbi.nlm.nih.gov/18004680/ . This is the professional/amateur paper, distinct from the male/female professional study.
 - Han et al.: primary abstract. https://pubmed.ncbi.nlm.nih.gov/31042142/ . Ground-interaction moments, not a new joint-moment or causal-work decomposition.
@@ -34,9 +34,9 @@ Primary records were checked on 2026-10-01. New bibliography metadata was cross-
 
 ## Delegation and Adjudication
 
-Eight supplied-text agy CLI gemini-3.8-flash-high jobs completed: claim inventory,
+Eleven supplied-text agy CLI gemini-3.8-flash-high jobs completed: claim inventory,
 test drafting, grip methods extraction, grip discussion extraction, register
-draft, figure draft, adversarial review, and PR description drafting. Lead review
+draft, figure draft, adversarial review, PR description drafting, turnover checklist, attribution check, and binding-script drafting. Lead review
 corrected these draft errors: Han's ground moments are not joint/body moments;
 the Choi/Park ratio is not directly sensed at two hands; 350 g is grip mass,
 not complete club mass; small longitudinal inertia is not automatically zero;
@@ -59,3 +59,9 @@ The adversarial review prompted precise power-versus-work wording and variance-o
 Publication checkpoint:223-page PDF/HTML and canonical/public parity pass; all Chapter24 pages164–170 plus boundary163/171 visually inspected. The figure was subsequently enlarged and its PDF/mobile render rechecked. Four viewport/theme checks pass with zero serious/critical axe findings. Nineteen math containers, two displays, no MathJax errors/unrendered nodes/page overflow at390/1440. All12 publication gates,48 targeted tests,Ruff,Black840,and CI-scoped mypy94 pass. Full regression, integration and final binding remain.
 
 The PR wording draft incorrectly called all87 historical audit findings empirical and conflated19 math containers with two display equations; both were corrected in lead review. Integrated PR4770 head3d7f4eb/peer main37fa19fef, preserving scientific fields from both parent ledgers. Combined PDF and HTML regenerated. Source checkpoint947ad2373 remains in history.
+
+Final source checks:publisher records confirm McPhee2022 and Koike2016 are single-author works; removed and-colleagues wording from the chapter and corrected matching audit attribution. Marsan2019 primary abstract was read:13 driver golfers and seven angular-component definitions produced different identified sequences (https://pubmed.ncbi.nlm.nih.gov/31741482/). No new full-paper reading or optimality result is claimed. A tenth Flash attribution check confirmed the queued corrections and found no further name/count/citation mismatch; a paragraph-end citation already supports the entire Choi/Park paragraph. The ninth Flash handoff audit confused119 pending sources with findings and confused the two integration operations; lead corrected the current turnover record.
+
+Full regression before the final author-wording correction:6389 passed,29 skipped,187 deselected, exit0. Final publication and affected checks will validate the wording-only update without claiming another full run.
+
+Final acceptance:after the two single-author corrections, all48 affected checks and all12 publication gates pass again. Final223-page PDF/HTML rebuilt;canonical/public PDF bytes match. Every revised page164–170 and boundaries163/171 was visually inspected again; four final browser profiles pass with zero serious/critical axe findings. Source-only coverage93.043% matches the preceding checkpoint; aggregate src+scripts coverage78.974% exceeds the configured floor. Eleven Flash jobs are complete. The binding draft was reviewed; its unrelated exit-file fallback was removed, existing full-regression scope retained, and obsolete pending fields synchronized. No fresh human evidence or solver rerun is claimed.

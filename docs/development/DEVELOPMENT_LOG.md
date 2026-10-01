@@ -28,6 +28,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-01;three covariance cases and two source contracts pass after RED,653 source titles. Final publication/regression/binding pending;no audit credit yet.
 - **Next:** Complete publication checks and regression, integrate PR4770/main, bind exact source bytes, regular PR and protected merge. Seven Flash drafts lead-adjudicated.
 
+- Final source validation:6389 regression passes,29 skips,187 deselections;48 followup tests,12 gates,223-page PDF/HTML,four browser profiles. Eleven Flash jobs adjudicated. Source947ad2373/integrationaa047b514 pushed;final author wording and binding checkpoint next.
+
 ### DL-#4769 · Speed, Energy, and Power Review
 
 - **State:** in_review
