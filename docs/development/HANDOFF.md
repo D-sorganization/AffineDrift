@@ -1,3 +1,15 @@
+# Complete-State Chapter Source Checkpoint — #4756
+
+- Goal active under epic4009. Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/state-snapshot-rigor-4756 from c5fe43ebf. Source checkpoint SELF; regular PR not yet created.
+- Full Chapter3 corrected: state versus observation/parameters; uniqueness and future-input contract; same-pose inertia and velocity-reversal parity; delay/history versus lag; matched-state contrasts versus finite preparation; causal events and measurement limits. Figure includes model/input conditions; six numerical/figure checks (figure RED first). Reports state-snapshot-review.md and provider-evidence.json retain scope and adjudication; prior55 findings preserved.
+- Five supplied-text agy Gemini3.8 Flash jobs completed. Lead rejects substantive errors and handoff draft's invented conflicts between partial checks and pending full validation. No provider rerun or human biomechanics validation claimed.
+- Twelve publication gates,654 titles,Ruff/Black836,CI-scoped mypy94 pass. Final221-page PDF canonical/public byte parity; all Chapter3 PDF18-24 plus17/25 boundaries visually reviewed. Browser4/4 and axe0 serious/critical;37 math expressions,0 errors/overflow; three displays fit mobile and visually reviewed. Full default pytest --cov PASSES:6401 passing progress symbols,29 skips,78.9% configured coverage and93.0% source-only;63 affected checks pass. Do not regenerate PDFs concurrently.
+- No corpus credit yet:125 full-source audits plus whole-book consistency pending. Next finish full regression, commit source, bind seven findings preserving55, update chapter row to124pending, rerun affected checks, push/open/attach regular PR and verify protected merge. No draft, force, direct-main or admin bypass.
+- PR4755 integrationc5fe43ebf pushed; protected auto-merge enabled; CI Standard36877392377 running and five other workflows green at last check. PR4752 current head17b1d217 differs from earliera69ba920: inspect before action; preserve until shaft source parity on main. Prior4741/4748/4750 merged. Preserve peer23ee826 in impact-review and all QA.
+- Lease/presence technical-review-20261001-state expires16:35/16:36UTC Oct1. Inbox incomplete; existing command-scoped owner auth only while shared bot expired. Next pending source Chapter23 fully read and routine Flash inventory dispatched; no fixes or completion credit for it yet.
+
+## Preserved Earlier Checkpoints
+
 # Preload PR Main Integration — #4755
 
 - Goal active. Branch fix/preload-rigor-4753 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Source8ffffbc7e, binding3691417a4 and registrationb00f94ad5 pushed;regular PR4755 attached with protected squash auto-merge enabled. Integration checkpoint SELF.

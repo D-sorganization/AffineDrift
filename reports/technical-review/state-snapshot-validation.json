@@ -1,0 +1,418 @@
+{
+  "issue": 4756,
+  "epic": 4009,
+  "scope": "Full Chapter3 source and schematic; pinned matched-state provider chapter and previously reviewed finite-preparation chapter. No provider simulation rerun or human validation.",
+  "source_sha256": {
+    "articles/proximal_distal_companion/chapters/ch03_state_snapshot.qmd": "5cebd62642a12640a73ac348e6b7e3be70895b0b49b0708c2c976b0cf7d796fb",
+    "scripts/make_proximal_distal_companion_figures.py": "7cef07e88b9c47f0012616c4e30b964ea9adcd08bf650beb742092352062478f",
+    "tests/test_state_snapshot_review.py": "997755463154582746102deec8a51c9c08c30648addbe4f0c1717042f0756b1b",
+    "articles/proximal-distal-companion.css": "9cd0ee931a950c533548067121ba400a4b84918a7a0ea2a6111a081efde9f016",
+    "articles/figures/proximal_distal_companion/fig_companion_state_snapshot.svg": "ee4f685f50ab4f4b55980831d58843620f8e605d7f6a7ce305d671338cbff581",
+    "articles/figures/proximal_distal_companion/fig_companion_state_snapshot.pdf": "e8dd542b46aab0154c97ed6ce85019d408720b04a7ec02e627b8bc65a0c72ad6",
+    "articles/proximal-distal-a-journey-through-the-swing.pdf": "01205728b2e2743b348e562fef8d717730edb2537334bc398bd6ed610c4d247b"
+  },
+  "focused_tests": {
+    "new_cases": 6,
+    "red": "Schematic regression failed before model/input conditions were added."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/state-snapshot-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "format": "Repository Ruff and Black836 pass; CI-scoped mypy94 pass.",
+  "titles": {
+    "checked": 654,
+    "passed": true
+  },
+  "browser": {
+    "publication_checks": {
+      "schema_version": "affinedrift/public-site-verification/v1",
+      "base_url": "http://127.0.0.1:17975",
+      "manifest_page_count": 1,
+      "evidence_count": 4,
+      "expected_evidence_count": 4,
+      "passed": true,
+      "failure_count": 0,
+      "navigation_retry_policy": {
+        "max_retries": 0,
+        "maximum_attempts": 1,
+        "base_delay_ms": 500,
+        "backoff": "exponential",
+        "retryable_status_codes": [502, 503, 504]
+      },
+      "axe_policy": {
+        "mode": "fail",
+        "impacts": ["serious", "critical"],
+        "scanned_route_count": 1,
+        "routes_with_violations": [],
+        "violation_count": 0
+      },
+      "navigation_attempt_count": 4,
+      "retried_evidence_count": 0,
+      "transient_response_count": 0,
+      "exhausted_retry_count": 0,
+      "results": [
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "light",
+          "axe": true,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 530584,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false,
+          "axe_violations": []
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 530584,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "light",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 530584,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 530584,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        }
+      ]
+    },
+    "math_layout": [
+      {
+        "width": 390,
+        "headings": 13,
+        "pageOverflow": 0,
+        "mathCount": 37,
+        "mathErrors": 0,
+        "displays": [
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          },
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          },
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          }
+        ],
+        "headingText": [
+          "3 The State Is the Complete Snapshot",
+          "3.1 A Concrete Picture",
+          "3.2 How the Mechanism Works",
+          "3.2.1 Configuration Is More Than a Photograph",
+          "3.2.2 Velocity Gives the Snapshot a Direction",
+          "3.2.3 Stored Variables Carry History Into the Present",
+          "3.2.4 State and Input Must Not Be Confused",
+          "3.2.5 A Matched-State Intervention",
+          "3.2.6 Phase Landmarks Need an Event Contract",
+          "3.2.7 State-Based Timing Versus Clock-Based Timing",
+          "3.2.8 What an Incomplete Observation Can Miss",
+          "3.2.9 What Must Be Measured",
+          "3.3 Where the Picture Breaks"
+        ]
+      },
+      {
+        "width": 1440,
+        "headings": 13,
+        "pageOverflow": 0,
+        "mathCount": 37,
+        "mathErrors": 0,
+        "displays": [
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          },
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          },
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          }
+        ],
+        "headingText": [
+          "3 The State Is the Complete Snapshot",
+          "3.1 A Concrete Picture",
+          "3.2 How the Mechanism Works",
+          "3.2.1 Configuration Is More Than a Photograph",
+          "3.2.2 Velocity Gives the Snapshot a Direction",
+          "3.2.3 Stored Variables Carry History Into the Present",
+          "3.2.4 State and Input Must Not Be Confused",
+          "3.2.5 A Matched-State Intervention",
+          "3.2.6 Phase Landmarks Need an Event Contract",
+          "3.2.7 State-Based Timing Versus Clock-Based Timing",
+          "3.2.8 What an Incomplete Observation Can Miss",
+          "3.2.9 What Must Be Measured",
+          "3.3 Where the Picture Breaks"
+        ]
+      }
+    ],
+    "visual_review": "Lead inspected all three mobile display equations; no clipping. Existing floating controls remain visible."
+  },
+  "pdf": {
+    "pages": 221,
+    "canonical_public_byte_parity": true,
+    "visually_reviewed_pdf_pages": [17, 18, 19, 20, 21, 22, 23, 24, 25],
+    "scope": "All Chapter3 pages18-24 and adjacent boundaries17/25. Text, equations and figure legible; no content clipping observed."
+  },
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --timeout=60 -q",
+    "exit_code": 0,
+    "passed_progress_symbols": 6401,
+    "skipped": 29,
+    "coverage_src_and_scripts": {
+      "statements": 28058,
+      "missed": 5931,
+      "percent": 78.9
+    },
+    "coverage_src_only": {
+      "statements": 13756,
+      "missed": 957,
+      "percent": 93.0
+    },
+    "notes": "Full configured default lane passes on final stable rendered artifacts. Double-quiet output suppresses summary counts/duration; pass count derived from progress dots. Repository marker exclusions and29 reported dependency/obsolete-helper/legacy-path skips remain."
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": [
+      "source inventory",
+      "provider inventory",
+      "test draft",
+      "notation review",
+      "handoff checklist"
+    ],
+    "adjudication": "Supplied-text-only drafts; lead adjudicates science. Pending validation and completed partial checks are compatible statuses, contrary to the handoff draft. State differences between branches are not necessarily discrete jumps."
+  },
+  "delivery": {
+    "branch": "fix/state-snapshot-rigor-4756",
+    "pr": null,
+    "predecessor_pr": 4755,
+    "predecessor_head": "c5fe43ebf916d09db6dde8906319436cb4c2544c",
+    "predecessor_status": "Open, protected auto-merge enabled; CI Standard running, five other workflows passed."
+  },
+  "corpus": {
+    "pending": 125,
+    "whole_book_consistency_pending": true,
+    "completion_credit": "None until source committed and seven findings bound; prior55 findings retained."
+  },
+  "integrated_tests": {
+    "passed": 63,
+    "scope": "New numerical/figure tests, companion publication contract, complete claims, claim inventory/output boundary and book publication audit."
+  }
+}
