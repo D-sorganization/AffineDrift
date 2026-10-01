@@ -40,6 +40,7 @@ def test_network_counts_and_common_signed_output(examples: dict[str, Any]) -> No
         np.empty((0, 2)),
         np.array([[np.nan]]),
         np.array([[np.inf]]),
+        np.array([[1.0 + 1.0j]]),
     ],
 )
 def test_nmf_rejects_undefined_or_invalid_data(examples: dict[str, Any], data: np.ndarray) -> None:

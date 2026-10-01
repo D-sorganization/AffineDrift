@@ -114,8 +114,11 @@ then run against them: 17 failed and six passed. After correction all 23 pass.
 Tests execute the actual printed listings, check parameter counts and common
 signed output, reject invalid inputs/options, reconstruct rank-one data over
 scales 1e-120 to 1e120, check deterministic local randomness and one-iteration
-return, and demonstrate factor-scaling and lost-velocity ambiguities. There
-was no human experiment or trained-controller benchmark.
+return, and demonstrate factor-scaling and lost-velocity ambiguities. A final complex-input case exposed lossy conversion before validation; the
+listing now rejects complex data explicitly, bringing the example suite to
+24 checks. Six additional audit tests retain the original audit identity and
+reject invalid follow-up issue URLs. There was no human experiment or
+trained-controller benchmark.
 
 ## Publication and Remaining Questions
 

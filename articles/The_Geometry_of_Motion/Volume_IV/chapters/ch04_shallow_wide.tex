@@ -285,6 +285,8 @@ def extract_synergies(
     Rows are samples; columns are channels. Zero data are rejected.
     This teaching example uses one reproducible local random start.
     """
+    if np.iscomplexobj(emg_data):
+        raise ValueError("data must be real, not complex")
     data = np.asarray(emg_data, dtype=float)
     if (data.ndim != 2 or data.size == 0
             or not np.all(np.isfinite(data)) or np.any(data < 0)):
