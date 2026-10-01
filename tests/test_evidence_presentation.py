@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import json
+import shutil
+from datetime import date, timedelta
 from pathlib import Path
 
 import jsonschema
 import pytest
 
+from src.affine_control.evidence_presentation import generator as evidence_presentation_generator
 from src.affine_control.evidence_presentation.generator import (
     build_evidence_presentation_registry,
     generate_evidence_presentation,
@@ -27,6 +30,22 @@ from src.affine_control.evidence_presentation.vocabulary import (
     EvidencePresentationViewModel,
     EvidenceTier,
 )
+
+EVIDENCE_PRESENTATION_GENERATOR_INPUTS = (
+    Path("data/trust/claim_registry.json"),
+    Path("data/research_protocols/public_summary.json"),
+    Path("tests/fixtures/companion/manifest_v1_0_0_authoritative.json"),
+    Path("schemas/evidence-presentation-v1.schema.json"),
+)
+
+
+def _copy_evidence_presentation_inputs(source_root: Path, destination_root: Path) -> None:
+    """Copy the four source files needed to generate the registry in isolation."""
+    for relative_path in EVIDENCE_PRESENTATION_GENERATOR_INPUTS:
+        source_path = source_root / relative_path
+        destination_path = destination_root / relative_path
+        destination_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source_path, destination_path)
 
 
 def test_view_model_invariants_and_dbc() -> None:
@@ -158,7 +177,7 @@ def test_rendering_components() -> None:
     assert "Test Heading" in table
 
 
-def test_full_registry_generation(tmp_path: Path) -> None:
+def test_full_registry_generation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Verify live repository generation and schema validation."""
     repo_root = Path(__file__).resolve().parent.parent
     registry, vms = build_evidence_presentation_registry(repo_root)
@@ -170,10 +189,34 @@ def test_full_registry_generation(tmp_path: Path) -> None:
     schema = json.loads(schema_file.read_text(encoding="utf-8"))
     jsonschema.validate(instance=registry, schema=schema)
 
+    registry_path = repo_root / "data/trust/generated/evidence_presentation_registry.json"
+    partial_path = repo_root / "_includes/generated/evidence-presentation-summary.qmd"
+    reviewed_registry_bytes = registry_path.read_bytes()
+    reviewed_partial_bytes = partial_path.read_bytes()
+    next_day = date.fromisoformat(registry["generated_on"]) + timedelta(days=1)
+
+    class NextDayDate(date):
+        @classmethod
+        def today(cls) -> date:
+            return next_day
+
+    monkeypatch.setattr(evidence_presentation_generator, "date", NextDayDate)
+
+    _copy_evidence_presentation_inputs(repo_root, tmp_path)
+
     # Test file generation
-    reg_path, part_path = generate_evidence_presentation(check=False, repo_root=repo_root)
+    reg_path, part_path = generate_evidence_presentation(check=False, repo_root=tmp_path)
     assert reg_path.is_file()
     assert part_path.is_file()
+    assert reg_path.resolve().is_relative_to(tmp_path.resolve())
+    assert part_path.resolve().is_relative_to(tmp_path.resolve())
+    assert json.loads(reg_path.read_text(encoding="utf-8"))["generated_on"] == next_day.isoformat()
 
     # Test check mode passes
-    generate_evidence_presentation(check=True, repo_root=repo_root)
+    checked_reg_path, checked_part_path = generate_evidence_presentation(
+        check=True, repo_root=tmp_path
+    )
+    assert checked_reg_path == reg_path
+    assert checked_part_path == part_path
+    assert registry_path.read_bytes() == reviewed_registry_bytes
+    assert partial_path.read_bytes() == reviewed_partial_bytes
