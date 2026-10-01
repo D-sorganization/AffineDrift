@@ -4471,6 +4471,34 @@
           "priority": "p2",
           "rationale": "Distinguish model identities, numerical results and editorial limits. Extra contact measurements do not refute net-wrench-only ambiguity; specify effect, uncertainty and rejection criterion for an untested relationship.",
           "verification_commit": "6dadc5ddbb372c67445f7765a9511ac502fbdec5"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "src/affine_control/research_releases/generator.py",
+            "tests/test_research_artifact_releases.py",
+            "data/trust/generated/research_releases_registry.json",
+            "_includes/generated/research-releases-summary.qmd",
+            "reports/technical-review/atlas-release-prior.json",
+            "reports/technical-review/atlas-review.md",
+            "reports/technical-review/atlas-validation.json"
+          ],
+          "evidence_sha256": {
+            "_includes/generated/research-releases-summary.qmd": "c41fcc248e92c21b787aab23d1f0133d4fdaba9206610ed8cc39caf73e9b5c85",
+            "data/trust/generated/research_releases_registry.json": "ef9333d9bcc8f84ce48a10f19bdcfa0350ac38112fe2f70061b25f517cae8d47",
+            "reports/technical-review/atlas-release-prior.json": "b472afdbfb15b3c63e66fbbed843d8d8bcd1a6c744078da3fbfff53a2a9612e2",
+            "reports/technical-review/atlas-review.md": "563755ad007bba6cda2a28440110b391a9e621f6ad78db6dc49d8db4dc0017ac",
+            "reports/technical-review/atlas-validation.json": "b5cba10fc179a043bedfaf56a460f9b8766c8cf86915b51e397ef80c28c22efe",
+            "src/affine_control/research_releases/generator.py": "000245c134de41fab49448399bdcf092470e61d7b461cab5566557eeff4cb6a7",
+            "tests/test_research_artifact_releases.py": "fc04524298c4df9b6f3f72631f79318d96f5a69732c18d120b5254582dacc431"
+          },
+          "finding_id": "ad-finding-atlas-release-attestation",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4749",
+          "priority": "p1",
+          "rationale": "Withhold the hardcoded qualified release: current-byte digests under a fixed historical pin and unsupported reviewer, measurement and execution assertions do not establish a verified package. Preserve prior record and publish explicit unavailable state; keep synthetic schema/checksum/nonempty-renderer tests.",
+          "verification_commit": "8ebd0e5ea4c3f5927394b7a4891d8752ee153713"
         }
       ],
       "review": {
@@ -4506,9 +4534,16 @@
           "resources/resources-datasets.qmd",
           "tests/test_falsification_atlas_identities.py",
           "reports/technical-review/atlas-review.md",
-          "reports/technical-review/atlas-prior-review.json"
+          "reports/technical-review/atlas-prior-review.json",
+          "src/affine_control/research_releases/generator.py",
+          "tests/test_research_artifact_releases.py",
+          "data/trust/generated/research_releases_registry.json",
+          "_includes/generated/research-releases-summary.qmd",
+          "reports/technical-review/atlas-release-prior.json",
+          "reports/technical-review/atlas-validation.json"
         ],
         "evidence_sha256": {
+          "_includes/generated/research-releases-summary.qmd": "c41fcc248e92c21b787aab23d1f0133d4fdaba9206610ed8cc39caf73e9b5c85",
           "_quarto.yml": "527209155d3fbad367b11fbf29d7c155de3057efe81631a5af10d61ac1385323",
           "articles/_generated/proximal-distal-falsification-atlas.qmd": "1be4d14fc1b96a16838d5a83b3a34663d89a5e175da50c4f13c720582915674f",
           "articles/proximal-distal-falsification-atlas.qmd": "b1b40482a0643eaff21a0e39111589e7864303f3587ee1afc063b9255a24fbef",
@@ -4518,9 +4553,12 @@
           "data/research_protocols/library.json": "505d7c66b3e9b4474c0d8520d7289d4ee3dbb97cb1d0682c41c1d4d79d4f9925",
           "data/trust/claim_critique_ledger.json": "6b1a4a7ab46566b5122fe33b65e76da50bd4cb477809896a7a2d168ea5ad42db",
           "data/trust/generated/evidence_presentation_registry.json": "e4dd1f9f5f7c7ef66af77342e83583e15ac8bc30eeadd551b378a3e01906e433",
+          "data/trust/generated/research_releases_registry.json": "ef9333d9bcc8f84ce48a10f19bdcfa0350ac38112fe2f70061b25f517cae8d47",
           "data/trust/proximal_distal_falsification_atlas.json": "7b95c447cdba533fb2491071855446c4904e309d27142357967a22a6c31c8196",
           "reports/technical-review/atlas-prior-review.json": "fc7136d0a56a90e8ef8394d18aa83006b8a6fea6925fc342473ad17eea94bcb9",
+          "reports/technical-review/atlas-release-prior.json": "b472afdbfb15b3c63e66fbbed843d8d8bcd1a6c744078da3fbfff53a2a9612e2",
           "reports/technical-review/atlas-review.md": "563755ad007bba6cda2a28440110b391a9e621f6ad78db6dc49d8db4dc0017ac",
+          "reports/technical-review/atlas-validation.json": "b5cba10fc179a043bedfaf56a460f9b8766c8cf86915b51e397ef80c28c22efe",
           "reports/technical-review/two-hand-wrench-publication-dependencies.json": "201d2a31861a2f11a1ccc0d837cdd5472061383af08bda4008be1dad229b5844",
           "reports/technical-review/two-hand-wrench-readiness-carry-forward.json": "3ee73d21a9234bdac507485e0369096bd165e662404d4f1e074baef615c9e638",
           "resources/resources-datasets.qmd": "0c037f553f89c97a859704a2ce223f7131ba6e57d51e99ea11cbbfbe68e82508",
@@ -4532,9 +4570,11 @@
           "src/affine_control/falsification_atlas/models.py": "ee6cbb436de92f41dda8033892f968fbea843238ba72f39039fdad2b66be86c6",
           "src/affine_control/falsification_atlas/rendering.py": "8678eabb28a7411fff2e8f8a0831ee786069456aa78193816f92fd33091ffe49",
           "src/affine_control/falsification_atlas/validation.py": "09788efe7654539e87ddb804125ac789cd8cbaa8696a05b612abce079d742691",
+          "src/affine_control/research_releases/generator.py": "000245c134de41fab49448399bdcf092470e61d7b461cab5566557eeff4cb6a7",
           "tests/test_claim_audit_followup_scope.py": "055c677986deb3737d8617a9170e2f8e7777d5a7915830712ea08d74d186f5f2",
           "tests/test_falsification_atlas_identities.py": "4991b2d76843dc2dae7a694efc73697db8f3d3a13fb63c3ca6d3fcefa0a49cdd",
-          "tests/test_proximal_distal_falsification_atlas.py": "9d47740ea05b40bb6b9f1a42b0a19812cb73b0c20be16d5794f8238171fec548"
+          "tests/test_proximal_distal_falsification_atlas.py": "9d47740ea05b40bb6b9f1a42b0a19812cb73b0c20be16d5794f8238171fec548",
+          "tests/test_research_artifact_releases.py": "fc04524298c4df9b6f3f72631f79318d96f5a69732c18d120b5254582dacc431"
         },
         "review_commit": "6dadc5ddbb372c67445f7765a9511ac502fbdec5",
         "reviewed_on": "2026-10-01",

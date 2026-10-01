@@ -1,3 +1,15 @@
+# Atlas Final Evidence Binding — #4749
+
+- Goal active; branch fix/atlas-rigor-4749 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Source6dadc5ddbb372c67445f7765a9511ac502fbdec5 is pushed; main integration/release repair8ebd0e5ea4c3f5927394b7a4891d8752ee153713 is committed. Current evidence binding SELF; atlas PR not created.
+- Seven corrected findings now bound: six atlas findings to6dadc5 and the unsupported-release finding to8ebd0e5.127 full-source audits plus whole-book consistency remain. Canonical reports preserve old source/release records, exact validation and six Flash support jobs with lead adjudication.
+- Final integrated73 checks and six hygiene checks pass, plus release/binding checks after this metadata update. Four browser/axe cases pass;37 math expressions/no errors or overflow;12 gates,653 titles,Ruff/Black832. Full6381 pass/one repaired release-registry failure/29 skips is retained as failed. No new full-green claim.
+- Main a473831 contains reviewed muscle and Chapters9/10 source/PDF work. PR4741 and4748 still open; remaining published CSS and critique corrections are included here. Preserve them until the combined regular PR is verified on remote main. No live deployment claim.
+- Next: push this complete checkpoint, create regular main-target PR from atlas-pr-body.md, attach it, register its number in handoffs/DL/SPEC, arm protected merge and inspect current-head CI at natural checkpoints. Close superseded4741/4748 only after exact main verification. Never draft, force, admin or direct-main.
+- Integration push encountered a hook worktree-change detection while metadata regeneration was concurrently running; it did not create a PR. Finish this checkpoint and retry a normal push with no concurrent mutations. No hook bypass or test weakening.
+- Lease atlas14:11UTC; critics13:37,Chapter9 13:03,Chapter10 13:12. Inbox remains incomplete; preserve all QA and separate peer worktree changes.
+
+## Preserved Earlier Checkpoints
+
 # Atlas Review and Main Integration — #4749
 
 - Goal active. Branch fix/atlas-rigor-4749; worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Source6dadc5ddbb372c67445f7765a9511ac502fbdec5 pushed; current merge/binding checkpoint SELF; atlas PR not created.
