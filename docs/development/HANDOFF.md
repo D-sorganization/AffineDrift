@@ -1,3 +1,17 @@
+# Ground-Reaction Chapter — #4730
+
+- Goal active under epic #4009; continue complete reviews and protected delivery. Regular PRs only; no draft, direct-main or bypass pushes.
+- Current branch `fix/ground-conversation-rigor-4730`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, base remote main `fd508f04cd48b80f8f248432cea4a033b9188a13`.
+- Reference PR #4729 merged at 2026-10-01 03:37:56 UTC and ancestry verified. Final integrated receipt (6191 passed/29 skipped, 92.95% src coverage, subsequent content 183/four skips) finished after merge and is carried here. Lease/presence released 03:44 UTC (5924297561 / 5924298286).
+- Ground session `technical-review-20261001-ground-conversation`; lease/presence through 05:30 UTC. Scientific source complete with twelve new tests and forty combined focused passes. Complete source and pinned provider Chapters 03c/06ca read; primary human scopes and two Flash inventories adjudicated in `reports/technical-review/ground-conversation-review.md`.
+- Archive recomputation: work ratio 13.44–3519.40, not twice; zero primary matches, 202 load-only matches; 60 post-hoc matches occur 48/8/4/0 across 4/10/25/50 ms. Total model intervention differs from the matched estimand. Distributed central tension-only grip does not inherit the noncentral dashpot defect from UpstreamDrift #11195.
+- Final publication verification and evidence binding pending. First 213-page PDF Chapter16 pp98–106 plus contents/boundary inspected; table shortened to keep its three rows together and final render running. Four browser cases pass (390/1440, light/dark, 32 math items, four displays, no math errors/overflow); rerun after final render. Corpus status remains pending until full checks and audit binding.
+- Preserve QA artifacts, prior scoped audits, parked provider synthesis #4253, and peer-owned deployment #4688/#4713. No live deployment claim.
+
+## Earlier Checkpoints
+
+Older pending statements below are historical; current status is above.
+
 # Annotated Reference Library — #4725
 
 - Active branch `fix/reference-library-rigor-4725`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`; base `fb377e96dc33ee80b655284aef066f8acfb7caf1` includes heavy-hit #4723 and peer web #4704.

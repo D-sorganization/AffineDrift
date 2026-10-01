@@ -388,12 +388,13 @@ def test_grip_and_shaft_companions_state_the_limits_with_the_results() -> None:
     ground = " ".join(GROUND_COMPANION.read_text(encoding="utf-8").split())
     assert "What Happened When the Ground Was Actually Added" in ground
     assert "Zero of 384" in ground
-    assert "a ground pathway benefit was not established" in ground
-    # the seductive misreading has to be named and defused, not omitted
+    assert "no speed benefit under its joint load-and-total-work matching criterion" in ground
+    # Preserve the primary result without erasing a different model-intervention estimand.
     assert "0.177 m/s" in ground
-    assert "Those are exactly the cells that failed the fairness check" in ground
-    assert "not a replacement verdict" in ground
-    assert "20 faster, 40 slower" in ground
+    assert "Dissipation is partly downstream of the support change" in ground
+    assert "does not replace the primary result" in ground
+    assert "20 positive and 40 negative" in ground
+    assert "not 60 successful 50 ms comparisons" in ground
 
 
 def test_spatial_companion_exposes_contact_closure_before_contact_dynamics() -> None:
