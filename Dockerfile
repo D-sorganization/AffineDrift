@@ -14,7 +14,9 @@
 #   docker run -p 8080:8000 affinedrift:latest
 
 ARG PYTHON_BASE_IMAGE=python:3.12-slim@sha256:46cb7cc2877e60fbd5e21a9ae6115c30ace7a077b9f8772da879e4590c18c2e3
-ARG NODE_MAJOR=20
+# Keep NODE_MAJOR equal to `.nvmrc` (the CI pin); enforced by
+# tests/test_single_source_pins.py (#4601).
+ARG NODE_MAJOR=22
 # Keep QUARTO_VERSION equal to `.quarto-version` (the CI pin); enforced by
 # tests/test_single_source_pins.py (#4126).
 ARG QUARTO_VERSION=1.8.26

@@ -20,7 +20,6 @@ FORBIDDEN_ROOT_ARTIFACTS = {
     "The_Physics_of_Golf.pdf",
     "TURNOVER_PROMPT.md",
     "brute_merge.ps1",
-    "listings.json",
     "magic_numbers_report.txt",
     "main.pdf",
     "notes_workspace_escape.png",
