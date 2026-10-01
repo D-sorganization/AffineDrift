@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4769 · Speed, Energy, and Power Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4770 (regular, attached)
 - **Issue:** #4769 (epic #4009)
 - **Branch:** fix/speed-energy-rigor-4769
 - **Paths:** articles/proximal_distal_companion/chapters/ch05_speed_energy_power.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_speed_energy_review.py
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (6,382 full-regression passes;two temporary-root failures resolved, six root retests pass;12 gates;223-page PDF/HTML;4 browser profiles;8 findings bound to 4c80a4a26d060791b7d3505d0a27a5657c6a2eed;79 preserved;119 sources pending)
 - **Summary:** Correct point/body energy, power-conjugate motion and whole-club/shaft/head accounting; qualify evidence and counterfactual inference. Preserve79 earlier findings; Chapter5 complete;119 sources plus whole-book consistency remain.
-- **Next step:** Validate/push bound checkpoint; open regular PR and verify guarded merge.
+- **Next step:** Source and binding pushed; push registration, verify final-head CI and guarded remote-main delivery.
 
 ### DL-#4766 · Patent Catalog Technical Review
 
