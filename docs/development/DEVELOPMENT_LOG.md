@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (nine new checks;66 affected;12 gates;653 titles;Ruff/Black838;mypy94;221-page PDF/parity/visual inspection;4 browser/theme checks;full regression 6418 passes/29 skips/79.0% configured coverage/93.0% source-only)
 - **Summary:** Correct geometric force, power, singularity and inertia mappings; reproduce scalar allocation evidence and repair moment-arm figure. Flash support and lead scientific adjudication. Nine findings bound to source 1293c48c575b28986c41a2a826d6ed2030ba85fb;70 earlier findings preserved;122 full-source audits plus whole-book consistency remain.
-- **Next step:** Validate binding, deliver regular protected PR and verify predecessor/main delivery.
+- **Next step:** 36 binding checks and 66 integrated checks pass. Main83f6c0bc9 Node pin update merged without conflicts. Deliver regular protected PR and verify predecessor/main delivery.
 
 ### DL-#4759 · Robust-Speed Technical Review
 
