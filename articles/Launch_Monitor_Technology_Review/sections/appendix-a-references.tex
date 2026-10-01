@@ -1,16 +1,37 @@
-\chapter{Live Reference Library}
+\chapter{Annotated Reference Library}
 \label{app:links}
+% Allow long reference URLs to wrap without changing other chapters.
+\begingroup
+\raggedright
+\def\UrlBreaks{\do\/\do\-\do\.\do\_\do\?\do\=\do\&
+  \do\a\do\b\do\c\do\d\do\e\do\f\do\g\do\h\do\i\do\j\do\k\do\l\do\m
+  \do\n\do\o\do\p\do\q\do\r\do\s\do\t\do\u\do\v\do\w\do\x\do\y\do\z
+  \do\A\do\B\do\C\do\D\do\E\do\F\do\G\do\H\do\I\do\J\do\K\do\L\do\M
+  \do\N\do\O\do\P\do\Q\do\R\do\S\do\T\do\U\do\V\do\W\do\X\do\Y\do\Z
+  \do\0\do\1\do\2\do\3\do\4\do\5\do\6\do\7\do\8\do\9}
 
-This appendix collects every substantive source consulted for this review
-as a clickable link, organized by category. The four raw research
-dossiers in \path{articles/Launch_Monitor_Technology_Review/research/} pair each of these with the
-specific claims they support.
+This appendix organizes sources used in the review by their evidential role.
+The research dossiers in
+\path{articles/Launch_Monitor_Technology_Review/research/} record the working
+claim trails; they are research notes, not independent validation. A source
+listed here does not support every claim about the associated product.
+Manufacturer descriptions, measured agreement, and physical models answer
+different questions. Read a numerical result together with its device version,
+measurand, reference point, event time, test conditions, and missing-data rate.
+Access checks on 1 October 2026 are observations, not availability guarantees:
+a failed retrieval does not establish permanent absence.
 
 \section{Patents (Google Patents / USPTO)}
 
+These records disclose proposed methods and embodiments. They do not establish the architecture shipped
+in a particular device, independent performance, or freedom to implement.
+The annotations identify technical topics; they do not determine claim scope
+or current legal status. Inventor and company groupings are navigation aids,
+not a complete ownership or portfolio history.
+
 \subsection*{TrackMan A/S (Fredrik Tuxen)}
 \begin{itemize}\small
-\item Full portfolio index:
+\item Inventor index and manufacturer patent list:
   \url{https://patents.justia.com/inventor/fredrik-tuxen} \,and\,
   \url{https://www.trackman.com/legal/patents}
 \item US8845442 --- Determination of spin parameters of a sports ball
@@ -29,17 +50,18 @@ specific claims they support.
   \url{https://patents.google.com/patent/US10315093B2/en}
 \item US11086005 --- multi-bay range tracking:
   \url{https://patents.google.com/patent/US11086005B2/en}
-\item TrackMan's own spin-patent explainer:
+\item Historical TrackMan spin-patent explainer address (redirected to the
+  general blog during this review; use the patent records above for content):
   \url{https://blog.trackmangolf.com/patent-measuring-the-spin-of-a-sports-ball/}
 \end{itemize}
 
 \subsection*{FlightScope / EDH (Henri Johnson)}
 \begin{itemize}\small
-\item US9868044 --- dielectric-lens spin measurement:
+\item US9868044 --- spin from periodic features in a phase-demodulated signal:
   \url{https://patents.google.com/patent/US9868044B2/en}
-\item US10775492 --- direct spin-axis via perpendicular receiver pairs:
+\item US10775492 --- spin-axis estimation using receiver-pair time delays:
   \url{https://patents.google.com/patent/US10775492B2/en}
-\item US10338209 --- Fusion Tracking (radar+camera):
+\item US10338209 --- combined radar and camera tracking:
   \url{https://patents.google.com/patent/US10338209B2/en}
 \item Company history:
   \url{https://athlonsports.com/golf/the-flightscope-story-tracking-the-history-of-flight-in-golf}
@@ -47,10 +69,10 @@ specific claims they support.
 
 \subsection*{Foresight Sports / Wintriss Engineering (Kiraly)}
 \begin{itemize}\small
-\item US7292711 --- flight parameter measurement system
-  (\textbf{expired 2025}; markerless dimple-spin blueprint):
+\item US7292711 --- flight parameters from imaged surface features,
+  including markings, blemishes, or dimples:
   \url{https://patents.google.com/patent/US7292711B2/en}
-\item US7324663 --- smart-camera sibling (\textbf{expired 2025}):
+\item US7324663 --- standalone smart-camera launch monitor:
   \url{https://patents.google.com/patent/US7324663B2/en}
 \item US7497780 --- integrated launch monitor UX:
   \url{https://patents.google.com/patent/US7497780B2/en}
@@ -64,34 +86,34 @@ specific claims they support.
 
 \subsection*{Acushnet / Titleist (Gobush et al.)}
 \begin{itemize}\small
-\item US5501463 --- stereo + retroreflective dots, club and face
-  (\textbf{expired}): \url{https://patents.google.com/patent/US5501463A/en}
-\item US6500073 --- stereo ball trajectory + flight integration
-  (\textbf{expired}): \url{https://patents.google.com/patent/US6500073B1/en}
-\item US6758759 --- dual stereo monitors, measured face angle
-  (\textbf{expired}): \url{https://patents.google.com/patent/US6758759B2/en}
-\item US7143639 --- portable four-camera monitor (\textbf{expired}):
+\item US5501463 --- optical club/ball measurement with reflective markers:
+  \url{https://patents.google.com/patent/US5501463A/en}
+\item US6500073 --- camera measurements and trajectory computation:
+  \url{https://patents.google.com/patent/US6500073B1/en}
+\item US6758759 --- separate club and ball monitors before/after impact:
+  \url{https://patents.google.com/patent/US6758759B2/en}
+\item US7143639 --- portable monitor with one or more cameras:
   \url{https://patents.google.com/patent/US7143639B2/en}
 \item US8500568 / US8556267 --- portable continuations:
   \url{https://patents.google.com/patent/US8500568B2/en},
   \url{https://patents.google.com/patent/US8556267B2/en}
-\item US10668350 --- 3D/light-field launch monitor:
+\item US10668350 --- stereographic or light-field camera embodiments:
   \url{https://patents.google.com/patent/US10668350B2/en}
-\item US6186002 --- $C_D$/$C_L$ from measured trajectories (model
-  calibration template):
-  \url{https://patents.google.com/patent/US6186002B1/en}
 \end{itemize}
 
 \subsection*{Others}
 \begin{itemize}\small
+\item USGA US6186002 --- aerodynamic characteristics from measured
+  trajectories (original assignee: United States Golf Association):
+  \url{https://patents.google.com/patent/US6186002B1/en}
 \item Full Swing US2020/0147470 --- CW+FMCW dual-mode launch monitor:
-  \url{https://www.freepatentsonline.com/y2020/0147470.html}
+  \url{https://patents.google.com/patent/US20200147470A1/en}
 \item Creatz US10247553 --- start-position sensor:
   \url{https://patents.google.com/patent/US10247553B2/en}
 \item Golfzon US9242158 --- two-stage latency-hiding simulation:
   \url{https://patents.google.com/patent/US9242158B2/en}
 \item Uneekor patent/license list: \url{https://uneekor.com/legal/patents}
-\item Camera-timing/Gabor dimple tracking US12401909:
+\item Pulse/exposure timing correlation US12401909:
   \url{https://patents.google.com/patent/US12401909B2/en}
 \item TrackMan EP1698380 litigation coverage:
   \url{https://thegolfwire.com/322771-2/}
@@ -99,7 +121,10 @@ specific claims they support.
   \url{https://golfbusinessnews.com/news/innovation-centre/flightscope-wins-patent-infringement-case-against-trackman-in-germany/}
 \end{itemize}
 
-\section{Regulatory / Teardown (RF Ground Truth)}
+\section{Regulatory Records and Teardown Reports}
+FCC filing mirrors identify equipment records and tested configurations;
+they do not independently validate launch parameters. Forum teardown reports
+are secondary observations requiring confirmation against the actual hardware.
 \begin{itemize}\small
 \item TrackMan 4 FCC ID SFX-TMAN4 (X-band + 24\,GHz):
   \url{https://fccid.io/SFX-TMAN4}
@@ -111,7 +136,10 @@ specific claims they support.
   \url{https://golfsimulatorforum.com/forum/flightscope/277362-mevo-teardown}
 \end{itemize}
 
-\section{Manufacturer Technical Documentation}
+\section{Manufacturer Documentation and Product Reporting}
+Official pages describe vendor definitions and specifications. Media,
+retailer, and community pages below are labeled separately; their inclusion
+does not turn a product claim into an independent measurement.
 
 \subsection*{TrackMan}
 \begin{itemize}\small
@@ -128,51 +156,72 @@ specific claims they support.
   \url{https://www.trackman.com/blog/golf/two-radars-one-camera-zero-doubt}
 \item Tech specs (TM4, iO):
   \url{https://www.trackman.com/golf/launch-monitors/tech-specs}
-\item Ball Flight Laws newsletter (Jan.\ 2009; D-plane, and the origin of
-  the ``85/15'' rule of thumb---see \S\ref{sec:facepathweighting} for why
-  the measured horizontal weight is $0.76$):
+\item Ball Flight Laws newsletter (Jan.\ 2009; historical D-plane and
+  launch-direction teaching material). Compare the study-specific weights
+  in \S\ref{sec:facepathweighting}; $0.76$ is not a universal constant:
   \url{https://www.yumpu.com/en/document/view/11652756/trackman-ball-flight-laws}
 \end{itemize}
 
 \subsection{The TrackMan Newsletter Archive}
 
-Every official TrackMan newsletter URL now returns 404, and the Wayback
-captures are redirect stubs. A complete live third-party mirror of issues
-\#1--\#10 exists and is the richest single source of TrackMan-published
-numbers anywhere. All at
+Historical newsletters are indexed below through a third-party mirror.
+Issues \#7--\#9 were retrieved for the present annotation review; this is
+not a claim that the collection is complete or that official and archival
+copies are unavailable. The mirror directory is
 \url{https://www.gregsmithgolfcoach.com/wp-content/uploads/2014/04/}:
 
 \begin{itemize}\itemsep2pt
 \item \texttt{newsletter1.pdf} (Nov 2007) through \texttt{newsletter9.pdf}
   (Jan 2013), sequentially numbered.
 \item \texttt{TrackMan\_Newsletter\_2014.pdf} is issue \#10 (Jan 2014); the
-  filename convention changed, which is why sequential guesses fail. The
-  series ends there.
-\item \textbf{\#7 (Oct 2010), ``Ten Fundamentals''} is the origin of most
-  TrackMan rules of thumb, including the 85/15 claim in both planes, the
-  spin-loft subtraction stated as a definition, and ``the spin rate drops
-  during ball flight---typically 4\% for each second.''
-\item \textbf{\#9 (Jan 2013)} carries the canonical club-delivery
-  definitions (all specifying maximum compression) and the only published
-  TrackMan accuracy specification located: for TrackMan III/IIIe at 95\%
-  confidence, club speed $\pm1.5$~mph, attack angle $\pm1.0\degs$, club path
-  $\pm1.0\degs$, dynamic loft $\pm0.8\degs$, face angle $\pm0.6\degs$.
-\item \textbf{\#8 (Jun 2011)} quantifies bulge: a $\SI{12.7}{\milli\metre}$
-  heel-ward impact makes the face angle $2\degs$ closed at that point
-  relative to face centre, ``for all drivers on the market.''
+  filename differs from the numbered examples. This does not establish an
+  end date for the series.
+\item \textbf{\#7 (Oct 2010), ``Ten Fundamentals''} presents historical
+  vendor rules of thumb: driver launch weights of 85\% toward the face in
+  both planes, 75\% for irons, and nominal spin decay of 4\% per second.
+  These are not universal material or aerodynamic constants. Its scalar
+  loft-minus-attack definition requires a common-plane interpretation;
+  spatial spin loft is the angle between the face normal and velocity.
+\item \textbf{\#9 (Jan 2013), pp.\ 3 and 5} specifies a maximum-compression
+  reporting reference with averaging qualifications. It lists TrackMan
+  III/IIIe \emph{absolute} specifications, described by the manufacturer as
+  95\% confidence: speed $\pm1.5$~mph, attack $\pm1.0\degs$, path
+  $\pm1.0\degs$, loft $\pm0.8\degs$, face $\pm0.6\degs$. Its separate
+  repeatability column is not interchangeable with absolute error.
+  Conditions include a centre of gravity within 10\,mm of the geometric
+  centre for attack/path, impact entirely on the face for loft/face, and
+  successful measurement of the required club, ball-direction and spin data.
+  A reporting reference does not mean every output is an instantaneous
+  direct measurement; see also the dated club-data definitions above.
+\item \textbf{\#8 (Jun 2011), p.\ 4} gives a 12.7\,mm heel offset and a
+  $2\degs$ face-angle change toward closed. Its universal-driver wording
+  should not be adopted as a geometric law: the change depends on local face curvature.
+  For an ideal circular horizontal section, $\Delta\theta=\arcsin(x/R)$
+  for lateral offset $x$ and radius $R$, relative to the central normal.
+  At $x=12.7$\,mm, radii of 250 and 500\,mm give about $2.91\degs$ and
+  $1.46\degs$, respectively. These are geometric examples, not measured
+  driver specifications; the sign depends on the heel/toe convention.
 \end{itemize}
 
 \begin{warning}
-Those TrackMan accuracy figures are the manufacturer's own. Independent
-testing against a traceable optical benchmark
+Those accuracy figures are manufacturer specifications. Leach et al.\ tested
+TrackMan Pro IIIe and GC2+HMT against an optical reference in an indoor,
+eight-golfer, 240-shot study
 (Leach et al.\ 2017,
-\url{https://doi.org/10.1016/j.measurement.2017.08.009}) found club
-path met $\pm1\degs$ on
-only $45\%$ of shots and face angle on $66\%$, and that full clubhead
-parameters were returned on just $62\%$ of shots overall---$19\%$ for a
-utility wedge. The lesson is that a published tolerance and a
-per-shot success rate are different specifications, and only the first is
-ever advertised.
+\url{https://doi.org/10.1016/j.measurement.2017.08.009}). In Table~6,
+45\% of TrackMan path differences and 66\% of face-angle differences fall
+within $\pm1\degs$ of the \emph{median difference}, not of zero error.
+Such a band describes dispersion after centering; a systematic bias can
+remain. It is not a direct pass/fail test of the vendor's absolute limits.
+
+Data availability is another quantity: TrackMan returned club velocity on
+98\% of shots, but the other four club parameters on 62\% overall and
+19\% for the utility wedge. The authors also describe installation
+compromises, possible radar interference, markers, and differences in
+reference point or impact timing. Reference calibration alone does not
+make all compared outputs the same measurand. Report bias, dispersion,
+uncertainty and return rate separately, and retain these device/setup limits
+when applying the result to a golfer's swing or to a newer monitor.
 \end{warning}
 
 \subsection*{Foresight Sports}
@@ -193,9 +242,9 @@ ever advertised.
 
 \subsection*{Other Vendors}
 \begin{itemize}\small
-\item FlightScope X3 (multi-frequency, Fusion Tracking):
+\item FlightScope X3 announcement (The Golf Wire):
   \url{https://thegolfwire.com/326713-2/}
-\item Garmin R10 architecture and accuracy:
+\item Garmin R10 third-party explainers (My Golf Simulator):
   \url{https://mygolfsimulator.com/garmin-r10-data/},
   \url{https://mygolfsimulator.com/garmin-r10-accuracy/}
 \item Garmin R50 (three-camera):
@@ -205,19 +254,24 @@ ever advertised.
   \url{https://www.fullswinggolf.com/kit-specs/}
 \item Rapsodo MLM2PRO spin (MyGolfSpy):
   \url{https://mygolfspy.com/news-opinion/rapsodo-mlm2pro-takes-spin-measurement-to-pro-level/}
-\item SkyTrak+ measurement:
-  \url{https://www.skytrakgolf.com/pages/what-does-the-skytrak-st-launch-monitor-measure}
-\item Uneekor EYE XO / Dimple Optix:
-  \url{https://uneekor.com/blogs/blog/photometric-vs.-doppler:-which-launch-monitor-technology-delivers-the-most-accurate-golf-data}
+\item SkyTrak+ / ST+ vendor product and measurement description:
+  \url{https://www.skytrakgolf.com/products/skytrak-plus-launch-monitor}
+\item Uneekor EYE XO / Dimple Optix vendor description (Canadian site):
+  \url{https://uneekor.com/en-ca/products/eye-xo-standalone}
 \item Uneekor calibration guide (Carl's Place):
   \url{https://www.carlofet.com/blog/calibrating-uneekor-launch-monitors};
   official PDF:
   \url{https://download.uneekor.com/docs/EYEXO2_Calibration_Guide.pdf}
-\item ProTee VX reviews:
+\item ProTee VX retailer review (PlayBetter):
   \url{https://www.playbetter.com/blogs/golf-simulator-reviews/protee-vx-review}
 \end{itemize}
 
-\section{Peer-Reviewed and Academic}
+\section{Research Papers, Standards, and Technical Notes}
+Journal and proceedings papers, preprints, theses, author notes and test
+standards have different review and validation roles. Agreement with another
+monitor is not automatically accuracy against an independent reference;
+repeatability is not trueness. A cross-sport method needs golf-specific
+validation before its reported performance can be transferred.
 \begin{itemize}\small
 \item Penner, ``The physics of golf,'' Rep.\ Prog.\ Phys.\ 66 (2003):
   \url{https://iopscience.iop.org/article/10.1088/0034-4885/66/2/202}
@@ -237,8 +291,11 @@ ever advertised.
   \url{https://www.usga.org/content/dam/usga/images/equipment-standards/ITR-test-conditions-2028-ODS.pdf}
 \item Friction/tangential compliance and launch angle (MDPI 2020):
   \url{https://doi.org/10.3390/proceedings2020049027}
-\item Face angle / club path influence study:
-  \url{https://www.researchgate.net/publication/323373897}
+\item Wood, Henrikson and Broadie (2018), face/path influence study:
+  \url{https://doi.org/10.3390/proceedings2060249}.
+  The player-test horizontal means (driver 0.76, 7-iron 0.69, wedge 0.61)
+  use centre-strike and face-to-path filters; they are sample-specific,
+  not universal coefficients or individual-shot error bounds.
 \item Cross oblique-impact golf experiments:
   \url{https://www.physics.usyd.edu.au/~cross/GOLF/GOLF.htm}
 \item Cross \& Nathan oblique collision formalism:
@@ -330,15 +387,19 @@ ever advertised.
   \url{https://engineering.purdue.edu/~mrb/resources/AltLectureF/Session_21.pdf}
 \item Stalker baseball-spin patent (radar spin outside golf):
   \url{https://patents.google.com/patent/US10935657B2/en}
-\item Weibel Scientific projectile-tracking radar (TrackMan's origin):
+\item Weibel Scientific radar object-detection patent:
   \url{https://patents.google.com/patent/EP1735637B1/en}
 \end{itemize}
 
 \section{Comparative Testing and Market Analysis}
+These media, vendor and retailer accounts help locate comparisons and
+historical context. Before using a ranking or numerical accuracy claim,
+inspect its reference instrument, protocol, exclusions and uncertainty;
+the listing itself is not an endorsement of the test.
 \begin{itemize}\small
 \item MyGolfSpy indoor accuracy test:
   \url{https://mygolfspy.com/news-opinion/three-of-the-most-accurate-indoor-launch-monitors-and-one-to-avoid/}
-\item GCQuad vs TrackMan robot spin data:
+\item GCQuad vs TrackMan comparison article (Golf Simulator Zone):
   \url{https://golfsimulatorzone.com/gcquad-vs-trackman-accuracy-in-2026/}
 \item Foresight GCQuad/GC3 comparison:
   \url{https://www.foresightsports.com/blogs/golf-tips/comparing-golf-launch-monitor-foresight-sports-gcquad-and-gc3-stand-above-the-rest}
@@ -352,3 +413,5 @@ ever advertised.
 \item TrackMan history (Golf Monthly, Tuxen profile):
   \url{https://www.golfmonthly.com/features/from-tracking-missiles-to-tracking-golf-balls-meet-the-man-that-you-didnt-realise-changed-golf}
 \end{itemize}
+\par
+\endgroup

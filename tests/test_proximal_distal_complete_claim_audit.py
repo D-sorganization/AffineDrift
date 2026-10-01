@@ -401,7 +401,9 @@ def test_spatial_companion_exposes_contact_closure_before_contact_dynamics() -> 
     assert "Contact Closure Comes Before Contact Dynamics" in companion
     assert "0.171--0.616 m" in companion
     assert "rank-six bilateral contact Jacobian" in companion
-    assert "respecting joint limits and collisions" in companion
+    assert "respecting its declared joint and collision guards" in companion
+    assert "0.5 mm" in companion
+    assert "while allowing pelvis, trunk, and arm coordinates to change" in companion
     assert "234 of 234" in companion
     assert "reduced-tree necessary condition" in companion
     assert "cannot answer whether a passive mechanism reduces timing demand" in companion

@@ -22,30 +22,28 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex-luna-affine4688-handoff-20260930-2335
-- **PR:** #4713 (draft), published at `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`; do not push the in-progress integration before root review.
+- **PR:** #4713 (draft); remote head `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`, base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6` at latest scoped check.
 - **Issue:** #4688 (red main deployment route coverage)
-- **Branch:** `fix/luna-deploy-route-4688`; integrating verified main `fb377e96dc33ee80b655284aef066f8acfb7caf1` by ordinary merge.
-- **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`, `tests/test_evidence_presentation.py`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`.
+- **Branch:** `fix/luna-deploy-route-4688`; integrating current main `fd508f04cd48b80f8f248432cea4a033b9188a13` by ordinary merge.
+- **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`, `tests/test_evidence_presentation.py`, `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`.
 - **Started:** 2026-09-30
-- **Last verified:** 2026-10-01 (integrated tree `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`: focused 36 passed; clean-copy full suite 6,162 passed/31 skipped/185 deselected; content lint 183 passed/5 skipped/6,190 deselected; native exits 0 and 27 source/evidence hashes unchanged. Canonical evidence and enforced publication checks pass. Earlier render/audit validates published `4b886599` only.)
-- **Summary:** Adds the reviewed record for the already-public dataset-explorer route and source-derived route regression. JSON schema checks establish structure only; population inputs are manufactured synthetic and ZTCF/proximal-distal evidence remains model-level/educational. No human/population validation claim is made; #4695 remains open. #4694 workflow-gate work is separate.
-- **Current integration:** Ordinary merge of main `fb377e96` is staged in the owned worktree. Integrated tree `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d` preserves all 249 main route records, non-route metadata and finding records, adds only `/models/dataset-explorer.html` (`ad-route-60ee227724f0`), and retains all 16 matching evidence hashes. Four conflicts were resolved semantically; focused and full CI-order validation passed.
-- **Next step:** Complete required hooks and create the local merge commit for root review before any push. A fresh render/manifest/audit for the eventual accepted merged head, green exact-head PR CI, and successful merged-main deployment remain required before closing #4688.
+- **Last verified:** 2026-10-01 (current-main integration: 46 focused audit/review tests passed; pinned content-lint 183 passed/5 skipped/6,211 deselected; canonical evidence, inventory/publication, and SPEC checks passed. No full-suite result is claimed for this integrated tree; the 6,162-pass suite applies only to prior tree `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`).
+- **Summary:** Add the reviewed record for the already-public dataset-explorer route and source-derived regression. Schema checks establish JSON structure only; population inputs are manufactured synthetic and ZTCF/proximal-distal evidence remains model-level/educational. No human/population validation is claimed; #4695 remains open. #4694 workflow-gate work is separate.
+- **Current integration:** All 249 route and generated-report records/findings from `fd508f04` compare exactly with the integrated results; only `/models/dataset-explorer.html` (`ad-route-60ee227724f0`) is added. All 16 route evidence hashes match the integrated source. Canonical generation changes reviewed count 246→247 and route count 249→250; exempt 3 and deferred 0 are unchanged. Main SPEC, handoff and development-log history are preserved with this issue entry added.
+- **Next step:** Local integration is for root review; PR #4713 remains draft. Exact-candidate PR CI, a revision-bound full manifest/publication audit, and successful merged-main deployment are still required before closing #4688. The earlier `4b886599` render validates only that revision.
 
-### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
+### DL-#4725 · Annotated Reference Library
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
-- **Issue:** #4720 (epic #4009)
-- **Branch:** `fix/heavy-hit-consistency-4720`
-- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4729 (regular)
+- **Issue:** #4725 (epic #4009)
+- **Branch:** `fix/reference-library-rigor-4725`
+- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex`, `articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `reports/technical-review/reference-library-review.md`, `tests/test_reference_library_review.py`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
-- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
-- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 open, protected auto-merge armed; finish CI/remote-main verification and release lease. Goal active; 138 indexed full reviews remain.
-
-
+- **Last verified:** 2026-10-01 (21 focused passes; 6178 full-suite passes/29 skips; 78.37% combined coverage and 92.95% src-only from same data; 183 post-full content passes/four skips; 78-page PDF and 20 final pages verified; Ruff/Black/titles/content gates pass; broad mypy has nine errors in unchanged production sources)
+- **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
+- **Next step:** Science checkpoint b694b319d committed; final evidence and local checks complete with explicit type-check limitation. Regular PR #4729 protected auto-merge armed; #4726 merged main 644bfd5be integrated. Verify combined checks, then protected remote-main delivery. Broader technical-review goal remains active.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -63,6 +61,32 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4724 · Plane-to-Space Mechanical and Evidence Boundaries
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4726 (regular)
+- **Issue:** #4724 (epic #4009)
+- **Branch:** `fix/plane-space-rigor-4724`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch20_plane_to_space.qmd`, `tests/test_plane_space_review.py`, `reports/technical-review/plane-space-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (39 focused/legacy/hygiene checks; four final browser cases, zero serious/critical axe findings; three equations and final PDF pages inspected)
+- **Summary:** Correct observer/reference power, contact constraints, rank/feasibility, archived populations and engine independence; derive and expose the shared vector-damper angular-momentum limitation. Preserve prior review scopes and immutable provider source; follow-up UpstreamDrift #11195.
+- **Next step:** Merged remote main 644bfd5bebb197ee03deb16877f189a0d772c403 at 2026-10-01 03:23:14 UTC, all protected checks green (36807137602). Fetched/ancestor verified; lease/presence released 03:24 UTC. Broader goal remains active.
+
+### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
+- **Issue:** #4720 (epic #4009)
+- **Branch:** `fix/heavy-hit-consistency-4720`
+- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
+- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
+- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 merged at 2a7c094070c5ebd7d16c95c332d5526931cc5ba0 with all protected checks green (CI 36801091325). Remote-main ancestry verified; lease/presence released. Deployment separately blocked by #4688 / #4713.
 
 ### DL-#4717 · Radar Screw-Kinematics Appendix Review
 
