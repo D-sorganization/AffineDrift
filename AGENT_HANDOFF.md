@@ -1,3 +1,13 @@
+# Muscle Models — Review Complete, Protected Delivery Pending — #4743
+
+- Source d7be93d34322f2cbb73f8c933cf22991e604a2e5 and delivery46f71eda4eaf4965ffa12b5025544dce98f632b8 are pushed. Nine new findings bind delivery46f71 in BOTH ledgers;247 historical finding records retain all non-digest metadata. Only Chapter3 corpus row completed:130 full-source audits plus whole-book consistency remain.
+- Final bound89 tests pass. Earlier full6318 pass/five stale book-audit failures/29 skips/93.04%; repair88 pass;184 content/four skips;12 publication gates;653-title audit;PDF68pages/17 selected pages and browser4/4/axe verified. Keep original failure record; no full green claim at repaired tree.
+- Book-map source/PDF links pin d7be93d34; notebook remains separately pinned scaffold. Nine agy Gemini3.8 Flash supplied-text jobs supported routine work. Lead adjudicated all science, references, drafts and mathematical checks.
+- Current binding checkpoint SELF. Next: push and open regular main-target PR; dependencies Chapters9/10 are combined in PR4741 d9c21a9e5, still awaiting E2E. Preserve combined tree and verify actual main merge. No draft, force, admin, direct-main, or deployment claim.
+- Canonical reports: muscle-models-review.md, delivery-validation.json, render-verification.json, binding-validation.json and prior-review snapshots. Active worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/muscle-model-rigor-4743. Lease through12:33UTC; renew during continued work. Goal active.
+
+## Preserved Earlier Checkpoints
+
 # Muscle Models — Delivery Evidence Checkpoint — #4743
 
 - Scientific source d7be93d34322f2cbb73f8c933cf22991e604a2e5 pushed; all scientific/PDF/test/bibliography bytes unchanged. Normal merge aed9c9a7a incorporates externally combined Chapters9/10 d9c21a9e5. Main-target PR4741 still awaits final E2E; no main delivery claim.
