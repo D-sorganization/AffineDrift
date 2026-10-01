@@ -16,7 +16,7 @@
     "tests/test_proximal_distal_complete_claim_audit.py": "7d63e373fe0e2e5c7546b8ae26665b273a100d1eb78decc4759e725248832e2b"
   },
   "source_hash_convention": "Exact LF Git blobs equal checked working-tree bytes; both PDFs identical.",
-  "html_sha256": "8df02526224555d667232a3294cf679942c0d6c20b33aa8cebb3dfde6fc3db62",
+  "html_sha256": "b3a5b9f9d3c71c2a1e957889337c53e0f26b7f378415e2c245699f87a4acc8d7",
   "pdf": {
     "page_count": 211,
     "chapter_physical_pages": [123, 124, 125, 126, 127, 128, 129, 130, 131],
@@ -26,11 +26,12 @@
     "figure_visually_inspected": true,
     "undefined_citations_or_references": false,
     "final_revision_inspected_pages": [4, 126, 127, 128, 129, 130, 131],
-    "unchanged_page_carry_forward": "All other page text matches checkpoint 72a045d00; unchanged opening pages 123-125 and Chapter 21 boundary 132 retain prior visual inspection. Figure bytes unchanged."
+    "unchanged_page_carry_forward": "All other page text matches checkpoint 72a045d00; unchanged opening pages 123-125 and Chapter 21 boundary 132 retain prior visual inspection. Figure bytes unchanged.",
+    "integration_note": "Incoming #4704 changes HTML assets only for this book; all ten previously bound source/PDF/test hashes unchanged at integration. No additional PDF render needed."
   },
   "browser": {
     "quarto_version": "1.8.26",
-    "production_cleanup": "scripts.prune_internal_docs_from_deploy.strip_legacy_math_polyfill",
+    "production_cleanup": "strip_legacy_math_polyfill plus bundle_css and mirrored runtime assets; one-route local manifest supplied for page-feedback lookup.",
     "cases": [
       {
         "route": "articles/proximal-distal-a-journey-through-the-swing.html",
@@ -598,7 +599,7 @@
       }
     ],
     "manual_inspection": "All three displays inspected at 390 and 1440; chapter headings/opening and surrounding book structure inspected in both themes.",
-    "console": "Unused metrics.js preload warnings only; no observed runtime error.",
+    "console": "Initial preview before production bundling had missing font/manifest requests. Bundled CSS and one-route local manifest corrected; fresh verifier passed 4/4 with axe zero serious/critical. Final Playfair font status loaded; refreshed mobile opening checked. One cached initial manual visit retained a font error; no math errors or overflow in any case.",
     "official_verifier": {
       "schema_version": "affinedrift/public-site-verification/v1",
       "base_url": "http://127.0.0.1:17965",
@@ -639,7 +640,7 @@
           "status": 200,
           "passed": true,
           "failures": [],
-          "screenshot": "docs\\development\\technical-review\\plane-space-public-moment-screenshots\\articles__proximal-distal-a-journey-through-the-swing__mobile__light.png",
+          "screenshot": "docs\\development\\technical-review\\plane-space-public-integrated-screenshots\\articles__proximal-distal-a-journey-through-the-swing__mobile__light.png",
           "inspection": {
             "failures": [],
             "visibleH1s": ["How a Golf Swing Carries Energy"],
@@ -653,7 +654,7 @@
             },
             "overflow": 0,
             "overflowElements": [],
-            "mainTextLength": 494197,
+            "mainTextLength": 494270,
             "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
           },
           "navigation_attempts": [
@@ -679,7 +680,7 @@
           "status": 200,
           "passed": true,
           "failures": [],
-          "screenshot": "docs\\development\\technical-review\\plane-space-public-moment-screenshots\\articles__proximal-distal-a-journey-through-the-swing__mobile__dark.png",
+          "screenshot": "docs\\development\\technical-review\\plane-space-public-integrated-screenshots\\articles__proximal-distal-a-journey-through-the-swing__mobile__dark.png",
           "inspection": {
             "failures": [],
             "visibleH1s": ["How a Golf Swing Carries Energy"],
@@ -693,7 +694,7 @@
             },
             "overflow": 0,
             "overflowElements": [],
-            "mainTextLength": 494197,
+            "mainTextLength": 494270,
             "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
           },
           "navigation_attempts": [
@@ -718,7 +719,7 @@
           "status": 200,
           "passed": true,
           "failures": [],
-          "screenshot": "docs\\development\\technical-review\\plane-space-public-moment-screenshots\\articles__proximal-distal-a-journey-through-the-swing__desktop__light.png",
+          "screenshot": "docs\\development\\technical-review\\plane-space-public-integrated-screenshots\\articles__proximal-distal-a-journey-through-the-swing__desktop__light.png",
           "inspection": {
             "failures": [],
             "visibleH1s": ["How a Golf Swing Carries Energy"],
@@ -732,7 +733,7 @@
             },
             "overflow": 0,
             "overflowElements": [],
-            "mainTextLength": 494197,
+            "mainTextLength": 494270,
             "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
           },
           "navigation_attempts": [
@@ -757,7 +758,7 @@
           "status": 200,
           "passed": true,
           "failures": [],
-          "screenshot": "docs\\development\\technical-review\\plane-space-public-moment-screenshots\\articles__proximal-distal-a-journey-through-the-swing__desktop__dark.png",
+          "screenshot": "docs\\development\\technical-review\\plane-space-public-integrated-screenshots\\articles__proximal-distal-a-journey-through-the-swing__desktop__dark.png",
           "inspection": {
             "failures": [],
             "visibleH1s": ["How a Golf Swing Carries Energy"],
@@ -771,7 +772,7 @@
             },
             "overflow": 0,
             "overflowElements": [],
-            "mainTextLength": 494197,
+            "mainTextLength": 494270,
             "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
           },
           "navigation_attempts": [
@@ -784,6 +785,13 @@
           "navigation_retried": false
         }
       ]
+    },
+    "publication_asset_sha256": {
+      "docs/styles.css": "2b5946623ad477b17d0f740b8ae8ee50033f7fa475ae462155e9e574b6797b95",
+      "css/tokens/typography.css": "7636a923204c36a3f4b1dd0a6a35917d3b7b847e7d62278e9495eebdae52f5bc",
+      "_includes/mathjax-loader.html": "3c293c2afb2b6f4b0d9d723c380760af2c81e633f2ef6ac39d3f36c50a5c66a0",
+      "_includes/site-head.html": "83e052bb16781a385b35edded4fc75d3baea65e5c2537c3394334e88ade8a7f2",
+      "_quarto.yml": "cf3db4805b0c7c520e8d320ee01526a3a4b26fca2f1d8df52de6a955a3fce198"
     }
   },
   "independent_checks": {
@@ -804,5 +812,7 @@
     "No hardware, participant, or anatomical validation performed.",
     "An older text-anchor regression was updated for the more precise joint/collision guards; no rendered source changed during this test correction.",
     "No new contact-law experiment: archived vector-damper pair moment is recomputed in plane-space-moment-balance.json; provider follow-up UpstreamDrift #11195."
-  ]
+  ],
+  "integrated_main": "fb377e96dc33ee80b655284aef066f8acfb7caf1",
+  "integrated_revision": "69fec49acfd1a9243b3f7d74cf59d98502c3095b"
 }
