@@ -1,12 +1,20 @@
 # Muscle Models — Source Checkpoint — #4743
 
-- Goal active under epic #4009. Branch fix/muscle-model-rigor-4743 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; base9c6e29170. Full chapter first-pass source/PDF/test correction complete; source checkpoint SELF. No new completion credit or publication claim.
+- Goal active under epic #4009. Branch fix/muscle-model-rigor-4743 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; base9c6e29170. Full chapter first-pass source/PDF/test correction complete; source checkpoint d7be93d34322f2cbb73f8c933cf22991e604a2e5. No new completion credit or publication claim.
 - Corrected constitutive normalization/domains, parameter attribution, pennation, initialization, tendon identifiability, activation timing, power and curved-path stiffness. Full rationale and bounded primary reading: reports/technical-review/muscle-models-review.md.
 - Original28 failing/two passing tests; now38 focused tests pass. Twelve publication gates and653-source title audit pass. PDF68pages, all10 chapter pages plus boundaries, contents/preface and bibliography visually inspected. Existing unrelated volume warnings retained.
 - Supplied-text agy Gemini3.8 Flash agents handled inventories, test drafts, notation/checklist and turnover draft; lead adjudicated. No delegated repository edits or scientific authority.
-- Next: source commit/push, update public hub to immutable source/PDF revision, run full regression/browser checks, bind chapter findings and corpus row, create regular protected PR. 131 source audits and whole-book consistency remain on parent; do not reduce from this checkpoint alone.
+- Next: update public hub to immutable source/PDF revision, run full regression/browser checks, bind chapter findings and corpus row, create regular protected PR. 131 source audits and whole-book consistency remain on parent; do not reduce from this checkpoint alone.
 - External merge at11:02:53UTC combined4744 into Chapter10 branch asd9c21a9e5. PR4741 now carries both chapters and targets main; protected checks pending. This is not remote-main delivery. Preserve this combined branch, integrate normally after the source checkpoint, and verify protected main merge.
 - Lease session technical-review-20261001-muscle-models through12:33UTC. Coordination board unavailable/truncated, not proof of absent peers. Preserve historical findings/commits and QA; no draft PR, direct-main, force or protection bypass.
+
+## Preserved Earlier Checkpoint
+
+# Chapter 9 CI Evidence Repair — PR #4744
+
+- CI run36849737139 found two audit failures because one local CRLF in tests/test_force_direction_review.py had been hashed before Git normalization. Corrected the inventory to the existing Git blob, inspecting all677 bound evidence file paths. No scientific source, PDF, or historical verification commit changes.46 affected source/audit/pruning checks pass. Receipt reports/technical-review/force-direction-ci-repair.json.
+- Current repair checkpoint SELF; push then verify final CI. PR4744 remains regular and stacked on4741; do not merge into the topic base. Chapter10 final E2E still pending at the last authoritative check. Existing Chapter16 governance-vocabulary warning is nonblocking and outside this digest repair.
+- Muscle issue4743 now leased through12:33UTC and being implemented separately in link-health. Its new source is not included in this PR. Preserve all QA and canonical review history.
 
 ## Preserved Earlier Checkpoints
 

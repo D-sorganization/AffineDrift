@@ -35,14 +35,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4744 (regular; stacked on #4741)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4741 (carries merged topic PR #4744; main delivery pending)
 - **Issue:** #4742 (epic #4009)
 - **Branch:** `fix/force-direction-rigor-4742`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch09_force_direction.qmd`, `articles/figures/proximal_distal_companion/fig_companion_force_direction.svg`, `scripts/make_proximal_distal_companion_figures.py`, `tests/test_force_direction_review.py`, `reports/technical-review/force-direction-review.md`
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (source52408; full6281 pass/one stale source-contract failure,93.04%; repaired;59 focused then79 bound-audit and88 integration checks pass;184 content/4 skips;216-page PDF and browser4/4 verified)
 - **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
-- **Next step:** Verify Chapter10 PR4741 merge, retarget4744 to main, then verify final protected checks and merge. Six findings bound;35 historical findings preserved; merged guide corpus row reconciled.
+- **Next step:** Chapter9 merged externally into Chapter10 branch d9c21a9e5; PR4741 now carries both chapters to main. CI digest repaired;46 affected tests pass. Await protected checks and actual remote-main delivery.
 
 ### DL-#4739 · Force, Work, and Energy Boundaries
 
