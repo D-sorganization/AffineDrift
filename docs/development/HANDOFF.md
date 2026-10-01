@@ -1,6 +1,6 @@
 # Patent Catalog Review in Progress — #4766
 
-- Goal active under epic #4009. Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/patent-catalog-rigor-4766 from efc704831. Source/research checkpoint SELF; no PR yet for this unfinished review.
+- Goal active under epic #4009. Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/patent-catalog-rigor-4766 from efc704831. Source/research checkpoint f7d1f0ba5604eaee47b3a2c120e761502f96a48f; validation-detail checkpoint SELF; no PR yet for this unfinished review.
 - Lead read the complete patent compendium and linked patent-landscape chapter. Appendix edits correct two B2/B1 identifiers, twelve indexed priority years, radar-versus-camera spin, Garmin product inference, AccuSport absence and USGA attribution. Replaced the appendix's blanket expired/free-stack inference with a scoped technical interpretation. Bibliography marking notices updated. Remaining per-entry notes and Chapter7 still need correction; no full-source completion credit.
 - Research capture:173 identifiers attempted,170 Google records captured, two incorrect kind codes resolved and one new TrackMan grant checked through USPTO Gazette. Current TrackMan notice has47 numbers. Reports/patent-catalog-source-inventory.json retains metadata, URLs and source hashes; full HTML/claims/descriptions and all Flash drafts remain in QA/patent-catalog-sources and QA/patent-catalog-flash-packets.
 - agy Gemini3.8 Flash completed two initial drafts and25 comparison batches across three CLI workers. Lead adjudication is in reports/technical-review/patent-catalog-review.md. Reject false A/B kind-code semantics, status-to-marking-page inferences and grouped-row identifier mismatch claims. Abstract support is not a complete claim analysis or product identification.
@@ -8,7 +8,7 @@
 - Delivery predecessor PR4765 is regular, attached, pushed at efc704831 and protected squash auto-merge enabled. CI36893253026 is live. PR4762 CI36888354451 now passes; its branch conflicts with main, but its source is in4765/current. Preserve4752/4755/4758/4762 until source parity on remote main is verified.
 - Lease/presence technical-review-20261001-patents expires18:40UTC Oct1. Inbox incomplete/malformed/page-limited, not proof peers are absent. Existing owner credential only per command; Git network calls clear runtime extraheader for that command. No global auth/config changes, hook bypass, force or direct-main push. Preserve peer23ee826 in impact-review.
 
-- Partial-checkpoint checks:35 book/audit tests,653 titles,LaTeX structure and independent book BibTeX parsing pass. Repository169-entry bibliography JSON check also passes but has a different scope. No new rendered book or full-regression claim.
+- Partial-checkpoint checks:35 book/audit tests,653 titles,LaTeX structure and book BibTeX parsing completed (Biber exit0;54 unchanged pre-existing datamodel warnings, not warning-free). 83 unique entry keys and both edited access dates checked. Optional Python bibtexparser unavailable; Biber used. Repository169-entry bibliography JSON check also passes but has a different scope. No new rendered book or full-regression claim.
 
 ## Preserved Earlier Checkpoints
 

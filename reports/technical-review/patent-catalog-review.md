@@ -113,8 +113,13 @@ The 35 book-publication/claim-inventory tests, 653-source title audit and LaTeX
 structure baseline check pass. Claim-audit digests were already current: this
 partial edit does not create a new completed scientific finding. The repository
 bibliography checker passes on its 169-entry JSON authority; that check does not
-validate this book's separate BibTeX file. The book BibTeX was independently
-parsed for duplicate keys and the two changed marking-source dates checked.
+validate this book's separate BibTeX file. The optional Python `bibtexparser`
+package was unavailable, so its attempted check did not run. The installed Biber
+tool subsequently parsed the book file and exited zero; its 54 datamodel warnings
+are exactly the same as a separately parsed pre-edit baseline. These warnings
+include missing author and publication-date fields and remain to be reviewed;
+this is not a warning-free bibliography validation. A separate key/date check
+confirms 83 unique entry keys and both changed marking-source access dates.
 The first direct bibliography-script invocation lacked the repository import
 path; the corrected module invocation passed. No full regression or newly
 rendered book is claimed for these partial patent edits.
