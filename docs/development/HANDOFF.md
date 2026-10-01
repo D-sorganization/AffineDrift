@@ -1,3 +1,16 @@
+# Force Direction — Chapter 9 Delivery — #4742
+
+- Goal active under epic #4009. Branch `fix/force-direction-rigor-4742`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`. Scientific source `52408a254cdbc6314c79408a6558e4612802f7f7`; delivery checkpoint SELF. Regular PR pending; no merge claim.
+- Six findings now bind that exact source; all35 historical findings and verification commits preserved. Complete Chapter9 only;132 source audits remain pending on this base, plus whole-book consistency. Reports `force-direction-review.md`, `force-direction-render-verification.json` and `force-direction-delivery-validation.json` document bounded evidence.
+- Full regression:6281 passed,1 stale phrase failure,29 skipped,186 deselected,93.04% coverage. Source contract repaired to check the actual explicit pseudo-force/double-counting warning.59 focused tests then79 after audit binding pass;184 content checks pass,4 skips. Original failed full run retained honestly. Scientific source/PDF unchanged. Wheel artifacts preserved under QA.
+- Final216-page PDF and four browser cases verified before integration; all8 Chapter9 pages plus contents/boundaries visually checked,157 downstream pages text-identical after page shift. Seven supplied-text agy Gemini3.8 Flash jobs completed; scientific/script decisions lead-reviewed. No delegated source edits.
+- Chapter10 PR4741 passed all checks on39ae, but main advanced when peer4740 merged; integration is underway in separate impact-review checkout. Preserve both guide and book findings. Chapter9 source remains based on39ae until normal merge integration. Never overwrite peer theme changes.
+- Session technical-review-20261001-force-direction leased through11:22UTC; inbox unavailable due board truncation/malformed history, not proof of absent peers. Explicit issue lease and owned branch govern this work. Next: commit/push, integrate Chapter10 delivery, open regular PR and verify protected checks. No force/admin/direct-main/draft PRs. Preserve all QA and parked4253.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses below are historical; current state is above.
+
 # Force Direction — Chapter 9 — #4742
 
 - Goal active under epic #4009. Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/force-direction-rigor-4742`, based on Chapter 10 delivery `39ae90999281574623b568b47c8d2f03ee60e8b6`. Source checkpoint SELF; no Chapter 9 completion credit yet.

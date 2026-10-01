@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/force-direction-rigor-4742`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch09_force_direction.qmd`, `articles/figures/proximal_distal_companion/fig_companion_force_direction.svg`, `scripts/make_proximal_distal_companion_figures.py`, `tests/test_force_direction_review.py`, `reports/technical-review/force-direction-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (32 focused checks;184 content checks/4 skips;12 publication gates;216-page PDF scope and browser4/4 verified; full regression pending)
+- **Last verified:** 2026-10-01 (source52408; full6281 pass/one stale source-contract failure,93.04%; repaired;59 focused then79 bound-audit checks pass;184 content/4 skips;216-page PDF and browser4/4 verified)
 - **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
-- **Next step:** Commit/push source checkpoint, run full regression, bind six findings preserving35 historical findings, and open a regular PR after resolving the Chapter 10 dependency.
+- **Next step:** Commit/push delivery, integrate pending Chapter10 PR4741 normally, open a regular PR and verify protected final-head checks. Six findings bound;35 historical findings preserved.
 
 ### DL-#4739 · Force, Work, and Energy Boundaries
 

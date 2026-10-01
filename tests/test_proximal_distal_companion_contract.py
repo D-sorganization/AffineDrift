@@ -228,13 +228,14 @@ def test_workbench_exposes_drift_transfer_diagnostics() -> None:
 
 
 def test_companion_explains_coordinate_force_sources_without_double_counting() -> None:
-    source = _book_source()
+    source = " ".join(_book_source().split())
 
     for phrase in (
         "Coriolis Cross Term",
         "Squared-Speed Term",
         "coordinate-dependent",
-        "not forces to add",
+        "Do not add a rotating-frame pseudo-force to an inertial free-body diagram",
+        "the same mechanism twice",
         "13.817 N s",
         "rank-deficient",
     ):
