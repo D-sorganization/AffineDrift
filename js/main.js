@@ -34,13 +34,12 @@ import {
     initAccordions,
     initBackToTop,
     initExportToPdf,
+    initPrintMathTypesetting,
     initLightbox,
     initCriticsCorner,
     initLaymansTermsToggle,
     initCriticsCommentsToggle,
 } from "./ui-components.js";
-
-import { initPrintMathTypesetting } from "./pdf.js";
 
 import { updateHistorySidebar, initArticleHistory } from "./history.js";
 

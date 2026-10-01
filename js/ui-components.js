@@ -376,6 +376,16 @@ export function initExportToPdf() {
 }
 
 /**
+ * Typeset document before printing (Ctrl+P or PDF export).
+ * Forces lazy-loaded math to render before print (#4550).
+ */
+export function initPrintMathTypesetting() {
+    window.addEventListener("beforeprint", () => {
+        window.MathJax?.typesetPromise?.();
+    });
+}
+
+/**
  * Initialize lightbox for article images
  */
 export function initLightbox() {
