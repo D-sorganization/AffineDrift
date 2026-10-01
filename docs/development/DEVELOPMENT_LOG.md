@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/shallow-wide-rigor-4733`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex`, `articles/The_Geometry_of_Motion/Volume_IV/main.pdf`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `books/human-motor-control.qmd`, `tests/test_shallow_wide_review.py`, `reports/technical-review/shallow-wide-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (SELF: integrated full run6262 passed/one stale schema-checksum failure,29 skips,93.04% coverage; checksum regenerated;60 affected checks,184 content/four skips and8 browser cases pass; 31 new checks and 46 combined focused checks pass; final source e6eec4ac1 bound; twelve content gates; 71-page PDF chapter and four public-route cases visually verified)
+- **Last verified:** 2026-10-01 (SELF: latest main3e7d6958 and ground86ce488e integrated; 97 focused and 184 content checks pass, four skips; integrated full run6262 passed/one stale schema-checksum failure,29 skips,93.04% coverage; checksum regenerated;60 affected checks,184 content/four skips and8 browser cases pass; 31 new checks and 46 combined focused checks pass; final source e6eec4ac1 bound; twelve content gates; 71-page PDF chapter and four public-route cases visually verified)
 - **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
-- **Next step:** Create the regular shallow-wide PR after final integrated checks.
+- **Next step:** Push the verified shallow-wide integration branch.
 
 ### DL-#4688 · Dataset Explorer Deployment Route Audit
 
@@ -55,7 +55,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/ground-conversation-rigor-4730`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch16_ground_conversation.qmd`, `scripts/make_proximal_distal_companion_expanded_figures.py`, `tests/test_ground_conversation_review.py`, `reports/technical-review/ground-conversation-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (SELF: peer4713 integrated,43 focused and184 content checks pass (four skips), source/PDF unchanged; original CI36815440996 all green; integrated 6232 full tests/29 skips, 93.04% coverage, 184 content/four skips, four browser cases pass; prior6203 full tests/29 skips; 92.95% src coverage; final wording 38 focused and 183 content/four skips; 213-page PDF and four browser cases verified)
+- **Last verified:** 2026-10-01 (SELF: main3e7d6958 integrated, 55 focused and 184 content checks pass (four skips), source/PDF unchanged; original CI36815440996 all green; integrated 6232 full tests/29 skips, 93.04% coverage, 184 content/four skips, four browser cases pass; prior6203 full tests/29 skips; 92.95% src coverage; final wording 38 focused and 183 content/four skips; 213-page PDF and four browser cases verified)
 - **Summary:** Correct material contact power, internal/external wrench boundaries, ZVCF control convention and symmetric dissipation normalization; distinguish primary matching from total model contrasts and resolve post-hoc horizon counts.
 - **Next step:** Verify protected CI36821074418 on PR #4732.
 

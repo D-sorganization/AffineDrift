@@ -1,3 +1,17 @@
+# Shallow-Wide Review Delivery — #4733
+
+- Goal active under epic #4009; 134 indexed sources remain pending. Regular protected PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`; integration checkpoint `SELF`. Scientific source `e6eec4ac10fc5167197bf9a8ad93e360754810d4` and PDF unchanged. Historical finding commits are preserved.
+- Integrated ground head `86ce488e488a9fd9b7e5b6ca76ca8ae389c9806b` and main `3e7d6958c20ffc01a3d35f1ae43d7ff527fe370f` (peer PRs #4713/#4728). Latest 97 focused and 184 content checks pass, four skipped. Initial full suite: 6,262 passed, one stale generated schema-checksum failure, 29 skipped, 93.04% coverage; the checksum is corrected and affected checks pass. Do not relabel that initial run as an all-green full suite.
+- Both book and checksum-only datasets routes pass eight browser cases and axe (zero serious/critical findings), using the official book/hub classifications. The 71-page PDF's eight chapter pages, contents, boundary and bibliography were visually inspected. Exact scopes: `reports/technical-review/shallow-wide-integration-validation.json` and `shallow-wide-render-verification.json`.
+- PR not yet created. Next: push this branch, then open a regular PR based on `fix/ground-conversation-rigor-4730`. Do not arm merge into that parent branch. After ground PR #4732 merges, merge remote main into this published branch without force, retarget its PR to main, and pass protected CI.
+- Ground #4732 is mergeable at head `86ce488e4`, auto-merge armed, new checks registered. Scientific ground source/PDF unchanged. No live deployment claim; the peer dataset-explorer repair has merged but deployment is not verified here.
+- Session `technical-review-20261001-shallow-wide` lease/presence through 06:58 UTC; ground session through 07:16 UTC. Preserve all untracked QA and parked provider synthesis #4253. Two parallel agy Gemini3.8Flash agents handled PR drafting and validation/turnover summaries; lead corrected and verified their output.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses are historical; current state is above.
+
 # Shallow-Wide Chapter — #4733
 
 - Goal active under epic #4009; regular protected PRs only.
@@ -12,6 +26,19 @@
 ## Preserved Earlier Checkpoints
 
 Earlier pending statuses below are historical; current state is above.
+
+# Ground Review Delivery — PR #4732
+
+- Goal active under epic #4009. Regular protected PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`; branch `fix/ground-conversation-rigor-4730`; current integration checkpoint `SELF`.
+- Scientific source remains `ff4177f0309195e040085b44b31b355f033fef3d`. All ten source/PDF/test hashes remain unchanged. Preserve all 28 ground-route findings and the immutable provider archive.
+- Integrated peer dataset audit PR #4713 and on-ramp PR #4728; latest main `3e7d6958c20ffc01a3d35f1ae43d7ff527fe370f`. Latest 55 focused and 184 content checks pass, four skipped. Prior full suite at `feae3b872`: 6,232 passed, 29 skipped, 93.04% coverage. Exact scopes: `reports/technical-review/ground-conversation-integration-4713.json` and `ground-conversation-integration-4731.json`.
+- PR #4732 remains open; protected squash auto-merge armed. Next: push this integration and verify CI on its exact head. Never bypass protection. No live deployment claim.
+- Lease/presence session `technical-review-20261001-ground-conversation` through 07:16 UTC. Shallow-wide work is separate in `AffineDrift-screw-review`; do not include it in this PR. Preserve untracked QA and parked provider synthesis #4253.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses are historical; current state is above.
 
 # Ground PR Integration — #4730 / #4732
 
