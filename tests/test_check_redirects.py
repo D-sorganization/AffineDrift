@@ -212,3 +212,15 @@ def test_main_skips_comparison_when_previous_manifest_is_not_json(
         ],
     )
     assert main() == 0
+
+
+def test_shipped_redirect_ledger_is_valid() -> None:
+    """The repository's shipped redirect ledger must parse and contain valid routes."""
+    ledger_path = ROOT_DIR / "config" / "redirects.yml"
+    assert ledger_path.exists(), "config/redirects.yml must exist"
+    redirects = load_redirect_ledger(ledger_path)
+    assert "/articles/controllability-drift-ratio.html" in redirects
+    assert (
+        redirects["/articles/controllability-drift-ratio.html"]
+        == "/articles/drift-control-ratio.html"
+    )
