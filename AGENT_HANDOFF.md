@@ -18,7 +18,7 @@
 - Prior PR4741 d9c21:145 E2E pass/one copy-button size failure (rounded44x60). Flash triage is advisory; reproduce actual DOM/animation cause before changing anything, and retain44px threshold. Local observation failed because stale docs/index has no copy button; regenerate a fresh homepage in the owned impact-review checkout before reproducing. Browser/node observation process was interrupted; no repo edits from that probe.
 - Prior PR4745 at739e remains regular/main-target/auto-merge armed, Python/all8compile checks passed, E2E last building. Both prior PRs remain unmerged. Current branch includes both dependent science changes and must preserve them.
 - Next: commit/push this source checkpoint; open a regular PR when its checks are ready; isolate the Chapter9/10 touch-target failure and verify protected remote-main delivery. Update current turnover as statuses change. No draft, force, admin or direct-main.
-- Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12. Coordination inbox unavailable/truncated; explicit leases govern. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
+- Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12; renew as needed. Inbox unavailable/truncated. Preserve all QA; fresh preview server17975 logs to QA. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
 
 ## Preserved Earlier Checkpoints
 

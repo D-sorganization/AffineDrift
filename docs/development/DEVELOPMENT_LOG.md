@@ -30,7 +30,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-01 (73 focused pass;12 gates;653 titles;Ruff/Black831;96 MathJax expressions;full6372 pass/two root-hygiene failures;packaging artifacts preserved;18 follow-up and53 integrated checks pass;strict button9/10 plus two reruns pass with one navigation timeout retained)
 - **Summary:** Correct the excluded critique's error transport, pendulum units, algorithmic and empirical claims, contraction and hybrid-event arguments with lead-reviewed Flash support.
 - **Next step:** Verify protected CI and remote-main delivery of PR4748.
-
 ### DL-#4743 · Muscle Models and Coupled Power
 
 - **State:** in_review

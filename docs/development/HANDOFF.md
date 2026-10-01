@@ -21,7 +21,6 @@
 - Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12. Coordination inbox unavailable/truncated; explicit leases govern. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
 
 ## Preserved Earlier Checkpoints
-
 # Muscle Models — Regular PR #4745
 
 - Regular main-target PR: https://github.com/D-sorganization/AffineDrift/pull/4745. Pushed review/binding da493c5763121ff3a8b474395fca6ae6313ed09b; source d7be93d34322f2cbb73f8c933cf22991e604a2e5; evidence delivery46f71eda4eaf4965ffa12b5025544dce98f632b8. Current registration checkpoint SELF. Goal active.
