@@ -1,0 +1,452 @@
+{
+  "issue": 4753,
+  "epic": 4009,
+  "scope": "Full Chapter14 source and figure; pinned provider code and stored output inspected; no provider simulation rerun or human calibration.",
+  "source_sha256": {
+    "articles/proximal_distal_companion/chapters/ch14_arms_wrists_preload.qmd": "7c14557fe4dd8a2139f99eada418b3238df88df20cae6bcae61ba4d73631d52b",
+    "scripts/make_proximal_distal_companion_expanded_figures.py": "fa2150dd94fbce8dd003c1f52dcef5953eb194f4fc34965dff725d49353995eb",
+    "tests/test_preload_review.py": "606d42244c89cef5f6024d4ea5cc690baf911bcb2db2dadea97008621afbe9dd",
+    "articles/proximal-distal-companion.css": "b6889081b454142d32eee03f340b9554bdbb382a2ee10af2ab9ff054e6c8b892",
+    "data/illustrations/preload_transmission_study.npz": "140adf1baa5daaff42f9d7beee02e49e55d5041bc25a049bc99ec6933699b849",
+    "articles/figures/proximal_distal_companion/fig_companion_preload_role_reversal.svg": "918023b8c398db00027f2a012338d6dff8608fcbeec1a364c75852109f527025",
+    "articles/figures/proximal_distal_companion/fig_companion_preload_role_reversal.pdf": "a0b9da0efee6966b81e46fe442cff07ef1cd3f7f6d390bf55187c2b97eb54f8d",
+    "articles/proximal-distal-a-journey-through-the-swing.pdf": "558fb3087482adb18b8b31887969e8578b743a505c7a232ddfff08d56b0bb273"
+  },
+  "focused_tests": {
+    "passed": 11,
+    "new_cases": 6,
+    "red": "Figure regression failed before implementation: no transmitted history."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/preload-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "format": "Repository Ruff and Black835 pass. CI-scoped mypy passes94 source files. Broad scripts-directory invocation excluded all scripts by repository config; use actual CI scope.",
+  "titles": {
+    "checked": 654,
+    "passed": true
+  },
+  "browser": {
+    "schema_version": "affinedrift/public-site-verification/v1",
+    "base_url": "http://127.0.0.1:17975",
+    "manifest_page_count": 1,
+    "evidence_count": 4,
+    "expected_evidence_count": 4,
+    "passed": true,
+    "failure_count": 0,
+    "navigation_retry_policy": {
+      "max_retries": 0,
+      "maximum_attempts": 1,
+      "base_delay_ms": 500,
+      "backoff": "exponential",
+      "retryable_status_codes": [502, 503, 504]
+    },
+    "axe_policy": {
+      "mode": "fail",
+      "impacts": ["serious", "critical"],
+      "scanned_route_count": 1,
+      "routes_with_violations": [],
+      "violation_count": 0
+    },
+    "navigation_attempt_count": 4,
+    "retried_evidence_count": 0,
+    "transient_response_count": 0,
+    "exhausted_retry_count": 0,
+    "results": [
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 233.953125,
+            "top": 156.25,
+            "bottom": 368.75,
+            "width": 151.046875,
+            "height": 212.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 524721,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 233.953125,
+            "top": 156.25,
+            "bottom": 368.75,
+            "width": 151.046875,
+            "height": 212.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 524721,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 822.859375,
+            "top": 128,
+            "bottom": 218,
+            "width": 457.859375,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 524721,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": null,
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 822.859375,
+            "top": 128,
+            "bottom": 218,
+            "width": 457.859375,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 524721,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      }
+    ]
+  },
+  "math_layout": [
+    {
+      "width": 390,
+      "headings": 19,
+      "pageOverflow": 0,
+      "mathCount": 57,
+      "mathErrors": 0,
+      "displays": [
+        {
+          "width": 268.6875,
+          "scroll": 269,
+          "font": "17.78px"
+        },
+        {
+          "width": 268.6875,
+          "scroll": 269,
+          "font": "17.78px"
+        },
+        {
+          "width": 268.6875,
+          "scroll": 269,
+          "font": "17.78px"
+        },
+        {
+          "width": 268.6875,
+          "scroll": 269,
+          "font": "17.78px"
+        }
+      ],
+      "headingText": [
+        "14 Arms, Wrists, Preload, and the Meaning of Slack",
+        "14.1 A Concrete Picture",
+        "14.2 How the Mechanism Works",
+        "14.2.1 Two Extreme Stories",
+        "14.2.2 Replace \u201cSlack\u201d With Measured Variables",
+        "14.2.3 Continuous Preparation Matters",
+        "14.2.4 What the Zero-Dead-Zone Control Establishes",
+        "14.2.5 Compliance Can Be Useful",
+        "14.2.6 What Must Be Measured",
+        "14.2.7 Define Slack Operationally",
+        "14.2.8 Why Continuous Loading Might Help",
+        "14.2.9 Why Role Reversal Might Help",
+        "14.2.10 A Matched-Task Comparison",
+        "14.2.11 Predictions That Separate the Extremes",
+        "14.2.12 Safety and Coaching Boundary",
+        "14.2.13 What Would Count Against Preload",
+        "14.2.14 Reader Lab: Make the Opposite Case Strong",
+        "14.2.15 Interpreting a Null Result",
+        "14.3 Where the Picture Breaks"
+      ]
+    },
+    {
+      "width": 1440,
+      "headings": 19,
+      "pageOverflow": 0,
+      "mathCount": 57,
+      "mathErrors": 0,
+      "displays": [
+        {
+          "width": 605,
+          "scroll": 605,
+          "font": "18px"
+        },
+        {
+          "width": 605,
+          "scroll": 605,
+          "font": "18px"
+        },
+        {
+          "width": 605,
+          "scroll": 605,
+          "font": "18px"
+        },
+        {
+          "width": 605,
+          "scroll": 605,
+          "font": "18px"
+        }
+      ],
+      "headingText": [
+        "14 Arms, Wrists, Preload, and the Meaning of Slack",
+        "14.1 A Concrete Picture",
+        "14.2 How the Mechanism Works",
+        "14.2.1 Two Extreme Stories",
+        "14.2.2 Replace \u201cSlack\u201d With Measured Variables",
+        "14.2.3 Continuous Preparation Matters",
+        "14.2.4 What the Zero-Dead-Zone Control Establishes",
+        "14.2.5 Compliance Can Be Useful",
+        "14.2.6 What Must Be Measured",
+        "14.2.7 Define Slack Operationally",
+        "14.2.8 Why Continuous Loading Might Help",
+        "14.2.9 Why Role Reversal Might Help",
+        "14.2.10 A Matched-Task Comparison",
+        "14.2.11 Predictions That Separate the Extremes",
+        "14.2.12 Safety and Coaching Boundary",
+        "14.2.13 What Would Count Against Preload",
+        "14.2.14 Reader Lab: Make the Opposite Case Strong",
+        "14.2.15 Interpreting a Null Result",
+        "14.3 Where the Picture Breaks"
+      ]
+    }
+  ],
+  "pdf": {
+    "pages": 220,
+    "source_public_byte_parity": true,
+    "visually_inspected_pages": [88, 89, 90, 91, 92, 93, 94, 95, 96, 97],
+    "notes": "All Chapter14 pages and adjacent boundaries; figure legend moved off traces; mobile equations enlarged and stacked; command table replaced by readable list."
+  },
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --timeout=60 -q",
+    "exit_code": 0,
+    "passed_progress_symbols": 6395,
+    "skipped": 29,
+    "coverage_src_and_scripts": {
+      "statements": 28060,
+      "missed": 5949,
+      "percent": 78.8
+    },
+    "coverage_src_only": {
+      "statements": 13756,
+      "missed": 957,
+      "percent": 93.0
+    },
+    "notes": "Full configured default lane passed on stable final PDF; marker exclusions remain in repository config. Double-quiet output suppresses summary counts/duration; pass count derived from progress dots, not a fabricated summary. Three missing Streamlit skips,23 obsolete helper skips,one unavailable async helper,two missing generated legacy-path skips."
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": [
+      "source inventory",
+      "provider-code inventory",
+      "numerical-test draft",
+      "notation review",
+      "handoff checklist"
+    ],
+    "adjudication": "Lead rejects wrong-sign delay assertion, universal resultant-force claim, and sign/unit changes in accessible alt text. Retains model-output precision for reproducibility without physiological precision claim."
+  },
+  "delivery": {
+    "branch": "fix/preload-rigor-4753",
+    "source_checkpoint": "8ffffbc7ee749ecab165709b0f76ca092d0edf18",
+    "pr": 4755,
+    "predecessor_pr": 4752,
+    "predecessor_status": "Python/static/JS/website-lint pass; E2E pending at last check.",
+    "regular": true,
+    "attached": true,
+    "binding_checkpoint": "3691417a4fbaceb43d254c62998c437d1ffa763a",
+    "source_and_binding_pushed": true
+  },
+  "corpus": {
+    "pending": 125,
+    "completed_source": "articles/proximal_distal_companion/chapters/ch14_arms_wrists_preload.qmd",
+    "whole_book_consistency_pending": true
+  },
+  "integrated_tests": {
+    "passed": 63,
+    "scope": "Preload numeric checks, companion contract, complete claims, claim inventory/output boundary and book audit"
+  },
+  "finding_binding": {
+    "new_findings": 7,
+    "historical_findings_preserved": 48,
+    "verification_commit": "8ffffbc7ee749ecab165709b0f76ca092d0edf18",
+    "exact_git_blob_parity": true
+  },
+  "binding_tests": {
+    "passed": 36
+  }
+}

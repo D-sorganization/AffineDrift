@@ -18,9 +18,36 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4749 · Falsification Atlas Technical Review
+### DL-#4753 · Arm–Wrist Preload Technical Review
 
 - **State:** in_review
+- **Owner:** codex
+- **PR:** [#4755](https://github.com/D-sorganization/AffineDrift/pull/4755)
+- **Issue:** #4753 (epic #4009)
+- **Branch:** fix/preload-rigor-4753
+- **Paths:** articles/proximal_distal_companion/chapters/ch14_arms_wrists_preload.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_preload_review.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (full default suite PASS/29 skips/78.8% configured coverage/93.0% src;63 integrated;36 bound;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases)
+- **Summary:** Full chapter corrections distinguish moment/wrench, conditional dynamics, causal inference and human evidence; replace wrong command-only figure with archived transmission traces. Five Flash support jobs, lead-adjudicated.Seven findings bound to exact source8ffffbc7e;48 historical findings preserved;125 full-source audits plus whole-book consistency remain.
+- **Next step:** Source8ffffbc7e and binding3691417a4 pushed;regular PR4755 attached;36 binding checks pass. Full default regression passes. Registrationb00f94ad5 pushed;protected auto-merge enabled. Integrate main5b58cb68b after4741/4750 merged, validate documentation/ledgers, push and verify CI/main.
+
+
+### DL-#4751 · Shaft Memory Technical Review
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** [#4752](https://github.com/D-sorganization/AffineDrift/pull/4752)
+- **Issue:** #4751 (epic #4009)
+- **Branch:** fix/shaft-memory-rigor-4751
+- **Paths:** articles/proximal_distal_companion/chapters/ch15_shaft_memory.qmd, scripts/shaft_energy_illustration.py, tests/test_shaft_memory_review.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (63 integrated;12 gates;Ruff/Black834;final browser4/4 and axe;218-page PDF/parity;full6385 pass/4 concurrent-artifact failures, all affected reruns pass)
+- **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Seven findings bound to final source899f35bb0 after exact Git-blob parity checks;41 historical findings preserved;126 full-source audits remain.
+- **Next step:** Regular PR4752 open;36 bound checks plus63 final typography checks and4 final browser/axe cases pass. Source/binding pushed and protected auto-merge armed. Normal integration of main4c1ddafa5 resolves documentation/corpus conflicts after4748 merged; all36 integrated ledger/boundary checks pass; push integration and verify PR4752 CI/main. Goal remains active.
+
+### DL-#4749 · Falsification Atlas Technical Review
+
+- **State:** shipped
 - **Owner:** codex
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4750 (regular; main target)
 - **Issue:** #4749 (epic #4009)
@@ -29,11 +56,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (PR4750 open;seven findings bound;32 final binding checks pass;full6381 pass/one stale-registry failure/29 skips;unsupported release withdrawn;73 integrated checks pass;12 gates;653 titles;Ruff/Black832;four final browser/axe cases)
 - **Summary:** Distinguish source adjudication from editorial comparisons; correct force/wrench, coordinate-metric and support/compliance comparisons with five Flash support jobs and lead adjudication.
-- **Next step:** Push registration, arm protected auto-merge for4750, verify current-head CI/main and close superseded4741/4748 only after parity verification.
+- **Next step:** None for atlas source: PR4750 merged remote main 5b58cb68b619815214014ef4d7c9cd353d23ed87; exact source/generator/ledger/test parity verified.4741 and4748 also merged.
 
 ### DL-#4746 · Critics Corner Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4748 (regular; main target)
 - **Issue:** #4746 (epic #4009)
@@ -42,7 +69,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (73 focused pass;12 gates;653 titles;Ruff/Black831;96 MathJax expressions;full6372 pass/two root-hygiene failures;packaging artifacts preserved;18 follow-up and53 integrated checks pass;strict button9/10 plus two reruns pass with one navigation timeout retained)
 - **Summary:** Correct the excluded critique's error transport, pendulum units, algorithmic and empirical claims, contraction and hybrid-event arguments with lead-reviewed Flash support.
-- **Next step:** Verify protected CI and remote-main delivery of PR4748.
+- **Next step:** None for this source: PR4748 merged to remote main 4c1ddafa5a51c2be28361bc574618a9a146f99fa; exact source/tests/reports verified.
 
 ### DL-#4743 · Muscle Models and Coupled Power
 
