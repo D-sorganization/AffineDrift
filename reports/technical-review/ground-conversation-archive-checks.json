@@ -1,0 +1,55 @@
+{
+  "provider_commit": "a1a613999eb0c744da96caa040941955eb210a21",
+  "files_sha256": {
+    "docs/research/proximal_distal_energy_transfer/data/articulated_ground_atlas.json": "253d88d7d4842ff53333b6234e6cf1cc48f3879a9fc27dbe42f01bb6f8c38830",
+    "docs/research/proximal_distal_energy_transfer/data/articulated_ground_atlas.npz": "0e85e2d2afa0fbb3858b83ae17e52df1a94d9fa32a764a0b0296ff60b82a0312",
+    "docs/research/proximal_distal_energy_transfer/data/articulated_ground_posthoc_sensitivity.json": "615558176398b47c5ca3fac8d7ea8fdbf8ee6c14d016e88fb96a531be77817a6",
+    "docs/research/proximal_distal_energy_transfer/data/articulated_ground_diagnostic.json": "36a1dc2f49ee08693fed9d380455de99e2593cd02e23d4281b6d23851f23c10a",
+    "scripts/research/proximal_distal_energy/articulated_ground_atlas.py": "f426e07021b22b1cc0096e7731914b06cab0a58bfd08aa9d0fa0c32efd45f48a",
+    "scripts/research/proximal_distal_energy/articulated_ground_posthoc_sensitivity.py": "0bbd6dc84df534ee128eb6d62a091fc03f645db159fcd9bfa7ab6667f674dedf",
+    "scripts/research/proximal_distal_energy/articulated_ground_forward.py": "b9fc1c75980dccce93abfe1b1ce78144c6bcf59fe1e12dbe88a44edb78b66116",
+    "scripts/research/proximal_distal_energy/articulated_ground.py": "251f5f3845554257bbd63e53002284d43b0915ec5c70015d8147a0b5a50a66ac",
+    "scripts/research/proximal_distal_energy/articulated_distributed_grip.py": "8277410c523b941364f8451ca84d2d9dc384024630d0ad85e316a928ab712206",
+    "scripts/research/proximal_distal_energy/articulated_slack_contact.py": "79ad8644029ff8d447eae2e697a5ed7deceb173c000e5ef2b4f53be6c791ad69",
+    "docs/research/proximal_distal_energy_transfer/data/grf_drift/grf_drift_study.json": "6ff450a0b679db34235b11c34ec802168fd706342b597a1859509a27d8910b04"
+  },
+  "work_relative_formula": "abs(c-f)/max(1e-6,0.5*(abs(c)+abs(f)))",
+  "work_relative_range": [1.7230092995531614, 1.9988637651175676],
+  "raw_dissipation_ratio_range": [13.440918029187419, 3519.398873370441],
+  "floor_active_count": 0,
+  "primary_shape": [12, 4, 2, 2, 2, 4],
+  "axis_names": [
+    "state",
+    "pathway",
+    "signed_velocity_factor",
+    "step",
+    "engine",
+    "horizon"
+  ],
+  "primary_pathways": ["fixed", "translation", "free_moment", "coupled"],
+  "horizons_s": [0.004, 0.01, 0.025, 0.05],
+  "steps_s": [0.00025, 0.000125],
+  "engines": ["mujoco", "pinocchio"],
+  "scope": "Archived data recomputation only; no new simulation or physical validation.",
+  "recomputed": {
+    "primary_matches": 0,
+    "load_only_matches": 202,
+    "posthoc_matches": 60,
+    "posthoc_by_horizon": [48, 8, 4, 0],
+    "positive_posthoc": 20,
+    "negative_posthoc": 40,
+    "posthoc_speed_range": [-0.0007542090561893922, 0.013935696053175683],
+    "fine_50ms_speed_range": [0.027962524648224296, 0.17718693377488431],
+    "fine_50ms_positive": 48,
+    "all_primary_numerical": true,
+    "all_control_numerical": true,
+    "primary_initial_energy_range": 0.0,
+    "total_work_ranges_j": {
+      "fixed": [4.4589576253322166e-7, 0.0029032042753852206],
+      "coupled": [0.0015653512549276248, 1.8719588964087435]
+    }
+  },
+  "moment_boundary": "This archive uses distributed TENSION_ONLY central fibers. The force is magnitude times endpoint displacement direction; its equal-opposite pair moment vanishes. The noncentral vector-dashpot defect in UpstreamDrift#11195 is not imported into this pathway.",
+  "registration_boundary": "Pinned reachable git history introduces atlas code and results together in a1a613999e. No separately timestamped prospective registration verified; use declared primary criterion.",
+  "load_definition": "Maximum single-station force norm over the reported horizon (articulated_ground_atlas.py:_record_horizon); not summed hand force."
+}

@@ -27,9 +27,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/tangent-reading-rigor-4736`
 - **Paths:** `articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd`, `tests/test_tangent_series_links.py`, `reports/technical-review/tangent-reading-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (94 focused/184 content passes, four skips;653-source title check; final HTML render, four bounded browser cases/axe and math-layout checks pass; full6220 passes/29 skips/93.04% coverage plus two root-hygiene failures repaired by preserving untracked packaging outputs; six hygiene reruns pass; final source0b4 binding complete)
+- **Last verified:** 2026-10-01 (94 focused/184 content passes, four skips;653-source title check; final HTML render, four bounded browser cases/axe and math-layout checks pass; full6220 passes/29 skips/93.04% coverage plus two root-hygiene failures repaired by preserving untracked packaging outputs; six hygiene reruns pass; final source0b4 binding complete; main7eb87 integration155 focused/184 content passes and250 other route records preserved)
 - **Summary:** Correct all guide claims and navigation; connect sensitivity, finite-error propagation, feedback and impact timing to measurable golf/humanoid questions. Preserve primary scopes and independent counterexamples.
-- **Next step:** Push PR4738 metadata checkpoint, arm protected auto-merge and monitor exact-head CI; verify remote-main delivery before releasing #4736.
+- **Next step:** Validate and push ordinary main7eb87e3c9 integration; protected auto-merge is armed on PR4738. Monitor exact-head CI and verify remote-main delivery before releasing #4736.
+
 
 ### DL-#4688 · Dataset Explorer Deployment Route Audit
 
@@ -45,18 +46,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Current integration:** All 249 route and generated-report records/findings from `fd508f04` compare exactly with the integrated results; only `/models/dataset-explorer.html` (`ad-route-60ee227724f0`) is added. All 16 route evidence hashes match the integrated source. Canonical generation changes reviewed count 246→247 and route count 249→250; exempt 3 and deferred 0 are unchanged. Main SPEC, handoff and development-log history are preserved with this issue entry added.
 - **Next step:** Local integration is for root review; PR #4713 remains draft. Exact-candidate PR CI, a revision-bound full manifest/publication audit, and successful merged-main deployment are still required before closing #4688. The earlier `4b886599` render validates only that revision.
 
-### DL-#4725 · Annotated Reference Library
 
-- **State:** in_review
-- **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4729 (regular)
-- **Issue:** #4725 (epic #4009)
-- **Branch:** `fix/reference-library-rigor-4725`
-- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex`, `articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `reports/technical-review/reference-library-review.md`, `tests/test_reference_library_review.py`
-- **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (21 focused passes; 6178 full-suite passes/29 skips; 78.37% combined coverage and 92.95% src-only from same data; 183 post-full content passes/four skips; 78-page PDF and 20 final pages verified; Ruff/Black/titles/content gates pass; broad mypy has nine errors in unchanged production sources)
-- **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
-- **Next step:** Science checkpoint b694b319d committed; final evidence and local checks complete with explicit type-check limitation. Regular PR #4729 protected auto-merge armed; #4726 merged main 644bfd5be integrated. Verify combined checks, then protected remote-main delivery. Broader technical-review goal remains active.
 
 ### DL-#4602 · Content Inventory and Ownership Map
 
@@ -99,7 +89,46 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4733 · Shallow-Wide Latency and Synergy Arguments
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (merged)
+- **Issue:** #4733 (epic #4009)
+- **Branch:** `fix/shallow-wide-rigor-4733`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex`, `articles/The_Geometry_of_Motion/Volume_IV/main.pdf`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `books/human-motor-control.qmd`, `tests/test_shallow_wide_review.py`, `reports/technical-review/shallow-wide-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (remote main7eb87e3c94bc95c7c973e09b53ecc6eca94d758d exactly matches tested head5f54; CI36829619394 succeeded; issue lease/presence released at08:03UTC.)
+- **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
+- **Next step:** None for this source review; retain recorded scientific limits and validation provenance. Broader epic #4009 continues.
+
+### DL-#4730 · Ground-Reaction Boundaries and Matching Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (merged)
+- **Issue:** #4730 (epic #4009)
+- **Branch:** `fix/ground-conversation-rigor-4730`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch16_ground_conversation.qmd`, `scripts/make_proximal_distal_companion_expanded_figures.py`, `tests/test_ground_conversation_review.py`, `reports/technical-review/ground-conversation-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (remote main7eb87e3c94bc95c7c973e09b53ecc6eca94d758d exactly matches tested head5f54; CI36829619394 succeeded; issue lease/presence released at08:03UTC.)
+- **Summary:** Correct material contact power, internal/external wrench boundaries, ZVCF control convention and symmetric dissipation normalization; distinguish primary matching from total model contrasts and resolve post-hoc horizon counts.
+- **Next step:** None for this source review; retain recorded scientific limits and validation provenance. Broader epic #4009 continues.
+
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4725 · Annotated Reference Library
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4729 (regular)
+- **Issue:** #4725 (epic #4009)
+- **Branch:** `fix/reference-library-rigor-4725`
+- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex`, `articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `reports/technical-review/reference-library-review.md`, `tests/test_reference_library_review.py`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (21 focused passes; 6178 full-suite passes/29 skips; 78.37% combined coverage and 92.95% src-only from same data; 183 post-full content passes/four skips; 78-page PDF and 20 final pages verified; Ruff/Black/titles/content gates pass; broad mypy has nine errors in unchanged production sources)
+- **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
+- **Next step:** Merged protected remote main fd508f04cd48b80f8f248432cea4a033b9188a13 at 2026-10-01 03:37:56 UTC; fetched and verified. Final integrated local suite 6191 passed/29 skipped, 92.95% src coverage; subsequent content 183 passed/four skipped. Receipt carried in #4730 after merge; lease/presence released 03:44 UTC. Broader goal active.
 
 ### DL-#4724 · Plane-to-Space Mechanical and Evidence Boundaries
 
@@ -912,7 +941,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Branch:** `fix/putting-roll-rigor`
 - **Paths:** `articles/putting-roll-models.qmd`, `tests/test_putting_roll_rigor.py`, `data/trust/claim_audit_inventory.json`
 - **Started:** 2026-09-22
-- **Last verified:** 2026-09-22 (SELF; live publication verified; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
+- **Last verified:** 2026-09-22 (SELF; live publication verified; entire article rewritten; 15 independent mechanics/calibration/capture cases and 18 inventory checks pass; four production browser cases pass with zero serious/critical axe violations; all168 math expressions render in each case; all 28 desktop equations and four tables visually inspected; four expanded cases and every wide scroll endpoint pass)
 - **Summary:** Finds missing rotational inertia in slope acceleration, omitted first-order lateral resistance, spinless-only skid assumptions, incorrect V-groove geometry and a false universal capture limit. Primary Penner paper and official USGA sources inform corrections; preparation notes preserve access limits and derivations.
 - **Next step:** Publication verified at ded63640 via deployment35792227837 and live artifact10722988337;960/960 and all four putting cases pass. Preserve frozen evidence a17f5ded.
 
