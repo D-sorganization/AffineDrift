@@ -1,3 +1,15 @@
+# Speed, Energy, and Power Source Checkpoint — #4769
+
+- Goal active, epic4009/corpus4021. Owned AffineDrift-link-health checkout; branch fix/speed-energy-rigor-4769 from remote main55f21d8fb. Work in progress; no PR or full-audit credit yet.
+- Patent PR4768 merged as55f21d8fb874434d92823f9dade683897fe1c78b. All22 bound source/evidence Git blobs match; final-head CI Standard36913081005 and Compile Textbooks36913081019 pass. Issue4766 closed and lease/presence released. Receipt:reports/technical-review/patent-remote-main-receipt.json.
+- Chapter5 revision clarifies endpoint speed versus whole-body energy, physical versus coordinate partitions, relative actuator power versus segment moment power, shaft storage versus external work, net impulse/reference conditions and bounded counterfactual/evidence claims. Corrected figure normalization; only its generator function changes.
+- Seven supplied-text agy CLI gemini-3.8-flash-high jobs completed. Lead specifies and adjudicates mechanics. Six checks pass after two source-contract failures;29 affected checks pass. Sources/scopes and rejected suggestions recorded in speed-energy-review.md and preparation.json.
+- Final223-page PDF/HTML renders, all12 publication gates,4 browser profiles,6 equations at390/1440 and PDF31–37 with boundaries30/38 pass visual inspection. Ruff/Black839/mypy94/Jest546 pass.113 earlier evidence dependencies unchanged;three changed dependencies recorded. Full regression running; final finding binding remains. Prior79 route findings snapshotted; no new source credit. Corpus remains120 pending plus whole-book consistency.
+- Next: finish running regression; commit/push checkpoint and bind eight findings to exact Git blobs; regular PR and guarded merge.
+- Lease technical-review-20261001-speed-energy expires21:21UTC Oct1; presence21:23. Inbox incomplete/malformed; absence is not proof of no peers. Preserve peer23ee826 and QA. No drafts, direct-main/force/admin pushes or hook bypass; never edit tracked files during push hooks.
+
+## Preserved Earlier Checkpoints
+
 # Patent Catalog Final Source Checkpoint — #4766
 
 - Goal active under epic #4009 and corpus #4021. Owned AffineDrift-link-health worktree; branch fix/patent-catalog-rigor-4766. Final source checkpoint 38bb58ae552f4313d9eaa09c925f462494a3946b; source-bound receipt reports/technical-review/patent-catalog-final-validation.json. Regular PR #4768 is open: https://github.com/D-sorganization/AffineDrift/pull/4768. Source and binding bc38713b2 are pushed; normal commit/push hooks passed.

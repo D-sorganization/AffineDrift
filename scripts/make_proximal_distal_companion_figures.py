@@ -153,20 +153,18 @@ def make_state_map() -> tuple[Path, Path]:
 def make_speed_energy() -> tuple[Path, Path]:
     speed = np.linspace(0, 2, 200)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.3))
-    axes[0].plot(speed, speed, color=BLUE, lw=3, label="Speed")
-    axes[0].plot(speed, speed**2, color=ORANGE, lw=3, label="Kinetic Energy")
+    axes[0].plot(speed, speed, color=BLUE, lw=3, label=r"Speed $v/v_0$")
+    axes[0].plot(speed, speed**2, color=ORANGE, lw=3, label=r"Energy $K/K_0$")
     axes[0].set(
-        xlabel="Relative Speed", ylabel="Relative Amount", title="Energy Grows With Speed Squared"
+        xlabel=r"Speed Ratio $v/v_0$",
+        ylabel="Dimensionless Ratio",
+        title="Fixed Mass: $K_0 = m v_0^2/2$",
     )
     axes[0].legend(frameon=False)
-    masses = ["Light Segment", "Heavy Segment"]
+    masses = [r"Mass $m_0$", r"Mass $3m_0$"]
     axes[1].bar(masses, [1, 3], color=[GREEN, VIOLET])
-    axes[1].set(
-        ylabel="Relative Kinetic Energy at the Same Speed", title="Mass and Inertia Matter Too"
-    )
-    axes[1].text(
-        0.5, 2.55, "Same speed\nDifferent energy", ha="center", color=INK, fontweight="bold"
-    )
+    axes[1].set(ylabel=r"Energy Ratio $K/K_0$", title="Translation at the Same Speed")
+    axes[1].text(0, 2.35, "$K_0=m_0v^2/2$\nNo Rotation Included", ha="center", color=INK)
     fig.suptitle("A Speedometer Is Not an Energy Meter", fontsize=16, fontweight="bold", color=INK)
     fig.tight_layout()
     return _save(fig, "fig_companion_speed_is_not_energy")

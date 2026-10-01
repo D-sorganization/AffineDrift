@@ -2,240 +2,246 @@
 
 ## A Concrete Picture
 
-A car dashboard separates quantities that casual speech blends together. The
-speedometer says how fast the car is moving now. Pressing the accelerator changes
-speed, but the rate of change is acceleration, not speed itself. The fuel gauge
-tracks stored chemical energy, not motion. The engine's power rating describes
-how rapidly it can do work under stated conditions. A heavy truck and a bicycle
-can show the same speed while carrying very different kinetic energy.
+A car dashboard separates quantities that casual speech blends together.
+The speedometer reports how fast the car is moving now.
+Acceleration describes how its velocity changes, including a change of direction.
+The fuel gauge concerns stored chemical energy, whereas power describes a rate of energy conversion or transfer.
+A heavy truck and a bicycle can have the same speed and very different kinetic energies.
+These quantities answer different questions even when they rise together.
 
-Swing discussions often collapse these distinctions into “speed.” A pelvis can
-have a high angular speed but modest kinetic energy because its effective
-rotational inertia about a chosen axis differs from the club's. A club can have
-positive acceleration while receiving negative power if changing geometry
-redistributes kinetic energy among coordinates. A large instantaneous power peak
-can deliver little work if it lasts only a moment. Before following transfer, we
-need separate meters.
+The same distinction matters in a swing.
+Clubhead speed describes one point, while the club's kinetic energy includes motion throughout the club.
+Pelvis angular speed alone does not determine pelvis energy, and a slowing pelvis does not identify where energy went.
+A large power peak may deliver little work if it is brief or followed by negative power.
+Before interpreting a transfer, name the body or collection of bodies, the point whose motion is reported, the time interval, and the observer frame.
+In this chapter, velocities are measured in a declared inertial laboratory frame unless a relative velocity is explicitly named.
+Changing the direction of coordinate axes in that frame does not change energy; changing to a physically moving observer can.
 
-![Speed and Kinetic Energy Rise Differently, and Bodies at the Same Speed Can Carry Different Energy.](figures/proximal_distal_companion/fig_companion_speed_is_not_energy.svg){#fig-lay-speed-energy width=96% fig-alt="Two plots show kinetic energy growing with the square of speed and a heavier body carrying more energy than a lighter body at the same speed."}
+![Normalized Speed and Kinetic Energy, and the Effect of Mass at a Fixed Translational Speed.](figures/proximal_distal_companion/fig_companion_speed_is_not_energy.svg){#fig-lay-speed-energy width=96% fig-alt="For fixed mass, speed divided by a reference speed grows linearly while kinetic energy divided by its reference value grows quadratically. A second panel compares translating masses in a one-to-three ratio at the same speed."}
 
 ## How the Mechanism Works
 
-Velocity is motion with direction. Translational velocity is measured in metres
-per second; angular velocity in radians per second. The clubhead velocity is not
-simply the wrist angular velocity multiplied by club length because the wrist
-itself is moving and the arm-club geometry changes. In a linked chain, endpoint
-velocity is a geometric combination of all relevant joint rates.
+### The Point, the Body, and the System
 
-Acceleration is the rate of change of velocity. A body moving around a circle at
-constant speed is accelerating because direction changes. This distinction is
-critical near impact: large radial acceleration and tension can exist without a
-corresponding increase in speed. The force responsible for bending the path can
-be enormous while its instantaneous work is small.
+Velocity includes direction; speed is its magnitude.
+For a rigid club, the velocity of a head point H is
 
-Kinetic energy for a translating point mass is
+$$\mathbf v_H=\mathbf v_C+\boldsymbol\omega\times\mathbf r_{H/C},$$
 
-$$K=\tfrac12 m v^2.$$
+Here C is the club's center of mass, $\mathbf v_C$ its velocity, $\boldsymbol\omega$ the club's absolute angular velocity, and $\mathbf r_{H/C}$ the vector from C to H.
+Translation and rotation combine as vectors.
+A wrist rate multiplied by club length omits motion of the wrist and may also confuse a relative joint rate with the club's absolute angular velocity.
+A flexible club requires additional deformation velocities; one rigid-body formula cannot describe every material point exactly.
 
-For rotation about a fixed axis it is $K=\tfrac12 I\omega^2$. The square means a
-10% speed increase produces about a 21% kinetic-energy increase if mass and
-inertia remain fixed. In a multibody system, kinetic energy is more generally
+Acceleration is the time derivative of velocity.
+When speed is nonzero, its rate of change is
 
-$$K=\tfrac12\dot{\mathbf q}^{\mathsf T}\mathbf M(\mathbf q)\dot{\mathbf q},$$
+$$\frac{d|\mathbf v_H|}{dt}
+=\frac{\mathbf v_H\cdot\mathbf a_H}{|\mathbf v_H|}.$$
 
-so cross-terms capture shared motion and configuration-dependent inertia.
-Assigning one independent energy number to each angle can miss this coupling.
+A Cartesian acceleration component may change sign while speed rises; the tangential component in this equation determines the speed change.
+Normal acceleration bends the path and is present even at constant speed.
+For a particle moving around a fixed circle, an exactly radial force is perpendicular to velocity and has zero instantaneous power.
+A force directed along a club toward moving hands need not be perpendicular to the head's laboratory-frame velocity.
+Calling it radial does not establish zero work.
 
-Power is the time derivative of work or energy transfer. A $1{,}000$ watt input
-maintained for $0.05$ seconds delivers $50$ joules. A $5{,}000$ watt spike lasting
-$0.002$ seconds delivers only $10$ joules. Peak power attracts attention, but
-integrated work answers how much energy crossed the boundary during a phase.
+For a translating particle of mass $m$, $K=\tfrac12m|\mathbf v|^2$.
+For a rigid segment with arbitrary three-dimensional motion,
 
-Torque power is $P=\tau\omega$ in one dimension. Four sign combinations are
-possible. Positive torque with positive angular velocity supplies positive
-power. Negative torque with positive velocity removes energy. But negative torque
-with negative velocity again supplies positive power. “Negative torque” is a
-direction statement, not an energy verdict.
+$$K=\tfrac12m|\mathbf v_C|^2
++\tfrac12\boldsymbol\omega^{\mathsf T}\mathbf I_C\boldsymbol\omega.$$
 
-### Segment Speed Peaks Are Landmarks, Not Packages
+The inertia tensor $\mathbf I_C$ and angular velocity must be represented in the same axes.
+The familiar $\tfrac12I\omega^2$ is the fixed-axis specialization, with $I$ taken about that axis.
+For a translating club, adding a rotational term about the moving grip to a center-of-mass translational term is not generally this decomposition; the reference shift needs its accompanying cross-term.
+Using center-of-mass translation and center-of-mass rotational inertia avoids that particular double count.
 
-If pelvis, trunk, arm, and club angular-speed peaks occur in order, the sequence
-describes coordination. It can indicate that distal segments continue to
-accelerate after proximal segments begin slowing. Yet the energy route remains
-underdetermined. A proximal segment may slow because it does negative work,
-because interaction forces remove energy, because its effective inertia changes,
-or because energy is redistributed within the linked kinetic-energy expression.
+In generalized coordinates for a system with time-independent position maps,
 
-A clean analysis overlays segment energies, joint and interface powers, and
-external work. When the club gains energy, we ask which powers integrate to that
-gain. When a segment slows, we do not automatically label its lost kinetic
-energy as transferred until the boundary ledger supports that statement.
+$$K=\tfrac12\dot{\mathbf q}^{\mathsf T}\mathbf M(\mathbf q)\dot{\mathbf q}.$$
 
-### A Worked Comparison
+Here $\mathbf q$ contains the generalized coordinates, $\dot{\mathbf q}$ their rates, and $\mathbf M(\mathbf q)$ is the symmetric generalized mass matrix.
+Configuration-dependent cross-terms describe shared physical motion.
+They do not make the energy of a specified rigid segment arbitrary: its center-of-mass and rotational terms still define it in the chosen observer frame.
+What can be arbitrary is assigning each generalized coordinate its own independent energy share while distributing the cross-terms by convention.
+Prescribed moving supports add explicit time dependence unless their motion is included among the coordinates; then the simple quadratic expression needs additional terms.
+The moving-base chapter returns to that distinction.
 
-Consider two idealized clubheads of equal mass. Club A reaches $40$ m/s and Club
-B reaches $44$ m/s. The speed difference is 10%. Their translational kinetic
-energies differ by $(44/40)^2=1.21$, or 21%. That extra energy must be supplied,
-released from storage, or retained by reducing losses. A model that predicts a
-small speed increase should therefore pass a demanding work-energy check.
+### What a Speed Increase Costs
 
-Now compare a $0.20$ kg clubhead at $50$ m/s with a $70$ kg golfer center of
-mass moving at $1$ m/s. The simplified translational energies are $250$ J and
-$35$ J, respectively. The slower object can have less energy despite far more
-mass, while body segments also carry substantial rotational energy. Speed alone
-cannot rank their energetic importance.
+Compare equal-mass idealized clubheads moving at 40 and 44 m/s.
+The second is 10% faster and has 21% more **translational** kinetic energy because $(44/40)^2=1.21$.
+For a 0.20 kg point-mass representation, those energies are 160 and 193.6 J.
+The extra 33.6 J is a useful accounting requirement for that model, not a measurement of extra muscular work.
+It could reflect different external work, release of stored energy, lower dissipation, or different initial energy.
+A full club also has rotational and possibly elastic energy.
 
-### Acceleration Decomposition Is Not Energy Decomposition
+Likewise, a 0.20 kg head at 50 m/s has 250 J of translational energy, while a 70 kg golfer's center-of-mass translation at 1 m/s contributes 35 J.
+The latter calculation omits all motion relative to the golfer's center of mass.
+It therefore does not say that the golfer's entire kinetic energy is 35 J or that the club contains more energy than the body.
+Comparisons are useful only when their included motions are explicit.
 
-The equations can decompose acceleration into gravity, velocity-dependent,
-control, and constraint contributions at a fixed state. Those contributions add
-linearly at that instant. Their powers and accumulated works require velocities
-and time histories. A term that contributes positive club angular acceleration
-for one instant need not deliver positive net work across the impact window.
+A point can speed up while its extended body loses kinetic energy.
+As a manufactured example, take a uniform 2 m rod of mass 3 kg with center-of-mass planar inertia 1 kg m$^2$.
+At one instant let its center move at $(1,0)$ m/s with acceleration $(-3,0)$ m/s$^2$, its angular velocity be 2 rad/s, and its angular acceleration be 4 rad/s$^2$.
+For the endpoint 1 m below the center at that instant, rigid-body kinematics gives velocity $(3,0)$ m/s and acceleration $(1,4)$ m/s$^2$.
+Its speed increases at 1 m/s$^2$, but the rod's kinetic-energy rate is $3(1)(-3)+1(2)(4)=-1$ W.
+The center's translational energy falls faster than rotational energy rises.
+This is a consistent instantaneous mechanics example, not measured golf behavior.
+For a single particle, by contrast, increasing speed at fixed mass requires positive **net** power $m\mathbf v\cdot\mathbf a$.
+Changing coordinates cannot evade that identity.
 
-This is why the technical paper reports impulse, work, and power alongside
-acceleration. Impulse measures accumulated force over time; work weights force
-by displacement; power shows timing. Together they prevent a single attractive
-peak from standing in for the mechanism.
+### Power Needs a Named Interaction
 
-**Model Result:** Late wrist drive improves club speed in the declared double-
-pendulum schedules, while an early opposing command can improve one lower-tail
-speed metric in an uncertainty ensemble. Neither result is interpretable from
-torque sign alone; the power and trajectory histories determine the outcome.
+Power is work per unit time.
+A force acting at a material point supplies $P=\mathbf F\cdot\mathbf v$ using that point's velocity.
+For a rigid body, a resultant force and moment represented at C supply
 
-**Human Evidence:** Kinematic sequences and clubhead speed are measurable, but
-estimating energy and power requires segment inertias, joint definitions, forces,
-and filtering. Reported relationships vary across methods and populations
-[@tinmark2010; @mcphee2022].
+$$P=\mathbf F\cdot\mathbf v_C+\mathbf M_C\cdot\boldsymbol\omega.$$
 
-**Practical Interpretation:** Use four separate questions: How fast is it? How
-is its velocity changing? How much mechanical energy does the chosen system
-have? How rapidly is energy entering or leaving through each boundary?
+Moment and point velocity must be shifted together if another rigid-body reference is used.
+For several deforming contacts, retain their separate force–velocity and moment–angular-velocity pairings unless a common rigid motion has been justified.
+One interaction's positive power does not require positive net power after all other interactions are included.
+Nor does power at an external boundary always equal total mechanical-energy rate: internal elastic storage, dissipation and, for a biological system, chemical-to-mechanical conversion must be accounted for.
 
-### One Downswing, Four Different Graphs
+A constant 1,000 W input for 0.05 s supplies 50 J.
+A 5,000 W input for 0.002 s supplies 10 J.
+For a variable signal the work is its signed integral, $W=\int P\,dt$.
+Peak height alone supplies neither that integral nor its sign.
+Positive and negative portions can nearly cancel even when both peaks are large.
 
-A clubhead-speed graph tells us the magnitude of endpoint velocity, not which
-way the clubhead is moving or how that motion was produced. An acceleration
-graph can change sign while speed still rises because tangential and normal
-components play different roles. Even motion at constant speed requires inward
-acceleration when the path curves. Treating acceleration as merely “more speed
-per second” hides that geometry.
+### Joint Actuator Power and Segment Power
 
-An energy graph weights speed by inertia. For a rigid segment rotating about a
-fixed point, rotational kinetic energy is one half of inertia times angular
-speed squared. A linked club does not rotate about one fixed hinge; its center
-translates while the body rotates. A complete calculation includes translational
-and rotational terms and avoids double counting. Because speed is squared, a
-small late speed increase can require a larger energy increase than the same
-numerical speed increase early.
+Torque sign is a direction statement, not an energy verdict.
+In a planar model, a moment $\tau$ acting on a segment contributes $\tau\omega$ using that segment's absolute angular velocity in the declared frame.
+If $\tau$ is instead the actuator moment conjugate to a **relative** joint angle $q$, its actuator power is $\tau\dot q$ using relative angular velocity.
+These are different quantities.
+In three dimensions, Euler-angle rates are not generally angular-velocity components; their generalized moments must be transformed to preserve power.
 
-A power graph answers a different question. Positive power means energy is
-entering the selected system through the named port at that instant. Negative
-power means it is leaving. Large alternating positive and negative peaks can
-integrate to modest net work. Conversely, moderate positive power sustained
-over a long interval can contribute substantial work. The area under a power
-curve matters alongside its peak.
+For an ideal joint joining two bodies, an actuator applies equal and opposite moments.
+If the distal and proximal angular velocities are $\omega_d$ and $\omega_p$, their moment powers are $\tau\omega_d$ and $-\tau\omega_p$.
+Their sum is actuator power $\tau(\omega_d-\omega_p)$.
+For example, $\tau=2$ N m, $\omega_d=1$ rad/s and $\omega_p=3$ rad/s give moment-power contributions of +2 W on the distal body and -6 W on the proximal body.
+Of the 6 W removed from the proximal body through this moment channel, 2 W enters the distal body and 4 W is absorbed by the actuator.
+This example isolates the moment channel; any joint-force power must be included separately when finding the total power on either segment.
+This does not imply anything about muscle activation or metabolic cost.
+It shows why a joint-power label needs its velocity convention.
 
-### Torque Sign Is Not Power Sign
+For a negative moment acting along a declared swing-plane normal, the sign of its contribution also depends on angular velocity along that normal.
+Even when that moment channel removes energy from the club, hand forces or other channels can supply more energy than it removes.
+Do not add “wrist power” to already complete hand-wrench power if both represent the same transmitted moment.
+The final speed depends on the coupled trajectory, rather than the sign of one moment channel.
 
-Rotational power is the dot product of torque and angular velocity. In a planar
-coordinate it reduces to $P=\tau\dot q$. If both torque and angular velocity are
-positive, power is positive. If torque is negative while the coordinate still
-rotates positively, power is negative. If the coordinate reverses too, a
-negative torque can have positive power. A label such as “negative wrist torque”
-is incomplete until the coordinate and angular velocity are named.
+### A Worked Whole-Club Ledger
 
-The same caution applies to a two-hand couple. A negative swing-normal couple
-can remove rotational energy from the club locally while other hand-force
-components supply positive translational power, the shaft returns energy, and
-proximal coupling changes future geometry. The final speed outcome belongs to
-the integrated coupled trajectory, not the sign of one channel.
+Choose the **whole flexible club**, including its shaft, as the system.
+Write its mechanical storage as $E=K+V+U_s$, where $V$ includes gravitational potential and $U_s$ is shaft strain energy.
+Assume no internal actuator, no shaft damping, and no other omitted work channels for this illustration.
+Then
 
-### A Worked Comparison
+$$\Delta(K+V+U_s)=W_{\rm hands}+W_{\rm aero}.$$
 
-Imagine two late-downswing intervals lasting 0.05 seconds. In the first, hand
-power into the club averages 800 watts, so idealized work is 40 joules. In the
-second, power peaks at 1,500 watts but changes sign and averages only 300 watts,
-producing 15 joules. The larger peak did less net work. Now add a shaft returning
-8 joules during the second interval and an aerodynamic loss of 2 joules in each.
-The full club-energy changes become roughly 38 and 21 joules. These illustrative
-numbers show why relevant ports must be integrated consistently.
+Gravity is represented through $V$ and must not also be added as gravitational work on the right.
+Shaft release changes internal storage; it is not another external supply.
+Real calculations must add their actual losses and other interactions instead of inheriting these illustrative exclusions.
 
-Suppose the second strategy nonetheless ends with similar clubhead speed. It
-may have started with more stored kinetic or strain energy, changed club
-orientation to alter effective inertia, or traded another output such as face
-control. Equality of one terminal metric cannot identify the history. Time
-series and ledgers distinguish histories that a launch-monitor number collapses.
+Consider two intervals of 0.05 s.
+In the first, total hand-wrench power averages 800 W, supplying 40 J.
+In the second it peaks at 1,500 W but averages only 300 W, supplying 15 J.
+Let aerodynamic work be -2 J in each, and let shaft strain energy remain unchanged in the first interval but fall by 8 J in the second.
+The ledgers are:
 
-### Why Impulse Belongs Beside Work
+| Quantity | First Interval | Second Interval |
+|---|---:|---:|
+| Hand work | 40 J | 15 J |
+| Aerodynamic work | -2 J | -2 J |
+| Change in shaft strain energy | 0 J | -8 J |
+| Change in total club mechanical energy | 38 J | 13 J |
+| Change in club $K+V$ | 38 J | 21 J |
 
-Impulse integrates force over time and changes linear momentum. Angular impulse
-integrates moment and changes angular momentum. Work integrates force along
-motion and changes energy. A force nearly perpendicular to point velocity may
-deliver substantial impulse with little work, redirecting motion more than
-speeding it. A constraint force can therefore be dynamically important even
-when its direct power is zero.
+The second whole-club energy gain is **13 joules**, while its $K+V$ gain is 21 J because strain energy decreases.
+Adding the 8 J to the whole-club gain would count an internal conversion as new energy.
+If instead the system is just a rigid head, excluding the shaft, shaft-to-head interface work is external to that subsystem.
+To split the second interval consistently, add two illustrative assumptions: the shaft's own $K+V$ rises by 5 J, and all -2 J of aerodynamic work acts on the head.
+The shaft's mechanical-energy change is then $5-8=-3$ J, so 15 J entering from the hands and 18 J leaving through the head interface close its ledger.
+The head receives those 18 J and loses 2 J aerodynamically, gaining 16 J.
+The head's 16 J and shaft's -3 J sum to the whole club's 13 J gain.
+These assigned storage and drag partitions are not measurements: without them or corresponding observations, whole-club hand work alone does not determine head-interface work.
+Adding proximal hand work again to that head ledger would count a transmission path twice.
 
-This distinction is central to transfer. The body can arrange and redirect the
-club's momentum through linked geometry while muscular work enters elsewhere.
-Calling every beneficial interaction an “energy source” is wrong; calling a
-zero-work force irrelevant is also wrong. Reporting force, impulse, power, work,
-and acceleration contribution keeps both errors visible.
+Equal terminal head speeds therefore do not establish equal work histories or equal total club energy.
+The trials may begin with different storage, distribute energy differently among translation, rotation and shaft deformation, or produce different face and path outcomes.
+For a specified rigid club, mass and body-frame inertia do not change just because its orientation changes; changing orientation alters projections and the relation between endpoint speed and the rest of its motion.
 
-### A Reader's Diagnostic Checklist
+### Sequence, Acceleration, and Impulse
 
-Inspect units. Metres per second is speed; joules is energy; watts is power;
-newton-seconds is impulse. Check whether the quantity is signed or a magnitude,
-whether it is at a joint or endpoint, and whether it is normalized. Then look
-for the interval definition and numerical integral. If a conclusion about total
-work rests only on a power peak, or a conclusion about endpoint speed rests only
-on joint angular velocity, the argument is incomplete.
+An ordered sequence of pelvis, trunk, arm and club speed peaks describes coordination.
+It does not demonstrate that one energy package passed along those peaks.
+A lower angular speed does not alone prove lower segment energy: translation, axis direction and the inertia tensor still matter.
+Track the segment's actual energy change, the work through its boundaries, and any storage or conversion within the selected system [@robertson1980; @winter2009].
+Ideal joint reactions can transmit power between individual segments while their net power cancels for the combined system.
+Zero net work at that larger boundary does not make a force dynamically irrelevant.
+
+For a fixed collection of material bodies, net external force impulse equals the change in total linear momentum in an inertial frame.
+Net external angular impulse equals the angular-momentum change about a fixed point in that frame; moving-reference formulas require their appropriate transport terms.
+Work instead pairs forces with displacement and moments with angular motion.
+A perpendicular force may redirect momentum substantially while doing no instantaneous work.
+Momentum, energy and speed therefore need separate graphs.
+
+At a fixed state and fixed contact/constraint mode, suitable equations can split generalized acceleration into named force contributions.
+These are not automatically separate physical energy supplies.
+Power requires the appropriate force–velocity pairing, and coordinate velocity-bias terms must be interpreted together with the changing mass matrix.
+Comparing instantaneous contributions also differs from changing an input and following the resulting trajectory.
+The force/work and counterfactual chapters develop those distinctions.
+
+### What the Evidence Supports
+
+**Model Result:** In the pinned double-pendulum timing sweep, selected later-drive schedules produce more delivery speed than early drive or the passive baseline under the stated input bounds and event rules.
+A separate coupled uncertainty study reports higher held-out 10th-percentile delivery speed for early restraint than late drive, but worse mean planar face/path error.
+These are different model comparisons, not one universal optimum or a demonstration of human preactivation.
+The [timing results](proximal_distal_energy_transfer/index.html#sec-results-e1) and [uncertainty/control study](proximal_distal_energy_transfer/index.html#sec-uncertainty-control) specify the respective assumptions and outcomes.
+
+**Human and Methodological Evidence:** Tinmark and colleagues measured pelvis, upper-torso and hand kinematics in 45 skilled golfers, using full and partial shots; their reported peak sequence is kinematic evidence, not a direct measurement of the segment energy route [@tinmark2010].
+Robertson and Winter's segment-power study used a sagittal linked-body model and data from two walking participants; it supports an accounting methodology rather than a golf-specific transfer magnitude [@robertson1980].
+McPhee's narrative review is a map of golf models and measurement methods, not an additional intervention experiment [@mcphee2022].
+Keep those evidence roles distinct when reading a claim about how a golfer generated speed.
 
 ### Reader Lab: Diagnose a Misleading Result
 
-Suppose a report says one strategy is better because its clubhead-speed curve
-has a steeper late slope and its wrist-power peak is larger. Ask for the actual
-endpoint velocity vector, not only magnitude, and inspect whether both trials
-start the comparison window with equal energy. Integrate hand and wrist power,
-include shaft and aerodynamic terms, and compare residual closure. The larger
-peak might be shorter, partly canceled, or accompanied by a different initial
-state.
+Suppose a report favors one strategy because head speed rises more steeply late in the swing and wrist power has a larger peak.
+First identify the speed point, observer frame, joint-rate convention, system boundary and integration interval.
+Compare initial storage and integrate distinct work channels exactly once.
+For a whole-club ledger include strain-energy change inside storage; for a head-only ledger use shaft-to-head work at the boundary.
+Check the closure residual against the size of the proposed effect, with consistent event detection and numerical resolution.
 
-Next compare shot-relevant outcomes. Did face orientation, path, impact location,
-or variability change? Did the faster curve require greater peak hand force or
-joint load? A mechanical speed result can remain correct while the broader claim
-“better strategy” fails.
+Then compare the actual task outputs: face orientation, path, impact location, variability and modeled loads.
+A speed improvement may be real while “better strategy” remains unsupported.
+A large force with little mechanical work may still matter for tissue loading, and mechanical work is not metabolic effort.
 
-Finally, branch both simulations from an identical state and exchange only the
-control schedule. If the ranking persists under timestep refinement and
-parameter uncertainty, it is a robust model result. If it disappears, the
-original difference belonged to preparation or parameter choice. This simple
-lab shows why the four gauges—speed, acceleration, energy, and power—must be read
-together.
-
-### Language That Preserves the Distinction
-
-Use “the clubhead speed increased,” “the club mechanical energy changed,” “the
-hands supplied positive power,” and “the interface performed positive work” as
-separate sentences. State the system and interval. Avoid “power was stored,”
-because power is a rate, and avoid “speed was transferred,” because speed is not
-a conserved substance. Clear language is a scientific control: it makes a wrong
-inference harder to hide inside a familiar phrase.
+Finally, compare schedules from the same admissible state, including controller or actuator memory where the model has it.
+Hold parameter choices, event rules and other inputs fixed for that comparison.
+If the ranking survives timestep refinement and specified uncertainty tests, it has support within those tested conditions, rather than universal robustness.
+If it disappears, investigate numerical error, changed event selection, initial preparation, parameter choices or other altered conditions; disappearance alone does not identify which explanation is responsible.
+A simulation intervention does not by itself establish what a human can execute.
 
 ## Where the Picture Breaks
 
-The dashboard analogy suggests independent gauges. In a linked body, the gauges
-are coupled. Effective inertia changes with configuration, endpoint velocity
-combines several coordinates, and segmental energy partitions can depend on
-convention. Biological energy also includes metabolic and elastic processes not
-captured by a rigid mechanical ledger.
+The dashboard analogy separates the questions, but the swing couples their answers.
+Head velocity combines translation and rotation; joint power depends on relative motion; physical segment energies differ from arbitrary coordinate energy shares.
+Changing the system boundary moves an interaction between internal conversion and external transfer without creating or destroying energy.
+Those relationships are why apparently contradictory graphs can coexist.
 
-Clubhead kinetic energy immediately before impact is not identical to useful
-shot outcome. Impact location, face orientation, path, dynamic loft, shaft state,
-and ball properties matter. A strategy that raises speed while worsening face or
-contact variability may lose on the actual task.
+Biological systems also contain chemical energy, active muscle processes and losses that a rigid mechanical model does not resolve.
+An internally driven system can increase mechanical energy without positive external wrench work.
+Conversely, high muscular effort may coexist with little external mechanical work.
+Do not infer muscle action or a coaching prescription merely from a closed rigid-body ledger.
+
+Use “head speed increased,” “club mechanical energy increased,” and “the hands supplied positive work” as separate statements until the accounting connects them.
+Avoid “power was stored,” because power is a rate, and “speed was transferred,” because speed is not a conserved substance.
+A useful explanation lets readers follow the connection without substituting one quantity for another.
 
 **Go Deeper:** See the monograph's
-[mechanics and operational energy definitions](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch02_mechanics.qmd),
-the [phase-resolved results](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch07_results.qmd),
-and the foundational segment energetics literature [@robertson1980; @winter2009].
+[mechanics and operational energy definitions](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch02_mechanics.qmd),
+[phase-resolved results](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch07_results.qmd),
+and [coupled uncertainty study](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd).
+The manufactured examples here test mathematical consistency; they are not measurements of golfers.
