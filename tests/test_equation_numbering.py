@@ -1,11 +1,12 @@
-"""Tests verifying Quarto equation numbering and cross-references.
+"""Tests verifying Quarto equation numbering and cross-references (issue #4580).
 
 Ensures that:
 1. MathJax loader sets `tags: 'none'` to avoid conflict with Quarto numbering.
-2. No raw LaTeX equation labels (`\\label{eq:...}`) remain in `.qmd` sources.
+2. No content files contain raw LaTeX equation labels (`\\label{eq:...}`).
 3. No raw LaTeX `\\begin{equation}` or `\\begin{align}` environments remain in `.qmd` sources.
-4. Converted articles contain standard Quarto `{#eq-...}` labels.
-5. All `@eq-...` cross-references in `.qmd` files resolve to defined labels.
+4. Equation cross-references follow Quarto syntax (`@eq-...`) rather than raw LaTeX (`\\ref{eq:...}`, `\\eqref{eq:...}`).
+5. Target converted articles contain standard Quarto `{#eq-...}` labels.
+6. All `@eq-...` cross-references in `.qmd` files resolve to defined labels.
 """
 
 from __future__ import annotations
