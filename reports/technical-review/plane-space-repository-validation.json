@@ -1,0 +1,161 @@
+{
+  "issue": 4724,
+  "source_checkpoint": "494b6f8fb",
+  "evidence_checkpoint": "a814b94e0",
+  "audit_binding_commit": "eb9e2f8bc",
+  "base_main": "fb377e96dc33ee80b655284aef066f8acfb7caf1",
+  "status": "Final integrated local validation passed; regular PR #4726 open with protected auto-merge armed. CI and remote-main merge remain pending.",
+  "checks": {
+    "focused_and_legacy": {
+      "passed": 39,
+      "failed": 0
+    },
+    "ruff": "pass",
+    "black": {
+      "status": "pass",
+      "files_unchanged": 817,
+      "note": "Optional notebook dependencies absent; no notebook changes."
+    },
+    "mypy": {
+      "status": "pass",
+      "files": 93
+    },
+    "titles": {
+      "status": "pass",
+      "sources": 651
+    },
+    "spec_changelog": "pass",
+    "claim_audit_evidence": "pass",
+    "content_gates": [
+      {
+        "check": ["check_latex_environments.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_latex_environments.py.log"
+      },
+      {
+        "check": [
+          "check_terminology.py",
+          "--baseline",
+          "config/terminology-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_terminology.py.log"
+      },
+      {
+        "check": ["generate_worked_examples.py", "--check"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-generate_worked_examples.py.log"
+      },
+      {
+        "check": [
+          "check_tree_parity.py",
+          "--baseline",
+          "config/tree-parity-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_tree_parity.py.log"
+      },
+      {
+        "check": [
+          "check_latex_structure.py",
+          "--root",
+          "articles",
+          "--baseline",
+          "config/latex-structure-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_latex_structure.py.log"
+      },
+      {
+        "check": ["validate_frontmatter.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-validate_frontmatter.py.log"
+      },
+      {
+        "check": ["validate_accessibility.py", "--qmd-only"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-validate_accessibility.py.log"
+      },
+      {
+        "check": ["check_scaffolding_styling.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_scaffolding_styling.py.log"
+      },
+      {
+        "check": ["check_bibliography_quality.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_bibliography_quality.py.log"
+      },
+      {
+        "check": ["check_bibliography_cross_file.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_bibliography_cross_file.py.log"
+      },
+      {
+        "check": ["check_citation_resolution.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_citation_resolution.py.log"
+      },
+      {
+        "check": ["check_qmd_citation_keys.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/plane-space-gate-check_qmd_citation_keys.py.log"
+      }
+    ],
+    "full_suite": {
+      "passed": 6183,
+      "skipped": 29,
+      "deselected": 185,
+      "warnings": 51,
+      "seconds": 459.8,
+      "coverage_percent": 92.95
+    },
+    "post_full_content": {
+      "passed": 183,
+      "skipped": 4,
+      "deselected": 6210,
+      "seconds": 11.25,
+      "evidence_restoration_between_runs": false
+    },
+    "root_hygiene": "pass after preserving generated wheel artifacts in QA scratch",
+    "browser": {
+      "cases_passed": 4,
+      "axe_serious_critical": 0,
+      "display_equations": 3,
+      "chapter_math_nodes": 22,
+      "overflow": false
+    }
+  },
+  "delivery": {
+    "regular_pr": 4726,
+    "heavy_hit_dependency_pr": 4723,
+    "heavy_hit_state": "merged 2026-10-01 02:10:27 UTC at 2a7c094070c5ebd7d16c95c332d5526931cc5ba0; all checks green, remote ancestry verified, lease released",
+    "main_deploy_run": 36799898334,
+    "main_deploy": "failed: missing dataset-explorer audit route; separately owned #4688 / #4713, not changed here.",
+    "web_integration": "PR #4704 / fb377e96d integrated; final HTML re-rendered and verified; book source and PDF hashes unchanged."
+  },
+  "scope": "Complete companion Chapter20 only. Prior reviews and exact dependency changes retained in plane-space-prior-reviews.json and plane-space-dependency-carry-forward.json. No new human or engine experiment.",
+  "tested_revision": "eb9e2f8bcd6d591f9d33d123f1a16d80bdc60385",
+  "previous_runs": [
+    {
+      "scope": "Before final angular-momentum correction",
+      "passed": 6088,
+      "failed": 1,
+      "cause": "Review evidence incorrectly included deployment-output PDF; corrected to canonical articles PDF."
+    },
+    {
+      "scope": "Final science integrated with heavy-hit #4723, before web #4704",
+      "passed": 6099,
+      "skipped": 29,
+      "deselected": 181,
+      "coverage_percent": 92.95,
+      "seconds": 336.34,
+      "post_full_content_passed": 180,
+      "post_full_content_skipped": 4
+    },
+    {
+      "scope": "Content-gate command invocation after integration",
+      "cause": "Five scripts could not import repository packages without PYTHONPATH; rerun with repository path passed all twelve."
+    }
+  ]
+}

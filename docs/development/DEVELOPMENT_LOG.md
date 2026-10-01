@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4725 · Annotated Reference Library
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** pending (regular PR required)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4729 (regular)
 - **Issue:** #4725 (epic #4009)
 - **Branch:** `fix/reference-library-rigor-4725`
 - **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex`, `articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `reports/technical-review/reference-library-review.md`, `tests/test_reference_library_review.py`
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (21 focused passes; 6178 full-suite passes/29 skips; 78.37% combined coverage and 92.95% src-only from same data; 183 post-full content passes/four skips; 78-page PDF and 20 final pages verified; Ruff/Black/titles/content gates pass; broad mypy has nine errors in unchanged production sources)
 - **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
-- **Next step:** Science checkpoint b694b319d committed; final evidence and local checks complete with explicit type-check limitation. Integrate protected #4726 after merge and deliver a regular PR. Broader technical-review goal remains active.
+- **Next step:** Science checkpoint b694b319d committed; final evidence and local checks complete with explicit type-check limitation. Regular PR #4729 protected auto-merge armed; #4726 merged main 644bfd5be integrated. Verify combined checks, then protected remote-main delivery. Broader technical-review goal remains active.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -48,6 +48,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 Entries stay here for 90 days after merge, then move to the archive.
 
+### DL-#4724 · Plane-to-Space Mechanical and Evidence Boundaries
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4726 (regular)
+- **Issue:** #4724 (epic #4009)
+- **Branch:** `fix/plane-space-rigor-4724`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch20_plane_to_space.qmd`, `tests/test_plane_space_review.py`, `reports/technical-review/plane-space-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (39 focused/legacy/hygiene checks; four final browser cases, zero serious/critical axe findings; three equations and final PDF pages inspected)
+- **Summary:** Correct observer/reference power, contact constraints, rank/feasibility, archived populations and engine independence; derive and expose the shared vector-damper angular-momentum limitation. Preserve prior review scopes and immutable provider source; follow-up UpstreamDrift #11195.
+- **Next step:** Merged remote main 644bfd5bebb197ee03deb16877f189a0d772c403 at 2026-10-01 03:23:14 UTC, all protected checks green (36807137602). Fetched/ancestor verified; lease/presence released 03:24 UTC. Broader goal remains active.
+
 ### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
 
 - **State:** shipped
@@ -59,9 +72,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
 - **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
-- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Merged remote main 2a7c094070c5ebd7d16c95c332d5526931cc5ba0 at 2026-10-01 02:10:27 UTC; all protected checks green (36801091325). Merge fetched and ancestor verified; lease/presence released 02:13 UTC. Broader goal remains active.
-
-
+- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 merged at 2a7c094070c5ebd7d16c95c332d5526931cc5ba0 with all protected checks green (CI 36801091325). Remote-main ancestry verified; lease/presence released. Deployment separately blocked by #4688 / #4713.
 
 ### DL-#4717 · Radar Screw-Kinematics Appendix Review
 

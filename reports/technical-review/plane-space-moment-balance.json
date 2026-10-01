@@ -1,0 +1,31 @@
+{
+  "issue": 4724,
+  "provider_issue": "https://github.com/D-sorganization/UpstreamDrift/issues/11195",
+  "provider_commit": "a1a613999eb0c744da96caa040941955eb210a21",
+  "npz_sha256": "0abc856f275678d04009d1950e4779d7e98ef5d8c98398a8d6f1653d6a1fc61d",
+  "method": "Compute the sum over both interfaces of (club contact point minus hand position) cross club contact force. Forces are equal and opposite; endpoints differ. No engine execution.",
+  "derivation": "For d=h-p and F=k*d+c*dot(d), p cross F + h cross (-F) = -c*d cross dot(d). Net force zero and dissipative body-plus-storage power do not imply zero internal pair torque.",
+  "traces": {
+    "mujoco_baseline": {
+      "max_endpoint_gap_m": 0.011251685304278072,
+      "max_net_contact_pair_moment_nm": 0.0826086564194171,
+      "post_killswitch_max_net_contact_pair_moment_nm": 0.03219980748081049
+    },
+    "mujoco_killswitch": {
+      "max_endpoint_gap_m": 0.011251685304278072,
+      "max_net_contact_pair_moment_nm": 0.0826086564194171,
+      "post_killswitch_max_net_contact_pair_moment_nm": 0.033644019086295295
+    },
+    "pinocchio_baseline": {
+      "max_endpoint_gap_m": 0.011246648104294966,
+      "max_net_contact_pair_moment_nm": 0.08273899228765469,
+      "post_killswitch_max_net_contact_pair_moment_nm": 0.03253847731444623
+    },
+    "pinocchio_killswitch": {
+      "max_endpoint_gap_m": 0.011246648104294966,
+      "max_net_contact_pair_moment_nm": 0.08273899228765469,
+      "post_killswitch_max_net_contact_pair_moment_nm": 0.03364913321733224
+    }
+  },
+  "interpretation": "The force-only vector-damper record requires a declared reaction-moment pathway or revised constitutive model before an isolated internal-contact angular-momentum claim. Does not identify how much this term changes the archived projected club moment; that requires a new governed run. Does not invalidate the algebraic wrench/power identities."
+}
