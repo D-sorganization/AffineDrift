@@ -1,0 +1,647 @@
+{
+  "issue": 4751,
+  "epic": 4009,
+  "scope": "Full companion Chapter15 and figure; selected provider code and committed arrays, not simulation rerun or complete linked monograph re-review.",
+  "source_sha256": {
+    "articles/proximal_distal_companion/chapters/ch15_shaft_memory.qmd": "f5976323471eb7bdc0b41fc8a7e41e252bbd221f4d03b58e8998be6192229aff",
+    "scripts/shaft_energy_illustration.py": "3c950d7300d619612fabf21e73af7e0b34d7115b33dfb8ad4e64c3ecfebfa9c2",
+    "scripts/make_proximal_distal_companion_figures.py": "7e6bf1159c599475f4db174110f97a9282b27e5fdafcf7a047e06d7445e1a716",
+    "tests/test_shaft_memory_review.py": "17dc761d03db5377f8c0faf66d0c737160ea99df52b59f3bd745e47d5736de7f",
+    "articles/proximal-distal-companion.css": "f6e9fb3e6edf86aaa035e8c29d9066278827e25eb6b788b28745f5035c5ed94a",
+    "articles/figures/proximal_distal_companion/fig_companion_shaft_storage.svg": "cd71508e2ac2546901cdcdc7d9ff5cb6a5d6016890865e8d96d252399b43fdb9",
+    "articles/figures/proximal_distal_companion/fig_companion_shaft_storage.pdf": "7da62d7f8fd93168a4ba40926e08b713af768baab519c33f011821e4e7908f00",
+    "articles/proximal-distal-a-journey-through-the-swing.pdf": "c3fba98498d6b575a515d5095967e35a0913265f02d46f1614ce68a07a992f1e"
+  },
+  "focused_tests": {
+    "passed": 11,
+    "new_synthetic_cases": 6,
+    "red": "Prescribed-cycle test failed with missing helper before implementation."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/shaft-memory-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "structural_gate_followup": "Generated Quarto .tex was scanned as standalone source:71 false unresolved refs. Intermediate preserved outside articles; final structural check passes with unchanged baseline.",
+  "format": "Repository Ruff passes; Black834 unchanged, optional notebook formatter dependencies absent.",
+  "title_audit": {
+    "passed": true,
+    "sources": 654
+  },
+  "browser": {
+    "schema_version": "affinedrift/public-site-verification/v1",
+    "base_url": "http://127.0.0.1:17975",
+    "manifest_page_count": 1,
+    "evidence_count": 4,
+    "expected_evidence_count": 4,
+    "passed": true,
+    "failure_count": 0,
+    "navigation_retry_policy": {
+      "max_retries": 0,
+      "maximum_attempts": 1,
+      "base_delay_ms": 500,
+      "backoff": "exponential",
+      "retryable_status_codes": [502, 503, 504]
+    },
+    "axe_policy": {
+      "mode": "fail",
+      "impacts": ["serious", "critical"],
+      "scanned_route_count": 1,
+      "routes_with_violations": [],
+      "violation_count": 0
+    },
+    "navigation_attempt_count": 4,
+    "retried_evidence_count": 0,
+    "transient_response_count": 0,
+    "exhausted_retry_count": 0,
+    "results": [
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shaft-memory-public-shots\\articles__proximal-distal-a-journey-through-the-swing__mobile__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 233.953125,
+            "top": 156.25,
+            "bottom": 368.75,
+            "width": 151.046875,
+            "height": 212.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 519433,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shaft-memory-public-shots\\articles__proximal-distal-a-journey-through-the-swing__mobile__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 233.953125,
+            "top": 156.25,
+            "bottom": 368.75,
+            "width": 151.046875,
+            "height": 212.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 519433,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shaft-memory-public-shots\\articles__proximal-distal-a-journey-through-the-swing__desktop__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 822.859375,
+            "top": 128,
+            "bottom": 218,
+            "width": 457.859375,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 519433,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shaft-memory-public-shots\\articles__proximal-distal-a-journey-through-the-swing__desktop__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["How a Golf Swing Carries Energy"],
+          "primaryHeadingRect": {
+            "left": 365,
+            "right": 822.859375,
+            "top": 128,
+            "bottom": 218,
+            "width": 457.859375,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 519433,
+          "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      }
+    ]
+  },
+  "math_layout": [
+    {
+      "width": 390,
+      "headings": 21,
+      "pageOverflow": 0,
+      "mathCount": 45,
+      "mathErrors": 0,
+      "displays": [
+        {
+          "width": 268.6875,
+          "scroll": 269,
+          "font": "17.78px"
+        },
+        {
+          "width": 268.6875,
+          "scroll": 269,
+          "font": "17.78px"
+        }
+      ],
+      "headingText": [
+        "15 The Shaft Is a Spring With a Memory",
+        "15.1 A Concrete Picture",
+        "15.2 How the Mechanism Works",
+        "15.2.1 Timing, Not Free Speed",
+        "15.2.2 One Mode Versus a Distributed Shaft",
+        "15.2.3 Excitation Decides Required Complexity",
+        "15.2.4 Interface Power Connects Hand and Shaft",
+        "15.2.5 Impact Is a Severe Boundary",
+        "15.2.6 What the Shaft Adds to the State",
+        "15.2.7 Loading, Storage, and Return",
+        "15.2.8 A Simple Spring Thought Experiment",
+        "15.2.9 Interaction With the Negative-Couple Mechanism",
+        "15.2.10 Interaction With Preload and Slack",
+        "15.2.11 Model Validation Ladder",
+        "15.2.12 What a Shaft Result Can Support",
+        "15.2.13 Reader Lab: Watch Phase Change the Answer",
+        "15.2.14 Avoiding Double Explanations",
+        "15.2.15 A Minimum Flexible-Club Result",
+        "15.2.16 The Registered Test Says the Benefit Is Not Universal",
+        "15.2.17 Chapter Checkpoint",
+        "15.3 Where the Picture Breaks"
+      ]
+    },
+    {
+      "width": 1440,
+      "headings": 21,
+      "pageOverflow": 0,
+      "mathCount": 45,
+      "mathErrors": 0,
+      "displays": [
+        {
+          "width": 605,
+          "scroll": 605,
+          "font": "18px"
+        },
+        {
+          "width": 605,
+          "scroll": 605,
+          "font": "18px"
+        }
+      ],
+      "headingText": [
+        "15 The Shaft Is a Spring With a Memory",
+        "15.1 A Concrete Picture",
+        "15.2 How the Mechanism Works",
+        "15.2.1 Timing, Not Free Speed",
+        "15.2.2 One Mode Versus a Distributed Shaft",
+        "15.2.3 Excitation Decides Required Complexity",
+        "15.2.4 Interface Power Connects Hand and Shaft",
+        "15.2.5 Impact Is a Severe Boundary",
+        "15.2.6 What the Shaft Adds to the State",
+        "15.2.7 Loading, Storage, and Return",
+        "15.2.8 A Simple Spring Thought Experiment",
+        "15.2.9 Interaction With the Negative-Couple Mechanism",
+        "15.2.10 Interaction With Preload and Slack",
+        "15.2.11 Model Validation Ladder",
+        "15.2.12 What a Shaft Result Can Support",
+        "15.2.13 Reader Lab: Watch Phase Change the Answer",
+        "15.2.14 Avoiding Double Explanations",
+        "15.2.15 A Minimum Flexible-Club Result",
+        "15.2.16 The Registered Test Says the Benefit Is Not Universal",
+        "15.2.17 Chapter Checkpoint",
+        "15.3 Where the Picture Breaks"
+      ]
+    }
+  ],
+  "pdf": {
+    "pages": 218,
+    "source_and_public_equal": true,
+    "visually_reviewed": "All revised chapter pages95-102 and adjacent boundaries; final reflow pages101-103; standalone figure; browser mobile/desktop point-power and matching equations. Prior219-page intermediate retained in raster evidence; final removes reference-only orphan page."
+  },
+  "full_regression": {
+    "passed": 6385,
+    "failed": 4,
+    "skipped": 29,
+    "deselected": 186,
+    "duration_seconds": 790.59,
+    "coverage_src_and_scripts": {
+      "statements": 28057,
+      "missed": 6060,
+      "percent": 78.4
+    },
+    "coverage_src_only": {
+      "statements": 13756,
+      "missed": 957,
+      "percent": 93.0
+    },
+    "failures": [
+      "test_canonical_inventory_and_generated_reports_are_current: canonical PDF absent during render",
+      "test_review_evidence_survives_deployment_pruning: PDF digest mismatch",
+      "test_companion_pdf_has_a_stable_source_and_publication_path: source/public PDFs differed during regeneration",
+      "test_expanded_companion_pdf_is_at_least_as_long_as_the_technical_monograph: partially written PDF stream"
+    ],
+    "resolution": "Lead ran full suite concurrently with Quarto, which replaces/copies canonical PDF; those artifact reads were invalid. Finished rendering, verified exact source/public parity, refreshed audit digests, then all63 affected checks passed on stable files. Original failed full run retained; no full-green claim."
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": [
+      "source inventory",
+      "provider-code inventory",
+      "numerical-test draft",
+      "notation inventory",
+      "turnover checklist"
+    ],
+    "authority": "Supplied-text-only drafts; scientific and implementation decisions lead-adjudicated."
+  },
+  "corpus": {
+    "pending": 126,
+    "completed_source": "articles/proximal_distal_companion/chapters/ch15_shaft_memory.qmd",
+    "whole_book_consistency_pending": true
+  },
+  "delivery": {
+    "branch": "fix/shaft-memory-rigor-4751",
+    "pr": 4752,
+    "source_checkpoint": "f9cf1301ec24160888abf448dcf8e2eff8f23834",
+    "predecessor_pr": 4750,
+    "predecessor_status": "Protected auto-merge armed; Python,static,JS pass; E2E building at last observation.",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4752",
+    "registration_checkpoint": "899f35bb0bf8b624928dd63639ab226c13114985",
+    "status": "Regular PR4752 auto-merge armed; normal main integration in progress; protected delivery pending.",
+    "final_source_revision": "899f35bb0bf8b624928dd63639ab226c13114985",
+    "main_integration": {
+      "revision": "4c1ddafa5a51c2be28361bc574618a9a146f99fa",
+      "merged_pr": 4748,
+      "verified_paths": [
+        "articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd",
+        "tests/test_critics_corner_identities.py",
+        "reports/technical-review/critics-corner-review.md",
+        "reports/technical-review/critics-corner-validation.json"
+      ],
+      "conflicts": "Only handoff/log/corpus; later completed shaft row preserved and incoming lease/preview details retained.",
+      "checkpoint": "SELF",
+      "checks_passed": 36
+    }
+  },
+  "integrated_tests": {
+    "passed": 63,
+    "scope": "All six modules: shaft mechanics, companion publication, complete claim audit, claim inventory, deployment-boundary preservation and book audit."
+  },
+  "finding_binding": {
+    "new_findings": 7,
+    "historical_findings_preserved": 41,
+    "verification_commit": "899f35bb0bf8b624928dd63639ab226c13114985",
+    "exact_git_blob_parity_verified": true
+  },
+  "binding_checks": {
+    "passed": 36
+  },
+  "final_typography": "Five compound words joined across QMD line wraps. Final regenerated HTML/PDF,63 affected checks,4 browser/axe cases and changed-page visual inspection pass; all seven findings bind exact final source/evidence bytes at899f35bb0.",
+  "final_typography_checks": {
+    "passed": 63,
+    "browser": {
+      "schema_version": "affinedrift/public-site-verification/v1",
+      "base_url": "http://127.0.0.1:17975",
+      "manifest_page_count": 1,
+      "evidence_count": 4,
+      "expected_evidence_count": 4,
+      "passed": true,
+      "failure_count": 0,
+      "navigation_retry_policy": {
+        "max_retries": 0,
+        "maximum_attempts": 1,
+        "base_delay_ms": 500,
+        "backoff": "exponential",
+        "retryable_status_codes": [502, 503, 504]
+      },
+      "axe_policy": {
+        "mode": "fail",
+        "impacts": ["serious", "critical"],
+        "scanned_route_count": 1,
+        "routes_with_violations": [],
+        "violation_count": 0
+      },
+      "navigation_attempt_count": 4,
+      "retried_evidence_count": 0,
+      "transient_response_count": 0,
+      "exhausted_retry_count": 0,
+      "results": [
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "light",
+          "axe": true,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\shaft-memory-wrap-shots\\articles__proximal-distal-a-journey-through-the-swing__mobile__light.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 519428,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false,
+          "axe_violations": []
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\shaft-memory-wrap-shots\\articles__proximal-distal-a-journey-through-the-swing__mobile__dark.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 519428,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "light",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\shaft-memory-wrap-shots\\articles__proximal-distal-a-journey-through-the-swing__desktop__light.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 519428,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\shaft-memory-wrap-shots\\articles__proximal-distal-a-journey-through-the-swing__desktop__dark.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 519428,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        }
+      ]
+    },
+    "visual": "Final changed PDF pages97,99,101,102 inspected after compound-word joining; other inspected pages unchanged in content."
+  }
+}

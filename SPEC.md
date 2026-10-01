@@ -224,6 +224,9 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4755 | Correct arm–wrist task/wrench equivalence, preload dynamics and causal interpretation; publish archived transmission traces and scoped scientific evidence. |
+| 2026-10-01 | #4752 | Correct shaft-memory power/state accounting, model screens, matching counts and speed endpoint; replace illustrative curves with a closed energy ledger. |
+| 2026-10-01 | #4601 | Align Node.js versions across Dockerfile, CI workflows, and documentation via single-source .nvmrc pin (#4601). |
 | 2026-10-01 | #4754 | Run the unchanged blocking source link check after rendering and RSS generation so /feed.xml exists during deployment. |
 | 2026-10-01 | #4750 | Clarify atlas evidence and mechanical comparisons with synthetic checks; withhold an unsupported qualified release and preserve its prior record. |
 | 2026-10-01 | #4748 | Correct the internal tangent critique: transported residual bounds, pendulum scaling, algorithm/evidence scope, contraction metrics and hybrid event sensitivity; preserve publication exclusion. |
@@ -512,5 +515,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4713 | For governing issue #4688, add the reviewed `/models/dataset-explorer.html` route to the claim-audit inventory and cover it in the source-derived regression; preserve open finding #4695 and model/synthetic evidence boundaries. |
 | 2026-09-30 | #4556 | Configure Quarto's native theme.dark alongside theme.light and hide the resulting duplicate native color-scheme toggle in favor of the site's existing tested custom toggle. |
 | 2026-09-30 | #4559 | Add Home-page visual-regression coverage at 390/768/1440 px in light and dark themes (WEB-08.8), coordinated with the #4089 route/mask conventions; Start Here coverage is blocked on #4486/#4487. |
+| 2026-10-01 | #4598 | Remove legacy cruft files and directories (legacy-pages/, _includes/home-sidebar-content.html, js/pdf.js, listings.json, preview-articles.sh, start-preview.sh, duplicate .Jules/) and update root hygiene checks. |
 | 2026-10-01 | #4694 | Enforce scientific claim-audit coverage in PR CI e2e-tests when site-facing files are rendered, preventing un-audited routes from passing PR CI and breaking Deploy Website on main. |
-

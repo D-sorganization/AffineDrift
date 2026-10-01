@@ -24,8 +24,10 @@ FORBIDDEN_ROOT_ARTIFACTS = {
     "main.pdf",
     "notes_workspace_escape.png",
     "pr_body.txt",
+    "preview-articles.sh",
     "replace.patch",
     "ruff_errors.txt",
+    "start-preview.sh",
     "test.diff",
     "test_bibliography_perf.js",
     "test_notes.html",
@@ -34,9 +36,11 @@ FORBIDDEN_ROOT_ARTIFACTS = {
 }
 
 FORBIDDEN_ROOT_DIRECTORIES = {
+    ".Jules",
     ".agent",
     ".tmp_issue_bodies",
     "deploy",
+    "legacy-pages",
     "tmp_issue_bodies",
 }
 

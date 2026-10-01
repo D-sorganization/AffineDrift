@@ -28,6 +28,7 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         ".nojekyll",
         ".pre-commit-config.yaml",
         ".pre-commit-hooks.yaml",
+        ".nvmrc",
         ".prettierignore",
         ".python-version",
         ".quarto-version",
@@ -64,7 +65,6 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "package-lock.json",
         "package.json",
         "playwright.config.js",
-        "preview-articles.sh",
         "pyproject.toml",
         "requirements-benchmarks.txt",
         "requirements-docker.lock",
@@ -72,7 +72,6 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         "robots.txt",
         "service-worker.js",
         "start-gaai-daemon.sh",
-        "start-preview.sh",
         "stylelint.config.mjs",
         "styles.css",
     }
@@ -81,7 +80,6 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
 # Allowed tracked directories at the repository root
 ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
     {
-        ".Jules",
         ".benchmarks",
         ".claude",
         ".gaai",
@@ -105,7 +103,6 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "evidence",
         "fonts",
         "js",
-        "legacy-pages",
         "logo",
         "models",
         "notebooks",
@@ -144,8 +141,10 @@ FORBIDDEN_ROOT_FILES: frozenset[str] = frozenset(
         "main.pdf",
         "notes_workspace_escape.png",
         "pr_body.txt",
+        "preview-articles.sh",
         "replace.patch",
         "ruff_errors.txt",
+        "start-preview.sh",
         "test.diff",
         "test_bibliography_perf.js",
         "test_notes.html",
@@ -157,9 +156,11 @@ FORBIDDEN_ROOT_FILES: frozenset[str] = frozenset(
 # Forbidden directories that must never appear at repo root
 FORBIDDEN_ROOT_DIRECTORIES: frozenset[str] = frozenset(
     {
+        ".Jules",
         ".agent",
         ".tmp_issue_bodies",
         "deploy",
+        "legacy-pages",
         "tmp_issue_bodies",
     }
 )

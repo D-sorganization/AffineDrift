@@ -1,3 +1,14 @@
+# Preload PR Main Integration — #4755
+
+- Goal active. Branch fix/preload-rigor-4753 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Source8ffffbc7e, binding3691417a4 and registrationb00f94ad5 pushed;regular PR4755 attached with protected squash auto-merge enabled. Integration checkpoint SELF.
+- PR4741 and4750 have merged on remote main; fetched main 5b58cb68b619815214014ef4d7c9cd353d23ed87. Exact atlas source/generated source/schema/rendering/release-generator/numeric-test parity verified. Scientific changes already present here; normal merge resolves only three handoff/log conflicts. Incoming checkpoint copies preserved in QA; newer preload/shaft and prior reviewer history retained. PR4748 already merged. No superseded PR closure needed for4741/4750.
+- Chapter14 completed with seven exact-source-bound findings;all48 earlier companion findings retained (55 total). Corpus125 full-source audits plus whole-book consistency pending. Full default suite6395 passes/29 skips;78.8% configured coverage,93.0% src;63 affected and36 binding checks;12 content gates;Ruff/Black835;CI-scoped mypy94;220-page PDF/parity/changed-page inspection;4 browser/axe cases. This merge changes no scientific source or PDF; rerun integrated ledger/boundary checks.
+- Next: validate/commit/push integration and verify PR4755 current-head CI/main. Older4752 still contains shaft work already included in4755; its CI run36871841169 was live at last check. Preserve it until shaft source parity reaches main. Keep protected merge only;no drafts/force/direct-main/admin override.
+- Chapter3 is the next pending source, fully read; Flash inventory and lead adjudication in QA/state-snapshot-preparation.md. No new source edits/issue yet. Fix simultaneous-velocity reversal and same-pose mass-matrix claims; separate state/parameters, delay history, uniqueness, observation and interventions. Five Flash jobs supported completed Chapter14;one routine Chapter3 inventory completed.
+- Preload lease/presence technical-review-20261001-preload expires16:01UTC. Inbox incomplete. Preserve peer23ee826 in impact-review and all QA. Use command-scoped existing owner authentication while shared bot is expired, never print token or change global account.
+
+## Preserved Earlier Checkpoints
+
 # Main Deploy Feed Ordering — #4688
 
 - **Repository / Working Directory:** `D-sorganization/AffineDrift`; `C:/Users/diete/Repositories/Worktrees/affine-4688-main-feed-order-20261001`.
@@ -22,7 +33,7 @@
 - Goal active; regular main-target PR https://github.com/D-sorganization/AffineDrift/pull/4750 is open and attached. Branch fix/atlas-rigor-4749 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Reviewed source6dadc5, main integration/release repair8ebd0e5 and final bindinga3a861cab are pushed. Current registration checkpoint SELF.
 - Seven corrected findings bound to exact source/repair commits;127 full-source audits plus whole-book consistency remain. Six supplied-text agy Gemini3.8 Flash jobs handled inventories, test/checklist drafts and notation; lead adjudicated.
 - Validation:73 integrated checks,32 final binding checks and6 hygiene checks pass;12 publication gates,653-title audit,Ruff/Black832;four final browser/axe cases with37 math expressions/no errors or overflow. Full6381 pass/one repaired release-registry failure/29 skips remains failed; no full-green claim. Reports atlas-review.md and atlas-validation.json preserve evidence and prior records.
-- PR4745 and **#4741** merged on remote main (`cf0d1136`); muscle, Chapters9/10, and atlas CSS/critique work from open **#4748** are integrated in **#4750**. Close superseded **#4748** only after verified protected main delivery of **#4750**. Do not reopen topic4744 or modify separate peer23ee826.
+- PR4745 merged remote main a473831; muscle and Chapters9/10 source/PDF parity verified. Remaining published CSS correction and tangent critique from open4741/4748 are included in4750. Close superseded PRs only after verified protected main delivery. Do not reopen topic4744 or modify separate peer23ee826.
 - Next: push this registration, arm normal protected squash auto-merge for4750, inspect final current-head CI at natural checkpoints, fix actionable failures, then verify main and close superseded4741/4748. No draft/force/admin/direct-main; no deployment claim.
 - Active bot credential expired at12:52UTC. Use the already-authorized dieterolson credential only in command-local GH_TOKEN plus Git's command-local gh helper; do not print tokens or change shared active-account selection. Stable retry passed every push hook; first interrupted push's worktree-change detection is documented below.
 - Lease atlas14:11UTC; critics13:37,Chapter9 13:03,Chapter10 13:12. Muscle presence released. Inbox incomplete; preserve QA and prior records. Goal remains active.
@@ -86,7 +97,7 @@
 - Prior PR4741 d9c21:145 E2E pass/one copy-button size failure (rounded44x60). Flash triage is advisory; reproduce actual DOM/animation cause before changing anything, and retain44px threshold. Local observation failed because stale docs/index has no copy button; regenerate a fresh homepage in the owned impact-review checkout before reproducing. Browser/node observation process was interrupted; no repo edits from that probe.
 - Prior PR4745 at739e remains regular/main-target/auto-merge armed, Python/all8compile checks passed, E2E last building. Both prior PRs remain unmerged. Current branch includes both dependent science changes and must preserve them.
 - Next: commit/push this source checkpoint; open a regular PR when its checks are ready; isolate the Chapter9/10 touch-target failure and verify protected remote-main delivery. Update current turnover as statuses change. No draft, force, admin or direct-main.
-- Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12. Coordination inbox unavailable/truncated; explicit leases govern. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
+- Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12; renew as needed. Inbox unavailable/truncated. Preserve all QA; fresh preview server17975 logs to QA. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
 
 ## Preserved Earlier Checkpoints
 
