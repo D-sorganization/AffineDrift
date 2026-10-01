@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (63 integrated;12 gates;Ruff/Black834;final browser4/4 and axe;218-page PDF/parity;full6385 pass/4 concurrent-artifact failures, all affected reruns pass)
 - **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Seven findings bound to final source899f35bb0 after exact Git-blob parity checks;41 historical findings preserved;126 full-source audits remain.
-- **Next step:** Regular PR4752 open;36 bound checks plus63 final typography checks and4 final browser/axe cases pass. Push final source binding and verify protected CI/main delivery; goal remains active.
+- **Next step:** Regular PR4752 open;36 bound checks plus63 final typography checks and4 final browser/axe cases pass. Source/binding pushed and protected auto-merge armed. Normal integration of main4c1ddafa5 resolves documentation/corpus conflicts after4748 merged; all36 integrated ledger/boundary checks pass; push integration and verify PR4752 CI/main. Goal remains active.
 
 ### DL-#4749 · Falsification Atlas Technical Review
 
@@ -46,7 +46,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4746 · Critics Corner Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4748 (regular; main target)
 - **Issue:** #4746 (epic #4009)
@@ -55,7 +55,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (73 focused pass;12 gates;653 titles;Ruff/Black831;96 MathJax expressions;full6372 pass/two root-hygiene failures;packaging artifacts preserved;18 follow-up and53 integrated checks pass;strict button9/10 plus two reruns pass with one navigation timeout retained)
 - **Summary:** Correct the excluded critique's error transport, pendulum units, algorithmic and empirical claims, contraction and hybrid-event arguments with lead-reviewed Flash support.
-- **Next step:** Verify protected CI and remote-main delivery of PR4748.
+- **Next step:** None for this source: PR4748 merged to remote main 4c1ddafa5a51c2be28361bc574618a9a146f99fa; exact source/tests/reports verified.
 
 ### DL-#4743 · Muscle Models and Coupled Power
 

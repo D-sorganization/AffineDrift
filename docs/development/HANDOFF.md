@@ -1,3 +1,13 @@
+# Shaft PR Main Integration — #4752
+
+- Goal active; PR https://github.com/D-sorganization/AffineDrift/pull/4752 is regular and protected squash auto-merge is enabled. Remote source/binding c2dd323906c34a5400cf75549e5cb3a6993bf08c; current normal main-merge checkpoint SELF. Same owned branch/worktree;126 full-source audits plus whole-book consistency remain.
+- PR4748 is now merged to remote main 4c1ddafa5a51c2be28361bc574618a9a146f99fa. Exact critique source, numeric tests and both reports match main. This normal merge resolves only turnover/log/corpus conflicts: preserve newer atlas/shaft completion and muscle shipped status, and retain incoming preview-server/lease details. No scientific source conflict. Prior source and seven shaft findings remain bound to899f35bb0.
+- Final source63 affected tests,36 binding checks,12 publication gates,218-page PDF/visual parity and4 browser/axe cases passed before integration. All36 integrated ledger/boundary checks pass before commit/push. Original full6385 pass/4 concurrent-artifact failures is retained; all affected checks passed after rendering. Do not overlap future rendering and regression.
+- Next: validate/commit/push normal main integration, confirm PR4752 remains auto-armed and mergeable, follow its new CI run to remote-main parity. Prior4750 is now conflicting but its atlas/release work is included here; do not drop it. Close superseded4750/4741 only after their source delivery is verified.4748 is already merged, not a closure candidate. No draft/force/admin/direct-main/deployment claim.
+- Five agy Gemini3.8 Flash routine jobs were lead-adjudicated. Preserve all scientific receipts and prior41 companion findings. Lease4751 through15:00UTC; inbox incomplete; command-scoped existing owner credential. Preserve unrelated peer23ee826 in impact-review.
+
+## Preserved Earlier Checkpoints
+
 # Shaft Memory Regular PR — #4752
 
 - Goal active. Source f9cf1301ec24160888abf448dcf8e2eff8f23834 committed and pushed on fix/shaft-memory-rigor-4751 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Regular main-target PR https://github.com/D-sorganization/AffineDrift/pull/4752 is open and attached. Registration/final publication checkpoint 899f35bb0bf8b624928dd63639ab226c13114985; current final binding checkpoint SELF; protected delivery pending.
@@ -91,7 +101,7 @@
 - Prior PR4741 d9c21:145 E2E pass/one copy-button size failure (rounded44x60). Flash triage is advisory; reproduce actual DOM/animation cause before changing anything, and retain44px threshold. Local observation failed because stale docs/index has no copy button; regenerate a fresh homepage in the owned impact-review checkout before reproducing. Browser/node observation process was interrupted; no repo edits from that probe.
 - Prior PR4745 at739e remains regular/main-target/auto-merge armed, Python/all8compile checks passed, E2E last building. Both prior PRs remain unmerged. Current branch includes both dependent science changes and must preserve them.
 - Next: commit/push this source checkpoint; open a regular PR when its checks are ready; isolate the Chapter9/10 touch-target failure and verify protected remote-main delivery. Update current turnover as statuses change. No draft, force, admin or direct-main.
-- Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12. Coordination inbox unavailable/truncated; explicit leases govern. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
+- Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12; renew as needed. Inbox unavailable/truncated. Preserve all QA; fresh preview server17975 logs to QA. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
 
 ## Preserved Earlier Checkpoints
 
