@@ -98,19 +98,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
 - **Next step:** Push SELF and check protected CI for combined PR #4734.
 
-### DL-#4688 · Dataset Explorer Deployment Route Audit
+### DL-#4688 · Dataset Explorer Route Audit and Main Feed Ordering
 
 - **State:** in_review
 - **Owner:** codex-luna-affine4688-handoff-20260930-2335
-- **PR:** #4713 (draft); remote head `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`, base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6` at latest scoped check.
-- **Issue:** #4688 (red main deployment route coverage)
-- **Branch:** `fix/luna-deploy-route-4688`; integrating current main `fd508f04cd48b80f8f248432cea4a033b9188a13` by ordinary merge.
-- **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`, `tests/test_evidence_presentation.py`, `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`.
+- **PR:** #4713 merged 2026-10-01T06:04:26Z at `03ea44ea70639f7314a773b668bef0eaa02c0cd1`; standalone feed-order PR not created.
+- **Issue:** #4688 (main deployment coverage and feed ordering; remains open pending successful deployment of the feed-order repair)
+- **Branch:** `fix/issue-4688-main-feed-order-20261001` (feed-order repair; prior route-audit branch `fix/luna-deploy-route-4688` is historical).
+- **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`, `tests/test_evidence_presentation.py`, `.github/workflows/deploy-website.yml`, `tests/test_generate_feed.py`, `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`.
 - **Started:** 2026-09-30
-- **Last verified:** 2026-10-01 (current-main integration: 46 focused audit/review tests passed; pinned content-lint 183 passed/5 skipped/6,211 deselected; canonical evidence, inventory/publication, and SPEC checks passed. No full-suite result is claimed for this integrated tree; the 6,162-pass suite applies only to prior tree `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`).
-- **Summary:** Add the reviewed record for the already-public dataset-explorer route and source-derived regression. Schema checks establish JSON structure only; population inputs are manufactured synthetic and ZTCF/proximal-distal evidence remains model-level/educational. No human/population validation is claimed; #4695 remains open. #4694 workflow-gate work is separate.
-- **Current integration:** All 249 route and generated-report records/findings from `fd508f04` compare exactly with the integrated results; only `/models/dataset-explorer.html` (`ad-route-60ee227724f0`) is added. All 16 route evidence hashes match the integrated source. Canonical generation changes reviewed count 246→247 and route count 249→250; exempt 3 and deferred 0 are unchanged. Main SPEC, handoff and development-log history are preserved with this issue entry added.
-- **Next step:** Local integration is for root review; PR #4713 remains draft. Exact-candidate PR CI, a revision-bound full manifest/publication audit, and successful merged-main deployment are still required before closing #4688. The earlier `4b886599` render validates only that revision.
+- **Last verified:** 2026-10-01 (feed-order behavior remains source-bound to `50f8279cd566733982249da97b53160a1224a933`; after pinned #4748 integration, 3 workflow tests, 17 deployment-integrity tests/1 existing skip, and all 6 Critics Corner identity tests pass. Claim-audit check, SPEC, 653-title, CSS budget/architecture, Ruff/Black hooks pass. Frontend mirror `--check` exits 1 because render-generated `docs/js/` mirrors are absent; no full render was run. HISTORICAL route-audit results remain revision-specific: earlier 46 focused and 183 content-lint tests, 6,162-pass suite at `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`, and render at `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`.)
+- **Summary:** PR #4713 added the reviewed record for the already-public dataset-explorer route and source-derived regression; it merged at `03ea44e`. Separately, repair main deploy ordering while preserving render → sitemap → feed, then run the unchanged blocking source link check. HISTORICAL route-audit evidence is limited to its reviewed source/revisions; population inputs were manufactured synthetic and ZTCF/proximal-distal evidence remained model-level/educational. Finding #4695 was closed via merged PR #4728. #4694 workflow-gate work is separate.
+- **Current integration:** Feed-order repair is based on `a473831731989fce80f110bcc34745affe9ad837`; the branch also integrates pinned main commit `4c1ddafa5a51c2be28361bc574618a9a146f99fa` (#4748). Accepted workflow/test diff remains commit `50f8279cd566733982249da97b53160a1224a933` (tree `efe4c26a3c16d1a3ade3f52dad3c22527fdd2a86`), byte-identical after integration. All 14 incoming paths are retained and incoming non-history blobs match the pinned commit; the three authorized history files preserve both records. HISTORICAL route-audit checkpoints and their associated tests/render do not evidence feed-order behavior.
+- **Next step:** Root reviews the local integration report before deciding whether to publish the standalone feed-order PR; issue #4688 remains open pending successful main deployment. PR #4713 is already merged and is not awaiting monitoring.
 
 
 ### DL-#4730 · Ground-Reaction Boundaries and Matching Evidence

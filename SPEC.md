@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4754 | Run the unchanged blocking source link check after rendering and RSS generation so /feed.xml exists during deployment. |
 | 2026-10-01 | #4750 | Clarify atlas evidence and mechanical comparisons with synthetic checks; withhold an unsupported qualified release and preserve its prior record. |
 | 2026-10-01 | #4748 | Correct the internal tangent critique: transported residual bounds, pendulum scaling, algorithm/evidence scope, contraction metrics and hybrid event sensitivity; preserve publication exclusion. |
 | 2026-10-01 | #4745 | Correct Volume III muscle constitutive curves, parameter attribution, equilibrium domains, tendon and joint power, activation timing and stiffness; add executable mathematical checks. |
