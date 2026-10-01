@@ -224,7 +224,12 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4720 | Reconcile heavy-hit coupling and moving-support impedance, boundary work, acoustic evidence limits, and proposed experiments. |
+| 2026-09-30 | #4717 | Reconcile radar screw-kinematics observability, frame conventions, waveform budgets, and evidence limits in the launch-monitor appendix. |
+| 2026-09-30 | #4714 | Bound impact energy optimality, inertia equivalence, solver evidence and golfer inference; reconcile linked summaries with preserved review history. |
 | 2026-09-30 | #4712 | Reconcile companion two-hand wrench geometry, identifiability, power and archived contact/sensor evidence; correct mutable instrumented-grip citations while preserving immutable source scope. |
+| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
+| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
 | 2026-09-30 | #4716 | Classify Quarto JavaScript action URLs outside filesystem link checks while retaining missing-file failures. |
 | 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
 | 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
@@ -447,10 +452,18 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-09-28 | #4483 | Sanitation pass: delete verified-merged stale branch drive/e-content-fixes and record findings in a sanitation report. |
 | 2026-09-28 | #4484 | Night Watch pass: flip two stale in_review development-log entries (DL-#3903, DL-#3904) to shipped after confirming their PRs merged to main. |
+| 2026-09-29 | #4557 | Constrain prose to a 60-75ch reading measure on standard article/book pages and self-host the Playfair Display heading font, removing the Google Fonts CDN request and its CSP allowances. |
+| 2026-09-29 | #4520 | Add `scripts/generate_freshness_report.py`, generating an internal report of pages whose `last-reviewed` front matter is missing or 12+ months old without ever using a build date as a review date. |
+
+
 | 2026-09-29 | #4542 | Fix the Programming Companion catalog generator reading a nonexistent `title` field (real field `name`) that made every program and engine row render its ID as its title; drop the Engines page's fabricated Maturity column; label the 16 unpinned repository UpstreamDrift links as navigation only. |
+| 2026-09-29 | #4581 | Consolidate duplicate display-math overflow rules from custom.scss and two conflicting blocks in styles.css into one canonical rule set, preserving the previously-effective computed values. |
+| 2026-09-29 | #4566 | Move the skip-to-content link into static HTML via a new include-before-body partial so it works without JavaScript and is never duplicated; the JS enhancer now only manages focus on the existing link. |
+| 2026-09-29 | #4585 | Force the full-site E2E render lane on a `.quarto-version` bump so the existing single-MathJax-runtime assertion runs against upgraded Quarto output; document the `html-math-method`/`mathjax-loader.html` split in `docs/MATHJAX-MOBILE.md`. |
 | 2026-09-29 | #4549 | Rebuild the Datasets resource page as a generated catalogue from `data/datasets.yml` with verified licence/access/schema/checksum fields for third-party datasets and an "AffineDrift Data Artefacts" section for `data/ztcf`, `data/research_protocols`, and `schemas`, dropping the `mini.s-shot.ru` thumbnail host. |
 | 2026-09-29 | #4600 | Remove the stale content-hash cache-busting TODO in service-worker.js and re-enable the excluded offline E2E test with a deterministic service-worker-ready wait. |
 | 2026-09-29 | #4651 | Add deterministic, publication-grade SVG figures and accessible descriptions to core theory pages (DCR, ZTCF, Superposition) (#4536). |
+| 2026-09-29 | #4511 | Adopt the `.callout-example` worked-example convention and add eight src/-backed worked examples across the theory parts, DCR, ZTCF, and superposition pages. |
 | 2026-09-30 | #4578 | Generate per-book/series Open Graph social cards at build time instead of one site-wide card. |
 | 2026-09-30 | #4567 | Wire `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate`, add a long-description check for complex SVG diagrams (E8/E9), and baseline pre-existing figures. |
 | 2026-09-30 | #4595 | Cache the PR E2E Quarto render (`docs/` + `.quarto/`) on an exact source-hash match, skipping the render only when nothing render-relevant changed; deploy keeps its clean full render. |
@@ -477,5 +490,9 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-29 | #4523 | Add a generated evidence/claims.qmd Claim Ledger page (one accessible card per claim: plain/formal statement, evidence rung, falsifiers, related critiques, pages making the claim) and link every claim-making page back to it. |
 | 2026-09-29 | #4551 | Render PARAMETERS.md and add a one-page notation quick-reference card; remove pages/notation.qmd's duplicate heading and manual table of contents. |
 | 2026-09-30 | #4607 | Add reader-facing Contributor and Reviewer Guide (`pages/contributor-guide.qmd`) covering corrections, critiques, dataset contributions, and chapter review; link it from Collaborate. |
+| 2026-09-29 | #4519 | Park [WEB-04.5] maturity badges for the Article Index and Books Hub as blocked: its dependency WEB-02.7 (#4501) and the maturity vocabulary (WEB-04.1 #4515) are still open; WEB-04.2 (#4516) has since merged. |
+| 2026-09-29 | #4513 | Record blocker: layered-page-template rollout deferred pending WEB-03.1/03.4 (#4506/#4509); WEB-03.5 (#4510) has since merged. |
 | 2026-09-30 | #4705 | Regenerate stale evidence-presentation and research-release trust artifacts, make generator `--check` ignore `generated_on`, and add a committed-artifact freshness test. |
+| 2026-09-30 | #4700 | Regenerate `requirements-docker.lock` as a universal uv lock with platform markers (Windows-only `pywinpty` no longer breaks the Linux Docker install) and guard it against `requirements.txt` drift. |
+| 2026-09-30 | #4703 | Restore DEVELOPMENT_LOG.md entries and HANDOFF.md sections spliced by line-hunk union merges to each PR's own contiguous block (structural only) and add a pytest guarding against stacked or duplicated headings. |
 | 2026-09-30 | #4713 | For governing issue #4688, add the reviewed `/models/dataset-explorer.html` route to the claim-audit inventory and cover it in the source-derived regression; preserve open finding #4695 and model/synthetic evidence boundaries. |

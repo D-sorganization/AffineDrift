@@ -7,7 +7,9 @@ network calls for unit-marked tests. See FLEET_TESTING_STANDARDS.md §5.
 from __future__ import annotations
 
 import os
+import shutil
 import socket
+from pathlib import Path
 
 # C-extension thread safety. Many "xdist worker crashed" failures come from
 # MKL/OpenBLAS forking under xdist. Pin to single-threaded for tests.
@@ -49,6 +51,25 @@ from src.core.contracts import (  # noqa: E402 -- reason: thread-safety env vars
 # three as private, so an SSRF guard that rejects private addresses would
 # reject the stub too and the tests would fail exactly as they do offline.
 PUBLIC_STUB_IP = "93.184.216.34"
+
+
+@pytest.fixture
+def trust_generation_root(tmp_path: Path) -> Path:
+    """Copy real generator inputs while keeping output writes out of the checkout."""
+    source_root = Path(__file__).resolve().parent.parent
+    for relative in (
+        "data/trust/claim_registry.json",
+        "data/research_protocols/public_summary.json",
+        "tests/fixtures/companion/manifest_v1_0_0_authoritative.json",
+        "data/trust/proximal_distal_falsification_atlas.json",
+        "schemas/evidence-presentation-v1.schema.json",
+        "schemas/reader-comprehension-study-v1.schema.json",
+        "schemas/research-artifact-release-v1.schema.json",
+    ):
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source_root / relative, target)
+    return tmp_path
 
 
 @pytest.fixture
@@ -131,3 +152,21 @@ def _no_real_network_in_unit_lane(
                     monkeypatch.setattr(mod, attr, _refuse, raising=False)
         except ImportError:
             pass
+
+
+def pytest_collection_finish(session: pytest.Session) -> None:
+    """Pre-warm Hypothesis's local-constants scan once per (xdist) process.
+
+    Hypothesis scans every imported local module for literals on the first
+    draw and bills that scan to the draw's timing. On Windows the scan is
+    slow (its site-packages fast path only matches ``/`` separators), so the
+    first ``@given`` test in each worker failed ``HealthCheck.too_slow``
+    intermittently. Paying the cost here, after collection has imported the
+    test modules, keeps the health check meaningful for the tests themselves.
+    See tests/test_hypothesis_warmup.py.
+    """
+    try:
+        from hypothesis.internal.conjecture.providers import _get_local_constants
+    except ImportError:  # Hypothesis absent, or a version without the scan.
+        return
+    _get_local_constants()

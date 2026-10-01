@@ -1,0 +1,201 @@
+{
+  "issue": 4720,
+  "reviewed_on": "2026-10-01",
+  "source_revision": "3f9c6882b0196838271dc8a1ae9fd2843540e723",
+  "scope": "Complete heavy-hit article and both included sections; no provider implementation or new physical validation.",
+  "source_sha256": {
+    "articles/technology-heavy-hit-impact-coupling.qmd": "596ee134dea9de69ebd7e3ca30a6f066e2517e460b4aa57dd99b8b9908f4c863",
+    "articles/_includes/impact-acoustics.qmd": "7110093acb2ef24ea5b1d7f87adb6b98875470e23c6cc3b6dfb6cb15208822bf",
+    "articles/_includes/impact-research-program.qmd": "af7cfaadbd749cd265efd36b2ba8ab0acaf33b502540c0511f9246c3dfbbd0d6",
+    "tests/test_heavy_hit_boundary_review.py": "07bee115fcf0978a1cae00c220b63fd77cef95bef0ba10b4a1936f4b3901a489",
+    "reports/technical-review/heavy-hit-prior-reviews.json": "16928ba25a964a24ee9464ee82a5e246c3d388a640d12ed9193ab28b66f8cd93",
+    "reports/technical-review/heavy-hit-source-review.json": "975f3c917a21a662e9dd4181259c71cb30e893e1ea59bfe4cfc8a1aa1b8f39ae"
+  },
+  "hash_convention": "Exact LF Git blobs; working-tree CRLF normalized before comparison.",
+  "mathematical_checks": {
+    "new_passed": 8,
+    "existing_passed": 5,
+    "new_initial_failed": 4,
+    "new_initial_passed": 4,
+    "scope": "Three independent full-versus-condensed dynamic cases, one two-port storage/dissipation check, four source regressions; reuse five existing arithmetic/evidence-boundary checks."
+  },
+  "browser": {
+    "quarto_version": "1.8.26",
+    "cases": [
+      {
+        "route": "articles/technology-heavy-hit-impact-coupling.html",
+        "width": 390,
+        "theme": "light",
+        "math": 138,
+        "display": 23,
+        "lazy": 0,
+        "errors": 0,
+        "wide": [],
+        "tables": [
+          {
+            "width": 714,
+            "parentWidth": 269,
+            "parentOverflow": "auto"
+          },
+          {
+            "width": 714,
+            "parentWidth": 269,
+            "parentOverflow": "auto"
+          },
+          {
+            "width": 714,
+            "parentWidth": 269,
+            "parentOverflow": "auto"
+          }
+        ],
+        "structural": {
+          "overflow": false,
+          "theme": "light"
+        }
+      },
+      {
+        "route": "articles/technology-heavy-hit-impact-coupling.html",
+        "width": 1440,
+        "theme": "light",
+        "math": 138,
+        "display": 23,
+        "lazy": 0,
+        "errors": 0,
+        "wide": [],
+        "tables": [
+          {
+            "width": 714,
+            "parentWidth": 605,
+            "parentOverflow": "auto"
+          },
+          {
+            "width": 714,
+            "parentWidth": 605,
+            "parentOverflow": "auto"
+          },
+          {
+            "width": 714,
+            "parentWidth": 605,
+            "parentOverflow": "auto"
+          }
+        ],
+        "structural": {
+          "overflow": false,
+          "theme": "light"
+        }
+      }
+    ],
+    "official_gate_cases": 4,
+    "axe_routes": 1,
+    "serious_critical_findings": 0,
+    "visual_scope": "All 23 final display equations visually inspected at 390 and 1440 px. Initial clipped numbered and unnumbered expressions were rejected and repaired. Final mobile title/theme screenshots inspected; three tables scrolled to their rightmost columns and visually inspected, each with 445 px reachable scroll. No full-page horizontal overflow.",
+    "title_only_revision": "Only frontmatter title changed after display screenshots; equation source unchanged. Official four-case gate rerun on final title.",
+    "production_cleanup": "scripts.prune_internal_docs_from_deploy.strip_legacy_math_polyfill",
+    "html_sha256": "d5064da42cce5f3f19a61b9a67fe91293cc22b3a552d06f81cce7be506baae0c",
+    "gate_sha256": "ff4f1cc2df447c32ac4449a075a8d07a454455efc1aded5fe20716ba8b144c97",
+    "table_scroll": [
+      {
+        "table": 0,
+        "left": 445,
+        "width": 269,
+        "scroll": 714
+      },
+      {
+        "table": 1,
+        "left": 445,
+        "width": 269,
+        "scroll": 714
+      },
+      {
+        "table": 2,
+        "left": 445,
+        "width": 269,
+        "scroll": 714
+      }
+    ]
+  },
+  "content_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/heavy-hit-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "primary_read_scope": "reports/technical-review/heavy-hit-source-review.json",
+  "delegation": {
+    "tool": "agy CLI",
+    "model": "gemini-3.8-flash-medium",
+    "calls": 2,
+    "scope": "Supplied-text inventories only, lead adjudication; no delegated tools/network/edits."
+  },
+  "delivery_boundary": "Local scientific/render evidence; full repository validation, audit binding and protected delivery pending. No live-site deployment claim."
+}

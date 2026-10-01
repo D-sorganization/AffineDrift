@@ -6,7 +6,10 @@ This directory contains build, maintenance, and automation scripts for the Affin
 
 ### generate_sitemap.py
 
-Generates the sitemap.xml file for SEO and search engine indexing.
+Generates the sitemap.xml file for SEO and search engine indexing. Also
+verified against source content by `check_quarto_render_coverage.py`, which
+calls `build_pages()` directly rather than reading a persisted file, so there
+is no stale on-disk copy to keep in sync (#4572).
 
 **Usage:**
 
@@ -14,7 +17,22 @@ Generates the sitemap.xml file for SEO and search engine indexing.
 python scripts/generate_sitemap.py
 ```
 
-**Output:** `sitemap.xml` in the project root
+**Output:** `docs/sitemap.xml` (pass `--output` to write elsewhere)
+
+### generate_feed.py
+
+Generates `feed.xml`, an RSS 2.0 "what's new" feed built from article
+frontmatter (title/description/date), newest first. Validates the generated
+XML structurally before writing and raises instead of publishing an invalid
+feed.
+
+**Usage:**
+
+```bash
+python scripts/generate_feed.py
+```
+
+**Output:** `docs/feed.xml` (pass `--output` to write elsewhere)
 
 ### generate_search_index.py
 

@@ -1,5 +1,5 @@
 ---
-title: "Impact Dynamics, Shaft Prestress, and the Heavy Hit Hypothesis"
+title: "The Physics of a Heavy Hit"
 description: "A qualified theory of contact inertia, finite-duration shaft coupling, applied wrenches, vibration, sound radiation, and perceived hit sweetness."
 author: "Dieter Olson"
 date: "2026-09-07"
@@ -44,7 +44,7 @@ Corke and colleagues investigated strain propagation in a clamped steel-shafted 
 
 Milne and Davis combined swing simulation with shaft-strain measurements; MacKenzie and Boucher investigated changes in delivered kinematics with shaft stiffness. Both belong in the pre-impact evidence base. Neither alone identifies a grip-dependent acoustic mechanism [@milne1992shaft; @mackenzie2017shaft]. Brown and McPhee's club–grip study provides a further reason to identify a compliant boundary rather than assume a clamp [@brown2018grip].
 
-The detailed [review ledger](https://github.com/D-sorganization/AffineDrift/blob/docs/4253-impact-dynamics-acoustics/docs/development/impact-acoustics/REVIEW.md) distinguishes full-text inspection, abstract-only evidence, independent derivation, and proposed experiments. The [capability inventory](https://github.com/D-sorganization/AffineDrift/blob/docs/4253-impact-dynamics-acoustics/docs/development/impact-acoustics/INVENTORY.md) links software claims to source and tests.
+The detailed [review ledger](https://github.com/D-sorganization/AffineDrift/blob/1ce02d7ae4d916d4c598b62be78cefa83452aaa7/docs/development/impact-acoustics/REVIEW.md) distinguishes full-text inspection, abstract-only evidence, independent derivation, and proposed experiments. The historical [capability inventory](https://github.com/D-sorganization/AffineDrift/blob/1ce02d7ae4d916d4c598b62be78cefa83452aaa7/docs/development/impact-acoustics/INVENTORY.md) links software claims to source and tests at its stated repository revisions; it is not a certificate for later provider changes.
 
 ## Rigid-Body Contact Is a Reference, Not the Whole Model {#sec-impact-mobility}
 
@@ -58,15 +58,19 @@ $$
 The instantaneous change of contact-point velocity is therefore
 
 $$
-\Delta\mathbf v_c=\mathbf W_h\mathbf j,\qquad
-\mathbf W_h=\frac{\mathbf 1}{m_h}-[\mathbf r]_\times\mathbf I_h^{-1}[\mathbf r]_\times.
+\begin{aligned}
+\Delta\mathbf v_c&=\mathbf W_h\mathbf j,\\
+\mathbf W_h&=\frac{\mathbf 1}{m_h}-[\mathbf r]_\times\mathbf I_h^{-1}[\mathbf r]_\times.
+\end{aligned}
 $$ {#eq-impact-point-mobility}
 
 Here $[\mathbf r]_\times\mathbf a=\mathbf r\times\mathbf a$. The rotational contribution is positive semidefinite: for a unit normal $\mathbf n$,
 
 $$
-\frac{1}{m_{h,n}}=\mathbf n^T\mathbf W_h\mathbf n
-=\frac{1}{m_h}+(\mathbf r\times\mathbf n)^T\mathbf I_h^{-1}(\mathbf r\times\mathbf n).
+\begin{aligned}
+\frac{1}{m_{h,n}}&=\mathbf n^T\mathbf W_h\mathbf n\\
+&=\frac{1}{m_h}+(\mathbf r\times\mathbf n)^T\mathbf I_h^{-1}(\mathbf r\times\mathbf n).
+\end{aligned}
 $$ {#eq-impact-normal-mass}
 
 This retains products of inertia and orientation. The familiar $1/m_h+r^2/I$ is a special principal-axis case. An offset parallel to the normal produces no normal-impulse moment. Off-diagonal point mobility can nevertheless couple a normal impulse to tangential contact velocity.
@@ -88,8 +92,10 @@ Thus an eccentric strike can reduce ball launch and increase head rotation even 
 For multibody generalized velocities $\dot{\mathbf q}$ with mass matrix $\mathbf M$ and contact Jacobian $\mathbf J_c$, the corresponding unconstrained point inverse mass is $\mathbf J_c\mathbf M^{-1}\mathbf J_c^T$. If the selected model imposes bilateral velocity constraints $\mathbf A\dot{\mathbf q}=0$, use the constrained inverse operator
 
 $$
-\mathbf M_c^{-1}=\mathbf M^{-1}-\mathbf M^{-1}\mathbf A^T
-(\mathbf A\mathbf M^{-1}\mathbf A^T)^{-1}\mathbf A\mathbf M^{-1}
+\begin{aligned}
+\mathbf M_c^{-1}&=\mathbf M^{-1}\\
+&\quad-\mathbf M^{-1}\mathbf A^T(\mathbf A\mathbf M^{-1}\mathbf A^T)^{-1}\mathbf A\mathbf M^{-1}
+\end{aligned}
 $$
 
 on an independent constraint set, then form $\mathbf J_c\mathbf M_c^{-1}\mathbf J_c^T$. Singular or redundant constraints require an explicitly documented reduction. A rigid constraint acts instantaneously by model definition; that does not demonstrate instantaneous propagation through a physical shaft.
@@ -164,7 +170,10 @@ For nonnegative tension this contribution is positive semidefinite. Compression 
 In a straight radial beam rotating steadily with angular speed $\Omega$, root offset $R_0$, tip mass $m_h$, and no additional axial loads,
 
 $$
-N(s)=m_h\Omega^2(R_0+L)+\int_s^L\mu(\xi)\Omega^2(R_0+\xi)\,d\xi.
+\begin{aligned}
+N(s)&=m_h\Omega^2(R_0+L)\\
+&\quad+\int_s^L\mu(\xi)\Omega^2(R_0+\xi)\,d\xi.
+\end{aligned}
 $$
 
 This is a useful verification case, not the tension distribution of every three-dimensional golf swing. As an illustrative scale, $m_h=0.2$ kg, $\Omega=40$ rad/s and tip radius 1.2 m give a 384 N tip centrifugal load. Determine the actual time-dependent force/moment field from the swing, including head CG eccentricity, distributed shaft inertia, base acceleration and constraints.
@@ -172,10 +181,12 @@ This is a useful verification case, not the tension distribution of every three-
 In coordinates rotating with the shaft base,
 
 $$
-\mathbf a=\mathbf a_0+\mathbf R\left[
-\ddot{\boldsymbol\rho}+2\boldsymbol\Omega\times\dot{\boldsymbol\rho}
-+\dot{\boldsymbol\Omega}\times\boldsymbol\rho
-+\boldsymbol\Omega\times(\boldsymbol\Omega\times\boldsymbol\rho)\right].
+\begin{aligned}
+\mathbf a&=\mathbf a_0+\mathbf R\Bigl[
+\ddot{\boldsymbol\rho}+2\boldsymbol\Omega\times\dot{\boldsymbol\rho}\\
+&\qquad+\dot{\boldsymbol\Omega}\times\boldsymbol\rho
++\boldsymbol\Omega\times(\boldsymbol\Omega\times\boldsymbol\rho)\Bigr].
+\end{aligned}
 $$
 
 Coriolis terms depend on motion relative to the rotating frame. In an appropriate linearized conservative system they produce a skew-symmetric gyroscopic matrix, not material stiffness or viscous damping. The identity $\dot{\boldsymbol\eta}^T\mathbf G\dot{\boldsymbol\eta}=0$ for $\mathbf G^T=-\mathbf G$ is an energy test. Centrifugal prestress can stiffen bending, while other rotational terms can soften or split modes depending on geometry. Derive all terms from one kinetic/potential-energy formulation to avoid counting rotation twice. Rotating-beam literature supplies mathematical comparison cases, not golf calibration [@rodrigues2024spinning].
@@ -183,9 +194,11 @@ Coriolis terms depend on motion relative to the rotating frame. In an appropriat
 For a reduced model about a declared loaded trajectory, a schematic form is
 
 $$
-\mathbf M\ddot{\boldsymbol\eta}+(\mathbf C+\mathbf G)\dot{\boldsymbol\eta}
-+(\mathbf K_e+\mathbf K_g+\mathbf K_{\rm rot})\boldsymbol\eta
-=\mathbf B_c\mathbf F_c+\mathbf B_g\mathbf w_g+\mathbf f_{\rm base}.
+\begin{aligned}
+&\mathbf M\ddot{\boldsymbol\eta}+(\mathbf C+\mathbf G)\dot{\boldsymbol\eta}\\
+&\quad +(\mathbf K_e+\mathbf K_g+\mathbf K_{\rm rot})\boldsymbol\eta\\
+&=\mathbf B_c\mathbf F_c+\mathbf B_g\mathbf w_g+\mathbf f_{\rm base}.
+\end{aligned}
 $$ {#eq-impact-modal-system}
 
 A time-varying reduction also needs its basis-derivative terms. Head shell/face modes, shaft axial/bending/torsional modes, and the hosel connection must be retained or condensed with demonstrated bandwidth accuracy. Contact forces and grip wrenches act at specified positions; a wrench shifted to another origin obeys $\mathbf M_O=\mathbf M_P+(\mathbf p_P-\mathbf p_O)\times\mathbf F$.
@@ -195,8 +208,10 @@ For each grip, power is $P_g=\mathbf F_g\cdot\mathbf v_g+\mathbf M_g\cdot\boldsy
 A mechanically meaningful energy audit is
 
 $$
-E_{\rm mech}(t)+E_{\rm diss}(0,t)+E_{\rm rad}(0,t)
-=E_{\rm mech}(0)+\int_0^t P_{\rm boundary}\,dt,
+\begin{aligned}
+&E_{\rm mech}(t)+E_{\rm diss}(0,t)+E_{\rm rad}(0,t)\\
+&\quad=E_{\rm mech}(0)+\int_0^t P_{\rm boundary}\,dt,
+\end{aligned}
 $$
 
 with every retained energy and boundary defined. If acoustic back-reaction is neglected, do not subtract estimated acoustic energy a second time from an independently damped structural simulation. The approximation and its error must be declared.
@@ -208,12 +223,12 @@ with every retained energy and boundary defined. If acoustic back-reaction is ne
 ::: {.callout-note}
 ## Related Concepts
 
-*   **Impact mechanics and ball flight**: the collision physics the two-stage decoupled architecture implements. (See: [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html))
-*   **Launch monitors**: the measured pre-impact and launch states the decoupling law connects. (See: [Launch Monitor Technology](technology-launch-monitors.html))
-*   **Force measurement**: the ground-reaction wrench that can act only before the collision window opens. (See: [Force Measurement Technology](technology-force-measurement.html))
+*   **Impact mechanics and ball flight**: the contact laws and reference cases used to test a chosen collision model. (See: [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.html))
+*   **Launch monitors**: the reference points, event times and uncertainty needed to compare estimated delivery with ball launch. (See: [Launch Monitor Technology](technology-launch-monitors.html))
+*   **Force measurement**: the ground-reaction wrench that can continue during contact; its effect on the ball depends on the intervening body–grip–shaft dynamics and delivered state. (See: [Force Measurement Technology](technology-force-measurement.html))
 *   **Motion capture**: the kinematic reconstruction supplying the pre-collision club state. (See: [Motion Capture Technology](technology-motion-capture.html))
-*   **Club fitting**: the delivery-state targets this decoupling law justifies fitting against. (See: [Club Fitting Simulation](technology-club-fitting.html))
+*   **Club fitting**: equipment comparisons that must distinguish changed delivery from changed contact response. (See: [Club Fitting Simulation](technology-club-fitting.html))
 *   **Reference points**: impact maps must name the reference point of the twist they transform. (See: [The Reference-Point Problem](reference-point-problem.html))
 *   **Vendor measurement claims**: which commercial systems resolve the states this analysis requires. (See: [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.html))
-*   **Model interchange**: the engines that consume the impact-coupling wire. (See: [Drake Models](../models/models-drake.html), [MuJoCo Models](../models/models-mujoco.html), [OpenSim Models](../models/models-opensim.html), and [Model Repositories](../repositories/repositories-models.html))
+*   **Model interchange**: engine interfaces whose retained states, contact laws and event conventions must be checked before exchanging impact results. (See: [Drake Models](../models/models-drake.html), [MuJoCo Models](../models/models-mujoco.html), [OpenSim Models](../models/models-opensim.html), and [Model Repositories](../repositories/repositories-models.html))
 :::

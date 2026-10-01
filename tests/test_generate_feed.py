@@ -15,6 +15,8 @@ from scripts.generate_feed import (
     build_feed_xml,
     main,
     parse_date,
+    resolve_item_link,
+    resolve_pub_date,
     to_rfc822,
     validate_feed_xml,
 )
@@ -47,6 +49,72 @@ class TestParseDate:
         """A non-date string falls back rather than raising."""
         result = parse_date("sometime in spring", fallback="2024-03-15")
         assert result == datetime(2024, 3, 15, tzinfo=UTC)
+
+
+class TestResolvePubDate:
+    """Tests for resolving an item's real, substantive-update date (#4606)."""
+
+    def test_prefers_date_modified_over_date(self):
+        """``date-modified`` (last substantive change) outranks ``date``."""
+        frontmatter = {"date": "Date unverified", "date-modified": "2026-09-10"}
+        result = resolve_pub_date(frontmatter, fallback="2024-01-01")
+        assert result == datetime(2026, 9, 10, tzinfo=UTC)
+
+    def test_falls_back_to_latest_changes_entry(self):
+        """Without ``date-modified``, the newest ``changes:`` date is used."""
+        frontmatter = {
+            "changes": [
+                {"date": "2026-08-20", "description": "Older change."},
+                {"date": "2026-09-10", "description": "Newer change."},
+            ]
+        }
+        result = resolve_pub_date(frontmatter, fallback="2024-01-01")
+        assert result == datetime(2026, 9, 10, tzinfo=UTC)
+
+    def test_falls_back_to_date_field_when_no_changes(self):
+        """With no ``date-modified``/``changes``, the plain ``date`` is used."""
+        frontmatter = {"date": "2025-11-28"}
+        result = resolve_pub_date(frontmatter, fallback="2024-01-01")
+        assert result == datetime(2025, 11, 28, tzinfo=UTC)
+
+    def test_falls_back_to_git_date_when_nothing_else(self):
+        """With no date metadata at all, the git-derived fallback is used."""
+        result = resolve_pub_date({}, fallback="2024-03-15")
+        assert result == datetime(2024, 3, 15, tzinfo=UTC)
+
+
+class TestResolveItemLink:
+    """Tests for linking feed items to revision history (#4606)."""
+
+    def test_links_to_revision_history_when_changes_present(self):
+        """An article with ``changes:`` links to its revision-history section."""
+        frontmatter = {"changes": [{"date": "2026-09-10", "description": "x"}]}
+        link = resolve_item_link(frontmatter, "https://affinedrift.com/articles/a.html")
+        assert link == "https://affinedrift.com/articles/a.html#revision-history"
+
+    def test_plain_link_when_no_changes(self):
+        """An article without ``changes:`` links to the page itself."""
+        link = resolve_item_link({}, "https://affinedrift.com/articles/a.html")
+        assert link == "https://affinedrift.com/articles/a.html"
+
+    def test_plain_link_when_changes_empty_list(self):
+        """An empty ``changes:`` list is treated the same as none."""
+        link = resolve_item_link({"changes": []}, "https://affinedrift.com/articles/a.html")
+        assert link == "https://affinedrift.com/articles/a.html"
+
+    def test_guid_stays_on_page_url_when_link_targets_revision_history(self):
+        """The guid is the stable page URL, so gaining a ``changes:`` entry never re-publishes an item."""
+        page = "https://affinedrift.com/articles/a.html"
+        item = FeedItem(
+            title="A",
+            link=resolve_item_link({"changes": [{"date": "2026-09-10"}]}, page),
+            description="d",
+            pub_date=datetime(2026, 9, 10, tzinfo=UTC),
+            guid=page,
+        )
+        xml = build_feed_xml([item], build_date=datetime(2026, 9, 30, tzinfo=UTC))
+        assert f"<link>{page}#revision-history</link>" in xml
+        assert f'<guid isPermaLink="true">{page}</guid>' in xml
 
 
 class TestToRfc822:
@@ -224,6 +292,24 @@ class TestValidateFeedXml:
         xml = build_feed_xml(items, build_date=datetime(2026, 6, 9, tzinfo=UTC))
         errors = validate_feed_xml(xml)
         assert any("duplicate" in e.lower() for e in errors)
+
+
+class TestMainWritesOnlyRequestedOutput:
+    """main() must not also write an unconditional root feed.xml copy (#4572).
+
+    That copy was only refreshed when someone remembered to run the
+    generator and commit the result, so it drifted stale.
+    """
+
+    def test_main_does_not_write_a_root_copy(self, tmp_path, monkeypatch):
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr("scripts.generate_feed.collect_items", lambda: [])
+        monkeypatch.setattr("sys.argv", ["generate_feed.py", "--output", "docs/feed.xml"])
+
+        main()
+
+        assert (tmp_path / "docs" / "feed.xml").exists()
+        assert not (tmp_path / "feed.xml").exists()
 
 
 class TestMainValidatesBeforeWriting:

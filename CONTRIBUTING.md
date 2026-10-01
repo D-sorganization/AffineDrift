@@ -675,6 +675,9 @@ AffineDrift/
 # Generate sitemap
 python scripts/generate_sitemap.py
 
+# Generate RSS feed
+python scripts/generate_feed.py
+
 # Generate search index
 python scripts/generate_search_index.py
 

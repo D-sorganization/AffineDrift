@@ -131,22 +131,17 @@ def qmd_path_to_url_path(filepath: Path) -> str:
     return url_path
 
 
-def main() -> None:
-    """Generate sitemap.xml."""
-    parser = argparse.ArgumentParser(description="Generate sitemap.xml")
-    parser.add_argument(
-        "--output",
-        default="docs/sitemap.xml",
-        help="Output path for the generated sitemap (default: docs/sitemap.xml)",
-    )
-    args = parser.parse_args()
+def build_pages() -> list[dict[str, str]]:
+    """Collect sitemap page entries from QMD sources, sorted by priority.
 
+    This is the single source of truth for "what is currently published":
+    callers that need a fresh, in-memory view of the sitemap (rather than a
+    possibly-stale persisted ``sitemap.xml``) should call this directly.
+    """
     base_url = "https://affinedrift.com"
     pages: list[dict[str, str]] = []
     git_dates = get_git_last_modified_map()
-    now_obj = datetime.now()
-    iso_now = now_obj.isoformat()
-    today = iso_now[:10]
+    today = datetime.now().isoformat()[:10]
 
     for filepath in collect_qmd_files(SITEMAP_CONTENT_DIRS):
         if filepath.name in ["404.qmd", "offline.qmd"]:
@@ -178,6 +173,21 @@ def main() -> None:
 
     # Sort by priority
     pages.sort(key=lambda x: float(x["priority"]), reverse=True)
+    return pages
+
+
+def main() -> None:
+    """Generate sitemap.xml."""
+    parser = argparse.ArgumentParser(description="Generate sitemap.xml")
+    parser.add_argument(
+        "--output",
+        default="docs/sitemap.xml",
+        help="Output path for the generated sitemap (default: docs/sitemap.xml)",
+    )
+    args = parser.parse_args()
+
+    iso_now = datetime.now().isoformat()
+    pages = build_pages()
 
     # Generate XML
     xml_lines = [
@@ -205,10 +215,6 @@ def main() -> None:
     sitemap_path = Path(args.output)
     sitemap_path.parent.mkdir(parents=True, exist_ok=True)
     sitemap_path.write_text("\n".join(xml_lines), encoding="utf-8")
-
-    # Also copy to root for Quarto
-    root_sitemap = Path("sitemap.xml")
-    root_sitemap.write_text("\n".join(xml_lines), encoding="utf-8")
 
 
 if __name__ == "__main__":

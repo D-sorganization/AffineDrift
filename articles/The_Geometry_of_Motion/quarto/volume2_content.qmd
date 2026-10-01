@@ -1982,7 +1982,7 @@ ongoing noise, phase uncertainty, and impact-output sensitivity. Specify an
 intervention and held-out evidence that would distinguish competing explanations.
 
 ## Underactuation and Passive Dynamics
-\label{ch:underactuation}
+[]{#ch-underactuation}
 
 > ### How One Input Moves Several Links
 > Moving the hands can accelerate a club even when a simplified model applies
@@ -1995,15 +1995,15 @@ intervention and held-out evidence that would distinguish competing explanations
 ## Instantaneous Authority and Motion Over Time
 
 In independent configuration coordinates $q\in\mathbb R^n$, write
-\begin{equation}
+$$
 M(q)\ddot q+h(q,\dot q)=B(q)u,\qquad M=M^T\succ0.
-\end{equation}
+$$
 Here $h=C(q,\dot q)\dot q+\nabla V(q)$ for an ideal rigid mechanical model;
 damping, elastic forces, and other loads must be added when retained.
 At fixed state the attainable acceleration set is
-\begin{equation}
+$$
 \mathcal A(q,\dot q)=-M^{-1}h+M^{-1}B\mathcal U,
-\end{equation}
+$$
 where $\mathcal U$ is the admissible input set. With unrestricted inputs its
 affine dimension is $r=\operatorname{rank}B$. Underactuation means $r<n$.
 When $m<n$, an $n\times m$ matrix can have full column rank $m$ while lacking
@@ -2021,16 +2021,16 @@ distributed foot contact can support a bounded moment. The contact model matters
 Let $\theta_1$ and $\theta_2$ be absolute angles of the arm and club measured
 from downward vertical in one inertial plane. Let $\tau_s$ be shoulder torque
 and $\tau_w$ wrist torque exerted on the club. Virtual work gives
-\begin{equation}
+$$
 \delta W=\tau_s\delta\theta_1+\tau_w(\delta\theta_2-\delta\theta_1),
 \qquad Q_\theta=(\tau_s-\tau_w,\tau_w)^T.
-\end{equation}
+$$
 The corresponding actuator power is
 $\tau_s\dot\theta_1+\tau_w(\dot\theta_2-\dot\theta_1)$.
 For relative coordinates $q=(\theta_1,\theta_2-\theta_1)^T$, let
-\begin{equation}
+$$
 \theta=Tq,\qquad T=\begin{pmatrix}1&0\\1&1\end{pmatrix}.
-\end{equation}
+$$
 Then $Q_q=T^TQ_\theta=(\tau_s,\tau_w)^T$ and $M_q=T^TM_\theta T$.
 For this constant transformation, $h_q=T^Th_\theta$. The shoulder-only map
 $(1,0)^T$ is valid in both conventions when $\tau_w=0$; the mass and bias terms
@@ -2039,18 +2039,18 @@ must still use the chosen coordinates. Wrist power uses relative angular speed.
 For a transparent worked model, use massless links of lengths $l_1,l_2$,
 point masses $m_1$ at the wrist and $m_2$ at the club tip, and positive gravity
 magnitude $g$. Set $\Delta=\theta_1-\theta_2$ and $b=m_2l_1l_2$. In absolute angles,
-\begin{equation}
+$$
 M_\theta=\begin{pmatrix}
 (m_1+m_2)l_1^2&b\cos\Delta\\
 b\cos\Delta&m_2l_2^2
 \end{pmatrix},
-\end{equation}
-\begin{equation}
+$$
+$$
 h_\theta=\begin{pmatrix}
 b\sin\Delta\,\dot\theta_2^2+(m_1+m_2)gl_1\sin\theta_1\\
 -b\sin\Delta\,\dot\theta_1^2+m_2gl_2\sin\theta_2
 \end{pmatrix}.
-\end{equation}
+$$
 These equations follow from $L=\tfrac12\dot\theta^TM_\theta\dot\theta-V$ with
 $V=-(m_1+m_2)gl_1\cos\theta_1-m_2gl_2\cos\theta_2$.
 They omit distributed limb inertia, a moving shoulder, shaft bending, and
@@ -2059,12 +2059,11 @@ three-dimensional grip mechanics. Their purpose is an inspectable mechanism.
 ### What Arm Deceleration Does and Does Not Imply
 
 With zero wrist torque, the second row is
-\begin{equation}
+$$
 M_{21}\ddot\theta_1+M_{22}\ddot\theta_2+h_2=0,
 \qquad
 \ddot\theta_2=-\frac{M_{21}\ddot\theta_1+h_2}{M_{22}}.
-\label{eq:pend_unactuated}
-\end{equation}
+$$ {#eq-pend_unactuated}
 The positive denominator does not determine the sign of this expression.
 $M_{21}=b\cos\Delta$ changes sign with geometry, and the velocity and gravity
 terms remain. With $M_{22}=1$, $h_2=0$, and $\ddot\theta_1=-2$,
@@ -2080,10 +2079,10 @@ gravity. Calling this an optimal momentum transfer requires an objective,
 admissible inputs, and an optimization result that these equations alone do not supply.
 
 For the ideal conservative model,
-\begin{equation}
+$$
 \frac{d}{dt}(T_{\rm kinetic}+V)
 =\tau_s\dot\theta_1+\tau_w(\dot\theta_2-\dot\theta_1).
-\end{equation}
+$$
 Zero wrist actuator power does not mean zero energy flow into the club.
 Forces at the moving wrist can do work on the club while doing opposite work
 on the arm. Whole-system and segment energy budgets answer different questions;
@@ -2094,14 +2093,13 @@ include translational boundary power and avoid counting internal power twice.
 On a constant-rank coordinate patch, let $N_B(q)\in\mathbb R^{(n-r)\times n}$
 have rows spanning the left nullspace of $B$. Thus $N_BB=0$. A twice
 differentiable configuration path with its stated timing requires the load
-\begin{equation}
+$$
 b_*(t)=M(q_*)\ddot q_*+h(q_*,\dot q_*).
-\end{equation}
+$$
 The condition
-\begin{equation}
+$$
 N_B(q_*)b_*=0
-\label{eq:unactuated_dynamics}
-\end{equation}
+$$ {#eq-unactuated_dynamics}
 is equivalent to $b_*\in\operatorname{range}B$: some unrestricted algebraic
 input produces that load. One solution is $u_*=B^+b_*$, with possible additions
 from $\ker B$. The required input must also belong to $\mathcal U$.
@@ -2119,15 +2117,17 @@ unknowns with their friction and unilateral-contact conditions.
 ## Partial Feedback Linearization and Zero Dynamics
 
 For an ideal collocated partition with $B=(I,0)^T$, write
-\begin{align}
+$$
+\begin{aligned}
 M_{aa}\ddot q_a+M_{au}\ddot q_u+h_a&=u,\\
 M_{ua}\ddot q_a+M_{uu}\ddot q_u+h_u&=0.
-\end{align}
+\end{aligned}
+$$
 Choosing the acceleration command $v_a$ requires
-\begin{equation}
+$$
 u=(M_{aa}-M_{au}M_{uu}^{-1}M_{ua})v_a
   +h_a-M_{au}M_{uu}^{-1}h_u.
-\end{equation}
+$$
 The Schur complement is positive definite when $M\succ0$. Exact cancellation
 assumes an accurate model and an admissible computed input. Saturation and
 uncertain loads invalidate the ideal equality $\ddot q_a=v_a$.
@@ -2139,17 +2139,17 @@ They are not identical to the motion obtained by switching all actuators off.
 
 No phase of a generic swing is automatically attracting. Integrate a specified
 nominal solution and the variational equation
-\begin{equation}
+$$
 \delta\dot z=A_z(t)\delta z,\qquad
 \dot\Phi_z=A_z(t)\Phi_z,\quad\Phi_z(t_0)=I.
-\end{equation}
+$$
 Specify the output, comparison time or event, and the metric used to scale
 angle and velocity errors. Singular values of the appropriately scaled
 transition map measure finite-time amplification. A time-varying positive
 metric $W(t)$ satisfying
-\begin{equation}
+$$
 \dot W+A_z^TW+WA_z\preceq-2\lambda W
-\end{equation}
+$$
 certifies differential decay on the interval where it holds, with metric bounds
 needed to translate it into a coordinate norm. Frozen-time eigenvalues and
 large club speed alone do not supply this certificate. A verified invariant

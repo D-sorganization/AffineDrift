@@ -13,7 +13,11 @@ const {
   summarizeNavigationAttempts,
   screenshotOptions,
   screenshotName,
+  waitForSettledPage,
+  waitForVisibleMath,
 } = require('../scripts/verify-public-site.js');
+const fs = require('fs');
+const path = require('path');
 
 function fixtureManifest() {
   return {
@@ -448,5 +452,53 @@ describe('axe-core policy (ISSUE-4126)', () => {
       routes_with_violations: [],
       violation_count: 0,
     });
+  });
+});
+
+describe('waitForFunction timeouts', () => {
+  // Playwright: page.waitForFunction(pageFunction, arg, options). A `{ timeout }`
+  // passed as the second argument is treated as `arg` and silently ignored.
+  function mockPage() {
+    return {
+      waitForFunction: jest.fn().mockResolvedValue(true),
+      evaluate: jest.fn().mockResolvedValue(undefined),
+    };
+  }
+
+  test('waitForVisibleMath passes its timeout as the options argument', async () => {
+    const page = mockPage();
+    await waitForVisibleMath(page);
+    expect(page.waitForFunction).toHaveBeenCalledTimes(1);
+    const [fn, arg, options] = page.waitForFunction.mock.calls[0];
+    expect(typeof fn).toBe('function');
+    expect(arg).toBeUndefined();
+    expect(options).toEqual({ timeout: 5000 });
+  });
+
+  test('waitForSettledPage passes every timeout as the options argument', async () => {
+    const page = mockPage();
+    await waitForSettledPage(page);
+    const calls = page.waitForFunction.mock.calls;
+    // MathJax gate, visible math (x2), fixed-header padding, deferred wrappers.
+    expect(calls.map(([, , options]) => options)).toEqual([
+      { timeout: 20000 },
+      { timeout: 5000 },
+      { timeout: 5000 },
+      { timeout: 5000 },
+      { timeout: 5000 },
+    ]);
+    for (const [fn, arg] of calls) {
+      expect(typeof fn).toBe('function');
+      expect(arg).toBeUndefined();
+    }
+  });
+
+  test('no waitForFunction call in the verifier passes options as the arg', () => {
+    const source = fs.readFileSync(
+      path.join(__dirname, '..', 'scripts', 'verify-public-site.js'),
+      'utf8',
+    );
+    expect(source).toContain('waitForFunction(');
+    expect(source).not.toMatch(/\},\s*\{\s*timeout\s*:/);
   });
 });
