@@ -34,9 +34,9 @@ Primary records were checked on 2026-10-01. New bibliography metadata was cross-
 
 ## Delegation and Adjudication
 
-Seven supplied-text agy CLI gemini-3.8-flash-high jobs completed: claim inventory,
+Eight supplied-text agy CLI gemini-3.8-flash-high jobs completed: claim inventory,
 test drafting, grip methods extraction, grip discussion extraction, register
-draft, figure draft, and adversarial review. Lead review
+draft, figure draft, adversarial review, and PR description drafting. Lead review
 corrected these draft errors: Han's ground moments are not joint/body moments;
 the Choi/Park ratio is not directly sensed at two hands; 350 g is grip mass,
 not complete club mass; small longitudinal inertia is not automatically zero;
@@ -57,3 +57,5 @@ remains 119 pending until validated binding.
 The adversarial review prompted precise power-versus-work wording and variance-of-grand-mean terminology. Rejected suggestions: the citation key does not determine displayed authors (koike2020 contains Choi/Park metadata); the companion hierarchy filter intentionally handles chapter headings; a pinned provider source is deliberate; an electrode type supplied without primary evidence is not adopted. The reader-facing abstract-access aside was removed while its honest audit limitation remains here.
 
 Publication checkpoint:223-page PDF/HTML and canonical/public parity pass; all Chapter24 pages164–170 plus boundary163/171 visually inspected. The figure was subsequently enlarged and its PDF/mobile render rechecked. Four viewport/theme checks pass with zero serious/critical axe findings. Nineteen math containers, two displays, no MathJax errors/unrendered nodes/page overflow at390/1440. All12 publication gates,48 targeted tests,Ruff,Black840,and CI-scoped mypy94 pass. Full regression, integration and final binding remain.
+
+The PR wording draft incorrectly called all87 historical audit findings empirical and conflated19 math containers with two display equations; both were corrected in lead review. Integrated PR4770 head3d7f4eb/peer main37fa19fef, preserving scientific fields from both parent ledgers. Combined PDF and HTML regenerated. Source checkpoint947ad2373 remains in history.
