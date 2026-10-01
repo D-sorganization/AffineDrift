@@ -24,7 +24,71 @@
     "ruff": "pass",
     "black": "pass; 819 files unchanged",
     "titles": "pass; 651 sources",
-    "mypy": "Broad diagnostic: nine errors in five production files unchanged from base main; no strict type-clean claim. Changed-src pre-push mypy selects no files."
+    "mypy": "Broad diagnostic: nine errors in five production files unchanged from base main; no strict type-clean claim. Changed-src pre-push mypy selects no files.",
+    "final_content_gates": [
+      {
+        "check": ["check_latex_environments.py"],
+        "exit_code": 0
+      },
+      {
+        "check": [
+          "check_terminology.py",
+          "--baseline",
+          "config/terminology-baseline.json"
+        ],
+        "exit_code": 0
+      },
+      {
+        "check": ["generate_worked_examples.py", "--check"],
+        "exit_code": 0
+      },
+      {
+        "check": [
+          "check_tree_parity.py",
+          "--baseline",
+          "config/tree-parity-baseline.json"
+        ],
+        "exit_code": 0
+      },
+      {
+        "check": [
+          "check_latex_structure.py",
+          "--root",
+          "articles",
+          "--baseline",
+          "config/latex-structure-baseline.json"
+        ],
+        "exit_code": 0
+      },
+      {
+        "check": ["validate_frontmatter.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["validate_accessibility.py", "--qmd-only"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_scaffolding_styling.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_bibliography_quality.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_bibliography_cross_file.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_citation_resolution.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_qmd_citation_keys.py"],
+        "exit_code": 0
+      }
+    ]
   },
   "status": "Local final wording validation complete; protected PR #4732 delivery pending.",
   "final_focused": {
@@ -38,5 +102,6 @@
     "deselected": 6230,
     "seconds": 14.14,
     "evidence_restored_between_runs": false
-  }
+  },
+  "source_checkpoint": "ff4177f0309195e040085b44b31b355f033fef3d"
 }
