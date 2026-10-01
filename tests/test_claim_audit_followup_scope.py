@@ -11,4 +11,4 @@ def test_later_atlas_route_can_reopen_without_rewriting_original_census() -> Non
     route = "/articles/proximal-distal-falsification-atlas.html"
     assert deferred_issue_url(route) == "https://github.com/D-sorganization/AffineDrift/issues/4059"
     assert route not in APPLIED_ARTICLE_ROUTES
-    assert sum(DEFERRED_AUDIT_SCOPE_COUNTS.values()) == 227
+    assert sum(DEFERRED_AUDIT_SCOPE_COUNTS.values()) == 228

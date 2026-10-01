@@ -157,6 +157,26 @@ jobs:
         run: python3 scripts/check_companion_pins.py
       - name: Verify Software Freshness Dashboard Is Current
         run: python3 -m scripts.generate_companion_freshness --check
+      - name: Generate Content Inventory
+        # #4602: a fresh page inventory (word count, status, last-reviewed,
+        # link health) for every build. It is an artifact, not a staleness
+        # gate: word counts change with every content edit, so a --check
+        # gate would fail unrelated PRs. The committed snapshot in
+        # data/content/ is refreshed with the generator when needed.
+        run: >-
+          python3 -m scripts.generate_content_inventory
+          --json-output "${{ runner.temp }}/content-inventory.json"
+          --csv-output "${{ runner.temp }}/content-inventory.csv"
+          --dashboard-output "${{ runner.temp }}/content-inventory.qmd"
+
+      - name: Upload Content Inventory
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: content-inventory
+          path: |
+            ${{ runner.temp }}/content-inventory.json
+            ${{ runner.temp }}/content-inventory.csv
       - name: Verify Quarto Math Syntax
         # scan_quarto_syntax.py existed but was wired into nothing, so none of its
         # checks had ever run in CI. The corpus was brought to zero findings before

@@ -118,6 +118,18 @@ jobs:
       - name: Pre-build Link Check
         run: python3 -m src.tools.check_links
 
+      - name: Fetch previously deployed manifest for URL stability check
+        # Best-effort: absent on the first deploy or a transient fetch
+        # failure. src.tools.check_redirects treats a missing file as
+        # "nothing to compare" rather than failing the build (#4503).
+        run: |
+          mkdir -p "$RUNNER_TEMP/redirect-check"
+          # --fail: an HTTP error must leave no file, not save the 404 page
+          # as the "previous manifest".
+          curl --fail --location --silent --show-error \
+            --output "$RUNNER_TEMP/redirect-check/previous-public-site-manifest.json" \
+            "$PUBLIC_SITE_URL/public-site-manifest.json" || true
+
       - name: Update Service Worker Cache Version
         run: python3 scripts/update_sw_cache_version.py
 
@@ -177,6 +189,16 @@ jobs:
             --source-root . \
             --source-revision "$GITHUB_SHA" \
             --output docs/public-site-manifest.json
+
+      - name: Verify URL Stability and Redirect Policy
+        # Deploy fails if a previously published route disappears without
+        # a documented, rendered redirect (#4503).
+        run: |
+          python3 -m src.tools.check_redirects \
+            --previous-manifest "$RUNNER_TEMP/redirect-check/previous-public-site-manifest.json" \
+            --current-manifest docs/public-site-manifest.json \
+            --redirects config/redirects.yml \
+            --docs-dir docs
 
       - name: Enforce scientific claim-audit coverage
         # Blocking by design: publication must be truthful. Ledger bookkeeping
