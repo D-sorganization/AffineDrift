@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (source52408; full6281 pass/one stale source-contract failure,93.04%; repaired;59 focused then79 bound-audit and88 integration checks pass;184 content/4 skips;216-page PDF and browser4/4 verified)
 - **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
-- **Next step:** Verify Chapter10 PR4741 merge, retarget4744 to main, then verify final protected checks and merge. Six findings bound;35 historical findings preserved; merged guide corpus row reconciled.
+- **Next step:** Push CI digest repair (one mixed line ending;46 affected tests pass), verify Chapter10 PR4741 merge, retarget4744 to main, then verify protected checks and merge. Six findings bound;35 historical findings preserved; merged guide corpus row reconciled.
 
 ### DL-#4739 · Force, Work, and Energy Boundaries
 

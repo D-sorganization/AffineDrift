@@ -1,3 +1,11 @@
+# Chapter 9 CI Evidence Repair — PR #4744
+
+- CI run36849737139 found two audit failures because one local CRLF in tests/test_force_direction_review.py had been hashed before Git normalization. Corrected the inventory to the existing Git blob, inspecting all677 bound evidence file paths. No scientific source, PDF, or historical verification commit changes.46 affected source/audit/pruning checks pass. Receipt reports/technical-review/force-direction-ci-repair.json.
+- Current repair checkpoint SELF; push then verify final CI. PR4744 remains regular and stacked on4741; do not merge into the topic base. Chapter10 final E2E still pending at the last authoritative check. Existing Chapter16 governance-vocabulary warning is nonblocking and outside this digest repair.
+- Muscle issue4743 now leased through12:33UTC and being implemented separately in link-health. Its new source is not included in this PR. Preserve all QA and canonical review history.
+
+## Preserved Earlier Checkpoints
+
 # Force-Direction Review — PR #4744
 
 - Regular PR: https://github.com/D-sorganization/AffineDrift/pull/4744, stacked on Chapter10 PR4741. Delivery161a3b662 is pushed. Do not merge into the topic base; retarget to main only after verified protected Chapter10 merge. PR4741 head eb288 is remote; all observed checks pass except E2E still running at10:29UTC. Protected auto-merge armed there only.
