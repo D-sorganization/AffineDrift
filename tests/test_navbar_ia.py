@@ -37,7 +37,7 @@ def test_page_footer_links_publication_and_executable_companions() -> None:
     links = {item["text"]: item["href"] for item in footer["right"]}
     assert links["AffineDrift Source"].endswith("/AffineDrift")
     assert links["UpstreamDrift Programs"].endswith("/UpstreamDrift")
-    assert links["About & Authority"] == "pages/about.html"
+    assert links["About"] == "pages/about.html"
     assert links["Privacy Policy"] == "pages/privacy-policy.html"
 
 
@@ -130,8 +130,8 @@ class TestBuildDropdownContent:
             "Programming Companion",
             "Repositories",
             "Datasets",
-            "Software Catalog",
-            "Interactive Tools",
+            "Software",
+            "Programs & Tools",
         }.issubset(labels)
         assert not {"MuJoCo", "Drake", "Pinocchio", "OpenSim", "MyoSim", "Simulink"}.intersection(
             labels
