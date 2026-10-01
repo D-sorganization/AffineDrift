@@ -62,13 +62,14 @@ Agreement between that track and the radar track is therefore not a comparison o
 US12517218B2 claim~1 selects corrections by minimizing quality-weighted three-dimensional track residuals.
 Improved correspondence is a calibration objective; agreement alone does not establish absolute accuracy against an independent reference.
 \item[Display and Attribution.]
-Trajectory illustration appears in \patent{US10315093B2}.
+The abstract of \patent{US10315093B2} describes trajectory illustration, while its first claim concerns calibrated simultaneous camera/radar tracking.
+The related documents show why a shared abstract is not enough to specify a method: US10441863B2 claim~1 recalibrates after a camera field-of-view change, US11135495B2 claim~1 derives part of a striking implement's trajectory, and US11291902B2 claim~1 includes a three-dimensional launch-vector overlay.
 Associating tracked balls with launch locations is described in \patent{US11086005B2}. A convincing video overlay and a correct association with a
 player are separate requirements from accurate trajectory measurement.
 \item[Terrain-Constrained Position.]
 \patent{US12186643B2} intersects a calibrated camera-to-ball ray with a three-dimensional terrain model and outputs that intersection as a ball position.
 The terrain constraint supplies depth information that the image alone lacks.
-For interpreting such an output, distinguish the ray--surface intersection from independently observed ball height: during the airborne part of a bounce, a ball above the surface need not coincide with that intersection.
+When the observed ball point is above the modeled surface, the ray--surface intersection is a different point; interpreting that intersection as the ball's unconstrained spatial position introduces a geometric error.
 An output labeled three-dimensional therefore still needs an account of the geometric assumptions that determined it.
 \end{description}
 
@@ -282,9 +283,9 @@ That approach differs from tracking rotating surface features.
 A plausible spin value may partly reflect the prior model, so evaluating both methods requires experiments that expose their different ambiguities.
 
 When using these outputs to investigate a swing, retain the measurement
-frame, time interval, calibration and model assumptions. Launch conditions
-constrain the ball's initial state; they alone do not identify the golfer's
-joint torques, force history or unique movement strategy. Technical rigor
+frame, time interval, calibration and model assumptions. Ball launch conditions
+and club-delivery kinematics constrain terminal states; they alone do not
+identify the golfer's joint torques, force history or unique movement strategy. Technical rigor
 means carrying those information limits through the argument, rather
 than letting a precise display imply a uniquely determined cause.
 \end{keypoint}

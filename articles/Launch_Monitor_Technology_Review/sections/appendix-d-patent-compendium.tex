@@ -43,11 +43,11 @@ The Garmin and USGA entries below separate the disclosed mechanism from unsuppor
 \textbf{Patent} & \textbf{Subject} & \textbf{Prio.} & \textbf{Notes}\\
 \midrule
 \endhead
-\patent{US8845442B2} & Spin rate via harmonic sidebands; spin axis via trajectory/Magnus inversion & 2005 & Also EP1698380B1 \\
+\patent{US8845442B2} & Spin rate via harmonic sidebands; model-dependent axis from flight curvature & 2005 & Also EP1698380B1 \\
 \patent{US9645235B2} & Unmarked-ball spin frequency from radar harmonic spacing & 2005 &  \\
 \patent{US10393870B2} & Radar harmonic spin estimation without ball-marking information & 2005 &  \\
 \patent{US10962635B2} & Spin frequency from radar modulation harmonic spacing & 2005 &  \\
-\patent{US11143754B2} & Spin-axis inference from trajectory accelerations and spin frequency & 2005 &  \\
+\patent{US11143754B2} & Model-dependent axis from trajectory accelerations and spin frequency & 2005 &  \\
 \patent{US10850179B2} & Projected spin axis from multi-receiver Doppler components & 2018 &  \\
 \patent{US11446546B2} & Spin-axis projection from angular positions of radar frequency components & 2018 &  \\
 \patent{US11938375B2} & Spin-axis component from receiver-pair phase differences & 2018 &  \\
@@ -67,7 +67,7 @@ The Garmin and USGA entries below separate the disclosed mechanism from unsuppor
 \patent{US10953303B2} & Impact timing and location from tracked club-image points & 2017 &  \\
 \patent{US11439886B2} & Image-based impact geometry; single-imager embodiment with optional shaft marker & 2017 &  \\
 \patent{US11612801B2} & Image-tracked line angle evaluated at impact time & 2017 &  \\
-\patent{US12263393B2} & Fix-line angle at impact; 3D reconstruction uses known club geometry & 2017 &  \\
+\patent{US12263393B2} & Tracked fix-line angle (e.g., shaft); known geometry for 3D reconstruction & 2017 &  \\
 \bottomrule
 \end{longtable}
 
@@ -82,7 +82,7 @@ The Garmin and USGA entries below separate the disclosed mechanism from unsuppor
 \patent{US10471328B2} & Radar/image trajectory and target-line overlay & 2004 &  \\
 \patent{US10989791B2} & Fused radar range/rate + imager angles track & 2016 &  \\
 \patent{US11828867B2} & Radar range and image angles combined with sensor separation geometry & 2016 &  \\
-\patent{US11619708B2} & Calibration by comparing radar and image tracks that share radar range & 2020 &  \\
+\patent{US11619708B2} & Calibration using radar tracks and camera bearings augmented by radar range & 2020 &  \\
 \patent{US12517218B2} & Sensor calibration by weighted 3D track-residual minimization & 2020 &  \\
 \patent{US11748985B2} & Master clock; composite multi-moment images & 2019 &  \\
 \patent{US12067775B2} & Clock-referenced composite imaging & 2019 &  \\
@@ -137,7 +137,7 @@ The publications in this section identify Topgolf Sweden AB and include camera, 
 \patent{US8189857B2} & Impact-mark localization from before/after playing-surface images & 2007 &  \\
 \patent{US9036864B2} & Bounce localization from composite long-exposure image envelopes & 2011 &  \\
 \patent{US9868044B2} & Spin rate from periodic phase-demodulated radar features & 2013 &  \\
-\patent{US10775492B2} & Spin axis from perpendicular receiver pairs & 2013 &  \\
+\patent{US10775492B2} & Spin-axis inference from receiver-pair delays and separations & 2013 &  \\
 \patent{US10338209B2} & Camera/radar calibration and tracking through missing data & 2015 & also \patent{US11016188B2} \\
 \patent{US11573082B2} & Effective-altitude estimation by matching environmental air density & 2019 &  \\
 \patent{US12528005B2} & Weather-based range prediction, club selector & 2023 &  \\
@@ -175,7 +175,8 @@ This is a rebound-based inference, not direct image tracking of a rotating ball 
 \patent{US11351436B2} --- ``Hybrid golf launch monitor'' (indexed priority 2019): two laterally separated cameras whose capture timing depends on clubhead speed and a swing trigger.
 Claim~1 describes the two-camera arrangement; claim~9 adds a radar-based trigger and clubhead speed estimate.
 This disclosure does not establish that the Approach R10 implements the claimed arrangement.
-Other listed Garmin disclosures are \patent{US8647214B2} (2008, motion-sensor swing analysis) and \patent{US7467060B2} (2006, motion-parameter estimation).
+For scope comparison, other Garmin disclosures are \patent{US8647214B2} (2008, associating inertial swing data with ball start/rest positions) and \patent{US7467060B2} (2006, stride-based estimation for cyclical motion).
+The latter's first claim uses acceleration and stride duration; it should not be presented as a ball-flight or golf-swing reconstruction method.
 These entries do not establish the completeness of Garmin's portfolio.
 
 \Needspace{8\baselineskip}
@@ -199,6 +200,7 @@ These entries do not establish the completeness of Garmin's portfolio.
 \end{longtable}
 
 \Needspace{8\baselineskip}
+\clearpage
 \section{Camera Vendors: Foresight/Wintriss, Creatz/Uneekor, Golfzon}
 
 \Needspace{8\baselineskip}
@@ -292,7 +294,7 @@ It is a useful experimental-modeling reference, not evidence that arbitrary laun
 \textbf{SkyTrak / SkyHawke:} \patent{US12515116B2} (2023, swing-tag + launch-monitor fusion display) is one relevant disclosure.
 This catalog does not establish the complete SkyHawke portfolio or the patent marking of every SkyTrak model.
 No verified entries for \textbf{Zelocity, GolfTek, Ernest Sports or ProTee United} are supplied here; that search limitation establishes neither the absence of patents nor the technical ancestry of their products.
-\textbf{Voice Caddie (Ucomm):} \patent{US10338212B2} (2014, portable Doppler swing/ball analyzer).
+\textbf{Voice Caddie (Ucomm):} \patent{US10338212B2} (2014) specifies in claim~1 club-speed calculation from time-domain processing and ball-speed calculation from frequency-domain processing of an output generated from a mixed Doppler return.
 \textbf{Sports Sensors (Dilz):} \patent{US6079269A} (1997) describes a short-range sports-object speed sensor, including a ball-catching application; it should not be labeled the Swing Speed Radar product patent.
 \patent{US6898971B2} (2000) addresses short-range speed measurement, including clubhead speed; \patent{US8007367B2} (2005) explicitly addresses swing duration and clubhead speed.
 These are different measurement tasks.

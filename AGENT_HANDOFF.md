@@ -1,3 +1,15 @@
+# Patent Catalog Final Source Checkpoint — #4766
+
+- Goal active under epic #4009 and corpus #4021. Owned AffineDrift-link-health worktree; branch fix/patent-catalog-rigor-4766. Current source checkpoint SELF; regular PR and final binding pending.
+- All 168 catalog macro references plus the separate Gazette first claim reviewed through abstracts, first claims and targeted descriptions. Three reports account for 40 + 78 + 50 dispositions; 14 grouped findings explain corrections. This is technical editorial review, not all-claims/legal/product-performance certification.
+- Full regression: 6377 passed, 29 skipped, 187 deselected; overall coverage78.98%, source-only rounded93.0%. Ruff, Black, configured mypy94 files and Jest546 tests/35 suites pass. Content-lint passes. Final81-page build and visual checks completed; final source-hash receipt next.
+- 64 agy CLI gemini-3.8-flash-high jobs completed cumulatively. Six earlier provider errors and one current permission-limited receipt job excluded; supplied-data retry succeeded. Lead retained technical adjudication.
+- All168 identifiers,111 priority rows and captured source/claim hashes verified. Prior AppendixA/E sources preserved. Corpus remains122 pending until binding credits only Chapter7 and AppendixD, then120; whole-book consistency remains.
+- PR4765 already verified on remote main39f7553b5 and predecessor PRs closed. Preserve peer23ee826, QA and historical receipts. No draft PRs, main/force/admin pushes or hook bypass. No tracked mutations during push hooks.
+- Next: commit sources, bind exact Git blobs, update corpus, push normal hooks, open regular PR with Fixes#4766, run guarded merge workflow. Lease technical-review-20261001-patents expires19:49UTC Oct1; renew as needed.
+
+## Preserved Earlier Checkpoints
+
 # Patent Leading-Entry Review and Geometry Delivery — #4766
 
 - Goal active under epic #4009 and corpus #4021. Owned checkout: C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/patent-catalog-rigor-4766. Source checkpoint 8b09328d6, normal main integration 2a9e555e4 and validation receipt 835276f7a are pushed; this delivery-status update is SELF. Receipt: reports/technical-review/patent-leading-entries-validation.json. Patent review remains in progress; no patent PR yet.

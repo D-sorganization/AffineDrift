@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/patent-catalog-rigor-4766
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/preamble.tex, articles/Launch_Monitor_Technology_Review/main.pdf, articles/Launch_Monitor_Technology_Review/research/patent-catalog-review-20261001.md
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (42 additional first-claim reads; 25 refinements/17 retained; 81-page build and 15-page visual review; 38 tests, 653 titles, LaTeX structure, digests, SPEC and 78 source/row/hash checks pass)
-- **Summary:** Complete leading-entry reads (118 selected in total); explain timing, association and environmental inference. Six Flash jobs failed with provider errors; 47 prior jobs remain completed. No final audit credit; 122 sources remain. PR4765 science verified on remote main 39f7553b5.
-- **Next step:** Source/receipt pushed and main integrated; predecessor PRs closed. Review the 50 secondary references, consolidate dispositions, bind findings and run final regression before regular PR.
+- **Last verified:** 2026-10-01 (168 source/claim/context checks; 111 priority rows; full regression6377 passed; Ruff/Black/mypy/Jest/content checks pass; final source binding next)
+- **Summary:** All 168 references plus Gazette adjudicated; 14 grouped corrections; 64 completed Flash jobs with failed attempts excluded. Corpus122 until final binding; then120 plus whole-book consistency.
+- **Next step:** Commit final sources, bind Git blobs, update corpus and submit a regular PR; guarded merge after CI.
 
 
 ### DL-#4763 · Geometry Technical Review
