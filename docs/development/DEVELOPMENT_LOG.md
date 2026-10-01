@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4733 · Shallow-Wide Latency and Synergy Arguments
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4734 (regular; stacked on #4732)
 - **Issue:** #4733 (epic #4009)
 - **Branch:** `fix/shallow-wide-rigor-4733`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex`, `articles/The_Geometry_of_Motion/Volume_IV/main.pdf`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `books/human-motor-control.qmd`, `tests/test_shallow_wide_review.py`, `reports/technical-review/shallow-wide-review.md`
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (SELF: latest main3e7d6958 and ground86ce488e integrated; 97 focused and 184 content checks pass, four skips; integrated full run6262 passed/one stale schema-checksum failure,29 skips,93.04% coverage; checksum regenerated;60 affected checks,184 content/four skips and8 browser cases pass; 31 new checks and 46 combined focused checks pass; final source e6eec4ac1 bound; twelve content gates; 71-page PDF chapter and four public-route cases visually verified)
 - **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
-- **Next step:** Push the verified shallow-wide integration branch.
+- **Next step:** Run the final full regression on the pushed PR #4734 checkpoint.
 
 ### DL-#4688 · Dataset Explorer Deployment Route Audit
 

@@ -1,12 +1,13 @@
-# Shallow-Wide Review Delivery — #4733
+# Shallow-Wide Review Delivery — PR #4734 / Issue #4733
 
 - Goal active under epic #4009; 134 indexed sources remain pending. Regular protected PRs only.
-- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`; integration checkpoint `SELF`. Scientific source `e6eec4ac10fc5167197bf9a8ad93e360754810d4` and PDF unchanged. Historical finding commits are preserved.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`; integration checkpoint `7259d61b679a151c836fcdc50d2c18a14fad7ad1` is pushed; current PR-binding checkpoint `SELF`. Scientific source `e6eec4ac10fc5167197bf9a8ad93e360754810d4` and PDF unchanged. Historical finding commits are preserved.
 - Integrated ground head `86ce488e488a9fd9b7e5b6ca76ca8ae389c9806b` and main `3e7d6958c20ffc01a3d35f1ae43d7ff527fe370f` (peer PRs #4713/#4728). Latest 97 focused and 184 content checks pass, four skipped. Initial full suite: 6,262 passed, one stale generated schema-checksum failure, 29 skipped, 93.04% coverage; the checksum is corrected and affected checks pass. Do not relabel that initial run as an all-green full suite.
 - Both book and checksum-only datasets routes pass eight browser cases and axe (zero serious/critical findings), using the official book/hub classifications. The 71-page PDF's eight chapter pages, contents, boundary and bibliography were visually inspected. Exact scopes: `reports/technical-review/shallow-wide-integration-validation.json` and `shallow-wide-render-verification.json`.
-- PR not yet created. Next: push this branch, then open a regular PR based on `fix/ground-conversation-rigor-4730`. Do not arm merge into that parent branch. After ground PR #4732 merges, merge remote main into this published branch without force, retarget its PR to main, and pass protected CI.
+- Regular PR [#4734](https://github.com/D-sorganization/AffineDrift/pull/4734) is open against `fix/ground-conversation-rigor-4730`. Next: finish its full regression rerun and protected ground delivery. Do not arm merge into that parent branch. After ground PR #4732 merges, merge remote main into this published branch without force, retarget its PR to main, and pass protected CI.
+- Planned full rerun after the final push: `docs/development/technical-review/shallow-wide-final-full-driver.ps1`, logs `shallow-wide-final-full.txt` and `shallow-wide-final-content.txt`. Do not run renders or commit hooks concurrently in this checkout; preserve generated wheel artifacts under QA.
 - Ground #4732 is mergeable at head `86ce488e4`, auto-merge armed, new checks registered. Scientific ground source/PDF unchanged. No live deployment claim; the peer dataset-explorer repair has merged but deployment is not verified here.
-- Session `technical-review-20261001-shallow-wide` lease/presence through 06:58 UTC; ground session through 07:16 UTC. Preserve all untracked QA and parked provider synthesis #4253. Two parallel agy Gemini3.8Flash agents handled PR drafting and validation/turnover summaries; lead corrected and verified their output.
+- Session `technical-review-20261001-shallow-wide` lease/presence renewed through 08:22 UTC; ground lease/presence through 08:23 UTC. Preserve all untracked QA and parked provider synthesis #4253. Two parallel agy Gemini3.8Flash agents handled PR drafting and validation/turnover summaries; lead corrected and verified their output.
 
 ## Preserved Earlier Checkpoints
 
