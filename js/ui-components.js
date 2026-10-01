@@ -376,6 +376,20 @@ export function initExportToPdf() {
 }
 
 /**
+ * Force MathJax to typeset the whole document before any print, including
+ * a native browser print (Ctrl+P) that bypasses the export-to-PDF button.
+ * Lazy-loaded, off-screen math is left as raw TeX until scrolled into view
+ * (WEB-11.3), so `beforeprint` is the fallback that forces it (#4550).
+ */
+export function initPrintMathTypesetting() {
+    window.addEventListener("beforeprint", () => {
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            window.MathJax.typesetPromise();
+        }
+    });
+}
+
+/**
  * Initialize lightbox for article images
  */
 export function initLightbox() {
