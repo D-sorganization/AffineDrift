@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/geometry-rigor-4763
 - **Paths:** articles/proximal_distal_companion/chapters/ch04_geometry_machine.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_geometry_machine_review.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (nine new checks;66 affected;12 gates;653 titles;Ruff/Black838;mypy94;221-page PDF/parity/visual inspection;4 browser/theme checks;full regression 6418 passes/29 skips/79.0% configured coverage/93.0% source-only)
+- **Last verified:** 2026-10-01 (prior full validation retained; main integration preserves55 delivered findings within79 and6 ground-reaction findings; preload/shaft source, archive and test parity verified; initial full run 6419 passed/3 metadata failures, 78.86% coverage; corrected digests/history and preserved generated packaging outputs; 69 recovery checks and Jest546 pass; Ruff/Black838/mypy94 pass; prior-head CI36893253026 green)
 - **Summary:** Correct geometric force, power, singularity and inertia mappings; reproduce scalar allocation evidence and repair moment-arm figure. Flash support and lead scientific adjudication. Nine findings bound to source 1293c48c575b28986c41a2a826d6ed2030ba85fb;70 earlier findings preserved;122 full-source audits plus whole-book consistency remain.
-- **Next step:** 36 binding checks and 66 integrated checks pass. Main83f6c0bc9 Node pin update merged without conflicts. Regular PR #4765 is open and attached; source, findings and main integration pushed. Push registration, enable protected auto-merge and verify predecessor/main delivery.
+- **Next step:** Push validated normal merge of main dd70693bc (delivered4755 and4760), verify4765 exact-head CI/guarded merge, then integrate back into patent branch a9d46717e. Preserve both source/evidence histories.
 
 ### DL-#4759 · Robust-Speed Technical Review
 

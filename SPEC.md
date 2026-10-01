@@ -518,3 +518,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4713 | For governing issue #4688, add the reviewed `/models/dataset-explorer.html` route to the claim-audit inventory and cover it in the source-derived regression; preserve open finding #4695 and model/synthetic evidence boundaries. |
 | 2026-09-30 | #4556 | Configure Quarto's native theme.dark alongside theme.light and hide the resulting duplicate native color-scheme toggle in favor of the site's existing tested custom toggle. |
 | 2026-09-30 | #4559 | Add Home-page visual-regression coverage at 390/768/1440 px in light and dark themes (WEB-08.8), coordinated with the #4089 route/mask conventions; Start Here coverage is blocked on #4486/#4487. |
+| 2026-10-01 | #4598 | Remove legacy cruft files and directories (legacy-pages/, _includes/home-sidebar-content.html, js/pdf.js, listings.json, preview-articles.sh, start-preview.sh, duplicate .Jules/) and update root hygiene checks. |
