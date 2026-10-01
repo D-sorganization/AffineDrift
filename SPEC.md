@@ -224,12 +224,13 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4724 | Clarify spatial wrench power, observer and contact restrictions, projection sensitivity, and archived closure and native-engine evidence in companion Chapter 20. |
+| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
+| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
 | 2026-10-01 | #4720 | Reconcile heavy-hit coupling and moving-support impedance, boundary work, acoustic evidence limits, and proposed experiments. |
 | 2026-09-30 | #4717 | Reconcile radar screw-kinematics observability, frame conventions, waveform budgets, and evidence limits in the launch-monitor appendix. |
 | 2026-09-30 | #4714 | Bound impact energy optimality, inertia equivalence, solver evidence and golfer inference; reconcile linked summaries with preserved review history. |
 | 2026-09-30 | #4712 | Reconcile companion two-hand wrench geometry, identifiability, power and archived contact/sensor evidence; correct mutable instrumented-grip citations while preserving immutable source scope. |
-| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
-| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
 | 2026-09-30 | #4716 | Classify Quarto JavaScript action URLs outside filesystem link checks while retaining missing-file failures. |
 | 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
 | 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |

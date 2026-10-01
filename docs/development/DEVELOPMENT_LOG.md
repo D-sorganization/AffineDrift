@@ -18,20 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
+### DL-#4724 · Plane-to-Space Mechanical and Evidence Boundaries
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
-- **Issue:** #4720 (epic #4009)
-- **Branch:** `fix/heavy-hit-consistency-4720`
-- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4726 (regular)
+- **Issue:** #4724 (epic #4009)
+- **Branch:** `fix/plane-space-rigor-4724`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch20_plane_to_space.qmd`, `tests/test_plane_space_review.py`, `reports/technical-review/plane-space-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
-- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
-- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 open, protected auto-merge armed; finish CI/remote-main verification and release lease. Goal active; 138 indexed full reviews remain.
-
-
+- **Last verified:** 2026-10-01 (39 focused/legacy/hygiene checks; four final browser cases, zero serious/critical axe findings; three equations and final PDF pages inspected)
+- **Summary:** Correct observer/reference power, contact constraints, rank/feasibility, archived populations and engine independence; derive and expose the shared vector-damper angular-momentum limitation. Preserve prior review scopes and immutable provider source; follow-up UpstreamDrift #11195.
+- **Next step:** Final audit binding excludes deployment-output paths; first full run had 6,088 passes and one output-location failure. Integrated heavy-hit PR #4723. Integrated web batch #4704; final 6,183 full tests pass with 29 skips and 92.95% coverage, followed by 183 content checks/four skips without evidence restoration. Four final browser cases/axe pass; Ruff, Black817, mypy93, twelve content gates and title/SPEC/evidence checks pass. Next: protected CI and auto-merge on regular PR #4726; verify remote-main ancestry and release #4724. Goal active; 137 indexed reviews remain.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -49,6 +47,19 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
+- **Issue:** #4720 (epic #4009)
+- **Branch:** `fix/heavy-hit-consistency-4720`
+- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
+- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
+- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 merged at 2a7c094070c5ebd7d16c95c332d5526931cc5ba0 with all protected checks green (CI 36801091325). Remote-main ancestry verified; lease/presence released. Deployment separately blocked by #4688 / #4713.
 
 ### DL-#4717 · Radar Screw-Kinematics Appendix Review
 
