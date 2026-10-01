@@ -158,9 +158,9 @@ def test_rendering_components() -> None:
     assert "Test Heading" in table
 
 
-def test_full_registry_generation(tmp_path: Path) -> None:
+def test_full_registry_generation(tmp_path: Path, trust_generation_root: Path) -> None:
     """Verify live repository generation and schema validation."""
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = trust_generation_root
     registry, vms = build_evidence_presentation_registry(repo_root)
 
     assert len(vms) > 0
@@ -172,6 +172,8 @@ def test_full_registry_generation(tmp_path: Path) -> None:
 
     # Test file generation
     reg_path, part_path = generate_evidence_presentation(check=False, repo_root=repo_root)
+    assert reg_path.is_relative_to(tmp_path)
+    assert part_path.is_relative_to(tmp_path)
     assert reg_path.is_file()
     assert part_path.is_file()
 
