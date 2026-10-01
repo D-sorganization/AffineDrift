@@ -1,3 +1,11 @@
+# Integrated Force-Direction Delivery — #4742
+
+- Scientific source52408 and all six source/PDF/figure/test/generator hashes unchanged; six Chapter9 findings and all35 prior book findings preserved. Integrated Chapter10 deliveryeb288 and remote main019a (peer4740) normally. Both canonical handoff conflicts resolved by retaining records.
+- Reconciled the guide corpus row against its already-merged source and review receipt:131 full source audits pending, plus whole-book consistency. This adds no new linked-page review. Receipt reports/technical-review/force-direction-integration-validation.json.
+- Integrated validation: 88 focused and 184 content checks pass (4 skips); rebuilt HTML passes four official browser/axe cases. All 74 Chapter9 expressions render in every width/theme case; selected refreshed screenshots inspected. PDF unchanged. Next: commit/push, create a regular Chapter9 PR stacked on4741, then retarget main after verified Chapter10 merge. Protected checks remain required; no live publication claim.
+
+## Preserved Earlier Checkpoints
+
 # Force Direction — Chapter 9 Delivery — #4742
 
 - Goal active under epic #4009. Branch `fix/force-direction-rigor-4742`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`. Scientific source `52408a254cdbc6314c79408a6558e4612802f7f7`; delivery checkpoint SELF. Regular PR pending; no merge claim.
@@ -25,6 +33,17 @@ Earlier pending statuses below are historical; current state is above.
 
 Earlier pending statuses below are historical; current state is above.
 
+
+## Integrated Chapter 10 Checkpoint
+
+# Force-Work Main Integration — PR #4741
+
+- Integrated remote main `019a25a4320cae03915b744b648c1a4de596d898` after peer4740 merged. Chapter10 source/PDF unchanged from39ae; guide and theme changes retained byte-for-byte. Every prior and main finding retains its metadata and verification commit. Only handoff narrative conflicted; both preserved. Receipt reports/technical-review/force-work-main-integration.json.
+- All CI passed on39ae before main advanced. 58 integrated focused checks pass and evidence digests are current; final integrated CI and protected merge remain; no remote-main Chapter10 claim. Session technical-review-20261001-force-work renewed through11:52UTC/presence11:53UTC.
+- Chapter9 continues separately in screw-review; do not include its edits here. Guide4736 delivered by4740; guide QA and prior checkouts retained. Regular PRs only; no protection bypass.
+
+## Preserved Earlier Checkpoints
+
 # Force, Work, and Motion — PR #4741
 
 - Goal active under epic #4009. Only Chapter10 receives new completion credit;133 sources still pending on this main7eb-based branch, plus whole-book consistency passes. Regular protected PR https://github.com/D-sorganization/AffineDrift/pull/4741; no merge claim.
@@ -40,6 +59,23 @@ Earlier pending statuses below are historical; current state is above.
 ## Preserved Earlier Checkpoints
 
 Earlier pending statuses below are historical; the current state is above.
+
+## Preserved Peer Consolidation Checkpoint
+
+# Consolidation Wave 6 — Web and Content (2026-10-01)
+
+- Repository: `D-sorganization/AffineDrift`; worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-web-5`.
+- Branch: `chore/web-consolidated-6-2026-10-01`; baseline `origin/main` at `7eb87e3c9` (includes merged #4734, #4728, #4731).
+- Policy: Repository_Management#1691 / fleet `pr-queue-consolidation`.
+- Integrated (one CI cycle):
+  - **#4667** Quarto native `theme.dark` support (#4556)
+  - **#4680** Home page theme+viewport e2e visual QA (#4559)
+  - **#4738** Tangent reading guide reconciliation and technical review evidence (#4736)
+- Validation (local):
+  - `python -m scripts.regenerate_claim_audit_evidence --check`: current.
+  - `pytest tests/test_dark_theme_config.py tests/test_tangent_series_links.py tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py tests/test_content_page_inventory.py tests/test_check_redirects.py tests/test_series_title_and_naming.py`: 58 passed.
+  - Line endings verified as pure LF.
+- Next: push consolidated branch, open PR referencing Closes #4556, #4559, #4736, arm protected squash auto-merge, and close superseded PRs #4735 and #4738.
 
 # Ground and Shallow-Wide Delivery — PR #4734
 

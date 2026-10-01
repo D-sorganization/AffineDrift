@@ -1,3 +1,11 @@
+# Integrated Force-Direction Delivery — #4742
+
+- Scientific source52408 and all six source/PDF/figure/test/generator hashes unchanged; six Chapter9 findings and all35 prior book findings preserved. Integrated Chapter10 deliveryeb288 and remote main019a (peer4740) normally. Both canonical handoff conflicts resolved by retaining records.
+- Reconciled the guide corpus row against its already-merged source and review receipt:131 full source audits pending, plus whole-book consistency. This adds no new linked-page review. Receipt reports/technical-review/force-direction-integration-validation.json.
+- Integrated validation: 88 focused and 184 content checks pass (4 skips); rebuilt HTML passes four official browser/axe cases. All 74 Chapter9 expressions render in every width/theme case; selected refreshed screenshots inspected. PDF unchanged. Next: commit/push, create a regular Chapter9 PR stacked on4741, then retarget main after verified Chapter10 merge. Protected checks remain required; no live publication claim.
+
+## Preserved Earlier Checkpoints
+
 # Force Direction — Chapter 9 Delivery — #4742
 
 - Goal active under epic #4009. Branch `fix/force-direction-rigor-4742`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`. Scientific source `52408a254cdbc6314c79408a6558e4612802f7f7`; delivery checkpoint SELF. Regular PR pending; no merge claim.
@@ -24,6 +32,16 @@ Earlier pending statuses below are historical; current state is above.
 ## Preserved Earlier Checkpoints
 
 Earlier pending statuses below are historical; current state is above.
+
+## Integrated Chapter 10 Checkpoint
+
+# Force-Work Main Integration — PR #4741
+
+- Integrated remote main `019a25a4320cae03915b744b648c1a4de596d898` after peer4740 merged. Chapter10 source/PDF unchanged from39ae; guide and theme changes retained byte-for-byte. Every prior and main finding retains its metadata and verification commit. Only handoff narrative conflicted; both preserved. Receipt reports/technical-review/force-work-main-integration.json.
+- All CI passed on39ae before main advanced. 58 integrated focused checks pass and evidence digests are current; final integrated CI and protected merge remain; no remote-main Chapter10 claim. Session technical-review-20261001-force-work renewed through11:52UTC/presence11:53UTC.
+- Chapter9 continues separately in screw-review; do not include its edits here. Guide4736 delivered by4740; guide QA and prior checkouts retained. Regular PRs only; no protection bypass.
+
+## Preserved Earlier Checkpoints
 
 # Force, Work, and Motion — PR #4741
 

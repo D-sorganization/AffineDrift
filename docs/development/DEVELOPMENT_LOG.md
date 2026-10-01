@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (source52408; full6281 pass/one stale source-contract failure,93.04%; repaired;59 focused then79 bound-audit checks pass;184 content/4 skips;216-page PDF and browser4/4 verified)
 - **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
-- **Next step:** Commit/push delivery, integrate pending Chapter10 PR4741 normally, open a regular PR and verify protected final-head checks. Six findings bound;35 historical findings preserved.
+- **Next step:** Validate normal integration of Chapter10eb288/main019a, commit/push, open a regular PR and verify protected final-head checks. Six findings bound;35 historical findings preserved; merged guide corpus row reconciled.
 
 ### DL-#4739 · Force, Work, and Energy Boundaries
 
@@ -42,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (source803b58ecb; PDF/chapter browser verified; full6272 pass/one pin failure,93.04%; pin repaired;53 affected checks and184 content checks pass/4 skips;12 publication checks and freshness browser4/4 pass; final protected CI pending)
 - **Summary:** Correct three-dimensional work, net impulse, internal mechanical-energy conversion, coordinate-force versus physical work and archive scope; preserve human-model limits and prior book findings.
-- **Next step:** Push delivery metadata, verify exact-head protected CI and remote-main merge; preserve35 findings and historical provenance.
+- **Next step:** Validate normal integration of peer4740/main019a; Chapter10 source/PDF and both branches findings preserved. Push and verify integrated-head protected CI and merge.
 
 
 
