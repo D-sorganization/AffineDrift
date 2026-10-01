@@ -2,19 +2,21 @@
 
 ## A Concrete Picture
 
-Push a shopping cart forward and it speeds up. Push sideways and it turns. Push
-down on the handle and the wheels may grip more firmly without much forward
-acceleration. The force magnitude can be identical in all three cases; direction
-changes the job.
+Push a shopping cart along its rolling direction and it can speed up. A sideways
+push may turn it or be largely balanced by wheel reactions. A downward push can
+change wheel loading without much forward acceleration. Direction changes the
+interaction, but the motion follows the net force, moments, and constraints—not
+one applied arrow in isolation.
 
-At the grip, a hand force can point along the club, across it in the swing plane,
-or out of that plane. Along-club force largely creates axial loading and curved-
-path support. Across-club force has a lever arm and tends to turn the club. An
-out-of-plane component can affect lie, face orientation, and spatial motion. As
-the club rotates, a force fixed in the room changes its components in the club
-frame. Direction is a moving relationship.
+At the grip, resolve a hand force along the shaft and along two transverse
+directions. These components can load the shaft, accelerate the club center of
+mass, and create a moment about that center. The moment depends on the force’s
+line of action and chosen reference; a force applied at the hand has zero moment
+about that same point. An independent grip moment is a separate load. As the club
+rotates, a force fixed in the room changes its club-frame components. Direction
+is a moving relationship, not a permanent assignment to translation or rotation.
 
-![A Hand Force Is Split Into Along-Club and Across-Club Components With Different Mechanical Roles.](figures/proximal_distal_companion/fig_companion_force_direction.svg){#fig-lay-force-direction width=92% fig-alt="A force vector at the grip is decomposed into an along-club component that mainly loads the shaft and an across-club component that creates a turning moment."}
+![Hand-Force Components and the Moment Arm From the Club Center of Mass.](figures/proximal_distal_companion/fig_companion_force_direction.svg){#fig-lay-force-direction width=92% fig-alt="Along-shaft and transverse force components act at hand point H. A distinct center of mass G defines the moment arm from G to H; the hand force has zero moment about H itself."}
 
 ## How the Mechanism Works
 
@@ -25,22 +27,50 @@ moment arm. The same vector can therefore do little translational work yet creat
 a large moment, or deliver power through a moving base while its moment about a
 particular point is small.
 
-Define club-aligned radial and tangential unit vectors. The force components are
-$F_r=\mathbf F\cdot\hat{\mathbf e}_r$ and
-$F_t=\mathbf F\cdot\hat{\mathbf e}_t$. The tangential contribution to moment
-about the hand is approximately $L F_t$ for club length $L$. The radial component
-supports centripetal acceleration and shaft tension. Neither label says whether
-power is positive; that requires the corresponding velocity.
+For the planar illustration, let $H$ be the hand point, $G$ the club center of
+mass, $\hat e_s$ the shaft direction from grip toward head, and $\hat n$ a chosen
+unit normal to the illustration plane. Define $\hat e_\perp=\hat n\times\hat e_s$.
+Then $F_s=F\cdot\hat e_s$ and $F_\perp=F\cdot\hat e_\perp$; retain
+$F_n=F\cdot\hat n$ in a spatial model. These are shaft-based components, not
+automatically the normal and tangent of the hand or clubhead trajectory.
+
+The force’s moment about $G$ is
+
+$$M_G^{(F)}=(r_H-r_G)\times F.$$
+
+In the straight-link idealization $r_G=r_H+\ell\hat e_s$, its projected moment
+is $M_G^{(F)}\cdot\hat n=-\ell F_\perp$. Here $\ell$ is the hand-to-center-of-mass
+distance, not necessarily the full club length. The figure labels the
+center-to-hand lever arm $r_{GH}=r_H-r_G$. The minus sign follows the
+stated basis. Its moment about $H$ is zero. Add any intrinsic grip moment
+separately. A real club’s center of mass may lie off the shaft line, so even an
+axial force can have a moment about $G$; use the actual vector lever arm.
+
+Nor does an axial force automatically equal a centripetal requirement. For a
+rigid offset $r_{HG}=r_G-r_H$, with angular velocity $\omega$ and angular
+acceleration $\dot\omega$, the center acceleration is
+
+$$\begin{aligned}
+a_G={}&a_H+\dot\omega\times r_{HG}\\
+&+\omega\times(\omega\times r_{HG}).
+\end{aligned}$$
+
+Hand acceleration and all external loads enter the balance. Only in a declared
+fixed-center circular case does the inward net-force component reduce directly
+to $m v^2/R$. An axial grip force can deliver positive power when the hand moves
+along it, even when its moment about an on-axis center is zero.
 
 ### Vectors Rotate While Labels Stay Put
 
 Suppose the laboratory vertical force remains upward through a short interval.
-When the club is nearly horizontal, upward may be close to club-normal. When the
-club is nearly vertical, upward may be largely axial. A plot of global vertical
-force can remain positive while the club-tangential component crosses zero.
+When the club is nearly horizontal, upward may be largely transverse to the
+shaft. When the club is nearly vertical, upward may be largely axial. A plot of
+global vertical force can remain positive while the signed shaft-transverse
+component $F_\perp$ crosses zero.
 Mechanistic claims should use the frame tied to the proposed job and provide the
 transform back to measured coordinates.
 
+@fig-lay-force-direction identifies the application point and moment arm.
 The technical figures draw vectors on model snapshots because time traces alone
 hide this geometry. At each selected phase, the reader can see force origin,
 direction, scale, reference point, club orientation, and sign convention. A good
@@ -48,21 +78,30 @@ vector figure is an argument, not decoration.
 
 ### A Force Can Accelerate One Coordinate and Decelerate Another
 
-Generalized coordinates are not independent Cartesian directions. Through the
-Jacobian transpose, one hand force maps into several joint torques. A force that
-creates positive club angular acceleration may create negative arm acceleration.
-This is precisely how interaction can redistribute motion without violating
-action-reaction.
+Generalized coordinates need not be independent Cartesian directions. For a
+specified force on a modeled body, virtual work gives $Q_H=J_H^T F_H$, where
+$J_H$ maps generalized velocity to its application-point velocity. Include the
+opposite interface load when the other body is also inside the modeled system.
+Generalized forces are moments only for the corresponding angular coordinates.
+After resolving ideal constraints, a contribution $Q_k$ produces
+$\ddot q^{(k)}=M^{-1}Q_k$ at the same state in a nonsingular model. For example,
+$M=\left[\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right]$ and
+$Q_k=(1,0)^T$ give $\ddot q^{(k)}=(2/3,-1/3)^T$. Coupled response can have opposite
+signs without violating action–reaction; it does not identify the source of
+energy or muscle effort. Unreduced constrained equations require the associated
+reaction solve, not an unconstrained inverse mass matrix.
 
 The mass matrix then mixes generalized forces into accelerations. Looking only
-at the sign of $F_t$ does not guarantee the sign of $\ddot q_2$ when other terms
-are present. Exact decomposition solves the coupled equations at the same state
+at the sign of $F_\perp$ does not guarantee the sign of the relative wrist
+acceleration $\ddot q_2$, where $q_2$ is the wrist angle relative to the arm
+in the two-link example, when other terms are present. Exact decomposition solves the coupled equations at the same state
 and reports the contribution rather than inferring it from one arrow.
 
 ### Direction Through the Downswing
 
 Early in the downswing, the hand path and club orientation can make a large
-reaction mostly radial. It carries and redirects the club. Later, as relative
+reaction mostly along the shaft. Its path-radial role depends on the declared
+center of curvature. Later, as relative
 angle changes, a similar interaction can have a stronger tangential projection.
 Near the impact zone, two separated hand forces may form a negative swing-normal
 couple even while other pathways increase club kinetic energy.
@@ -80,13 +119,14 @@ by the wrist's relative opening rate. If either motion stops, the product is
 zero. It is therefore a compact way to ask how simultaneous proximal rotation
 and distal unfolding reshape the joint-coordinate balance.
 
-A second contribution is the **Squared-Speed Term**. It contains one rotation
-rate squared. This is the coordinate-equation counterpart of the inward demand
-needed to keep mass following a curved path. In an inertial-frame free-body
-diagram, that inward requirement is called centripetal. A person describing the
-same balance from a rotating frame may use the outward inertial label
-centrifugal. They are two viewpoints on one interaction, not forces to add
-together.
+A second contribution is the **Squared-Speed Term**: the collected terms
+proportional to individual coordinate-rate squares in this registered model.
+Curvature contributes to such terms, but this bin is not a measured inward
+contact force. Centripetal describes an inward acceleration requirement in a
+declared motion; centrifugal is an inertial term introduced in a rotating
+observer’s equations. Those are different balance conventions. Do not add a
+rotating-frame pseudo-force to an inertial free-body diagram that already
+accounts for the motion.
 
 Gravity supplies a third, configuration-dependent contribution. Unlike the
 other two, it does not require motion. It can help or oppose the declared
@@ -98,9 +138,12 @@ the same mechanism twice.
 These categories are coordinate-dependent. In this study the arm angle is
 absolute and the wrist angle is relative to the arm. A different coordinate
 choice can move algebra between cross-speed and squared-speed bins without
-changing the physical trajectory. The complete velocity effect is the more
-stable object; the named split is an explanatory lens whose coordinate label
-must travel with every number.
+changing the physical trajectory. The full equations must transform together. Even the complete velocity-bias
+vector is not independently invariant under a nonlinear coordinate change:
+a free Cartesian particle $x=q^2$ has $\ddot x=0$, yet
+$\ddot q=-\dot q^2/q$ for $q>0$. Its curved coordinate description introduces
+a velocity term. Compare reconstructed physical accelerations and power, and
+carry the coordinate and decomposition convention with every named contribution.
 
 ### Why an Outward Energy Story Needs More Than a Force Name
 
@@ -132,19 +175,32 @@ restore missing contact allocation. Directional averages can cancel when
 participants use different frames or handedness conventions. Preprocessing is
 part of the interpretation.
 
-**Model Result:** The double-pendulum audit separates radial and tangential wrist
-reaction contributions and shows that their mechanical roles change with state.
-The two-hand geometry controls reverse or remove the predicted couple when the
-moment arms are reversed or collapsed.
+**Model Result:** The archived planar double-pendulum audit reconstructs wrist
+reaction from the links’ tangential/centripetal accelerations and gravity support.
+That kinematic force balance is distinct from the coordinate-equation
+Coriolis/squared-speed split. Both require the state and declared conventions;
+neither alone identifies biological effort.
+The two-hand geometric reconstructions test the separated-force couple under
+frozen loads. They reverse that component under the stated transformations;
+they do not necessarily reverse the entire grip moment or describe a new
+forward trajectory.
 
-**Human Evidence:** Instrumented grips and inverse dynamics can estimate force
-direction, but individual hand wrenches require direct measurement and careful
-  frame registration and rigid-body convention [@featherstone2008; @koike2020;
-  @koike2016instrumented].
+**Human Evidence:** Net club motion alone does not uniquely identify both hand
+wrenches. Additional measurements or explicit allocation assumptions are needed.
+Koike’s single-instructor example used a strain-gauge handle with static
+calibration, fixed contact points, and neglected handle-piece inertia
+[@koike2016instrumented]. Choi and Park combined a six-axis internal-grip sensor
+with inverse dynamics for nine right-handed male professionals. Their estimates
+depend on the sensor/segment model; the heavier grip, hand overlap, and foam-ball
+impact limit interpretation [@koike2020]. Neither study proves a passive human
+control strategy. Rigid-body wrench conventions provide the mathematical
+background [@featherstone2008].
 
-**Hypothesis:** A late negative club couple can arise passively from the evolving
-projection of two-hand interaction forces, not solely from an actively commanded
-negative wrist moment.
+**Hypothesis:** A late negative projected force couple can occur without an
+instantaneous commanded free moment in a specified model. “Passive” must name
+which commands and dissipative terms were removed, the retained state and stored
+energy, and whether the result is a frozen-state evaluation or a new rollout.
+Its sign alone proves neither passive muscles nor whole-system passivity.
 
 **Practical Interpretation:** Replace “push harder” with a more scientific
 question: where does the force point relative to the club, hand path, and desired
@@ -156,55 +212,80 @@ Draw a force arrow at the grip. If its point of application is moving in the
 same direction, the force delivers positive power. If motion is opposite, it
 absorbs power. If motion is perpendicular, instantaneous translational power is
 zero even though the force changes momentum direction. Rotate the club and the
-same laboratory-frame force obtains different radial and tangential components.
+same laboratory-frame force obtains different shaft-axis and transverse components.
 No arrow has a permanent mechanical job independent of state.
 
 This is why phrases such as “pulling on the handle” need coordinates. Pulling
 toward the golfer, along the shaft, along the hand path, or opposite clubhead
 motion are different vectors. A force can be inward relative to the clubhead
-path but tangential relative to a joint. The scientific treatment resolves every
-force into declared frames and also reports frame-invariant power.
+path but tangential relative to a joint. Resolve each vector in declared axes while retaining the same observer and
+physical velocity. A common orthogonal axis rotation preserves a dot product.
+Changing to an observer translating with velocity $U$ instead changes force
+power by $-F\cdot U$. Distinguish a coordinate representation from a new
+observer; the scalar work and energy balances must use matching conventions.
 
 ### Force at a Point Becomes a Wrench
 
 A rigid body's external loading is summarized by a force and a moment at a
 reference point. Move the reference point and the force remains the same while
 the reported moment changes by the cross product of offset and force. This does
-not change the physics. It changes the coordinates used to describe the wrench.
+not change the physics. It changes the point about which the moment is reported.
 
-With two hands, sum the two forces for net translation and sum each hand's
-moment about the chosen club point for net rotation. Equal and opposite forces
-can cancel in net force while retaining a couple. Forces in the same direction
-can add strongly yet create little couple if their combined line passes through
-the reference point. Both common and differential hand modes matter.
+Use net external force for center-of-mass translation. In body axes, spatial
+rotation about the center obeys
+$\sum M_G=I_G\dot\omega+\omega\times(I_G\omega)$, with constant body inertia
+$I_G$. An arbitrary reference-point moment is not simply $I\dot\omega$;
+a moving-point balance needs its transport terms.
+
+For two contact forces $F_1,F_2$ at $r_1=c+d/2$ and $r_2=c-d/2$, define resultant
+$R=F_1+F_2$ and differential force $D=(F_1-F_2)/2$. Include intrinsic
+contact moments $C_1,C_2$. About a point with position $r_O$,
+
+$$\begin{aligned}
+M_O={}&(c-r_O)\times R+d\times D\\
+&+C_1+C_2.
+\end{aligned}$$
+
+The separated-force couple is $d\times D$. The common-force moment vanishes at
+the midpoint, but generally not at another reference point. Intrinsic moments can survive
+when $d=0$. An axial differential load $D$ parallel to $d$ changes internal
+loading while leaving both resultant force and force couple unchanged. Thus
+net club loading cannot generally recover individual hand loading;
+@sec-lay-ch12 examines the additional constraints and measurements needed.
 
 ### Following a Vector Through the Downswing
 
 Early in the downswing, a large grip reaction may point largely along the club,
 maintaining the curved path and transmitting proximal motion. Its direct
 tangential acceleration contribution can be modest. As the club changes
-orientation, the projection can rotate even if the laboratory-frame force
-changes smoothly. Late in the downswing, a smaller force with greater tangential
-projection or moment arm may have a larger effect on club rotation.
+orientation, the force’s shaft-axis components can change even if its
+laboratory-frame components change smoothly. Late in the downswing, a smaller
+force with a larger component perpendicular to the center-to-hand lever arm,
+or a longer lever arm, may contribute a larger moment about the club center.
 
 At the same time, hand-point velocity changes. Positive grip force power can
 coexist with a negative swing-normal couple power because the translational and
 rotational pieces differ. A complete display therefore shows the force vector,
-moment vector, contact-point velocity, angular velocity, and their two power
-dot products. One scalar cannot represent this structure.
+moment vector, contact-point velocity, angular velocity, and the paired power
+terms $F\cdot v$ and $M\cdot\omega$ at the same reference point. One scalar cannot represent this structure.
 
 ### A Geometry-Control Experiment
 
-Take a simulated state and its predicted bilateral hand forces. Run four
-reconstructions. In the first, retain original geometry. In the second, swap the
-hand contact positions but retain forces. In the third, reverse differential
-force direction. In the fourth, collapse hand separation toward zero. The
-claimed two-hand couple should respectively retain, reverse or otherwise change,
-reverse, and approach zero according to the declared cross products.
+Take a simulated state and freeze its resultant $R$, differential force $D$,
+midpoint $c$, and intrinsic moments. Reconstruct the force couple $d\times D$
+under four controls: retain $d$; replace $d$ by $-d$ by swapping contact positions;
+replace $D$ by $-D$; and shrink $d$ to zero. The force couple respectively stays
+the same, reverses, reverses, and tends to zero **if the differential force $D$ remains bounded**.
+Allowing $D$ to grow inversely with separation can keep the couple finite.
+Neither the common-force moment about another reference point nor intrinsic contact
+moments must vanish or reverse. Test the declared component, not a mislabeled
+total wrench.
 
 These controls are more informative than simply changing a force magnitude.
-They challenge the proposed geometric pathway. If the plotted couple stays
-unchanged when its moment arm is removed, the calculation or labeling is wrong.
+They challenge the proposed geometric pathway. If a nonzero separated-force
+couple survives zero separation while $D$ remains bounded, the calculation or
+labeling is wrong. A surviving intrinsic moment is
+not such an error.
 If the control behaves correctly, the model has passed a necessary mechanical
 test but has not shown that golfers use that allocation.
 
@@ -213,12 +294,18 @@ test but has not shown that golfers use that allocation.
 Instrumented grips report forces in sensor axes. Motion capture reports markers
 in laboratory axes. The club carries a moving frame, while anatomical analysis
 may use segment or joint frames. A calibration must locate each sensor and its
-orientation relative to the club. Time-varying transforms then put force,
-moment, position, and velocity into a common frame.
+orientation relative to the club. Rotate force and moment components together,
+and also transport moments when the reference point changes. Correct inertial
+loads of sensor-side hardware when needed; a raw internal sensor wrench is not
+automatically either hand’s complete wrench. Synchronize kinematics and loads
+before combining them, then propagate both rotation and position uncertainty.
 
 Small orientation errors can mix large axial forces into smaller transverse
-components. That matters when the proposed negative couple depends on a modest
-swing-normal projection. Calibration uncertainty should therefore be propagated
+components. Let $\delta$ be the sensor-axis misalignment angle. For one sign convention, a true axial/transverse pair of 100 N and
+1 N becomes $1\cos\delta-100\sin\delta$ N transversely: at
+$\delta=1^\circ$ it is about $-0.745$ N. The inferred sign reverses without a
+physical force reversal. Such leakage can alter a moment’s swing-normal projection when that moment
+depends on a small transverse force and its lever arm. Calibration uncertainty should therefore be propagated
 into couple sign and timing, and reference transforms should be tested with
 known loads before any biological interpretation.
 
@@ -248,14 +335,17 @@ wrench? Answering these questions turns an arrow from decoration into evidence.
 
 Choose two three-dimensional hand positions and force vectors. Select a club
 reference point. Compute net force and moment directly. Translate the reference
-point and recompute; then verify total wrench power is unchanged when the new
-point velocity is transformed consistently. This catches the common mistake of
+point and recompute; then verify total wrench power is unchanged for points on
+the same rigid body, seen by the same observer, when the new point velocity is
+transformed consistently. A cut through a deforming shaft or slipping interface
+requires its own local velocity and energy balance. This catches the common mistake of
 moving the moment without moving the velocity term.
 
 Resolve each force in laboratory, club, and swing frames. Reconstruct the
 original vector from every component set. Perturb sensor orientation by one or
 two degrees and observe how much a large axial force leaks into the smaller
-swing-normal component. That leakage becomes part of sign uncertainty.
+transverse component. Recompute the moment’s swing-normal projection; the
+resulting change becomes part of sign uncertainty.
 
 Animate the arrows through a simulated late downswing using one fixed scale.
 Overlay moment arms and hand velocities. The visual should explain the calculated
@@ -270,25 +360,31 @@ negative couple. A third may say shaft reaction explains the observed wrench.
 They can coexist, but each predicts a different relationship among force
 direction, hand motion, deformation, and state.
 
-Use partial interventions and measured mediators to separate them. Removing
-shaft flexibility in simulation tests the elastic route. Collapsing hand
-separation tests the differential-couple route. Preserving force while changing
-handle path tests geometric projection. A good figure places these controls
-beside baseline so the reader sees how the mechanism can fail.
+Separate algebraic checks from feasible dynamical interventions. Frozen-force
+separation changes test the couple formula; alternative velocities paired with
+the same force illustrate the power projection. Neither automatically supplies
+a trajectory satisfying Newton’s laws and contact constraints. For a causal
+comparison, reintegrate a declared model after changing geometry, compliance,
+actuation, or controller while matching the initial state and reporting new
+reactions. Removing shaft flexibility changes stored energy and often other
+dynamics; specify what was matched. Compare those trajectories separately from
+reconstructions so a correct cross product is not mistaken for a demonstrated
+human mechanism.
 
 ## Where the Picture Breaks
 
 The cart and planar arrows ignore distributed contact, three-dimensional axes,
 and deformable tissue. The real grip force acts across an area; a six-axis sensor
-reduces it to an equivalent wrench at a reference. That reduction preserves net
-effect but not pressure discomfort or local tissue load.
+reduces it to an equivalent wrench at a reference point. That reduction preserves resultant loading and, for a common rigid velocity
+field, its power. It does not preserve local deformation work, contact pressure,
+discomfort or tissue load without additional information.
 
 Force direction alone also cannot identify muscle intent. The same hand wrench
-can arise from many shoulder, elbow, wrist, and co-contraction patterns. EMG adds
+can arise from many shoulder, elbow, wrist, and co-contraction patterns. Electromyography (EMG) adds
 activation timing but not a unique force mapping.
 
 **Go Deeper:** Use the monograph's
-[force-vector mechanism chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
-[coordinate force-source chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03ba_coordinate_force_sources.qmd),
-[two-hand local geometry results](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
+[force-vector mechanism chapter](https://github.com/D-sorganization/UpstreamDrift/blob/f70f4620b61a5becec7b5abd34f1028cc588742a/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
+[coordinate force-source chapter](https://github.com/D-sorganization/UpstreamDrift/blob/f70f4620b61a5becec7b5abd34f1028cc588742a/docs/research/proximal_distal_energy_transfer/chapters/_ch03ba_coordinate_force_sources.qmd),
+[two-hand local geometry results](https://github.com/D-sorganization/UpstreamDrift/blob/f70f4620b61a5becec7b5abd34f1028cc588742a/docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd),
 and the instrumented-grip studies [@koike2020; @koike2016instrumented].
