@@ -208,6 +208,30 @@ This separates feedback latency from completion of the measurement pipeline.
 Timing examples in a description are not measured latency guarantees.
 Readers comparing monitors should ask both when an output appears and when the final parameters become available.
 
+\section{Timing, Association and Environmental Inference}
+
+Several disclosures show why a measurement pipeline needs more than a list of sensors.
+Topgolf's \patent{US11335013B2} interpolates timestamped image positions to a common time before combining them with another sensor.
+Golfzon's \patent{US10045008B2} describes alternating camera capture with estimated intermediate images.
+These methods synthesize information at a requested time; they do not create an additional exposure at that time.
+Their interpretation therefore depends on the motion between samples, particularly across impact or bounce, where an interpolation rule must account for a rapid change in velocity.
+
+Object association is a separate inference.
+Topgolf's \patent{US11644562B2} extrapolates a trajectory backward and combines position and angular error estimates before assigning a launch origin; when its criterion is unmet, it waits for more observations.
+Foresight's \patent{US10639537B2} uses launch-monitor predictions to choose among observed flight and landing records.
+A correctly reconstructed flight assigned to the wrong strike still produces incorrect feedback to the golfer.
+Moreover, agreement with a prediction used to select that flight is partly a selection effect, rather than wholly independent validation of the prediction.
+
+Environmental quantities can also be inferred rather than directly sensed.
+Topgolf's \patent{US12298326B2} compares model and observed accelerations and combines wind estimates from multiple ball trajectories.
+Because the comparison includes a flight model, aerodynamic-model error can affect the inferred wind; adding trajectories does not automatically remove a shared model error.
+FlightScope's \patent{US11573082B2} instead maps temperature, pressure and humidity to an effective altitude by matching air density to a reference environment.
+Equal density does not establish equal wind or every other aerodynamic condition, so this equivalent altitude is a defined environmental summary rather than a complete replacement for the atmosphere in a trajectory calculation.
+
+These dependencies matter when a launch monitor is used to test a swing hypothesis.
+Record which data were observed, which were interpolated, how the shot was associated with a player and which environmental assumptions entered the calculation.
+An apparent change in inferred spin or predicted distance can otherwise be attributed to the golfer when it partly reflects a change in capture, association or modeling.
+
 \section{Technical Research Map and Rights Boundaries}
 \label{sec:fto}
 
@@ -245,6 +269,7 @@ Staged display & US9242158B2 &
 \end{tabular}
 \end{table}
 
+\Needspace{20\baselineskip}
 \begin{keypoint}
 A launch monitor is a chain of observations and inferences. Radial speed,
 image displacement, surface rotation, launch conditions and predicted

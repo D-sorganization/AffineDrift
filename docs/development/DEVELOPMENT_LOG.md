@@ -27,9 +27,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/patent-catalog-rigor-4766
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/preamble.tex, articles/Launch_Monitor_Technology_Review/main.pdf, articles/Launch_Monitor_Technology_Review/research/patent-catalog-review-20261001.md
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (47 completed Flash jobs;36 new dispositions,76 cumulative first-claim reads;42 leading rows pending;80-page build/14-page visual review;38 tests,653 titles,LaTeX structure/digests and168 identifiers/111 years pass)
-- **Summary:** Refine22 catalog subjects, retain14 with explicit evidence, and explain coordinate mapping, projected axes, shared-range calibration and terrain-constrained depth. Per-entry hashes and rejected drafts recorded. No final audit credit;122 sources remain.
-- **Next step:** Push this checkpoint, finish42 leading rows/secondary references, consolidate dispositions, bind findings and run final regression before regular PR. PR4765 current-head E2E still live; other lanes pass.
+- **Last verified:** 2026-10-01 (42 additional first-claim reads; 25 refinements/17 retained; 81-page build and 15-page visual review; 38 tests, 653 titles, LaTeX structure, digests, SPEC and 78 source/row/hash checks pass)
+- **Summary:** Complete leading-entry reads (118 selected in total); explain timing, association and environmental inference. Six Flash jobs failed with provider errors; 47 prior jobs remain completed. No final audit credit; 122 sources remain. PR4765 science verified on remote main 39f7553b5.
+- **Next step:** Push checkpoint and integrate main; close verified predecessors #4758/#4762; review the 50 secondary references, consolidate dispositions, bind findings and run final regression before regular PR.
+
 
 ### DL-#4763 · Geometry Technical Review
 

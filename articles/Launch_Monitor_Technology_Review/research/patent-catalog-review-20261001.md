@@ -216,3 +216,15 @@ The links below identify the publications used by the revised chapters. These ar
 - [US9955126B2](https://patents.google.com/patent/US9955126B2/en)
 - [US9958527B2](https://patents.google.com/patent/US9958527B2/en)
 - [WO2003032006A1](https://patents.google.com/patent/WO2003032006A1/en)
+
+## Remaining Leading Entries — October 1, 2026
+
+The lead reviewed the remaining42 abstracts and first claims, with targeted description checks for image features, unsynchronized cameras, antenna geometry and brightness compensation. There are now118 selected first-claim reads and no pending leading-entry reads. The consolidated disposition file contains78 records from the two disposition checkpoints:47 refined subjects and31 retained subjects. Earlier selected reviews remain documented in the preceding checkpoints; these counts do not imply an all-claims legal review.
+
+Twenty-five additional subjects were refined and17 retained. The significant corrections distinguish air-density-derived effective altitude from environment-robust tracking (US11573082B2), radar-timed capture from generic sensor fusion (US9955126B2), surface features from mandatory applied markers (US11170513B2), and an image-size database from unrestricted single-camera depth reconstruction (US9605960B2). US11747461B2 retains its expressly disclosed camera/radar association while distinguishing its radar-track first claim. US20230364468A1 expressly separates the ball-image and swing-radar representations rather than integrating their positions.
+
+Retained details are source-supported: US9448067B2 describes unsynchronized cameras, US10587797B2 connects brightness compensation to spin marks, US11311789B2 describes non-uniform antennas, and US8414408B2 describes ball return. Missing words in claim1 alone do not refute those embodiments. US9737757B1's first claim uses two camera-defined planes; its abstract's ground-plane example is not a universal camera-count requirement.
+
+The new chapter discussion connects synthesized timing, launch-origin association, prediction-conditioned track selection and environmental inference to golf-swing interpretation. Interpolated frames are not additional exposures; selection using a predicted trajectory conditions the resulting agreement; shared aerodynamic-model error can persist across multiple trajectory-derived wind estimates; density-equivalent altitude does not encode the entire atmosphere.
+
+Six supplied-text comparisons were dispatched through agy CLI gemini-3.8-flash-high, in two waves of three. All ended with provider HTTP500 or503 errors and returned no review. They are recorded as failed attempts, not added to the47 completed patent support jobs. The lead completed these42 source comparisons and decisions directly. The final secondary-reference review, combined scientific binding, full regression and regular PR remain pending; corpus credit remains122 pending full-source audits plus whole-book consistency.
