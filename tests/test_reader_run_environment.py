@@ -1,20 +1,15 @@
-"""Reader run environment contracts: Binder and source downloads (#4538).
+"""Reader run environment contracts: Binder, devcontainer, and source downloads (#4538).
 
 Before this issue, a reader could not run the textbook's notebooks anywhere
-other than their own machine: no Binder environment, and `code-tools: false`
-hid the source-download menu on every page, including the pages that show
-Python reference implementations. Each check below pins one piece of that run
-environment to a single file so it cannot silently regress.
-
-The devcontainer half of #4538 is not implemented here: this session's
-sandbox denies every write under a path named `.devcontainer` (tested via
-both the Write and Bash tools, as a directory and as a root `.devcontainer.json`
-file), so the file could not be created. See the PR's "Blocked" section for
-the exact `devcontainer.json` content to add.
+other than their own machine: no Binder environment, no devcontainer, and
+`code-tools: false` hid the source-download menu on every page, including the
+pages that show Python reference implementations. Each check below pins one
+piece of that run environment to a single file so it cannot silently regress.
 """
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -97,3 +92,25 @@ def test_root_hygiene_allows_the_new_environment_file() -> None:
     from scripts.check_root_hygiene import ALLOWED_TRACKED_ROOT_FILES
 
     assert "environment.yml" in ALLOWED_TRACKED_ROOT_FILES
+
+
+def test_devcontainer_configuration_matches_spec() -> None:
+    """The devcontainer config must exist, be valid JSON, build from the repo
+    Dockerfile targeting 'dev', and specify repository root as context.
+    """
+    devcontainer_path = REPO_ROOT / ".devcontainer" / "devcontainer.json"
+    assert devcontainer_path.is_file()
+    data = json.loads(devcontainer_path.read_text(encoding="utf-8"))
+    assert data["name"] == "AffineDrift"
+    assert "build" in data
+    assert data["build"]["dockerfile"] == "../Dockerfile"
+    assert data["build"]["context"] == ".."
+    assert data["build"]["target"] == "dev"
+    assert data.get("forwardPorts") == [8000, 8888]
+
+
+def test_root_hygiene_allows_devcontainer_directory() -> None:
+    """The root-hygiene allowlist must permit the .devcontainer directory."""
+    from scripts.check_root_hygiene import ALLOWED_TRACKED_ROOT_DIRECTORIES
+
+    assert ".devcontainer" in ALLOWED_TRACKED_ROOT_DIRECTORIES
