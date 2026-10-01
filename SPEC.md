@@ -224,7 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-10-01 | #4763 | Correct moment-arm geometry, wrench–power and Jacobian mappings, singularity/inertia interpretation and matched scalar allocation evidence in Chapter 4. |
+| 2026-10-01 | #4765 | Correct moment-arm geometry, wrench–power and Jacobian mappings, singularity/inertia interpretation and matched scalar allocation evidence in Chapter 4. |
 | 2026-10-01 | #4762 | Correct robust-speed risk, finite Pareto, provider sampling and selection claims; reproduce eight-program archived evidence and replace mismatched tradeoff figure. |
 | 2026-10-01 | #4758 | Correct complete-state prediction, velocity reversal, memory, intervention and measurement claims with independent counterexamples and scoped evidence. |
 | 2026-10-01 | #4755 | Correct arm–wrist task/wrench equivalence, preload dynamics and causal interpretation; publish archived transmission traces and scoped scientific evidence. |
