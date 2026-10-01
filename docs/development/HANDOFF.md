@@ -1,12 +1,12 @@
 # Patent Catalog Final Source Checkpoint — #4766
 
-- Goal active under epic #4009 and corpus #4021. Owned AffineDrift-link-health worktree; branch fix/patent-catalog-rigor-4766. Final source checkpoint 38bb58ae552f4313d9eaa09c925f462494a3946b; source-bound receipt reports/technical-review/patent-catalog-final-validation.json. Regular PR pending.
+- Goal active under epic #4009 and corpus #4021. Owned AffineDrift-link-health worktree; branch fix/patent-catalog-rigor-4766. Final source checkpoint 38bb58ae552f4313d9eaa09c925f462494a3946b; source-bound receipt reports/technical-review/patent-catalog-final-validation.json. Regular PR #4768 is open: https://github.com/D-sorganization/AffineDrift/pull/4768. Source and binding bc38713b2 are pushed; normal commit/push hooks passed.
 - All 168 catalog macro references plus the separate Gazette first claim reviewed through abstracts, first claims and targeted descriptions. Three reports account for 40 + 78 + 50 dispositions; 14 grouped findings explain corrections. This is technical editorial review, not all-claims/legal/product-performance certification.
 - Full regression: 6377 passed, 29 skipped, 187 deselected; overall coverage78.98%, source-only rounded93.0%. Ruff, Black, configured mypy94 files and Jest546 tests/35 suites pass. Content-lint passes. Final81-page build and visual checks completed; exact Git-blob binding complete.
 - 64 agy CLI gemini-3.8-flash-high jobs completed cumulatively. Six earlier provider errors and one current permission-limited receipt job excluded; supplied-data retry succeeded. Lead retained technical adjudication.
 - All168 identifiers,111 priority rows and captured source/claim hashes verified. Prior AppendixA/E sources preserved. Chapter7 and AppendixD now credited; corpus120 pending full-source audits plus whole-book consistency.
 - PR4765 already verified on remote main39f7553b5 and predecessor PRs closed. Preserve peer23ee826, QA and historical receipts. No draft PRs, main/force/admin pushes or hook bypass. No tracked mutations during push hooks.
-- Next: push final source and binding commits with normal hooks, open regular PR with Fixes#4766, run guarded merge workflow. Lease technical-review-20261001-patents expires19:49UTC Oct1; renew as needed.
+- Next: finish PR #4768 CI/review and guarded merge; verify source parity on remote main before marking shipped. Lease technical-review-20261001-patents expires19:49UTC Oct1; renew as needed.
 
 ## Preserved Earlier Checkpoints
 

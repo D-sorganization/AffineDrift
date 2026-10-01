@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4766 · Patent Catalog Technical Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4768
 - **Issue:** #4766 (epic #4009)
 - **Branch:** fix/patent-catalog-rigor-4766
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/preamble.tex, articles/Launch_Monitor_Technology_Review/main.pdf, articles/Launch_Monitor_Technology_Review/research/patent-catalog-review-20261001.md
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (168 source/claim/context checks; 111 priority rows; full regression6377 passed; Ruff/Black/mypy/Jest/content checks pass; source binding in patent-catalog-final-validation.json)
 - **Summary:** All 168 references plus Gazette adjudicated; 14 grouped corrections; 64 completed Flash jobs with failed attempts excluded. Two audited sources credited;120 full-source audits plus whole-book consistency remain.
-- **Next step:** Push source38bb58ae5 and final binding; submit regular PR and use guarded merge after CI.
+- **Next step:** Source38bb58ae5 and bindingbc38713b2 pushed; finish PR4768 CI/review and guarded merge, then verify remote-main source parity.
 
 
 ### DL-#4763 · Geometry Technical Review
