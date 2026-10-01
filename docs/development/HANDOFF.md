@@ -1,3 +1,14 @@
+# Preload PR Main Integration — #4755
+
+- Goal active. Branch fix/preload-rigor-4753 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Source8ffffbc7e, binding3691417a4 and registrationb00f94ad5 pushed;regular PR4755 attached with protected squash auto-merge enabled. Integration checkpoint SELF.
+- PR4741 and4750 have merged on remote main; fetched main 5b58cb68b619815214014ef4d7c9cd353d23ed87. Exact atlas source/generated source/schema/rendering/release-generator/numeric-test parity verified. Scientific changes already present here; normal merge resolves only three handoff/log conflicts. Incoming checkpoint copies preserved in QA; newer preload/shaft and prior reviewer history retained. PR4748 already merged. No superseded PR closure needed for4741/4750.
+- Chapter14 completed with seven exact-source-bound findings;all48 earlier companion findings retained (55 total). Corpus125 full-source audits plus whole-book consistency pending. Full default suite6395 passes/29 skips;78.8% configured coverage,93.0% src;63 affected and36 binding checks;12 content gates;Ruff/Black835;CI-scoped mypy94;220-page PDF/parity/changed-page inspection;4 browser/axe cases. This merge changes no scientific source or PDF; rerun integrated ledger/boundary checks.
+- Next: validate/commit/push integration and verify PR4755 current-head CI/main. Older4752 still contains shaft work already included in4755; its CI run36871841169 was live at last check. Preserve it until shaft source parity reaches main. Keep protected merge only;no drafts/force/direct-main/admin override.
+- Chapter3 is the next pending source, fully read; Flash inventory and lead adjudication in QA/state-snapshot-preparation.md. No new source edits/issue yet. Fix simultaneous-velocity reversal and same-pose mass-matrix claims; separate state/parameters, delay history, uniqueness, observation and interventions. Five Flash jobs supported completed Chapter14;one routine Chapter3 inventory completed.
+- Preload lease/presence technical-review-20261001-preload expires16:01UTC. Inbox incomplete. Preserve peer23ee826 in impact-review and all QA. Use command-scoped existing owner authentication while shared bot is expired, never print token or change global account.
+
+## Preserved Earlier Checkpoints
+
 # Arm–Wrist Preload PR Checkpoint — #4755
 
 - Goal active under epic4009. Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/preload-rigor-4753 from a69ba920f. Source checkpoint 8ffffbc7ee749ecab165709b0f76ca092d0edf18; binding3691417a4 committed/pushed; regular main-target PR4755 open and attached. Registration checkpoint SELF.

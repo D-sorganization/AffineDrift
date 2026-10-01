@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (full default suite PASS/29 skips/78.8% configured coverage/93.0% src;63 integrated;36 bound;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases)
 - **Summary:** Full chapter corrections distinguish moment/wrench, conditional dynamics, causal inference and human evidence; replace wrong command-only figure with archived transmission traces. Five Flash support jobs, lead-adjudicated.Seven findings bound to exact source8ffffbc7e;48 historical findings preserved;125 full-source audits plus whole-book consistency remain.
-- **Next step:** Source8ffffbc7e and binding3691417a4 pushed;regular PR4755 attached;36 binding checks pass. Full default regression passes on stable publication. Push registration, arm protected merge and verify CI/main delivery.
+- **Next step:** Source8ffffbc7e and binding3691417a4 pushed;regular PR4755 attached;36 binding checks pass. Full default regression passes. Registrationb00f94ad5 pushed;protected auto-merge enabled. Integrate main5b58cb68b after4741/4750 merged, validate documentation/ledgers, push and verify CI/main.
 
 
 ### DL-#4751 · Shaft Memory Technical Review
@@ -47,7 +47,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4749 · Falsification Atlas Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4750 (regular; main target)
 - **Issue:** #4749 (epic #4009)
@@ -56,7 +56,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (PR4750 open;seven findings bound;32 final binding checks pass;full6381 pass/one stale-registry failure/29 skips;unsupported release withdrawn;73 integrated checks pass;12 gates;653 titles;Ruff/Black832;four final browser/axe cases)
 - **Summary:** Distinguish source adjudication from editorial comparisons; correct force/wrench, coordinate-metric and support/compliance comparisons with five Flash support jobs and lead adjudication.
-- **Next step:** Push registration, arm protected auto-merge for4750, verify current-head CI/main and close superseded4741/4748 only after parity verification.
+- **Next step:** None for atlas source: PR4750 merged remote main 5b58cb68b619815214014ef4d7c9cd353d23ed87; exact source/generator/ledger/test parity verified.4741 and4748 also merged.
 
 ### DL-#4746 · Critics Corner Technical Review
 
