@@ -20,16 +20,17 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4739 · Force, Work, and Energy Boundaries
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4741 (regular)
 - **Issue:** #4739 (epic #4009)
 - **Branch:** `fix/force-work-rigor-4739`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch10_force_work_motion.qmd`, `articles/proximal-distal-a-journey-through-the-swing.pdf`, `tests/test_force_work_review.py`, `reports/technical-review/force-work-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (77 focused pass;654 titles and184 content checks pass,4 skips; full chapter read; archived135 outcomes reselected; final215-page PDF and8 chapter pages/contents/next boundary inspected; browser4/4 and axe pass; full regression pending)
+- **Last verified:** 2026-10-01 (source803b58ecb; PDF/chapter browser verified; full6272 pass/one pin failure,93.04%; pin repaired;53 affected checks and184 content checks pass/4 skips;12 publication checks and freshness browser4/4 pass; final protected CI pending)
 - **Summary:** Correct three-dimensional work, net impulse, internal mechanical-energy conversion, coordinate-force versus physical work and archive scope; preserve human-model limits and prior book findings.
-- **Next step:** Commit source checkpoint, run stable-tree full/content validation, bind findings and create regular PR.
+- **Next step:** Push delivery metadata, verify exact-head protected CI and remote-main merge; preserve35 findings and historical provenance.
+
 
 
 ### DL-#4733 · Shallow-Wide Latency and Synergy Arguments
