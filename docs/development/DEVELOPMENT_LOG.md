@@ -18,6 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4746 · Critics Corner Technical Review
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4748 (regular; main target)
+- **Issue:** #4746 (epic #4009)
+- **Branch:** fix/critics-rigor-4746
+- **Paths:** articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd, tests/test_critics_corner_identities.py, reports/technical-review/critics-corner-review.md
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (73 focused pass;12 gates;653 titles;Ruff/Black831;96 MathJax expressions;full6372 pass/two root-hygiene failures;packaging artifacts preserved;18 follow-up and53 integrated checks pass;strict button9/10 plus two reruns pass with one navigation timeout retained)
+- **Summary:** Correct the excluded critique's error transport, pendulum units, algorithmic and empirical claims, contraction and hybrid-event arguments with lead-reviewed Flash support.
+- **Next step:** Verify protected CI and remote-main delivery of PR4748.
 ### DL-#4743 · Muscle Models and Coupled Power
 
 - **State:** in_review
@@ -81,10 +93,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/issue-4688-main-feed-order-20261001` (feed-order repair; prior route-audit branch `fix/luna-deploy-route-4688` is historical).
 - **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`, `tests/test_evidence_presentation.py`, `.github/workflows/deploy-website.yml`, `tests/test_generate_feed.py`, `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`.
 - **Started:** 2026-09-30
-- **Last verified:** 2026-10-01 (feed-order behavior evidence is source-bound to `50f8279cd566733982249da97b53160a1224a933`: strengthened lifecycle regression RED against rejected order; 3 workflow tests and 17 deployment-integrity tests passed with 1 existing skip; Ruff, Black, SPEC, title-case, and YAML checks passed. HISTORICAL route-audit evidence only: 46 focused tests and 183 content-lint tests/5 skips applied to the earlier integration; the 6,162-pass suite applies only to `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`, and the prior render applies only to `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`.)
+- **Last verified:** 2026-10-01 (feed-order behavior remains source-bound to `50f8279cd566733982249da97b53160a1224a933`; after pinned #4748 integration, 3 workflow tests, 17 deployment-integrity tests/1 existing skip, and all 6 Critics Corner identity tests pass. Claim-audit check, SPEC, 653-title, CSS budget/architecture, Ruff/Black hooks pass. Frontend mirror `--check` exits 1 because render-generated `docs/js/` mirrors are absent; no full render was run. HISTORICAL route-audit results remain revision-specific: earlier 46 focused and 183 content-lint tests, 6,162-pass suite at `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`, and render at `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`.)
 - **Summary:** PR #4713 added the reviewed record for the already-public dataset-explorer route and source-derived regression; it merged at `03ea44e`. Separately, repair main deploy ordering while preserving render → sitemap → feed, then run the unchanged blocking source link check. HISTORICAL route-audit evidence is limited to its reviewed source/revisions; population inputs were manufactured synthetic and ZTCF/proximal-distal evidence remained model-level/educational. Finding #4695 was closed via merged PR #4728. #4694 workflow-gate work is separate.
-- **Current integration:** Feed-order repair is based on main `a473831731989fce80f110bcc34745affe9ad837`; accepted workflow/test diff is commit `50f8279cd566733982249da97b53160a1224a933` (tree `efe4c26a3c16d1a3ade3f52dad3c22527fdd2a86`). It preserves render → sitemap → RSS and runs the unchanged blocking source-link command after feed generation. HISTORICAL route-audit checkpoints `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d` and `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633` and their associated tests/render are not evidence for the feed-order commit.
-- **Next step:** Root reviews the current local feed-order repair, then publishes that repair through its own PR; issue #4688 remains open pending successful main deployment. PR #4713 is already merged and is not awaiting monitoring.
+- **Current integration:** Feed-order repair is based on `a473831731989fce80f110bcc34745affe9ad837`; the branch also integrates pinned main commit `4c1ddafa5a51c2be28361bc574618a9a146f99fa` (#4748). Accepted workflow/test diff remains commit `50f8279cd566733982249da97b53160a1224a933` (tree `efe4c26a3c16d1a3ade3f52dad3c22527fdd2a86`), byte-identical after integration. All 14 incoming paths are retained and incoming non-history blobs match the pinned commit; the three authorized history files preserve both records. HISTORICAL route-audit checkpoints and their associated tests/render do not evidence feed-order behavior.
+- **Next step:** Root reviews the local integration report before deciding whether to publish the standalone feed-order PR; issue #4688 remains open pending successful main deployment. PR #4713 is already merged and is not awaiting monitoring.
 
 
 ### DL-#4730 · Ground-Reaction Boundaries and Matching Evidence

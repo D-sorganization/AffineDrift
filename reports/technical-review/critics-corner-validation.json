@@ -1,0 +1,178 @@
+{
+  "issue": 4746,
+  "epic": 4009,
+  "original_revision": "739e65bf3ab7a94964ba87b6f5c07ae67deef37f",
+  "source_sha256": "2b92cb28b868af6b53df88ae12a49ab817d38960d8aac6517bb24292c2a595bd",
+  "test_sha256": "da7f25dc1b13d4566c6412177b06fa99d521d5af3fb4b3bbf7729b71b68414ca",
+  "focused_tests": {
+    "passed": 73,
+    "new_numeric_cases": 6
+  },
+  "title_audit": {
+    "checked": 653,
+    "exit_code": 0
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/critics-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "internal_preview": {
+    "mathCount": 96,
+    "displayCount": 10,
+    "mathErrors": [],
+    "headings": [
+      "Scope of This Review",
+      "1. What Does the\nGeometric View Contribute?",
+      "2. In What Sense Is a\nDerivative Exact?",
+      "3. What Does a\nQuantitative Error Bound Require?",
+      "4. What Can DDP and iLQR\nGuarantee?",
+      "5. What Evidence\nSupports the Applications?",
+      "6. What Does a\nLinear Spacecraft Example Establish?",
+      "7. How Does This Relate to\nPrior Work?",
+      "8. What\nHappens at Contact and Other Nonsmooth Events?",
+      "Review Standard"
+    ],
+    "pageErrors": []
+  },
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov",
+    "passed": 6372,
+    "failed": 2,
+    "skipped": 29,
+    "deselected": 186,
+    "duration_seconds": 503.19,
+    "coverage_percent_src_and_scripts": 78.53,
+    "src_only_statement_counts": {
+      "statements": 13764,
+      "missed": 958
+    },
+    "failures": [
+      "tests/test_root_hygiene.py::test_root_matches_allowlist_and_hygiene_script_passes",
+      "tests/test_root_hygiene.py::test_check_root_hygiene_cli_passes"
+    ],
+    "cause": "Untracked affinedrift.egg-info remained from the earlier 04:17 local packaging run.",
+    "repair": "Preserved affinedrift.egg-info and newly generated build/dist under QA critics-full-generated, after verifying absolute worktree paths. No allowlist or test threshold changes.",
+    "targeted_after_repair": {
+      "passed": 18,
+      "command": "py -3.12 -X utf8 -m pytest tests/test_root_hygiene.py tests/test_critics_corner_identities.py tests/test_tangent_series_links.py --no-cov -q"
+    },
+    "historical_result": "Original full run remains failed; no subsequent full green run claimed."
+  },
+  "publication_scope": "Internal excluded source only; no public route or deployment claim.",
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "jobs": [
+      "claim inventory",
+      "numeric test draft",
+      "final notation checklist"
+    ],
+    "authority": "Lead scientific adjudication"
+  },
+  "audit_tests": {
+    "passed": 35,
+    "scope": "book publication and claim inventory; no ledger changes"
+  },
+  "corpus": {
+    "completed_source": "articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd",
+    "full_source_audits_pending": 129,
+    "whole_book_consistency_pending": true
+  },
+  "reviewed_source_revision": "92f33d3101d304d46b984b7f8019193c5184089a",
+  "integration": {
+    "peer_revision": "be82224977c5ac158c8de0356f286a39b0982667",
+    "kind": "Normal merge of published PR4741 copy-button correction; no conflict and no test-threshold change.",
+    "affected_python_checks_passed": 53,
+    "claim_audit_evidence_check": "passed",
+    "homepage_render": "quarto render index.qmd --to html passed; generated font-URL rewrite preserved in QA and canonical CSS restored.",
+    "strict_button_repetitions": {
+      "passed": 9,
+      "navigation_timeout": 1,
+      "failure_location": "page.goto before geometry assertions"
+    },
+    "subsequent_single_runs": [
+      {
+        "passed": 1,
+        "seconds": 24.3
+      },
+      {
+        "passed": 1,
+        "seconds": 2.2,
+        "server": "fresh local HTTP server with redirected log"
+      }
+    ],
+    "issue_4747": "Initial interpretation from test summary was incorrect; detailed log showed navigation timeout. Issue body/title corrected and closed not_planned. No extra sizing or tolerance patch applied.",
+    "local_peer_commit": "23ee82686e02a92a8bf7037e3cccdfe77dae935c in impact-review is preserved and not included; it has a competing size/test-rounding change."
+  }
+}

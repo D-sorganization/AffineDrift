@@ -1,366 +1,160 @@
-# Critic's Corner: Defending the Tangent Hyperplane Framework
-**Purpose:** Preemptive responses to anticipated criticisms
-**Audience:** Peer reviewers, skeptical practitioners, academic gatekeepers
-**Date:** January 18, 2026
+# Critic's Corner: Testing the Tangent Hyperplane Argument
 
----
+**Purpose:** State assumptions, test limits, and separate mathematical identities from engineering evidence.
+**Audience:** Technical reviewers and readers of the tangent-space series.
+**Reviewed:** October 1, 2026.
 
-:::{.callout-note}
-## About This Document
-
-This document adopts the perspective of a skeptical reviewer and addresses each criticism with concrete mathematical responses. Where defenses are incomplete, we acknowledge the gap openly. Intellectual honesty about limitations strengthens the framework — it does not weaken it.
-:::
-
-## Introduction: Steel-Manning the Opposition
-
-This document identifies the **strongest possible objections** to the Tangent Hyperplane thesis and provides rigorous defenses. We assume hostile, intelligent reviewers who will interpret ambiguities uncharitably.
-
-**Our standard:** If a defense feels weak, we revise the claim. If a criticism stands, we acknowledge the limitation explicitly.
-
----
-
-## Criticism 1: "This is Just Taylor Expansion—What's New?"
-
-### The Attack
-
-> *"You've 'discovered' that smooth functions have derivatives. Congratulations—calculus students learn this in freshman year. The Jacobian linearization is standard in every controls textbook. Where's the novelty?"*
-
-### Our Defense
-
-**We acknowledge:** The mathematics is not new. Fréchet derivatives, tangent spaces, and Jacobian linearization are classical (19th-20th century).
-
-**What IS new:**
-
-1. **Conceptual reframing:** Shifting from "linearization as approximation" to "linearization as exact infinitesimal structure"
-   - This is a **philosophical** contribution, not a mathematical one
-   - It changes pedagogy: students stop thinking "we're being lazy" and start thinking "we're exploiting exact local geometry"
-
-2. **Unified perspective:** Showing that LQR, Lyapunov stability, gain scheduling, DDP, iLQR, and MPC all exploit the **same underlying geometric principle**
-   - Prior texts treat these as separate techniques
-   - We show they're facets of "exploit tangent space exactness"
-
-3. **Residuals as geometric feature:** Framing superposition failures as **curvature**, not errors
-   - Traditional view: residuals are "what we got wrong"
-   - Our view: residuals are intrinsic manifold geometry
-
-**Analogy:** Physicists knew conservation laws before Emmy Noether, but her 1918 theorem showed they all stem from **one principle** (symmetry). We didn't discover linearization, but we show it has a **unifying geometric essence**.
-
-**Verdict:** Valid criticism of novelty claims, but pedagogical and conceptual unification is valuable. We are **synthesizers, not inventors**.
-
----
-
-## Criticism 2: "You Claim Linearization is Exact, But $f(x + \delta x) \neq f(x) + A\delta x$"
-
-### The Attack
-
-> *"On page 3, you say 'linearization is not an approximation.' But obviously $\sin(0.1) \neq 0.1$, yet linearization says it is. This is either sloppy or wrong."*
-
-### Our Defense
-
-**We acknowledge:** The phrasing is provocative and risks misunderstanding.
-
-**What we mean (and will clarify):**
-
-1. **The derivative is exact:** $A$ is the unique linear map satisfying $\lim_{\delta x \to 0} \frac{\|f(x + \delta x) - f(x) - A\delta x\|}{\|\delta x\|} = 0$ (Fréchet derivative—exact by definition of the limit)
-
-2. **The tangent space is exact:** At $x$, $T_x\mathcal{M}$ is the **exact** local linear structure (not a "first-order approx" of something else)
-
-3. **The Taylor approximation is approximate:** $f(x + \delta x) \approx f(x) + A\delta x$ has error $O(\|\delta x\|^2)$ for finite $\delta x$
-
-**We do NOT claim:** Nonlinear functions are linear. We claim: *Nonlinear functions are locally exactly linear in the limit—the tangent space captures this exactness.*
-
-**Revised language (to be added):**
-
-> **Terminology Clarification:** When we say "linearization is exact," we mean the **derivative** (the tangent map) is exact as a limit, not that the first-order Taylor polynomial equals the function for finite $\delta x$. The contribution is recognizing that this exactness is exploitable even for finite-time control via iterative methods.
-
-**Verdict:** Valid criticism. Solution: Add footnote and terminology section early. Defensible with clarification.
-
----
-
-## Criticism 3: "Your Residual Bounds Are Unverifiable"
-
-### The Attack
-
-> *"You repeatedly claim residuals are $O(\epsilon^2)$, but you never compute the constant $C$. For all I know, $C = 10^{100}$ and your 'small' perturbations are useless in practice. Without explicit bounds, this is hand-waving."*
-
-### Our Defense
-
-**We acknowledge:** This is the weakest aspect of the current thesis. The bounds are **qualitative** (order notation) rather than **quantitative** (explicit constants).
-
-**Why this matters:** For practitioners, "small enough" is ambiguous without numerical guidance.
-
-**Our plan to fix (Appendix B addition):**
-
-```markdown
-## Explicit Residual Bound (Quantitative)
-
-For $f \in C^2$ with Hessian norm $\|H\|_{\max}$:
-
-$$
-\|r(t_1)\| \leq \frac{1}{2}\|H\|_{\max} \int_{t_0}^{t_1} \|\delta x(\tau)\|^2 d\tau
-$$
-
-**Example: Pendulum**
-- $f = [\omega, -g/L \sin(\theta)]^T$
-- $H_{22} = g/L \cos(\theta)$, so $\|H\|_{\max} \approx g/L$
-- For $\epsilon = 0.1$ rad, $\|r\| \leq \frac{1}{2}(g/L)(0.1)^2 t = 0.005(g/L)t$
-
-If $g/L = 10$ rad/s², $t = 1$ s: $\|r\| \leq 0.05$ rad (2.9°) — acceptable for most applications.
-```
-
-**Why this matters:** With explicit bounds, practitioners can **decide** if residuals are negligible for their tolerance. Currently, they cannot.
-
-**Verdict:** Valid and serious criticism. Solution: Add Appendix B proof with worked example. Will be included before defense.
-
----
-
-## Criticism 4: "DDP Doesn't Always Converge—You Downplay Failure Modes"
-
-### The Attack
-
-> *"You claim DDP has 'quadratic convergence,' but any optimization textbook will tell you that's only true near a local minimum with positive definite Hessians. In practice, DDP often diverges or gets stuck. Your Chapter 11 reads like an advertisement, not rigorous analysis."*
-
-### Our Defense
-
-**We acknowledge:** The current text underemphasizes failure modes. This is a pedagogical choice (maintain enthusiasm) but risks misleading practitioners.
-
-**What we will add:**
-
-```markdown
-::: {.callout-warning}
-## When DDP Fails
-
-**Requirements for convergence:**
-1. $Q_{uu} \succ 0$ (positive definite) — often requires regularization: $Q_{uu} + \mu I$
-2. Initial trajectory reasonably close to optimum (no global convergence guarantee)
-3. Continuous, twice-differentiable dynamics and cost
-4. No active state constraints near optimum (complicates Hessian structure)
-
-**Common failure modes:**
-- **Indefinite $Q_{uu}$:** Add Levenberg-Marquardt damping ($\mu = 10^{-3}$ to $10^3$)
-- **Divergence:** Reduce step size $\alpha$ or improve initialization (try RRT*, straight-line, heuristic)
-- **Local minima:** Non-convex problems have multiple solutions; run from multiple initial guesses
-- **Constraint violations:** Use augmented Lagrangian or projected Newton
-
-**Reality check:** DDP is powerful but not magic. Like all Newton-type methods, it's locally fast but globally fragile.
-:::
-```
-
-**Verdict:** Valid criticism. Solution: Add failure mode discussion with remedies. Maintains honesty without undermining confidence.
-
----
-
-## Criticism 5: "You Have No Experimental Validation"
-
-### The Attack
-
-> *"All your 'case studies' are simulations with made-up numbers. No real robot, no real data, no comparison to ground truth. How do I know this works in practice?"*
-
-### Our Defense
-
-**We acknowledge:** This is a **pedagogical thesis**, not an experimental paper. The goal is to:
-1. Unify existing theory under geometric framework
-2. Provide clear exposition of tangent space perspective
-3. Give practitioners conceptual tools
-
-**What we are NOT claiming:**
-- That we invented DDP (Jacobson & Mayne did, 1970)
-- That our examples are novel applications (they're standard benchmarks)
-- That this framework enables control previously impossible
-
-**What we ARE claiming:**
-- The geometric perspective (tangent spaces, curvature, exactness) clarifies *why* methods work
-- This aids teaching, debugging, and extension to new domains
-
-**Experimental validation exists in literature:**
-- DDP/iLQR on quadrotors: Tassa et al. (2012), Plancher et al. (2017)
-- MPC on spacecraft: Acikmese & Ploen (2007)
-- Robot arms: multiple industrial implementations
-
-**Our contribution:** Explaining the shared geometric foundation, not demonstrating novel control.
-
-**Verdict:** Valid point. Solution: Emphasize pedagogical/unifying goal, cite experimental literature, avoid implying novelty of applications.
-
----
-
-## Criticism 6: "Your First Example (Spacecraft) is Linear—Weak Demonstration"
-
-### The Attack
-
-> *"Case Study 1 uses Clohessy-Wiltshire equations, which are already linear. Your 'tangent space framework' reduces to standard LQR. This doesn't prove your framework handles actual nonlinearity."*
-
-### Our Defense
-
-**We acknowledge:** Starting with a linear example is a **pedagogical choice** (build confidence) but creates perception problem.
-
-**Why we included it:**
-1. **Validation:** Framework subsumes linear case (desirable property)
-2. **Comparison baseline:** Establishes what "no tangent space variation" looks like
-3. **Accessibility:** Readers familiar with LQR see the connection
-
-**Why this is defensible:**
-- Unified frameworks *should* include linear systems as special cases
-- Newton's method works on quadratic problems (trivially); that doesn't invalidate its use on nonlinear problems
-
-**How we'll improve:**
-Reorder so Robot Arm (nonlinear inertia matrix, Coriolis effects) comes first. Move Spacecraft to second position with explicit note:
-
-> **Note:** The CW equations are linear, making this a limiting case where tangent spaces are constant. This validates that our framework subsumes classical LQR. For truly nonlinear orbital mechanics (elliptical orbits, J2 perturbations), tangent spaces vary with orbital phase, and DDP/iLQR provide substantial benefit over fixed-gain LQR.
-
-**Verdict:** Valid perception issue. Solution: Reorder examples, add caveat. Defensible but requires clearer framing.
-
----
-
-## Criticism 7: "You Ignore Important Prior Work"
-
-### The Attack
-
-> *"Trajectory linearization control (TLC) from the 1990s does exactly what you describe. Extended Kalman Filter (EKF) has used Jacobian linearization since Kalman & Bucy (1961). Contraction theory (Lohmiller & Slotine, 1998) analyzes stability via Jacobians. You're repackaging 60 years of control theory and claiming it's new."*
-
-### Our Defense
-
-**We acknowledge:** The mathematical content is **not new**, and the thesis should explicitly state relationships to prior work.
-
-**Our contribution relative to each:**
-
-| Prior Work | What They Did | What We Add |
-|------------|---------------|-------------|
-| **EKF** | Jacobian linearization for state estimation (filtering) | Geometric interpretation, extension to deterministic optimal control, unified pedagogy |
-| **TLC** | Trajectory tracking via repeated linearization | Geometric language (tangent spaces), connection to LQR/MPC/DDP, pedagogical synthesis |
-| **Contraction** | Stability analysis via Jacobian negativity | Focus on optimization (not just stability), residual quantification, case studies |
-| **DDP** | Trajectory optimization via local quadratic approx | Explicit tangent space interpretation, connection to Fréchet derivatives, integration with LQR |
-
-**What's novel:**
-1. **Pedagogical synthesis:** Treating these as manifestations of one principle (tangent space exactness)
-2. **Geometric language:** Emphasizing manifolds, curvature, tangent bundles (differential geometry vocabulary)
-3. **Residuals as features:** Reframing "errors" as intrinsic geometric properties
-
-**What's NOT novel:** The algorithms, the Jacobians, the convergence proofs
-
-**To be added (Conclusion):**
-
-```markdown
-## Relationship to Existing Literature
-
-This thesis does not claim to invent linearization, Jacobians, or trajectory optimization. These are well-established (Kalman, Jacobson, Lohmiller, and many others). Our contribution is **conceptual synthesis**:
-
-**We argue that:**
-- EKF, LQR, TLC, DDP, iLQR, MPC, and contraction analysis all exploit the **same geometric principle**: exactness of tangent space linearity
-- Framing this explicitly (via differential geometry) **clarifies** why methods work and when they fail
-- **Residuals** are not errors to minimize but **curvature** to understand
-
-**This is not a claim of algorithmic novelty.** It is a **pedagogical and conceptual** contribution—showing that disparate techniques share a unified foundation.
-
-**Analogy:** Noether's theorem didn't invent conservation laws; it showed they all come from symmetry. We didn't invent linearization; we show it all comes from tangent space geometry.
-```
-
-**Verdict:** Valid and critical. Solution: Add "Related Work" section explicitly positioning contribution as synthesis, not invention. Essential before defense.
-
----
-
-## Criticism 8: "C¹ Smoothness is Unrealistic for Real Systems"
-
-### The Attack
-
-> *"You require continuously differentiable dynamics, but real systems have friction (discontinuous), impacts (velocity jumps), mode switches (hybrid), and saturated actuators (non-smooth). Your framework is useless for actual engineering."*
-
-### Our Defense
-
-**We acknowledge:** $C^1$ smoothness is a **modeling assumption**, not a physical truth. Many real systems violate this.
-
-**Our counterarguments:**
-
-1. **Regularization works in practice:**
-   - Coulomb friction → Stribeck model (smooth approximation)
-   - Saturation → tanh or soft-clipping (smooth)
-   - Impacts → compliant contact (spring-damper, smooth)
-
-   **These approximations are standard in trajectory optimization.**
-
-2. **Hybrid systems have separate tangent spaces per mode:**
-   - Dynamics smooth within each mode
-   - Framework applies mode-by-mode
-   - Guard conditions (switches) handled separately (e.g., via mode scheduling)
-
-3. **Discontinuities are measure-zero in time:**
-   - Impact lasts 0 seconds (in idealization)
-   - Between impacts, dynamics are smooth → framework applies
-   - Special handling at discontinuities (e.g., impact map) doesn't invalidate framework for 99.99% of trajectory
-
-**What we will clarify:**
-
-```markdown
 ::: {.callout-note}
-## Smoothness Requirement and Practical Reality
+## Scope of This Review
 
-**Assumption:** $f \in C^1$ (continuously differentiable)
-
-**Real systems often violate this:**
-- Friction: Use smooth Stribeck approximation
-- Impacts: Treat separately via impact map (Newton's restitution law)
-- Saturated actuators: Use smooth tanh approximation or projected gradient
-- Hybrid systems: Apply framework per mode, switch at mode transitions
-
-**Why this is acceptable:**
-- Regularized models are standard in trajectory optimization (necessary for gradient-based methods)
-- Framework applies during smooth segments (which dominate most trajectories)
-- Non-smooth events (impacts, switches) are handled with specialized techniques
-
-**Limitation acknowledged:** Pure Coulomb friction or instantaneous impacts require differential inclusions (beyond scope). Extensions possible via Filippov solutions or hybrid automata.
+This internal companion manuscript is excluded from the public site build. The [reference manuscript](Tangent_Hyperplanes_Unified_Thesis.qmd) develops the derivations; the [series overview](TABLE_OF_CONTENTS.qmd) identifies the public reading path. These examples check declared mathematical models. They are not measurements of golfers or evidence of a superior teaching method.
 :::
-```
 
-**Verdict:** Valid concern. Solution: Explicit discussion of regularization and hybrid systems. Limitation is acknowledged, but framework remains broadly useful.
+## 1. What Does the Geometric View Contribute?
 
----
+Derivatives, variational equations, local optimal-control methods, and differential stability analysis are established mathematics. The useful proposal here is pedagogical: follow a perturbation from its input, through the changing dynamics, to the output that matters. No priority claim or new convergence theorem follows from presenting these ideas together.
 
-## Summary: Overall Defensibility
+For a golf model, a torque-command change affects acceleration through the current mass matrix and constraints; the state perturbation is transported along the swing; the terminal task map converts it into a change in clubhead speed or face orientation. Muscle activation, tendon compliance, and contact may belong inside those dynamics rather than being independent corrections applied afterward. An instantaneous input gain alone cannot describe this chain.
 
-| Criticism | Validity | Severity | Defense Strength | Status |
-|-----------|----------|----------|------------------|--------|
-| 1. Just Taylor expansion | Valid | Medium | Strong (synthesis claim) | Add Related Work section |
-| 2. "Exact" language misleading | Valid | High | Strong with clarification | Add terminology section |
-| 3. Unverifiable residual bounds | Valid | High | Weak (needs Appendix B) | Add quantitative proof |
-| 4. DDP failure modes downplayed | Valid | Medium | Strong (add warnings) | Add failure mode callouts |
-| 5. No experimental validation | Valid | Low | Strong (pedagogical thesis) | Clarify scope |
-| 6. Linear spacecraft example first | Valid | Low | Medium (reorder + caveat) | Reorder case studies |
-| 7. Ignores prior work | Valid | High | Strong (add comparisons) | Add Related Work section |
-| 8. C¹ unrealistic | Valid | Medium | Strong (regularization) | Add smoothness discussion |
+This perspective does not reduce every method to one theorem. LQR optimizes a specified linear-quadratic problem. Lyapunov analysis can use nonlinear energy functions without linearizing. MPC repeatedly solves a finite-horizon problem and need not use tangent approximations. Shared use of local models in some implementations does not supply shared guarantees of feasibility, stability, or optimality.
 
----
+## 2. In What Sense Is a Derivative Exact?
 
-## Recommendations for Revision
+In a declared coordinate chart, differentiability at $x$ means there is a linear map $Df(x)$ satisfying
 
-**Before Defense (High Priority):**
-1. Add "Terminology: Exact vs. Approximate" section (addresses Criticism 2)
-2. Add "Related Work" section to Conclusion (addresses Criticisms 1, 7)
-3. Add Appendix B with quantitative residual bounds (addresses Criticism 3)
-4. Add failure mode warnings to Chapter 11 (addresses Criticism 4)
-5. Add smoothness discussion to Chapter 1 (addresses Criticism 8)
+$$
+f(x+h)=f(x)+Df(x)h+\rho(x,h),\qquad
+\frac{\|\rho(x,h)\|}{\|h\|}\longrightarrow0.
+$$
 
-**After Defense (Lower Priority):**
-6. Reorder case studies (addresses Criticism 6)
-7. Add experimental validation references (addresses Criticism 5)
+The derivative is a well-defined mathematical object; the finite first-order prediction is generally approximate. Differentiability gives a little-$o(\|h\|)$ remainder. A locally Lipschitz derivative, including a bounded continuous Hessian on the relevant segment, supplies an $O(\|h\|^2)$ bound. Merely assuming $C^1$ does not supply that stronger order: $f(h)=|h|^{3/2}$ at zero is a counterexample.
 
----
+For a smooth map between manifolds, its tangent map sends one tangent space into another. Comparing finite states still requires a chart, retraction, or other declared construction. A Hessian of coordinate components is not, by itself, intrinsic Riemannian curvature. Nonlinear response also occurs on flat Euclidean state spaces.
 
-## Final Verdict: Is This Thesis Defensible?
+## 3. What Does a Quantitative Error Bound Require?
 
-**Yes, with targeted revisions.**
+### Separate the Three Errors
 
-The core mathematics is sound. The criticisms are about:
-- **Framing** (exact vs. approximate language)
-- **Completeness** (missing comparisons, proofs, caveats)
-- **Positioning** (pedagogical vs. algorithmic novelty)
+A first-order **prediction error** compares a nonlinear trajectory with its linearized prediction. A four-trajectory **interaction residual** compares combined and separate perturbations after subtracting the evolved nominal trajectory. A **physical-model error** compares modeled behavior with the actual system. None automatically bounds the other two.
 
-None of these require changes to the central thesis. They require **clarifications** to prevent misunderstanding and **citations** to acknowledge prior work.
+Consider $\dot x=f(t,x,u)$ and a nominal solution $(\bar x,\bar u)$. Use fixed scales for state and input components so all norms below have a declared meaning. Assume $f$ is continuous in time and $C^2$ in $(x,u)$ on a tube containing both trajectories and their connecting segments. Put
 
-**After implementing the 5 high-priority revisions, this thesis is defensible at the PhD level.**
+$$
+\Delta x=x-\bar x,\quad \Delta u=u-\bar u,\quad
+A=f_x(t,\bar x,\bar u),\quad B=f_u(t,\bar x,\bar u).
+$$
 
-The contribution is real: **conceptual unification via geometric perspective**. This is valuable even if the math is classical—many important works in science are synthetic (Darwin, Noether, Shannon) rather than purely inventive.
+The finite linearized prediction $\xi$ solves $\dot\xi=A\xi+B\Delta u$ with $\xi(t_0)=\Delta x(t_0)$. Define $e=\Delta x-\xi$ and the vector-field remainder
 
----
+$$
+\rho=f(t,\bar x+\Delta x,\bar u+\Delta u)
+-f(t,\bar x,\bar u)-A\Delta x-B\Delta u.
+$$
 
-**Prepared by:** The Critic (Adversarial Scientific Reviewer) & Thesis Defender (co-authored)
-**Purpose:** Steel-man opposing arguments, provide rigorous defenses
-**Outcome:** Strengthened thesis ready for hostile peer review
+Then $\dot e=Ae+\rho$. With $\Phi(t,s)$ the state-transition matrix of $A$, variation of constants gives the exact identity
+
+$$
+e(T)=\int_{t_0}^{T}\Phi(T,s)\rho(s)\,ds.
+$$
+
+If the joint Hessian in $(x,u)$ has bilinear operator norm at most $H(s)$ on every connecting segment,
+
+$$
+\|e(T)\|\leq\frac12\int_{t_0}^{T}
+\|\Phi(T,s)\|H(s)\|(\Delta x(s),\Delta u(s))\|^2\,ds.
+$$
+
+This conditional bound needs the *actual evolving* deviations to remain in the tube. Inserting the initial perturbation everywhere does not establish that. If $\|\Phi(T,s)\|\leq K e^{\lambda(T-s)}$, $H\leq H_*$, and the joint deviation norm is at most $d$, the bound is $KH_*d^2(e^{\lambda L}-1)/(2\lambda)$, with $L=T-t_0$ and limit $KH_*d^2L/2$ at $\lambda=0$. A bound proportional to elapsed time alone needs controlled transport.
+
+### A Counterexample to Omitting Transport
+
+In nondimensional variables, take $\dot x=ax+u^2$, $x(0)=0$, and constant $u=\epsilon$ about the zero-input nominal. The first-order input response is zero, but
+
+$$
+e(T)=\epsilon^2\frac{e^{aT}-1}{a},\qquad
+e(T)=\epsilon^2T\quad\text{if }a=0.
+$$
+
+For $a=2$, $T=1$, and $\epsilon=0.1$, the error is approximately $0.0319453$, exceeding the untransported estimate $\epsilon^2T=0.01$. Two constant perturbations $\epsilon v_1$ and $\epsilon v_2$ instead give the four-trajectory interaction $2\epsilon^2v_1v_2(e^{aT}-1)/a$. These are different residuals in the same flat state space.
+
+### A Pendulum Bound With Consistent Units
+
+For $\ddot\theta=-k\sin\theta$, where $k=g/\ell>0$ has units $\mathrm{s}^{-2}$ and angles are expressed in radians, the only nonzero second state derivative of the acceleration component is
+
+$$
+\frac{\partial^2(-k\sin\theta)}{\partial\theta^2}=k\sin\theta.
+$$
+
+The first derivative is $-k\cos\theta$; it is not a Hessian entry. An acceleration error integrated once is a velocity error, not an angle error.
+
+Introduce dimensionless time $\tau=\sqrt{k}\,t$ and state $z=(\theta,w)$ with $w=\dot\theta/\sqrt{k}$. Then $z'=(w,-\sin\theta)$. At the downward equilibrium the linearized matrix is skew-symmetric, so its transition matrix has Euclidean norm one. For the unforced, undamped solution initialized at $(\theta_0,0)$ with $0<\theta_0<\pi$, conservation of $w^2/2+1-\cos\theta$ confines $|\theta|\leq\theta_0$ in the well around zero. Since $|\theta-\sin\theta|\leq|\theta|^3/6$,
+
+$$
+\|z(\tau)-z_{\mathrm{lin}}(\tau)\|_2\leq\frac{\theta_0^3\tau}{6},
+\qquad z_{\mathrm{lin}}=(\theta_0\cos\tau,-\theta_0\sin\tau).
+$$
+
+For $k=10\,\mathrm{s}^{-2}$, $t=1\,\mathrm{s}$ and $\theta_0=0.1$, the bound is $0.00052705$ in this scaled norm. The angle error is therefore at most $0.00052705$ radians (about $0.0302$ degrees), and the angular-velocity error is at most $\sqrt{k}$ times that bound, approximately $0.00167\,\mathrm{rad/s}$. These component bounds are conservative and model-specific. Meeting a task tolerance is a separate decision; forcing, damping, an inverted equilibrium, or different scaling requires a new argument.
+
+## 4. What Can DDP and iLQR Guarantee?
+
+DDP retains second derivatives of the dynamics in its local quadratic optimization model; the usual iLQR approximation omits those terms. Here $Q_{uu}$ is the control Hessian of the local action-value model (stage cost plus predicted downstream value). Positive-definite $Q_{uu}$ makes the unconstrained quadratic control step uniquely solvable. It does not establish global convergence, constraint satisfaction, or closed-loop stability. See the iLQR/DDP discussion in [Tedrake's trajectory-optimization notes](https://underactuated.mit.edu/trajopt.html).
+
+Quadratic local convergence belongs to a specified algorithm and regular solution. Its hypotheses include suitable smoothness and nondegeneracy, sufficiently close initialization, and appropriate step acceptance; $C^2$ alone does not universally give a quadratic Newton rate. Approximate Hessians, persistent damping, and inexact derivatives may change the rate. Do not transfer a full-DDP result to iLQR without checking its assumptions.
+
+Regularization and line searches help construct and accept steps. Their parameters depend on scaling and conditioning; no universal damping interval exists. Active constraints need an algorithm that handles them and corresponding regularity conditions. They are not categorically incompatible with fast local convergence. Check objective change, stationarity, feasibility, and derivative/integration accuracy separately; a small objective change can also mean stagnation.
+
+## 5. What Evidence Supports the Applications?
+
+The illustrative calculations establish properties of their stated models. They do not establish that golfers use a proposed control strategy or that changing technique improves performance.
+
+The earlier attribution of quadrotor experimental validation to Tassa, Erez, and Todorov (2012) was incorrect. Their [paper](https://roboti.us/lab/papers/TassaIROS12.pdf), especially its abstract and Sections II–IV, studies online trajectory optimization with simulated systems including a humanoid, acrobot, swimmer, and hopper. These are algorithmic demonstrations within their simulation setup, not hardware quadrotor experiments. As an editorial requirement, claims about industrial or human applications need an identified study with inspected methods and results.
+
+For a golf claim, specify the observable, intervention, population, measurement uncertainty, calibration, comparison conditions, and failure criterion. A manufactured identity check verifies an implementation against mathematics; a simulation sensitivity study explores a model. Neither supplies a measured effect size or causal identification in humans. Claims that a geometric presentation improves learning likewise need educational evidence.
+
+## 6. What Does a Linear Spacecraft Example Establish?
+
+Within the linear Clohessy–Wiltshire model, the first-order model reproduces the model dynamics exactly; an LQR calculation can check signs, units, and implementation. It does not validate the circular-reference-orbit and small-relative-motion assumptions against nonlinear orbital dynamics, or test nonlinear residual handling.
+
+An elliptical reference orbit can lead to a *linear time-varying* relative-motion model: time variation does not itself imply nonlinear state dependence. Comparing with a nonlinear orbital model requires specified perturbations, horizon, constraints, and controller. Neither orbital variation nor an Earth-oblateness ($J_2$) term proves DDP/iLQR outperforms a well-designed linear or gain-scheduled controller. Similarly, adding anatomical detail to a swing model does not by itself establish better prediction or control.
+
+## 7. How Does This Relate to Prior Work?
+
+| Method | Relevant Local Structure | Additional Requirement |
+|---|---|---|
+| EKF | Jacobians propagate local uncertainty approximations | Statistical assumptions and observability; nonlinear posteriors need not be Gaussian |
+| Trajectory Linearization and Gain Scheduling | Local models vary along a trajectory or operating condition | Tracking and scheduling analysis; stable frozen models alone are insufficient |
+| LQR and DDP/iLQR | Quadratic subproblems exploit dynamics and cost structure | Problem assumptions and the actual algorithm's convergence conditions |
+| Nonlinear MPC | Repeated finite-horizon optimization | Feasibility, timing and stability analysis for the formulation |
+| Contraction Analysis | Differential displacement evolves through the Jacobian | A controlled metric and contraction inequality on the relevant region |
+
+For this contraction argument, fix the input policy and write the resulting smooth dynamics as $\dot x=f(x,t)$; a feedback policy is included in $f$. A differential displacement $\delta x$ then obeys $\dot{\delta x}=A(x,t)\delta x$, with $A=\partial f/\partial x$ across the region. A smooth metric $M(x,t)$ with $mI\preceq M\preceq\bar mI$ for fixed positive constants gives
+
+$$
+\frac{d}{dt}(\delta x^TM\delta x)
+=\delta x^T(A^TM+MA+\dot M)\delta x.
+$$
+
+Here $\dot M=\partial_tM+\sum_i f_i\partial_{x_i}M$ is the derivative along the flow. The inequality $A^TM+MA+\dot M\preceq-2\lambda M$, $\lambda>0$, gives differential contraction; trajectory-distance conclusions also need connecting paths to remain in the contraction region. This is more precise than “Jacobian negativity.” See [Lohmiller and Slotine, Sections 3.3–3.4](https://web.mit.edu/nsl/www/preprints/contraction.pdf).
+
+These are relationships, not claims that the fields lacked geometric interpretations. Nor should the nonlinear EKF's history be assigned wholesale to the linear Kalman–Bucy filter. A conceptual connection is useful only while its distinct assumptions remain visible.
+
+## 8. What Happens at Contact and Other Nonsmooth Events?
+
+Smooth-segment derivatives are insufficient when perturbations change event timing. For a time-independent differentiable guard $h(x)=0$, reset $x^+=R(x^-)$, and transverse isolated event with the same nearby event sequence, the first-order jump is described by the saltation matrix
+
+$$
+\Xi=DR+\frac{(f^+-DRf^-)\nabla h^T}{\nabla h^Tf^-}.
+$$
+
+The vector fields are evaluated on their respective sides. The denominator must be nonzero. The second term accounts for event-time shifts; differentiating the reset alone misses it. Time-dependent guards and resets require additional terms. Grazing, simultaneous events, changing event order, and accumulated events require separate analysis. See [Kong et al., Section III](https://arxiv.org/html/2306.06862v3#S3).
+
+For example, let $\dot x=1$ before crossing zero, $\dot x=3$ afterward, with the identity reset. From $x(0)=-1$ at $T=2$, the endpoint is $3$. Increasing the initial state by $\delta$ advances the crossing by $\delta$ and changes the endpoint by $3\delta$. Both smooth flows have zero state Jacobian and unit transition factor, so endpoint sensitivity equals $\Xi=3$, although $DR=1$ and the event occupies no time. A golf impact cannot be dismissed on duration alone.
+
+Regularization is a modeling choice, not a prerequisite for every gradient method. Stribeck friction may retain a discontinuous sign term; compliant contact may retain nonsmooth activation; replacing saturation by $\tanh$ changes the actuator law. State the actual equations, differentiability, admissible forces, and limiting behavior, then check sensitivity to regularization and integration resolution. Coulomb sticking may need a set-valued force law; ideal impacts may instead be represented by hybrid resets. These are related but distinct constructions.
+
+## Review Standard
+
+The defensible argument is conditional: local derivatives, transport, task maps, and event sensitivity help organize model-based questions about a swing. Demonstrate their usefulness for the particular model and task. Residuals remain errors when evaluating predictions, even when they also reveal nonlinear interactions.
+
+For each application, record the reference trajectory, coordinate scales, perturbation, constraints and contact regime; distinguish symbolic results, numerical checks, simulation comparisons, and measurements. Report what would invalidate the conclusion. This internal review neither certifies the entire thesis nor establishes empirical validity or publication readiness.
