@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/reference-library-rigor-4725`
 - **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex`, `articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `reports/technical-review/reference-library-review.md`, `tests/test_reference_library_review.py`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (21 focused cases pass; PDF rebuild/visual and full repository validation in progress)
+- **Last verified:** 2026-10-01 (21 focused passes; 6178 full-suite passes/29 skips; 78.37% combined coverage and 92.95% src-only from same data; 183 post-full content passes/four skips; 78-page PDF and 20 final pages verified; Ruff/Black/titles/content gates pass; broad mypy has nine errors in unchanged production sources)
 - **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
-- **Next step:** Finish rendered evidence and full validation, preserve earlier reviews, integrate protected #4726 after merge, and deliver a regular PR. Broader technical-review goal remains active.
+- **Next step:** Science checkpoint b694b319d committed; final evidence and local checks complete with explicit type-check limitation. Integrate protected #4726 after merge and deliver a regular PR. Broader technical-review goal remains active.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 

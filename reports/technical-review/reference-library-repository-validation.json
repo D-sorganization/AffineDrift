@@ -1,0 +1,120 @@
+{
+  "issue": 4725,
+  "source_checkpoint": "b694b319de8c5b361c5e06d07c2b6282956b9897",
+  "base_main": "fb377e96dc33ee80b655284aef066f8acfb7caf1",
+  "status": "Scientific source, 78-page PDF and local validation complete; regular PR and protected remote-main delivery pending.",
+  "full_suite": {
+    "command": "py -3.12 -X utf8 -m pytest tests --cov --cov-report=term-missing --cov-report=xml",
+    "passed": 6178,
+    "skipped": 29,
+    "deselected": 185,
+    "warnings": 51,
+    "seconds": 639.35,
+    "coverage_src_and_scripts_percent": 78.37,
+    "coverage_src_only_percent": 92.95,
+    "coverage_note": "Default --cov uses configured src and scripts. The src-only figure is reported from the same execution data with coverage report --include=src/* --precision=2, for like-for-like comparison to earlier src-only checkpoints. No lowered floor and no rerun to alter coverage."
+  },
+  "subsequent_content": {
+    "passed": 183,
+    "skipped": 4,
+    "deselected": 6205,
+    "seconds": 20.86,
+    "evidence_restored_between_runs": false
+  },
+  "focused": {
+    "new": 8,
+    "existing_radar_screw": 13
+  },
+  "static": {
+    "ruff": "pass",
+    "black": "pass; 817 files unchanged",
+    "titles": "pass; 651 publishable sources",
+    "content_gates": [
+      {
+        "check": ["check_latex_environments.py"],
+        "exit_code": 0
+      },
+      {
+        "check": [
+          "check_terminology.py",
+          "--baseline",
+          "config/terminology-baseline.json"
+        ],
+        "exit_code": 0
+      },
+      {
+        "check": ["generate_worked_examples.py", "--check"],
+        "exit_code": 0
+      },
+      {
+        "check": [
+          "check_tree_parity.py",
+          "--baseline",
+          "config/tree-parity-baseline.json"
+        ],
+        "exit_code": 0
+      },
+      {
+        "check": [
+          "check_latex_structure.py",
+          "--root",
+          "articles",
+          "--baseline",
+          "config/latex-structure-baseline.json"
+        ],
+        "exit_code": 0,
+        "repair": "Split final par and endgroup onto separate lines; no checker or baseline relaxation."
+      },
+      {
+        "check": ["validate_frontmatter.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["validate_accessibility.py", "--qmd-only"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_scaffolding_styling.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_bibliography_quality.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_bibliography_cross_file.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_citation_resolution.py"],
+        "exit_code": 0
+      },
+      {
+        "check": ["check_qmd_citation_keys.py"],
+        "exit_code": 0
+      }
+    ],
+    "spec_changelog": "pass",
+    "root_hygiene": "pass after preserving own wheel artifacts"
+  },
+  "type_check_limit": {
+    "result": "Broad diagnostic failed in unchanged production source; not represented as a successful strict check. No production Python source changes in this content PR. Configured pre-push changed-src gate does not select these paths.",
+    "command": "mypy src --ignore-missing-imports --disable-error-code=no-any-unimported --disable-error-code=type-arg --disable-error-code=no-any-return --disable-error-code=unused-ignore --disable-error-code=import-untyped",
+    "errors": 9,
+    "files_checked": 186,
+    "files": [
+      "src/affine_control/lqr.py",
+      "src/affine_control/hand_wrench_protocol.py",
+      "src/tools/wrist_universal_joint/plots.py",
+      "src/tools/wrist_universal_joint/diagram.py",
+      "src/tools/wrist_universal_joint/streamlit_visualization.py"
+    ],
+    "earlier_invocation_notes": "A targetless call and an explicitly excluded scripts target were invocation errors. A src/tools strict diagnostic also found missing optional Streamlit and existing typing errors. No type-check configuration was modified.",
+    "all_affected_sources_byte_identical_to_base": true
+  },
+  "limits": [
+    "No full-book scientific certification.",
+    "No live-site deployment claim.",
+    "Protected merge still pending."
+  ]
+}
