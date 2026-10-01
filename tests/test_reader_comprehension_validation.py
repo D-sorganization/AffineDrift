@@ -165,9 +165,9 @@ def test_null_findings_and_remediations() -> None:
         assert r.target_issue_url.startswith("https://github.com/D-sorganization/")
 
 
-def test_full_study_generation_and_schema_validation(tmp_path: Path) -> None:
+def test_full_study_generation_and_schema_validation(trust_generation_root: Path) -> None:
     """Verify live repository generation and schema conformance."""
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = trust_generation_root
     study_dict, metrics = build_reader_validation_study(repo_root)
 
     assert study_dict["schema_version"] == "affinedrift.reader-comprehension-study/v1"

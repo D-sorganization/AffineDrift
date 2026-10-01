@@ -152,9 +152,9 @@ def test_release_validator_detects_digest_mismatch(tmp_path: Path) -> None:
         validate_release_package(pkg, tmp_path)
 
 
-def test_full_release_generation_and_schema_validation() -> None:
+def test_full_release_generation_and_schema_validation(trust_generation_root: Path) -> None:
     """Verify live release package generation and schema conformance."""
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = trust_generation_root
     releases = build_authoritative_releases(repo_root)
     assert len(releases) >= 1
 

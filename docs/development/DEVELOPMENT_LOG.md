@@ -31,6 +31,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Final browser/repository validation, committed evidence binding, main integration, and regular protected PR delivery.
 
 
+
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
 - **State:** in_review
@@ -48,6 +49,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 Entries stay here for 90 days after merge, then move to the archive.
 
+### DL-#4717 · Radar Screw-Kinematics Appendix Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4721 (regular)
+- **Issue:** #4717 (epic #4009)
+- **Branch:** `fix/radar-screw-rigor-4717`
+- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-e-screw-kinematics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `tests/test_radar_screw_appendix_review.py`, `reports/technical-review/radar-screw-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (40 focused and 46 post-cleanup cases pass; 6,057 full-suite passes/29 skips; separate coverage run passed at 92.95%; 180 content passes/four skips; 76-page book with fifteen final pages visually checked; Ruff/Black/mypy and content gates pass)
+- **Summary:** Distinguish a rigid-motion representation from observable information and model-based inference; correct frame, covariance, waveform, impact and output-definition claims. Preserve the rest of the book's review scope and the historical outline's provenance.
+- **Next step:** Merged remote main `bd1255f153926c7e653148b8c4db972a08ba7be9` at 2026-10-01 01:11:24 UTC, all protected checks green (36799282870). Full combined-main suite 6078 passes, 92.95% coverage; subsequent content 180 passes/four skips. Lease/presence released 01:12 UTC.
+
 ### DL-#4714 · Impact Optimality and Model Limits
 
 - **State:** shipped
@@ -59,7 +73,8 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (21 impact checks; 46 post-binding audit/numerical/hygiene checks; 179 content passes; full Windows 6036 passes and three audit/snapshot failures subsequently resolved; 92.88% coverage; Ruff/Black/mypy and 12 content gates; final 12 browser cases and 74 math expressions)
 - **Summary:** Bound the instantaneous theorem, inertia reduction and historical solver evidence; correct primary-study and human-objective inference; reconcile two linked public summaries without renewing their other review scope.
-- **Next step:** Merged remote main `24cdba4d4` with protected checks green; lease/presence released. Corpus work continues under #4009.
+- **Next step:** Complete. Regular PR #4718 merged to remote main 24cdba4d49abec347bbe56fd51cc7d5ed00ab6a5 at 2026-10-01 00:23:35 UTC; every protected check passed (CI 36792360532). Lease/presence released. Provider follow-up Tools #5393 and separately owned deployment gap #4688 remain open.
+
 
 ### DL-#4712 · Two-Hand Wrench Chapter Review
 

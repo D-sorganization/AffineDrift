@@ -9,9 +9,35 @@
 - Next: finish final visual/browser and repository checks, commit source checkpoint, bind completed audit, mark only this corpus row, integrate radar PR #4721 after protected merge, and deliver a regular PR. No provider synthesis, physical experiment, or live-site publication claim. Preserve parked #4253 and peer-owned deployment issue #4688.
 - Prior impact PR #4718 merged to remote main `24cdba4d4` with all checks green; its lease was released. Radar PR #4721 merged with all protected checks green to remote main `bd1255f153926c7e653148b8c4db972a08ba7be9` at 2026-10-01 01:11:24 UTC. Test output isolation repaired the CI evidence mutation without changing scientific bytes.
 
+- Integrated radar remote main `bd1255f153926c7e653148b8c4db972a08ba7be9`; its lease/presence released at 01:12 UTC. Preserve both completed review streams below. Only heavy-hit full validation and delivery remain in flight for this session.
+
 ## Preserved Prior Delivery Records
 
-Earlier pending statements below are historical; #4718 is now merged.
+Radar and impact reviews below are merged; their earlier pending statuses are historical.
+
+# Radar Screw-Kinematics Review — #4717
+
+- Goal active under epic #4009. Review the longest unfinished sources first; regular PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`; branch `fix/radar-screw-rigor-4717`; original main base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6`; integrated remote main `24cdba4d49abec347bbe56fd51cc7d5ed00ab6a5`.
+- Session `technical-review-20260930-screw`; lease/presence expire 2026-10-01 02:05 UTC. Renew as needed.
+- Complete Appendix E corrected for Doppler rank/nullspace, twist frames, axis/plane limits, covariance, temporal inference, sensor/waveform budgets, glints, event times and parameter definitions. Scientific report and primary read scopes are in `reports/technical-review/radar-screw-review.md` and the book's `research/radar-screw-review-dossier.md`.
+- 40 focused checks pass: general rank/SE(3) checks reused from #4309, new waveform/closure/temporal checks, six corrected source regressions, all twelve prior anchors, and existing Chapter 11 publication contract. No hardware or human experiment was performed.
+- Canonical book rebuilt to 76 pages with no undefined citations/references. All eight appendix pages, ten equations, contents/boundary and revised bibliography pages were visually checked (fifteen final pages). A range/rotation notation collision and awkward title wrap were repaired. Scientific/render receipt and dependency carry-forward are saved under `reports/technical-review/radar-screw-*`. Only this corpus row is newly completed: 139 pending after integrating #4718.
+- README summary corrected; four existing bibliography records corrected and three primary references added, permanent keys preserved. Other chapter source files remain unchanged. The historical research outline receives only a qualification notice; its full review remains in native epic child #4719.
+- Two agy Gemini 3.8 Flash supplied-text inventories independently adjudicated. No delegated tools, edits, network, or decisions.
+- PR #4712 merged remote main `be263f9cd` with all protected checks green; #4716 merged `5e1a11059`; both leases released. Impact review regular PR #4718 merged to remote main `24cdba4d49abec347bbe56fd51cc7d5ed00ab6a5` at 2026-10-01 00:23:35 UTC with all protected checks green (CI 36792360532). Its lease/presence were released at 00:24 UTC.
+- Deployment has a separately owned dataset-explorer audit gap (#4688 / #4713). Do not claim live-site publication or take over another session's PR.
+- Full Windows run passed 6,057 tests, 29 skipped, 181 deselected; 46 final root-hygiene/focused checks pass. The separate repository-required coverage run also passed 6,057 tests with 29 skips and 92.95% coverage (609.24 seconds). Content: 180 passed/four skipped. Ruff, full Black (799 files), configured mypy (93 files), title/citation/bibliography/LaTeX and evidence checks pass.
+- Source/PDF checkpoint `18c545c796ad23f6f7c44c9974017d4122bfe4bb` committed and pushed. All seven final source/PDF/test hashes verified; the dossier hash correction is exactly attributable to one Prettier underscore escape, with old/new digests retained.
+- Combined-main integration: 105 targeted checks and 180 content checks pass (four skips); claim-audit evidence and SPEC checks pass. All seven radar source/PDF/test hashes remain unchanged.
+- Regular PR [#4721](https://github.com/D-sorganization/AffineDrift/pull/4721) is open and protected auto-merge is armed. Next: finish protected CI/merge and release #4717 lease after remote-main verification. Both prior turnover streams and completed corpus rows are preserved.
+- Next longest article review is native epic child #4720, session `technical-review-20261001-heavy-hit`, in the reused `AffineDrift-impact-review` worktree on `fix/heavy-hit-consistency-4720`, base `24cdba4d4`. Lease/presence through 2026-10-01 02:29 UTC. Complete article/includes read; two supplied-text Flash inventories and primary read scopes saved locally. Published sources are not edited or newly marked complete yet. Preserve parked provider synthesis #4253.
+
+- CI run 36796606743 exposed a generator test writing into the checkout before exact-byte content verification. All three write-mode trust-generator tests now use copied real inputs in temporary roots; production generators, published artifacts and evidence checksums are unchanged. Regression failed before isolation; all 32 affected tests and 180 content checks (four skips) now pass sequentially without restoring output between them. Combined-main full-suite rerun passed 6,078 tests, 29 skipped, 181 deselected, 92.95% coverage in 632.86 seconds.
+
+## Preserved Prior Delivery Records
+
+Earlier pending statuses below are historical. Current delivery: #4718, #4712 and #4716 are merged; their leases are released. The radar appendix is in regular PR #4721.
 
 # Impact-Optimality Technical Review — #4714
 
