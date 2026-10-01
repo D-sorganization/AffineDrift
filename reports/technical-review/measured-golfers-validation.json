@@ -1,7 +1,7 @@
 {
   "issue": 4771,
   "source": "articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd",
-  "status": "final corrected source validated; binding and regular PR pending",
+  "status": "Chapter24 full audit bound; regular PR4772 pending protected delivery",
   "tests": {
     "red": "3 covariance checks pass;2 source contracts fail before prose correction.",
     "green": 5,
@@ -123,11 +123,8 @@
     ],
     "authority": "Lead-adjudicated supplied-text drafts. Rejected errors documented in measured-golfers-review.md. Lead removed unrelated exit-file fallback and preserves existing full-regression scope when binding."
   },
-  "remaining": [
-    "Exact committed-source finding binding",
-    "Regular PR and protected delivery"
-  ],
-  "corpus_pending": 119,
+  "remaining": ["Final-head CI and protected delivery"],
+  "corpus_pending": 118,
   "whole_book_consistency_pending": true,
   "integration": {
     "parent": "3d7f4ebc75f924c49c6d680e4a46983d995465af",
@@ -144,11 +141,13 @@
     "skipped": 29,
     "deselected": 187,
     "exit_code": 0,
-    "command": "py -3.12 -X utf8 -m pytest tests/ --cov --cov-report=xml --timeout=120",
+    "command": "py -3.12 -X utf8 -m pytest tests/ --cov --cov-report=xml --timeout=120; configured marker exclusions; one quiet flag retained to expose final count",
     "scope": "Configured marker exclusions;src+scripts coverage. Before final single-author wording correction; affected and publication checks follow.",
     "log": "docs\\development\\technical-review\\measured-golfers-full-coverage.txt",
     "coverage_percent_src_and_scripts": 78.9736101713024,
-    "coverage_percent_src": 93.0430357662111
+    "coverage_percent_src": 93.0430357662111,
+    "initial_exit_code": 0,
+    "coverage_scope": "src and scripts; pyproject floor unchanged"
   },
   "final_followup": {
     "affected_tests": 48,
@@ -158,5 +157,41 @@
     "pdf_pages": 223,
     "visual_pages": [163, 164, 165, 166, 167, 168, 169, 170, 171],
     "scope": "After final single-author wording correction; full6389-test run before that correction, not repeated."
-  }
+  },
+  "finding_binding": {
+    "new_findings": 9,
+    "historical_findings_preserved": 87,
+    "verification_commit": "f565c72885e73d9e463debc336322691f46ea11a",
+    "exact_git_blob_sha256": {
+      "articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd": "0dd9196195e1a6a090966313df0f9c0a243e77b7f45a95224f96ab4eca3dc7c1",
+      "scripts/make_proximal_distal_companion_expanded_figures.py": "b2aa494490b32b80a91d99a2f3d949a2b6686c072974477b64adf07ddcb8242c",
+      "tests/test_measured_golfers_review.py": "520beee79ab1017587a3269f802bb70ee723b39c5668be7fa587b1ee612e2856",
+      "articles/figures/proximal_distal_companion/fig_companion_human_evidence_pyramid.svg": "a558d1bf70efd83e8731ef8c044a3db75b392954811142b34e3c33a9b4b898e8",
+      "articles/figures/proximal_distal_companion/fig_companion_human_evidence_pyramid.pdf": "709a8714c0868066af561f5e220f750173ae96da96c0aa687ae5a95feb85a97c",
+      "reports/technical-review/measured-golfers-review.md": "37980d8b65fc16163feced7322323489b1d36554c0c8231a8392473cb494d140",
+      "reports/technical-review/measured-golfers-prior-review.json": "fbcc9aa116499585a8321d2aad2a66dea2bd99470e7896bd3919322a83e07a7c",
+      "reports/technical-review/measured-golfers-dependency-carry-forward.json": "b22c8d624d4eb1221b999e745612eda044d898a91e4479ec83c0f6ba2cc6daea"
+    }
+  },
+  "corpus": {
+    "pending": 118,
+    "completed_source": "articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd",
+    "whole_book_consistency_pending": true
+  },
+  "delivery": {
+    "pr": 4772,
+    "regular": true,
+    "attached": true,
+    "branch": "fix/measured-golfers-rigor-4771",
+    "final_source_checkpoint": "f565c72885e73d9e463debc336322691f46ea11a",
+    "source_checkpoints_pushed": true,
+    "source_push_hooks": "Normal hooks passed; no bypass.",
+    "ci": "Final binding/registration head still must pass CI before protected merge."
+  },
+  "binding_verification": "Eight exact Git-blob SHA256 values equal raw checkout bytes; nine new findings share verified source checkpoint;87 historical scientific records preserved.",
+  "binding_tests": {
+    "passed": 67,
+    "log": "docs/development/technical-review/measured-golfers-bound-tests.txt"
+  },
+  "local_processes": "All render, regression, Flash and browser jobs completed; local HTTP server stopped after verification."
 }

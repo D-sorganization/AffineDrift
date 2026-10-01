@@ -20,15 +20,15 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4771 — Measured Golfer Evidence
 
-- **Status:** in_progress
+- **Status:** in_review
 - **Issue:** #4771; epic #4009 / corpus #4021
-- **Branch:** fix/measured-golfers-rigor-4771; regular PR pending
+- **Branch:** fix/measured-golfers-rigor-4771; regular PR #4772
 - **Why:** Wrong systematic-review attribution and overbroad instrument, EMG, statistical and validation claims.
 - **Change:** Full Chapter24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Preserve87 historical findings.
 - **Last verified:** 2026-10-01;three covariance cases and two source contracts pass after RED,653 source titles. Final publication/regression/binding pending;no audit credit yet.
 - **Next:** Complete publication checks and regression, integrate PR4770/main, bind exact source bytes, regular PR and protected merge. Seven Flash drafts lead-adjudicated.
 
-- Final source validation:6389 regression passes,29 skips,187 deselections;48 followup tests,12 gates,223-page PDF/HTML,four browser profiles. Eleven Flash jobs adjudicated. Source947ad2373/integrationaa047b514 pushed;final author wording and binding checkpoint next.
+- Final source validation:6389 regression passes,29 skips,187 deselections;48 followup tests,12 gates,223-page PDF/HTML,four browser profiles. Eleven Flash jobs adjudicated. Source947ad2373/integrationaa047b514 pushed;final author wording committed and pushed at f565c72885e73d9e463debc336322691f46ea11a;nine findings bound,eight exact Git blobs verified,87 historical records preserved;118 corpus sources pending. Final PR4772 head CI/protected delivery next.
 
 ### DL-#4769 · Speed, Energy, and Power Review
 
