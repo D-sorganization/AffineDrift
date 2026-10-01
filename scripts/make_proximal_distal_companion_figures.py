@@ -133,21 +133,21 @@ def make_follow_energy() -> tuple[Path, Path]:
 
 
 def make_state_map() -> tuple[Path, Path]:
+    """Separate components of state from the conditions needed for prediction."""
     fig, axis = plt.subplots(figsize=(9, 5))
     axis.set(xlim=(0, 10), ylim=(0, 6))
     axis.axis("off")
     _box(axis, (0.4, 3.8), "Configuration\nWhere Things Are", BLUE, 2.3)
     _box(axis, (3.85, 3.8), "Velocity\nHow They Move", GREEN, 2.3)
-    _box(axis, (7.3, 3.8), "Stored State\nWhat Is Loaded", VIOLET, 2.3)
-    for x in (2.7, 6.15):
-        _arrow(axis, (x, 4.2), (x + 1.15, 4.2), INK)
+    _box(axis, (7.3, 3.8), "Internal Variables\nMemory and Mode", VIOLET, 2.3)
     _box(axis, (2.1, 1.25), "The Present State", INK, 5.8)
     for x in (1.55, 5.0, 8.45):
         _arrow(axis, (x, 3.75), (x + (5 - x) * 0.22, 2.1), GRAY)
     axis.text(
         5,
         0.55,
-        "A model asks what happens next from this complete snapshot.",
+        "Prediction Also Requires the Model and Parameters,\n"
+        "Future Inputs, Initial Time, and Well-Posed Evolution Rules.",
         ha="center",
         color=GRAY,
     )
