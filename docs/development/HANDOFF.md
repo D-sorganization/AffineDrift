@@ -1,3 +1,7 @@
+## Latest Ground Delivery Integration
+
+- SELF integrates peer PR #4713 at 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Ground source, PDF and all prior findings preserved; only handoff/log conflicts resolved. 43 focused and 184 content checks pass (four skips). Prior6232-pass full suite belongs to feae3b872. Receipt: reports/technical-review/ground-conversation-integration-4713.json. Next: push for protected PR4732 CI. No live deployment claim.
+
 # Ground-Reaction Chapter — #4730
 
 - Goal active under epic #4009; continue complete reviews and protected delivery. Regular PRs only; no draft, direct-main or bypass pushes.
@@ -10,6 +14,21 @@
 - Preserve QA artifacts, prior scoped audits, parked provider synthesis #4253, and peer-owned deployment #4688/#4713. No live deployment claim.
 
 - Parallel Chapter4 work is isolated on `fix/shallow-wide-rigor-4733` in `AffineDrift-screw-review`, source checkpoint b3410b4f040b73fa108a207b6d51e7233c75e919; do not include those edits in PR4732.
+
+## Preserved Peer Delivery Record
+
+PR #4713 merged as 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Its original record below is historical; main deployment is not verified here.
+
+# Dataset Explorer Deployment Route Audit — #4688 — Current Integration
+
+- Worktree: `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`.
+- PR #4713 is open and draft at remote head `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`, base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6`. The local branch integrates accepted candidate `046021164` with current main `fd508f04`; keep it unpushed until root review.
+- Structural checks confirm all 249 current-main route and report records/findings, inventory metadata, and main docs history are retained, with only the reviewed `/models/dataset-explorer.html` record (`ad-route-60ee227724f0`) added. Its 16 evidence hashes match source. Canonical generation yields 250 routes, 247 reviewed, 3 exempt, 0 deferred; enforced audit verifies two reports.
+- Focused audit/review tests: 46 passed. Pinned content-lint: 183 passed, 5 skipped, 6,211 deselected. Canonical evidence, inventory/publication, and SPEC checks pass. The 6,162-pass full suite is from prior tree `3c9572b6` and is not represented as full-suite validation of this integration.
+- The old `4b886599` full render, 250-page manifest and enforced audit validate `4b886599` only; the earlier interrupted `dccdceab` native exit is unknown.
+- Current-main reviewed Chapter 20 and reference-library source/audit records are preserved. Synthetic population inputs remain synthetic; ZTCF/proximal-distal evidence remains model-level/educational; no human/population validation is claimed. Keep #4695 open and #4694 separate.
+- Exact-candidate PR CI render and full revision-bound publication audit remain required; after merge, verify successful main deployment before closing #4688. Keep finding #4695 open and workflow follow-up #4694 separate.
+
 
 ## Earlier Checkpoints
 

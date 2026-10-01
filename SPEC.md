@@ -225,16 +225,16 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-10-01 | #4732 | Correct ground power and system boundaries, counterfactual reaction definitions, archived matching normalization and causal interpretation in companion Chapter 16. |
-| 2026-09-29 | #4602 | Add a generated content inventory (word count, status, last-reviewed date, canonical pointer, inbound links, outbound broken links) as JSON/CSV artifacts and a dashboard page, verified in CI. |
-| 2026-09-29 | #4614 | Adopt unified Theory Series naming across navbar, sidebar, titles, Article Index, and home page, retitle affine-nature-golf-swing as Consolidated Edition, and enforce title patterns from series metadata (#4499). |
 | 2026-10-01 | #4725 | Qualify reference-library evidence, historical specifications, patent disclosures and launch-weight sensitivity; preserve prior chapter reviews. |
 | 2026-10-01 | #4724 | Clarify spatial wrench power, observer and contact restrictions, projection sensitivity, and archived closure and native-engine evidence in companion Chapter 20. |
-| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
-| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
+| 2026-09-29 | #4602 | Add a generated content inventory (word count, status, last-reviewed date, canonical pointer, inbound links, outbound broken links) as JSON/CSV artifacts and a dashboard page, verified in CI. |
+| 2026-09-29 | #4614 | Adopt unified Theory Series naming across navbar, sidebar, titles, Article Index, and home page, retitle affine-nature-golf-swing as Consolidated Edition, and enforce title patterns from series metadata (#4499). |
 | 2026-10-01 | #4720 | Reconcile heavy-hit coupling and moving-support impedance, boundary work, acoustic evidence limits, and proposed experiments. |
 | 2026-09-30 | #4717 | Reconcile radar screw-kinematics observability, frame conventions, waveform budgets, and evidence limits in the launch-monitor appendix. |
 | 2026-09-30 | #4714 | Bound impact energy optimality, inertia equivalence, solver evidence and golfer inference; reconcile linked summaries with preserved review history. |
 | 2026-09-30 | #4712 | Reconcile companion two-hand wrench geometry, identifiability, power and archived contact/sensor evidence; correct mutable instrumented-grip citations while preserving immutable source scope. |
+| 2026-09-29 | #4611 | Standardize equation numbering on Quarto {#eq-} syntax across ch05, ch09, ch03b, volume2_content, and superposition with cross-reference test coverage (#4580). |
+| 2026-09-29 | #4612 | Remove Crawl-delay and /site_libs/ disallow from robots.txt, register robots.txt in Quarto resources, and add crawler rendering test coverage (#4571). |
 | 2026-09-30 | #4716 | Classify Quarto JavaScript action URLs outside filesystem link checks while retaining missing-file failures. |
 | 2026-09-30 | #4706 | Reconcile paired IAA biomechanics chapter signs, state and input maps, constrained/output accounting and primary-study inference. |
 | 2026-09-29 | #4613 | Configure PEP 621 packaging for src/ namespace, build release wheel, attach wheel to releases, and add external import smoke tests (#4532). |
@@ -501,3 +501,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-09-30 | #4705 | Regenerate stale evidence-presentation and research-release trust artifacts, make generator `--check` ignore `generated_on`, and add a committed-artifact freshness test. |
 | 2026-09-30 | #4700 | Regenerate `requirements-docker.lock` as a universal uv lock with platform markers (Windows-only `pywinpty` no longer breaks the Linux Docker install) and guard it against `requirements.txt` drift. |
 | 2026-09-30 | #4703 | Restore DEVELOPMENT_LOG.md entries and HANDOFF.md sections spliced by line-hunk union merges to each PR's own contiguous block (structural only) and add a pytest guarding against stacked or duplicated headings. |
+| 2026-09-30 | #4713 | For governing issue #4688, add the reviewed `/models/dataset-explorer.html` route to the claim-audit inventory and cover it in the source-derived regression; preserve open finding #4695 and model/synthetic evidence boundaries. |
