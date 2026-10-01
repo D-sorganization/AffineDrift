@@ -85,3 +85,64 @@ def test_spec_documents_the_pinned_quarto_version() -> None:
     """SPEC.md states the same Quarto version that `.quarto-version` pins."""
     pinned = _read(".quarto-version").strip()
     assert f"Quarto {pinned}" in _read("SPEC.md")
+
+
+NODE_MAJOR_PATTERN = re.compile(r"^\d+$")
+
+
+def test_nvmrc_file_is_a_single_integer_line() -> None:
+    r""".nvmrc exists, is a single integer line matching ^\d+$, and equals 22."""
+    nvmrc_path = REPO_ROOT / ".nvmrc"
+    assert nvmrc_path.is_file(), ".nvmrc file must exist"
+    raw = nvmrc_path.read_text(encoding="utf-8")
+    assert raw.endswith("\n"), ".nvmrc must end with a newline"
+    lines = raw.splitlines()
+    assert len(lines) == 1, f".nvmrc must contain exactly one line, got {len(lines)}"
+    version = lines[0]
+    assert NODE_MAJOR_PATTERN.fullmatch(version), f".nvmrc must match ^\\d+$, got {version!r}"
+    assert version == "22", f".nvmrc must equal 22, got {version!r}"
+
+
+def test_dockerfile_node_major_matches_nvmrc() -> None:
+    """Dockerfile's ARG NODE_MAJOR matches .nvmrc."""
+    nvmrc_path = REPO_ROOT / ".nvmrc"
+    assert nvmrc_path.is_file(), ".nvmrc file must exist"
+    raw = nvmrc_path.read_text(encoding="utf-8")
+    pinned = raw.strip()
+    dockerfile_text = _read("Dockerfile")
+    match = re.search(r"^ARG NODE_MAJOR=(\S+)$", dockerfile_text, flags=re.M)
+    assert match is not None, "Dockerfile must define ARG NODE_MAJOR"
+    node_major = match.group(1)
+    assert node_major == pinned, f"Dockerfile NODE_MAJOR ({node_major}) != .nvmrc ({pinned})"
+
+
+def test_workflows_specify_node_version_file_nvmrc() -> None:
+    """All workflows using actions/setup-node specify node-version-file: ".nvmrc"."""
+    workflow_dir = REPO_ROOT / ".github" / "workflows"
+    workflow_files = sorted(workflow_dir.glob("*.yml"))
+    setup_node_workflows = [
+        wf for wf in workflow_files if "actions/setup-node" in wf.read_text(encoding="utf-8")
+    ]
+    assert (
+        len(setup_node_workflows) >= 3
+    ), f"Expected at least 3 setup-node workflows, found {len(setup_node_workflows)}"
+    for workflow in setup_node_workflows:
+        text = workflow.read_text(encoding="utf-8")
+        assert (
+            'node-version-file: ".nvmrc"' in text
+        ), f'{workflow.name} must specify node-version-file: ".nvmrc"'
+        hard_coded = re.findall(r"^\s*node-version:\s*.*$", text, flags=re.M)
+        assert hard_coded == [], f"{workflow.name} hardcodes node-version: {hard_coded}"
+
+
+def test_claude_documents_pinned_node_version() -> None:
+    """CLAUDE.md documents Node 22 matching .nvmrc."""
+    nvmrc_path = REPO_ROOT / ".nvmrc"
+    assert nvmrc_path.is_file(), ".nvmrc file must exist"
+    raw = nvmrc_path.read_text(encoding="utf-8")
+    pinned = raw.strip()
+    claude_text = _read("CLAUDE.md")
+    assert (
+        f"Node.js {pinned}" in claude_text
+    ), f"CLAUDE.md must document Node.js {pinned} matching .nvmrc"
+    assert "Node.js 20" not in claude_text, "CLAUDE.md must not reference outdated Node.js 20"

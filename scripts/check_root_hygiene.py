@@ -28,6 +28,7 @@ ALLOWED_TRACKED_ROOT_FILES: frozenset[str] = frozenset(
         ".nojekyll",
         ".pre-commit-config.yaml",
         ".pre-commit-hooks.yaml",
+        ".nvmrc",
         ".prettierignore",
         ".python-version",
         ".quarto-version",
