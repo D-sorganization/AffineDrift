@@ -1,3 +1,16 @@
+# Ground Review Delivery — PR #4732
+
+- Goal active under epic #4009. Regular protected PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`; branch `fix/ground-conversation-rigor-4730`; current integration checkpoint `SELF`.
+- Scientific source remains `ff4177f0309195e040085b44b31b355f033fef3d`. All ten source/PDF/test hashes remain unchanged. Preserve all 28 ground-route findings and the immutable provider archive.
+- Integrated peer dataset audit PR #4713 and on-ramp PR #4728; latest main `3e7d6958c20ffc01a3d35f1ae43d7ff527fe370f`. Latest 55 focused and 184 content checks pass, four skipped. Prior full suite at `feae3b872`: 6,232 passed, 29 skipped, 93.04% coverage. Exact scopes: `reports/technical-review/ground-conversation-integration-4713.json` and `ground-conversation-integration-4731.json`.
+- PR #4732 remains open; protected squash auto-merge armed. Next: push this integration and verify CI on its exact head. Never bypass protection. No live deployment claim.
+- Lease/presence session `technical-review-20261001-ground-conversation` through 07:16 UTC. Shallow-wide work is separate in `AffineDrift-screw-review`; do not include it in this PR. Preserve untracked QA and parked provider synthesis #4253.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses are historical; current state is above.
+
 ## Latest Ground Delivery Integration
 
 - SELF integrates peer PR #4713 at 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Ground source, PDF and all prior findings preserved; only handoff/log conflicts resolved. 43 focused and 184 content checks pass (four skips). Prior6232-pass full suite belongs to feae3b872. Receipt: reports/technical-review/ground-conversation-integration-4713.json. Next: push for protected PR4732 CI. No live deployment claim.

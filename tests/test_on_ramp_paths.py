@@ -159,39 +159,79 @@ def test_subtitle_hours_match_learning_paths_hub() -> None:
     assert "40–160 hours" not in content
 
 
-THREE_HOUR_HEADING_PATTERN = re.compile(
-    r"^### (\d+)(?:–(\d+))? Hours \{#onramp-([\w-]+)-3hr\}$", re.MULTILINE
+THREE_HOUR_HEADING_PATTERN = re.compile(r"^### (\d+) Hours \{#onramp-([\w-]+)-3hr\}$", re.MULTILINE)
+TIER_HEADING_PATTERN = re.compile(
+    r"^### (\d+)\s*(Minutes|Hours) \{#onramp-([\w-]+)-(5min|30min|3hr)\}$", re.MULTILINE
 )
 STEP_TIME_PATTERN = re.compile(r"— ~(\d+)\s*min")
 
 
 def test_three_hour_tier_totals_match_heading() -> None:
-    """Each '3 Hours' (or renamed range) tier's summed step minutes must match
+    """Each '3 Hours' tier must have an exact '### 3 Hours' heading and its
 
-    its own heading: an exact 'N Hours' heading must sum to N*60 minutes, and
-    a 'A–B Hours' range heading must sum to somewhere between A*60 and B*60
-    minutes. This is what #4695 fixed: several '3 Hours' on-ramps only summed
-    to 120-140 minutes of listed study time.
+    summed step minutes must equal 180 minutes (~3 hours).
+    This enforces the fix for #4695, where several '3 Hours' on-ramps
+    previously totaled ~2 hours (120-140 minutes).
     """
     content = PAGE_PATH.read_text(encoding="utf-8")
     matches = list(THREE_HOUR_HEADING_PATTERN.finditer(content))
     persona_ids = _persona_ids()
-    found_personas = {m.group(3) for m in matches}
+    found_personas = {m.group(2) for m in matches}
     assert found_personas == set(persona_ids), (
-        f"Expected a 3-hour heading for every persona, got {found_personas} "
+        f"Expected an exact '### 3 Hours' heading for every persona, got {found_personas} "
         f"vs {set(persona_ids)}"
     )
 
     for match in matches:
-        low_str, high_str, persona_id = match.groups()
+        hours_str, persona_id = match.groups()
+        expected_minutes = int(hours_str) * 60
+        assert expected_minutes == 180, f"Expected 3 Hours (180 min), got {hours_str} Hours"
+
         end = content.find("\n---\n", match.end())
         assert end != -1, f"No closing '---' found after {persona_id}'s 3-hour section"
         section = content[match.end() : end]
         total_minutes = sum(int(m) for m in STEP_TIME_PATTERN.findall(section))
 
-        low = int(low_str) * 60
-        high = int(high_str) * 60 if high_str else low
-        assert low <= total_minutes <= high, (
-            f"Persona '{persona_id}' 3-hour tier sums to {total_minutes} min, "
-            f"outside heading range {low}-{high} min"
+        assert total_minutes == expected_minutes, (
+            f"Persona '{persona_id}' 3-hour tier steps sum to {total_minutes} min, "
+            f"expected {expected_minutes} min (~3 hours)"
+        )
+
+
+def test_all_tier_totals_match_heading() -> None:
+    """Sum each tier's `~N min` steps and check the total against its heading."""
+    content = PAGE_PATH.read_text(encoding="utf-8")
+    matches = list(TIER_HEADING_PATTERN.finditer(content))
+    persona_ids = _persona_ids()
+    expected_count = len(persona_ids) * len(TIER_SUFFIXES)
+    assert (
+        len(matches) == expected_count
+    ), f"Expected {expected_count} tier headings across all personas, found {len(matches)}"
+
+    for match in matches:
+        amount_str, unit, persona_id, suffix = match.groups()
+        if unit == "Minutes":
+            expected_minutes = int(amount_str)
+        else:
+            expected_minutes = int(amount_str) * 60
+
+        end = content.find("\n---\n", match.end())
+        if end == -1:
+            # Last section before ## Related Articles or EOF
+            end = content.find("\n## Related Articles", match.end())
+        if end == -1:
+            end = len(content)
+
+        # Slice section until next sub-heading or section end
+        next_heading = content.find("\n### ", match.end())
+        if next_heading != -1 and next_heading < end:
+            section_end = next_heading
+        else:
+            section_end = end
+
+        section = content[match.end() : section_end]
+        total_minutes = sum(int(m) for m in STEP_TIME_PATTERN.findall(section))
+        assert total_minutes == expected_minutes, (
+            f"Persona '{persona_id}' tier '{suffix}' steps sum to {total_minutes} min, "
+            f"expected {expected_minutes} min ({amount_str} {unit})"
         )

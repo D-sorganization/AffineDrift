@@ -42,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/ground-conversation-rigor-4730`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch16_ground_conversation.qmd`, `scripts/make_proximal_distal_companion_expanded_figures.py`, `tests/test_ground_conversation_review.py`, `reports/technical-review/ground-conversation-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (SELF: peer4713 integrated,43 focused and184 content checks pass (four skips), source/PDF unchanged; original CI36815440996 all green; integrated 6232 full tests/29 skips, 93.04% coverage, 184 content/four skips, four browser cases pass; prior6203 full tests/29 skips; 92.95% src coverage; final wording 38 focused and 183 content/four skips; 213-page PDF and four browser cases verified)
+- **Last verified:** 2026-10-01 (SELF: main3e7d6958 integrated, 55 focused and 184 content checks pass (four skips), source/PDF unchanged; original CI36815440996 all green; integrated 6232 full tests/29 skips, 93.04% coverage, 184 content/four skips, four browser cases pass; prior6203 full tests/29 skips; 92.95% src coverage; final wording 38 focused and 183 content/four skips; 213-page PDF and four browser cases verified)
 - **Summary:** Correct material contact power, internal/external wrench boundaries, ZVCF control convention and symmetric dissipation normalization; distinguish primary matching from total model contrasts and resolve post-hoc horizon counts.
 - **Next step:** Push the validated peer-main merge resolution to PR #4732.
 
