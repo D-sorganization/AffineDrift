@@ -1,3 +1,14 @@
+# Muscle Models — Regular PR #4745
+
+- Regular main-target PR: https://github.com/D-sorganization/AffineDrift/pull/4745. Pushed review/binding da493c5763121ff3a8b474395fca6ae6313ed09b; source d7be93d34322f2cbb73f8c933cf22991e604a2e5; evidence delivery46f71eda4eaf4965ffa12b5025544dce98f632b8. Current registration checkpoint SELF. Goal active.
+- Nine Chapter3 findings bound in book/claim ledgers;247 historical finding records preserved;130 full-source audits plus whole-book consistency remain. Final89 bound tests pass; full6318 pass/five repaired audit failures/29 skips/93.04%;88 repair,184 content/four skips,12 publication gates,653 titles,repository-wide Ruff and Black830 pass. Do not relabel the original failed full run green.
+- Final PDF68pages and17 physical pages visually inspected; public hub4/4 browser/axe pass. Source/PDF links pin d7be; notebook retains historical scaffold revision. Nine agy Gemini3.8 Flash jobs supported routine drafts/inventories/tests, with lead adjudication.
+- PR4741 carries Chapters9/10 combined externally asd9c21a9e5; all observed CI passes except E2E site build still running. Neither PR is verified on main. Keep PR4745 against main, preserve the dependency, and verify protected checks and actual remote-main commits before closing delivery/releasing leases.
+- Next: push registration, arm normal protected merge for4745, monitor CI at natural checkpoints and repair actionable failures. After4741 merges, fetch main and reconcile any integration conflicts without losing findings or peer theme/guide changes. Never force, admin, direct-main or draft. No live publication claim.
+- Canonical source/review and current worktree: C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health, fix/muscle-model-rigor-4743. Muscle lease through12:33UTC; Chapter9 through13:03UTC; Chapter10 through13:12UTC. Renew before expiry. Coordination board unavailable/truncated; explicit leases remain authoritative. Preserve all QA and prior receipts.
+
+## Preserved Earlier Checkpoints
+
 # Muscle Models — Review Complete, Protected Delivery Pending — #4743
 
 - Source d7be93d34322f2cbb73f8c933cf22991e604a2e5 and delivery46f71eda4eaf4965ffa12b5025544dce98f632b8 are pushed. Nine new findings bind delivery46f71 in BOTH ledgers;247 historical finding records retain all non-digest metadata. Only Chapter3 corpus row completed:130 full-source audits plus whole-book consistency remain.
