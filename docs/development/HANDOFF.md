@@ -1,3 +1,22 @@
+# Main Deploy Feed Ordering — #4688
+
+- **Repository / Working Directory:** `D-sorganization/AffineDrift`; `C:/Users/diete/Repositories/Worktrees/affine-4688-main-feed-order-20261001`.
+- **Branch / Commit:** `fix/issue-4688-main-feed-order-20261001` / `SELF` (corrected local commit; exact SHA is resolved after commit).
+- **Pull Request:** Feed-order PR not created; root review is required before publication. Earlier route-audit PR #4713 merged 2026-10-01T06:04:26Z at `03ea44ea70639f7314a773b668bef0eaa02c0cd1`.
+- **Governing Issue / Objective:** #4688, bounded repair of the current main deploy failure by generating the existing RSS feed before the existing source link check.
+- **Review Correction:** The first local commit `6618cb70ae2a4e2617469ca66cb1ef2ffefc1ddf` moved feed generation before website render and was rejected at root review. The corrected commit restores the original `Render Website` → `Generate sitemap.xml` → `Generate RSS feed.xml` lifecycle, then moves only the same blocking link-check command after feed generation. The strengthened regression failed against the rejected ordering because render position 5282 followed feed position 3589.
+- **Completed:** Retained output `docs/feed.xml`, exactly one feed-generation command, exactly one blocking source-link-check command, and all unrelated workflow guards/settings. Added regression coverage and updated the existing #4688 SPEC/development-log records in place.
+- **Root Cause:** Scoped failed job `110366141215` reported `_includes/site-head.html:63 -> /feed.xml` under `Broken Links Found` and exited 1. Feed generation occurred later in the workflow.
+- **Validation:** Lifecycle-strengthened regression failed against rejected order and passed on behavior commit `50f8279cd566733982249da97b53160a1224a933`. Its `python -m pytest tests/test_generate_feed.py::TestDeployWorkflowWiring -q` passed (3); `python -m pytest -m content_lint tests/test_deployment_integrity.py -q` passed (17, 1 existing skip). Ruff and Black on the changed test, SPEC changelog, title-case (653 sources), YAML parse, and `git diff --check` passed. This follow-up changes documentation only; scoped SPEC/title-case/log checks and commit hooks are recorded in its report. The earlier candidate's feed-generation/link-check production receipt is evidence for unchanged commands only; it does not test corrected workflow chronology. No full deployment render or post-deploy green result is claimed.
+- **Issue Status:** #4688 remains open pending successful deployment of the feed-order repair. Finding #4695 was closed via merged PR #4728. The prior route-audit work merged as #4713 at `03ea44e`; its revision-specific route tests/render remain historical and are not feed-order validation.
+- **Constraints / Assumptions:** No route migration, pruning, alias/schema/scientific content changes, inventory changes, or draft consolidation. Keep all other worktrees untouched. Issue lease remains with root's existing owner; no lease was claimed/released. Inbox/list was incomplete (`ok:false`) due malformed board comment and page limit, so roster status is unknown.
+- **Pinned Main Integration:** The local integration commit records the normal merge of `4c1ddafa5a51c2be28361bc574618a9a146f99fa` (#4748). Its 14 changed paths are retained; all incoming blobs outside the authorized `SPEC.md`, `docs/development/DEVELOPMENT_LOG.md`, and `docs/development/HANDOFF.md` history files match the pinned commit. The accepted workflow and regression test remain byte-identical to behavior commit `50f8279cd566733982249da97b53160a1224a933`. No migration-worker changes were brought in.
+- **Blockers / Worktree State:** This integration includes the five feed-fix paths plus the pinned #4748 changes. `docs/feed.xml` is ignored generated output. No CI evidence or deployment-ready claim exists.
+- **Next Step:** Root reviews the local integration report before deciding whether to publish the standalone feed-order repair through its own PR.
+- **Development Log:** `DL-#4688`.
+
+## Preserved Earlier Checkpoints
+
 # Atlas Regular PR — #4750
 
 - Goal active; regular main-target PR https://github.com/D-sorganization/AffineDrift/pull/4750 is open and attached. Branch fix/atlas-rigor-4749 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Reviewed source6dadc5, main integration/release repair8ebd0e5 and final bindinga3a861cab are pushed. Current registration checkpoint SELF.
