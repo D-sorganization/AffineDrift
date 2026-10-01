@@ -75,6 +75,12 @@ def test_book_audit_inventory_replaces_all_six_deferments() -> None:
 
 def test_blockers_are_closed_and_every_route_has_adversarial_evidence() -> None:
     allowed = {"corrected", "publication_blocked"}
+    prior = _json(ROOT / "reports/technical-review/shallow-wide-prior-reviews.json")
+    historical = {
+        (record["route"], finding["finding_id"]): finding
+        for record in prior["book_records"]
+        for finding in record["findings"]
+    }
     for route, record in _routes(_json(AUDIT)).items():
         assert record["claims"], route
         assert record["adversarial_review"]["counterexamples"], route
@@ -83,7 +89,40 @@ def test_blockers_are_closed_and_every_route_has_adversarial_evidence() -> None:
         for finding in record["findings"]:
             if finding["priority"] in {"p0", "p1"}:
                 assert finding["disposition"] in allowed
-                assert finding["verification_commit"] == record["source_revision"]
+                if finding["verification_commit"] != record["source_revision"]:
+                    original = historical[(route, finding["finding_id"])]
+                    # Current dependency hashes can change; original review facts cannot.
+                    assert {k: v for k, v in finding.items() if k != "evidence_sha256"} == {
+                        k: v for k, v in original.items() if k != "evidence_sha256"
+                    }
+
+
+def test_followup_findings_keep_the_original_book_audit_identity() -> None:
+    audit = _json(AUDIT)
+    assert audit["issue_url"].endswith("/issues/4062")
+    route = _routes(audit)["/books/human-motor-control.html"]
+    followups = [f for f in route["findings"] if f["issue_url"].endswith("/issues/4733")]
+    assert len(followups) == 3
+    assert all(f["verification_commit"] == route["source_revision"] for f in followups)
+    validate_audit(audit, SCHEMA, ROOT)
+
+
+@pytest.mark.parametrize(
+    "url",
+    [
+        "https://github.com/other/AffineDrift/issues/4733",
+        "https://github.com/D-sorganization/AffineDrift/pull/4733",
+        "https://github.com/D-sorganization/AffineDrift/issues/0",
+        "https://github.com/D-sorganization/AffineDrift/issues/4733/extra",
+        "http://github.com/D-sorganization/AffineDrift/issues/4733",
+        "https://github.com/D-sorganization/AffineDrift/issues/4733\n",
+    ],
+)
+def test_followup_findings_reject_wrong_repository_or_non_issue_urls(url: str) -> None:
+    audit = _json(AUDIT)
+    audit["routes"][0]["findings"][0]["issue_url"] = url
+    with pytest.raises(BookAuditContractError, match="issue_url"):
+        validate_audit(audit, SCHEMA, ROOT)
 
 
 def test_publication_state_chapter_coverage_and_notebook_limits_are_explicit() -> None:

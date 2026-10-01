@@ -1,457 +1,404 @@
-\chapter{Shallow-but-Wide: Why Brains Are Parallel, Not Deep}
+\chapter[Shallow-but-Wide: Latency and State]{Shallow-but-Wide:\\Latency and State}
 \label{ch:shallow-wide}
 
-\epigraph{%
-  The brain is not a deep learning system.
-  It is a massively parallel, notably shallow one.
-  This is not a bug --- it is the architecture that makes
-  real-time motor control possible.
-}{}
+\epigraph{A fast correction depends on what must be computed now,
+what is already represented, and what the mechanics do before feedback arrives.}{}
 
-\section{The Speed Constraint}
+\section{A Conditional Argument About Speed}
 
-The most fundamental constraint on neural computation is \textbf{speed}. Every
-biological computation has a time cost determined by the physics of synaptic
-transmission:
+A golf swing joins neural computation to a moving mechanical system. The controller
+must act on incomplete, delayed information while muscles, tendons, contacts and
+the club continue to evolve. Parallel processing can shorten some computational
+paths, and a learned policy can turn an existing state estimate into a command
+without solving an optimization problem from scratch. Neither observation proves
+that the brain has a universally shallow architecture. The useful question is:
+\emph{which new information must influence which output before a specified deadline?}
 
-\begin{neurobox}{Neural Timing Constraints}{timing}
-  Measured values from neurophysiology~\cite{HodgkinHuxley1952,Kandel2013}:
-  \begin{itemize}
-    \item \textbf{Synaptic delay}: 1--5~ms per chemical synapse (AMPA receptor rise time $\sim$1 ms)
-    \item \textbf{Axonal conduction}: unmyelinated $\sim$1~m/s, myelinated $\sim$100~m/s
-    \item \textbf{Action potential}: rising phase 1~ms, falling phase 2--3~ms
-    \item \textbf{Refractory period}: absolute $\sim$1--2~ms (sodium channel inactivation)
-    \item \textbf{Total per-layer delay}: $\sim$5--10~ms (synaptic + integration + propagation)
-  \end{itemize}
-\end{neurobox}
+\subsection{Define the Clock Before Counting Stages}
 
-These delays are not technological limitations to be overcome with faster hardware.
-They are \emph{fundamental physical constraints} of electrochemical signaling. No
-amount of biological optimization can reduce synaptic delay below $\sim$1~ms.
+A response measured at EMG onset, a change in muscle force, and successful recovery
+of the club trajectory have different endpoints. A budget must state the stimulus
+or perturbation onset, sensory modality, preparation and output landmark. Include
+sensory transduction, propagation, processing and the relevant output delays only
+once. Electromechanical delay belongs in a force-response budget; it does not
+belong after an endpoint defined as EMG onset.
 
-\subsection{The Depth Budget}
+There is no universal 1~ms lower bound for chemical synaptic delay. Katz and
+Miledi reported minimum delays of 0.4--0.5~ms at 20$^\circ$C, measured from the
+peak presynaptic inward current to the onset of the postsynaptic current at a
+neuromuscular junction~\cite{katzMiledi1965review}. Those landmarks and temperature
+matter: this is neither a whole sensorimotor-loop latency nor a universal cortical
+processing time. Action-potential width, receptor rise time, refractory period,
+axonal travel time and input-to-output latency are different measurements.
 
-Given the timing constraints, we can compute the maximum depth of any neural
-computation that must complete within a given time window:
-
-\begin{definition}{The Neural Depth Budget}{depth-budget}
-  For a motor task requiring a response within time $T_{\text{response}}$, the
-  maximum number of serial processing layers is:
-  \begin{equation}
-    L_{\max} = \frac{T_{\text{response}}}{\tau_{\text{layer}}},
-    \label{eq:ch4:depth-budget}
-  \end{equation}
-  where $\tau_{\text{layer}} \approx 5$--$10$~ms is the per-layer processing time.
-  For typical motor control scenarios:
-  \begin{center}
-  \renewcommand{\arraystretch}{1.3}
-  \begin{tabular}{@{}lrr@{}}
-  \toprule
-  \textbf{Task} & $T_{\text{response}}$ & $L_{\max}$ \\
-  \midrule
-  Spinal reflex & 30~ms & 3--6 \\
-  Postural correction & 100~ms & 10--20 \\
-  Voluntary movement initiation & 150--250~ms & 15--50 \\
-  Golf swing correction (mid-downswing) & 50~ms & 5--10 \\
-  Saccadic eye movement & 200~ms & 20--40 \\
-  \bottomrule
-  \end{tabular}
-  \end{center}
-  Compare this with modern deep learning: GPT-4 has $\sim$120 transformer layers;
-  ResNet-152 has 152 layers. These run on silicon at $\sim$ns per operation.
-  Biology cannot afford this depth at $\sim$ms per operation.
+\begin{definition}{A Stipulated Serial Depth Budget}{depth-budget}
+For a serial model with $L$ new processing stages, define
+\begin{equation}
+ T_{\mathrm{required}}=T_{\mathrm{fixed}}+\sum_{j=1}^{L}\tau_j.
+ \label{eq:ch4:depth-budget}
+\end{equation}
+$T_{\mathrm{fixed}}$ contains endpoint-specific delays excluded from the stage
+costs $\tau_j$. If every stage is assigned the same positive cost $\tau$ and
+$T_{\mathrm{available}}\geq T_{\mathrm{fixed}}$, then
+\[
+ L_{\max}=\left\lfloor
+ \frac{T_{\mathrm{available}}-T_{\mathrm{fixed}}}{\tau}
+ \right\rfloor.
+\]
+If the available time is smaller than the fixed delay, even zero additional
+stages cannot meet this endpoint deadline. An illustrative budget of 50~ms,
+20~ms fixed delay and 5~ms per stage permits six stages. These numbers define
+a toy calculation; they are not measured golf-response times.
 \end{definition}
 
-\section{The Motor Cortex: Six Layers, Not Sixty}
+For a computation with parallel branches, use the longest required dependency
+path, including communication and synchronization costs, rather than the sum
+of all operations. For recurrence, unroll a \emph{finite correction interval}
+with a declared initial state. A feedback loop cannot be assigned a finite
+critical path by treating its cyclic graph as an acyclic feedforward network.
 
-The cerebral cortex has a notably consistent six-layered architecture across
-mammalian species~\cite{Mountcastle1997}. This constraint applies uniformly to M1 and
-other cortical areas:
+\textbf{Throughput is not latency.} A pipeline may produce a command every
+millisecond while each command still depends on sensory information acquired
+much earlier. Conversely, an existing recurrent state can support a rapid
+readout without replaying its entire history. Prediction can exploit predictable
+motion, but it cannot incorporate an unpredictable disturbance before information
+about that disturbance is available. Thus a fresh correction's latency and the
+time used to establish the current policy or state estimate must be distinguished.
 
-\begin{enumerate}
-  \item \textbf{Layer I}: molecular layer (mostly dendrites and axons, few cell bodies)
-  \item \textbf{Layer II/III}: external pyramidal layer (cortico-cortical connections)
-  \item \textbf{Layer IV}: internal granular layer (thalamic input)
-  \item \textbf{Layer V}: internal pyramidal layer (\emph{output layer} --- corticospinal tract)
-  \item \textbf{Layer VI}: multiform layer (feedback to thalamus)
-\end{enumerate}
+\section{Anatomical Layers and Computational Paths}
 
-The signal path from sensory input (Layer IV) through cortical processing to motor
-output (Layer V) passes through \emph{at most 3--4 synapses within the cortex itself}.
-Adding thalamic relay and spinal motor neuron connections, the total sensorimotor loop
-is approximately 8--12 synapses deep.
+Cortical laminae describe anatomy; they are not a count of sequential artificial
+network transformations. Parallel projections, recurrent connections and multiple
+input and output populations prevent a six-lamina description from specifying
+six serial computations. Nor does a short response identify every circuit
+participating in preparation, ongoing estimation or later correction.
 
-\begin{insight}{The Architecture Is the Algorithm}{arch-is-algo}
-  In deep learning, we can stack layers because silicon is fast. In biology, we cannot.
-  Instead, the brain uses:
-  \begin{enumerate}
-    \item \textbf{Width}: approximately 16 billion cortical neurons in
-          humans~\cite{Azevedo2009}, each receiving on the order of $10^4$ synaptic
-          inputs~\cite{Kandel2013}. The total computational capacity is in the connections,
-          not the depth.
-    \item \textbf{Recurrence}: horizontal connections within layers create recurrent
-          dynamics that effectively increase computational depth through temporal
-          iteration (but at the cost of time). These recurrent loops operate at 10--100 ms
-          timescales within a single motor control cycle.
-    \item \textbf{Specialization}: different brain regions process different aspects
-          of the motor task in parallel, communicating through thick fiber bundles
-          (corpus callosum, cerebral peduncles).
-    \item \textbf{Hierarchy}: a shallow hierarchy of cortex $\to$ subcortical structures
-          (basal ganglia, cerebellum, brainstem) $\to$ spinal cord $\to$ muscles, with each
-          level operating at different timescales and abstraction levels.
-  \end{enumerate}
+Even the anatomical description needs regional and species qualifications.
+Yamawaki and colleagues identified a thin population at the layer~3/5A border in
+mouse forelimb M1 with layer-4-like connectivity: thalamic inputs, ascending
+local outputs to layers~2/3 and relatively weak long-range outputs
+\cite{yamawaki2014review}. This challenges a categorical absence of M1 layer~4;
+it does not establish uniform granular anatomy in all motor cortex or a fixed
+number of synapses in a human golf-control loop.
+
+\begin{insight}{Architecture as a Testable Model}{arch-is-algo}
+Parallel pathways, recurrent state, prediction and hierarchical organization
+are candidate ways to coordinate a delayed system. Their benefit depends on
+available information, connectivity, learning, energy, communication and the
+mechanical task. Neither total neuron count nor histological layer count
+specifies the latency or accuracy of a controller. Width also has costs;
+its computation and communication cannot be assumed free.
 \end{insight}
 
-\emph{This architectural choice has far-reaching consequences.} While a deep network might
-process sensory information in 50 serial steps, the brain achieves comparable flexibility
-through width and recurrence. Consider a reaching task: the cortex does not recompute the
-entire motor plan from scratch at each millisecond. Instead, it maintains a dynamical
-state that evolves according to its intrinsic connectivity. Perturbations are handled
-through feedback loops that operate in parallel at multiple levels.
+\section{What a Network Comparison Can Establish}
 
-\begin{figure}[h]
+A static artificial neuron applies an activation function to a weighted sum.
+This is a useful mathematical model, not a complete description of a biological
+neuron's dendrites, spikes or temporal state. The following example compares
+\emph{untrained feedforward mappings}, not successful motor controllers. Both
+have 20 inputs, ten signed abstract outputs, ReLU hidden activations and a
+linear output. Signed outputs are not bounded muscle activations.
+
+The deep model has nine hidden layers of width~50 followed by ten outputs:
+ten affine maps and 21,960 weights and biases. A single hidden layer of width
+$h$ followed by ten outputs has $31h+10$ parameters. Choosing $h=708$ gives
+21,958, two fewer than the deep model. This is nearly equal parameter count,
+not equal expressiveness, training difficulty or task performance. Choosing
+width~2000 instead would give 62,010 parameters and would not match that budget.
+
+\begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.95]
-  % Input
-  \draw (0, 1.5) rectangle (0.8, 2.2);
-  \draw (0.4, 1.85) node[align=center, anchor=center, font=\tiny] {Input};
-
-  % Deep network (left)
-  \draw (0.4, 3.5) node[align=center, anchor=center, font=\small\bf] {Deep: 10 layers $\times$ 50 wide};
-  \foreach \i in {1, ..., 10} {
-    \draw (1 + 0.4*\i, 1.5) circle (0.15);
-  };
-  \foreach \i in {1, ..., 10} {
-    \draw (1.4 + 0.4*\i, 1.5) circle (0.15);
-  };
-  \draw (6, 1.5) node[align=center, anchor=west, font=\tiny] {Latency: 50 ms};
-
-  % Output layer
-  \draw (8, 1.5) rectangle (8.8, 2.2);
-  \draw (8.4, 1.85) node[align=center, anchor=center, font=\tiny] {Output};
-
-  % Wide network (right)
-  \draw (0.4, -0.2) node[align=center, anchor=center, font=\small\bf] {Wide: 2 layers $\times$ 2000 wide};
-  \fill[blue, opacity=0.2] (1, -1) rectangle (4.5, -0.4);
-  \draw (2.75, -0.7) node[align=center, anchor=center, font=\small] {Hidden layer (2000 neurons)};
-  \draw (6, -0.7) node[align=center, anchor=west, font=\tiny] {Latency: 10 ms};
-
-  % Arrow showing advantage
-  \draw[->, thick, red] (6.2, 1.3) -- (6.2, -0.3);
-  \draw (6.5, 0.5) node[align=center, anchor=west, font=\small, color=red] {5x faster};
+\begin{tikzpicture}[x=0.95cm,y=1cm,>=Stealth]
+ \node[anchor=west,font=\small] at (0,1.55) {Nine Hidden Maps of Width 50; One Output Map};
+ \node[anchor=east,font=\scriptsize] at (0,0.95) {Input};
+ \foreach \i in {1,...,10} {
+   \ifnum\i=10 \draw[fill=white] (\i,0.95) circle (2.4mm);
+   \else \draw[fill=blue!10] (\i,0.95) circle (2.4mm); \fi
+   \node[font=\scriptsize] at (\i,0.95) {\i};
+   \pgfmathsetmacro{\prev}{\i-0.75}
+   \draw[->] (\prev+0.03,0.95) -- (\i-0.28,0.95);
+ }
+ \node[anchor=west,font=\scriptsize] at (0,0.40) {Map 10 Produces Ten Outputs; Stipulated Delay: $10\tau$};
+ \node[anchor=west,font=\small] at (0,-0.35) {One Hidden Map, Then One Output Map};
+ \node[anchor=east,font=\scriptsize] at (0,-0.95) {Input};
+ \node[draw,fill=blue!10,font=\scriptsize,minimum width=3cm] (hidden) at (3,-0.95) {708 Hidden Units};
+ \draw[->] (0.25,-0.95) -- (hidden.west);
+ \node[draw,font=\scriptsize] (output) at (7.5,-0.95) {10 Outputs};
+ \draw[->] (hidden) -- (output);
+ \node[anchor=west,font=\scriptsize] at (0,-1.50) {Stipulated Delay: $2\tau$};
 \end{tikzpicture}
-\caption{Shallow-wide architecture trades depth for width: a 2-layer network with 2000
-neurons per layer completes in 10 ms, while a 10-layer network with 50 neurons per
-layer takes 50 ms---too slow for real-time motor control.}
+\caption{Counted Affine Maps Under an Equal Stage-Cost Assumption.
+The diagram shows computational stages, not cortical laminae or measured neural delays.}
 \label{fig:ch4:shallow-wide-arch}
 \end{figure}
 
-\section{Computational Implications}
-
-The shallow-but-wide architecture has notable implications for motor control theory:
-
-\subsection{Complex Computations Through Simple Local Rules}
-
-Each neuron performs a relatively simple computation: weighted sum of inputs, passed
-through a nonlinear activation function. The power of the system comes from the
-\emph{collective behavior} of billions of these simple units operating in parallel.
-
-\begin{lstlisting}[language=Python, caption={Comparison: deep vs. wide network for motor control.}]
+\begin{lstlisting}[language=Python, caption={Parameter Counts and an Assumed Stage Delay}]
 import numpy as np
-import time
 
-def deep_network_forward(
-    x: np.ndarray,
-    weights: list[np.ndarray],
-    biases: list[np.ndarray],
-    layer_delay_ms: float = 5.0
-) -> tuple[np.ndarray, float]:
-    """Forward pass through a deep network with biological timing.
-
-    Parameters
-    ----------
-    x : np.ndarray
-        Input vector.
-    weights : list of np.ndarray
-        Weight matrices for each layer.
-    biases : list of np.ndarray
-        Bias vectors for each layer.
-    layer_delay_ms : float
-        Simulated per-layer delay in milliseconds.
-
-    Returns
-    -------
-    tuple
-        (output, total_latency_ms)
-    """
-    h = x
-    total_latency = 0.0
-    for W, b in zip(weights, biases):
-        h = np.maximum(0, W @ h + b)  # ReLU activation
-        total_latency += layer_delay_ms
-    return h, total_latency
+Network = list[tuple[np.ndarray, np.ndarray]]
 
 
-def wide_network_forward(
-    x: np.ndarray,
-    W_hidden: np.ndarray,
-    b_hidden: np.ndarray,
-    W_out: np.ndarray,
-    b_out: np.ndarray,
-    layer_delay_ms: float = 5.0
-) -> tuple[np.ndarray, float]:
-    """Forward pass through a wide (2-layer) network.
-
-    Parameters
-    ----------
-    x : np.ndarray
-        Input vector.
-    W_hidden : np.ndarray
-        Hidden layer weights (wide).
-    b_hidden : np.ndarray
-        Hidden layer biases.
-    W_out : np.ndarray
-        Output layer weights.
-    b_out : np.ndarray
-        Output biases.
-    layer_delay_ms : float
-        Per-layer delay.
-
-    Returns
-    -------
-    tuple
-        (output, total_latency_ms)
-    """
-    h = np.maximum(0, W_hidden @ x + b_hidden)
-    y = W_out @ h + b_out
-    total_latency = 2 * layer_delay_ms  # Only 2 layers
-    return y, total_latency
+def make_network(widths: list[int], rng: np.random.Generator) -> Network:
+    """Create an untrained toy mapping with zero biases."""
+    return [(rng.normal(0, 0.1, (right, left)), np.zeros(right))
+            for left, right in zip(widths[:-1], widths[1:], strict=True)]
 
 
-# Compare architectures for a motor control task
-# Input: 20-dim state, Output: 10-dim muscle activations
-np.random.seed(42)
-n_input, n_output = 20, 10
-n_params_budget = 50000  # Same total parameter budget
+def parameter_count(model: Network) -> int:
+    """Count every weight and bias, including the output map."""
+    return sum(weights.size + bias.size for weights, bias in model)
 
-# Deep network: 10 layers of width 50
-deep_widths = [n_input] + [50] * 9 + [n_output]
-deep_W = [np.random.randn(deep_widths[i+1], deep_widths[i]) * 0.1
-           for i in range(len(deep_widths)-1)]
-deep_b = [np.zeros(deep_widths[i+1]) for i in range(len(deep_widths)-1)]
 
-# Wide network: 2 layers, width 2000
-wide_hidden = 2000
-W_h = np.random.randn(wide_hidden, n_input) * 0.1
-b_h = np.zeros(wide_hidden)
-W_o = np.random.randn(n_output, wide_hidden) * 0.1
-b_o = np.zeros(n_output)
+def forward(model: Network, state: np.ndarray) -> np.ndarray:
+    """Use ReLU hidden maps and a common linear signed output."""
+    hidden = state
+    for weights, bias in model[:-1]:
+        hidden = np.maximum(0, weights @ hidden + bias)
+    weights, bias = model[-1]
+    return weights @ hidden + bias
 
-x = np.random.randn(n_input)
 
-y_deep, latency_deep = deep_network_forward(x, deep_W, deep_b)
-y_wide, latency_wide = wide_network_forward(x, W_h, b_h, W_o, b_o)
-
-print(f"Deep network (10 layers x 50 wide):")
-print(f"  Latency: {latency_deep:.0f} ms")
-print(f"  Parameters: {sum(W.size + b.size for W, b in zip(deep_W, deep_b)):,}")
-
-print(f"\nWide network (2 layers x 2000 wide):")
-print(f"  Latency: {latency_wide:.0f} ms")
-print(f"  Parameters: {W_h.size + b_h.size + W_o.size + b_o.size:,}")
-
-print(f"\nLatency ratio: {latency_deep/latency_wide:.1f}x faster with wide network")
+rng = np.random.default_rng(42)
+deep_model = make_network([20] + [50] * 9 + [10], rng)
+wide_model = make_network([20, 708, 10], rng)
+toy_state = rng.normal(size=20)
+deep_output = forward(deep_model, toy_state)
+wide_output = forward(wide_model, toy_state)
+assumed_stage_ms = 5.0  # A declared model cost, not a timing measurement.
+assumed_delays_ms = tuple(
+    len(model) * assumed_stage_ms for model in (deep_model, wide_model)
+)
+counts = (parameter_count(deep_model), parameter_count(wide_model))
+assert counts == (21960, 21958)
+assert assumed_delays_ms == (50.0, 10.0)
 \end{lstlisting}
 
-\subsection{Hierarchical Decomposition}
+The fivefold delay ratio follows directly from assigning each affine map the
+same 5~ms cost, independent of width. It is not a measured software speedup or
+a biological result. Actual delays may change with width, hardware, memory
+movement and parallel resources. Random outputs establish no tracking accuracy;
+a meaningful comparison trains both controllers on a common task and tests
+held-out performance under measured input-to-output delays and actuator limits.
 
-The brain does not solve the full-dimensional control problem in one computation.
-Instead, it decomposes the problem hierarchically:
+\subsection{Approximation Is Not a Control Guarantee}
 
-\begin{enumerate}
-  \item \textbf{High level} (prefrontal cortex, $\sim$200~ms): task goal, strategy
-  \item \textbf{Mid level} (premotor/SMA, $\sim$100~ms): movement plan, sequencing
-  \item \textbf{Low level} (M1 + spinal cord, $\sim$30~ms): muscle activation patterns
-\end{enumerate}
+Cybenko's theorem establishes uniform approximation of continuous functions on
+a compact unit cube by sufficiently many units with a continuous sigmoidal
+activation~\cite{cybenko1989review}. It does not supply a small required width,
+a successful training algorithm or closed-loop stability. That specific theorem
+also does not analyze the ReLU listing above. Approximating a state-to-command
+map on a bounded domain is different from reconstructing unavailable state or
+controlling trajectories that leave that domain. An approximate policy can
+perform poorly near constraints even when a global average error is small.
 
-Each level operates on a compressed representation of the level below:
+\subsection{Hierarchy and Information Loss}
 
-\begin{proposition}
-  In a hierarchical motor control architecture with $L$ levels, each reducing
-  dimensionality by a factor $r$, the effective state dimension at level $l$ is:
-  \begin{equation}
-    n_l = n_0 / r^l,
-    \label{eq:ch4:hierarchical-dim}
-  \end{equation}
-  where $n_0$ is the full state dimension. The computational cost per level
-  scales as $\mathcal{O}(n_l^2)$ for a single-layer network, giving total
-  cost $\sum_{l=0}^{L} n_l^2 = n_0^2 \sum_{l=0}^{L} r^{-2l}$, which converges
-  for $r > 1$. The curse of dimensionality is broken by hierarchy.
-\end{proposition}
-
-\subsection{Synergies as Dimensionality Reduction}
-
-Muscle synergies provide direct evidence for dimensionality reduction. d'Avella and Bizzi
-showed that the muscle patterns of natural frog hindlimb behaviours decompose into a small
-set of synergies, some shared across behaviours and some specific to
-one~\cite{dAvellaBizzi2005}. How far that conclusion depends on the decomposition used is a
-separate question, and Tresch and colleagues addressed it directly by running several matrix
-factorization algorithms against the same simulated and experimental data: the algorithms
-broadly agree on the synergies they recover, which is what makes the finding a property of
-the data rather than of the method~\cite{Tresch2006}. The muscle activation pattern of $p$
-muscles is approximated as a linear combination of $k \ll p$ synergies:
+Suppose a model deliberately assigns dimensions $n_l=n_0/r^l$, $r>1$, to
+levels $l=0,\ldots,L$, and each level uses a dense square map with cost
+proportional to $n_l^2$. Treat these dimensions as idealized; an implementation
+must choose integers. The algebraic cost is
 \begin{equation}
-  \bm{u}(t) = \sum_{i=1}^{k} c_i(t) \bm{w}_i = W \bm{c}(t),
-  \label{eq:ch4:synergy-decomposition}
+ \sum_{l=0}^{L}n_l^2
+ =n_0^2\frac{1-r^{-2(L+1)}}{1-r^{-2}}.
+ \label{eq:ch4:hierarchical-dim}
 \end{equation}
-where $W \in \Reals^{p \times k}$ is the synergy matrix (fixed spatial patterns)
-and $\bm{c}(t) \in \Reals^k$ are the time-varying synergy activations.
+For fixed $r>1$ this is bounded as $L$ increases, but still scales as
+$\mathcal{O}(n_0^2)$. The calculation assumes the representation and the square
+maps; it does not include learning or communication costs, nor eliminate
+exponential state-space sampling or approximation complexity in general.
 
-Experimental studies across diverse tasks (reaching, walking, postural responses)
-consistently identify $k = 4$--$6$ synergies accounting for $> 90\%$ variance
-(Tresch et al. 2006, Ting and Macpherson 2005).
+Compression must preserve information needed for the task. Two states with the
+same position $q$ and opposite velocities $v$ need opposite damping commands
+$u=-kv$, $k>0$. A position-only representation maps them to the same value and
+cannot produce both correct commands. A history-dependent estimator might
+recover velocity, but then the retained history or estimator state is part of
+the controller. Hierarchy helps only when its chosen representations and
+interfaces preserve the distinctions needed downstream.
 
-\begin{lstlisting}[language=Python, caption={Muscle synergy extraction using Non-negative Matrix Factorization.}]
+\section{Synergies: Reconstruction and Interpretation}
+
+For a nonnegative processed EMG vector $\bm e(t)$, a synchronous spatial model is
+\begin{equation}
+ \bm e(t)\approx W\bm c(t),\qquad
+ W\in\Reals_{\geq0}^{p\times k},\quad
+ \bm c(t)\in\Reals_{\geq0}^{k}.
+ \label{eq:ch4:synergy-decomposition}
+\end{equation}
+The residual matters. EMG is a measurement of electrical activity, not a direct
+identity with a neural control input, activation state, muscle force or joint
+torque. Time-varying synergy templates are a different model: temporal structure
+belongs to the templates as well as their recruitment and timing.
+
+d'Avella and Bizzi recorded 13 hindlimb muscles in three frogs during jumping,
+swimming and walking. Five components gave average reconstruction $R^2$ values
+of 0.89 for synchronous synergies and 0.80 for time-varying synergies
+\cite{dAvellaBizzi2005}. Those results concern particular data, preprocessing
+and model definitions; they do not establish a universal four-to-six-synergy,
+over-90\% rule for human golf. The two representations also differ in
+parameterization, so component count alone is not a capacity comparison.
+
+Tresch and colleagues compared factorization methods with simulated data and
+withdrawal EMG from frogs after spinalization. Recovery depended on assumptions about noise
+and the factors; different criteria could suggest different model orders
+\cite{Tresch2006}. Agreement across methods can strengthen a description of
+data structure, but cannot identify its unique neural generator. For example,
+$W D$ and $D^{-1}\bm c$ give the same reconstruction for any positive diagonal
+$D$, and component permutations also leave the product unchanged. Further
+ambiguities can remain. Task restrictions, mechanics and processing choices
+must be considered alongside a neural-module interpretation.
+
+\subsection{A Reproducible Factorization Example}
+
+Let rows of $X$ index time and columns index channels, so $X\approx CW^T$.
+The following nonnegative least-squares example uses multiplicative updates
+\cite{leeSeung2000review}. The joint optimization is not convex. The ideal
+updates' nonincreasing objective does not guarantee a global optimum, unique
+factors or exact floating-point monotonicity in this implementation.
+
+Define the \emph{uncentered reconstruction score}
+\[
+ S=1-\frac{\lVert X-CW^T\rVert_F^2}{\lVert X\rVert_F^2}.
+\]
+This convention is sometimes called uncentered variance accounted for. It is
+not centered statistical $R^2$; it is at most one, may be negative, and is
+undefined for an all-zero dataset. A high training score alone neither selects
+a unique rank nor establishes out-of-sample performance.
+
+\begin{lstlisting}[language=Python, caption={Validated Nonnegative Factorization of Synthetic Channels}]
 import numpy as np
+
+
+def positive_integer(value: int, name: str) -> None:
+    """Reject zero, fractional values and booleans for count options."""
+    if (isinstance(value, (bool, np.bool_))
+            or not isinstance(value, (int, np.integer)) or value <= 0):
+        raise ValueError(f"{name} must be a positive integer")
+
 
 def extract_synergies(
-    emg_data: np.ndarray,
-    n_synergies: int,
-    max_iter: int = 500,
-    tol: float = 1e-6
+    emg_data: np.ndarray, n_synergies: int,
+    max_iter: int = 500, tol: float = 1e-6
 ) -> tuple[np.ndarray, np.ndarray, float]:
-    """Extract muscle synergies using NMF.
+    """Return W, C and uncentered score for finite nonnegative data.
 
-    Parameters
-    ----------
-    emg_data : np.ndarray, shape (n_timepoints, n_muscles)
-        Processed EMG data (non-negative).
-    n_synergies : int
-        Number of synergies to extract.
-    max_iter : int
-        Maximum NMF iterations.
-    tol : float
-        Convergence tolerance.
-
-    Returns
-    -------
-    tuple
-        (synergy_weights, synergy_activations, vaf)
-        W: (n_muscles, n_synergies)
-        C: (n_timepoints, n_synergies)
-        vaf: variance accounted for (0-1)
+    W: channels by rank; C: samples by rank. Reconstruct with C @ W.T.
+    Rows are samples; columns are channels. Zero data are rejected.
+    This teaching example uses one reproducible local random start.
     """
-    n_t, n_m = emg_data.shape
-
-    # Initialize with random non-negative values
-    W = np.abs(np.random.randn(n_m, n_synergies)) * 0.01
-    C = np.abs(np.random.randn(n_t, n_synergies)) * 0.01
-
-    for iteration in range(max_iter):
-        # Multiplicative update rules (Lee & Seung 2001)
-        # Update C
-        numerator = emg_data @ W
-        denominator = C @ W.T @ W + 1e-10
-        C *= numerator / denominator
-
-        # Update W
-        numerator = emg_data.T @ C
-        denominator = W @ C.T @ C + 1e-10
-        W *= numerator / denominator
-
-        # Check convergence
-        reconstruction = C @ W.T
-        residual = np.sum((emg_data - reconstruction)**2)
-        total = np.sum(emg_data**2)
-        vaf = 1.0 - residual / total
-
-        if iteration > 0 and abs(vaf - prev_vaf) < tol:
+    if np.iscomplexobj(emg_data):
+        raise ValueError("data must be real, not complex")
+    data = np.asarray(emg_data, dtype=float)
+    if (data.ndim != 2 or data.size == 0
+            or not np.all(np.isfinite(data)) or np.any(data < 0)):
+        raise ValueError("data must be finite, nonnegative and nonempty 2D")
+    positive_integer(n_synergies, "n_synergies")
+    positive_integer(max_iter, "max_iter")
+    if not np.isfinite(tol) or tol < 0:
+        raise ValueError("tol must be finite and nonnegative")
+    scale = np.max(data)
+    if scale == 0:
+        raise ValueError("relative reconstruction score needs nonzero data")
+    normalized = data / scale
+    rng = np.random.default_rng(42)
+    weights = rng.uniform(0.1, 1.0, (data.shape[1], n_synergies))
+    coefficients = rng.uniform(0.1, 1.0, (data.shape[0], n_synergies))
+    denominator_floor = np.finfo(float).tiny
+    total = np.sum(normalized**2)
+    previous_score = -np.inf
+    for _ in range(max_iter):
+        coefficients *= (normalized @ weights) / np.maximum(
+            coefficients @ (weights.T @ weights), denominator_floor)
+        weights *= (normalized.T @ coefficients) / np.maximum(
+            weights @ (coefficients.T @ coefficients), denominator_floor)
+        residual = normalized - coefficients @ weights.T
+        score = float(1 - np.sum(residual**2) / total)
+        if abs(score - previous_score) < tol:
             break
-        prev_vaf = vaf
+        previous_score = score
+    # Fit normalized data; split its original scale across factors.
+    return weights * np.sqrt(scale), coefficients * np.sqrt(scale), score
 
-    return W, C, vaf
 
-
-# Example: simulate EMG from 8 muscles during walking
-np.random.seed(42)
-n_timepoints = 200
-n_muscles = 8
-
-# Ground truth: 3 synergies generating 8-muscle activation
-true_W = np.array([
-    [0.8, 0.6, 0.1, 0.0, 0.2, 0.0, 0.1, 0.0],  # Syn 1: extensors
-    [0.0, 0.1, 0.7, 0.9, 0.0, 0.3, 0.0, 0.1],  # Syn 2: flexors
-    [0.2, 0.0, 0.1, 0.0, 0.8, 0.7, 0.6, 0.9],  # Syn 3: stabilizers
-]).T  # (8 muscles, 3 synergies)
-
-t = np.linspace(0, 2*np.pi, n_timepoints)
-true_C = np.column_stack([
-    np.maximum(0, np.sin(t)),
-    np.maximum(0, np.sin(t + 2*np.pi/3)),
-    np.maximum(0, np.sin(t + 4*np.pi/3)),
-])
-
-emg_simulated = true_C @ true_W.T + np.abs(np.random.randn(n_timepoints, n_muscles)) * 0.05
-
-# Extract synergies
-W_est, C_est, vaf = extract_synergies(emg_simulated, n_synergies=3)
-print(f"Synergy extraction: {vaf:.1%} variance accounted for with 3 synergies")
-
-# Test with different numbers
-for k in range(1, 7):
-    _, _, vaf_k = extract_synergies(emg_simulated, n_synergies=k)
-    print(f"  k={k}: VAF = {vaf_k:.1%}")
+rng = np.random.default_rng(7)
+true_weights = rng.uniform(0.0, 1.0, (8, 3))
+time = np.linspace(0, 2 * np.pi, 200)
+true_coefficients = np.maximum(
+    0, np.sin(time[:, None] + np.arange(3) * 2 * np.pi / 3)
+)
+# Arbitrary channels and positive-biased synthetic noise, not walking data.
+synthetic = (true_coefficients @ true_weights.T
+             + 0.05 * np.abs(rng.normal(size=(200, 8))))
+reconstruction_scores = [extract_synergies(synthetic, rank)[2]
+                         for rank in range(1, 7)]
 \end{lstlisting}
 
-\section{The Shallow-Wide Hypothesis for Motor Control}
+The three generating factors are a construction, not an experimental discovery.
+Channel numbers have no assigned muscle anatomy. Additional fitted components
+can fit noise; rank inferred from a training-score threshold need not equal the
+generating count. The Gram-matrix parentheses avoid constructing a channel-by-sample
+matrix in the weight update; the benefit depends on sample count and rank.
 
-We now formalize the central thesis of this volume:
+For an empirical study, compare explicitly recorded random starts, preprocessing
+and model orders. Fit normalization and the basis on training data only; for
+held-out reconstruction, keep the basis fixed and estimate only permitted
+coefficients. Distinguish that reconstruction from forecasting future EMG.
+Check robustness across trials, tasks and subjects. The listing's one fixed seed
+is reproducibility for a demonstration, not such a model-selection study.
+
+\section{From This Hypothesis to a Golf Experiment}
+
+A useful swing model connects mechanical state, actuator state and controller
+state. Joint and club positions alone generally omit velocity, muscle activation,
+tendon deformation and relevant history. Internal models (Chapter~\ref{ch:internal-models})
+can estimate missing state and predict its evolution. Passive mechanics
+(Chapter~\ref{ch:passive-control}) begin responding before a new neural command
+arrives, while activation and mechanical history change the available force.
+The coupled-state treatment in Chapter~\ref{ch:biology-nonlinear} explains why
+local mechanical response, whole-body stability and task accuracy are separate
+questions.
+
+Ground-force, hand-motion and club-speed peaks are outputs of that coupled
+system. Their ordering does not count neural layers, and a compact description
+of their coordination does not uniquely identify the controller. A controller
+that uses fewer freshly evaluated stages could reduce delay under a particular
+implementation; a deeper or recurrent controller might compensate with better
+estimation or prediction. These alternatives must be tested at the same task,
+information access and physical constraints.
 
 \begin{insight}{The Shallow-Wide Hypothesis}{shallow-wide-hypothesis}
-  Biological motor control systems achieve high-dimensional control through
-  architectures that are:
-  \begin{enumerate}
-    \item \textbf{Shallow}: at most 10--20 serial processing layers (limited by
-          synaptic delay)
-    \item \textbf{Wide}: millions to billions of units per layer (enabled by neural
-          density and parallel wiring)
-    \item \textbf{Modular}: functionally specialized subnetworks process different
-          aspects of the task in parallel
-    \item \textbf{Hierarchical}: a small number of levels, each compressing dimensionality
-    \item \textbf{Recurrent}: intra-layer connections provide temporal depth without
-          adding spatial depth
-  \end{enumerate}
-  This architecture can approximate any smooth mapping (universal approximation theorem)
-  with a single hidden layer of sufficient width. The practical advantage over deep
-  networks is \textbf{latency}: a 2-layer network with 10,000 neurons per layer
-  completes in 10~ms. A 100-layer network with 100 neurons per layer completes in
-  500~ms---too slow for motor control.
-
-  \textbf{For real-time motor control, width is cheap and depth is expensive.}
+When a correction requires new information under a tight deadline, reducing the
+critical path can help \emph{if} the resulting representation preserves the
+information and policy accuracy needed for the task. Test this conditional
+claim with measured latency, trained controllers, held-out perturbations and
+matched actuator limits. It is an engineering hypothesis, not a universal
+layer-count law or proof of a human neural mechanism.
 \end{insight}
 
+A discriminating experiment varies perturbation predictability, sensing delay,
+available state variables and controller architecture separately. Report
+input-to-command and input-to-force latencies, tracking error, delivered club
+state, contact feasibility and robustness. Compare parameter count alongside
+actual compute and communication costs. A benefit under those conditions can
+support a model choice; translating it to human control requires corresponding
+physiological measurements and causal tests.
+
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Depth Budget.}
-        For a goalkeeper diving to save a penalty kick (reaction time $\sim$200~ms),
-        compute the maximum neural depth. How deep can the ``controller'' be?
-
-  \item \textbf{Width vs. Depth.}
-        Using the provided code, compare the outputs of a 10-layer $\times$ 50-wide
-        network with a 2-layer $\times$ 2000-wide network on random inputs. Compare
-        latencies.
-
-  \item \textbf{Synergy Analysis.}
-        Using the NMF code, determine how many synergies are needed to explain
-        $> 95\%$ of variance in the simulated EMG data. Does this match the
-        literature value of 4--6?
-
-  \item \textbf{(Programming.)} Implement a motor control task (reaching) using both
-        a deep and a wide network architecture. Compare tracking accuracy at different
-        latency budgets.
-
-  \item \textbf{(Research.)} Find experimental evidence for the number of cortical
-        layers involved in processing a motor command from M1 to spinal motor neurons.
-        How many synapses does the signal cross?
+ \item \textbf{Endpoint and Budget.} For the stipulated 50/20/5~ms example,
+ compute the allowable stage count. Repeat with 15~ms available. Explain
+ why neither answer estimates the number of synapses in a golfer.
+ \item \textbf{Count and Measure.} Verify both parameter counts, then measure
+ runtime on a declared machine. Explain why the measured ratio need not be
+ five and why untrained outputs cannot rank control performance.
+ \item \textbf{Lost State.} Construct two equal-position states requiring
+ opposite damping commands. Identify the additional information a compressed
+ controller or its estimator must retain.
+ \item \textbf{Factorization.} Reconstruct the synthetic channels at ranks one
+ through six. Rescale or permute fitted factors without changing their product.
+ Explain what training score, held-out reconstruction and neural identification
+ each establish.
+ \item \textbf{Controlled Comparison.} Design a reaching or golf simulation
+ with identical sensing and actuator constraints. Separate a predictable
+ disturbance from an unannounced one; compare trained policies with measured
+ delays and state explicitly what would remain untested in humans.
 \end{enumerate}
