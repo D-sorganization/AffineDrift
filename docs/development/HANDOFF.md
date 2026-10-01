@@ -1,3 +1,13 @@
+# Dataset Explorer Deployment Route Audit — #4688 — Current Integration
+
+- Worktree: `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`.
+- PR #4713 is open and draft at remote head `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`, base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6`. The local branch integrates accepted candidate `046021164` with current main `fd508f04`; keep it unpushed until root review.
+- Structural checks confirm all 249 current-main route and report records/findings, inventory metadata, and main docs history are retained, with only the reviewed `/models/dataset-explorer.html` record (`ad-route-60ee227724f0`) added. Its 16 evidence hashes match source. Canonical generation yields 250 routes, 247 reviewed, 3 exempt, 0 deferred; enforced audit verifies two reports.
+- Focused audit/review tests: 46 passed. Pinned content-lint: 183 passed, 5 skipped, 6,211 deselected. Canonical evidence, inventory/publication, and SPEC checks pass. The 6,162-pass full suite is from prior tree `3c9572b6` and is not represented as full-suite validation of this integration.
+- The old `4b886599` full render, 250-page manifest and enforced audit validate `4b886599` only; the earlier interrupted `dccdceab` native exit is unknown.
+- Current-main reviewed Chapter 20 and reference-library source/audit records are preserved. Synthetic population inputs remain synthetic; ZTCF/proximal-distal evidence remains model-level/educational; no human/population validation is claimed. Keep #4695 open and #4694 separate.
+- Exact-candidate PR CI render and full revision-bound publication audit remain required; after merge, verify successful main deployment before closing #4688. Keep finding #4695 open and workflow follow-up #4694 separate.
+
 # Annotated Reference Library — #4725
 
 - Active branch `fix/reference-library-rigor-4725`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`; base `fb377e96dc33ee80b655284aef066f8acfb7caf1` includes heavy-hit #4723 and peer web #4704.

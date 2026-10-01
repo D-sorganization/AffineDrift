@@ -193,6 +193,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/evidence/claims.html` | `evidence/claims.qmd` | 2 |
 | `/models/active-impedance-identification.html` | `models/active-impedance-identification.qmd` | 8 |
 | `/models/bilateral-hand-wrench-validation.html` | `models/bilateral-hand-wrench-validation.qmd` | 18 |
+| `/models/dataset-explorer.html` | `models/dataset-explorer.qmd` | 16 |
 | `/models/equipment-individual-response.html` | `models/equipment-individual-response.qmd` | 6 |
 | `/models/hybrid-impact-contact.html` | `models/hybrid-impact-contact.qmd` | 6 |
 | `/models/model-ladder.html` | `models/model-ladder.qmd` | 4 |
@@ -446,6 +447,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-3de14a21ce3c` | `/evidence/claims.html` | Reviewed | — | None | None | 1 |
 | `ad-route-eb36645ba003` | `/models/active-impedance-identification.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5602bed13ca4` | `/models/bilateral-hand-wrench-validation.html` | Reviewed | — | None | None | 0 |
+| `ad-route-60ee227724f0` | `/models/dataset-explorer.html` | Reviewed | — | None | None | 0 |
 | `ad-route-610504f8ac44` | `/models/equipment-individual-response.html` | Reviewed | — | None | None | 0 |
 | `ad-route-cd5e133fe28e` | `/models/hybrid-impact-contact.html` | Reviewed | — | None | None | 0 |
 | `ad-route-25575b069ccb` | `/models/model-ladder.html` | Reviewed | — | None | None | 0 |

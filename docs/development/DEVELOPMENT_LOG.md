@@ -18,6 +18,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4688 · Dataset Explorer Deployment Route Audit
+
+- **State:** in_review
+- **Owner:** codex-luna-affine4688-handoff-20260930-2335
+- **PR:** #4713 (draft); remote head `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`, base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6` at latest scoped check.
+- **Issue:** #4688 (red main deployment route coverage)
+- **Branch:** `fix/luna-deploy-route-4688`; integrating current main `fd508f04cd48b80f8f248432cea4a033b9188a13` by ordinary merge.
+- **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`, `tests/test_evidence_presentation.py`, `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`.
+- **Started:** 2026-09-30
+- **Last verified:** 2026-10-01 (current-main integration: 46 focused audit/review tests passed; pinned content-lint 183 passed/5 skipped/6,211 deselected; canonical evidence, inventory/publication, and SPEC checks passed. No full-suite result is claimed for this integrated tree; the 6,162-pass suite applies only to prior tree `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`).
+- **Summary:** Add the reviewed record for the already-public dataset-explorer route and source-derived regression. Schema checks establish JSON structure only; population inputs are manufactured synthetic and ZTCF/proximal-distal evidence remains model-level/educational. No human/population validation is claimed; #4695 remains open. #4694 workflow-gate work is separate.
+- **Current integration:** All 249 route and generated-report records/findings from `fd508f04` compare exactly with the integrated results; only `/models/dataset-explorer.html` (`ad-route-60ee227724f0`) is added. All 16 route evidence hashes match the integrated source. Canonical generation changes reviewed count 246→247 and route count 249→250; exempt 3 and deferred 0 are unchanged. Main SPEC, handoff and development-log history are preserved with this issue entry added.
+- **Next step:** Local integration is for root review; PR #4713 remains draft. Exact-candidate PR CI, a revision-bound full manifest/publication audit, and successful merged-main deployment are still required before closing #4688. The earlier `4b886599` render validates only that revision.
+
 ### DL-#4725 · Annotated Reference Library
 
 - **State:** in_review
