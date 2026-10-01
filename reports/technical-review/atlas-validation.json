@@ -1,0 +1,385 @@
+{
+  "issue": 4749,
+  "epic": 4009,
+  "scope": "Full atlas wrapper and six generated cards, mappings, renderer and tests. Six imported claim records read; no complete linked monograph review or provider simulation rerun.",
+  "source_sha256": {
+    "articles/proximal-distal-falsification-atlas.qmd": "b1b40482a0643eaff21a0e39111589e7864303f3587ee1afc063b9255a24fbef",
+    "articles/_generated/proximal-distal-falsification-atlas.qmd": "1be4d14fc1b96a16838d5a83b3a34663d89a5e175da50c4f13c720582915674f",
+    "data/trust/proximal_distal_falsification_atlas.json": "7b95c447cdba533fb2491071855446c4904e309d27142357967a22a6c31c8196",
+    "src/affine_control/falsification_atlas/rendering.py": "8678eabb28a7411fff2e8f8a0831ee786069456aa78193816f92fd33091ffe49",
+    "tests/test_proximal_distal_falsification_atlas.py": "9d47740ea05b40bb6b9f1a42b0a19812cb73b0c20be16d5794f8238171fec548",
+    "tests/test_falsification_atlas_identities.py": "4991b2d76843dc2dae7a694efc73697db8f3d3a13fb63c3ca6d3fcefa0a49cdd",
+    "css/components/falsification-atlas.css": "4f9c28840c3d389c10d1dd6c00383ec26d66f02de68be8f44b5a60a7dc6184f0"
+  },
+  "focused_tests": {
+    "passed": 25,
+    "synthetic_cases": 7,
+    "label_regression_red": "Two failing tests before the renderer correction; 18 atlas tests pass after it."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/atlas-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "title_audit": {
+    "checked": 653,
+    "passed": true
+  },
+  "format": "Repository-wide Ruff passes; Black 832 files unchanged; optional notebook formatting dependencies absent.",
+  "browser": {
+    "final_published_surface": {
+      "schema_version": "affinedrift/public-site-verification/v1",
+      "base_url": "http://127.0.0.1:17975",
+      "manifest_page_count": 1,
+      "evidence_count": 4,
+      "expected_evidence_count": 4,
+      "passed": true,
+      "failure_count": 0,
+      "navigation_retry_policy": {
+        "max_retries": 0,
+        "maximum_attempts": 1,
+        "base_delay_ms": 500,
+        "backoff": "exponential",
+        "retryable_status_codes": [502, 503, 504]
+      },
+      "axe_policy": {
+        "mode": "fail",
+        "impacts": ["serious", "critical"],
+        "scanned_route_count": 1,
+        "routes_with_violations": [],
+        "violation_count": 0
+      },
+      "navigation_attempt_count": 4,
+      "retried_evidence_count": 0,
+      "transient_response_count": 0,
+      "exhausted_retry_count": 0,
+      "results": [
+        {
+          "route": "/articles/proximal-distal-falsification-atlas.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "light",
+          "axe": true,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\atlas-public-shots\\articles__proximal-distal-falsification-atlas__mobile__light.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": [
+              "Proximal\u2013Distal Claim, Alternative, and Falsification Atlas"
+            ],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 198.25,
+              "bottom": 495.75,
+              "width": 151.046875,
+              "height": 297.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 24656,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-falsification-atlas.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false,
+          "axe_violations": []
+        },
+        {
+          "route": "/articles/proximal-distal-falsification-atlas.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\atlas-public-shots\\articles__proximal-distal-falsification-atlas__mobile__dark.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": [
+              "Proximal\u2013Distal Claim, Alternative, and Falsification Atlas"
+            ],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 198.25,
+              "bottom": 495.75,
+              "width": 151.046875,
+              "height": 297.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 24656,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-falsification-atlas.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-falsification-atlas.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "light",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\atlas-public-shots\\articles__proximal-distal-falsification-atlas__desktop__light.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": [
+              "Proximal\u2013Distal Claim, Alternative, and Falsification Atlas"
+            ],
+            "primaryHeadingRect": {
+              "left": 475,
+              "right": 857.859375,
+              "top": 176.453125,
+              "bottom": 311.453125,
+              "width": 382.859375,
+              "height": 135
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 24656,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-falsification-atlas.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-falsification-atlas.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": "docs\\development\\technical-review\\atlas-public-shots\\articles__proximal-distal-falsification-atlas__desktop__dark.png",
+          "inspection": {
+            "failures": [],
+            "visibleH1s": [
+              "Proximal\u2013Distal Claim, Alternative, and Falsification Atlas"
+            ],
+            "primaryHeadingRect": {
+              "left": 475,
+              "right": 857.859375,
+              "top": 176.453125,
+              "bottom": 311.453125,
+              "width": 382.859375,
+              "height": 135
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 24656,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-falsification-atlas.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        }
+      ]
+    },
+    "math_layout": [
+      {
+        "width": 390,
+        "math": 37,
+        "errors": 0,
+        "pageOverflow": 0,
+        "cards": 6
+      },
+      {
+        "width": 1440,
+        "math": 37,
+        "errors": 0,
+        "pageOverflow": 0,
+        "cards": 6
+      }
+    ],
+    "visual_review": "Selected mobile coordinate-equation and desktop card screenshots inspected; multi-line equations and page-scoped inherited font size repair confirmed. Initial unpruned preview failed CSP; standard publication polyfill cleanup passed all four cases."
+  },
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov",
+    "passed": 6381,
+    "failed": 1,
+    "skipped": 29,
+    "deselected": 186,
+    "duration_seconds": 845.36,
+    "coverage_src_and_scripts": {
+      "statements": 28044,
+      "missed": 6023,
+      "percent": 78.52
+    },
+    "coverage_src_only": {
+      "statements": 13764,
+      "missed": 957,
+      "percent": 93.05
+    },
+    "failure": "tests/test_trust_generated_artifacts_fresh.py::test_research_release_artifacts_are_fresh",
+    "cause": "Atlas mapping bytes changed; release registry retained old artifact digest and size.",
+    "repair": "Traced generator and withdrew its unsupported hardcoded qualified package instead of renewing current bytes under its fixed historical pin. Two new boundary regressions fail first; all twelve release/freshness tests pass after repair.",
+    "scope": "Run began before final source layout/ledger edits; 61 affected checks passed on committed atlas source, then 73 final integrated checks cover final source and release repair. Original full failure retained; no full green claim."
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": [
+      "card inventory",
+      "provenance inventory",
+      "numeric test draft",
+      "notation review",
+      "handoff checklist",
+      "release test-assumption inventory"
+    ],
+    "authority": "Supplied-text-only drafts; lead scientific adjudication."
+  },
+  "corpus": {
+    "pending": 127,
+    "whole_book_consistency_pending": true,
+    "completed_sources": [
+      "articles/proximal-distal-falsification-atlas.qmd",
+      "articles/_generated/proximal-distal-falsification-atlas.qmd"
+    ]
+  },
+  "delivery": {
+    "muscle_pr": 4745,
+    "muscle_main_commit": "a473831731989fce80f110bcc34745affe9ad837",
+    "muscle_verified": "Exact source/PDF/two test-file parity with fetched remote main.",
+    "prior_prs_pending": [4741, 4748],
+    "atlas_pr": "not created",
+    "chapters_main_parity": {
+      "articles/proximal_distal_companion/chapters/ch09_force_direction.qmd": true,
+      "articles/proximal_distal_companion/chapters/ch10_force_work_motion.qmd": true,
+      "articles/proximal-distal-a-journey-through-the-swing.pdf": true,
+      "tests/test_force_direction_review.py": true,
+      "reports/technical-review/force-direction-review.md": true,
+      "reports/technical-review/force-work-review.md": true
+    },
+    "integration_main": "a473831731989fce80f110bcc34745affe9ad837",
+    "integration_checkpoint": "SELF"
+  },
+  "source_revision": "6dadc5ddbb372c67445f7765a9511ac502fbdec5",
+  "release_withholding": {
+    "checkpoint": "SELF",
+    "reason": "No revision-bound execution/measurement/independent-review records support the former hardcoded qualified package. A file alone is not a release attestation.",
+    "prior_record": "reports/technical-review/atlas-release-prior.json",
+    "regression_red_failed": 2,
+    "release_tests_passed": 12,
+    "preserved": "Synthetic package schema, checksum and nonempty renderer tests remain."
+  },
+  "integrated_tests": {
+    "passed": 73,
+    "scope": "Atlas, numeric identities, claim/book ledgers, release schema/renderer and artifact freshness."
+  }
+}

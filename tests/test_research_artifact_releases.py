@@ -11,6 +11,7 @@ import pytest
 from src.affine_control.research_releases.generator import (
     build_authoritative_releases,
     generate_research_releases,
+    render_releases_summary,
 )
 from src.affine_control.research_releases.validator import (
     ReleaseIntegrityError,
@@ -145,6 +146,13 @@ def test_release_validator_detects_digest_mismatch(tmp_path: Path) -> None:
     # Valid run passes
     errors = validate_release_package(pkg, tmp_path)
     assert errors == []
+    schema_path = (
+        Path(__file__).resolve().parents[1] / "schemas/research-artifact-release-v1.schema.json"
+    )
+    jsonschema.validate(pkg.to_dict(), json.loads(schema_path.read_text(encoding="utf-8")))
+    summary = render_releases_summary([pkg])
+    assert "Test Release Package" in summary
+    assert "Approved by `rev-01`" in summary
 
     # Corrupted file throws ReleaseIntegrityError
     test_file.write_text('{"status": "corrupted"}', encoding="utf-8")
@@ -152,20 +160,27 @@ def test_release_validator_detects_digest_mismatch(tmp_path: Path) -> None:
         validate_release_package(pkg, tmp_path)
 
 
-def test_full_release_generation_and_schema_validation(trust_generation_root: Path) -> None:
-    """Verify live release package generation and schema conformance."""
+def test_release_generation_withholds_unsubstantiated_atlas(trust_generation_root: Path) -> None:
+    """An atlas file alone supplies no execution, measurements or independent review."""
     repo_root = trust_generation_root
     releases = build_authoritative_releases(repo_root)
-    assert len(releases) >= 1
-
-    schema_file = repo_root / "schemas/research-artifact-release-v1.schema.json"
-    schema = json.loads(schema_file.read_text(encoding="utf-8"))
-    for rel in releases:
-        jsonschema.validate(instance=rel.to_dict(), schema=schema)
+    assert releases == []
 
     reg_path, part_path = generate_research_releases(check=False, repo_root=repo_root)
     assert reg_path.is_file()
     assert part_path.is_file()
+    registry = json.loads(reg_path.read_text(encoding="utf-8"))
+    assert registry["total_releases"] == 0
+    assert registry["releases"] == []
+    summary = part_path.read_text(encoding="utf-8")
+    assert "No verified research release is registered" in summary
+    assert "reviewer-biomech-independent-01" not in summary
+    assert "**qualified**" not in summary
 
     # Verify check mode passes
     generate_research_releases(check=True, repo_root=repo_root)
+
+
+def test_absent_atlas_does_not_manufacture_zero_digest_release(tmp_path: Path) -> None:
+    """Missing input must not produce an approved placeholder release."""
+    assert build_authoritative_releases(tmp_path) == []
