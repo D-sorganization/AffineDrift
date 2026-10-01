@@ -649,6 +649,7 @@ jobs:
           # allow cdnjs.cloudflare.com, so the un-pruned tag trips a CSP
           # violation on every math page (#4565).
           python3 scripts/prune_internal_docs_from_deploy.py --docs-dir docs
+          python3 scripts/public_site_manifest.py
 
       - name: Run Playwright E2E Suite (Chromium)
         # Every spec under tests/e2e against the full render.

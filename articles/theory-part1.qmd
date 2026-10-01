@@ -394,6 +394,22 @@ For reference, the following table summarizes the main symbols used in the manus
 
 : Summary of main symbols {#tab:notation}
 
+::: {.callout-example}
+## Worked Example: Assembling a Spatial Inertia
+
+**Given:** a single rigid body with mass $m=2$ kg, center-of-mass offset $c=(0.3,0,0)$ m from the body origin, and rotational inertia about its own center of mass $I_c=\operatorname{diag}(0.05,0.05,0.01)$ kg m².
+
+**Steps:**
+
+1. Call `spatial_inertia(mass=2.0, com=[0.3, 0.0, 0.0], inertia_com=diag([0.05, 0.05, 0.01]))`.
+2. The function assembles the $6\times6$ spatial inertia about the body origin, applying the parallel-axis shift for the $0.3$ m offset along $x$.
+3. Read the diagonal of the rotational (upper-left $3\times3$) block.
+
+**Result:** $\operatorname{diag}(M_{1:3,1:3})=(0.05,\ 0.23,\ 0.19)$ kg m². The $x$-axis entry is unchanged because the offset lies along $x$; the $y$- and $z$-axis entries each grow by the parallel-axis term $mc_x^2=2(0.3)^2=0.18$ kg m².
+
+Computed by `src/affine_control/dynamics.py::spatial_inertia`; checked against this page by `tests/test_worked_example_callouts.py::test_theory_part1_spatial_inertia`.
+:::
+
 ## Unified Control-Affine Derivation (Rigid + Flexible System)
 
 ### Lagrangian Formulation

@@ -1,7 +1,7 @@
 -- scripts/filters/revision-history.lua
 -- Pandoc filter for the Per-Article Revision History component (WEB-07.3 #4545).
 --
--- Renders front-matter `changes` as an accessible <section id="revision-history">
+-- Renders front-matter `changes` as an accessible <div id="revision-history"> block
 -- before references or at the end of the document.
 
 function Pandoc(doc)

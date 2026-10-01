@@ -12,7 +12,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from scripts.check_quarto_render_coverage import load_sitemap_paths, sitemap_loc_to_source_path
+from scripts.check_quarto_render_coverage import sitemap_loc_to_source_path
+from scripts.generate_sitemap import build_pages
 from src.tools.utils.frontmatter import split_frontmatter
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -36,9 +37,8 @@ def get_effective_page_title(fm: dict[str, object], body: str) -> str:
 
 
 def get_published_sources() -> list[Path]:
-    """Return all published source paths mapped from sitemap.xml."""
-    sitemap_path = REPO_ROOT / "sitemap.xml"
-    locs = load_sitemap_paths(sitemap_path)
+    """Return all published source paths from the current sitemap page set."""
+    locs = [page["loc"] for page in build_pages()]
     return [sitemap_loc_to_source_path(loc, REPO_ROOT) for loc in locs]
 
 

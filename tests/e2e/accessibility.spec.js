@@ -8,6 +8,15 @@ const CONTRAST_ROUTES = [
   "/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html",
 ];
 
+// Home page, an article, and a stand-in for the "Start Here" page proposed
+// in WEB-01.1 (pages/start-here.qmd does not exist yet, so pages/overview.qmd
+// — the closest existing entry-style page — is used instead; see issue #4566).
+const SKIP_LINK_ROUTES = [
+  "/",
+  "/pages/overview.html",
+  "/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html",
+];
+
 // Three math-heavy pages for #4565 (WEB-09.5): the CSP `connect-src 'self'`
 // in _includes/site-head.html could block MathJax speech-rule locale fetches
 // if the a11y/explorer module were ever loaded. This guards that no such
@@ -240,22 +249,36 @@ test.describe("Accessibility", () => {
     }
   });
 
-  test("should have skip to main content link", async ({ page }) => {
-    await page.goto("/");
+});
 
-    // Tab to first element (should be skip link if present)
-    await page.keyboard.press("Tab");
+test.describe("Skip link and focus order without JavaScript (issue #4566)", () => {
+  test.use({ javaScriptEnabled: false });
 
-    const focusedElement = await page.evaluate(() => {
-      const el = document.activeElement;
-      return {
-        text: el.textContent,
-        href: el.getAttribute("href"),
-      };
+  for (const route of SKIP_LINK_ROUTES) {
+    test(`exactly one skip link is present in the static HTML on ${route}`, async ({
+      page,
+    }) => {
+      await page.goto(route);
+
+      await expect(page.locator(".skip-to-content")).toHaveCount(1);
     });
 
-    // Skip link is optional but recommended
-    // Just verify we can tab to something
-    expect(focusedElement).toBeTruthy();
-  });
+    test(`skip link is first in focus order and its target exists on ${route}`, async ({
+      page,
+    }) => {
+      await page.goto(route);
+
+      await page.keyboard.press("Tab");
+      const focused = await page.evaluate(() => {
+        const el = document.activeElement;
+        return { className: el.className, href: el.getAttribute("href") };
+      });
+
+      expect(focused.className).toContain("skip-to-content");
+      expect(focused.href).toBeTruthy();
+
+      const targetId = focused.href.replace("#", "");
+      await expect(page.locator(`#${targetId}`)).toHaveCount(1);
+    });
+  }
 });

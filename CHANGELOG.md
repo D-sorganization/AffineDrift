@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed CI build badge in `README.md` to target active `ci-standard.yml` workflow (#4128).
 - Updated `AGENT_HANDOFF.md` to eliminate local Windows paths (#4128).
 
+### Fixed
+
+- `requirements-docker.lock` is regenerated with `uv pip compile --universal --python-version 3.12 --generate-hashes`: Windows-only `pywinpty` now carries `; os_name == 'nt'` so the Linux image no longer tries to build its sdist under `--require-hashes`, and the lock matches `requirements.txt` again (numpy 2.5.3, sympy, pypdf, pytest-asyncio, pytest-httpx, responses, type stubs). `tests/test_docker_lock.py` guards both.
+
 ### Removed
 
 - Removed root sprawl and stray assets: `replace.patch`, `AffineDrift_Content_Review_Instructions.docx`, `js/bibliography.js.orig`, `test_bibliography_perf.js`, `uv.lock`, stray 2.1 MB PDF, and 3.3 MB presentation file (#4128).

@@ -268,8 +268,15 @@ class TestSitemapXmlFormat:
 class TestGenerateSitemapMain:
     """End-to-end tests for sitemap generation."""
 
-    def test_main_writes_sorted_sitemap_and_root_copy(self, tmp_path, monkeypatch):
-        """main writes the requested sitemap plus root sitemap.xml."""
+    def test_main_writes_sorted_sitemap_without_a_root_copy(self, tmp_path, monkeypatch):
+        """main writes only the requested output path; no root sitemap.xml copy.
+
+        The generator previously also wrote an unconditional ``sitemap.xml``
+        copy in the current working directory. That copy was only refreshed
+        when someone remembered to run the generator and commit the result,
+        so it drifted stale (#4572). Nothing should be written outside the
+        requested ``--output`` path.
+        """
         pages = [
             Path("articles/keep.qmd"),
             Path("pages/no-title.qmd"),
@@ -299,9 +306,8 @@ class TestGenerateSitemapMain:
         generate_sitemap.main()
 
         generated = (tmp_path / "public" / "sitemap.xml").read_text(encoding="utf-8")
-        root_copy = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
 
-        assert generated == root_copy
+        assert not (tmp_path / "sitemap.xml").exists()
         assert "<!-- Total URLs: 2 -->" in generated
         assert "<loc>https://affinedrift.com/</loc>" in generated
         assert "<loc>https://affinedrift.com/articles/keep.html</loc>" in generated
@@ -309,3 +315,23 @@ class TestGenerateSitemapMain:
         assert generated.index("<loc>https://affinedrift.com/</loc>") < generated.index(
             "<loc>https://affinedrift.com/articles/keep.html</loc>"
         )
+
+    def test_build_pages_matches_main_output(self, tmp_path, monkeypatch):
+        """build_pages() is the reusable source of truth main() renders to XML."""
+        pages = [Path("articles/keep.qmd"), Path("index.qmd")]
+
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(generate_sitemap, "collect_qmd_files", lambda _dirs: pages)
+        monkeypatch.setattr(
+            generate_sitemap,
+            "read_qmd_with_frontmatter",
+            lambda path: ("body", {"title": path.stem}),
+        )
+        monkeypatch.setattr(generate_sitemap, "get_git_last_modified", lambda _path: "2026-06-10")
+
+        built = generate_sitemap.build_pages()
+
+        assert [page["loc"] for page in built] == [
+            "https://affinedrift.com/",
+            "https://affinedrift.com/articles/keep.html",
+        ]
