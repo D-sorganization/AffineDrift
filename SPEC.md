@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4724 | Clarify spatial wrench power, observer and contact restrictions, projection sensitivity, and archived closure and native-engine evidence in companion Chapter 20. |
 | 2026-09-30 | #4717 | Reconcile radar screw-kinematics observability, frame conventions, waveform budgets, and evidence limits in the launch-monitor appendix. |
 | 2026-09-30 | #4714 | Bound impact energy optimality, inertia equivalence, solver evidence and golfer inference; reconcile linked summaries with preserved review history. |
 | 2026-09-30 | #4712 | Reconcile companion two-hand wrench geometry, identifiability, power and archived contact/sensor evidence; correct mutable instrumented-grip citations while preserving immutable source scope. |

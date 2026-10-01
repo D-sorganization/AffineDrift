@@ -1,3 +1,19 @@
+# Plane-to-Space Technical Review — #4724
+
+- Goal active under epic #4009. Regular PRs only; complete current review and protected delivery, then continue longest unfinished sources.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`; branch `fix/plane-space-rigor-4724`; base `bd1255f153926c7e653148b8c4db972a08ba7be9`.
+- Session `technical-review-20261001-plane-space`; lease/presence expire 2026-10-01 03:26 UTC. Renew as needed.
+- Full Chapter 20 read and corrected for wrench/reference/observer power, contact restrictions, rank versus bounded feasibility, study populations, shared engine assumptions, algebraic versus forward controls, projection uncertainty and human evidence. Neighboring chapters and immutable monograph unchanged.
+- Archived four JSON/NPZ pairs checked without running engines; 1,098 open geometry states, 234 closed solves, 54 paired shoulder cases, and four forward traces recomputed. All twelve supplied source hashes match provider revision `a1a613999eb0c744da96caa040941955eb210a21`. Exact read limits in `reports/technical-review/plane-space-archive-checks.json`.
+- Two agy Gemini 3.8 Flash supplied-text inventories adjudicated. No delegated tools, network, edits or decisions. Corrected their conflation of passive frame changes with observer changes.
+- RED: eight source failures, three independent numerical passes; GREEN: 26 new and reused Chapter 12 checks pass. HTML render completed; PDF render running. Final visual QA, audit binding, whole-repo validation and protected PR delivery still pending. Corpus row not yet completed.
+- Radar PR #4721 merged remote main `bd1255f15` with green CI 36799282870; lease #4717 released. Heavy-hit regular PR #4723 at `1d3e7fed7` has local full validation complete (6,086 tests, 92.95%); protected CI 36801091325 pending E2E site build. Finish merge, verify remote main, release #4720 and integrate before final delivery.
+- Preserve prior scientific scopes and handoffs below. Deployment remains a separate gate; do not claim live publication from merge alone. Parked provider synthesis #4253 remains outside this chapter review.
+
+## Preserved Prior Delivery Records
+
+Earlier pending statuses below are historical; the current state is above.
+
 # Radar Screw-Kinematics Review — #4717
 
 - Goal active under epic #4009. Review the longest unfinished sources first; regular PRs only.

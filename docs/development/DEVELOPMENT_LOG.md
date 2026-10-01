@@ -1,5 +1,9 @@
 # Development Log — AffineDrift
 
+## 2026-10-01 — Plane-to-Space Review Checkpoint (#4724)
+
+Corrected Chapter 20 observer/frame, contact, closure and independent-engine claims against exact archived data; 26 focused checks pass. Rendering and full validation remain pending. Radar #4721 is merged; heavy-hit #4723 awaits protected E2E. No new corpus completion at this checkpoint.
+
 State table for every feature in flight in this repository. Update
 entries **in place**; never append dated sections. One entry per
 feature, from proposal to ship. See the `development-logs` section of

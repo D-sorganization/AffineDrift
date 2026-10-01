@@ -8,10 +8,11 @@ normal force and torque mechanisms, but it cannot see out-of-plane clubface
 moments, changing swing plane, or spatial joint axes.
 
 Moving to three dimensions is not merely drawing the same links with perspective.
-Rotations no longer commute, moments require declared frames, contacts have six-
-axis wrenches, and constraints can contain new internal modes.
+Finite rotations generally do not commute, moments require declared frames and
+reference points, and constraints can contain new internal modes. A six-component
+wrench record does not mean that every contact can exert six independent loads.
 
-![A Planar Shadow Captures Swing-Normal Mechanics While a Spatial View Adds Out-of-Plane Force, Twist, and Changing Axes.](figures/proximal_distal_companion/fig_companion_planar_to_spatial.svg){#fig-lay-plane-space width=98% fig-alt="A planar stick model is shown as the shadow of a three-dimensional golfer-club system, with additional arrows for out-of-plane force, shaft twist, and changing joint axes."}
+![A Planar Projection Hides Directions That a Spatial Model Must Resolve.](figures/proximal_distal_companion/fig_companion_planar_to_spatial.svg){#fig-lay-plane-space width=98% fig-alt="Two orange two-link sketches compare a planar projection with a spatial view containing a purple directional arrow. The schematic illustrates an omitted direction, not a measured golfer, complete wrench, or changing-axis trajectory."}
 
 ## How the Mechanism Works
 
@@ -22,10 +23,38 @@ orders can yield different orientations.
 
 ### Spatial Wrenches Preserve the Physical Contract
 
-A three-dimensional wrench combines three force and three moment components.
-When moved to another reference point, its moment changes by the cross product
-of offset and force. Power combines force with linear velocity and moment with
-angular velocity. Consistent spatial algebra preserves power under frame change.
+A three-dimensional wrench records force $\mathbf F$ and moment $\mathbf M_O$
+about a specified point $O$. For $\mathbf r=\overrightarrow{OQ}$, expressing the
+same loading at another point $Q$ of a rigid body gives
+
+$$
+\begin{aligned}
+\mathbf M_Q &= \mathbf M_O-\mathbf r\times\mathbf F,\\
+\mathbf v_Q &= \mathbf v_O+\boldsymbol\omega\times\mathbf r,\\
+P &= \mathbf F\cdot\mathbf v_O+\mathbf M_O\cdot\boldsymbol\omega\\
+  &= \mathbf F\cdot\mathbf v_Q+\mathbf M_Q\cdot\boldsymbol\omega.
+\end{aligned}
+$$ {#eq-lay-spatial-wrench-power}
+
+All velocities here describe the same rigid motion for the **same observer**.
+Rotating the components of every vector into another orthonormal basis preserves
+these dot products. The wrench components themselves change. Likewise, shifting
+the moment reference requires the matching change in rigid-body velocity; using
+the old velocity with the new moment generally changes the reported power.
+
+Changing the observer is a different operation. An observer translating with
+constant velocity $\mathbf U$ measures $\mathbf v'_O=\mathbf v_O-\mathbf U$ and
+$P'=P-\mathbf F\cdot\mathbf U$. External power and kinetic energy need not have
+the same value for different observers. Rotating observers require additional
+relative-motion terms in dynamics. Expressing laboratory-observed velocities in
+club-aligned axes does not by itself make them club-relative velocities.
+
+A point-force contact has no independent contact moment: its moment about $O$
+is fixed by its position and force. Friction, unilateral separation, and contact
+area further restrict admissible loads. A distributed grip may transmit a
+resultant moment, but its six recorded components still obey the contact model.
+For a deforming shaft, one rigid wrench--velocity pairing does not capture all
+deformation power; sum the actual contact powers and account for internal energy.
 
 This frame-explicit contract is the bridge from the planar negative couple to a
 spatial test. The swing-normal component can be compared while additional
@@ -52,16 +81,20 @@ points by 0.171--0.616 m, and none meets the registered 5 mm tolerance.
 
 The same open configurations still produce a rank-six bilateral contact
 Jacobian. That is not a contradiction. Rank asks whether six local correction
-directions are available; closure asks whether a correction is still required.
+directions are locally available without coordinate bounds; closure asks whether
+a correction is still required. Rank alone does not guarantee a finite correction
+within joint limits or without collision.
 Calling a rank test a contact-feasibility result would therefore hide the most
 important geometric failure.
 
 This adverse result narrowed the next model rather than weakening the scientific
 program. A bounded subject-scaled solver then closed both hands on the grip while
-respecting joint limits and collisions. It held the club at 13 prescribed phase
-samples and closed **234 of 234** profile--span--phase cases, with no contact
-error above $1.16\times10^{-10}$ m. A deliberately unreachable 2.0 m grip span
-failed, preserving a negative control.
+respecting its declared joint and collision guards. It held the club at 13
+prescribed samples over 0--0.24 s, while allowing pelvis, trunk, and arm coordinates
+to change. All **234 of 234** profile--span--sample cases passed the **0.5 mm**
+closure gate, with no stored contact error above $1.16\times10^{-10}$ m. That
+numerical residual is not an anatomical measurement accuracy. A deliberately
+unreachable 2.0 m grip span failed, preserving a negative control.
 
 That success is a reduced-tree necessary condition, not proof that a person can
 adopt the poses. The limits are broad engineering guards, collision clearance
@@ -73,23 +106,29 @@ anatomy and calibrated compliant forward contact are the next gates.
 
 ### Scapular Mobility Changes Reachability Without Identifying Strategy
 
-The next paired screen changes only one structural assumption. It holds the
-trunk and club pose fixed, then compares the original fixed shoulder centers
+The next screen makes a paired comparison within a different feasible set. It
+holds the trunk and club pose fixed, then compares fixed shoulder centers
 with shoulder centers that can move on a declared thoracic ellipsoid. Four
 screening coordinates per side represent protraction, elevation, upward
-rotation, and winging. This is a reduced geometry experiment, not a digital
-human shoulder.
+rotation, and winging. In this surrogate, the first two move the shoulder center;
+the latter two change joint orientation. This is a reduced geometry experiment,
+not a validated anatomical shoulder. Its arm-only solve is not a rerun of the
+234-case solve that allowed trunk motion.
 
-The fixed branch closes **0 of 54** registered states. The mobile branch reaches
-the residual tolerance in **31 of 54**, but only **16 of 54** also receive a
-successful optimizer termination. Twenty-eight states touch a declared bound,
+The fixed branch closes **0 of 54** stored states. The mobile branch reaches
+the 0.5 mm residual tolerance in **31 of 54**. The optimizer reports successful
+termination in **39 of 54**, but only **16 of 54** satisfy both criteria: fifteen
+closed cases lack successful termination, and twenty-three successfully
+terminated cases remain open. Twenty-eight states touch a declared bound,
 and an intentionally impossible 2.0 m grip span remains open. Mobility clearly
 changes modeled reach, but unresolved cases may reflect range choice, omitted
 coordinates, or numerical termination rather than human infeasibility.
 
 There is a second warning. Both contact Jacobians retain rank six, while local
 coordinate nullity rises from two to ten. Many scapular and glenohumeral
-coordinate changes can therefore satisfy the same bilateral contact task.
+coordinate changes therefore leave the contact residual unchanged to first order
+in the unconstrained local linearization. At an open pose this is not yet a
+closed-contact manifold, and active joint bounds restrict admissible directions.
 Contact geometry alone cannot tell a reviewer which internal allocation a
 person used or should use.
 
@@ -101,15 +140,24 @@ delivery, or human-strategy hypotheses be tested.
 
 ### Independent Engines Test Implementation Dependence
 
-Running the same conceptual experiment in two engines is useful only if the
-implementations are genuinely independent and observables are transformed to a
-common convention. Matching screenshots prove little. Matching trajectories,
+Running the same conceptual experiment in two engines tests the implementation
+parts that differ, provided observables use a common convention. Report which
+model construction, contact laws, derivatives, and numerical updates are shared.
+Matching screenshots prove little. Matching trajectories,
 wrenches, powers, constraint residuals, and negative controls is stronger.
 
-MuJoCo and Pinocchio differ in their numerical and contact machinery. The
-project's finite-mass hand-carriage experiment uses paired compliant interfaces
-and no direct club actuation in both. Its same-state driver killswitch and moment-
-arm controls make the comparison mechanistic.
+The archived finite-mass hand-carriage experiment calls native MuJoCo
+`mj_forward` and Pinocchio articulated-body forward dynamics, both version 3.8.0.
+It uses a shared Kelvin--Voigt point-interface law and a shared semi-implicit
+update after native acceleration evaluation. It therefore compares rigid-body
+dynamics and force mapping; it does not independently test the engines' native
+contact solvers or integrators. Neither branch commands the club directly.
+
+The driver killswitch is a genuine forward intervention: starting from the same
+state at 0.180 s, it removes the grounded hand-carriage driver while retaining
+gravity, inertia, and interface storage and damping. In contrast, the coincident
+and reversed moment-arm controls reuse achieved forces **without advancing a new trajectory**.
+They test the moment calculation, not the later motion of a physically altered grip.
 
 ### Agreement Has a Boundary
 
@@ -125,13 +173,17 @@ scapula and forearm. Joint centers and axes are estimated. Clubface orientation
 requires careful rigid-body tracking. Bilateral grip sensors must be registered
 to the club frame. These uncertainties should enter the model-data comparison.
 
-**Model Result:** A reduced spatial mechanism retains the late negative contact
-couple across two independent engine realizations for the declared interval and
-passes sign-changing controls.
+**Model Result:** The archived carriage model retains a negative swing-normal
+projection of its point-force moment after the driver is removed in both native
+dynamics realizations. The moment-arm identities also pass their algebraic
+controls. This projection is about the declared club reference; it is not an
+origin-independent pure couple when net contact force is nonzero.
 
-**Human Evidence:** Three-dimensional golf motion is clearly not planar, but
-  existing heterogeneous datasets do not validate the specific spatial contact
-  mechanism [@meister2011; @joyce2013; @mcphee2022].
+**Human Evidence:** Measured trunk and pelvic motion has three-dimensional
+structure [@meister2011; @joyce2013]. Those kinematic studies do not test this
+specific bilateral compliant-contact mechanism. McPhee reviews the broader
+modeling and measurement methods [@mcphee2022]; neither that review nor agreement
+between reduced models supplies participant validation for this mechanism.
 
 **Hypothesis:** The planar swing-normal couple is one projection of a spatial
 wrench pattern that should be measurable without requiring a unique muscle
@@ -149,27 +201,34 @@ see, it is an excellent place to derive and falsify the basic negative-couple
 mechanism.
 
 The plane is not a claim that a golf swing is flat. It is a controlled slice.
+Projecting a spatial trajectory is not a closed planar dynamics model: omitted
+motion can alter inertia, reactions, and forces within the displayed plane.
+Imposing planar constraints may itself introduce reactions absent in free space.
 The key question is whether a spatial extension retains the corresponding
 physical projection when out-of-plane motion and extra axes are admitted.
 
 ### What Three Dimensions Add
 
 Each rigid body now has spatial orientation and angular velocity. The club's
-moment is a vector. Hand forces and moments have six components per contact.
+moment is a vector. Hand loading can be recorded as a six-component wrench at
+each declared reference, subject to the contact restrictions above.
 Swing-plane normal can vary with time and must be defined operationally. Forearm
 rotation, wrist deviation, shaft droop, torso side bend, and shoulder-girdle
 motion introduce pathways absent from the plane.
 
 These freedoms can redistribute a planar effect rather than merely add to it.
 A moment that looked entirely negative in one axis may split across changing
-axes. The invariant quantity is the complete wrench and its power; the chosen
-swing-normal projection remains useful if its construction is reported and
-tested for sensitivity.
+axes. Preserve the complete wrench, its reference point, and the observer used
+for power. A passive coordinate rotation changes components while preserving
+the physical loading and scalar power; choosing a different physical projection
+axis changes the reported component. The swing-normal projection remains useful
+if its construction is reported and tested for sensitivity.
 
 ### Frames Must Be Registered
 
 Laboratory, pelvis, trunk, arm, hand, club, sensor, and swing frames all move
-differently. Every spatial wrench transform includes rotation and moment shift.
+differently. A general spatial wrench transform includes rotation and a moment
+shift; either part can be trivial when axes or reference points already coincide.
 Angular velocities require consistent representation; Euler-angle derivatives
 are not the angular-velocity vector. These are common sources of plausible but
 wrong signs.
@@ -204,7 +263,8 @@ successful agreement and known deviations.
 
 ### A Spatial Geometry-Control Suite
 
-Reverse the defined swing-normal axis and verify only the reported projection
+These are proposed extension and measurement tests, beyond the two archived
+same-force moment-arm identities. Reverse the defined swing-normal axis and verify only the reported projection
 changes sign, not physical power. Swap hand positions in the model and verify
 the differential couple responds. Collapse separation, align forces with the
 separation vector, and rotate the swing plane. Perturb sensor-frame orientation
@@ -213,7 +273,19 @@ to quantify sign confidence.
 These tests distinguish coordinate behavior from physical mechanism. If a
 purported negative couple disappears whenever the reporting plane shifts a few
 degrees, its interpretation should include that uncertainty rather than a binary
-label.
+label. At a fixed reference point, if two unit normals differ by angle $\theta$,
+
+$$
+\left|\mathbf M\cdot(\mathbf n'-\mathbf n)\right|
+\leq 2\lVert\mathbf M\rVert\sin(\theta/2).
+$$ {#eq-lay-spatial-axis-bound}
+
+A projection close to zero can reverse sign under a small angular perturbation
+even when the moment vector is accurately known. For example, a moment
+$(1,0,-0.01)$ N m is negative along $(0,0,1)$ but positive after that normal tilts
+one degree toward the positive first axis. A sign probability additionally needs
+a specified uncertainty distribution; a collection of plausible axes alone gives
+a sensitivity range, not a probability.
 
 ### Moving Anatomy Without Overclaiming It
 
@@ -224,12 +296,15 @@ measurement uncertainty. A generalized shoulder driver remains an abstraction.
 
 The model can predict a required hand wrench or joint-level generalized load.
 Mapping that to scapular retraction, protraction, or named muscle action requires
-additional kinematics, EMG, and a biological model. Keeping that boundary
+additional kinematics, physiological measurements, and a biological model.
+EMG constrains activation hypotheses but does not uniquely identify muscle force.
+Keeping that boundary
 explicit protects the very hypothesis the work aims to test.
 
 ### Quantities That Should Survive the Extension
 
-Whole-system energy balance, contact action--reaction, wrench power invariance,
+Whole-system energy balance for a declared observer, contact action--reaction,
+consistent wrench--velocity power under passive coordinate changes,
 and geometric control responses should survive exactly or within numerical
 tolerance. Qualitative timing and sign of the proposed contact contribution may
 survive over a declared region. Exact optimal controls and magnitudes are
@@ -255,9 +330,11 @@ participants.
 
 ### Reader Lab: Rotate the World
 
-Take one spatial state and rigidly rotate every position, orientation, force,
-moment, and gravity vector into a new laboratory frame. Recompute dynamics. The
-rotated physical trajectory, energy, and wrench power should match. A quantity
+Take one spatial state and apply one constant proper rotation to every position,
+orientation, velocity, force, moment, gravity vector, and boundary/input definition.
+Express inertias and constraints consistently, then recompute dynamics. This is
+a passive relabeling for the same observer. The rotated trajectory and the same
+scalar energy and wrench power should match. A quantity
 tied to the declared swing frame should transform predictably. Failure reveals a
 frame-dependent implementation error.
 
@@ -279,8 +356,8 @@ uncertainty, and model-rung label. Let readers rotate the scene and inspect the
 numeric state. Do not use a detailed human mesh to imply anatomical fidelity not
 present in the equations.
 
-The best spatial figure pairs an intuitive view with invariant plots: wrench
-power, projected couple with axis sensitivity, and closure residual. Beauty
+The best spatial figure pairs an intuitive view with declared observables: wrench
+power for a named observer, projected moment with axis sensitivity, and closure residual. Beauty
 should make the mechanism easier to audit, not harder to question.
 
 ### A Minimal Spatial Report
@@ -338,6 +415,8 @@ the other. Parameters and tolerances should be registered before comparison,
 with held-out cases and negative controls.
 
 **Go Deeper:** Read the
-[spatial common-state formulation](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06c_spatial_cross_formulation.qmd),
-the [independent forward-contact chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06cc_spatial_forward_contact.qmd),
-and the project's [reproduction boundary](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).
+[spatial common-state formulation](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/chapters/_ch06c_spatial_cross_formulation.qmd),
+the [native forward-dynamics comparison](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/chapters/_ch06cc_spatial_forward_contact.qmd),
+and the project's [reproduction boundary](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).
+These links identify the reviewed provider revision; proposed validation steps
+above are not claims that those studies have already been completed.
