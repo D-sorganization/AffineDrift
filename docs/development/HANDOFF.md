@@ -1,3 +1,18 @@
+# Force, Work, and Motion — #4739
+
+- Goal active under epic #4009. Chapter 10 has no completion credit yet; 134 sources remain pending on this main7eb-based branch. Regular protected PRs only.
+- Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review; branch fix/force-work-rigor-4739; base7eb87e3c94bc95c7c973e09b53ecc6eca94d758d. Source checkpoint SELF; no PR yet. Session technical-review-20261001-force-work lease/presence through10:11/10:12UTC.
+- Entire chapter reviewed. Corrections cover rotational work, internal conversion and energy boundaries, net impulse, generalized residual power, wrench reference points, joint versus segment power and model/human inference. Preserve all 28 historical route findings. Reports/technical-review/force-work-* record exact primary reading and archive scopes.
+- Immutable135-outcome archive independently reselected:91 qualified events, distinct impulse/speed grid maxima. No new provider simulation or human experiment. Five agy Gemini3.8 Flash High supplied-text jobs handled inventories and drafts; lead rejected invented historical claims and adjudicated scientific content.
+- Validation: 2 source checks initially RED; all8 new checks and77 focused checks pass. Title654/Ruff/Black pass;184 content checks pass with four expected skips. Final215-page PDF and HTML render successfully; all8 chapter pages, contents and next boundary inspected; changed pages reinspected. Mobile clipping found manually and corrected with line wrapping. Final browser4/4, axe zero serious/critical violations; all43 chapter math expressions render without errors in each width/theme case. Canonical and docs PDF bytes identical. Receipt force-work-render-verification.json records bounded scope.
+- Next: refresh trust hashes, commit/push this source checkpoint, run stable-tree full regression and final content gates, bind adjudicated findings without changing historical provenance, then complete only the Chapter10 corpus row and create a regular PR. SPEC row waits for actual PR number. Do not edit/render during full pytest.
+- Guide PR4738 is CLOSED UNMERGED, superseded by peer consolidation4740, headf98904377d61fc071e84f1f4f4c12ca372b98954. Six guide scientific/evidence blobs and all8 route findings match11c78 exactly; receipt tangent-consolidation-4740-verification.json. Consolidation Python/static/JS checks pass; e2e pending as last observed. No merge claim. Guide checkout remains clean/pushed; release4736 after verified delivery. Do not reopen4738 or overwrite peer theme work.
+- Ground/neural PR4734 merged remote main7eb with green exact-head CI and identical tested tree;4730/4733 leases released. Preserve all local QA, original worktrees and parked provider synthesis4253. No force/admin/direct-main/draft PRs; no live deployment claim.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses below are historical; the current state is above.
+
 # Ground and Shallow-Wide Delivery — PR #4734
 
 - Goal active under epic #4009;134 sources still need full audits. Only regular protected PRs. Delegate routine work to agy Gemini 3.8 Flash; lead retains scientific judgment.
