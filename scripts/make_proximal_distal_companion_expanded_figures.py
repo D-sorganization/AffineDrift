@@ -178,7 +178,7 @@ def make_preload() -> None:
 
 def make_ground_ledger() -> None:
     fig, axis = plt.subplots(figsize=(10, 5.3))
-    _clean(axis, (-1, 11), (-1, 5.5))
+    _clean(axis, (-1, 11.5), (-1, 5.5))
     for x, text, color in (
         (1.0, "Gravity +\nConfiguration", GRAY),
         (4.0, "Velocity-Dependent\nDrift", BLUE),
@@ -193,7 +193,7 @@ def make_ground_ledger() -> None:
     axis.text(3.0, -0.2, "Left Foot Allocation?", color=RED, ha="center")
     axis.text(8.0, -0.2, "Right Foot Allocation?", color=RED, ha="center")
     axis.set_title(
-        "Net Reaction Can Be Decomposed While Contact Allocation Remains Hidden",
+        "Modeled Net Reaction Does Not Uniquely Specify Foot Allocation",
         color=INK,
         fontweight="bold",
         fontsize=15,

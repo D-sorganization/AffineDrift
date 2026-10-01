@@ -2,7 +2,7 @@
   "issue": 4725,
   "source_checkpoint": "b694b319de8c5b361c5e06d07c2b6282956b9897",
   "base_main": "fb377e96dc33ee80b655284aef066f8acfb7caf1",
-  "status": "Scientific source, 78-page PDF and local validation complete; regular PR and protected remote-main delivery pending.",
+  "status": "Merged by protected PR #4729 to remote main fd508f04cd48b80f8f248432cea4a033b9188a13 at 2026-10-01 03:37:56 UTC. Integrated local receipt completed after merge and carried forward in #4730.",
   "full_suite": {
     "command": "py -3.12 -X utf8 -m pytest tests --cov --cov-report=term-missing --cov-report=xml",
     "passed": 6178,
@@ -114,7 +114,27 @@
   },
   "limits": [
     "No full-book scientific certification.",
-    "No live-site deployment claim.",
-    "Protected merge still pending."
-  ]
+    "No live-site deployment claim."
+  ],
+  "integrated_validation": {
+    "base_main": "644bfd5bebb197ee03deb16877f189a0d772c403",
+    "tested_head": "e71bc7c2201a9cbc104d3eeeb9cb042e14fcc7dc",
+    "command": "py -3.12 -X utf8 -m pytest tests --cov=src --cov-report=term-missing --cov-report=xml",
+    "passed": 6191,
+    "skipped": 29,
+    "deselected": 185,
+    "warnings": 51,
+    "seconds": 528.74,
+    "coverage_src_percent": 92.95,
+    "subsequent_content": {
+      "command": "py -3.12 -X utf8 -m pytest tests -m content_lint",
+      "passed": 183,
+      "skipped": 4,
+      "deselected": 6218,
+      "seconds": 9.02,
+      "evidence_restored_between_runs": false
+    },
+    "focused_passed": 37,
+    "invocation_note": "An initial -m content selection selected no tests; the subsequent content_lint command is the reported content validation."
+  }
 }

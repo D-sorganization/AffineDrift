@@ -1,3 +1,24 @@
+## Latest Ground Delivery Integration
+
+- SELF integrates peer PR #4713 at 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Ground source, PDF and all prior findings preserved; only handoff/log conflicts resolved. 43 focused and 184 content checks pass (four skips). Prior6232-pass full suite belongs to feae3b872. Receipt: reports/technical-review/ground-conversation-integration-4713.json. Next: push for protected PR4732 CI. No live deployment claim.
+
+# Ground-Reaction Chapter — #4730
+
+- Goal active under epic #4009; continue complete reviews and protected delivery. Regular PRs only; no draft, direct-main or bypass pushes.
+- Current branch `fix/ground-conversation-rigor-4730`, delivery worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`, integrated remote main `668de3a23b73c166936077ccdd6c4f869deb1c6c`.
+- Reference PR #4729 merged at 2026-10-01 03:37:56 UTC and ancestry verified. Final integrated receipt (6191 passed/29 skipped, 92.95% src coverage, subsequent content 183/four skips) finished after merge and is carried here. Lease/presence released 03:44 UTC (5924297561 / 5924298286).
+- Ground session `technical-review-20261001-ground-conversation`; lease/presence through 07:16 UTC. Scientific source complete with twelve new tests and forty combined focused passes. Complete source and pinned provider Chapters 03c/06ca read; primary human scopes and three Flash inventories adjudicated in `reports/technical-review/ground-conversation-review.md`.
+- Archive recomputation: work ratio 13.44–3519.40, not twice; zero primary matches, 202 load-only matches; 60 post-hoc matches occur 48/8/4/0 across 4/10/25/50 ms. Total model intervention differs from the matched estimand. Distributed central tension-only grip does not inherit the noncentral dashpot defect from UpstreamDrift #11195.
+- Regular PR [#4732](https://github.com/D-sorganization/AffineDrift/pull/4732) is open, final science checkpoint `ff4177f0309195e040085b44b31b355f033fef3d`, protected squash auto-merge armed. All original CI 36815440996 checks passed; peer main #4731 introduced eleven digest/key-order conflicts, now resolved with all 28 ground findings preserved. Integrated validation passes: 6232 tests/29 skips, 93.04% src coverage; 184 subsequent content checks/four skips; four bounded browser cases and axe pass. Receipt: reports/technical-review/ground-conversation-integration-4731.json. Pushed-head protected CI remains required. Initial push raced a Quarto render and failed artifact/evidence hooks; after render completion and complete evidence staging, all push hooks passed.
+- Initial science checkpoint `0da67ca26cd147dfffd098c7c2b41427a168f87e`: final 213-page PDF Chapter16 pp98–106 plus contents/boundary verified; table fits on one page. Four final browser cases pass (390/1440, light/dark, 32 math items, four displays), zero serious/critical axe findings. All twelve content gates, Ruff, Black (819 files), title and root hygiene pass; 48 focused/legacy/hygiene checks pass. Prior 22 findings preserved, six new findings bound; 57 previous dependency paths unchanged, with chapter/PDF and bounded legacy-test changes explained. Stable full at 163cf5e59: 6203 passed/29 skipped/185 deselected, 92.95% src coverage. Final prose clarifies observer frame, 1536 pathway summaries/96 trajectory pairs/384 horizon comparisons, and empty cohort versus zero effect. Final 38 focused and 183 content checks/four skips pass without evidence restoration; final four public-route cases pass. Only PDF pages99/104/105 changed and were reinspected. Corpus Chapter16 row complete; 135 pending remain. Receipt: ground-conversation-repository-validation.json.
+- Preserve QA artifacts, prior scoped audits, parked provider synthesis #4253, and peer-owned deployment #4688/#4713. No live deployment claim.
+
+- Parallel Chapter4 work is isolated on `fix/shallow-wide-rigor-4733` in `AffineDrift-screw-review`, source checkpoint b3410b4f040b73fa108a207b6d51e7233c75e919; do not include those edits in PR4732.
+
+## Preserved Peer Delivery Record
+
+PR #4713 merged as 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Its original record below is historical; main deployment is not verified here.
+
 # Dataset Explorer Deployment Route Audit — #4688 — Current Integration
 
 - Worktree: `C:\Users\diete\Repositories\Worktrees\luna-affine-deploy-route-4688-20260930`; branch `fix/luna-deploy-route-4688`.
@@ -7,6 +28,11 @@
 - The old `4b886599` full render, 250-page manifest and enforced audit validate `4b886599` only; the earlier interrupted `dccdceab` native exit is unknown.
 - Current-main reviewed Chapter 20 and reference-library source/audit records are preserved. Synthetic population inputs remain synthetic; ZTCF/proximal-distal evidence remains model-level/educational; no human/population validation is claimed. Keep #4695 open and #4694 separate.
 - Exact-candidate PR CI render and full revision-bound publication audit remain required; after merge, verify successful main deployment before closing #4688. Keep finding #4695 open and workflow follow-up #4694 separate.
+
+
+## Earlier Checkpoints
+
+Older pending statements below are historical; current status is above.
 
 # Annotated Reference Library — #4725
 

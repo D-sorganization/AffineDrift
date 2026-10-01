@@ -1,3 +1,16 @@
+# Ground PR Integration — #4730 / #4732
+
+- Goal active. Delivery checkout `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`, branch `fix/ground-conversation-rigor-4730`, integration checkpoint `SELF`.
+- Ground scientific source remains ff4177f0309195e040085b44b31b355f033fef3d; original PR head 821a1899246df83ebd017061489835157f4bfec7 passed every required check. Protected squash auto-merge remains armed.
+- Latest integration SELF adds peer PR4713 at 03ea44ea70639f7314a773b668bef0eaa02c0cd1; its dataset-explorer audit record and tests are preserved. Only handoff/development-log conflicts; ground source/PDF unchanged. 43 focused and 184 content checks pass (four skips); receipt reports/technical-review/ground-conversation-integration-4713.json.
+- Integrate peer PR4731 at 668de3a23b73c166936077ccdd6c4f869deb1c6c. Eleven inventory conflicts are key-order/digest-only; all 28 ground-route findings and scientific source/PDF are preserved. Peer content-inventory, redirect and naming changes remain intact.
+- Full integration validation passes: 6232 tests/29 skips, 93.04% src coverage; 184 subsequent content checks/four skips; four bounded browser cases and axe pass. Exact receipt: reports/technical-review/ground-conversation-integration-4731.json. Pushed-head protected CI remains required.
+- Ground lease/presence renewed through 07:16 UTC. Next action: push the verified integration for protected PR4732 CI. No force, admin, direct-main or draft PR.
+- Chapter4 source is separately committed on fix/shallow-wide-rigor-4733 (b3410b4f0) in AffineDrift-screw-review. That review remains active; preserve both checkouts and their QA. DL-#4730 updated here.
+- Detailed continuation: docs/development/HANDOFF.md. No live-deployment claim; peer deployment #4688/#4713 remains separately owned.
+
+## Preserved Earlier Records
+
 # Plane-to-Space Technical Review — #4724
 
 - Goal active under epic #4009. Regular PRs only; complete current review and protected delivery, then continue longest unfinished sources.
