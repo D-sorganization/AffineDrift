@@ -20,15 +20,17 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4771 — Measured Golfer Evidence
 
-- **Status:** in_review
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4772 (regular, attached)
 - **Issue:** #4771; epic #4009 / corpus #4021
-- **Branch:** fix/measured-golfers-rigor-4771; regular PR #4772
+- **Branch:** fix/measured-golfers-rigor-4771
+- **Paths:** articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_measured_golfers_review.py
+- **Started:** 2026-10-01
 - **Why:** Wrong systematic-review attribution and overbroad instrument, EMG, statistical and validation claims.
-- **Change:** Full Chapter24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Preserve87 historical findings.
-- **Last verified:** 2026-10-01;three covariance cases and two source contracts pass after RED,653 source titles. Final publication/regression/binding pending;no audit credit yet.
-- **Next:** Complete publication checks and regression, integrate PR4770/main, bind exact source bytes, regular PR and protected merge. Seven Flash drafts lead-adjudicated.
-
-- Final source validation:6389 regression passes,29 skips,187 deselections;48 followup tests,12 gates,223-page PDF/HTML,four browser profiles. Eleven Flash jobs adjudicated. Source947ad2373/integrationaa047b514 pushed;final author wording committed and pushed at f565c72885e73d9e463debc336322691f46ea11a;nine findings bound,eight exact Git blobs verified,87 historical records preserved;118 corpus sources pending. Final PR4772 head CI/protected delivery next.
+- **Change:** Full Chapter 24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Nine findings bind eight exact Git blobs at f565c72885e73d9e463debc336322691f46ea11a; 87 historical findings remain intact. Chapter audit credited; 118 corpus sources plus whole-book consistency remain.
+- **Last verified:** 2026-10-01; 6,389 full-regression passes, 29 skips and 187 configured deselections; 48 affected follow-up checks after final author wording, 12 publication gates and 67 post-binding checks. Final 223-page PDF/HTML and four browser profiles verified. Source and binding cb9e634d5 are pushed. See measured-golfers-validation.json for exact scope.
+- **Next step:** Push documentation-only review correction SELF; verify PR #4770 delivery, final PR #4772 CI/review and protected merge; then verify remote-main blobs and release the lease. Twelve Flash jobs lead-adjudicated. Root turnover is a concise state map; detailed new checkpoints remain in docs/development/HANDOFF.md.
 
 ### DL-#4769 · Speed, Energy, and Power Review
 
@@ -41,7 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (6,382 full-regression passes;two temporary-root failures resolved, six root retests pass;12 gates;223-page PDF/HTML;4 browser profiles;8 findings bound to 4c80a4a26d060791b7d3505d0a27a5657c6a2eed;79 preserved;119 sources pending)
 - **Summary:** Correct point/body energy, power-conjugate motion and whole-club/shaft/head accounting; qualify evidence and counterfactual inference. Preserve79 earlier findings; Chapter5 complete;119 sources plus whole-book consistency remain.
-- **Next step:** Source and binding pushed; push registration, verify final-head CI and guarded remote-main delivery.
+- **Next step:** Integration head 3d7f4ebc75f924c49c6d680e4a46983d995465af is pushed; protected auto-merge is armed. Verify final-head CI and all 22 changed blobs on remote main before marking shipped.
 
 - Main integration: preserve PR4761 changes at 37fa19fef352844ed0d3d3635bb7b36879c65c55; rebuild combined PDF and refresh evidence; no new scientific credit. Final-head CI pending.
 
