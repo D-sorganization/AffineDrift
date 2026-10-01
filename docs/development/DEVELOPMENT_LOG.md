@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4756 · Complete-State Technical Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** [#4758](https://github.com/D-sorganization/AffineDrift/pull/4758)
 - **Issue:** #4756 (epic #4009)
 - **Branch:** fix/state-snapshot-rigor-4756
 - **Paths:** articles/proximal_distal_companion/chapters/ch03_state_snapshot.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_state_snapshot_review.py
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (six new checks;12 publication gates;654 titles;Ruff/Black836;CI-scoped mypy94;221-page PDF/parity/changed-page inspection;4 browser/axe cases;full6401 passes/29 skips/78.9% configured coverage/93.0% src;63 affected)
 - **Summary:** Correct complete-state, velocity-reversal, intervention and observation arguments with five Flash support jobs and lead adjudication. Seven findings bound to source 44b29ef73bf187c4b9220a90ff9e1a08a45bed20;55 prior findings preserved;124 full-source audits plus whole-book consistency remain.
-- **Next step:** Run binding checks, push source/binding, open regular PR and verify protected delivery.
+- **Next step:** Source 44b29ef73 and binding fe7e34e1a pushed; regular PR #4758 open and attached. All 36 binding checks pass. Push registration, enable protected auto-merge, and verify exact-head CI and remote-main delivery.
 
 ### DL-#4753 · Arm–Wrist Preload Technical Review
 
