@@ -32,11 +32,11 @@ model and the information present in the observed flight segment
 \item[Target-Referenced Measurements.]
 \patent{US8085188B2} / \patent{US9857459B2} /
 \patent{US10473778B2}.
-These documents concern relating launch or trajectory information to a
-target designated in an image. Sensor and image coordinates must be
-registered before a target-relative angle has a physical meaning. Their
-publication history does not by itself establish clearance for a
-particular target-selection interface.
+US8085188B2 determines direction deviation relative to an image-designated target; US9857459B2 adds a co-rotated camera/radar arrangement in its first claim.
+US10473778B2 claim~1 instead correlates radar trajectory data with an image feature and displays the resulting trajectory information.
+Related coordinate transformations appear in \patent{US8912945B2} and \patent{US10690764B2}: a launch position and image-identified reference define a target-relative frame.
+These operations change how an observation is related to the scene; they do not by themselves add an independent observation of projectile motion.
+Sensor and image coordinates must be registered before a target-relative angle has a physical meaning.
 \item[A Radar View of Spin Axis.]
 \patent{US10850179B2}.
 Claim~1 separates the Doppler spectrum into components, determines their
@@ -45,9 +45,9 @@ a \emph{projection} of the spin axis onto a plane perpendicular to the
 radar's line of sight~\cite{us10850179}. That projection is not, by itself,
 an unrestricted three-dimensional axis measurement. Motion compensation,
 receiver geometry and the distinction between a projected axis and a full
-axis belong in any explanation of the method. Related documents include
-\patent{US11446546B2} and \patent{US11938375B2}; their claims must be read
-separately.
+axis belong in any explanation of the method.
+US11446546B2 claim~1 likewise identifies a projected axis; US11938375B2 claim~1 identifies an axis component from phase differences for radar frequency components.
+The related publications \patent{US11446546B2} and \patent{US11938375B2} therefore require their own account of the output and receiver geometry.
 \item[Tracking, Calibration and Impact.]
 \patent{US10989791B2} and \patent{US11828867B2} concern radar/imager
 tracking; \patent{US11619708B2} and \patent{US12517218B2} address
@@ -57,10 +57,19 @@ problems, even when a product presents their outputs together. The
 similarly titled radar/image documents \patent{US10596416B2},
 \patent{US11697046B2} and \patent{US12128275B2} identify Topgolf Sweden AB,
 not TrackMan, in their publication records.
+In US11619708B2 claim~1, the initial camera track already uses radar range together with image angles.
+Agreement between that track and the radar track is therefore not a comparison of two wholly independent measurements.
+US12517218B2 claim~1 selects corrections by minimizing quality-weighted three-dimensional track residuals.
+Improved correspondence is a calibration objective; agreement alone does not establish absolute accuracy against an independent reference.
 \item[Display and Attribution.]
 Trajectory illustration appears in \patent{US10315093B2}.
 Associating tracked balls with launch locations is described in \patent{US11086005B2}. A convincing video overlay and a correct association with a
 player are separate requirements from accurate trajectory measurement.
+\item[Terrain-Constrained Position.]
+\patent{US12186643B2} intersects a calibrated camera-to-ball ray with a three-dimensional terrain model and outputs that intersection as a ball position.
+The terrain constraint supplies depth information that the image alone lacks.
+For interpreting such an output, distinguish the ray--surface intersection from independently observed ball height: during the airborne part of a bounce, a ball above the surface need not coincide with that intersection.
+An output labeled three-dimensional therefore still needs an account of the geometric assumptions that determined it.
 \end{description}
 
 \section{Foresight Sports, WAWGD and Wintriss Disclosures}

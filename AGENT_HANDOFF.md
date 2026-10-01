@@ -1,3 +1,16 @@
+# Patent First-Claim Disposition Checkpoint — #4766
+
+- Goal active, epic4009/corpus4021. Owned AffineDrift-link-health checkout; fix/patent-catalog-rigor-4766. Prior consistency0b96bd668 is pushed; current source/disposition checkpoint SELF. No patent PR yet; final audit is incomplete.
+- Nine agy CLI gemini-3.8-flash-high jobs completed in three waves of three parallel workers,47 patent jobs total. Lead read36 additional abstracts/first claims and targeted descriptions. Cumulative selected first-claim reads76;42 leading rows remain, explicitly listed in source-inventory checkpoint_review. Do not conflate this count with full claims review or corpus completion.
+- New reports/technical-review/patent-catalog-dispositions.json records36 source-hashed dispositions and final rows:22 refined,14 retained. Source-inventory, review report and book dossier preserve rationale and rejected Flash diagnoses. In particular, absent claim words do not disprove disclosed camera/range-rate/master-clock/toppling/single-radar examples.
+- Chapter7 now separates coordinate mapping, axis projection/component, shared-range calibration, quality-weighted track agreement and terrain-constrained depth. Catalog clarifies first-claim mechanisms and retains one- and two-radar embodiments. No invented product performance or legal clearance. Both sources and80-page PDF updated.
+- Build passes without undefined references/citations; all14 patent pages26–30/58–66 visually inspected.38 focused tests,653 titles,LaTeX structure and evidence digests pass. All168 appendix macros and111 leading years preserved. Each new disposition row and source/claim hash checked. Receipt:patent-disposition-validation.json. No full patent regression, final binding or new corpus credit;122 full-source audits plus whole-book consistency remain.
+- PR4765 aab6c3999 current-head E2E remains in progress in CI36902084456; other lanes pass; guarded auto-merge remains enabled. This branch includes that integration via7fcd86945. PR4755 already merged; preserve4758/4762 until source is verified on main. Never cancel/restart live peer CI.
+- Next: commit/push checkpoint, then audit42 remaining leading rows and secondary references, consolidate final disposition, bind source-corrected findings, validate and deliver a regular PR. Continue regular primary-source verification with cheap-agent support; no restart of completed36 comparisons.
+- Lease/presence technical-review-20261001-patents to19:49UTC Oct1; geometry to19:37. Inbox incomplete. Command-scoped owner auth and HTTP extraheader clearing only. Preserve peer23ee826 and QA. No draft, direct-main/force/admin push or hook bypass; no tracked-file edits during push hooks.
+
+## Preserved Earlier Checkpoints
+
 # Patent Consistency Checkpoint — #4766
 
 - Goal active under epic #4009; owned AffineDrift-link-health checkout, fix/patent-catalog-rigor-4766. Prior rendered checkpoint a9d46717e is safely pushed. Geometry integration aab6c3999 is pushed to regular PR4765 and normally merged here as 7fcd86945. Current consistency checkpoint SELF; patent PR not yet created.

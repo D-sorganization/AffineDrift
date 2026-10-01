@@ -28,6 +28,12 @@ The final Flash review suggested explicit Creatz attribution and clearer phased 
 
 Geometry main integration aab6c3999 is pushed to PR4765 and normally merged here as 7fcd86945. Its current-head static/Python/JS/link checks pass; E2E was still running at this checkpoint. Patent final per-entry adjudication, secondary-reference review, scientific binding and full regression remain pending. Corpus credit remains unchanged at 122 pending full-source audits plus whole-book consistency.
 
+## Additional First-Claim Comparisons
+
+Thirty-six more leading catalog entries have scoped lead dispositions in [the per-entry decision record](../../../reports/technical-review/patent-catalog-dispositions.json). The source hashes and exact table rows make the review reproducible. Twenty-two subjects were refined and14 retained; first-claim scope is not substituted for the full disclosure.
+
+The chapter now explains shared radar-range dependence in US11619708B2 calibration, quality-weighted residual minimization in US12517218B2, and terrain-constrained camera depth in US12186643B2. These examples connect output coordinates and model assumptions to what an apparent agreement or three-dimensional display can actually establish. Single-radar and two-radar embodiments in US10379214B2 are both retained. The updated report records rejected draft diagnoses and remaining work.
+
 ## Institutional Sources
 
 - [USPTO Patent Essentials](https://www.uspto.gov/patents/basics/essentials)
