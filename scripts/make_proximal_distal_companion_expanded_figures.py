@@ -70,23 +70,34 @@ def make_system_boundaries() -> None:
 
 
 def make_moment_arm() -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4.8))
     for axis, angle, title in zip(
-        axes, (0.1, 1.35), ("Short Moment Arm", "Long Moment Arm"), strict=True
+        axes, (np.pi / 6, np.pi / 2), ("Shorter Moment Arm", "Perpendicular Force"), strict=True
     ):
-        _clean(axis, (-0.5, 5), (-1, 3.8))
+        _clean(axis, (-0.6, 5), (-2.2, 2.5))
+        axis.set_aspect("equal")
         axis.plot([0, 4.2], [0, 0], lw=9, color=ORANGE, solid_capstyle="round")
         axis.scatter(0, 0, s=100, color=INK)
-        force_end = (3.2 + 1.5 * np.cos(angle), 1.5 * np.sin(angle))
-        _edge(axis, (3.2, 0), force_end, BLUE)
-        axis.plot([0, force_end[0]], [0, force_end[1]], ls="--", color=GRAY)
+        contact = np.array([3.2, 0.0])
+        direction = np.array([np.cos(angle), np.sin(angle)])
+        foot = contact - (contact @ direction) * direction
+        force_line = np.stack([contact - 4 * direction, contact + 1.8 * direction])
+        axis.plot(*force_line.T, ls="--", color=GRAY, gid="force-line-of-action")
+        axis.plot([0, foot[0]], [0, foot[1]], color=GREEN, lw=3, gid="perpendicular-moment-arm")
+        _edge(axis, tuple(contact), tuple(contact + 1.5 * direction), BLUE)
+        axis.text(-0.25, 0.25, "O", color=INK, fontweight="bold")
+        axis.text(3.45, -0.38, "H", color=INK, ha="center")
+        label = contact + 1.65 * direction + 0.14 * np.array([-direction[1], direction[0]])
+        axis.text(*label, "F", color=BLUE, fontweight="bold")
+        axis.text(foot[0] / 2, foot[1] / 2 - 0.4, "h", color=GREEN, fontweight="bold")
         axis.set_title(title, color=INK, fontweight="bold")
     fig.suptitle(
-        "The Same Force Can Produce a Different Turning Effect",
+        "Moment About O: Force Magnitude × Perpendicular Distance h",
         color=INK,
         fontweight="bold",
-        fontsize=16,
+        fontsize=14,
     )
+    fig.tight_layout(rect=(0, 0, 1, 0.9))
     _save(fig, "fig_companion_moment_arm_geometry")
 
 

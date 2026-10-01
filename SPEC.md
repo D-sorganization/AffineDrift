@@ -225,6 +225,9 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-10-01 | #4761 | Refresh content inventory and ownership map snapshot for 207 pages and replace governance vocabulary in companion Chapter 16 (#4602). |
+| 2026-10-01 | #4765 | Correct moment-arm geometry, wrench–power and Jacobian mappings, singularity/inertia interpretation and matched scalar allocation evidence in Chapter 4. |
+| 2026-10-01 | #4762 | Correct robust-speed risk, finite Pareto, provider sampling and selection claims; reproduce eight-program archived evidence and replace mismatched tradeoff figure. |
+| 2026-10-01 | #4758 | Correct complete-state prediction, velocity reversal, memory, intervention and measurement claims with independent counterexamples and scoped evidence. |
 | 2026-10-01 | #4755 | Correct arm–wrist task/wrench equivalence, preload dynamics and causal interpretation; publish archived transmission traces and scoped scientific evidence. |
 | 2026-10-01 | #4752 | Correct shaft-memory power/state accounting, model screens, matching counts and speed endpoint; replace illustrative curves with a closed energy ledger. |
 | 2026-10-01 | #4601 | Align Node.js versions across Dockerfile, CI workflows, and documentation via single-source .nvmrc pin (#4601). |
