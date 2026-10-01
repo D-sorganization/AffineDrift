@@ -1,3 +1,18 @@
+# Consolidation Wave 6 — Web and Content (2026-10-01)
+
+- Repository: `D-sorganization/AffineDrift`; worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-web-5`.
+- Branch: `chore/web-consolidated-6-2026-10-01`; baseline `origin/main` at `7eb87e3c9` (includes merged #4734, #4728, #4731).
+- Policy: Repository_Management#1691 / fleet `pr-queue-consolidation`.
+- Integrated (one CI cycle):
+  - **#4667** Quarto native `theme.dark` support (#4556)
+  - **#4680** Home page theme+viewport e2e visual QA (#4559)
+  - **#4738** Tangent reading guide reconciliation and technical review evidence (#4736)
+- Validation (local):
+  - `python -m scripts.regenerate_claim_audit_evidence --check`: current.
+  - `pytest tests/test_dark_theme_config.py tests/test_tangent_series_links.py tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py tests/test_content_page_inventory.py tests/test_check_redirects.py tests/test_series_title_and_naming.py`: 58 passed.
+  - Line endings verified as pure LF.
+- Next: push consolidated branch, open PR referencing Closes #4556, #4559, #4736, arm protected squash auto-merge, and close superseded PRs #4735 and #4738.
+
 # Ground and Shallow-Wide Delivery — PR #4734
 
 - Goal active under epic #4009;134 sources still need full audits. Only regular protected PRs. Delegate routine work to agy Gemini 3.8 Flash; lead retains scientific judgment.
