@@ -195,10 +195,29 @@
       }
     ]
   },
-  "full_regression": "Pending on integrated tree; do not treat ground-only full run as chapter validation.",
-  "content_gates": "Twelve explicit gates passed before integration; integrated full/content checks remain required.",
+  "full_regression": {
+    "passed": 6262,
+    "failed": 1,
+    "skipped": 29,
+    "deselected": 186,
+    "warnings": 51,
+    "coverage_percent": 93.04,
+    "seconds": 689.21,
+    "failure": "tests/test_generate_datasets_catalog.py::test_real_page_is_up_to_date_with_real_catalog",
+    "cause": "Generated datasets page retained the old book-publication-audit schema checksum after the scoped follow-up URL schema change. Regeneration changes exactly one checksum cell. No numerical/example test failure.",
+    "followup": {
+      "catalog_examples_audit_hygiene_passed": 60,
+      "seconds": 2.71,
+      "content_passed": 184,
+      "content_skipped": 4,
+      "content_deselected": 6290,
+      "content_seconds": 25.49,
+      "scope": "Only generated checksum and review/delivery metadata changed after the full run. Full protected CI remains required; the original failed run is not relabeled green."
+    }
+  },
+  "content_gates": "Twelve explicit gates passed before integration; integrated content selection passed184 with four skips after catalog regeneration.",
   "type_check": "No new src implementation; changed test code passes Ruff/Black. No claim of a new broad strict-mypy pass.",
-  "delivery": "Regular PR not created; finish integrated regression, push and create one. Ground PR4732 must merge before this branch can be delivered independently to main.",
+  "delivery": "Updated branch checkpoint; regular PR pending integration of ground2890e80cf and main03ea44ea7. Protected CI and merge required; no live deployment claim.",
   "scientific_source_sha256_verified_unchanged": {
     "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex": "671c27d53b2cc858b4cd3cb6e59ab2b4f18eb3a86cc2c0526fe809e7985efcd2",
     "articles/The_Geometry_of_Motion/Volume_IV/main.tex": "8d2fe9408b8e752c4733b64ff3cb712db520f758ce67ab204049cab53f93931b",
@@ -208,5 +227,352 @@
     "articles/The_Geometry_of_Motion/nomenclature.tex": "592fff7b34d6df16880eb634ba142d13f45e19fb7b39abd1bb4f68328542e901",
     "books/human-motor-control.qmd": "85358896205ed6e9f8a632f8ba97962afa0602a3317ee5e35c2d977dd67cfd68",
     "tests/test_shallow_wide_review.py": "ace7b3174dbea7130f34a67ca4aa635ececf12ec85089dd5d8f625eac595d369"
-  }
+  },
+  "integration_checkpoint": "35684ed7c717c2cfcf1836d69fd240fdce178da3",
+  "scientific_digest_convention": "Local file bytes, including CRLF in the unchanged shared .sty; its LF Git-blob digest is 2d9d5c7db2c7035f0caffd268644e8fea3f311472d5f17c27276c51ba251ca1a. Other source bytes are LF; PDF is binary. The earlier carry-forward snapshot uses normalized Git text.",
+  "turnover_review": "Supplied-text Gemini 3.8 Flash check confirmed seven audit tests and stale running/pushed status. Lead corrected records and clarified historical render versus integrated validation. No delegated tools, edits or network.",
+  "browser_followup": {
+    "schema_version": "affinedrift/public-site-verification/v1",
+    "base_url": "http://127.0.0.1:17965",
+    "manifest_page_count": 2,
+    "evidence_count": 8,
+    "expected_evidence_count": 8,
+    "passed": true,
+    "failure_count": 0,
+    "navigation_retry_policy": {
+      "max_retries": 0,
+      "maximum_attempts": 1,
+      "base_delay_ms": 500,
+      "backoff": "exponential",
+      "retryable_status_codes": [502, 503, 504]
+    },
+    "axe_policy": {
+      "mode": "fail",
+      "impacts": ["serious", "critical"],
+      "scanned_route_count": 2,
+      "routes_with_violations": [],
+      "violation_count": 0
+    },
+    "navigation_attempt_count": 8,
+    "retried_evidence_count": 0,
+    "transient_response_count": 0,
+    "exhausted_retry_count": 0,
+    "results": [
+      {
+        "route": "/books/human-motor-control.html",
+        "pageKind": "book",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\books__human-motor-control__mobile__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume IV: Human Motor Control"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 198.25,
+            "bottom": 325.75,
+            "width": 224.1875,
+            "height": 127.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 7010,
+          "canonical": "https://affinedrift.com/books/human-motor-control.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/resources/resources-datasets.html",
+        "pageKind": "hub",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\resources__resources-datasets__mobile__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Datasets"],
+          "primaryHeadingRect": {
+            "left": 51,
+            "right": 339,
+            "top": 320.875,
+            "bottom": 379.125,
+            "width": 288,
+            "height": 58.25
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 12560,
+          "canonical": "https://affinedrift.com/resources/resources-datasets.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/books/human-motor-control.html",
+        "pageKind": "book",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\books__human-motor-control__mobile__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume IV: Human Motor Control"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 198.25,
+            "bottom": 325.75,
+            "width": 224.1875,
+            "height": 127.5
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 7010,
+          "canonical": "https://affinedrift.com/books/human-motor-control.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/resources/resources-datasets.html",
+        "pageKind": "hub",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\resources__resources-datasets__mobile__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Datasets"],
+          "primaryHeadingRect": {
+            "left": 51,
+            "right": 339,
+            "top": 320.875,
+            "bottom": 379.125,
+            "width": 288,
+            "height": 58.25
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 12560,
+          "canonical": "https://affinedrift.com/resources/resources-datasets.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/books/human-motor-control.html",
+        "pageKind": "book",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\books__human-motor-control__desktop__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume IV: Human Motor Control"],
+          "primaryHeadingRect": {
+            "left": 475,
+            "right": 931,
+            "top": 156.046875,
+            "bottom": 246.046875,
+            "width": 456,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 7010,
+          "canonical": "https://affinedrift.com/books/human-motor-control.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/resources/resources-datasets.html",
+        "pageKind": "hub",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\resources__resources-datasets__desktop__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Datasets"],
+          "primaryHeadingRect": {
+            "left": 382,
+            "right": 1088,
+            "top": 277.875,
+            "bottom": 336.125,
+            "width": 706,
+            "height": 58.25
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 12560,
+          "canonical": "https://affinedrift.com/resources/resources-datasets.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/books/human-motor-control.html",
+        "pageKind": "book",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\books__human-motor-control__desktop__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume IV: Human Motor Control"],
+          "primaryHeadingRect": {
+            "left": 475,
+            "right": 931,
+            "top": 156.046875,
+            "bottom": 246.046875,
+            "width": 456,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 7010,
+          "canonical": "https://affinedrift.com/books/human-motor-control.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      },
+      {
+        "route": "/resources/resources-datasets.html",
+        "pageKind": "hub",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "axe": false,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\shallow-wide-catalog-screenshots\\resources__resources-datasets__desktop__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Datasets"],
+          "primaryHeadingRect": {
+            "left": 382,
+            "right": 1088,
+            "top": 277.875,
+            "bottom": 336.125,
+            "width": 706,
+            "height": 58.25
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 12560,
+          "canonical": "https://affinedrift.com/resources/resources-datasets.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false
+      }
+    ]
+  },
+  "browser_followup_scope": "Both book landing and checksum-only datasets page; official manifest classifier yields book/hub. Initial copied article classification rejected the hub reader-notes contract; corrected local input then eight checks passed. Canonical page behavior unchanged."
 }

@@ -116,7 +116,7 @@ signed output, reject invalid inputs/options, reconstruct rank-one data over
 scales 1e-120 to 1e120, check deterministic local randomness and one-iteration
 return, and demonstrate factor-scaling and lost-velocity ambiguities. A final complex-input case exposed lossy conversion before validation; the
 listing now rejects complex data explicitly, bringing the example suite to
-24 checks. Six additional audit tests retain the original audit identity and
+24 checks. Seven additional audit tests retain the original audit identity and
 reject invalid follow-up issue URLs. There was no human experiment or
 trained-controller benchmark.
 
@@ -126,8 +126,10 @@ The whole volume is rebuilt with existing repository sources in an isolated
 scratch directory. Local latexmk could not start because its Perl engine is
 absent; the installed pdflatex/BibTeX/makeindex tools were used in an explicit
 halt-on-error multi-pass build instead. No forced compilation or dependency
-installation was used. Exact final render and validation receipts accompany
-this report after visual review.
+installation was used. The PDF build and visual-review snapshot is recorded in
+`shallow-wide-render-verification.json`. Later integrated repository and browser
+checks are recorded separately in `shallow-wide-integration-validation.json`;
+these do not expand the scientific review to the rest of the volume.
 
 The prior book-route records are preserved in
 `shallow-wide-prior-reviews.json`. The new chapter review must not replace
