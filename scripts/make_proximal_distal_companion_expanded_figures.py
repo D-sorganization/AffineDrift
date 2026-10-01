@@ -11,6 +11,7 @@ from make_proximal_distal_companion_figures import (
     INK,
     ORANGE,
     RED,
+    ROOT,
     VIOLET,
     _save,
     _style,
@@ -155,23 +156,43 @@ def make_force_power() -> None:
 
 
 def make_preload() -> None:
-    time = np.linspace(-0.18, 0.12, 500)
-    fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
-    persistent_arm = np.where(time < 0, 8, 16)
-    persistent_wrist = np.where(time < 0, -2, -6)
-    reversal_arm = np.where(time < 0, -4, 16)
-    reversal_wrist = np.where(time < 0, 10, -6)
-    for axis, arm, wrist, title in (
-        (axes[0], persistent_arm, persistent_wrist, "Persistent Loaded Directions"),
-        (axes[1], reversal_arm, reversal_wrist, "Complete Role Reversal"),
-    ):
-        axis.plot(time * 1000, arm, color=BLUE, lw=3, label="Arm channel")
-        axis.plot(time * 1000, wrist, color=ORANGE, lw=3, label="Wrist channel")
-        axis.axvline(0, color=INK, ls="--")
-        axis.axhline(0, color=GRAY, lw=1)
-        axis.set(ylabel="Desired Torque", title=title)
-    axes[0].legend(frameon=False, ncol=2)
+    """Plot the pinned finite-preparation experiment, including transmitted torque."""
+    fig, axes = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
+    programs = (
+        ("persistent_arm_drive", (10, -4), "Persistent Command Directions"),
+        ("wrist_to_arm_role_reversal", (-4, 10), "Complete Role Reversal"),
+    )
+    with np.load(ROOT / "data/illustrations/preload_transmission_study.npz") as data:
+        for axis, (program, preparation, title) in zip(axes, programs, strict=True):
+            prefix = "continuous_" + program
+            time = data[prefix + "_time_s"]
+            for name, color, before, after in zip(
+                ("arm", "wrist"), (BLUE, ORANGE), preparation, (16, -6), strict=True
+            ):
+                transmitted = data[prefix + "_transmitted_" + name + "_torque_nm"]
+                desired = np.where(time < 0, before, after)
+                axis.plot(
+                    time * 1000,
+                    transmitted,
+                    color=color,
+                    lw=2.5,
+                    label=name.title() + " Transmitted",
+                )
+                axis.step(
+                    time * 1000,
+                    desired,
+                    where="post",
+                    color=color,
+                    ls="--",
+                    lw=1.2,
+                    label=name.title() + " Command",
+                )
+            axis.axvline(0, color=INK, ls=":")
+            axis.axhline(0, color=GRAY, lw=0.8)
+            axis.set(ylabel="Torque (N m)", title=title)
+    axes[0].legend(frameon=False, ncol=2, loc="upper left")
     axes[1].set_xlabel("Time Relative to Transition (ms)")
+    fig.suptitle("Synthetic Transmission: Commands and Continuous State", color=INK)
     fig.tight_layout()
     _save(fig, "fig_companion_preload_role_reversal")
 

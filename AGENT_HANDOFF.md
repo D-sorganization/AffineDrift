@@ -1,3 +1,14 @@
+# Arm–Wrist Preload Source Checkpoint — #4753
+
+- Goal active under epic4009. Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/preload-rigor-4753 from a69ba920f. Source checkpoint SELF; regular PR not yet created.
+- Full Chapter14 review corrects scalar control-induced moment versus wrench; control contact increments/norm metrics; transmission state/parameters and exact finite preparation; absolute error integral/gap resolution; common-time-constant negative control; stiffness, class identification, causal matching and null-result interpretation; Kao1995 citation. Figure now uses the exact archived NPZ and correct commands. Provider authorities unchanged; no simulation rerun or human validation claimed.
+- Five supplied-text agy Gemini3.8 Flash jobs completed; lead adjudication in reports/technical-review/preload-review.md. Six new checks pass (figure RED first),63 integrated;12 content gates;Ruff/Black835;CI-scoped mypy94;654 titles. Final220-page PDF/source-public parity;all eight changed pages and boundaries inspected. Browser4/4 and axe0 serious/critical;mobile math readable and command list fits. Full pytest --cov is running AFTER final render/hash refresh; do not regenerate PDFs concurrently.
+- Preserve48 existing companion findings (preload-prior-review.json). Seven new scientific findings await exact source-commit binding. Corpus126 full-source audits plus whole-book consistency remain until Chapter14 binding. Record full-suite outcome truthfully, bind findings, refresh ledgers, run affected checks, create/attach regular PR and use protected merge.
+- Prior4752 still open with protected auto-merge enabled; Python/static/JS/website-lint pass, E2E pending at last check. It includes4750 atlas/release-withholding work and earlier CSS. Verify exact main parity before closing superseded4750/4741.4748 already merged. Preserve peer23ee826 in impact-review and all QA.
+- Lease/presence technical-review-20261001-preload expires16:01UTC Oct1. Inbox incomplete; not proof peers are absent. Scope existing owner token per command while shared bot credential is expired; never print it or switch global auth. No draft/force/direct-main/admin bypass. Canonical handoffs/log and one SPEC issue/PR row must accompany each checkpoint.
+
+## Preserved Earlier Checkpoints
+
 # Shaft PR Main Integration — #4752
 
 - Goal active; PR https://github.com/D-sorganization/AffineDrift/pull/4752 is regular and protected squash auto-merge is enabled. Remote source/binding c2dd323906c34a5400cf75549e5cb3a6993bf08c; current normal main-merge checkpoint SELF. Same owned branch/worktree;126 full-source audits plus whole-book consistency remain.

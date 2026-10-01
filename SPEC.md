@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4753 | Correct arm–wrist task/wrench equivalence, preload dynamics and causal interpretation; publish archived transmission traces and scoped scientific evidence. |
 | 2026-10-01 | #4752 | Correct shaft-memory power/state accounting, model screens, matching counts and speed endpoint; replace illustrative curves with a closed energy ledger. |
 | 2026-10-01 | #4750 | Clarify atlas evidence and mechanical comparisons with synthetic checks; withhold an unsupported qualified release and preserve its prior record. |
 | 2026-10-01 | #4748 | Correct the internal tangent critique: transported residual bounds, pendulum scaling, algorithm/evidence scope, contraction metrics and hybrid event sensitivity; preserve publication exclusion. |

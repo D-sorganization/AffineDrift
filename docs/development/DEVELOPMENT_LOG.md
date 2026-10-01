@@ -18,6 +18,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4753 · Arm–Wrist Preload Technical Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** Not yet created
+- **Issue:** #4753 (epic #4009)
+- **Branch:** fix/preload-rigor-4753
+- **Paths:** articles/proximal_distal_companion/chapters/ch14_arms_wrists_preload.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_preload_review.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (63 integrated;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases)
+- **Summary:** Full chapter corrections distinguish moment/wrench, conditional dynamics, causal inference and human evidence; replace wrong command-only figure with archived transmission traces. Five Flash support jobs, lead-adjudicated.48 historical findings preserved;seven new findings await source binding.
+- **Next step:** Commit source checkpoint, inspect stable-publication full regression, bind findings, update corpus, open regular PR and verify protected CI/main delivery.
+
+
 ### DL-#4751 · Shaft Memory Technical Review
 
 - **State:** in_review
