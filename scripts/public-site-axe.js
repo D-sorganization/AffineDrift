@@ -35,8 +35,9 @@ function summarizeAxeViolations(violations) {
 function markAxeCells(plan, mode) {
   const seen = new Set();
   return plan.map((item) => {
-    const scan = mode !== 'off' && !seen.has(item.route);
-    if (scan) seen.add(item.route);
+    const key = `${item.route}::${item.viewport.id}::${item.theme}`;
+    const scan = mode !== 'off' && !seen.has(key);
+    if (scan) seen.add(key);
     return { ...item, axe: scan };
   });
 }
@@ -44,11 +45,14 @@ function markAxeCells(plan, mode) {
 function axePolicyEvidence(options, results) {
   const scanned = results.filter((result) => Array.isArray(result.axe_violations));
   const flagged = scanned.filter((result) => result.axe_violations.length > 0);
+  const scannedRoutes = new Set(scanned.map((result) => result.route));
+  const flaggedRoutes = new Set(flagged.map((result) => result.route));
   return {
     mode: options.axe,
     impacts: [...AXE_FAILING_IMPACTS],
-    scanned_route_count: scanned.length,
-    routes_with_violations: flagged.map((result) => result.route).sort(),
+    scanned_route_count: scannedRoutes.size,
+    scanned_cell_count: scanned.length,
+    routes_with_violations: [...flaggedRoutes].sort(),
     violation_count: flagged.reduce((sum, result) => sum + result.axe_violations.length, 0),
   };
 }

@@ -413,13 +413,10 @@ describe('axe-core policy (ISSUE-4126)', () => {
     expect(() => summarizeAxeViolations(null)).toThrow(TypeError);
   });
 
-  test('scans each route exactly once unless axe is off', () => {
+  test('scans each evidence cell in the plan unless axe is off (#4562)', () => {
     const plan = buildEvidencePlan(fixtureManifest());
     const marked = markAxeCells(plan, 'warn');
-    expect(marked.filter((item) => item.axe).map((item) => item.route)).toEqual([
-      '/',
-      '/articles/example.html',
-    ]);
+    expect(marked.filter((item) => item.axe)).toHaveLength(plan.length);
     expect(markAxeCells(plan, 'off').some((item) => item.axe)).toBe(false);
     expect(marked).toHaveLength(plan.length);
   });
@@ -435,6 +432,7 @@ describe('axe-core policy (ISSUE-4126)', () => {
       mode: 'warn',
       impacts: ['serious', 'critical'],
       scanned_route_count: 3,
+      scanned_cell_count: 3,
       routes_with_violations: ['/a.html', '/b.html'],
       violation_count: 3,
     });
@@ -449,8 +447,28 @@ describe('axe-core policy (ISSUE-4126)', () => {
       mode: 'fail',
       impacts: ['serious', 'critical'],
       scanned_route_count: 2,
+      scanned_cell_count: 2,
       routes_with_violations: [],
       violation_count: 0,
+    });
+  });
+
+  test('summarizes multi-viewport and multi-theme cells for the same route (#4562)', () => {
+    const results = [
+      { route: '/', viewport: { id: 'desktop-small' }, theme: 'light', axe_violations: [] },
+      { route: '/', viewport: { id: 'desktop-small' }, theme: 'dark', axe_violations: [] },
+      { route: '/', viewport: { id: 'mobile' }, theme: 'light', axe_violations: [] },
+      { route: '/', viewport: { id: 'mobile' }, theme: 'dark', axe_violations: [{ id: 'color-contrast' }] },
+      { route: '/b.html', viewport: { id: 'desktop-small' }, theme: 'light', axe_violations: [{ id: 'color-contrast' }] },
+      { route: '/b.html', viewport: { id: 'desktop-small' }, theme: 'dark', axe_violations: [{ id: 'color-contrast' }] },
+    ];
+    expect(axePolicyEvidence({ axe: 'fail' }, results)).toEqual({
+      mode: 'fail',
+      impacts: ['serious', 'critical'],
+      scanned_route_count: 2,
+      scanned_cell_count: 6,
+      routes_with_violations: ['/', '/b.html'],
+      violation_count: 3,
     });
   });
 });
