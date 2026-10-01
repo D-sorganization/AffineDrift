@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/patent-catalog-rigor-4766
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/preamble.tex, articles/Launch_Monitor_Technology_Review/main.pdf, articles/Launch_Monitor_Technology_Review/research/patent-catalog-review-20261001.md
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (32 completed Flash jobs; selected primary first claims;111 leading indexed years and167 identifier preservation;80-page PDF and14 changed pages visually inspected;35 focused tests,653 titles,LaTeX structure pass)
-- **Summary:** Both patent chapters revised with mechanism, projection, attribution and evidence-scope corrections; unsupported legal/product shortcuts removed. Source dossier and rendered checkpoint saved; final per-entry audit still open. No corpus completion credit;122 sources remain.
-- **Next step:** Final per-entry/book consistency review, binding and regression, then regular PR. PR4755 merged on main394a7b40b; integrate it into conflicting4765/current source with preservation. CI4765 remains live.
+- **Last verified:** 2026-10-01 (38 completed Flash jobs; selected primary first claims;111 leading indexed years and167 identifier preservation;80-page PDF and22 affected pages visually inspected;38 focused tests plus3 final handoff tests pass; final80-page build,653 titles,LaTeX structure,SPEC and evidence digests pass)
+- **Summary:** Both patent chapters revised with mechanism, projection, attribution and evidence-scope corrections; unsupported legal/product shortcuts removed. Model-corrected spin and conditional optical inference clarified; five related sections corrected for consistency; final per-entry audit still open. No corpus completion credit;122 sources remain.
+- **Next step:** Final per-entry/book consistency review, binding and regression, then regular PR. Geometry integration aab6c3999 pushed and merged here as7fcd86945; current-head4765 E2E pending, other lanes pass.
 
 ### DL-#4763 · Geometry Technical Review
 

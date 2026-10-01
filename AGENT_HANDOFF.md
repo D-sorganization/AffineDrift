@@ -1,3 +1,15 @@
+# Patent Consistency Checkpoint — #4766
+
+- Goal active under epic #4009; owned AffineDrift-link-health checkout, fix/patent-catalog-rigor-4766. Prior rendered checkpoint a9d46717e is safely pushed. Geometry integration aab6c3999 is pushed to regular PR4765 and normally merged here as 7fcd86945. Current consistency checkpoint SELF; patent PR not yet created.
+- Thirty-eight patent support jobs completed through agy CLI gemini-3.8-flash-high, including six since the rendered checkpoint. Lead verified first claims/selected description passages and final prose. Source inventory and book dossier record scope and rejected suggestions; raw sources and agent packets remain in QA.
+- Corrected model correction versus fallback spin, database-derived spin, golf-surface impact, optional marker/camera conditions and geometry-dependent 3D inference. Five related sections receive scoped corrections to patent expiry/clearance, commercial lineage and unconditional sensing-capability claims. They do not receive full-audit credit. Final per-entry and secondary-reference review still pending; corpus remains122 pending plus whole-book consistency.
+- Existing MiKTeX/Biber book build passed at80 pages and22 affected/reflowed pages were visually inspected. Final heading/attribution refinements rebuilt successfully and pages29/36/53/59 were rechecked; final receipt is reports/technical-review/patent-consistency-validation.json. 38 book/evidence/handoff tests pass, plus3 final handoff checks;653 titles,LaTeX structure,SPEC and evidence digests pass. All168 appendix macros and111 leading priority rows are preserved from a9d46717e. No full patent regression or scientific completion binding is claimed.
+- PR4765 head aab6c3999fc50949d3de7c6f97bba25f574dd786: current-head Python, JS, static, link and website-lint checks pass; E2E pending; guarded squash auto-merge remains enabled. Prior-head CI36893253026 passed fully. Preserve4758/4762 until science reaches remote main. PR4755 already merged as394a7b40b.
+- Next: push this validated checkpoint; then finalize patent per-entry/secondary-reference disposition, bind reviewed findings and appropriate regression before regular PR. Do not treat source captures or Flash drafts as completed science review.
+- Patent lease/presence technical-review-20261001-patents renewed to19:49UTC Oct1; geometry lease to19:37. Inbox incomplete. Existing owner auth only per command; clear Git HTTP extraheaders for that command. Preserve peer23ee826 and all QA. No drafts, direct-main/force/admin pushes, hook bypass or peer CI cancellation. Never modify tracked files during push hooks.
+
+## Preserved Earlier Checkpoints
+
 # Patent Catalog Rendered Checkpoint — #4766
 
 - Goal active under epic #4009. Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/patent-catalog-rigor-4766. Prior source/research f7d1f0ba5604eaee47b3a2c120e761502f96a48f and bibliography-detail be207dfd0f494bbeb9ee5bfd00be135ad2bc4274 are pushed. Current chapter/catalog/render checkpoint SELF. Patent PR not created; final audit is unfinished.

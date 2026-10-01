@@ -184,6 +184,16 @@ Uneekor's marking notice connects specific products with listed patent numbers~\
 The Creatz disclosures include \patent{US10247553B2}, which describes a start sensor for identifying ball placement and starting movement, and \patent{US12008770B2}, which concerns dimple-based spin estimation.
 A product's markerless-spin label does not specify its entire algorithm or establish performance across every ball surface.
 
+Creatz's \patent{US11191998B2} makes the distinction between observation and inference particularly clear.
+Claim~1 uses speed- or angle-related quantities to estimate spin when image marks cannot supply it; when mark-based calculation is possible, it also uses such an estimate to correct that calculation.
+This is more than a fallback for missing observations.
+The reported spin can depend on both image evidence and a relationship inferred from other ball or club quantities.
+Validation should distinguish these operating modes and test their errors separately; a plausible corrected value does not establish an independent measurement of rotation.
+
+Golfzon's \patent{US12002222B2} provides a different example of this dependence.
+Claim~1 obtains dynamic loft and backspin through a reference database using observed club/ball motion parameters, then calculates spin-axis and side-spin quantities from motion vectors and specified relationships.
+These inferred outputs must not be used as independent evidence that the assumed impact relationships hold for a particular shot.
+
 Golfzon's \patent{US9242158B2} describes beginning the displayed flight with a first set of ball information and updating it when a second set arrives~\cite{us9242158}.
 This separates feedback latency from completion of the measurement pipeline.
 Timing examples in a description are not measured latency guarantees.

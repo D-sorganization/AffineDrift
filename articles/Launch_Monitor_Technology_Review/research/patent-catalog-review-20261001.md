@@ -14,6 +14,20 @@ The lead compared full source chapters with the captured index metadata and abst
 - US6758759B2 and US7143639B2 illustrate why the camera count in an embodiment must not be presented as the minimum in every claim.
 - The engineering validation questions are the review's synthesis, not patent-office performance findings.
 
+## Retained Details and Cross-Chapter Consistency Checkpoint
+
+Six additional supplied-text agy Gemini 3.8 Flash jobs are complete (38 patent jobs total): three retained-detail comparisons, one cross-book inventory, one camera-condition search comparison and one patch consistency review. The lead read the drafts and selected primary claims/description passages. The extra handoff-deduplication job belongs to geometry integration, not this patent count.
+
+US11191998B2 claim 1 uses speed/angle-based estimates both to replace unavailable mark-derived spin and to correct available mark-derived spin. Chapter 7 now explains why that corrected output is not independent evidence for its input relationship. US12002222B2 distinguishes database-derived dynamic loft/backspin from motion-vector axis inference. The catalog also corrects golf-surface versus screen impact (US11875517B2), fixed-plane/image measurement versus unsupported simulator lifecycle labels (US8758103B2), and unconditional markerless/camera-count language (US11439886B2). US12263393B2 claim 1 concerns fix-line angle; claims 3/4 expressly add known geometry to the three-dimensional reconstruction.
+
+Retain supported details: US11452911B2 describes range radar as an embodiment; US9958527B2 describes phase-comparison monopulse; US5471383A describes retroreflective material; US5501463A describes face orientation/contact location. Missing words in a first claim do not refute descriptions. US9333409B2's low-speed-camera passage states a motivating difficulty rather than a performance guarantee, so the table now describes candidate-trajectory processing. US9514379B2 likewise states the inference mechanism rather than a low-resolution capability promise.
+
+The abstract, introduction, camera discussion, design guidance and implementation appendix now agree with Chapter 7's evidence boundaries. Removed blanket expiry dates, public-domain recipes, direct commercial lineage and automatic optical-accuracy claims from the identified passages. Camera count, visibility, calibration, geometric priors and model dependence are connected explicitly. These focused edits do not constitute full audits of the five additional sections. Their other hardware, numerical, vendor-comparison and performance statements still need the corpus review.
+
+The final Flash review suggested explicit Creatz attribution and clearer phased optical headings; those clarity edits were accepted. Its claim that the word measured is inherently incompatible with calibrated reconstruction is too broad; the correction avoids an unconditional promised capability without declaring all calibrated measurements invalid. Its Tier 3 reference actually concerned Tier 4. No new patent fact was accepted solely from that draft.
+
+Geometry main integration aab6c3999 is pushed to PR4765 and normally merged here as 7fcd86945. Its current-head static/Python/JS/link checks pass; E2E was still running at this checkpoint. Patent final per-entry adjudication, secondary-reference review, scientific binding and full regression remain pending. Corpus credit remains unchanged at 122 pending full-source audits plus whole-book consistency.
+
 ## Institutional Sources
 
 - [USPTO Patent Essentials](https://www.uspto.gov/patents/basics/essentials)
