@@ -1,3 +1,14 @@
+# Shaft Memory Regular PR — #4752
+
+- Goal active. Source f9cf1301ec24160888abf448dcf8e2eff8f23834 committed and pushed on fix/shaft-memory-rigor-4751 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Regular main-target PR https://github.com/D-sorganization/AffineDrift/pull/4752 is open and attached. Registration/final typography checkpoint SELF; protected delivery pending.
+- Seven corrected findings bound to that exact source commit;41 earlier companion findings preserved. Chapter15 full-source corpus row complete;126 full-source audits plus whole-book consistency remain. Provider-array receipt and review rationale are committed; no simulation rerun, equipment calibration or human causal result claimed.
+- Five agy Gemini3.8 Flash supplied-text jobs handled routine inventories/tests/notation/turnover; lead adjudicated. 63 final integrated checks pass,12 publication gates,Ruff/Black834;218-page PDF byte parity and changed-page visual checks; final browser4/4 plus axe,45 math/no errors/no overflow, both equations fit390px.
+- Full6385 pass/4 artifact failures/29 skips/186 deselections;790.59s;78.4% src+scripts,93.0% src-only. Three reads overlapped Quarto replacement, one caught stale digest. Original failure retained; all63 affected checks pass after stable rendering and hash refresh. Do not overlap full regression with artifact writes. No full-green or deployment claim.
+- 36 bound-ledger checks pass. Joined five compound words across source line wraps and regenerated the book. Next: finish final affected validation, commit registration/typography, bind final source revision, push, arm protected merge and verify CI/main. No draft/force/direct-main/admin bypass. Prior4750 still auto-armed, E2E building at last check; close4741/4748 only after verified main parity. Preserve peer23ee826 in impact-review and all QA.
+- Lease/presence technical-review-20261001-shaft-memory expires15:00UTC; inbox incomplete. Use command-scoped existing owner credential while shared bot auth is expired, without exposing token or changing global auth. Canonical turnover/log/SPEC row must accompany each implementation checkpoint.
+
+## Preserved Earlier Checkpoints
+
 # Shaft Memory Source Checkpoint — #4751
 
 - Goal active under epic4009. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health, branch fix/shaft-memory-rigor-4751; source checkpoint SELF; no shaft PR yet.

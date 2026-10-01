@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4751 · Shaft Memory Technical Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** [#4752](https://github.com/D-sorganization/AffineDrift/pull/4752)
 - **Issue:** #4751 (epic #4009)
 - **Branch:** fix/shaft-memory-rigor-4751
 - **Paths:** articles/proximal_distal_companion/chapters/ch15_shaft_memory.qmd, scripts/shaft_energy_illustration.py, tests/test_shaft_memory_review.py
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (63 integrated;12 gates;Ruff/Black834;final browser4/4 and axe;218-page PDF/parity;full6385 pass/4 concurrent-artifact failures, all affected reruns pass)
-- **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Preserve41 historical findings; seven new findings await exact source binding.
-- **Next step:** Commit stable source checkpoint, bind seven findings preserving41 historical records, create regular protected PR and verify delivery.
+- **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Seven new findings bound to f9cf1301e;41 historical findings preserved;126 full-source audits remain.
+- **Next step:** Regular PR4752 open;36 bound checks pass. Commit final compound-word typography/registration, bind final source revision, push and verify protected CI/main delivery.
 
 ### DL-#4749 · Falsification Atlas Technical Review
 
