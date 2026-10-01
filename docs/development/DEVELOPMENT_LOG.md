@@ -28,8 +28,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** articles/proximal_distal_companion/chapters/ch14_arms_wrists_preload.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_preload_review.py
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (63 integrated;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases)
-- **Summary:** Full chapter corrections distinguish moment/wrench, conditional dynamics, causal inference and human evidence; replace wrong command-only figure with archived transmission traces. Five Flash support jobs, lead-adjudicated.48 historical findings preserved;seven new findings await source binding.
-- **Next step:** Commit source checkpoint, inspect stable-publication full regression, bind findings, update corpus, open regular PR and verify protected CI/main delivery.
+- **Summary:** Full chapter corrections distinguish moment/wrench, conditional dynamics, causal inference and human evidence; replace wrong command-only figure with archived transmission traces. Five Flash support jobs, lead-adjudicated.Seven findings bound to exact source8ffffbc7e;48 historical findings preserved;125 full-source audits plus whole-book consistency remain.
+- **Next step:** Validate/push source binding, inspect stable-publication full regression, open regular PR and verify protected CI/main delivery.
 
 
 ### DL-#4751 · Shaft Memory Technical Review
