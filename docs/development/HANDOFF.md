@@ -9,6 +9,23 @@
 - Local validation: Jest (35 suites, 547 tests passed), pytest deployment integrity and spec changelog passed, CSS bundle up to date.
 - Next: pass CI, release lease and merge.
 
+# Speed, Energy, and Power Review — #4769
+
+- The goal remains active under epic #4009 and corpus #4021. Chapter 5 is reviewed and corrected; 119 full-source audits and whole-book consistency remain.
+- Owned integration checkout: C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration. Branch: fix/speed-energy-rigor-4769. Source checkpoint 4c80a4a26d060791b7d3505d0a27a5657c6a2eed is pushed with all normal hooks passing. Binding checkpoint: af5af739b2d5e1c3a4497fcd23c3d10380d95ef7, pushed. Regular PR #4770 is open and attached: https://github.com/D-sorganization/AffineDrift/pull/4770. Registration and first integration 3d7f4eb are pushed. Integration 8d5032cee incorporates peer redirect PR #4773 at main 1b255c15a. Checkpoint SELF retains the normal pre-push YAML quote normalization before retry; no scientific/publication files changed. Delivery verification covers 23 paths against the new main.
+- Eight findings now bind exact committed source/evidence bytes. All 79 earlier findings retain their scientific fields and verification commits. The carry-forward receipt records 113 unchanged dependency files and three changed dependencies; only make_speed_energy changes in the shared figure generator. Earlier preparation/review files are immutable source-checkpoint records; speed-energy-validation.json records current acceptance.
+- The revision separates endpoint speed, body energy, actuator power, segment moment power, internal strain storage and boundary work. Manufactured examples reconcile whole-club gain 13 J, shaft total change -3 J, head gain 16 J and strain change -8 J. Primary reading scopes and model/human limitations remain explicit.
+- Seven agy CLI gemini-3.8-flash-high jobs completed. The lead reviewed all output, retained scientific responsibility and corrected the PR draft's confusion between total shaft energy and strain energy. No live delegated jobs remain.
+- Validation: six new checks after two source-contract failures; 29 affected checks; 12 publication gates; 653 source title checks; Ruff; Black839; CI-scoped mypy94; 546 JavaScript passes, 19 skips. Full Python run: 6,382 passes, two root-hygiene failures, 29 skips and 187 deselections. Both failures were temporary browser-directory artifacts; after preserving browser and later build outputs in QA, all six root tests pass. No assertions were weakened and the full suite was not repeated. Coverage: 78.99% src+scripts, 93.04% src. 53 binding/publication/mechanics/root checks also pass afterward.
+- Final HTML and 223-page canonical/public PDFs pass; PDF bytes match. All Chapter 5 PDF pages 31–37 and boundaries30/38 inspected. Six display equations fit at390/1440; table scrolls accessibly. Four viewport/theme cases pass with zero serious/critical axe violations. The initial generated-TeX false-positive check is retained in the receipt; the unchanged canonical-source checker passes after preserving the render intermediate.
+- Next: push this redirect integration checkpoint, review final-head CI and any feedback, then use Repository_Management/scripts/automerge_guard.py for protected merge. Verify bound blobs on remote main, update the turnover receipt and release the lease. No draft, direct-main, force, admin or hook bypass. Do not edit tracked files during push hooks.
+- Patent PR #4768 is merged as55f21d8fb874434d92823f9dade683897fe1c78b; all22 bound blobs and final-head CI verified. See patent-remote-main-receipt.json. Preserve peer worktree23ee826 and all historical receipts.
+- Lease technical-review-20261001-speed-energy expires22:52UTC Oct1; presence22:52. Latest inbox remains malformed/page-limited and incomplete; absence is not evidence of no peers.
+
+## Main Integration Update
+
+PR #4761 advanced main to 37fa19fef352844ed0d3d3635bb7b36879c65c55. This checkpoint integrates its content inventory, Chapter16 wording, SPEC row and evidence digests without dropping historical findings. The combined PDF is rebuilt. Owned integration checkout: C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration, branch fix/speed-energy-rigor-4769. Chapter24 work remains separate in AffineDrift-link-health on fix/measured-golfers-rigor-4771 and is not included here. Final-head CI and remote-main verification remain required. See reports/technical-review/speed-energy-main-integration.json.
+
 ## Preserved Earlier Checkpoints
 
 # Patent Catalog Final Source Checkpoint — #4766

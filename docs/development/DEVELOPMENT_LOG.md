@@ -31,18 +31,33 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Expand axe-core verification in CI to include mobile viewport (390x844) and dark theme; update markAxeCells to key on route, viewport, and theme; track distinct scanned route and cell counts in axePolicyEvidence.
 - **Next step:** Pass CI, release lease and merge.
 
-### DL-#4766 · Patent Catalog Technical Review
+### DL-#4769 · Speed, Energy, and Power Review
 
 - **State:** in_review
+- **Owner:** codex
+- **PR:** #4770 (regular, attached)
+- **Issue:** #4769 (epic #4009)
+- **Branch:** fix/speed-energy-rigor-4769
+- **Paths:** articles/proximal_distal_companion/chapters/ch05_speed_energy_power.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_speed_energy_review.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (6,382 full-regression passes;two temporary-root failures resolved, six root retests pass;12 gates;223-page PDF/HTML;4 browser profiles;8 findings bound to 4c80a4a26d060791b7d3505d0a27a5657c6a2eed;79 preserved;119 sources pending)
+- **Summary:** Correct point/body energy, power-conjugate motion and whole-club/shaft/head accounting; qualify evidence and counterfactual inference. Preserve79 earlier findings; Chapter5 complete;119 sources plus whole-book consistency remain.
+- **Next step:** Source and binding pushed; integration 8d5032cee incorporates peer redirect PR #4773; SELF retains the normal hook quote-formatting correction. No scientific/publication changes. Push, require final-head CI and verify all 23 changed blobs against main 1b255c15a.
+
+- Main integration: preserve PR4761 changes at 37fa19fef352844ed0d3d3635bb7b36879c65c55; rebuild combined PDF and refresh evidence; no new scientific credit. Final-head CI pending.
+
+### DL-#4766 · Patent Catalog Technical Review
+
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4768
 - **Issue:** #4766 (epic #4009)
 - **Branch:** fix/patent-catalog-rigor-4766
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/preamble.tex, articles/Launch_Monitor_Technology_Review/main.pdf, articles/Launch_Monitor_Technology_Review/research/patent-catalog-review-20261001.md
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (168 source/claim/context checks; 111 priority rows; full regression6377 passed; Ruff/Black/mypy/Jest/content checks pass; source binding in patent-catalog-final-validation.json)
+- **Last verified:** 2026-10-01 (PR4768 merged as55f21d8fb; all22 bound blobs identical; final-head CI Standard and textbook builds passed; patent-remote-main-receipt.json)
 - **Summary:** All 168 references plus Gazette adjudicated; 14 grouped corrections; 64 completed Flash jobs with failed attempts excluded. Two audited sources credited;120 full-source audits plus whole-book consistency remain.
-- **Next step:** Source38bb58ae5 and bindingbc38713b2 pushed; finish PR4768 CI/review and guarded merge, then verify remote-main source parity.
+- **Next step:** Complete; all22 bound paths verified on remote main55f21d8fb; issue closed and lease/presence released.
 
 
 ### DL-#4763 · Geometry Technical Review
