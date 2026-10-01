@@ -1,6 +1,6 @@
 {
   "issue": 4717,
-  "status": "full-suite-passed-coverage-run-pending",
+  "status": "local-validation-passed-awaiting-protected-delivery",
   "scientific_scope": "Complete Appendix E; linked README/outline notice and bounded bibliography metadata only.",
   "focused_tests": {
     "passed": 40,
@@ -27,7 +27,7 @@
     "spec_changelog": "passed"
   },
   "book": "76 pages; fifteen final pages visually inspected; all ten appendix equations readable; no appendix overfull boxes or undefined citations/references; source/render receipt records limits.",
-  "delivery": "No PR created yet; finish full-suite validation and commit/push. Integrate impact PR #4718 after its protected merge to avoid a redundant full CI cycle.",
+  "delivery": "Scientific/source/PDF checkpoint 18c545c796ad23f6f7c44c9974017d4122bfe4bb committed and pushed. Local coverage validation complete. Regular PR follows protected merge of impact PR #4718 and integration of its main checkpoint.",
   "related_delivery": {
     "4712": "merged to remote main be263f9cd946a6aa8b4a97b086af9eab399c3ac6",
     "4718": "regular PR at dfe3960626858b680da0c54e74e9a391845e9b32; all checks except full-site E2E complete; auto-merge armed",
@@ -41,12 +41,25 @@
     "skipped": 29,
     "deselected": 181,
     "seconds": 423.36,
-    "coverage": "not collected by initial invocation; required coverage run in progress"
+    "coverage": "not collected by initial invocation; separate required coverage run now passed"
   },
   "post_run_checks": {
     "passed": 46,
     "failed": 0,
     "scope": "Complete appendix/geometry/Chapter11 and root hygiene modules"
   },
-  "generated_artifacts": "Verified six test-generated JSON/QMD artifacts equivalent to HEAD and restored committed bytes. Preserved wheel-test build/dist/egg-info under local technical-review scratch."
+  "generated_artifacts": "After both full runs, verified six test-generated JSON/QMD artifacts semantically or newline-normalized byte-equivalent to HEAD and restored committed bytes. Preserved each run's wheel-test build/dist/egg-info separately under local technical-review scratch.",
+  "source_checkpoint": "18c545c796ad23f6f7c44c9974017d4122bfe4bb",
+  "required_coverage_run": {
+    "command": "py -3.12 -X utf8 -m pytest tests/ --cov=src --cov-report=xml --timeout=120",
+    "passed": 6057,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 181,
+    "warnings": 51,
+    "seconds": 609.24,
+    "coverage_percent": 92.95,
+    "source_checkpoint": "18c545c796ad23f6f7c44c9974017d4122bfe4bb"
+  },
+  "lease": "technical-review-20260930-screw renewed through 2026-10-01 02:05:53 UTC; presence through 02:05:51 UTC"
 }

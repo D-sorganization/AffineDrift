@@ -1,6 +1,6 @@
 # Radar Screw-Kinematics Appendix Review
 
-Governing issue: #4717; epic #4009. Base: be263f9cd946a6aa8b4a97b086af9eab399c3ac6. Complete source: `articles/Launch_Monitor_Technology_Review/sections/appendix-e-screw-kinematics.tex`. Scientific correction and final 76-page book build/visual inspection complete. The initial full repository run passed 6,057 tests with 29 skips; required coverage collection and protected delivery remain pending at this checkpoint.
+Governing issue: #4717; epic #4009. Base: be263f9cd946a6aa8b4a97b086af9eab399c3ac6. Complete source: `articles/Launch_Monitor_Technology_Review/sections/appendix-e-screw-kinematics.tex`. Scientific correction and final 76-page book build/visual inspection complete. The initial full repository run passed 6,057 tests with 29 skips; the separate required coverage run also passed 6,057 tests with 29 skips and 92.95% coverage. Scientific source/PDF checkpoint `18c545c79` is pushed; protected delivery remains pending.
 
 ## Findings and Corrections
 
