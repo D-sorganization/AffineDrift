@@ -8,6 +8,8 @@
 - PR4762 is regular, attached and protected auto-merge enabled at3cf28a88c. CI36888354451 running; five other workflows green. Earlier4758 CI36882100460 now passes, including every-route axe, but branch conflicts with main. Older4755 page-settling timeout is retained as a historical failure, not a persistent reproduced defect. Preserve4752/4755/4758/4762 until source delivery on main. Main83f6c0bc9 included. Local browser/formatter runtime is Node25.9.0; Node22 is the incoming CI pin, not a claimed local runtime.
 - Lease/presence technical-review-20261001-geometry expires18:01UTC Oct1. Inbox incomplete/malformed, not proof of absent peers. Use existing owner credentials only per command; Git push must clear runtime http.extraHeader and http.https://github.com/.extraheader for that command, retaining normal hooks. No global credential/config changes. Preserve peer23ee826 in impact-review, QA and packaging outputs. Next source not yet selected.
 
+- First push stopped on incoming CLAUDE.md blank-line formatting; normal remaining hooks passed. Two blank lines outside managed blocks normalized; commit and retry with hooks.
+
 ## Preserved Earlier Checkpoints
 
 # Robust-Speed Review PR Checkpoint — #4762
