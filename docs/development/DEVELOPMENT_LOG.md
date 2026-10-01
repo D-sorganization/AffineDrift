@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (6,382 full-regression passes;two temporary-root failures resolved, six root retests pass;12 gates;223-page PDF/HTML;4 browser profiles;8 findings bound to 4c80a4a26d060791b7d3505d0a27a5657c6a2eed;79 preserved;119 sources pending)
 - **Summary:** Correct point/body energy, power-conjugate motion and whole-club/shaft/head accounting; qualify evidence and counterfactual inference. Preserve79 earlier findings; Chapter5 complete;119 sources plus whole-book consistency remain.
-- **Next step:** Source and binding pushed; push registration, verify final-head CI and guarded remote-main delivery.
+- **Next step:** Source and binding pushed; integration SELF incorporates peer redirect PR #4773 at main 1b255c15a with no scientific/publication changes. Push, require final-head CI and verify all 22 changed blobs on remote main.
 
 - Main integration: preserve PR4761 changes at 37fa19fef352844ed0d3d3635bb7b36879c65c55; rebuild combined PDF and refresh evidence; no new scientific credit. Final-head CI pending.
 
