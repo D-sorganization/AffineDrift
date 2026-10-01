@@ -732,7 +732,6 @@ branch, plus one re-run if `main` moved) instead of at least N cycles under a
 
 <!-- END FLEET-MANAGED: pr-queue-consolidation -->
 
-
 ---
 
 <!-- BEGIN FLEET-MANAGED: agent-tiers -->
@@ -783,7 +782,6 @@ The full guide is in
 [`docs/agents/AGENT_TIER_ROUTING.md`](https://github.com/D-sorganization/Repository_Management/blob/main/docs/agents/AGENT_TIER_ROUTING.md).
 
 <!-- END FLEET-MANAGED: agent-tiers -->
-
 
 ## Specification
 

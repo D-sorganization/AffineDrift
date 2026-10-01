@@ -1,0 +1,456 @@
+{
+  "issue": 4763,
+  "epic": 4009,
+  "scope": "Full Chapter4 source and moment-arm figure; scoped pinned provider code/chapter reading and archived allocation-summary recomputation. No constrained-solver rerun or human validation.",
+  "source_sha256": {
+    "articles/proximal_distal_companion/chapters/ch04_geometry_machine.qmd": "c9d4f9b9cead70bd89abdce9b708787ccb423d23156f42dc03a34eff909ee51e",
+    "scripts/make_proximal_distal_companion_expanded_figures.py": "b950cd4ed815d05119a67c75bcfe42aeea9cc3725f7ab53305791707ac69fd0b",
+    "tests/test_geometry_machine_review.py": "286584f94ceb50f233217c817dfe299dbec57b65e2cca9cb7c0a66f0c928aa59",
+    "articles/proximal-distal-companion.css": "2ca29922aa29b5afc12702dd2ef6c05df89371535d29924fd7e5f36d81d25c42",
+    "articles/figures/proximal_distal_companion/fig_companion_moment_arm_geometry.svg": "37a2a764bbae330de2fa7da55fc14a1365fb5b72bc5aa88f8937364ddf483a16",
+    "articles/figures/proximal_distal_companion/fig_companion_moment_arm_geometry.pdf": "1044be3639c24783ed524fb9ba11b860cf0a093df443fb6e920558cb25f1cb45",
+    "articles/proximal-distal-a-journey-through-the-swing.pdf": "c1a3a4b52087c7393a2daff7b43400785687a608a100f59bfa9deaa5e58f5657",
+    "data/illustrations/preload_transmission_study.npz": "140adf1baa5daaff42f9d7beee02e49e55d5041bc25a049bc99ec6933699b849"
+  },
+  "focused_tests": {
+    "new_cases": 9,
+    "red": "Figure did not represent the force line and perpendicular moment-arm construction.",
+    "affected_passed": 66
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/geometry-machine-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "format": "Repository Ruff and Black838 pass; CI-scoped mypy94 pass.",
+  "titles": {
+    "checked": 653,
+    "passed": true
+  },
+  "browser": {
+    "publication_checks": {
+      "schema_version": "affinedrift/public-site-verification/v1",
+      "base_url": "http://127.0.0.1:17975",
+      "manifest_page_count": 1,
+      "evidence_count": 4,
+      "expected_evidence_count": 4,
+      "passed": true,
+      "failure_count": 0,
+      "navigation_retry_policy": {
+        "max_retries": 0,
+        "maximum_attempts": 1,
+        "base_delay_ms": 500,
+        "backoff": "exponential",
+        "retryable_status_codes": [502, 503, 504]
+      },
+      "axe_policy": {
+        "mode": "fail",
+        "impacts": ["serious", "critical"],
+        "scanned_route_count": 1,
+        "routes_with_violations": [],
+        "violation_count": 0
+      },
+      "navigation_attempt_count": 4,
+      "retried_evidence_count": 0,
+      "transient_response_count": 0,
+      "exhausted_retry_count": 0,
+      "results": [
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "light",
+          "axe": true,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 539169,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false,
+          "axe_violations": []
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 539169,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "light",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 539169,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 539169,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        }
+      ]
+    },
+    "math_layout": [
+      {
+        "width": 390,
+        "headings": 12,
+        "pageOverflow": 0,
+        "mathCount": 63,
+        "mathErrors": 0,
+        "displays": [
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          },
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          },
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          },
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          }
+        ],
+        "headingText": [
+          "4 Geometry Is Part of the Machine",
+          "4.1 A Concrete Picture",
+          "4.2 How the Mechanism Works",
+          "4.2.1 Name the Point, Plane, and Direction",
+          "4.2.2 Changing the Reference Preserves a Contract, Not Every Number",
+          "4.2.3 The Jacobian Maps Velocities and Their Dual Forces",
+          "4.2.4 Near a Singularity, Motion and Force Have Different Scalings",
+          "4.2.5 Inertia Couples the Response Through the Equations of Motion",
+          "4.2.6 A Two-Hand Couple Has Exact, Conditional Controls",
+          "4.2.7 What the Allocation Study Actually Holds Fixed",
+          "4.2.8 Connect Geometry to the Question Being Tested",
+          "4.3 Where the Picture Breaks"
+        ]
+      },
+      {
+        "width": 1440,
+        "headings": 12,
+        "pageOverflow": 0,
+        "mathCount": 63,
+        "mathErrors": 0,
+        "displays": [
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          },
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          },
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          },
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          }
+        ],
+        "headingText": [
+          "4 Geometry Is Part of the Machine",
+          "4.1 A Concrete Picture",
+          "4.2 How the Mechanism Works",
+          "4.2.1 Name the Point, Plane, and Direction",
+          "4.2.2 Changing the Reference Preserves a Contract, Not Every Number",
+          "4.2.3 The Jacobian Maps Velocities and Their Dual Forces",
+          "4.2.4 Near a Singularity, Motion and Force Have Different Scalings",
+          "4.2.5 Inertia Couples the Response Through the Equations of Motion",
+          "4.2.6 A Two-Hand Couple Has Exact, Conditional Controls",
+          "4.2.7 What the Allocation Study Actually Holds Fixed",
+          "4.2.8 Connect Geometry to the Question Being Tested",
+          "4.3 Where the Picture Breaks"
+        ]
+      }
+    ],
+    "visual_review": "Lead inspected all four mobile display equations; they fit. Existing floating site controls remain visible."
+  },
+  "pdf": {
+    "pages": 221,
+    "canonical_public_byte_parity": true,
+    "visually_reviewed_pdf_pages": [24, 25, 26, 27, 28, 29, 30, 31],
+    "scope": "All Chapter4 PDF25-30 and boundaries24/31; text, equations and corrected figure legible."
+  },
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --timeout=60 -q",
+    "exit_code": 0,
+    "passed_progress_symbols": 6418,
+    "skipped": 29,
+    "coverage_src_and_scripts": {
+      "statements": 28077,
+      "missed": 5902,
+      "percent": 79.0
+    },
+    "coverage_src_only": {
+      "statements": 13756,
+      "missed": 957,
+      "percent": 93.0
+    },
+    "notes": "Configured default lane. Double-quiet output suppresses final count/duration; count derives from progress dots. Marker exclusions and 29 dependency/obsolete-helper/legacy-path skips remain. Final rendering preceded regression."
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": [
+      "source inventory",
+      "provider chapter inventory",
+      "allocation code contract",
+      "test draft",
+      "notation review",
+      "handoff checklist",
+      "PR summary draft"
+    ],
+    "handoff_job": "Completed and adjudicated. Solver rerun/human validation are claim limits, not pending acceptance tasks. Four mobile display equations, not four mobile profiles; 653 sources, not headings.",
+    "adjudication": "Lead rejects false assumptions about inertial origins, equilibrium, force nullspaces, provider coordinate/argument meanings and numerical precision. Accepted clarification of applied-force system, moment reference and signed observer-power shift.",
+    "pr_draft_job": "Completed; lead replaced awaiting-extraction language with verified 6418 passes/29 skips and retained scientific scope limits."
+  },
+  "delivery": {
+    "branch": "fix/geometry-rigor-4763",
+    "pr": 4765,
+    "base": "3cf28a88c8abc908b82eeecba743c72e2288cd18",
+    "predecessor_pr": 4762,
+    "predecessor_status": "Regular, attached, protected squash auto-merge enabled; final-head CI36888354451 running, five other workflows pass. Earlier4758 CI36882100460 passes but branch conflicts with main.",
+    "source_checkpoint": "1293c48c575b28986c41a2a826d6ed2030ba85fb",
+    "binding_checkpoint": "4b6f2941d581c08c665c7cfe898e7f66bd898b6b",
+    "integrated_main": "83f6c0bc9d37e6d16caa9a7a9ce9e32eb98a73df",
+    "integration_scope": "Conflict-free normal merge; incoming Node22 pin workflows/tooling retained exactly after newline normalization. Scientific source unchanged. Full6418 regression precedes this Node-pin-only main integration; targeted integration checks supplement it.",
+    "local_node": "25.9.0",
+    "ci_node_pin": "22",
+    "push_hook_repair": "First push stopped after Prettier removed two extra blank lines outside managed blocks in incoming CLAUDE.md. Remaining normal push hooks, including Bandit and unit tests, passed. Formatting committed before retry; no bypass.",
+    "regular": true,
+    "attached": true,
+    "integration_checkpoint": "8429490ab3c5dd61df93ea465e3b7abd2a64cd4c",
+    "formatting_checkpoint": "6cc8a14a69c524c3205afec34838457dcab2e609",
+    "source_binding_integration_pushed": true,
+    "retry_push_hooks": "All normal hooks passed; branch created remotely. No bypass."
+  },
+  "corpus": {
+    "pending": 122,
+    "completed_source": "articles/proximal_distal_companion/chapters/ch04_geometry_machine.qmd",
+    "whole_book_consistency_pending": true
+  },
+  "finding_binding": {
+    "new_findings": 9,
+    "historical_findings_preserved": 70,
+    "verification_commit": "1293c48c575b28986c41a2a826d6ed2030ba85fb",
+    "exact_git_blob_parity": true
+  },
+  "binding_tests": {
+    "passed": 36,
+    "log": "docs\\development\\technical-review\\geometry-machine-bound-tests.txt"
+  },
+  "integration_tests": {
+    "passed": 66,
+    "log": "docs\\development\\technical-review\\geometry-machine-integrated-tests.txt",
+    "scope": "Geometry, complete companion claims, claim inventory/output boundary, book publication audit, version pins and root hygiene."
+  }
+}
