@@ -1,3 +1,13 @@
+# Consolidation Wave 5 — Web and Content (2026-10-01)
+
+- Repository: `D-sorganization/AffineDrift`; worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/wave3-20261001`.
+- Branch: `chore/web-consolidated-5-2026-10-01`; baseline `origin/main` at `3e7d6958` (includes merged #4704 and #4728).
+- Policy: Repository_Management#1691 / fleet `pr-queue-consolidation`.
+- Integrated (one CI cycle): **#4732** ground-reaction content (#4730), **#4667** Quarto `theme.dark` (#4556), **#4680** Home e2e visual QA (#4559).
+- Excluded from this batch: **#4683** (`docs/` → `_site/` output-dir, #4597) — extensive modify/delete conflicts with post-#4704 main; rebase in a dedicated lane. **#4659** (#4573 apex canonical host) — still blocked on GitHub Pages/DNS per PR notes; no code change.
+- Validation (local): `pytest tests/test_dark_theme_config.py tests/test_ground_conversation_review.py` — 15 passed; `scripts.regenerate_claim_audit_evidence --check` current after #4556 digest refresh.
+- Next: push consolidated branch, open/update PR, arm protected squash auto-merge; close superseded PRs **#4732**, **#4667**, **#4680** with `superseded by #<consolidated>`; leave **#4683** and **#4659** open.
+
 ## Latest Ground Delivery Integration
 
 - SELF integrates peer PR #4713 at 03ea44ea70639f7314a773b668bef0eaa02c0cd1. Ground source, PDF and all prior findings preserved; only handoff/log conflicts resolved. 43 focused and 184 content checks pass (four skips). Prior6232-pass full suite belongs to feae3b872. Receipt: reports/technical-review/ground-conversation-integration-4713.json. Next: push for protected PR4732 CI. No live deployment claim.
