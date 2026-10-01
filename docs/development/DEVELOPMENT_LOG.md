@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4759 · Robust-Speed Technical Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** [#4762](https://github.com/D-sorganization/AffineDrift/pull/4762)
 - **Issue:** #4759 (epic #4009)
 - **Branch:** fix/robust-speed-rigor-4759
 - **Paths:** articles/proximal_distal_companion/chapters/ch23_robustly_fast.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_robust_speed_review.py
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (seven new checks;64 affected;12 publication gates;653 titles;Ruff/Black837;mypy94;221-page PDF/parity/visual inspection;4 browser/theme checks;full6408 passes/29 skips/78.9% configured coverage/93.0% src)
 - **Summary:** Correct risk, Pareto, sampling and causal claims; replace mismatched figure with eight-program archive and independently reproduce stored metrics. Six Flash support jobs and lead adjudication. Eight findings bound to source 4f3c2b3daec076f4c806d67e0d84768d2e0ed8fd;62 prior findings preserved;123 full-source audits plus whole-book consistency remain.
-- **Next step:** All41 binding checks pass; source4f3c2b3da and binding23827cbba committed. Main2f2bc56a9 integrated preserving peer feed-order repair and records; run integrated tests, push/open regular PR, verify protected delivery. Older preload CI has one page-settling timeout, not an axe violation; root cause not reproduced.
+- **Next step:** All41 binding checks pass; source4f3c2b3da and binding23827cbba committed. Main2f2bc56a9 integrated preserving peer feed-order repair and records; 77 integrated checks pass. Regular PR #4762 open and attached; source/binding/integration pushed. Push registration and verify protected CI/main delivery. Older preload CI has one page-settling timeout, not an axe violation; root cause not reproduced.
 
 ### DL-#4756 · Complete-State Technical Review
 
