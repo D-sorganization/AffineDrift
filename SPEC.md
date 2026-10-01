@@ -226,6 +226,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-10-01 | #4601 | Align Node.js versions across Dockerfile, CI workflows, and documentation via single-source .nvmrc pin (#4601). |
 | 2026-10-01 | #4754 | Run the unchanged blocking source link check after rendering and RSS generation so /feed.xml exists during deployment. |
+| 2026-10-01 | #4758 | Correct complete-state prediction, velocity reversal, memory, intervention and measurement claims with independent counterexamples and scoped evidence. |
 | 2026-10-01 | #4756 | Correct complete-state prediction, velocity reversal, memory, intervention and measurement claims with independent counterexamples and scoped evidence. |
 | 2026-10-01 | #4755 | Correct arm–wrist task/wrench equivalence, preload dynamics and causal interpretation; publish archived transmission traces and scoped scientific evidence. |
 | 2026-10-01 | #4752 | Correct shaft-memory power/state accounting, model screens, matching counts and speed endpoint; replace illustrative curves with a closed energy ledger. |
