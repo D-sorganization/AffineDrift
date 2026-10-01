@@ -1,0 +1,37 @@
+{
+  "issue": 4743,
+  "source_checkpoint": "d7be93d34322f2cbb73f8c933cf22991e604a2e5",
+  "integrated_dependency": "d9c21a9e56b8a4ab82dc2484dcf0f8a2c38277c0",
+  "scope": "Complete Chapter3 source review, corrected constitutive evaluator, manufactured mathematics, PDF and book-map links. No full equilibrium trajectory or human model validation.",
+  "full_regression": {
+    "passed": 6318,
+    "failed": 5,
+    "skipped": 29,
+    "deselected": 186,
+    "coverage_percent": 93.04,
+    "duration_seconds": 433.19,
+    "failure_scope": "Five book-publication-audit tests: changed hub source digest and inherited shared bibliography/PDF evidence digests needed synchronization.",
+    "failed_tests": [
+      "tests/test_book_publication_audit.py::test_book_audit_is_schema_valid_exactly_scoped_and_self_contained",
+      "tests/test_book_publication_audit.py::test_book_audit_inventory_replaces_all_six_deferments",
+      "tests/test_book_publication_audit.py::test_followup_findings_keep_the_original_book_audit_identity",
+      "tests/test_book_publication_audit.py::test_validator_rejects_missing_or_wrong_digest_and_weak_p1",
+      "tests/test_book_publication_audit.py::test_report_is_deterministic_and_current"
+    ]
+  },
+  "repair": "Synchronize only current source/evidence digests in book-publication ledger with inventory; preserve original finding IDs, rationales, review dates and verification revisions. Regenerate both reports and downstream audit digests.",
+  "after_repair": {
+    "affected_checks_passed": 88,
+    "content_checks_passed": 184,
+    "content_checks_skipped": 4,
+    "publication_gates_passed": 12,
+    "title_sources_checked": 653,
+    "ruff_black": "passed",
+    "browser_cases_passed": 4,
+    "serious_critical_axe_findings": 0
+  },
+  "provenance": "All five scientific source/PDF/bibliography/test blobs equal pushed d7be93d34. Prior inventory and book records preserved separately. External combined Chapters9/10 tree matches421edb3e7 exactly.",
+  "render": "All ten chapter pages, boundaries, preface/contents and bibliography visually inspected; final chapter has no overfull box. Four hub cases and selected screenshots inspected.",
+  "delegation": "Nine supplied-text agy Gemini3.8 Flash jobs across preparation and delivery; lead adjudicated inventories, tests, notation, checklist, turnover and finding drafts.",
+  "limitations": "Original full run remains failed in the record. Follow-up targeted checks establish repaired audit state; protected CI still required. Chapter corpus completion and final binding follow this delivery evidence checkpoint. No remote-main/live deployment claim."
+}

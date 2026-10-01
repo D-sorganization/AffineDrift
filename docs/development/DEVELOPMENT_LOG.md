@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/muscle-model-rigor-4743
 - **Paths:** articles/The_Geometry_of_Motion/Volume_III/chapters/ch03_muscle_models.tex, articles/The_Geometry_of_Motion/geometry_of_motion.bib, tests/test_muscle_models_review.py, tests/test_muscle_model_identities.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (38 focused passes after28 original failures/two passes;12 publication gates;653-source title audit;68-page PDF and17 selected pages inspected)
+- **Last verified:** 2026-10-01 (source d7be93d34; full6318 pass/five book-audit digest failures/29 skipped/93.04%; digest repair88 affected passes;184 content/four skips;12 gates;653-title audit;PDF68pages/17 pages and browser4/4 verified)
 - **Summary:** Correct force curves and attribution; connect excitation, fiber state, series equilibrium, tendon storage, joint power and stiffness under explicit model/empirical boundaries.
-- **Next step:** Commit/push source checkpoint, publish immutable hub links after source commit, run full regression/browser checks, bind new chapter findings and create regular protected PR. No chapter completion or merge claim yet.
+- **Next step:** Commit/push delivery evidence, bind nine new findings in book/claim ledgers to that exact revision, complete Chapter3 corpus row, verify bound checks and open regular main-target PR. No chapter completion or merge claim yet.
 
 ### DL-#4742 · Force Direction and Reference Points
 

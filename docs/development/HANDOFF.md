@@ -1,3 +1,13 @@
+# Muscle Models — Delivery Evidence Checkpoint — #4743
+
+- Scientific source d7be93d34322f2cbb73f8c933cf22991e604a2e5 pushed; all scientific/PDF/test/bibliography bytes unchanged. Normal merge aed9c9a7a incorporates externally combined Chapters9/10 d9c21a9e5. Main-target PR4741 still awaits final E2E; no main delivery claim.
+- Public hub pins updated to d7be93d34; notebook remains a separately pinned scaffold. Four browser cases/axe pass, selected mobile/desktop light/dark screenshots inspected. PDF68pages and17 physical pages inspected; report muscle-models-render-verification.json.
+- Full regression6318 passed,5 book-audit digest failures,29 skipped,93.04% coverage. Reconciled source/evidence hashes without changing historical finding metadata;88 affected checks pass. Content184 passed/four skips,12 publication gates and653-title audit pass. Original full failure retained in muscle-models-delivery-validation.json.
+- Source checkpoint and turnover are durable. Next: commit/push delivery evidence, bind nine adjudicated chapter findings in BOTH book ledger and claim inventory to that exact delivery revision, complete only Chapter3 corpus row, run bound checks, open regular PR against main.131 source audits remain pending until that binding; whole-book consistency remains.
+- Nine supplied-text agy Gemini3.8 Flash jobs support routine inventories/tests/drafts; all decisions lead-reviewed. Preserve prior-record snapshots, current reports and QA. Goal active; no draft PR, direct-main, force or protection bypass.
+
+## Preserved Earlier Checkpoints
+
 # Muscle Models — Source Checkpoint — #4743
 
 - Goal active under epic #4009. Branch fix/muscle-model-rigor-4743 in C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; base9c6e29170. Full chapter first-pass source/PDF/test correction complete; source checkpoint d7be93d34322f2cbb73f8c933cf22991e604a2e5. No new completion credit or publication claim.
