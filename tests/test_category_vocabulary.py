@@ -12,10 +12,6 @@ Validates that:
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
-
-import pytest
-import yaml
 
 from src.tools.site_link_gate import check_categories, is_book_chapter, load_vocabulary
 from src.tools.site_page_scan import find_content_pages, parse_front_matter
