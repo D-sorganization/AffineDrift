@@ -106,12 +106,12 @@ Primary literature checks:
 
 ## Independent Checks and Delegation
 
-Three new numerical cases check passive rotation versus observer boost,
+The initial three numerical cases check passive rotation versus observer boost,
 projection sign reversal with a rigorous angular bound, and full-rank but bounded
 infeasibility. Existing Chapter 12 tests provide independent point-force rank,
 reference-shift power, deformation-power and negative-projection counterexamples.
 Eight source-boundary checks failed before correction; all 26 new and reused
-checks passed afterward.
+checks passed afterward. The additional independent moment-balance case and source qualification now bring the focused, legacy and hygiene check total to 39.
 
 Two agy Gemini 3.8 Flash supplied-text inventories were reviewed by the lead.
 They had no tools, network or editing authority. The lead rejected the assertion
