@@ -103,4 +103,6 @@ new scientific review of all thirty chapters.
 The original route audit and all findings are preserved verbatim as structured
 records in `plane-space-prior-reviews.json`. Dependency carry-forward must verify
 that only Chapter 20 and the generated book PDF changed among prior publication
-dependencies. Earlier findings retain their original scientific scope.
+dependencies. One prior text-anchor test now checks the narrower engineering guards,
+0.5 mm gate and permitted trunk motion; its other functions are unchanged.
+Earlier findings retain their original scientific scope.
