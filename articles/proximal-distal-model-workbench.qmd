@@ -57,23 +57,26 @@ Tooltips explain controls at the point of use. The searchable glossary defines
 terms such as interaction torque, equivalent couple, power, work, mass matrix,
 Jacobian, and ZTCF family without requiring the reader to leave the experiment.
 
-## A Known Limit of the Two-Link Model
+## Energy Bounds and Reachable Swings
 
-The workbench now carries a **Swing Objective Lab** tile, which optimizes one
-downswing against five competing objectives under a shared torque budget. Its
-optima are dynamically feasible and **not golf-like**: they brake the arms to a
-standstill at impact, arriving with hands at 0.36 m/s against a measured 6–9 m/s.
+The **Swing Objective Lab** compares five objectives under a shared torque
+budget. Its historical 0.50 kg tip-mass example reported nearly stationary hands
+at impact; changing the represented club inertia produced substantially higher
+terminal hand speeds. These are configuration-dependent simulation reports,
+with reference-band and reproducibility limits described in
+[When a Double Pendulum's Energy Optimum Stops Its Hands](impact-optimality-and-model-limits.html).
 
-That is a property of the model, not of the optimizer. In a point-mass-clubhead
-double pendulum the clubhead-speed-optimal hand speed at impact is *identically
-zero* for every parameter value, and releasing the club requires reversing the
-hub torque, which is the same act as stopping the hands. The derivation, the
-repairs that fail, and the model change that would fix it are in
-[Why an Optimized Double Pendulum Stops Its Hands](impact-optimality-and-model-limits.html).
+The exact zero-hand-rate result applies to an instantaneous fixed-pose,
+fixed-energy problem with collinear links, a point mass at the head, and
+positive proximal inertia. It does not require every torque-constrained swing
+to stop its hands or reverse the hub torque. Matching one club inertia also
+does not preserve its full dynamics.
 
-Read that before drawing conclusions from the objective comparison: the five
-objectives sit within 0.6% of each other on realism while all of them sit far
-outside measured golfer kinematics, so their ordering is not evidence about golf.
+Compare complete trajectories, all constraints, numerical convergence, and
+independently defined measurements before interpreting an objective ordering.
+Similar endpoint scores cannot identify which objective a golfer uses. The
+linked review corrects the earlier structural and human-inference claims;
+it does not certify a new run of the workbench.
 
 ## What Would Count Against the Mechanism?
 

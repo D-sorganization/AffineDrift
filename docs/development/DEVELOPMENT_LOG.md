@@ -18,18 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4712 · Two-Hand Wrench Chapter Review
+### DL-#4714 · Impact Optimality and Model Limits
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4712 (regular)
-- **Issue:** #4710 (corpus #4021; epic #4009)
-- **Branch:** `fix/two-hand-wrench-rigor-4710`
-- **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4718 (regular)
+- **Issue:** #4714 (epic #4009; historical corpus #4021)
+- **Branch:** `fix/impact-optimality-rigor-4714`
+- **Paths:** `articles/impact-optimality-and-model-limits.qmd`, `articles/proximal-distal-model-workbench.qmd`, `resources/articles.qmd`, `tests/test_impact_optimality_review.py`, `reports/technical-review/impact-optimality-review.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (combined-main suite: 6,034 passed, 29 skipped, 92.88% coverage; final content: 180 passed/four skipped; 39 protocol/history/audit checks; 209-page PDF and 20 browser cases verified)
-- **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
-- **Next step:** Complete protected CI and delivery of regular PR #4712. Provider citation follow-up #4711 remains open.
+- **Last verified:** 2026-09-30 (21 impact checks; 46 post-binding audit/numerical/hygiene checks; 179 content passes; full Windows 6036 passes and three audit/snapshot failures subsequently resolved; 92.88% coverage; Ruff/Black/mypy and 12 content gates; final 12 browser cases and 74 math expressions)
+- **Summary:** Bound the instantaneous theorem, inertia reduction and historical solver evidence; correct primary-study and human-objective inference; reconcile two linked public summaries without renewing their other review scope.
+- **Next step:** Scientific source/evidence committed at 3ff93eda0/fdec68157. Integrated remote main be263f9cd; regular PR #4718 is open with protected auto-merge armed; verify CI and merge; keep corpus goal active. Provider follow-up Tools #5393. Live deployment separately blocked by #4688 dataset-explorer coverage.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -47,6 +47,19 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4712 · Two-Hand Wrench Chapter Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4712 (regular)
+- **Issue:** #4710 (corpus #4021; epic #4009)
+- **Branch:** `fix/two-hand-wrench-rigor-4710`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (combined-main suite: 6,034 passed, 29 skipped, 92.88% coverage; final content: 180 passed/four skipped; 39 protocol/history/audit checks; 209-page PDF and 20 browser cases verified)
+- **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
+- **Next step:** Merged to remote main be263f9cd946a6aa8b4a97b086af9eab399c3ac6 at 23:32:17 UTC; all protected CI checks passed (36786787125). Lease and presence released. Provider citation follow-up #4711 remains open.
 
 ### DL-#4715 · Quarto Script-Action Link Classification
 
@@ -1826,6 +1839,19 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4712 · Two-Hand Wrench Chapter Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4712 (regular)
+- **Issue:** #4710 (corpus #4021; epic #4009)
+- **Branch:** `fix/two-hand-wrench-rigor-4710`
+- **Paths:** `articles/proximal_distal_companion/chapters/ch12_two_hands_one_wrench.qmd`, `references/proximal-distal-energy.bib`, `models/bilateral-hand-wrench-validation.qmd`, `tests/test_two_hand_wrench_review.py`, `reports/technical-review/two-hand-wrench-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (combined-main suite: 6,034 passed, 29 skipped, 92.88% coverage; final content: 180 passed/four skipped; 39 protocol/history/audit checks; 209-page PDF and 20 browser cases verified)
+- **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
+- **Next step:** Merged to remote main be263f9cd946a6aa8b4a97b086af9eab399c3ac6 at 23:32:17 UTC; all protected CI checks passed (36786787125). Lease and presence released. Provider citation follow-up #4711 remains open.
 
 ## Archive
 

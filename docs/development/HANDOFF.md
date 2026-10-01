@@ -1,3 +1,22 @@
+# Impact-Optimality Technical Review — #4714
+
+- Goal remains active under epic #4009; #4021 is the historical corpus umbrella. Only regular PRs.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`, branch `fix/impact-optimality-rigor-4714`; source `3ff93eda0`, scientific/render evidence `fdec68157`.
+- Session `technical-review-20260930-impact`; lease expires 2026-10-01 00:20 UTC; presence 00:35 UTC. Renew before expiry.
+- Complete article reviewed: fixed-energy theorem versus reachability, singular limits, distributed inertia/realizability, coupling error, grip origin, historical solver and human-data boundaries, actuation, objective identification and moving-pivot power. No historical solver rerun or new human validation.
+- Workbench model-limit section and catalog description corrected only; remaining bytes compared to base. Original audit records preserved in `reports/technical-review/impact-optimality-prior-reviews.json`. Ten new findings and three routes bound to committed evidence. Only the impact article's corpus row is completed; 140 sources remain pending after integrating #4712.
+- All 21 impact checks pass. Full Windows run: 6,036 passed, three expected audit/hygiene failures, 29 skipped, 92.88% coverage. Deferral and generated-artifact location failures resolved; all 46 focused audit/numerical/hygiene checks pass. Content: 179 passed, four skipped. Ruff, Black (796 files), configured mypy (93 files), twelve content gates and quotation gate pass. Exact limits in `impact-optimality-repository-validation.json`.
+- Final browser: three routes × two widths × two themes = 12 passes; three axe scans, zero serious/critical findings. All 74 math expressions rendered; all twelve displays visually inspected at 390/1440 px. Earlier clipped mobile render rejected and repaired with authored line breaks; final displays fit. Source/HTML hashes and paper-read scopes are preserved outside deploy-pruned docs.
+- Two parallel agy Gemini 3.8 Flash text inventories completed; lead adjudicated. Provider wording follow-up [Tools #5393](https://github.com/D-sorganization/Tools/issues/5393) is open; no Tools code changed.
+- PR #4709 merged `984552e17`; checker repair #4716 merged `5e1a11059` and its lease released. PR #4712 merged to remote main `be263f9cd946a6aa8b4a97b086af9eab399c3ac6` at 23:32:17 UTC after all protected checks passed (CI 36786787125). Its lease/presence were released; this branch integrates that main revision.
+- Main deploy 36785717927 failed missing dataset-explorer audit coverage, tracked separately by #4688 / another agent's #4713. Do not take over its lease or claim the site is deployed.
+- Combined main integration: 197 targeted checks pass (178 default-selected plus 19 audit/protocol cases); 180 content checks pass, four skipped. Evidence regeneration and SPEC checks pass; all three impact-reviewed sources are unchanged.
+- Regular PR [#4718](https://github.com/D-sorganization/AffineDrift/pull/4718) is open and protected auto-merge is armed. Next: verify final protected CI/merge; keep the broader goal active. Next longest pending source is launch-monitor screw-kinematics appendix, claimed as #4717 in `AffineDrift-screw-review`, branch `fix/radar-screw-rigor-4717`. Primary-source research and two adjudicated agy inventories are preserved; no published-source edit or review completion yet.
+
+## Preserved Prior Delivery Records
+
+These records retain earlier validation detail. Current status: #4712 and #4716 are merged and their leases released; earlier pending statements below are historical.
+
 # Two-Hand Wrench Technical Review — #4710
 
 The corpus goal remains active under #4021 and epic #4009. Never create draft PRs.
