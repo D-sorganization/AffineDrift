@@ -18,20 +18,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4717 · Radar Screw-Kinematics Appendix Review
+### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4721 (regular)
-- **Issue:** #4717 (epic #4009)
-- **Branch:** `fix/radar-screw-rigor-4717`
-- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-e-screw-kinematics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `tests/test_radar_screw_appendix_review.py`, `reports/technical-review/radar-screw-review.md`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (40 focused and 46 post-cleanup cases pass; 6,057 full-suite passes/29 skips; separate coverage run passed at 92.95%; 180 content passes/four skips; 76-page book with fifteen final pages visually checked; Ruff/Black/mypy and content gates pass)
-- **Summary:** Distinguish a rigid-motion representation from observable information and model-based inference; correct frame, covariance, waveform, impact and output-definition claims. Preserve the rest of the book's review scope and the historical outline's provenance.
-- **Next step:** Source/render checkpoint `18c545c79` is pushed; final coverage and binding receipts are ready. Remote main #4718 is integrated; 105 targeted and 180 content checks pass, with four content skips. Regular PR #4721 is open with protected auto-merge armed; finish CI/merge. Full outline review remains #4719.
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
+- **Issue:** #4720 (epic #4009)
+- **Branch:** `fix/heavy-hit-consistency-4720`
+- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
+- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
+- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 open, protected auto-merge armed; finish CI/remote-main verification and release lease. Goal active; 138 indexed full reviews remain.
 
-- **CI repair:** CI run 36796606743 exposed a generator test writing into the checkout before exact-byte content verification. All three write-mode trust-generator tests now use copied real inputs in temporary roots; production generators, published artifacts and evidence checksums are unchanged. Regression failed before isolation; all 32 affected tests and 180 content checks (four skips) now pass sequentially without restoring output between them. Combined-main full-suite rerun passed 6,078 tests, 29 skipped, 181 deselected, 92.95% coverage in 632.86 seconds.
+
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -49,6 +49,19 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4717 · Radar Screw-Kinematics Appendix Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4721 (regular)
+- **Issue:** #4717 (epic #4009)
+- **Branch:** `fix/radar-screw-rigor-4717`
+- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-e-screw-kinematics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `tests/test_radar_screw_appendix_review.py`, `reports/technical-review/radar-screw-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (40 focused and 46 post-cleanup cases pass; 6,057 full-suite passes/29 skips; separate coverage run passed at 92.95%; 180 content passes/four skips; 76-page book with fifteen final pages visually checked; Ruff/Black/mypy and content gates pass)
+- **Summary:** Distinguish a rigid-motion representation from observable information and model-based inference; correct frame, covariance, waveform, impact and output-definition claims. Preserve the rest of the book's review scope and the historical outline's provenance.
+- **Next step:** Merged remote main `bd1255f153926c7e653148b8c4db972a08ba7be9` at 2026-10-01 01:11:24 UTC, all protected checks green (36799282870). Full combined-main suite 6078 passes, 92.95% coverage; subsequent content 180 passes/four skips. Lease/presence released 01:12 UTC.
 
 ### DL-#4714 · Impact Optimality and Model Limits
 

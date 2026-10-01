@@ -12,9 +12,9 @@ It can alter damping, effective inertia, stiffness, contact area, and slipping
 simultaneously. A clubhead is also not an ideal string: bending, torsion, shell
 motion and acoustic radiation have different spatial patterns.
 
-Represent the grip by a frequency-dependent mechanical impedance
-$\mathbf Z_g(\omega)$ relating the wrench into the boundary to its relative
-velocity. A matrix is needed for translations, rotations and their coupling.
+For a stationary support, represent the linearized grip by a driving-point
+mechanical impedance $\mathbf Z_g(\omega)$ relating the wrench into the
+boundary to the velocity at its port. A matrix is needed for translations, rotations and their coupling.
 For a passive boundary its Hermitian real part is nonnegative on the represented
 ports. In a scalar spring–damper–mass example, using $e^{i\omega t}$,
 
@@ -27,14 +27,23 @@ force and velocity at the same port, preserve phase, and distinguish active
 muscle work from passive dissipation. A moving prescribed grip can do work even
 if its displacement during the collision is small.
 
-For a frozen linear model with displacement-to-grip map $\mathbf L_g$, the grip
-adds $i\omega\mathbf L_g^T\mathbf Z_g\mathbf L_g$ to dynamic stiffness. The
+For the following frozen linear reduction, let $\boldsymbol\eta$ be small
+structural displacements and $\mathbf v_g=\mathbf L_g\dot{\boldsymbol\eta}$
+the grip-port velocity relative to a stationary support. Express the port's
+force, moment, linear velocity and angular velocity at one declared origin and
+in compatible axes. If $\mathbf w_{\rm into}=\mathbf Z_g\mathbf v_g$ is the
+wrench exerted by the club on the boundary, its reaction on the structure is
+$-\mathbf L_g^T\mathbf w_{\rm into}$. The transpose follows from power:
+$\dot{\boldsymbol\eta}^T\mathbf L_g^T\mathbf w_{\rm into}
+=\mathbf v_g^T\mathbf w_{\rm into}$. Eliminating this boundary therefore adds $i\omega\mathbf L_g^T\mathbf Z_g\mathbf L_g$ to dynamic stiffness. The
 contact mobility, in velocity per force, is
 
 $$
-\mathbf Y_c(\omega)=i\omega\mathbf B_c^T
-\left[-\omega^2\mathbf M+i\omega(\mathbf C+\mathbf G)
-+\mathbf K+i\omega\mathbf L_g^T\mathbf Z_g\mathbf L_g\right]^{-1}\mathbf B_c.
+\begin{aligned}
+\mathbf Y_c(\omega)&=i\omega\mathbf B_c^T\mathbf D(\omega)^{-1}\mathbf B_c,\\
+\mathbf D(\omega)&=-\omega^2\mathbf M+i\omega(\mathbf C+\mathbf G)\\
+&\quad+\mathbf K+i\omega\mathbf L_g^T\mathbf Z_g\mathbf L_g.
+\end{aligned}
 $$ {#eq-impact-frequency-mobility}
 
 Do not convert this complex, frequency-dependent object into one real
@@ -42,6 +51,45 @@ Do not convert this complex, frequency-dependent object into one real
 Resonances, antiresonances and dissipative phase are central to the question.
 The frozen-frequency description also needs comparison against the time-varying
 swing when rotation, tension or contact topology changes appreciably.
+The displayed inverse is only defined away from poles of that frozen operator;
+use a compatible causal response and initial conditions for a transient.
+Do not include the same hand mass, stiffness or damping both in the structural
+matrices and again in an impedance that already condenses those dynamics.
+
+### Why a Moving Support Needs Another Input {#sec-impact-moving-grip}
+
+A fixed-support driving-point impedance does not by itself specify the response
+to an accelerating support. Consider an illustrative one-dimensional boundary:
+club-port displacement $x$, hand-mass displacement $y$, support displacement $b$,
+a grip spring/damper $(k_g,c_g)$ between $x$ and $y$, and another $(k_b,c_b)$
+between $y$ and $b$. These are small motions about a stated equilibrium, not
+identified physiological parameters. The force exerted by the club on this
+boundary is $F_g=k_g(x-y)+c_g(\dot x-\dot y)$; the hand mass obeys
+$m_g\ddot y=F_g-k_b(y-b)-c_b(\dot y-\dot b)$.
+
+With $D_g=k_g+i\omega c_g$, $D_b=k_b+i\omega c_b$, and
+$D_h=D_g+D_b-m_g\omega^2\ne0$, elimination gives
+
+$$
+\begin{aligned}
+\widehat F_g&=D_{cc}\widehat x+D_{cb}\widehat b,\\
+D_{cc}&=D_g\left(1-\frac{D_g}{D_h}\right),\\
+D_{cb}&=-\frac{D_gD_b}{D_h},\\
+Z_{cc}&=\frac{D_{cc}}{i\omega},\qquad \omega\ne0.
+\end{aligned}
+$$ {#eq-impact-moving-boundary}
+
+The fixed-support impedance is $Z_{cc}$, but the second coefficient is generally
+not $-D_{cc}$ when $m_g\ne0$. Replacing $\dot x$ by $\dot x-\dot b$ in that
+one-port law would therefore lose the support-acceleration response. The
+massless two-terminal spring/damper reduction is a special case. Even
+$\widehat x=\widehat b$ can require force to accelerate the intervening mass.
+A moving hand/support model needs its additional input or retained states,
+and the energy audit must include work at both driven ports. The force on the
+club is $-F_g$; positive force alone does not determine its sign of work.
+This example explains a possible pathway without assigning it a golfer-specific
+size or proving an acoustic benefit.
+
 
 Chiementin and colleagues identified grip-dependent modes of one club with one
 right-handed participant. Their bending-mode table and discussion generally
@@ -67,9 +115,10 @@ $\widehat F(\omega)=\int F(t)e^{-i\omega t}\,dt$, a compactly supported,
 piecewise smooth force with finitely many jumps $\Delta F_j$ satisfies
 
 $$
-i\omega\widehat F(\omega)=
-\sum_j\Delta F_j e^{-i\omega t_j}
-+\int F'_{\mathrm{regular}}(t)e^{-i\omega t}\,dt.
+\begin{aligned}
+i\omega\widehat F(\omega)&=\sum_j\Delta F_j e^{-i\omega t_j}\\
+&\quad+\int F'_{\mathrm{regular}}(t)e^{-i\omega t}\,dt.
+\end{aligned}
 $$ {#eq-impact-force-jump-spectrum}
 
 This follows by integrating the distributional derivative. If the regular
@@ -135,9 +184,11 @@ sonification, not a prediction of impact acoustics.
 For a mass-normalized uncoupled structural mode $j$,
 
 $$
-\ddot\eta_j+2\zeta_j\omega_j\dot\eta_j+\omega_j^2\eta_j=Q_j(t),\qquad
-Q_j(t)=\int_{S_c}\boldsymbol\phi_j(\mathbf x)^T
+\begin{aligned}
+\ddot\eta_j+2\zeta_j\omega_j\dot\eta_j+\omega_j^2\eta_j&=Q_j(t),\\
+Q_j(t)&=\int_{S_c}\boldsymbol\phi_j(\mathbf x)^T
 \mathbf t_c(\mathbf x,t)\,dS.
+\end{aligned}
 $$
 
 Strike position changes modal participation through the mode shape
@@ -163,9 +214,11 @@ For an exterior linear acoustic field with sound speed $c_a$, air density
 $\rho_a$ and normal surface velocity $v_n$, a frequency-domain model satisfies
 
 $$
-(\nabla^2+k_a^2)\widehat p=0,\qquad
-\frac{\partial\widehat p}{\partial n}=-i\omega\rho_a\widehat v_n,
-\qquad k_a=\omega/c_a,
+\begin{aligned}
+(\nabla^2+k_a^2)\widehat p&=0,\\
+\frac{\partial\widehat p}{\partial n}&=-i\omega\rho_a\widehat v_n,\\
+k_a&=\omega/c_a,
+\end{aligned}
 $$
 
 with $n$ pointing from the solid into the air and an outgoing-wave condition
@@ -178,7 +231,11 @@ they materially affect the response.
 
 Mase and colleagues provide a golf-specific finite-element/boundary-element
 modeling precedent. Delaye and colleagues use a titanium plate as an intermediate
-acoustic validation fixture [@mase2012sound; @delaye2016plate]. Earlier thesis work
+acoustic validation fixture [@mase2012sound; @delaye2016plate]. The plate study's
+microphone was not calibrated for pressure: it compared relative spectral
+amplitudes and decay, with substantial discrepancies, rather than validating
+absolute radiated pressure. Its material parameters were also adjusted against
+the plate, so transfer to a new club remains a prediction to test. Earlier thesis work
 also records poor correlation for a driver despite success on a simpler plate;
 this is an explicit warning against treating a plausible simulated tone as
 validation [@sharpe2010sound].
@@ -186,9 +243,11 @@ validation [@sharpe2010sound].
 A useful measured transfer model is
 
 $$
-\widehat p_{\rm mic}(\omega)=H_{\rm mic}(\omega)H_{\rm room}(\omega)
-\sum_j R_j(\omega,\mathbf x_{\rm mic})\widehat\eta_j(\omega)
-+\widehat p_{\rm other}(\omega).
+\begin{aligned}
+\widehat p_{\rm mic}(\omega)&=H_{\rm mic}(\omega)H_{\rm room}(\omega)\\
+&\quad\times\sum_j R_j(\omega,\mathbf x_{\rm mic})\widehat\eta_j(\omega)\\
+&\quad+\widehat p_{\rm other}(\omega).
+\end{aligned}
 $$
 
 Here $R_j$ includes radiation and propagation, with units consistent with modal

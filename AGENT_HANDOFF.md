@@ -1,3 +1,22 @@
+# Heavy-Hit Technical Review — #4720
+
+- Goal active under epic #4009; longest unfinished articles first; regular PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`, branch `fix/heavy-hit-consistency-4720`, base `24cdba4d49abec347bbe56fd51cc7d5ed00ab6a5`.
+- Session `technical-review-20261001-heavy-hit`; lease/presence through 2026-10-01 02:29 UTC. Renew as needed.
+- Complete article and two includes read. Corrected the closing physical-isolation claims, declared fixed-support impedance and reaction signs, derived moving-support forcing with hand inertia and both port powers, qualified uncalibrated acoustic evidence, clarified proposed preregistration, and pinned historical evidence links.
+- Eight new checks and five existing checks pass. Two supplied-text agy Gemini 3.8 Flash inventories were adjudicated; no delegated edits/tools/network. Numbered and unnumbered clipping was repaired after visual inspection; all 23 final displays verified at 390/1440 px. Four browser/theme cases and one axe scan pass; no serious/critical findings. Twelve content gates, Ruff/Black and configured mypy pass. Source checkpoint `3f9c6882b` is committed.
+- Canonical report and source-read scopes: `reports/technical-review/heavy-hit-review.md` and `heavy-hit-source-review.json`. Original route audit preserved verbatim in `heavy-hit-prior-reviews.json`; one route and five corrected findings now bound to scientific evidence checkpoint `c1fc3a09f`, covering source checkpoint `3f9c6882b`. Do not refresh the old audit as if it certified new science.
+- Next: combined-main full coverage suite passed 6,086 tests, 29 skipped, 92.95% coverage in 483.63 seconds. No tracked generated evidence changed. Subsequent content checks passed 180 tests with four skips, without restoring generated evidence. Regular PR [#4723](https://github.com/D-sorganization/AffineDrift/pull/4723) is open with protected auto-merge armed. Verify CI and remote-main merge, then release #4720 lease/presence. No provider synthesis, physical experiment, or live-site publication claim. Preserve parked #4253 and peer-owned deployment issue #4688.
+- Prior impact PR #4718 merged to remote main `24cdba4d4` with all checks green; its lease was released. Radar PR #4721 merged with all protected checks green to remote main `bd1255f153926c7e653148b8c4db972a08ba7be9` at 2026-10-01 01:11:24 UTC. Test output isolation repaired the CI evidence mutation without changing scientific bytes.
+
+- Integrated radar remote main `bd1255f153926c7e653148b8c4db972a08ba7be9`; its lease/presence released at 01:12 UTC. Preserve both completed review streams below. Only heavy-hit full validation and delivery remain in flight for this session.
+
+- Next indexed source is companion Chapter 20 (`ch20_plane_to_space.qmd`, 2632 words). Read-only preparation and two supplied-text Flash inventories are complete locally: inspect observer versus representation invariance, contact wrench admissibility, and exact archived closure/engine evidence. No issue claim, source edit, or completed review for that chapter. Provider facts remain unverified; do not promote delegate conjectures.
+
+## Preserved Prior Delivery Records
+
+Radar and impact reviews below are merged; their earlier pending statuses are historical.
+
 # Radar Screw-Kinematics Review — #4717
 
 - Goal active under epic #4009. Review the longest unfinished sources first; regular PRs only.
