@@ -20,9 +20,9 @@ club/ball parameter calculations — a vendor-neutral technical reference.
 > layout, labels, citation keys, prose style, and the build. This document is
 > designed to grow toward a textbook-scale reference edited by many hands.
 
-- **[main.pdf](main.pdf)** — the compiled report (~65 pages)
+- **[main.pdf](main.pdf)** — the compiled report
 - `main.tex` + `sections/` — LaTeX source (11 chapters + 5 appendices), one file per chapter
-- `references.bib` — the bibliography database (80 entries, grouped by source category)
+- `references.bib` — the bibliography database (grouped by source category)
 - `build.ps1` — local build; CI builds every PR via `.github/workflows/compile-textbooks.yml`
 - `research/` — the four raw research dossiers the report was synthesized from
   (radar systems, camera systems, patents, physics/algorithms), with source
@@ -49,6 +49,6 @@ Appendix C — Sensor hardware and integration reference: OPS243-A specs/API/rol
 
 Appendix D — Patent portfolio compendium: every identified US patent for TrackMan (all 45 on their legal page + 7 more), Topgolf Sweden/Toptracer, FlightScope/EDH, Full Swing (US11311789 grant), Garmin, Rapsodo, Foresight/Wintriss, Creatz/Uneekor, Golfzon, Acushnet (back to the ancestral 1977 US4136387), plus prior art (Sports Sensors, Weibel, Stalker) — each number hotlinked to Google Patents, with two attribution corrections (US10596416 family = Toptracer, not TrackMan)
 
-Appendix E — Clubhead kinematics from radar velocities: a screw-theoretic how-to — why Doppler measurements are exactly linear in the club's twist (reciprocal product of sight line and screw), what each OpenFlight sensor can observe (OPS243-A = 1D velocity distribution only; K-LD7 = wrong envelope; IWR6843 = full rigid-body estimation with custom chirps), a seven-step estimation recipe (OS-CFAR → segmentation → per-frame twist least squares → observability/SVD truncation → SE(3) smoothing with low-pitch and hub priors → impact-time evaluation → parameter projections including closure rate and ISA swing plane), and a four-stage validation plan; notes that ISA theory is established in golf biomechanics (Vena et al.) but no vendor publicly uses the screw formalism
+Appendix E — Radar Clubhead Kinematics: Motion and Observability — consistent point/body/spatial velocity conventions; the exact single-origin Doppler rank limit; conditional uncertainty and temporal observability; coupled TDM waveform budgets; and a proposed estimation and validation sequence. Speed, path, face closure, swing plane, and low point require distinct reference, geometry, timing, and evidence conditions. This appendix is a bounded technical review; the remaining chapters and historical research outline are not newly qualified.
 
 Appendix B — Detailed implementation guidance: OPS243-A DSP parameters (Doppler scaling, window/chirp trade-offs, comb spin estimation), K-LD7 interferometry + EKF/RTS smoother design, alignment calibration procedures, D-plane inversion with priors and gear-effect bounds, Phase-2 optical module design parameters (strobe timing, dimple registration), and the MLM2PRO validation protocol

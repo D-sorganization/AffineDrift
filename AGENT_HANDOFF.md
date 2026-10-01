@@ -1,3 +1,22 @@
+# Radar Screw-Kinematics Review — #4717
+
+- Goal active under epic #4009. Review the longest unfinished sources first; regular PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`; branch `fix/radar-screw-rigor-4717`; main base `be263f9cd946a6aa8b4a97b086af9eab399c3ac6`.
+- Session `technical-review-20260930-screw`; lease/presence expire 2026-10-01 01:25/01:26 UTC. Renew as needed.
+- Complete Appendix E corrected for Doppler rank/nullspace, twist frames, axis/plane limits, covariance, temporal inference, sensor/waveform budgets, glints, event times and parameter definitions. Scientific report and primary read scopes are in `reports/technical-review/radar-screw-review.md` and the book's `research/radar-screw-review-dossier.md`.
+- 40 focused checks pass: general rank/SE(3) checks reused from #4309, new waveform/closure/temporal checks, six corrected source regressions, all twelve prior anchors, and existing Chapter 11 publication contract. No hardware or human experiment was performed.
+- Canonical book rebuilt to 76 pages with no undefined citations/references. All eight appendix pages, ten equations, contents/boundary and revised bibliography pages were visually checked (fifteen final pages). A range/rotation notation collision and awkward title wrap were repaired. Scientific/render receipt and dependency carry-forward are saved under `reports/technical-review/radar-screw-*`. Only this corpus row is newly completed: 140 pending locally, 139 expected after integrating #4718.
+- README summary corrected; four existing bibliography records corrected and three primary references added, permanent keys preserved. Other chapter source files remain unchanged. The historical research outline receives only a qualification notice; its full review remains in native epic child #4719.
+- Two agy Gemini 3.8 Flash supplied-text inventories independently adjudicated. No delegated tools, edits, network, or decisions.
+- PR #4712 merged remote main `be263f9cd` with all protected checks green; #4716 merged `5e1a11059`; both leases released. Impact review regular PR #4718 at `dfe396062` is open with protected auto-merge armed; its source/validation checkpoint remains in the separate impact-review worktree.
+- Deployment has a separately owned dataset-explorer audit gap (#4688 / #4713). Do not claim live-site publication or take over another session's PR.
+- Full Windows run passed 6,057 tests, 29 skipped, 181 deselected; 46 final root-hygiene/focused checks pass. The first full run did not collect coverage; the repository-required coverage run is now in progress. Content: 180 passed/four skipped. Ruff, full Black (799 files), configured mypy (93 files), title/citation/bibliography/LaTeX and evidence checks pass.
+- Next: finish coverage validation, save the committed checkpoint, and create a regular PR. Integrate merged #4718 before delivery if it is available; preserve both turnover streams and completed corpus rows.
+
+## Preserved Prior Delivery Records
+
+Earlier pending statuses below are historical; current delivery status is summarized above.
+
 # Two-Hand Wrench Technical Review — #4710
 
 The corpus goal remains active under #4021 and epic #4009. Never create draft PRs.

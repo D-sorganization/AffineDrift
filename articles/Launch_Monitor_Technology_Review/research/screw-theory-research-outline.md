@@ -1,5 +1,7 @@
 # Screw Theory Applied to Launch Monitors: A Research Outline
 
+> **Historical Research Outline — Qualification Pending.** The original proposal below is retained as provenance, not a verified estimator specification. The corrected Appendix E supersedes its claims of full-twist recovery from single-origin instantaneous Doppler, automatically calibrated covariance, free face closure or an ISA-defined swing plane, and an independently selectable TDM waveform budget. It also distinguishes conditional priors from measured information. Remaining optical, fusion, uncertainty, novelty, vendor, and experiment claims require full review under [#4719](https://github.com/D-sorganization/AffineDrift/issues/4719); no hardware or human validation is established here. See [the Appendix E review dossier](radar-screw-review-dossier.md) for the bounded correction and read scopes.
+
 **Purpose.** A research-grade map of how screw-axis theory (twists, instantaneous
 screw axes, Plücker line geometry) can improve launch monitor measurement —
 radar-based and camera-based — with emphasis on **club data accuracy** and, in

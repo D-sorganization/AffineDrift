@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4717 · Radar Screw-Kinematics Appendix Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4717 (epic #4009)
+- **Branch:** `fix/radar-screw-rigor-4717`
+- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-e-screw-kinematics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `tests/test_radar_screw_appendix_review.py`, `reports/technical-review/radar-screw-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (40 focused and 46 post-cleanup cases pass; 6,057 full-suite passes/29 skips; coverage run pending; 180 content passes/four skips; 76-page book with fifteen final pages visually checked; Ruff/Black/mypy and content gates pass)
+- **Summary:** Distinguish a rigid-motion representation from observable information and model-based inference; correct frame, covariance, waveform, impact and output-definition claims. Preserve the rest of the book's review scope and the historical outline's provenance.
+- **Next step:** Finish the coverage run, preserve the source/render checkpoint and create a regular PR after integrating merged #4718 when available. Full outline review remains #4719; impact PR #4718 is independently in protected CI.
+
 ### DL-#4712 · Two-Hand Wrench Chapter Review
 
 - **State:** in_review
