@@ -225,8 +225,21 @@
   "preview_preparation": "Applied normal asset sync/bundle and existing polyfill-strip helper; served official bounded one-page manifest. Preserved render-generated CSS in QA and restored existing tracked styles/print files before final browser check; no authored CSS change.",
   "prior_failures": "Initial bounded preview lacked polyfill cleanup/served manifest. Publication-boundary regression exposed four excluded critique targets. All corrected; original logs retained.",
   "pending": [
-    "Full repository regression on committed tree.",
-    "Bind final review/finding metadata to source commit and mark only this corpus row complete.",
-    "Open regular PR with SPEC row keyed by actual PR number; protected CI and merge."
-  ]
+    "Regular PR with actual PR-keyed SPEC row; protected CI and merge."
+  ],
+  "source_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d",
+  "full_regression": {
+    "passed": 6220,
+    "failed": 2,
+    "skipped": 29,
+    "deselected": 186,
+    "seconds": 736.12,
+    "src_coverage_percent": 93.04,
+    "failures": [
+      "tests/test_root_hygiene.py::test_root_matches_allowlist_and_hygiene_script_passes",
+      "tests/test_root_hygiene.py::test_check_root_hygiene_cli_passes"
+    ],
+    "cause": "Pre-existing untracked build, dist and affinedrift.egg-info directories violated the root allowlist. All three were preserved under the local QA directory; no production or test implementation changed.",
+    "rerun": "All six tests in tests/test_root_hygiene.py pass after preserving the outputs. The initial full run is not relabeled as an all-green run."
+  }
 }
