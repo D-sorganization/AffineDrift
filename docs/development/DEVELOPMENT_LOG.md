@@ -27,7 +27,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/shallow-wide-rigor-4733`
 - **Paths:** `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex`, `articles/The_Geometry_of_Motion/Volume_IV/main.pdf`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `books/human-motor-control.qmd`, `tests/test_shallow_wide_review.py`, `reports/technical-review/shallow-wide-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (SELF: 30 new checks and 45 combined focused checks pass; twelve content gates; 71-page PDF chapter and four public-route cases visually verified)
+- **Last verified:** 2026-10-01 (SELF: 30 new checks and 45 combined focused checks pass; final source e6eec4ac1 bound; twelve content gates; 71-page PDF chapter and four public-route cases visually verified)
 - **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
 - **Next step:** Integrate the ground-delivery branch after its protected merge.
 
