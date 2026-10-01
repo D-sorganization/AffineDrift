@@ -24,6 +24,8 @@ from scripts.e2e_relevant_paths import is_e2e_relevant
         "reports/scientific-claim-audit.md",
         ".github/workflows/ci-standard.yml",
         ".github/workflows/deploy-website.yml",
+        ".quarto-version",
+        "_includes/mathjax-loader.html",
     ),
 )
 def test_visual_contract_changes_always_trigger_e2e(path: str) -> None:

@@ -206,7 +206,7 @@ class TestRevisionHistoryRendering:
         )
 
         html = res.stdout
-        assert '<section id="revision-history"' in html
+        assert '<section id="revision-history"' in html or '<div id="revision-history"' in html
         assert "Revision History</h2>" in html
         assert '<span class="revision-history-date">2026-09-29</span>' in html
         assert "Added critique annotations." in html

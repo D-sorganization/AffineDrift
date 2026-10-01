@@ -2,7 +2,7 @@
 title: "Local Optimal Control: LQR, DDP, and Riccati"
 description: "Formulates local optimal control via LQR, differential dynamic programming, and Riccati equations for trajectory optimization in nonlinear systems."
 ---
-\label{ch:optimal-control}
+[]{#ch-optimal-control}
 
 ::: {.callout-note}
 ## Zoom in, Solve, Check, Repeat
@@ -22,36 +22,35 @@ automatically answer the others.
 ## Bellman and Pontryagin: Two Views of the Same Objective
 
 For a fixed initial state, consider
-\begin{equation}
+$$
 \min_{u_0,\ldots,u_{N-1}}J=\ell_N(x_N)+\sum_{k=0}^{N-1}\ell_k(x_k,u_k),
 \qquad x_{k+1}=f_k(x_k,u_k).
-\label{eq:ch5:traj-opt}
-\end{equation}
+$$ {#eq-ch5:traj-opt}
 Here $x_k\in\mathbb R^n$, $u_k\in\mathbb R^m$, and $f_k$ is a discrete
 transition, potentially obtained by integrating a continuous model. Its
 derivatives must match that transition and its time step.
 
 Bellman's principle gives
-\begin{equation}
+$$
 V_k(x)=\min_u\{\ell_k(x,u)+V_{k+1}(f_k(x,u))\},\qquad V_N=\ell_N.
-\label{eq:ch5:bellman}
-\end{equation}
+$$ {#eq-ch5:bellman}
 The future value makes this different from repeatedly minimizing today's stage
 cost. With linear dynamics, quadratic costs, and unconstrained controls, this
 recursion reduces to a Riccati recursion [@bellman1957].
 
 For Pontryagin's conditions, choose the Lagrangian sign convention
-\begin{equation}
+$$
 \mathcal L=\ell_N(x_N)+\sum_{k=0}^{N-1}
 \{\ell_k(x_k,u_k)+\lambda_{k+1}^{T}[f_k(x_k,u_k)-x_{k+1}]\}.
-\label{eq:ch5:lagrangian}
-\end{equation}
+$$ {#eq-ch5:lagrangian}
 With $H_k=\ell_k+\lambda_{k+1}^{T}f_k$, stationarity gives
-\begin{align}
-0&=\ell_{k,u}+f_{k,u}^{T}\lambda_{k+1},\label{eq:ch5:kkt-u}\\
-\lambda_k&=\ell_{k,x}+f_{k,x}^{T}\lambda_{k+1},\quad
-\lambda_N=\ell_{N,x}.\label{eq:ch5:costate-update}
-\end{align}
+$$
+0=\ell_{k,u}+f_{k,u}^{T}\lambda_{k+1},
+$$ {#eq-ch5:kkt-u}
+$$
+\lambda_k=\ell_{k,x}+f_{k,x}^{T}\lambda_{k+1},\quad
+\lambda_N=\ell_{N,x}.
+$$ {#eq-ch5:costate-update}
 In continuous time, the normal minimization convention $H=L+\lambda^Tf$
 uses $\dot x=H_\lambda$, $\dot\lambda=-H_x$, and a control minimizing $H$.
 The alternative maximum convention changes the sign of the running-cost term.
@@ -73,21 +72,19 @@ Let $(\bar x_k,\bar u_k)$ be dynamically feasible and write
 $\delta x=x-\bar x$, $\delta u=u-\bar u$. Derivatives below are evaluated
 on that trajectory. Use column gradients,
 $\ell_{ux}\in\mathbb R^{m\times n}$, and $\ell_{xu}=\ell_{ux}^T$:
-\begin{equation}
+$$
 \ell\simeq\ell_0+\ell_x^T\delta x+\ell_u^T\delta u+
 \frac12\begin{bmatrix}\delta x\\\delta u\end{bmatrix}^{T}
 \begin{bmatrix}\ell_{xx}&\ell_{xu}\\\ell_{ux}&\ell_{uu}\end{bmatrix}
 \begin{bmatrix}\delta x\\\delta u\end{bmatrix}.
-\label{eq:ch5:cost-expansion}
-\end{equation}
+$$ {#eq-ch5:cost-expansion}
 Retain the linear terms: they drive improvement when the nominal trajectory
 is not stationary. Dropping them generally removes the feedforward correction.
 The first-order dynamics are
-\begin{equation}
+$$
 \delta x_{k+1}\simeq A_k\delta x_k+B_k\delta u_k,
 \qquad A_k=f_{k,x},\quad B_k=f_{k,u}.
-\label{eq:ch5:perturbation}
-\end{equation}
+$$ {#eq-ch5:perturbation}
 Even an exact Jacobian gives a tangent approximation to a finite perturbation.
 An infeasible nominal trajectory introduces a defect
 $f_k(\bar x_k,\bar u_k)-\bar x_{k+1}$ that a defect-aware method must carry.
@@ -95,12 +92,18 @@ $f_k(\bar x_k,\bar u_k)-\bar x_{k+1}$ that a defect-aware method must carry.
 Write the next local value as
 $V_{k+1}\simeq V_0+s^T\delta x_{k+1}+\tfrac12\delta x_{k+1}^TS\delta x_{k+1}$.
 The action value $Q=\ell+V_{k+1}\circ f_k$ has derivatives
-\begin{align}
-Q_x&=\ell_x+A^Ts,&Q_u&=\ell_u+B^Ts,\label{eq:ch5:Qx}\\
-Q_{xx}&=\ell_{xx}+A^TSA+\sum_i s_i f^i_{xx},\label{eq:ch5:Qxx}\\
-Q_{uu}&=\ell_{uu}+B^TSB+\sum_i s_i f^i_{uu},\label{eq:ch5:Quu}\\
-Q_{ux}&=\ell_{ux}+B^TSA+\sum_i s_i f^i_{ux}.\label{eq:ch5:Qxu}
-\end{align}
+$$
+Q_x=\ell_x+A^Ts,\qquad Q_u=\ell_u+B^Ts,
+$$ {#eq-ch5:Qx}
+$$
+Q_{xx}=\ell_{xx}+A^TSA+\sum_i s_i f^i_{xx},
+$$ {#eq-ch5:Qxx}
+$$
+Q_{uu}=\ell_{uu}+B^TSB+\sum_i s_i f^i_{uu},
+$$ {#eq-ch5:Quu}
+$$
+Q_{ux}=\ell_{ux}+B^TSA+\sum_i s_i f^i_{ux}.
+$$ {#eq-ch5:Qxu}
 The superscript $i$ selects a component of $f$. The sums contract the value
 gradient with dynamics second derivatives. Full DDP retains these terms;
 iLQR omits them. Both methods retain the complete cost Hessian, including
@@ -111,16 +114,20 @@ does not itself require full DDP: iLQR still linearizes those dynamics.
 
 Suppose $Q_{uu}\succ0$. Invertibility alone gives only a stationary control,
 possibly a maximum or saddle. Completing the square gives
-\begin{align}
-\delta u^*&=k+K\delta x,\label{eq:ch5:feedback-affine}\\
-k&=-Q_{uu}^{-1}Q_u,&K&=-Q_{uu}^{-1}Q_{ux}.\label{eq:ch5:gain-def}
-\end{align}
+$$
+\delta u^*=k+K\delta x,
+$$ {#eq-ch5:feedback-affine}
+$$
+k=-Q_{uu}^{-1}Q_u,\qquad K=-Q_{uu}^{-1}Q_{ux}.
+$$ {#eq-ch5:gain-def}
 Negative signs are included in $k$ and $K$ throughout this chapter. Implement
 the inverses with factorization and linear solves. The unregularized update is
-\begin{align}
+$$
+\begin{aligned}
 s_k&=Q_x-Q_{xu}Q_{uu}^{-1}Q_u,\\
-S_k&=Q_{xx}-Q_{xu}Q_{uu}^{-1}Q_{ux}.\label{eq:ch5:S-def}
-\end{align}
+S_k&=Q_{xx}-Q_{xu}Q_{uu}^{-1}Q_{ux}.
+\end{aligned}
+$$ {#eq-ch5:S-def}
 Initialize $s_N=\ell_{N,x}$ and $S_N=\ell_{N,xx}$. Both gradient and
 curvature must be propagated. A large eigenvalue of $Q_{uu}$ penalizes a
 control change; for fixed gradient it reduces the step in that direction.
@@ -128,12 +135,13 @@ control change; for fixed gradient it reduces the step in that direction.
 For linear dynamics and stage cost
 $\ell_k=\tfrac12(x^TQ_kx+2u^TN_kx+u^TR_ku)$, with
 $N_k\in\mathbb R^{m\times n}$, the exact recursion is
-\begin{align}
+$$
+\begin{aligned}
 H_k&=R_k+B_k^TS_{k+1}B_k,\quad D_k=N_k+B_k^TS_{k+1}A_k,\\
 K_k&=-H_k^{-1}D_k,\\
 S_k&=Q_k+A_k^TS_{k+1}A_k-D_k^TH_k^{-1}D_k,\quad S_N=Q_N.
-\label{eq:ch5:riccati-full}
-\end{align}
+\end{aligned}
+$$ {#eq-ch5:riccati-full}
 A sufficient convexity assumption is that the joint stage-cost block
 $\left[\begin{smallmatrix}Q_k&N_k^T\\N_k&R_k\end{smallmatrix}\right]$
 is positive semidefinite, $R_k\succ0$, and $Q_N\succeq0$. For $N_k=0$
@@ -142,11 +150,10 @@ minimizes this finite-horizon linear-quadratic problem globally. Applying it
 to a nonlinear system has a local approximation scope.
 
 An independent check, including the cross-cost terms, is
-\begin{equation}
+$$
 S_k=Q_k+K_k^TN_k+N_k^TK_k+K_k^TR_kK_k+
 (A_k+B_kK_k)^TS_{k+1}(A_k+B_kK_k).
-\label{eq:ch5:riccati-alt}
-\end{equation}
+$$ {#eq-ch5:riccati-alt}
 Let $A=B=Q=R=1$, $N=1/2$, and $S_{k+1}=1$. Then
 $H=2$, $D=3/2$, $K=-3/4$, and $S_k=7/8$. Both formulas give $7/8$;
 omitting the two cross-cost terms does not.
@@ -160,9 +167,9 @@ transfers can be achieved. A hard terminal equality can be infeasible even
 though unconstrained finite-horizon LQR has a finite solution.
 
 For a continuous time-varying linearization, endpoint reachability uses
-\begin{equation}
+$$
 W_c(t_0,T)=\int_{t_0}^T\Phi(T,s)B(s)B(s)^T\Phi(T,s)^T\,ds,
-\end{equation}
+$$
 where $\Phi$ is the state-transition matrix of $A(t)$. A frozen-time rank
 test on $[B,AB,\ldots]$ is not a general substitute. Small Gramian eigenvalues
 indicate expensive transfers under the specified state units and input metric;
@@ -175,7 +182,7 @@ Controllability is stronger than necessary. A finite-horizon optimum alone
 does not guarantee asymptotic stability.
 
 ## Differential Dynamic Programming and iLQR
-\label{sec:ch5:ilqr-vs-ddp}
+[]{#sec-ch5-ilqr-vs-ddp}
 
 DDP repeatedly constructs the local action value and updates the nominal
 trajectory [@jacobson1970dpp]. A practical implementation follows this sequence.
@@ -204,10 +211,12 @@ trajectory [@jacobson1970dpp]. A practical implementation follows this sequence.
 When choosing a policy, regularization may replace $Q_{uu}$ by $Q_{uu}+\mu I$.
 Choose $\mu$ large enough to obtain positive definiteness. To evaluate that
 policy in the original quadratic model, use general substitution:
-\begin{align}
+$$
+\begin{aligned}
 s_k&=Q_x+K^TQ_u+Q_{xu}k+K^TQ_{uu}k,\\
 S_k&=Q_{xx}+Q_{xu}K+K^TQ_{ux}+K^TQ_{uu}K.
-\end{align}
+\end{aligned}
+$$
 Mixing regularized gains with an unqualified Schur-complement update silently
 changes the model. State the regularization convention implemented.
 
@@ -222,17 +231,16 @@ whole backward pass to $O(Nm^3)$. Compare measured runtime at matched
 tolerances; there is no universal hundredfold speed advantage.
 
 ## What Local Convergence Requires
-\label{sec:ch5:ddp-as-newton}
+[]{#sec-ch5-ddp-as-newton}
 
 Eliminating states in an unconstrained shooting problem yields a reduced
 objective $J(U)$ in stacked controls. Exact Newton solves
 $\nabla^2J(U)\Delta U=-\nabla J(U)$. With positive-definite Hessian at a
 stationary point, locally Lipschitz Hessian, sufficiently close initialization,
 and eventual full unregularized steps, its standard local result is
-\begin{equation}
+$$
 \|U^{(i+1)}-U^*\|\le C\|U^{(i)}-U^*\|^2.
-\label{eq:ch5:quad-convergence}
-\end{equation}
+$$ {#eq-ch5:quad-convergence}
 This measures error from the solution, not successive step size. A strict
 minimum need not have a positive-definite Hessian; twice continuous
 differentiability alone does not imply a Lipschitz Hessian.
@@ -254,16 +262,14 @@ steps without guaranteeing the desired local minimum.
 
 For a point mass $m$ on a massless rod of length $l$, viscous damping $b\ge0$,
 torque $\tau$, and angle measured from downward vertical,
-\begin{equation}
+$$
 ml^2\ddot\theta=-mgl\sin\theta-b\dot\theta+\tau.
-\label{eq:ch5:pendulum-dynamics}
-\end{equation}
+$$ {#eq-ch5:pendulum-dynamics}
 Hanging is $\theta=0$ and upright is $\theta=\pi$. With $m=1\,\mathrm{kg}$,
 $l=1\,\mathrm m$, $g=10\,\mathrm{m/s^2}$, $b=0.1\,\mathrm{N\,m\,s}$,
-\begin{equation}
+$$
 \dot\theta=\omega,\qquad\dot\omega=-10\sin\theta-0.1\omega+\tau.
-\label{eq:ch5:pendulum-first-order}
-\end{equation}
+$$ {#eq-ch5:pendulum-first-order}
 The energy $E=\tfrac12ml^2\omega^2+mgl(1-\cos\theta)$ obeys
 $\dot E=\tau\omega-b\omega^2$, independently checking the damping sign.
 
@@ -277,18 +283,20 @@ the trade-off with terminal cost.
 
 An independently reproducible calculation is infinite-horizon LQR balance for
 $e=\theta-\pi$ with
-\begin{equation}
+$$
 A=\begin{bmatrix}0&1\\10&-0.1\end{bmatrix},\quad
 B=\begin{bmatrix}0\\1\end{bmatrix},\quad Q=\operatorname{diag}(100,10),\quad R=0.1.
-\end{equation}
+$$
 For cost $\int_0^\infty(x^TQx+R\tau^2)dt$, feedback is
 $\tau=-R^{-1}B^TPx$. Write the symmetric $P$ using entries
 $p_{11},p_{12},p_{22}$. Its stabilizing solution satisfies
-\begin{align}
+$$
+\begin{aligned}
 p_{12}&=1+\sqrt{11},\\
 p_{22}&=\frac{-0.2+\sqrt{0.04+40(2p_{12}+10)}}{20},\\
 p_{11}&=0.1p_{12}-10p_{22}+10p_{12}p_{22}.
-\end{align}
+\end{aligned}
+$$
 The position and velocity feedback gains are approximately $43.166$ and
 $13.551$. The closed-loop polynomial is
 $s^2+(0.1+13.551)s+(43.166-10)$, with negative real-part roots. This establishes
@@ -322,15 +330,13 @@ for increasing damping: check poles, constraints, and nonlinear response.
 ## Continuous-Time Riccati and a Counterexample
 
 The Hamilton--Jacobi--Bellman equation is
-\begin{equation}
+$$
 -V_t=\min_u\{L+\nabla V^Tf\},\qquad V(T,x)=\ell_T(x).
-\label{eq:ch5:hjb}
-\end{equation}
+$$ {#eq-ch5:hjb}
 For $\dot x=Ax+Bu$, $L=\tfrac12(x^TQx+u^TRu)$, and $V=\tfrac12x^TSx$,
-\begin{equation}
+$$
 -\dot S=Q+A^TS+SA-SBR^{-1}B^TS,\quad S(T)=Q_T,\quad u^*=-R^{-1}B^TSx.
-\label{eq:ch5:DRE}
-\end{equation}
+$$ {#eq-ch5:DRE}
 The time-invariant algebraic equation sets $\dot S=0$ and requires the
 stabilizing solution under the assumptions stated earlier.
 For $\dot x=x$, $B=0$, $Q=1$, $Q_T=0$, the finite-horizon solution is
@@ -349,9 +355,9 @@ active constraints can make this guess poor.
 
 A standard nominal stability argument assumes admissible terminal feedback
 $\kappa_f$, an invariant terminal set $\mathcal X_f$, and
-\begin{equation}
+$$
 V_f(f(x,\kappa_f(x)))-V_f(x)\le-\ell(x,\kappa_f(x)),\qquad x\in\mathcal X_f.
-\end{equation}
+$$
 With initial feasibility, the terminal constraint, positive-definite stage
 cost relative to the target, and appropriate regularity, a shifted candidate
 establishes recursive feasibility and decrease of the optimal value. Exact

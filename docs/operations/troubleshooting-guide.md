@@ -306,10 +306,12 @@ sha256sum quarto.deb
 
 **Resolution:**
 ```powershell
-py -3.12 -m piptools compile --allow-unsafe --generate-hashes `
-  --resolver=backtracking `
-  --output-file requirements-docker.lock `
-  requirements.txt
+# --universal keeps platform markers (e.g. `pywinpty ; os_name == 'nt'`) so the
+# Linux image never tries to build a Windows-only sdist; guarded by
+# tests/test_docker_lock.py.
+uv pip compile requirements.txt --universal --python-version 3.12 `
+  --generate-hashes --output-file requirements-docker.lock `
+  --custom-compile-command "uv pip compile requirements.txt --universal --python-version 3.12 --generate-hashes --output-file requirements-docker.lock"
 git add requirements-docker.lock
 git commit -m "chore(deps): regenerate requirements-docker.lock"
 ```

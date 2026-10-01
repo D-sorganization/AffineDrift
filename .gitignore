@@ -129,6 +129,12 @@ docs/**/*.html
 docs/search.json
 docs/feed.xml
 docs/sitemap.xml
+
+# Root sitemap.xml/feed.xml are generated artifacts (scripts/generate_sitemap.py,
+# scripts/generate_feed.py write docs/ only by default); never commit stale
+# root copies again (#4572).
+/sitemap.xml
+/feed.xml
 docs/robots.txt
 docs/service-worker.js
 docs/manifest.json

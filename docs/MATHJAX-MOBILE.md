@@ -2,6 +2,45 @@
 
 Comprehensive mobile-friendly rendering for MathJax equations.
 
+## Runtime Integration (Quarto vs. the Site Loader)
+
+The site renders exactly one MathJax runtime per page, but two separate
+mechanisms cooperate to make that happen, and neither one alone is
+sufficient:
+
+1. **`_quarto.yml`'s `format.html.html-math-method`** is set to `mathjax`
+   with `url: "/js/equation-runtime-gate.js"`. That file
+   (`js/equation-runtime-gate.js`) is inert — comment-only. Pointing Pandoc
+   at it stops Quarto from emitting its own default MathJax `<script>` tag
+   and legacy polyfill, without disabling TeX delimiter preservation in the
+   rendered HTML (`.math` spans, `$...$`, `\(...\)`, etc.).
+2. **`_includes/mathjax-loader.html`**, wired in via `include-in-header`,
+   owns the real, tested runtime: it defines `window.MathJax` config
+   (macros, accessibility, SVG output), scans the rendered DOM for math, and
+   only then injects the pinned, SRI-verified MathJax bundle from jsDelivr.
+   See `tests/mathjax-loader.test.js` for the gating/idempotency contract.
+
+This split is fragile across Quarto upgrades: if a future Quarto version
+changes how it interprets `html-math-method.url` (for example, by fetching
+and inlining it, or by emitting a runtime even when the URL target is
+non-executable), the page could end up with zero or two MathJax runtimes
+instead of one. Because there are no executable cells on this site, nothing
+else exercises a real `quarto render` output against this specific
+interaction.
+
+**Guard:** `tests/e2e/article.spec.js` ("should load MathJax assistive
+MathML without duplicate state errors") renders a real article page and
+asserts exactly one MathJax `/es5/tex-*` bundle script, no separately
+loaded assistive-MML script, and no duplicate MathJax state errors.
+`scripts/e2e_relevant_paths.py` forces this full-site E2E render lane in CI
+(`e2e-tests` in `.github/workflows/ci-standard.yml`) on two independent
+triggers: `.quarto-version` is listed in its `EXACT_PATHS`, so bumping the
+pinned Quarto version always forces the lane; and `_includes/` is listed in
+its `PATH_PREFIXES`, so any change to `_includes/mathjax-loader.html` — the
+file that owns the real MathJax runtime — forces it too. Either a Quarto
+upgrade or a loader edit that breaks this mechanism fails CI instead of
+shipping silently.
+
 ## Features Implemented
 
 ### 1. Touch-Friendly Scrolling

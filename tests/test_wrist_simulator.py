@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
-from hypothesis import given
+from hypothesis import example, given
 from hypothesis import strategies as st
 
 from src.core.contracts import ContractViolationError
@@ -260,6 +260,11 @@ class TestMomentOfInertiaProperties:
         length_m=st.floats(min_value=0.1, max_value=2.0),
         cg_m=st.floats(min_value=0.1, max_value=1.5),
     )
+    # Domain corners. The intermittent -n 8 failures were FailedHealthCheck
+    # (too_slow) from Hypothesis's first-draw constants scan, not a falsifying
+    # input; see tests/test_hypothesis_warmup.py. Pin the extremes anyway.
+    @example(head_g=1.0, shaft_g=1.0, length_m=0.1, cg_m=0.1)
+    @example(head_g=1000.0, shaft_g=500.0, length_m=2.0, cg_m=1.5)
     def test_always_positive(
         self, head_g: float, shaft_g: float, length_m: float, cg_m: float
     ) -> None:
@@ -287,6 +292,9 @@ class TestMomentOfInertiaProperties:
         length_m=st.floats(min_value=0.1, max_value=2.0),
         cg_m=st.floats(min_value=0.1, max_value=1.5),
     )
+    # Smallest head increment (10 g at the shortest CG) against the largest
+    # shaft term: the hardest case for float resolution of I_alpha.
+    @example(head_g=1000.0, shaft_g=500.0, length_m=2.0, cg_m=0.1)
     def test_monotonic_in_head_weight(
         self, head_g: float, shaft_g: float, length_m: float, cg_m: float
     ) -> None:

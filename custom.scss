@@ -2,6 +2,9 @@
 /* stylelint-disable-next-line comment-whitespace-inside */
 /*-- scss:defaults --*/
 
+/* Disable external Bootswatch Google Fonts import to prevent CSP violations */
+$web-font-path: "";
+
 /* Okabe-Ito Colorblind-Safe Palette */
 $color-orange: #E69F00;
 $color-sky-blue: #56B4E9;
@@ -55,32 +58,10 @@ $font-family-serif: "Playfair Display", Georgia, "Times New Roman", serif;
    styling is owned solely by the canonical token system (styles.css plus
    css/tokens/), ending the two-competing-systems cascade fight. */
 
-/* MathJax Layout & Overflow Control */
-/* stylelint-disable selector-class-pattern */
-.math.display, 
-.MathJax_Display,
-mjx-container[display="true"] {
-  overflow: auto hidden;
-  max-width: 100%;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
-}
-/* stylelint-enable selector-class-pattern */
-
-/* Mobile MathJax scaling. Heading sizes and callout-box spacing are owned by
-   the token system (styles.css fluid clamp() scale) and css/components/
-   callouts.css respectively (issue #3331), so only the MathJax display rule
-   remains viewport-specific here. */
-@media (max-width: 767.98px) {
-  /* stylelint-disable selector-class-pattern */
-  .math.display,
-  .MathJax_Display,
-  mjx-container[display="true"] {
-    font-size: 0.9em;
-  }
-  /* stylelint-enable selector-class-pattern */
-}
+/* NOTE (issue #4581): display-math overflow/scaling for `.math.display`,
+   `.MathJax_Display` and `mjx-container` moved to the single canonical rule
+   in styles.css — this file and styles.css previously each defined the rule
+   independently with conflicting overflow-y/padding/font-size values. */
 
 /* YouTube Embed Placeholder Styles */
 .youtube-placeholder {

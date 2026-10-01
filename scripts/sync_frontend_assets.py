@@ -44,6 +44,7 @@ CANONICAL_JS_NAMES = (
     "metrics.js",
     "navigation.js",
     "notes-workspace.js",
+    "page-feedback.js",
     "pdf.js",
     "rotation-converter.js",
     "rotation-converter-ui.js",

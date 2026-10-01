@@ -157,3 +157,41 @@ def test_subtitle_hours_match_learning_paths_hub() -> None:
     content = PAGE_PATH.read_text(encoding="utf-8")
     assert "10–160+ hours" in content
     assert "40–160 hours" not in content
+
+
+THREE_HOUR_HEADING_PATTERN = re.compile(
+    r"^### (\d+)(?:–(\d+))? Hours \{#onramp-([\w-]+)-3hr\}$", re.MULTILINE
+)
+STEP_TIME_PATTERN = re.compile(r"— ~(\d+)\s*min")
+
+
+def test_three_hour_tier_totals_match_heading() -> None:
+    """Each '3 Hours' (or renamed range) tier's summed step minutes must match
+
+    its own heading: an exact 'N Hours' heading must sum to N*60 minutes, and
+    a 'A–B Hours' range heading must sum to somewhere between A*60 and B*60
+    minutes. This is what #4695 fixed: several '3 Hours' on-ramps only summed
+    to 120-140 minutes of listed study time.
+    """
+    content = PAGE_PATH.read_text(encoding="utf-8")
+    matches = list(THREE_HOUR_HEADING_PATTERN.finditer(content))
+    persona_ids = _persona_ids()
+    found_personas = {m.group(3) for m in matches}
+    assert found_personas == set(persona_ids), (
+        f"Expected a 3-hour heading for every persona, got {found_personas} "
+        f"vs {set(persona_ids)}"
+    )
+
+    for match in matches:
+        low_str, high_str, persona_id = match.groups()
+        end = content.find("\n---\n", match.end())
+        assert end != -1, f"No closing '---' found after {persona_id}'s 3-hour section"
+        section = content[match.end() : end]
+        total_minutes = sum(int(m) for m in STEP_TIME_PATTERN.findall(section))
+
+        low = int(low_str) * 60
+        high = int(high_str) * 60 if high_str else low
+        assert low <= total_minutes <= high, (
+            f"Persona '{persona_id}' 3-hour tier sums to {total_minutes} min, "
+            f"outside heading range {low}-{high} min"
+        )
