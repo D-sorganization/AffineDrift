@@ -28,8 +28,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** articles/proximal_distal_companion/chapters/ch04_geometry_machine.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_geometry_machine_review.py
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (nine new checks;66 affected;12 gates;653 titles;Ruff/Black838;mypy94;221-page PDF/parity/visual inspection;4 browser/theme checks;full regression 6418 passes/29 skips/79.0% configured coverage/93.0% source-only)
-- **Summary:** Correct geometric force, power, singularity and inertia mappings; reproduce scalar allocation evidence and repair moment-arm figure. Flash support and lead scientific adjudication. Preserve70 prior findings; no completion credit before binding.
-- **Next step:** Finish regression, commit source, bind nine findings, deliver regular protected PR and verify predecessor/main delivery.
+- **Summary:** Correct geometric force, power, singularity and inertia mappings; reproduce scalar allocation evidence and repair moment-arm figure. Flash support and lead scientific adjudication. Nine findings bound to source 1293c48c575b28986c41a2a826d6ed2030ba85fb;70 earlier findings preserved;122 full-source audits plus whole-book consistency remain.
+- **Next step:** Validate binding, deliver regular protected PR and verify predecessor/main delivery.
 
 ### DL-#4759 · Robust-Speed Technical Review
 
