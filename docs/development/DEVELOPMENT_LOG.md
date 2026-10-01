@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4749 · Falsification Atlas Technical Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4750 (regular; main target)
 - **Issue:** #4749 (epic #4009)
 - **Branch:** fix/atlas-rigor-4749
 - **Paths:** articles/proximal-distal-falsification-atlas.qmd, articles/_generated/proximal-distal-falsification-atlas.qmd, data/trust/proximal_distal_falsification_atlas.json, src/affine_control/falsification_atlas/rendering.py, tests/test_falsification_atlas_identities.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (seven findings bound;full6381 pass/one stale-registry failure/29 skips;unsupported release withdrawn;73 integrated checks pass;12 gates;653 titles;Ruff/Black832;four final browser/axe cases)
+- **Last verified:** 2026-10-01 (PR4750 open;seven findings bound;32 final binding checks pass;full6381 pass/one stale-registry failure/29 skips;unsupported release withdrawn;73 integrated checks pass;12 gates;653 titles;Ruff/Black832;four final browser/axe cases)
 - **Summary:** Distinguish source adjudication from editorial comparisons; correct force/wrench, coordinate-metric and support/compliance comparisons with five Flash support jobs and lead adjudication.
-- **Next step:** Push source6dadc5 plus integration8ebd0e5 and seven bound findings; open regular protected PR, register it and verify protected main delivery.
+- **Next step:** Push registration, arm protected auto-merge for4750, verify current-head CI/main and close superseded4741/4748 only after parity verification.
 
 ### DL-#4746 · Critics Corner Technical Review
 
