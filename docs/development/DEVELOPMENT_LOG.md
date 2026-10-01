@@ -20,15 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
 - **Issue:** #4720 (epic #4009)
 - **Branch:** `fix/heavy-hit-consistency-4720`
 - **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
 - **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
-- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Finish content checks, push regular PR and complete protected delivery. Goal active; 138 indexed full reviews remain.
+- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 open, protected auto-merge armed; finish CI/remote-main verification and release lease. Goal active; 138 indexed full reviews remain.
 
 
 
