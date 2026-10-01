@@ -29,7 +29,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (39 focused/legacy/hygiene checks; four final browser cases, zero serious/critical axe findings; three equations and final PDF pages inspected)
 - **Summary:** Correct observer/reference power, contact constraints, rank/feasibility, archived populations and engine independence; derive and expose the shared vector-damper angular-momentum limitation. Preserve prior review scopes and immutable provider source; follow-up UpstreamDrift #11195.
-- **Next step:** Final audit binding excludes deployment-output paths; first full run had 6,088 passes and one output-location failure. Integrated heavy-hit PR #4723. Rerun full coverage and sequential content checks, then protected regular PR delivery. Goal active; 137 indexed reviews remain.
+- **Next step:** Final audit binding excludes deployment-output paths; first full run had 6,088 passes and one output-location failure. Integrated heavy-hit PR #4723. Integrated web batch #4704; final 6,183 full tests pass with 29 skips and 92.95% coverage, followed by 183 content checks/four skips without evidence restoration. Four final browser cases/axe pass; Ruff, Black817, mypy93, twelve content gates and title/SPEC/evidence checks pass. Next: protected regular PR delivery. Goal active; 137 indexed reviews remain.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
