@@ -43,6 +43,32 @@ moment and normal is distinct from choosing a new physical normal. A probability
 of negative sign requires a stated uncertainty distribution. Proposed geometry,
 measurement and human-validation tests are separated from completed archive results.
 
+## Additional Moment-Accounting Finding
+
+The archived vector dashpot acts across separated hand and club endpoints.
+Equal and opposite forces leave a combined pair moment `-c d × d_dot`, despite
+nonpositive dissipative power. An independent transverse-velocity counterexample
+has zero force sum, -18 W body-plus-storage power, and -0.18 N m pair moment.
+The peak norm summed across both interfaces is about 0.083 N m in the archived
+traces. Exact recomputation is in `plane-space-moment-balance.json`.
+
+The native adapter force-application sections were inspected and apply no
+additional contact couples. The existing driver-reaction proxy does not close
+this additional pathway. [UpstreamDrift #11195](https://github.com/D-sorganization/UpstreamDrift/issues/11195)
+asks the provider to declare the reaction-moment interpretation or revise the
+constitutive law and qualify angular momentum. No provider bytes changed. The
+chapter explicitly withholds a closed internal biological-contact interpretation;
+the quantitative effect on the proposed club-moment mechanism is not known from
+this diagnostic and requires a new governed run. This finding does not negate
+the algebraic wrench/power identities.
+
+One additional source check failed before this qualification; its independent
+numerical counterexample already passed. Final focused checks include this
+case. The first full suite had 6,088 passes and one evidence-location failure:
+the route binding incorrectly included the deployment-output PDF. The canonical
+`articles/` PDF is the durable evidence; the output copy remains checked for
+byte equality only. The final binding excludes all `docs/` output paths.
+
 ## Evidence and Read Scope
 
 The exact provider revision is `a1a613999eb0c744da96caa040941955eb210a21`.

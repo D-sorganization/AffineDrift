@@ -160,6 +160,39 @@ gravity, inertia, and interface storage and damping. In contrast, the coincident
 and reversed moment-arm controls reuse achieved forces **without advancing a new trajectory**.
 They test the moment calculation, not the later motion of a physically altered grip.
 
+### Angular Momentum Is a Separate Check
+
+Equal and opposite forces can still produce a net moment when their application
+points differ. In the archived vector spring--damper law, let $\mathbf h$ be the
+hand position, $\mathbf p$ the club contact point, and $\mathbf d=\mathbf h-\mathbf p$.
+The club receives $\mathbf F=k\mathbf d+c\dot{\mathbf d}$ and the hand receives
+$-\mathbf F$. With both positions measured from one origin, the pair contributes
+
+$$
+\begin{aligned}
+\boldsymbol\tau_{\mathrm{pair}}
+ &= \mathbf p\times\mathbf F+\mathbf h\times(-\mathbf F)\\
+ &= -c\mathbf d\times\dot{\mathbf d}.
+\end{aligned}
+$$ {#eq-lay-spatial-pair-moment}
+
+The spring term cancels, but transverse relative velocity makes the damping
+forces noncentral. The power ledger can still show nonnegative dissipation.
+Thus force balance and passivity alone do not establish angular-momentum balance
+for a closed internal interface. A declared support reaction or contact-couple
+pathway is needed to account for this moment, or the constitutive model must change.
+
+Direct calculation from the archived traces gives a peak norm of the summed
+two-interface pair moment of about 0.083 N m. The native adapters apply no
+additional contact couples, and the recorded ground-pathway proxy accounts for
+the driver. This is a shared modeling limitation, not a discrepancy between the
+two engines. Its effect on the proposed club-moment mechanism requires a new,
+governed comparison; the existing agreement does not quantify that effect.
+The [provider follow-up](https://github.com/D-sorganization/UpstreamDrift/issues/11195)
+tracks this unresolved moment accounting. The archived sign and power results
+remain results of the declared engineering model, not validation of an isolated
+biological grip.
+
 ### Agreement Has a Boundary
 
 If two engines agree on a reduced spatial mechanism, code-specific error becomes

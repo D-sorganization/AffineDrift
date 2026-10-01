@@ -49,6 +49,24 @@ def test_full_rank_open_constraint_does_not_prove_bounded_feasibility() -> None:
     assert np.all(target > upper_bound)
 
 
+def test_dissipative_equal_opposite_forces_can_have_nonzero_pair_moment() -> None:
+    hand_position = np.array([0.01, 0.0, 0.0])
+    club_position = np.zeros(3)
+    hand_velocity = np.array([0.0, 1.0, 0.0])
+    club_velocity = np.zeros(3)
+    stiffness, damping = 1800.0, 18.0  # Archived engineering parameters, N/m and N s/m.
+    displacement = hand_position - club_position
+    relative_velocity = hand_velocity - club_velocity
+    force = stiffness * displacement + damping * relative_velocity
+    moment = np.cross(club_position, force) + np.cross(hand_position, -force)
+    body_power = force @ club_velocity - force @ hand_velocity
+    storage_rate = stiffness * displacement @ relative_velocity
+    assert force - force == pytest.approx(np.zeros(3))
+    assert body_power + storage_rate == pytest.approx(-18.0)
+    assert moment == pytest.approx(-damping * np.cross(displacement, relative_velocity))
+    assert moment == pytest.approx([0.0, 0.0, -0.18])
+
+
 @pytest.mark.parametrize(
     "boundary",
     [
@@ -60,6 +78,7 @@ def test_full_rank_open_constraint_does_not_prove_bounded_feasibility() -> None:
         "without advancing a new trajectory",
         "point-force moment",
         "not a closed planar dynamics model",
+        "Angular Momentum Is a Separate Check",
     ],
 )
 def test_chapter_states_mechanical_and_archive_boundaries(boundary: str) -> None:
