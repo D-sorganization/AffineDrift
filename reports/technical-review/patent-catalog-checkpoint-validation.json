@@ -1,0 +1,50 @@
+{
+  "issue": 4766,
+  "checkpoint_commit": "SELF",
+  "status": "in_progress",
+  "source_sha256": {
+    "articles/Launch_Monitor_Technology_Review/sections/07-patents.tex": "062ad1220a4e5f762f7e116b2987dca57a093a0d20f7268f353decbfd4c2de7a",
+    "articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex": "8c851b7b14bd0fff00f7f3a6dd70d9daaf7a6b22ee89bd0b6327af319634b6b8",
+    "articles/Launch_Monitor_Technology_Review/preamble.tex": "f6b6de19f2dcdb4397fd81b03db77af1ffadca2334be6984bebf892b009aad0e",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "50df89e6c3bfe21427f8dbdb551089599ff759eec3b85e59e53cc76d10ef81bd",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "478ee27ca03fb8bd8bfacd6ac36a3a6fc56059accad7ff6fc94bdbbb17604bd0"
+  },
+  "build": {
+    "command": "pwsh -NoProfile -File articles/Launch_Monitor_Technology_Review/build.ps1",
+    "exit_code": 0,
+    "pages": 80,
+    "undefined_citations_or_references": 0,
+    "box_warnings_in_edited_chapters": 0,
+    "other_chapter_warnings": "not adjudicated"
+  },
+  "visual_review": {
+    "chapter_7_pdf_pages": [26, 27, 28, 29, 30],
+    "appendix_d_pdf_pages": [58, 59, 60, 61, 62, 63, 64, 65, 66],
+    "final_boundary_rechecked": [65, 66],
+    "tool": "Poppler PNG rendering and lead visual inspection"
+  },
+  "tests": {
+    "command": "py -3.12 -m pytest tests/test_book_publication_audit.py tests/test_claim_audit_inventory.py --no-cov -q",
+    "exit_code": 0,
+    "passed": 35,
+    "full_regression": "not yet run for patent work"
+  },
+  "content_checks": {
+    "title_audit_sources": 653,
+    "latex_structure": "pass",
+    "claim_evidence_regeneration": "already current",
+    "preserved_original_identifiers": 167,
+    "explicit_kind_code_corrections": 2,
+    "current_unique_macros": 168,
+    "additional_gazette_link": 1,
+    "leading_table_priority_years_checked": 111
+  },
+  "delegation": {
+    "provider": "agy CLI",
+    "model": "gemini-3.8-flash-high",
+    "total_completed_jobs": 32,
+    "this_checkpoint_completed_jobs": 5,
+    "parallel_workers": 3
+  },
+  "remaining": "Final per-entry and book-consistency adjudication, scientific binding, corpus update, final regression and regular PR."
+}

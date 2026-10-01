@@ -159,16 +159,11 @@ locates ball images; strobe-timestamped positions give speed and launch
 angles; 3D spin on all three axes is solved by searching candidate
 rotations that best register the dimple imagery between exposures ---
 Gabor-filter dimple enhancement is documented in the adjacent patent
-literature~\cite{us12401909}. Total BOM $\approx$\$250--300. The
-architecture is a direct descendant of the now-expired Wintriss patents
-(\cref{sec:wintriss}) and of the GC2's flash-multi-exposure technique.
+literature~\cite{us12401909}. Total BOM $\approx$\$250--300.
+The architecture shares multi-exposure imaging and surface-feature registration principles with the disclosures discussed in \cref{sec:wintriss}; that comparison establishes neither a direct product lineage nor rights clearance.
 
 \begin{implication}
-PiTrac proves that commodity global-shutter sensors + IR strobing deliver
-photometric-grade launch and spin measurement at hobbyist price
-point. For a radar-first system the natural division of labor is: keep the radar
-core for speed/trigger robustness and outdoor use, and adopt a
-PiTrac-style strobed camera as the spin/impact-location module indoors
---- the same fusion direction every commercial vendor has taken, from the
-opposite starting modality.
+PiTrac provides an open implementation of strobed optical capture and image-based motion estimation using commodity hardware.
+Its architecture can inform a radar/optical prototype, but a parts list or successful spin fit is not a measurement-error specification.
+Ball-spin capture and club-face impact imaging require their own visibility, calibration and validation checks; adding a camera does not automatically establish both capabilities.
 \end{implication}

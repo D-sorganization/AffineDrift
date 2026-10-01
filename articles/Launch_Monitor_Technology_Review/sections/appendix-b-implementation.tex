@@ -54,10 +54,9 @@ balls~\cite{mygolfspymlm2pro} and FlightScope's metallic-dot
 stickers~\cite{mevoteardown}). Logging which ball type produced each
 detection will quantify this for a given deployment.
 
-\emph{Patent posture:} this method is claimed by
-US8845442 to $\sim$2029 (US10393870 to Dec.\ 2026)~\cite{us8845442};
-the FlightScope phase-demodulation alternative (US9868044, dielectric
-lens~\cite{us9868044}) is claimed to $\sim$2034. See \cref{sec:fto}.
+\emph{Disclosure references:} US8845442 and US9868044 describe distinct radar spin-processing approaches~\cite{us8845442,us9868044}.
+The latter's dielectric-lens explanation should be distinguished from its claims' signal-processing requirements (\cref{sec:patentflightscope}).
+These references identify technical material to study, not technique-wide expiry dates or implementation clearance (\cref{sec:fto}).
 
 \subsection{Club-Speed Extraction}
 
@@ -150,8 +149,8 @@ rather than hiding it.
 \section{Optical Module (Phase 2) Design Parameters}
 \label{app:optical}
 
-The expired Wintriss patents~\cite{us7292711} plus PiTrac's published
-design~\cite{pitrac} fix the working parameters:
+The Wintriss disclosures provide optical measurement principles~\cite{us7292711}; PiTrac provides an implementation reference~\cite{pitrac}.
+The following choices are prototype parameters to verify against the selected hardware and capture conditions, rather than specifications fixed by a patent:
 \begin{itemize}\itemsep2pt
 \item \textbf{Sensor}: Raspberry Pi Global Shutter camera (IMX296,
 $1456\times1088$); global shutter is non-negotiable (rolling shutter
@@ -177,11 +176,10 @@ US12401909~\cite{us12401909}; with $\Delta t \approx 400$\,\si{\micro
 \second}, 3,000\,rpm is only $7.2\degs$ of rotation --- comfortably
 below the aliasing limit, and small enough that a local search around
 the D-plane-predicted axis converges quickly
-(\cref{sec:dimplespin}). This is the public-domain
-(post-2025) Wintriss/Foresight method~\cite{us7292711,foresightspherical}.
-\item \textbf{Impact location / measured face angle} (later): either
-face fiducials per the expired Acushnet recipes
-(US5501463/US6758759: dots + stereo pose)~\cite{us5501463,us6758759},
+(\cref{sec:dimplespin}).
+Surface-image registration appears in the Wintriss disclosures and Foresight's technical account~\cite{us7292711,foresightspherical}; neither source establishes blanket rights clearance for the prototype.
+\item \textbf{Impact location / face orientation} (later): either
+calibrated face-fiducial reconstruction, informed by the distinct Acushnet camera arrangements in US5501463 and US6758759~\cite{us5501463,us6758759},
 or an overhead second camera per the Uneekor
 geometry~\cite{uneekoreyexo}.
 \end{itemize}

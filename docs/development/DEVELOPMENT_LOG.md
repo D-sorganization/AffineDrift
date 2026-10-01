@@ -18,9 +18,23 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4763 · Geometry Technical Review
+### DL-#4766 · Patent Catalog Technical Review
 
 - **State:** in_review
+- **Owner:** codex
+- **PR:** #4768
+- **Issue:** #4766 (epic #4009)
+- **Branch:** fix/patent-catalog-rigor-4766
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/preamble.tex, articles/Launch_Monitor_Technology_Review/main.pdf, articles/Launch_Monitor_Technology_Review/research/patent-catalog-review-20261001.md
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (168 source/claim/context checks; 111 priority rows; full regression6377 passed; Ruff/Black/mypy/Jest/content checks pass; source binding in patent-catalog-final-validation.json)
+- **Summary:** All 168 references plus Gazette adjudicated; 14 grouped corrections; 64 completed Flash jobs with failed attempts excluded. Two audited sources credited;120 full-source audits plus whole-book consistency remain.
+- **Next step:** Source38bb58ae5 and bindingbc38713b2 pushed; finish PR4768 CI/review and guarded merge, then verify remote-main source parity.
+
+
+### DL-#4763 · Geometry Technical Review
+
+- **State:** shipped
 - **Owner:** codex
 - **PR:** [#4765](https://github.com/D-sorganization/AffineDrift/pull/4765)
 - **Issue:** #4763 (epic #4009)
@@ -29,11 +43,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (prior full validation retained; main integration preserves55 delivered findings within79 and6 ground-reaction findings; preload/shaft source, archive and test parity verified; initial full run 6419 passed/3 metadata failures, 78.86% coverage; corrected digests/history and preserved generated packaging outputs; 69 recovery checks and Jest546 pass; Ruff/Black838/mypy94 pass; prior-head CI36893253026 green)
 - **Summary:** Correct geometric force, power, singularity and inertia mappings; reproduce scalar allocation evidence and repair moment-arm figure. Flash support and lead scientific adjudication. Nine findings bound to source 1293c48c575b28986c41a2a826d6ed2030ba85fb;70 earlier findings preserved;122 full-source audits plus whole-book consistency remain.
-- **Next step:** Push validated normal merge of main dd70693bc (delivered4755 and4760), verify4765 exact-head CI/guarded merge, then integrate back into patent branch a9d46717e. Preserve both source/evidence histories.
+- **Next step:** Delivered through merged PR #4765 on remote main 39f7553b562b6d83e5aff36d9277bbcbfcaff401; source/evidence parity verified in reports/technical-review/geometry-remote-main-receipt.json. Predecessors #4758/#4762 and issues #4756/#4759/#4763 are closed. No remaining work for this bounded review.
 
 ### DL-#4759 · Robust-Speed Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** [#4762](https://github.com/D-sorganization/AffineDrift/pull/4762)
 - **Issue:** #4759 (epic #4009)
@@ -42,11 +56,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (seven new checks;64 affected;12 publication gates;653 titles;Ruff/Black837;mypy94;221-page PDF/parity/visual inspection;4 browser/theme checks;full6408 passes/29 skips/78.9% configured coverage/93.0% src)
 - **Summary:** Correct risk, Pareto, sampling and causal claims; replace mismatched figure with eight-program archive and independently reproduce stored metrics. Six Flash support jobs and lead adjudication. Eight findings bound to source 4f3c2b3daec076f4c806d67e0d84768d2e0ed8fd;62 prior findings preserved;123 full-source audits plus whole-book consistency remain.
-- **Next step:** All41 binding checks pass; source4f3c2b3da and binding23827cbba committed. Main2f2bc56a9 integrated preserving peer feed-order repair and records; 77 integrated checks pass. Regular PR #4762 open and attached; source/binding/integration pushed. Push registration and verify protected CI/main delivery. Older preload CI has one page-settling timeout, not an axe violation; root cause not reproduced.
+- **Next step:** Delivered through merged PR #4765 on remote main 39f7553b562b6d83e5aff36d9277bbcbfcaff401; source/evidence parity verified in reports/technical-review/geometry-remote-main-receipt.json. Predecessors #4758/#4762 and issues #4756/#4759/#4763 are closed. No remaining work for this bounded review.
 
 ### DL-#4756 · Complete-State Technical Review
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** [#4758](https://github.com/D-sorganization/AffineDrift/pull/4758)
 - **Issue:** #4756 (epic #4009)
@@ -55,7 +69,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (six new checks;12 publication gates;654 titles;Ruff/Black836;CI-scoped mypy94;221-page PDF/parity/changed-page inspection;4 browser/axe cases;full6401 passes/29 skips/78.9% configured coverage/93.0% src;63 affected)
 - **Summary:** Correct complete-state, velocity-reversal, intervention and observation arguments with five Flash support jobs and lead adjudication. Seven findings bound to source 44b29ef73bf187c4b9220a90ff9e1a08a45bed20;55 prior findings preserved;124 full-source audits plus whole-book consistency remain.
-- **Next step:** Source 44b29ef73 and binding fe7e34e1a pushed; regular PR #4758 open and attached. All 36 binding checks pass. Push registration, enable protected auto-merge, and verify exact-head CI and remote-main delivery.
+- **Next step:** Delivered through merged PR #4765 on remote main 39f7553b562b6d83e5aff36d9277bbcbfcaff401; source/evidence parity verified in reports/technical-review/geometry-remote-main-receipt.json. Predecessors #4758/#4762 and issues #4756/#4759/#4763 are closed. No remaining work for this bounded review.
 
 ### DL-#4753 · Arm–Wrist Preload Technical Review
 
