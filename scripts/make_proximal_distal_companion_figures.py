@@ -16,11 +16,7 @@ from scripts.shaft_energy_illustration import prescribed_cycle
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "articles/figures/proximal_distal_companion"
-EVIDENCE = (
-    ROOT
-    / "data/proximal_distal_energy_transfer"
-    / "transmission_robustness_companion_snapshot.json"
-)
+EVIDENCE = ROOT / "data/illustrations/uncertainty_control_study.json"
 
 INK = "#17324D"
 BLUE = "#2C7FB8"
@@ -376,50 +372,42 @@ def make_clock_state() -> tuple[Path, Path]:
 
 
 def make_speed_tradeoffs() -> tuple[Path, Path]:
+    """Plot the chapter's eight archived candidates without inventing a frontier."""
     data = json.loads(EVIDENCE.read_text(encoding="utf-8"))
-    summaries = data["program_summaries"]
-    labels = {
-        "clock_restrain_then_drive": "Clock",
-        "state_triggered_handoff": "State",
-        "state_triggered_higher_impedance": "State + Impedance",
-        "early_drive": "Early Drive",
-    }
-    colors = (BLUE, GREEN, VIOLET, ORANGE)
-    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.7))
-    for (program, label), color in zip(labels.items(), colors, strict=True):
-        held = summaries[program]["held_out"]
+    candidates = data["control_comparison"]["candidates"]
+    with np.load(EVIDENCE.with_name(data["array_artifact"])) as archive:
+        held = archive["held_out_outputs"].copy()
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 5.6))
+    for index, candidate in enumerate(candidates):
+        label = f"{index + 1}. {candidate['name'].replace('_', ' ').title()}"
+        color = plt.get_cmap("tab10")(index)
+        speed = held[index, :, 0]
+        first = (held[index, :, 1].mean(), np.quantile(speed, 0.1))
+        second = (np.quantile(held[index, :, 2], 0.9), speed.std(ddof=1))
         axes[0].scatter(
-            held["delivery_speed_m_s"]["std"],
-            held["delivery_speed_m_s"]["q10"],
-            s=90,
+            *first,
+            s=65,
             color=color,
             label=label,
         )
-        axes[1].scatter(
-            held["peak_hand_force_n"]["q90"],
-            held["face_path_error_deg"]["mean"],
-            s=90,
-            color=color,
-            label=label,
-        )
+        axes[1].scatter(*second, s=65, color=color)
+        for axis, point in zip(axes, (first, second), strict=True):
+            axis.annotate(str(index + 1), point, xytext=(5, 5), textcoords="offset points")
     axes[0].set(
-        xlabel="Speed Spread (m/s)",
-        ylabel="Lower-Tail Delivery Speed (m/s)",
-        title="Speed Floor Versus Repeatability",
+        xlabel="Mean Planar Face–Path Error (deg)",
+        ylabel="10th-Percentile Delivery Speed (m/s)",
+        title="Speed Versus Planar Error",
     )
     axes[1].set(
-        xlabel="High-Exposure Hand Force (N)",
-        ylabel="Mean Planar Error (deg)",
-        title="Accuracy Proxy Versus Loading",
+        xlabel="90th-Percentile Peak Hand Force (N)",
+        ylabel="Delivery-Speed Standard Deviation (m/s)",
+        title="Force Versus Speed Spread",
     )
-    axes[1].legend(frameon=False, fontsize=8)
-    fig.suptitle(
-        "There Is No Single Winner When the Outcomes Disagree",
-        fontsize=15,
-        fontweight="bold",
-        color=INK,
-    )
-    fig.tight_layout()
+    for axis in axes:
+        axis.margins(0.12)
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="lower center", ncol=4, fontsize=8)
+    fig.suptitle("Eight Preselected Programs: Six Held-Out Cases", fontweight="bold", color=INK)
+    fig.tight_layout(rect=(0, 0.12, 1, 0.96))
     return _save(fig, "fig_companion_tradeoff_map")
 
 

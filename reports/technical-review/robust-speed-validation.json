@@ -1,0 +1,426 @@
+{
+  "issue": 4759,
+  "epic": 4009,
+  "scope": "Full Chapter23 source, archive-driven figure and pinned provider contracts. Independent archived-output recomputation; no dynamics rerun or human validation.",
+  "source_sha256": {
+    "articles/proximal_distal_companion/chapters/ch23_robustly_fast.qmd": "aab2062f306d2b59715821ffddd767f25145ae29c554e2163e7df4a162dba688",
+    "scripts/make_proximal_distal_companion_figures.py": "4d0219892bbadee40cf305e9f88b31d220ed37d390133223f2c87ada8e90fa48",
+    "tests/test_robust_speed_review.py": "e356b33b1ec72189b1e892cb44163c6c29d892819a49b66bf0daf8bd792e4a35",
+    "articles/proximal-distal-companion.css": "28fc23b910577e8fa25d803250f0d0dd3544e04217d9e63d3ce34cc07816321e",
+    "articles/figures/proximal_distal_companion/fig_companion_tradeoff_map.svg": "3d16c61a52db58a03fc09a11103e57e79d3d79dbfd78cda22c1d533cac1b0151",
+    "articles/figures/proximal_distal_companion/fig_companion_tradeoff_map.pdf": "f94d71db7ab5d30251fe8eb59a3769bcdd57e7110f5f8cf0677d025694d962b0",
+    "articles/proximal-distal-a-journey-through-the-swing.pdf": "906ca040948e4c4221c783b285392156096c4b2cf116cd59b8f454b4b45b9841",
+    "data/illustrations/uncertainty_control_study.json": "a604eb90b03a467a426ae2d963962a54d50f48cd66f3b312e32c53d925b52d46",
+    "data/illustrations/uncertainty_control_study.npz": "b051d567fcf7d0c03060f058887b2342ca46a85e78a3f1e5108d1c469ed6be9d",
+    "references/proximal-distal-energy.bib": "262bb4518efe8cde0afcb70cb9a749e723f4e76fccbf0fd80e12d1dc688e11dd"
+  },
+  "focused_tests": {
+    "new_cases": 7,
+    "red": "Figure regression failed with four points instead of the declared eight.",
+    "affected_passed": 64
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/robust-speed-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "format": "Repository Ruff and Black837 pass; CI-scoped mypy94 pass.",
+  "titles": {
+    "checked": 653,
+    "passed": true
+  },
+  "browser": {
+    "publication_checks": {
+      "schema_version": "affinedrift/public-site-verification/v1",
+      "base_url": "http://127.0.0.1:17975",
+      "manifest_page_count": 1,
+      "evidence_count": 4,
+      "expected_evidence_count": 4,
+      "passed": true,
+      "failure_count": 0,
+      "navigation_retry_policy": {
+        "max_retries": 0,
+        "maximum_attempts": 1,
+        "base_delay_ms": 500,
+        "backoff": "exponential",
+        "retryable_status_codes": [502, 503, 504]
+      },
+      "axe_policy": {
+        "mode": "fail",
+        "impacts": ["serious", "critical"],
+        "scanned_route_count": 1,
+        "routes_with_violations": [],
+        "violation_count": 0
+      },
+      "navigation_attempt_count": 4,
+      "retried_evidence_count": 0,
+      "transient_response_count": 0,
+      "exhausted_retry_count": 0,
+      "results": [
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "light",
+          "axe": true,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 535824,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false,
+          "axe_violations": []
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 844,
+            "id": "mobile",
+            "width": 390
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 82.90625,
+              "right": 233.953125,
+              "top": 156.25,
+              "bottom": 368.75,
+              "width": 151.046875,
+              "height": 212.5
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 535824,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "light",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 535824,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        },
+        {
+          "route": "/articles/proximal-distal-a-journey-through-the-swing.html",
+          "pageKind": "article",
+          "viewport": {
+            "height": 900,
+            "id": "desktop",
+            "width": 1440
+          },
+          "theme": "dark",
+          "axe": false,
+          "status": 200,
+          "passed": true,
+          "failures": [],
+          "screenshot": null,
+          "inspection": {
+            "failures": [],
+            "visibleH1s": ["How a Golf Swing Carries Energy"],
+            "primaryHeadingRect": {
+              "left": 365,
+              "right": 822.859375,
+              "top": 128,
+              "bottom": 218,
+              "width": 457.859375,
+              "height": 90
+            },
+            "overflow": 0,
+            "overflowElements": [],
+            "mainTextLength": 535824,
+            "canonical": "https://affinedrift.com/articles/proximal-distal-a-journey-through-the-swing.html"
+          },
+          "navigation_attempts": [
+            {
+              "attempt": 1,
+              "status": 200,
+              "error": null
+            }
+          ],
+          "navigation_retried": false
+        }
+      ]
+    },
+    "math_layout": [
+      {
+        "width": 390,
+        "headings": 15,
+        "pageOverflow": 0,
+        "mathCount": 29,
+        "mathErrors": 0,
+        "displays": [
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          },
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          },
+          {
+            "width": 268.6875,
+            "scroll": 269,
+            "font": "17.78px"
+          }
+        ],
+        "headingText": [
+          "23 Fast Once Is Not the Same as Robustly Fast",
+          "23.1 A Concrete Picture",
+          "23.2 How the Mechanism Works",
+          "23.2.1 State the Question Before Choosing a Score",
+          "23.2.2 The Tail Depends on Whether Larger Is Better",
+          "23.2.3 Severity, Probability, and Worst Case Are Different",
+          "23.2.4 What the Registered Coupled Study Actually Compares",
+          "23.2.5 What the Archived Results Establish",
+          "23.2.6 A Pareto Set Is Relative to Its Feasible Comparisons",
+          "23.2.7 Construct Uncertainty Without Hiding the Experiment",
+          "23.2.8 Preserve Failures and the Denominator",
+          "23.2.9 Keep Selection Separate From Evaluation",
+          "23.2.10 Compare Model Tiers and Human Evidence Explicitly",
+          "23.2.11 Reader Lab: Make the Robustness Claim Auditable",
+          "23.3 Where the Picture Breaks"
+        ]
+      },
+      {
+        "width": 1440,
+        "headings": 15,
+        "pageOverflow": 0,
+        "mathCount": 29,
+        "mathErrors": 0,
+        "displays": [
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          },
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          },
+          {
+            "width": 605,
+            "scroll": 605,
+            "font": "18px"
+          }
+        ],
+        "headingText": [
+          "23 Fast Once Is Not the Same as Robustly Fast",
+          "23.1 A Concrete Picture",
+          "23.2 How the Mechanism Works",
+          "23.2.1 State the Question Before Choosing a Score",
+          "23.2.2 The Tail Depends on Whether Larger Is Better",
+          "23.2.3 Severity, Probability, and Worst Case Are Different",
+          "23.2.4 What the Registered Coupled Study Actually Compares",
+          "23.2.5 What the Archived Results Establish",
+          "23.2.6 A Pareto Set Is Relative to Its Feasible Comparisons",
+          "23.2.7 Construct Uncertainty Without Hiding the Experiment",
+          "23.2.8 Preserve Failures and the Denominator",
+          "23.2.9 Keep Selection Separate From Evaluation",
+          "23.2.10 Compare Model Tiers and Human Evidence Explicitly",
+          "23.2.11 Reader Lab: Make the Robustness Claim Auditable",
+          "23.3 Where the Picture Breaks"
+        ]
+      }
+    ],
+    "visual_review": "Lead inspected all three mobile display equations; no clipping."
+  },
+  "pdf": {
+    "pages": 221,
+    "canonical_public_byte_parity": true,
+    "visually_reviewed_pdf_pages": [
+      154, 155, 156, 157, 158, 159, 160, 161, 162
+    ],
+    "scope": "All Chapter23 PDF155-161 and adjacent boundaries154/162; text, equations and figure legible."
+  },
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --timeout=60 -q",
+    "exit_code": 0,
+    "passed_progress_symbols": 6408,
+    "skipped": 29,
+    "coverage_src_and_scripts": {
+      "statements": 28066,
+      "missed": 5916,
+      "percent": 78.9
+    },
+    "coverage_src_only": {
+      "statements": 13756,
+      "missed": 957,
+      "percent": 93.0
+    },
+    "notes": "Configured default lane; double-quiet output suppresses final count/duration, so pass count derives from progress dots. Marker exclusions and29 reported dependency/obsolete-helper/legacy-path skips remain. Rendering completed before regression."
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": [
+      "source inventory",
+      "provider inventory",
+      "code contract",
+      "test draft",
+      "notation review",
+      "handoff checklist"
+    ],
+    "adjudication": "Supplied-text drafts only. Lead rejected invented rank, unconditional causality, IID sampling and population guarantees. Handoff draft incorrectly called124-before/123-after binding contradictory; chapter credit explains the decrement. Axe result is zero serious/critical findings, not a claim of no accessibility issues of any severity."
+  },
+  "delivery": {
+    "branch": "fix/robust-speed-rigor-4759",
+    "pr": null,
+    "base": "17f27f5827e238ecc7900676952f1f1c0478e04c",
+    "predecessor_pr": 4758,
+    "predecessor_status": "Open, protected auto-merge enabled, now conflicting with main. Preload4755 older CI36877392377 failed public-site evidence despite zero serious/critical axe findings; artifact investigation pending. Other sessions integrated predecessor4752/4755, preserve their changes.",
+    "predecessor_failure_detail": "Older preload CI36877392377: secondary-axis-stability.html inspection timed out waiting for page settling after HTTP200; no serious/critical axe violations on250 scanned routes. Downloaded pr-axe.json retained in QA. Root cause not yet reproduced; no verifier relaxation or rerun issued."
+  },
+  "corpus": {
+    "pending": 124,
+    "whole_book_consistency_pending": true,
+    "completion_credit": "None until source commit and eight findings bound; prior62 retained."
+  }
+}

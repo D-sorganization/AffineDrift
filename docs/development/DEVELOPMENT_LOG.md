@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4759 · Robust-Speed Technical Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4759 (epic #4009)
+- **Branch:** fix/robust-speed-rigor-4759
+- **Paths:** articles/proximal_distal_companion/chapters/ch23_robustly_fast.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_robust_speed_review.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (seven new checks;64 affected;12 publication gates;653 titles;Ruff/Black837;mypy94;221-page PDF/parity/visual inspection;4 browser/theme checks;full6408 passes/29 skips/78.9% configured coverage/93.0% src)
+- **Summary:** Correct risk, Pareto, sampling and causal claims; replace mismatched figure with eight-program archive and independently reproduce stored metrics. Six Flash support jobs and lead adjudication. Preserve62 prior findings; no completion credit before binding.
+- **Next step:** Finish regression, commit source, bind eight findings, then deliver regular protected PR. Inspect predecessor CI failure and merge latest main without discarding peer integration records.
+
 ### DL-#4756 · Complete-State Technical Review
 
 - **State:** in_review

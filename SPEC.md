@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4759 | Correct robust-speed risk, finite Pareto, provider sampling and selection claims; reproduce eight-program archived evidence and replace mismatched tradeoff figure. |
 | 2026-10-01 | #4758 | Correct complete-state prediction, velocity reversal, memory, intervention and measurement claims with independent counterexamples and scoped evidence. |
 | 2026-10-01 | #4755 | Correct arm–wrist task/wrench equivalence, preload dynamics and causal interpretation; publish archived transmission traces and scoped scientific evidence. |
 | 2026-10-01 | #4752 | Correct shaft-memory power/state accounting, model screens, matching counts and speed endpoint; replace illustrative curves with a closed energy ledger. |
