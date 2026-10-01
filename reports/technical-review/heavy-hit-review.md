@@ -78,9 +78,18 @@ actual bounded-variation, integrability, and window-endpoint assumptions.
 
 `heavy-hit-source-review.json` records exact primary-source access limits.
 `heavy-hit-prior-reviews.json` preserves the original route audit verbatim.
-The prior audit must not be made to certify edited scientific bytes by merely
-refreshing hashes. Temporarily defer the route while committing the corrected
-sources, then bind the completed review and render receipt to that exact
-checkpoint. Complete browser, repository, and protected-delivery validation
-before marking this corpus row complete. Other corpus entries retain their
-independent status. No live-site publication is claimed by a local render.
+The prior audit is preserved rather than silently refreshed. Scientific sources
+are committed at `3f9c6882b`; the new review and render receipt will bind that
+source checkpoint through a second evidence commit. Final HTML passes four
+mobile/desktop and light/dark cases, with one axe scan and no serious/critical
+findings. All 138 expressions render, including 23 displays visually inspected
+at 390 and 1440 px. Initial clipped expressions were rejected and repaired.
+All three tables expose their rightmost columns through horizontal scrolling.
+The shorter title resolves broken mobile words. Twelve content gates pass;
+Ruff, Black and configured mypy checks pass. An initial scratch runner omitted
+PYTHONPATH and was corrected before rerunning all twelve gates.
+
+Repository-wide validation and protected delivery remain separate operational
+checks. Only this article's corpus row may be completed by the new scientific
+review. Other entries retain their independent status. No live-site publication
+is claimed by a local render.
