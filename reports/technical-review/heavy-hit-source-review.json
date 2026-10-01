@@ -1,0 +1,110 @@
+{
+  "status": "Complete source reading and scientific edits; mathematical checks pass; final browser and repository validation pending.",
+  "source_files_read": [
+    "articles/technology-heavy-hit-impact-coupling.qmd",
+    "articles/_includes/impact-acoustics.qmd",
+    "articles/_includes/impact-research-program.qmd"
+  ],
+  "prior_records_read": [
+    "docs/development/impact-acoustics/REVIEW.md",
+    "docs/development/impact-acoustics/INVENTORY.md",
+    "docs/development/impact-acoustics/GRIP_QUALIFICATION_REVIEW.md",
+    "docs/development/impact-acoustics/FORCE_REGULARITY_REVIEW.md"
+  ],
+  "findings": [
+    "Related Concepts repeats withdrawn universal decoupling/ground-force cut-off claims. Distinguish software staging from physical decoupling.",
+    "Explain reference/velocity/wrench sign and fixed-base condition for grip impedance dynamic stiffness; prescribed base motion belongs on forcing side.",
+    "Pin historical evidence links to an immutable existing source rather than a topic branch, preserving their historical scope.",
+    "Delaye plate experiment used an uncalibrated microphone; relative spectra and decay do not establish absolute pressure. Add this concrete qualification without promoting thesis or provider results."
+  ],
+  "delegation": {
+    "model": "gemini-3.8-flash-medium",
+    "tool": "agy CLI",
+    "inventories": 2,
+    "scope": "supplied text only, no tools/network/edits",
+    "adjudication": [
+      "Accept stale Related Concepts and ground-force cutoff contradictions.",
+      "Do not treat explicitly retracted historical wave-speed claims as current errors.",
+      "A software wire or two-stage architecture is not intrinsically a physical decoupling assertion; remove unsupported implementation claims only after checking their scope.",
+      "Fourier transform exp(-i wt) and time harmonic exp(+i wt) are consistent; the acoustic normal derivative sign follows momentum balance.",
+      "Most delegate overbroad-claim flags describe cautions already present. Do not rewrite them as new errors.",
+      "Delegate simplified spectral regularity incorrectly: bounded first derivative alone is not the stated bounded-variation/integrability condition. Preserve the actual assumptions."
+    ]
+  },
+  "primary_read_scope": [
+    {
+      "url": "https://arxiv.org/abs/2401.17519",
+      "scope": "Complete abstract and metadata; not full paper."
+    },
+    {
+      "url": "https://pure.ulster.ac.uk/ws/files/12405099/applsci_08_00422.pdf",
+      "scope": "Paper body through conclusions lines31-458; methods, results and discussion read. No new figure/table visual inspection yet."
+    },
+    {
+      "url": "https://shura.shu.ac.uk/12988/1/Senior%20modelling%20the%20sound.pdf",
+      "scope": "Body abstract through conclusion, methods/results/discussion and bibliography. No new figure/table visual inspection yet. Microphone uncalibrated; relative spectral amplitude qualification."
+    },
+    {
+      "url": "https://pdfs.semanticscholar.org/5f78/0348a8b77f80cc30e75cd04e0ca0272a63e0.pdf",
+      "scope": "Complete primary-paper body and bibliography read through line244; figure/table text extracted, no new visual inspection yet."
+    },
+    {
+      "url": "https://digitalcommons.calpoly.edu/theses/272/",
+      "scope": "Complete institutional abstract and metadata, not full thesis."
+    },
+    {
+      "url": "https://repository.lboro.ac.uk/articles/journal_contribution/Evaluation_of_impact_sound_on_the_feel_of_a_golf_shot/9570947",
+      "scope": "Complete institutional abstract and metadata, not full manuscript."
+    },
+    {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/1517274/",
+      "scope": "Complete abstract and metadata returned in primary-source search extraction; direct page fetch initially blank. No full paper."
+    },
+    {
+      "url": "https://www.sashomackenzie.com/publications/MacKenzie%202017%20The%20influence%20of%20golf%20shaft%20stiffness%20on%20grip%20and%20clubhead%20kinematics.pdf",
+      "scope": "Abstract and first-page introduction returned in primary-source search extraction; direct PDF fetch failed; no newly inspected full methods/results."
+    },
+    {
+      "url": "https://www.mdpi.com/2504-3900/2/6/239",
+      "scope": "Publisher search extraction of Methods 2.1-2.4 and Results/Discussion; numerical FRF/optimization text read, figures not visually inspected.",
+      "limit": "Two rotational grip degrees of freedom, one-hand modal setup; damping changed between modal fit and swing optimization. Neither broadband acoustic calibration nor human effect size."
+    },
+    {
+      "url": "https://repository.lboro.ac.uk/articles/journal_contribution/Evaluation_of_vibrotactile_sensations_in_the_feel_of_a_golf_shot/9348662",
+      "scope": "Complete institutional abstract and metadata; not full manuscript.",
+      "limit": "Perception correlations depend on processing; no general causal grip law."
+    },
+    {
+      "url": "https://simbody.github.io/3.7.0/classSimTK_1_1HuntCrossleyForce.html",
+      "scope": "Detailed force/storage and low-speed restitution documentation, lines120-147; not entire API.",
+      "limit": "Sphere contact implementation is not measured golf-ball/face material behavior."
+    },
+    {
+      "url": "https://researchportal.ulisboa.pt/pt/publications/exact-restitution-and-generalizations-for-the-huntcrossley-contac/",
+      "scope": "Complete institutional abstract and metadata; not full paper.",
+      "limit": "Supports externally forced adhesion caution, not a newly inspected exact restitution derivation."
+    },
+    {
+      "url": "https://orbi.umons.ac.be/bitstream/20.500.12907/18868/1/CHI2019%20-%20applsci469551.pdf",
+      "scope": "Selected methods, Tables1-3, sections4.2,5,6,7 via PDF text, lines119-376. No successful new visual table inspection.",
+      "limit": "One club/participant and limited frequency band. Preserve table/discussion versus conclusion damping contradiction; do not silently adopt inconsistent material parameters."
+    },
+    {
+      "url": "https://journals.sagepub.com/doi/10.1177/1754337112442782",
+      "scope": "Complete publisher abstract and bibliographic metadata; restricted main text not read.",
+      "limit": "FE/BEM and plate/driver modeling precedent only."
+    },
+    {
+      "url": "https://onlinelibrary.wiley.com/doi/abs/10.1046/j.1460-2687.2001.00084.x",
+      "scope": "Complete primary abstract and metadata returned by search; not full paper.",
+      "limit": "Electrical contact measurement varies equipment/speed; does not make duration universal."
+    }
+  ],
+  "access_failures": [
+    "Some direct MDPI requests returned 429; primary PDF mirrors and publisher search extraction used with stated scope.",
+    "MacKenzie author PDF direct fetch failed; abstract/first-page search extraction only.",
+    "PubMed Milne direct fetch was blank; complete abstract later returned by primary search extraction.",
+    "Delaye PDF screenshot request failed; text reading is recorded, no new visual inspection claimed."
+  ],
+  "ownership": "Epics #4253/#4009. #4255 closed by triage into #4253; provider synthesis remains parked, do not treat closed issue as completed physical research."
+}
