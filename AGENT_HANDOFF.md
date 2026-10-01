@@ -16,6 +16,8 @@
 - Regular PR [#4721](https://github.com/D-sorganization/AffineDrift/pull/4721) is open and protected auto-merge is armed. Next: finish protected CI/merge and release #4717 lease after remote-main verification. Both prior turnover streams and completed corpus rows are preserved.
 - Next longest article review is native epic child #4720, session `technical-review-20261001-heavy-hit`, in the reused `AffineDrift-impact-review` worktree on `fix/heavy-hit-consistency-4720`, base `24cdba4d4`. Lease/presence through 2026-10-01 02:29 UTC. Complete article/includes read; two supplied-text Flash inventories and primary read scopes saved locally. Published sources are not edited or newly marked complete yet. Preserve parked provider synthesis #4253.
 
+- CI run 36796606743 exposed a generator test writing into the checkout before exact-byte content verification. All three write-mode trust-generator tests now use copied real inputs in temporary roots; production generators, published artifacts and evidence checksums are unchanged. Regression failed before isolation; all 32 affected tests and 180 content checks (four skips) now pass sequentially without restoring output between them. Combined-main full-suite rerun passed 6,078 tests, 29 skipped, 181 deselected, 92.95% coverage in 632.86 seconds.
+
 ## Preserved Prior Delivery Records
 
 Earlier pending statuses below are historical. Current delivery: #4718, #4712 and #4716 are merged; their leases are released. The radar appendix is in regular PR #4721.

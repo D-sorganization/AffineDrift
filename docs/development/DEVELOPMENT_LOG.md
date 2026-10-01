@@ -31,6 +31,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Distinguish a rigid-motion representation from observable information and model-based inference; correct frame, covariance, waveform, impact and output-definition claims. Preserve the rest of the book's review scope and the historical outline's provenance.
 - **Next step:** Source/render checkpoint `18c545c79` is pushed; final coverage and binding receipts are ready. Remote main #4718 is integrated; 105 targeted and 180 content checks pass, with four content skips. Regular PR #4721 is open with protected auto-merge armed; finish CI/merge. Full outline review remains #4719.
 
+- **CI repair:** CI run 36796606743 exposed a generator test writing into the checkout before exact-byte content verification. All three write-mode trust-generator tests now use copied real inputs in temporary roots; production generators, published artifacts and evidence checksums are unchanged. Regression failed before isolation; all 32 affected tests and 180 content checks (four skips) now pass sequentially without restoring output between them. Combined-main full-suite rerun passed 6,078 tests, 29 skipped, 181 deselected, 92.95% coverage in 632.86 seconds.
+
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
 - **State:** in_review

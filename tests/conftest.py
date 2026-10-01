@@ -7,7 +7,9 @@ network calls for unit-marked tests. See FLEET_TESTING_STANDARDS.md §5.
 from __future__ import annotations
 
 import os
+import shutil
 import socket
+from pathlib import Path
 
 # C-extension thread safety. Many "xdist worker crashed" failures come from
 # MKL/OpenBLAS forking under xdist. Pin to single-threaded for tests.
@@ -49,6 +51,25 @@ from src.core.contracts import (  # noqa: E402 -- reason: thread-safety env vars
 # three as private, so an SSRF guard that rejects private addresses would
 # reject the stub too and the tests would fail exactly as they do offline.
 PUBLIC_STUB_IP = "93.184.216.34"
+
+
+@pytest.fixture
+def trust_generation_root(tmp_path: Path) -> Path:
+    """Copy real generator inputs while keeping output writes out of the checkout."""
+    source_root = Path(__file__).resolve().parent.parent
+    for relative in (
+        "data/trust/claim_registry.json",
+        "data/research_protocols/public_summary.json",
+        "tests/fixtures/companion/manifest_v1_0_0_authoritative.json",
+        "data/trust/proximal_distal_falsification_atlas.json",
+        "schemas/evidence-presentation-v1.schema.json",
+        "schemas/reader-comprehension-study-v1.schema.json",
+        "schemas/research-artifact-release-v1.schema.json",
+    ):
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source_root / relative, target)
+    return tmp_path
 
 
 @pytest.fixture
