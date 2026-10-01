@@ -1,10 +1,11 @@
 ---
 title: "Proximal–Distal Claim, Alternative, and Falsification Atlas"
 author: "Dieter Olson"
-description: "A governed map from prominent proximal–distal claims to alternative mechanisms, discriminating measurements, uncertainty, and exact falsifiers."
+description: "A governed map of proximal–distal claims, competing explanations, comparison designs, and the limits of source-reported evidence and falsifiers."
 date: "Date unverified"
 date-source: "unverified"
 page-layout: article
+body-classes: falsification-atlas-page
 format:
   html:
     css: ../css/components/falsification-atlas.css
@@ -17,21 +18,175 @@ categories:
 This atlas is a compact reading aid for the full
 [Proximal-to-Distal Energy Transfer technical monograph](proximal_distal_energy_transfer/index.html).
 It does not replace the monograph, adjudicate scientific consensus, or turn a
-model result into a statement about golfers. Each claim, evidence state,
-uncertainty boundary, and falsifier below is projected verbatim from the pinned
-claim authority. Editorial mappings supply only the alternative question,
-discriminating measurement, and exact reading target.
+model result into a statement about golfers. Each source claim, reported status,
+model domain, uncertainty boundary, and source-stated falsifier below is projected
+verbatim from the pinned claim authority. The explanations here and the fields
+labeled **Editorial** interpret the questions and comparison designs; they do
+not change the imported adjudication.
 
 ::: {.callout-warning title="Interpretation Boundary"}
 The atlas supports critical review. It is not coaching, clinical, equipment,
-participant-validation, or causal authority. An unavailable workflow remains
-visible until UpstreamDrift publishes a qualified exact-commit companion
-record.
+participant-validation, or causal authority. **Unavailable** means no qualified
+workflow is registered for this atlas card. It does not mean no relevant
+software or study exists elsewhere. A later provider publication needs an
+explicitly verified registration before the atlas can present it as available.
 :::
 
 <noscript>
 This page is complete without JavaScript. All claims, alternatives, limitations,
 falsifiers, evidence paths, and links remain available in the static document.
 </noscript>
+
+## Read the Statuses Separately
+
+**Source-Reported Claim Status** belongs to the imported monograph's
+adjudication. A mathematical identity, one numerical program, and a hypothesis
+have different evidential scopes even when their cards look similar. The source
+revision identifies that monograph snapshot. **Critique Ledger Disposition**
+and **Readiness Record** come from their separately maintained records; a
+readiness entry based on manufactured data is not a human experiment.
+**Registered Validation Release** and **Registered Workflow** report what this
+atlas has qualified for use, not whether the source proposition is true.
+
+For example, the timing card reports differences from one 30 ms model branch:
+continuing rather than removing the selected torso, bilateral-arm, or
+bilateral-wrist command changes the model's delivery-speed endpoint by
+approximately $+1.223$, $-1.364$, and $+1.818\,\mathrm{m/s}$, respectively.
+These are three separate branch comparisons. These rounded values match the
+[registered artifact at the imported revision](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data/rotating_base_torso_velocity_study.json).
+Reading that artifact verifies the reported values; it does not rerun the
+simulation or validate a golfer. In the wrist-command comparison, delivery-speed
+and contact-work differences even have opposite signs, so an increase in one selected endpoint is not a
+complete account of energy transfer.
+
+## Match the Question to the Comparison
+
+### A Common Endpoint Does Not Specify an Internal History
+
+Matching one scalar, such as clubhead speed, leaves other terminal-state
+components and earlier forces unconstrained. This allows different histories
+to have the same selected outcome; it does not prove that every proposed
+history is dynamically or physiologically feasible. Declare the endpoint map,
+event and tolerance, then compare internal states, boundary work, loads and
+robustness under the same definitions.
+
+A same-state intervention asks a different question. It changes a specified
+input after the model reaches a shared complete state. Activation, deformation,
+and other memory variables must be included if the model has them. Removing a
+command is not generally the same as instantly removing muscle or contact
+force. Subsequent feedback responses belong to the declared intervention
+policy; they must not be mistaken for independently held controls.
+
+### Equal Force and Equal Wrench Are Different Conditions
+
+For ideal point-force vectors $F_1,F_2$ applied at position vectors $r_1,r_2$
+relative to one reference point, the total force and moment vectors are
+
+$$
+\begin{aligned}
+F&=F_1+F_2,\\
+M&=r_1\times F_1+r_2\times F_2.
+\end{aligned}
+$$
+
+Adding $d$ to one force and subtracting it from the other keeps $F$ fixed but
+changes the moment by $(r_1-r_2)\times d$. The **complete wrench** is unchanged
+only if that moment increment also vanishes, for example when $d$ lies along
+the contact-separation line. Intrinsic contact moments, friction, unilateral
+contact and force limits change the admissible family; they must be specified.
+
+For the unrestricted point-force example with contacts at $\pm0.2\,\mathrm{m}$
+on the $x$ axis, opposite $7\,\mathrm{N}$ increments along $x$ preserve the
+wrench. The same increments along $y$ change its $z$ moment by
+$-2.8\,\mathrm{N\cdot m}$ when applied positively at the negative-$x$ contact.
+This is a model identity, not a measured hand-force distribution.
+
+An internal force pair can have zero total power on an ideal rigid club while
+the hands still carry different loads. Zero rigid-body work does not establish
+zero muscle effort, tissue deformation, or metabolic cost. Bilateral wrench
+sensors constrain contact allocation, but do not by themselves identify muscle
+coordination. Wrench and velocity quantities must use compatible reference
+points, frames and signs; [the virtual-power derivation in Modern Robotics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-2-statics-of-open-chains/)
+explains their dual mapping.
+
+### Coordinate Changes Preserve Physical Pairings, Not Arbitrary Fits
+
+Write a force-only endpoint fit as $\tau=J^TF+r$, retaining the generalized
+residual $r$. For an invertible coordinate change $q=S z$,
+
+$$
+\begin{aligned}
+\tau_z&=S^T\tau_q,\\
+J_z&=J_qS,\\
+\tau_q^T\dot q&=\tau_z^T\dot z.
+\end{aligned}
+$$
+
+The power pairing is unchanged. Unweighted least squares in the two coordinate
+systems need not choose the same fitted $F$: scaling a generalized coordinate
+changes the implicit residual weighting. In a nondimensionalized example with
+two generalized coordinates and a scalar fitted force, set $J^T=(1,1)^T$ and
+$\tau=(1,0)^T$. The least-squares force is $0.5$.
+With $S=\operatorname{diag}(2,1)$ it becomes $0.8$ if the new residual is again
+unweighted; transforming the residual metric to
+$\operatorname{diag}(1/4,1)$ restores $0.5$.
+
+Thus coordinate comparison needs the same physical trajectory, consistent
+covector and Jacobian transformations, and declared metrics. If the force fit
+has multiple minimizers, an additional minimum-norm choice selects among them;
+that choice is an allocation rule, not evidence that a biological system uses it.
+Reconstruction closure alone does not identify the physical wrench. Power and
+work also depend on the observer: compare them in the same observer frame;
+do not confuse coordinate invariance with observer independence. Likewise,
+projecting along a path tangent $v/\|v\|$ requires nonzero velocity; at zero
+speed a separate convention is needed.
+
+### Support and Shaft Conditions Belong Inside the Energy Account
+
+A stationary ideal support can exchange momentum while doing no work at its
+fixed contact. A prescribed moving base can exchange energy through its
+reaction force and velocity. Replacing either with a finite-mass dynamic base
+changes the equations and admissible states. A fair comparison maps compatible
+initial conditions and accounts for all boundary power; it does not assume
+that changing the base automatically eliminates a negative club couple.
+
+Internal storage matters as well as boundary power. For a linear spring with
+displacement $y$ in metres and stiffness $k>0$ in $\mathrm{N/m}$,
+$U=ky^2/2$ and $\dot U=ky\dot y$. The same nonzero deformation can be storing
+or releasing energy depending on the sign of $y\dot y$. Peak stored energy therefore does
+not specify the timing, destination or usefulness of returned energy. Damping,
+actuation, contact, inertia and the selected endpoint all enter the comparison.
+
+Use a **fixed-command comparison** to ask how outcomes change, or a
+**matched-delivery comparison** to ask how required inputs and losses differ.
+Keep the endpoint definition and event rule consistent. Imposing both identical
+commands and identical outcomes may leave no feasible matched pair; forcing an
+endpoint by an external constraint also changes the energy account. A rigid
+reference model must state which masses, inertias and other properties were
+preserved when compliance was removed.
+
+## Interpret the Source-Stated Falsifiers Carefully
+
+The source uses *falsifier* for several kinds of tests. Reconstruction or
+convergence failures challenge a derivation or calculation. Different
+same-state branch results challenge a registered numerical result. A sentence
+that prescribes coaching breaches an editorial boundary. These are useful
+checks with different meanings; passing them is not empirical confirmation.
+
+Some imported wording needs further operational definition. In `PD-CLAIM-131`,
+a successful simpler policy in a particular human study would challenge the
+scope of the modeling guidance, not prove that all internal mechanisms are
+identifiable from one endpoint. In `PD-CLAIM-068`, collecting extra contact
+measurements does not refute underdetermination from the net wrench *alone*.
+Unique identification requires assumptions or measurements that remove the
+admissible nullspace. In `PD-CLAIM-144`, “reject the relationship” is not a
+complete experiment: specify the relationship, comparison, measurable effect,
+uncertainty and rejection criterion before collecting data.
+
+The cards retain those source statements for traceability. The editorial
+comparisons clarify what a useful test would need; they do not silently upgrade
+the imported claims or imply that a proposed experiment has occurred. Evidence
+artifact identifiers name the provider's files or external references and may
+require inspection at the linked source revision.
 
 {{< include _generated/proximal-distal-falsification-atlas.qmd >}}

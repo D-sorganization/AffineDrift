@@ -8,15 +8,9 @@ from pathlib import Path
 
 import jsonschema  # type: ignore[import-untyped]
 
-from src.affine_control.research_releases.validator import compute_file_sha256
 from src.affine_control.research_releases.vocabulary import (
     RELEASE_AUTHORITY_BOUNDARY,
-    ExecutionReport,
-    IndependentReviewRecord,
-    ReleaseArtifact,
-    ReleaseLevel,
     ResearchReleasePackage,
-    UncertaintyBreakdown,
 )
 
 logger = logging.getLogger(__name__)
@@ -24,86 +18,11 @@ logger = logging.getLogger(__name__)
 
 def build_authoritative_releases(repo_root: Path) -> list[ResearchReleasePackage]:
     """Build authoritative list of governed research release packages."""
-    releases: list[ResearchReleasePackage] = []
-
-    # 1. Proximal-Distal Falsification Atlas Release
-    atlas_path = repo_root / "data/trust/proximal_distal_falsification_atlas.json"
-    if atlas_path.is_file():
-        atlas_hash = compute_file_sha256(atlas_path)
-        atlas_size = atlas_path.stat().st_size
-    else:
-        atlas_hash = "0" * 64
-        atlas_size = 0
-
-    p1 = ResearchReleasePackage(
-        release_id="rel-proximal-distal-falsification-001",
-        release_level=ReleaseLevel.QUALIFIED.value,
-        title="Proximal-Distal Falsification & Energy Transfer Release",
-        protocol_id="ad-protocol-proximal-distal-001",
-        git_commit="4d6d46983794d2fa8c130ef1d48c8b41bb164104",
-        repository_url="https://github.com/D-sorganization/AffineDrift",
-        environment_pins={
-            "python": "3.12.14",
-            "quarto": "1.8.27",
-            "upstream_drift_release": "1.0.0",
-        },
-        license="MIT",
-        artifacts=(
-            ReleaseArtifact(
-                path="data/trust/proximal_distal_falsification_atlas.json",
-                sha256=atlas_hash,
-                byte_size=atlas_size,
-                kind="falsification-atlas",
-                description="Atlas of 10 proximal-distal claims and counterexamples.",
-            ),
-        ),
-        analysis_execution=ExecutionReport(
-            command="python -m scripts.generate_proximal_distal_falsification_atlas",
-            exit_code=0,
-            runtime_seconds=1.45,
-            outputs_produced=(
-                "data/trust/proximal_distal_falsification_atlas.json",
-                "_includes/generated/proximal-distal-falsification-atlas.qmd",
-            ),
-        ),
-        uncertainty_and_limitations=UncertaintyBreakdown(
-            measured_quantities=(
-                "Clubhead speed boundary (m/s)",
-                "Segment angular velocity profiles (rad/s)",
-            ),
-            modeled_quantities=(
-                "Rigid body double pendulum kinetic energy distribution (J)",
-                "Joint work transfer rate (W)",
-            ),
-            assumed_quantities=(
-                "Planar swing trajectory",
-                "Frictionless wrist hub revolute assumption",
-            ),
-            unavailable_quantities=(
-                "In vivo physiological tendon elasticity",
-                "Direct muscle activation electromyography",
-            ),
-            known_limitations=(
-                "Valid for planar modeled mechanics only; does not infer coaching advice.",
-            ),
-        ),
-        independent_review=IndependentReviewRecord(
-            reviewer_id="reviewer-biomech-independent-01",
-            review_scope="Equations of motion, energy conservation proofs, and dry-run tests.",
-            conflict_of_interest_statement="Reviewer declares no conflicts of interest.",
-            disposition="approved",
-            findings=(
-                "Analytical energy equations verified against symbolic algebra.",
-                "Deterministic test suite characterization passes with zero failures.",
-            ),
-            verification_commit="4d6d46983794d2fa8c130ef1d48c8b41bb164104",
-        ),
-        authority_boundary=RELEASE_AUTHORITY_BOUNDARY,
-        released_on="2026-08-30",
-    )
-    releases.append(p1)
-
-    return releases
+    # Issue #4749: the former atlas entry supplied unsupported execution/reviewer
+    # metadata and rehashed current bytes under a fixed historical pin.
+    # A file's existence is not a release attestation. Keep this registry empty
+    # until an explicit, revision-bound execution and review record is adopted.
+    return []
 
 
 def render_releases_summary(releases: list[ResearchReleasePackage]) -> str:
@@ -117,6 +36,14 @@ def render_releases_summary(releases: list[ResearchReleasePackage]) -> str:
         "| Release ID | Maturity | Protocol Scope | Pinned Commit | Verification |",
         "|---|---|---|---|---|",
     ]
+
+    if not releases:
+        return (
+            "\n".join(lines[:5])
+            + "\nNo verified research release is registered. The atlas remains a reading aid; "
+            "its file and synthetic checks do not establish measured results, independent "
+            "review, or a qualified workflow.\n\n" + f"*{RELEASE_AUTHORITY_BOUNDARY}*\n:::\n"
+        )
 
     for rel in releases:
         rev = rel.independent_review
