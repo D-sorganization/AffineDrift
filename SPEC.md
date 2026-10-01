@@ -526,3 +526,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-01 | #4598 | Remove legacy cruft files and directories (legacy-pages/, _includes/home-sidebar-content.html, js/pdf.js, listings.json, preview-articles.sh, start-preview.sh, duplicate .Jules/) and update root hygiene checks. |
 | 2026-10-01 | #4694 | Enforce scientific claim-audit coverage in PR CI e2e-tests when site-facing files are rendered, preventing un-audited routes from passing PR CI and breaking Deploy Website on main. |
 | 2026-10-01 | #4502 | Align navigation labels with page titles and add contract test (WEB-02.8). |
+| 2026-10-01 | #4501 | Drive Article Index and category listings from front matter with controlled vocabulary validation (WEB-02.7). |
