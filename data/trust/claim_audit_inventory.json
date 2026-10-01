@@ -12504,7 +12504,7 @@
         {
           "claim_ids": [],
           "critique_ids": [],
-          "disposition": "open",
+          "disposition": "corrected",
           "evidence_paths": ["pages/accessibility.qmd"],
           "evidence_sha256": {
             "pages/accessibility.qmd": "cdbbc7781d6f4ee1160ecb08251a225acab86c65ff881ff1de792fd82b77d910"
@@ -12512,7 +12512,8 @@
           "finding_id": "ad-finding-accessibility-closed-tracker",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4691",
           "priority": "p3",
-          "rationale": "No scientific claim. The 247-violation / 163-of-238-route figures match #4139 and the report-only axe policy is accurate, but the page cites the closed #4139 as the live remediation tracker."
+          "rationale": "No scientific claim. The page now says #4139 closed as remediated on 2026-09-06 and that the CI axe check fails the build on serious or critical findings (#4561, PR #4656), matching ci-standard.yml's --axe fail; a test ties the wording to the workflow mode.",
+          "verification_commit": "492e7a6e84ef003d240f22c028d5d25d2a7cf72d"
         }
       ],
       "review": {
@@ -13204,7 +13205,7 @@
         {
           "claim_ids": [],
           "critique_ids": [],
-          "disposition": "open",
+          "disposition": "corrected",
           "evidence_paths": ["pages/privacy-policy.qmd"],
           "evidence_sha256": {
             "pages/privacy-policy.qmd": "33a2a7e5045d050ac7dcce5034ffea1466972a9f2bcb43cedb364961602e7d66"
@@ -13212,7 +13213,8 @@
           "finding_id": "ad-finding-privacy-csp-image-scope",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4691",
           "priority": "p3",
-          "rationale": "No scientific claim. Storage, service-worker, analytics and embed statements match the code; the statement that the CSP limits external domains is broader than img-src, which allows any HTTPS host."
+          "rationale": "No scientific claim. The CSP sentence now names what the policy restricts (scripts, styles, fonts and frames, to a short allowlist) and states that img-src permits images from any HTTPS host, matching _includes/site-head.html.",
+          "verification_commit": "0864602de9582854fe45394423676b9a3103c8ca"
         }
       ],
       "review": {
@@ -13757,15 +13759,16 @@
         {
           "claim_ids": [],
           "critique_ids": [],
-          "disposition": "open",
+          "disposition": "corrected",
           "evidence_paths": ["resources/on-ramp-paths.qmd"],
           "evidence_sha256": {
-            "resources/on-ramp-paths.qmd": "2a195e5813a62e25c6cfe2a08d33b4330c23b908722fb86554656e5a124eb7fc"
+            "resources/on-ramp-paths.qmd": "20e42b4ee2fd53bfb8b4ae0b9153317e6be0779ac32a9f0b2287ab63eeed0d40"
           },
           "finding_id": "ad-finding-on-ramp-three-hour-totals",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4695",
           "priority": "p3",
-          "rationale": "Quoted phrases and answers match their linked source pages (Theory Parts 1, 2 and 5, the ZTCF identifiability critique, Critiques index, About, Model Ladder, the 70-record program directory, NOTATION.md and Chapter 28), but four of the eight '3 Hours' on-ramps sum to 120-140 minutes of listed study time."
+          "rationale": "Quoted phrases and answers match their linked source pages; all eight personas' 3-hour on-ramps have been rebalanced to sum to 180 minutes of study time, matching the 3 Hours heading and verified by tests/test_on_ramp_paths.py.",
+          "verification_commit": "e43e104c224ff92de2ed9e18d93ef8c55a557533"
         }
       ],
       "review": {
@@ -13799,7 +13802,7 @@
           "models/model-ladder.qmd": "d1f7ecd021945fe9cffe7175f6aeba28670f6b619489762da2830169efdd7161",
           "models/programming/programs.qmd": "53443a192f18a9477e4e4a45db16faee983a10cf4618f9a627dcd6370bb1cf88",
           "pages/about.qmd": "95b1846d4dac0b9f0662b0781ce3415e155b699c9831834b32409c102de3cbb2",
-          "resources/on-ramp-paths.qmd": "2a195e5813a62e25c6cfe2a08d33b4330c23b908722fb86554656e5a124eb7fc"
+          "resources/on-ramp-paths.qmd": "20e42b4ee2fd53bfb8b4ae0b9153317e6be0779ac32a9f0b2287ab63eeed0d40"
         },
         "review_commit": "799338321bb0231598d2bd44321fc648fc86329d",
         "reviewed_on": "2026-09-30",
