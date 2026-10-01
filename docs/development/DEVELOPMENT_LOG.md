@@ -26,9 +26,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** `fix/heavy-hit-consistency-4720`
 - **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (13 focused checks pass; initial HTML renders 138 math expressions/23 displays; six wide equations reformatted, final visual review pending)
+- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
 - **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
-- **Next step:** Final browser/repository validation, committed evidence binding, main integration, and regular protected PR delivery.
+- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Finish content checks, push regular PR and complete protected delivery. Goal active; 138 indexed full reviews remain.
 
 
 
