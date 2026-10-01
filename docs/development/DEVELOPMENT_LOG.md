@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4751 · Shaft Memory Technical Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4751 (epic #4009)
+- **Branch:** fix/shaft-memory-rigor-4751
+- **Paths:** articles/proximal_distal_companion/chapters/ch15_shaft_memory.qmd, scripts/shaft_energy_illustration.py, tests/test_shaft_memory_review.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (63 integrated;12 gates;Ruff/Black834;final browser4/4 and axe;218-page PDF/parity;full6385 pass/4 concurrent-artifact failures, all affected reruns pass)
+- **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Preserve41 historical findings; seven new findings await exact source binding.
+- **Next step:** Commit stable source checkpoint, bind seven findings preserving41 historical records, create regular protected PR and verify delivery.
+
 ### DL-#4749 · Falsification Atlas Technical Review
 
 - **State:** in_review

@@ -12,7 +12,13 @@ survives: flexibility adds state. Treating the club as perfectly rigid may be
 adequate for one question and misleading for another, especially when late
 timing, grip moment, and impact-window energy are under study.
 
-![A Flexible Shaft Accepts Power, Stores Elastic Energy, and Returns Part of It Later While Damping Removes Some.](figures/proximal_distal_companion/fig_companion_shaft_storage.svg){#fig-lay-shaft-storage width=96% fig-alt="A timeline shows grip power bending a shaft, elastic energy rising, later return toward the clubhead, and a smaller branch lost through damping."}
+![A Prescribed Spring–Mass–Damper Motion Separates Stored Energy From Input Power and Damping Loss. This Is an Illustrative Energy Ledger, Not a Shaft Simulation.](figures/proximal_distal_companion/fig_companion_shaft_storage.svg){#fig-lay-shaft-storage width=96% fig-alt="Two panels show elastic and kinetic energy in joules, then signed drive power, damping loss and energy rate in watts during one prescribed displacement cycle."}
+
+The illustration prescribes $x=A\sin^2(\pi t/T)$ with $A=0.025$ m,
+$T=0.6$ s, $m=0.2$ kg, $k=80$ N/m and $c=0.8$ N s/m. The required drive
+force is $m\ddot x+c\dot x+kx$, so input power minus $c\dot x^2$ equals
+the rate of change of kinetic plus elastic energy. Negative drive power means
+energy returns to the actuator; it does not label energy delivered to a clubhead.
 
 ## How the Mechanism Works
 
@@ -23,15 +29,21 @@ increase $U_s$; later shaft motion can return energy to rigid-body coordinates.
 
 ### Timing, Not Free Speed
 
-A spring conserves energy only in an ideal undamped model. It cannot create net
-energy. Its value is timing: accepting work when the input is available and
-returning it when geometry or task makes that energy useful. Damping and impact
-can prevent full return.
+An ideal passive spring stores and releases energy without creating it. Its
+strain energy is not constant while it exchanges work with the rest of the
+system. For a fixed linear stiffness $k>0$, $\dot U_s=ks\dot s$: the same
+nonzero deformation can be storing or releasing energy. Mechanical energy is
+conserved only for the complete conservative system with no net boundary work.
+Damping converts mechanical energy to heat; contact can transfer energy to the
+ball or other bodies.
 
-In the matched rigid-flexible reference, flexibility changes delivery timing
-modestly rather than producing a magical speed reservoir. The work-energy ledger
-tracks grip input, gravity, damping, stored energy, and rigid kinetic energy so
-any benefit has a source.
+The potentially useful feature is timing: accepting work and returning it when
+the geometry and task make the transfer useful. That usefulness is an outcome
+to test, not a property guaranteed by elasticity.
+
+In a rigid-flexible comparison, the work-energy ledger must track boundary
+input, gravity, damping and all retained kinetic and strain energy so that any
+change in the specified delivery outcome has an accounted source.
 
 ### One Mode Versus a Distributed Shaft
 
@@ -40,11 +52,13 @@ vibration patterns. The first mode may capture most low-frequency deformation;
 higher modes matter when excitation is rapid or spatially complex. A one-mode
 model is efficient but should be compared with a higher-order beam reference.
 
-The technical study assembles an Euler-Bernoulli beam with tip mass and rotary
+An isolated structural study assembles an Euler–Bernoulli beam with tip mass and rotary
 inertia, computes modal frequencies, identifies synthetic stiffness and mass,
-and compares reduced responses. It then couples several modes into forward
-two-hand dynamics. Mode truncation is judged by common wrench, power, energy,
-and trajectory errors, not by appearance alone.
+and compares reduced responses. A separate study transports bending modes into
+forward two-hand dynamics. Its baseline fails its declared small-deflection
+screen, as discussed below; numerical closure does not remove that failure.
+Mode truncation should be judged by specified load, power, energy and trajectory
+errors, not by appearance or frequency agreement alone.
 
 ### Excitation Decides Required Complexity
 
@@ -58,10 +72,25 @@ input and observable are sensitive to them.
 
 ### Interface Power Connects Hand and Shaft
 
-At the grip, the equivalent force and moment act on a moving, rotating, deforming
-interface. Consistent power combines translational force power, rotational moment
-power, and modal generalized force power. If those terms are omitted or double
-counted, stored energy appears from nowhere.
+For an ideal point load $F$ at a deforming shaft station, write its material-point
+velocity as $v=V+\omega\times r+B\dot\eta$. Here $V$ and $\omega$ describe
+the reference motion, $r$ is the current offset, and $B\dot\eta$ is the relative
+deformation velocity. In one observer frame the same power can be written as
+
+$$
+\begin{aligned}
+P&=F\cdot v\\
+ &=F\cdot V+(r\times F)\cdot\omega\\
+ &\quad +(B^TF)\cdot\dot\eta.
+\end{aligned}
+$$
+
+These are two representations of one port. Adding the last modal term to
+$F\cdot v$ would count deformation power twice. Applied contact moments require
+their own compatible angular-velocity decomposition. A resultant wrench alone
+represents all contact power only when the interface motion is rigid, or the
+unrepresented deformation power vanishes. Distributed tractions can do work on
+deformation even when their net wrench is zero.
 
 The flexible model separates grip moment from internal shaft moment. A negative
 grip couple can coexist with shaft energy release and positive club kinetic-
@@ -76,14 +105,18 @@ impact prediction. A distributed shaft needs measured stiffness, damping,
 geometry, clubhead inertia, grip conditions, and timestep resolution before it
 becomes equipment calibration.
 
-**Model Result:** Reduced and distributed shaft tiers pass declared modal,
-work-energy, and timestep checks for synthetic reference parameters. They show
-conditional timing and coupling effects.
+**Model Result:** The isolated beam and articulated first-mode atlas report
+bounded synthetic checks. The separate planar forward-modal baseline retains
+numerical coupling evidence but fails its small-deflection screen. These are
+different models and acceptance results, not interchangeable validation claims.
 
-**Human Evidence:** Shaft deformation can be measured with strain or high-speed
-  motion, but the current release does not identify a participant's shaft or grip
-  properties. Measured stiffness effects also depend on club presentation and
-  wrist kinematics [@betzler2012].
+**Human Evidence:** Betzler and colleagues tested 20 golfers with two clubs
+designed to differ in shaft bending stiffness. The less stiff club produced a
+small average clubhead-speed increase, alongside changes in shaft recovery and
+grip motion; the authors judged the overall effects small for the shafts tested
+[@betzler2012]. This does not identify a universal fitting rule or calibrate the
+synthetic models here. Strain or optical measurements need their own calibration
+and uncertainty treatment.
 
 **Hypothesis:** Shaft state may mediate how a late negative grip couple and
 proximal power coexist, returning stored energy while the grip channel opposes
@@ -95,7 +128,8 @@ changed.
 
 ### What the Shaft Adds to the State
 
-A rigid club can be described by position and velocity. A flexible shaft needs
+A rigid club needs pose, including orientation, and compatible linear and angular
+velocity. A flexible shaft needs
 additional deformation coordinates and their rates. A one-mode model might use
 one bending amplitude; a distributed beam uses many modes or elements. These
 states carry memory because current shaft force depends not only on grip and
@@ -103,14 +137,19 @@ clubhead position but also on how the shaft is bent and moving.
 
 That memory complicates matched-state comparisons. Two swings with identical
 grip and clubhead pose can have different shaft curvature or modal velocity.
-Removing a torque from those apparently identical frames can produce different
-responses. A serious flexible-club study therefore records and matches the
-complete shaft state, not just rigid coordinates.
+Removing a command from those apparently identical frames can produce different
+responses. Within the same flexible model, a same-state intervention must match
+the complete state, including activation or contact-memory variables if present.
+Between rigid and flexible models, the state spaces differ: declare a mapping
+of common pose and velocity, the elastic initial state, mass properties, contact
+geometry and energy. Equal rigid coordinates alone do not establish equal total
+energy or a compatible constrained state.
 
 ### Loading, Storage, and Return
 
-When grip and clubhead motion bend or twist the shaft, hand and inertial forces
-do work that increases strain energy. Damping turns some mechanical energy into
+When relative motion bends or twists the shaft, load power can increase strain
+energy. Inertial coupling redistributes energy; it is not a separate external
+energy supply. Damping turns some mechanical energy into
 heat. As deformation changes, the shaft can return energy to the rigid motion
 of grip and head. Return is not guaranteed to occur in the useful direction or
 at the useful time; phase matters.
@@ -130,9 +169,14 @@ damping and a changing boundary, and release timing depends on natural
 frequencies, mode shapes, and excitation history.
 
 If the downswing duration aligns poorly with a mode, extra bending can return
-too late or increase presentation variability. A stiffer shaft stores less for
-the same load but responds faster; a more flexible shaft stores more but changes
-geometry and phase. There is no universal “more flex equals more speed” rule.
+too late or increase presentation variability. A linear spring in static
+equilibrium stores $F^2/(2k)$ under a prescribed force, so increasing $k$ reduces
+storage in that comparison. At fixed displacement it stores $kx^2/2$, so
+increasing $k$ increases storage instead. Dynamic loading also depends on inertia,
+damping and drive frequency: resonance can reverse a simple stiffness trend.
+Increasing stiffness raises $\sqrt{k/m}$ only with the same effective mass and
+boundary model; it does not guarantee a faster useful response. There is no
+universal “more flex equals more speed” rule.
 
 ### Interaction With the Negative-Couple Mechanism
 
@@ -142,8 +186,9 @@ state. A negative contact couple may partly regulate deformation, or it may be a
 reaction to deformation generated elsewhere. Causal separation requires
 killswitches and energy accounting in the flexible model.
 
-Compare rigid, one-mode, and distributed-shaft rungs under equivalent initial
-conditions. Does the late couple retain sign? Does its timing shift with modal
+Compare rigid, one-mode, and distributed-shaft rungs with an explicit initial-
+state mapping and the same endpoint definition. Does the late couple retain
+sign? Does its timing shift with modal
 frequency? Does a speed benefit remain after shaft strain energy and damping are
 accounted for? If a mechanism vanishes in the flexible rung, that is important
 evidence about the rigid approximation.
@@ -158,16 +203,19 @@ component crosses zero, or vice versa. Each state requires its own measurement.
 The phenomenological dead zone should not absorb shaft dynamics implicitly. If
 shaft deformation is modeled, transmission parameters and modal states must be
 identifiable enough to avoid two mechanisms explaining the same delay. Ablation
-tests—rigid shaft, zero dead zone, altered damping—help show which mechanism
-actually produces the result.
+tests—rigid shaft, zero dead zone, altered damping—show which declared model
+mechanism changes the result. They do not by themselves identify the mechanism
+in a golfer; distinct models can still fit the same observations.
 
 ### Model Validation Ladder
 
 Begin with static deflection under known loads. Continue with free-vibration
 frequency and damping tests, then dynamic boundary excitation. Verify modal
 convergence and timestep stability. Compare strain, tip displacement, and
-energy balance with an independent beam or finite-element reference. Only then
-embed the shaft in the full swing.
+energy balance with an independent beam or finite-element reference. These are
+verification steps. After coupling to the swing, repeat the power, convergence
+and deformation-domain checks: a sound isolated beam can be driven outside its
+valid range by the coupled model. Experimental validation is a separate step.
 
 Human validation uses instrumented clubs with calibrated strain or optical
 shape measures. Club properties should be measured, not selected merely from a
@@ -189,16 +237,26 @@ ladder has found the boundary where the simpler explanation must be revised.
 
 ### Reader Lab: Watch Phase Change the Answer
 
-Excite a calibrated one-mode shaft with the same peak handle force at three
+Excite a declared one-mode shaft model with the same peak handle force at three
 different times. Plot deformation, modal velocity, strain energy, grip power,
 head power, and damping loss. The same force magnitude can store or return
-different energy because phase and boundary motion differ.
+different energy because phase and boundary motion differ. Equal peaks do not
+match force history, impulse or work; report those differences too.
 
-Copy two states with identical rigid club pose but opposite modal velocity.
-Apply the same future hand wrench. Clubhead response should differ. Then set
-shaft deformation and modal velocity to zero while retaining rigid state; this
-ablation measures what shaft memory contributes under the model. It is an
-artificial counterfactual, not an available human action.
+Copy two states with identical rigid pose and velocity but opposite modal
+velocity. Apply the same future hand wrench and test whether the chosen
+clubhead observable differs. Symmetry, mode coupling or observation timing can
+hide a state difference; a different internal state does not guarantee a
+different measured endpoint.
+
+Next, reset shaft deformation and modal velocity to zero while retaining the
+rigid coordinates and rates. This is a model intervention with a new initial
+condition. Record its energy change, momentum change and any constraint or
+contact projection. Removing strain energy does not necessarily reduce total
+energy: rigid–modal cross terms in kinetic energy can change either way. The
+reset requires explicit work and impulse bookkeeping before interpreting the
+subsequent trajectory. It is not an available human command or a measured
+causal contribution in a golfer.
 
 Repeat the negative-couple branch across stiffness and damping. Report whether
 couple sign, onset, work, and terminal speed remain. A result that survives
@@ -223,69 +281,109 @@ state—rather than a preferred story.
 At minimum, publish the measured or declared club properties, modal frequencies
 and damping, deformation and modal velocity, grip and head power, strain-energy
 history, damping loss, and work-energy residual. Show timestep and modal
-convergence. Compare rigid and flexible branches from matched state.
+convergence. Declare the rigid-to-flexible state mapping and distinguish fixed-
+input comparisons from comparisons selected to match an outcome.
 
 Then qualify the conclusion. A synthetic property sweep shows mechanical
-possibility and sensitivity. A calibrated participant club supports prediction
-for that equipment. A replicated held-out result supports a broader statement.
+possibility and sensitivity. A calibrated participant club permits predictions
+for that equipment; held-out observations test their accuracy. Replication can
+extend support only across the equipment, golfers and conditions actually tested.
 Skipping these levels turns shaft “memory” into a metaphor too broad to fail.
 
 ### The Registered Test Says the Benefit Is Not Universal
 
-That ladder has now been climbed one full rung, and the answer is worth stating
-plainly because it contradicts the comfortable version of the story.
+The [articulated shaft atlas](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/docs/research/proximal_distal_energy_transfer/data/articulated_shaft_atlas.json)
+tests a passive synthetic shaft with the first bending shape in each of two
+orthogonal planes, plus torsion. These are not the first and second bending
+frequencies in one plane. Bending is anchored to a 24-element reference at
+5.2399 Hz; torsion is declared at 70.1260 Hz. Twelve initial states, four
+activations (rigid, bending, torsion, coupled), two velocity branches, two
+timesteps and two engines give **384 trajectories**. The motion starts from
+initial conditions, with no active driver or joint torque. Zero modal coordinates
+and rates give a common initial energy in this declared comparison. The velocity
+branches add $\pm0.05$ m/s to club-frame $x$ translation; the timesteps are
+0.25 and 0.125 ms, using MuJoCo and Pinocchio. Five tension-only spring–damper
+stations per hand supply grip loads and grip dissipation. These are synthetic
+contact elements, not measured fingers or pressure distributions.
 
-A passive shaft — two first bending modes plus tip twist, bending anchored to a
-24-element beam reference at 5.2399 Hz and declared torsion at 70.1260 Hz — was
-added to the articulated model and run for 384 trajectories against a rigid
-comparator from matched states. Deflections stayed small, as the linear-domain
-screen requires: at most 1.696 mm of tip bend and 0.00186 rad of twist. Two
-coarse-timestep probes that left the linear domain were excluded and reported
-rather than quietly dropped.
+The observed maxima are 1.696 mm of tip bend and 0.00186 rad of twist; these are
+results, not the acceptance thresholds. The configured limits are 5% of the
+1.08 m shaft length (54 mm) and 10 degrees of twist (about 0.175 rad). Two
+additional coarse-timestep probes that left the linear domain were excluded and
+reported separately; they do not reduce the accepted 384-trajectory grid.
 
-Then the honest comparison. Only **126 of 384** coupled-versus-rigid cells match
-within 5% on both peak load and dissipated work — comparisons across unmatched
-cells are not like-for-like and are set aside. Among the matched cells, the final
-club-speed difference runs from **$-0.0285$ to $+0.0212$ m/s**. Both signs
-appear. Sometimes the flexible shaft is slower.
+The coupled-versus-rigid comparison uses four horizons: 4, 10, 25 and 50 ms.
+Its **384 comparison cells** count twelve states, two velocity branches, two
+timesteps, two engines and four horizons. This happens to equal the trajectory
+count, but counts something different. Repeated horizons, engines and timesteps
+are not independent golfer trials.
 
-So "the shaft gives you speed" is **rejected as a universal rule** at this tier.
-Not disproved for every club, golfer, or delivery — rejected as something you can
-assume. Whether a particular shaft helps a particular swing is a question that
-still needs matched states, a closed energy ledger, and calibrated equipment.
+Only **126 of 384** comparison cells pass the post-registration load-and-work
+matching rule: 28 at 4 ms, zero at 10 ms, 40 at 25 ms and 58 at 50 ms. For each
+quantity $a,b$, the rule is
 
-Two limits keep this result in its lane. The structural numbers are synthetic
-references, not a calibrated club: a committed six-mode beam disagrees materially
-more under short high-frequency loading than under slow loading, so short sharp
-events are exactly where one mode is least trustworthy. And ground reaction and
-free moment are absent from this tier, so nothing here speaks to what the feet
-contribute.
+$$
+\frac{|a-b|}{\max\{f,(|a|+|b|)/2\}}\leq0.05.
+$$
+
+The floor $f$ is 1 N for the largest station-force norm over the horizon and
+$10^{-6}$ J for grip-plus-shaft damping loss. When the mean magnitude falls
+below its floor, the absolute tolerances are 0.05 N and $5\times10^{-8}$ J,
+respectively. These compare dissipation, not total grip boundary work.
+Selecting cells by these two outcomes is a descriptive
+comparison; it does not match every load history or identify a causal shaft
+effect in a golfer.
+
+Across those selected cells, the reported coupled-minus-rigid speed difference is
+**$-0.0285$ to $+0.0212$ m/s**. Both signs appear. Crucially, the
+[recording code](https://github.com/D-sorganization/UpstreamDrift/blob/a1a613999eb0c744da96caa040941955eb210a21/scripts/research/proximal_distal_energy/articulated_shaft_atlas.py)
+uses the norm of the club-frame translation rates, with origin at the modeled
+grip mass. This omits the rotational
+and deformation contributions to clubhead-point velocity. It is measured at
+fixed horizons, not at impact. Sometimes the flexible shaft is slower **in this
+translation-speed observable**; the quoted interval is not an impact clubhead-
+speed interval. At 50 ms alone, the matched range is $-0.0208$ to $+0.00634$ m/s.
+
+A positive effect on this observable is therefore **rejected as a universal
+rule** within the registered synthetic comparison. A human clubhead-speed or
+equipment-fitting conclusion requires a different endpoint and calibrated data.
+The atlas also omits ground reaction and free moment, so it cannot establish a
+contribution from the feet.
+
+Two other studies answer different questions. In the isolated beam reference,
+one-mode versus six-mode tip-displacement RMS disagreement rises from about
+$0.69$ micrometres under an 80 ms pulse to $41$ micrometres under a 4 ms pulse
+with a different force-and-moment input. That comparison motivates checking
+excitation and truncation; it is not a universal frequency cutoff. In the
+separate planar forward-modal baseline, maximum absolute modal tip displacement
+is **13.48% of shaft length**, above its **5%** screen. Its small contact-power
+residual verifies a coupling identity but cannot establish valid small-
+deflection dynamics outside the screen. The articulated atlas passing its own
+checks does not repair this distinct baseline.
 
 ### Chapter Checkpoint
 
-Before crediting the shaft with a speed effect, verify that deformation was
-represented or measured, the modal state was included in comparisons, shaft
-energy decreased consistently with return, damping was accounted for, and the
-whole ledger closed. Then test whether the outcome survives property uncertainty
-and an independent flexible model. Note that when this was actually done, the
-speed benefit did not survive as a general rule.
-
-The remaining biological question is individual: whether a golfer and club
-repeatedly create the predicted phase relation without unacceptable control or
-load cost. That requires calibrated human data.
+Before crediting shaft return, check the complete state, energy-transfer
+direction, damping and ledger closure. Test the specified endpoint across
+property uncertainty and independent models. Distinguish verification, domain
+screens and held-out validation. The current translation-speed result supports
+both signs of change; clubhead-speed and individual control/load tradeoffs still
+require calibrated human data.
 
 ## Where the Picture Breaks
 
 The ruler bends in one obvious plane. Shafts bend and twist in space, taper, vary
-in material, and interact with a distributed grip and clubhead. Euler-Bernoulli
-assumptions omit shear deformation and some rotary effects. Synthetic parameter
-recovery proves a pipeline, not equipment validity.
+in material, and interact with a distributed grip and clubhead. Classical
+Euler–Bernoulli bending neglects shear deformation and distributed beam rotary
+inertia; a tip body's rotary inertia can still be included, as in this reference.
+Torsion requires its own model. Synthetic parameter recovery checks an inverse
+pipeline under its generating assumptions, not equipment validity.
 
 The phrase “kick” can also imply a free late boost. Any returned energy was
 previously supplied and survived damping. A fair comparison counts the complete
 cycle.
 
 **Go Deeper:** Read the
-[gravity, damping, and shaft contribution chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06_shaft_contributions.qmd),
-the [beam reference](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06bb_shaft_beam_reference.qmd),
-and the [forward modal coupling](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06bbb_forward_modal_shaft.qmd).
+[gravity, damping, and shaft contribution chapter](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06_shaft_contributions.qmd),
+the [beam reference](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06bb_shaft_beam_reference.qmd),
+and the [forward modal coupling](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06bbb_forward_modal_shaft.qmd).
