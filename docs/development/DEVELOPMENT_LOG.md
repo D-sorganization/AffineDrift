@@ -31,6 +31,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
 - **Next step:** Science checkpoint b694b319d committed; final evidence and local checks complete with explicit type-check limitation. Regular PR #4729 protected auto-merge armed; #4726 merged main 644bfd5be integrated. Verify combined checks, then protected remote-main delivery. Broader technical-review goal remains active.
 
+### DL-#4602 · Content Inventory and Ownership Map
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4626
+- **Issue:** #4602 (epic #4604)
+- **Branch:** `claude/issue-4602`
+- **Paths:** `scripts/generate_content_inventory.py`, `tests/test_content_page_inventory.py`, `data/content/inventory.json`, `data/content/inventory.csv`, `pages/content-inventory.qmd`, `pages/development-roadmap.qmd`, `.github/workflows/ci-standard.yml`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (9 new tests pass; site link gate, title-case, terminology, root-hygiene, DRY-adoption, module-size-budget, internal link, mypy/ruff/black, and claim-audit evidence checks pass; `python3 -m scripts.generate_content_inventory --check` passes at a stable 197-page fixed point)
+- **Summary:** Generates a deterministic inventory of every rendered page (word count, status from the `status-banner` component, last-reviewed date from front-matter `date:`, canonical pointer, inbound link count, outbound broken links) as JSON/CSV artifacts plus a dashboard page; flags pages under 300 words without a Planned status as consolidation/retirement candidates; verified via a new CI step.
+- **Next step:** Open the draft PR for frontier review; no further implementation planned unless review requests changes.
+
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
 - **State:** in_review
@@ -43,6 +56,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-09-30 (SELF: 7/7 `tests/test_reader_run_environment.py` pass; `check_root_hygiene.py`, `check_quarto_render_coverage.py`, `check_quarto_xrefs.py`, `check_single_title.py`, `check_title_case.py`, `check_terminology.py`, `check_dry_adoption.py`, `check_contract_coverage.py` all pass; ruff/black clean on changed Python files)
 - **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment that opens the notebook scaffolds, installing from `requirements.txt` (not `requirements-docker.lock`, which pins a Windows-only `pywinpty` wheel that fails on Binder's Linux image and is stale relative to `requirements.txt`), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked — see HANDOFF.md. The Binder build itself is unverified (repo2docker was never run).
 - **Next step:** A session with permission to write under a path named `.devcontainer` must add the file (content given in the PR's Blocked section) and a CI build step; then this entry's state can move to `shipped`.
+
+### DL-#4503 · URL Stability and Redirect Policy
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** #4503 (draft)
+- **Issue:** #4503 (WEB-02.9; epic #4505 / E2)
+- **Branch:** `claude/issue-4503`
+- **Paths:** `src/tools/check_redirects.py`, `tests/test_check_redirects.py`, `tests/test_deployment_integrity.py`, `config/redirects.yml`, `.github/workflows/deploy-website.yml`, `CONTRIBUTING.md`
+- **Started:** 2026-09-29
+- **Last verified:** 2026-09-29 (13/13 new pytest cases in `test_check_redirects.py` pass; `test_deployment_integrity.py` 16 passed/1 skipped; ruff, black --line-length 100, and mypy clean on the new module.)
+- **Summary:** Compares the previously deployed site's public-site manifest against the new build's manifest and the `config/redirects.yml` ledger, failing the deploy workflow if a previously published route disappeared without a documented and actually-rendered redirect; ledger usage documented in CONTRIBUTING.md alongside Quarto `aliases:`.
+- **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
 
@@ -143,6 +169,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 ## Archive
 
 Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
+
 ### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review

@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 246
+- Reviewed: 247
 - Deferred: 0
 - Exempt: 3
 
@@ -219,6 +219,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
 | `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
 | `/pages/contact.html` | `pages/contact.qmd` | 3 |
+| `/pages/content-inventory.html` | `pages/content-inventory.qmd` | 3 |
 | `/pages/contributor-guide.html` | `pages/contributor-guide.qmd` | 1 |
 | `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
@@ -472,6 +473,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | — | None | None | 1 |
 | `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Reviewed | — | None | None | 1 |
 | `ad-route-6e4e4be935a4` | `/pages/contact.html` | Reviewed | — | None | None | 1 |
+| `ad-route-f0c3cff4bc42` | `/pages/content-inventory.html` | Reviewed | — | None | None | 1 |
 | `ad-route-1678ef51a577` | `/pages/contributor-guide.html` | Reviewed | — | None | None | 0 |
 | `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Reviewed | — | None | None | 1 |
 | `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | — | None | None | 1 |
