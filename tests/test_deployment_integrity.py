@@ -184,6 +184,18 @@ def test_ci_captures_revision_bound_representative_visual_evidence() -> None:
     assert "python3 scripts/e2e_relevant_paths.py" in content
 
 
+def test_ci_enforces_scientific_claim_audit_coverage_when_e2e_renders_site() -> None:
+    """PR CI must enforce publication claim-audit coverage after full-site E2E render (#4694)."""
+    content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "Enforce scientific claim-audit coverage" in content
+    assert "scripts.generate_claim_audit_inventory" in content
+    assert "--manifest docs/public-site-manifest.json" in content
+    assert "--check" in content
+    assert "--enforce-publication" in content
+
+
+
 def test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match() -> None:
     """WEB-13.1 (#4595): skip the ~14-minute render only on an exact cache hit.
 
