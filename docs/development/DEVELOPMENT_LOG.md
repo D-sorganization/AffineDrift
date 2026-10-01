@@ -27,9 +27,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/atlas-rigor-4749
 - **Paths:** articles/proximal-distal-falsification-atlas.qmd, articles/_generated/proximal-distal-falsification-atlas.qmd, data/trust/proximal_distal_falsification_atlas.json, src/affine_control/falsification_atlas/rendering.py, tests/test_falsification_atlas_identities.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (25 focused;12 gates;653 titles;Ruff/Black832;four browser/axe cases;full regression running)
+- **Last verified:** 2026-10-01 (six findings bound;full6381 pass/one stale-registry failure/29 skips;unsupported release withdrawn;73 integrated checks pass;12 gates;653 titles;Ruff/Black832;four final browser/axe cases)
 - **Summary:** Distinguish source adjudication from editorial comparisons; correct force/wrench, coordinate-metric and support/compliance comparisons with five Flash support jobs and lead adjudication.
-- **Next step:** Finish final mobile equation rendering and full regression, bind source review, then deliver a regular protected PR.
+- **Next step:** Commit normal main integration and release repair, bind its seventh finding, open regular protected PR and verify delivery.
 
 ### DL-#4746 · Critics Corner Technical Review
 
@@ -46,16 +46,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4743 · Muscle Models and Coupled Power
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** https://github.com/D-sorganization/AffineDrift/pull/4745 (regular; main target)
 - **Issue:** #4743 (epic #4009)
 - **Branch:** fix/muscle-model-rigor-4743
 - **Paths:** articles/The_Geometry_of_Motion/Volume_III/chapters/ch03_muscle_models.tex, articles/The_Geometry_of_Motion/geometry_of_motion.bib, tests/test_muscle_models_review.py, tests/test_muscle_model_identities.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (source d7be93d34; full6318 pass/five book-audit digest failures/29 skipped/93.04%; digest repair88 then bound89 passes;184 content/four skips;12 gates;653-title audit;PDF68pages/17 pages and browser4/4 verified)
+- **Last verified:** 2026-10-01 (main a473831 verified; source d7be93d34; full6318 pass/five book-audit digest failures/29 skipped/93.04%; digest repair88 then bound89 passes;184 content/four skips;12 gates;653-title audit;PDF68pages/17 pages and browser4/4 verified)
 - **Summary:** Correct force curves and attribution; connect excitation, fiber state, series equilibrium, tendon storage, joint power and stiffness under explicit model/empirical boundaries.
-- **Next step:** Nine chapter findings bound to46f71;247 historical finding records preserved;130 full-source audits remain. Regular PR4745 opened against main with da493c576. Push registration, arm protected merge and verify final CI/main delivery; dependent Chapters9/10 PR4741 still awaits E2E.
+- **Next step:** None for this chapter; PR4745 merged to remote main a473831731989fce80f110bcc34745affe9ad837 on 2026-10-01. Exact source/PDF/tests verified; continue remaining corpus reviews.
 
 ### DL-#4742 · Force Direction and Reference Points
 

@@ -1,3 +1,16 @@
+# Atlas Review and Main Integration — #4749
+
+- Goal active. Branch fix/atlas-rigor-4749; worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health. Source6dadc5ddbb372c67445f7765a9511ac502fbdec5 pushed; current merge/binding checkpoint SELF; atlas PR not created.
+- Six atlas findings bound to6dadc5; both wrapper and generated-card corpus rows complete.127 full-source audits plus whole-book consistency remain. Preserve historical findings and atlas-prior-review.json. Full rationale/evidence in atlas-review.md and atlas-validation.json.
+- Full regression6381 passed/one stale release registry failure/29 skipped/186 deselected,845.36s. Coverage78.52% src+scripts,93.05% src-only. Original failed run retained.61 source-bound checks and73 final integrated checks pass;12 publication gates,653 titles,Ruff/Black832, four final browser/axe cases,37 math expressions/no errors or overflow. Page-specific math sizing confirmed visually. No full-green or deployment claim.
+- Release-registry tracing found hardcoded unsupported qualified/reviewer/measurement/runtime claims and current file hashes under a fixed historical pin. Prior record saved in atlas-release-prior.json; generator now withholds that package with explicit unavailable state. Two regression failures before/twelve release checks after; synthetic schema/checksum/nonempty-renderer tests preserved. This additional finding must be bound to this integration checkpoint in the next metadata commit.
+- Six supplied-text agy Gemini3.8 Flash jobs supported inventories, tests, notation and turnover; lead adjudicated. No delegated repository mutation or scientific authority.
+- Normal merge of remote main a473831731989fce80f110bcc34745affe9ad837 preserves our added handoff/log sections. PR4745 is merged; exact muscle source/PDF/tests and Chapters9/10 source/PDF/reports match fetched main. Prior PR4741 and4748 remain open; their remaining CSS/critique work is included here. Atlas PR should close4749 and4746, reference main-delivered4739/4742, and replace older PRs only after verified main parity.
+- Next: commit/push integration; bind release-withholding finding to it, create regular main-target PR, update its number and handoffs, arm protected merge; verify CI/main then close superseded4741/4748. Never draft/force/admin/direct-main. Preserve all QA and separate peer23ee826 in impact-review.
+- Atlas lease14:11UTC; critics13:37,Chapter9 13:03,Chapter10 13:12. Muscle presence released after main verification. Inbox incomplete; no claim of absent peers. Renew relevant leases before expiry. DL-#4749 current; goal remains active.
+
+## Preserved Earlier Checkpoints
+
 # Falsification Atlas Source Checkpoint — #4749
 
 - Goal active. Branch fix/atlas-rigor-4749; worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; checkpoint SELF; atlas PR not created.

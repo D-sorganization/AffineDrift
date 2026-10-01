@@ -40,7 +40,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
 | `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 84 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
-| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 23 |
+| `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 26 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 4 |
 | `/articles/proximal_distal_energy_transfer/index.html` | `articles/proximal_distal_energy_transfer/index.qmd` | 38 |
 | `/articles/putting-roll-models.html` | `articles/putting-roll-models.qmd` | 5 |
@@ -294,7 +294,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 41 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
-| `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 0 |
+| `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 6 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 1 |
 | `ad-route-7487856d31fa` | `/articles/proximal_distal_energy_transfer/index.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d7694a0e6d30` | `/articles/putting-roll-models.html` | Reviewed | — | None | None | 7 |

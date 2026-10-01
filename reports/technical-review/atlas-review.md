@@ -95,3 +95,35 @@ The accompanying `atlas-validation.json` records exact source digests and test
 and browser outcomes. Validation applies to this atlas surface; it is not a
 site-wide scientific completion or deployment claim. Canonical handoffs and the
 development log retain PR dependencies and the remaining corpus count.
+
+## Release Registration Correction Found During Validation
+
+The full suite caught a stale digest in the generated research-release registry.
+Tracing its generator found a more fundamental provenance problem: it hardcoded
+a qualified release, reviewer `reviewer-biomech-independent-01`, measured
+quantities and a 1.45-second execution, while rehashing the current atlas under
+the fixed commit `4d6d46983794d2fa8c130ef1d48c8b41bb164104`. It also described
+ten claims although the atlas has six cards and named a generated output path
+that the atlas generator does not produce. No supporting execution or
+independent-review artifact is linked by that entry. These strings are not
+evidence that the asserted events occurred.
+
+The prior generated record is retained in `atlas-release-prior.json`. The
+generator now withholds the unsupported package and publishes an explicit
+empty-state explanation. It does not manufacture a substitute reviewer,
+runtime, empirical measurement, maturity label or release date. Restoring a
+package requires explicit revision-bound supporting records. This correction
+does not change the imported monograph's own adjudications or assert that no
+relevant work exists elsewhere.
+
+Two regression cases failed before this change. Twelve release/freshness checks
+then passed; synthetic nonempty package schema, checksum and renderer checks
+remain. A sixth supplied-text Flash job inventoried the existing test
+assumptions; its suggested mocked empty-list test was not used because it
+would miss the authoritative builder's unsupported promotion.
+
+The full run had 6,381 passes, one stale-registry failure, 29 skips and 186
+deselections. Coverage was 78.52% for src plus scripts and 93.05% for src alone.
+The original full run remains failed. After the repair and normal integration
+of remote main, 73 affected checks pass; no subsequent full green run is claimed.
+Both atlas source rows are complete; 127 audits and whole-book consistency remain.
