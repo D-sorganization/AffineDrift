@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4766 · Patent Catalog Technical Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4766 (epic #4009)
+- **Branch:** fix/patent-catalog-rigor-4766
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/appendix-d-patent-compendium.tex, articles/Launch_Monitor_Technology_Review/sections/07-patents.tex, articles/Launch_Monitor_Technology_Review/references.bib
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (full lead source reads;173 record attempts/170 Google captures; official marking notices/Gazette;27 Flash jobs complete; selected first claims inspected)
+- **Summary:** Partial corrections to identifiers, dates, radar-spin mechanism, product mapping and assignee attribution; broad catalog and FTO claims need full adjudication. No corpus completion credit;122 sources remain.
+- **Next step:** Finish per-entry and Chapter7 corrections, render/inspect, validate, bind findings and deliver regular PR. PR4765 CI remains live; preserve predecessor source history until main parity.
+
 ### DL-#4763 · Geometry Technical Review
 
 - **State:** in_review
