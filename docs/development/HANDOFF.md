@@ -1,3 +1,13 @@
+# Force-Direction Review — PR #4744
+
+- Regular PR: https://github.com/D-sorganization/AffineDrift/pull/4744, stacked on Chapter10 PR4741. Delivery161a3b662 is pushed. Do not merge into the topic base; retarget to main only after verified protected Chapter10 merge. PR4741 head eb288 is remote; all observed checks pass except E2E still running at10:29UTC. Protected auto-merge armed there only.
+- Scientific source52408 remains unchanged. Six new findings preserve35 historical book findings. Guide4740 is merged and its corpus marker reconciled against existing evidence;131 full-source audits and whole-book consistency remain.
+- Full regression6281 passed/one stale wording failure/29 skips/93.04% coverage, followed by repaired59 focused,79 bound-audit,88 integration checks and184 content checks (4 skips). Original failure retained. Rebuilt HTML passes four official browser/axe cases; all74 chapter expressions render in allfour.216-page PDF unchanged; exact source/render scopes in force-direction reports.
+- Eight supplied-text agy Gemini3.8 Flash jobs support this chapter. Lead adjudicated all results; transition draft's instruction never to lease4743 was rejected as an invented restriction. Issue4743 is prepared read-only in impact-review QA; implement after this delivery checkpoint, under a fresh claim/lease, with independent scientific review.
+- Current metadata checkpoint SELF. Next: push this PR registration; monitor final CI at natural work breaks, retarget4744 and arm protected merge only after4741 is verified on main. Keep canonical handoffs and development log current. Never bypass branch protection, create draft PRs, force-push, or claim unverified deployment.
+
+## Preserved Earlier Checkpoints
+
 # Integrated Force-Direction Delivery — #4742
 
 - Scientific source52408 and all six source/PDF/figure/test/generator hashes unchanged; six Chapter9 findings and all35 prior book findings preserved. Integrated Chapter10 deliveryeb288 and remote main019a (peer4740) normally. Both canonical handoff conflicts resolved by retaining records.
