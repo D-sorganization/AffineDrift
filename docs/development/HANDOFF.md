@@ -13,11 +13,12 @@
 - Full Windows run passed 6,057 tests, 29 skipped, 181 deselected; 46 final root-hygiene/focused checks pass. The separate repository-required coverage run also passed 6,057 tests with 29 skips and 92.95% coverage (609.24 seconds). Content: 180 passed/four skipped. Ruff, full Black (799 files), configured mypy (93 files), title/citation/bibliography/LaTeX and evidence checks pass.
 - Source/PDF checkpoint `18c545c796ad23f6f7c44c9974017d4122bfe4bb` committed and pushed. All seven final source/PDF/test hashes verified; the dossier hash correction is exactly attributable to one Prettier underscore escape, with old/new digests retained.
 - Combined-main integration: 105 targeted checks and 180 content checks pass (four skips); claim-audit evidence and SPEC checks pass. All seven radar source/PDF/test hashes remain unchanged.
-- Next: open the appendix regular PR and finish protected delivery. Both prior turnover streams and completed corpus rows are preserved.
+- Regular PR [#4721](https://github.com/D-sorganization/AffineDrift/pull/4721) is open and protected auto-merge is armed. Next: finish protected CI/merge and release #4717 lease after remote-main verification. Both prior turnover streams and completed corpus rows are preserved.
+- Next longest article review is native epic child #4720, session `technical-review-20261001-heavy-hit`, in the reused `AffineDrift-impact-review` worktree on `fix/heavy-hit-consistency-4720`, base `24cdba4d4`. Lease/presence through 2026-10-01 02:29 UTC. Complete article/includes read; two supplied-text Flash inventories and primary read scopes saved locally. Published sources are not edited or newly marked complete yet. Preserve parked provider synthesis #4253.
 
 ## Preserved Prior Delivery Records
 
-Earlier pending statuses below are historical. Current delivery: #4718, #4712 and #4716 are merged; their leases are released. The radar appendix remains awaiting its regular PR.
+Earlier pending statuses below are historical. Current delivery: #4718, #4712 and #4716 are merged; their leases are released. The radar appendix is in regular PR #4721.
 
 # Impact-Optimality Technical Review — #4714
 

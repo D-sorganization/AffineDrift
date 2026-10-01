@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4717 · Radar Screw-Kinematics Appendix Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4721 (regular)
 - **Issue:** #4717 (epic #4009)
 - **Branch:** `fix/radar-screw-rigor-4717`
 - **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-e-screw-kinematics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `tests/test_radar_screw_appendix_review.py`, `reports/technical-review/radar-screw-review.md`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (40 focused and 46 post-cleanup cases pass; 6,057 full-suite passes/29 skips; separate coverage run passed at 92.95%; 180 content passes/four skips; 76-page book with fifteen final pages visually checked; Ruff/Black/mypy and content gates pass)
 - **Summary:** Distinguish a rigid-motion representation from observable information and model-based inference; correct frame, covariance, waveform, impact and output-definition claims. Preserve the rest of the book's review scope and the historical outline's provenance.
-- **Next step:** Source/render checkpoint `18c545c79` is pushed; final coverage and binding receipts are ready. Remote main #4718 is integrated; 105 targeted and 180 content checks pass, with four content skips. Open the regular PR. Full outline review remains #4719.
+- **Next step:** Source/render checkpoint `18c545c79` is pushed; final coverage and binding receipts are ready. Remote main #4718 is integrated; 105 targeted and 180 content checks pass, with four content skips. Regular PR #4721 is open with protected auto-merge armed; finish CI/merge. Full outline review remains #4719.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
