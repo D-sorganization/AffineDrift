@@ -137,3 +137,41 @@ def test_check_mode_detects_stale_output(tmp_path: Path) -> None:
     assert inventory.main([*args, "--check"]) == 0
     json_output.write_text(json_output.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     assert inventory.main([*args, "--check"]) == 1
+
+
+@pytest.mark.unit
+def test_coverage_wording_and_provenance_contract(tmp_path: Path) -> None:
+    """Dashboard must state Quarto (.qmd) scope and committed snapshot provenance (#4693)."""
+    write_page(tmp_path / "pages" / "alpha.qmd", "Body.\n", title="Alpha")
+    records = inventory.build_inventory(tmp_path)
+    page = inventory.render_dashboard(records)
+    fm = inventory.parse_front_matter(page)
+    description = str(fm.get("description", "")).strip()
+
+    # Scope accuracy and character budget (WEB-10.7, #4575, #4693)
+    assert 70 <= len(description) <= 160, f"Description length {len(description)} outside 70-160"
+    assert (
+        "every rendered page" not in description.lower()
+    ), "Description must not state 'every rendered page' because inventory indexes .qmd pages (#4693)"
+    assert (
+        "quarto" in description.lower() and ".qmd" in description.lower()
+    ), "Description must accurately specify Quarto (.qmd) scope (#4693)"
+
+    # Snapshot provenance clarity (generation date / version notes)
+    assert "snapshot" in page.lower()
+    assert "baseline" in page.lower() or "schema version" in page.lower()
+
+
+@pytest.mark.unit
+def test_committed_content_inventory_page_wording() -> None:
+    """The committed pages/content-inventory.qmd must honor the coverage contract (#4693)."""
+    committed = inventory.DASHBOARD_OUTPUT
+    assert committed.is_file(), f"Missing committed dashboard page: {committed}"
+    text = committed.read_text(encoding="utf-8")
+    fm = inventory.parse_front_matter(text)
+    description = str(fm.get("description", "")).strip()
+
+    assert 70 <= len(description) <= 160
+    assert "every rendered page" not in description.lower()
+    assert "quarto" in description.lower() and ".qmd" in description.lower()
+    assert "snapshot" in text.lower()
