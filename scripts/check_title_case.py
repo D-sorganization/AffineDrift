@@ -78,7 +78,6 @@ EXCLUDED_PARTS = {
     ".git",
     ".quarto",
     "docs",
-    "legacy-pages",
     "node_modules",
     "Drafts_Original_Articles",
     "tangent-hyperplane-contraction",

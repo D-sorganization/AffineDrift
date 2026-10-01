@@ -124,3 +124,7 @@ that rounded numerical bounds conflict with “about,” its invented exact6e-15
 maximum, and its labeling of all Jacobian-nullspace motion as unactuated.
 No blanket radial-force-to-angular-acceleration claim was added: the full
 constrained response and system boundary must be specified.
+
+## Delivered-Main Integration — October 1, 2026
+
+Merged main dd70693bc, including delivered preload/shaft PR4755 and root-cleanup PR4760. The 55 delivered companion findings are semantically contained in the current 79, and six ground-reaction findings are preserved; shared changes are digest values reflecting the later companion artifact. Source/archive/test parity and precise choices are in `geometry-main-delivery-parity.json`. Retain the later geometry/state/robust-speed generator additions and PDF rather than replacing them with the earlier delivered preload artifact. Both canonical PDF copies match. No technical source or PDF rerender was needed for this integration. Final integration checks are recorded in the parity receipt.
