@@ -1,3 +1,18 @@
+# Moving-Base Final Source Checkpoint — #4774
+
+- Epic #4009 / corpus #4021 remains active: 118 full-source audits and whole-book consistency remain until Chapter 17 binding.
+- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration`; branch `fix/moving-base-rigor-4774`, based on `5d3b569fb`. Source checkpoint is ready; regular PR and binding pending.
+- Chapter 17: twelve supplied-text agy Gemini 3.8 Flash jobs adjudicated; 17 new tests, 72 final focused checks, 12 publication gates, four browser profiles pass. Full regression had 6,406 passes and one heading-contract failure, corrected in the source and retested without weakening the test.
+- Final 225-page PDF/HTML reviewed; 69 math containers fully rendered at both widths, seven displays, no math errors or page overflow. Canonical/public PDFs match.
+- PR #4770 is verified on remote main `099dc2cbf`. PR #4772 now has external main integration `4ec429b06`; scientific source unchanged; protected auto-merge armed and CI `36940029128` running. Prior CI `36937087586` was cancelled by the new head.
+- Next: commit/push this source, integrate the parent/main update, bind eight scoped findings while preserving all 96 earlier findings, then regular PR and protected delivery. Leases: #4771 through October 2 00:30 UTC; #4774 through 00:48 UTC.
+- Decisions and evidence: [review](reports/technical-review/moving-base-review.md), [validation](reports/technical-review/moving-base-validation.json), [handoff](docs/development/HANDOFF.md), [development log](docs/development/DEVELOPMENT_LOG.md).
+- Preserve peer `23ee826` and QA. No drafts, direct-main/force/admin pushes or hook bypass. Never mutate tracked files during push hooks.
+
+The prior PR verifier must use the new reviewed head 4ec429b06a12ebdf05b934248c30a73dfec5ad7d and a freshly checked main base/path inventory, not the old 5d3 command. Its new main parent is 387607370. No scientific source changed in that integration. The full-run failure, local-manifest setup failure and corrected browser-probe assumption are preserved in the validation/review records. UpstreamDrift #11195 tracks correction of the immutable source monograph; no provider files or archives were silently edited here.
+
+## Preserved Earlier Checkpoints
+
 # Measured Golfer Evidence Final Source Checkpoint — #4771
 
 - Goal active under epic #4009/corpus #4021. Full Chapter24 source review and correction validated. Nine findings bind eight exact Git blobs at f565c72885e73d9e463debc336322691f46ea11a;87 historical findings preserved. Chapter24 audit credited;118 source audits plus whole-book consistency remain.

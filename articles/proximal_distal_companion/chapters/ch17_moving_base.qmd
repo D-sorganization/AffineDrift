@@ -2,266 +2,353 @@
 
 ## A Concrete Picture
 
-Stand on a stable floor and swing a pendulum from your hand. Then repeat while
-standing on a rolling board. The pendulum pulls you; your motion changes its
-path; the board moves beneath both. Prescribing your hand path from the first
-experiment and replaying it on the board would erase this feedback.
+Swing a pendulum while standing on a rolling board. Your hand accelerates the
+pendulum, and its reaction can move you and the board. Now imagine a powerful
+actuator holding your hand to a recorded trajectory. The hand can still move,
+but the pendulum cannot change its assigned path. The actuator supplies the
+reaction needed to maintain that motion.
 
-Many simple golf models prescribe a hub, shoulder, or hand trajectory. That is
-useful for asking what club forces are compatible with a measured path. It is
-less useful for asking how club reactions alter the body. A moving-base forward
-model turns the prescribed support into a dynamical participant.
+These experiments answer different questions. A prescribed hand path lets us
+calculate a club response or infer loads compatible with measured motion. A
+finite-mass base lets the body-side motion respond to the loading. Comparing
+them is useful only when we say which inputs change, which motions are enforced,
+and where the enforcing force and its work enter the calculation.
 
-![A Prescribed Base Follows a Fixed Path While a Coupled Moving Base Responds to the Club Reaction.](figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.svg){#fig-lay-moving-base width=97% fig-alt="Side-by-side diagrams compare a hand hub forced along a predetermined path with a finite-mass moving hub whose acceleration changes under equal-and-opposite club reactions."}
+![Both Bases Can Move: One Follows an Assigned Trajectory, While the Other Responds to Force and Inertia.](figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.svg){#fig-lay-moving-base width=97% fig-alt="Two vertically arranged schematics show a translating base connected to arm and club links. The prescribed case requires a reported enforcing reaction and power; the finite-mass case lets club loading change the base motion. Arrows are qualitative, not measured force vectors."}
 
 ## How the Mechanism Works
 
-In the simplest double pendulum, the shoulder may be fixed. In a prescribed-
-motion model, shoulder or hub kinematics are supplied as known functions of time.
-The solver computes joint reactions needed to realize them. In a coupled model,
-base coordinates join $\mathbf q$ and their accelerations emerge from force and
-inertia.
+### The Boundary Condition Comes First
 
-### Prescribed Motion Is an Infinite-Authority Driver
+A **fixed base** is constrained to remain stationary. A **prescribed base** has
+a specified position and orientation as functions of time; stationary support is
+one special case. A **dynamic base** has equations of motion in which applied
+loads, inertia, gravity, contacts, and constraints determine its acceleration.
+None of these descriptions alone identifies a golfer's muscles or controller.
 
-A perfectly prescribed trajectory occurs regardless of reaction. Mathematically,
-the driver supplies whatever force and power are needed. This can hide a large
-back-reaction from the club. The computed wrench is still useful, but the model
-cannot predict how the body would deviate under finite strength or mass.
+For prescribed motion, the enforcing reaction is the residual needed after the
+other loads have been declared. It may be large even when the trajectory looks
+smooth. Multiple contacts can leave the allocation of that reaction nonunique.
+Calling the trajectory measured improves its connection to an observed trial;
+it does not make the motion responsive to a new control strategy.
 
-Calling prescribed motion “measured” does not remove this limitation. It makes
-the model an inverse or hybrid analysis of that trial. Causal strategy comparison
-needs a forward tier where changes in control can change the base state.
+Assigning an applied force as well as a prescribed trajectory is not automatically
+an error. It is a well-defined experiment if an additional constraint reaction
+absorbs the difference and its work is reported. The error is to treat the
+assigned force as the sole cause of the motion while silently allowing the
+trajectory actuator to supply the remaining force and energy.
 
-### Coupled Inertia Creates Feedback
+#### Finite Mass Is Not a Trajectory Actuator
 
-When base and club coordinates share one mass matrix, off-diagonal terms connect
-their accelerations. A club reaction can slow, redirect, or translate the base.
-Base motion changes hand velocity and therefore club power. The whole-system
-balance must include both.
+A translating body's acceleration decreases as its mass increases under a
+bounded resultant force. In a simple translating-base limit with a fixed time
+interval and initial velocity, increasing
+mass does not produce an arbitrary accelerating hand path. Maintaining such a
+path instead requires an appropriately increasing force. Mass, stiffness,
+feedback gain, and actuator force capacity are different model assumptions.
 
-The coupled base-flex model separates grip and shaft moments, includes convective
-terms, and uses a constrained solve. Same-state interventions remove selected
-drivers or reverse geometry while preserving the instant. Sensitivity sweeps
-ask whether the negative-couple mechanism survives plausible parameters.
+A reduced moving hub also remains a reduced hub. Adding finite mass does not
+supply pelvis and trunk dynamics, shoulder anatomy, balance, or realistic ground
+contact. Its value is that one formerly imposed motion can now respond to load.
 
-### Finite Mass Matters
+### A Small Model That Makes the Difference Visible
 
-An infinite-mass base barely responds; a light base moves strongly. Human body
-segments have finite, distributed mass and active control. A reduced moving hub
-does not become a torso, but it tests whether a mechanism depends on an immovable
-support.
+Consider a cart of mass $M$ on a frictionless horizontal track. A point bob of mass
+$m$ is attached by a massless rigid link of length $l$. Let $x$ be cart position
+and $\theta$ the link angle from downward vertical, so the bob is at
+$(x+l\sin\theta,-l\cos\theta)$. Apply horizontal cart force $F$ and pivot torque
+$\tau$, positive with increasing $\theta$. The cart does not rotate; the support
+moment that maintains this orientation has zero angular power.
+Take $M,m,l>0$ and let $g$ be the magnitude of gravitational acceleration.
 
-The independent spatial test uses finite-mass hand carriages rather than direct
-club actuation. Paired compliant contacts transmit action-reaction. The late
-negative couple survives for a bounded interval in both engine realizations.
-This broadens the mechanism beyond one prescribed planar driver.
+In an inertial frame, the equations are
 
-### Whole-System Power Prevents Hidden Work
+$$
+\begin{bmatrix}
+M+m & ml\cos\theta\\
+ml\cos\theta & ml^2
+\end{bmatrix}
+\begin{bmatrix}\ddot x\\\ddot\theta\end{bmatrix}
++
+\begin{bmatrix}
+-ml\sin\theta\,\dot\theta^2\\
+mgl\sin\theta
+\end{bmatrix}
+=
+\begin{bmatrix}F\\\tau\end{bmatrix}.
+$$
 
-A prescribed base can inject or remove power implicitly. A forward base requires
-explicit drivers or external forces. Summing actuator work, gravity, damping,
-contact power, shaft storage, and kinetic-energy change exposes hidden sources.
-Timestep refinement distinguishes physical residual from numerical error.
+The first row is total horizontal momentum balance. The second is the bob's
+tangential balance about its moving pivot. Both rows are needed: the pivot
+acceleration is part of the bob's equation, while the bob contributes to the
+force needed to accelerate the cart.
 
-### A Hierarchy of Questions
+Use the **manufactured** values $M=2\,\mathrm{kg}$, $m=1\,\mathrm{kg}$,
+$l=1\,\mathrm m$, and $\theta=\dot\theta=0$. Keep $\tau=1\,\mathrm{N\,m}$.
+The following are simultaneous accelerations at that state, not measured golf
+results or finite-duration performance predictions. Force entries are in newtons;
+the acceleration pair is $(\ddot x,\ddot\theta)$ in
+$\mathrm{m\,s^{-2}}$ and $\mathrm{rad\,s^{-2}}$, respectively.
 
-Use fixed-base models for clean local coupling. Use prescribed motion to attribute
-forces along a measured path. Use a moving reduced base to test back-reaction.
-Use full-body models to represent spatial mass distribution and joint structure.
-Each tier should inherit common observables so the mechanism can be compared.
+| Experiment | Applied $F$ | Extra Enforcing Force $\lambda$ | Acceleration Pair |
+| --- | ---: | ---: | ---: |
+| Free cart, baseline | 3 | 0 | $(1,0)$ |
+| Free cart, remove $F$ | 0 | 0 | $(-0.5,1.5)$ |
+| Enforce baseline cart acceleration after removing $F$ | 0 | 3 | $(1,0)$ |
 
-**Model Result:** The negative-couple and transfer findings survive a finite-base,
-forward constrained tier under registered controls, while quantitative values
-change.
+The free-cart intervention changes both accelerations. The prescribed replay
+instead replaces the removed force with $\lambda$. Its unchanged pendulum
+response does not show that the original cart force was unimportant. It shows
+that another driver is now enforcing the same base motion.
 
-**Human Evidence:** Measured hub paths and the modeled effect of inward hand-path
-motion show why base and handle translation cannot be treated as decorative
-details [@nesbit2009hub; @miura2001].
+#### Coordinate Changes Do Not Remove Physical Coupling
 
-**Hypothesis:** Human proximal control may arrange a moving base whose reaction
-with the club supports late transfer, but the reduced hub cannot identify the
-specific body coordination.
+Off-diagonal inertia terms are informative in a declared coordinate system, but
+they are not a coordinate-independent definition of mechanical interaction.
+For this example, put $a=ml/(M+m)$ and use the horizontal center-of-mass coordinate
+$r=x+a\sin\theta$. The kinetic energy becomes diagonal:
 
-**Practical Interpretation:** If the club can push back on the golfer, a model
-that forces the hands along an unchangeable path answers only part of the story.
+$$
+T=\frac12(M+m)\dot r^2+
+\frac12\left(ml^2-\frac{m^2l^2}{M+m}\cos^2\theta\right)\dot\theta^2.
+$$
 
-### Why a Fixed Pivot Is Both Useful and Dangerous
+However, the same applied loads have virtual work
 
-Fixing the proximal joint makes the double pendulum easy to interpret. It
-removes translational base work and exposes arm--club coupling. Yet a golfer's
-hands travel because pelvis, trunk, shoulder girdle, arms, and wrists all move.
-The hand path has curvature, inward motion, elevation change, and out-of-plane
-components. Once those are important to the question, a fixed pivot can distort
-both force direction and energy flow.
+$$
+F\,\delta x+\tau\,\delta\theta
+=F\,\delta r+(\tau-aF\cos\theta)\,\delta\theta.
+$$
 
-The danger is not that every fixed-base result is false. It is that a mechanism
-may rely on compensation for an omitted base motion. The correct response is a
-model ladder: preserve the same observable definitions and controls while
-releasing the base in stages.
+The cart force still contributes to the angular equation. A coordinate change
+moves terms between the inertia description and the generalized loads; it does
+not alter the physical accelerations. Convective terms, gravity, constraints,
+and the way controls enter the equations must travel with the coordinate change.
 
-### Prescribed Motion Versus Dynamic Motion
+### What a Counterfactual Can Establish
 
-A prescribed base follows a measured or designed path regardless of reaction
-from the club. This is computationally convenient and can test how hand-path
-geometry influences club motion. Work needed to enforce the path is an external
-input and must be included in the energy ledger. The club cannot feed back to
-change the prescribed body trajectory.
+Start two free-base simulations from the same compatible state. Keep the distal
+input history fixed and remove a declared base input from one branch. Compare
+instantaneous accelerations before either trajectory has moved. Then integrate
+them and compare the accumulated changes in base motion, contact loads, club
+speed, and work. This identifies an effect of that intervention **within the
+specified model**, not a physiological strategy effect by itself.
 
-A dynamic base has mass and equations of motion. Applied forces and torques,
-ground constraints, and club reactions determine its acceleration. Energy and
-momentum exchange are reciprocal. This is more physical but introduces control,
-contact, and parameter questions. Comparing prescribed and dynamic versions
-reveals which findings depend on one-way forcing.
+Now prescribe the baseline base trajectory. If the removed input enters only
+the base equations, while distal equations, inputs, and initial state remain
+identical, the baseline distal trajectory solves the replay problem too. Under
+uniqueness it is the same solution; the enforcing reaction supplies the missing
+base load. **Baseline replay is a consistency check, not evidence that dynamic
+feedback was unimportant.** The acceleration table is an instantaneous example;
+a trajectory comparison additionally needs compatible position and velocity.
 
-### The Moving-Handle Contribution
+This conclusion has limits. Removing an actuator that also supplies a distal
+generalized load need not leave the distal equations unchanged. Discontinuous
+contact changes, incompatible constraints, or a different initial state can also
+invalidate the comparison. State those changes instead of attributing every
+difference to feedback.
 
-Clubhead velocity equals handle velocity plus the contribution of club rotation
-and deformation. Accelerating the handle can raise clubhead speed even before
-relative release. Pulling the handle inward can change angular momentum and
-effective geometry, a mechanism explored in golf models as parametric
-acceleration. Whether it helps depends on timing and the rest of the state.
+Keeping a torque **history** fixed differs from keeping a feedback **policy**
+fixed. A policy evaluated along diverging trajectories can issue different
+commands. Both experiments can be useful: the first isolates a prescribed input
+comparison, while the second evaluates the chosen controller interacting with
+the altered mechanics. They estimate different effects and should not share one
+unqualified label such as “proximal contribution.”
 
-Handle power can be calculated from the grip wrench and handle twist. A moving
-base adds translational power channels that a fixed hinge cannot represent. The
-negative-couple question must therefore be revisited: a locally negative
-rotational channel can coexist with substantial positive translational hand
-power.
+### Follow Work Across the Same Boundary
 
-### Releasing the Base in Rungs
+For a declared collection of bodies in an inertial frame, a useful mechanical
+ledger is
 
-Rung one prescribes planar pivot translation. Rung two adds a finite-mass planar
-base driven by declared controls. Rung three adds pelvis and trunk rotation with
-ground constraints. Rung four introduces three-dimensional shoulder-girdle and
-arm motion. At each rung, calculate the same hand wrench, swing-normal couple,
-club power, work, and terminal outcomes.
+$$
+\frac{d}{dt}\left(T+U_g+U_{\rm shaft}+U_{\rm contact}\right)
+=P_{\rm act}+P_{\rm other,ext}-D,
+\qquad D\ge0.
+$$
 
-The sign of a physical wrench projection should transform consistently. Exact
-magnitude and preferred onset can change. If the mechanism reverses under a
-small plausible base motion, the fixed-base conclusion is fragile. If it
-persists across a broad ensemble, it becomes a stronger candidate for human
-testing.
+Here $T$ includes the kinetic energy of every included body and any represented
+flexible modes. The $U$ terms are the conservative gravitational, shaft, and
+contact energies actually present in that model; absent elements contribute
+nothing. $P_{\rm act}$ is the power of the declared actuators, including any
+trajectory-enforcing actuator; $P_{\rm other,ext}$ is other external power not
+already represented by the conservative potentials. Dissipation $D$ includes
+the specified damping or friction losses.
+Account for gravity through $U_g$ or through gravitational power, not both.
+Likewise, shaft work entering stored energy is not an additional unexplained
+whole-system energy input.
 
-### A Counterfactual Base Test
+If the prescribed base coordinate is $x$, its enforcing actuator contributes
+$\lambda\dot x$. For several prescribed coordinates the corresponding term is
+$\boldsymbol\lambda^\top\dot{\mathbf q}_b$, where $\mathbf q_b$ contains the
+prescribed coordinates and $\boldsymbol\lambda$ their power-conjugate enforcing
+loads. In the cart example, $E=T+mgl(1-\cos\theta)$ and
 
-Copy one state from a dynamic simulation. In one branch retain proximal driver;
-in another remove it while retaining distal control. Observe immediate changes
-in base reaction, handle acceleration, club constraint force, and club angular
-acceleration. Then integrate both branches briefly. This traces a causal path
-from proximal input through moving base to distal response within the model.
+$$
+\dot E=(F+\lambda)\dot x+\tau\dot\theta.
+$$
 
-Repeat with a prescribed base using the baseline path. If the club effect remains
-despite removal of dynamic feedback, it is mostly kinematic forcing. If it
-changes, reciprocity matters. Neither result is “more true” automatically; the
-comparison identifies the assumption carrying the conclusion.
+The force needed to enforce motion is not free merely because the solver calls
+it a constraint reaction. At an instant with zero base velocity, that reaction
+can change acceleration while doing zero instantaneous translational work.
 
-### Moving Bases and Timing
+When the system boundary includes both sides of an ideal passive internal joint, their
+constraint powers cancel under its compatible relative motion. A compliant
+interface instead exchanges energy with its storage and dissipative elements.
+Do not add club-side contact power as a new external input to an enlarged system
+that already contains the hand, club, and interface. Relative joint motion is
+power-conjugate to an internal actuator torque; an absolute segment angular
+velocity generally is not. These distinctions connect the moving-base question
+to the ledgers in @sec-lay-ch05 and @sec-lay-ch10.
 
-A clock-based wrist command can meet different geometry when base motion changes.
-A state trigger based on arm--club angle, handle radial velocity, or a coupling
-term may be more portable. But a trigger chosen after inspecting results can
-overfit. Candidate triggers and outcome windows should be declared before held-
-out evaluation.
+Numerical convergence tests whether the computed result stabilizes under a
+specified refinement. It does not establish that the contact law, controller,
+or anatomy is valid. Check force and moment balance, power signs, bookkeeping,
+and constraint-projection work separately; report any residual with its scale
+and refinement behavior rather than treating a small energy residual as a
+universal validation certificate.
 
-Base motion also changes the location and orientation of the late impact zone.
-Alignment by impact alone can hide meaningful differences earlier. Reports
-should show both absolute time and state-space trajectories, with uncertainty in
-event detection.
+#### The Moving-Handle Contribution
 
-### Human Measurements Required
+For a rigid club, let $H$ be a handle point, $C$ a head point,
+$\mathbf r_{C/H}$ the vector from $H$ to $C$, and $\boldsymbol\omega$ the club's
+angular velocity. Their inertial-frame velocities satisfy
+$\mathbf v_C=\mathbf v_H+\boldsymbol\omega\times\mathbf r_{C/H}$.
+A flexible club needs its additional deformation velocity under a declared
+reference description. Changing handle motion can therefore change head speed,
+club loading, and relative release together. An inward handle motion is not a
+universal speed instruction: its effect depends on timing, force, orientation,
+shaft state, and the rest of the trajectory.
 
-Whole-body motion should include pelvis, trunk, scapular/shoulder proxies, arms,
-hands, and club. Separate force plates and instrumented grips constrain external
-and interface wrenches. Segment inertias and joint centers carry uncertainty.
-High-speed club tracking and shaft strain add the distal state.
+For a locally rigid grip region, let $\mathbf F_H$ be the resultant force on
+the club and $\mathbf M_H$ its moment about $H$. With grip velocity
+$\mathbf v_H$ and angular velocity $\boldsymbol\omega_H$, their power is
 
-Soft-tissue artifact is especially important at the shoulder girdle. A moving-
-base model should not claim anatomical precision beyond its measurement. It can
-use a generalized handle driver for mechanism testing while explicitly reserving
-muscle and scapular interpretation.
+$$
+P_H=\mathbf F_H\cdot\mathbf v_H+
+\mathbf M_H\cdot\boldsymbol\omega_H.
+$$
 
-### Practical Meaning
-
-The useful lesson is not a command to pull the handle along a particular path.
-It is that club release cannot be optimized independently of how the hand base
-moves. Geometry, speed, and force at the handle jointly determine club response.
-A strategy should be evaluated across realistic base variations and control
-objectives rather than on one fixed-pivot animation.
-
-### Reader Lab: Prescribe, Then Release
-
-Record or design one handle path and drive a club model with it as a prescribed
-boundary. Calculate the external work needed to enforce that motion. Then build
-a finite-mass base driven to approximate the path. Compare club trajectory,
-handle wrench, body reaction, and energy. Differences reveal the effect of
-dynamic reciprocity.
-
-Run an inward-handle-path perturbation at matched state. Hold distal torque fixed
-and observe radial/tangential reaction, relative release, and clubhead speed.
-Repeat with changed club inertia. If the outcome reverses, the proposed path
-effect is parameter-dependent and should be mapped, not prescribed.
-
-Finally compare a clock-scheduled distal command with a state-triggered one
-across varied base tempo. A state policy may retain performance better, or it may
-overfit an unobservable model variable. Report both the performance and whether
-the trigger has a measurable proxy.
-
-### Common Modeling Trap
-
-Prescribing a measured body path while also assigning body torques can double-
-count control: the path is already enforced by whatever unreported force is
-needed. Decide whether motion is input or outcome. If prescribed, report its
-constraint wrench and work. If dynamic, show how controls and ground contact
-produce it.
-
-This distinction is crucial when attributing energy to proximal drivers. A
-prescribed path can inject exactly the energy required and make distal transfer
-look inevitable. A dynamic base exposes the energetic cost and feedback.
-
-### A Minimal Moving-Base Benchmark
-
-Use one finite-mass base translating in a plane, one arm link, and one club link.
-Publish mass and inertia, applied base force, joint torques, initial state, and
-constraints. Verify momentum and energy. Compare with a prescribed trajectory
-that matches baseline base motion. This small benchmark can be implemented in
-multiple engines and isolates reciprocity before a whole human model is added.
-
-Run the two-hand geometry controls on both versions. The physical contact-couple
-sign should respond consistently even if reaction magnitudes differ. Run
-proximal killswitches and show how base, hand, and club variables diverge. These
-tests create a clear bridge from the fixed double pendulum to spatial whole-body
-dynamics.
-
-### Why This Matters for Strategy
-
-An arm or scapular action changes both force and the moving base from which the
-club is carried. A wrist-focused model that prescribes hand path may hide the
-work needed to create that path; an arm-focused model may underrepresent distal
-regulation. A balanced comparison includes both controls and their reaction on
-the base.
-
-The useful strategy question becomes: which allocation produces a favorable
-handle state and club interaction across realistic body variability, with
-acceptable load and control? The moving-base rung makes that question computable
-without pretending it is already answered for a golfer.
-
-### Chapter Checkpoint
-
-Ask whether the base motion is prescribed or dynamically produced, where its
-work enters, and whether club reaction can feed back. Compare both formulations
-on shared observables. A mechanism that survives this comparison has moved
-beyond the most consequential fixed-pivot shortcut.
+A negative projected moment is neither this total power nor its time integral.
+Even negative rotational power can coexist with positive translational power.
+Moving the wrench reduction point changes its moment and the separate power
+terms; consistent transport preserves their total for the same rigid-body
+loading and twist. It does not permit treating a flexible assembly as one rigid
+body without accounting for deformation work.
 
 ## Where the Picture Breaks
 
-The rolling board has one translation. A human base has pelvis and trunk motion,
-joint limits, balance, ground contact, and active feedback. A finite carriage is
-a falsification bridge, not anatomy.
+### What the Provider Benchmarks Establish
 
-Forward models also require control choices. A wrong controller can make a good
-mechanism look poor. Comparisons must separate mechanism failure from controller
-failure and report both.
+The pinned coupled-base/flex study supplies a reduced planar example with
+explicit base dynamics, grip and shaft moments, and a constrained solve. Its
+registered driver-removal branch follows a short, 50 ms continuation from the
+selected state. The spatial study instead uses finite-mass hand carriages,
+compliant contact forces, and a rigid club. Its archived driver-removal traces
+retain the provider-defined negative projected contact moment for a bounded
+37.5 ms interval. These are model results with declared inputs and observables,
+not estimates of a typical golfer's passive release duration.
 
-**Go Deeper:** See the
-[coupled base and compliance chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06b_coupled_base_flex.qmd)
-and the [independent spatial contact test](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06cc_spatial_forward_contact.qmd).
+MuJoCo and Pinocchio provide separate native inertia and bias operators in the
+spatial comparison. The experiment shares its contact law and integration
+procedure, so agreement is narrower than two independently developed physical
+models reproducing a human experiment. A reproducible sign within that shared
+construction can motivate a further test without establishing physiological
+passivity, net energy transfer, or robustness over untested parameters.
+
+#### Force Closure Is Not the Whole Contact Contract
+
+The spatial force-pair limitation already discussed in @sec-lay-ch20 matters
+here too. With club-point position $\mathbf p$, hand-point position $\mathbf h$, displacement
+$\boldsymbol\delta=\mathbf h-\mathbf p$, and the supplied law
+$\mathbf F=k\boldsymbol\delta+c\dot{\boldsymbol\delta}$, where $k$ is stiffness
+and $c$ is damping coefficient, applying $+\mathbf F$ at the club point and
+$-\mathbf F$ at the hand point gives zero resultant force but pair moment
+
+$$
+(\mathbf p-\mathbf h)\times\mathbf F
+=-c\boldsymbol\delta\times\dot{\boldsymbol\delta}.
+$$
+
+The central spring contribution vanishes; the general vector damping
+contribution need not. Calling this a closed internal interface requires the
+corresponding connector moment or angular-momentum account, or an explicit
+external torque pathway. The existing power identity and native-engine
+agreement do not supply that missing interpretation. This qualification is not
+proof that the pair moment causes the reported negative club moment. Changing
+the contact law or adding a couple changes the dynamics and power ledger, so
+one must rerun the registered trajectories before claiming the sign survives.
+The central-fiber model discussed in @sec-lay-ch16 has a different contact law;
+the diagnosis cannot be transferred to it by name alone.
+
+#### Declare the Moment Point, Axis, and Geometry Control
+
+The spatial record reduces its contact wrench at the club reference point. Its
+signed projection uses a normalized cross product of the club longitudinal axis
+and that point's linear velocity, with a declared world-axis fallback and sign
+convention. This is a chosen observable, not a universal anatomical swing-plane
+normal. Near a degenerate cross product, the fallback and sign convention need
+to be exposed in the record.
+
+Expressing the same physical moment and axis in another orthonormal frame
+preserves their dot product. Changing the moment reference point, changing the
+axis, or moving a contact point is a different operation. The spatial
+coincident-point and reversed-arm controls recompute moments from the same
+force traces; they test wrench geometry, not newly simulated contact
+trajectories. The planar coincident-grip control does run a new continuation.
+A one-arm benchmark also needs explicit second-hand contacts and controls before
+it can answer a two-hand allocation question.
+
+### Human Evidence and Strategy
+
+Nesbit and McGinnis analyze one selected swing from each of four right-handed
+amateurs. Their three-dimensional marker measurements are mapped into a rigid
+planar club model to infer loads and examine hub-path effects. This supports a
+mechanical reason to include handle motion; it is not a population intervention
+showing that an imposed path improves performance [@nesbit2009hub].
+
+Miura combines measured examples with simplified moving-pivot models to examine
+inward pulling and parametric acceleration. A prescribed-pivot model explains
+a possible route for work to enter the club under its assumptions. It does not
+establish the required whole-body control, energy cost, or benefit for every
+golfer [@miura2001]. The relation among measured motion, inferred loads, and
+biological explanations is developed further in @sec-lay-ch24.
+
+Testing a body-side strategy needs synchronized whole-body and club motion,
+external and interface load estimates, inertial parameters, and uncertainty in
+joint centers and soft-tissue motion. A force plate constrains an external
+wrench; it does not identify individual muscle forces. A handle driver can be a
+useful reduced input without acquiring anatomical precision from its name.
+
+Declare the model, controller, comparison, and failure criterion before testing.
+If their combination fails, that result counts against the tested combination.
+Blaming the controller rather than the proposed mechanism requires additional
+comparisons or evidence. A state-triggered command may transfer better across
+base tempo than a clock-triggered one, but that remains a hypothesis to assess
+on held-out conditions with observable triggers and appropriate load limits.
+
+## Reader Lab: Prescribe, Then Release
+
+Begin with the manufactured cart example. Verify the acceleration table from
+both Newton balances and the coupled equations. Compare the energy rate with
+applied and enforcing power. Then simulate a baseline, remove $F$ with the cart
+free, and replay the baseline cart trajectory under the same distal torque.
+Report which reaction replaces the removed force and the numerical tolerance
+of the replay comparison.
+
+Only then enlarge the model: add a club link, shaft compliance, declared contact
+points, and body-side degrees of freedom as the question requires. Preserve
+wrench points, projection axes, energy boundaries, and event definitions across
+comparisons. Physical parameter changes need newly consistent states and
+trajectories; relabeling coordinates does not create a new experiment.
+
+The useful golf question is how body-side controls create a handle state and
+club interaction while remaining responsive to loading. The hand path, club
+reaction, shaft storage, and distal control are intertwined through the same
+equations and energy boundaries. A moving-base model makes those assumptions
+available for testing; it does not settle the golfer's best strategy by itself.
+
+**Go Deeper:** See the pinned
+[coupled base and compliance chapter](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06b_coupled_base_flex.qmd)
+and [spatial contact study](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06cc_spatial_forward_contact.qmd).
+These immutable records specify the experiments; they are not a new simulation
+or an endorsement of every physiological interpretation attached to them.

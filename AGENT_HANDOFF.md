@@ -1,12 +1,13 @@
 # Technical Review Current State
 
-- Epic #4009 / corpus #4021 remains active: 118 full-source audits and whole-book consistency remain.
-- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health`, branch `fix/measured-golfers-rigor-4771`.
-- Regular PR #4772: reviewed source `f565c72885e73d9e463debc336322691f46ea11a`, binding `cb9e634d5`, and nine new findings remain unchanged. Integration `SELF` reconciles the delivered predecessor and refreshes turnover.
-- PR #4770 merged as `099dc2cbfcf506941b3b0d306b43b7a1ccc5e767`; final-head CI passed and all 23 changed files match remote main. Its lease and presence are released.
-- Next: pass final-head CI and the protected merge guard for PR #4772, then verify its delivered blobs. Issue #4771 lease expires October 2 at 00:30 UTC. PR #4772 is not yet merged.
-- Six older owned review entries are reconciled to their verified main carriers; receipts and detailed continuation are in the [canonical handoff](docs/development/HANDOFF.md) and [development log](docs/development/DEVELOPMENT_LOG.md).
-- Preserve peer worktree `23ee826` and QA artifacts. No draft PRs, direct-main/force/admin pushes or hook bypass. Never change tracked files while push hooks run.
+- Epic #4009 / corpus #4021 remains active: 118 full-source audits and whole-book consistency remain until Chapter 17 binding.
+- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration`; branch `fix/moving-base-rigor-4774`, based on `5d3b569fb`. Source checkpoint is ready; regular PR and binding pending.
+- Chapter 17: twelve supplied-text agy Gemini 3.8 Flash jobs adjudicated; 17 new tests, 72 final focused checks, 12 publication gates, four browser profiles pass. Full regression had 6,406 passes and one heading-contract failure, corrected in the source and retested without weakening the test.
+- Final 225-page PDF/HTML reviewed; 69 math containers fully rendered at both widths, seven displays, no math errors or page overflow. Canonical/public PDFs match.
+- PR #4770 is verified on remote main `099dc2cbf`. PR #4772 now has external main integration `4ec429b06`; scientific source unchanged; protected auto-merge armed and CI `36940029128` running. Prior CI `36937087586` was cancelled by the new head.
+- Next: commit/push this source, integrate the parent/main update, bind eight scoped findings while preserving all 96 earlier findings, then regular PR and protected delivery. Leases: #4771 through October 2 00:30 UTC; #4774 through 00:48 UTC.
+- Decisions and evidence: [review](reports/technical-review/moving-base-review.md), [validation](reports/technical-review/moving-base-validation.json), [handoff](docs/development/HANDOFF.md), [development log](docs/development/DEVELOPMENT_LOG.md).
+- Preserve peer `23ee826` and QA. No drafts, direct-main/force/admin pushes or hook bypass. Never mutate tracked files during push hooks.
 
 ## Earlier Records Preserved From the Parent Branch
 
