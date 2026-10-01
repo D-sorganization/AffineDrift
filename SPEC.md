@@ -224,7 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
-| 2026-10-01 | #4734 | Correct Volume IV Chapter 4 latency, neural-layer, network-budget and EMG-synergy arguments with executable examples and bounded primary evidence. |
+| 2026-10-01 | #4734 | Correct Volume IV Chapter 4 latency, neural-layer, network-budget and EMG-synergy arguments with executable examples and bounded primary evidence; align evidence with Git bytes and isolate CI test inputs. |
 | 2026-10-01 | #4728 | Rebalance on-ramp 3-hour tier estimates to 180 minutes, add duration contract tests, and mark audit findings corrected (#4695, #4691, RM#1879). |
 | 2026-10-01 | #4732 | Correct ground power and system boundaries, counterfactual reaction definitions, archived matching normalization and causal interpretation in companion Chapter 16. |
 | 2026-10-01 | #4725 | Qualify reference-library evidence, historical specifications, patent disclosures and launch-weight sensitivity; preserve prior chapter reviews. |
