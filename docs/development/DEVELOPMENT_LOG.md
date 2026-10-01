@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4753 · Arm–Wrist Preload Technical Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** Not yet created
+- **PR:** [#4755](https://github.com/D-sorganization/AffineDrift/pull/4755)
 - **Issue:** #4753 (epic #4009)
 - **Branch:** fix/preload-rigor-4753
 - **Paths:** articles/proximal_distal_companion/chapters/ch14_arms_wrists_preload.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_preload_review.py
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (63 integrated;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases)
+- **Last verified:** 2026-10-01 (full default suite PASS/29 skips/78.8% configured coverage/93.0% src;63 integrated;36 bound;12 publication gates;Ruff/Black835;CI-scoped mypy94;654 titles;220-page PDF/source-public parity;4 browser/axe cases)
 - **Summary:** Full chapter corrections distinguish moment/wrench, conditional dynamics, causal inference and human evidence; replace wrong command-only figure with archived transmission traces. Five Flash support jobs, lead-adjudicated.Seven findings bound to exact source8ffffbc7e;48 historical findings preserved;125 full-source audits plus whole-book consistency remain.
-- **Next step:** Validate/push source binding, inspect stable-publication full regression, open regular PR and verify protected CI/main delivery.
+- **Next step:** Source8ffffbc7e and binding3691417a4 pushed;regular PR4755 attached;36 binding checks pass. Full default regression passes on stable publication. Push registration, arm protected merge and verify CI/main delivery.
 
 
 ### DL-#4751 · Shaft Memory Technical Review

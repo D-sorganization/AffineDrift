@@ -392,7 +392,23 @@
     "visually_inspected_pages": [88, 89, 90, 91, 92, 93, 94, 95, 96, 97],
     "notes": "All Chapter14 pages and adjacent boundaries; figure legend moved off traces; mobile equations enlarged and stacked; command table replaced by readable list."
   },
-  "full_regression": "Running on stable final publication after ledger hash refresh; inspect preload-full-coverage.txt and preload-full-exit.txt. No green claim yet.",
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --timeout=60 -q",
+    "exit_code": 0,
+    "passed_progress_symbols": 6395,
+    "skipped": 29,
+    "coverage_src_and_scripts": {
+      "statements": 28060,
+      "missed": 5949,
+      "percent": 78.8
+    },
+    "coverage_src_only": {
+      "statements": 13756,
+      "missed": 957,
+      "percent": 93.0
+    },
+    "notes": "Full configured default lane passed on stable final PDF; marker exclusions remain in repository config. Double-quiet output suppresses summary counts/duration; pass count derived from progress dots, not a fabricated summary. Three missing Streamlit skips,23 obsolete helper skips,one unavailable async helper,two missing generated legacy-path skips."
+  },
   "delegation": {
     "model": "gemini-3.8-flash-high",
     "completed_jobs": [
@@ -407,9 +423,13 @@
   "delivery": {
     "branch": "fix/preload-rigor-4753",
     "source_checkpoint": "8ffffbc7ee749ecab165709b0f76ca092d0edf18",
-    "pr": null,
+    "pr": 4755,
     "predecessor_pr": 4752,
-    "predecessor_status": "Python/static/JS/website-lint pass; E2E pending at last check."
+    "predecessor_status": "Python/static/JS/website-lint pass; E2E pending at last check.",
+    "regular": true,
+    "attached": true,
+    "binding_checkpoint": "3691417a4fbaceb43d254c62998c437d1ffa763a",
+    "source_and_binding_pushed": true
   },
   "corpus": {
     "pending": 125,
@@ -425,5 +445,8 @@
     "historical_findings_preserved": 48,
     "verification_commit": "8ffffbc7ee749ecab165709b0f76ca092d0edf18",
     "exact_git_blob_parity": true
+  },
+  "binding_tests": {
+    "passed": 36
   }
 }
