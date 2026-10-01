@@ -1,17 +1,29 @@
 # Shallow-Wide Chapter — #4733
 
 - Goal active under epic #4009; regular protected PRs only.
-- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `e6eec4ac10fc5167197bf9a8ad93e360754810d4`; audit binding `SELF`; PR not created. Branch initially follows ground head `821a1899246df83ebd017061489835157f4bfec7`; integrate ground delivery after its peer-main reconciliation.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `e6eec4ac10fc5167197bf9a8ad93e360754810d4`; audit binding `442b73d6f`; integration checkpoint `SELF`; PR not created. Integrated ground delivery feae3b872 and peer main 668de3a23; both chapter reviews and peer changes are retained.
 - Session `technical-review-20261001-shallow-wide`, lease/presence through 06:58 UTC. Full Chapter 4 corrected: conditional latency, anatomical versus computational layers, state compression, accurate parameter comparison, bounded synergy evidence and validated printed NMF. Three supplied-text agy Flash inventories adjudicated; no delegated tools/network/edits.
 - Durable rationale, exact primary scopes, old-code reproduction, prior audit snapshots and render evidence: `reports/technical-review/shallow-wide-*`. Historical notebook remains unreviewed/scaffolded.
-- Validation: 24 printed-example/counterexample tests; 45 combined focused/book-audit/hygiene passes; all twelve content gates; 651 title checks. Rebuilt Volume IV PDF 71 pages: all eight chapter pages, contents, following boundary and three bibliography pages visually inspected; final diagram enlarged and page24 reinspected. Public route four width/theme cases and axe pass. Three new findings are bound to the source checkpoint; the original finding retains its historical commit. Six follow-up provenance/URL tests pass (45 combined focused checks). Final complex-input rejection and PDF are committed; all three new findings are bound to that exact final source checkpoint. Full integrated suite remains pending.
-- Ground PR #4732 original head passed all CI 36815440996. Peer PR #4731 merged main `668de3a23b73c166936077ccdd6c4f869deb1c6c`, creating eleven shared digest/key-order conflict blocks. They are resolved in `AffineDrift-impact-review` on ground branch; all28 findings preserved. Integrated full suite is running there. Ground lease renewed through07:16 UTC. Do not mix worktrees or include Chapter4 in PR4732.
-- Next: integrate the completed ground-delivery branch, run final regression, and open a regular PR after ground delivery. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
+- Validation: 24 printed-example/counterexample tests; 46 combined focused/book-audit/hygiene passes; all twelve content gates; 651 title checks. Rebuilt Volume IV PDF 71 pages: all eight chapter pages, contents, following boundary and three bibliography pages visually inspected; final diagram enlarged and page24 reinspected. Public route four width/theme cases and axe pass. Three new findings are bound to the source checkpoint; the original finding retains its historical commit. Seven follow-up provenance/URL tests pass (46 combined focused checks), including rejection of trailing whitespace. Final complex-input rejection and PDF are committed; all three new findings are bound to that exact final source checkpoint. Full integrated suite remains pending.
+- Ground PR #4732 original head passed all CI 36815440996. Peer PR #4731 merged main `668de3a23b73c166936077ccdd6c4f869deb1c6c`, creating eleven shared digest/key-order conflict blocks. They are resolved in `AffineDrift-impact-review` on ground branch; all 28 findings preserved. Integrated ground suite passed 6232 tests with 93.04% coverage; 184 content checks and four browser cases passed. Ground lease renewed through 07:16 UTC. Do not mix worktrees or include Chapter4 in PR4732.
+- Next: run `py -3.12 -X utf8 -m pytest tests/ --cov=src --cov-report=xml --timeout=120` in this checkout, then preserve wheel artifacts under QA and run the content-lint selection. Complete regular PR delivery after protected ground merge. Ground head feae3b872 is pushed, auto-merge armed, CI36821074418 running. Integrated chapter receipt: reports/technical-review/shallow-wide-integration-validation.json. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
 - Development entries touched: DL-#4733; DL-#4730 delivery continues in the isolated checkout.
 
 ## Preserved Earlier Checkpoints
 
 Earlier pending statuses below are historical; current state is above.
+
+# Ground PR Integration — #4730 / #4732
+
+- Goal active. Delivery checkout `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`, branch `fix/ground-conversation-rigor-4730`, integration checkpoint `SELF`.
+- Ground scientific source remains ff4177f0309195e040085b44b31b355f033fef3d; original PR head 821a1899246df83ebd017061489835157f4bfec7 passed every required check. Protected squash auto-merge remains armed.
+- Integrate peer PR4731 at 668de3a23b73c166936077ccdd6c4f869deb1c6c. Eleven inventory conflicts are key-order/digest-only; all 28 ground-route findings and scientific source/PDF are preserved. Peer content-inventory, redirect and naming changes remain intact.
+- Full integration validation passes: 6232 tests/29 skips, 93.04% src coverage; 184 subsequent content checks/four skips; four bounded browser cases and axe pass. Exact receipt: reports/technical-review/ground-conversation-integration-4731.json. Pushed-head protected CI remains required.
+- Ground lease/presence renewed through 07:16 UTC. Next action: push the merge resolution for protected CI. No force, admin, direct-main or draft PR.
+- Chapter4 source is separately committed on fix/shallow-wide-rigor-4733 (b3410b4f0) in AffineDrift-screw-review. That review remains active; preserve both checkouts and their QA. DL-#4730 updated here.
+- Detailed continuation: docs/development/HANDOFF.md. No live-deployment claim; peer deployment #4688/#4713 remains separately owned.
+
+## Preserved Earlier Records
 
 # Plane-to-Space Technical Review — #4724
 

@@ -198,10 +198,10 @@ def generate_evidence_presentation(
         return registry_path, partial_path
 
     registry_path.parent.mkdir(parents=True, exist_ok=True)
-    registry_path.write_text(registry_content, encoding="utf-8")
+    registry_path.write_bytes(registry_content.encode("utf-8"))
 
     partial_path.parent.mkdir(parents=True, exist_ok=True)
-    partial_path.write_text(partial_content, encoding="utf-8")
+    partial_path.write_bytes(partial_content.encode("utf-8"))
 
     logger.info(
         "Successfully generated evidence presentation artifacts at %s and %s",

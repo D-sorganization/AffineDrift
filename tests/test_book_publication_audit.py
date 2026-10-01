@@ -115,6 +115,7 @@ def test_followup_findings_keep_the_original_book_audit_identity() -> None:
         "https://github.com/D-sorganization/AffineDrift/issues/0",
         "https://github.com/D-sorganization/AffineDrift/issues/4733/extra",
         "http://github.com/D-sorganization/AffineDrift/issues/4733",
+        "https://github.com/D-sorganization/AffineDrift/issues/4733\n",
     ],
 )
 def test_followup_findings_reject_wrong_repository_or_non_issue_urls(url: str) -> None:

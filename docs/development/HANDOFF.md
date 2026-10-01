@@ -1,12 +1,12 @@
 # Shallow-Wide Chapter — #4733
 
 - Goal active under epic #4009; regular protected PRs only.
-- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `e6eec4ac10fc5167197bf9a8ad93e360754810d4`; audit binding `SELF`; PR not created. Branch initially follows ground head `821a1899246df83ebd017061489835157f4bfec7`; integrate ground delivery after its peer-main reconciliation.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `e6eec4ac10fc5167197bf9a8ad93e360754810d4`; audit binding `442b73d6f`; integration checkpoint `SELF`; PR not created. Integrated ground delivery feae3b872 and peer main 668de3a23; both chapter reviews and peer changes are retained.
 - Session `technical-review-20261001-shallow-wide`, lease/presence through 06:58 UTC. Full Chapter 4 corrected: conditional latency, anatomical versus computational layers, state compression, accurate parameter comparison, bounded synergy evidence and validated printed NMF. Three supplied-text agy Flash inventories adjudicated; no delegated tools/network/edits.
 - Durable rationale, exact primary scopes, old-code reproduction, prior audit snapshots and render evidence: `reports/technical-review/shallow-wide-*`. Historical notebook remains unreviewed/scaffolded.
-- Validation: 24 printed-example/counterexample tests; 45 combined focused/book-audit/hygiene passes; all twelve content gates; 651 title checks. Rebuilt Volume IV PDF 71 pages: all eight chapter pages, contents, following boundary and three bibliography pages visually inspected; final diagram enlarged and page24 reinspected. Public route four width/theme cases and axe pass. Three new findings are bound to the source checkpoint; the original finding retains its historical commit. Six follow-up provenance/URL tests pass (45 combined focused checks). Final complex-input rejection and PDF are committed; all three new findings are bound to that exact final source checkpoint. Full integrated suite remains pending.
-- Ground PR #4732 original head passed all CI 36815440996. Peer PR #4731 merged main `668de3a23b73c166936077ccdd6c4f869deb1c6c`, creating eleven shared digest/key-order conflict blocks. They are resolved in `AffineDrift-impact-review` on ground branch; all28 findings preserved. Integrated full suite is running there. Ground lease renewed through07:16 UTC. Do not mix worktrees or include Chapter4 in PR4732.
-- Next: integrate the completed ground-delivery branch, run final regression, and open a regular PR after ground delivery. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
+- Validation: 24 printed-example/counterexample tests; 46 combined focused/book-audit/hygiene passes; all twelve content gates; 651 title checks. Rebuilt Volume IV PDF 71 pages: all eight chapter pages, contents, following boundary and three bibliography pages visually inspected; final diagram enlarged and page24 reinspected. Public route four width/theme cases and axe pass. Three new findings are bound to the source checkpoint; the original finding retains its historical commit. Seven follow-up provenance/URL tests pass (46 combined focused checks), including rejection of trailing whitespace. Final complex-input rejection and PDF are committed; all three new findings are bound to that exact final source checkpoint. Full integrated suite remains pending.
+- Ground PR #4732 original head passed all CI 36815440996. Peer PR #4731 merged main `668de3a23b73c166936077ccdd6c4f869deb1c6c`, creating eleven shared digest/key-order conflict blocks. They are resolved in `AffineDrift-impact-review` on ground branch; all 28 findings preserved. Integrated ground suite passed 6232 tests with 93.04% coverage; 184 content checks and four browser cases passed. Ground lease renewed through 07:16 UTC. Do not mix worktrees or include Chapter4 in PR4732.
+- Next: run `py -3.12 -X utf8 -m pytest tests/ --cov=src --cov-report=xml --timeout=120` in this checkout, then preserve wheel artifacts under QA and run the content-lint selection. Complete regular PR delivery after protected ground merge. Ground head feae3b872 is pushed, auto-merge armed, CI36821074418 running. Integrated chapter receipt: reports/technical-review/shallow-wide-integration-validation.json. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
 - Development entries touched: DL-#4733; DL-#4730 delivery continues in the isolated checkout.
 
 ## Preserved Earlier Checkpoints
@@ -16,14 +16,16 @@ Earlier pending statuses below are historical; current state is above.
 # Ground-Reaction Chapter — #4730
 
 - Goal active under epic #4009; continue complete reviews and protected delivery. Regular PRs only; no draft, direct-main or bypass pushes.
-- Current branch `fix/ground-conversation-rigor-4730`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, base remote main `fd508f04cd48b80f8f248432cea4a033b9188a13`.
+- Current branch `fix/ground-conversation-rigor-4730`, delivery worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`, integrated remote main `668de3a23b73c166936077ccdd6c4f869deb1c6c`.
 - Reference PR #4729 merged at 2026-10-01 03:37:56 UTC and ancestry verified. Final integrated receipt (6191 passed/29 skipped, 92.95% src coverage, subsequent content 183/four skips) finished after merge and is carried here. Lease/presence released 03:44 UTC (5924297561 / 5924298286).
-- Ground session `technical-review-20261001-ground-conversation`; lease/presence through 05:30 UTC. Scientific source complete with twelve new tests and forty combined focused passes. Complete source and pinned provider Chapters 03c/06ca read; primary human scopes and three Flash inventories adjudicated in `reports/technical-review/ground-conversation-review.md`.
+- Ground session `technical-review-20261001-ground-conversation`; lease/presence through 07:16 UTC. Scientific source complete with twelve new tests and forty combined focused passes. Complete source and pinned provider Chapters 03c/06ca read; primary human scopes and three Flash inventories adjudicated in `reports/technical-review/ground-conversation-review.md`.
 - Archive recomputation: work ratio 13.44–3519.40, not twice; zero primary matches, 202 load-only matches; 60 post-hoc matches occur 48/8/4/0 across 4/10/25/50 ms. Total model intervention differs from the matched estimand. Distributed central tension-only grip does not inherit the noncentral dashpot defect from UpstreamDrift #11195.
-- Regular PR [#4732](https://github.com/D-sorganization/AffineDrift/pull/4732) is open, final science checkpoint `ff4177f0309195e040085b44b31b355f033fef3d`, protected squash auto-merge armed on final head 821a1899246df83ebd017061489835157f4bfec7; CI 36815440996 in progress. Initial push raced a Quarto render and failed artifact/evidence hooks; after render completion and complete evidence staging, all push hooks passed.
+- Regular PR [#4732](https://github.com/D-sorganization/AffineDrift/pull/4732) is open, final science checkpoint `ff4177f0309195e040085b44b31b355f033fef3d`, protected squash auto-merge armed. All original CI 36815440996 checks passed; peer main #4731 introduced eleven digest/key-order conflicts, now resolved with all 28 ground findings preserved. Integrated validation passes: 6232 tests/29 skips, 93.04% src coverage; 184 subsequent content checks/four skips; four bounded browser cases and axe pass. Receipt: reports/technical-review/ground-conversation-integration-4731.json. Pushed-head protected CI remains required. Initial push raced a Quarto render and failed artifact/evidence hooks; after render completion and complete evidence staging, all push hooks passed.
 - Initial science checkpoint `0da67ca26cd147dfffd098c7c2b41427a168f87e`: final 213-page PDF Chapter16 pp98–106 plus contents/boundary verified; table fits on one page. Four final browser cases pass (390/1440, light/dark, 32 math items, four displays), zero serious/critical axe findings. All twelve content gates, Ruff, Black (819 files), title and root hygiene pass; 48 focused/legacy/hygiene checks pass. Prior 22 findings preserved, six new findings bound; 57 previous dependency paths unchanged, with chapter/PDF and bounded legacy-test changes explained. Stable full at 163cf5e59: 6203 passed/29 skipped/185 deselected, 92.95% src coverage. Final prose clarifies observer frame, 1536 pathway summaries/96 trajectory pairs/384 horizon comparisons, and empty cohort versus zero effect. Final 38 focused and 183 content checks/four skips pass without evidence restoration; final four public-route cases pass. Only PDF pages99/104/105 changed and were reinspected. Corpus Chapter16 row complete; 135 pending remain. Receipt: ground-conversation-repository-validation.json.
 - Preserve QA artifacts, prior scoped audits, parked provider synthesis #4253, and peer-owned deployment #4688/#4713. No live deployment claim.
 - Next longest source is queued as epic child #4733 (shallow-wide neural latency/synergies). Complete source read; original code defects reproduced; two supplied-text Flash inventories adjudicated. Read-only preparation and primary scopes are saved in docs/development/technical-review/shallow-wide-preparation.md and shallow-wide-correction-design.md. No #4733 lease, branch or source edits yet; finish #4732 first.
+
+- Parallel Chapter4 work is isolated on `fix/shallow-wide-rigor-4733` in `AffineDrift-screw-review`, source checkpoint b3410b4f040b73fa108a207b6d51e7233c75e919; do not include those edits in PR4732.
 
 ## Earlier Checkpoints
 
@@ -54,6 +56,161 @@ Older pending statements below are historical; current status is above.
 - Radar PR #4721 merged remote main `bd1255f15` with green CI 36799282870; lease #4717 released. Heavy-hit PR #4723 merged at `2a7c094070c5ebd7d16c95c332d5526931cc5ba0` with all CI 36801091325 checks green. Remote-main ancestry verified and #4720 lease/presence released. Integrated before final validation.
 - Added angular-momentum limitation: separated vector-damper endpoints leave `-c d × d_dot`; archive peak about 0.083 N m. Provider follow-up UpstreamDrift #11195; no provider edits or new engine run.
 - Preserve prior scientific scopes and handoffs below. Deployment remains a separate gate; do not claim live publication from merge alone. Parked provider synthesis #4253 remains outside this chapter review.
+
+# Implementation Handoff — #4602
+
+- Repository: `D-sorganization/AffineDrift`, working directory
+  `C:\Users\diete\Repositories\AffineDrift-worktrees\claude-4602` (git worktree).
+- Branch `claude/issue-4602`, commit `SELF`; pull request not created yet (opened as a draft
+  immediately after this handoff commit; see the development log entry DL-#4602 for the URL once
+  filled in).
+- Governing issue: #4602 (epic #4604, "[WEB-13.8] Content Inventory and Ownership Map"), CLI tier.
+- Objective: generate a deterministic content inventory (word count, status, last-reviewed date,
+  canonical pointer, inbound links, outbound broken links) for every rendered page, as CSV/JSON
+  artifacts plus a dashboard page, with pages under 300 words and no Planned status flagged.
+
+## Completed Work
+
+- `scripts/generate_content_inventory.py`: builds the inventory from `src.tools.site_page_scan`
+  primitives (`find_content_pages`, `extract_links`, `_resolve_target`, `_target_exists`,
+  `expand_includes`, `page_body`, `parse_front_matter`, `strip_code`) — the same primitives the
+  existing site link gate (`src/tools/site_link_gate.py`) uses, so link resolution semantics match
+  exactly. Status is read from the existing `status-banner__title` HTML component (there is no
+  frontmatter `status:` convention in this repo); last-reviewed is read from frontmatter `date:`
+  (no dedicated last-reviewed field exists); canonical defaults to the page's own route and can be
+  overridden with a frontmatter `canonical:` field (no such field existed before this change).
+- Writes `data/content/inventory.json`, `data/content/inventory.csv`, and the generated dashboard
+  page `pages/content-inventory.qmd`, all verified via `--check` (same pattern as
+  `scripts/generate_companion_freshness.py`).
+- Added one line to `pages/development-roadmap.qmd` linking the new dashboard page (needed so it
+  is not an orphan under the site link gate); the dashboard page itself carries `categories:
+  site-information` and a `## Related Articles` section with 3 resolving links, per the site gate
+  contract in `src/tools/site_link_gate.py`.
+- `.github/workflows/ci-standard.yml` generates a fresh inventory every build and uploads it as the
+  `content-inventory` artifact. Reviewer change: this is not a `--check` staleness gate, because
+  word counts and inbound links change with every content edit, so a gate would fail unrelated PRs.
+  The committed snapshot is refreshed with the generator when needed.
+- `tests/test_content_page_inventory.py`: 10 new tests (word count/status flagging, inbound/broken
+  link tracking, canonical override, last-reviewed, deterministic JSON/CSV/dashboard rendering,
+  and `--check` staleness detection on a temp tree; the repo-wide snapshot-currency test was
+  dropped for the same reason as the CI gate). Named
+  distinctly from `tests/test_content_inventory.py`, which already existed for an unrelated
+  media-deduplication hygiene guard (IA cleanup #3222) — see below.
+- Ran `python3 -m scripts.regenerate_claim_audit_evidence` after editing
+  `pages/development-roadmap.qmd`: that file carries a pinned SHA-256 review-evidence digest in
+  `data/trust/claim_audit_inventory.json` (reviewed under #4429), and any edit to a reviewed file's
+  bytes must refresh the recorded digest through this script rather than by hand.
+
+## Known Behavior Worth Understanding
+
+- The generator is self-referential: once `pages/content-inventory.qmd` exists as a rendered page,
+  it is itself scanned on the next run, which changes the inbound-link counts of the pages it
+  links to from its own Related Articles section. This reaches a stable fixed point (verified by
+  regenerating repeatedly until byte-identical); it is not an infinite oscillation. Anyone adding
+  new inbound/outbound links to or from the dashboard page should regenerate at least twice locally
+  and confirm `--check` passes before relying on a single generation pass.
+- Pitfall hit and fixed this session: my first `Write` to `tests/test_content_inventory.py`
+  silently overwrote a pre-existing, unrelated test (the media-dedup guard above) because a
+  content grep for the new filename used a lowercase pattern and missed the existing file's
+  capitalized docstring ("Content-inventory hygiene guards"). Restored from `git show HEAD:` and
+  moved the new tests to `tests/test_content_page_inventory.py`. Anyone naming a new file in this
+  repo should `git log --oneline -- [path]` first, not just grep file contents.
+- Running the broader test suite (`pytest -m "not e2e and not slow"`) regenerates
+  `data/trust/generated/reader_validation_study.json` and
+  `data/trust/generated/evidence_presentation_registry.json` in place with today's date and
+  reformatted JSON, as a pre-existing side effect unrelated to this change (their generators write
+  to the real repo path rather than a fixture path during some test). Both were reverted with
+  `git checkout HEAD --` before committing; do the same if a future run touches them again.
+- `tests/test_claim_audit_output_boundary.py::test_review_evidence_survives_deployment_pruning` is
+  slow in this environment (>60s hashing evidence files) and trips the default 60s per-test
+  pytest-timeout; it passes at 180s. Pre-existing, unrelated to this change.
+
+## Validation (Local)
+
+- `python3 -m pytest tests/test_content_page_inventory.py tests/test_content_inventory.py tests/test_site_link_gate.py -q` — 45 passed.
+- `python3 -m ruff check scripts/generate_content_inventory.py tests/test_content_page_inventory.py` — clean.
+- `python3 -m black --check --line-length 100 scripts/generate_content_inventory.py tests/test_content_page_inventory.py` — clean.
+- `python3 -m mypy scripts/generate_content_inventory.py` — no errors in the new file (2 pre-existing
+  errors surface transitively from `scripts/public_site_manifest.py`, unrelated to this change).
+- `src.tools.site_link_gate.run_site_gate` on the full repo — 0 new (non-baseline) errors touching
+  `pages/content-inventory.qmd` or `pages/development-roadmap.qmd`.
+- `python3 scripts/check_title_case.py`, `python3 scripts/check_terminology.py`,
+  `python3 scripts/check_root_hygiene.py`, `python3 -m scripts.check_dry_adoption`,
+  `python3 -m scripts.check_module_size_budget`, `python3 scripts/check_quarto_xrefs.py`,
+  `python3 scripts/link-checker.py --root . --internal-only`, `python3 -m scripts.check_spec_changelog`,
+  `python3 -m scripts.regenerate_claim_audit_evidence --check` — all pass.
+- Broader `pytest -q -m "not e2e and not slow"` was run for regression coverage; see the PR
+  description for its final pass count and the two pre-existing issues noted above.
+
+## Next Steps
+
+1. Open the draft PR and record its URL here and in DEVELOPMENT_LOG.md DL-#4602 (a small follow-up
+   commit is expected for this).
+2. A frontier reviewer should confirm the word-count heuristic (regex tokenization over
+   HTML/Markdown-stripped body text) and the `date:`-as-last-reviewed proxy are acceptable, since
+   neither is an existing repo convention — this issue introduced both.
+
+- Claim audit: `/pages/content-inventory.html` is a new rendered route, so it has a
+  reviewed inventory record (Deploy Website's `--enforce-publication` gate needs one for
+  every route). Open p3 finding `ad-finding-content-inventory-coverage` is tracked in #4693
+  ("every rendered page" wording vs the .qmd-only collector; snapshot drift).
+
+
+# Implementation Handoff — Give the Theory Series a Single Name (#4499)
+
+## Identity
+
+- Repository: `D-sorganization/AffineDrift`
+- Working directory: `C:/Users/diete/Repositories/AffineDrift`
+- Branch: `fix/web-02-3-theory-series-name-4499`
+- Baseline commit: `31572bc386154687007da85b376f92fb2b876403`
+- Implementation commit: `SELF`
+- Pull request: #4614
+- Governing issue/epic: #4499 (epic #4498)
+
+## Objective and Status
+
+- Objective: Adopt "Theory Series" as the unified series name across navbar, sidebar, titles, Article Index, and home page, retitle affine-nature-golf-swing as Consolidated Edition, and enforce title patterns from series metadata (#4499).
+- Status: ready for review / auto-merge
+- Completed: Standardized `_quarto.yml`, `index.qmd`, `resources/articles.qmd`, `pages/drifter-manifesto.qmd`, and `articles/theory-part*.qmd`, added `tests/test_series_title_and_naming.py`, updated trust inventories, merged main, and updated `SPEC.md`.
+- Remaining: Push to origin and monitor PR #4614 CI / auto-merge.
+
+## Files and Decisions
+
+- Files changed:
+  - `_quarto.yml`: Updated navbar and sidebar labels to use "Theory Series".
+  - `articles/affine-nature-golf-swing.qmd`: Retitled as "Theory Series: Consolidated Edition" with series metadata.
+  - `articles/theory-part1.qmd` through `part5.qmd`: Standardized series front-matter metadata and title patterns.
+  - `index.qmd`, `resources/articles.qmd`, `pages/drifter-manifesto.qmd`: Unified naming references.
+  - `data/trust/claim_audit_inventory.json` & generated trust registries: Synchronized digests.
+  - `tests/test_series_title_and_naming.py`: Comprehensive test suite verifying series naming and metadata patterns.
+  - `SPEC.md`: Added change-log row for #4614.
+  - `docs/development/HANDOFF.md`: Updated durable handoff state.
+- Key decisions: "Theory Series" is adopted consistently across all user-facing navigational surfaces.
+- User-owned or unrelated worktree changes: none observed
+
+## Validation
+
+- `pytest tests/test_series_title_and_naming.py` — PASS (15 passed)
+- `python -m ruff check tests/test_series_title_and_naming.py` — PASS
+- `python -m black --check --line-length 100 tests/test_series_title_and_naming.py` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\fleet_hooks.py spec-changelog` — PASS
+- `python C:\Users\diete\Repositories\Repository_Management\shared_scripts\handoff_validator.py` — PASS
+
+## Blockers and Risks
+
+- Blockers: none
+- Risks/assumptions: none
+
+## Next Steps
+
+1. Push commit to origin.
+2. Verify PR #4614 checks pass and auto-merge merges into main.
+
+## Change Log
+
+- `SELF` — Merge main, resolve SPEC.md conflicts, and update HANDOFF.md for PR #4614 (#4499).
+- `73961632` — Give the Theory Series a single name and title pattern (#4499).
 
 ## Preserved Prior Delivery Records
 
@@ -226,6 +383,45 @@ September 28 pause instruction below. Never create draft PRs. Goal remains activ
 - Next: owner review of the draft PR. The union merge policy in the fleet-managed
   consolidation section will keep causing this; fix it upstream in Repository_Management.
 
+# URL Stability and Redirect Policy — Issue #4503
+
+- Repository: `D-sorganization/AffineDrift`, worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4503`.
+- Branch `claude/issue-4503`, commit `SELF`; pull request: to be opened as a draft by this session.
+- Governing issue: #4503 (WEB-02.9, part of epic #4505 / E2 — Information Architecture, Naming, and Consolidation).
+- Objective: consolidation and renaming move URLs; a previously published route must never
+  silently disappear. Implemented `config/redirects.yml` (a ledger of `{from, to, issue, since}`
+  entries) alongside Quarto's existing `aliases:` front matter mechanism, `src/tools/check_redirects.py`
+  to enforce the policy, and a CONTRIBUTING.md section documenting how to move a page.
+- Enforcement mechanism: the deploy workflow (`.github/workflows/deploy-website.yml`) now fetches
+  the currently-live `public-site-manifest.json` (the previous deploy, best-effort — a missing or
+  unreachable file is treated as "nothing to compare," not a failure) before the new manifest
+  overwrites it, then runs `check_redirects.py`, which fails the build if a route present in the
+  previous manifest is absent from the new one and not covered by a `redirects.yml` entry, and
+  separately fails if a ledger entry's old route was never actually rendered by Quarto (i.e. the
+  `aliases:` entry was declared but the page doing the aliasing doesn't exist or wasn't rebuilt).
+- `config/redirects.yml` starts empty (`redirects: []`); no page renames are in flight in this
+  issue's scope, only the mechanism the later consolidation issues (part of epic #4505) will use.
+- Validation:
+  - `python3 -m pytest tests/test_check_redirects.py -q`: 13 passed.
+  - `python3 -m pytest --override-ini addopts= -m content_lint tests/test_deployment_integrity.py -q`: 16 passed, 1 skipped.
+  - `python3 -m ruff check src/tools/check_redirects.py tests/test_check_redirects.py tests/test_deployment_integrity.py`: clean.
+  - `python3 -m black --check --line-length 100 src/tools/check_redirects.py tests/test_check_redirects.py tests/test_deployment_integrity.py`: clean.
+  - `python3 -m mypy src/tools/check_redirects.py`: clean.
+  - `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .`: clean (whole repo).
+  - Module size budget and Python dependency boundary checks: pass.
+  - Full project suite (`pytest --cov`, `npx jest`, `npx playwright test`) was not run to completion
+    in this session (large repo, background timeout); the change touches only a new script, its
+    test file, one existing test file, a new empty-ledger config file, one CI workflow, and
+    CONTRIBUTING.md, with no behavioral change to any existing module.
+
+## Next Steps
+
+1. Open the draft PR (`Fixes #4503`) and let the frontier review pass judge the redirect-ledger
+   schema and the "previous manifest via live curl" enforcement strategy.
+2. When a later E2 consolidation issue actually renames or merges pages, it should populate
+   `config/redirects.yml` and add the matching `aliases:` front matter using the pattern
+   documented in CONTRIBUTING.md's new "Renaming or Moving a Page" section.
+3. No further implementation is planned from this session pending review feedback.
 # Implementation Handoff — on-ramp route claim audit (#4492 follow-up)
 
 - Repository: D-sorganization/AffineDrift; worktree `AffineDrift-worktrees/claude-onramp-audit`
@@ -4252,4 +4448,3 @@ The following record preserves the merged PR #4723 review; its pending delivery 
 - Integrated radar remote main `bd1255f153926c7e653148b8c4db972a08ba7be9`; its lease/presence released at 01:12 UTC. Preserve both completed review streams below. Only heavy-hit full validation and delivery remain in flight for this session.
 
 - Next indexed source is companion Chapter 20 (`ch20_plane_to_space.qmd`, 2632 words). Read-only preparation and two supplied-text Flash inventories are complete locally: inspect observer versus representation invariance, contact wrench admissibility, and exact archived closure/engine evidence. No issue claim, source edit, or completed review for that chapter. Provider facts remain unverified; do not promote delegate conjectures.
-
