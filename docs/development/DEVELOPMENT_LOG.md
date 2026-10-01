@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4746 · Critics Corner Technical Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4746 (epic #4009)
+- **Branch:** fix/critics-rigor-4746
+- **Paths:** articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd, tests/test_critics_corner_identities.py, reports/technical-review/critics-corner-review.md
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (73 focused pass;12 gates;653 titles;Ruff/Black831;96 MathJax expressions;full6372 pass/two root-hygiene failures;packaging artifacts preserved;18 follow-up checks pass)
+- **Summary:** Correct the excluded critique's error transport, pendulum units, algorithmic and empirical claims, contraction and hybrid-event arguments with lead-reviewed Flash support.
+- **Next step:** Push the reviewed source checkpoint and open its regular PR with the recorded validation scope.
+
 ### DL-#4743 · Muscle Models and Coupled Power
 
 - **State:** in_review

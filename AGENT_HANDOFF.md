@@ -1,3 +1,16 @@
+# Critics Corner Reviewed Source — #4746
+
+- Goal active. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/critics-rigor-4746; checkpoint SELF; regular PR not created yet.
+- Entire excluded internal source reviewed and corrected, with three supplied-text agy Gemini3.8 Flash jobs and lead scientific adjudication. Six new numerical cases plus existing tests verify transport, pendulum scaling and event sensitivity. Reports critics-corner-review.md and critics-corner-validation.json contain decisions, bounded sources and exact source/test digests.
+- Validation:73 focused,35 audit and18 post-cleanup checks pass;12 publication gates;653 titles;Ruff and Black831; internal preview96 MathJax expressions/ten displays with no errors. Full6372 pass/two local root-hygiene failures/29 skips;78.53% src+scripts and93.04% src-only coverage. Preserved leftover04:17 egg-info and new build/dist under QA;18 follow-up checks pass. Never relabel the original full run green.
+- Only this internal source marked complete:129 full-source audits plus whole-book consistency remain. No public route, empirical validation, trust-ledger history change, or main delivery claim.
+- Prior PR4741 d9c21:145 E2E pass/one copy-button size failure (rounded44x60). Flash triage is advisory; reproduce actual DOM/animation cause before changing anything, and retain44px threshold. Local observation failed because stale docs/index has no copy button; regenerate a fresh homepage in the owned impact-review checkout before reproducing. Browser/node observation process was interrupted; no repo edits from that probe.
+- Prior PR4745 at739e remains regular/main-target/auto-merge armed, Python/all8compile checks passed, E2E last building. Both prior PRs remain unmerged. Current branch includes both dependent science changes and must preserve them.
+- Next: commit/push this source checkpoint; open a regular PR when its checks are ready; isolate the Chapter9/10 touch-target failure and verify protected remote-main delivery. Update current turnover as statuses change. No draft, force, admin or direct-main.
+- Lease critics through13:37UTC; muscle12:33,Chapter9 13:03,Chapter10 13:12. Coordination inbox unavailable/truncated; explicit leases govern. DL-#4746 updated; preserve all untracked QA and historical checkpoints.
+
+## Preserved Earlier Checkpoints
+
 # Muscle Models — Regular PR #4745
 
 - Regular main-target PR: https://github.com/D-sorganization/AffineDrift/pull/4745. Pushed review/binding da493c5763121ff3a8b474395fca6ae6313ed09b; source d7be93d34322f2cbb73f8c933cf22991e604a2e5; evidence delivery46f71eda4eaf4965ffa12b5025544dce98f632b8. Current registration checkpoint SELF. Goal active.
