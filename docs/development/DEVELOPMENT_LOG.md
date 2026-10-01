@@ -20,16 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4562 · Scan Dark Theme and Mobile Viewports in axe Matrix
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** antigravity
-- **PR:** pending
+- **PR:** #4777
 - **Issue:** #4562 (epic #4569)
 - **Branch:** fix/web-09-2-axe-dark-mobile-4562
 - **Paths:** scripts/public-site-axe.js, scripts/verify-public-site.js, .github/workflows/ci-standard.yml, tests/public-site-verifier.test.js
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (Jest 35 suites / 547 passed)
 - **Summary:** Expand axe-core verification in CI to include mobile viewport (390x844) and dark theme; update markAxeCells to key on route, viewport, and theme; track distinct scanned route and cell counts in axePolicyEvidence.
-- **Next step:** Push branch, open PR, add SPEC.md entry, pass CI, release lease and merge.
+- **Next step:** Pass CI, release lease and merge.
 
 ### DL-#4766 · Patent Catalog Technical Review
 

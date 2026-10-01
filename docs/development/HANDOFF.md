@@ -1,13 +1,13 @@
 # Scan Dark Theme and Mobile Viewports in axe Matrix — #4562
 
-- Goal active under epic #4569 (E9 — Accessibility Conformance). Branch fix/web-09-2-axe-dark-mobile-4562.
+- Goal active under epic #4569 (E9 — Accessibility Conformance). Branch fix/web-09-2-axe-dark-mobile-4562. PR #4777.
 - Updated `scripts/public-site-axe.js` to key cell deduplication on `${item.route}::${item.viewport.id}::${item.theme}`, ensuring multi-viewport and multi-theme matrices scan all requested cells.
 - Updated `axePolicyEvidence` to compute distinct `scanned_route_count` and `scanned_cell_count`, deduplicating `routes_with_violations`.
 - Updated `scripts/verify-public-site.js` to display `scanned_cell_count` in axe log output.
 - Expanded axe-core quality gate in `.github/workflows/ci-standard.yml` to `--viewports desktop-small,mobile` and `--themes light,dark`.
 - Added contract tests in `tests/public-site-verifier.test.js` validating multi-cell plan marking and evidence summaries.
 - Local validation: Jest (35 suites, 547 tests passed), pytest deployment integrity and spec changelog passed, CSS bundle up to date.
-- Next: push branch, open PR, add SPEC.md entry, pass CI, release lease and merge.
+- Next: pass CI, release lease and merge.
 
 ## Preserved Earlier Checkpoints
 

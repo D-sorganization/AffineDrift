@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4777 | Expand axe-core verification in CI to scan dark theme and mobile viewports with multi-cell deduplication (#4562). |
 | 2026-10-01 | #4773 | Record controllability-drift-ratio redirect in redirects.yml to restore URL stability check in deploy workflow (#4688). |
 | 2026-10-01 | #4761 | Refresh content inventory and ownership map snapshot for 207 pages and replace governance vocabulary in companion Chapter 16 (#4602). |
 | 2026-10-01 | #4766 | Audit all 168 catalog references plus Gazette entry; correct patent mechanisms, attribution, dates and inference limits; preserve source-hashed dispositions and render revised book. |
