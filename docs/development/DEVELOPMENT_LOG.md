@@ -20,15 +20,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4730 · Ground-Reaction Boundaries and Matching Evidence
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4732 (regular)
 - **Issue:** #4730 (epic #4009)
 - **Branch:** `fix/ground-conversation-rigor-4730`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch16_ground_conversation.qmd`, `scripts/make_proximal_distal_companion_expanded_figures.py`, `tests/test_ground_conversation_review.py`, `reports/technical-review/ground-conversation-review.md`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (40 focused checks pass; independent archived NPZ recomputation complete; first PDF and four browser cases inspected)
+- **Last verified:** 2026-10-01 (6203 full tests/29 skips; 92.95% src coverage; final wording 38 focused and 183 content/four skips; 213-page PDF and four browser cases verified)
 - **Summary:** Correct material contact power, internal/external wrench boundaries, ZVCF control convention and symmetric dissipation normalization; distinguish primary matching from total model contrasts and resolve post-hoc horizon counts.
-- **Next step:** Finish final PDF/browser verification, bind chapter-scoped evidence with prior reviews preserved, run full validation, open a regular PR and deliver through protected merge.
+- **Next step:** Regular PR #4732: local validation complete. Verify final pushed CI, arm protected squash auto-merge, verify remote-main ancestry, and release lease/presence. First full run had three render-race artifact failures; stable rerun passed without relaxed gates. Empty matched cohort explicitly distinguished from zero effect. Broader goal remains active.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 

@@ -388,7 +388,9 @@ def test_grip_and_shaft_companions_state_the_limits_with_the_results() -> None:
     ground = " ".join(GROUND_COMPANION.read_text(encoding="utf-8").split())
     assert "What Happened When the Ground Was Actually Added" in ground
     assert "Zero of 384" in ground
-    assert "no speed benefit under its joint load-and-total-work matching criterion" in ground
+    assert "no eligible comparison exists to estimate" in ground
+    assert "a speed benefit under the joint load-and-total-work matching criterion" in ground
+    assert "An empty matched cohort does not estimate a zero effect" in ground
     # Preserve the primary result without erasing a different model-intervention estimand.
     assert "0.177 m/s" in ground
     assert "Dissipation is partly downstream of the support change" in ground

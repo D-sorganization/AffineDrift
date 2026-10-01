@@ -41,7 +41,7 @@ P_g=\mathbf F_g\cdot\mathbf v_O+
 $$
 
 The moment and velocity must refer to the same point on the same rigid body.
-An ideal stationary, nonslipping rigid contact has zero boundary power despite
+An ideal nonslipping rigid contact at rest in the chosen observer frame has zero boundary power despite
 large reactions. For a deforming foot, use traction dotted with local
 material-point velocity over the contact surface, including any applied contact
 couples in the chosen continuum model. A center-of-pressure path is a changing
@@ -328,8 +328,9 @@ unilateral ground contact, Coulomb friction, or measured plantar pressure.
 The design comprises 12 states, four primary pathways, two signed initial
 velocity perturbations, two timesteps, and two native dynamics backends:
 $12\times4\times2\times2\times2=384$ primary trajectories. Two control families
-add 192 trajectories. Each is summarized at 4, 10, 25, and 50 ms. Consequently,
-the coupled-versus-fixed test has **384 summary comparisons**,
+add 192 trajectories. Each is summarized at 4, 10, 25, and 50 ms, giving 1536
+primary pathway summaries. The coupled-versus-fixed subset contains 96 trajectory
+pairs, each compared at four horizons. Consequently, it has **384 summary comparisons**,
 $12\times2\times2\times2\times4$, rather than 384 independent human trials or
 384 distinct trajectory pairs. Engine and timestep variants are numerical
 replications of the modeled conditions.
@@ -372,8 +373,9 @@ estimated minimum tolerance, nor proof that unequal work is unavoidable in every
 possible ground model. Adding support damping changes dissipation directly and
 also changes motion, hence grip and shaft dissipation.
 
-The supported conclusion is narrow: **this archive establishes no speed benefit
-under its joint load-and-total-work matching criterion**. That criterion must
+The supported conclusion is narrow: **no eligible comparison exists to estimate
+a speed benefit under the joint load-and-total-work matching criterion**. An
+empty matched cohort does not estimate a zero effect. That criterion must
 not be replaced silently after seeing the result.
 
 ### A Total Simulated Contrast Is a Different Question

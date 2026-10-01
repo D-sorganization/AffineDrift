@@ -80,19 +80,25 @@ still limit the independence of native-operator parity.
   contact implementation inspected. Exact file hashes and independent archive
   recomputation are in `ground-conversation-archive-checks.json`.
 
-Two agy Gemini 3.8 Flash High supplied-text inventories assisted claim discovery.
+Three agy Gemini 3.8 Flash High supplied-text inventories assisted claim discovery.
 They had no tools, network or editing authority. The lead rejected automatic
 two-foot rank-deficiency claims and claims that every contact problem is an
 LCP/QP, and independently checked the accepted mechanical/numerical findings.
 
 ## Publication Status
 
-Scientific corrections, 40 focused checks, all twelve content gates and final
+Scientific corrections, 48 focused/legacy/hygiene checks, all twelve content gates and final
 PDF/browser inspection are complete. The 213-page PDF has all nine chapter pages
 plus contents and the next-chapter boundary inspected. Four viewport/theme cases
 pass with zero serious/critical axe findings. All 57 unchanged prior publication
 dependencies are verified; only Chapter16, the rebuilt PDF and bounded legacy ground assertions changed
 within that prior set. The legacy test previously required the inaccurate
 blanket fairness claim; it now checks both estimands and the post-hoc horizon
-boundary. Full repository validation and protected delivery remain pending.
+boundary. Stable full regression at 163cf5e59 passes 6203 tests with 29 skips
+and 92.95% src coverage. Final wording distinguishes an empty matched cohort
+from an estimated zero effect, identifies the observer frame for stationary
+contact, and clarifies trajectory versus horizon counts. Final publication
+verification passes: 38 focused checks, 183 content checks (four skips), and
+four viewport/theme cases with zero serious/critical axe findings. Protected
+PR #4732 delivery remains pending.
 No whole-book or live-deployment certification is implied.
