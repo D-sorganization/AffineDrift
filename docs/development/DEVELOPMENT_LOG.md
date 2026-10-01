@@ -31,6 +31,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct point/body energy, power-conjugate motion and whole-club/shaft/head accounting; qualify evidence and counterfactual inference. Preserve79 earlier findings; Chapter5 complete;119 sources plus whole-book consistency remain.
 - **Next step:** Source and binding pushed; push registration, verify final-head CI and guarded remote-main delivery.
 
+- Main integration: preserve PR4761 changes at 37fa19fef352844ed0d3d3635bb7b36879c65c55; rebuild combined PDF and refresh evidence; no new scientific credit. Final-head CI pending.
+
 ### DL-#4766 · Patent Catalog Technical Review
 
 - **State:** shipped

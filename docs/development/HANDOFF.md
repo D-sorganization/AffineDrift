@@ -11,6 +11,10 @@
 - Patent PR #4768 is merged as55f21d8fb874434d92823f9dade683897fe1c78b; all22 bound blobs and final-head CI verified. See patent-remote-main-receipt.json. Preserve peer worktree23ee826 and all historical receipts.
 - Lease technical-review-20261001-speed-energy expires21:21UTC Oct1; presence21:23. Latest inbox remains malformed/page-limited and incomplete; absence is not evidence of no peers.
 
+## Main Integration Update
+
+PR #4761 advanced main to 37fa19fef352844ed0d3d3635bb7b36879c65c55. This checkpoint integrates its content inventory, Chapter16 wording, SPEC row and evidence digests without dropping historical findings. The combined PDF is rebuilt. Owned integration checkout: C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration, branch fix/speed-energy-rigor-4769. Chapter24 work remains separate in AffineDrift-link-health on fix/measured-golfers-rigor-4771 and is not included here. Final-head CI and remote-main verification remain required. See reports/technical-review/speed-energy-main-integration.json.
+
 ## Preserved Earlier Checkpoints
 
 # Patent Catalog Final Source Checkpoint — #4766
