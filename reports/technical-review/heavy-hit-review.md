@@ -49,9 +49,11 @@ effect in a particular golfer or an improvement in perceived sweetness.
    merged revision `1ce02d7ae4d916d4c598b62be78cefa83452aaa7` and explain their
    historical scope. Keep existing provider links at their reviewed revision.
 7. **Readable Equations.** The first browser pass found six horizontally wide
-   displays. Break their chains into aligned lines without changing the
-   mechanics; name the frozen dynamic-stiffness matrix in the mobility formula.
-   Final visual acceptance is recorded separately after rebuilding.
+   displays; visual inspection also caught clipped unnumbered expressions
+   missed by the overflow counters. Their aligned forms preserve the mechanics.
+   Name the frozen dynamic-stiffness matrix in the mobility formula and shorten
+   the title to avoid broken mobile words. Final visual acceptance is recorded
+   separately after rebuilding.
 
 ## Independent Checks and Adjudication
 
