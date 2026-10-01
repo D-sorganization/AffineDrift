@@ -1,0 +1,84 @@
+{
+  "issue": 4751,
+  "scope": "Recomputed matching masks and summaries from committed provider arrays; no dynamics rerun or human validation.",
+  "provider_revisions": {
+    "articulated_atlas": "a1a613999eb0c744da96caa040941955eb210a21",
+    "isolated_and_forward_modal": "85cce4d3307bb7ad3953d9fc6e583e370803515c"
+  },
+  "provider_data_directory": "docs/research/proximal_distal_energy_transfer/data/",
+  "sha256": {
+    "articulated_shaft.py": "314371699ad92854817fb0f79bc60cd9e7febd827d2c5c9ad0a8a3a632a5ece1",
+    "articulated_shaft_atlas.json": "2b074dabe952d98c3ac6e5e1582f65710f47b0566e4c5eccc5dfbc471a8b7864",
+    "articulated_shaft_atlas.npz": "bf49e945b838fc0307f5f50d58fcfad6b9755a0ff389a4e8eb9943bd49dcbf3b",
+    "articulated_shaft_atlas.py": "acb98cbb0e5d6eed102d71891a19ce884e3dad0e60240188d2c335a331ebb9f9",
+    "articulated_shaft_forward.py": "0d3067e5c3ee11606f5719d6b9066ea4bc6c7568dcf653f85f1fba407f3c0323",
+    "moving_base_modal_shaft_study.json": "3ed7cc8612b4ee979879b9860ee5395b36317d5b5d0d29536b0e2e5f190f550f",
+    "shaft_beam_reference.json": "f07fc33cc76fb80f395cd10b01a30169b6440cec3854be3894024d435bc0f722",
+    "spatial_full_body.py": "8e0c3efb06747742cca30f6bc1b9e18a28779a1c187e4b98ba6cde5293d96cfc"
+  },
+  "trajectory_axes": [
+    "12 states",
+    "4 activations",
+    "2 velocity branches",
+    "2 timesteps",
+    "2 engines"
+  ],
+  "comparison_axes": [
+    "12 states",
+    "2 velocity branches",
+    "2 timesteps",
+    "2 engines",
+    "4 horizons"
+  ],
+  "trajectory_count": 384,
+  "comparison_cell_count": 384,
+  "matched_cell_count": 126,
+  "metric": "Norm of qd[14:17], club-frame origin translation speed; coupled minus rigid. Not clubhead-point speed or impact.",
+  "matching": {
+    "formula": "abs(a-b)/max(floor,(abs(a)+abs(b))/2) <= .05",
+    "peak_station_force_floor_n": 1.0,
+    "grip_and_shaft_damping_loss_floor_j": 1e-6
+  },
+  "matched_range_m_s": [-0.028519582842675667, 0.02123340599224041],
+  "by_horizon": [
+    {
+      "horizon_s": 0.004,
+      "total_cells": 96,
+      "matched_cells": 28,
+      "range_m_s": [-0.009506355793839738, 0.0060183279704826426],
+      "negative": 20,
+      "positive": 8
+    },
+    {
+      "horizon_s": 0.01,
+      "total_cells": 96,
+      "matched_cells": 0,
+      "range_m_s": null,
+      "negative": 0,
+      "positive": 0
+    },
+    {
+      "horizon_s": 0.025,
+      "total_cells": 96,
+      "matched_cells": 40,
+      "range_m_s": [-0.028519582842675667, 0.02123340599224041],
+      "negative": 14,
+      "positive": 26
+    },
+    {
+      "horizon_s": 0.05,
+      "total_cells": 96,
+      "matched_cells": 58,
+      "range_m_s": [-0.020784234197256418, 0.006339313363409788],
+      "negative": 48,
+      "positive": 10
+    }
+  ],
+  "forward_modal_screen": {
+    "interpretation": "failure retains the run as an out-of-domain numerical stress test but rejects quantitative small-deflection beam inference",
+    "metric": "maximum_abs_modal_tip_deflection_over_shaft_length",
+    "observed": 0.1347566237083847,
+    "passed": false,
+    "threshold": 0.05
+  }
+}

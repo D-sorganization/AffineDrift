@@ -12,6 +12,8 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.patches import Arc, Circle, FancyArrowPatch, FancyBboxPatch
 
+from scripts.shaft_energy_illustration import prescribed_cycle
+
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "articles/figures/proximal_distal_companion"
 EVIDENCE = (
@@ -299,23 +301,22 @@ def make_sign_quadrants() -> tuple[Path, Path]:
 
 
 def make_shaft_spring() -> tuple[Path, Path]:
-    t = np.linspace(0, 1, 300)
-    load = np.exp(-(((t - 0.34) / 0.16) ** 2))
-    stored = np.exp(-(((t - 0.48) / 0.19) ** 2))
-    release = np.gradient(-stored, t)
-    fig, axis = plt.subplots(figsize=(10, 4.5))
-    axis.plot(t, load, color=BLUE, lw=3, label="Applied Loading")
-    axis.plot(t, stored, color=VIOLET, lw=3, label="Stored Elastic Energy")
-    axis.fill_between(
-        t, np.maximum(release, 0) / 8, color=ORANGE, alpha=0.3, label="Illustrative Release Rate"
-    )
-    axis.set(
-        xlabel="Illustrative Swing Phase",
-        ylabel="Normalized Amount",
-        title="A Flexible Shaft Is a Small, Timed Energy Account",
-    )
-    axis.legend(frameon=False, ncol=3)
-    axis.set_xticks([0, 0.33, 0.66, 1], labels=["Early", "Loading", "Late", "Delivery"])
+    data = prescribed_cycle()
+    time = data["time"]
+    fig, axes = plt.subplots(2, 1, figsize=(10, 7), sharex=True, layout="constrained")
+    energy, power = axes
+    energy.plot(time, data["elastic"], color=VIOLET, label="Elastic Energy")
+    energy.plot(time, data["kinetic"], color=BLUE, label="Kinetic Energy")
+    energy.plot(time, data["elastic"] + data["kinetic"], color=INK, ls="--", label="Total")
+    energy.set(ylabel="Energy (J)", title="A Prescribed Motion With a Closed Energy Account")
+    power.plot(time, data["input_power"], color=BLUE, label="Signed Drive Power")
+    power.plot(time, data["dissipation"], color=ORANGE, label="Damping Loss Rate")
+    power.plot(time, data["energy_rate"], color=INK, ls="--", label="Stored-Energy Rate")
+    power.axhline(0, color=GRAY, lw=0.7)
+    power.set(xlabel="Time (s)", ylabel="Power (W)")
+    for axis in axes:
+        axis.legend(frameon=False, loc="upper right", fontsize=9)
+    fig.supxlabel("Illustration Only: Prescribed Spring–Mass–Damper Motion", fontsize=10)
     return _save(fig, "fig_companion_shaft_storage")
 
 

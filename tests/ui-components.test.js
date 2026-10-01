@@ -10,6 +10,7 @@ let unregisterScrollCallback;
 let initAccordions;
 let initBackToTop;
 let initFadeAnimations;
+let initPrintMathTypesetting;
 
 describe('ui-components.js', () => {
   beforeEach(() => {
@@ -23,6 +24,7 @@ describe('ui-components.js', () => {
     initAccordions = mod.initAccordions;
     initBackToTop = mod.initBackToTop;
     initFadeAnimations = mod.initFadeAnimations;
+    initPrintMathTypesetting = mod.initPrintMathTypesetting;
   });
 
   describe('scroll callbacks', () => {
@@ -117,6 +119,30 @@ describe('ui-components.js', () => {
         disconnect() {}
       };
       expect(() => initFadeAnimations()).not.toThrow();
+    });
+  });
+
+  describe('initPrintMathTypesetting', () => {
+    // WEB-07.9 (#4550) / WEB-11.3: lazy-loaded, off-screen math is not
+    // typeset until scrolled into view. A native print (Ctrl+P) must not
+    // ship raw TeX, so `beforeprint` forces a full typeset.
+    test('forces MathJax.typesetPromise on beforeprint when MathJax is present', () => {
+      const typesetPromise = jest.fn().mockResolvedValue(undefined);
+      window.MathJax = { typesetPromise };
+
+      initPrintMathTypesetting();
+      window.dispatchEvent(new Event('beforeprint'));
+
+      expect(typesetPromise).toHaveBeenCalledTimes(1);
+
+      delete window.MathJax;
+    });
+
+    test('does not throw when MathJax is unavailable', () => {
+      delete window.MathJax;
+
+      initPrintMathTypesetting();
+      expect(() => window.dispatchEvent(new Event('beforeprint'))).not.toThrow();
     });
   });
 });
