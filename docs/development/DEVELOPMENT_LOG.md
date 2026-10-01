@@ -18,20 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
+### DL-#4725 · Annotated Reference Library
 
-- **State:** in_review
+- **State:** in_progress
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
-- **Issue:** #4720 (epic #4009)
-- **Branch:** `fix/heavy-hit-consistency-4720`
-- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **PR:** pending (regular PR required)
+- **Issue:** #4725 (epic #4009)
+- **Branch:** `fix/reference-library-rigor-4725`
+- **Paths:** `articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex`, `articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex`, `articles/Launch_Monitor_Technology_Review/references.bib`, `articles/Launch_Monitor_Technology_Review/main.pdf`, `reports/technical-review/reference-library-review.md`, `tests/test_reference_library_review.py`
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
-- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
-- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 open, protected auto-merge armed; finish CI/remote-main verification and release lease. Goal active; 138 indexed full reviews remain.
-
-
+- **Last verified:** 2026-10-01 (21 focused cases pass; PDF rebuild/visual and full repository validation in progress)
+- **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
+- **Next step:** Finish rendered evidence and full validation, preserve earlier reviews, integrate protected #4726 after merge, and deliver a regular PR. Broader technical-review goal remains active.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -49,6 +47,21 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4723 (regular)
+- **Issue:** #4720 (epic #4009)
+- **Branch:** `fix/heavy-hit-consistency-4720`
+- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (6086 full-suite passes, 29 skips, 92.95% coverage; 38 focused audit/numerical/hygiene passes; 138 rendered expressions/23 displays visually checked at 390/1440 px; four browser cases and one axe scan, zero serious/critical findings; twelve content gates and Ruff/Black/mypy pass)
+- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
+- **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Merged remote main 2a7c094070c5ebd7d16c95c332d5526931cc5ba0 at 2026-10-01 02:10:27 UTC; all protected checks green (36801091325). Merge fetched and ancestor verified; lease/presence released 02:13 UTC. Broader goal remains active.
+
+
 
 ### DL-#4717 · Radar Screw-Kinematics Appendix Review
 

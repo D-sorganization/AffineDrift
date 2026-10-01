@@ -1,3 +1,13 @@
+# Annotated Reference Library — #4725
+
+- Active branch `fix/reference-library-rigor-4725`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-review`; base `fb377e96dc33ee80b655284aef066f8acfb7caf1` includes heavy-hit #4723 and peer web #4704.
+- Complete Appendix A source review corrects median-centered agreement, return-rate interpretation, historical specification conditions, curvature, patent attribution and source roles. Bounded Chapter 3 launch-weight attribution/sensitivity corrections and Wood bibliography metadata are included; Chapter 3 remains pending for full review.
+- Durable evidence is in `reports/technical-review/reference-library-*`. Original link inventory and primary read scopes are explicit. Two supplied-text agy Gemini 3.8 Flash High inventories were adjudicated by the lead; no delegated tools/network/edits.
+- Eight new interpretation/geometry/source checks and thirteen prior radar-screw checks pass. Canonical PDF rebuild and affected-page verification are in progress; full repository coverage is running. Do not claim final delivery or live-site publication yet.
+- Session `technical-review-20261001-reference-library`; issue lease through 04:33 UTC, presence refreshed through 04:57 UTC. Preserve prior review receipts, parked provider synthesis #4253 and peer-owned deployment #4688/#4713.
+- Prior spatial review: regular PR #4726, head `935501efa377dcdcb02291968d18aeb4b96bade0`, protected auto-merge armed. CI 36807137602: Python/static/links and other checks green; E2E building site. Lease #4724 renewed through 05:08 UTC (receipt 5923930542). On merge, fetch/verify ancestor and release its lease/presence; integrate before this PR delivery.
+- Heavy-hit #4723 merged remote main `2a7c094070c5ebd7d16c95c332d5526931cc5ba0` at 02:10:27 UTC on 1 October; fetched/verified and lease/presence released. Older handoff sections below are historical checkpoints.
+
 # Heavy-Hit Technical Review — #4720
 
 - Goal active under epic #4009; longest unfinished articles first; regular PRs only.
