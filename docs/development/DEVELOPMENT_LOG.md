@@ -18,18 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4714 · Impact Optimality and Model Limits
+### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
 
-- **State:** in_review
+- **State:** in_progress
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4718 (regular)
-- **Issue:** #4714 (epic #4009; historical corpus #4021)
-- **Branch:** `fix/impact-optimality-rigor-4714`
-- **Paths:** `articles/impact-optimality-and-model-limits.qmd`, `articles/proximal-distal-model-workbench.qmd`, `resources/articles.qmd`, `tests/test_impact_optimality_review.py`, `reports/technical-review/impact-optimality-review.md`
-- **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (21 impact checks; 46 post-binding audit/numerical/hygiene checks; 179 content passes; full Windows 6036 passes and three audit/snapshot failures subsequently resolved; 92.88% coverage; Ruff/Black/mypy and 12 content gates; final 12 browser cases and 74 math expressions)
-- **Summary:** Bound the instantaneous theorem, inertia reduction and historical solver evidence; correct primary-study and human-objective inference; reconcile two linked public summaries without renewing their other review scope.
-- **Next step:** Scientific source/evidence committed at 3ff93eda0/fdec68157. Integrated remote main be263f9cd; regular PR #4718 is open with protected auto-merge armed; verify CI and merge; keep corpus goal active. Provider follow-up Tools #5393. Live deployment separately blocked by #4688 dataset-explorer coverage.
+- **Issue:** #4720 (epic #4009)
+- **Branch:** `fix/heavy-hit-consistency-4720`
+- **Paths:** `articles/technology-heavy-hit-impact-coupling.qmd`, `articles/_includes/impact-acoustics.qmd`, `articles/_includes/impact-research-program.qmd`, `tests/test_heavy_hit_boundary_review.py`, `reports/technical-review/heavy-hit-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (13 focused checks pass; initial HTML renders 138 math expressions/23 displays; six wide equations reformatted, final visual review pending)
+- **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
+- **Next step:** Final browser/repository validation, committed evidence binding, main integration, and regular protected PR delivery.
+
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
@@ -47,6 +47,19 @@ reachable from any live state and `abandoned` from `parked`.
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
+
+### DL-#4714 · Impact Optimality and Model Limits
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4718 (regular)
+- **Issue:** #4714 (epic #4009; historical corpus #4021)
+- **Branch:** `fix/impact-optimality-rigor-4714`
+- **Paths:** `articles/impact-optimality-and-model-limits.qmd`, `articles/proximal-distal-model-workbench.qmd`, `resources/articles.qmd`, `tests/test_impact_optimality_review.py`, `reports/technical-review/impact-optimality-review.md`
+- **Started:** 2026-09-30
+- **Last verified:** 2026-09-30 (21 impact checks; 46 post-binding audit/numerical/hygiene checks; 179 content passes; full Windows 6036 passes and three audit/snapshot failures subsequently resolved; 92.88% coverage; Ruff/Black/mypy and 12 content gates; final 12 browser cases and 74 math expressions)
+- **Summary:** Bound the instantaneous theorem, inertia reduction and historical solver evidence; correct primary-study and human-objective inference; reconcile two linked public summaries without renewing their other review scope.
+- **Next step:** Merged remote main `24cdba4d4` with protected checks green; lease/presence released. Corpus work continues under #4009.
 
 ### DL-#4712 · Two-Hand Wrench Chapter Review
 

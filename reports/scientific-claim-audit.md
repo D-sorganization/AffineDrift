@@ -4,12 +4,13 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 246
-- Deferred: 0
+- Reviewed: 245
+- Deferred: 1
 - Exempt: 3
 
 ## Deferred Delivery Batches
 
+- [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059): 1 routes
 
 ## Reviewed Evidence
 
@@ -71,7 +72,6 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | `articles/tangent-hyperplanes-series/part-7-residual-aware.qmd` | 1 |
 | `/articles/technology-club-fitting.html` | `articles/technology-club-fitting.qmd` | 5 |
 | `/articles/technology-force-measurement.html` | `articles/technology-force-measurement.qmd` | 5 |
-| `/articles/technology-heavy-hit-impact-coupling.html` | `articles/technology-heavy-hit-impact-coupling.qmd` | 3 |
 | `/articles/technology-launch-monitors.html` | `articles/technology-launch-monitors.qmd` | 1 |
 | `/articles/technology-motion-capture.html` | `articles/technology-motion-capture.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | `articles/The_Geometry_of_Motion/quarto/ch01_foundations.qmd` | 1 |
@@ -323,7 +323,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-d231d447846d` | `/articles/tangent-hyperplanes-series/part-7-residual-aware.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4abf3e223d5f` | `/articles/technology-club-fitting.html` | Reviewed | — | None | None | 9 |
 | `ad-route-76402cb90d52` | `/articles/technology-force-measurement.html` | Reviewed | — | None | None | 8 |
-| `ad-route-88598cd32ba2` | `/articles/technology-heavy-hit-impact-coupling.html` | Reviewed | — | None | None | 0 |
+| `ad-route-88598cd32ba2` | `/articles/technology-heavy-hit-impact-coupling.html` | Deferred | [#4059](https://github.com/D-sorganization/AffineDrift/issues/4059) | None | None | 0 |
 | `ad-route-8a80ab38a564` | `/articles/technology-launch-monitors.html` | Reviewed | — | None | None | 0 |
 | `ad-route-7237539d8141` | `/articles/technology-motion-capture.html` | Reviewed | — | None | None | 0 |
 | `ad-route-72a9a6bbc151` | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | Reviewed | — | None | None | 0 |
