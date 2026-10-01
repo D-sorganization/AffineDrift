@@ -8,25 +8,36 @@
 
 \section{The Hill-Type Muscle Model}
 
-The Hill-type muscle model, originating from A.V.\ Hill's Nobel Prize-winning work on
-muscle thermodynamics and muscle energetics \cite{Hill1938, Hill1950}, is the standard
-lumped-parameter model used in biomechanical simulation. It represents the musculotendon
-unit as a combination of contractile, elastic, and damping elements. Modern implementations
-include refinements by \cite{Thelen2003} and \cite{millard2013flexing}.
+A joint moment is not yet a muscle model. To predict how excitation becomes
+force, we must specify activation, fiber length and velocity, tendon stretch,
+and the geometry through which tension acts on the skeleton. These quantities
+evolve together: joint motion changes the muscle path, while muscle tension
+changes joint motion.
+
+Hill's shortening experiments motivate a force--velocity relation
+\cite{Hill1938}; modern Hill-type models combine phenomenological constitutive
+curves with selected mechanical and physiological states. They form a family,
+not one universal equation. We use a massless, undamped equilibrium architecture,
+constant-thickness pennation, and explicitly declared fiber curves.
+Thelen's formulation and Millard's equilibrium, damped-equilibrium and
+rigid-tendon alternatives make different numerical choices
+\cite{Thelen2003,millard2013flexing}. A force evaluator is not by itself a
+simulation of any of these complete systems.
 
 \subsection{Model Architecture}
 
-The standard Hill-type musculotendon model consists of three elements:
+The three-element network used here has the following components.
+The diagram shows mechanical connectivity, not literal fiber orientation:
 
 \begin{enumerate}
   \item \textbf{Contractile Element (CE)}: represents the active force-generating
         capacity of the muscle fibers. Its force depends on activation $a(t)$, fiber
         length $\ell^M$, and fiber velocity $v^M = \dot{\ell}^M$.
   \item \textbf{Parallel Elastic Element (PE)}: represents the passive elastic
-        properties of the muscle belly (titin filaments, connective tissue). Produces
-        force only when the muscle is stretched beyond its resting length.
+        properties of the muscle belly (titin filaments, connective tissue). In this particular curve, passive tension begins above optimal fiber length;
+        that threshold is a modeling assumption, not a universal resting length.
   \item \textbf{Series Elastic Element (SE)}: represents the tendon, which is in
-        series with the contractile element. Modeled as a nonlinear spring with a
+        series with the parallel CE--PE combination. Modeled here as a lossless nonlinear spring with a
         slack length $\ell_T^s$.
 \end{enumerate}
 
@@ -62,17 +73,15 @@ The standard Hill-type musculotendon model consists of three elements:
   \node[below] at (0, -0.1) {\small Origin};
   \node[below] at (9, -0.1) {\small Insertion};
 
-  % Pennation angle
-  \draw[thick, dashed, gray] (5, 0) -- (5, 0.4);
-  \draw[gray, ->] (5, 0) arc (270:300:0.4);
-  \node[gray, right] at (5.3, -0.2) {\small $\alpha$};
 \end{tikzpicture}
 \end{center}
 
 \subsection{The Force-Length Relationship}
 
 The isometric (zero velocity) force of the contractile element depends on the
-normalized fiber length $\tilde{\ell} = \ell^M / \ell_0^M$:
+normalized fiber length $\tilde{\ell} = \ell^M / \ell_0^M$, where
+$\ell_0^M$ is optimal fiber length. Let $F_0$ be the full-activation,
+optimal-length isometric \emph{active fiber} force scale:
 
 \begin{definition}{Active Force-Length Curve}{fl-curve}
   The normalized active force-length relationship is:
@@ -82,224 +91,206 @@ normalized fiber length $\tilde{\ell} = \ell^M / \ell_0^M$:
   \end{equation}
   where $\gamma \approx 0.45$ \cite{Thelen2003} controls the width of the
   curve. Maximum force ($f_L = 1$) occurs at optimal fiber length ($\tilde{\ell} = 1$).
-  Force decreases for both shorter and longer fiber lengths, reaching near-zero at
-  approximately $\tilde{\ell} = 0.5$ and $\tilde{\ell} = 1.5$.
+  This Gaussian is strictly positive at finite lengths. At both
+  $\tilde{\ell}=0.5$ and $1.5$ it gives $0.574$, not nearly zero.
+  The half-height interval is
+  $|\tilde{\ell}-1|<\sqrt{\gamma\ln 2}$, approximately $(0.442,1.558)$
+  for this width. These are properties of the approximation, not measured
+  anatomical operating limits.
 \end{definition}
 
 \begin{quote}
-  \textit{A note on the numerical parameters.} The values $\gamma = 0.45$,
-  $A_f = 0.25$, $k^{PE} = 4.0$, and $\varepsilon_0 = 0.6$ used throughout this
-  chapter are the default parameters recommended by Thelen
-  \cite{Thelen2003} for the ``generic'' adult Hill-type muscle, and
-  also serve as the baseline for the Millard--Uchida formulation
-  \cite{millard2013flexing}. They are calibrated against mid-thigh muscles of
-  young adults and should be interpreted as a starting point, not as universal
-  constants. Real muscles exhibit systematic variation with age, sex, training
-  status, and fiber-type composition, and subject-specific tuning is almost
-  always required for quantitative predictions.
+  \textit{Parameter and evidence scope.}
+  Thelen's Appendix uses
+  $\gamma=0.45$, $A_f=0.25$, $k^{PE}=5$, passive reference strain $\varepsilon_0=0.6$,
+  and the activation-dependent law in \eqref{eq:ch3:force-velocity}
+  \cite{Thelen2003}.
+  These are model parameters, not universal human constants. Millard uses
+  separately constructed smooth curves rather than establishing these
+  numbers as shared defaults \cite{millard2013flexing}.
 \end{quote}
 
-The physical basis for the force-length relationship is the sliding filament theory
-\cite{HuxleySimmons1971}: at the optimal length, the maximum number of actin-myosin
-cross-bridges can form. At shorter lengths, filament overlap reduces the number of
-available binding sites. At longer lengths, the filaments pull apart.
+Filament overlap helps explain length-dependent active tension. Gordon,
+Huxley and Julian studied tetanized single frog fibers and found a plateau
+and distinct ascending and descending regions \cite{GordonHuxleyJulian1966}.
+That evidence supports length dependence; it does not identify this Gaussian
+as a microscopic law or validate its extrapolation to every human muscle.
 
-\begin{lstlisting}[language=Python, caption={Hill-type muscle model implementation.}]
-import numpy as np
+The passive curve is
+\begin{equation}
+ f_{PE}(\tilde{\ell})=
+ \begin{cases}
+ 0,&0<\tilde{\ell}\leq1,\\
+ \dfrac{\exp[k^{PE}(\tilde{\ell}-1)/\varepsilon_0]-1}
+       {\exp(k^{PE})-1},&\tilde{\ell}>1.
+ \end{cases}
+ \label{eq:ch3:passive-force}
+\end{equation}
+It is continuous, nonnegative, and equals one at
+$\tilde{\ell}=1+\varepsilon_0$. Its derivative changes at the slack threshold.
+The exponential has no finite global maximum, so a force surface needs a
+declared length domain.
+
+\subsection{A Constitutive Evaluator With Declared Inputs}
+
+The listing takes fiber length and velocity as inputs and returns tendon-axis
+projections. It does \emph{not} infer those inputs from joint motion or enforce
+tendon equilibrium. The stored tendon slack length becomes relevant when
+the series element and path geometry are supplied. The biceps force and length
+scales reproduce \texttt{BIClong} in the pinned OpenSim Arm26 model
+\cite{OpenSimArm26Pinned}; they do not describe both biceps heads or an
+individual golfer. The full-activation speed scale is explicitly chosen as
+$10\ell_0^M/\mathrm{s}$ for this example.
+
+\begin{lstlisting}[language=Python, caption={Prescribed-Fiber Constitutive Evaluation.}]
 from dataclasses import dataclass
-from typing import Tuple
+import math
 
-@dataclass
+def finite_values(values: tuple[float, ...]) -> None:
+    """Reject nonfinite scalar inputs."""
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("Inputs must be finite.")
+
+@dataclass(frozen=True)
 class MuscleParameters:
-    """Parameters for a Hill-type musculotendon model."""
-    F0: float          # Maximum isometric force (N)
-    l0_M: float        # Optimal fiber length (m)
-    v0: float          # Maximum contraction velocity (m/s)
-    l_T_slack: float   # Tendon slack length (m)
-    alpha0: float      # Pennation angle at optimal length (rad)
-    # Defaults below are the Thelen (2003) generic-adult values.
-    # See: Thelen, D.G. (2003) "Adjustment of muscle mechanics
-    # model parameters to simulate dynamic contractions in older
-    # adults," J. Biomech. Eng. 125(1), 70-77 [Thelen2003].
-    gamma: float = 0.45  # Force-length curve width (Thelen 2003)
-    Af: float = 0.25     # Force-velocity shape factor (Thelen 2003)
-    kPE: float = 4.0     # Passive elastic stiffness (Thelen 2003)
-    e0: float = 0.6      # Passive strain at F0 (Thelen 2003)
+    """Fiber constitutive parameters; SI units, radians."""
+    F0: float
+    l0_M: float
+    v0: float
+    l_T_slack: float
+    alpha0: float
+    gamma: float = 0.45
+    Af: float = 0.25
+    kPE: float = 5.0
+    e0: float = 0.6
+
+    def __post_init__(self) -> None:
+        values = (self.F0, self.l0_M, self.v0,
+                  self.l_T_slack, self.gamma,
+                  self.Af, self.kPE, self.e0)
+        finite_values((*values, self.alpha0))
+        if min(values) <= 0 or not 0 <= self.alpha0 < math.pi / 2:
+            raise ValueError("Positive scales and 0 <= alpha0 < pi/2 required.")
 
     @property
     def v_max(self) -> float:
-        """Maximum shortening velocity in fiber lengths/s."""
+        """Full-activation speed scale in fiber lengths/s."""
         return self.v0 / self.l0_M
 
-
 def force_length_active(l_tilde: float, gamma: float = 0.45) -> float:
-    """Active force-length relationship.
+    """Normalized active fiber force at zero velocity."""
+    finite_values((l_tilde, gamma))
+    if l_tilde <= 0 or gamma <= 0:
+        raise ValueError("Positive length and width required.")
+    return math.exp(-((l_tilde - 1.0) ** 2) / gamma)
 
-    Parameters
-    ----------
-    l_tilde : float
-        Normalized fiber length (l_M / l0_M).
-    gamma : float
-        Width parameter of the Gaussian curve.
-
-    Returns
-    -------
-    float
-        Normalized active force (0 to 1).
-
-    References
-    ----------
-    Thelen, D.G. (2003). Adjustment of muscle mechanics model
-    parameters to simulate dynamic contractions in older adults.
-    J. Biomechanical Engineering, 125(1), 70-77.
-    """
-    return np.exp(-((l_tilde - 1.0) ** 2) / gamma)
-
-
-def force_length_passive(l_tilde: float, kPE: float = 4.0,
+def force_length_passive(l_tilde: float, kPE: float = 5.0,
                          e0: float = 0.6) -> float:
-    """Passive force-length relationship (exponential model).
-
-    Parameters
-    ----------
-    l_tilde : float
-        Normalized fiber length.
-    kPE : float
-        Stiffness parameter.
-    e0 : float
-        Strain at which passive force equals F0.
-
-    Returns
-    -------
-    float
-        Normalized passive force.
-    """
+    """Passive fiber tension, normalized by F0."""
+    finite_values((l_tilde, kPE, e0))
+    if l_tilde <= 0 or kPE <= 0 or e0 <= 0:
+        raise ValueError("Positive length and shape scales required.")
     if l_tilde <= 1.0:
         return 0.0
-    return (np.exp(kPE * (l_tilde - 1.0) / e0 - kPE) - 1.0) / \
-           (np.exp(kPE) - 1.0)
-
+    try:
+        return math.expm1(kPE * (l_tilde - 1.0) / e0) / math.expm1(kPE)
+    except OverflowError as error:
+        raise ValueError("Constitutive extrapolation exceeds numeric range.") from error
 
 def force_velocity(v_tilde: float, a: float, Af: float = 0.25,
                    Flen: float = 1.4) -> float:
-    """Force-velocity relationship (Thelen 2003 model).
+    """Thelen interior multiplier; v_tilde = v_M / v0."""
+    finite_values((v_tilde, a, Af, Flen))
+    if not 0 <= a <= 1 or Af <= 0 or Flen <= 1:
+        raise ValueError("Require a in [0,1], Af > 0, Flen > 1.")
+    speed = 0.25 + 0.75 * a
+    if v_tilde < -speed:
+        raise ValueError("Shortening exceeds the declared interior branch.")
+    w = v_tilde / speed
+    if w <= 0:
+        return (1.0 + w) / (1.0 - w / Af)
+    shape = (2.0 + 2.0 / Af) / (Flen - 1.0)
+    # Algebraic rearrangement avoids multiplying two large velocities.
+    return Flen - (Flen - 1.0) / (1.0 + shape * w)
 
-    Parameters
-    ----------
-    v_tilde : float
-        Normalized fiber velocity (v_M / v_max).
-        Negative = shortening (concentric).
-    a : float
-        Activation level (0 to 1).
-    Af : float
-        Shape factor for concentric portion.
-    Flen : float
-        Maximum normalized eccentric force.
+def muscle_force(activation: float, l_M: float, v_M: float,
+                 params: MuscleParameters) -> tuple[float, float, float]:
+    """Tendon-axis projections for PRESCRIBED fiber state, in N.
 
-    Returns
-    -------
-    float
-        Normalized force multiplier.
+    Returns total, active and passive projections. This does not
+    solve tendon equilibrium or determine the fiber state.
     """
-    if v_tilde <= 0:
-        # Concentric (shortening)
-        return (1.0 + v_tilde) / (1.0 - v_tilde / (Af * a + 0.01))
-    else:
-        # Eccentric (lengthening)
-        return (1.0 + v_tilde * Flen / (0.04 + a))  / \
-               (1.0 + v_tilde / (0.04 + a))
+    finite_values((activation, l_M, v_M))
+    if not 0 <= activation <= 1:
+        raise ValueError("Activation must lie in [0,1].")
+    thickness = params.l0_M * math.sin(params.alpha0)
+    if l_M <= thickness:
+        raise ValueError("Require fiber length greater than thickness.")
+    cos_alpha = math.sqrt(1.0 - (thickness / l_M) ** 2)
+    length = l_M / params.l0_M
+    active = (activation * force_length_active(length, params.gamma)
+              * force_velocity(v_M / params.v0, activation, params.Af))
+    passive = force_length_passive(length, params.kPE, params.e0)
+    scale = params.F0 * cos_alpha
+    result = ((active + passive) * scale, active * scale, passive * scale)
+    finite_values(result)
+    return result
 
-
-def muscle_force(
-    activation: float,
-    l_M: float,
-    v_M: float,
-    params: MuscleParameters
-) -> Tuple[float, float, float]:
-    """Compute total musculotendon force.
-
-    Parameters
-    ----------
-    activation : float
-        Neural activation level (0 to 1).
-    l_M : float
-        Current muscle fiber length (m).
-    v_M : float
-        Current muscle fiber velocity (m/s, negative = shortening).
-    params : MuscleParameters
-        Muscle parameters.
-
-    Returns
-    -------
-    Tuple[float, float, float]
-        (total_force, active_force, passive_force) in Newtons.
-    """
-    # Normalize
-    l_tilde = l_M / params.l0_M
-    v_tilde = v_M / params.v0
-
-    # Force components
-    f_active = (activation
-                * force_length_active(l_tilde, params.gamma)
-                * force_velocity(v_tilde, activation, params.Af))
-    f_passive = force_length_passive(l_tilde, params.kPE, params.e0)
-
-    # Pennation angle varies with fiber length under the
-    # constant-thickness assumption: sin(alpha) = sin(alpha0) * l0_M / l_M
-    sin_alpha = np.sin(params.alpha0) * params.l0_M / max(l_M, 1e-6)
-    cos_alpha = np.sqrt(max(0.0, 1.0 - sin_alpha ** 2))
-
-    # Total force along tendon
-    F_active = f_active * params.F0 * cos_alpha
-    F_passive = f_passive * params.F0 * cos_alpha
-    F_total = F_active + F_passive
-
-    return F_total, F_active, F_passive
-
-
-# Example: Biceps brachii
-biceps = MuscleParameters(
-    F0=624.3,        # N (Holzbaur et al. 2005, upper-extremity model)
-    l0_M=0.1157,     # m
-    v0=10 * 0.1157,  # 10 fiber lengths/s
-    l_T_slack=0.2723, # m
-    alpha0=0.0        # parallel-fibered
-)
-
-# Compute force at optimal length, half activation, isometric
-F_total, F_active, F_passive = muscle_force(
-    activation=0.5,
-    l_M=biceps.l0_M,  # optimal length
-    v_M=0.0,           # isometric
-    params=biceps
-)
-print(f"Biceps at 50% activation, optimal length, isometric:")
-print(f"  Active force:  {F_active:.1f} N")
-print(f"  Passive force: {F_passive:.1f} N")
-print(f"  Total force:   {F_total:.1f} N")
+# Long-head biceps geometry/force scales from OpenSim Arm26 BIClong.
+# v0 and curve parameters are declared teaching choices.
+biceps = MuscleParameters(F0=624.3, l0_M=0.1157,
+                          v0=10 * 0.1157,
+                          l_T_slack=0.2723, alpha0=0.0)
+total, active, passive = muscle_force(0.5, biceps.l0_M, 0.0, biceps)
+print(f"Prescribed isometric fiber: {total:.2f} N "
+      f"(active {active:.2f}, passive {passive:.2f})")
 \end{lstlisting}
 
 \subsection{The Force-Velocity Relationship}
 
-The second critical property of the contractile element is the force-velocity
-relationship, first characterized by Hill (1938) \cite{Hill1938}.
+Let $v_0>0$ be the dimensional full-activation shortening-speed scale and
+$\tilde v=v^M/v_0$, with negative velocity denoting shortening.
+Here $A_f=0.25$ controls the shortening branch and $F_{\rm len}=1.4$
+is the dimensionless lengthening asymptote used by the listing.
+For the interior branches obtained from Thelen's equations, define
+\[
+ c(a)=0.25+0.75a,\qquad w=\tilde v/c(a),\qquad
+ K=\frac{2+2/A_f}{F_{\rm len}-1}.
+\]
+Solving the velocity-as-a-function-of-force relation for its multiplier gives
+\begin{equation}
+ f_V(\tilde v,a)=
+ \begin{cases}
+ \dfrac{1+w}{1-w/A_f},&-1\leq w\leq0,\\[3pt]
+ \dfrac{1+K F_{\rm len}w}{1+K w},&w>0.
+ \end{cases}
+ \label{eq:ch3:force-velocity}
+\end{equation}
+Thus $f_V(0,a)=1$, unloaded shortening occurs at $v^M=-c(a)v_0$,
+and the lengthening branch approaches $F_{\rm len}$ asymptotically.
+At half activation the zero-force speed is $-0.625v_0$, not $-v_0$.
+The multiplier is continuous at zero velocity, but the right slope is twice
+the left slope. An optimizer must not assume a continuously differentiable join.
 
-\begin{principle}{The Force-Velocity Asymmetry}{fv-asymmetry}
-  The force-velocity relationship characterizes how muscle force depends on contraction
-  velocity \cite{Hill1938, Hill1950}:
-  \begin{itemize}
-    \item \textbf{Concentric (shortening) contraction}: force \emph{decreases} with
-          increasing shortening velocity. At maximum shortening velocity $v_0$, the
-          muscle produces zero force. The relationship is well-approximated by a
-          hyperbolic curve.
-    \item \textbf{Eccentric (lengthening) contraction}: force \emph{increases} beyond
-          the maximum isometric force. The magnitude of enhancement is muscle and fiber-type
-          dependent, documented in \cite{Thelen2003} and similar references.
-    \item \textbf{Isometric ($v = 0$)}: force equals the product of activation and
-          the force-length relationship.
-  \end{itemize}
-  The asymmetry between concentric and eccentric force production is a fundamental property
-  of biological muscle that is absent in engineered linear actuators.
+This evaluator rejects shortening outside its declared branch rather than
+returning negative active tension. The current OpenSim implementation adds
+continuations and state restrictions \cite{OpenSimThelenPinned}; this listing
+is not a replacement for that solver. An inverse equilibrium calculation also
+requires $a f_L>0$ and an attainable force ratio below $F_{\rm len}$.
+At zero activation the forward active force is zero, but dividing by activation
+to recover velocity is undefined.
+
+\begin{principle}{Force, Velocity, and Power}{fv-asymmetry}
+ Shortening reduces active force below its isometric value; lengthening
+ increases the multiplier above one, at the same activation and fiber length.
+ This does not say that eccentric force always exceeds the full-activation,
+ optimal-length reference force $F_0$.
+
+ Isometric \emph{fiber} force includes active and passive contributions.
+ Zero fiber velocity need not mean zero joint velocity; fixed joints need
+ not imply isometric fibers while a tendon stretches. Active mechanical
+ output is $-F_{CE}v^M$, with $F_{CE}$ the active fiber force,, positive during shortening and negative during
+ lengthening. Its sign does not determine metabolic expenditure.
 \end{principle}
 
 \subsection{Activation Dynamics}
@@ -320,10 +311,30 @@ and deactivation:
   \end{cases}
   \label{eq:ch3:tau-activation}
 \end{equation}
-Typical values: $\tau_{\text{act}} = 10$--$15$~ms, $\tau_{\text{deact}} = 40$--$60$~ms
-\cite{Winters1984}. The asymmetry between activation and deactivation time constants
-has important consequences for motor control: it is much easier to ``turn on'' a
-muscle quickly than to ``turn it off.''
+The exercise uses $\tau_{\rm act}=15$~ms and $\tau_{\rm deact}=50$~ms,
+as in the young-adult parameter set of \cite{Thelen2003}. These base
+parameters are not observed force-rise or neural-conduction delays.
+At $a=1$ the two effective branch times are $30$ and $25$~ms, respectively;
+the base constants do not imply faster activation at every state.
+
+The vector field is continuous at $u=a$ because both branches give zero there;
+its derivatives generally differ across that surface. Continuous-time
+trajectories preserve $[0,1]$: the derivative points inward at its boundaries.
+Numerical integration still needs suitable tolerances and checked states.
+
+With $a(0)=0$ and a step to $u=1$, separation of variables gives
+\[
+ t(a)=\tau_{\rm act}\{-1.5a-2\ln(1-a)\}.
+\]
+Activation reaches $0.95$ after approximately $68.50$~ms.
+For deactivation from $a(0)=1$ with $u=0$,
+\[
+ t(a)=2\tau_{\rm deact}
+ \ln\!\left(\frac{0.5+1.5a}{2a}\right),
+\]
+so $a=0.05$ occurs at approximately $174.92$~ms.
+These are activation-state calculations; tendon force follows the coupled
+fiber and series-elastic dynamics.
 
 \section{Tendon Mechanics}
 
@@ -337,115 +348,249 @@ element with a resting (slack) length $\ell_T^s$:
   \end{cases}
   \label{eq:ch3:tendon-force}
 \end{equation}
-where $\varepsilon_T = (\ell_T - \ell_T^s) / \ell_T^s$ is the tendon strain and
-$\varepsilon_{0T} \approx 0.033$ is the strain at maximum isometric force. The
-tendon stiffness parameter $k_T$ is typically chosen so that the tendon strain is
-approximately 3.3\% at $F_0$ \cite{Zajac1989}.
+where $\ell_T$ is current tendon length and
+$\varepsilon_T=(\ell_T-\ell_T^s)/\ell_T^s$,
+$k_T>0$ and $\varepsilon_{0T}>0$. This single-exponential tendon is a
+\emph{declared teaching choice}, not Thelen's toe-region/linear tendon or a
+full Millard curve. It gives $F_T=F_0$ at the reference strain for \emph{every}
+$k_T$; that reference point cannot identify the shape parameter.
+A second measurement, such as tangent stiffness, is needed:
+\[
+ \frac{dF_T}{d\ell_T}
+ =\frac{F_0 k_T e^{k_T\varepsilon_T}}
+ {\ell_T^s(e^{k_T\varepsilon_{0T}}-1)}
+ \quad(\varepsilon_T>0).
+\]
+For $F_T>0$, its inverse is
+\[
+ \varepsilon_T=\frac{1}{k_T}
+ \ln\!\left[1+\frac{F_T}{F_0}
+ (e^{k_T\varepsilon_{0T}}-1)\right].
+\]
+Force is continuous at slack engagement but stiffness changes there.
 
 \begin{principle}{Tendons as Energy Storage Elements}{tendon-energy}
-  Biological tendons are not simply rigid force transmitters. They are viscoelastic elements
-  that can store and return elastic strain energy. The energy storage capacity of a tendon
-  is determined by its stiffness and the strain it undergoes during muscle contraction.
-  This energy storage changes the energetics and the effective impedance of the muscle-tendon
-  unit compared to a model with infinitely stiff tendons. The physiological consequence is
-  that tendons enable more efficient movement by recovering elastic energy that would otherwise
-  be dissipated, as documented in \cite{Alexander1991, Alexander2002}.
+ The lossless teaching spring stores
+ $U_T=\ell_T^s\int_0^{\varepsilon_T}F_T(e)\,de$ above slack.
+ It returns that energy on unloading; it creates none. Biological
+ viscoelasticity can dissipate energy and needs an additional constitutive law.
+
+ Elastic recoil can separate the timing of fiber work from joint power.
+ Alexander's account concerns locomotor mechanisms \cite{Alexander2002};
+ it does not establish a metabolic saving or tendon-recoil strategy in a
+ particular golf swing. Larger instantaneous joint power alone cannot
+ identify its muscular, elastic, or external source.
 \end{principle}
 
 \section{Musculotendon Equilibrium}
 
-The muscle fiber and tendon must satisfy force equilibrium at all times. Assuming
-the muscle fiber acts at a pennation angle $\alpha$ to the tendon line of action:
+Neglecting fiber and series-element inertia, the declared axial balance is
 \begin{equation}
-  F_T = (F_{\text{CE}} + F_{\text{PE}}) \cos\alpha,
-  \label{eq:ch3:mt-equilibrium}
+ F_T=(F_{CE}+F_{PE})\cos\alpha,\qquad
+ F_{CE}=a f_L f_V F_0,\quad F_{PE}=f_{PE}F_0.
+ \label{eq:ch3:mt-equilibrium}
 \end{equation}
-where:
-\begin{align}
-  F_{\text{CE}} &= a \cdot f_L(\tilde{\ell}^M) \cdot f_V(\tilde{v}^M) \cdot F_0, \\
-  F_{\text{PE}} &= f_{\text{PE}}(\tilde{\ell}^M) \cdot F_0.
-\end{align}
+This is a model assumption, not a claim that real accelerating muscle has no
+inertia. Any added damping force belongs in this balance and the energy account.
 
-The musculotendon length $\ell^{MT}$ is the sum of tendon length and the
-projection of fiber length:
+Let $\alpha$ be current pennation angle and $\alpha_0$ its value at optimal
+fiber length. For constant fiber-bundle thickness $h=\ell_0^M\sin\alpha_0$
+and total musculotendon path length $\ell^{MT}$,
 \begin{equation}
-  \ell^{MT} = \ell_T + \ell^M \cos\alpha.
-  \label{eq:ch3:mt-length}
+ x=\ell^M\cos\alpha=\sqrt{(\ell^M)^2-h^2},\qquad
+ \ell^{MT}=\ell_T+x,\qquad \ell^M>h.
+ \label{eq:ch3:mt-length}
 \end{equation}
+An impossible length is not repaired by clipping $\cos\alpha$ to zero.
+The limit $\ell^M=h$ is singular.
 
-Given a known musculotendon length (from the skeletal geometry) and activation,
-the equilibrium condition \eqref{eq:ch3:mt-equilibrium} and the constraint
-\eqref{eq:ch3:mt-length} determine the fiber length and velocity.
+\begin{center}
+\begin{tikzpicture}[>=Stealth,scale=0.85]
+ \draw[thick] (0,0) -- (5,0) node[midway,below] {$x=\ell^M\cos\alpha$};
+ \draw[thick] (0,0) -- (5,1.5) node[midway,above] {$\ell^M$};
+ \draw[dashed] (5,0) -- (5,1.5) node[midway,right] {$h$};
+ \draw[->] (1,0) arc[start angle=0,end angle=16.7,radius=1];
+ \node at (1.35,0.2) {$\alpha$};
+ \draw[thick,decorate,decoration={zigzag,segment length=5,amplitude=2}]
+   (-2.5,0) -- (0,0) node[midway,below=6pt] {$\ell_T$};
+ \node[above] at (2.5,2) {Constant-Thickness Geometry};
+\end{tikzpicture}
+\end{center}
 
-\section{The Complete Hill Model as a Dynamical System}
+Given activation, fiber length and total path length, compute tendon length and
+tension, then solve for fiber velocity. Define the required active-force multiplier
+\[
+ r=\frac{F_T/(F_0\cos\alpha)-f_{PE}}{a f_L}.
+\]
+The independent inverse of the declared interior law is
+\begin{equation}
+ \frac{v^M}{v_0}=
+ \begin{cases}
+ c(a)\dfrac{r-1}{1+r/A_f},&0\leq r\leq1,\\[3pt]
+ c(a)\dfrac{(r-1)(F_{\rm len}-1)}
+ {(2+2/A_f)(F_{\rm len}-r)},&1<r<F_{\rm len}.
+ \end{cases}
+ \label{eq:ch3:inverse-velocity}
+\end{equation}
+Negative residual active-force demand, a ratio at or above the eccentric
+asymptote, zero activation, or zero active-length multiplier lies outside this
+inverse. Near the asymptote small force errors imply large velocity changes.
+A solver must report failure or use an explicitly different regularized model,
+not silently clamp the answer.
 
-Combining all elements, the Hill muscle model can be expressed as a dynamical
-system with two state variables per muscle:
+\subsection{Initialization and Integration}
+
+Fiber length is a state. Activation and total path length alone do not determine
+both fiber length and velocity. Specify $a(0)$ and $\ell^M(0)$, or an explicit
+initialization rule. For an assumed initially isometric fiber, search for a root
+of \eqref{eq:ch3:mt-equilibrium} with $v^M=0$ in an admissible interval.
+The nonlinear curves may admit multiple roots or none; record the interval,
+residual and selected root rather than assuming uniqueness.
+
+At each evaluation:
+\begin{enumerate}
+ \item Check states and geometry; derive $\ell_T=\ell^{MT}-x$.
+ \item Evaluate tendon and passive-fiber forces.
+ \item Check $a f_L\cos\alpha$ and the attainable ratio, then invert for $v^M$.
+ \item Integrate activation and fiber length with error control, monitoring
+ the force residual and domain boundaries.
+\end{enumerate}
+For this undamped inverse, a slack tendon with positive passive fiber tension
+has no admissible nonnegative active-force balance. Damped or constrained
+models can behave differently; their equations and state policy must be declared.
+
+\section{From Fiber Power to Joint Mechanics}
+
+With $v^{MT}=\dot\ell^{MT}$ and $v_T=\dot\ell_T$,
+differentiating the geometry gives
+\[
+ v^{MT}=v_T+\frac{v^M}{\cos\alpha}.
+\]
+The force projection then gives
+$F_T(v^{MT}-v_T)=(F_{CE}+F_{PE})v^M$.
+Projecting force and also multiplying fiber velocity by $\cos\alpha$
+would count the geometry incorrectly.
+
+Let $\bm q$ be generalized coordinates and $\bm Q_M$ the generalized muscle
+load. For a frictionless path $\ell^{MT}(\bm q)$, virtual work gives
+\[
+ \bm Q_M=-F_T\nabla_{\bm q}\ell^{MT},\qquad
+ \bm Q_M^T\dot{\bm q}=-F_Tv^{MT}.
+\]
+For lossless tendon and passive fiber, let $U_{PE}$ be passive-fiber stored
+energy, so $\dot U_{PE}=F_{PE}v^M$. Then
+\begin{equation}
+ \bm Q_M^T\dot{\bm q}
+ =-F_{CE}v^M-\dot U_{PE}-\dot U_T.
+ \label{eq:ch3:power-balance}
+\end{equation}
+Active output and changing stored energy jointly produce skeletal power.
+A tendon can deliver power with nearly isometric fibers, or absorb power
+while active fibers shorten. Neither observation uniquely identifies excitation,
+chemical-energy use, or the cause of segment deceleration.
+Frictional wraps would require an additional dissipation account.
+
+\subsection{Coactivation, Equilibrium, and Stiffness}
+
+Index muscles by $i$, with tendon force $F_i$ and path length $\ell_i^{MT}$.
+For a joint coordinate $q$, define $\ell_i'=d\ell_i^{MT}/dq$ and
+$\ell_i''=d^2\ell_i^{MT}/dq^2$. Write joint moment as $\tau_q$
+to distinguish it from the activation time scale.
+A declared quasistatic path-force law at fixed activation gives
+\[
+ \tau_q=-\sum_i F_i\ell_i',\qquad
+ K_q=-\frac{d\tau_q}{dq}
+ =\sum_i\left[k_i(\ell_i')^2+F_i\ell_i''\right],
+ \quad k_i=\frac{dF_i}{d\ell_i^{MT}}.
+\]
+Material response and changing moment arms both contribute.
+Define how fiber and tendon equilibrate when calculating $k_i$.
+Frozen states, quasistatic relaxation and dynamic impedance are different
+experiments; activation dynamics, frequency and feedback matter to the last.
+
+Equal excitation of unequal antagonists does not generally balance their
+moments. Symmetric force capacities and opposite matched moment arms can
+preserve equilibrium under balanced coactivation, but that is a controlled
+example, not a conclusion about biceps and triceps. The active descending
+length branch and geometric term also prevent a universal positive-stiffness
+guarantee.
+
+\section{The Hill Model as a Coupled Dynamical System}
+
+For the declared equilibrium model,
 \begin{align}
-  \dot{a} &= \frac{u - a}{\tau(u, a)}, \label{eq:ch3:state-activation} \\
-  \dot{\ell}^M &= v^M(a, \ell^M, \ell^{MT}), \label{eq:ch3:state-fiber}
+ \dot a&=(u-a)/\tau(u,a),\label{eq:ch3:state-activation}\\
+ \dot\ell^M&=v^M(a,\ell^M,\ell^{MT}),\label{eq:ch3:state-fiber}
 \end{align}
-where $v^M$ is obtained by inverting the force-velocity relationship at the
-equilibrium fiber force. The input is the neural excitation $u(t) \in [0, 1]$
-and the ``disturbance'' is the musculotendon path length $\ell^{MT}(\bm{q})$,
-which depends on the joint configuration.
+using \eqref{eq:ch3:inverse-velocity} only on its admissible domain.
+Pennation, tendon geometry, constitutive ranges and invertibility restrict
+the state space; it is not the unrestricted product $[0,1]\times\Reals_{>0}$.
 
-\begin{principle}{Muscle as a Nonlinear Control System}{muscle-control}
-  Each muscle is itself a nonlinear dynamical system with:
-  \begin{itemize}
-    \item \textbf{State}: $(a, \ell^M) \in [0,1] \times \Reals_{>0}$
-    \item \textbf{Input}: neural excitation $u \in [0,1]$
-    \item \textbf{Output}: tendon force $F_T$
-    \item \textbf{Disturbance}: musculotendon path length $\ell^{MT}(\bm{q})$
-  \end{itemize}
-  The muscle transforms a scalar neural command into a scalar force, but the
-  transformation is highly nonlinear, state-dependent, and history-dependent.
-  The entire musculoskeletal system is a cascade: neural commands $\to$ muscle
-  dynamics $\to$ tendon forces $\to$ joint torques $\to$ skeletal dynamics.
+With prescribed joint motion, path length is an input signal. In forward
+dynamics it is $\ell^{MT}(\bm q)$ inside a feedback coupling: excitation
+changes muscle state, tension changes skeletal loads, and motion changes
+muscle length. Zero net joint moment therefore does not imply inactive
+muscles, and identical joint trajectories can coexist with different
+coactivation and stored-energy histories.
+
+\begin{principle}{Model Choice Follows the Question}{muscle-control}
+ Distinguish prescribed-fiber evaluation, compliant equilibrium simulation,
+ damped equilibrium simulation, and rigid-tendon approximation.
+ Each answers a different mechanical question.
+
+ Millard and colleagues compared computational behavior and force fits in
+ particular preparations, including rat and cat soleus \cite{millard2013flexing}.
+ Those results do not rank every model for every human task.
+ Validation should name the muscle, population, loading protocol, predicted
+ quantity, parameter estimation and independent test data.
+ A fit to swing kinematics cannot alone validate individual muscle force.
 \end{principle}
 
 \section*{Exercises}
 
 \begin{enumerate}
-  \item \textbf{Force-Length Curve.}
-        Plot the active force-length curve for $\gamma \in \{0.3, 0.45, 0.6\}$.
-        For each, determine the ``useful range'' (the interval of fiber lengths
-        where $f_L > 0.5$). How does the width parameter affect the operating range?
+ \item \textbf{Force-Length Range.} Plot $f_L$ for
+ $\gamma\in\{0.3,0.45,0.6\}$ and derive the half-height interval.
+ Explain why its endpoints are not anatomical limits.
+ Independently check passive continuity, nonnegativity and
+ $f_{PE}(1+\varepsilon_0)=1$.
 
-  \item \textbf{Force-Velocity Curve.}
-        Plot the complete force-velocity curve (both concentric and eccentric) for
-        the biceps parameters given in the code listing. Mark the maximum eccentric
-        force and the maximum shortening velocity.
+ \item \textbf{Velocity and Its Inverse.} Plot both branches at $a=0.5$ and $1$.
+ Mark unloaded shortening, the isometric point and the unattained lengthening
+ asymptote. Verify forward/inverse agreement at $r=0.4$ and $1.2$.
+ Compare one-sided slopes at zero velocity.
 
-  \item \textbf{Activation Dynamics.}
-        Simulate the activation dynamics for a square-wave neural excitation input
-        ($u = 1$ for 200~ms, then $u = 0$). Plot the activation response with
-        $\tau_{\text{act}} = 15$~ms and $\tau_{\text{deact}} = 50$~ms. How long does
-        it take for activation to reach 95\% of maximum? How long for deactivation?
+ \item \textbf{Activation Timing.} Use the stated $15/50$~ms parameters,
+ $a(0)=0$, and $u=1$ for $200$~ms followed by $u=0$.
+ Compare integration with the analytic solutions. Measure decay relative to
+ the actual state at switch-off, distinguishing it from decay starting at one.
 
-  \item \textbf{Tendon Compliance.}
-        For the Achilles tendon (slack length $\ell_T^s = 0.25$~m, max force 4000~N),
-        compute the tendon stretch at 50\%, 75\%, and 100\% of maximum force. Does
-        the tendon behave approximately linearly over this range?
+ \item \textbf{Tendon Shape and Energy.} Use a synthetic teaching tendon with
+ $\ell_T^s=0.25$~m, $F_0=4000$~N, $\varepsilon_{0T}=0.04$ and $k_T=35$.
+ Compute stretch at $0.5F_0$, $0.75F_0$ and $F_0$, and integrate stored energy.
+ Repeat with $k_T=10$. Explain why both laws share the reference force but
+ have different stiffness. These choices do not calibrate an Achilles tendon.
 
-  \item \textbf{Isometric Force Surface.}
-        Create a 3D surface plot of muscle force as a function of normalized fiber
-        length ($\tilde{\ell}$) and activation ($a$) at zero velocity (isometric).
-        Identify the point of maximum force production.
+ \item \textbf{Force Surface.} Plot active, passive and total \emph{fiber}
+ force over $0.5\leq\tilde\ell\leq1.6$ and $0\leq a\leq1$, at zero fiber
+ velocity and zero pennation. Locate bounded-domain maxima.
+ Explain why extrapolating the passive exponential to unbounded length gives
+ no finite global total-force maximum.
 
-  \item \textbf{(Programming.)} Implement a complete musculotendon simulation: given
-        a prescribed musculotendon length trajectory $\ell^{MT}(t)$ and neural
-        excitation $u(t)$, integrate the state equations \eqref{eq:ch3:state-activation}
-        and \eqref{eq:ch3:state-fiber} and plot the resulting tendon force $F_T(t)$.
+ \item \textbf{Equilibrium Simulation.} Implement the checked procedure for a
+ prescribed path and excitation. Declare initial states, constitutive laws,
+ root selection and domain policy. Verify force residual and power balance;
+ report step-size convergence. Demonstrate a clear failure for an inadmissible
+ state rather than a clipped trajectory.
 
-  \item \textbf{(Programming.)} Implement a two-muscle antagonist pair (e.g., biceps
-        and triceps) acting on a single-DOF elbow joint. Given co-contraction
-        ($u_{\text{biceps}} = u_{\text{triceps}} = 0.5$), compute the net joint torque
-        and the joint stiffness. Verify that co-contraction increases stiffness without
-        changing the equilibrium position.
+ \item \textbf{Antagonists and Geometry.} Begin with matched antagonists,
+ opposite constant moment arms and a balanced equilibrium. Calculate torque
+ and tangent stiffness as common activation changes. Then change one force
+ capacity and introduce curved paths. Identify the symmetry assumptions
+ needed to preserve equilibrium; distinguish tangent stiffness from impedance.
 
-  \item \textbf{(Research.)} Compare the Thelen (2003) muscle model with the
-        Millard et al.\ (2013) model used in OpenSim 4.x. What are the key differences
-        in the force-velocity and passive force models? Which is more physiologically
-        accurate?
+ \item \textbf{Model Comparison.} Compare specified Thelen and Millard
+ implementations using the same data and initialization. Report force error,
+ solver cost and domain failures. Distinguish numerical regularization from
+ physiological validation and identify evidence needed for a golf-swing claim.
 \end{enumerate}

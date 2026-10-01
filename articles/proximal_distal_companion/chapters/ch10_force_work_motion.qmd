@@ -7,7 +7,9 @@ suitcase has not moved and the external mechanical work on it is zero. Carry it
 horizontally at constant height and the upward hand force is nearly perpendicular
 to horizontal velocity, so that force again does little mechanical work on the
 suitcase. Lift it onto a shelf and force aligns with displacement; positive work
-raises gravitational potential energy.
+by the hand raises the suitcase–Earth gravitational potential energy. During a
+slow lift, the hand and gravity do nearly equal and opposite work on the suitcase,
+so its kinetic energy changes little. Hand work and net work are different ledgers.
 
 This example feels unfair because biological effort is real in all three cases.
 That is exactly the lesson. Mechanical work, metabolic cost, muscle activation,
@@ -23,9 +25,20 @@ Over a path, translational work is
 
 $$W=\int \mathbf F\cdot d\mathbf r.$$
 
-Over time, the same quantity is $W=\int \mathbf F\cdot\mathbf v\,dt$. Rotational
-work is $\int\boldsymbol\tau\cdot d\boldsymbol\theta$. Impulse instead integrates
-force over time, $\mathbf J=\int\mathbf F\,dt$. These answer different questions.
+Here $\mathbf r$ is the position of the material point where the force acts,
+measured in a declared inertial observer frame; $\mathbf v=\dot{\mathbf r}$.
+Over time, $W=\int \mathbf F\cdot\mathbf v\,dt$. For a rigid body, rotational
+power at the chosen reference is $\mathbf M\cdot\boldsymbol\omega$, so its work
+channel is $\int\mathbf M\cdot\boldsymbol\omega\,dt$. Only for rotation about a
+fixed axis does this reduce directly to $\int M_{\rm axis}\,d\theta$.
+In general three-dimensional motion, Euler-angle rates are not the components
+of angular velocity. Generalized moments must be transformed to be power
+conjugate to those rates before taking their dot product.
+
+Impulse instead integrates force over time, $\mathbf J=\int\mathbf F\,dt$.
+For a fixed collection of bodies, the **net external** impulse equals the change
+in total linear momentum in that inertial frame. A single force contributes to
+that balance; other forces may cancel it. These answer different questions.
 
 A force can have large impulse and small work when it acts mostly perpendicular
 to motion. It can have small impulse and meaningful work if it aligns with rapid
@@ -36,34 +49,48 @@ together exposes the difference.
 
 Some golf analyses project net hand force along the hand path and integrate over
 path length. This can be a useful transfer observable. But a large value does not
-prove large biological effort. The force may be generated largely by drift and
-constraint reactions at the moving state, while active control contributes
-slightly against it.
+prove large biological effort. A chosen model may assign much of the instantaneous force to its
+drift/constraint part and an opposing contribution to its input part. This is a
+decomposition at the same achieved state, not a finding that muscle activity was
+unnecessary. Removing an input changes later states and reactions; its causal
+effect requires a new trajectory under a declared intervention or controller.
 
-The technical study evaluates this estimand across three model tiers. In two
+The pinned hand-path study evaluates this estimand in a planar double pendulum,
+a one-arm three-link point-mass model, and a two-arm floating-club closed loop. In two
 forward cases, drift supplies slightly more than 100% of signed hand-path force
 work because the contemporaneous control contribution is opposing. A percentage
 above 100 does not violate conservation; positive and negative contributions
-cancel to the total. In a two-arm local sweep, drift and control nearly cancel,
+cancel to the total. In a prescribed two-arm kinematic sweep, rather than a
+forward rollout, drift and control nearly cancel,
 making fraction language unstable.
 
 ### What the Coriolis-Impulse Search Actually Optimized
 
-The new pendulum example asks a deliberately narrow question: among 135 frozen
+A separate archived pendulum example asks a deliberately narrow question: among 135 frozen
 torque programs, which one produces the greatest *absolute* along-hand-path
 impulse from the coordinate-defined Coriolis cross term before qualified
 impact? Absolute impulse counts both signs, so a force that reverses direction
 does not disappear through cancellation. Signed impulse is published beside it
-to retain direction.
+to retain sign relative to the changing path tangent. This scalar projected
+impulse is not the vector impulse that appears in the momentum balance. The
+registered search uses shoulder-absolute and wrist-relative coordinates; its
+Coriolis label denotes their cross-speed equation terms. It is not an additional
+force acting on a free-body diagram.
 
-Ninety-one programs reach the registered impact event. The maximum absolute
+The grid combines three proximal torques (60, 80, 100 N m), three restraint
+magnitudes (0, 5, 10 N m), and fifteen onset times from 0 to 0.350 s. After onset,
+the wrist drive is 15 N m. Ninety-one programs reach the registered event: the
+first upward crossing of the club angle through downward vertical, with arm
+angle no greater than 2 radians. The other 44 are excluded. This is a geometric
+pre-impact score interpolated from sampled history, not a simulated ball collision. The maximum absolute
 Coriolis impulse is 13.817 N s with a 100 N m proximal drive, 10 N m of early
 wrist restraint, and wrist-drive onset at 0.100 s. That program reaches
-46.780 m/s. The highest-speed program instead uses 5 N m of early restraint and
+46.780 m/s. The highest-speed program also uses 100 N m proximally, but 5 N m of early restraint and
 a 0.125 s onset; it reaches 46.913 m/s with 13.701 N s of absolute Coriolis
 impulse. The optima are close, but they are not the same program. Maximizing a
 named force component is therefore not identical to maximizing clubhead speed,
-even inside this small deterministic model.
+even inside this small deterministic model. These are discrete grid maxima,
+not continuous optimal-control solutions or human swing prescriptions.
 
 The signed values deepen the lesson. The maximum-absolute-impulse program has a
 signed Coriolis impulse of -6.825 N s and Coriolis generalized work of
@@ -72,7 +99,22 @@ the source reverses and because force, velocity, and generalized-coordinate
 signs matter. Squared-speed work is -33.73 J, gravity work is +25.56 J, and
 applied-drive work is +358.20 J in the same impact-truncated interval. These
 figures are an equation-term ledger, not a claim that a Coriolis agent supplied
-or removed a measured amount of biological energy.
+or removed a measured amount of biological energy. Nor does their sum, by
+itself, equal the change in total kinetic energy: the configuration dependence
+of the mass matrix matters.
+
+For example, in a smooth ideal model with time-independent constraints, let $q$ be the generalized coordinates,
+$M(q)$ the mass matrix, $U(q)$ the potential, and $\tau$ the applied generalized
+forces. Define kinetic energy
+$K=\tfrac12\dot q^TM(q)\dot q$ and write
+$M\ddot q+h+\nabla U=\tau$, with $h$ the full velocity bias and dots denoting time derivatives. The kinetic-energy
+rate contains $\tfrac12\dot q^T\dot M\dot q$ as well as
+$\dot q^TM\ddot q$. For the usual consistent rigid-body equations,
+$\dot q^Th=\tfrac12\dot q^T\dot M\dot q$; these terms cancel to give
+$d(K+U)/dt=\tau^T\dot q$. Coriolis and squared-speed terms redistribute the
+coordinate acceleration balance without becoming extra energy sources. Include
+dissipation, moving constraints and explicit time dependence when they are
+present.
 
 ### The Hand-Path Arrow Does Not Carry the Whole Wrench
 
@@ -82,18 +124,34 @@ rank-deficient for mapping a two-coordinate generalized drive into one
 force-only hand-path vector. The software computes the minimum-norm force that
 can be represented at the wrist and keeps the leftover generalized couple as a
 residual. It never hides that remainder inside the displayed hand force.
+For component $k$, use generalized drive $Q_k$, point Jacobian
+$J_H=\partial x_H/\partial q$, mapped force $F_{H,k}$, residual $r_k$,
+and point velocity $v_H=J_H\dot q$. Then
+$Q_k=J_H^TF_{H,k}+r_k$. Consequently,
+$Q_k^T\dot q=F_{H,k}^Tv_H+r_k^T\dot q$. The generalized work totals above
+include the residual-power channel; they are not just force work along the hand
+path. A least-squares force equivalent is not automatically a measured contact
+force.
 
-For the two highlighted programs, the maximum retained residual is 54.44 and
-52.81 N m. That is not a small numerical rounding error. It tells the reader
+The archived maximum residual norm is 54.44 N m for the impulse-selected
+program and 52.81 N m for the speed-selected program. Each maximum is taken
+over time **and all attributed components**, not solely the Coriolis component
+or the net physical wrist moment. This is a structural mapping diagnostic, not
+a measured joint load or a small numerical rounding error. It tells the reader
 that an along-path force plot answers a useful but incomplete question. A
 complete grip description needs a wrench, or an endpoint-and-couple mapping
 with enough independent coordinates and measurements.
 
 At the top of the simulated swing, hand speed begins at zero, so no path tangent
 exists. The integration marks that interval undefined and uses only adjacent
-samples with a defined direction. More than 99.6% of the impact-truncated time
+samples with a defined direction (the archived speed threshold is
+$10^{-12}$ m/s). Generalized power remains defined at zero speed and its work
+is integrated over the full recorded interval. More than 99.6% of the impact-truncated time
 is valid in the highlighted runs. Reporting that fraction prevents an arbitrary
-initial direction from contaminating the impulse.
+initial direction from contaminating the impulse. It does not bound the
+missing impulse: even a short excluded interval can matter if its force is
+large. Report the masking threshold and convergence when interpreting a small
+difference between programs.
 
 ### Fractions Become Dangerous Near Cancellation
 
@@ -120,12 +178,11 @@ to transition, early downswing, delivery, and impact.
 
 ### Joint Power Is Not Muscle Power
 
-Net joint power is often calculated as net joint moment times joint angular
-velocity. It is a legitimate mechanical quantity at the modeled joint. Muscles,
-tendons, ligaments, and co-contraction contribute to that net. A biarticular
-muscle can transfer energy between joints. Tendons can store and return energy.
-Therefore net positive joint power does not identify one shortening muscle, and
-near-zero joint power can coexist with substantial opposing muscle forces.
+A measured or inferred net joint power is a mechanical constraint on a model;
+it is not a muscle-energy meter. Tendon storage, biarticular transfer and
+opposing muscle forces can produce different biological allocations with the
+same net result. The segment-work section below specifies the required
+relative angular velocity and explains what inverse dynamics identifies.
 
 This distinction is central to the arm-versus-wrist proposal. A net club wrench
 can match while direct wrist moments, two-hand force couples, internal squeeze,
@@ -134,13 +191,19 @@ biological allocation measurement.
 
 **Model Result:** The hand-path attribution separates pointwise drift and control
 contributions, then reports impulse, power, work, force vectors, joint effects,
-and cancellation rather than one percentage.
+and cancellation rather than one percentage. Recomputing the selections from
+the archived 135 outcome records reproduces the stated grid winners and counts.
+That check does not independently reproduce their ODE trajectories or quadrature.
 
-**Human Evidence:** Joint-work estimates depend on inverse-dynamics conventions
-and cannot uniquely recover muscle work. Instrumented contact and muscle-informed
-  models can narrow but not eliminate ambiguity. Golf-specific work and energy
-  studies still provide important system-level constraints [@winter2009;
-  @nesbit2005work; @mackenzie2020energy].
+**Human Evidence:** Nesbit and Serrano used kinematically driven body/club models
+to examine four selected amateur golfers; the outputs are model-based work
+estimates, not direct muscle-energy measurements [@nesbit2005work]. MacKenzie
+and colleagues analyzed 76 right-handed golfers with handicaps below 15 using
+the same driver, inverse dynamics and between-golfer regressions. Their strong
+force/work associations do not measure the effect of instructing a golfer to
+pull harder [@mackenzie2020energy]. Model boundaries, differentiation, inertial
+parameters and shaft treatment affect interpretation. Contact measurements and
+muscle-informed models can narrow the ambiguity without eliminating it.
 
 **Practical Interpretation:** Force tells how strongly the system interacts;
 work tells how that force aligns with motion over distance; power tells how fast
@@ -148,8 +211,8 @@ the exchange happens; effort belongs to a separate biological account.
 
 ### From Force History to Mechanical Consequence
 
-Start with a force vector through time. Its integral is impulse, which changes
-momentum. Pair each force sample with contact-point velocity and take the dot
+Start with a force vector through time. Its integral is that force’s impulse;
+only the sum of external impulses fixes the system’s momentum change. Pair each force sample with contact-point velocity and take the dot
 product to obtain power. Integrate power for work. Pair a moment with angular
 velocity for rotational power. These operations answer related but distinct
 questions; none can be safely inferred from the appearance of the force curve.
@@ -164,13 +227,21 @@ rotating path.
 
 Choose a club reference point. Translational power is net force dotted with
 reference-point velocity. Rotational power is net moment dotted with angular
-velocity. Their sum is wrench power and is invariant to a consistent change of
-reference point. Reporting only the couple may miss positive translational power;
+velocity, all expressed in the same observer frame. Their sum is wrench power.
+For two material points on the same rigid body, let $r_{AB}$ run from $A$ to $B$;
+$F$ is the resultant force and $M_A,M_B$ its equivalent moments.
+Then $v_B=v_A+\omega\times r_{AB}$ and $M_B=M_A-r_{AB}\times F$, so
+$F\cdot v_B+M_B\cdot\omega=F\cdot v_A+M_A\cdot\omega$.
+The separate force and moment powers can change even though the sum does not.
+A change of observer is different: kinetic energy and power are frame dependent.
+A point across a bending shaft need not satisfy this rigid-body velocity relation. Reporting only the couple may miss positive translational power;
 reporting only net force may miss a large rotational exchange.
 
 For two hands, individual contact powers can also be calculated. Their sum must
 match net wrench power after consistent transformations and inclusion of any
-contact moments. That closure is a strong audit. Yet individual hand power does
+contact moments, provided the contacts share the rigid-body motion used in the
+reduction. With slip, local deformation or distinct hand/club velocities, retain
+those contact powers and losses explicitly. That closure is a strong audit. Yet individual hand power does
 not identify which muscle supplied it, because work can cross wrist, elbow,
 shoulder, and trunk pathways and because co-contraction can add internal cost
 without changing net external power.
@@ -182,7 +253,9 @@ two-hand couple supplies -150 watts of rotational power over a short interval.
 Net hand power remains +750 watts. The negative couple is real and locally
 absorptive, but the hands as a whole still add club energy. If the couple changes
 orientation so its power later becomes positive, its integrated work may be
-near zero even while its impulse substantially changes angular momentum.
+near zero while its angular impulse is nonzero. A change in angular momentum
+requires the sum of all external moments about a consistently chosen inertial
+origin (or a separately justified center-of-mass balance).
 
 Now run a matched-state branch without that couple. The club may release sooner,
 changing geometry and reducing later positive power from another channel. The
@@ -193,8 +266,12 @@ changed the route and timing by which other work acted.
 ### Segment Work Is Not Muscle Work
 
 Inverse dynamics produces net joint moments consistent with measured motion and
-external loads under a model. Multiplying net moment by joint angular velocity
-gives net joint power under the chosen convention. Several muscles, passive
+external loads under a model. For a rotational joint, dot the net moment acting
+on the distal segment with its angular velocity **relative to the proximal
+segment**, expressed in a common frame. This gives the joint’s net rotational
+power; moments dotted with absolute segment velocities instead describe the
+separate segment power flows. Include translational joint power if relative
+translation is allowed. Several muscles, passive
 tissues, contact loads, and model residuals can contribute to that moment.
 Biarticular muscles can absorb energy at one joint and generate it at another.
 Assigning net joint work to one named muscle is therefore not warranted.
@@ -207,15 +284,45 @@ levels. This distinction is especially important for claims about wrists
 
 ### Numerical Closure Before Storytelling
 
-For a chosen system, the change in mechanical energy should equal integrated
-external power plus any declared dissipative or impact terms, within numerical
-residual. Calculate closure over the whole trial and important phases. Report
-absolute residual and residual relative to the effect being discussed. A two-
-joule residual may look small compared with total swing energy yet be fatal to a
-claimed one-joule mechanism.
+First declare the resolved mechanical energy: kinetic energy plus the chosen
+gravitational and elastic potentials. A club-only boundary receives hand work;
+a golfer-plus-club boundary instead contains actuators or muscles that convert
+chemical energy into mechanical energy internally. “Closed” to mass does not
+mean mechanically isolated or unable to perform internal work.
+
+A useful smooth-phase ledger is
+
+$$
+\begin{aligned}
+\Delta E_{\rm mech}
+&= W_{\rm boundary,nc}\\
+&\quad+W_{\rm internal\ actuation}\\
+&\quad-E_{\rm dissipated}.
+\end{aligned}
+$$
+
+where “nc” denotes the nonconservative boundary channel, and
+$E_{\rm dissipated}\geq0$ is mechanical energy converted into unresolved heat
+or other dissipative modes. Boundary work excludes forces already represented by the included
+potentials, and internal actuation excludes elastic storage already counted in
+$E_{\rm mech}$. This equation assumes no unlisted mass flow, time-varying
+potential or other energy conversion. Use a separate jump balance for impacts
+rather than integrating across an unresolved impulse. For a passive full club
+including its shaft, hand and aerodynamic work feed kinetic, gravitational and
+shaft elastic energy plus dissipative losses. For the combined body and club,
+hand-interface work cancels internally when contact motion is compatible, but
+muscle/actuator conversion remains. Adding gravity work while also treating
+gravitational potential $U_g$ as a destination would double-count it. Adding shaft storage to an energy
+that already includes it would do the same.
+
+Calculate closure over the whole trial and important phases. Report
+absolute residual and residual relative to the effect being discussed. A 2 J residual may look small compared with total swing energy yet be fatal to a
+claimed 1 J mechanism.
 
 Timestep refinement, alternate differentiation/filtering, and independent
-power calculations should preserve the conclusion. At contact interfaces,
+power calculations should preserve the conclusion. Agreement from two quantities
+derived from the same filtered motion is an internal consistency check; it is
+not an independent validation of the assumed mass properties or contact model. At contact interfaces,
 action-reaction and power consistency provide additional checks. A model that
 cannot close its ledger should not explain an unexpected sign by inventing a
 new transfer narrative.
@@ -251,10 +358,12 @@ rotational power, and their sum sample by sample. Numerically integrate each wit
 at least two reasonable quadrature rules and compare. A difference larger than
 the reported mechanism needs explanation.
 
-Next transform the wrench and velocity to another club point and verify summed
-power is invariant. Reverse the declared swing-normal axis and confirm only the
+Next transform the wrench and velocity to another point on the same rigid club
+segment, keeping the observer fixed, and verify summed power is invariant. Reverse the declared swing-normal axis and confirm only the
 coordinate label changes, not the physical power. Compare cumulative hand work
-with club energy change plus shaft, gravity, drag, and residual terms.
+with the declared club energy and losses: count gravity and shaft storage once,
+include any power crossing a cut through a flexible shaft, and retain the
+residual with its sign.
 
 Finally, shorten and lengthen the integration window. If a claimed positive
 contribution depends entirely on an unreported boundary choice, the conclusion
@@ -263,9 +372,12 @@ powerful enough to expose many sign and synchronization errors.
 
 ### The Difference Between Necessary and Sufficient
 
-Positive net work is necessary to increase a closed system's mechanical energy,
-but a particular positive joint-power peak may not be necessary because other
-routes can substitute. A negative couple may be sufficient to alter release in
+For a constant-mass particle in an inertial frame, increasing kinetic energy
+requires positive net force work.
+For an articulated system’s total mechanical energy, the required positive
+balance may come from boundary work or internal chemical/actuator conversion,
+after accounting for potentials and losses. Neither statement makes one
+particular joint-power peak necessary: other routes can substitute. A negative couple may be sufficient to alter release in
 one model but not necessary for all high-speed trajectories. Counterfactuals and
 alternative allocations establish these logical distinctions.
 
@@ -293,8 +405,12 @@ Mechanical work also does not judge usefulness. Negative work can be essential
 for control, accuracy, or preparing a favorable state. Positive work at the wrong
 time can worsen the final task.
 
-**Go Deeper:** Read the full
-[hand-path attribution chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03b_hand_path_attribution.qmd),
-[coordinate force-source chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03ba_coordinate_force_sources.qmd),
-inspect its [machine-readable evidence](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer/data),
-and compare the segment energetics conventions [@robertson1980; @winter2009].
+**Go Deeper:** Compare the [pinned hand-path attribution snapshot](../data/proximal_distal_energy_transfer/hand_path_attribution_snapshot.json)
+(provider revision `69eb7e9d`) with the separate
+[coordinate force-source chapter](https://github.com/D-sorganization/UpstreamDrift/blob/f70f4620b61a5becec7b5abd34f1028cc588742a/docs/research/proximal_distal_energy_transfer/chapters/_ch03ba_coordinate_force_sources.qmd)
+and its [135 archived outcome records](https://github.com/D-sorganization/UpstreamDrift/blob/f70f4620b61a5becec7b5abd34f1028cc588742a/docs/research/proximal_distal_energy_transfer/data/force_source_optimization.json).
+The latter archive is at revision `f70f4620`; its recorded generating revision
+is `942c4e32`. Archive inspection is distinct from rerunning that environment.
+For methodological background, Robertson and Winter examined segment power
+balance in a sagittal-plane walking model; that is not golf-specific validation
+[@robertson1980]. Winter’s textbook supplies broader background [@winter2009].
