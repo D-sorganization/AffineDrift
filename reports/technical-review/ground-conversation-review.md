@@ -38,7 +38,8 @@ from 13.44 to 3519.40, with no active work floor. The 200% tolerance endpoint is
 vacuous and does not estimate the smallest tolerance that yields a match.
 
 Only 202 of 384 summaries meet the 5% load criterion. None also meets total-work
-matching. The 60 alternative-work matches occur at 4/10/25/50 ms in counts
+matching. The load quantity is the maximum single-station force norm over the
+interval (`_record_horizon`), not summed hand force. The 60 alternative-work matches occur at 4/10/25/50 ms in counts
 48/8/4/0, with 20 positive and 40 negative speed differences. The 48 finer-step
 50 ms comparisons all favor coupled support by 0.028--0.177 m/s, but use a
 different cohort and estimand. Numerical backends, timesteps and horizons do not
