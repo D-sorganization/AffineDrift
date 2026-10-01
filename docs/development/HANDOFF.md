@@ -1,3 +1,18 @@
+# Shallow-Wide Chapter — #4733
+
+- Goal active under epic #4009; regular protected PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `SELF`; PR not created. Branch initially follows ground head `821a1899246df83ebd017061489835157f4bfec7`; integrate ground delivery after its peer-main reconciliation.
+- Session `technical-review-20261001-shallow-wide`, lease/presence through 06:58 UTC. Full Chapter 4 corrected: conditional latency, anatomical versus computational layers, state compression, accurate parameter comparison, bounded synergy evidence and validated printed NMF. Three supplied-text agy Flash inventories adjudicated; no delegated tools/network/edits.
+- Durable rationale, exact primary scopes, old-code reproduction, prior audit snapshots and render evidence: `reports/technical-review/shallow-wide-*`. Historical notebook remains unreviewed/scaffolded.
+- Validation: 23 printed-example/counterexample tests; 38 combined focused/book-audit/hygiene passes; all twelve content gates; 651 title checks. Rebuilt Volume IV PDF 71 pages: all eight chapter pages, contents, following boundary and three bibliography pages visually inspected; final diagram enlarged and page24 reinspected. Public route four width/theme cases and axe pass. Full suite and final finding/source-commit binding remain pending.
+- Ground PR #4732 original head passed all CI 36815440996. Peer PR #4731 merged main `668de3a23b73c166936077ccdd6c4f869deb1c6c`, creating eleven shared digest/key-order conflict blocks. They are resolved in `AffineDrift-impact-review` on ground branch; all28 findings preserved. Integrated full suite is running there. Ground lease renewed through07:16 UTC. Do not mix worktrees or include Chapter4 in PR4732.
+- Next: bind the chapter audit to its committed source, complete integrated validation, and open a regular PR after ground delivery. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
+- Development entries touched: DL-#4733; DL-#4730 delivery continues in the isolated checkout.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses below are historical; current state is above.
+
 # Ground-Reaction Chapter — #4730
 
 - Goal active under epic #4009; continue complete reviews and protected delivery. Regular PRs only; no draft, direct-main or bypass pushes.
@@ -5,9 +20,10 @@
 - Reference PR #4729 merged at 2026-10-01 03:37:56 UTC and ancestry verified. Final integrated receipt (6191 passed/29 skipped, 92.95% src coverage, subsequent content 183/four skips) finished after merge and is carried here. Lease/presence released 03:44 UTC (5924297561 / 5924298286).
 - Ground session `technical-review-20261001-ground-conversation`; lease/presence through 05:30 UTC. Scientific source complete with twelve new tests and forty combined focused passes. Complete source and pinned provider Chapters 03c/06ca read; primary human scopes and three Flash inventories adjudicated in `reports/technical-review/ground-conversation-review.md`.
 - Archive recomputation: work ratio 13.44–3519.40, not twice; zero primary matches, 202 load-only matches; 60 post-hoc matches occur 48/8/4/0 across 4/10/25/50 ms. Total model intervention differs from the matched estimand. Distributed central tension-only grip does not inherit the noncentral dashpot defect from UpstreamDrift #11195.
-- Regular PR [#4732](https://github.com/D-sorganization/AffineDrift/pull/4732) is open, final science checkpoint `ff4177f0309195e040085b44b31b355f033fef3d`, not yet armed for merge. Initial push raced a Quarto render and failed artifact/evidence hooks; after render completion and complete evidence staging, all push hooks passed.
+- Regular PR [#4732](https://github.com/D-sorganization/AffineDrift/pull/4732) is open, final science checkpoint `ff4177f0309195e040085b44b31b355f033fef3d`, protected squash auto-merge armed on final head 821a1899246df83ebd017061489835157f4bfec7; CI 36815440996 in progress. Initial push raced a Quarto render and failed artifact/evidence hooks; after render completion and complete evidence staging, all push hooks passed.
 - Initial science checkpoint `0da67ca26cd147dfffd098c7c2b41427a168f87e`: final 213-page PDF Chapter16 pp98–106 plus contents/boundary verified; table fits on one page. Four final browser cases pass (390/1440, light/dark, 32 math items, four displays), zero serious/critical axe findings. All twelve content gates, Ruff, Black (819 files), title and root hygiene pass; 48 focused/legacy/hygiene checks pass. Prior 22 findings preserved, six new findings bound; 57 previous dependency paths unchanged, with chapter/PDF and bounded legacy-test changes explained. Stable full at 163cf5e59: 6203 passed/29 skipped/185 deselected, 92.95% src coverage. Final prose clarifies observer frame, 1536 pathway summaries/96 trajectory pairs/384 horizon comparisons, and empty cohort versus zero effect. Final 38 focused and 183 content checks/four skips pass without evidence restoration; final four public-route cases pass. Only PDF pages99/104/105 changed and were reinspected. Corpus Chapter16 row complete; 135 pending remain. Receipt: ground-conversation-repository-validation.json.
 - Preserve QA artifacts, prior scoped audits, parked provider synthesis #4253, and peer-owned deployment #4688/#4713. No live deployment claim.
+- Next longest source is queued as epic child #4733 (shallow-wide neural latency/synergies). Complete source read; original code defects reproduced; two supplied-text Flash inventories adjudicated. Read-only preparation and primary scopes are saved in docs/development/technical-review/shallow-wide-preparation.md and shallow-wide-correction-design.md. No #4733 lease, branch or source edits yet; finish #4732 first.
 
 ## Earlier Checkpoints
 

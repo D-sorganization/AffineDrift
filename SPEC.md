@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4733 | Correct Volume IV Chapter 4 latency, neural-layer, network-budget and EMG-synergy arguments with executable examples and bounded primary evidence. |
 | 2026-10-01 | #4730 | Correct ground power and system boundaries, counterfactual reaction definitions, archived matching normalization and causal interpretation in companion Chapter 16. |
 | 2026-10-01 | #4725 | Qualify reference-library evidence, historical specifications, patent disclosures and launch-weight sensitivity; preserve prior chapter reviews. |
 | 2026-10-01 | #4724 | Clarify spatial wrench power, observer and contact restrictions, projection sensitivity, and archived closure and native-engine evidence in companion Chapter 20. |

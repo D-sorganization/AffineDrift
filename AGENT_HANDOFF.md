@@ -1,3 +1,18 @@
+# Shallow-Wide Chapter — #4733
+
+- Goal active under epic #4009; regular protected PRs only.
+- Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-review`, branch `fix/shallow-wide-rigor-4733`, source checkpoint `SELF`; PR not created. Branch initially follows ground head `821a1899246df83ebd017061489835157f4bfec7`; integrate ground delivery after its peer-main reconciliation.
+- Session `technical-review-20261001-shallow-wide`, lease/presence through 06:58 UTC. Full Chapter 4 corrected: conditional latency, anatomical versus computational layers, state compression, accurate parameter comparison, bounded synergy evidence and validated printed NMF. Three supplied-text agy Flash inventories adjudicated; no delegated tools/network/edits.
+- Durable rationale, exact primary scopes, old-code reproduction, prior audit snapshots and render evidence: `reports/technical-review/shallow-wide-*`. Historical notebook remains unreviewed/scaffolded.
+- Validation: 23 printed-example/counterexample tests; 38 combined focused/book-audit/hygiene passes; all twelve content gates; 651 title checks. Rebuilt Volume IV PDF 71 pages: all eight chapter pages, contents, following boundary and three bibliography pages visually inspected; final diagram enlarged and page24 reinspected. Public route four width/theme cases and axe pass. Full suite and final finding/source-commit binding remain pending.
+- Ground PR #4732 original head passed all CI 36815440996. Peer PR #4731 merged main `668de3a23b73c166936077ccdd6c4f869deb1c6c`, creating eleven shared digest/key-order conflict blocks. They are resolved in `AffineDrift-impact-review` on ground branch; all28 findings preserved. Integrated full suite is running there. Ground lease renewed through07:16 UTC. Do not mix worktrees or include Chapter4 in PR4732.
+- Next: bind the chapter audit to its committed source, complete integrated validation, and open a regular PR after ground delivery. Preserve prior provenance, all untracked QA, peer deployment #4688/#4713, and parked provider synthesis #4253. No live deployment claim.
+- Development entries touched: DL-#4733; DL-#4730 delivery continues in the isolated checkout.
+
+## Preserved Earlier Checkpoints
+
+Earlier pending statuses below are historical; current state is above.
+
 # Plane-to-Space Technical Review — #4724
 
 - Goal active under epic #4009. Regular PRs only; complete current review and protected delivery, then continue longest unfinished sources.

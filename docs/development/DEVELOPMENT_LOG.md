@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4733 · Shallow-Wide Latency and Synergy Arguments
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4733 (epic #4009)
+- **Branch:** `fix/shallow-wide-rigor-4733`
+- **Paths:** `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch04_shallow_wide.tex`, `articles/The_Geometry_of_Motion/Volume_IV/main.pdf`, `articles/The_Geometry_of_Motion/geometry_of_motion.bib`, `books/human-motor-control.qmd`, `tests/test_shallow_wide_review.py`, `reports/technical-review/shallow-wide-review.md`
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (SELF: 23 new checks and 38 combined focused checks pass; twelve content gates; 71-page PDF chapter and four public-route cases visually verified)
+- **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
+- **Next step:** Bind the completed chapter review to the committed source checkpoint.
+
 ### DL-#4730 · Ground-Reaction Boundaries and Matching Evidence
 
 - **State:** in_review
@@ -29,7 +42,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (6203 full tests/29 skips; 92.95% src coverage; final wording 38 focused and 183 content/four skips; 213-page PDF and four browser cases verified)
 - **Summary:** Correct material contact power, internal/external wrench boundaries, ZVCF control convention and symmetric dissipation normalization; distinguish primary matching from total model contrasts and resolve post-hoc horizon counts.
-- **Next step:** Regular PR #4732: local validation complete. Verify final pushed CI, arm protected squash auto-merge, verify remote-main ancestry, and release lease/presence. First full run had three render-race artifact failures; stable rerun passed without relaxed gates. Empty matched cohort explicitly distinguished from zero effect. Broader goal remains active.
+- **Next step:** Verify peer-main integration in the isolated ground-delivery checkout.
 
 ### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
