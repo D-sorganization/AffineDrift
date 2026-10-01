@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4738 | Correct tangent reading guide variation, propagated error, DDP, contraction, hybrid timing, biomechanical scope and public reading links; preserve source evidence and review provenance. |
 | 2026-10-01 | #4728 | Rebalance on-ramp 3-hour tier estimates to 180 minutes, add duration contract tests, and mark audit findings corrected (#4695, #4691, RM#1879). |
 | 2026-10-01 | #4725 | Qualify reference-library evidence, historical specifications, patent disclosures and launch-weight sensitivity; preserve prior chapter reviews. |
 | 2026-10-01 | #4724 | Clarify spatial wrench power, observer and contact restrictions, projection sensitivity, and archived closure and native-engine evidence in companion Chapter 20. |
