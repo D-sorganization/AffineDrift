@@ -18,18 +18,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4743 · Muscle Models and Coupled Power
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4745 (regular; main target)
+- **Issue:** #4743 (epic #4009)
+- **Branch:** fix/muscle-model-rigor-4743
+- **Paths:** articles/The_Geometry_of_Motion/Volume_III/chapters/ch03_muscle_models.tex, articles/The_Geometry_of_Motion/geometry_of_motion.bib, tests/test_muscle_models_review.py, tests/test_muscle_model_identities.py
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-01 (source d7be93d34; full6318 pass/five book-audit digest failures/29 skipped/93.04%; digest repair88 then bound89 passes;184 content/four skips;12 gates;653-title audit;PDF68pages/17 pages and browser4/4 verified)
+- **Summary:** Correct force curves and attribution; connect excitation, fiber state, series equilibrium, tendon storage, joint power and stiffness under explicit model/empirical boundaries.
+- **Next step:** Nine chapter findings bound to46f71;247 historical finding records preserved;130 full-source audits remain. Regular PR4745 opened against main with da493c576. Push registration, arm protected merge and verify final CI/main delivery; dependent Chapters9/10 PR4741 still awaits E2E.
+
 ### DL-#4742 · Force Direction and Reference Points
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4744 (regular; stacked on #4741)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4741 (carries merged topic PR #4744; main delivery pending)
 - **Issue:** #4742 (epic #4009)
 - **Branch:** `fix/force-direction-rigor-4742`
 - **Paths:** `articles/proximal_distal_companion/chapters/ch09_force_direction.qmd`, `articles/figures/proximal_distal_companion/fig_companion_force_direction.svg`, `scripts/make_proximal_distal_companion_figures.py`, `tests/test_force_direction_review.py`, `reports/technical-review/force-direction-review.md`
 - **Started:** 2026-10-01
 - **Last verified:** 2026-10-01 (source52408; full6281 pass/one stale source-contract failure,93.04%; repaired;59 focused then79 bound-audit and88 integration checks pass;184 content/4 skips;216-page PDF and browser4/4 verified)
 - **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
-- **Next step:** Push CI digest repair (one mixed line ending;46 affected tests pass), verify Chapter10 PR4741 merge, retarget4744 to main, then verify protected checks and merge. Six findings bound;35 historical findings preserved; merged guide corpus row reconciled.
+- **Next step:** Chapter9 merged externally into Chapter10 branch d9c21a9e5; PR4741 now carries both chapters to main. CI digest repaired;46 affected tests pass. Await protected checks and actual remote-main delivery.
 
 ### DL-#4739 · Force, Work, and Energy Boundaries
 
