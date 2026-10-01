@@ -131,3 +131,41 @@ test.describe('whole-site visual regression and layout invariants', () => {
     }
   });
 });
+
+/**
+ * Home page visual QA across viewports and themes (issue #4559), coordinated
+ * with the representative-route matrix above (#4089): same masking and
+ * snapshot approach, at the 390/768/1440 px widths and light/dark themes
+ * #4559 specifies. Start Here (`pages/start-here.qmd`) is out of scope here
+ * because it does not exist yet — it ships under #4486 (WEB-01.1), a
+ * tier:strong design issue — so this suite covers only the page that exists
+ * today and is ready to extend once Start Here lands.
+ */
+const HOME_THEME_VIEWPORTS = [
+  { label: '390', width: 390, height: 844 },
+  { label: '768', width: 768, height: 1024 },
+  { label: '1440', width: 1440, height: 900 },
+];
+
+const THEMES = ['light', 'dark'];
+
+test.describe('home page visual QA across viewports and themes (#4559)', () => {
+  test.describe.configure({ timeout: 90000 });
+
+  for (const vp of HOME_THEME_VIEWPORTS) {
+    for (const theme of THEMES) {
+      test(`home @ ${vp.label}px (${theme}) matches visual snapshot`, async ({ page }) => {
+        await page.setViewportSize({ width: vp.width, height: vp.height });
+        await page.goto('/', { waitUntil: 'load' });
+        await page.evaluate((t) => {
+          document.documentElement.setAttribute('data-theme', t);
+          document.documentElement.setAttribute('data-bs-theme', t);
+        }, theme);
+        await expect(page).toHaveScreenshot(`home-${vp.label}-${theme}.png`, {
+          fullPage: true,
+          mask: volatileMasks(page),
+        });
+      });
+    }
+  }
+});

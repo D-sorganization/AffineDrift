@@ -6,6 +6,7 @@ from src.tools.check_links import _is_broken_link, find_links
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 TANGENT_LINK_SOURCES = (
+    Path("articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd"),
     Path("books/tangent-space-methods.qmd"),
     Path("resources/articles.qmd"),
     Path("pages/tangent-hyperplanes.qmd"),

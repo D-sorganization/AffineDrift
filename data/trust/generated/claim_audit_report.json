@@ -34,7 +34,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "index.qmd": "5f7d289aa7206bded0b965179f6c7cc825d3e333c329aef397ea302350869522",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -3554,7 +3554,7 @@
       "review_evidence": {
         "evidence_file_count": 23,
         "evidence_sha256": {
-          "_quarto.yml": "7ea8bf8e97cb4f7efa1ffcdc5bccc133cc069bc43c6fb08da8852e19461eec62",
+          "_quarto.yml": "527209155d3fbad367b11fbf29d7c155de3057efe81631a5af10d61ac1385323",
           "articles/_generated/proximal-distal-falsification-atlas.qmd": "d60241c297a8bd1112cd9375e13f7c711527186849bceb101c77690d1bf26a51",
           "articles/proximal-distal-falsification-atlas.qmd": "a8d187f4dc3d79d74a83a001253fd0900bfb654b5c786d98166c4718cde8ce9b",
           "articles/proximal_distal_energy_transfer/data/claim_adjudication_summary.json": "21cd105216d53adb7706f1e21a7be5e0d37c0e2d061b3843fb17fd18fdfeb33a",
@@ -4768,11 +4768,199 @@
       "claims": [],
       "critiques": [],
       "deferment_issue_url": null,
-      "findings": [],
+      "findings": [
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_foundation_rigor.py::test_continuous_derivative_does_not_imply_quadratic_remainder",
+            "tests/test_tangent_foundation_rigor.py::test_finite_perturbation_error_survives_exact_integration",
+            "tests/test_residual_flow_bounds.py::test_riccati_counterexample_and_conditional_bound",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_residual_flow_bounds.py::test_riccati_counterexample_and_conditional_bound": "171bb642226cdea486241f8ecb93ef8d9dab4c24d85a2956fad01abbf1ce12f6",
+            "tests/test_tangent_foundation_rigor.py::test_continuous_derivative_does_not_imply_quadratic_remainder": "3178662c5dfc7c8e92b61d8e88eae810ff2b667b962a14513845eeae265a386f",
+            "tests/test_tangent_foundation_rigor.py::test_finite_perturbation_error_survives_exact_integration": "e0ca10925baee1856bef76c6268e40fa93cd94390d224be2bd6a6ff80643bed7"
+          },
+          "finding_id": "ad-finding-tangent-guide-linearization-and-error-dynamics",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The glossary treated tangent-space dynamics as exactly linear and gave unqualified quadratic residual scaling; the lookup bound omitted transition-matrix propagation. Separate exact first variations from finite predictions, require bounded joint state/input Hessians for a quadratic remainder, and derive the propagated error equation with actual deviations. The scalar counterexample disproves the unweighted bound.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_control_rigor.py::test_ddp_retains_all_value_weighted_transition_hessians",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_tangent_control_rigor.py::test_ddp_retains_all_value_weighted_transition_hessians": "bba8acb7ff623284baaf6983cfb3c6d7538a8f567f50a2e698b0cc57a9ab1cbe"
+          },
+          "finding_id": "ad-finding-tangent-guide-ddp-curvature-and-ilqr",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The DDP lookup omitted value-gradient-weighted transition Hessians, while the pitfalls section implied repeated linearization preserves exactness and permits arbitrary reachability. Restore full discrete DDP curvature, distinguish iLQR and the continuous Hamiltonian, and retain local-model, feasibility and convergence conditions.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_contraction_reference_rigor.py::test_metric_derivative_requires_covariant_matrix_order",
+            "tests/test_contraction_reference_rigor.py::test_finite_horizon_metric_can_shrink_while_state_error_grows",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_contraction_reference_rigor.py::test_finite_horizon_metric_can_shrink_while_state_error_grows": "8cba5f28a148b8e4cc7a31f9d4be25418669ddd42fc267a2de0e184d76d31b6b",
+            "tests/test_contraction_reference_rigor.py::test_metric_derivative_requires_covariant_matrix_order": "10e58beca5524d2d7306ef86c601e6c9f60c2cc2651f73ab594235aa3930c49d"
+          },
+          "finding_id": "ad-finding-tangent-guide-contraction-metrics-and-convergence",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The contraction glossary reduced the condition to a uniformly negative-definite Jacobian, and the pitfalls section equated contraction with optimizer progress. Specify the actual closed-loop Jacobian, symmetric metric derivative, rate convention and regional/path conditions; distinguish physical time from optimization iterations. A Hurwitz-matrix counterexample illustrates why eigenvalues alone do not establish Euclidean contraction.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_hybrid_tangent_rigor.py::test_published_bounce_jacobian_matches_relocated_events",
+            "tests/test_hybrid_tangent_rigor.py::test_saltation_is_independent_of_guard_reset_extension",
+            "reports/technical-review/tangent-reading-counterexamples.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_hybrid_tangent_rigor.py::test_published_bounce_jacobian_matches_relocated_events": "db7b393844b0e356e4ce885414eb85661dbe5cbc32561491aabdcda14e3a9f32",
+            "tests/test_hybrid_tangent_rigor.py::test_saltation_is_independent_of_guard_reset_extension": "db2ed2a22f50966564749cf791e1a4c4733b69d4bec916921d8edd9c946e111c"
+          },
+          "finding_id": "ad-finding-tangent-guide-hybrid-event-timing-and-saltation",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p1",
+          "rationale": "The guide equated guards with tangent-space jumps and described impact maps as instantaneous rotations. Separate guard, reset and common-time sensitivity; include the event-time contribution through saltation, with transverse isolated-event and fixed-sequence assumptions. Dissipative reset derivatives need not preserve norms, and grazing or Zeno behavior falls outside this formula's stated scope.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29"
+          },
+          "finding_id": "ad-finding-tangent-guide-coordinate-distinctions-vs-curvature",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "Residual-as-manifold-curvature wording, footstrike-as-curvature-spike and gimbal-lock-as-curvature-singularity examples conflated distinct objects. Distinguish model residuals, intrinsic curvature, coordinate-chart degeneracy and nonsmooth events; a residual depends on the model and coordinates and is not itself intrinsic curvature.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_foundation_rigor.py::test_feedback_sensitivity_uses_the_closed_loop_derivative"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_tangent_foundation_rigor.py::test_feedback_sensitivity_uses_the_closed_loop_derivative": "84961f307fe9d5bc62993092c037d5845e01c34d05b727aee8c0d49cf24f6479"
+          },
+          "finding_id": "ad-finding-tangent-guide-biomechanical-validation-and-control",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "The golf reading path promised a mathematical basis for coaching decomposition without specifying the model or empirical inference needed. Add the connections among complete model state, imposed inputs versus feedback, propagated uncertainty, event-time convention and task output. These qualifications explain what motion data and model calculations can establish without inferring a unique neural mechanism or human efficacy.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "tests/test_tangent_series_links.py"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "tests/test_tangent_series_links.py": "3f3553b694abfa5bb16c8218dc9cc338eac387820171fc757836f8659050596f"
+          },
+          "finding_id": "ad-finding-tangent-guide-navigation-boundaries-and-citations",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "Bare filenames and nonexistent review pointers obscured the usable reading path, and textbook chapter pointers were inaccurate. Prioritize the canonical seven-part hub, distinguish full manuscripts and retired drafts, and correct chapter locations from primary contents/front matter. Four excluded-target links introduced during revision failed the navigation regression and were replaced with published destinations. Linked-page descriptions do not claim new full reviews of those works.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd",
+            "reports/technical-review/tangent-reading-review.md",
+            "reports/technical-review/tangent-reading-validation.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+            "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+            "reports/technical-review/tangent-reading-validation.json": "89996cb55a430574e1548d17e0dd9217401a4d4d67e5a53f73d409d7f780c3f1"
+          },
+          "finding_id": "ad-finding-tangent-guide-pedagogical-claims-and-presentation",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4736",
+          "priority": "p2",
+          "rationale": "Reading outcomes promised expert understanding or a practical solution, novelty and internal-grade language overstated independent support, and proposed features were mixed with available material. Replace those claims with scoped study activities and verified resources. Remove the unnecessary Code button after mobile inspection and wrap long equations; bounded browser checks pass, with the shared smaller mobile math styling explicitly recorded.",
+          "verification_commit": "0b4a21467baf8176b1d78b9819c88f17bd1a816d"
+        }
+      ],
       "review_evidence": {
-        "evidence_file_count": 1,
+        "evidence_file_count": 14,
         "evidence_sha256": {
-          "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "749cbda541529e1911666b3c5c9c46f9b6b2589abf9d9c3f51c79f2a60c5481d"
+          "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd": "6bdc1c2efd6f191fbd1f0c747066aaa0974de7dc5bfb8659ffa2e6d211bb1fcf",
+          "reports/technical-review/tangent-reading-counterexamples.json": "b011ef39813c97365a46bf1b049fed0e0c32728f2506ac7b380c9f205c605371",
+          "reports/technical-review/tangent-reading-review.md": "bc5a7522ab7df0aa46977dc84ee12a89ccd097b33700f48b436b6a40d3457b29",
+          "reports/technical-review/tangent-reading-validation.json": "89996cb55a430574e1548d17e0dd9217401a4d4d67e5a53f73d409d7f780c3f1",
+          "tests/test_contraction_reference_rigor.py::test_finite_horizon_metric_can_shrink_while_state_error_grows": "8cba5f28a148b8e4cc7a31f9d4be25418669ddd42fc267a2de0e184d76d31b6b",
+          "tests/test_contraction_reference_rigor.py::test_metric_derivative_requires_covariant_matrix_order": "10e58beca5524d2d7306ef86c601e6c9f60c2cc2651f73ab594235aa3930c49d",
+          "tests/test_hybrid_tangent_rigor.py::test_published_bounce_jacobian_matches_relocated_events": "db7b393844b0e356e4ce885414eb85661dbe5cbc32561491aabdcda14e3a9f32",
+          "tests/test_hybrid_tangent_rigor.py::test_saltation_is_independent_of_guard_reset_extension": "db2ed2a22f50966564749cf791e1a4c4733b69d4bec916921d8edd9c946e111c",
+          "tests/test_residual_flow_bounds.py::test_riccati_counterexample_and_conditional_bound": "171bb642226cdea486241f8ecb93ef8d9dab4c24d85a2956fad01abbf1ce12f6",
+          "tests/test_tangent_control_rigor.py::test_ddp_retains_all_value_weighted_transition_hessians": "bba8acb7ff623284baaf6983cfb3c6d7538a8f567f50a2e698b0cc57a9ab1cbe",
+          "tests/test_tangent_foundation_rigor.py::test_continuous_derivative_does_not_imply_quadratic_remainder": "3178662c5dfc7c8e92b61d8e88eae810ff2b667b962a14513845eeae265a386f",
+          "tests/test_tangent_foundation_rigor.py::test_feedback_sensitivity_uses_the_closed_loop_derivative": "84961f307fe9d5bc62993092c037d5845e01c34d05b727aee8c0d49cf24f6479",
+          "tests/test_tangent_foundation_rigor.py::test_finite_perturbation_error_survives_exact_integration": "e0ca10925baee1856bef76c6268e40fa93cd94390d224be2bd6a6ff80643bed7",
+          "tests/test_tangent_series_links.py": "3f3553b694abfa5bb16c8218dc9cc338eac387820171fc757836f8659050596f"
         },
         "source_path": "articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.qmd"
       },
@@ -10998,7 +11186,7 @@
         "evidence_file_count": 35,
         "evidence_sha256": {
           "_includes/generated/research-readiness-library.qmd": "b58c86b19ed4b1ae4082b4fd5c3e31fe0483a7a3dbf7d8e41e70e751dd36ed90",
-          "_quarto.yml": "7ea8bf8e97cb4f7efa1ffcdc5bccc133cc069bc43c6fb08da8852e19461eec62",
+          "_quarto.yml": "527209155d3fbad367b11fbf29d7c155de3057efe81631a5af10d61ac1385323",
           "data/research_protocols/data_dictionary.json": "a39b4ee56f9ecee321f2d2fe1612b351c201e1c813aaf258f99d6e087d4a1720",
           "data/research_protocols/library.json": "505d7c66b3e9b4474c0d8520d7289d4ee3dbb97cb1d0682c41c1d4d79d4f9925",
           "data/research_protocols/manufactured_dry_runs.json": "4f23dc9ac93900b364846adeefce69adb35543da0b911943ba9a13fe1edc5f5b",
@@ -11073,7 +11261,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/about.qmd": "95b1846d4dac0b9f0662b0781ce3415e155b699c9831834b32409c102de3cbb2",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11141,7 +11329,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/book-reviews.qmd": "1d9bbae08b203ab3bcf8a652214482212371c16fc82b5f45ad339add08e88b3e",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11176,7 +11364,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/collaborate.qmd": "023f5f1d92ac20a38e48fd2ba22ab8143f08fe7d4aba509cab36415d09043344",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11211,7 +11399,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/contact.qmd": "54b9899e48623ee407e7da3e032246562d4f785a92c280a2a32bcc9b18de87ea",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11297,7 +11485,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/daydreams-doodles.qmd": "301ebd880e1773b7d866de4fb7e727cfac55a35815cd8c3efc54c7a12caa42f7",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11332,7 +11520,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/development-roadmap.qmd": "4a2e7aa461ebaede627e3758a9d6a6e8136f6cec13f5a95a70f4493a49d11d0a",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11448,7 +11636,7 @@
         "evidence_file_count": 6,
         "evidence_sha256": {
           "css/manifesto.css": "35117d0650e73a65c9164e7c7ea2c95065822a7455baf1da78e9190ffd2dbbcb",
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/drifter-manifesto.qmd": "5b8debf5a9731ee5d1a261c09ea2fa4647275b6738b42001dcf8224e6358a08d",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05",
           "reports/technical-review/manifesto-notation-render-verification.json": "c9627edf421f78c60bec0a6fb5b16ce8535733f32139aa54353cbfa77c5f15a6",
@@ -11546,7 +11734,7 @@
           "evidence_sha256": {
             "NOTATION.md": "5c13dbbdf46e723982295f498e6f3bcef26e411d92e3bd882024a93688822ab9",
             "pages/notation.qmd": "5b04a36e8b7008b2b6534112e6e6b9fea380257dc7d21b5a44e899be3e291c56",
-            "styles.css": "f9477506b6b4feba43b1697db46c6571529b83c8d8a32f85fe804ad2f48d7afc",
+            "styles.css": "e2a6fb99f31e6fad38fa0ea85bef851b8542ee6ebba885613add7f70304b74f9",
             "tests/test_responsive_layout_contract.py::test_dense_tables_scroll_without_collapsing_long_cells_to_fragments": "3366f928cc423ecc4a3e7b1f0f43307600976b735c1e7a9fb0f0ccf817eaa1fb",
             "tests/test_responsive_layout_contract.py::test_mobile_publication_shell_contains_wide_content_without_page_scroll": "9b75bc2cf8e4748d60c03f8c8fb2fa41c07edeb1638a7abe2f11d00e195f4ee3"
           },
@@ -11561,7 +11749,7 @@
         "evidence_file_count": 4,
         "evidence_sha256": {
           "NOTATION.md": "5c13dbbdf46e723982295f498e6f3bcef26e411d92e3bd882024a93688822ab9",
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/notation.qmd": "5b04a36e8b7008b2b6534112e6e6b9fea380257dc7d21b5a44e899be3e291c56",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11616,7 +11804,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/overview.qmd": "648a94271295ca3543bbf391d058ffbfb58a09e39e306b22e14974f716f3d1b5",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11719,7 +11907,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/tangent-hyperplanes.qmd": "95edfe5dc1ab5ce5ba8e15b40f81e9641b3e7c2844de8367f2ae9affb205bb66",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11754,7 +11942,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/technology.qmd": "c0cba55ecb0f69e11479962eb9326ea8d71bbce8cd45b7f301627c69291b3263",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -11789,7 +11977,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "7551197829d3bd362402be13b5e296906449b6cabac804beec5fb13cfb2f6863",
+          "data/trust/site_trust_surface_audit.json": "549354e25eb3c255d883d4df6c2fa1bd8052ce6039246a93a05228aab00d3ce1",
           "pages/tools.qmd": "45bd542300dcccb5872bfec1da7ac6f47d3b260951bd7b1cc48d080f3e58d725",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
