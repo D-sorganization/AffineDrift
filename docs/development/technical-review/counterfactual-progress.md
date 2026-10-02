@@ -40,3 +40,7 @@ Preserve raw QA in this directory and earlier synthesis worktree. Complete valid
 ## Acceptance Checkpoint
 
 Full regression: 6,636 passed, 29 skipped, 187 deselected; 79.32% coverage. Final contents and chapter boundaries visually accepted. Six Flash helpers adjudicated. Frozen scientific decisions, prior snapshot, carry-forward and provider evidence are in reports/technical-review/counterfactual-*. Commit this acceptance, then bind its exact SHA. No corpus credit before binding. Future ideomotor inventory and reproduced example defect remain preparation only, without issue or source credit.
+
+## Binding Checkpoint
+
+Accepted source `c27c09f3b08725ba485faa81a63673484746d957` is bound to eight new findings;209prior findings preserved,217total,102source audits pending. All47post-binding checks pass. Initial deployment-pruning hashing hit60s; identical retry passed within the same timeout, with no code/gate changes. Normal hooks and remote push remain next. Frozen acceptance reports are unchanged; mutable validation and log comparison are saved separately.
