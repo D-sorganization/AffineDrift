@@ -8073,10 +8073,250 @@
           "priority": "p2",
           "rationale": "**Schematic Provenance.** The previous Gaussian figure's shaded Overlapping Coupling interval had no calculated coupling quantity, and Relative Speed blurred relative angular rate with scaling. Removed the shading, normalized all chosen peaks to their own maxima, added distinct line styles and declared schematic axes/title/caption/alt text. It encodes chosen timing and overlap only, not speed ratios, Jacobian contributions or transfer. Only make_sequence_overlap changes in the shared generator; other AST nodes must remain equal to baseline.",
           "verification_commit": "9f2327cad675eb2ceb9ba1665d5cd310a7e37ee0"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-power-conjugacy",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Power Conjugacy.** Separate a moment on the club from its action/reaction joint pair. Club-side power uses absolute club angular velocity; rotational joint power uses club-minus-arm rate. Manufactured torque -2 N m with rates 3 and 5 rad/s gives -6 W club, +10 W arm, +4 W pair. Relative coordinates `(theta_arm, beta)` and absolute `(theta_arm, theta_club)` preserve total generalized power. Three-dimensional dot products and coordinate-rate mappings replace one projected-component inference.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-energy-boundary",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Energy Boundary.** Rigid-club kinetic-energy change equals physical hand-wrench power plus gravitational power and power from any other declared external loads in one inertial observer. A boundary enclosing a flexible shaft includes its strain storage and dissipation; shaft release and inertial coupling must not be counted as extra external supplies. Spring/damper examples distinguish recoverable storage from dissipation. Instantaneous negative power does not imply negative cumulative work or energy loss for the full system.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-moment-transport",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Moment Transport.** With H-to-C displacement `(0, 1, 0)`, absolute omega `(0, 0, 3)`, vH `(2, 0, 0)`, F `(10, 0, 0)` and MH `(0, 0, -2)` in SI, vC = (-1, 0, 0), MC = (0, 0, 8). Both wrench reductions give 14 W although the moment component changes sign. Reference-point transport is different from changing observer. A seeded 32-case vector identity verifies transport without claiming human validation.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-reaction-geometry",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Reaction Geometry.** Preserve the provider convention d = trail-minus-lead and Fd = (lead-minus-trail)/2; midpoint force moment = -d cross Fd. Fixed-force reversal/collapse are algebraic controls, not predictions of re-solved reactions. Free moments survive collapse. Co-rotation includes the measuring normal. Ideal two-sided constraint power can vanish while one body receives nonzero contact power.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-three-study-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Three Study Scopes.** Separate archived pointwise zero-command reactions, a distinct finite forward constrained branch, and the finite eight-schedule uncertain-control comparison. Reintegrated saved contact power is -149.417052 J over 0.088121744 s. About 85% is negative, not a positive-power boost. The forward representative branch copies state exactly and all saved couple values stay negative for 50 ms, minimum -7.43245166 Nm. The later 37.25 ms persistence is read from provider JSON/text, not independently rerun. Eight candidates are nondominated; early_restrain q10 = 4.705878716 m/s, mean face/path 5.439869 deg versus late_drive q10 = 4.417288309 m/s, mean 1.576101 deg. Five-objective arithmetic matches archived arrays at relative and absolute tolerances of 1e-14. Endpoint 0.24 s, no ball collision, no population bound or continuous optimum.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-empirical-attribution",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Empirical Attribution.** Remove unsupported wrist-EMG attribution to Morrison2016. Its primary abstract concerns UCM kinematics. Read Nesbit2005 abstract and methods, including kinematically prescribed wrists and simplified hands; describe inferred kinetics without claiming individual-muscle measurement. No full-paper methodological endorsement. Sprigings2000 publisher access failed, so specific claims attributed to it were not added; its old trailing citation is removed from this chapter, bibliography retained unchanged.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-causal-design",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Causal Design.** Declare complete copied state, finite torque versus command removal, controller/actuator memory, fixed constraints and event definitions. Reactions evolve on each branch. Contact-mode changes can require state compatibility or reset; pointwise splits are not independently evolved trajectory partitions. Equal torque is not equal work when velocity differs. Reoptimization asks substitution, not the same fixed-policy effect. Remove unsupported necessary interior optimum. Preserve the arms/wrists role-reversal and loading-history hypothesis with measurable boundaries.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd",
+            "tests/test_negative_torque_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf",
+            "reports/technical-review/negative-torque-review.md",
+            "reports/technical-review/negative-torque-prior-review.json",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+            "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
+            "articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd": "0803c423011a1fa1cd1061e6d014557a71a0fe723458b488da4c332deedda2e4",
+            "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+            "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+            "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
+            "scripts/make_proximal_distal_companion_figures.py": "3ef6609561761ea799fe4a94bd21b7aeed3e07571704ce741117fa2281fec708",
+            "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef"
+          },
+          "finding_id": "ad-finding-negative-torque-power-quadrant-contract",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4811",
+          "priority": "p2",
+          "rationale": "**Figure Contract.** Retain mathematically correct quadrants while requiring conjugate rate and distinguishing absolute club versus relative joint rate. Only make_sign_quadrants changes in the shared generator. Initial default-style generation revealed footer overlap; corrected footer offset and regenerated with the generator's standard \\_style(). The final standalone figure pixels were inspected and are legible. Final inclusion on Chapter 13 pages 90-95 is inspected and legible.",
+          "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
         }
       ],
       "review_evidence": {
-        "evidence_file_count": 187,
+        "evidence_file_count": 193,
         "evidence_sha256": {
           "articles/figures/proximal_distal_companion/fig_companion_biological_redundancy.pdf": "dbfe8ec34a77dc58bc7adb98ba8d473fb6419b5125ce3d56148072e355460fbd",
           "articles/figures/proximal_distal_companion/fig_companion_biological_redundancy.svg": "347439fb587986d20a19f7e4eba5c67c4dbbb0a28dda19b1babab7368e5bc765",
@@ -8114,6 +8354,8 @@
           "articles/figures/proximal_distal_companion/fig_companion_state_snapshot.svg": "ee4f685f50ab4f4b55980831d58843620f8e605d7f6a7ce305d671338cbff581",
           "articles/figures/proximal_distal_companion/fig_companion_system_boundaries.pdf": "ca10bc70a32bbfc2f52f5ca716d6c4cd9433bbd3d801589da9bde32f96041d86",
           "articles/figures/proximal_distal_companion/fig_companion_system_boundaries.svg": "f0de5677a646dafc58167b024fb7f0f2206327447b7af110138a4c5ef46b25e3",
+          "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.pdf": "72a8d42a211583a4f791cfc80b8e52620d2c9334e683d3bfbe625ac340867364",
+          "articles/figures/proximal_distal_companion/fig_companion_torque_power_quadrants.svg": "adc2eba166c2b403defa057dbdcd630aa4a499c2aca54b79983ef45a18be6a86",
           "articles/figures/proximal_distal_companion/fig_companion_tradeoff_map.svg": "3d16c61a52db58a03fc09a11103e57e79d3d79dbfd78cda22c1d533cac1b0151",
           "articles/figures/proximal_distal_companion/fig_companion_two_hand_couple.pdf": "ce741269e3e9cb05f1ae564867dabcea423637236aeb86c62d67630d0bd217da",
           "articles/figures/proximal_distal_companion/fig_companion_two_hand_couple.svg": "f437a38d1b57e6db319859fa9f22c03f95be756a4d35b2135d86fd8c67d15dbe",
@@ -8192,6 +8434,9 @@
           "reports/technical-review/moving-base-dependency-carry-forward.json": "a905ca13a4dff2c7c2bf1ae5b18de7b02a507a4457b10aa432b3e1894771e25a",
           "reports/technical-review/moving-base-prior-review.json": "788a30e40174739a3e3bc20643627b537ffde09d20db53ad1fa71cffe294e4f7",
           "reports/technical-review/moving-base-review.md": "5336f455d32b132fa40a8f8f2d605ae7d0417395106b0f6471b40e860b008a29",
+          "reports/technical-review/negative-torque-dependency-carry-forward.json": "a5c25f756bc3c197ceb042a461a6b452882c2459d87b3db818960f0eda0af5b0",
+          "reports/technical-review/negative-torque-prior-review.json": "2f66ced38e69cfa874913e82bcd807dfb8be1923dce7ff2b913300c6ebb98020",
+          "reports/technical-review/negative-torque-review.md": "46a5604ce656d7fc39ac915a1131ebb624a908f6bcde1f09e652e37abc9832da",
           "reports/technical-review/open-evidence-dependency-carry-forward.json": "917d1ad3dca3bb648fb32476817f70b06e7eea707d70ec82690ced87eba2b179",
           "reports/technical-review/open-evidence-prior-review.json": "616c3b7f7e84a4bdecfd217f766502cac29b6327c40546ac4e2dbf8ed5589c23",
           "reports/technical-review/open-evidence-review.md": "52bfac541a9f67cc39aaabc2e302a74f8af34b41a0866ec39343901e4c3e8d9b",
@@ -8251,6 +8496,7 @@
           "tests/test_measured_golfers_review.py": "520beee79ab1017587a3269f802bb70ee723b39c5668be7fa587b1ee612e2856",
           "tests/test_model_ladder_review.py": "4402b9ec527023c2b0c454363761c17d2bab48c41160070c4bf445d28454cf99",
           "tests/test_moving_base_review.py": "9272f41fedf6557fc6ebe48742e543cecb0eee1dec8cfcf8e92eeeb582a70136",
+          "tests/test_negative_torque_review.py": "b2d14563f614ab60e2f47eede2f86f258d75c79968de381dbbd2c4319d37c1ef",
           "tests/test_open_evidence_review.py": "932648bc4ee49f7f9fcb2f03e9b84c2eb13e91098dca38d2d069708f5b394ed0",
           "tests/test_pendulum_review.py": "9bbb8dda8bc047f9241c0e4b8bab041f11737e5c7679517344201feb5ba3d7b9",
           "tests/test_plane_space_review.py": "4c297246fba925bcbcd4e7a772bcbd7c6705c29ea20f62f395cf7c1ed87f9911",
