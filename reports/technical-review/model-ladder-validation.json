@@ -1,10 +1,10 @@
 {
   "issue": 4799,
-  "status": "Local scientific and bounded publication acceptance complete; source binding, PR and remote-main delivery pending.",
+  "status": "Source committed and pushed; eight findings bound to exact source blobs. Regular PR and protected delivery pending.",
   "baseline": "5383de39977f1b43bf467a120cfe7cc5227a8fe6",
   "source_findings": 8,
   "historical_findings": 145,
-  "corpus_pending": 112,
+  "corpus_pending": 111,
   "whole_book_consistency_pending": true,
   "tdd": {
     "red_passed": 5,
@@ -230,6 +230,25 @@
     "followup": "py -3.12 -X utf8 -m pytest tests/test_model_ladder_review.py tests/test_proximal_distal_companion_contract.py tests/test_claim_audit_inventory.py tests/test_root_hygiene.py --no-cov",
     "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf, then --to html"
   },
-  "source_commit": "SELF",
-  "pr": "not created"
+  "source_commit": "8e4660f58b6d427c6f3bd16e26890f033973f86e",
+  "pr": "not created",
+  "binding": {
+    "prior_findings_preserved": 145,
+    "new_findings": 8,
+    "total_findings": 153,
+    "exact_source_files": {
+      "articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd": "f4d582f7473659ec08dc03bcf639c69bccab4458ba3d4968e42b5c31d83f63d0",
+      "tests/test_model_ladder_review.py": "9ba1ae38730f0b16f32a192d525df683017c200b3c964c33873dc6845e019ce3",
+      "scripts/make_proximal_distal_companion_figures.py": "d3b859a62bc84537455d5654a7bbaa4f8532ae62d79b448dd06cf1a989ecd1d3",
+      "articles/figures/proximal_distal_companion/fig_companion_evidence_ladder.svg": "de05449090c14f59f481e5a498ca54edddd2d7b7dd6d434674be8bf4470b4af0",
+      "articles/figures/proximal_distal_companion/fig_companion_evidence_ladder.pdf": "c360103e2d08d1f003fd222516d6607160d9ce7f4b9e8915f853a68bc1c1a331",
+      "reports/technical-review/model-ladder-review.md": "3975125ef3168cbfbc6d5ff80ff33997d2fadc4f038eb77dacf8d073e04cf324",
+      "reports/technical-review/model-ladder-prior-review.json": "7a9b58268fe65671cf0c0d7225d1059f43aee73e704a960005970b68b6ad0ce5",
+      "reports/technical-review/model-ladder-dependency-carry-forward.json": "aaae1d169442fac2d1a51474f7eaee28521333db0a58e02193d5dcc9eba6632b"
+    }
+  },
+  "binding_followup": {
+    "passed": 19,
+    "failed": 0
+  }
 }
