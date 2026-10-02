@@ -171,13 +171,18 @@ def make_speed_energy() -> tuple[Path, Path]:
 
 
 def make_carry_release() -> tuple[Path, Path]:
-    fig, axes = plt.subplots(1, 3, figsize=(11, 4))
-    titles = ("1. Carry", "2. Reorient", "3. Handoff")
-    angles = (2.2, 1.5, 0.45)
-    for axis, title, angle in zip(axes, titles, angles, strict=True):
-        shoulder = np.array([0.2, 0.2])
-        hand = shoulder + 1.2 * np.array([np.cos(angle), np.sin(angle)])
-        club = hand + 1.3 * np.array([np.cos(angle - 0.9), np.sin(angle - 0.9)])
+    """Illustrate distinct configurations without claiming a simulated sequence."""
+    fig, axes = plt.subplots(1, 3, figsize=(11, 4.5))
+    titles = ("Folded", "Opening", "Nearly Aligned")
+    arm_angles = np.array([2.2, 1.5, 0.45])
+    club_angles = arm_angles + np.array([-1.6, -0.8, -0.1])
+    hands = 1.2 * np.column_stack((np.cos(arm_angles), np.sin(arm_angles)))
+    heads = hands + 1.3 * np.column_stack((np.cos(club_angles), np.sin(club_angles)))
+    configurations = np.stack((np.zeros_like(hands), hands, heads), axis=1)
+    # Shared bounds preserve comparative scale and include every endpoint.
+    points = configurations.reshape(-1, 2)
+    lower, upper = points.min(axis=0) - 0.3, points.max(axis=0) + 0.3
+    for axis, title, (shoulder, hand, club) in zip(axes, titles, configurations, strict=True):
         axis.plot(
             [shoulder[0], hand[0]], [shoulder[1], hand[1]], color=BLUE, lw=8, solid_capstyle="round"
         )
@@ -186,16 +191,21 @@ def make_carry_release() -> tuple[Path, Path]:
         )
         axis.scatter(*shoulder, s=90, color=INK)
         axis.scatter(*hand, s=70, color=GREEN)
+        axis.scatter(*club, s=70, color=ORANGE)
         axis.set_title(title, fontweight="bold", color=INK)
         axis.set_aspect("equal")
         axis.axis("off")
-        axis.set(xlim=(-1.2, 1.8), ylim=(-1.4, 1.8))
+        axis.set(xlim=(lower[0], upper[0]), ylim=(lower[1], upper[1]))
     fig.suptitle(
-        "The Distal Segment Is First Carried, Then Accelerated Relative to Its Base",
+        "Continuous Coupling Across Configurations",
         fontsize=15,
         fontweight="bold",
         color=INK,
     )
+    fig.text(
+        0.5, 0.03, "Illustrative Geometry; Not a Simulated Trajectory", ha="center", color=GRAY
+    )
+    fig.tight_layout(rect=(0, 0.08, 1, 0.9))
     return _save(fig, "fig_companion_carry_then_handoff")
 
 
@@ -449,32 +459,42 @@ def make_task_null() -> tuple[Path, Path]:
 
 
 def make_evidence_ladder() -> tuple[Path, Path]:
-    fig, axis = plt.subplots(figsize=(10, 5.4))
-    axis.set(xlim=(0, 11), ylim=(0, 6))
+    """Show model branches sharing a contract without implying cumulative validation."""
+    fig, axis = plt.subplots(figsize=(11, 5.8))
+    axis.set(xlim=(0, 12), ylim=(0, 6.4))
     axis.axis("off")
-    levels = (
-        (0.5, 0.6, "Equation\nIdentity", GRAY),
-        (2.5, 1.55, "Reduced\nModel", BLUE),
-        (4.5, 2.5, "Cross-Engine\nCheck", VIOLET),
-        (6.5, 3.45, "Instrumented\nHuman Study", GREEN),
-        (8.5, 4.4, "Replicated\nOutcome", ORANGE),
+    branches = (
+        (0.4, 4.8, "Planar Coupling", BLUE),
+        (4.4, 4.8, "Two-Hand Constraints", GREEN),
+        (8.4, 4.8, "Shaft Deformation", ORANGE),
+        (0.4, 1.5, "Moving Base", VIOLET),
+        (4.4, 1.5, "Spatial Contact", BLUE),
+        (8.4, 1.5, "Biological Allocation", GREEN),
     )
-    for x, y, label, color in levels:
-        _box(axis, (x, y), label, color, 1.75)
-    axis.plot([0.5, 10.25], [0.45, 5.25], color=INK, lw=1, alpha=0.3)
+    for x, y, label, color in branches:
+        _box(axis, (x, y), label, color, 3.2)
+        start, end = (4.7, 4.05) if y > 3 else (2.4, 3.1)
+        _arrow(axis, (x + 1.6, start), (x + 1.6, end), color)
+    _box(
+        axis,
+        (0.4, 3.2),
+        "Shared Comparison Contract\nAvailable Outputs; Frames; States; Inputs; Events",
+        INK,
+        11.2,
+    )
     axis.text(
-        5.5,
-        5.7,
-        "Confidence Rises Only When the Evidence Changes Kind",
+        6.0,
+        6.05,
+        "Model Families Share Tests, Not a Rank",
         ha="center",
         fontsize=16,
         fontweight="bold",
         color=INK,
     )
     axis.text(
-        5.5,
-        0.15,
-        "A more detailed model is not automatically a human experiment.",
+        6.0,
+        0.45,
+        "Human Tests Need Qualified Measurements and Predictions.",
         ha="center",
         color=RED,
         fontweight="bold",

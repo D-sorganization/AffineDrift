@@ -224,6 +224,8 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4801 | Correct two-link torque coordinates, moving-hand reactions, limiting cases, and conditional inference in Chapter 7. |
+| 2026-10-02 | #4799 | Qualify model-family observables, port power, full state, implementation independence, and evidence scope in Chapter 19. |
 | 2026-10-02 | #4798 | Correct experimental controls, filter consistency, causal mediation, participant inference and equivalence decisions in Chapter 26; preserve model/human evidence boundaries. |
 | 2026-10-02 | #4794 | Clarify constraint feasibility, moving-support work, reaction identifiability, full hand wrenches and shared drift in Chapter 6; test manufactured limits and preserve primary-source scope. |
 | 2026-10-02 | #4790 | Clarify biological load inference, bounded muscle allocation, geometric stiffness, tendon energy and matched club tasks in Chapter 25; verify manufactured mechanics and primary-source limits. |

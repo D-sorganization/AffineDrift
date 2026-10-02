@@ -1,0 +1,151 @@
+{
+  "issue": 4799,
+  "pr": 4804,
+  "status": "Historical Chapter19-only delivery checkpoint; superseded by the combined Chapter7/19 delivery record below. No main merge of either is credited here.",
+  "branch": "fix/model-ladder-delivery-4799",
+  "accepted_full_regression_commit": "1772f3799740e8c0e2325e8de5f37e0efa193001",
+  "full_regression": {
+    "passed": 6560,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 730.0,
+    "coverage_percent": 79.03
+  },
+  "javascript": {
+    "passed": 547,
+    "skipped": 19,
+    "suites": 35,
+    "seconds": 45.886
+  },
+  "incoming_main": "041a83a8c06bf1880053141536d8bbdeedefa508",
+  "parent_remote_main_receipt": "reports/technical-review/constraints-experiment-remote-main-receipt.json",
+  "conflict_resolution": {
+    "AGENT_HANDOFF.md": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "articles/proximal-distal-a-journey-through-the-swing.pdf": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "data/trust/claim_audit_inventory.json": "Clean logical three-way: own1772, accepted base5383, actual main041a",
+    "data/trust/generated/claim_audit_report.json": "Clean logical three-way: own1772, accepted base5383, actual main041a",
+    "docs/articles/proximal-distal-a-journey-through-the-swing.pdf": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "docs/development/DEVELOPMENT_LOG.md": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "docs/development/HANDOFF.md": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "docs/development/technical-review/corpus-review-index.csv": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "reports/scientific-claim-audit.md": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "reports/technical-review/constraints-experiment-consolidation.json": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "reports/technical-review/constraints-validation.json": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes",
+    "reports/technical-review/experiment-validation.json": "Incoming exact accepted ancestor5383; preserve descendant1772 bytes"
+  },
+  "followup_tests": {
+    "passed": 59,
+    "seconds": 30.54,
+    "scope": "Volume titles, page metadata, Chapter19 arithmetic, companion contract, claim inventory and root hygiene"
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/consolidated-model-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "source_bindings_exact": {
+    "articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd": "f4d582f7473659ec08dc03bcf639c69bccab4458ba3d4968e42b5c31d83f63d0",
+    "tests/test_model_ladder_review.py": "9ba1ae38730f0b16f32a192d525df683017c200b3c964c33873dc6845e019ce3",
+    "scripts/make_proximal_distal_companion_figures.py": "d3b859a62bc84537455d5654a7bbaa4f8532ae62d79b448dd06cf1a989ecd1d3",
+    "articles/figures/proximal_distal_companion/fig_companion_evidence_ladder.svg": "de05449090c14f59f481e5a498ca54edddd2d7b7dd6d434674be8bf4470b4af0",
+    "articles/figures/proximal_distal_companion/fig_companion_evidence_ladder.pdf": "c360103e2d08d1f003fd222516d6607160d9ce7f4b9e8915f853a68bc1c1a331",
+    "reports/technical-review/model-ladder-review.md": "3975125ef3168cbfbc6d5ff80ff33997d2fadc4f038eb77dacf8d073e04cf324",
+    "reports/technical-review/model-ladder-prior-review.json": "7a9b58268fe65671cf0c0d7225d1059f43aee73e704a960005970b68b6ad0ce5",
+    "reports/technical-review/model-ladder-dependency-carry-forward.json": "aaae1d169442fac2d1a51474f7eaee28521333db0a58e02193d5dcc9eba6632b"
+  },
+  "pdf_sha256": "dcf54519465e71e2c72060c80b63bf40963da5c8237f1f561dbeb2478a803eb2",
+  "pdf_pages": 232,
+  "source_and_artifact_bytes_unchanged": true,
+  "whole_book_consistency_pending": true,
+  "corpus_pending": 111,
+  "total_findings": 153,
+  "render_scope": "Previously accepted1772 HTML/PDF and bounded browser evidence retained. Subsequent peer changes affect Geometry of Motion volume pages/sidebar labels, not companion chapter sources or its selected sidebar. No repeated render/full suite is claimed.",
+  "known_limitations": [
+    "Inherited dark-theme reference contrast:184nodes per dark profile; no suppression. Dedicated peer PR4803 exists and is not folded into this work.",
+    "Historical development-log errors remain; no current owned issue error."
+  ],
+  "remote_main_verified": false,
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4804",
+  "pushed_integration": "6670fff3a79264c4ff1d4fab0d80f3348bb850b1",
+  "guarded_auto_merge": {
+    "armed": true,
+    "method": "squash",
+    "head_at_arming": "6670fff3a79264c4ff1d4fab0d80f3348bb850b1"
+  },
+  "expected_changed_path_count": 26,
+  "registration_checkpoint": "SELF",
+  "superseded_by": "reports/technical-review/model-pendulum-delivery.json"
+}
