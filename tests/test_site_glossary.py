@@ -114,11 +114,17 @@ def test_every_term_shortcode_references_valid_key() -> None:
 
     all_files = list(ROOT.glob("**/*.qmd")) + list(ROOT.glob("**/*.md"))
     for file_path in all_files:
-        if ".git" in file_path.parts or "docs" in file_path.parts:
+        if (
+            ".git" in file_path.parts
+            or "docs" in file_path.parts
+            or file_path.name in ("CONTRIBUTING.md", "README.md")
+        ):
             continue
         content = file_path.read_text(encoding="utf-8", errors="ignore")
         for match in term_pattern.finditer(content):
             key = match.group(1)
+            if key in ("key", "term-key"):
+                continue
             assert (
                 key in glossary
             ), f"Unknown glossary term key '{key}' referenced in {file_path.relative_to(ROOT)}"
