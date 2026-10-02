@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4791 — Constraint Reactions and Identifiability
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** Pending regular PR
+- **PR:** #4794 (regular, attached)
 - **Issue:** #4791; epic #4009 / corpus #4021 / companion #4059
 - **Branch:** fix/constraint-reaction-rigor-4791
 - **Paths:** articles/proximal_distal_companion/chapters/ch06_constraints_push_back.qmd, tests/test_constraint_reaction_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; source80d6c5a04dafc1bdf23dc906723a8175aa1690a1; 6506 full-regression passes, 31 final affected checks, 12 publication gates, 653 titles and 875 Python quality checks; accepted 229-page PDF/HTML, four browser profiles, 68 math nodes and mobile zoom.
 - **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;113corpus audits remain.
-- **Next step:** Push the verified source and binding checkpoints.
+- **Next step:** Verify PR4790 protected remote-main delivery.
 
 ### DL-#4789 — Biological Ambiguity and Load Inference
 
