@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4815 · Lagrangian Mechanics and Counterfactual Reference
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** pending; parent #4814 verified on remote main
+- **PR:** #4818 (regular); parent #4814 verified on remote main
 - **Issue:** #4815; epic #4009 / corpus #4021
 - **Branch:** fix/lagrangian-rigor-4815
 - **Paths:** articles/lagrangian-reference.qmd, tests/test_lagrangian_reference_review.py, css/lagrangian-reference.css
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; ancestry reconciliation SELF preserves all premerge33afa bytes and accepted scientific source 13bd1cc29c3249e284cd379fdfb60679cc44f93e;65 affected checks pass; mobile title RED/GREEN and4 final browser cells pass with0 serious/critical axe findings after shared contrast integration.
 - **Summary:** Review eight mechanics decisions spanning energy functions, coordinates, flexible inertia, damping, input levels, constraints, boundary power and counterfactuals. Seven Flash helper outputs adjudicated. Source 13bd1cc29c3249e284cd379fdfb60679cc44f93e committed; eight findings bound and all other routes preserved. Binding 50c169c27d52595de7e5361dff4ae2f83daacbed and accepted source are verified on the remote topic; integration checkpoint91b32cca96a56a14426ea86f987a8445ca60ff4b is verified on remote topic; queued Chapter18 issue#4817 has a committed preparation note and no acceptance credit. There are 105 source audits plus whole-book consistency remaining.
-- **Next step:** Open the regular Lagrangian PR after pushing this reconciled checkpoint.
+- **Next step:** Push PR4818 registration and arm guarded auto-merge after removing the temporary integration hold.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
