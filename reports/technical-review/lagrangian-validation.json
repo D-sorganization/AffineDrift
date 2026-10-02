@@ -1,0 +1,259 @@
+{
+  "issue": 4815,
+  "base_checkpoint": "b581710c211526e4a18288b9aa6b1babbf72a79b",
+  "status": "lead accepted article and bounded publication with dark citation contrast limitation; source commit and binding pending",
+  "source_commit": null,
+  "bound": false,
+  "remote_main_verified": false,
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 891,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "content_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/lagrangian-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "focused_tests": {
+    "passed": 9,
+    "failed": 0,
+    "seconds": 1.04
+  },
+  "title_checks": 655,
+  "math": [
+    {
+      "width": 390,
+      "total": 123,
+      "rendered": 123,
+      "displays": 14,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "total": 123,
+      "rendered": 123,
+      "displays": 14,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    }
+  ],
+  "lay_panel": [
+    {
+      "width": 390,
+      "expandedHeight": 1233.375,
+      "codeBlocks": 0,
+      "closed": true
+    },
+    {
+      "width": 1440,
+      "expandedHeight": 668.765625,
+      "codeBlocks": 0,
+      "closed": true
+    }
+  ],
+  "browser_cells": [
+    {
+      "viewport": {
+        "height": 844,
+        "id": "mobile",
+        "width": 390
+      },
+      "theme": "light",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 844,
+        "id": "mobile",
+        "width": 390
+      },
+      "theme": "dark",
+      "passed": false,
+      "failures": [
+        "axe serious: color-contrast (7 nodes) Elements must meet minimum color contrast ratio thresholds"
+      ],
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+          "node_count": 7,
+          "first_target": "#citation-1"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "height": 900,
+        "id": "desktop",
+        "width": 1440
+      },
+      "theme": "light",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 900,
+        "id": "desktop",
+        "width": 1440
+      },
+      "theme": "dark",
+      "passed": false,
+      "failures": [
+        "axe serious: color-contrast (7 nodes) Elements must meet minimum color contrast ratio thresholds"
+      ],
+      "axe_violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+          "node_count": 7,
+          "first_target": "#citation-1"
+        }
+      ]
+    }
+  ],
+  "helpers": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_and_reviewed": 7
+  },
+  "manufactured_examples": {
+    "scope": "Lead-manufactured algebra, not a fitted golfer or new provider dynamics",
+    "coupled_acceleration": [1.6944444444444444, -0.47222222222222227],
+    "coupled_input_map": [0.5555555555555556, -0.2777777777777778],
+    "mechanical_power_W": 3.4,
+    "zero_velocity_acceleration": [-0.4722222222222223, 0.8611111111111112],
+    "kkt_acceleration_and_multiplier": [
+      1.9999999999999996, 2.0000000000000004, -6.000000000000001
+    ],
+    "moving_support_power_W": 6.126,
+    "prior_route_findings": 0
+  },
+  "publication_notes": [
+    "Initial lay HTML rendered as code; raw HTML block fixed it. Heading wrapper then prevented panel expansion; scoped CSS uses aria-hidden state and active theme.",
+    "Long displays retain normal type and use dedicated horizontal scrolling on narrow screens; no document overflow.",
+    "Final screenshots inspected at390/1440; panel expands as prose and closes.",
+    "Both light cells pass; both dark cells have7citation-area contrast nodes, first#citation-1; peerPR4803 remains separate. No full-site accessibility pass."
+  ],
+  "full_regression": {
+    "passed": 6623,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 858.92,
+    "coverage_percent": 79.34,
+    "failed": 0
+  },
+  "corpus_pending": 106,
+  "companion_findings_preserved": 193,
+  "companion_dependencies_preserved": 199,
+  "stylelint": {
+    "exit_code": 0,
+    "initial_invocation": "Could not resolve shared stylelint-config-standard; rerun with explicit existing config-basedir passed."
+  },
+  "equation_scroll": {
+    "viewport_width": 390,
+    "container": "MJX-CONTAINER",
+    "client_width": 269,
+    "scroll_width": 304,
+    "verified_scroll_left": 35,
+    "overflow_x": "auto"
+  }
+}

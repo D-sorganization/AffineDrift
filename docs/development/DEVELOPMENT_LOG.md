@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4815 · Lagrangian Mechanics and Counterfactual Reference
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending; parent #4814 remains open
+- **Issue:** #4815; epic #4009 / corpus #4021
+- **Branch:** fix/lagrangian-rigor-4815
+- **Paths:** articles/lagrangian-reference.qmd, tests/test_lagrangian_reference_review.py, css/lagrangian-reference.css
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; baseline b581710c211526e4a18288b9aa6b1babbf72a79b; nine focused passes; Ruff, Black100, mypy and891filequality pass; finalHTML/math/panel andboundedbrowser review;CSSlint;full6623pass/29skip/79.34%coverage.
+- **Summary:** Review eight mechanics decisions spanning energy functions, coordinates, flexible inertia, damping, input levels, constraints, boundary power and counterfactuals. Seven Flash helper outputs adjudicated. Source accepted; checkpoint SELF awaits commit/binding; no corpus credit yet;106sourceaudits pluswholebookconsistency remain.
+- **Next step:** Commit accepted source, bind actual source SHA, then push and open a regular PR after verified parent delivery.
+
 ### DL-#4813 · Timing, State Events, and Actuator History
 
 - **State:** in_review
