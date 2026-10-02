@@ -29,8 +29,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** articles/proximal_distal_companion/chapters/ch28_practical_synthesis.qmd, scripts/make_proximal_distal_companion_review_figures.py, tests/test_synthesis_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 682b709bc31459a882421062d2632282b78ed356 baseline;6632tests pass,29skip,187deselected,79.33%coverage;12gates,893Python files,655titles;237pagePDF,48math and4browserprofiles pass.
-- **Summary:** Lead accepted eight scientific decisions connecting wrench/power, hidden hand allocations, task velocity, feasible interventions, finite Pareto results, measurement limits and frontend scope. Five Flash outputs adjudicated. Source commit/binding pending;201 prior findings and104pending source audits unchanged until binding.
-- **Next step:** Commit accepted source, bind eight findings to exact Git bytes, validate/push normally; verify parent protected delivery before regular PR publication.
+- **Summary:** Lead accepted eight scientific decisions connecting wrench/power, hidden hand allocations, task velocity, feasible interventions, finite Pareto results, measurement limits and frontend scope. Five Flash outputs adjudicated. Source 1a7521e581bab0e6aa40df3f9bf0cb5ddafdee66 committed; eight findings bound with201 prior findings preserved,209total and103pending source audits. All44post-binding checks pass; binding push pending.
+- **Next step:** Validate and push binding normally; verify parent4818 delivery before one combined regular PR for4817/4819.
 
 ### DL-#4817 · Forward Solver Guarantees and Validation
 
@@ -43,7 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 baseline 33afa9d25b7f61113ff4a0928d2cef2c2b1da76e; five focused passes after one RED failure;234pagePDF/HTML/56math/4browserchecks,12gates,892filequality; broad6624pass/4metadata-hygienefail,40remediationpass,79.35%accumulatedcoverage; source e4540364c6a21b66df55eb2959beef4e5eed9a2d committed; eight findings bound;40postbinding checks pass; source and binding 66a5bed3773a8991978fd7df7c27066d5cf0b9dc verified on remote topic with normal hooks.
 - **Summary:** Correct fixed-mode KKT assumptions, multiplier units, projection/work ledgers, moving-boundary compatibility, input memory, counterfactuals, evidence scope and coordinate/contact comparisons. Six successful Flash outputs adjudicated. Eight findings bound to the accepted source;193 prior companion findings preserved,201total;104 source audits and whole-book consistency remain.
-- **Next step:** Verify protected parent PR4818 delivery before opening the regular Chapter18 PR.
+- **Next step:** Verify parent4818 delivery; publish accepted Chapter18 together with accepted Chapter28 in one regular PR after reconciliation.
 
 ### DL-#4815 · Lagrangian Mechanics and Counterfactual Reference
 
