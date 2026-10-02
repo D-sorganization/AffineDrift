@@ -1,6 +1,8 @@
-# Chapter 21 Sensitivity and Identifiability — Preparation Only
+# Chapter 21 Sensitivity and Identifiability — Historical Preparation
 
-Proposed issue [#4806](https://github.com/D-sorganization/AffineDrift/issues/4806), under epic #4009 and corpus #4021. The 2,077-word indexed chapter is the longest remaining unaudited source. No implementation lease, source edit, rendered acceptance or audit credit is claimed here. Finish Chapter 7/19 delivery first; check claims and acquire a new lease before editing.
+Historical preparation only; the subsequent scientific review supersedes its pending checks and excerpt-only Raue reading limit. Full Raue paper reading and the implemented corrections are documented in `reports/technical-review/sensitivity-review.md` once frozen.
+
+Implementation now owned under issue [#4806](https://github.com/D-sorganization/AffineDrift/issues/4806), under epic #4009 and corpus #4021. The 2,077-word indexed chapter is the longest remaining unaudited source. This preparation snapshot preceded the isolated implementation at SELF. Session technical-review-20261002-sensitivity now owns the work; source/test/figure edits have begun. No rendered acceptance or audit credit yet. Repository WIP excludes in_review CI waits; parent PR4804 stays frozen. See canonical HANDOFF.md for current state.
 
 ## Source and Provider Inspection
 

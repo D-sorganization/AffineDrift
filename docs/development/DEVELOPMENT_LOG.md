@@ -19,7 +19,21 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4801 — Two-Link Coordinates, Reactions, and Limits
+### DL-#4806 · Sensitivity, Identifiability, and Measurement
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created; separate from frozen #4804
+- **Issue:** #4806; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/sensitivity-rigor-4806
+- **Paths:** articles/proximal_distal_companion/chapters/ch21_sensitivity_identifiability.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_sensitivity_review.py, references/proximal-distal-energy.bib
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; baseline a931f3e3583ac028666bf1a8f793231731acf894; working source: broad run 6,591 pass/three failures/79.22% coverage; required chapter heading and local browser scratch repaired; all 34 affected chapter/contract/hygiene tests pass. Twelve publication gates and static checks pass; final 233-page PDF/HTML and bounded visual review accepted; binding pending.
+- **Summary:** Clarify local/global inference, finite provider regression, rank limits, noise and nuisance parameters, hand-wrench maps, ensemble probabilities and held-out evidence. Ten Flash preparation/test/editorial/record helpers read and adjudicated; lead retains scientific decisions. No corpus credit yet.
+- **Next step:** Commit accepted source, bind eight findings to exact Git bytes, then open a regular PR.
+
+
+### DL-#4801 · Two-Link Coordinates, Reactions, and Limits
 
 - **State:** in_review
 - **Owner:** codex
@@ -28,12 +42,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/pendulum-rigor-4801
 - **Paths:** articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd, tests/test_pendulum_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
+- **Last verified:** 2026-10-02; baseline a931f3e3583ac028666bf1a8f793231731acf894; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
 - **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; eight new findings bind exact accepted source;161total;110corpusfiles pluswholebookreview remain.
-- **Next step:** Push the accepted marker-only review follow-up for PR4804.
+- **Next step:** Await required CI on frozen PR4804 at a931f3e; verify the actual merge on remote main before delivery credit.
 
 
-### DL-#4799 — Model Comparison and Evidence Boundaries
+### DL-#4799 · Model Comparison and Evidence Boundaries
 
 - **State:** in_review
 - **Owner:** codex
@@ -42,9 +56,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/model-ladder-delivery-4799
 - **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
+- **Last verified:** 2026-10-02; baseline a931f3e3583ac028666bf1a8f793231731acf894; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
 - **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** Push the accepted marker-only review follow-up for PR4804.
+- **Next step:** Await required CI on frozen PR4804 at a931f3e; verify the actual merge on remote main before delivery credit.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
@@ -60,31 +74,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Passing CI Standard, squash auto-merge armed.
 
 
-### DL-#4795 — Experimental Inference and Falsification
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** #4800 (regular, attached; original#4798 frozen)
-- **Issue:** #4795; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** feat/technical-review-consolidated-20261002
-- **Paths:** articles/proximal_distal_companion/chapters/ch26_experiment_can_say_no.qmd, tests/test_experiment_design_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
-- **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;111corpus audits remain after Chapter19.
-- **Next step:** Complete: PR4800 merged as041a83a8c;31owned paths accounted for,CI36974008090 successful. See constraints-experiment-remote-main-receipt.json. Lease/presence released; original PR already closed.
-
-### DL-#4791 — Constraint Reactions and Identifiability
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** #4800 (regular, attached; original#4794 frozen)
-- **Issue:** #4791; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** feat/technical-review-consolidated-20261002
-- **Paths:** articles/proximal_distal_companion/chapters/ch06_constraints_push_back.qmd, tests/test_constraint_reaction_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
-- **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;111corpus audits remain after Chapter19.
-- **Next step:** Complete: PR4800 merged as041a83a8c;31owned paths accounted for,CI36974008090 successful. See constraints-experiment-remote-main-receipt.json. Lease/presence released; original PR already closed.
 
 ### DL-#4756 · Complete-State Technical Review
 

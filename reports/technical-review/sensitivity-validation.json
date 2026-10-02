@@ -1,0 +1,216 @@
+{
+  "issue": 4806,
+  "status": "Lead scientific and bounded publication acceptance complete; source commit, binding and regular PR pending.",
+  "base_checkpoint": "a931f3e3583ac028666bf1a8f793231731acf894",
+  "full_regression": {
+    "passed": 6591.0,
+    "skipped": 29.0,
+    "deselected": 187.0,
+    "warnings": 60.0,
+    "seconds": 1135.87,
+    "coverage_percent": 79.22,
+    "failed_initially": 3,
+    "resolved_failures": [
+      "tests/test_proximal_distal_companion_contract.py::test_expanded_companion_has_one_substantive_file_per_registered_chapter",
+      "tests/test_root_hygiene.py::test_root_matches_allowlist_and_hygiene_script_passes",
+      "tests/test_root_hygiene.py::test_check_root_hygiene_cli_passes"
+    ],
+    "remediation": "34 affected chapter, companion-contract and root-hygiene tests pass after restoring the required heading and preserving browser/packaging scratch under QA."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 887,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "render": {
+    "pages": 233,
+    "inspected_physical_pages": [
+      152, 153, 154, 155, 156, 157, 158, 159, 160, 229, 230, 231, 232, 233, 3,
+      4, 5
+    ],
+    "pdf_sha256": "ae8a2fe24b154169fc2258e61ba6c0bfdfcb6cf3294b3b2961a8a656b457c327",
+    "canonical_public_parity": true,
+    "html_success": true
+  },
+  "browser": {
+    "scope": "Single companion route only",
+    "cells": [
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (190 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 190,
+            "first_target": "#references-1"
+          }
+        ]
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (190 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 190,
+            "first_target": "#references-1"
+          }
+        ]
+      }
+    ],
+    "math_expressions": 60,
+    "display_equations": 5,
+    "math_errors": 0,
+    "placeholders": 0,
+    "overflow": false,
+    "zoom_opened": true,
+    "zoom_closed": true
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_helpers": 10,
+    "all_outputs_lead_reviewed": true,
+    "canonical_edits_by_helpers": false
+  },
+  "backlog": {
+    "source_audits_pending": 110,
+    "whole_book_consistency_pending": true,
+    "credit_pending_source_binding": true
+  }
+}

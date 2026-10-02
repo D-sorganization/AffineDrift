@@ -2,284 +2,346 @@
 
 ## A Concrete Picture
 
-Taste a soup and notice it is salty. That observation may be sensitive to the
-amount of salt, but it cannot tell whether salt was added directly, broth was
-reduced, or a salty ingredient was included. Several recipes can produce the
-same taste. Sensitivity asks how the taste changes when an ingredient changes.
-Identifiability asks whether tasting the soup lets us recover the recipe.
+Taste a soup and notice that it is salty. Its taste changes when salt is added,
+but tasting it may not tell whether the cook added salt, reduced the broth, or
+used a salty ingredient. **Sensitivity** asks how an observation changes when
+an input changes. **Identifiability** asks whether the observations distinguish
+the unknown inputs. A strong effect does not guarantee a recoverable cause.
 
-Golf models face the same distinction. Club speed may be sensitive to shoulder
-torque and wrist timing. Yet one speed trace may not uniquely identify those
-inputs because shaft stiffness, hand path, damping, contact allocation, and
-inertial parameters can compensate.
+The same distinction matters in a swing. A model's clubhead speed can respond
+to both a torque schedule and a shaft parameter. Matching that speed does not
+show which quantity was responsible. Conversely, uncertainty about individual
+parameters need not prevent a useful prediction: several compatible parameter
+sets may predict the same club outcome but different hand loads.
 
-![Sensitivity Shows Which Inputs Move Each Outcome, While Identifiability Shows Which Inputs Can Be Recovered From the Available Observations.](figures/proximal_distal_companion/fig_companion_sensitivity_identifiability.svg){#fig-lay-sensitivity-identifiability width=98% fig-alt="A two-panel diagram contrasts arrows from parameters to outcome changes with overlapping parameter combinations that produce the same observed outcome, illustrating sensitivity without identifiability."}
+![A Schematic Contrast Between Changing Inputs and Distinguishing Explanations.](figures/proximal_distal_companion/fig_companion_sensitivity_identifiability.svg){#fig-lay-sensitivity-identifiability width=98% fig-alt="The left panel shows torque, stiffness and delay as possible influences on an outcome. The right shows three different recipes leading to the same observation. This is a conceptual diagram, not a measured sensitivity or parameter-recovery result."}
 
 ## How the Mechanism Works
 
-Local sensitivity changes one parameter slightly near a reference and estimates
-an outcome derivative. Global sensitivity varies many parameters across declared
-ranges and apportions outcome variance. A parameter can be locally quiet yet
-important through interactions elsewhere in the range.
+Write a forward model as $y=h(p;u)$, where $p$ contains the unknown parameters,
+$u$ contains the declared inputs and experimental conditions, and $y$ contains
+the observations being compared. Initial states, sensor offsets, time alignment
+and unknown actuator histories must either be known or included among the
+unknowns. Calling them fixed does not establish that they were measured.
 
-### Structural and Practical Identifiability
+An observation might be one terminal speed, six summaries, or a collection of
+waveforms from several trials. These are different inverse problems. A richer
+waveform can contain information discarded by a summary, although thousands
+of correlated samples are not thousands of independent measurements. The
+parameter domain, contact assumptions and sensor model also belong to the
+problem definition.
 
-Structural identifiability asks whether perfect, noise-free observations under
-the model could uniquely recover parameters. Practical identifiability includes
-finite data, noise, limited excitation, and correlated effects. A parameter may
-be structurally identifiable and practically hopeless.
+For this declared model and experiment, **global structural identifiability**
+means that ideal noise-free observations distinguish the parameter vector over
+the allowed domain; **local** identifiability concerns nearby alternatives.
+Usual structural claims concern generic parameter values, with exceptional
+cases stated separately. **Practical identifiability** asks whether the actual
+noisy, finite data constrain the quantities sufficiently for the intended
+question. State the required precision; a numerical optimizer returning one
+answer is not a demonstration of either property.
 
-The coupled study varies 12 inputs simultaneously but observes six summary
-quantities. The full parameter vector cannot be identified from that information.
-This is not a solver failure. It is an information limit.
+These distinctions also separate calibration, optimization and explanation.
+Calibration seeks parameter values consistent with data. Optimization selects
+an input or design for an objective. Neither makes the selected solution a
+unique account of a person's control strategy.
 
-### Hidden Hand-Force Modes
+### A Worked Ambiguity and a Useful New Measurement
 
-Even perfect net club wrench leaves an individual-hand-force mode unresolved.
-No amount of optimizing club trajectory can recover a quantity absent from the
-observations. Bilateral sensors add the missing information; a preferred
-regularizer merely selects one possible allocation.
+Consider a manufactured, dimensionless model with two unknowns. Its first
+observation is $y_1=p_1+p_2$. Both partial derivatives equal one, so both
+parameters influence the observation. If $y_1=10$, however, $(6,4)$, $(5,5)$
+and $(8,2)$ fit equally well. The **sum** is identified; its allocation is not.
+Requiring nonnegative parameters leaves a finite line segment of possibilities,
+not a unique solution. Among exact fits, minimizing the parameter norm selects
+$(5,5)$ by assumption.
 
-### Sensitivity Is Outcome-Specific
+Now add an independently measured channel $y_2=p_1-p_2$. The two observations
+permit the inverse
 
-An input can strongly affect speed and weakly affect face/path, or vice versa.
-Ranks should therefore be reported by outcome. Combining everything into one
-score hides tradeoffs and lets arbitrary weights select the answer.
+$$
+\hat p_1=\frac{y_1+y_2}{2},\qquad
+\hat p_2=\frac{y_1-y_2}{2}.
+$$
 
-### Uncertainty Should Travel to Conclusions
+With $y_1=10$ and $y_2=2$, the estimates are $(6,4)$. If the two measurement
+errors have zero mean, are independent and have variances $\sigma_1^2$ and
+$\sigma_2^2$, the covariance of this inverse estimator is
 
-Parameter ranges come from measurement, literature, or explicit synthetic
-design. Samples propagate those ranges through the model. Reporting medians,
-tails, and failure rates is more honest than one nominal trajectory. Held-out
-samples test whether a chosen program generalizes beyond the cases used to
-select it.
+$$
+\operatorname{Cov}(\hat p)=\frac14
+\begin{pmatrix}
+\sigma_1^2+\sigma_2^2 & \sigma_1^2-\sigma_2^2\\
+\sigma_1^2-\sigma_2^2 & \sigma_1^2+\sigma_2^2
+\end{pmatrix}.
+$$
 
-### Identifiability Guides Measurement
+For variances one and four, the diagonal entries are $1.25$ and the off-diagonal
+entries are $-0.75$. The model is invertible, yet recovery becomes imprecise as
+the second channel becomes noisy. This covariance calculation does not require
+Gaussian errors; distributional confidence statements require additional
+assumptions. Correlated sensor errors require their full covariance matrix.
 
-The value of analysis is not only declaring uncertainty. It identifies which
-new observations would separate competing explanations: bilateral hand wrenches,
-shaft strain, activation timing, or a richer time series instead of six summaries.
-Experiment design can target sensitive and discriminating states.
+The lesson for golf is conditional. A shaft-strain or bilateral-wrench channel
+is useful if its predicted response separates explanations beyond measurement
+and modeling uncertainty. Its name alone does not guarantee that it identifies
+stiffness, timing or muscle action. Demonstrate the separation under a declared
+measurement model, as the second channel does in this example.
 
-![Many Internal Paths Can Reach One Club-Level Outcome, Which Is Why Motion Alone Cannot Recover the Hidden Allocation.](figures/proximal_distal_companion/fig_companion_many_paths_one_outcome.svg){#fig-lay-many-paths width=92% fig-alt="Several colored trajectories from different parameter and actuator combinations converge on the same club-level outcome, illustrating equifinality and the need for additional measurements."}
+### Local Sensitivity and What Rank Can Establish
 
-**Model Result:** The 12-input coupled design shows practical nonidentifiability,
-one unresolved two-hand force mode, and outcome-dependent sensitivity.
+For fixed declared inputs $u$, let $\Delta p=p-p_0$ and
+$\Delta y=h(p;u)-h(p_0;u)$. Near the reference $p_0$, differentiable observations satisfy
 
-**Human Evidence:** Methodological heterogeneity and participant variability in
-golf research make parameter recovery more difficult, not less
-[@mcphee2022].
+$$
+\Delta y\approx J(p_0)\Delta p,\qquad
+J_{ij}=\left.\frac{\partial h_i}{\partial p_j}\right|_{p_0}.
+$$
 
-**Hypothesis:** Bilateral wrench and shaft measurements will distinguish arm-
-wrist allocation mechanisms that club motion alone cannot identify.
+Here $h_i$ is observation component $i$ and $p_j$ is parameter component $j$.
+The approximation is local. Analytic derivatives, automatic differentiation or
+finite differences can estimate $J$, but check perturbation size, numerical
+convergence and the active contact or event regime. A derivative across a
+switch or changing impact event needs particular care. A derivative per
+kilogram cannot be compared directly with one per millisecond. Declare the
+parameter scales and observation scales; noise weighting serves a different
+purpose from merely standardizing units.
 
-**Practical Interpretation:** A result can change strongly when a parameter
-changes while the observed result still cannot tell us which parameter changed.
+For a continuously differentiable map, full column rank is a sufficient local recovery
+condition. Rank deficiency describes first-order directions that the
+observations cannot distinguish; it is not a universal proof of nonlinear
+nonuniqueness. For example, $y=p^3$ is one-to-one even though its derivative is
+zero at $p=0$, where recovery is poorly conditioned. Conversely, $y=p^2$ has
+nonzero derivative away from zero but cannot distinguish $p$ from $-p$ if both
+are allowed. The domain and the distinction between local and global claims
+matter.
 
-### Start With the Question, Not the Method
+For an inverse problem with 12 freely varying continuous parameters and six
+scalar summaries, as in the study considered below, a
+Jacobian has rank at most six. At a regular rank-six point, the model's local
+constant-observation family has six dimensions. This prevents generic recovery
+of the full vector from that experiment alone. It does not identify which six
+parameters could be recovered, exclude identifiable combinations, or rule out
+an isolated exceptional solution at a singular point. More experiments, known
+parameters or independently justified restrictions change the problem.
 
-Sensitivity asks what changes when an input changes. Identifiability asks what
-inputs can be learned from observations. Optimization asks which inputs best meet
-an objective. Calibration asks which inputs make a model resemble data. These
-questions use related mathematics but produce different claims. A parameter can
-be influential yet unidentifiable, or identifiable yet irrelevant to the output
-of interest.
+### Global Screening Is a Different Calculation
 
-For the proximal-distal product, write each question explicitly: Which inputs
-alter late hand couple? Can bilateral wrench data distinguish arm and wrist
-allocation? Which timing policy is robust across uncertain inertia? Can shaft
-stiffness be estimated from strain and motion? This prevents one global ranking
-from being treated as an answer to all four.
+Global sensitivity studies variation across a specified range or joint input
+distribution. Variance decomposition is one approach; regression, rank
+correlation and elementary-effect screens answer other questions. A ranking
+belongs to its outcome, input distribution and estimator. It is not an intrinsic
+percentage of a muscle's or parameter's causal importance.
 
-### Local Sensitivity
+Partial rank correlation removes linear associations with the other ranked
+inputs before correlating the residuals. It is a screen for monotonic
+association after that adjustment, not a general allocation of output variance. Inspect
+nonmonotonic response, dependent inputs and estimator stability before
+interpreting it [@marino2008sensitivity]. A symmetric sample of $y=p^2$ can
+have zero linear slope despite strong variation. For samples
+$p=(-2,-1,0,1,2)$, the linear regression slope of $p^3$ on $p$ is $3.4$, while
+the local derivative at zero is zero. A fitted slope and a local derivative
+are not interchangeable.
 
-Near a nominal parameter vector, perturb one input by a small amount and estimate
-the derivative of an outcome. Automatic differentiation, analytic sensitivities,
-or carefully checked finite differences can compute it. Scaling matters: a
-derivative per kilogram cannot be compared directly with one per millisecond.
-Use nondimensional or uncertainty-scaled effects.
+Report sensitivity separately for speed, face/path, hand loading and effort.
+A parameter can affect one strongly and another weakly. Combining the outcomes
+into a weighted score is a decision rule whose weights need explanation; it
+does not remove the tradeoff.
 
-Local derivatives reveal sign and steepness around one case. They can miss
-thresholds, sign reversals, and interactions elsewhere. A dead-zone transmission
-model is a clear example: sensitivity may be nearly zero while disengaged and
-large near engagement. Multiple nominal states and directional perturbations
-are needed.
+#### What the Coupled Study Actually Computes
 
-### Global Sensitivity
+The pinned provider study screens 12 inputs in 24 engineering-envelope cases
+and records six outputs. Its so-called standardized sensitivity matrix contains
+linear least-squares coefficients across those cases after input/output
+standardization. It is a **finite global regression screen**, not a local
+Jacobian, noise-weighted information matrix or likelihood profile.
 
-Define justified ranges and joint distributions, sample them, and propagate each
-case through the model. Variance-based indices, elementary effects, or surrogate
-models can identify main and interaction effects. The result belongs to the
-chosen range and distribution. A broad arbitrary range can exaggerate a
-parameter; a narrow convenient range can hide it.
+Reconstructing the saved arrays reproduces the six singular values of the
+6-by-12 coefficient matrix; the input design itself has 24 rows and 12 columns. Relative
+cutoffs of 1%, 5% and 10% retain all six; a 20% cutoff retains five. Those ranks
+describe the fitted matrix under the chosen threshold and scaling. They do not
+constitute a structural-identifiability proof for the nonlinear simulator or
+a practical-identifiability analysis with measured sensor noise. High in-sample
+regression fit is also not held-out parameter recovery.
 
-Outcome-specific reporting is essential. Arm inertia might dominate terminal
-speed variance while hand separation dominates couple magnitude and command
-rise time dominates face/path sensitivity. A single importance score would
-erase the design tradeoff.
+The stored leave-one-out audit changes the leading hand-force parameter among
+limb-mass scale, actuator time constant and delay. This makes the screen useful
+for generating questions, while limiting claims of a stable ranking. The
+separate six-case training and six-case held-out designs assess selected model
+programs across synthetic cases. They are not participant-held-out experiments.
+The reconstruction here checks saved results and selected implementation; it
+does not rerun the provider dynamics.
 
-### Structural Nonidentifiability of Two Hands
+### Force Allocation Is Another Observation Map
 
-Suppose only the net club wrench is observed. Adding one internal hand-force mode
-and subtracting it from the other can preserve the same resultant. No noise-free
-club trajectory can recover that hidden mode without additional assumptions.
-This is structural nonidentifiability, not a shortage of optimizer effort.
+Club motion, a net club wrench and two individual hand wrenches are different
+observations. Even a net wrench inferred from motion depends on inertial,
+external-load and contact assumptions. Consider known contact positions and
+express all forces and moments in one frame about one point $O$. Let $f_i$ be
+each hand force and $r_i$ its position vector from $O$; $F$ and $M$ are the net
+force and moment about $O$:
 
-Regularization can choose a minimum-force or minimum-effort allocation, but the
-choice is a prior. Report it as one candidate. Bilateral sensors add observables
-that collapse much of the null space and transform the scientific question from
-speculation to estimation.
+$$
+F=f_1+f_2,\qquad
+M=r_1\times f_1+r_2\times f_2+m_1+m_2.
+$$
 
-### Practical Identifiability in a Rich Model
+Here $m_i$ is a direct contact couple, included only when the contact model
+allows it. For two point forces, set both $m_i$ to zero. The following are
+ranks of the unconstrained instantaneous linear maps, before friction or other
+contact restrictions:
 
-Even theoretically identifiable parameters can be strongly correlated in finite
-noisy data. A more flexible shaft can mimic timing delay; a different hand path
-can mimic torque onset; inertial error can be absorbed by estimated control.
-Posterior distributions, profile likelihoods, or bootstrap intervals reveal
-these ridges better than one best fit.
+| Contact Description | Unknown Scalars | Net Wrench Map Rank | Nullity |
+| --- | ---: | ---: | ---: |
+| Two distinct planar point forces | 4 | 3 | 1 |
+| Two distinct spatial point forces | 6 | 5 | 1 |
+| Two coincident spatial point forces | 6 | 3 | 3 |
+| Two complete spatial hand wrenches | 12 | 6 | 6 |
 
-Excitation matters. If all recorded swings occupy nearly the same state region,
-the data cannot distinguish mechanisms that diverge elsewhere. Safe equipment
-or task manipulations can increase information by changing hand separation,
-shaft response, tempo, or load geometry.
+For separated spatial point forces, adding a force along the line joining the
+hands to one hand and subtracting it from the other leaves the net wrench
+unchanged. Complete hand wrenches permit further compensating force/couple
+changes. Thus “one hidden hand-force mode” is correct for particular point-force
+models, not for every two-hand representation.
 
-### A Worked Ambiguity
+Friction, anatomy, actuator dynamics and constitutive laws may restrict feasible
+allocations. A justified additional law can narrow the solution set; a
+regularizer selects according to a preference. Neither should be presented as
+a new observation. Kinematic constraint rank, instantaneous force-allocation
+nullity and parameter identifiability over time are distinct questions.
 
-Imagine terminal speed rises one metre per second when either wrist-torque onset
-moves five milliseconds or shaft stiffness increases ten percent. One speed
-number cannot tell which changed. Add a shaft-strain waveform: stiffness affects
-modal phase differently from command timing. Add bilateral wrench: onset changes
-contact history. The extra observations make candidate explanations separable.
+Calibrated bilateral wrench sensors can directly constrain the hand resultants
+they measure. They do not by themselves resolve the pressure distribution
+within a hand, individual muscle forces or a unique neural strategy. Likewise,
+activation timing, shaft strain and body motion have their own forward models,
+uncertainties and nuisance variables. Evaluate which ambiguity each channel
+actually reduces.
 
-Now suppose both candidates still fit because motion filtering uncertainty
-shifts phase. The correct result is a joint confidence region, not an arbitrary
-winner. Experiment design should target a phase or manipulation where their
-predictions separate beyond measurement uncertainty.
+![A Schematic of Different Histories Sharing a Task Outcome.](figures/proximal_distal_companion/fig_companion_many_paths_one_outcome.svg){#fig-lay-many-paths width=92% fig-alt="Hand-drawn curves meet at a delivery window to illustrate that different histories can share a task-level outcome. The curves are not simulated trajectories and do not establish indistinguishability of complete measured motion traces."}
 
-### Sensitivity of a Sign Claim
+### Let Other Parameters Compensate During the Test
 
-For the late negative couple, calculate not only mean magnitude but probability
-of negative sign across parameter and measurement uncertainty. Report onset and
-duration distributions. Identify the parameters most associated with sign
-failure. Geometry reversal and zero-separation controls should remain decisive
-across the ensemble.
+A likelihood profile varies one parameter while reoptimizing the remaining
+parameters. Holding the others fixed instead produces a slice that can hide
+compensation and exaggerate precision. Raue and colleagues use profiles to
+expose such tradeoffs and guide additional measurements; their particular
+criterion for practical nonidentifiability is an unbounded likelihood-based
+interval [@raue2009identifiability]. That criterion is narrower than declaring
+an estimate too imprecise for an application. State which meaning is intended.
 
-If sign confidence is only slightly above chance, use qualified language. If
-sign is robust but magnitude uncertain, the mechanism claim can be stronger than
-the performance claim. Distinguishing those levels is more informative than one
-binary validation stamp.
+In the dimensionless example with unrestricted real parameters, the first-observation cost is
+$(10-p_1-p_2)^2$. For every $p_1$, choosing $p_2=10-p_1$ gives zero cost.
+Holding $p_2=4$ would instead give $(p_1-6)^2$, falsely suggesting that the first
+observation alone isolates $p_1$. With the second observation and the stated
+variances one and four, divide each squared residual by its measurement
+variance. Minimizing
 
-### Participant-Held-Out Tests
+$$
+(10-p_1-p_2)^2+\frac{(2-p_1+p_2)^2}{4}
+$$
 
-Fit or select policies on one set of participants and freeze them before
-evaluation on another. Split by person, not swing, because repeated trials from
-one golfer share anatomy and strategy. Report individual outcomes and population
-distribution. A model that predicts the average but fails most individuals is
-not an individualized product.
+over $p_2$ gives $p_2=7.6-0.6p_1$ and profile cost $0.8(p_1-6)^2$.
+An independent numerical minimization checks these values. They illustrate how
+an informative observation changes the inverse problem; they are not a fitted
+swing or a calibrated confidence interval.
 
-When data are limited, leave-one-participant-out evaluation and hierarchical
-models can help, but uncertainty will remain wide. Honest width is preferable to
-leakage that creates impressive but non-reproducible accuracy.
+Profiles require reliable optimization and a justified likelihood. Local
+minima, finite search bounds and a chosen threshold can alter the result.
+A frequentist confidence procedure concerns repeated-sampling coverage;
+a Bayesian credible region depends on the likelihood and prior. A tight
+posterior or bounded search interval can owe its width to assumptions. Show
+which combinations the data constrain, what the prior or penalty supplies,
+and how predictions vary along the remaining ambiguity.
 
-### Measurement Value as a Design Output
+### Carry Uncertainty Into the Mechanical Claim
 
-Use the sensitivity and identifiability analysis to rank candidate sensors by
-which hypotheses they discriminate. Bilateral wrench may be essential for hand
-allocation; shaft strain for elastic state; high-quality shoulder-girdle motion
-for scapular geometry; EMG for activation timing; perturbation response for
-effective stiffness.
+Consider a mechanical hypothesis such as a late negative hand couple. Define
+its reference point, axis,
+time/event window and sign before counting cases. Report the fraction of the
+**declared ensemble** exhibiting that sign, its magnitude and duration, and
+which assumptions change it. Engineering ranges and synthetic design points
+are not automatically a golfer-population probability distribution. Nor is
+50% a universal chance baseline for a mechanical sign.
 
-The best next measurement is not always the most precise. It is the one that
-separates live hypotheses at acceptable cost and burden. This turns uncertainty
-analysis into an experimental roadmap rather than a disclaimer.
+A sign stable across many cases can support a conditional prediction without
+identifying the underlying mechanism. Different force allocations or constitutive models
+may predict the same sign. Geometry controls need their own derivation: making
+hand separation zero removes the moment of an equal-and-opposite force pair,
+but does not remove an independently applied couple. A geometry reversal must
+specify what else is held fixed and use compatible sign/frame conventions.
 
-### What to Publish
+Compare decision-relevant predictions across all adequately supported models
+and parameter sets. A well-constrained speed prediction may coexist with
+uncertain hand loading. Robustness of one output does not justify an
+unqualified performance or physiological claim about another.
 
-Release parameter definitions, units, ranges, distributions, correlation
-assumptions, sample design, convergence diagnostics, sensitivity estimator,
-outcome definitions, and raw indices. Include failure cases and plots showing
-nonlinear response surfaces. Link every summary back to a machine-readable
-table. Reviewers can then test alternate priors without rerunning the entire
-argument from prose.
+### Turn Ambiguity Into an Experiment
 
-### Reader Lab: Design One Discriminating Measurement
+Choose two or more explanations consistent with current observations. Simulate
+the proposed sensor channels under each, including noise, calibration,
+synchronization, filtering and plausible model discrepancy. Locate an event or
+manipulation where their predictions differ reliably. A more precise version
+of the same insensitive observation may help less than a new channel with a
+different parameter dependence.
 
-Select two parameter or mechanism combinations that fit current club motion.
-Simulate candidate observations: bilateral wrench, shaft strain, ground reaction,
-or EMG timing. Plot where predictions differ relative to expected sensor noise.
-Choose the observation and phase with the largest reliable separation and design
-a bounded trial around it.
+Freeze preprocessing choices, parameter tuning, sensor selection and decision
+thresholds before the final evaluation. Split repeated swings by participant
+when the claim concerns new people; reserve other appropriate groups when the
+claim concerns equipment or conditions. Synthetic holdouts test the stated
+model sampling process, not transport to golfers. Report individual errors,
+uncertainty calibration and failure cases, rather than only an average fit.
 
-After collecting data, evaluate the predeclared discriminator on held-out trials.
-Do not refit both models until they agree and then claim neither was rejected.
-If data fall between predictions, quantify whether both are wrong or uncertainty
-was understated.
+**Provider Model Finding:** The coupled study supplies a finite sensitivity screen and
+synthetic control comparison. Its point-force null mode follows from its
+particular wrench map. These do not uniquely identify human parameters or
+control policies.
 
-Repeat the exercise for the arm/wrist allocation extremes. Club speed may be
-nearly identical while differential hand force and transition stiffness differ
-strongly. This demonstrates how identifiability analysis directly determines
-instrumentation priorities.
+**Human Evidence Boundary:** No participant parameter-recovery experiment is
+established by the manufactured examples or saved-array reconstruction here.
+A claim that additional sensors resolve an actual golfer's allocation needs
+its own measured-data evaluation.
 
-### Communicating an Unidentifiable Result
+**Hypothesis:** Additional wrench and shaft observations can distinguish some
+competing explanations when their predicted channel differences exceed the
+combined measurement and model uncertainty.
 
-Do not say “the parameter could not be estimated” and stop. Show the family of
-values or combinations consistent with data, the observables they predict, and
-the measurement that would shrink the family. If a practical conclusion remains
-constant across it, that conclusion may still be robust. If the conclusion
-changes, the product should withhold recommendation.
+#### Reader Lab: Design One Discriminating Measurement
 
-This is one of the clearest ways to expose falsifiability: uncertainty is
-represented as competing predictions a future experiment can separate.
+Start with the sum-only example. Plot its family of exact solutions, then add
+the difference channel. Increase its noise variance and plot how estimator
+uncertainty grows. Compare the profiled cost with the misleading fixed-parameter
+slice. These are three separate questions: uniqueness, precision and whether
+nuisance parameters were allowed to change.
 
-### A Minimum Identifiability Report
+Next choose two golf-model explanations that fit the same current data. Compare
+candidate measurements with an explicit noise model. State what would reject
+each explanation, what could remain ambiguous, and which prediction matters
+for the decision. If both fail, investigate model discrepancy rather than
+forcing one to win. If neither is separated, report that result without
+retuning on the test data and declaring success.
 
-List every estimated parameter and observed channel. State structural
-nonidentifiabilities, priors, bounds, correlations, noise model, calibration
-data, and holdout design. Plot posterior or profile relationships, not only
-standard errors around one optimum. Show predictive coverage on untouched data.
+#### A Minimum Report
 
-For hand allocation, display the null-space dimension with and without bilateral
-sensing. For preload, show correlation among transmission gap, activation delay,
-shaft dynamics, and onset. For robustness, show which parameter uncertainty
-changes policy ranking. These plots reveal what the current product can and
-cannot personalize.
-
-### When More Data Do Not Help
-
-Collecting more repetitions of the same uninformative motion reduces random
-noise but may not separate structurally equivalent mechanisms. Richer excitation
-or a different sensor is needed. Conversely, adding many noisy sensors can
-increase processing assumptions without adding discriminating information.
-
-Experiment design should therefore maximize expected distinction between live
-hypotheses under realistic noise and burden. The result is a ranked measurement
-plan tied directly to completion of model claims.
-
-### Conservative Product Behavior
-
-When inputs are unidentifiable and conclusions vary across compatible values,
-the interface should say so and avoid a unique strategy result. It can show the
-family, sensitivity, and next useful measurement. If all compatible values lead
-to the same qualitative conclusion, it can report that robustness while
-retaining magnitude uncertainty.
-
-### Chapter Checkpoint
-
-An influential parameter is not necessarily recoverable, and a fitted parameter
-is not necessarily causally important. Show both maps. When ambiguity affects a
-decision, withhold the decision and name the measurement that would resolve it.
+Publish the unknowns and their units, known inputs, observation definitions,
+parameter domain, ranges/distributions and correlations. Name the sensitivity
+estimator, scaling, numerical checks and any rank threshold. Separate ideal
+identifiability arguments from finite-data fits. Report the noise model,
+priors/penalties, nuisance treatment, calibration/holdout split, parameter
+tradeoffs and predictive checks. Link numerical summaries to their inputs and
+implementation revision.
 
 ## Where the Picture Breaks
 
-Soup ingredients are independent items; mechanical parameters interact through
-equations and may change meaning across models. Sensitivity indices depend on
-chosen ranges and distributions. Narrow ranges can make an important mechanism
-look unimportant.
+The soup analogy suggests independent ingredients; mechanical parameters are
+coupled and can have different meanings in different models. Even perfect
+identification within an inadequate model can produce a precise parameter
+that compensates for missing physics. Residual structure, independent
+observations and comparison across model assumptions remain necessary.
 
-Identifiability within a wrong model is also not truth. Data may precisely select
-a parameter that compensates for omitted physics. Residual structure and cross-
-model validation remain essential.
+The chapter's central connection is between **what affects the swing**, **what
+our measurements distinguish**, and **what a decision actually requires**.
+Explain the remaining family of possibilities, identify which conclusions hold
+across it, and specify the observation that could change the conclusion.
 
-**Go Deeper:** Read the monograph's
-[uncertainty and identifiability chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd)
-and the [machine-readable study outputs](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer/data).
+**Go Deeper:** Read the pinned provider's
+[uncertainty and identifiability chapter](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd)
+and [machine-readable study record](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.json).

@@ -409,6 +409,7 @@ def make_planar_spatial() -> None:
 
 
 def make_sensitivity() -> None:
+    """Keep conceptual observation nodes fully visible inside both panels."""
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.6))
     for axis in axes:
         _clean(axis, (-1, 6), (-1, 5))
@@ -418,8 +419,8 @@ def make_sensitivity() -> None:
         (1.2, "Delay", VIOLET),
     ):
         _node(axes[0], 1.0, y, label, color, 1.7)
-        _edge(axes[0], (1.9, y), (4.0, 2.5), color)
-    _node(axes[0], 5.0, 2.5, "Outcome", GREEN, 1.7)
+        _edge(axes[0], (1.9, y), (3.42, 2.5), color)
+    _node(axes[0], 4.4, 2.5, "Outcome", GREEN, 1.8)
     axes[0].set_title("Sensitivity: What Moves the Outcome?", color=INK, fontweight="bold")
     for y, label, color in (
         (3.8, "Recipe A", BLUE),
@@ -427,8 +428,8 @@ def make_sensitivity() -> None:
         (1.2, "Recipe C", VIOLET),
     ):
         _node(axes[1], 1.0, y, label, color, 1.7)
-        _edge(axes[1], (1.9, y), (4.0, 2.5), color)
-    _node(axes[1], 5.0, 2.5, "Same Observation", GREEN, 2.0)
+        _edge(axes[1], (1.9, y), (3.42, 2.5), color)
+    _node(axes[1], 4.4, 2.5, "Same\nObservation", GREEN, 1.8)
     axes[1].set_title("Identifiability: Can We Recover the Recipe?", color=INK, fontweight="bold")
     fig.tight_layout()
     _save(fig, "fig_companion_sensitivity_identifiability")
