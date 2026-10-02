@@ -29,8 +29,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd, tests/test_pendulum_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; fullpytest6574pass/79.09%coverage;12publicationgates;Ruff/Black855/mypy95;232pagePDFHTML accepted;66mathnodes at390/1440; inherited darkcontrast182nodes remains.
-- **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; no new credit yet.
-- **Next step:** Commit accepted source/carry records, bind8findings preserving153prior, then regularPR/protected delivery. See pendulum-review.md and pendulum-validation.json; no whole-book completion.
+- **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; eight new findings bind exact accepted source;161total;110corpusfiles pluswholebookreview remain.
+- **Next step:** Push source/binding through normal hooks; regular PR depends on4804; verify parent delivery before main integration and guarded merge. See pendulum-review.md and pendulum-validation.json; no whole-book completion.
 
 
 ### DL-#4799 — Model Comparison and Evidence Boundaries
