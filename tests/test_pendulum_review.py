@@ -177,6 +177,7 @@ def test_inelastic_wrist_locking_impulse_and_dissipation() -> None:
     np.testing.assert_allclose(ke_loss, 1.0 / 3.0)
 
 
+@pytest.mark.integration
 def test_pendulum_figure_contains_all_endpoints_and_changes_relative_angle(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -208,6 +209,7 @@ def test_pendulum_figure_contains_all_endpoints_and_changes_relative_angle(
         plt.close(figure)
 
 
+@pytest.mark.integration
 def test_pendulum_provider_links_are_revision_bound() -> None:
     """Source provenance must identify the mechanics text actually reviewed."""
     source = Path(__file__).resolve().parents[1] / (

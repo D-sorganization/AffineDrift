@@ -1,0 +1,35 @@
+{
+  "base_commit": "068fb02f1526723d59e8dc5ce412f4c1b9e2e7d9",
+  "followup_commit": "SELF",
+  "pr": 4804,
+  "scope": "Three filesystem tests and one cross-module figure test receive integration markers. No assertions, scientific source, figure, render or immutable scientific review changes.",
+  "files": {
+    "tests/test_model_ladder_review.py": {
+      "before_sha256": "9ba1ae38730f0b16f32a192d525df683017c200b3c964c33873dc6845e019ce3",
+      "after_sha256": "4402b9ec527023c2b0c454363761c17d2bab48c41160070c4bf445d28454cf99",
+      "added_integration_markers": [
+        "test_model_ladder_provider_links_are_revision_bound",
+        "test_model_ladder_figure_matches_its_model_comparison_subject"
+      ],
+      "all_other_bytes_and_ast_unchanged": true
+    },
+    "tests/test_pendulum_review.py": {
+      "before_sha256": "0532dd7e2ee8b061b082855cdb0a1b3023c75142ae42b48d786342c8ba353f0f",
+      "after_sha256": "9bbb8dda8bc047f9241c0e4b8bab041f11737e5c7679517344201feb5ba3d7b9",
+      "added_integration_markers": [
+        "test_pendulum_figure_contains_all_endpoints_and_changes_relative_angle",
+        "test_pendulum_provider_links_are_revision_bound"
+      ],
+      "all_other_bytes_and_ast_unchanged": true
+    }
+  },
+  "before": "pytest --collect-only --no-cov -m integration: no tests collected, 15 deselected, exit 5",
+  "after": {
+    "integration": "4 passed, 11 deselected in 2.40s",
+    "not_integration": "11 passed, 4 deselected in 2.65s",
+    "ruff_black100": "pass on both files"
+  },
+  "full_regression_boundary": "6582-pass full run precedes this marker-only follow-up. Default repository selection does not exclude integration, so default membership is unchanged; no second full regression claimed.",
+  "scientific_binding": "Original verification commits and frozen reviews remain authoritative; only current-tree evidence digests are refreshed for the two classified test files.",
+  "delegation": "agy Gemini 3.8 Flash drafted three decorators. Lead corrected invented filenames and added the cross-module marker required by AGENTS.md; all output read."
+}

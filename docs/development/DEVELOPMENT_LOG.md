@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/pendulum-rigor-4801
 - **Paths:** articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd, tests/test_pendulum_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration and source preservation verified.
+- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
 - **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; eight new findings bind exact accepted source;161total;110corpusfiles pluswholebookreview remain.
-- **Next step:** Push accepted main integration/turnover; remove dependency hold, guarded squash auto-merge, then actual remote-main verification. See model-pendulum-delivery.json.
+- **Next step:** Push the accepted marker-only review follow-up for PR4804.
 
 
 ### DL-#4799 — Model Comparison and Evidence Boundaries
@@ -42,9 +42,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/model-ladder-delivery-4799
 - **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration and source preservation verified.
+- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
 - **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** Push accepted main integration/turnover; remove dependency hold, guarded squash auto-merge, then actual remote-main verification. See model-pendulum-delivery.json.
+- **Next step:** Push the accepted marker-only review follow-up for PR4804.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 

@@ -56,6 +56,7 @@ def test_ninety_five_of_one_hundred_is_not_a_probability_guarantee() -> None:
     assert interval.low < 0.95
 
 
+@pytest.mark.integration
 def test_model_ladder_provider_links_are_revision_bound() -> None:
     """Provider assertions must retain their inspected immutable source revision."""
     text = Path("articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd").read_text(
@@ -66,6 +67,7 @@ def test_model_ladder_provider_links_are_revision_bound() -> None:
     assert all("/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/" in link for link in links)
 
 
+@pytest.mark.integration
 def test_model_ladder_figure_matches_its_model_comparison_subject() -> None:
     """A model-family figure must not silently substitute an evidence hierarchy."""
     text = Path(
