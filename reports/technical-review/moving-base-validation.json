@@ -1,0 +1,246 @@
+{
+  "issue": 4774,
+  "source": "articles/proximal_distal_companion/chapters/ch17_moving_base.qmd",
+  "status": "Named-constant CI fix and refreshed evidence binding; final CI/protected delivery pending",
+  "tests": {
+    "red_numerical_pass": 14,
+    "red_editorial_fail": 3,
+    "green": 17
+  },
+  "full_regression": {
+    "passed": 6406,
+    "failed": 1,
+    "skipped": 29,
+    "deselected": 187,
+    "exit_code": 1,
+    "command": "py -3.12 -X utf8 -m pytest tests/ --cov --cov-report=xml --timeout=120",
+    "coverage_percent_src_scripts": 78.97,
+    "failure": "Required chapter navigation landmarks omitted; source headings restored, test unchanged.",
+    "scope": "Before final heading correction; retain initial failure, follow-up validation separately."
+  },
+  "static": {
+    "ruff": "pass",
+    "black_files": 841,
+    "mypy_files": 94,
+    "title_files": 653
+  },
+  "javascript": {
+    "passed": 546,
+    "skipped": 19,
+    "suites": 35
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/moving-base-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "render": {
+    "pdf_pages": 225,
+    "inspected_pages": [116, 117, 118, 119, 120, 121, 122, 123, 124, 125],
+    "pdf_parity": true,
+    "final_heading_rebuild_pending": false
+  },
+  "browser": {
+    "profiles": 4,
+    "failed": 0,
+    "axe_serious_critical": 0,
+    "display_equations": 7,
+    "widths": [390, 1440],
+    "display_math_errors": 0,
+    "initial_failure": "Missing local generated public-site manifest; supplied scoped artifact.",
+    "inline_placeholders_at_checkpoint": 0,
+    "scope": "Final heading rebuild; all chapter math visited at both widths; mobile scrollers retained.",
+    "math_containers": 69
+  },
+  "delegation": {
+    "model": "gemini-3.8-flash-high",
+    "completed_jobs": 12,
+    "method": "agy CLI supplied-text sandbox tasks; lead-adjudicated",
+    "delivery_assistance_jobs": 3,
+    "binding_draft_adjudication": "Rejected recursive digest-key omission and guessed id fallbacks; compare exact finding_id/order and every field except top-level evidence_sha256.",
+    "delivery_assistance_scope": "Evidence binding, issue-scope comparison, generic delivery-verifier adaptation; source-phase count stays12. Four separate future-source preparation jobs are not Chapter17 credit."
+  },
+  "historical_findings": 96,
+  "corpus_pending": 117,
+  "whole_book_consistency_pending": true,
+  "remaining": ["Final-head CI and protected delivery"],
+  "parent_delivery": {
+    "pr": 4772,
+    "head": "e58d1f158c3365846292edc7f950d47d544d462d",
+    "ci_run": 36947184666,
+    "status": "verified on remote main",
+    "previous_run": 36937087586,
+    "previous_conclusion": "cancelled after external main integration",
+    "superseded_runs": [36937087586, 36940029128, 36943365974],
+    "merge_commit": "a4cf9b56cbd94ab067277d0bbdf3d6df329a69b9",
+    "receipt": "reports/technical-review/measured-golfers-remote-main-receipt.json",
+    "verified_path_count": 22
+  },
+  "final_followup": {
+    "passed": 72,
+    "publication_gates": 12,
+    "browser_profiles": 4,
+    "axe_serious_critical": 0,
+    "scope": "After heading correction; no repeated full run."
+  },
+  "finding_binding": {
+    "new_findings": 8,
+    "historical_findings_preserved": 96,
+    "verification_commit": "318f9f9da1ba6b5090e94f06c251fc20eff19c9c",
+    "exact_git_blob_sha256": {
+      "articles/proximal_distal_companion/chapters/ch17_moving_base.qmd": "79711f78c0488b86ac77e1076fd8ac27b33f031806778eb354ff0ffc79e17ba6",
+      "scripts/make_proximal_distal_companion_expanded_figures.py": "9402769663c4dbfddbd610c3c3b983a545bfb667736a3d8c04f6f20303ea9670",
+      "tests/test_moving_base_review.py": "9272f41fedf6557fc6ebe48742e543cecb0eee1dec8cfcf8e92eeeb582a70136",
+      "articles/figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.svg": "6a74e2ef860077bada91332f2bc317664c37d1ffde4cf0812ee6f3cd38432a0a",
+      "articles/figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.pdf": "1bd63a75b5886300eeec97f87cf4573522af4993f7d5b45243c72ed1a5ac44fe",
+      "reports/technical-review/moving-base-review.md": "5336f455d32b132fa40a8f8f2d605ae7d0417395106b0f6471b40e860b008a29",
+      "reports/technical-review/moving-base-prior-review.json": "788a30e40174739a3e3bc20643627b537ffde09d20db53ad1fa71cffe294e4f7",
+      "reports/technical-review/moving-base-dependency-carry-forward.json": "a905ca13a4dff2c7c2bf1ae5b18de7b02a507a4457b10aa432b3e1894771e25a"
+    }
+  },
+  "integration": {
+    "head": "e30a2a97759c1b3f3a31110c15834d59950a6f34",
+    "parent_head": "4ec429b06a12ebdf05b934248c30a73dfec5ad7d",
+    "main": "387607370",
+    "files": [
+      "SPEC.md",
+      "tests/test_equation_cross_references.py",
+      "tests/test_equation_numbering.py"
+    ],
+    "tests_passed": 12,
+    "scientific_source_unchanged": true,
+    "second_parent_head": "2f5bb732b9ae3b746d31c07d47ebf0bce9d35e3f",
+    "second_main": "15c876736",
+    "second_scope": "Devcontainer, reader environment tests, root-hygiene allowance and SPEC; no scientific/publication source changes.",
+    "second_tests_log": "docs/development/technical-review/moving-base-devcontainer-integration-tests.txt",
+    "second_tests_passed": 15,
+    "spec_reconciliation": "Use reviewed parent SPEC, retain own PR4782 row, remove stale duplicate issue4771 row, retain Binder PR4682 and key new devcontainer by actual merged PR4779.",
+    "third_parent_head": "e58d1f158c3365846292edc7f950d47d544d462d",
+    "third_main": "f14216ba53315c0a3fc441233ee83a09b651cd93",
+    "third_scope": "PR4776 deploy JavaScript newline preservation, mirrored print CSS and SPEC; all eight Chapter17 bound Git blobs unchanged.",
+    "third_tests_passed": 43,
+    "third_tests_log": "docs/development/technical-review/moving-base-minify-integration-tests.txt",
+    "third_binding_tests_passed": 21,
+    "third_spec_reconciliation": "Preserve prior reviewed SPEC row order and insert merged PR4776; exclude stale issue4538 devcontainer row already keyed to actual PR4779.",
+    "parent_squash_merge": "a4cf9b56cbd94ab067277d0bbdf3d6df329a69b9",
+    "squash_resolution": "Parent merge tree exactly equals e58, already ancestor of reviewed 23a head. Retained reviewed child files for conflicts; no scientific file changed."
+  },
+  "pr": 4782,
+  "binding_followup": {
+    "passed": 68,
+    "scope": "New mechanics, companion, audit, output-boundary, reader-environment and root-hygiene checks after binding and main integration"
+  },
+  "development_log": {
+    "baseline_findings": 71,
+    "current_findings": 71,
+    "introduced": [],
+    "owned_entry_findings": [],
+    "bytes": 199954,
+    "scope": "Whole validator fails on inherited entries; no newly introduced finding. Kept new entry concise instead of exceeding size ceiling."
+  },
+  "quality_followup": {
+    "failed_ci_run": 36945214325,
+    "failed_job": 110645693113,
+    "cause": "Code-quality rule requires a named GRAVITY_M_S2 constant for the manufactured fixture.",
+    "source_fix": "318f9f9da1ba6b5090e94f06c251fc20eff19c9c",
+    "affected_tests_passed": 17,
+    "quality_fixture_pass": true,
+    "tracked_quality_scope": "All tracked Python files using the unchanged CI directory exclusions; passed.",
+    "local_untracked_scope": "Unrestricted local scan also saw six findings in two untracked QA drafts; those drafts are preserved, not in CI checkout.",
+    "publication_unchanged": true,
+    "full_regression_repeated": false,
+    "new_findings_rebound": 8,
+    "historical_findings_preserved": 96
+  },
+  "head_ci_followup": {
+    "head": "407699d6154874dec6234c63b893ed4e199ec8ba",
+    "run": 36946175394,
+    "python_passed": 6371,
+    "python_skipped": 74,
+    "python_deselected": 187,
+    "source_coverage_percent": 93.01,
+    "content_lint_passed": 185,
+    "content_lint_skipped": 4,
+    "critical_coverage_cases_passed": 68,
+    "static": "pass",
+    "javascript": "pass",
+    "e2e": "Not accepted; integration replaces this head before completion."
+  },
+  "issue_scope_guard": {
+    "run": 36946175397,
+    "attempt": 2,
+    "conclusion": "success",
+    "reason": "Issue mentioned unchanged historical Chapter20 test but omitted actual Chapter17 test; corrected scope text, no guard bypass."
+  }
+}

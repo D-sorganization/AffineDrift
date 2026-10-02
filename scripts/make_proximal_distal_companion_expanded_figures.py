@@ -234,27 +234,25 @@ def make_ground_ledger() -> None:
 
 
 def make_moving_base() -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
-    for axis, title, movable in (
-        (axes[0], "Prescribed Base", False),
-        (axes[1], "Coupled Finite-Mass Base", True),
-    ):
-        _clean(axis, (-2.5, 3.5), (-2, 3.5))
-        axis.add_patch(Rectangle((-0.8, 1.6), 1.6, 0.45, color=BLUE, alpha=0.6))
-        axis.plot([0, 1.5, 2.5], [1.6, 0.7, -0.8], lw=6, color=ORANGE)
-        _edge(axis, (1.5, 0.7), (-0.2, 1.75), RED)
-        if movable:
-            _edge(axis, (-0.8, 1.2), (-1.8, 1.2), GREEN)
-            axis.text(-1.2, 0.7, "Base responds", ha="center", color=GREEN)
-        else:
-            axis.plot([-1.8, 1.8], [1.55, 1.55], color=INK, lw=3)
-        axis.set_title(title, color=INK, fontweight="bold")
-    fig.suptitle(
-        "Back-Reaction Is Hidden When the Driver Cannot Move",
-        color=INK,
-        fontweight="bold",
-        fontsize=16,
+    fig, axes = plt.subplots(2, 1, figsize=(5.5, 7), layout="constrained")
+    panels = (
+        (axes[0], "Prescribed Path", "Trajectory is specified\nReport reaction and power"),
+        (
+            axes[1],
+            "Finite-Mass Base",
+            "Force and inertia set motion\nClub load can change the path",
+        ),
     )
+    for axis, title, description in panels:
+        _clean(axis, (-3.0, 3.0), (-2.2, 2.7))
+        axis.add_patch(Rectangle((-0.8, 1.4), 1.6, 0.45, color=BLUE, alpha=0.6))
+        axis.plot([0, 1.4, 2.3], [1.4, 0.5, -0.7], lw=5, color=ORANGE)
+        _edge(axis, (1.2, 0.15), (0, 1.4), RED)
+        _edge(axis, (-1.2, 2.15), (1.2, 2.15), INK)
+        _edge(axis, (1.2, 2.15), (-1.2, 2.15), INK)
+        axis.text(-2.7, 0.1, "Club\nload", color=RED, fontsize=14, fontweight="bold")
+        axis.text(-2.7, -1.3, description, color=INK, fontsize=14)
+        axis.set_title(title, color=INK, fontsize=17, fontweight="bold")
     _save(fig, "fig_companion_prescribed_vs_moving_base")
 
 
