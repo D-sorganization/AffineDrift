@@ -1,5 +1,18 @@
 # Development Log Archive — 2026
 
+### DL-#4811 · Negative Torque, Conjugate Power, and Causal Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4812 (regular); parent #4810 verified on remote main
+- **Issue:** #4811; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/negative-torque-rigor-4811
+- **Paths:** articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_negative_torque_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; protected merge 48265e2002b9c5b326993935bae726b1e3667717; CI37019006638 succeeded; all25owned blobs and entire tree match accepted80b00bf271fcfd6ef33cd979350fa122f0d24bca.
+- **Summary:** Separate club-side and joint power, moment transport, physical energy inputs, reaction geometry, pointwise/forward/finite-strategy evidence and human attribution. Eight agyFlash helpers read/adjudicated. Eight decisions bound;177priorfindings preserved,185totalfindings and107sourceaudits pluswholebookreview remain.
+- **Next step:** Delivered. See reports/technical-review/negative-torque-remote-main-receipt.json. Lease and presence released at15:17UTC. No remaining work for this bounded review.
+
 ### DL-#4807 · Velocity Summation and Sequence Evidence
 
 - **State:** shipped
