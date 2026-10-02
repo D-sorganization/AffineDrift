@@ -368,22 +368,30 @@ def make_moving_base() -> None:
 
 def make_solver_loop() -> None:
     fig, axis = plt.subplots(figsize=(10, 5.2))
-    _clean(axis, (-1, 11), (-1, 5.5))
+    _clean(axis, (-0.5, 11.5), (-1, 5.5))
     nodes = (
-        (1.0, 3.9, "Present State\n+ Controls", BLUE),
-        (4.0, 3.9, "KKT Dynamics\n+ Reactions", VIOLET),
+        (1.0, 3.9, "Complete State\n+ Inputs", BLUE),
+        (4.0, 3.9, "Fixed-Mode KKT\n+ Reactions", VIOLET),
         (7.0, 3.9, "Acceleration\n+ Integration", ORANGE),
-        (10.0, 3.9, "Next State", GREEN),
-        (5.5, 1.2, "Constraint + Energy + Timestep Audits", RED),
+        (10.0, 3.9, "Candidate\nNext State", GREEN),
+        (5.5, 1.2, "Closure + Work + Projection Checks", RED),
     )
     for x, y, text, color in nodes:
-        _node(axis, x, y, text, color, 2.2 if y > 2 else 4.0)
+        _node(axis, x, y, text, color, 2.2 if y > 2 else 6.8)
     for left, right in ((1.0, 4.0), (4.0, 7.0), (7.0, 10.0)):
         _edge(axis, (left + 1.1, 3.9), (right - 1.1, 3.9))
-    _edge(axis, (10.0, 3.5), (6.8, 1.55), GRAY)
-    _edge(axis, (4.2, 1.2), (1.0, 3.5), RED)
+    _edge(axis, (10.0, 3.5), (8.9, 1.55), GRAY)
+    _edge(axis, (2.1, 1.2), (1.0, 3.5), RED)
+    axis.text(
+        5.5,
+        -0.4,
+        "Schematic: Fixed Bilateral Mode; Refinement Compares Separate Runs",
+        ha="center",
+        color=GRAY,
+        fontsize=10,
+    )
     axis.set_title(
-        "A Forward Solver Predicts, Advances, and Checks Every Step",
+        "A Forward Model Advances State\nand Audits Its Approximation",
         color=INK,
         fontweight="bold",
         fontsize=16,

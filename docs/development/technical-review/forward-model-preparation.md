@@ -1,6 +1,8 @@
 # Chapter 18 Preparation — No Acceptance Credit
 
-This is preparation for `articles/proximal_distal_companion/chapters/ch18_forward_model.qmd`, the next longest pending source (about 2,052 words), now queued as [issue #4817](https://github.com/D-sorganization/AffineDrift/issues/4817). No claim, source edit, finding binding or corpus credit has been created. Chapter 28 follows at about 2,051 words. The current goal remains 105 source audits plus whole-book consistency.
+Current status: issue #4817 is now claimed and the chapter revision is undergoing validation in the forward-model worktree. No acceptance or corpus credit has been awarded. See `reports/technical-review/forward-review.md` and the current handoff. The preparation record below preserves the earlier reading sequence.
+
+At the preparation checkpoint, this was preparation for `articles/proximal_distal_companion/chapters/ch18_forward_model.qmd`, the next longest pending source (about 2,052 words), now queued as [issue #4817](https://github.com/D-sorganization/AffineDrift/issues/4817). No claim, source edit, finding binding or corpus credit has been created. Chapter 28 follows at about 2,051 words. The current goal remains 105 source audits plus whole-book consistency.
 
 ## Reading Completed
 
