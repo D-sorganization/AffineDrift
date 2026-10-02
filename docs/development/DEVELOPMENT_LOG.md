@@ -23,14 +23,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4833 (regular; temporary hold pending predecessor #4829)
 - **Issue:** #4831; epic #4009 / corpus #4021
 - **Branch:** fix/radar-rigor-4831
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex, articles/Launch_Monitor_Technology_Review/references.bib, tests/test_radar_systems_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted SELF; all 89 post-acceptance checks passed.
+- **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted db2c8a7918e7686fd51787e76702d7e7246495ea and verified on remote; all 89 post-acceptance checks passed.
 - **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
-- **Next step:** Run post-acceptance evidence checks; commit/push and open a regular PR; verify predecessor delivery.
+- **Next step:** Push PR registration checkpoint, verify predecessor #4829 delivery, then reconcile ancestry and verify guarded delivery.
 
 ### DL-#4825 · Ideomotor Prediction and Action Review
 
