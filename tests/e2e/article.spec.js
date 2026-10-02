@@ -17,7 +17,14 @@ test.describe('Article Pages', () => {
     await page.goto('/articles/inverse-dynamics.html');
 
     // Scroll down to trigger lazy loading of MathJax if needed
-    await page.evaluate(() => window.scrollBy(0, 1000));
+    await page.evaluate(() => {
+      const math = document.querySelector('.math, mjx-container, [class*="math"]');
+      if (math) {
+        math.scrollIntoView();
+      } else {
+        window.scrollBy(0, 1000);
+      }
+    });
 
     // Look for rendered math (MathJax creates SVG or mjx- elements)
     const mathElements = page.locator('.MathJax, mjx-container, .mjx-chtml, svg[class*="MathJax"]');
@@ -42,7 +49,14 @@ test.describe('Article Pages', () => {
     });
 
     await page.goto('/articles/theory-part1.html', { waitUntil: 'networkidle' });
-    await page.evaluate(() => window.scrollBy(0, 1000));
+    await page.evaluate(() => {
+      const math = document.querySelector('.math, mjx-container, [class*="math"]');
+      if (math) {
+        math.scrollIntoView();
+      } else {
+        window.scrollBy(0, 1500);
+      }
+    });
     await page.waitForSelector('mjx-container', { timeout: 15000 });
     await page.waitForSelector('mjx-assistive-mml', { state: 'attached', timeout: 15000 });
 

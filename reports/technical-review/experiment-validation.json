@@ -1,0 +1,218 @@
+{
+  "issue": 4795,
+  "status": "Original PR frozen for consolidation; see constraints-experiment-consolidation.json. Protected combined delivery pending.",
+  "baseline": "471fa4e4edfa08b25127fc3c7e5f26ca7c3b8d7d",
+  "source_findings": 8,
+  "historical_findings": 137,
+  "corpus_pending": 112,
+  "whole_book_consistency_pending": true,
+  "tdd": {
+    "red_passed": 8,
+    "red_failed": 1,
+    "green_passed": 9
+  },
+  "full_regression": {
+    "passed": 6515,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 555.62,
+    "coverage_percent": 78.95
+  },
+  "related_checks": 60,
+  "editorial_followup": 25,
+  "final_affected_checks": 31,
+  "full_run_followup_scope": "Notation-only changes after full regression; affected checks and publication gates repeated.",
+  "render": {
+    "pages": 229,
+    "inspected_physical_pages": [
+      182, 183, 184, 185, 186, 187, 188, 189, 190, 225, 226, 227, 228, 229
+    ],
+    "canonical_public_parity": true,
+    "pdf_sha256": "01e14b55cdd9b307e0fbb062a7449145b0bf0c01c29f4f1ca3db5df3c11b1d8a",
+    "html_success": true
+  },
+  "browser": {
+    "profiles": 4,
+    "failed": 0,
+    "serious_critical_axe": 0,
+    "route_scope": "Single rendered companion route, not full-site acceptance",
+    "viewports": [390, 1440],
+    "chapter_math_nodes": 62,
+    "display_equations": 4,
+    "errors": 0,
+    "placeholders": 0,
+    "horizontal_overflow": false,
+    "zoom_opened": true,
+    "zoom_closed": true
+  },
+  "recovered_setup_failures": [
+    "Quarto tree scan raced with preservation of build artifacts; stable-tree retry passed.",
+    "First browser invocation lacked server; next lacked served manifest; final explicit single-route preview passed."
+  ],
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 876,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "source_title_files": 653,
+  "agy_flash_helpers_completed": 7,
+  "prior_evidence_unchanged": 154,
+  "prior_evidence_changed": 3,
+  "figure_generator_other_ast_unchanged": true,
+  "no_provider_rerun": true,
+  "no_new_human_validation": true,
+  "parent_delivery": {
+    "pr": 4794,
+    "head": "3fb14220d7fc1c0e81a309125fa4b2b7479dc64b",
+    "status": "Frozen for consolidation; auto-merge disabled on4794; combined delivery pending."
+  },
+  "commands": {
+    "full": "py -3.12 -X utf8 -m pytest --cov",
+    "followup": "py -3.12 -X utf8 -m pytest tests/test_experiment_design_review.py tests/test_proximal_distal_companion_contract.py tests/test_root_hygiene.py -q --no-cov",
+    "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; then --to html"
+  },
+  "source_commit": "2bb1a52086dd006d676d919f5f4fd4d86391e184",
+  "binding": {
+    "prior_findings_preserved": 137,
+    "new_findings": 8,
+    "total_findings": 145,
+    "exact_source_files": {
+      "articles/figures/proximal_distal_companion/fig_companion_falsification_map.pdf": "f8336ef9b0373210c155b10ea4150eeb4541c1d35d1642028adaf096fe8bb133",
+      "articles/figures/proximal_distal_companion/fig_companion_falsification_map.svg": "9005c861b54b01d8a3ed4879e625f0e4802ad3d73b0ae16aad963b767b676162",
+      "articles/proximal_distal_companion/chapters/ch26_experiment_can_say_no.qmd": "3370600e5933e49f598a7a7036a2b46b1dedaf93eef686ee2e9bb0aaf7fbc0a8",
+      "reports/technical-review/experiment-dependency-carry-forward.json": "bff12bdf20cd01923ad0742ce6605a5a39f8ef21ffa533ec4384be30424bd3c4",
+      "reports/technical-review/experiment-prior-review.json": "8387c3b6a384e584a906d36c54df29713cdde2e5d543730fcd694d4da1f81b50",
+      "reports/technical-review/experiment-review.md": "38210475a544bef1748ec24bad0c3840b21a8d674807ec4e3aa3c735812bfa58",
+      "scripts/make_proximal_distal_companion_figures.py": "fab78e4762b0677093eb9c82234e1a6039e1e68f0749c1be98db390acf84774b",
+      "tests/test_experiment_design_review.py": "afd30008618c1d331fb702e8b594c291883d04e62334643ed916e406392d2a2f"
+    }
+  },
+  "pr": 4798,
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4798",
+  "precommit_followup": {
+    "passed": 31,
+    "failed": 0
+  },
+  "binding_followup": {
+    "passed": 6,
+    "failed": 0
+  },
+  "hook_recovery": "Initial binding commit omitted generated scientific-claim-audit.md; its expected counts were inspected, staged and normal hooks passed on retry.",
+  "main_integration": {
+    "parent_head": "3fb14220d7fc1c0e81a309125fa4b2b7479dc64b",
+    "remote_main_included": "70a0c6422cf485b82d9c193546d55d04e5dad1ef",
+    "chapter26_scientific_and_pdf_bytes_unchanged": true,
+    "parent_combined_regression": {
+      "passed": 6535,
+      "skipped": 29,
+      "deselected": 187,
+      "coverage_percent": 78.97
+    },
+    "scope": "Parent combined run covers Chapter6 plus peer main. Chapter26 original full run6515 remains recorded separately; no full run of this new integration is claimed.",
+    "affected_checks": {
+      "passed": 85,
+      "failed": 0,
+      "seconds": 6.91
+    }
+  },
+  "consolidation": {
+    "branch": "feat/technical-review-consolidated-20261002",
+    "pr": 4800,
+    "original_pr_frozen": true,
+    "receipt": "reports/technical-review/constraints-experiment-consolidation.json",
+    "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4800"
+  }
+}

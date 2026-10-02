@@ -215,6 +215,19 @@ export function initAriaLabels() {
         }
     }
 
+    // Listing thumbnails and metadata links without discernible text
+    const listingPosts = document.querySelectorAll(".quarto-post, .quarto-listing-item, div[data-index]");
+    for (const post of listingPosts) {
+        const heading = post.querySelector(".listing-title, .title, h2, h3, a.title");
+        const titleText = heading?.textContent?.trim() || "Article";
+        const postLinks = post.getElementsByTagName("a");
+        for (const link of postLinks) {
+            if (!link.textContent.trim() && !link.hasAttribute("aria-label")) {
+                link.setAttribute("aria-label", titleText);
+            }
+        }
+    }
+
     // History lists - live regions
     // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
     const uls = document.getElementsByTagName("ul");

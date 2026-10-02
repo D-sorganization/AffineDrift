@@ -12,8 +12,8 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.294                                          |
-| **Last Spec Update**    | 2026-10-01                                       |
+| **Spec Version**        | 1.0.295                                          |
+| **Last Spec Update**    | 2026-10-02                                       |
 
 ## 2. Purpose & Mission
 
@@ -224,9 +224,12 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4798 | Correct experimental controls, filter consistency, causal mediation, participant inference and equivalence decisions in Chapter 26; preserve model/human evidence boundaries. |
+| 2026-10-02 | #4794 | Clarify constraint feasibility, moving-support work, reaction identifiability, full hand wrenches and shared drift in Chapter 6; test manufactured limits and preserve primary-source scope. |
 | 2026-10-02 | #4790 | Clarify biological load inference, bounded muscle allocation, geometric stiffness, tendon energy and matched club tasks in Chapter 25; verify manufactured mechanics and primary-source limits. |
 | 2026-10-02 | #4788 | Distinguish artifact identity, computational reproduction and physical validation in Chapter 27; retain release-profile limits and immutable provider references. |
 | 2026-10-02 | #4785 | Distinguish system boundaries, contact work, COM pseudowork, observer power and gravity accounting in Chapter 2; add manufactured counterexamples and an explicit interaction-classification figure (#4783). |
+| 2026-10-01 | #4780 | Configure Quarto listing on article index and add category vocabulary contract enforcement (#4501). |
 | 2026-10-01 | #4781 | Add runtime performance budget configuration for ten representative routes, Playwright E2E budget spec, and CI verification script (#4570). |
 | 2026-10-01 | #4777 | Expand axe-core verification in CI to scan dark theme and mobile viewports with multi-cell deduplication (#4562). |
 | 2026-10-01 | #4782 | Correct moving-base replay and inertia inferences, enforcing power and provider evidence limits; verify manufactured cart-pendulum balances and clarify the schematic (#4774). |
@@ -536,5 +539,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-01 | #4694 | Enforce scientific claim-audit coverage in PR CI e2e-tests when site-facing files are rendered, preventing un-audited routes from passing PR CI and breaking Deploy Website on main. |
 | 2026-10-01 | #4502 | Align navigation labels with page titles and add contract test (WEB-02.8). |
 | 2026-10-01 | #4515 | Consolidate maturity vocabulary into a single enum (WEB-04.1) in config/maturity.yml, with schema validation, legacy string mappings, and tests. |
-| 2026-10-01 | #4506 | Define and validate article front-matter schema (WEB-03.1) in schemas/article-front-matter-v1.schema.json, with core-page validation and allowlist burn-down. |
 | 2026-10-02 | #4495 | Enhance 404 page navigation with Start Here, Library, search trigger, and unified contact routing (WEB-01.10). |
+| 2026-10-02 | #4498 | Resolve Volume II collision and unify volume numbering scheme (WEB-02.2) across _quarto.yml, books/*.qmd, and Geometry of Motion index; publish concordance table on Books hub and expand volume overview pages to >= 200 words. |
+| 2026-10-02 | #4506 | Define and validate article front-matter schema (WEB-03.1) in schemas/article-front-matter-v1.schema.json, with core-page validation and allowlist burn-down. |
