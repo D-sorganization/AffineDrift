@@ -30,7 +30,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 682b709bc31459a882421062d2632282b78ed356 baseline;6632tests pass,29skip,187deselected,79.33%coverage;12gates,893Python files,655titles;237pagePDF,48math and4browserprofiles pass.
 - **Summary:** Lead accepted eight scientific decisions connecting wrench/power, hidden hand allocations, task velocity, feasible interventions, finite Pareto results, measurement limits and frontend scope. Five Flash outputs adjudicated. Source 1a7521e581bab0e6aa40df3f9bf0cb5ddafdee66 committed; eight findings bound with201 prior findings preserved,209total and103pending source audits. All44post-binding checks pass; source and binding c19ff2d993ea0a0a0f1cd8151e54b03df93d1869 are verified on remote topic with normal hooks.
-- **Next step:** Validate and push binding normally; verify parent4818 delivery before one combined regular PR for4817/4819.
+- **Next step:** Parent4818 verified and reconciled; publish one combined regular PR for4817/4819 after integration checks.
 
 ### DL-#4817 · Forward Solver Guarantees and Validation
 
@@ -43,20 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 baseline 33afa9d25b7f61113ff4a0928d2cef2c2b1da76e; five focused passes after one RED failure;234pagePDF/HTML/56math/4browserchecks,12gates,892filequality; broad6624pass/4metadata-hygienefail,40remediationpass,79.35%accumulatedcoverage; source e4540364c6a21b66df55eb2959beef4e5eed9a2d committed; eight findings bound;40postbinding checks pass; source and binding 66a5bed3773a8991978fd7df7c27066d5cf0b9dc verified on remote topic with normal hooks.
 - **Summary:** Correct fixed-mode KKT assumptions, multiplier units, projection/work ledgers, moving-boundary compatibility, input memory, counterfactuals, evidence scope and coordinate/contact comparisons. Six successful Flash outputs adjudicated. Eight findings bound to the accepted source;193 prior companion findings preserved,201total;104 source audits and whole-book consistency remain.
-- **Next step:** Verify parent4818 delivery; publish accepted Chapter18 together with accepted Chapter28 in one regular PR after reconciliation.
-
-### DL-#4815 · Lagrangian Mechanics and Counterfactual Reference
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4818 (regular); parent #4814 verified on remote main
-- **Issue:** #4815; epic #4009 / corpus #4021
-- **Branch:** fix/lagrangian-rigor-4815
-- **Paths:** articles/lagrangian-reference.qmd, tests/test_lagrangian_reference_review.py, css/lagrangian-reference.css
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; integration SELF preserves accepted scientific source 13bd1cc29c3249e284cd379fdfb60679cc44f93e;65 affected checks pass; mobile title RED/GREEN and4 final browser cells pass with0 serious/critical axe findings after shared contrast integration.
-- **Summary:** Review eight mechanics decisions spanning energy functions, coordinates, flexible inertia, damping, input levels, constraints, boundary power and counterfactuals. Seven Flash helper outputs adjudicated. Source 13bd1cc29c3249e284cd379fdfb60679cc44f93e committed; eight findings bound and all other routes preserved. Binding 50c169c27d52595de7e5361dff4ae2f83daacbed and accepted source are verified on the remote topic; integration checkpoint91b32cca96a56a14426ea86f987a8445ca60ff4b is verified on remote topic; queued Chapter18 issue#4817 has a committed preparation note and no acceptance credit. There are 105 source audits plus whole-book consistency remaining.
-- **Next step:** Verify protected PR4818 delivery at its final checked head.
+- **Next step:** Parent4818 delivery verified; publish accepted Chapter18 together with Chapter28 in one regular PR after integration checks.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
