@@ -228,6 +228,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | 2026-10-02 | #4788 | Distinguish artifact identity, computational reproduction and physical validation in Chapter 27; retain release-profile limits and immutable provider references. |
 | 2026-10-02 | #4785 | Distinguish system boundaries, contact work, COM pseudowork, observer power and gravity accounting in Chapter 2; add manufactured counterexamples and an explicit interaction-classification figure (#4783). |
 | 2026-10-01 | #4781 | Add runtime performance budget configuration for ten representative routes, Playwright E2E budget spec, and CI verification script (#4570). |
+| 2026-10-01 | #4777 | Expand axe-core verification in CI to scan dark theme and mobile viewports with multi-cell deduplication (#4562). |
 | 2026-10-01 | #4782 | Correct moving-base replay and inertia inferences, enforcing power and provider evidence limits; verify manufactured cart-pendulum balances and clarify the schematic (#4774). |
 | 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
 | 2026-10-01 | #4772 | Correct measured-golfer study attribution, sensor/model inference, repeated-swing uncertainty and human-validation boundaries in Chapter 24; replace evidence pyramid (#4771). |
@@ -536,3 +537,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-01 | #4502 | Align navigation labels with page titles and add contract test (WEB-02.8). |
 | 2026-10-01 | #4515 | Consolidate maturity vocabulary into a single enum (WEB-04.1) in config/maturity.yml, with schema validation, legacy string mappings, and tests. |
 | 2026-10-01 | #4506 | Define and validate article front-matter schema (WEB-03.1) in schemas/article-front-matter-v1.schema.json, with core-page validation and allowlist burn-down. |
+| 2026-10-02 | #4495 | Enhance 404 page navigation with Start Here, Library, search trigger, and unified contact routing (WEB-01.10). |

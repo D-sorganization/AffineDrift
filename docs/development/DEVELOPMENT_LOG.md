@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4495 — Make 404 Page and Empty States Useful
+
+- **State:** in_review
+- **Owner:** antigravity
+- **PR:** #4796 (regular)
+- **Issue:** #4495; epic #4496
+- **Branch:** fix/web-01-10-404-useful-4495
+- **Paths:** 404.qmd, tests/test_404_page.py, SPEC.md
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; pytest tests/test_404_page.py (6 passed); ruff, black, mypy clean.
+- **Summary:** Added prominent links for Start Here (/resources/learning-paths.html), the Library (/books/index.html), search box trigger, top destinations, and verified unified contact email dieterolson@AffineDrift.com matching contact.qmd.
+- **Next step:** Passing CI Standard, squash auto-merge armed.
+
 ### DL-#4789 — Biological Ambiguity and Load Inference
 
 - **State:** in_review
