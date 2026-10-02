@@ -1,3 +1,24 @@
+# 404 Page and Empty States Enhancement — #4495
+
+- **Issue:** #4495 (`[WEB-01.10] Make the 404 Page and Empty States Useful`), epic #4496.
+- **Branch:** `fix/web-01-10-404-useful-4495`, worktree at `c:\Users\diete\Repositories\_worktrees\AffineDrift-4495`.
+- **Status:** Complete, verified, and PR #4796 open with squash auto-merge armed.
+- **Changes:**
+  - `404.qmd`: Updated navigation links to include Start Here (`/resources/learning-paths.html`), the Library (`/books/index.html`), Article Index, key textbooks, and Home.
+  - `404.qmd`: Added interactive search trigger and keyboard shortcut hint (`/`) linking `#quarto-search`.
+  - `404.qmd`: Verified contact reporting email `dieterolson@AffineDrift.com` with link to `pages/contact.html`.
+  - `tests/test_404_page.py`: Added 6 unit tests covering metadata conformance, Start Here link, Library link, search trigger, contact email matching `pages/contact.qmd`, and referential disk integrity of all destination routes.
+  - `SPEC.md`: Added change log row for #4495.
+- **Verification:**
+  - `pytest tests/test_404_page.py` (6 passed in 1.27s).
+  - `ruff check tests/test_404_page.py` passed.
+  - `black --check tests/test_404_page.py` passed.
+  - `mypy tests/test_404_page.py` passed.
+  - `python scripts/check_spec_changelog.py` passed.
+- **Next step:** Passing CI Standard, squash auto-merge armed.
+
+---
+
 # Biological Ambiguity Review Current State — #4789
 
 - Goal active under #4009 / #4021 / #4059. Complete Chapter 25 scientific and publication review accepted; eight findings bind source53023631e01deccb5131b434d715000d6ed70541 across nine exact files. All121prior findings retain their scientific fields and verification commits. Corpus now has114pending, plus whole-book consistency.

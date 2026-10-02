@@ -535,3 +535,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-01 | #4694 | Enforce scientific claim-audit coverage in PR CI e2e-tests when site-facing files are rendered, preventing un-audited routes from passing PR CI and breaking Deploy Website on main. |
 | 2026-10-01 | #4502 | Align navigation labels with page titles and add contract test (WEB-02.8). |
 | 2026-10-01 | #4515 | Consolidate maturity vocabulary into a single enum (WEB-04.1) in config/maturity.yml, with schema validation, legacy string mappings, and tests. |
+| 2026-10-02 | #4495 | Enhance 404 page navigation with Start Here, Library, search trigger, and unified contact routing (WEB-01.10). |
