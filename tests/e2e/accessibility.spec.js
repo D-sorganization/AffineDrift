@@ -88,6 +88,7 @@ async function findContrastFailures(page) {
             if (stop) gradientStops.push(stop);
           }
         }
+        if (gradientStops.length > 0 || color?.a === 1) break;
       }
       const isDark =
         document.documentElement.getAttribute("data-theme") === "dark" ||
