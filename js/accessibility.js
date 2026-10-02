@@ -215,6 +215,22 @@ export function initAriaLabels() {
         }
     }
 
+    // Listing thumbnails without discernible text
+    const thumbnails = document.getElementsByClassName("thumbnail");
+    for (const thumb of thumbnails) {
+        const thumbLinks = thumb.getElementsByTagName("a");
+        for (const link of thumbLinks) {
+            if (!link.textContent.trim() && !link.hasAttribute("aria-label")) {
+                const post = thumb.closest(".quarto-post, .quarto-listing-item");
+                const heading = post?.querySelector(".listing-title, .title, h2, h3");
+                const titleText = heading?.textContent?.trim();
+                if (titleText) {
+                    link.setAttribute("aria-label", titleText);
+                }
+            }
+        }
+    }
+
     // History lists - live regions
     // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
     const uls = document.getElementsByTagName("ul");
