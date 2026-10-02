@@ -1,5 +1,11 @@
 # Current Technical Review Handoff
 
+Chapter13 issue4811 is active in fix/negative-torque-rigor-4811; working checkpoint SELF. Chapter8 regular PR4810 is frozen with protected auto-merge while CI runs. Continue from [the canonical handoff](docs/development/HANDOFF.md). Chapter21 is verified on remote main.
+
+## Preserved Earlier Checkpoint
+
+# Current Technical Review Handoff
+
 Chapter 21 PR #4808 is verified on remote main. Chapter 8 regular PR #4810 is open; source, bindings and parent reconciliation are pushed. Registration checkpoint SELF awaits push and guarded arming; protected delivery remains pending. Continue from [the canonical handoff](docs/development/HANDOFF.md).
 
 ## Preserved Earlier Checkpoint
