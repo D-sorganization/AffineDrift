@@ -1,6 +1,6 @@
 {
   "issue": 4807,
-  "status": "Lead source and bounded publication acceptance complete; source commit, immutable binding and regular PR pending.",
+  "status": "Source accepted and eight findings bound; 48 binding checks pass. Verify remote topic checkpoint and parent delivery before the regular PR.",
   "base_checkpoint": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
   "full_regression": {
     "passed": 6598,
@@ -317,8 +317,27 @@
     "canonical_edits_by_helpers": false
   },
   "backlog": {
-    "source_audits_pending": 109,
-    "credit_pending_source_binding": true,
+    "source_audits_pending": 108,
+    "credit_pending_source_binding": false,
     "whole_book_consistency_pending": true
+  },
+  "source_commit": "9f2327cad675eb2ceb9ba1665d5cd310a7e37ee0",
+  "binding": {
+    "new_findings": 8,
+    "total_findings": 177,
+    "prior_scientific_findings_preserved": 169,
+    "only_corpus_row_changed": "articles/proximal_distal_companion/chapters/ch08_summation_of_speed.qmd"
+  },
+  "delivery_queue": {
+    "runner_utilization_percent": 93,
+    "observed_at": "2026-10-02T12:29:32Z",
+    "active_parent_pr": 4808,
+    "parent_ci_run": 37001380667,
+    "chapter8_pr_created": false,
+    "policy": "Keep one active owned PR while parent CI runs; push accepted chapter checkpoint without opening another competing CI lane."
+  },
+  "binding_validation": {
+    "passed": 48,
+    "seconds": 69.74
   }
 }

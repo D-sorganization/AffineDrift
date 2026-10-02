@@ -23,14 +23,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** Not created; accepted source awaits commit and evidence binding
+- **PR:** Not created; source accepted and bound; one active delivery lane through parent #4808
 - **Issue:** #4807; epic #4009 / corpus #4021 / companion #4059
 - **Branch:** fix/sequence-rigor-4807
 - **Paths:** articles/proximal_distal_companion/chapters/ch08_summation_of_speed.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_sequence_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; baseline 891b38bcf34b967025e7d4d1d733e8ee9c1e888a; working source accepted with six new checks, 6,598 broad passes/two stale-digest failures corrected by review and refresh, 48 affected passes, 79.24% accumulated coverage, 12 publication gates and final print/web review.
-- **Summary:** Distinguish velocity sums, vector peak timing, energy/power and causal claims; correct finite-study interpretation and citation scope; replace uncomputed figure coupling label with a normalized schematic. Four implementation Flash helpers read and adjudicated. Source binding and protected delivery remain pending; no new corpus credit yet.
-- **Next step:** Commit accepted source, bind eight findings, push and open a regular PR after verifying parent delivery state.
+- **Last verified:** 2026-10-02; source 9f2327cad675eb2ceb9ba1665d5cd310a7e37ee0 accepted with six new checks, 6,598 broad passes/two stale-digest failures corrected by review and refresh, 48 affected passes, 79.24% accumulated coverage, 12 publication gates and final print/web review; all 48 post-binding checks pass in 69.74 seconds.
+- **Summary:** Distinguish velocity sums, vector peak timing, energy/power and causal claims; correct finite-study interpretation and citation scope; replace uncomputed figure coupling label with a normalized schematic. Four implementation Flash helpers read and adjudicated. Eight findings bound (177 total), prior 169 preserved; 108 source audits plus whole-book consistency remain. Protected delivery pending.
+- **Next step:** Commit/push the validated binding checkpoint and verify its remote tip; retain one active PR at 93% runner utilization, verify parent #4808 delivery, then publish the regular Chapter 8 PR.
 
 
 ### DL-#4806 · Sensitivity, Identifiability, and Measurement
