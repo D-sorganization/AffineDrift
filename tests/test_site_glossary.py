@@ -19,7 +19,12 @@ from pathlib import Path
 
 import pytest
 
-from src.tools.site_glossary import MINIMUM_TERMS, load_glossary
+from src.tools.site_glossary import (
+    MINIMUM_TERMS,
+    get_glossary_path,
+    load_glossary,
+    validate_glossary_entry,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 GLOSSARY_YAML = ROOT / "data" / "glossary.yml"
@@ -43,24 +48,43 @@ def test_glossary_data_minimum_count_and_schema() -> None:
             r"^[a-z0-9-]+$", key
         ), f"Term key '{key}' must use only lowercase alphanumeric characters and hyphens"
         assert isinstance(entry, dict), f"Entry for '{key}' must be a mapping"
-        assert (
-            "name" in entry and isinstance(entry["name"], str) and entry["name"].strip()
-        ), f"Term '{key}' missing required non-empty 'name'"
-        assert (
-            "plain" in entry and isinstance(entry["plain"], str) and entry["plain"].strip()
-        ), f"Term '{key}' missing required non-empty 'plain' definition"
-        assert (
-            "technical" in entry
-            and isinstance(entry["technical"], str)
-            and entry["technical"].strip()
-        ), f"Term '{key}' missing required non-empty 'technical' definition"
-        assert (
-            "canonical_page" in entry
-            and isinstance(entry["canonical_page"], str)
-            and entry["canonical_page"].strip()
-        ), f"Term '{key}' missing required non-empty 'canonical_page'"
+        validate_glossary_entry(key, entry)
         if "symbols" in entry and entry["symbols"] is not None:
             assert isinstance(entry["symbols"], list), f"Term '{key}' symbols must be a list"
+
+
+def test_glossary_loader_and_validator_error_cases(tmp_path: Path) -> None:
+    """Verify error contracts of load_glossary and validate_glossary_entry."""
+    assert get_glossary_path().exists()
+
+    with pytest.raises(FileNotFoundError, match="Missing glossary data file"):
+        load_glossary(tmp_path / "nonexistent.yml")
+
+    invalid_file = tmp_path / "invalid.yml"
+    invalid_file.write_text("- item1\n- item2\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="must be a mapping"):
+        load_glossary(invalid_file)
+
+    valid_entry = {
+        "name": "Drift",
+        "plain": "Passive motion.",
+        "technical": "Uncontrolled vector field.",
+        "canonical_page": "articles/affine-nature-golf-swing.qmd",
+    }
+    validate_glossary_entry("drift", valid_entry)
+
+    bad_entry_missing = dict(valid_entry)
+    del bad_entry_missing["plain"]
+    with pytest.raises(ValueError, match="missing required field 'plain'"):
+        validate_glossary_entry("drift", bad_entry_missing)
+
+    bad_entry_empty = dict(valid_entry, plain="")
+    with pytest.raises(ValueError, match="missing required field 'plain'"):
+        validate_glossary_entry("drift", bad_entry_empty)
+
+    bad_entry_non_str = dict(valid_entry, name=123)
+    with pytest.raises(ValueError, match="name must be a string"):
+        validate_glossary_entry("drift", bad_entry_non_str)
 
 
 def test_glossary_canonical_pages_resolve() -> None:
