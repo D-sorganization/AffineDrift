@@ -29,8 +29,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** articles/proximal_distal_companion/chapters/ch02_choose_the_system.qmd, tests/test_system_boundary_review.py, scripts/make_proximal_distal_companion_expanded_figures.py, references/proximal-distal-energy.bib
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run has two stale-digest failures; refreshed evidence passes 71 checks; static gates pass.
-- **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Preserve 117 pending sources until complete review.
-- **Next step:** Commit reviewed source, bind findings, and deliver through a regular PR.
+- **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
+- **Next step:** Validate binding, integrate Chapter 17 delivery checkpoint, and open a regular PR.
 
 ### DL-#4774 — Moving-Base Mechanics
 
