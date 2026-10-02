@@ -105,6 +105,7 @@ async function findContrastFailures(page) {
       const directText = [...element.childNodes]
         .filter((node) => node.nodeType === 3)
         .map((node) => node.textContent.trim())
+        .filter(Boolean)
         .join(" ");
       const style = getComputedStyle(element);
       if (
