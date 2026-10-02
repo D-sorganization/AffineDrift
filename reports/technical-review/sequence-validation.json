@@ -1,6 +1,6 @@
 {
   "issue": 4807,
-  "status": "Source accepted and eight findings bound; 48 binding checks pass. Verify remote topic checkpoint and parent delivery before the regular PR.",
+  "status": "Source and binding pushed through normal hooks; remote topic ref verified. Regular Chapter 8 PR waits behind parent #4808 in the one-active-PR delivery queue.",
   "base_checkpoint": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
   "full_regression": {
     "passed": 6598,
@@ -339,5 +339,13 @@
   "binding_validation": {
     "passed": 48,
     "seconds": 69.74
+  },
+  "binding_commit": "3c22ee2d7872f67adf67ceb9af1ef87a0f43a426",
+  "remote_topic_verified_commit": "3c22ee2d7872f67adf67ceb9af1ef87a0f43a426",
+  "publication_checkpoint": "SELF",
+  "initial_push_failure": {
+    "check": "Bandit B310",
+    "path": "Untracked QA sequence-provider-check.py",
+    "resolution": "Replaced generic URL opener with explicit HTTPSConnection to pinned GitHub host, reverified three files, normal push retry passed. No canonical code change or hook bypass."
   }
 }
