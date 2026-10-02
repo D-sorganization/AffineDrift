@@ -29,6 +29,7 @@
 @import url("css/components/status-badge.css");
 @import url("css/components/where-next.css");
 @import url("css/components/page-feedback.css");
+@import url("css/components/quarto-theme.css");
 @import url("css/utilities/spacing.css");
 
 /* Native cross-document view transitions (issue #3334): a free same-origin
@@ -744,9 +745,8 @@ nav .container {
   color: var(--pure-white);
 }
 
-/* Dropdown menus in navbar and page tools */
-:is(#quarto-header, #quarto-code-tools-menu, .quarto-title-block, .dropdown) .dropdown-menu,
-.dropdown-menu {
+/* Dropdown menus in navbar */
+#quarto-header .dropdown-menu {
   background: var(--bg-body);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -755,18 +755,14 @@ nav .container {
   margin-top: 0.5rem;
 }
 
-:is(#quarto-header, #quarto-code-tools-menu, .quarto-title-block, .dropdown) .dropdown-item,
-.dropdown-item,
-#quarto-code-tools-source {
+#quarto-header .dropdown-item {
   color: var(--text-main);
   padding: 0.6rem 1.25rem;
   font-size: var(--fs-small);
   transition: all 0.2s ease;
 }
 
-:is(#quarto-header, #quarto-code-tools-menu, .quarto-title-block, .dropdown) .dropdown-item:hover,
-.dropdown-item:hover,
-#quarto-code-tools-source:hover {
+#quarto-header .dropdown-item:hover {
   background: var(--light-blue);
   color: var(--color-link-hover);
 }
@@ -3077,55 +3073,6 @@ body.quarto-dark .navbar .nav-link {
   color: var(--text-secondary);
 }
 
-/* Quarto dark theme overrides (WEB-09.9 #4787) */
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(#quarto-appendix, #quarto-appendix.default) {
-  background: transparent !important;
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(table, table.table, .page-columns .column-page-left table) {
-  background: transparent !important;
-  color: var(--text-main);
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(th, td) {
-  color: var(--text-main);
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(details > summary, summary) {
-  color: var(--text-secondary);
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.dropdown-menu, #quarto-code-tools-menu .dropdown-menu) {
-  background-color: var(--bg-body) !important;
-  border-color: var(--border-color) !important;
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.dropdown-item, #quarto-code-tools-source, #quarto-code-tools-menu .dropdown-item) {
-  color: var(--text-main) !important;
-  background-color: transparent !important;
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.dropdown-item:hover, .dropdown-item:focus, #quarto-code-tools-source:hover, #quarto-code-tools-source:focus, #quarto-code-tools-menu .dropdown-item:hover, #quarto-code-tools-menu .dropdown-item:focus) {
-  background-color: var(--bg-tertiary) !important;
-  color: var(--color-accent) !important;
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(pre, pre code, .code-wrapper pre, .code-wrapper code, .modal pre, .modal pre code) {
-  background-color: var(--code-bg) !important;
-  color: var(--code-text) !important;
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.listing-title, .listing-title a, .no-anchor.listing-title > .no-external, .quarto-listing-table th, .quarto-listing-table td) {
-  color: var(--text-main) !important;
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.listing-title a:hover, .listing-title a:focus, .no-anchor.listing-title > .no-external:hover, .no-anchor.listing-title > .no-external:focus) {
-  color: var(--color-accent) !important;
-}
-
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.listing-description, .listing-author, .listing-date) {
-  color: var(--text-muted) !important;
-}
 
 
 /* Ensure :focus-visible is visible (no outline: none) */
