@@ -21,29 +21,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4831 · Radar Observability and Spin-Axis Review
 
-- **State:** proposed
-- **Owner:** unassigned; codex prepared the inventory
+- **State:** in_review
+- **Owner:** codex
 - **PR:** not created
 - **Issue:** #4831; epic #4009 / corpus #4021
-- **Branch:** not created
-- **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex
+- **Branch:** fix/radar-rigor-4831
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex, articles/Launch_Monitor_Technology_Review/references.bib, tests/test_radar_systems_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 source read at 542f03e0b6f095f34cb20ddcfed54f6c1dcf523b; four Flash outputs adjudicated; K-LD7 specification pages visually inspected; primary device/patent reading limits and manufactured arithmetic recorded; no acceptance or implementation lease.
-- **Summary:** Queued full radar chapter review covers phase/harmonic ambiguities, axis identifiability, a patent ratio discrepancy, device/ball modes and model-dependent face inference. No source edit or new corpus credit; current PR delivery has priority.
-- **Next step:** Check issue #4831 ownership after current PR delivery frees implementation capacity.
+- **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted SELF; all 89 post-acceptance checks passed.
+- **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
+- **Next step:** Run post-acceptance evidence checks; commit/push and open a regular PR; verify predecessor delivery.
 
 ### DL-#4825 · Ideomotor Prediction and Action Review
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4829 (regular); predecessor delivered; ancestry reconciled, integration validation pending
+- **PR:** #4829 (regular); pushed at ca4a23487; CI 37075895860 in progress; guarded merge armed
 - **Issue:** #4825; epic #4009 / corpus #4021
 - **Branch:** fix/ideomotor-rigor-4825
 - **Paths:** articles/ideomotor-theory-and-predictive-brain.qmd, src/affine_control/ideomotor_demo.py, tests/test_ideomotor_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 baseline 4cf785eccbfff52e9372b1f49a5d040d517e5f33; 19 RED/GREEN cases; full regression 6655 passed/29 skipped/187 deselected/79.36% coverage; static and publication checks pass; accepted source f488f45f3254fa40f98bedceb5edaa11280bb70c; six findings bound; 61 post-binding checks pass; binding 8f42bde9155478397dc13910362a6e98555a1ec7 verified on remote; registration SELF.
 - **Summary:** Full article draft separates prediction/task errors, dynamics/actuation, prior/likelihood precision, free-energy identity and action selection. Repaired zero-action Euler example with a bounded constant-torque search and typed nominal DOP853 predictor. Seven Flash outputs adjudicated. Complete article and bounded publication accepted; six findings bound; primary-reading limits recorded. 101 source audits and whole-book consistency remain.
-- **Next step:** Validate and push the reconciled branch, remove temporary PR #4829 hold, then verify its CI and delivery.
+- **Next step:** Verify CI and actual remote-main delivery of ca4a23487; integration 6660 tests and 61 evidence checks already pass, normal push hooks passed.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
