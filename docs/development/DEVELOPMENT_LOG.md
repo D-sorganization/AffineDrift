@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/model-ladder-rigor-4799
 - **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; source 8e4660f58b6d427c6f3bd16e26890f033973f86e; binding SELF; 6555 full regression passes; 48 final affected passes; 12 publication gates; 232-page PDF/HTML accepted with inherited dark-theme contrast limitation recorded.
+- **Last verified:** 2026-10-02; source 8e4660f58b6d427c6f3bd16e26890f033973f86e; binding 4daa2b58f9c8738d2f7ec66d30478259118d2d38; 6555 full regression passes; 48 final affected passes; 12 publication gates; 232-page PDF/HTML accepted with inherited dark-theme contrast limitation recorded.
 - **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** Push bound checkpoint and open regular PR; verify parent #4800 delivery before child merge.
+- **Next step:** Parent #4800 all-route accessibility CI remains pending; verify protected delivery before opening child PR under 93% runner utilization. Source and binding are pushed.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
