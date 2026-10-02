@@ -1,3 +1,15 @@
+# Technical Review Current State
+
+- Epic #4009 / corpus #4021 remains active: 118 full-source audits and whole-book consistency remain.
+- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health`, branch `fix/measured-golfers-rigor-4771`.
+- Regular PR #4772: reviewed source `f565c72885e73d9e463debc336322691f46ea11a`, binding `cb9e634d5`, and nine new findings remain unchanged. Integration `SELF` reconciles the delivered predecessor and refreshes turnover.
+- PR #4770 merged as `099dc2cbfcf506941b3b0d306b43b7a1ccc5e767`; final-head CI passed and all 23 changed files match remote main. Its lease and presence are released.
+- Next: pass final-head CI and the protected merge guard for PR #4772, then verify its delivered blobs. Issue #4771 lease expires October 2 at 00:30 UTC. PR #4772 is not yet merged.
+- Six older owned review entries are reconciled to their verified main carriers; receipts and detailed continuation are in the [canonical handoff](docs/development/HANDOFF.md) and [development log](docs/development/DEVELOPMENT_LOG.md).
+- Preserve peer worktree `23ee826` and QA artifacts. No draft PRs, direct-main/force/admin pushes or hook bypass. Never change tracked files while push hooks run.
+
+## Earlier Records Preserved From the Parent Branch
+
 # Speed, Energy, and Power Review — #4769
 
 - The goal remains active under epic #4009 and corpus #4021. Chapter 5 is reviewed and corrected; 119 full-source audits and whole-book consistency remain.
