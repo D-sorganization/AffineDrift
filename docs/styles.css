@@ -3563,6 +3563,87 @@ code span.va {
   margin-bottom: 0;
 }
 /* ===== end css/components/summary-takeaways.css ===== */
+/* ===== begin css/components/caveats-block.css ===== */
+/* Caveats and Scope Boundary Component (WEB-03.4 #4509)
+   Standard "What This Shows / What It Does Not Show" block. */
+
+.caveats-card,
+.what-this-shows-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin: 1.5rem 0 2rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-neutral-200);
+  border-left: 4px solid var(--color-warning, #d97706);
+  border-radius: 6px;
+  color: var(--text-primary);
+}
+
+.caveats-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.caveats-section {
+  margin: 0;
+}
+
+.caveats-subtitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.caveats-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.caveats-list li {
+  margin-bottom: 0.35rem;
+}
+
+.caveats-list li:last-child {
+  margin-bottom: 0;
+}
+
+.caveats-gate-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Dark mode adjustment */
+[data-theme="dark"] .caveats-card,
+[data-theme="dark"] .what-this-shows-card {
+  background: var(--bg-secondary);
+  border-color: var(--color-neutral-700);
+  border-left-color: var(--color-warning, #f59e0b);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .caveats-card,
+  :root:not([data-theme="light"]) .what-this-shows-card {
+    background: var(--bg-secondary);
+    border-color: var(--color-neutral-700);
+    border-left-color: var(--color-warning, #f59e0b);
+  }
+}
+/* ===== end css/components/caveats-block.css ===== */
 /* ===== begin css/components/revision-history.css ===== */
 /* Revision History Component (WEB-07.3 #4545)
    Section rendering per-article change history from front-matter `changes`. */
