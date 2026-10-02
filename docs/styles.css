@@ -2401,6 +2401,9 @@ Dark mode (separate concern):
 .site-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
   gap: 0.5rem;
   padding: 0.6rem 1.1rem;
   background: var(--color-primary-main);
@@ -2596,7 +2599,10 @@ Dark mode (separate concern):
 }
 
 .entry-list__title {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
   font-family: var(--font-display, "Playfair Display"), Georgia, serif;
   font-size: 1.15rem;
   font-weight: 600;
@@ -2651,6 +2657,9 @@ Dark mode (separate concern):
 }
 
 .provenance-note a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--color-link);
 }
 /* ===== end css/components/provenance-note.css ===== */
@@ -4580,6 +4589,12 @@ body.quarto-dark .status-pill--planned,
   background-color: var(--bg-tertiary) !important;
 }
 
+/* Touch-target minimum dimensions (WCAG 2.5.5) */
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 /* ===== end css/components/quarto-theme.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
