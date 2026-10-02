@@ -52,3 +52,17 @@
 - **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run had two stale-digest failures; 71 follow-up checks pass; CI SVG CRLF mismatch corrected to bound Git LF bytes; 25 evidence checks pass.
 - **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
 - **Next step:** None; PR4785 delivered at0bcc9f8663ea10d3c2a846cb7443472bec69cd3f, CI36956637268 and22changed Git blobs verified.
+
+### DL-#4771 — Measured Golfer Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4772 (regular, attached)
+- **Issue:** #4771; epic #4009 / corpus #4021
+- **Branch:** fix/measured-golfers-rigor-4771
+- **Paths:** articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_measured_golfers_review.py
+- **Started:** 2026-10-01
+- **Why:** Wrong systematic-review attribution and overbroad instrument, EMG, statistical and validation claims.
+- **Change:** Full Chapter 24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Nine findings bind eight exact Git blobs at f565c72885e73d9e463debc336322691f46ea11a; 87 historical findings remain intact. Chapter audit credited; 118 corpus sources plus whole-book consistency remain.
+- **Last verified:** 2026-10-02; PR #4772 merged a4cf9b56c; final e58 CI 36947184666 passed; ancestry and all 22 reviewed/delivered Git blobs match.
+- **Next step:** None; delivered and verified on remote main.

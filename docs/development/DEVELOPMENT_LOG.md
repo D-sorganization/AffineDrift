@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4791 — Constraint Reactions and Identifiability
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** Pending regular PR
+- **Issue:** #4791; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/constraint-reaction-rigor-4791
+- **Paths:** articles/proximal_distal_companion/chapters/ch06_constraints_push_back.qmd, tests/test_constraint_reaction_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; 6506 full-regression passes, 31 final affected checks, 12 publication gates, 653 titles and 875 Python quality checks; accepted 229-page PDF/HTML, four browser profiles, 68 math nodes and mobile zoom.
+- **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Full chapter accepted; source binding pending;114 corpus audits remain.
+- **Next step:** Commit the accepted source checkpoint.
+
 ### DL-#4789 — Biological Ambiguity and Load Inference
 
 - **State:** in_review
@@ -44,20 +57,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Eight findings bind028720c0a5e7ec6e298cfb4615aa98c9cf6e8c31.
 - **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 115 audits remain.
 - **Next step:** None for Chapter27: PR4788 merged8bead8523, CI36961840257 passed, all18changed blobs verified; lease/presence released.
-
-### DL-#4771 — Measured Golfer Evidence
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** #4772 (regular, attached)
-- **Issue:** #4771; epic #4009 / corpus #4021
-- **Branch:** fix/measured-golfers-rigor-4771
-- **Paths:** articles/proximal_distal_companion/chapters/ch24_measured_golfers.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_measured_golfers_review.py
-- **Started:** 2026-10-01
-- **Why:** Wrong systematic-review attribution and overbroad instrument, EMG, statistical and validation claims.
-- **Change:** Full Chapter 24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Nine findings bind eight exact Git blobs at f565c72885e73d9e463debc336322691f46ea11a; 87 historical findings remain intact. Chapter audit credited; 118 corpus sources plus whole-book consistency remain.
-- **Last verified:** 2026-10-02; PR #4772 merged a4cf9b56c; final e58 CI 36947184666 passed; ancestry and all 22 reviewed/delivered Git blobs match.
-- **Next step:** None; delivered and verified on remote main.
 
 ### DL-#4763 · Geometry Technical Review
 

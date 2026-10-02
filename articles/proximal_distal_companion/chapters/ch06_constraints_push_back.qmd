@@ -2,30 +2,45 @@
 
 ## A Concrete Picture
 
-Swing a key on a cord. Your hand does not continuously command the key's inward
-acceleration. The cord supplies tension because it prevents the key from flying
-away. Cut the cord and the key leaves along its instantaneous tangent. The
-constraint is not a passive absence of freedom; it is an interaction that pushes
-or pulls as needed to keep the allowed geometry.
+A key on a taut cord cannot follow an arbitrary path relative to your hand.
+The cord pulls along its length and changes the key's acceleration. It cannot
+push: if the motion would require compression, the cord goes slack and the taut
+constraint stops applying. Cut it without an impulse and the key retains its
+instantaneous velocity, tangent to the former circle for a stationary hand.
+Gravity then bends its subsequent trajectory. The tangent is an initial
+direction, not a promise of straight-line flight.
 
-Human joints, two hands on one grip, and feet on the ground all impose versions
-of this idea. A wrist reaction can be large even when commanded wrist torque is
-zero. Two arms can develop internal forces that cancel in the club's net force.
-The ground can exert a reaction determined by the whole body's state and
-constraints. “No motor command here” does not mean “no force here.”
+A rigid pin can transmit forces in either direction; a cord cannot. A shoe can
+push against the ground but normally cannot pull the ground upward, and its
+resistance to slipping is limited by contact conditions. These distinctions
+matter before solving any equations. A mathematically enforceable motion need
+not be physically feasible for the chosen connection.
 
-![A Constraint Force Holds a Moving Mass to Its Allowed Path While an Unconstrained Counterfactual Leaves Tangentially.](figures/proximal_distal_companion/fig_companion_constraint_reaction.svg){#fig-lay-constraint-reaction width=95% fig-alt="A mass moving on a circular path is held inward by a tension arrow, while a dashed unconstrained path continues tangentially after the connection is removed."}
+The shared lesson is useful in the golf swing: **zero selected motor torque does
+not imply zero connection force**. A wrist can transmit force while its modeled
+torque command is zero. Two separated hand forces can oppose one another yet
+produce a club moment. The ground reaction depends on the complete constrained
+motion, not on a single local command. None of those observations identifies
+which human muscles are active.
+
+![An Ideal Circular Guide Changes Acceleration; the Tangent Marks Release Velocity, Not a Gravity-Affected Future Trajectory.](figures/proximal_distal_companion/fig_companion_constraint_reaction.svg){#fig-lay-constraint-reaction width=78% fig-pos="H" fig-alt="A schematic circular guide with an inward reaction and a perpendicular instantaneous velocity. The dotted tangent indicates the velocity direction at release; a cord can supply the inward force only while its tension is nonnegative."}
 
 ## How the Mechanism Works
 
-A holonomic constraint can be written $\boldsymbol\phi(\mathbf q)=0$. It says
-which configurations are allowed. Differentiating gives the velocity condition
-$\mathbf J\dot{\mathbf q}=0$, where $\mathbf J$ is the constraint Jacobian.
-Differentiating again produces an acceleration condition involving
-$\mathbf J\ddot{\mathbf q}$ and a velocity term. The constraint force must be
-whatever value makes the equations of motion and this allowed acceleration agree.
+### Geometry and Dynamics Must Agree
 
-One common system is
+For a smooth, time-independent holonomic constraint, write
+$\boldsymbol\phi(\mathbf q)=0$. Here $\mathbf q$ contains configuration
+coordinates, $\mathbf J=\partial\boldsymbol\phi/\partial\mathbf q$ maps their
+rates into constraint rates, and dots mean time derivatives along the motion.
+The compatible velocity and acceleration satisfy
+$\mathbf J\dot{\mathbf q}=0$ and
+$\mathbf J\ddot{\mathbf q}+\dot{\mathbf J}\dot{\mathbf q}=0$.
+The second term is essential: a key moving around a circle has inward
+acceleration even at constant speed.
+
+For the coordinate convention in which generalized velocity is
+$\dot{\mathbf q}$, one common simultaneous solve is
 
 $$
 \begin{bmatrix}
@@ -43,217 +58,309 @@ $$
 \end{bmatrix}.
 $$
 
-$\boldsymbol\lambda$ contains constraint reactions. They are solved together
-with acceleration, not pasted on afterward. Change configuration, velocity, or
-control and the required reactions change.
+$\mathbf M$ is the inertia matrix; $\mathbf Q$ contains declared applied
+generalized loads, including controls; $\mathbf h$ contains the remaining
+bias terms under the chosen gravity convention. The generalized constraint
+load is $\mathbf Q_c=\mathbf J^{\mathsf T}\boldsymbol\lambda$.
+A multiplier is not automatically a Cartesian force in newtons: its meaning
+and units depend on how the constraint equation is defined and scaled.
+In formulations using generalized speeds $\mathbf v$ with
+$\dot{\mathbf q}=\mathbf N(\mathbf q)\mathbf v$, the corresponding velocity
+Jacobian and dynamics must be used consistently. Here $\mathbf N$ maps
+generalized speeds into coordinate rates.
 
-### Zero Torque Does Not Mean Zero Reaction
+Positive-definite $\mathbf M$ and independent rows of $\mathbf J$ make this
+fixed-state bilateral system nonsingular. It requires compatible initial
+position and velocity. Integrating only the acceleration equation can still
+accumulate position or velocity drift; numerical projection or stabilization
+must be audited separately from physical forces and work. These distinctions
+follow the [multibody formulation](https://underactuated.mit.edu/multibody.html)
+and are developed further in the book's forward-model discussion.
 
-Set one selected control torque to zero at a fixed moving state. Gravity remains.
-Momentum remains. Other actuators remain. Most importantly, constraints remain.
-The wrist joint must still keep arm and club connected, so it transmits force.
-The resulting **zero-torque counterfactual force** is a model-defined answer to a
-narrow question: what reaction does this model require now if that selected
-torque is zero while the state is held fixed?
+The solve is valid within its declared contact mode. A solution demanding
+negative cord tension, tensile ground contact, or excessive sticking friction
+cannot be rescued by calling its multiplier a reaction. The mode or model must
+change. Impacts additionally require an impulse/contact treatment; this smooth
+acceleration equation is not an impact law.
 
-It is not “the passive force in the human wrist.” It depends on which control was
-removed, which terms remain, and how the joint is modeled. Yet it reveals an
-important mechanism: interaction forces can arise from linked motion itself and
-can contribute substantially to the club's acceleration or hand-path work.
+### A Circle Checks the Signs
 
-### Ideal Constraints Can Carry Force Without Work
+At the top of a one-metre circle, a two-kilogram key has required vertical
+acceleration $-v^2/(1\,\mathrm m)$, with upward positive. Use terrestrial
+gravity $g=9.81\,\mathrm{m\,s^{-2}}$ and let $\lambda$ denote the guide's
+upward reaction in newtons. Newton's law gives
+$\lambda=mg-mv^2/(1\,\mathrm m)$.
+At $v=1\,\mathrm{m\,s^{-1}}$, the required reaction is $+17.62\,\mathrm N$:
+an enclosing bilateral guide could push upward, but a cord from the centre
+could not. At $v=4\,\mathrm{m\,s^{-1}}$, it is $-12.38\,\mathrm N$, so
+the required inward tension is feasible in this idealized example.
 
-An ideal constraint force is often perpendicular to the allowed virtual motion,
-so it does no work on the complete constrained system. That does not make it
-unimportant. A rail pushes a train sideways around a curve. The normal force
-changes momentum direction while doing little work. At a subsystem boundary,
-the same interaction can have nonzero power on one part and opposite power on
-another.
+This is a manufactured sign-and-feasibility check, not a golfer parameter
+estimate. It shows why solving an equality and checking the permitted force
+direction are distinct operations.
 
-Real biological contacts are not perfectly rigid or frictionless. Grip
-compliance, joint deformation, soft tissue, and shaft flex permit relative motion
-and energy storage. The ideal constraint is a reference case that separates
-geometric enforcement from compliance; it is not a claim that the interface has
-infinite stiffness.
+### Zero Virtual Work Is Not Always Zero Actual Work
 
-### Constraints Create Hidden Internal Modes
+An ideal constraint is defined through virtual work: its generalized load
+pairs to zero with every allowed virtual displacement at a fixed instant.
+That is a force--displacement pairing, not necessarily Euclidean
+perpendicularity in a mixed set of angular and translational coordinates.
+For stationary ideal constraints, the actual compatible velocity is also in
+the allowed tangent space, giving zero total constraint power.
 
-With two hands attached to one club, more contact-force components may exist than
-the club's net wrench can identify. Add equal and opposite forces to the two
-hands and the resultant can remain unchanged. That internal squeeze can alter
-joint loading and stability without appearing in club motion. Closed-chain
-inverse dynamics therefore cannot uniquely recover individual hand forces unless
-extra measurements or allocation rules are supplied.
+A prescribed moving support changes the result. If
+$\boldsymbol\phi(\mathbf q,t)=0$, then
+$\mathbf J\dot{\mathbf q}+\boldsymbol\phi_t=0$, and therefore
 
-The same issue appears at the feet. A net ground-reaction wrench may not uniquely
-identify left and right foot forces or pressure distributions. A force plate per
-foot, pressure insoles, and careful calibration reduce ambiguity, but model
-assumptions remain.
+$$
+P_c=\mathbf Q_c^{\mathsf T}\dot{\mathbf q}
+=\boldsymbol\lambda^{\mathsf T}\mathbf J\dot{\mathbf q}
+=-\boldsymbol\lambda^{\mathsf T}\boldsymbol\phi_t.
+$$
 
-### Reaction Forces Are Not Free Energy
+This can be nonzero even for an ideal constraint. The support's drive supplies
+or absorbs that power. Here $\boldsymbol\phi_t$ is the partial time derivative
+at fixed configuration. The acceleration condition must also retain the full
+time derivative of the moving-constraint velocity condition; the autonomous
+formula above cannot simply be reused with its explicit-time terms omitted.
 
-Constraint reactions can accelerate one coordinate and oppose another. This can
-look like energy creation if only one segment is inspected. The whole-system
-work-energy balance restores perspective. The reaction redistributes momentum
-and energy under the constraint; active work, gravity, and stored energy still
-fund the ledger.
+An existing manufactured example makes the accounting concrete. A two-kilogram
+mass follows the prescribed guide $x(t)=\alpha t^2$, with
+$\alpha=1\,\mathrm{m\,s^{-2}}$. At one second, $v=2\,\mathrm{m\,s^{-1}}$
+and $a=2\,\mathrm{m\,s^{-2}}$. A separate applied force of $3\,\mathrm N$
+leaves a $1\,\mathrm N$ guide reaction. Their powers are $6\,\mathrm W$
+and $2\,\mathrm W$, summing to the $8\,\mathrm W$ kinetic-energy rate.
+The moving guide's work must appear in the selected system's ledger.
 
-This is particularly important for the phrase “interaction forces increase
-transfer.” They may increase club acceleration relative to a counterfactual by
-redirecting momentum or mediating power from proximal actuation. They do not
-manufacture energy. The scientific question is which state and geometry make
-their contribution favorable, for how long, and at what internal cost.
+This is the same boundary issue encountered with a prescribed torso or hand
+path. If the support is outside the model, its reaction power is external.
+If its driven body is included, account for that body's actuator, storage,
+and other interactions instead of treating the imposed motion as free energy.
 
-**Model Result:** In the double-pendulum decomposition, zero selected wrist torque
-leaves a substantial wrist reaction generated by gravity, velocity terms,
-proximal actuation, and the connection. Pointwise and forward tests quantify
-where its contribution persists.
+### Zero Total Constraint Power Can Hide Transfer Between Bodies
 
-**Human Evidence:** Joint reactions and individual hand forces are difficult to
-measure directly. Instrumented grips can constrain the two-hand problem, while
-motion and external-force data support inverse dynamics with stated uncertainty
-[@koike2020; @koike2016instrumented].
+Now consider a passive ideal pin joining two bodies. At their common point,
+compatible velocities and equal-and-opposite connection forces give opposite
+one-sided powers. The sum is zero, but either body's contribution can be large.
+A powered wagon can pull an unpowered wagon through such a connection, raising
+the latter's kinetic energy without a motor on it.
 
-**Hypothesis:** The late downswing may exploit constraint and inertial reactions
-so the club receives favorable acceleration even while a direct distal moment
-is small or opposing.
+For a connection that also transmits a couple, include the moment--angular-
+velocity pairing. Total cancellation requires the corresponding compatible
+relative motion; force cancellation by itself is insufficient. Slip,
+deformation, interface inertia, or actuation changes the ledger. An ideal
+rigid constraint has no elastic storage state. A compliant element replacing
+it may store strain energy, while damping dissipates energy.
 
-### What a Constraint Actually Does
+This explains how a wrist reaction can contribute to club power without
+creating energy for the complete chain. A rigid foot held stationary against
+rigid ground has zero contact-wrench power because its contact twist vanishes,
+while the support still enables internal actuators to accelerate the golfer
+and club. The contact conditions and system boundary must be stated before
+either claim is applied.
 
-A constraint removes a motion that would otherwise be possible. A rigid pin
-keeps two points together while allowing rotation. An ideal no-slip contact
-keeps a foot point stationary relative to the ground. A bilateral grip model
-keeps specified hand and handle frames related. The equations must generate
-reaction forces large enough to satisfy those conditions while all masses,
-applied forces, and velocities evolve.
+### Three Different Questions About Reaction Uniqueness
 
-Those reactions are not corrections added after the motion. They are part of
-the simultaneous solution. Accelerations and constraint multipliers are solved
-together. Reaction at one joint therefore depends on applied torque elsewhere,
-gravity, configuration, velocity, inertia, and every other active constraint.
-This dependence is the mechanical foundation for interaction-force transfer.
+**A forward model with known inputs.** Given its complete state, applied loads,
+inertia, and independent bilateral constraints, the nonsingular system above
+determines acceleration and multipliers uniquely. Having two hands or a closed
+loop does not, by itself, make that solve indeterminate. The pinned provider's
+planar two-hand model has seven coordinates and four independent scalar
+point-coincidence constraints; it rejects rank loss rather than silently
+choosing a different allocation.
 
-### A Wagon-and-Hinge Example
+**A redundant description.** If rows of $\mathbf J$ repeat the same restriction,
+different multipliers can produce the same generalized load. For example, with
+rows $(1,0)$ and $(2,0)$, multipliers $(-2,0)$ and $(-0.4,-0.8)$ both give
+$\mathbf J^{\mathsf T}\boldsymbol\lambda=(-2,0)$.
+The latter has smaller Euclidean multiplier norm. Rescaling the second
+equation changes the minimum-norm numbers again without changing the physical
+restriction. For positive-definite inertia and compatible redundant
+acceleration equations, acceleration can remain unique while multipliers are
+not. Inconsistent equations instead have no exact solution. A pseudoinverse
+does not turn an inconsistent residual into physical evidence.
 
-Imagine a light wagon connected by a hinge to a heavier powered wagon. Accelerate
-the powered wagon. The hinge pulls on the light wagon even though it has no
-motor. That force can increase its kinetic energy because the attachment point
-moves along the force direction. If the hinge instead forces a curved path, part
-of the reaction may redirect velocity with little direct work. The light wagon's
-motion is still caused in part by the connection.
+**Inference from incomplete observations.** Measuring the club's resultant
+wrench is a different problem. It supplies fewer conditions than a detailed
+description of two hand-contact wrenches, and the required biological inputs
+are usually unknown. A complete model can provide additional equations or
+constitutive assumptions; sensors can provide additional observations.
+Identifiability then depends on what those additions actually determine.
+Neither a solver's preferred allocation nor a club trajectory alone measures
+muscle recruitment. Chapter 25 follows this inference problem inward from
+hand loads to joint demand and musculotendon forces.
 
-Now brake the light wagon. The hinge reaction changes and affects the powered
-wagon. “Proximal causes distal” is therefore a useful phase description, not a
-one-way causal law. Linked dynamics is reciprocal. Distal speed often rises late
-because of evolving state and control, not because forces pass through a valve
-in only one direction.
+### Opposing Forces Do Not Necessarily Cancel the Wrench
 
-### Radial and Tangential Jobs
+Let hand-force increments be $+\mathbf f$ and $-\mathbf f$ at fixed club
+points $\mathbf r_L$ and $\mathbf r_R$. Their net-force change is zero, but
+their moment change about the same origin is
 
-In a planar arm--club model, wrist reaction can be resolved along and across the
-club. The radial component helps enforce connection and supplies inward
-acceleration for curved motion. The tangential component more directly changes
-relative angular motion. Yet their labels rotate with the club, and a radial
-force at the wrist can contribute to club-center translation and system-level
-work. It is safer to calculate power and generalized acceleration than infer
-function from component names.
+$$
+\Delta\mathbf M=(\mathbf r_L-\mathbf r_R)\times\mathbf f.
+$$
 
-During early downswing, rapid arm motion can produce a reaction that carries the
-club while relative release remains limited. Later, changed geometry can project
-reactions more strongly into club rotation. A direct wrist command may
-supplement, oppose, or reshape that interaction. The model separates these terms
-at fixed state, then tests their persistence forward.
+For points $0.2\,\mathrm m$ apart along the club's local $x$ axis, opposite
+$1\,\mathrm N$ transverse forces produce a $0.2\,\mathrm{N\,m}$ couple.
+Opposite axial increments along the separation vector instead give zero
+complete-wrench change. Contact couples, if permitted, must also be included when testing a
+wrench-neutral allocation.
 
-### Pointwise Removal Versus Forward Removal
+Such an algebraic load change need not be feasible under friction, strength,
+joint, or constitutive constraints. Nor does zero resultant wrench guarantee
+zero deformation or identical tissue demand. It leaves the rigid club's
+instantaneous Newton--Euler load unchanged under the stated geometry and other
+loads; it does not by itself establish stability or a beneficial squeeze.
+Two-foot load inference has analogous limits. Separate six-axis force plates
+can add bilateral wrench information. Ordinary pressure-only insoles measure
+normal pressure; their shear and full-wrench estimates require additional
+information or modeling.
 
-For a pointwise zero-torque counterfactual, copy one state, set the selected
-torque to zero, and resolve acceleration and reactions. This answers “what is
-this input contributing now under these equations?” It does not say what a
-person would do after losing the input and does not allow state to change before
-comparison.
+### Radial Force, Moment, and Power Ask Different Questions
 
-For a forward killswitch, both trajectories begin at the same state but one
-input is removed over an interval. They then occupy different states, so later
-differences include direct removal and nonlinear consequences of divergence.
-This is closer to causal intervention within the model but depends on the chosen
-continuation of all other controls. Agreement between local and forward stories
-is stronger than either alone.
+For a straight rigid club, a wrist force directed along the line from wrist to
+club centre of mass has zero moment about that centre. A transverse component
+has a lever arm and contributes to the rotational balance. The complete
+acceleration still depends on translation, other loads, any applied couple,
+and the connected bodies. A component's name does not isolate a causal driver.
 
-### When Reactions Become Ambiguous
+Force power uses the force's application-point velocity. A force radial to
+the club can therefore perform hand-point work when that point moves along it.
+By contrast, the proximal centripetal term in the provider's fixed-hub planar
+decomposition is radial to the *arm* and perpendicular to the wrist velocity,
+so that particular term has zero wrist-force power. Those two uses of
+"radial" are not interchangeable. The signed dot product resolves the issue.
 
-If several contacts enforce the same net restriction, individual reactions may
-not be unique. Two hands can share a net force in infinitely many ways; two feet
-can share a ground wrench in many ways. A solver can choose a minimum-norm
-allocation, but that is a convention rather than a measurement. The null space
-should be reported or extra constitutive rules and sensors introduced.
+### Remove an Input Without Counting the Drift Twice
 
-Compliance changes the picture too. Real grip and shaft deformation turn an
-exact geometric constraint into a high-stiffness force law with state. That may
-smooth reactions, introduce delay, and store energy. A mechanism that survives
-both rigid and compliant representations is more credible than one existing
-only because an ideal constraint is infinitely stiff.
+A pointwise counterfactual copies the full state and time, removes specified
+commands, and solves again with the other declared loads and constraints
+retained. The resulting zero-command reaction is not a force-free wrist, a
+measurement of passive tissue, or a statement about human effort.
 
-### What Would Refute the Transfer Claim
+For a fixed smooth contact mode and dynamics affine in two declared inputs
+(proximal $P$ and distal $D$),
+let $\mathbf y_{PD}$ denote the response with both inputs, $\mathbf y_P$ and
+$\mathbf y_D$ the respective single-input cases, and $\mathbf y_0$ the
+zero-input case. The response can include acceleration and reactions. Then
 
-The claim weakens if removing proximal drive at matched state produces no
-meaningful change in distal reaction or acceleration; reversing geometry does
-not reverse the predicted projection; work-energy closure fails; or the effect
-vanishes under finer integration and an independent solver. In human data,
-predicted reaction direction and timing must agree with synchronized hand
-wrenches and motion within uncertainty. Calling the reaction “passive” does not
-lower that evidentiary standard.
+$$
+\mathbf y_{PD}
+=\mathbf y_0+(\mathbf y_P-\mathbf y_0)+(\mathbf y_D-\mathbf y_0)
+=\mathbf y_P+\mathbf y_D-\mathbf y_0.
+$$
 
-### Reader Lab: Separate Motor and Connection
+Simply adding the two single-input runs counts shared gravity, velocity,
+external-load, and constraint-bias effects twice. For endpoint position
+$\mathbf x(\mathbf q)$, the kinematic Jacobian
+$\mathbf J_x=\partial\mathbf x/\partial\mathbf q$ gives
+$\mathbf a_x=\mathbf J_x\ddot{\mathbf q}+\dot{\mathbf J}_x\dot{\mathbf q}$.
+That changing-Jacobian contribution belongs in the fixed-state baseline too.
+The identity does not generally survive a contact-mode
+change, a nonlinear input map, or comparison of different states.
 
-Run a two-link model from one copied state under four conditions: all inputs;
-proximal input only; distal input only; and neither input. At the copied instant,
-record direct generalized accelerations, constraint reactions, and endpoint
-acceleration. Over a short forward window, record power, work, and trajectory.
-The proximal-only branch should make visible how the connection moves the distal
-link without an explicit distal motor.
+A forward killswitch begins from the same state but removes a command over an
+interval. The trajectories then diverge, and later differences include that
+changed history. Retaining an open-loop command history is different from
+retaining a feedback policy whose outputs change with the state. Report the
+chosen continuation.
 
-Now alter link angle while holding masses and instantaneous inputs. The reaction
-and its distal projection should change. Reverse a coordinate sign and transform
-all related quantities; physical endpoint motion and power should not change.
-Replace the ideal joint with a stiff compliant element and test convergence as
-stiffness rises. These operations distinguish a real coupling effect from one
-created by notation or constraint implementation.
+### Compliance Is a Model With Its Own Dynamics
 
-The exercise also demonstrates cancellation. A direct distal input may oppose
-the proximal-generated reaction at one state. Total acceleration can be smaller
-than either component. That is why components are not percentages and why a
-negative contribution can still be part of a later-beneficial schedule.
+A force--extension law stores strain energy; a static stiffness value is not a
+time delay. Inertia, damping, relaxation, activation, and wave propagation can
+introduce timescales in a more complete model. Specify which mechanism is
+present instead of attributing all timing to compliance.
 
-### The Everyday Meaning of Passive
+Making a penalty spring stiffer also creates faster dynamics. For a
+one-kilogram undamped mass with initial extension $F_0/k$ and zero velocity,
+where $F_0=1\,\mathrm N$, the extension is
+$\delta(t)=(F_0/k)\cos(\sqrt{k/m}\,t)$.
+Its amplitude and initial stored energy $F_0^2/(2k)$ tend to zero as $k$
+increases, yet the spring-force amplitude remains $1\,\mathrm N$.
+Vanishing displacement alone therefore does not establish uniform convergence
+of reaction forces to the rigid model.
 
-In ordinary speech, passive means doing nothing. In mechanics, it often means a
-force follows from state, geometry, material law, or constraint rather than an
-explicit selected control. A spring force is passive even if it is large; a
-joint reaction is passive in that narrow channel even while motors elsewhere
-work hard. Every use in this book carries that technical meaning. Human intent
-and muscle effort require separate evidence.
+A useful rigid/compliant comparison declares initial compatibility, damping,
+contact law, integration accuracy, and the observable whose convergence is
+claimed. Resolve the fast modes or justify a reduced description. Track
+constraint residuals and numerical energy changes alongside the physical
+work ledger. Successful convergence of one observable is not human validation
+of the chosen compliance.
+
+### What the Evidence Establishes
+
+**Model Result:** The pinned double-pendulum source derives nonzero wrist
+reactions after specified torque removal and separates force magnitude from
+signed wrist-force power. Its forward two-hand extension reports a finite
+negative-couple persistence interval after all six applied commands are cut.
+Those are declared model results, not new simulations performed for this
+chapter, universal persistence, or measurements of biological passivity.
+
+**Human Evidence:** Koike's 2016 instrumented-grip report describes a
+professional instructor and a design with twelve sets of strain gauges
+[@koike2016instrumented]. Choi and Park's
+2020 study used a six-axis sensor between sections of a customized grip in
+nine right-handed male professional golfers, combined with motion capture and
+inverse dynamics [@koike2020]. The internal sensor
+wrench is measured; the remaining joint loads are inferred through the model.
+The latter study reports limitations including altered instrument mass,
+hand-contact coupling, foam-ball impact, and rigid-segment assumptions.
+Its measurements improve load inference without identifying individual muscle
+forces or establishing an optimal intervention.
+
+**Hypothesis:** An achieved late-downswing state may permit favorable club
+acceleration or power through connection forces while selected distal commands
+are small or opposing. Specify the observable, sign, interval, load limits,
+and alternative models before testing it. Large reactions or a negative
+couple alone do not establish that hypothesis.
+
+### Reader Lab and Ways the Claim Could Fail
+
+Run all-input, proximal-only, distal-only, and zero-input cases from one copied
+state. Compare the reactions and endpoint accelerations using the shared-drift
+identity above. Check the physical force directions and contact limits before
+accepting a branch. Then integrate explicitly defined continuations and compare
+power, work, delivery events, and trajectory divergence.
+
+Change geometry through constraint-consistent states. A force component's
+projection may reverse under a specified geometric transformation, but the
+recomputed reaction can also change; an arbitrary angle reversal need not
+reverse total transfer. Changing coordinate signs consistently must leave
+physical predictions unchanged. Removing a force lever arm has a sharper null
+prediction: its moment contribution vanishes, while separately applied couples
+must remain separately accounted for.
+
+A claimed mechanism is undermined by failure of its registered counterfactual
+effect, force/moment balance, work ledger, admissible contact conditions, or
+observable convergence. Agreement between independent solvers strengthens the
+numerical result only to the extent their methods and assumptions are actually
+independent. Human relevance additionally needs synchronized load and motion
+measurements, uncertainty, participant-held-out predictions, and evidence that
+the model represents the tested task.
 
 ### One Sentence to Retain
 
-A connection can strongly affect motion without being an independent energy
-source. Its force depends on the whole state and can transmit, redirect, store,
-or constrain the consequences of work performed elsewhere. That statement is
-both more accurate and more testable than saying the club accelerates “by
-itself.”
+A connection can transmit force and transfer energy between bodies without
+being an independent energy source; its physical feasibility, power, and
+inferred biological meaning are three separate questions.
 
 ## Where the Picture Breaks
 
-The cord-and-key picture has one exact constraint and no anatomy. A wrist has
-several degrees of freedom, ligaments, muscle stiffness, and distributed contact.
-The shoulder girdle moves. Grip friction can slip. A rigid planar hinge can test
-a coupling mechanism but cannot estimate tissue loading or injury risk.
+The circular guide is a deliberately simple example. A human wrist has multiple
+degrees of freedom, deformable tissues, muscle action, and distributed contact;
+the shoulder girdle and grip can move. Ideal point constraints omit those
+features. Their multipliers cannot be read directly as tissue stresses,
+muscle forces, injury estimates, or coaching instructions.
 
-Constraint-force decomposition can also depend on the mathematical partition.
-At redundant contacts, $\boldsymbol\lambda$ may be nonunique. Reporting one
-minimum-norm solution does not make it the biological allocation. The model must
-fail closed or show the null space.
+Keep three boundaries visible: the permitted motion and contact mode; the
+complete system whose energy is counted; and the measurements or assumptions
+used to identify loads. A plausible mechanism can survive those checks and
+remain an untested hypothesis about how a particular golfer produces it.
 
-**Go Deeper:** Study the exact
-[wrist-reaction decomposition](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
-the [forward two-hand constraints](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
-and the [ground-reaction attribution](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03c_ground_reaction_drift.qmd).
+**Go Deeper:** Read the pinned
+[wrist-reaction decomposition](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch03_interaction_forces.qmd),
+[forward two-hand constraints](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
+and [ground-reaction attribution](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch03c_ground_reaction_drift.qmd).
+Chapters 2, 17, and 25 connect these reactions to system boundaries,
+prescribed versus moving supports, and biological load inference.

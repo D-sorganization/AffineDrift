@@ -1,0 +1,48 @@
+# Review Record: Chapter 6 Constraints Push Back
+
+## Scope
+
+- **Target:** Chapter 6 _Constraints Push Back_.
+- **Tracking References:** Issue 4791, Epic 4009, Corpus 4021, Companion 4059.
+- **Baseline Commit:** `97f07b41bfd2d3e218880f484097d787a2b5a9ae`.
+- **Source Material:** Full original 2,088-word inventory and revised source read.
+- **Acceptance Scope:** Full Chapter 6 scientific review accepted by the lead. Source and publication checks below are complete; the following binding commit will credit only this chapter. At this frozen source checkpoint, 114 corpus audits and whole-book consistency remain. Delivery state belongs in constraints-validation.json.
+
+## Scientific Decisions
+
+1. **Unilateral Cord Versus Bilateral Guide:** Tangent-only initial release velocity. For the top of a circular path ($2\text{ kg}$, $1\text{ m}$ radius), evaluation at speeds $1\text{ m/s}$ and $4\text{ m/s}$ yields upward reactions $\lambda = 17.62\text{ N}$ and $-12.38\text{ N}$. At the circle top, upward is outward: the positive value would require compression and is invalid for a cord, while the negative value corresponds to feasible inward tension. The original Flash draft reversed this conclusion; rejected by the lead against the numerical force balance.
+2. **Constraint Formulation & Solvability:** Assumes symmetric positive-definite (SPD) mass, full row-rank constraint Jacobian $J$, and consistent kinematic initialization. Distinguishes physical generalized constraint forces $Q_c = J^T \lambda$ from arbitrary multiplier normalizations, and isolates fixed bilateral constraint modes from contact impact events.
+3. **Constraint Power & Work:** Ideal bilateral constraints do zero virtual work, but moving prescribed constraints can do actual physical work: $P_c = -\lambda \cdot \phi_t$. In the moving constraint example ($2\text{ kg}$, $x = \alpha t^2$, $\alpha = 1\text{ m/s}^2$, evaluated at one second), an applied force of $3\text{ N}$ plus a reaction force of $1\text{ N}$ yields a kinetic-energy-rate balance of $6\text{ W} + 2\text{ W} = 8\text{ W}$.
+4. **Indeterminacy & Net-Wrench Observations:** Differentiates unique, fully specified forward constraint reactions from redundant Jacobian rows and incomplete net-wrench observations. For duplicate rows $[1, 0]$ and $[2, 0]$, non-unique multipliers such as $\lambda = [-2, 0]^T$ or $[-0.4, -0.8]^T$ produce the identical generalized constraint force $Q_c = [-2, 0]^T$.
+5. **Two-Hand Couple Mechanics:** Equal and opposite force increments applied by two hands cancel net linear force but can generate a club moment couple $\Delta M = (r_L - r_R) \times f$. An axial null offset contrasts with a $0.2\text{ N}\cdot\text{m}$ transverse couple at $0.2\text{ m}$ separation; this mechanical balance carries no automatic claim of biological feasibility.
+6. **Kinematic Drift & Club Power:** Retains one drift term across four input cases ($y_{PD} = y_P + y_D - y_0$), accounts for endpoint kinematic $\dot{J}$ contributions, and restricts claims to the forward policy/history scope. A purely radial club force that generates zero moment about the center of mass (COM) does not imply zero instantaneous power at the point of application.
+7. **Compliance Versus Constraint Limits:** Mechanical stiffness is distinguished from time delay and rigid-body force convergence. For an undamped $1\text{ kg}$ system with initial displacement $F_0 / k$, with $F_0 = 1\text{ N}$, the force amplitude remains $1\text{ N}$ while displacement and stored strain energy vanish as $k \to \infty$. Analysis maintains strict separation between ideal algebraic reactions, elastic potential storage, and viscous damping.
+8. **Empirical Grounding & Presentation:** Enforces hypothesis-specific falsification, states explicit computational provider and human subject boundaries, ensures clear legibility for circular trajectory figures, and prunes redundant cautionary prose.
+
+## Primary Sources and Reading Limits
+
+- **[Upstream Repository](https://github.com/D-sorganization/UpstreamDrift/tree/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters) (commit `85cce4d3307bb7ad3953d9fc6e583e370803515c`):** Read all three canonical chapters in full: interaction forces (423 lines), forward two-hand dynamics (355 lines), and ground reaction forces (258 lines). No code execution or new human validation performed.
+- **[Tedrake Multibody Course Text](https://underactuated.mit.edu/multibody.html):** Read selected passages covering generalized speeds, bilateral constraints, rigid contact, and compliance/stiffness formulations. Governing equations were independently derived; entire online lecture notes were not read end-to-end.
+- **[Koike (2016)](https://ojs.ub.uni-konstanz.de/cpa/article/view/6828):** Consulted official publication abstract and metadata only (one professional instructor, 12 strain gauge sets).
+- **[Choi and Park (2020), EuropePMC Full-Text XML](https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7374515/fullTextXML):** Read abstract, introduction, methodology sections 2.1–2.3, portion of 2.4, and discussion/conclusions; full results and figure pixels were not read. Noted cohort parameters (nine right-handed male professional golfers, six-axis split-grip transducer), inverse dynamics joint inference, and stated physical limits (instrument mass, grip coupling, foam practice ball, rigid segment assumptions); asserts no clinical or performance efficacy claim.
+- **Internal Precedent Reviews:** Read `nullspace-complete-review.md` in full; read selected decisions 1 through 6 of `system-boundary-review.md`.
+- **Fixtures:** Reused existing moving-guide and circular test fixtures without claiming novel scientific discoveries.
+
+## Delegation
+
+Seven supplied-text agy CLI `gemini-3.8-flash-high` jobs completed: inventory, test draft, editorial review, record copyedit, binder adaptation acceptance-record copyedit and PR prose. Helpers used no tools or canonical edits and did not claim or publish this strong-tier issue. The lead read every returned draft and retained scientific responsibility. Earlier next-source inventory is preparation, not an additional completed audit.
+
+Rejected helper errors include reversed cord feasibility at the top of the circle, a NumPy Boolean identity assertion, an overly broad source glob, a claim that the entire figure-generator AST was unchanged, and an inappropriate “hardware provider” description. Accepted suggestions clarify generalized-speed notation, explicit-time constraint power, wrench changes and zero contact twist. A proposed extra Go Deeper heading was rejected to retain the book's standard bold label. The PR draft was corrected to say moving constraints can do work, force cancellation can leave a couple, and the affine check uses four cases of two inputs. Binder adaptation is reviewed but not executed at this source checkpoint.
+
+## Validation
+
+- RED: eight cases pass and the mutable-provider-link case fails. GREEN: nine cases pass. The cases test unilateral force feasibility, redundant multiplier scaling, full-wrench changes, shared drift and stiff-spring limits; they are manufactured checks, not golfer measurements. Existing moving-guide, circle, power and nullspace checks are reused.
+- Fifty-seven related mechanics/publication checks pass. Full regression: 6,506 passed, 29 skipped, 187 deselected, 60 warnings in 553.70 seconds; coverage 78.96%. This run preceded the figure-placement-only revision and generator docstring. Thirty-one final affected checks pass afterward; no second full-suite run is claimed.
+- Twelve publication gates, 653 source title checks, Ruff, Black, configured mypy and 875 Python quality checks pass. Temporary build, dist and egg-info outputs were preserved in the ignored QA tree after the full regression.
+- Whole-book PDF and HTML builds succeed. Canonical/public PDF bytes match. The 229-page PDF was inspected at physical pages 39–48 and 224–229: Chapter 6, adjoining boundaries and references. The initial floating figure interrupted equation/definition reading order; final placement after the complete introduction keeps the equation and definitions together. Other chapters are not credited as reviewed by this render.
+- The single rendered book route passes four viewport/theme profiles and zero serious/critical axe violations. All 68 Chapter 6 math nodes, including four displays, render at 390 and 1440 pixels without errors, placeholders or horizontal overflow. Inline mobile figure labels remain small; readable chapter text, alternative text and image zoom provide access. Final zoom verification is recorded separately in the mutable validation receipt.
+- The reaction/velocity diagram uses equal geometric aspect, an inward force, tangent velocity and a dotted continuation beyond the velocity arrow. Only make_constraint_reaction changes in the shared generator; all other function and top-level AST nodes are unchanged.
+
+## Evidence Continuity and Limits
+
+The frozen prior route contains 129 findings. Preserve their scientific fields and verification commits. The carry-forward receipt accounts for the 151 prior evidence paths, distinguishes the changed chapter, generator and regenerated book PDF, and preserves all unchanged Git bytes. Only eight new findings are planned. Source acceptance is not a provider rerun, independent human validation, whole-book review or completed remote delivery. The source review and carry-forward records become immutable evidence after binding; delivery updates belong in constraints-validation.json and the turnover documents.

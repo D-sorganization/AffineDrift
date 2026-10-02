@@ -1,0 +1,173 @@
+{
+  "issue": 4791,
+  "status": "Full Chapter6 scientific/publication acceptance complete; source commit and binding pending",
+  "baseline": "97f07b41bfd2d3e218880f484097d787a2b5a9ae",
+  "integrated_parent": "4351ce0c0",
+  "source_findings": 8,
+  "historical_findings": 129,
+  "corpus_pending": 114,
+  "whole_book_consistency_pending": true,
+  "tdd": {
+    "red_passed": 8,
+    "red_failed": 1,
+    "green_passed": 9
+  },
+  "full_regression": {
+    "passed": 6506,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 553.7,
+    "coverage_percent": 78.96
+  },
+  "related_checks": 57,
+  "final_affected_checks": 31,
+  "full_run_followup_scope": "Figure placement and generator docstring only after full regression; 31 affected checks, publication gates and static checks repeated.",
+  "render": {
+    "pages": 229,
+    "inspected_physical_pages": [
+      39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 224, 225, 226, 227, 228, 229
+    ],
+    "canonical_public_parity": true,
+    "pdf_sha256": "b353b8e35703bc47e642ed87f9051ffff5e978354de1e12ab9d08d54be1b0a5b",
+    "html_success": true
+  },
+  "browser": {
+    "profiles": 4,
+    "failed": 0,
+    "serious_critical_axe": 0,
+    "route_scope": "Single rendered companion book route; not full site",
+    "viewports": [390, 1440],
+    "chapter_math_nodes": 68,
+    "display_equations": 4,
+    "errors": 0,
+    "placeholders": 0,
+    "horizontal_overflow": false,
+    "zoom_opened": true,
+    "zoom_closed": true,
+    "zoom_probe_note": "Initial final-build probe checked visibility before transition and returned false; explicit visible-state wait confirmed opening and Escape closure. Raw first result retained.",
+    "settled_zoom_screenshot": "docs/development/technical-review/constraints-mobile-zoom-settled.png"
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/constraints-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 875,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "source_title_files": 653,
+  "agy_flash_helpers_completed": 7,
+  "prior_evidence_unchanged": 148,
+  "prior_evidence_changed": 3,
+  "figure_generator_other_ast_unchanged": true,
+  "no_provider_rerun": true,
+  "no_new_human_validation": true,
+  "parent_delivery": {
+    "pr": 4788,
+    "merge_commit": "8bead85237ca8e80444f36bee510a22bd5dac141",
+    "ci_run": 36961840257,
+    "verified_changed_paths": 18,
+    "receipt": "reports/technical-review/open-evidence-remote-main-receipt.json"
+  },
+  "commands": {
+    "full": "py -3.12 -X utf8 -m pytest --cov",
+    "followup": "py -3.12 -X utf8 -m pytest tests/test_constraint_reaction_review.py tests/test_proximal_distal_companion_contract.py tests/test_root_hygiene.py -q --no-cov",
+    "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; then --to html",
+    "gates": "py -3.12 -X utf8 docs/development/technical-review/constraints_content_gates.py",
+    "static": "PYTHONPATH=. py -3.12 -X utf8 docs/development/technical-review/constraints_static.py"
+  },
+  "precommit_followup": {
+    "passed": 21,
+    "failed": 0
+  }
+}
