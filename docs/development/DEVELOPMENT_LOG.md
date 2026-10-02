@@ -29,8 +29,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** articles/proximal_distal_companion/chapters/ch26_experiment_can_say_no.qmd, tests/test_experiment_design_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; 6515 full-regression passes;31final affected checks;12publication gates;653titles;876Python quality checks. Accepted229-page PDF/HTML, four browser profiles,62mathnodes and mobilezoom.
-- **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. Preserve137prior findings;113corpus audits remain until source binding.
-- **Next step:** Commit source, bind evidence and open regular PR after parent4794.
+- **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;112corpus audits remain.
+- **Next step:** Push source/binding and open regular PR; await parent4794 delivery before protected merge.
 
 ### DL-#4791 — Constraint Reactions and Identifiability
 
