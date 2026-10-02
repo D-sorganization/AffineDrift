@@ -2,275 +2,346 @@
 
 ## A Concrete Picture
 
-A weather map can explain pressure, wind, and uncertainty without telling every
-person whether to carry an umbrella. The decision depends on destination,
-tolerance for rain, and changing local conditions. A mechanics model can clarify
-the swing in the same way without declaring one motion correct for every golfer.
+A weather map connects pressure, wind and uncertainty without deciding whether
+every person should carry an umbrella. The decision also depends on the journey
+and the consequences of getting wet. A swing model has a similar role: it can
+explain a mechanism and predict a conditional outcome without establishing one
+motion as best for every golfer.
 
-We can now assemble the picture: proximal work moves a linked system; constraints
-and inertia transmit and redirect effects; geometry changes leverage; two hands
-create visible and hidden wrench modes; negative torque can retain or stabilize;
-the shaft stores and returns energy; timing depends on state; robustness exposes
-tradeoffs; human evidence remains the final gate.
+The useful synthesis connects several questions that are easy to confuse.
+Geometry helps determine how forces affect motion. Force and application-point velocity jointly determine power. Work changes the selected system's energy, but an energy total
+does not uniquely determine clubhead speed. Many hand-force allocations can
+produce the same club wrench (resultant force and moment), while requiring
+different internal loads. The
+controls that create a useful state must also be feasible before that state is
+reached. Each connection needs its own evidence.
 
-![A Final Map Connects Energy Supply, Transfer, Storage, Geometry, Timing, Robustness, and Falsification Without Selecting One Technique.](figures/proximal_distal_companion/fig_companion_synthesis_map.svg){#fig-lay-synthesis width=98% fig-alt="A synthesis map connects mechanical energy supply, interaction transfer, elastic storage, changing geometry, state-based timing, robust outcomes, and experimental falsification around a neutral central question rather than a prescribed swing."}
+![A Conceptual Review Map Connects Energy, Geometry, Timing, Robustness, Human Evidence and Falsification; It Does Not Assign Equal Support to Every Claim.](figures/proximal_distal_companion/fig_companion_synthesis_map.svg){#fig-lay-synthesis width=98% fig-alt="Six review topics surround a testable mechanism. Arrows connect questions to investigate rather than showing measured causal effects or equal evidence strength."}
 
 ## How the Mechanism Works
 
-The useful framework is a sequence of questions.
+### Begin With the Claim, System and Comparison
 
-First, choose the system and outcome. Are we explaining club kinetic energy,
-clubhead velocity, face/path, joint load, repeatability, or some combination?
+A useful claim specifies the system, outcome, intervention, comparison and range
+of conditions. Club kinetic energy, clubhead speed, face orientation, joint load
+and repeatability are different outcomes. An improvement in one need not improve
+the others. Define the event too: a fixed simulation time or a club-angle
+crossing is not a resolved ball collision.
 
-Second, reconstruct the state and geometry. Where are the segments, how are they
-moving, and what elastic or activation states are loaded?
+Choose a boundary before identifying an energy source. Hand forces can do work
+on the club while transferring energy internally when the arms and club are
+considered together. Muscle action can convert chemical energy into mechanical
+energy inside that larger system. An ideal stationary ground contact can
+exchange momentum without doing mechanical work; a moving or compliant
+boundary needs its own power and storage terms. The words *proximal* and
+*distal* describe location, not a guaranteed one-way energy flow.
 
-Third, close the instantaneous mechanics. Which forces, moments, constraints,
-gravity, and velocity terms balance acceleration? Are frames and reference points
-consistent?
+Next state what was measured and what was inferred. A model state can include
+configuration, velocity, shaft deformation and actuator memory. Knowing one
+angle, one speed peak or one scalar energy total does not reconstruct that
+state. Unmeasured states and uncertain parameters must remain visible in the
+interpretation.
 
-Fourth, close work and energy over time. Which interfaces supply, transfer,
-store, return, or dissipate energy? Do positive and negative contributions cancel?
+### Connect Force, Moment and Power Before Interpreting Signs
 
-Fifth, intervene fairly. Hold state for pointwise attribution, integrate matched
-branches for persistence, and resimulate full schedules for strategy. Include
-negative controls.
+For a rigid club, hand action can be reduced to a resultant force
+$\mathbf F$ and moment $\mathbf M_C$ about its center of mass $C$. Its
+instantaneous hand-to-club power is
 
-Sixth, climb the model ladder. Does the mechanism survive two hands, compliance,
-a moving base, spatial motion, independent engines, and uncertainty?
+$$
+P_{\mathrm{hands}\to\mathrm{club}}
+=\mathbf F\cdot\mathbf v_C+\mathbf M_C\cdot\boldsymbol\omega.
+$$
 
-Seventh, design the human test. Measure the variables that distinguish competing
-stories and preregister what would count against each.
+Here $\mathbf v_C$ is center-of-mass velocity and $\boldsymbol\omega$ is
+club angular velocity in the declared frame. Include both force-generated
+moments and any direct grip moments in $\mathbf M_C$. This is the same power
+obtained by summing the individual hand forces dotted with their application-
+point velocities, plus the direct moments dotted with angular velocity.
 
-### What the Current Evidence Supports
+A negative component of moment is a direction relative to a chosen axis. Its
+power also depends on the conjugate motion. Even negative rotational power can
+coexist with positive total hand-to-club power through the force term. Neither
+sign alone identifies which muscle worked, whether a golfer was passive, or
+whether the action improved a later outcome. See @sec-lay-ch13 for the separate
+questions hidden inside “negative torque.”
 
-The reduced models support a real mechanical possibility: club acceleration and
-hand-path work can be strongly influenced by interaction and state-dependent
-terms even with selected distal torque removed. Two-hand geometry can create a
-late negative club couple. Flexibility can modify timing while obeying energy
-closure. Arm- and wrist-dominant allocations can produce the same club task with
-different internal demands. Preload continuity helps only under a declared
-transmission family.
+Consider an explicitly manufactured planar example. Grip positions relative to
+$C$ are $(0,0.1)$ and $(0,-0.1)\,\mathrm m$. Hand forces are
+$(10,20)$ and $(-10,30)\,\mathrm N$. Their resultant is
+$(0,50)\,\mathrm N$, and their summed moment about $C$ is
+$-2\,\mathrm{N\,m}$ under the positive out-of-plane convention. With
+$\mathbf v_C=(2,1)\,\mathrm{m/s}$ and angular velocity
+$+3\,\mathrm{rad/s}$ about that axis, translational power is $50\,\mathrm W$ and rotational
+power is $-6\,\mathrm W$. The club receives $44\,\mathrm W$ in total.
+The two application-point velocities are $(1.7,1)$ and
+$(2.3,1)\,\mathrm{m/s}$, giving individual powers $37$ and $7\,\mathrm W$.
 
-### What Remains Open
+This identity is a bookkeeping check, not evidence that these loads occur in a
+golfer. If the shaft deforms, a single rigid-body twist no longer describes all
+its points. If an interface slips or deforms, use the relevant velocities and
+account for interface storage and dissipation. Do not force a flexible or
+slipping system into the rigid-club shortcut.
 
-The work does not establish a universal human technique, scapular mechanism,
-muscle preactivation strategy, injury benefit, or calibrated equipment effect.
-It does not identify one best allocation. The held-out model ensemble explicitly
-rejects a universal optimum across its outcomes.
+### The Same Club Wrench Can Hide Different Hand Demands
 
-### Better Practical Questions
+In that example, add $(0,100)\,\mathrm N$ to the first force and subtract it
+from the second. The added forces are equal, opposite and collinear with the
+line between the grips. They change neither the resultant force nor the moment
+about $C$. The total power remains $44\,\mathrm W$, but the individual powers
+become $137$ and $-93\,\mathrm W$.
 
-Instead of “should I hold lag?” ask which state variable and outcome the cue is
-supposed to change. Instead of “are the wrists passive?” ask whether direct wrist
-moment, impedance, and force-generated couple were measured separately. Instead
-of “is slack good?” ask which gap, stiffness, compliance, or activation variable
-was observed. Instead of “did the hips transfer speed?” ask which boundary power
-and energy balance supports that statement.
+This is a null direction of the wrench map: a change in force allocation that
+the net wrench cannot reveal. It can alter internal loading and power exchange
+between the hands even when the club's instantaneous net action is unchanged.
+It does not follow that every such allocation is physically admissible. Under
+an illustrative per-hand force limit of $50\,\mathrm N$, the first allocation
+satisfies the limit and the modified allocation violates it. That limit is a
+manufactured constraint, not a measured human strength threshold.
 
-These questions do not make instruction impossible. They make claims testable
-and participant-specific.
+Contact friction, grip capacity, joint limits, actuator bounds and state history
+restrict the feasible allocations. Adding muscles introduces further unknowns
+rather than automatically identifying one solution. Matching a net club wrench
+is weaker than matching the complete trajectory, contact states and biological
+demands. Distinguish these comparisons before interpreting a push--pull strategy
+or attributing a club moment to the trail hand alone.
+
+### Equal Energy Is Not Equal Clubhead Speed
+
+For a rigid body, velocity at a head point $H$ is
+
+$$
+\mathbf v_H=\mathbf v_C+\boldsymbol\omega\times\mathbf r_{H/C}.
+$$
+
+The translational and rotational contributions can reinforce or oppose one
+another. In a second manufactured example, take a planar rigid body of mass
+$1\,\mathrm{kg}$, central rotational inertia $0.25\,\mathrm{kg\,m^2}$,
+$\mathbf v_C=(0,2)\,\mathrm{m/s}$ and
+$\mathbf r_{H/C}=(0.5,0)\,\mathrm m$. Angular velocities of
+$+2$ and $-2\,\mathrm{rad/s}$ give the same kinetic energy,
+$2.5\,\mathrm J$, but head speeds of $3$ and $1\,\mathrm{m/s}$.
+
+These are instantaneous states at the same pose. They do not prove that both
+are reachable from one initial state under the same torque or grip limits.
+They show why a scalar energy budget cannot replace the geometry and velocity
+information needed for a task. In a linked swing, initial energy, subsequent
+work, dissipation and redistribution all matter. The useful question is how a
+feasible trajectory places motion and energy at the required task event, while
+also meeting face/path, impact and load constraints.
+
+### Compare Interventions at the Right Level
+
+Pointwise attribution holds the complete state fixed and changes a declared
+input or model term. Recompute the constraint reactions under that change. A
+forward branch copies the complete initial state and then evolves under its
+own inputs and reactions. A preparation study changes the history that creates
+that state. A policy comparison may additionally retune the controls. These
+answer different questions; none substitutes automatically for another.
+
+Copy actuator, controller and flexible states as well as angles and velocities.
+A zero command need not remove a stored actuator load, and zero direct wrist
+torque need not remove force-generated moment or interface power. If a
+zero-velocity diagnostic is used, it changes the state and must satisfy the
+retained boundary conditions. The discussions in @sec-lay-ch11 and
+@sec-lay-ch18 explain these distinctions.
+
+Matching peak torque, impulse, mechanical work and endpoint task are also
+different controls on an experiment. State which quantities are matched and
+which are allowed to change. A later benefit does not by itself show that early
+negative work was its cause. Compare the relevant alternatives, including
+failures and admissible negative controls.
+
+A clock trigger and a measured-state trigger should be compared using declared
+sensors, noise, latency and control limits. Aligning a finished swing by its
+actual future impact is a retrospective analysis, not information a real-time
+controller already possesses. A force-direction or moment-arm reversal with
+forces held fixed is an algebraic geometry test; changing the geometry and
+re-solving a forward trajectory need not reverse its resultant moment.
+
+### What the Current Model Comparisons Support
+
+The pinned research record contains several distinct tests, not one model
+validated at every level. Planar two-hand forward branches examine finite
+persistence after selected applied torques are removed. Coupled moving-base and
+shaft models examine additional physical pathways. A common-state spatial
+comparison tests prescribed-force geometry and rigid-body dynamics. The reduced
+spatial forward-contact comparison uses hand carriages, shared compliant
+interfaces and a shared state update; its agreement is not independent contact-
+solver validation or proof for articulated human arms.
+
+The same record includes adverse results and unresolved boundaries. A
+preregistered finite-base comparison did not obtain its required matched-load
+and dissipation conditions. A contact-geometry audit showed why full rank does
+not establish that anatomically placed hands actually meet the club grips. Later closed-state screens and short-horizon
+trajectory checks answer narrower questions than a complete calibrated swing.
+Treat each result according to its model, intervention, observable and tested
+range, as the reviewer workbench specifies.
+
+The saved uncertainty/control comparison tests eight prescribed programs on six
+training and six held-out model parameter draws. Independently recomputing
+nondominance from its saved summary rows gives seven nondominated programs on
+the training ensemble and all eight on the held-out ensemble. A program is
+nondominated within that set if no other tested program is at least as good on
+every declared objective and strictly better on at least one.
+
+The objectives reward the tenth-percentile delivery speed ($\mathrm{m/s}$)
+while penalizing mean absolute planar face-to-path angle error (degrees),
+90th-percentile hand force ($\mathrm N$), squared-torque effort and delivery
+speed standard deviation ($\mathrm{m/s}$). The “effort” integral has units
+$(\mathrm{N\,m})^2\mathrm s$; it is neither mechanical work nor metabolic cost.
+Delivery is evaluated at a fixed model time without ball collision. The
+parameter ranges are engineering assumptions, and tail statistics from six
+draws are not calibrated population quantiles. This chapter checks stored
+summaries, not a new dynamics run.
+
+Those results show tradeoffs among the tested programs. They do not prove that
+no untested policy can improve all five outcomes. For a simple two-objective
+illustration in which smaller is better, $(1,4)$ and $(4,1)$ are nondominated
+relative to each other, yet an additional feasible result $(0.5,0.5)$ would
+improve both. Whether such an alternative is actually attainable requires a
+separate analysis. Nor does a choice of objective weights identify a golfer's
+control objective.
+
+### Keep the Strategy Families as Testable Hypotheses
+
+One proposed family emphasizes arm-side drive with early wrist resistance;
+another emphasizes a different phase allocation of wrist drive and arm
+resistance. Preserve both as hypotheses about inputs, state preparation and
+outcomes. They are not exhaustive biological categories, and a generalized
+actuator subspace is not an identified shoulder-girdle muscle group.
+
+Define *preload* as the load already present at a declared initial state, and
+*slack* as motion before a specified resistance engages. Use *transmission gap*
+only with an operational definition, such as a stated clearance or response
+delay; those mechanisms are not interchangeable.
+A force crossing zero need not mean that contact opened. A compliant element
+can remain engaged at low force; low tangent stiffness, clearance, contact
+separation and actuator delay are different mechanisms. Continued command does
+not guarantee immediate delivered load, and reversing a command does not
+necessarily erase stored load. The declared transmission law and initial state
+determine the prediction.
+
+A fair test examines feasible preparation, bilateral wrenches, contact state,
+work and outcomes across a declared range. It may find a benefit, a cost, no
+resolvable difference or a failure of the proposed mechanism. Do not assume in
+advance that an opposing moment stabilizes the swing or that a longer retained
+configuration must improve delivery. “Manage the negative couple” becomes a
+scientific claim only after the measurable intervention and outcome are named.
+
+### Measurements Constrain Models Without Identifying Everything
+
+Synchronized kinematics, external wrenches and inertial assumptions can support
+net dynamic estimates with propagated uncertainty. Missing forces, uncertain
+segment properties and numerical differentiation can change those estimates.
+Bilateral grip sensing can distinguish allocations hidden by the net wrench,
+provided its measured components, calibration, frames and timing are adequate.
+Shaft strain constrains deformation only through a declared structural and
+sensor model; a gauge is not a direct measurement of all stored elastic energy.
+
+Surface EMG records electrical activity associated with muscle-fibre excitation.
+Its amplitude is not a direct measurement of activation, force or work; geometry,
+recording conditions and excitation-to-force dynamics affect interpretation
+[@vigotsky2018EMG]. Perturbation responses can constrain mechanical impedance,
+but stiffness, damping, inertia and delayed feedback require an identified model
+and a declared perturbation range. These measurements can discriminate among
+hypotheses without uniquely recovering every biological state.
+
+**Model Result:** The project supplies conditional mechanism tests and numerical
+checks with different scopes. Some comparisons support a bounded pathway;
+others expose a failed match or an unresolved inference.
+
+**Human Evidence:** The cited measurement literature constrains interpretation.
+The research record's synthetic protocol checks are readiness evidence, not
+human observations validating the complete strategy.
+
+**Hypothesis:** A feasible choice of arm/wrist allocation and preparation may
+improve a specified combination of delivery, load and repeatability outcomes.
+Which choice, for whom and over what conditions remains an experimental question.
+
+**Practical Interpretation:** Use the framework to formulate a comparison and
+decide what evidence is missing, rather than converting a model label into a cue.
+
+### A Research Workflow That Can Change Its Mind
+
+Write the prediction and failure rule before choosing the preferred result.
+Select the smallest model that can represent the disputed mechanism: a linked
+chain for inertial coupling, bilateral contacts for hand allocation, flexible
+states for shaft behavior, a moving base for boundary work, or spatial dynamics
+for out-of-plane effects. More detail does not automatically strengthen evidence;
+each addition needs verified equations, consistent state and suitable data.
+
+Check numerical convergence over a declared range, contact feasibility and
+physical work separately from numerical corrections. Compare independent
+implementations using matched physical definitions, and identify any shared
+contact or integration code. Small residuals verify aspects of a calculation;
+they do not validate every assumption about a golfer.
+
+When a prediction fails, inspect synchronization, frames, parameters, numerical
+error and observation uncertainty. If a discrepancy remains outside the declared
+range, reject or revise the specific model-and-measurement claim. A failed
+anatomical mapping can invalidate the application of otherwise correct contact
+mechanics. A failed wrench prediction does not overturn Newton's laws. Keep
+adverse results rather than changing the outcome or tolerance after seeing them.
+
+Reserve participants or conditions for predictions made without tuning on them.
+A held-out synthetic draw checks robustness within an assumed model family; a
+held-out participant checks a different external generalization. Report what
+was fitted, what was fixed, which data were withheld and which claims remain
+unidentified.
 
 ### A Reader's Next Experiment
 
-Use the interactive workbench to compare clock and state triggers, remove a
-selected torque at one state, reverse a two-hand moment arm, or change shaft
-stiffness. Predict the result before running it. Then inspect forces, powers,
-work, energy closure, and falsifiers rather than only final speed.
+Translate “trail-hand pull creates passive wrist lag and more speed” into
+separate propositions. Define the force components and moment point, define lag
+as a measured state variable, name the supposedly passive input channel and
+choose the delivery outcome. Ask whether another hand allocation or preparation
+history can reproduce the observations. Then predict discriminating wrenches,
+powers, deformation or responses under a feasible comparison.
 
-**Model Result:** The project delivers a connected, openly reviewable set of
-mechanism tests across a common-observable ladder.
+The linked workbench is a place to inspect available model controls and their
+limitations. At the [pinned catalog revision](https://github.com/D-sorganization/Tools/blob/cefcc1878de11804c44cd7d1d19c0ffcf58fa89e/src/pendulum_simulator/src/double_pendulum_golf/resources/companion_catalog.json), the desktop Companion Guide displays
+experiment instructions; the React guide can select a model and display the
+shared instructions. A catalog workflow is not by itself evidence that every
+step is implemented as a runnable experiment. Check the version and the actual
+controls before promising clock/state comparisons, shaft changes or a copied-
+state branch in a particular interface. Use a recorded script when an experiment
+requires capabilities beyond that interface. No new frontend run is certified
+by this chapter.
 
-**Human Evidence:** The literature motivates and bounds the questions but does
-not yet validate the complete strategy mechanism.
+Predict the result first, retain failed cases, and inspect force, power, work,
+contact and uncertainty alongside final speed. Promote exploratory output only
+with reproducible inputs, declared numerical checks and traceable interpretation.
 
-**Hypothesis:** Some golfers may benefit from strategies that maintain useful
-proximal drive, manage distal resistance and preload, and permit state-dependent
-late transfer without force-transmission gaps. The opposite allocation remains
-a serious competing hypothesis.
+### What Completion Should Mean
 
-**Practical Interpretation:** The framework is not a recipe. It is a way to ask
-better questions of a motion, a model, a sensor, or a coaching claim.
+The desired product connects readable explanations, auditable derivations,
+versioned simulations, qualified measurements and reproducible publication.
+Readers should be able to move from a claim to its assumptions, evidence and
+possible refutation. Completing that framework does not mean proving a
+preferred biological strategy or making every proposed experiment available in
+every interface.
 
-### What the Framework Now Says
-
-The swing is a coupled mechanical system. Proximal work, moving geometry,
-constraint reactions, direct distal control, bilateral hand allocation, shaft
-deformation, and ground interaction overlap. Clubhead speed is an outcome of
-their integrated trajectory. No single peak, torque sign, or body-part label
-contains the whole explanation.
-
-The proximal-distal description remains useful when it means changing emphasis
-and energy pathways in a continuously linked system. It becomes misleading when
-turned into a strict relay or a universal timing script. The framework replaces
-that script with state, force, wrench, power, work, and counterfactual tests.
-
-### What the Models Establish
-
-Verified reduced models demonstrate that interaction forces can carry and
-accelerate a distal link without direct distal drive; geometry controls the sign
-and leverage of that contribution; negative torque or contact couple can coexist
-with a positive later outcome; and multiple hand allocations can yield the same
-net club task. Flexible, moving-base, and spatial rungs test whether those
-mechanisms survive added physics.
-
-These are model results under declared assumptions. Their strongest value is
-the observable predictions they generate. They do not establish a unique muscle
-strategy or prove that golfers exploit every simulated pathway.
-
-### The Two Strategy Extremes
-
-One family emphasizes continuous arm/shoulder-girdle drive with wrist resistance
-from backswing through early downswing. Its proposed advantage is a loaded
-transition state with less transmission delay. The opposite family emphasizes
-greater wrist-created backswing club moment, arm resistance, then arm drive with
-wrist opposition in downswing. Its possible advantage is phase-specific use of
-different mechanical and biological resources.
-
-Both can maintain contact and stiffness; both can create or avoid a measured
-force gap depending on implementation. Real strategies can lie between them.
-The meaningful comparison matches club task and measures bilateral wrench,
-stiffness, activation, work, load, and robustness.
-
-### A Decision Tree for the Researcher
-
-If the question concerns linked inertia, begin with the double pendulum. If it
-concerns push--pull allocation, add two hands. If delay or “kick” is central, add
-shaft and transmission states. If ground or handle path is central, release the
-base. If out-of-plane couple matters, use spatial dynamics. If muscle claims are
-made, add biological measurements and a qualified musculoskeletal rung.
-
-At each step, retain the smallest model that answers the question, common
-observables, negative controls, and closure tests. Add complexity only when a
-residual or hypothesis requires it.
-
-### A Decision Tree for the Evidence
-
-If only motion is measured, report kinematics. With external wrenches and
-inertial assumptions, report net dynamics. With bilateral grip sensing, test
-hand allocation and contact couple. With shaft strain, test elastic pathways.
-With EMG and perturbation, constrain activation timing and effective stiffness.
-Do not climb the claim ladder without the corresponding evidence.
-
-When evidence disagrees, localize the disagreement. A failed anatomical mapping
-does not automatically falsify the contact mechanics; a failed wrench prediction
-does. A model fitting speed but failing reactions needs revision.
-
-### What This Means for Creating Clubhead Speed
-
-Within the mechanical framework, favorable conditions include sufficient whole-
-system work, a hand path and geometry that permit useful late club acceleration,
-control timing that avoids premature or incomplete release, and allocation that
-remains robust to execution error. An opposing moment can be useful if it shapes
-state and later power rather than simply wasting energy.
-
-Those conditions are evaluation criteria, not body instructions. A specific
-golfer may meet them through different coordination. Speed must be considered
-with face/path, impact, internal load, and repeatability.
-
-### What “Manage the Negative Couple” Can Mean
-
-Management is not necessarily conscious application of a negative wrist torque.
-It may mean arranging geometry and proximal motion so contact reactions have a
-favorable sign, maintaining enough engagement to avoid unwanted delay, and
-allowing direct control to regulate rather than fight the coupled motion. It may
-also mean avoiding excessive retention that leaves too little time.
-
-The phrase should remain tied to measurable couple, power, timing, and outcomes.
-Without those, it is only a cue. The project does not recommend a cue from the
-current evidence.
-
-### A Practical Analysis Workflow
-
-Begin with synchronized, qualified data. Reconstruct state and uncertainty.
-Close whole-system and interface ledgers. Plot force vectors and bilateral
-wrenches in declared frames. Run pointwise decompositions and matched-state
-forward branches. Compare model rungs and independent engines. Propagate
-parameter uncertainty and evaluate held-out participants.
-
-Then classify each conclusion: mechanics identity, verified model result, human
-observation, hypothesis, or practical interpretation. Link it to the evidence
-graph. This workflow makes a sophisticated modeling product usable without
-pretending it is already a coaching authority.
-
-### Near-Term Completion Priorities
-
-The highest-value next work is a qualified synchronized bilateral dataset, a
-spatial whole-body model with measured base and shaft state, participant-held-
-out prediction, and explicit arm/wrist allocation experiments. The workbench
-should expose counterfactuals, uncertainty, and failure regions with shared
-canonical engines. Documentation should update automatically from evidence
-manifests.
-
-These priorities deepen falsifiability more than adding another attractive
-nominal animation. They also invite independent replication because the
-observables and contracts are software-neutral.
-
-### Questions a Reader Should Keep
-
-What system and boundary are used? Which quantities were measured? Which were
-inferred or simulated? Does the ledger close? Is the comparison matched by state
-or task? Does geometry control the predicted sign? Can another allocation explain
-the same motion? Does the result survive uncertainty, higher model rungs, and
-held-out people? What finding would make the authors change their minds?
-
-If those questions remain visible, the framework can grow without becoming a
-closed doctrine. It becomes an open map of mechanisms, evidence, and remaining
-uncertainty.
-
-### Final Boundary
-
-Nothing in this synthesis establishes a universally superior swing, a prescribed
-scapular action, or a safe wrist-loading pattern. The research supports a more
-precise way to ask how transfer can occur and how competing explanations can be
-tested. Practical use requires qualified individual evidence and professional
-judgment appropriate to performance and health.
-
-### Reader Lab: Evaluate a New Claim
-
-Suppose a new analysis says, “Trail-hand pull creates passive wrist lag and more
-speed.” Translate it into testable pieces. Define trail-hand force in a frame;
-define lag as state; define passive channel; identify power and work; specify the
-comparison and outcome. Ask whether arm, wrist, shaft, and geometry alternatives
-can reproduce it.
-
-Then choose a model rung and negative controls. Predict bilateral wrench and
-shaft response. Match state for causal removal and club task for allocation
-comparison. Propagate uncertainty. Finally define a human measurement and a
-failure condition. Only after these steps should practical interpretation be
-considered.
-
-This workflow does not drain intuition from the question. It converts intuition
-into an argument that another group can test.
-
-### The Desired End State of the Project
-
-The complete product is a linked set of readable chapters, technical derivations,
-canonical simulation libraries, interactive experiments, qualified evidence,
-and reproducible publication. A newcomer can understand why a force vector
-matters; a specialist can audit equations; an experimentalist can see the next
-discriminating measurement; and an independent developer can implement the
-contracts elsewhere.
-
-Completion does not mean the biological hypothesis is proven. It means the
-framework is sufficiently explicit, broad, and falsifiable that future data can
-change it cleanly. That is a more durable scientific objective than presenting
-one software package or swing strategy as finished truth.
+Priorities follow the unresolved question: feasible articulated contact before
+interpreting its loads, equipment calibration before equipment-specific
+predictions, and prospective human tests before individual recommendations.
+The evidence may change the proposed mechanism or favor a competing allocation.
+A synthesis is useful when it makes that revision possible.
 
 ## Where the Picture Breaks
 
-A synthesis map can create the illusion that every arrow has equal evidence.
-They do not. Structural mechanics, simulated model results, and human observations
-occupy different evidentiary levels. The claim labels must travel with any excerpt
-from this book.
+The map can make every connection look equally established. Mechanical
+identities, manufactured examples, finite simulation results, human observations
+and hypotheses have different evidentiary roles. Preserve those labels when a
+passage or figure is quoted outside the book.
 
-The final danger is using scientific caution as vague neutrality. The models do
-make conditional predictions. They should be tested decisively, updated when
-wrong, and retained when they survive—not promoted prematurely and not dismissed
-because they are reduced.
+Uncertainty should not erase conditional predictions. State them precisely and
+test them within their declared scope. Neither numerical agreement nor a
+persuasive mechanism establishes a universally superior swing, a particular
+scapular action or a safe loading prescription.
 
-**Go Deeper:** Read the monograph's
-[discussion and conclusions](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch09_conclusions.qmd),
-open the [interactive workbench](/articles/proximal-distal-model-workbench.html), and use
-the [reviewer path](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md)
-to challenge any claim that matters to you.
+**Go Deeper:** Read the revision-bound
+[discussion and conclusions](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch09_conclusions.qmd),
+inspect the [interactive workbench](/articles/proximal-distal-model-workbench.html),
+and follow the [reviewer path](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md)
+to the evidence for each specific claim.
