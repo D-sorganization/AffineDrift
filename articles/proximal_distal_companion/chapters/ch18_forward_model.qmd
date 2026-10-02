@@ -2,283 +2,339 @@
 
 ## A Concrete Picture
 
-A navigation app knows where a car is, how fast it moves, road rules, engine
-commands, and map geometry. To predict the next second, it cannot choose position
-directly. It computes how forces and constraints change acceleration, then
-advances velocity and position. If the predicted car drifts through a barrier,
-the model violated a constraint or took an unreliable step.
+Imagine a computer model of two hinged arms holding a bar. You specify its
+configuration, motion and applied joint torques. The program must find how the
+arms and bar accelerate together. It cannot move each arm independently and
+then declare that both hands still hold the same bar. Their shared geometry
+helps determine the interaction forces.
 
-A forward swing model performs a more demanding version of that calculation.
-At every tiny step it balances inertia, gravity, velocity effects, controls,
-contact reactions, and flexible states, then checks that joints and contacts
-remain closed.
+A forward swing model performs this calculation repeatedly. Within a declared
+contact mode, it balances inertia, gravity, velocity effects, applied loads and
+constraint reactions. Flexible deformation and actuator memory add state variables that
+must also evolve. If a hand slips or a contact opens, the equations governing
+that mode must change; keeping every contact closed is not a universal success
+criterion.
 
-![A Forward-Dynamics Pipeline Turns State and Control Into Accelerations and Reactions, Integrates the State, and Audits Constraints and Energy.](figures/proximal_distal_companion/fig_companion_forward_solver_loop.svg){#fig-lay-forward-loop width=98% fig-alt="A loop diagram flows from present state and controls through mass, drift, and constraint equations to acceleration and reaction, then numerical integration and residual checks before the next state."}
+![A Schematic Forward-Dynamics Loop Connects State, Constrained Acceleration, Integration and Separate Numerical Audits.](figures/proximal_distal_companion/fig_companion_forward_solver_loop.svg){#fig-lay-forward-loop width=98% fig-alt="A schematic loop starts with complete state and inputs, solves a declared constraint mode, integrates to a candidate next state and checks numerical consistency; refinement compares separate runs."}
 
 ## How the Mechanism Works
 
-The mass matrix $\mathbf M(\mathbf q)$ says how strongly each generalized
-coordinate resists acceleration and how coordinates are coupled. The vector
-$\mathbf h(\mathbf q,\dot{\mathbf q})$ collects gravity and velocity-dependent
-terms. Controls and external loads form generalized force $\mathbf Q$. Constraints
-add reaction $\mathbf J^{\mathsf T}\boldsymbol\lambda$.
+For local generalized coordinates $\mathbf q$ with $\mathbf v=\dot{\mathbf q}$, write
 
-The KKT system solves $\ddot{\mathbf q}$ and $\boldsymbol\lambda$ together. This
-is crucial: reaction force is whatever enforces the declared acceleration-level
-closure, not an independent input selected for a preferred result.
+$$
+\mathbf M\dot{\mathbf v}+\mathbf h
+=\mathbf Q+\mathbf J^{\mathsf T}\boldsymbol\lambda,
+\qquad
+\mathbf J\dot{\mathbf v}=\mathbf b.
+$$
+
+The vector $\boldsymbol\lambda$ contains reaction multipliers. The mass matrix
+$\mathbf M$ expresses inertia and coupling. The constraint
+Jacobian $\mathbf J$ maps coordinate velocities to rates of change of the
+constraint equations. Here $\mathbf h$
+contains the selected velocity, gravitational, elastic and dissipative terms;
+$\mathbf Q$ contains the remaining applied loads. The allocation can differ
+between implementations, but each term belongs in the balance once. An elastic
+force already represented by a potential must not be added again as an
+independent energy source. Representations with generalized velocities other
+than $\dot{\mathbf q}$ require their own configuration-rate map.
+
+For a fixed set of ideal bilateral constraints, the simultaneous solve has the
+Karush--Kuhn--Tucker (KKT) saddle-point form
+
+$$
+\begin{bmatrix}
+\mathbf M&-\mathbf J^{\mathsf T}\\
+\mathbf J&\mathbf 0
+\end{bmatrix}
+\begin{bmatrix}\dot{\mathbf v}\\\boldsymbol\lambda\end{bmatrix}
+=\begin{bmatrix}\mathbf Q-\mathbf h\\\mathbf b\end{bmatrix}.
+$$
+
+The right-hand side $\mathbf b$ follows from differentiating the constraints,
+including any prescribed boundary motion. Symmetric positive-definite $\mathbf M$ and
+full row rank of $\mathbf J$ are sufficient for a unique solve in this form.
+Redundant constraints, singular configurations and different contact laws need
+separate treatment. Reaction multipliers are solved alongside acceleration;
+they are not arbitrary controls chosen to create a preferred swing.
+
+### What a Reaction Multiplier Means
+
+The physical generalized reaction is $\mathbf J^{\mathsf T}\boldsymbol\lambda$.
+A multiplier's units and sign depend on the constraint equation. Multiplying
+one constraint row and its right-hand side by seven divides its multiplier by
+seven while leaving the reaction and acceleration unchanged. A raw multiplier
+is therefore not automatically a Cartesian hand-force component.
+
+The same caution applies to residual norms. Translational and rotational force
+equations, acceleration constraints and geometric closure have different units
+and scales. Report them separately or normalize them with declared reference
+scales. A small unscaled norm alone does not tell the reader which physical
+quantity is accurate.
 
 ### Integration Turns Local Rules Into a Trajectory
 
-Acceleration updates velocity; velocity updates configuration. Numerical methods
-approximate this continuous evolution with finite steps. A step too large can
-miss an impact, distort a fast shaft mode, or inject energy. A stable-looking
-animation is not numerical validation.
+An integrator approximates the coupled evolution of configuration, velocity and
+internal states. It may evaluate dynamics several times per accepted step.
+Large steps can miss events or distort fast flexible motion even when the
+animation looks smooth. Stability, accuracy and constraint consistency are
+related but distinct requirements.
 
-The study repeats key cases at smaller timesteps. Physical results should
-converge while work-energy and constraint residuals decrease. Event detection
-locates impact consistently rather than accepting the nearest coarse sample.
+Compare declared observables over a sequence of step sizes, solver tolerances
+and, where relevant, mode-transition settings. Look for convergence and report
+the range over which it is observed. Projection tolerances, event-location
+error, roundoff and competing errors can prevent each residual from decreasing
+monotonically. The name of an integration scheme does not establish its order
+after velocity-dependent forces, projections or contact switches are added.
 
-### Constraint Stabilization Is Not Free
+Define each event explicitly. In the revision-bound two-degree-of-freedom
+double-pendulum study, “impact” is a
+specified club-angle crossing located by interpolation; it does not simulate
+ball contact. The planar forward two-hand example instead runs to a fixed
+time horizon. Neither should be described as a resolved club-ball collision.
+An actual collision requires an impact law or a resolved compliant-contact
+model, with its own verification.
 
-Roundoff and integration error can let closed contacts drift apart. Projection
-or stabilization corrects the state toward the constraint manifold. Corrections
-must be reported because large projections can hide an unstable solver. The
-forward tests set tolerances for position closure, velocity closure, and maximum
-projection.
+### Initial Conditions and Projection
 
-### Inputs Need Dynamics Too
+For a holonomic constraint $\boldsymbol\Phi(\mathbf q,t)=\mathbf 0$,
+compatible velocities satisfy the following condition, where
+$\boldsymbol\Phi_t$ is the explicit partial derivative with respect to time:
 
-An instantaneous torque step is mathematically convenient and physiologically
-harsh. First-order command filters, torque-rate limits, and activation states
-make inputs finite. Sensitivity to rise time tests whether a result depends on a
-single discontinuous sample.
+$$
+\mathbf J\mathbf v=-\boldsymbol\Phi_t.
+$$
 
-The preload study goes further by evolving internal transmission state before
-the transition. The uncertainty study includes delayed actuators. These additions
-do not create a complete muscle model; they challenge timing claims with more
-realistic state continuity.
+For a stationary boundary, $\boldsymbol\Phi_t=\mathbf 0$ and the condition
+reduces to $\mathbf J\mathbf v=\mathbf 0$: admissible motion does not open or
+stretch the constraints. Give
+flexible modes, activation states and controller memory consistent initial
+values too. Otherwise the solver may spend its first steps repairing the
+initialization rather than predicting the intended experiment.
 
-### Registered Observables Keep the Solver Honest
+Projection changes a state to satisfy the chosen constraints. Its correction
+and energy change are numerical bookkeeping, unless a separately justified
+physical reset law gives them a different interpretation. Record whether the
+energy ledger starts before or after initial projection. A genuine impact can
+change velocity discontinuously; silently correcting an inconsistent measured
+state is a different operation.
 
-The forward two-hand model reports club trajectory, speed, hand reactions,
-equivalent wrench, common and differential modes, interface powers, actuator
-work, energy residual, and constraint closure. A result is rejected if one key
-contract fails even when club speed looks attractive.
+For a manufactured example at fixed configuration, take two translational
+coordinates with masses $2$ and $1\,\mathrm{kg}$, velocity
+$(3,-1)\,\mathrm{m/s}$ and the stationary condition $v_1+v_2=0$.
+Mass-metric velocity projection gives $(7/3,-7/3)\,\mathrm{m/s}$. Kinetic
+energy changes from $9.5$ to $49/6\,\mathrm J$: a loss of
+$4/3\,\mathrm J$ introduced by the correction. Calling that loss muscle work
+or physical damping would tell the wrong story. Large corrections should
+trigger investigation of initialization, discretization or model consistency.
 
-Negative controls alter contact separation, moment-arm sign, driver commands,
-gravity, damping, or stiffness. The solver must reproduce the qualitative and
-quantitative limiting behavior expected from mechanics.
+### Inputs Need a Declared Physical Meaning
+
+A finite step in directly applied torque produces a finite acceleration jump
+in a regular fixed-mode model; it is not an impulse and does not itself jump
+velocity. For example, a $3\,\mathrm{N\,m}$ step on an ideal rotor with
+inertia $2\,\mathrm{kg\,m^2}$ changes acceleration to
+$1.5\,\mathrm{rad/s^2}$. Starting at $0.4\,\mathrm{rad/s}$, speed is still
+$0.4$ at the step and reaches $0.55\,\mathrm{rad/s}$ after $0.1\,\mathrm s$.
+The increase in kinetic energy equals the torque's work in this example.
+
+Realistic input models may add activation or transmission dynamics. A
+first-order filter smooths its output but does not impose a universal hard
+torque-rate bound. A delay shifts a signal without necessarily smoothing it.
+Preload and actuator memory can retain applied load after the command is set
+to zero. Rise-time and delay studies therefore compare different input models
+and initializations; they do not directly identify human activation.
+
+The pinned two-hand example maps its six command values directly to joint
+torques. Its zero-command branch removes those torques. That interpretation
+must be revised if an actuator state is inserted between command and load.
+
+### Building a Counterfactual Correctly
+
+At a forward intervention, copy the complete model state and preserve the
+boundary prescription. Change only the declared future input, contact law or
+other intervention variable. Keep solver settings comparable and record
+mode changes. Do not silently reset velocities, controller integrators or shaft
+modes. The trajectories can then diverge through both state evolution and
+changed reactions.
+
+For an instantaneous input comparison, retain the state and solve the dynamics
+and reactions again under each input. If the applied generalized load has the
+affine form $\mathbf Q=\mathbf Q_0+\mathbf B\mathbf u$, then $\mathbf Q_0$ is
+the input-independent load and $\mathbf B$ maps inputs to generalized loads.
+With all coefficients fixed at that state, the same nonsingular KKT system maps input differences
+linearly to acceleration differences. Here $\mathbf u$ must be the declared
+input level; it is not automatically the actuator command. Contact-mode changes
+or nonlinear actuator maps can invalidate
+that simple comparison. A zero-velocity construction changes the state and
+requires a separate feasibility check; it is not another input change at the
+original state. See @sec-lay-ch11 for the different counterfactual questions.
+
+### Physical Work and Numerical Error Need Separate Ledgers
+
+Choose the modeled system and its mechanical energy before assigning power.
+Count applied work, prescribed-boundary power and dissipation consistently with
+the conservative terms already included in that energy. An ideal stationary
+constraint has zero net power across the complete constrained system, but a
+hand force can still transfer energy into the club viewed alone.
+
+An ideal moving constraint may supply or remove energy. In a second
+manufactured example, two masses of $2$ and $3\,\mathrm{kg}$ satisfy
+$q_1-q_2=s(t)$, where $q_1,q_2$ are their positions and $s(t)$ is a prescribed
+relative displacement. With $\dot s=0.5\,\mathrm{m/s}$,
+$\ddot s=0.2\,\mathrm{m/s^2}$, velocities $(2,1.5)\,\mathrm{m/s}$ and no
+other loads, the reaction is $(0.24,-0.24)\,\mathrm N$. Its net power is
+$0.12\,\mathrm W$, equal to the kinetic-energy rate. Resetting both velocities
+to zero would violate the retained moving-boundary condition. Compliant contact
+can store energy and may dissipate it; neither effect should be confused with
+an ideal stationary reaction.
+
+Record numerical projection energy separately from the physical work ledger.
+A small net energy residual can conceal cancellation among larger numerical
+errors. Momentum checks add useful information when the external wrench and
+the reference point/frame are specified; angular momentum about a moving point
+requires the appropriate transport terms.
+
+### What the Pinned Forward Example Actually Shows
+
+The saved planar two-hand example has seven coordinates, four independent
+bilateral constraints and no prescribed swing trajectory. Its report records
+closure, interface-power identities, work-energy residuals, geometry controls
+and selected step/tolerance comparisons. These records support bounded
+mechanical feasibility under the stated model, not a guarantee for every
+forward tier or controller.
+
+The saved baseline reports about $0.096\,\mathrm J$ of absolute work-energy
+residual alongside about $-0.778\,\mathrm J$ of accumulated projection-energy
+change. The latter is not physical work to insert merely to improve the former.
+It shows why the separate error terms matter. In the saved step comparison,
+the raw work-energy residual falls from about $0.695$ to $0.373$ to
+$0.191\,\mathrm J$ as the step falls from $2$ to $1$ to $0.5\,\mathrm{ms}$;
+position closure does not decrease strictly at every refinement. These are
+inspected stored results, not a new simulation performed for this chapter.
+
+The model's direct tests also examine a short driven rollout, a zero-torque
+step comparison, a branch from an achieved moving state, coincident grip offsets and selected
+invalid requests. Their finite cases do not prove general convergence,
+symplecticity or global positive definiteness. Checking a release's file hashes
+establishes correspondence to recorded artifacts; rerunning its dynamics is a
+separate act that must be reported separately.
 
 ### Inverse and Forward Models Complement Each Other
 
-Inverse dynamics begins with measured motion and estimates required forces. It
-is strong for trial-specific attribution but vulnerable to noise and contact
-nonuniqueness. Forward dynamics begins with force/control models and predicts
-motion. It supports interventions but depends on controller and parameter quality.
-Agreement between them on common observables is more informative than choosing
-one as universally superior.
+Inverse dynamics uses motion, inertial assumptions and external-load information
+to infer net generalized loads. It does not uniquely recover individual muscle
+forces or redundant internal contact forces without additional assumptions.
+Forward dynamics predicts motion from a complete initial state and a declared
+input model. It enables interventions within that model, but its parameter,
+controller and contact assumptions remain consequential.
 
-**Model Result:** The constrained forward tiers pass registered closure,
-work-energy, negative-control, and timestep tests for their declared synthetic
-models.
+Agreement between inverse and forward calculations can expose implementation
+errors. It can also follow from using the same equations and fitted data in both
+directions. Independent observations and held-out interventions provide stronger
+evidence for predictive validity than replay agreement alone.
 
-**Human Evidence:** Existing three-dimensional golf models show both the value
-and the strong assumption load of forward simulation [@mackenzie2009;
-@balzerson2016].
+**Model Result:** The revision-bound planar study reports selected numerical
+checks and a feasible negative sum of grip-force moments about the club center,
+using its declared planar angular sign convention and excluding direct wrist torques.
+Those checks neither establish biological passivity nor identify a human
+control strategy.
 
-**Hypothesis:** Interaction-force mechanisms that persist under forward
-integration and geometry controls are better candidates for human experiments
-than effects seen only in inverse replay.
+**Human Evidence:** MacKenzie and Sprigings fitted a selected swing of one
+golfer using single-camera measurements; their quantitative comparison did not
+cover the model's axial arm rotation. A separate optimization then targeted
+clubhead speed [@mackenzie2009]. Balzerson and colleagues combined a fitted
+golfer model with shaft, impact and flight components having different
+comparison datasets [@balzerson2016]. These studies illustrate useful modeling
+and bounded empirical comparisons, rather than independent validation of every
+prediction of an optimized whole-system model.
 
-**Practical Interpretation:** A forward model earns trust by showing its
-homework: equations, state continuity, small steps, closed constraints, balanced
-energy, and failed cases where the mechanism predicts failure.
+**Hypothesis:** Mechanisms that survive declared forward, geometry and numerical
+checks are stronger candidates for targeted experiments. That survival does
+not establish that golfers exploit them.
 
-### The Solver's Job at Every Time Step
+**Practical Interpretation:** Trust grows when the reader can distinguish the
+equations, their numerical solution, the fitted data and genuinely predictive
+tests of the physical system.
 
-A constrained forward model begins with state and control. It evaluates mass,
-gravity, velocity-dependent, elastic, damping, external, and applied-control
-terms. Constraint equations say which relative motions are permitted. The solver
-then finds accelerations and reaction multipliers that satisfy dynamics and
-constraints together. An integrator advances positions, velocities, and internal
-states to the next instant.
+### Coordinates, Contact and Independent Implementations
 
-This loop repeats thousands of times. Small sign, frame, or indexing errors can
-create plausible-looking motion while corrupting forces or energy. Contracts at
-each layer are therefore as important as the final animation.
+Minimal coordinates can eliminate simple holonomic joint constraints locally.
+Maximal coordinates often make body poses and complex connectivity easier to
+describe, at the cost of explicit constraints. Spatial-vector algorithms
+organize dynamics calculations and can be used with different coordinate
+choices; they are not a competing coordinate representation.
 
-### Coordinates and Constraints
+Compare mapped positions, velocities, wrenches and powers for the same physical
+model, inputs and initial state. Components in different bases or at different
+wrench reference points need the corresponding transformations. Coordinate
+invariance is not a claim that kinetic energy has the same numerical value for
+observers moving relative to one another. Agreement between independent engines
+is strongest when they do not share the same derivative implementation or
+unexamined assumptions.
 
-Minimal generalized coordinates avoid explicit holonomic constraint multipliers
-for simple joints but can make complex contacts and spatial frames harder to
-manage. Maximal or Cartesian coordinates describe body poses more uniformly and
-enforce joints with constraints. Spatial-vector formulations organize rigid-body
-dynamics efficiently. Independent engines using different formulations provide
-valuable cross-checks.
+An ideal bilateral grasp places no friction or strength limit on its reaction.
+Human hands and feet do. A no-slip model must be checked against the specified
+contact capacity before interpreting its loads physically. Unilateral contact
+requires separation and admissibility conditions; an active-set KKT solve can
+describe a regular fixed mode, while switching, complementarity, compliant
+contact or impacts require additional equations and numerical choices. Test
+sensitivity to those choices when the proposed mechanism depends on contact.
 
-No formulation is inherently the truth. They should agree on frame-invariant
-observables when representing the same physical model. Differences point to
-implementation, tolerance, or specification mismatch that must be reconciled
-before interpretation.
+### Reader Lab: Separate a Broken Calculation From a Different Model
 
-### Initial Conditions Must Satisfy the Model
+Introduce a frame mismatch deliberately: reverse one measured axis while
+leaving the model transformation unchanged. A frame-consistency check should
+detect that error. Transforming all quantities consistently describes the same
+physics and should pass. Likewise, a documented damping removal or input delay
+can define a legitimate new physical scenario. It should change predictions,
+not automatically fail the solver. Energy may rise when applied work is positive.
 
-Positions should satisfy joint and contact constraints. Velocities should lie in
-the constraint tangent space. Flexible modes and controller states need declared
-initial values. Starting from an inconsistent state can create large artificial
-reaction impulses that resemble interesting interaction forces.
+For a geometry control, setting both grip offsets to zero removes their
+force-generated moment about the coincident point. By contrast, reversing an
+offset and solving a new trajectory also changes the reactions; the resultant
+couple is not guaranteed to reverse sign. State the exact limiting prediction
+before using it as a pass/fail test.
 
-A projection step can place measured or designed states on the constraint
-manifold, but projection changes them. Record the correction and reject cases
-whose adjustment exceeds tolerance. For human data, measurement uncertainty
-should be reconciled with dynamics rather than silently forced into perfect
-constraints.
+Next perturb the initial state or enlarge the timestep and compare correction
+sizes and converged observables. Preserve failed cases and classify them:
+infeasible contact, singular geometry, a numerical failure and a different
+physical model are not interchangeable explanations. Do not loosen tolerances
+until a desired animation appears and then call it verified.
 
-### Work-Energy and Momentum Audits
+### Reproducibility and Extending the Model
 
-The change in total modeled mechanical energy should match integrated external
-and control power minus declared dissipation. Constraint work should follow the
-contact model: zero for ideal stationary constraints, nonzero for moving or
-compliant contacts. Linear and angular momentum balances provide separate checks
-when external wrench is known.
+Record the exact code and model revision, parameters, complete initial state,
+input schedule or feedback law, solver settings, event definitions and relevant
+random seed. State units and frames in machine-readable outputs. A stateful
+controller needs its own state evolution; repeatedly calling a hidden mutable
+callback can change the experiment and make reconstructed diagnostics disagree
+with the inputs actually used.
 
-Audits should run on every major model rung and counterfactual. A branch that
-removes torque changes power, but it should not suddenly create an unexplained
-energy residual. Report maximum constraint violation, balance residuals,
-integration tolerances, and refinement convergence with each result.
+Retain earlier benchmarks when adding a shaft, moving base or spatial joint.
+Add new limiting cases and explain which earlier assumptions no longer apply.
+Version changed output meanings and regenerate figures from recorded results.
+Publish a small runnable benchmark, its expected tolerances and failed-case
+examples so review does not require the entire optimization stack.
 
-### Building a Killswitch Correctly
-
-At intervention time, copy the complete state. Modify only selected future input.
-Do not reset velocities, controller integrators, or shaft modes unless those are
-the explicit intervention. Use the same solver settings and event handling.
-Store both trajectories with a branch identifier and intervention manifest.
-
-For pointwise decomposition, do not advance state. Re-evaluate the right-hand
-side under baseline and counterfactual inputs at the same state. This difference
-should close against a declared term decomposition. Keeping the two procedures
-separate prevents a forward divergence from being mislabeled as instantaneous
-force attribution.
-
-### Contact and Friction
-
-Ideal bilateral constraints can transmit whatever reaction is needed. Human
-hands and feet have finite friction, compliance, and moment capacity. A richer
-model checks whether reconstructed loads remain within plausible contact cones
-and pressure limits. If not, the assumed no-slip constraint is infeasible.
-
-Complementarity or compliant contact introduces switches and numerical
-stiffness. Event detection, regularization, and timestep can affect results. The
-negative-couple mechanism should be tested across reasonable contact
-representations rather than tuned to one solver's smoothing.
-
-### Verification Before Validation
-
-Verification asks whether code solves the equations intended. Use analytic
-limits, manufactured solutions, finite-difference derivative checks, timestep
-studies, conservation cases, and independent engine comparison. Validation asks
-whether the intended equations represent measured reality. It uses calibrated
-data, uncertainty, held-out predictions, and residual structure.
-
-A model can be verified and invalid. It can also fit data while being
-implemented incorrectly through compensating errors. Publication must show both
-tracks and avoid treating visual resemblance as either.
-
-### Reproducible Output Contracts
-
-Every run should record code commit, model version, parameter manifest, control
-schedule, initial state, solver and tolerance, random seed, and output schema.
-Derived figures should be reproducible from machine-readable results. Units,
-frames, and sign conventions belong in the schema, not only the prose.
-
-The open workbench should invoke the same canonical engines used by tests rather
-than copying equations into a second educational implementation. That reduces
-drift and lets a reader move from a casual experiment to the exact scientific
-artifact.
-
-### What Forward Simulation Can Establish
-
-It can demonstrate that a mechanism is dynamically possible under declared
-assumptions, quantify its effects, expose tradeoffs, and make falsifiable
-predictions. It cannot prove that observed golfers used the simulated controls,
-that unmeasured muscles produced generalized torques, or that an optimum is safe.
-Those boundaries make the simulator a stronger scientific resource, not a
-weaker sales demonstration.
-
-### Reader Lab: Break the Solver on Purpose
-
-Reverse one sensor axis, introduce a small initial constraint violation, enlarge
-timestep, remove damping, and shift one input channel in time. Each defect should
-trigger a predictable gate: frame closure, projection correction, convergence,
-energy behavior, or synchronization. If outputs remain silently “valid,” the
-product is not fail-closed.
-
-Then perform an independent implementation of one benchmark. Share only the
-specification and input manifest, not internal derivative code. Compare state,
-reaction, power, and energy residual. Agreement in animation with disagreement
-in wrench is not enough because this project interprets forces.
-
-Finally replay a stored run from exact commit and seed. Regenerate tables and
-figures and compare hashes or numeric tolerances. Reproducibility should be a
-test, not a claim in the methods paragraph.
-
-### Interpreting Solver Failure
-
-A failed integration can indicate numerical stiffness, infeasible contact,
-singular geometry, or a physically extreme control. Retrying with looser
-tolerances until motion appears is not an acceptable default. Classify failure,
-retain the case in ensemble statistics, and determine whether the model or
-numerics needs revision.
-
-Failure regions are scientifically valuable. They reveal where an ideal
-constraint demands impossible reaction, where contact should switch, or where a
-control policy lacks robustness. The public tool should visualize these regions
-rather than omitting them from the success rate.
-
-### Model Contracts as Scientific Sentences
-
-“Mass matrix is symmetric positive definite in the qualified state region” is
-both a test and a statement about kinetic energy. “Constraint violation remains
-below tolerance” says simulated contacts mean what the prose claims. “Wrench
-power is invariant under reference-point transform” protects the energy story.
-“The geometry reversal changes the couple sign” encodes the proposed mechanism.
-
-Writing such contracts before implementation gives the solver an explicit job.
-Tests then protect scientific meaning as code evolves. A regression that passes
-visual inspection but violates one contract is caught before publication.
-
-### Extending the Engine Safely
-
-When adding a shaft, moving base, or spatial joint, preserve old benchmarks and
-add new limiting cases. Version schemas rather than silently changing column
-meaning. Rebuild all derived artifacts and compare qualified observables. Record
-intentional changes in a release note and evidence manifest.
-
-This discipline supports multiple front ends and repositories. The canonical
-physics library owns equations and contracts; educational pages consume its
-versioned outputs. Duplication is minimized, and a casual explanation cannot
-quietly drift from the tested engine.
-
-### What a Reviewer Needs
-
-Provide a small runnable benchmark, exact command, expected tolerances, and
-human-readable trace. Include failed-case examples. A reviewer should not need
-the full optimization stack to verify core dynamics. This modularity is one of
-the most important ways to move the project from an internal modeling package
-to an open scientific resource.
+The same reproducibility requirement extends to the reader's visualization.
+An educational interface should consume the same versioned model or verified
+outputs used for the scientific evidence. That is a design recommendation,
+not proof that every existing front end already shares one engine. Inspect
+actual dependencies before making that architectural claim.
 
 ## Where the Picture Breaks
 
-The navigation picture has known roads. Human joint constraints and controls are
-uncertain. A numerically impeccable solver can integrate the wrong anatomy or
-controller. Verification checks code against equations; validation checks model
-predictions against reality.
+The two-arm picture assumes known geometry, constitutive laws and boundaries.
+Human anatomy, contact and control are uncertain. Verification checks how well
+the implementation solves the declared equations; validation compares relevant
+predictions with physical observations over a specified use range. Good
+numerics can integrate an inadequate model, and a good fit can hide compensating
+errors. Neither an optimized swing nor a small residual proves that a person
+used the modeled controls, that a particular muscle supplied a net torque, or
+that a proposed intervention is beneficial.
 
-Contact models are particularly consequential. Rigid, compliant, frictional,
-and distributed contacts can change internal forces. Results should be qualified
-by the contact family tested.
-
-**Go Deeper:** Read the
-[forward constrained two-hand model](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
-the [solver and platform methods](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06_methods.qmd),
-and the open [qualification instructions](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).
+**Go Deeper:** Read the revision-bound
+[forward constrained two-hand model](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd),
+the [solver and platform methods](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06_methods.qmd),
+and the [qualification instructions](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).

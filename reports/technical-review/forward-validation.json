@@ -1,0 +1,253 @@
+{
+  "issue": 4817,
+  "base_checkpoint": "33afa9d25b7f61113ff4a0928d2cef2c2b1da76e",
+  "status": "Regular combined PR4820 open; registration checkpoint and guarded merge pending",
+  "source_commit": "e4540364c6a21b66df55eb2959beef4e5eed9a2d",
+  "bound": true,
+  "remote_main_verified": false,
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 892,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "content_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/forward-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "full_regression": {
+    "failed": 4,
+    "passed": 6624,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 999.69,
+    "coverage_percent": 79.23
+  },
+  "failures": [
+    "tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current",
+    "tests/test_claim_audit_output_boundary.py::test_review_evidence_survives_deployment_pruning",
+    "tests/test_root_hygiene.py::test_root_matches_allowlist_and_hygiene_script_passes",
+    "tests/test_root_hygiene.py::test_check_root_hygiene_cli_passes"
+  ],
+  "remediation": {
+    "reason": "Refresh stale PDF/generator/chapter evidence hashes; preserve Playwright scratch directory under QA. No mathematical or solver changes.",
+    "focused": {
+      "summary": "40 passed in 63.49s (0:01:03)",
+      "passed": 40,
+      "coverage_percent": 79.35,
+      "failed": 0
+    },
+    "scope": "Broad regression plus targeted remediation; not a repeated clean full run."
+  },
+  "math": [
+    {
+      "width": 390,
+      "total": 56,
+      "rendered": 56,
+      "displays": 3,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "total": 56,
+      "rendered": 56,
+      "displays": 3,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    }
+  ],
+  "publication": {
+    "pages_before": 233,
+    "pages_after": 234,
+    "before_chapter_changed_pages": [4, 5],
+    "after_chapter_shifted_differences": [],
+    "changed_generator_nodes": ["make_solver_loop"],
+    "canonical_public_pdf_equal": true,
+    "pdf_sha256": "62ff214aaaae7ffb04f122fdbe7bd5ee35eef77d985c1bcb23afff39e99d980c",
+    "visually_inspected_physical_pages": [
+      4, 5, 128, 129, 130, 131, 132, 133, 134, 135, 136
+    ]
+  },
+  "browser_cells": [
+    {
+      "viewport": {
+        "height": 844,
+        "id": "mobile",
+        "width": 390
+      },
+      "theme": "light",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 844,
+        "id": "mobile",
+        "width": 390
+      },
+      "theme": "dark",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 900,
+        "id": "desktop",
+        "width": 1440
+      },
+      "theme": "light",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 900,
+        "id": "desktop",
+        "width": 1440
+      },
+      "theme": "dark",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    }
+  ],
+  "zoom": {
+    "opened": true,
+    "closed": true
+  },
+  "helpers": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_and_reviewed": 7,
+    "failed_attempts": 1
+  },
+  "prior_findings_preserved": 193,
+  "prior_dependencies_unchanged": 196,
+  "prior_dependencies_changed": 3,
+  "provider_dynamics_rerun": false,
+  "human_study": false,
+  "corpus_pending_before_binding": 105,
+  "title_checks": 655,
+  "post_binding_tests": {
+    "passed": 40,
+    "failed": 0,
+    "seconds": 34.57
+  },
+  "corpus_pending": 104,
+  "companion_findings_total": 201,
+  "binding_note": "Initial exact-byte check stopped on SVG CRLF before mutation; committed LF bytes copied after semantic newline equality assertion; retry succeeded.",
+  "commands": {
+    "full_regression": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "remediation": "py -3.12 -X utf8 -m pytest tests/test_forward_model_review.py tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_root_hygiene.py --cov --cov-append --cov-report=xml --timeout=60",
+    "post_binding": "Same seven test modules without coverage options; --timeout=60",
+    "renders": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; followed sequentially by --to html",
+    "static_and_gates": "Exact command arguments stored in static/content_gates entries and local forward_static.py/forward_content_gates.py",
+    "titles": "py -3.12 -X utf8 scripts/check_title_case.py"
+  },
+  "binding_commit": "66a5bed3773a8991978fd7df7c27066d5cf0b9dc",
+  "remote_topic_verified_commit": "1d2a48ccd8020f5fbc74c583d03bcb1078d1ce2c",
+  "normal_commit_push_hooks_passed": true,
+  "pr_prose_adjudication": "Lead removed repetitive lists and clarified56total math expressions including3displays; no clean-full-run claim.",
+  "combined_delivery": "reports/technical-review/synthesis-delivery.json",
+  "combined_topic_verified_commit": "c19ff2d993ea0a0a0f1cd8151e54b03df93d1869",
+  "combined_issue": 4819,
+  "parent_remote_main_verified": true,
+  "parent_merge_commit": "41c7a6df057ae0fd35f85b1bf001afdc19596f4b",
+  "parent_receipt": "reports/technical-review/lagrangian-remote-main-receipt.json",
+  "integration_validation": "reports/technical-review/synthesis-integration-validation.json",
+  "pr": 4820,
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4820"
+}
