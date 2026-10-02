@@ -1,0 +1,191 @@
+{
+  "issue": 4821,
+  "status": "Accepted source bound; 47 post-binding checks pass; regular PR pending parent delivery",
+  "baseline": "dc1884f2084a1caaa1b135201e751e330afe24e2",
+  "source_audits_pending": 102,
+  "companion_findings_unchanged": 209,
+  "provider_revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+  "data_snapshots": [
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/counterfactual_ensemble.json",
+      "sha256": "fe3157680189c1e0486085e104f77dbd79db056d44c63ed2aa3dd891003c41f5",
+      "snapshot": "docs\\development\\technical-review\\counterfactual-provider-counterfactual_ensemble.json",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/spatial_forward_contact_study.json",
+      "sha256": "0af6b817c190978746f6736ec805801c013e1db3a69336e4e0e156f4720a4e51",
+      "snapshot": "docs\\development\\technical-review\\counterfactual-provider-spatial_forward_contact_study.json",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/experimental_protocol_readiness.json",
+      "sha256": "5815eee513d0b384609ff0cbf9be73d7e3bf96559e4f4a7c47f870610bd3536c",
+      "snapshot": "docs\\development\\technical-review\\counterfactual-provider-experimental_protocol_readiness.json",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/experimental_protocol_dry_run.json",
+      "sha256": "6b193ae754d54150e158fc559a045eee5dd497a64e0a393e58e30e1165f12c93",
+      "snapshot": "docs\\development\\technical-review\\counterfactual-provider-experimental_protocol_dry_run.json",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c"
+    }
+  ],
+  "saved_summary_arithmetic": {
+    "scope": "Arithmetic on saved JSON, not dynamics, NPZ reconstruction or human validation",
+    "rows": 96,
+    "variants": 12,
+    "exact_grid_verified": true,
+    "max_matched_state_error": 0.0,
+    "max_initial_control_closure_error_rad_s2": 3.2171190647067566e-14,
+    "max_initial_ztcf_closure_error_rad_s2": 0.0,
+    "sensitivity_exactly_reproduced": {
+      "1_ms_versus_0_5_ms": {
+        "terminal_q_distance_rad": 3.878064536166903e-10,
+        "terminal_v_distance_rad_s": 1.057136955751048e-8,
+        "terminal_force_distance_n": 1.1232765473323525e-7,
+        "force_work_difference_j": 0.017394603133982223,
+        "terminal_clubhead_speed_difference_m_s": 4.480270376916451e-9
+      },
+      "2_ms_versus_0_5_ms": {
+        "terminal_q_distance_rad": 0.009117786678739692,
+        "terminal_v_distance_rad_s": 0.09076944329330772,
+        "terminal_force_distance_n": 0.993340560951431,
+        "force_work_difference_j": 0.35563232600357164,
+        "terminal_clubhead_speed_difference_m_s": 0.19002885475428677
+      }
+    },
+    "one_ms_work_extrema": [
+      {
+        "cut_time_s": 0.32,
+        "horizon_s": 0.12,
+        "dt_s": 0.001,
+        "force_work_difference_j": -30.87602844327142,
+        "terminal_clubhead_speed_difference_m_s": 3.418004486054784
+      },
+      {
+        "cut_time_s": 0.22,
+        "horizon_s": 0.12,
+        "dt_s": 0.001,
+        "force_work_difference_j": 66.16902040271255,
+        "terminal_clubhead_speed_difference_m_s": 14.196490598979008
+      }
+    ]
+  },
+  "dependency_hash_checks": {
+    "count": 20,
+    "exact_matches": 16,
+    "nonmatches": [
+      {
+        "record": "counterfactual_ensemble.json",
+        "path": "docs/research/proximal_distal_energy_transfer/data/wscg_2024_hand_force_series.csv",
+        "matches": false,
+        "recorded": "5cdf32b890e58d733085eea87f102aaf325012435e6e83fcdc21a1b84d26d7b2",
+        "actual": "f938aa3d6839aa912d7174bf88f3f04f2c0708fee0f045062a535aa1532e8357",
+        "crlf_normalization_matches": true
+      },
+      {
+        "record": "counterfactual_ensemble.json",
+        "path": "scripts/research/proximal_distal_energy/double_pendulum_attribution.py",
+        "matches": false,
+        "recorded": "615b84e6579aae7dd8fadd25be221cf6b989444d860ff5fdbf35ca455547655b",
+        "actual": "e3603df2c93eb5133b541eb0431d7005b7d342844bad6b9d33b13a6f44fa8981",
+        "crlf_normalization_matches": false,
+        "matching_historical_source": {
+          "commit": "06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5",
+          "bytes": "git"
+        }
+      },
+      {
+        "record": "counterfactual_ensemble.json",
+        "path": "scripts/research/proximal_distal_energy/run_experiments.py",
+        "matches": false,
+        "recorded": "650cc17c3d4877dcd8f89841c9dc31617c2ee6c09df7b73a4adae6f93403a742",
+        "actual": "dcf045271488eeabc4bc8c1e0a104ee622d7b1a147abf01eaf9a6aeeea15f107",
+        "crlf_normalization_matches": false,
+        "matching_historical_source": {
+          "commit": "2e8ebaef8db22a3fc3fae931fb2ecb8f2f2cf659",
+          "bytes": "git"
+        }
+      },
+      {
+        "record": "spatial_forward_contact_study.json",
+        "path": "scripts/research/proximal_distal_energy/run_spatial_forward_contact_study.py",
+        "matches": false,
+        "recorded": "aa2c8602c07cd500b9abd41d3925c6f74c8183858f90d39c42db2a4083f84e3b",
+        "actual": "b86400e58a9c5be66e58e2c1a8590585897eb17cd2ffba8bf3c4d7743288a7a2",
+        "crlf_normalization_matches": false,
+        "matching_historical_source": {
+          "commit": "05a76a2bfcececf0a01df8311d0c4265a0e60e55",
+          "bytes": "git"
+        }
+      }
+    ]
+  },
+  "preservation": {
+    "prior_inventory_only_three_declared_dependency_digests_changed": true,
+    "changed_digest_count": 143,
+    "all_prior_scientific_fields_and_verification_commits_unchanged": true,
+    "other_routes_unchanged": true,
+    "other_generator_ast_equal": true,
+    "prior_body_pages_7_to_74_exact_text_equal": true,
+    "after_ch11_tail_text_equal_excluding_footer_pages": true,
+    "old_ch12_physical_page": 81,
+    "new_ch12_physical_page": 82,
+    "canonical_public_pdf_equal": true,
+    "pdf_sha256": "446cc2126c7113ea9f240b59a06615dfdfbc4542ad1846479e54da58a57a5d5b"
+  },
+  "validation": {
+    "focused_tests_passed": 4,
+    "affected_tests_passed": 27,
+    "affected_tests_failed": 2,
+    "failure_reason": "Browser verifier root artifacts directory; raw screenshots preserved under QA",
+    "hygiene_remediation_passed": 6,
+    "publication_gates": 12,
+    "title_sources": 655,
+    "python_files_quality_checked": 894,
+    "static_checks": ["Ruff", "Black100", "configured mypy"],
+    "pdf_pages": 238,
+    "canonical_public_pdf_equal": true,
+    "math": {
+      "expressions": 53,
+      "displays": 2,
+      "widths": [390, 1440],
+      "errors": 0,
+      "placeholders": 0,
+      "page_overflow": false
+    },
+    "browser_cells_passed": 4,
+    "serious_critical_axe": 0,
+    "image_zoom_open_close": true,
+    "mobile_table_horizontal_scroll": true,
+    "full_regression_pending": false,
+    "binding_pending": false,
+    "checkpoint_affected_tests_passed": 29,
+    "full_regression": {
+      "passed": 6636,
+      "skipped": 29,
+      "deselected": 187,
+      "warnings": 60,
+      "coverage_percent": 79.32,
+      "exit_code": 0
+    },
+    "final_contents_and_boundaries_inspected": true,
+    "post_binding_tests_passed": 47,
+    "post_binding_first_attempt": "60s timeout in deployment-pruning evidence hashing; no failed assertion",
+    "post_binding_retry": "Identical tests and 60s timeout; all47pass; pruning test29.75s"
+  },
+  "scope_limits": [
+    "No provider dynamics or provider test suite execution",
+    "No NPZ reconstruction",
+    "No human study",
+    "No whole-book scientific acceptance"
+  ],
+  "helper_count": 6,
+  "review_notes": "docs/development/technical-review/counterfactual-progress.md",
+  "parent_pr": 4820,
+  "parent_delivery_verified": false,
+  "frozen_review": "reports/technical-review/counterfactual-review.md",
+  "source_commit": "c27c09f3b08725ba485faa81a63673484746d957",
+  "companion_findings_total": 217
+}
