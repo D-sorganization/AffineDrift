@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4785 | Distinguish system boundaries, contact work, COM pseudowork, observer power and gravity accounting in Chapter 2; add manufactured counterexamples and an explicit interaction-classification figure (#4783). |
 | 2026-10-01 | #4777 | Expand axe-core verification in CI to scan dark theme and mobile viewports with multi-cell deduplication (#4562). |
 | 2026-10-01 | #4782 | Correct moving-base replay and inertia inferences, enforcing power and provider evidence limits; verify manufactured cart-pendulum balances and clarify the schematic (#4774). |
 | 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
