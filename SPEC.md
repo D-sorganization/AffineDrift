@@ -226,6 +226,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-10-02 | #4788 | Distinguish artifact identity, computational reproduction and physical validation in Chapter 27; retain release-profile limits and immutable provider references. |
 | 2026-10-02 | #4785 | Distinguish system boundaries, contact work, COM pseudowork, observer power and gravity accounting in Chapter 2; add manufactured counterexamples and an explicit interaction-classification figure (#4783). |
+| 2026-10-01 | #4781 | Add runtime performance budget configuration for ten representative routes, Playwright E2E budget spec, and CI verification script (#4570). |
 | 2026-10-01 | #4782 | Correct moving-base replay and inertia inferences, enforcing power and provider evidence limits; verify manufactured cart-pendulum balances and clarify the schematic (#4774). |
 | 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
 | 2026-10-01 | #4772 | Correct measured-golfer study attribution, sensor/model inference, repeated-swing uncertainty and human-validation boundaries in Chapter 24; replace evidence pyramid (#4771). |
