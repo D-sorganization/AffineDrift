@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/open-evidence-rigor-4786
 - **Paths:** articles/proximal_distal_companion/chapters/ch27_open_evidence.qmd, tests/test_open_evidence_review.py, references/proximal-distal-energy.bib
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Exact source binding pending.
-- **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 116 audits still pending.
-- **Next step:** Commit accepted source, bind eight findings, integrate predecessor and deliver regular PR.
+- **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Eight findings bind028720c0a5e7ec6e298cfb4615aa98c9cf6e8c31.
+- **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 115 audits remain.
+- **Next step:** Commit binding, integrate parent8881a7939 and deliver regular PR.
 
 ### DL-#4783 — System Boundaries and Contact Work
 
