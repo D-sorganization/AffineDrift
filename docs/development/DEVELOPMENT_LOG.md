@@ -19,9 +19,22 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4786 — Open Evidence and Reproduction
+### DL-#4789 — Biological Ambiguity and Load Inference
 
 - **State:** in_review
+- **Owner:** codex
+- **PR:** #4790 (regular, attached)
+- **Issue:** #4789; epic #4009 / corpus #4021
+- **Branch:** fix/biological-ambiguity-rigor-4789
+- **Paths:** articles/proximal_distal_companion/chapters/ch25_biological_ambiguity.qmd, tests/test_biological_ambiguity_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; source53023631e; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
+- **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. 121 prior findings preserved; eight new findings bound; eight agy Flash helpers reviewed.
+- **Next step:** PR4788 verified and integrated; push final integration, verify CI and protected PR4790 remote-main delivery; 114 corpus audits remain.
+
+### DL-#4786 — Open Evidence and Reproduction
+
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4788 (regular)
 - **Issue:** #4786; epic #4009 / corpus #4021
@@ -30,33 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Eight findings bind028720c0a5e7ec6e298cfb4615aa98c9cf6e8c31.
 - **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 115 audits remain.
-- **Next step:** PR4785 remote delivery verified at0bcc9f866; push unchanged-science integration, verify final-head CI, protected merge and remote-main blobs.
-
-### DL-#4783 — System Boundaries and Contact Work
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4785 (regular)
-- **Issue:** #4783; epic #4009 / corpus #4021
-- **Branch:** fix/system-boundary-rigor-4783
-- **Paths:** articles/proximal_distal_companion/chapters/ch02_choose_the_system.qmd, tests/test_system_boundary_review.py, scripts/make_proximal_distal_companion_expanded_figures.py, references/proximal-distal-energy.bib
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run had two stale-digest failures; 71 follow-up checks pass; CI SVG CRLF mismatch corrected to bound Git LF bytes; 25 evidence checks pass.
-- **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
-- **Next step:** Verify final-head CI, predecessor delivery, protected merge and exact remote-main blobs.
-
-### DL-#4774 — Moving-Base Mechanics
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** #4782
-- **Issue:** #4774
-- **Branch:** fix/moving-base-rigor-4774
-- **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd
-- **Started:** 2026-10-01
-- **Last verified:** 2026-10-02; remote main 4c025bbf0b822f7576f1ea60afc3d21f47945e59; final CI 36951827315 succeeds; all 20 delivered blobs match.
-- **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
-- **Next step:** None; delivered and verified on remote main.
+- **Next step:** None for Chapter27: PR4788 merged8bead8523, CI36961840257 passed, all18changed blobs verified; lease/presence released.
 
 ### DL-#4771 — Measured Golfer Evidence
 

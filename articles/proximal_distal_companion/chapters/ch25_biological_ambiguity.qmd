@@ -2,277 +2,372 @@
 
 ## A Concrete Picture
 
-Several teams can move the same piano through a doorway. One team pushes from
-behind, another pulls with straps, and a third combines both. The piano follows
-nearly the same path, but internal effort, stability, and injury risk differ.
-Watching the piano does not identify the team strategy.
+Several teams can move the same piano through a doorway. One pushes, another
+pulls with straps, and a third combines both. The piano can follow the same path
+while the people share the load differently. Watching the piano does not reveal
+each person's force or establish equal effort.
 
-Club motion is the piano. Muscles, joints, two hands, and connective tissues form
-an overcomplete team. A model may estimate the net wrench required at the grip
-or the net moment at a joint. Those quantities rarely identify which muscles or
-scapular actions produced them.
+Club motion poses a similar inverse problem. A net grip wrench describes the
+combined force and moment acting on the club. It does not usually identify the
+separate hand loads, anatomical joint moments, muscle forces, or neural commands
+behind that result. These are successive inference problems with different
+unknowns. Resolving one does not automatically resolve the next.
 
-![Many Muscle and Joint Allocations Converge on the Same Net Hand Wrench While Producing Different Internal Loads and Stiffness.](figures/proximal_distal_companion/fig_companion_biological_redundancy.svg){#fig-lay-biological-redundancy width=98% fig-alt="Multiple paths from scapular, shoulder, elbow, forearm, and wrist actions converge on one identical club wrench, while side branches show different joint load, co-contraction, and stiffness."}
+![Different Feasible Biological Allocations Can Share a Resultant Grip Wrench.](figures/proximal_distal_companion/fig_companion_biological_redundancy.svg){#fig-lay-biological-redundancy width=98% fig-alt="Conceptual diagram connecting scapula, shoulder, elbow, forearm, and wrist contributions to a resultant grip wrench. Internal load, stiffness, and effort may differ between feasible allocations. The arrows are not independent actuators or measured pathways."}
+
+The anatomical boxes are coupled parts of a body, not five interchangeable
+actuators. Different allocations must still satisfy anatomy, contact
+constraints, force limits, and state history.
 
 ## How the Mechanism Works
 
-Muscles pull through moment arms. Several muscles cross one joint; some cross two.
-Agonists and antagonists can be active together. A net joint moment is the signed
-sum of muscle, passive tissue, and contact effects. Infinite or numerous muscle-
-force combinations can reproduce the same net moment.
+### Three Different Inverse Problems
 
-### Activation Is Not Force
+First, a rigid-club model can infer a resultant grip wrench from motion and
+inertia, after accounting for gravity and other external loads. Second, body
+inverse dynamics can estimate net joint moments if segment motion, inertial
+parameters, and the necessary external loads are known. A net club wrench alone
+generally leaves the separate hand loads underdetermined in the two-arm closed
+chain. Third, a musculoskeletal model allocates joint demand among muscles and
+passive tissues.
 
-EMG reflects electrical activation near sampled muscle fibers. Muscle force also
-depends on length, velocity, tendon state, fatigue, architecture, and activation
-dynamics. Surface amplitude cannot be read directly as torque. Timing evidence
-is valuable when interpreted at that level.
+### Two Allocations With the Same Full Club Wrench
 
-### Co-Contraction Changes Impedance
+Separate contact ambiguity from muscle ambiguity. Fix a club reference $O$ and
+contact points $\mathbf r_L=(-0.1,0,0)$ and
+$\mathbf r_R=(0.1,0,0)\,\mathrm m$. All components below use one right-handed
+frame. Here $\mathbf F_i$ is hand $i$'s force and $\mathbf C_i$ is its
+contact couple; both act **on the club**:
 
-Equal opposing muscle moments can cancel in net torque while increasing joint
-stiffness and compression. This hidden activation may stabilize the grip or
-prepare rapid force transmission. It also costs energy and can raise load.
+| Allocation | $F_{Ly}$ (N) | $F_{Ry}$ (N) | $C_{Lz}$ (N m) | $C_{Rz}$ (N m) |
+|---|---:|---:|---:|---:|
+| A | -10 | 110 | 0 | 0 |
+| B | 30 | 70 | 4 | 4 |
 
-The arm-wrist comparison therefore needs effort and stiffness measurements, not
-only net club work. A model that minimizes generalized torque may choose an
-allocation unlike one that maximizes robustness or comfort.
+All unlisted components vanish. Both allocations satisfy
 
-### The Scapula Is Not a Fixed Hinge
+$$
+\begin{aligned}
+\mathbf F&=\mathbf F_L+\mathbf F_R=(0,100,0)\,\mathrm N,\\
+\mathbf M_O&=\sum_{i=L,R}(\mathbf r_i\times\mathbf F_i+\mathbf C_i)
+=(0,0,12)\,\mathrm{N\,m}.
+\end{aligned}
+$$ {#eq-lay-biology-matched-wrench}
 
-Scapulothoracic motion reorients the shoulder socket and changes hand reach,
-moment arms, and muscle lengths. Retraction and protraction can contribute to a
-proximal push-pull pattern, but a reduced shoulder torque cannot be relabeled as
-scapular retraction. Direct scapular kinematics and muscle evidence are required.
+A obtains all $12\,\mathrm{N\,m}$ from the force distribution. B obtains
+$4\,\mathrm{N\,m}$ that way and $8\,\mathrm{N\,m}$ from contact moments.
+These are full resultant-wrench matches within an ideal contact model.
+Grip pressure, friction, and tissue limits determine actual feasibility.
 
-Marker measurement over the scapula is difficult because skin moves relative to
-bone. Specialized clusters, imaging, or validated models may improve estimates.
-The uncertainty belongs in any mechanism test.
+The equal force at each hand, $\mathbf F_c=\mathbf F/2$, contributes
+$(\mathbf r_L+\mathbf r_R)\times\mathbf F_c=0$ at this midpoint. Changing arm
+posture while keeping the contact points, force components, and reference fixed
+cannot create a new common-force moment arm. Physically shifting both contacts
+$0.02\,\mathrm m$ along $+x$ relative to the same $O$ raises the moment to
+$14\,\mathrm{N\,m}$ if the loads are retained. That is changed geometry and a
+changed wrench, not a third allocation matching the original task. Changing
+only the reporting origin is a separate wrench-transport operation.
 
-### Wrists Are Multi-Axis Transmissions
+At the same rigid-club twist, $\mathbf v_O=(0,2,0)\,\mathrm{m\,s^{-1}}$ and
+$\boldsymbol\omega=(0,0,3)\,\mathrm{rad\,s^{-1}}$, both allocations deliver
+$\mathbf F\cdot\mathbf v_O+\mathbf M_O\cdot\boldsymbol\omega=236\,\mathrm W$.
+Summing contact powers with
+$\mathbf v_i=\mathbf v_O+\boldsymbol\omega\times\mathbf r_i$
+gives the same answer: left/right contributions are $-17/253\,\mathrm W$
+for A and $63/173\,\mathrm W$ for B. Equal total club power does not identify each
+hand's contribution or each muscle's expenditure. Bilateral wrench sensing
+addresses the first ambiguity; anatomical and physiological evidence addresses
+the second.
 
-Flexion-extension, radial-ulnar deviation, forearm rotation, carpal motion, and
-grip compliance interact. A planar wrist torque is a projection. Direct negative
-club torque could arise from active wrist moment, force-generated couple, passive
-stiffness, or a mixture.
+### Matching a Scalar Task Is Weaker Than Matching a Wrench
 
-### Tendon and Muscle History
+The companion benchmark in UpstreamDrift, linked below at its reviewed revision,
+matches a same-state control-induced angular-acceleration target expressed in
+moment units: $I_C\ddot\alpha_{C,u}=8\,\mathrm{N\,m}$. Here $I_C$ is the
+model club's planar rotational inertia, and
+$\ddot\alpha_{C,u}$ is the control-induced part of its angular acceleration. It subtracts the zero-control
+acceleration at the same state and allocates controls within proximal and wrist
+generalized-torque subspaces. This scalar constraint does not by itself match
+all resultant-force components, the full grip wrench, or a future trajectory.
+The table above demonstrates a different, explicitly full-wrench construction.
 
-Tendon slack length is a model parameter, not a casual synonym for a loose swing.
-Series compliance delays and stores force. Muscle short-range stiffness depends
-on activation and recent movement. These phenomena may affect preload, but the
-dead-zone study represents only one falsifiable transmission family.
+For a rigid club with identical initial state and other external loads,
+identical resultant-wrench histories expressed consistently imply identical
+rigid-club motion. Matching one instantaneous moment, one speed, or one scalar
+acceleration does not supply those conditions. Shaft deformation adds states if
+the club is not modeled as rigid. Name precisely which task was held equal
+before interpreting a successful simulation.
 
-### What a Responsible Biological Model Would Add
+### From Joint Demand to Muscle Forces
 
-A higher-order model would include anatomical joint axes, muscle paths, activation
-and contraction dynamics, tendon compliance, passive limits, contact pressure,
-and participant parameters. It would be constrained by synchronized motion,
-wrench, EMG, and possibly ultrasound. Even then, muscle redundancy requires
-optimization or probabilistic inference and uncertainty reporting.
+Let $\boldsymbol\tau_{\mathrm{ID}}$ denote the joint demand remaining after
+the chosen inverse-dynamics formulation accounts for external loads and
+constraint reactions. One declared allocation model is
 
-**Human Evidence:** Scapular and wrist EMG establishes phase-dependent activity
-in small samples, not a unique torque allocation
-([Jobe et al., 1995](https://pubmed.ncbi.nlm.nih.gov/7726345/);
-[Robinson et al., 2023](https://pubmed.ncbi.nlm.nih.gov/37983261/)).
+$$
+\boldsymbol\tau_{\mathrm{ID}}
+=R(q)\mathbf F_{\mathrm{mt}}+\boldsymbol\tau_{\mathrm{passive}},
+\qquad
+R_{ji}=-\frac{\partial\ell_i}{\partial q_j}.
+$$ {#eq-lay-biology-allocation}
 
-**Model Result:** Generalized arm and wrist subspaces can produce the same club
-task with different internal demands. This is a mechanics statement, not muscle
-identification.
+Here $q$ collects joint coordinates, $\mathbf F_{\mathrm{mt}}$ collects
+musculotendon tensions, $\ell_i$ is musculotendon path length, $F_i\geq0$ is its tensile force,
+and $R_{ji}$ is its signed moment arm about rotational coordinate $q_j$.
+A positive entry means tension produces positive generalized torque. Separate
+passive joint loads exclude passive muscle contributions already included in
+$F_i$. Grip forces and joint reactions must not be added again if the
+inverse-dynamics demand already accounts for them.
 
-That many-to-one mapping is consistent with the broader multi-articular muscle
-coordination problem: muscle action depends on the state and on the rest of the
-mechanism, not on a muscle name alone [@zajac1989].
+More muscles than independent joint equations permits a force-map null space,
+but does not guarantee an unlimited feasible family. Nonnegative tension,
+strength limits, tendon state, activation history, and measurements constrain
+it. An allocation can be infeasible, unique, or nonunique. Optimization selects
+a solution conditional on its cost and constraints; it does not identify a
+neural strategy merely by producing a smooth answer [@zajac1989].
 
-**Hypothesis:** Proximal push-pull and wrist resistance may maintain useful
-preload for some golfers, while wrist-led preparation and arm resistance may be
-favored for others. Bilateral force and stiffness data must decide.
+### A Bounded Muscle Example
 
-**Practical Interpretation:** Similar club motion can be produced by different
-internal organizations. A visible outcome should not be reverse-engineered into
-one muscle story.
+Consider a manufactured one-joint example with opposing moment arms of
+$+0.03$ and $-0.03\,\mathrm m$, zero separate passive torque, and a required
+moment of $3\,\mathrm{N\,m}$. Suppose $0\leq F_A\leq300\,\mathrm N$ and
+$0\leq F_B\leq200\,\mathrm N$. In SI units,
 
-### From Club Wrench Back Toward the Body
+$$
+0.03(F_A-F_B)=3,\qquad
+F_A=F_B+100,\qquad 0\leq F_B\leq200.
+$$ {#eq-lay-biology-bounded-forces}
 
-The club wrench is a useful boundary observation. Moving inward, each hand
-contact loads wrist and forearm; elbow and shoulder reactions depend on segment
-motion; the shoulder girdle transmits load to the trunk; trunk and pelvis couple
-to the ground. Inverse dynamics can estimate net generalized loads along this
-chain under a rigid-body model. It does not uniquely allocate those loads to
-muscles and passive tissues.
+The pairs $(100,0)$, $(200,100)$, and $(300,200)\,\mathrm N$ produce the same
+net moment with different individual forces. Pairs outside the bounds are
+inadmissible. Pairs inside them are only instantaneously feasible; generating
+their histories also requires compatible muscle and tendon dynamics.
+Specifying those internal states can remove ambiguity that remains when only
+net torque is known.
 
-At each step, degrees of freedom and uncertainty multiply. Wrist axes are not
-perfect hinges. Forearm pronation changes orientation. The glenohumeral joint
-moves relative to a scapula that itself moves relative to the thorax. Skin
-markers imperfectly track bone. An anatomical story should become more
-qualified, not more certain, as it moves away from directly measured contact.
+At $\dot q=2\,\mathrm{rad\,s^{-1}}$, the two path-length rates are
+$-0.06$ and $+0.06\,\mathrm{m\,s^{-1}}$. Every listed pair gives
 
-### Muscle Redundancy
+$$
+P_{\mathrm{paths}}=-\sum_iF_i\dot\ell_i
+=\tau_{\mathrm{muscle}}\dot q=6\,\mathrm W.
+$$ {#eq-lay-biology-path-power}
 
-Many muscles can contribute to one joint moment, and muscles spanning several
-joints can move energy between segments. Agonists and antagonists may activate
-together, raising stiffness and internal force while leaving net moment nearly
-unchanged. Passive tissues can contribute state- and history-dependent loads.
+Here $\tau_{\mathrm{muscle}}=\sum_i r_i F_i$ is the net torque from the
+musculotendon paths, including any passive force they contain.
+This virtual-work equality gives net musculotendon power delivered to the
+modeled coordinate, not each muscle fibre's power or metabolic expenditure.
+Tendon storage and pennation separate fibre mechanics from path mechanics.
+Equal net joint power does not make the allocations biologically
+interchangeable. These numbers illustrate accounting, not fitted golfer
+parameters.
 
-An optimization criterion—minimum activation squared, metabolic cost, stress,
-or fatigue—selects one allocation from many. That solution is conditional on the
-criterion and muscle model. EMG can reject some allocations and inform timing,
-but sparse surface electrodes do not fully identify deep muscle forces.
+### Electrical Excitation, Activation, and Force
 
-### Scapular Action as a Candidate Mechanism
+Surface EMG measures electrical potentials associated with muscle-fibre action
+potentials in an electrode's detection region. With suitable processing it
+informs sampled excitation, not a direct force or activation-state measurement.
+Activation dynamics link excitation to contractile state; contraction mechanics
+depend on length, velocity, history, architecture, and tendon loading.
+Normalization does not remove those dependencies. Electrode position, tissue
+conduction, cancellation, and cross-talk also limit comparisons
+[@vigotsky2018EMG].
 
-Scapular protraction, retraction, rotation, and tilt reorient the shoulder socket
-and alter hand reach and leverage. Coordinated lead/trail shoulder-girdle action
-could plausibly contribute to a push--pull handle pattern. That makes scapular
-kinematics and activation relevant measurements.
+A detected burst alone establishes neither joint-torque magnitude nor the sign
+of club power. An apparently silent channel cannot exclude force: passive
+tension, retained internal state, unmeasured muscles, and detection limits
+remain possibilities. EMG helps discriminate candidate timings and constrain
+models when its measurement assumptions are explicit. It does not replace the
+mechanical measurements needed to test a proposed force or power pathway.
 
-It does not justify replacing a generalized arm driver with the phrase
-“scapular retraction.” The same hand wrench can arise through different shoulder,
-elbow, wrist, trunk, and grip combinations. Direct or well-validated scapular
-tracking, multi-muscle EMG, and a closed-chain model are required to test the
-specific mapping.
+### Co-Contraction, Stiffness, and Impedance
 
-### Wrist Resistance Is Not Necessarily Passive
+Opposing muscle forces can increase without changing net torque. Whether this
+improves resistance to disturbance requires a different measurement: the
+response to a perturbation about a declared state. Stiffness, damping, inertia,
+and delayed feedback contribute differently to mechanical impedance. A
+moment-versus-angle slope traced during a swing also contains changes in
+activation and history; it is not automatically the local stiffness measured
+by perturbing a specified state.
 
-If net wrist torque opposes club rotation, active muscle, passive tissue,
-contact geometry, and dynamic interaction may all contribute. EMG silence does
-not prove absence of force, and EMG activity does not prove positive work.
-Shortening and lengthening contractions, co-contraction, and moment-arm changes
-complicate the relation.
+For a one-coordinate elastic illustration, hold activation and other internal
+variables fixed, set $k_i=\partial F_i/\partial\ell_i$, and use
+$r_i=-\partial\ell_i/\partial q$. The restoring stiffness contribution is
 
-The word “passive” should be reserved for a declared model channel or measured
-material behavior. A safer human hypothesis is that some late opposing club-
-moment contribution may arise without a newly increasing explicit distal drive.
-The experiment then measures wrench, activation, and state to test candidate
-sources.
+$$
+K=-\frac{\partial\tau}{\partial q}
+=\sum_i\left(k_i r_i^2-F_i\frac{\partial r_i}{\partial q}\right).
+$$ {#eq-lay-biology-geometric-stiffness}
 
-### A Many-to-One Example
+The first term maps material stiffness through the moment arm. The second
+comes from changing geometry. At fixed moment arms, larger positive local
+muscle stiffness increases the first term. Geometry, other tissues, and
+feedback prevent that observation from becoming a universal claim about
+whole-joint or whole-swing stability. Joint compression likewise requires force
+directions and joint equilibrium, not just a scalar net moment.
 
-Suppose the club requires a 12-newton-metre swing-normal moment and a specified
-net force. Allocation A uses a stronger bilateral differential hand force with
-modest contact moments. Allocation B uses smaller differential force plus larger
-wrist contact moments. Allocation C changes arm posture so common force also has
-a useful moment arm. The club can see nearly the same wrench in all three.
+A manufactured counterexample makes the geometric term visible. Near $q=0$,
+use path changes $\Delta\ell_1=-0.03q-0.01q^2$ and
+$\Delta\ell_2=0.03q$ in metres, with $F_i=100+1000\Delta\ell_i$ in newtons.
+Here radians are dimensionless, and the coefficients carry the corresponding
+SI units. Both tensile paths have positive $1000\,\mathrm{N\,m^{-1}}$
+stiffness. At zero angle their net torque is zero, but the restoring stiffness
+is $1.8-2.0=-0.2\,\mathrm{N\,m\,rad^{-1}}$. Holding the moment arms constant
+instead gives $+1.8\,\mathrm{N\,m\,rad^{-1}}$. Positive element stiffness alone
+does not determine generalized restoring stiffness. This is a counterexample
+for two ideal elastic paths, not a stability assessment of a human joint.
 
-Internally, joint moments, co-contraction, tissue load, and sensitivity differ.
-Club motion alone cannot identify the allocation. Bilateral six-axis sensing
-rules out some solutions; EMG and kinematics constrain others; a model proposes
-remaining possibilities with uncertainty.
+Hu, Murray, and Perreault combined a short-range-stiffness model with an
+upper-limb model and compared it with previously collected small-perturbation
+endpoint-stiffness measurements from five people. Their formulation includes
+moment-arm geometry; the tested conditions involved specified postures and
+voluntary forces. It supports studying this mechanism, not a claim that rapid
+golf transition dynamics or an optimal co-contraction strategy has been
+validated [@hu2011ShortRange].
 
-### Preactivation and Effective Stiffness
+### Tendons Store Energy
 
-Before motion reverses at transition, neural activation and load history may
-prepare muscles and tissues. Co-contraction can increase resistance to
-perturbation without a large net joint torque. Tendon and cross-bridge behavior
-can create history dependence. Grip and shaft deformation add mechanical states.
+An elastic tendon stores strain energy, not force. For an ideal linear element
+$F=kx$, with extension $x$ from its unloaded reference,
 
-This gives a plausible biological basis for investigating continuous loading,
-but the simple dead-zone model is only phenomenological. Effective stiffness
-should be estimated through perturbation or system identification, not inferred
-from a feeling or one EMG channel. The benefit must also be weighed against
-internal load and reduced adaptability.
+$$
+\Delta E=\int_{x_0}^{x_1}F(x)\,dx
+=\tfrac12 k(x_1^2-x_0^2).
+$$ {#eq-lay-biology-tendon-energy}
 
-### Lead and Trail Sides Need Separate Treatment
+With $k=10{,}000\,\mathrm{N\,m^{-1}}$, extension from $5$ to $10\,\mathrm{mm}$
+raises force from $50$ to $100\,\mathrm N$ and stores an additional
+$0.375\,\mathrm J$. Force is an instantaneous load; stored energy accounts for
+work. A static force-extension law contains no time delay. Force-rise timing
+requires system dynamics, including excitation, contraction, movement, and any
+dissipative behavior. Compliance can affect that timing but is not itself a
+fixed delay.
 
-The hands occupy different positions and anatomical orientations. The same
-club-frame force direction maps to different joint and muscle demands on each
-side. Roles can change over the swing. Summing them into one “wrist torque” or
-one EMG average can erase the differential mode central to the hypothesis.
+For two positive linear stiffnesses in series,
+$k_{\mathrm{eq}}^{-1}=k_1^{-1}+k_2^{-1}$; a compliant tendon can limit the
+effective stiffness of the combined path. Tendon slack length in a model defines
+a force-length reference. It is not evidence for a backlash-like interval at a
+golfer's wrist.
 
-Report side, hand position, frame, phase, and dominance. A model may use symmetric
-contacts for mechanism isolation, but human validation should not assume
-symmetry. Participant handedness and technique further constrain generalization.
+The UpstreamDrift benchmark also studies a separate synthetic law: a rotational dead zone,
+linear transmitted torque beyond it, and first-order deflection dynamics.
+Its persistent-direction advantage disappears in its declared zero-dead-zone
+comparison. That result is conditional on the chosen transmission family.
+Neither the calculation nor a sensation of firmness establishes a human
+transmission gap. Muscle short-range stiffness, tendon elasticity, grip contact,
+and shaft deformation need distinct state descriptions and tests.
 
-### How to Compare the Allocation Extremes Biologically
+### Scapula, Forearm, and Wrist Are Distinct Parts
 
-Use matched club tasks and randomized, bounded strategy conditions. Measure
-bilateral wrenches, grip pressure, whole-arm and shoulder-girdle kinematics,
-forearm and scapular EMG, shaft response, and perturbation-based stiffness proxy.
-Track discomfort and peak loads. Verify that instructions actually changed the
-intended mediator.
+Scapulothoracic motion describes the scapula moving relative to the thorax; it
+is not a fixed hinge. Scapular orientation changes the orientation of the glenoid
+and the geometry available to the arm. Distinguish clavicle, scapula, and humerus
+when reporting shoulder motion. The International Society of Biomechanics (ISB) recommendations provide a
+reporting framework, not a shortcut from one reduced shoulder torque to an
+identified scapular action
+([Wu et al., 2005](https://doi.org/10.1016/j.jbiomech.2004.05.042)).
 
-Analyze whether force continuity or stiffness mediates outcomes rather than
-assigning success to the instruction label. Some participants may implement the
-same cue with opposite internal allocations. Cluster only on measured variables
-and validate clusters on held-out people.
+Forearm pronation and supination involve the radioulnar mechanism; they are
+distinct from wrist flexion-extension and radial-ulnar deviation. They interact
+in orienting a gripping hand. A planar model's wrist coordinate represents its
+declared relative rotation. Projecting a three-dimensional moment onto an axis
+gives an axis moment, but it is a work-conjugate generalized torque only when
+the coordinate-to-angular-velocity mapping justifies it.
 
-### Claims at Four Levels
+A grip contact moment is not automatically an anatomical wrist joint moment.
+Segment inertia, forces, lever arms, and muscle loads intervene. An opposing
+club-moment contribution can coexist with positive translational contact power
+or active muscles. Pair the correct wrench and velocity before classifying
+power; an opposing moment alone does not identify a passive tissue mechanism.
 
-Level one is observation: a measured hand force, EMG timing, or motion. Level two
-is rigid-body inference: net joint or interface load. Level three is biological
-inference: candidate muscle, stiffness, or tissue allocation. Level four is
-practical interpretation: a strategy might be worth testing. Every paragraph
-should make its level apparent.
+Skin-mounted measurements need a validated relationship to bone motion.
+Ludewig and colleagues used bone-fixed tracking to study shoulder-complex motion
+during arm elevation in twelve people; this describes their measurement scope,
+not a golf-specific scapular force pathway
+([Ludewig et al., 2009](https://doi.org/10.2106/JBJS.G.01483)).
+Testing a proposed scapular contribution to bilateral hand loads needs compatible
+kinematics, load measurements, and an anatomical model with uncertainty.
+Renaming an abstract arm driver cannot provide those observations.
 
-Moving upward requires new evidence. A beautiful model trajectory cannot skip
-levels. This discipline makes room for bold hypotheses while keeping them easy
-to challenge.
+### What the Golf EMG Studies Establish
 
-### What Would Refute the Anatomical Story
+Kao, Pink, Jobe, and Perry studied fifteen competitive male golfers with
+bilateral EMG of four scapular muscles and cinematography [@kao1995].
+Their phase-dependent observations concern those sampled muscles and
+participants, not a uniquely identified two-hand wrench allocation.
 
-If predicted scapular kinematics or activation do not accompany the bilateral
-wrench, the specific scapular pathway weakens. If wrist activation and measured
-contact moments contradict the proposed passive resistance, revise the mapping.
-If multiple biological allocations remain equally supported, report ambiguity
-rather than choosing the most intuitive one.
+Robinson and colleagues studied bilateral extensor carpi ulnaris activity and
+wrist kinematics in fifteen subelite, right-handed men [@robinson2023].
+This is one selected muscle on each side, not a complete wrist-muscle inventory.
+The reported absence of a significant downswing EMG association with impact
+clubhead kinematics does not establish equivalence or mechanical irrelevance.
+Both studies motivate specific anatomical questions; neither resolves muscle
+forces from club motion or proves the proposed preload benefit.
 
-The mechanical contact mechanism may survive even when an anatomical hypothesis
-fails. Conversely, observed activation may exist without the predicted club
-effect. Separating layers lets evidence refine the right part of the framework.
+### A Biological Comparison That Can Fail
 
-### Reader Lab: Map a Claim Downward and Upward
+The working hypothesis remains worth testing: directionally persistent loading
+might preserve useful force transmission for some golfers, while another
+allocation might reduce effort or suit different anatomy. Neither mechanics
+example chooses a universal strategy.
 
-Start with a measured negative hand couple. Moving downward toward raw evidence,
-identify sensor voltages, calibration, frame transform, hand positions, and
-uncertainty. Moving upward, identify inferred wrist moments, candidate muscle
-allocations, proposed scapular coordination, and practical interpretation. Mark
-where each new assumption enters.
+Select measurements for the hypothesis. To distinguish contact allocations,
+measure bilateral wrenches at declared reference points and check resultant
+closure. To investigate stiffness, define the perturbation or identified
+dynamic model, amplitude, time window, and feedback assumptions. To test an
+anatomical pathway, add suitable segment kinematics and muscle observations.
+Ultrasound or other internal-state measurements may help particular tendon
+questions; not every study requires every sensor. The linked protocol specifies
+a particular combined test, not a universal minimum for biological claims.
 
-Now ask which alternate biological allocation produces the same measured
-wrench. Construct at least two candidates and list observables that separate
-them: EMG timing, scapular kinematics, joint reaction, stiffness, or fatigue.
-The model should retain both until data discriminate.
+Randomizing instructions can estimate the effect of assigned instructions under
+a sound experimental design. It does not randomize the muscle allocation
+actually adopted. Check whether the intended load pattern changed. Association
+among a cue, stiffness, and outcome does not alone establish causal mediation;
+confounding and other pathways remain. Prespecify contrasts, uncertainty,
+alternative explanations, and participant-level holdout.
 
-Repeat from an EMG observation. Activation timing alone can support “this sampled
-muscle was active under this normalization.” It cannot establish sign of club
-power. Linking both directions teaches why contact mechanics and biology need
-one another but cannot be collapsed.
+A failed wrench-closure check challenges the mechanical reconstruction.
+A well-measured mismatch between predicted and observed scapular motion
+challenges that anatomical mapping. Ambiguous EMG or unresolved alternatives
+can leave the biological question inconclusive even when contact mechanics
+remains supported. Separating these outcomes helps avoid attributing failures to an
+unspecified hidden muscle strategy.
 
-### Practical Value of Ambiguity
+### Reader Lab: Follow the Evidence in Both Directions
 
-Redundancy can be beneficial: it permits adaptation to anatomy, fatigue,
-equipment, and perturbation. A modeling product should therefore expose feasible
-families and costs rather than force every golfer toward one allocation. The
-most stable individual solution may not resemble the population mean.
+Start with allocations A and B. Compute force, moment, and power, then identify
+the bilateral measurements that distinguish them. Next hold a net joint moment
+fixed and construct two candidates from the bounded antagonist example.
+State which internal measurements or model assumptions could reject one.
+Do not call a modeled joint reaction a directly measured force.
 
-Ambiguity also sets a safety boundary. Without identified internal load, a
-speed-equivalent strategy cannot be assumed equally safe. Clinical and coaching
-decisions require measurements and expertise beyond the current model.
-
-### A Minimum Biological Claim
-
-State the measured activation or kinematics, the net mechanical quantity, the
-model mapping between them, alternative allocations, and uncertainty. Do not
-name one muscle or scapular action as the source of a club wrench unless the
-data and model distinguish it. Report internal-load and safety limitations near
-any practical interpretation.
-
-This minimum still permits useful conclusions: a candidate allocation is
-consistent with evidence; a proposed mapping is contradicted; or additional
-measurement is required. Scientific neutrality is not silence. It is calibrated
-specificity.
+Reverse the exercise from an EMG burst. Identify the sampled region,
+processing, normalization, and timing uncertainty. List the additional state
+and mechanics needed to infer force, joint torque, and club power. A statement
+of sampled excitation cannot skip those steps. Contact mechanics and biology
+inform one another without becoming interchangeable.
 
 ## Where the Picture Breaks
 
-The piano teams choose explicit roles. Human control can be distributed,
-automatic, and task-dependent. Muscle synergies and reflexes do not map neatly
-to coaching words such as push, pull, firm, or passive.
+Piano teams choose explicit roles. Human control also involves distributed
+coordination, feedback, and history. Coaching words such as push, pull, firm,
+and passive do not specify a muscle allocation or a state equation.
 
-Musculoskeletal detail can also create false precision. Unmeasured moment arms
-or tendon properties may dominate an optimized allocation. More anatomy without
-better data can increase confidence faster than knowledge.
+More anatomical detail adds parameters as well as explanatory possibilities.
+Uncertain paths or tendon properties can dominate an optimized answer.
+Report sensitivity and feasible alternatives instead of equating detail with
+identification. Similar club speed does not establish similar internal loading
+or safety; these examples do not evaluate clinical outcomes.
 
-**Go Deeper:** Read the technical
-[biological boundaries in the allocation chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06bc_torque_allocation_preload.qmd),
-the [experimental protocol](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06e_experimental_protocol.qmd),
-and the linked activation evidence above.
+A useful biological claim states the observation, mechanical demand, anatomical
+mapping, alternatives, and uncertainty. It may show consistency with evidence,
+contradict a pathway, or identify a discriminating measurement. Ambiguity becomes
+productive when it specifies the next test.
+
+**Go Deeper:** Read the
+[allocation and transmission assumptions](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06bc_torque_allocation_preload.qmd)
+and [experimental protocol](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06e_experimental_protocol.qmd)
+at the reviewed provider revision. Its human predictions remain untested;
+these mathematical examples are verification fixtures, not new human
+measurements or a rerun of that provider.

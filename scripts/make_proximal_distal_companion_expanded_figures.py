@@ -483,11 +483,11 @@ def make_biological_redundancy() -> None:
     ):
         _node(axis, x, 4.6, text, color, 1.7)
         _edge(axis, (x, 4.2), (5.4, 2.6), color)
-    _node(axis, 5.4, 2.1, "Same Net Hand Wrench", INK, 3.0)
+    _node(axis, 5.4, 2.1, "Resultant Grip Wrench", INK, 3.0)
     for x, text in (
-        (2.3, "Different Load"),
-        (5.4, "Different Stiffness"),
-        (8.5, "Different Effort"),
+        (2.3, "Load May Differ"),
+        (5.4, "Stiffness May Differ"),
+        (8.5, "Effort May Differ"),
     ):
         _edge(axis, (5.4, 1.7), (x, 0.5), GRAY)
         axis.text(x, 0.1, text, ha="center", color=GRAY)
