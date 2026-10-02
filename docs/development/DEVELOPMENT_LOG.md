@@ -30,7 +30,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; 6515 full-regression passes;31final affected checks;12publication gates;653titles;876Python quality checks. Accepted229-page PDF/HTML, four browser profiles,62mathnodes and mobilezoom.
 - **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;112corpus audits remain.
-- **Next step:** Verify parent4794 delivery, integrate actual squash and final-head CI before protected merge.
+- **Next step:**85integration checks pass with parent3fb14220d included; push and verify parent4794 delivery, then actual-squash integration/final-head CI before protected merge.
 
 ### DL-#4791 — Constraint Reactions and Identifiability
 
@@ -43,11 +43,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; source80d6c5a04dafc1bdf23dc906723a8175aa1690a1; 6506 full-regression passes, 31 final affected checks, 12 publication gates, 653 titles and 875 Python quality checks; accepted 229-page PDF/HTML, four browser profiles, 68 math nodes and mobile zoom.
 - **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;113corpus audits remain.
-- **Next step:** Verify PR4790 protected remote-main delivery.
+- **Next step:** Combined regression6535passed; integration3fb14220d pushed and guarded auto-merge armed; verify final-head CI and remote-main delivery.
 
 ### DL-#4789 — Biological Ambiguity and Load Inference
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4790 (regular, attached)
 - **Issue:** #4789; epic #4009 / corpus #4021
@@ -56,7 +56,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; source53023631e; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
 - **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. 121 prior findings preserved; eight new findings bound; eight agy Flash helpers reviewed.
-- **Next step:** PR4788 verified and integrated; push final integration, verify CI and protected PR4790 remote-main delivery; 114 corpus audits remain.
+- **Next step:** None for Chapter25: PR4790 merged70a0c6422, CI36965483957 passed;21exact blobs plus clean three-way SPEC merge verified;8peer paths preserved; lease/presence released.
 
 ### DL-#4763 · Geometry Technical Review
 

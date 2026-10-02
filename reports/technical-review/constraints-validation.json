@@ -1,6 +1,6 @@
 {
   "issue": 4791,
-  "status": "Source and binding pushed; regular PR4794 open; parent4790 and final-head CI/protected delivery pending",
+  "status": "Integration3fb14220d pushed; protected squash auto-merge armed; final-head CI/remote-main verification pending",
   "baseline": "97f07b41bfd2d3e218880f484097d787a2b5a9ae",
   "integrated_parent": "4351ce0c0",
   "source_findings": 8,
@@ -153,11 +153,13 @@
   "no_provider_rerun": true,
   "no_new_human_validation": true,
   "parent_delivery": {
-    "pr": 4788,
-    "merge_commit": "8bead85237ca8e80444f36bee510a22bd5dac141",
-    "ci_run": 36961840257,
-    "verified_changed_paths": 18,
-    "receipt": "reports/technical-review/open-evidence-remote-main-receipt.json"
+    "pr": 4790,
+    "merge_commit": "70a0c6422cf485b82d9c193546d55d04e5dad1ef",
+    "ci_run": 36965483957,
+    "verified_exact_paths": 21,
+    "metadata_three_way_paths": ["SPEC.md"],
+    "peer_paths_preserved": 8,
+    "receipt": "reports/technical-review/biological-ambiguity-remote-main-receipt.json"
   },
   "commands": {
     "full": "py -3.12 -X utf8 -m pytest --cov",
@@ -191,5 +193,34 @@
     "failed": 0
   },
   "pr": 4794,
-  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4794"
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4794",
+  "main_integration": {
+    "parent_head": "4351ce0c04b9e9248f3a9fb1395766a6d43d8c88",
+    "main": "70a0c6422cf485b82d9c193546d55d04e5dad1ef",
+    "scientific_pdf_and_binding_bytes_unchanged": true,
+    "conflicts_resolved": 10,
+    "conflict_proof": "Every conflicted incoming blob equals the already-integrated parent head; preserve descendant Chapter6 blobs. Nine peer-main paths accounted for separately. SPEC restored to clean three-way result because union driver moved a peer row.",
+    "regression": {
+      "passed": 6535,
+      "failed": 0,
+      "skipped": 29,
+      "deselected": 187,
+      "warnings": 60,
+      "seconds": 654.66,
+      "coverage_percent": 78.97
+    },
+    "static": {
+      "runtime_budget_config_routes": 10,
+      "ruff_passed": true,
+      "black_files": 4,
+      "mypy_files": 2
+    },
+    "agy_helpers_completed": 1,
+    "helper_disposition": "Corrected PR draft attribution:21exact blobs belong to parent4790 delivery, not4794. Removed local file URI. Source-level seven-helper record remains frozen."
+  },
+  "guarded_auto_merge": {
+    "armed": true,
+    "head": "3fb14220d7fc1c0e81a309125fa4b2b7479dc64b",
+    "method": "squash"
+  }
 }
