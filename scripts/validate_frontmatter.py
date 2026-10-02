@@ -14,10 +14,19 @@ import re
 import sys
 from pathlib import Path
 
-from scripts.cli_output import write_stdout
-from src.tools.utils.frontmatter import split_frontmatter
-
 ROOT = Path(__file__).parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.cli_output import write_stdout  # noqa: E402  # reason: import ordering constraint
+from src.tools.utils.frontmatter import (  # noqa: E402  # reason: import ordering constraint
+    split_frontmatter,
+)
+from src.tools.utils.frontmatter_schema import (  # noqa: E402  # reason: import ordering constraint
+    normalize_rel_path,
+    validate_article_frontmatter,
+)
+
 ARTICLES_DIR = ROOT / "articles"
 REQUIRED_FIELDS = {"title"}
 RECOMMENDED_FIELDS = {"description", "date"}
@@ -91,6 +100,9 @@ def validate_file(path: Path) -> list[str]:
         if field == "title" and has_body_h1(body):
             continue
         errors.append(f"{path}: missing required frontmatter field '{field}'")
+
+    rel_path = normalize_rel_path(path)
+    errors.extend(validate_article_frontmatter(fm, rel_path))
 
     return errors
 

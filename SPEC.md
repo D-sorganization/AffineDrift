@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.294                                          |
+| **Spec Version**        | 1.0.295                                          |
 | **Last Spec Update**    | 2026-10-02                                       |
 
 ## 2. Purpose & Mission
@@ -541,3 +541,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-01 | #4515 | Consolidate maturity vocabulary into a single enum (WEB-04.1) in config/maturity.yml, with schema validation, legacy string mappings, and tests. |
 | 2026-10-02 | #4495 | Enhance 404 page navigation with Start Here, Library, search trigger, and unified contact routing (WEB-01.10). |
 | 2026-10-02 | #4498 | Resolve Volume II collision and unify volume numbering scheme (WEB-02.2) across _quarto.yml, books/*.qmd, and Geometry of Motion index; publish concordance table on Books hub and expand volume overview pages to >= 200 words. |
+| 2026-10-02 | #4506 | Define and validate article front-matter schema (WEB-03.1) in schemas/article-front-matter-v1.schema.json, with core-page validation and allowlist burn-down. |
