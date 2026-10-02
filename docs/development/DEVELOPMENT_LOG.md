@@ -37,27 +37,27 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4798 (frozen; regular consolidated PR not created)
+- **PR:** #4800 (regular, attached; original#4798 frozen)
 - **Issue:** #4795; epic #4009 / corpus #4021 / companion #4059
 - **Branch:** feat/technical-review-consolidated-20261002
 - **Paths:** articles/proximal_distal_companion/chapters/ch26_experiment_can_say_no.qmd, tests/test_experiment_design_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
+- **Last verified:** 2026-10-02; checkpoint4ef7a317e; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
 - **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;112corpus audits remain.
-- **Next step:** Open the regular consolidated PR after normal commit and push hooks pass.
+- **Next step:** Verify final-head CI and guarded protected delivery of PR4800.
 
 ### DL-#4791 — Constraint Reactions and Identifiability
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4794 (frozen; regular consolidated PR not created)
+- **PR:** #4800 (regular, attached; original#4794 frozen)
 - **Issue:** #4791; epic #4009 / corpus #4021 / companion #4059
 - **Branch:** feat/technical-review-consolidated-20261002
 - **Paths:** articles/proximal_distal_companion/chapters/ch06_constraints_push_back.qmd, tests/test_constraint_reaction_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
+- **Last verified:** 2026-10-02; checkpoint4ef7a317e; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
 - **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;113corpus audits remain.
-- **Next step:** Open the regular consolidated PR after normal commit and push hooks pass.
+- **Next step:** Verify final-head CI and guarded protected delivery of PR4800.
 
 ### DL-#4756 · Complete-State Technical Review
 
