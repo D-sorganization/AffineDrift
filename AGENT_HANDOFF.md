@@ -1,3 +1,15 @@
+## Parent Delivery Verified — October 2
+
+PR #4772 is merged at `a4cf9b56cbd94ab067277d0bbdf3d6df329a69b9`. Exact-head CI
+36947184666 succeeded for e58d1f158; ancestry and all 22 delivered Git blobs
+match. The receipt is `reports/technical-review/measured-golfers-remote-main-receipt.json`.
+The parent squash tree equals e58 exactly, already in Chapter 17 history.
+This merge checkpoint retains the reviewed Chapter 17 content during squash
+conflict resolution; its eight bound scientific blobs remain unchanged.
+PR #4782 still needs final-head CI and protected delivery. The source review
+continues separately in `AffineDrift-system-boundary-review`, issue #4783;
+117 audits and whole-book consistency remain pending there until binding.
+
 # Technical Review Current State
 
 - Epic #4009 / corpus #4021 remains active: 117 full-source audits and whole-book consistency remain.
