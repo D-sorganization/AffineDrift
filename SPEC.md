@@ -225,6 +225,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-10-01 | #4570 | Add runtime performance budget configuration for ten representative routes, Playwright E2E budget spec, and CI verification script (#4570). |
+| 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
 | 2026-10-01 | #4538 | Add devcontainer configuration for reader run environment, allow .devcontainer in root hygiene, and add verification tests. |
 | 2026-10-01 | #4778 | Standardize equation numbering to Quarto syntax and add test suite coverage in test_equation_numbering.py (#4580). |
 | 2026-10-01 | #4769 | Clarify speed, body energy, joint/segment power and shaft storage boundaries; add manufactured counterexamples and normalize the companion figure. |
