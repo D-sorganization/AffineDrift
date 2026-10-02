@@ -357,24 +357,28 @@ def make_counterfactual_fork() -> tuple[Path, Path]:
 
 
 def make_clock_state() -> tuple[Path, Path]:
+    """Show scalar event alignment without implying full-state equivalence."""
     x = np.linspace(0, 1, 300)
-    states = [1 / (1 + np.exp(-18 * (x - c))) for c in (0.44, 0.52, 0.60)]
+    centers = np.array([0.42, 0.52, 0.62])
+    rates = np.array([12.0, 18.0, 24.0])
+    threshold = 0.6
+    states = 1 / (1 + np.exp(-rates[:, None] * (x - centers[:, None])))
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.5), sharey=True)
     for state, color in zip(states, (BLUE, GREEN, VIOLET), strict=True):
         axes[0].plot(x, state, color=color, lw=2)
         axes[1].plot(x, state, color=color, lw=2)
     axes[0].axvline(0.52, color=RED, ls="--", lw=2, label="Clock Trigger")
     axes[0].set_title("Clock: One Time for Every Run")
-    for state, color in zip(states, (BLUE, GREEN, VIOLET), strict=True):
-        idx = np.argmin(np.abs(state - 0.6))
-        axes[1].scatter(x[idx], state[idx], color=color, s=70)
-    axes[1].axhline(0.6, color=RED, ls="--", lw=2, label="State Threshold")
-    axes[1].set_title("State: Trigger When the System Arrives")
+    event_times = centers + np.log(threshold / (1 - threshold)) / rates
+    for event_time, color in zip(event_times, (BLUE, GREEN, VIOLET), strict=True):
+        axes[1].scatter(event_time, threshold, color=color, s=70)
+    axes[1].axhline(threshold, color=RED, ls="--", lw=2, label="Coordinate Threshold")
+    axes[1].set_title("State: One Coordinate at the Threshold")
     for axis in axes:
-        axis.set(xlabel="Time", ylabel="Mechanical Progress")
+        axis.set(xlabel="Time (Arbitrary Units)", ylabel="Selected Coordinate (Arbitrary Units)")
         axis.legend(frameon=False)
     fig.suptitle(
-        "A State Trigger Moves With the Realized Motion", fontsize=15, fontweight="bold", color=INK
+        "Schematic Timing Rules for One Coordinate", fontsize=15, fontweight="bold", color=INK
     )
     return _save(fig, "fig_companion_clock_vs_state")
 

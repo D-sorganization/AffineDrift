@@ -2,273 +2,303 @@
 
 ## A Concrete Picture
 
-A cook does not remove bread from an oven simply because twelve minutes passed.
-The timer is useful, but color, temperature, and structure tell whether the loaf
-reached the intended state. Two ovens or loaf sizes reach that state at different
-times.
+A cook watches both the timer and the bread. Twelve minutes specifies elapsed
+time; temperature and structure describe what has happened during it. Neither
+one thermometer reading nor a timer reveals the entire loaf's condition.
 
-Swing instructions often use clock language: start the release later, apply a
-torque earlier, wait until a position. A model can define these precisely, but
-the useful trigger may be a club angle, relative velocity, hand-speed event,
-shaft state, or predicted time to impact rather than elapsed milliseconds.
+The same distinction matters in a swing. A wrist command applied 100 ms after
+transition can encounter different club angles, velocities, shaft deflections
+and existing loads. Triggering at one club angle removes that particular angle
+difference, but the other quantities can still differ. The useful question is
+which information predicts a feasible opportunity to improve the chosen outcome.
 
-![Clock-Time Triggers and State-Based Triggers Select Different Command Onsets When Two Swings Progress at Different Rates.](figures/proximal_distal_companion/fig_companion_clock_vs_state.svg){#fig-lay-clock-state width=97% fig-alt="Two swing trajectories progress at different rates; a vertical clock-time trigger cuts them at different states while a state-event trigger aligns them at the same club configuration."}
+![Schematic Clock and Coordinate Triggers for Three Artificial Trajectories: Equal Coordinate Values Can Occur at Different Times and Rates.](figures/proximal_distal_companion/fig_companion_clock_vs_state.svg){#fig-lay-clock-state width=97% fig-alt="Three artificial scalar trajectories have different offsets and rates. A fixed clock line intersects different coordinate values; threshold markers share one coordinate value but have different times and slopes. These are not complete swing states or measured trajectories."}
 
 ## How the Mechanism Works
 
-A torque program needs amplitude, sign, onset, rise time, duration, and shutdown.
-An onset can be fixed in time or defined by an event function
-$g(\mathbf x)=0$. Event-based timing can align mechanisms across parameter
-variations, but the event must be observable and chosen before outcomes.
+### Specify What Reaches the Trigger
 
-### Early Drive and Retain-Then-Drive
+Let $x$ contain every state needed to predict the declared model: positions,
+velocities, actuator states, elastic memory and any controller memory. A measured
+quantity is generally only a function of that state. A club-angle threshold,
+for example, does not specify bilateral hand force, shaft strain or activation.
+Even identical poses can have different futures.
 
-The simple comparison applies positive wrist torque immediately after transition
-or uses zero/negative early torque followed by positive late torque. Optimization
-over onset shows late drive can outperform early drive under declared actuator
-bounds. This supports a timing mechanism, not a universal delay number.
+Define an event by a scalar function $g(x,t)=0$, then specify which root counts.
+One useful rule is the first upward crossing after a registered transition,
+inside a declared admissible region. An unsigned equality alone also admits
+backward crossings, repeated crossings and tangential touches. Define what
+happens if no admissible event occurs before the horizon. Noise suppression,
+hysteresis and a one-shot latch change the policy and must be included in it.
 
-The early opposing program tests a different idea: retaining state and preload
-may improve robust speed under delay. In the held-out ensemble it improves one
-lower-tail speed comparison while worsening face/path proxy. Timing has multiple
-objectives.
+An event detector also has numerical limits. A solver that searches for sign
+changes between integration steps can miss multiple crossings inside one step;
+a tangential touch need not change sign. Event localization and step-size
+sensitivity therefore need their own checks. A small differential-equation
+residual is not proof that the intended event was found.
 
-### Command Timing Is Not Force Timing
+The figure uses three invented scalar curves. It illustrates the two timing
+rules, not an advantage of one controller. Their threshold values agree while
+their slopes differ; no claim of full-state matching follows.
 
-Activation and transmission dynamics delay force after command. A $35$ ms rise
-time means the actuator does not jump to its requested level. A preloaded channel
-may transmit immediately even when desired magnitude changes. Complete sign
-reversal may pass through low force. Distinguishing command, internal state,
-transmitted torque, and resulting motion prevents false timing claims.
+### A Slow Crossing Magnifies Timing Error
 
-### Impact Definition Changes Optimization
+For smooth pre-event motion $\dot x=f(x,t)$, the rate of change of the event
+function is
 
-If impact is defined by a club-angle crossing, a strategy altering trajectory
-also alters impact time. A fixed terminal clock time can compare different club
-positions. Robust studies repeat plausible impact criteria and reject schedules
-that never reach a valid event.
+$$
+\dot g=g_t+\nabla_xg\cdot f.
+$$
 
-### State Feedback Versus Open-Loop Schedules
+A *transverse* crossing has $\dot g\ne0$. If a small perturbation changes the
+event-function value at the nominal event time by $\delta g$, first-order
+implicit differentiation gives
 
-An open-loop program plays the same command versus time regardless of deviation.
-A feedback strategy responds to state. Humans use sensory and predictive control,
-though delays limit rapid correction near impact. The model workbench lets
-readers compare clock and state triggers without calling either a complete neural
-controller.
+$$
+\delta t_e\approx-\frac{\delta g}{g_t+\nabla_xg\cdot f}.
+$$
 
-**Model Result:** Preferred onsets move with parameters, rise time, and objective;
-the qualitative late-drive ordering survives declared command filters.
+Evaluate the denominator on the approach side if detection switches the control
+law. The numerator can include a threshold error or the changed trajectory's
+state error at the original event time. This is a local approximation for the
+same identifiable crossing, not a rule for arbitrary event changes.
 
-**Human Evidence:** Observed timing varies across golfers and measurement
-definitions. Kinematic events do not directly reveal command onset.
+For a manufactured angle crossing, a positive 0.002 rad error shifts detection
+about 0.5 ms earlier at 4 rad/s, but 50 ms earlier at 0.04 rad/s. The latter
+calculation is exact for a linear angle trace; a curved trace over that longer
+interval needs explicit root evaluation. At a grazing event the denominator
+vanishes. In dimensionless time $s$, the example
+$g=(s-0.2)^2+\epsilon$ has no real event for positive $\epsilon$, two for negative
+$\epsilon$, and a double root at $s=0.2$ when $\epsilon=0$. A confidence interval around one assumed
+time cannot describe all three possibilities.
 
-Computer simulations of delayed release show why timing claims must be stated
-against a declared model, objective, and state [@sprigings2002].
+Report missed and multiple events as outcomes. Add synchronization error,
+processing delay and uncertainty in the observable proxy. A timestamp reported
+to a millisecond need not be accurate to a millisecond.
 
-**Hypothesis:** Preparation and early downswing arrange a state in which late
-coupling and distal power become favorable; event-based triggers may generalize
-better than fixed clock delays.
+### Separate the Command From the Torque Response
 
-**Practical Interpretation:** “Late” should mean late relative to a mechanical
-state or event, not a mystical timestamp copied across swings.
+Command onset, transmitted torque, contact wrench, acceleration, a velocity
+peak and delivery are distinct events. An ideal command step produces an
+instantaneous torque step only in a model that directly equates command and
+applied torque. A finite step in torque still does not instantaneously change
+velocity in a smooth mechanical system.
 
-### Clock Time Is Easy to Measure and Easy to Misread
+For an illustrative first-order torque response $a$ to a constant target $u$,
+with time constant $T_a>0$,
 
-Researchers commonly express events as milliseconds before impact or percentage
-of downswing. This supports averaging, but impact alignment stretches or
-compresses mechanically different trajectories onto one axis. Two golfers at
-the same normalized time may have different arm--club angles, velocities, shaft
-states, and force directions.
+$$
+\dot a=\frac{u-a}{T_a},\qquad
+ a(t)=u+(a_0-u)e^{-t/T_a}.
+$$
 
-Clock timing remains useful when fully defined. Report event detection,
-normalization, uncertainty, and absolute duration alongside normalized phase.
-Do not treat a population mean as the command time used by any participant.
+Time is measured from the target change and $a_0$ is the existing torque state.
+With zero initial output and a unit target, the response reaches about 63.2%
+after one time constant. Its 10--90% rise time is $T_a\ln9$. Thus a **35 ms time
+constant means approximately 76.9 ms of 10--90% rise**, not 35 ms of rise.
+A pure delay postpones the response; it is a different parameter.
 
-### State Timing
+Initial load matters as well. For a target change from $-5$ to $+15$ N m and
+$T_a=35$ ms, the existing output remains $-5$ N m at the change, crosses zero
+after $T_a\ln(4/3)\approx10.1$ ms, and approaches $+15$ N m gradually. These
+are manufactured actuator examples, not measured muscle timings. Rate limits,
+saturation, contact changes and elastic transmission can change this response.
+A preloaded channel can already carry force without responding instantaneously
+to a new target.
 
-A state trigger activates when a measurable condition is met: an arm--club-angle
-range, sign change in relative angular velocity, handle radial velocity, shaft
-mode phase, or interaction-term threshold. Such triggers can adapt to tempo and
-parameter differences. They also risk being difficult to measure or overly
-tuned.
+Compare step, ramp and filtered commands with declared initial actuator states
+and capacities. Equal targets and nominal onset do not guarantee equal torque
+impulse, mechanical work or load. Work requires the applied torque paired with
+its conjugate rate, as in @sec-lay-ch13. To test how preparation established a
+load, include that history and its cost. To test a subsequent intervention,
+copy the complete prepared state before branching. Those are different questions.
 
-Candidate triggers should come from mechanism, then be frozen before held-out
-testing. A trigger based on a hidden model variable may be useful for simulation
-but cannot guide an experiment until an observable proxy is validated.
+### What the Recorded Timing Studies Establish
 
-### Command, Force, Motion, and Outcome Events
+The pinned [two-link methods](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06_methods.qmd)
+use a fixed hub, rigid club, projected gravity and retained joint damping.
+They compare constant shoulder commands of 60 or 100 N m with zero wrist drive,
+drive-only, or restrain-then-drive programs. The positive wrist target is 15 N m, with early restraint magnitudes of 5 or
+10 N m where included. Fifteen onset values from 0 to 0.35 s, separated by
+25 ms, form 92 attempted programs across the two shoulder levels. The
+zero-wrist-command condition retains the model's damping; it is not necessarily
+a torque-free anatomical wrist. Constant shoulder command also does not mean
+equal shoulder work when the angular trajectories differ.
 
-Neural command onset, EMG onset, muscle force rise, joint torque, hand wrench,
-shaft response, angular acceleration, velocity peak, and impact occur at
-different times. Delay and filtering separate them. Seeing a club event does
-not reveal when control began.
+The endpoint is the first upward crossing of the club's absolute angle through
+zero, scored only if the arm angle is at most 2 rad. It is a registered geometric
+delivery proxy, **not a simulated ball collision**. In the unfiltered sweep,
+63 of 92 programs satisfy that rule. Excluded crossings remain recorded. A
+schedule that fails the rule cannot quietly disappear from the denominator or
+be compared at a later, more favorable crossing.
 
-This chain matters for preload. Continuous loading may shorten the interval from
-command to useful wrench, but the expected signature is a changed force-rise or
-stiffness state—not merely an earlier club release. Measuring several links
-allows mediation tests and prevents outcome timing from being mistaken for
-cause.
+The [command-filter audit](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/scripts/research/proximal_distal_energy/e1e_smooth_command_sensitivity.py)
+repeats the grid at time constants of 0, 20, 35 and 50 ms. Its implementation
+copies the initial command directly into the filter state and smooths subsequent
+changes. This is a declared preloaded initialization; it does not simulate the
+process that established that initial torque.
 
-### A Command-Shape Experiment
+Across these four settings and both shoulder levels, the four comparison speeds increase
+from early drive (onset at zero) through zero wrist command and grid-selected
+drive-only to grid-selected
+restrain-then-drive. The selected onset is allowed to change with the filter.
+At 60 N m, the selected drive-only onset moves from 0.200 s without filtering to
+0.175 s at 35 ms. Accepted counts change too: 63, 59, 59 and 56 out of 92 as the
+time constant increases. These are stored finite-grid results, not a continuous
+optimum, one fixed policy succeeding everywhere, or human timing prescriptions.
 
-Compare an ideal step, a ramp, and a first-order activation filter with identical
-nominal onset and steady amplitude. The step supplies force immediately. The
-ramp and filter delay effective torque and can move the preferred nominal onset
-earlier. If a result exists only with an impossible step, it has limited human
-relevance.
 
-Vary rise time across plausible bounds and optimize on training samples. Then
-freeze schedule or trigger for held-out cases. Report speed, face/path, peak load,
-and lower-tail outcomes. A robust timing claim survives command dynamics rather
-than hiding them.
+A [separate uncertainty comparison](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd)
+uses moving-base, two-hand, flexible-club dynamics, delayed bounded actuators,
+eight schedules and six held-out parameter draws. Its nominal wrist targets differ: `early_restrain` requests -2 N m before
+0.10 s and +4 N m afterward; `late_drive` requests zero before 0.14 s and
++5 N m afterward. Delivered drive remains subject to delay, lag and bounds.
+This comparison changes early torque, switching time and late amplitude; it
+does not isolate early restraint alone. The named `early_restrain` schedule improves
+the sampled 10th-percentile speed relative to `late_drive` while worsening mean
+planar face/path error. All eight schedules are nondominated across five
+objectives: that speed quantile, mean face/path error, upper-tail hand force,
+squared-torque effort and speed dispersion. The last four are minimized; the
+speed quantile is maximized. This describes tradeoffs among the sampled
+schedules, not a proven boundary of every feasible policy.
+Its endpoint is the fixed time 0.24 s, not the preceding study's crossing.
+Neither comparison tests a general advantage of observable state feedback over
+clock schedules, and the engineering draws are not a golfer population sample.
 
-### Timing the Negative Couple
+Sprigings and MacKenzie separately compared three optimized conditions in a
+planar torso--arm--club model with constrained torque generators. They reported
+a small advantage from resisted delay and an advantage from active wrist torque
+after release [@sprigings2002]. That published simulation supports a bounded
+model question, not an identified human command history or the parameters of
+our separate filter audit.
 
-Define the couple interval by sign and swing-normal projection, then report its
-relation to state variables and impact. Test whether it consistently occurs
-over a state region across tempo changes. Compare direct torque, contact couple,
-shaft power, and relative release on aligned plots.
+**Model Result:** Selected timing and speed rankings depend on the model,
+candidate family, initialization and endpoint. The recorded filter comparisons
+retain their stated ordering within those boundaries.
 
-If the couple appears after the relevant state change, it cannot be its cause.
-If its onset precedes the change but varies too widely for prediction, the
-mechanism may be present without being a useful control target. Causal branches
-within the model and intervention data are still needed.
+**Human Evidence:** The simulations above do not measure human command onset,
+preactivation or a physiological delay. Kinematics and EMG are different
+observations; neither alone identifies the complete transmitted wrench history.
 
-### Timing Across the Two Allocation Extremes
+**Hypothesis:** Preparation can arrange geometry, motion and loading so that a
+later distal action becomes useful. An observable event might select that
+opportunity more reliably than a fixed clock, but this requires a prospective
+comparison with delays, failures and competing objectives included.
 
-The continuous arm-dominant strategy predicts continuity in one generalized
-drive or load mode across transition. The role-reversal strategy predicts a
-clearer allocation change, perhaps with continued co-contraction. Both may yield
-similar club event timing if activation and transmission histories differ.
+**Practical Interpretation:** Define what “late” is relative to, which signal is
+available, and what outcome improves before turning it into a cue.
 
-Compare not just onset but duration, rise rate, impulse, and cumulative work.
-Align by transition, state trigger, and impact. A finding that only appears under
-one alignment should be described accordingly.
+### Alignment Changes the View, and Sometimes the Units
 
-### Robust Timing Is a Region
+Subtracting impact time from every timestamp translates a trial's time axis;
+it does not stretch the trial. Scaling each downswing to a common percentage
+is an additional operation. With duration $D=t_{\mathrm{end}}-t_0>0$ and phase
+$\phi=(t-t_0)/D$, corresponding phase values can still contain different states.
+For an angular coordinate $q$, the derivative $dq/d\phi=D\dot q$ has units
+of radians per unit phase, not rad/s.
 
-An optimum at 112 milliseconds before impact can be misleading if 108–125
-milliseconds perform nearly as well while a narrow peak at 112 collapses under
-small errors. Map the objective surface and identify a plateau satisfying speed,
-control, and load constraints. Plateaus are more actionable than isolated
-maxima.
+For physical power $P$, preserve the time Jacobian when computing work:
 
-Uncertainty in event detection, sensor delay, and golfer variability should be
-shown on the same scale. If experimental timing uncertainty exceeds the width
-of a simulated optimum, the optimum is not currently testable at that precision.
+$$
+W=\int_{t_0}^{t_{\mathrm{end}}}P(t)\,dt
+ =D\int_0^1P(t_0+D\phi)\,d\phi.
+$$
 
-### Feedback Changes the Question
+Two manufactured traces with the same displayed curve $P=10+5\phi$ W but
+durations 0.2 and 0.4 s deliver 2.5 and 5 J. Their identical phase plots do not
+imply identical work. A nonlinear time warp needs its local $dt/d\phi$, and
+averaging before integration need not reproduce the mean of trial work.
 
-Open-loop schedules prescribe control by time. Humans use sensory feedback,
-feedforward preparation, and task-level corrections, although feedback delays
-limit rapid late changes. A state-triggered model approximates one aspect of
-feedback but is not a neural model.
+An event used to align curves will be sharp at the alignment origin by
+construction. Greater sharpness after state alignment does not, by itself,
+show a causal mechanism. Publish physical time, absolute duration, the alignment
+rule and uncertainty alongside phase plots. Compare proposed explanations on
+independent outcomes rather than rewarding the feature used to align them.
 
-Add bounded feedback controllers on later model rungs and ask whether the
-mechanism remains. A strategy that works only open loop may be fragile; a policy
-that relies on unrealistically instantaneous feedback is also suspect. Control
-assumptions belong beside mechanical ones.
+### A Real-Time Policy Cannot Know Future Impact
 
-### Experimental Reporting
+Retrospective “100 ms before actual impact” is available after the trial. A
+controller cannot use that future timestamp directly. It can use a prediction
+from present and past observations, with an explicitly evaluated prediction
+error. The same restriction applies to normalized phase if its denominator uses
+the future downswing duration.
 
-Publish synchronized raw and processed time bases, latency corrections, event
-definitions, and confidence intervals. Preregister primary windows and permit
-exploratory state alignments with clear labels. Provide code that reconstructs
-events from released signals. This lets reviewers decide whether a timing claim
-is mechanical, measurement-driven, or an artifact of normalization.
+An open-loop schedule chooses commands from elapsed time and declared initial
+conditions. A state-triggered rule uses available state estimates and detector
+memory. Elapsed time can itself be included in an augmented mathematical state;
+that formal conversion does not give a clock schedule information about an
+unobserved deviation.
 
-### Reader Lab: Compare Three Alignments
+For a fair comparison, declare the sensor set, sampling, latency, estimator,
+actuator bounds, training data and available preparation. A trigger based on an
+unmeasured shaft mode or an engine's internal force decomposition is initially
+a simulation diagnostic. Its experimental proxy needs validation. Robustness of
+an ideal full-state controller does not establish robustness of a delayed
+measurement-based implementation, much less a complete neural controller.
 
-Take repeated trials and align them by impact, by transition, and by a preregistered
-state event such as an arm--club-angle crossing. Plot direct torque, hand couple,
-shaft power, and club acceleration with uncertainty. A feature that sharpens only
-under state alignment may be organized by mechanics rather than absolute clock.
+### Test Preparation, Causation and a Usable Timing Region
 
-Next fit a timing policy on part of the data and freeze it. Evaluate fixed-clock,
-normalized-phase, and state-trigger versions on held-out participants. Include
-sensor and command delay. Compare distributional outcomes and trigger failures,
-not only means.
+A moment's sign crossing is not necessarily the beginning of the physical
+interaction: the same channel may have acted earlier with the other sign.
+A later action cannot alter the physical past, but measured event order alone
+does not isolate the cause of a state change. Sensor delays, filtering, shared
+state dependence and opposing contributions complicate that inference.
+Specify the body, moment point and projection axis before comparing couple
+onsets; pair power channels with their own conjugate velocities.
 
-Finally shift event detection within its confidence interval. If the claimed
-ordering reverses, the evidence cannot support fine timing language. State that
-the events overlap within resolution.
+Compare forward branches from a complete copied state to ask what removing or
+changing a declared input does next. Each branch must evolve its own reactions
+and reach the registered endpoint, or report failure. A separate preparation
+experiment should account for how different states were reached. Reoptimizing
+other controls after removal asks whether another strategy can substitute; it
+does not estimate the same fixed-policy effect.
 
-### Timing as Preparation Plus Opportunity
+Continuous arm loading and phase-dependent redistribution between arm and wrist
+channels remain candidate explanations. A change of allocation need not produce
+a net torque sign reversal, and an unchanged net sign can hide large internal
+changes. Relate the predictions to bilateral loads, stored energy, work and
+estimated stiffness, rather than treating one onset as a biological role label.
+A changed mediator consistent with a cue is informative but does not by itself
+establish mediation: competing pathways and confounding still need a design.
 
-A useful late action requires preparation: the system must arrive with suitable
-geometry, velocities, load, and shaft state. It also requires opportunity:
-enough remaining time and motion for force or work to affect impact. Acting
-earlier can spoil geometry; acting later can miss the window.
+There may be a broad useful region, a narrow peak, a boundary solution, several
+separated regions or no feasible benefit. Search and report the actual response
+surface under declared speed, direction and load requirements. A plateau is a
+result to establish, not a consequence of calling timing robust. Include onset
+jitter, measurement error, event failure and held-out uncertainty. If the proposed
+region is narrower than the experiment can resolve, do not claim that the
+experiment has located it precisely.
 
-This two-part view unifies delayed transfer and preload. Backswing and early
-downswing arrange state; later dynamics determine which control channels are
-effective. It explains why one timestamp cannot be detached from the trajectory
-that created it.
+### Reader Lab: Audit One Proposed Timing Rule
 
-### A Minimum Timing Report
+First reproduce the filter's 63.2% response, 76.9 ms rise interval and 10.1 ms
+sign-reversal example. Then compare the crossing rates of 4 and 0.04 rad/s and identify where the
+local timing approximation breaks. Finally integrate the phase power traces
+with their actual durations. These exercises separate actuator history, event
+uncertainty and energy accounting.
 
-State event definitions, time base, normalization, sampling rate, latency,
-filtering, and confidence intervals. Show raw-time and normalized-time plots,
-then one preregistered state alignment. Distinguish command, EMG, force, torque,
-motion, and outcome events. Report the full response surface around any optimum.
-
-If the preferred region is narrower than measurement or execution uncertainty,
-say that the current experiment cannot resolve it. If a broad plateau survives
-held-out testing, report the plateau rather than a false-precision timestamp.
-
-### Timing and the Two-Hands Mechanism
-
-The contact couple depends on both state and bilateral force. Its onset may be
-better described by a region of hand separation, club orientation, and force
-projection than by a single millisecond. The model can propose this region;
-instrumented data can test whether it recurs.
-
-Continuous loading and role reversal make different predictions about the
-events preceding it. One predicts force-mode continuity; the other predicts a
-sign change with retained or recovered stiffness. Aligning only at impact can
-blur these transition signatures. The protocol should preserve both transition
-and state views.
-
-### What a Timing Cue Cannot Establish
-
-A cue such as “wait” or “hold the angle” may change several variables and may be
-implemented differently by each golfer. Its success does not validate a modeled
-torque schedule unless the predicted mediator changes. Conversely, a mechanism
-can be real without a conscious cue.
-
-The distinction protects both scientific timing and practical interpretation.
-
-This keeps practical experiments open but bounded. Measure what the cue changed,
-compare it with the model, and avoid treating subjective intent as a control
-input known to the equations.
-
-### Chapter Checkpoint
-
-Every timing claim should answer five questions: which event, measured how, in
-which frame or state, with what uncertainty, and related to which later outcome?
-It should also distinguish command from force and motion. If a state trigger is
-proposed, the observable proxy and held-out performance must be shown.
-
-The key lesson is not that clock time is useless. Clock and state are two views.
-Agreement across them is strong; disagreement is information about tempo,
-preparation, or measurement. Publishing both prevents an exact timestamp from
-becoming a universal myth.
-
-For the allocation comparison, transition is the critical bridge. Measure load,
-stiffness, activation, and wrench through it. The timing hypothesis succeeds only
-if those mediators explain the later difference.
+For a proposed swing rule, freeze the event definition and training choices
+before testing. Compare clock and observable-event policies on the same declared
+task and information budget. Report all attempted trials, event ambiguity,
+failures, latency, complete outcome distributions and uncertainty, rather than
+only the successful mean. Include raw-time and phase views with reproducible
+detection code. A prospective performance comparison is stronger evidence than
+a sharper aligned plot.
 
 ## Where the Picture Breaks
 
-The oven has a small set of observable states. A golfer's relevant state includes
-uncertain internal loads and activation. A convenient club angle may correlate
-with, but not cause, the favorable mechanism.
+An oven's few visible indicators make the analogy attractive; a golfer's
+relevant internal state is much less accessible. One angle can be a useful
+predictor without being either a complete state or the cause of a favorable
+outcome. A simulated trigger can also exploit measurements and response times
+that an experiment cannot provide.
 
-Optimization can exploit unrealistic switches or measurement-perfect feedback.
-Rate limits, delays, noise, and held-out tests are required before interpreting
-a schedule biologically.
+Preparation determines the state available for a later action. Event detection
+determines when the policy recognizes it. Actuator dynamics determine what load
+actually changes before the task ends. Their interaction, together with the
+objective and feasible constraints, is the timing question.
 
-**Go Deeper:** Read the
-[timing counterfactual framework](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch04_counterfactuals.qmd),
-[torque-program methods](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06_methods.qmd),
-and [robust delayed-command study](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd).
+**Go Deeper:** Compare the pinned
+[timing and counterfactual framework](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch04_counterfactuals.qmd)
+with the distinct methods and uncertainty studies above. Read @sec-lay-ch13 for
+the power boundaries needed to decide what a timed torque actually does.

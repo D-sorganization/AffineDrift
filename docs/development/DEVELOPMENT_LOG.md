@@ -19,6 +19,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4813 · Timing, State Events, and Actuator History
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending; parent #4812 in protected CI
+- **Issue:** #4813; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/timing-rigor-4813
+- **Paths:** articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_timing_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; baseline 80b00bf271fcfd6ef33cd979350fa122f0d24bca; seven focused passes after two RED failures,655titles,12publication gates,Ruff,Black100,mypy,890filequality; final233pagePDF/HTML/parity/boundedvisual review;33math/4displays;lightbrowserpass,dark186inheritedcontrast;full6614pass/29skip/79.34%coverage.
+- **Summary:** Review complete state versus scalar events, transverse/grazing timing sensitivity, actuator preload and rise time, bounded provider evidence, phase-work Jacobians, prospective information and causal timing experiments. Seven Flash helper outputs adjudicated. No new corpus credit.
+- **Next step:** Commit accepted source, bind eight decisions, then regular PR and protected delivery.
+
+
 ### DL-#4811 · Negative Torque, Conjugate Power, and Causal Evidence
 
 - **State:** in_review
