@@ -4387,6 +4387,37 @@ body.quarto-dark .status-pill--planned,
 #title-block-header .dropdown-menu :is(a, .dropdown-item):focus-visible {
   color: var(--color-link-hover) !important;
 }
+
+/* Quarto listing pagination in light and dark themes (WEB-09.3 #4563) */
+.pagination .page-link {
+  color: var(--color-link);
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+.pagination .page-item.active .page-link {
+  color: var(--text-inverse);
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.pagination .page-link, .page-link, a.page-link, .page-item a.page, a.page) {
+  color: var(--color-accent) !important;
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.pagination .page-item.active .page-link, .page-item.active .page-link) {
+  color: var(--text-inverse) !important;
+  background-color: var(--color-link) !important;
+  border-color: var(--color-link) !important;
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.pagination .page-link:hover, .page-link:hover, a.page-link:hover, .page-item a.page:hover, a.page:hover) {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-tertiary) !important;
+}
+
 /* ===== end css/components/quarto-theme.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
