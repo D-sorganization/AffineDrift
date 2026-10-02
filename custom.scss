@@ -1,4 +1,4 @@
-/* stylelint-disable comment-empty-line-before */
+/* stylelint-disable comment-empty-line-before, at-rule-no-unknown, annotation-no-unknown, at-rule-empty-line-before */
 /* stylelint-disable-next-line comment-whitespace-inside */
 /*-- scss:defaults --*/
 
@@ -25,11 +25,18 @@ $warning: #8a5a00;               /* dark amber — AA contrast with white text *
 $danger: $color-vermillion;      /* #D55E00 - Vermillion for errors */
 $info: $color-sky-blue;          /* #56B4E9 - Sky blue for info */
 
-$body-color: #2c3e50;
-$link-color: $color-blue;        /* #0072B2 - Colorblind-safe blue */
-/* Ensure table and figure captions have WCAG AA contrast against light backgrounds (WEB-09.1 #4561) */
-$table-caption-color: $body-color;
-$figure-caption-color: $body-color;
+@if (variable-exists("theme") and $theme == "darkly") or (variable-exists("body-bg") and $body-bg != #fff and $body-bg != #ffffff) {
+  $body-color: #fff;
+  $link-color: $color-sky-blue;
+  $table-caption-color: #b0bec5;
+  $figure-caption-color: #b0bec5;
+} @else {
+  $body-color: #2c3e50 !default;
+  $link-color: $color-blue !default;        /* #0072B2 - Colorblind-safe blue */
+  /* Ensure table and figure captions have WCAG AA contrast against light backgrounds (WEB-09.1 #4561) */
+  $table-caption-color: $body-color;
+  $figure-caption-color: $body-color;
+}
 /* stylelint-disable value-keyword-case -- font names are case-insensitive per CSS spec */
 $font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: "Playfair Display", Georgia, "Times New Roman", serif;

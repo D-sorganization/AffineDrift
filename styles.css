@@ -239,6 +239,44 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Keep reference and citation list on theme background (issue #4787) */
+#quarto-appendix,
+#quarto-document-content #quarto-appendix.default {
+  background-color: transparent;
+}
+
+/* Quarto code tools dropdown accessibility (issue #4787) */
+#quarto-code-tools-menu {
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+#quarto-code-tools-menu .dropdown-item,
+#quarto-code-tools-source {
+  color: var(--text-primary);
+}
+
+#quarto-code-tools-menu .dropdown-item:hover,
+#quarto-code-tools-menu .dropdown-item:focus,
+#quarto-code-tools-source:hover,
+#quarto-code-tools-source:focus {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* Table headers follow theme text color (issue #4787) */
+th,
+table th,
+#quarto-document-content table th {
+  color: var(--text-primary);
+}
+
+/* Summary disclosure elements follow primary text color (issue #4787) */
+details > summary,
+summary {
+  color: var(--text-primary);
+}
+
 .reading-time-estimate,
 .reading-time-estimate span,
 .quarto-title-block .reading-time-estimate,
@@ -592,11 +630,12 @@ figcaption {
   font-style: italic;
 }
 
-/* Captions follow the selected reading theme with accessible contrast (WCAG AA, WEB-09.1 #4561). */
+/* Captions follow the selected reading theme with accessible contrast (WCAG AA, WEB-09.1 #4561, #4787). */
 .figure-caption,
 .quarto-float-caption,
 .quarto-float-caption-top,
 .quarto-float-caption-bottom,
+caption,
 table caption,
 #quarto-document-content table caption,
 #quarto-document-content .figure-caption,
@@ -1718,7 +1757,7 @@ h3:hover .anchor-link,
 }
 
 .laymans-item {
-  background: var(--pure-white);
+  background: var(--bg-primary);
   border-radius: 6px;
   padding: 1.25rem;
   margin-bottom: 1rem;
@@ -1849,7 +1888,7 @@ h3:hover .anchor-link,
 }
 
 .contact-form-container {
-  background: var(--pure-white);
+  background: var(--bg-primary);
 
   /* Ensure contrast */
   padding: 2rem;
@@ -1913,7 +1952,7 @@ form.contact-form .form-group textarea {
   outline: none;
   border-color: var(--accent-blue);
   box-shadow: 0 0 0 3px var(--light-blue);
-  background-color: var(--pure-white);
+  background-color: var(--bg-primary);
 }
 
 .btn-primary {

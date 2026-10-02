@@ -8,15 +8,26 @@
   <style>
     :root,
     :root[data-theme="dark"] {
-      --bg-body: #0a0a0f;
+      --bg-body: #0d0d1a;
       --text-main: #e0e0e0;
-      --accent-blue: #4a9eff;
+      --accent-blue: #8bd3ff;
+      --retry-btn-color: #0d0d1a;
     }
 
     :root[data-theme="light"] {
       --bg-body: #f7f9fc;
       --text-main: #172033;
       --accent-blue: #075fc4;
+      --retry-btn-color: #ffffff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-body: #0d0d1a;
+        --text-main: #e0e0e0;
+        --accent-blue: #8bd3ff;
+        --retry-btn-color: #0d0d1a;
+      }
     }
 
     * {
@@ -62,7 +73,7 @@
       display: inline-block;
       padding: 0.75rem 1.5rem;
       background: var(--accent-blue);
-      color: white;
+      color: var(--retry-btn-color, white);
       text-decoration: none;
       border-radius: 8px;
       font-weight: 500;
