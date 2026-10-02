@@ -63,10 +63,18 @@ def make_synthesis() -> None:
         _node(axis, x, y, text, color, 2.0)
         _edge(axis, (x * 0.72, y * 0.72), (x * 0.25, y * 0.25), color)
     axis.set_title(
-        "The Framework Connects Mechanisms Without Selecting One Technique",
+        "Connect the Mechanics\nand Check Each Claim's Evidence",
         color=INK,
         fontweight="bold",
         fontsize=16,
+    )
+    axis.text(
+        0,
+        -3.65,
+        "Conceptual Review Map; Evidence Is Specific to Each Claim",
+        ha="center",
+        color=GRAY,
+        fontsize=10,
     )
     _save(fig, "fig_companion_synthesis_map")
 

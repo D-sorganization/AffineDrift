@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4819 · Practical Synthesis Evidence and Causal Comparisons
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4819; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/synthesis-rigor-4819
+- **Paths:** articles/proximal_distal_companion/chapters/ch28_practical_synthesis.qmd, scripts/make_proximal_distal_companion_review_figures.py, tests/test_synthesis_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 682b709bc31459a882421062d2632282b78ed356 baseline;6632tests pass,29skip,187deselected,79.33%coverage;12gates,893Python files,655titles;237pagePDF,48math and4browserprofiles pass.
+- **Summary:** Lead accepted eight scientific decisions connecting wrench/power, hidden hand allocations, task velocity, feasible interventions, finite Pareto results, measurement limits and frontend scope. Five Flash outputs adjudicated. Source commit/binding pending;201 prior findings and104pending source audits unchanged until binding.
+- **Next step:** Commit accepted source, bind eight findings to exact Git bytes, validate/push normally; verify parent protected delivery before regular PR publication.
+
 ### DL-#4817 · Forward Solver Guarantees and Validation
 
 - **State:** in_progress

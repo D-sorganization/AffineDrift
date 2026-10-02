@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4819 | Correct Chapter 28 wrench-power and energy-speed arguments, feasible counterfactuals, finite-study and measurement inference, and guide capability claims; qualify the reused synthesis map. |
 | 2026-10-02 | #4814 | Correct Chapter 22 event-state definitions, actuator history, finite-study scope, phase-work accounting and prospective causal timing; verify manufactured examples and regenerate the schematic threshold figure. |
 | 2026-10-02 | #4812 | Correct Chapter 13 conjugate power, energy boundaries, moment transport, two-hand reactions, study scope and causal tests; qualify human attribution and regenerate the power-sign figure. |
 | 2026-10-02 | #4810 | Correct Chapter 8 velocity sums, vector-speed peaks, empirical and finite-model evidence, and intervention limits; verify signed speed/energy examples and label sequence curves as schematic. |
