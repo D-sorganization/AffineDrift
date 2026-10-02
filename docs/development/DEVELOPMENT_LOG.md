@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/sensitivity-rigor-4806
 - **Paths:** articles/proximal_distal_companion/chapters/ch21_sensitivity_identifiability.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_sensitivity_review.py, references/proximal-distal-energy.bib
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; baseline a931f3e3583ac028666bf1a8f793231731acf894; working source: broad run 6,591 pass/three failures/79.22% coverage; required chapter heading and local browser scratch repaired; all 34 affected chapter/contract/hygiene tests pass. Twelve publication gates and static checks pass; final 233-page PDF/HTML and bounded visual review accepted; binding pending.
-- **Summary:** Clarify local/global inference, finite provider regression, rank limits, noise and nuisance parameters, hand-wrench maps, ensemble probabilities and held-out evidence. Ten Flash preparation/test/editorial/record helpers read and adjudicated; lead retains scientific decisions. No corpus credit yet.
-- **Next step:** Commit accepted source, bind eight findings to exact Git bytes, then open a regular PR.
+- **Last verified:** 2026-10-02; baseline a931f3e3583ac028666bf1a8f793231731acf894; working source: broad run 6,591 pass/three failures/79.22% coverage; required chapter heading and local browser scratch repaired; all 34 affected chapter/contract/hygiene tests pass. Twelve publication gates and static checks pass; final 233-page PDF/HTML and bounded visual review accepted; eight findings bound to source 2f31f16b9 (169 total); delivery pending.
+- **Summary:** Clarify local/global inference, finite provider regression, rank limits, noise and nuisance parameters, hand-wrench maps, ensemble probabilities and held-out evidence. Ten Flash preparation/test/editorial/record helpers read and adjudicated; lead retains scientific decisions. Only Chapter 21 credited; 109 source audits plus whole-book review remain.
+- **Next step:** Commit the binding, push normally and create a regular PR.
 
 
 ### DL-#4801 · Two-Link Coordinates, Reactions, and Limits
