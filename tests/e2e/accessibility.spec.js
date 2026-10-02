@@ -198,6 +198,18 @@ test.describe("Accessibility", () => {
         await page.evaluate((selectedTheme) => {
           document.documentElement.setAttribute("data-theme", selectedTheme);
           document.documentElement.setAttribute("data-bs-theme", selectedTheme);
+          if (selectedTheme === "dark") {
+            document.body.classList.add("quarto-dark");
+            document.body.classList.remove("quarto-light");
+          } else {
+            document.body.classList.add("quarto-light");
+            document.body.classList.remove("quarto-dark");
+          }
+          for (const anim of document.getAnimations()) {
+            try {
+              anim.finish();
+            } catch {}
+          }
         }, theme);
         const failures = await findContrastFailures(page);
         expect(failures, `${route} (${theme}) contrast failures`).toEqual([]);
