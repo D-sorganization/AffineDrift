@@ -215,18 +215,15 @@ export function initAriaLabels() {
         }
     }
 
-    // Listing thumbnails without discernible text
-    const thumbnails = document.getElementsByClassName("thumbnail");
-    for (const thumb of thumbnails) {
-        const thumbLinks = thumb.getElementsByTagName("a");
-        for (const link of thumbLinks) {
+    // Listing thumbnails and metadata links without discernible text
+    const listingPosts = document.querySelectorAll(".quarto-post, .quarto-listing-item, div[data-index]");
+    for (const post of listingPosts) {
+        const heading = post.querySelector(".listing-title, .title, h2, h3, a.title");
+        const titleText = heading?.textContent?.trim() || "Article";
+        const postLinks = post.getElementsByTagName("a");
+        for (const link of postLinks) {
             if (!link.textContent.trim() && !link.hasAttribute("aria-label")) {
-                const post = thumb.closest(".quarto-post, .quarto-listing-item");
-                const heading = post?.querySelector(".listing-title, .title, h2, h3");
-                const titleText = heading?.textContent?.trim();
-                if (titleText) {
-                    link.setAttribute("aria-label", titleText);
-                }
+                link.setAttribute("aria-label", titleText);
             }
         }
     }
