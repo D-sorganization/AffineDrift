@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4810 | Correct Chapter 8 velocity sums, vector-speed peaks, empirical and finite-model evidence, and intervention limits; verify signed speed/energy examples and label sequence curves as schematic. |
 | 2026-10-02 | #4808 | Distinguish sensitivity from parameter recovery in Chapter 21; verify noise covariance, nuisance profiles and wrench nullspaces, qualify synthetic evidence, and correct the conceptual figure. |
 | 2026-10-02 | #4801 | Correct two-link torque coordinates, moving-hand reactions, limiting cases, and conditional inference in Chapter 7. |
 | 2026-10-02 | #4799 | Qualify model-family observables, port power, full state, implementation independence, and evidence scope in Chapter 19. |

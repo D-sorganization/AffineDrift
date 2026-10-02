@@ -1,5 +1,18 @@
 # Development Log Archive — 2026
 
+### DL-#4806 · Sensitivity, Identifiability, and Measurement
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4808 (regular); parent #4804 verified on remote main
+- **Issue:** #4806; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/sensitivity-rigor-4806
+- **Paths:** articles/proximal_distal_companion/chapters/ch21_sensitivity_identifiability.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_sensitivity_review.py, references/proximal-distal-energy.bib
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; protected merge acbaf49ec23f95f3a25fa887c4a9f000e13ca8dc; exact-head CI37001380667 succeeded; 26 owned Git blobs and the whole merged tree match accepted 891b38bcf34b967025e7d4d1d733e8ee9c1e888a. Historical local validation and its limits remain in sensitivity-validation.json.
+- **Summary:** Clarify local/global inference, finite provider regression, rank limits, noise and nuisance parameters, hand-wrench maps, ensemble probabilities and held-out evidence. Ten Flash preparation/test/editorial/record helpers read and adjudicated; lead retains scientific decisions. Only Chapter 21 credited; 109 source audits plus whole-book review remain.
+- **Next step:** None for this delivered chapter. Lease and presence released; receipt in reports/technical-review/sensitivity-remote-main-receipt.json. Chapter 8 remains separately in review.
+
 ### DL-#4801 · Two-Link Coordinates, Reactions, and Limits
 
 - **State:** shipped

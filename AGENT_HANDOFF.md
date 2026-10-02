@@ -1,3 +1,9 @@
+# Current Technical Review Handoff
+
+Chapter 21 PR #4808 is verified on remote main. Chapter 8 regular PR #4810 is open; source, bindings and parent reconciliation are pushed. Registration checkpoint SELF awaits push and guarded arming; protected delivery remains pending. Continue from [the canonical handoff](docs/development/HANDOFF.md).
+
+## Preserved Earlier Checkpoint
+
 # Chapter 21 Accepted Source Checkpoint — Issue #4806
 
 - Goal remains active under epic #4009, corpus #4021 and companion #4059. Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-sensitivity-review`, branch `fix/sensitivity-rigor-4806`, baseline `a931f3e3583ac028666bf1a8f793231731acf894`. Source commit `2f31f16b93818cb15e7c6acf19addca9f92d2417`; eight findings now bound to exact source Git bytes (161 prior retained, 169 total). Chapter 21 alone receives audit credit; 109 source audits and whole-book consistency remain. Source, binding, main reconciliation and parent receipt are pushed. Regular PR #4808 is open; exact-head CI and protected merge remain pending.
