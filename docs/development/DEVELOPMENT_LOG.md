@@ -30,11 +30,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; source53023631e; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
 - **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. 121 prior findings preserved; eight new findings bound; eight agy Flash helpers reviewed.
-- **Next step:** Register regular PR and verify protected delivery after predecessors; 114 corpus audits remain.
+- **Next step:** PR4788 verified and integrated; push final integration, verify CI and protected PR4790 remote-main delivery; 114 corpus audits remain.
 
 ### DL-#4786 — Open Evidence and Reproduction
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4788 (regular)
 - **Issue:** #4786; epic #4009 / corpus #4021
@@ -43,7 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Eight findings bind028720c0a5e7ec6e298cfb4615aa98c9cf6e8c31.
 - **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 115 audits remain.
-- **Next step:** PR4785 remote delivery verified at0bcc9f866; push unchanged-science integration, verify final-head CI, protected merge and remote-main blobs.
+- **Next step:** None for Chapter27: PR4788 merged8bead8523, CI36961840257 passed, all18changed blobs verified; lease/presence released.
 
 ### DL-#4771 — Measured Golfer Evidence
 
