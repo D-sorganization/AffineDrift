@@ -1,0 +1,167 @@
+{
+  "issue": 4795,
+  "status": "Full Chapter26 source/publication acceptance complete; source commit, binding and regular PR pending",
+  "baseline": "471fa4e4edfa08b25127fc3c7e5f26ca7c3b8d7d",
+  "source_findings": 8,
+  "historical_findings": 137,
+  "corpus_pending": 113,
+  "whole_book_consistency_pending": true,
+  "tdd": {
+    "red_passed": 8,
+    "red_failed": 1,
+    "green_passed": 9
+  },
+  "full_regression": {
+    "passed": 6515,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 555.62,
+    "coverage_percent": 78.95
+  },
+  "related_checks": 60,
+  "editorial_followup": 25,
+  "final_affected_checks": 31,
+  "full_run_followup_scope": "Notation-only changes after full regression; affected checks and publication gates repeated.",
+  "render": {
+    "pages": 229,
+    "inspected_physical_pages": [
+      182, 183, 184, 185, 186, 187, 188, 189, 190, 225, 226, 227, 228, 229
+    ],
+    "canonical_public_parity": true,
+    "pdf_sha256": "01e14b55cdd9b307e0fbb062a7449145b0bf0c01c29f4f1ca3db5df3c11b1d8a",
+    "html_success": true
+  },
+  "browser": {
+    "profiles": 4,
+    "failed": 0,
+    "serious_critical_axe": 0,
+    "route_scope": "Single rendered companion route, not full-site acceptance",
+    "viewports": [390, 1440],
+    "chapter_math_nodes": 62,
+    "display_equations": 4,
+    "errors": 0,
+    "placeholders": 0,
+    "horizontal_overflow": false,
+    "zoom_opened": true,
+    "zoom_closed": true
+  },
+  "recovered_setup_failures": [
+    "Quarto tree scan raced with preservation of build artifacts; stable-tree retry passed.",
+    "First browser invocation lacked server; next lacked served manifest; final explicit single-route preview passed."
+  ],
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/experiment-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 876,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "source_title_files": 653,
+  "agy_flash_helpers_completed": 7,
+  "prior_evidence_unchanged": 154,
+  "prior_evidence_changed": 3,
+  "figure_generator_other_ast_unchanged": true,
+  "no_provider_rerun": true,
+  "no_new_human_validation": true,
+  "parent_delivery": {
+    "pr": 4794,
+    "head": "471fa4e4edfa08b25127fc3c7e5f26ca7c3b8d7d",
+    "status": "Open; depends on4790; not yet delivered"
+  },
+  "commands": {
+    "full": "py -3.12 -X utf8 -m pytest --cov",
+    "followup": "py -3.12 -X utf8 -m pytest tests/test_experiment_design_review.py tests/test_proximal_distal_companion_contract.py tests/test_root_hygiene.py -q --no-cov",
+    "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; then --to html"
+  }
+}

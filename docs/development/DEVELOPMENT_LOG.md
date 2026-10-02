@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4795 — Experimental Inference and Falsification
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not yet opened
+- **Issue:** #4795; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/experiment-rigor-4795
+- **Paths:** articles/proximal_distal_companion/chapters/ch26_experiment_can_say_no.qmd, tests/test_experiment_design_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; 6515 full-regression passes;31final affected checks;12publication gates;653titles;876Python quality checks. Accepted229-page PDF/HTML, four browser profiles,62mathnodes and mobilezoom.
+- **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. Preserve137prior findings;113corpus audits remain until source binding.
+- **Next step:** Commit source, bind evidence and open regular PR after parent4794.
+
 ### DL-#4791 — Constraint Reactions and Identifiability
 
 - **State:** in_review
@@ -44,19 +57,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-02; source53023631e; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
 - **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. 121 prior findings preserved; eight new findings bound; eight agy Flash helpers reviewed.
 - **Next step:** PR4788 verified and integrated; push final integration, verify CI and protected PR4790 remote-main delivery; 114 corpus audits remain.
-
-### DL-#4786 — Open Evidence and Reproduction
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** #4788 (regular)
-- **Issue:** #4786; epic #4009 / corpus #4021
-- **Branch:** fix/open-evidence-rigor-4786
-- **Paths:** articles/proximal_distal_companion/chapters/ch27_open_evidence.qmd, tests/test_open_evidence_review.py, references/proximal-distal-energy.bib
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Eight findings bind028720c0a5e7ec6e298cfb4615aa98c9cf6e8c31.
-- **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 115 audits remain.
-- **Next step:** None for Chapter27: PR4788 merged8bead8523, CI36961840257 passed, all18changed blobs verified; lease/presence released.
 
 ### DL-#4763 · Geometry Technical Review
 

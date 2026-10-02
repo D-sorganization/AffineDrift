@@ -483,31 +483,34 @@ def make_evidence_ladder() -> tuple[Path, Path]:
 
 
 def make_falsification_map() -> tuple[Path, Path]:
-    fig, axis = plt.subplots(figsize=(10, 5.5))
-    axis.set(xlim=(0, 11), ylim=(0, 6))
+    """Save a prediction diagram that retains unresolved and untested outcomes."""
+    fig, axis = plt.subplots(figsize=(11, 5.5))
+    axis.set(xlim=(0, 13), ylim=(0, 6))
     axis.axis("off")
-    _box(axis, (0.5, 2.6), "Claim", INK, 1.5)
-    _arrow(axis, (2, 3), (3, 3), INK)
-    _box(axis, (3, 2.6), "Prediction", BLUE, 1.8)
-    _arrow(axis, (4.8, 3), (5.8, 3), INK)
-    _box(axis, (5.8, 2.6), "Measurement", GREEN, 1.8)
-    _arrow(axis, (7.6, 3), (8.6, 4.3), GREEN, "Agrees")
-    _arrow(axis, (7.6, 3), (8.6, 1.5), RED, "Disagrees")
-    _box(axis, (8.6, 3.9), "Narrower\nConfidence", GREEN, 1.8)
-    _box(axis, (8.6, 1.1), "Revise or\nReject", RED, 1.8)
+    _box(axis, (0.3, 2.6), "Bounded\nClaim", INK, 1.6)
+    _arrow(axis, (2, 3), (2.8, 3), INK)
+    _box(axis, (2.9, 2.6), "Registered\nPrediction", BLUE, 2.0)
+    _arrow(axis, (5, 3), (5.8, 3), INK)
+    _box(axis, (5.9, 2.6), "Qualified\nMeasurements", VIOLET, 2.2)
+    _arrow(axis, (8.2, 3), (9.3, 4.6), GREEN)
+    _arrow(axis, (8.2, 3), (9.3, 3), RED)
+    _arrow(axis, (8.2, 3), (9.3, 1.4), ORANGE)
+    _box(axis, (9.4, 4.2), "Bounded\nSupport", GREEN, 2.6)
+    _box(axis, (9.4, 2.6), "Contradiction:\nRevise the Claim", RED, 2.6)
+    _box(axis, (9.4, 1.0), "Inconclusive:\nResolve Uncertainty", ORANGE, 2.6)
     axis.text(
-        5.5,
-        5.55,
-        "A Scientific Story Must Include an Exit",
+        6.5,
+        5.65,
+        "A Test Must Distinguish Its Possible Outcomes",
         ha="center",
         fontsize=16,
         fontweight="bold",
         color=INK,
     )
     axis.text(
-        5.5,
-        0.35,
-        "A claim that survives every possible result has not risked enough.",
+        6.5,
+        0.25,
+        "An Unexecuted Test Remains Untested.",
         ha="center",
         color=GRAY,
     )
