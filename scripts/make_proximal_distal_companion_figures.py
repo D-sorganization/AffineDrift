@@ -449,32 +449,42 @@ def make_task_null() -> tuple[Path, Path]:
 
 
 def make_evidence_ladder() -> tuple[Path, Path]:
-    fig, axis = plt.subplots(figsize=(10, 5.4))
-    axis.set(xlim=(0, 11), ylim=(0, 6))
+    """Show model branches sharing a contract without implying cumulative validation."""
+    fig, axis = plt.subplots(figsize=(11, 5.8))
+    axis.set(xlim=(0, 12), ylim=(0, 6.4))
     axis.axis("off")
-    levels = (
-        (0.5, 0.6, "Equation\nIdentity", GRAY),
-        (2.5, 1.55, "Reduced\nModel", BLUE),
-        (4.5, 2.5, "Cross-Engine\nCheck", VIOLET),
-        (6.5, 3.45, "Instrumented\nHuman Study", GREEN),
-        (8.5, 4.4, "Replicated\nOutcome", ORANGE),
+    branches = (
+        (0.4, 4.8, "Planar Coupling", BLUE),
+        (4.4, 4.8, "Two-Hand Constraints", GREEN),
+        (8.4, 4.8, "Shaft Deformation", ORANGE),
+        (0.4, 1.5, "Moving Base", VIOLET),
+        (4.4, 1.5, "Spatial Contact", BLUE),
+        (8.4, 1.5, "Biological Allocation", GREEN),
     )
-    for x, y, label, color in levels:
-        _box(axis, (x, y), label, color, 1.75)
-    axis.plot([0.5, 10.25], [0.45, 5.25], color=INK, lw=1, alpha=0.3)
+    for x, y, label, color in branches:
+        _box(axis, (x, y), label, color, 3.2)
+        start, end = (4.7, 4.05) if y > 3 else (2.4, 3.1)
+        _arrow(axis, (x + 1.6, start), (x + 1.6, end), color)
+    _box(
+        axis,
+        (0.4, 3.2),
+        "Shared Comparison Contract\nAvailable Outputs; Frames; States; Inputs; Events",
+        INK,
+        11.2,
+    )
     axis.text(
-        5.5,
-        5.7,
-        "Confidence Rises Only When the Evidence Changes Kind",
+        6.0,
+        6.05,
+        "Model Families Share Tests, Not a Rank",
         ha="center",
         fontsize=16,
         fontweight="bold",
         color=INK,
     )
     axis.text(
-        5.5,
-        0.15,
-        "A more detailed model is not automatically a human experiment.",
+        6.0,
+        0.45,
+        "Human Tests Need Qualified Measurements and Predictions.",
         ha="center",
         color=RED,
         fontweight="bold",

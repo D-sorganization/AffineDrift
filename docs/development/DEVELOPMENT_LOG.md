@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4799 — Model Comparison and Evidence Boundaries
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4799; epic #4009 / corpus #4021
+- **Branch:** fix/model-ladder-rigor-4799
+- **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; source checkpoint SELF; 6555 full regression passes; 48 final affected passes; 12 publication gates; 232-page PDF/HTML accepted with inherited dark-theme contrast limitation recorded.
+- **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
+- **Next step:** Commit and bind eight findings, update corpus, open regular PR; verify parent #4800 delivery before child merge.
+
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
 - **State:** in_review

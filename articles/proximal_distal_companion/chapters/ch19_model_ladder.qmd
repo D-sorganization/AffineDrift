@@ -7,13 +7,15 @@ The city map is not false because it omits plumbing. The plumbing drawing is not
 better for planning a cross-country trip. Scale and detail should match the
 question.
 
-The proximal-distal project uses a model ladder for the same reason. A double
-pendulum isolates coupling. A two-hand model exposes wrench redundancy. A
-flexible shaft adds storage. A moving base adds back-reaction. Spatial and
-full-body tiers add frames, contacts, and independent engine realizations. Each
-rung should answer a declared question and preserve common observables.
+The proximal-distal project uses a model ladder for the same reason, but its
+models form branches rather than one sequence of increasingly complete replicas.
+A double pendulum isolates coupling. A two-hand model represents separate
+contacts. A flexible shaft adds storage. A dynamic base adds back-reaction.
+Spatial and anatomical models address other omissions; neither their detail nor
+their software name establishes an independently verified result. Each model
+must answer a declared question through observables it can actually represent.
 
-![A Model Ladder Adds Two Hands, Flexibility, Moving Base, Spatial Motion, and Full-Body Structure While Keeping Common Wrench and Power Observables.](figures/proximal_distal_companion/fig_companion_evidence_ladder.svg){#fig-lay-model-ladder width=98% fig-alt="A ladder rises from double pendulum through two-hand, flexible-shaft, moving-base, spatial-contact, and full-body models, with a common wrench-power contract running alongside every rung."}
+![Model Families Meet Through a Declared Comparison Contract; More Detail Does Not Establish Human Validity.](figures/proximal_distal_companion/fig_companion_evidence_ladder.svg){#fig-lay-model-ladder width=98% fig-pos="H" fig-alt="Planar coupling, two-hand constraints, shaft deformation, moving base, spatial contact, and biological allocation connect to a shared comparison contract for available outputs, frames, states, inputs, and events. Human tests separately require qualified measurements and predictions."}
 
 ## How the Mechanism Works
 
@@ -28,27 +30,90 @@ Coordinates differ across tiers. A planar wrist angle has no one-to-one match in
 a spatial model with two wrists and a flexible shaft. Comparing raw coordinates
 would confuse model architecture with mechanism.
 
-Instead, every tier reports a club wrench at a declared reference, interface
-power, club motion, relevant work integrals, and closure residuals. These are the
-handrail connecting rungs. Added internal detail can be reported without losing
-the shared comparison.
+Instead, specify a comparison map for each model $m$:
+
+$$
+\mathbf y_m=h_m(\mathbf x_m,\mathbf u_m,\boldsymbol\theta_m).
+$$
+
+Here $\mathbf x_m$ is the full state, $\mathbf u_m$ the declared input, and
+$\boldsymbol\theta_m$ the model parameters. The common output $\mathbf y_m$ might
+contain club motion, a wrench at a named reference point, interface power, work,
+and closure residuals. Every component needs units, signs, frame, event window,
+system boundary, and an uncertainty or numerical-error allowance. A planar
+result is a projection with restrictions; storing it in a three-component array
+does not add out-of-plane dynamics.
+
+Use the intersection of available outputs. A single-wrist pendulum does not
+measure two individual hand wrenches; a rigid club has no shaft strain state.
+Mark an unsupported quantity **unavailable** or **not applicable**, with the
+reason. A zero imposed by a model assumption is not an observed zero. A shared
+record format ensures compatible labels, not common physics or equal trajectories.
+
+The power comparison needs particular care when one branch deforms. At separate
+contact ports, retain
+
+$$
+P_{\mathrm{ports}}=\sum_i
+\left(\mathbf F_i\cdot\mathbf v_i+
+\mathbf M_i\cdot\boldsymbol\omega_i\right).
+$$
+
+The moments here are local contact moments, paired with their work-conjugate
+angular velocities; positive power enters the chosen system. Reduction to one
+resultant wrench and one rigid-body twist
+requires compatible rigid motion at all those ports. For a counterexample,
+apply outward axial forces of 10 N at two ends moving apart, each with outward
+velocity 0.2 m/s in the same inertial frame.
+The resultant force and moment are zero, yet the input power is 4 W. A rigid
+center-of-mass motion alone misses that deformation power. This connects the
+system boundary in Chapter 2, power accounting in Chapter 5, and shaft storage
+in Chapter 15; it does not violate reference-point invariance for a rigid body.
+
+### Matching Outputs Does Not Match the State
+
+Two full states can have the same comparison output. In a manufactured
+two-mass spring example, initially set the observed mass's position and velocity
+to zero. Let $q_1$ and $q_2$ be displacements from the two masses' equilibrium
+positions along the same axis, with spring extension $z=q_2-q_1$ and force
+$+kz$ on mass 1. With mass 1 kg and stiffness 100 N/m, an omitted extension of
+$+0.01$ m or $-0.01$ m gives that mass acceleration $+1$ or $-1$ m/s$^2$.
+The reduced snapshot is identical; the stored elastic state is not. Activation,
+contact history, and modal velocities can create analogous ambiguities.
+
+Therefore register how a reduced initial condition is lifted into each full
+state, including preload and stored energy, and whether the lift is unique.
+Holding the same motion while reconstructing required loads is an inverse
+comparison. Applying matched input histories or matched feedback policies and
+letting motion evolve is a forward comparison. Deleting a command at one state
+does not erase its earlier impulse or reproduce the trajectory obtained by
+removing it throughout the swing. Chapters 3 and 11 supply those distinctions.
 
 ### Complexity Must Pay Rent
 
-Adding degrees of freedom increases parameter uncertainty and nonuniqueness. A
-full-body model can look lifelike while allowing many internal solutions. If it
-does not improve a relevant observable, falsifier, or uncertainty estimate, its
-complexity has not paid rent.
+Adding states can expose uncertain parameters and alternative explanations, but
+does not necessarily increase every uncertainty or destroy identifiability.
+Known parameters, informative measurements, or a justified constraint can make
+a richer model more predictive. Conversely, a smaller model can be precise
+about the wrong quantity because it excludes important physics. Distinguish
+approximation bias, numerical error, parameter uncertainty, and ambiguity in the
+unobserved internal variables. A full-body animation does not resolve any of
+these by itself.
 
-The distributed shaft is justified when higher modes change the impact-window
-wrench or energy beyond tolerance. The moving base is justified when back-
-reaction changes the mechanism. Spatial contact is justified when out-of-plane
-geometry or wrench components matter. The question comes first.
+The distributed shaft earns its extra states when omitted modes affect the
+target beyond the declared tolerance, or when shaft behavior is itself the
+target. A moving base matters when prescribed support hides relevant work or
+back-reaction. Spatial contact matters when out-of-plane geometry or wrench
+components matter. Compare predictions on data or conditions not used to tune
+the model; improved training fit alone does not establish the improvement.
 
 ### Surviving and Changing Claims
 
-Some statements are structural. Action-reaction, wrench transformation, and
-work-energy closure should survive every tier. Some are model-specific: the
+Some statements are structural within their stated mechanics. Consistent
+action-reaction, wrench transformation, and complete work-energy accounting
+should survive a change of representation. Closure must include moving-support
+work, storage, dissipation, and numerical residuals where relevant; zero energy
+change is not the universal test. Some statements are model-specific: the
 exact duration of a negative couple, optimal torque onset, or numerical force
 magnitude can change with parameters and degrees of freedom.
 
@@ -63,32 +128,62 @@ observable. Agreement under independently implemented equations reduces the
 chance that one code path created the effect. Disagreement helps locate hidden
 assumptions.
 
-The independently executed spatial contact test is especially useful because
-MuJoCo and Pinocchio do not share one dynamics implementation. Their agreement
-on bounded mechanism observables strengthens numerical credibility, though both
-still represent the same reduced physical idea.
+The reviewed upstream release makes a narrower distinction than “two engines
+agree.” Its nonplanar common-state inverse comparison uses MuJoCo and a separate
+Lagrange--Christoffel formulation with prescribed hand loads. Its reduced spatial
+forward-contact comparison uses native MuJoCo and Pinocchio inertia-and-bias
+operators, but a **shared contact law and integrator**: projected compliant
+contacts and the same semi-implicit update. That checks transport through those
+rigid-body operators; it is not agreement between independently authored native
+contact solvers or integration schemes. The separate native-formulation control
+reports a discrepancy rather than proving their equivalence.
+
+Report which equations, code, calibration, contact law, and time integration are
+independent. Compare the physical generalized reaction or a declared contact wrench,
+not raw redundant multipliers whose values depend on constraint coordinates
+(Chapter 6). Check converged observables and residuals under refinement, with
+event alignment stated. Identical bugs in a shared layer can survive perfect
+cross-engine agreement. Pinocchio is a rigid-body dynamics library; using it in
+a simulation does not imply that it independently supplied every component of
+that simulation.
 
 ### The Ladder Ends at an Open Gate
 
-No model rung becomes a human trial. The top computational tier still needs
-measured kinematics, bilateral hand wrenches, ground reactions, shaft behavior,
-and activation. The experimental protocol is not an optional future decoration;
-it is the next rung.
+No computational branch becomes a human trial. Select measurements from the
+claim and its competing explanations: bilateral hand wrenches for hand-load
+allocation, shaft measurements for deformation, or activation observations for
+an activation hypothesis. Not every question requires the same sensor list;
+EMG does not directly measure muscle force. The full project protocol requests
+multiple synchronized modalities because its joint claims cross these boundaries.
+Chapters 25 and 26 connect measurement sufficiency to identifiability and design.
 
-**Model Result:** The negative-couple and interaction-force mechanisms survive
-several rungs with changing quantitative values and explicit failures under
-geometry controls.
+**Model Result:** The pinned release reports bounded interaction and
+force-generated-couple findings in specified planar and reduced spatial
+branches. It also includes qualified short-horizon articulated cases, while
+broader anatomical transport remains unresolved. “Articulated” is not one
+universal pass/fail label: capability, duration, contact law, and calibration
+must accompany it. In its finite-base work-matching experiment, numerical gates
+pass for 576 trajectories but no fixed-versus-coupled comparison cell meets the
+registered total-work match. Consequently, that experiment identifies no delivery
+benefit; numerical success cannot supply a missing matched comparison.
 
-**Human Evidence:** Available golf measurements constrain motion and some net
-kinetics but do not yet supply the synchronized dataset needed to validate every
-common observable.
+**Human Evidence:** The reviewed release has no qualifying governed participant
+deposit for its complete bilateral-wrench protocol. That is an evidence boundary
+for this project and revision, not a claim that no relevant measurements exist
+anywhere. Published kinematics or net kinetics support narrower questions.
 
-Optimization with higher-degree-of-freedom golf models illustrates how rapidly
-the design space grows as anatomical and club freedoms are added [@mcnally2018].
+For example, McNally and McPhee's six-degree-of-freedom model combines pelvis motion,
+a second shoulder coordinate, flexible-club dynamics, and an impact/flight
+objective [@mcnally2018]. Its optimization constrains some joint timings together
+and assumes candidate center-face impacts. The authors report a
+torso-before-pelvis timing result and grip-kinematic discrepancies, discussing
+rigid-torso limitations. This is a useful example of testing a richer model against selected
+observations, not evidence that its optimum identifies a golfer's muscle control.
 
 **Practical Interpretation:** Ask for the smallest model that can answer today's
-question and the next larger model capable of proving that the answer was not an
-artifact of the simplification.
+question and a comparison that can expose a consequential simplification. One
+successful extension supplies bounded support, not proof against every omitted
+mechanism.
 
 ### Why No Single Model Is “the Model”
 
@@ -101,8 +196,12 @@ interpretability, fidelity, and identifiability.
 
 The ladder works when observables and interventions remain aligned across rungs.
 If every model uses a different definition of transfer, comparison is impossible.
-This project carries forward hand wrench, swing-normal couple, interface power,
-work, club state, energy closure, and declared counterfactuals.
+This project carries forward available hand-wrench, swing-normal-couple,
+interface-power, work, club-state, closure, and intervention records with their
+capability limits. None may be silently filled from a different model.
+
+The following families organize modeling questions. They are not a claim that
+every listed capability has been executed or validated together in one release.
 
 ### Rung Zero: Algebra and Geometry
 
@@ -130,14 +229,19 @@ carry upward.
 
 ### Rung Two: Two Hands and a Moving Base
 
-Add separated contact points and either prescribed or dynamic proximal motion.
-Now the model can reconstruct common and differential hand modes and test the
-geometric negative-couple hypothesis. A finite-mass base restores reaction from
-club to body. Contact remains idealized and anatomy generalized.
+Add separated contact points and declare either prescribed or dynamic proximal
+motion. An algebraic two-hand representation can display common and differential
+force modes, but geometry alone does not determine their forces. A forward
+contact model needs the constitutive law, state, drivers, and constraints that
+close its dynamics. A finite-mass dynamic base allows club-to-base reaction to
+change base motion; a prescribed base instead requires whatever external
+actuation enforces its trace. Contact remains idealized and anatomy generalized.
 
 This rung asks whether the mechanism survives when the very feature it concerns
-—two hands—is represented explicitly. It also reveals nonuniqueness: the same
-club wrench can correspond to many internal contact allocations.
+—two hands—is represented explicitly. It also exposes a possible inverse
+ambiguity: the same club wrench can admit different hand allocations. Additional
+measurements or constitutive restrictions can reduce that set; its dimension and
+feasible extent are not fixed solely by having two contacts.
 
 ### Rung Three: Flexible Club
 
@@ -157,9 +261,12 @@ ground contact. Spatial frames permit out-of-plane moments and full wrenches.
 The number of parameters and controls grows sharply, so identifiability becomes
 a central result rather than an inconvenience.
 
-Independent engine agreement is valuable here. Matching trajectories is not
-enough; constraint reactions, energy, and wrench projections should also agree.
-A mechanism surviving only one software stack remains suspect.
+Independent implementations are valuable here, provided the physical problem
+and compared outputs are matched. Similar trajectories alone can hide incorrect
+load or power bookkeeping. Conversely, different contact laws need not predict
+identical reactions: first decide whether the test concerns implementation
+agreement or sensitivity to physical assumptions. One implementation is not
+automatically wrong, but it leaves that replication question open.
 
 ### Rung Five: Biological Allocation
 
@@ -175,11 +282,13 @@ measurement-aware shoulder-girdle representation.
 
 ### Promotion and Demotion Rules
 
-A claim is promoted when it passes implementation verification, negative
-controls, uncertainty tests, and the next rung's relevant physics while retaining
-a coherent observable prediction. It is demoted when sign or mechanism depends
-on a removed assumption, fails closure, or cannot be distinguished with
-available measurements.
+A claim earns support in an additional model only for the registered outputs,
+interventions, and domain that were tested. Keep four different outcomes apart:
+a failed closure check prevents numerical qualification; a resolved adverse
+prediction can contradict the registered claim; insufficient measurements leave
+it inconclusive; an unrun comparison remains untested. Changing a constitutive
+law and reversing an effect demonstrates sensitivity to that assumption, not
+automatically a bug or a contradiction of the original conditional statement.
 
 Demotion is not failure of the project. It locates a boundary: “this effect is
 specific to a fixed-base rigid planar model” is scientifically useful. The
@@ -204,8 +313,9 @@ software ecosystem.
 Add a degree of freedom or state when it changes a target observable, explains a
 structured residual, enables a discriminating experiment, or removes an
 unacceptable assumption. Do not add complexity merely for visual realism.
-Unidentifiable complexity can make a model less falsifiable by allowing it to fit
-anything.
+Weakly constrained flexibility can absorb residuals and weaken discrimination
+among explanations. It does not literally allow every possible observation;
+the question is which alternatives the chosen data and test can distinguish.
 
 The final modeling product should therefore remain modular: a transparent core,
 optional higher-fidelity rungs, shared contracts, and explicit qualification.
@@ -225,10 +335,21 @@ The matrix makes a common error obvious: a claim may be well verified in early
 rungs but unresolved in humans. It also reveals where complexity changes the
 result. Link each cell to machine-readable evidence and tests.
 
-Now define promotion criteria before looking at the next rung. Perhaps sign must
-hold in 95 percent of a declared ensemble and geometry controls must pass, while
-magnitude can vary. If criteria fail, narrow the claim. This avoids silently
-moving the goalposts as realism increases.
+Define comparison criteria before looking at outcomes. A chosen rule might
+require the sign in 95 percent of a declared ensemble, with geometry controls
+passing, while permitting bounded changes in magnitude. That percentage is a
+decision rule about a specified sample and weighting, not a universal probability
+or confidence guarantee. Three positive results among four scenarios give 75%
+with equal weights, but 30% with weights $(0.1,0.1,0.1,0.7)$ when the last result
+is negative. Neither weighting becomes a golfer population without evidence.
+
+Even under independent sampling from a specified Bernoulli population, 95
+successes in 100 trials give an approximate 95% Wilson interval of
+$[0.888,0.978]$ for its success probability, not proof that it is at least 0.95.
+A deterministic parameter grid or correlated trajectories do not automatically
+justify that binomial calculation. Declare scenario selection, dependence,
+weights, adverse cases, and held-out checks. Keep statistical uncertainty
+separate from untested model discrepancy.
 
 ### Independent Extension
 
@@ -243,8 +364,9 @@ the manuscript's conceptual core.
 
 ### A Claim Can Live at More Than One Rung
 
-The identity that wrench power is reference-point invariant belongs to the
-mechanics rung and should hold everywhere. The finding that a particular
+The identity that rigid-body wrench power is reference-point invariant requires
+paired transport of moment and velocity for the same physical port motion.
+The finding that a particular
 negative-couple interval appears belongs to specific model rungs. The hypothesis
 that golfers use it belongs to the human-evidence rung. Separating them prevents
 a human null result from invalidating an identity or a verified identity from
@@ -256,10 +378,11 @@ updates the appropriate layer without rewriting the entire framework.
 
 ### Completion Is a Maintained Ladder
 
-The ladder is complete enough for release when every rung has a specification,
-verification, shared observables, limitations, and a documented route to the
-next test. It does not require maximal anatomical detail. Future rungs can be
-added when evidence and questions justify them.
+A release can be complete as an audited record while leaving proposed branches
+untested. Each included result needs a specification, executed verification,
+available observables, limitations, and the next discriminating test; proposed
+extensions need explicit untested status. Documentation completeness is neither
+completion of every experiment nor validation of maximal anatomical detail.
 
 Maintaining simple benchmarks alongside rich models prevents regression and
 keeps the project teachable. The lay book, technical monograph, simulator, and
@@ -276,6 +399,11 @@ More agreement also does not guarantee truth if all tiers share a wrong premise.
 Independent measurement remains decisive.
 
 **Go Deeper:** Explore the monograph's
-[common-observable ladder](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch07_model_ladder.qmd),
-[model completion matrix](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/MODEL_COMPLETION_FALSIFICATION_MATRIX.md),
-and [reviewer workbench](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md).
+[common-observable ladder](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch07_model_ladder.qmd),
+[model completion matrix](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/MODEL_COMPLETION_FALSIFICATION_MATRIX.md),
+and [reviewer workbench](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/REVIEWER_WORKBENCH.md)
+at reviewed revision `85cce4d`. The [MuJoCo computation documentation](https://mujoco.readthedocs.io/en/3.2.7/computation/index.html)
+and [Pinocchio overview](https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/devel/doxygen-html/)
+describe package algorithms; their capabilities alone do not certify a project
+comparison. This chapter audits published evidence and manufactured examples,
+without rerunning those provider simulations or collecting human measurements.
