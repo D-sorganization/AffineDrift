@@ -89,7 +89,12 @@ async function findContrastFailures(page) {
           }
         }
       }
-      let solid = { r: 255, g: 255, b: 255, a: 1 };
+      const isDark =
+        document.documentElement.getAttribute("data-theme") === "dark" ||
+        document.documentElement.getAttribute("data-bs-theme") === "dark";
+      let solid = isDark
+        ? { r: 13, g: 13, b: 26, a: 1 }
+        : { r: 255, g: 255, b: 255, a: 1 };
       for (const layer of layers.reverse()) solid = blend(layer, solid);
       return gradientStops.length
         ? gradientStops.map((stop) => blend(stop, solid))
@@ -196,6 +201,14 @@ test.describe("Accessibility", () => {
       await page.goto(route);
       for (const theme of ["light", "dark"]) {
         await page.evaluate((selectedTheme) => {
+          let style = document.getElementById("disable-transitions-contrast-test");
+          if (!style) {
+            style = document.createElement("style");
+            style.id = "disable-transitions-contrast-test";
+            style.textContent =
+              "*, *::before, *::after { transition: none !important; animation: none !important; }";
+            document.head.appendChild(style);
+          }
           document.documentElement.setAttribute("data-theme", selectedTheme);
           document.documentElement.setAttribute("data-bs-theme", selectedTheme);
           if (selectedTheme === "dark") {
