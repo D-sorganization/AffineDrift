@@ -33,33 +33,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Commit the binding, push normally and create a regular PR.
 
 
-### DL-#4801 · Two-Link Coordinates, Reactions, and Limits
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4804 (regular, combined Chapters7/19; child4805 merged into topic only)
-- **Issue:** #4801; epic #4009 / corpus #4021
-- **Branch:** fix/pendulum-rigor-4801
-- **Paths:** articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd, tests/test_pendulum_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; baseline a931f3e3583ac028666bf1a8f793231731acf894; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
-- **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; eight new findings bind exact accepted source;161total;110corpusfiles pluswholebookreview remain.
-- **Next step:** Await required CI on frozen PR4804 at a931f3e; verify the actual merge on remote main before delivery credit.
-
-
-### DL-#4799 · Model Comparison and Evidence Boundaries
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4804 (regular, combined Chapters7/19; child4805 merged into topic only)
-- **Issue:** #4799; epic #4009 / corpus #4021
-- **Branch:** fix/model-ladder-delivery-4799
-- **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; baseline a931f3e3583ac028666bf1a8f793231731acf894; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration verified; SELF marker-only follow-up: four integration/eleven unit cases pass, Ruff/Black100 pass, non-marker bytes and AST unchanged.
-- **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** Await required CI on frozen PR4804 at a931f3e; verify the actual merge on remote main before delivery credit.
-
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
 - **State:** in_review

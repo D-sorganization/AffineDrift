@@ -1,5 +1,33 @@
 # Development Log Archive — 2026
 
+### DL-#4801 · Two-Link Coordinates, Reactions, and Limits
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4804 (regular, combined Chapters7/19; child4805 merged into topic only)
+- **Issue:** #4801; epic #4009 / corpus #4021
+- **Branch:** fix/pendulum-rigor-4801
+- **Paths:** articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd, tests/test_pendulum_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 (`29aa7fe9dc553d81ef5fd14a13653c09675f2d36`); PR4804 exact-head CI36992387220 succeeded; all39 owned paths and whole parent tree match accepted a931f3e. Local regression and marker checks are retained in the frozen review/validation records.
+- **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; eight new findings bind exact accepted source;161total;110corpusfiles pluswholebookreview remain.
+- **Next step:** None for this delivered chapter; see active Chapter21 issue4806 and corpus4021 for remaining work.
+
+
+### DL-#4799 · Model Comparison and Evidence Boundaries
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4804 (regular, combined Chapters7/19; child4805 merged into topic only)
+- **Issue:** #4799; epic #4009 / corpus #4021
+- **Branch:** fix/model-ladder-delivery-4799
+- **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 (`29aa7fe9dc553d81ef5fd14a13653c09675f2d36`); PR4804 exact-head CI36992387220 succeeded; all39 owned paths and whole parent tree match accepted a931f3e. Local regression and marker checks are retained in the frozen review/validation records.
+- **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
+- **Next step:** None for this delivered chapter; see active Chapter21 issue4806 and corpus4021 for remaining work.
+
+
 ### DL-#4769 · Speed, Energy, and Power Review
 
 - **State:** shipped
