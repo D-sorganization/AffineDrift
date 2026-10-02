@@ -171,13 +171,18 @@ def make_speed_energy() -> tuple[Path, Path]:
 
 
 def make_carry_release() -> tuple[Path, Path]:
-    fig, axes = plt.subplots(1, 3, figsize=(11, 4))
-    titles = ("1. Carry", "2. Reorient", "3. Handoff")
-    angles = (2.2, 1.5, 0.45)
-    for axis, title, angle in zip(axes, titles, angles, strict=True):
-        shoulder = np.array([0.2, 0.2])
-        hand = shoulder + 1.2 * np.array([np.cos(angle), np.sin(angle)])
-        club = hand + 1.3 * np.array([np.cos(angle - 0.9), np.sin(angle - 0.9)])
+    """Illustrate distinct configurations without claiming a simulated sequence."""
+    fig, axes = plt.subplots(1, 3, figsize=(11, 4.5))
+    titles = ("Folded", "Opening", "Nearly Aligned")
+    arm_angles = np.array([2.2, 1.5, 0.45])
+    club_angles = arm_angles + np.array([-1.6, -0.8, -0.1])
+    hands = 1.2 * np.column_stack((np.cos(arm_angles), np.sin(arm_angles)))
+    heads = hands + 1.3 * np.column_stack((np.cos(club_angles), np.sin(club_angles)))
+    configurations = np.stack((np.zeros_like(hands), hands, heads), axis=1)
+    # Shared bounds preserve comparative scale and include every endpoint.
+    points = configurations.reshape(-1, 2)
+    lower, upper = points.min(axis=0) - 0.3, points.max(axis=0) + 0.3
+    for axis, title, (shoulder, hand, club) in zip(axes, titles, configurations, strict=True):
         axis.plot(
             [shoulder[0], hand[0]], [shoulder[1], hand[1]], color=BLUE, lw=8, solid_capstyle="round"
         )
@@ -186,16 +191,21 @@ def make_carry_release() -> tuple[Path, Path]:
         )
         axis.scatter(*shoulder, s=90, color=INK)
         axis.scatter(*hand, s=70, color=GREEN)
+        axis.scatter(*club, s=70, color=ORANGE)
         axis.set_title(title, fontweight="bold", color=INK)
         axis.set_aspect("equal")
         axis.axis("off")
-        axis.set(xlim=(-1.2, 1.8), ylim=(-1.4, 1.8))
+        axis.set(xlim=(lower[0], upper[0]), ylim=(lower[1], upper[1]))
     fig.suptitle(
-        "The Distal Segment Is First Carried, Then Accelerated Relative to Its Base",
+        "Continuous Coupling Across Configurations",
         fontsize=15,
         fontweight="bold",
         color=INK,
     )
+    fig.text(
+        0.5, 0.03, "Illustrative Geometry; Not a Simulated Trajectory", ha="center", color=GRAY
+    )
+    fig.tight_layout(rect=(0, 0.08, 1, 0.9))
     return _save(fig, "fig_companion_carry_then_handoff")
 
 

@@ -19,6 +19,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4801 — Two-Link Coordinates, Reactions, and Limits
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** not created
+- **Issue:** #4801; epic #4009 / corpus #4021
+- **Branch:** fix/pendulum-rigor-4801
+- **Paths:** articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd, tests/test_pendulum_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; fullpytest6574pass/79.09%coverage;12publicationgates;Ruff/Black855/mypy95;232pagePDFHTML accepted;66mathnodes at390/1440; inherited darkcontrast182nodes remains.
+- **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; no new credit yet.
+- **Next step:** Commit accepted source/carry records, bind8findings preserving153prior, then regularPR/protected delivery. See pendulum-review.md and pendulum-validation.json; no whole-book completion.
+
+
 ### DL-#4799 — Model Comparison and Evidence Boundaries
 
 - **State:** in_review
