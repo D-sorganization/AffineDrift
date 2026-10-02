@@ -1,3 +1,17 @@
+# Open-Evidence Review Current State — #4786
+
+- Goal active under epic #4009 / corpus #4021 / companion #4059. Chapter 27 has eight corrected technical distinctions; publication acceptance is complete; exact source binding is next. Preserve all 113 prior findings. Corpus remains 116 pending plus whole-book consistency.
+- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-open-evidence-review`; branch `fix/open-evidence-rigor-4786`, baseline `09794b73a01bcbba643da5f165188da02bce33a0`. Lease/presence `technical-review-20261002-open-evidence` through October 2 04:03 UTC. No Chapter 27 PR yet.
+- Complete Chapter 27, pinned reviewer workbench, release qualification and qualification entry point read; partial dictionary and release-bundle code reading accurately recorded. Separate artifact identity, reproduction, physical validation, numeric agreement, qualification profiles and unresolved evidence. Six supplied-text agy Gemini 3.8 Flash helpers completed; lead owns scientific decisions. Binding draft corrected to use nested review fields and preserve existing evidence paths; not executed yet.
+- Valid RED five numerical passes/one mutable-link failure; GREEN six passes. Full Windows run: 6,481 passed, four failures, 29 skipped, 187 deselected; coverage gate passed. Heading/encoding/root-artifact failures resolved and 55 final affected tests pass. No repeated full-green claim. Twelve publication gates, 653 titles, Ruff/Black/mypy and 873 tracked Python quality checks pass.
+- Final 226-page PDF/HTML accepted with canonical/public PDF equality. Physical pages 188–194 and 222–226 inspected; final changed pages 189–193 rechecked. Short visible revision label retains exact immutable link. Four final browser profiles pass, zero serious/critical axe; 24 math/two display expressions render without errors/placeholders/overflow at390/1440. Mobile zoom works; wide labels remain small with text alternatives. Initial preview/build/test failures remain recorded.
+- PR #4772 delivered at a4cf9b56c. PR #4782 is now verified on remote main 4c025bbf0b822f7576f1ea60afc3d21f47945e59: CI36951827315 succeeds and all20changed blobs match. Lease and presence released. Its delivery receipt is being carried through the Chapter2 integration. PR #4785 remains open; old head09794CI is superseded when the parent integration pushes. All Chapter2 scientific/binding blobs stay unchanged during that integration.
+- Next: commit the accepted source, bind eight findings to exact Git bytes, integrate the Chapter2 parent checkpoint, push a regular PR, and verify protected delivery. Do not count source credit until binding. Carry-forward preserves138old evidence files; three shared dependencies changed. Regenerated NPZ member bytes match and baseline container is retained.
+- Development log entry #4786 is current and below 200,000 bytes. Source decisions/read limits: `reports/technical-review/open-evidence-review.md`; raw QA under `docs/development/technical-review/open-evidence-*`. Preserve inherited handoff history, peer `23ee826`, all worktrees and QA. No drafts, force/direct-main/admin pushes or hook bypass; do not mutate tracked files during push hooks.
+
+
+## Preserved Earlier Checkpoints
+
 # System-Boundary Review Current State — #4783
 
 - Goal active under epic #4009 / corpus #4021 / companion #4059. 116 full-source audits plus whole-book consistency remain. Chapter 2 now has nine findings bound to source commit `e96394591cdec32aed86fe362a7f71444efd33b8`, preserving all 104 prior findings.

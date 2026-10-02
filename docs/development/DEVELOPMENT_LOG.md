@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4786 — Open Evidence and Reproduction
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending
+- **Issue:** #4786; epic #4009 / corpus #4021
+- **Branch:** fix/open-evidence-rigor-4786
+- **Paths:** articles/proximal_distal_companion/chapters/ch27_open_evidence.qmd, tests/test_open_evidence_review.py, references/proximal-distal-energy.bib
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Exact source binding pending.
+- **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 116 audits still pending.
+- **Next step:** Commit accepted source, bind eight findings, integrate predecessor and deliver regular PR.
+
 ### DL-#4783 — System Boundaries and Contact Work
 
 - **State:** in_review
