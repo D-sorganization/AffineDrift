@@ -1,0 +1,582 @@
+# data/glossary.yml
+# Site-wide glossary terms, definitions, symbols, and canonical page references.
+# Governed by Issue #4490 [WEB-01.5].
+
+acceleration:
+  name: "Acceleration"
+  plain: "The rate at which an object's speed or direction changes over time."
+  technical: "The second time derivative of position in a declared reference frame, a = d^2r/dt^2."
+  symbols:
+    - "a"
+    - '\ddot{r}'
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+aerodynamic-drag:
+  name: "Aerodynamic Drag"
+  plain: "The air resistance pushing backwards against the ball or club during flight."
+  technical: "The fluid resistance force opposing relative velocity, F_D = 0.5 * rho * v^2 * C_D * A."
+  symbols:
+    - "F_D"
+    - "C_D"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+aerodynamic-lift:
+  name: "Aerodynamic Lift"
+  plain: "The upward aerodynamic force generated as backspin interacts with airflow."
+  technical: "The component of aerodynamic force perpendicular to the oncoming flow direction, F_L = 0.5 * rho * v^2 * C_L * A."
+  symbols:
+    - "F_L"
+    - "C_L"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+affine-control-system:
+  name: "Affine Control System"
+  plain: "A physical system where motion is the sum of natural coasting plus active motor effort."
+  technical: "A dynamical system of the form dx/dt = f(x) + G(x)u, affine in the input vector u with drift vector field f(x) and control matrix G(x)."
+  symbols:
+    - '\dot{x} = f(x) + G(x)u'
+    - "f(x)"
+    - "G(x)"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+affine-decomposition:
+  name: "Affine Decomposition"
+  plain: "Separating a moving system's motion into unforced natural drift and the part caused by active controls."
+  technical: "The partition of the total generalized acceleration or tangent vector into an unforced zero-input component and an actuator-dependent linear map."
+  symbols:
+    - "f(x)"
+    - "G(x)u"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+angular-acceleration:
+  name: "Angular Acceleration"
+  plain: "The rate at which rotational spin speed or rotation axis changes over time."
+  technical: "The time derivative of angular velocity vector in a declared reference frame, alpha = d(omega)/dt."
+  symbols:
+    - '\alpha'
+    - '\dot{\omega}'
+  canonical_page: "articles/rotation-representations-reference.qmd"
+
+angular-momentum:
+  name: "Angular Momentum"
+  plain: "The rotational momentum of a spinning or revolving object, resisting changes to its spin."
+  technical: "The cross product of position and linear momentum, or the product of inertia tensor and angular velocity, L = I * omega."
+  symbols:
+    - "L"
+    - "H"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+angular-velocity:
+  name: "Angular Velocity"
+  plain: "How quickly an object rotates around an axis and the direction of that axis."
+  technical: "The axial vector omega describing the instantaneous rate and axis of rotation of a rigid body."
+  symbols:
+    - '\omega'
+  canonical_page: "articles/rotation-representations-reference.qmd"
+
+backswing:
+  name: "Backswing"
+  plain: "The preparatory movement moving the club away from the ball to the top of the swing."
+  technical: "The phase taking the multibody system from static address to transition, setting initial kinematic and elastic conditions for the downswing."
+  symbols: []
+  canonical_page: "articles/theory-part1.qmd"
+
+ball-compression:
+  name: "Ball Compression"
+  plain: "The amount a golf ball squashes during an impact test under a standardized load."
+  technical: "An empirical index measuring deflection under a standard load, distinct from dynamic restitution or material Young's modulus."
+  symbols: []
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+center-of-mass:
+  name: "Center of Mass"
+  plain: "The average position of all the weight in a body or club."
+  technical: "The unique point r_com = (1/M) * sum(m_i * r_i) where the weighted relative position of distributed mass sums to zero."
+  symbols:
+    - "r_{com}"
+    - "COM"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+center-of-pressure:
+  name: "Center of Pressure"
+  plain: "The point on the ground where the total pushing force under the feet is centered."
+  technical: "The spatial centroid of the ground normal pressure distribution, r_cop = integral(r * p(r) dA) / integral(p(r) dA)."
+  symbols:
+    - "COP"
+  canonical_page: "articles/technology-force-measurement.qmd"
+
+clubhead-speed:
+  name: "Clubhead Speed"
+  plain: "The linear speed of the center of the clubface immediately before impact."
+  technical: "The magnitude of the instantaneous linear velocity vector of the clubhead center of mass immediately prior to collision, v_c = ||v_{head}(t_{impact}^-)||."
+  symbols:
+    - "v_c"
+    - "v_{head}"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+coefficient-of-restitution:
+  name: "Coefficient of Restitution"
+  plain: "The bounciness of a collision, measuring how much speed remains after impact."
+  technical: "The ratio of relative separation speed to relative approach speed along the collision normal, e = -(v_b^+ - v_c^+) / (v_b^- - v_c^-)."
+  symbols:
+    - "e"
+    - "COR"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+constraint-force:
+  name: "Constraint Force"
+  plain: "Forces inside joints or at ground contact that hold bodies together without performing work along free directions."
+  technical: "The Lagrange multiplier reaction forces lambda acting normal to the admissible configuration manifold, satisfying J^T lambda with J * q_dot = 0."
+  symbols:
+    - '\lambda'
+    - 'J^T \lambda'
+  canonical_page: "articles/null-space-constraint-jacobian.qmd"
+
+control-authority:
+  name: "Control Authority"
+  plain: "The maximum ability of muscles or actuators to change the system's acceleration."
+  technical: "The range of the input mapping G(x) applied to the admissible control set U, measuring achievable control-induced accelerations."
+  symbols:
+    - "G(x)U"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+control-input:
+  name: "Control Input"
+  plain: "The active muscle forces or motor commands supplied by the golfer."
+  technical: "The vector of generalized forces or joint torques u(t) within the admissible torque bounds U."
+  symbols:
+    - "u(t)"
+    - '\tau'
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+cost-function:
+  name: "Cost Function"
+  plain: "A mathematical score measuring what an optimization algorithm tries to minimize (like effort or error)."
+  technical: "A functional J(x, u) quantifying trajectory error, effort expenditure, or terminal clubhead velocity in optimal control problems."
+  symbols:
+    - "J"
+    - '\mathcal{L}(x, u)'
+  canonical_page: "articles/nonlinear-control-insights.qmd"
+
+degrees-of-freedom:
+  name: "Degrees of Freedom"
+  plain: "The number of independent directions in which a system can move."
+  technical: "The dimension of the configuration manifold, n = d * N - k, where N is the number of bodies and k is the number of holonomic constraints."
+  symbols:
+    - "DoF"
+    - "n"
+  canonical_page: "articles/degrees-of-freedom-and-dimensionality.qmd"
+
+double-pendulum:
+  name: "Double Pendulum"
+  plain: "A classic two-segment mechanical model representing the arms and the golf club."
+  technical: "A planar or spatial multibody system with two rigid links connected by revolute or universal joints, often modeling torso/arms and club."
+  symbols: []
+  canonical_page: "articles/drift-components-wrench-double-pendulum.qmd"
+
+downswing:
+  name: "Downswing"
+  plain: "The rapid motion from the top of the swing down to the ball."
+  technical: "The forward acceleration phase between transition and impact where potential and kinetic energy are converted and directed into the clubhead."
+  symbols: []
+  canonical_page: "articles/theory-part1.qmd"
+
+drift:
+  name: "Drift"
+  plain: "The natural motion the club or body continues along under inertia, gravity, and passive forces without active muscles."
+  technical: "The unforced vector field f(x) in an affine control system dx/dt = f(x) + G(x)u, capturing inertia, Coriolis, centrifugal, gravity, and passive stiffness."
+  symbols:
+    - "f(x)"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+drift-control-ratio:
+  name: "Drift-Control Ratio (DCR)"
+  plain: "The proportion of swing motion driven by natural momentum compared to active muscle effort."
+  technical: "The capacity-normalized ratio of unforced drift acceleration to total acceleration capacity, ranging from 0 (pure control) to 1 (pure drift)."
+  symbols:
+    - "DCR"
+  canonical_page: "articles/drift-control-ratio.qmd"
+
+dynamic-coupling:
+  name: "Dynamic Coupling"
+  plain: "The physical phenomenon where applying torque to one joint automatically accelerates other joints."
+  technical: 'The off-diagonal terms in the multibody mass matrix M(q) causing cross-joint acceleration via \ddot{q} = M(q)^{-1}(u - C(q, \dot{q})\dot{q} - G(q)).'
+  symbols:
+    - "M(q)^{-1}"
+  canonical_page: "articles/force-mobility-matrices.qmd"
+
+equations-of-motion:
+  name: "Equations of Motion"
+  plain: "The mathematical formulas describing how the body and club accelerate given current positions, speeds, and forces."
+  technical: 'The second-order differential equations M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q) = u + J^T \lambda derived from Lagrangian mechanics.'
+  symbols:
+    - 'M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = \tau'
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+extension:
+  name: "Extension"
+  plain: "Straightening a joint or bending backwards."
+  technical: "Movement in the sagittal plane increasing the angle between articulating skeletal segments."
+  symbols: []
+  canonical_page: "articles/theory-part2.qmd"
+
+fail-closed:
+  name: "Fail-Closed"
+  plain: "A safety rule where a check stops and refuses to pass if it cannot verify complete evidence."
+  technical: "A validation policy that treats indeterminate, missing, or corrupt records as failing rather than defaulting to permissive execution."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+feedback-control:
+  name: "Feedback Control"
+  plain: "Adjusting muscle effort based on sensory observations during movement."
+  technical: "A control policy u(x(t), t) where actuation is dynamically updated based on measured state error relative to a desired trajectory."
+  symbols:
+    - "u(x)"
+  canonical_page: "articles/nonlinear-control-insights.qmd"
+
+feedforward-control:
+  name: "Feedforward Control"
+  plain: "Pre-planned muscle commands executed without waiting for sensory feedback."
+  technical: "An open-loop control trajectory u(t) synthesized prior to movement initiation based on an internal forward model of the system."
+  symbols:
+    - "u(t)"
+  canonical_page: "articles/ideomotor-theory-and-predictive-brain.qmd"
+
+flexion:
+  name: "Flexion"
+  plain: "Bending a joint to decrease the angle between body segments."
+  technical: "Movement in the sagittal plane decreasing the angle between articulating bones."
+  symbols: []
+  canonical_page: "articles/theory-part2.qmd"
+
+forward-dynamics:
+  name: "Forward Dynamics"
+  plain: "Calculating how the golfer and club will move given the applied muscle torques."
+  technical: 'Solving the equations of motion for state accelerations \ddot{q} given generalized coordinates q, velocities \dot{q}, and input torques u.'
+  symbols:
+    - '\ddot{q} = f(q, \dot{q}, u)'
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+generalized-coordinates:
+  name: "Generalized Coordinates"
+  plain: "The smallest set of numbers needed to describe the exact position and angles of the body and club."
+  technical: "A minimal set of independent parameters q = (q_1, ..., q_n) uniquely specifying the system configuration on its constraint manifold."
+  symbols:
+    - "q"
+    - "q_i"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+generalized-forces:
+  name: "Generalized Forces"
+  plain: "The effective forces or torques acting directly along the generalized coordinates."
+  technical: "The virtual work coefficients Q_i = sum(F_j * dr_j / dq_i) conjugate to generalized coordinates q_i."
+  symbols:
+    - "Q_i"
+    - '\tau'
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+governed:
+  name: "Governed"
+  plain: "Tracked by the publication's scientific review and claim-audit process."
+  technical: "Subject to explicit falsification ledgers, verifiable provenance, and continuous regression testing in the scientific claim registry."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+ground-reaction-force:
+  name: "Ground Reaction Force (GRF)"
+  plain: "The contact force exerted by the ground back against the golfer's shoes."
+  technical: "The equal and opposite reaction force vector F_grf exerted by the ground on the feet according to Newton's third law."
+  symbols:
+    - "F_{grf}"
+    - "GRF"
+  canonical_page: "articles/technology-force-measurement.qmd"
+
+ideomotor-theory:
+  name: "Ideomotor Theory"
+  plain: "The concept that movements are planned and triggered by anticipating their sensory outcomes."
+  technical: "The psychological and neurocomputational framework asserting that actions are represented, selected, and controlled by anticipated perceptual effects."
+  symbols: []
+  canonical_page: "articles/ideomotor-theory-and-predictive-brain.qmd"
+
+impact:
+  name: "Impact"
+  plain: "The collision between clubhead and ball lasting under half a millisecond."
+  technical: "A brief collision (~400 microseconds) characterized by large contact forces (~10 kN) transferring momentum and kinetic energy."
+  symbols:
+    - '\Delta t_{impact}'
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+induced-acceleration:
+  name: "Induced Acceleration"
+  plain: "The acceleration of any segment caused indirectly by a force applied elsewhere in the body."
+  technical: 'The contribution to \ddot{q} from an individual joint torque or force component through the inverse mass matrix M(q)^{-1}.'
+  symbols:
+    - 'M(q)^{-1}\tau_k'
+  canonical_page: "articles/superposition.qmd"
+
+inverse-dynamics:
+  name: "Inverse Dynamics"
+  plain: "Working backward from measured motion to estimate the net forces and torques at joints."
+  technical: 'Computing net joint torques u(t) by substituting measured positions q(t), velocities \dot{q}(t), and accelerations \ddot{q}(t) into the equations of motion.'
+  symbols:
+    - 'u = M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q)'
+  canonical_page: "articles/inverse-dynamics.qmd"
+
+kinetic-chain:
+  name: "Kinetic Chain"
+  plain: "The linked series of connected body segments passing motion from the feet to the hands."
+  technical: "An open or closed kinematic chain of articulated rigid bodies transferring momentum, work, and constraint reactions."
+  symbols: []
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+kinetic-energy:
+  name: "Kinetic Energy"
+  plain: "The energy of motion stored in moving masses and rotating bodies."
+  technical: 'The quadratic form T = 0.5 * \dot{q}^T M(q) \dot{q} representing translational and rotational kinetic energy.'
+  symbols:
+    - "T"
+    - "E_k"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+lag:
+  name: "Lag"
+  plain: "The angle between the lead forearm and the clubshaft during the early downswing."
+  technical: "The acute wrist uncocking angle preserved during early downswing before releasing toward impact."
+  symbols:
+    - '\theta_{wrist}'
+  canonical_page: "articles/theory-part1.qmd"
+
+lagrangian-mechanics:
+  name: "Lagrangian Mechanics"
+  plain: "A reformulation of classical physics based on energy (kinetic minus potential) rather than force vectors."
+  technical: 'Analytical mechanics based on the Lagrangian function L = T - V and the Euler-Lagrange equations d/dt(dL/d\dot{q}) - dL/dq = Q.'
+  symbols:
+    - "L = T - V"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+launch-angle:
+  name: "Launch Angle"
+  plain: "The vertical angle at which the golf ball leaves the clubface relative to the ground."
+  technical: "The elevation angle of the initial ball velocity vector relative to the horizontal ground plane immediately after impact separation."
+  symbols:
+    - '\theta_{launch}'
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+linear-momentum:
+  name: "Linear Momentum"
+  plain: "The product of an object's mass and its velocity."
+  technical: "The vector p = m * v representing the translational momentum of a body or system."
+  symbols:
+    - "p"
+    - "m v"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+magnus-effect:
+  name: "Magnus Effect"
+  plain: "The curving flight path caused by air pressure differences around a spinning ball."
+  technical: "The transverse aerodynamic force F_M = S * (omega x v) generated on a spinning body moving through a viscous fluid."
+  symbols:
+    - "F_M"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+moment-of-inertia:
+  name: "Moment of Inertia"
+  plain: "How difficult it is to rotate an object around a specific axis."
+  technical: "The tensor I = integral( (r^T r * E - r r^T) dm ) quantifying resistance to rotational acceleration."
+  symbols:
+    - "I"
+    - "MOI"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+motor-program:
+  name: "Motor Program"
+  plain: "A pre-structured set of neural motor commands that execute coordinated movement."
+  technical: "A stored neural representation that coordinates muscle activation timing and magnitudes without requiring continuous peripheral feedback."
+  symbols: []
+  canonical_page: "articles/ideomotor-theory-and-predictive-brain.qmd"
+
+muscle-torque:
+  name: "Muscle Torque"
+  plain: "The rotational turning force produced across a joint by contracting muscles."
+  technical: "The net moment generated by internal musculoskeletal tendon forces acting around a joint axis of rotation."
+  symbols:
+    - '\tau_{muscle}'
+  canonical_page: "articles/theory-part2.qmd"
+
+null-space:
+  name: "Null Space"
+  plain: "The set of internal joint adjustments that do not change the hand or clubhead position."
+  technical: 'The kernel of the Jacobian matrix, ker(J), containing joint velocity vectors \dot{q} that produce zero end-effector velocity J * \dot{q} = 0.'
+  symbols:
+    - '\ker(J)'
+    - "N(J)"
+  canonical_page: "articles/null-space-constraint-jacobian.qmd"
+
+phase-portrait:
+  name: "Phase Portrait"
+  plain: "A graph showing all possible movement paths plotted as speed versus position."
+  technical: "A geometric representation of dynamical system trajectories plotted in the state space (position vs velocity)."
+  symbols: []
+  canonical_page: "articles/nonlinear-control-insights.qmd"
+
+potential-energy:
+  name: "Potential Energy"
+  plain: "Energy stored due to an object's height or elastic stretching."
+  technical: "The scalar function V(q) whose negative gradient produces conservative forces, F = -grad(V)."
+  symbols:
+    - "V"
+    - "U"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+power:
+  name: "Power"
+  plain: "The rate at which mechanical energy is transferred or work is done."
+  technical: "The scalar rate of doing work, P = dW/dt = F * v + tau * omega."
+  symbols:
+    - "P"
+    - '\dot{W}'
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+pronation:
+  name: "Pronation"
+  plain: "Rotating the forearm so the palm turns downward or inward."
+  technical: "Rotational movement of the radius around the ulna placing the palm facing downward or posteriorly."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+protected:
+  name: "Protected"
+  plain: "Software branches that accept code only after automated checks and reviews pass."
+  technical: "A branch management policy where direct pushes are disabled and commits require passing continuous integration gates."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+provenance:
+  name: "Provenance"
+  plain: "The tracked source, version, and chain of custody for any scientific finding or dataset."
+  technical: "Cryptographically verifiable metadata recording git revision, generator parameters, and input dataset hashes for published artifacts."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+proximal-to-distal:
+  name: "Proximal-to-Distal Sequence"
+  plain: "The movement pattern starting from large central body segments (hips, torso) and finishing in peripheral segments (arms, club)."
+  technical: "The kinetic and kinematic sequencing where proximal segment peak speeds and torques precede distal segment peaks."
+  symbols: []
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+qualified:
+  name: "Qualified"
+  plain: "A research finding presented with its specific limits, assumptions, and scope attached."
+  technical: "A statement whose mathematical domain, assumptions, error bounds, and unvalidated regimes are explicitly documented."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+radial-deviation:
+  name: "Radial Deviation"
+  plain: "Tilting the wrist towards the thumb side (wrist cocking)."
+  technical: "Movement of the hand at the radiocarpal joint toward the radial styloid process in the frontal plane."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+reachable-set:
+  name: "Reachable Set"
+  plain: "All the positions and speeds a golfer can possibly reach given their strength limits."
+  technical: "The set of states x(t) that can be reached from an initial state x_0 under admissible control inputs u(t) in U over horizon T."
+  symbols:
+    - '\mathcal{R}(T, x_0)'
+  canonical_page: "articles/drift-control-ratio.qmd"
+
+smash-factor:
+  name: "Smash Factor"
+  plain: "The ratio of ball speed to clubhead speed, measuring impact energy transfer efficiency."
+  technical: "The dimensionless ratio v_{ball} / v_{club} measured immediately post- and pre-collision."
+  symbols:
+    - "SF"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+spin-rate:
+  name: "Spin Rate"
+  plain: "How fast the golf ball rotates around its spin axis right after leaving the clubface."
+  technical: "The magnitude of the ball's angular velocity vector immediately following impact separation, typically reported in revolutions per minute (rpm)."
+  symbols:
+    - '\omega_{ball}'
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+state-space:
+  name: "State Space"
+  plain: "The complete mathematical space containing every possible combination of positions and velocities."
+  technical: 'The 2n-dimensional manifold or vector space x = (q, \dot{q}) representing the full instantaneous physical state.'
+  symbols:
+    - 'x \in \mathbb{R}^{2n}'
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+supination:
+  name: "Supination"
+  plain: "Rotating the forearm so the palm turns upward or forward."
+  technical: "Rotational movement of the radius around the ulna placing the palm facing upward or anteriorly."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+torque:
+  name: "Torque"
+  plain: "A twisting or turning force that causes rotation around an axis."
+  technical: "The rotational moment tau = r x F produced by a force acting at a moment arm r from a rotation center."
+  symbols:
+    - '\tau'
+    - "M"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+ulnar-deviation:
+  name: "Ulnar Deviation"
+  plain: "Tilting the wrist towards the little finger side (wrist uncocking/release)."
+  technical: "Movement of the hand at the radiocarpal joint toward the ulnar styloid process in the frontal plane."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+underactuation:
+  name: "Underactuation"
+  plain: "A condition where a system has more joints or directions of movement than available motors or muscles."
+  technical: "A mechanical system having fewer independent control inputs than degrees of freedom, rank(G(x)) < dim(q)."
+  symbols:
+    - "m < n"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+vector-field:
+  name: "Vector Field"
+  plain: "An assignment of a velocity direction and speed to every point in space."
+  technical: "A smooth mapping f: M -> TM assigning a tangent vector to each point on the state manifold."
+  symbols:
+    - "f(x)"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+work:
+  name: "Work"
+  plain: "The total mechanical energy transferred by applying a force through a distance."
+  technical: "The line integral of force along a displacement path, W = integral(F * dr) = integral(tau * dtheta)."
+  symbols:
+    - "W"
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+wrist-cock:
+  name: "Wrist Cock"
+  plain: "The hinge angle formed by radial deviation in the lead wrist during the swing."
+  technical: "Frontal-plane radial deviation of the lead wrist that sets the clubshaft angle relative to the lead forearm."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+wrist-hinge:
+  name: "Wrist Hinge"
+  plain: "The flexion/extension movement of the wrists during the swing."
+  technical: "Sagittal-plane flexion and extension of the wrists, distinct from radial/ulnar deviation."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+zero-torque-counterfactual:
+  name: "Zero-Torque Counterfactual (ZTCF)"
+  plain: "The path the club and body would follow if all muscle effort ceased at a specific instant."
+  technical: "The forward-simulated state trajectory under zero active control input (u=0) initialized from a declared swing state x(t_0)."
+  symbols:
+    - "ZTCF"
+  canonical_page: "articles/zero-torque-counterfactual.qmd"

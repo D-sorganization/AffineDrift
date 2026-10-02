@@ -1,38 +1,1042 @@
 ---
-title: "Governance Vocabulary Glossary"
-description: "Plain-language definitions for internal governance terms that surface on reader pages: governed, qualified, provenance, protected, and fail-closed."
-categories:
-- reference
+title: "Glossary"
+description: "Site-wide glossary of biomechanics, control theory, golf physics, and governance terms with plain-language and technical definitions."
+toc: true
+toc-depth: 2
 ---
 
-::: {.callout-important}
-## Scope
-
-AffineDrift tracks the review status of its own scientific claims with a falsification/critique apparatus (see [Critiques and Responses](../critiques/index.html)). A handful of words from that internal process — **governed**, **qualified**, **provenance**, **protected**, and **fail-closed** — occasionally appear in reader-facing prose. This page gives their plain-language meaning on this site, so a reader who has not seen the review apparatus is not left guessing.
+:::{.lead}
+A rigorous, accessible glossary bridging intuitive plain-language concepts, mathematical definitions, and canonical research articles across the AffineDrift publication.
 :::
 
-## Governed
+<nav class="glossary-nav" aria-label="Alphabetical term index">
+  <div class="glossary-nav__letters">
+    <a href="#a" class="glossary-nav__letter">A</a>
+    <a href="#b" class="glossary-nav__letter">B</a>
+    <a href="#c" class="glossary-nav__letter">C</a>
+    <a href="#d" class="glossary-nav__letter">D</a>
+    <a href="#e" class="glossary-nav__letter">E</a>
+    <a href="#f" class="glossary-nav__letter">F</a>
+    <a href="#g" class="glossary-nav__letter">G</a>
+    <a href="#i" class="glossary-nav__letter">I</a>
+    <a href="#k" class="glossary-nav__letter">K</a>
+    <a href="#l" class="glossary-nav__letter">L</a>
+    <a href="#m" class="glossary-nav__letter">M</a>
+    <a href="#n" class="glossary-nav__letter">N</a>
+    <a href="#p" class="glossary-nav__letter">P</a>
+    <a href="#q" class="glossary-nav__letter">Q</a>
+    <a href="#r" class="glossary-nav__letter">R</a>
+    <a href="#s" class="glossary-nav__letter">S</a>
+    <a href="#t" class="glossary-nav__letter">T</a>
+    <a href="#u" class="glossary-nav__letter">U</a>
+    <a href="#v" class="glossary-nav__letter">V</a>
+    <a href="#w" class="glossary-nav__letter">W</a>
+    <a href="#z" class="glossary-nav__letter">Z</a>
+  </div>
+</nav>
 
-A claim or workflow is **governed** when it is tracked by the site's critique/adjudication process: it has an open review record, and its status can change as evidence comes in. In prose, read "governed" as *"tracked and subject to review"* rather than as a legal or organizational sense of the word.
+## A {#a}
 
-## Qualified
+### Acceleration {#acceleration}
 
-A **qualified** result is one presented with its limits stated up front — the scope, sample, or assumptions under which it holds — rather than as an unconditional finding. Read "qualified" as *"stated with its limits attached"*, not as a credential (as in "a qualified expert").
+::: {.glossary-entry id="def-acceleration"}
 
-## Provenance
+**Plain Language:** The rate at which an object's speed or direction changes over time.
 
-**Provenance** records where a claim, dataset, model, or software snapshot came from — its source, version, and chain of custody — so a reader can verify it independently. Read "provenance" as *"origin and version history"*.
+**Technical Definition:** The second time derivative of position in a declared reference frame, a = d^2r/dt^2.
 
-## Protected
+**Symbols / Notation:** $a$, $\ddot{r}$
 
-A **protected** branch accepts changes only through reviewed pull requests whose required checks pass; nothing can be pushed to it directly or rewritten. A **protected** commit is one on such a branch — for example "protected main". Read "protected" as *"landed through the repository's required review and checks"*.
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
 
-## Fail-Closed
+:::
 
-A **fail-closed** check or control is one that blocks by default when it cannot confirm a condition, rather than silently letting the condition pass. Read "fail-closed" as *"blocks by default when unsure"*.
+### Aerodynamic Drag {#aerodynamic-drag}
 
-## Related Articles
+::: {.glossary-entry id="def-aerodynamic-drag"}
 
-- [Critiques and Responses](../critiques/index.html) — the review process these terms describe.
-- [Mathematical Notation Reference](notation.html) — normative mathematical vocabulary (a separate, symbol-level glossary).
-- [Development Roadmap](development-roadmap.html) — how protected merges and review gates decide what counts as delivered.
+**Plain Language:** The air resistance pushing backwards against the ball or club during flight.
+
+**Technical Definition:** The fluid resistance force opposing relative velocity, F_D = 0.5 * rho * v^2 * C_D * A.
+
+**Symbols / Notation:** $F_D$, $C_D$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Aerodynamic Lift {#aerodynamic-lift}
+
+::: {.glossary-entry id="def-aerodynamic-lift"}
+
+**Plain Language:** The upward aerodynamic force generated as backspin interacts with airflow.
+
+**Technical Definition:** The component of aerodynamic force perpendicular to the oncoming flow direction, F_L = 0.5 * rho * v^2 * C_L * A.
+
+**Symbols / Notation:** $F_L$, $C_L$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Affine Control System {#affine-control-system}
+
+::: {.glossary-entry id="def-affine-control-system"}
+
+**Plain Language:** A physical system where motion is the sum of natural coasting plus active motor effort.
+
+**Technical Definition:** A dynamical system of the form dx/dt = f(x) + G(x)u, affine in the input vector u with drift vector field f(x) and control matrix G(x).
+
+**Symbols / Notation:** $\dot{x} = f(x) + G(x)u$, $f(x)$, $G(x)$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Affine Decomposition {#affine-decomposition}
+
+::: {.glossary-entry id="def-affine-decomposition"}
+
+**Plain Language:** Separating a moving system's motion into unforced natural drift and the part caused by active controls.
+
+**Technical Definition:** The partition of the total generalized acceleration or tangent vector into an unforced zero-input component and an actuator-dependent linear map.
+
+**Symbols / Notation:** $f(x)$, $G(x)u$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Angular Acceleration {#angular-acceleration}
+
+::: {.glossary-entry id="def-angular-acceleration"}
+
+**Plain Language:** The rate at which rotational spin speed or rotation axis changes over time.
+
+**Technical Definition:** The time derivative of angular velocity vector in a declared reference frame, alpha = d(omega)/dt.
+
+**Symbols / Notation:** $\alpha$, $\dot{\omega}$
+
+[Read in Context &rarr;](/articles/rotation-representations-reference.html){.glossary-canonical-link}
+
+:::
+
+### Angular Momentum {#angular-momentum}
+
+::: {.glossary-entry id="def-angular-momentum"}
+
+**Plain Language:** The rotational momentum of a spinning or revolving object, resisting changes to its spin.
+
+**Technical Definition:** The cross product of position and linear momentum, or the product of inertia tensor and angular velocity, L = I * omega.
+
+**Symbols / Notation:** $L$, $H$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Angular Velocity {#angular-velocity}
+
+::: {.glossary-entry id="def-angular-velocity"}
+
+**Plain Language:** How quickly an object rotates around an axis and the direction of that axis.
+
+**Technical Definition:** The axial vector omega describing the instantaneous rate and axis of rotation of a rigid body.
+
+**Symbols / Notation:** $\omega$
+
+[Read in Context &rarr;](/articles/rotation-representations-reference.html){.glossary-canonical-link}
+
+:::
+
+## B {#b}
+
+### Backswing {#backswing}
+
+::: {.glossary-entry id="def-backswing"}
+
+**Plain Language:** The preparatory movement moving the club away from the ball to the top of the swing.
+
+**Technical Definition:** The phase taking the multibody system from static address to transition, setting initial kinematic and elastic conditions for the downswing.
+
+[Read in Context &rarr;](/articles/theory-part1.html){.glossary-canonical-link}
+
+:::
+
+### Ball Compression {#ball-compression}
+
+::: {.glossary-entry id="def-ball-compression"}
+
+**Plain Language:** The amount a golf ball squashes during an impact test under a standardized load.
+
+**Technical Definition:** An empirical index measuring deflection under a standard load, distinct from dynamic restitution or material Young's modulus.
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+## C {#c}
+
+### Center of Mass {#center-of-mass}
+
+::: {.glossary-entry id="def-center-of-mass"}
+
+**Plain Language:** The average position of all the weight in a body or club.
+
+**Technical Definition:** The unique point r_com = (1/M) * sum(m_i * r_i) where the weighted relative position of distributed mass sums to zero.
+
+**Symbols / Notation:** $r_{com}$, $COM$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Center of Pressure {#center-of-pressure}
+
+::: {.glossary-entry id="def-center-of-pressure"}
+
+**Plain Language:** The point on the ground where the total pushing force under the feet is centered.
+
+**Technical Definition:** The spatial centroid of the ground normal pressure distribution, r_cop = integral(r * p(r) dA) / integral(p(r) dA).
+
+**Symbols / Notation:** $COP$
+
+[Read in Context &rarr;](/articles/technology-force-measurement.html){.glossary-canonical-link}
+
+:::
+
+### Clubhead Speed {#clubhead-speed}
+
+::: {.glossary-entry id="def-clubhead-speed"}
+
+**Plain Language:** The linear speed of the center of the clubface immediately before impact.
+
+**Technical Definition:** The magnitude of the instantaneous linear velocity vector of the clubhead center of mass immediately prior to collision, v_c = ||v_{head}(t_{impact}^-)||.
+
+**Symbols / Notation:** $v_c$, $v_{head}$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Coefficient of Restitution {#coefficient-of-restitution}
+
+::: {.glossary-entry id="def-coefficient-of-restitution"}
+
+**Plain Language:** The bounciness of a collision, measuring how much speed remains after impact.
+
+**Technical Definition:** The ratio of relative separation speed to relative approach speed along the collision normal, e = -(v_b^+ - v_c^+) / (v_b^- - v_c^-).
+
+**Symbols / Notation:** $e$, $COR$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Constraint Force {#constraint-force}
+
+::: {.glossary-entry id="def-constraint-force"}
+
+**Plain Language:** Forces inside joints or at ground contact that hold bodies together without performing work along free directions.
+
+**Technical Definition:** The Lagrange multiplier reaction forces lambda acting normal to the admissible configuration manifold, satisfying J^T lambda with J * q_dot = 0.
+
+**Symbols / Notation:** $\lambda$, $J^T \lambda$
+
+[Read in Context &rarr;](/articles/null-space-constraint-jacobian.html){.glossary-canonical-link}
+
+:::
+
+### Control Authority {#control-authority}
+
+::: {.glossary-entry id="def-control-authority"}
+
+**Plain Language:** The maximum ability of muscles or actuators to change the system's acceleration.
+
+**Technical Definition:** The range of the input mapping G(x) applied to the admissible control set U, measuring achievable control-induced accelerations.
+
+**Symbols / Notation:** $G(x)U$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Control Input {#control-input}
+
+::: {.glossary-entry id="def-control-input"}
+
+**Plain Language:** The active muscle forces or motor commands supplied by the golfer.
+
+**Technical Definition:** The vector of generalized forces or joint torques u(t) within the admissible torque bounds U.
+
+**Symbols / Notation:** $u(t)$, $\tau$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Cost Function {#cost-function}
+
+::: {.glossary-entry id="def-cost-function"}
+
+**Plain Language:** A mathematical score measuring what an optimization algorithm tries to minimize (like effort or error).
+
+**Technical Definition:** A functional J(x, u) quantifying trajectory error, effort expenditure, or terminal clubhead velocity in optimal control problems.
+
+**Symbols / Notation:** $J$, $\mathcal{L}(x, u)$
+
+[Read in Context &rarr;](/articles/nonlinear-control-insights.html){.glossary-canonical-link}
+
+:::
+
+## D {#d}
+
+### Degrees of Freedom {#degrees-of-freedom}
+
+::: {.glossary-entry id="def-degrees-of-freedom"}
+
+**Plain Language:** The number of independent directions in which a system can move.
+
+**Technical Definition:** The dimension of the configuration manifold, n = d * N - k, where N is the number of bodies and k is the number of holonomic constraints.
+
+**Symbols / Notation:** $DoF$, $n$
+
+[Read in Context &rarr;](/articles/degrees-of-freedom-and-dimensionality.html){.glossary-canonical-link}
+
+:::
+
+### Double Pendulum {#double-pendulum}
+
+::: {.glossary-entry id="def-double-pendulum"}
+
+**Plain Language:** A classic two-segment mechanical model representing the arms and the golf club.
+
+**Technical Definition:** A planar or spatial multibody system with two rigid links connected by revolute or universal joints, often modeling torso/arms and club.
+
+[Read in Context &rarr;](/articles/drift-components-wrench-double-pendulum.html){.glossary-canonical-link}
+
+:::
+
+### Downswing {#downswing}
+
+::: {.glossary-entry id="def-downswing"}
+
+**Plain Language:** The rapid motion from the top of the swing down to the ball.
+
+**Technical Definition:** The forward acceleration phase between transition and impact where potential and kinetic energy are converted and directed into the clubhead.
+
+[Read in Context &rarr;](/articles/theory-part1.html){.glossary-canonical-link}
+
+:::
+
+### Drift {#drift}
+
+::: {.glossary-entry id="def-drift"}
+
+**Plain Language:** The natural motion the club or body continues along under inertia, gravity, and passive forces without active muscles.
+
+**Technical Definition:** The unforced vector field f(x) in an affine control system dx/dt = f(x) + G(x)u, capturing inertia, Coriolis, centrifugal, gravity, and passive stiffness.
+
+**Symbols / Notation:** $f(x)$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Drift-Control Ratio (DCR) {#drift-control-ratio}
+
+::: {.glossary-entry id="def-drift-control-ratio"}
+
+**Plain Language:** The proportion of swing motion driven by natural momentum compared to active muscle effort.
+
+**Technical Definition:** The capacity-normalized ratio of unforced drift acceleration to total acceleration capacity, ranging from 0 (pure control) to 1 (pure drift).
+
+**Symbols / Notation:** $DCR$
+
+[Read in Context &rarr;](/articles/drift-control-ratio.html){.glossary-canonical-link}
+
+:::
+
+### Dynamic Coupling {#dynamic-coupling}
+
+::: {.glossary-entry id="def-dynamic-coupling"}
+
+**Plain Language:** The physical phenomenon where applying torque to one joint automatically accelerates other joints.
+
+**Technical Definition:** The off-diagonal terms in the multibody mass matrix M(q) causing cross-joint acceleration via \ddot{q} = M(q)^{-1}(u - C(q, \dot{q})\dot{q} - G(q)).
+
+**Symbols / Notation:** $M(q)^{-1}$
+
+[Read in Context &rarr;](/articles/force-mobility-matrices.html){.glossary-canonical-link}
+
+:::
+
+## E {#e}
+
+### Equations of Motion {#equations-of-motion}
+
+::: {.glossary-entry id="def-equations-of-motion"}
+
+**Plain Language:** The mathematical formulas describing how the body and club accelerate given current positions, speeds, and forces.
+
+**Technical Definition:** The second-order differential equations M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q) = u + J^T \lambda derived from Lagrangian mechanics.
+
+**Symbols / Notation:** $M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) = \tau$
+
+[Read in Context &rarr;](/articles/lagrangian-reference.html){.glossary-canonical-link}
+
+:::
+
+### Extension {#extension}
+
+::: {.glossary-entry id="def-extension"}
+
+**Plain Language:** Straightening a joint or bending backwards.
+
+**Technical Definition:** Movement in the sagittal plane increasing the angle between articulating skeletal segments.
+
+[Read in Context &rarr;](/articles/theory-part2.html){.glossary-canonical-link}
+
+:::
+
+## F {#f}
+
+### Fail-Closed {#fail-closed}
+
+::: {.glossary-entry id="def-fail-closed"}
+
+**Plain Language:** A safety rule where a check stops and refuses to pass if it cannot verify complete evidence.
+
+**Technical Definition:** A validation policy that treats indeterminate, missing, or corrupt records as failing rather than defaulting to permissive execution.
+
+[Read in Context &rarr;](/pages/overview.html){.glossary-canonical-link}
+
+:::
+
+### Feedback Control {#feedback-control}
+
+::: {.glossary-entry id="def-feedback-control"}
+
+**Plain Language:** Adjusting muscle effort based on sensory observations during movement.
+
+**Technical Definition:** A control policy u(x(t), t) where actuation is dynamically updated based on measured state error relative to a desired trajectory.
+
+**Symbols / Notation:** $u(x)$
+
+[Read in Context &rarr;](/articles/nonlinear-control-insights.html){.glossary-canonical-link}
+
+:::
+
+### Feedforward Control {#feedforward-control}
+
+::: {.glossary-entry id="def-feedforward-control"}
+
+**Plain Language:** Pre-planned muscle commands executed without waiting for sensory feedback.
+
+**Technical Definition:** An open-loop control trajectory u(t) synthesized prior to movement initiation based on an internal forward model of the system.
+
+**Symbols / Notation:** $u(t)$
+
+[Read in Context &rarr;](/articles/ideomotor-theory-and-predictive-brain.html){.glossary-canonical-link}
+
+:::
+
+### Flexion {#flexion}
+
+::: {.glossary-entry id="def-flexion"}
+
+**Plain Language:** Bending a joint to decrease the angle between body segments.
+
+**Technical Definition:** Movement in the sagittal plane decreasing the angle between articulating bones.
+
+[Read in Context &rarr;](/articles/theory-part2.html){.glossary-canonical-link}
+
+:::
+
+### Forward Dynamics {#forward-dynamics}
+
+::: {.glossary-entry id="def-forward-dynamics"}
+
+**Plain Language:** Calculating how the golfer and club will move given the applied muscle torques.
+
+**Technical Definition:** Solving the equations of motion for state accelerations \ddot{q} given generalized coordinates q, velocities \dot{q}, and input torques u.
+
+**Symbols / Notation:** $\ddot{q} = f(q, \dot{q}, u)$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+## G {#g}
+
+### Generalized Coordinates {#generalized-coordinates}
+
+::: {.glossary-entry id="def-generalized-coordinates"}
+
+**Plain Language:** The smallest set of numbers needed to describe the exact position and angles of the body and club.
+
+**Technical Definition:** A minimal set of independent parameters q = (q_1, ..., q_n) uniquely specifying the system configuration on its constraint manifold.
+
+**Symbols / Notation:** $q$, $q_i$
+
+[Read in Context &rarr;](/articles/lagrangian-reference.html){.glossary-canonical-link}
+
+:::
+
+### Generalized Forces {#generalized-forces}
+
+::: {.glossary-entry id="def-generalized-forces"}
+
+**Plain Language:** The effective forces or torques acting directly along the generalized coordinates.
+
+**Technical Definition:** The virtual work coefficients Q_i = sum(F_j * dr_j / dq_i) conjugate to generalized coordinates q_i.
+
+**Symbols / Notation:** $Q_i$, $\tau$
+
+[Read in Context &rarr;](/articles/lagrangian-reference.html){.glossary-canonical-link}
+
+:::
+
+### Governed {#governed}
+
+::: {.glossary-entry id="def-governed"}
+
+**Plain Language:** Tracked by the publication's scientific review and claim-audit process.
+
+**Technical Definition:** Subject to explicit falsification ledgers, verifiable provenance, and continuous regression testing in the scientific claim registry.
+
+[Read in Context &rarr;](/pages/overview.html){.glossary-canonical-link}
+
+:::
+
+### Ground Reaction Force (GRF) {#ground-reaction-force}
+
+::: {.glossary-entry id="def-ground-reaction-force"}
+
+**Plain Language:** The contact force exerted by the ground back against the golfer's shoes.
+
+**Technical Definition:** The equal and opposite reaction force vector F_grf exerted by the ground on the feet according to Newton's third law.
+
+**Symbols / Notation:** $F_{grf}$, $GRF$
+
+[Read in Context &rarr;](/articles/technology-force-measurement.html){.glossary-canonical-link}
+
+:::
+
+## I {#i}
+
+### Ideomotor Theory {#ideomotor-theory}
+
+::: {.glossary-entry id="def-ideomotor-theory"}
+
+**Plain Language:** The concept that movements are planned and triggered by anticipating their sensory outcomes.
+
+**Technical Definition:** The psychological and neurocomputational framework asserting that actions are represented, selected, and controlled by anticipated perceptual effects.
+
+[Read in Context &rarr;](/articles/ideomotor-theory-and-predictive-brain.html){.glossary-canonical-link}
+
+:::
+
+### Impact {#impact}
+
+::: {.glossary-entry id="def-impact"}
+
+**Plain Language:** The collision between clubhead and ball lasting under half a millisecond.
+
+**Technical Definition:** A brief collision (~400 microseconds) characterized by large contact forces (~10 kN) transferring momentum and kinetic energy.
+
+**Symbols / Notation:** $\Delta t_{impact}$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Induced Acceleration {#induced-acceleration}
+
+::: {.glossary-entry id="def-induced-acceleration"}
+
+**Plain Language:** The acceleration of any segment caused indirectly by a force applied elsewhere in the body.
+
+**Technical Definition:** The contribution to \ddot{q} from an individual joint torque or force component through the inverse mass matrix M(q)^{-1}.
+
+**Symbols / Notation:** $M(q)^{-1}\tau_k$
+
+[Read in Context &rarr;](/articles/superposition.html){.glossary-canonical-link}
+
+:::
+
+### Inverse Dynamics {#inverse-dynamics}
+
+::: {.glossary-entry id="def-inverse-dynamics"}
+
+**Plain Language:** Working backward from measured motion to estimate the net forces and torques at joints.
+
+**Technical Definition:** Computing net joint torques u(t) by substituting measured positions q(t), velocities \dot{q}(t), and accelerations \ddot{q}(t) into the equations of motion.
+
+**Symbols / Notation:** $u = M(q)\ddot{q} + C(q, \dot{q})\dot{q} + G(q)$
+
+[Read in Context &rarr;](/articles/inverse-dynamics.html){.glossary-canonical-link}
+
+:::
+
+## K {#k}
+
+### Kinetic Chain {#kinetic-chain}
+
+::: {.glossary-entry id="def-kinetic-chain"}
+
+**Plain Language:** The linked series of connected body segments passing motion from the feet to the hands.
+
+**Technical Definition:** An open or closed kinematic chain of articulated rigid bodies transferring momentum, work, and constraint reactions.
+
+[Read in Context &rarr;](/articles/proximal-distal-energy-transfer.html){.glossary-canonical-link}
+
+:::
+
+### Kinetic Energy {#kinetic-energy}
+
+::: {.glossary-entry id="def-kinetic-energy"}
+
+**Plain Language:** The energy of motion stored in moving masses and rotating bodies.
+
+**Technical Definition:** The quadratic form T = 0.5 * \dot{q}^T M(q) \dot{q} representing translational and rotational kinetic energy.
+
+**Symbols / Notation:** $T$, $E_k$
+
+[Read in Context &rarr;](/articles/lagrangian-reference.html){.glossary-canonical-link}
+
+:::
+
+## L {#l}
+
+### Lag {#lag}
+
+::: {.glossary-entry id="def-lag"}
+
+**Plain Language:** The angle between the lead forearm and the clubshaft during the early downswing.
+
+**Technical Definition:** The acute wrist uncocking angle preserved during early downswing before releasing toward impact.
+
+**Symbols / Notation:** $\theta_{wrist}$
+
+[Read in Context &rarr;](/articles/theory-part1.html){.glossary-canonical-link}
+
+:::
+
+### Lagrangian Mechanics {#lagrangian-mechanics}
+
+::: {.glossary-entry id="def-lagrangian-mechanics"}
+
+**Plain Language:** A reformulation of classical physics based on energy (kinetic minus potential) rather than force vectors.
+
+**Technical Definition:** Analytical mechanics based on the Lagrangian function L = T - V and the Euler-Lagrange equations d/dt(dL/d\dot{q}) - dL/dq = Q.
+
+**Symbols / Notation:** $L = T - V$
+
+[Read in Context &rarr;](/articles/lagrangian-reference.html){.glossary-canonical-link}
+
+:::
+
+### Launch Angle {#launch-angle}
+
+::: {.glossary-entry id="def-launch-angle"}
+
+**Plain Language:** The vertical angle at which the golf ball leaves the clubface relative to the ground.
+
+**Technical Definition:** The elevation angle of the initial ball velocity vector relative to the horizontal ground plane immediately after impact separation.
+
+**Symbols / Notation:** $\theta_{launch}$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Linear Momentum {#linear-momentum}
+
+::: {.glossary-entry id="def-linear-momentum"}
+
+**Plain Language:** The product of an object's mass and its velocity.
+
+**Technical Definition:** The vector p = m * v representing the translational momentum of a body or system.
+
+**Symbols / Notation:** $p$, $m v$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+## M {#m}
+
+### Magnus Effect {#magnus-effect}
+
+::: {.glossary-entry id="def-magnus-effect"}
+
+**Plain Language:** The curving flight path caused by air pressure differences around a spinning ball.
+
+**Technical Definition:** The transverse aerodynamic force F_M = S * (omega x v) generated on a spinning body moving through a viscous fluid.
+
+**Symbols / Notation:** $F_M$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Moment of Inertia {#moment-of-inertia}
+
+::: {.glossary-entry id="def-moment-of-inertia"}
+
+**Plain Language:** How difficult it is to rotate an object around a specific axis.
+
+**Technical Definition:** The tensor I = integral( (r^T r * E - r r^T) dm ) quantifying resistance to rotational acceleration.
+
+**Symbols / Notation:** $I$, $MOI$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Motor Program {#motor-program}
+
+::: {.glossary-entry id="def-motor-program"}
+
+**Plain Language:** A pre-structured set of neural motor commands that execute coordinated movement.
+
+**Technical Definition:** A stored neural representation that coordinates muscle activation timing and magnitudes without requiring continuous peripheral feedback.
+
+[Read in Context &rarr;](/articles/ideomotor-theory-and-predictive-brain.html){.glossary-canonical-link}
+
+:::
+
+### Muscle Torque {#muscle-torque}
+
+::: {.glossary-entry id="def-muscle-torque"}
+
+**Plain Language:** The rotational turning force produced across a joint by contracting muscles.
+
+**Technical Definition:** The net moment generated by internal musculoskeletal tendon forces acting around a joint axis of rotation.
+
+**Symbols / Notation:** $\tau_{muscle}$
+
+[Read in Context &rarr;](/articles/theory-part2.html){.glossary-canonical-link}
+
+:::
+
+## N {#n}
+
+### Null Space {#null-space}
+
+::: {.glossary-entry id="def-null-space"}
+
+**Plain Language:** The set of internal joint adjustments that do not change the hand or clubhead position.
+
+**Technical Definition:** The kernel of the Jacobian matrix, ker(J), containing joint velocity vectors \dot{q} that produce zero end-effector velocity J * \dot{q} = 0.
+
+**Symbols / Notation:** $\ker(J)$, $N(J)$
+
+[Read in Context &rarr;](/articles/null-space-constraint-jacobian.html){.glossary-canonical-link}
+
+:::
+
+## P {#p}
+
+### Phase Portrait {#phase-portrait}
+
+::: {.glossary-entry id="def-phase-portrait"}
+
+**Plain Language:** A graph showing all possible movement paths plotted as speed versus position.
+
+**Technical Definition:** A geometric representation of dynamical system trajectories plotted in the state space (position vs velocity).
+
+[Read in Context &rarr;](/articles/nonlinear-control-insights.html){.glossary-canonical-link}
+
+:::
+
+### Potential Energy {#potential-energy}
+
+::: {.glossary-entry id="def-potential-energy"}
+
+**Plain Language:** Energy stored due to an object's height or elastic stretching.
+
+**Technical Definition:** The scalar function V(q) whose negative gradient produces conservative forces, F = -grad(V).
+
+**Symbols / Notation:** $V$, $U$
+
+[Read in Context &rarr;](/articles/lagrangian-reference.html){.glossary-canonical-link}
+
+:::
+
+### Power {#power}
+
+::: {.glossary-entry id="def-power"}
+
+**Plain Language:** The rate at which mechanical energy is transferred or work is done.
+
+**Technical Definition:** The scalar rate of doing work, P = dW/dt = F * v + tau * omega.
+
+**Symbols / Notation:** $P$, $\dot{W}$
+
+[Read in Context &rarr;](/articles/proximal-distal-energy-transfer.html){.glossary-canonical-link}
+
+:::
+
+### Pronation {#pronation}
+
+::: {.glossary-entry id="def-pronation"}
+
+**Plain Language:** Rotating the forearm so the palm turns downward or inward.
+
+**Technical Definition:** Rotational movement of the radius around the ulna placing the palm facing downward or posteriorly.
+
+[Read in Context &rarr;](/articles/wrist-universal-joint.html){.glossary-canonical-link}
+
+:::
+
+### Protected {#protected}
+
+::: {.glossary-entry id="def-protected"}
+
+**Plain Language:** Software branches that accept code only after automated checks and reviews pass.
+
+**Technical Definition:** A branch management policy where direct pushes are disabled and commits require passing continuous integration gates.
+
+[Read in Context &rarr;](/pages/overview.html){.glossary-canonical-link}
+
+:::
+
+### Provenance {#provenance}
+
+::: {.glossary-entry id="def-provenance"}
+
+**Plain Language:** The tracked source, version, and chain of custody for any scientific finding or dataset.
+
+**Technical Definition:** Cryptographically verifiable metadata recording git revision, generator parameters, and input dataset hashes for published artifacts.
+
+[Read in Context &rarr;](/pages/overview.html){.glossary-canonical-link}
+
+:::
+
+### Proximal-to-Distal Sequence {#proximal-to-distal}
+
+::: {.glossary-entry id="def-proximal-to-distal"}
+
+**Plain Language:** The movement pattern starting from large central body segments (hips, torso) and finishing in peripheral segments (arms, club).
+
+**Technical Definition:** The kinetic and kinematic sequencing where proximal segment peak speeds and torques precede distal segment peaks.
+
+[Read in Context &rarr;](/articles/proximal-distal-energy-transfer.html){.glossary-canonical-link}
+
+:::
+
+## Q {#q}
+
+### Qualified {#qualified}
+
+::: {.glossary-entry id="def-qualified"}
+
+**Plain Language:** A research finding presented with its specific limits, assumptions, and scope attached.
+
+**Technical Definition:** A statement whose mathematical domain, assumptions, error bounds, and unvalidated regimes are explicitly documented.
+
+[Read in Context &rarr;](/pages/overview.html){.glossary-canonical-link}
+
+:::
+
+## R {#r}
+
+### Radial Deviation {#radial-deviation}
+
+::: {.glossary-entry id="def-radial-deviation"}
+
+**Plain Language:** Tilting the wrist towards the thumb side (wrist cocking).
+
+**Technical Definition:** Movement of the hand at the radiocarpal joint toward the radial styloid process in the frontal plane.
+
+[Read in Context &rarr;](/articles/wrist-universal-joint.html){.glossary-canonical-link}
+
+:::
+
+### Reachable Set {#reachable-set}
+
+::: {.glossary-entry id="def-reachable-set"}
+
+**Plain Language:** All the positions and speeds a golfer can possibly reach given their strength limits.
+
+**Technical Definition:** The set of states x(t) that can be reached from an initial state x_0 under admissible control inputs u(t) in U over horizon T.
+
+**Symbols / Notation:** $\mathcal{R}(T, x_0)$
+
+[Read in Context &rarr;](/articles/drift-control-ratio.html){.glossary-canonical-link}
+
+:::
+
+## S {#s}
+
+### Smash Factor {#smash-factor}
+
+::: {.glossary-entry id="def-smash-factor"}
+
+**Plain Language:** The ratio of ball speed to clubhead speed, measuring impact energy transfer efficiency.
+
+**Technical Definition:** The dimensionless ratio v_{ball} / v_{club} measured immediately post- and pre-collision.
+
+**Symbols / Notation:** $SF$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### Spin Rate {#spin-rate}
+
+::: {.glossary-entry id="def-spin-rate"}
+
+**Plain Language:** How fast the golf ball rotates around its spin axis right after leaving the clubface.
+
+**Technical Definition:** The magnitude of the ball's angular velocity vector immediately following impact separation, typically reported in revolutions per minute (rpm).
+
+**Symbols / Notation:** $\omega_{ball}$
+
+[Read in Context &rarr;](/articles/impact-mechanics-and-ball-flight.html){.glossary-canonical-link}
+
+:::
+
+### State Space {#state-space}
+
+::: {.glossary-entry id="def-state-space"}
+
+**Plain Language:** The complete mathematical space containing every possible combination of positions and velocities.
+
+**Technical Definition:** The 2n-dimensional manifold or vector space x = (q, \dot{q}) representing the full instantaneous physical state.
+
+**Symbols / Notation:** $x \in \mathbb{R}^{2n}$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+### Supination {#supination}
+
+::: {.glossary-entry id="def-supination"}
+
+**Plain Language:** Rotating the forearm so the palm turns upward or forward.
+
+**Technical Definition:** Rotational movement of the radius around the ulna placing the palm facing upward or anteriorly.
+
+[Read in Context &rarr;](/articles/wrist-universal-joint.html){.glossary-canonical-link}
+
+:::
+
+## T {#t}
+
+### Torque {#torque}
+
+::: {.glossary-entry id="def-torque"}
+
+**Plain Language:** A twisting or turning force that causes rotation around an axis.
+
+**Technical Definition:** The rotational moment tau = r x F produced by a force acting at a moment arm r from a rotation center.
+
+**Symbols / Notation:** $\tau$, $M$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+## U {#u}
+
+### Ulnar Deviation {#ulnar-deviation}
+
+::: {.glossary-entry id="def-ulnar-deviation"}
+
+**Plain Language:** Tilting the wrist towards the little finger side (wrist uncocking/release).
+
+**Technical Definition:** Movement of the hand at the radiocarpal joint toward the ulnar styloid process in the frontal plane.
+
+[Read in Context &rarr;](/articles/wrist-universal-joint.html){.glossary-canonical-link}
+
+:::
+
+### Underactuation {#underactuation}
+
+::: {.glossary-entry id="def-underactuation"}
+
+**Plain Language:** A condition where a system has more joints or directions of movement than available motors or muscles.
+
+**Technical Definition:** A mechanical system having fewer independent control inputs than degrees of freedom, rank(G(x)) < dim(q).
+
+**Symbols / Notation:** $m < n$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+## V {#v}
+
+### Vector Field {#vector-field}
+
+::: {.glossary-entry id="def-vector-field"}
+
+**Plain Language:** An assignment of a velocity direction and speed to every point in space.
+
+**Technical Definition:** A smooth mapping f: M -> TM assigning a tangent vector to each point on the state manifold.
+
+**Symbols / Notation:** $f(x)$
+
+[Read in Context &rarr;](/articles/affine-nature-golf-swing.html){.glossary-canonical-link}
+
+:::
+
+## W {#w}
+
+### Work {#work}
+
+::: {.glossary-entry id="def-work"}
+
+**Plain Language:** The total mechanical energy transferred by applying a force through a distance.
+
+**Technical Definition:** The line integral of force along a displacement path, W = integral(F * dr) = integral(tau * dtheta).
+
+**Symbols / Notation:** $W$
+
+[Read in Context &rarr;](/articles/proximal-distal-energy-transfer.html){.glossary-canonical-link}
+
+:::
+
+### Wrist Cock {#wrist-cock}
+
+::: {.glossary-entry id="def-wrist-cock"}
+
+**Plain Language:** The hinge angle formed by radial deviation in the lead wrist during the swing.
+
+**Technical Definition:** Frontal-plane radial deviation of the lead wrist that sets the clubshaft angle relative to the lead forearm.
+
+[Read in Context &rarr;](/articles/wrist-universal-joint.html){.glossary-canonical-link}
+
+:::
+
+### Wrist Hinge {#wrist-hinge}
+
+::: {.glossary-entry id="def-wrist-hinge"}
+
+**Plain Language:** The flexion/extension movement of the wrists during the swing.
+
+**Technical Definition:** Sagittal-plane flexion and extension of the wrists, distinct from radial/ulnar deviation.
+
+[Read in Context &rarr;](/articles/wrist-universal-joint.html){.glossary-canonical-link}
+
+:::
+
+## Z {#z}
+
+### Zero-Torque Counterfactual (ZTCF) {#zero-torque-counterfactual}
+
+::: {.glossary-entry id="def-zero-torque-counterfactual"}
+
+**Plain Language:** The path the club and body would follow if all muscle effort ceased at a specific instant.
+
+**Technical Definition:** The forward-simulated state trajectory under zero active control input (u=0) initialized from a declared swing state x(t_0).
+
+**Symbols / Notation:** $ZTCF$
+
+[Read in Context &rarr;](/articles/zero-torque-counterfactual.html){.glossary-canonical-link}
+
+:::

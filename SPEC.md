@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.295                                          |
+| **Spec Version**        | 1.0.296                                          |
 | **Last Spec Update**    | 2026-10-02                                       |
 
 ## 2. Purpose & Mission
@@ -551,4 +551,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4498 | Resolve Volume II collision and unify volume numbering scheme (WEB-02.2) across _quarto.yml, books/*.qmd, and Geometry of Motion index; publish concordance table on Books hub and expand volume overview pages to >= 200 words. |
 | 2026-10-02 | #4506 | Define and validate article front-matter schema (WEB-03.1) in schemas/article-front-matter-v1.schema.json, with core-page validation and allowlist burn-down. |
 | 2026-10-02 | #4787 | Fix dark theme color contrast violations across axe matrix, adjust text tokens and component styles, update accessibility statement, and re-enable --axe fail in CI (#4787). |
+| 2026-10-02 | #4490 | Build site-wide glossary with data/glossary.yml (72 terms), pages/glossary.qmd generation, accessible WAI-ARIA tooltip shortcode/Lua filter {{< term >}}, styles, and book glossary cross-linking (WEB-01.5). |
 
