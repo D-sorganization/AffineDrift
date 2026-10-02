@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4783 | Distinguish system boundaries, contact work, COM pseudowork, observer power and gravity accounting in Chapter 2; add manufactured counterexamples and an explicit interaction-classification figure. |
 | 2026-10-01 | #4782 | Correct moving-base replay and inertia inferences, enforcing power and provider evidence limits; verify manufactured cart-pendulum balances and clarify the schematic (#4774). |
 | 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
 | 2026-10-01 | #4772 | Correct measured-golfer study attribution, sensor/model inference, repeated-swing uncertainty and human-validation boundaries in Chapter 24; replace evidence pyramid (#4771). |
