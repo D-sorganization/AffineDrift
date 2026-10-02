@@ -21,29 +21,29 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4819 · Practical Synthesis Evidence and Causal Comparisons
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4820 (regular, combined Chapters18/28); parent #4818 verified on remote main
 - **Issue:** #4819; epic #4009 / corpus #4021 / companion #4059
 - **Branch:** fix/synthesis-rigor-4819
 - **Paths:** articles/proximal_distal_companion/chapters/ch28_practical_synthesis.qmd, scripts/make_proximal_distal_companion_review_figures.py, tests/test_synthesis_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 682b709bc31459a882421062d2632282b78ed356 baseline;6632tests pass,29skip,187deselected,79.33%coverage;12gates,893Python files,655titles;237pagePDF,48math and4browserprofiles pass.
 - **Summary:** Lead accepted eight scientific decisions connecting wrench/power, hidden hand allocations, task velocity, feasible interventions, finite Pareto results, measurement limits and frontend scope. Five Flash outputs adjudicated. Source 1a7521e581bab0e6aa40df3f9bf0cb5ddafdee66 committed; eight findings bound with201 prior findings preserved,209total and103pending source audits. All44post-binding checks pass; source and binding c19ff2d993ea0a0a0f1cd8151e54b03df93d1869 are verified on remote topic with normal hooks.
-- **Next step:** Parent4818 verified and reconciled; publish one combined regular PR for4817/4819 after integration checks.
+- **Next step:** Push PR4820 registration, remove temporary integration hold and arm guarded squash auto-merge; verify exact checked head and remote-main owned files after merge.
 
 ### DL-#4817 · Forward Solver Guarantees and Validation
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4820 (regular, combined Chapters18/28); parent #4818 verified on remote main
 - **Issue:** #4817; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** fix/forward-model-rigor-4817
+- **Branch:** fix/synthesis-rigor-4819
 - **Paths:** articles/proximal_distal_companion/chapters/ch18_forward_model.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_forward_model_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 baseline 33afa9d25b7f61113ff4a0928d2cef2c2b1da76e; five focused passes after one RED failure;234pagePDF/HTML/56math/4browserchecks,12gates,892filequality; broad6624pass/4metadata-hygienefail,40remediationpass,79.35%accumulatedcoverage; source e4540364c6a21b66df55eb2959beef4e5eed9a2d committed; eight findings bound;40postbinding checks pass; source and binding 66a5bed3773a8991978fd7df7c27066d5cf0b9dc verified on remote topic with normal hooks.
 - **Summary:** Correct fixed-mode KKT assumptions, multiplier units, projection/work ledgers, moving-boundary compatibility, input memory, counterfactuals, evidence scope and coordinate/contact comparisons. Six successful Flash outputs adjudicated. Eight findings bound to the accepted source;193 prior companion findings preserved,201total;104 source audits and whole-book consistency remain.
-- **Next step:** Parent4818 delivery verified; publish accepted Chapter18 together with Chapter28 in one regular PR after integration checks.
+- **Next step:** Push PR4820 registration, remove temporary integration hold and arm guarded squash auto-merge; verify exact checked head and remote-main owned files after merge.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
