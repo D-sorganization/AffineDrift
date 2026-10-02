@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/lagrangian-rigor-4815
 - **Paths:** articles/lagrangian-reference.qmd, tests/test_lagrangian_reference_review.py, css/lagrangian-reference.css
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; baseline b581710c211526e4a18288b9aa6b1babbf72a79b; nine focused passes; Ruff, Black100, mypy and891filequality pass; finalHTML/math/panel andboundedbrowser review;CSSlint;full6623pass/29skip/79.34%coverage.
+- **Last verified:** 2026-10-02; integration SELF preserves accepted scientific source 13bd1cc29c3249e284cd379fdfb60679cc44f93e;65 affected checks pass; mobile title RED/GREEN and4 final browser cells pass with0 serious/critical axe findings after shared contrast integration.
 - **Summary:** Review eight mechanics decisions spanning energy functions, coordinates, flexible inertia, damping, input levels, constraints, boundary power and counterfactuals. Seven Flash helper outputs adjudicated. Source 13bd1cc29c3249e284cd379fdfb60679cc44f93e committed; eight findings bound and all other routes preserved. Binding 50c169c27d52595de7e5361dff4ae2f83daacbed and accepted source are verified on the remote topic; delivery-status checkpoint SELF. There are 105 source audits plus whole-book consistency remaining.
-- **Next step:** Push this delivery-status checkpoint; 51 affected checks and normal push hooks pass after a local QA-helper Bandit fix. Verify parent delivery, reconcile main and open a regular PR.
+- **Next step:** Verify protected delivery of parent PR4814 at cfc2b7ad before opening the regular Lagrangian PR.
 
 ### DL-#4813 · Timing, State Events, and Actuator History
 
@@ -43,7 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; baseline 80b00bf271fcfd6ef33cd979350fa122f0d24bca; seven focused passes after two RED failures,655titles,12publication gates,Ruff,Black100,mypy,890filequality; final233pagePDF/HTML/parity/boundedvisual review;33math/4displays;lightbrowserpass,dark186inheritedcontrast;full6614pass/29skip/79.34%coverage.
 - **Summary:** Review complete state versus scalar events, transverse/grazing timing sensitivity, actuator preload and rise time, bounded provider evidence, phase-work Jacobians, prospective information and causal timing experiments. Seven Flash helper outputs adjudicated. Eight decisions bound to source 8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9;185prior retained,193total;106sourceaudits pluswholebookreview remain.
-- **Next step:** Push PR4814 registration checkpoint, remove temporary integration hold and arm guarded auto-merge. Verify exact-head protected delivery and remote-main bytes.
+- **Next step:** Verify CI37036705535 and protected PR4814 delivery at cfc2b7ad after automated contrast integration; prior CI attempt2 was cancelled.
 
 
 

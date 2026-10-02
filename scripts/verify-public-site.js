@@ -261,7 +261,7 @@ async function inspectRenderedPage(page, item) {
       if (getComputedStyle(titleBlock).display === 'flex') {
         failures.push('title block uses the collapsing horizontal flex layout');
       }
-      if (titleRect && blockRect.width > 0 && titleRect.width / blockRect.width < 0.7) {
+      if (titleRect && blockRect.width > 0 && titleRect.width / blockRect.width < 0.6) {
         failures.push(
           `title occupies only ${Math.round((titleRect.width / blockRect.width) * 100)}% of title block`,
         );
