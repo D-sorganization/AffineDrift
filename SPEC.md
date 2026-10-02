@@ -12,8 +12,8 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.292                                          |
-| **Last Spec Update**    | 2026-09-13                                       |
+| **Spec Version**        | 1.0.293                                          |
+| **Last Spec Update**    | 2026-10-01                                       |
 
 ## 2. Purpose & Mission
 
@@ -226,6 +226,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-10-02 | #4788 | Distinguish artifact identity, computational reproduction and physical validation in Chapter 27; retain release-profile limits and immutable provider references. |
 | 2026-10-02 | #4785 | Distinguish system boundaries, contact work, COM pseudowork, observer power and gravity accounting in Chapter 2; add manufactured counterexamples and an explicit interaction-classification figure (#4783). |
+| 2026-10-01 | #4781 | Add runtime performance budget configuration for ten representative routes, Playwright E2E budget spec, and CI verification script (#4570). |
 | 2026-10-01 | #4777 | Expand axe-core verification in CI to scan dark theme and mobile viewports with multi-cell deduplication (#4562). |
 | 2026-10-01 | #4782 | Correct moving-base replay and inertia inferences, enforcing power and provider evidence limits; verify manufactured cart-pendulum balances and clarify the schematic (#4774). |
 | 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
@@ -533,3 +534,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-01 | #4598 | Remove legacy cruft files and directories (legacy-pages/, _includes/home-sidebar-content.html, js/pdf.js, listings.json, preview-articles.sh, start-preview.sh, duplicate .Jules/) and update root hygiene checks. |
 | 2026-10-01 | #4694 | Enforce scientific claim-audit coverage in PR CI e2e-tests when site-facing files are rendered, preventing un-audited routes from passing PR CI and breaking Deploy Website on main. |
 | 2026-10-01 | #4502 | Align navigation labels with page titles and add contract test (WEB-02.8). |
+| 2026-10-01 | #4515 | Consolidate maturity vocabulary into a single enum (WEB-04.1) in config/maturity.yml, with schema validation, legacy string mappings, and tests. |

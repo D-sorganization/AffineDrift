@@ -1,0 +1,75 @@
+# Controlled maturity vocabulary for rendered content pages (issue #4515).
+#
+# Single authoritative source of truth for publication states across AffineDrift.
+# Defined in accordance with the 6-state publication key in pages/how-to-read.qmd (#publication-states).
+#
+# Every state defines:
+# - label: Display title
+# - definition: Plain-language definition
+# - establishes: What this state explicitly establishes
+# - does_not_establish: What this state explicitly does not establish
+
+states:
+  available:
+    label: "Available"
+    definition: "The text, code, or derivation is complete, readable, and open for inspection."
+    establishes: "The complete text, derivation, model, or implementation is present, structurally sound, and open for technical inspection."
+    does_not_establish: "Does not imply independent peer review, clinical consensus, or empirical human validation."
+
+  validated:
+    label: "Validated"
+    definition: "Specific claims name verifiable empirical evidence, calibration datasets, and exact error bounds."
+    establishes: "Named, reproducible empirical evidence, hardware or benchmark calibration data, and quantified error bounds for declared regimes."
+    does_not_establish: "Neighboring claims, untested swing regimes, or full-body extensions do not inherit validation."
+
+  experimental:
+    label: "Experimental"
+    definition: "Exploratory modeling or software available for discussion and sensitivity testing."
+    establishes: "Exploratory mathematical modeling, early software prototypes, or provisional hypotheses available for technical discussion and sensitivity analysis."
+    does_not_establish: "Does not guarantee numerical convergence, stable APIs, or verified real-world predictive fidelity."
+
+  planned:
+    label: "Planned"
+    definition: "A formal specification or tracking issue exists, but the deliverable is not yet completed."
+    establishes: "An approved architectural specification, formal problem statement, or tracked roadmap issue."
+    does_not_establish: "Does not imply active implementation in the current release cycle or guaranteed delivery dates."
+
+  deprecated:
+    label: "Deprecated"
+    definition: "Material preserved strictly for historical context, backwards compatibility, or audit history."
+    establishes: "Preserved historical record, backward-compatibility bridge, or superseded milestone context."
+    does_not_establish: "Not recommended for current modeling, active research, or pedagogical study."
+
+  opinion:
+    label: "Opinion"
+    definition: "Editorial synthesis, philosophical positioning, or speculative research agendas."
+    establishes: "Editorial perspective, research synthesis, architectural philosophy, or speculative research agenda."
+    does_not_establish: "Does not represent mathematical proof, empirical data, or institutional consensus."
+
+# Legacy label mappings onto the canonical enum
+legacy_mappings:
+  "in progress (scaffolding phase)": "planned"
+  "scaffolding phase": "planned"
+  "scaffolded": "planned"
+  "scaffolding": "planned"
+  "in progress": "planned"
+  "in-progress": "planned"
+  "exploratory": "experimental"
+  "experiment": "experimental"
+  "draft": "experimental"
+  "drafts": "experimental"
+  "canonical / reference / exploratory": "available"
+  "canonical": "available"
+  "avail": "available"
+  "available computational publication": "available"
+  "supported / extended": "available"
+  "supported": "available"
+  "extended": "available"
+  "verified": "validated"
+  "reviewed": "validated"
+  "valid": "validated"
+  "retired": "deprecated"
+  "archived": "deprecated"
+  "obsolete": "deprecated"
+  "editorial": "opinion"
+  "speculative": "opinion"
