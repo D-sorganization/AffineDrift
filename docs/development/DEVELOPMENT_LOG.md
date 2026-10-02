@@ -19,6 +19,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4807 · Velocity Summation and Sequence Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** Not created; accepted source awaits commit and evidence binding
+- **Issue:** #4807; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/sequence-rigor-4807
+- **Paths:** articles/proximal_distal_companion/chapters/ch08_summation_of_speed.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_sequence_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; baseline 891b38bcf34b967025e7d4d1d733e8ee9c1e888a; working source accepted with six new checks, 6,598 broad passes/two stale-digest failures corrected by review and refresh, 48 affected passes, 79.24% accumulated coverage, 12 publication gates and final print/web review.
+- **Summary:** Distinguish velocity sums, vector peak timing, energy/power and causal claims; correct finite-study interpretation and citation scope; replace uncomputed figure coupling label with a normalized schematic. Four implementation Flash helpers read and adjudicated. Source binding and protected delivery remain pending; no new corpus credit yet.
+- **Next step:** Commit accepted source, bind eight findings, push and open a regular PR after verifying parent delivery state.
+
+
 ### DL-#4806 · Sensitivity, Identifiability, and Measurement
 
 - **State:** in_review

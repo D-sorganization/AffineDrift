@@ -2,256 +2,290 @@
 
 ## A Concrete Picture
 
-Walk forward inside a moving train. Relative to the carriage you may move at
-$2$ m/s; the carriage moves at $20$ m/s relative to the ground; your ground
-speed is roughly $22$ m/s when directions align. Endpoint speed in a linked
-chain has a similar geometric addition. The clubhead moves because the hands
-translate, the club rotates about them, and all upstream joints contribute to
-the hand motion.
+Walk forward inside a train moving at $20$ m/s. If you walk at $2$ m/s relative
+to the carriage, your ground velocity is $22$ m/s along the track. Walk backward
+at the same speed and it is $18$ m/s. Velocities add as vectors; their magnitudes
+add only when the vectors point in the same direction.
 
-This gives the summation-of-speed story its appeal. Proximal motion carries the
-distal base, and distal rotation adds speed farther from the center. But unlike
-the straight train aisle, the velocity vectors rotate, segment lengths matter,
-and the same motions can cancel when directions oppose.
+A clubhead likewise moves because its base moves and because the club changes
+orientation. The geometry is less forgiving than a straight train aisle:
+rotating segments continually change the directions of their contributions.
+A large angular speed does not, by itself, tell us how much endpoint speed it
+adds. Nor does an ordered series of speed peaks explain the forces that made
+the movement possible.
 
-![Segment-Speed Peaks Occur in an Ordered Sequence While Their Contributions to Clubhead Velocity Overlap in Time.](figures/proximal_distal_companion/fig_companion_sequence_overlap.svg){#fig-lay-sequence-overlap width=97% fig-alt="Overlapping pelvis, trunk, arm, and club speed curves peak in proximal-to-distal order, while a shaded band emphasizes that all segments remain dynamically coupled throughout the sequence."}
+![Schematic Peak Ordering With Overlapping Motion.](figures/proximal_distal_companion/fig_companion_sequence_overlap.svg){#fig-lay-sequence-overlap width=97% fig-alt="Four invented Gaussian angular-speed curves have separately normalized peaks in pelvis, trunk, hand, and club order. The curves illustrate timing and overlap only, not measured speed ratios, velocity contributions, or energy transfer."}
+
+The figure uses chosen Gaussian curves, each scaled to its own peak. It shows
+what an ordering could look like. It contains no human measurements, equations
+of motion, calculated coupling, or contribution analysis. Equal normalized
+heights do not mean equal segment speeds.
 
 ## How the Mechanism Works
 
-For a planar arm and club, clubhead velocity can be written as hand velocity plus
-velocity from club rotation about the hand:
+### A Velocity Identity With Explicit Assumptions
 
-$$\mathbf v_{head}=\mathbf v_{hand}+\boldsymbol\omega_{club}\times\mathbf r_{head/hand}.$$
+Choose two material points on a rigid club: a grip point $H$ and a head point
+$C$. Express their velocities and the club's angular velocity in the same
+inertial frame. With $\mathbf r_{C/H}=\mathbf x_C-\mathbf x_H$,
 
-Hand velocity already contains contributions from proximal joint rates. This is
-a kinematic identity. It tells how motions combine at an instant, not which
-forces caused those motions or where their energy came from.
+$$
+\mathbf v_C=\mathbf v_H+\boldsymbol\omega_{club}\times\mathbf r_{C/H}.
+$$
 
-### Why Distal Rotation Has Large Leverage
+Here $\boldsymbol\omega_{club}$ is the club's **absolute angular velocity**,
+not its angular velocity relative to the forearm. The grip point can be
+identified with a hand point only under a compatible no-slip contact assumption.
+The identity holds in three dimensions; it does not require planar motion.
 
-Linear speed from rotation grows with radius: $v=r\omega$. A given angular
-velocity near the club can contribute strongly at the clubhead because the
-radius is long. Yet creating that angular velocity requires energy and control
-under the system's inertia. The benefit of distal speed is not free leverage;
-it is a mapping between angular and endpoint motion.
+For a deforming shaft, write $\mathbf r_{C/H}=R(t)\boldsymbol\rho(t)$ where $R(t)$ rotates coordinates from a chosen moving club frame into the
+inertial frame and $\boldsymbol\rho(t)$ is the displacement in that moving
+frame. Differentiation adds $R\dot{\boldsymbol\rho}$ to the
+transport and chosen-frame rotation terms. A slipping hand point also needs its relative
+motion accounted for. A single rigid-body formula cannot silently include
+shaft deformation or changing grip contact.
 
-Timing matters because velocity vectors can align or oppose. If hand velocity
-and club-relative velocity point similarly near impact, their magnitudes add.
-If the club releases too early, its relative velocity may point less favorably
-later or change hand dynamics through reaction. The optimal schedule depends on
-the full trajectory and outcome definition.
+The rotational term has magnitude $\|\boldsymbol\omega\|r_\perp$, where
+$r_\perp$ is the perpendicular distance from the angular-velocity axis through
+$H$ to $C$. The familiar $v=r\omega$ uses that radius, not an arbitrary segment
+length. A long club can amplify endpoint motion for a given angular rate;
+kinematics alone says nothing about the torque, energy, or controllability
+required to achieve it.
 
-### Peaks Do Not Hand Off Like Relay Batons
+### A Two-Link Calculation That Exposes a Common Error
 
-When pelvis speed peaks and falls before trunk speed peaks, it is tempting to
-say pelvis speed was transferred into trunk speed. But speed is not conserved.
-Momentum and energy have conservation laws under stated conditions; angular
-speed does not. A declining pelvis speed may coexist with continued positive hip
-power, changing effective inertia, or work transferred through several joints.
+Take two links, each one metre long, in a plane with a fixed base. Let $q_1$ be the arm's
+absolute angle and $q_2$ the club's angle relative to the arm, both positive
+counterclockwise. The head position is
 
-Peak order is therefore a coordination descriptor. To claim transfer, pair it
-with joint powers, interface powers, segment energies, and external forces.
-Even then, the partition must be declared.
+$$
+\mathbf x_C=
+\begin{bmatrix}
+\cos q_1+\cos(q_1+q_2)\\
+\sin q_1+\sin(q_1+q_2)
+\end{bmatrix}.
+$$
 
-### Sequence Can Vary While Outcome Remains Similar
+At $q_1=0$, $q_2=\pi/2$, $\dot q_1=2$ rad/s and $\dot q_2=3$ rad/s,
+the hand velocity is $(0,2)$ m/s. The club's absolute angular rate is
+$2+3=5$ rad/s, giving a rotational velocity $(-5,0)$ m/s and a total
+$\mathbf v_C=(-5,2)$ m/s. Substituting the relative rate of $3$ rad/s into
+the rigid-body formula would incorrectly give $(-3,2)$ m/s. It loses the
+rotation of the club carried by the arm.
 
-Human movement is redundant. Different joint-rate combinations can produce a
-similar clubhead path and speed. One golfer may use more pelvis rotation and
-another more thoracic or arm motion. Averages can show a common sequence while
-hiding participant-specific solutions.
+Differentiating the head position, or checking a small central time difference,
+recovers $(-5,2)$. This is a geometric check on the convention, not a simulation
+of a golfer or a demonstration of energy transfer.
 
-The uncertainty study reinforces this point in model space. Eight preselected
-control programs are all nondominated across held-out outcomes: improving one
-metric costs another. A single “ideal sequence” does not emerge from speed alone.
+### Joint Contributions Are a Declared Decomposition
 
-### Phase-by-Phase Reading
+For endpoint position $\mathbf x_C(\mathbf q)$, the Jacobian gives
+$\mathbf v_C=J(\mathbf q)\dot{\mathbf q}$. Include moving-base coordinates
+among $\mathbf q$, or add their transport explicitly. If position depends
+explicitly on time, its partial time derivative is another term. Generalized
+speeds that differ from $\dot{\mathbf q}$ require the corresponding mapping.
 
-During transition, the system changes direction and builds load. Early in the
-downswing, proximal motion can raise hand speed while the club remains lagged.
-In mid-downswing, geometry and velocity coupling change rapidly. Late, club
-rotation becomes a dominant contributor to clubhead speed. These labels are
-useful, but continuous powers and states are more informative than hard phase
-boxes.
+In the two-link example the Jacobian columns at that posture are $(-1,1)$ and
+$(-1,0)$. Their rate-weighted contributions are $(-2,2)$ and $(-3,0)$ m/s.
+These sum to the same head velocity as the hand-plus-club decomposition, but
+allocate it differently. The first joint rotates both links; hand translation
+alone is not its entire Jacobian contribution.
 
-A meaningful plot aligns events such as transition, peak hand speed, onset of
-rapid relative club rotation, and impact criterion. It then overlays segment
-speeds with the forces and powers proposed to cause them. The sequence becomes
-an entry point to mechanics rather than the conclusion.
+For any declared vector decomposition $\mathbf v_C=\sum_i\mathbf v_i$ with
+nonzero total velocity, a useful signed speed partition is
 
-**Human Evidence:** Proximal-to-distal peak ordering has been observed in many
-skilled striking and throwing tasks, including golf, but methods and definitions
-  vary [@milburn1982; @putnam1991; @putnam1993; @tinmark2010].
+$$
+c_i=\frac{\mathbf v_C}{\|\mathbf v_C\|}\mathbin{\cdot}\mathbf v_i,
+\qquad \sum_i c_i=\|\mathbf v_C\|.
+$$
 
-**Model Result:** The double-pendulum and higher tiers reproduce distal speed
-amplification through overlapping proximal transport, coupling, and late
-relative rotation. Their control programs are not unique human solutions.
+These projections can be negative. Keep the posture and arm rate above, but
+set $\dot q_2=-5$ rad/s. The contributions become $(-2,2)$ and $(5,0)$ m/s;
+total velocity is $(3,2)$ m/s. Their projections are $-2/\sqrt{13}$ and
+$15/\sqrt{13}$ m/s, summing to $\sqrt{13}$ m/s. Large component magnitudes
+would overestimate the actual speed if simply added.
 
-**Hypothesis:** A useful strategy arranges geometry and state so the distal
-velocity contribution aligns with hand velocity near the chosen impact event
-without paying unacceptable face, path, load, or robustness costs.
+The partition depends on the selected point, coordinates, reference motion and
+choice of terms. A common orthogonal rotation of the axes leaves these dot
+products unchanged; changing the decomposition is a different operation.
+At zero endpoint speed the unit direction, and therefore this partition, is
+undefined.
 
-### Why the Relay-Race Story Is Attractive
+A negative projection does **not** establish negative joint power. Even the
+translational kinetic energy of a point mass contains cross terms:
 
-In many skilled striking and throwing motions, proximal segment angular
-velocities peak before distal ones. Plot the curves and they resemble runners
-passing a baton. The picture captures the broad fact that distal speed is built
-on motion already present proximally. Problems begin when peak order becomes a
-mechanism by itself or a command to stop one segment before starting the next.
+$$
+\frac12 m\left\|\sum_i\mathbf v_i\right\|^2
+=\frac12 m\sum_i\|\mathbf v_i\|^2
++m\sum_{i<j}\mathbf v_i\mathbin{\cdot}\mathbf v_j.
+$$
 
-Endpoint velocity is a vector sum. Clubhead velocity includes proximal-base
-translation, contributions from trunk and arm rotation, relative club rotation,
-and deformation. These contributions overlap and change direction. A proximal
-angular velocity can decline while its current motion still contributes strongly
-to distal linear velocity. A distal segment can accelerate because of
-interaction forces before its own peak.
+For the opposing example with $m=1$ kg, total energy is $6.5$ J, whereas
+adding the two separate squared-speed energies gives $16.5$ J. The cross term
+is $-10$ J. A whole golfer also has distributed mass and rotational energy.
+Speed projections are neither segment energy shares nor causal allocations
+of the work that created the state.
 
-### Peak Time Does Not Equal Transfer Time
+### Peak Time Is Not Transfer Time
 
-A velocity peak occurs when that coordinate's acceleration crosses zero. An
-energy-transfer event is identified by power and work across a boundary. They
-need not coincide. Proximal speed can peak because distal reaction loads it,
-because drive declines, or because geometry changes—not necessarily because
-energy was deliberately “passed.” Distal speed may keep rising after one joint-
-power term turns negative because other channels remain positive.
+A smooth signed scalar velocity component has zero derivative at an interior
+extremum. For nonzero three-dimensional angular velocity, however,
 
-Filtering and coordinates can move peaks. Global segment angular velocity,
-relative joint angular velocity, one anatomical component, and the magnitude of
-a three-dimensional vector produce different event times. A sequence claim
-must state quantity, frame, filter, event definition, and uncertainty.
+$$
+\frac{d\|\boldsymbol\omega\|}{dt}
+=\frac{\boldsymbol\omega\mathbin{\cdot}\boldsymbol\alpha}
+       {\|\boldsymbol\omega\|},
+\qquad \boldsymbol\alpha=\frac{d\boldsymbol\omega}{dt}.
+$$
 
-### A Three-Link Thought Experiment
+A smooth interior angular-speed peak requires
+$\boldsymbol\omega\cdot\boldsymbol\alpha=0$, not
+$\boldsymbol\alpha=\mathbf0$. For a dimensionless manufactured example near
+$t=0$, take $\boldsymbol\omega(t)=(1-t^2)(\cos t,\sin t,0)$.
+Its magnitude reaches $1$ at $t=0$ while $\boldsymbol\alpha(0)=(0,1,0)$:
+the rotation axis is changing direction. A stationary derivative alone does
+not prove a maximum; endpoints, plateaus, noise and nonsmooth signals need
+separate event rules.
 
-Imagine pelvis, arm, and club speed peaks at 300, 220, and 80 milliseconds before
-impact. Ordering alone does not reveal whether pelvis work caused club
-acceleration. Inspect power: pelvis-to-trunk transfer may be positive over a
-broad interval; hand power may alternate; shaft return may peak late. If a
-filter shifts the pelvis peak while power integrals remain stable, the causal
-story should follow the ledgers rather than the prettiest order.
+Report whether a peak belongs to an absolute segment angular-speed norm, a
+relative joint rate, or an anatomical component. Merely re-expressing the same
+physical vector in orthonormal axes cannot change its norm or its peak time.
+Switching from an absolute rate to a relative joint rate, or selecting a
+component, can change the reported peak time. Filtering,
+differentiation, time normalization and event detection can also alter the
+reported ordering; near ties need uncertainty intervals rather than a forced
+ranking.
 
-Hold final club speed fixed while altering torque schedule. A model can produce
-the same peak sequence through different work allocations. Conversely, two
-schedules can have different sequences but similar final energy. Sequencing is
-an observable constraint, not an identifying fingerprint.
+Power answers a different question. For applied force $\mathbf F$ and moment
+$\mathbf M$ at a declared rigid-body contact point, $P=\mathbf F\cdot\mathbf v+\mathbf M\cdot\boldsymbol\omega$, with moment
+and velocity referred consistently to that point. For a rotational joint, net joint power uses the
+joint moment and compatible relative angular velocity. Interface power,
+net joint power, segment energy change and external work are related ledgers,
+not interchangeable labels. Integrate the powers over a declared interval and compare the resulting work
+with changes in stored energy to test the account. Angular-speed peak times
+cannot close it.
 
-### Overlap Is the Rule
+### What the Human and Model Evidence Establishes
 
-Muscles do not operate as isolated switches, and segments never become
-mechanically disconnected. Proximal and distal torques coexist. Constraint
-forces act bidirectionally. The nervous system may prepare stiffness before
-visible motion and regulate objectives simultaneously. A better phrase is “a
-wave of changing emphasis across a continuously coupled system.”
+**Human Evidence:** Tinmark and colleagues studied 45 golfers: 11 male tournament
+professionals, 21 male elite amateurs and 13 female elite amateurs. They recorded
+pelvis, upper-torso and hand motion at 240 Hz and calculated resultant angular-speed
+magnitudes. Their reported ordering and increasing peaks occurred across the
+partial and full-shot conditions studied [@tinmark2010]. This is evidence about
+those measured segments and definitions. It does not supply a club-energy ledger,
+prove that every individual trial follows one order, or experimentally identify
+an optimal torque schedule. The authors' interpretation involving interaction
+torques goes beyond the directly reported kinematic observations.
 
-This matters for the arm-versus-wrist proposal. In one extreme, arms establish
-the dominant handle wrench while wrists resist and regulate. In the opposite,
-wrists create more club moment while arm action supplies another allocation.
-Both can generate familiar-looking kinematics. Bilateral wrenches, power
-histories, and activation measures are needed to separate them.
+**Mechanistic Evidence From Other Tasks:** Putnam's 1991 analysis used four
+subjects performing kicking, walking and running, and examined thigh--leg
+interaction terms [@putnam1991]. It supports investigating motion-dependent
+interaction, not transferring a lower-limb result unqualified to golf. The later
+striking-and-throwing review synthesizes descriptions and explanations
+[@putnam1993]. Milburn's golf paper presents a double-pendulum analysis of the
+downswing [@milburn1982]; its model conclusions should be stated with their
+assumptions rather than counted as independent proof of a universal human rule.
 
-### How to Use Sequence Evidence Well
+**Model Result:** The pinned uncertainty study uses a planar moving-base,
+two-hand, flexible-club model with bounded surrogate actuators. Delivery is
+evaluated at a fixed $0.24$ s, without a ball collision; its speeds are not
+calibrated full-swing human performance. All eight preselected control programs
+are nondominated across five objectives on six synthetic held-out cases: lower-tail
+delivery speed, planar face/path error, upper-tail hand force, squared-torque
+effort proxy, and speed dispersion. That means no other member of this finite comparison
+set is at least as good in every objective and strictly better in one. It does
+not imply every possible improvement incurs a cost, or that these programs form
+the continuous optimum over all controls.
 
-Combine sequence data with kinetics. Report segment and joint kinematics,
-external and grip wrenches, interface power, work by phase, and uncertainty in
-event timing. Test whether a mechanism predicts not only peak order but also
-force direction, couple sign, and changes under geometry or equipment
-manipulation.
+Speed alone selects `early_restrain`: its tenth-percentile delivery speed is
+highest among these candidates, about $4.706$ m/s. This ranking does not settle
+a choice across all five objectives. The saved comparisons do not analyze
+segment-peak sequences, validate human strategies, or establish that different
+human sequences achieve the same result.
 
-For an individual, repeatability matters. A mean peak time with wide within-
-person variability may be a weak control target. A state relation—such as a
-force-direction change over a consistent arm--club-angle range—may generalize
-better across tempo. That possibility must be tested rather than assumed.
+**Hypothesis:** A useful strategy may arrange geometry and motion so that the
+club's rotational contribution aligns favorably with grip-point velocity near
+the chosen impact event, while satisfying face, path, load and robustness
+requirements. Whether that strategy improves performance requires trajectory
+and intervention evidence. Instantaneous vector alignment is not an optimization
+result or a prescription for when a golfer should release the club.
 
-### What Would Change the Interpretation
+### A Sequence as a Testable Constraint
 
-If a participant preserves club speed while systematically reversing expected
-peak order, the order is not necessary. If the order appears but predicted
-transfer powers and hand-force signs do not, it is insufficient evidence for
-the mechanism. If order changes with coordinate definition, conclusions should
-be framed at the level that remains invariant. These productive failures turn a
-slogan into a bounded empirical statement.
+A proximal peak can precede a distal peak because proximal drive changes,
+because interaction loads change, or because the measured vector changes
+magnitude or direction. Several mechanisms can coexist. Proximal slowing also
+need not mean that every associated joint has negative power. The links remain
+coupled while their speeds rise and fall; a peak does not disconnect one segment
+and hand its motion to the next.
 
-### Reader Lab: Rebuild an Endpoint Velocity
+Build the explanation around synchronized observations: segment and joint
+kinematics, external and grip wrenches, declared interface powers, segment
+energies, and uncertainty. Define transition and impact events explicitly.
+Then ask whether a proposed mechanism predicts the force direction, moment
+sign and energy changes as well as the peak order. A model with the right order
+but the wrong power history has not explained that history.
 
-Take a planar three-link chain and compute endpoint velocity as the sum of each
-joint-rate contribution through its Jacobian column. Draw each contribution as
-an arrow tip-to-tail. Some arrows can partially cancel even when every angular
-speed is large. Change posture without changing joint rates and watch the arrows
-rotate. Geometry is part of the summation.
+If the arm-dominant and wrist-dominant proposals reproduce similar motion,
+bilateral wrenches and motion can constrain their external mechanical
+allocations. Activation measurements can add physiological evidence, but they
+do not uniquely identify muscle forces or neural commands. More measurements
+are useful only insofar as they discriminate the competing predictions; see
+@sec-lay-ch21 for identifiability.
 
-Now plot each segment's angular speed and mark peaks. Compare those marks with
-endpoint speed, joint power, and cumulative work. They will not generally align.
-Repeat after applying a low-pass filter or switching from relative to absolute
-angular velocity. If the reported peak order changes, record that methodological
-sensitivity rather than choosing the preferred plot.
+### Reader Lab: Separate Motion From Its Causes
 
-For a model intervention, remove proximal torque at a copied state while keeping
-current proximal velocity. Immediate club velocity is unchanged because state is
-unchanged, but acceleration and future trajectory differ. This shows why an
-existing proximal velocity contribution is not the same as continuing proximal
-power.
+Reproduce the two-link velocity with a central finite difference of position.
+Plot its Jacobian contributions tip-to-tail, then use the opposing-rate example
+to calculate signed projections and the energy cross term. Change posture while
+holding rates fixed. The arrows change because geometry participates in the
+mapping, even before a dynamics model has been introduced.
 
-### Alternative Explanations for the Same Sequence
+Next, plot the manufactured angular-velocity vector above and its norm. At the
+norm peak, check both the acceleration vector and its dot product with velocity.
+This prevents the zero-acceleration interpretation from entering a subsequent
+sequence analysis. With measured data, repeat peak detection across justified
+filter settings and report ambiguous orderings instead of selecting a preferred
+plot.
 
-A proximal peak can precede a distal peak because proximal drive declines,
-because distal reaction brakes the proximal segment, because joint geometry
-changes effective inertia, or because the chosen coordinate reaches an
-extremum. Several explanations can coexist. The sequence alone does not select
-among them.
-
-Competing mechanisms make different predictions for forces, powers, and response
-to perturbation. A transfer explanation predicts particular interface-power and
-reaction patterns. A purely kinematic constraint may reproduce peak order
-without the same work exchange. Measuring and modeling those discriminators
-makes sequence evidence useful.
+Finally, in a forward dynamics model, copy a state and remove a finite proximal
+torque while retaining positions, velocities and the same constraints. The
+instantaneous endpoint velocity is unchanged. Acceleration can change through
+the constrained equations of motion, and the subsequent trajectories can diverge;
+it is not guaranteed that every endpoint acceleration component changes.
+Impulses, contact changes and prescribed-motion constraints require separate
+handling. An existing velocity contribution is distinct from continuing actuator
+power, and a finite-time response is distinct from the copied-state comparison.
 
 ### Responsible Practical Translation
 
-A golfer need not consciously pause each body segment. Skilled motion can show
-overlapping peaks as the coupled system and control change emphasis. Practical
-analysis should avoid chasing exact population-average peak times. It can instead
-ask whether an individual's motion, wrench, and outcome are repeatable and
-whether a proposed change improves the full tradeoff under uncertainty.
+A sequence plot can locate a phase worth investigating and test whether a model
+reproduces a measured coordination feature. It becomes more informative when
+paired with within-person repeatability and predicted responses to perturbation.
+A reliably successful counterexample would refute a claim that one exact ordering
+is necessary under those conditions. Observing the order alone would not establish
+sufficiency or reveal its cause.
 
-### What the Sequence Can Still Tell Us
-
-After all these cautions, sequence is not discarded. It is a compact description
-of how motion emphasis changes, a useful check on model realism, and a way to
-locate phases for kinetic analysis. It becomes much stronger when paired with
-repeatability and mechanism predictions.
-
-For example, a model that predicts a late negative couple should also predict
-where that interval lies relative to segment-speed peaks and arm--club state.
-Measured disagreement can refute or relocate the mechanism. Sequence is thus
-most useful as one layer in a synchronized evidence stack.
-
-The responsible conclusion is neither “sequence proves transfer” nor “sequence
-does not matter.” It is that peak order constrains candidate explanations but
-does not identify one. Forces, powers, counterfactuals, and uncertainty complete
-the test.
-
-### Chapter Checkpoint
-
-The observed sequence is one set of constraints on an explanation. The stronger
-explanation also closes forces and energy, predicts what changes under an
-intervention, and survives alternate coordinate definitions. If those pieces
-are absent, describe peak order without assigning a unique cause.
-
-This standard still leaves sequence plots valuable for communication. Their role
-is to orient the reader in time and state, then point toward the forces and
-powers that require deeper analysis.
+For coaching or equipment analysis, evaluate the whole declared objective and
+the uncertainty of the change. Do not turn population peak times into commands
+to stop one segment before starting another. State-based timing, such as an event
+near a particular arm--club configuration, is a candidate for testing across
+tempos rather than an established replacement rule.
 
 ## Where the Picture Breaks
 
-The train analogy adds velocities in a straight line and ignores reaction. In a
-swing, walking “inside the train” pushes back on the carriage. Segment rotations
-alter one another through inertia and constraints. Three-dimensional vectors can
-cancel even when scalar angular speeds look large.
+The train analogy explains instantaneous velocity addition. It leaves out the
+reaction forces, changing geometry, elastic motion and control that determine
+a swing trajectory. Increasing every segment's angular speed does not guarantee
+a faster, better-directed clubhead at the event of interest.
 
-The phrase summation of speed can also imply that more speed at every segment is
-always better. A proximal segment may need to slow or reorient so distal motion
-aligns. Peak magnitude, timing, and direction all matter, and the best pattern
-depends on the task.
+The chapter's central distinction is between three questions: how current motions
+combine, when a selected speed reaches its peak, and how forces and work created
+or changed the state. Jacobians answer the first, defined events answer the
+second, and dynamics with explicit power boundaries addresses the third. A strong
+swing explanation connects all three without using one as a substitute for another.
 
-**Go Deeper:** See the monograph's
-[summation-of-speed discussion](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch02_mechanics.qmd),
-[empirical evidence chapter](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch03_evidence.qmd),
-and the review of kinematic heterogeneity [@mcphee2022].
+**Go Deeper:** Read the pinned
+[mechanics chapter](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch02_mechanics.qmd),
+[empirical evidence chapter](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch03_evidence.qmd),
+and [uncertainty study record](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.json).

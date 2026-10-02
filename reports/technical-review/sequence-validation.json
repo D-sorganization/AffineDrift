@@ -1,0 +1,324 @@
+{
+  "issue": 4807,
+  "status": "Lead source and bounded publication acceptance complete; source commit, immutable binding and regular PR pending.",
+  "base_checkpoint": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
+  "full_regression": {
+    "passed": 6598,
+    "failed": 2,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 905.79,
+    "coverage_percent": 79.12,
+    "failures": [
+      "tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current",
+      "tests/test_claim_audit_output_boundary.py::test_review_evidence_survives_deployment_pruning"
+    ]
+  },
+  "remediation": {
+    "passed": 48,
+    "seconds": 119.81,
+    "accumulated_coverage_percent": 79.24,
+    "command": "pytest tests/test_sequence_review.py tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py tests/test_proximal_distal_companion_contract.py tests/test_root_hygiene.py --cov --cov-append -o addopts= -q",
+    "scope": "Digest freshness fixed after review; not a repeated full run."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sequence-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 888,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "source_title_count": 655,
+  "render": {
+    "pages": 233,
+    "inspected_final_pages": [3, 53, 54, 55, 56, 57, 58],
+    "inspected_preceding_boundary_pages": [52, 59, 60],
+    "pdf_sha256": "442c7c775f5eab0d5eba648fdc4fb7e2751b1ba54adba73e3d23ae4b6ced177b",
+    "canonical_public_parity": true,
+    "changed_text_pages": [3, 53, 54, 55, 56, 57, 58],
+    "reference_pixel_carry": [
+      {
+        "page": 229,
+        "identical": true,
+        "sha256": "720f94c77ffdd478f8a853e3d39350865289260c62b30595edf6b261578f74eb"
+      },
+      {
+        "page": 230,
+        "identical": true,
+        "sha256": "f7af3e33d643251fd5eef55fbb2ff430eb5054edd32bb3ffefa22f0eb6cabde0"
+      },
+      {
+        "page": 231,
+        "identical": true,
+        "sha256": "e2ebd01cc9bd706a58f6818d8193c99a63d5c06736cde5b619fe5da5eb11aef1"
+      },
+      {
+        "page": 232,
+        "identical": true,
+        "sha256": "d804fbce734004b22b4372abd35c4c1412f0d25e3f4821c4dc8b5a445ef8bb9d"
+      },
+      {
+        "page": 233,
+        "identical": true,
+        "sha256": "3244c8f63a996e38328eefd07c287f770239ad78ed4f1603bb2fb9506881f222"
+      }
+    ]
+  },
+  "browser": {
+    "scope": "Single companion route",
+    "cells": [
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (190 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 190,
+            "first_target": "#references-1"
+          }
+        ]
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (190 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 190,
+            "first_target": "#references-1"
+          }
+        ]
+      }
+    ],
+    "math": [
+      {
+        "width": 390,
+        "total": 67,
+        "rendered": 67,
+        "displays": 5,
+        "errors": 0,
+        "placeholders": 0,
+        "overflow": false
+      },
+      {
+        "width": 1440,
+        "total": 67,
+        "rendered": 67,
+        "displays": 5,
+        "errors": 0,
+        "placeholders": 0,
+        "overflow": false
+      }
+    ],
+    "zoom_opened": true,
+    "zoom_closed": true
+  },
+  "provider": {
+    "scope": "Saved-array reconstruction, no dynamics rollout or human measurement",
+    "provider_files": [
+      {
+        "path": "docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.npz",
+        "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+        "sha256": "b051d567fcf7d0c03060f058887b2342ca46a85e78a3f1e5108d1c469ed6be9d",
+        "matches_previous_saved_bytes": true
+      },
+      {
+        "path": "docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.json",
+        "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+        "sha256": "101b9be2bccf705af9e856364312f797f0c725fab521b0c7357830e9e778715b",
+        "matches_previous_saved_bytes": true
+      },
+      {
+        "path": "docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd",
+        "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+        "sha256": "a55a3c3a1b5e7ea5ab570ca41e5e2465c6987c18d5e3ee88b7ea3bf9715dc83c",
+        "matches_previous_saved_bytes": true
+      }
+    ],
+    "shape": [8, 6, 6],
+    "nondominated_indices": [0, 1, 2, 3, 4, 5, 6, 7],
+    "unique_speed_best_index": 7,
+    "q10_speed_m_s": 4.705878716075947,
+    "objectives": [
+      [
+        -4.270395563164539, 2.3271911722629737, 230.79888484136217,
+        79.72484198727035, 0.5609509280976196
+      ],
+      [
+        -2.423555369031277, 26.485107978188086, 206.2380732734869,
+        82.55079501050974, 0.5018086852918432
+      ],
+      [
+        -4.417288308696056, 1.5761009798390673, 230.90692156887243,
+        80.18840752545964, 0.5754895404764778
+      ],
+      [
+        -4.494814795413739, 9.191959576315648, 185.52401468545455,
+        80.32521591258262, 0.6397943564522101
+      ],
+      [
+        -4.468638845136379, 4.475129394728682, 143.34953130398026,
+        79.23065962557587, 0.6559913332150402
+      ],
+      [
+        -4.317461137009742, 11.134201479836031, 185.20269472160004,
+        80.27268831581348, 0.6008209101813101
+      ],
+      [
+        -4.414448920954138, 5.546876762635463, 207.88798697434436,
+        79.85809151403357, 0.592759579251797
+      ],
+      [
+        -4.705878716075947, 5.4398693254516886, 199.9178014198605,
+        80.61223607135081, 0.5803258551752909
+      ]
+    ]
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_helpers": 4,
+    "earlier_preparation_inventory_read": true,
+    "all_outputs_lead_reviewed": true,
+    "canonical_edits_by_helpers": false
+  },
+  "backlog": {
+    "source_audits_pending": 109,
+    "credit_pending_source_binding": true,
+    "whole_book_consistency_pending": true
+  }
+}

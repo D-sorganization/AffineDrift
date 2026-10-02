@@ -235,19 +235,19 @@ def make_constraint_reaction() -> None:
 def make_sequence_overlap() -> None:
     time = np.linspace(0, 1, 400)
     fig, axis = plt.subplots(figsize=(10, 5))
-    for center, width, height, color, label in (
-        (0.36, 0.16, 1.0, GRAY, "Pelvis"),
-        (0.48, 0.15, 1.15, BLUE, "Trunk"),
-        (0.61, 0.13, 1.3, GREEN, "Arm / Hands"),
-        (0.78, 0.11, 1.7, ORANGE, "Club"),
+    for center, width, color, style, label in (
+        (0.36, 0.16, GRAY, "-", "Pelvis"),
+        (0.48, 0.15, BLUE, "--", "Trunk"),
+        (0.61, 0.13, GREEN, "-.", "Hand"),
+        (0.78, 0.11, ORANGE, ":", "Club"),
     ):
-        curve = height * np.exp(-0.5 * ((time - center) / width) ** 2)
-        axis.plot(time, curve, lw=3, color=color, label=label)
-    axis.axvspan(0.3, 0.9, color=VIOLET, alpha=0.07, label="Overlapping Coupling")
+        # Chosen curves illustrate order only, with no measured amplitude ratios.
+        curve = np.exp(-0.5 * ((time - center) / width) ** 2)
+        axis.plot(time, curve, lw=3, color=color, linestyle=style, label=label)
     axis.set(
-        xlabel="Normalized Downswing Time",
-        ylabel="Relative Speed",
-        title="Ordered Peaks Do Not Mean Sequentially Isolated Segments",
+        xlabel="Normalized Schematic Time",
+        ylabel="Angular Speed / Own Peak (Normalized)",
+        title="Schematic Peak Ordering: Chosen Curves, Not Measurements",
     )
     axis.legend(frameon=False, ncol=2)
     _save(fig, "fig_companion_sequence_overlap")
