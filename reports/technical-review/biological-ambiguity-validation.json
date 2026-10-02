@@ -1,0 +1,201 @@
+{
+  "issue": 4789,
+  "status": "Parent PR4788 verified and integrated; final-head CI and protected PR4790 delivery pending",
+  "baseline": "2263c094ffe8be7fb7222037dccc8fc7e6935c33",
+  "source_findings": 8,
+  "historical_findings": 121,
+  "corpus_pending": 114,
+  "whole_book_consistency_pending": true,
+  "tdd": {
+    "red_passed": 11,
+    "red_failed": 1,
+    "green_passed": 12
+  },
+  "full_regression": {
+    "passed": 6497,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 442.15,
+    "coverage_percent": 78.96
+  },
+  "editorial_followup": {
+    "passed": 34,
+    "failed": 0
+  },
+  "render": {
+    "pages": 228,
+    "inspected_physical_pages": [
+      175, 176, 177, 178, 179, 180, 181, 182, 183, 223, 224, 225, 226, 227, 228
+    ],
+    "canonical_public_parity": true
+  },
+  "browser": {
+    "profiles": 4,
+    "failed": 0,
+    "serious_critical_axe": 0,
+    "math_containers": 72,
+    "display_equations": 6,
+    "widths": [390, 1440],
+    "math_errors": 0,
+    "placeholders": 0,
+    "overflow": false,
+    "zoom_opens_closes": true,
+    "scope": "single locally rendered route after normal post-build steps",
+    "limitation": "Inline mobile figure labels remain small; text alternatives available."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 874,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "source_title_files": 653,
+  "figure_generator_other_ast_unchanged": true,
+  "agy_flash_helpers_completed": 8,
+  "prior_evidence_unchanged": 141,
+  "prior_evidence_changed": 4,
+  "no_provider_rerun": true,
+  "no_new_human_validation": true,
+  "commands": {
+    "full": "py -3.12 -X utf8 -m pytest --cov",
+    "followup": "py -3.12 -X utf8 -m pytest tests/test_biological_ambiguity_review.py tests/test_proximal_distal_companion_contract.py tests/test_root_hygiene.py -q --no-cov",
+    "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; then --to html",
+    "gates": "py -3.12 -X utf8 docs/development/technical-review/biological_ambiguity_content_gates.py",
+    "static": "PYTHONPATH=. py -3.12 -X utf8 docs/development/technical-review/biological_ambiguity_static.py"
+  },
+  "source_commit": "53023631e01deccb5131b434d715000d6ed70541",
+  "binding": {
+    "prior_findings_preserved": 121,
+    "new_findings": 8,
+    "total_findings": 129,
+    "exact_source_files": {
+      "articles/figures/proximal_distal_companion/fig_companion_biological_redundancy.pdf": "dbfe8ec34a77dc58bc7adb98ba8d473fb6419b5125ce3d56148072e355460fbd",
+      "articles/figures/proximal_distal_companion/fig_companion_biological_redundancy.svg": "347439fb587986d20a19f7e4eba5c67c4dbbb0a28dda19b1babab7368e5bc765",
+      "articles/proximal_distal_companion/chapters/ch25_biological_ambiguity.qmd": "06cc0175f8e9f8dd3a96b8db8d3e5a96902320638e64ed3fbc8d57d49f497aa4",
+      "references/proximal-distal-energy.bib": "908f18f873dd587cbe1e43e0365259184ff521aa9b9400779be836a7eb20b5de",
+      "reports/technical-review/biological-ambiguity-dependency-carry-forward.json": "0105d6d8e70e8863376fce11ce1e745be4ac527949ad76fd7b9458cdc8158315",
+      "reports/technical-review/biological-ambiguity-prior-review.json": "27e823ada028a04fe26906f1eefd1655b2882b32e49df91eddfe93405221f5a8",
+      "reports/technical-review/biological-ambiguity-review.md": "e1a9945338c7d997c1b5b66e807a8f1a4488a1c8fa9823ff6e6583d18d8293ca",
+      "scripts/make_proximal_distal_companion_expanded_figures.py": "ced6e34d9ff8061f524c1bf2782bda23e048938ad8d1e5920359048796397c7d",
+      "tests/test_biological_ambiguity_review.py": "37e9b401fd09d3e0fabb6c3b1d50851334d90fbef910d94f6095b00a4294d1e6"
+    }
+  },
+  "precommit_followup": {
+    "passed": 54,
+    "failed": 0
+  },
+  "delegation_followup": "Eighth Flash helper drafted PR prose; lead rejected its false claim that PR4788 was already merged.",
+  "binding_followup": {
+    "passed": 50,
+    "failed": 0
+  },
+  "parent_integration": {
+    "head": "9e752014d6679549805778ca3d9b6a10f379e9c0",
+    "pr": 4788,
+    "scientific_files_unchanged": true,
+    "pr4785_receipt": "reports/technical-review/system-boundary-remote-main-receipt.json"
+  },
+  "pr": 4790,
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4790",
+  "parent_delivery": {
+    "pr": 4788,
+    "merge_commit": "8bead85237ca8e80444f36bee510a22bd5dac141",
+    "ci_run": 36961840257,
+    "verified_changed_paths": 18,
+    "parent_tree_equals_head": true,
+    "scientific_files_unchanged": true,
+    "receipt": "reports/technical-review/open-evidence-remote-main-receipt.json"
+  }
+}
