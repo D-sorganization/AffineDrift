@@ -1,3 +1,24 @@
+# 404 Page and Empty States Enhancement — #4495
+
+- **Issue:** #4495 (`[WEB-01.10] Make the 404 Page and Empty States Useful`), epic #4496.
+- **Branch:** `fix/web-01-10-404-useful-4495`, worktree at `c:\Users\diete\Repositories\_worktrees\AffineDrift-4495`.
+- **Status:** Complete, verified, and ready for PR.
+- **Changes:**
+  - `404.qmd`: Updated navigation links to include Start Here (`/resources/learning-paths.html`), the Library (`/books/index.html`), Article Index, key textbooks, and Home.
+  - `404.qmd`: Added interactive search trigger and keyboard shortcut hint (`/`) linking `#quarto-search`.
+  - `404.qmd`: Verified contact reporting email `dieterolson@AffineDrift.com` with link to `pages/contact.html`.
+  - `tests/test_404_page.py`: Added 6 unit tests covering metadata conformance, Start Here link, Library link, search trigger, contact email matching `pages/contact.qmd`, and referential disk integrity of all destination routes.
+  - `SPEC.md`: Added change log row for #4495.
+- **Verification:**
+  - `pytest tests/test_404_page.py` (6 passed in 1.27s).
+  - `ruff check tests/test_404_page.py` passed.
+  - `black --check tests/test_404_page.py` passed.
+  - `mypy tests/test_404_page.py` passed.
+  - `python scripts/check_spec_changelog.py` passed.
+- **Next step:** Push branch, open PR, enable squash auto-merge.
+
+## Preserved Earlier Checkpoints
+
 # Open-Evidence Review Current State — #4786
 
 - PR #4785 is verified on remote main at 0bcc9f8663ea10d3c2a846cb7443472bec69cd3f: CI36956637268 passed and all22changed blobs match. The entire squash tree equals parent head8881a7939. This merge retains all Chapter27 source, PDF, bibliography and finding bytes from2263c094f; only turnover and delivery receipts change. Final-head CI and protected PR4788 delivery remain pending.
