@@ -4217,8 +4217,16 @@ body.quarto-dark .status-pill--planned,
   color: var(--color-accent) !important;
 }
 
-:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.listing-description, .listing-author, .listing-date) {
-  color: var(--text-muted) !important;
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.listing-description, .listing-description *, .delink.listing-description, .delink.listing-description *, .listing-author, .listing-date) {
+  color: var(--text-secondary) !important;
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.listing-description a:hover, .delink.listing-description a:hover, .listing-description a:focus, .delink.listing-description a:focus) {
+  color: var(--color-accent) !important;
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.metrics-heading, .metrics-breakdown-title, #related-articles h3, .timeline-year, .search-result-title) {
+  color: var(--text-primary) !important;
 }
 
 :is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.quarto-listing .listing-category, .listing-categories .listing-category, .listing-category) {
