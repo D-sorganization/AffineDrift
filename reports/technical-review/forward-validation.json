@@ -1,9 +1,9 @@
 {
   "issue": 4817,
   "base_checkpoint": "33afa9d25b7f61113ff4a0928d2cef2c2b1da76e",
-  "status": "Lead accepted Chapter18 and bounded publication; source commit and binding pending",
-  "source_commit": null,
-  "bound": false,
+  "status": "Accepted source committed; eight findings bound and post-binding checks pass; push and protected delivery pending",
+  "source_commit": "e4540364c6a21b66df55eb2959beef4e5eed9a2d",
+  "bound": true,
   "remote_main_verified": false,
   "static": [
     {
@@ -220,5 +220,21 @@
   "provider_dynamics_rerun": false,
   "human_study": false,
   "corpus_pending_before_binding": 105,
-  "title_checks": 655
+  "title_checks": 655,
+  "post_binding_tests": {
+    "passed": 40,
+    "failed": 0,
+    "seconds": 34.57
+  },
+  "corpus_pending": 104,
+  "companion_findings_total": 201,
+  "binding_note": "Initial exact-byte check stopped on SVG CRLF before mutation; committed LF bytes copied after semantic newline equality assertion; retry succeeded.",
+  "commands": {
+    "full_regression": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "remediation": "py -3.12 -X utf8 -m pytest tests/test_forward_model_review.py tests/test_claim_audit_inventory.py tests/test_claim_audit_output_boundary.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_root_hygiene.py --cov --cov-append --cov-report=xml --timeout=60",
+    "post_binding": "Same seven test modules without coverage options; --timeout=60",
+    "renders": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; followed sequentially by --to html",
+    "static_and_gates": "Exact command arguments stored in static/content_gates entries and local forward_static.py/forward_content_gates.py",
+    "titles": "py -3.12 -X utf8 scripts/check_title_case.py"
+  }
 }

@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/forward-model-rigor-4817
 - **Paths:** articles/proximal_distal_companion/chapters/ch18_forward_model.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_forward_model_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline 33afa9d25b7f61113ff4a0928d2cef2c2b1da76e; five focused passes after one RED failure;234pagePDF/HTML/56math/4browserchecks,12gates,892filequality; broad6624pass/4metadata-hygienefail,40remediationpass,79.35%accumulatedcoverage; source accepted SELF.
-- **Summary:** Correct fixed-mode KKT assumptions, multiplier units, projection/work ledgers, moving-boundary compatibility, input memory, counterfactuals, evidence scope and coordinate/contact comparisons. Six successful Flash outputs adjudicated. Source accepted; binding and corpus credit pending;193 prior companion findings preserved.
-- **Next step:** Commit accepted Chapter18 source and bind its eight findings to that actual SHA.
+- **Last verified:** 2026-10-02 baseline 33afa9d25b7f61113ff4a0928d2cef2c2b1da76e; five focused passes after one RED failure;234pagePDF/HTML/56math/4browserchecks,12gates,892filequality; broad6624pass/4metadata-hygienefail,40remediationpass,79.35%accumulatedcoverage; source e4540364c6a21b66df55eb2959beef4e5eed9a2d committed; eight findings bound;40postbinding checks pass.
+- **Summary:** Correct fixed-mode KKT assumptions, multiplier units, projection/work ledgers, moving-boundary compatibility, input memory, counterfactuals, evidence scope and coordinate/contact comparisons. Six successful Flash outputs adjudicated. Eight findings bound to the accepted source;193 prior companion findings preserved,201total;104 source audits and whole-book consistency remain.
+- **Next step:** Push accepted source and binding checkpoints with normal hooks.
 
 ### DL-#4815 · Lagrangian Mechanics and Counterfactual Reference
 
