@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/biological-ambiguity-rigor-4789
 - **Paths:** articles/proximal_distal_companion/chapters/ch25_biological_ambiguity.qmd, tests/test_biological_ambiguity_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
-- **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. Preserve 121 prior findings; seven agy Flash helpers reviewed.
-- **Next step:** Commit source, bind accepted findings, register regular PR and verify protected delivery after predecessors.
+- **Last verified:** 2026-10-02; source53023631e; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
+- **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. 121 prior findings preserved; eight new findings bound; eight agy Flash helpers reviewed.
+- **Next step:** Register regular PR and verify protected delivery after predecessors; 114 corpus audits remain.
 
 ### DL-#4786 — Open Evidence and Reproduction
 
