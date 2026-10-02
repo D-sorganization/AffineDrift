@@ -224,11 +224,12 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-01 | #4772 | Correct measured-golfer study attribution, sensor/model inference, repeated-swing uncertainty and human-validation boundaries in Chapter 24; replace evidence pyramid (#4771). |
 | 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
 | 2026-10-01 | #4538 | Add devcontainer configuration for reader run environment, allow .devcontainer in root hygiene, and add verification tests. |
 | 2026-10-01 | #4778 | Standardize equation numbering to Quarto syntax and add test suite coverage in test_equation_numbering.py (#4580). |
-| 2026-10-01 | #4769 | Clarify speed, body energy, joint/segment power and shaft storage boundaries; add manufactured counterexamples and normalize the companion figure. |
 | 2026-10-01 | #4773 | Record controllability-drift-ratio redirect in redirects.yml to restore URL stability check in deploy workflow (#4688). |
+| 2026-10-01 | #4769 | Clarify speed, body energy, joint/segment power and shaft storage boundaries; add manufactured counterexamples and normalize the companion figure. |
 | 2026-10-01 | #4761 | Refresh content inventory and ownership map snapshot for 207 pages and replace governance vocabulary in companion Chapter 16 (#4602). |
 | 2026-10-01 | #4766 | Audit all 168 catalog references plus Gazette entry; correct patent mechanisms, attribution, dates and inference limits; preserve source-hashed dispositions and render revised book. |
 | 2026-10-01 | #4765 | Correct moment-arm geometry, wrench–power and Jacobian mappings, singularity/inertia interpretation and matched scalar allocation evidence in Chapter 4. |
