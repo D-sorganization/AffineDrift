@@ -12,8 +12,7 @@
 }
 
 :is(#quarto-header, #quarto-code-tools-menu, .quarto-title-block, .dropdown) .dropdown-item,
-.dropdown-item,
-#quarto-code-tools-source {
+.dropdown-item {
   color: var(--text-main);
   padding: 0.6rem 1.25rem;
   font-size: var(--fs-small);
@@ -21,8 +20,7 @@
 }
 
 :is(#quarto-header, #quarto-code-tools-menu, .quarto-title-block, .dropdown) .dropdown-item:hover,
-.dropdown-item:hover,
-#quarto-code-tools-source:hover {
+.dropdown-item:hover {
   background: var(--light-blue);
   color: var(--color-link-hover);
 }
@@ -123,8 +121,12 @@
   color: #fff !important;
 }
 
-/* Breadcrumb and links inside dark title-block-header (WEB-09.3 #4563) */
+/* Breadcrumb, code tools, and links inside dark title-block-header (WEB-09.3 #4563) */
 #title-block-header a,
+#title-block-header button,
+#title-block-header .btn,
+#title-block-header .code-tools-button,
+#title-block-header #quarto-code-tools-source,
 #title-block-header .quarto-page-breadcrumbs a,
 #title-block-header .breadcrumb-item,
 #title-block-header .breadcrumb-item a,
@@ -132,9 +134,31 @@
   color: var(--text-inverse) !important;
 }
 
+#title-block-header :is(button, .btn, .code-tools-button, #quarto-code-tools-source) {
+  border-color: rgb(255 255 255 / 0.4);
+  background-color: rgb(255 255 255 / 0.1);
+}
+
 #title-block-header a:hover,
 #title-block-header a:focus-visible,
 #title-block-header .quarto-page-breadcrumbs a:hover,
 #title-block-header .quarto-page-breadcrumbs a:focus-visible {
   color: var(--color-accent, #8bd3ff) !important;
+}
+
+#title-block-header :is(button, .btn, .code-tools-button, #quarto-code-tools-source):hover,
+#title-block-header :is(button, .btn, .code-tools-button, #quarto-code-tools-source):focus-visible {
+  color: #fff !important;
+  background-color: rgb(255 255 255 / 0.2);
+  border-color: #fff;
+}
+
+/* Ensure dropdown menu inside title-block-header keeps readable text on menu background */
+#title-block-header .dropdown-menu :is(a, .dropdown-item) {
+  color: var(--text-main) !important;
+}
+
+#title-block-header .dropdown-menu :is(a, .dropdown-item):hover,
+#title-block-header .dropdown-menu :is(a, .dropdown-item):focus-visible {
+  color: var(--color-link-hover) !important;
 }
