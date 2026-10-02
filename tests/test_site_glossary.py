@@ -16,25 +16,16 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Any
 
 import pytest
-import yaml
+
+from src.tools.site_glossary import MINIMUM_TERMS, load_glossary
 
 ROOT = Path(__file__).resolve().parents[1]
 GLOSSARY_YAML = ROOT / "data" / "glossary.yml"
 GLOSSARY_QMD = ROOT / "pages" / "glossary.qmd"
 GLOSSARY_FILTER = ROOT / "scripts" / "filters" / "term-tooltip.lua"
 BOOK_GLOSSARY_QMD = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "glossary.qmd"
-MINIMUM_TERMS = 60
-
-
-def load_glossary() -> dict[str, dict[str, Any]]:
-    """Load and parse data/glossary.yml."""
-    assert GLOSSARY_YAML.exists(), f"Missing glossary data file: {GLOSSARY_YAML}"
-    data = yaml.safe_load(GLOSSARY_YAML.read_text(encoding="utf-8"))
-    assert isinstance(data, dict), "data/glossary.yml must be a mapping of term keys to definitions"
-    return data
 
 
 def test_glossary_data_minimum_count_and_schema() -> None:
