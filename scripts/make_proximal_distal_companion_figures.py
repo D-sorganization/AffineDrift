@@ -328,11 +328,13 @@ def make_counterfactual_fork() -> tuple[Path, Path]:
     fig, axis = plt.subplots(figsize=(10, 5))
     axis.set(xlim=(0, 10), ylim=(0, 6))
     axis.axis("off")
-    _box(axis, (0.6, 2.6), "Same State", INK, 1.8)
-    _arrow(axis, (2.4, 3.0), (4.0, 4.4), BLUE, "Keep Input")
-    _arrow(axis, (2.4, 3.0), (4.0, 1.6), RED, "Remove Input")
+    _box(axis, (0.6, 2.6), "Complete\nState", INK, 1.8)
+    _arrow(axis, (2.4, 3.0), (4.0, 4.4), BLUE)
+    _arrow(axis, (2.4, 3.0), (4.0, 1.6), RED)
+    axis.text(2.9, 4.25, "Keep Input", ha="center", color=BLUE, fontweight="bold")
+    axis.text(2.8, 1.3, "Change Input", ha="center", color=RED, fontweight="bold")
     _box(axis, (4.0, 4.0), "Pointwise\nAcceleration", BLUE, 2.1)
-    _box(axis, (4.0, 1.2), "Pointwise\nDrift", RED, 2.1)
+    _box(axis, (4.0, 1.2), "Changed-Input\nAcceleration", RED, 2.1)
     _arrow(axis, (6.1, 4.4), (7.5, 4.4), BLUE)
     _arrow(axis, (6.1, 1.6), (7.5, 1.6), RED)
     _box(axis, (7.5, 4.0), "Forward\nTrajectory", BLUE, 1.8)
@@ -349,7 +351,7 @@ def make_counterfactual_fork() -> tuple[Path, Path]:
     axis.text(
         5,
         0.35,
-        "Pointwise: what is the acceleration now?  Forward: where does the changed system go?",
+        "Conceptual Input Comparison: Pointwise Response and Evolving Futures",
         ha="center",
         color=GRAY,
     )

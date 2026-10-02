@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4824 | Distinguish complete-state counterfactual interventions, nonlinear finite effects, geometry controls, archived numerical evidence and human inference in Chapter 11; verify worked examples and publication. |
 | 2026-10-02 | #4820 | Qualify constrained forward-model assumptions, state memory and work accounting in Chapter 18; connect wrench, energy, causal and evidence reasoning in Chapter 28 and correct both schematic figures. |
 | 2026-10-02 | #4818 | Correct Lagrangian energy and force accounting, flexible inertia, input levels, constrained reactions, moving-boundary work and counterfactual signs; verify nine examples and repair article panel and mobile title presentation. |
 | 2026-10-02 | #4814 | Correct Chapter 22 event-state definitions, actuator history, finite-study scope, phase-work accounting and prospective causal timing; verify manufactured examples and regenerate the schematic threshold figure. |
