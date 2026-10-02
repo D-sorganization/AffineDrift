@@ -18,9 +18,22 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4771 — Measured Golfer Evidence
+### DL-#4774 — Moving-Base Mechanics
 
 - **State:** in_review
+- **Owner:** codex
+- **PR:** #4782
+- **Issue:** #4774
+- **Branch:** fix/moving-base-rigor-4774
+- **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-02; 0eec41749 / 318f9f9da; 72 focused checks and publication pass. Full-run failure/follow-up scope: reports/technical-review/moving-base-validation.json.
+- **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
+- **Next step:** Verify final-head CI, protected merge and remote-main parity.
+
+### DL-#4771 — Measured Golfer Evidence
+
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4772 (regular, attached)
 - **Issue:** #4771; epic #4009 / corpus #4021
@@ -29,8 +42,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-01
 - **Why:** Wrong systematic-review attribution and overbroad instrument, EMG, statistical and validation claims.
 - **Change:** Full Chapter 24 revision, targeted figure, four bibliography additions, manufactured covariance checks and explicit primary-source reading scopes. Nine findings bind eight exact Git blobs at f565c72885e73d9e463debc336322691f46ea11a; 87 historical findings remain intact. Chapter audit credited; 118 corpus sources plus whole-book consistency remain.
-- **Last verified:** 2026-10-01; 6,389 full-regression passes, 29 skips and 187 configured deselections; 48 affected follow-up checks after final author wording, 12 publication gates and 67 post-binding checks. Final 223-page PDF/HTML and four browser profiles verified. Source and binding cb9e634d5 are pushed. See measured-golfers-validation.json for exact scope. Predecessor4770 verified on remote main099dc2cbf; ancestry-only integration preserves all reviewed scientific content and evidence bindings;61 focused integration checks pass. Whole-log validation retains71 inherited findings, with none introduced or in the eight updated entries.
-- **Next step:** Verify final-head CI and protected remote-main delivery for PR #4772.
+- **Last verified:** 2026-10-02; PR #4772 merged a4cf9b56c; final e58 CI 36947184666 passed; ancestry and all 22 reviewed/delivered Git blobs match.
+- **Next step:** None; delivered and verified on remote main.
 
 ### DL-#4769 · Speed, Energy, and Power Review
 
