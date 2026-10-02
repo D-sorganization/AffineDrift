@@ -1849,7 +1849,7 @@ h3:hover .anchor-link,
 }
 
 .contact-form-container {
-  background: var(--pure-white);
+  background: var(--bg-primary);
 
   /* Ensure contrast */
   padding: 2rem;
@@ -3071,6 +3071,25 @@ body.quarto-dark .navbar .nav-link {
 [data-bs-theme="dark"] .nav-footer p {
   color: var(--text-secondary);
 }
+
+/* Quarto dark theme overrides (WEB-09.9 #4787) */
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(#quarto-appendix, #quarto-appendix.default) {
+  background: transparent !important;
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(table, table.table, .page-columns .column-page-left table) {
+  background: transparent !important;
+  color: var(--text-main);
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(th, td) {
+  color: var(--text-main);
+}
+
+:is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(details > summary, summary) {
+  color: var(--text-secondary);
+}
+
 
 /* Ensure :focus-visible is visible (no outline: none) */
 button:focus,
