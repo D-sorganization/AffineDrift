@@ -1,6 +1,6 @@
 # Chapter 11 Review Progress
 
-Issue #4821; baseline dc1884f2084a1caaa1b135201e751e330afe24e2. Work in progress, not accepted or bound. The103pending source audits and209prior findings are unchanged.
+Issue #4821; baseline dc1884f2084a1caaa1b135201e751e330afe24e2. Source and bounded publication lead-accepted in SELF; exact-source binding pending. The103pending source audits and209prior findings are unchanged.
 
 ## Technical Decisions
 
@@ -36,3 +36,7 @@ Editorial helper usefully clarified the analogy, subtraction order, work-extrema
 Four manufactured/provenance tests pass; changed Python Ruff and Black100 pass. PDF and HTML renders succeed. Initial reviewed physical75-82pages expose an isolated final-links page; closing prose tightened. Arrow-label overlap corrected and standalone finalfigure visually confirmed. Final PDF/HTML layout renders pass; identical canonical/public238pagePDFs, changed physical75-81pages and boundary82inspected. Remaining chapter text and earlier body text match baseline (later footer page numbers shift byone). All53math expressions/two displays render at390/1440 with no errors/placeholders/overflow. Four light/dark mobile/desktop route checks pass with0serious/critical axe findings. Image zoom opens/closes; the mobile table scrolls horizontally to expose all columns. Initial CLI navigation had two refused resources in other chapters; fresh chapter image/pinnedlinks and route verification pass. All12publication gates,655titles and Python static checks on894files pass. Initial static wrapper needed repository PYTHONPATH; this was a runner invocation correction. Initial preview sanitizer called the directory helper with text; corrected to the documented Path API. No product gate was weakened. The29affected checks had27passes and2root-hygiene failures from browser-verifier screenshots under root artifacts; preserved those under QA and all6hygiene checks pass. Trust digests refreshed only for the changed source, PDF and shared generator; allprior scientific fields/verification commits and other routes remain unchanged. A final29-check affected rerun passes after the scratch cleanup and digest refresh. Broad regression, corpus binding, final accepted-source freeze and remote delivery remain pending. No scientific acceptance yet.
 
 Preserve raw QA in this directory and earlier synthesis worktree. Complete validation, update this note with actual outcomes, record final source acceptance separately, then bind only Chapter11 while preserving prior scientific fields and verification commits. PR4820 remains inCI; verify its actual delivery independently.
+
+## Acceptance Checkpoint
+
+Full regression: 6,636 passed, 29 skipped, 187 deselected; 79.32% coverage. Final contents and chapter boundaries visually accepted. Six Flash helpers adjudicated. Frozen scientific decisions, prior snapshot, carry-forward and provider evidence are in reports/technical-review/counterfactual-*. Commit this acceptance, then bind its exact SHA. No corpus credit before binding. Future ideomotor inventory and reproduced example defect remain preparation only, without issue or source credit.

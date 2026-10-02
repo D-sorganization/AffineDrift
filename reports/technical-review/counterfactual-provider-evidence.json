@@ -1,9 +1,4 @@
 {
-  "issue": 4821,
-  "status": "Lead-accepted source and publication; exact-source binding pending",
-  "baseline": "dc1884f2084a1caaa1b135201e751e330afe24e2",
-  "source_audits_pending": 103,
-  "companion_findings_unchanged": 209,
   "provider_revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
   "data_snapshots": [
     {
@@ -122,65 +117,77 @@
       }
     ]
   },
-  "preservation": {
-    "prior_inventory_only_three_declared_dependency_digests_changed": true,
-    "changed_digest_count": 143,
-    "all_prior_scientific_fields_and_verification_commits_unchanged": true,
-    "other_routes_unchanged": true,
-    "other_generator_ast_equal": true,
-    "prior_body_pages_7_to_74_exact_text_equal": true,
-    "after_ch11_tail_text_equal_excluding_footer_pages": true,
-    "old_ch12_physical_page": 81,
-    "new_ch12_physical_page": 82,
-    "canonical_public_pdf_equal": true,
-    "pdf_sha256": "446cc2126c7113ea9f240b59a06615dfdfbc4542ad1846479e54da58a57a5d5b"
-  },
-  "validation": {
-    "focused_tests_passed": 4,
-    "affected_tests_passed": 27,
-    "affected_tests_failed": 2,
-    "failure_reason": "Browser verifier root artifacts directory; raw screenshots preserved under QA",
-    "hygiene_remediation_passed": 6,
-    "publication_gates": 12,
-    "title_sources": 655,
-    "python_files_quality_checked": 894,
-    "static_checks": ["Ruff", "Black100", "configured mypy"],
-    "pdf_pages": 238,
-    "canonical_public_pdf_equal": true,
-    "math": {
-      "expressions": 53,
-      "displays": 2,
-      "widths": [390, 1440],
-      "errors": 0,
-      "placeholders": 0,
-      "page_overflow": false
-    },
-    "browser_cells_passed": 4,
-    "serious_critical_axe": 0,
-    "image_zoom_open_close": true,
-    "mobile_table_horizontal_scroll": true,
-    "full_regression_pending": false,
-    "binding_pending": true,
-    "checkpoint_affected_tests_passed": 29,
-    "full_regression": {
-      "passed": 6636,
-      "skipped": 29,
-      "deselected": 187,
-      "warnings": 60,
-      "coverage_percent": 79.32,
-      "exit_code": 0
-    },
-    "final_contents_and_boundaries_inspected": true
-  },
   "scope_limits": [
     "No provider dynamics or provider test suite execution",
     "No NPZ reconstruction",
     "No human study",
     "No whole-book scientific acceptance"
   ],
-  "helper_count": 6,
-  "review_notes": "docs/development/technical-review/counterfactual-progress.md",
-  "parent_pr": 4820,
-  "parent_delivery_verified": false,
-  "frozen_review": "reports/technical-review/counterfactual-review.md"
+  "issue": 4821,
+  "reading_scope": {
+    "full": ["three linked provider chapters", "counterfactual_ensemble.py"],
+    "selected": [
+      "run_counterfactual_ensemble.py variant,selected-trace and build_outputs functions",
+      "spatial_forward_study.py contact/driver/wrench/update,negative-duration,summarize_trace",
+      "saved JSON design/summary/limits and96baseline/12variant arithmetic"
+    ],
+    "checksum_only": "Other stored dependency files unless explicitly listed above"
+  },
+  "spatial_saved_evidence": {
+    "interventions": {
+      "coincident_grips": "same achieved forces transported through club reference",
+      "reversed_geometry": "same achieved forces with both moment arms negated",
+      "same_state_driver_killswitch_s": 0.18
+    },
+    "mechanism_tests": {
+      "coincident_grip_couple_max_nm": 0.0,
+      "direct_club_force_or_torque_command": "none",
+      "reversed_geometry_sign_residual_max_nm": 9.159339953157541e-16,
+      "same_state_killswitch_minimum_couple_nm": -0.4092851000343657,
+      "same_state_killswitch_negative_duration_s": 0.0375,
+      "same_state_prebranch_max_state_difference": 0.0
+    },
+    "claim_boundary": {
+      "equipment_calibration": "untested",
+      "human_strategy": "untested",
+      "muscle_mechanism": "untested",
+      "physiological_effort": "untested"
+    },
+    "limitations": [
+      "The two hand bodies are finite-mass translational carriages, not anatomical arms.",
+      "The grounded driver is a declared reference-force pathway, not muscle activation.",
+      "The Kelvin-Voigt interface is a reduced grip law, not measured tissue calibration.",
+      "The branches share one contact law and state update while native libraries independently supply kinematics, mass, bias, gravity, spatial-force mapping, and continuous-time acceleration.",
+      "Neither native contact solver nor native integrator is exercised in this transport study.",
+      "The experiment does not use participant data and cannot support a coaching prescription."
+    ]
+  },
+  "readiness": {
+    "schema_version": "experimental-falsification-readiness-v1",
+    "protocol_id": "proximal-distal-human-falsification-v1",
+    "readiness": {
+      "status": "synthetic_dry_run_only",
+      "pipeline_ready": true,
+      "claims_evaluable": false,
+      "participant_count": 2,
+      "held_out_count": 1,
+      "limitations": [
+        "Synthetic records qualify schema and processing readiness only.",
+        "No human, physiological, skill, or causal claim may be evaluated."
+      ]
+    },
+    "human_data_evaluation": "not_executed",
+    "claim_status": {
+      "EXP-H1": "untested_no_governed_human_data",
+      "EXP-H2": "untested_no_governed_human_data",
+      "EXP-H3": "untested_no_governed_human_data",
+      "EXP-H4": "untested_no_governed_human_data"
+    },
+    "source_sha256": {
+      "docs/research/proximal_distal_energy_transfer/data/experimental_protocol_v1.json": "c3af53b966083702eab7ca99a39e5e99d35dfbf7e7a8ae3ff8261a1945bc0834",
+      "docs/research/proximal_distal_energy_transfer/data/experimental_protocol_dry_run.json": "6b193ae754d54150e158fc559a045eee5dd497a64e0a393e58e30e1165f12c93"
+    },
+    "interpretation_boundary": "This artifact qualifies schema, split, modality, provenance, and fail-closed behavior only; it contains no human measurements."
+  },
+  "historical_hash_scope": "Historical file matches do not establish one reproduced historical whole dependency closure; numerical results remain archived saved-output evidence."
 }

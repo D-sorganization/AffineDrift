@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/counterfactual-rigor-4821
 - **Paths:** articles/proximal_distal_companion/chapters/ch11_counterfactual_scissors.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_counterfactual_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline dc1884f2084a1caaa1b135201e751e330afe24e2; four focused passes;12gates/655titles/894filequality;238pagePDF,53math,4browsercells pass;initial27affected passes plus2scratch-hygiene failures remediated with6passes; final29affected checks pass.
-- **Summary:** Eight issue findings distinguish complete-state intervention, nonlinear finite effects, geometry controls, strategy comparisons and human inference. Supplied-text Flash helpers support data arithmetic and test drafting; four helper outputs lead-adjudicated; publication validated, broad regression and acceptance/binding pending. No audit credit yet;103 source audits plus whole-book consistency remain.
-- **Next step:** Run the full regression before final source acceptance and corpus binding.
+- **Last verified:** 2026-10-02 full regression6636pass/29skip/187deselected/79.32%coverage; finalPDFcontents/boundaries pass; source accepted in SELF. Previous checks: 2026-10-02 baseline dc1884f2084a1caaa1b135201e751e330afe24e2; four focused passes;12gates/655titles/894filequality;238pagePDF,53math,4browsercells pass;initial27affected passes plus2scratch-hygiene failures remediated with6passes; final29affected checks pass.
+- **Summary:** Eight issue findings distinguish complete-state intervention, nonlinear finite effects, geometry controls, strategy comparisons and human inference. Supplied-text Flash helpers support data arithmetic and test drafting; six helper outputs lead-adjudicated; source and publication accepted, binding pending. No audit credit yet;103 source audits plus whole-book consistency remain.
+- **Next step:** Bind the eight accepted findings to the exact accepted-source commit.
 
 ### DL-#4819 · Practical Synthesis Evidence and Causal Comparisons
 
