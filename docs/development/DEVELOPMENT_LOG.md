@@ -28,7 +28,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/system-boundary-rigor-4783
 - **Paths:** articles/proximal_distal_companion/chapters/ch02_choose_the_system.qmd, tests/test_system_boundary_review.py, scripts/make_proximal_distal_companion_expanded_figures.py, references/proximal-distal-energy.bib
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run has two stale-digest failures; refreshed evidence passes 71 checks; static gates pass.
+- **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run had two stale-digest failures; 71 follow-up checks pass; CI SVG CRLF mismatch corrected to bound Git LF bytes; 25 evidence checks pass.
 - **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
 - **Next step:** Verify final-head CI, predecessor delivery, protected merge and exact remote-main blobs.
 
