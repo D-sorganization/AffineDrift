@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4813 · Timing, State Events, and Actuator History
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** pending; parent #4812 verified on remote main
+- **PR:** #4814 (regular); parent #4812 verified on remote main
 - **Issue:** #4813; epic #4009 / corpus #4021 / companion #4059
 - **Branch:** fix/timing-rigor-4813
 - **Paths:** articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_timing_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; baseline 80b00bf271fcfd6ef33cd979350fa122f0d24bca; seven focused passes after two RED failures,655titles,12publication gates,Ruff,Black100,mypy,890filequality; final233pagePDF/HTML/parity/boundedvisual review;33math/4displays;lightbrowserpass,dark186inheritedcontrast;full6614pass/29skip/79.34%coverage.
 - **Summary:** Review complete state versus scalar events, transverse/grazing timing sensitivity, actuator preload and rise time, bounded provider evidence, phase-work Jacobians, prospective information and causal timing experiments. Seven Flash helper outputs adjudicated. Eight decisions bound to source 8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9;185prior retained,193total;106sourceaudits pluswholebookreview remain.
-- **Next step:** Source and binding pushed; reconcile verified parent squash, open a regular PR, then protected delivery.
+- **Next step:** Push PR4814 registration checkpoint, remove temporary integration hold and arm guarded auto-merge. Verify exact-head protected delivery and remote-main bytes.
 
 
 
