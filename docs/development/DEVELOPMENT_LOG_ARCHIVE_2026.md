@@ -52,4 +52,3 @@
 - **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run had two stale-digest failures; 71 follow-up checks pass; CI SVG CRLF mismatch corrected to bound Git LF bytes; 25 evidence checks pass.
 - **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
 - **Next step:** None; PR4785 delivered at0bcc9f8663ea10d3c2a846cb7443472bec69cd3f, CI36956637268 and22changed Git blobs verified.
-

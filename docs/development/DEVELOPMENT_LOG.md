@@ -21,9 +21,9 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4789 — Biological Ambiguity and Load Inference
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** Pending source checkpoint
+- **PR:** #4790 (regular, attached)
 - **Issue:** #4789; epic #4009 / corpus #4021
 - **Branch:** fix/biological-ambiguity-rigor-4789
 - **Paths:** articles/proximal_distal_companion/chapters/ch25_biological_ambiguity.qmd, tests/test_biological_ambiguity_review.py
