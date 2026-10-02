@@ -23,14 +23,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** pending regular follow-up; #4800 delivered parent only
+- **PR:** #4804 (regular, attached); #4800 delivered parent only
 - **Issue:** #4799; epic #4009 / corpus #4021
 - **Branch:** fix/model-ladder-delivery-4799
 - **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
 - **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** Create regular Chapter19 follow-up PR, check final-head CI and guarded delivery. Parent4800 verified separately; current receipt model-ladder-delivery.json.
+- **Next step:** PR4804 open with guarded squash auto-merge armed; integration6670fff3a pushed. Freeze scope, inspect final-head CI, then verify remote-main delivery. Parent4800 verified separately; current receipt model-ladder-delivery.json.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
