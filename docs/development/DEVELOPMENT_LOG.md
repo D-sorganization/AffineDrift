@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4799 — Model Comparison and Evidence Boundaries
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4800 (regular, consolidated)
 - **Issue:** #4799; epic #4009 / corpus #4021
-- **Branch:** fix/model-ladder-rigor-4799
+- **Branch:** feat/technical-review-consolidated-20261002
 - **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; source 8e4660f58b6d427c6f3bd16e26890f033973f86e; binding 4daa2b58f9c8738d2f7ec66d30478259118d2d38; 6555 full regression passes; 48 final affected passes; 12 publication gates; 232-page PDF/HTML accepted with inherited dark-theme contrast limitation recorded.
+- **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
 - **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** Parent #4800 all-route accessibility CI remains pending; verify protected delivery before opening child PR under 93% runner utilization. Source and binding are pushed.
+- **Next step:** Push validated three-chapter integration, arm guarded auto-merge, freeze scope, verify final-head CI and actual remote-main delivery before closing originals. No separate Chapter19 PR.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
@@ -55,9 +55,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** feat/technical-review-consolidated-20261002
 - **Paths:** articles/proximal_distal_companion/chapters/ch26_experiment_can_say_no.qmd, tests/test_experiment_design_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; checkpoint4ef7a317e; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
-- **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;112corpus audits remain.
-- **Next step:** Verify final-head CI and guarded protected delivery of PR4800.
+- **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
+- **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;111corpus audits remain after Chapter19.
+- **Next step:** Push validated three-chapter integration, arm guarded auto-merge, freeze scope, verify final-head CI and actual remote-main delivery before closing originals. No separate Chapter19 PR.
 
 ### DL-#4791 — Constraint Reactions and Identifiability
 
@@ -68,9 +68,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** feat/technical-review-consolidated-20261002
 - **Paths:** articles/proximal_distal_companion/chapters/ch06_constraints_push_back.qmd, tests/test_constraint_reaction_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; checkpoint4ef7a317e; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
-- **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;113corpus audits remain.
-- **Next step:** Verify final-head CI and guarded protected delivery of PR4800.
+- **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
+- **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;111corpus audits remain after Chapter19.
+- **Next step:** Push validated three-chapter integration, arm guarded auto-merge, freeze scope, verify final-head CI and actual remote-main delivery before closing originals. No separate Chapter19 PR.
 
 ### DL-#4756 · Complete-State Technical Review
 
