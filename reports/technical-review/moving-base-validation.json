@@ -1,7 +1,7 @@
 {
   "issue": 4774,
   "source": "articles/proximal_distal_companion/chapters/ch17_moving_base.qmd",
-  "status": "final source and publication validated; exact committed-source binding and delivery pending",
+  "status": "Chapter17 audit bound; regular PR4782 registered; protected delivery pending",
   "tests": {
     "red_numerical_pass": 14,
     "red_editorial_fail": 3,
@@ -126,19 +126,22 @@
   "delegation": {
     "model": "gemini-3.8-flash-high",
     "completed_jobs": 12,
-    "method": "agy CLI supplied-text sandbox tasks; lead-adjudicated"
+    "method": "agy CLI supplied-text sandbox tasks; lead-adjudicated",
+    "delivery_assistance_jobs": 1,
+    "binding_draft_adjudication": "Rejected recursive digest-key omission and guessed id fallbacks; compare exact finding_id/order and every field except top-level evidence_sha256."
   },
   "historical_findings": 96,
-  "corpus_pending": 118,
+  "corpus_pending": 117,
   "whole_book_consistency_pending": true,
-  "remaining": ["Source binding", "Regular PR and protected delivery"],
+  "remaining": ["Final-head CI and protected delivery"],
   "parent_delivery": {
     "pr": 4772,
-    "head": "4ec429b06a12ebdf05b934248c30a73dfec5ad7d",
-    "ci_run": 36940029128,
+    "head": "2f5bb732b9ae3b746d31c07d47ebf0bce9d35e3f",
+    "ci_run": 36943365974,
     "status": "pending",
     "previous_run": 36937087586,
-    "previous_conclusion": "cancelled after external main integration"
+    "previous_conclusion": "cancelled after external main integration",
+    "superseded_runs": [36937087586, 36940029128]
   },
   "final_followup": {
     "passed": 72,
@@ -146,5 +149,51 @@
     "browser_profiles": 4,
     "axe_serious_critical": 0,
     "scope": "After heading correction; no repeated full run."
+  },
+  "finding_binding": {
+    "new_findings": 8,
+    "historical_findings_preserved": 96,
+    "verification_commit": "0eec41749fa18bf28995de990aff01b98a036493",
+    "exact_git_blob_sha256": {
+      "articles/proximal_distal_companion/chapters/ch17_moving_base.qmd": "79711f78c0488b86ac77e1076fd8ac27b33f031806778eb354ff0ffc79e17ba6",
+      "scripts/make_proximal_distal_companion_expanded_figures.py": "9402769663c4dbfddbd610c3c3b983a545bfb667736a3d8c04f6f20303ea9670",
+      "tests/test_moving_base_review.py": "4c421b2a1c4e80db7bad0176f6c131ccb4dcf3a5069bd442280a6d1527f8ec11",
+      "articles/figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.svg": "6a74e2ef860077bada91332f2bc317664c37d1ffde4cf0812ee6f3cd38432a0a",
+      "articles/figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.pdf": "1bd63a75b5886300eeec97f87cf4573522af4993f7d5b45243c72ed1a5ac44fe",
+      "reports/technical-review/moving-base-review.md": "5336f455d32b132fa40a8f8f2d605ae7d0417395106b0f6471b40e860b008a29",
+      "reports/technical-review/moving-base-prior-review.json": "788a30e40174739a3e3bc20643627b537ffde09d20db53ad1fa71cffe294e4f7",
+      "reports/technical-review/moving-base-dependency-carry-forward.json": "a905ca13a4dff2c7c2bf1ae5b18de7b02a507a4457b10aa432b3e1894771e25a"
+    }
+  },
+  "integration": {
+    "head": "e30a2a97759c1b3f3a31110c15834d59950a6f34",
+    "parent_head": "4ec429b06a12ebdf05b934248c30a73dfec5ad7d",
+    "main": "387607370",
+    "files": [
+      "SPEC.md",
+      "tests/test_equation_cross_references.py",
+      "tests/test_equation_numbering.py"
+    ],
+    "tests_passed": 12,
+    "scientific_source_unchanged": true,
+    "second_parent_head": "2f5bb732b9ae3b746d31c07d47ebf0bce9d35e3f",
+    "second_main": "15c876736",
+    "second_scope": "Devcontainer, reader environment tests, root-hygiene allowance and SPEC; no scientific/publication source changes.",
+    "second_tests_log": "docs/development/technical-review/moving-base-devcontainer-integration-tests.txt",
+    "second_tests_passed": 15,
+    "spec_reconciliation": "Use reviewed parent SPEC, retain own PR4782 row, remove stale duplicate issue4771 row, retain Binder PR4682 and key new devcontainer by actual merged PR4779."
+  },
+  "pr": 4782,
+  "binding_followup": {
+    "passed": 68,
+    "scope": "New mechanics, companion, audit, output-boundary, reader-environment and root-hygiene checks after binding and main integration"
+  },
+  "development_log": {
+    "baseline_findings": 71,
+    "current_findings": 71,
+    "introduced": [],
+    "owned_entry_findings": [],
+    "bytes": 199945,
+    "scope": "Whole validator fails on inherited entries; no newly introduced finding. Kept new entry concise instead of exceeding size ceiling."
   }
 }

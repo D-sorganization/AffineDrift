@@ -18,19 +18,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4774 — Moving-Base Counterfactuals and Power
+### DL-#4774 — Moving-Base Mechanics
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** Not created; source and publication validation in progress.
-- **Issue:** #4774 (epic #4009; corpus #4021)
+- **PR:** #4782
+- **Issue:** #4774
 - **Branch:** fix/moving-base-rigor-4774
-- **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_moving_base_review.py
+- **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (base 5d3b569fb132b0c3e25037b9b8676b612987a7eb; full 6,406 passes/one heading-contract failure, then 72 focused passes after source correction; 12 gates, final 225-page PDF/HTML and four browser cases pass; all chapter math materialized at 390/1440.)
-- **Summary:** Correct baseline-replay inference, prescribed/finite-mass distinctions, coordinate-dependent inertia, enforcing power and provider/human evidence scope; use a manufactured cart-pendulum example and readable schematic. Preserve96 historical findings; no completed-audit credit yet.
-- **Next step:** Commit and bind the validated Chapter 17 source, integrate current main, and open a regular PR.
-
+- **Last verified:** 2026-10-01; 0eec41749; 72 focused checks and publication pass. Full-run failure/follow-up scope: reports/technical-review/moving-base-validation.json.
+- **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
+- **Next step:** Push binding; verify CI, protected merge and remote-main parity.
 
 ### DL-#4771 — Measured Golfer Evidence
 

@@ -1,15 +1,17 @@
-# Moving-Base Final Source Checkpoint — #4774
+# Moving-Base Binding and PR Registration — #4774
 
-- Epic #4009 / corpus #4021 remains active: 118 full-source audits and whole-book consistency remain until Chapter 17 binding.
-- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration`; branch `fix/moving-base-rigor-4774`, based on `5d3b569fb`. Source checkpoint is ready; regular PR and binding pending.
-- Chapter 17: twelve supplied-text agy Gemini 3.8 Flash jobs adjudicated; 17 new tests, 72 final focused checks, 12 publication gates, four browser profiles pass. Full regression had 6,406 passes and one heading-contract failure, corrected in the source and retested without weakening the test.
-- Final 225-page PDF/HTML reviewed; 69 math containers fully rendered at both widths, seven displays, no math errors or page overflow. Canonical/public PDFs match.
-- PR #4770 is verified on remote main `099dc2cbf`. PR #4772 now has external main integration `4ec429b06`; scientific source unchanged; protected auto-merge armed and CI `36940029128` running. Prior CI `36937087586` was cancelled by the new head.
-- Next: commit/push this source, integrate the parent/main update, bind eight scoped findings while preserving all 96 earlier findings, then regular PR and protected delivery. Leases: #4771 through October 2 00:30 UTC; #4774 through 00:48 UTC.
-- Decisions and evidence: [review](reports/technical-review/moving-base-review.md), [validation](reports/technical-review/moving-base-validation.json), [handoff](docs/development/HANDOFF.md), [development log](docs/development/DEVELOPMENT_LOG.md).
-- Preserve peer `23ee826` and QA. No drafts, direct-main/force/admin pushes or hook bypass. Never mutate tracked files during push hooks.
+- Epic #4009 / corpus #4021 remains active: 117 full-source audits and whole-book consistency remain.
+- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration`; branch `fix/moving-base-rigor-4774`; regular [PR #4782](https://github.com/D-sorganization/AffineDrift/pull/4782).
+- Chapter 17 source `0eec41749fa18bf28995de990aff01b98a036493` is pushed. Eight corrected findings bind eight exact Git blobs; all 96 prior finding semantics and verification commits remain. This checkpoint records binding and integrates the latest parent/main changes.
+- Twelve source-phase agy Gemini 3.8 Flash tasks plus one binding helper completed; lead corrected scientific and helper errors. 72 final focused checks and 12 incoming equation checks pass. Initial full regression: 6,406 passes and one missing-heading failure; corrected source headings pass follow-up without weakening tests.
+- Final 225-page PDF/HTML inspected; four browser profiles pass, zero serious/critical axe findings; all 69 chapter expressions rendered at both widths, seven displays, no errors/placeholders/page overflow. Canonical/public PDFs match.
+- PR #4770 is verified on remote main `099dc2cbf`. PR #4772 now has external main integration `2f5bb732b9ae3b746d31c07d47ebf0bce9d35e3f`; scientific source unchanged, protected auto-merge armed, CI `36943365974` running. Two earlier runs were cancelled by replacement heads.
+- Next: pass binding/integration checks, push this PR #4782 checkpoint, verify both final-head CIs and protected merges, then compare delivered blobs with reviewed heads. Leases #4771/#4774 renewed through October 2 02:09 UTC.
+- Evidence: [review](reports/technical-review/moving-base-review.md), [validation](reports/technical-review/moving-base-validation.json), [handoff](docs/development/HANDOFF.md), [development log](docs/development/DEVELOPMENT_LOG.md). Preserve peer `23ee826` and QA; no drafts, direct-main/force/admin pushes or hook bypass. No tracked edits during push hooks.
 
-The prior PR verifier must use the new reviewed head 4ec429b06a12ebdf05b934248c30a73dfec5ad7d and a freshly checked main base/path inventory, not the old 5d3 command. Its new main parent is 387607370. No scientific source changed in that integration. The full-run failure, local-manifest setup failure and corrected browser-probe assumption are preserved in the validation/review records. UpstreamDrift #11195 tracks correction of the immutable source monograph; no provider files or archives were silently edited here.
+Source checkpoint reports are preserved as historical evidence. The current validation receipt carries final follow-up and delivery status. The full-run heading failure and browser setup failure remain explicit. The Flash binding helper's recursive removal of digest keys was rejected; only the schema's top-level evidence_sha256 map is excluded from exact historical comparison. The immutable source monograph's contact correction is tracked in UpstreamDrift #11195, not silently changed in the consumer.
+
+PR4772 verification must use its actual final head and updated main base/path inventory. Current reviewed head is 2f5bb732b9ae3b746d31c07d47ebf0bce9d35e3f; CI36943365974. Do not rerun or cancel a live build merely because it is slow. Two external main integrations replaced prior runs. After actual merge, fetch main and compare all changed Git blobs before calling delivery complete. The central development-log checker retains inherited findings; a changed-entry pass is not a whole-log pass.
 
 ## Preserved Earlier Checkpoints
 
