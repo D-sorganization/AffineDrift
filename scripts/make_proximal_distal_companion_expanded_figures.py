@@ -207,19 +207,24 @@ def make_moment_arm() -> None:
 
 
 def make_constraint_reaction() -> None:
+    """Save a circular-guide schematic separating force from release velocity."""
     fig, axis = plt.subplots(figsize=(8, 5.5))
     _clean(axis, (-3.5, 4.5), (-3, 3.5))
-    axis.add_patch(Circle((0, 0), 2.1, fill=False, ls="--", color=GRAY, lw=2))
-    point = np.array([1.5, 1.47])
+    axis.set_aspect("equal")
+    radius = 2.1  # Schematic plotting units, not measured golf geometry.
+    axis.add_patch(Circle((0, 0), radius, fill=False, ls="--", color=GRAY, lw=2))
+    point = radius * np.array([1.0, 1.0]) / np.sqrt(2)
+    tangent = np.array([1.0, -1.0]) / np.sqrt(2)
     axis.scatter(*point, s=180, color=ORANGE)
-    _edge(axis, tuple(point), (0.15, 0.15), BLUE)
-    _edge(axis, tuple(point), (3.0, 0.0), GREEN)
-    axis.plot([point[0], 4.0], [point[1], -0.9], ls=":", color=RED, lw=3)
-    axis.text(-0.6, 0.8, "Constraint Reaction", color=BLUE, fontweight="bold")
-    axis.text(2.7, 0.8, "Instantaneous Velocity", color=GREEN, fontweight="bold")
-    axis.text(2.8, -1.35, "Unconstrained Tangent", color=RED)
+    _edge(axis, tuple(point), tuple(0.1 * point), BLUE)
+    _edge(axis, tuple(point), tuple(point + 2.0 * tangent), GREEN)
+    release = np.vstack([point + 2.05 * tangent, point + 3.5 * tangent])
+    axis.plot(release[:, 0], release[:, 1], ls=":", color=RED, lw=3)
+    axis.text(-1.1, 2.4, "Constraint Reaction", color=BLUE, fontweight="bold", ha="center")
+    axis.text(3.1, 1.6, "Instantaneous\nVelocity", color=GREEN, fontweight="bold", ha="center")
+    axis.text(2.8, -1.35, "Release Tangent", color=RED, ha="center")
     axis.set_title(
-        "A Constraint Pushes Back to Preserve the Allowed Path",
+        "Connection Force and Release Velocity",
         color=INK,
         fontweight="bold",
         fontsize=15,
