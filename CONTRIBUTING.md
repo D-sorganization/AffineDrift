@@ -131,6 +131,13 @@ All articles are governed by `schemas/article-front-matter-v1.schema.json`.
 - **`key-takeaways`** must contain between 3 and 5 items.
 - Non-core articles undergoing migration are tracked in `config/article-front-matter-allowlist.yml` and burned down over time.
 
+### Editorial and Writing Standards
+
+All article prose and educational content must adhere to:
+
+- [Editorial Style Guide](docs/development/editorial-style-guide.md) (WEB-12.1): Establishes editorial voice, mathematical confidence, the standardized "What This Shows / What It Does Not Show" caveat block (WEB-03.4), glossary linking via `{{< term key >}}`, layer readability targets (lay blocks $\le$ Grade 10), analogy boundaries ("say where the analogy breaks"), and banned internal jargon (WEB-12.2).
+- [Writing Style Guide](docs/development/writing-style-guide.md): Sentence-level standards, active voice, and anti-nominalization metrics.
+
 **Best Practices:**
 
 - Use YAML frontmatter for metadata conforming to the schema

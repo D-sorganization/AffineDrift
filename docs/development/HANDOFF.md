@@ -1,3 +1,13 @@
+# Current Delivery Checkpoint — Chapter 11 Merged
+
+PR [#4824](https://github.com/D-sorganization/AffineDrift/pull/4824) merged at 22:19:36 UTC October 2 as `037f42d4d551ff59e1661d539f5e7e49e8ca48d8`. CI `37064262227` succeeded on `2bc8033e32df2953f0c94e847490ac1139242660`. Verified main ancestry, 23 byte-identical owned files and the shared SPEC change from editorial PR #4827. Receipt: `reports/technical-review/counterfactual-remote-main-receipt.json`. The whole tree differs because #4827 landed first; do not claim whole-tree identity. DL-#4821 is archived as shipped. Its accepted scientific source and binding identifiers remain unchanged.
+
+The ideomotor branch has now merged that main ancestry. Three metadata conflicts were resolved only after proving the incoming files exactly matched its already-included baseline. The merged tree preserves the five upstream editorial files, including their SPEC entry/version, and all five frozen ideomotor evidence files remain unchanged. Prior research checkpoint `4aefa8efcf95f6db35d45ea318152693e3baaee9` is verified on remote. Integration checkpoint SELF; full integration regression pending. Next: validate, commit/push, remove PR #4829's temporary hold, and verify normal CI/delivery. No admin merge or bypass.
+
+Ideomotor issue #4825 remains owned by session `technical-review-20261002-ideomotor`, with lease/presence through 00:27 UTC October 3. Current worktree and branch are the ideomotor paths below. Radar issue #4831 remains proposed and unclaimed; four Flash preparation outputs have been adjudicated and selected primary documents read. No radar implementation or corpus credit yet. There are 101 source audits plus whole-book consistency remaining. Earlier checkpoint blocks below are historical and superseded by this delivery status.
+
+---
+
 # Ideomotor Review — Accepted Source
 
 Issue #4825; epic #4009 / corpus #4021. Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-ideomotor-review`, branch `fix/ideomotor-rigor-4825`, session `technical-review-20261002-ideomotor`, baseline `4cf785eccbfff52e9372b1f49a5d040d517e5f33`. Accepted source `f488f45f3254fa40f98bedceb5edaa11280bb70c`. Binding `8f42bde9155478397dc13910362a6e98555a1ec7` verified on remote topic. Regular PR [#4829](https://github.com/D-sorganization/AffineDrift/pull/4829) is open and attached, with do-not-merge pending predecessor #4824 delivery. Registration `542f03e0b6f095f34cb20ddcfed54f6c1dcf523b` verified on remote; delivery/preparation checkpoint 37825a2ce3d7576a7bbde27048b6a2ed500166d8 verified on remote; research checkpoint SELF. DL-#4825 in review; six findings bound. 101 source audits plus whole-book consistency remain.
