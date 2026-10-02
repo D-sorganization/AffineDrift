@@ -1,5 +1,9 @@
 # System-Boundary Review Current State — #4783
 
+## Chapter 17 Parent Delivery and Integration
+
+PR #4782 is verified on fetched remote main at `4c025bbf0b822f7576f1ea60afc3d21f47945e59` (2026-10-02T02:29:51Z). Final head `9723ded23d44f625726529fc995e09c5a46327f7` passed CI 36951827315; all 20 changed blobs match the merge. Receipt: `reports/technical-review/moving-base-remote-main-receipt.json`. The complete squash tree equals the already-included parent head. Integration resolves eight conflicts using reviewed Chapter 2 versions and restores the single PR-keyed SPEC row ordering. Before delivery-document updates the diff against `09794b73a` was empty; all scientific source, PDF and binding blobs remain unchanged. Next: push the integration, require new-head CI, arm protected merge, and verify PR #4785 on remote main. The earlier 09794 run remains historical after the new push.
+
 - Goal active under epic #4009 / corpus #4021 / companion #4059. 116 full-source audits plus whole-book consistency remain. Chapter 2 now has nine findings bound to source commit `e96394591cdec32aed86fe362a7f71444efd33b8`, preserving all 104 prior findings.
 - Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-system-boundary-review`; branch `fix/system-boundary-rigor-4783`, baseline `23a47f628`. Issue #4783 lease: `technical-review-20261002-boundary`, through October 2 03:42 UTC. Regular [PR #4785](https://github.com/D-sorganization/AffineDrift/pull/4785) is open and attached; first pushed head `6fcdda203`.
 - Complete Chapter 2 and pinned provider Chapters 5/6 read. Nine corrections cover body inventory, actual contact work versus COM pseudowork, compatible contact power, gravity and actuator accounting, recoil, rigid transport versus observer boost, flexible load allocation and evidence limits. No provider rerun or human validation claimed.

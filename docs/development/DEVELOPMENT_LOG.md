@@ -34,16 +34,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4774 — Moving-Base Mechanics
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4782
 - **Issue:** #4774
 - **Branch:** fix/moving-base-rigor-4774
 - **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-02; 0eec41749 / 318f9f9da; 72 focused checks and publication pass. Full-run failure/follow-up scope: reports/technical-review/moving-base-validation.json.
+- **Last verified:** 2026-10-02; remote main 4c025bbf0b822f7576f1ea60afc3d21f47945e59; final CI 36951827315 succeeds; all 20 delivered blobs match.
 - **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
-- **Next step:** Verify final-head CI, protected merge and remote-main parity.
+- **Next step:** None; delivered and verified on remote main.
 
 ### DL-#4771 — Measured Golfer Evidence
 
