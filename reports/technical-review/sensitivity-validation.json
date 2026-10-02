@@ -1,0 +1,273 @@
+{
+  "issue": 4806,
+  "status": "Source and bindings pushed; regular PR4808 open. Required exact-head CI, review and protected merge remain pending.",
+  "base_checkpoint": "a931f3e3583ac028666bf1a8f793231731acf894",
+  "full_regression": {
+    "passed": 6591.0,
+    "skipped": 29.0,
+    "deselected": 187.0,
+    "warnings": 60.0,
+    "seconds": 1135.87,
+    "coverage_percent": 79.22,
+    "failed_initially": 3,
+    "resolved_failures": [
+      "tests/test_proximal_distal_companion_contract.py::test_expanded_companion_has_one_substantive_file_per_registered_chapter",
+      "tests/test_root_hygiene.py::test_root_matches_allowlist_and_hygiene_script_passes",
+      "tests/test_root_hygiene.py::test_check_root_hygiene_cli_passes"
+    ],
+    "remediation": "34 affected chapter, companion-contract and root-hygiene tests pass after restoring the required heading and preserving browser/packaging scratch under QA."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/sensitivity-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 887,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "render": {
+    "pages": 233,
+    "inspected_physical_pages": [
+      152, 153, 154, 155, 156, 157, 158, 159, 160, 229, 230, 231, 232, 233, 3,
+      4, 5
+    ],
+    "pdf_sha256": "ae8a2fe24b154169fc2258e61ba6c0bfdfcb6cf3294b3b2961a8a656b457c327",
+    "canonical_public_parity": true,
+    "html_success": true
+  },
+  "browser": {
+    "scope": "Single companion route only",
+    "cells": [
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (190 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 190,
+            "first_target": "#references-1"
+          }
+        ]
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (190 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 190,
+            "first_target": "#references-1"
+          }
+        ]
+      }
+    ],
+    "math_expressions": 60,
+    "display_equations": 5,
+    "math_errors": 0,
+    "placeholders": 0,
+    "overflow": false,
+    "zoom_opened": true,
+    "zoom_closed": true
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_helpers": 10,
+    "all_outputs_lead_reviewed": true,
+    "canonical_edits_by_helpers": false
+  },
+  "backlog": {
+    "source_audits_pending": 109,
+    "whole_book_consistency_pending": true,
+    "credit_pending_source_binding": false
+  },
+  "source_commit": "2f31f16b93818cb15e7c6acf19addca9f92d2417",
+  "finding_binding": {
+    "new": 8,
+    "prior_preserved": 161,
+    "total": 169,
+    "exact_git_bytes_verified": true
+  },
+  "line_endings": {
+    "source_commit": "2f31f16b93818cb15e7c6acf19addca9f92d2417",
+    "normalized_files": [
+      {
+        "path": "scripts/make_proximal_distal_companion_expanded_figures.py",
+        "working_bytes_sha256": "dc7ad5fe84c4885d4f366f585eb1025092bcd24eb0e96a2177ba38c1c580a921",
+        "git_blob_sha256": "9e0c393e88637c44c1a7b9c5c30388fe2d5904ba2be20038aaa08e7e4c25a228"
+      },
+      {
+        "path": "articles/figures/proximal_distal_companion/fig_companion_sensitivity_identifiability.svg",
+        "working_bytes_sha256": "172dbe27e26e8d42f216ac08a02f7bf77641f599a36b35878deee696b88c4641",
+        "git_blob_sha256": "d2a84fda50cb65a536a6242b129b94fd443dbb51334056f7d582f4e469a5fb15"
+      }
+    ],
+    "proof": "Original working bytes differ from the committed Git blob only by CRLF-to-LF. Frozen carry after_sha256 values describe the accepted working files before this normalization; new finding bindings use exact committed Git bytes."
+  },
+  "titles": {
+    "checked_files": 655,
+    "passed": true
+  },
+  "binding_commit": "7cafdbf58c8a6d8be9ce5ef261569472a22d3f51",
+  "main_reconciliation": {
+    "baseline": "a931f3e3583ac028666bf1a8f793231731acf894",
+    "incoming_main": "29aa7fe9dc553d81ef5fd14a13653c09675f2d36",
+    "premerge_head": "7cafdbf58c8a6d8be9ce5ef261569472a22d3f51",
+    "whole_incoming_tree_equals_baseline": true,
+    "whole_resolved_tree_equals_premerge_head": true,
+    "resolved_paths": [
+      "AGENT_HANDOFF.md",
+      "articles/proximal-distal-a-journey-through-the-swing.pdf",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json",
+      "docs/articles/proximal-distal-a-journey-through-the-swing.pdf",
+      "docs/development/DEVELOPMENT_LOG.md",
+      "docs/development/HANDOFF.md",
+      "docs/development/technical-review/corpus-review-index.csv",
+      "docs/development/technical-review/sensitivity-preparation.md",
+      "reports/scientific-claim-audit.md"
+    ],
+    "reason": "The protected squash merge has the exact accepted parent tree. All incoming content is already in this branch; conflicts arise from squash ancestry. Preserve every accepted Chapter21 byte.",
+    "merge_commit": "46ae5ca75408f3036b57ff2dfd469e4fc9f00cb5"
+  },
+  "binding_checks": {
+    "passed": 47,
+    "seconds": 32.19
+  },
+  "pr": 4808,
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4808",
+  "prepush_hooks": "All normal hooks passed, including Bandit and unit tests; no bypass.",
+  "development_log_validation": "reports/technical-review/sensitivity-development-log-validation.json"
+}
