@@ -43,20 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; 6481-pass full run had four failures; final55affected checks,226-page PDF/HTML,four browser profiles and653titles pass. Eight findings bind028720c0a5e7ec6e298cfb4615aa98c9cf6e8c31.
 - **Summary:** Separate artifact identity, numerical agreement, independent verification and empirical validation; bound provider qualification and improve connected mechanics examples. Preserve 113 prior findings; 115 audits remain.
-- **Next step:** Verify final-head CI, parent PR4785 delivery, protected merge and remote-main blobs.
-
-### DL-#4783 — System Boundaries and Contact Work
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4785 (regular)
-- **Issue:** #4783; epic #4009 / corpus #4021
-- **Branch:** fix/system-boundary-rigor-4783
-- **Paths:** articles/proximal_distal_companion/chapters/ch02_choose_the_system.qmd, tests/test_system_boundary_review.py, scripts/make_proximal_distal_companion_expanded_figures.py, references/proximal-distal-energy.bib
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run had two stale-digest failures; 71 follow-up checks pass; CI SVG CRLF mismatch corrected to bound Git LF bytes; 25 evidence checks pass.
-- **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
-- **Next step:** Verify final-head CI, predecessor delivery, protected merge and exact remote-main blobs.
+- **Next step:** PR4785 remote delivery verified at0bcc9f866; push unchanged-science integration, verify final-head CI, protected merge and remote-main blobs.
 
 ### DL-#4771 — Measured Golfer Evidence
 

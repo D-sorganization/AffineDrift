@@ -39,3 +39,17 @@
 - **Last verified:** 2026-10-02; remote main 4c025bbf0b822f7576f1ea60afc3d21f47945e59; final CI 36951827315 succeeds; all 20 delivered blobs match.
 - **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
 - **Next step:** None; delivered and verified on remote main.
+
+### DL-#4783 — System Boundaries and Contact Work
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4785 (regular)
+- **Issue:** #4783; epic #4009 / corpus #4021
+- **Branch:** fix/system-boundary-rigor-4783
+- **Paths:** articles/proximal_distal_companion/chapters/ch02_choose_the_system.qmd, tests/test_system_boundary_review.py, scripts/make_proximal_distal_companion_expanded_figures.py, references/proximal-distal-energy.bib
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run had two stale-digest failures; 71 follow-up checks pass; CI SVG CRLF mismatch corrected to bound Git LF bytes; 25 evidence checks pass.
+- **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
+- **Next step:** None; PR4785 delivered at0bcc9f8663ea10d3c2a846cb7443472bec69cd3f, CI36956637268 and22changed Git blobs verified.
+
