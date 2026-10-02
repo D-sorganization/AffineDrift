@@ -23,14 +23,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4800 (regular, consolidated)
+- **PR:** pending regular follow-up; #4800 delivered parent only
 - **Issue:** #4799; epic #4009 / corpus #4021
-- **Branch:** feat/technical-review-consolidated-20261002
+- **Branch:** fix/model-ladder-delivery-4799
 - **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
 - **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** Push validated three-chapter integration, arm guarded auto-merge, freeze scope, verify final-head CI and actual remote-main delivery before closing originals. No separate Chapter19 PR.
+- **Next step:** Create regular Chapter19 follow-up PR, check final-head CI and guarded delivery. Parent4800 verified separately; current receipt model-ladder-delivery.json.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
@@ -48,7 +48,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4795 — Experimental Inference and Falsification
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4800 (regular, attached; original#4798 frozen)
 - **Issue:** #4795; epic #4009 / corpus #4021 / companion #4059
@@ -57,11 +57,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
 - **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;111corpus audits remain after Chapter19.
-- **Next step:** Push validated three-chapter integration, arm guarded auto-merge, freeze scope, verify final-head CI and actual remote-main delivery before closing originals. No separate Chapter19 PR.
+- **Next step:** Complete: PR4800 merged as041a83a8c;31owned paths accounted for,CI36974008090 successful. See constraints-experiment-remote-main-receipt.json. Lease/presence released; original PR already closed.
 
 ### DL-#4791 — Constraint Reactions and Identifiability
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4800 (regular, attached; original#4794 frozen)
 - **Issue:** #4791; epic #4009 / corpus #4021 / companion #4059
@@ -70,7 +70,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
 - **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;111corpus audits remain after Chapter19.
-- **Next step:** Push validated three-chapter integration, arm guarded auto-merge, freeze scope, verify final-head CI and actual remote-main delivery before closing originals. No separate Chapter19 PR.
+- **Next step:** Complete: PR4800 merged as041a83a8c;31owned paths accounted for,CI36974008090 successful. See constraints-experiment-remote-main-receipt.json. Lease/presence released; original PR already closed.
 
 ### DL-#4756 · Complete-State Technical Review
 
