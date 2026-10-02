@@ -1,6 +1,6 @@
 # Current Technical Review Handoff
 
-Chapter 21 PR #4808 is verified on remote main. Chapter 8 source and bindings are pushed; its regular PR and protected delivery remain pending. Continue from [the canonical handoff](docs/development/HANDOFF.md).
+Chapter 21 PR #4808 is verified on remote main. Chapter 8 regular PR #4810 is open; source, bindings and parent reconciliation are pushed. Registration checkpoint SELF awaits push and guarded arming; protected delivery remains pending. Continue from [the canonical handoff](docs/development/HANDOFF.md).
 
 ## Preserved Earlier Checkpoint
 
