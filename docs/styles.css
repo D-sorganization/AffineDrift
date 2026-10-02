@@ -7216,6 +7216,15 @@ h1.title,
   color: #fff;
 }
 
+/* theme.dark is now configured (#4556), which makes Quarto auto-inject its
+   own native color-scheme toggle switch into the navbar. Hide it: the site
+   already ships the tested, accessible toggle above with its own design
+   tokens, and two independent, out-of-sync theme controls would confuse
+   readers. */
+.quarto-color-scheme-toggle {
+  display: none !important;
+}
+
 
 /* =============================================================
    Accessibility Phase 2: Focus States & Motion (Issue #2970)

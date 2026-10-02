@@ -19,70 +19,45 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4495 — Make 404 Page and Empty States Useful
+
+- **State:** in_review
+- **Owner:** antigravity
+- **PR:** #4796 (regular)
+- **Issue:** #4495; epic #4496
+- **Branch:** fix/web-01-10-404-useful-4495
+- **Paths:** 404.qmd, tests/test_404_page.py, SPEC.md
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; pytest tests/test_404_page.py (6 passed); ruff, black, mypy clean.
+- **Summary:** Added prominent links for Start Here (/resources/learning-paths.html), the Library (/books/index.html), search box trigger, top destinations, and verified unified contact email dieterolson@AffineDrift.com matching contact.qmd.
+- **Next step:** Passing CI Standard, squash auto-merge armed.
+
+
 ### DL-#4795 — Experimental Inference and Falsification
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4798 (regular, attached)
+- **PR:** #4798 (frozen; regular consolidated PR not created)
 - **Issue:** #4795; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** fix/experiment-rigor-4795
+- **Branch:** feat/technical-review-consolidated-20261002
 - **Paths:** articles/proximal_distal_companion/chapters/ch26_experiment_can_say_no.qmd, tests/test_experiment_design_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; 6515 full-regression passes;31final affected checks;12publication gates;653titles;876Python quality checks. Accepted229-page PDF/HTML, four browser profiles,62mathnodes and mobilezoom.
+- **Last verified:** 2026-10-02; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
 - **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;112corpus audits remain.
-- **Next step:**85integration checks pass with parent3fb14220d included; push and verify parent4794 delivery, then actual-squash integration/final-head CI before protected merge.
+- **Next step:** Open the regular consolidated PR after normal commit and push hooks pass.
 
 ### DL-#4791 — Constraint Reactions and Identifiability
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4794 (regular, attached)
+- **PR:** #4794 (frozen; regular consolidated PR not created)
 - **Issue:** #4791; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** fix/constraint-reaction-rigor-4791
+- **Branch:** feat/technical-review-consolidated-20261002
 - **Paths:** articles/proximal_distal_companion/chapters/ch06_constraints_push_back.qmd, tests/test_constraint_reaction_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; source80d6c5a04dafc1bdf23dc906723a8175aa1690a1; 6506 full-regression passes, 31 final affected checks, 12 publication gates, 653 titles and 875 Python quality checks; accepted 229-page PDF/HTML, four browser profiles, 68 math nodes and mobile zoom.
+- **Last verified:** 2026-10-02; consolidated6544Python passes; later main70affected passes and547Jest passes; exact scientific/PDF parity; expanded browser check retains known dark-theme contrast limitation.
 - **Summary:** Eight corrections connect physical feasibility, work, inference, two-hand moments, shared drift and compliant limits. Preserve129 prior findings; seven agy Flash helpers reviewed. Eight findings bound to eight exact files; all129prior scientific fields and commits preserved;113corpus audits remain.
-- **Next step:** Combined regression6535passed; integration3fb14220d pushed and guarded auto-merge armed; verify final-head CI and remote-main delivery.
-
-### DL-#4789 — Biological Ambiguity and Load Inference
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** #4790 (regular, attached)
-- **Issue:** #4789; epic #4009 / corpus #4021
-- **Branch:** fix/biological-ambiguity-rigor-4789
-- **Paths:** articles/proximal_distal_companion/chapters/ch25_biological_ambiguity.qmd, tests/test_biological_ambiguity_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; source53023631e; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
-- **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. 121 prior findings preserved; eight new findings bound; eight agy Flash helpers reviewed.
-- **Next step:** None for Chapter25: PR4790 merged70a0c6422, CI36965483957 passed;21exact blobs plus clean three-way SPEC merge verified;8peer paths preserved; lease/presence released.
-
-### DL-#4763 · Geometry Technical Review
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** [#4765](https://github.com/D-sorganization/AffineDrift/pull/4765)
-- **Issue:** #4763 (epic #4009)
-- **Branch:** fix/geometry-rigor-4763
-- **Paths:** articles/proximal_distal_companion/chapters/ch04_geometry_machine.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_geometry_machine_review.py
-- **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (prior full validation retained; main integration preserves55 delivered findings within79 and6 ground-reaction findings; preload/shaft source, archive and test parity verified; initial full run 6419 passed/3 metadata failures, 78.86% coverage; corrected digests/history and preserved generated packaging outputs; 69 recovery checks and Jest546 pass; Ruff/Black838/mypy94 pass; prior-head CI36893253026 green)
-- **Summary:** Correct geometric force, power, singularity and inertia mappings; reproduce scalar allocation evidence and repair moment-arm figure. Flash support and lead scientific adjudication. Nine findings bound to source 1293c48c575b28986c41a2a826d6ed2030ba85fb;70 earlier findings preserved;122 full-source audits plus whole-book consistency remain.
-- **Next step:** Delivered through merged PR #4765 on remote main 39f7553b562b6d83e5aff36d9277bbcbfcaff401; source/evidence parity verified in reports/technical-review/geometry-remote-main-receipt.json. Predecessors #4758/#4762 and issues #4756/#4759/#4763 are closed. No remaining work for this bounded review.
-
-### DL-#4759 · Robust-Speed Technical Review
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** [#4762](https://github.com/D-sorganization/AffineDrift/pull/4762)
-- **Issue:** #4759 (epic #4009)
-- **Branch:** fix/robust-speed-rigor-4759
-- **Paths:** articles/proximal_distal_companion/chapters/ch23_robustly_fast.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_robust_speed_review.py
-- **Started:** 2026-10-01
-- **Last verified:** 2026-10-01 (seven new checks;64 affected;12 publication gates;653 titles;Ruff/Black837;mypy94;221-page PDF/parity/visual inspection;4 browser/theme checks;full6408 passes/29 skips/78.9% configured coverage/93.0% src)
-- **Summary:** Correct risk, Pareto, sampling and causal claims; replace mismatched figure with eight-program archive and independently reproduce stored metrics. Six Flash support jobs and lead adjudication. Eight findings bound to source 4f3c2b3daec076f4c806d67e0d84768d2e0ed8fd;62 prior findings preserved;123 full-source audits plus whole-book consistency remain.
-- **Next step:** Delivered through merged PR #4765 on remote main 39f7553b562b6d83e5aff36d9277bbcbfcaff401; source/evidence parity verified in reports/technical-review/geometry-remote-main-receipt.json. Predecessors #4758/#4762 and issues #4756/#4759/#4763 are closed. No remaining work for this bounded review.
+- **Next step:** Open the regular consolidated PR after normal commit and push hooks pass.
 
 ### DL-#4756 · Complete-State Technical Review
 

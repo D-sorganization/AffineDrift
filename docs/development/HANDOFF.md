@@ -1,3 +1,41 @@
+# Constraints and Experiment Review Consolidation — #4791 / #4795
+
+- Goal active under #4009 / #4021 / #4059. Chapters 6 and 26 are scientifically reviewed and locally accepted. All 145 recorded findings, exact source bindings and prior verification commits are preserved; 112 full-source audits and whole-book consistency remain.
+- Owned checkout: C:/Users/diete/Repositories/Worktrees/AffineDrift-review-consolidated. Branch feat/technical-review-consolidated-20261002; checkpoint SELF. Consolidated PR not created. Regular originals #4794 (3fb14220d7fc1c0e81a309125fa4b2b7479dc64b) and #4798 (8bd6177815f3d48fa1b0952b23f7944f86904ade) are frozen; auto-merge is off. Preserve their worktrees and QA until combined remote-main proof.
+- Runner utilization93% triggered repository consolidation policy (threshold70%). Started from main70a0c6422, accepted base4794 before tip4798. Later integrated main526dc7be925db5220d59addcd456b97a2a55e1dc (peer404 and accessibility PRs). Both handoff sides and peer DL-#4495 are preserved; SPEC and global evidence metadata equal clean three-way merges. Eight incoming peer paths match main. All16source-bound files, the complete145-finding book route and final229-page PDF retain accepted bytes. No provider rerun or new human evidence.
+- Full consolidated command `py -3.12 -X utf8 -m pytest --cov`:6544passed,29skipped,187deselected,60warnings,701.11s,78.96%coverage on8bd617781. Later main integration:70affected Python passes,547Jest passes/19skips/35suites,source evidence andSPEC checks. Twelve publication gates,654titles,Ruff,Black851,mypy95 passed. No repeated full run after main integration is claimed.
+- Quarto HTML render passes; prior accepted229-page PDF is carried by exact bytes. Single-route browser checks: earlier four profiles passed with one axe cell; expanded main checker passes light cells but flags184dark-theme contrast nodes per dark cell, first#references-1. This inherited limitation is recorded, not suppressed; main#4777 already uses warn while triaging dark theme. Both chapters have68/62rendered mathnodes,4displays each,zero math errors/placeholders/overflow at390/1440; mobile zoom opens/closes. Preserve all failure and recovery logs under docs/development/technical-review/consolidated-*.
+- Recovered local failures: first Jest overlapped Quarto temporary stylesheet output; preserved generated CSS and restored tracked bytes, then39affected tests passed and final full Jest547passed. Initial affected pytest command had a nonexistent filename; corrected70test invocation passed. Frozen source reports, prior snapshots and carry-forward receipts remain untouched.
+- Two additional supplied-text agy CLI gemini-3.8-flash-high helpers completed; lead rejected incorrect pending-finding count and whole-book acceptance claims. Source-phase seven-job records for each chapter stay frozen. No live helpers. Chapter19 issue#4799 exists but is unclaimed and unimplemented; preparation and two earlier helper outputs remain in experiment-review QA/model-ladder-preparation.md. No extra audit credit.
+- Lease sessions technical-review-20261002-constraints and technical-review-20261002-experiment renewed through08:07UTC October2. Presence constraints session tracks consolidated branch. Inbox remains potentially incomplete; preserve peer work. Updated DL-#4791 andDL-#4795 in place; owned shipped#4789/#4763/#4759 records archived intact for the log size budget. Foreign entries remain untouched.
+- Next: commit/push through normal hooks, open and attach one regular PR with Fixes#4791 and Fixes#4795, inspect final-head CI/reviews, arm only through Repository_Management/scripts/automerge_guard.py. Verify actual remote-main scientific and metadata delivery before closing originals as superseded and releasing both leases. Then resume scoped Chapter19 review after claim check. Never draft,force,direct-main,admin or bypass hooks. Do not mutate tracked files during push hooks.
+
+## Preserved Earlier Checkpoints
+
+# 404 Page and Empty States Enhancement — #4495
+
+- **Issue:** #4495 (`[WEB-01.10] Make the 404 Page and Empty States Useful`), epic #4496.
+- **Branch:** `fix/web-01-10-404-useful-4495`, worktree at `c:\Users\diete\Repositories\_worktrees\AffineDrift-4495`.
+- **Status:** Complete, verified, and PR #4796 open with squash auto-merge armed.
+- **Changes:**
+  - `404.qmd`: Updated navigation links to include Start Here (`/resources/learning-paths.html`), the Library (`/books/index.html`), Article Index, key textbooks, and Home.
+  - `404.qmd`: Added interactive search trigger and keyboard shortcut hint (`/`) linking `#quarto-search`.
+  - `404.qmd`: Verified contact reporting email `dieterolson@AffineDrift.com` with link to `pages/contact.html`.
+  - `tests/test_404_page.py`: Added 6 unit tests covering metadata conformance, Start Here link, Library link, search trigger, contact email matching `pages/contact.qmd`, and referential disk integrity of all destination routes.
+  - `SPEC.md`: Added change log row for #4495.
+- **Verification:**
+  - `pytest tests/test_404_page.py` (6 passed in 1.27s).
+  - `ruff check tests/test_404_page.py` passed.
+  - `black --check tests/test_404_page.py` passed.
+  - `mypy tests/test_404_page.py` passed.
+  - `python scripts/check_spec_changelog.py` passed.
+- **Next step:** Passing CI Standard, squash auto-merge armed.
+
+---
+
+
+## Preserved Technical Review Checkpoints
+
 # Experiment Design Review Current State — #4795
 
 - Goal active under #4009 / #4021 / #4059. Full Chapter 26 scientific/publication review accepted; eight findings bind source2bb1a52086dd006d676d919f5f4fd4d86391e184 across eight exact files. All137prior scientific finding fields and verification commits preserved. Corpus now has112pending full-source audits plus whole-book consistency.
