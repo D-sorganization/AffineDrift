@@ -1,0 +1,280 @@
+{
+  "issue": 4801,
+  "status": "Source and binding pushed with normal hooks; regular PR4805 open against parent4804 branch, dependency hold active; remote-main delivery pending.",
+  "base_checkpoint": "224c8ca96aafc34bf9f35209c115f500ba77a3b9",
+  "full_regression": {
+    "passed": 6574,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 564.32,
+    "coverage_percent": 79.09
+  },
+  "affected_tests": {
+    "passed": 24,
+    "seconds": 7.56,
+    "new_cases": 8
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/pendulum-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 884,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "titles": {
+    "files": 654,
+    "passed": true
+  },
+  "render": {
+    "pages": 232,
+    "inspected_physical_pages": [
+      46, 47, 48, 49, 50, 51, 52, 53, 229, 230, 231, 232
+    ],
+    "canonical_public_parity": true,
+    "pdf_sha256": "cc4ca2e23f5fcf00138006a419a26e328fed80cc3b4657ef970f63bccec7caba",
+    "html_success": true
+  },
+  "browser": {
+    "route_scope": "Single companion route, not full-site acceptance",
+    "profiles": 4,
+    "failed": 2,
+    "cells": [
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (182 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 182,
+            "first_target": "#references-1"
+          }
+        ]
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (182 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 182,
+            "first_target": "#references-1"
+          }
+        ]
+      }
+    ],
+    "limitation": "Existing dark-reference contrast failure:182 nodes per dark cell, first #references-1; peer4803 separately owned.",
+    "viewports": [390, 1440],
+    "chapter_math_nodes": 66,
+    "display_equations": 4,
+    "errors": 0,
+    "placeholders": 0,
+    "horizontal_overflow": false,
+    "zoom_opened": true,
+    "zoom_closed": true
+  },
+  "carry_forward": {
+    "prior_findings": 153,
+    "unchanged_dependencies": 166,
+    "changed_dependencies": 3,
+    "other_generator_ast_unchanged": true
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_helpers": 8,
+    "all_outputs_lead_reviewed": true,
+    "canonical_edits_by_helpers": false
+  },
+  "backlog": {
+    "source_audits_pending": 110,
+    "whole_book_consistency_pending": true,
+    "credit_pending_source_binding": false
+  },
+  "commands": {
+    "full": "py -3.12 -X utf8 -m pytest --cov",
+    "affected": "py -3.12 -X utf8 -m pytest tests/test_pendulum_review.py tests/test_proximal_distal_companion_contract.py --no-cov",
+    "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf, then --to html",
+    "browser": "node scripts/verify-public-site.js --base-url http://127.0.0.1:8774 --manifest docs/development/technical-review/pendulum-single-route-manifest.json --output docs/development/technical-review/pendulum-browser.json --screenshots --screenshot-dir docs/development/technical-review/pendulum-browser --axe fail"
+  },
+  "final_source_checks": {
+    "passed": 49,
+    "seconds": 13.75,
+    "scope": "Chapter7, companion contract, claim inventory and root hygiene; SPEC and digest checks pass"
+  },
+  "source_commit": "623cee52540aafa8c2d5c11fc81c67bfc620168c",
+  "binding": {
+    "prior_findings_preserved": 153,
+    "new_findings": 8,
+    "total_findings": 161,
+    "exact_source_files": {
+      "articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd": "20edb30db7c716dbec17444d14473e73632a09581bce70f4d239b9718d485aa3",
+      "tests/test_pendulum_review.py": "0532dd7e2ee8b061b082855cdb0a1b3023c75142ae42b48d786342c8ba353f0f",
+      "scripts/make_proximal_distal_companion_figures.py": "e7b6bb3ab9cecc9325e29f384fef94b52071c02eddb57b1cb0a59bd589e23d26",
+      "articles/figures/proximal_distal_companion/fig_companion_carry_then_handoff.svg": "c1680813feaf527ce7a508d1322ca03c12e564a320c7126aa940f0f8f14f0c31",
+      "articles/figures/proximal_distal_companion/fig_companion_carry_then_handoff.pdf": "221cc24c6596dd4fb9a9884085a105f8a3e095a7fa7b0c91f692a25b647b4815",
+      "reports/technical-review/pendulum-review.md": "6c03518f5f083af7cd9e37ca392bb6abd52007027f779a5543a43ecba6677a26",
+      "reports/technical-review/pendulum-prior-review.json": "394d6d2a7e15af9c83728ff489d0f849927b8d093d2c7690ef9bc1386bdb882d",
+      "reports/technical-review/pendulum-dependency-carry-forward.json": "c94a5c3cde4cb8094cb7501111903a2c189ca9ba62d4870b05442c61ec187375"
+    }
+  },
+  "binding_followup": {
+    "passed": 49,
+    "seconds": 16.66
+  },
+  "binding_commit": "2b94f104f0cbeefd8220f786b3f5781e5d7d8b21",
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4805",
+  "current_delivery": {
+    "pr": 4805,
+    "branch": "fix/pendulum-rigor-4801",
+    "base": "fix/model-ladder-delivery-4799",
+    "parent_pr": 4804,
+    "parent_head": "224c8ca96aafc34bf9f35209c115f500ba77a3b9",
+    "draft": false,
+    "auto_merge": false,
+    "hold_label": "do-not-merge",
+    "hold_reason": "Do not merge into parent branch; verify parent on remote main, integrate actual merge, retarget to main and remove hold before guarded arming.",
+    "registration_checkpoint": "SELF"
+  },
+  "coordination": {
+    "session": "technical-review-20261002-pendulum",
+    "lease_expires": "2026-10-02T11:14:45.447345+00:00",
+    "presence_expires": "2026-10-02T11:16:16.343909+00:00",
+    "parent_session": "technical-review-20261002-model-ladder",
+    "parent_lease_expires": "2026-10-02T11:15:18.635704+00:00",
+    "parent_presence_expires": "2026-10-02T11:16:41.304141+00:00"
+  }
+}
