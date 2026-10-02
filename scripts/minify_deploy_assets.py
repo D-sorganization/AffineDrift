@@ -47,10 +47,12 @@ def minify_js(source: str) -> str:
 
     The scanner preserves quoted strings and template literals verbatim. It is
     intentionally conservative: it emits a single space between adjacent
-    identifier-like tokens where removing all whitespace could change parsing.
+    identifier-like tokens and preserves newlines to avoid altering Automatic
+    Semicolon Insertion (ASI) semantics.
     """
     out: list[str] = []
     i = 0
+    pending_newline = False
     pending_space = False
     quote: str | None = None
     escape = False
@@ -73,8 +75,11 @@ def minify_js(source: str) -> str:
             continue
 
         if char in {'"', "'", "`"}:
-            if pending_space and previous_emitted and _is_identifier_char(previous_emitted):
+            if pending_newline and out and previous_emitted != "\n":
+                out.append("\n")
+            elif pending_space and previous_emitted and _is_identifier_char(previous_emitted):
                 out.append(" ")
+            pending_newline = False
             pending_space = False
             quote = char
             out.append(char)
@@ -86,29 +91,37 @@ def minify_js(source: str) -> str:
             i += 2
             while i < len(source) and source[i] not in "\r\n":
                 i += 1
-            pending_space = True
+            pending_newline = True
             continue
 
         if char == "/" and nxt == "*":
             i += 2
             while i + 1 < len(source) and not (source[i] == "*" and source[i + 1] == "/"):
+                if source[i] in "\r\n":
+                    pending_newline = True
                 i += 1
             i += 2
             pending_space = True
             continue
 
         if char.isspace():
-            pending_space = True
+            if char in "\r\n":
+                pending_newline = True
+            else:
+                pending_space = True
             i += 1
             continue
 
-        if (
+        if pending_newline and out and previous_emitted != "\n":
+            out.append("\n")
+        elif (
             pending_space
             and previous_emitted
             and _is_identifier_char(previous_emitted)
             and _is_identifier_char(char)
         ):
             out.append(" ")
+        pending_newline = False
         pending_space = False
         out.append(char)
         previous_emitted = char

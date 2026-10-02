@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import shutil
+import subprocess
+import tempfile
 from pathlib import Path
 
 from scripts.minify_deploy_assets import minify_css, minify_deploy_assets, minify_js
+from scripts.sync_frontend_assets import CANONICAL_JS_NAMES
 
 
 def test_minify_css_removes_comments_and_extra_whitespace() -> None:
@@ -69,3 +73,40 @@ def test_minify_deploy_assets_touches_only_docs_assets(tmp_path: Path) -> None:
     assert (tmp_path / "docs" / "styles.css").read_text(encoding="utf-8") == ".x{color:red}\n"
     assert (tmp_path / "docs" / "js" / "app.js").read_text(encoding="utf-8") == "const value=1;\n"
     assert (tmp_path / "js" / "app.js").read_text(encoding="utf-8") == "const value = 1; // x\n"
+
+
+def test_minify_js_preserves_asi_and_newline_semantics() -> None:
+    js = """
+    const api = factory(root)
+    root.item = api
+    """
+    minified = minify_js(js)
+    assert "factory(root)\nroot.item" in minified
+
+
+def test_minify_js_all_canonical_assets_produce_valid_syntax() -> None:
+    node_bin = shutil.which("node")
+    assert node_bin is not None, "node executable required for syntax check"
+
+    repo_root = Path(__file__).resolve().parent.parent
+    for name in CANONICAL_JS_NAMES:
+        src_path = repo_root / "js" / name
+        if not src_path.is_file():
+            continue
+        minified = minify_js(src_path.read_text(encoding="utf-8"))
+        with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False) as tmp:
+            tmp.write(minified)
+            tmp_path = tmp.name
+        try:
+            p = subprocess.run([node_bin, "--check", tmp_path], capture_output=True, text=True)
+            if p.returncode != 0:
+                with tempfile.NamedTemporaryFile("w", suffix=".mjs", delete=False) as tmp_mjs:
+                    tmp_mjs.write(minified)
+                    tmp_mjs_path = tmp_mjs.name
+                p2 = subprocess.run(
+                    [node_bin, "--check", tmp_mjs_path], capture_output=True, text=True
+                )
+                Path(tmp_mjs_path).unlink()
+                assert p2.returncode == 0, f"{name} minification failed syntax check: {p2.stderr}"
+        finally:
+            Path(tmp_path).unlink()

@@ -1,7 +1,9 @@
 /* Print optimization extracted from styles.css to reduce layout coupling. */
 @media print {
   @page {
-    size: a4;
+    /* auto (not a4) lets the printer/OS paper-size choice govern, so both
+       Letter and A4 work (#4550). */
+    size: auto;
     margin: 1in;
   }
 
@@ -328,5 +330,30 @@
     color: #666;
     border-top: 1px solid #ccc;
     padding-top: 0.5rem;
+  }
+
+  /* In Layman's Terms — merged from styles.css (#4550). */
+  .laymans-terms {
+    border: 1px solid #17a2b8;
+    break-inside: avoid;
+  }
+
+  .laymans-terms-content {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .laymans-terms-icon {
+    display: none;
+  }
+
+  .laymans-terms-header {
+    background: #e3f6f8;
+    color: #17a2b8;
+  }
+
+  .laymans-terms-header h2,
+  .laymans-terms-header .laymans-terms-header-title {
+    color: #17a2b8;
   }
 }
