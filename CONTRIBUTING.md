@@ -95,19 +95,45 @@ Quarto files are the source for all content pages.
 ```yaml
 ---
 title: "Your Article Title"
-author: "Your Name"
-date: "2026-01-22"
 description: "Brief description for SEO"
-categories: [category1, category2]
+subtitle: "Optional Subtitle"
+author: "Your Name"
+status: "available" # available, validated, experimental, planned, deprecated, opinion
+audience-level: "advanced" # intro, intermediate, advanced, research
+prerequisites:
+  - "articles/theory-part1.html"
+summary-plain: "Plain-language summary of findings (maximum 60 words)."
+abstract: "Formal technical or scientific abstract of the derivation or model."
+key-takeaways:
+  - "First core takeaway statement."
+  - "Second core takeaway statement."
+  - "Third core takeaway statement."
+date: "2026-01-22" # 'date: today' is prohibited; use verified date or 'Date unverified'
+date-source: "initial-publication-record" # or archive-record, unverified, etc.
+date-modified: "2026-09-10"
+last-reviewed: "2026-09-10"
+canonical: "/articles/your-title.html"
+evidence-rung: "mathematical-identity" # or qualified-simulation, measured-participant-result, etc.
+categories: [theory-core]
 ---
 ## Introduction
 
 Your content here...
 ```
 
+**Article Front-Matter Schema (WEB-03.1 #4506):**
+
+All articles are governed by `schemas/article-front-matter-v1.schema.json`.
+
+- **Core pages** must strictly define all required fields (`status`, `audience-level`, `summary-plain`, `abstract`, `key-takeaways`, `date`, `date-modified`, `last-reviewed`, `canonical`, `evidence-rung`).
+- **`date: today` is strictly prohibited** across the entire repository. Dates must be explicit or marked `Date unverified` with `date-source: unverified`.
+- **`summary-plain`** must not exceed 60 words.
+- **`key-takeaways`** must contain between 3 and 5 items.
+- Non-core articles undergoing migration are tracked in `config/article-front-matter-allowlist.yml` and burned down over time.
+
 **Best Practices:**
 
-- Use YAML frontmatter for metadata
+- Use YAML frontmatter for metadata conforming to the schema
 - Include `description` for SEO
 - Add `categories` for organization
 - Use proper heading hierarchy (h2, h3, h4)

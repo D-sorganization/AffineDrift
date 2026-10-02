@@ -1,0 +1,177 @@
+{
+  "$id": "https://affinedrift.com/schemas/article-front-matter-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AffineDrift Article Front Matter Schema",
+  "description": "Schema definition and validation constraints for Quarto article YAML front matter (WEB-03.1 #4506).",
+  "type": "object",
+  "required": [
+    "title",
+    "status",
+    "audience-level",
+    "summary-plain",
+    "abstract",
+    "key-takeaways",
+    "date",
+    "date-modified",
+    "last-reviewed",
+    "canonical",
+    "evidence-rung"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Article display title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Short SEO description"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Optional secondary title"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author name or attribution"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "validated",
+        "experimental",
+        "planned",
+        "deprecated",
+        "opinion"
+      ],
+      "description": "Controlled publication maturity state (WEB-04.1 #4515)"
+    },
+    "audience-level": {
+      "type": "string",
+      "enum": ["intro", "intermediate", "advanced", "research"],
+      "description": "Target audience depth level"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "List of prerequisite page links or topics"
+    },
+    "summary-plain": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Plain-language summary of findings (maximum 60 words)"
+    },
+    "abstract": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Technical or scientific abstract of the article"
+    },
+    "key-takeaways": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "List of 3 to 5 core takeaway statements"
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^(?:\\d{4}-\\d{2}-\\d{2}|Date unverified|unverified)$",
+      "description": "True first-publication date (YYYY-MM-DD) or 'Date unverified'"
+    },
+    "date-source": {
+      "type": "string",
+      "enum": [
+        "initial-publication-record",
+        "archive-record",
+        "editorial-board-review",
+        "manuscript-release-record",
+        "unverified"
+      ],
+      "description": "Governed provenance source for the publication date"
+    },
+    "date-modified": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Last modification date (YYYY-MM-DD)"
+    },
+    "last-reviewed": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Last technical review date (YYYY-MM-DD)"
+    },
+    "canonical": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Canonical URL or route for this article"
+    },
+    "series": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Name of the containing article series"
+    },
+    "series-part": {
+      "type": ["integer", "string"],
+      "description": "Part or chapter index within the series"
+    },
+    "evidence-rung": {
+      "type": "string",
+      "enum": [
+        "mathematical-identity",
+        "manufactured-fixture",
+        "qualified-simulation",
+        "measured-participant-result",
+        "replicated-result",
+        "bounded-application",
+        "mathematical_identity",
+        "manufactured_synthetic",
+        "qualified_simulation",
+        "pilot_bounded",
+        "governed_dataset",
+        "collecting_locked",
+        "validated_evidence",
+        "published_claim",
+        "superseded_revoked"
+      ],
+      "description": "Governed rung on the evidence ladder (WEB-04.3)"
+    },
+    "format": {
+      "type": "object"
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "changes": {
+      "type": "array"
+    },
+    "css": {
+      "type": ["string", "array"]
+    },
+    "filters": {
+      "type": "array"
+    },
+    "bibliography": {
+      "type": ["string", "array"]
+    },
+    "csl": {
+      "type": "string"
+    },
+    "toc": {
+      "type": "boolean"
+    },
+    "toc-depth": {
+      "type": "integer"
+    },
+    "number-sections": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true
+}
