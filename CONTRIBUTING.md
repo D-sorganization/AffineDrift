@@ -129,6 +129,7 @@ All articles are governed by `schemas/article-front-matter-v1.schema.json`.
 - **`date: today` is strictly prohibited** across the entire repository. Dates must be explicit or marked `Date unverified` with `date-source: unverified`.
 - **`summary-plain`** must not exceed 60 words.
 - **`key-takeaways`** must contain between 3 and 5 items.
+- **`caveats` block (WEB-03.4 #4509):** Isolates scope boundaries into the standardized "What This Shows / What It Does Not Show" component. Requires `establishes` (positive assertions with scope bounds) and `does-not-establish` (negative boundaries and limitations retained from prose), with optional `evidence-level`, `open-critiques`, and `next-gate`.
 - Non-core articles undergoing migration are tracked in `config/article-front-matter-allowlist.yml` and burned down over time.
 
 **Best Practices:**

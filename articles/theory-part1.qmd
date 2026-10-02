@@ -21,6 +21,18 @@ key-takeaways:
   - "The golf swing equations of motion admit a strict control-affine decomposition into drift and input."
   - "Generalized muscular forces enter linearly through a state-dependent control input matrix."
   - "The autonomous drift field encapsulates all passive gravitational, Coriolis, and velocity-dependent forces."
+caveats:
+  evidence-level: "Theory (Mathematical Identity)"
+  establishes:
+    - "Mathematical formulation of the coupled golfer-club system as a control-affine dynamical system."
+    - "Instantaneous decomposition of the phase space vector field into autonomous drift and input components."
+  does-not-establish:
+    - "Individual muscle recruitment, motor unit activation, or neural intent."
+    - "Aerodynamic clubhead drag, compliant foot-ground shear traction, or impact collision mechanics."
+    - "Empirical validation on human golfers without subject-specific parameter identification."
+  open-critiques:
+    - "[Critique: Affine Nature of the Golf Swing](affine-nature-golf-swing.html)"
+  next-gate: "Simscape torque matching (GATE-SIM-01) and laboratory force plate qualification."
 changes:
   - date: "2026-09-10"
     description: "Wired reference cluster cross-article links (#4364)."
@@ -56,13 +68,6 @@ This is the authoritative treatment of the control-affine framework for the golf
 - **Proposed golf application:** Applying the drift/input decomposition to golf biomechanics; the "Frozen Strategy" assumption for biological impedance; defining ZTCF family and ZVCF as diagnostic tools for swing analysis.
 - **Terminology:** The terms "drift" and "input" are standard in nonlinear control. "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' naming for these constructions in the golf context.
 :::
-
-::: {.callout-note}
-## Scope & Exclusions
-This model captures the mechanical structure of coupled rigid bodies (golfer's limbs and torso) and a flexible shaft connected at the grip. It includes inertia, gravity, elastic and damping forces from shaft bending, and joint torques as declared inputs. It explicitly excludes aerodynamic drag, compliant or changing foot contact, marker dynamics, muscle activation delays, and impacts. Ideal fixed-base support reactions are retained through the constraints even when eliminated from the independent-coordinate equations. Terms retained in the chosen equations can be separated into autonomous and declared-input components; what is excluded lies outside the model's scope and must not be attributed by the decomposition.
-:::
-
-{{< include ../_includes/control-affine-attribution-boundary.qmd >}}
 
 The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate net generalized loads consistent with motion and external-force measurements, but it does not identify individual-muscle forces, neural intent, or a unique real-world cause. This paper develops a strictly theoretical control-affine model and separates its instantaneous vector field into autonomous (drift) and declared-input terms. The Zero Torque Counterfactual (ZTCF), Zero Velocity Counterfactual (ZVCF), and force taxonomy are model-conditioned diagnostics; empirical interpretation requires parameter identification, qualifying measurements, and validation.
 
