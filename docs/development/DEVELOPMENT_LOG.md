@@ -23,14 +23,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** Not created; parent regular PR4810 verified on remote main
+- **PR:** #4812 (regular); parent #4810 verified on remote main
 - **Issue:** #4811; epic #4009 / corpus #4021 / companion #4059
 - **Branch:** fix/negative-torque-rigor-4811
 - **Paths:** articles/proximal_distal_companion/chapters/ch13_negative_torque.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_negative_torque_review.py
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; source ab782cb9e38923b4414778d1df18e4ad811cd842; two RED source/figure failures then seven focused passes, saved-array power/objective checks,655titles and changedRuff pass; final PDF/HTML and chapter math reviewed;184/187 dependencies unchanged; full6605pass/2root-hygiene failures remediated;49affectedpass;79.29%accumulatedcoverage.
 - **Summary:** Separate club-side and joint power, moment transport, physical energy inputs, reaction geometry, pointwise/forward/finite-strategy evidence and human attribution. Eight agyFlash helpers read/adjudicated. Eight decisions bound;177priorfindings preserved,185totalfindings and107sourceaudits pluswholebookreview remain.
-- **Next step:** Commit/push binding checkpoint and verify remote topic; publish regular PR after protected parent delivery.
+- **Next step:** Push PR4812 registration checkpoint SELF, remove temporary integration hold and arm protected auto-merge.
 
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
