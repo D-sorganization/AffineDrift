@@ -1,6 +1,6 @@
-# Ideomotor Review — Accepted Source
+# Ideomotor Review — Regular PR #4829
 
-Accepted source checkpoint SELF; full regression 6655 passed, 29 skipped, 187 deselected, 60 warnings, 79.36% coverage. Seven Flash helpers adjudicated. Final decisions and reading limits are frozen in reports/technical-review/ideomotor-review.md. Binding pending; 102 source audits plus whole-book consistency remain. Earlier preparation notes below describe historical checkpoints.
+Accepted source `f488f45f3254fa40f98bedceb5edaa11280bb70c` and binding `8f42bde9155478397dc13910362a6e98555a1ec7` verified on remote. Regular PR #4829 is open and attached; registration SELF. All 61 post-binding checks pass. Full regression: 6655 passed, 29 skipped, 187 deselected, 60 warnings, 79.36% coverage. Seven Flash helpers adjudicated. Frozen decisions and reading limits: reports/technical-review/ideomotor-review.md. 101 source audits plus whole-book consistency remain. Await predecessor #4824 exact-head CI and delivery, then reconcile ancestry and remove the temporary merge hold. Earlier preparation notes below are historical.
 
 ---
 

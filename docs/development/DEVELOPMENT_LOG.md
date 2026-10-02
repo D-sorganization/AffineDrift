@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4825 · Ideomotor Prediction and Action Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created; predecessor regular PR #4824 is open
+- **PR:** #4829 (regular); held pending predecessor #4824 delivery
 - **Issue:** #4825; epic #4009 / corpus #4021
 - **Branch:** fix/ideomotor-rigor-4825
 - **Paths:** articles/ideomotor-theory-and-predictive-brain.qmd, src/affine_control/ideomotor_demo.py, tests/test_ideomotor_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline 4cf785eccbfff52e9372b1f49a5d040d517e5f33; 19 RED/GREEN cases; full regression 6655 passed/29 skipped/187 deselected/79.36% coverage; static and publication checks pass; accepted source f488f45f3254fa40f98bedceb5edaa11280bb70c; six findings bound; 61 post-binding checks pass; binding SELF.
+- **Last verified:** 2026-10-02 baseline 4cf785eccbfff52e9372b1f49a5d040d517e5f33; 19 RED/GREEN cases; full regression 6655 passed/29 skipped/187 deselected/79.36% coverage; static and publication checks pass; accepted source f488f45f3254fa40f98bedceb5edaa11280bb70c; six findings bound; 61 post-binding checks pass; binding 8f42bde9155478397dc13910362a6e98555a1ec7 verified on remote; registration SELF.
 - **Summary:** Full article draft separates prediction/task errors, dynamics/actuation, prior/likelihood precision, free-energy identity and action selection. Repaired zero-action Euler example with a bounded constant-torque search and typed nominal DOP853 predictor. Seven Flash outputs adjudicated. Complete article and bounded publication accepted; six findings bound; primary-reading limits recorded. 101 source audits and whole-book consistency remain.
-- **Next step:** Open a regular PR after pushing the accepted source and binding.
+- **Next step:** Verify predecessor #4824 delivery before reconciling PR #4829 ancestry.
 
 ### DL-#4821 · Counterfactual Intervention and Evidence Review
 

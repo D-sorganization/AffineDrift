@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4829 | Correct ideomotor prediction, precision and action arguments; replace the zero-action Euler example with a tested finite-horizon torque search and bind six scoped technical findings. |
 | 2026-10-02 | #4824 | Distinguish complete-state counterfactual interventions, nonlinear finite effects, geometry controls, archived numerical evidence and human inference in Chapter 11; verify worked examples and publication. |
 | 2026-10-02 | #4820 | Qualify constrained forward-model assumptions, state memory and work accounting in Chapter 18; connect wrench, energy, causal and evidence reasoning in Chapter 28 and correct both schematic figures. |
 | 2026-10-02 | #4818 | Correct Lagrangian energy and force accounting, flexible inertia, input levels, constrained reactions, moving-boundary work and counterfactual signs; verify nine examples and repair article panel and mobile title presentation. |
