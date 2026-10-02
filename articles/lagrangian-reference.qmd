@@ -4,6 +4,7 @@ description: "Reference guide for Lagrangian mechanics applied to control-affine
 author: "Dieter Olson"
 date: "2025-11-28"
 date-source: "initial-publication-record"
+css: ../css/lagrangian-reference.css
 format:
   html:
     toc: true
@@ -14,295 +15,417 @@ categories:
 - reference
 ---
 
-## Introduction
+## What the Lagrangian Description Does
 
-There are two foundational approaches to mechanics. The Newtonian approach requires identifying all forces acting on a system and applying $F = ma$ to each body. The Lagrangian approach, by contrast, works with scalar energy functions rather than vector forces. Both approaches yield identical equations of motion, but the Lagrangian method is often simpler for complex multibody systems because energy is a scalar quantity---one need only add numbers rather than resolve vector forces in multiple directions.
+Lagrangian mechanics derives motion from kinetic and potential **functions**,
+the chosen coordinates, and the forces and constraints that complete the model.
+Knowing only total energy at two instants is not enough to recover a swing.
+Different configurations and velocities can have the same energy, and a force
+can redirect motion without doing instantaneous work.
 
-The golf swing has many moving parts: a rotating torso, swinging arms, bending shaft, clubhead spinning and translating. Tracking all the forces would be a nightmare. But tracking energy? That's elegant. And from energy, we can extract everything we need to understand how the system behaves—including the crucial distinction between passive dynamics (what happens by itself) and active control (what the golfer must do).
+For a golfer, the useful connection is between preparation and later response.
+Earlier loading changes joint configuration, velocity and shaft deformation.
+Those quantities affect both the motion that continues with zero declared drive
+and the acceleration produced by a new drive. Lagrange's equations organize
+that coupling; they do not establish which muscles supplied a load or which
+coaching instruction will improve delivery.
 
-This reference document summarizes the Lagrangian formulation of multibody mechanical systems and shows how the control-affine structure
+This reference derives a smooth mechanical model first, then states what
+changes for constraints, moving supports and actuator memory. Its manufactured
+examples verify bookkeeping, not a fitted golfer. The [normative notation](../pages/notation.html)
+defines the site's drift, input, ZTCF family and instantaneous ZVCF terminology.
 
-$$
-\dot{x} = f(x) + G(x)u
-$$
+## Coordinates, Velocities, and the Mechanical State
 
-arises naturally from first principles. It also clarifies how the drift and input components correspond to potential, kinetic, and generalized non-conservative forces, including those associated with a flexible shaft.
+Let $z=(q,\eta)\in\mathbb R^N$ be a **local** coordinate chart, with rigid-body
+coordinates $q$ and retained shaft-deformation coordinates $\eta$. Here
+$v=\dot z$. Coordinates need not all be angles: their conjugate generalized
+forces must be paired with the corresponding rates to compute power.
 
-## Configuration Space and Generalized Coordinates
+A global unconstrained Euclidean chart is not available for every configuration
+space. For example, a unit quaternion uses four numbers for orientation but only
+three independent angular-velocity components. Implementations often use
+$\dot q=N(q)\nu$, where $\nu$ denotes generalized velocities that need not be
+coordinate derivatives and can have a different dimension from $q$. The simpler
+$\dot z=v$ derivation below applies in its declared local chart; inserting
+quaternion components into it as four independent rotation coordinates is not
+valid. Singular charts, massless coordinates and redundant constraints also
+require treatment before asserting an invertible mass matrix.
 
-Let $q \in \mathbb{R}^n$ denote the generalized coordinates describing the rigid-body configuration of the system (e.g., joint angles, trunk rotation).
-Let $x_s \in \mathbb{R}^k$ denote additional generalized coordinates representing shaft deformation modes (e.g., bending, torsion).
-We define the extended coordinate vector
+The state $(z,v)$ is complete only for a model whose future is determined by
+those variables and its prescribed inputs. Activation, viscoelastic memory,
+controller state or contact history may require additional state. A photograph
+of a pose does not specify that complete state.
 
-$$
-q_{\mathrm{ext}} = \begin{bmatrix} q \\ x_s \end{bmatrix} \in \mathbb{R}^{n+k}.
-$$
+## Energy Functions and Flexible Coordinates
 
-The corresponding generalized velocities are $\dot{q}$ and $\dot{x}_s$, and we collect them in
-
-$$
-\dot{q}_{\mathrm{ext}} = \begin{bmatrix} \dot{q} \\ \dot{x}_s \end{bmatrix}.
-$$
-
-## Lagrangian: Kinetic and Potential Energy
-
-The Lagrangian is defined as
-
-$$
-\mathcal{L}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}}) = T(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}}) - V(q_{\mathrm{ext}}),
-$$
-
-where $T$ is the total kinetic energy and $V$ is the total potential energy.
-
-For an articulated rigid-body system with flexible shaft modes, the kinetic energy can be written in quadratic form:
-
-$$
-T = \frac{1}{2}\dot{q}_{\mathrm{ext}}^\top M_{\mathrm{ext}}(q_{\mathrm{ext}}) \dot{q}_{\mathrm{ext}},
-$$
-
-where $M_{\mathrm{ext}}(q_{\mathrm{ext}})$ is the extended inertia matrix, symmetric and positive definite.
-
-The potential energy includes gravitational and elastic components:
+For time-independent kinematics in an inertial observer, assume a regular
+mechanical model with
 
 $$
-V(q_{\mathrm{ext}}) = V_{\mathrm{grav}}(q) + V_{\mathrm{shaft}}(x_s) + V_{\mathrm{geom}}(q,x_s),
+T(z,v)=\tfrac12v^\mathsf T M(z)v,\qquad
+\mathcal L(z,v)=T(z,v)-V(z).
 $$
 
-where $V_{\mathrm{shaft}}$ accounts for shaft bending/torsion and $V_{\mathrm{geom}}$ captures configuration-dependent geometric terms.
+The inertia matrix is symmetric and positive definite when every nonzero
+velocity in these independent coordinates has positive kinetic
+energy. This is an assumption to check, not a remedy for a redundant or singular
+parameterization. Prescribed support motion can make the reduced Lagrangian
+explicitly time-dependent and introduce terms linear in velocity; it need not
+have precisely the autonomous form above.
 
-## Euler--Lagrange Equations With Generalized Forces
-
-The Euler--Lagrange equations for generalized coordinates $q_{\mathrm{ext}}$ are
+For a flexible shaft, use the geometry of the deformed system:
 
 $$
-\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_{\mathrm{ext}}}\right)
--
-\frac{\partial \mathcal{L}}{\partial q_{\mathrm{ext}}}
+V(z)=V_{\mathrm{grav}}(q,\eta)+V_{\mathrm{el}}(q,\eta),\qquad
+M(z)=\begin{bmatrix}M_{qq}&M_{q\eta}\\M_{\eta q}&M_{\eta\eta}\end{bmatrix}.
+$$
+
+Deflection can change elevation as well as elastic strain, so gravitational
+potential need not depend on $q$ alone. A small-deformation approximation may
+use $V_{\mathrm{el}}=\tfrac12\eta^\mathsf T K(q)\eta$ about a specified reference.
+Check the mode shapes, boundary conditions, retained modal inertia and range of
+validity. Off-diagonal inertia couples rigid motion and deformation.
+
+Do not add an unexplained second “geometric energy” on top of a strain-energy
+model that already contains the same effect. Tangent stiffness comes from
+linearizing the declared force and constraint equations about a loaded state.
+Prestress can contribute geometric stiffness; it is not automatically a separate
+energy supply, nor is every geometric-stiffness effect a centrifugal effect.
+
+## Count Every Generalized Force Once
+
+The forced Euler–Lagrange equations are
+
+$$
+\frac{d}{dt}\frac{\partial\mathcal L}{\partial v}
+-\frac{\partial\mathcal L}{\partial z}=Q.
+$$
+
+For time-independent coordinate kinematics, virtual work defines
+$\delta W=Q^\mathsf T\delta z$, and the associated power is $Q^\mathsf T v$.
+A wrench must be reduced about a declared point and expressed in a compatible
+frame before its Jacobian transpose maps it into $Q$. Net generalized load does
+not identify a unique muscle-force or bilateral-hand-force allocation.
+
+Choose the following disjoint bookkeeping convention:
+
+$$
+Q=\bar B(z)u-D(z)v+Q_r(z,v).
+$$
+
+Here $u$ is the declared **applied force or torque input**, $\bar B$ maps that
+input into generalized loads, $-Dv$ is the modeled viscous damping, and $Q_r$
+contains other retained generalized-force laws. A load already represented by
+$V$ or $-Dv$ is excluded from $Q_r$. An independently prescribed disturbance
+needs its own declared argument or channel; it is not silently identified with
+the input removed by a counterfactual.
+
+With $D=D^\mathsf T\succeq0$, the optional Rayleigh function
+$\mathcal R=\tfrac12v^\mathsf T Dv$ gives $Q_d=-\partial\mathcal R/\partial v=-Dv$.
+Writing damping directly in $Q$ is equally legitimate. Rayleigh's construction
+is a useful representation for suitable force laws, not a prerequisite for
+including every dissipative force. Dry friction or hysteresis can need a
+nonsmooth law or internal state; they do not become conservative because they
+appear in Lagrange's equations. See the distinction between general external
+forces and the Rayleigh subclass in the [author's abstract on dissipation](https://arxiv.org/abs/2107.03780).
+
+## Manipulator Form and Its Energy Check
+
+Expanding the derivatives and moving the **same** damping term to the left gives
+
+$$
+M(z)\dot v+c(z,v)+\nabla_zV(z)+D(z)v=\bar B(z)u+Q_r(z,v).
+$$
+
+There is no additional copy of damping on the right. Define
+$h=c+\nabla_zV+Dv-Q_r$, so the equation is $M\dot v+h=\bar Bu$.
+The physical conservative generalized load is $-\nabla_zV$; the positive
+potential gradient is a left-hand load term, not its signed force on the system.
+
+For the kinetic energy above, one construction of the velocity-product vector is
+
+$$
+c_i=\sum_{j,k}\Gamma_{ijk}v_jv_k,\qquad
+\Gamma_{ijk}=\tfrac12\left(
+\frac{\partial M_{ij}}{\partial z_k}
++\frac{\partial M_{ik}}{\partial z_j}
+-\frac{\partial M_{jk}}{\partial z_i}\right).
+$$
+
+Writing $c=C(z,v)v$ does not make $C$ unique. The Christoffel choice
+$C_{ij}=\sum_k\Gamma_{ijk}v_k$ satisfies $C+C^\mathsf T=\dot M$.
+Thus $\dot M-2C$ is skew-symmetric and gives
+$v^\mathsf Tc=\tfrac12v^\mathsf T\dot Mv$. This identity is why the inertial
+terms fit the energy balance; treating Coriolis terms as an additional external
+energy source would break it. The [Modern Robotics velocity-product derivation](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-1-lagrangian-formulation-of-dynamics-part-2-of-2/)
+provides the standard construction, while [MIT's multibody notes](https://underactuated.mit.edu/multibody.html)
+cover the broader manipulator and constrained forms.
+
+For $E=T+V$ and the time-independent model,
+
+$$
+\dot E=v^\mathsf T\bar Bu+v^\mathsf TQ_r-v^\mathsf TDv.
+$$
+
+This is **mechanical** power. It is not metabolic power, and zero mechanical
+power does not establish zero muscle effort. Elastic release changes the
+partition between $T$ and $V$; it is not another external input to the same
+whole-system energy balance.
+
+As a small check, take one angular coordinate with inertia 2 kg m², stiffness
+3 N m/rad and damping 0.2 N m s/rad. At angle 0.2 rad, rate 1 rad/s and zero
+applied torque, acceleration is $(-0.6-0.2)/2=-0.4$ rad/s². The mechanical
+energy rate is $2(1)(-0.4)+3(0.2)(1)=-0.2$ W, exactly the damping loss.
+Counting the damping twice would predict a different motion and loss.
+
+## What Control-Affine Structure Establishes
+
+For $x_m=(z,v)$, invertibility of $M$ and input-independent $M,h,\bar B$ give
+
+$$
+\dot x_m=f(x_m)+G(x_m)u,\qquad
+f=\begin{bmatrix}v\\-M^{-1}h\end{bmatrix},\quad
+G=\begin{bmatrix}0\\M^{-1}\bar B\end{bmatrix}.
+$$
+
+The inverse denotes a linear solve; numerical implementations should solve the
+system rather than form a dense inverse unnecessarily. The model may be very
+nonlinear in state while remaining affine in this particular input.
+
+At one fixed complete state, changing $u$ by $\Delta u$ changes the vector field
+by $G(x_m)\Delta u$. Doubling $u$ doubles its input contribution, not the drift,
+total acceleration, subsequent trajectory, clubhead speed or energy. Two forward
+branches generally develop different states and therefore different $f$ and $G$.
+The relation is not a superposition theorem for whole swings or for neural effort.
+
+The drift also depends on the declared zero of the input. Under a new convention
+$u=u_0(x_m)+\widetilde u$, the same physical dynamics have drift $f+Gu_0$ and input
+$G\widetilde u$. Gravity compensation illustrates why a physical source and a
+chosen input convention must not be confused. State coordinates and output
+projections can change the displayed components without changing the motion.
+
+### Flexibility Changes the Input Response Too
+
+Even when a shaft mode has no direct actuator, its acceleration can respond to
+joint torque through $M^{-1}$. Consider two angular coordinates with manufactured
+SI coefficients
+
+$$
+M=\begin{bmatrix}2&0.4\\0.4&0.8\end{bmatrix},\qquad
+\bar B=\begin{bmatrix}1\\0\end{bmatrix},\qquad
+M^{-1}\bar B=\begin{bmatrix}5/9\\-5/18\end{bmatrix}.
+$$
+
+The entries of $M$ have units kg m²; $\bar B$ is dimensionless, while
+$M^{-1}\bar B$ has units (rad/s²)/(N m).
+The second coordinate has a zero row in the direct load map and a nonzero row
+in the acceleration map. It would therefore be wrong to say that adding shaft
+dynamics can change only drift. A changed inertia or constraint model changes
+how input is transmitted as well.
+
+Use $K=\operatorname{diag}(3,5)$, $D=\operatorname{diag}(0.2,0.1)$,
+$z=(0.2,-0.1)$ rad, $v=(1,2)$ rad/s and $u=4$ N m, with $K$ in N m/rad, $D$ in N m s/rad, $Q_r=0$ and
+$V=\tfrac12z^\mathsf TKz$. The acceleration is
+$(61/36,-17/36)$ rad/s². Applied power is 4 W, damping loss is 0.6 W and
+$\dot E=3.4$ W. These numbers test the coupling and the energy balance together.
+
+### A Neural Command Is Not an Applied Torque
+
+Suppose a scalar applied torque $a$ has illustrative dynamics
+$\dot a=(u_c-a)/T_a$. The mechanical equation uses $a$, while command $u_c$
+enters the equation for $a$. With state $(z,v,a)$ the system can still be affine
+in $u_c$, but its input column acts in the actuator-state block. It is not the
+same $G$ as the direct-torque model above.
+
+If $a(0)=6$ N m, $T_a=30$ ms and $u_c=0$, the torque after one time constant is
+$6/e$ N m. A free inertia of 2 kg m² still accelerates at $3/e$ rad/s².
+Directly removing applied torque would instead give zero acceleration in that
+otherwise unloaded example.
+
+Activation-dependent stiffness, force–length and force–velocity effects,
+saturation, delay and recruitment can change the input law or require additional
+state. An input bound on an affine model does not itself remove affineness;
+passing an upstream command through saturation need not be globally affine in
+that command. State explicitly which level is being modeled before interpreting
+“zero control” or an effort increase.
+
+## Constraints, Contact, and Moving Supports
+
+### Solve Reactions With the Acceleration
+
+For ideal, stationary, bilateral constraints $\Phi(z)=0$, let
+$J=\partial\Phi/\partial z$. Compatible motion satisfies $Jv=0$ and
+$J\dot v+\dot Jv=0$. In coordinates independent before these added constraints,
+
+$$
+\begin{bmatrix}M&-J^\mathsf T\\J&0\end{bmatrix}
+\begin{bmatrix}\dot v\\\lambda\end{bmatrix}
 =
-Q_{\mathrm{ext}},
+\begin{bmatrix}\bar Bu-h\\-\dot Jv\end{bmatrix}.
 $$
 
-where $Q_{\mathrm{ext}}$ are the generalized non-conservative forces.
-
-We partition $Q_{\mathrm{ext}}$ as
-
-$$
-Q_{\mathrm{ext}} =
-\begin{bmatrix}
-Q_q \\ Q_s
-\end{bmatrix},
-$$
-
-where $Q_q$ corresponds to torques at the actuated joints and $Q_s$ corresponds to generalized forces associated with shaft modes. Typically,
+With $M\succ0$ and independent constraint rows, the acceleration and multiplier
+are uniquely determined. Holding that smooth mode fixed, the constrained
+input-to-acceleration map is
 
 $$
-Q_q = \tau_{\mathrm{app}} + Q_{q,\mathrm{nc}}, \qquad Q_s = Q_{s,\mathrm{nc}},
+\begin{aligned}
+G_{v,c}={}&M^{-1}\bar B\\
+&-M^{-1}J^\mathsf T(JM^{-1}J^\mathsf T)^{-1}JM^{-1}\bar B.
+\end{aligned}
 $$
 
-with $\tau_{\mathrm{app}}$ the applied joint torques, and $Q_{(\cdot),\mathrm{nc}}$ representing additional non-conservative effects such as damping.
+Thus reactions depend on the input too. A counterfactual branch must solve its
+own reactions; retaining the original reaction forces after changing drive is
+a different model. Dependent constraints, unidentified internal forces or
+incompatible initial conditions need additional analysis rather than an
+unqualified inverse.
 
-## Manipulator Form From Lagrange
+For a manufactured example, take $M=\operatorname{diag}(2,3)$,
+$J=[1,-1]$, $\bar B=(1,0)^\mathsf T$ and a 10 N m input with $h=0$.
+Both angular accelerations are 2 rad/s² and $\lambda=-6$ N m. At rates
+$(0.4,0.4)$ rad/s, the two reaction-power terms are -2.4 and +2.4 W.
+They cancel for the complete constrained system while transferring power
+between its coordinates. The constrained acceleration map $G_{v,c}$ is
+$(0.2,0.2)^\mathsf T$, whereas the unconstrained acceleration map
+$M^{-1}\bar B$ is $(0.5,0)^\mathsf T$, both in (rad/s²)/(N m).
 
-Expanding the Euler--Lagrange equations yields the standard manipulator form for the extended system:
+### Nonholonomic Constraints Are Not Excluded
 
-$$
-M_{\mathrm{ext}}(q_{\mathrm{ext}})\ddot{q}_{\mathrm{ext}}
-+
-C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}
-+
-\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}})
-+
-\tau_{\mathrm{passive,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
-=
-Q_{\mathrm{ext}},
-$$
+Ideal velocity constraints such as rolling without lateral slip can be modeled
+with Lagrange–d'Alembert equations and their reaction forces. They need not be
+integrable into position constraints. This is an established Lagrangian
+formulation, as described in the [authors' nonholonomic-mechanics abstract](https://murray.cds.caltech.edu/Nonholonomic_Mechanical_Systems_and_Symmetry).
+Simply substituting a nonintegrable velocity restriction into an unconstrained
+Hamilton action is not generally the same variational problem.
 
-where:
-- $M_{\mathrm{ext}}(q_{\mathrm{ext}})$ is the extended inertia matrix,
+For a shoe and ground, choose a contact law appropriate to the question:
+compliance, sticking, sliding, separation and rolling are different assumptions.
+Unilateral contact, frictional transitions and impacts can produce mode changes,
+set-valued forces or velocity resets. One smooth affine vector field does not
+automatically cover all of those regimes. Check feasibility, contact-law validity
+and mode transitions alongside the integration residuals.
 
-- $C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}$ contains Coriolis and centrifugal terms,
+### Moving Boundaries Can Supply Power at Zero Drive
 
-- $\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$ contains gravitational and elastic contributions (the gradient of the potential with respect to the extended generalized coordinates),
-
-- $\tau_{\mathrm{passive,ext}}$ gathers additional modeled passive effects (e.g. damping).
-
-For actuated joints with input $u \in \mathbb{R}^m$, we express
-
-$$
-Q_{\mathrm{ext}} =
-\begin{bmatrix}
-B u + Q_{q,\mathrm{nc}} \\
-Q_{s,\mathrm{nc}}
-\end{bmatrix},
-$$
-
-where $B$ maps inputs to generalized joint torques.
-
-## Drift and Input Decomposition
-
-We define the extended drift generalized forces as
+For a time-dependent constraint $\Phi(z,t)=0$, compatible velocity satisfies
+$Jv=-\Phi_t$. Differentiating this condition gives
 
 $$
-\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
-=
-- \left[
-C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}
-+ \mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}})
-+ \tau_{\mathrm{passive,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
-- Q_{\mathrm{ext,noninput}}
-\right],
+J\dot v=-\dot Jv-\frac{d\Phi_t}{dt}
+=-\dot Jv-J_t v-\Phi_{tt}.
 $$
 
-where $Q_{\mathrm{ext,noninput}}$ groups non-input generalized forces (e.g., certain non-conservative terms). The input generalized forces are
+Here $\dot J$ is the total derivative along the motion and $J_t$ is the
+partial time derivative. This replaces the stationary constraint's second-row
+right-hand side in the block solve. With reaction $J^\mathsf T\lambda$, its power is
 
 $$
-\tau_{\mathrm{input,ext}} = 
-\begin{bmatrix}
-B u \\ 0
-\end{bmatrix}.
+P_{\mathrm{constraint}}=v^\mathsf TJ^\mathsf T\lambda=-\lambda^\mathsf T\Phi_t.
 $$
 
-Then the extended equation of motion becomes
+It need not vanish. For a 2 kg mass moving vertically upward at 0.3 m/s with
+upward acceleration 0.4 m/s² and $g=9.81$ m/s², the supporting force is
+20.42 N. It supplies 6.126 W even with no separate actuator on the mass.
+Resetting that mass's velocity to zero would violate the prescribed motion.
+
+A prescribed hand path or moving base can therefore be an external power source
+in a reduced club model. Report that boundary work. If prescribed motion makes
+the mechanical model explicitly time-dependent, write $f(x_m,t)$ or augment the state with
+a clock. The latter does not turn supplied boundary energy into a free internal
+resource. Once coordinates are eliminated, use the resulting time-dependent
+energy identity rather than silently reusing the autonomous balance above.
+
+## Counterfactuals With an Explicit Intervention
+
+### Distinguish Pointwise Evaluation From Forward Motion
+
+The site uses **pointwise ZTCF** for evaluating the zero-applied-control vector
+field at an achieved complete state. A stitched trace of such evaluations follows
+the achieved states as its sampling locations; it is not an integrated zero-input
+motion. A **forward ZTCF** integrates from one specified state with the declared
+applied drive removed. A branched ZTCF starts such a forward motion at an achieved
+state and compares its future with the original future.
+
+Retain the specified elastic loading, damping, constraints, other internal state
+and boundary laws, and identify exactly which input channel is removed. With
+actuator memory, setting command to zero need not implement applied-torque
+removal. A zero-input branch can contain energy stored by earlier active work
+and power supplied by a retained moving boundary. Calling it drift does not
+identify a biologically inactive golfer.
+
+### Give the Zero-Velocity Evaluation Its Correct Sign
+
+For the unconstrained smooth model, or after valid reduction to independent
+coordinates, the instantaneous ZVCF acceleration is
 
 $$
-M_{\mathrm{ext}}(q_{\mathrm{ext}})\ddot{q}_{\mathrm{ext}}
-=
-\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
-+
-\tau_{\mathrm{input,ext}}.
+a_{\mathrm{ZVCF}}(z)=-M(z)^{-1}h(z,0),\qquad u=0.
 $$
 
-## First-Order State Form and Control-Affine Structure
+If constraints remain explicit, solve their acceleration/reaction system at the
+reset state instead of using this unconstrained inverse.
+Reset all declared generalized velocities and velocity-like internal variables;
+retain configuration, non-velocity memory and frozen parameters. Check that the
+reset is admissible under the retained constraints. If it is not, do not report
+the resulting incompatible state as a physical release. In particular, when
+$\Phi_t\ne0$, setting all velocities to zero cannot satisfy $Jv=-\Phi_t$:
+that ZVCF reset is undefined within the retained constrained model. Freezing
+the boundary or resetting only relative velocities defines a different
+intervention that must be named and derived separately.
 
-Define the extended state
+Only under additional assumptions does $h(z,0)=\nabla_zV$. Quadratic velocity
+products and smooth viscous damping vanish at zero velocity, but retained
+internal loads, friction laws or prescribed boundary effects need not reduce
+to that potential gradient. A friction law can be set-valued at rest.
 
-$$
-x = 
-\begin{bmatrix}
-q_{\mathrm{ext}} \\
-\dot{q}_{\mathrm{ext}}
-\end{bmatrix},
-$$
+When reporting a generalized-force representation, its signed drift load is
+$-h(z,0)$. The formal holding load is $+h(z,0)$, and the ZVCF itself is an
+acceleration. In the coupled example, the signed drift load is $(-0.6,0.5)$ N m
+and acceleration is $(-17/36,31/36)$ rad/s². The holding load $(0.6,-0.5)$ N m
+cannot be supplied by the single first-coordinate actuator. A mathematical
+holding load is not automatically an executable control policy.
 
-and write
+## A Useful Golf Interpretation
 
-$$
-\dot{x} =
-\begin{bmatrix}
-\dot{q}_{\mathrm{ext}} \\
-M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
-\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
-\end{bmatrix}
-+
-\begin{bmatrix}
-0 \\
-M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
-\begin{bmatrix} B \\ 0 \end{bmatrix}
-\end{bmatrix} u.
-$$
+Preparation, current state and current drive are intertwined. Earlier work can
+load a shaft and alter configuration; configuration and retained deformation
+change inertia, potential gradients and constraint geometry; current inputs act
+through that changed system. Measure the resulting power and endpoint energy
+without counting the same elastic release or constraint transfer twice.
 
-Define
+A complete mechanical model still needs identified parameters, measured boundary
+conditions, and evidence that its approximations fit the task. It does not infer
+muscle recruitment, neural intent, metabolic efficiency or a coaching benefit
+from the affine form. Those questions need additional models and observations.
 
-$$
-f(x) =
-\begin{bmatrix}
-\dot{q}_{\mathrm{ext}} \\
-M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
-\tau_{\mathrm{drift,ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})
-\end{bmatrix},
-\qquad
-G(x) =
-\begin{bmatrix}
-0 \\
-M_{\mathrm{ext}}^{-1}(q_{\mathrm{ext}})
-\begin{bmatrix} B \\ 0 \end{bmatrix}
-\end{bmatrix}.
-$$
-
-Then
-
-$$
-\dot{x} = f(x) + G(x)u,
-$$
-
-which is exactly the control-affine structure used throughout the main text.
-
-## Role of Gravity and Flexible Shaft in Lagrangian Terms
-
-In the Lagrangian framework, gravity arises as part of the potential energy $V_{\mathrm{grav}}(q)$, and hence appears in the gravity/elastic vector $\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$. Shaft elasticity is included in $V_{\mathrm{shaft}}(x_s)$, and any associated non-conservative terms (e.g. shaft damping) appear in $\tau_{\mathrm{passive,ext}}$. Both gravity and shaft contributions enter the **drift** term $f(x)$ (via $\tau_{\mathrm{drift,ext}}$) and do not modify the linear dependence on $u$. Note this gravity vector $\mathbf{g}_{\mathrm{ext}}$ is distinct from the control **input matrix** $G(x)$ defined above: gravity is part of the passive drift, never the actuation map.
-
-## Connection to ZTCF Family and ZVCF
-
-From the Lagrangian viewpoint:
-
-- **ZTCF** corresponds to the *trajectory* obtained by setting $u = 0$ in the Euler--Lagrange equations and integrating forward from the actual initial condition, so that
-$$
-M_{\mathrm{ext}}\ddot{q}_{\mathrm{ext}} = \tau_{\mathrm{drift,ext}},
-$$
-and the motion is governed solely by the drift.
-
-- **ZVCF** evaluates the *drift* at zero velocity ($\dot{q}_{\mathrm{ext}} = 0$): the velocity-dependent terms (Coriolis, centrifugal, damping) vanish and the remaining generalized forces are the configuration-dependent passive loads $\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$ (gravity $g(q)$ plus elastic restoring forces). It is the configuration-only slice of the drift, $\tau_{\mathrm{ZVCF}} = \tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$, and contains **no input contribution** — in particular it is *not* $\tau_{\mathrm{input,ext}} = [B u;\, 0]$. It is a pointwise diagnostic, not a trajectory.
-Thus the Lagrangian formulation supports the same drift--input decomposition and counterfactual constructions as the Newton--Euler and screw-theoretic formulations.
-
-## Summary
-
-The Lagrangian formalism provides a principled route from kinetic and potential energy to the manipulator equations, and from there to the control-affine state-space representation. Drift dynamics collect all velocity-dependent, gravitational, and elastic effects, including those of a flexible shaft, while inputs enter linearly via the actuator mapping. This alignment with the control-affine structure underpins the theoretical framework developed in the main body of the work.
-
-## Limitations
-
-:::{.callout-warning}
-The Lagrangian approach, while mathematically elegant, operates under several restrictive assumptions:
-
-1. **Assumes holonomic constraints only (no rolling without slipping)**: The framework assumes all constraints can be written as algebraic relations between coordinates ($\Phi(q) = 0$). Non-holonomic constraints—such as rolling contact (wheel rolling without slipping on the ground) or knife-edge constraints—cannot be directly incorporated into the standard Lagrangian formulation. Foot-ground interaction during the golf swing is approximated as a holonomic contact, but the actual rolling and sticking of the shoe sole involves non-holonomic effects.
-
-2. **Dissipative forces (friction, damping) require Rayleigh dissipation function extension**: The classical Lagrangian formulation (kinetic minus potential energy) cannot directly represent velocity-proportional damping. Adding this requires the Rayleigh dissipation function, which extends the framework but introduces additional phenomenological terms that must be separately identified. Muscle damping, joint friction, and air resistance all require this extension, meaning the "pure" Lagrangian elegance is compromised.
-
-3. **Electromagnetic and thermodynamic couplings excluded**: The Lagrangian mechanics framework applies to mechanical systems. Muscle activation involves neural signaling and biochemical processes—energy transduction from ATP to mechanical work. These thermodynamic and electromechanical couplings are outside the scope of classical mechanics. Any heat dissipation, muscle efficiency losses, or fatigue-induced stiffness changes cannot be captured within the purely mechanical Lagrangian description.
-:::
-
+```{=html}
 <section class="laymans-terms">
   <h2>
   <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
     <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
-</h2>
+  </h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This article explains a mathematical "shortcut" used to describe complex golf swings by tracking energy instead of forces.
-      </p>
-
+      <p class="laymans-terms-intro">Energy functions describe how motion and loading depend on the swing's geometry. The energy total alone cannot tell us the full motion; forces, constraints and the starting state still matter.</p>
       <div class="laymans-item">
-        <h3>The Energy Shortcut (Lagrangian)</h3>
-        <p>Calculating how a golfer moves by tracking every single force (gravity, muscle, tension) is incredibly messy. This method instead tracks "Energy" (speed and height) to get the same result much faster.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Tracking a budget. Instead of counting every single penny that changes hands in a store (Newton's forces), you just look at the register's balance at the start and end of the day (Lagrangian energy). You get the same answer—how much money was made—but with way less counting.
-        </div>
+        <h3>Preparation Changes the Next Response</h3>
+        <p>Earlier loading changes position, speed and shaft deformation. The same later torque can therefore produce a different acceleration. A loaded shaft can return stored energy, but it does not create another supply of energy.</p>
       </div>
-
       <div class="laymans-item">
-        <h3>Natural Drift vs. Active Input</h3>
-        <p>We split the swing into two parts: what happens naturally because of momentum and gravity ("Drift"), and what happens because you pull with your muscles ("Input").</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Riding a bicycle downhill. The "Drift" is the bike speeding up just because of the slope and your current speed. The "Input" is you deciding to pedal harder. Your total speed is the combination of the hill's pull plus your leg power.
-        </div>
+        <h3>A Local Input Rule Has Limits</h3>
+        <p>At one fixed state, doubling a declared applied torque doubles its part of the instantaneous acceleration. It need not double the total acceleration or clubhead speed. It also does not establish that twice the mental or muscular effort produces twice the torque.</p>
       </div>
-
-      <div class="laymans-item">
-        <h3>The "Volume Knob" Rule</h3>
-        <p>This math proves that your muscle effort adds directly to the swing's motion without getting twisted up. If you double your effort, you get double the "push" from that muscle.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A volume knob on a stereo. Turning the knob doesn't change the song or the lyrics; it just makes the output louder or softer. Similarly, your muscles just "turn up the volume" on the forces acting on the club.
-        </div>
-      </div>
-
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> By looking at energy instead of forces, we can mathematically prove that a golf swing is just a mix of "natural momentum" plus "muscle effort" added together.
+        <strong>Key Takeaway:</strong> Ask what was prepared, which load changes now, and where energy enters or leaves. Zero applied drive can retain stored energy and contact forces; zero neural command can also retain activation. These distinctions make a swing explanation testable without turning a model into a prescription.
       </div>
     </div>
   </div>
 </section>
+```
 
 ## Related Articles
 
@@ -312,5 +435,3 @@ The Lagrangian approach, while mathematically elegant, operates under several re
 - [Affine Control Interpretation (Theory Part 1)](theory-part1.html) — Foundational control-affine derivation of the drift and input decomposition
 - [The Physics of Golf: Chapter 5 Affine Structure](The_Physics_of_Golf/quarto/ch05_affine_structure.html) — Multibody equations of motion and drift-control ratio in textbook form
 - [The Physics of Golf Glossary](The_Physics_of_Golf/quarto/glossary.html) — Definitions of Lagrangian mechanics, drift, control, and ZTCF
-
-

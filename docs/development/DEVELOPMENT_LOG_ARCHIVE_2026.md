@@ -213,3 +213,16 @@
 - **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
 - **Summary:** Eight corrections connect measurement, mechanical controls, causality, uncertainty and evidence. Seven agy Flash helpers reviewed. All137prior scientific findings and commits preserved; eight new findings bind eight exact files;111corpus audits remain after Chapter19.
 - **Next step:** Complete: PR4800 merged as041a83a8c;31owned paths accounted for,CI36974008090 successful. See constraints-experiment-remote-main-receipt.json. Lease/presence released; original PR already closed.
+
+### DL-#4813 · Timing, State Events, and Actuator History
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4814 (regular); parent #4812 verified on remote main
+- **Issue:** #4813; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/timing-rigor-4813
+- **Paths:** articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_timing_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 263c28c23c9ccc89602d0e1dd44f41be15722a99; exact-head CI37036705535 succeeded;25owned blobs and whole merged tree match cfc2; remote-main ancestry verified.
+- **Summary:** Review complete state versus scalar events, transverse/grazing timing sensitivity, actuator preload and rise time, bounded provider evidence, phase-work Jacobians, prospective information and causal timing experiments. Seven Flash helper outputs adjudicated. Eight decisions bound to source 8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9;185prior retained,193total;106sourceaudits pluswholebookreview remain.
+- **Next step:** None for this delivered scope.

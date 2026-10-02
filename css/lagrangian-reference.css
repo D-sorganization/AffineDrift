@@ -1,0 +1,24 @@
+/* The semantic heading separates the toggle from its controlled panel. */
+#quarto-document-content .laymans-terms-content[aria-hidden="false"] {
+  max-height: none;
+}
+
+/* Keep the expanded explanation consistent with the active reading theme. */
+#quarto-document-content .laymans-terms,
+#quarto-document-content .laymans-item {
+  background: var(--bg-primary);
+}
+
+/* Long equations retain legible type and use the site's scroll container. */
+#quarto-document-content .math.display,
+#quarto-document-content .math.display mjx-container[display="true"] {
+  font-size: inherit !important;
+}
+
+/* Give the article title its own row beside Quarto's source-code control. */
+@media (max-width: 767px) {
+  .quarto-title .quarto-title-block > div {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
