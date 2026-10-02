@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.296                                          |
+| **Spec Version**        | 1.0.297                                          |
 | **Last Spec Update**    | 2026-10-02                                       |
 
 ## 2. Purpose & Mission
@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4824 | Distinguish complete-state counterfactual interventions, nonlinear finite effects, geometry controls, archived numerical evidence and human inference in Chapter 11; verify worked examples and publication. |
 | 2026-10-02 | #4820 | Qualify constrained forward-model assumptions, state memory and work accounting in Chapter 18; connect wrench, energy, causal and evidence reasoning in Chapter 28 and correct both schematic figures. |
 | 2026-10-02 | #4818 | Correct Lagrangian energy and force accounting, flexible inertia, input levels, constrained reactions, moving-boundary work and counterfactual signs; verify nine examples and repair article panel and mobile title presentation. |
 | 2026-10-02 | #4814 | Correct Chapter 22 event-state definitions, actuator history, finite-study scope, phase-work accounting and prospective causal timing; verify manufactured examples and regenerate the schematic threshold figure. |
@@ -551,5 +552,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4498 | Resolve Volume II collision and unify volume numbering scheme (WEB-02.2) across _quarto.yml, books/*.qmd, and Geometry of Motion index; publish concordance table on Books hub and expand volume overview pages to >= 200 words. |
 | 2026-10-02 | #4506 | Define and validate article front-matter schema (WEB-03.1) in schemas/article-front-matter-v1.schema.json, with core-page validation and allowlist burn-down. |
 | 2026-10-02 | #4787 | Fix dark theme color contrast violations across axe matrix, adjust text tokens and component styles, update accessibility statement, and re-enable --axe fail in CI (#4787). |
+| 2026-10-02 | #4587 | Write canonical Editorial Style Guide in docs/development/editorial-style-guide.md covering voice, scope, standardized caveat block, glossary tooltips, layer readability targets, analogy rules, banned vocabulary list, and author checklist (WEB-12.1). |
 | 2026-10-02 | #4490 | Build site-wide glossary with data/glossary.yml (72 terms), pages/glossary.qmd generation, accessible WAI-ARIA tooltip shortcode/Lua filter {{< term >}}, styles, and book glossary cross-linking (WEB-01.5). |
 
