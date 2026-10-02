@@ -175,6 +175,14 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
             "Multibody Impact Coupling",
         ),
         ("articles/reference-point-problem.qmd", "The Reference-Point Problem"),
+        (
+            "articles/The_Geometry_of_Motion/quarto/volume1.qmd",
+            "Volume I: Tangent-Space Methods for Nonlinear Control",
+        ),
+        (
+            "articles/The_Geometry_of_Motion/quarto/volume2.qmd",
+            "Volume II: Control Is Motion",
+        ),
     }
 )
 
