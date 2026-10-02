@@ -225,6 +225,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
 | 2026-10-01 | #4772 | Correct measured-golfer study attribution, sensor/model inference, repeated-swing uncertainty and human-validation boundaries in Chapter 24; replace evidence pyramid (#4771). |
+| 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
 | 2026-10-01 | #4538 | Add devcontainer configuration for reader run environment, allow .devcontainer in root hygiene, and add verification tests. |
 | 2026-10-01 | #4778 | Standardize equation numbering to Quarto syntax and add test suite coverage in test_equation_numbering.py (#4580). |
 | 2026-10-01 | #4773 | Record controllability-drift-ratio redirect in redirects.yml to restore URL stability check in deploy workflow (#4688). |
