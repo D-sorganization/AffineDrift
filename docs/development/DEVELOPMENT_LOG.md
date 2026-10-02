@@ -23,28 +23,28 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4805 (regular, attached; dependency hold for #4804)
+- **PR:** #4804 (regular, combined Chapters7/19; child4805 merged into topic only)
 - **Issue:** #4801; epic #4009 / corpus #4021
 - **Branch:** fix/pendulum-rigor-4801
 - **Paths:** articles/proximal_distal_companion/chapters/ch07_one_pendulum_to_two.qmd, tests/test_pendulum_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; fullpytest6574pass/79.09%coverage;12publicationgates;Ruff/Black855/mypy95;232pagePDFHTML accepted;66mathnodes at390/1440; inherited darkcontrast182nodes remains.
+- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration and source preservation verified.
 - **Summary:** Correct coordinate/input maps, moving-hand force balances, energy/velocity interpretation, singular limits, underactuation and evidence scope. Preserve153 prior findings; eight new findings bind exact accepted source;161total;110corpusfiles pluswholebookreview remain.
-- **Next step:** Source623cee525 and binding2b94f104f pushed; PR4805 open against parent4804 branch with do-not-merge, noauto. After actual parent remote-main verification, integrate/retargetmain, removehold and guardedmerge. See pendulum-review.md and pendulum-validation.json; no whole-book completion.
+- **Next step:** Push accepted main integration/turnover; remove dependency hold, guarded squash auto-merge, then actual remote-main verification. See model-pendulum-delivery.json.
 
 
 ### DL-#4799 — Model Comparison and Evidence Boundaries
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4804 (regular, attached); #4800 delivered parent only
+- **PR:** #4804 (regular, combined Chapters7/19; child4805 merged into topic only)
 - **Issue:** #4799; epic #4009 / corpus #4021
 - **Branch:** fix/model-ladder-delivery-4799
 - **Paths:** articles/proximal_distal_companion/chapters/ch19_model_ladder.qmd, tests/test_model_ladder_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02; combined PR4800:6560Python passes/79.03%coverage;547Jest passes;12publication gates;Ruff/Black853/mypy95;232-page accepted PDF exact;fresh HTML and chapter math/zoom checks pass. Inherited dark-theme contrast failure retained; see model-ladder-consolidation.json.
+- **Last verified:** 2026-10-02; 6,582 Python tests passed, 29 skipped, 187 deselected, 60 warnings in 558.62s; coverage 79.14%; static/publication gates pass; exact peer integration and source preservation verified.
 - **Summary:** Eight scientific corrections qualify capabilities, port power, hidden state, implementation independence and inference. All 145 prior findings preserved; eight new findings bound to exact source blobs; 111 corpus files remain; eight supplied-text Flash helpers reviewed. Exact commands and reading/visual scopes in model-ladder-validation.json and model-ladder-review.md.
-- **Next step:** PR4804 open with guarded squash auto-merge armed; integration6670fff3a pushed. Freeze scope, inspect final-head CI, then verify remote-main delivery. Parent4800 verified separately; current receipt model-ladder-delivery.json.
+- **Next step:** Push accepted main integration/turnover; remove dependency hold, guarded squash auto-merge, then actual remote-main verification. See model-pendulum-delivery.json.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
