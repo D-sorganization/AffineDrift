@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4789 — Biological Ambiguity and Load Inference
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** Pending source checkpoint
+- **Issue:** #4789; epic #4009 / corpus #4021
+- **Branch:** fix/biological-ambiguity-rigor-4789
+- **Paths:** articles/proximal_distal_companion/chapters/ch25_biological_ambiguity.qmd, tests/test_biological_ambiguity_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; 6497 full-regression passes; 34 editorial follow-up checks; 228-page PDF/HTML, four browser profiles, 72 math expressions and 653 titles pass.
+- **Summary:** Eight bounded corrections connect wrench allocation, muscle-force inference, geometric stiffness, tendon energy and human evidence. Preserve 121 prior findings; seven agy Flash helpers reviewed.
+- **Next step:** Commit source, bind accepted findings, register regular PR and verify protected delivery after predecessors.
+
 ### DL-#4786 — Open Evidence and Reproduction
 
 - **State:** in_review
@@ -44,19 +57,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run had two stale-digest failures; 71 follow-up checks pass; CI SVG CRLF mismatch corrected to bound Git LF bytes; 25 evidence checks pass.
 - **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
 - **Next step:** Verify final-head CI, predecessor delivery, protected merge and exact remote-main blobs.
-
-### DL-#4774 — Moving-Base Mechanics
-
-- **State:** shipped
-- **Owner:** codex
-- **PR:** #4782
-- **Issue:** #4774
-- **Branch:** fix/moving-base-rigor-4774
-- **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd
-- **Started:** 2026-10-01
-- **Last verified:** 2026-10-02; remote main 4c025bbf0b822f7576f1ea60afc3d21f47945e59; final CI 36951827315 succeeds; all 20 delivered blobs match.
-- **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
-- **Next step:** None; delivered and verified on remote main.
 
 ### DL-#4771 — Measured Golfer Evidence
 

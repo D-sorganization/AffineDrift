@@ -26,3 +26,16 @@
 - **Last verified:** 2026-10-01 (PR4768 merged as55f21d8fb; all22 bound blobs identical; final-head CI Standard and textbook builds passed; patent-remote-main-receipt.json)
 - **Summary:** All 168 references plus Gazette adjudicated; 14 grouped corrections; 64 completed Flash jobs with failed attempts excluded. Two audited sources credited;120 full-source audits plus whole-book consistency remain.
 - **Next step:** Complete; all22 bound paths verified on remote main55f21d8fb; issue closed and lease/presence released.
+
+### DL-#4774 — Moving-Base Mechanics
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4782
+- **Issue:** #4774
+- **Branch:** fix/moving-base-rigor-4774
+- **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd
+- **Started:** 2026-10-01
+- **Last verified:** 2026-10-02; remote main 4c025bbf0b822f7576f1ea60afc3d21f47945e59; final CI 36951827315 succeeds; all 20 delivered blobs match.
+- **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
+- **Next step:** None; delivered and verified on remote main.

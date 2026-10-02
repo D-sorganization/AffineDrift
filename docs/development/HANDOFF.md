@@ -1,3 +1,16 @@
+# Biological Ambiguity Review Current State — #4789
+
+- Goal active under #4009 / #4021 / #4059. Complete Chapter 25 scientific and publication review accepted; eight decisions await immutable source binding. Preserve 121 prior findings. Corpus remains 115 pending until binding, plus whole-book consistency.
+- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-biological-ambiguity-review`; branch `fix/biological-ambiguity-rigor-4789`; baseline `2263c094ffe8be7fb7222037dccc8fc7e6935c33`. Lease/presence `technical-review-20261002-biological` through 04:59 UTC October 2. No PR yet; source checkpoint pending.
+- Corrections connect full club wrench, individual hand loads, net joint demand, bounded muscle forces, excitation, power, stiffness and tendon energy. Source/read limits and rejected helper suggestions are in `reports/technical-review/biological-ambiguity-review.md`. Seven supplied-text agy Gemini 3.8 Flash jobs completed and lead-reviewed; no live helpers.
+- Full regression: 6,497 passes, 29 skips, 187 deselections, 60 warnings; coverage 78.96%. Final wording/read-order follow-up: 34 passes. Twelve publication gates, 653 titles, Ruff/Black/mypy, 874 Python quality checks pass. Final 228-page PDF/HTML accepted; canonical/public PDF identical. Physical 175–183 and 223–228 inspected. Four browser profiles and 72 math expressions/six displays pass; zero axe/errors/placeholders/overflow at 390/1440. Zoom works; mobile labels remain small with text alternatives.
+- Prior-evidence carry-forward checks 141 unchanged files and four changed shared dependencies; other figure generator AST unchanged and existing bibliography entries preserved. Source acceptance does not imply provider rerun or new human validation. Preserve all QA and predecessor worktrees.
+- PR #4785 merged at0bcc9f8663ea10d3c2a846cb7443472bec69cd3f; final CI36956637268 and all22changed blobs verified on remote main. Lease/presence released. PR #4788 head2263c094f passed CI36957444154; verified parent integration is being prepared in its own checkout. PR4788 is not yet delivered.
+- Next: commit source acceptance, bind eight findings with `docs/development/technical-review/biological_ambiguity_bind.py`, verify exact source bytes and 121 historical semantics, update corpus to 114 pending, open regular PR, then integrate predecessor squash deliveries with receipts. Guarded merges only, no drafts/force/admin/direct-main or hook bypass. Do not edit tracked files during push hooks.
+- PR #4782 delivered at 4c025bbf0b822f7576f1ea60afc3d21f47945e59, CI 36951827315 success, all 20 blobs match; lease/presence released. Receipt remains in reports. Earlier handoff history is preserved below and in docs/development/HANDOFF.md. Whole-log inherited findings/WIP warning remain; new owned record must have no field findings.
+
+## Preserved Earlier Checkpoints
+
 # Open-Evidence Review Current State — #4786
 
 - Goal active under epic #4009 / corpus #4021 / companion #4059. Chapter 27 has eight corrected technical distinctions; publication acceptance is complete and all eight findings bind source028720c0a5e7ec6e298cfb4615aa98c9cf6e8c31. Preserve all 113 prior findings. Corpus now has 115 pending plus whole-book consistency.

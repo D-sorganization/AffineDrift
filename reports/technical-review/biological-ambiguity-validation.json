@@ -1,0 +1,158 @@
+{
+  "issue": 4789,
+  "status": "Source/publication accepted; source commit and immutable binding pending",
+  "baseline": "2263c094ffe8be7fb7222037dccc8fc7e6935c33",
+  "source_findings": 8,
+  "historical_findings": 121,
+  "corpus_pending": 115,
+  "whole_book_consistency_pending": true,
+  "tdd": {
+    "red_passed": 11,
+    "red_failed": 1,
+    "green_passed": 12
+  },
+  "full_regression": {
+    "passed": 6497,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 442.15,
+    "coverage_percent": 78.96
+  },
+  "editorial_followup": {
+    "passed": 34,
+    "failed": 0
+  },
+  "render": {
+    "pages": 228,
+    "inspected_physical_pages": [
+      175, 176, 177, 178, 179, 180, 181, 182, 183, 223, 224, 225, 226, 227, 228
+    ],
+    "canonical_public_parity": true
+  },
+  "browser": {
+    "profiles": 4,
+    "failed": 0,
+    "serious_critical_axe": 0,
+    "math_containers": 72,
+    "display_equations": 6,
+    "widths": [390, 1440],
+    "math_errors": 0,
+    "placeholders": 0,
+    "overflow": false,
+    "zoom_opens_closes": true,
+    "scope": "single locally rendered route after normal post-build steps",
+    "limitation": "Inline mobile figure labels remain small; text alternatives available."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/biological-ambiguity-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 874,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "source_title_files": 653,
+  "figure_generator_other_ast_unchanged": true,
+  "agy_flash_helpers_completed": 7,
+  "prior_evidence_unchanged": 141,
+  "prior_evidence_changed": 4,
+  "no_provider_rerun": true,
+  "no_new_human_validation": true,
+  "commands": {
+    "full": "py -3.12 -X utf8 -m pytest --cov",
+    "followup": "py -3.12 -X utf8 -m pytest tests/test_biological_ambiguity_review.py tests/test_proximal_distal_companion_contract.py tests/test_root_hygiene.py -q --no-cov",
+    "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; then --to html",
+    "gates": "py -3.12 -X utf8 docs/development/technical-review/biological_ambiguity_content_gates.py",
+    "static": "PYTHONPATH=. py -3.12 -X utf8 docs/development/technical-review/biological_ambiguity_static.py"
+  }
+}
