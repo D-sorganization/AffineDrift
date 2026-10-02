@@ -8,6 +8,8 @@ import pytest
 from numpy.typing import NDArray
 from scipy.integrate import solve_ivp
 
+GRAVITY_M_S2 = 9.81
+
 
 @dataclass(frozen=True)
 class CartPendulum:
@@ -16,7 +18,7 @@ class CartPendulum:
     cart_mass: float = 2.0
     bob_mass: float = 1.0
     length: float = 1.0
-    gravity: float = 9.81
+    gravity: float = GRAVITY_M_S2
 
 
 def forward_dynamics(
