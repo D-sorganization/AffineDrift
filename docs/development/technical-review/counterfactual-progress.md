@@ -1,0 +1,38 @@
+# Chapter 11 Review Progress
+
+Issue #4821; baseline dc1884f2084a1caaa1b135201e751e330afe24e2. Work in progress, not accepted or bound. The103pending source audits and209prior findings are unchanged.
+
+## Technical Decisions
+
+1. Define complete copied state, time/phase, physical input, command and admissible contact mode. Input-only branches differ from internal-state intervention; changed activation/gap/elastic state requires compatibility and energy accounting.
+2. Separate pointwise finite effects, affine decomposition, local derivative, evolving forward branches, changed preparation and compensated optimization. Manufactured quadratic-input rotor: separate reductions4.5+4.5rad/s2 versus simultaneous6; linearized total reduction12 is not the finite6.
+3. Declare cut/event/horizon, retain non-reaching branches, distinguish finite torque steps from impulses and sampled sensitivity from convergence guarantees. A one-sample feature is not automatically false.
+4. Derive midpoint differential moment and offset-resultant moment; bounded separation limit removes only differential force moment, with direct moments separately retained. Manufactured1+16=17Nm; coincident contacts retain16Nm and a direct2Nm gives18Nm.
+5. Consistently map normal, moment and angular velocity under proper coordinate rotation: component sign can flip while physical projection and power remain invariant. Cross-model observables must actually exist in both models.
+6. Archive planar96case/12variant and spatial-carriage evidence with exact scope. Saved summaries are not fresh dynamics, independent contact/integrator confirmation or human validation. Endogenous contact moment follows the driver intervention; it is not independently retained.
+7. Ablation, optimization feasibility and biological redundancy are separate claims. Equal stiffness is not rigidification; zero dead zone is not absence of activation delay. Human spacing interventions can also change forces and feedback.
+8. Correct two-input-path figure/caption; complete-state labeling and explicit conceptual scope. Only make_counterfactual_fork changes in the shared generator. Final publication and whole-book-boundary checks remain part of acceptance.
+
+## Evidence Read and Recomputed
+
+Full canonical source and three linked provider chapters read at UpstreamDrift85cce4d3307bb7ad3953d9fc6e583e370803515c. Full counterfactual_ensemble.py read; selected run_counterfactual_ensemble.py variant/selected-trace/build_outputs sections read. Selected spatial_forward_study.py contact/driver/wrench/update, negative-duration and summarize_trace passages read. Saved JSON design/summary/limitations read; all96baseline and12variant row arithmetic checked. No provider rollout/test suite, NPZ reconstruction, external paper or human experiment executed.
+
+Independent arithmetic reproduces all ten timestep-sensitivity values exactly and the full grids; all saved initial matched-state errors zero, control-closure maximum3.2171190647067566e-14rad/s2. At1ms, work extrema-30.87602844327142/+66.16902040271255J correspond to speed differences+3.418004486054784/+14.196490598979008m/s, respectively. Different prior histories in whole-model variants are not a matched-state causal partition.
+
+Twenty stored dependency hashes checked against pinned Git blobs:16exact matches. WSCG CSV mismatch is exactly explained byCRLF versusLF. Three code mismatches match historical Git blobs: double_pendulum_attribution.py at06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5; run_experiments.py at2e8ebaef8db22a3fc3fae931fb2ecb8f2f2cf659; run_spatial_forward_contact_study.py at05a76a2bfcececf0a01df8311d0c4265a0e60e55. Historical hash identification is not historical whole-closure reproduction. The chapter explicitly reports archived numerical evidence and the reproduction gap. Other dependency files were checksum-only unless listed as read above.
+
+The saved readiness artifact lists four hypothesis statuses while the provider chapter discusses six. The revised chapter makes no six-status claim; it reports synthetic readiness and no human measurements. No freshness or full-pipeline acceptance inferred.
+
+## Flash Delegation and Adjudication
+
+Supplied-text agy CLI gemini-3.8-flash-high outputs: earlier source inventory, saved-data analysis draft, manufactured-test draft, editorial audit. No canonical editing, claims or publication delegated. Lead rejects inventory assumptions recorded in counterfactual-preparation.md.
+
+Data helper recomputed values but never compared them to saved summaries, accepted nonzero matched errors within1e-9 and used0.5ms extrema despite the chapter's1ms reference. Lead replaced those with exact saved-value comparisons, exactzero equality, exact variant grid and1ms extrema; removed speculative schema fallbacks. Test helper's loose substring URL matching could admit the wrong host; lead requires complete pinned URLs and keeps focused numeric tests. Red3numeric passes/1provenance failure; Green4passes.
+
+Editorial helper usefully clarified the analogy, subtraction order, work-extrema antecedents, within-case work/speed comparison, mode admissibility and state-determined compliant power. Reject its invented statement that the spatial geometry control only negates separation rather than both reference-point arms: the inspected code explicitly negates both about club_position. Arithmetic17/16/18Nm was already correct; wording now says adding the direct couple yields18. The general statement that power may differ did not assert it must; the specific compliant exception is now explicit.
+
+## Validation and Next Actions
+
+Four manufactured/provenance tests pass; changed Python Ruff and Black100 pass. PDF and HTML renders succeed. Initial reviewed physical75-82pages expose an isolated final-links page; closing prose tightened. Arrow-label overlap corrected and standalone finalfigure visually confirmed. Final PDF/HTML layout renders pass; identical canonical/public238pagePDFs, changed physical75-81pages and boundary82inspected. Remaining chapter text and earlier body text match baseline (later footer page numbers shift byone). All53math expressions/two displays render at390/1440 with no errors/placeholders/overflow. Four light/dark mobile/desktop route checks pass with0serious/critical axe findings. Image zoom opens/closes; the mobile table scrolls horizontally to expose all columns. Initial CLI navigation had two refused resources in other chapters; fresh chapter image/pinnedlinks and route verification pass. All12publication gates,655titles and Python static checks on894files pass. Initial static wrapper needed repository PYTHONPATH; this was a runner invocation correction. Initial preview sanitizer called the directory helper with text; corrected to the documented Path API. No product gate was weakened. The29affected checks had27passes and2root-hygiene failures from browser-verifier screenshots under root artifacts; preserved those under QA and all6hygiene checks pass. Trust digests refreshed only for the changed source, PDF and shared generator; allprior scientific fields/verification commits and other routes remain unchanged. A final29-check affected rerun passes after the scratch cleanup and digest refresh. Broad regression, corpus binding, final accepted-source freeze and remote delivery remain pending. No scientific acceptance yet.
+
+Preserve raw QA in this directory and earlier synthesis worktree. Complete validation, update this note with actual outcomes, record final source acceptance separately, then bind only Chapter11 while preserving prior scientific fields and verification commits. PR4820 remains inCI; verify its actual delivery independently.
