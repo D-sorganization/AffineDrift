@@ -327,22 +327,40 @@ def make_sensitivity() -> None:
 
 
 def make_human_evidence() -> None:
-    fig, axis = plt.subplots(figsize=(8, 5.5))
-    _clean(axis, (-1, 9), (-0.5, 6))
+    """Separate observations and conditional inferences without a certainty ladder."""
+    fig, axis = plt.subplots(figsize=(5.5, 6.5))
+    _clean(axis, (0, 8), (-0.4, 6.4))
     levels = (
-        (0.7, 7.6, "Observed Motion", BLUE),
-        (1.4, 6.2, "External + Net Joint Kinetics", GREEN),
-        (2.1, 4.8, "Bilateral Contact + Shaft State", ORANGE),
-        (2.8, 3.4, "Mechanistic Biological Identification", RED),
+        ("Calibrated Observations", "Motion, external loads,\nelectrical activity", BLUE),
+        ("Mechanical Inference", "Frames, inertias,\ncontact assumptions", GREEN),
+        ("Anatomical Inference", "Multiple muscle allocations\ncan remain", ORANGE),
+        ("Prospective Tests", "Frozen predictions;\nrelevant new data", RED),
     )
-    for index, (x, width, label, color) in enumerate(levels):
-        y = 0.6 + index * 1.25
-        axis.add_patch(Rectangle((x, y), width, 0.85, color=color, alpha=0.22, ec=color, lw=2))
+    for index, (label, detail, color) in enumerate(levels):
+        y = 4.9 - index * 1.3
+        axis.add_patch(Rectangle((0.3, y), 7.4, 1.15, color=color, alpha=0.16, ec=color, lw=2))
         axis.text(
-            x + width / 2, y + 0.42, label, ha="center", va="center", color=color, fontweight="bold"
+            4,
+            y + 0.87,
+            label,
+            ha="center",
+            va="center",
+            color=color,
+            fontweight="bold",
+            fontsize=17,
         )
+        axis.text(4, y + 0.35, detail, ha="center", va="center", color=INK, fontsize=14)
+    axis.text(
+        4,
+        0.35,
+        "Measurements constrain explanations.\nA unique mechanism is not guaranteed.",
+        ha="center",
+        va="center",
+        color=INK,
+        fontsize=13,
+    )
     axis.set_title(
-        "Evidence Narrows as the Claim Becomes More Specific",
+        "Observations, Inferences, and Tests",
         color=INK,
         fontweight="bold",
         fontsize=16,

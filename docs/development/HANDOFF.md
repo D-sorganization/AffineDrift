@@ -1,13 +1,44 @@
-# Scan Dark Theme and Mobile Viewports in axe Matrix — #4562
+# Measured Golfer Evidence Final Source Checkpoint — #4771
 
-- Goal active under epic #4569 (E9 — Accessibility Conformance). Branch fix/web-09-2-axe-dark-mobile-4562. PR #4777.
-- Updated `scripts/public-site-axe.js` to key cell deduplication on `${item.route}::${item.viewport.id}::${item.theme}`, ensuring multi-viewport and multi-theme matrices scan all requested cells.
-- Updated `axePolicyEvidence` to compute distinct `scanned_route_count` and `scanned_cell_count`, deduplicating `routes_with_violations`.
-- Updated `scripts/verify-public-site.js` to display `scanned_cell_count` in axe log output.
-- Expanded axe-core quality gate in `.github/workflows/ci-standard.yml` to `--viewports desktop-small,mobile` and `--themes light,dark`.
-- Added contract tests in `tests/public-site-verifier.test.js` validating multi-cell plan marking and evidence summaries.
-- Local validation: Jest (35 suites, 547 tests passed), pytest deployment integrity and spec changelog passed, CSS bundle up to date.
-- Next: pass CI, release lease and merge.
+- Goal active under epic #4009/corpus #4021. Full Chapter24 source review and correction validated. Nine findings bind eight exact Git blobs at f565c72885e73d9e463debc336322691f46ea11a;87 historical findings preserved. Chapter24 audit credited;118 source audits plus whole-book consistency remain.
+- Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health;branch fix/measured-golfers-rigor-4771. Source947ad2373 and integrationaa047b514 are pushed through normal hooks. This checkpoint contains final single-author corrections for McPhee2022 and Koike2016. Final source f565c72885e73d9e463debc336322691f46ea11a is pushed. Regular PR #4772 is open and attached: https://github.com/D-sorganization/AffineDrift/pull/4772. Binding/registration cb9e634d59327f4520e94ecd07b0be379d507963 is pushed. Pushed documentation-only correction 024bdc650 removes the new duplicated root checkpoints, retaining a short root state map and this detailed record.
+- Twelve supplied-text agy CLI gemini-3.8-flash-high jobs completed and lead-adjudicated, including a compact turnover draft. Its machine-specific file links were replaced with portable repository links. They handled inventories, extraction, test/figure/PR drafts, adversarial/attribution/turnover checks and a binding-script draft. Incorrect draft claims were rejected; see measured-golfers-review.md. No live agents remain.
+- Corrections distinguish calibrated signals, inferred hand/net-joint loads, muscle allocation, statistical estimation, unseen-person prediction and causal evidence. Eight bounded study summaries, independently verified synthetic repeated-measure variance, synchronized energy accounting, and a legible replacement for the certainty pyramid.
+- Full regression:6389 passed,29 skipped,187 deselected,exit0. Final wording-only followup:48 affected checks and12 publication gates pass. Ruff,Black840,mypy94,653 titles and546 Jest tests/35 suites pass. Source coverage93.043% unchanged;aggregate src+scripts78.974%. No repeated full run claimed.
+- Final223-page PDF/HTML and canonical/public parity verified;all Chapter24 pages164–170 and boundaries163/171 inspected. Four final viewport/theme checks pass;zero serious/critical axe violations. Nineteen math containers,two display equations,no errors/lazy math/overflow at390/1440;mobile figure enlarged and inspected. Generated TeX/build/browser artifacts preserved under technical-review.
+- Integration SELF reconciles squash main099dc2cbf. Before resolving conflicts, the incoming entire Git tree was verified identical to already-included ancestor e5e4bf456. Restoring the reviewed descendant for the nine conflicts and the SPEC row ordering gave an empty tracked diff against efc2ccd2 before turnover edits. Thus scientific sources, figures, both PDFs, trust ledgers and corpus records remain unchanged; no new render or scientific revalidation is claimed.
+- PR4770 merged at2026-10-01T22:26:23Z as099dc2cbfcf506941b3b0d306b43b7a1ccc5e767. CI36929938103 passed on exact head e5e4bf456. All23 changed Git blobs match the merge on fetched remote main. Receipt: reports/technical-review/speed-energy-remote-main-receipt.json. Lease and presence released with durable receipts on issue4769 and the fleet board.
+- Next: validate and push integration SELF, require final-head CI, use the Repository_Management automerge guard for PR4772, and verify exact delivered blobs before releasing4771. The prior efc2ccd2 CI run36930438191 remains scoped to that prior head; it cannot certify SELF.
+
+- Post-binding checks: 67 passed. Review comment 4160568522 addressed by keeping the new detailed history only here and a concise root map; this satisfies both the development-document location rule and the explicit root-map requirement. Existing parent-branch history is preserved. Development-log fields now consistently describe the validated, bound chapter awaiting delivery. No scientific source, figure, PDF or evidence binding changes.
+
+- Proposed Chapter17 issue4774 holds lead-reviewed source/provider gaps, a reproduced existing Chapter20 contact-moment qualification (Affine4724/Upstream11195), and manufactured objectivity/coordinate examples. Six preparation Flash jobs were lead-adjudicated. No source edit or new audit credit. QA moving-base-preparation.md records exact read scopes and rejected claims.
+
+- Issue4771 lease renewed through2026-10-02T00:30:18UTC;4769 released after verified delivery. Preserve peer23ee826 and historical QA. No drafts, direct-main/force/admin pushes or hook bypass; no tracked mutation during push hooks.
+
+
+- Reconciled DL-#4753/#4751 via4755, DL-#4742/#4739 via4741 and DL-#4733/#4730 via4734 to shipped. reports/technical-review/prior-delivery-reconciliation.json verifies actual merges, ancestry, predecessor source/figure/test parity and the later ground-wording change.4752/4735 were closed unmerged;4744 merged into a topic branch. No new corpus credit or public-deployment claim. A supplied-text Flash draft was corrected to preserve historical checks and the actual shallow-wide source identity.
+
+- A further Flash delivery-verifier draft was reviewed and corrected: failed Git reads now fail verification rather than count as deletions; path parsing is NUL-safe and the latest CI run must be completed and successful. Present/missing/error/path-inventory checks passed in QA. No live Flash jobs remain.
+
+- Integration validation:61 focused checks passed; claim-audit evidence is current. The central portable development-log checker reports71 inherited findings versus76 at efc2ccd2, with no introduced findings and none in the eight touched entries. Its whole-file run remains failed; no green whole-log claim or hook bypass. Details are in measured-golfers-validation.json.
+
+- Prior head efc2ccd2 CI36930438191 failed one of251 all-route evidence items: secondary-axis-stability.html returnedHTTP200 then timed out in a5000ms settling wait.250routes scanned with zero serious/critical axe findings; this does not include the failed route. Fresh targeted render plus normal CI polyfill postprocessing passes locally. Root cause unconfirmed; no page/verifier change or rerun-only workaround. Integration SELF must pass its own full CI. Artifact/result details are retained in measured-golfers-validation.json.
+
+## Preserved Earlier Checkpoints
+
+# Measured Golfer Evidence Source Checkpoint — #4771
+
+- Goal active under epic #4009/corpus #4021. Chapter24 source and figure revised; source checkpoint947ad2373 saved; 119 pending sources plus whole-book consistency until full validation/binding. No completed-audit credit yet.
+- Owned checkout C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health; branch fix/measured-golfers-rigor-4771 starts at PR4770 registration head8779bd7. Regular PR not created yet. Do not add these changes to PR4770.
+- Eight supplied-text agy Gemini3.8 Flash jobs completed; lead adjudicated substantive errors and accepted power/work and variance wording clarifications. No live delegated jobs. Three independent covariance cases plus two source contracts pass after recorded RED;653 source titles pass.
+- New chapter: corrected Bourgain review attribution, ECU-specific EMG, sensor versus inverse-dynamics grip loads, scoped eight-study register, synthetic repeated-measure uncertainty, prediction/causation distinctions, synchronized mechanical accounting and bounded validation gap. Nine decisions and exact primary reading scopes in measured-golfers-review.md;87 prior route findings snapshotted.
+- 223-page PDF/HTML render and canonical/public parity pass; all Chapter24/boundary pages inspected, mobile figure improved. Four browser viewport/theme cases pass with zero serious/critical axe findings;19 math containers/two display equations, no errors/lazy math/overflow at390/1440. All12 publication gates,48 targeted tests,Ruff,Black840,mypy94 pass. PR4770 integration head3d7f4eb now included and combined PDF/HTML rebuilt;546 Jest tests pass. Full regression and exact Git-blob binding remain. Preserve QA and previous records.
+- PR4770 is separately integrating remote main37fa19fef (peer PR4761) in owned AffineDrift-speed-energy-integration checkout on fix/speed-energy-rigor-4769. Git merged without textual conflicts; rebuild combined PDF and refresh digests. Push with normal hooks, require final-head CI, verify delivery before recording merged. QA verification script now checks integration head3d7f4eb and22 paths.
+- Next: complete and push this source checkpoint; finish PR4770 integration/delivery; integrate verified remote main here, rerender if peer Chapter16 changes affect publication, validate and bind Chapter24, open regular PR with Fixes#4771, guarded merge.
+- Lease4771 technical-review-20261001-measured-golfers expires22:52UTC Oct1;4769lease22:52. Inbox incomplete/malformed, not proof no peers. Preserve peer23ee826. Never drafts, direct-main/force/admin pushes or bypass. No tracked mutation during push hooks.
+
+## Preserved Earlier Checkpoints
 
 # Speed, Energy, and Power Review — #4769
 
