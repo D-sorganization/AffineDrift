@@ -27,7 +27,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/moving-base-rigor-4774
 - **Paths:** articles/proximal_distal_companion/chapters/ch17_moving_base.qmd
 - **Started:** 2026-10-01
-- **Last verified:** 2026-10-01; 0eec41749; 72 focused checks and publication pass. Full-run failure/follow-up scope: reports/technical-review/moving-base-validation.json.
+- **Last verified:** 2026-10-02; 0eec41749 / 318f9f9da; 72 focused checks and publication pass. Full-run failure/follow-up scope: reports/technical-review/moving-base-validation.json.
 - **Summary:** Eight corrections bound; 96 prior findings preserved; 117 sources pending.
 - **Next step:** Push binding; verify CI, protected merge and remote-main parity.
 

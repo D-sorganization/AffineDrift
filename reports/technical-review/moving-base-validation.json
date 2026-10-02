@@ -1,7 +1,7 @@
 {
   "issue": 4774,
   "source": "articles/proximal_distal_companion/chapters/ch17_moving_base.qmd",
-  "status": "Chapter17 audit bound; regular PR4782 registered; protected delivery pending",
+  "status": "Named-constant CI fix and refreshed evidence binding; final CI/protected delivery pending",
   "tests": {
     "red_numerical_pass": 14,
     "red_editorial_fail": 3,
@@ -153,11 +153,11 @@
   "finding_binding": {
     "new_findings": 8,
     "historical_findings_preserved": 96,
-    "verification_commit": "0eec41749fa18bf28995de990aff01b98a036493",
+    "verification_commit": "318f9f9da1ba6b5090e94f06c251fc20eff19c9c",
     "exact_git_blob_sha256": {
       "articles/proximal_distal_companion/chapters/ch17_moving_base.qmd": "79711f78c0488b86ac77e1076fd8ac27b33f031806778eb354ff0ffc79e17ba6",
       "scripts/make_proximal_distal_companion_expanded_figures.py": "9402769663c4dbfddbd610c3c3b983a545bfb667736a3d8c04f6f20303ea9670",
-      "tests/test_moving_base_review.py": "4c421b2a1c4e80db7bad0176f6c131ccb4dcf3a5069bd442280a6d1527f8ec11",
+      "tests/test_moving_base_review.py": "9272f41fedf6557fc6ebe48742e543cecb0eee1dec8cfcf8e92eeeb582a70136",
       "articles/figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.svg": "6a74e2ef860077bada91332f2bc317664c37d1ffde4cf0812ee6f3cd38432a0a",
       "articles/figures/proximal_distal_companion/fig_companion_prescribed_vs_moving_base.pdf": "1bd63a75b5886300eeec97f87cf4573522af4993f7d5b45243c72ed1a5ac44fe",
       "reports/technical-review/moving-base-review.md": "5336f455d32b132fa40a8f8f2d605ae7d0417395106b0f6471b40e860b008a29",
@@ -195,5 +195,19 @@
     "owned_entry_findings": [],
     "bytes": 199945,
     "scope": "Whole validator fails on inherited entries; no newly introduced finding. Kept new entry concise instead of exceeding size ceiling."
+  },
+  "quality_followup": {
+    "failed_ci_run": 36945214325,
+    "failed_job": 110645693113,
+    "cause": "Code-quality rule requires a named GRAVITY_M_S2 constant for the manufactured fixture.",
+    "source_fix": "318f9f9da1ba6b5090e94f06c251fc20eff19c9c",
+    "affected_tests_passed": 17,
+    "quality_fixture_pass": true,
+    "tracked_quality_scope": "All tracked Python files using the unchanged CI directory exclusions; passed.",
+    "local_untracked_scope": "Unrestricted local scan also saw six findings in two untracked QA drafts; those drafts are preserved, not in CI checkout.",
+    "publication_unchanged": true,
+    "full_regression_repeated": false,
+    "new_findings_rebound": 8,
+    "historical_findings_preserved": 96
   }
 }
