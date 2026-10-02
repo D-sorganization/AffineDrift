@@ -2,8 +2,8 @@
   "issue": 4825,
   "source_checkpoint": "SELF",
   "source_accepted": true,
-  "binding_pending": true,
-  "source_audits_pending": 102,
+  "binding_pending": false,
+  "source_audits_pending": 101,
   "full_regression": {
     "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
     "passed": 6655,
@@ -139,5 +139,20 @@
     "adjudicated_helpers": 7,
     "scope": "Supplied-text drafts; no canonical editing, claims or publication authority"
   },
-  "scope": "One article; partial primary reading; no human study or whole-book validation"
+  "scope": "One article; partial primary reading; no human study or whole-book validation",
+  "source_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c",
+  "binding_checkpoint": "SELF",
+  "scientific_preservation": {
+    "added_findings": 6,
+    "companion_findings_unchanged": 217,
+    "all_other_routes_unchanged": true,
+    "corpus_rows_changed": 1,
+    "bound_files_match_accepted_commit": true
+  },
+  "post_binding": {
+    "passed": 61,
+    "seconds": 31.26,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/test_ideomotor_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60"
+  }
 }

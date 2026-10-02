@@ -757,11 +757,160 @@
       "claims": [],
       "critiques": [],
       "deferment_issue_url": null,
-      "findings": [],
+      "findings": [
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/ideomotor-theory-and-predictive-brain.qmd",
+            "src/affine_control/ideomotor_demo.py",
+            "tests/test_ideomotor_review.py",
+            "reports/technical-review/ideomotor-review.md",
+            "reports/technical-review/ideomotor-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b",
+            "reports/technical-review/ideomotor-prior-review.json": "a1ce9916d1fa8b5e574e88a82d613620281027ef80e65e21b1001ceade9fd31e",
+            "reports/technical-review/ideomotor-review.md": "1564b76aacddc8ddd47ead5705a9ba367d16e629d720b4ef451fe2ae9d54c83e",
+            "src/affine_control/ideomotor_demo.py": "2384c099d80d2201ba429303d77a83b937e9934b3612764657630a11b5946bb2",
+            "tests/test_ideomotor_review.py": "65a60d5a415b84cd92d51d115fabf72927f1d11d89d2fa43dae04d38c2591efe"
+          },
+          "finding_id": "ad-finding-ideomotor-outcome-error",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4825",
+          "priority": "p2",
+          "rationale": "**Outcome and Error:** Separate anticipated action effects, intended outcomes and observed sensations. A forward flow under a specified input followed by an observation map predicts an outcome; inverse action selection searches a constrained input family. Neither a cognitive representation theory nor a successful prediction supplies the goal, weights, physical bounds or a unique inverse. The 5 m versus 0 m example distinguishes predicted task error from observed-minus-predicted sensory error. Output redundancy does not remove joint, contact, balance or internal-load constraints, nor identify individual hand forces.",
+          "verification_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/ideomotor-theory-and-predictive-brain.qmd",
+            "src/affine_control/ideomotor_demo.py",
+            "tests/test_ideomotor_review.py",
+            "reports/technical-review/ideomotor-review.md",
+            "reports/technical-review/ideomotor-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b",
+            "reports/technical-review/ideomotor-prior-review.json": "a1ce9916d1fa8b5e574e88a82d613620281027ef80e65e21b1001ceade9fd31e",
+            "reports/technical-review/ideomotor-review.md": "1564b76aacddc8ddd47ead5705a9ba367d16e629d720b4ef451fe2ae9d54c83e",
+            "src/affine_control/ideomotor_demo.py": "2384c099d80d2201ba429303d77a83b937e9934b3612764657630a11b5946bb2",
+            "tests/test_ideomotor_review.py": "65a60d5a415b84cd92d51d115fabf72927f1d11d89d2fa43dae04d38c2591efe"
+          },
+          "finding_id": "ad-finding-ideomotor-input-forward",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4825",
+          "priority": "p2",
+          "rationale": "**Input and Forward Dynamics:** A control-affine predictor includes both drift and input. Drift is zero declared input, which can retain actuator state and stored energy; it is not biological passivity. A perfect predictor still requires the holding torque mgl sin(theta). Distinguish planned physical actuation from corrective feedback. State the infinite-horizon LTI regulation assumptions for the constant Riccati feedback law: positive semidefinite state weight, positive definite input weight, stabilizability, detectability and stabilizing solution. Time-varying tracking requires its own formulation. The value gradient 2P delta-x is not a sensory prediction error or motor command. A delayed estimator and feedback can work together; correction opportunity depends on the full sensing-to-mechanics delay and remaining task time, not a blanket claim that a swing excludes feedback.",
+          "verification_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/ideomotor-theory-and-predictive-brain.qmd",
+            "src/affine_control/ideomotor_demo.py",
+            "tests/test_ideomotor_review.py",
+            "reports/technical-review/ideomotor-review.md",
+            "reports/technical-review/ideomotor-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b",
+            "reports/technical-review/ideomotor-prior-review.json": "a1ce9916d1fa8b5e574e88a82d613620281027ef80e65e21b1001ceade9fd31e",
+            "reports/technical-review/ideomotor-review.md": "1564b76aacddc8ddd47ead5705a9ba367d16e629d720b4ef451fe2ae9d54c83e",
+            "src/affine_control/ideomotor_demo.py": "2384c099d80d2201ba429303d77a83b937e9934b3612764657630a11b5946bb2",
+            "tests/test_ideomotor_review.py": "65a60d5a415b84cd92d51d115fabf72927f1d11d89d2fa43dae04d38c2591efe"
+          },
+          "finding_id": "ad-finding-ideomotor-precision-action",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4825",
+          "priority": "p2",
+          "rationale": "**Precision and Action:** Likelihood precision weights a fixed residual more strongly when it increases. Prior precision has a different role; neither is automatically a control cost. For independent Gaussian prior and observation noise, the stated posterior means are 0.2 m, 0.8 m and 1/17 m, with variance equal to inverse summed precisions. Post-update residual reduction must not be confused with weighting a residual held fixed. If covariance varies, its normalization and derivatives matter. The explicit quadratic action objective requires a transpose sensitivity map from output to input coordinates; omitting it does not yield a general torque law. Precision-weighted neural gain remains a proposed implementation rather than a golfer measurement.",
+          "verification_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/ideomotor-theory-and-predictive-brain.qmd",
+            "src/affine_control/ideomotor_demo.py",
+            "tests/test_ideomotor_review.py",
+            "reports/technical-review/ideomotor-review.md",
+            "reports/technical-review/ideomotor-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b",
+            "reports/technical-review/ideomotor-prior-review.json": "a1ce9916d1fa8b5e574e88a82d613620281027ef80e65e21b1001ceade9fd31e",
+            "reports/technical-review/ideomotor-review.md": "1564b76aacddc8ddd47ead5705a9ba367d16e629d720b4ef451fe2ae9d54c83e",
+            "src/affine_control/ideomotor_demo.py": "2384c099d80d2201ba429303d77a83b937e9934b3612764657630a11b5946bb2",
+            "tests/test_ideomotor_review.py": "65a60d5a415b84cd92d51d115fabf72927f1d11d89d2fa43dae04d38c2591efe"
+          },
+          "finding_id": "ad-finding-ideomotor-free-energy",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4825",
+          "priority": "p2",
+          "rationale": "**Free Energy and Action Selection:** Preserve the valid pointwise variational identity for normalized q and compatible support under a fixed generative model. At fixed observation and model, changing q reduces the approximation gap without changing evidence; a restricted family need not reach the exact posterior. Use consistent measures and distinguish information from mechanical energy in joules. The identity alone supplies no preferred shot or action algorithm. Commands can affect future sensations, not a recorded observation; the model must specify this dependency and its objective. Do not require expected free energy in every continuous-action formulation or identify all predictive theories with one neural computation.",
+          "verification_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/ideomotor-theory-and-predictive-brain.qmd",
+            "src/affine_control/ideomotor_demo.py",
+            "tests/test_ideomotor_review.py",
+            "reports/technical-review/ideomotor-review.md",
+            "reports/technical-review/ideomotor-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b",
+            "reports/technical-review/ideomotor-prior-review.json": "a1ce9916d1fa8b5e574e88a82d613620281027ef80e65e21b1001ceade9fd31e",
+            "reports/technical-review/ideomotor-review.md": "1564b76aacddc8ddd47ead5705a9ba367d16e629d720b4ef451fe2ae9d54c83e",
+            "src/affine_control/ideomotor_demo.py": "2384c099d80d2201ba429303d77a83b937e9934b3612764657630a11b5946bb2",
+            "tests/test_ideomotor_review.py": "65a60d5a415b84cd92d51d115fabf72927f1d11d89d2fa43dae04d38c2591efe"
+          },
+          "finding_id": "ad-finding-ideomotor-learning-evidence",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4825",
+          "priority": "p2",
+          "rationale": "**Learning and Evidence:** MOSAIC uses responsibility-weighted outputs and learning; soft weighting need not mean a single winner. A mixture does not automatically inherit controller guarantees. Descriptive practice stages, movement variability, stiffness, Bayesian precision and entropy are different quantities, so a connection needs an identified distribution, model and measurement. Variation alone does not prove local-minimum escape, better forward learning or a training benefit. Remove unverified universal latency and expertise/effort claims. The revised layer table and golf-specific perturbation proposal connect state estimation, feasible actuation, task outcomes and force/work accounting without claiming new human evidence.",
+          "verification_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/ideomotor-theory-and-predictive-brain.qmd",
+            "src/affine_control/ideomotor_demo.py",
+            "tests/test_ideomotor_review.py",
+            "reports/technical-review/ideomotor-review.md",
+            "reports/technical-review/ideomotor-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b",
+            "reports/technical-review/ideomotor-prior-review.json": "a1ce9916d1fa8b5e574e88a82d613620281027ef80e65e21b1001ceade9fd31e",
+            "reports/technical-review/ideomotor-review.md": "1564b76aacddc8ddd47ead5705a9ba367d16e629d720b4ef451fe2ae9d54c83e",
+            "src/affine_control/ideomotor_demo.py": "2384c099d80d2201ba429303d77a83b937e9934b3612764657630a11b5946bb2",
+            "tests/test_ideomotor_review.py": "65a60d5a415b84cd92d51d115fabf72927f1d11d89d2fa43dae04d38c2591efe"
+          },
+          "finding_id": "ad-finding-ideomotor-finite-horizon-example",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4825",
+          "priority": "p2",
+          "rationale": "**Finite-Horizon Example:** The exact original Euler example selects zero torque from zero initialization because its single position step is independent of torque. Its handwritten model contains no learning; omitting a factor two in both gradient terms changes effective learning rate, not the minimizer. Replace the inline multi-function controller with a tested importable nominal pendulum model and bounded constant-input search. Declare units, damping rate, cost weights, horizon, bounds, integrator tolerances and maximum step. The short-time sensitivity starts at T squared over 2I. Compare candidate, both bounds and zero under the same horizon; this is not a global-optimality or robustness certificate. The checked torque approximately -3.407 N m reduces terminal angle and cost relative to the zero-input future, while increasing terminal angular speed. It does not establish stabilization, neural learning or golf performance. ##",
+          "verification_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c"
+        }
+      ],
       "review_evidence": {
-        "evidence_file_count": 1,
+        "evidence_file_count": 5,
         "evidence_sha256": {
-          "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b"
+          "articles/ideomotor-theory-and-predictive-brain.qmd": "1b33e7d435ec1987962f03941eb6fa223a78033666f7add1b4025e79d3fd350b",
+          "reports/technical-review/ideomotor-prior-review.json": "a1ce9916d1fa8b5e574e88a82d613620281027ef80e65e21b1001ceade9fd31e",
+          "reports/technical-review/ideomotor-review.md": "1564b76aacddc8ddd47ead5705a9ba367d16e629d720b4ef451fe2ae9d54c83e",
+          "src/affine_control/ideomotor_demo.py": "2384c099d80d2201ba429303d77a83b937e9934b3612764657630a11b5946bb2",
+          "tests/test_ideomotor_review.py": "65a60d5a415b84cd92d51d115fabf72927f1d11d89d2fa43dae04d38c2591efe"
         },
         "source_path": "articles/ideomotor-theory-and-predictive-brain.qmd"
       },
