@@ -8313,15 +8313,257 @@
           "priority": "p2",
           "rationale": "**Figure Contract.** Retain mathematically correct quadrants while requiring conjugate rate and distinguishing absolute club versus relative joint rate. Only make_sign_quadrants changes in the shared generator. Initial default-style generation revealed footer overlap; corrected footer offset and regenerated with the generator's standard \\_style(). The final standalone figure pixels were inspected and are legible. Final inclusion on Chapter 13 pages 90-95 is inspected and legible.",
           "verification_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-state-event-definition",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**State and Event Definition.** Distinguish the complete predictive state from a scalar event condition, which can depend on many state variables. A threshold in one coordinate does not match full state. Specify the first admissible directed root, detector memory, hysteresis and absent or repeated events. Sign-change detection can miss multiple crossings within a step and tangential roots; ODE residual checks alone do not validate event localization.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-transversality",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**Transversality.** Derive the local event-time perturbation as minus the event-function perturbation divided by its approach-side derivative. A positive 0.002 rad error gives -0.5 ms at 4 rad/s or -50 ms at 0.04 rad/s for a linear trace. A curved trace over the longer interval needs explicit root evaluation. The dimensionless grazing example `(s-0.2)^2+epsilon` has no, two, or one double real root as epsilon is positive, negative or zero; the double root is at s=0.2. A confidence interval conditional on one root cannot represent all event outcomes.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-actuator-history",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**Actuator History.** Use an explicitly illustrative first-order torque response, not a universal muscle law. A 35 ms time constant gives 63.2% response after one constant and 76.9 ms of 10–90% rise. A -5 to +15 N m target change crosses zero after 10.1 ms with that time constant. Distinguish pure delay, lag, rate limits, preload and transmitted load. A finite torque step does not instantaneously change velocity. Complete-state branching and finite preparation answer different causal questions; equal command is not equal impulse or mechanical work.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-bounded-study-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**Provider and Literature Scope.** The pinned filter audit attempts 92 programs per filter, 368 rows across four filter constants and two shoulder commands (60/100 N m). Lead reconstruction reproduces eight ordering summaries and acceptance counts 63/59/59/56. Initial command is copied directly into the filter state; only subsequent changes are smoothed. The first upward club-angle-zero event, with arm angle at most 2 rad, is a geometric proxy without ball collision. Selected onset may change across filters; finite-grid reselection is not continuous optimization or fixed-policy robustness. The separate moving-base/two-hand/flexible comparison has eight schedules, six held-out draws and endpoint 0.24 s. Nominal early_restrain (-2 N m before 0.10 s, +4 after) and late_drive (zero before 0.14 s, +5 after) change early torque, switch time and late amplitude together. All eight candidates are nondominated across five objectives; neither this comparison nor the filter audit tests a general feedback advantage. Sprigings2002 publisher abstract supports a bounded three-condition planar simulation, not measured human command histories or this audit's filter parameters.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-alignment-work",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**Alignment and Work.** Distinguish translation from duration normalization. The angular derivative with respect to normalized phase is D times angular velocity and has units rad per unit phase. Preserve the time Jacobian in work integration. Identical phase power traces `10+5*phase` W over durations 0.2/0.4 s give 2.5/5 J. Nonlinear warps need their local Jacobian; averaging phase traces before integration need not recover mean trial work. Sharpness at an alignment event is partly constructed, not causal evidence.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-prospective-information",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**Prospective Information.** Actual future impact and actual completed duration are retrospective quantities. A real-time policy needs available measurements or predictions with evaluated error. Adding a clock to the mathematical state adds no information about unobserved deviations. Compare sensors, estimator memory, latency, actuator bounds and preparation explicitly; an internal simulation diagnostic is not automatically an experimentally available control signal.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-causal-timing-region",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**Causal Design and Feasible Regions.** A sign crossing need not begin an interaction. Define body, moment point, projection and power-conjugate rates. Distinguish measured ordering from causation, copied-state intervention from preparation, and fixed-policy effects from reoptimization. Each branch evolves its own reactions. Preserve the loading-history and arm/wrist allocation hypotheses without equating roles with net sign. A broad plateau, narrow peak, boundary optimum, disconnected regions or no feasible benefit are possible; report failures and the actual response rather than asserting a robust plateau.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd",
+            "tests/test_timing_review.py",
+            "scripts/make_proximal_distal_companion_figures.py",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf",
+            "reports/technical-review/timing-review.md",
+            "reports/technical-review/timing-prior-review.json",
+            "reports/technical-review/timing-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+            "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
+            "articles/proximal_distal_companion/chapters/ch22_timing_state_question.qmd": "b37d17143931069c3579f9643834b847fd68007c5922618d4a2431571f45313f",
+            "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+            "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+            "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
+            "scripts/make_proximal_distal_companion_figures.py": "c624f58be1ae8b179ffb75fe3f70cb6db87ea984499650aacfcdcd168b187740",
+            "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1"
+          },
+          "finding_id": "ad-finding-timing-schematic-trigger-contract",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4813",
+          "priority": "p2",
+          "rationale": "**Figure Contract.** Three artificial logistic curves have different offsets and slopes; exact threshold markers share scalar value 0.6, not complete state. Labels declare schematic curves and arbitrary units. Only `make_clock_state` changes in the generator; all other top-level AST nodes match baseline. Manufactured checks test algebra and figure geometry. No new provider dynamics rollout or human experiment was performed.",
+          "verification_commit": "8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9"
         }
       ],
       "review_evidence": {
-        "evidence_file_count": 193,
+        "evidence_file_count": 199,
         "evidence_sha256": {
           "articles/figures/proximal_distal_companion/fig_companion_biological_redundancy.pdf": "dbfe8ec34a77dc58bc7adb98ba8d473fb6419b5125ce3d56148072e355460fbd",
           "articles/figures/proximal_distal_companion/fig_companion_biological_redundancy.svg": "347439fb587986d20a19f7e4eba5c67c4dbbb0a28dda19b1babab7368e5bc765",
           "articles/figures/proximal_distal_companion/fig_companion_carry_then_handoff.pdf": "221cc24c6596dd4fb9a9884085a105f8a3e095a7fa7b0c91f692a25b647b4815",
           "articles/figures/proximal_distal_companion/fig_companion_carry_then_handoff.svg": "c1680813feaf527ce7a508d1322ca03c12e564a320c7126aa940f0f8f14f0c31",
+          "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.pdf": "2c030ab4d40b6d8b5faa39ecb88530aae3f5efb01cad7dfe44a1fba21b6ef522",
+          "articles/figures/proximal_distal_companion/fig_companion_clock_vs_state.svg": "3a99166ac99a6f9e62f81c620e57ec5b5d3a9844201cd193b099b83b375d20bf",
           "articles/figures/proximal_distal_companion/fig_companion_constraint_reaction.pdf": "04c329854a0df5a32eec32b0c40d23e23aa8ef033307160356a4c94c62645caa",
           "articles/figures/proximal_distal_companion/fig_companion_constraint_reaction.svg": "bfa371b715b50bd67921b657fa3f28ed2d964b43ddc20ab46bf866ba62e0df49",
           "articles/figures/proximal_distal_companion/fig_companion_evidence_ladder.pdf": "c360103e2d08d1f003fd222516d6607160d9ce7f4b9e8915f853a68bc1c1a331",
@@ -8474,6 +8716,9 @@
           "reports/technical-review/system-boundary-dependency-carry-forward.json": "e8a684186af523e9c95ad636690f15f37079bed23ea4ebff333b4c81bb4c5d97",
           "reports/technical-review/system-boundary-prior-review.json": "049a31c0e9afe687ebfee319e9f2c0201a8fa18ad6269960350f0a32b114dc2b",
           "reports/technical-review/system-boundary-review.md": "78cf45bfd5d4a3b0b6e580bf6c2f16546c237843c045e819bef3047efbdaeb1d",
+          "reports/technical-review/timing-dependency-carry-forward.json": "52096f91bde6b516aa239b55605d4c681dbfb5d94132f322942a1d4b1b38c8f2",
+          "reports/technical-review/timing-prior-review.json": "3d6516127fa53705dbbe19ac4a5da9c720ab2cd6cf7f0866e66d9bab9008f8fb",
+          "reports/technical-review/timing-review.md": "d7731c5a82f766462662b3af592fd8602cb075fd2be9d41ebc31255eb6463fc7",
           "reports/technical-review/two-hand-wrench-archive-checks.json": "f94aa3b9dd14ba4583fe001cb11f82f8f67d53f1595ab250910e2512b15a10cf",
           "reports/technical-review/two-hand-wrench-dependency-carry-forward.json": "eb6fed1c3f1734f3d0d8affb0bcb915b276764a25273cb3b1cdc3da001acda48",
           "reports/technical-review/two-hand-wrench-prior-reviews.json": "6f4ac220e8e8ad11eacbee123f778383c22853ad69783ebebd3f81da153232bc",
@@ -8509,6 +8754,7 @@
           "tests/test_speed_energy_review.py": "4cea1e2d1e79b5f611cd6de99ff6607576312db97e1568e90686238d5971fb25",
           "tests/test_state_snapshot_review.py": "997755463154582746102deec8a51c9c08c30648addbe4f0c1717042f0756b1b",
           "tests/test_system_boundary_review.py": "1f691f45de4f665f30548bbe6e3f0db57898fda57cc828f5a1fb39f6651041df",
+          "tests/test_timing_review.py": "b26f4d1ff2f5ded49295d006a0576c20f5f2ce104f8195bd31e30a8db19fd2f1",
           "tests/test_two_hand_wrench_review.py": "74411c733d84d50d2b2ed88fbc53bd88aef392e07f51960a693c1eb8fec54a08",
           "tests/test_whole_swing_ledger_rigor.py": "d454ad3f8fb5ed59029ac61d06cf3ac1dee93fd7b479d77f2d30489e91cb229b"
         },
