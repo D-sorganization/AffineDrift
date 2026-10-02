@@ -1,6 +1,24 @@
 ---
-title: "Volume II: Transverse Control and the Architecture of Trajectories"
-description: "Transverse control, trajectory geometry, and motion architecture for multi-body biomechanical and robotic systems."
+title: "The Geometry of Motion — Volume II: Control Is Motion"
+description: "Explores trajectory-centric nonlinear control, geometric mechanics, transverse dynamics, and coordinate-free formulations for athletic movement."
 ---
+
+**Volume II: Control Is Motion** extends the tangent-space framework developed in Volume I into trajectory-native nonlinear control design and athletic movement architecture. 
+
+In classical feedback engineering, control objectives are overwhelmingly formulated as setpoint regulation around an isolated static equilibrium point. In biological and athletic mechanics, however, movement is fundamentally orbital: the system executes high-velocity, non-equilibrium dynamic maneuvers where timing, configuration, velocity-dependent Coriolis coupling, and impact conditions interact continuously.
+
+## The 'Control Is Motion' Paradigm
+
+**Control Is Motion (CIM)** organizes control design around a central geometric principle: control inputs should not be treated as arbitrary force commands driving toward a static setpoint, but as geometric deformations of a nominal reference trajectory in state space. Rather than forcing a high-dimensional system onto an unnatural equilibrium, the controller shapes the orbit, its transverse convergence funnel, and its phase progression.
+
+Mathematically, for a smooth control-affine system $\dot{x} = f(x) + G(x)u$ with nominal reference trajectory $x^*(t)$, the local effectiveness of feedback is evaluated through a transverse projection:
+
+$$
+\delta \dot{x}_\perp = A_\perp(t) \delta x_\perp + B_\perp(t) \delta u
+$$
+
+where $\delta x_\perp$ represents perturbation dynamics transverse to the nominal orbit $x^*(t)$, and $A_\perp(t), B_\perp(t)$ denote projected time-varying Jacobian matrices. Orbital stability is established by synthesizing transverse contraction funnels that bound deviations across phase transitions rather than requiring asymptotic arrival at a static point.
+
+The chapters below provide the complete unabridged text, derivations, algorithms, and simulation analyses for Volume II.
 
 {{< include volume2_content.qmd >}}
