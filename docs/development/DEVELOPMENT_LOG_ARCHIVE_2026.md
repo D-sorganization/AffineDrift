@@ -1,5 +1,18 @@
 # Development Log Archive — 2026
 
+### DL-#4807 · Velocity Summation and Sequence Evidence
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4810 (regular); parent #4808 verified on remote main
+- **Issue:** #4807; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/sequence-rigor-4807
+- **Paths:** articles/proximal_distal_companion/chapters/ch08_summation_of_speed.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_sequence_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02; protected merge a2e4725f94261c1c41af30a1d2f2ca1e30347f21; CI37010363062 succeeded;25owned blobs and whole tree match accepted93f04ccfdf32cbe6ceb066a3fb2a30e35598b12f.
+- **Summary:** Distinguish velocity sums, vector peak timing, energy/power and causal claims; correct finite-study interpretation and citation scope; replace uncomputed figure coupling label with a normalized schematic. Four implementation Flash helpers read and adjudicated. Eight findings bound (177 total), prior 169 preserved; 108 source audits plus whole-book consistency remain. Protected delivery pending.
+- **Next step:** None for this delivered chapter. Lease and presence released; sequence-remote-main-receipt.json records proof. Chapter13 delivery remains separate.
+
 ### DL-#4806 · Sensitivity, Identifiability, and Measurement
 
 - **State:** shipped

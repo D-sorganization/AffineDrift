@@ -1,0 +1,363 @@
+{
+  "issue": 4811,
+  "status": "Regular PR4812 open; source, binding and parent main reconciliation verified on remote topic. Registration checkpoint SELF awaits push, guarded arming and protected delivery.",
+  "baseline": "93f04ccfdf32cbe6ceb066a3fb2a30e35598b12f",
+  "source_audits_pending": 107,
+  "whole_book_consistency_pending": true,
+  "focused_red": {
+    "failed": 2,
+    "passed": 5
+  },
+  "focused_green": {
+    "passed": 7
+  },
+  "primary_reading_scope": "See negative-torque-review.md; no full-paper acceptance",
+  "provider_files": [
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/chapters/_ch04_counterfactuals.qmd",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "49bdee11230b9252bd9abb0d05f59cc0e05c897fed4d64212bac2df2cb143ada",
+      "saved_as": "negative-torque-provider-_ch04_counterfactuals.qmd"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/chapters/_ch05_two_hand_wrench.qmd",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "fa2fbafe03bea6f3c1c17e2d40d37db7628e340e6a51ae5b5a1eb6af72de6428",
+      "saved_as": "negative-torque-provider-_ch05_two_hand_wrench.qmd"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/chapters/_ch05b_forward_two_hand.qmd",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "a1e2117c31003c41e93ee0cc954e458a4490950a88be20f6a1c4fcbeba60232e",
+      "saved_as": "negative-torque-provider-_ch05b_forward_two_hand.qmd"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/chapters/_ch06d_uncertainty_control.qmd",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "a55a3c3a1b5e7ea5ab570ca41e5e2465c6987c18d5e3ee88b7ea3bf9715dc83c",
+      "saved_as": "negative-torque-provider-_ch06d_uncertainty_control.qmd"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/two_hand_wscg_analysis.json",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "56fcea4c627191291ec4f20f5da398e9705ec71542835a36e461c3d711942ba9",
+      "saved_as": "negative-torque-provider-two_hand_wscg_analysis.json"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/two_hand_wscg_analysis.npz",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "084b49ba093fe8a713e2d98b5fab24bebd7f352fe65a03e1dd0ed29cf1413239",
+      "saved_as": "negative-torque-provider-two_hand_wscg_analysis.npz"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.json",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "101b9be2bccf705af9e856364312f797f0c725fab521b0c7357830e9e778715b",
+      "saved_as": "negative-torque-provider-uncertainty_control_study.json"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/uncertainty_control_study.npz",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "b051d567fcf7d0c03060f058887b2342ca46a85e78a3f1e5108d1c469ed6be9d",
+      "saved_as": "negative-torque-provider-uncertainty_control_study.npz"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/forward_two_arm_study.json",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "f2e88ad80e3c1edb71421339bf47833df055eefc79e97750c901f4bc18f91281",
+      "saved_as": "negative-torque-provider-forward_two_arm_study.json"
+    },
+    {
+      "path": "docs/research/proximal_distal_energy_transfer/data/forward_two_arm_study.npz",
+      "revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+      "sha256": "df0cabfc45e9c6b6ee8b5e623df0127eb93e8f87605cd44c2e182e1ea468ba12",
+      "saved_as": "negative-torque-provider-forward_two_arm_study.npz"
+    }
+  ],
+  "reconstruction": {
+    "scope": "Arithmetic and reintegration of saved arrays; no dynamics rollout or human measurements",
+    "provider_revision": "85cce4d3307bb7ad3953d9fc6e583e370803515c",
+    "pointwise_archive": {
+      "crossings_s": [0.1818941780768366, 0.27001592205391867],
+      "negative_interval_s": 0.08812174397708206,
+      "negative_fraction_interior_samples": 0.8503401360544217,
+      "contact_work_j": -149.41705223245467,
+      "note": "Interior samples give 85.034%; adding interpolated interval endpoints gives 84.954751%, reproducing the provider's rounded84.95%. Both support about85%. Saved power reintegrated, not reconstructed from raw velocities.",
+      "negative_fraction_endpoint_augmented_samples": 0.8495475113122172
+    },
+    "finite_candidates": {
+      "shape": [8, 6, 6],
+      "all_eight_nondominated": true,
+      "early_restrain_q10_speed_m_s": 4.705878716075947,
+      "late_drive_q10_speed_m_s": 4.417288308696056,
+      "early_restrain_mean_face_path_deg": 5.4398693254516886,
+      "late_drive_mean_face_path_deg": 1.5761009798390673,
+      "objectives_match_saved": true
+    },
+    "forward_branch": {
+      "start_s": 0.2,
+      "horizon_s": 0.04999999999999999,
+      "all_stored_couple_values_negative": true,
+      "minimum_nm": -7.432451660254221,
+      "copied_state_byte_equal": true,
+      "stored_control_power_zero": true,
+      "later_branch_scope": "0.24s branch37.25ms persistence read from provider JSON/chapter, not independently reintegrated.",
+      "copied_state_check": "q and qdot stored array bytes match baseline index 800"
+    }
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_helpers": 8,
+    "outputs_lead_reviewed": true,
+    "canonical_edits_by_helpers": false,
+    "adjacent_excerpt_inventory": "Seventh helper checked selected Chapter13/14 excerpts only. Lead rejected an alleged contradiction between copied-state branching and finite-history preparation: they answer different causal questions. Optional cross-references deferred to whole-book review. No Chapter14 audit credit."
+  },
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 889,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "math": [
+    {
+      "width": 390,
+      "total": 59,
+      "rendered": 59,
+      "displays": 3,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "total": 59,
+      "rendered": 59,
+      "displays": 3,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    }
+  ],
+  "render": {
+    "pages": 233,
+    "canonical_public_parity": true,
+    "visually_inspected_pages": [
+      89, 90, 91, 92, 93, 94, 95, 96, 229, 230, 231, 232, 233
+    ],
+    "toc_text_unchanged": true,
+    "changed_text_pages": [90, 91, 92, 93, 94, 95, 232, 233],
+    "pdf_sha256": "5aa3ba029567706fb202b6eb0eccfb1f034b3b83f94704ceae575ad0e472e014"
+  },
+  "dependency_carry": {
+    "unchanged": 184,
+    "total": 187,
+    "other_generator_ast_unchanged": true,
+    "bibliography_unchanged": true
+  },
+  "full_regression": {
+    "passed": 6605,
+    "failed": 2,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 1036.08,
+    "coverage_percent": 79.28,
+    "failures": [
+      "tests/test_root_hygiene.py::test_root_matches_allowlist_and_hygiene_script_passes",
+      "tests/test_root_hygiene.py::test_check_root_hygiene_cli_passes"
+    ]
+  },
+  "remediation": {
+    "passed": 49,
+    "seconds": 66.7,
+    "accumulated_coverage_percent": 79.29,
+    "cause": "Browser screenshot written at repository root; preserved under QA. Packaging output also preserved under QA. No canonical Python or chapter change.",
+    "scope": "Broad run plus targeted remediation, not a repeated failure-free full suite."
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 1,
+      "log": "docs/development/technical-review/negative-torque-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/negative-torque-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "latex_structure_retry": {
+    "exit_code": 0,
+    "reason": "Preserved transient generated book TeX outside canonical source."
+  },
+  "source_titles_passed": 655,
+  "browser": {
+    "scope": "Single companion route; inherited dark reference contrast remains tracked in #4803. No full-site accessibility pass.",
+    "cells": [
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (186 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 186,
+            "first_target": "#references-1"
+          }
+        ]
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "passed": true,
+        "failures": [],
+        "axe_violations": []
+      },
+      {
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "passed": false,
+        "failures": [
+          "axe serious: color-contrast (186 nodes) Elements must meet minimum color contrast ratio thresholds"
+        ],
+        "axe_violations": [
+          {
+            "id": "color-contrast",
+            "impact": "serious",
+            "help": "Elements must meet minimum color contrast ratio thresholds",
+            "help_url": "https://dequeuniversity.com/rules/axe/4.13/color-contrast?application=playwright",
+            "node_count": 186,
+            "first_target": "#references-1"
+          }
+        ]
+      }
+    ],
+    "zoom_opened": true,
+    "zoom_closed": true
+  },
+  "source_commit": "ab782cb9e38923b4414778d1df18e4ad811cd842",
+  "bound_findings": 8,
+  "total_companion_findings": 185,
+  "post_binding": {
+    "passed": 49,
+    "seconds": 28.48
+  },
+  "binding_commit": "b6a6557bf304df51ea89674e6009ac1fa09a9232",
+  "parent_remote_main_verified": true,
+  "pr": 4812,
+  "remote_topic_verified_commit": "afaece5af8c7043007a89fb429b2ace815616833",
+  "delivery_helper": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "lead_reviewed": true,
+    "rejected": "False clean-full-suite claim and two-screenshot count; actual two failures concerned one screenshot. PR wording corrected."
+  }
+}

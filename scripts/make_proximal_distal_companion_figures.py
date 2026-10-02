@@ -280,9 +280,9 @@ def make_sign_quadrants() -> tuple[Path, Path]:
     axis.set(
         xlim=(-1, 1),
         ylim=(-1, 1),
-        xlabel="Angular Velocity Sign",
-        ylabel="Torque Sign",
-        title="Power Depends on Torque and Motion Together",
+        xlabel="Conjugate Angular-Rate Sign",
+        ylabel="Conjugate Torque Sign",
+        title="Power Requires Conjugate Torque and Rate",
     )
     labels = {
         (0.5, 0.5): ("Positive Power", GREEN),
@@ -296,8 +296,8 @@ def make_sign_quadrants() -> tuple[Path, Path]:
         )
     axis.text(
         0,
-        -1.15,
-        "A negative torque can add or remove energy; the velocity sign decides.",
+        -1.38,
+        "Club Moment: Club Rate. Joint Pair: Relative Rate.",
         ha="center",
         color=GRAY,
     )
