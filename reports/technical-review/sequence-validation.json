@@ -1,6 +1,6 @@
 {
   "issue": 4807,
-  "status": "Source and binding pushed through normal hooks; remote topic ref verified. Regular Chapter 8 PR waits behind parent #4808 in the one-active-PR delivery queue.",
+  "status": "Accepted Chapter 8 source and bindings pushed; parent PR4808 verified on remote main. Parent ancestry reconciled without scientific changes. Regular Chapter 8 PR pending.",
   "base_checkpoint": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
   "full_regression": {
     "passed": 6598,
@@ -329,23 +329,46 @@
     "only_corpus_row_changed": "articles/proximal_distal_companion/chapters/ch08_summation_of_speed.qmd"
   },
   "delivery_queue": {
-    "runner_utilization_percent": 93,
-    "observed_at": "2026-10-02T12:29:32Z",
-    "active_parent_pr": 4808,
-    "parent_ci_run": 37001380667,
+    "parent_pr": 4808,
+    "parent_merged": true,
     "chapter8_pr_created": false,
-    "policy": "Keep one active owned PR while parent CI runs; push accepted chapter checkpoint without opening another competing CI lane."
+    "policy": "Publish one regular Chapter 8 PR now that parent delivery is verified."
   },
   "binding_validation": {
     "passed": 48,
     "seconds": 69.74
   },
   "binding_commit": "3c22ee2d7872f67adf67ceb9af1ef87a0f43a426",
-  "remote_topic_verified_commit": "3c22ee2d7872f67adf67ceb9af1ef87a0f43a426",
+  "remote_topic_verified_commit": "a398afbe221b27b7de397f77e0b292741eaa1b31",
   "publication_checkpoint": "SELF",
   "initial_push_failure": {
     "check": "Bandit B310",
     "path": "Untracked QA sequence-provider-check.py",
     "resolution": "Replaced generic URL opener with explicit HTTPSConnection to pinned GitHub host, reverified three files, normal push retry passed. No canonical code change or hook bypass."
+  },
+  "main_reconciliation": {
+    "baseline": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
+    "incoming_main": "acbaf49ec23f95f3a25fa887c4a9f000e13ca8dc",
+    "premerge_head": "a398afbe221b27b7de397f77e0b292741eaa1b31",
+    "whole_incoming_tree_equals_baseline": true,
+    "whole_resolved_tree_equals_premerge_head": true,
+    "resolved_paths": [
+      "articles/proximal-distal-a-journey-through-the-swing.pdf",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json",
+      "docs/articles/proximal-distal-a-journey-through-the-swing.pdf",
+      "docs/development/DEVELOPMENT_LOG.md",
+      "docs/development/HANDOFF.md",
+      "reports/scientific-claim-audit.md"
+    ],
+    "reason": "Protected parent squash has the exact accepted baseline tree. All incoming content already exists in this branch; preserve accepted Chapter 8 bytes while joining squash ancestry."
+  },
+  "parent_main_receipt": "reports/technical-review/sensitivity-remote-main-receipt.json",
+  "delivery_helper": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed": true,
+    "lead_reviewed": true,
+    "scope": "Supplied-text turnover and PR prose, no canonical edits or scientific acceptance."
   }
 }

@@ -1,9 +1,10 @@
 {
   "issue": 4807,
-  "status": "Source and binding pushed through normal hooks; remote topic ref verified. Regular Chapter 8 PR waits behind parent #4808 in the one-active-PR delivery queue.",
+  "status": "Accepted Chapter 8 source and bindings pushed; parent PR4808 verified on remote main. Parent ancestry reconciled without scientific changes. Regular Chapter 8 PR pending.",
   "source_commit": "9f2327cad675eb2ceb9ba1665d5cd310a7e37ee0",
-  "comparison_base": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
+  "comparison_base": "acbaf49ec23f95f3a25fa887c4a9f000e13ca8dc",
   "owned_paths": [
+    "AGENT_HANDOFF.md",
     "articles/figures/proximal_distal_companion/fig_companion_sequence_overlap.pdf",
     "articles/figures/proximal_distal_companion/fig_companion_sequence_overlap.svg",
     "articles/proximal-distal-a-journey-through-the-swing.pdf",
@@ -12,9 +13,13 @@
     "data/trust/generated/claim_audit_report.json",
     "docs/articles/proximal-distal-a-journey-through-the-swing.pdf",
     "docs/development/DEVELOPMENT_LOG.md",
+    "docs/development/DEVELOPMENT_LOG_ARCHIVE_2026.md",
     "docs/development/HANDOFF.md",
     "docs/development/technical-review/corpus-review-index.csv",
     "reports/scientific-claim-audit.md",
+    "reports/technical-review/sensitivity-delivery.json",
+    "reports/technical-review/sensitivity-remote-main-receipt.json",
+    "reports/technical-review/sensitivity-validation.json",
     "reports/technical-review/sequence-delivery.json",
     "reports/technical-review/sequence-dependency-carry-forward.json",
     "reports/technical-review/sequence-development-log-validation.json",
@@ -24,7 +29,7 @@
     "scripts/make_proximal_distal_companion_expanded_figures.py",
     "tests/test_sequence_review.py"
   ],
-  "scope": "Chapter 8 paths relative to accepted parent, not a claim that parent is on remote main.",
+  "scope": "Chapter 8 delivery plus verified parent receipt and turnover; relative to protected parent merge on main.",
   "parent_pr": 4808,
   "parent_head": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
   "parent_ci_run": 37001380667,
@@ -33,11 +38,42 @@
   "whole_book_consistency_pending": true,
   "runner_utilization_percent": 93,
   "binding_commit": "3c22ee2d7872f67adf67ceb9af1ef87a0f43a426",
-  "remote_topic_verified_commit": "3c22ee2d7872f67adf67ceb9af1ef87a0f43a426",
+  "remote_topic_verified_commit": "a398afbe221b27b7de397f77e0b292741eaa1b31",
   "publication_checkpoint": "SELF",
   "initial_push_failure": {
     "check": "Bandit B310",
     "path": "Untracked QA sequence-provider-check.py",
     "resolution": "Replaced generic URL opener with explicit HTTPSConnection to pinned GitHub host, reverified three files, normal push retry passed. No canonical code change or hook bypass."
+  },
+  "main_reconciliation": {
+    "baseline": "891b38bcf34b967025e7d4d1d733e8ee9c1e888a",
+    "incoming_main": "acbaf49ec23f95f3a25fa887c4a9f000e13ca8dc",
+    "premerge_head": "a398afbe221b27b7de397f77e0b292741eaa1b31",
+    "whole_incoming_tree_equals_baseline": true,
+    "whole_resolved_tree_equals_premerge_head": true,
+    "resolved_paths": [
+      "articles/proximal-distal-a-journey-through-the-swing.pdf",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json",
+      "docs/articles/proximal-distal-a-journey-through-the-swing.pdf",
+      "docs/development/DEVELOPMENT_LOG.md",
+      "docs/development/HANDOFF.md",
+      "reports/scientific-claim-audit.md"
+    ],
+    "reason": "Protected parent squash has the exact accepted baseline tree. All incoming content already exists in this branch; preserve accepted Chapter 8 bytes while joining squash ancestry."
+  },
+  "parent_main_receipt": "reports/technical-review/sensitivity-remote-main-receipt.json",
+  "delivery_queue": {
+    "parent_pr": 4808,
+    "parent_merged": true,
+    "chapter8_pr_created": false,
+    "policy": "Publish one regular Chapter 8 PR now that parent delivery is verified."
+  },
+  "delivery_helper": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed": true,
+    "lead_reviewed": true,
+    "scope": "Supplied-text turnover and PR prose, no canonical edits or scientific acceptance."
   }
 }
