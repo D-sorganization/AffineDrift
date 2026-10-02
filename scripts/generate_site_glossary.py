@@ -60,6 +60,9 @@ def generate_glossary_qmd(glossary: dict[str, dict[str, Any]]) -> str:
         'description: "Site-wide glossary of biomechanics, control theory, golf physics, and governance terms with plain-language and technical definitions."',
         "toc: true",
         "toc-depth: 2",
+        "categories:",
+        "  - site-information",
+        "  - reference",
         "---",
         "",
         ":::{.lead}",
@@ -99,12 +102,27 @@ def generate_glossary_qmd(glossary: dict[str, dict[str, Any]]) -> str:
                 sym_list = ", ".join(f"${s}$" if not s.startswith("$") else s for s in symbols)
                 lines.append(f"**Symbols / Notation:** {sym_list}\n")
 
-            link_target = canonical if canonical.startswith("/") else f"/{canonical}"
+            target = canonical.lstrip("/")
+            if target.startswith("pages/"):
+                link_target = target[len("pages/") :]
+            else:
+                link_target = f"../{target}"
+
             if link_target.endswith(".qmd"):
                 link_target = link_target[:-4] + ".html"
 
             lines.append(f"[Read in Context &rarr;]({link_target}){{.glossary-canonical-link}}\n")
             lines.append(":::\n")
+
+    lines.extend(
+        [
+            "## Related Articles\n",
+            "- [Overview](overview.html) — Scope, evidence standards, and reading paths",
+            "- [Drifter Manifesto](drifter-manifesto.html) — Canonical series on control-affine modeling of the golf swing",
+            "- [Mathematical Notation Reference](notation.html) — Normative symbol conventions and control-affine definitions",
+            "- [Article Index](../resources/articles.html) — Complete inventory of published articles\n",
+        ]
+    )
 
     return "\n".join(lines)
 
