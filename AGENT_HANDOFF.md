@@ -1,12 +1,27 @@
+## Parent Delivery Verified — October 2
+
+PR #4772 is merged at `a4cf9b56cbd94ab067277d0bbdf3d6df329a69b9`. Exact-head CI
+36947184666 succeeded for e58d1f158; ancestry and all 22 delivered Git blobs
+match. The receipt is `reports/technical-review/measured-golfers-remote-main-receipt.json`.
+The parent squash tree equals e58 exactly, already in Chapter 17 history.
+This merge checkpoint retains the reviewed Chapter 17 content during squash
+conflict resolution; its eight bound scientific blobs remain unchanged.
+PR #4782 still needs final-head CI and protected delivery. The source review
+continues separately in `AffineDrift-system-boundary-review`, issue #4783;
+117 audits and whole-book consistency remain pending there until binding.
+
 # Technical Review Current State
 
-- Epic #4009 / corpus #4021 remains active: 118 full-source audits and whole-book consistency remain.
-- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-link-health`, branch `fix/measured-golfers-rigor-4771`.
-- Regular PR #4772: reviewed source `f565c72885e73d9e463debc336322691f46ea11a`, binding `cb9e634d5`, and nine new findings remain unchanged. Integration `SELF` reconciles the delivered predecessor and refreshes turnover.
-- PR #4770 merged as `099dc2cbfcf506941b3b0d306b43b7a1ccc5e767`; final-head CI passed and all 23 changed files match remote main. Its lease and presence are released.
-- Next: pass final-head CI and the protected merge guard for PR #4772, then verify its delivered blobs. Issue #4771 lease expires October 2 at 00:30 UTC. PR #4772 is not yet merged.
-- Six older owned review entries are reconciled to their verified main carriers; receipts and detailed continuation are in the [canonical handoff](docs/development/HANDOFF.md) and [development log](docs/development/DEVELOPMENT_LOG.md).
-- Preserve peer worktree `23ee826` and QA artifacts. No draft PRs, direct-main/force/admin pushes or hook bypass. Never change tracked files while push hooks run.
+- Epic #4009 / corpus #4021 remains active: 117 full-source audits and whole-book consistency remain.
+- Owned checkout: `C:/Users/diete/Repositories/Worktrees/AffineDrift-speed-energy-integration`; branch `fix/moving-base-rigor-4774`; regular [PR #4782](https://github.com/D-sorganization/AffineDrift/pull/4782).
+- Chapter 17 source `0eec41749fa18bf28995de990aff01b98a036493` is pushed. Fixture-only correction `318f9f9da` names the unchanged gravity constant; all eight current findings are rebound to that revision. The initial static CI failed this one quality rule; 17 affected tests and the tracked Python quality scan now pass. No article, figure or PDF changed. Eight corrected findings bind eight exact Git blobs; all 96 prior finding semantics and verification commits remain. This checkpoint records binding and integrates the latest parent/main changes.
+- Twelve source-phase agy Gemini 3.8 Flash tasks plus three delivery helpers completed; lead corrected scientific and helper errors. 72 final focused checks and 12 incoming equation checks pass. Initial full regression: 6,406 passes and one missing-heading failure; corrected source headings pass follow-up without weakening tests.
+- Final 225-page PDF/HTML inspected; four browser profiles pass, zero serious/critical axe findings; all 69 chapter expressions rendered at both widths, seven displays, no errors/placeholders/page overflow. Canonical/public PDFs match.
+- PR #4770 is verified on remote main `099dc2cbf`. PR #4772 now has external main integration `e58d1f158c3365846292edc7f950d47d544d462d`; scientific source unchanged, protected auto-merge armed, CI `36947184666` running. Three earlier runs were cancelled by replacement heads.
+- Next: pass binding/integration checks, push this PR #4782 checkpoint, verify both final-head CIs and protected merges, then compare delivered blobs with reviewed heads. Leases #4771/#4774 renewed through October 2 02:09 UTC.
+- Evidence: [review](reports/technical-review/moving-base-review.md), [validation](reports/technical-review/moving-base-validation.json), [handoff](docs/development/HANDOFF.md), [development log](docs/development/DEVELOPMENT_LOG.md). Preserve peer `23ee826` and QA; no drafts, direct-main/force/admin pushes or hook bypass. No tracked edits during push hooks.
+
+Current integration incorporates main f14216ba5 / PR4776 (deploy JavaScript newline preservation and print CSS). All eight bound Chapter17 blobs are unchanged;43 integration checks pass. Prior head407699d61 passed6371 Python tests and static/JS/content lint; its pending E2E is not delivery proof. The issue-scope guard now passes after listing the actual local test. Source/preparation work is preserved in QA; no new audit credit.
 
 ## Earlier Records Preserved From the Parent Branch
 
