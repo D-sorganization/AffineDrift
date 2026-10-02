@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4831 · Radar Observability and Spin-Axis Review
+
+- **State:** proposed
+- **Owner:** unassigned; codex prepared the inventory
+- **PR:** not created
+- **Issue:** #4831; epic #4009 / corpus #4021
+- **Branch:** not created
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 source read at 542f03e0b6f095f34cb20ddcfed54f6c1dcf523b; one Flash inventory adjudicated; primary-reading limits and manufactured arithmetic recorded; no acceptance or implementation lease.
+- **Summary:** Queued full radar chapter review covers phase/harmonic ambiguities, axis identifiability, a patent ratio discrepancy, device/ball modes and model-dependent face inference. No source edit or new corpus credit; current PR delivery has priority.
+- **Next step:** Check issue #4831 ownership after current PR delivery frees implementation capacity.
+
 ### DL-#4825 · Ideomotor Prediction and Action Review
 
 - **State:** in_review
