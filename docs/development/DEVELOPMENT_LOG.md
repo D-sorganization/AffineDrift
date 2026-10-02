@@ -29,8 +29,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** articles/lagrangian-reference.qmd, tests/test_lagrangian_reference_review.py, css/lagrangian-reference.css
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; baseline b581710c211526e4a18288b9aa6b1babbf72a79b; nine focused passes; Ruff, Black100, mypy and891filequality pass; finalHTML/math/panel andboundedbrowser review;CSSlint;full6623pass/29skip/79.34%coverage.
-- **Summary:** Review eight mechanics decisions spanning energy functions, coordinates, flexible inertia, damping, input levels, constraints, boundary power and counterfactuals. Seven Flash helper outputs adjudicated. Source accepted; checkpoint SELF awaits commit/binding; no corpus credit yet;106sourceaudits pluswholebookconsistency remain.
-- **Next step:** Commit accepted source, bind actual source SHA, then push and open a regular PR after verified parent delivery.
+- **Summary:** Review eight mechanics decisions spanning energy functions, coordinates, flexible inertia, damping, input levels, constraints, boundary power and counterfactuals. Seven Flash helper outputs adjudicated. Source 13bd1cc29c3249e284cd379fdfb60679cc44f93e committed; eight findings bound and all other routes preserved. Binding checkpoint SELF awaits commit/push. There are 105 source audits plus whole-book consistency remaining.
+- **Next step:** Commit/push the binding checkpoint; 51 affected checks pass. Verify parent delivery, reconcile main and open a regular PR.
 
 ### DL-#4813 · Timing, State Events, and Actuator History
 

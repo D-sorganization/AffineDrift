@@ -31,7 +31,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/intentional-constraint-collapse.html` | `articles/intentional-constraint-collapse.qmd` | 2 |
 | `/articles/inverse-dynamics-inference.html` | `articles/inverse-dynamics-inference.qmd` | 4 |
 | `/articles/inverse-dynamics.html` | `articles/inverse-dynamics.qmd` | 4 |
-| `/articles/lagrangian-reference.html` | `articles/lagrangian-reference.qmd` | 1 |
+| `/articles/lagrangian-reference.html` | `articles/lagrangian-reference.qmd` | 6 |
 | `/articles/launch-monitor-vendor-reference.html` | `articles/launch-monitor-vendor-reference.qmd` | 1 |
 | `/articles/markerless-mocap-camera-selection.html` | `articles/markerless-mocap-camera-selection.qmd` | 6 |
 | `/articles/nonlinear-control-insights.html` | `articles/nonlinear-control-insights.qmd` | 9 |
@@ -285,7 +285,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-33941e46336a` | `/articles/intentional-constraint-collapse.html` | Reviewed | — | None | `crit-intentional-constraint-collapse`, `crit-stiffness-pulse-paradox` | 0 |
 | `ad-route-53f2549bc89f` | `/articles/inverse-dynamics-inference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-5ac6ade49b31` | `/articles/inverse-dynamics.html` | Reviewed | — | None | None | 0 |
-| `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Reviewed | — | None | None | 0 |
+| `ad-route-d43e6dc0f339` | `/articles/lagrangian-reference.html` | Reviewed | — | None | None | 8 |
 | `ad-route-35fef90e5b8f` | `/articles/launch-monitor-vendor-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-67b306deccbc` | `/articles/markerless-mocap-camera-selection.html` | Reviewed | — | None | None | 9 |
 | `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Reviewed | — | None | `crit-sequencing-lie-bracket-fallacy` | 8 |

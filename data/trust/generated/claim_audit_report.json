@@ -1119,11 +1119,225 @@
       "claims": [],
       "critiques": [],
       "deferment_issue_url": null,
-      "findings": [],
+      "findings": [
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-energy-state",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Energy and State.** Energy functions, geometry, forces, constraints and initial conditions enter the equations of motion. Scalar energy totals do not specify a trajectory. Use local independent coordinates z, coordinate rates v, and a separate generalized velocity nu when position and velocity representations differ. Positive-definite inertia requires positive kinetic energy for every nonzero independent velocity; it does not follow merely from choosing notation. Internal memory can require state beyond position and velocity.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-flexible-geometry",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Flexible Geometry.** Shaft deformation can change gravitational potential as well as elastic energy. Off-diagonal inertia changes the input-to-acceleration map even when a mode has no direct actuator. Specify modal reference, boundaries and validity; do not double-count an unexplained geometric potential. Tangent and prestress stiffness follow the declared force/constraint linearization and are not extra energy supplies.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-force-energy-accounting",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Force and Energy Accounting.** Count viscous damping once. A Rayleigh function is optional, and is not a representation of every dissipative law. The signed conservative load is minus the potential gradient. The declared Christoffel construction gives C+C-transpose=M-dot and the correct mechanical energy balance, including applied and retained force power minus viscous loss. Mechanical and metabolic power remain different quantities.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-affine-input-actuator",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Affine Input and Actuator State.** At a fixed complete state, input increments map linearly to vector-field increments. Neither total acceleration nor evolved trajectories, speed, energy or neural effort inherit that scaling. The declared input origin changes the drift/input split. Command-level and applied-torque-level interventions differ when activation or actuator memory remains; saturation and state-dependent impedance require a stated input law.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-reactions-contact",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Reactions and Contact.** Solve stationary ideal bilateral reactions with accelerations. The constrained acceleration map G-v-c is a projection of the unconstrained M-inverse-B map, not the generalized-force map B itself. Each counterfactual branch solves its own reactions. Nonholonomic ideal constraints admit Lagrange–d'Alembert treatment; arbitrary substitution into Hamilton's action is not equivalent. Friction, separation and impact can require different smooth modes, set-valued laws or velocity resets; not every mode change requires a reset.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-moving-boundaries",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Moving Boundaries.** Differentiating Jv=-Phi-t gives Jv-dot=-J-dot-v-J-t-v-Phi-tt, with total and partial Jacobian derivatives distinguished. Reaction power is -lambda-transpose-Phi-t. A prescribed support can supply energy at zero separately declared drive. Adding a clock does not eliminate that boundary power. Reduced time-dependent kinematics require their own energy identity.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-counterfactual-sign",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Counterfactual Definition and Sign.** Distinguish pointwise, stitched, forward and branched zero-torque counterfactual constructions under the site's normative definitions. For an unconstrained or validly reduced mechanical model, ZVCF acceleration is -M-inverse-h(z,0), the signed drift load is -h and the formal holding load is +h. A holding load can lie outside the actuator's range. Explicit constraints require their acceleration/reaction solve. An all-zero velocity reset is undefined within a retained moving-constraint model when Phi-t is nonzero; freezing a boundary or resetting relative rates is another intervention.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/lagrangian-reference.qmd",
+            "css/lagrangian-reference.css",
+            "tests/test_lagrangian_reference_review.py",
+            "reports/technical-review/lagrangian-review.md",
+            "reports/technical-review/lagrangian-prior-review.json",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+            "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+            "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+            "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+            "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+            "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
+          },
+          "finding_id": "ad-finding-lagrangian-golf-evidence",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4815",
+          "priority": "p2",
+          "rationale": "**Golf Interpretation and Evidence.** Earlier work changes loading and geometry; these affect both subsequent drift and the response to current input. Reactions transfer power across chosen boundaries, and elastic release transfers energy within the whole-system ledger. These relationships support precise model comparisons, not muscle allocation, metabolic efficiency or a coaching benefit without separate measurements and causal evidence.",
+          "verification_commit": "13bd1cc29c3249e284cd379fdfb60679cc44f93e"
+        }
+      ],
       "review_evidence": {
-        "evidence_file_count": 1,
+        "evidence_file_count": 6,
         "evidence_sha256": {
-          "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8"
+          "articles/lagrangian-reference.qmd": "21b1e7723c3aa4ff3c45995af61849a4237025597d4a8743f756ae7d196f53b8",
+          "css/lagrangian-reference.css": "15d22bfdcf660d4c89a006eebb7c76fa0472749fac07fc998023d723a1f7a3a6",
+          "reports/technical-review/lagrangian-dependency-carry-forward.json": "92019caec35436360c5458532dfc7c509e8d6b0cb22e08e3d8101a726f56f974",
+          "reports/technical-review/lagrangian-prior-review.json": "f22218aadea811e354f81bbb4f57a9ba08f983324b447763f0b916029f8c57cf",
+          "reports/technical-review/lagrangian-review.md": "39661cb93d1b1aab6495ce7eac7d5252667dfccf34ad3ab2081eeade399cf2a0",
+          "tests/test_lagrangian_reference_review.py": "11ff9a84b48ae33137b9c21ba30096cb229c2c4f38b12e82fd3eb0901c2645e9"
         },
         "source_path": "articles/lagrangian-reference.qmd"
       },
