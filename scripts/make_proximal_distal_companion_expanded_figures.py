@@ -49,23 +49,128 @@ def _edge(
     )
 
 
-def make_system_boundaries() -> None:
-    fig, axis = plt.subplots(figsize=(9, 5.4))
-    _clean(axis, (-5, 5), (-3, 3))
-    for radius, color, label in (
-        (1.0, ORANGE, "Club"),
-        (2.0, BLUE, "Golfer + Club"),
-        (2.8, GREEN, "Golfer + Club + Earth"),
-    ):
-        axis.add_patch(Circle((0, 0), radius, fill=False, lw=3, color=color))
-        axis.text(0, radius - 0.24, label, ha="center", color=color, fontweight="bold")
-    _edge(axis, (-4.4, 0.9), (-2.9, 0.9), RED)
-    axis.text(-3.7, 1.25, "Gravity / Ground", ha="center", color=RED)
-    _edge(axis, (-2.0, -1.7), (-1.0, -0.8), VIOLET)
-    axis.text(-2.5, -2.05, "Hand Work Changes Boundary Role", color=VIOLET)
-    axis.set_title(
-        "Choose the Boundary Before Naming the Transfer", color=INK, fontweight="bold", fontsize=16
+def _boundary_draw_header(ax: plt.Axes) -> None:
+    """Draw title and interaction header on axes."""
+    ax.text(
+        5.25,
+        5.8,
+        "Choose the Boundary Before Naming the Transfer",
+        ha="center",
+        va="center",
+        fontsize=14,
+        fontweight="bold",
+        color=INK,
     )
+    ax.text(
+        0.5,
+        4.75,
+        "Interaction /\nConversion",
+        ha="left",
+        va="center",
+        fontsize=11.5,
+        fontweight="bold",
+        color=INK,
+    )
+    ax.plot([0.5, 2.7], [4.3, 4.3], color=GRAY, linewidth=1.5)
+
+
+def _boundary_draw_cards(ax: plt.Axes, cards_x: list[float], card_w: float) -> None:
+    """Draw colored inventory card boxes, headers, and row dividers."""
+    headers = ["Club", "Golfer + Club", "Golfer + Club\n+ Earth"]
+    colors = [ORANGE, BLUE, GREEN]
+    for head, col, cx in zip(headers, colors, cards_x, strict=True):
+        card = FancyBboxPatch(
+            (cx, 1.35),
+            card_w,
+            3.85,
+            boxstyle="round,pad=0.0,rounding_size=0.15",
+            facecolor="white",
+            edgecolor=col,
+            linewidth=2.0,
+        )
+        ax.add_patch(card)
+        ax.text(
+            cx + card_w / 2,
+            4.75,
+            head,
+            ha="center",
+            va="center",
+            fontsize=11.5,
+            fontweight="bold",
+            color=col,
+        )
+        ax.plot([cx + 0.15, cx + card_w - 0.15], [4.3, 4.3], color=col, linewidth=1.5)
+        for y_div in [3.585, 2.855, 2.125]:
+            ax.plot(
+                [cx + 0.15, cx + card_w - 0.15],
+                [y_div, y_div],
+                color=GRAY,
+                linewidth=0.8,
+                linestyle=":",
+                alpha=0.6,
+            )
+
+
+def _boundary_draw_rows(ax: plt.Axes, cards_x: list[float], card_w: float) -> None:
+    """Draw row labels and classification values across inventory cards."""
+    rows = [
+        ("Hand Contact", ["External", "Internal", "Internal"]),
+        ("Foot-Ground", ["Outside Inventory", "External", "Internal"]),
+        ("Gravity from Earth", ["External Force", "External Force", "Internal Interaction"]),
+        ("Muscle Conversion", ["Outside Inventory", "Internal", "Internal"]),
+    ]
+    row_y = [3.95, 3.22, 2.49, 1.76]
+
+    for y, (label, vals) in zip(row_y, rows, strict=True):
+        ax.text(0.5, y, label, ha="left", va="center", fontsize=11, fontweight="bold", color=INK)
+        for cx, val in zip(cards_x, vals, strict=True):
+            ax.text(
+                cx + card_w / 2,
+                y,
+                val,
+                ha="center",
+                va="center",
+                fontsize=10.5,
+                color=INK,
+            )
+
+
+def _boundary_draw_notes(ax: plt.Axes) -> None:
+    """Draw clarifying notes at bottom of diagram."""
+    ax.text(
+        0.5,
+        0.85,
+        "Effective Gravitational Potential Can Represent an External Field",
+        ha="left",
+        va="center",
+        fontsize=10,
+        color=INK,
+    )
+    ax.text(
+        0.5,
+        0.45,
+        "Interaction Classification Does Not Determine Work",
+        ha="left",
+        va="center",
+        fontsize=10,
+        color=INK,
+    )
+
+
+def make_system_boundaries() -> None:
+    """Create colored inventory cards comparing three explicit body inventories."""
+    fig, ax = plt.subplots(figsize=(10.5, 6.2))
+    _clean(ax, (0, 10.5), (0, 6.2))
+
+    _boundary_draw_header(ax)
+
+    cards_x = [2.9, 5.4, 7.9]
+    card_w = 2.3
+
+    _boundary_draw_cards(ax, cards_x, card_w)
+    _boundary_draw_rows(ax, cards_x, card_w)
+    _boundary_draw_notes(ax)
+
     _save(fig, "fig_companion_system_boundaries")
 
 

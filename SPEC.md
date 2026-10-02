@@ -223,6 +223,8 @@ Rows are keyed by pull request, not by a serial spec version: `| YYYY-MM-DD | #<
 The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-#1520 serial-versioned narrative entries, kept verbatim for traceability. Do not add new ones — new detail goes in the row summary or the pull request.
 
 | Date       | PR    | Changes    |
+| ---------- | ----- | ---------- |
+| 2026-10-02 | #4785 | Distinguish system boundaries, contact work, COM pseudowork, observer power and gravity accounting in Chapter 2; add manufactured counterexamples and an explicit interaction-classification figure (#4783). |
 | 2026-10-01 | #4501 | Configure Quarto listing on article index and add category vocabulary contract enforcement (#4501). |
 | 2026-10-01 | #4782 | Correct moving-base replay and inertia inferences, enforcing power and provider evidence limits; verify manufactured cart-pendulum balances and clarify the schematic (#4774). |
 | 2026-10-01 | #4776 | Preserve statement-separating newlines during deploy asset JS minification to prevent breaking Automatic Semicolon Insertion (ASI) (#4775). |
