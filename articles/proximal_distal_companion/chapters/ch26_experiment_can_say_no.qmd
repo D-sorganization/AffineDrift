@@ -2,306 +2,351 @@
 
 ## A Concrete Picture
 
-A good smoke alarm is tested with smoke, with clean air, with a weak battery, and
-with a blocked sensor. A demonstration that rings only when the manufacturer
-presses a hidden button proves little. Scientific tests should likewise include
-conditions where the proposed mechanism predicts absence, reversal, or failure.
+A smoke alarm that remains silent may have encountered clean air, a flat battery,
+or a blocked sensor. Those outcomes mean different things. Likewise, a golf
+experiment can contradict a prediction, lack the precision to distinguish it,
+or fail to measure the quantity that the prediction concerns. A credible test
+makes those possibilities distinguishable before looking at the result.
 
-The proximal-distal hypotheses are valuable only if measurements can count
-against them. This chapter turns the model's attractive pictures into a protocol
-that can say no.
+The question is not simply whether a force, an EMG burst, or a speed increase
+appears. It is whether a specified mechanical explanation predicts an observable
+under conditions that could expose its failure. A negative club moment does not
+identify muscular inactivity; an instruction that changes speed does not by
+itself identify how that change occurred. The experiment must connect its
+measurements, model assumptions, intervention and decision rule.
 
-![A Falsification Map Connects Each Mechanism Claim to Required Measurements, Negative Controls, and a Predeclared Failure Condition.](figures/proximal_distal_companion/fig_companion_falsification_map.svg){#fig-lay-falsification-map width=98% fig-alt="A flow map connects interaction-force, negative-couple, preload, and robustness claims to synchronized measurements, negative controls, and explicit outcomes that would falsify each claim."}
+![A Registered Prediction Leads to Qualified Measurements and Distinct Supported, Contradicted, or Inconclusive Outcomes.](figures/proximal_distal_companion/fig_companion_falsification_map.svg){#fig-lay-falsification-map width=98% fig-alt="A prediction and qualified measurements lead to three possible interpretations: bounded support, contradiction requiring revision, or an inconclusive result. An unexecuted experiment remains untested."}
 
 ## How the Mechanism Works
 
-Preregistration freezes primary hypotheses, outcomes, windows, exclusions,
-filtering, coordinate conventions, and analyses before outcome inspection. It
-does not guarantee truth; it prevents the test from quietly changing to fit the
-data.
-
-### Synchronized Measurements
-
-The protocol calls for whole-body and club kinematics, separate ground-reaction
-wrenches, bilateral six-axis grip wrenches and pressure, shaft strain or
-deformation, launch outcomes, and forearm/shoulder/scapular EMG. Shared timing is
-essential because millisecond phase differences are part of the mechanism.
-
-### Calibration Before Interpretation
-
-Force sensors need zeroing, axis checks, and reference transforms. Motion and
-force coordinate systems must be registered. Club and body inertias need
-uncertainty. Known-load trials and action-reaction checks reveal sign or scale
-errors before a biological narrative is attached.
-
-### Filtering and Residual Gates
-
-Differentiating marker positions amplifies noise. Filtering force and motion with
-incompatible cutoffs creates artificial phase shifts. The protocol freezes
-methods and checks inverse-dynamics residual force and moment. Trials failing
-closure are not used to support a mechanism.
-
-### Primary Falsifiers
-
-The interaction-force claim is weakened if measured force direction, power, and
-counterfactual predictions do not match. The two-hand couple claim fails if
-bilateral wrenches lack the predicted late sign or geometry dependence. The
-preload claim fails if role reversal produces no measurable force/stiffness gap
-or if any advantage persists after gap-related variables are equalized. The
-robust-control claim fails if held-out participants do not preserve the declared
-tradeoff.
-
-### Negative Controls
-
-Hardware or task manipulations should alter grip separation, shaft properties,
-or load direction within safe limits. Analysis controls scramble event timing,
-reverse sign conventions, or use impossible reference transforms to confirm the
-pipeline rejects them. Synthetic dry runs test code paths but never count as
-human outcomes.
-
-### Participant Holdout and Hierarchy
-
-Repeated swings from one person are not independent people. Training and test
-splits occur at participant level. Hierarchical models report individual and
-population variation. A mechanism may be supported for a subgroup without
-becoming universal.
-
-### Identity and Governance
-
-Human data require consent, privacy, controlled access, provenance, and an
-identity-safe analysis plan. Session or row order must not be used to infer
-player identity. Public releases can contain deidentified derived observables and
-qualified synthetic examples while raw authority remains governed.
-
-**Hypothesis:** The predicted force-couple, preload, and timing signatures will
-survive preregistered participant-held-out testing.
-
-**Human Evidence:** No such complete dataset has yet been analyzed by this
-project. The protocol and synthetic dry run establish readiness, not evidence.
-
-**Practical Interpretation:** The strongest version of a claim names the result
-that would make its authors change their minds.
-
-### Turn Each Mechanism Into a Prediction Table
-
-For every claim, list the model rung, intervention, primary observable, expected
-sign or ordering, uncertainty window, negative control, and failure condition.
-The table should distinguish direct measurement from derived quantity. This
-prevents a broad theory from retreating to a different outcome whenever one
-prediction fails.
-
-For interaction-force transfer, predict hand-force direction, acceleration
-contribution, and forward persistence. For the negative couple, predict bilateral
-wrench projection and geometry response. For preload, predict force-rise or
-stiffness mediation. For robustness, predict held-out distributions rather than
-one optimum.
-
-### Phase One: Bench and Instrument Qualification
-
-Before recruiting participants, calibrate force plates, grip sensors, pressure
-mapping, shaft strain, motion system, and timing hardware with known loads and
-motions. Characterize crosstalk, drift, hysteresis, range, orientation, latency,
-and repeatability. Verify action--reaction and wrench transforms on a rigid test
-fixture.
-
-Run synthetic and hardware-in-the-loop signals through the complete pipeline.
-Intentionally swap axes, shift time, and exceed ranges to confirm gates fail.
-Qualification records belong in the release and should be tied to hardware and
-software versions.
-
-### Phase Two: Feasibility and Manipulation Checks
-
-Use a small pilot to test comfort, sensor durability, event synchronization, and
-whether bounded instructions or equipment changes alter the intended mediator.
-Pilot outcomes do not confirm the primary hypothesis. They refine protocol and
-effect-size uncertainty before preregistration.
-
-If an “arm-dominant” instruction does not change measured allocation, comparing
-its club speed with a “wrist-dominant” label is meaningless. Manipulation checks
-use bilateral wrench and activation/stiffness observables, not participant
-self-report alone.
-
-### Phase Three: Confirmatory Study
-
-Freeze inclusion, exclusion, conditions, randomization, primary windows,
-outcomes, model versions, filters, transforms, residual gates, and statistical
-analysis. Power the study at participant level. Separate discovery and holdout
-participants and prevent identity leakage across splits.
-
-Randomize condition order and allow familiarization. Blind data processing to
-condition where possible. Track adverse or uncomfortable trials. Preserve raw
-authority and generate deidentified derived releases under consent and governance.
-
-### Phase Four: External Replication
-
-An independent group should receive the protocol, schemas, calibration fixtures
-or specifications, analysis container, and preregistered predictions. Replication
-with different hardware and participants tests whether findings belong to the
-mechanism rather than one laboratory pipeline.
-
-Discrepancies should be decomposed by measurement, population, model, and
-intervention. A multi-lab result need not be identical to be informative; it
-should make heterogeneity explicit.
-
-### A Negative-Control Catalog
-
-Geometric controls reverse hand positions or force directions and collapse
-separation. Temporal controls shift or scramble event alignment. Computational
-controls remove dead zone, shaft flexibility, or selected drivers. Sensor
-controls apply known loads and impossible transforms. Statistical controls test
-null data and label permutation.
-
-Each control has an expected failure signature. If the pipeline still reports a
-negative couple after separation is mathematically zero, stop. If shuffled
-timing produces the same mediation result, timing evidence is not specific.
-
-### Primary Analysis for the Two Extremes
-
-Compare continuous arm-dominant and role-reversed wrist-dominant families only
-after confirming measured allocation differs. Primary endpoints might include
-transition force-gap duration, effective stiffness, late swing-normal couple,
-club speed, and a face/path variability metric. Internal load and discomfort are
-safety outcomes.
-
-Use hierarchical models with participant-specific effects. Test whether preload
-metrics mediate outcome differences. Report the full distribution and
-participants whose response reverses. Avoid declaring one universal strategy if
-heterogeneity is substantial.
-
-### Analysis of Slack
-
-Predefine literal contact loss, near-zero differential load, force-development
-delay, and low stiffness as separate variables. Choose thresholds from sensor
-qualification or physiology, not outcome inspection. Report duration and phase,
-not only whether a gap occurred.
-
-Test whether each variable predicts or mediates speed, control, and load after
-accounting for initial state. A finding that a brief low-load interval is common
-and beneficial would directly challenge a simplistic “never allow slack” claim.
-
-### Model-to-Data Comparison
-
-Do not fit every parameter to each trial and then call the fitted trajectory a
-prediction. Estimate permissible calibration parameters on training trials,
-freeze them, and predict held-out wrench, strain, and motion time series. Use
-absolute errors, phase errors, sign accuracy, energy residuals, and coverage of
-prediction intervals.
-
-Inspect residual structure. A consistent out-of-plane error suggests missing
-spatial dynamics; a timing-dependent shaft residual suggests missing modal
-physics; participant-specific force errors suggest allocation variability. Model
-revision follows a declared version and new holdout.
-
-### Decision Rules
-
-Support is graded. A mechanism can pass geometry controls but fail human sign
-prediction; preload can alter stiffness but not performance; robustness can hold
-for a subgroup. Record each result separately. Do not collapse them into one
-“validated” label.
-
-Predeclare what triggers rejection, narrowing, or redesign. A confidence
-interval crossing a practical threshold may mean inconclusive rather than no
-effect. Repeated confirmatory failure should demote the claim in the public
-evidence register.
-
-### Publication Regardless of Outcome
-
-Register the study and commit to releasing qualified results whether supportive,
-null, or contradictory. Provide code, schemas, calibration, deviations, and
-limitations. Privacy-preserving data access can retain raw authority while
-sharing derived evidence and verification hashes.
-
-An open resource earns trust when a negative result improves it. The model,
-figures, and lay explanation should update together so obsolete claims do not
-survive in an attractive PDF.
-
-### Reader Lab: Write the Failure Sentence First
-
-Before analysis, complete this sentence for each primary claim: “We will narrow
-or reject the claim if ___ is observed under ___ qualified conditions.” Include
-effect direction, uncertainty, mediator, and negative controls. Post it with the
-registration and analysis commit.
-
-Then create synthetic data representing support, null effect, sign reversal,
-sensor failure, and participant heterogeneity. Run the frozen pipeline and check
-that it produces the intended decisions without crashing or silently excluding
-unfavorable cases. Synthetic success qualifies analysis logic, not the mechanism.
-
-After real data arrive, publish the registered result and deviations before
-exploratory refinements. If the primary claim fails but a subgroup pattern
-appears, label it exploratory and design a new held-out test. This sequence keeps
-failure scientifically productive.
-
-### Choosing a Minimal First Human Study
-
-The full synchronized protocol is ambitious. A first decisive study could focus
-on the bilateral negative-couple prediction with instrumented grip, club motion,
-and shaft strain, plus bounded grip-separation or geometry manipulation. It
-would not identify scapular strategy, but it could refute a central contact
-mechanism.
-
-A second study could add transition stiffness and EMG to compare preload
-allocations. Staging reduces burden while preserving clear qualification. Each
-study should be designed around a discriminator rather than accumulating sensors
-without a primary question.
-
-### Stopping Rules and Governance
-
-Define hardware-failure, discomfort, fatigue, and data-quality stopping rules.
-Record adverse events and protocol deviations. Protect participant identity and
-keep consent scope attached to every derived release. Scientific openness does
-not authorize disclosure of raw private data.
-
-These controls belong inside the epic and evidence manifest, not in an appendix
-read only after collection. They make the proposed falsification program
-operational and responsible.
-
-### A Public Completion Checklist
-
-Before calling an experiment ready, verify qualified hardware, frozen protocol,
-registered analysis, synthetic failure cases, participant-level power, identity
-and consent controls, calibrated time and frames, residual thresholds, adverse-
-event rules, and an outcome-independent publication plan. Each item links to an
-artifact and owner.
-
-After collection, verify provenance, exclusions, code version, blinded primary
-result, deviations, uncertainty, and negative controls before interpretation.
-After publication, connect evidence status back to model and lay text. Completion
-is a closed trace, not only a paper submission.
-
-### If the Central Claim Fails
-
-A failed negative-couple prediction would redirect attention to other contact,
-shaft, or control pathways. A failed preload mediation would remove justification
-for interpreting continuous loading through the dead-zone mechanism. A failed
-held-out policy would narrow optimization claims. None invalidates the general
-use of state, energy, and counterfactual analysis.
-
-Writing these consequences in advance makes the theory genuinely revisable. It
-also reassures reviewers that the open resource is designed to learn rather
-than to sell a predetermined answer.
-
-### Chapter Checkpoint
-
-The experimental program is credible when a reader can locate the registered
-prediction, calibration, data-quality gates, analysis, result, and consequence
-for the model. Every central mechanism has a feasible negative control and a
-result that changes its status.
-
-This standard prevents “future work” from becoming an indefinite shield. Even a
-staged study can close one important uncertainty if it chooses a decisive
-observable and preserves qualification.
+### Start With the Quantity the Claim Predicts
+
+Define the **estimand**: the quantity the study intends to estimate, for a stated
+population, task, phase window and comparison. For a late negative-couple claim,
+that might be a participant-level mean of one declared moment projection over a
+registered preimpact interval. It is not interchangeable with peak force, total
+club work, or the fraction of trials with any negative sample.
+
+Separate the measured channels from their interpretation. A six-axis sensor
+measures a wrench at its calibrated reference. Transporting that wrench requires
+geometry; calculating its power also requires the matching velocity and angular
+velocity. Individual muscle force, effective stiffness, model-attributed
+acceleration and a zero-command counterfactual require further assumptions or
+experiments. More channels can constrain an inference without uniquely solving
+it. Chapter 25 follows this distinction from hand loads into biological demand.
+
+For each proposed mechanism, register the model, intervention, primary
+observable, expected direction or interval, competing explanation, and result
+that would narrow the claim. Four examples organize the program:
+
+- **Interaction forces:** Test a specified force–velocity projection or work
+  prediction. An acceleration decomposition is computed within a declared model;
+  it is not another force sensor reading. A human instruction is not the same
+  intervention as an instantaneous model torque deletion at a fixed full state.
+- **Two-hand moments:** Define the reference, axis, separated-force contribution
+  and directly applied hand moments. Test the predicted component and its
+  geometry dependence before interpreting a negative total moment.
+- **Preload and transmission:** Name the mechanical channel: hand–grip contact,
+  musculotendinous tissue or shaft. Distinguish contact loss, low differential
+  load, force-development delay and tangent stiffness. Test whether a manipulation
+  changes the proposed variable, and separately whether that change explains
+  an outcome under defensible causal assumptions.
+- **Robust control:** Declare the disturbance distribution, task and load limits,
+  outcome distribution and comparison policy. A favorable synthetic perturbation
+  result is not automatically a prediction about variation across golfers.
+
+### Register the Plan and Preserve Its Changes
+
+Specify outcomes, windows, exclusions, sample-size rationale, stopping rules,
+filters, coordinate conventions, model versions and statistical analyses before
+relevant outcome inspection. Record what data were already known. A timestamped
+plan makes later changes visible; it cannot prevent them or guarantee a sound
+experiment.
+
+Useful amendments and exploratory analyses remain possible. Preserve the
+original plan, dated reasons, data-access state and revised analysis; distinguish
+predeclared contingencies from decisions informed by results. Report planned
+outcomes even when they are unfavorable. These are the transparency functions
+of [preregistration](https://www.cos.io/initiatives/prereg), not a prohibition on
+learning. A pilot can inform feasibility and variance assumptions, but reusing
+its inspected outcomes as untouched confirmation requires a different argument.
+
+### Qualify the Measurement Chain
+
+Choose instruments from the estimand, rather than treating the longest sensor
+list as the best experiment. The UpstreamDrift computational research protocol
+(the provider linked below) proposes synchronized body and club kinematics,
+separate ground-reaction and bilateral hand wrenches, with launch,
+EMG, pressure or shaft measurements as particular hypotheses require. A
+split-grip transducer's internal wrench does not by itself directly measure
+every component of each hand's distributed contact load. State the instrument
+boundary and the balances needed to infer the remaining quantities.
+
+Before interpretation, characterize calibration, axis orientation, crosstalk,
+range, drift, hysteresis and dynamic response. Register reference points and
+frames, sensor and club mass, motion reconstruction, segment inertias and their
+uncertainty. A calibration load checks particular errors; it does not establish
+accuracy throughout an untested dynamic range. Instrument mass or altered grip
+geometry can change the swing being measured.
+
+Sampling interval, clock offset, clock drift, device latency, resampling and
+event localization are different sources of timing error. A high sampling rate
+does not prove synchronization. Combine their uncertainties according to their
+dependencies; a root-sum-of-squares rule needs a justified covariance model,
+whereas bounded errors may need a conservative combined bound. Report an event
+ordering as unresolved when its uncertainty permits reversal. The provider's
+rates and millisecond tolerances are specifications for its frozen protocol,
+not universal evidence that every proposed golf observable is resolvable.
+
+### Filtering Can Break Closure Without Shifting Phase
+
+Differentiation amplifies high-frequency position noise. Filtering can alter
+both amplitude and timing, but unequal cutoffs do not necessarily produce a
+relative phase shift. Two zero-phase filters can retain different amplitudes
+and thereby make force and acceleration inconsistent.
+
+For a periodic illustrative signal, let $F=ma$ and filter force and acceleration
+with linear operators $H_F$ and $H_a$. The residual becomes
+
+$$
+r=H_F F-mH_a a=m(H_F-H_a)a.
+$$
+
+It can be nonzero even when both filters have zero phase at every retained
+frequency. Applying the same linear filter closes this simple constant-mass
+example; it does not automatically close nonlinear multibody inverse dynamics,
+where products, rotations, lever arms and differentiation also matter. Acausal
+forward–backward filtering additionally needs care near events and record
+boundaries: future samples contribute to the estimate.
+
+Studies of [sidestep cutting](https://pubmed.ncbi.nlm.nih.gov/22227316/) and
+[drop-jump landing](https://pubmed.ncbi.nlm.nih.gov/22893510/) illustrate sensitivity
+of inferred joint moments to filtering. Those tasks and their findings do not
+determine a universal golf cutoff. Qualify bandwidth and temporal response for
+the intended observable, freeze a primary method, and report registered
+sensitivity analyses. Do not tune a filter until a preferred sign appears.
+
+Force, moment and energy residuals test consistency of the selected model and
+measurement chain. A failed gate may indicate calibration error, missing loads,
+timing problems or structural model discrepancy. Keep a disposition for every
+trial, report failure rates by condition, and investigate differential loss.
+Invalid measurements cannot support a force claim, but silently deleting them
+can also bias the comparison. Missing or unqualified data are neither a measured
+zero nor a successful falsification.
+
+### Separate Physical Controls, Invariance Checks and Deliberate Errors
+
+A consistent change of coordinates must preserve the physical prediction.
+Rotating a complete wrench and its conjugate twist together preserves power.
+Transporting both to another reference does too. Merely changing the sign of
+one channel is a corrupted-input test, not a physical reversal. Specify which
+of these operations each control performs and its expected result.
+
+There is a similarly important limit to collapsing hand separation. For
+equal-and-opposite forces $\mathbf f$ and $-\mathbf f$, the net moment is
+
+$$
+\mathbf M=(\mathbf r_L-\mathbf r_R)\times\mathbf f
+          +\mathbf C_L+\mathbf C_R,
+$$
+
+where $\mathbf r_L$ and $\mathbf r_R$ locate the left and right force
+application points relative to a common reference, with $+\mathbf f$ on the
+left and $-\mathbf f$ on the right. The vectors $\mathbf C_L$ and
+$\mathbf C_R$ are directly applied contact moments, all expressed in one frame.
+Coincident application points eliminate the separated-force term. They do not
+eliminate those other moments. In a manufactured example, two coincident hands
+with zero resultant force and direct moment projections $-0.3$ and
+$-0.2\,\mathrm{N\,m}$ along a common $z$ axis retain a net projection of
+$-0.5\,\mathrm{N\,m}$. A zero-separation null is therefore valid for the named
+force-couple contribution, or for a point-force-only model, not for every
+negative club moment.
+
+Changing grip geometry in a person also changes attainable forces, comfort and
+control. Do not assume that only the lever arm changed. A model intervention
+that holds forces fixed answers a narrower question.
+
+Temporal shifts can probe an alleged event relation, provided the surrogate
+destroys that relation while retaining the relevant noise and dependence.
+Repeated, autocorrelated samples are not exchangeable independent rows. Likewise,
+label permutations must respect the actual randomization and clustering.
+Document what a control rules out; survival of one control does not identify a
+unique mechanism.
+
+### Randomizing an Instruction Does Not Randomize Its Mediator
+
+Let $T$ be an assigned instruction, $M$ a measured preload variable and $Y$ a
+delivery outcome. Randomization can support an effect of the assigned
+instruction under the study's design and adherence assumptions. It does not
+make differences in $M$ random: strength, initial state, comfort or other
+variables may affect both $M$ and $Y$.
+
+A manufactured example makes the problem explicit. Take independent, centered,
+unit-variance variables $T,U,E$, where $U$ is a pretreatment common cause and
+$E$ supplies independent variation in the mediator. Define
+
+$$
+M=T+U+E,\qquad Y=U.
+$$
+
+Changing $M$ alone has no effect on $Y$ in this structural model. Yet regressing
+$M$ on $T$ gives coefficient $1$, and regressing $Y$ on $T$ and $M$ gives a
+mediator coefficient $1/2$. Their product suggests an indirect effect of $1/2$
+where the true effect through $M$ is zero. The omitted common cause $U$ creates
+the association. Adjusting for $U$ when it is observed removes it in this
+example; a hierarchical fit or a large sample alone does not.
+
+[Causal mediation analysis](https://imai.sites.fas.harvard.edu/research/mediation/)
+therefore needs an explicit causal model, temporal ordering, measurement
+assumptions, and defensible treatment–outcome and mediator–outcome identification.
+Variables changed by treatment can introduce further confounding that ordinary
+covariate adjustment does not solve. Report sensitivity to unmeasured causes;
+an analysis designed only for pretreatment confounding does not cover every
+post-treatment problem.
+
+A failed manipulation check weakens the proposed explanation through preload.
+It does not make a randomized instruction's total-effect comparison meaningless:
+the instruction could act through another pathway. Nor should researchers select
+only participants whose measured mediator changed and treat that selected group
+as if randomization were preserved. Force-gap, stiffness and EMG measurements
+remain distinct; EMG alone does not supply a calibrated stiffness measurement.
+
+### Repeated Swings Improve Precision Within a Defined Design
+
+For prediction in new golfers, keep participants separate between fitting and
+evaluation. Freeze feature selection, normalization, thresholds and hyperparameter
+choices using the training data. A held-out participant's prescribed baseline
+calibration may be legitimate if it is part of the intended use; accessing their
+test outcomes to tune the prediction is different. Predicting a later swing of
+a known golfer is also a different validation target from predicting a new
+golfer. Name the target instead of applying one split rule to every question.
+
+Repeated swings are useful, but they do not create new independent people.
+For the balanced random-intercept illustration
+$Y_{ij}=\mu+u_i+e_{ij}$, let $\mu$ be the population mean, with independent
+participant effects of variance
+$\sigma_u^2$ and independent within-participant errors of variance $\sigma_e^2$,
+the variance of the mean $\bar Y$ across all $nm$ observations is
+
+$$
+\operatorname{Var}(\bar Y)=\frac{\sigma_u^2}{n}
+                         +\frac{\sigma_e^2}{nm},
+$$
+
+for $n$ participants and $m$ swings each. Twelve participants with ten swings,
+$\sigma_u^2=4$ and $\sigma_e^2=1$ give variance $0.3417$, rather than the
+independent-row calculation $5/120=0.0417$: an 8.2-fold difference. These are
+illustrative squared units. This grand-mean formula is not a universal penalty
+for paired treatment contrasts, where a stable participant intercept can cancel.
+
+Plan power or interval precision for the actual estimand, covariance, condition
+order, expected missingness and multiplicity. More trials cannot necessarily
+substitute for more participants; neither is a fixed participant count or holdout
+fraction universally adequate. Use justified ranges of plausible effects and
+variances rather than treating a noisy pilot estimate as certain. Randomize or
+counterbalance conditions, allow familiarization, and model carryover or fatigue
+when the design requires it. Report participant variation and uncertainty in
+subgroup claims rather than promoting an exploratory reversal into a new rule.
+
+### Distinguish Contradiction From Insufficient Precision
+
+Predeclare a scientifically justified negligible region and a decision rule.
+A nonsignificant test against zero is not evidence that the effect is negligible.
+Conversely, a precisely estimated nonzero effect can still be too small to matter.
+
+For illustration only, choose an equivalence interval
+$[-0.5,0.5]\,\mathrm{N\,m}$ for a mean moment contrast. Under a normal model with
+known standard error $s$, a 90% interval for the estimated mean contrast
+$\hat\theta$ is $\hat\theta\pm1.645s$. At estimate zero and $s=0.2\,\mathrm{N\,m}$, the interval
+is about $[-0.329,0.329]\,\mathrm{N\,m}$ and fits inside the equivalence bounds.
+At the same estimate with $s=0.5\,\mathrm{N\,m}$, it is about
+$[-0.822,0.822]\,\mathrm{N\,m}$ and is inconclusive about equivalence.
+Neither case establishes exact zero.
+
+The 90% interval here corresponds to two one-sided equivalence tests at
+$\alpha=0.05$ under the stated model. This is not a generic license to use 90%
+intervals for every claim or ignore multiplicity. Estimated variance, small
+samples and clustered data require the appropriate inference procedure. The
+[equivalence-testing framework](https://lakens.github.io/statistical_inferences/09-equivalencetest.html)
+clarifies the distinction; the numerical margin above is a teaching choice,
+not an established golf threshold.
+
+Classify qualified results against the registered prediction as supported,
+contradicted or inconclusive. Keep an unexecuted test untested. A residual-gate
+failure is an acquisition/model problem to resolve, not automatically biological
+contradiction. Repeated precise failures should narrow the claimed mechanism;
+repeated imprecision should change the study design. Neither licenses moving the
+primary outcome after inspection.
+
+### A Staged Study With an Honest Completion Record
+
+Begin with bench tests and complete-pipeline synthetic cases that include known
+signs, nulls, timing errors, saturation and missing channels. Then use a pilot to
+establish instrument usability, attainable manipulations and uncertainty. A first
+human study could address one carefully defined bilateral moment prediction;
+another could add a qualified stiffness perturbation and activation observations.
+No single sensor list automatically identifies a scapular or neural strategy.
+
+Before confirmatory collection, preserve the protocol, analysis version,
+qualification records, oversight and consent scope, data authority, and rules
+for discomfort, fatigue and equipment failure. Public availability of an article
+does not imply access to its participant records or permission to reuse them.
+Publish governed derived results without inferring identities from filenames,
+session order or performance. Hashes identify bytes; they do not anonymize data.
+
+After collection, report the primary results, uncertainty, exclusions, quality
+failures and deviations regardless of direction. For model-to-data comparison,
+distinguish a fitted reconstruction from a held-out prediction and examine signed
+errors, event timing, work residuals and interval coverage. A residual pattern can
+suggest a missing mechanism but need not identify it uniquely. Freeze a revised
+model before testing it on fresh data. Independent laboratories can then test
+transport across instruments, populations and tasks rather than demanding
+numerically identical curves.
+
+**Model Result:** At the pinned provider revision, the experimental protocol
+reports a synthetic intake dry run and declared validation gates. Its model
+matrix distinguishes bounded mechanical support from open anatomical and human
+questions. This chapter does not rerun those validators or qualify instruments.
+
+**Human Evidence:** The pinned protocol reports no governed dataset meeting its
+full bilateral-wrench contract; its human predictions remain untested. That is
+a statement about the declared evidence boundary, not proof that no relevant
+human study or dataset exists anywhere.
+
+**Hypothesis:** The registered force, moment and transmission predictions may
+survive qualified participant-level testing. Their success, failure and practical
+size must remain open outcomes.
+
+### Reader Lab: Specify Both the Result and Its Interpretation
+
+Write a failure sentence naming the observable, population, task, window,
+uncertainty and competing explanations. Then state which instrument failure
+would make the result uninterpretable rather than contradictory. Run the
+collapsed-separation, filtering, confounded-mediation and interval examples
+above as synthetic checks of that distinction.
+
+Before accepting a diagram or a statistical label, ask what was held fixed and
+what was allowed to change. A consistent frame rotation, a physical grip change,
+a model torque deletion and a randomized instruction are four different tests.
+Their connection is useful precisely because their conclusions are not identical.
 
 ## Where the Picture Breaks
 
-The smoke alarm has a known target. Human strategies adapt to instrumentation
-and instructions. A manipulation intended to change preload may also change
-comfort, intent, or path. Manipulation checks and mediation analysis are needed.
+Human strategies adapt to instrumentation and instructions. Changing grip,
+preload or timing can also alter path, effort and comfort. A good manipulation
+check documents that problem; it does not eliminate confounding by itself.
+Likewise, a well-registered analysis cannot create information absent from the
+measurements or establish a model's anatomical adequacy.
 
-Preregistration cannot rescue poor measurement or an underspecified model.
-Exploratory findings remain useful when labeled and independently replicated.
+The useful standard is a traceable claim with a test capable of distinguishing
+its alternatives. Progress may support one mechanical component while narrowing
+a biological explanation. That is a reason to update the model and the writing,
+not to preserve an attractive story by redefining its success.
 
-**Go Deeper:** Read the complete
-[experimental falsification protocol](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/chapters/_ch06e_experimental_protocol.qmd),
-the [model-falsification matrix](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/MODEL_COMPLETION_FALSIFICATION_MATRIX.md),
-and the [open qualification boundary](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).
+**Go Deeper:** Read the pinned
+[experimental falsification protocol](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/chapters/_ch06e_experimental_protocol.qmd),
+[model-falsification matrix](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/MODEL_COMPLETION_FALSIFICATION_MATRIX.md),
+and [open qualification boundary](https://github.com/D-sorganization/UpstreamDrift/blob/85cce4d3307bb7ad3953d9fc6e583e370803515c/docs/research/proximal_distal_energy_transfer/OPEN_RELEASE_QUALIFICATION.md).
+Chapters 6, 24 and 25 connect the protocol to constraint mechanics, existing
+measurements and biological identifiability; Chapter 27 separates reproduction
+from validation.
