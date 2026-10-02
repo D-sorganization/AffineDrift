@@ -1,3 +1,13 @@
+# Chapter 11 Counterfactual Review Checkpoint
+
+Active issue #4821, session `technical-review-20261002-counterfactual`, branch `fix/counterfactual-rigor-4821`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-counterfactual-review`. DL-#4821 is in progress. Baseline `dc1884f2084a1caaa1b135201e751e330afe24e2` preserves the accepted Chapters18/28 checkpoint. No Chapter11 acceptance or source credit yet.
+
+Predecessor regular PR #4820 remains open with guarded squash auto-merge armed. Anti-Phantom run37056378688 attempt2 passed after truthful issue4817 implementation-path clarification; main CI37056378767 is still running. Preserve its checked head; verify exact-head CI, actual merge and all40owned paths before archiving DL-#4817/DL-#4819 or releasing their leases. Its durable turnover is https://github.com/D-sorganization/AffineDrift/pull/4820#issuecomment-5960292586 .
+
+Chapter11 source/test/figure corrections and bounded publication checks are complete; see `docs/development/technical-review/counterfactual-progress.md` and `reports/technical-review/counterfactual-progress.json`. No acceptance/binding credit yet. Next: run full regression and finalize scientific acceptance; retain all209 prior findings and frozen accepted-source records. Review publication, bind only accepted work, and push regular PRs with normal hooks. Goal remains active with103source audits and whole-book consistency pending. Raw evidence and Flash outputs are retained under this worktree's `docs/development/technical-review/`; older raw QA remains in the synthesis worktree.
+
+---
+
 # Chapters 18 and 28 — Regular PR #4820
 
 - Active goal #4009 / #4021 / #4059; issue #4819, branch `fix/synthesis-rigor-4819`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-synthesis-review`, baseline `682b709bc31459a882421062d2632282b78ed356`. Chapter28 and bounded publication are lead-accepted; accepted source `1a7521e581bab0e6aa40df3f9bf0cb5ddafdee66` is committed and eight findings are bound in the working ledger. All201prior findings are preserved (209total);103source audits plus whole-book consistency remain. All44post-binding checks pass. Binding `c19ff2d993ea0a0a0f1cd8151e54b03df93d1869` and source are verified on the remote topic; normal commit/push hooks passed. Regular combined PR [#4820](https://github.com/D-sorganization/AffineDrift/pull/4820) is open and attached. Reconciled checkpoint `1d2a48ccd8020f5fbc74c583d03bcb1078d1ce2c` is pushed; this PR registration checkpoint is SELF. No Chapter18/28 remote-main credit yet.
