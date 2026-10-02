@@ -490,7 +490,7 @@ describe('waitForFunction timeouts', () => {
     const [fn, arg, options] = page.waitForFunction.mock.calls[0];
     expect(typeof fn).toBe('function');
     expect(arg).toBeUndefined();
-    expect(options).toEqual({ timeout: 5000 });
+    expect(options).toEqual({ timeout: 15000 });
   });
 
   test('waitForSettledPage passes every timeout as the options argument', async () => {
@@ -500,10 +500,10 @@ describe('waitForFunction timeouts', () => {
     // MathJax gate, visible math (x2), fixed-header padding, deferred wrappers.
     expect(calls.map(([, , options]) => options)).toEqual([
       { timeout: 20000 },
-      { timeout: 5000 },
-      { timeout: 5000 },
-      { timeout: 5000 },
-      { timeout: 5000 },
+      { timeout: 15000 },
+      { timeout: 15000 },
+      { timeout: 15000 },
+      { timeout: 15000 },
     ]);
     for (const [fn, arg] of calls) {
       expect(typeof fn).toBe('function');

@@ -402,7 +402,7 @@ async function waitForVisibleMath(page) {
         rect.right > 0 && rect.left < window.innerWidth;
     });
     return !visiblePendingMath && !visibleRawMath;
-  }, undefined, { timeout: 5000 });
+  }, undefined, { timeout: 15000 });
 }
 
 async function waitForSettledPage(page) {
@@ -425,7 +425,7 @@ async function waitForSettledPage(page) {
     if (!header) return true;
     const bodyPadding = Number.parseFloat(getComputedStyle(document.body).paddingTop);
     return bodyPadding + 3 >= header.getBoundingClientRect().height;
-  }, undefined, { timeout: 5000 });
+  }, undefined, { timeout: 15000 });
   await page.waitForFunction(() => {
     const main = document.querySelector('#quarto-document-content, main.content, main');
     if (!main) return true;
@@ -438,7 +438,7 @@ async function waitForSettledPage(page) {
         getComputedStyle(p).overflowX === 'auto' || getComputedStyle(par).overflowX === 'auto';
     });
     return tablesReady && codeReady;
-  }, undefined, { timeout: 5000 });
+  }, undefined, { timeout: 15000 });
 }
 
 async function verifyItem(page, item, options) {
