@@ -1,6 +1,6 @@
 # Current Technical Review Handoff
 
-Chapter 13 accepted source `ab782cb9e38923b4414778d1df18e4ad811cd842` has eight bound decisions and 49 affected checks passing. Binding checkpoint SELF awaits publication; 107 source audits and whole-book consistency remain. Parent regular PR4810 remains in protected CI. Continue from [the canonical handoff](docs/development/HANDOFF.md).
+Chapter 13 accepted source `ab782cb9e38923b4414778d1df18e4ad811cd842` has eight bound decisions and 49 affected checks passing. Binding checkpoint SELF awaits publication; 107 source audits and whole-book consistency remain. Parent regular PR4810 is verified on remote main; Chapter13 source and binding are committed, normal push and regular PR are next. Continue from [the canonical handoff](docs/development/HANDOFF.md).
 
 ## Preserved Earlier Checkpoint
 
