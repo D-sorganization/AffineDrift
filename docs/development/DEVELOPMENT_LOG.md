@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4783 — System Boundaries and Contact Work
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4785 (regular)
 - **Issue:** #4783; epic #4009 / corpus #4021
 - **Branch:** fix/system-boundary-rigor-4783
 - **Paths:** articles/proximal_distal_companion/chapters/ch02_choose_the_system.qmd, tests/test_system_boundary_review.py, scripts/make_proximal_distal_companion_expanded_figures.py, references/proximal-distal-energy.bib
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02; 227-page PDF/HTML and four browser profiles pass; 6432-pass full run has two stale-digest failures; refreshed evidence passes 71 checks; static gates pass.
 - **Summary:** Distinguish body boundaries, contact/COM work, gravity ledgers, rigid transport, observer power and deformable load allocation. Nine findings bind e96394591; 104 prior findings preserved; 116 source audits remain.
-- **Next step:** Push bound source and parent integration; open a regular PR and verify delivery.
+- **Next step:** Verify final-head CI, predecessor delivery, protected merge and exact remote-main blobs.
 
 ### DL-#4774 — Moving-Base Mechanics
 
