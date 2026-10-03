@@ -146,7 +146,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 12 |
 | `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 24 |
 | `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 6 |
-| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 15 |
+| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 22 |
 | `/books/index.html` | `books/index.qmd` | 5 |
 | `/books/roadmap.html` | `books/roadmap.qmd` | 5 |
 | `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 11 |
@@ -400,7 +400,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | `crit-passive-overshoot-artifact`, `crit-static-fallacy-zvcf`, `crit-ztcf-identifiability` | 6 |
 | `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 10 |
 | `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Reviewed | — | None | None | 1 |
-| `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 4 |
+| `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 11 |
 | `ad-route-c25ee250631d` | `/books/index.html` | Reviewed | — | None | None | 1 |
 | `ad-route-de682b77b431` | `/books/roadmap.html` | Reviewed | — | None | None | 1 |
 | `ad-route-6d5fbbdd2308` | `/books/tangent-space-methods.html` | Reviewed | — | None | None | 1 |

@@ -30,7 +30,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 (`f5eb47370611412a429de6e0875837f77bd3db00`); 6737 tests, 93.24% coverage; 149 focused checks, static/content gates and bounded PDF/browser inspection pass.
 - **Summary:** Separate task geometry, physical feasibility and neural inference; preserve historical review scope when refreshing shared publication dependencies.
-- **Next step:** Commit accepted source, bind exact evidence and one corpus row, open a regular PR, then verify CI and guarded remote-main delivery.
+- **Next step:** Accepted source 8160bb8ba7a981f39b7a6bbbde13d21f15740f32 is bound to 11 files and one corpus row; 149 bound checks pass. Open a regular PR, then verify CI and guarded remote-main delivery.
 
 ### DL-#4842 · Impact Physics Chapter
 
