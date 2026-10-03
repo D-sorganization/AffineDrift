@@ -19,18 +19,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4850 · Musculoskeletal Modeling Conventions
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4851
+- **Issue:** #4850; epic #4009 / corpus #4021
+- **Branch:** fix/msk-conventions-rigor
+- **Paths:** articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex, articles/The_Geometry_of_Motion/Volume_III/main.pdf, tests/test_msk_conventions_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — baseline `eaae683256ec0924c43307427a94c9ff61d83318`; complete chapter corrected; 51 focused plus 2 explicit content checks pass; native PDF and 51-page carry checks pass; initial full run 6764 passed/1 Windows encoding failure at b7c433455; seven minifier tests pass under UTF-8; bounded landing/browser checks pass; full UTF-8 retry passed at `387de1628d5f9a67e35a12652cdb43ddfc0592ef`: 6765 passed, 29 skipped, 187 deselected, 51 warnings in 608.05s (0:10:08); 93.24% coverage; chapter accepted at `d53ec669335a900fcf42bd4a6065d1d6d27046a8`; ten frozen files bound; 73 post-binding checks pass.
+- **Summary:** Reconcile anatomical frames, declared rotation coordinates, inertia origin/order and inference limits.
+- **Next step:** Finish regular PR #4851 exact-head review/CI and verify remote-main delivery through the normal guard.
+
 ### DL-#4847 · Launch-Monitor Validation Program
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4849
 - **Issue:** #4847; epic #4009 / corpus #4021
 - **Branch:** fix/validation-program-rigor-4847
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/11-validation-program.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_validation_program_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 — working tree based on `a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9` plus scoped uncommitted changes; pinned aggregate/protocol review; 83 focused tests, twelve publication gates, 665 title checks, fresh claim evidence and bounded native PDF review pass; initial full regression at `cdca706bdb7fc1a788d0a6792ed363924c4a30be` had 6746 passes / three failures / 93.24% coverage; contract wording and externalized packaging residue repaired; 21 focused repair cases pass; full retry passed: 6749 passed, 29 skipped, 187 deselected, 51 warnings; 93.24% coverage at `8c96428041fe1636f9fa4081a1e4b4f1eb6d1d57`.
+- **Last verified:** 2026-10-03 — PR #4849 at `eaae683256ec0924c43307427a94c9ff61d83318`; nine frozen files, 17 owned paths and 64 prior dependencies verified on remote main; CI and textbook builds pass.
 - **Summary:** Distinguish software readiness from preregistration and physical evidence; derive agreement, reference uncertainty, clustering and sample-planning limits while preserving the accepted-pair gate.
-- **Next step:** Bind the accepted source, publish a regular PR and deliver through normal checks and the central guard.
+- **Next step:** Delivery complete; continue scoped review #4850.
+- **Shipped:** 2026-10-03
 
 ### DL-#4845 · Degrees-of-Freedom Chapter
 

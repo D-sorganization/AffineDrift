@@ -77,8 +77,11 @@ def test_blockers_are_closed_and_every_route_has_adversarial_evidence() -> None:
     allowed = {"corrected", "publication_blocked"}
     prior = _json(ROOT / "reports/technical-review/shallow-wide-prior-reviews.json")
     dof_prior = _json(ROOT / "reports/technical-review/dof-chapter-prior-review.json")
+    msk_prior = _json(ROOT / "reports/technical-review/msk-conventions-prior-review.json")
     prior_records = (
-        prior["book_records"] + dof_prior["records"]["data/trust/book_publication_audit.json"]
+        prior["book_records"]
+        + dof_prior["records"]["data/trust/book_publication_audit.json"]
+        + msk_prior["records"]["data/trust/book_publication_audit.json"]
     )
     historical = {
         (record["route"], finding["finding_id"]): finding

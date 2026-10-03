@@ -568,4 +568,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4839 | Correct 72-entry glossary mechanics and evidence scope; preserve anchors, enforce generated definitions and render alphabetical links correctly. |
 | 2026-10-03 | #4843 | Verify the pinned passive-control SVG artifact; reconcile combined impact/amendment remote-main receipts and repair duplicate historical handoff headings. |
 | 2026-10-03 | #4844 | Correct impact-chapter geometry, normal/tangential impulse and gear-effect limits; preserve prior publication evidence through explicit dependency carry-forward. |
-| 2026-10-03 | #4847 | Correct launch-monitor validation preregistration, agreement/repeatability and sample-planning claims; preserve the accepted-pair gate and prior chapter evidence. |
+| 2026-10-03 | #4849 | Correct launch-monitor validation preregistration, agreement/repeatability and sample-planning claims; preserve the accepted-pair gate and prior chapter evidence. |
+| 2026-10-03 | #4851 | Reconcile musculoskeletal anatomical frames, ZXY chart extraction, spatial inertia and inference limits; publish the corrected Chapter 2 with independent checks and preserved prior evidence. |
