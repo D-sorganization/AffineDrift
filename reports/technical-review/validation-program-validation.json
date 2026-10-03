@@ -1,0 +1,98 @@
+{
+  "issue": 4847,
+  "source_acceptance": false,
+  "status": "Revised source and PDF reviewed; final selected regression and repository checks pending",
+  "red": "One provenance regression failed against the truncated published digest; eleven independent manufactured checks passed.",
+  "new_test_cases": 12,
+  "numerical_scope": "Manufactured identities and inspected aggregate digest only; no physical validation or private-row reanalysis.",
+  "render": "reports/technical-review/validation-program-render-verification.json",
+  "delegation": "Four successful agy Gemini 3.8 Flash low mechanical/editorial/formatting tasks; one permission-denied file-based task replaced by text-only task without permission change.",
+  "scope": "No source binding, new corpus credit, CI or remote-main delivery yet.",
+  "focused_tests": {
+    "passed": 83,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 28.239,
+    "command": "pytest selected validation/impact/radar/publication/inventory/development/spec modules --no-cov --timeout=120 with fresh basetemp"
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/validation-program-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "title_source_files": 665,
+  "claim_evidence_freshness": "passed",
+  "static": "Changed test Ruff, Black100 and strict mypy passed; configured CI mypy and full regression pending"
+}

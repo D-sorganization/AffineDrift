@@ -1,3 +1,15 @@
+# Validation Program — Review in Progress #4847
+
+The degrees-of-freedom work and turnover are delivered through regular PRs #4846 and #4848. Turnover #4848 merged as `a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9` on 2026-10-03 at 13:09:28 UTC; CI 37124710894 passed. The reviewed tree, seven owned paths and eleven frozen source files match observed remote main. Session `technical-review-20261003-dof` is released. The receipt is `reports/technical-review/dof-turnover-remote-main-receipt.json`.
+
+Current branch: `fix/validation-program-rigor-4847`, base `a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9`. Session `technical-review-20261003-validation-program` owns Chapter 11, its bibliography/PDF dependencies and bounded review evidence; lease/presence renewed through approximately 15:15 UTC. The corrected chapter is provisional: no source acceptance or corpus credit yet. It corrects incomplete preregistration, a truncated manifest digest, paired/reference uncertainty, agreement versus repeatability, and sample planning versus the preserved 84-accepted-pair gate. The complete source and six PDF pages are reviewed; native compilation, 90-entry bibliography, 70-page carry-forward, 83 focused tests and twelve publication gates pass. Finish full regression, source binding, regular PR and normal guarded merge.
+
+Four new agy Gemini 3.8 Flash helpers produced mechanical digest checks, draft editorial notes, supplied-metadata bibliography formatting, and revised-source copy editing. One file-based bibliography attempt was denied a headless command permission; the text-only retry required no such permission. Lead review accepts the digest observation, spacing and symbol-definition suggestions, and checked article metadata. It retains distinct analyzer/gate terminology and uses a supported manual entry for VIM with its edition. No helper examined private authority or certified scientific correctness. Earlier insufficient-credit failures remain historical.
+
+Private authority originals remain outside this public checkout; never commit raw copies or the local location pointer. Only selected pinned protocol/code/aggregate metadata were inspected; no restricted observed shot rows or upstream tests were accessed/executed. Whole-book review and physical measurements remain separate. Exactly 96 original sources plus whole-book consistency remain, and the goal stays active. Preserve prior accepted source records and untracked QA. Earlier sections below are historical checkpoints.
+
+---
+
 # Degrees-of-Freedom Chapter — Verified Delivery #4846
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4846 delivered reviewed head `959d7748e0856e4bc2c1461a308646c0d706eec6` as `5917ebf0ae1f2421b37c0a9ec73bde4c8966daf2` on remote main. Accepted scientific source `8160bb8ba7a981f39b7a6bbbde13d21f15740f32` remains frozen. All 11 evidence files, 23 owned merge paths and 55 unchanged prior dependency blobs match their recorded bytes; the remote receipt is `reports/technical-review/dof-chapter-remote-main-receipt.json`. This accepts Chapter 1 and its bounded landing summary, not the rest of Volume IV or its historical notebook.

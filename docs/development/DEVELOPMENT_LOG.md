@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4847 · Launch-Monitor Validation Program
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending
+- **Issue:** #4847; epic #4009 / corpus #4021
+- **Branch:** fix/validation-program-rigor-4847
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/11-validation-program.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_validation_program_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — working tree based on `a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9` plus scoped uncommitted changes; pinned aggregate/protocol review; 83 focused tests, twelve publication gates, 665 title checks, fresh claim evidence and bounded native PDF review pass; full regression pending.
+- **Summary:** Distinguish software readiness from preregistration and physical evidence; derive agreement, reference uncertainty, clustering and sample-planning limits while preserving the accepted-pair gate.
+- **Next step:** Finish review, build and inspect PDF, preserve prior chapter evidence, validate and publish a regular PR.
+
 ### DL-#4845 · Degrees-of-Freedom Chapter
 
 - **State:** shipped
@@ -30,7 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 (`5917ebf0ae1f2421b37c0a9ec73bde4c8966daf2`); 11 frozen files, 23 owned paths and 55 prior dependencies verified on remote main; CI 37120237483 and textbook compilation passed.
 - **Summary:** Separate task geometry, physical feasibility and neural inference; preserve historical review scope when refreshing shared publication dependencies.
-- **Next step:** Deliver the documentation-only turnover PR through the central merge guard.
+- **Next step:** Delivery complete; turnover PR #4848 merged at a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9 with CI and remote-file verification. Continue scoped review #4847.
 - **Shipped:** 2026-10-03
 
 ### DL-#4842 · Impact Physics Chapter
