@@ -1,3 +1,9 @@
+# Impact Review — Parent Amendment Integrated
+
+Incoming passive-control binding c3187850f6e65576699c1bb5ec3b7c3e867705cf is integrated in this branch. Impact source b90b86376c9eebbc9d07be754b254ee914fdfff2 and all eight evidence files remain unchanged. The updated parent test/SVG and new amendment record retain their explicit old/new provenance; the older frozen impact dependency record remains a historical checkpoint. All 68 combined pinned-environment checks pass (19.70s); merge commit pending. Original PR4841 merged its older head, so its corrected artifact must use a new follow-up PR. PR4841 has an owned do-not-merge hold until its amended head passes; no remote-main delivery is claimed. The original corpus has 97 pending sources, plus whole-book consistency work.
+
+---
+
 # Impact Chapter — Bound Local Acceptance #4842
 
 Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 binds eight exact evidence files. Full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passed 6757 tests with 79.54% coverage. Exactly one corpus row advances; 97 originals and separate whole-book consistency remain. Thirty parent files were preserved at this acceptance. The pinned plotting-artifact amendment now committed separately in parent PR4841 changes two of those parent files; integrate that amendment explicitly and record the revised dependency provenance before this branch is delivered. Do not rewrite the frozen impact acceptance report or its historical carry-forward record.
@@ -19,6 +25,14 @@ Passive-control regular PR https://github.com/D-sorganization/AffineDrift/pull/4
 agy CLI Gemini 3.8 Flash remains unavailable after two insufficient-credit failures; earlier helpers were adjudicated. No new helper evidence, retry loop or credit purchase. Use Python3.12, Black100, Ruff check, isolated pytest --basetemp, normal hooks and regular PRs. Never edit tracked source or render during tests/hooks in the same worktree. Goal active.
 
 Final local acceptance: full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passes 6757 cases with 79.54% coverage. Source/PDF review is complete; pin the accepted source in a separate delivery record and advance only the Chapter 3 corpus row (98 to 97 originals pending). Regular PR, remote checks/merge and delivery verification remain pending.
+
+---
+
+# Passive-Control PR #4841 — Reproducibility Amendment
+
+Review comment 4172127928 identified an SVG generated with Matplotlib 3.10.8 instead of pinned 3.11.2. The pinned environment reproduced the new committed-artifact freshness failure; regeneration resolves it and all 15 model/figure checks pass. Article, generator, mechanical model and original scientific report are unchanged. The amendment report preserves old/new artifact hashes, environment scope and validation history. Amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e passes normal commit hooks; eight evidence files are now bound while all 468 prior findings remain unchanged. All 51 amended binding checks pass in the pinned environment. Repository automation rearmed auto-merge after a simple disable, so the supported do-not-merge label is applied until the corrected binding is pushed and exact-head checks pass. Remove only this owned temporary hold before invoking the central guard. Do not use the old remote-verification helper with a new head without updating its explicit accepted-head and frozen-file list.
+
+Parallel impact #4842 has a clean 6757-pass full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea with 79.54% coverage; that worktree must integrate this amendment explicitly before its own delivery. The agy Flash credit block remains unchanged.
 
 ---
 

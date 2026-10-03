@@ -139,6 +139,11 @@ def test_published_figure_is_reproducible_and_has_readable_labels(tmp_path: Path
     first = target.read_bytes()
     build_figure(target)
     assert target.read_bytes() == first
+    published = Path(__file__).resolve().parents[1] / "articles/figures/passive-control-energy.svg"
+    assert first == published.read_bytes(), (
+        "Published SVG is stale; install requirements.txt and regenerate with "
+        "python -m scripts.build_passive_control_figure articles/figures/passive-control-energy.svg"
+    )
     root = ElementTree.fromstring(first)
     assert root.tag == "{http://www.w3.org/2000/svg}svg"
     labels = set(root.itertext())

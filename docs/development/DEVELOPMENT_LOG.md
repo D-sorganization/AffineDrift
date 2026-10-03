@@ -28,22 +28,22 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/impact-chapter-rigor-4842
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_impact_chapter_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; full checkpoint d03494a4034a310bf1b9974df6e32a6b5de4edea; 6757 tests, 79.54% coverage; 17 focused checks, static/publication gates and scoped PDF review pass.
+- **Last verified:** 2026-10-03; full checkpoint d03494a4034a310bf1b9974df6e32a6b5de4edea; 6757 tests, 79.54% coverage; 17 focused checks, static/publication gates and scoped PDF review pass; 68 combined pinned cases pass after parent amendment integration.
 - **Summary:** Correct collision geometry, impulse and gear scaling; separate empirical models and instrument inference with explicit PDF/bibliography carry-forward.
 - **Next step:** Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 binds eight evidence files and one corpus row; integrate parent PR4841 plotting amendment, open a regular PR and verify guarded remote-main delivery.
 
 ### DL-#4836 · Passive Distributed Control Article
 
-- **State:** in_review
+- **State:** in_progress
 - **Owner:** codex
 - **PR:** #4841
 - **Issue:** #4836; epic #4009 / corpus #4021
 - **Branch:** fix/passive-control-rigor-4836
 - **Paths:** articles/passive-distributed-control.qmd, src/affine_control/series_elastic_demo.py, tests/test_series_elastic_demo.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; integration 20db20ff13328574c4fd886d3f8fbd8ea2b39064; 6751 tests, 79.54% coverage; four browser cells and publication gates pass.
+- **Last verified:** 2026-10-03; amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e; pinned SVG freshness failure reproduced, regenerated artifact and all 15 model/figure cases pass (7.46s); full 6751-pass run remains historical at 20db20ff1.
 - **Summary:** Reconcile mechanical topology and energy accounting; distinguish passive mechanics, controlled stability and empirical learning claims.
-- **Next step:** Regular PR #4841 is pushed for bound source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a; inspect exact-head CI, merge with the central guard and verify remote main.
+- **Next step:** Commit and bind the pinned-artifact amendment, push regular PR #4841, verify exact-head CI, rearm guarded merge and verify remote main. Auto-merge currently disabled.
 
 
 ### DL-#4828 · Historical Player Research Handoff
