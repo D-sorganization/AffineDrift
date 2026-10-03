@@ -1,20 +1,24 @@
-# Deploy Website Caching and Timeout Fix — #4809
+# Deploy Website Redirect and Timeout Fix — #4809 (PR #4861)
 
 - Repository: `D-sorganization/AffineDrift`
 - Branch: `fix/deploy-website-cache-4809`
 - Governing issue: #4809 (`main is red: Deploy Website (fleet-main-health)`)
-- Objective: Restore green `Deploy Website` on `main` by adding Quarto render caching with exact source-hash key (`quarto-render-v2-${key}`, matching `ci-standard.yml`), skipping redundant renders when cache hits, and increasing the job timeout from 60 to 90 minutes to prevent timeouts on cold builds.
+- Pull Request: #4861
+- Objective: Restore green `Deploy Website` on `main` by following the GitHub Pages 301 apex redirect with `--location` when polling `public-site-manifest.json`, and increasing the build job timeout from 60 to 90 minutes to ensure full 251-route verification completes safely on ubuntu-latest runners.
 - Completed:
   - Updated `.github/workflows/deploy-website.yml`:
-    - Added `Compute Quarto render cache key` and `Restore cached Quarto render` (`actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9`).
-    - Made `Render Website` conditional on `steps.quarto_cache.outputs.cache-hit != 'true'`.
+    - Added `--location` to `curl` in `Verify Deployment Manifest and Every Public Page`.
     - Increased `build` job `timeout-minutes` from 60 to 90 minutes.
-  - Updated `SPEC.md` Change Log table and Last Spec Update.
+    - Preserved clean uncached Quarto render contract (`actions/cache@` omitted in deploy).
+  - Updated `tests/test_deployment_integrity.py`:
+    - In `test_live_manifest_poll_retries_transient_non_json_responses`, asserted `--location` or `-L` in the poll script.
+  - Updated `SPEC.md` Change Log table for PR #4861.
 - Validation:
-  - Ruff check: all checks passed.
-  - Black format check: all 888 files formatted cleanly.
-  - `python -m src.tools.code_quality_check`: passed.
-- Next steps: open PR, enable squash auto-merge, and verify landing.
+  - `pytest -m content_lint tests/test_deployment_integrity.py`: 18 passed, 1 skipped.
+  - `python3 scripts/check_root_hygiene.py`: passed.
+  - `python3 -m src.tools.code_quality_check`: passed.
+  - `python3 -m scripts.check_spec_changelog`: passed.
+- Next steps: push branch, auto-merge PR #4861, verify landing on main.
 
 # Optimal-Control Review — Regular PR #4859
 

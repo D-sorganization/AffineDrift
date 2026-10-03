@@ -136,22 +136,6 @@ jobs:
         # ci-standard.yml, this workflow, and the Dockerfile (#4126).
         run: echo "version=$(tr -d '[:space:]' < .quarto-version)" >> "$GITHUB_OUTPUT"
 
-      - name: Compute Quarto render cache key
-        id: quarto_cache_key
-        shell: bash
-        run: |
-          key=$(git ls-files -s -- . ':(exclude)tests/**' ':(exclude).github/**' ':(exclude)docs/development/**' | sha256sum | cut -c1-64)
-          echo "key=quarto-render-v2-${key}" >> "$GITHUB_OUTPUT"
-
-      - name: Restore cached Quarto render
-        id: quarto_cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            docs
-            .quarto
-          key: ${{ steps.quarto_cache_key.outputs.key }}
-
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
@@ -163,7 +147,6 @@ jobs:
         # non-empty. Since we don't need this file during build, just remove it.
 
       - name: Render Website
-        if: steps.quarto_cache.outputs.cache-hit != 'true'
         uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
           to: html
@@ -296,7 +279,7 @@ jobs:
           mkdir -p artifacts/public-site-verification
           LIVE_MANIFEST="$RUNNER_TEMP/public-site-manifest.json"
           for attempt in {1..60}; do
-            if curl --fail --silent --show-error \
+            if curl --fail --silent --show-error --location \
               "$PUBLIC_SITE_URL/public-site-manifest.json?revision=$GITHUB_SHA" \
               --output "$LIVE_MANIFEST"; then
               if SOURCE_REVISION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["source_revision"])' "$LIVE_MANIFEST" 2>/dev/null); then
