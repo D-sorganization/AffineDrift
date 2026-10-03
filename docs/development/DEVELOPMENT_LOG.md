@@ -34,16 +34,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4852 · Corpus Status Reconciliation
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4852; epic #4009 / corpus #4021
-- **PR:** not yet opened; parent #4851 verified on remote main
+- **PR:** #4854; regular; parent #4851 verified on remote main
 - **Branch:** docs/corpus-reconcile-4852
 - **Paths:** docs/development/technical-review/corpus-review-index.csv, reports/technical-review/corpus-status-reconciliation.md, reports/technical-review/corpus-status-reconciliation.json, AGENT_HANDOFF.md
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — 13 historical source/evidence comparisons and 22 retained mechanics tests pass; seven corpus rows corrected (five scope updates and two renamed paths); all 407 current paths exist; 57 document/ledger checks pass; four agy Flash inventories adjudicated; no new scientific acceptance.
 - **Summary:** Distinguish stale bookkeeping from unfinished source review; preserve historical proof and prioritize the longer remaining originals.
-- **Next step:** Parent #4851 delivery verified and receipt saved; open this regular metadata PR, inspect exact-head checks, deliver through the central guard and verify its owned files on remote main.
+- **Next step:** Parent #4851 delivery verified and receipt saved; regular PR #4854 open; inspect exact-head checks, deliver through the central guard and verify its owned files on remote main.
 
 ### DL-#4850 · Musculoskeletal Modeling Conventions
 
