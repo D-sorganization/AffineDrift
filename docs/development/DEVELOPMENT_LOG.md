@@ -28,7 +28,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/passive-control-rigor-4836
 - **Paths:** articles/passive-distributed-control.qmd, src/affine_control/series_elastic_demo.py, tests/test_series_elastic_demo.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; original source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a; pinned SVG freshness failure reproduced, regenerated artifact and all 15 model/figure cases pass (7.46s); full 6751-pass run remains historical at 20db20ff1.
+- **Last verified:** 2026-10-03; amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e; pinned SVG freshness failure reproduced, regenerated artifact and all 15 model/figure cases pass (7.46s); full 6751-pass run remains historical at 20db20ff1.
 - **Summary:** Reconcile mechanical topology and energy accounting; distinguish passive mechanics, controlled stability and empirical learning claims.
 - **Next step:** Commit and bind the pinned-artifact amendment, push regular PR #4841, verify exact-head CI, rearm guarded merge and verify remote main. Auto-merge currently disabled.
 
