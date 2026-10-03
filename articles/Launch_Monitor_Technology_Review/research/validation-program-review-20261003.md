@@ -36,4 +36,4 @@ Independent numerical work checks the normal-quantile planning calculation, iden
 
 The review adds two bibliography entries while preserving the original 88 entries, impact/radar chapter sources and existing acceptance records. The shared PDF changes are tracked explicitly. The revised Chapter 11 text, all six numbered equations, six rendered chapter pages, two new bibliography entries and impact/radar boundary pages have been read. No claim is made to have newly reviewed the remaining book's scientific content or visually inspected every page.
 
-Four agy Gemini 3.8 Flash helper outputs were limited to public mechanical/editorial/supplied-metadata tasks and adjudicated in the source report. Private authority content was not delegated. Formal acceptance/source binding and remote delivery are recorded separately, after validation.
+Five agy Gemini 3.8 Flash helper outputs were limited to public mechanical/editorial/supplied-metadata tasks and adjudicated in the source report. Private authority content was not delegated. Formal acceptance/source binding and remote delivery are recorded separately, after validation.

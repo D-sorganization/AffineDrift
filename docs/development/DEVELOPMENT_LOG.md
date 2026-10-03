@@ -28,7 +28,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/validation-program-rigor-4847
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/11-validation-program.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_validation_program_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 — working tree based on `a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9` plus scoped uncommitted changes; pinned aggregate/protocol review; 83 focused tests, twelve publication gates, 665 title checks, fresh claim evidence and bounded native PDF review pass; full regression pending.
+- **Last verified:** 2026-10-03 — working tree based on `a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9` plus scoped uncommitted changes; pinned aggregate/protocol review; 83 focused tests, twelve publication gates, 665 title checks, fresh claim evidence and bounded native PDF review pass; initial full regression at `cdca706bdb7fc1a788d0a6792ed363924c4a30be` had 6746 passes / three failures / 93.24% coverage; contract wording and externalized packaging residue repaired; 21 focused repair cases pass; full retry pending.
 - **Summary:** Distinguish software readiness from preregistration and physical evidence; derive agreement, reference uncertainty, clustering and sample-planning limits while preserving the accepted-pair gate.
 - **Next step:** Finish review, build and inspect PDF, preserve prior chapter evidence, validate and publish a regular PR.
 
