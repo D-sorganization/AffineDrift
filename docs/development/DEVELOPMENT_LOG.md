@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/drift-wrench-review
 - **Paths:** articles/drift-components-wrench-double-pendulum.qmd, tests/test_drift_wrench_review.py, reports/technical-review/drift-wrench-prior-review.json
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 — eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun passed; sixteen publication gates passed before LF normalization, with final digest refresh pending.
+- **Last verified:** 2026-10-03 — eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun and 193 content checks passed; full clean retry 6790 passed/29 skipped/93.24% coverage after preserving prior packaging output and passing six hygiene checks. Initial two hygiene failures retained. Nine Flash helpers adjudicated; complete source locally accepted, final binding pending.
 - **Summary:** Complete the article argument review while preserving valid prior mechanics; distinguish input attribution, segment force/couple power and motor work with explicit frames and independently checked examples.
-- **Next step:** Finish render, publication/evidence checks and full regression; bind accepted source, update bounded corpus/route status and deliver a regular PR. No completion credit yet.
+- **Next step:** Bind accepted source, update only the bounded corpus/route record and deliver a regular PR; preserve pending empirical critique and other review identities.
 
 ### DL-#4853 · DCR Figure Inference Regression
 
