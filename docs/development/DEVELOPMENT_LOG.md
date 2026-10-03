@@ -30,7 +30,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — 74 focused checks, 16 publication gates and full retry 6800 passed/29 skipped/93.24% source coverage; seven revised print pages and sixteen web captures inspected. Initial four PDF-dependency failures repaired without changing audit identities.
 - **Summary:** Clarify numerical conventions while preserving valid prior optimal-control mechanics and inference limits.
-- **Next step:** Freeze accepted source, bind the bounded route/corpus records and deliver a regular PR; #4857 delivery is verified and released.
+- **Next step:** Accepted source 8a8accd335edf66c527893d51b1cd9fe05c9a31a binds nine frozen files, four findings and two original corpus rows. Run dependent checks and deliver a regular PR; #4857 delivery is verified and released.
 - **Evidence:** reports/technical-review/optimal-control-validation.json; 58 focused checks pass, seven revised print pages inspected; web reflow still pending.
 
 ### DL-#4855 · Drift, Wrench and Double-Pendulum Power

@@ -14404,7 +14404,136 @@
       "audit_id": "ad-route-08a4d449d5e0",
       "claim_ids": [],
       "critique_ids": [],
-      "findings": [],
+      "findings": [
+        {
+          "finding_id": "ad-finding-optimal-control-regularization-scale",
+          "priority": "p2",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "Declare control units and transform the regularization metric under constant nonsingular scaling; retain the valid fixed-scale mu-I algebra and distinguish numerical penalty from joint damping or metabolic cost.",
+          "evidence_paths": [
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf",
+            "tests/test_optimal_control_conventions.py",
+            "reports/technical-review/optimal-control-review.md",
+            "reports/technical-review/optimal-control-prior-review.json",
+            "reports/technical-review/optimal-control-independent-checks.json",
+            "reports/technical-review/optimal-control-render-verification.json",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "3f43cd49d029815464d1b6258d0150979e590e905c1d4ee587f4ad83e8ce7ff2",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+          },
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
+        },
+        {
+          "finding_id": "ad-finding-optimal-control-local-smoothness",
+          "priority": "p2",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "State local C2 transition/cost and independent perturbation-coordinate assumptions; identify the separate reset/event-time sensitivity needed through impact without claiming to implement a hybrid solver.",
+          "evidence_paths": [
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf",
+            "tests/test_optimal_control_conventions.py",
+            "reports/technical-review/optimal-control-review.md",
+            "reports/technical-review/optimal-control-prior-review.json",
+            "reports/technical-review/optimal-control-independent-checks.json",
+            "reports/technical-review/optimal-control-render-verification.json",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "3f43cd49d029815464d1b6258d0150979e590e905c1d4ee587f4ad83e8ce7ff2",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+          },
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
+        },
+        {
+          "finding_id": "ad-finding-optimal-control-trial-step",
+          "priority": "p2",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "Define the displayed trial step fraction and its feedforward role; evaluate trial feedback rollouts against the original objective without adding an unimplemented line-search guarantee.",
+          "evidence_paths": [
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf",
+            "tests/test_optimal_control_conventions.py",
+            "reports/technical-review/optimal-control-review.md",
+            "reports/technical-review/optimal-control-prior-review.json",
+            "reports/technical-review/optimal-control-independent-checks.json",
+            "reports/technical-review/optimal-control-render-verification.json",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "3f43cd49d029815464d1b6258d0150979e590e905c1d4ee587f4ad83e8ce7ff2",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+          },
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
+        },
+        {
+          "finding_id": "ad-finding-optimal-control-mobile-equations",
+          "priority": "p2",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "Reflow equivalent long local-model, Riccati, pendulum and MPC expressions for the actual root-site layout. Preserve original targets and verify print/web presentation without renewing whole-book scientific acceptance.",
+          "evidence_paths": [
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf",
+            "tests/test_optimal_control_conventions.py",
+            "reports/technical-review/optimal-control-review.md",
+            "reports/technical-review/optimal-control-prior-review.json",
+            "reports/technical-review/optimal-control-independent-checks.json",
+            "reports/technical-review/optimal-control-render-verification.json",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "3f43cd49d029815464d1b6258d0150979e590e905c1d4ee587f4ad83e8ce7ff2",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+          },
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
+        }
+      ],
       "review": {
         "dimensions": [
           "evidence",
@@ -14413,14 +14542,30 @@
           "audience_framing"
         ],
         "evidence_paths": [
-          "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd"
+          "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
+          "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
+          "articles/The_Geometry_of_Motion/Volume_I/main.pdf",
+          "tests/test_optimal_control_conventions.py",
+          "reports/technical-review/optimal-control-review.md",
+          "reports/technical-review/optimal-control-prior-review.json",
+          "reports/technical-review/optimal-control-independent-checks.json",
+          "reports/technical-review/optimal-control-render-verification.json",
+          "reports/technical-review/optimal-control-dependency-carry-forward.json"
         ],
         "evidence_sha256": {
-          "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a"
+          "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+          "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
+          "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "3f43cd49d029815464d1b6258d0150979e590e905c1d4ee587f4ad83e8ce7ff2",
+          "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
+          "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+          "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+          "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+          "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
+          "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
         },
-        "review_commit": "cc17385782f3a6dfd22191f8e0bcdee6c211bdb3",
-        "reviewed_on": "2026-09-13",
-        "reviewer": "codex-4055-20260913",
+        "review_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
+        "reviewed_on": "2026-10-03",
+        "reviewer": "codex-4858-20261003",
         "source_path": "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd"
       },
       "route": "/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html",
