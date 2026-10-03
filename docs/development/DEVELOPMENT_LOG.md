@@ -19,9 +19,35 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4850 · Musculoskeletal Modeling Conventions
+### DL-#4853 · DCR Figure Inference Regression
+
+- **State:** proposed
+- **Owner:** codex
+- **Issue:** #4853; epic #4009 / corpus #4021
+- **PR:** none
+- **Branch:** not started
+- **Paths:** articles/drift-control-ratio.qmd, articles/figures/core_theory/fig_dcr_vector_decomposition.svg, articles/figures/core_theory/fig_dcr_reachability_tubes.svg, articles/figures/core_theory/fig_dcr_swing_phases.svg
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — complete current article, three includes, generator and tests read; three original SVGs visually inspected and plotted coordinates checked; six Flash helpers adjudicated. Bounded figure contracts prepared; no canonical edits or new acceptance.
+- **Summary:** Reconcile later figures and long descriptions with drift, input-set, observation and finite-time assumptions; preserve valid prior review.
+- **Next step:** After #4852 delivery, check claim and post lease, then write failing plotted-value checks and implement the three bounded figure contracts. Preserve prior proof identities and inspect regenerated article/figures.
+
+### DL-#4852 · Corpus Status Reconciliation
 
 - **State:** in_review
+- **Owner:** codex
+- **Issue:** #4852; epic #4009 / corpus #4021
+- **PR:** #4854; regular; parent #4851 verified on remote main
+- **Branch:** docs/corpus-reconcile-4852
+- **Paths:** docs/development/technical-review/corpus-review-index.csv, reports/technical-review/corpus-status-reconciliation.md, reports/technical-review/corpus-status-reconciliation.json, AGENT_HANDOFF.md
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — 13 historical source/evidence comparisons and 22 retained mechanics tests pass; seven corpus rows corrected (five scope updates and two renamed paths); all 407 current paths exist; 57 document/ledger checks pass; four agy Flash inventories adjudicated; no new scientific acceptance.
+- **Summary:** Distinguish stale bookkeeping from unfinished source review; preserve historical proof and prioritize the longer remaining originals.
+- **Next step:** Parent #4851 delivery verified and receipt saved; regular PR #4854 open; inspect exact-head checks, deliver through the central guard and verify its owned files on remote main.
+
+### DL-#4850 · Musculoskeletal Modeling Conventions
+
+- **State:** shipped
 - **Owner:** codex
 - **PR:** #4851
 - **Issue:** #4850; epic #4009 / corpus #4021
@@ -30,7 +56,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — baseline `eaae683256ec0924c43307427a94c9ff61d83318`; complete chapter corrected; 51 focused plus 2 explicit content checks pass; native PDF and 51-page carry checks pass; initial full run 6764 passed/1 Windows encoding failure at b7c433455; seven minifier tests pass under UTF-8; bounded landing/browser checks pass; full UTF-8 retry passed at `387de1628d5f9a67e35a12652cdb43ddfc0592ef`: 6765 passed, 29 skipped, 187 deselected, 51 warnings in 608.05s (0:10:08); 93.24% coverage; chapter accepted at `d53ec669335a900fcf42bd4a6065d1d6d27046a8`; ten frozen files bound; 73 post-binding checks pass.
 - **Summary:** Reconcile anatomical frames, declared rotation coordinates, inertia origin/order and inference limits.
-- **Next step:** Finish regular PR #4851 exact-head review/CI and verify remote-main delivery through the normal guard.
+- **Next step:** Delivered as `c11e1370798723e2e4787e30fa0d6374e3cf0ac4`; all 24 owned, ten frozen, 67 prior and 172 Geometry paths verified on remote main. Exact-head CI Standard and all textbook builds passed. Receipt is carried by #4852; bounded acceptance retained and coordination released.
 
 ### DL-#4847 · Launch-Monitor Validation Program
 
