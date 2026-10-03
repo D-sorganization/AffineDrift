@@ -1,12 +1,11 @@
-\chapter[Governed Analytics and Validation Program]{Governed Analytics and
-\mbox{Validation Program}}
+\chapter[Governed Analytics and Validation Program]{Governed Analytics\\and Validation Program}
 \label{ch:validation-program}
 
 The distinction between a useful analytics platform and a scientific
 vendor comparison is the evidence design. A large collection of launch
 records can support exploratory model checking without supporting the
-stronger claim that one device disagrees with another. The repositories
-associated with this review therefore use a two-release program with a
+stronger claim that one device disagrees with another.
+At the revisions pinned below, the repositories associated with this review use a two-release program with a
 versioned data contract, explicit use eligibility, and fail-closed
 statistics. The program is tracked by the public
 \href{https://github.com/D-sorganization/Tools/issues/4583}{Tools program
@@ -24,8 +23,9 @@ non-imputed values for all five primary launch inputs (ball speed, launch
 angle, launch direction, spin rate, and spin axis). Before the per-source
 minimum-size gate, 13,647 rows also contain carry, 13,532 lateral outcome,
 9,850 descent angle, and 9,283 flight time. The strict model cohort contains
-13,843 rows from 15 source families because each predicted outcome has its own
-availability rule. Eligibility is evaluated by source, metric, provenance,
+13,843 rows from 15 source families with complete launch inputs and at least one supported observed outcome.
+Each outcome comparison then uses its own eligible subset; 13,843 is not the sample size for every metric.
+Eligibility is evaluated by source, metric, provenance,
 and intended use; a blank field is represented as \emph{unavailable}, never
 silently filled merely to increase sample size.
 
@@ -79,13 +79,15 @@ they are not yet UpstreamDrift API operations. This bounded duplication is a
 tracked architectural seam, not evidence that two independent implementations
 are automatically equivalent.
 
-Exploratory all-pairs scans report multiplicity warnings. Within-player
+Exploratory all-pairs scans report multiplicity warnings; a warning does not control a false-positive rate.
+Within-player
 analysis separates raw pooled association, player-mean-centred association,
 between-player association, and per-player estimates; these quantities answer
 different questions and must not be substituted for one another. Correlation
 and principal-component loadings are descriptive, not causal. Predictive
 work uses grouped splits whenever a trusted player or session identity exists
 and otherwise states that leakage-resistant grouping is unavailable.
+The split must match the intended generalization: holding out sessions from known players does not test prediction for previously unseen players or sources.
 
 Strokes gained is similarly gated. A result labelled \emph{strokes gained}
 requires a cited baseline table, a declared lie and distance state, and a
@@ -122,6 +124,8 @@ configuration on one Garmin R10 source ($n=1{,}541$) had RMSE $7.150$\,m and
 bias $-4.722$\,m, while one Garmin R50 source ($n=255$) had RMSE
 $10.238$\,m and bias $+6.554$\,m. The sign change is one reason a pooled vendor
 ranking would be scientifically unsafe.
+Here ``best tested'' means the lowest carry RMSE among the seven configurations on that source's evaluation rows.
+Selecting that minimum is not a new held-out evaluation, and comparisons between these unpaired sources cannot isolate a vendor effect.
 
 The content-addressed calculation record is the private campaign's
 \path{results/v2/model/model_campaign_manifest.json}. It binds the cohort,
@@ -131,17 +135,21 @@ companion \path{multisource_v2_model_report.md} states row selection and
 limitations in human-readable form. Restricted rows remain in the private
 authority; the public paper reports only qualified aggregates.
 
-The qualified snapshot is pinned to private authority commit and three
-independently verifiable digests:
+The qualified snapshot is pinned to a private authority commit and three
+digests verifiable against the corresponding files by an authorized reader:
 \begin{quote}
 \small\ttfamily
 private merge: 8cd8ad04bf2904eedd0d8f10d2aa202e437e91fd\\
-qualification: 679856edb290111a0106c0bcbd2b673f581fd6b0026409c4d643565b330709a\\
-model campaign: b70935fb4209b3f3aa18c3129ae948c4e20da74536af4d88433e5f0875960ca7\\
-capability manifest digest: 1906d19fcace3284ae99d9dd8de213a0\allowbreak{}e2dabe8c062e4d63edc06c98f7eaf92e
+qualification:\\
+679856edb290111a0106c0cbcbd2b673f\allowbreak{}581fd6b0026409c4d643565b330709a\\
+model campaign:\\
+b70935fb4209b3f3aa18c3129ae948c4e\allowbreak{}20da74536af4d88433e5f0875960ca7\\
+capability manifest digest:\\
+1906d19fcace3284ae99d9dd8de213a0e\allowbreak{}2dabe8c062e4d63edc06c98f7eaf92e
 \end{quote}
 These identifiers bind the reported aggregates without exposing restricted
 shot rows.
+A matching digest establishes file identity; it does not validate the measurements, selection rules, or statistical conclusions.
 
 The associated software and public-boundary revisions are pinned separately:
 \begin{quote}
@@ -167,42 +175,113 @@ evidence.
 
 \section{Release B: Paired-Device Scientific Validation}
 
-Release B begins only after a preregistered paired-device protocol has been
-executed. The same physical shot must be observed simultaneously by each
-device under comparison, with device model and firmware, ball and club,
-indoor/outdoor condition, environmental state, alignment, player identity,
-shot identity, and measured-versus-estimated status recorded. Randomized
-blocks should span speed, loft, spin, launch direction, impact location, and
-representative mishits. A traceable reference system is required where a
-criterion claim is made.
+Release B's scientific claims require a protocol fixed before confirmatory data collection, followed by execution and analysis under that protocol.
+The pinned bundle is a \emph{structural template}, not a completed preregistration.
+The ball specification, numeric speed bands, device/reference set, placement, and calibration procedures still require a documented freeze before the pilot.
+Pilot-informed changes must be distinguished from confirmatory decisions, with the final analysis plan registered before inspecting confirmatory differences.
+The software bundle and its synthetic fixture establish an executable workflow, not completion of those scientific decisions.
 
-The primary estimands are paired bias, limits of agreement, error as a
-function of magnitude and condition, repeatability, missingness, and
-device-by-condition interaction. Bland--Altman analysis and hierarchical
-models are more informative here than correlation alone: two devices can be
-highly correlated while disagreeing systematically. Sample-size targets and
-exclusion rules must be fixed before inspecting device differences. Firmware
-changes form new strata rather than being pooled invisibly.
+The broader intended program covers speed, loft, spin, launch direction, impact location, representative mishits, and indoor/outdoor conditions.
+Record device model and firmware, ball and club, environmental state, alignment, player or robot identity, shot identity, and measured-versus-estimated status.
+Firmware changes form new strata rather than being pooled invisibly.
+The current template covers only three robot-center, outdoor club/speed cells: driver, 7-iron, and wedge.
+Even a completed study in those cells would not establish indoor performance, mishit robustness, or generalization to human players.
 
-The preregistered confirmatory design uses exactly three robot-centre,
-outdoor club/speed cells with 84 accepted shot pairs per cell (252 total).
-Each pair requires observations from two devices and exactly one independent
-reference; calibration must pass, device rows must be unique within a pair,
-serial identifiers must be SHA-256 hashes, and all members share the common
-trigger timestamp. The protocol, capture-row JSON Schema, Python validator,
-deterministic 252-pair schedule, immutable collection ledger, command-line
-procedure, and synthetic fixture are complete. The generated status record
-reports \path{confirmatory_ready=false}, 252 \path{not_collected} exclusions,
-and zero analyzed pairs. Its schedule and ledger are independently bound by
-SHA-256:
+\subsection{Pairing and Reference Uncertainty}
+
+Each paired comparison must concern the same physical shot and the same \emph{measurand}, the quantity intended to be measured.
+For example, horizontal carry to first ground contact in a declared frame differs from a model's carry normalized to standard weather, even if both outputs are labelled carry.
+A traceable reference requires an uncertainty statement, not merely a passed-calibration flag; calibration and repeatability have specific metrological meanings~\cite{jcgmvim}.
+Alignment, time registration, environmental corrections, and the distinction between measured and estimated outputs remain part of the comparison.
+A common trigger timestamp associates records; it does not demonstrate zero acquisition lag or negligible synchronization uncertainty.
+
+An additive model shows what pairing can and cannot remove.
+For shot $s$, let $X_s$ be the shared physical quantity, $Y_{ds}$ the output of device $d$, and $R_s$ the reference output.
+Within a declared condition, write constant biases as $b_d,b_R$ and zero-mean random errors as $e_{ds},e_{Rs}$:
+\begin{align}
+Y_{ds}&=X_s+b_d+e_{ds}, & R_s&=X_s+b_R+e_{Rs},\\
+D_{ds}:=Y_{ds}-R_s&=b_d-b_R+e_{ds}-e_{Rs}.
+\label{eq:paired-device-difference}
+\end{align}
+The common $X_s$ cancels, but reference bias and uncertainty do not.
+Suppressing the shot index for the random variables across shots within this condition,
+\begin{equation}
+\operatorname{Var}(D_d)=\operatorname{Var}(e_d)+\operatorname{Var}(e_R)
+-2\operatorname{Cov}(e_d,e_R).
+\label{eq:paired-error-variance}
+\end{equation}
+Shared calibration or environmental corrections can therefore change apparent agreement through error covariance.
+As a constructed counterexample, two devices with the same \SI{5}{\meter} offset agree perfectly while both differ from the physical quantity by \SI{5}{\meter}.
+This is a mathematical example, not a measured vendor error.
+Across golf shots, dispersion of $Y_{ds}$ also includes variation in $X_s$ and any covariance between the physical outcome and measurement error.
+It cannot automatically be attributed to golfer inconsistency, sensor noise, or a motor-control mechanism.
+
+\subsection{Agreement, Repeatability, and Repeated Shots}
+
+For independent paired differences from an approximately normal distribution with constant mean and variance, descriptive 95\% limits of agreement are
+\begin{equation}
+\overline D\ \pm\ 1.96s_D,
+\label{eq:paired-agreement-limits}
+\end{equation}
+where $\overline D$ and $s_D$ are the sample mean and sample standard deviation of the differences.
+These limits concern individual paired differences, not a confidence interval for mean bias; each estimated limit also has sampling uncertainty.
+Repeated observations of changing quantities and replicates of a constant quantity require different variance decompositions~\cite{blandaltman2007}.
+Condition-dependent bias or spread calls for a prespecified conditional model or justified transformation and examination of its residual assumptions.
+Correlation alone cannot establish agreement, and a nonsignificant mean difference cannot establish acceptable error: practical bounds and precision requirements must be specified for the intended use.
+
+Within-device repeatability concerns repeated measurements under specified conditions~\cite{jcgmvim}.
+For two independent normal errors from one instrument with within-device standard deviation $\sigma_w$, measured at the same underlying quantity, the standard deviation of their difference is $\sqrt{2}\sigma_w$.
+The corresponding 95\% absolute-difference threshold is $1.96\sqrt{2}\sigma_w$.
+A device--reference difference standard deviation does not separately identify either instrument's $\sigma_w$.
+Repeated robot shots can themselves have different physical outcomes, so their raw dispersion is not automatically instrument repeatability.
+
+The pinned descriptive analyzer computes $1.96s_D$ under the field name \path{repeatability_coefficient}; here it is an \emph{agreement half-width}, not an identified within-device repeatability coefficient.
+The analyzer's bootstrap resamples individual pairs to estimate uncertainty in mean bias; it does not implement the proposed hierarchical analysis or confidence intervals for both agreement limits.
+Its pooled device summaries must not be mistaken for the completed condition-specific confirmatory analysis.
+
+To illustrate the effect of clustering, suppose difference $j$ in block $b$ follows $D_{bj}=\mu+U_b+E_{bj}$.
+Let $\mu$ be the population mean difference, independent zero-mean block effects $U_b$ have variance $\tau^2$, and mutually independent zero-mean residuals $E_{bj}$ have variance $\sigma^2$, also independent of all block effects.
+For $B$ independent blocks of $m$ shots each,
+\begin{equation}
+\operatorname{Var}(\overline D)=\frac{\tau^2}{B}+\frac{\sigma^2}{Bm}.
+\label{eq:paired-block-mean}
+\end{equation}
+Treating all $Bm$ shots as independent would instead give $(\tau^2+\sigma^2)/(Bm)$, understating uncertainty when $m>1$ and $\tau^2>0$.
+This illustrative model is not a fit to the campaign.
+Unequal blocks, player effects, serial dependence, and comparisons sharing a reference require the model and resampling scheme appropriate to that design, preserving the shot pairing and relevant clusters.
+
+\subsection{Sample Planning and the Completion Gate}
+
+The template's planning arithmetic uses one two-sided paired-mean test with independent, identically distributed normal differences:
+\begin{equation}
+n\ \approx\ \left[\frac{(z_{1-\alpha/2}+z_{1-\beta})\sigma_D}{\delta}\right]^2.
+\label{eq:paired-sample-planning}
+\end{equation}
+Here $z_p$ is the standard-normal $p$ quantile, $\alpha$ the test's type-I error probability, $1-\beta$ its power, $\sigma_D$ the assumed difference standard deviation, and $\delta$ the mean difference to detect.
+With $\alpha=0.05$, power $0.80$, $\sigma_D=\SI{3}{\meter}$ and $\delta=\SI{1}{\meter}$, this approximation gives $70.6399$, rounded up to 71 complete independent pairs.
+Allowing an expected 15\% unusable fraction gives $\lceil71/0.85\rceil=84$ \emph{attempts}; that expected-yield calculation does not guarantee a quota.
+It neither establishes power for the protocol's multiplicity-adjusted family of endpoints and comparisons nor specifies precision for agreement limits.
+Clustering and the intended interaction estimates also require separate planning.
+
+The existing software gate nevertheless requires \textbf{84 accepted pairs per cell}, or 252 across the three cells; that operational threshold is retained.
+The checked-in schedule has exactly 252 slots, so it supplies no attrition reserve for achieving 252 accepted pairs.
+Before collection, specify and version an attempt budget, stopping rule, and replacement policy consistent with that gate.
+Retain every failed attempt and its reason, rather than overwriting a failure or silently removing a device that struggles with difficult shots.
+Report missingness by device and condition alongside agreement among retained pairs; complete-pair results alone need not represent performance over all attempted shots.
+
+The software's ``pair'' identifier actually denotes one same-shot observation set containing at least two distinct commercial devices and exactly one reference.
+Each device--reference contrast forms a statistical pair; contrasts within the same set share the reference, and do not create additional independent shots toward the quota.
+The validator checks the recorded calibration status, unique device rows, hashed serial identifiers, and a common trigger timestamp; these schema checks do not establish physical independence or reference accuracy.
+The versioned protocol template, capture-row JSON Schema, validator, deterministic schedule, collection ledger, command-line procedure, and synthetic fixture are present.
+The generated status record reports \path{confirmatory_ready=false}, 252 \path{not_collected} exclusions, and zero analyzed pairs.
+The schedule and ledger are bound by SHA-256:
 \begin{quote}
 \small\ttfamily
 schedule: 72b06c034e73751dbacce8468505517a8500754d4d769cc89fed846611790173\\
 ledger: ebc1a24100b0e09ea39978127d6f1bcad3bd26bf6c4f3ae042680a833281d9c9
 \end{quote}
-Because the paired observations have not yet been collected, protocol readiness is not reported
-as a completed device-validation result; the status is a software hold point,
-not device evidence.
+No paired observations are represented as collected in this snapshot.
+The remaining protocol decisions and physical acquisition are hold points; neither software readiness nor a synthetic fixture is device-validation evidence.
 
 Neural-network vendor emulators remain internal research artifacts. Their
 training manifests must pin the eligible sources, feature and target units,
@@ -215,16 +294,10 @@ shots.
 
 \section{Reproducibility and Claim Discipline}
 
-The repository fleet records exact Git revisions for the statistical
-authority, user interfaces, paper, public data facade, and private data
-authority. A release manifest binds those revisions to the data manifest and
-its checksums. Source files remain immutable; normalization and exclusions
-are transformations with their own lineage. Project exports contain both the
-request and complete backing rows so another analyst can reproduce the
-displayed result without relying on GUI state.
+Release manifests bind software, interface, paper, and data revisions to their checksums.
+Normalization and exclusions have their own lineage; exports retain the request and backing rows needed to reproduce a displayed calculation independently of interface state, subject to the source's access restrictions.
 
-These controls deliberately narrow the claims. Public launch-monitor records
-can compare an open flight model with reported outcomes under stated source
-conditions. They cannot, by themselves, identify a proprietary vendor model,
-separate sensor error from aerodynamic-model error, or establish cross-device
-agreement. Those questions belong to Release B and require paired evidence.
+Unpaired public records support source-specific model comparisons.
+Same-shot observations with characterized reference uncertainty support the proposed device comparisons.
+Neither design alone identifies proprietary algorithms or uniquely separates sensor and aerodynamic-model errors: those inferences require additional assumptions and identifiable experiments.
+Reproducible calculations make these limits inspectable; they do not remove them.
