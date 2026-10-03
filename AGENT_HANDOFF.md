@@ -1,3 +1,11 @@
+# Ideomotor Integration With Current Main
+
+Two independent site-policy PRs (#4830 and #4822) landed as main `b5126fe7977c58b6466c8fcde6135f8b022513d4`. A normal local merge into the ideomotor branch succeeded. The preservation check caught an automatic SPEC row reordering; it was corrected to exact upstream bytes plus our #4829 row. All 32 upstream changed paths are preserved, all other trust routes match upstream, and the five accepted ideomotor scientific files remain byte-identical to `f488f45f3254fa40f98bedceb5edaa11280bb70c`. Proof: reports/technical-review/ideomotor-policy-integration.json. Full policy integration regression passed: 6,670 passed, 29 skipped, 187 deselected, 60 warnings, 79.37% coverage (1,049.41 s). Normal merge checkpoint and push remain pending. Remote PR #4829 remains at ca4a23487; CI 37075895860 was running all-route axe at 00:03 UTC October 3. Avoid restarting its near-complete CI solely for turnover metadata; if it merges first, carry this validated checkpoint downstream into radar. No source acceptance history is rewritten.
+
+Radar source db2c8a7918e7686fd51787e76702d7e7246495ea and registration 0ddbd4b5149ec957cf3e4e851f4e65a68936a055 are safely pushed in regular PR #4833. It is temporarily held and currently conflicted against newer main; finish predecessor #4829 delivery before reconciling that branch. Radar full regression: 6668 passed / 29 skipped / 187 deselected, 79.36% coverage; 89 post-acceptance checks pass. One source accepted, so 100 source audits plus whole-book consistency remain. Issue #4832 is preparation only. Both active lease/presence sessions renewed through 01:40 UTC October 3. Earlier checkpoint blocks below are historical.
+
+---
+
 # Current Delivery Checkpoint — Chapter 11 Merged
 
 PR [#4824](https://github.com/D-sorganization/AffineDrift/pull/4824) merged at 22:19:36 UTC October 2 as `037f42d4d551ff59e1661d539f5e7e49e8ca48d8`. CI `37064262227` succeeded on `2bc8033e32df2953f0c94e847490ac1139242660`. Verified main ancestry, 23 byte-identical owned files and the shared SPEC change from editorial PR #4827. Receipt: `reports/technical-review/counterfactual-remote-main-receipt.json`. The whole tree differs because #4827 landed first; do not claim whole-tree identity. DL-#4821 is archived as shipped. Its accepted scientific source and binding identifiers remain unchanged.
