@@ -1,3 +1,13 @@
+# Screw Reference — PR #4838 Delivery Checkpoint
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838. Scientific acceptance `85eb432d38fd099069ddf2cdd58f45baae055d19`; main integration `a9b586006020d2db3bced68544379a1d2458245c`; publication-only correction `42c6036d0387c5e79cd638240204adc1ecfba483`. Current binding checkpoint `SELF` binds all seven existing findings to five exact evidence files at the corrected publication commit. No new scientific findings or corpus credit: 99 source audits plus whole-book consistency remain. Preserve the original accepted scientific report and the publication amendment's exact four-line wrapper-removal proof.
+
+Full source regression: 6,686 passes, 79.37% coverage. Main integration: 90 affected passes. Publication correction: complete source-site gate, 63 affected passes, render and four browser cells pass. Source/integration normal commit/push hooks and publication-source commit hooks passed. Binding commit/push and exact final-head CI/reviews remain pending; do not infer delivery from older CI. Use reports/technical-review/screw-reference-delivery.json and validation.json for current evidence.
+
+Final binding validation passed: 21 tests in 88.30 seconds. Next: commit/push this checkpoint, inspect PR checks/reviews, arm only through Repository_Management's scripts/automerge_guard.py, and verify merge ancestry plus owned-file bytes on remote main. Stop no peer runs. Renew issue4832/presence before 03:27 UTC October3 if needed. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; branch fix/screw-reference-rigor-4832; session technical-review-20261003-screw-reference. Goal active. #4836 remains preparation only. Four agy CLI Gemini 3.8 Flash helpers were adjudicated; two failed for insufficient credits, so do not buy credits or repeatedly retry.
+
+---
+
 # Screw Reference — PR #4838 Publication Correction
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838 is open. Scientific source `85eb432d38fd099069ddf2cdd58f45baae055d19` and integration `a9b586006020d2db3bced68544379a1d2458245c` are pushed. CI's standalone Quarto-reference gate found the redundant same-level See Also heading prematurely ended Related Articles. This checkpoint `SELF` removes only that terminal callout wrapper; all scientific prose, equations, six links, original accepted report and tests remain unchanged. The exact byte transformation is verified in reports/technical-review/screw-reference-publication-amendment.json. It supersedes the article bytes for publication only; preserve the historical scientific acceptance record.

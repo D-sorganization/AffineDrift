@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/screw-reference-rigor-4832
 - **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; integration a9b586006020d2db3bced68544379a1d2458245c pushed. Publication-only Related Articles correction passes site gate, 63 affected tests and four browser cells; exact byte change proved. Full source regression: 6,686 passes, 79.37% coverage. Seven findings and 99 pending audits unchanged.
+- **Last verified:** 2026-10-03; corrected publication 42c6036d0387c5e79cd638240204adc1ecfba483 committed with normal hooks. Seven findings bound to five exact files. Full source 6,686 passes, integration90, publication63, source-site gate and four browser cells pass. Final binding push/CI pending; 99 audits remain.
 - **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 99 source audits plus whole-book consistency remain.
-- **Next step:** Commit publication correction, bind five exact evidence files, push PR #4838 and verify checks plus protected remote-main delivery.
+- **Next step:** Validate final evidence, commit/push PR #4838 checkpoint and verify exact-head CI/reviews, guarded merge and remote-main bytes.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 

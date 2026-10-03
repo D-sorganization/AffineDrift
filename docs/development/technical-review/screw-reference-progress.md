@@ -33,3 +33,7 @@ Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings
 ## Bound and Integrated Checkpoint
 
 Source 85eb432d38fd099069ddf2cdd58f45baae055d19 is frozen and pushed. Main 1edc38aaadd4e079b675df7093ee2d02d3c4ab69 integrated; seven findings and one corpus row bound, 99 audits remain. 90 affected tests and four browser cells pass. Normal integration commit/push, regular PR and remote-main verification remain pending.
+
+## PR #4838 Publication Binding
+
+Publication 42c6036d0387c5e79cd638240204adc1ecfba483 removes only the redundant related-links wrapper. Seven findings now bind five exact evidence files; source85eb scientific report remains frozen. Site gate, 63 tests and four browser cells pass. Final push/CI and remote-main verification pending.
