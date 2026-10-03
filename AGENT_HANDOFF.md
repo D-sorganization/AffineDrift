@@ -1,3 +1,11 @@
+# Impact Chapter — Bound Local Acceptance #4842
+
+Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 binds eight exact evidence files. Full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passed 6757 tests with 79.54% coverage. Exactly one corpus row advances; 97 originals and separate whole-book consistency remain. Thirty parent files were preserved at this acceptance. The pinned plotting-artifact amendment now committed separately in parent PR4841 changes two of those parent files; integrate that amendment explicitly and record the revised dependency provenance before this branch is delivered. Do not rewrite the frozen impact acceptance report or its historical carry-forward record.
+
+Regular PR, updated parent integration, exact-head checks, guarded merge and remote-main proof remain pending. Both original and amended passive-control validation scopes remain distinct; no new helper output exists while agy Flash credits are exhausted.
+
+---
+
 # Impact Physics Chapter — Active Review #4842
 
 Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-chapter-review; branch fix/impact-chapter-rigor-4842; baseline 4d5c21bcb389dda237d810d50de257dcb84d015a. Issue lease/presence session technical-review-20261003-impact-chapter expires approximately 09:17 UTC on 2026-10-03. The incomplete central inbox does not establish absence of peers.
