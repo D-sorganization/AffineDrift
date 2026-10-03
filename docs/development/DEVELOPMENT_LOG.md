@@ -21,20 +21,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4853 · DCR Figure Inference Regression
 
-- **State:** proposed
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4853; epic #4009 / corpus #4021
-- **PR:** none
-- **Branch:** not started
+- **PR:** #4856
+- **Branch:** fix/dcr-figure-rigor
 - **Paths:** articles/drift-control-ratio.qmd, articles/figures/core_theory/fig_dcr_vector_decomposition.svg, articles/figures/core_theory/fig_dcr_reachability_tubes.svg, articles/figures/core_theory/fig_dcr_swing_phases.svg
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 — complete current article, three includes, generator and tests read; three original SVGs visually inspected and plotted coordinates checked; six Flash helpers adjudicated. Bounded figure contracts prepared; no canonical edits or new acceptance.
+- **Last verified:** 2026-10-03 — three bounded figure corrections implemented; initial red ten failures/three passes; 32 focused checks passed; three corrected SVGs and twelve page captures inspected; canonical browser four cells pass after existing deployment cleanup; twenty protected files retained; nine Flash helpers adjudicated. Source bound at b6ab9a9229738d764d93975e87e04af1d1b550df; 175 dependent and 185 content checks pass after resolving three generated-metadata failures from the broad run (6775 passed, 29 skipped, 93.24% coverage). Ten Flash helpers adjudicated.
 - **Summary:** Reconcile later figures and long descriptions with drift, input-set, observation and finite-time assumptions; preserve valid prior review.
-- **Next step:** After #4852 delivery, check claim and post lease, then write failing plotted-value checks and implement the three bounded figure contracts. Preserve prior proof identities and inspect regenerated article/figures.
+- **Next step:** Regular PR #4856 open; run clean full retry and exact-head CI, then verify protected delivery. Next queued source review is epic child #4855.
 
 ### DL-#4852 · Corpus Status Reconciliation
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4852; epic #4009 / corpus #4021
 - **PR:** #4854; regular; parent #4851 verified on remote main
@@ -43,7 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — 13 historical source/evidence comparisons and 22 retained mechanics tests pass; seven corpus rows corrected (five scope updates and two renamed paths); all 407 current paths exist; 57 document/ledger checks pass; four agy Flash inventories adjudicated; no new scientific acceptance.
 - **Summary:** Distinguish stale bookkeeping from unfinished source review; preserve historical proof and prioritize the longer remaining originals.
-- **Next step:** Parent #4851 delivery verified and receipt saved; regular PR #4854 open; inspect exact-head checks, deliver through the central guard and verify its owned files on remote main.
+- **Next step:** Delivered via regular PR #4854 as 07bcb56f514ebf846ce7d391ec482d8d1b782a1c; all ten owned paths and ten frozen parent files verified; CI passed and coordination released. Receipt carried by #4853.
 
 ### DL-#4850 · Musculoskeletal Modeling Conventions
 

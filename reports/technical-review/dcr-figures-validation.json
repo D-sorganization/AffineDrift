@@ -1,0 +1,170 @@
+{
+  "issue": 4853,
+  "baseline": "07bcb56f514ebf846ce7d391ec482d8d1b782a1c",
+  "status": "Source-bound correction and all focused/publication checks passed; full retry and PR delivery pending",
+  "red": {
+    "original_generator_revision": "2be99b7a9c77bf44050f8dfee26e8ae827c698b3",
+    "failed": 10,
+    "passed": 3,
+    "seconds": 8.86,
+    "log": "docs/development/technical-review/dcr-figure-red.txt"
+  },
+  "first_green": {
+    "passed": 32,
+    "seconds": 9.05,
+    "scope": "New figure checks plus retained article and reachability tests; before final guard/caption/evidence updates",
+    "log": "docs/development/technical-review/dcr-figure-first-green.txt"
+  },
+  "render": "reports/technical-review/dcr-figures-render-verification.json",
+  "full_regression": {
+    "source_commit": "bafc4f0863d5c66f488e18dcc6eb9529514408fd",
+    "passed": 6775,
+    "failed": 3,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 51,
+    "seconds": 716.48,
+    "coverage_percent": 93.24,
+    "failures": [
+      "tests/test_generate_datasets_catalog.py::test_real_page_is_up_to_date_with_real_catalog",
+      "tests/test_trust_generated_artifacts_fresh.py::test_evidence_presentation_artifacts_are_fresh",
+      "tests/test_trust_generated_artifacts_fresh.py::test_evidence_presentation_check_ignores_generated_on"
+    ],
+    "resolution": "Regenerated two dataset checksum rows and evidence-presentation generation date/single DCR source revision. Dependent suite now passes all 175 cases. Full clean retry remains separate; this initial run was not fully green.",
+    "log": "docs/development/technical-review/dcr-full-regression.txt"
+  },
+  "delivery": "pending",
+  "dependent_initial": {
+    "passed": 153,
+    "failed": 1,
+    "seconds": 24.62,
+    "cause": "Formatting new prior-review JSON invalidated its evidence digest; regenerated without relaxing the digest check."
+  },
+  "focused_retry": {
+    "passed": 154,
+    "seconds": 17.06,
+    "log": "docs/development/technical-review/dcr-focused-retry.txt"
+  },
+  "type_check": {
+    "initial_errors": 3,
+    "resolution": "Typed plotting settings as matplotlib.RcParams; pinned SVG bytes unchanged",
+    "retry": "Success: no issues found in 99 source files",
+    "log": "docs/development/technical-review/dcr-mypy-retry.txt"
+  },
+  "preservation": {
+    "protected_files_exact": 20,
+    "other_route_identities_and_dispositions_preserved": 250,
+    "other_protocols_exact": 7,
+    "dcr_specification_and_authority_unchanged": true,
+    "dcr_readiness": "simulation-ready; pilot promotion still rejected"
+  },
+  "delegation": "Ten successful supplied-text agy CLI Gemini 3.8 Flash helpers through PR drafting; lead rejected the PR draft invented expansion Drift-Compensated Reachability. DCR means Drift-Control Ratio.",
+  "dependent_final": {
+    "passed": 175,
+    "seconds": 26.66,
+    "log": "docs/development/technical-review/dcr-dependent-final.txt"
+  },
+  "content_lint": {
+    "passed": 185,
+    "skipped": 4,
+    "deselected": 6805,
+    "seconds": 12.3
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_latex_environments.txt"
+    },
+    {
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_terminology.txt"
+    },
+    {
+      "check": ["generate_worked_examples", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-generate_worked_examples.txt"
+    },
+    {
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_tree_parity.txt"
+    },
+    {
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_latex_structure.txt"
+    },
+    {
+      "check": ["validate_frontmatter"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-validate_frontmatter.txt"
+    },
+    {
+      "check": ["validate_accessibility", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-validate_accessibility.txt"
+    },
+    {
+      "check": ["check_scaffolding_styling"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "check": ["check_bibliography_quality"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_bibliography_quality.txt"
+    },
+    {
+      "check": ["check_bibliography_cross_file"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "check": ["check_citation_resolution"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_citation_resolution.txt"
+    },
+    {
+      "check": ["check_qmd_citation_keys"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "check": ["check_title_case"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-check_title_case.txt"
+    },
+    {
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "check": ["generate_research_readiness_library", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dcr-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "generated_dependency_carry": "resources/resources-datasets.qmd differs only in two SHA-256 strings; evidence_presentation_registry.json differs only in generated_on and the DCR source_revision. All state/authority/presentation fields remain unchanged; reader-study and research-release projections are current. Nine frozen source/evidence files exactly retain the accepted source."
+}
