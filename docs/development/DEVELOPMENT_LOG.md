@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/passive-control-rigor-4836
 - **Paths:** articles/passive-distributed-control.qmd, src/affine_control/series_elastic_demo.py, tests/test_series_elastic_demo.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; 6751 tests, 79.54% coverage; four browser cells and publication gates pass.
+- **Last verified:** 2026-10-03; integration 20db20ff13328574c4fd886d3f8fbd8ea2b39064; 6751 tests, 79.54% coverage; four browser cells and publication gates pass.
 - **Summary:** Reconcile mechanical topology and energy accounting; distinguish passive mechanics, controlled stability and empirical learning claims.
-- **Next step:** Commit the validated source, bind exact evidence and open a regular PR.
+- **Next step:** Open a regular PR for bound source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a; inspect exact-head CI, merge with the central guard and verify remote main.
 
 
 ### DL-#4828 · Historical Player Research Handoff
