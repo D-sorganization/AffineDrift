@@ -53,3 +53,12 @@ assignees: ""
 - [ ] Yes - well-defined scope, standard material
 - [ ] Partially - needs human review of novel claims
 - [ ] No - requires original research or domain expertise
+
+## Editorial Compliance
+
+Please review the [Editorial Style Guide](docs/development/editorial-style-guide.md) (WEB-12.1) before submitting:
+
+- [ ] Proposed content plans for the standardized "What This Shows / What It Does Not Show" caveat block (WEB-03.4)
+- [ ] Confirms lay summary block will target <= Grade 10 readability
+- [ ] Confirms key domain terms will use glossary shortcodes (`{{< term key >}}`)
+- [ ] Explicitly avoids banned internal vocabulary in reader prose (WEB-12.2)

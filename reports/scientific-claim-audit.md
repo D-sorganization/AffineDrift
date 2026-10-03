@@ -25,7 +25,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/drifter-manifesto.html` | `articles/drifter-manifesto.qmd` | 6 |
 | `/articles/force-mobility-matrices.html` | `articles/force-mobility-matrices.qmd` | 8 |
 | `/articles/green-simulation.html` | `articles/green-simulation.qmd` | 5 |
-| `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 1 |
+| `/articles/ideomotor-theory-and-predictive-brain.html` | `articles/ideomotor-theory-and-predictive-brain.qmd` | 5 |
 | `/articles/impact-mechanics-and-ball-flight.html` | `articles/impact-mechanics-and-ball-flight.qmd` | 1 |
 | `/articles/impact-optimality-and-model-limits.html` | `articles/impact-optimality-and-model-limits.qmd` | 8 |
 | `/articles/intentional-constraint-collapse.html` | `articles/intentional-constraint-collapse.qmd` | 2 |
@@ -38,7 +38,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
 | `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
-| `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 214 |
+| `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 221 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 32 |
 | `/articles/proximal-distal-model-workbench.html` | `articles/proximal-distal-model-workbench.qmd` | 4 |
@@ -279,7 +279,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-910047593da3` | `/articles/drifter-manifesto.html` | Reviewed | — | None | None | 0 |
 | `ad-route-46e866bf487d` | `/articles/force-mobility-matrices.html` | Reviewed | — | None | None | 6 |
 | `ad-route-14f7688532dc` | `/articles/green-simulation.html` | Reviewed | — | None | None | 9 |
-| `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f0aa9219ad04` | `/articles/ideomotor-theory-and-predictive-brain.html` | Reviewed | — | None | None | 6 |
 | `ad-route-cae4475c188f` | `/articles/impact-mechanics-and-ball-flight.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0e8c82e86942` | `/articles/impact-optimality-and-model-limits.html` | Reviewed | — | None | None | 8 |
 | `ad-route-33941e46336a` | `/articles/intentional-constraint-collapse.html` | Reviewed | — | None | `crit-intentional-constraint-collapse`, `crit-stiffness-pulse-paradox` | 0 |
@@ -292,7 +292,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
 | `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
-| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 209 |
+| `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 217 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 7 |
 | `ad-route-72efd0398c0b` | `/articles/proximal-distal-model-workbench.html` | Reviewed | — | None | None | 1 |

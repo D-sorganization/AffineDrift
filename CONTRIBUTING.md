@@ -129,7 +129,15 @@ All articles are governed by `schemas/article-front-matter-v1.schema.json`.
 - **`date: today` is strictly prohibited** across the entire repository. Dates must be explicit or marked `Date unverified` with `date-source: unverified`.
 - **`summary-plain`** must not exceed 60 words.
 - **`key-takeaways`** must contain between 3 and 5 items.
+- **`caveats` block (WEB-03.4 #4509):** Isolates scope boundaries into the standardized "What This Shows / What It Does Not Show" component. Requires `establishes` (positive assertions with scope bounds) and `does-not-establish` (negative boundaries and limitations retained from prose), with optional `evidence-level`, `open-critiques`, and `next-gate`.
 - Non-core articles undergoing migration are tracked in `config/article-front-matter-allowlist.yml` and burned down over time.
+
+### Editorial and Writing Standards
+
+All article prose and educational content must adhere to:
+
+- [Editorial Style Guide](docs/development/editorial-style-guide.md) (WEB-12.1): Establishes editorial voice, mathematical confidence, the standardized "What This Shows / What It Does Not Show" caveat block (WEB-03.4), glossary linking via `{{< term key >}}`, layer readability targets (lay blocks $\le$ Grade 10), analogy boundaries ("say where the analogy breaks"), and banned internal jargon (WEB-12.2).
+- [Writing Style Guide](docs/development/writing-style-guide.md): Sentence-level standards, active voice, and anti-nominalization metrics.
 
 **Best Practices:**
 
@@ -167,6 +175,77 @@ def example():
     return "Hello"
 ```
 ````
+
+### Content Deprecation and Archive Policy (WEB-13.9)
+
+AffineDrift maintains an immutable, evidence-bounded scientific record. Content is never silently altered or removed. When a page, derivation, or article family is superseded, the following lifecycle rules apply:
+
+#### 1. When a Page Is Deprecated
+
+A page or document enters the **Deprecated** publication state under any of the following conditions:
+
+- **Consolidation & Supersession (WEB-02.4):** An exploratory series, standalone draft, or multi-part rendition is superseded by a definitive, peer-reviewed, or unified canonical edition (e.g., earlier draft series replaced by a canonical monograph or unified series hub).
+- **Theoretical or Terminological Standardization:** The formulations, coordinates, or terminology used in an early article are superseded by a standardized framework (e.g., Drift-Control Ratio terminology standardization, canonical Lagrangian power accounting).
+- **Archival Retirement:** A working draft or internal document is retired from the active public reading path while retained for citation continuity, provenance, and auditability.
+
+#### 2. How Deprecated Pages Are Bannered
+
+Deprecated documents must clearly signal their status to readers so they are never mistaken for active research or canonical models:
+
+- **Frontmatter Declaration:** Set `status: "deprecated"` in the YAML frontmatter. Specify the authoritative replacement using the `canonical:` field (e.g., `canonical: "/pages/tangent-hyperplanes.html"`).
+- **Semantic Deprecation Banner:** Include a prominent `.status-banner--deprecated` component immediately below the article title or at the top of the body:
+  ```html
+  <aside class="status-banner status-banner--deprecated">
+    <p class="status-banner__title">
+      Status:
+      <a
+        href="how-to-read.html#publication-states"
+        class="status-badge status-badge--deprecated"
+        title="Deprecated — Click to Read Publication State Definition"
+        ><svg
+          class="status-badge__icon"
+          aria-hidden="true"
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"
+          ></path>
+          <line x1="12" y1="9" x2="12" y2="13"></line>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line></svg
+        ><span class="status-badge__text">Deprecated</span></a
+      >
+    </p>
+    <p class="status-banner__body">
+      This document is preserved strictly for historical context, backwards
+      compatibility, and audit history. It is not recommended for current
+      modeling or research.
+    </p>
+    <p class="status-banner__body">
+      <strong>Canonical edition:</strong> Please consult the
+      <a href="[canonical-url]">[Canonical Title]</a> for the authoritative
+      derivation and current evidence bounds.
+    </p>
+  </aside>
+  ```
+- **Provenance Note:** If the document has a specific lineage or superseded status, attach an accompanying `<aside class="provenance-note">` recording its historical origin and relationship to current work.
+
+#### 3. When a Page Is Removed
+
+- **Preservation by Default:** Public pages and published URLs are **never deleted**. Breaking external inbound links, academic citations, or audit records is strictly prohibited.
+- **Physical Removal Scope:** File deletion is restricted solely to temporary untracked scratch files, ephemeral test outputs, or unindexed duplicates that were never referenced in any public sitemap, manifest, or commit reachable from release tags.
+- **Navigation De-indexing:** Deprecated pages are removed from primary reading paths, active navbar menus, and current series sidebars, remaining accessible via direct links, archival lists, and audit ledgers.
+
+#### 4. URL Preservation and Redirects
+
+- **Permanent URLs:** If a page must be relocated or reorganized, register the old route in the page's Quarto frontmatter using `aliases:` (e.g., `aliases: [/articles/old-slug.html]`). Quarto generates client-side redirect stubs preserving all existing inbound links.
+- **Canonical Pointers:** Every deprecated page must declare a `canonical:` URL in its frontmatter pointing directly to its modern successor, preventing search index fragmentation.
 
 ### Python
 
