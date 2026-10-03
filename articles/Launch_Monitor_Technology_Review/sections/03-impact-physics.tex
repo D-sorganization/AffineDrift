@@ -1,61 +1,65 @@
 \chapter{Impact Physics: From Club Delivery to Ball Launch}
 \label{ch:impact}
 
-Every launch monitor embeds a model of the club--ball collision. Camera
-systems use it \emph{forward} (sanity-checking and filling gaps); radar
-systems use it \emph{inverse} (recovering face angle and dynamic loft from
-measured ball launch). This chapter develops that model.
+The collision connects a golfer's delivered club state to the ball's launch velocity and spin.
+A forward model predicts those outcomes from specified incident states, geometry and contact properties; an inverse model estimates some of those inputs from observations.
+Either can be used with optical, radar or combined measurements.
+The sensing modality alone does not establish a product's internal algorithm or which reported quantities are independently measured.
+This chapter separates exact geometry, conditional impact mechanics and empirical approximations so that each can support an appropriate inference.
 
 \section{The D-Plane}
 \label{sec:dplane}
 
-Jorgensen~\cite{jorgensen} observed that at impact two unit vectors
-determine the collision geometry for a center strike:
-\begin{itemize}
-  \item $\uvec{n}$, the \textbf{face normal}, built from face angle
-        $\varphi_f$ and dynamic loft $\lambda_d$;
-  \item $\uvec{p}$, the \textbf{club-head velocity direction}, built from
-        club path $\varphi_p$ and attack angle $\alpha$.
-\end{itemize}
-These two vectors span a wedge-shaped plane --- the \emph{D-plane}
-(``descriptive plane''). Its two governing consequences are:
+Use a right-handed basis with $x$ forward along the target, $y$ upward and $z$ to the right when viewed toward the target.
+Horizontal angles remain positive to the right and elevations positive upward, consistent with the right-handed-player signs in \cref{ch:params}.
+A unit direction with azimuth $\varphi$ and elevation $\lambda$ is
+\begin{equation}
+\label{eq:impactdirection}
+\vect{d}(\varphi,\lambda)=
+\begin{pmatrix}\cos\lambda\cos\varphi\\\sin\lambda\\\cos\lambda\sin\varphi\end{pmatrix}.
+\end{equation}
+The local face normal is $\uvec{n}=\vect{d}(\varphi_f,\lambda_d)$.
+For collision mechanics, define $\uvec{p}_c=\vect{d}(\varphi_c,\alpha_c)$ from the incident velocity of the \emph{contact point}, with $V_c=\|\vect{v}_c\|>0$ and all states evaluated at a declared common instant.
+A monitor's reported club path and attack angle may instead describe another reference point or maximum compression.
+They cannot be substituted silently: for a rigid head, $\vect{v}_c=\vect{v}_O+\boldsymbol\omega_h\times(\vect{r}_c-\vect{r}_O)$, and the state can change during impact.
 
-\begin{enumerate}
-\item \textbf{Launch direction lies in the D-plane}, between $\uvec{n}$ and
-$\uvec{p}$, much closer to the face normal.
-\item \textbf{The spin axis is normal to the D-plane}:
+In the centered, symmetric oblique-impact idealization associated with the D-plane~\cite{jorgensen}, the nonparallel directions $\uvec{n}$ and $\uvec{p}_c$ span a plane.
+Assume an initially stationary, nonspinning spherical ball, an isotropic contact response and a face normal treated as fixed during the impulse.
+If the net impulse lies in that plane, so does the outgoing ball velocity.
+Its location between face and path, and its closeness to either, additionally depend on the contact law; geometry alone supplies no universal weighting.
+For tangential impulse directed along the contact-plane component of club motion, the ball's contact lever arm is $-R\uvec{n}$, giving
 \begin{equation}
 \label{eq:spinaxisdplane}
-\hat{\vect{\omega}} \propto \uvec{p} \times \uvec{n}.
+\Delta\boldsymbol\omega_b
+ = I_b^{-1}(-R\uvec{n})\times\vect{J}_t,
+\qquad
+\Delta\boldsymbol\omega_b\parallel\uvec{p}_c\times\uvec{n}.
 \end{equation}
-The ball therefore curves \emph{away from the path, around the face} ---
-the ``new ball flight laws.''
-\end{enumerate}
+Here $R$ is the ball radius and $I_b$ its scalar inertia in this spherical model; the signed tangential impulse sets the orientation along that axis and its magnitude.
+Parallel directions do not define a unique D-plane or a normalized cross-product axis.
+Initial spin, off-center head rotation, anisotropy and changing contact geometry require an expanded model.
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=1.05,>=Stealth]
-  % target line
-  \draw[accentgray,dashed,->] (0,0) -- (9.5,0) node[right] {\small target line};
-  % club path vector
-  \draw[thick,accentgreen,->] (0,0) -- ({8*cos(-6)},{8*sin(-6)})
-    node[below right] {\small club path $\uvec{p}$ ($-6\degs$)};
-  % face normal
-  \draw[thick,accentblue,->] (0,0) -- ({8*cos(-2)},{8*sin(-2)})
-    node[above right] {\small face normal $\uvec{n}$ ($-2\degs$)};
-  % launch direction
-  \draw[very thick,red!70!black,->] (0,0) -- ({8.6*cos(-2.6)},{8.6*sin(-2.6)})
-    node[right] {\small launch $\approx 0.76\varphi_f + 0.24\varphi_p$};
-  % angle arcs
-  \draw[accentgray] (2.2,0) arc[start angle=0,end angle=-6,radius=2.2];
-  \node[accentgray] at (2.9,-0.32) {\footnotesize $\varphi_p$};
-  \draw[accentgray] (4.6,0) arc[start angle=0,end angle=-2,radius=4.6];
-  \node[accentgray] at (5.3,-0.09) {\footnotesize $\varphi_f$};
+\begin{tikzpicture}[scale=0.95,>=Stealth]
+  \draw[accentgray,dashed,->] (0,0) -- (9.5,0);
+  \node[accentgray] at (5.2,0.8) {\small Target Line};
+  \draw[accentgray,thin] (5.2,0.55) -- (5.2,0.04);
+  \draw[thick,accentblue,->] (0,0) -- ({8*cos(-2)},{8*sin(-2)});
+  \draw[accentblue,thin] ({8*cos(-2)},{8*sin(-2)}) -- (8.4,0.45);
+  \node[accentblue,anchor=west] at (8.4,0.6)
+    {\small Face Normal ($-2\degs$)};
+  \draw[very thick,red!70!black,->] (0,0) -- ({8.6*cos(-2.96)},{8.6*sin(-2.96)});
+  \node[red!70!black,anchor=west] at (8.8,-0.55)
+    {\small Launch ($-2.96\degs$)};
+  \draw[thick,accentgreen,->] (0,0) -- ({8*cos(-6)},{8*sin(-6)});
+  \draw[accentgreen,thin] ({8*cos(-6)},{8*sin(-6)}) -- (8.4,-1.25);
+  \node[accentgreen,anchor=west] at (8.4,-1.4)
+    {\small Club Path ($-6\degs$)};
 \end{tikzpicture}
-\caption{Horizontal D-plane geometry (top view, right-handed golfer,
-out-to-in ``fade'' delivery). The ball launches close to the face
-direction; the face-to-path difference tilts the spin axis and curves the
-ball away from the path.}
+\caption{Manufactured Horizontal Launch Example.
+The declared $0.76/0.24$ weighting gives $-2.96\degs$ from face angle $-2\degs$ and path $-6\degs$.
+This top-view projection illustrates the arithmetic, not a measured shot or a complete three-dimensional spin prediction.}
 \label{fig:dplane}
 \end{figure}
 
@@ -98,7 +102,7 @@ samples, not individual-shot tolerance bands; protocol and measurand
 differences preclude treating the comparison as a definitive test of every
 application of the vendor rule.
 
-This matters directly for any radar-first system: inverting
+For any estimator using this weighting model, inverting
 Eq.~\eqref{eq:launchweight} to recover face angle amplifies any bias in
 measured launch direction by $1/w_f$ when path and weight are fixed.
 At $w_f=0.76$ the factor is $1.32$, versus $1.18$ at $w_f=0.85$:
@@ -107,173 +111,207 @@ uncertainty in the weight contribute separately, so this derivative is
 not a complete uncertainty budget for inferred face angle.
 \end{warning}
 
-The weight is loft-dependent: more loft means a more oblique
-impact, hence a larger tangential momentum component along the path
-direction. Peer-reviewed impact modeling with normal COR plus tangential
-compliance reproduces the loft dependence from first
-principles~\cite{mdpifriction,facepathstudy}.
+Henrikson and colleagues~\cite{mdpifriction} compare a tangentially compliant contact model with plate impacts and player data.
+Their model's launch ratio varies with incidence even at fixed friction, and changing friction has different effects across incidence regimes.
+It uses a fixed impact surface and an adjustment for normal inelasticity; agreement in those comparisons is not a universal validation for moving, rotating clubheads.
+The findings support examining the contact-force history rather than attributing all club-dependent weighting to surface smoothness.
 
-The \emph{mechanism} is contested. TrackMan attributes the driver's higher
-weight to a smoother, lower-friction titanium face; PING rejects this,
-showing the loft dependence persists at constant $\mu$ and that below
-$\sim20\degs$ of incidence \emph{lower} friction moves launch \emph{closer}
-to the path---the opposite of the friction hypothesis~\cite{mdpifriction}.
-An implementation that fits $w_f$ empirically should record which
-explanation its calibration assumes.
+\subsection{Spin Loft and Approximate Launch Maps}
 
-Tutelman~\cite{tutelman3d} gives a closed-form version calibrated to
-TrackMan data. With face-to-path angle $A$ and dynamic loft $L$, define the
-total obliqueness $\Phi$ (which is precisely the spin loft):
+The geometric angle $\Phi$ between the local normal and contact-point incident velocity satisfies the full dot product
 \begin{equation}
 \label{eq:obliqueness}
-\cos\Phi = \cos A \cos L, \qquad
-f(\Phi) = 0.96 - 0.0071\,\Phi \quad (\Phi \text{ in degrees}),
+\cos\Phi=\uvec{n}\cdot\uvec{p}_c
+ =\sin\lambda_d\sin\alpha_c
+  +\cos\lambda_d\cos\alpha_c\cos(\varphi_f-\varphi_c).
 \end{equation}
-and the departure angles relative to the club path are
+This contact obliquity equals a reported spin loft only when point, time and angle definitions match.
+For coplanar forward directions it reduces to $|\lambda_d-\alpha_c|$.
+Writing $A_c=\varphi_f-\varphi_c$, neither $\cos A_c\cos\lambda_d$ nor $\cos A_c\cos(\lambda_d-\alpha_c)$ is a general replacement when horizontal separation and both elevations are nonzero.
+
+Tutelman's historical model~\cite{tutelman3d} uses its own loft/relative-angle construction and an approximate launch map,
 \begin{equation}
 \label{eq:tutelmanlaunch}
-\mathrm{DA}_{\mathrm{vert}} = L\,f(\Phi), \qquad
-\mathrm{DA}_{\mathrm{horiz}} = A\,f(\Phi),
+f(\Phi)=0.96-0.0071\Phi,\qquad
+\mathrm{DA}_{\rm vert}=L f(\Phi),\qquad
+\mathrm{DA}_{\rm horiz}=A f(\Phi),
 \end{equation}
-with launch angles relative to the target obtained by adding attack angle
-and path respectively. Note $f(\Phi)\approx0.85$ at $\Phi\approx15\degs$
-(driver) and $\approx0.75$ at $\Phi\approx30\degs$ (short iron): one
-friction-calibrated function reproduces both rules of thumb.
+with angles in degrees and $A,L$ interpreted according to that model.
+Its historical loft terminology is not interchangeable with target-frame dynamic loft, and its later comparison with TrackMan does not establish that the original model was fitted to that comparison.
+Treat the map as an author approximation with a declared domain, not an exact spherical-coordinate transformation or a general friction identification.
+For a three-dimensional implementation, obtain launch angles from the predicted velocity vector using \texttt{atan2}; adding component angles is not a general rotation composition.
 
 \subsection{Spin-Axis Tilt}
 
-For a center strike the spin-axis tilt follows from the D-plane geometry:
+A spin axis needs a reference frame as well as a direction.
+For outgoing unit velocity $\uvec{v}_b$ that is not vertical, let $\uvec{e}_y$ be world up and define
 \begin{equation}
 \label{eq:axistilt}
-\tan\theta_{\mathrm{axis}} \approx
-  \frac{\tan(\text{face-to-path})}{\tan(\text{spin loft})},
+\uvec{e}_b=\frac{\uvec{v}_b\times\uvec{e}_y}
+ {\|\uvec{v}_b\times\uvec{e}_y\|},\quad
+\uvec{e}_u=\uvec{e}_b\times\uvec{v}_b,\quad
+\theta_{\rm axis}=\operatorname{atan2}
+ (-\boldsymbol\omega_b\cdot\uvec{e}_u,
+   \boldsymbol\omega_b\cdot\uvec{e}_b).
 \end{equation}
-so $1\degs$ of face-to-path tilts the axis $\approx4\degs$ with a driver
-(spin loft $\sim$12--15$\degs$) but only $\approx2\degs$ with a mid-iron
-(spin loft $\sim$25--30$\degs$)~\cite{perfectgolfswing}. Tuxen's
-shot-shaping rule for a ball that curves back to the target line:
-$\theta_{\mathrm{axis}} \approx -2.5\times$ the horizontal launch angle.
+This convention makes positive backspin point along $\uvec{e}_b$ and gives positive tilt for a right-curving spin component in ordinary forward flight.
+Compare a device's sign and reference-axis definition before comparing its number.
+A vertical launch needs a different frame construction; a zero spin vector has no spin-axis direction.
+The tilt is also undefined when both transverse projections vanish, even if an axial spin component is nonzero.
+A general spin vector can also have a component along $\uvec{v}_b$, so total spin and one tilt angle do not specify every three-dimensional spin state.
+
+The often-used ratio $\tan(\text{face-to-path})/\tan(\text{spin loft})$ is not an exact tilt identity for general target-frame angles.
+Calculate the cross product and its projections under the stated collision assumptions instead.
+Likewise, a fixed yards-per-degree or return-to-target multiplier cannot replace a flight calculation: speed, spin magnitude, launch, wind and aerodynamic coefficients also affect curvature.
 
 \begin{implication}
-A radar-first system typically measures launch direction and club
-path. \Cref{eq:launchweight} then yields face angle by inversion:
-$\varphi_f = (\varphi_{\mathrm{launch}} - (1-w_f)\varphi_p)/w_f$. Because
-$1/w_f$ depends on the assumed weight, launch-direction bias alone is
-amplified by about 18\% at $w_f=0.85$ or 32\% at $w_f=0.76$, with path
-and weight fixed. Alignment calibration matters, but its priority relative
-to path error, weight uncertainty and model discrepancy requires a complete
-uncertainty budget.
+If an estimator adopts the launch-weight model, it may infer
+$\varphi_f=[\varphi_{\rm launch}-(1-w_f)\varphi_p]/w_f$.
+Its local launch sensitivity is $1/w_f$; path, weight, reference-frame covariance and model discrepancy contribute separately.
+Agreement between an inferred face angle and the launch measurement used to infer it is not an independent validation of that face angle.
 \end{implication}
 
 \section{Ball Speed and Smash Factor}
 \label{sec:smash}
 
-The normal-direction collision is well modeled as a two-body impact with
-coefficient of restitution $e$~\cite{cochranstobbs,penner2003}:
+Let $J_n$ be the normal impulse on an initially stationary ball of mass $m$.
+For a free rigid head of mass $M$, centroidal inertia tensor $I_h$ and contact lever arm $\vect{r}_h$, its normal inverse effective mass is
+\begin{equation}
+\label{eq:impacteffectivemass}
+\frac{1}{M_{\rm eff,n}}=\frac{1}{M}
+ +(\vect{r}_h\times\uvec{n})^{\mathsf T}I_h^{-1}
+   (\vect{r}_h\times\uvec{n}).
+\end{equation}
+In the scalar limit with no normal--tangential coupling, normal restitution $e_n$ and closing speed $V_c\cos\Phi>0$ give~\cite{cochranstobbs,penner2003}
 \begin{equation}
 \label{eq:ballspeed}
-v_{\mathrm{ball}} = v_{\mathrm{club}}\,
-  \frac{1+e}{1+m/M}\,\cos\Phi\,
-  \bigl(1 - 0.14\,x_{\mathrm{miss}}\bigr),
+J_n=\frac{(1+e_n)V_c\cos\Phi}{1/m+1/M_{\rm eff,n}},
+\qquad
+\vect{v}_b^+\cdot\uvec{n}
+ =\frac{1+e_n}{1+m/M_{\rm eff,n}}V_c\cos\Phi.
 \end{equation}
-with $e \approx 0.83$ at the USGA driver limit (falling with loft and
-impact speed), ball mass $m = 45.93$\,g, head mass $M \approx 200$\,g
-(driver), $\cos\Phi$ the obliqueness loss, and the last factor an empirical
-off-center loss with $x_{\mathrm{miss}}$ in inches~\cite{tutelmansmash}.
-The prefactor $(1+e)/(1+m/M)\approx1.49$ sets the theoretical driver smash
-ceiling; smash factor falls with loft:
+This predicts the \emph{normal component} of ball velocity.
+If there is tangential impulse, $\vect{v}_b^+=(J_n\uvec{n}+\vect{J}_t)/m$ and the speed norm also contains that component.
+Normal--tangential coupling requires a coupled contact solve rather than inserting an effective mass into an otherwise unrelated scalar fit.
 
+For illustration only, taking $m=0.04593$ kg, $M_{\rm eff,n}=0.200$ kg and $e_n=0.83$ gives the following normal-component ratios to $V_c$:
 \begin{center}
 \small
 \begin{tabular}{@{}lcccc@{}}
 \toprule
-Effective loft & $0\degs$ & $10\degs$ & $20\degs$ & $30\degs$ \\
-Max smash factor & 1.488 & 1.465 & 1.398 & 1.288 \\
+Obliquity & $0\degs$ & $10\degs$ & $20\degs$ & $30\degs$ \\
+Normal Ratio & 1.488 & 1.466 & 1.398 & 1.289 \\
 \bottomrule
 \end{tabular}
 \end{center}
+These are manufactured values, not a current equipment-conformance test or a loft-dependent physical ceiling.
+The assumed restitution is a model parameter; it does not identify every real ball/face combination or impact speed.
 
 \begin{keypoint}
-This table is a built-in sanity check: a measured smash factor above the
-loft-appropriate ceiling indicates a measurement error --- most commonly a
-radar unit reporting toe speed or shaft speed instead of
-geometric-center club speed. An implementation should flag physically impossible
-smash values instead of displaying them.
+A reported smash factor divides measured ball speed by a specified reported club speed, which need not be the contact-point incident speed $V_c$.
+Exceeding one row of this illustrative table therefore does not by itself prove measurement error.
+Before rejecting a shot, reconcile reference point and time, effective inertia, contact model and uncertainty.
+A discrepancy is a diagnostic lead, not a universal impossibility verdict.
 \end{keypoint}
 
 \section{Spin Generation}
 \label{sec:spingen}
 
-Friction during the oblique compression converts tangential surface speed
-$v_{\mathrm{club}}\sin\Phi$ into rotation. Real impacts exhibit tangential
-compliance (the contact patch sticks and stretches like a shear
-spring)~\cite{mdpifriction,crossoblique}, but a practical engineering fit
-calibrated to TrackMan data~\cite{tutelman3d} is simply
+The same tangential impulse changes both ball translation and angular momentum.
+For a spherical ball with contact arm $-R\uvec{n}$,
+$\Delta\boldsymbol\omega_b=I_b^{-1}(-R\uvec{n})\times\vect{J}_t$.
+For an impulse in the obliquity plane, the launch deflection from the normal satisfies $\tan\delta_b=J_t/J_n$.
+Thus independently chosen launch and spin fits must still be checked for compatibility with one contact solution.
+Tangential compliance can reverse force during contact; a single friction coefficient does not specify the entire slip--stick history~\cite{mdpifriction,crossoblique}.
+
+When its club-speed input is identified with $V_c$, an empirical approximation in Tutelman's model is~\cite{tutelman3d}
 \begin{equation}
 \label{eq:spinrate}
-S_{\mathrm{total}}\ [\mathrm{rpm}] \approx
-  160\, v_{\mathrm{club}}[\mathrm{mph}]\, \sin\Phi ,
+S\ [\mathrm{rpm}]\approx160\,V_c[\mathrm{mph}]\sin\Phi.
 \end{equation}
-with the back/side split following from the D-plane direction ratio
-$d = \tan A/\tan L$:
-$S_{\mathrm{back}} = S/\sqrt{1+d^2}$, $S_{\mathrm{side}} = d\,S_{\mathrm{back}}$.
-Cross-checks: $\sim$200--300\,rpm per degree of spin loft for a driver;
-the ``iron loft $\times$ 200'' rule matches PGA Tour averages. Friction
-saturates near spin lofts of 45--50$\degs$ (the ``spin-loft cliff''), and
-wet or grass-contaminated contact reduces spin at fixed spin
-loft~\cite{trackmanspinloft}.
+The coefficient carries the stated units and is not a dimensional identity or a universal spin law.
+Retain the model's input conventions and calibration limits; use the predicted spin vector for component decomposition rather than imposing a separate trigonometric tilt rule.
+Rules based only on iron loft, or a universal spin-loft saturation angle, omit contact material, speed and force history.
+Changing surface conditions changes the contact problem; this chapter supplies no universal contamination correction or threshold.
+% Retain the previously cited vendor source as background, not as evidence of a universal threshold.
+\nocite{trackmanspinloft}
 
 \section{Gear Effect and Impact Location}
 \label{sec:gear}
 
-An impact at horizontal offset $x$ from the CG line torques the head about
-its CG; the recoiling face ``gears'' the ball the opposite way. The
-angular-impulse model~\cite{tutelmangear} gives head rotation
-$\omega_{\mathrm{head}} = x\,m\,v_{\mathrm{ball}}/I_h$ and gear spin
+An off-center impulse rotates the head and changes contact-point velocity during collision.
+In a simplified horizontal construction, let $x$ be the signed lateral offset from the head CG line, $C$ the normal CG-to-face distance and $I_h$ the head inertia about the relevant vertical axis.
+Tutelman's angular-impulse heuristic~\cite{tutelmangear} estimates $\Delta\omega_h=xmV_b/I_h$ and equates a face tangential speed to the ball's rotational surface speed at separation, giving
 \begin{equation}
 \label{eq:gear}
-s\ [\mathrm{rpm}] = 58{,}830\,
-  \frac{v_{\mathrm{ball}}[\mathrm{mph}]\; C[\mathrm{in}]\;
-        x[\mathrm{in}]}{I_h[\mathrm{g\,cm^2}]}
-\;\approx\; 16.4\, v_{\mathrm{ball}}[\mathrm{mph}]\;
-   x[\mathrm{in}] \times 100,
+s\ [\mathrm{rpm}]\approx58{,}830\,
+ \frac{V_b[\mathrm{mph}]\,C[\mathrm{in}]\,x[\mathrm{in}]}
+ {I_h[\mathrm{g\,cm^2}]}
+ \approx16.4\,V_b[\mathrm{mph}]\,x[\mathrm{in}].
 \end{equation}
-where $C$ is CG depth behind the face (32--47\,mm on measured OEM drivers)
-and $I_h = 4000$--$5800\,\mathrm{g\,cm^2}$; the ratio $I_h/C$ is nearly
-constant across modern drivers, which is why the simplified form works to
-$\pm2.5\%$. A toe strike opens the head and imparts \emph{hook} gear spin;
-a heel strike, slice spin. Vertical gear effect (high-face strikes reduce
-backspin, low-face strikes increase it) follows the same equation with the
-vertical CG offset and roll radius.
+The last coefficient uses the author's representative $C=1.42$ in and $I_h=5100\,\mathrm{g\,cm^2}$; there is no extra factor of 100.
+For $V_b=150$ mph and $x=0.25$ in, the simplified estimate is 615 rpm, not 61,500 rpm.
+The cited 2.5\% describes the relative sample standard deviation of a historical, filtered inertia/depth ratio, not a guaranteed spin-prediction error or all current drivers.
+The contact-speed assumption neglects ball tangential translation and coupled recoil, so the heuristic is not a complete no-slip impact solution.
 
-Driver faces are built curved to exploit this: \textbf{bulge} (horizontal
-radius, typically 12\,in) starts a toe miss right so the gear-effect hook
-curves it back. Worked example~\cite{tutelmangear}: a 1\,in toe miss at
-150\,mph ball speed gets $+1354$\,rpm of bulge-induced slice spin against
-$-2192$\,rpm of gear hook spin --- net 838\,rpm hook and $\sim$10\,yd left,
-versus $\sim$61\,yd offline for a flat face. Sensitivity is extreme: a
-strike one dimple width ($0.14$\,in) off-center tilts the spin axis
-$\sim6\degs$ on a driver ($\sim2\degs$ on a 6-iron)~\cite{perfectgolfswing}.
-Irons have shallow CG depth, hence weak gear effect and flat faces.
+\subsection{Why a Coupled Contact Solve Matters}
+
+The missing terms can be seen without fitting a golfer or product.
+Consider an initially nonspinning free head moving normally at speed $V$ toward a stationary spherical ball, with head contact arm $C\uvec{n}+x\uvec{t}$ in a planar model.
+The unit tangent $\uvec{t}$ is perpendicular to $\uvec{n}$.
+The head has mass $M$ and scalar inertia $I_h$; the ball has mass $m$, radius $R$ and inertia $I_b$.
+Take positive inertial parameters and $V>0$, with $0\leq e_n\leq1$ and an impulsive friction coefficient $\mu\geq0$.
+With impulse components $(J_n,J_t)$ on the ball, the ball-minus-head contact-velocity increment is $K(J_n,J_t)^{\mathsf T}$, where
+\begin{equation}
+\label{eq:gearcoupledmobility}
+K=\begin{pmatrix}
+ \frac1m+\frac1M+\frac{x^2}{I_h} & -\frac{Cx}{I_h}\\
+ -\frac{Cx}{I_h} & \frac1m+\frac1M+\frac{R^2}{I_b}+\frac{C^2}{I_h}
+\end{pmatrix}.
+\end{equation}
+Normal restitution and zero final tangential relative velocity then give the sticking candidate
+\begin{equation}
+\label{eq:gearstickcandidate}
+K\begin{pmatrix}J_n\\J_t\end{pmatrix}
+ =\begin{pmatrix}(1+e_n)V\\0\end{pmatrix},
+\qquad |J_t|\leq\mu J_n.
+\end{equation}
+The inequality must hold for the candidate to be admissible under this impulsive friction model; otherwise a sliding branch is needed.
+The term $1/m$ in the tangential entry accounts for ball translation, $R^2/I_b$ for ball spin and the head terms for recoil.
+Consequently, matching contact velocities does not mean that face speed equals $R$ times ball spin.
+This idealization still omits contact compliance, shaft impulses and changing face geometry; it is a consistency calculation, not a universally identified gear-effect law.
+
+Bulge and roll alter the local normal as strike location changes, while gear effect alters the impulse through head motion.
+Their contributions must be evaluated together; changing the rotation axis also changes the relevant head inertia.
+An optical strike measurement can constrain the geometry, but uncertainty in pose, CG, inertia and contact response remains.
+Neither a quoted yardage example nor \cref{eq:gear} provides a universal bound on face-angle inference error.
 
 \begin{implication}
-Gear effect is why \emph{impact location} is the most valuable club
-parameter a launch monitor can add after path/face: without it, a pure
-D-plane inversion misattributes gear-effect spin-axis tilt to face-to-path.
-For a radar-only system this is a fundamental, quantifiable error
-source on off-center driver strikes (up to several degrees of apparent
-face-to-path); \cref{eq:gear} bounds it, and an optical impact-location
-add-on (\cref{ch:implications}) removes it.
+Impact location is valuable when it resolves an important uncertainty for the intended outcome.
+Its priority relative to face pose, local velocity or spin requires a sensitivity and uncertainty analysis.
+Off-center launch/spin cannot in general be inverted with a centered D-plane model alone, and adding a strike sensor does not remove collision-model discrepancy.
 \end{implication}
 
 \section{Vertical Plane and the Low-Point Geometry}
 
-The identical geometry applies vertically: launch angle sits 75--85\% of
-the way from attack angle toward dynamic loft, and spin loft sets spin
-magnitude via \cref{eq:spinrate}. One non-obvious coupling: for a
-descending strike on an inclined swing plane, the instantaneous path points
-in-to-out even when the swing direction is square --- e.g.\ hitting
-$5\degs$ down on a $60\degs$ plane yields $\approx2.9\degs$ of in-to-out
-path. Radar systems that measure swing plane and attack angle use this
-relation (path $=f(\text{swing direction, swing plane, attack angle})$) as
-a consistency constraint among the measured club parameters.
+A fixed inclined-plane construction explains one conditional coupling between attack and horizontal path.
+Set the plane's horizontal base along the target and its inclination to $0<\beta<90\degs$, with unit normal $(0,\cos\beta,\sin\beta)$ in the forward/up/right frame.
+A velocity direction with elevation $\alpha_c$ and horizontal offset $\psi$ lies in that plane only if
+\begin{equation}
+\label{eq:inclinedplanepath}
+\sin\alpha_c\cos\beta+
+ \cos\alpha_c\sin\psi\sin\beta=0,
+\qquad
+\sin\psi=-\frac{\tan\alpha_c}{\tan\beta}.
+\end{equation}
+On the forward-moving branch, $\alpha_c=-5\degs$ and $\beta=60\degs$ give $\psi\approx2.8953\degs$ to the right.
+The result requires $|\tan\alpha_c/\tan\beta|\leq1$ and the declared side of plane inclination; a mirrored plane changes the sign.
+A measured swing need not follow one fixed plane, and this derivation does not establish any particular product's processing algorithm.
+
+\section{Connecting Delivery, Impact and Measurement}
+
+Swing dynamics determines the delivered local velocity, orientation and retained elastic state; contact mechanics converts that state into an impulse and outgoing ball state; the instrument estimates selected quantities from its observations.
+An explanation of technique must keep those stages connected while testing each with sufficiently independent evidence.
+For example, changing wrist motion may alter both face pose and contact-point velocity, and changing strike location may alter both the local normal and effective inertia.
+A single fitted launch percentage cannot identify which change caused an observed ball flight.
+Report the retained states, reference points, contact assumptions and uncertainty alongside the conclusion, and compare joint predictions of launch direction, speed and spin rather than validating each with incompatible scalar rules.

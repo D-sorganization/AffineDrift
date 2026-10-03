@@ -1,3 +1,65 @@
+# Impact PR #4844 — Committed and Pushed
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4844 is open from fix/impact-chapter-rigor-4842. Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 and its eight evidence files remain frozen. All normal initial commit/push hooks passed. Full6757 regression (79.54%) and 68 combined pinned checks retain their recorded checkpoints. Current evidence set has 39 verified files; no website findings were added.
+
+Deliver regular parent correction PR4843 first. Both PRs carry an owned do-not-merge hold until their final heads pass; remove only the relevant hold and invoke the central guard. PR4841 original source is already remote-verified at7b723333502f94aed4a1a995f656a235ad7bbe2b; that receipt is not amendment delivery. Keep the goal active and do not start another review while these deliveries remain open. The agy Gemini3.8 Flash credit block persists.
+
+---
+
+# Impact Chapter — Main Ancestry and Follow-Up Dependency
+
+Impact source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains accepted and unchanged; all eight impact and 31 current parent evidence files are byte-verified. Parent main-integration 278fff4d76232ce29dbb42731ac2a70124bb9d79 carries original PR4841 remote receipt and regular correction PR4843. All 68 combined pinned checks passed before this documentation/ancestry-only merge; no source, test or evidence hash changed. Full 6757-pass regression remains at d03494a4034a310bf1b9974df6e32a6b5de4edea (79.54%).
+
+Commit and push this integration, open the impact work as a regular PR with do-not-merge, and deliver PR4843 first. Exact-head CI and remote-main verification are still required. Only one original corpus row advances: 97 originals plus whole-book consistency remain.
+
+---
+
+# Impact Review — Parent Amendment Integrated
+
+Incoming passive-control binding c3187850f6e65576699c1bb5ec3b7c3e867705cf is integrated in this branch. Impact source b90b86376c9eebbc9d07be754b254ee914fdfff2 and all eight evidence files remain unchanged. The updated parent test/SVG and new amendment record retain their explicit old/new provenance; the older frozen impact dependency record remains a historical checkpoint. All 68 combined pinned-environment checks pass (19.70s); merge commit pending. Original PR4841 merged its older head, so its corrected artifact must use a new follow-up PR. PR4841 has an owned do-not-merge hold until its amended head passes; no remote-main delivery is claimed. The original corpus has 97 pending sources, plus whole-book consistency work.
+
+---
+
+# Impact Chapter — Bound Local Acceptance #4842
+
+Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 binds eight exact evidence files. Full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passed 6757 tests with 79.54% coverage. Exactly one corpus row advances; 97 originals and separate whole-book consistency remain. Thirty parent files were preserved at this acceptance. The pinned plotting-artifact amendment now committed separately in parent PR4841 changes two of those parent files; integrate that amendment explicitly and record the revised dependency provenance before this branch is delivered. Do not rewrite the frozen impact acceptance report or its historical carry-forward record.
+
+Regular PR, updated parent integration, exact-head checks, guarded merge and remote-main proof remain pending. Both original and amended passive-control validation scopes remain distinct; no new helper output exists while agy Flash credits are exhausted.
+
+---
+
+# Impact Physics Chapter — Active Review #4842
+
+Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-chapter-review; branch fix/impact-chapter-rigor-4842; baseline 4d5c21bcb389dda237d810d50de257dcb84d015a. Issue lease/presence session technical-review-20261003-impact-chapter expires approximately 09:17 UTC on 2026-10-03. The incomplete central inbox does not establish absence of peers.
+
+The complete original Chapter 3 and bounded primary readings were reviewed. Draft corrections, a research dossier and six new regression cases exist. Three tests reproduced old source defects; three numerical cases passed after a mistyped expected angle in the initial test was corrected. The revised source plus existing impact geometry tests pass eight cases (one existing content-lint deselection). No source acceptance or corpus credit yet: 98 originals remain pending, plus separate whole-book consistency work.
+
+The bibliography author/journal correction and planned PDF rebuild are explicit dependencies of the older radar acceptance. Historical hashes and the thirty parent files that must remain unchanged are recorded in reports/technical-review/impact-chapter-dependency-carry-forward.json. Neither chapter has a website claim-inventory route; preserve that ledger rather than inventing one. The rebuilt 86-page PDF has six inspected impact pages and thirteen displays, no chapter overfull boxes and all 88 bibliography entries. Radar source/text carry-forward and thirty parent hashes pass. Seventeen selected impact/radar checks including content lint, all static/publication/title checks and claim freshness pass. Next: commit this provisional checkpoint, run the full isolated regression on frozen files, then pin acceptance and open a regular PR. Do not edit tracked files or render during the run.
+
+Passive-control regular PR https://github.com/D-sorganization/AffineDrift/pull/4841 is safely pushed at 4d5c21bcb389dda237d810d50de257dcb84d015a with central guarded auto-merge armed. Its source is d1215cb17315d0df2e579d2b3b45f50f6cf1d34a, eight findings preserve all prior 468. Full Python regression: 6751 passed, 29 skipped, 187 deselected, 79.54% coverage; 51 binding tests, 15 Jest cases and four bounded browser cells pass. At 07:54 UTC, site build passed and required browser CI was running; other principal checks passed. Merge/remote-main verification and lease release remain pending; do not claim delivery yet. Poll no more often than every five minutes.
+
+agy CLI Gemini 3.8 Flash remains unavailable after two insufficient-credit failures; earlier helpers were adjudicated. No new helper evidence, retry loop or credit purchase. Use Python3.12, Black100, Ruff check, isolated pytest --basetemp, normal hooks and regular PRs. Never edit tracked source or render during tests/hooks in the same worktree. Goal active.
+
+Final local acceptance: full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passes 6757 cases with 79.54% coverage. Source/PDF review is complete; pin the accepted source in a separate delivery record and advance only the Chapter 3 corpus row (98 to 97 originals pending). Regular PR, remote checks/merge and delivery verification remain pending.
+
+---
+
+# Passive-Control Amendment — Follow-Up PR Required
+
+PR4841 merged original head4d5c21bcb389dda237d810d50de257dcb84d015a at 7b723333502f94aed4a1a995f656a235ad7bbe2b on 2026-10-03T08:30:42Z before the corrected branch head reached the PR. Remote verification confirms all 22 owned paths and 32 frozen files; whole trees match. The amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e and binding c3187850f6e65576699c1bb5ec3b7c3e867705cf remain accepted and pushed, with 51 pinned checks. Main is integrated without changing any amendment evidence. Issue4836 is reopened; regular follow-up PR https://github.com/D-sorganization/AffineDrift/pull/4843 is open with do-not-merge while the integration checkpoint is pushed and exact-head CI runs. Remove this owned hold only after checking the final head, then use the central guard. Original PR receipt is historical and must not be represented as amendment delivery. Lease/presence renewed through 10:30 UTC.
+
+Parallel impact accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains immutable; 68 combined pinned integration checks pass. Incorporate this remote-main ancestry and explicit follow-up delivery metadata there before its PR.
+
+---
+
+# Passive-Control PR #4841 — Reproducibility Amendment
+
+Review comment 4172127928 identified an SVG generated with Matplotlib 3.10.8 instead of pinned 3.11.2. The pinned environment reproduced the new committed-artifact freshness failure; regeneration resolves it and all 15 model/figure checks pass. Article, generator, mechanical model and original scientific report are unchanged. The amendment report preserves old/new artifact hashes, environment scope and validation history. Amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e passes normal commit hooks; eight evidence files are now bound while all 468 prior findings remain unchanged. All 51 amended binding checks pass in the pinned environment. Repository automation rearmed auto-merge after a simple disable, so the supported do-not-merge label is applied until the corrected binding is pushed and exact-head checks pass. Remove only this owned temporary hold before invoking the central guard. Do not use the old remote-verification helper with a new head without updating its explicit accepted-head and frozen-file list.
+
+Parallel impact #4842 has a clean 6757-pass full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea with 79.54% coverage; that worktree must integrate this amendment explicitly before its own delivery. The agy Flash credit block remains unchanged.
+
+---
+
 # Passive Control Article — Active Review #4836
 
 Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-passive-control-review; branch fix/passive-control-rigor-4836; baseline 503fb4fe6e686fcdcc13a8ac56c5039d313fbff6. Issue lease technical-review-20261003-passive-control and presence renewed through 2026-10-03T08:44 UTC. Full original article and bounded primary notes read; this standalone source is distinct from paired Chapter 27 review #4336. Source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a is accepted locally with eight bound findings, preserving all 468 prior findings. Exactly one original-corpus row advances; 98 original sources and separate whole-book consistency work remain.
