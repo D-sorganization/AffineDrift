@@ -1,3 +1,11 @@
+# Impact Chapter — Main Ancestry and Follow-Up Dependency
+
+Impact source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains accepted and unchanged; all eight impact and 31 current parent evidence files are byte-verified. Parent main-integration 278fff4d76232ce29dbb42731ac2a70124bb9d79 carries original PR4841 remote receipt and regular correction PR4843. All 68 combined pinned checks passed before this documentation/ancestry-only merge; no source, test or evidence hash changed. Full 6757-pass regression remains at d03494a4034a310bf1b9974df6e32a6b5de4edea (79.54%).
+
+Commit and push this integration, open the impact work as a regular PR with do-not-merge, and deliver PR4843 first. Exact-head CI and remote-main verification are still required. Only one original corpus row advances: 97 originals plus whole-book consistency remain.
+
+---
+
 # Impact Review — Parent Amendment Integrated
 
 Incoming passive-control binding c3187850f6e65576699c1bb5ec3b7c3e867705cf is integrated in this branch. Impact source b90b86376c9eebbc9d07be754b254ee914fdfff2 and all eight evidence files remain unchanged. The updated parent test/SVG and new amendment record retain their explicit old/new provenance; the older frozen impact dependency record remains a historical checkpoint. All 68 combined pinned-environment checks pass (19.70s); merge commit pending. Original PR4841 merged its older head, so its corrected artifact must use a new follow-up PR. PR4841 has an owned do-not-merge hold until its amended head passes; no remote-main delivery is claimed. The original corpus has 97 pending sources, plus whole-book consistency work.
@@ -25,6 +33,14 @@ Passive-control regular PR https://github.com/D-sorganization/AffineDrift/pull/4
 agy CLI Gemini 3.8 Flash remains unavailable after two insufficient-credit failures; earlier helpers were adjudicated. No new helper evidence, retry loop or credit purchase. Use Python3.12, Black100, Ruff check, isolated pytest --basetemp, normal hooks and regular PRs. Never edit tracked source or render during tests/hooks in the same worktree. Goal active.
 
 Final local acceptance: full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passes 6757 cases with 79.54% coverage. Source/PDF review is complete; pin the accepted source in a separate delivery record and advance only the Chapter 3 corpus row (98 to 97 originals pending). Regular PR, remote checks/merge and delivery verification remain pending.
+
+---
+
+# Passive-Control Amendment — Follow-Up PR Required
+
+PR4841 merged original head4d5c21bcb389dda237d810d50de257dcb84d015a at 7b723333502f94aed4a1a995f656a235ad7bbe2b on 2026-10-03T08:30:42Z before the corrected branch head reached the PR. Remote verification confirms all 22 owned paths and 32 frozen files; whole trees match. The amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e and binding c3187850f6e65576699c1bb5ec3b7c3e867705cf remain accepted and pushed, with 51 pinned checks. Main is integrated without changing any amendment evidence. Issue4836 is reopened; regular follow-up PR https://github.com/D-sorganization/AffineDrift/pull/4843 is open with do-not-merge while the integration checkpoint is pushed and exact-head CI runs. Remove this owned hold only after checking the final head, then use the central guard. Original PR receipt is historical and must not be represented as amendment delivery. Lease/presence renewed through 10:30 UTC.
+
+Parallel impact accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains immutable; 68 combined pinned integration checks pass. Incorporate this remote-main ancestry and explicit follow-up delivery metadata there before its PR.
 
 ---
 
