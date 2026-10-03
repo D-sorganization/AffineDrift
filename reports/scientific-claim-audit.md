@@ -225,7 +225,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/daydreams-doodles.html` | `pages/daydreams-doodles.qmd` | 3 |
 | `/pages/development-roadmap.html` | `pages/development-roadmap.qmd` | 3 |
 | `/pages/drifter-manifesto.html` | `pages/drifter-manifesto.qmd` | 6 |
-| `/pages/glossary.html` | `pages/glossary.qmd` | 1 |
+| `/pages/glossary.html` | `pages/glossary.qmd` | 7 |
 | `/pages/how-to-read.html` | `pages/how-to-read.qmd` | 1 |
 | `/pages/notation-quick-reference.html` | `pages/notation-quick-reference.qmd` | 2 |
 | `/pages/notation.html` | `pages/notation.qmd` | 4 |
@@ -480,7 +480,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-004f2501add9` | `/pages/daydreams-doodles.html` | Reviewed | — | None | None | 1 |
 | `ad-route-2ab60b171f5a` | `/pages/development-roadmap.html` | Reviewed | — | None | None | 1 |
 | `ad-route-ac0efed1b25f` | `/pages/drifter-manifesto.html` | Reviewed | — | None | None | 5 |
-| `ad-route-39185f792b9a` | `/pages/glossary.html` | Reviewed | — | None | None | 0 |
+| `ad-route-39185f792b9a` | `/pages/glossary.html` | Reviewed | — | None | None | 8 |
 | `ad-route-c15406d82939` | `/pages/how-to-read.html` | Reviewed | — | None | None | 0 |
 | `ad-route-842027bd7c5a` | `/pages/notation-quick-reference.html` | Reviewed | — | None | None | 0 |
 | `ad-route-4c6de352603b` | `/pages/notation.html` | Reviewed | — | None | None | 2 |
