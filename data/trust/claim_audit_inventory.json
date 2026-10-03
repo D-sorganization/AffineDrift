@@ -206,7 +206,112 @@
       "critique_ids": [
         "crit-double-pendulum-energy-blindness"
       ],
-      "findings": [],
+      "findings": [
+        {
+          "finding_id": "ad-finding-wrench-input-attribution",
+          "priority": "p1",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "Replace the opening identification of conscious input and passive pulling with the declared same-state input partition; demonstrate that proximal torque changes distal force power even with zero distal torque.",
+          "evidence_paths": [
+            "articles/drift-components-wrench-double-pendulum.qmd",
+            "tests/test_drift_wrench_review.py",
+            "reports/technical-review/drift-wrench-review.md",
+            "reports/technical-review/drift-wrench-prior-review.json",
+            "reports/technical-review/drift-wrench-render-verification.json",
+            "reports/technical-review/drift-wrench-independent-checks.json"
+          ],
+          "evidence_sha256": {
+            "articles/drift-components-wrench-double-pendulum.qmd": "7b4b23273e154ed6b2de5477ca250a08696474f82dbbf7296b828346cef52ad0",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
+            "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+          },
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
+        },
+        {
+          "finding_id": "ad-finding-wrench-power-conventions",
+          "priority": "p1",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "Make the inertial frame, application point, COM lever/Jacobian and absolute versus relative power explicit. Retain the valid balances and independently verify energy and moment identities; this is not a replacement of incorrect prior power equations.",
+          "evidence_paths": [
+            "articles/drift-components-wrench-double-pendulum.qmd",
+            "tests/test_drift_wrench_review.py",
+            "reports/technical-review/drift-wrench-review.md",
+            "reports/technical-review/drift-wrench-prior-review.json",
+            "reports/technical-review/drift-wrench-render-verification.json",
+            "reports/technical-review/drift-wrench-independent-checks.json"
+          ],
+          "evidence_sha256": {
+            "articles/drift-components-wrench-double-pendulum.qmd": "7b4b23273e154ed6b2de5477ca250a08696474f82dbbf7296b828346cef52ad0",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
+            "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+          },
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
+        },
+        {
+          "finding_id": "ad-finding-wrench-empirical-scope",
+          "priority": "p1",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "Remove unsupported late-downswing dominance, universal flexible-shaft capacity and spatial face-closure claims. Keep manufactured examples distinct from golfer measurements and leave the empirical critique open.",
+          "evidence_paths": [
+            "articles/drift-components-wrench-double-pendulum.qmd",
+            "tests/test_drift_wrench_review.py",
+            "reports/technical-review/drift-wrench-review.md",
+            "reports/technical-review/drift-wrench-prior-review.json",
+            "reports/technical-review/drift-wrench-render-verification.json",
+            "reports/technical-review/drift-wrench-independent-checks.json"
+          ],
+          "evidence_sha256": {
+            "articles/drift-components-wrench-double-pendulum.qmd": "7b4b23273e154ed6b2de5477ca250a08696474f82dbbf7296b828346cef52ad0",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
+            "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+          },
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
+        },
+        {
+          "finding_id": "ad-finding-wrench-reproduction",
+          "priority": "p2",
+          "disposition": "corrected",
+          "claim_ids": [],
+          "critique_ids": [],
+          "rationale": "Resolve the nonexistent equation reference and notation collisions; replace the incomplete Streamlit promise with a declared reproducible example, real source links and publication contracts.",
+          "evidence_paths": [
+            "articles/drift-components-wrench-double-pendulum.qmd",
+            "tests/test_drift_wrench_review.py",
+            "reports/technical-review/drift-wrench-review.md",
+            "reports/technical-review/drift-wrench-prior-review.json",
+            "reports/technical-review/drift-wrench-render-verification.json",
+            "reports/technical-review/drift-wrench-independent-checks.json"
+          ],
+          "evidence_sha256": {
+            "articles/drift-components-wrench-double-pendulum.qmd": "7b4b23273e154ed6b2de5477ca250a08696474f82dbbf7296b828346cef52ad0",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
+            "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+          },
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
+        }
+      ],
       "review": {
         "dimensions": [
           "evidence",
@@ -216,15 +321,25 @@
         ],
         "evidence_paths": [
           "articles/_generated/trust/critique-annotations/drift-components-wrench-double-pendulum.qmd",
-          "articles/drift-components-wrench-double-pendulum.qmd"
+          "articles/drift-components-wrench-double-pendulum.qmd",
+          "tests/test_drift_wrench_review.py",
+          "reports/technical-review/drift-wrench-review.md",
+          "reports/technical-review/drift-wrench-prior-review.json",
+          "reports/technical-review/drift-wrench-render-verification.json",
+          "reports/technical-review/drift-wrench-independent-checks.json"
         ],
         "evidence_sha256": {
           "articles/_generated/trust/critique-annotations/drift-components-wrench-double-pendulum.qmd": "b131e8d51b6315acc9dbf13f7abae77b0887a56efeb997516dbe9a32153507a3",
-          "articles/drift-components-wrench-double-pendulum.qmd": "7b4b23273e154ed6b2de5477ca250a08696474f82dbbf7296b828346cef52ad0"
+          "articles/drift-components-wrench-double-pendulum.qmd": "7b4b23273e154ed6b2de5477ca250a08696474f82dbbf7296b828346cef52ad0",
+          "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
+          "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+          "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
+          "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
+          "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
         },
-        "review_commit": "0f547c4524c5bb9c1a7e28a58e2d42127fa2f33e",
-        "reviewed_on": "2026-09-13",
-        "reviewer": "codex-4058-20260913",
+        "review_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
+        "reviewed_on": "2026-10-03",
+        "reviewer": "codex-4855-20261003",
         "source_path": "articles/drift-components-wrench-double-pendulum.qmd"
       },
       "route": "/articles/drift-components-wrench-double-pendulum.html",
