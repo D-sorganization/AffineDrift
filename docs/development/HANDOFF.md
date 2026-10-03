@@ -1,3 +1,13 @@
+# Screw Reference — PR #4838 Publication Correction
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838 is open. Scientific source `85eb432d38fd099069ddf2cdd58f45baae055d19` and integration `a9b586006020d2db3bced68544379a1d2458245c` are pushed. CI's standalone Quarto-reference gate found the redundant same-level See Also heading prematurely ended Related Articles. This checkpoint `SELF` removes only that terminal callout wrapper; all scientific prose, equations, six links, original accepted report and tests remain unchanged. The exact byte transformation is verified in reports/technical-review/screw-reference-publication-amendment.json. It supersedes the article bytes for publication only; preserve the historical scientific acceptance record.
+
+Whole-source site gate passes after a reproduced failure. 63 affected tests pass in 60.96 seconds; render and four mobile/desktop light/dark browser cells pass with zero serious/critical axe findings. Source regression remains 6,686 passed and 79.37% coverage; integration previously passed 90 affected tests. Seven scientific findings, 99 pending source audits and whole-book consistency scope are unchanged. No new review credit.
+
+Next: commit this publication checkpoint with normal hooks, bind the exact current five evidence files (article, original tests/report/prior-route snapshot, publication amendment), update the PR delivery record and push. Inspect exact-head checks/reviews before central guarded merge and remote-main verification. Goal active; #4836 stays preparation only. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; session technical-review-20261003-screw-reference; lease/presence expires 03:27 UTC October 3. Four agy Flash helpers were adjudicated; two failed for insufficient credits. Do not repeatedly retry or buy credits.
+
+---
+
 # Screw Reference — Bound and Integrated Checkpoint
 
 Accepted source `85eb432d38fd099069ddf2cdd58f45baae055d19` is pushed with normal hooks. Integration checkpoint `SELF` preserves main `1edc38aaadd4e079b675df7093ee2d02d3c4ab69` (PR #4816 accessibility changes), the four frozen screw evidence files and 13 frozen radar/ideomotor files. Seven corrected findings are bound to that source; exactly one corpus row advances, leaving 99 source audits plus whole-book consistency. All 453 prior inventory findings are preserved. Historical companion review scope is unchanged.

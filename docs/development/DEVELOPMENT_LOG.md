@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4832 · Screw Reference Geometry and Dynamics
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
-- **PR:** not created
+- **PR:** #4838 (regular)
 - **Issue:** #4832; epic #4009 / corpus #4021
 - **Branch:** fix/screw-reference-rigor-4832
 - **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; source 85eb432d38fd099069ddf2cdd58f45baae055d19 passed 6,686 tests and normal commit/push hooks. Main 1edc38aaadd4e079b675df7093ee2d02d3c4ab69 integrated; 90 affected tests and four browser cells pass. Seven findings bound, 99 source audits remain.
+- **Last verified:** 2026-10-03; integration a9b586006020d2db3bced68544379a1d2458245c pushed. Publication-only Related Articles correction passes site gate, 63 affected tests and four browser cells; exact byte change proved. Full source regression: 6,686 passes, 79.37% coverage. Seven findings and 99 pending audits unchanged.
 - **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 99 source audits plus whole-book consistency remain.
-- **Next step:** Commit/push integration, open a regular PR, inspect checks/reviews and verify protected remote-main delivery.
+- **Next step:** Commit publication correction, bind five exact evidence files, push PR #4838 and verify checks plus protected remote-main delivery.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
