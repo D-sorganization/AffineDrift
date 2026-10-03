@@ -19,9 +19,22 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4842 · Impact Physics Chapter
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4844
+- **Issue:** #4842; epic #4009 / corpus #4021
+- **Branch:** fix/impact-chapter-rigor-4842
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_impact_chapter_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03; full checkpoint d03494a4034a310bf1b9974df6e32a6b5de4edea; 6757 tests, 79.54% coverage; 17 focused checks, static/publication gates and scoped PDF review pass; 68 combined pinned cases pass after parent amendment integration.
+- **Summary:** Correct collision geometry, impulse and gear scaling; separate empirical models and instrument inference with explicit PDF/bibliography carry-forward.
+- **Next step:** Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 binds eight evidence files and one corpus row; parent PR4843 correction and original main ancestry are integrated; regular impact PR4844 is open; deliver parent PR4843 first, then verify exact-head CI and guarded remote-main delivery.
+
 ### DL-#4836 · Passive Distributed Control Article
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **PR:** #4843; original #4841 merged
 - **Issue:** #4836; epic #4009 / corpus #4021
