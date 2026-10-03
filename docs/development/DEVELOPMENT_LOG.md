@@ -19,18 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4839 · Site Glossary Scientific Consistency
+### DL-#4836 · Passive Distributed Control Article
 
-- **State:** in_review
+- **State:** in_progress
 - **Owner:** codex
-- **PR:** Regular PR via branch lookup; number unknown at this commit.
-- **Issue:** #4839; epic #4009
-- **Branch:** fix/glossary-rigor-4839
-- **Paths:** data/glossary.yml, pages/glossary.qmd, tests/test_site_glossary.py
+- **PR:** pending
+- **Issue:** #4836; epic #4009 / corpus #4021
+- **Branch:** fix/passive-control-rigor-4836
+- **Paths:** articles/passive-distributed-control.qmd, src/affine_control/series_elastic_demo.py, tests/test_series_elastic_demo.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; source 06a610cc2fe5f5f5a28ed6641ed3cd5743575c68; 6736 tests/79.46% coverage, four browser cells, static/publication gates and normal source commit hooks pass.
-- **Summary:** Audit 72 glossary definitions and publication; see site-glossary-review.md.
-- **Next step:** Push normal integration checkpoint; use gh pr view fix/glossary-rigor-4839 for live PR, CI and delivery.
+- **Last verified:** 2026-10-03; integration 20db20ff13328574c4fd886d3f8fbd8ea2b39064; 6751 tests, 79.54% coverage; four browser cells and publication gates pass.
+- **Summary:** Reconcile mechanical topology and energy accounting; distinguish passive mechanics, controlled stability and empirical learning claims.
+- **Next step:** Open a regular PR for bound source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a; inspect exact-head CI, merge with the central guard and verify remote main.
+
 
 ### DL-#4828 · Historical Player Research Handoff
 

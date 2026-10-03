@@ -1,5 +1,18 @@
 # Development Log Archive — 2026
 
+### DL-#4839 · Site Glossary Scientific Consistency
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4840 (regular; merged)
+- **Issue:** #4839; epic #4009
+- **Branch:** fix/glossary-rigor-4839
+- **Paths:** data/glossary.yml, pages/glossary.qmd, tests/test_site_glossary.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03; merge ffed849156fc50ce836e9cc6ca85c19184a6c12d on remote main; CI37099199797 success at head15ba42. All seven current and 18 parent evidence files unchanged; peer PR4835 changes explicitly reconciled.
+- **Summary:** Audit 72 glossary definitions and publication; see site-glossary-review.md.
+- **Next step:** Delivered; site-glossary-remote-main-receipt.json. Lease and presence released.
+
 ### DL-#4832 · Screw Reference Geometry and Dynamics
 
 - **State:** shipped

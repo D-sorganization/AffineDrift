@@ -37,7 +37,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/nonlinear-control-insights.html` | `articles/nonlinear-control-insights.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian-bibliography.html` | `articles/null-space-constraint-jacobian-bibliography.qmd` | 9 |
 | `/articles/null-space-constraint-jacobian.html` | `articles/null-space-constraint-jacobian.qmd` | 9 |
-| `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 1 |
+| `/articles/passive-distributed-control.html` | `articles/passive-distributed-control.qmd` | 7 |
 | `/articles/proximal-distal-a-journey-through-the-swing.html` | `articles/proximal-distal-a-journey-through-the-swing.qmd` | 221 |
 | `/articles/proximal-distal-energy-transfer.html` | `articles/proximal-distal-energy-transfer.qmd` | 2 |
 | `/articles/proximal-distal-falsification-atlas.html` | `articles/proximal-distal-falsification-atlas.qmd` | 32 |
@@ -291,7 +291,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-6906c62a8783` | `/articles/nonlinear-control-insights.html` | Reviewed | — | None | `crit-sequencing-lie-bracket-fallacy` | 8 |
 | `ad-route-886e7598e714` | `/articles/null-space-constraint-jacobian-bibliography.html` | Reviewed | — | None | None | 1 |
 | `ad-route-c41aed74a51a` | `/articles/null-space-constraint-jacobian.html` | Reviewed | — | None | None | 6 |
-| `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 0 |
+| `ad-route-294204b8d0fb` | `/articles/passive-distributed-control.html` | Reviewed | — | None | None | 8 |
 | `ad-route-d9039af2e2e4` | `/articles/proximal-distal-a-journey-through-the-swing.html` | Reviewed | — | None | None | 217 |
 | `ad-route-dd2dbe6e5350` | `/articles/proximal-distal-energy-transfer.html` | Reviewed | — | None | `crit-control-causality-mechanical`, `crit-effective-plant-fallacy`, `crit-sequencing-lie-bracket-fallacy`, `crit-simulation-tautology`, `crit-stiffness-pulse-paradox`, `crit-ztcf-identifiability` | 0 |
 | `ad-route-43a827ed6d62` | `/articles/proximal-distal-falsification-atlas.html` | Reviewed | — | None | None | 7 |
