@@ -571,3 +571,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4849 | Correct launch-monitor validation preregistration, agreement/repeatability and sample-planning claims; preserve the accepted-pair gate and prior chapter evidence. |
 | 2026-10-03 | #4854 | Reconcile historical corpus review and delivery statuses; preserve evidence and longer-source continuation priorities. |
 | 2026-10-03 | #4851 | Reconcile musculoskeletal anatomical frames, ZXY chart extraction, spatial inertia and inference limits; publish the corrected Chapter 2 with independent checks and preserved prior evidence. |
+| 2026-10-03 | #4853 | Correct DCR acceleration-set geometry, endpoint projections and manufactured speed figures; preserve historical proof with plotted-value and render checks. |
