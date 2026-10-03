@@ -30,7 +30,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted db2c8a7918e7686fd51787e76702d7e7246495ea and verified on remote; all 89 post-acceptance checks passed.
 - **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
-- **Next step:** Combined integration of 094e804e223ceb718aadbbe5b91746ea35d70f01 and current-main policies passed 6678 tests/79.37% coverage, static/publication gates; 89 evidence checks pass and predecessor #4829 delivery is verified; finish checkpoint, reconcile delivered main ancestry, then push and remove hold for new-head CI and guarded delivery.
+- **Next step:** Combined integration of 094e804e223ceb718aadbbe5b91746ea35d70f01 and current-main policies passed 6678 tests/79.37% coverage, static/publication gates; 89 evidence checks pass; integration683907292 committed and delivered main53f75b291 reconciled with the identical tracked tree. Push ancestry/turnover checkpoint with normal hooks, then remove hold, verify new-head CI and guarded delivery.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
