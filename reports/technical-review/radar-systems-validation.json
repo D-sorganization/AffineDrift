@@ -1,0 +1,250 @@
+{
+  "issue": 4831,
+  "source_checkpoint": "SELF",
+  "source_accepted": true,
+  "source_audits_pending": 100,
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "passed": 6668,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 736.16,
+    "coverage_percent": 79.36,
+    "exit_code": 0,
+    "initial_attempt": "Stopped at 60-second timeout in existing test_review_evidence_survives_deployment_pruning while hashing evidence; identical full-command retry passed. No test, code or timeout change."
+  },
+  "affected_tests": {
+    "passed": 56,
+    "seconds": 4.16,
+    "exit_code": 0
+  },
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 898,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "content_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "titles_checked": 656,
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "scientific_preparation_helpers": 7,
+    "reporting_helpers": 1,
+    "scope": "Supplied-text only; lead adjudication, no canonical edit or publication authority"
+  },
+  "publication": "reports/technical-review/radar-systems-render-verification.json",
+  "scope": "Complete Chapter 4 source; partial primary readings; no sensor/human performance experiment or whole-book validation",
+  "post_acceptance": {
+    "passed": 89,
+    "seconds": 39.05,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/test_radar_systems_review.py tests/test_radar_screw_appendix_review.py tests/test_launch_monitor_estimation_rigor.py tests/test_launch_monitor_release_program_contract.py tests/test_reference_library_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60"
+  },
+  "integration_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "passed": 6678,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 823.14,
+    "coverage_percent": 79.37,
+    "exit_code": 0,
+    "checkpoint": "SELF",
+    "integration_parent": "094e804e223ceb718aadbbe5b91746ea35d70f01",
+    "upstream_main": "b5126fe7977c58b6466c8fcde6135f8b022513d4",
+    "log": "docs/development/technical-review/radar-integration-regression.txt"
+  },
+  "integration_static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 901,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "integration_content_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/radar-integration-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "integration_evidence": {
+    "passed": 89,
+    "seconds": 39.41,
+    "exit_code": 0,
+    "log": "docs/development/technical-review/radar-integration-evidence.txt"
+  }
+}

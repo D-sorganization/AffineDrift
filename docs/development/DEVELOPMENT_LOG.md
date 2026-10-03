@@ -19,44 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4821 · Counterfactual Intervention and Evidence Review
+### DL-#4831 · Radar Observability and Spin-Axis Review
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4824 (regular); held pending predecessor #4820 delivery
-- **Issue:** #4821; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** fix/counterfactual-rigor-4821
-- **Paths:** articles/proximal_distal_companion/chapters/ch11_counterfactual_scissors.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_counterfactual_review.py
+- **PR:** #4833 (regular; temporary hold pending predecessor #4829)
+- **Issue:** #4831; epic #4009 / corpus #4021
+- **Branch:** fix/radar-rigor-4831
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex, articles/Launch_Monitor_Technology_Review/references.bib, tests/test_radar_systems_review.py
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 full regression6636pass/29skip/187deselected/79.32%coverage; finalPDFcontents/boundaries pass; source c27c09f3b08725ba485faa81a63673484746d957; binding 53ef3b688b225be03232409a6fe737e7e5608eac verified remote;47postbinding checks pass; registration SELF. Previous checks: 2026-10-02 baseline dc1884f2084a1caaa1b135201e751e330afe24e2; four focused passes;12gates/655titles/894filequality;238pagePDF,53math,4browsercells pass;initial27affected passes plus2scratch-hygiene failures remediated with6passes; final29affected checks pass.
-- **Summary:** Eight issue findings distinguish complete-state intervention, nonlinear finite effects, geometry controls, strategy comparisons and human inference. Supplied-text Flash helpers support data arithmetic and test drafting; six helper outputs lead-adjudicated; source c27c09f3b08725ba485faa81a63673484746d957 accepted and eight findings bound with209prior findings preserved. 217total;102source audits plus whole-book consistency remain.
-- **Next step:** Verify predecessor #4820 delivery before reconciling and arming PR #4824.
-
-### DL-#4819 · Practical Synthesis Evidence and Causal Comparisons
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4820 (regular, combined Chapters18/28); parent #4818 verified on remote main
-- **Issue:** #4819; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** fix/synthesis-rigor-4819
-- **Paths:** articles/proximal_distal_companion/chapters/ch28_practical_synthesis.qmd, scripts/make_proximal_distal_companion_review_figures.py, tests/test_synthesis_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 682b709bc31459a882421062d2632282b78ed356 baseline;6632tests pass,29skip,187deselected,79.33%coverage;12gates,893Python files,655titles;237pagePDF,48math and4browserprofiles pass.
-- **Summary:** Lead accepted eight scientific decisions connecting wrench/power, hidden hand allocations, task velocity, feasible interventions, finite Pareto results, measurement limits and frontend scope. Five Flash outputs adjudicated. Source 1a7521e581bab0e6aa40df3f9bf0cb5ddafdee66 committed; eight findings bound with201 prior findings preserved,209total and103pending source audits. All44post-binding checks pass; source and binding c19ff2d993ea0a0a0f1cd8151e54b03df93d1869 are verified on remote topic with normal hooks.
-- **Next step:** Push PR4820 registration, remove temporary integration hold and arm guarded squash auto-merge; verify exact checked head and remote-main owned files after merge.
-
-### DL-#4817 · Forward Solver Guarantees and Validation
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4820 (regular, combined Chapters18/28); parent #4818 verified on remote main
-- **Issue:** #4817; epic #4009 / corpus #4021 / companion #4059
-- **Branch:** fix/synthesis-rigor-4819
-- **Paths:** articles/proximal_distal_companion/chapters/ch18_forward_model.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_forward_model_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline 33afa9d25b7f61113ff4a0928d2cef2c2b1da76e; five focused passes after one RED failure;234pagePDF/HTML/56math/4browserchecks,12gates,892filequality; broad6624pass/4metadata-hygienefail,40remediationpass,79.35%accumulatedcoverage; source e4540364c6a21b66df55eb2959beef4e5eed9a2d committed; eight findings bound;40postbinding checks pass; source and binding 66a5bed3773a8991978fd7df7c27066d5cf0b9dc verified on remote topic with normal hooks.
-- **Summary:** Correct fixed-mode KKT assumptions, multiplier units, projection/work ledgers, moving-boundary compatibility, input memory, counterfactuals, evidence scope and coordinate/contact comparisons. Six successful Flash outputs adjudicated. Eight findings bound to the accepted source;193 prior companion findings preserved,201total;104 source audits and whole-book consistency remain.
-- **Next step:** Push PR4820 registration, remove temporary integration hold and arm guarded squash auto-merge; verify exact checked head and remote-main owned files after merge.
+- **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted db2c8a7918e7686fd51787e76702d7e7246495ea and verified on remote; all 89 post-acceptance checks passed.
+- **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
+- **Next step:** Combined integration of 094e804e223ceb718aadbbe5b91746ea35d70f01 and current-main policies passed 6678 tests/79.37% coverage, static/publication gates; 89 evidence checks pass; integration683907292 committed and delivered main53f75b291 reconciled with the identical tracked tree. Push ancestry/turnover checkpoint with normal hooks, then remove hold, verify new-head CI and guarded delivery.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 

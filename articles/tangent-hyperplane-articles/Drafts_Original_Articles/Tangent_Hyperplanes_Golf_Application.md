@@ -4,6 +4,8 @@ description: "The golf swing is a quintessential example of a complex, high-spee
 subtitle: "Applying the Tangent Hyperplane Framework to Biomechanical Analysis"
 author: "Generated via NotebookLM"
 date: "2026-01-18"
+status: "deprecated"
+canonical: "/articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.html"
 format:
   html:
     toc: true
@@ -12,6 +14,16 @@ format:
     documentclass: article
 categories: [application, biomechanics, golf, instantaneous-linearization]
 ---
+
+<aside class="status-banner status-banner--deprecated">
+  <p class="status-banner__title">Status: <a href="../../pages/how-to-read.html#publication-states" class="status-badge status-badge--deprecated" title="Deprecated — Click to Read Publication State Definition"><svg class="status-badge__icon" aria-hidden="true" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><span class="status-badge__text">Deprecated</span></a></p>
+  <p class="status-banner__body">
+    This early golf-application manuscript is in the repository's draft archive and has been superseded by the canonical Tangent Hyperplanes Unified Thesis. It is preserved strictly for historical context, backwards compatibility, and audit history.
+  </p>
+  <p class="status-banner__body">
+    <strong>Canonical edition:</strong> Please consult the <a href="../Tangent_Hyperplanes_Unified_Thesis.html">Tangent Hyperplanes Full Reference Manuscript</a> for the authoritative derivation and current evidence bounds.
+  </p>
+</aside>
 
 # Introduction: The Golf Swing as a High-Speed Nonlinear System
 
