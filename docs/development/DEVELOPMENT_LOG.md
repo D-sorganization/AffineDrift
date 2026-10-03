@@ -21,12 +21,12 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4860 · Passive-Stabilization Chapter Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Branch:** fix/passive-stabilization-review
-- **PR:** pending
+- **PR:** #4862
 - **Summary:** Three source copies reviewed; conservative loaded-loop stiffness bridge, constitutive/rate conventions and citation scope corrected. Five text-only Flash helpers adjudicated; 38 focused, 204 content, 16 gates and 6805 full cases passed (93.24% source coverage). Seven print pages and ten web captures inspected. Complete current source/scoped presentation locally accepted.
-- **Next step:** Accepted source eff44ef6fa8ee11a37b2d4e82293b297f6745a95 binds eleven files, five findings and three original corpus rows. Parent #4859 is verified on remote main and integrated with the child tree unchanged. Deliver a regular PR and verify protected remote-main publication.
+- **Next step:** Accepted source eff44ef6fa8ee11a37b2d4e82293b297f6745a95 binds eleven files, five findings and three original corpus rows. Parent #4859 is verified on remote main and integrated with the child tree unchanged. Regular PR #4862 is open; 60 post-integration checks pass. Verify final-head CI and protected remote-main publication.
 
 ### DL-#4858 · Paired Optimal-Control Review
 
