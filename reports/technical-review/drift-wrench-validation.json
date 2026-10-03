@@ -1,0 +1,177 @@
+{
+  "issue": 4855,
+  "baseline": "c1d33e780b9a920cf500da2b3adbf2d250441a4b",
+  "status": "Accepted source bound in regular PR #4857; exact-head CI and protected remote-main delivery pending",
+  "tested_checkpoint": "cf3b81a6a293e81397261e032768c3d1a3afe442",
+  "red": {
+    "failed": 8,
+    "passed": 12,
+    "seconds": 3.25,
+    "scope": "Seven unsupported-wording contracts plus missing worked-example contract fail; existing mechanical formulas pass"
+  },
+  "focused_initial": {
+    "passed": 48,
+    "seconds": 2.94
+  },
+  "focused_final": {
+    "passed": 48,
+    "seconds": 4.18
+  },
+  "content_lint": {
+    "passed": 193,
+    "skipped": 4,
+    "deselected": 6817,
+    "seconds": 10.16
+  },
+  "full_initial": {
+    "passed": 6788,
+    "failed": 2,
+    "skipped": 29,
+    "deselected": 195,
+    "warnings": 51,
+    "seconds": 368.04,
+    "coverage_percent": 93.24,
+    "failures": [
+      "tests/test_root_hygiene.py::test_root_matches_allowlist_and_hygiene_script_passes",
+      "tests/test_root_hygiene.py::test_check_root_hygiene_cli_passes"
+    ],
+    "cause": "Prior pre-push packaging output build/dist/affinedrift.egg-info remained in the checkout. All were verified untracked and within this worktree, then moved intact to a named TEMP backup. No test or root allowlist was relaxed."
+  },
+  "hygiene_retry": {
+    "passed": 6,
+    "seconds": 0.85
+  },
+  "full_retry": {
+    "passed": 6790,
+    "failed": 0,
+    "skipped": 29,
+    "deselected": 195,
+    "warnings": 51,
+    "seconds": 380.84,
+    "coverage_percent": 93.24,
+    "log": "docs/development/technical-review/drift-wrench-full-retry.txt"
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_latex_environments.txt"
+    },
+    {
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_terminology.txt"
+    },
+    {
+      "check": ["generate_worked_examples", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-generate_worked_examples.txt"
+    },
+    {
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_tree_parity.txt"
+    },
+    {
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_latex_structure.txt"
+    },
+    {
+      "check": ["validate_frontmatter"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-validate_frontmatter.txt"
+    },
+    {
+      "check": ["validate_accessibility", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-validate_accessibility.txt"
+    },
+    {
+      "check": ["check_scaffolding_styling"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "check": ["check_bibliography_quality"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_bibliography_quality.txt"
+    },
+    {
+      "check": ["check_bibliography_cross_file"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "check": ["check_citation_resolution"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_citation_resolution.txt"
+    },
+    {
+      "check": ["check_qmd_citation_keys"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "check": ["check_title_case"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-check_title_case.txt"
+    },
+    {
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "check": ["generate_research_readiness_library", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/drift-wrench-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "precommit": "All normal hooks passed at the tested checkpoint after formatting-only fixes to four records; final binding hooks remain separate.",
+  "preservation": {
+    "protected_files_exact": 46,
+    "other_route_identities_preserved": 250,
+    "render_source_files_verified": 2,
+    "article_acceptance": "Complete current source locally accepted; final source binding and delivery pending"
+  },
+  "render": "reports/technical-review/drift-wrench-render-verification.json",
+  "delegation": "Nine successful text-only agy CLI Gemini 3.8 Flash helpers through PR drafting. Lead rejected framing suggesting that the already valid power equations were replaced.",
+  "delivery": "pending",
+  "accepted_source_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
+  "dependent_binding_checks": {
+    "passed": 71,
+    "seconds": 32.12,
+    "log": "docs/development/technical-review/drift-wrench-bound-dependent.txt"
+  },
+  "corpus_update": {
+    "new_complete_original_sources": 1,
+    "existing_DCR_delivery_rows_refreshed": 1,
+    "other_rows_unchanged": 405,
+    "changed_rows": [
+      "articles/drift-control-ratio.qmd",
+      "articles/drift-components-wrench-double-pendulum.qmd"
+    ]
+  },
+  "pull_request": "https://github.com/D-sorganization/AffineDrift/pull/4857",
+  "draft": false
+}

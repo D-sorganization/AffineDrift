@@ -1,0 +1,56 @@
+{
+  "issue": 4855,
+  "status": "Completed manufactured symbolic/numerical preparation; mathematical model evidence, not golfer measurements",
+  "symbolic_checks": [
+    "Mass matrix from COM kinetic energy equals existing article formula",
+    "Velocity-bias and gravity from Euler-Lagrange equal existing article formula",
+    "Distal Newton-Euler COM moment balance",
+    "Distal energy derivative equals joint force power plus absolute moment power",
+    "Whole-system energy derivative equals relative joint motor power"
+  ],
+  "parameters_and_state": {
+    "m1": 2.5,
+    "m2": 0.4,
+    "l1": 0.35,
+    "c1": 0.175,
+    "c2": 0.5,
+    "I1": 0.025,
+    "I2": 0.03,
+    "g": 9.81,
+    "q1": 0.6,
+    "q2": -0.8,
+    "v1": 1.7,
+    "v2": -2.3
+  },
+  "examples": [
+    {
+      "u_Nm": [0, 0],
+      "acceleration_rad_s2": [-25.83874236978267, 39.64683564760817],
+      "F21_N": [-0.4931688129721956, 1.7372954570319845],
+      "force_power_W": 0.34148300592884995,
+      "distal_moment_power_W": -0.0,
+      "distal_energy_rate_W": 0.34148300592885206,
+      "whole_system_input_power_W": 0.0
+    },
+    {
+      "u_Nm": [2, 0],
+      "acceleration_rad_s2": [-10.717772132967553, 18.853236956116508],
+      "F21_N": [0.14210301322045016, 3.158002801670627],
+      "force_power_W": 1.1307529884787406,
+      "distal_moment_power_W": -0.0,
+      "distal_energy_rate_W": 1.130752988478741,
+      "whole_system_input_power_W": 3.4
+    },
+    {
+      "u_Nm": [0, 2],
+      "acceleration_rad_s2": [-46.63234106127433, 83.62576341901081],
+      "F21_N": [1.6488267538102488, -0.8276801649145202],
+      "force_power_W": 0.5316277800067082,
+      "distal_moment_power_W": -1.1999999999999997,
+      "distal_energy_rate_W": -0.6683722199932882,
+      "whole_system_input_power_W": -4.6
+    }
+  ],
+  "scope": "Fixed base, planar rigid bodies, ideal pin joints, upward-positive inertial y, uniform gravity, no external endpoint load or damping. The zero-input and driven cases are evaluated at the same instantaneous state; these are not independently evolved trajectories.",
+  "reproduction": "Article COM/energy derivation; existing operators in build_affine_structure_figures.py and retained chapter checks; tests/test_drift_wrench_review.py independently differentiates distal energy and checks force/moment/power and displayed values. Original arbitrary-parameter SymPy preparation is retained in local QA drift_wrench_independent_preparation.py.txt."
+}
