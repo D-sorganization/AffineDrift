@@ -1,3 +1,15 @@
+# Degrees-of-Freedom Chapter — Bound Acceptance #4845
+
+Complete Chapter 1 and its bounded landing summary are accepted at source `8160bb8ba7a981f39b7a6bbbde13d21f15740f32`. Eleven evidence files are frozen in `reports/technical-review/dof-chapter-delivery.json`; seven findings join the motor-control book route while four earlier findings retain their original scientific facts and verification commits. The corpus has exactly 96 original sources plus whole-book consistency remaining. No other chapter or historical notebook gains acceptance.
+
+Full tests/ regression at `f5eb47370611412a429de6e0875837f77bd3db00` passes 6737 cases with 93.24% coverage, using the existing CI 120-second timeout. The earlier 60-second timeout and isolated 40-second pass remain recorded. There are 149 focused checks, twelve publication gates and scoped PDF/browser evidence. The PDF has 72 pages; 54 later body pages retain normalized text and 44 existing bibliography entries survive. Publisher metadata confirms the existing Latash title.
+
+Next: create a regular PR from `fix/dof-chapter-rigor-4845`, inspect exact-head CI and review, use the central guarded merge workflow, then verify source bytes on remote main and release the issue lease. Keep source evidence frozen. The last two agy Gemini 3.8 Flash calls failed for insufficient credits; no fresh helper output is claimed. The goal remains active.
+
+Prior impact/passive work and turnover PR #4843 are delivered on baseline `66c166693f2bba2120d9d3b9af59a27648ba69f9`. Older pending prose below is historical.
+
+---
+
 # Verified Combined Delivery — Impact and Passive Control
 
 PR #4844 merged reviewed head `35ebde7ff820b1ce9ce91cc453cf7b7d28acf611` to remote main as `d907add46b30ecedfc866f36ff5ab2c337bdfa16` on 2026-10-03 at 09:38 UTC. It carried both accepted impact source `b90b86376c9eebbc9d07be754b254ee914fdfff2` and passive-control amendment `c6a12064ef6da2c24c3cc80fb399d25b87e4e47e`. The entire delivered tree matches the reviewed head; all 39 frozen evidence files and 26 changed paths match. Receipts are `reports/technical-review/impact-chapter-remote-main-receipt.json` and `reports/technical-review/passive-control-amendment-remote-main-receipt.json`.

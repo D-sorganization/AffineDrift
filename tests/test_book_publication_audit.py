@@ -76,9 +76,13 @@ def test_book_audit_inventory_replaces_all_six_deferments() -> None:
 def test_blockers_are_closed_and_every_route_has_adversarial_evidence() -> None:
     allowed = {"corrected", "publication_blocked"}
     prior = _json(ROOT / "reports/technical-review/shallow-wide-prior-reviews.json")
+    dof_prior = _json(ROOT / "reports/technical-review/dof-chapter-prior-review.json")
+    prior_records = (
+        prior["book_records"] + dof_prior["records"]["data/trust/book_publication_audit.json"]
+    )
     historical = {
         (record["route"], finding["finding_id"]): finding
-        for record in prior["book_records"]
+        for record in prior_records
         for finding in record["findings"]
     }
     for route, record in _routes(_json(AUDIT)).items():
@@ -103,7 +107,9 @@ def test_followup_findings_keep_the_original_book_audit_identity() -> None:
     route = _routes(audit)["/books/human-motor-control.html"]
     followups = [f for f in route["findings"] if f["issue_url"].endswith("/issues/4733")]
     assert len(followups) == 3
-    assert all(f["verification_commit"] == route["source_revision"] for f in followups)
+    prior = _json(ROOT / "reports/technical-review/dof-chapter-prior-review.json")
+    original = prior["records"]["data/trust/book_publication_audit.json"][0]
+    assert all(f["verification_commit"] == original["source_revision"] for f in followups)
     validate_audit(audit, SCHEMA, ROOT)
 
 
