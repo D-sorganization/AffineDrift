@@ -19,6 +19,18 @@ key-takeaways:
   - "The golf swing is formulated as a control-affine mechanical system with autonomous drift."
   - "Counterfactual baselines isolate the mechanical consequences of passive dynamics versus active torque."
   - "Serves as an exploratory research manifesto and philosophical framing rather than peer-reviewed clinical dogma."
+caveats:
+  evidence-level: "Opinion & Theoretical Synthesis"
+  establishes:
+    - "Mathematical formulation of the full golf swing as a control-affine mechanical system."
+    - "Definition of Zero Torque Counterfactual (ZTCF), Zero Velocity Counterfactual (ZVCF), and Drift-Control Ratio (DCR)."
+  does-not-establish:
+    - "Individual muscle forces, biological recruitment strategies, or metabolic energy consumption."
+    - "Clinical or coaching prescriptive dogma without subject-specific empirical validation."
+    - "Aerodynamic clubhead drag, ground-shoe compliant shear interaction, or impact deformation."
+  open-critiques:
+    - "[CRIT-001: Model-Conditioned Attribution Limitations](../critiques/index.html)"
+  next-gate: "Simscape multi-body torque qualification and C3D markerless capture benchmarking."
 changes:
   - date: "2026-09-08"
     description: "Standardized cross-article category metadata and link targets (#4302)."
@@ -65,11 +77,6 @@ The Drifter Manifesto establishes the control-affine framework, introduces key c
 - **Established (textbook):** Control-affine system formulation $\dot{x} = f(x) + G(x)u$ [@isidori1995nonlinear; @nijmeijer1990nonlinear; @khalil2002nonlinear]; Lagrangian derivation of rigid-body multibody dynamics [@goldstein2002classical; @lanczos2012variational; @arnold1989mathematical]; tangent space linearization.
 - **Proposed golf application:** Applying the drift/input decomposition to golf biomechanics; the "Frozen Strategy" assumption for biological impedance; defining ZTCF and ZVCF as diagnostic tools for swing analysis.
 - **Terminology:** The terms "drift" and "input" are standard in nonlinear control. "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' naming for these constructions in the golf context.
-:::
-
-::: {.callout-note}
-#### Scope & Exclusions
-This model captures the mechanical structure of coupled rigid bodies (golfer's limbs and torso) and a flexible shaft connected at the grip. It includes inertia, gravity, elastic and damping forces from shaft bending, and joint torques as declared inputs. It explicitly excludes aerodynamic drag, compliant or changing foot contact, marker dynamics, muscle activation delays, and impacts. Ideal fixed-base support reactions are retained through the constraints even when eliminated from the independent-coordinate equations. Terms retained in the chosen equations can be separated into autonomous and declared-input components; what is excluded lies outside the model's scope and must not be attributed by the decomposition.
 :::
 
 {{< include ../_includes/control-affine-attribution-boundary.qmd >}}

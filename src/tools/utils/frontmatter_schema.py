@@ -94,6 +94,32 @@ def normalize_rel_path(path: Path | str) -> str:
         return p.as_posix()
 
 
+def _check_content_constraints(fm: dict[str, Any], norm_path: str) -> list[str]:
+    """Validate summary word count, takeaways count, and caveats structure."""
+    errors: list[str] = []
+    summary_plain = fm.get("summary-plain")
+    if summary_plain and isinstance(summary_plain, str):
+        words = re.findall(r"\b\w+\b", summary_plain)
+        if len(words) > 60:
+            errors.append(
+                f"{norm_path}: 'summary-plain' exceeds 60 words (found {len(words)} words)"
+            )
+
+    takeaways = fm.get("key-takeaways")
+    if takeaways is not None:
+        if not isinstance(takeaways, list) or not (3 <= len(takeaways) <= 5):
+            errors.append(f"{norm_path}: 'key-takeaways' must contain between 3 and 5 items")
+
+    caveats = fm.get("caveats")
+    if caveats is not None:
+        from src.tools.caveats_block import validate_caveats_dict
+
+        for ce in validate_caveats_dict(caveats):
+            errors.append(f"{norm_path}: {ce}")
+
+    return errors
+
+
 def validate_article_frontmatter(
     fm: dict[str, Any],
     rel_path: str,
@@ -134,19 +160,5 @@ def validate_article_frontmatter(
         field = ".".join(str(p) for p in err.path) if err.path else "root"
         errors.append(f"{norm_path}: schema error at '{field}': {err.message}")
 
-    # Additional constraint: summary-plain word count <= 60 words
-    summary_plain = fm.get("summary-plain")
-    if summary_plain and isinstance(summary_plain, str):
-        words = re.findall(r"\b\w+\b", summary_plain)
-        if len(words) > 60:
-            errors.append(
-                f"{norm_path}: 'summary-plain' exceeds 60 words (found {len(words)} words)"
-            )
-
-    # Additional constraint: key-takeaways must have between 3 and 5 items
-    takeaways = fm.get("key-takeaways")
-    if takeaways is not None:
-        if not isinstance(takeaways, list) or not (3 <= len(takeaways) <= 5):
-            errors.append(f"{norm_path}: 'key-takeaways' must contain between 3 and 5 items")
-
+    errors.extend(_check_content_constraints(fm, norm_path))
     return errors

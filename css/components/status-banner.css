@@ -36,6 +36,7 @@
 .status-banner--success { border-left-color: var(--color-success); }
 .status-banner--warning { border-left-color: var(--color-warning); }
 .status-banner--exploratory { border-left-color: var(--color-primary-light); }
+.status-banner--deprecated { border-left-color: var(--color-error, #c82333); }
 
 /* Inline status pill — a small chip-like label next to a heading.
    Replaces inline ``style="display: inline-block; padding…"`` blobs. */
@@ -65,6 +66,18 @@ a.status-pill:focus {
   color: var(--color-link);
 }
 .status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }
+.status-pill--deprecated  {
+  background: #fff1f2;
+  color: #9f1239;
+}
+
+body.quarto-dark .status-pill--deprecated,
+[data-theme="dark"] .status-pill--deprecated,
+[data-bs-theme="dark"] .status-pill--deprecated {
+  background-color: rgba(159, 18, 57, 0.25);
+  color: #fca5a5;
+}
+
 .status-banner__title a {
   color: inherit;
   text-decoration: underline;

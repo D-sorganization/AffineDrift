@@ -30,20 +30,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-02
 - **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted db2c8a7918e7686fd51787e76702d7e7246495ea and verified on remote; all 89 post-acceptance checks passed.
 - **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
-- **Next step:** Push PR registration checkpoint, verify predecessor #4829 delivery, then reconcile ancestry and verify guarded delivery.
-
-### DL-#4825 · Ideomotor Prediction and Action Review
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4829 (regular); pushed at ca4a23487; CI 37075895860 in progress; guarded merge armed
-- **Issue:** #4825; epic #4009 / corpus #4021
-- **Branch:** fix/ideomotor-rigor-4825
-- **Paths:** articles/ideomotor-theory-and-predictive-brain.qmd, src/affine_control/ideomotor_demo.py, tests/test_ideomotor_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline 4cf785eccbfff52e9372b1f49a5d040d517e5f33; 19 RED/GREEN cases; full regression 6655 passed/29 skipped/187 deselected/79.36% coverage; static and publication checks pass; accepted source f488f45f3254fa40f98bedceb5edaa11280bb70c; six findings bound; 61 post-binding checks pass; binding 8f42bde9155478397dc13910362a6e98555a1ec7 verified on remote; registration SELF.
-- **Summary:** Full article draft separates prediction/task errors, dynamics/actuation, prior/likelihood precision, free-energy identity and action selection. Repaired zero-action Euler example with a bounded constant-torque search and typed nominal DOP853 predictor. Seven Flash outputs adjudicated. Complete article and bounded publication accepted; six findings bound; primary-reading limits recorded. 101 source audits and whole-book consistency remain.
-- **Next step:** Verify CI and actual remote-main delivery of ca4a23487; integration 6660 tests and 61 evidence checks already pass, normal push hooks passed.
+- **Next step:** Combined integration of 094e804e223ceb718aadbbe5b91746ea35d70f01 and current-main policies passed 6678 tests/79.37% coverage, static/publication gates; 89 evidence checks pass and predecessor #4829 delivery is verified; finish checkpoint, reconcile delivered main ancestry, then push and remove hold for new-head CI and guarded delivery.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 

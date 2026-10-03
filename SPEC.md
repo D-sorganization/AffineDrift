@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.296                                          |
+| **Spec Version**        | 1.0.298                                          |
 | **Last Spec Update**    | 2026-10-02                                       |
 
 ## 2. Purpose & Mission
@@ -226,6 +226,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 | ---------- | ----- | ---------- |
 | 2026-10-02 | #4829 | Correct ideomotor prediction, precision and action arguments; replace the zero-action Euler example with a tested finite-horizon torque search and bind six scoped technical findings. |
 | 2026-10-02 | #4824 | Distinguish complete-state counterfactual interventions, nonlinear finite effects, geometry controls, archived numerical evidence and human inference in Chapter 11; verify worked examples and publication. |
+| 2026-10-02 | #4822 | Formulate content deprecation and archive policy in CONTRIBUTING.md (WEB-13.9), add CSS styling for deprecated status banners and pills, retrofit early tangent-space drafts with metadata and notices, and add automated verification suite. |
 | 2026-10-02 | #4820 | Qualify constrained forward-model assumptions, state memory and work accounting in Chapter 18; connect wrench, energy, causal and evidence reasoning in Chapter 28 and correct both schematic figures. |
 | 2026-10-02 | #4818 | Correct Lagrangian energy and force accounting, flexible inertia, input levels, constrained reactions, moving-boundary work and counterfactual signs; verify nine examples and repair article panel and mobile title presentation. |
 | 2026-10-02 | #4814 | Correct Chapter 22 event-state definitions, actuator history, finite-study scope, phase-work accounting and prospective causal timing; verify manufactured examples and regenerate the schematic threshold figure. |
@@ -554,4 +555,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4506 | Define and validate article front-matter schema (WEB-03.1) in schemas/article-front-matter-v1.schema.json, with core-page validation and allowlist burn-down. |
 | 2026-10-02 | #4787 | Fix dark theme color contrast violations across axe matrix, adjust text tokens and component styles, update accessibility statement, and re-enable --axe fail in CI (#4787). |
 | 2026-10-02 | #4587 | Write canonical Editorial Style Guide in docs/development/editorial-style-guide.md covering voice, scope, standardized caveat block, glossary tooltips, layer readability targets, analogy rules, banned vocabulary list, and author checklist (WEB-12.1). |
+| 2026-10-02 | #4830 | Implement standard "What This Shows / What It Does Not Show" caveat block (WEB-03.4 #4509) with Lua filter, schema validation, print styles, and core-page rollout. |
 | 2026-10-02 | #4833 | Correct Chapter 4 radar phase/spin ambiguity, conditional axis inference, device modes and face-estimator dependencies; retain bibliography and rebuild the reviewed PDF (#4831). |

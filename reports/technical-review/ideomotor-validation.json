@@ -154,5 +154,44 @@
     "seconds": 31.26,
     "exit_code": 0,
     "command": "py -3.12 -X utf8 -m pytest tests/test_ideomotor_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60"
+  },
+  "integration_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "commit": "802e9adc55698d6db4fd926456a1514e2966991d",
+    "passed": 6660,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 1112.72,
+    "coverage_percent": 79.36,
+    "exit_code": 0,
+    "scope": "Reconciled main ancestry plus editorial guide PR4827; accepted scientific files unchanged"
+  },
+  "integration_evidence": {
+    "passed": 61,
+    "seconds": 60.26,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/test_ideomotor_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60",
+    "initial_attempt": "59 passed, 2 root-hygiene failures from untracked affinedrift.egg-info created by packaging tests; artifact preserved in local QA, identical command then passed."
+  },
+  "policy_integration_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "passed": 6670,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 1049.41,
+    "coverage_percent": 79.37,
+    "exit_code": 0,
+    "upstream_main": "b5126fe7977c58b6466c8fcde6135f8b022513d4",
+    "checkpoint": "SELF",
+    "log": "docs/development/technical-review/ideomotor-policy-regression.txt"
+  },
+  "policy_integration_evidence": {
+    "passed": 61,
+    "seconds": 72.21,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/test_ideomotor_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60",
+    "log": "docs/development/technical-review/ideomotor-policy-evidence.txt"
   }
 }
