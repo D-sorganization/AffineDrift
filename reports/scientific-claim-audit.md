@@ -109,7 +109,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | `articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | `articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | `articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | `articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd` | 1 |
+| `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | `articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd` | 11 |
 | `/articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.html` | `articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.html` | `articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | `articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd` | 1 |
@@ -363,7 +363,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-b47203d9a15a` | `/articles/The_Physics_of_Golf/quarto/ch07_constraint_forces.html` | Reviewed | — | None | None | 0 |
 | `ad-route-c3f8f28d515e` | `/articles/The_Physics_of_Golf/quarto/ch08_triple_pendulum.html` | Reviewed | — | None | None | 0 |
 | `ad-route-084d047d81cc` | `/articles/The_Physics_of_Golf/quarto/ch09_parallel_mechanisms.html` | Reviewed | — | None | None | 0 |
-| `ad-route-f860cf1740b2` | `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | Reviewed | — | None | None | 0 |
+| `ad-route-f860cf1740b2` | `/articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.html` | Reviewed | — | None | None | 5 |
 | `ad-route-f711355c9899` | `/articles/The_Physics_of_Golf/quarto/ch10_energy_transfer.html` | Reviewed | — | None | None | 0 |
 | `ad-route-40d07bf3aa25` | `/articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.html` | Reviewed | — | None | None | 0 |
 | `ad-route-d7bbf52529cb` | `/articles/The_Physics_of_Golf/quarto/ch12_fascia.html` | Reviewed | — | None | None | 0 |
