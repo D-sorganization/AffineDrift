@@ -1,6 +1,6 @@
 {
   "issue": 4850,
-  "status": "provisional; full regression pending",
+  "status": "Provisional; initial full run has one Windows encoding failure; UTF-8-focused retry passes; final full retry pending",
   "baseline": "eaae683256ec0924c43307427a94c9ff61d83318",
   "focused": {
     "passed": 51,
@@ -19,7 +19,7 @@
   "coverage": null,
   "full_regression": null,
   "scientific_scope": "Manufactured arithmetic and convention validation; not biological or instrument validation.",
-  "delegation": "Six successful text-only agy Gemini 3.8 Flash helpers; lead adjudication documented in review.",
+  "delegation": "Seven successful agy CLI Gemini 3.8 Flash helpers; lead corrections and rejected claims documented in review.",
   "publication_gates": [
     {
       "check": ["check_latex_environments.py"],
@@ -95,5 +95,26 @@
       "exit_code": 0,
       "log": "docs/development/technical-review/msk-conventions-gate-check_qmd_citation_keys.py.log"
     }
-  ]
+  ],
+  "initial_full_regression": {
+    "source_commit": "b7c4334554be0208a41f9a9b6a7b4613791638da",
+    "passed": 6764,
+    "failed": 1,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 51,
+    "seconds": 739.77,
+    "coverage_percent": 93.24,
+    "failure": "Existing test_minify_js_all_canonical_assets_produce_valid_syntax writes U+26A1 through cp1252 in NamedTemporaryFile; no production or test code change for this failure."
+  },
+  "encoding_retry": {
+    "passed": 7,
+    "seconds": 3.6,
+    "environment": "PYTHONUTF8=1 and Python -X utf8; same test module"
+  },
+  "static": "Ruff/Black100 and strict new-test mypy pass; actual configured CI mypy targets pass across 98 source files; code quality and 665 title checks pass. Two initial mypy invocations used wrong targets; retained in QA and not counted as validation.",
+  "audit_focused": {
+    "passed": 54,
+    "seconds": 18.25
+  }
 }

@@ -28,7 +28,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/msk-conventions-rigor
 - **Paths:** articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex, articles/The_Geometry_of_Motion/Volume_III/main.pdf, tests/test_msk_conventions_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 — baseline `eaae683256ec0924c43307427a94c9ff61d83318`; complete chapter corrected; 51 focused plus 2 explicit content checks pass; native PDF and 51-page carry checks pass; full regression and acceptance pending.
+- **Last verified:** 2026-10-03 — baseline `eaae683256ec0924c43307427a94c9ff61d83318`; complete chapter corrected; 51 focused plus 2 explicit content checks pass; native PDF and 51-page carry checks pass; initial full run 6764 passed/1 Windows encoding failure at b7c433455; seven minifier tests pass under UTF-8; bounded landing/browser checks pass; full UTF-8 retry and acceptance pending.
 - **Summary:** Reconcile anatomical frames, declared rotation coordinates, inertia origin/order and inference limits.
 - **Next step:** Commit provisional evidence, run full regression with frozen sources, bind acceptance and deliver a regular PR.
 

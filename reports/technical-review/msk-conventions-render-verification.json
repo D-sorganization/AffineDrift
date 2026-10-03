@@ -1,11 +1,13 @@
 {
   "issue": 4850,
-  "scope": "Chapter 2 PDF only; book landing is unchanged; no browser or deployed-site verification.",
+  "scope": "Chapter 2 PDF and bounded book landing in local working-tree preview; no live deployment or whole-volume acceptance.",
   "source_sha256": {
     "articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex": "e2f91a040835be3fd1f8aaa6356cf4a33812dda4be6ad902a4ce5fba946af63c",
     "articles/The_Geometry_of_Motion/Volume_III/main.pdf": "6755e5831c59a896fbeecd0d7869d5adadb9499b2c31f92897c866c1388fb645",
     "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "cada46f74d7bdd3ca9b1c9eafd1a391d7374c836179bdc1f5123b839eed2612f",
-    "tests/test_msk_conventions_review.py": "769dfbc115abd49bab7217df2d08d51cedf5645d718df871810073af3cb79639"
+    "tests/test_msk_conventions_review.py": "769dfbc115abd49bab7217df2d08d51cedf5645d718df871810073af3cb79639",
+    "books/biomechanics-biology-to-systems.qmd": "c48027452c0d9d45a71432ab4bb2e47c6543d4ed5c5cb9f34989a83b62ddc8f0",
+    "tests/test_book_publication_audit.py": "daf251aa164b179a66f914c528f3008ae130a882001d025be1f63bc051e22c24"
   },
   "pdf": {
     "page_count": 69,
@@ -62,5 +64,281 @@
     "native_build": "pdflatex, bibtex, repeated pdflatex; final layout pass exit zero",
     "limitations": "Untouched chapters retain layout warnings, including the clipped Chapter 1 exercise heading on physical page 17; no whole-volume layout acceptance.",
     "layout_changes": "Explicit chapter-title line break; unbreakable global-frame definition; separated frame/axis/origin labels and darker green axes."
+  },
+  "browser": {
+    "schema_version": "affinedrift/public-site-verification/v1",
+    "base_url": "http://127.0.0.1:18050",
+    "manifest_page_count": 1,
+    "evidence_count": 4,
+    "expected_evidence_count": 4,
+    "passed": true,
+    "failure_count": 0,
+    "navigation_retry_policy": {
+      "max_retries": 0,
+      "maximum_attempts": 1,
+      "base_delay_ms": 500,
+      "backoff": "exponential",
+      "retryable_status_codes": [502, 503, 504]
+    },
+    "axe_policy": {
+      "mode": "fail",
+      "impacts": ["serious", "critical"],
+      "scanned_route_count": 1,
+      "scanned_cell_count": 4,
+      "routes_with_violations": [],
+      "violation_count": 0
+    },
+    "navigation_attempt_count": 4,
+    "retried_evidence_count": 0,
+    "transient_response_count": 0,
+    "exhausted_retry_count": 0,
+    "results": [
+      {
+        "route": "/books/biomechanics-biology-to-systems.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\msk-browser-images\\books__biomechanics-biology-to-systems__mobile__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume III: Biomechanics - Biology to Systems"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 198.25,
+            "bottom": 368.25,
+            "width": 224.1875,
+            "height": 170
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 9377,
+          "canonical": "https://affinedrift.com/books/biomechanics-biology-to-systems.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/books/biomechanics-biology-to-systems.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 844,
+          "id": "mobile",
+          "width": 390
+        },
+        "theme": "dark",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\msk-browser-images\\books__biomechanics-biology-to-systems__mobile__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume III: Biomechanics - Biology to Systems"],
+          "primaryHeadingRect": {
+            "left": 82.90625,
+            "right": 307.09375,
+            "top": 198.25,
+            "bottom": 368.25,
+            "width": 224.1875,
+            "height": 170
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 9377,
+          "canonical": "https://affinedrift.com/books/biomechanics-biology-to-systems.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/books/biomechanics-biology-to-systems.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "light",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\msk-browser-images\\books__biomechanics-biology-to-systems__desktop__light.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume III: Biomechanics - Biology to Systems"],
+          "primaryHeadingRect": {
+            "left": 475,
+            "right": 931,
+            "top": 156.046875,
+            "bottom": 246.046875,
+            "width": 456,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 9377,
+          "canonical": "https://affinedrift.com/books/biomechanics-biology-to-systems.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      },
+      {
+        "route": "/books/biomechanics-biology-to-systems.html",
+        "pageKind": "article",
+        "viewport": {
+          "height": 900,
+          "id": "desktop",
+          "width": 1440
+        },
+        "theme": "dark",
+        "axe": true,
+        "status": 200,
+        "passed": true,
+        "failures": [],
+        "screenshot": "docs\\development\\technical-review\\msk-browser-images\\books__biomechanics-biology-to-systems__desktop__dark.png",
+        "inspection": {
+          "failures": [],
+          "visibleH1s": ["Volume III: Biomechanics - Biology to Systems"],
+          "primaryHeadingRect": {
+            "left": 475,
+            "right": 931,
+            "top": 156.046875,
+            "bottom": 246.046875,
+            "width": 456,
+            "height": 90
+          },
+          "overflow": 0,
+          "overflowElements": [],
+          "mainTextLength": 9377,
+          "canonical": "https://affinedrift.com/books/biomechanics-biology-to-systems.html"
+        },
+        "navigation_attempts": [
+          {
+            "attempt": 1,
+            "status": 200,
+            "error": null
+          }
+        ],
+        "navigation_retried": false,
+        "axe_violations": []
+      }
+    ]
+  },
+  "landing_links": [
+    {
+      "width": 390,
+      "theme": "light",
+      "text": "Chapter 2: Musculoskeletal Modeling Conventions\n\nExplains how anatomical calibration and frame definitions affect reported joint motion and inertial parameters. A declared ZXY example makes angle signs, branches and singularities explicit. Point-transport identities check spatial inertia and connect motion to kinetic energy and generalized loads.\n\nFor a golf swing, consistent conventions help distinguish changes of coordinates from changes in movement. They do not identify individual muscle forces or a neural control strategy. The chapter relates frame choices to the uncertainty in body-segment parameters and to the assumptions needed for biological inference.\n\nVerification boundary: the printed code and manufactured examples check the declared mathematical conventions. Clinical side/sign mapping requires separate anatomical calibration. The notebook below remains scaffolded at its historical revision; it is not the corrected chapter\u00e2\u20ac\u2122s executable verification.\n\nSource\n.tex\n(opens in a new tab)\n View Notebook on GitHub\n(opens in a new tab)",
+      "links": [
+        {
+          "text": "",
+          "url": "http://127.0.0.1:18050/books/biomechanics-biology-to-systems.html#book3-ch2"
+        },
+        {
+          "text": "Source .tex (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/b7c4334554be0208a41f9a9b6a7b4613791638da/articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex"
+        },
+        {
+          "text": "View Notebook on GitHub (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol3_ch2_musculoskeletal_modeling_conventions.ipynb"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "text": "Chapter 2: Musculoskeletal Modeling Conventions\n\nExplains how anatomical calibration and frame definitions affect reported joint motion and inertial parameters. A declared ZXY example makes angle signs, branches and singularities explicit. Point-transport identities check spatial inertia and connect motion to kinetic energy and generalized loads.\n\nFor a golf swing, consistent conventions help distinguish changes of coordinates from changes in movement. They do not identify individual muscle forces or a neural control strategy. The chapter relates frame choices to the uncertainty in body-segment parameters and to the assumptions needed for biological inference.\n\nVerification boundary: the printed code and manufactured examples check the declared mathematical conventions. Clinical side/sign mapping requires separate anatomical calibration. The notebook below remains scaffolded at its historical revision; it is not the corrected chapter\u00e2\u20ac\u2122s executable verification.\n\nSource\n.tex\n(opens in a new tab)\n View Notebook on GitHub\n(opens in a new tab)",
+      "links": [
+        {
+          "text": "",
+          "url": "http://127.0.0.1:18050/books/biomechanics-biology-to-systems.html#book3-ch2"
+        },
+        {
+          "text": "Source .tex (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/b7c4334554be0208a41f9a9b6a7b4613791638da/articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex"
+        },
+        {
+          "text": "View Notebook on GitHub (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol3_ch2_musculoskeletal_modeling_conventions.ipynb"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "text": "Chapter 2: Musculoskeletal Modeling Conventions\n\nExplains how anatomical calibration and frame definitions affect reported joint motion and inertial parameters. A declared ZXY example makes angle signs, branches and singularities explicit. Point-transport identities check spatial inertia and connect motion to kinetic energy and generalized loads.\n\nFor a golf swing, consistent conventions help distinguish changes of coordinates from changes in movement. They do not identify individual muscle forces or a neural control strategy. The chapter relates frame choices to the uncertainty in body-segment parameters and to the assumptions needed for biological inference.\n\nVerification boundary: the printed code and manufactured examples check the declared mathematical conventions. Clinical side/sign mapping requires separate anatomical calibration. The notebook below remains scaffolded at its historical revision; it is not the corrected chapter\u00e2\u20ac\u2122s executable verification.\n\nSource\n.tex\n(opens in a new tab)\n View Notebook on GitHub\n(opens in a new tab)",
+      "links": [
+        {
+          "text": "",
+          "url": "http://127.0.0.1:18050/books/biomechanics-biology-to-systems.html#book3-ch2"
+        },
+        {
+          "text": "Source .tex (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/b7c4334554be0208a41f9a9b6a7b4613791638da/articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex"
+        },
+        {
+          "text": "View Notebook on GitHub (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol3_ch2_musculoskeletal_modeling_conventions.ipynb"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "text": "Chapter 2: Musculoskeletal Modeling Conventions\n\nExplains how anatomical calibration and frame definitions affect reported joint motion and inertial parameters. A declared ZXY example makes angle signs, branches and singularities explicit. Point-transport identities check spatial inertia and connect motion to kinetic energy and generalized loads.\n\nFor a golf swing, consistent conventions help distinguish changes of coordinates from changes in movement. They do not identify individual muscle forces or a neural control strategy. The chapter relates frame choices to the uncertainty in body-segment parameters and to the assumptions needed for biological inference.\n\nVerification boundary: the printed code and manufactured examples check the declared mathematical conventions. Clinical side/sign mapping requires separate anatomical calibration. The notebook below remains scaffolded at its historical revision; it is not the corrected chapter\u00e2\u20ac\u2122s executable verification.\n\nSource\n.tex\n(opens in a new tab)\n View Notebook on GitHub\n(opens in a new tab)",
+      "links": [
+        {
+          "text": "",
+          "url": "http://127.0.0.1:18050/books/biomechanics-biology-to-systems.html#book3-ch2"
+        },
+        {
+          "text": "Source .tex (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/b7c4334554be0208a41f9a9b6a7b4613791638da/articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex"
+        },
+        {
+          "text": "View Notebook on GitHub (opens in a new tab)",
+          "url": "https://github.com/D-sorganization/AffineDrift/blob/f287ce6ab2cd26079bbace6b8f362a1f0a729acd/notebooks/geometry_of_motion/vol3_ch2_musculoskeletal_modeling_conventions.ipynb"
+        }
+      ]
+    }
+  ],
+  "preview_fixture": "One-route local manifest supplied search endpoint. Used existing primary-checkout Playwright 1.62.1 dependencies read-only via NODE_PATH; initial missing-module calls retained. Quarto-generated tracked stylesheet change was inspected and restored to its previously clean HEAD bytes. No product CSS change.",
+  "link_scope": "Three current source/PDF links pin corrected checkpoint b7c4334554be0208a41f9a9b6a7b4613791638da; old notebook pin and Chapters 1/3 accepted-source links preserved. Link values inspected, not followed; no remote availability claim before push.",
+  "manual_visual_review": {
+    "cells": ["390-light", "390-dark", "1440-light", "1440-dark"],
+    "result": "Chapter text, headings and source/notebook labels are legible; no horizontal content overflow. Supplemental 390x900 viewport captures distinguish actual controls from element-screenshot cropping.",
+    "remaining_global_issue": "Existing fixed floating controls cover portions of lower text lines in the mobile viewport; those lines can be exposed by scrolling. The automatic matrix reports no serious/critical axe violation but does not establish an unobstructed whole-page reading experience. Retain for the site-wide publication/layout pass; no global CSS change or clean whole-site visual claim.",
+    "screenshots": "msk-chapter-settled-* and msk-viewport-390-* in local QA"
   }
 }
