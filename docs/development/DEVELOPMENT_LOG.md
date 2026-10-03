@@ -21,16 +21,17 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4845 · Degrees-of-Freedom Chapter
 
-- **State:** in_progress
+- **State:** shipped
 - **Owner:** codex
-- **PR:** pending
+- **PR:** #4846
 - **Issue:** #4845; epic #4009 / corpus #4021
 - **Branch:** fix/dof-chapter-rigor-4845
 - **Paths:** articles/The_Geometry_of_Motion/Volume_IV/chapters/ch01_dof_problem.tex, articles/The_Geometry_of_Motion/Volume_IV/main.pdf, books/human-motor-control.qmd, src/affine_control/ucm_analysis.py, tests/test_ucm_analysis.py, tests/test_dof_chapter_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 (`f5eb47370611412a429de6e0875837f77bd3db00`); 6737 tests, 93.24% coverage; 149 focused checks, static/content gates and bounded PDF/browser inspection pass.
+- **Last verified:** 2026-10-03 (`5917ebf0ae1f2421b37c0a9ec73bde4c8966daf2`); 11 frozen files, 23 owned paths and 55 prior dependencies verified on remote main; CI 37120237483 and textbook compilation passed.
 - **Summary:** Separate task geometry, physical feasibility and neural inference; preserve historical review scope when refreshing shared publication dependencies.
-- **Next step:** Accepted source 8160bb8ba7a981f39b7a6bbbde13d21f15740f32 is bound to 11 files and one corpus row; 149 bound checks pass. Open a regular PR, then verify CI and guarded remote-main delivery.
+- **Next step:** Deliver the documentation-only turnover PR through the central merge guard.
+- **Shipped:** 2026-10-03
 
 ### DL-#4842 · Impact Physics Chapter
 
