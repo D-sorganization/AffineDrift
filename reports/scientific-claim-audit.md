@@ -77,7 +77,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Geometry_of_Motion/quarto/ch01_foundations.html` | `articles/The_Geometry_of_Motion/quarto/ch01_foundations.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch02_variational.html` | `articles/The_Geometry_of_Motion/quarto/ch02_variational.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch03_superposition.html` | `articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd` | 1 |
-| `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd` | 13 |
+| `/articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.html` | `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd` | 15 |
 | `/articles/The_Geometry_of_Motion/quarto/ch04_contraction.html` | `articles/The_Geometry_of_Motion/quarto/ch04_contraction.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.html` | `articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd` | 1 |
 | `/articles/The_Geometry_of_Motion/quarto/ch06_duality.html` | `articles/The_Geometry_of_Motion/quarto/ch06_duality.qmd` | 2 |
@@ -131,7 +131,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch28_impact_collision.html` | `articles/The_Physics_of_Golf/quarto/ch28_impact_collision.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.html` | `articles/The_Physics_of_Golf/quarto/ch29_joint_damping_friction.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.html` | `articles/The_Physics_of_Golf/quarto/ch30_kinetic_chain.qmd` | 1 |
-| `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd` | 12 |
+| `/articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html` | `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd` | 14 |
 | `/articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.html` | `articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | `articles/The_Physics_of_Golf/quarto/ch32_putting.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/glossary.html` | `articles/The_Physics_of_Golf/quarto/glossary.qmd` | 1 |
@@ -144,12 +144,12 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/upstreamdrift-educational-integration.html` | `articles/upstreamdrift-educational-integration.qmd` | 1 |
 | `/articles/wrist-universal-joint.html` | `articles/wrist-universal-joint.qmd` | 2 |
 | `/articles/zero-torque-counterfactual.html` | `articles/zero-torque-counterfactual.qmd` | 12 |
-| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 24 |
-| `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 6 |
-| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 22 |
-| `/books/index.html` | `books/index.qmd` | 5 |
-| `/books/roadmap.html` | `books/roadmap.qmd` | 5 |
-| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 11 |
+| `/books/biomechanics-biology-to-systems.html` | `books/biomechanics-biology-to-systems.qmd` | 31 |
+| `/books/control-is-motion.html` | `books/control-is-motion.qmd` | 8 |
+| `/books/human-motor-control.html` | `books/human-motor-control.qmd` | 24 |
+| `/books/index.html` | `books/index.qmd` | 7 |
+| `/books/roadmap.html` | `books/roadmap.qmd` | 7 |
+| `/books/tangent-space-methods.html` | `books/tangent-space-methods.qmd` | 13 |
 | `/critiques/01_muscle_physiology.html` | `critiques/01_muscle_physiology.md` | 1 |
 | `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
 | `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |
@@ -398,7 +398,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-e2a1a24bc0fe` | `/articles/upstreamdrift-educational-integration.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e710f35e4163` | `/articles/wrist-universal-joint.html` | Reviewed | — | None | `crit-hard-constraint-fallacy`, `crit-validation-dimensionality-gap` | 0 |
 | `ad-route-3588d4a28331` | `/articles/zero-torque-counterfactual.html` | Reviewed | — | None | `crit-passive-overshoot-artifact`, `crit-static-fallacy-zvcf`, `crit-ztcf-identifiability` | 6 |
-| `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 10 |
+| `ad-route-b8c49a2f2553` | `/books/biomechanics-biology-to-systems.html` | Reviewed | — | None | None | 18 |
 | `ad-route-7e95a23b1ade` | `/books/control-is-motion.html` | Reviewed | — | None | None | 1 |
 | `ad-route-80659b17b74b` | `/books/human-motor-control.html` | Reviewed | — | None | None | 11 |
 | `ad-route-c25ee250631d` | `/books/index.html` | Reviewed | — | None | None | 1 |
