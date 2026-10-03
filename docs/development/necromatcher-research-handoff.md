@@ -253,3 +253,8 @@ rerun retained the same offline filtering and passed **6,685 tests**, with
 directory. The failed 4,638-pass attempt is not counted as a completed
 full-suite pass. Host Python 3.13.5 remains distinct from configured 3.12; no
 separate Python 3.12 validation is claimed.
+
+
+## Committed Review Delivery
+
+Committed delivery: ready-for-review [PR #4834](https://github.com/D-sorganization/AffineDrift/pull/4834) targets main. Implementation commit `b10ecec30ea75d0d447e0b0642378e8578da2eb0` is pushed and independently remote-verified; all normal commit and push hooks passed. The earlier actual local receipt retains its historical working-tree fingerprint/checkout base and is not relabeled as execution at this later commit. No merge, automatic merge, public deployment or scientific qualification is claimed.
