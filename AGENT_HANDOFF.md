@@ -344,13 +344,13 @@ A seventh delivery helper drafted a read-only parent receipt verifier; lead corr
 
 ## Preserved Earlier Checkpoint
 
-# Current Technical Review Handoff
+# Chapter 13 Preserved Review Handoff — Issue #4811
 
 Chapter 8 PR #4810 is verified on remote main. Chapter 13 source and eight finding bindings are pushed; regular PR #4812 is open. Registration checkpoint SELF awaits push and guarded auto-merge. Continue from [the canonical handoff](docs/development/HANDOFF.md). The goal remains active with 107 source audits and whole-book consistency outstanding.
 
 ## Preserved Earlier Checkpoint
 
-# Current Technical Review Handoff
+# Chapter 8 Preserved Review Handoff — Issue #4809
 
 Chapter 21 PR #4808 is verified on remote main. Chapter 8 regular PR #4810 is open; source, bindings and parent reconciliation are pushed. Registration checkpoint SELF awaits push and guarded arming; protected delivery remains pending. Continue from [the canonical handoff](docs/development/HANDOFF.md).
 
