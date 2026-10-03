@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** not started
 - **Paths:** articles/drift-control-ratio.qmd, articles/figures/core_theory/fig_dcr_vector_decomposition.svg, articles/figures/core_theory/fig_dcr_reachability_tubes.svg, articles/figures/core_theory/fig_dcr_swing_phases.svg
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 — source diff after renamed path inspected; later physiological trend description contradicts retained nonmonotone manufactured counterexample. Full current article/SVG/dependency reading and correction remain pending.
+- **Last verified:** 2026-10-03 — complete current article, three includes, generator and tests read; three original SVGs visually inspected and plotted coordinates checked; six Flash helpers adjudicated. Bounded figure contracts prepared; no canonical edits or new acceptance.
 - **Summary:** Reconcile later figures and long descriptions with drift, input-set, observation and finite-time assumptions; preserve valid prior review.
-- **Next step:** After #4852 delivery, check claim, post lease and read current full source/figures before bounded correction. Delegate routine inventory through agy Flash.
+- **Next step:** After #4852 delivery, check claim and post lease, then write failing plotted-value checks and implement the three bounded figure contracts. Preserve prior proof identities and inspect regenerated article/figures.
 
 ### DL-#4852 · Corpus Status Reconciliation
 
