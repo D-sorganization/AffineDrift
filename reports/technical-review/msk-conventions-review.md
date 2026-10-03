@@ -1,6 +1,6 @@
 # Musculoskeletal Conventions Review
 
-Issue #4850 belongs to epic #4009 and the original-source corpus #4021. Scope is the complete Geometry of Motion Volume III Chapter 2, its printed code and exercises, the regenerated Volume III PDF, two bibliography additions, and a bounded book-landing update. This checkpoint is provisional pending full regression and source binding. It does not certify all of Volume III, anatomical measurements, clinical signs for either limb, or a deployed web page.
+Issue #4850 belongs to epic #4009 and the original-source corpus #4021. Scope is the complete Geometry of Motion Volume III Chapter 2, its printed code and exercises, the regenerated Volume III PDF, two bibliography additions, and a bounded book-landing update. The complete chapter and bounded landing are lead-accepted after the local checks recorded in `msk-conventions-validation.json`; source binding and remote delivery remain separate. It does not certify all of Volume III, anatomical measurements, clinical signs for either limb, or a deployed web page.
 
 ## Scientific Findings and Decisions
 
@@ -32,7 +32,7 @@ The new executable manuscript tests first exposed eleven failures against the or
 
 The 51 focused mechanics/biology checks passed; two separately marked convention content checks were then explicitly selected. Native PDF compilation passed. The new 69-page PDF retains all 29 previously printed bibliography entries, adds four rendered references (two existing keys newly cited and two new entries), and preserves 51 other body pages under a conservative text/citation comparison. Exact source and prior-evidence checks accompany that comparison; extraction alone does not certify visual equivalence. The final seven chapter pages (physical 18-24) and three bibliography pages (67-69) are inspected separately. Whole-book layout and consistency remain pending, including the pre-existing clipped Chapter 1 exercise heading on physical page 17.
 
-Seven agy CLI Gemini 3.8 Flash helpers supplied mechanical inventory, citation inventory, a draft test module, editorial notes, a carry-forward checklist, a turnover consistency check and a landing-summary draft. Lead review rejected unsupported macro and axis assertions, repaired the test draft and adopted conservative PDF comparison. Helpers did not certify scientific acceptance or receive canonical write/PR authority. Current helpers succeeded; earlier credit failures belong to earlier checkpoints.
+Eight agy CLI Gemini 3.8 Flash helpers supplied mechanical inventory, citation inventory, a draft test module, editorial notes, a carry-forward checklist, a turnover consistency check, a landing-summary draft and a PR draft. Lead review rejected unsupported macro and axis assertions, repaired the test draft and adopted conservative PDF comparison. Helpers did not certify scientific acceptance or receive canonical write/PR authority. Current helpers succeeded; earlier credit failures belong to earlier checkpoints.
 
 Full regression, final acceptance and delivery evidence belong in the companion validation/delivery records. Shared PDF/bibliography digest refreshes preserve earlier finding identities and scientific verification revisions in `msk-conventions-prior-review.json`; no earlier scientific review is silently redated.
 

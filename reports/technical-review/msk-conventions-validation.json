@@ -1,6 +1,6 @@
 {
   "issue": 4850,
-  "status": "Provisional; initial full run has one Windows encoding failure; UTF-8-focused retry passes; final full retry pending",
+  "status": "Complete Chapter 2 and bounded landing lead-accepted locally; source binding and remote delivery pending",
   "baseline": "eaae683256ec0924c43307427a94c9ff61d83318",
   "focused": {
     "passed": 51,
@@ -16,10 +16,20 @@
     "note": "Confirmed red run after fixing the draft parser; original code/inertia fail independently. Earlier parser-error run is not scientific evidence."
   },
   "new_cases": 16,
-  "coverage": null,
-  "full_regression": null,
+  "coverage": 93.24,
+  "full_regression": {
+    "source_commit": "387de1628d5f9a67e35a12652cdb43ddfc0592ef",
+    "xml_tests": 6794,
+    "skipped": 29,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 607.848,
+    "pytest_summary": "6765 passed, 29 skipped, 187 deselected, 51 warnings in 608.05s (0:10:08)",
+    "coverage_percent": 93.24,
+    "command": "PYTHONUTF8=1 python -X utf8 -m pytest tests/ --cov=src --cov-report=xml --timeout=120; default markers and fresh TEMP basetemp"
+  },
   "scientific_scope": "Manufactured arithmetic and convention validation; not biological or instrument validation.",
-  "delegation": "Seven successful agy CLI Gemini 3.8 Flash helpers; lead corrections and rejected claims documented in review.",
+  "delegation": "Eight successful agy CLI Gemini 3.8 Flash helpers; supplied-text inventories, test/editorial/checklist/landing/PR drafting. Lead adjudication retains scientific and delivery authority.",
   "publication_gates": [
     {
       "check": ["check_latex_environments.py"],
@@ -116,5 +126,30 @@
   "audit_focused": {
     "passed": 54,
     "seconds": 18.25
-  }
+  },
+  "source_acceptance": true,
+  "full_regression_owned_hashes": {
+    "AGENT_HANDOFF.md": "480bfac32791e53715b3e6713c8651cd8ac849ac507eedfa200f636b2430e218",
+    "articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex": "e2f91a040835be3fd1f8aaa6356cf4a33812dda4be6ad902a4ce5fba946af63c",
+    "articles/The_Geometry_of_Motion/Volume_III/main.pdf": "6755e5831c59a896fbeecd0d7869d5adadb9499b2c31f92897c866c1388fb645",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "cada46f74d7bdd3ca9b1c9eafd1a391d7374c836179bdc1f5123b839eed2612f",
+    "books/biomechanics-biology-to-systems.qmd": "c48027452c0d9d45a71432ab4bb2e47c6543d4ed5c5cb9f34989a83b62ddc8f0",
+    "data/trust/book_publication_audit.json": "b533b6faad22cc045c779d76c5fa20cb277bd6ec574b981662844fc8a00d5a03",
+    "data/trust/claim_audit_inventory.json": "7502c898317b802fc338f1fa2defd802e2ec72e09ff6d6481b1d5752ffb2de09",
+    "data/trust/generated/claim_audit_report.json": "d8bf73d996410ce7b2d16c100d2d0f68d51f267e125d7a45a3ac5ea8fdd50e7c",
+    "docs/development/DEVELOPMENT_LOG.md": "918c5126ec469ba2989134c44c1b46aced7d8fe3c6b10b52903faeef7b31f4e8",
+    "docs/development/HANDOFF.md": "480bfac32791e53715b3e6713c8651cd8ac849ac507eedfa200f636b2430e218",
+    "reports/book-publication-audit.md": "c587b1e78bf34e97d576077cf616a44a7421b7e57edc417a5424ebcfa0f4b196",
+    "reports/technical-review/msk-conventions-dependency-carry-forward.json": "4a090f6e1da69cbfd8701e184b85bdcfcf3404cd97899a5f98eecfa6c2196b11",
+    "reports/technical-review/msk-conventions-prior-review.json": "568b7ec2b91aa87e499600381124994fa15a43b41ce55a675cd022e38ed87249",
+    "reports/technical-review/msk-conventions-render-verification.json": "6d8b01d7a185413ecd517af7f1640929d40ddde15e387e0a3099865c2929b109",
+    "reports/technical-review/msk-conventions-review.md": "92df5b6df2b11b989396b0c5c897daae701e0a6fd7edff5af9bcfee9622289ce",
+    "reports/technical-review/msk-conventions-validation.json": "f6477435b615dafd7d5a0e27639c5ec244de93d5efa2218c9d44166cd6b78b10",
+    "reports/technical-review/validation-program-delivery.json": "105fcf79d6cf81a4f7a9aed8f383789b86a847160d8b8ea2c2c21758110758b8",
+    "reports/technical-review/validation-program-remote-main-receipt.json": "0d1a9054195540be6a0ae5b56c2850ba5133d394c352fee6f1e5256d1d6100dd",
+    "tests/test_book_publication_audit.py": "daf251aa164b179a66f914c528f3008ae130a882001d025be1f63bc051e22c24",
+    "tests/test_msk_conventions_review.py": "769dfbc115abd49bab7217df2d08d51cedf5645d718df871810073af3cb79639"
+  },
+  "corpus_count_note": "The previous roll-forward total 95 is not a reconciled index total: before this acceptance there are 93 exact indexed-pending rows and 15 targeted-only rows, plus other partial/whole-book statuses. This acceptance changes one row, leaving 92 indexed-pending; no exact remaining-total claim.",
+  "scope": "Repository tests/ with default markers; content-lint cases separately selected. No separate benchmark, full-site browser, live deployment or physical-measurement acceptance."
 }
