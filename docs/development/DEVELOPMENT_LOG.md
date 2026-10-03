@@ -19,18 +19,31 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4836 · Passive Distributed Control Article
+### DL-#4842 · Impact Physics Chapter
 
 - **State:** in_progress
 - **Owner:** codex
 - **PR:** pending
+- **Issue:** #4842; epic #4009 / corpus #4021
+- **Branch:** fix/impact-chapter-rigor-4842
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_impact_chapter_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03; baseline 4d5c21bcb389dda237d810d50de257dcb84d015a; 17 selected impact/radar checks including content lint pass; static/publication/title/freshness gates and PDF/dependency review pass; full regression and source acceptance pending.
+- **Summary:** Correct collision geometry, impulse and gear scaling; separate empirical models and instrument inference with explicit PDF/bibliography carry-forward.
+- **Next step:** Commit the provisional reviewed publication, run full regression without concurrent edits, bind exact source acceptance and open a regular PR.
+
+### DL-#4836 · Passive Distributed Control Article
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4841
 - **Issue:** #4836; epic #4009 / corpus #4021
 - **Branch:** fix/passive-control-rigor-4836
 - **Paths:** articles/passive-distributed-control.qmd, src/affine_control/series_elastic_demo.py, tests/test_series_elastic_demo.py
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03; integration 20db20ff13328574c4fd886d3f8fbd8ea2b39064; 6751 tests, 79.54% coverage; four browser cells and publication gates pass.
 - **Summary:** Reconcile mechanical topology and energy accounting; distinguish passive mechanics, controlled stability and empirical learning claims.
-- **Next step:** Open a regular PR for bound source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a; inspect exact-head CI, merge with the central guard and verify remote main.
+- **Next step:** Regular PR #4841 is pushed for bound source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a; inspect exact-head CI, merge with the central guard and verify remote main.
 
 
 ### DL-#4828 · Historical Player Research Handoff

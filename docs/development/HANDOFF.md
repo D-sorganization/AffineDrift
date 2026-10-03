@@ -1,3 +1,17 @@
+# Impact Physics Chapter — Active Review #4842
+
+Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-impact-chapter-review; branch fix/impact-chapter-rigor-4842; baseline 4d5c21bcb389dda237d810d50de257dcb84d015a. Issue lease/presence session technical-review-20261003-impact-chapter expires approximately 09:17 UTC on 2026-10-03. The incomplete central inbox does not establish absence of peers.
+
+The complete original Chapter 3 and bounded primary readings were reviewed. Draft corrections, a research dossier and six new regression cases exist. Three tests reproduced old source defects; three numerical cases passed after a mistyped expected angle in the initial test was corrected. The revised source plus existing impact geometry tests pass eight cases (one existing content-lint deselection). No source acceptance or corpus credit yet: 98 originals remain pending, plus separate whole-book consistency work.
+
+The bibliography author/journal correction and planned PDF rebuild are explicit dependencies of the older radar acceptance. Historical hashes and the thirty parent files that must remain unchanged are recorded in reports/technical-review/impact-chapter-dependency-carry-forward.json. Neither chapter has a website claim-inventory route; preserve that ledger rather than inventing one. The rebuilt 86-page PDF has six inspected impact pages and thirteen displays, no chapter overfull boxes and all 88 bibliography entries. Radar source/text carry-forward and thirty parent hashes pass. Seventeen selected impact/radar checks including content lint, all static/publication/title checks and claim freshness pass. Next: commit this provisional checkpoint, run the full isolated regression on frozen files, then pin acceptance and open a regular PR. Do not edit tracked files or render during the run.
+
+Passive-control regular PR https://github.com/D-sorganization/AffineDrift/pull/4841 is safely pushed at 4d5c21bcb389dda237d810d50de257dcb84d015a with central guarded auto-merge armed. Its source is d1215cb17315d0df2e579d2b3b45f50f6cf1d34a, eight findings preserve all prior 468. Full Python regression: 6751 passed, 29 skipped, 187 deselected, 79.54% coverage; 51 binding tests, 15 Jest cases and four bounded browser cells pass. At 07:54 UTC, site build passed and required browser CI was running; other principal checks passed. Merge/remote-main verification and lease release remain pending; do not claim delivery yet. Poll no more often than every five minutes.
+
+agy CLI Gemini 3.8 Flash remains unavailable after two insufficient-credit failures; earlier helpers were adjudicated. No new helper evidence, retry loop or credit purchase. Use Python3.12, Black100, Ruff check, isolated pytest --basetemp, normal hooks and regular PRs. Never edit tracked source or render during tests/hooks in the same worktree. Goal active.
+
+---
+
 # Passive Control Article — Active Review #4836
 
 Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-passive-control-review; branch fix/passive-control-rigor-4836; baseline 503fb4fe6e686fcdcc13a8ac56c5039d313fbff6. Issue lease technical-review-20261003-passive-control and presence renewed through 2026-10-03T08:44 UTC. Full original article and bounded primary notes read; this standalone source is distinct from paired Chapter 27 review #4336. Source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a is accepted locally with eight bound findings, preserving all 468 prior findings. Exactly one original-corpus row advances; 98 original sources and separate whole-book consistency work remain.
