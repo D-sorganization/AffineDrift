@@ -35,3 +35,7 @@ Inventory inspection clarified the dependency mechanism: neither this LaTeX chap
 ## Initial Regression Evidence
 
 The first six-case run failed the existing diagram arithmetic, the extra gear factor and the universal-instrument/smash claims as intended. Two independent impulse/unit checks passed. A fourth failure was a mistyped expected inclined-plane angle in the new test (2.895299 rather than the independently calculated 2.8953337877 degrees); that expected value was corrected before editing the chapter. Preserve `impact-chapter-red.txt` as the initial record, not as evidence that all four failures belonged to the old source.
+
+## Final Review Checkpoint
+
+The complete revised chapter, six numerical/content regressions and all thirteen displayed equations have been reviewed. The corrected red run reproduced three source defects; the final selected suite passes all 17 impact/radar cases including content lint. Full regression at `d03494a4034a310bf1b9974df6e32a6b5de4edea` passes 6757 cases with 79.54% coverage. Static, publication, title and claim-freshness gates pass. All six chapter pages, the radar boundary pages and corrected bibliography entry were visually inspected. The immutable report and dependency records define the bounded acceptance; other chapters and device performance are not newly validated. The opening notes above record preparation-time status.

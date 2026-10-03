@@ -10,6 +10,8 @@ Passive-control regular PR https://github.com/D-sorganization/AffineDrift/pull/4
 
 agy CLI Gemini 3.8 Flash remains unavailable after two insufficient-credit failures; earlier helpers were adjudicated. No new helper evidence, retry loop or credit purchase. Use Python3.12, Black100, Ruff check, isolated pytest --basetemp, normal hooks and regular PRs. Never edit tracked source or render during tests/hooks in the same worktree. Goal active.
 
+Final local acceptance: full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passes 6757 cases with 79.54% coverage. Source/PDF review is complete; pin the accepted source in a separate delivery record and advance only the Chapter 3 corpus row (98 to 97 originals pending). Regular PR, remote checks/merge and delivery verification remain pending.
+
 ---
 
 # Passive Control Article — Active Review #4836

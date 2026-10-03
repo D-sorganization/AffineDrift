@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/impact-chapter-rigor-4842
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/03-impact-physics.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_impact_chapter_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; baseline 4d5c21bcb389dda237d810d50de257dcb84d015a; 17 selected impact/radar checks including content lint pass; static/publication/title/freshness gates and PDF/dependency review pass; full regression and source acceptance pending.
+- **Last verified:** 2026-10-03; full checkpoint d03494a4034a310bf1b9974df6e32a6b5de4edea; 6757 tests, 79.54% coverage; 17 focused checks, static/publication gates and scoped PDF review pass.
 - **Summary:** Correct collision geometry, impulse and gear scaling; separate empirical models and instrument inference with explicit PDF/bibliography carry-forward.
-- **Next step:** Commit the provisional reviewed publication, run full regression without concurrent edits, bind exact source acceptance and open a regular PR.
+- **Next step:** Commit accepted source, bind exact evidence and one corpus row, open a regular PR, then verify exact-head CI and guarded remote-main delivery.
 
 ### DL-#4836 · Passive Distributed Control Article
 

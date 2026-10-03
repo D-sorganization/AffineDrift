@@ -1,6 +1,6 @@
 # Impact Physics Chapter Review
 
-Issue #4842; epic #4009 / corpus #4021. Baseline `4d5c21bcb389dda237d810d50de257dcb84d015a`. The lead read the complete original and revised Chapter 3, its six new regression cases and the bounded dependencies. This is a validation checkpoint: complete source acceptance awaits full regression and a pinned source commit. No corpus credit is assigned yet.
+Issue #4842; epic #4009 / corpus #4021. Baseline `4d5c21bcb389dda237d810d50de257dcb84d015a`. The lead read the complete original and revised Chapter 3, its six new regression cases and the bounded dependencies. Complete Chapter 3 source and bounded PDF publication are lead-accepted on 2026-10-03. Source checkpoint SELF; the separate delivery receipt will bind exact evidence hashes. One original-corpus row is eligible for complete-review credit; whole-book consistency remains separate.
 
 ## Scientific Corrections
 
@@ -24,3 +24,5 @@ The first test run contained three reproduced source failures and one mistaken e
 The 86-page PDF includes six revised chapter pages and thirteen display equations, all visually reviewed. Overlapping labels found in the first render were corrected. All 88 bibliography records compile; the four corrected authors are visible. Existing layout warnings elsewhere remain outside this acceptance. The radar source and thirty retained parent evidence files are byte-exact; its rendered text matches after explicit normalization. Historical radar receipts remain immutable; the new dependency record identifies the changed bibliography/PDF hashes rather than silently updating old evidence.
 
 Neither LaTeX chapter has a website claim route. All 251 routes and 476 findings remain unchanged. Only this chapter is under complete review; no new whole-book, full-site deployment or neighboring-chapter acceptance is claimed. Routine agy Gemini 3.8 Flash calls were unavailable because of insufficient credits; no new helper evidence is claimed.
+
+Full regression at checkpoint `d03494a4034a310bf1b9974df6e32a6b5de4edea` passed 6757 cases, with 29 skips, 187 existing-marker deselections and 60 warnings in 899.96 seconds. Coverage is 79.54%. Source files remained frozen during the run. This is the tested checkpoint, not an assertion that later documentation/binding commits ran the entire suite again.
