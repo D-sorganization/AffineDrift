@@ -19,6 +19,32 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4853 · DCR Figure Inference Regression
+
+- **State:** proposed
+- **Owner:** codex
+- **Issue:** #4853; epic #4009 / corpus #4021
+- **PR:** none
+- **Branch:** not started
+- **Paths:** articles/drift-control-ratio.qmd, articles/figures/core_theory/fig_dcr_vector_decomposition.svg, articles/figures/core_theory/fig_dcr_reachability_tubes.svg, articles/figures/core_theory/fig_dcr_swing_phases.svg
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — source diff after renamed path inspected; later physiological trend description contradicts retained nonmonotone manufactured counterexample. Full current article/SVG/dependency reading and correction remain pending.
+- **Summary:** Reconcile later figures and long descriptions with drift, input-set, observation and finite-time assumptions; preserve valid prior review.
+- **Next step:** After #4852 delivery, check claim, post lease and read current full source/figures before bounded correction. Delegate routine inventory through agy Flash.
+
+### DL-#4852 · Corpus Status Reconciliation
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4852; epic #4009 / corpus #4021
+- **PR:** not yet opened; waiting for parent #4851
+- **Branch:** docs/corpus-reconcile-4852
+- **Paths:** docs/development/technical-review/corpus-review-index.csv, reports/technical-review/corpus-status-reconciliation.md, reports/technical-review/corpus-status-reconciliation.json, AGENT_HANDOFF.md
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — 13 historical source/evidence comparisons and 22 retained mechanics tests pass; seven corpus rows corrected (five scope updates and two renamed paths); all 407 current paths exist; 57 document/ledger checks pass; four agy Flash inventories adjudicated; no new scientific acceptance.
+- **Summary:** Distinguish stale bookkeeping from unfinished source review; preserve historical proof and prioritize the longer remaining originals.
+- **Next step:** Verify #4851 remote delivery, save receipt, move unpublished metadata work onto remote main, run document/ledger checks, open a regular PR and deliver through the central guard.
+
 ### DL-#4850 · Musculoskeletal Modeling Conventions
 
 - **State:** in_review
