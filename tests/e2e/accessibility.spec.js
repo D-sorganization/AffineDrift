@@ -88,8 +88,14 @@ async function findContrastFailures(page) {
             if (stop) gradientStops.push(stop);
           }
         }
+        if (gradientStops.length > 0 || color?.a === 1) break;
       }
-      let solid = { r: 255, g: 255, b: 255, a: 1 };
+      const isDark =
+        document.documentElement.getAttribute("data-theme") === "dark" ||
+        document.documentElement.getAttribute("data-bs-theme") === "dark";
+      let solid = isDark
+        ? { r: 13, g: 13, b: 26, a: 1 }
+        : { r: 255, g: 255, b: 255, a: 1 };
       for (const layer of layers.reverse()) solid = blend(layer, solid);
       return gradientStops.length
         ? gradientStops.map((stop) => blend(stop, solid))
@@ -100,6 +106,7 @@ async function findContrastFailures(page) {
       const directText = [...element.childNodes]
         .filter((node) => node.nodeType === 3)
         .map((node) => node.textContent.trim())
+        .filter(Boolean)
         .join(" ");
       const style = getComputedStyle(element);
       if (
@@ -196,8 +203,28 @@ test.describe("Accessibility", () => {
       await page.goto(route);
       for (const theme of ["light", "dark"]) {
         await page.evaluate((selectedTheme) => {
+          let style = document.getElementById("disable-transitions-contrast-test");
+          if (!style) {
+            style = document.createElement("style");
+            style.id = "disable-transitions-contrast-test";
+            style.textContent =
+              "*, *::before, *::after { transition: none !important; animation: none !important; }";
+            document.head.appendChild(style);
+          }
           document.documentElement.setAttribute("data-theme", selectedTheme);
           document.documentElement.setAttribute("data-bs-theme", selectedTheme);
+          if (selectedTheme === "dark") {
+            document.body.classList.add("quarto-dark");
+            document.body.classList.remove("quarto-light");
+          } else {
+            document.body.classList.add("quarto-light");
+            document.body.classList.remove("quarto-dark");
+          }
+          for (const anim of document.getAnimations()) {
+            try {
+              anim.finish();
+            } catch {}
+          }
         }, theme);
         const failures = await findContrastFailures(page);
         expect(failures, `${route} (${theme}) contrast failures`).toEqual([]);

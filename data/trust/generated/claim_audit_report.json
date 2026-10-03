@@ -34,7 +34,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "index.qmd": "5f7d289aa7206bded0b965179f6c7cc825d3e333c329aef397ea302350869522",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -10585,11 +10585,169 @@
       "claims": [],
       "critiques": [],
       "deferment_issue_url": null,
-      "findings": [],
+      "findings": [
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/screw-theory-reference.qmd",
+            "tests/test_screw_reference_review.py",
+            "reports/technical-review/screw-reference-review.md",
+            "reports/technical-review/screw-reference-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+            "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+            "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+            "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
+          },
+          "finding_id": "ad-finding-screw-reference-pitch-geometry",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4832",
+          "priority": "p2",
+          "rationale": "**Twist Geometry and Pitch:** Define the body-to-space transform and derive both twists. The spatial linear component is the velocity field at the space origin, not generally the body-origin velocity. The displaced stationary-origin example recovers zero point velocity despite nonzero spatial linear components. Include axial translation through pitch, recover the closest axis point, and describe the axis-point gauge. Quotients require nonzero angular velocity; pure translation, rest and near-zero angular speed need separate interpretations. Chasles concerns a finite displacement, not an entire time-varying swing. A screw representation preserves six rigid-body kinematic degrees of freedom.",
+          "verification_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/screw-theory-reference.qmd",
+            "tests/test_screw_reference_review.py",
+            "reports/technical-review/screw-reference-review.md",
+            "reports/technical-review/screw-reference-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+            "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+            "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+            "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
+          },
+          "finding_id": "ad-finding-screw-reference-frames-jacobian",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4832",
+          "priority": "p2",
+          "rationale": "**Frames and Current Joint Axes:** Keep angular-first twists and moment-first wrenches. Derive the adjoint and inverse-transpose wrench map from invariant power, including the moment-origin shift. Home joint screws must be transformed through upstream motion to form the current space Jacobian. The rotated second-joint example checks zero velocity at its current axis; using the home column there fails. A six-component wrench and twist belong to dual spaces and are not transformed interchangeably.",
+          "verification_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/screw-theory-reference.qmd",
+            "tests/test_screw_reference_review.py",
+            "reports/technical-review/screw-reference-review.md",
+            "reports/technical-review/screw-reference-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+            "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+            "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+            "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
+          },
+          "finding_id": "ad-finding-screw-reference-load-inversion",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4832",
+          "priority": "p2",
+          "rationale": "**Load Compatibility and Metrics:** The transpose Jacobian maps the contribution of a specified endpoint wrench into generalized load; arbitrary actuator effort is not thereby an identified endpoint wrench. Exact inversion requires range compatibility. The manufactured seven-by-six full-column-rank map leaves a residual of square root two for the stated incompatible load. Compatible solutions form an affine null-space family, while the numerical Moore–Penrose minimum itself is unique. Minimum norm depends on the declared units, origin and metric. The N m versus N mm example demonstrates this dependence; converting the metric restores the physical solution. Transform the same wrench quadratic form as Q_s = A Q_b A^T. Neither a residual nor a null space alone identifies antagonism, internal tension or muscle activity.",
+          "verification_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/screw-theory-reference.qmd",
+            "tests/test_screw_reference_review.py",
+            "reports/technical-review/screw-reference-review.md",
+            "reports/technical-review/screw-reference-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+            "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+            "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+            "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
+          },
+          "finding_id": "ad-finding-screw-reference-actuation-boundary",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4832",
+          "priority": "p2",
+          "rationale": "**Actuation and Physical Boundaries:** Distinguish the n-by-m generalized actuation matrix from a six-by-m boundary-wrench distribution. Only the latter receives the inverse-transpose spatial map for unchanged input components. Factorization through a chosen endpoint requires every generalized-actuation column to lie in the transpose-Jacobian range and requires a physical load premise. Two hand-on-club wrenches can be summed after transport to one origin, but their net wrench does not uniquely identify both hands. Inertia, other external loads, differentiation error, contact geometry and instrumentation delimit any inverse-dynamics inference.",
+          "verification_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/screw-theory-reference.qmd",
+            "tests/test_screw_reference_review.py",
+            "reports/technical-review/screw-reference-review.md",
+            "reports/technical-review/screw-reference-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+            "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+            "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+            "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
+          },
+          "finding_id": "ad-finding-screw-reference-forward-constraints",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4832",
+          "priority": "p2",
+          "rationale": "**Solved Dynamics and Reactions:** Retain the correct declared coadjoint sign, ad-star = minus ad-transpose. Inertial demand is not an additional autonomous applied wrench. Solve the body-fixed Newton–Euler equation to obtain acceleration; include pose kinematics and internal-state evolution in the complete vector field. Account for pose-dependent spatial inertia when changing frames. The torque-free asymmetric-body fixture reproduces Euler acceleration (-3, 2, -0.5) rad/s squared. A whole-player model needs assembled multibody inertia and a declared constraint solve. Positive-definite mass and independent ideal stationary-constraint rows make the stated block system invertible. Both acceleration and workless reaction can depend affinely on input at a fixed complete state and mode. The two-mass fixture verifies the stated reactions and acceleration; changing contact mode or prescribed boundaries requires new feasibility and solution conditions.",
+          "verification_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/screw-theory-reference.qmd",
+            "tests/test_screw_reference_review.py",
+            "reports/technical-review/screw-reference-review.md",
+            "reports/technical-review/screw-reference-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+            "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+            "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+            "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
+          },
+          "finding_id": "ad-finding-screw-reference-modal-affinity",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4832",
+          "priority": "p2",
+          "rationale": "**Modal Effort and Conditional Affinity:** Define shaft restoring/damping effort as generalized modal effort with explicit signs. The elastic-energy rate verifies the signs for constant symmetric positive-semidefinite stiffness and damping. A kinematic modal shape is not automatically a dual wrench; virtual power requires a declared boundary-velocity map, and distributed internal elasticity need not be representable by one endpoint wrench. Input independence is a partial derivative at fixed complete state and model settings. Inputs can change future deformation; direct impedance commands require reconsidering the input/state choice. Wrench addition does not imply trajectory superposition in nonlinear dynamics.",
+          "verification_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/screw-theory-reference.qmd",
+            "tests/test_screw_reference_review.py",
+            "reports/technical-review/screw-reference-review.md",
+            "reports/technical-review/screw-reference-prior-review.json"
+          ],
+          "evidence_sha256": {
+            "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+            "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+            "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+            "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
+          },
+          "finding_id": "ad-finding-screw-reference-counterfactual-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4832",
+          "priority": "p2",
+          "rationale": "**Counterfactuals and Golf Interpretation:** Match canonical notation: pointwise ZTCF samples, stitched traces, forward integrations and branched integrations are different constructions. Specify the zeroed input level and retained plant/memory rather than equating zero input with biological passivity. ZVCF is instantaneous acceleration after zeroing declared velocity-like states and input while retaining configuration, other internal states, mode and parameters. Use a compatible constrained solve when required. A mass-matrix image is generalized effort, not a measured hand wrench or the counterfactual itself. The visible plain-language summary and takeaways connect motion, loads and prediction without claiming muscle identification or coaching benefit. ##",
+          "verification_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19"
+        }
+      ],
       "review_evidence": {
-        "evidence_file_count": 1,
+        "evidence_file_count": 4,
         "evidence_sha256": {
-          "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be"
+          "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+          "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+          "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+          "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506"
         },
         "source_path": "articles/screw-theory-reference.qmd"
       },
@@ -18300,7 +18458,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/about.qmd": "95b1846d4dac0b9f0662b0781ce3415e155b699c9831834b32409c102de3cbb2",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18368,7 +18526,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/book-reviews.qmd": "1d9bbae08b203ab3bcf8a652214482212371c16fc82b5f45ad339add08e88b3e",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18403,7 +18561,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/collaborate.qmd": "023f5f1d92ac20a38e48fd2ba22ab8143f08fe7d4aba509cab36415d09043344",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18438,7 +18596,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/contact.qmd": "54b9899e48623ee407e7da3e032246562d4f785a92c280a2a32bcc9b18de87ea",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18524,7 +18682,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/daydreams-doodles.qmd": "301ebd880e1773b7d866de4fb7e727cfac55a35815cd8c3efc54c7a12caa42f7",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18559,7 +18717,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/development-roadmap.qmd": "4a2e7aa461ebaede627e3758a9d6a6e8136f6cec13f5a95a70f4493a49d11d0a",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18675,7 +18833,7 @@
         "evidence_file_count": 6,
         "evidence_sha256": {
           "css/manifesto.css": "35117d0650e73a65c9164e7c7ea2c95065822a7455baf1da78e9190ffd2dbbcb",
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/drifter-manifesto.qmd": "5b8debf5a9731ee5d1a261c09ea2fa4647275b6738b42001dcf8224e6358a08d",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05",
           "reports/technical-review/manifesto-notation-render-verification.json": "c9627edf421f78c60bec0a6fb5b16ce8535733f32139aa54353cbfa77c5f15a6",
@@ -18773,7 +18931,7 @@
           "evidence_sha256": {
             "NOTATION.md": "5c13dbbdf46e723982295f498e6f3bcef26e411d92e3bd882024a93688822ab9",
             "pages/notation.qmd": "5b04a36e8b7008b2b6534112e6e6b9fea380257dc7d21b5a44e899be3e291c56",
-            "styles.css": "e4ff86140b9bc443d8dfe1473e93e376eb06bb6bddda1d7cf230bfccbdd98faf",
+            "styles.css": "151456b37903232960343e9fc98a507726af8960ad8c2f6c715bbb2f0c5d2438",
             "tests/test_responsive_layout_contract.py::test_dense_tables_scroll_without_collapsing_long_cells_to_fragments": "3366f928cc423ecc4a3e7b1f0f43307600976b735c1e7a9fb0f0ccf817eaa1fb",
             "tests/test_responsive_layout_contract.py::test_mobile_publication_shell_contains_wide_content_without_page_scroll": "9b75bc2cf8e4748d60c03f8c8fb2fa41c07edeb1638a7abe2f11d00e195f4ee3"
           },
@@ -18788,7 +18946,7 @@
         "evidence_file_count": 4,
         "evidence_sha256": {
           "NOTATION.md": "5c13dbbdf46e723982295f498e6f3bcef26e411d92e3bd882024a93688822ab9",
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/notation.qmd": "5b04a36e8b7008b2b6534112e6e6b9fea380257dc7d21b5a44e899be3e291c56",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18843,7 +19001,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/overview.qmd": "648a94271295ca3543bbf391d058ffbfb58a09e39e306b22e14974f716f3d1b5",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18946,7 +19104,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/tangent-hyperplanes.qmd": "95edfe5dc1ab5ce5ba8e15b40f81e9641b3e7c2844de8367f2ae9affb205bb66",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -18981,7 +19139,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/technology.qmd": "c0cba55ecb0f69e11479962eb9326ea8d71bbce8cd45b7f301627c69291b3263",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },
@@ -19016,7 +19174,7 @@
       "review_evidence": {
         "evidence_file_count": 3,
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "213ee9150f106df84841bce3d51fc6fe2a4e7a53de780d1a52faab76dfbae5d1",
+          "data/trust/site_trust_surface_audit.json": "80a33a5858ec85dbbf5fd1e54cb7904bc0ecb1f15ad67f173354aaad62eceb38",
           "pages/tools.qmd": "45bd542300dcccb5872bfec1da7ac6f47d3b260951bd7b1cc48d080f3e58d725",
           "reports/site-trust-surface-audit.md": "5ab7119d321b85138735a39d45c544defcaeb81c56968f24efbd6dd3d5b25f05"
         },

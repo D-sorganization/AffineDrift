@@ -1,3 +1,15 @@
+# Screw Reference — Bound and Integrated Checkpoint
+
+Accepted source `85eb432d38fd099069ddf2cdd58f45baae055d19` is pushed with normal hooks. Integration checkpoint `SELF` preserves main `1edc38aaadd4e079b675df7093ee2d02d3c4ab69` (PR #4816 accessibility changes), the four frozen screw evidence files and 13 frozen radar/ideomotor files. Seven corrected findings are bound to that source; exactly one corpus row advances, leaving 99 source audits plus whole-book consistency. All 453 prior inventory findings are preserved. Historical companion review scope is unchanged.
+
+Full source regression: 6,686 passed, 29 skipped, 187 deselected, 60 warnings, 791.61 seconds, 79.37% coverage. Integration: 90 affected tests pass in 30.99 seconds; render and all four mobile/desktop light/dark browser cells pass with no serious/critical axe findings. Earlier failures and their corrections remain in the validation record. No new full-site or human validation is claimed.
+
+Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; branch fix/screw-reference-rigor-4832; issue #4832; session technical-review-20261003-screw-reference. Next: commit/push the integration with normal hooks, create a regular PR, inspect reviews/checks, use the central guarded merge and verify remote-main delivery. Lease/presence expires 03:27 UTC October 3; renew if needed. Goal remains active. Queue #4836 is preparation only, with no implementation claim. Four agy CLI Gemini 3.8 Flash helpers were adjudicated; two further calls failed for insufficient credits. Do not buy credits or repeatedly retry.
+
+Mutable proof: reports/technical-review/screw-reference-integration.json; validation: reports/technical-review/screw-reference-validation.json. Preserve the accepted review report. Historical checkpoints below retain their original scope.
+
+---
+
 # Screw Reference â€” Accepted Source Checkpoint
 
 Issue #4832, epic #4009 / corpus #4021. Complete article and bounded HTML publication are lead-accepted. Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings in 791.61 seconds; coverage 79.37%, above the configured 75% floor. A fresh task-specific --basetemp isolates this run from shared pytest cleanup. All 43 affected screw checks, 21 corrected index/hygiene checks, static checks (902 Python quality files), 12 publication gates and four browser/axe cells pass. All 16 displays inspected; 149 math nodes render with no errors/placeholders. The new status is reflected in the generated search index. Initial failures and preserved browser/build scratch are recorded honestly in reports/technical-review/screw-reference-validation.json.

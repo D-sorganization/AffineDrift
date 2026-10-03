@@ -48,7 +48,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/rotation-converter.html` | `articles/rotation-converter.qmd` | 1 |
 | `/articles/rotation-induced-spin.html` | `articles/rotation-induced-spin.qmd` | 1 |
 | `/articles/rotation-representations-reference.html` | `articles/rotation-representations-reference.qmd` | 1 |
-| `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 1 |
+| `/articles/screw-theory-reference.html` | `articles/screw-theory-reference.qmd` | 4 |
 | `/articles/secondary-axis-stability.html` | `articles/secondary-axis-stability.qmd` | 8 |
 | `/articles/sources-of-nonlinearity.html` | `articles/sources-of-nonlinearity.qmd` | 1 |
 | `/articles/strokes-gained-limitations.html` | `articles/strokes-gained-limitations.qmd` | 9 |
@@ -302,7 +302,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-e7072902cc8a` | `/articles/rotation-converter.html` | Reviewed | — | None | None | 0 |
 | `ad-route-66b021768f26` | `/articles/rotation-induced-spin.html` | Reviewed | — | None | None | 0 |
 | `ad-route-934aea328ade` | `/articles/rotation-representations-reference.html` | Reviewed | — | None | None | 0 |
-| `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 0 |
+| `ad-route-c1ddd8da5e36` | `/articles/screw-theory-reference.html` | Reviewed | — | None | None | 7 |
 | `ad-route-fe1735c55564` | `/articles/secondary-axis-stability.html` | Reviewed | — | None | `crit-intermediate-axis-fallacy`, `crit-misattribution-stability-gravity` | 6 |
 | `ad-route-00b5dca02ac1` | `/articles/sources-of-nonlinearity.html` | Reviewed | — | None | None | 0 |
 | `ad-route-e88127bf9985` | `/articles/strokes-gained-limitations.html` | Reviewed | — | None | `crit-strokes-gained-non-ergodic` | 3 |

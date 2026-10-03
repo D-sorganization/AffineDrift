@@ -29,3 +29,7 @@ Full regression/static/publication acceptance and source binding remain pending.
 ## Accepted Source Checkpoint
 
 Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings in 791.61 seconds; coverage 79.37%, above the configured 75% floor. A fresh task-specific --basetemp isolates this run from shared pytest cleanup. Source and bounded HTML are lead-accepted; exact commit binding, corpus transition and regular PR remain pending. The accepted review and mutable validation record contain the complete scope and initial failures.
+
+## Bound and Integrated Checkpoint
+
+Source 85eb432d38fd099069ddf2cdd58f45baae055d19 is frozen and pushed. Main 1edc38aaadd4e079b675df7093ee2d02d3c4ab69 integrated; seven findings and one corpus row bound, 99 audits remain. 90 affected tests and four browser cells pass. Normal integration commit/push, regular PR and remote-main verification remain pending.
