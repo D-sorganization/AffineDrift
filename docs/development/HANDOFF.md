@@ -1,3 +1,9 @@
+# Optimal-Control Review — Regular PR #4859
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4859 is open, not draft. The accepted scientific source remains `8a8accd335edf66c527893d51b1cd9fe05c9a31a` (nine frozen files). All work is committed and pushed; this turnover update receives its own final push. Verify final-head CI/reviews, use the central guard for ordinary squash auto-merge, and verify owned/frozen bytes on fetched remote main. No further source rewrites are needed unless validation or review identifies a defect. The goal remains active.
+
+---
+
 # Verified Drift/Wrench Delivery and Optimal-Control Regression
 
 Regular PR #4857 merged at 2026-10-03T21:53:00Z as `252c8a086a3a532ee7e2204f94a945ef41f50bd5`. Its complete tree, 19 owned paths, six frozen files and 46 protected files match fetched main. CI passed 6741 Python tests, 158 browser tests, 158 representative cells and 251 accessibility routes/1004 cells with no serious/critical violations. Lease/presence is released. Receipt: `reports/technical-review/drift-wrench-remote-main-receipt.json`.

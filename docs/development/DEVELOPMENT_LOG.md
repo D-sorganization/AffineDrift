@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4858 · Paired Optimal-Control Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4858; epic #4009 / corpus #4021
-- **PR:** pending
+- **PR:** #4859
 - **Branch:** fix/optimal-control-review
 - **Paths:** articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex, articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd, tests/test_optimal_control_conventions.py
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — 74 focused checks, 16 publication gates and full retry 6800 passed/29 skipped/93.24% source coverage; seven revised print pages and sixteen web captures inspected. Initial four PDF-dependency failures repaired without changing audit identities.
 - **Summary:** Clarify numerical conventions while preserving valid prior optimal-control mechanics and inference limits.
-- **Next step:** Accepted source 8a8accd335edf66c527893d51b1cd9fe05c9a31a binds nine frozen files, four findings and two original corpus rows. Run dependent checks and deliver a regular PR; #4857 delivery is verified and released.
+- **Next step:** Accepted source 8a8accd335edf66c527893d51b1cd9fe05c9a31a binds nine frozen files, four findings and two original corpus rows. Regular PR #4859 is open. Verify final-head CI/reviews and protected remote-main delivery; #4857 is verified and released.
 - **Evidence:** reports/technical-review/optimal-control-validation.json; 58 focused checks pass, seven revised print pages inspected; web reflow still pending.
 
 ### DL-#4855 · Drift, Wrench and Double-Pendulum Power
