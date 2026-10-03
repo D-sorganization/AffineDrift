@@ -8,6 +8,8 @@ The new prior-record snapshot retains six inventory routes and the motor-control
 
 Next: finish static/content gates and normal source checkpoint; run full Python regression in the existing pinned numerical environment with a fresh isolated pytest directory and frozen tracked files. Record failures honestly. Bind accepted evidence only after passing, update one corpus row, open a regular PR, inspect review/CI, and use the central guarded merge workflow. Never use a draft PR or bypass hooks. Keep this goal active. The last two agy Gemini 3.8 Flash requests failed for insufficient credits; no fresh delegated output is claimed.
 
+The first full run at cfa3c9f344532cfeccf17993fb8cc6566021fe56 timed out in deployment evidence validation after 60 seconds; the isolated test then passed in 40.00 seconds. Retry the existing CI command with its configured 120-second timeout, retaining both records. Publisher metadata confirms the existing Latash bibliography title; no bibliography edit is required.
+
 ---
 
 # Verified Combined Delivery — Impact and Passive Control
