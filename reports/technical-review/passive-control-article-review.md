@@ -120,3 +120,5 @@ Four earlier agy Gemini 3.8 Flash helpers were adjudicated for the screw review.
 Two subsequent agy calls failed for insufficient credits; no fresh helper
 evidence, purchase or repeated retry is claimed for this article. Scientific
 decisions and verification remain with the lead reviewer.
+
+The static-SVG accessibility gate initially required a long description; an expandable, textual explanation of the axes, curves, preload and work/loss relationship now passes that gate. No baseline exception was added.
