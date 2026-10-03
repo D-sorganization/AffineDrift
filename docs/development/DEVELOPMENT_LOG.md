@@ -23,14 +23,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** pending
+- **PR:** Regular PR via branch lookup; number unknown at this commit.
 - **Issue:** #4839; epic #4009
 - **Branch:** fix/glossary-rigor-4839
 - **Paths:** data/glossary.yml, pages/glossary.qmd, tests/test_site_glossary.py
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03; source 06a610cc2fe5f5f5a28ed6641ed3cd5743575c68; 6736 tests/79.46% coverage, four browser cells, static/publication gates and normal source commit hooks pass.
 - **Summary:** Audit 72 glossary definitions and publication; see site-glossary-review.md.
-- **Next step:** Commit binding, integrate merged main, push regular PR and verify delivery.
+- **Next step:** Push normal integration checkpoint; use gh pr view fix/glossary-rigor-4839 for live PR, CI and delivery.
 
 ### DL-#4828 · Historical Player Research Handoff
 

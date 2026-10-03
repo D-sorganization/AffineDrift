@@ -82,10 +82,10 @@ def test_only_live_every_page_verification_opts_into_bounded_document_retries() 
 
 
 def test_live_verifier_targets_the_direct_canonical_pages_host() -> None:
-    """Hosted verification must avoid the cacheable apex-to-www redirect."""
+    """Hosted verification must target the canonical site host matching CNAME and _quarto.yml (#4573)."""
     content = WORKFLOW_PATH.read_text(encoding="utf-8")
 
-    assert 'PUBLIC_SITE_URL: "https://www.affinedrift.com"' in content
+    assert 'PUBLIC_SITE_URL: "https://affinedrift.com"' in content
 
 
 def test_ci_and_deploy_use_the_locally_qualified_quarto_version() -> None:
