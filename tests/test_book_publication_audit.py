@@ -76,9 +76,13 @@ def test_book_audit_inventory_replaces_all_six_deferments() -> None:
 def test_blockers_are_closed_and_every_route_has_adversarial_evidence() -> None:
     allowed = {"corrected", "publication_blocked"}
     prior = _json(ROOT / "reports/technical-review/shallow-wide-prior-reviews.json")
+    dof_prior = _json(ROOT / "reports/technical-review/dof-chapter-prior-review.json")
+    prior_records = (
+        prior["book_records"] + dof_prior["records"]["data/trust/book_publication_audit.json"]
+    )
     historical = {
         (record["route"], finding["finding_id"]): finding
-        for record in prior["book_records"]
+        for record in prior_records
         for finding in record["findings"]
     }
     for route, record in _routes(_json(AUDIT)).items():

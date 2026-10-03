@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4845 · Degrees-of-Freedom Chapter
+
+- **State:** in_progress
+- **Owner:** codex
+- **PR:** pending
+- **Issue:** #4845; epic #4009 / corpus #4021
+- **Branch:** fix/dof-chapter-rigor-4845
+- **Paths:** articles/The_Geometry_of_Motion/Volume_IV/chapters/ch01_dof_problem.tex, articles/The_Geometry_of_Motion/Volume_IV/main.pdf, books/human-motor-control.qmd, src/affine_control/ucm_analysis.py, tests/test_ucm_analysis.py, tests/test_dof_chapter_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03; 149 focused cases (25 new numerical cases); static/content gates, native PDF and scoped four-cell browser checks pass. Full regression and acceptance pending.
+- **Summary:** Separate task geometry, physical feasibility and neural inference; preserve historical review scope when refreshing shared publication dependencies.
+- **Next step:** Complete gates and frozen-checkpoint regression, bind acceptance, update exactly one corpus row, then open a regular PR and verify remote-main delivery.
+
 ### DL-#4842 · Impact Physics Chapter
 
 - **State:** shipped

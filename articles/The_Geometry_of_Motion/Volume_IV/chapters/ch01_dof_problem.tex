@@ -1,300 +1,359 @@
-\chapter{The Degrees-of-Freedom Problem}
+\chapter[The Degrees-of-Freedom Problem]{The Degrees-of-Freedom\\Problem}
 \label{ch:dof-problem}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+A successful swing is an outcome of coordinated motion, forces and contact.
+It does not specify a unique joint trajectory or muscle history.
+The question associated with Bernstein's account of coordination
+\cite{Bernstein1967} is how a body with many available motions produces a
+repeatable task outcome while remaining adaptable.
+Answering it requires distinguishing three things: the geometry of equivalent
+outcomes, the dynamics that make a movement feasible, and the evidence from
+which a controller might be inferred.
 
-\epigraph{%
-  The coordination of movement is the process of mastering redundant
-  degrees of freedom of the moving organ, in other words its conversion
-  to a controllable system.
-}{--- Nikolai Bernstein, 1967}
-
-\section{Bernstein's Original Formulation}
-
-In 1935, Nikolai Bernstein, a Soviet physiologist, made a deceptively simple
-observation: the number of degrees of freedom available for any motor task
-\emph{vastly exceeds} the number required to define the task. This observation,
-formalized in his 1967 monograph \cite{Bernstein1967}, is the founding problem
-of motor control.
+\section{Bernstein's Problem as a Modeling Question}
 
 \begin{definition}{The Degrees-of-Freedom Problem}{dof-problem}
-  Let a motor task be defined by $k$ task-space constraints (e.g., $k = 6$ for
-  placing a hand at a specific position and orientation). Let the body have $n$
-  joint degrees of freedom and $p > n$ muscles. The \textbf{degrees-of-freedom
-  problem} is: how does the nervous system select a specific solution
-  $(\bm{q}(t), \bm{u}(t)) \in \Reals^n \times \Reals^p$ from the infinite set
-  of solutions consistent with the task constraints?
-
-  The \textbf{kinematic redundancy} is $n - k$ (extra joint configurations).
-  The \textbf{muscle redundancy} is $p - n$ (extra muscles per joint).
-  The \textbf{total redundancy} is $(n - k) + (p - n) = p - k$.
+Let $\mathcal Q$ be an $n$-dimensional configuration manifold and let a local
+chart be denoted by $\bm q$.
+Choose a task map $h:\mathcal Q\to\Reals^k$ and a desired value $\bm y_0$.
+The configurations satisfying that task form the level set
+$\mathcal M_{\bm y_0}=\{\bm q:h(\bm q)=\bm y_0\}$.
+Where the task Jacobian has constant rank $r$ in a neighborhood, the local level-set dimension
+is $n-r$; it is $n-k$ only for $k$ independent task constraints.
+This counts local configuration freedom, not feasible control histories.
 \end{definition}
 
-\subsection{The Numbers Are Staggering}
+A seven-coordinate arm with a regular three-dimensional endpoint-position
+map has four local task-null directions.
+If a locally independent six-dimensional pose is specified instead, it has
+one. These are illustrative model counts, not anatomical measurements.
+Dependent constraints must not be counted twice, and joint limits can remove
+available motion even when a Jacobian has a nontrivial kernel.
+At a singular configuration, rank can change and a tangent-kernel count alone
+need not describe the dimension of an exact solution set.
 
-Consider the golf swing:
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}lr@{}}
-\toprule
-\textbf{Quantity} & \textbf{Approximate Value} \\
-\midrule
-Skeletal DOF involved & $\sim$200 \\
-Muscles contributing & $\sim$400 \\
-Task constraints (clubhead at impact) & 6 \\
-Kinematic redundancy & $\sim$194 \\
-Muscle redundancy & $\sim$200 \\
-Total redundancy & $\sim$394 \\
-Duration of downswing & $\sim$0.25~s \\
-Neural processing delay & $\sim$0.1$\,$--$\,$0.2~s \\
-\bottomrule
-\end{tabular}
-\end{center}
+\subsection{Configuration Freedom and Muscle Allocation}
 
-The nervous system must select from $\sim$400-dimensional muscle activation patterns
-to satisfy 6 constraints, while accounting for interaction torques, gravity, and
-neural delays---\emph{in a quarter of a second}. This is the problem.
+At a fixed posture, a simplified muscle-force allocation model writes
+\begin{equation}
+ R(\bm q)\bm F=\bm\tau_{\mathrm{req}},\qquad
+ 0\leq F_i\leq F_{i,\max},
+ \label{eq:ch1:force-allocation}
+\end{equation}
+where $R\in\Reals^{n\times p}$ is a signed moment-arm matrix, $\bm F$ contains
+$p$ tensile forces, and $\bm\tau_{\mathrm{req}}$ is the required generalized
+load after other modeled contributions have been separated.
+If the equality is feasible, its unconstrained affine solution space has
+dimension $p-\operatorname{rank}R$, not automatically $p-n$.
+Force limits restrict it to a feasible set that may contain a continuum, one
+point, or no solution. Activations and excitations are distinct variables:
+force also depends on muscle length, velocity, tendon state and history.
 
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[scale=1.2]
-  % Task space (low-dim)
-  \draw[->, thick] (0, 0) -- (1, 0) node[align=center, anchor=north] {Task DOF = 6};
-  \draw[->, thick] (0, 0) -- (0, 1) node[align=center, anchor=east] {Position + Orientation};
+For example, use a dimensionless toy map
+\[
+ R=\begin{bmatrix}1&0&1\\0&1&1\end{bmatrix},\qquad
+ \bm\tau_{\mathrm{req}}=\begin{bmatrix}3\\3\end{bmatrix}.
+\]
+The equality gives $\bm F=(3-t,3-t,t)^T$.
+Bounds $0\leq F_i\leq3$ leave $0\leq t\leq3$; imposing $F_{3,\max}=0$
+leaves only $(3,3,0)^T$.
+A nullity of one therefore does not guarantee compensatory capacity.
+Configuration and force nullspaces act on different physical variables;
+adding their dimensions does not generally yield a trajectory redundancy.
+The familiar arithmetic $p-k$ can describe a particular regular algebraic
+model with $n+p$ variables and $n+k$ independent equalities, but those
+assumptions must be established rather than inferred from anatomical counts.
 
-  % Mapping to configuration space
-  \draw (2.5, 0.5) ellipse (0.6 and 1.5) node[align=center, anchor=center] {\footnotesize Config};
+A movement must additionally satisfy equations of motion, contact constraints,
+actuator dynamics and boundary conditions.
+A kinematically equivalent posture can change inertial coupling, moment arms,
+force capacity, energy use and the response to the next perturbation.
+This connects redundancy to the muscle-state and load-accounting treatment
+in Volume III rather than providing an alternative to it.
 
-  % Null space visualization
-  \draw (5, 0) ellipse (1.5 and 2);
-  \draw (5, 0.1) node[align=center, anchor=center] {Null space};
-  \draw (5, -0.8) node[align=center, anchor=center] {\footnotesize (task-irrelevant};
-  \draw (5, -1.2) node[align=center, anchor=center] {\footnotesize variability)};
+\subsection{What Is the Task in a Golf Swing?}
 
-  % Arrow showing redundancy
-  \draw[->, thick, dashed] (1.8, 0.5) -- (2.9, 0.5) node[align=center, anchor=south, midway] {\small redundant DOF};
-  \draw[->, thick] (3.2, 0.5) -- (3.5, 0.5);
+Six pose coordinates describe a local rigid-club position and orientation.
+They do not specify clubhead velocity, the face contact point, collision
+conditions or the resulting ball flight.
+For a swing outcome, a more useful terminal map can depend on configuration,
+velocity and implement state: $\bm y=g(\bm x(T))$.
+The state $\bm x$ may include shaft deformation and internal actuator states;
+$T$ and the definition of impact must also be specified.
+A Jacobian of this state map has a different domain from $J_h(\bm q)$.
 
-  % Label
-  \draw (2.5, 2.5) node[align=center, anchor=center] {\textbf{Bernstein's DOF Problem}};
-  \draw (2.5, 2.1) node[align=center, anchor=center] {\small Many solutions satisfy the task constraints};
-\end{tikzpicture}
-\caption{The degrees-of-freedom problem: redundancy in configuration space allows
-task-irrelevant variability in the null space of the task Jacobian.}
-\label{fig:ch1:dof-illustration}
-\end{figure}
+Consequently, there is no universal ``200 coordinates minus six constraints''
+calculation for golf, nor a single neural delay that determines the available
+controller dimension. Model resolution, task tolerance, contact mode and
+measurement bandwidth determine what a chosen count means.
+A small variation in club position can coexist with a consequential change
+in delivery velocity or face orientation.
+Coordination should be evaluated against the declared outcome and its
+uncertainty, not solely against visual similarity of joint motion.
 
-\section{From Problem to Resource: Motor Abundance}
-
-Modern motor control theory has reframed Bernstein's ``problem'' as an
-\emph{opportunity}. Redundancy is not a curse but a resource:
+\section{From Redundancy to Motor Abundance}
 
 \begin{insight}{Redundancy as Motor Abundance}{abundance}
-  The extra degrees of freedom provide:
-  \begin{enumerate}
-    \item \textbf{Flexibility}: the same task can be performed in many ways,
-          allowing adaptation to constraints (fatigue, injury, obstacles)
-    \item \textbf{Robustness}: perturbations can be absorbed without task failure
-    \item \textbf{Exploration}: variability in execution allows the system to
-          discover better solutions over time
-    \item \textbf{Error correction}: task-irrelevant DOF can compensate for
-          errors in task-relevant DOF
-  \end{enumerate}
-  We adopt the term \textbf{motor abundance} (Latash 2012) to emphasize that
-  redundancy is a feature, not a bug.
+Extra feasible solutions can provide alternatives when conditions change.
+They may allow a golfer to preserve an outcome while changing joint loading,
+or a humanoid to avoid an obstacle while maintaining a grasp.
+This is an opportunity conditional on available force, motion and information;
+a high-dimensional model alone guarantees neither robustness nor learning.
 \end{insight}
+
+Latash's abundance perspective emphasizes families of useful solutions
+rather than the elimination of every additional degree of freedom
+\cite{Latash2012}.
+That interpretation motivates examining task-preserving covariation.
+It is not a proof of one neural implementation or a rejection of every
+optimization model: a feedback policy can also permit many realizations.
+Variability that is irrelevant to one output may matter to fatigue,
+contact stability, another objective, or a later time.
 
 \section{The Uncontrolled Manifold Hypothesis}
 
-The uncontrolled manifold (UCM) hypothesis \cite{ScholzSchoner1999} provides a
-mathematical framework for understanding how the nervous system manages redundancy.
+The UCM approach compares observed variability with directions that locally
+preserve a selected task variable \cite{ScholzSchoner1999}.
+Its original sit-to-stand study tested alternative task hypotheses in nine
+participants; that evidence does not establish a universal golf controller.
+Here ``uncontrolled'' denotes a proposed relative pattern of stabilization,
+not an uncontrollable subspace of a dynamical system.
+Reachability concerns which states inputs can attain; a task kernel concerns
+which instantaneous variations an output fails to distinguish.
 
 \begin{definition}{The Uncontrolled Manifold}{ucm}
-  Let $\bm{q} \in \Reals^n$ be the joint configuration and $\bm{y} = h(\bm{q}) \in \Reals^k$
-  be the task variable. The \textbf{uncontrolled manifold} at a nominal configuration
-  $\bm{q}_0$ is the null space of the task Jacobian:
-  \begin{equation}
-    \text{UCM}(\bm{q}_0) = \left\{ \delta\bm{q} \in \Reals^n :
-    J_h(\bm{q}_0) \delta\bm{q} = \bm{0} \right\},
-    \label{eq:ch1:ucm-def}
-  \end{equation}
-  where $J_h = \partial h / \partial \bm{q}$ is the task Jacobian. Variability within
-  the UCM does not affect the task variable. Variability perpendicular to the UCM
-  (in the \textbf{orthogonal complement}) directly affects task performance.
+Distinguish the exact level set $\mathcal M_{\bm y_0}$ from its local linear
+approximation. At a regular point $\bm q_0$ with $h(\bm q_0)=\bm y_0$,
+\begin{equation}
+ T_{\bm q_0}\mathcal M_{\bm y_0}
+ =\ker J_h(\bm q_0)
+ =\{\delta\bm q:J_h(\bm q_0)\delta\bm q=\bm0\}.
+ \label{eq:ch1:ucm-def}
+\end{equation}
+The kernel is commonly called the linearized UCM.
+It preserves the task to first order; it is not generally the exact curved
+set of finite task-preserving displacements.
 \end{definition}
 
-\noindent
-Geometrically, $\text{UCM}(\bm{q}_0)$ is the kernel of the task map's differential. Where $J_h$
-has full rank $k$, the implicit function theorem makes $h$ a submersion near $\bm{q}_0$, so the
-level set $h^{-1}(\bm{y}_0)$ is a smooth $(n-k)$-dimensional manifold whose tangent space at
-$\bm{q}_0$ is exactly the UCM. Motion along that manifold changes the configuration without
-changing the task variable.
+Taylor expansion makes the limitation explicit:
+\begin{equation}
+ h(\bm q_0+\delta\bm q)-h(\bm q_0)
+ =J_h\delta\bm q+
+ \tfrac12 D^2h[\delta\bm q,\delta\bm q]
+ +\mathcal O(\|\delta\bm q\|^3).
+ \label{eq:ch1:curvature}
+\end{equation}
+This expression assumes sufficient local smoothness and a common coordinate
+chart. A null first-order term leaves the curvature term.
+For $h(q_1,q_2)=q_1^2+q_2^2$ at $(1,0)$, $(0,\epsilon)$ is tangent but gives
+$h(1,\epsilon)=1+\epsilon^2$.
+At $\epsilon=0.1$ the task changes by $0.01$; the exact nearby solution is
+$(\sqrt{1-\epsilon^2},\epsilon)$.
+At the singular point $(0,0)$, by contrast, $J_h=0$ while the zero level set
+contains only that point. A two-dimensional kernel is not a two-dimensional
+family of exact zero-task solutions there.
 
-It is worth being explicit that this is a statement about the \emph{task map}, not about the
-dynamics. The UCM is a redundancy of $h$, not an uncontrollable subspace of the control system:
-a configuration can be fully controllable and still have a large uncontrolled manifold, because
-controllability asks what states are reachable while the UCM asks which state changes the task
-cannot see. Conflating the two makes the hypothesis sound like a claim about what the nervous
-system \emph{cannot} do, when it is a claim about what it need not bother to correct.
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=1.65]
+ \draw[->] (-1.35,0)--(2.0,0) node[right] {$q_1$};
+ \draw[->] (0,-1.2)--(0,1.35) node[above] {$q_2$};
+ \draw[thick] (0,0) circle (1);
+ \draw[dashed] (1,-0.7)--(1,1.2);
+ \fill (1,0) circle (1.1pt) node[below right] {$\bm q_0$};
+ \fill (1,0.6) circle (1.1pt);
+ \fill (0.8,0.6) circle (1.1pt);
+ \draw[<->] (0.8,0.6)--(1,0.6);
+ \draw[->] (1.65,0.85)--(1.02,0.61);
+ \node[align=left,anchor=west] at (1.15,1.08) {\scriptsize Tangent Step};
+ \node at (-0.6,-1.22) {\small Exact Level Set};
+\end{tikzpicture}
+\caption{Tangent Steps and Exact Task Preservation for a Curved Level Set}
+\label{fig:ch1:dof-illustration}
+\end{figure}
 
 \begin{laymansbox}{Mathematical Reminder: The Geometry of the UCM}{ucm_geometry_reminder}
-Recall our differential geometry from Volume 0: a manifold is a curved surface representing valid states. The \textbf{Uncontrolled Manifold} (UCM) is quite literally a geometric submanifold embedded inside the larger configuration space $\mathcal{Q}$. 
-
-Because the task geometry is non-linear (e.g., the arc of a swinging robot arm), the UCM is curved. We calculate its flat \textbf{Tangent Space} mathematically using the null space of the Jacobian ($J_h \delta\bm{q} = \bm{0}$). As long as the nervous system's noise vectors point exclusively into this tangent space, the physical position of the hand will not budge from the target. The nervous system is actively shaping its noise ellipsoid to align with the tangent space of the target manifold.
+A tangent gives the direction of a road at one point, not the road's whole
+path. Following the tangent in a straight line eventually leaves a curved
+road. Similarly, tangent-aligned variations can still change a nonlinear task.
+Maintaining the exact task requires following the level set or correcting
+its finite error; a covariance ellipse alone does not provide that mechanism.
 \end{laymansbox}
 
-The UCM hypothesis predicts that the nervous system:
-\begin{enumerate}
-  \item \textbf{Suppresses} variability in the orthogonal complement of the UCM
-        (task-relevant variability)
-  \item \textbf{Tolerates} or even \textbf{encourages} variability within the UCM
-        (task-irrelevant variability)
-\end{enumerate}
+\subsection{Coordinates, Metrics and Numerical Rank}
 
-This has been experimentally confirmed across many motor tasks \cite{ScholzSchoner1999,TodorovJordan2002}.
+Choose a chart and coordinate scales before saying that two directions are
+orthogonal. With positive diagonal scales $D$, analyze
+$\delta\bm z=D^{-1}\delta\bm q$ and $J_z=J_hD$.
+Euclidean orthogonality in $\bm z$ corresponds to the metric
+$D^{-T}D^{-1}$ in $\bm q$.
+Mixing metres and radians without a declared scale makes a variance ratio
+ambiguous; even changing one coordinate's scale changes that metric.
+Joint angles crossing a branch cut must be unwrapped or treated in an
+appropriate local chart before taking an arithmetic mean.
 
-\begin{lstlisting}[language=Python, caption={Uncontrolled manifold analysis.}]
+For the chosen scaled Jacobian, an SVD supplies orthonormal bases $N$ for
+$\ker J_z$ and $B$ for $\operatorname{range}(J_z^T)$.
+The projectors are $P_N=NN^T$ and $P_B=BB^T$, with $P_N+P_B=I$.
+Numerical rank depends on a stated singular-value tolerance.
+The implementation below uses a relative tolerance, so multiplying the whole
+Jacobian by a nonzero scalar does not change rank in ordinary finite precision.
+For heterogeneous outputs, task scaling and near-singular directions still
+require an explicit sensitivity analysis.
+
+\subsection{Variance Is a Statistic, Not a Mechanism}
+
+Let $N_s\geq2$ repeated observations be aligned at a declared event or phase,
+with scaled deviations $\bm d_i=\bm z_i-\bar{\bm z}$.
+Evaluate the task Jacobian at the corresponding mean configuration.
+Using sample covariance $C=(N_s-1)^{-1}\sum_i\bm d_i\bm d_i^T$, define
+\begin{equation}
+ V_N=\frac{\operatorname{tr}(P_NC)}{n-r},\qquad
+ V_B=\frac{\operatorname{tr}(P_BC)}{r},\qquad
+ \rho=\frac{V_N}{V_B}.
+ \label{eq:ch1:variance}
+\end{equation}
+These expressions require $0<r<n$ and $V_B>0$ for a finite ratio.
+A zero-dimensional group has no per-dimension variance; $0/0$ is not evidence
+of perfect stabilization. The function returns \texttt{None} for these
+undefined quantities.
+The $N_s-1$ covariance convention is unbiased for independent, identically
+distributed observations with finite covariance; it does not make correlated
+samples, pooled participants or phase-misaligned swings independent trials.
+
+A value $\rho>1$ describes greater variance per dimension along the chosen
+linearized task-null directions. Isotropic covariance gives $\rho=1$ when
+both groups exist. A sample ratio needs uncertainty analysis and appropriate
+comparisons; it is not a stand-alone significance test.
+Also, the complementary variance does not equal task-output variance:
+to first order the latter is $J_zCJ_z^T$, weighted by task sensitivities.
+Changing phase alignment, coordinate scales, measurement errors or the task
+map can change the interpretation.
+
+A manufactured counterexample demonstrates the inference limit.
+For a stable linear stochastic model $d\bm z=A\bm z\,dt+L\,d\bm W$,
+let $\bm W$ be standard Brownian motion and write $Q=LL^T$.
+Stationary covariance satisfies $AC+CA^T+Q=0$.
+Both
+\[
+ C=\operatorname{diag}(1,9),\quad
+ (A_1,Q_1)=(-I,2C),\quad
+ (A_2,Q_2)=(-\operatorname{diag}(9,1),18I)
+\]
+satisfy this equation.
+For task Jacobian $(1,0)$, both give $\rho=9$.
+The first has isotropic restoring dynamics and anisotropic noise; the second
+has directional restoring dynamics and isotropic noise.
+Thus identical covariance cannot identify which mechanism generated it.
+Controlled perturbations, temporal information and independent noise models
+can help discriminate hypotheses. This algebra is not a fitted neural model.
+
+\section{A Reproducible Reaching Example}
+
+Run this listing from the repository root with its pinned Python dependencies.
+The tested implementation in \texttt{src/affine\_control/ucm\_analysis.py}
+validates array shape, finite real values, rank tolerance and numerical range.
+Its input is a fixed Jacobian, so the caller owns the task model and its
+linearization point. The three-link arm below uses relative joint angles in
+radians and link lengths in metres, with Euclidean joint-angle scaling.
+
+\begin{lstlisting}[language=Python, caption={Manufactured Reaching Variance and Finite Task Error}]
 import numpy as np
-from typing import Tuple
-
-def ucm_analysis(
-    joint_angles: np.ndarray,
-    task_jacobian_func,
-    n_repetitions: int | None = None
-) -> Tuple[float, float, float]:
-    """Perform UCM variance decomposition.
-
-    Parameters
-    ----------
-    joint_angles : np.ndarray, shape (n_reps, n_dof)
-        Joint angle data from multiple repetitions of the same task.
-    task_jacobian_func : callable
-        q -> J(q), shape (k, n_dof), the task Jacobian.
-    n_repetitions : int, optional
-        Number of repetitions (inferred from data if not given).
-
-    Returns
-    -------
-    Tuple[float, float, float]
-        (variance_ucm, variance_ort, ratio)
-        UCM variance, orthogonal variance, and their ratio.
-    """
-    n_reps, n_dof = joint_angles.shape
-    q_mean = np.mean(joint_angles, axis=0)
-
-    # Task Jacobian at the mean configuration
-    J = task_jacobian_func(q_mean)
-    k = J.shape[0]  # task dimension
-
-    # Null space of J (UCM directions)
-    U, S, Vt = np.linalg.svd(J, full_matrices=True)
-    rank = np.sum(S > 1e-10)
-    null_space = Vt[rank:].T  # Shape: (n_dof, n_dof - rank)
-
-    # Orthogonal complement (range space)
-    range_space = Vt[:rank].T  # Shape: (n_dof, rank)
-
-    # Decompose variability
-    deviations = joint_angles - q_mean  # (n_reps, n_dof)
-
-    # Project onto UCM
-    proj_ucm = deviations @ null_space  # (n_reps, n_dof - rank)
-    var_ucm = np.mean(np.sum(proj_ucm**2, axis=1))
-
-    # Project onto orthogonal complement
-    proj_ort = deviations @ range_space  # (n_reps, rank)
-    var_ort = np.mean(np.sum(proj_ort**2, axis=1))
-
-    # Normalize by dimensionality
-    var_ucm_per_dof = var_ucm / (n_dof - rank) if n_dof > rank else 0
-    var_ort_per_dof = var_ort / rank if rank > 0 else 0
-
-    ratio = var_ucm_per_dof / var_ort_per_dof if var_ort_per_dof > 0 else np.inf
-
-    return var_ucm_per_dof, var_ort_per_dof, ratio
+from src.affine_control.ucm_analysis import ucm_variance
 
 
-# Example: 3-joint planar arm reaching to a point
-def planar_arm_jacobian(q: np.ndarray, L: np.ndarray = np.array([0.3, 0.25, 0.2])):
-    """Task Jacobian for endpoint position of a 3-link planar arm."""
-    n = len(q)
-    J = np.zeros((2, n))
-    for i in range(n):
-        for j in range(i, n):
-            angle_sum = np.sum(q[:j+1])
-            J[0, i] -= L[j] * np.sin(angle_sum)
-            J[1, i] += L[j] * np.cos(angle_sum)
-    return J
+def planar_endpoint(angles, lengths):
+    headings = np.cumsum(angles, axis=-1)
+    x = np.sum(lengths * np.cos(headings), axis=-1)
+    y = np.sum(lengths * np.sin(headings), axis=-1)
+    return np.stack((x, y), axis=-1)
 
-# Generate synthetic reaching data (50 repetitions)
-np.random.seed(42)
-q_nominal = np.array([0.5, 1.2, -0.3])
-n_reps = 50
-# Motor noise: more variability in task-irrelevant directions
-noise = np.random.randn(n_reps, 3) * 0.05
-q_data = q_nominal + noise
 
-v_ucm, v_ort, ratio = ucm_analysis(q_data, planar_arm_jacobian)
-print(f"UCM variance (per DOF): {v_ucm:.6f}")
-print(f"ORT variance (per DOF): {v_ort:.6f}")
-print(f"UCM/ORT ratio:          {ratio:.2f}")
-print(f"(Ratio > 1 supports the UCM hypothesis)")
+def planar_jacobian(angles, lengths):
+    headings = np.cumsum(angles)
+    terms = np.array([-lengths * np.sin(headings),
+                     lengths * np.cos(headings)])
+    return np.cumsum(terms[:, ::-1], axis=1)[:, ::-1]
+
+
+nominal = np.array([0.5, 1.2, -0.3])
+lengths = np.array([0.3, 0.25, 0.2])
+jacobian = planar_jacobian(nominal, lengths)
+_, _, vt = np.linalg.svd(jacobian, full_matrices=True)
+basis = np.column_stack((vt[2:].T, vt[:2].T))
+# Six symmetric observations: sample mean = nominal.
+# N-1 = 5; paired axes have covariance diag(sigma**2).
+sigma = np.array([0.03, 0.01, 0.01])
+axes = np.sqrt(2.5) * np.diag(sigma)
+deviations = np.vstack((axes, -axes)) @ basis.T
+result = ucm_variance(nominal + deviations, jacobian)
+iso_axes = np.sqrt(2.5) * 0.01 * np.eye(3)
+iso_data = nominal + np.vstack((iso_axes, -iso_axes))
+isotropic = ucm_variance(iso_data, jacobian)
+step = 0.03 * vt[2]
+null_step_linear_error = np.linalg.norm(jacobian @ step)
+null_step_actual_error = np.linalg.norm(
+    planar_endpoint(nominal + step, lengths)
+    - planar_endpoint(nominal, lengths))
+print(result)             # VN = 0.0009, VB = 0.0001, ratio = 9
+print(isotropic.ratio)    # 1, apart from roundoff
+print(null_step_actual_error)  # nonzero despite J @ step ~ 0
 \end{lstlisting}
 
-\section{Bernstein's Three Stages of Learning}
+The larger null variance is deliberately constructed, not discovered in
+experimental data. Six deterministic points demonstrate covariance accounting;
+they do not estimate human variability or provide a statistical confidence
+interval. The finite endpoint residual exposes the linearization limit.
+The tests compare the printed Jacobian with Cartesian finite differences and
+verify both the anisotropic example and its isotropic control.
 
-Bernstein proposed that motor skill acquisition progresses through three stages:
+\section{Learning, Constraints and Passive Dynamics}
 
-\begin{enumerate}
-  \item \textbf{Freezing}: initially, the learner constrains (``freezes'') excess
-        degrees of freedom, reducing the system to manageable dimensionality.
-        A beginner golfer keeps wrists rigid, eliminating the wrist DOF.
-  \item \textbf{Freeing}: as skill develops, the learner gradually releases
-        (``frees'') the frozen DOF, allowing them to participate in the movement.
-        The intermediate golfer adds wrist hinge.
-  \item \textbf{Exploiting}: the expert learner exploits the released DOF to
-        harness reactive forces, elastic energy, and passive dynamics. The expert
-        golfer uses the passive wrist release driven by centrifugal force.
-\end{enumerate}
+Freezing, freeing and exploiting degrees of freedom are useful questions to
+bring to descriptions of skill acquisition associated with Bernstein's
+framework \cite{Bernstein1967}; they should not be imposed as a universal
+three-stage law or a fixed sequence for every golfer.
+A joint moving through a small range is not thereby absent from the model.
+True mechanical locking, increased stiffness, correlated motion and a changed
+control policy have different effects on the system's feasible states.
+None implies that configuration dimension becomes exactly the task dimension.
 
-In the language of control theory:
-\begin{itemize}
-  \item Stage 1: reduce the system dimension from $n$ to $k$ (the task dimension)
-  \item Stage 2: increase the controlled dimension while maintaining task performance
-  \item Stage 3: exploit the drift dynamics $f(\state)$ by designing trajectories that
-        use passive mechanics (Volume~II, Chapter~5). Agrachev \& Sachkov
-        \cite{AgrachevSachkov2004} develop the geometric theory of reachable sets in
-        Chapter~8; what a system can reach depends on its drift as much as on its inputs,
-        which is why releasing a degree of freedom can enlarge the reachable set without
-        adding an actuator.
-\end{itemize}
+Likewise, wrist release is a coupled dynamical event involving geometry,
+applied loads and joint/implement mechanics; naming a centrifugal effect does
+not establish zero muscle action or a unique expert mechanism.
+A control-affine model $\dot{\bm x}=f(\bm x)+G(\bm x)\bm u$ can describe the
+interaction of drift and inputs under stated assumptions.
+Reachability depends on that complete system and its admissible controls
+\cite{AgrachevSachkov2004}.
+Removing a physical constraint can add feasible trajectories when the old
+ones remain admissible in the enlarged model, but merely observing more joint
+motion proves neither a larger reachable set nor better task performance.
 
+For golf and humanoid movement, the useful chain is therefore explicit:
+choose the outcome; identify its local geometry; impose the coupled physical
+constraints; then test candidate explanations against repeated observations
+and perturbations. This preserves the insight of motor abundance while
+keeping kinematic equivalence, dynamic feasibility and neural inference distinct.
+
+\clearpage
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Redundancy Quantification.}
-        For each of the following tasks, estimate the task dimension $k$, body DOF $n$,
-        and compute the kinematic redundancy:
-        (a) Standing balance, (b) Picking up a cup, (c) Walking on a treadmill,
-        (d) A tennis serve.
-
-  \item \textbf{UCM Analysis.}
-        Using the provided code, generate synthetic data for 3-joint planar reaching
-        with structured variability (more noise in the null space of the Jacobian).
-        Verify that the UCM/ORT ratio exceeds 1.
-
-  \item \textbf{Bernstein's Stages.}
-        Observe a beginner and an expert performing the same motor task (e.g., throwing
-        a ball). Describe their movement in terms of Bernstein's three stages. Which
-        degrees of freedom are frozen, freed, and exploited?
-
-  \item \textbf{(Programming.)} Implement a UCM analysis for a 7-DOF arm model reaching
-        to a 3D target. Visualize the UCM and ORT directions.
-
-  \item \textbf{(Research.)} Read Scholz and Sch{\"o}ner (1999) and summarize the key
-        experimental evidence for the UCM hypothesis.
+ \item \textbf{Rank and Feasibility.} Compute the rank and kernel of
+ $J=\left[\begin{smallmatrix}1&0\\2&0\end{smallmatrix}\right]$.
+ Compare its nullity with the force-allocation example and impose $F_{3,\max}=0$.
+ Explain why equal nullity does not imply equal physical freedom.
+ \item \textbf{Curvature.} For the circle task, compare a tangent step with
+ the exact level-set point at $\epsilon=0.05$ and $0.1$.
+ Verify the second-order task residual and discuss the singular point at the origin.
+ \item \textbf{Variance and Scaling.} Execute the reaching example.
+ Change the coordinate scales consistently in both data and Jacobian; explain
+ why this changes the metric and can change the variance ratio.
+ Test rank-zero, full-rank and zero-variance inputs and interpret \texttt{None}.
+ \item \textbf{Identifiability.} Verify both stationary-covariance equations.
+ Propose a perturbation or time-lag measurement that could distinguish the
+ models despite their identical instantaneous covariance.
+ \item \textbf{Golf Task Design.} Define a delivery outcome including the
+ measurement reference point, event time and uncertainty. Compare it with a
+ position-only task. State which additional data would be needed to distinguish
+ kinematic compensation from a particular muscle or neural mechanism.
 \end{enumerate}

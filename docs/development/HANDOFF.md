@@ -1,3 +1,15 @@
+# Degrees-of-Freedom Chapter — Validation Checkpoint #4845
+
+Active worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-dof-chapter-review`, branch `fix/dof-chapter-rigor-4845`, baseline `66c166693f2bba2120d9d3b9af59a27648ba69f9`. Issue lease session `technical-review-20261003-dof`. Chapter 1 source, tested UCM module and bounded book summary are revised. Focused 149-case checks (25 new numerical cases), static/content gates and native PDF/scoped browser validation pass; full regression, final source binding and remote delivery remain pending. No new corpus credit: 97 originals and whole-book consistency remain.
+
+PR #4843 is now merged at the baseline above. Its eight owned turnover paths and the 39 earlier frozen files were verified on remote main. Earlier pending descriptions below are historical. PR #4844 already delivered impact and passive-control scientific changes; preserve their receipts and accepted source hashes.
+
+The new prior-record snapshot retains six inventory routes and the motor-control book audit. Shared PDF/landing hashes are refreshed explicitly with dependency carry-forward, without assigning earlier findings a new scientific verification commit. Fifty-five preparation files remain unchanged; 54 later PDF body pages preserve normalized text and all 44 prior bibliography entries survive. Latash2012 adds one cited entry. Original shallow-wide records remain immutable.
+
+Next: finish static/content gates and normal source checkpoint; run full Python regression in the existing pinned numerical environment with a fresh isolated pytest directory and frozen tracked files. Record failures honestly. Bind accepted evidence only after passing, update one corpus row, open a regular PR, inspect review/CI, and use the central guarded merge workflow. Never use a draft PR or bypass hooks. Keep this goal active. The last two agy Gemini 3.8 Flash requests failed for insufficient credits; no fresh delegated output is claimed.
+
+---
+
 # Verified Combined Delivery — Impact and Passive Control
 
 PR #4844 merged reviewed head `35ebde7ff820b1ce9ce91cc453cf7b7d28acf611` to remote main as `d907add46b30ecedfc866f36ff5ab2c337bdfa16` on 2026-10-03 at 09:38 UTC. It carried both accepted impact source `b90b86376c9eebbc9d07be754b254ee914fdfff2` and passive-control amendment `c6a12064ef6da2c24c3cc80fb399d25b87e4e47e`. The entire delivered tree matches the reviewed head; all 39 frozen evidence files and 26 changed paths match. Receipts are `reports/technical-review/impact-chapter-remote-main-receipt.json` and `reports/technical-review/passive-control-amendment-remote-main-receipt.json`.
