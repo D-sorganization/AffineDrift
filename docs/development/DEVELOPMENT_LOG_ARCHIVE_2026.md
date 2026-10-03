@@ -239,3 +239,44 @@
 - **Last verified:** 2026-10-02 263c28c23c9ccc89602d0e1dd44f41be15722a99; exact-head CI37036705535 succeeded;25owned blobs and whole merged tree match cfc2; remote-main ancestry verified.
 - **Summary:** Review complete state versus scalar events, transverse/grazing timing sensitivity, actuator preload and rise time, bounded provider evidence, phase-work Jacobians, prospective information and causal timing experiments. Seven Flash helper outputs adjudicated. Eight decisions bound to source 8f9ec2361fbddeda985d6adf9bcbbc37270b2bc9;185prior retained,193total;106sourceaudits pluswholebookreview remain.
 - **Next step:** None for this delivered scope.
+
+
+### DL-#4819 · Practical Synthesis Evidence and Causal Comparisons
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4820 (regular, combined Chapters18/28); parent #4818 verified on remote main
+- **Issue:** #4819; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/synthesis-rigor-4819
+- **Paths:** articles/proximal_distal_companion/chapters/ch28_practical_synthesis.qmd, scripts/make_proximal_distal_companion_review_figures.py, tests/test_synthesis_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 merge29472661de971899bfb7cdc4a3f92b3e9eee19aa; exact-head CI37056378767 passed; all40owned blobs/whole tree/main ancestry verified.
+- **Summary:** Lead accepted eight scientific decisions connecting wrench/power, hidden hand allocations, task velocity, feasible interventions, finite Pareto results, measurement limits and frontend scope. Five Flash outputs adjudicated. Source 1a7521e581bab0e6aa40df3f9bf0cb5ddafdee66 committed; eight findings bound with201 prior findings preserved,209total and103pending source audits. All44post-binding checks pass; source and binding c19ff2d993ea0a0a0f1cd8151e54b03df93d1869 are verified on remote topic with normal hooks.
+- **Next step:** None for this delivered scope.
+
+
+### DL-#4817 · Forward Solver Guarantees and Validation
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4820 (regular, combined Chapters18/28); parent #4818 verified on remote main
+- **Issue:** #4817; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/synthesis-rigor-4819
+- **Paths:** articles/proximal_distal_companion/chapters/ch18_forward_model.qmd, scripts/make_proximal_distal_companion_expanded_figures.py, tests/test_forward_model_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 merge29472661de971899bfb7cdc4a3f92b3e9eee19aa; exact-head CI37056378767 passed; all40owned blobs/whole tree/main ancestry verified.
+- **Summary:** Correct fixed-mode KKT assumptions, multiplier units, projection/work ledgers, moving-boundary compatibility, input memory, counterfactuals, evidence scope and coordinate/contact comparisons. Six successful Flash outputs adjudicated. Eight findings bound to the accepted source;193 prior companion findings preserved,201total;104 source audits and whole-book consistency remain.
+- **Next step:** None for this delivered scope.
+
+### DL-#4821 · Counterfactual Intervention and Evidence Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4824 (regular); merged to remote main 037f42d4d551ff59e1661d539f5e7e49e8ca48d8
+- **Issue:** #4821; epic #4009 / corpus #4021 / companion #4059
+- **Branch:** fix/counterfactual-rigor-4821
+- **Paths:** articles/proximal_distal_companion/chapters/ch11_counterfactual_scissors.qmd, scripts/make_proximal_distal_companion_figures.py, tests/test_counterfactual_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-02 full regression6636pass/29skip/187deselected/79.32%coverage; finalPDFcontents/boundaries pass; source c27c09f3b08725ba485faa81a63673484746d957; binding 53ef3b688b225be03232409a6fe737e7e5608eac verified remote;47postbinding checks pass; registration SELF. Previous checks: 2026-10-02 baseline dc1884f2084a1caaa1b135201e751e330afe24e2; four focused passes;12gates/655titles/894filequality;238pagePDF,53math,4browsercells pass;initial27affected passes plus2scratch-hygiene failures remediated with6passes; final29affected checks pass.
+- **Summary:** Eight issue findings distinguish complete-state intervention, nonlinear finite effects, geometry controls, strategy comparisons and human inference. Supplied-text Flash helpers support data arithmetic and test drafting; six helper outputs lead-adjudicated; source c27c09f3b08725ba485faa81a63673484746d957 accepted and eight findings bound with209prior findings preserved. 217total;102source audits plus whole-book consistency remain.
+- **Next step:** Delivered. Exact-head CI37064262227 succeeded; 23 owned blobs match and the shared SPEC update from PR4827 is explicitly verified in reports/technical-review/counterfactual-remote-main-receipt.json. No remaining work for this bounded chapter.

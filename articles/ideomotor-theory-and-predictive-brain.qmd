@@ -4,330 +4,397 @@ description: "Cross-cutting treatment of ideomotor theory, predictive coding, an
 author: "Dieter Olson"
 date: "Date unverified"
 date-source: "unverified"
-date-modified: "2026-09-10"
+date-modified: "2026-10-02"
 categories:
 - motor-control
 ---
 
-## Overview
+## What a Predictive Account Must Explain
 
-A leading view in modern neuroscience holds that the brain does not merely react to the
-world — it actively predicts it. This idea, developed over the past few decades in
-predictive coding theory (Helmholtz, 1867; Rao & Ballard, 1999; Friston, 2010), is an
-influential and well-supported framework — though not an uncontested one — and it has
-profound implications for how we understand motor control. On this account, a golfer does
-not compute a muscle-by-muscle control sequence during the swing. Instead, the brain
-generates a *prediction* of the desired sensory outcome (the sound, feel, and trajectory of
-impact), and the motor system executes whatever movements minimize the discrepancy between
-predicted and actual sensation. The truth is almost certainly a blend of prediction and
-feedback; we foreground prediction here because its mathematics maps so cleanly onto the
-control-affine framework.
+A golfer can intend a ball flight without consciously specifying every muscle
+force. That observation poses a control problem: how can an intended outcome
+influence a mechanically feasible action when the body is only partly observed,
+commands take time to produce force, and the consequences are uncertain?
 
-This document develops the ideomotor framework as a cross-cutting theme throughout the
-*Geometry of Motion* series.
+Prediction helps formulate this problem. It does not remove the need for
+actuation, feedback or constraints. A model can predict a poor outcome very
+accurately; an action can achieve a good outcome even when its prediction was
+wrong. We therefore need to distinguish **what will happen**, **what is wanted**,
+and **what can be changed**.
 
 ::: {.callout-note}
 ## Core Thesis
 
-**Skilled motor control leans heavily on forward-model prediction rather than moment-to-moment feedback error correction.**
-This is a matter of emphasis, not a strict dichotomy — fast movements like a golf swing
-outrun sensory feedback loops, so feedforward prediction must dominate, while feedback
-still tunes and calibrates the model over many repetitions. The mathematical structure of
-forward models maps directly onto the control-affine framework developed in Volume I: the
-drift term plays the role of the forward model's prediction of passive dynamics, and the
-control term corrects prediction errors.
+Forward prediction, state estimation and action selection are complementary
+operations. Their mathematical connections help us design testable accounts of
+movement, but do not identify one proven neural controller for the golf swing.
+A successful comparison must specify its model, observations, task, admissible
+inputs and evidence.
 :::
 
+## Anticipated Effects and Control Objectives
 
-## Ideomotor Theory
+The ideomotor perspective emphasizes anticipated action effects. A related
+proposal, Hommel and colleagues' Theory of Event Coding, describes perception
+and action planning through shared, task-dependent representations of event
+features. That is a cognitive account of representation, not a derivation of a
+unique torque controller or proof that intermediate joint states are irrelevant.
+See [Hommel et al. (2001)](https://doi.org/10.1017/S0140525X01000103).
 
-### Historical Development
+An engineering translation begins with an estimated complete state $\hat x_t$,
+a future input program $U$ and a horizon $T$. Let $\Phi_T$ predict state evolution
+and $h$ map the terminal state to an observable:
 
-**William James (1890):** "Every representation of a movement awakens in some degree the
-actual movement which is its object." Actions are represented by their anticipated effects,
-not by their muscular kinematics. A tennis player imagines the ball trajectory, not the
-arm muscle sequence.
+$$
+\hat y_T(U)=h\!\left(\Phi_T(\hat x_t,U)\right).
+$$
 
-**Greenwald (1970):** Ideomotor compatibility — responses are executed faster when the
-required movement matches the anticipated sensory effect. Experimental evidence that
-action planning operates in sensory space.
+A desired outcome is $y^*$. One possible design problem is
 
-**Hommel, Müsseler, Aschersleben & Prinz (2001):** Theory of Event Coding (TEC) —
-perception and action share the same representational currency (feature codes). Planning
-an action activates the sensory features of its expected consequences.
+$$
+U^*\in\arg\min_{U\in\mathcal U_{\mathrm{feasible}}}
+\left\{[\hat y_T(U)-y^*]^\mathsf TQ[\hat y_T(U)-y^*]+R(U)\right\}.
+$$
 
-### Mathematical Formulation
+Here $Q$ weights the chosen output errors, $R$ penalizes declared action costs,
+and the feasible set includes the dynamics and relevant bounds. They are design
+choices to justify or identify, not quantities supplied by the word "ideomotor."
+For mixed outputs such as angle, speed and impact location, their units and
+scales must be handled explicitly. A horizon or event rule is part of the task.
 
-Let the desired sensory outcome be $\mathbf{y}^* \in \mathcal{Y}$ (ball trajectory,
-sound of impact, proprioceptive feel). The forward model $\hat{f}$ predicts sensory
-outcome from state and action:
+Two errors play different roles:
 
-$$\hat{\mathbf{y}} = \hat{f}(\mathbf{x}, \mathbf{u}).$$
+| Error | Definition | What Does It Assess? |
+|---|---|---|
+| Predicted task error | $\hat y_T(U)-y^*$ | How the predicted outcome compares with the goal |
+| Sensory prediction error | $y_T^{\mathrm{observed}}-\hat y_T(U)$ | How the observation compares with the prediction |
 
-The ideomotor controller selects actions to minimize **sensory prediction error**:
+For an illustrative landing coordinate, predicting 5 m and observing 5 m when
+the goal is 0 m gives zero prediction error but a 5 m task error. Observing the
+goal at 0 m after predicting 5 m gives zero observed task error but a $-5$ m
+prediction error. Learning a better predictor and selecting a better action
+are consequently different problems.
 
-$$\mathbf{u}^* = \arg\min_{\mathbf{u}} \|\hat{f}(\mathbf{x}, \mathbf{u}) - \mathbf{y}^*\|^2.$$
+Specifying an output goal permits multiple joint trajectories. It does not
+make those trajectories immaterial: joint limits, balance, contact, fatigue
+and unmeasured internal loads may restrict which are acceptable. A clubhead
+outcome also need not determine the individual hand forces. Output redundancy
+connects action selection to the force and work accounting developed elsewhere
+on this site.
 
-This is fundamentally different from tracking a state reference $\mathbf{x}^*(t)$. The
-motor system does not know (and does not care about) the intermediate joint angles —
-only about the sensory outcome.
+Computing a zero-input future is **forward evaluation**. Searching for an input
+that meets an outcome is an **inverse problem**, which may have several solutions
+or none. Neither phrase guarantees a globally invertible dynamics map.
 
-**Connection to Vol I:** In Chapter 7 (counterfactual analysis), we ask "what would
-have happened if $\mathbf{u} = 0$?" The ideomotor framework answers a dual question:
-"what action $\mathbf{u}$ produces the target outcome $\mathbf{y}^*$?" Both questions
-require inverting the forward dynamics.
+## A Forward Model Includes the Input
 
+For a declared control-affine state model,
 
-## Predictive Coding and Active Inference
+$$
+\dot x=f(x)+G(x)u,
+$$
 
-### Hierarchical Prediction
+the forward prediction uses both $f$ and $G$, the initial state, and the future
+input or feedback policy. The drift $f$ is the vector field at zero **declared**
+input. It can retain gravity, stored elastic effects and actuator state. If $u$
+is an upstream command, setting it to zero need not immediately remove delivered
+torque. Drift is therefore not a coordinate-free measure of biological passivity.
 
-Friston's **active inference** framework (2010) extends ideomotor theory to a full
-probabilistic model. The brain maintains a generative model $p(\mathbf{y} | \mathbf{x}, \mathbf{u})$
-and seeks actions that minimize **free energy** $F$:
+Nor is $G(x)u$ necessarily an error correction. It can supply planned acceleration,
+compensate gravity, establish contact or change stiffness through an actuator
+model. A perfect predictor of a pendulum held away from the downward vertical
+still requires the nonzero holding torque $mgl\sin\theta$. Better prediction does
+not make that physical requirement disappear.
 
-$$F = \underbrace{\mathbb{E}_q[\log q(\mathbf{x}) - \log p(\mathbf{x} | \mathbf{y})]}_{\text{perception: } D_{\mathrm{KL}}[q \,\|\, p(\mathbf{x}|\mathbf{y})]} + \underbrace{\mathbb{E}_q[-\log p(\mathbf{y})]}_{\text{surprise: } -\log p(\mathbf{y})}.$$
+For an infinite-horizon linear time-invariant **regulation** problem with
+$\dot{\delta x}=A\delta x+B\delta u$, the feedback law is
+$\delta u=-R_u^{-1}B^\mathsf TP\delta x$ with state cost $Q_x\succeq0$,
+input cost $R_u\succ0$, $(A,B)$ stabilizable and $(Q_x^{1/2},A)$ detectable.
+$P$ is the stabilizing algebraic Riccati solution. Tracking a time-varying nominal
+trajectory instead generally requires a time-varying formulation; the same
+constant $P$ cannot simply be assumed. More generally, when a nominal state or
+motion requires $u_{\mathrm{nom}}$, the total input is
+$u=u_{\mathrm{nom}}+\delta u$. Small correction does not imply small total input.
+The gradient of $V(\delta x)=\delta x^\mathsf TP\delta x$ is $2P\delta x$,
+not a sensory prediction error or the motor command itself.
 
-This is the standard variational free energy, written here as the KL divergence between the
-approximate and true posterior plus the negative log-evidence (surprise). The split is
-schematic: perception lowers the KL term by refining beliefs, while action lowers surprise
-by steering observations toward what the model predicts. Minimizing $F$ simultaneously:
-1. Updates the brain's model of the current state (perception)
-2. Selects actions to make observations conform to predictions (action)
+## Prediction and Feedback Can Work Together
 
-This is a unified theory of perception AND action from a single principle.
+A delayed measurement can update an estimate of the current state, using a
+model and the intervening commands. The resulting estimate can guide feedback.
+This is a different architecture from either replaying a fixed command trace
+or reacting to a delayed measurement as though it were current.
 
-### Prediction Error as Control Signal
+Todorov and Jordan's optimal-feedback-control account combines forward
+estimation with delayed, noisy sensing and task-dependent correction. Its
+minimal-intervention argument concerns deviations that matter for the task;
+it does not say that total motor output vanishes with expertise. The paper
+presents a computational account and simplified models, with evidence from
+particular movement tasks. It does not measure the balance of prediction and
+feedback in a golf swing. See [Todorov and Jordan (2002)](https://doi.org/10.1038/nn963).
 
-In predictive coding, **prediction errors** are the only signals that propagate forward
-in the brain. If the predicted sensory consequence matches actual sensation, no signal is
-sent. If they differ, a **precision-weighted prediction error** travels up the hierarchy.
+For a proposed correction during a swing, compare the time remaining with the
+relevant sensing, processing, actuation and mechanical response delays. Different
+channels and phases can have different opportunities to influence the outcome.
+A correction arriving too late to alter impact may still affect follow-through
+or the next attempt. Swing duration alone does not establish that all online
+feedback is absent, and delay alone does not prove instability: that depends
+on the complete dynamics and controller.
 
-The precision (inverse variance) weighting is critical: high-precision predictions (the
-familiar "muscle memory" of a skilled golfer) suppress prediction errors at lower levels,
-allowing top-down planning to dominate. Low-precision predictions (in a novel situation)
-allow bottom-up signals to correct the model.
+## Precision Is About a Specified Uncertainty
 
-**Mathematical structure:** prediction error at level $l$:
-$$\boldsymbol{\varepsilon}_l = \mathbf{y}_l - \hat{f}_l(\mathbf{x}_{l+1}).$$
-The control signal at level $l$ is the precision-weighted error:
-$$\mathbf{u}_l = \Pi_l \boldsymbol{\varepsilon}_l,$$
-where $\Pi_l$ is the precision (inverse covariance) matrix. This precision weighting is
-closely analogous to the inverse cost weighting in LQR control: in both, an inverse-variance
-(or inverse-cost) matrix sets how strongly each error channel is trusted and corrected. The
-correspondence is conceptual rather than a strict identity — the two arise from different
-objectives — but it gives a useful bridge between Bayesian precision and optimal-control gain.
+For an observation model $y=h(x)+v$ with Gaussian noise covariance $\Sigma_y$,
+let $\Pi_y=\Sigma_y^{-1}$ and $\varepsilon=y-h(x)$. At fixed covariance, the
+quadratic part of the negative log-likelihood is
 
+$$
+\tfrac12\varepsilon^\mathsf T\Pi_y\varepsilon.
+$$
 
-## Forward Models in Motor Control
+Increasing a scalar likelihood precision increases the weight of a fixed
+residual. It does not suppress that residual's influence by definition. Prior
+precision is different: it weights a prior belief relative to the observation.
+If the covariance is itself estimated or state dependent, the normalization
+term and covariance derivatives also matter; residual weighting alone is not
+the entire likelihood objective.
 
-### Wolpert's MOSAIC Framework
+A manufactured scalar example makes the distinction explicit. Let a position
+prior have mean $\mu_0$ and variance $\sigma_0^2$, and let an independent noisy
+position observation have variance $\sigma_y^2$. The posterior mean is
 
-Wolpert & Kawato (1998) proposed that the cerebellum contains a population of paired
-**forward-inverse model modules** (MOSAIC: Modular Selection and Identification for
-Control). Each module:
-- **Forward model:** predicts the next state $\hat{\mathbf{x}}_{t+1}$ given current
-  state $\mathbf{x}_t$ and command $\mathbf{u}_t$
-- **Inverse model:** maps desired next state $\mathbf{x}_{t+1}^*$ to required command $\mathbf{u}_t$
+$$
+\mu_{\mathrm{post}}=
+\frac{\Pi_0\mu_0+\Pi_y y}{\Pi_0+\Pi_y},
+\qquad \Pi_0=\sigma_0^{-2},\quad \Pi_y=\sigma_y^{-2}.
+$$
 
-Multiple modules compete (soft selection based on prediction error), and the best-fitting
-module takes control. This is **mixture-of-experts** in modern machine learning terminology.
+With $\mu_0=0$ m, $y=1$ m, prior variance $1\,\mathrm{m^2}$ and observation
+variance $4\,\mathrm{m^2}$, the posterior mean is 0.2 m. Reducing observation
+variance to $0.25\,\mathrm{m^2}$ moves it to 0.8 m. Instead increasing prior
+precision to $4\,\mathrm{m^{-2}}$ while keeping observation variance
+$4\,\mathrm{m^2}$ gives $1/17$ m. This is an inference identity under stated
+Gaussian assumptions, not a model of muscle memory. The posterior variance is
+$(\Pi_0+\Pi_y)^{-1}$: equal relative weights can give the same mean but different
+uncertainty. After updating a belief, its residual from the observation may
+shrink even though the likelihood weight increased. That differs from weighting
+a residual held fixed during the comparison.
 
-### Connection to Drift-Control Decomposition
+Feldman and Friston propose a relationship between precision weighting and
+synaptic gain, illustrated with simulations of attention. That proposed
+implementation should be distinguished from the probability calculation above
+and from measurements in an athlete. See
+[Feldman and Friston (2010)](https://doi.org/10.3389/fnhum.2010.00215).
 
-The drift-control decomposition of Volume I maps naturally onto the forward model:
+A weighted residual is also not automatically a physical command. Its units
+and dimension may differ from those of torque. For differentiable output
+prediction over a declared future horizon and the explicit design cost
+$J(u)=\tfrac12 e(u)^\mathsf TQe(u)+\tfrac12u^\mathsf TR_u u$, with symmetric
+weights and $e(u)=\hat y(u)-y^*$, the action gradient is
 
-$$\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$$
+$$
+\nabla_u J=
+\left(\frac{\partial\hat y}{\partial u}\right)^\mathsf TQe+R_u u.
+$$
 
-The **drift** $f(\mathbf{x})$ is the forward model's prediction of what happens
-**without** control (passive dynamics). The **control** $G(\mathbf{x})\mathbf{u}$
-is the correction term.
+The sensitivity map connects outcome coordinates to input coordinates. A
+feasible optimization method must also respect input bounds. Omitting that
+map and writing $u=\Pi\varepsilon$ is not a general motor-control law.
+Uncertainty weights describe what is believed; cost weights describe what is
+valued. An equivalence requires a specified model and objective, not matching
+matrix notation.
 
-An expert golfer's forward model has learned $f(\mathbf{x})$ so accurately that control
-is only needed for small corrections. This is why experts use less muscular effort for
-the same outcome — they exploit the drift (passive dynamics of gravity, elastic energy,
-inertial forces) and control only deviations.
+## What the Free-Energy Identity Does and Does Not Establish
 
+Friston's free-energy principle proposes a unifying account of perception,
+learning and action. Its scope is theoretical; citing it does not establish
+one neural implementation or a golfer's control policy. See
+[Friston (2010)](https://doi.org/10.1038/nrn2787).
 
-## Implications for Skill Acquisition
+For a fixed generative model $p(x,y)$, an observed $y$, and a normalized
+approximate posterior $q(x)$ with compatible support, variational free energy is
 
-### Bernstein's Three Stages Revisited
+$$
+F[q;y]=\mathbb E_q[\log q(x)-\log p(x,y)]
+       =D_{\mathrm{KL}}[q(x)\Vert p(x\mid y)]-\log p(y).
+$$
 
-Nikolai Bernstein's (1967) classic description of motor learning maps onto predictive
-coding:
+Use probabilities, or densities relative to a declared reference measure,
+consistently. This identity separates an approximation gap from negative log
+evidence. With the model and observation fixed, changing $q$ can reduce the
+KL term; it cannot change $p(y)$. Restricted approximation families may not
+attain the exact posterior. This informational objective is not mechanical
+free energy in joules.
 
-1. **Freezing degrees of freedom:** Reducing uncertainty by eliminating variability.
-   In predictive coding terms: using high-precision priors to constrain the action space.
+An action cannot alter an observation already recorded. An action account must
+specify how present commands influence subsequent sensations, what outcomes are
+preferred or expected, and which variables the agent may change. Continuous
+action formulations can differentiate through a sensation-to-action dependency;
+policy formulations can evaluate future outcomes under an explicitly stated
+criterion. The static identity alone supplies neither a golf task nor a
+complete action-selection algorithm. A generic wish to reduce surprise is
+insufficient to explain why an agent seeks a particular shot.
 
-2. **Freeing degrees of freedom:** Progressively allowing more joints to participate.
-   In predictive coding terms: lowering precision at lower levels, allowing exploration.
+Predictive coding, ideomotor representation, forward/inverse models and optimal
+control address related questions at different levels. Mathematical compatibility
+is useful; it is not evidence that they are identical theories or all describe
+the same neural computation.
 
-3. **Exploiting degrees of freedom:** Using passive dynamics and elastic energy.
-   In predictive coding terms: the forward model has learned to *predict* passive dynamics
-   and the control signal approaches zero (pure drift utilization).
+## Multiple Models, Learning and Practice
 
-### Differential Learning (Schöllhorn)
+Wolpert and Kawato's paired forward/inverse-model proposal uses responsibility
+signals to weight model contributions and learning. A schematic combined
+command is $u=\sum_i\lambda_i u_i$, with nonnegative responsibilities summing
+to one. Soft weighting need not select a single winning module. The paper
+proposes possible neural organization; it does not establish that a golfer's
+cerebellum literally runs these modules. See
+[Wolpert and Kawato (1998)](https://doi.org/10.1016/S0893-6080(98)00066-5).
 
-Schöllhorn's **differential learning** (2000) deliberately introduces random perturbations
-to prevent the learner from forming stable attractors. This forces continuous updating of
-the forward model, preventing premature convergence to a suboptimal local minimum.
+Even a well-defined mixture needs a stability and feasibility analysis. Averaging
+commands from different controllers does not automatically preserve each
+controller's guarantees under switching, model error or nonlinear constraints.
+Responsibility can describe confidence about context without being a direct
+measure of expertise, effort or causal contribution of one muscle.
 
-**Mathematical interpretation:** differential learning maintains high entropy in the
-action-effect distribution, preventing precision (confidence) from concentrating too
-early in training.
+Likewise, describing practice as "freezing," "freeing" or "exploiting" degrees
+of freedom does not establish a fixed sequence of Bayesian precision changes.
+Reduced movement variability, mechanical stiffness, prior confidence and neural
+coordination are different quantities. To connect them, specify measurements
+and competing explanations rather than treating the vocabulary as an equation.
 
+Adding practice variation also does not by itself prove that a learner maintains
+higher entropy, avoids local minima or acquires a better forward model. Entropy
+belongs to a specified distribution at a stated scale; variation in the assigned
+task need not equal uncertainty in the learner's beliefs. A practice comparison
+would need defined interventions, retention/transfer outcomes and uncertainty.
+The control equations here do not establish a training prescription.
 
-## Cross-Volume Treatment
+## Connections Across the Modeling Layers
 
-::: {.callout-note}
-## Geometry of Motion — Forthcoming Textbook Series
-The "Vol I", "Vol II", etc. references in this table point to chapters in *Geometric Control of Nonlinear Systems* — a book-length treatment of control-affine biomechanics currently in development. These volumes are not yet publicly available. The table is included to show the structural connections between the AffineDrift articles and the forthcoming textbook.
-:::
+| Layer | Mathematical Role | What Must Not Be Identified With It |
+|---|---|---|
+| Configuration | Joint/segment geometry $q$ | The entire sensory outcome space |
+| State | Variables needed for future evolution, including velocity and actuator memory | A photograph of posture alone |
+| Observation | A mapping and noise/delay model for measured $y$ | Direct access to every internal force |
+| Forward prediction | Evolution under a specified input/policy | Drift alone or proof of a neural model |
+| Inference | Updating a belief about state or model | Choosing a desired task outcome |
+| Control | Selecting feasible action for an explicit objective | Eliminating all physical actuation |
 
-| Volume | Ideomotor / Predictive Brain Connection |
-|--------|----------------------------------------|
-| Vol 0 | Configuration space as the representation of sensory outcomes |
-| Vol I, Ch 7 | Counterfactual analysis = asking the ideomotor question |
-| Vol II | Forward kinematics = forward model for end-effector position |
-| Vol III | Optimal control = action selection to minimize predictive error |
-| Vol IV | Neural forward models; learning $f(\mathbf{x})$ from experience |
+Several configurations can have the same observed outcome, and identical
+configurations can have different futures because velocities or internal
+states differ. These relationships explain why prediction, control and the
+mechanical work ledger need one another without becoming interchangeable.
 
+## Python: A Declared Forward Model and Bounded Action Search
 
-## Python: Forward Model Simulation
+This example is a nominal engineering calculation. It has a known initial state,
+a hand-coded physical model and an explicit task cost; it learns no parameters
+and implements no neural architecture. Its input is a torque, held constant
+for a declared future interval. It is not a golf-swing model.
 
-The following example uses a nonlinear damped pendulum to match the nonlinear setting of
-the control-affine framework $\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$,
-where $f(\mathbf{x})$ captures the genuinely nonlinear passive dynamics (gravity, damping)
-rather than a linearised approximation.
+For a point mass $m=1$ kg on a massless rigid rod of length $l=1$ m, let
+$\theta=0$ be the downward vertical, $I=ml^2$, and
+$\beta=0.5\,\mathrm{s^{-1}}$ be a damping **rate**. Then
+
+$$
+\dot\theta=\omega,\qquad
+\dot\omega=-\frac{g}{l}\sin\theta-\beta\omega+\frac{u}{I},
+\quad g=9.81\,\mathrm{m/s^2}.
+$$
+
+The corresponding damping torque is $-I\beta\omega$; $\beta$ itself is not a
+rotational damping coefficient in N m s/rad. The zero-input prediction still
+contains gravity, damping and the current velocity.
+
+Starting from $(\theta,\omega)=(0.3\,\mathrm{rad},0)$, choose a constant torque
+in $[-6,6]$ N m over $T=0.2$ s. Use the dimensionless objective
+
+$$
+J(u)=q_\theta[\theta(T;u)-\theta^*]^2+r_u u^2,
+\qquad \theta^*=0,
+$$
+
+where $q_\theta=10\,\mathrm{rad^{-2}}$ and
+$r_u=0.01\,(\mathrm{N\,m})^{-2}$. These weights express an illustrative design
+tradeoff. The torque penalty is not mechanical work, metabolic energy or a
+measured neural preference.
+
+Why predict beyond a single explicit-Euler position step? That step gives
+$\theta_1=\theta_0+h\omega_0$, independent of torque. Optimizing its angle
+error cannot select an action through the pendulum's acceleration. For the
+continuous model over a short interval, the input sensitivity instead starts as
+$\partial\theta(T)/\partial u=T^2/(2I)+O(T^3)$. The horizon and numerical
+method must represent the path from input to the chosen observable.
+
+The repository module integrates with SciPy's adaptive DOP853 solver, using
+relative/absolute tolerances $10^{-10}/10^{-12}$ and a maximum step of
+$T/100$. It compares a bounded scalar optimizer's candidate with both torque
+bounds and zero torque. This checks a restricted constant-input family; it
+does not certify a global optimum even within that scalar interval, much less
+over time-varying control policies. Halving
+the maximum step checks this example's numerical sensitivity, not every state
+or horizon; it does not certify optimizer convergence or robustness to state
+uncertainty.
+
+Run this short example from a checkout with the project's Python dependencies:
 
 ```python
 import numpy as np
 
+from src.affine_control.ideomotor_demo import choose_torque, predict_pendulum
 
-class ForwardModel:
-    """
-    Learned forward model: predicts next state given current state and action.
-    Uses a simple nonlinear pendulum model to demonstrate the nonlinear drift term.
-    """
+state = np.array([0.3, 0.0])  # angle [rad], angular velocity [rad/s]
+choice = choose_torque(state, target_angle_rad=0.0, horizon_s=0.2)
+zero_future = predict_pendulum(state, torque_nm=0.0, horizon_s=0.2)
 
-    def __init__(self, m=1.0, l=1.0, b=0.5, g=9.81):
-        """
-        Parameters for a damped pendulum:
-        m: mass, l: length, b: damping, g: gravity
-        """
-        self.m = m
-        self.l = l
-        self.b = b
-        self.g = g
-
-    def f(self, x):
-        """Nonlinear drift: f(x) = [dtheta/dt, -(g/l)*sin(theta) - b*dtheta/dt]"""
-        theta, dtheta = x
-        return np.array([dtheta, -(self.g / self.l) * np.sin(theta) - self.b * dtheta])
-
-    def g_mat(self, x):
-        """Control gain matrix: G(x) — for this pendulum, control acts on acceleration"""
-        return np.array([0.0, 1.0 / (self.m * self.l**2)])
-
-    def predict(self, x, u, dt=0.01):
-        """Predict next state using control-affine forward model (Euler integration)."""
-        x_dot = self.f(x) + self.g_mat(x) * u
-        return x + dt * x_dot
-
-    def prediction_error(self, x_actual, x_predicted):
-        """Compute prediction error as Euclidean distance."""
-        return np.linalg.norm(x_actual - x_predicted)
-
-
-class IdeomotorController:
-    """
-    Ideomotor controller: selects action to minimize sensory prediction error.
-    Target is specified in output space (sensory consequences), not state space.
-    """
-
-    def __init__(self, forward_model, C, Q_sens, R_ctrl):
-        """
-        Parameters
-        ----------
-        forward_model : ForwardModel
-            Learned forward model of dynamics
-        C : np.ndarray
-            Output matrix y = C x (sensory consequences)
-        Q_sens : np.ndarray
-            Sensory error cost matrix
-        R_ctrl : float
-            Control effort cost scalar
-        """
-        self.model = forward_model
-        self.C = C
-        self.Q = Q_sens
-        self.R = R_ctrl
-
-    def select_action(self, x, y_star, n_iter=10, lr=0.1):
-        """
-        Gradient descent on sensory prediction error.
-
-        J(u) = (C(x + dt*f(x,u)) - y*)' Q (C(x + dt*f(x,u)) - y*) + R * u^2
-
-        The gradient of the forward model w.r.t. u is estimated by finite differences
-        to handle the nonlinear drift f(x) without requiring an analytic Jacobian.
-        """
-        u = 0.0
-        eps = 1e-4
-        for _ in range(n_iter):
-            x_pred = self.model.predict(x, u)
-            y_pred = self.C @ x_pred
-            sens_error = y_pred - y_star
-            # Finite-difference gradient of predict w.r.t. u
-            dx_du = (self.model.predict(x, u + eps) - self.model.predict(x, u - eps)) / (2 * eps)
-            grad = self.C @ dx_du @ self.Q @ sens_error + self.R * u
-            u = u - lr * grad
-        return u
-
-
-# Example: nonlinear damped pendulum with angle as sensory output
-C = np.array([[1, 0]])  # Only measure angle (sensory output)
-
-model = ForwardModel(m=1.0, l=1.0, b=0.5, g=9.81)
-ctrl = IdeomotorController(model, C,
-                           Q_sens=np.array([[10.0]]),
-                           R_ctrl=0.1)
-
-x = np.array([0.3, 0.0])  # Current state: displaced 0.3 rad, at rest
-y_star = np.array([0.0])  # Desired sensory consequence: zero angle
-
-u = ctrl.select_action(x, y_star)
-print(f"Ideomotor action: u = {u:.3f} N·m")
-print(f"Current angle: {np.degrees(x[0]):.1f}°")
-print(f"Prediction error before: {abs(C @ x - y_star)[0]:.3f} rad")
-x_next = model.predict(x, u)
-print(f"Prediction error after:  {abs(C @ x_next - y_star)[0]:.3f} rad")
+print(f"Selected constant torque: {choice.torque_nm:.3f} N m")
+print(f"Selected-input final angle: {choice.final_state[0]:.6f} rad")
+print(f"Zero-input final angle: {zero_future[0]:.6f} rad")
+print(f"Selected/zero-input costs: {choice.cost:.6f} / {choice.zero_input_cost:.6f}")
 ```
 
+The checked calculation selects approximately $-3.407$ N m. The selected-input
+future ends at $0.181738$ rad, compared with $0.245629$ rad under zero torque;
+the costs are approximately $0.446389$ and $0.603336$. Both futures start from
+the same state and use the same horizon. Comparing the controlled future only
+with the initial angle would incorrectly credit the action for changes that
+gravity would already produce.
 
-## Summary
+The selected branch also ends with angular velocity about $-1.125947$ rad/s,
+versus $-0.517771$ rad/s without input. Smaller terminal angle is not the same
+as coming to rest. A stabilization task would need an appropriate velocity
+objective and a continuing policy; a golf task would need its own delivery,
+contact and load constraints. This is why a goal, a predictor, an admissible
+action family and a performance measure must be specified together.
 
-Ideomotor theory and predictive coding provide a cognitive science grounding for the
-mathematical framework of Volume I:
+## What Would Strengthen the Golf Argument?
 
-- **Action planning in sensory space** ↔ output-space optimal control
-- **Forward model** ↔ drift term $f(\mathbf{x})$ of control-affine dynamics
-- **Prediction error** ↔ LQR cost-to-go gradient
-- **Precision weighting** ↔ cost matrix $Q$ and $R$ in optimal control
-- **Bernstein's stages** ↔ progressive unfreezing of DoF = reducing precision constraints
+A golf-specific account should state what the model predicts beyond a plausible
+story. For example, specify a perturbation, the information available before
+and after it, the expected correction and its latency, and an outcome that
+would distinguish the proposed estimator/controller from an alternative.
+Measure uncertainty in both the intervention and the response. A good shot
+alone does not identify the latent neural strategy that produced it.
 
-The expert performer is one whose forward model is accurate enough that control signals
-approach zero — the motion runs on passive dynamics alone, with control only correcting
-small prediction errors.
+Connect the prediction to achievable force, torque and work. If a model proposes
+that skill reduces correction, distinguish correction from the planned input,
+co-contraction, internal loading and total energetic cost. Claims about those
+quantities need their own measurements or justified inference, not the accuracy
+of a forward predictor alone.
+
+**The useful bridge is explicit:** anticipated effects define candidate goals;
+state estimates initialize predictions; dynamics and actuator/contact constraints
+limit feasible actions; costs rank the outcomes; observations test both the
+predictor and the proposed policy. Each connection is a place to make an
+assumption visible and a claim testable.
 
 ## Related Articles
 
-- [Passive Distributed Control: Frans Bosch Framework](passive-distributed-control.html) — Self-organization and distributed control as the physical substrate for forward models
-- [Degrees of Freedom and the Curse of Dimensionality](degrees-of-freedom-and-dimensionality.html) — How predictive models and Bernstein's stages resolve the curse of dimensionality
-- [Nonlinear Control Theory Insights](nonlinear-control-insights.html) — Drift dominance and underactuation in high-dimensional biomechanical control
-- [The Physics of Golf: Chapter 24 Motor Control I](The_Physics_of_Golf/quarto/ch24_motor_control_brain.html) — Delayed estimation, feasible actuation, prediction, and feedback in golf mechanics
-- [The Physics of Golf: Chapter 25 Motor Learning](The_Physics_of_Golf/quarto/ch25_motor_learning.html) — Sensory prediction, reward, and practice in motor skill acquisition
-- [The Physics of Golf: Chapter 26 The Computational Brain](The_Physics_of_Golf/quarto/ch26_remarkable_brain.html) — Neural delays, internal models, and impedance control in athletic performance
-- [Volume IV: Human Motor Control](../books/human-motor-control.html) — Comprehensive monograph treatment of neural architecture, internal models, and computational movement intelligence
-- [Learning Path: Biomechanics & Motor Control](../resources/learning-path-biomechanics.html) — Structured learning path from skeletal mechanics to neural control
-
+- [Passive Distributed Control: Frans Bosch Framework](passive-distributed-control.html)
+- [Degrees of Freedom and the Curse of Dimensionality](degrees-of-freedom-and-dimensionality.html)
+- [Nonlinear Control Theory Insights](nonlinear-control-insights.html)
+- [Counterfactual Interventions in the Proximal–Distal Companion](proximal-distal-a-journey-through-the-swing.html#sec-lay-ch11)
+- [The Physics of Golf: Motor Control I](The_Physics_of_Golf/quarto/ch24_motor_control_brain.html)
+- [The Physics of Golf: Motor Learning](The_Physics_of_Golf/quarto/ch25_motor_learning.html)
+- [The Physics of Golf: The Computational Brain](The_Physics_of_Golf/quarto/ch26_remarkable_brain.html)
+- [Human Motor Control](../books/human-motor-control.html)
+- [Learning Path: Biomechanics & Motor Control](../resources/learning-path-biomechanics.html)
