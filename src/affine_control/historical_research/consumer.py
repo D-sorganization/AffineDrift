@@ -38,11 +38,13 @@ class HistoricalResearchConsumer:
 
     @staticmethod
     def _safe_root(root: Path) -> None:
+        """Reject symlink and junction ancestors before accessing local storage."""
         for item in (root, *root.parents):
             if item.is_symlink() or item.is_junction():
                 raise ValueError("Research storage cannot contain symlinks or junctions")
 
     def _fetch(self, pins: ResearchImportPins) -> tuple[HistoricalResearchPackage, bytes]:
+        """Fetch exact pinned JSON bytes and admit the independent schema and package."""
         request = pins.request
         self._policy.validate_request(request)
         values: list[bytes] = []

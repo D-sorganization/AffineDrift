@@ -27,6 +27,7 @@ LOCAL_PATH = re.compile(r"(?<![A-Za-z])[A-Za-z]:[/\\]|(?:^|\s)/(?:Users|home|tmp
 
 
 def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """Reject duplicate object keys before constructing research JSON."""
     keys = [name for name, _ in pairs]
     if len(keys) != len(set(keys)):
         raise ValueError("Duplicate JSON keys are forbidden")
@@ -34,6 +35,7 @@ def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
 
 
 def _constant(value: str) -> None:
+    """Reject nonfinite constants during JSON decoding."""
     raise ValueError(f"Nonfinite JSON constant: {value}")
 
 
@@ -53,6 +55,7 @@ def load_research_json(payload: bytes) -> dict[str, Any]:
 
 
 def _sanitize(value: Any) -> None:
+    """Reject host paths and nonfinite values throughout detached evidence."""
     if isinstance(value, str) and LOCAL_PATH.search(value):
         raise ValueError("Local paths are forbidden in sanitized research")
     if isinstance(value, float) and not math.isfinite(value):
@@ -66,6 +69,7 @@ def _sanitize(value: Any) -> None:
 
 
 def _clock(value: dict[str, Any]) -> SourceClock:
+    """Decode the exact increasing source presentation interval."""
     times = [
         Fraction(value[key]["numerator"], value[key]["denominator"]) for key in ("start", "end")
     ]
@@ -92,6 +96,7 @@ def _validate_image_counts(value: dict[str, Any]) -> None:
 
 
 def _records(values: list[dict[str, Any]]) -> tuple[HistoricalResearchRecord, ...]:
+    """Build detached immutable records with consistent unique identities."""
     fits: set[str] = set()
     player_names: dict[str, str] = {}
     swing_owners: dict[str, str] = {}

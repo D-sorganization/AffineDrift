@@ -14,6 +14,7 @@ def _text(value: str) -> str:
 
 
 def _package_intro(package: HistoricalResearchPackage) -> list[str]:
+    """Render package identity and the local rejected research boundary."""
     return [
         "---",
         "title: Historical-Player Local Research",
@@ -32,6 +33,7 @@ def _package_intro(package: HistoricalResearchPackage) -> list[str]:
 
 
 def _record_intro(record: HistoricalResearchRecord, value: dict[str, Any]) -> list[str]:
+    """Render player identity, status boundaries and exact source coverage."""
     identity = record.identity
     return [
         f"## {_text(identity.player_name)}",
@@ -61,6 +63,7 @@ def _record_intro(record: HistoricalResearchRecord, value: dict[str, Any]) -> li
 
 
 def _record_metrics(value: dict[str, Any]) -> list[str]:
+    """Render recorded metrics and their explicit evidence definition."""
     lines: list[str] = []
     for name, number in sorted(value["metrics"].items()):
         lines.append(f"| `{name}` | {number:.9g} |")
@@ -78,6 +81,7 @@ def _record_metrics(value: dict[str, Any]) -> list[str]:
 
 
 def _record_tail(value: dict[str, Any]) -> list[str]:
+    """Render finite targets, limitations and bound evidence hashes."""
     lines: list[str] = []
     for target in sorted(value["targets"], key=lambda item: item["id"]):
         lines.append(f"- `{target['id']}`: {'pass' if target['passed'] else 'fail'}")

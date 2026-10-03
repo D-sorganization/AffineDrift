@@ -19,6 +19,7 @@ class ResearchImportPins:
     schema_bytes: int
 
     def __post_init__(self) -> None:
+        """Validate immutable request digests and bounded exact byte-size pins."""
         self.request.validate_digests()
         for size in (self.manifest_bytes, self.schema_bytes):
             if type(size) is not int or not 0 < size <= MAX_BYTES:
