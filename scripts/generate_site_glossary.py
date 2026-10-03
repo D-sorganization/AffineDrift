@@ -56,7 +56,7 @@ def generate_glossary_qmd(glossary: dict[str, dict[str, Any]]) -> str:
 
     lines: list[str] = [
         "---",
-        'title: "Glossary"',
+        'title: "Site Glossary"',
         'description: "Site-wide glossary of biomechanics, control theory, golf physics, and governance terms with plain-language and technical definitions."',
         "toc: true",
         "toc-depth: 2",

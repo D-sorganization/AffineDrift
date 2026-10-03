@@ -110,7 +110,12 @@ def test_pages_glossary_qmd_exists_and_covers_all_terms() -> None:
     qmd_content = GLOSSARY_QMD.read_text(encoding="utf-8")
 
     # Frontmatter verification
-    assert 'title: "Glossary"' in qmd_content or "title: Glossary" in qmd_content
+    assert (
+        'title: "Site Glossary"' in qmd_content
+        or "title: Site Glossary" in qmd_content
+        or 'title: "Glossary"' in qmd_content
+        or "title: Glossary" in qmd_content
+    )
     # Each term must have an anchor/heading or entry
     for key, entry in glossary.items():
         term_name = entry["name"]
