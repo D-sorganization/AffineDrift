@@ -1,0 +1,579 @@
+{
+  "issue": 4832,
+  "source_checkpoint": "SELF",
+  "source_accepted": true,
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60 --basetemp <fresh task-specific temporary directory>",
+    "passed": 6686,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 791.61,
+    "coverage_percent": 79.37,
+    "exit_code": 0
+  },
+  "initial_full_run": {
+    "passed": 6683,
+    "failed": 3,
+    "seconds": 924.77,
+    "coverage_percent": 79.38,
+    "failures": [
+      "stale generated search maturity index",
+      "two root hygiene checks"
+    ]
+  },
+  "shared_temp_run": {
+    "passed": 6214,
+    "setup_errors": 472,
+    "seconds": 921.57,
+    "cause": "FileNotFoundError for shared pytest-962; other test runs active and parent directory disappeared",
+    "remedy": "Fresh task-specific --basetemp outside shared cleanup tree"
+  },
+  "initial_correction": "Search index fixed; wheel test's build/dist/egg-info scratch then exposed by follow-up. Preserved scratch in QA.",
+  "corrected_checks": {
+    "passed": 21,
+    "seconds": 12.33,
+    "exit_code": 0
+  },
+  "affected_screw_checks": {
+    "passed": 43,
+    "seconds": 8.47,
+    "exit_code": 0
+  },
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 902,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "browser": {
+    "routes": 1,
+    "cells": 4,
+    "passed": true,
+    "serious_critical_axe": 0,
+    "scope": "Single revised article, mobile/desktop and light/dark; not whole site",
+    "initial_failure": "Local preview omitted existing deployment polyfill cleanup and scoped route manifest; neither CSP nor gate filters changed."
+  },
+  "render": {
+    "format": "html",
+    "exit_code": 0,
+    "display_equations_inspected": 16,
+    "math_nodes": 149,
+    "math_errors": 0,
+    "final_lazy_nodes": 0,
+    "widths": [390, 1440],
+    "page_overflow": false,
+    "wide_mobile_display_scroll_ranges_px": [57, 79, 28, 92, 27, 65]
+  },
+  "readability": {
+    "summary_words": 41,
+    "summary_grade": 9.705060975609758,
+    "rendered_prose_sentences_over_45_words": 0,
+    "legacy_block": "Removed redundant source block suppressed by the existing summary filter"
+  },
+  "local_link_source_targets": 8,
+  "completed_flash_helpers": 4,
+  "failed_flash_helpers": 2,
+  "flash_failure": "HTTP 429: insufficient AI credits; failed calls supplied no review evidence",
+  "source_audits_pending_before_binding": 100,
+  "raw_qa_directory": "docs/development/technical-review",
+  "source_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19",
+  "source_audits_pending": 99,
+  "binding_findings": 7,
+  "integration": {
+    "source_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19",
+    "integrated_main": "1edc38aaadd4e079b675df7093ee2d02d3c4ab69",
+    "integration_checkpoint": "SELF",
+    "changed_route_ids": ["ad-route-c1ddd8da5e36"],
+    "new_findings": 7,
+    "other_findings_preserved": 453,
+    "frozen_source_hashes": {
+      "articles/screw-theory-reference.qmd": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+      "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506",
+      "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+      "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144"
+    },
+    "frozen_parent_count": 13,
+    "frozen_parents_unchanged": true,
+    "corpus_rows_changed": ["articles/screw-theory-reference.qmd"],
+    "source_audits_pending": 99,
+    "upstream_paths_preserved": [
+      ".github/workflows/ci-standard.yml",
+      "SPEC.md",
+      "css/components/quarto-theme.css",
+      "custom.scss",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json",
+      "data/trust/site_trust_surface_audit.json",
+      "docs/styles.css",
+      "styles.css",
+      "tests/e2e/accessibility.spec.js"
+    ],
+    "upstream_shared_paths": [
+      "SPEC.md",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json"
+    ],
+    "integration_tests": {
+      "passed": 90,
+      "seconds": 30.99,
+      "exit_code": 0
+    },
+    "integration_render": {
+      "exit_code": 0,
+      "browser_cells": 4,
+      "browser_passed": true,
+      "serious_critical_axe": 0
+    },
+    "regression_scope": "Full 6686-test regression at accepted source; integrated main changes CSS, E2E contrast, workflow and generated evidence only. Affected Python/evidence tests and article browser rerun on integration.",
+    "inherited_companion_count": 217,
+    "companion_count_scope": "Historical parent record retained; no companion source changes or new companion acceptance in this integration."
+  },
+  "publication_amendment": {
+    "scientific_source_commit": "85eb432d38fd099069ddf2cdd58f45baae055d19",
+    "integration_commit": "a9b586006020d2db3bced68544379a1d2458245c",
+    "publication_checkpoint": "SELF",
+    "article": "articles/screw-theory-reference.qmd",
+    "old_article_sha256": "d864604d5402fc0410e6fa0756e4a058aaa55a81dede138549ec8dc1178951be",
+    "new_article_sha256": "46bade53cefccc77a5505934a00a27572c57693fdfb9c9c030d4bea3021b6e86",
+    "change": "Remove only the terminal Related Articles callout wrapper and its same-level See Also heading; six link targets/text and all scientific prose/equations unchanged.",
+    "trigger": {
+      "pr": 4838,
+      "failed_run": 37089703160,
+      "error": "related section has 0 resolving links (<3)",
+      "reproduced_locally": true
+    },
+    "site_gate": "passed, whole source site",
+    "affected_tests": {
+      "passed": 63,
+      "seconds": 60.96,
+      "exit_code": 0
+    },
+    "render": {
+      "exit_code": 0,
+      "browser_cells": 4,
+      "browser_passed": true,
+      "serious_critical_axe": 0
+    },
+    "scientific_findings_unchanged": 7,
+    "source_audits_pending": 99,
+    "scope": "Publication-only amendment to accepted source85eb; original report and tests stay frozen. Bind current article and this amendment record after source checkpoint commit. No new scientific or corpus credit."
+  },
+  "publication_source_commit": "42c6036d0387c5e79cd638240204adc1ecfba483",
+  "current_evidence_hashes": {
+    "articles/screw-theory-reference.qmd": "46bade53cefccc77a5505934a00a27572c57693fdfb9c9c030d4bea3021b6e86",
+    "tests/test_screw_reference_review.py": "63d09f4f49d54604a73720fe7f341c2ca3474d0434cb1c25ef014ad1fb8a7506",
+    "reports/technical-review/screw-reference-review.md": "2852fc888574c5b5d7d879ce7a7558ded12ea63e58a68bee4837e532bee14236",
+    "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
+    "reports/technical-review/screw-reference-publication-amendment.json": "60aee93cce9997d3e1dd7f81ef726d6dac73a9da7ca3ae017eb600b47145b19b"
+  },
+  "final_binding_tests": {
+    "passed": 21,
+    "seconds": 88.3,
+    "exit_code": 0
+  },
+  "historical_main_integration": {
+    "incoming_main": "dd16c1ee5919eccd80ce1314df5457f12231d23f",
+    "previous_topic": "0e6d772c523537910a68646aaf77d7af36390ddc",
+    "incoming_paths": [
+      "AGENT_HANDOFF.md",
+      "SPEC.md",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json",
+      "docs/architecture/C4.md",
+      "docs/development/DEVELOPMENT_LOG.md",
+      "docs/development/HANDOFF.md",
+      "docs/development/necromatcher-research-handoff.md",
+      "resources/resources-datasets.qmd",
+      "schemas/historical-player-research-v1.schema.json",
+      "src/affine_control/historical_research/__init__.py",
+      "src/affine_control/historical_research/admission.py",
+      "src/affine_control/historical_research/consumer.py",
+      "src/affine_control/historical_research/models.py",
+      "src/affine_control/historical_research/rendering.py",
+      "tests/test_historical_research_admission_regressions.py",
+      "tests/test_historical_research_budgets.py",
+      "tests/test_historical_research_handoff.py",
+      "tests/test_historical_research_schema.py"
+    ],
+    "shared_paths": [
+      "AGENT_HANDOFF.md",
+      "SPEC.md",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json",
+      "docs/development/DEVELOPMENT_LOG.md",
+      "docs/development/HANDOFF.md"
+    ],
+    "unchanged_frozen_screw_files": 5,
+    "unchanged_frozen_parent_files": 13,
+    "changed_route_ids": ["ad-route-c1ddd8da5e36"],
+    "incoming_implementation_exact": true,
+    "incoming_devlog_entry_exact": true,
+    "owned_devlog_entry_passes": true,
+    "current_devlog_findings": 68,
+    "scope": "Combined main integration accepted after full Python3.12 regression and static/publication gates. Source scientific and bounded browser acceptance remain at their separately pinned revisions.",
+    "integration_checkpoint": "SELF",
+    "full_regression": {
+      "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60 --basetemp <fresh isolated task directory>",
+      "passed": 6728,
+      "skipped": 29,
+      "deselected": 187,
+      "warnings": 60,
+      "seconds": 577.71,
+      "coverage_percent": 79.51,
+      "exit_code": 0
+    },
+    "static": [
+      {
+        "check": "ruff",
+        "exit_code": 0
+      },
+      {
+        "check": "black",
+        "exit_code": 0
+      },
+      {
+        "check": "mypy",
+        "exit_code": 0
+      },
+      {
+        "check": "tracked-python-quality",
+        "files": 911,
+        "issues": {},
+        "exit_code": false
+      }
+    ],
+    "publication_gates": [
+      {
+        "check": ["check_latex_environments.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_latex_environments.py.log"
+      },
+      {
+        "check": [
+          "check_terminology.py",
+          "--baseline",
+          "config/terminology-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_terminology.py.log"
+      },
+      {
+        "check": ["generate_worked_examples.py", "--check"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-generate_worked_examples.py.log"
+      },
+      {
+        "check": [
+          "check_tree_parity.py",
+          "--baseline",
+          "config/tree-parity-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_tree_parity.py.log"
+      },
+      {
+        "check": [
+          "check_latex_structure.py",
+          "--root",
+          "articles",
+          "--baseline",
+          "config/latex-structure-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_latex_structure.py.log"
+      },
+      {
+        "check": ["validate_frontmatter.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-validate_frontmatter.py.log"
+      },
+      {
+        "check": ["validate_accessibility.py", "--qmd-only"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-validate_accessibility.py.log"
+      },
+      {
+        "check": ["check_scaffolding_styling.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_scaffolding_styling.py.log"
+      },
+      {
+        "check": ["check_bibliography_quality.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_bibliography_quality.py.log"
+      },
+      {
+        "check": ["check_bibliography_cross_file.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_bibliography_cross_file.py.log"
+      },
+      {
+        "check": ["check_citation_resolution.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_citation_resolution.py.log"
+      },
+      {
+        "check": ["check_qmd_citation_keys.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_qmd_citation_keys.py.log"
+      }
+    ],
+    "source_site_gate": "passed",
+    "lease_expires": "2026-10-03T04:47:19.221341Z",
+    "presence_expires": "2026-10-03T04:47:23.254064Z"
+  },
+  "glossary_main_integration": {
+    "incoming_main": "b5d6426c3a7b64026d1c013dc6139411fcfc8b6f",
+    "previous_topic": "37f42e6c0c012055a45b641e552467cecb5cbf6c",
+    "incoming_paths": [
+      "CONTRIBUTING.md",
+      "SPEC.md",
+      "_quarto.yml",
+      "articles/The_Physics_of_Golf/quarto/glossary.qmd",
+      "css/components/site-glossary.css",
+      "data/glossary.yml",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json",
+      "data/trust/site_trust_surface_audit.json",
+      "docs/styles.css",
+      "pages/glossary.qmd",
+      "scripts/filters/term-tooltip.lua",
+      "scripts/generate_site_glossary.py",
+      "src/tools/site_glossary.py",
+      "styles.css",
+      "tests/test_page_titles_and_descriptions.py",
+      "tests/test_site_glossary.py"
+    ],
+    "shared_paths": [
+      "SPEC.md",
+      "data/trust/claim_audit_inventory.json",
+      "data/trust/generated/claim_audit_report.json"
+    ],
+    "unchanged_frozen_screw_files": 5,
+    "unchanged_frozen_parent_files": 13,
+    "changed_route_ids": ["ad-route-c1ddd8da5e36"],
+    "incoming_implementation_exact": true,
+    "owned_devlog_entry_passes": true,
+    "current_devlog_findings": 68,
+    "scope": "Combined main integration accepted after full Python3.12 regression and static/publication gates. Source scientific and bounded browser acceptance remain at their separately pinned revisions.",
+    "canonical_browser_cells": 4,
+    "canonical_browser_passed": true,
+    "canonical_browser_scope": "One freshly rendered article, mobile/desktop and light/dark. Prior draft manifest label is not a pinned source claim; exact article hash is retained at42c6036 and incoming renderer/style paths are checked against main.",
+    "supplemental_footer_images": "Desktop/mobile related-links screenshots inspected using existing verifier. Fragment visits fail expected landing-title/canonical-path checks and are not counted as passing canonical cells.",
+    "preview_attempt": "Quarto preview attempted broad preparation and was stopped. Initial browser attempt reached no ready server. Successful canonical rerun used a standard foreground local HTTP server, then stopped.",
+    "glossary_review_issue": 4839,
+    "glossary_definition_count": 72,
+    "glossary_definition_words": 2214,
+    "glossary_source_audit": "New unaccepted review beyond 99 existing corpus sources; priority before queued2001-word passive article4836",
+    "filter_scope": "Only explicit term shortcodes transform; screw article has none. Original source85eb review statement about missing filter remains historical.",
+    "integration_checkpoint": "SELF",
+    "full_regression": {
+      "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60 --basetemp <fresh isolated task directory>",
+      "passed": 6733,
+      "failed": 2,
+      "skipped": 29,
+      "deselected": 187,
+      "warnings": 60,
+      "seconds": 419.3,
+      "coverage_percent": 79.31,
+      "exit_code": 1,
+      "failure_scope": "Only root hygiene: untracked 404.html and site_libs from preview; archived without changing tracked source.",
+      "followup": {
+        "passed": 21,
+        "seconds": 24.03,
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw-reference-glossary-integration-hygiene-followup.txt"
+      }
+    },
+    "static": [
+      {
+        "check": "ruff",
+        "exit_code": 0
+      },
+      {
+        "check": "black",
+        "exit_code": 0
+      },
+      {
+        "check": "mypy",
+        "exit_code": 0
+      },
+      {
+        "check": "tracked-python-quality",
+        "files": 914,
+        "issues": {},
+        "exit_code": false
+      }
+    ],
+    "publication_gates": [
+      {
+        "check": ["check_latex_environments.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_latex_environments.py.log"
+      },
+      {
+        "check": [
+          "check_terminology.py",
+          "--baseline",
+          "config/terminology-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_terminology.py.log"
+      },
+      {
+        "check": ["generate_worked_examples.py", "--check"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-generate_worked_examples.py.log"
+      },
+      {
+        "check": [
+          "check_tree_parity.py",
+          "--baseline",
+          "config/tree-parity-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_tree_parity.py.log"
+      },
+      {
+        "check": [
+          "check_latex_structure.py",
+          "--root",
+          "articles",
+          "--baseline",
+          "config/latex-structure-baseline.json"
+        ],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_latex_structure.py.log"
+      },
+      {
+        "check": ["validate_frontmatter.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-validate_frontmatter.py.log"
+      },
+      {
+        "check": ["validate_accessibility.py", "--qmd-only"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-validate_accessibility.py.log"
+      },
+      {
+        "check": ["check_scaffolding_styling.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_scaffolding_styling.py.log"
+      },
+      {
+        "check": ["check_bibliography_quality.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_bibliography_quality.py.log"
+      },
+      {
+        "check": ["check_bibliography_cross_file.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_bibliography_cross_file.py.log"
+      },
+      {
+        "check": ["check_citation_resolution.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_citation_resolution.py.log"
+      },
+      {
+        "check": ["check_qmd_citation_keys.py"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/screw_reference_glossary_integration-gate-check_qmd_citation_keys.py.log"
+      }
+    ],
+    "source_site_gate": "passed",
+    "lease_expires": "2026-10-03T04:47:19.221341Z",
+    "presence_expires": "2026-10-03T04:47:23.254064Z"
+  }
+}

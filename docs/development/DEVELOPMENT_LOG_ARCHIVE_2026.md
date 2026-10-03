@@ -1,5 +1,18 @@
 # Development Log Archive — 2026
 
+### DL-#4831 · Radar Observability and Spin-Axis Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4833 (regular; merged)
+- **Issue:** #4831; epic #4009 / corpus #4021
+- **Branch:** fix/radar-rigor-4831
+- **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex, articles/Launch_Monitor_Technology_Review/references.bib, tests/test_radar_systems_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-03 remote main 6b9d4574157e6d48ac4ac4edf6f59dc5d071b6ea; CI37082657317 and textbook build37082657226 succeeded on exact head d678f76746b5020ecd9dd65807e334b6e5bf2581; all23owned blobs, entire tree and all8frozen radar files preserved; ancestry verified.
+- **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
+- **Next step:** Delivered; receipt reports/technical-review/radar-systems-remote-main-receipt.json. Lease/presence released.
+
 ### DL-#4825 · Ideomotor Prediction and Action Review
 
 - **State:** shipped

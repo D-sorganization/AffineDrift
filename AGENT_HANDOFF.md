@@ -1,3 +1,75 @@
+# Screw Review — Glossary Integration Validated
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838; remote topic verified at `37f42e6c0c012055a45b641e552467cecb5cbf6c`. Current integration checkpoint `SELF` incorporates main `b5d6426c3a7b64026d1c013dc6139411fcfc8b6f` (PR #4826 site-wide glossary). Both keyed SPEC rows are retained in one table; prior handoffs and incoming DL-#4828 remain unchanged, and shipped radar stays archived. The five screw evidence files at publication42c6036d0387c5e79cd638240204adc1ecfba483 and 13 frozen parent files are unchanged. Seven findings and 99 pending source audits plus whole-book consistency remain.
+
+Combined full Python3.12 regression: 6,733 passed, 2 root-hygiene failures, 29 skipped, 187 deselected, 60 warnings in 419.30s; coverage 79.31%. After archiving untracked preview/packaging output, all 21 hygiene, screw and glossary follow-up tests passed in 24.03s; no source or test assertions changed. A fresh --basetemp isolates this run. Ruff, Black, configured mypy98, quality across914 tracked Python files, 12 publication gates and the whole source-site gate pass. Incoming implementation bytes match main exactly. The revised article renders with the incoming filter/styles and passes four canonical browser cells; supplemental footer screenshots were inspected separately. Earlier validation and failures retain their historical scope; no human or full-site browser validation is inferred.
+
+Next: commit/push this integration with normal hooks, inspect checks/reviews on the exact new head, use the central guarded merge, then verify merge ancestry and owned-file hashes on remote main. Auto-merge was armed for PR4838 before main advanced; recheck holds and current head after push. Delivery record: reports/technical-review/screw-reference-delivery.json; combined proof: reports/technical-review/screw-reference-glossary-integration.json. Lease/presence renewed through04:47UTC October3, issue4832/session technical-review-20261003-screw-reference. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review. Goal active; new glossary issue #4839 covers 72 definitions (2,214 words), ahead of the queued 2,001-word passive article #4836. The 99 pending count refers to the original corpus; glossary review is additional and unaccepted. Four agy CLI Gemini3.8Flash helpers were adjudicated; two further calls failed for insufficient credits. No credit purchase or repeated retries.
+
+---
+
+# Screw Review — Combined Main Accepted
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838; remote topic verified at `0e6d772c523537910a68646aaf77d7af36390ddc`. Current integration checkpoint `SELF` incorporates main `dd16c1ee5919eccd80ce1314df5457f12231d23f` (PR #4834 historical-player research). Both handoff additions are preserved, including exact incoming DL-#4828; the shipped radar entry remains in the archive. The five screw evidence files at publication42c6036d0387c5e79cd638240204adc1ecfba483 and 13 frozen parent files are unchanged. Seven findings and 99 pending source audits plus whole-book consistency remain.
+
+Combined full Python3.12 regression: 6,728 passed, 29 skipped, 187 deselected, 60 warnings in 577.71s; coverage 79.51%. A fresh --basetemp isolates this run. Ruff, Black, configured mypy97, quality across911 tracked Python files, 12 publication gates and the whole source-site gate pass. Incoming implementation bytes match main exactly. Earlier source/browser validation and failures retain their historical scope; no new human or full-site browser validation is inferred.
+
+Next: commit/push this integration with normal hooks, inspect checks/reviews on the exact new head, use the central guarded merge, then verify merge ancestry and owned-file hashes on remote main. Auto-merge was armed for PR4838 before main advanced; recheck holds and current head after push. Delivery record: reports/technical-review/screw-reference-delivery.json; combined proof: reports/technical-review/screw-reference-historical-integration.json. Lease/presence renewed through04:47UTC October3, issue4832/session technical-review-20261003-screw-reference. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review. Goal active; #4836 remains queued preparation. Four agy CLI Gemini3.8Flash helpers were adjudicated; two further calls failed for insufficient credits. No credit purchase or repeated retries.
+
+---
+
+# Screw Reference — PR #4838 Delivery Checkpoint
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838. Scientific acceptance `85eb432d38fd099069ddf2cdd58f45baae055d19`; main integration `a9b586006020d2db3bced68544379a1d2458245c`; publication-only correction `42c6036d0387c5e79cd638240204adc1ecfba483`. Current binding checkpoint `SELF` binds all seven existing findings to five exact evidence files at the corrected publication commit. No new scientific findings or corpus credit: 99 source audits plus whole-book consistency remain. Preserve the original accepted scientific report and the publication amendment's exact four-line wrapper-removal proof.
+
+Full source regression: 6,686 passes, 79.37% coverage. Main integration: 90 affected passes. Publication correction: complete source-site gate, 63 affected passes, render and four browser cells pass. Source/integration normal commit/push hooks and publication-source commit hooks passed. Binding commit/push and exact final-head CI/reviews remain pending; do not infer delivery from older CI. Use reports/technical-review/screw-reference-delivery.json and validation.json for current evidence.
+
+Final binding validation passed: 21 tests in 88.30 seconds. Next: commit/push this checkpoint, inspect PR checks/reviews, arm only through Repository_Management's scripts/automerge_guard.py, and verify merge ancestry plus owned-file bytes on remote main. Stop no peer runs. Renew issue4832/presence before 03:27 UTC October3 if needed. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; branch fix/screw-reference-rigor-4832; session technical-review-20261003-screw-reference. Goal active. #4836 remains preparation only. Four agy CLI Gemini 3.8 Flash helpers were adjudicated; two failed for insufficient credits, so do not buy credits or repeatedly retry.
+
+---
+
+# Screw Reference — PR #4838 Publication Correction
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838 is open. Scientific source `85eb432d38fd099069ddf2cdd58f45baae055d19` and integration `a9b586006020d2db3bced68544379a1d2458245c` are pushed. CI's standalone Quarto-reference gate found the redundant same-level See Also heading prematurely ended Related Articles. This checkpoint `SELF` removes only that terminal callout wrapper; all scientific prose, equations, six links, original accepted report and tests remain unchanged. The exact byte transformation is verified in reports/technical-review/screw-reference-publication-amendment.json. It supersedes the article bytes for publication only; preserve the historical scientific acceptance record.
+
+Whole-source site gate passes after a reproduced failure. 63 affected tests pass in 60.96 seconds; render and four mobile/desktop light/dark browser cells pass with zero serious/critical axe findings. Source regression remains 6,686 passed and 79.37% coverage; integration previously passed 90 affected tests. Seven scientific findings, 99 pending source audits and whole-book consistency scope are unchanged. No new review credit.
+
+Next: commit this publication checkpoint with normal hooks, bind the exact current five evidence files (article, original tests/report/prior-route snapshot, publication amendment), update the PR delivery record and push. Inspect exact-head checks/reviews before central guarded merge and remote-main verification. Goal active; #4836 stays preparation only. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; session technical-review-20261003-screw-reference; lease/presence expires 03:27 UTC October 3. Four agy Flash helpers were adjudicated; two failed for insufficient credits. Do not repeatedly retry or buy credits.
+
+---
+
+# Screw Reference — Bound and Integrated Checkpoint
+
+Accepted source `85eb432d38fd099069ddf2cdd58f45baae055d19` is pushed with normal hooks. Integration checkpoint `SELF` preserves main `1edc38aaadd4e079b675df7093ee2d02d3c4ab69` (PR #4816 accessibility changes), the four frozen screw evidence files and 13 frozen radar/ideomotor files. Seven corrected findings are bound to that source; exactly one corpus row advances, leaving 99 source audits plus whole-book consistency. All 453 prior inventory findings are preserved. Historical companion review scope is unchanged.
+
+Full source regression: 6,686 passed, 29 skipped, 187 deselected, 60 warnings, 791.61 seconds, 79.37% coverage. Integration: 90 affected tests pass in 30.99 seconds; render and all four mobile/desktop light/dark browser cells pass with no serious/critical axe findings. Earlier failures and their corrections remain in the validation record. No new full-site or human validation is claimed.
+
+Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; branch fix/screw-reference-rigor-4832; issue #4832; session technical-review-20261003-screw-reference. Next: commit/push the integration with normal hooks, create a regular PR, inspect reviews/checks, use the central guarded merge and verify remote-main delivery. Lease/presence expires 03:27 UTC October 3; renew if needed. Goal remains active. Queue #4836 is preparation only, with no implementation claim. Four agy CLI Gemini 3.8 Flash helpers were adjudicated; two further calls failed for insufficient credits. Do not buy credits or repeatedly retry.
+
+Mutable proof: reports/technical-review/screw-reference-integration.json; validation: reports/technical-review/screw-reference-validation.json. Preserve the accepted review report. Historical checkpoints below retain their original scope.
+
+---
+
+# Screw Reference — Accepted Source Checkpoint
+
+Issue #4832, epic #4009 / corpus #4021. Complete article and bounded HTML publication are lead-accepted. Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings in 791.61 seconds; coverage 79.37%, above the configured 75% floor. A fresh task-specific --basetemp isolates this run from shared pytest cleanup. All 43 affected screw checks, 21 corrected index/hygiene checks, static checks (902 Python quality files), 12 publication gates and four browser/axe cells pass. All 16 displays inspected; 149 math nodes render with no errors/placeholders. The new status is reflected in the generated search index. Initial failures and preserved browser/build scratch are recorded honestly in reports/technical-review/screw-reference-validation.json.
+
+Four completed agy CLI Gemini 3.8 Flash helper outputs were adjudicated. Two further calls failed for insufficient credits and supplied no evidence; do not buy credits or repeatedly retry. Lead completed the review. Freeze the article, tests, reports/technical-review/screw-reference-review.md and the exact prior route snapshot. Parent radar/ideomotor's 13 frozen files remain unchanged. Source commit/binding and regular PR remain pending; no corpus credit yet (100 audits plus whole-book consistency remain).
+
+Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; branch fix/screw-reference-rigor-4832; session technical-review-20261003-screw-reference. Lease/presence through 03:27 UTC October 3. Next: commit with normal hooks, bind seven findings to the exact source commit and exactly one corpus row, validate evidence, push a regular PR and verify protected delivery. Goal remains active. Historical checkpoints below retain their original scope.
+
+---
+
+# Screw Reference Review — Active
+
+Issue #4832, epic #4009 / corpus #4021; worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review`, branch `fix/screw-reference-rigor-4832`, session `technical-review-20261003-screw-reference`. Lease/presence through 02:37 UTC October 3. Baseline d678f76746b5020ecd9dd65807e334b6e5bf2581 has the exact tree of verified main6b9d4574157e6d48ac4ac4edf6f59dc5d071b6ea; main ancestry merged without tree changes. This is a preparation/turnover checkpoint. Original article fully read, old route snapshotted; no new source/tests accepted and no corpus credit. Four agy CLI Gemini3.8Flash outputs adjudicated across prior inventory/arithmetic and current editorial/test drafting. Implementation and validation remain pending. The inbox response is incomplete because of malformed/paginated board data; it is not proof of no peers.
+
+Radar PR #4833 merged at 2026-10-03T00:41:08Z. CI37082657317 and textbook build37082657226 succeeded on exact d678f76746b5020ecd9dd65807e334b6e5bf2581. All23owned files, entire merged tree and eight frozen radar files match; remote-main ancestry verified. Receipt: reports/technical-review/radar-systems-remote-main-receipt.json. DL-#4831 archived shipped; its lease/presence released. All radar/ideomotor source and binding identifiers are unchanged. Current progress: 100 source audits and whole-book consistency remain. Preserve raw QA and historical blocks below. The active goal is not complete.
+
+Next: follow docs/development/technical-review/screw-reference-progress.md, build meaningful manufactured checks, revise the complete article and summaries, then render/inspect and run full validation before binding one accepted source. Regular PRs only, normal hooks, no direct main push. Prior checkpoints below retain their original scope.
+
+---
+
 # Historical-Player Research Handoff — Issue #4828
 
 - Active user-directed Necromatcher goal spans UpstreamDrift epics #11232/#11226/#11229, provider #11317 and AffineDrift consumer #4828. Worktree `AffineDrift-necromatcher-research-handoff`, topic branch `feat/necromatcher-research-handoff-4828`; no direct main push or public deployment.

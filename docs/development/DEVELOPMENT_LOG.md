@@ -19,6 +19,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4832 · Screw Reference Geometry and Dynamics
+
+- **State:** in_review
+- **Owner:** codex
+- **PR:** #4838 (regular)
+- **Issue:** #4832; epic #4009 / corpus #4021
+- **Branch:** fix/screw-reference-rigor-4832
+- **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03; main b5d6426c3a7b64026d1c013dc6139411fcfc8b6f. 6733 passed; 2 preview-artifact hygiene failures resolved (21 follow-up passes); 79.31% coverage. Static/publication/browser checks pass. Frozen evidence unchanged. See screw-reference-glossary-integration.json. Commit/push/CI pending.
+- **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 99 source audits plus whole-book consistency remain.
+- **Next step:** Commit/push combined integration; inspect exact new-head PR #4838 CI/review; verify guarded merge and remote-main owned bytes.
+
 ### DL-#4828 · Historical Player Research Handoff
 
 - **State:** in_review
@@ -35,19 +48,6 @@ reachable from any live state and `abandoned` from `parked`.
 - **CI remediation cycle 1:** Head `557d51867d7bdc9a47cd59126240b815e282cb64` has twelve owned helper docstring omissions; documentation-only correction preserves semantics and deterministic rendering. Two exact incoming-main chapter vocabulary warnings are nonblocking (`continue-on-error: true`) and unchanged. Quality, Ruff, Black100, strict mypy, title/SPEC checks and 82 focused cases pass after the correction. Remaining Python 3.12/E2E checks are pending.
 - **Next step:** Commit and push the resolved integration through normal hooks, monitor exact-head PR #4834 CI/review, and preserve separately pinned historical producer evidence. No automatic merge or public deployment.
 
-
-### DL-#4831 · Radar Observability and Spin-Axis Review
-
-- **State:** in_review
-- **Owner:** codex
-- **PR:** #4833 (regular; temporary hold pending predecessor #4829)
-- **Issue:** #4831; epic #4009 / corpus #4021
-- **Branch:** fix/radar-rigor-4831
-- **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex, articles/Launch_Monitor_Technology_Review/references.bib, tests/test_radar_systems_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted db2c8a7918e7686fd51787e76702d7e7246495ea and verified on remote; all 89 post-acceptance checks passed.
-- **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
-- **Next step:** Combined integration of 094e804e223ceb718aadbbe5b91746ea35d70f01 and current-main policies passed 6678 tests/79.37% coverage, static/publication gates; 89 evidence checks pass; integration683907292 committed and delivered main53f75b291 reconciled with the identical tracked tree. Push ancestry/turnover checkpoint with normal hooks, then remove hold, verify new-head CI and guarded delivery.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
