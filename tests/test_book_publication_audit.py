@@ -107,7 +107,9 @@ def test_followup_findings_keep_the_original_book_audit_identity() -> None:
     route = _routes(audit)["/books/human-motor-control.html"]
     followups = [f for f in route["findings"] if f["issue_url"].endswith("/issues/4733")]
     assert len(followups) == 3
-    assert all(f["verification_commit"] == route["source_revision"] for f in followups)
+    prior = _json(ROOT / "reports/technical-review/dof-chapter-prior-review.json")
+    original = prior["records"]["data/trust/book_publication_audit.json"][0]
+    assert all(f["verification_commit"] == original["source_revision"] for f in followups)
     validate_audit(audit, SCHEMA, ROOT)
 
 

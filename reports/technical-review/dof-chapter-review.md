@@ -1,6 +1,6 @@
 # Degrees-of-Freedom Chapter Review
 
-Issue #4845; epic #4009 / corpus #4021. Baseline `66c166693f2bba2120d9d3b9af59a27648ba69f9`. Scope: complete Volume IV Chapter 1 source, its printed reaching example, diagram and exercises, plus the Chapter 1 landing summary. The lead read the complete original and revised chapter. Full regression and final acceptance binding are pending; no original-corpus row has yet received credit.
+Issue #4845; epic #4009 / corpus #4021. Baseline `66c166693f2bba2120d9d3b9af59a27648ba69f9`. Scope: complete Volume IV Chapter 1 source, its printed reaching example, diagram and exercises, plus the Chapter 1 landing summary. The lead read the complete original and revised chapter. Complete Chapter 1 source and bounded publication are lead-accepted on 2026-10-03. The separate delivery record will bind the accepted source checkpoint; only this original-corpus row is eligible for credit. Whole-book consistency remains separate.
 
 ## Argument and Corrections
 
@@ -39,3 +39,9 @@ At the pre-regression checkpoint, all 149 selected UCM, printed-example, prior m
 The first full run at `cfa3c9f344532cfeccf17993fb8cc6566021fe56` terminated at the 60-second timeout in the deployment-pruning evidence test, with no complete suite or coverage result. All 19 tracked checkpoint files remained unchanged. The isolated case subsequently passed in 40.00 seconds (39.08 seconds in the test). The retry will use the existing CI command and its 120-second timeout; no test assertion or repository timeout configuration was changed.
 
 A final title check compared the shorter PMC author-manuscript title with the [publisher record](https://link.springer.com/article/10.1007/s00221-012-3000-4). The publisher confirms the existing longer bibliography title, publication date, volume and pages. No bibliography correction is warranted. This additional reading covered publisher metadata and abstract, not subscription-only full text.
+
+## Accepted Validation Checkpoint
+
+The frozen retry at `f5eb47370611412a429de6e0875837f77bd3db00` passed 6737 tests, with 29 skips, 187 existing-marker deselections and 51 warnings in 729.65 seconds. Coverage is 93.24%. This uses the existing CI command on `tests/`; separate `benchmarks/` were not included. All checkpoint files remained unchanged. Earlier pending descriptions above record the development sequence; this paragraph supersedes them for local acceptance. Later binding and turnover commits do not claim to rerun the entire suite.
+
+After the full run, the historical Chapter 4 provenance assertion was updated to compare with its preserved revision before the route receives the Chapter 1 revision. Numerical code, chapter and PDF remain unchanged. The PDF carry comparison was strengthened to retain interior numeral lines and non-line-end hyphens; all 54 later body pages still match. All 149 focused checks passed after these provenance changes in 23.11 seconds, before binding.

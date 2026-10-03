@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/dof-chapter-rigor-4845
 - **Paths:** articles/The_Geometry_of_Motion/Volume_IV/chapters/ch01_dof_problem.tex, articles/The_Geometry_of_Motion/Volume_IV/main.pdf, books/human-motor-control.qmd, src/affine_control/ucm_analysis.py, tests/test_ucm_analysis.py, tests/test_dof_chapter_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 (`2b61b39677e77a584365e54cc69ce9926d62a247`); 149 focused cases (25 new numerical cases); static/content gates, native PDF and scoped four-cell browser checks pass. Full regression and acceptance pending.
+- **Last verified:** 2026-10-03 (`f5eb47370611412a429de6e0875837f77bd3db00`); 6737 tests, 93.24% coverage; 149 focused checks, static/content gates and bounded PDF/browser inspection pass.
 - **Summary:** Separate task geometry, physical feasibility and neural inference; preserve historical review scope when refreshing shared publication dependencies.
-- **Next step:** Complete gates and frozen-checkpoint regression, bind acceptance, update exactly one corpus row, then open a regular PR and verify remote-main delivery.
+- **Next step:** Commit accepted source, bind exact evidence and one corpus row, open a regular PR, then verify CI and guarded remote-main delivery.
 
 ### DL-#4842 · Impact Physics Chapter
 

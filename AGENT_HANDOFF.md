@@ -10,6 +10,8 @@ Next: finish static/content gates and normal source checkpoint; run full Python 
 
 The first full run at cfa3c9f344532cfeccf17993fb8cc6566021fe56 timed out in deployment evidence validation after 60 seconds; the isolated test then passed in 40.00 seconds. Retry the existing CI command with its configured 120-second timeout, retaining both records. Publisher metadata confirms the existing Latash bibliography title; no bibliography edit is required.
 
+Local acceptance now passes at f5eb47370611412a429de6e0875837f77bd3db00: 6737 tests, 93.24% coverage, plus 149 focused checks, twelve content gates and scoped PDF/browser inspection. Bind the accepted source in a separate record, advance only this chapter (97 to 96 pending originals), then open a regular PR and verify exact-head checks and remote delivery. No whole-book or live-site acceptance is claimed.
+
 ---
 
 # Verified Combined Delivery — Impact and Passive Control
