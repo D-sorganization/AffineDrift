@@ -556,4 +556,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4787 | Fix dark theme color contrast violations across axe matrix, adjust text tokens and component styles, update accessibility statement, and re-enable --axe fail in CI (#4787). |
 | 2026-10-02 | #4587 | Write canonical Editorial Style Guide in docs/development/editorial-style-guide.md covering voice, scope, standardized caveat block, glossary tooltips, layer readability targets, analogy rules, banned vocabulary list, and author checklist (WEB-12.1). |
 | 2026-10-02 | #4830 | Implement standard "What This Shows / What It Does Not Show" caveat block (WEB-03.4 #4509) with Lua filter, schema validation, print styles, and core-page rollout. |
+| 2026-10-02 | #4816 | Restore WCAG AA contrast browser test in Playwright E2E suite, finish pending theme transitions, and enforce dark theme overrides (#4563). |
 | 2026-10-02 | #4833 | Correct Chapter 4 radar phase/spin ambiguity, conditional axis inference, device modes and face-estimator dependencies; retain bibliography and rebuild the reviewed PDF (#4831). |
