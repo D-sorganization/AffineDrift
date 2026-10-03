@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/dcr-figure-rigor
 - **Paths:** articles/drift-control-ratio.qmd, articles/figures/core_theory/fig_dcr_vector_decomposition.svg, articles/figures/core_theory/fig_dcr_reachability_tubes.svg, articles/figures/core_theory/fig_dcr_swing_phases.svg
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 — three bounded figure corrections implemented; initial red ten failures/three passes; 32 focused checks passed; three corrected SVGs and twelve page captures inspected; canonical browser four cells pass after existing deployment cleanup; twenty protected files retained; nine Flash helpers adjudicated. Final binding and broad regression pending.
+- **Last verified:** 2026-10-03 — three bounded figure corrections implemented; initial red ten failures/three passes; 32 focused checks passed; three corrected SVGs and twelve page captures inspected; canonical browser four cells pass after existing deployment cleanup; twenty protected files retained; nine Flash helpers adjudicated. Source bound at b6ab9a9229738d764d93975e87e04af1d1b550df; 175 dependent and 185 content checks pass after resolving three generated-metadata failures from the broad run (6775 passed, 29 skipped, 93.24% coverage). Ten Flash helpers adjudicated.
 - **Summary:** Reconcile later figures and long descriptions with drift, input-set, observation and finite-time assumptions; preserve valid prior review.
-- **Next step:** Refresh dependent evidence, run broad regression and checks, bind accepted source, open a regular PR and verify protected delivery.
+- **Next step:** Open regular PR; run clean full retry and exact-head CI, then verify protected delivery. Next queued source review is epic child #4855.
 
 ### DL-#4852 · Corpus Status Reconciliation
 
