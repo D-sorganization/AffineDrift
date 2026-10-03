@@ -21,16 +21,16 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4855 · Drift, Wrench and Double-Pendulum Power
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4855; epic #4009 / corpus #4021
-- **PR:** pending
+- **PR:** #4857
 - **Branch:** fix/drift-wrench-review
 - **Paths:** articles/drift-components-wrench-double-pendulum.qmd, tests/test_drift_wrench_review.py, reports/technical-review/drift-wrench-prior-review.json
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun and 193 content checks passed; full clean retry 6790 passed/29 skipped/93.24% coverage after preserving prior packaging output and passing six hygiene checks. Initial two hygiene failures retained. Nine Flash helpers adjudicated; complete source accepted at 0feeebd0897f67211e076ffb2139bf4445a9e8ce, with six frozen scientific files. Four scoped findings and one original corpus row are bound; delivery pending.
 - **Summary:** Complete the article argument review while preserving valid prior mechanics; distinguish input attribution, segment force/couple power and motor work with explicit frames and independently checked examples.
-- **Next step:** Finish dependent checks, open a regular PR and verify protected remote-main delivery; preserve pending empirical critique and other review identities.
+- **Next step:** Regular PR #4857 open; check final-head CI/reviews and verify protected remote-main delivery; preserve pending empirical critique and other review identities.
 
 ### DL-#4853 · DCR Figure Inference Regression
 
