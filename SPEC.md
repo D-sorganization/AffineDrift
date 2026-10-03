@@ -13,7 +13,7 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
 | **Spec Version**        | 1.0.300                                          |
-| **Last Spec Update**    | 2026-10-02                                       |
+| **Last Spec Update**    | 2026-10-03                                       |
 
 ## 2. Purpose & Mission
 
@@ -573,3 +573,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4851 | Reconcile musculoskeletal anatomical frames, ZXY chart extraction, spatial inertia and inference limits; publish the corrected Chapter 2 with independent checks and preserved prior evidence. |
 | 2026-10-03 | #4853 | Correct DCR acceleration-set geometry, endpoint projections and manufactured speed figures; preserve historical proof with plotted-value and render checks. |
 | 2026-10-03 | #4855 | Clarify drift/input force attribution, inertial-frame segment power and joint-motor work; add reproducible double-pendulum counterexamples and preserve prior review. |
+| 2026-10-03 | #4809 | Restore Deploy Website Quarto render cache with exact source-hash key and increase job timeout to 90 min, restoring green main. |

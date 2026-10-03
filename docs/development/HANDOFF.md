@@ -1,3 +1,23 @@
+# Deploy Website Caching and Timeout Fix — #4809
+
+- Repository: `D-sorganization/AffineDrift`
+- Branch: `fix/deploy-website-cache-4809`
+- Governing issue: #4809 (`main is red: Deploy Website (fleet-main-health)`)
+- Objective: Restore green `Deploy Website` on `main` by adding Quarto render caching with exact source-hash key (`quarto-render-v2-${key}`, matching `ci-standard.yml`), skipping redundant renders when cache hits, and increasing the job timeout from 60 to 90 minutes to prevent timeouts on cold builds.
+- Completed:
+  - Updated `.github/workflows/deploy-website.yml`:
+    - Added `Compute Quarto render cache key` and `Restore cached Quarto render` (`actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9`).
+    - Made `Render Website` conditional on `steps.quarto_cache.outputs.cache-hit != 'true'`.
+    - Increased `build` job `timeout-minutes` from 60 to 90 minutes.
+  - Updated `SPEC.md` Change Log table and Last Spec Update.
+- Validation:
+  - Ruff check: all checks passed.
+  - Black format check: all 888 files formatted cleanly.
+  - `python -m src.tools.code_quality_check`: passed.
+- Next steps: open PR, enable squash auto-merge, and verify landing.
+
+---
+
 # Drift and Wrench Review — Regular PR #4857
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4857 is open (not draft). The branch is pushed; check its final head and protected CI before merging.
