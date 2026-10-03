@@ -148,6 +148,7 @@ ALLOWLISTED_NAV_SHORT_FORMS: frozenset[tuple[str, str]] = frozenset(
             "Part 7: Residual-Aware Control",
         ),
         ("pages/accessibility.qmd", "Accessibility"),
+        ("pages/glossary.qmd", "Glossary"),
         ("books/tangent-space-methods.qmd", "Volume I: Tangent-Space Methods"),
         ("books/biomechanics-biology-to-systems.qmd", "Volume III: Biomechanics"),
         ("books/roadmap.qmd", "Roadmap & Curriculum"),
