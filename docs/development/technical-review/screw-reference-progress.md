@@ -41,3 +41,7 @@ Publication 42c6036d0387c5e79cd638240204adc1ecfba483 removes only the redundant 
 ## Combined Main Regression
 
 Main dd16c1ee5919eccd80ce1314df5457f12231d23f integrated; 6,728 passed, 29 skipped, 187 deselected, 60 warnings in 577.71s; coverage 79.51%. Both work streams and all current/parent frozen evidence are preserved. Static911 and publication/site gates pass. New integration commit/push and exact-head CI/remote-main verification remain pending. Lease/presence through04:47UTC October3.
+
+## Combined Main Regression
+
+Main b5d6426c3a7b64026d1c013dc6139411fcfc8b6f integrated; 6,733 passed, 2 root-hygiene failures, 29 skipped, 187 deselected, 60 warnings in 419.30s; coverage 79.31%. After archiving untracked preview/packaging output, all 21 hygiene, screw and glossary follow-up tests passed in 24.03s; no source or test assertions changed. Both work streams and all current/parent frozen evidence are preserved. Static914 and publication/site gates pass. New integration commit/push and exact-head CI/remote-main verification remain pending. Lease/presence through04:47UTC October3.

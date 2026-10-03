@@ -12,7 +12,7 @@ Last-Updated: 2026-09-03T09:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.9                                            |
-| **Spec Version**        | 1.0.298                                          |
+| **Spec Version**        | 1.0.300                                          |
 | **Last Spec Update**    | 2026-10-02                                       |
 
 ## 2. Purpose & Mission
@@ -559,5 +559,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4830 | Implement standard "What This Shows / What It Does Not Show" caveat block (WEB-03.4 #4509) with Lua filter, schema validation, print styles, and core-page rollout. |
 | 2026-10-02 | #4816 | Restore WCAG AA contrast browser test in Playwright E2E suite, finish pending theme transitions, and enforce dark theme overrides (#4563). |
 | 2026-10-02 | #4833 | Correct Chapter 4 radar phase/spin ambiguity, conditional axis inference, device modes and face-estimator dependencies; retain bibliography and rebuild the reviewed PDF (#4831). |
-
+| 2026-10-02 | #4490 | Build site-wide glossary with data/glossary.yml (72 terms), pages/glossary.qmd generation, accessible WAI-ARIA tooltip shortcode/Lua filter {{< term >}}, styles, and book glossary cross-linking (WEB-01.5). |
 | 2026-10-03 | #4832 | Correct screw reference pitch, frame/load duality, wrench inversion, constrained dynamics and counterfactual scope; add manufactured regression checks. |

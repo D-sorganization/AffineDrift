@@ -21,7 +21,7 @@
     "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
     "reports/technical-review/screw-reference-publication-amendment.json": "60aee93cce9997d3e1dd7f81ef726d6dac73a9da7ca3ae017eb600b47145b19b"
   },
-  "comparison_base": "dd16c1ee5919eccd80ce1314df5457f12231d23f",
+  "comparison_base": "b5d6426c3a7b64026d1c013dc6139411fcfc8b6f",
   "status": "Combined main integration accepted locally; normal commit/push and exact new-head CI plus remote-main delivery pending",
   "source_audits_pending": 99,
   "scientific_findings": 7,
@@ -43,14 +43,25 @@
   "historical_integration_main": "dd16c1ee5919eccd80ce1314df5457f12231d23f",
   "latest_full_regression": {
     "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60 --basetemp <fresh isolated task directory>",
-    "passed": 6728,
+    "passed": 6733,
+    "failed": 2,
     "skipped": 29,
     "deselected": 187,
     "warnings": 60,
-    "seconds": 577.71,
-    "coverage_percent": 79.51,
-    "exit_code": 0
+    "seconds": 419.3,
+    "coverage_percent": 79.31,
+    "exit_code": 1,
+    "failure_scope": "Only root hygiene: untracked 404.html and site_libs from preview; archived without changing tracked source.",
+    "followup": {
+      "passed": 21,
+      "seconds": 24.03,
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw-reference-glossary-integration-hygiene-followup.txt"
+    }
   },
-  "remote_topic_verified_commit": "0e6d772c523537910a68646aaf77d7af36390ddc",
-  "historical_integration_proof": "reports/technical-review/screw-reference-historical-integration.json"
+  "remote_topic_verified_commit": "37f42e6c0c012055a45b641e552467cecb5cbf6c",
+  "historical_integration_proof": "reports/technical-review/screw-reference-historical-integration.json",
+  "glossary_integration_checkpoint": "SELF",
+  "glossary_integration_main": "b5d6426c3a7b64026d1c013dc6139411fcfc8b6f",
+  "glossary_integration_proof": "reports/technical-review/screw-reference-glossary-integration.json"
 }

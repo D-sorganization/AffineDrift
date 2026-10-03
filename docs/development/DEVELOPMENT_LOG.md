@@ -28,7 +28,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/screw-reference-rigor-4832
 - **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; main dd16c1ee5919eccd80ce1314df5457f12231d23f integrated with both records preserved. Full Python3.12: 6,728 passed, 29 skipped, 187 deselected, 60 warnings in 577.71s; coverage 79.51%. Static911, all publication/site gates pass; exact incoming implementation, five frozen screw files and 13 parent files unchanged. Normal integration commit/push and new-head CI pending.
+- **Last verified:** 2026-10-03; main b5d6426c3a7b64026d1c013dc6139411fcfc8b6f. 6733 passed; 2 preview-artifact hygiene failures resolved (21 follow-up passes); 79.31% coverage. Static/publication/browser checks pass. Frozen evidence unchanged. See screw-reference-glossary-integration.json. Commit/push/CI pending.
 - **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 99 source audits plus whole-book consistency remain.
 - **Next step:** Commit/push combined integration; inspect exact new-head PR #4838 CI/review; verify guarded merge and remote-main owned bytes.
 
