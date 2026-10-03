@@ -1,3 +1,13 @@
+# Screw Reference Review — Active
+
+Issue #4832, epic #4009 / corpus #4021; worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review`, branch `fix/screw-reference-rigor-4832`, session `technical-review-20261003-screw-reference`. Lease/presence through 02:37 UTC October 3. Baseline d678f76746b5020ecd9dd65807e334b6e5bf2581 has the exact tree of verified main6b9d4574157e6d48ac4ac4edf6f59dc5d071b6ea; main ancestry merged without tree changes. This is a preparation/turnover checkpoint. Original article fully read, old route snapshotted; no new source/tests accepted and no corpus credit. Four agy CLI Gemini3.8Flash outputs adjudicated across prior inventory/arithmetic and current editorial/test drafting. Implementation and validation remain pending. The inbox response is incomplete because of malformed/paginated board data; it is not proof of no peers.
+
+Radar PR #4833 merged at 2026-10-03T00:41:08Z. CI37082657317 and textbook build37082657226 succeeded on exact d678f76746b5020ecd9dd65807e334b6e5bf2581. All23owned files, entire merged tree and eight frozen radar files match; remote-main ancestry verified. Receipt: reports/technical-review/radar-systems-remote-main-receipt.json. DL-#4831 archived shipped; its lease/presence released. All radar/ideomotor source and binding identifiers are unchanged. Current progress: 100 source audits and whole-book consistency remain. Preserve raw QA and historical blocks below. The active goal is not complete.
+
+Next: follow docs/development/technical-review/screw-reference-progress.md, build meaningful manufactured checks, revise the complete article and summaries, then render/inspect and run full validation before binding one accepted source. Regular PRs only, normal hooks, no direct main push. Prior checkpoints below retain their original scope.
+
+---
+
 # Verified Ideomotor Delivery and Radar Integration
 
 Ideomotor PR #4829 merged at 2026-10-03T00:22:11Z as `53f75b29125cdc1f5da8d0c09020b3b05f04b783`. CI37075895860 succeeded on `ca4a23487e79d0c28081fe665568959f0c83fd33`; remote-main ancestry and all five frozen scientific files are verified. Of 21 owned paths at the delivered head, 18 are byte-identical; SPEC and the two trust inventories exactly match the independently validated policy integration094. The whole tree differs because peer site-policy PRs landed first. Receipt: reports/technical-review/ideomotor-remote-main-receipt.json. Its lease/presence are released and DL-#4825 is archived shipped.

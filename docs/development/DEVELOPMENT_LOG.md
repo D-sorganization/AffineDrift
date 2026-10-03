@@ -19,18 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4831 · Radar Observability and Spin-Axis Review
+### DL-#4832 · Screw Reference Geometry and Dynamics
 
-- **State:** in_review
+- **State:** in_progress
 - **Owner:** codex
-- **PR:** #4833 (regular; temporary hold pending predecessor #4829)
-- **Issue:** #4831; epic #4009 / corpus #4021
-- **Branch:** fix/radar-rigor-4831
-- **Paths:** articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex, articles/Launch_Monitor_Technology_Review/references.bib, tests/test_radar_systems_review.py
-- **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 baseline 802e9adc55698d6db4fd926456a1514e2966991d; 1 RED source failure then 8 focused / 56 affected checks passed; seven Flash helpers adjudicated; revised chapter visually read; all 88 bibliography entries print; final 84-page PDF inspected; full retry 6668 passed/29 skipped/187 deselected/79.36% coverage; source accepted db2c8a7918e7686fd51787e76702d7e7246495ea and verified on remote; all 89 post-acceptance checks passed.
-- **Summary:** Complete chapter draft corrects phase/harmonic ambiguities, conditional axis inference, patent delay algebra, device/ball modes and correlated face inference. Research dossier records primary-reading limits. One corpus row accepted; 100 source audits and whole-book consistency remain.
-- **Next step:** Combined integration of 094e804e223ceb718aadbbe5b91746ea35d70f01 and current-main policies passed 6678 tests/79.37% coverage, static/publication gates; 89 evidence checks pass; integration683907292 committed and delivered main53f75b291 reconciled with the identical tracked tree. Push ancestry/turnover checkpoint with normal hooks, then remove hold, verify new-head CI and guarded delivery.
+- **PR:** not created
+- **Issue:** #4832; epic #4009 / corpus #4021
+- **Branch:** fix/screw-reference-rigor-4832
+- **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 baseline d678f76746b5020ecd9dd65807e334b6e5bf2581 and delivered main6b9d4574157e6d48ac4ac4edf6f59dc5d071b6ea have identical trees; complete original source read; prior route snapshotted; four Flash preparation/editorial/test outputs adjudicated; source/tests not yet edited or accepted.
+- **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 100 source audits plus whole-book consistency remain.
+- **Next step:** Review and implement manufactured regression fixtures, rewrite the complete article with model/evidence boundaries, render and validate before source acceptance or corpus credit.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 
