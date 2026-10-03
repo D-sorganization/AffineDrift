@@ -1,3 +1,25 @@
+# Verified Combined Delivery — Impact and Passive Control
+
+PR #4844 merged reviewed head `35ebde7ff820b1ce9ce91cc453cf7b7d28acf611` to remote main as `d907add46b30ecedfc866f36ff5ab2c337bdfa16` on 2026-10-03 at 09:38 UTC. It carried both accepted impact source `b90b86376c9eebbc9d07be754b254ee914fdfff2` and passive-control amendment `c6a12064ef6da2c24c3cc80fb399d25b87e4e47e`. The entire delivered tree matches the reviewed head; all 39 frozen evidence files and 26 changed paths match. Receipts are `reports/technical-review/impact-chapter-remote-main-receipt.json` and `reports/technical-review/passive-control-amendment-remote-main-receipt.json`.
+
+CI Standard 37110978517 passed at that head: 6,663 Python tests, full site browser/visual/accessibility checks, and all principal gates. The Launch Monitor compilation passed separately. Local 6,757-pass regression and 68 pinned dependency checks retain their earlier recorded checkpoints. No new full-suite or live-deployment claim is made.
+
+The actual merge occurred with the hold label present, ahead of the planned parent-first sequence. This is recorded as an observed delivery, not as execution of our guarded merge plan. PR #4843 now reconciles receipts and turnover. Incoming main merge `67bdb2a963f44213e9193b5b68408ac22f9d29c9` cancelled the old run; its new Python run found a duplicate historical handoff heading. The repair gives that checkpoint a unique title and preserves the historical prose. Keep the remaining PR held until the repaired head passes, then use the central guard.
+
+Exactly 97 original sources plus whole-book consistency remain. The goal stays active; complete this turnover PR before starting the next original-source review. Four earlier agy Gemini 3.8 Flash helpers were adjudicated; two later calls failed for insufficient credits. No fresh helper output is claimed. Preserve frozen source reports and use Python 3.12, pinned plotting dependencies, isolated pytest directories, normal hooks and regular PRs.
+
+Earlier sections below are historical checkpoints and may describe superseded pending states.
+
+---
+
+# Passive-Control Amendment — Follow-Up PR Required
+
+PR4841 merged original head4d5c21bcb389dda237d810d50de257dcb84d015a at 7b723333502f94aed4a1a995f656a235ad7bbe2b on 2026-10-03T08:30:42Z before the corrected branch head reached the PR. Remote verification confirms all 22 owned paths and 32 frozen files; whole trees match. The amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e and binding c3187850f6e65576699c1bb5ec3b7c3e867705cf remain accepted and pushed, with 51 pinned checks. Main is integrated without changing any amendment evidence. Issue4836 is reopened; regular follow-up PR https://github.com/D-sorganization/AffineDrift/pull/4843 is open with do-not-merge while the integration checkpoint is pushed and exact-head CI runs. Remove this owned hold only after checking the final head, then use the central guard. Original PR receipt is historical and must not be represented as amendment delivery. Lease/presence renewed through 10:30 UTC.
+
+Parallel impact accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains immutable; 68 combined pinned integration checks pass. Incorporate this remote-main ancestry and explicit follow-up delivery metadata there before its PR.
+
+---
+
 # Impact PR #4844 — Committed and Pushed
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4844 is open from fix/impact-chapter-rigor-4842. Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 and its eight evidence files remain frozen. All normal initial commit/push hooks passed. Full6757 regression (79.54%) and 68 combined pinned checks retain their recorded checkpoints. Current evidence set has 39 verified files; no website findings were added.
@@ -41,14 +63,6 @@ Passive-control regular PR https://github.com/D-sorganization/AffineDrift/pull/4
 agy CLI Gemini 3.8 Flash remains unavailable after two insufficient-credit failures; earlier helpers were adjudicated. No new helper evidence, retry loop or credit purchase. Use Python3.12, Black100, Ruff check, isolated pytest --basetemp, normal hooks and regular PRs. Never edit tracked source or render during tests/hooks in the same worktree. Goal active.
 
 Final local acceptance: full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea passes 6757 cases with 79.54% coverage. Source/PDF review is complete; pin the accepted source in a separate delivery record and advance only the Chapter 3 corpus row (98 to 97 originals pending). Regular PR, remote checks/merge and delivery verification remain pending.
-
----
-
-# Passive-Control Amendment — Follow-Up PR Required
-
-PR4841 merged original head4d5c21bcb389dda237d810d50de257dcb84d015a at 7b723333502f94aed4a1a995f656a235ad7bbe2b on 2026-10-03T08:30:42Z before the corrected branch head reached the PR. Remote verification confirms all 22 owned paths and 32 frozen files; whole trees match. The amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e and binding c3187850f6e65576699c1bb5ec3b7c3e867705cf remain accepted and pushed, with 51 pinned checks. Main is integrated without changing any amendment evidence. Issue4836 is reopened; regular follow-up PR https://github.com/D-sorganization/AffineDrift/pull/4843 is open with do-not-merge while the integration checkpoint is pushed and exact-head CI runs. Remove this owned hold only after checking the final head, then use the central guard. Original PR receipt is historical and must not be represented as amendment delivery. Lease/presence renewed through 10:30 UTC.
-
-Parallel impact accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains immutable; 68 combined pinned integration checks pass. Incorporate this remote-main ancestry and explicit follow-up delivery metadata there before its PR.
 
 ---
 
@@ -330,13 +344,13 @@ A seventh delivery helper drafted a read-only parent receipt verifier; lead corr
 
 ## Preserved Earlier Checkpoint
 
-# Current Technical Review Handoff
+# Chapter 13 Preserved Review Handoff — Issue #4811
 
 Chapter 8 PR #4810 is verified on remote main. Chapter 13 source and eight finding bindings are pushed; regular PR #4812 is open. Registration checkpoint SELF awaits push and guarded auto-merge. Continue from [the canonical handoff](docs/development/HANDOFF.md). The goal remains active with 107 source audits and whole-book consistency outstanding.
 
 ## Preserved Earlier Checkpoint
 
-# Current Technical Review Handoff
+# Chapter 8 Preserved Review Handoff — Issue #4809
 
 Chapter 21 PR #4808 is verified on remote main. Chapter 8 regular PR #4810 is open; source, bindings and parent reconciliation are pushed. Registration checkpoint SELF awaits push and guarded arming; protected delivery remains pending. Continue from [the canonical handoff](docs/development/HANDOFF.md).
 
