@@ -19,18 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4832 · Screw Reference Geometry and Dynamics
+### DL-#4836 · Passive Distributed Control Article
 
-- **State:** in_review
+- **State:** in_progress
 - **Owner:** codex
-- **PR:** #4838 (regular)
-- **Issue:** #4832; epic #4009 / corpus #4021
-- **Branch:** fix/screw-reference-rigor-4832
-- **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
+- **PR:** pending
+- **Issue:** #4836; epic #4009 / corpus #4021
+- **Branch:** fix/passive-control-rigor-4836
+- **Paths:** articles/passive-distributed-control.qmd, src/affine_control/series_elastic_demo.py, tests/test_series_elastic_demo.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; main b5d6426c3a7b64026d1c013dc6139411fcfc8b6f. 6733 passed; 2 preview-artifact hygiene failures resolved (21 follow-up passes); 79.31% coverage. Static/publication/browser checks pass. Frozen evidence unchanged. See screw-reference-glossary-integration.json. Commit/push/CI pending.
-- **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 99 source audits plus whole-book consistency remain.
-- **Next step:** Commit/push combined integration; inspect exact new-head PR #4838 CI/review; verify guarded merge and remote-main owned bytes.
+- **Last verified:** 2026-10-03; baseline 503fb4fe6; 14 manufactured model tests and scoped Ruff/Black pass after missing-module RED. First full run: 6748 passed, one no-executable-cell failure; static figure conversion passes 16 focused cases and four browser cells. Checkpoint SELF; full retry remains.
+- **Summary:** Reconcile mechanical topology and energy accounting; distinguish passive mechanics, controlled stability and empirical learning claims.
+- **Next step:** Complete final rendered checks and full regression, then commit and bind exact source before a regular PR.
 
 ### DL-#4828 · Historical Player Research Handoff
 

@@ -1,5 +1,18 @@
 # Development Log Archive — 2026
 
+### DL-#4832 · Screw Reference Geometry and Dynamics
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4838 (regular)
+- **Issue:** #4832; epic #4009 / corpus #4021
+- **Branch:** fix/screw-reference-rigor-4832
+- **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03; merged 503fb4fe6e686fcdcc13a8ac56c5039d313fbff6; CI37093639733 success on d041ad383e9b711a3560e10ef280f8519c1d883d. All five current and 13 parent frozen files unchanged; 24 exact owned blobs and one additive peer SPEC row verified.
+- **Summary:** Screw reference revision accepted.
+- **Next step:** Delivered; reports/technical-review/screw-reference-remote-main-receipt.json. Lease/presence released.
+
 ### DL-#4831 · Radar Observability and Spin-Axis Review
 
 - **State:** shipped
