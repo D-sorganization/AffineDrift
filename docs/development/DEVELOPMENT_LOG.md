@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/glossary-rigor-4839
 - **Paths:** data/glossary.yml, pages/glossary.qmd, tests/test_site_glossary.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; working-tree source based on d041ad383; 6736 tests, 79.46% coverage; four browser cells and publication gates pass.
+- **Last verified:** 2026-10-03; source 06a610cc2fe5f5f5a28ed6641ed3cd5743575c68; 6736 tests/79.46% coverage, four browser cells, static/publication gates and normal source commit hooks pass.
 - **Summary:** Audit 72 glossary definitions and publication; see site-glossary-review.md.
-- **Next step:** Commit source, bind evidence, open regular PR and verify delivery.
+- **Next step:** Commit binding, integrate merged main, push regular PR and verify delivery.
 
 ### DL-#4828 · Historical Player Research Handoff
 
