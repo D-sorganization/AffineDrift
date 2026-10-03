@@ -1,3 +1,15 @@
+# Optimal-Control Review — Checkpoint #4858
+
+Issue #4858 is the active native child of epic #4009, branch `fix/optimal-control-review`, session `technical-review-20261003-optimal-control` (lease/presence through approximately 23:09 UTC). The branch begins at reviewed #4857 head `69caba33fd08a412032516ce24639cbf35b96645`; do not publish a stacked PR accidentally. Verify #4857 remote-main delivery and move this unpublished work onto that actual main before opening the next regular PR.
+
+Both complete optimal-control sources were read. Earlier #4149/#4153 costate, Riccati, DDP, convergence and CARE repairs are valid and preserved. New paired text states local smoothness/impact limits, line-search fraction and a regularization metric under constant nonsingular input scaling. QMD equations are reflowed equivalently. New manufactured control-scaling checks and disclosure contracts went from 10 passes/6 expected source failures to 58 combined focused passes. Seven revised print pages (PDF 79–85, printed 65–71) were inspected after successful enclosing-volume compilation; this is not whole-volume review. The initial revised root-site render passed four browser/axe cells, but manual inspection found further DRE/MPC clipping; the final reflow passes four browser/axe cells and eight further captures were inspected (sixteen across both revisions). The tracked volume PDF is rebuilt; the remaining volume is not newly reviewed. No scientific source acceptance or corpus credit has yet been recorded.
+
+Six successful text-only agy CLI Gemini 3.8 Flash helpers supplied routine inventories, QA/issue/copy/checklist drafts. Lead corrected mistaken stability/convergence claims, manufactured-model centering and regularized gains, and rejected general nonlinear-Hessian tensor claims and unrequested solver/benchmark promises. See `reports/technical-review/optimal-control-review.md`, `optimal-control-prior-review.json`, `optimal-control-independent-checks.json` and mutable `optimal-control-validation.json`. Preserve all prior evidence and untracked QA; do not rerun one-shot editing/checkpoint scripts.
+
+At the latest live check, regular PR #4857 remained open with normal squash auto-merge armed. Python/static/JS/website checks passed; the end-to-end lane had reached the all-route axe scan. Its six frozen scientific files remain unchanged. Complete its actual delivery receipt and release its lease/presence only after observing merge and verifying fetched main. Then finish #4858 publication gates, stable full regression, source/evidence binding and regular-PR delivery. Before full tests, preserve/move generated root packaging directories outside the checkout; do not run renders or mutate tracked files during regression. The goal remains active, including longer sources and whole-book consistency. Earlier sections are historical checkpoints.
+
+---
+
 # Drift and Wrench Review — Regular PR #4857
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4857 is open (not draft). The branch is pushed; check its final head and protected CI before merging.

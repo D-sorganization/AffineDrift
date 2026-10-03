@@ -19,6 +19,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4858 · Paired Optimal-Control Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4858; epic #4009 / corpus #4021
+- **PR:** pending
+- **Branch:** fix/optimal-control-review
+- **Paths:** articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex, articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd, tests/test_optimal_control_conventions.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — 58 focused checks passed; seven revised print pages inspected.
+- **Summary:** Clarify numerical conventions while preserving valid prior optimal-control mechanics and inference limits.
+- **Next step:** Complete revised web layout, publication gates and stable full regression; preserve #4857 delivery before binding scientific acceptance and opening a regular PR.
+- **Evidence:** reports/technical-review/optimal-control-validation.json; 58 focused checks pass, seven revised print pages inspected; web reflow still pending.
+
 ### DL-#4855 · Drift, Wrench and Double-Pendulum Power
 
 - **State:** in_review
