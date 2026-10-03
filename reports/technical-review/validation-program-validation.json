@@ -1,13 +1,13 @@
 {
   "issue": 4847,
-  "source_acceptance": false,
-  "status": "Corrected source and PDF reviewed; first full regression found stale contract wording and generated packaging residue; repaired full retry pending",
+  "source_acceptance": true,
+  "status": "Complete Chapter 11 accepted after source, PDF and local validation; source binding and remote delivery pending",
   "red": "One provenance regression failed against the truncated published digest; eleven independent manufactured checks passed.",
   "new_test_cases": 12,
   "numerical_scope": "Manufactured identities and inspected aggregate digest only; no physical validation or private-row reanalysis.",
   "render": "reports/technical-review/validation-program-render-verification.json",
-  "delegation": "Five successful agy Gemini 3.8 Flash low tasks: digest, two editorial passes, bibliography formatting, and bounded contract-test synchronization. One permission-denied task replaced by text-only input; no permission change.",
-  "scope": "No source binding, new corpus credit, CI or remote-main delivery yet.",
+  "delegation": "Six successful agy CLI Gemini 3.8 Flash low tasks: digest, two editorial passes, bibliography formatting, contract synchronization and handoff consistency. One permission-denied task replaced by text-only input; no permission change. Lead adjudication retained scientific authority.",
+  "scope": "tests/ with repository default marker selection; separate benchmarks and physical validation are excluded. No CI, live-deployment or remote-main claim.",
   "focused_tests": {
     "passed": 83,
     "failures": 0,
@@ -94,7 +94,7 @@
   ],
   "title_source_files": 665,
   "claim_evidence_freshness": "passed",
-  "static": "Changed-test Ruff/Black100/strict mypy and configured CI mypy (98 files) passed before contract follow-up; follow-up checks pending.",
+  "static": "Changed test Ruff/Black100/strict mypy and configured CI mypy (98 source files) passed; owned development-log entry has zero findings",
   "initial_full_regression": {
     "checkpoint": "cdca706bdb7fc1a788d0a6792ed363924c4a30be",
     "passed": 6746,
@@ -108,6 +108,39 @@
       "Stale publication-contract phrases after the source correction",
       "Two root-hygiene assertions found prior generated affinedrift.egg-info"
     ],
-    "disposition": "Preserve failed evidence; synchronize only two superseded phrases and add stronger template/accepted-set/no-physical-evidence assertions; move ignored packaging residue outside checkout; full retry pending."
-  }
+    "disposition": "Preserve failed evidence; synchronize only two superseded phrases and add stronger template/accepted-set/no-physical-evidence assertions; move ignored packaging residue outside checkout; full retry subsequently passed; see full_regression."
+  },
+  "full_regression_checkpoint": "8c96428041fe1636f9fa4081a1e4b4f1eb6d1d57",
+  "full_regression": {
+    "tests": 6778,
+    "skipped": 29,
+    "failures": 0,
+    "errors": 0,
+    "seconds": 483.287,
+    "coverage_percent": 93.24,
+    "pytest_summary": "6749 passed, 29 skipped, 187 deselected, 51 warnings in 483.74s (0:08:03)",
+    "passed": 6749,
+    "deselected": 187,
+    "warnings": 51,
+    "tests_definition": "JUnit cases including skipped cases; excludes deselected cases"
+  },
+  "full_regression_owned_hashes": {
+    "AGENT_HANDOFF.md": "f54491248ae076ff642174680f8785e3b4119a6dc1b1ceb56dd524d3ae74c13c",
+    "SPEC.md": "3aeac9dac5fb6a8f7af173389d4090ec7387500d57ab4506e91034e2c1709636",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "ffa7e589b69da9a6fc4eb8451a7da1b086fe8822297981c7c59ecde8506a19a3",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "849d5917664444fafe855a960ccee1a8be766c1ff5c99589a3502949c633c8c8",
+    "articles/Launch_Monitor_Technology_Review/research/validation-program-review-20261003.md": "ac476d2a152c35c655361ca49324ef463934d3a26078d69658ec7991f09ce3b5",
+    "articles/Launch_Monitor_Technology_Review/sections/11-validation-program.tex": "10940d33821604654621adb58cf21a193c80ae573e8e51b85edf97acb2683c9e",
+    "docs/development/DEVELOPMENT_LOG.md": "35520bd739610282cbd9d315c8dc85eb3dd984100fae7444bace931767b12121",
+    "docs/development/HANDOFF.md": "990aef45c2d867ba570e93f420da4c67b4c7d2877274bd78afec829d4ee4eb62",
+    "reports/technical-review/dof-turnover-remote-main-receipt.json": "c4af93b743adf4c0126fe33b87ff49cd98bc2a3c267c0a15fac6baf71bea42d3",
+    "reports/technical-review/validation-program-dependency-carry-forward.json": "58099550eb3d2dfe97bc32236302c2dc449b25a4c07939bee73d67bbff9bb20d",
+    "reports/technical-review/validation-program-render-verification.json": "ccf593d647d270f192c3bc01f2b928044367e49b8fe10c79270f9df341da8fb2",
+    "reports/technical-review/validation-program-review.md": "71c5eaac808bd5640e6f58465e7e32654345fc8d1c342daa56e8704275c1e405",
+    "reports/technical-review/validation-program-validation.json": "9a8dc23542d115df0fa23856d9f8c135a3ebc9849a346fb8612b7eab0e67b97f",
+    "tests/test_launch_monitor_release_program_contract.py": "7bff223019ae5da903622a1f4529e48a188c7d7cb7c8686542ce928b7c93fd5d",
+    "tests/test_validation_program_review.py": "fd0607b54d670e466fbb5f61e9537ca726c95e861460d49cf1ccb78fc00d5417"
+  },
+  "full_regression_command": "pytest tests/ --cov=src --cov-report=xml --timeout=120; repository default marker selection",
+  "artifact_scope": "Gate logs and complete local run outputs are retained as untracked QA; this committed record summarizes their results. Tested owned hashes include the separately verified prior DOF turnover receipt; they do not claim remote delivery of Chapter 11."
 }
