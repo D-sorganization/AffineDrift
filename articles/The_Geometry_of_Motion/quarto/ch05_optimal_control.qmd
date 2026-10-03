@@ -68,32 +68,52 @@ abnormal extremals require the corresponding more general conditions.
 
 ## A Dimensionally Consistent Local Model
 
+For the Taylor models below, assume the transition and stage/terminal costs
+are twice continuously differentiable near the feasible nominal trajectory.
+Use independent local coordinates for state perturbations. If a transition
+includes an impact, a fixed-mode flow Jacobian alone omits the reset and
+event-time sensitivity. This smooth derivation does not supply those event
+derivatives; a hybrid transition requires its own applicable treatment
+[@Kong2024SaltationFoundations].
+
 Let $(\bar x_k,\bar u_k)$ be dynamically feasible and write
 $\delta x=x-\bar x$, $\delta u=u-\bar u$. Derivatives below are evaluated
 on that trajectory. Use column gradients,
 $\ell_{ux}\in\mathbb R^{m\times n}$, and $\ell_{xu}=\ell_{ux}^T$:
 $$
-\ell\simeq\ell_0+\ell_x^T\delta x+\ell_u^T\delta u+
-\frac12\begin{bmatrix}\delta x\\\delta u\end{bmatrix}^{T}
+\begin{aligned}
+\ell\simeq{}&\ell_0+\ell_x^T\delta x+\ell_u^T\delta u\\
+&+\frac12\begin{bmatrix}\delta x\\\delta u\end{bmatrix}^{T}
 \begin{bmatrix}\ell_{xx}&\ell_{xu}\\\ell_{ux}&\ell_{uu}\end{bmatrix}
 \begin{bmatrix}\delta x\\\delta u\end{bmatrix}.
+\end{aligned}
 $$ {#eq-ch5:cost-expansion}
 Retain the linear terms: they drive improvement when the nominal trajectory
 is not stationary. Dropping them generally removes the feedforward correction.
 The first-order dynamics are
 $$
-\delta x_{k+1}\simeq A_k\delta x_k+B_k\delta u_k,
-\qquad A_k=f_{k,x},\quad B_k=f_{k,u}.
+\begin{aligned}
+\delta x_{k+1}&\simeq A_k\delta x_k+B_k\delta u_k,\\
+A_k&=f_{k,x},\qquad B_k=f_{k,u}.
+\end{aligned}
 $$ {#eq-ch5:perturbation}
 Even an exact Jacobian gives a tangent approximation to a finite perturbation.
 An infeasible nominal trajectory introduces a defect
 $f_k(\bar x_k,\bar u_k)-\bar x_{k+1}$ that a defect-aware method must carry.
 
 Write the next local value as
-$V_{k+1}\simeq V_0+s^T\delta x_{k+1}+\tfrac12\delta x_{k+1}^TS\delta x_{k+1}$.
+$$
+\begin{aligned}
+V_{k+1}\simeq{}&V_0+s^T\delta x_{k+1}\\
+&+\tfrac12\delta x_{k+1}^TS\delta x_{k+1}.
+\end{aligned}
+$$
 The action value $Q=\ell+V_{k+1}\circ f_k$ has derivatives
 $$
-Q_x=\ell_x+A^Ts,\qquad Q_u=\ell_u+B^Ts,
+\begin{aligned}
+Q_x&=\ell_x+A^Ts,\\
+Q_u&=\ell_u+B^Ts.
+\end{aligned}
 $$ {#eq-ch5:Qx}
 $$
 Q_{xx}=\ell_{xx}+A^TSA+\sum_i s_i f^i_{xx},
@@ -133,13 +153,22 @@ curvature must be propagated. A large eigenvalue of $Q_{uu}$ penalizes a
 control change; for fixed gradient it reduces the step in that direction.
 
 For linear dynamics and stage cost
-$\ell_k=\tfrac12(x^TQ_kx+2u^TN_kx+u^TR_ku)$, with
+$$
+\begin{aligned}
+\ell_k={}&\tfrac12 x^TQ_kx+u^TN_kx\\
+&+\tfrac12 u^TR_ku,
+\end{aligned}
+$$
+with
 $N_k\in\mathbb R^{m\times n}$, the exact recursion is
 $$
 \begin{aligned}
-H_k&=R_k+B_k^TS_{k+1}B_k,\quad D_k=N_k+B_k^TS_{k+1}A_k,\\
+H_k&=R_k+B_k^TS_{k+1}B_k,\\
+D_k&=N_k+B_k^TS_{k+1}A_k,\\
 K_k&=-H_k^{-1}D_k,\\
-S_k&=Q_k+A_k^TS_{k+1}A_k-D_k^TH_k^{-1}D_k,\quad S_N=Q_N.
+S_k={}&Q_k+A_k^TS_{k+1}A_k\\
+&-D_k^TH_k^{-1}D_k,\\
+S_N&=Q_N.
 \end{aligned}
 $$ {#eq-ch5:riccati-full}
 A sufficient convexity assumption is that the joint stage-cost block
@@ -151,8 +180,11 @@ to a nonlinear system has a local approximation scope.
 
 An independent check, including the cross-cost terms, is
 $$
-S_k=Q_k+K_k^TN_k+N_k^TK_k+K_k^TR_kK_k+
-(A_k+B_kK_k)^TS_{k+1}(A_k+B_kK_k).
+\begin{aligned}
+A_{{\rm cl},k}&=A_k+B_kK_k,\\
+S_k={}&Q_k+K_k^TN_k+N_k^TK_k\\
+&+K_k^TR_kK_k+A_{{\rm cl},k}^TS_{k+1}A_{{\rm cl},k}.
+\end{aligned}
 $$ {#eq-ch5:riccati-alt}
 Let $A=B=Q=R=1$, $N=1/2$, and $S_{k+1}=1$. Then
 $H=2$, $D=3/2$, $K=-3/4$, and $S_k=7/8$. Both formulas give $7/8$;
@@ -208,6 +240,10 @@ trajectory [@jacobson1970dpp]. A practical implementation follows this sequence.
    line search or tiny regularized step is not a certificate of convergence.
 
 
+Here $\alpha$ is a trial step fraction, $0<\alpha\le1$. It scales the
+feedforward correction; the feedback term uses the trial trajectory's state
+deviation. Test the resulting rollout against the original objective.
+
 When choosing a policy, regularization may replace $Q_{uu}$ by $Q_{uu}+\mu I$.
 Choose $\mu$ large enough to obtain positive definiteness. To evaluate that
 policy in the original quadratic model, use general substitution:
@@ -219,6 +255,24 @@ S_k&=Q_{xx}+Q_{xu}K+K^TQ_{ux}+K^TQ_{uu}K.
 $$
 Mixing regularized gains with an unqualified Schur-complement update silently
 changes the model. State the regularization convention implemented.
+
+Identity regularization uses a declared control scale. For inputs with
+different units or characteristic magnitudes, normalize the controls or specify
+a fixed positive-definite regularization metric $W$. Choose $\mu W$ with units
+compatible with $Q_{uu}$; the added quadratic penalty is
+$\tfrac{\mu}{2}\delta u^TW\delta u$, with $\mu\ge0$.
+Under a constant nonsingular change of scale $\delta u=T_u\delta v$,
+$$
+\begin{aligned}
+H_{\rm reg}&=Q_{uu}+\mu W,\\
+H_{{\rm reg},v}&=T_u^TQ_{uu}T_u+\mu T_u^TWT_u.
+\end{aligned}
+$$ {#eq-ch5:regularization-scale}
+The metric transforms by congruence. Replacing $T_u^TWT_u$ by an identity
+matrix generally changes the physical trial policy. The original $\mu I$
+rule is valid in its declared scale; it is not invariant to arbitrary input
+rescaling. Numerical regularization is not a measurement of mechanical joint
+damping or metabolic expenditure.
 
 Both methods use local Taylor approximations. Solving a quadratic subproblem
 exactly does not make that approximation globally exact or establish a global
@@ -284,8 +338,11 @@ the trade-off with terminal cost.
 An independently reproducible calculation is infinite-horizon LQR balance for
 $e=\theta-\pi$ with
 $$
-A=\begin{bmatrix}0&1\\10&-0.1\end{bmatrix},\quad
-B=\begin{bmatrix}0\\1\end{bmatrix},\quad Q=\operatorname{diag}(100,10),\quad R=0.1.
+\begin{aligned}
+A&=\begin{bmatrix}0&1\\10&-0.1\end{bmatrix},\qquad
+B=\begin{bmatrix}0\\1\end{bmatrix},\\
+Q&=\operatorname{diag}(100,10),\qquad R=0.1.
+\end{aligned}
 $$
 For cost $\int_0^\infty(x^TQx+R\tau^2)dt$, feedback is
 $\tau=-R^{-1}B^TPx$. Write the symmetric $P$ using entries
@@ -335,7 +392,12 @@ $$
 $$ {#eq-ch5:hjb}
 For $\dot x=Ax+Bu$, $L=\tfrac12(x^TQx+u^TRu)$, and $V=\tfrac12x^TSx$,
 $$
--\dot S=Q+A^TS+SA-SBR^{-1}B^TS,\quad S(T)=Q_T,\quad u^*=-R^{-1}B^TSx.
+\begin{aligned}
+-\dot S={}&Q+A^TS+SA\\
+&-SBR^{-1}B^TS,\\
+S(T)&=Q_T,\\
+u^*&=-R^{-1}B^TSx.
+\end{aligned}
 $$ {#eq-ch5:DRE}
 The time-invariant algebraic equation sets $\dot S=0$ and requires the
 stabilizing solution under the assumptions stated earlier.
@@ -356,7 +418,10 @@ active constraints can make this guess poor.
 A standard nominal stability argument assumes admissible terminal feedback
 $\kappa_f$, an invariant terminal set $\mathcal X_f$, and
 $$
-V_f(f(x,\kappa_f(x)))-V_f(x)\le-\ell(x,\kappa_f(x)),\qquad x\in\mathcal X_f.
+\begin{gathered}
+V_f(f(x,\kappa_f(x)))-V_f(x)\\
+\le-\ell(x,\kappa_f(x)),\qquad x\in\mathcal X_f.
+\end{gathered}
 $$
 With initial feasibility, the terminal constraint, positive-definite stage
 cost relative to the target, and appropriate regularity, a shifted candidate
