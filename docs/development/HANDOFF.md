@@ -1,3 +1,13 @@
+# Verified Drift/Wrench Delivery and Optimal-Control Regression
+
+Regular PR #4857 merged at 2026-10-03T21:53:00Z as `252c8a086a3a532ee7e2204f94a945ef41f50bd5`. Its complete tree, 19 owned paths, six frozen files and 46 protected files match fetched main. CI passed 6741 Python tests, 158 browser tests, 158 representative cells and 251 accessibility routes/1004 cells with no serious/critical violations. Lease/presence is released. Receipt: `reports/technical-review/drift-wrench-remote-main-receipt.json`.
+
+Active #4858 branch `fix/optimal-control-review` is rebased onto that verified main. Rebased checkpoint `b2d6b76f10604e7b2b777b89dbdb036914143051` has the exact tested tree of `b5c5cbe3ce599b95d5323ac49f9da90e1b631c2e`. The first broad run passed 6841 and failed four book-audit checks from stale rebuilt-PDF dependency hashes; content lint passed 199 with four skips. The bounded hash repair preserves every historical audit identity. Verify it, then run final publication checks and a stable full retry before scientific acceptance. Initial default --cov included src/scripts (79.83%); use established tests/ --cov=src for comparison to earlier source-only runs. Seven text-only Flash helpers have succeeded; lead corrected the latest PR draft's chapter number, matrix-difference/residual distinction and combined-suite count.
+
+No source acceptance or corpus credit yet. Finish the clean regression, freeze the scientific source, bind the bounded route/corpus records and deliver a regular PR. Preserve all prior frozen evidence and untracked QA. No renders or tracked edits during full regression. The goal remains active. Earlier sections are historical checkpoints.
+
+---
+
 # Optimal-Control Review — Checkpoint #4858
 
 Issue #4858 is the active native child of epic #4009, branch `fix/optimal-control-review`, session `technical-review-20261003-optimal-control` (lease/presence through approximately 23:09 UTC). The branch begins at reviewed #4857 head `69caba33fd08a412032516ce24639cbf35b96645`; do not publish a stacked PR accidentally. Verify #4857 remote-main delivery and move this unpublished work onto that actual main before opening the next regular PR.

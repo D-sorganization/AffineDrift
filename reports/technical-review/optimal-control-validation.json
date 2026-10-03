@@ -1,6 +1,6 @@
 {
   "issue": 4858,
-  "status": "Paired scientific edits, scoped print/web inspection and focused checks complete; broad regression, acceptance binding and protected delivery pending.",
+  "status": "Scoped source/render checks pass; four broad-run dependency-record failures repaired, verification and clean full retry pending.",
   "red": {
     "passed": 10,
     "failed": 6,
@@ -28,7 +28,7 @@
     "manual_findings": "Further reflow needed for clipped DRE number and MPC terminal inequality. Passing body-overflow/axe checks alone do not establish readable equations. Revised source is awaiting another render."
   },
   "delegation": {
-    "successful_flash_helpers": 6,
+    "successful_flash_helpers": 7,
     "model": "gemini-3.8-flash-low",
     "authority": "Text-only routine preparation; lead independently adjudicates equations, evidence and acceptance."
   },
@@ -39,5 +39,121 @@
     "axe_serious_or_critical": 0,
     "manual_captures_inspected": 16,
     "scope": "Eight first-revised and eight final-reflow captures; seven print pages separately inspected."
-  }
+  },
+  "tested_checkpoint": "b5c5cbe3ce599b95d5323ac49f9da90e1b631c2e",
+  "rebased_checkpoint_same_tree": "b2d6b76f10604e7b2b777b89dbdb036914143051",
+  "full_initial": {
+    "passed": 6841,
+    "failed": 4,
+    "skipped": 29,
+    "deselected": 201,
+    "warnings": 60,
+    "seconds": 701.11,
+    "coverage_percent": 79.83,
+    "coverage_scope": "Default --cov includes src and scripts; differs from earlier --cov=src runs. Testpaths included tests and benchmarks.",
+    "failure_module": "tests/test_book_publication_audit.py",
+    "cause": "Old Volume I PDF dependency digest in separate book audit; refresh hashes only and preserve historical review identities."
+  },
+  "content_lint": {
+    "passed": 199,
+    "skipped": 4,
+    "deselected": 6872,
+    "seconds": 19.84
+  },
+  "publication_gates_initial": [
+    {
+      "check": ["check_latex_environments"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_latex_environments.txt"
+    },
+    {
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_terminology.txt"
+    },
+    {
+      "check": ["generate_worked_examples", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-generate_worked_examples.txt"
+    },
+    {
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_tree_parity.txt"
+    },
+    {
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_latex_structure.txt"
+    },
+    {
+      "check": ["validate_frontmatter"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-validate_frontmatter.txt"
+    },
+    {
+      "check": ["validate_accessibility", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-validate_accessibility.txt"
+    },
+    {
+      "check": ["check_scaffolding_styling"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "check": ["check_bibliography_quality"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_bibliography_quality.txt"
+    },
+    {
+      "check": ["check_bibliography_cross_file"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "check": ["check_citation_resolution"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_citation_resolution.txt"
+    },
+    {
+      "check": ["check_qmd_citation_keys"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "check": ["check_title_case"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-check_title_case.txt"
+    },
+    {
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "exit_code": 1,
+      "log": "docs/development/technical-review/optimal-control-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "check": ["generate_research_readiness_library", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/optimal-control-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ]
 }

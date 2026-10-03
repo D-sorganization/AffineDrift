@@ -35,7 +35,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4855 · Drift, Wrench and Double-Pendulum Power
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4855; epic #4009 / corpus #4021
 - **PR:** #4857
@@ -44,7 +44,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun and 193 content checks passed; full clean retry 6790 passed/29 skipped/93.24% coverage after preserving prior packaging output and passing six hygiene checks. Initial two hygiene failures retained. Nine Flash helpers adjudicated; complete source accepted at 0feeebd0897f67211e076ffb2139bf4445a9e8ce, with six frozen scientific files. Four scoped findings and one original corpus row are bound; delivery pending.
 - **Summary:** Complete the article argument review while preserving valid prior mechanics; distinguish input attribution, segment force/couple power and motor work with explicit frames and independently checked examples.
-- **Next step:** Regular PR #4857 open; check final-head CI/reviews and verify protected remote-main delivery; preserve pending empirical critique and other review identities.
+- **Next step:** Delivered in #4857 as 252c8a086a3a532ee7e2204f94a945ef41f50bd5; 19 owned paths, six frozen and 46 protected files verified, CI passed and lease/presence released. See drift-wrench-remote-main-receipt.json.
 
 ### DL-#4853 · DCR Figure Inference Regression
 
