@@ -1,3 +1,13 @@
+# Screw Reference â€” Accepted Source Checkpoint
+
+Issue #4832, epic #4009 / corpus #4021. Complete article and bounded HTML publication are lead-accepted. Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings in 791.61 seconds; coverage 79.37%, above the configured 75% floor. A fresh task-specific --basetemp isolates this run from shared pytest cleanup. All 43 affected screw checks, 21 corrected index/hygiene checks, static checks (902 Python quality files), 12 publication gates and four browser/axe cells pass. All 16 displays inspected; 149 math nodes render with no errors/placeholders. The new status is reflected in the generated search index. Initial failures and preserved browser/build scratch are recorded honestly in reports/technical-review/screw-reference-validation.json.
+
+Four completed agy CLI Gemini 3.8 Flash helper outputs were adjudicated. Two further calls failed for insufficient credits and supplied no evidence; do not buy credits or repeatedly retry. Lead completed the review. Freeze the article, tests, reports/technical-review/screw-reference-review.md and the exact prior route snapshot. Parent radar/ideomotor's 13 frozen files remain unchanged. Source commit/binding and regular PR remain pending; no corpus credit yet (100 audits plus whole-book consistency remain).
+
+Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review; branch fix/screw-reference-rigor-4832; session technical-review-20261003-screw-reference. Lease/presence through 03:27 UTC October 3. Next: commit with normal hooks, bind seven findings to the exact source commit and exactly one corpus row, validate evidence, push a regular PR and verify protected delivery. Goal remains active. Historical checkpoints below retain their original scope.
+
+---
+
 # Screw Reference Review — Active
 
 Issue #4832, epic #4009 / corpus #4021; worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review`, branch `fix/screw-reference-rigor-4832`, session `technical-review-20261003-screw-reference`. Lease/presence through 02:37 UTC October 3. Baseline d678f76746b5020ecd9dd65807e334b6e5bf2581 has the exact tree of verified main6b9d4574157e6d48ac4ac4edf6f59dc5d071b6ea; main ancestry merged without tree changes. This is a preparation/turnover checkpoint. Original article fully read, old route snapshotted; no new source/tests accepted and no corpus credit. Four agy CLI Gemini3.8Flash outputs adjudicated across prior inventory/arithmetic and current editorial/test drafting. Implementation and validation remain pending. The inbox response is incomplete because of malformed/paginated board data; it is not proof of no peers.

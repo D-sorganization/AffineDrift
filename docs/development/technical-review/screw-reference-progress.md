@@ -17,3 +17,15 @@ The test draft's numerical premises are correct; before use, add docstrings, use
 ## Evidence and Delivery
 
 Eight selected Modern Robotics author page transcripts were read across the preparation: twists, wrenches, space Jacobian, statics, rigid-body dynamics, singularities, manipulability and constrained dynamics. Exact links/scopes are in screw-reference-preparation.md; no full book, video/figure review or human trial. All numerical fixtures are manufactured algebra with declared units/scaling. Radar parent delivery is fully verified in reports/technical-review/radar-systems-remote-main-receipt.json. Current technical review remains unaccepted; 100 source audits plus whole-book consistency are pending.
+
+## Revised Source and Publication Checkpoint
+
+The complete article is revised, with eight manufactured checks (one bounded source contract, seven numerical fixtures). RED: one expected source-contract failure and seven algebra passes. GREEN: 43 combined screw tests pass. The two later agy editorial attempts failed with HTTP 429 / insufficient AI credits; they contributed no review evidence. Four completed helper outputs remain adjudicated. No credit purchase or substitute model dispatch.
+
+HTML renders, and final four mobile/desktop light/dark cells pass with zero browser failures and zero serious/critical axe findings. All 16 displays visually inspected; all 149 math nodes finish with zero errors/lazy placeholders at both widths. Six wide mobile equations scroll to their right edges without page overflow. The initial preview failed because the deployment polyfill cleanup and route manifest were absent. Applied the existing strip_legacy_math_polyfill function and a scoped one-route manifest; retained initial failures. The legacy lay block is intentionally removed by the summary filter when frontmatter is present, so remove that redundant source block and use the visible 41-word summary (grade 9.71) plus takeaways. No whole-site browser claim or PDF claim.
+
+Full regression/static/publication acceptance and source binding remain pending. The evidence refresh changes only current digests; the exact prior route snapshot retains historical source/review identifiers. No new audit credit yet: 100 pending.
+
+## Accepted Source Checkpoint
+
+Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings in 791.61 seconds; coverage 79.37%, above the configured 75% floor. A fresh task-specific --basetemp isolates this run from shared pytest cleanup. Source and bounded HTML are lead-accepted; exact commit binding, corpus transition and regular PR remain pending. The accepted review and mutable validation record contain the complete scope and initial failures.

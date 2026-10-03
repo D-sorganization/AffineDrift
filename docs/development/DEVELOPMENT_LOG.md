@@ -28,9 +28,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/screw-reference-rigor-4832
 - **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 baseline d678f76746b5020ecd9dd65807e334b6e5bf2581 and delivered main6b9d4574157e6d48ac4ac4edf6f59dc5d071b6ea have identical trees; complete original source read; prior route snapshotted; four Flash preparation/editorial/test outputs adjudicated; source/tests not yet edited or accepted.
+- **Last verified:** 2026-10-03; Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings in 791.61 seconds; coverage 79.37%, above the configured 75% floor. A fresh task-specific --basetemp isolates this run from shared pytest cleanup. All static/publication/browser gates pass; source lead-accepted, binding pending.
 - **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 100 source audits plus whole-book consistency remain.
-- **Next step:** Review and implement manufactured regression fixtures, rewrite the complete article with model/evidence boundaries, render and validate before source acceptance or corpus credit.
+- **Next step:** Commit the accepted source, bind seven findings and one corpus row, run affected evidence checks, push a regular PR and verify protected delivery.
 
 ### DL-#4495 — Make 404 Page and Empty States Useful
 

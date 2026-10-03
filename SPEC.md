@@ -557,3 +557,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4587 | Write canonical Editorial Style Guide in docs/development/editorial-style-guide.md covering voice, scope, standardized caveat block, glossary tooltips, layer readability targets, analogy rules, banned vocabulary list, and author checklist (WEB-12.1). |
 | 2026-10-02 | #4830 | Implement standard "What This Shows / What It Does Not Show" caveat block (WEB-03.4 #4509) with Lua filter, schema validation, print styles, and core-page rollout. |
 | 2026-10-02 | #4833 | Correct Chapter 4 radar phase/spin ambiguity, conditional axis inference, device modes and face-estimator dependencies; retain bibliography and rebuild the reviewed PDF (#4831). |
+
+| 2026-10-03 | #4832 | Correct screw reference pitch, frame/load duality, wrench inversion, constrained dynamics and counterfactual scope; add manufactured regression checks. |
