@@ -1,3 +1,27 @@
+# Musculoskeletal Conventions — Provisional Validation #4850
+
+Branch `fix/msk-conventions-rigor` starts at remote-main merge `eaae683256ec0924c43307427a94c9ff61d83318`. The complete Volume III Chapter 2 now has eight scoped corrections: anatomical calibration/ISB femoral axes, transform direction, mathematical versus clinical angles, screw/rotation limits, population estimates, inertia cross-block signs and reference point, generalized power, and self-contained exercises. The 51 focused checks and two explicitly selected content checks pass. Sixteen new numerical cases exercise the manuscript; confirmed original red failures are retained. Native build, all seven revised PDF pages and three bibliography pages are checked. The 51 other body pages, 29 old printed references, 172 other Geometry sources and 70 prior evidence files are preserved under the documented byte/citation checks.
+
+This is provisional: full regression, final acceptance/source binding and a regular PR remain. No corpus credit yet: 95 original sources plus whole-book consistency remain. Prior reviewer/date/commit identities are captured before refreshing shared PDF/bibliography hashes. The unchanged landing page has no fresh browser verification. Existing layout warnings elsewhere in Volume III, including the Chapter 1 exercise heading, remain outside this chapter acceptance.
+
+Six successful agy CLI Gemini 3.8 Flash helpers handled inventory, citation mapping, a test draft, editorial notes, carry checks and turnover consistency. The current 70 retained evidence files concern #4850; the earlier 64-file receipt concerns #4849. Lead review repaired the draft and owns scientific acceptance. Session `technical-review-20261003-msk-conventions` owns #4850 and bounded shared ledgers; preserve peer work and untracked QA. Commit the provisional checkpoint, run the full suite without concurrent edits/hooks/renders, then freeze accepted evidence and deliver through normal hooks and the central merge guard. The #4849 delivery receipt below is part of this turnover. Earlier sections are historical checkpoints.
+
+---
+
+# Validation Program Delivered; Musculoskeletal Conventions Next
+
+Regular PR #4849 merged reviewed head `fcea6100e44e9350ecc9231318ac0a82a071c79c` as `eaae683256ec0924c43307427a94c9ff61d83318` on remote main at 2026-10-03 14:32:30 UTC. The complete reviewed tree, 17 owned paths, nine frozen source files and 64 retained prior-evidence files match observed main. Accepted source `694730982d76203db1f193e4c8181104261101c0` remains frozen; the receipt is `reports/technical-review/validation-program-remote-main-receipt.json`.
+
+CI Standard 37129420919 and all eight textbook builds in 37129420909 passed. CI Python: 6700 passed, 78 skipped, 187 deselected, 93.21% coverage. Existing path selection skipped browser/site-render steps; no fresh browser or deployed-site acceptance is claimed. Local 6749-pass regression at `8c96428041fe1636f9fa4081a1e4b4f1eb6d1d57` and 86 focused checks retain their recorded scope. Initial failed validation remains preserved. The central guard armed ordinary squash auto-merge; the #4847 lease/presence is released.
+
+Eight agy CLI Gemini 3.8 Flash tasks supported the delivered review: digest inventory, two editorial passes, bibliography formatting, contract synchronization, handoff consistency, PR drafting and verifier adaptation. Lead review corrected inaccurate PR wording and an obsolete verifier schema key; helpers had no private-source or scientific acceptance authority. Earlier failed/credit-limited calls remain historical.
+
+Current work: issue #4850 under epic #4009/corpus #4021, branch `fix/msk-conventions-rigor`, session `technical-review-20261003-msk-conventions`, lease/presence through approximately 16:38 UTC. Next source is Volume III Chapter 2, `ch02_musculoskeletal_conventions.tex`. The complete original was read; mixed-angle extraction, inertia energy and attributed ISB femoral-frame discrepancies are reproduced. Primary reading and limits are in local `msk-conventions-orientation.md` and `msk-conventions-math-plan.md`. Two Flash helpers inventoried mechanics and citation claims. No acceptance or corpus credit yet. Implement bounded corrections, test independent identities, compile and inspect the shared PDF, preserve prior evidence, and deliver a regular PR.
+
+Exactly 95 original sources plus whole-book consistency remain; the goal stays active. Preserve untracked QA and all prior source bindings. Earlier sections below are historical checkpoints.
+
+---
+
 # Validation Program — Bound Acceptance #4847
 
 The degrees-of-freedom work and turnover are delivered through regular PRs #4846 and #4848. Turnover #4848 merged as `a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9` on 2026-10-03 at 13:09:28 UTC; CI 37124710894 passed. The reviewed tree, seven owned paths and eleven frozen source files match observed remote main. Session `technical-review-20261003-dof` is released. The receipt is `reports/technical-review/dof-turnover-remote-main-receipt.json`.
