@@ -2401,6 +2401,9 @@ Dark mode (separate concern):
 .site-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
   gap: 0.5rem;
   padding: 0.6rem 1.1rem;
   background: var(--color-primary-main);
@@ -2596,7 +2599,10 @@ Dark mode (separate concern):
 }
 
 .entry-list__title {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
   font-family: var(--font-display, "Playfair Display"), Georgia, serif;
   font-size: 1.15rem;
   font-weight: 600;
@@ -2651,6 +2657,10 @@ Dark mode (separate concern):
 }
 
 .provenance-note a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
   color: var(--color-link);
 }
 /* ===== end css/components/provenance-note.css ===== */
@@ -3506,6 +3516,8 @@ code span.va {
 .page-header-cite-link {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
+  min-width: 44px;
   color: var(--color-link);
   font-weight: 600;
   text-decoration: underline;
@@ -4373,6 +4385,10 @@ body.quarto-dark .status-pill--planned,
 }
 
 .page-feedback__email-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
   font-size: 0.9rem;
   color: var(--color-link);
 }
@@ -4578,6 +4594,80 @@ body.quarto-dark .status-pill--planned,
 :is([data-theme="dark"], [data-bs-theme="dark"], body.quarto-dark) :is(.pagination, .quarto-listing, .listing-pagination) :is(.page-link, a.page, a.page-link):hover {
   color: var(--text-primary) !important;
   background-color: var(--bg-tertiary) !important;
+}
+
+/* Touch-target minimum dimensions (WCAG 2.5.5) */
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.navbar-nav .nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.quarto-citation-bibtex-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.quarto-appendix-citeas a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.code-copy-button {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.nav-footer a,
+.nav-footer .nav-link,
+footer.footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+a:not([href]),
+a.visually-hidden[aria-hidden="true"] {
+  display: none !important;
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header .aa-DetachedSearchButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.anchorjs-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
 }
 
 /* ===== end css/components/quarto-theme.css ===== */
@@ -4926,6 +5016,11 @@ footer.footer,
 
 footer.footer a,
 .nav-footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
   color: var(--text-secondary);
 }
 
@@ -4940,7 +5035,10 @@ footer.footer a,
 .nav-footer .footer-items .nav-link {
   display: flex;
   align-items: center;
+  justify-content: center;
   min-height: 44px;
+  min-width: 44px;
+  padding: 0 0.5rem;
 }
 
 /* Full-layout hubs own their visible H1 in authored page markup. Every such
@@ -5441,6 +5539,11 @@ table caption,
   background: var(--primary-blue);
   color: var(--pure-white);
   padding: 0.5rem 1rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2000;
   text-decoration: none;
   font-weight: 600;
