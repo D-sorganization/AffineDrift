@@ -2022,8 +2022,10 @@ Let $\theta_1$ and $\theta_2$ be absolute angles of the arm and club measured
 from downward vertical in one inertial plane. Let $\tau_s$ be shoulder torque
 and $\tau_w$ wrist torque exerted on the club. Virtual work gives
 $$
-\delta W=\tau_s\delta\theta_1+\tau_w(\delta\theta_2-\delta\theta_1),
-\qquad Q_\theta=(\tau_s-\tau_w,\tau_w)^T.
+\begin{aligned}
+\delta W&=\tau_s\delta\theta_1+\tau_w(\delta\theta_2-\delta\theta_1),\\
+Q_\theta&=(\tau_s-\tau_w,\tau_w)^T.
+\end{aligned}
 $$
 The corresponding actuator power is
 $\tau_s\dot\theta_1+\tau_w(\dot\theta_2-\dot\theta_1)$.
@@ -2125,8 +2127,10 @@ M_{ua}\ddot q_a+M_{uu}\ddot q_u+h_u&=0.
 $$
 Choosing the acceleration command $v_a$ requires
 $$
-u=(M_{aa}-M_{au}M_{uu}^{-1}M_{ua})v_a
-  +h_a-M_{au}M_{uu}^{-1}h_u.
+\begin{aligned}
+u={}&(M_{aa}-M_{au}M_{uu}^{-1}M_{ua})v_a\\
+&+h_a-M_{au}M_{uu}^{-1}h_u.
+\end{aligned}
 $$
 The Schur complement is positive definite when $M\succ0$. Exact cancellation
 assumes an accurate model and an admissible computed input. Saturation and
@@ -2137,23 +2141,50 @@ $e_a=\dot e_a=0$ under the input that keeps this set invariant. They depend on
 the output and its reference, and are generally time varying for tracking.
 They are not identical to the motion obtained by switching all actuators off.
 
-No phase of a generic swing is automatically attracting. Integrate a specified
-nominal solution and the variational equation
+No phase of a generic swing is automatically attracting. Let $z$ denote the
+state of the specified smooth closed-loop system, or the internal state of
+its zero dynamics when that is the question being tested. Along a nominal
+trajectory $z_*(t)$ of $\dot z=F(z,t)$, set $A_z(t)=D_zF(z_*(t),t)$ and integrate
 $$
 \delta\dot z=A_z(t)\delta z,\qquad
 \dot\Phi_z=A_z(t)\Phi_z,\quad\Phi_z(t_0)=I.
 $$
-Specify the output, comparison time or event, and the metric used to scale
-angle and velocity errors. Singular values of the appropriately scaled
-transition map measure finite-time amplification. A time-varying positive
-metric $W(t)$ satisfying
+These are infinitesimal variations; they do not by themselves bound finite
+errors or disturbances. Specify the output, coordinate scales, and comparison
+time or event. An event comparison must also differentiate its arrival time
+and any reset; a fixed-time transition matrix alone is insufficient.
+
+For fixed-time comparison, choose a continuously differentiable symmetric
+metric $W(t)\succ0$ and a constant rate $\lambda>0$. If
 $$
-\dot W+A_z^TW+WA_z\preceq-2\lambda W
+\dot W+A_z^TW+WA_z\preceq-2\lambda W,
 $$
-certifies differential decay on the interval where it holds, with metric bounds
-needed to translate it into a coordinate norm. Frozen-time eigenvalues and
-large club speed alone do not supply this certificate. A verified invariant
-funnel additionally checks its moving boundary, input limits, and disturbances.
+then the squared metric error $V_\delta=\delta z^TW\delta z$ satisfies
+$$
+\dot V_\delta\leq-2\lambda V_\delta,\qquad
+V_\delta(t)\leq e^{-2\lambda(t-t_0)}V_\delta(t_0).
+$$
+The metric norm therefore decays at least at rate $\lambda$. Setting
+$\lambda=0$ would certify only nonincrease of this quadratic quantity.
+After declaring coordinate scales, if $W(t)\succeq w_-I$ throughout the interval
+and $W(t_0)\preceq w_+I$, with constants $0<w_-\leq w_+$, then
+$$
+\|\delta z(t)\|_2\leq
+\sqrt{\frac{w_+}{w_-}}\,e^{-\lambda(t-t_0)}\|\delta z(t_0)\|_2.
+$$
+The metric and coordinate conclusions differ: a changing metric can shrink
+while a coordinate error grows. The displayed lower bound prevents an
+arbitrarily vanishing weight from masquerading as an all-time coordinate
+decay guarantee. A finite downswing interval supplies a finite-time estimate,
+not an asymptotic conclusion beyond that interval.
+
+This is the differential metric argument of Lohmiller and Slotine [@LohmillerSlotine1998].
+A check along one nominal trajectory concerns that variational system.
+A nonlinear contraction claim additionally needs the inequality throughout
+a suitable region and the hypotheses keeping the compared trajectories and
+connecting paths there. Frozen-time eigenvalues and large club speed alone
+do not supply either certificate. A verified invariant funnel additionally
+checks its moving boundary, input limits, and disturbances.
 
 ## Accessibility Is Not Forward-Time Reachability
 

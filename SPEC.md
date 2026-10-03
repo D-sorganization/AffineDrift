@@ -575,3 +575,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4855 | Clarify drift/input force attribution, inertial-frame segment power and joint-motor work; add reproducible double-pendulum counterexamples and preserve prior review. |
 | 2026-10-03 | #4858 | Clarify paired optimal-control chapter smoothness, line-search and control-unit regularization conventions; preserve valid Riccati/DDP mechanics and improve mobile equation layout. |
 | 2026-10-03 | #4860 | Clarify loaded-loop restoring stiffness, muscle constitutive scope and sampled stiffness strategy in the three passive-stabilization chapter sources; retain prior mechanics and empirical limits. |
+| 2026-10-03 | #4863 | Clarify underactuation differential-decay assumptions, finite-interval metric bounds and nominal-versus-regional scope across four chapter copies; retain mechanics and improve scoped print/web presentation. |

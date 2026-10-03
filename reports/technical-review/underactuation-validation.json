@@ -1,0 +1,129 @@
+{
+  "issue": 4863,
+  "status": "Focused, publication and rendering checks pass; clean full regression pending. No source acceptance yet.",
+  "red": {
+    "passed": 5,
+    "failed": 4,
+    "seconds": 2.73,
+    "failures": "Expected missing source disclosures in four editions; numerical checks already passed."
+  },
+  "focused_initial": {
+    "passed": 13,
+    "seconds": 1.28
+  },
+  "focused_final": {
+    "passed": 63,
+    "seconds": 25.42
+  },
+  "content_lint": {
+    "passed": 208,
+    "skipped": 4,
+    "deselected": 6837,
+    "seconds": 23.63
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_latex_environments.txt"
+    },
+    {
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_terminology.txt"
+    },
+    {
+      "check": ["generate_worked_examples", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-generate_worked_examples.txt"
+    },
+    {
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_tree_parity.txt"
+    },
+    {
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_latex_structure.txt"
+    },
+    {
+      "check": ["validate_frontmatter"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-validate_frontmatter.txt"
+    },
+    {
+      "check": ["validate_accessibility", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-validate_accessibility.txt"
+    },
+    {
+      "check": ["check_scaffolding_styling"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "check": ["check_bibliography_quality"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_bibliography_quality.txt"
+    },
+    {
+      "check": ["check_bibliography_cross_file"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "check": ["check_citation_resolution"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_citation_resolution.txt"
+    },
+    {
+      "check": ["check_qmd_citation_keys"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "check": ["check_title_case"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_title_case.txt"
+    },
+    {
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "check": ["generate_research_readiness_library", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "render_verification": "reports/technical-review/underactuation-render-verification.json",
+  "delegation": "Six successful text-only agy CLI Gemini 3.8 Flash helpers; lead adjudicated all output.",
+  "preservation": {
+    "protected_files_exact": 72,
+    "other_route_identities_exact": 250,
+    "historical_target_identity_retained": true,
+    "book_audit_unchanged": true
+  },
+  "full": "Pending clean committed checkpoint."
+}
