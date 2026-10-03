@@ -566,4 +566,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4832 | Correct screw reference pitch, frame/load duality, wrench inversion, constrained dynamics and counterfactual scope; add manufactured regression checks. |
 | 2026-10-03 | #4839 | Correct 72-entry glossary mechanics and evidence scope; preserve anchors, enforce generated definitions and render alphabetical links correctly. |
 | 2026-10-03 | #4843 | Regenerate the passive-control SVG with pinned numerical/plotting dependencies and verify the committed artifact in the reproducibility test; preserve separate original and amended delivery evidence. |
-| 2026-10-03 | #4842 | Correct impact-chapter geometry, normal/tangential impulse and gear-effect limits; preserve prior publication evidence through explicit dependency carry-forward. |
+| 2026-10-03 | #4844 | Correct impact-chapter geometry, normal/tangential impulse and gear-effect limits; preserve prior publication evidence through explicit dependency carry-forward. |

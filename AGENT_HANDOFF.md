@@ -1,3 +1,11 @@
+# Impact PR #4844 — Committed and Pushed
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4844 is open from fix/impact-chapter-rigor-4842. Accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 and its eight evidence files remain frozen. All normal initial commit/push hooks passed. Full6757 regression (79.54%) and 68 combined pinned checks retain their recorded checkpoints. Current evidence set has 39 verified files; no website findings were added.
+
+Deliver regular parent correction PR4843 first. Both PRs carry an owned do-not-merge hold until their final heads pass; remove only the relevant hold and invoke the central guard. PR4841 original source is already remote-verified at7b723333502f94aed4a1a995f656a235ad7bbe2b; that receipt is not amendment delivery. Keep the goal active and do not start another review while these deliveries remain open. The agy Gemini3.8 Flash credit block persists.
+
+---
+
 # Impact Chapter — Main Ancestry and Follow-Up Dependency
 
 Impact source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains accepted and unchanged; all eight impact and 31 current parent evidence files are byte-verified. Parent main-integration 278fff4d76232ce29dbb42731ac2a70124bb9d79 carries original PR4841 remote receipt and regular correction PR4843. All 68 combined pinned checks passed before this documentation/ancestry-only merge; no source, test or evidence hash changed. Full 6757-pass regression remains at d03494a4034a310bf1b9974df6e32a6b5de4edea (79.54%).
