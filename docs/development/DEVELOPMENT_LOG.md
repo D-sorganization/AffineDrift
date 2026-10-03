@@ -19,9 +19,23 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4855 · Drift, Wrench and Double-Pendulum Power
+### DL-#4858 · Paired Optimal-Control Review
 
 - **State:** in_review
+- **Owner:** codex
+- **Issue:** #4858; epic #4009 / corpus #4021
+- **PR:** #4859
+- **Branch:** fix/optimal-control-review
+- **Paths:** articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex, articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd, tests/test_optimal_control_conventions.py
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — 74 focused checks, 16 publication gates and full retry 6800 passed/29 skipped/93.24% source coverage; seven revised print pages and sixteen web captures inspected. Initial four PDF-dependency failures repaired without changing audit identities.
+- **Summary:** Clarify numerical conventions while preserving valid prior optimal-control mechanics and inference limits.
+- **Next step:** Accepted source 8a8accd335edf66c527893d51b1cd9fe05c9a31a binds nine frozen files, four findings and two original corpus rows. Regular PR #4859 is open. Verify final-head CI/reviews and protected remote-main delivery; #4857 is verified and released.
+- **Evidence:** reports/technical-review/optimal-control-validation.json; 58 focused checks pass, seven revised print pages inspected; web reflow still pending.
+
+### DL-#4855 · Drift, Wrench and Double-Pendulum Power
+
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4855; epic #4009 / corpus #4021
 - **PR:** #4857
@@ -30,7 +44,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun and 193 content checks passed; full clean retry 6790 passed/29 skipped/93.24% coverage after preserving prior packaging output and passing six hygiene checks. Initial two hygiene failures retained. Nine Flash helpers adjudicated; complete source accepted at 0feeebd0897f67211e076ffb2139bf4445a9e8ce, with six frozen scientific files. Four scoped findings and one original corpus row are bound; delivery pending.
 - **Summary:** Complete the article argument review while preserving valid prior mechanics; distinguish input attribution, segment force/couple power and motor work with explicit frames and independently checked examples.
-- **Next step:** Regular PR #4857 open; check final-head CI/reviews and verify protected remote-main delivery; preserve pending empirical critique and other review identities.
+- **Next step:** Delivered in #4857 as 252c8a086a3a532ee7e2204f94a945ef41f50bd5; 19 owned paths, six frozen and 46 protected files verified, CI passed and lease/presence released. See drift-wrench-remote-main-receipt.json.
 
 ### DL-#4853 · DCR Figure Inference Regression
 

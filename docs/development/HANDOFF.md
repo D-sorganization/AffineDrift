@@ -16,6 +16,32 @@
   - `python -m src.tools.code_quality_check`: passed.
 - Next steps: open PR, enable squash auto-merge, and verify landing.
 
+# Optimal-Control Review — Regular PR #4859
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4859 is open, not draft. The accepted scientific source remains `8a8accd335edf66c527893d51b1cd9fe05c9a31a` (nine frozen files). All work is committed and pushed; this turnover update receives its own final push. Verify final-head CI/reviews, use the central guard for ordinary squash auto-merge, and verify owned/frozen bytes on fetched remote main. No further source rewrites are needed unless validation or review identifies a defect. The goal remains active.
+
+---
+
+# Verified Drift/Wrench Delivery and Optimal-Control Regression
+
+Regular PR #4857 merged at 2026-10-03T21:53:00Z as `252c8a086a3a532ee7e2204f94a945ef41f50bd5`. Its complete tree, 19 owned paths, six frozen files and 46 protected files match fetched main. CI passed 6741 Python tests, 158 browser tests, 158 representative cells and 251 accessibility routes/1004 cells with no serious/critical violations. Lease/presence is released. Receipt: `reports/technical-review/drift-wrench-remote-main-receipt.json`.
+
+Active #4858 branch `fix/optimal-control-review` is rebased onto that verified main. Rebased checkpoint `b2d6b76f10604e7b2b777b89dbdb036914143051` has the exact tested tree of `b5c5cbe3ce599b95d5323ac49f9da90e1b631c2e`. The first broad run passed 6841 and failed four book-audit checks from stale rebuilt-PDF dependency hashes; content lint passed 199 with four skips. The bounded hash repair preserves every historical audit identity. Verified: 74 focused checks, all 16 publication gates, and the clean full retry at d9e7884697da3308102f4280aef591588eb0c722 passed (6800 passed, 29 skipped, 201 deselected, 93.24% source coverage). Complete current paired source/scoped presentation is locally accepted; final immutable binding remains. Initial default --cov included src/scripts (79.83%); use established tests/ --cov=src for comparison to earlier source-only runs. Eight text-only Flash helpers have succeeded; lead corrected the latest PR draft's chapter number, matrix-difference/residual distinction and combined-suite count.
+
+Accepted source `8a8accd335edf66c527893d51b1cd9fe05c9a31a` binds nine frozen scientific files in `reports/technical-review/optimal-control-delivery.json`. Four bounded findings and two original corpus rows now bind that source; the third changed corpus row only records verified #4857 delivery. Run dependent metadata checks and deliver a regular PR. Preserve all prior frozen evidence and untracked QA. No renders or tracked edits during full regression. The goal remains active. Earlier sections are historical checkpoints.
+
+---
+
+# Optimal-Control Review — Checkpoint #4858
+
+Issue #4858 is the active native child of epic #4009, branch `fix/optimal-control-review`, session `technical-review-20261003-optimal-control` (lease/presence through approximately 23:09 UTC). The branch begins at reviewed #4857 head `69caba33fd08a412032516ce24639cbf35b96645`; do not publish a stacked PR accidentally. Verify #4857 remote-main delivery and move this unpublished work onto that actual main before opening the next regular PR.
+
+Both complete optimal-control sources were read. Earlier #4149/#4153 costate, Riccati, DDP, convergence and CARE repairs are valid and preserved. New paired text states local smoothness/impact limits, line-search fraction and a regularization metric under constant nonsingular input scaling. QMD equations are reflowed equivalently. New manufactured control-scaling checks and disclosure contracts went from 10 passes/6 expected source failures to 58 combined focused passes. Seven revised print pages (PDF 79–85, printed 65–71) were inspected after successful enclosing-volume compilation; this is not whole-volume review. The initial revised root-site render passed four browser/axe cells, but manual inspection found further DRE/MPC clipping; the final reflow passes four browser/axe cells and eight further captures were inspected (sixteen across both revisions). The tracked volume PDF is rebuilt; the remaining volume is not newly reviewed. No scientific source acceptance or corpus credit has yet been recorded.
+
+Six successful text-only agy CLI Gemini 3.8 Flash helpers supplied routine inventories, QA/issue/copy/checklist drafts. Lead corrected mistaken stability/convergence claims, manufactured-model centering and regularized gains, and rejected general nonlinear-Hessian tensor claims and unrequested solver/benchmark promises. See `reports/technical-review/optimal-control-review.md`, `optimal-control-prior-review.json`, `optimal-control-independent-checks.json` and mutable `optimal-control-validation.json`. Preserve all prior evidence and untracked QA; do not rerun one-shot editing/checkpoint scripts.
+
+At the latest live check, regular PR #4857 remained open with normal squash auto-merge armed. Python/static/JS/website checks passed; the end-to-end lane had reached the all-route axe scan. Its six frozen scientific files remain unchanged. Complete its actual delivery receipt and release its lease/presence only after observing merge and verifying fetched main. Then finish #4858 publication gates, stable full regression, source/evidence binding and regular-PR delivery. Before full tests, preserve/move generated root packaging directories outside the checkout; do not run renders or mutate tracked files during regression. The goal remains active, including longer sources and whole-book consistency. Earlier sections are historical checkpoints.
+
 ---
 
 # Drift and Wrench Review — Regular PR #4857
@@ -54,7 +80,6 @@ Current literal counts: 407 inventory rows; 92 exact indexed-pending, two annota
 
 Session `technical-review-20261003-corpus-reconcile` owns #4852. The parent #4850 lease and presence were released after verified delivery; refresh #4852 coordination before further edits. The central board remains incomplete; absence of sessions is not evidence of no peers. Preserve frozen scientific evidence, untracked QA and peer work. The goal stays active. Earlier checkpoints retain their historical pending states and counts.
 
-
 Read-only #4853 preparation now covers the complete current DCR article, three generated includes, the figure generator and tests, and visual inspection of all three original SVGs. Actual generated plot coordinates confirm the defects. Six successful Flash helpers supplied label inventories, a test checklist, caption drafts and a test-fixture draft; the lead corrected input/capacity and full-state/acceleration distinctions. See `docs/development/technical-review/dcr-figure-regression-preparation.md` for evidence, proposed exact figure contracts and rejected helper suggestions. No canonical figure/test edits or new source acceptance yet.
 
 ---
@@ -66,7 +91,6 @@ Branch `fix/msk-conventions-rigor` starts at remote-main merge `eaae683256ec0924
 The complete chapter and bounded landing are accepted locally; the source is bound and regular PR #4851 is open; exact-head CI and remote delivery remain. Exactly one original source advances. The index now has 92 indexed-pending rows; 15 targeted-only rows and other partial statuses need reconciliation, and whole-book consistency remains. The inherited total 95 was a roll-forward figure, not a reconciled count. Prior reviewer/date/commit identities are captured before refreshing shared PDF/bibliography hashes. The landing page now pins the corrected Chapter 2 and PDF; four scoped browser/axe cells pass. Manual mobile checks retain an existing floating-control overlap for the site-wide layout pass; no whole-page visual certification. Existing layout warnings elsewhere in Volume III, including the Chapter 1 exercise heading, remain outside this chapter acceptance.
 
 Eight successful agy CLI Gemini 3.8 Flash helpers handled inventory, citation mapping, a test draft, editorial notes, carry checks, turnover consistency, a landing draft and a PR draft. The current 67 retained evidence files concern #4850; the earlier 64-file receipt concerns #4849. Lead review repaired the draft and owns scientific acceptance. Session `technical-review-20261003-msk-conventions` owns #4850 and bounded shared ledgers; preserve peer work and untracked QA. Checkpoint `b7c433455` full regression recorded 6764 passes and one existing Windows cp1252 temporary-file failure, with 93.24% coverage. Seven asset-minification tests pass under explicit UTF-8. The full UTF-8 retry at `387de1628d5f9a67e35a12652cdb43ddfc0592ef` passed: 6765 passed, 29 skipped, 187 deselected, 51 warnings in 608.05s (0:10:08), coverage 93.24%. Preserve both runs. Accepted source `d53ec669335a900fcf42bd4a6065d1d6d27046a8` binds ten frozen evidence files in `reports/technical-review/msk-conventions-delivery.json`. PR https://github.com/D-sorganization/AffineDrift/pull/4851 is regular and open. Binding checkpoint `b20306d4f84fe97a458ad1eae1f9af369c994eb5` preserves all ten files. Inspect exact-head checks/reviews and deliver through the central guard. The #4849 delivery receipt below is part of this turnover. Earlier sections are historical checkpoints.
-
 
 After remote delivery, reconcile the 15 targeted-only and other partial corpus rows against their existing review/delivery evidence before selecting the next source by length. Use Flash for routine inventory; do not infer full acceptance from a closed issue or a previous targeted correction.
 
