@@ -1,0 +1,161 @@
+{
+  "issue": 4839,
+  "baseline": "d041ad383e9b711a3560e10ef280f8519c1d883d",
+  "source_checkpoint": "pending",
+  "full_regression": {
+    "passed": 6736,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 1110.4
+  },
+  "coverage_percent": 79.46,
+  "full_regression_exit_code": 0,
+  "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60 --basetemp <fresh isolated task directory>",
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 914,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/site_glossary-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "source_site_gate": "passed",
+  "browser": {
+    "cells": 4,
+    "passed": true,
+    "serious_critical_axe_violations": 0,
+    "scope": "One rendered glossary route, mobile/desktop light/dark; not whole-site deployment or exhaustive screen-reader acceptance"
+  },
+  "math_inspection": [
+    {
+      "width": 390,
+      "entries": 72,
+      "math": 157,
+      "errors": 0,
+      "lazy": 0,
+      "navLinks": 21,
+      "overflow": 0,
+      "header": {
+        "text": "Site Glossary",
+        "color": "rgb(255, 255, 255)",
+        "opacity": "1",
+        "visibility": "visible"
+      }
+    },
+    {
+      "width": 1440,
+      "entries": 72,
+      "math": 157,
+      "errors": 0,
+      "lazy": 0,
+      "navLinks": 21,
+      "overflow": 0,
+      "header": {
+        "text": "Site Glossary",
+        "color": "rgb(255, 255, 255)",
+        "opacity": "1",
+        "visibility": "visible"
+      }
+    }
+  ],
+  "evidence_logs": {
+    "glossary-full-regression.txt": "629d1aee79737209c2716b4cc9936d33824645e0e5d1034880203bbb4996e1a0",
+    "glossary-source-site-gate.txt": "39f248cd4e9a8e1db47aa742a0444b3100cffc2e183080f224d5264641429f53",
+    "glossary-browser-reviewed.json": "bd01ff3d28aca1cb4fe9e098a6b53ed379ec427df50d5d27c179475d11a3d30a",
+    "glossary-reviewed-math-inspection.json": "3b07f44ab78525873cf1d689dfcab6b4fd81e7219f87915b34710954530815ce",
+    "glossary-nav-red.txt": "15baa856882b2b74f8e4e96d7a6b8db5f7264cb312b3697eda5926a7e4f33d02",
+    "glossary-nav-green.txt": "2113dcbc625fabea8549df6ae4745bc8a8d468f3597d7732bffd215a9156e5e8",
+    "glossary-freshness-red-valid-yaml.txt": "9333c614096cb871c515d1ebd866cc3bd91ff558a0379bc1fb7f41be505ce9df"
+  },
+  "delegation": "Four prior screw helpers adjudicated; two later agy Gemini 3.8 Flash HTTP429 insufficient-credit failures supplied no glossary evidence",
+  "remaining": "Commit source, bind review evidence, normal hooks and push, regular PR, exact-head CI/review, guarded merge and remote-main verification"
+}

@@ -1,3 +1,15 @@
+# Site Glossary Review Checkpoint
+
+Issue #4839; branch fix/glossary-rigor-4839 in C:/Users/diete/Repositories/Worktrees/AffineDrift-glossary-review. Baseline d041ad383e9b711a3560e10ef280f8519c1d883d. All 72 definitions read; 66 edited and six retained. Source report and per-entry audit are under reports/technical-review/site-glossary-*. Keys, names, canonical targets and anchors are preserved. Two publication defects were fixed: stale definitions were not tested, and alphabetical links rendered as code. Eight focused tests and four browser cells pass; 157 math containers have zero errors/lazy placeholders after scroll-through. Selected screenshots and mobile math scrolling inspected. Full regression passes 6736 tests with 79.46% coverage. Source binding, regular PR and delivery remain pending. No glossary acceptance is inferred from the old route's review marker.
+
+PR #4838 merged as 503fb4fe6e686fcdcc13a8ac56c5039d313fbff6; exact-head CI passed. Remote-main receipt verifies five current and 13 parent frozen files, 24 exact owned files and one additive peer SPEC row. Lease/presence released; only its owned development-log entry was archived. Receipt and mutable delivery record are included in this glossary checkpoint.
+
+New glossary lease/presence: technical-review-20261003-glossary, expires 2026-10-03T05:48 UTC. Screw lease/presence released after verified delivery. Inbox evidence was incomplete due to board limits; no absence-of-peers claim. Preserve peer records. The original corpus still has 99 pending sources plus whole-book consistency; this expanded glossary is additional. Next queued original article is #4836, preparation only. agy Gemini 3.8 Flash credits are exhausted; four earlier helpers were adjudicated, two further calls failed. Do not repeatedly retry or purchase credits.
+
+Use Python3.12, Black100 and Ruff check. Every pytest run needs a fresh --basetemp outside shared pytest-of-diete. No tracked edits or rendering during tests/hooks. Keep raw QA and generated scratch under docs/development/technical-review; stage explicitly. Regular PRs only, no direct main pushes or guard bypass. Goal remains active.
+
+---
+
 # Screw Review — Glossary Integration Validated
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838; remote topic verified at `37f42e6c0c012055a45b641e552467cecb5cbf6c`. Current integration checkpoint `SELF` incorporates main `b5d6426c3a7b64026d1c013dc6139411fcfc8b6f` (PR #4826 site-wide glossary). Both keyed SPEC rows are retained in one table; prior handoffs and incoming DL-#4828 remain unchanged, and shipped radar stays archived. The five screw evidence files at publication42c6036d0387c5e79cd638240204adc1ecfba483 and 13 frozen parent files are unchanged. Seven findings and 99 pending source audits plus whole-book consistency remain.

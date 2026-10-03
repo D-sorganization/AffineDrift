@@ -69,7 +69,7 @@ def generate_glossary_qmd(glossary: dict[str, dict[str, Any]]) -> str:
         "A rigorous, accessible glossary bridging intuitive plain-language concepts, mathematical definitions, and canonical research articles across the AffineDrift publication.",
         ":::",
         "",
-        '<nav class="glossary-nav" aria-label="Alphabetical term index">',
+        '```{=html}\n<nav class="glossary-nav" aria-label="Alphabetical term index">',
         '  <div class="glossary-nav__letters">',
     ]
 
@@ -79,7 +79,7 @@ def generate_glossary_qmd(glossary: dict[str, dict[str, Any]]) -> str:
     lines.extend(
         [
             "  </div>",
-            "</nav>",
+            "</nav>\n```",
             "",
         ]
     )

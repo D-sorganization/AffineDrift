@@ -19,6 +19,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.generate_site_glossary import generate_glossary_qmd
 from src.tools.site_glossary import (
     MINIMUM_TERMS,
     get_glossary_path,
@@ -67,8 +68,8 @@ def test_glossary_loader_and_validator_error_cases(tmp_path: Path) -> None:
 
     valid_entry = {
         "name": "Drift",
-        "plain": "Passive motion.",
-        "technical": "Uncontrolled vector field.",
+        "plain": "The model's change at zero declared input.",
+        "technical": "The complete zero-declared-input vector field.",
         "canonical_page": "articles/affine-nature-golf-swing.qmd",
     }
     validate_glossary_entry("drift", valid_entry)
@@ -108,6 +109,9 @@ def test_pages_glossary_qmd_exists_and_covers_all_terms() -> None:
     glossary = load_glossary()
     assert GLOSSARY_QMD.exists(), f"pages/glossary.qmd must exist: {GLOSSARY_QMD}"
     qmd_content = GLOSSARY_QMD.read_text(encoding="utf-8")
+    assert qmd_content == generate_glossary_qmd(
+        glossary
+    ), "Generated glossary is stale; run python scripts/generate_site_glossary.py"
 
     # Frontmatter verification
     assert (
@@ -150,6 +154,27 @@ def test_every_term_shortcode_references_valid_key() -> None:
             ), f"Unknown glossary term key '{key}' referenced in {file_path.relative_to(ROOT)}"
 
 
+@pytest.mark.integration
+def test_glossary_alphabet_renders_as_links() -> None:
+    """Catch indentation turning the alphabetical navigation into visible HTML code."""
+    quarto = shutil.which("quarto")
+    if quarto is None:
+        pytest.skip("Quarto is required to verify rendered glossary navigation")
+    glossary = load_glossary()
+    result = subprocess.run(
+        [quarto, "pandoc", "--from=markdown", "--to=html", "--mathjax"],
+        input=generate_glossary_qmd(glossary),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=True,
+    )
+    letters = {term["name"][0].lower() for term in glossary.values()}
+    for letter in letters:
+        assert f'<a href="#{letter}" class="glossary-nav__letter">' in result.stdout
+    assert result.stdout.count('class="glossary-nav__letter"') == len(letters)
+
+
 def test_book_glossary_links_to_site_glossary() -> None:
     """Ensure the book appendix glossary links to the site glossary without duplication."""
     assert BOOK_GLOSSARY_QMD.exists()
@@ -177,7 +202,7 @@ def test_term_tooltip_lua_filter_accessible_markup() -> None:
             f"filters:\n  - {GLOSSARY_FILTER.resolve().as_posix()}\n"
             "format: html\n"
             "---\n\n"
-            'The concept of {{< term drift >}} explains passive mechanics, while {{< term control "active torque" >}} represents intervention.\n'
+            'Compare {{< term drift >}} with {{< term control-input "declared input" >}}.\n'
         )
         qmd.write_text(content, encoding="utf-8")
         result = subprocess.run(
@@ -196,4 +221,6 @@ def test_term_tooltip_lua_filter_accessible_markup() -> None:
         assert "glossary-tooltip" in html
         assert 'role="tooltip"' in html or "aria-describedby" in html
         assert "pages/glossary.html#drift" in html
-        assert "active torque" in html
+        assert "declared input" in html
+        assert load_glossary()["drift"]["plain"] in html
+        assert load_glossary()["control-input"]["plain"] in html

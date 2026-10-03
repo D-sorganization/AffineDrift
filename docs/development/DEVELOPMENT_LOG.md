@@ -19,18 +19,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4832 · Screw Reference Geometry and Dynamics
+### DL-#4839 · Site Glossary Scientific Consistency
 
 - **State:** in_review
 - **Owner:** codex
-- **PR:** #4838 (regular)
-- **Issue:** #4832; epic #4009 / corpus #4021
-- **Branch:** fix/screw-reference-rigor-4832
-- **Paths:** articles/screw-theory-reference.qmd, tests/test_screw_reference_review.py
+- **PR:** pending
+- **Issue:** #4839; epic #4009
+- **Branch:** fix/glossary-rigor-4839
+- **Paths:** data/glossary.yml, pages/glossary.qmd, tests/test_site_glossary.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03; main b5d6426c3a7b64026d1c013dc6139411fcfc8b6f. 6733 passed; 2 preview-artifact hygiene failures resolved (21 follow-up passes); 79.31% coverage. Static/publication/browser checks pass. Frozen evidence unchanged. See screw-reference-glossary-integration.json. Commit/push/CI pending.
-- **Summary:** Review pitch, spatial velocity and current Jacobian columns; distinguish load duality, wrench inference and generalized actuation; derive forward dynamics under declared constraints; correct modal and counterfactual interpretations. Preserve accepted parent science and all existing findings. 99 source audits plus whole-book consistency remain.
-- **Next step:** Commit/push combined integration; inspect exact new-head PR #4838 CI/review; verify guarded merge and remote-main owned bytes.
+- **Last verified:** 2026-10-03; working-tree source based on d041ad383; 6736 tests, 79.46% coverage; four browser cells and publication gates pass.
+- **Summary:** Audit 72 glossary definitions and publication; see site-glossary-review.md.
+- **Next step:** Commit source, bind evidence, open regular PR and verify delivery.
 
 ### DL-#4828 · Historical Player Research Handoff
 
