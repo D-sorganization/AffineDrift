@@ -1,3 +1,11 @@
+# Passive-Control Amendment — Follow-Up PR Required
+
+PR4841 merged original head4d5c21bcb389dda237d810d50de257dcb84d015a at 7b723333502f94aed4a1a995f656a235ad7bbe2b on 2026-10-03T08:30:42Z before the corrected branch head reached the PR. Remote verification confirms all 22 owned paths and 32 frozen files; whole trees match. The amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e and binding c3187850f6e65576699c1bb5ec3b7c3e867705cf remain accepted and pushed, with 51 pinned checks. Main is integrated without changing any amendment evidence. Issue4836 is reopened; regular follow-up PR https://github.com/D-sorganization/AffineDrift/pull/4843 is open with do-not-merge while the integration checkpoint is pushed and exact-head CI runs. Remove this owned hold only after checking the final head, then use the central guard. Original PR receipt is historical and must not be represented as amendment delivery. Lease/presence renewed through 10:30 UTC.
+
+Parallel impact accepted source b90b86376c9eebbc9d07be754b254ee914fdfff2 remains immutable; 68 combined pinned integration checks pass. Incorporate this remote-main ancestry and explicit follow-up delivery metadata there before its PR.
+
+---
+
 # Passive-Control PR #4841 — Reproducibility Amendment
 
 Review comment 4172127928 identified an SVG generated with Matplotlib 3.10.8 instead of pinned 3.11.2. The pinned environment reproduced the new committed-artifact freshness failure; regeneration resolves it and all 15 model/figure checks pass. Article, generator, mechanical model and original scientific report are unchanged. The amendment report preserves old/new artifact hashes, environment scope and validation history. Amendment source c6a12064ef6da2c24c3cc80fb399d25b87e4e47e passes normal commit hooks; eight evidence files are now bound while all 468 prior findings remain unchanged. All 51 amended binding checks pass in the pinned environment. Repository automation rearmed auto-merge after a simple disable, so the supported do-not-merge label is applied until the corrected binding is pushed and exact-head checks pass. Remove only this owned temporary hold before invoking the central guard. Do not use the old remote-verification helper with a new head without updating its explicit accepted-head and frozen-file list.

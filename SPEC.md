@@ -565,3 +565,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4490 | Build site-wide glossary with data/glossary.yml (72 terms), pages/glossary.qmd generation, accessible WAI-ARIA tooltip shortcode/Lua filter {{< term >}}, styles, and book glossary cross-linking (WEB-01.5). |
 | 2026-10-03 | #4832 | Correct screw reference pitch, frame/load duality, wrench inversion, constrained dynamics and counterfactual scope; add manufactured regression checks. |
 | 2026-10-03 | #4839 | Correct 72-entry glossary mechanics and evidence scope; preserve anchors, enforce generated definitions and render alphabetical links correctly. |
+| 2026-10-03 | #4843 | Regenerate the passive-control SVG with pinned numerical/plotting dependencies and verify the committed artifact in the reproducibility test; preserve separate original and amended delivery evidence. |
