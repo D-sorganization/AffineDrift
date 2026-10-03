@@ -1,258 +1,280 @@
 \chapter{Doppler Radar Systems}
 \label{ch:radar}
+% Retain historical bibliography records formerly cited by this chapter.
+% Their inclusion does not support the corrected claims or validate current products.
+\nocite{us12186643,flightscopex3,homeperformancelab,manzellaforum}
+
+Radar observations constrain a moving target through frequency, phase, amplitude and timing.
+A launch monitor combines those observations with geometry, signal processing and, for some outputs, a collision or flight model.
+The useful question is which quantities the available observations identify, under which assumptions, and with what uncertainty.
+Those distinctions matter when launch-monitor outputs are used to explain a golfer's swing: two reported parameters can share the same measured input and therefore share its errors.
+
+\begin{keypoint}
+\textbf{What This Shows:} The measurement equations below explain radial velocity, angular ambiguity, spin signatures and conditional trajectory-based spin-axis inference.
+They also show how an inferred face angle can inherit uncertainty from ball launch and club path.
+\textbf{What It Does Not Show:} A patent disclosure, vendor specification or manufactured calculation does not establish the accuracy or internal implementation of every commercial product.
+Device generation, firmware, ball type, geometry and operating mode must accompany any performance claim.
+\end{keypoint}
 
 \section{Continuous-Wave Doppler Fundamentals}
 \label{sec:cwdoppler}
 
-A CW radar transmits a carrier at frequency $f_c$ (wavelength $\lambda$)
-and receives echoes shifted by the Doppler effect. For a target with
-radial velocity $v_r$,
+A continuous-wave (CW) radar transmits a carrier at frequency $f_c$, with wavelength $\lambda=c/f_c$.
+For monostatic transmission and reception, target speeds small compared with $c$, and a sign convention assigning positive Doppler to increasing range, the instantaneous range rate $v_r=\dot r$ gives
 \begin{equation}
 \label{eq:doppler}
-f_d = \frac{2 v_r}{\lambda} = \frac{2 f_c v_r}{c}.
+f_d = \frac{2v_r}{\lambda}=\frac{2f_cv_r}{c}.
 \end{equation}
-At the 24.125\,GHz K-band center frequency used by the OPS243-A (and the
-Garmin R10, Full Swing KIT, original Mevo), each 1\,mph of radial speed
-produces $\approx71.7$\,Hz of shift; at X-band ($\sim$10.5\,GHz, TrackMan's
-long-range subsystem and the Mevo+) the constant is
-$\approx31.3$\,Hz/mph. A spinning, translating golf ball is not a point
-target: every surface patch has its own radial velocity, so the return is a
-velocity \emph{spectrum} whose structure carries the spin information
-(\cref{sec:radarspin}).
+The factor of two accounts for the outgoing-plus-return path; the displayed Doppler sign depends on the receiver's mixing convention.
+At an illustrative carrier of \SI{24.125}{\giga\hertz}, one mph of radial speed gives approximately \SI{71.95}{\hertz}; at \SI{10.5}{\giga\hertz}, it gives \SI{31.31}{\hertz}, using $c=\SI{299792458}{\meter\per\second}$ and $1\,\mathrm{mph}=\SI{0.44704}{\meter\per\second}$.
+These conversions do not identify a particular product's carrier or detection range.
 
-Band choice is a range-vs-resolution trade. X-band supports long-range
-full-flight tracking (TrackMan tracks the entire $\sim$6\,s flight);
-24\,GHz gives finer velocity resolution per unit observation time and
-compact low-power hardware, but consumer 24\,GHz units track only
-$\sim$30\,yd of flight~\cite{fccTman4,mevoteardown,garminr10data}.
+Carrier frequency alone does not set a flight-tracking limit.
+For a coherent observation of duration $T$, Fourier-bin spacing of order $1/T$ corresponds to radial-velocity spacing of order $\lambda/(2T)$.
+That is spectral spacing, not a universal velocity-error bound: windowing, acceleration, estimator design and signal-to-noise ratio matter.
+For an ideal wideband ranging waveform, range resolution instead scales with transmitted bandwidth $B$, approximately $c/(2B)$; angular performance depends on aperture and geometry.
+Detection range additionally depends on transmitted power, antenna gain, target scattering, propagation, clutter and detection thresholds.
+A blanket thirty-yard limit for consumer \SI{24}{\giga\hertz} radar cannot follow from the carrier frequency; the hybrid disclosure discussed below itself proposes much longer ranges~\cite{fullswingpatent}.
 
 \section{From Velocity Sensor to 3D Tracker: Phase Interferometry}
 \label{sec:interferometry}
 
-A single-channel Doppler radar measures radial speed only. Every serious
-launch monitor adds \emph{multiple receive antennas} and measures the
-\emph{phase difference} of the return across receiver pairs
-(phase-comparison monopulse / interferometry). A wavefront arriving from
-direction $\uvec{u}$ reaches two antennas separated by baseline $\vect{d}$
-with time delay $\tau = (\vect{d}\cdot\uvec{u})/c$, observed after mixing
-as a phase difference
+A single unmodulated CW channel supplies radial-velocity information without independently resolving absolute range and two angular coordinates.
+Multiple calibrated receive antennas can add direction information.
+Let $\uvec u$ denote the unit direction from the array toward the target.
+For a locally planar wavefront in a narrowband, far-field approximation, receivers separated by baseline $\vect{d}$ have a relative delay $\tau=(\vect{d}\cdot\uvec{u})/c$, with direction and phase signs chosen consistently.
+For baseline length $d$, direction cosine $u=\vect d\cdot\uvec u/d$ along it and a calibrated measured phase $\Delta\varphi$, the possible directions are
 \begin{equation}
 \label{eq:interferometry}
-\Delta\varphi = 2\pi f_c \tau \ (\mathrm{mod}\ 2\pi)
-\quad\Longrightarrow\quad
-u = \frac{\lambda\,\Delta\varphi}{2\pi d},
+\Delta\varphi \equiv \frac{2\pi d}{\lambda}u \pmod{2\pi},
+\qquad
+u_k=\frac{\lambda(\Delta\varphi+2\pi k)}{2\pi d},
+\quad k\in\mathbb Z,\quad |u_k|\leq1.
 \end{equation}
-where $u$ is the direction cosine along the baseline. Two orthogonal
-baselines give azimuth and elevation; the $2\pi$ ambiguities are resolved
-with more than three antennas at staggered spacings (TrackMan
-US\,9,958,527~\cite{us12186643}). Combined with range (from
-multi-frequency CW phase differences or an FMCW chirp) and range rate
-(Doppler), the radar produces a full 3D track $(r,\mathrm{az},
-\mathrm{el},\dot r)$ per epoch. Tuxen's spin-axis patent describes exactly
-this ``phase--phase monopulse comparison \ldots\ or interferometry'' across
-three receivers~\cite{us10850179}; the Garmin R10 uses a three-receiver
-24\,GHz array the same way~\cite{garminr10data}; FlightScope describes its
-aperture as a phased antenna array~\cite{flightscopex3}.
+The integer branch is part of the inverse problem.
+For $d=\lambda$, direction cosines $0.2$ and $-0.8$ give the same complex phase.
+Half-wavelength spacing avoids interior aliases over the full direction-cosine interval, but its opposite endpoints still coincide in phase.
+Larger baselines may be usable over a restricted field of view or with additional, appropriately chosen baselines and joint ambiguity resolution; an antenna count alone does not guarantee uniqueness~\cite{us9958527}.
+
+Two independent baselines constrain two direction cosines, with a physical hemisphere choice needed to reconstruct a direction.
+Near endfire, converting a direction cosine to an angle is poorly conditioned: for an angle $\theta$ measured from broadside so that $u=\sin\theta$, small unwrapped phase errors give $\delta\theta\simeq\lambda\delta\varphi/(2\pi d\cos\theta)$.
+This local approximation excludes branch errors and becomes unreliable near $\cos\theta=0$.
+Near-field wavefront curvature requires a range-dependent propagation model rather than the plane-wave formula.
+Combining a resolved direction with independently estimated range and range rate can yield a three-dimensional track, provided the channels observe the same target and share calibrated coordinates and timing.
+A per-Doppler-bin direction is a direction of contributing scattering, not automatically the ball center or a labeled point on a clubface~\cite{us10850179}.
 
 \begin{implication}
-A minimal radar architecture --- one CW Doppler module for speed plus two angle-radar modules for
-vertical and horizontal angles --- is a physically separated version of
-what commercial units do on one board: the K-LD7's RADC mode exposes raw
-ADC data from its two receive patches, and per-bin phase comparison
-\cref{eq:interferometry} yields the angle of each detection. The
-commercial lesson is that angle accuracy is limited by baseline length,
-SNR, and mutual calibration; a rigid mechanical mount and a one-time
-angular calibration against surveyed targets matter more than any software
-refinement.
+One speed module and two angle modules form an investigational sensing arrangement, not a validated launch monitor merely by supplying three outputs.
+RFbeam's K-LD7 exposes raw I/Q data: its RADC packet contains Rx1 and Rx2 at one carrier setting and Rx1 at a second setting used for FSK ranging.
+The March 2021 Revision B datasheet specifies a maximum configured speed of \SI{100}{\kilo\meter\per\hour}, a typical \SI{29}{\milli\second} frame at that setting, and warnings about out-of-range returns and serial throughput~\cite{kld7}.
+Its person-detection example and configurable range do not establish golf-ball performance.
+An implementer must establish speed and signal bandwidth, target association, synchronization, ambiguity handling and error propagation before treating these modules as a three-dimensional ball tracker.
+A rigid mount and surveyed calibration help, but do not remove the need to model drift, multipath and processing errors.
 \end{implication}
 
 \section{CW + FMCW Hybrids}
 \label{sec:fmcw}
 
-Full Swing's patent US\,11,311,789 (published as
-US\,2020/0147470)~\cite{fullswingpatent} is
-the clearest public description of a hybrid launch-monitor radar: two
-$\sim$24\,GHz transmitters, time-division multiplexed, one CW and one
-linear-FMCW. The CW channel provides club speed, ball speed, spin, and
-launch-window angles from Doppler; the FMCW chirp provides direct range to
-250\,m+, carry, and side displacement from beat-frequency and phase
-measurements. The antenna layout is deliberately \emph{non-uniform} ---
-four receive antennas symmetric about the axis, two transmit antennas
-placed asymmetrically --- to enrich the phase/frequency structure of the
-receive signal. FlightScope's X3 similarly advertises ``multi-frequency
-radar with direct distance measurement''~\cite{flightscopex3}.
+Frequency-modulated continuous-wave (FMCW) sensing adds delay information through a known transmitted frequency history.
+For a moving target, beat frequency contains range and Doppler contributions, so separating them depends on the waveform and estimator; a chirp does not make range an assumption-free observable.
+Full Swing's US\,11,311,789 describes example \SI{24}{\giga\hertz} CW and linear-FMCW channels, multiplexing alternatives and several antenna layouts~\cite{fullswingpatent}.
+The disclosure associates Doppler signatures with speed and spin and modulated signals with range, and discusses ranges exceeding \SI{250}{\meter}.
+Its examples include a ball swung on a line at \SI{75}{\meter}; that demonstration is not an independent accuracy study of full golf shots.
+The array drawings include both symmetric and nonuniform arrangements, so one example should not be presented as the definitive commercial KIT layout.
+The disclosure establishes proposed mechanisms; which mechanisms are deployed, and their error distributions, require separate product-specific evidence.
 
 \section{Ball Measurement}
 
 \subsection{Speed and Launch Angles}
 
-Ball speed is read from the dominant Doppler line immediately after
-impact; launch angles come from the interferometric track over the first
-meters of flight. These are the most directly measured quantities in the
-whole parameter set and show the best inter-device agreement in every
-independent study (\cref{ch:accuracy}). Because the radar sits behind
-(or above) the ball, the measured radial speed underestimates the true
-speed by the cosine of the aspect angle; commercial units correct this
-using the tracked geometry, and the correction is largest for high launch
-angles and close radar placement.
+A processor must associate the post-impact Doppler return with the ball before interpreting it as ball radial velocity.
+Three-dimensional launch velocity also requires direction information from a fitted track or another sensing channel.
+If $\alpha$ is the angle between target velocity and the radar line of sight, $v_r=\lVert\vect v\rVert\cos\alpha$; it is not generally enough to substitute the launch angle relative to the ground for $\alpha$.
+Dividing by $\cos\alpha$ becomes poorly conditioned near a tangential trajectory, and uncertainty in direction then strongly affects inferred speed.
+The reported impact state must also distinguish a sample taken after impact from a value extrapolated back to the defined event.
 
-\subsection{Spin Rate: The Harmonic-Sideband Method}
+Leach et al. compared TrackMan Pro IIIe and Foresight GC2+HMT with a benchmark optical system using 240 shots across a driver, 7-iron and utility wedge~\cite{leach2017}.
+They found generally stronger agreement for ball parameters than clubhead parameters, with several results dependent on club.
+That evidence supports a device- and study-specific distinction; it does not establish best agreement for the same parameters in every study or newer product.
+
+\subsection{Spin Rate: Harmonic Signatures and Their Ambiguities}
 \label{sec:radarspin}
 
-The foundational method is Tuxen's patent
-US\,8,845,442~\cite{us8845442} (EP\,1\,698\,380). A golf ball's dimples,
-paint, logo, seam, and core asymmetry make its radar cross-section vary
-periodically as it rotates. A surface feature at radius $r$ contributes a
-Doppler term
+Tuxen's US\,8,845,442 describes extracting spin information from Doppler spectral structure~\cite{us8845442}.
+In a rigid-ball point-feature model, let $\vect v_C$ be center velocity, $\vect\rho(t)$ the feature's offset from the center, and $\vect\omega$ the angular velocity, all expressed in one frame.
+Using a common line-of-sight unit vector $\uvec n$ across the small target gives
 \begin{equation}
-f_{d,\mathrm{feature}}(t) = \frac{2}{\lambda}
-  \bigl(v_r - r\,\omega \sin\omega t\bigr),
+\label{eq:radarfeature}
+f_{d,\mathrm{feature}}(t)=\frac{2}{\lambda}
+\uvec n\cdot\left[\vect v_C+\vect\omega\times\vect\rho(t)\right].
 \end{equation}
-i.e.\ frequency modulation of the return at the spin frequency
-$\omega/2\pi$ with deviation $(2/\lambda) r\omega$. The received spectrum
-therefore shows the main translational Doppler line flanked by
-\textbf{equally spaced harmonic sidebands} at
+The rotational term vanishes for spin parallel to that line of sight.
+For constant spin and approximately fixed viewing direction, a feature at perpendicular distance $\rho_\perp$ from the spin axis has a sinusoidal projected velocity with amplitude $\lVert\vect\omega\rVert\rho_\perp\sin\beta$, where $\beta$ is the spin-axis/viewing angle.
+The simpler amplitude $\rho_\perp\lVert\vect\omega\rVert$ requires a view perpendicular to the spin axis; $\rho_\perp$ equals the ball radius only for an equatorial surface feature.
+Actual returns also depend on coherent scattering, visibility and rotating reflectivity, so this point-feature model is not a complete electromagnetic ball model.
+
+Let $S$ denote spin rate in revolutions per minute.
+Periodic modulation at rotation frequency $f_{\mathrm{spin}}=\lVert\vect\omega\rVert/(2\pi)$ can produce spectral lines
 \begin{equation}
 \label{eq:sidebands}
-f = f_{d} \pm n\,f_{\mathrm{spin}}, \quad n = 1,2,3,\ldots
-\qquad\Longrightarrow\qquad
-S\,[\mathrm{rpm}] = 60\,\Delta f_{\mathrm{sideband}}.
+f_n=f_d+n f_{\mathrm{spin}},\quad n\in\mathbb Z,
+\qquad S\,[\mathrm{rpm}]=60 f_{\mathrm{spin}}\,[\mathrm{Hz}].
 \end{equation}
-The patented processing chain: (1) track the central velocity trace
-through the short-time Fourier transform; (2) detect symmetric sideband
-peaks; (3) track them over time as spectral traces; (4) \emph{qualify}
-harmonics by verifying constant equal spacing across consecutive FFT
-frames; (5) solve the harmonic-number assignment; (6) divide trace offset
-by harmonic number~\cite{us8845442,trackmanspinpatentblog}. In practice a
-cepstrum or harmonic-product-spectrum estimator finds the comb spacing
-robustly.
+Observed peaks need not include every integer order, symmetric peaks need not have equal detectable amplitude, and some rotation aspects may yield weak modulation.
+For example, peaks offset by 200 and 400 Hz can represent the first two orders of 200 Hz or the second and fourth orders of 100 Hz.
+A reflector pattern that repeats after half a revolution can suppress odd harmonics relative to the mechanical rotation frequency.
+Consequently, multiplying the spacing of any two visible peaks by sixty is not a generally valid spin estimator.
 
-Two practical corollaries: sideband SNR depends on ball-surface asymmetry
-(pristine two-piece range balls read weakly --- the origin of
-``marked-ball'' modes and Titleist RCT balls with embedded metal tags);
-and the comb yields spin \emph{rate} only --- the axis must come from
-elsewhere.
+The patent describes tracking candidate traces, qualifying harmonics and assigning their orders before estimating rotation frequency~\cite{us8845442}.
+Comb or cepstral processing can organize candidates, but cannot by itself resolve information absent from the observation.
+Window duration, frequency drift, noise, clutter, scattering asymmetry and ball markings affect which candidates are distinguishable.
+A harmonic spacing yields a candidate spin magnitude; it does not alone give a three-dimensional spin axis, though additional phase, amplitude, geometric or trajectory observations may supply axis information.
 
-\subsection{Spin Axis: Trajectory Inversion}
+\subsection{Spin Axis: Conditional Trajectory Inversion}
 \label{sec:spinaxis}
 
-The same patent discloses the standard radar route to spin axis. From the
-differentiated 3D track, total acceleration $\vect{A}$ decomposes as
-$\vect{A} = \vect{g} + \vect{D} + \vect{L}$ with drag $\vect{D}$
-antiparallel to the airspeed vector and Magnus lift $\vect{L}$
-perpendicular to both the spin axis and the velocity. Projecting out
-gravity and drag,
+Trajectory inversion combines observations with a force model.
+Let $\vect v_a=\vect v-\vect w$ be air-relative velocity for wind $\vect w$; let $\vect A$ denote ball acceleration in the ground-fixed inertial approximation, $\vect g$ gravitational acceleration, and $\vect D$ and $\vect L$ drag and lift accelerations, not forces.
+Assume aerodynamic acceleration separates into drag parallel to $\vect v_a$ and lift perpendicular to it, with no omitted transverse force.
+For nonzero airspeed,
 \begin{equation}
 \label{eq:liftextract}
-\vect{D} = \Bigl[\frac{(\vect{A}-\vect{g})\cdot\vect{v}_a}
-  {\lVert\vect{v}_a\rVert^2}\Bigr]\vect{v}_a,
+\vect D=\frac{(\vect A-\vect g)\cdot\vect v_a}
+{\lVert\vect v_a\rVert^2}\vect v_a,
 \qquad
-\vect{L} = \vect{A} - \vect{g} - \vect{D},
+\vect L=\vect A-\vect g-\vect D.
 \end{equation}
-and the orthogonality constraint $\vect{L}\cdot\hat{\vect{\omega}} = 0$,
-stacked over many trajectory points, gives an overdetermined linear system
-for the spin-axis direction $\hat{\vect{\omega}}$~\cite{us8845442}. This
-works well outdoors with seconds of observed flight; indoors, with
-2--6\,m of flight before the screen, the curvature signal is tiny and the
-axis becomes an estimate. FlightScope patented a direct alternative ---
-time delays between vertically and horizontally separated receiver pairs
-yield the axis angle
-$\Phi = \arctan[S_H T_H / (S_V T_V)]$~\cite{us10775492} --- precisely to
-recover the axis at short range.
+Physical drag additionally requires the fitted parallel component to oppose airspeed; a projection alone does not enforce that sign.
+Unknown wind, omitted forces and differentiation errors can contaminate the inferred lift.
+Acceleration estimated from position is especially sensitive to noise and the chosen temporal fit.
 
-\subsection{Flight: Tracked Outdoors, Modeled Indoors}
+For a fixed spin-axis direction over the fitted interval and a Magnus model with $\vect L$ perpendicular to that axis, stacking the constraints at $N$ sample times gives
+\begin{equation}
+\label{eq:radaraxis}
+\mathbf M\uvec{\omega}=\vect0,
+\qquad
+\mathbf M=\begin{bmatrix}\vect L_1^{\mathsf T}\\\vdots\\\vect L_N^{\mathsf T}\end{bmatrix},
+\qquad \lVert\uvec{\omega}\rVert=1.
+\end{equation}
+In exact consistent data, rank two leaves one axis line, with two possible signs; rank one leaves a plane of candidate vectors and therefore a continuum of unit axes.
+No lift leaves no directional information through this constraint.
+The zero vector is always a solution of the unconstrained homogeneous system, which is why unit normalization is essential.
+Noisy rows generally do not have an exact common nullspace: a weighted unit-norm fit and its conditioning are needed, rather than declaring uniqueness from a numerical rank alone.
+The separation between the smallest singular values matters to axis stability.
 
-Outdoors, TrackMan-class units report \emph{measured} carry, apex, and
-landing angle from the full track. Indoors every radar unit observes only
-the pre-screen segment (TrackMan~4 requires $\ge4.7$\,m of throw;
-FlightScope claims 8\,ft suffices with Fusion Tracking) and extrapolates
-with an aerodynamic model anchored to the vendor's measured-flight
-database~\cite{trackmanspecs,homeperformancelab}. The Garmin R10
-illustrates the consumer floor: it requires $\ge$20\,m of visible flight
-and ball speed above $\sim$90\,mph to measure spin at all; otherwise spin
-is estimated by a fitted model from the measured
-inputs~\cite{garminr10accuracy}.
+A signed Magnus relation, such as $\vect L=\kappa\vect\omega\times\vect v_a$ with a stated positive effective aerodynamic coefficient $\kappa$, can help select the orientation and estimate spin components.
+At one instant, adding spin parallel to $\vect v_a$ leaves this cross product unchanged.
+Changing air-relative velocity over time can add information if the same spin vector and force model remain applicable; instantaneous insensitivity does not prove non-identifiability over every trajectory.
+The patent's trajectory route must be interpreted with those model and geometry assumptions~\cite{us8845442}.
+A longer observed flight often supplies more useful curvature, but does not guarantee accurate inference.
+A short indoor segment can be poorly conditioned, especially with low lift or uncertain wind; both outdoor and indoor fitted axes remain estimates with different information and uncertainty.
+
+\subsection{A Dimensional and Algebraic Check on a Delay Disclosure}
+
+FlightScope's US\,10,775,492 describes a different spin-axis approach using spatially separated receiver pairs~\cite{us10775492}.
+In that disclosure, $S_V$ and $S_H$ are vertical and horizontal receiver separations, $D$ is target distance, and $\Phi$ is the spin-axis angle inferred from those pairs.
+Its displayed relations give $T_V=(S_V/D)\cos\Phi$ and $T_H=(S_H/D)\sin\Phi$, while calling the $T$ quantities time delays, and subsequently give $\arctan[S_HT_H/(S_VT_V)]$ for the angle.
+With $S_V,S_H,D$ all lengths, those right-hand sides are dimensionless and require an additional time scale to represent delays.
+Moreover, even treating the printed $T$ quantities as normalized values, elimination gives
+\begin{equation}
+\label{eq:radardelaycheck}
+\Phi=\operatorname{atan2}\!\left(\frac{T_H}{S_H},\frac{T_V}{S_V}\right),
+\qquad
+\tan\Phi=\frac{S_VT_H}{S_HT_V},
+\end{equation}
+where the tangent form applies only when its denominator is nonzero and loses quadrant information.
+For manufactured values $S_V=0.1$, $S_H=0.2$, $D=3$ in consistent length units and $\Phi=30\degs$, the displayed patent ratio returns approximately $66.59\degs$; the algebraic elimination returns $30\degs$.
+This identifies an inconsistency in the displayed relationships, not a validated replacement for the full measurement method or an interpretation of patent scope.
+A working delay estimator still needs timing definitions, feature correspondence, rotational geometry and experimental validation.
+
+\subsection{Flight Observation, Extrapolation, and Ball Modes}
+
+A trajectory tracked to landing can support measured-flight outcomes; a trajectory truncated by a screen requires a flight model for the unobserved part.
+A normalized trajectory, computed for selected weather or ball conditions, must also be distinguished from the actual observed shot.
+These are output modes, not an absolute division between radar brands.
+TrackMan's published TM4 minimum indoor setup of \SI{4.7}{\meter} is \emph{device-to-net} distance, not \SI{4.7}{\meter} of ball flight~\cite{trackmanspecs}.
+FlightScope's X3C instructions separately specify sensor-to-tee and ball-flight distances and identify marking/RCT requirements for indoor spin capture~\cite{flightscopex3csetup}.
+Instructions for that generation should not silently be applied to every earlier X3 or Mevo.
+
+Garmin's general R10 guidance describes standard-ball conditions under which spin is modeled rather than captured, including ball flight below \SI{20}{\meter} or ball speed below 90 mph~\cite{garminr10support}.
+It must be read alongside the RCT mode: Garmin describes indoor spin capture with compatible Titleist RCT balls and current software, with at least eight feet tee-to-net and about two ball rotations for its most reliable results~\cite{garminr10rct}.
+The support text allows successful capture with fewer rotations but also describes fallback to estimated spin when capture is inadequate; the app distinguishes that estimate typographically.
+Thus the standard-ball twenty-meter/ninety-mph guidance is not a universal requirement to measure spin in every supported mode.
+Marked radar-reflective balls and optically printed balls are different sensing aids and are not interchangeable across devices.
 
 \section{Club Measurement}
 \label{sec:radarclub}
 
 \subsection{What the Radar Tracks on the Head}
 
-The clubhead is a large, complex reflector whose parts move at different
-speeds (toe faster than heel by up to $\sim$7\mph{} on a driver). TrackMan
-defines club speed at the head's \emph{geometric center} and reconstructs
-that point by ``directly measuring the 3D silhouette of the club
-head''~\cite{trackmanclubspeed}; naive processors lock onto the strongest
-or fastest return and systematically over-report. Attack angle and club
-path are the vertical and horizontal direction of the geometric center's
-velocity at impact; swing plane, swing direction, and low point are
-properties of the center's trajectory arc through the hitting zone.
+A rotating clubhead has a velocity field: for a point $P$ offset by $\vect\rho$ from reference point $C$, $\vect v_P=\vect v_C+\vect\omega\times\vect\rho$.
+Here $\vect\omega$ is clubhead angular velocity, rather than the ball angular velocity in the preceding section.
+The fastest or strongest radar return need not correspond to the reference point used for reported club speed.
+Its bias is not universally positive; it depends on geometry and which part of the head dominates the return.
+TrackMan describes a reconstructed clubhead silhouette and defines reported parameters using specific points and event times~\cite{trackmanoert,trackmanclubspeed}.
+Club path and attack angle concern a declared velocity direction; face angle and dynamic loft concern surface orientation, potentially at the impact location rather than the geometric center.
+For curved faces, those orientations differ.
+Point, frame, timing and surface definitions must therefore be reconciled before attributing a disagreement between instruments to sensor error.
 
 \subsection{Face Angle and Dynamic Loft}
 \label{sec:faceangle}
 
-Radar cannot see face orientation. On radar-only systems, face angle and
-dynamic loft are obtained by \emph{inverting the D-plane collision model}
-(\cref{sec:facepathweighting}): given measured launch direction, club
-path, and the loft-dependent weighting $w_f$,
+Radial-velocity sensing alone does not uniquely determine every clubface orientation, but it is too strong to say radar can never provide orientation information.
+Resolved scattering geometry, multiple views, temporal constraints and other sensors can add information; the available model and measurements determine observability (\cref{app:screw}).
+One possible estimation route is inversion of a local collision approximation.
+Let $\varphi_f$ be face angle, $\varphi_p$ club path angle and $w_f$ the effective face weighting in a local collision model.
+For small horizontal angles about the same reference direction, suppose launch direction satisfies $\varphi_{\mathrm{launch}}\simeq w_f\varphi_f+(1-w_f)\varphi_p$ with known nonzero $w_f$.
+Then
 \begin{equation}
 \label{eq:faceinversion}
-\varphi_f = \frac{\varphi_{\mathrm{launch}} - (1-w_f)\,\varphi_p}{w_f},
+\varphi_f\simeq\frac{\varphi_{\mathrm{launch}}-(1-w_f)\varphi_p}{w_f}.
 \end{equation}
-and analogously dynamic loft from launch angle and attack angle. TrackMan
-has confirmed these are ``derived numbers from direct measurements and a
-collision model,'' validated by robot testing~\cite{manzellaforum}. On
-TrackMan~4/iO with OERT (\cref{sec:oert}), the company's position is that
-club delivery including face angle at the contact point is measured via
-synchronized radar+camera silhouette tracking rather than back-computed
---- though the exact split remains proprietary. Consumer units are
-explicit about the hierarchy: Garmin specifies launch direction at
-$\pm1\degs$ (measured) but face angle at $\pm2\degs$ and classifies it as
-calculated~\cite{garminr10accuracy}.
+This is an inverse of the stated local model, not a description of every radar product.
+The effective weighting depends on collision conditions and must not be transferred unchanged between clubs, lofts, ball types and impact locations (\cref{sec:facepathweighting}).
+A vertical-angle approximation likewise requires its own justified weighting and operating domain; it is not automatically obtained by substituting names into a horizontal fit.
+
+For small perturbations within this model,
+\begin{equation}
+\label{eq:radarfaceerror}
+\delta\varphi_f\simeq
+\frac{\delta\varphi_{\mathrm{launch}}}{w_f}
+-\frac{1-w_f}{w_f}\delta\varphi_p
++\frac{\varphi_p-\varphi_{\mathrm{launch}}}{w_f^2}\delta w_f.
+\end{equation}
+The launch-error gain is $1/w_f$ and therefore depends on the chosen collision weighting.
+Correlated measurement errors and uncertainty in the collision model also contribute.
+Off-center impact and gear effect can invalidate a fit that omits impact location; a richer estimator may use additional observations to address them.
+A common horizontal reference offset moves face and path together and cancels in their difference in this approximation, whereas independent misalignments need not cancel.
 
 \begin{keypoint}
-The reported ``face angle'' on a radar launch monitor is, to first order,
-a rescaled launch direction. It inherits launch-direction bias amplified
-by $1/w_f\approx1.15$, plus a gear-effect error on off-center strikes
-that the model cannot see (\cref{sec:gear}). This is not a defect of any
-particular product but a structural property of the modality.
+An inferred face angle can be statistically coupled to the measured launch direction because the estimator uses that direction as an input.
+Agreement or correlation between those outputs is therefore not independent confirmation of a physical face-to-launch relationship.
+For swing analysis, document the measurement and inference dependencies, propagate their covariance, and compare against an independent criterion before drawing conclusions about technique.
 \end{keypoint}
 
 \subsection{Known Limitations}
 
-Independent benchmarking consistently finds club parameters far less
-accurate than ball parameters for radar (and for camera systems without
-face markers): the Leach et al.\ criterion study is the key
-reference~\cite{leach2017}. Irons are harder than drivers (shaft and hosel
-returns, turf strike clutter, lower speeds); TrackMan's advertised
-``$>$90\% club-data pickup rate'' with OERT is itself an acknowledgment
-that pickup is not universal~\cite{trackmanoert}. Alignment error
-translates directly into correlated path/face bias on all units.
+The Leach et al. comparison motivates caution about clubhead outputs for research, but does not rank all modern radar and optical systems~\cite{leach2017}.
+A pickup rate describes availability, not the error distribution of successful readings.
+TrackMan's stated club-data pickup rate in its 2020 OERT description should be read in that sense~\cite{trackmanoert}.
+Validation should retain missed shots, state the tested clubs and speeds, and distinguish bias, dispersion and repeatability from agreement with an independent reference.
 
 \section{Optically Enhanced Radar: OERT and Fusion Tracking}
 \label{sec:oert}
 
-TrackMan~4 fuses its dual radar (X-band long-range ball subsystem +
-24\,GHz high-resolution club/impact subsystem, receivers sampled at
-40\,ksps) with a built-in camera synchronized in time and space: the
-camera contributes exact pre-impact ball position, markerless
-\emph{impact location} on the face, and ``4D silhouette'' clubhead
-tracking between radar epochs~\cite{trackmanoert,fccTman4}. The
-indoor-only TrackMan~iO packs a 24\,GHz radar with dual cameras --- one at
-up to 4,600\,fps for club and ball, one for alignment --- under 810--850\,nm
-IR illumination~\cite{trackmanspecs}. FlightScope's patented equivalent is
-Fusion Tracking (US\,10,338,209~\cite{us10338209}): the radar's predicted
-track steers image search windows, the camera's precise angular fixes
-correct the radar's, and inter-sensor offsets are removed by error
-minimization. Rapsodo's MLM2PRO pairs radar with 240\,fps cameras that
-read the printed dot pattern on RPT/RCT balls for measured spin rate and
-axis~\cite{mygolfspymlm2pro}; Full Swing's KIT feeds a 4K camera into an
-ML pipeline alongside its CW+FMCW radar~\cite{fullswingkit}.
+TrackMan's OERT description presents synchronized dual radar and camera observations, including clubhead silhouette and impact-location information~\cite{trackmanoert}.
+Its current specification table describes TM4 and the indoor iO separately; the latter combines \SI{24}{\giga\hertz} radar with cameras and describes optical three-dimensional spin measurement~\cite{trackmanspecs}.
+Those descriptions support the stated product distinctions without exposing every proprietary processing step.
+FlightScope describes Fusion Tracking as synchronized image processing combined with radar, and US\,10,338,209 discloses mechanisms for combining the modalities~\cite{flightscopex3csetup,us10338209}.
+The presence of a patent does not establish independent accuracy or prove that every disclosed option is deployed.
 
-\begin{keypoint}
-Every major radar vendor has independently concluded that pure Doppler is
-insufficient at short range --- for spin axis, impact location, and
-club-face data --- and has added optical sensing or instrumented balls.
-This is the strongest architectural signal in the market for a radar-first design's
-roadmap.
-\end{keypoint}
+Rapsodo explicitly requires the printed RPT pattern for MLM2PRO optical spin measurement; its support distinguishes RPT from RCT radar-reflective balls~\cite{rapsodomlm2prorpt}.
+Full Swing markets machine-learning radar and video capabilities, but that description alone does not establish that its camera contributes to a fused spin/face estimator~\cite{fullswingkit}.
+A camera used for swing video is not automatically a measurement camera.
+
+\begin{implication}
+Choose an additional sensor to reduce a specified ambiguity or uncertainty, then test whether the combined estimator does so.
+Optical features can constrain orientation or impact location; radar can contribute radial velocity and flight tracking; ball markings can improve identifiable rotational structure.
+Their value depends on visibility, timing, calibration and the joint model.
+Combining modalities can improve inference, but neither sensor count nor a vendor's architectural choice proves a universal limit of radar or the accuracy of a new implementation.
+\end{implication}

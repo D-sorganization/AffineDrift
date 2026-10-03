@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-02 | #4829 | Correct ideomotor prediction, precision and action arguments; replace the zero-action Euler example with a tested finite-horizon torque search and bind six scoped technical findings. |
 | 2026-10-02 | #4822 | Formulate content deprecation and archive policy in CONTRIBUTING.md (WEB-13.9), add CSS styling for deprecated status banners and pills, retrofit early tangent-space drafts with metadata and notices, and add automated verification suite. |
 | 2026-10-02 | #4824 | Distinguish complete-state counterfactual interventions, nonlinear finite effects, geometry controls, archived numerical evidence and human inference in Chapter 11; verify worked examples and publication. |
 | 2026-10-02 | #4820 | Qualify constrained forward-model assumptions, state memory and work accounting in Chapter 18; connect wrench, energy, causal and evidence reasoning in Chapter 28 and correct both schematic figures. |
@@ -555,5 +556,6 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-02 | #4787 | Fix dark theme color contrast violations across axe matrix, adjust text tokens and component styles, update accessibility statement, and re-enable --axe fail in CI (#4787). |
 | 2026-10-02 | #4587 | Write canonical Editorial Style Guide in docs/development/editorial-style-guide.md covering voice, scope, standardized caveat block, glossary tooltips, layer readability targets, analogy rules, banned vocabulary list, and author checklist (WEB-12.1). |
 | 2026-10-02 | #4830 | Implement standard "What This Shows / What It Does Not Show" caveat block (WEB-03.4 #4509) with Lua filter, schema validation, print styles, and core-page rollout. |
+| 2026-10-02 | #4816 | Restore WCAG AA contrast browser test in Playwright E2E suite, finish pending theme transitions, and enforce dark theme overrides (#4563). |
+| 2026-10-02 | #4833 | Correct Chapter 4 radar phase/spin ambiguity, conditional axis inference, device modes and face-estimator dependencies; retain bibliography and rebuild the reviewed PDF (#4831). |
 | 2026-10-02 | #4490 | Build site-wide glossary with data/glossary.yml (72 terms), pages/glossary.qmd generation, accessible WAI-ARIA tooltip shortcode/Lua filter {{< term >}}, styles, and book glossary cross-linking (WEB-01.5). |
-

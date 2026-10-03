@@ -1,0 +1,58 @@
+# Radar Review Preparation
+
+Queued issue [#4831](https://github.com/D-sorganization/AffineDrift/issues/4831), epic #4009 / corpus #4021. No implementation lease, source edits, acceptance or corpus credit. Full current `articles/Launch_Monitor_Technology_Review/sections/04-radar-systems.tex` read at checkpoint `542f03e0b6f095f34cb20ddcfed54f6c1dcf523b`; relevant bibliography entries and parent document inputs inspected. This is one of the longest remaining pending sources (2,002 indexed words). Finish current PR delivery before starting implementation.
+
+## Lead Review Direction
+
+The chapter needs a measurement-to-inference chain: signal and geometry assumptions, observability, estimation uncertainty, device implementation and empirical validation. Treat these separately. A phase equation does not guarantee a unique angle; a Doppler spectrum does not guarantee an identifiable spin fundamental; trajectory fitting does not guarantee a unique well-conditioned axis; a vendor label or patent is not independent accuracy evidence.
+
+The issue records six scoped findings. Additional research should verify the actual band/range claims, coherent processing assumptions, K-LD7 data interface, Full Swing patent architecture, product generation and mode definitions, and cited validation conditions. Do not repeat its universal claims about all vendors or all studies. A one-time calibration is not proof that software, drift, multipath or target association cease to matter. The chapter's universal 24 GHz range limitation conflicts with its own later long-range 24 GHz example.
+
+## Flash Adjudication
+
+Four supplied-text agy CLI `gemini-3.8-flash-high` outputs were read and adjudicated: inventory, test draft, citation map and K-LD7 extraction. Raw outputs remain local as `radar-*-flash.txt`. No tools, canonical editing, issue claims or publication authority were delegated. Draft tests have not been run or accepted as regression evidence.
+
+- Accept phase-branch, aspect-angle, harmonic-number, inference-conditioning and product-mode questions.
+- Reject a universal impossibility claim for trajectory-based axis inference. A rank-two homogeneous system in three dimensions has a one-dimensional nullspace; unit normalization identifies an axis up to sign. Rank-one rows leave a plane. Changing airspeed directions can add information if a constant spin vector and an adequate force model are justified. Instantaneous gyro-spin blindness alone does not establish non-identifiability over every trajectory.
+- Reject the alleged single-module 3D contradiction: the source explicitly proposes separate vertical and horizontal angle modules. Their synchronization, coordinate registration, target association and sensing baselines still need treatment.
+- A feature radius can mean distance from the rotation axis; it need not equal the ball radius. The missing line-of-sight projection is the sound criticism, not a universal equator requirement.
+- A large baseline can be usable over a restricted field of view or with ambiguity resolution. The half-wavelength criterion is not an unconditional ban on larger baselines; even the endpoint convention matters.
+- A local empirical linear loft model is possible with a stated domain. Reject the helper's blanket impossibility claim and unverified club-specific weighting numbers.
+- Indoor device operation does not itself prove measured spin. Garmin's standard-ball thresholds are documented; the missing RCT mode qualification is the concrete finding.
+- A named vendor statement in a forum can be evidence of that dated statement if authenticated. It cannot automatically establish the deployed algorithm in every newer product.
+
+The test draft needs corrections before use: retain the verified Doppler value below; distinguish half-period repetition (odd Fourier harmonics absent) from half-wave antisymmetry (even harmonics absent); describe the rank-two nullspace as a line, not a ray; and test all four quadrants if claiming quadrant coverage. Its arbitrary feature radius is manufactured, not a golf-ball dimension. A restricted field of view can exclude a particular alias without making all endpoint conventions unambiguous.
+
+The citation map mistook deliberately clipped excerpts for malformed BibTeX. The actual Garmin accuracy entry is complete. A blog title containing “Patent” is not itself a metadata defect, and a 2026 URL is not future-dated on this review date. FCC attachments can contain hardware descriptions; assess the actual model and document rather than dismissing all filings as compliance-only. Community evidence must be evaluated by provenance and measurement method, not automatically called subjective.
+
+The K-LD7 extraction table agrees with the inspected specification tables, with three qualifications: out-of-range targets **can** produce erroneous outputs, not necessarily every target; the highest baud rate is recommended, with throughput the actual constraint; and exported Rx2 data at frequency A does not prove that no internal Rx2 sampling at frequency B ever occurs.
+
+## Primary Reading Limits
+
+Garmin's general R10 accuracy page was available in indexed primary text at `https://support.garmin.com/id-ID/?faq=kj37CgzvwM98hC9WPrIQm5`. The [RCT support page](https://support.garmin.com/fr-CA/?faq=COFCXdRAJv2m8r9MBtLrf8) returned its substantive instructions through search indexing on October 2; direct opens still returned navigation. Read text specifies current software, at least eight feet tee-to-net, two rotations for the most reliable capture, and possibly additional space up to twenty feet. It allows fewer rotations to succeed and says inadequate capture falls back to an estimate, shown in italics. The chart image was not inspected; the stated capture percentage is a vendor claim. This mode must qualify the standard-ball thresholds. The [R10 manual](https://www8.garmin.com/manuals/webhelp/GUID-E2BBF6BE-4276-436F-B697-59ABEFD61933/EN-GB/GUID-88F65277-47D4-403D-8F79-719CAA256D6B.html) separately defines device-to-tee and tee-to-net distances.
+
+Rapsodo's current product FAQ distinguishes optical RPT support for MLM2PRO from radar RCT support for MLM: `https://rapsodo.com/products/titleist-2025-pro-v1x-golf-balls-w-rpt`. Relevant FAQ passages were read. Other vendor pages contain stale or internally inconsistent purchase/compatibility wording; do not infer firmware history from them. This reading establishes the product distinction, not an independent accuracy result.
+
+TrackMan's April 2020 OERT article body was read at `https://www.trackman.com/blog/two-radars-one-camera-zero-doubt`. It describes synchronized sensing, 40 kHz sampling, silhouette tracking and a stated pickup rate. These are dated vendor claims, not proof of the full current proprietary algorithm or a universal radar limitation. Selected club-data definition passages at `https://www.trackman.com/blog/club-data-definitions` distinguish impact-location orientation and impact timing from a geometric-center description.
+
+The [current TrackMan specifications](https://www.trackman.com/golf/launch-monitors/tech-specs) state a minimum 4.7 m **TrackMan-to-net** setup for TM4; this is not 4.7 m of ball flight. Relevant TM4 and iO tables were read. They identify iO's optical spin measurement and 24 GHz radar; they do not supply frequencies for both TM4 subsystems. Avoid assigning the iO camera architecture to TM4 or reading frequency values into a silent table.
+
+Selected spin/trajectory description passages of [US8845442B2](https://patents.google.com/patent/US8845442B2/en) and time-delay passages of [US10775492B2](https://patents.google.com/patent/US10775492B2/en) were read as technical disclosures. The latter's dimensional and algebraic discrepancy is detailed in #4831. The printed delay equations lack a time scale, and its printed angle ratio does not follow from them for unequal baselines. Correcting that algebra is not a validated replacement algorithm.
+
+Selected phase-comparison passages of [US9958527B2](https://patents.google.com/patent/US9958527B2/en) discuss narrow fields of view and additional antennas as ambiguity strategies. Selected descriptions of [US11311789B2](https://patents.google.com/patent/US11311789B2/en) describe CW/FMCW, alternative multiplexing arrangements and multiple array layouts. Its 75 m example concerns a ball swung on a line; its long-range statements are not independent golf-shot validation. The article's single definitive array layout misrepresents these alternatives. Selected passages of [US10850179B2](https://patents.google.com/patent/US10850179B2/en) discuss per-Doppler-bin angles and spin-plane information. No complete patent, legal-status, claim-scope or commercial implementation validation was performed; patent figures remain uninspected.
+
+The [Full Swing technology page](https://www.fullswinggolf.com/kit-launch-monitor-technology/) describes radar and media processors and radar-derived metrics. That does not establish the article's claimed fusion of the 4K camera into a measurement ML pipeline. Its specification link returned 404. Do not use other Full Swing simulator camera systems as evidence about KIT.
+
+The [FlightScope X3C page](https://flightscope.com/products/flightscope-x3c) describes synchronized imaging and radar. Its setup section and FAQ give differing sensor-to-tee ranges; both separate that spacing from ball flight and require ball marking or RCT support for the stated indoor spin mode. The relevant passages were read, not the linked manual. Do not silently assign X3C instructions to every X3 or Mevo generation. Camera presence alone does not establish its measurement role or prove that radar-only inference is impossible.
+
+## K-LD7 Hardware Evidence
+
+Downloaded the [manufacturer datasheet](https://rfbeam.ch/wp-content/uploads/dlm_uploads/2022/10/K-LD7_Datasheet.pdf) through its public product link. Local PDF: `radar-kld7-datasheet.pdf`, 1,645,383 bytes, SHA-256 `a6808b1088a085f7f368401a16692cebdc233f056adcdb499220da6cba52c6be`. Footer identifies March 2021 Revision B. Text extracted; pages 2, 5, 6, 9 and 17 visually inspected. Other pages were not visually reviewed.
+
+The tables specify FSK, two I/Q receivers, a maximum configured speed of 100 km/h with a typical 29 ms frame, and up to 100 m configured unambiguous distance; tracked-target range and detection performance have separate limits. The 15 m person example is not a golf-ball result. RADC exports 3,072 bytes: Rx1 and Rx2 at frequency A, plus Rx1 at B, each with 256 I and 256 Q unsigned 16-bit samples. The document warns about out-of-range returns and readout time exceeding frame duration. Raw access supports investigation; it does not establish launch-monitor suitability. The stock speed/timing limits must be addressed before proposing the module for high-speed ball tracking, alongside target association, synchronization, calibration and noise.
+
+## Preliminary Arithmetic
+
+Local `radar-preliminary-arithmetic.json` contains manufactured checks: 24.125 GHz gives 71.9487079291 Hz per mph using exact SI light speed; 10.5 GHz gives 31.3144635547. The unequal-baseline ratio discrepancy yields 66.5868 degrees versus the specified 30 degrees. Rank-one and rank-two nullspace examples illustrate the corrected inference argument. These are arithmetic checks, not a radar simulation, validation study or tested replacement for a patented method.
+
+Next: after current PR delivery frees implementation capacity, check the issue claim, obtain a lease, review the remaining primary sources and add independent tests for the actual corrections. Preserve the accepted ideomotor records and all other corpus findings.

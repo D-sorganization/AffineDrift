@@ -1,0 +1,197 @@
+{
+  "issue": 4825,
+  "source_checkpoint": "SELF",
+  "source_accepted": true,
+  "binding_pending": false,
+  "source_audits_pending": 101,
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "passed": 6655,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 630.2,
+    "coverage_percent": 79.36,
+    "exit_code": 0
+  },
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 896,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "content_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/ideomotor-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "publication": {
+    "html_render": true,
+    "titles_checked": 656,
+    "browser_cells": 4,
+    "serious_critical_axe": 0,
+    "math_nodes": 88,
+    "display_equations": 9,
+    "widths": [390, 1440],
+    "errors": 0,
+    "placeholders": 0,
+    "page_overflow": false,
+    "display_equations_visually_inspected": true,
+    "mobile_code_equations_scroll": true,
+    "mobile_table_scroll_extent_px": 445
+  },
+  "example": {
+    "exact_article_fence_stdout": "Selected constant torque: -3.407 N m\nSelected-input final angle: 0.181738 rad\nZero-input final angle: 0.245629 rad\nSelected/zero-input costs: 0.446389 / 0.603336\n",
+    "torque_nm": -3.407373306942378,
+    "final_state": [0.1817381379811291, -1.1259471860488686],
+    "zero_final_state": [0.24562903419535795, -0.5177705871368893],
+    "cost": 0.44638943649711355,
+    "zero_input_cost": 0.6033362243974432
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "adjudicated_helpers": 7,
+    "scope": "Supplied-text drafts; no canonical editing, claims or publication authority"
+  },
+  "scope": "One article; partial primary reading; no human study or whole-book validation",
+  "source_commit": "f488f45f3254fa40f98bedceb5edaa11280bb70c",
+  "binding_checkpoint": "SELF",
+  "scientific_preservation": {
+    "added_findings": 6,
+    "companion_findings_unchanged": 217,
+    "all_other_routes_unchanged": true,
+    "corpus_rows_changed": 1,
+    "bound_files_match_accepted_commit": true
+  },
+  "post_binding": {
+    "passed": 61,
+    "seconds": 31.26,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/test_ideomotor_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60"
+  },
+  "integration_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "commit": "802e9adc55698d6db4fd926456a1514e2966991d",
+    "passed": 6660,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 1112.72,
+    "coverage_percent": 79.36,
+    "exit_code": 0,
+    "scope": "Reconciled main ancestry plus editorial guide PR4827; accepted scientific files unchanged"
+  },
+  "integration_evidence": {
+    "passed": 61,
+    "seconds": 60.26,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/test_ideomotor_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60",
+    "initial_attempt": "59 passed, 2 root-hygiene failures from untracked affinedrift.egg-info created by packaging tests; artifact preserved in local QA, identical command then passed."
+  },
+  "policy_integration_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "passed": 6670,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 1049.41,
+    "coverage_percent": 79.37,
+    "exit_code": 0,
+    "upstream_main": "b5126fe7977c58b6466c8fcde6135f8b022513d4",
+    "checkpoint": "SELF",
+    "log": "docs/development/technical-review/ideomotor-policy-regression.txt"
+  },
+  "policy_integration_evidence": {
+    "passed": 61,
+    "seconds": 72.21,
+    "exit_code": 0,
+    "command": "py -3.12 -X utf8 -m pytest tests/test_ideomotor_review.py tests/test_claim_audit_inventory.py tests/test_trust_generated_artifacts_fresh.py tests/test_root_hygiene.py tests/test_claim_audit_followup_scope.py tests/test_claim_audit_markdown_sources.py tests/test_proximal_distal_complete_claim_audit.py tests/test_claim_audit_output_boundary.py --no-cov --timeout=60",
+    "log": "docs/development/technical-review/ideomotor-policy-evidence.txt"
+  }
+}
