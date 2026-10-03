@@ -1,3 +1,13 @@
+# Screw Review — Combined Main Accepted
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838; remote topic verified at `0e6d772c523537910a68646aaf77d7af36390ddc`. Current integration checkpoint `SELF` incorporates main `dd16c1ee5919eccd80ce1314df5457f12231d23f` (PR #4834 historical-player research). Both handoff additions are preserved, including exact incoming DL-#4828; the shipped radar entry remains in the archive. The five screw evidence files at publication42c6036d0387c5e79cd638240204adc1ecfba483 and 13 frozen parent files are unchanged. Seven findings and 99 pending source audits plus whole-book consistency remain.
+
+Combined full Python3.12 regression: 6,728 passed, 29 skipped, 187 deselected, 60 warnings in 577.71s; coverage 79.51%. A fresh --basetemp isolates this run. Ruff, Black, configured mypy97, quality across911 tracked Python files, 12 publication gates and the whole source-site gate pass. Incoming implementation bytes match main exactly. Earlier source/browser validation and failures retain their historical scope; no new human or full-site browser validation is inferred.
+
+Next: commit/push this integration with normal hooks, inspect checks/reviews on the exact new head, use the central guarded merge, then verify merge ancestry and owned-file hashes on remote main. Auto-merge was armed for PR4838 before main advanced; recheck holds and current head after push. Delivery record: reports/technical-review/screw-reference-delivery.json; combined proof: reports/technical-review/screw-reference-historical-integration.json. Lease/presence renewed through04:47UTC October3, issue4832/session technical-review-20261003-screw-reference. Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-screw-reference-review. Goal active; #4836 remains queued preparation. Four agy CLI Gemini3.8Flash helpers were adjudicated; two further calls failed for insufficient credits. No credit purchase or repeated retries.
+
+---
+
 # Screw Reference — PR #4838 Delivery Checkpoint
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4838. Scientific acceptance `85eb432d38fd099069ddf2cdd58f45baae055d19`; main integration `a9b586006020d2db3bced68544379a1d2458245c`; publication-only correction `42c6036d0387c5e79cd638240204adc1ecfba483`. Current binding checkpoint `SELF` binds all seven existing findings to five exact evidence files at the corrected publication commit. No new scientific findings or corpus credit: 99 source audits plus whole-book consistency remain. Preserve the original accepted scientific report and the publication amendment's exact four-line wrapper-removal proof.
@@ -30,7 +40,7 @@ Mutable proof: reports/technical-review/screw-reference-integration.json; valida
 
 ---
 
-# Screw Reference â€” Accepted Source Checkpoint
+# Screw Reference — Accepted Source Checkpoint
 
 Issue #4832, epic #4009 / corpus #4021. Complete article and bounded HTML publication are lead-accepted. Full regression passes: 6,686 passed, 29 skipped, 187 deselected and 60 warnings in 791.61 seconds; coverage 79.37%, above the configured 75% floor. A fresh task-specific --basetemp isolates this run from shared pytest cleanup. All 43 affected screw checks, 21 corrected index/hygiene checks, static checks (902 Python quality files), 12 publication gates and four browser/axe cells pass. All 16 displays inspected; 149 math nodes render with no errors/placeholders. The new status is reflected in the generated search index. Initial failures and preserved browser/build scratch are recorded honestly in reports/technical-review/screw-reference-validation.json.
 
@@ -49,6 +59,29 @@ Radar PR #4833 merged at 2026-10-03T00:41:08Z. CI37082657317 and textbook build3
 Next: follow docs/development/technical-review/screw-reference-progress.md, build meaningful manufactured checks, revise the complete article and summaries, then render/inspect and run full validation before binding one accepted source. Regular PRs only, normal hooks, no direct main push. Prior checkpoints below retain their original scope.
 
 ---
+
+# Historical-Player Research Handoff — Issue #4828
+
+- Active user-directed Necromatcher goal spans UpstreamDrift epics #11232/#11226/#11229, provider #11317 and AffineDrift consumer #4828. Worktree `AffineDrift-necromatcher-research-handoff`, topic branch `feat/necromatcher-research-handoff-4828`; no direct main push or public deployment.
+- Public `historical_research` admission, consumer and renderer reuse canonical transport and atomic draft snapshots under a distinct local namespace. Exact schema is mirrored from Upstream, SHA-256 `a194bf0c8145e417262f460c9bc4ea817b73d491b8468be7dfcd17a88334cb30`. Qualified mocap projection and authoritative release registry are unchanged.
+- Actual Upstream export at published commit `6654881b0788c77620a0afb8a9a6763f3ee1ccb9` has manifest SHA-256 `757a644c5408e4f5fc54904bd2918290f2c3af7d77d9a3b4045420334f1bc93d`, 6,849 bytes. It binds Hogan V12 and Tiger V14, preserving their separate numerical producers, rejected/nonconverged status, unknown physical timing and unresolved rights. No original footage or host paths are in the package. Separate Desktop export and independent verification receipts preserve unchanged input brackets.
+- TDD fixes cover snapshot-parent junction escape, contradictory optional image counts and repository function/signature budgets. Latest focused suite: 42 passed, 95.35% module coverage; strict mypy, Black100 and Ruff passed. Three pre-refactor renderer byte baselines remain identical. The preceding full SDK-first offline run passed 6,681 tests, 26 skipped and 187 configured-marker deselected; the first post-refactor full run stopped after4,638 passes on earlier generated ignored packaging scratch. Root preserved those bytes externally (receipt962d1dc8de24bf2f01c4320542a1d1cc1ef4c147c7478a5e0cb25e45eeb4e308), six hygiene cases passed, and unchanged clean SDK-first full rerun passed6,685 tests/26skips/187existing-marker deselections/61warnings in600.28s. Host Python 3.13.5 differs from configured 3.12. Exact UTF-8/SDK-first/thread controls and earlier runtime failures are retained in the procedure.
+- Actual independent pinned package admission inspected without writes, exclusively installed/recalled a draft idempotently, and rendered deterministic QMD with Quarto 1.8.26 --no-execute. Receipt `ccf4615f4eb3d51a51b6b3a1af98b9bfd92abda4683be20b26744ff6c67136c2`; browser AX/three screenshots receipt `f39ffed5532bbc8700b32e50053abf4e0dafd335ad838c6b255130d3c6edadef` verifies visible local/rejected statuses, units, finite Tiger ground failure and limitations at default1234×712. All input/source/driver/registry brackets unchanged. Consumer checkout29472661de971899bfb7cdc4a3f92b3e9eee19aa plus working-tree fingerprint4c712713d0aa4dde9afc34876a3b73a0074bbe04515b23215cca9f410cc6af09 does not claim committed consumer implementation. Cohort remains Hogan V12/Tiger V14, not V15. No optimizer/media import/public deployment/manual-user acceptance. Procedures: `docs/development/necromatcher-research-handoff.md`; architecture: `docs/architecture/C4.md`.
+- CI remediation cycle 1: merged head `557d51867d7bdc9a47cd59126240b815e282cb64` exposed twelve missing owned helper docstrings; add documentation only, preserving consumer behavior and render bytes. Two exact incoming-main chapter vocabulary warnings are explicitly nonblocking in CI and remain unchanged. Quality, Ruff, Black100, strict mypy, title/SPEC checks and 82 focused cases pass; Python 3.12 and E2E checks are still pending; no all-green claim.
+
+- Next: monitor exact-head PR #4834 checks/review; preserve historical local receipts and source hashes. No CI repair during actual export jobs, automatic merge or public deployment.
+
+- Final full coverage: The final unchanged SDK-first full offline coverage retry passed 6,685 tests, with26 skips,187 existing-marker deselections and61 warnings in1,044.94 seconds; full src coverage was93.51%, exceeding the configured75% floor. Logs are affine-historical-full-suite-final-coverage-retry.log and affine-necromatcher-final-coverage-retry.xml in the local temporary directory. The first coverage attempt timed out in unchanged wheel packaging and is retained as failed; the untouched four packaging tests passed on retry in39.82 seconds before the unchanged full retry passed. Coverage reports missing temporary installed-wheel-copy source warnings; these are disclosed, not treated as separate Python3.12 validation. HostPython3.13.5, UTF-8, MuJoCo3.3.4 SDK-first import, single BLAS threads and the exact existing offline marker policy remain unchanged.
+
+- Workflow conflict: Workflow precedence: repository CLAUDE.md targets main, while .GAAI project guidance targets staging; both remote refs exist. The owning workflow selects main under the top-level repository instructions, with a ready-for-review PR required by nearest AGENTS.md. No automatic merge, production merge or public deployment is authorized at this checkpoint.
+
+- Committed delivery: ready-for-review [PR #4834](https://github.com/D-sorganization/AffineDrift/pull/4834) targets main. Implementation commit `b10ecec30ea75d0d447e0b0642378e8578da2eb0` is pushed and independently remote-verified; all normal commit and push hooks passed. The earlier actual local receipt retains its historical working-tree fingerprint/checkout base and is not relabeled as execution at this later commit. No merge, automatic merge, public deployment or scientific qualification is claimed.
+
+- Integration checkpoint SELF merges origin/main53f75b29125cdc1f5da8d0c09020b3b05f04b783 non-destructively into the topic branch. All incoming peer handoff bytes and SPEC rows are preserved; canonical catalog/claim regeneration changes only three dataset evidence digests and no review judgments. Consumer source bytes remain unchanged. Focused consumer, schema, budget, development-structure, architecture, catalog and SPEC regression:82 cases passed; titles662, SPEC and claim freshness pass. The earlier6685/93.51% full run and frozen8fde receipts remain historical evidence, not a new merged-tree full-suite claim. No automatic merge/public deployment.
+
+- Follow-up integration merges incoming main `6b9d45741` after peer PR #4833 landed during CI remediation hooks; preserve every incoming peer handoff and scientific record. Cycle 1 source correction remains documentation-only.
+
+## Preserved Peer Handoff
 
 # Verified Ideomotor Delivery and Radar Integration
 

@@ -37,3 +37,7 @@ Source 85eb432d38fd099069ddf2cdd58f45baae055d19 is frozen and pushed. Main 1edc3
 ## PR #4838 Publication Binding
 
 Publication 42c6036d0387c5e79cd638240204adc1ecfba483 removes only the redundant related-links wrapper. Seven findings now bind five exact evidence files; source85eb scientific report remains frozen. Site gate, 63 tests and four browser cells pass. Final push/CI and remote-main verification pending.
+
+## Combined Main Regression
+
+Main dd16c1ee5919eccd80ce1314df5457f12231d23f integrated; 6,728 passed, 29 skipped, 187 deselected, 60 warnings in 577.71s; coverage 79.51%. Both work streams and all current/parent frozen evidence are preserved. Static911 and publication/site gates pass. New integration commit/push and exact-head CI/remote-main verification remain pending. Lease/presence through04:47UTC October3.

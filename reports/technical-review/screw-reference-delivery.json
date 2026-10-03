@@ -21,14 +21,14 @@
     "reports/technical-review/screw-reference-prior-review.json": "b335332a9c49c53fbaf659b8d6f4305a579cb67bda0709fe336bdda272d71144",
     "reports/technical-review/screw-reference-publication-amendment.json": "60aee93cce9997d3e1dd7f81ef726d6dac73a9da7ca3ae017eb600b47145b19b"
   },
-  "comparison_base": "1edc38aaadd4e079b675df7093ee2d02d3c4ab69",
-  "status": "Publication correction accepted locally; binding checkpoint push and exact-head CI/review/guarded merge pending",
+  "comparison_base": "dd16c1ee5919eccd80ce1314df5457f12231d23f",
+  "status": "Combined main integration accepted locally; normal commit/push and exact new-head CI plus remote-main delivery pending",
   "source_audits_pending": 99,
   "scientific_findings": 7,
   "prior_inventory_findings_preserved": 453,
   "original_scientific_report_frozen": true,
   "parent_frozen_files_preserved": 13,
-  "normal_hooks": "Scientific source and integration commit/push passed; publication-source commit passed; binding commit/push pending",
+  "normal_hooks": "Scientific source, first integration and publication/binding checkpoints passed normal commit/push hooks. Current combined main integration hooks/push pending.",
   "validation": "reports/technical-review/screw-reference-validation.json",
   "publication_amendment": "reports/technical-review/screw-reference-publication-amendment.json",
   "queued_issue": 4836,
@@ -38,5 +38,19 @@
     "passed": 21,
     "seconds": 88.3,
     "exit_code": 0
-  }
+  },
+  "historical_integration_checkpoint": "SELF",
+  "historical_integration_main": "dd16c1ee5919eccd80ce1314df5457f12231d23f",
+  "latest_full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60 --basetemp <fresh isolated task directory>",
+    "passed": 6728,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 577.71,
+    "coverage_percent": 79.51,
+    "exit_code": 0
+  },
+  "remote_topic_verified_commit": "0e6d772c523537910a68646aaf77d7af36390ddc",
+  "historical_integration_proof": "reports/technical-review/screw-reference-historical-integration.json"
 }
