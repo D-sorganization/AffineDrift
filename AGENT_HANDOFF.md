@@ -17,7 +17,45 @@
 
 - Integration checkpoint SELF merges origin/main53f75b29125cdc1f5da8d0c09020b3b05f04b783 non-destructively into the topic branch. All incoming peer handoff bytes and SPEC rows are preserved; canonical catalog/claim regeneration changes only three dataset evidence digests and no review judgments. Consumer source bytes remain unchanged. Focused consumer, schema, budget, development-structure, architecture, catalog and SPEC regression:82 cases passed; titles662, SPEC and claim freshness pass. The earlier6685/93.51% full run and frozen8fde receipts remain historical evidence, not a new merged-tree full-suite claim. No automatic merge/public deployment.
 
+- Follow-up integration merges incoming main `6b9d45741` after peer PR #4833 landed during CI remediation hooks; preserve every incoming peer handoff and scientific record. Cycle 1 source correction remains documentation-only.
+
 ## Preserved Peer Handoff
+
+# Verified Ideomotor Delivery and Radar Integration
+
+Ideomotor PR #4829 merged at 2026-10-03T00:22:11Z as `53f75b29125cdc1f5da8d0c09020b3b05f04b783`. CI37075895860 succeeded on `ca4a23487e79d0c28081fe665568959f0c83fd33`; remote-main ancestry and all five frozen scientific files are verified. Of 21 owned paths at the delivered head, 18 are byte-identical; SPEC and the two trust inventories exactly match the independently validated policy integration094. The whole tree differs because peer site-policy PRs landed first. Receipt: reports/technical-review/ideomotor-remote-main-receipt.json. Its lease/presence are released and DL-#4825 is archived shipped.
+
+The six newer turnover/validation paths from local `094e804e223ceb718aadbbe5b91746ea35d70f01` are carried in this radar checkpoint, not credited to PR4829 delivery. The combined radar tree passed 6,678 tests with 79.37% coverage, all 89 evidence checks, static checks and 12 publication gates. Normal integration commit 683907292338bc7714230c0625dd8a765b73d58e passed hooks. Delivered main ancestry is now reconciled: all five incoming metadata conflicts exactly matched the already-included delivered head, and retaining the newer records reproduced the entire premerge tracked tree. Only this turnover update follows. Push regular PR #4833 with normal hooks, remove its temporary hold after successful push, then verify new-head CI and guarded delivery. Radar source db2c8a7918e7686fd51787e76702d7e7246495ea and all eight frozen files remain unchanged. The goal remains active with 100 source audits plus whole-book consistency; #4832 remains preparation only. Earlier blocks are historical snapshots.
+
+---
+
+# Radar Integration Checkpoint
+
+The accepted radar review is registered and verified on remote PR #4833 at `0ddbd4b5149ec957cf3e4e851f4e65a68936a055`. The ideomotor policy checkpoint `094e804e223ceb718aadbbe5b91746ea35d70f01` is committed locally with normal hooks and is now integrated here. It contains main `b5126fe7977c58b6466c8fcde6135f8b022513d4`, 6,670 passing regression tests and 61 passing evidence checks. The combined radar tree passed its full regression: 6,678 passed, 29 skipped, 187 deselected, 60 warnings, 79.37% coverage (823.14 s). Ruff, Black100, configured mypy, 901 Python quality checks and all 12 publication gates pass. Both owned development-log entries pass, with 68 inherited schema/WIP findings unchanged. Normal merge commit/push remain pending. All eight frozen radar files and five frozen ideomotor files remain unchanged. Shared turnover conflicts were resolved by retaining both histories and the newest delivery state; SPEC preserves upstream row order plus #4833. No source rewrite or new corpus credit.
+
+PR #4829 remains on remote ca4a23487 with CI 37075895860 running all-route axe as last observed at 00:03 UTC October 3. This local integration has not been pushed; preserve it downstream and verify predecessor delivery before removing #4833's hold. Both leases/presence last renewed through 01:40 UTC October 3. There are 100 pending source audits plus whole-book consistency. Issue #4832 remains preparation only. Historical blocks below retain their original checkpoint scope.
+
+---
+
+# Radar Chapter Review — Accepted Source
+
+Issue #4831; epic #4009 / corpus #4021. Worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-radar-review`, branch `fix/radar-rigor-4831`, session `technical-review-20261002-radar`, baseline `802e9adc55698d6db4fd926456a1514e2966991d`. Lease/presence through 00:32 UTC October 3. Chapter 4 is revised, seven agy CLI Gemini 3.8 Flash helpers adjudicated, 56 affected checks pass, and the book builds successfully. All 88 bibliography entries print; all seven final chapter pages and nine displays inspected. Full regression retry passed 6,668 tests / 29 skips / 187 deselections / 60 warnings, 79.36% coverage, after one existing evidence-hashing timeout. Accepted source `db2c8a7918e7686fd51787e76702d7e7246495ea` verified on remote topic; exactly one corpus row accepted, leaving 100 source audits plus whole-book consistency.
+
+The source now distinguishes phase and harmonic ambiguity, conditional spin-axis inference, delay-equation dimensional/algebraic consistency, product operating modes and correlated face-angle inference. Research and exact reading limits: `articles/Launch_Monitor_Technology_Review/research/radar-systems-review-20261002.md`. Preserve prior reports, all other chapter sources, existing bibliography entries, trust inventory and all 217 companion findings. This book has no matching trust route; do not invent one. Four formerly cited bibliography entries are retained as historical uncited background, not evidence for the corrected claims.
+
+Ideomotor regular PR #4829 is pushed at `ca4a23487e79d0c28081fe665568959f0c83fd33`; full integration regression 6,660 passed / 29 skipped / 187 deselected, 79.36% coverage; all 61 follow-up evidence checks pass after preserving packaging scratch. Normal commit/push hooks passed. Temporary hold removed; guarded squash auto-merge armed. CI Standard `37075895860` is in progress on that exact head; ancillary checks passed. Do not claim remote-main delivery until actual merge, ancestry and accepted-source preservation are verified. Parent Chapter 11 PR #4824 is verified merged; receipt is already tracked. Frozen ideomotor source/binding identifiers remain unchanged.
+
+All 89 post-acceptance checks pass. One further Flash reporting helper was adjudicated separately from the seven preparation/scientific helpers. Regular PR [#4833](https://github.com/D-sorganization/AffineDrift/pull/4833) is open and attached, with a temporary do-not-merge label pending predecessor #4829. Normal source commit/push hooks passed. Registration checkpoint SELF. Next: push registration, verify predecessor delivery, reconcile ancestry without changing accepted scientific bytes, then remove the temporary hold and verify protected delivery. Issue #4832 is queued with one adjudicated Flash inventory and selected author-transcript readings; no implementation lease or source edits. See docs/development/technical-review/screw-reference-preparation.md. Keep raw QA under docs/development/technical-review. Earlier checkpoint blocks below are historical.
+
+---
+
+# Ideomotor Integration With Current Main
+
+Two independent site-policy PRs (#4830 and #4822) landed as main `b5126fe7977c58b6466c8fcde6135f8b022513d4`. A normal local merge into the ideomotor branch succeeded. The preservation check caught an automatic SPEC row reordering; it was corrected to exact upstream bytes plus our #4829 row. All 32 upstream changed paths are preserved, all other trust routes match upstream, and the five accepted ideomotor scientific files remain byte-identical to `f488f45f3254fa40f98bedceb5edaa11280bb70c`. Proof: reports/technical-review/ideomotor-policy-integration.json. Full policy integration regression passed: 6,670 passed, 29 skipped, 187 deselected, 60 warnings, 79.37% coverage (1,049.41 s). Normal merge checkpoint and push remain pending. Remote PR #4829 remains at ca4a23487; CI 37075895860 was running all-route axe at 00:03 UTC October 3. Avoid restarting its near-complete CI solely for turnover metadata; if it merges first, carry this validated checkpoint downstream into radar. No source acceptance history is rewritten.
+
+Radar source db2c8a7918e7686fd51787e76702d7e7246495ea and registration 0ddbd4b5149ec957cf3e4e851f4e65a68936a055 are safely pushed in regular PR #4833. It is temporarily held and currently conflicted against newer main; finish predecessor #4829 delivery before reconciling that branch. Radar full regression: 6668 passed / 29 skipped / 187 deselected, 79.36% coverage; 89 post-acceptance checks pass. One source accepted, so 100 source audits plus whole-book consistency remain. Issue #4832 is preparation only. Both active lease/presence sessions renewed through 01:40 UTC October 3. Earlier checkpoint blocks below are historical.
+
+---
 
 # Current Delivery Checkpoint — Chapter 11 Merged
 

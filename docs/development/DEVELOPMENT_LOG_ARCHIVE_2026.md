@@ -1,5 +1,18 @@
 # Development Log Archive — 2026
 
+### DL-#4825 · Ideomotor Prediction and Action Review
+
+- **State:** shipped
+- **Owner:** codex
+- **PR:** #4829 (regular; merged)
+- **Issue:** #4825; epic #4009 / corpus #4021
+- **Branch:** fix/ideomotor-rigor-4825
+- **Paths:** articles/ideomotor-theory-and-predictive-brain.qmd, src/affine_control/ideomotor_demo.py, tests/test_ideomotor_review.py
+- **Started:** 2026-10-02
+- **Last verified:** 2026-10-03 merge 53f75b29125cdc1f5da8d0c09020b3b05f04b783; CI37075895860 succeeded on ca4a23487; 18 owned files exact plus three shared-policy reconciliations match validated094; all five frozen source files and remote-main ancestry verified.
+- **Summary:** Full article draft separates prediction/task errors, dynamics/actuation, prior/likelihood precision, free-energy identity and action selection. Repaired zero-action Euler example with a bounded constant-torque search and typed nominal DOP853 predictor. Seven Flash outputs adjudicated. Complete article and bounded publication accepted; six findings bound; primary-reading limits recorded. 101 source audits and whole-book consistency remain.
+- **Next step:** Delivered; receipt reports/technical-review/ideomotor-remote-main-receipt.json. Lease/presence released. Newer local094 turnover ships through radar PR4833.
+
 ### DL-#4815 · Lagrangian Mechanics and Counterfactual Reference
 
 - **State:** shipped
