@@ -25,8 +25,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** codex
 - **Branch:** fix/passive-stabilization-review
 - **PR:** pending
-- **Summary:** Three source copies reviewed; conservative loaded-loop stiffness bridge, constitutive/rate conventions and citation scope corrected. Four text-only Flash helpers adjudicated; 21 focused cases and seven revised print pages verified. No full-source acceptance yet.
-- **Next step:** Finish scoped root-site QA, publication gates and stable full regression; verify parent #4859 delivery, preserve prior evidence, bind acceptance and deliver a regular PR.
+- **Summary:** Three source copies reviewed; conservative loaded-loop stiffness bridge, constitutive/rate conventions and citation scope corrected. Five text-only Flash helpers adjudicated; 38 focused, 204 content, 16 gates and 6805 full cases passed (93.24% source coverage). Seven print pages and ten web captures inspected. Complete current source/scoped presentation locally accepted.
+- **Next step:** Commit and bind accepted source; verify parent #4859 remote-main delivery and integrate normally, preserve prior evidence, run binding checks and deliver a regular PR.
 
 ### DL-#4858 · Paired Optimal-Control Review
 
