@@ -573,4 +573,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4851 | Reconcile musculoskeletal anatomical frames, ZXY chart extraction, spatial inertia and inference limits; publish the corrected Chapter 2 with independent checks and preserved prior evidence. |
 | 2026-10-03 | #4853 | Correct DCR acceleration-set geometry, endpoint projections and manufactured speed figures; preserve historical proof with plotted-value and render checks. |
 | 2026-10-03 | #4855 | Clarify drift/input force attribution, inertial-frame segment power and joint-motor work; add reproducible double-pendulum counterexamples and preserve prior review. |
-| 2026-10-03 | #4809 | Restore Deploy Website Quarto render cache with exact source-hash key and increase job timeout to 90 min, restoring green main. |
+| 2026-10-03 | #4861 | Follow apex redirect in live deployment manifest verification and increase build job timeout to 90 min (#4809). |
