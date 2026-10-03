@@ -19,9 +19,22 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4855 · Drift, Wrench and Double-Pendulum Power
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4855; epic #4009 / corpus #4021
+- **PR:** pending
+- **Branch:** fix/drift-wrench-review
+- **Paths:** articles/drift-components-wrench-double-pendulum.qmd, tests/test_drift_wrench_review.py, reports/technical-review/drift-wrench-prior-review.json
+- **Started:** 2026-10-03
+- **Last verified:** 2026-10-03 — eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun passed; sixteen publication gates passed before LF normalization, with final digest refresh pending.
+- **Summary:** Complete the article argument review while preserving valid prior mechanics; distinguish input attribution, segment force/couple power and motor work with explicit frames and independently checked examples.
+- **Next step:** Finish render, publication/evidence checks and full regression; bind accepted source, update bounded corpus/route status and deliver a regular PR. No completion credit yet.
+
 ### DL-#4853 · DCR Figure Inference Regression
 
-- **State:** in_review
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4853; epic #4009 / corpus #4021
 - **PR:** #4856
@@ -30,7 +43,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03 — three bounded figure corrections implemented; initial red ten failures/three passes; 32 focused checks passed; three corrected SVGs and twelve page captures inspected; canonical browser four cells pass after existing deployment cleanup; twenty protected files retained; nine Flash helpers adjudicated. Source bound at b6ab9a9229738d764d93975e87e04af1d1b550df; 175 dependent and 185 content checks pass after resolving three generated-metadata failures from the broad run (6775 passed, 29 skipped, 93.24% coverage). Ten Flash helpers adjudicated.
 - **Summary:** Reconcile later figures and long descriptions with drift, input-set, observation and finite-time assumptions; preserve valid prior review.
-- **Next step:** Regular PR #4856 open; run clean full retry and exact-head CI, then verify protected delivery. Next queued source review is epic child #4855.
+- **Next step:** Delivered in regular PR #4856 as c1d33e780b9a920cf500da2b3adbf2d250441a4b; all 25 owned paths and protected evidence verified on remote main, full CI passed and coordination released. Receipt carried by #4855.
 
 ### DL-#4852 · Corpus Status Reconciliation
 
