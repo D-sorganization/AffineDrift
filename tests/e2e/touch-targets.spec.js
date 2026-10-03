@@ -285,6 +285,22 @@ test.describe('Touch Target Compliance (WCAG 2.5.5)', () => {
       );
     });
 
+    for (const test of allTests) {
+      const { results, skipped } = await checkTouchTarget(
+        page,
+        test.selector,
+        test.name
+      );
+      if (skipped) continue;
+      const nonCompliantList = results.filter(r => !r.compliant);
+      if (nonCompliantList.length > 0) {
+        console.warn(`✗ ${test.name}: ${nonCompliantList.length} undersized:`);
+        nonCompliantList.forEach(r => {
+          console.warn(`  - ${r.height}×${r.width}px (needs ${r.minRequired}×${r.minRequired}px)`);
+        });
+      }
+    }
+
     // All interactive elements should be compliant
     expect(summary.nonCompliant).toBe(0);
   });

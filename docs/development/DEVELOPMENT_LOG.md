@@ -30,7 +30,8 @@ reachable from any live state and `abandoned` from `parked`.
 - **Started:** 2026-10-03
 - **Last verified:** 2026-10-03; baseline 503fb4fe6; 14 manufactured model tests and scoped Ruff/Black pass after missing-module RED. First full run: 6748 passed, one no-executable-cell failure; static figure conversion passes 16 focused cases and four browser cells. Checkpoint a7663562b; follow-up SELF supplies the required SVG long description. Full retry remains.
 - **Summary:** Reconcile mechanical topology and energy accounting; distinguish passive mechanics, controlled stability and empirical learning claims.
-- **Next step:** Complete final rendered checks and full regression, then commit and bind exact source before a regular PR.
+- **Next step:** Validate integration of main ffed84915, run the complete regression, bind exact evidence and open a regular PR.
+
 
 ### DL-#4828 · Historical Player Research Handoff
 
