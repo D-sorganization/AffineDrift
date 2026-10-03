@@ -1,3 +1,11 @@
+# Passive-Control PR #4841 — Reproducibility Amendment
+
+Review comment 4172127928 identified an SVG generated with Matplotlib 3.10.8 instead of pinned 3.11.2. The pinned environment reproduced the new committed-artifact freshness failure; regeneration resolves it and all 15 model/figure checks pass. Article, generator, mechanical model and original scientific report are unchanged. The amendment report preserves old/new artifact hashes, environment scope and validation history. Auto-merge is disabled until the amendment is committed, bound, pushed and exact-head checks pass. Do not use the old remote-verification helper with a new head without updating its explicit accepted-head and frozen-file list.
+
+Parallel impact #4842 has a clean 6757-pass full regression at d03494a4034a310bf1b9974df6e32a6b5de4edea with 79.54% coverage; that worktree must integrate this amendment explicitly before its own delivery. The agy Flash credit block remains unchanged.
+
+---
+
 # Passive Control Article — Active Review #4836
 
 Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-passive-control-review; branch fix/passive-control-rigor-4836; baseline 503fb4fe6e686fcdcc13a8ac56c5039d313fbff6. Issue lease technical-review-20261003-passive-control and presence renewed through 2026-10-03T08:44 UTC. Full original article and bounded primary notes read; this standalone source is distinct from paired Chapter 27 review #4336. Source d1215cb17315d0df2e579d2b3b45f50f6cf1d34a is accepted locally with eight bound findings, preserving all 468 prior findings. Exactly one original-corpus row advances; 98 original sources and separate whole-book consistency work remain.
