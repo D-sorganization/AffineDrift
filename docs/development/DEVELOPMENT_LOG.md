@@ -19,6 +19,15 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4860 · Passive-Stabilization Chapter Review
+
+- **State:** in_progress
+- **Owner:** codex
+- **Branch:** fix/passive-stabilization-review
+- **PR:** pending
+- **Summary:** Three source copies reviewed; conservative loaded-loop stiffness bridge, constitutive/rate conventions and citation scope corrected. Four text-only Flash helpers adjudicated; 21 focused cases and seven revised print pages verified. No full-source acceptance yet.
+- **Next step:** Finish scoped root-site QA, publication gates and stable full regression; verify parent #4859 delivery, preserve prior evidence, bind acceptance and deliver a regular PR.
+
 ### DL-#4858 · Paired Optimal-Control Review
 
 - **State:** in_review

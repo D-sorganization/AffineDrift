@@ -1,0 +1,63 @@
+{
+  "scope": "Manufactured static conservative mechanics and existing chapter identities; no golfer data.",
+  "original_source_sha256": {
+    "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "f38532e26c1d2e3c2093d5fc5b1824d4c058032049d549880420b59f4e9e8b5c",
+    "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "f38532e26c1d2e3c2093d5fc5b1824d4c058032049d549880420b59f4e9e8b5c",
+    "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "a573db7f6244c23d34621112fc4c12b2cf345f715468f27f08d38b8c2b36617b"
+  },
+  "circle_definition": "phi=(x^2+y^2-R^2)/2; U=kx*(x-a)^2/2+ky*y^2/2; q*=(R,0); N=(0,1)",
+  "multiplier_convention": "grad U=A^T lambda; lambda=kx*(R-a)/R",
+  "reduced_stiffness": "-k_x + k_y + a*k_x/R",
+  "exact_curve_identity": "d^2 U(R cos theta,R sin theta)/d theta^2 at zero = R^2 Kr",
+  "cases": [
+    {
+      "R_m": 1,
+      "kx_N_per_m": 100,
+      "ky_N_per_m": 40,
+      "a_m": "4/5",
+      "lambda_N_per_m": "20",
+      "Kr_N_per_m": "20",
+      "ambient_tangent_N_per_m": 40,
+      "stable_static_compliance_m_per_N": "1/20"
+    },
+    {
+      "R_m": 1,
+      "kx_N_per_m": 100,
+      "ky_N_per_m": 40,
+      "a_m": "1/2",
+      "lambda_N_per_m": "50",
+      "Kr_N_per_m": "-10",
+      "ambient_tangent_N_per_m": 40,
+      "stable_static_compliance_m_per_N": null
+    }
+  ],
+  "muscle_chain_rule": {
+    "length": "x+y+xy/5+x^2/10",
+    "force": "7+3l+l^2/2",
+    "identity_exact": true
+  },
+  "scheduled_spring_chain_rule_exact": true,
+  "unloaded_compliance": "5/6",
+  "ucm": {
+    "J": [[1, 1]],
+    "covariance": [
+      [4, 1],
+      [1, 2]
+    ],
+    "parallel_variance": 2,
+    "perpendicular_variance": 4
+  },
+  "oscillator": {
+    "M": 0.02,
+    "D": 0.5,
+    "K": 100,
+    "omega_rad_per_s": 70.71067811865476,
+    "zeta": 0.1767766952966369,
+    "static_deflection_rad": 0.05,
+    "doubled_K_omega": 100,
+    "doubled_K_zeta": 0.125,
+    "doubled_K_deflection_rad": 0.025
+  },
+  "issue": 4860,
+  "source_sha256_scope": "Original sources before this review; later current source binding is separate."
+}
