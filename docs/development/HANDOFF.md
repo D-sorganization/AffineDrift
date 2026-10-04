@@ -1,3 +1,9 @@
+# Two-Article PR #4889 — Parent Delivered
+
+Parameter PR #4886 merged to remote main at d33e635d5f7aab7d983117955db08650df1acb8d on 2026-10-04 19:47 UTC. All eight accepted parameter paths match; receipt saved in reports/technical-review/parameter-remote-main-receipt.json and its lease/presence released. Main is merged into this article branch without changing its four accepted source/evidence hashes. Metadata conflicts retain the newer article acceptance and all main SPEC rows; no scientific source conflict occurred. Next: publish this merge, retarget #4889 to main and arm only through the central guard. Current article lease expires 21:50 UTC. Date PR #4891 follows this PR; implementation PR #4895 follows the date PR and has completed its own source/PDF/full-regression acceptance. Never merge a child into its topic-branch parent. Earlier entries are historical. Goal active.
+
+---
+
 # Two-Article Review #4885 — Accepted Source
 
 Accepted source `6cd4d2eee0b5e5f73c0bfc698a862bc5566b558a` passed the full frozen-tree regression:6,856 tests,29 skips,210 deselections,60 warnings and93.24% src coverage in512.05seconds. Both full article reviews and scoped local presentation checks are complete; four canonical source/evidence hashes are bound in `reports/technical-review/dimensionality-integration-validation.json`. Five read-only Flash helpers supported lead review. No engine, human or live-site certification is implied. Test-created packaging directories were verified untracked/workspace-contained and preserved under QA after the run.
