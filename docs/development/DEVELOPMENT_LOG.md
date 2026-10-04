@@ -1,3 +1,7 @@
+# Parameter Delivered and Article Main Integration — 2026-10-04
+
+Verified all eight accepted parameter source/evidence hashes on actual remote main d33e635d5 after PR #4886 merge. Released its lease/presence and merged main into #4889 with only metadata conflict resolution; all four accepted article hashes remain unchanged. Retargeted-main delivery preparation follows; CI/protected merge remains.
+
 # Implementation Appendix Acceptance — 2026-10-04
 
 Frozen source f141a02b5be45db857bee76e2d078ce5a444a135 passed 6,863 tests with 93.24% src coverage in 453.48 seconds. Scoped final PDF and complete source review accepted, five canonical bindings saved, only the appendix corpus row advanced. Earlier parameter PDF/bibliography hashes remain historical; the other 13 parameter/article/date source bindings are unchanged. Protected delivery remains. Follow-up #4894 groups the connected flight, accuracy and design chapters; two Flash inventories and primary-reading preparation are isolated from this acceptance.

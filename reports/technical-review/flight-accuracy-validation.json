@@ -86,10 +86,14 @@
     "explanation": "Corrected primary-study bibliographic metadata and the rebuilt PDF supersede these two artifacts. All listed earlier parameter, article, date and implementation sources remain unchanged; historical PDF/bibliography receipts are preserved."
   },
   "delivery": {
-    "status": "Regular PR preparation; parent PR 4895 is not yet on main",
+    "status": "Regular PR open; protected parent delivery pending",
     "base": "fix/implementation-appendix-review",
     "dependency": "PR 4895 after 4891 after 4889",
-    "next": "Open regular PR, verify protected merge and accepted canonical bytes on fetched main before release"
+    "next": "Open regular PR, verify protected merge and accepted canonical bytes on fetched main before release",
+    "pr": "https://github.com/D-sorganization/AffineDrift/pull/4897",
+    "draft_pr": false,
+    "initial_head": "f01cdda80d88a2ae7acadc0d9151ec11130d2dc8",
+    "parent_integration": "aa08d334a; all seven accepted source/evidence hashes unchanged"
   },
   "metadata_tests": {
     "passed": 40,
@@ -97,5 +101,15 @@
     "exit_code": 0,
     "command": "pytest tests/test_citation_metadata.py tests/test_root_hygiene.py tests/test_spec_changelog.py --no-cov",
     "log": "docs/development/technical-review/flight-accuracy-review/acceptance-metadata-tests.txt"
+  },
+  "pre_pr": {
+    "status": "passed",
+    "gates_passed": 5,
+    "mapped_tests": 0,
+    "command": "pre_pr --from-ref 0f81bb1ace83f53a9c6aefbc67d04ee155b52027 --to-ref f01cdda80d88a2ae7acadc0d9151ec11130d2dc8",
+    "tool_source": "Repository_Management 5ee23e5d78bc71305ea8993497b20e5bed3c6d7c (now merged via PR 1943)",
+    "log": "docs/development/technical-review/flight-accuracy-review/pre-pr.txt",
+    "exit_code": 0,
+    "scope": "Full frozen regression recorded separately; document-heavy diff mapped no Python tests"
   }
 }
