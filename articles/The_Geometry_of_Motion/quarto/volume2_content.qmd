@@ -1133,9 +1133,9 @@ nearby motions regularly. Infinite torque does not follow from the chart
 alone: it depends on whether a controller performs an ill-conditioned
 inversion, differentiates discontinuities, saturates, or switches charts.
 
-There are three distinct concerns. A \emph{coordinate singularity} is a
-failure of a representation. A \emph{mechanical singularity} may align actual
-gimbal axes or change the mobility of a mechanism. A \emph{task singularity}
+There are three distinct concerns. A *coordinate singularity* is a
+failure of a representation. A *mechanical singularity* may align actual
+gimbal axes or change the mobility of a mechanism. A *task singularity*
 is a rank loss in the map from feasible joint velocity to the selected output.
 A three-gimbal inertial platform can physically suffer gimbal alignment;
 rewriting its orientation with quaternions does not rebuild its hardware.
@@ -1751,15 +1751,17 @@ describe sensitivity across an impact.
 
 For a transient, $\Phi(t_2,t_1)$ gives first-order sensitivity under its stated
 closed-loop dynamics. In a fixed Euclidean norm its largest singular value
-is a worst-case amplification factor. A value above one means \emph{some}
+is a worst-case amplification factor. A value above one means *some*
 initial direction is amplified, not all directions. A terminal value below
 one does not exclude earlier growth. Higher-order errors and ongoing
 disturbances also remain outside that homogeneous linear map.
 
 The stable constant matrix
 $$
-A=\begin{pmatrix}-1&10\\0&-1\end{pmatrix},\qquad
- \Phi(t,0)=e^{-t}\begin{pmatrix}1&10t\\0&1\end{pmatrix}
+\begin{aligned}
+A&=\begin{pmatrix}-1&10\\0&-1\end{pmatrix},\\
+\Phi(t,0)&=e^{-t}\begin{pmatrix}1&10t\\0&1\end{pmatrix}.
+\end{aligned}
 $$ {#eq-orbital_transient_growth}
 has both eigenvalues at $-1$. Nevertheless $\|\Phi(1,0)\|_2>3.7$, while
 $\|\Phi(10,0)\|_2<0.005$. A small final error does not prove an intermediate

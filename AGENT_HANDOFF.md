@@ -1,3 +1,17 @@
+# Volume II Consistency Review — #4864
+
+Current branch `fix/volume2-consistency-review` starts at parent PR #4867 head `95c3c6d1512f32244f9078583dff77bea1ca58d9`. #4864 session `technical-review-20261004-volume2-consistency` is claimed through approximately 04:12 UTC. Ten successful supplied-text agy CLI Gemini 3.8 Flash helpers supported the preparation, regression draft, validation drafting and read-only title-card diagnosis; lead adjudicated every output. Failed attempts remain recorded separately.
+
+Four omitted web terms are restored, the landing now distinguishes task objectives/feasible motion/local versus regional guarantees, the print preface matches actual Volume III scope, and a mobile matrix display is equivalently reflowed. The native 101-page PDF is rebuilt; page 3 is the only changed raster among 101. Twelve final body captures and the revised preface were inspected. Six browser regressions, four browser/axe cells, 78 focused cases, 208 content cases (four skips) and all 16 publication gates pass. Source checkpoint/full regression/immutable acceptance and corpus promotion remain pending; see `reports/technical-review/volume2-consistency-validation.json`.
+
+Preserve all 82 protected historical files and the old accepted source identities. Six book dependency hashes and claim evidence digests were carried forward without changing historical review identities. Shared nomenclature #4865 remains queued. Manual desktop dark title-card paint discrepancies reproduce in preserved parent HTML and are queued separately as #4868; automated DOM/axe success is not complete visual clearance. Do not apply speculative frontend changes or claim whole-book/empirical/corpus acceptance from these checks.
+
+Parent PR #4867 merged at 03:02:58 UTC as `897dd890704a18481ba229d35add610694da0285`. Its entire tree equals reviewed head 95c3c6d; 27 changed paths, 12 frozen scientific files and 72 prior files were verified on fetched remote main. CI Standard 37170328750 passed. Lease/presence released; canonical receipt `reports/technical-review/underactuation-remote-main-receipt.json`. Integrate this verified main normally after the current source checkpoint; preserve child edits and historical evidence. Older turnover below is retained as history.
+
+Next: commit the current checkpoint, integrate verified main, preserve generated root packaging artifacts outside the checkout, run the stable full regression without concurrent edits/renders/hooks, then bind source acceptance and deliver a regular PR. Never create a draft PR. Goal remains active; no new issue claimed. Raw QA and helper scripts remain under `docs/development/technical-review`. No full regression is currently running.
+
+---
+
 # Underactuation Review — Regular PR #4867
 
 Active epic #4009 / corpus #4021 child #4863, branch `fix/underactuation-review`, session `technical-review-20261003-underactuation`; lease/presence through approximately 2026-10-04 03:23 UTC. The accepted review is in regular PR https://github.com/D-sorganization/AffineDrift/pull/4867, with guarded squash auto-merge armed. Never create a draft. The full-corpus goal remains active.

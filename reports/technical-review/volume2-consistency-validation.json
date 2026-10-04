@@ -1,0 +1,139 @@
+{
+  "issue": 4864,
+  "status": "Corrected source and scoped checks saved; full regression and acceptance binding pending.",
+  "red": {
+    "terminology_expected_failures": 2,
+    "matrix_expected_mobile_failures": 1,
+    "matrix_width": 317.46875,
+    "column_plus_rounding_allowance": 272.65625
+  },
+  "browser_regressions": {
+    "passed": 6,
+    "seconds": 8.9
+  },
+  "focused": {
+    "passed": 78,
+    "deselected": 23,
+    "seconds": 32.23
+  },
+  "content_lint": {
+    "passed": 208,
+    "skipped": 4,
+    "deselected": 6882,
+    "seconds": 116.66
+  },
+  "publication_gates": [
+    {
+      "exit_code": 0,
+      "check": ["check_latex_environments"],
+      "log": "docs/development/technical-review/volume2-gate-check_latex_environments.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "log": "docs/development/technical-review/volume2-gate-check_terminology.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["generate_worked_examples", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-generate_worked_examples.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "log": "docs/development/technical-review/volume2-gate-check_tree_parity.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "log": "docs/development/technical-review/volume2-gate-check_latex_structure.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["validate_frontmatter"],
+      "log": "docs/development/technical-review/volume2-gate-validate_frontmatter.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["validate_accessibility", "--qmd-only"],
+      "log": "docs/development/technical-review/volume2-gate-validate_accessibility.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_scaffolding_styling"],
+      "log": "docs/development/technical-review/volume2-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_bibliography_quality"],
+      "log": "docs/development/technical-review/volume2-gate-check_bibliography_quality.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_bibliography_cross_file"],
+      "log": "docs/development/technical-review/volume2-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_citation_resolution"],
+      "log": "docs/development/technical-review/volume2-gate-check_citation_resolution.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_qmd_citation_keys"],
+      "log": "docs/development/technical-review/volume2-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_title_case"],
+      "log": "docs/development/technical-review/volume2-gate-check_title_case.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["generate_research_readiness_library", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "full": {
+    "status": "pending"
+  },
+  "render_verification": "reports/technical-review/volume2-consistency-render-verification.json",
+  "delegation": {
+    "successful_supplied_text_agy_flash_helpers": 10,
+    "failed_attempts": [
+      "Test draft produced no usable output after a command request.",
+      "Validation draft CLI timeout lacked duration unit."
+    ],
+    "adjudication": "Lead review; no permission bypass, invented facts or speculative CSS adopted."
+  },
+  "remaining": [
+    "Full local regression and immutable source binding",
+    "Regular PR and protected remote-main delivery",
+    "Separate shared nomenclature #4865",
+    "Separate baseline title-card investigation #4868"
+  ]
+}
