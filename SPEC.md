@@ -587,4 +587,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-10-04 | #4886 | Correct launch-monitor timing, reference-point, spin and inference conventions; preserve primary-source and mathematical evidence with rebuilt book PDF. |
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
-| 2026-10-04 | #4494 | Render "In Layman's Terms" blocks through one open-by-default Lua-filter component; migrate the 14 existing inline blocks with unchanged wording. |
+| 2026-10-04 | #4909 | Render "In Layman's Terms" blocks through one open-by-default Lua-filter component; migrate the 14 existing inline blocks with unchanged wording. |

@@ -220,6 +220,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** claude
 - **Issue:** #4494 (mechanical sub-task); epic #4496
 - **Branch:** claude/issue-4494
+- **PR:** #4909 (draft)
 - **Paths:** scripts/filters/laymans-terms.lua, _quarto.yml, styles.css, _templates/partials/laymans-terms.html, scripts/check_readability.py, articles/ (14 pages), tests/laymans-terms.test.js, tests/test_laymans_terms_component.py, tests/tools/test_check_readability.py
 - **Started:** 2026-10-04
 - **Last verified:** 2026-10-04; jest laymans-terms 5 passed; pytest component 5 passed (Quarto 1.8.27); lay-block wording byte-identical on 14/14 pages.
