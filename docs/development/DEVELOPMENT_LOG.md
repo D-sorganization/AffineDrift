@@ -214,6 +214,18 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4494 · Shared Open-by-Default Layman Component
+
+- **State:** in_review
+- **Owner:** claude
+- **Issue:** #4494 (mechanical sub-task); epic #4496
+- **Branch:** claude/issue-4494
+- **Paths:** scripts/filters/laymans-terms.lua, _quarto.yml, styles.css, _templates/partials/laymans-terms.html, scripts/check_readability.py, articles/ (14 pages), tests/laymans-terms.test.js, tests/test_laymans_terms_component.py, tests/tools/test_check_readability.py
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-04; jest laymans-terms 5 passed; pytest component 5 passed (Quarto 1.8.27); lay-block wording byte-identical on 14/14 pages.
+- **Summary:** One Lua-filter component replaces 14 inline lay blocks; open by default, placed above the Abstract heading, native-button keyboard toggle. Wording unchanged; rewrite and page extension stay under #4494.
+- **Next step:** Review the draft PR and mark it ready.
+
 ### DL-#4864 · Volume II Consistency Review
 
 - **State:** in_review

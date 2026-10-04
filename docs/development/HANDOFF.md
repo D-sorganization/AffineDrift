@@ -1,3 +1,7 @@
+# Issue #4494 (Sub-Task) - Shared Open-by-Default Layman Component
+
+Branch `claude/issue-4494`, worktree `AffineDrift-worktrees/claude-4494`. PR: draft, opened from this branch (`Refs #4494`). New Lua filter `scripts/filters/laymans-terms.lua` (registered after `summary-takeaways.lua`) renders `::: {.laymans-terms}` blocks open by default (`aria-expanded="true"`) and moves a block authored after an "Abstract" heading to directly above it. All 14 pages with inline blocks migrated; their wording is byte-identical (inner HTML compared against origin/main, 14/14). `scripts/check_readability.py` reads the new form. Tests: `npx jest laymans-terms` (5), `pytest tests/test_laymans_terms_component.py` (5 with Quarto). Out of scope and still under #4494 (tier:strong): plain-language rewrite, extension to 15+ pages, `*_LAYMAN.qmd` merge. Next: review the draft PR.
+
 # Issue #4882 - Freshness Dashboard Page-Relative Links
 
 Branch `claude/issue-4882`: `scripts/generate_companion_freshness.py` now emits route link targets relative to `models/programming/freshness.qmd`; page regenerated, claim-audit evidence refreshed, 12 path-style baseline entries removed (one journey-page entry remains by design). Next: review the draft PR and arm the merge queue.

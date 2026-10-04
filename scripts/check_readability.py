@@ -67,6 +67,10 @@ DEFAULT_QMD_GLOBS: Final[tuple[str, ...]] = (
 
 _LAY_SECTION_RE = re.compile(r'<section class="laymans-terms">(.*?)</section>', re.DOTALL)
 _LAY_CONTENT_MARKER: Final = 'laymans-terms-content"'
+# Shared component form (#4494), rendered by scripts/filters/laymans-terms.lua.
+_LAY_COMPONENT_RE = re.compile(
+    r"^::: \{\.laymans-terms\}\n```\{=html\}\n(.*?)\n```\n:::$", re.DOTALL | re.MULTILINE
+)
 
 _SHORTCODE_RE = re.compile(r"\{\{<.*?>\}\}", re.DOTALL)
 _FENCED_CODE_RE = re.compile(r"```.*?```", re.DOTALL)
@@ -151,11 +155,16 @@ def score_prose(raw_text: str) -> ReadabilityScore | None:
 
 # ─── Layer extraction ────────────────────────────────────────────────────
 def extract_lay_blocks(content: str) -> list[str]:
-    """Return the raw HTML of each "In Layman's Terms" section in ``content``."""
+    """Return the raw HTML of each "In Layman's Terms" block in ``content``.
+
+    Recognises both the legacy inline ``<section>`` and the shared
+    ``::: {.laymans-terms}`` component, whose raw-HTML fence lines are dropped.
+    """
     blocks = []
     for section in _LAY_SECTION_RE.findall(content):
         marker = section.find(_LAY_CONTENT_MARKER)
         blocks.append(section[marker:] if marker != -1 else section)
+    blocks.extend(_LAY_COMPONENT_RE.findall(content))
     return blocks
 
 
