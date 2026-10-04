@@ -1,3 +1,35 @@
+# Regular PR #4886 — Parameter Delivery Pending
+
+The accepted parameter review is published at https://github.com/D-sorganization/AffineDrift/pull/4886 (not draft), reviewed source117a416d5 and initial PR head25dee2f98. Full regression and45 metadata checks pass; canonical source acceptance remains unchanged. The central auto-merge guard found no hold but could not arm because GitHub GraphQL was rate-limited. Retry the guard after recovery; do not bypass protected merge. Verify remote-main delivery before releasing4881. Next batch4885 remains isolated and unaccepted. Goal active.
+
+---
+
+# Parameter Review #4881 — Accepted Source and Delivery Preparation
+
+The complete chapter 2 review is accepted at `117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb`. Full frozen-tree regression passed 6,856 tests, with 29 skips, 210 deselections, 60 warnings and 93.24% src coverage in 534.77 seconds. Tracked files stayed unchanged throughout. The 94-page PDF has scoped visual acceptance; eight canonical source/evidence hashes are bound in `reports/technical-review/parameter-validation.json`. No new device, human, whole-book scientific or live-site acceptance is implied.
+
+Next: run final metadata checks, publish a regular PR closing #4881, attach it and arm the central guarded merge workflow. Verify actual remote-main bytes before releasing the lease. Parent #4879 is delivered and its receipt is retained. Six successful agy Flash helpers supported the chapter review. Goal remains active.
+
+Next corpus batch #4885 has an isolated worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-dimensionality-review`, branch `fix/dimensionality-integration-review`, session `technical-review-20261004-dimensionality` through 20:06 UTC. Its two article drafts are not yet accepted. It starts from the accepted parameter source and must integrate final delivery metadata before its own publication. Flash inventories and prose assistance remain subject to lead review. Earlier entries below are historical.
+
+---
+
+# Parameter Review #4881 Resumed: Final Validation in Progress
+
+The user resumed the corpus goal. Work continues on `fix/launch-parameter-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-parameter-review`. Chapter2 source, equations and94-page book PDF have received final scoped review; the full frozen-tree regression is next. See `reports/technical-review/parameter-review.md` and the source dossier for evidence. Do not reuse the older paused checkpoint as current acceptance status.
+
+Parent PR4879 merged at b33bcf1a37c1cf8665fb6cc3a0f8abd84a1db496. All11accepted hardware/Bosch paths match their canonical hashes on remote main; the receipt is `reports/technical-review/hardware-bosch-remote-main-receipt.json`. Both leases/presence records were released after verification. Six completed agy Flash helper tasks now support the parameter review; the oversized seventh invocation failed before execution and its narrowed retry is counted once. Goal is active. No empirical device or whole-book technical acceptance is implied. Current claim is technical-review-20261004-parameters-resume through19:49UTC. Earlier entries below are historical.
+
+---
+
+# Paused at User-Requested Handoff: Parameter Review #4881
+
+Continue only after user authorization. The source-review checkpoint is on `fix/launch-parameter-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-parameter-review`, based on205f08913. Read [the detailed handoff](docs/development/technical-review/parameter-review-handoff.md) and the parameter evidence dossier before editing. No #4881 PR is open; provisional chapter and bibliography changes are committed for continuation, not accepted for publication. The canonical PDF still represents the preceding accepted source; a94-page provisional preview is saved separately. Final technical/PDF acceptance and full regression remain.
+
+Regular PR #4879 is independently in the protected queue, last seen position1 awaiting checks at head205f08913. Its head CI and eight textbook builds passed. Do not modify or dequeue it merely to add checkpoint work. Verify actual remote-main delivery on authorized resumption. Parent #4875 is already delivered. Four agy Gemini3.8Flash helpers supported current preparation; their outputs and rejected suggestions are saved. The broad corpus remains incomplete. This paused handoff supersedes older active-goal language below.
+
+---
+
 # Joint PR #4879 — Parent Delivered and Bibliography Cleanup Reconciled
 
 Continue on `fix/bosch-insertion-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-bosch-insertion-review`. Regular PR https://github.com/D-sorganization/AffineDrift/pull/4879 closes #4876/#4877. Current checked source head is `60bb50112d8e8d671f3428e64032147c239c551a`; CI Standard 37211067657 and eight-book compilation 37211067593 passed. Its E2E job filtered/skipped rendering, browser, visual and axe steps. Do not claim a new browser pass from the green job name.

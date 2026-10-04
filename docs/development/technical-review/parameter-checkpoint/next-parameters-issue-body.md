@@ -1,0 +1,5 @@
+Part of technical-review epic #4009 and corpus audit #4021.
+
+Full-source review of articles/Launch_Monitor_Technology_Review/sections/02-parameters.tex (baseline 1,585 words) identified: incompatible blanket timing claims; unqualified reference-point and 3-degree offsets; face-to-path curvature determinism; spin-component equations missing frame/axial-spin assumptions; trajectory descriptors classified as instantaneous launch state; universal sensor capability assertions; and underspecified lie/closure-rate conventions.
+
+Acceptance: preserve chapter labels; distinguish vendor definitions and publication dates from physics; derive reference-point and spin-loft relationships with reproducible counterexamples; align spin frame with reviewed chapter 3; replace universal architecture capability table with an evidence/assumption table; check primary sources and save a bounded evidence dossier; rebuild and inspect affected book pages; run repository validation and retain limitations. No new device accuracy claims or empirical validation. Lead owns conceptual decisions; agy Gemini 3.8 Flash assists routine inventories and checks.

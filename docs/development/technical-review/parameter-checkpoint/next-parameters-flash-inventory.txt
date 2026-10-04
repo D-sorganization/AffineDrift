@@ -1,0 +1,57 @@
+Here is the technical inventory of concrete definition, reference-point, sign, timing, measurement-versus-model, and inference inaccuracies identified in the chapter text.
+
+---
+
+### Part I: Errors Proved by Mathematics and Kinematics
+
+1. **Incorrect Sign/Direction on Attack Angle Comparison**
+   * *Exact phrase:* `"The same geometry tilts the face-center velocity slightly upward relative to the CG --- a shallower attack angle --- because the face center sits ahead of the CG on an arc that is turning upward through the bottom."`
+   * *Inaccuracy:* Tilting velocity *upward* corresponds to a **steeper positive** (higher) attack angle, not a shallower one. Conversely, prior to low point (hitting down), being ahead on a downward arc would produce a *steeper negative* angle, while being past low point tilting upward increases positive attack angle. Describing an upward tilt as "a shallower attack angle" is kinematically contradictory.
+
+2. **Oversimplified 2D Spin Vector Projection**
+   * *Exact phrase:* `"$S_{\mathrm{side}} = S \sin\theta_{\mathrm{axis}}, \qquad S_{\mathrm{back}} = S \cos\theta_{\mathrm{axis}}, \qquad \theta_{\mathrm{axis}} = \operatorname{atan2}\!\left( S_{\mathrm{side}}, S_{\mathrm{back}}\right)$."`
+   * *Inaccuracy:* This formulation implicitly assumes the ball's total spin vector lies strictly in a vertical plane transverse to the trajectory (zero rifle/gyro spin component along the velocity vector, $\omega_{\parallel} = 0$). If a ball has non-zero rifle spin, $S \neq \sqrt{S_{\mathrm{side}}^2 + S_{\mathrm{back}}^2}$, making the direct decomposition $S_{\mathrm{back}} = S\cos\theta_{\mathrm{axis}}$ mathematically incomplete without explicitly defining the projection onto the transverse plane.
+
+3. **Inconsistent Definition vs. Table Notes on Face-to-Path Sign**
+   * *Exact phrase:* In Table: `"Face to path | Face angle − club path | Sign controls curvature"` vs. Keypoint: `"And note that TrackMan's reported face-to-path is already a hybrid --- face orientation evaluated at the contact point minus velocity direction evaluated at the geometric center"`
+   * *Inaccuracy:* For off-center hits on curved faces (bulge), if Face Angle is taken at the contact point and Club Path at the GC, Face-to-Path computed this way deviates from the effective local impact normal relative to the local impact velocity vector (gear-effect dynamic loft/spin-loft offset), creating a mathematical mismatch between the scalar difference $(FA - CP)$ and the actual curvature-inducing torque.
+
+---
+
+### Part II: Timing and Concrete Definitional Inaccuracies
+
+4. **Contradiction in Club Speed Timing Definition**
+   * *Exact phrase:* Intro: `"club-delivery parameters at the time of maximum compression"` vs. Table: `"Linear speed of the GC just prior to first contact"`
+   * *Inaccuracy:* Club speed is explicitly defined in TrackMan's published standards as the speed immediately prior to first impact/contact (to avoid deceleration from ball collision), directly contradicting the introductory assertion that *all* club delivery parameters are defined at "maximum compression".
+
+5. **Dynamic Lie Definition Conflates Impact Timing with Pose**
+   * *Exact phrase:* `"Dynamic lie | Shaft angle vs. horizontal at impact"`
+   * *Inaccuracy:* In TrackMan standard definitions, Dynamic Lie is defined specifically as the angle of the shaft relative to the horizontal ground plane at the moment of **maximum compression**, not generic "impact" (which starts $\approx 200\text{--}400\,\mu\text{s}$ prior to maximum compression).
+
+---
+
+### Part III: Reference-Point, Sign, and Kinematic Inferences
+
+6. **Inversion of Arc Curvature Kinematics on Path Differential**
+   * *Exact phrase:* `"Two rotations drive it, both pushing the same way horizontally: the swing arc curves leftward through impact, so a point displaced forward along the arc has its velocity rotated further around it; and face closure about the shaft axis swings a point ahead of the rotation center leftward."`
+   * *Inaccuracy:* For a right-handed golfer swinging on an in-to-out or circular swing arc centered behind the player, displacement along the shaft axis vs. forward along the face normal requires careful sign definition. The face center sits *ahead* of the CG in the direction of the face normal (pointing toward the ball/target), not necessarily tangential along the swing arc. Furthermore, if the swing arc center is inside the player's turn, the position vector $\vect{r} = \vect{p}_{\mathrm{face}} - \vect{p}_{\mathrm{CG}}$ crossed with swing arc angular velocity $\boldsymbol{\Omega}_{\mathrm{swing}}$ and closure rate $\boldsymbol{\omega}_{\mathrm{shaft}}$ can oppose or reinforce depending on whether the clubhead has passed low point and the orientation of the shaft axis relative to the instantaneous center of curvature.
+
+---
+
+### Part IV: Measurement vs. Model & Manufacturer Claims Needing Primary Verification
+
+7. **Manufacturer-Specific 3° Discrepancy Attribution**
+   * *Exact phrase:* `"TrackMan quantifies the resulting gap directly: for a driver, the CG path and the face-center path differ by approximately 3°, with the face-center path being the more out-to-in of the two..."`
+   * *Status:* **Manufacturer claim needing primary verification.** The exact magnitude ($\sim 3^\circ$) depends heavily on individual swing dynamics (closure rate $\omega_z$, swing radius $R$, delivery speed $v$). Citing this as an intrinsic constant or definitive TrackMan quantification requires verification against TrackMan's primary technical whitepaper documentation.
+
+8. **Over-Categorization of Radar Face Angle and Dynamic Loft as Purely "D-Plane Inversion"**
+   * *Exact phrase:* `"$^g$ D-plane inversion from ball launch + path on radar-only units; optically assisted on OERT-class hardware"`
+   * *Status:* **Inference / vendor-fact inaccuracy.** While early or single-radar units derived face orientation via D-plane equations (assuming centered contact and zero gear effect), dual-radar tracking units (TrackMan 4) track phase/frequency shifts from head motion features and micro-Doppler signals directly to extract 3D face orientation prior to/during strike, rather than relying exclusively on an inverted ball-launch model.
+
+9. **Classification of Camera Systems Measuring Club Path as Requiring Face Fiducials**
+   * *Exact phrase:* `"$^f$ Requires face fiducials (Foresight/Garmin R50) or overhead geometry (Uneekor/ProTee)."`
+   * *Status:* **Incomplete / manufacturer claim.** Multiple photometric and stereoscopic camera systems (including modern markerless optical engines and overhead systems) measure clubhead velocity vectors and delivery kinematics without requiring physical fiducial markers on the club face.
+
+10. **Attribution of Closure Rate Exclusivity**
+    * *Exact phrase:* `"Foresight GCQuad-class only"`
+    * *Status:* **Inaccurate exclusivity claim.** High-speed multi-camera systems (such as high-end optical systems, studio stereoscopic rigs, and modern overhead launch monitors) also measure or report 3D face closure rates; it is not exclusive to Foresight GCQuad hardware.

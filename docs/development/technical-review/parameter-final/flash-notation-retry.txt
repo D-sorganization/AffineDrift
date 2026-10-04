@@ -1,0 +1,85 @@
+Here is the consistency review of the source passage under the specified frame conventions ($x$ forward, $y$ up, $z$ right; right-handed):
+
+---
+
+### 1. Verification of the Rigid-Point Cross-Product Example
+* **Given values in $(x, y, z)$ coordinates**:
+  * $\vect{v}_O = (40, 0, 0)$
+  * $\vect{r} = (0.04, 0, 0)$
+  * $\boldsymbol\omega = (0, 50, 0)$
+* **Cross product**:
+  $$
+  \boldsymbol\omega \times \vect{r} = 
+  \begin{vmatrix}
+  \hat{\vect{x}} & \hat{\vect{y}} & \hat{\vect{z}} \\
+  0 & 50 & 0 \\
+  0.04 & 0 & 0
+  \end{vmatrix}
+  = (0, 0, -50 \times 0.04) = (0, 0, -2)
+  $$
+* **Resulting velocity $\vect{v}_P$**:
+  $$
+  \vect{v}_P = (40, 0, 0) + (0, 0, -2) = (40, 0, -2)
+  $$
+* **Heading**:
+  * $\operatorname{atan2}(-2, 40) \approx -2.8624\degs \simeq -2.86\degs$.
+* **Conclusion**: **Mathematically correct** in the stated right-handed frame.
+
+---
+
+### 2. Verification of the Spin-Loft Dot Identity
+* **Vector definition given**:
+  * Unit vector: $(\cos a \cos p, \, \sin a, \, \cos a \sin p)$
+    * $x = \cos a \cos p$ (forward)
+    * $y = \sin a$ (up)
+    * $z = \cos a \sin p$ (right)
+    * Magnitude check: $\cos^2 a (\cos^2 p + \sin^2 p) + \sin^2 a = \cos^2 a + \sin^2 a = 1$. (Consistent).
+  * Unit normal: $(\cos\ell \cos f, \, \sin\ell, \, \cos\ell \sin f)$.
+* **Dot product**:
+  $$
+  \vect{u} \cdot \vect{n} = \sin a \sin\ell + \cos a \cos\ell (\cos p \cos f + \sin p \sin f) = \sin a \sin\ell + \cos a \cos\ell \cos(f - p)
+  $$
+* **Numerical example check**:
+  * $a = -5^\circ$, $\ell = 15^\circ$, $\Delta = f - p = 10^\circ$:
+    $$
+    \cos\sigma = \sin(-5^\circ)\sin(15^\circ) + \cos(-5^\circ)\cos(15^\circ)\cos(10^\circ)
+    $$
+    $$
+    \cos\sigma \approx (-0.087156)(0.258819) + (0.996195)(0.965926)(0.984808) \approx -0.022558 + 0.947672 = 0.925114
+    $$
+    $$
+    \sigma = \arccos(0.925114) \approx 22.316^\circ \simeq 22.32^\circ
+    $$
+* **Conclusion**: **Mathematically correct**.
+
+---
+
+### 3. Critique of Attack-Angle Statement When Horizontal Velocity Changes
+* **Text statement**:
+  > *"An upward change in velocity increases attack angle, but need not make an already upward motion 'shallower.' "*
+* **Critique & Concrete Issue**:
+  * Attack angle is the vertical elevation angle: $\alpha = \arctan\left(\frac{v_y}{\|\vect{v}_{xz}\|}\right) = \arcsin\left(\frac{v_y}{\|\vect{v}\|}\right)$.
+  * An upward change means $\Delta v_y > 0$.
+  * **Qualification/Error**: If horizontal velocity $\vect{v}_{xz}$ simultaneously increases, $\alpha$ can **decrease** even when $v_y$ increases (e.g., $v_y$ increases by $1\,\text{m/s}$ while $v_x$ doubles).
+  * Furthermore, for an *already upward motion* ($v_y > 0$), increasing attack angle makes it **steeper**, never shallower; "shallower" corresponds to decreasing magnitude towards horizontal ($\alpha \to 0^+$). The text's phrasing conflates colloquial terminology with coordinate signs.
+  * **Shortest qualification**: *"An upward velocity change ($\Delta v_y > 0$) increases attack angle only if horizontal speed $\|\vect{v}_{xz}\|$ remains fixed or does not outpace $\Delta v_y$."*
+
+---
+
+### 4. Contact Relative-Velocity Formula: Rigid Kinematics vs. Deformational Velocity
+* **Formula in text**:
+  $$
+  \vect v_{\rm rel} = \vect v_P - \left[\vect v_B + \boldsymbol\omega_B \times (\vect p_Q - \vect p_B)\right]
+  $$
+* **Does it require rigid kinematics or additional deformational velocity?**
+  * **Kinematic status**: The formula as written represents purely **rigid-body relative velocity** between the boundary material points $P$ and $Q$.
+  * **Collision / Contact mechanics requirement**:
+    * During impact, golf ball and clubface undergo finite elastoplastic/viscoelastic local deformation.
+    * If $P$ and $Q$ track the instantaneous deformed contact surface, the true relative material velocity is:
+      $$
+      \vect{v}_{\text{rel, total}} = \vect{v}_{\text{rel, rigid}} + \dot{\vect{u}}_P^{\text{def}} - \dot{\vect{u}}_Q^{\text{def}}
+      $$
+    * For rigid-body contact models (e.g., Poisson/Stronge coefficient of restitution formulation), $\vect{v}_{\rm rel}$ evaluates the pre-impact boundary conditions of rigid proxy points.
+  * **Concrete identification / Shortest qualification**:
+    * The formula is **strictly rigid-body relative velocity**.
+    * **Shortest qualification**: Add a qualification that $\vect{v}_{\rm rel}$ denotes the *undeformed rigid-body velocity at contact points prior to local deformation/compliance rates*.
