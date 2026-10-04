@@ -87,14 +87,27 @@ distinguished from an evolution map retaining initial-time/state dependence.
 No global existence, autonomous-flow group, or uniqueness claim is inferred
 from the notation. The model and its domain of existence must be declared.
 
+A final copy pass clarified the direction of this statement: specified initial
+data and an input law define the trajectory being considered; observing a
+trajectory need not identify a unique input history. For `xdot = u_1 + u_2`
+with `x(0) = 0`, the distinct constant input pairs `(1,0)` and `(0,1)` both
+produce `x(t) = t`. This exact counterexample does not rule out identification
+under stronger model and measurement assumptions. In a swing analysis, motion
+and the allocation of control effort are different inference questions.
+
 ## Delegation and Publication Scope
 
-Two successful supplied-text agy CLI Gemini 3.8 Flash helpers supplied a
-notation inventory and copy review. The lead checked all scientific claims
+Five successful supplied-text agy CLI Gemini 3.8 Flash helpers supplied a
+notation inventory, copy review, PR draft, trajectory wording, and turnover
+review. The lead checked all scientific claims
 and chapter contexts. The copy review's new-symbol typography suggestions
 were applied. Its request to remove the golf connection was rejected because
 that connection serves the user's stated purpose. Its proposals to expand
 previously reviewed DCR definitions were not treated as new proven defects.
+Later drafts were corrected to avoid claims of whole-book visual proof and
+unconditional non-identifiability. Test results and delivery status are
+reported only after verification, with the tested commit stated separately
+from the subsequent trajectory clarification and its scoped revalidation.
 
 Visual inspection also found inherited ``Contents'' running headings on the
 nomenclature pages and confirmed the previously indexed DCR line overflow in

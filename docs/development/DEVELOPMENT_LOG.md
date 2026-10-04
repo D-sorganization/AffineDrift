@@ -1,3 +1,13 @@
+# Shared Nomenclature — Full Regression and Final Clarification Complete
+
+The full offline suite at `8068ddb140caab8bf7152f92f8b5641ab309c078` passed 6,811 tests, with 29 skipped, 210 deselected and 93.24% src coverage in 1,097.12 seconds. Tracked files, renders and hooks were frozen during the run. A subsequent one-sentence clarification states that a trajectory is considered for specified initial data and inputs; it does not imply observed motion uniquely identifies the input history. Equations and executable code are unchanged. An exact two-input integrator counterexample supports that distinction without asserting universal non-identifiability.
+
+All six PDFs rebuilt successfully with unchanged page counts. Comparison across all 682 pages finds changed text on exactly one nomenclature page per volume. Of the 35 previously inspected page images, 29 are pixel-identical; the six changed pages were manually inspected at 110 dpi and remain legible without clipping. Earlier body-crop evidence retains its original edition scope. The later evidence/book/trust/SPEC run passed 70 tests, and all 17 publication gates pass. The 149 dependent digest updates preserve all other parsed metadata relative to the full-tested checkpoint. See reports/technical-review/shared-nomenclature-validation.json and its linked reports.
+
+Five successful supplied-text agy CLI Gemini 3.8 Flash helpers supported routine preparation and copy review; the lead checked the mathematics and bounded every claim. Commit/push this final source checkpoint, then bind the twelve scientific source/PDF/report files and update the corpus row. Parent regular PR #4869 still requires actual remote-main verification before opening this child PR. Never create a draft PR. The claim for #4865 expires approximately 06:08 UTC; renew if needed. No full regression is running. Preserve raw QA and older acceptance identities. The overall goal remains active; #4868 and the remaining corpus are not cleared. Earlier entries below are historical checkpoints.
+
+---
+
 # Shared Nomenclature — Ready for Full Regression
 
 All 17 publication gates pass after the complete dependency refresh and parent evidence-boundary integration; 70 integration checks pass in 33.19 seconds. Earlier 94 mechanics and 50 metadata checks remain recorded with their exact scopes. Three supplied-text agy CLI Gemini 3.8 Flash helpers have succeeded, including a prepared PR body. Lead review corrected its description of generalized velocity, rejected visual-proof language and distinguished the planned offline full suite from protected browser CI. No scientific source or PDF changes followed final visual inspection.
