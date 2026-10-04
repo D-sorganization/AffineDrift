@@ -1,3 +1,9 @@
+# Joint Review — Revalidated External Progress
+
+2026-10-04 15:33 UTC: revalidated current repository state after advancement to 60bb50112. Verified all 15 #4875 changed paths on its actual remote-main merge 0bb9d47f8 and released its claim/presence. Reconciled the later 11-line deletion of uncited usgarules at 4b1285fd5 with preserved original review evidence and new source bindings. Current eight-book CI passes; Launch Monitor has 96 cited/printed entries and 92 pages. All bibliography-page extracted text matches the retained reviewed PDF; 79 complete pages match and 13 have mathematical extraction differences, recorded without a pixel-equivalence claim. Inspected CI pages 67 and 90. Parent delivery and hash changes supersede the temporarily restated older epic checkpoint. No manuscript body edit was made during reconciliation.
+
+---
+
 # Bosch Insertion Plan — Fixed-Commit Acceptance #4877
 
 2026-10-04: source checkpoint `73f6f3946649b6a708495cc8d30bc61cbf4b25eb` passed the full regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,087.67 seconds, exit 0. The tracked tree stayed unchanged; no local rendering or hooks overlapped. Five canonical source/evidence hashes bind the complete insertion-plan review and cited bibliography repairs. The corpus advances one row, leaving 89 explicitly pending originals. Eight Flash helpers supported review/PR preparation under lead adjudication. Hardware turnover commit ebf0b82fe is integrated without changing its six accepted source/evidence files. The two completed reviews share regular PR #4879 and one protected delivery cycle; the PR is attached and not a draft. Parent #4875 remains queued; #4878 is only filed read-only preparation. No whole-book or empirical acceptance is added.
