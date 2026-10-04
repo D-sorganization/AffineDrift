@@ -1,224 +1,206 @@
 \chapter{Parameter Definitions and Conventions}
 \label{ch:params}
+% Preserve the historical community reference without treating it as primary data.
+\nocite{perfectgolfswing}
 
-Launch monitors from different vendors disagree partly because they measure
-different things and partly because they \emph{define} things differently.
-TrackMan's definitions~\cite{trackman40params,trackmanclubdata} are the
-industry reference and are adopted here. The critical subtlety is
-\emph{when} each quantity is defined: club-delivery parameters at the time
-of \textbf{maximum compression}, ball parameters \textbf{immediately after
-separation}.
+A launch-monitor number describes a chosen quantity, at a chosen point and time, through a particular estimation procedure.
+A disagreement can therefore reflect different definitions as well as measurement error.
+This chapter uses TrackMan's published conventions where stated, without treating them as a universal standard or an independent accuracy validation~\cite{trackman40params,trackmanclubdata,trackmanparameterdefinitions}.
+The right-handed world frame used here and in \cref{ch:impact} has $x$ forward along the target line, $y$ upward and $z$ right.
+Horizontal angles are positive right of target and elevations are positive upward; right and left do not change with the golfer's handedness.
+Terms such as open, closed, in-to-out and draw need an additional handedness convention.
 
 \section{Club-Delivery Parameters}
 \label{sec:clubparams}
 
+The time assigned to an output need not be the time interval used to estimate it.
+TrackMan's 2017 account describes club-motion estimates fitted from pre-impact observations and referenced to maximum compression, excluding collision-induced motion~\cite{trackmanclubdata}.
+Its current parameter list explicitly defines club speed just before first contact, while path and attack angle retain the maximum-compression reference~\cite{trackmanparameterdefinitions,trackmanclubspeed}.
+Thus the latter reference does not justify interpreting every displayed club parameter as an instantaneous measurement of the colliding head.
+Keep the device, software version, output definition and observation window with a comparison dataset.
+
 \begin{table}[htbp]
 \centering\small
-\caption{Club-delivery parameters (TrackMan conventions). ``GC'' = the
-geometric center of the club head.}
+\caption{Club-Delivery Quantities and Their Declared Conventions}
 \label{tab:clubparams}
-\begin{tabular}{@{}p{3.2cm}p{7.2cm}p{4.2cm}@{}}
+\begin{tabular}{@{}p{3.0cm}p{7.0cm}p{4.6cm}@{}}
 \toprule
-\textbf{Parameter} & \textbf{Definition} & \textbf{Notes} \\
+\textbf{Parameter} & \textbf{Quantity} & \textbf{Interpretation} \\
 \midrule
-Club speed & Linear speed of the GC just prior to first contact &
-  Not the impact-point speed; the toe moves up to $\sim$7\mph{} faster than
-  the heel \\
-Attack angle & Vertical direction of GC motion at maximum compression &
-  $+$ = hitting up. PGA Tour driver avg $\approx-1.3\degs$;
-  LPGA $\approx+3\degs$ \\
-Club path & Horizontal direction of GC motion at maximum compression &
-  $+$ = in-to-out (right of target for RH) \\
-Face angle & Horizontal direction the face normal points, at the
-  center-point of ball contact, at maximum compression & $+$ = open \\
-Face to path & Face angle $-$ club path & Sign controls curvature \\
-Dynamic loft & Vertical angle of the face normal at the contact point at
-  maximum compression & Differs from static loft via shaft lean/bend, face
-  roll, impact height \\
-Spin loft & 3D angle between the club-motion direction (path, attack
-  angle) and the face-normal direction (face angle, dynamic loft) &
-  $\approx$ dynamic loft $-$ attack angle only when face-to-path
-  $\approx 0$ \\
-Swing plane & Vertical angle of the plane traced by GC motion vs.\ the
-  horizon & \\
-Swing direction & Horizontal angle of that plane's base vs.\ the target
-  line & \\
-Low point & Distance from GC at maximum compression to the lowest point of
-  the swing arc & $+$ = low point ahead of the ball (ball-first contact) \\
-Impact height / offset & Vertical / horizontal strike location relative to
-  face center & Drives gear effect (\cref{sec:gear}) \\
-Dynamic lie & Shaft angle vs.\ horizontal at impact & \\
-Closure rate & Angular rate at which the face is closing in 3D
-  (\si{\degree\per\second}) & Foresight GCQuad-class only \\
+Club speed & Norm of geometric-center (GC) velocity before first contact & Reference-point dependent \\
+Attack angle & Elevation of GC motion at the stated reference event & Positive upward \\
+Club path & Azimuth of GC motion at that event & Positive right of target \\
+Face angle & Azimuth of the local face normal at the contact center & Positive right of target \\
+Face to path & Face angle minus club path & A difference of headings \\
+Dynamic loft & Elevation of the local contact normal & Includes delivered pose and face curvature \\
+Spin loft & Angle between the declared motion direction and face normal & A three-dimensional angle \\
+Swing plane / direction & Inclination / horizontal orientation of a plane fitted to a clubhead trajectory segment & Declare the fitted interval and point \\
+Low point & Location of the swing-arc minimum relative to the impact reference & Does not alone determine turf contact \\
+Impact height / offset & Strike coordinates relative to face center & Declare face axes and signs \\
+Dynamic lie & TrackMan: lower-shaft inclination to horizontal at impact & Not identical to face roll \\
+Closure rate & Foresight: heel-to-toe rotation rate about the shaft & Not the full angular-velocity norm \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Two definitional choices deserve emphasis because they are common sources of
-inter-device disagreement:
+The delivery definitions in \cref{tab:clubparams} follow the cited vendor documentation; Foresight's lie output instead describes face-plane roll~\cite{trackmanparameterdefinitions,foresightclubdefinitions}.
+A shaft inclination and a face-roll coordinate cannot be compared by name alone.
+Likewise, a rate about a shaft axis does not supply the other components of a clubhead's angular velocity, and a finite-window rate need not equal its value at one instant.
+No exclusivity claim about which product can report these quantities follows from their definitions.
 
-\begin{enumerate}
-\item \textbf{Which point on the club is tracked.} TrackMan defines club
-speed at the \emph{geometric center} of the head and reconstructs that point
-from the radar ``3D silhouette'' of the head~\cite{trackmanclubspeed}. A
-naive Doppler processor instead locks to the strongest or fastest return ---
-often the toe of a driver --- and reports a speed several mph high. This
-single choice explains much of the chronic club-speed disagreement between
-brands.
-\item \textbf{Where on the face orientation is evaluated.} Face angle and
-dynamic loft are defined at the \emph{contact point}, not the face center.
-On a curved driver face (bulge and roll, \cref{sec:gear}) the local normal
-at a toe strike differs from the center normal by several degrees, so
-systems that measure face pose but not impact location are systematically
-biased on off-center hits.
-\end{enumerate}
+A fitted swing plane summarizes a selected trajectory segment; it does not imply that the whole swing is planar.
+TrackMan's low-point convention locates the arc minimum relative to the GC at maximum compression~\cite{trackmanlowpoint}.
+An arc minimum ahead of that reference does not establish ball-first contact with the ground: absolute height, the sole and leading-edge geometry, ball position and the ground surface also matter.
+A translated copy of the same arc can have the same fore-aft low point while intersecting the ground at a different place.
 
-\subsection{Club path is reference-point dependent too --- by about
-3\degs{} on a driver}
+Face angle and dynamic loft refer here to the normal at the contact center.
+Bulge and roll make that normal differ from the face-center normal on an off-center driver strike (\cref{sec:gear}).
+A measurement of face-center pose is not intrinsically wrong; it answers a different question unless local surface geometry and strike location are supplied.
+Similarly, face-to-path can help interpret a centered strike under a stated collision model, but its sign alone does not determine curvature in the presence of gear effect or differing flight conditions.
+
+\subsection{Reference Point and Rigid-Body Velocity}
 \label{sec:pathreference}
 
-The reference-point issue is usually discussed only for club speed, but it
-applies with equal force to \emph{direction}, and the magnitude is large
-enough to matter.
-
-For any two points on the rigid clubhead,
+For two material points on an ideal rigid clubhead at the same instant,
 \begin{equation}
 \label{eq:pointvel}
-\vect{v}_P = \vect{v}_O + \boldsymbol{\omega}\times\vect{r},
-\qquad \vect{r} = \vect{p}_P - \vect{p}_O,
+\vect{v}_P=\vect{v}_O+\boldsymbol\omega\times\vect r,
+\qquad \vect r=\vect p_P-\vect p_O.
 \end{equation}
-so there is a \emph{velocity field} across the head rather than a single
-path. A reported path is that field sampled at a chosen point. The two
-candidate points are far apart on a driver: the center of gravity sits
-roughly 25--50\,mm behind the face, and the geometric center that radar
-tracks is typically within 6\,mm of the CG~\cite{trackmanclubspeed}.
+All vectors must be expressed in the same frame.
+Both speed and direction can change with the reference point; geometric center, center of mass and face center are distinct definitions even when two happen to be close.
+TrackMan's 2017 vendor illustration reports an approximately $3\degs$ driver path difference between center of gravity and face center, with the face-center path farther left~\cite{trackmanclubdata}.
+That illustration is neither a universal correction nor evidence that every radar and optical product chooses those respective points.
 
-The industry has split along the sensing modality. Radar systems report
-path at the geometric center, because that is the point the silhouette
-reconstruction can locate from behind. Optical systems with face fiducials
-report it at the \emph{face center}, because that is where the markers
-are. TrackMan quantifies the resulting gap directly: for a driver, the
-CG path and the face-center path differ by \textbf{approximately
-3\degs}, with the face-center path being the more
-out-to-in of the two, and the discrepancy shrinks for shorter clubs as the
-CG-to-face distance falls~\cite{trackmanclubdata}.
-
-Two rotations drive it, both pushing the same way horizontally: the swing
-arc curves leftward through impact, so a point displaced forward along the
-arc has its velocity rotated further around it; and face closure about the
-shaft axis swings a point ahead of the rotation center leftward. The same
-geometry tilts the face-center velocity slightly \emph{upward} relative to
-the CG --- a shallower attack angle --- because the face center sits ahead
-of the CG on an arc that is turning upward through the bottom.
+For a manufactured example in SI units, choose $\vect v_O=(40,0,0)$, $\vect r=(0.04,0,0)$ and $\boldsymbol\omega=(0,50,0)$.
+Then $\vect v_P=(40,0,-2)$ and its horizontal heading is $\operatorname{atan2}(-2,40)\simeq-2.86\degs$.
+Reversing $\boldsymbol\omega$ reverses the heading offset; choosing $\boldsymbol\omega=(50,0,0)$ gives zero offset despite the same angular-speed norm.
+An upward change in velocity increases attack angle, but need not make an already upward motion ``shallower.''
+These examples demonstrate geometry, not typical golfer values or measured device discrepancies.
 
 \begin{keypoint}
-Because the offset is $\boldsymbol{\omega}\times\vect{r}$, it is not a
-fixed constant: it scales with closure rate and arc tightness. Two players
-with identical reported path but different release rates do not have the
-same face-center path. And note that TrackMan's reported face-to-path is
-already a \emph{hybrid} --- face orientation evaluated at the contact
-point minus velocity direction evaluated at the geometric center --- so it
-is not a physically clean angle under either convention.
+A rigid-body twist $(\boldsymbol\omega,\vect v_O)$ and known $\vect r$ permit conversion between reference points (\cref{app:screw}).
+The scalar $\|\boldsymbol\omega\|$ alone does not.
+The velocity difference obeys $\|\Delta\vect v\|\leq\|\boldsymbol\omega\|\|\vect r\|$, but converting that bound to a heading difference also requires the original velocity and a nonvanishing horizontal projection.
+Two devices can be compared only after reconciling their reference points, frames and times, with the conversion uncertainty retained.
 \end{keypoint}
 
-\begin{implication}
-This is the sharpest available argument for the twist formulation of
-\cref{app:screw}. Estimating $\xi = (\boldsymbol{\omega}, \vect{v}_O)$
-makes path at any point a projection of one fitted object, so both
-conventions --- and the rotation rate that separates them --- fall out of
-the same estimate. An implementation should report path at a
-\emph{declared} reference point, state which one, and expose
-$\lVert\boldsymbol{\omega}\rVert$ alongside it so the user can see how
-much the choice is worth on that swing. Reporting a bare path number
-without its reference point is reporting a quantity that is
-$\sim$3\degs{} ambiguous on a driver.
-\end{implication}
+\subsection{Spin Loft and Contact Kinematics}
+
+Write attack angle as $a$, club path as $p$, dynamic loft as $\ell$ and face angle as $f$.
+For nonvertical directions, the unit motion vector is $(\cos a\cos p,\sin a,\cos a\sin p)$ and the unit face normal has the analogous form with $(\ell,f)$.
+Their dot product gives the spin-loft angle $\sigma\in[0,\pi]$:
+\begin{equation}
+\label{eq:parametersspinloft}
+\cos\sigma=\sin a\sin\ell+\cos a\cos\ell\cos(f-p).
+\end{equation}
+This implements the vendor's three-dimensional angular definition~\cite{trackmanspinloft}.
+When $f=p$ and the elevation difference lies in $[-\pi,\pi]$, $\sigma=|\ell-a|$; using a signed difference silently assumes its sign.
+For $a=-5\degs$, $\ell=15\degs$, changing $f-p$ from zero to $10\degs$ increases spin loft from $20\degs$ to approximately $22.32\degs$.
+Direct vector evaluation still works when an azimuth is undefined at a vertical direction, provided both vectors are known.
+
+Reported face-to-path and spin loft are legitimate declared quantities even when face orientation is evaluated at contact and velocity at GC.
+They are not automatically the local relative contact kinematics required by an impact law.
+For a club point $P$ contacting a ball point $Q$, that relative velocity is
+\begin{equation}
+\vect v_{\rm rel}=\vect v_P-
+ \left[\vect v_B+\boldsymbol\omega_B\times(\vect p_Q-\vect p_B)\right],
+\end{equation}
+where $B$ is the ball center.
+Its normal and tangential components enter a contact model; compliance, friction and impact location then influence the outgoing ball state (\cref{ch:impact}).
+Knowing two headings does not identify all of those quantities.
 
 \section{Ball-Launch Parameters}
 
 \begin{table}[htbp]
 \centering\small
-\caption{Ball-Launch Parameters (Defined Immediately After Separation).}
+\caption{Launch State and Separately Derived Flight Descriptors}
 \label{tab:ballparams}
 \begin{tabular}{@{}p{3.2cm}p{10.8cm}@{}}
 \toprule
-\textbf{Parameter} & \textbf{Definition} \\
+\textbf{Parameter} & \textbf{Meaning and Scope} \\
 \midrule
-Ball speed & Speed of the ball's center of gravity at separation \\
-Smash factor & Ball speed $\div$ club speed \\
-Launch angle & Vertical takeoff angle vs.\ the horizon \\
-Launch direction & Horizontal takeoff angle vs.\ the target line \\
-Spin rate & Rotation rate about the (single) spin axis, in rpm \\
-Spin axis & Tilt of the rotation axis relative to the horizon;
-  $-$ = tilted left $\Rightarrow$ draw for a right-hander \\
-Carry / side / total & Trajectory descriptors; carry is measured to the
-  point at launch elevation \\
-Apex, landing angle & Peak height; descent angle at landing \\
+Ball speed & Norm of center velocity immediately after separation \\
+Launch angle / direction & Elevation / azimuth of that outgoing velocity \\
+Spin rate & Angular-speed magnitude, usually expressed in rpm \\
+Spin axis & Direction of the nonzero spin vector; one tilt angle requires an additional convention \\
+Smash factor & Ball-speed / club-speed ratio, using their respective events and reference points \\
+Carry / carry side & Distance / lateral position at a declared flight endpoint, not an instantaneous launch state \\
+Total & Distance to a resting position, requiring bounce and roll treatment \\
+Apex / landing angle & Maximum flight height / velocity elevation at a declared landing event \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-A golf ball in flight has exactly one rotation vector
-$\vect{\omega}$. ``Backspin'' and ``sidespin'' are components of that
-vector, not separate spins. Systems that report sidespin (SkyTrak-style)
-and systems that report spin axis (TrackMan-style) are related by
+TrackMan's carry convention uses the descending crossing of the launch elevation, not necessarily the first contact with actual terrain~\cite{trackmancarry}.
+Its parameter documentation distinguishes this flight descriptor from initial launch quantities and describes total using a calculated resting position~\cite{trackmanparameterdefinitions}.
+A launch-only indoor measurement therefore cannot by itself observe carry, landing or roll.
+Comparisons must state whether flight is tracked, extrapolated or normalized to chosen environmental conditions (\cref{ch:flight}).
+Smash factor is a speed ratio, not a fraction of kinetic energy transferred: it omits the relevant masses and rotational and deformational energy.
+
+\subsection{Spin Components Need a Frame}
+
+An ideal rigid ball has one instantaneous angular-velocity vector, not independent physical ``backspin'' and ``sidespin'' rotations.
+Use the orthonormal launch frame in \cref{eq:axistilt}: outgoing direction $\uvec v_b$, transverse backspin axis $\uvec e_b$ and transverse up axis $\uvec e_u$.
+Express the spin vector $\vect S$ in rpm, so $\vect S=60\boldsymbol\omega_b/(2\pi)$ when angular velocity is in radians per second.
+Define $S_{\rm back}=\vect S\cdot\uvec e_b$, $S_{\rm side}=-\vect S\cdot\uvec e_u$ and $S_{\parallel}=\vect S\cdot\uvec v_b$.
+Then
 \begin{equation}
 \label{eq:spincomponents}
-S_{\mathrm{side}} = S \sin\theta_{\mathrm{axis}}, \qquad
-S_{\mathrm{back}} = S \cos\theta_{\mathrm{axis}}, \qquad
-\theta_{\mathrm{axis}} = \operatorname{atan2}\!\left(
-  S_{\mathrm{side}}, S_{\mathrm{back}}\right).
+\begin{aligned}
+ S_\perp&=\sqrt{S_{\rm back}^2+S_{\rm side}^2},&
+ \theta&=\operatorname{atan2}(S_{\rm side},S_{\rm back}),\\
+ S_{\rm side}&=S_\perp\sin\theta,&
+ S_{\rm back}&=S_\perp\cos\theta,\\
+ S^2&=S_\perp^2+S_\parallel^2,& S&=\|\vect S\|.
+\end{aligned}
 \end{equation}
-A useful rule of thumb from TrackMan's data: $1\degs$ of spin-axis tilt
-produces roughly $0.7\%$ of carry as side-curve (about
-$0.7$\,yd per 100\,yd)~\cite{perfectgolfswing}.
+Replacing $S_\perp$ by total spin $S$ is valid only when the axial component vanishes.
+For horizontal forward flight and $\vect S=(1000,-300,3000)$ rpm in the world frame, $S_\perp\simeq3014.96$ rpm, $S\simeq3176.48$ rpm and $\theta\simeq5.71\degs$.
+Thus total spin and one tilt angle do not determine the general three-dimensional state.
+The tilt is undefined if both transverse components vanish, and zero spin has no axis; the chosen launch-frame construction also needs a nonvertical launch.
+Device-specific sidespin and tilt conventions must be converted explicitly before applying these equations.
+
+In the usual spin-induced lift model, the transverse spin relative to air velocity contributes to lateral and vertical lift; wind can make that velocity differ from ground-relative launch velocity.
+A fixed lateral-distance-per-degree rule cannot replace the flight calculation: speed, launch direction, spin magnitude, wind and aerodynamic coefficients also matter (\cref{ch:flight}).
+Left/right curvature labels need not be draw/fade labels for both handednesses.
 
 \section{The Directness Hierarchy}
 \label{sec:hierarchy}
 
-For any launch monitor, each reported parameter falls somewhere on a
-hierarchy from directly measured to purely modeled. Anticipating the
-detailed treatment in \cref{ch:radar,ch:camera}, the hierarchy for the two
-sensing families is summarized in \cref{tab:hierarchy}. This table is the
-skeleton of this whole review.
+Here, \emph{measured} means estimated from observations that constrain the quantity, with calibration and a stated observation model; it does not mean algorithm-free or error-free.
+\emph{Derived} denotes a transformation of reported quantities, and \emph{estimated from a physical model} denotes an inference or prediction that additionally depends on collision, flight or ground-interaction assumptions.
+These are provenance descriptions rather than mutually exclusive product classes.
+Radar records signals and cameras record images; neither records a calibrated three-dimensional club path as raw data.
+\Cref{tab:hierarchy} therefore lists the evidence needed for an output rather than assigning every device of one architecture an identical capability.
 
 \begin{table}[htbp]
 \centering\small
-\caption{Measured vs.\ derived, by architecture. ``M'' = measured directly,
-``D'' = derived through a physical model, ``E'' = estimated/model-fit,
-``--'' = not available.}
+\caption{Output Provenance and Conditions to Check}
 \label{tab:hierarchy}
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}p{3cm}p{6cm}p{5.5cm}@{}}
 \toprule
-\textbf{Parameter} & \textbf{Radar (outdoor)} & \textbf{Radar (indoor)} &
-\textbf{Camera (photometric)} & \textbf{Hybrid} \\
+\textbf{Output} & \textbf{Possible Provenance} & \textbf{Necessary Qualification} \\
 \midrule
-Ball speed          & M & M & M & M \\
-Launch angles       & M & M & M & M \\
-Spin rate           & M$^{a}$ & M/E$^{a}$ & M$^{b}$ & M \\
-Spin axis           & D$^{c}$ & E & M$^{b}$ & M \\
-Carry               & M & E$^{d}$ & E$^{d}$ & E$^{d}$ \\
-Club speed          & M$^{e}$ & M$^{e}$ & M$^{f}$ & M \\
-Club path / attack  & M & M & M$^{f}$ & M \\
-Face angle          & D$^{g}$ & D$^{g}$ & M$^{f}$ & M \\
-Dynamic loft        & D$^{g}$ & D$^{g}$ & M$^{f}$ & M \\
-Impact location     & -- & -- & M$^{f}$ & M$^{h}$ \\
+Ball speed / launch & Measured through calibrated radar or image observations & Geometry, timing, track association and launch-event fit \\
+Spin rate / axis & Measured from rotation-sensitive observations; or model-inferred from other quantities & Visible features or spin signatures, ambiguity, axial component and flight window \\
+Club motion & Measured by tracking a declared point or fitting rigid motion & Reference point, observation interval and collision exclusion \\
+Face pose / strike & Measured from resolved geometry; or inferred through an impact model & Surface normal, strike location, markers if required, and model identifiability \\
+Face to path / smash & Derived from the constituent outputs & Shared uncertainty and definition compatibility \\
+Carry / landing & Derived from a sufficiently observed trajectory, or predicted from launch & Observed endpoint versus extrapolation and normalization \\
+Total & Estimated with flight, bounce and roll models when rest is not observed & Ground slope, restitution, friction and endpoint definition \\
 \bottomrule
 \end{tabular}
-
-\smallskip
-\raggedright\footnotesize
-$^{a}$ Doppler harmonic sidebands; requires surface asymmetry and
-sufficient flight (\cref{sec:radarspin}).
-$^{b}$ Dimple-pattern registration (\cref{sec:dimplespin}).
-$^{c}$ Inverted from trajectory curvature via the Magnus constraint
-(\cref{sec:spinaxis}).
-$^{d}$ Trajectory model integration from measured launch
-(\cref{ch:flight}).
-$^{e}$ Reference-point dependent; silhouette reconstruction on TrackMan.
-$^{f}$ Requires face fiducials (Foresight/Garmin R50) or overhead
-geometry (Uneekor/ProTee).
-$^{g}$ D-plane inversion from ball launch + path on radar-only units;
-optically assisted on OERT-class hardware (\cref{sec:faceangle}).
-$^{h}$ Markerless via camera on TrackMan~4/iO.
 \end{table}
+
+The radar and camera chapters develop these conditional observation relationships (\cref{ch:radar,ch:camera}).
+An outdoor radar track can support trajectory-based spin inference, while a short indoor track may require different information; neither statement identifies every product's algorithm.
+For example, TrackMan now describes iO as using cameras for full three-dimensional spin, including axial spin~\cite{trackmaniospin}.
+That product-specific vendor claim is evidence against a universal ``indoor radar means estimated axis'' label, not independent proof of its advertised accuracy.
+Similarly, a marker requirement belongs to the particular club-tracking implementation, not to optical sensing as a physical necessity.
+
+\begin{implication}
+To use launch-monitor data to investigate the golf swing, retain the measurement chain: club motion and contact geometry constrain impact; impact produces launch; launch and environment determine flight.
+A face angle inferred from ball launch is not independent corroboration of a proposed relationship between those same outputs.
+Report definitions, uncertainty and shared inputs alongside the numbers before attributing a difference to technique or to one sensor family.
+\end{implication}

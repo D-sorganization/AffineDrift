@@ -1,3 +1,11 @@
+# Paused at User-Requested Handoff: Parameter Review #4881
+
+Continue only after user authorization. The source-review checkpoint is on `fix/launch-parameter-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-parameter-review`, based on205f08913. Read [the detailed handoff](technical-review/parameter-review-handoff.md) and the parameter evidence dossier before editing. No #4881 PR is open; provisional chapter and bibliography changes are committed for continuation, not accepted for publication. The canonical PDF still represents the preceding accepted source; a94-page provisional preview is saved separately. Final technical/PDF acceptance and full regression remain.
+
+Regular PR #4879 is independently in the protected queue, last seen position1 awaiting checks at head205f08913. Its head CI and eight textbook builds passed. Do not modify or dequeue it merely to add checkpoint work. Verify actual remote-main delivery on authorized resumption. Parent #4875 is already delivered. Four agy Gemini3.8Flash helpers supported current preparation; their outputs and rejected suggestions are saved. The broad corpus remains incomplete. This paused handoff supersedes older active-goal language below.
+
+---
+
 # Joint PR #4879 — Parent Delivered and Bibliography Cleanup Reconciled
 
 Continue on `fix/bosch-insertion-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-bosch-insertion-review`. Regular PR https://github.com/D-sorganization/AffineDrift/pull/4879 closes #4876/#4877. Current checked source head is `60bb50112d8e8d671f3428e64032147c239c551a`; CI Standard 37211067657 and eight-book compilation 37211067593 passed. Its E2E job filtered/skipped rendering, browser, visual and axe steps. Do not claim a new browser pass from the green job name.
