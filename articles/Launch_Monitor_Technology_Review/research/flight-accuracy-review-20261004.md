@@ -1,6 +1,6 @@
 # Flight, Accuracy and Design Review — Preparation
 
-Issue #4894, epic #4009, corpus #4021. Three complete original chapters read: 08-ball-flight-models.tex, 09-accuracy.tex and 10-design-guidance.tex. No publication edits or acceptance yet. Branch fix/flight-accuracy-design-review starts at implementation checkpoint f141a02b5; integrate final #4890 acceptance metadata after its frozen run. Lease technical-review-20261004-flight-accuracy expires 2026-10-04 21:40 UTC. Claim checker and direct issue inspection showed no prior owner; lease and presence receipts are 5983679296 and 5983679432. The central inbox is incomplete (board page limit and malformed history), not proof of conflict absence.
+Issue #4894, epic #4009, corpus #4021. Three complete original chapters read: 08-ball-flight-models.tex, 09-accuracy.tex and 10-design-guidance.tex. No publication edits or acceptance yet. Branch fix/flight-accuracy-design-review starts at implementation checkpoint f141a02b5; final #4890 acceptance metadata through 0f81bb1ac is now integrated. The accepted appendix passed 6,863 tests and is regular PR #4895; its canonical bindings are unchanged. Lease technical-review-20261004-flight-accuracy expires 2026-10-04 21:40 UTC. Claim checker and direct issue inspection showed no prior owner; lease and presence receipts are 5983679296 and 5983679432. The central inbox is incomplete (board page limit and malformed history), not proof of conflict absence.
 
 ## Technical Plan
 
