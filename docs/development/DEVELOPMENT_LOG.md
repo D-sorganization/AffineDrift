@@ -26,9 +26,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Issue:** #4863; epic #4009 / corpus #4021
 - **Branch:** fix/underactuation-review
 - **PR:** pending
-- **Summary:** Complete chapter and corresponding combined-volume blocks reviewed; metric decay assumptions and scope clarified while preserving prior mechanics. Six supplied-text Flash helpers adjudicated. Fifteen print chapter pages plus revised title and twelve web captures inspected; final four browser/axe cells pass.
+- **Summary:** Complete chapter and corresponding combined-volume blocks reviewed; metric decay assumptions and scope clarified while preserving prior mechanics. Eight supplied-text Flash helpers adjudicated. Fifteen print chapter pages plus revised title and twenty web captures inspected; final four browser/axe cells pass.
 - **Evidence:** reports/technical-review/underactuation-review.md; 63 focused checks, 208 content cases and 16 publication gates pass. All 72 protected files and 250 other route identities preserved.
-- **Next step:** Commit the reviewed checkpoint, run a clean full regression, bind acceptance and deliver a regular PR after parent #4862 is verified on remote main. No whole-book, empirical or live-site acceptance.
+- **Next step:** Full suite at 0160547578c00a8cb711f6246c3c1480d48dc567 passed 6810 with 93.24% src coverage. Subsequent eight heading-only prefixes pass 63 focused, 208 content, five gates and four browser/axe cells; mathematical text and PDFs unchanged. Bind locally accepted source and deliver a regular PR after parent #4862 is verified on remote main. No whole-book, empirical or live-site acceptance.
 
 ### DL-#4860 · Passive-Stabilization Chapter Review
 

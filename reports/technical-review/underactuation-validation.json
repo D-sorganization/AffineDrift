@@ -1,6 +1,6 @@
 {
   "issue": 4863,
-  "status": "Focused, publication and rendering checks pass; clean full regression pending. No source acceptance yet.",
+  "status": "Complete current chapter source and scoped presentation locally accepted; immutable binding and protected delivery pending.",
   "red": {
     "passed": 5,
     "failed": 4,
@@ -118,12 +118,76 @@
     }
   ],
   "render_verification": "reports/technical-review/underactuation-render-verification.json",
-  "delegation": "Six successful text-only agy CLI Gemini 3.8 Flash helpers; lead adjudicated all output.",
+  "delegation": "Eight successful text-only agy CLI Gemini 3.8 Flash helpers; lead adjudicated all output.",
   "preservation": {
     "protected_files_exact": 72,
     "other_route_identities_exact": 250,
     "historical_target_identity_retained": true,
     "book_audit_unchanged": true
   },
-  "full": "Pending clean committed checkpoint."
+  "full": {
+    "tested_checkpoint": "0160547578c00a8cb711f6246c3c1480d48dc567",
+    "passed": 6810,
+    "skipped": 29,
+    "failed": 0,
+    "errors": 0,
+    "seconds": 815.599,
+    "pytest_summary_seconds": 816.02,
+    "deselected": 210,
+    "warnings": 51,
+    "coverage_percent": 93.24,
+    "coverage_scope": "src",
+    "tracked_files_unchanged_through_run": true
+  },
+  "post_full_heading_only": {
+    "delta": {
+      "full_test_checkpoint": "0160547578c00a8cb711f6246c3c1480d48dc567",
+      "file": "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+      "changed_headings": 8,
+      "change": "Seven section headings level2 to level3; one subsection level3 to level4. Existing chapter/section anchor strings and mathematical body unchanged.",
+      "pre_sha256": "11fe1f71f7461c7891b15d8e106506ad1de0816af70dcbe097c19b7d1b91f785",
+      "post_sha256": "a0ed9a14cd92a41b68e14b1c4bed400a10e0f8d944131518a617009a673a361c",
+      "helper": "Separate supplied-heading Flash inventory; missing-anchor claim rejected because the explicit next-line span already exists."
+    },
+    "focused": {
+      "passed": 63,
+      "seconds": 27.4
+    },
+    "content_lint": {
+      "passed": 208,
+      "skipped": 4,
+      "deselected": 6837,
+      "seconds": 24.69
+    },
+    "publication_gates": [
+      {
+        "check": ["check_title_case"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-check_title_case.txt"
+      },
+      {
+        "check": ["validate_frontmatter"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-validate_frontmatter.txt"
+      },
+      {
+        "check": ["validate_accessibility", "--qmd-only"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-validate_accessibility.txt"
+      },
+      {
+        "check": ["check_qmd_citation_keys"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-check_qmd_citation_keys.txt"
+      },
+      {
+        "check": ["regenerate_claim_audit_evidence", "--check"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-regenerate_claim_audit_evidence.txt"
+      }
+    ],
+    "browser_cells_passed": 4,
+    "additional_manually_inspected_captures": 8,
+    "qualification": "The full suite tested the named checkpoint before eight heading-only prefix edits and derived digest refresh. Post-edit focused/content/publication/render checks cover final headings; protected CI must validate the final PR head."
+  }
 }
