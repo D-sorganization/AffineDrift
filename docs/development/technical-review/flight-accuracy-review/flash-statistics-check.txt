@@ -1,0 +1,89 @@
+Here are the independent statistical checks and methodological reviews based strictly on the provided transcriptions:
+
+---
+
+### 1. Leach (2017) Review
+
+#### Arithmetic & Data Checks
+* **Design:** $240 \text{ shots} = 8 \text{ golfers} \times 3 \text{ clubs} \times 10 \text{ shots/club}$.
+* **Data Availability / Capture Rates:**
+  * **TrackMan:** Ball speed & club speed: $98\%$ ($235/240$). Other club metrics: $62\%$ ($149/240$). Wedge (other club metrics): $19\%$ ($15/80$).
+  * **Foresight:** Ball speed: $90\%$ ($216/240$). Club speed: $75\%$ ($180/240$).
+* **Fractions within $\pm 1\text{ mph}$ of Median Difference:**
+  * TrackMan: $54\%$
+  * Foresight: $29\%$
+* **Reported Median Offsets:**
+  * Pooled medians: $-1.1\text{ mph}$ vs. $+2.8\text{ mph}$
+  * Driver-only medians: $-0.4\text{ mph}$ vs. $+3.9\text{ mph}$
+
+#### Why Centered Fractions $\ne$ Absolute Accuracy
+1. **Precision vs. Bias:** Assessing the proportion of shots falling within $\pm 1\text{ mph}$ of the *sample median difference* measures **dispersion/precision around an empirical central tendency**, not absolute error relative to true ground truth ($0\text{ mph}$ error).
+2. **Ignored Systematic Shift:** With non-zero median offsets (e.g., Foresight driver at $+3.9\text{ mph}$ or pooled at $+2.8\text{ mph}$), a distribution can be tightly clustered around a biased estimate. Measuring spread around the empirical median completely subtracts out this constant systematic bias.
+3. **True Tolerance Bounds:** Absolute accuracy requires evaluating the fraction within an absolute threshold relative to reference zero ($\Delta \in [-\delta, +\delta]$), where total error reflects both systematic bias ($\mu_\Delta$) and random variance ($\sigma_\Delta^2$): $\text{MSE} = \text{Bias}^2 + \sigma^2$.
+
+---
+
+### 2. Bishop Review
+
+#### Arithmetic & Formula Checks
+* **Design:** $13 \text{ golfers} \times 10 \text{ driver shots/session} \times 2 \text{ sessions} = 260 \text{ total shots}$.
+* **Reported Spin ICCs:** Within-session ICCs: $0.60$ and $0.02$; Between-session ICC: $0.15$.
+* **Uncertainty of Difference Between Two Sessions:**
+  * Let two independent session estimates $\hat{X}_1$ and $\hat{X}_2$ have standard error $\text{SEM}_1 = \text{SEM}_2 = \text{SEM}$.
+  * Difference: $\Delta = \hat{X}_1 - \hat{X}_2$.
+  * Variance of difference:
+    $$\text{Var}(\Delta) = \text{Var}(\hat{X}_1) + \text{Var}(\hat{X}_2) = \text{SEM}^2 + \text{SEM}^2 = 2\,\text{SEM}^2$$
+  * Standard error of difference: $\text{SE}_\Delta = \sqrt{2}\,\text{SEM}$.
+  * Under normality, the 95% margin of error / minimal detectable change is:
+    $$\text{MDC}_{95} = z_{0.975} \times \sqrt{2}\,\text{SEM} = 1.96\sqrt{2}\,\text{SEM} \approx 2.77\,\text{SEM}$$
+  * A naive heuristic of $2\,\text{SEM}$ assumes only one estimate varies or omits the $\sqrt{2}$ factor for the difference of two independent estimates ($\sqrt{2} \approx 1.414$, making $2\,\text{SEM}$ substantially understated by a factor of $\approx 1.39$).
+
+#### Why Low ICC $\ne$ Sensor Error Alone
+* **ICC Formula Structure:**
+  $$\text{ICC} = \frac{\sigma_{\text{between-person}}^2}{\sigma_{\text{between-person}}^2 + \sigma_{\text{within-person/error}}^2}$$
+* **Sensitivity to Cohort Homogeneity:** ICC evaluates relative reliability. If the 13 golfers have a narrow, homogeneous spread in spin rates ($\sigma_{\text{between-person}}^2$ is small), the ICC will approach $0$ even if measurement error is modest.
+* **Human Delivery Variance vs. Sensor Error:** In the absence of an independent ground-truth reference (such as calibrated high-speed optical tracking), within-person variance $\sigma_{\text{within}}^2$ conflates biomechanical shot-to-shot variability (strike location, delivery dynamics) with launch-monitor sensor error.
+* **Statistical vs. Practical Significance:**
+  * **Statistical detection (real change):** A difference exceeding $1.96\sqrt{2}\,\text{SEM}$ indicates a non-zero shift beyond measurement noise.
+  * **Practical importance (clinical/fitting relevance):** A statistically detectable shift (e.g., $50\text{ rpm}$) may fall well below the minimum threshold required to alter launch trajectory, ball flight stability, or club-fitting decisions.
+
+---
+
+### 3. Bliss (2026) Review
+
+#### Retained Fraction Calculations
+* **Driver:**
+  * Attempts: $118$
+  * Retained: $58$
+  * Excluded: $60$ ($3\text{ mishits} + 15\text{ missing club data} + 42\text{ estimated spin}$).
+  * **Retained fraction:** $\frac{58}{118} \approx 49.15\%$ (loss of $50.85\%$).
+* **7-Iron:**
+  * Attempts: $118$
+  * Retained: $80$
+  * Excluded: $38$ ($7\text{ missing club data} + 31\text{ estimated spin}$).
+  * **Retained fraction:** $\frac{80}{118} \approx 67.80\%$ (loss of $32.20\%$).
+* **Pitching Wedge (PW):**
+  * Attempts: $174$
+  * Retained: $69$
+  * Excluded: $105$ ($60\text{ missing TrackMan} + 4\text{ missing Mevo} + 41\text{ estimated spin}$).
+  * **Retained fraction:** $\frac{69}{174} \approx 39.66\%$ (loss of $60.34\%$).
+* **Overall Pooled:**
+  * Attempts: $118 + 118 + 174 = 410$
+  * Retained: $58 + 80 + 69 = 207$
+  * **Overall retained fraction:** $\frac{207}{410} \approx 50.49\%$.
+
+#### Methodological & Statistical Inferences
+1. **Selection Bias & Attrition:**
+   * Excluding non-reads, mishits, and estimated spin values selectively discards shots where radar or optical tracking struggled (e.g., high obliquity, extreme spin, poor strike).
+   * The remaining subset represents a non-random, idealized sample of clean strikes, biasing observed agreement upwards and underestimating real-world error rates.
+2. **Mean-Rating ICC vs. Single-Measurement Device Performance:**
+   * If an analysis uses an average-measures ICC ($\text{ICC}_k$) rather than single-measures ($\text{ICC}_1$), it assesses the reliability of aggregated group means, artificially inflating the reliability coefficient compared to what a single shot reading provides.
+3. **Consistency vs. Absolute Agreement:**
+   * Two-way random consistency ICC ($\text{ICC}(C,1)$) strips out systematic additive shifts between devices. Only absolute agreement ($\text{ICC}(A,1)$) penalizes fixed calibration offsets.
+4. **Circularity of "95% of Data Within Computed 95% Limits of Agreement (LoA)":**
+   * By mathematical construction, parametric 95% LoA ($\bar{d} \pm 1.96 \cdot s_d$) enclose $\approx 95\%$ of sample differences if differences are approximately normally distributed.
+   * Stating that "95% of shots fell within the computed 95% LoA" is a tautological check of normality, **not** an external test of whether the devices meet a pre-defined engineering or practical tolerance.
+5. **Paired Error Variance:**
+   * For paired measurements $A$ and $B$, the variance of differences is:
+     $$\sigma_{A-B}^2 = \sigma_A^2 + \sigma_B^2 - 2\,\text{Cov}(A, B)$$
+   * Because both devices measure the exact same physical shot, errors can share common source variance (e.g., environmental temperature, ball condition) or covary positively. Evaluating device accuracy without accounting for covariance and without a zero-variance reference metric prevents isolating $\sigma_A^2$ from $\sigma_B^2$.

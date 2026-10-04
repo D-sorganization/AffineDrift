@@ -1,0 +1,88 @@
+Here is the compact numbered editorial checklist of claims, measured vs. calculated distinctions, package/version qualifiers, and internal inconsistencies/category errors identified in the provided LaTeX source.
+
+---
+
+### 1. Inconsistencies & Discrepancies Between Table and Narrative
+1. **TrackMan 4 club face data source:**
+   - *Snippet (Table \ref{tab:survey}):* `Radar silhouette + camera`
+   - *Snippet (Section 1):* `D-plane-derived face data`
+   - *Editorial issue:* Discrepancy between whether face data is directly measured via optical/radar fusion or inverted via D-plane calculations.
+2. **TrackMan 4 impact location capability:**
+   - *Snippet (Table \ref{tab:survey}):* `Yes (markerless, OERT)`
+   - *Snippet (Section 1):* `Reports 27+ parameters including swing plane/direction, low point, dynamic lie, and D-plane-derived face data` (impact location is omitted from the narrative parameter list).
+   - *Editorial issue:* Need to verify against official manual whether TrackMan 4 provides markerless impact location without markers/stickers and what tier/feature package enables it.
+3. **FlightScope Mevo+ camera specification & branding:**
+   - *Snippet (Table \ref{tab:survey}):* `(+ Pro cameras)`
+   - *Snippet (Section 1):* `Fusion Tracking cameras on the X3 and Mevo+ Pro`
+   - *Editorial issue:* Category/hardware error: Mevo+ hardware has no internal optical camera (it uses external iOS/Android device cameras for Fusion tracking, unlike the built-in cameras on X3). "Mevo+ Pro" is a software license add-on ("Pro Package"), not a separate multi-camera hardware model.
+4. **Garmin Approach R50 architectural placement:**
+   - *Snippet (Table \ref{tab:survey}):* Listed under general table rows (`3 high-speed cameras | Dimple imaging | Optical (fiducials) | Yes`).
+   - *Snippet (Section 1):* Placed under `\section{Radar-First Systems}` (`Garmin's step-up R50 abandons radar entirely for three cameras`).
+   - *Editorial issue:* Structural category error: an all-camera system is categorized and discussed under "Radar-First Systems".
+5. **Rapsodo MLM2PRO impact location vs. video replay:**
+   - *Snippet (Table \ref{tab:survey}):* `Impact location: Video only`
+   - *Snippet (Table caption):* Caption defines column as impact location measurement.
+   - *Snippet (Section 1):* Mentions speed/launch and spin, but does not state measured numerical impact location.
+   - *Editorial issue:* Category error: high-speed impact video playback is conflated with quantitative metric measurement of impact location (x/y coordinates on face).
+6. **PiTrac impact location:**
+   - *Snippet (Table \ref{tab:survey}):* `PiTrac (DIY) | ... | Dimple registration | None yet | No`
+   - *Snippet (Section 3):* `strobed multi-exposure global-shutter imaging` / `Neither yet measures club face data`
+   - *Editorial issue:* Missing qualifier whether impact location is fundamentally unavailable or just lacking club face tracking.
+
+---
+
+### 2. Measured vs. Calculated / Derived Distinctions Needing Verification
+7. **FlightScope X3 / Mevo+ club face angle:**
+   - *Snippet (Table \ref{tab:survey}):* `Radar; face derived`
+   - *Editorial issue:* Needs verification against vendor manuals whether face angle at impact is ever directly tracked via Doppler silhouette/phased array or purely calculated from D-plane inversion of launch/path.
+8. **Garmin Approach R10 spin methodology & flight constraints:**
+   - *Snippet (Table \ref{tab:survey}):* `Doppler ($\ge$20\,m flight) or model`
+   - *Snippet (Section 1):* `directly measures only the safe primitives ... and models the rest. Spin requires $\ge$20\,m of flight and $>$90\,mph ball speed (or an RCT marked ball indoors); face angle is explicitly a calculated value at $\pm2\degs$`
+   - *Editorial issue:* Verify whether Garmin documentation specifies spin as estimated/modeled below 20 m or if RCT balls indoors provide true measured Doppler spin without the 20 m flight distance.
+9. **SkyTrak+ / ST MAX club and face data:**
+   - *Snippet (Table \ref{tab:survey}):* `Cameras (ball) + dual radar (club) | Photometric | Radar; face derived | No`
+   - *Editorial issue:* Verify whether the dual-radar module measures face angle directly or derives it from path and ball launch angles.
+
+---
+
+### 3. Claims Requiring Verification Against Official Vendor Manuals & Specs
+10. **TrackMan 4 radar frequencies and sampling rate:**
+    - *Snippet (Section 1):* `two synchronized radar subsystems (long-range X-band at the corners for full ball flight; higher-frequency 24\,GHz at the center for club and impact), receivers sampled at 40\,ksps`
+    - *Editorial issue:* Verify specific radar center frequencies, RF layout, and exact ADC receiver sampling rate (40 ksps) against FCC compliance grants/manuals.
+11. **TrackMan 4 indoor throw distance requirement:**
+    - *Snippet (Section 1):* `requires $\ge4.7$\,m of indoor throw`
+    - *Editorial issue:* Check official installation manual for exact required indoor ball flight / minimum distance from tee to net (typically specified as 3.0 m–3.7 m ball flight plus sensor-to-tee distance).
+12. **TrackMan iO camera frame rate & radar configuration:**
+    - *Snippet (Table \ref{tab:survey} & Section 1):* `24\,GHz radar + 4{,}600\,fps camera`
+    - *Editorial issue:* Verify sensor frame rate (4,600 fps) and whether radar is standalone 24 GHz CW/FMCW against official spec sheet.
+13. **FlightScope Mevo+ radar band:**
+    - *Snippet (Section 1):* `X-band 10.5--10.55\,GHz per FCC filings`
+    - *Editorial issue:* Verify FCC ID grant frequency range for Mevo/Mevo+ to ensure no confusion with 24 GHz models.
+14. **Full Swing KIT radar mode, parameters, and claims:**
+    - *Snippet (Table \ref{tab:survey} & Section 1):* `24\,GHz CW+FMCW + 4K camera ML`, `16 parameters`, `third-party testing places it within 1--2\% of TrackMan/GCQuad`
+    - *Editorial issue:* Verify 16 reported parameters in vendor user guide and verify marketing claim vs. technical verification of CW+FMCW operation.
+15. **Rapsodo MLM2PRO spin accuracy claim:**
+    - *Snippet (Section 1):* `claimed within 1\% of reference units`
+    - *Editorial issue:* Check whether the 1% claim is an official vendor specification or a third-party review quote.
+16. **Foresight GCQuad frame rate / image count:**
+    - *Snippet (Section 1):* `Quadrascopic IR-strobed capture ($\sim$200 images/shot)`
+    - *Editorial issue:* Verify whether "200 images/shot" reflects 200 frames per camera, total shutter exposures across all 4 cameras, or a loose colloquial estimate.
+17. **Uneekor EYE XO2 frame rate & fiducial requirements:**
+    - *Snippet (Table \ref{tab:survey}):* `3 overhead IR cameras, 3{,}000+\,fps | Dimple Optix | Optical, sticker-free | Yes + video`
+    - *Editorial issue:* Verify 3,000+ fps rating and whether sticker-free club measurement covers all metrics (face angle, dynamic loft) or requires reflective dots for full face orientation.
+18. **OpenFlight detection rate and hardware bill-of-materials:**
+    - *Snippet (Table \ref{tab:survey} & Section 3):* `OPS243-A 24\,GHz + 2$\times$K-LD7 + sound trigger`, `Doppler I/Q buffer ($\sim$50--60\% detect)`
+    - *Editorial issue:* Verify project source repo/documentation for official hardware BOM and empirical basis for the 50–60% detection figure.
+
+---
+
+### 4. Version, Model, and Packaging Qualifiers Needed
+19. **Foresight GC3 / Bushnell Launch Pro feature tiering:**
+    - *Snippet (Table \ref{tab:survey} & Section 2):* `Optical (fiducials; add-on)`, `club data is a paid add-on tier using the same stickers`
+    - *Editorial issue:* Qualify firmware/subscription tier names (e.g., Club Data package vs. Gold/Ball-only unlocked tiers).
+20. **SkyTrak model naming ("ST MAX"):**
+    - *Snippet (Table \ref{tab:survey} & Section 2):* `SkyTrak+ / ST MAX`
+    - *Editorial issue:* Confirm whether "ST MAX" is an officially released hardware model or unannounced/conflated product name.
+21. **RCT ball compatibility qualifier on radar vs. camera:**
+    - *Snippet (Table \ref{tab:survey} & Section 1):* Rapsodo MLM2PRO lists `Marked ball (RPT/RCT)`; Garmin R10 mentions `or an RCT marked ball indoors`.
+    - *Editorial issue:* Radar-reflective pattern (Titleist RCT) is an RF radar aid, whereas Rapsodo RPT (Rapid Purpose Tracking) is high-contrast optical dots for cameras. The parenthetical `(RPT/RCT)` conflates optical pattern balls with radar internal foil balls.

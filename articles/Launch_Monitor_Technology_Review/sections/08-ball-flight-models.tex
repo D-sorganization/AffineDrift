@@ -1,106 +1,148 @@
 \chapter{Ball Flight Models and Trajectory Estimation}
 \label{ch:flight}
 
-Both sensing families depend on an aerodynamic model: cameras integrate
-it forward from measured launch to get carry; radars fit it to partial
-trajectories to extract spin axis and to extrapolate indoor flights.
+A launch monitor connects three different problems: observing motion, estimating a launch state, and predicting the flight that follows.
+An indoor carry value is principally a prediction from a short observed segment; an outdoor system may also observe much of the trajectory.
+The same aerodynamic model can be used forward to predict carry or inversely to infer launch conditions from later observations.
+Neither direction makes the model exact, and using one model in both directions does not provide independent validation.
 
-\section{Equations of Motion}
+\section{Equations of Motion and Coefficient Conventions}
 
-With air density $\rho$, ball radius $R = 21.34$\,mm, mass
-$m = 45.93$\,g, cross-section $A = \pi R^2$, and airspeed
-$\vect{v}_a = \vect{v} - \vect{v}_{\mathrm{wind}}$:
+Let $\vect{p}$ and $\vect{v}$ denote ball-centre position and velocity in a ground-fixed frame, and let $\vect{w}(\vect{p},t)$ be the local wind velocity.
+Define air-relative velocity $\vect{v}_a=\vect{v}-\vect{w}$, airspeed $V=\lVert\vect{v}_a\rVert$, cross-sectional area $A=\pi R^2$, and dynamic pressure $q=\rho V^2/2$.
+Radius $R$ and mass $m$ should describe the ball being modeled; values near 21.34\,mm and 45.93\,g are illustrative inputs, not identities for every ball.
+A quasi-steady drag-and-Magnus model is
 \begin{equation}
 \label{eq:eom}
-m\,\frac{d\vect{v}}{dt} =
-  -\tfrac{1}{2}\rho A C_D \lVert\vect{v}_a\rVert\, \vect{v}_a
-  \;+\; \tfrac{1}{2}\rho A C_L \lVert\vect{v}_a\rVert^2
-     \,(\hat{\vect{\omega}} \times \hat{\vect{v}}_a)
-  \;+\; m\vect{g},
+\dot{\vect{p}}=\vect{v},\qquad
+m\dot{\vect{v}}=-qAC_D\frac{\vect{v}_a}{V}
+                   +qAC_L\vect{e}_L+m\vect{g},\qquad
+\vect{e}_L=\frac{\vect{\omega}\times\vect{v}_a}
+                    {\lVert\vect{\omega}\times\vect{v}_a\rVert}.
 \end{equation}
-with the drag and lift coefficients functions of Reynolds number
-$\mathrm{Re} = 2R\lVert\vect{v}_a\rVert/\nu$ and spin ratio
-$S = R\omega/\lVert\vect{v}_a\rVert$. Fourth-order Runge--Kutta
-integration is ample; carry is evaluated where the trajectory returns to
-launch elevation. Tilting the spin axis by $\theta$ rotates the Magnus
-force off vertical, giving lateral acceleration
-$(F_M/m)\sin\theta$ --- the mechanism behind the 0.7\%-per-degree
-side-curve rule and \cref{eq:spincomponents}.
+Here $\vect{\omega}$ is the physical spin vector and $C_L$ is a \emph{signed} coefficient in the displayed direction.
+This convention assigns lift magnitude $qA|C_L|$; a formula using $\hat{\vect{\omega}}\times\hat{\vect{v}}_a$ instead has an additional factor equal to the sine of the angle between spin and airflow.
+Coefficients fitted under one convention cannot be moved to the other without that conversion.
+With the book's right-handed axes ($x$ forward, $y$ up, $z$ right), positive $z$ backspin and forward air-relative motion give upward lift when $C_L>0$.
+The force law is an approximation to the mean aerodynamic force; it does not represent every unsteady or orientation-dependent force on a real dimpled ball.
 
-\section{Aerodynamic Coefficient Data}
+The unit vectors in \cref{eq:eom} require explicit limiting rules.
+At zero airspeed, use the model's zero-force limit rather than divide by $V$.
+At zero spin or parallel spin and airflow, the cross-product direction is undefined.
+A symmetric Magnus model sets that lift contribution to zero and requires its coefficient to approach zero consistently; an empirical fit measured away from these limits does not establish its own continuation to them.
+For drag force $\vect{F}_D=-qAC_D\vect{v}_a/V$ with $C_D\geq0$, the air-relative power is nonpositive: $\vect{F}_D\cdot\vect{v}_a=-qAC_DV$.
+It can nevertheless do positive work in the ground frame when a sufficiently fast tailwind accelerates the ball.
+Lift in this model is perpendicular to air-relative velocity, not necessarily to ground-relative velocity.
 
-\begin{description}
-\item[Bearman \& Harvey (1976)~\cite{bearmanharvey}.] The canonical
-wind-tunnel dataset on spinning golf-ball models across the flight
-envelope. Dimples drop the critical Reynolds number to
-$\sim5\times10^4$; post-critical $C_D \approx 0.25$ is nearly
-Re-independent; $C_L$ rises with spin ratio from $\approx$0.08 to 0.25
-over $S \approx 0.02$--0.3; hexagonal dimples outperform round ones.
-\item[Smits \& Smith (1994)~\cite{smitssmith}.] The parameterized model
-most widely used in simulators:
+Useful dimensionless inputs are Reynolds number $\mathrm{Re}=2RV/\nu$ and spin ratio $S=R\lVert\vect{\omega}\rVert/V$, with kinematic viscosity $\nu$.
+The angle $\alpha$ between spin and airflow, ball construction and surface condition may also matter.
+A model interface should therefore declare its dependencies and calibration domain, schematically
 \begin{equation}
 \label{eq:smits}
-C_D = C_{D1} + C_{D2}\,S + C_{D3}\sin\!\bigl(\pi\,
-  \tfrac{\mathrm{Re}-A_1}{A_2}\bigr),
-\qquad
-C_L = C_{L1} S^{0.4},
+C_D=f_D(\mathrm{Re},S,\alpha;\vect{b}),\qquad
+C_L=f_L(\mathrm{Re},S,\alpha;\vect{b}),
 \end{equation}
-with $C_{D1}=0.24$, $C_{D2}=0.18$, $C_{D3}=0.06$, $A_1=9\times10^4$,
-$A_2=2\times10^5$, $C_{L1}\approx0.54$, plus a spin-decay law with time
-constant $\approx24$\,s at 100\,mph (roughly 4\%/s early in flight).
-\item[Quintavalla / USGA Indoor Test Range (2002)~\cite{quintavalla}.]
-Six-term polynomial $C_D$/$C_L$ models in Re and $S$ fitted from
-trajectory photography on the USGA ITR; captures the low-speed
-end-of-flight regime better than wind tunnels; the basis of USGA Overall
-Distance Standard conformance testing. The companion method patent
-US6186002~\cite{us6186002} --- determining coefficients from measured
-trajectories --- is the template for calibrating an open model against
-real flights.
-\end{description}
+where $\vect{b}$ denotes a versioned set of ball-specific parameters.
+This is an interface definition, not a numerical fit attributed to a particular author.
+Fits obtained with spin perpendicular to the airflow need an additional justified assumption before use at general $\alpha$.
+
+Spin evolution needs its own equation, for example $I\dot{\vect{\omega}}=\vect{\tau}_{a}$ for an idealized ball with constant scalar moment of inertia $I$ and aerodynamic torque $\vect{\tau}_{a}$.
+An empirical decay law $\dot{\vect{\omega}}=-k\vect{\omega}$ further assumes no change in axis direction from torque, and $k$ may depend on speed and spin.
+Even when physical spin decays, spin ratio can rise as the ball slows.
+For fixed $R$, nonzero spin and positive $V$,
+\begin{equation}
+\label{eq:spinratioevolution}
+\frac{\dot S}{S}
+=\frac{\vect{\omega}\cdot\dot{\vect{\omega}}}{\lVert\vect{\omega}\rVert^2}
+-\frac{\dot V}{V}.
+\end{equation}
+Thus integrating $S$ with a physical-spin decay constant is generally inconsistent unless the airspeed term is included.
+For a varying wind field, $\dot V=\vect{v}_a\cdot\dot{\vect{v}}_a/V$ uses $\dot{\vect{v}}_a=\dot{\vect{v}}-\partial_t\vect{w}-(\vect{v}\cdot\nabla)\vect{w}$, including the wind variation along the ball's path.
+
+\section{What Aerodynamic Data Establish}
+
+Bearman and Harvey's wind-tunnel study compared particular spinning, dimpled ball models~\cite{bearmanharvey}.
+It motivates accounting for Reynolds number, spin and surface geometry; its tested dimple comparison is not a universal ranking of modern balls.
+Smits and Smith~\cite{smitssmith} and Quintavalla~\cite{quintavalla} provide further modeling approaches.
+Quintavalla's author description identifies six-term lift and drag models fitted to Indoor Test Range measurements over driver trajectories.
+That is a calibration strategy, not evidence that any six-term polynomial is accurate outside its fitted conditions or intrinsically superior to wind-tunnel data.
+This review does not prescribe numerical coefficients from an unverified transcription of those models; an implementation must establish the original equations and their domain before adopting them.
+
+An implementer needs the actual coefficient data, normalization, units, fitted ball, validity range and spin-torque law, not just a model name.
+Preserve source tables or reproducible digitization and report extrapolation beyond the calibration domain.
+Fit aerodynamic parameters using independent launch observations and multiple trajectories with varied speeds and spins.
+Otherwise a biased launch angle, unknown wind or a spin error can be absorbed into apparently plausible lift and drag coefficients.
+US6186002 describes determination of coefficients from measured trajectories~\cite{us6186002}; a patent's disclosure supplies a method description, not independent evidence of accuracy or a legal clearance determination.
 
 \begin{implication}
-An implementation should ship Smits--Smith (\cref{eq:smits}) with spin decay as
-the default flight model, structured so a Quintavalla-style six-term fit
-can drop in, and calibrate against measured outdoor trajectories (or
-MLM2PRO reference data) using the US6186002 trajectory-fitting approach.
-Carry disagreements between simulators are dominated by model choice, not
-launch measurement --- version the model and record it with every shot log.
+Version the coefficient data, spin law, atmosphere, wind, ground definition and numerical solver together.
+Validate predicted trajectories on shots excluded from fitting.
+Agreement with another simulator is a comparison of predictions; it does not establish that either prediction matches the physical flight.
 \end{implication}
+
+\section{Numerical Integration and the Landing Event}
+
+Fourth-order Runge--Kutta is one possible integrator, but its order alone does not establish adequate carry accuracy.
+Check convergence as the step is reduced, resolve coefficient transitions, and locate landing between integration steps.
+Define landing as a descending intersection of the ball-centre trajectory with a declared height surface, excluding the launch-time root.
+Returning to launch elevation is only one convention; tee height, uneven ground and a surface referenced to the ball's contact point require explicit treatment.
+Bounce and roll require additional contact and terrain models and are not part of airborne carry.
+
+Landing-time uncertainty matters even if the trajectory integrator is exact.
+Let $a$ be a scalar uncertain input and let the landing event satisfy $G(\vect{p}(t_*,a),t_*,a)=0$.
+For fixed-time sensitivity $Y=\partial\vect{p}/\partial a$, implicit differentiation gives
+\begin{equation}
+\label{eq:landingderivative}
+\frac{dt_*}{da}=-\frac{G_{\vect{p}}Y+G_a}{G_{\vect{p}}\vect{v}+G_t},\qquad
+\frac{d\vect{p}_*}{da}=Y+\vect{v}\frac{dt_*}{da}.
+\end{equation}
+All terms are evaluated at the same landing event.
+The formula assumes differentiability and a transverse crossing, $G_{\vect{p}}\vect{v}+G_t\ne0$; a nearly tangential crossing is poorly conditioned.
+For a vector of uncertain inputs, differentiate with respect to each input component in turn.
+For an output $c(\vect{p}_*,t_*,a)$, also include the explicit terms $c_t\,dt_*/da+c_a$ along with $c_{\vect{p}}\,d\vect{p}_*/da$.
+For downrange position $c=x_*$ with a fixed origin, those explicit terms vanish; the landing-time contribution is already included in $d\vect{p}_*/da$.
+
+A vacuum trajectory makes the missing term easy to see.
+For level launch and landing, $x=v_x t$, $y=v_y t-g_0t^2/2$, and $v_y>0$, the descending root is $t_*=2v_y/g_0$.
+Downrange carry is $c=2v_xv_y/g_0$, so $\partial c/\partial v_y=2v_x/g_0$.
+At fixed time, however, $\partial x/\partial v_y=0$.
+Ignoring the change in landing time would therefore erase the entire vertical-launch-speed contribution to carry uncertainty in this simple example.
 
 \section{Trajectory Estimation and Filtering}
 \label{sec:ekf}
 
-The estimation core of a radar launch monitor is a nonlinear filtering
-problem. State $\vect{x} = (\vect{p}, \vect{v}, S, \theta_{\mathrm{axis}})$;
-process model = \cref{eq:eom}; measurement models:
-radar $h(\vect{x}) = (r, \mathrm{az}, \mathrm{el}, \dot r)$ with
-$\dot r = \vect{v}\cdot\hat{\vect{p}}$, camera $h(\vect{x})$ = pixel
-projections. An extended (or unscented) Kalman filter runs the standard
-recursion; launch parameters are then obtained by \emph{smoothing and
-back-extrapolation} --- fit the entire observed arc and evaluate the state
-at the moment of face separation, which is far more robust than
-differencing the first noisy fixes. Including
-$\theta_{\mathrm{axis}}$ in the state makes spin-axis-from-curvature
-(\cref{sec:spinaxis}) fall out of the filter naturally, and per-measurement
-confidence weighting is the clean way to fuse heterogeneous sensors
-(OPS243-A speed, K-LD7 angles, future camera fixes).
+A useful physical state is $\vect{x}=(\vect{p},\vect{v},\vect{\omega})$, augmented only with additional parameters that the data can constrain.
+For a fixed radar at position $\vect{s}$, range is $r=\lVert\vect{p}-\vect{s}\rVert$ and radial velocity is $\dot r=\vect{n}\cdot\vect{v}$, with $\vect{n}=(\vect{p}-\vect{s})/r$.
+Angles require the radar's own axes; camera pixels require calibrated projection, pose and timing.
+Different sensors therefore need different measurement functions, Jacobians and noise models, even when they share one state estimator.
+Observation windows, processing delays, association of returns to ball or club, and correlated errors belong in that model; treating every output as a simultaneous independent point measurement overstates information.
 
-\begin{implication}
-A two-module radar design correlates angle-radar bursts with the CW
-impact timestamp and reads angles from single detections. Migrating to a
-short EKF smoother over the full K-LD7 ring-buffer burst --- even 10--20
-detections over 50\,ms --- would use all available data, reject outlier
-bins, and yield launch angles with quantified covariance. The same filter
-skeleton later absorbs camera measurements unchanged.
-\end{implication}
+Extended or unscented Kalman filtering and subsequent smoothing provide approximate state estimates conditional on the process and observation models~\cite{sarkkasvensson2023}.
+Backward estimation to ball separation can use the observed arc, but its uncertainty grows with uncertain timing, model error and weak geometric information.
+Including a spin-axis state does not make that axis observable.
+A short arc can be consistent with multiple combinations of launch velocity, wind, lift coefficients and spin; a tight prior may select one combination without the observations independently identifying it.
+Check sensitivity rank and conditioning, residual structure and performance on withheld data, rather than equating a small filter covariance with demonstrated accuracy.
 
-\section{Indoor Extrapolation and Its Errors}
+For the K-LD7 example, use the speed-dependent measurement cadence documented in \cref{app:impl}; a roughly 29\,ms cycle at the stated 100\,km/h example does not supply 10--20 independent detections in 50\,ms.
+Processing a complete burst can help only to the extent that it contains useful, correctly associated observations.
+Neither a smoother nor a confidence weight repairs an incorrect timestamp or a missing observation direction.
 
-Indoors, every system integrates \cref{eq:eom} from launch conditions.
-Error propagation is dominated by spin uncertainty: at driver speeds,
-$\pm300$\,rpm maps to roughly $\pm4$--6\,yd of carry and $\pm1$\,yd of
-side; a $\pm2\degs$ spin-axis error at 2,500\,rpm maps to $\pm3$--4\,yd
-of side at 250\,yd carry. This is why the accuracy literature
-(\cref{ch:accuracy}) finds spin to be the fragile channel indoors for
-radar, and why camera systems --- which measure spin directly --- win the
-indoor comparison structurally.
+\section{Indoor Extrapolation and Coupled Uncertainty}
+
+Let $\vect{a}$ collect launch state, aerodynamic parameters, atmospheric inputs and ground geometry, and let $c(\vect{a})$ be a carry or lateral-distance prediction evaluated at landing.
+For locally smooth behavior and sufficiently small uncertainty,
+\begin{equation}
+\label{eq:flightcovariance}
+\operatorname{Var}(c)\approx J_c\Sigma_aJ_c^{\mathsf T},\qquad
+J_c=\frac{dc}{d\vect{a}}.
+\end{equation}
+The covariance $\Sigma_a$ must retain correlations, including those introduced when launch and aerodynamic parameters are fitted together.
+This expression covers uncertainty in the declared inputs, not every discrepancy between the chosen force law and reality.
+Model discrepancy needs separate evidence from held-out trajectories; combine it probabilistically only after stating its dependence on the input errors.
+For nonlinear, multimodal or threshold-sensitive predictions, propagate representative joint samples and report the resulting distribution rather than only a local Gaussian approximation.
+
+There is consequently no universal conversion from 300\,rpm of spin error, two degrees of axis error, or a 0.01 change in drag coefficient to a fixed number of yards.
+Report the baseline launch, ball model, atmosphere, perturbation and landing convention with any numerical sensitivity.
+Likewise, tilting spin changes lift direction only under stated geometric and coefficient assumptions; lateral displacement integrates that changing force over the flight and is not a universal percentage of carry per degree.
+An optical spin observation can constrain an indoor extrapolation, but its calibration and rotation ambiguity still need validation.
+The evidence question is which uncertain inputs control this shot's prediction and how well they were observed, not which sensor family wins by definition.

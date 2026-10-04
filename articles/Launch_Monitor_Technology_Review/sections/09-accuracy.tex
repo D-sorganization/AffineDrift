@@ -1,72 +1,141 @@
 \chapter{Accuracy: The Independent Evidence}
 \label{ch:accuracy}
 
-\section{Peer-Reviewed Validation}
+Accuracy is a property of a specified quantity, instrument configuration and operating condition.
+Ball speed at separation, club speed at a face point before impact, and predicted carry are different measurands with different validation requirements.
+A study can establish useful agreement for some of these without validating every number on a display.
+The evidence below separates comparisons against an independently characterized reference, repeated-swing reliability, and agreement between commercial devices.
 
-\textbf{Leach, Forrester, Mears \& Roberts (2017)}~\cite{leach2017}
-remains the key criterion study: 240 shots (driver, 7-iron, wedge)
-measured simultaneously by a TrackMan Pro~IIIe, a Foresight GC2+HMT, and
-a four-camera 5,400\,fps optical reference. Findings: ball parameters
-agreed well on both devices (TrackMan clubhead-speed median difference
-$-0.4$\,mph; ball speed $+0.2$\,mph; launch angle $0.0\degs$), but
-\textbf{club parameters were materially worse for both} --- the authors
-endorse ball data for research use and advise caution on club data. This
-is the empirical face of the directness hierarchy of
-\cref{sec:hierarchy}: what is measured agrees; what is derived diverges.
+\section{Comparison Against an Optical Reference}
 
-\textbf{TrackMan 4 indoor reliability (J. Sports Sciences,
-2024)}~\cite{tm4reliability}: within- and between-session reliability in
-high-level golfers indoors --- ICC 0.99 for club speed, 0.97--0.99 for
-ball speed, but \textbf{spin-rate ICC as low as 0.02--0.60}: even the
-reference radar's indoor spin channel is fragile when flight is
-truncated.
+Leach, Forrester, Mears and Roberts~\cite{leach2017} recorded 240 shots from eight golfers using a driver, 7-iron and utility wedge, comparing TrackMan Pro~IIIe and Foresight GC2+HMT with a four-camera 5,400\,Hz GOM system.
+The experiment used the then-current software in January 2015.
+The authors characterized the reference with a calibration artefact, position tests, simulated noise propagation and a separate spinning-sphere experiment.
+Their simulated ball-parameter uncertainties were 0.06\,mph for speed, $0.01\degs$ for launch angle and direction, and 14\,rpm for spin; the spinning-sphere comparison gave a 9\,rpm uncertainty.
+These are setup-specific estimates under the paper's stated uncertainty convention, not proof of an error-free reference.
+The same propagation experiment was not performed for the club quantities.
 
-A 2025 Mevo+ vs.\ TrackMan~4 indoor agreement study
-exists~\cite{mevoplusstudy} (abstract-level access only at review time),
-extending the same pattern down-market.
+Ball parameters generally agreed more closely than club parameters, but the details resist a simple radar-versus-camera ranking.
+Table~4 of the paper gives pooled club-speed median differences (device minus reference) of $-1.1$\,mph for TrackMan and $+2.8$\,mph for Foresight, with interquartile intervals of $[-1.9,0.1]$ and $[1.4,4.5]$\,mph.
+TrackMan's often-quoted $-0.4$\,mph club-speed median is the \emph{driver-only} result in Table~5.
+Its $0.0\degs$ launch-angle median is also driver-only; the pooled median is $0.1\degs$.
+Pooling or switching clubs changes the question being answered.
 
-\section{Robot and Industry Testing}
+The paper's ``research grade'' fractions also need their original definition.
+The tolerance interval was centered on each sample's \emph{median difference}, rather than on zero difference from the reference.
+Thus the reported 54\% of TrackMan and 29\% of Foresight club-speed values within the $\pm1$\,mph research band describe spread after centering.
+They are not the fractions of all attempted shots with absolute club-speed error below 1\,mph.
+The thresholds were selected by the authors for research and coaching purposes; they are not a universal instrument standard.
+Report bias, spread, tolerance definition and denominator together.
 
-Golf Laboratories robot testing (reported via Foresight and third
-parties) puts GCQuad center-strike spin standard deviation at
-$\approx$82\,rpm versus $\approx$175\,rpm for TrackMan~4 --- the
-photometric spin advantage in its clearest form~\cite{golflabsrobot}.
-MyGolfSpy's indoor comparison against a GCQuad reference found the
-camera-assisted MLM2PRO among the tightest budget units for launch,
-spin, and carry, with radar-only units (R10, original Mevo) trailing
-indoors~\cite{mygolfspyindoor}. Manufacturer-quoted specs bracket the
-market: $\pm1$\,mph ball speed and $\pm1\degs$ launch angles are common
-claims; club-face claims ($\pm2\degs$, ``calculated'') are visibly
-weaker.
+Availability was a separate limitation.
+TrackMan returned ball and club-speed data for about 98\% of trials, but the other club parameters for 62\% overall and only 19\% of utility-wedge trials.
+Foresight tracked the ball in 90\% and the club in 75\% of trials.
+The simultaneous laboratory arrangement required compromises in lighting, markers and nearby equipment that the authors identified as possible interference sources.
+These return rates characterize that experiment, not every current model or installation.
+TrackMan spin values flagged as calculated were excluded from the analysis.
 
-\section{What Drives Inter-Device Disagreement}
+Several disagreements also concern definitions.
+The reference club velocity used a manufacturer-supplied centre-of-gravity location, while a launch monitor may track a different point on a rotating head.
+The study compared different face-normal definitions for the two devices and could not exactly reproduce all vendors' impact-time conventions.
+Such differences are physically consequential, not merely interchangeable labels.
+In this experiment, some impact-model-derived orientation results agreed more closely than optical orientation results.
+The lesson is to validate each estimator and measurand; ``measured'' does not automatically mean accurate and ``derived'' does not automatically mean poor.
 
-Synthesizing the validation literature and the architecture analysis:
+\section{Reliability Across Repeated Swings}
+
+Bishop et al.~\cite{tm4reliability}, in a 2023 journal volume published online in 2024, studied 13 male golfers performing ten shots with their own driver in each of two indoor sessions.
+The paper reported high within-session intraclass correlation coefficients (ICCs) for club speed (0.99) and ball speed (0.97--0.99), while spin ICCs were 0.60 and 0.02; the between-session spin ICC was 0.15.
+These findings concern repeatability of the combined golfer, protocol and instrument.
+Without a simultaneous independent spin reference, they do not isolate radar spin error from actual variation in impact and ball launch.
+Nor does a high speed ICC establish a small absolute speed bias.
+
+An ICC compares variance components and depends on the variation among the subjects or shots being compared.
+In a simple random-intercept model, it has the form $\sigma_b^2/(\sigma_b^2+\sigma_w^2)$, where $\sigma_b^2$ is between-subject variance and $\sigma_w^2$ includes within-subject variation and measurement error.
+This schematic formula is not a substitute for specifying the fitted ICC model, agreement definition and single- or average-measurement target.
+A more heterogeneous group can produce a higher ICC without any improvement in the instrument.
+For monitoring one golfer, absolute uncertainty and the repeatability of the chosen session summary matter alongside relative reliability.
+
+The Bishop tables label spin dispersion in degrees per second and the abstract mislabels carry dispersion in mph, while its tables use yards for carry.
+Do not silently reinterpret the spin units as rpm or propagate the carry typo into a device specification.
+The source supports the reported ICC comparison, but the ambiguous spin units limit reuse of its dimensional error figures.
+
+The uncertainty of a change also involves both measurements.
+For two session estimates with error standard deviations $s_1,s_2$ and error covariance $c_{12}$,
+\begin{equation}
+\label{eq:changeuncertainty}
+ s_{\Delta}^2=s_1^2+s_2^2-2c_{12}.
+\end{equation}
+Under an independent, equal-precision, approximately normal error model with known error standard deviation $s$, a two-sided 95\% noise threshold is about $1.96\sqrt{2}\,s$, not $2s$.
+Estimating that standard deviation from limited data introduces additional uncertainty and requires a corresponding interval method.
+This derivation assumes that $s$ describes the actual session estimator being compared and excludes systematic drift.
+It does not make every larger change practically important or prove that training caused the change.
+Repeated-swings variability, alignment changes and instrument error all need consideration when using such a threshold.
+
+\section{Agreement Between Commercial Monitors}
+
+Bliss and Langdown's full paper~\cite{mevoplusstudy} is available, replacing the earlier abstract-only account.
+Published online in December 2025 in a 2026 volume, it compares Mevo+ with TrackMan~4 indoors using one golfer and three clubs.
+Of 118 driver, 118 seven-iron and 174 pitching-wedge attempts, 58, 80 and 69 were retained after exclusions for missing fields, estimated spin or severe mishits: approximately 49\%, 68\% and 40\%.
+These are retained analysis fractions, not either device's standalone detection rate.
+Table~2 reports a seven-iron ball-speed consistency ICC of 0.996 alongside a mean TrackMan-minus-Mevo+ difference of $-3.03$\,mph; its absolute-agreement ICC is 0.90 with a wide interval from $-0.02$ to 0.97.
+The protocol used mean-rating ICCs and reported both consistency and absolute agreement.
+Results describe the selected paired observations from that golfer and setup; they do not establish error against an independent physical reference or performance on the excluded attempts.
+The paper's criterion of 95\% of differences inside computed 95\% agreement limits does not specify a practically acceptable error width.
+
+More generally, consistency can remain high despite an additive calibration offset.
+An average-measures ICC targets an average of ratings, rather than the reliability of one instrument reading; its value should not be quoted as a single-reading accuracy specification.
+Limits of agreement and confidence intervals answer different questions: the former describe the spread of paired differences, while the latter quantify uncertainty in estimated statistics.
+For approximately normal differences, $\bar d\pm1.96s_d$ estimates population agreement limits; their width must be compared with a tolerance chosen for the intended use.
+Merely finding most observations inside those fitted limits cannot establish interchangeability.
+
+If two devices measure the same scalar measurand with errors $e_A$ and $e_B$, the variance of their difference is
+\begin{equation}
+\label{eq:paireddevicevariance}
+\operatorname{Var}(e_A-e_B)
+=\operatorname{Var}(e_A)+\operatorname{Var}(e_B)
+ -2\operatorname{Cov}(e_A,e_B).
+\end{equation}
+Agreement alone cannot identify both devices' error variances or expose a bias they share.
+This reasoning presumes matched reference points, timing and definitions; otherwise the physical measurand difference contributes too.
+Comparing two indoor carry predictions adds another layer because both outputs depend on launch estimates and flight models.
+
+\section{Robot Tests, Specifications and Causal Interpretation}
+
+Robot and industry tests can be useful when the protocol and raw paired observations are available.
+A smaller standard deviation of displayed spin over robot shots is not, by itself, evidence of smaller spin-measurement error.
+True impact variation, ball differences, rejection rules, averaging and output smoothing can all change that standard deviation.
+A constant but biased output would have excellent repeatability and poor accuracy.
+Comparing these output standard deviations cannot establish a universal photometric advantage without an independent reference and an uncertainty analysis of the test.
+The industry reports cited elsewhere in this review~\cite{golflabsrobot,mygolfspyindoor} should be read as protocol-specific comparisons, not replacements for that analysis.
+Likewise, a manufacturer's tolerance requires its conditions, confidence convention and parameter definition before it can be compared with a study's spread statistic.
+
+\section{A Validation Protocol That Supports the Intended Claim}
 
 \begin{enumerate}
-\item \textbf{Reference-point differences} in club speed (geometric
-center vs.\ fastest return) --- several mph of systematic spread.
-\item \textbf{Derived face data}: D-plane inversion amplifies
-launch-direction bias by $\sim$1.15$\times$ and cannot see gear effect,
-so radar face angle diverges from optical face angle most on off-center
-strikes.
-\item \textbf{Indoor spin}: sideband SNR collapses on short flights and
-clean balls; systems silently switch to estimation, and estimated spin
-feeds the carry model.
-\item \textbf{Flight-model differences}: identical launch conditions
-produce different simulated carries across vendors; this is a modeling
-disagreement, not a measurement one.
-\item \textbf{Alignment}: a unit misaligned to the target line biases
-path, face, and launch direction coherently --- the cheapest error to fix
-and the most common in practice.
+\item \textbf{Define the measurand.}
+Specify units, coordinate frame, reference point, event time and whether carry is observed or simulated.
+For club speed, a constant per-club offset is not a substitute for transforming velocities between points on a rotating rigid body (\cref{sec:pathreference,app:screw}).
+\item \textbf{Characterize the reference.}
+Calibrate space and time and document reference uncertainty over the tested range.
+A consumer monitor can be a useful comparator, but agreement with it does not certify physical accuracy.
+RPT optical markings and RCT radar-reflective construction serve different measurement routes; choose balls supported by each instrument's actual spin mode (\cref{app:impl}).
+\item \textbf{Retain every attempt.}
+Report attempted shots, returned values, rejected values and estimated fallbacks separately for each parameter and condition.
+Analyze conditional accuracy among returned observations alongside total availability.
+Missingness may depend on club, speed, strike location and spin; neither dropping failures nor assigning them zero error is defensible.
+\item \textbf{Separate calibration from validation.}
+Freeze calibration, model versions and rejection criteria before testing held-out shots, golfers or sessions appropriate to the deployment claim.
+If a bias correction is fitted, report its uncertainty and validate it independently.
+\item \textbf{Report effect sizes and uncertainty.}
+Show paired differences, bias, spread, outliers and uncertainty intervals in physical units, stratified by relevant conditions.
+Account for repeated shots within golfers and sessions when estimating uncertainty; hundreds of shots from one person are not hundreds of independent golfers.
+Use predeclared tolerances tied to the coaching, fitting or research decision.
 \end{enumerate}
 
 \begin{implication}
-For validation against a consumer unit such as the MLM2PRO (a common reference
-instrument): compare ball speed and launch angles directly; compare spin
-only on RPT/RCT marked balls where the MLM2PRO's measurement is
-camera-based; expect club-speed offsets from reference-point differences
-and calibrate a per-club correction rather than chasing agreement; and
-log raw I/Q captures so spin-detection improvements can be replayed
-against historical shots.
+Validation follows the whole chain from observation to decision.
+Timing and geometry determine what is observed; the estimator determines what is inferred; the flight model determines what is predicted.
+Log those distinctions with the uncertainty and version of every reported quantity, and preserve replayable observations where feasible.
+That makes a disagreement investigable without assuming that the more expensive device, the smaller variance or the label ``measured'' identifies the correct answer.
 \end{implication}

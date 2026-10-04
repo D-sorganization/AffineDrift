@@ -1,0 +1,33 @@
+### Concrete Defects & Mathematical Inventory
+
+#### 1. Radar Kinematics & Spin Window
+* **Unambiguous Velocity Calculation:** At $f_0 = 24.125\text{ GHz}$, $\lambda = c / f_0 \approx 12.427\text{ mm}$. For complex I/Q at $f_s = 30\text{ kSPS}$, Nyquist frequency is $[-15, +15]\text{ kHz}$. Maximum Doppler speed is $v_{\max} = \frac{f_{\text{Nyq}} \lambda}{2} = \frac{15000 \times 0.012427}{2} \approx 93.20\text{ m/s} \approx \mathbf{208.5\text{ mph}}$ ($\pm 209\text{ mph}$ is **correct**).
+* **Bin Resolution:** $\Delta f = \frac{30000}{128} \approx 234.375\text{ Hz} \implies \Delta v = \frac{234.375 \times 0.012427}{2} \approx 1.456\text{ m/s} \approx \mathbf{3.26\text{ mph}}$ ($\approx 3.3\text{ mph}$ is **correct**; $T = 128 / 30000 \approx 4.267\text{ ms}$).
+* **Defect:** Spin at $3000\text{ RPM} = 50\text{ Hz}$ has a period of $T_{\text{spin}} = 20\text{ ms}$. Requiring $\ge 40\text{ ms}$ captures $\ge 2$ full rotational cycles, but claiming $\ge 40\text{ ms}$ is strictly required for Doppler sideband resolution conflates resolving sideband spacing ($\Delta f = 50\text{ Hz} \implies T \ge 1/50\text{ Hz} = 20\text{ ms}$) with multi-cycle averaging.
+
+#### 2. Dechirping & Spectrum Method Robustness
+* **Defect:** Shifting STFT frames by the ridge frequency eliminates translation carrier drift, not intra-frame chirp rate ($dv/dt$). 
+* **Defect:** Harmonic Product Spectrum (HPS) is **not** robust to missing fundamental/harmonics (multiplying zero bins nulls or misplaces the peak). Cepstrum requires log-spectral periodicity; attributing "equal spacing over $\ge 3$ frames" directly to patent qualification without a cited patent claim number is an **unsupported guarantee**.
+
+#### 3. Geometric Center Speed & Smash Filtering
+* **Defect (Mathematical Error):** Trimming the top and bottom deciles of the Doppler velocity spectrum across clubhead rotation removes the toe/heel extremes, but the median of the residual does **not** mathematically equal geometric center speed unless mass/reflectivity distribution and projected velocity gradients are perfectly symmetric across the radar beam.
+* **Defect:** Rejecting shots above a smash ceiling as a definitive "toe-lock signature" is an **unsupported guarantee**; high smash factor also arises from thin hits, non-standard COR/CT, or calibration offsets.
+
+#### 4. K-LD7 Hardware Specs
+* **Defect (Factually False Hardware Claim):** The RFbeam K-LD7 does **not** expose raw ADC samples over its serial/SPI interface; it outputs processed target lists/tracking data from an onboard DSP unless factory debug firmware is used.
+* **Defect:** Patches on standard K-LD7 are typically separated by non-$\lambda/2$ spacing or asymmetric Rx baselines depending on the specific patch array revision; verifying baseline requires the manufacturer RF layout datasheet.
+
+#### 5. Face Angle & Spin-Axis Sensitivity
+* **Defect:** Inverting launch direction: $\theta_{\text{launch}} \approx r \theta_{\text{face}} + (1-r)\theta_{\text{path}}$ yields $\theta_{\text{face}} = \frac{\theta_{\text{launch}} - (1-r)\theta_{\text{path}}}{r}$. The stated weights ($0.87, 0.75$) are empirical approximations (TrackMan/TPI ball-flight laws), not physical invariants.
+* **Defect:** A "universal $\pm 6^\circ$ per 0.14-inch miss" ignores impact clubhead MOI, ball stiffness, and head mass (gear effect varies drastically between a 460cc driver and a bladed iron).
+
+#### 6. Optical Geometry, Pulse Freezing & Sound Trigger
+* **Calculations:** 
+  * $150\text{ mph} \approx 67.056\text{ m/s}$. At $300\text{--}500\,\mu\text{s}$, displacement is $20.1\text{--}33.5\text{ mm}$ ($2.0\text{--}3.35\text{ cm}$, **correct**).
+  * $3000\text{ RPM} = 18^\circ/\text{ms} \implies 400\,\mu\text{s} \times 18^\circ/\text{ms} = \mathbf{7.2^\circ}$ (**correct**).
+* **Defect (Motion Blur):** A pulse width of $50\,\mu\text{s}$ at $67.06\text{ m/s}$ results in $3.35\text{ mm}$ of motion blur ($\approx 8\%$ of ball diameter $\approx 100+$ pixels). Stating "tens of microseconds" freezes high-speed ball motion is false; exposure must be $\le 2\text{--}5\,\mu\text{s}$.
+* **Defect:** Claiming a $10\,\mu\text{s}$ sound trigger latency while omitting the $\approx 343\text{ m/s}$ acoustic propagation delay ($1\text{ m} \approx 2.91\text{ ms}$) is a critical latency defect.
+* **Defect:** Calling $7.2^\circ$ rotation "comfortably unaliased" without knowing pattern symmetry (e.g., standard dimple symmetry or 2-fold logo markings aliasing at $180^\circ/N$) is an **unsupported guarantee**.
+
+#### 7. Ball Pattern Interchangeability
+* **Defect:** RPT (Rapsodo Patterned Technology, high-contrast visual dot matrix for optical tracking) and RCT (Radar Capture Technology, internal metallic radar pattern for Doppler spin modulation) are **not interchangeable**; MLM2PRO requires RPT for camera-based spin and cannot read spin optically from plain RCT balls.
