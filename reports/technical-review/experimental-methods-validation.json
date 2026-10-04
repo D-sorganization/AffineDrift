@@ -1,0 +1,91 @@
+{
+  "issue": 4898,
+  "epic": 4009,
+  "status": "Complete chapter source and scoped PDF accepted; protected delivery pending",
+  "accepted_source_commit": "de99d7032d377d7785582bf95b488a6b0d2c32b2",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_III/chapters/ch07_experimental_methods.tex": "fce81b65e3c94e57f085b3e798d633beb19292ef78a3ac16cccaad902dfad771",
+    "articles/The_Geometry_of_Motion/Volume_III/main.tex": "5da5c3f5d64a6f0f4cffa875d009c6c57e83452dffa031a02809c6d5589df44f",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "a9fba4c3e05692043abc64ad72b4670cd52764bac296fd0d95f68acd5159e269",
+    "articles/The_Geometry_of_Motion/Volume_III/main.pdf": "7d936b5063816634c651219368c3817ead5762fabbb9f01c977664cf338c1f50",
+    "tests/test_experimental_methods_listing.py": "d0e1d4e4b0f5d36b11ed91fd304cadc41692245516c32bb91f1d4440215f34a5",
+    "reports/technical-review/experimental-methods-independent-checks.json": "3d015e255e187d4f5606bad08421c153d5e685a1ab9bc9ae1058a6a6c893ec67",
+    "docs/development/technical-review/experimental-methods-review/review-notes.md": "a7a20458c558f2e0c8ffaa7b5f75355e23cdce6f239404a54c29809785d03af7"
+  },
+  "scope": "Complete experimental-methods chapter; no whole-volume, empirical sensor or biological certification",
+  "full_regression": {
+    "head": "de99d7032d377d7785582bf95b488a6b0d2c32b2",
+    "passed": 6880,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 387.59,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/experimental-methods-review/full-tests.txt",
+    "notes": "Initial five stale publication dependency bindings repaired; original failed regression retained. No scientific chapter change in repair."
+  },
+  "pdf": {
+    "pages": 73,
+    "printed_entries": 38,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3\u20136, 51\u201357 and 71\u201373; complete affected chapter, preface/TOC and bibliography",
+    "build_exit": 0,
+    "build_log": "docs/development/technical-review/experimental-methods-review/final-pass2.txt",
+    "limits": "Other chapters and historical duplicate figure destinations are outside scoped acceptance"
+  },
+  "mathematics": {
+    "record": "reports/technical-review/experimental-methods-independent-checks.json",
+    "cases_each": 100,
+    "threshold": 1e-9,
+    "scope": "Four manufactured identities; not physical sensor validation"
+  },
+  "delegation": {
+    "helpers": 4,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only; complete answers lead-adjudicated in review notes"
+  },
+  "delivery": {
+    "status": "Not yet published",
+    "base": "fix/camera-survey-review",
+    "dependency": "PR 4899",
+    "next": "Publish regular PR and verify protected delivery and canonical hashes on fetched main"
+  },
+  "prior_acceptance_reconciliation": {
+    "unchanged_paths": [
+      "articles/Launch_Monitor_Technology_Review/sections/05-camera-systems.tex",
+      "articles/Launch_Monitor_Technology_Review/sections/06-commercial-survey.tex",
+      "articles/Launch_Monitor_Technology_Review/preamble.tex",
+      "articles/Launch_Monitor_Technology_Review/references.bib",
+      "articles/Launch_Monitor_Technology_Review/main.pdf",
+      "articles/Launch_Monitor_Technology_Review/research/camera-survey-review-20261004.md",
+      "reports/technical-review/camera-survey-independent-checks.json"
+    ],
+    "intentional_changed_paths": [
+      "articles/The_Geometry_of_Motion/Volume_III/main.tex",
+      "articles/The_Geometry_of_Motion/geometry_of_motion.bib",
+      "articles/The_Geometry_of_Motion/Volume_III/main.pdf"
+    ],
+    "explanation": "Volume III PDF/main and shared bibliography supersede prior artifacts. Camera-book sources and PDF remain unchanged."
+  },
+  "metadata_checks": {
+    "passed": 37,
+    "exit_code": 0,
+    "log": "docs/development/technical-review/experimental-methods-review/acceptance-metadata-tests.txt"
+  },
+  "post_regression_annotation": {
+    "commit": "9e9e880c415da089c0ce9df7bbbcdb8ecbc00938",
+    "path": "tests/test_experimental_methods_listing.py",
+    "original_sha256": "847791442c3644232e3fe6f36add7440a8abdf74ed2733ddd6fe46796c73182b",
+    "scope": "Comments only: narrow Semgrep annotation documents repository-owned fixed input. Executable behavior unchanged; all 17 tests and five pre-PR gates repeated successfully."
+  },
+  "pre_pr": {
+    "base": "b33465fd3",
+    "head": "9e9e880c415da089c0ce9df7bbbcdb8ecbc00938",
+    "five_gates": "passed",
+    "mapped_tests": 17,
+    "log": "docs/development/technical-review/experimental-methods-review/pre-pr.txt"
+  }
+}
