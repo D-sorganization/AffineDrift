@@ -94,6 +94,7 @@ ALLOWED_TRACKED_ROOT_DIRECTORIES: frozenset[str] = frozenset(
         "assessments",
         "benchmarks",
         "books",
+        "changes",
         "config",
         "content",
         "content-development",
