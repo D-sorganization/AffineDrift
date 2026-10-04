@@ -1,3 +1,13 @@
+# Volume II CI Evidence Boundary Repair — #4864
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4869 remains unmerged with guarded squash auto-merge enabled. CI Standard 37175635139 failed on head 53e4676ee1e2ffa32a05257cca64913fcbc25769: the clean site render removed a preparation record under docs/development referenced by four findings. A canonically formatted copy with identical parsed JSON content now lives at reports/technical-review/volume2-consistency-preparation.json, and those findings point there. The original accepted source a167deda0e90b6282d5c02e94bbfb82e5ac59862 and all eleven frozen files remain unchanged. The new file is separately recorded as delivery support; no historical source acceptance was rewritten.
+
+The new regression covering finding evidence outside generated output failed before the repair. Afterward, 70 selected evidence/book/trust/SPEC checks passed in 31.38 seconds. The previous route-review pruning regression also passed during red verification. No full-suite repeat is claimed for this metadata/test-only correction. A thirteenth successful supplied-text agy CLI Gemini 3.8 Flash helper supported delivery turnover; lead verified and corrected its draft. Push this fix, watch CI on the resulting exact remote head, verify actual remote-main bytes, then release #4864's lease and presence (current expiry approximately 05:52 UTC).
+
+Separately claimed #4865 uses C:/Users/diete/Repositories/Worktrees/AffineDrift-shared-nomenclature-review, branch fix/shared-nomenclature-review, session technical-review-20261004-shared-nomenclature (expiry approximately 06:08 UTC). Its source and six PDFs are revised; 94 focused checks pass, 18 notation pages plus 17 adjacent pages have been inspected, and independent mechanical identities pass. Publication validation/acceptance/commit remain underway. Integrate this parent delivery repair before publishing the child. Do not mix its intentionally newer PDFs into the #4869 delivery branch. #4868 remains queued. Preserve all raw QA. The full-corpus goal remains active; never create draft PRs. Earlier sections below are historical checkpoints.
+
+---
+
 # Development Log — AffineDrift
 
 State table for every feature in flight in this repository. Update
@@ -19,9 +29,20 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4863 · Underactuation Chapter Review
+### DL-#4864 · Volume II Consistency Review
 
 - **State:** in_review
+- **Owner:** codex
+- **Issue:** #4864; epic #4009 / corpus #4021
+- **Branch:** fix/volume2-consistency-review
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4869
+- **Summary:** Complete combined-edition review and confirmed web terminology/landing/preface corrections. All eleven body chapters and recorded ancillary/evidence material read; mathematical/prose/header comparisons and eight figure pages inspected during preparation.
+- **Evidence:** reports/technical-review/volume2-consistency-prior-review.json; docs/development/technical-review/volume2-consistency-preparation.json. Parent acceptance stays on the #4867 delivery branch; changed shared artifacts require new scoped evidence.
+- **Next step:** Full regression at a167deda0e90b6282d5c02e94bbfb82e5ac59862 passed 6810, skipped 29, deselected 210, with 93.24% src coverage in 872.43 seconds. Eleven frozen files bind four new findings while preserving prior review identities. Two combined originals and landing/preface receive scoped corpus updates; #4865/#4868 remain open. Regular PR #4869 is open with guarded squash auto-merge armed. Post-binding 100 selected cases pass with one existing skip; exact final-head CI and remote-main verification remain.
+
+### DL-#4863 · Underactuation Chapter Review
+
+- **State:** shipped
 - **Owner:** codex
 - **Issue:** #4863; epic #4009 / corpus #4021
 - **Branch:** fix/underactuation-review
@@ -29,6 +50,9 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Complete chapter and corresponding combined-volume blocks reviewed; metric decay assumptions and scope clarified while preserving prior mechanics. Eight supplied-text Flash helpers adjudicated. Fifteen print chapter pages plus revised title and twenty web captures inspected; final four browser/axe cells pass.
 - **Evidence:** reports/technical-review/underactuation-review.md; 63 focused checks, 208 content cases and 16 publication gates pass. All 72 protected files and 250 other route identities preserved.
 - **Next step:** Full suite at 0160547578c00a8cb711f6246c3c1480d48dc567 passed 6810 with 93.24% src coverage. Subsequent eight heading-only prefixes pass 63 focused, 208 content, five gates and four browser/axe cells; mathematical text and PDFs unchanged. Accepted source 30625cf420f79ed7ffbe070a6322d0f5903dc025 binds twelve files and four findings. The 63 post-binding checks pass and checkpoint e12767c10 is pushed. Parent update bfebb9d5210ccc3c0e47d92f3e8b63c4ef014d24/main af4c2d42e is integrated; 100 tests pass with one skip. Integration 63812c493 is pushed. Parent #4862 is verified on remote main at 48261ef8587095832b3360648f4cc6d444d6c36b and integrated with the child tree unchanged. Regular PR #4867 is open with guarded squash auto-merge armed. Verify final-head CI and remote-main delivery. Read-only whole-book preparation and confirmed missing HTML terms are queued under unclaimed #4864. No whole-book, empirical or live-site acceptance.
+
+
+- **Verified delivery:** PR #4867 merged as `897dd890704a18481ba229d35add610694da0285`; exact tree, 27 changed paths, 12 accepted scientific files and 72 prior files verified on remote main. CI Standard 37170328750 passed; lease/presence released.
 
 ### DL-#4860 · Passive-Stabilization Chapter Review
 

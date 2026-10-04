@@ -1,24 +1,27 @@
 ---
 title: "The Geometry of Motion — Volume II: Control Is Motion"
-description: "Explores trajectory-centric nonlinear control, geometric mechanics, transverse dynamics, and coordinate-free formulations for athletic movement."
+description: "Develops geometric mechanics and nonlinear control for feasible motion, disturbance response, and impact outcomes."
 ---
 
-**Volume II: Control Is Motion** extends the tangent-space framework developed in Volume I into trajectory-native nonlinear control design and athletic movement architecture. 
+**Volume II: Control Is Motion** connects the geometric tools of Volume I to the design and analysis of movement. For a golf swing, the question is how the body and club can produce a desired impact outcome through a feasible motion, and how sensitive that outcome is to variation.
 
-In classical feedback engineering, control objectives are overwhelmingly formulated as setpoint regulation around an isolated static equilibrium point. In biological and athletic mechanics, however, movement is fundamentally orbital: the system executes high-velocity, non-equilibrium dynamic maneuvers where timing, configuration, velocity-dependent Coriolis coupling, and impact conditions interact continuously.
+Configuration, timing and control must be considered together. Traversing the same configuration path at a different speed changes velocity, inertial loads and required effort. Ground and grip constraints restrict compatible motion; available inputs limit which accelerations can be produced. Impact evaluates the resulting motion at an event whose time may itself change under a perturbation.
 
 ## The 'Control Is Motion' Paradigm
 
-**Control Is Motion (CIM)** organizes control design around a central geometric principle: control inputs should not be treated as arbitrary force commands driving toward a static setpoint, but as geometric deformations of a nominal reference trajectory in state space. Rather than forcing a high-dimensional system onto an unnatural equilibrium, the controller shapes the orbit, its transverse convergence funnel, and its phase progression.
-
-Mathematically, for a smooth control-affine system $\dot{x} = f(x) + G(x)u$ with nominal reference trajectory $x^*(t)$, the local effectiveness of feedback is evaluated through a transverse projection:
+For a declared smooth control-affine mode, a nominal trajectory needs a compatible admissible input:
 
 $$
-\delta \dot{x}_\perp = A_\perp(t) \delta x_\perp + B_\perp(t) \delta u
+\begin{aligned}
+\dot{x}_d(t)&=f(x_d(t),t)+G(x_d(t),t)u_d(t),\\
+u_d(t)&\in\mathcal{U}(x_d(t),t).
+\end{aligned}
 $$
 
-where $\delta x_\perp$ represents perturbation dynamics transverse to the nominal orbit $x^*(t)$, and $A_\perp(t), B_\perp(t)$ denote projected time-varying Jacobian matrices. Orbital stability is established by synthesizing transverse contraction funnels that bound deviations across phase transitions rather than requiring asymptotic arrival at a static point.
+Here $x_d$ is the nominal state, $u_d$ the input, $f$ the drift field and $G$ the input matrix field. State and contact constraints must also hold. This is a model for one smooth mode; actuator states and contact transitions require their own equations when included.
 
-The chapters below provide the complete unabridged text, derivations, algorithms, and simulation analyses for Volume II.
+Regulation, tracking, path following, event objectives and orbital stabilization are complementary task specifications. A finite golf swing need not be a periodic orbit, and an along-path perturbation can still alter impact speed or contact time. Transverse analysis requires valid phase coordinates and the terms introduced by a moving basis. A local linear calculation can guide feedback design; a nonlinear funnel additionally requires verification over its stated region, input limits, disturbances and relevant transitions.
+
+The chapters develop these connections through derivations and worked model examples. The closing golf case study sets out a proposed investigation. Numerical consistency, a verified statement about a declared model, and experimental validation of human movement are distinct forms of evidence.
 
 {{< include volume2_content.qmd >}}
