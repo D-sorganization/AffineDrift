@@ -1,3 +1,7 @@
+# DL-#4890 — Implementation Appendix Source Checkpoint
+
+2026-10-04: completed full original/revision reading and primary-source checks. Corrected Doppler/window claims, dechirping, club reference-point interpretation, hardware cadence, sensor observation functions and Jacobians, EKF/RTS assumptions, event timing, inverse-club priors, optical blur/overlap and held-out validation. Five read-only Flash helpers were lead-adjudicated. Manufactured arithmetic and 100 finite-difference Jacobians pass. Canonical PDF rebuilt to 97 pages with 102 printed references; scoped final visual review passed after fixing a stranded heading. Full frozen regression and protected delivery remain. See the implementation dossier for derivations, source-reading bounds and rejected helper assertions.
+
 # DL-#4888 — Unverified Date Presentation
 
 The browser exposed Invalid Date in two shared presentation surfaces. TDD reproduced both failures, then a scoped title-placeholder replacement and metadata-aware span fixed them without replacing dates in article prose. Seven new cases and existing metadata/header suites pass; browser output and delegation limits are recorded. Frozen source 70337154c passed 6,863 tests, 29 skips, 210 deselections and 60 warnings in 593.82 seconds, with 93.24% src coverage and no tracked edits during execution. Article acceptance metadata through 5ccb2d600 is integrated. Five final pre-PR gates passed over explicit source refs using repaired tool ca802ada, with 15 mapped tests; 44 metadata/root/SPEC tests passed. Protected delivery remains.

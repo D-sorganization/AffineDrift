@@ -1,203 +1,276 @@
 \chapter{Detailed Implementation Guidance}
 \label{app:impl}
 
-This appendix turns the review into engineering guidance at the level of
-signal-processing parameters, algorithms, and procedures, citing the
-governing sources throughout. Coordinate conventions follow
-\cref{ch:params}.
+A useful estimator must connect a reported quantity to the observations that constrain it.
+This appendix develops a candidate measurement chain, with explicit assumptions and checks; it does not report a validated prototype.
+Coordinate conventions and reference points follow \cref{ch:params}, and hardware limits follow \cref{app:hardware}.
+Measured sensor channels, derived physical quantities and estimates dominated by priors must remain distinguishable in the output.
+A plausible number, a small filter covariance or agreement with another launch monitor is insufficient evidence on its own.
 
 \section{Radar Signal Chain (OPS243-A)}
 \label{app:radardsp}
 
 \subsection{Doppler Scaling and Resolution Budget}
 
-At $f_c = 24.125$\,GHz, \cref{eq:doppler} gives 71.7\,Hz per mph. With
-a 30\,kHz I/Q sample rate, the unambiguous span is
-$\pm15$\,kHz $\approx \pm209$\,mph --- adequate for ball speeds to
-$\sim$200\,mph. Velocity resolution is set by observation time:
-a 128-sample window ($4.27$\,ms) gives $\Delta f = 234$\,Hz
-$\approx3.3$\,mph per raw bin; zero-padding to 4096 (the current
-pipeline) interpolates the peak but does not add information. For
-\emph{spin} work the window, not the padding, must grow: resolving
-sidebands at $f_{\mathrm{spin}} = S/60$ (e.g.\ 50\,Hz at 3,000\,rpm)
-requires windows of $\gtrsim40$\,ms, during which a 150\,mph ball
-decelerates and the central line \emph{chirps} --- so the practical
-estimator de-chirps first (track the central line per
-US8845442's spectral-trace step~\cite{us8845442}, resample the phase to
-remove it), then measures the residual modulation.
+For the illustrative carrier $f_c=\SI{24.125}{\giga\hertz}$, \cref{eq:doppler} gives approximately \SI{71.95}{\hertz} per mph of radial speed.
+With uniformly spaced complex I/Q samples at $f_s=\SI{30}{\kilo\hertz}$, the ideal principal frequency interval is $[-f_s/2,f_s/2)$, corresponding to a radial-speed half-width of about 208.48\,mph.
+This sampling calculation does not certify the analog passband, firmware, detection sensitivity or total-speed envelope of an OPS243-A installation~\cite{ops243brief,an029}.
+At 200\,mph radial speed, the carrier Doppler is already about \SI{14.39}{\kilo\hertz}; rotational sidebands and acceleration can consume the remaining frequency margin.
+Confirm sample cadence, I/Q ordering, mixer sign and missing-frame behavior with the actual acquisition mode.
 
-\subsection{Spin-Rate Comb Estimation}
+A 128-sample record lasts \SI{4.267}{\milli\second} and has raw Fourier spacing $f_s/128=\SI{234.375}{\hertz}$, equivalent to approximately 3.26\,mph.
+Padding it to 4096 points samples the same finite-record spectrum more densely; it does not create independent observations.
+Distinguish bin spacing, separation of neighboring components, single-tone estimation precision and absolute speed accuracy.
+All depend differently on window shape, signal-to-noise ratio, calibration and model mismatch.
 
-The patent-documented chain (\cref{sec:radarspin}) maps to this concrete
-pipeline~\cite{us8845442,trackmanspinpatentblog}:
+At 3,000\,rpm, mechanical rotation frequency is \SI{50}{\hertz}.
+An observation of \SI{20}{\milli\second} gives a \SI{50}{\hertz} unpadded grid; \SI{40}{\milli\second} gives \SI{25}{\hertz}.
+Neither duration guarantees that weak spin sidebands can be separated from a strong drifting carrier: sidelobes, missing harmonic orders and frequency variation also matter.
+Choose a window and acceptance criterion using injected signals and recorded shots over the intended operating envelope, rather than treating two rotation periods as a universal requirement.
+
+\subsection{Candidate Spin-Rate Estimation}
+
+US8845442 describes candidate spectral traces, harmonic relationships and order assignment~\cite{us8845442}.
+The following is an engineering proposal informed by that disclosure, not its exact algorithm or a claim about current commercial firmware:
 \begin{enumerate}\itemsep2pt
-\item STFT with 50--75\% overlap over the post-impact 50--250\,ms;
-      track the ball ridge (max-SNR bin per frame with continuity
-      constraint).
-\item De-chirp: mix each frame down by the tracked ridge frequency so
-      the ball line sits at DC.
-\item Estimate the sideband comb spacing on the de-chirped spectrum via
-      cepstrum or harmonic product spectrum --- both are robust to
-      missing harmonics; the patent's \emph{qualification} step
-      (verify equal spacing across $\ge$3 consecutive frames, and
-      consistency of the harmonic-number assignment) is what separates
-      real spin from clutter~\cite{us8845442}.
-\item Report spin only when the qualified comb persists; otherwise fall
-      back to a flagged estimate from club priors
-      (\cref{app:priors}) --- the Garmin R10's documented
-      behavior~\cite{garminr10accuracy}.
+\item Preserve coherent raw I/Q with acquisition timestamps and configuration metadata.
+Associate a post-impact ridge with the ball using temporal continuity and independently justified gates; the strongest peak need not be the ball.
+Exclude saturation and unresolved aliasing before interpreting peak locations.
+\item Estimate carrier frequency as a continuous function of time.
+For a convention with carrier phase $+2\pi\int f_d\,dt$, coherent demodulation uses
+\begin{equation}
+\label{eq:impldechirp}
+y(t)=z(t)\exp\!\left[-j2\pi\int_{t_*}^{t}\widehat f_d(\tau)\,d\tau\right].
+\end{equation}
+Here $z$ is the recorded complex signal and $t_*$ is a fixed phase origin.
+An independent frequency shift per short-time Fourier frame can recenter its peak but does not generally remove intraframe chirp; discontinuous phase corrections also introduce artifacts.
+Carrier-estimation error belongs in the residual uncertainty.
+\item Search for harmonic families using a declared spectral or time-domain model.
+Cepstral or harmonic-product scores can propose candidates, but missing orders, clutter and approximately symmetric patterns can cause octave errors or competing fundamentals.
+Test the candidate order assignments and residuals, rather than declaring either method intrinsically robust to missing harmonics.
+\item Require prespecified evidence across usable observations and check against an independent spin reference.
+Overlapping Fourier windows are correlated, so three consecutive frames are not three independent confirmations.
+Report ambiguity, detection failures and the fraction of attempted shots yielding an accepted measurement.
+If only a club-conditioned prior is available, label the result estimated and retain the missing-measurement flag.
 \end{enumerate}
-Expected detection physics: sideband amplitude scales with
-ball-surface asymmetry~\cite{us8845442}; range balls and clean urethane
-balls read weakly (the reason for Titleist RCT metal-tagged
-balls~\cite{mygolfspymlm2pro} and FlightScope's metallic-dot
-stickers~\cite{mevoteardown}). Logging which ball type produced each
-detection will quantify this for a given deployment.
 
-\emph{Disclosure references:} US8845442 and US9868044 describe distinct radar spin-processing approaches~\cite{us8845442,us9868044}.
-The latter's dielectric-lens explanation should be distinguished from its claims' signal-processing requirements (\cref{sec:patentflightscope}).
-These references identify technical material to study, not technique-wide expiry dates or implementation clearance (\cref{sec:fto}).
+Scattering contrast, viewing direction and ball pattern influence which modulation components are observable (\cref{sec:radarspin}).
+Log ball identity and markings rather than assigning a universal ranking to clean urethane, range or marked balls.
+A candidate rotation frequency does not by itself identify the full spin vector.
+US8845442 and US9868044 offer distinct technical approaches to study; the latter's dielectric-lens explanation and claimed processing requirements must remain separate~\cite{us8845442,us9868044}.
+These disclosures establish neither implementation clearance nor technique-wide expiry dates (\cref{sec:fto}).
 
 \subsection{Club-Speed Extraction}
 
-The pre-impact spectrum contains a velocity \emph{smear} from heel
-(slow) to toe (fast), plus shaft returns below. TrackMan resolves this
-by reconstructing the head silhouette and reporting the geometric
-center~\cite{trackmanclubspeed}; a single-radar approximation that
-tracks a stable reference is: gate the last 30--50\,ms before the
-trigger timestamp, form the velocity histogram of CFAR-passing bins,
-discard the bottom decile (shaft/hosel) and top decile (toe glint), and
-report a fixed percentile (median of the remainder). Validate against
-the loft-dependent smash ceiling of \cref{sec:smash}
-(\cite{tutelmansmash}); reject or flag shots exceeding it, which
-independent testing shows is the signature of toe-lock
-errors~\cite{leach2017}.
+The velocity of a rigid-head point $P$ is $\vect v_P=\vect v_O+\vect\omega\times\vect r_{OP}$; radar observes its line-of-sight projection, weighted by the actual scattering response (\cref{sec:radarclub,app:screw}).
+The heel need not always be the slower return, and shaft returns need not occupy a separable bottom decile.
+Trimming the highest and lowest spectral deciles and taking a median defines a reproducible spectral statistic, not a geometric-center speed.
+It can become a calibrated proxy only after reference-point, timing and pose dependence have been characterized against an independent measurement.
 
+TrackMan's documented geometric-center speed definition specifies the intended reported quantity, not a reconstruction algorithm that can be assumed for a different sensor~\cite{trackmanclubspeed}.
+For a candidate club track, retain the pre-impact observation interval, target-association evidence and uncertainty in projection and reference-point conversion.
+A smash-factor discrepancy is a diagnostic lead, not proof of toe-lock or grounds for a universal rejection threshold (\cref{sec:smash}).
+Validate the speed estimate before using it to validate an impact model; otherwise the same assumption can appear to confirm itself.
+
+\Needspace{8\baselineskip}
 \section{Angle Measurement (K-LD7) and the EKF}
 \label{app:ekf}
 
-\subsection{Interferometric Angles}
+\subsection{Interferometric Angles and Hardware Limits}
 
-The K-LD7's two receive patches implement \cref{eq:interferometry} with
-a $\lambda/2$-class baseline; per-bin phase comparison of the two ADC
-channels after the range-Doppler FFT yields one angle per detection ---
-the same phase-monopulse principle as
-US10850179~\cite{us10850179} and the R10's three-receiver
-array~\cite{garminr10data}. Two practical constraints from the
-commercial art: (i) angle error grows as SNR falls, so weight each
-detection by measured SNR; (ii) mechanical alignment dominates the
-error budget --- a $1\degs$ mount error is a $1\degs$ bias on every
-launch direction, amplified $\sim$1.15$\times$ into face angle
-(\cref{eq:faceinversion}).
+For the declared ideal two-receiver geometry, phase difference obeys \cref{eq:interferometry}.
+Phase calibration, wrapping, multiple targets and the antenna response affect the inverse angle estimate.
+The K-LD7 revision-B datasheet specifies a 6.223\,mm receiver separation, FSK ranging, processed detections and a raw-data request interface; it does not justify treating the module as an arbitrary FMCW range--Doppler instrument~\cite{kld7}.
+Its maximum speed setting is 100\,km/h, with a typical frame duration of \SI{29}{\milli\second} at that setting.
+A ball whose radial component exceeds that limit is outside the stated unambiguous speed range; combining sensors in a filter does not make an invalid channel valid.
+Thus a \SI{50}{\milli\second} interval cannot be assumed to contain ten to twenty independent detections from one module at that cadence.
+Raw transport bandwidth, settings and dropped frames must also be checked (\cref{app:hardware}).
 
-\subsection{Recommended Filter}
+Signal-to-noise ratio can inform a calibrated observation covariance, but a universal inverse-SNR weight ignores phase ambiguity, geometry and systematic alignment error.
+A small mount-yaw error produces an approximately equal azimuth bias near the horizontal plane; a general three-dimensional pose error couples the angle channels.
+Common calibration errors correlate observations across time and must not be averaged away as independent noise.
 
-Implement the \cref{sec:ekf} smoother concretely as:
-state $\vect{x} = (\vect{p}, \vect{v})$ (add spin states later);
-process model \cref{eq:eom} with Smits--Smith
-coefficients~\cite{smitssmith}; measurements: OPS243-A radial speed
-($\dot r$, high rate, low noise), K-LD7 angle+range detections (lower
-rate, SNR-weighted covariance). Run a forward EKF then an RTS
-(Rauch--Tung--Striebel) backward smoother over the 50--150\,ms burst,
-and evaluate the smoothed state at the sound-trigger timestamp minus
-the acoustic delay --- this back-extrapolation is how commercial radars
-report launch conditions robustly despite early-flight
-clutter~\cite{us8845442,us10338209}. The innovation-gating step of the
-EKF doubles as the outlier rejector for multipath and club returns.
-The same filtering architecture extends from point tracking (the ball)
-to rigid-body tracking (the club) via the screw-theoretic formulation
-of \cref{app:screw}, which is the recommended estimation layer for the
-IWR6843 integration.
+\subsection{Measurement Functions and Observability}
+
+For a fixed sensor at world position $\vect s_i$, let $R_i$ map its calibrated local frame into the world frame.
+Choose local axes consistently with the book's forward/up/right convention and explicitly convert any vendor-native axes.
+For ball state $\vect x=(\vect p,\vect v)$, define
+\begin{equation}
+\vect q_i=R_i^{\mathsf T}(\vect p-\vect s_i),\qquad
+\vect w_i=R_i^{\mathsf T}\vect v,\qquad \rho_i=\lVert\vect q_i\rVert.
+\label{eq:implsensorframe}
+\end{equation}
+A candidate observation vector is
+\begin{equation}
+\label{eq:implmeasurements}
+h_i(\vect x)=\begin{pmatrix}
+\rho_i\\
+\vect q_i^{\mathsf T}\vect w_i/\rho_i\\
+\operatorname{atan2}(q_{iz},q_{ix})\\
+\operatorname{atan2}\!\left(q_{iy},\sqrt{q_{ix}^2+q_{iz}^2}\right)
+\end{pmatrix}.
+\end{equation}
+Use only the components actually supplied by the sensor and supported by its calibration; the OPS243-A speed channel does not supply all four.
+Range rate requires $\rho_i>0$, and azimuth is undefined on the local vertical axis.
+The elevation value approaches $\pm\pi/2$ there, but its Cartesian Jacobian is also singular; use a nonsingular local representation or exclude that geometry from an angle-based linearization.
+Wrap angular innovations consistently and propagate pose and timestamp uncertainty.
+Moving sensors require their own translational and rotational motion in the observation model.
+
+Writing $\uvec u_i=(\vect p-\vect s_i)/\rho_i$ and $v_{ri}=\uvec u_i^{\mathsf T}\vect v$, the radial-speed Jacobian blocks are
+\begin{equation}
+\frac{\partial v_{ri}}{\partial\vect p}
+=\frac{(\vect v-v_{ri}\uvec u_i)^{\mathsf T}}{\rho_i},
+\qquad
+\frac{\partial v_{ri}}{\partial\vect v}=\uvec u_i^{\mathsf T}.
+\label{eq:implradialjacobian}
+\end{equation}
+Even with position known, a single instantaneous radial-speed observation leaves two velocity directions unconstrained.
+Additional times, sensor viewpoints and dynamical assumptions can add information, but nearly repeated geometry can remain poorly conditioned.
+Inspect local sensitivity over the actual observation window and compare posterior uncertainty with the prior; adding a state variable does not create a measurement of it.
+In particular, including spin states does not establish that a short flight segment identifies spin magnitude, axis, wind and aerodynamic coefficients separately (\cref{sec:spinaxis}).
+
+\subsection{Filtering, Smoothing, and the Impact Event}
+
+An extended Kalman filter (EKF) and an extended Rauch--Tung--Striebel smoother are approximate nonlinear estimators, based on local linearization~\cite{sarkkasvensson2023}.
+A proposed translational model is $\dot{\vect p}=\vect v$ and $\dot{\vect v}=\vect g+\vect a_{\rm aero}$, with a declared aerodynamic law and its parameter uncertainty.
+If spin is omitted from the state, uncertain spin-dependent acceleration must still be represented through nuisance parameters or justified model-error covariance.
+It cannot silently be treated as a known force.
+Choose numerical time steps and interpolation by convergence checks at the required measurement precision.
+
+Propagate between acquisition times, update only with associated valid observations, and retain the predicted and filtered means, covariances and transition Jacobians for backward smoothing.
+For innovation $\vect\nu_k=\vect y_k-h_k(\widehat{\vect x}_k^-)$, a locally independent Gaussian observation model gives
+\begin{equation}
+S_k=H_kP_k^-H_k^{\mathsf T}+R_k,
+\qquad d_k^2=\vect\nu_k^{\mathsf T}S_k^{-1}\vect\nu_k.
+\label{eq:implinnovation}
+\end{equation}
+Here $H_k$ is the measurement Jacobian, $P_k^-$ the predicted state covariance and $R_k$ the observation-noise covariance; $R_k$ is distinct from the sensor rotation $R_i$ above.
+A prespecified chi-square gate is only an approximate screening rule under the stated model.
+Multipath or a misassociated club return can pass it, while a valid shot can fail a misspecified filter.
+Inspect residual bias, temporal correlation, uncertainty coverage and rejection rates on held-out data.
+
+Let a raw acoustic timestamp, expressed on the common clock, include sound travel over source-to-microphone distance $d$ at speed $c_s$ and electronic/detection delay $\tau_e$.
+The estimated acoustic source-event time is
+\begin{equation}
+\widehat t_{\rm event}=t_{\rm stamp}-d/c_s-\tau_e.
+\label{eq:impleventtime}
+\end{equation}
+The sound source event need not coincide exactly with face separation; establish that offset independently.
+Estimate $d$ from the source location and microphone pose, propagate their uncertainty, and avoid subtracting delays already removed by acquisition software.
+At $c_s=\SI{343}{\meter\per\second}$, one meter adds about \SI{2.92}{\milli\second}, much more than an assumed \SI{10}{\micro\second} electronic delay.
+To first order, \SI{100}{\micro\second} of timing uncertainty at 150\,mph contributes about \SI{6.71}{\milli\meter} of along-track position uncertainty before other errors are included.
+A post-impact flight smoother may extrapolate to the declared separation event, with increasing uncertainty outside its observed interval; it must not propagate a smooth free-flight model through the contact impulse into the pre-impact state.
+Clock calibration and event definition are therefore part of the launch measurement, not merely data-logging details.
 
 \subsection{Alignment Calibration Procedure}
 
-Adopt the commercial patterns: (i) Uneekor-style floor chart --- a
-printed target-line chart at known positions establishes the
-target-line azimuth for both K-LD7s~\cite{uneekorcalib}; (ii)
-FlightScope-style known-trajectory check --- roll or swing balls along
-a surveyed line and verify reported directions
-(US10338209 uses a Doppler simulator for the same
-purpose~\cite{us10338209}); (iii) record the mount pose in the session
-log so data from different setups is never silently mixed.
+Use surveyed targets or a calibration artifact to identify the sensor-to-world transforms, with several positions spanning the intended observation region.
+Optical floor charts are useful precedents~\cite{uneekorcalib}, but radar needs a target and motion visible to its own measurement channels.
+A ball rolled or swung along a surveyed line can test selected geometric relationships; rolling contact or a curved pendulum path is not automatically a known free-flight trajectory.
+Validate range, direction, Doppler scale and clock alignment with separate checks where possible.
+Record poses, calibration residuals, covariance assumptions, firmware, configuration and environmental conditions for each session.
+Use independent poses or trajectories to test calibration transfer, rather than reporting the fitting residual as general accuracy.
 
 \section{Derived Club Data, With Priors}
 \label{app:priors}
 
-Implement the D-plane module once, use it both ways
-(\cref{sec:dplane,sec:faceangle}):
-\begin{itemize}\itemsep2pt
-\item \textbf{Forward} (simulation/validation): Tutelman's calibrated
-closed form, \cref{eq:obliqueness,eq:tutelmanlaunch}, plus spin from
-\cref{eq:spinrate}~\cite{tutelman3d}.
-\item \textbf{Inverse} (reporting): face angle from
-\cref{eq:faceinversion} with $w_f$ interpolated in dynamic loft between
-0.87 (driver) and 0.75 (wedge)~\cite{trackmanballflightlaws,tutelman3d};
-dynamic loft analogously from launch angle and attack angle. Tag both
-as \emph{derived} per \cref{tab:hierarchy}.
-\item \textbf{Priors table} per club type (driver\ldots{}wedge): static
-loft, typical dynamic-loft delta, spin-loft range, smash ceiling
-(\cref{sec:smash}), PGA/LPGA reference deliveries~\cite{trackman40params}.
-Used for: spin fallback estimates, outlier gating, and the smash sanity
-check.
-\item \textbf{Gear-effect bound}: when impact location is unknown,
-attach an uncertainty of up to $\pm6\degs$ of spin-axis tilt per
-0.14\,in of possible driver miss~\cite{perfectgolfswing,tutelmangear} to
-any derived face-to-path interpretation --- and surface it in the UI
-rather than hiding it.
-\end{itemize}
+The forward collision problem and inverse club-state problem have different information requirements (\cref{sec:dplane,sec:faceangle}).
+For a forward calculation, declare contact-point incident velocity, local face normal, impact location, inertial properties and contact law.
+The empirical relations in \cref{eq:tutelmanlaunch,eq:spinrate} are conditional approximations, not mutually independent physical identities~\cite{tutelman3d}.
+Check that translation and spin remain compatible with the same impulse model and its domain of calibration.
+
+For a local scalar launch approximation, write $b=wF+(1-w)P$, where $b$, $F$ and $P$ are launch, face-normal and path angles in one consistent projection.
+For known $w\ne0$, its inverse and sensitivities are
+\begin{align}
+F&=P+\frac{b-P}{w},\label{eq:implfaceinverse}\\
+\left(\frac{\partial F}{\partial b},\frac{\partial F}{\partial P},
+\frac{\partial F}{\partial w}\right)
+&=\left(\frac1w,-\frac{1-w}{w},-\frac{b-P}{w^2}\right).
+\label{eq:implfacesensitivity}
+\end{align}
+Use these derivatives with the joint input covariance and a separate allowance for model discrepancy.
+For illustration, $w=0.87$ gives a launch-angle sensitivity of about 1.15, but it is not a universal amplification factor for a three-dimensional mounting error.
+Study-specific weights cannot be turned into a universal driver-to-wedge interpolation solely from dynamic loft (\cref{sec:facepathweighting}).
+Separate horizontal and vertical inversions also require checking the validity of the small-angle projection approximation.
+
+A club-type prior can regularize an underdetermined estimate, but the reported face angle, loft or spin then depends on that prior.
+Record the prior distribution, its population and calibration range, and test sensitivity to plausible alternatives.
+Do not use a spin fallback estimated from club priors as an independent confirmation of the same club estimate.
+Unknown strike location, head inertia and local face geometry introduce gear-effect ambiguity; a fixed spin-axis allowance per millimeter of miss is not a universal uncertainty bound (\cref{sec:gear}).
+Where those effects cannot be bounded from evidence, report the inverse quantity as unresolved or explicitly model-dependent.
 
 \section{Optical Module (Phase 2) Design Parameters}
 \label{app:optical}
 
-The Wintriss disclosures provide optical measurement principles~\cite{us7292711}; PiTrac provides an implementation reference~\cite{pitrac}.
-The following choices are prototype parameters to verify against the selected hardware and capture conditions, rather than specifications fixed by a patent:
-\begin{itemize}\itemsep2pt
-\item \textbf{Sensor}: Raspberry Pi Global Shutter camera (IMX296,
-$1456\times1088$); global shutter is non-negotiable (rolling shutter
-skews a 150\,mph ball by several pixels per row-time).
-\item \textbf{Strobed multi-exposure}: $N=3$--5 IR pulses
-(850\,nm, tens of \si{\micro\second} each) inside one long exposure
-freeze $N$ ball images per frame; at 150\,mph the ball moves 6.7\,cm/ms,
-so pulse spacing of $\sim$300--500\,\si{\micro\second} spaces images
-2--3\,cm apart in a 30\,cm capture volume --- matching the commercial
-capture geometry~\cite{foresightgcquad,pitrac}.
-\item \textbf{Trigger}: reuse the SEN-14262 sound trigger; its
-$\sim$10\,\si{\micro\second} latency is far inside the strobe-timing
-budget, solving the triggering problem the Wintriss patent addressed
-with a microphone+radar pair~\cite{us7292711}.
-\item \textbf{Ball detection}: Hough circles on the strobed frame
-(PiTrac-proven~\cite{pitrac}); depth from the known 42.67\,mm diameter
-(the Wintriss mono-camera range cue~\cite{us7292711}) or from a second
-camera via \cref{eq:depth}.
-\item \textbf{Spin}: register the dimple texture between successive
-ball images over $SO(3)$ (\cref{eq:rotangle}); Gabor-filter
-pre-enhancement of dimples is documented in
-US12401909~\cite{us12401909}; with $\Delta t \approx 400$\,\si{\micro
-\second}, 3,000\,rpm is only $7.2\degs$ of rotation --- comfortably
-below the aliasing limit, and small enough that a local search around
-the D-plane-predicted axis converges quickly
-(\cref{sec:dimplespin}).
-Surface-image registration appears in the Wintriss disclosures and Foresight's technical account~\cite{us7292711,foresightspherical}; neither source establishes blanket rights clearance for the prototype.
-\item \textbf{Impact location / face orientation} (later): either
-calibrated face-fiducial reconstruction, informed by the distinct Acushnet camera arrangements in US5501463 and US6758759~\cite{us5501463,us6758759},
-or an overhead second camera per the Uneekor
-geometry~\cite{uneekoreyexo}.
-\end{itemize}
+The Wintriss disclosures and PiTrac provide optical concepts and implementation examples, respectively~\cite{us7292711,pitrac}.
+They do not establish the accuracy or timing of a new camera, lens, illumination and trigger combination.
+The following manufactured budget illustrates what must be checked.
+
+\subsection{Shutter, Illumination, and Motion Blur}
+
+The Raspberry Pi Global Shutter Camera uses an IMX296 sensor with $1456\times1088$ output, and its documented short-exposure capability is about \SI{30}{\micro\second} with adequate light~\cite{pigsproduct,pigscam}.
+Global exposure avoids row-dependent capture times; it does not remove motion during integration.
+The standard camera includes an infrared-cut filter, so an \SI{850}{\nano\meter} illuminator requires an explicitly verified optical configuration~\cite{pigscam}.
+Do not assume unmodified spectral sensitivity or an arbitrary shorter exposure from the sensor name.
+
+For locally transverse translation at speed $v_\perp$ and effective illumination duration $\tau$, object-plane blur is approximately $v_\perp\tau$.
+At 150\,mph and \SI{30}{\micro\second}, this is \SI{2.01}{\milli\meter}, about 4.71\% of a nominal \SI{42.67}{\milli\meter} ball diameter.
+Pixel blur is that fraction of the observed ball diameter in pixels, with additional effects from spin, defocus and lens distortion.
+A shorter light pulse can determine the effective exposure only if it falls within the active integration interval and ambient light contributes negligibly.
+Choose pulse width from the allowable image error and measured photon budget, not from a universal ``frozen motion'' threshold.
+
+\subsection{Multiple Exposures and Trigger Timing}
+
+For same-frame strobed images at approximately constant depth, pulse-center spacing $\Delta t$ produces center separation $v_\perp\Delta t$.
+At 150\,mph, \SI{300}{\micro\second} and \SI{500}{\micro\second} give \SI{20.1}{\milli\meter} and \SI{33.5}{\milli\meter}, both less than the nominal ball diameter.
+The silhouettes overlap; an algorithm must explicitly handle that overlap or use a different capture schedule.
+An ideal no-overlap condition, before blur and margins, is
+\begin{equation}
+\Delta t>\frac{D}{v_\perp},\qquad
+(N-1)v_\perp\Delta t+D\le L,
+\label{eq:implstrobebudget}
+\end{equation}
+where $D$ is diameter, $N$ the number of pulses and $L$ the usable lateral field of view at the ball plane.
+The first bound is about \SI{636}{\micro\second} for this example.
+For a rectangular light pulse of duration $\tau$ with pure transverse translation, replace $D$ by $D+v_\perp\tau$ in both bounds to include the illuminated motion extent; additional errors still require margins.
+Five pulses spaced by \SI{0.8}{\milli\second} occupy about \SI{257}{\milli\meter}, including one ball diameter, within an ideal \SI{300}{\milli\meter} field before allowance for blur, pose, depth change and timing error.
+These numbers specify a test case, not a commercial capture geometry or a validated design.
+
+Budget acoustic propagation, threshold-crossing jitter, transport delay and camera/strobe synchronization together with the event offset in \cref{eq:impleventtime}.
+Use pretrigger buffering where appropriate; an asserted microphone-module delay alone does not solve impact timing.
+Verify actual pulse times and integration windows electrically and with a moving target.
+
+\subsection{Position, Spin, and Club Pose}
+
+Circle detection is a candidate image-processing step, not proof that partially overlapping, blurred or occluded balls are correctly localized.
+A known-diameter depth estimate requires calibrated projection, actual ball size and a suitable silhouette model; stereo additionally requires calibrated extrinsics, correspondence and synchronization.
+For close views, account for the perspective silhouette of a sphere rather than assuming the far-field diameter formula is exact.
+
+Texture registration across ball images can estimate rotation on $SO(3)$ when visible features constrain it~\cite{us7292711,foresightspherical}.
+At 3,000\,rpm, \SI{400}{\micro\second} corresponds to $7.2\degs$, but a small angle alone proves neither uniqueness nor convergence of a local search.
+Dimple repetition, partial visibility, lighting and image noise can leave multiple compatible rotations.
+Use multiple hypotheses or intervals, inspect residuals and determine which rotation components are constrained before converting an increment to a spin vector.
+A D-plane prior may guide a search; it must not force the answer and then be counted as independent optical evidence.
+Calibrated face fiducials or additional viewpoints can constrain club pose and strike location, with their own geometry and uncertainty requirements~\cite{us5501463,us6758759}.
 
 \section{Flight Model and Validation Protocol}
 
-Ship Smits--Smith (\cref{eq:smits}) with spin
-decay~\cite{smitssmith}, version the coefficients, and calibrate
-against measured trajectories using the US6186002 fitting
-approach~\cite{us6186002} --- outdoor sessions with the MLM2PRO (or
-simple carry ground-truth) provide the data. Validation against the
-MLM2PRO should follow the Leach protocol
-structure~\cite{leach2017}: per-club shot blocks, Bland--Altman limits
-of agreement per parameter, ball data compared directly, spin compared
-only on RPT/RCT balls (where the MLM2PRO's spin is
-camera-measured~\cite{mygolfspymlm2pro}), and club speed compared with
-an explicit reference-point caveat (\cref{sec:radarclub}). Log raw
-I/Q and (later) raw frames for every shot so algorithm changes can be
-replayed against history --- the practice that made this review's
-accuracy analysis possible for the commercial units is exactly what an
-open project can do better.
+Treat aerodynamic coefficients, spin decay, wind, ball properties and numerical integration as parts of a declared model, not universal constants inherited from a named publication.
+A literature model can supply a starting hypothesis~\cite{smitssmith}; trajectory fitting can estimate parameters~\cite{us6186002}, but neither guarantees identification over a short observation arc.
+Carry alone is one scalar outcome and generally cannot determine a complete lift, drag and spin-decay law.
+Version the model and coefficient domain, verify signs and units, and test integration convergence and event detection before interpreting a physical discrepancy.
+Do not infer golf accuracy from solver convergence alone.
+
+Separate calibration trajectories from held-out validation by the relevant independent units, such as session, ball batch or participant.
+Prespecify reference definitions, practical error limits, exclusions and missing-shot reporting (\cref{ch:accuracy,ch:validation-program}).
+Paired commercial measurements test agreement, including the reference instrument's uncertainty; they are not automatically ground truth.
+Use repeated-measures analysis when shots share a participant or session, and examine condition-dependent bias and spread rather than relying on correlation or one pooled mean~\cite{blandaltman2007}.
+
+For MLM2PRO spin comparison, Rapsodo specifies RPT printed balls; an RCT radar ball is not an interchangeable optical reference~\cite{rapsodomlm2prorpt}.
+Record ball identity, device mode, firmware, failed reads and whether every reported channel was measured, derived or estimated.
+Log raw I/Q, available frames, timestamps and calibration/configuration identifiers so an algorithm revision can be replayed, while retaining an untouched test set for final evaluation.
+Replayability makes errors inspectable; independent observations and appropriate uncertainty analysis establish what the system actually measures.
+
+% Keep the existing background catalog entries; they do not substantiate the
+% removed universal launch-weight, smash-ceiling or deployed-algorithm claims.
+\nocite{trackmanballflightlaws,trackmanspinpatentblog,tutelmansmash}
