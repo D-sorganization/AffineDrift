@@ -1,3 +1,13 @@
+# Shared Nomenclature — Verified Parent Delivered, Ready for Regular PR
+
+Parent PR #4869 merged at 2026-10-04T05:45:08Z as `6be3a480a707588776325210171f3fa76ec87f18` after final-head CI 37178192004 passed. Its 25 changed Git paths, eleven accepted scientific files, 82 protected prior files and stable evidence copy are verified on fetched remote main. The merge tree equals reviewed head 1f9eff7cc. The canonical receipt is reports/technical-review/volume2-consistency-remote-main-receipt.json; parent lease and presence are released. An expired inherited monitor credential caused a monitor-only HTTP401; the saved GitHub credential restored observation, and CI was not rerun or misclassified as failed.
+
+The parent squash is integrated normally into fix/shared-nomenclature-review. Eight conflicts were resolved from the committed child only after proving incoming main exactly matched its already integrated parent ancestor. The complete resolved tree equals child 02cf1d9e7; no scientific changes occurred. Accepted source a738be703d0f161c9a18896c274a8e671256e292 and all twelve bound scientific files remain unchanged. Full tests at8068 and the later prose/PDF checks retain separate scopes in shared-nomenclature-validation.json.
+
+Commit/push this parent receipt and turnover, then create a regular PR for #4865 against main, attach it, enable guarded squash auto-merge, and verify final-head CI plus actual remote-main bytes before releasing the child claim. Its renewed lease expires 2026-10-04T07:44:41.799335+00:00. Use the stored dieterolson GitHub credential explicitly if inherited GH_TOKEN expires. Five agy CLI Gemini 3.8 Flash helpers supported routine tasks; lead scientific review and all exact evidence remain recorded. Never draft. No full regression is running. The complete shared-source review is accepted; #4868 and the remaining corpus remain open and the overall goal is active. Earlier entries are historical.
+
+---
+
 # Shared Nomenclature — Accepted Source Bound
 
 Final source `a738be703d0f161c9a18896c274a8e671256e292` is committed and pushed. Twelve scientific source/PDF/report files now bind the complete shared-nomenclature review for #4865. The full regression at 8068ddb140caab8bf7152f92f8b5641ab309c078 passed 6,811 tests with 93.24% src coverage; its later one-sentence clarification has separate successful algebra, six native builds, all-page text comparison, six changed-page inspections, 70 evidence/metadata tests and 17 publication gates. Earlier source and review identities remain intact: 89 protected scientific files and 86 other Geometry inputs are Git-unchanged.
