@@ -66,6 +66,7 @@ def test_live_manifest_poll_retries_transient_non_json_responses() -> None:
     assert "for attempt in {1..60}; do" in live_poll
     assert "if SOURCE_REVISION=$(python3" in live_poll
     assert "2>/dev/null); then" in live_poll
+    assert "--location" in live_poll or "-L" in live_poll
 
 
 def test_only_live_every_page_verification_opts_into_bounded_document_retries() -> None:
