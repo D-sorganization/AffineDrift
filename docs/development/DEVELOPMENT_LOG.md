@@ -218,7 +218,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** draft PR opened by this session (see `HANDOFF.md`)
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4907 (draft)
 - **Issue:** #4531 (WEB-06.1; epic #4543)
 - **Branch:** `claude/issue-4531`
 - **Paths:** `docs/adr/0002-interactive-technology-stack.md`, `docs/adr/README.md`, `tests/test_adr_index.py`
