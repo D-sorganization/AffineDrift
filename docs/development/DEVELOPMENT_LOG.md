@@ -1,3 +1,41 @@
+# Joint Review — Revalidated External Progress
+
+2026-10-04 15:33 UTC: revalidated current repository state after advancement to 60bb50112. Verified all 15 #4875 changed paths on its actual remote-main merge 0bb9d47f8 and released its claim/presence. Reconciled the later 11-line deletion of uncited usgarules at 4b1285fd5 with preserved original review evidence and new source bindings. Current eight-book CI passes; Launch Monitor has 96 cited/printed entries and 92 pages. All bibliography-page extracted text matches the retained reviewed PDF; 79 complete pages match and 13 have mathematical extraction differences, recorded without a pixel-equivalence claim. Inspected CI pages 67 and 90. Parent delivery and hash changes supersede the temporarily restated older epic checkpoint. No manuscript body edit was made during reconciliation.
+
+---
+
+# Bosch Insertion Plan — Fixed-Commit Acceptance #4877
+
+2026-10-04: source checkpoint `73f6f3946649b6a708495cc8d30bc61cbf4b25eb` passed the full regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,087.67 seconds, exit 0. The tracked tree stayed unchanged; no local rendering or hooks overlapped. Five canonical source/evidence hashes bind the complete insertion-plan review and cited bibliography repairs. The corpus advances one row, leaving 89 explicitly pending originals. Eight Flash helpers supported review/PR preparation under lead adjudication. Hardware turnover commit ebf0b82fe is integrated without changing its six accepted source/evidence files. The two completed reviews share regular PR #4879 and one protected delivery cycle; the PR is attached and not a draft. Parent #4875 remains queued; #4878 is only filed read-only preparation. No whole-book or empirical acceptance is added.
+
+---
+
+# Hardware Appendix — Queue and Turnover Update #4876
+
+2026-10-04: recorded the successful full Ruff/Black checks and their log hashes. The six accepted source/evidence files remain unchanged. Parent #4875 passed its complete PR CI and is undergoing protected merge-group validation; no remote-main delivery is claimed. Bosch #4877 is separately committed/pushed at 73f6f3946 and running its fixed-source regression. Updated turnover distinguishes both branches, current leases and the remaining main-target PR workflow. No publication source or PDF was changed.
+
+---
+
+# Hardware Appendix — Fixed-Commit Regression and Acceptance #4876
+
+2026-10-04: accepted source `377ae74fc8917529f36882614012538e2254816f` passed the full repository regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,106.10 seconds, exit 0. The tracked tree remained unchanged throughout; no concurrent rendering or commit hooks. Six source/evidence files now have canonical Git-byte bindings, and one corpus row advances to complete source review. Five Flash source helpers plus one prose helper were lead-reviewed. No additional source correction was needed after the fixed checkpoint. Packaging outputs were preserved beneath QA after the run. Full scope and separate PDF/source validation are in `reports/technical-review/hardware-appendix-validation.json`. Parent #4875 protected delivery and the hardware regular PR remain pending; no hardware measurement, full-book or entire-corpus acceptance is claimed.
+
+---
+
+# Hardware Appendix — Correction Checkpoint #4876
+
+Work is on `fix/hardware-appendix-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-hardware-review`, starting from the final PR #4875 head `4b92fe90af30ddaa0e2b339e0814375437a4b071`. Parent PR #4875 remains open with auto-merge enabled through the merge queue: all completed checks passed; E2E site rendering is still running in CI Standard 37190386364. Do not claim it is merged or cancel/restart its build. Its accepted source/evidence bytes remain unchanged here.
+
+Issue #4876 corrects the complete hardware appendix of the Launch Monitor Technology Review. The work separates spectral grids from resolving power/accuracy, explains radial projection and target association, budgets trigger timing, qualifies FMCW/MIMO and camera sampling, preserves simulator provenance, corrects the obsolete 2028 equipment-rule timetable and derives CA-CFAR under explicit assumptions. Only the appendix publication source, supporting bibliography and generated textbook PDF are changed. Existing chapter sources/preamble are preserved. Read `reports/technical-review/hardware-appendix-review.md`, the independent-check JSON and `articles/Launch_Monitor_Technology_Review/research/hardware-appendix-review-20261004.md`.
+
+Five successful agy CLI Gemini 3.8 Flash helpers supplied inventory, arithmetic, manufacturer cross-check, copy review and proof review; the last two ran in parallel. Lead review rejected invented hardware latency, fixed buffer-size guarantees and universal resolution/CFAR assertions. Independent rational arithmetic, symbolic integration/differentiation and a DFT identity passed. Initial/final substantive PDF builds produced 92 pages without undefined citations/references; the final title wrap and all six appendix pages were visually checked. The 73 other body pages match after removing citation renumbering, headers/footers, line-end hyphenation and whitespace; TOC/bibliography are excluded. All 63 focused checks and the 665-source title audit passed. No hardware experiment was performed. Full repository validation and remote delivery remain pending. Do not mark the whole corpus or hardware implementation accepted.
+
+Next: commit the reviewed source checkpoint and run the full suite without concurrent rendering or hook stashing. Exact source/PDF hashes and QA scope are in hardware-appendix-validation.json. Then finish evidence/corpus/turnover, open a regular PR, integrate the actual #4875 merge if necessary, and deliver through the protected queue. Never draft PRs. Local QA is under `docs/development/technical-review`; preserve the baseline PDF and helper failures. Python3.13 has PyMuPDF for PDF QA; pinned Python3.12 for repo checks is `C:/Users/diete/AppData/Local/Temp/affine-passive-pinned-fa72c4415ed54625846b906ba6af2033/Scripts/python.exe`. Use the existing multi-file `build.ps1`; no standalone LaTeX editor compilation is applicable.
+
+Lease session `technical-review-20261004-hardware` expires 2026-10-04T11:04:29.468733+00:00; presence through 11:04:34.339436+00:00. Lease receipt 5978356084 on #4876, presence receipt 5978356263 on Repository_Management#1576. The central inbox is incomplete because the board is truncated/malformed; issue claims remain authoritative. Parent #4871 lease remains held through 10:10 UTC until delivery/release. Broad goal remains active; earlier entries below are historical.
+
+---
+
 # Tangent Lay Summary — Accepted Source and Regular PR #4875
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4875 is open against main and attached; never draft. Accepted source 73a1ae4f4f337036d1da211458fa81a3a1da3dbd binds four source/review/math/browser files. Six corrected findings now reference those exact bytes; the earlier route review is preserved separately. The complete article distinguishes local sensitivity and affine offsets from finite motion, qualifies remainder regularity, demonstrates coupled phases, bounds engineering examples and separates control algorithms. Only this publication source changed; production Python/tests are Git-unchanged from f10a0feff. The corpus row records complete source review without empirical coaching acceptance.

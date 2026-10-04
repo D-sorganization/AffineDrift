@@ -582,3 +582,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4873 | Record shared-nomenclature remote-main delivery and retract the title-card missing-text finding after raw-pixel verification; preserve deployment provenance and bounded corpus scope. |
 
 | 2026-10-04 | #4875 | Correct the complete tangent-framework lay summary: local sensitivity, remainder assumptions, coupled swing phases, bounded engineering examples and distinct control algorithms. |
+
+| 2026-10-04 | #4879 | Correct hardware sampling, timing, integration and conditional inference claims (#4876); correct Bosch attribution, stability, control, intrinsic mechanics, power and transfer claims (#4877). Preserve both reviews and fixed-commit validation. |
