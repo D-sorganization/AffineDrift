@@ -1,3 +1,7 @@
+# Issue #4882 - Freshness Dashboard Page-Relative Links
+
+Branch `claude/issue-4882`: `scripts/generate_companion_freshness.py` now emits route link targets relative to `models/programming/freshness.qmd`; page regenerated, claim-audit evidence refreshed, 12 path-style baseline entries removed (one journey-page entry remains by design). Next: review the draft PR and arm the merge queue.
+
 # Regular PR #4886 — Parameter Delivery Pending
 
 The accepted parameter review is published at https://github.com/D-sorganization/AffineDrift/pull/4886 (not draft), reviewed source117a416d5 and initial PR head25dee2f98. Full regression and45 metadata checks pass; canonical source acceptance remains unchanged. The central auto-merge guard found no hold but could not arm because GitHub GraphQL was rate-limited. Retry the guard after recovery; do not bypass protected merge. Verify remote-main delivery before releasing4881. Next batch4885 remains isolated and unaccepted. Goal active.
