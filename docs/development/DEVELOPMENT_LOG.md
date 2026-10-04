@@ -25,10 +25,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** codex
 - **Issue:** #4864; epic #4009 / corpus #4021
 - **Branch:** fix/volume2-consistency-review
-- **PR:** pending
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4869
 - **Summary:** Complete combined-edition review and confirmed web terminology/landing/preface corrections. All eleven body chapters and recorded ancillary/evidence material read; mathematical/prose/header comparisons and eight figure pages inspected during preparation.
 - **Evidence:** reports/technical-review/volume2-consistency-prior-review.json; docs/development/technical-review/volume2-consistency-preparation.json. Parent acceptance stays on the #4867 delivery branch; changed shared artifacts require new scoped evidence.
-- **Next step:** Full regression at a167deda0e90b6282d5c02e94bbfb82e5ac59862 passed 6810, skipped 29, deselected 210, with 93.24% src coverage in 872.43 seconds. Eleven frozen files bind four new findings while preserving prior review identities. Two combined originals and landing/preface receive scoped corpus updates; #4865/#4868 remain open. Open regular PR and verify protected delivery.
+- **Next step:** Full regression at a167deda0e90b6282d5c02e94bbfb82e5ac59862 passed 6810, skipped 29, deselected 210, with 93.24% src coverage in 872.43 seconds. Eleven frozen files bind four new findings while preserving prior review identities. Two combined originals and landing/preface receive scoped corpus updates; #4865/#4868 remain open. Regular PR #4869 is open with guarded squash auto-merge armed. Post-binding 100 selected cases pass with one existing skip; exact final-head CI and remote-main verification remain.
 
 ### DL-#4863 · Underactuation Chapter Review
 
