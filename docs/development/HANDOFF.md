@@ -1,3 +1,9 @@
+# Issue #4883 - See Also Callout Headings Un-nested
+
+Branch `claude/issue-4883`: 17 pages now use `::: {.callout-note title="See Also"}` so the gate sees their links; parts 2, 4, 5, 6, 7 of the tangent-hyperplanes series gain previous/next links; 25 related-coverage baseline entries removed (70 to 45); new `test_committed_baseline_has_no_stale_entries` guard; claim-audit evidence regenerated. Next: review the draft PR and arm the merge queue.
+
+---
+
 # Issue #4882 - Freshness Dashboard Page-Relative Links
 
 Branch `claude/issue-4882`: `scripts/generate_companion_freshness.py` now emits route link targets relative to `models/programming/freshness.qmd`; page regenerated, claim-audit evidence refreshed, 12 path-style baseline entries removed (one journey-page entry remains by design). Next: review the draft PR and arm the merge queue.
