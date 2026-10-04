@@ -1,3 +1,11 @@
+# Shared Nomenclature — Accepted Source Bound
+
+Final source `a738be703d0f161c9a18896c274a8e671256e292` is committed and pushed. Twelve scientific source/PDF/report files now bind the complete shared-nomenclature review for #4865. The full regression at 8068ddb140caab8bf7152f92f8b5641ab309c078 passed 6,811 tests with 93.24% src coverage; its later one-sentence clarification has separate successful algebra, six native builds, all-page text comparison, six changed-page inspections, 70 evidence/metadata tests and 17 publication gates. Earlier source and review identities remain intact: 89 protected scientific files and 86 other Geometry inputs are Git-unchanged.
+
+The shared-source corpus row is now reviewed with exact scope; this does not clear the six whole books or promote historical website route reviews. See reports/technical-review/shared-nomenclature-delivery.json for immutable hashes and five findings. Five agy CLI Gemini 3.8 Flash helpers supported routine work, with lead adjudication recorded. Next: verify parent PR #4869's actual remote-main delivery, integrate its squash merge normally, then open a regular child PR, attach it and complete protected CI/merge verification. Never draft. The overall goal remains active, and #4868 plus the remaining corpus remain open. No full regression is running. Earlier entries are historical.
+
+---
+
 # Shared Nomenclature — Full Regression and Final Clarification Complete
 
 The full offline suite at `8068ddb140caab8bf7152f92f8b5641ab309c078` passed 6,811 tests, with 29 skipped, 210 deselected and 93.24% src coverage in 1,097.12 seconds. Tracked files, renders and hooks were frozen during the run. A subsequent one-sentence clarification states that a trajectory is considered for specified initial data and inputs; it does not imply observed motion uniquely identifies the input history. Equations and executable code are unchanged. An exact two-input integrator counterexample supports that distinction without asserting universal non-identifiability.

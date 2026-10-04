@@ -1,0 +1,126 @@
+{
+  "issue": 4865,
+  "status": "Complete shared nomenclature review accepted at the final source checkpoint; regular PR and verified remote-main delivery pending.",
+  "accepted_source_commit": "a738be703d0f161c9a18896c274a8e671256e292",
+  "accepted_source_git_sha256": {
+    "articles/The_Geometry_of_Motion/nomenclature.tex": "61c6652529780b39b3d1b8f47ad6c2046e080075cfb02fe948a6e12d646ede6d",
+    "articles/The_Geometry_of_Motion/Volume_0/main.pdf": "3f909759b742827100015e105c28268328b7c88a0f2cd6423aad0d1e0bae4cd0",
+    "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "0f30500f3dd91811dcee80a2eb23f10270771430ac5fe1f22fb931dc3c49802c",
+    "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "0b04e168ebd633602df2d60e2dba990fd70428058f2159e48e22a26459dc110d",
+    "articles/The_Geometry_of_Motion/Volume_III/main.pdf": "b44e5b9541c3a243538100a9595d667c35e2c03b9db27383cc0d8686242775fe",
+    "articles/The_Geometry_of_Motion/Volume_IV/main.pdf": "491148fe50f1899f93119fbfb2c84b4728e8538b7dffb73404cd23c36552711d",
+    "articles/The_Geometry_of_Motion/Volume_V/main.pdf": "31987f1cbe45a280d02145882aedf82b7bad319e5f4f8c1fab5a19ca6a98672b",
+    "reports/technical-review/shared-nomenclature-review.md": "ad292ebd11aa7680ad531087d0c8aa023721fe0dd66c4df9591c916e0235868a",
+    "reports/technical-review/shared-nomenclature-independent-checks.json": "4e03ec6c04ab7402d3ad386e4682746449bcf8a5bc97e43eb03842faae31a224",
+    "reports/technical-review/shared-nomenclature-prior-review.json": "f8641a6d6cafcae42c6f313f1be82f163abf64197a5b4d86943ec1130b09f41f",
+    "reports/technical-review/shared-nomenclature-render-verification.json": "43b55779a71974e55cbe44c7badba3a3ea0317888432bfc3ab620fecf15ca7bf",
+    "reports/technical-review/shared-nomenclature-dependency-carry-forward.json": "c28bdf87ffa6eb872222b285a03f8dec50314635c09f11db5f2ba08233c35d87"
+  },
+  "baseline_reviewed_head": "53e4676ee1e2ffa32a05257cca64913fcbc25769",
+  "parent_pr": 4869,
+  "scientific_findings": [
+    {
+      "finding_id": "shared-nomenclature-representation-and-power",
+      "disposition": "corrected",
+      "rationale": "Qualify local qdot=v, permit qdot=Nv with different representation dimensions, define n_x, and transform task Jacobians and power-conjugate forces consistently."
+    },
+    {
+      "finding_id": "shared-nomenclature-mass-and-velocity-product",
+      "disposition": "corrected",
+      "rationale": "State independent-velocity and kinetic-energy assumptions for SPD inertia; distinguish C from Cqdot and its nonunique factorization."
+    },
+    {
+      "finding_id": "shared-nomenclature-full-and-discrete-jacobians",
+      "disposition": "corrected",
+      "rationale": "Declare full discrete update F_k and a common nominal pair; distinguish full continuous dynamics from zero-input drift."
+    },
+    {
+      "finding_id": "shared-nomenclature-trajectory-and-inference",
+      "disposition": "corrected",
+      "rationale": "Separate parameterized curves, timed trajectories for specified data/inputs, and evolution maps; avoid implying unique inverse input identification."
+    },
+    {
+      "finding_id": "shared-nomenclature-print-presentation",
+      "disposition": "corrected",
+      "rationale": "Correct shared running headings and display the unchanged DCR formula within the narrow editions; preserve formula and counterfactual meanings."
+    }
+  ],
+  "validation": "reports/technical-review/shared-nomenclature-validation.json",
+  "prior_review": "reports/technical-review/shared-nomenclature-prior-review.json",
+  "full": {
+    "status": "passed",
+    "source_commit": "8068ddb140caab8bf7152f92f8b5641ab309c078",
+    "passed": 6811,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 51,
+    "failed": 0,
+    "errors": 0,
+    "seconds": 1097.12,
+    "src_coverage_percent": 93.24,
+    "command": "python -u -X utf8 -m pytest tests/ --cov=src --cov-report=xml --cov-report=term --timeout=60 --junitxml=docs/development/technical-review/nomenclature-full-results.xml",
+    "scope": "Repository default offline exclusions. No tracked-file edits, renders or Git hooks ran concurrently. This full-tested checkpoint precedes the separately validated one-sentence trajectory clarification and its regenerated PDFs."
+  },
+  "post_full_scope": {
+    "change": "Replace a trajectory fixes initial state and input law with for specified initial data and an input law, gamma(t) denotes a particular timed state trajectory. No equation changes.",
+    "independent_check": "Two different allocations for xdot=u1+u2 produce x(t)=t; does not assert all input-identification problems are nonunique.",
+    "scoped_checks": {
+      "passed": 70,
+      "skipped": 0,
+      "seconds": 29.233,
+      "scope": "Finding evidence output boundary, claim inventory, book publication audit, scientific trust metadata and SPEC, after final PDF dependency refresh."
+    },
+    "publication_gates_passed": 17,
+    "pdf_comparison": {
+      "pages": [
+        {
+          "volume": "Volume_0",
+          "page_count": 234,
+          "changed_extracted_text_pages": [14]
+        },
+        {
+          "volume": "Volume_I",
+          "page_count": 152,
+          "changed_extracted_text_pages": [14]
+        },
+        {
+          "volume": "Volume_II",
+          "page_count": 103,
+          "changed_extracted_text_pages": [10]
+        },
+        {
+          "volume": "Volume_III",
+          "page_count": 71,
+          "changed_extracted_text_pages": [8]
+        },
+        {
+          "volume": "Volume_IV",
+          "page_count": 74,
+          "changed_extracted_text_pages": [8]
+        },
+        {
+          "volume": "Volume_V",
+          "page_count": 48,
+          "changed_extracted_text_pages": [7]
+        }
+      ],
+      "changed_images": [
+        "docs/development/technical-review/nomenclature-final-Volume_0-014.png",
+        "docs/development/technical-review/nomenclature-final-Volume_I-014.png",
+        "docs/development/technical-review/nomenclature-final-Volume_II-010.png",
+        "docs/development/technical-review/nomenclature-final-Volume_III-08.png",
+        "docs/development/technical-review/nomenclature-final-Volume_IV-08.png",
+        "docs/development/technical-review/nomenclature-final-Volume_V-07.png"
+      ],
+      "equal_images": 29,
+      "dependency_digest_updates": 149
+    },
+    "full_suite_repeated": false,
+    "reason": "One prose-only source refinement; executable code unchanged from the full-tested checkpoint. Native rebuild, all-page extracted-text comparison, scoped raster comparison/manual inspection, exact algebra and metadata/publication checks cover the later change.",
+    "script_repair": "Initial local comparison helper used an obsolete nominal_pages field name; failed before copying PDFs. Corrected to the actual nomenclature_pages field; successful complete rerun recorded separately."
+  },
+  "protected_prior_files_verified": 89,
+  "other_geometry_inputs_git_verified": 86,
+  "scope": "Complete shared TeX source and bounded six-PDF notation presentation. The shared input has no standalone web route; this source acceptance does not rewrite or promote enclosing route reviews, claims or whole-book scientific status. No empirical or live-deployment acceptance.",
+  "delegation": "Five successful supplied-text agy CLI Gemini 3.8 Flash helpers: notation inventory, copy review, PR draft, trajectory wording and turnover review. Lead retained the golf connection, corrected velocity and inverse-inference overclaims, and kept bounded print evidence, offline regression, final-head CI and delivery scopes separate."
+}
