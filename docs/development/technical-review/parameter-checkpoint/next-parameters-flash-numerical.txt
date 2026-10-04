@@ -1,0 +1,111 @@
+### 1. Rigid Point Velocity Verification
+
+**Coordinate System:** Right-handed with $\hat{x}$ forward, $\hat{y}$ upward, $\hat{z}$ right.
+Standard vector cross product:
+$$\boldsymbol{\omega} \times \mathbf{r} = (\omega_y r_z - \omega_z r_y)\hat{x} + (\omega_z r_x - \omega_x r_z)\hat{y} + (\omega_x r_y - \omega_y r_x)\hat{z}$$
+
+Given:
+- $\mathbf{v}_O = (40, 0, 0)\text{ m/s}$
+- $\mathbf{r} = (0.04, 0, 0)\text{ m}$ (so $r_x = 0.04\text{ m}, r_y = 0, r_z = 0$)
+
+Formula:
+$$\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{r} = (40, 0, 0) + (0,\, \omega_z(0.04),\, -\omega_y(0.04))$$
+
+Horizontal deflection angle:
+$$\theta_{\text{horiz}} = \operatorname{atan2}(v_z, v_x)$$
+
+---
+
+#### Case A: $\boldsymbol{\omega} = (0, 50, 0)\text{ rad/s}$
+- $\boldsymbol{\omega} \times \mathbf{r} = (0,\, 0,\, -50 \times 0.04) = (0, 0, -2.0)\text{ m/s}$
+- $\mathbf{v}_P = (40, 0, -2.0)\text{ m/s}$
+- $\operatorname{atan2}(v_z, v_x) = \operatorname{atan2}(-2.0, 40) \approx \mathbf{-2.8624^\circ}$ (or $-0.04996\text{ rad}$)
+
+#### Case B: $\boldsymbol{\omega} = (0, -50, 0)\text{ rad/s}$
+- $\boldsymbol{\omega} \times \mathbf{r} = (0,\, 0,\, -(-50) \times 0.04) = (0, 0, 2.0)\text{ m/s}$
+- $\mathbf{v}_P = (40, 0, 2.0)\text{ m/s}$
+- $\operatorname{atan2}(v_z, v_x) = \operatorname{atan2}(2.0, 40) \approx \mathbf{+2.8624^\circ}$ (or $+0.04996\text{ rad}$)
+
+#### Case C: $\boldsymbol{\omega} = (50, 0, 0)\text{ rad/s}$
+- $\boldsymbol{\omega} \times \mathbf{r} = (0, 0, 0)\text{ m/s}$ (since $\boldsymbol{\omega} \parallel \mathbf{r}$)
+- $\mathbf{v}_P = (40, 0, 0)\text{ m/s}$
+- $\operatorname{atan2}(v_z, v_x) = \operatorname{atan2}(0, 40) = \mathbf{0.0^\circ}$
+
+---
+
+#### Why equal norms $\|\boldsymbol{\omega}\|$ do not imply equal direction offsets:
+1. **Geometric projection / collinearity:** The cross product $\boldsymbol{\omega} \times \mathbf{r}$ depends on the relative orientation ($\sin \angle(\boldsymbol{\omega}, \mathbf{r})$). For pure roll ($\boldsymbol{\omega} \parallel \mathbf{r}$), $\|\boldsymbol{\omega} \times \mathbf{r}\| = 0$, producing zero velocity modification and zero offset despite having the exact same magnitude $\|\boldsymbol{\omega}\| = 50\text{ rad/s}$.
+2. **Component plane selectivity:** The horizontal deflection angle $\operatorname{atan2}(v_z, v_x)$ projects only onto the horizontal ($x$-$z$) plane. Any component of $\boldsymbol{\omega} \times \mathbf{r}$ in $\hat{y}$ alters vertical pitch/elevation without affecting horizontal yaw/deflection directly.
+
+---
+
+### 2. Unit Vector Dot Product & Spin Loft Proof
+
+Let the unit vectors be:
+- Club path / motion vector: $\hat{\mathbf{u}}_1 = (\cos a \cos p,\, \sin a,\, \cos a \sin p)$
+- Club face normal vector: $\hat{\mathbf{u}}_2 = (\cos l \cos f,\, \sin l,\, \cos l \sin f)$
+
+Compute the dot product $\hat{\mathbf{u}}_1 \cdot \hat{\mathbf{u}}_2$:
+$$\hat{\mathbf{u}}_1 \cdot \hat{\mathbf{u}}_2 = (\cos a \cos p)(\cos l \cos f) + (\sin a)(\sin l) + (\cos a \sin p)(\cos l \sin f)$$
+$$= \sin a \sin l + \cos a \cos l (\cos p \cos f + \sin p \sin f)$$
+
+Using the angle subtraction identity $\cos f \cos p + \sin f \sin p = \cos(f - p)$:
+$$\hat{\mathbf{u}}_1 \cdot \hat{\mathbf{u}}_2 = \sin a \sin l + \cos a \cos l \cos(f - p) \quad \blacksquare$$
+
+The angle between them (spin loft $\theta_{\text{SL}}$) is:
+$$\theta_{\text{SL}} = \arccos\big(\sin a \sin l + \cos a \cos l \cos(f - p)\big)$$
+
+---
+
+#### Spin Loft Computations ($a = -5^\circ$, $l = 15^\circ$)
+- $\sin(-5^\circ) \approx -0.08715574$
+- $\cos(-5^\circ) \approx 0.99619470$
+- $\sin(15^\circ) \approx 0.25881905$
+- $\cos(15^\circ) \approx 0.96592583$
+- $\sin a \sin l = (-0.08715574)(0.25881905) \approx -0.02256756$
+- $\cos a \cos l = (0.99619470)(0.96592583) \approx 0.96225026$
+
+1. **For $f - p = 0^\circ$:**
+   $$\cos(0^\circ) = 1$$
+   $$\hat{\mathbf{u}}_1 \cdot \hat{\mathbf{u}}_2 = -0.02256756 + 0.96225026 = 0.93968270$$
+   $$\theta_{\text{SL}} = \arccos(0.93968270) = l - a = 15^\circ - (-5^\circ) = \mathbf{20.00^\circ}$$
+
+2. **For $f - p = 10^\circ$:**
+   $$\cos(10^\circ) \approx 0.98480775$$
+   $$\hat{\mathbf{u}}_1 \cdot \hat{\mathbf{u}}_2 = -0.02256756 + 0.96225026 \times 0.98480775 = -0.02256756 + 0.94763158 = 0.92506402$$
+   $$\theta_{\text{SL}} = \arccos(0.92506402) \approx \mathbf{22.32^\circ}$$
+
+---
+
+### 3. Spin Vector Breakdown in Horizontal Forward Flight
+
+Given spin vector in rpm:
+$$\boldsymbol{\omega} = (\omega_x, \omega_y, \omega_z) = (1000, -300, 3000)\text{ rpm}$$
+With flight path along $\hat{x}$, backspin basis $\hat{\mathbf{e}}_b = \hat{z}$ (pitch axis), sidespin/upward basis $\hat{\mathbf{e}}_u = \hat{y}$ (yaw axis), and roll axis $\hat{\mathbf{e}}_r = \hat{x}$:
+
+- **Total spin magnitude:**
+  $$\|\boldsymbol{\omega}\| = \sqrt{1000^2 + (-300)^2 + 3000^2} = \sqrt{1{,}000{,}000 + 90{,}000 + 9{,}000{,}000} = \sqrt{10{,}090{,}000} \approx \mathbf{3176.48\text{ rpm}}$$
+
+- **Transverse spin magnitude** (component orthogonal to forward flight along $\hat{x}$, spanning the $\hat{y}$-$\hat{z}$ plane):
+  $$\|\boldsymbol{\omega}_{\perp}\| = \sqrt{\omega_y^2 + \omega_z^2} = \sqrt{(-300)^2 + 3000^2} = \sqrt{90{,}000 + 9{,}000{,}000} = \sqrt{9{,}090{,}000} \approx \mathbf{3014.96\text{ rpm}}$$
+
+- **Tilt angle $\operatorname{atan2}(300, 3000)$:**
+  $$\operatorname{atan2}(300, 3000) = \arctan(0.1) \approx 0.09966865\text{ rad} \approx \mathbf{5.7106^\circ}$$
+  *(Note: For the actual signed vector with $\omega_y = -300$, $\operatorname{atan2}(-\omega_y, \omega_z) = \operatorname{atan2}(300, 3000) \approx +5.71^\circ$, representing a tilt/cant of the spin axis).*
+
+---
+
+### 4. Assumptions & Undefined Cases
+
+1. **Rigid-Body Kinematics:**
+   - Assumes infinitesimal rigidity (no structural deformation, flex, or gear-tooth lash between points $O$ and $P$).
+   - Point velocity formula applies instantaneously at fixed coordinate evaluation time.
+
+2. **Angles and Trigonometric Projections:**
+   - **Gimbal lock / Singularity:** If attack angle $a = \pm 90^\circ$ or loft $l = \pm 90^\circ$, the horizontal projections collapse ($\cos a = 0$ or $\cos l = 0$), rendering azimuth angles $p$ and $f$ undefined / degenerate.
+   - **Planar domain bounds:** Argument to $\arccos$ is strictly bounded within $[-1, 1]$ via Cauchy-Schwarz.
+
+3. **Spin Vector Projections:**
+   - **Zero-magnitude singularity:** Tilt angle $\operatorname{atan2}(\omega_y, \omega_z)$ is mathematically undefined when both transverse components vanish ($\omega_y = 0$ and $\omega_z = 0$, i.e., pure rifle/bullet spin).
+   - **Forward flight orientation:** The decomposition assumes instantaneous flight velocity is aligned along $\hat{x}$; if velocity has non-zero elevation or azimuth, $\hat{\mathbf{e}}_b$ and $\hat{\mathbf{e}}_u$ must be re-projected via the trajectory Frenet-Serret frame.
+   - **Consistency Check Notice:** These calculations serve strictly as mathematical and manufactured consistency checks, not empirical validations of aerodynamic drag, Magnus lift, or ball-club impact dynamics.

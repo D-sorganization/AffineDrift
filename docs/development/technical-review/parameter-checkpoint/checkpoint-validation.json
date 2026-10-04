@@ -1,0 +1,65 @@
+{
+  "status": "Provisional checkpoint; final technical and visual acceptance pending",
+  "base_commit": "205f089130a03fdee77c6a73074cf6ce7d598c7a",
+  "issue": 4881,
+  "build": {
+    "passes": [
+      "pdflatex -halt-on-error",
+      "biber",
+      "pdflatex -halt-on-error",
+      "pdflatex -halt-on-error"
+    ],
+    "exit_code": 0,
+    "pages": 94,
+    "bibliography_entries": 101,
+    "printed_entries": 101,
+    "undefined_references_or_citations": false,
+    "visual_review": "Not performed for this provisional PDF",
+    "scope": "QA output directory only; canonical main.pdf remains the previously accepted hardware PDF",
+    "preview_sha256": "4f444c3be839929fe70c91d1c273ef09b4a3374c2a80d4f25e6b4d89d3b41467"
+  },
+  "focused_checks": {
+    "count": 63,
+    "exit_code": 0,
+    "command": "python -X utf8 -m pytest tests/test_launch_monitor_estimation_rigor.py tests/test_claim_audit_inventory.py tests/test_claim_audit_followup_scope.py tests/test_spec_changelog.py --no-cov -q"
+  },
+  "titles": {
+    "files": 665,
+    "exit_code": 0
+  },
+  "not_run": [
+    "Full regression on parameter changes",
+    "Full PDF visual review",
+    "New browser/render acceptance",
+    "Independent final technical review"
+  ],
+  "hashes": {
+    "articles/Launch_Monitor_Technology_Review/sections/02-parameters.tex": "7e02fa2b59341f4b774c513763e68ccc4c8e474bd65d04905f17b0f1b52330bc",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "c980451d17e81baddd6695fe7d72c235050995f0bb994bfa88eca1301ab91d33"
+  },
+  "hash_scope": "SHA-256 of local working-tree bytes at provisional build; final acceptance must also bind canonical Git blobs",
+  "final_metadata_checks": {
+    "count": 39,
+    "exit_code": 0,
+    "log": "final-metadata-tests.txt"
+  },
+  "root_hygiene": {
+    "count": 6,
+    "exit_code": 0
+  },
+  "latex_environments": {
+    "files": 245,
+    "exit_code": 0
+  },
+  "canonical_bibliography_quality": {
+    "entries": 169,
+    "exit_code": 0,
+    "scope": "Repository canonical bibliography; separate from book-specific101/101build parity"
+  },
+  "existing_labels_preserved": 9,
+  "parameter_claim_release": {
+    "issue_receipt": "https://github.com/D-sorganization/AffineDrift/issues/4881#issuecomment-5981909404",
+    "presence_receipt": "https://github.com/D-sorganization/Repository_Management/issues/1576#issuecomment-5981910077",
+    "reason": "User-requested pause and handoff; not completion"
+  }
+}
