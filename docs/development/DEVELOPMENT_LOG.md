@@ -1,52 +1,52 @@
-# Parameter Delivered and Article Main Integration â€” 2026-10-04
+# Parameter Delivered and Article Main Integration — 2026-10-04
 
 Verified all eight accepted parameter source/evidence hashes on actual remote main d33e635d5 after PR #4886 merge. Released its lease/presence and merged main into #4889 with only metadata conflict resolution; all four accepted article hashes remain unchanged. Retargeted-main delivery preparation follows; CI/protected merge remains.
 
-# Implementation Appendix Acceptance â€” 2026-10-04
+# Implementation Appendix Acceptance — 2026-10-04
 
 Frozen source f141a02b5be45db857bee76e2d078ce5a444a135 passed 6,863 tests with 93.24% src coverage in 453.48 seconds. Scoped final PDF and complete source review accepted, five canonical bindings saved, only the appendix corpus row advanced. Earlier parameter PDF/bibliography hashes remain historical; the other 13 parameter/article/date source bindings are unchanged. Protected delivery remains. Follow-up #4894 groups the connected flight, accuracy and design chapters; two Flash inventories and primary-reading preparation are isolated from this acceptance.
 
-# DL-#4890 â€” Implementation Appendix Source Checkpoint
+# DL-#4890 — Implementation Appendix Source Checkpoint
 
 2026-10-04: completed full original/revision reading and primary-source checks. Corrected Doppler/window claims, dechirping, club reference-point interpretation, hardware cadence, sensor observation functions and Jacobians, EKF/RTS assumptions, event timing, inverse-club priors, optical blur/overlap and held-out validation. Five read-only Flash helpers were lead-adjudicated. Manufactured arithmetic and 100 finite-difference Jacobians pass. Canonical PDF rebuilt to 97 pages with 102 printed references; scoped final visual review passed after fixing a stranded heading. Full frozen regression and protected delivery remain. See the implementation dossier for derivations, source-reading bounds and rejected helper assertions.
 
-# DL-#4888 â€” Unverified Date Presentation
+# DL-#4888 — Unverified Date Presentation
 
 The browser exposed Invalid Date in two shared presentation surfaces. TDD reproduced both failures, then a scoped title-placeholder replacement and metadata-aware span fixed them without replacing dates in article prose. Seven new cases and existing metadata/header suites pass; browser output and delegation limits are recorded. Frozen source 70337154c passed 6,863 tests, 29 skips, 210 deselections and 60 warnings in 593.82 seconds, with 93.24% src coverage and no tracked edits during execution. Article acceptance metadata through 5ccb2d600 is integrated. Five final pre-PR gates passed over explicit source refs using repaired tool ca802ada, with 15 mapped tests; 44 metadata/root/SPEC tests passed. Protected delivery remains.
 
-# Dimensionality and Integration Source Review â€” 2026-10-04
+# Dimensionality and Integration Source Review — 2026-10-04
 
 Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. Both reviews, scoped local presentation and full regression are accepted at 6cd4d2eee. Regular PR #4889 is open, stacked on #4886; remote-main delivery remains. See the review report for hypotheses and rejected suggestions.
 
-# Parameter Review Acceptance â€” 2026-10-04
+# Parameter Review Acceptance — 2026-10-04
 
 Issue4881: full chapter/PDF review and full regression accepted at 117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb. Canonical source and validation records preserve scope, rejected helper errors and all test outcomes. Regular protected PR delivery remains.
 
-# Joint Review â€” Revalidated External Progress
+# Joint Review — Revalidated External Progress
 
 2026-10-04 15:33 UTC: revalidated current repository state after advancement to 60bb50112. Verified all 15 #4875 changed paths on its actual remote-main merge 0bb9d47f8 and released its claim/presence. Reconciled the later 11-line deletion of uncited usgarules at 4b1285fd5 with preserved original review evidence and new source bindings. Current eight-book CI passes; Launch Monitor has 96 cited/printed entries and 92 pages. All bibliography-page extracted text matches the retained reviewed PDF; 79 complete pages match and 13 have mathematical extraction differences, recorded without a pixel-equivalence claim. Inspected CI pages 67 and 90. Parent delivery and hash changes supersede the temporarily restated older epic checkpoint. No manuscript body edit was made during reconciliation.
 
 ---
 
-# Bosch Insertion Plan â€” Fixed-Commit Acceptance #4877
+# Bosch Insertion Plan — Fixed-Commit Acceptance #4877
 
 2026-10-04: source checkpoint `73f6f3946649b6a708495cc8d30bc61cbf4b25eb` passed the full regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,087.67 seconds, exit 0. The tracked tree stayed unchanged; no local rendering or hooks overlapped. Five canonical source/evidence hashes bind the complete insertion-plan review and cited bibliography repairs. The corpus advances one row, leaving 89 explicitly pending originals. Eight Flash helpers supported review/PR preparation under lead adjudication. Hardware turnover commit ebf0b82fe is integrated without changing its six accepted source/evidence files. The two completed reviews share regular PR #4879 and one protected delivery cycle; the PR is attached and not a draft. Parent #4875 remains queued; #4878 is only filed read-only preparation. No whole-book or empirical acceptance is added.
 
 ---
 
-# Hardware Appendix â€” Queue and Turnover Update #4876
+# Hardware Appendix — Queue and Turnover Update #4876
 
 2026-10-04: recorded the successful full Ruff/Black checks and their log hashes. The six accepted source/evidence files remain unchanged. Parent #4875 passed its complete PR CI and is undergoing protected merge-group validation; no remote-main delivery is claimed. Bosch #4877 is separately committed/pushed at 73f6f3946 and running its fixed-source regression. Updated turnover distinguishes both branches, current leases and the remaining main-target PR workflow. No publication source or PDF was changed.
 
 ---
 
-# Hardware Appendix â€” Fixed-Commit Regression and Acceptance #4876
+# Hardware Appendix — Fixed-Commit Regression and Acceptance #4876
 
 2026-10-04: accepted source `377ae74fc8917529f36882614012538e2254816f` passed the full repository regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,106.10 seconds, exit 0. The tracked tree remained unchanged throughout; no concurrent rendering or commit hooks. Six source/evidence files now have canonical Git-byte bindings, and one corpus row advances to complete source review. Five Flash source helpers plus one prose helper were lead-reviewed. No additional source correction was needed after the fixed checkpoint. Packaging outputs were preserved beneath QA after the run. Full scope and separate PDF/source validation are in `reports/technical-review/hardware-appendix-validation.json`. Parent #4875 protected delivery and the hardware regular PR remain pending; no hardware measurement, full-book or entire-corpus acceptance is claimed.
 
 ---
 
-# Hardware Appendix â€” Correction Checkpoint #4876
+# Hardware Appendix — Correction Checkpoint #4876
 
 Work is on `fix/hardware-appendix-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-hardware-review`, starting from the final PR #4875 head `4b92fe90af30ddaa0e2b339e0814375437a4b071`. Parent PR #4875 remains open with auto-merge enabled through the merge queue: all completed checks passed; E2E site rendering is still running in CI Standard 37190386364. Do not claim it is merged or cancel/restart its build. Its accepted source/evidence bytes remain unchanged here.
 
@@ -60,7 +60,7 @@ Lease session `technical-review-20261004-hardware` expires 2026-10-04T11:04:29.4
 
 ---
 
-# Tangent Lay Summary â€” Accepted Source and Regular PR #4875
+# Tangent Lay Summary — Accepted Source and Regular PR #4875
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4875 is open against main and attached; never draft. Accepted source 73a1ae4f4f337036d1da211458fa81a3a1da3dbd binds four source/review/math/browser files. Six corrected findings now reference those exact bytes; the earlier route review is preserved separately. The complete article distinguishes local sensitivity and affine offsets from finite motion, qualifies remainder regularity, demonstrates coupled phases, bounds engineering examples and separates control algorithms. Only this publication source changed; production Python/tests are Git-unchanged from f10a0feff. The corpus row records complete source review without empirical coaching acceptance.
 
@@ -72,7 +72,7 @@ Four agy CLI Gemini 3.8 Flash helpers supported #4871, including two parallel re
 
 ---
 
-# Tangent Lay Summary â€” Source Correction Under Validation
+# Tangent Lay Summary — Source Correction Under Validation
 
 Active #4871 is on fix/tangent-lay-summary-review in C:/Users/diete/Repositories/Worktrees/AffineDrift-lay-summary-review. The complete lay-summary source now distinguishes exact first-order sensitivity from finite nonlinear motion; qualifies C1 versus quadratic bounds; demonstrates cross-phase dependence; removes invented robot/spacecraft outcomes; and separates DDP/iLQR from MPC. Read reports/technical-review/tangent-lay-summary-review.md and its exact-check JSON. Four agy CLI Gemini 3.8 Flash helpers supported preparation, inventory and review, with the last two in parallel. Lead review rejected helper overstatements about C2 necessity, zero equilibria and universal dependence of every output on every earlier input.
 
@@ -84,7 +84,7 @@ Next: finish validation, bind the complete source and six corrections to an exac
 
 ---
 
-# Title-Card Finding Retracted After Raw-Pixel Verification â€” #4868
+# Title-Card Finding Retracted After Raw-Pixel Verification — #4868
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4873 delivers the #4868 investigation; it is open, attached and not a draft. Earlier missing-text claims were mistaken readings of displayed previews. Eight controlled desktop viewports, four partial-build viewports and the two ordinary-reader theme-toggle captures have identical title, description and reading-time RGB regions within their respective case families. All 100 native frames retain identical regions, including frame 64 overlapping the browser capture. Original-resolution reinspection of the original Volume II dark cards confirms visible text; those older light/dark pairs are not byte-identical and are not included in equality claims. No CSS, JavaScript or publication source changed. Do not resume speculative paint fixes or diagnose the preview implementation.
 
@@ -96,7 +96,7 @@ Validation: all 22 turnover/SPEC checks passed and all raw-pixel comparisons pas
 
 ---
 
-# Deployment Baseline Reproduces Title-Card Discrepancy â€” #4868
+# Deployment Baseline Reproduces Title-Card Discrepancy — #4868
 
 The exact-revision deployment baseline is now available and verified: workflow 37181787221 at ecc23b233e54349981db6622238341c6866a298f completed the full render, publication gate, pre-deployment browser checks and live verification successfully. Artifact 11296206954 (github-pages) has the expected manifest revision and 251 public pages. Its extracted site is served at localhost:8878 by exec session 17274 from C:/Users/diete/AppData/Local/Temp/affine-title-card-deploy-6cf9235c9fc340d19db0eb11438c42a8/site. The local build driver failed at its 3600-second timeout; its Deno child later rendered 250 inputs and exited, but the five subsequent pipeline commands never ran. Do not call the local pipeline successful or restart it as though it were still required for this baseline.
 
@@ -107,7 +107,7 @@ Current browser sessions are titlecard-clean-headed, titlecard-clean-headless, t
 Queued issue #4871 records six technical/pedagogical defects in the next unreviewed tangent-framework lay summary. Three lead-specified exact counterexamples were drafted by a separate Flash helper and verified; no source correction or claim for #4871 exists. Shared-nomenclature #4870 remains delivered on remote main; artifact byte checks additionally confirm Volumes III/IV/V. Do not claim all six source PDFs are in this deployment artifact: the first three are not at those paths, and some public book pages intentionally link separately pinned GitHub editions. Source acceptance and reader-link provenance remain separate. The overall goal stays active; #4868 is unresolved. Never create draft PRs. Earlier entries are historical.
 
 ---
-# Title-Card Baseline Limitations Recorded â€” #4868
+# Title-Card Baseline Limitations Recorded — #4868
 
 The current investigation is on fix/volume2-title-card-investigation in C:/Users/diete/Repositories/Worktrees/AffineDrift-title-card-review, starting from verified main ecc23b233. Preliminary observations are recorded in reports/technical-review/title-card-preliminary-observations.md. The old single-route build lacks 17 generated resources and logs an AnchorJS error. Its dark viewport initially omits title text that appears in subsequent locator and viewport captures. A separate native capture after reload shows the text, but the narrower native window clips the emulated layout. Service-worker policy differs from older headless captures. These are unresolved comparison variables, not an accepted source defect or capture-only explanation.
 
@@ -116,7 +116,7 @@ The clean full-site build remains live in exec session 5732, with raw output at 
 Four supplied-text agy CLI Gemini 3.8 Flash invocations have completed for this issue. The first inventory draft was rejected; a reviewed correction hashes nine images. The fourth drafted a note that the lead corrected for scope and timing. No publication, CSS or JavaScript source has changed. The claim technical-review-20261004-title-card expires 2026-10-04T08:08:06.784803+00:00. Shared-nomenclature PR #4870 is delivered at ecc23b233, verified on remote main and released; its receipt is already committed on this branch. The overall corpus goal remains active. Never create draft PRs. Earlier entries below are historical.
 
 ---
-# Title-Card Paint Investigation â€” #4868
+# Title-Card Paint Investigation — #4868
 
 Shared-nomenclature PR #4870 is delivered as `ecc23b233e54349981db6622238341c6866a298f`. Final-head CI 37181458391 passed; all 25 changed Git paths, twelve accepted scientific files, 89 protected prior files and 86 other Geometry inputs match fetched remote main. The full-site browser build, Playwright and axe steps were skipped by the E2E change filter, not executed successfully. Local native PDF builds and bounded print checks retain their independent scope. The receipt is reports/technical-review/shared-nomenclature-remote-main-receipt.json; #4865 lease and presence are released. Parent #4869 is already delivered and receipted. The shared source is complete, while whole-book, remaining corpus and empirical scopes remain open.
 
@@ -126,7 +126,7 @@ Next: finish and serve the clean build; compare visible-browser and headless Chr
 
 ---
 
-### DL-#4868 Â· Title-Card Paint Investigation
+### DL-#4868 · Title-Card Paint Investigation
 
 - **State:** in_progress
 - **Owner:** codex
@@ -136,7 +136,7 @@ Next: finish and serve the clean build; compare visible-browser and headless Chr
 - **Evidence:** Parent issue and preserved one-route screenshots; title-card-clean-build-directories.json and the observed build process; shared-nomenclature-remote-main-receipt.json records delivered parent scope.
 - **Next step:** Complete clean build and visible/headless desktop/mobile, light/dark pixel inspection. No source defect or correction is accepted yet.
 
-### DL-#4865 Â· Shared Nomenclature Delivered
+### DL-#4865 · Shared Nomenclature Delivered
 
 - **State:** done
 - **Owner:** codex
@@ -147,7 +147,7 @@ Next: finish and serve the clean build; compare visible-browser and headless Chr
 - **Evidence:** reports/technical-review/shared-nomenclature-remote-main-receipt.json; shared-nomenclature-delivery.json; shared-nomenclature-validation.json.
 - **Next step:** No remaining #4865 delivery work; #4868 and the broader corpus remain open.
 
-# Shared Nomenclature â€” Regular PR #4870
+# Shared Nomenclature — Regular PR #4870
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4870 is open against main, attached, and guarded squash auto-merge is enabled. Never draft. Final accepted source a738be703d0f161c9a18896c274a8e671256e292 and all twelve bound source/PDF/report files are unchanged. The full offline suite at8068 passed 6,811 tests, 29 skipped and 210 deselected, with93.24% src coverage; the later one-sentence trajectory clarification has separate exact algebra, six native builds, 682-page text comparison, six changed-page inspections, 70 evidence/metadata tests and all17 publication gates. The22 turnover checks also pass. Source and delivery scopes remain distinct.
 
@@ -157,7 +157,7 @@ Push this PR-link turnover, then watch CI on that exact final remote head. Verif
 
 ---
 
-# Shared Nomenclature â€” Accepted Source Bound
+# Shared Nomenclature — Accepted Source Bound
 
 Final source `a738be703d0f161c9a18896c274a8e671256e292` is committed and pushed. Twelve scientific source/PDF/report files now bind the complete shared-nomenclature review for #4865. The full regression at 8068ddb140caab8bf7152f92f8b5641ab309c078 passed 6,811 tests with 93.24% src coverage; its later one-sentence clarification has separate successful algebra, six native builds, all-page text comparison, six changed-page inspections, 70 evidence/metadata tests and 17 publication gates. Earlier source and review identities remain intact: 89 protected scientific files and 86 other Geometry inputs are Git-unchanged.
 
@@ -165,7 +165,7 @@ The shared-source corpus row is now reviewed with exact scope; this does not cle
 
 ---
 
-# Shared Nomenclature â€” Full Regression and Final Clarification Complete
+# Shared Nomenclature — Full Regression and Final Clarification Complete
 
 The full offline suite at `8068ddb140caab8bf7152f92f8b5641ab309c078` passed 6,811 tests, with 29 skipped, 210 deselected and 93.24% src coverage in 1,097.12 seconds. Tracked files, renders and hooks were frozen during the run. A subsequent one-sentence clarification states that a trajectory is considered for specified initial data and inputs; it does not imply observed motion uniquely identifies the input history. Equations and executable code are unchanged. An exact two-input integrator counterexample supports that distinction without asserting universal non-identifiability.
 
@@ -175,7 +175,7 @@ Five successful supplied-text agy CLI Gemini 3.8 Flash helpers supported routine
 
 ---
 
-# Shared Nomenclature â€” Ready for Full Regression
+# Shared Nomenclature — Ready for Full Regression
 
 All 17 publication gates pass after the complete dependency refresh and parent evidence-boundary integration; 70 integration checks pass in 33.19 seconds. Earlier 94 mechanics and 50 metadata checks remain recorded with their exact scopes. Three supplied-text agy CLI Gemini 3.8 Flash helpers have succeeded, including a prepared PR body. Lead review corrected its description of generalized velocity, rejected visual-proof language and distinguished the planned offline full suite from protected browser CI. No scientific source or PDF changes followed final visual inspection.
 
@@ -183,7 +183,7 @@ Commit and push this integration, then run the pinned Python tests/ suite with -
 
 ---
 
-# Shared Nomenclature â€” Parent CI Repair Integrated
+# Shared Nomenclature — Parent CI Repair Integrated
 
 Source/PDF checkpoint a3fe27cd49d7986b60bec3e8d442a39c0793f507 is committed. Parent repair 1f9eff7cc5b2717acc98363b58b1c1f6ba377f43 is now integrated into this child: stable finding evidence outside generated output and its new regression are retained alongside the child's newer PDF hashes. The four conflicts were turnover text and the adjacent #4864/#4865 SPEC rows; both histories and both rows are preserved. No scientific source conflict occurred. The dependency report describes the child PDF/hash carry-forward before this separately recorded parent integration.
 
@@ -191,7 +191,7 @@ Parent regular PR #4869 is pushed at 1f9eff7cc; exact-head CI 37178192004 is run
 
 ---
 
-# Shared Nomenclature â€” Local Review Checkpoint #4865
+# Shared Nomenclature — Local Review Checkpoint #4865
 
 Active epic #4009 / corpus #4021 child #4865, branch fix/shared-nomenclature-review in C:/Users/diete/Repositories/Worktrees/AffineDrift-shared-nomenclature-review. Session technical-review-20261004-shared-nomenclature has a lease/presence through approximately 06:08 UTC. The complete shared notation has been reviewed against chapter usage. Local-coordinate qdot remains valid; generalized velocity mapping, state size, power pairing, mass-matrix regularity, full/discrete dynamics Jacobians and curve/evolution distinctions are explicit. Shared running headings and the unchanged DCR formula's print overflow are repaired. Two supplied-text agy CLI Gemini 3.8 Flash helpers supported inventory/copy work; the lead checked all mathematics and scope.
 
@@ -203,7 +203,7 @@ Parent regular PR #4869 is still unmerged: exact-head CI37175635139 failed becau
 
 ---
 
-# Volume II CI Evidence Boundary Repair â€” #4864
+# Volume II CI Evidence Boundary Repair — #4864
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4869 remains unmerged with guarded squash auto-merge enabled. CI Standard 37175635139 failed on head 53e4676ee1e2ffa32a05257cca64913fcbc25769: the clean site render removed a preparation record under docs/development referenced by four findings. A canonically formatted copy with identical parsed JSON content now lives at reports/technical-review/volume2-consistency-preparation.json, and those findings point there. The original accepted source a167deda0e90b6282d5c02e94bbfb82e5ac59862 and all eleven frozen files remain unchanged. The new file is separately recorded as delivery support; no historical source acceptance was rewritten.
 
@@ -213,7 +213,7 @@ Separately claimed #4865 uses C:/Users/diete/Repositories/Worktrees/AffineDrift-
 
 ---
 
-# Development Log â€” AffineDrift
+# Development Log — AffineDrift
 
 State table for every feature in flight in this repository. Update
 entries **in place**; never append dated sections. One entry per
@@ -228,13 +228,13 @@ feature, from proposal to ship. See the `development-logs` section of
 
 ## States
 
-`proposed` â†’ `in_progress` â†’ `in_review` â†’ `shipped`, with `parked`
+`proposed` → `in_progress` → `in_review` → `shipped`, with `parked`
 reachable from any live state and `abandoned` from `parked`.
 `shipped` never returns to `in_progress`; open a new entry instead.
 
 ## Active
 
-### DL-#4864 Â· Volume II Consistency Review
+### DL-#4864 · Volume II Consistency Review
 
 - **State:** in_review
 - **Owner:** codex
@@ -245,7 +245,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Evidence:** reports/technical-review/volume2-consistency-prior-review.json; docs/development/technical-review/volume2-consistency-preparation.json. Parent acceptance stays on the #4867 delivery branch; changed shared artifacts require new scoped evidence.
 - **Next step:** Full regression at a167deda0e90b6282d5c02e94bbfb82e5ac59862 passed 6810, skipped 29, deselected 210, with 93.24% src coverage in 872.43 seconds. Eleven frozen files bind four new findings while preserving prior review identities. Two combined originals and landing/preface receive scoped corpus updates; #4865/#4868 remain open. Regular PR #4869 is open with guarded squash auto-merge armed. Post-binding 100 selected cases pass with one existing skip; exact final-head CI and remote-main verification remain.
 
-### DL-#4863 Â· Underactuation Chapter Review
+### DL-#4863 · Underactuation Chapter Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -259,7 +259,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 - **Verified delivery:** PR #4867 merged as `897dd890704a18481ba229d35add610694da0285`; exact tree, 27 changed paths, 12 accepted scientific files and 72 prior files verified on remote main. CI Standard 37170328750 passed; lease/presence released.
 
-### DL-#4860 Â· Passive-Stabilization Chapter Review
+### DL-#4860 · Passive-Stabilization Chapter Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -269,7 +269,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Delivery:** Regular PR #4862 merged as 48261ef8587095832b3360648f4cc6d444d6c36b; full reviewed tree, 24 owned paths, eleven frozen and 61 prior scientific files verified on remote main. CI Standard 37166080212 passed at final head bfebb9d5210ccc3c0e47d92f3e8b63c4ef014d24. Receipt: reports/technical-review/passive-stabilization-remote-main-receipt.json.
 - **Next step:** None for this bounded chapter review. Continue epic #4009 under #4863.
 
-### DL-#4858 Â· Paired Optimal-Control Review
+### DL-#4858 · Paired Optimal-Control Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -278,12 +278,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/optimal-control-review
 - **Paths:** articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex, articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd, tests/test_optimal_control_conventions.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 â€” 74 focused checks, 16 publication gates and full retry 6800 passed/29 skipped/93.24% source coverage; seven revised print pages and sixteen web captures inspected. Initial four PDF-dependency failures repaired without changing audit identities.
+- **Last verified:** 2026-10-03 — 74 focused checks, 16 publication gates and full retry 6800 passed/29 skipped/93.24% source coverage; seven revised print pages and sixteen web captures inspected. Initial four PDF-dependency failures repaired without changing audit identities.
 - **Summary:** Clarify numerical conventions while preserving valid prior optimal-control mechanics and inference limits.
 - **Next step:** None for this bounded chapter review. Continue epic #4009 under #4860.
 - **Evidence:** reports/technical-review/optimal-control-remote-main-receipt.json; PR #4859 merged as ca0e1b8bed20f58366e95dd453fecffbdf17cb89; complete reviewed tree, 23 owned paths, nine frozen and 52 prior scientific files verified. CI Standard passed at reviewed head; lease/presence released.
 
-### DL-#4855 Â· Drift, Wrench and Double-Pendulum Power
+### DL-#4855 · Drift, Wrench and Double-Pendulum Power
 
 - **State:** shipped
 - **Owner:** codex
@@ -292,11 +292,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/drift-wrench-review
 - **Paths:** articles/drift-components-wrench-double-pendulum.qmd, tests/test_drift_wrench_review.py, reports/technical-review/drift-wrench-prior-review.json
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 â€” eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun and 193 content checks passed; full clean retry 6790 passed/29 skipped/93.24% coverage after preserving prior packaging output and passing six hygiene checks. Initial two hygiene failures retained. Nine Flash helpers adjudicated; complete source accepted at 0feeebd0897f67211e076ffb2139bf4445a9e8ce, with six frozen scientific files. Four scoped findings and one original corpus row are bound; delivery pending.
+- **Last verified:** 2026-10-03 — eight original publication-contract failures, twelve mechanical passes; corrected combined suite 48 passed. Eight Flash helpers adjudicated. HTML render preserves eighteen original section anchors; four browser cells and twelve revised/detail captures pass after correcting clipped equations. Final 48-case rerun and 193 content checks passed; full clean retry 6790 passed/29 skipped/93.24% coverage after preserving prior packaging output and passing six hygiene checks. Initial two hygiene failures retained. Nine Flash helpers adjudicated; complete source accepted at 0feeebd0897f67211e076ffb2139bf4445a9e8ce, with six frozen scientific files. Four scoped findings and one original corpus row are bound; delivery pending.
 - **Summary:** Complete the article argument review while preserving valid prior mechanics; distinguish input attribution, segment force/couple power and motor work with explicit frames and independently checked examples.
 - **Next step:** Delivered in #4857 as 252c8a086a3a532ee7e2204f94a945ef41f50bd5; 19 owned paths, six frozen and 46 protected files verified, CI passed and lease/presence released. See drift-wrench-remote-main-receipt.json.
 
-### DL-#4853 Â· DCR Figure Inference Regression
+### DL-#4853 · DCR Figure Inference Regression
 
 - **State:** shipped
 - **Owner:** codex
@@ -305,11 +305,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/dcr-figure-rigor
 - **Paths:** articles/drift-control-ratio.qmd, articles/figures/core_theory/fig_dcr_vector_decomposition.svg, articles/figures/core_theory/fig_dcr_reachability_tubes.svg, articles/figures/core_theory/fig_dcr_swing_phases.svg
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 â€” three bounded figure corrections implemented; initial red ten failures/three passes; 32 focused checks passed; three corrected SVGs and twelve page captures inspected; canonical browser four cells pass after existing deployment cleanup; twenty protected files retained; nine Flash helpers adjudicated. Source bound at b6ab9a9229738d764d93975e87e04af1d1b550df; 175 dependent and 185 content checks pass after resolving three generated-metadata failures from the broad run (6775 passed, 29 skipped, 93.24% coverage). Ten Flash helpers adjudicated.
+- **Last verified:** 2026-10-03 — three bounded figure corrections implemented; initial red ten failures/three passes; 32 focused checks passed; three corrected SVGs and twelve page captures inspected; canonical browser four cells pass after existing deployment cleanup; twenty protected files retained; nine Flash helpers adjudicated. Source bound at b6ab9a9229738d764d93975e87e04af1d1b550df; 175 dependent and 185 content checks pass after resolving three generated-metadata failures from the broad run (6775 passed, 29 skipped, 93.24% coverage). Ten Flash helpers adjudicated.
 - **Summary:** Reconcile later figures and long descriptions with drift, input-set, observation and finite-time assumptions; preserve valid prior review.
 - **Next step:** Delivered in regular PR #4856 as c1d33e780b9a920cf500da2b3adbf2d250441a4b; all 25 owned paths and protected evidence verified on remote main, full CI passed and coordination released. Receipt carried by #4855.
 
-### DL-#4852 Â· Corpus Status Reconciliation
+### DL-#4852 · Corpus Status Reconciliation
 
 - **State:** shipped
 - **Owner:** codex
@@ -318,11 +318,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** docs/corpus-reconcile-4852
 - **Paths:** docs/development/technical-review/corpus-review-index.csv, reports/technical-review/corpus-status-reconciliation.md, reports/technical-review/corpus-status-reconciliation.json, AGENT_HANDOFF.md
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 â€” 13 historical source/evidence comparisons and 22 retained mechanics tests pass; seven corpus rows corrected (five scope updates and two renamed paths); all 407 current paths exist; 57 document/ledger checks pass; four agy Flash inventories adjudicated; no new scientific acceptance.
+- **Last verified:** 2026-10-03 — 13 historical source/evidence comparisons and 22 retained mechanics tests pass; seven corpus rows corrected (five scope updates and two renamed paths); all 407 current paths exist; 57 document/ledger checks pass; four agy Flash inventories adjudicated; no new scientific acceptance.
 - **Summary:** Distinguish stale bookkeeping from unfinished source review; preserve historical proof and prioritize the longer remaining originals.
 - **Next step:** Delivered via regular PR #4854 as 07bcb56f514ebf846ce7d391ec482d8d1b782a1c; all ten owned paths and ten frozen parent files verified; CI passed and coordination released. Receipt carried by #4853.
 
-### DL-#4850 Â· Musculoskeletal Modeling Conventions
+### DL-#4850 · Musculoskeletal Modeling Conventions
 
 - **State:** shipped
 - **Owner:** codex
@@ -331,11 +331,11 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/msk-conventions-rigor
 - **Paths:** articles/The_Geometry_of_Motion/Volume_III/chapters/ch02_musculoskeletal_conventions.tex, articles/The_Geometry_of_Motion/Volume_III/main.pdf, tests/test_msk_conventions_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 â€” baseline `eaae683256ec0924c43307427a94c9ff61d83318`; complete chapter corrected; 51 focused plus 2 explicit content checks pass; native PDF and 51-page carry checks pass; initial full run 6764 passed/1 Windows encoding failure at b7c433455; seven minifier tests pass under UTF-8; bounded landing/browser checks pass; full UTF-8 retry passed at `387de1628d5f9a67e35a12652cdb43ddfc0592ef`: 6765 passed, 29 skipped, 187 deselected, 51 warnings in 608.05s (0:10:08); 93.24% coverage; chapter accepted at `d53ec669335a900fcf42bd4a6065d1d6d27046a8`; ten frozen files bound; 73 post-binding checks pass.
+- **Last verified:** 2026-10-03 — baseline `eaae683256ec0924c43307427a94c9ff61d83318`; complete chapter corrected; 51 focused plus 2 explicit content checks pass; native PDF and 51-page carry checks pass; initial full run 6764 passed/1 Windows encoding failure at b7c433455; seven minifier tests pass under UTF-8; bounded landing/browser checks pass; full UTF-8 retry passed at `387de1628d5f9a67e35a12652cdb43ddfc0592ef`: 6765 passed, 29 skipped, 187 deselected, 51 warnings in 608.05s (0:10:08); 93.24% coverage; chapter accepted at `d53ec669335a900fcf42bd4a6065d1d6d27046a8`; ten frozen files bound; 73 post-binding checks pass.
 - **Summary:** Reconcile anatomical frames, declared rotation coordinates, inertia origin/order and inference limits.
 - **Next step:** Delivered as `c11e1370798723e2e4787e30fa0d6374e3cf0ac4`; all 24 owned, ten frozen, 67 prior and 172 Geometry paths verified on remote main. Exact-head CI Standard and all textbook builds passed. Receipt is carried by #4852; bounded acceptance retained and coordination released.
 
-### DL-#4847 Â· Launch-Monitor Validation Program
+### DL-#4847 · Launch-Monitor Validation Program
 
 - **State:** shipped
 - **Owner:** codex
@@ -344,12 +344,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** fix/validation-program-rigor-4847
 - **Paths:** articles/Launch_Monitor_Technology_Review/sections/11-validation-program.tex, articles/Launch_Monitor_Technology_Review/references.bib, articles/Launch_Monitor_Technology_Review/main.pdf, tests/test_validation_program_review.py
 - **Started:** 2026-10-03
-- **Last verified:** 2026-10-03 â€” PR #4849 at `eaae683256ec0924c43307427a94c9ff61d83318`; nine frozen files, 17 owned paths and 64 prior dependencies verified on remote main; CI and textbook builds pass.
+- **Last verified:** 2026-10-03 — PR #4849 at `eaae683256ec0924c43307427a94c9ff61d83318`; nine frozen files, 17 owned paths and 64 prior dependencies verified on remote main; CI and textbook builds pass.
 - **Summary:** Distinguish software readiness from preregistration and physical evidence; derive agreement, reference uncertainty, clustering and sample-planning limits while preserving the accepted-pair gate.
 - **Next step:** Delivery complete; continue scoped review #4850.
 - **Shipped:** 2026-10-03
 
-### DL-#4845 Â· Degrees-of-Freedom Chapter
+### DL-#4845 · Degrees-of-Freedom Chapter
 
 - **State:** shipped
 - **Owner:** codex
@@ -363,7 +363,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Delivery complete; turnover PR #4848 merged at a4afe8cc9f573e29fe11f22bf79dae1e39ba4dc9 with CI and remote-file verification. Continue scoped review #4847.
 - **Shipped:** 2026-10-03
 
-### DL-#4842 Â· Impact Physics Chapter
+### DL-#4842 · Impact Physics Chapter
 
 - **State:** shipped
 - **Owner:** codex
@@ -378,7 +378,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Shipped:** 2026-10-03
 
 
-### DL-#4836 Â· Passive Distributed Control Article
+### DL-#4836 · Passive Distributed Control Article
 
 - **State:** shipped
 - **Owner:** codex
@@ -394,7 +394,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Shipped:** 2026-10-03
 
 
-### DL-#4828 Â· Historical Player Research Handoff
+### DL-#4828 · Historical Player Research Handoff
 
 - **State:** in_review
 - **Owner:** codex
@@ -403,7 +403,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Branch:** feat/necromatcher-research-handoff-4828
 - **Paths:** src/affine_control/historical_research/, schemas/historical-player-research-v1.schema.json, tests/test_historical_research_handoff.py, docs/development/necromatcher-research-handoff.md
 - **Started:** 2026-10-02
-- **Last verified:** 2026-10-02 â€” post-budget-refactor 42 focused cases pass with 95.35% module coverage; strict mypy, scoped Ruff and Black pass. Five red junction/count regressions fixed; three renderer byte baselines unchanged. Actual Upstream package inspected without writes, exclusively installed as draft, idempotently reinstalled/recalled, deterministic QMD rendered with Quarto 1.8.26 --no-execute and bounded browser screenshots/AX reviewed. Receipt ccf4615f4eb3d51a51b6b3a1af98b9bfd92abda4683be20b26744ff6c67136c2; browser receipt f39ffed5532bbc8700b32e50053abf4e0dafd335ad838c6b255130d3c6edadef. All input/source/driver/registry brackets unchanged. The preceding SDK-first full offline run passed 6,681 tests, 26 skipped, 187 existing-marker deselected, 61 warnings in 795.45 seconds; this predates the budget refactor. The first post-refactor rerun stopped after 4,638 passes on generated ignored packaging scratch; bytes were preserved externally, six root-hygiene cases passed, and the unchanged clean SDK-first full rerun passed 6,685 tests, 26 skipped, 187 existing-marker deselected, 61 warnings in 600.28 seconds. Host Python 3.13.5 versus configured 3.12 and exact UTF-8/SDK-first/thread controls remain documented. Consumer checkout base 29472661de971899bfb7cdc4a3f92b3e9eee19aa identifies a working-tree review, not committed consumer changes. The final unchanged SDK-first full offline coverage retry passed 6,685 tests, with26 skips,187 existing-marker deselections and61 warnings in1,044.94 seconds; full src coverage was93.51%, exceeding the configured75% floor. Logs are affine-historical-full-suite-final-coverage-retry.log and affine-necromatcher-final-coverage-retry.xml in the local temporary directory. The first coverage attempt timed out in unchanged wheel packaging and is retained as failed; the untouched four packaging tests passed on retry in39.82 seconds before the unchanged full retry passed. Coverage reports missing temporary installed-wheel-copy source warnings; these are disclosed, not treated as separate Python3.12 validation. HostPython3.13.5, UTF-8, MuJoCo3.3.4 SDK-first import, single BLAS threads and the exact existing offline marker policy remain unchanged. Integration checkpoint SELF merges origin/main53f75b29125cdc1f5da8d0c09020b3b05f04b783 non-destructively into the topic branch. All incoming peer handoff bytes and SPEC rows are preserved; canonical catalog/claim regeneration changes only three dataset evidence digests and no review judgments. Consumer source bytes remain unchanged. Focused consumer, schema, budget, development-structure, architecture, catalog and SPEC regression:82 cases passed; titles662, SPEC and claim freshness pass. The earlier6685/93.51% full run and frozen8fde receipts remain historical evidence, not a new merged-tree full-suite claim. No automatic merge/public deployment.
+- **Last verified:** 2026-10-02 — post-budget-refactor 42 focused cases pass with 95.35% module coverage; strict mypy, scoped Ruff and Black pass. Five red junction/count regressions fixed; three renderer byte baselines unchanged. Actual Upstream package inspected without writes, exclusively installed as draft, idempotently reinstalled/recalled, deterministic QMD rendered with Quarto 1.8.26 --no-execute and bounded browser screenshots/AX reviewed. Receipt ccf4615f4eb3d51a51b6b3a1af98b9bfd92abda4683be20b26744ff6c67136c2; browser receipt f39ffed5532bbc8700b32e50053abf4e0dafd335ad838c6b255130d3c6edadef. All input/source/driver/registry brackets unchanged. The preceding SDK-first full offline run passed 6,681 tests, 26 skipped, 187 existing-marker deselected, 61 warnings in 795.45 seconds; this predates the budget refactor. The first post-refactor rerun stopped after 4,638 passes on generated ignored packaging scratch; bytes were preserved externally, six root-hygiene cases passed, and the unchanged clean SDK-first full rerun passed 6,685 tests, 26 skipped, 187 existing-marker deselected, 61 warnings in 600.28 seconds. Host Python 3.13.5 versus configured 3.12 and exact UTF-8/SDK-first/thread controls remain documented. Consumer checkout base 29472661de971899bfb7cdc4a3f92b3e9eee19aa identifies a working-tree review, not committed consumer changes. The final unchanged SDK-first full offline coverage retry passed 6,685 tests, with26 skips,187 existing-marker deselections and61 warnings in1,044.94 seconds; full src coverage was93.51%, exceeding the configured75% floor. Logs are affine-historical-full-suite-final-coverage-retry.log and affine-necromatcher-final-coverage-retry.xml in the local temporary directory. The first coverage attempt timed out in unchanged wheel packaging and is retained as failed; the untouched four packaging tests passed on retry in39.82 seconds before the unchanged full retry passed. Coverage reports missing temporary installed-wheel-copy source warnings; these are disclosed, not treated as separate Python3.12 validation. HostPython3.13.5, UTF-8, MuJoCo3.3.4 SDK-first import, single BLAS threads and the exact existing offline marker policy remain unchanged. Integration checkpoint SELF merges origin/main53f75b29125cdc1f5da8d0c09020b3b05f04b783 non-destructively into the topic branch. All incoming peer handoff bytes and SPEC rows are preserved; canonical catalog/claim regeneration changes only three dataset evidence digests and no review judgments. Consumer source bytes remain unchanged. Focused consumer, schema, budget, development-structure, architecture, catalog and SPEC regression:82 cases passed; titles662, SPEC and claim freshness pass. The earlier6685/93.51% full run and frozen8fde receipts remain historical evidence, not a new merged-tree full-suite claim. No automatic merge/public deployment.
 - **Committed delivery:** Committed delivery: ready-for-review [PR #4834](https://github.com/D-sorganization/AffineDrift/pull/4834) targets main. Implementation commit `b10ecec30ea75d0d447e0b0642378e8578da2eb0` is pushed and independently remote-verified; all normal commit and push hooks passed. The earlier actual local receipt retains its historical working-tree fingerprint/checkout base and is not relabeled as execution at this later commit. No merge, automatic merge, public deployment or scientific qualification is claimed.
 - **Summary:** User-directed cross-repository priority. Add a separate immutable local research contract and generic player renderer using canonical transport and atomic snapshot storage. Retain rejected/nonconverged status, unresolved footage rights and unknown physical timing; qualified mocap publication and authoritative release registry remain separate. Topic branch follows the explicit workspace prohibition on direct main pushes despite older local branch-policy text.
 - **Workflow precedence:** Workflow precedence: repository CLAUDE.md targets main, while .GAAI project guidance targets staging; both remote refs exist. The owning workflow selects main under the top-level repository instructions, with a ready-for-review PR required by nearest AGENTS.md. No automatic merge, production merge or public deployment is authorized at this checkpoint.
@@ -411,7 +411,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Commit and push the resolved integration through normal hooks, monitor exact-head PR #4834 CI/review, and preserve separately pinned historical producer evidence. No automatic merge or public deployment.
 
 
-### DL-#4495 â€” Make 404 Page and Empty States Useful
+### DL-#4495 — Make 404 Page and Empty States Useful
 
 - **State:** in_review
 - **Owner:** antigravity
@@ -426,7 +426,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 
 
-### DL-#4756 Â· Complete-State Technical Review
+### DL-#4756 · Complete-State Technical Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -439,7 +439,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct complete-state, velocity-reversal, intervention and observation arguments with five Flash support jobs and lead adjudication. Seven findings bound to source 44b29ef73bf187c4b9220a90ff9e1a08a45bed20;55 prior findings preserved;124 full-source audits plus whole-book consistency remain.
 - **Next step:** Delivered through merged PR #4765 on remote main 39f7553b562b6d83e5aff36d9277bbcbfcaff401; source/evidence parity verified in reports/technical-review/geometry-remote-main-receipt.json. Predecessors #4758/#4762 and issues #4756/#4759/#4763 are closed. No remaining work for this bounded review.
 
-### DL-#4753 Â· Armâ€“Wrist Preload Technical Review
+### DL-#4753 · Arm–Wrist Preload Technical Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -453,7 +453,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** None for this delivered scope.
 
 
-### DL-#4751 Â· Shaft Memory Technical Review
+### DL-#4751 · Shaft Memory Technical Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -466,7 +466,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct power, state, model-domain and endpoint interpretations with five Flash support jobs and lead adjudication. Seven findings bound to final source899f35bb0 after exact Git-blob parity checks;41 historical findings preserved;126 full-source audits remain.
 - **Next step:** None for this delivered scope.
 
-### DL-#4749 Â· Falsification Atlas Technical Review
+### DL-#4749 · Falsification Atlas Technical Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -479,7 +479,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Distinguish source adjudication from editorial comparisons; correct force/wrench, coordinate-metric and support/compliance comparisons with five Flash support jobs and lead adjudication.
 - **Next step:** None for atlas source: PR4750 merged remote main 5b58cb68b619815214014ef4d7c9cd353d23ed87; exact source/generator/ledger/test parity verified.4741 and4748 also merged.
 
-### DL-#4746 Â· Critics Corner Technical Review
+### DL-#4746 · Critics Corner Technical Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -492,7 +492,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct the excluded critique's error transport, pendulum units, algorithmic and empirical claims, contraction and hybrid-event arguments with lead-reviewed Flash support.
 - **Next step:** None for this source: PR4748 merged to remote main 4c1ddafa5a51c2be28361bc574618a9a146f99fa; exact source/tests/reports verified.
 
-### DL-#4743 Â· Muscle Models and Coupled Power
+### DL-#4743 · Muscle Models and Coupled Power
 
 - **State:** shipped
 - **Owner:** codex
@@ -505,7 +505,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct force curves and attribution; connect excitation, fiber state, series equilibrium, tendon storage, joint power and stiffness under explicit model/empirical boundaries.
 - **Next step:** None for this chapter; PR4745 merged to remote main a473831731989fce80f110bcc34745affe9ad837 on 2026-10-01. Exact source/PDF/tests verified; continue remaining corpus reviews.
 
-### DL-#4742 Â· Force Direction and Reference Points
+### DL-#4742 · Force Direction and Reference Points
 
 - **State:** shipped
 - **Owner:** codex
@@ -518,7 +518,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct force reference points and axis conventions; explain coupled response, two-hand geometric controls, observer-dependent power and measurement limits.
 - **Next step:** None for this delivered scope.
 
-### DL-#4739 Â· Force, Work, and Energy Boundaries
+### DL-#4739 · Force, Work, and Energy Boundaries
 
 - **State:** shipped
 - **Owner:** codex
@@ -533,7 +533,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 
 
-### DL-#4733 Â· Shallow-Wide Latency and Synergy Arguments
+### DL-#4733 · Shallow-Wide Latency and Synergy Arguments
 
 - **State:** shipped
 - **Owner:** codex
@@ -546,7 +546,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Replace universal neural-depth claims with conditional latency reasoning; correct parameter counts, state-compression inference and synergy interpretation; validate the printed NMF example.
 - **Next step:** None for this delivered scope.
 
-### DL-#4688 Â· Dataset Explorer Route Audit and Main Feed Ordering
+### DL-#4688 · Dataset Explorer Route Audit and Main Feed Ordering
 
 - **State:** in_review
 - **Owner:** codex-luna-affine4688-handoff-20260930-2335
@@ -556,12 +556,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`, `tests/test_claim_audit_inventory.py`, `tests/test_evidence_presentation.py`, `.github/workflows/deploy-website.yml`, `tests/test_generate_feed.py`, `SPEC.md`, `docs/development/HANDOFF.md`, `docs/development/DEVELOPMENT_LOG.md`.
 - **Started:** 2026-09-30
 - **Last verified:** 2026-10-01 (feed-order behavior remains source-bound to `50f8279cd566733982249da97b53160a1224a933`; after pinned #4748 integration, 3 workflow tests, 17 deployment-integrity tests/1 existing skip, and all 6 Critics Corner identity tests pass. Claim-audit check, SPEC, 653-title, CSS budget/architecture, Ruff/Black hooks pass. Frontend mirror `--check` exits 1 because render-generated `docs/js/` mirrors are absent; no full render was run. HISTORICAL route-audit results remain revision-specific: earlier 46 focused and 183 content-lint tests, 6,162-pass suite at `3c9572b64cf1e4dd4d3a8dbe7766de0354abb40d`, and render at `4b886599d65f9bbcec7cb9f9d41f9dfcbf674633`.)
-- **Summary:** PR #4713 added the reviewed record for the already-public dataset-explorer route and source-derived regression; it merged at `03ea44e`. Separately, repair main deploy ordering while preserving render â†’ sitemap â†’ feed, then run the unchanged blocking source link check. HISTORICAL route-audit evidence is limited to its reviewed source/revisions; population inputs were manufactured synthetic and ZTCF/proximal-distal evidence remained model-level/educational. Finding #4695 was closed via merged PR #4728. #4694 workflow-gate work is separate.
+- **Summary:** PR #4713 added the reviewed record for the already-public dataset-explorer route and source-derived regression; it merged at `03ea44e`. Separately, repair main deploy ordering while preserving render → sitemap → feed, then run the unchanged blocking source link check. HISTORICAL route-audit evidence is limited to its reviewed source/revisions; population inputs were manufactured synthetic and ZTCF/proximal-distal evidence remained model-level/educational. Finding #4695 was closed via merged PR #4728. #4694 workflow-gate work is separate.
 - **Current integration:** Feed-order repair is based on `a473831731989fce80f110bcc34745affe9ad837`; the branch also integrates pinned main commit `4c1ddafa5a51c2be28361bc574618a9a146f99fa` (#4748). Accepted workflow/test diff remains commit `50f8279cd566733982249da97b53160a1224a933` (tree `efe4c26a3c16d1a3ade3f52dad3c22527fdd2a86`), byte-identical after integration. All 14 incoming paths are retained and incoming non-history blobs match the pinned commit; the three authorized history files preserve both records. HISTORICAL route-audit checkpoints and their associated tests/render do not evidence feed-order behavior.
 - **Next step:** Root reviews the local integration report before deciding whether to publish the standalone feed-order PR; issue #4688 remains open pending successful main deployment. PR #4713 is already merged and is not awaiting monitoring.
 
 
-### DL-#4730 Â· Ground-Reaction Boundaries and Matching Evidence
+### DL-#4730 · Ground-Reaction Boundaries and Matching Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -574,7 +574,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Correct material contact power, internal/external wrench boundaries, ZVCF control convention and symmetric dissipation normalization; distinguish primary matching from total model contrasts and resolve post-hoc horizon counts.
 - **Next step:** None for this delivered scope.
 
-### DL-#4602 Â· Content Inventory and Ownership Map
+### DL-#4602 · Content Inventory and Ownership Map
 
 - **State:** in_review
 - **Owner:** claude
@@ -587,7 +587,7 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Generates a deterministic inventory of every rendered page (word count, status from the `status-banner` component, last-reviewed date from front-matter `date:`, canonical pointer, inbound link count, outbound broken links) as JSON/CSV artifacts plus a dashboard page; flags pages under 300 words without a Planned status as consolidation/retirement candidates; verified via a new CI step.
 - **Next step:** Open the draft PR for frontier review; no further implementation planned unless review requests changes.
 
-### DL-#4538 Â· Reader Run Environment (Binder, Devcontainer, Downloads)
+### DL-#4538 · Reader Run Environment (Binder, Devcontainer, Downloads)
 
 - **State:** in_review
 - **Owner:** claude
@@ -597,10 +597,10 @@ reachable from any live state and `abandoned` from `parked`.
 - **Paths:** `environment.yml`, `articles/_metadata.yml`, `_includes/notebook-binder-launch.qmd`, `books/tangent-space-methods.qmd`, `books/control-is-motion.qmd`, `books/biomechanics-biology-to-systems.qmd`, `books/human-motor-control.qmd`, `notebooks/geometry_of_motion/README.md`, `scripts/check_root_hygiene.py`, `tests/test_reader_run_environment.py`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF: 7/7 `tests/test_reader_run_environment.py` pass; `check_root_hygiene.py`, `check_quarto_render_coverage.py`, `check_quarto_xrefs.py`, `check_single_title.py`, `check_title_case.py`, `check_terminology.py`, `check_dry_adoption.py`, `check_contract_coverage.py` all pass; ruff/black clean on changed Python files)
-- **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment that opens the notebook scaffolds, installing from `requirements.txt` (not `requirements-docker.lock`, which pins a Windows-only `pywinpty` wheel that fails on Binder's Linux image and is stale relative to `requirements.txt`), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked â€” see HANDOFF.md. The Binder build itself is unverified (repo2docker was never run).
+- **Summary:** Adds a root `environment.yml` so mybinder.org can build a JupyterLab environment that opens the notebook scaffolds, installing from `requirements.txt` (not `requirements-docker.lock`, which pins a Windows-only `pywinpty` wheel that fails on Binder's Linux image and is stale relative to `requirements.txt`), a shared `_includes/notebook-binder-launch.qmd` Binder-launch link included from each of the four book pages' "Notebook Workflow" section and from the notebooks README, and `code-tools: true` scoped to `articles/_metadata.yml` (the one content directory that shows Python reference implementations) so those pages get Quarto's source-download menu without flipping the site-wide default. The devcontainer half of the issue (`.devcontainer/devcontainer.json` and the CI job to build it) is blocked — see HANDOFF.md. The Binder build itself is unverified (repo2docker was never run).
 - **Next step:** A session with permission to write under a path named `.devcontainer` must add the file (content given in the PR's Blocked section) and a CI build step; then this entry's state can move to `shipped`.
 
-### DL-#4503 Â· URL Stability and Redirect Policy
+### DL-#4503 · URL Stability and Redirect Policy
 
 - **State:** in_review
 - **Owner:** claude
@@ -617,7 +617,7 @@ reachable from any live state and `abandoned` from `parked`.
 
 Entries stay here for 90 days after merge, then move to the archive.
 
-### DL-#4725 Â· Annotated Reference Library
+### DL-#4725 · Annotated Reference Library
 
 - **State:** shipped
 - **Owner:** codex
@@ -630,7 +630,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Distinguish median-centered agreement, absolute error, data return, historical vendor specifications and patent disclosures; correct study attribution and inverse sensitivity without certifying the full chapter.
 - **Next step:** Merged protected remote main fd508f04cd48b80f8f248432cea4a033b9188a13 at 2026-10-01 03:37:56 UTC; fetched and verified. Final integrated local suite 6191 passed/29 skipped, 92.95% src coverage; subsequent content 183 passed/four skipped. Receipt carried in #4730 after merge; lease/presence released 03:44 UTC. Broader goal active.
 
-### DL-#4724 Â· Plane-to-Space Mechanical and Evidence Boundaries
+### DL-#4724 · Plane-to-Space Mechanical and Evidence Boundaries
 
 - **State:** shipped
 - **Owner:** codex
@@ -643,7 +643,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Correct observer/reference power, contact constraints, rank/feasibility, archived populations and engine independence; derive and expose the shared vector-damper angular-momentum limitation. Preserve prior review scopes and immutable provider source; follow-up UpstreamDrift #11195.
 - **Next step:** Merged remote main 644bfd5bebb197ee03deb16877f189a0d772c403 at 2026-10-01 03:23:14 UTC, all protected checks green (36807137602). Fetched/ancestor verified; lease/presence released 03:24 UTC. Broader goal remains active.
 
-### DL-#4720 Â· Heavy-Hit Coupling and Acoustic Evidence
+### DL-#4720 · Heavy-Hit Coupling and Acoustic Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -656,7 +656,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Reconcile force transmission, fixed/moving grip ports and energy accounting; retain source-specific acoustic and research limits. Preserve previous reviews and parked provider synthesis.
 - **Next step:** Science/evidence bound at 3f9c6882b/c1fc3a09f; merged radar main bd1255f15 integrated. Post-full content: 180 passes/four skips. Regular PR #4723 merged at 2a7c094070c5ebd7d16c95c332d5526931cc5ba0 with all protected checks green (CI 36801091325). Remote-main ancestry verified; lease/presence released. Deployment separately blocked by #4688 / #4713.
 
-### DL-#4717 Â· Radar Screw-Kinematics Appendix Review
+### DL-#4717 · Radar Screw-Kinematics Appendix Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -669,7 +669,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Distinguish a rigid-motion representation from observable information and model-based inference; correct frame, covariance, waveform, impact and output-definition claims. Preserve the rest of the book's review scope and the historical outline's provenance.
 - **Next step:** Merged remote main `bd1255f153926c7e653148b8c4db972a08ba7be9` at 2026-10-01 01:11:24 UTC, all protected checks green (36799282870). Full combined-main suite 6078 passes, 92.95% coverage; subsequent content 180 passes/four skips. Lease/presence released 01:12 UTC.
 
-### DL-#4714 Â· Impact Optimality and Model Limits
+### DL-#4714 · Impact Optimality and Model Limits
 
 - **State:** shipped
 - **Owner:** codex
@@ -683,7 +683,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Next step:** Complete. Regular PR #4718 merged to remote main 24cdba4d49abec347bbe56fd51cc7d5ed00ab6a5 at 2026-10-01 00:23:35 UTC; every protected check passed (CI 36792360532). Lease/presence released. Provider follow-up Tools #5393 and separately owned deployment gap #4688 remain open.
 
 
-### DL-#4712 Â· Two-Hand Wrench Chapter Review
+### DL-#4712 · Two-Hand Wrench Chapter Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -696,7 +696,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Reconcile force/moment origins, map degeneracies, rigid/flexible power and archived sensor/contact evidence; distinguish synthetic model support from human inference. Citation-only updates in three neighboring chapters and the protocol do not renew their scientific reviews.
 - **Next step:** Merged to remote main be263f9cd946a6aa8b4a97b086af9eab399c3ac6 at 23:32:17 UTC; all protected CI checks passed (36786787125). Lease and presence released. Provider citation follow-up #4711 remains open.
 
-### DL-#4715 Â· Quarto Script-Action Link Classification
+### DL-#4715 · Quarto Script-Action Link Classification
 
 - **State:** shipped
 - **Owner:** codex
@@ -709,7 +709,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Ignore JavaScript action URLs during filesystem target resolution so Quarto code-menu controls no longer block deployment; retain failures for missing article links.
 - **Next step:** Merged #4716 to remote main 5e1a11059 at 22:27:52 UTC; lease released. Preserve #4688's separate audit work and verify a later main deployment.
 
-### DL-#4706 Â· Induced Acceleration Biomechanics Review
+### DL-#4706 · Induced Acceleration Biomechanics Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -726,7 +726,7 @@ Entries stay here for 90 days after merge, then move to the archive.
 
 Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 
-### DL-#4606 Â· "What's New" Feed RSS Validation
+### DL-#4606 · "What's New" Feed RSS Validation
 
 - **State:** in_review
 - **Owner:** claude
@@ -738,7 +738,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_generate_feed.py` 26/26 pass; ruff and black --line-length 100 clean; mypy clean; live generator run against real repo content produces 30 items with zero validation errors)
 - **Summary:** Adds `validate_feed_xml()`, an RSS 2.0 structural validator (well-formed XML, required channel/item elements, absolute item links, RFC-822 pubDates, unique guids) wired into `generate_feed.py`'s `main()` so an invalid feed fails the build instead of publishing, satisfying acceptance criterion 1 ("The RSS feed validates"). Criterion 2 ("Items link to revision history") is blocked on the still-open prerequisite #4545 (WEB-07.3), which introduces the `changes:` front-matter field and per-page "Revision history" section this criterion depends on; see HANDOFF.md Blocked section.
 - **Next step:** Land #4545 (WEB-07.3), then point feed item links at its revision-history anchor and re-check criterion 2.
-### DL-#4592 Â· Consolidate the Manifesto
+### DL-#4592 · Consolidate the Manifesto
 
 - **State:** in_review
 - **Owner:** claude
@@ -750,20 +750,20 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (focused suites pass: editorial/consistency, trust-surface/claim-audit, page-style, manifesto rigor, formatting lints, site link gate; full suite passes with no failures; ruff/black clean; `regenerate_claim_audit_evidence --check` passes.)
 - **Summary:** Adds `opinion` to the controlled category vocabulary and recategorises both Manifesto pages from `critique`; declares `pages/drifter-manifesto.qmd` the canonical entry point and `articles/drifter-manifesto.qmd` an explicitly non-canonical, Opinion-labelled companion, without deleting either page's content (full retirement is WEB-02.4's own `tier:strong` ADR work).
 - **Next step:** Open the draft PR and await frontier review; no further development expected unless the reviewer requests scope changes.
-### DL-#4541 Â· Fixture and Dataset Explorer
+### DL-#4541 · Fixture and Dataset Explorer
 
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created yet (draft PR to be opened this session)
-- **Issue:** #4541 (epic #4543, E6 â€” Interactive Models and Reproducibility)
+- **Issue:** #4541 (epic #4543, E6 — Interactive Models and Reproducibility)
 - **Branch:** `claude/issue-4541`
 - **Paths:** `models/dataset-explorer.qmd`, `js/dataset-explorer.js`, `js/dataset-explorer-ui.js`, `css/dataset-explorer.css`, `scripts/generate_dataset_explorer_manifest.py`, `data/dataset_explorer_manifest.json`, `tests/dataset-explorer.test.js`, `tests/dataset-explorer-ui.test.js`, `tests/test_generate_dataset_explorer_manifest.py`, `scripts/sync_frontend_assets.py`, `_quarto.yml`, `data/trust/claim_audit_inventory.json`, `SPEC.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `npx jest` 28 suites/455 passed/19 skipped; targeted `pytest` across `test_generate_dataset_explorer_manifest.py`, `test_claim_audit_inventory.py`, `test_claim_audit_output_boundary.py`, `test_sync_frontend_assets.py`, `test_check_single_title.py`, `test_site_trust_surface_audit.py` â€” 84/84 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide; `stylelint css/dataset-explorer.css` clean; site link gate passes; `check_spec_changelog.py` passes)
-- **Summary:** New browser page listing every `data/ztcf/`, `data/population_generalization/`, and `data/proximal_distal_energy_transfer/` fixture from a generated manifest. A hand-written JSON Schema validator checks each fixture against its published schema client-side. Each fixture gets an accessible data table and a download button whose SHA-256 is computed in-browser. Linked from `_quarto.yml`'s navbar (Build â†’ Datasets).
+- **Last verified:** 2026-09-30 (SELF: `npx jest` 28 suites/455 passed/19 skipped; targeted `pytest` across `test_generate_dataset_explorer_manifest.py`, `test_claim_audit_inventory.py`, `test_claim_audit_output_boundary.py`, `test_sync_frontend_assets.py`, `test_check_single_title.py`, `test_site_trust_surface_audit.py` — 84/84 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide; `stylelint css/dataset-explorer.css` clean; site link gate passes; `check_spec_changelog.py` passes)
+- **Summary:** New browser page listing every `data/ztcf/`, `data/population_generalization/`, and `data/proximal_distal_energy_transfer/` fixture from a generated manifest. A hand-written JSON Schema validator checks each fixture against its published schema client-side. Each fixture gets an accessible data table and a download button whose SHA-256 is computed in-browser. Linked from `_quarto.yml`'s navbar (Build → Datasets).
 - **Next step:** Push the branch, open the draft PR, and let CI's `quarto render`/Playwright lane confirm the page renders and passes axe-core.
 
-### DL-#4550 Â· Print and PDF Editions for Books and Core Series
+### DL-#4550 · Print and PDF Editions for Books and Core Series
 
 - **State:** in_review
 - **Owner:** claude
@@ -773,9 +773,9 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Paths:** `css/print.css`, `styles.css`, `js/pdf.js`, `js/main.js`, `tests/test_print_stylesheet_consolidation.py`, `tests/pdf.test.js`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_print_stylesheet_consolidation.py` 4/4 pass; `npx jest` 27 suites, 437 passed/19 skipped; `ruff check .` and `black --check --line-length 100 .` clean)
-- **Summary:** Consolidates the two competing `@media print` blocks into `css/print.css` as the single print stylesheet, drops the A4-only forced `@page` size (now `auto`) so both Letter and A4 print via the printer/OS choice, and adds a `beforeprint` handler forcing MathJax to typeset lazy-loaded off-screen math before any print (native Ctrl+P or the export-to-PDF button). The "PDFs built in CI and linked from the header card" criterion is deliberately not implemented this session â€” see HANDOFF.md Blocked section.
+- **Summary:** Consolidates the two competing `@media print` blocks into `css/print.css` as the single print stylesheet, drops the A4-only forced `@page` size (now `auto`) so both Letter and A4 print via the printer/OS choice, and adds a `beforeprint` handler forcing MathJax to typeset lazy-loaded off-screen math before any print (native Ctrl+P or the export-to-PDF button). The "PDFs built in CI and linked from the header card" criterion is deliberately not implemented this session — see HANDOFF.md Blocked section.
 - **Next step:** Owner/frontier decision on the deferred PDF-header-card-link scope (see HANDOFF.md Blocked), then implement or split into a follow-up issue.
-### DL-#4495 Â· Make the 404 Page and Empty States Useful
+### DL-#4495 · Make the 404 Page and Empty States Useful
 
 - **State:** in_review
 - **Owner:** claude
@@ -785,9 +785,9 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Paths:** `404.qmd`, `tests/test_404_page.py`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF: `pytest tests/test_404_page.py` 3 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide)
-- **Summary:** Unifies the 404 page's contact address with About/Contact (`dieterolson@AffineDrift.com`, not the personal Gmail address it previously pointed to). The page's search-box mention and its five suggested-destination links were already present. The other half of the acceptance criteria â€” explicit "Start Here" and "Library" links â€” is blocked: neither target exists yet (`pages/start-here.qmd` is #4486, tier:strong, still open; the "Library" navbar grouping is part of the unmerged WEB-02.1 navbar restructure, also tier:strong). See the PR's Blocked section.
+- **Summary:** Unifies the 404 page's contact address with About/Contact (`dieterolson@AffineDrift.com`, not the personal Gmail address it previously pointed to). The page's search-box mention and its five suggested-destination links were already present. The other half of the acceptance criteria — explicit "Start Here" and "Library" links — is blocked: neither target exists yet (`pages/start-here.qmd` is #4486, tier:strong, still open; the "Library" navbar grouping is part of the unmerged WEB-02.1 navbar restructure, also tier:strong). See the PR's Blocked section.
 - **Next step:** Once #4486 (Start Here page) and WEB-02.1 (Library navbar grouping) land, add the two links to `404.qmd` and close out the remainder of this issue's acceptance criteria.
-### DL-#4565 Â· Math Accessibility Verification
+### DL-#4565 · Math Accessibility Verification
 
 - **State:** in_review
 - **Owner:** claude
@@ -797,9 +797,9 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Paths:** `tests/mathjax-loader.test.js`, `tests/e2e/accessibility.spec.js`, `docs/development/math-accessibility-verification-4565.md`, `.github/workflows/ci-standard.yml`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF: `npx jest` 26 suites passed, 432 passed/19 skipped, 0 failed; `npx playwright test tests/e2e/accessibility.spec.js --list` registers the new test across all 5 browser projects; YAML-validated `ci-standard.yml`; full Playwright run deferred to CI's `e2e-tests` job since Quarto is not installed in this worktree)
-- **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches â€” finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today â€” and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
+- **Summary:** Verifies the `connect-src 'self'` CSP does not block MathJax speech-rule locale fetches — finding is that `_includes/mathjax-loader.html` never loads the `[a11y]/explorer`/SRE component, so no such fetch happens today — and adds regression tests plus a Playwright check across three math-heavy pages confirming assistive MathML attaches with no CSP violations or failed requests. CI review of the first PR revision found a real, unrelated CSP violation (Pandoc's legacy cdnjs polyfill tag surviving into the pre-prune E2E render); fixed by reordering `ci-standard.yml` so pruning runs before Playwright, without widening the CSP. The issue's first acceptance criterion (an actual NVDA/VoiceOver run with recorded results) is a human-in-the-loop step this agent cannot perform; see `docs/development/math-accessibility-verification-4565.md` for the manual protocol.
 - **Next step:** A human tester runs the manual NVDA/VoiceOver protocol in the findings doc and records results on #4565.
-### DL-#4599 Â· Consolidate Inline "Recent" History Scripts
+### DL-#4599 · Consolidate Inline "Recent" History Scripts
 
 - **State:** in_review
 - **Owner:** claude
@@ -811,7 +811,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (`npx jest`: 27 suites, 445 passed, 19 pre-existing skips; `ruff check .` clean; `black --check --line-length 100 .` clean.)
 - **Summary:** Replaces the 15 duplicated inline localStorage "Recent X" widgets with a shared `initCategoryHistory()` in `js/history.js` for the 7 `models-*` pages (which genuinely track visits across a shared page set) and removes the widget entirely on the 8 `resources-*` pages (each only ever recorded its own page, so the feature showed nothing useful); adds first-ever Jest coverage for `history.js` and `home.js`.
 - **Next step:** Awaiting reviewer merge of #4625.
-### DL-#4542 Â· Programming-Companion Metadata and Repository Links
+### DL-#4542 · Programming-Companion Metadata and Repository Links
 
 - **State:** in_review
 - **Owner:** claude
@@ -824,7 +824,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** The catalog generator read a nonexistent `title` key for programs and engines (the manifest field is `name`), so every program and engine row rendered its ID as its title; fixed to read `name` (and `engine_id` for the programs' Engine column), dropped the Engines page's fabricated Maturity column (no such field exists in the manifest schema), and regenerated the committed pages. Labelled the 16 unpinned `repositories/*.qmd` UpstreamDrift root links as "navigation only" per the acceptance criteria, since they point at the live repository rather than a reviewed commit.
 - **Next step:** Open the draft PR and record its number here; awaiting frontier-agent review.
 
-### DL-#4551 Â· Parameters Page and Notation Quick-Reference Card
+### DL-#4551 · Parameters Page and Notation Quick-Reference Card
 
 - **State:** in_review
 - **Owner:** claude
@@ -837,7 +837,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Renders `PARAMETERS.md` via a new `pages/parameters.qmd`, adds a condensed one-page printable `pages/notation-quick-reference.qmd`, and removes the duplicate heading/manual table of contents that `pages/notation.qmd` inherited from `NOTATION.md`. The acceptance criterion "every core page links notation from its header card" is not implemented: the header-card component (#4507 / WEB-03.2) does not exist yet, so there is nothing to link from; see the PR's Blocked section.
 - **Next step:** Owner/reviewer decides whether to accept the interim scope (3 of 4 criteria) or hold for #4507, then mark shipped once the PR merges.
 
-### DL-#4607 Â· Contributor and Reviewer Guide on the Site
+### DL-#4607 · Contributor and Reviewer Guide on the Site
 
 - **State:** in_review
 - **Owner:** claude
@@ -850,7 +850,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Adds a reader-facing guide routing corrections, claim critiques, dataset contributions, and chapter reviews to their GitHub issue templates, linked from Collaborate. The "linked from every WEB-03.4 block" acceptance criterion is deferred because WEB-03.4 does not exist yet.
 - **Next step:** Owner/frontier review of the draft PR.
 
-### DL-#4492 Â· Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
+### DL-#4492 · Short On-Ramp Learning Paths (5 Minutes, 30 Minutes, 3 Hours)
 
 - **State:** in_review
 - **Owner:** claude
@@ -862,7 +862,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (fix round for PR #4677 review: `pytest tests/test_on_ramp_paths.py` 10 passed; `pytest tests/test_site_link_gate.py tests/test_how_to_read.py tests/test_persona_start_paths.py tests/test_check_links.py tests/test_check_site_health.py` 98 passed; site gate passed; `ruff check tests/test_on_ramp_paths.py` and `black --check --line-length 100 tests/test_on_ramp_paths.py` clean)
 - **Summary:** Adds `resources/on-ramp-paths.qmd`, a new page with 5-minute, 30-minute, and 3-hour reading sequences for each of the 8 personas from `config/personas.yml`, built entirely from existing pages (no new prose content elsewhere), each ending in a self-check question with its answer grounded in the linked page's own body text; linked from `resources/learning-paths.qmd` so it isn't orphaned. Fix round corrected a notation error (lowercase `g(x)u`), a ZVCF/trajectory wording error, a fabricated "double-pendulum benchmark" claim about Theory Part 4, a mischaracterization of the research-review stub pages as finished reviews, an inconsistent Theory Part 1 time estimate, a subtitle hour-range mismatch, and rewrote all 24 self-checks from recall trivia to reflective questions.
 - **Next step:** Push the branch with this fix round and await re-review.
-### DL-#4547 Â· Deduplicate and Reconcile Bibliography Databases
+### DL-#4547 · Deduplicate and Reconcile Bibliography Databases
 
 - **State:** in_review
 - **Owner:** claude
@@ -871,10 +871,10 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Branch:** `claude/issue-4547`
 - **Paths:** `scripts/check_bibliography_cross_file.py`, `tests/test_check_bibliography_cross_file.py`, `articles/The_Physics_of_Golf/golf_physics.bib` (metadata fix only).
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: reworked after review blocked the original mechanical-merge draft. `python3 scripts/check_bibliography_cross_file.py` reports 163 keys shared across files, 0 disagreeing, 0 CI-flagged duplicate DOIs (82 raw shared-DOI groups exist pre-exemption, mostly legitimate per-book copies â€” see PR #4676 for the list); `pytest tests/test_check_bibliography_cross_file.py` 18/18; `python3 -m scripts.check_citation_resolution`, `python3 -m scripts.check_qmd_citation_keys`, and `scripts/check_latex_structure.py` (pre-existing, already CI-wired citation-resolution checks) all pass clean against the reverted tree; `ruff check .` and `black --check --line-length 100 .` clean.)
+- **Last verified:** 2026-09-29 (SELF: reworked after review blocked the original mechanical-merge draft. `python3 scripts/check_bibliography_cross_file.py` reports 163 keys shared across files, 0 disagreeing, 0 CI-flagged duplicate DOIs (82 raw shared-DOI groups exist pre-exemption, mostly legitimate per-book copies — see PR #4676 for the list); `pytest tests/test_check_bibliography_cross_file.py` 18/18; `python3 -m scripts.check_citation_resolution`, `python3 -m scripts.check_qmd_citation_keys`, and `scripts/check_latex_structure.py` (pre-existing, already CI-wired citation-resolution checks) all pass clean against the reverted tree; `ruff check .` and `black --check --line-length 100 .` clean.)
 - **Summary:** Reworked after review blocked the original mechanical dedupe: that merge broke the locked `proximal_distal_energy_transfer` article, touched an owner-sign-off-gated book audit ledger, deleted citation keys still in use, and silently renamed a key. All of that is reverted to `origin/main` byte-for-byte. What ships instead: `proximal_distal_energy_transfer/references.bib` added to `STANDALONE_LINKED` (it is `index.qmd`'s sole `bibliography:` override) and `clark2013whatever` fixed to the `@article`/*Behavioral and Brain Sciences*/Cambridge University Press record it actually is everywhere it appears. No new citation-resolution test was added: `scripts/check_citation_resolution.py`, `scripts/check_qmd_citation_keys.py`, and `scripts/check_latex_structure.py` already do exactly that (CI-gated, all currently passing), so writing a parallel implementation would have duplicated working infrastructure. The 82 raw duplicate-DOI groups the mechanical merge would have addressed are left in place; most are legitimate copies across `STANDALONE_LINKED` files, and the CI check does not flag any of them as violations.
 - **Next step:** Owner/frontier review of the reworked draft PR #4676; mark ready and merge once approved.
-### DL-#4564 Â· Cross-Browser Coverage (Nightly Firefox/WebKit)
+### DL-#4564 · Cross-Browser Coverage (Nightly Firefox/WebKit)
 
 - **State:** in_review
 - **Owner:** claude
@@ -884,9 +884,9 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Paths:** `.github/workflows/cross-browser-nightly.yml`, `scripts/report_e2e_browser_failures.py`, `tests/test_report_e2e_browser_failures.py`
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF, review feedback round 1: 29/29 tests in test_report_e2e_browser_failures.py pass via `python -m pytest -q -o addopts=`; ruff and black --line-length 100 clean on the changed files; no-new-labels, missing-report-handling, and issue-cap behaviors each landed test-first)
-- **Summary:** Adds a nightly workflow that runs `tests/e2e/smoke.spec.js` (the existing representative public-route + behavioral-invariant suite) against Firefox and WebKit â€” the two `playwright.config.js` projects `ci-standard.yml`'s PR-gated `e2e-tests` job never exercises â€” and files deduplicated-by-title GitHub issues via `scripts/report_e2e_browser_failures.py`: one per distinct (browser, test title) failure, using only the repo's existing `ci`/`automation` labels, rolling more than 5 new failures into a single dated summary issue, and treating a missing/empty/unparseable report as a failure of its own instead of crashing or vanishing.
+- **Summary:** Adds a nightly workflow that runs `tests/e2e/smoke.spec.js` (the existing representative public-route + behavioral-invariant suite) against Firefox and WebKit — the two `playwright.config.js` projects `ci-standard.yml`'s PR-gated `e2e-tests` job never exercises — and files deduplicated-by-title GitHub issues via `scripts/report_e2e_browser_failures.py`: one per distinct (browser, test title) failure, using only the repo's existing `ci`/`automation` labels, rolling more than 5 new failures into a single dated summary issue, and treating a missing/empty/unparseable report as a failure of its own instead of crashing or vanishing.
 - **Next step:** Owner/frontier review of the draft PR; the schedule cannot be exercised end-to-end until it first fires on `main`, so verify the first nightly run once merged.
-### DL-#4576 Â· Privacy Policy Page
+### DL-#4576 · Privacy Policy Page
 
 - **State:** in_review
 - **Owner:** claude
@@ -899,12 +899,12 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Adds a Privacy Policy page covering local storage (`metrics.js`), the service worker, third-party embeds (YouTube, Google Fonts, jsDelivr), and analytics per Board decision D6; linked from the site footer.
 - **Next step:** Open the draft PR and update this entry's PR field with the resulting number.
 
-### DL-#4582 Â· Enforce G(x) Notation and Add a Notation Lint
+### DL-#4582 · Enforce G(x) Notation and Add a Notation Lint
 
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created yet (draft opened in the same turn this entry lands)
-- **Issue:** #4582 (native child of epic #4586, E11 â€” Mathematical Typesetting and Notation)
+- **Issue:** #4582 (native child of epic #4586, E11 — Mathematical Typesetting and Notation)
 - **Branch:** `claude/issue-4582`
 - **Paths:** `index.qmd`, `models/models-drake.qmd`, `articles/motion-control/chapter8.tex`, `articles/motion-control/Control_Is_Motion_Complete.tex`, `articles/The_Geometry_of_Motion/quarto/ch03_superposition.qmd`, `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03_superposition.tex`, `articles/The_Geometry_of_Motion/quarto/volume2_content.qmd`, `articles/The_Geometry_of_Motion/Volume_II/chapters/ch08_phase_variable_control.tex`, `critiques/*.md` (12 files), `scripts/check_notation.py`, `tests/test_check_notation.py`, `config/notation-baseline.json`
 - **Started:** 2026-09-29
@@ -912,7 +912,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Replaces lowercase `g(x)` with uppercase `G(x)` for the control-affine input map everywhere it carries that meaning (home page, four textbook chapters and their LaTeX mirrors, 12 critique files), per `NOTATION.md:342-346`. Adds a baseline-gated pytest lint (`scripts/check_notation.py` + `tests/test_check_notation.py`) so a reintroduced lowercase `g(x)` fails CI; the two `ch05_optimal_control` files keep their unrelated inequality-constraint `g(x)` via an explicit baseline allowlist rather than a misleading rewrite.
 - **Next step:** Open the draft PR for #4582 and flip this entry to `shipped` once it merges.
 
-### DL-#4546 Â· ScholarlyArticle and Book JSON-LD
+### DL-#4546 · ScholarlyArticle and Book JSON-LD
 
 - **State:** in_review
 - **Owner:** claude
@@ -921,11 +921,11 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Branch:** `claude/issue-4546`
 - **Paths:** `scripts/filters/schema-jsonld.lua`, `tests/test_schema_jsonld.py`, `_quarto.yml`, `_includes/article-schema.html` (deleted), `articles/affine-nature-golf-swing.qmd`, `articles/appendix-applications.qmd`, `books/control-is-motion.qmd`, `resources/resources-datasets.qmd`, `resources/resources-software.qmd`
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_schema_jsonld.py tests/test_companion_hierarchy.py -v` â€” 10 passed; `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` clean; manual `quarto render` of all five tagged sample pages confirmed valid per-type JSON-LD)
+- **Last verified:** 2026-09-29 (`python3 -m pytest tests/test_schema_jsonld.py tests/test_companion_hierarchy.py -v` — 10 passed; `python3 -m ruff check .` and `python3 -m black --check --line-length 100 .` clean; manual `quarto render` of all five tagged sample pages confirmed valid per-type JSON-LD)
 - **Summary:** Replaced the dead, broken `_includes/article-schema.html` (unreferenced; `{{< meta >}}` does not expand inside raw HTML) with a Lua filter registered project-wide in `_quarto.yml` that emits Schema.org JSON-LD for any page declaring `schema-type: ScholarlyArticle|Book|Chapter|Dataset|SoftwareSourceCode`; pages without that field are untouched. Tagged one real sample page per type.
 - **Next step:** None outstanding for this scope; a frontier agent reviews the draft PR before merge.
 
-### DL-#4608 Â· Website & UX Issue Template
+### DL-#4608 · Website & UX Issue Template
 
 - **State:** in_review
 - **Owner:** claude
@@ -938,7 +938,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Adds a GitHub issue template for website/UX problems capturing page URL, viewport, theme, browser, and expected versus actual behaviour, matching the style of the existing content/critique/textbook templates.
 - **Next step:** Open the draft PR and hand off for frontier review.
 
-### DL-#4583 Â· Standardise the DCR Name
+### DL-#4583 · Standardise the DCR Name
 
 - **State:** in_review
 - **Owner:** claude
@@ -947,16 +947,16 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Branch:** `claude/issue-4583`
 - **Paths:** `articles/drift-control-ratio.qmd` (renamed from `controllability-drift-ratio.qmd`), `scripts/check_terminology.py`, `tests/test_check_terminology.py`, `data/trust/claim_audit_inventory.json`, `data/trust/claim_critique_ledger.json`, `data/trust/claim_registry.json`, `data/trust/site_trust_surface_audit.json`, `NOTATION.md`, plus ~28 other files referencing the old slug or expansion (critiques, articles, config, tests, generated trust panels/reports).
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (targeted suite: `test_dcr_article_rigor.py`, `test_dcr_reachability_contract.py`, `test_dcr_event_sensitivity_protocol.py`, `test_editorial_and_consistency.py`, `test_publication_markup_contract.py`, `test_scientific_trust_metadata.py`, `test_research_protocol_readiness.py`, `test_check_single_title.py`, `test_formatting_lints.py`, `test_check_terminology.py`, `test_claim_audit_inventory.py` â€” 149 passed. `ruff check .` and `black --check --line-length 100 .` clean. `regenerate_claim_audit_evidence --check`, `generate_claim_critique_ledger --check`, `generate_trust_panels --check` all current. `check_spec_changelog` passes.)
+- **Last verified:** 2026-09-29 (targeted suite: `test_dcr_article_rigor.py`, `test_dcr_reachability_contract.py`, `test_dcr_event_sensitivity_protocol.py`, `test_editorial_and_consistency.py`, `test_publication_markup_contract.py`, `test_scientific_trust_metadata.py`, `test_research_protocol_readiness.py`, `test_check_single_title.py`, `test_formatting_lints.py`, `test_check_terminology.py`, `test_claim_audit_inventory.py` — 149 passed. `ruff check .` and `black --check --line-length 100 .` clean. `regenerate_claim_audit_evidence --check`, `generate_claim_critique_ledger --check`, `generate_trust_panels --check` all current. `check_spec_changelog` passes.)
 - **Summary:** Standardises the three competing DCR expansions ("drift-to-control ratio", "controllability-drift ratio") to the canonical "Drift-Control Ratio" across ~34 files; renames the article slug from `controllability-drift-ratio` to `drift-control-ratio` with a `controllability-drift-ratio.html` redirect alias; bans both wrong expansions in `scripts/check_terminology.py`; updates the source-of-truth trust/audit JSON registries and regenerates all derived artifacts (critique annotations, trust panels, audit report, research-readiness library).
 - **Next step:** Open the draft PR for #4583.
 
-### DL-#4568 Â· Accessibility Statement Page
+### DL-#4568 · Accessibility Statement Page
 
 - **State:** in_review
 - **Owner:** claude
 - **PR:** see this session's draft PR
-- **Issue:** #4568 (epic #4569 â€” E9 Accessibility Conformance)
+- **Issue:** #4568 (epic #4569 — E9 Accessibility Conformance)
 - **Branch:** `claude/issue-4568`
 - **Paths:** `pages/accessibility.qmd`, `_quarto.yml`, `tests/test_accessibility_statement_page.py`, `tests/test_page_style_discipline.py`
 - **Started:** 2026-09-29
@@ -964,7 +964,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Publishes an accessibility statement stating the WCAG 2.1 Level AA conformance target, summarizing the known-issues inventory tracked in #4139, and giving a contact route (GitHub Issues, email) for reporting barriers; linked from the site footer.
 - **Next step:** Awaiting frontier-agent review of the draft PR.
 
-### DL-#4548 Â· Render or Retire Orphaned Per-Article Bibliography Files
+### DL-#4548 · Render or Retire Orphaned Per-Article Bibliography Files
 
 - **State:** in_review
 - **Owner:** claude
@@ -977,26 +977,26 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Added the `articles/*-bibliography.md` Quarto render rule (mirroring the pre-existing `critiques/*.md` rule) and minimal title/description front matter to the 22 companion bibliography files, so they render instead of 404ing; fixed the two links that pointed at raw `.md`/GitHub-blob sources; kept and front-mattered the one orphan companion file (`Pinocchio_Project_Outline-bibliography.md`) because its annotated content is substantive; documented the pattern.
 - **Next step:** Open the draft PR for review.
 
-### DL-#4504 Â· Configure Search, and Include Maturity in Results
+### DL-#4504 · Configure Search, and Include Maturity in Results
 
 - **State:** in_review
 - **Owner:** claude
 - **PR:** not created yet (draft PR to be opened this session)
-- **Issue:** #4541 (epic #4543, E6 â€” Interactive Models and Reproducibility)
+- **Issue:** #4541 (epic #4543, E6 — Interactive Models and Reproducibility)
 - **Branch:** `claude/issue-4541`
-- **Paths:** `models/dataset-explorer.qmd`, `js/dataset-explorer.js`, `js/dataset-explorer-ui.js`, `css/dataset-explorer.css`, `scripts/generate_dataset_explorer_manifest.py`, `data/dataset_explorer_manifest.json`, `tests/dataset-explorer.test.js`, `tests/dataset-explorer-ui.test.js`, `tests/test_generate_dataset_explorer_manifest.py`, `scripts/sync_frontend_assets.py` (registered the two new JS modules), `_quarto.yml` (navbar entry under Build â†’ Datasets), `data/trust/claim_audit_inventory.json` (digests regenerated via `scripts/regenerate_claim_audit_evidence.py` after the `_quarto.yml` edit), `SPEC.md`
+- **Paths:** `models/dataset-explorer.qmd`, `js/dataset-explorer.js`, `js/dataset-explorer-ui.js`, `css/dataset-explorer.css`, `scripts/generate_dataset_explorer_manifest.py`, `data/dataset_explorer_manifest.json`, `tests/dataset-explorer.test.js`, `tests/dataset-explorer-ui.test.js`, `tests/test_generate_dataset_explorer_manifest.py`, `scripts/sync_frontend_assets.py` (registered the two new JS modules), `_quarto.yml` (navbar entry under Build → Datasets), `data/trust/claim_audit_inventory.json` (digests regenerated via `scripts/regenerate_claim_audit_evidence.py` after the `_quarto.yml` edit), `SPEC.md`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `npx jest` 28 suites/455 passed/19 skipped; targeted `pytest` across `test_generate_dataset_explorer_manifest.py`, `test_claim_audit_inventory.py`, `test_claim_audit_output_boundary.py`, `test_sync_frontend_assets.py`, `test_check_single_title.py`, `test_site_trust_surface_audit.py` â€” 84/84 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide; `stylelint css/dataset-explorer.css` clean; site link gate passes ("Site gate passed!"); `check_spec_changelog.py` passes)
-- **Summary:** New browser page listing every `data/ztcf/`, `data/population_generalization/`, and `data/proximal_distal_energy_transfer/` fixture from a generated manifest. A hand-written JSON Schema validator (draft 2020-12 keyword subset used by AffineDrift's fixture schemas) checks each fixture against its published schema client-side; only `data/ztcf/` has a published `*.schema.json` today, so the other two families are reported as "schema unavailable" rather than a fabricated pass. Each fixture gets an accessible data table (generic JSON flatten, capped at 500 rows) and a download button whose SHA-256 is computed in-browser from the exact fetched bytes. The page is linked only from `_quarto.yml`'s navbar (Build â†’ Datasets), not from existing narrative articles: those articles' digests are pinned as claim-audit review evidence, so cross-linking them was reverted; `_quarto.yml` is pinned too, so its edit required running `scripts/regenerate_claim_audit_evidence.py` (the sanctioned in-place digest refresh) to keep `data/trust/claim_audit_inventory.json` current.
+- **Last verified:** 2026-09-30 (SELF: `npx jest` 28 suites/455 passed/19 skipped; targeted `pytest` across `test_generate_dataset_explorer_manifest.py`, `test_claim_audit_inventory.py`, `test_claim_audit_output_boundary.py`, `test_sync_frontend_assets.py`, `test_check_single_title.py`, `test_site_trust_surface_audit.py` — 84/84 passed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide; `stylelint css/dataset-explorer.css` clean; site link gate passes ("Site gate passed!"); `check_spec_changelog.py` passes)
+- **Summary:** New browser page listing every `data/ztcf/`, `data/population_generalization/`, and `data/proximal_distal_energy_transfer/` fixture from a generated manifest. A hand-written JSON Schema validator (draft 2020-12 keyword subset used by AffineDrift's fixture schemas) checks each fixture against its published schema client-side; only `data/ztcf/` has a published `*.schema.json` today, so the other two families are reported as "schema unavailable" rather than a fabricated pass. Each fixture gets an accessible data table (generic JSON flatten, capped at 500 rows) and a download button whose SHA-256 is computed in-browser from the exact fetched bytes. The page is linked only from `_quarto.yml`'s navbar (Build → Datasets), not from existing narrative articles: those articles' digests are pinned as claim-audit review evidence, so cross-linking them was reverted; `_quarto.yml` is pinned too, so its edit required running `scripts/regenerate_claim_audit_evidence.py` (the sanctioned in-place digest refresh) to keep `data/trust/claim_audit_inventory.json` current.
 - **Next step:** Push the branch, open the draft PR, and let CI's `quarto render`/Playwright lane confirm the page renders and passes axe-core (not run locally; see HANDOFF.md).
 - **Issue:** #4504 (WEB-02.10; epic #4514)
 - **Branch:** `claude/issue-4504`
 - **Paths:** `_quarto.yml`, `_includes/site-head.html`, `js/search-maturity-badge.js`, `scripts/generate_search_maturity_index.py`, `css/search-metrics.css`, `articles/zero-torque-counterfactual.qmd`, `.github/workflows/deploy-website.yml`, `tests/e2e/search.spec.js`
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (SELF: `npx jest` 441 passed/19 skipped; `pytest --timeout=120 -q` all passed; ruff/black clean; `check_spec_changelog` and `regenerate_claim_audit_evidence --check` pass. Full-site Playwright E2E not run locally â€” `quarto render` is blocked in this sandbox; CI's `e2e-tests` job validates the new ZTCF search spec.)
+- **Last verified:** 2026-09-29 (SELF: `npx jest` 441 passed/19 skipped; `pytest --timeout=120 -q` all passed; ruff/black clean; `check_spec_changelog` and `regenerate_claim_audit_evidence --check` pass. Full-site Playwright E2E not run locally — `quarto render` is blocked in this sandbox; CI's `e2e-tests` job validates the new ZTCF search spec.)
 - **Summary:** Configures an explicit Quarto `search:` block (overlay, limit 10, `/`/`s` shortcut), removes the unverified `SearchAction` JSON-LD (its target was never implemented), and injects the page-header-card maturity badge into matching search results via a generated `search-maturity.json` index and a client-side DOM-annotation module.
 - **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job confirm the new "ZTCF" search spec passes against the real full-site render.
-### DL-#4535 Â· DCR Visualiser Widget
+### DL-#4535 · DCR Visualiser Widget
 
 - **State:** in_review
 - **Owner:** claude
@@ -1009,7 +1009,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Adds an interactive DCR-through-swing-phase widget to the DCR article, built on a pure-JS mirror of `src/affine_control/reachability.py`'s `LinearScalarSystem`/`instantaneous_scalar_dcr`/`scalar_linear_reachable_interval`. It compares an additive-drift and a state-dependent-drift system that share one instantaneous DCR at the phase start but different reachable-interval widths (the same fixture governed by `tests/test_dcr_event_sensitivity_protocol.py`), explicitly demonstrating claim `ad-dcr-001`, and links that claim from the widget. Review response: relabeled the phase slider and heading to remove the golf-specific "swing phase" framing, added a `<thead>`/`scope="col"` header row to the results table, added a `<noscript>` fallback with the default example's values, moved all inline styles and hex literals into `css/dcr-visualizer.css` (theme-variable-driven, with a dark-mode override for the two series accent colors, and registered in `scripts/sync_frontend_assets.py`'s deploy mirror map alongside the two JS modules, which had been missing from it), and centralized the shared parity numbers into `tests/fixtures/dcr_visualizer_parity.json` read by both the pytest and Jest suites. Regenerated the claim-audit and research-readiness digests that pin the article's SHA-256 after editing it.
 - **Next step:** Let CI's Jest/E2E/quality-gate confirm the widget renders, mirrors correctly into `docs/`, and passes axe-core on the DCR page.
 
-### DL-#4577 Â· Performance of MathJax-Heavy Pages
+### DL-#4577 · Performance of MathJax-Heavy Pages
 
 - **State:** in_review
 - **Owner:** claude
@@ -1018,11 +1018,11 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Branch:** `claude/issue-4577`
 - **Paths:** `_includes/mathjax-loader.html`, `tests/mathjax-loader.test.js`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (SELF: `npx jest tests/mathjax-loader.test.js` 10/10 passed after REDâ†’GREEN; full `npx jest` 432 passed/19 skipped/0 failed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide)
-- **Summary:** Evaluated the issue's "smaller MathJax component build" option: swapped the gated loader's CDN bundle from `tex-mml-chtml.js` to `tex-chtml.js` (TeX input + CHTML output only), dropping the unused MathML *input* jax that Quarto's TeX-only `.math` spans never exercise, with a re-pinned SRI hash. Measured before/after via the pinned CDN URLs: 1,173,007 â†’ 1,160,989 bytes raw (264,567 â†’ 261,828 bytes gzip transfer) â€” applies to every math-bearing page, including the three heaviest chapters by display-equation density (`Tangent_Hyperplanes_Unified_Thesis.qmd` 329, `volume2_content.qmd` 284, `superposition.qmd` 190 delimiter occurrences). `enableAssistiveMml` (screen-reader MathML) ships identically in both bundles, so accessibility is unchanged. The larger "build-time pre-rendering to SVG/MathML" option in the issue was evaluated and not implemented â€” see HANDOFF.md for why.
+- **Last verified:** 2026-09-30 (SELF: `npx jest tests/mathjax-loader.test.js` 10/10 passed after RED→GREEN; full `npx jest` 432 passed/19 skipped/0 failed; `ruff check .` and `black --check --line-length 100 .` clean repo-wide)
+- **Summary:** Evaluated the issue's "smaller MathJax component build" option: swapped the gated loader's CDN bundle from `tex-mml-chtml.js` to `tex-chtml.js` (TeX input + CHTML output only), dropping the unused MathML *input* jax that Quarto's TeX-only `.math` spans never exercise, with a re-pinned SRI hash. Measured before/after via the pinned CDN URLs: 1,173,007 → 1,160,989 bytes raw (264,567 → 261,828 bytes gzip transfer) — applies to every math-bearing page, including the three heaviest chapters by display-equation density (`Tangent_Hyperplanes_Unified_Thesis.qmd` 329, `volume2_content.qmd` 284, `superposition.qmd` 190 delimiter occurrences). `enableAssistiveMml` (screen-reader MathML) ships identically in both bundles, so accessibility is unchanged. The larger "build-time pre-rendering to SVG/MathML" option in the issue was evaluated and not implemented — see HANDOFF.md for why.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
-### DL-#4578 Â· Social Cards per Page
+### DL-#4578 · Social Cards per Page
 
 - **State:** in_review
 - **Owner:** claude
@@ -1034,7 +1034,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-30 (SELF: 13/13 tests pass across test_social_cards.py and test_image_budget.py; ruff and black --line-length 100 clean)
 - **Summary:** Generates one 1200x630 Open Graph card per book/series (title, badge, signature graphic) at build time instead of one site-wide card, checked in like the existing site-wide `logo/og-card.png`, and wires three representative landing pages to use theirs via per-page `open-graph`/`twitter-card` overrides.
 - **Next step:** After merge and deploy, run a social-card debugger against the three live page URLs to close out the issue's second acceptance criterion (see HANDOFF.md Blockers).
-### DL-#4567 Â· Wire Alt-Text and Long-Description Validation Into CI
+### DL-#4567 · Wire Alt-Text and Long-Description Validation Into CI
 
 - **State:** in_progress
 - **Owner:** claude
@@ -1047,7 +1047,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Wires `validate_accessibility.py`'s alt-text/heading/long-description checks into `quality-gate` via a new `--qmd-only` CI step; adds a long-description check for complex E8 SVG diagrams, grandfathering 39 pre-existing matplotlib-generated SVG figures via a new baseline file; the script's unrelated CSS colorblind-color and JS ARIA-label checks remain unwired (pre-existing failures, out of scope).
 - **Next step:** Open the draft PR referencing Closes #4567 and release the lease.
 
-### DL-#4549 Â· Datasets Page Rebuild (Licences, Schemas, Checksums)
+### DL-#4549 · Datasets Page Rebuild (Licences, Schemas, Checksums)
 
 - **State:** in_review
 - **Owner:** claude
@@ -1059,7 +1059,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (`pytest tests/test_generate_datasets_catalog.py` 14 passed; `generate_datasets_catalog --check` up to date; ruff/black clean repo-wide; mypy clean on new modules; Quarto render-coverage/syntax/xref/single-title/title-case checks pass; full pre-push hook chain including `pytest-unit` passed; PR #4632 opened as draft)
 - **Summary:** Rebuilds the Datasets resource page as a generated catalogue from `data/datasets.yml`, replacing four truncated-looking third-party cards and the `mini.s-shot.ru` thumbnail host with verified licence/size/modality/access/citation fields, and adds an "AffineDrift Data Artefacts" section listing `data/ztcf`, `data/research_protocols`, and `schemas` with a real SHA-256 checksum per file.
 - **Next step:** Awaiting frontier-agent PR review.
-### DL-#4595 Â· Cache Quarto Renders in CI
+### DL-#4595 · Cache Quarto Renders in CI
 
 - **State:** in_review
 - **Owner:** claude
@@ -1070,9 +1070,9 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF: 16/16 test_deployment_integrity.py pass + 1 skipped, 2/2 test_workflow_action_pins.py pass, ruff/black clean repo-wide)
 - **Summary:** Caches the PR `e2e-tests` Quarto render output (`docs/` + `.quarto/`) keyed on a hash of every render-relevant source file, skipping the ~14-minute render only on an exact hash match; deploy's clean full render is untouched. A true per-file incremental render was scoped out because it would conflict with the existing #4126 invariant guaranteeing the E2E lane always renders every route; see HANDOFF.md for the full reasoning.
-- **Next step:** Owner/frontier review of the draft PR, including the `tier:strong` follow-up proposed for reconciling incremental rendering with the #4126 full-coverage guarantee if the â‰¥30% median-time criterion is not met by the cache alone.
+- **Next step:** Owner/frontier review of the draft PR, including the `tier:strong` follow-up proposed for reconciling incremental rendering with the #4126 full-coverage guarantee if the ≥30% median-time criterion is not met by the cache alone.
 
-### DL-#4600 Â· Service-Worker Cache Busting by Content Hash
+### DL-#4600 · Service-Worker Cache Busting by Content Hash
 
 - **State:** in_review
 - **Owner:** claude
@@ -1081,10 +1081,10 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Branch:** `claude/issue-4600`
 - **Paths:** `service-worker.js`, `tests/e2e/offline.spec.js`, `.github/workflows/ci-standard.yml`
 - **Started:** 2026-09-29
-- **Last verified:** 2026-09-29 (Jest full suite 420 passed/19 skipped; `pytest tests/test_update_sw_cache_version.py` 12 passed; `ruff check .` and `black --check --line-length 100 .` clean. Full-site Playwright E2E not run locally â€” `quarto render` is out of scope for this session; CI's `e2e-tests` job validates the re-enabled offline spec.)
+- **Last verified:** 2026-09-29 (Jest full suite 420 passed/19 skipped; `pytest tests/test_update_sw_cache_version.py` 12 passed; `ruff check .` and `black --check --line-length 100 .` clean. Full-site Playwright E2E not run locally — `quarto render` is out of scope for this session; CI's `e2e-tests` job validates the re-enabled offline spec.)
 - **Summary:** Removes the stale TODO in `service-worker.js` referencing closed issue #1459 (content-hash cache busting is already implemented by `scripts/update_sw_cache_version.py`, which hashes precached CSS/JS assets into `CACHE_NAME`), replaces the offline E2E test's flaky fixed 3s wait with a deterministic `navigator.serviceWorker.ready` wait, and drops that one title from the `ci-standard.yml` full-site E2E exclusion list.
 - **Next step:** Push the branch, open the draft PR, and let CI's `e2e-tests` job confirm the re-enabled offline spec passes against the real full-site render.
-### DL-#4596 Â· Report Broken External Links as Issues
+### DL-#4596 · Report Broken External Links as Issues
 
 - **State:** in_review
 - **Owner:** claude
@@ -1102,7 +1102,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Started:** 2026-09-30
 - **Last verified:** 2026-09-30 (SELF: 16/16 test_deployment_integrity.py pass + 1 skipped, 2/2 test_workflow_action_pins.py pass, ruff/black clean repo-wide)
 - **Summary:** Caches the PR `e2e-tests` Quarto render output (`docs/` + `.quarto/`) keyed on a hash of every render-relevant source file, skipping the ~14-minute render only on an exact hash match; deploy's clean full render is untouched. A true per-file incremental render was scoped out because it would conflict with the existing #4126 invariant guaranteeing the E2E lane always renders every route; see HANDOFF.md for the full reasoning.
-- **Next step:** Owner/frontier review of the draft PR, including the `tier:strong` follow-up proposed for reconciling incremental rendering with the #4126 full-coverage guarantee if the â‰¥30% median-time criterion is not met by the cache alone.
+- **Next step:** Owner/frontier review of the draft PR, including the `tier:strong` follow-up proposed for reconciling incremental rendering with the #4126 full-coverage guarantee if the ≥30% median-time criterion is not met by the cache alone.
 - **Issue:** #4596 (epic #4604)
 - **Branch:** `claude/issue-4596`
 - **Paths:** `scripts/link-checker.py`, `.github/workflows/link-checker.yml`, `docs/LINK-CHECKER.md`, `tests/test_link_checker_script.py`
@@ -1111,7 +1111,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Scheduled external-link check now upserts a single tracking issue (find-or-update, close on all-clear) instead of only logging, checks DOI links through their doi.org redirect, and attaches an archive.org fallback suggestion to each dead link.
 - **Next step:** Push branch, open draft PR referencing Closes #4596, and release the fleet lease.
 
-### DL-#4588 Â· Keep Internal Governance Vocabulary Out of Reader Prose
+### DL-#4588 · Keep Internal Governance Vocabulary Out of Reader Prose
 
 - **State:** in_progress
 - **Owner:** claude
@@ -1132,20 +1132,20 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Adds a warn-mode CI lint for internal governance vocabulary ("governed", "qualified", "provenance", "protected", "fail-closed") in reader prose, a plain-language glossary page, and removes the vocabulary from the hub/entry reader pages. Full 75% corpus-wide reduction is blocked on the still-open prerequisite #4587 (editorial style guide) for the remaining `articles/` chapter corpus; see the HANDOFF.md Blocked section.
 - **Next step:** Land #4587, then use its standard to rewrite the `articles/` chapter corpus and shrink the baseline.
 
-### DL-#4563 Â· Restore the Ten Excluded Browser Tests
+### DL-#4563 · Restore the Ten Excluded Browser Tests
 
 - **State:** in_review
 - **Owner:** claude
 - **PR:** to be opened as a draft by this session
-- **Issue:** #4563 (WEB-09.3; epic #4569 / E9 â€” Accessibility Conformance)
+- **Issue:** #4563 (WEB-09.3; epic #4569 / E9 — Accessibility Conformance)
 - **Branch:** `claude/issue-4563`
 - **Paths:** `.github/workflows/ci-standard.yml`, `tests/e2e/touch-targets.spec.js`
 - **Started:** 2026-09-30
-- **Last verified:** 2026-09-30 (statically, not by running Playwright â€” see Blocked note on the PR; `npx jest` 429/429 passing, unaffected)
-- **Summary:** Nine of the ten titles `--grep-invert`-excluded from the Chromium E2E job (#4140) were already fixed in source by PR #4200 (stale homepage/navigation/user-journey selectors, dark-theme contrast, back-to-top touch target, bibliography detail panel) but the exclusion list itself was never removed, so CI never actually validated those fixes; this issue removes the nine now-obsolete exclusions and fixes a tenth defect found by re-reading the suite (`touch-targets.spec.js`'s shared helper counted a CSS-hidden element, such as the collapsed `.navbar-toggler` at desktop width, as a non-compliant 0Ã—0 touch target instead of skipping it). The tenth excluded title, `matches visual snapshot` (60 pixel-comparison cases in `visual.spec.js`), stays excluded: no baseline PNGs are committed anywhere in the repo, so it cannot pass regardless of site correctness; generating them needs a `playwright test --update-snapshots` run on the actual fleet CI runner (font metrics differ from this sandbox), which is out of reach here.
+- **Last verified:** 2026-09-30 (statically, not by running Playwright — see Blocked note on the PR; `npx jest` 429/429 passing, unaffected)
+- **Summary:** Nine of the ten titles `--grep-invert`-excluded from the Chromium E2E job (#4140) were already fixed in source by PR #4200 (stale homepage/navigation/user-journey selectors, dark-theme contrast, back-to-top touch target, bibliography detail panel) but the exclusion list itself was never removed, so CI never actually validated those fixes; this issue removes the nine now-obsolete exclusions and fixes a tenth defect found by re-reading the suite (`touch-targets.spec.js`'s shared helper counted a CSS-hidden element, such as the collapsed `.navbar-toggler` at desktop width, as a non-compliant 0×0 touch target instead of skipping it). The tenth excluded title, `matches visual snapshot` (60 pixel-comparison cases in `visual.spec.js`), stays excluded: no baseline PNGs are committed anywhere in the repo, so it cannot pass regardless of site correctness; generating them needs a `playwright test --update-snapshots` run on the actual fleet CI runner (font metrics differ from this sandbox), which is out of reach here.
 - **Next step:** Frontier review of the draft PR's Blocked note (pixel-snapshot baselines) and CI's e2e-tests run, which is the only environment in this fleet that can actually execute the restored tests against a real Quarto render.
 
-### DL-#4591 Â· Readability Measurement Tool
+### DL-#4591 · Readability Measurement Tool
 
 - **State:** in_review
 - **Owner:** claude
@@ -1157,7 +1157,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Last verified:** 2026-09-29 (33/33 new pytest cases pass; ruff, black --line-length 100, and mypy clean on the new module.)
 - **Summary:** Advisory Flesch-Kincaid grade-level checker for lay blocks, `summary-plain`, and hub pages, wired into CI as a non-blocking step with a JSON report artifact; threshold (grade 10) taken from WEB-12.1's stated targets since the style guide itself (WEB-12.1) is still open.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
-### DL-#4524 Â· Extend Critique Annotations to ZTCF and Proximalâ€“Distal Pages
+### DL-#4524 · Extend Critique Annotations to ZTCF and Proximal–Distal Pages
 
 - **State:** in_progress
 - **Owner:** local
@@ -1170,20 +1170,20 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Enforces that every critique maps to every page whose claim it targets and extends critique annotations to the ZTCF, Theory Part 2, and Proximal-Distal pages.
 - **Next step:** Commit changes, push branch, open PR referencing Closes #4524, and release lease.
 
-### DL-#4523 Â· Readable Claim Ledger Page
+### DL-#4523 · Readable Claim Ledger Page
 
 - **State:** in_review
 - **Owner:** claude
-- **PR:** #4637 (draft) â€” https://github.com/D-sorganization/AffineDrift/pull/4637
+- **PR:** #4637 (draft) — https://github.com/D-sorganization/AffineDrift/pull/4637
 - **Issue:** #4523 (epic #4530)
 - **Branch:** `claude/issue-4523`
 - **Paths:** `evidence/claims.qmd`, `scripts/generate_claims_ledger.py`, `tests/test_claims_ledger.py`, `_includes/generated/claims-ledger.qmd`, `_includes/generated/claims-ledger/drift-control-ratio.qmd`, `articles/drift-control-ratio.qmd`, `_quarto.yml`, `src/tools/site_page_scan.py`, `tests/test_site_link_gate.py`, `scripts/check_root_hygiene.py`, `data/trust/claim_audit_inventory.json`, `data/trust/generated/claim_audit_report.json`, `reports/scientific-claim-audit.md`
 - **Started:** 2026-09-29
 - **Last verified:** 2026-09-30 (SELF: merged origin/main forward, fixed the stale `articles/controllability-drift-ratio.qmd` path left over from PR #4629's DCR rename, and reviewed/added claim-audit inventory records for the new `/evidence/claims.html` route.)
-- **Summary:** Generates a dedicated `evidence/claims.qmd` page from `data/trust/claim_registry.json` â€” one accessible card per claim with plain/formal statements, evidence rung, falsifiers, related critiques, and the pages making the claim â€” and links every claim-making page back to its ledger entry via a generated per-page include.
+- **Summary:** Generates a dedicated `evidence/claims.qmd` page from `data/trust/claim_registry.json` — one accessible card per claim with plain/formal statements, evidence rung, falsifiers, related critiques, and the pages making the claim — and links every claim-making page back to its ledger entry via a generated per-page include.
 - **Next step:** Open the draft PR for frontier review; `scripts/generate_sitemap.py`'s `SITEMAP_CONTENT_DIRS` does not yet include `evidence/` (noted as a follow-up, not blocking).
 
-### DL-#4477 Â· Companion Opening and Whole-Swing Ledger
+### DL-#4477 · Companion Opening and Whole-Swing Ledger
 
 - **State:** shipped
 - **Owner:** codex
@@ -1196,7 +1196,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Reconciles ground impulse/work, rigid/flexible wrench power, shaft storage, physical mass, state and intervention semantics across the opening and synthesis; preserves the remaining chapter sources and historical review scope.
 - **Next step:** Merged with required CI passing; deployment pending at the user-requested remote-main stop checkpoint. No further development.
 
-### DL-#4475 Â· Green Simulation Mechanics and Implementation Evidence
+### DL-#4475 · Green Simulation Mechanics and Implementation Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1209,7 +1209,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects rolling/sliding dynamics and probability claims, qualifies numerical/surface/capture choices, and documents actual provider discrepancies without changing provider code.
 - **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
 
-### DL-#4473 Â· Club-Fitting Mechanics and Evidence
+### DL-#4473 · Club-Fitting Mechanics and Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1222,7 +1222,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Separates model interventions and causal inference, corrects spatial/beam/mass mechanics and replaces nonexistent wire guarantees with explicit synthetic proposals.
 - **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
 
-### DL-#4471 Â· Markerless Camera Measurement Rigor
+### DL-#4471 · Markerless Camera Measurement Rigor
 
 - **State:** shipped
 - **Owner:** codex
@@ -1235,7 +1235,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Connects exposure, timing, payload, geometry and differentiation to the limits of golf-swing inference; preserves unavailable prices/licenses and unmeasured physical qualification.
 - **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
 
-### DL-#4469 Â· Volume I Mathematical Reference
+### DL-#4469 · Volume I Mathematical Reference
 
 - **State:** shipped
 - **Owner:** codex
@@ -1248,7 +1248,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Reconciles notation and mathematical reference material with corrected chapter assumptions; separates geometry, flow sensitivity and control certification.
 - **Next step:** Published at 24c77a55. Deployment 36389665569, CI 36389665580 and Compile 36389665540 pass. Live gate 960/960; four reviewed-route cases, zero severe axe findings; both pinned source/PDF downloads and six hashes verified. Receipt: volume-one-reference-publication.json.
 
-### DL-#4467 Â· Secondary-Axis Mechanics and Putter Design
+### DL-#4467 · Secondary-Axis Mechanics and Putter Design
 
 - **State:** shipped
 - **Owner:** codex
@@ -1261,7 +1261,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Separates free spin, supported motion, gravity and collision; supplies checked inertia-rate and moment comparisons; removes unsupported equipment and neural claims from article and critiques.
 - **Next step:** Published at 54d73e39; deployment 36386984016 and post-merge CI pass. Revision-bound live gate passes all 960 site cases and 12 reviewed-route cases with zero severe axe findings. Eight evidence hashes match. Receipt: reports/technical-review/secondary-axis-publication.json.
 
-### DL-#4465 Â· Contraction Development Workspace
+### DL-#4465 · Contraction Development Workspace
 
 - **State:** shipped
 - **Owner:** codex
@@ -1274,7 +1274,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects the full development manuscript, consolidated QMD, eight chapters and hub; separates optimal cost from contraction, supplies counterexamples and explicit domain/coordinate/contact assumptions. Existing production exclusions and redirects remain intact.
 - **Next step:** Preserve the excluded-route review receipt after protected PR #4466 merged at e48c9e00.
 
-### DL-#4463 Â· Biological Model Selection
+### DL-#4463 · Biological Model Selection
 
 - **State:** shipped
 - **Owner:** codex
@@ -1288,7 +1288,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** Preserve the source and publication receipts for this completed chapter correction.
 
 
-### DL-#4429 Â· Site-Surface Audit Provenance Reconciliation
+### DL-#4429 · Site-Surface Audit Provenance Reconciliation
 
 - **State:** shipped
 - **Owner:** local
@@ -1301,7 +1301,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Reconciles historical provenance of site-surface audit evidence across 12 canonical routes, binds exact source bytes to committed checkpoint 63d98d19, resolves test symbol provenance for ad-finding-notation-render-integrity, and preserves render history.
 - **Next step:** None. PR #4453 merged 2026-09-24; issue #4429 closed.
 
-### DL-#4450 Â· Why Physics Matters
+### DL-#4450 · Why Physics Matters
 
 - **State:** shipped
 - **Owner:** codex
@@ -1314,7 +1314,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Replaces unsupported force/energy and expertise claims with a defined input baseline, explicit constraints, checked manufactured work/release examples and six worked answers; connects mechanics to finite-time club delivery and impact.
 - **Next step:** None for this correction. Merged to main.
 
-### DL-#4444 Â· Language of Motion
+### DL-#4444 · Language of Motion
 
 - **State:** shipped
 - **Owner:** codex
@@ -1340,7 +1340,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Deploys the canonical validator and fail-closed catalog hook, preserving v1 plans and separating pending resources from approval or measurement.
 - **Next step:** None. Merged to main.
 
-### DL-#4441 Â· Contraction Lay Article
+### DL-#4441 · Contraction Lay Article
 
 - **State:** shipped
 - **Owner:** codex
@@ -1353,7 +1353,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects stability/metric/Riccati interpretation, removes unsupported results, and connects feasible feedback and mechanical impedance to finite-time strike and event sensitivity. No comparative solver or human-performance claim.
 - **Next step:** None for this correction. Merge the documentation-only turnover checkpoint; the broader corpus/whole-book review remains active under the latest explicit resume.
 
-### DL-#4438 Â· Deferred Impact Project Projection
+### DL-#4438 · Deferred Impact Project Projection
 
 - **State:** shipped
 - **Owner:** codex
@@ -1367,7 +1367,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** #4439 merged as c169bbd9; live parked DV-4253 is verified. Enforcement continues in DL-#4445.
 
 
-### DL-#4436 Â· Force and Mobility Ellipsoids
+### DL-#4436 · Force and Mobility Ellipsoids
 
 - **State:** shipped
 - **Owner:** codex
@@ -1380,7 +1380,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Reconciles rate/load metrics and power pairing, rank loss, dynamic authority, constrained impact, compliance and preload, grasp/constraint maps, and unsupported human interpretations. Corrects the rectangular SVD example and bibliography provenance. No empirical or physiological validation is claimed.
 - **Next step:** None for this scientific release. Merge the documentation-only checkpoint, release this session and pause the broader goal at the user's request. No new tasks or rewrites.
 
-### DL-#4431 Â· Nonlinear Control Insights and Physical Coupling
+### DL-#4431 · Nonlinear Control Insights and Physical Coupling
 
 - **State:** shipped
 - **Owner:** codex
@@ -1393,7 +1393,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Replaces indefinite inertia and degree/radian errors, energy amplification, unique physiological baseline and unsupported control/identification claims with a physical two-rod example, complete energy balance and finite-time counterexamples. The governed critique stays open; primary-source access limits are recorded. Final CI corrections fixed 17 published-link suffixes and issue/test scope metadata. Publication receipt: `reports/technical-review/nonlinear-control-insights-publication.json`.
 - **Next step:** None for this release. Finish the documentation-only closeout and pause the broader goal at the user's request. No new tasks or rewrites.
 
-### DL-#4428 Â· Manifesto State-Rate Units and Verification Scope
+### DL-#4428 · Manifesto State-Rate Units and Verification Scope
 
 - **State:** shipped
 - **Owner:** codex
@@ -1406,7 +1406,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Distinguishes generalized input load, acceleration contribution and full-state rate; includes retained flexible coordinates and memory/constraint boundaries; corrects Part 5 capability and Part 4 orientation. Scientific model runs remain unchanged. Publication receipt: `reports/technical-review/manifesto-notation-publication.json`.
 - **Next step:** None for this release. Preserve its evidence at the requested stopping checkpoint.
 
-### DL-#4427 Â· Zero-Torque Counterfactual Mechanics and Interpretation
+### DL-#4427 · Zero-Torque Counterfactual Mechanics and Interpretation
 
 - **State:** shipped
 - **Owner:** codex
@@ -1419,7 +1419,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects inertia, velocity/gravity bias, coupled inverse recovery, DCR projection, branch/state-reset distinctions, inverse-dynamics double counting and unsupported numerical/physiological claims. Exact rigid fixture unchanged; preparation records scope and access limits.
 - **Next step:** Preserve frozen scientific checkpoint e7d8c688 and publication receipt at main4fe70151.
 
-### DL-#4425 Â· Paired Induced-Acceleration Mechanics and Evidence
+### DL-#4425 · Paired Induced-Acceleration Mechanics and Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1432,7 +1432,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Print retains claims removed from the web edition. Both need constrained affine baseline and task projection, precise coupling/index normalization, a distinction between integrated terms and interventions, and corrected novelty/literature/anatomy claims. Preparation notes preserve access limits and reproducible examples.
 - **Next step:** Preserve the frozen scientific evidence and publication receipt at main 99aa5835.
 
-### DL-#4422 Â· Putting Launch, Rolling, Slope and Capture
+### DL-#4422 · Putting Launch, Rolling, Slope and Capture
 
 - **State:** shipped
 - **Owner:** codex
@@ -1458,7 +1458,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Separates unavailable empirical/perceptual obligations from active qualified theory synthesis. Existing source issues and scientific acceptance criteria are preserved.
 - **Next step:** None. PR #4423 merged 2026-09-22; planning docs deployed. Epic #4253 remains open as a deferred impact research item.
 
-### DL-#4420 Â· Force-Measurement Geometry, Instruments and Inference
+### DL-#4420 · Force-Measurement Geometry, Instruments and Inference
 
 - **State:** shipped
 - **Owner:** codex
@@ -1472,7 +1472,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** None for this delivery; publication receipt saved separately from frozen scientific evidence. Continue corpus review.
 
 
-### DL-#4418 Â· Superposition Feasibility and Constrained Task Authority
+### DL-#4418 · Superposition Feasibility and Constrained Task Authority
 
 - **State:** shipped
 - **Owner:** codex
@@ -1485,7 +1485,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Retains earlier mechanics corrections and adds feasible-reference input sets, constrained inverse-mass and task maps, a circular-guide example and correct reaction/virtual-work language. Repairs three wide or spuriously numbered equation groups.
 - **Next step:** None for this delivery; deployment 35782578807 succeeded at 31cdc615, live artifact 10720600549 passes 960/960 cases and all four superposition records. Publication evidence: reports/technical-review/superposition-publication.json.
 
-### DL-#4415 Â· Ground-Reaction Chapter Mechanics and Evidence
+### DL-#4415 · Ground-Reaction Chapter Mechanics and Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1498,7 +1498,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Reconciles paired system boundaries, momentum signs, COP/free moment, work, input-induced reactions, admissible counterfactuals, muscle inference and human evidence; adds eight worked solutions and corrects three bibliographic author lists from primary records.
 - **Next step:** None for this delivery; publication evidence is reports/technical-review/ground-reaction-publication.json.
 
-### DL-#4413 Â· Physics of Golf Preface Scientific Framing
+### DL-#4413 · Physics of Golf Preface Scientific Framing
 
 - **State:** shipped
 - **Owner:** codex
@@ -1512,7 +1512,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** None for this delivery; broader corpus review continues.
 
 
-### DL-#4412 Â· Anatomy and Joint Modeling Scientific Review
+### DL-#4412 · Anatomy and Joint Modeling Scientific Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -1526,7 +1526,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** None for this delivery; broader corpus review continues.
 
 
-### DL-#4406 Â· Deploy Website Public-Site Verification Gate
+### DL-#4406 · Deploy Website Public-Site Verification Gate
 
 - **State:** shipped
 - **Owner:** local
@@ -1539,7 +1539,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Ignore non-actionable cross-origin embed pageerrors in the every-page verifier so Deploy Website stays green without weakening first-party regression detection.
 - **Next step:** None. PR #4407 merged 2026-09-21; issue #4406 closed.
 
-### DL-#4375 Â· Curious Golfer Mechanics and Evidence Reasoning
+### DL-#4375 · Curious Golfer Mechanics and Evidence Reasoning
 
 - **State:** shipped
 - **Owner:** codex
@@ -1552,7 +1552,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects acceleration, wrench power and storage, forward versus instantaneous intervention, force-couple limits, numerical convergence and identifiability. Keeps the dialogue and extended examples. New issue4376 records direct-render/web chapter hierarchy drift; the corrected205-page PDF now carries the scientific update in both tracked destinations. No complete-book review or human performance qualification is asserted.
 - **Next step:** None for this delivery; broader corpus work continues under #4009/#4021.
 
-### DL-#4376 Â· Companion Chapter Hierarchy and PDF Synchronization
+### DL-#4376 · Companion Chapter Hierarchy and PDF Synchronization
 
 - **State:** shipped
 - **Owner:** codex
@@ -1565,7 +1565,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Restores subordinate heading levels without changing chapter prose or incoming anchors. Rebuilds and synchronizes both PDFs with the corrected Chapter30 science. Preserves mobile equation type size. Integrates protected nullspace main squash7f0fed76; retains current turnover records through three documentation conflicts.
 - **Next step:** None for this delivery; broader corpus work continues under #4009/#4021.
 
-### DL-#4371 Â· Constraint Null Spaces, Dynamics and Golf Inference
+### DL-#4371 · Constraint Null Spaces, Dynamics and Golf Inference
 
 - **State:** shipped
 - **Owner:** codex
@@ -1578,7 +1578,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Rewrites the full article and bibliography around regular constraints, reduced speeds, force/velocity duality, curvature-complete drift, task acceleration, reaction power and finite-time control. Replaces inconsistent golf coordinates with a declared planar mechanism and removes unsupported synergy/coaching claims and citation-graph edges. Independent examples are constructed, not fitted golfer data.
 - **Next step:** Continue corpus review; separate shared TOC and keyboard defects remain #4370/#4374.
 
-### DL-#1595 Â· Mermaid C4 Architecture Map Contract
+### DL-#1595 · Mermaid C4 Architecture Map Contract
 
 - **State:** shipped
 - **Owner:** local
@@ -1591,7 +1591,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Adopts the maintainable Mermaid C4 architecture-map contract for AffineDrift, providing C4Context, C4Container, Feature Map, and Architecture Change Log.
 - **Next step:** None. PR #4363 merged; RM#1595 addressed.
 
-### DL-#4369 Â· Muscle Geometry, Torque Feasibility and Inference
+### DL-#4369 · Muscle Geometry, Torque Feasibility and Inference
 
 - **State:** shipped
 - **Owner:** codex
@@ -1604,7 +1604,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Rewrites both editions and all11 exercise answers around signed virtual work, feasible force sharing, coupled coordinates, stiffness and power. Adds a checked feasibility/power figure and four primary-source bibliography entries. Removes unsupported anatomical/grip prescriptions and separates inverse estimates, calibration, recruitment and control hypotheses. Preserves original destinations.
 - **Next step:** Address the separate TOC highlighting defect in #4370.
 
-### DL-#4358 Â· Strokes-Gained Accounting and Individual Inference
+### DL-#4358 · Strokes-Gained Accounting and Individual Inference
 
 - **State:** shipped
 - **Owner:** codex
@@ -1617,7 +1617,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects accounting and individual inference, including joint shot-cost/distribution/continuation effects and attribution-order dependence. Resumed after PR4360 merged without its pending rendered audit; repairs reference/panel dark contrast and invisible expanded text. All future PRs regular. Governed critique remains open; both route reviews now bind complete review evidence outside generated docs output, with Markdown-source support matching publication precedence.
 - **Next step:** Preserve the published sources and bound review while continuing the corpus audit.
 
-### DL-#4355 Â· Complete Forces, Torques and Physical Attribution
+### DL-#4355 · Complete Forces, Torques and Physical Attribution
 
 - **State:** shipped
 - **Owner:** codex
@@ -1627,10 +1627,10 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Paths:** `articles/The_Physics_of_Golf/chapters/ch04_forces_and_torques.tex`, `articles/The_Physics_of_Golf/quarto/ch04_forces_and_torques.qmd`, `articles/The_Physics_of_Golf/golf_physics.bib`, `articles/The_Physics_of_Golf/main.pdf`, `articles/The_Physics_of_Golf/figures/forces_torques_verified.*`, `tests/test_forces_torques_chapter_rigor.py`, `tests/test_audit_quarto_figure_parity.py`, `docs/development/technical-review/forces-torques-review.md`, `docs/development/technical-review/build_forces_torques_figures.py`, `docs/development/technical-review/forces-torques-numerics.json`
 - **Started:** 2026-09-10
 - **Last verified:** 2026-09-10 (`0c753400190cf330533bffc12e9b035162f37749`; exact deployment34477888759 succeeded; independently inspected all956 records/239 routes in artifact10153444359, all HTTP200/pass, no record/inspection failures, retries or axe violations)
-- **Summary:** Rebuilds physical and generalized load attribution, moving-frame signs, gravity work, muscle-state and contact feasibility, whole-club grip wrench and segment power. Independent Newtonâ€“Euler and energy checks support a declared two-link example and seven worked answers. Full audit records derivations, source limits and validation failure history.
+- **Summary:** Rebuilds physical and generalized load attribution, moving-frame signs, gravity work, muscle-state and contact feasibility, whole-club grip wrench and segment power. Independent Newton–Euler and energy checks support a declared two-link example and seven worked answers. Full audit records derivations, source limits and validation failure history.
 - **Next step:** None for this chapter; preserve the complete audit.
 
-### DL-#4353 Â· Complete Double-Pendulum Derivation and Task Mechanics
+### DL-#4353 · Complete Double-Pendulum Derivation and Task Mechanics
 
 - **State:** shipped
 - **Owner:** codex
@@ -1643,7 +1643,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects COM versus hinge inertia, gravity signs, Coriolis rate factors, coupled input response, physical interface power and endpoint curvature. Six worked answers and primary-source boundaries distinguish anatomical interpretation, task sensitivity and chaos. Audit records independent derivations, numerical checks and rendering defects found by complete reading.
 - **Next step:** None for this chapter; preserve its derivation audit and cancellation history.
 
-### DL-#4351 Â· Complete Constraint Forces, Compatible Dynamics and Power
+### DL-#4351 · Complete Constraint Forces, Compatible Dynamics and Power
 
 - **State:** shipped
 - **Owner:** codex
@@ -1656,7 +1656,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Rebuilds acceleration compatibility, rank/scaling, mass-metric projection, moving-contact power, physical segment energy, actuation/reaction coupling and plastic capture/release. Six worked answers and independently checked examples distinguish mechanical coupling from muscle and coaching inference. Full audit preserves derivation and evidence limits.
 - **Next step:** None for this chapter; preserve its audit and continue corpus review.
 
-### DL-#4349 Â· Complete Affine Structure, Drift and Optimality
+### DL-#4349 · Complete Affine Structure, Drift and Optimality
 
 - **State:** shipped
 - **Owner:** codex
@@ -1669,7 +1669,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Re-derives complete coupled drift, inverse inertia and constrained vector fields; separates capacity, realized input, energy and finite-time task authority. Seven worked answers and a reproduced figure replace unsupported phase/optimality claims. Full print/web reading corrected conversion defects missed by layout checks; all 30 historical web destinations now verified. The audit records source limits, numerical derivations and failure history.
 - **Next step:** None for this chapter; preserve audit and continue corpus review.
 
-### DL-#4347 Â· Complete Brain Control and Neuroscience Evidence
+### DL-#4347 · Complete Brain Control and Neuroscience Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1682,7 +1682,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Corrects prediction/inverse dimensions, torque versus neural inputs, delayed observations, activation and finite-horizon/event response. Replaces unsupported neural algorithms, timing/noise constants and coaching conclusions with bounded primary evidence. Ten worked answers and shared functional/activation figure connect mechanics, observation, actuation, learning and task uncertainty. Audit records derivations, failures and exact reading limits.
 - **Next step:** Retain the verified brain-control source and evidence during subsequent chapter reviews.
 
-### DL-#4345 Â· Complete Triple-Pendulum Dynamics and Evidence
+### DL-#4345 · Complete Triple-Pendulum Dynamics and Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1696,7 +1696,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** Retain the published derivation while reviewing the remaining constraint and affine chapters.
 
 
-### DL-#4342 Â· Durable Claim-Review Evidence Through Deployment
+### DL-#4342 · Durable Claim-Review Evidence Through Deployment
 
 - **State:** shipped
 - **Owner:** codex
@@ -1709,7 +1709,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Quarto output pruning removed the DCR review because it was stored under docs/. Move durable bound evidence to reports/technical-review, update references/digests and enforce survival of actual pruning for every reviewed route. Scientific authority and publication gates remain intact.
 - **Next step:** Continue the remaining corpus review, including companion DCR critiques #4340.
 
-### DL-#4341 Â· Fascia Mechanics and Biological Evidence
+### DL-#4341 · Fascia Mechanics and Biological Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1722,7 +1722,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Replaces the complete paired chapter with explicit force/power/energy distinctions, correct SI examples, nonlinear and viscoelastic derivations, directional coupling, augmented control/sensing states and bounded primary evidence. Eight worked answers and a shared reproducible figure preserve historical links. Corrects the legacy regression that preserved the erroneous 1.25 J calculation. Source boundaries, failures and validation are documented. Companion DCR critiques remain separately queued as #4340.
 - **Next step:** Continue the remaining corpus review, including companion DCR critiques #4340.
 
-### DL-#4338 Â· DCR Scaling, Coordinates and Correction Evidence
+### DL-#4338 · DCR Scaling, Coordinates and Correction Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1735,7 +1735,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Complete replacement withdraws unsupported downswing growth and derives scaling, coordinate Hessians, transported metrics, regularization, finite-time reachability and event sensitivity. Thirteen independent tests support the argument. Readiness now names the actual route reviewer with coherent manufactured chronology; scientific protocol states and immutable authority pins remain unchanged. Full reading, mobile/table/disclosure QA, content, static, titles, links, style and types pass. Initial digest/date failures and visually detected dark-panel defect were corrected and documented. Companion critiques and remaining corpus stay open.
 - **Next step:** Continue the remaining corpus review, including companion DCR critiques #4340.
 
-### DL-#4336 Â· Passive Impedance, Distributed Feedback and Stability
+### DL-#4336 · Passive Impedance, Distributed Feedback and Stability
 
 - **State:** shipped
 - **Owner:** codex
@@ -1748,7 +1748,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Complete paired correction connects intrinsic mechanics, maintained activation, distributed feedback, input counterfactuals, energy and finite-time outcomes. Proper storage/tracking proofs, independently checked damping/delay examples, one reproducible figure and all 12 worked answers. Final tests-directory run 5,111 passes, 92.68% coverage; focused 36, content 131, 34 static contracts, title/style/type/link and complete affected PDF/web QA pass. Protected merge and exact publication verified without retries or serious/critical accessibility findings. Peer impact work and immutable publication excluded.
 - **Next step:** Retain this published derivation as a cross-reference during the remaining corpus review.
 
-### DL-#4333 Â· Flexible Shaft Dynamics and Evidence
+### DL-#4333 · Flexible Shaft Dynamics and Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1761,7 +1761,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Both editions corrected with beam assumptions, modal normalization, coupled input mechanics, energy accounting and bounded fitting evidence; two reproducible figures and six worked answers. Root 5,143 passes / 29 skips; content, 34 static contracts, 636 title checks, style/type/link checks and complete affected print/web QA pass. Protected deploy 34437073824 passed; all live records and 239 axe routes passed without failures/retries. Peer impact/acoustic work and immutable publication excluded.
 - **Next step:** Complete; continue the corpus review.
 
-### DL-#4331 Â· Muscle Force Models, Tendon Energy and Control Inference
+### DL-#4331 · Muscle Force Models, Tendon Energy and Control Inference
 
 - **State:** shipped
 - **Owner:** codex
@@ -1774,7 +1774,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Both editions now connect muscle architecture, force curves, activation, tendon energy and joint/control mechanics through bounded evidence, independent examples, two figures and seven worked answers. Root 5,131 passes, 79.2% coverage; final affected, content, static, style/type/link and complete print/web QA pass. Initial conversion/manifest failures and evidence limits are documented.
 - **Next step:** Complete; continue corpus review. Original deployment was cancelled; descendant deploy 34433303512 succeeded with exact live verification.
 
-### DL-#4326 Â· Motor Learning, Sensory Prediction and Practice Evidence
+### DL-#4326 · Motor Learning, Sensory Prediction and Practice Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1787,7 +1787,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Complete paired correction connects mechanics, feel, prediction and practice through bounded primary evidence, independent examples, two shared figures and twelve worked answers. Root 5,118 passes at 79.19% coverage; final focused 44, content 130, static 34, style/type/link checks and complete affected PDF/web QA pass. Protected main/deployment checks pass; all 956 exact live records across 239 routes pass with no serious/critical axe findings or navigation retries.
 - **Next step:** Continue the adjacent computational-brain chapter audit under the corpus epic.
 
-### DL-#4327 Â· Nonlinear Control Explanation Publication Repair
+### DL-#4327 · Nonlinear Control Explanation Publication Repair
 
 - **State:** shipped
 - **Owner:** codex
@@ -1800,7 +1800,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Exact rotation deployment artifact identifies malformed nonlinear-control explanation HTML as a publication blocker. Native disclosures replace escaped markup and unsupported muscle-work, torso-stop and validation claims. Root 5,097 tests pass at79.19%coverage; final content130/static34 and12expanded keyboard/theme cases pass. The article is only partially reviewed.
 - **Next step:** Continue the remaining corpus review under epic #4009.
 
-### DL-#4324 Â· Motion Capture, Uncertainty and Scientific Interpretation
+### DL-#4324 · Motion Capture, Uncertainty and Scientific Interpretation
 
 - **State:** shipped
 - **Owner:** codex
@@ -1813,7 +1813,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Complete article review connects camera geometry, anatomy, timing, conventions and correlated uncertainty to defensible golf-mechanics inference. Bounded primary claims replace categorical accuracy and energy assertions. Root 5,097 passes, 79.19% coverage; final focused 19, content 130, static 34, style/type/link checks and complete bounded web QA pass. Native Quarto explanation expands visibly.
 - **Next step:** Continue the remaining corpus review under epic #4009.
 
-### DL-#4322 Â· Rotation Conventions, Stable Conversion and Golf Interpretation
+### DL-#4322 · Rotation Conventions, Stable Conversion and Golf Interpretation
 
 - **State:** shipped
 - **Owner:** codex
@@ -1826,7 +1826,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Both complete articles derive stable boundary conversions and connect calibrated orientation, angular velocity, face sensitivity, uncertainty and physical work. Converter rejects malformed inputs, preserves labeled prior results and supports optional-3D failure. Root 5,078 passes, 79.19% coverage; final numerical/UI/content/static/style/type/link checks and complete bounded web QA pass.
 - **Next step:** Continue the remaining corpus review under epic #4009.
 
-### DL-#4320 Â· Textbook Energy Transfer and Work Ledgers
+### DL-#4320 · Textbook Energy Transfer and Work Ledgers
 
 - **State:** shipped
 - **Owner:** codex
@@ -1839,7 +1839,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Both complete editions now derive consistent whole-system, physical segment and interface ledgers, full two-link dynamics, lag/elasticity and collision boundaries. Two shared figures and six worked answers have independent numerical verification. Root 5,061 passes, 79.17% coverage; all final affected/content/static/title/style/type/quality/link checks and complete bounded print/web QA pass.
 - **Next step:** Continue the corpus review; exact live artifact 10126445934 verifies energy publication (956/956 records, 239 routes, no failures or serious/critical axe findings).
 
-### DL-#4318 Â· Spatial Algebra, Physical Inertia and Recursive Dynamics
+### DL-#4318 · Spatial Algebra, Physical Inertia and Recursive Dynamics
 
 - **State:** shipped
 - **Owner:** codex
@@ -1852,7 +1852,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Complete paired correction connects frame/power duality, physical inertia, momentum derivatives, planar restriction, composite/joint inertia and constraints. Two figures, fifteen worked answers and shared routines have independent numerical checks. Root 5,050 passes, 79.14% coverage; final affected 37, content 130, static 34, titles 634, style/type/quality/link and complete affected print/web QA pass. Implementation was replayed alone onto protected main b6578132 before first push; all normal commit/push hooks pass.
 - **Next step:** Continue the remaining corpus under epic #4009; spatial delivery is verified by live artifact 10123816915 (956/956, 239 routes, zero failures or serious/critical axe findings).
 
-### DL-#4315 Â· Soft-Tissue Dynamics and Pressure Mechanics
+### DL-#4315 · Soft-Tissue Dynamics and Pressure Mechanics
 
 - **State:** shipped
 - **Owner:** codex
@@ -1865,7 +1865,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Both editions now derive consistent tissue, pressure, inertia and energy models with bounded primary evidence, two shared figures and seven worked answers. Regression passes 4,991 tests with 92.65% coverage; final affected, content, static, style, type, title and site-link checks pass. Complete print/web inspection includes accessible math and corrected exercise numbering.
 - **Next step:** Published: main CI 34393037135, textbooks 34393037136, performance 34393037120 and deployment 34393037121 pass. Downloaded exact live artifact 10121457373 passes all 956 records across 239 routes, with zero failures, serious/critical axe findings or retries. Continue the remaining corpus.
 
-### DL-#4313 Â· Interdisciplinary Golf Synthesis and Evidence
+### DL-#4313 · Interdisciplinary Golf Synthesis and Evidence
 
 - **State:** shipped
 - **Owner:** codex
@@ -1878,7 +1878,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Both editions now connect mechanics, finite-horizon control, impedance, materials, impact and evidence using independently checked examples, two figures and eight worked answers. Local regression passes 4,974 tests with 92.65% coverage; complete affected print/web review and all normal hooks pass.
 - **Next step:** Published: main CI, textbooks, performance and deployment pass. Exact artifact 10119982807 passes 956/956 records across 239 routes with zero failures, serious/critical axe findings or retries. Continue the remaining corpus; no further delivery work for this batch.
 
-### DL-#3904 Â· Series navigation and tangent-space cluster integration
+### DL-#3904 · Series navigation and tangent-space cluster integration
 
 - **State:** shipped
 - **Owner:** claude (wave-8 agent W8_3904)
@@ -1899,13 +1899,13 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
   Geometry of Motion volumes) for prev/next and breadcrumbs; wired the four
   isolated geometry articles into the tangent-space cluster with the canonical
   Related Articles component and hub-side companion links; added return links
-  from tangent parts 1â€“7; chained appendix-applications and
+  from tangent parts 1–7; chained appendix-applications and
   affine-nature-golf-swing into the theory sequence. Contract test:
   60 passed. All relative link targets verified to exist.
 - **Next step:** No further delivery work for this batch; PR #4271 merged as
   `c088f9d0`.
 
-### DL-0035 Â· Impact Dynamics and Acoustics Review
+### DL-0035 · Impact Dynamics and Acoustics Review
 
 - **State:** shipped
 - **Owner:** codex
@@ -1918,585 +1918,585 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Summary:** Extends the existing theory with contact-force regularity, finite-jump versus impulse, spectral-tail derivation and externally forced candidate-law limits; retains source-identified synthetic status and distinct physical/radiation/perception requirements.
 - **Next step:** Resume open #4255 evidence-gated synthesis after reviewed Tools/consumer results; canonical HANDOFF records the checkpoint and outstanding physical/acoustic work.
 
-### DL-0001 Â· Audit Quality Fixes
+### DL-0001 · Audit Quality Fixes
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`ff8f89c2`)
 - **Summary:** Seeded from local branch `audit/quality-fixes`, which is
   6 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0002 Â· Audit Webux Fixes
+### DL-0002 · Audit Webux Fixes
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`a8de0549`)
 - **Summary:** Seeded from local branch `audit/webux-fixes`, which is
   4 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0003 Â· Codex Fix Back To Top E2E
+### DL-0003 · Codex Fix Back To Top E2E
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`5ecf36da`)
 - **Summary:** Seeded from local branch `codex/fix-back-to-top-e2e`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0004 Â· Codex Fix Deploy Runner Picker
+### DL-0004 · Codex Fix Deploy Runner Picker
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`e7e1052f`)
 - **Summary:** Seeded from local branch `codex/fix-deploy-runner-picker`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0005 Â· Codex Fix Image Derivatives Main
+### DL-0005 · Codex Fix Image Derivatives Main
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`eeaf1963`)
 - **Summary:** Seeded from local branch `codex/fix-image-derivatives-main`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0006 Â· Codex Fix Local Guard Trigger
+### DL-0006 · Codex Fix Local Guard Trigger
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`0e355770`)
 - **Summary:** Seeded from local branch `codex/fix-local-guard-trigger`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0007 Â· Codex Issue 3230 Remaining Tests
+### DL-0007 · Codex Issue 3230 Remaining Tests
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`8e0a1008`)
 - **Summary:** Seeded from local branch `codex/issue-3230-remaining-tests`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0008 Â· Codex Issue 3230 Script Tests
+### DL-0008 · Codex Issue 3230 Script Tests
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`0a826c32`)
 - **Summary:** Seeded from local branch `codex/issue-3230-script-tests`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0009 Â· Codex Issue 3254 Sw Precache Cleanup
+### DL-0009 · Codex Issue 3254 Sw Precache Cleanup
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`059a8608`)
 - **Summary:** Seeded from local branch `codex/issue-3254-sw-precache-cleanup`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0010 Â· Codex Pr 3096 Accordion Aria
+### DL-0010 · Codex Pr 3096 Accordion Aria
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`34fe1e83`)
 - **Summary:** Seeded from local branch `codex/pr-3096-accordion-aria`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0011 Â· Codex Pr 3257 Current
+### DL-0011 · Codex Pr 3257 Current
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`ef70b175`)
 - **Summary:** Seeded from local branch `codex/pr-3257-current`, which is
   4 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0012 Â· Codex Pr 3257 Tail
+### DL-0012 · Codex Pr 3257 Tail
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`14ee8c0e`)
 - **Summary:** Seeded from local branch `codex/pr-3257-tail`, which is
   4 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0013 Â· Codex Rl Funnel Facade Delegation
+### DL-0013 · Codex Rl Funnel Facade Delegation
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`90f67166`)
 - **Summary:** Seeded from local branch `codex/rl-funnel-facade-delegation`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0014 Â· Fix 3241 Spec
+### DL-0014 · Fix 3241 Spec
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`d4748e3d`)
 - **Summary:** Seeded from local branch `fix/3241-spec`, which is
   7 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0015 Â· Fix Affinedrift Metrics Clobber 3273
+### DL-0015 · Fix Affinedrift Metrics Clobber 3273
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`ec259c52`)
 - **Summary:** Seeded from local branch `fix/affinedrift-metrics-clobber-3273`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0016 Â· Fix Ball Flight Finite States 3285
+### DL-0016 · Fix Ball Flight Finite States 3285
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`5bacbca0`)
 - **Summary:** Seeded from local branch `fix/ball-flight-finite-states-3285`, which is
   4 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0017 Â· Fix Dbc Launch Conditions Finite States 3284 3285
+### DL-0017 · Fix Dbc Launch Conditions Finite States 3284 3285
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`0a461f82`)
 - **Summary:** Seeded from local branch `fix/dbc-launch-conditions-finite-states-3284-3285`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0018 Â· Fix Dedup Escape Html 3291
+### DL-0018 · Fix Dedup Escape Html 3291
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`ae1554b0`)
 - **Summary:** Seeded from local branch `fix/dedup-escape-html-3291`, which is
   6 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0019 Â· Fix Exclude Internal Critic Docs 3913
+### DL-0019 · Fix Exclude Internal Critic Docs 3913
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`1da2f4a2`)
 - **Summary:** Seeded from local branch `fix/exclude-internal-critic-docs-3913`, which is
   3 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0020 Â· Fix Golf Physics 3266 3271 3272
+### DL-0020 · Fix Golf Physics 3266 3271 3272
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`3d015a7e`)
 - **Summary:** Seeded from local branch `fix/golf-physics-3266-3271-3272`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0021 Â· Fix Honest Unfinished Content 3918
+### DL-0021 · Fix Honest Unfinished Content 3918
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`fb59f8dd`)
 - **Summary:** Seeded from local branch `fix/honest-unfinished-content-3918`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0022 Â· Fix Missing H1 Full Layout 3917
+### DL-0022 · Fix Missing H1 Full Layout 3917
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`a338c479`)
 - **Summary:** Seeded from local branch `fix/missing-h1-full-layout-3917`, which is
   1 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0023 Â· Fix Rotation Converter 3281 3282 3283
+### DL-0023 · Fix Rotation Converter 3281 3282 3283
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`a7b810b4`)
 - **Summary:** Seeded from local branch `fix/rotation-converter-3281-3282-3283`, which is
   3 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0024 Â· Fix Round Simulator Tests 3293
+### DL-0024 · Fix Round Simulator Tests 3293
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`6b1d3f2c`)
 - **Summary:** Seeded from local branch `fix/round-simulator-tests-3293`, which is
   3 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0025 Â· Fix Swing Optimizer Dt 3288
+### DL-0025 · Fix Swing Optimizer Dt 3288
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`3626c44e`)
 - **Summary:** Seeded from local branch `fix/swing-optimizer-dt-3288`, which is
   3 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0026 Â· Fix Terrain Bounce Roll 3275
+### DL-0026 · Fix Terrain Bounce Roll 3275
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`27f6adf3`)
 - **Summary:** Seeded from local branch `fix/terrain-bounce-roll-3275`, which is
   3 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0027 Â· Issue 3221 Sw Networkfirst Local
+### DL-0027 · Issue 3221 Sw Networkfirst Local
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`e317d950`)
 - **Summary:** Seeded from local branch `issue-3221-sw-networkfirst-local`, which is
   7 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0028 Â· Issue Golf Docs V1 Ci Fix
+### DL-0028 · Issue Golf Docs V1 Ci Fix
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`b776b73b`)
 - **Summary:** Seeded from local branch `issue-golf-docs-v1-ci-fix`, which is
   4 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0029 Â· Issue Mech Notation V1
+### DL-0029 · Issue Mech Notation V1
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`e9d62a09`)
 - **Summary:** Seeded from local branch `issue-mech-notation-v1`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0030 Â· Issue Sci V2
+### DL-0030 · Issue Sci V2
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`11a03223`)
 - **Summary:** Seeded from local branch `issue-sci-v2`, which is
   6 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0031 Â· Issue Sec Audit V2
+### DL-0031 · Issue Sec Audit V2
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`fb592f6a`)
 - **Summary:** Seeded from local branch `issue-sec-audit-v2`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0032 Â· Issue Testing 3231 3230 3233 Local
+### DL-0032 · Issue Testing 3231 3230 3233 Local
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`3da4daca`)
 - **Summary:** Seeded from local branch `issue-testing-3231-3230-3233-local`, which is
   4 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0033 Â· Issue Webperf 3219 3221 3220 Local
+### DL-0033 · Issue Webperf 3219 3221 3220 Local
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`938c260b`)
 - **Summary:** Seeded from local branch `issue-webperf-3219-3221-3220-local`, which is
   4 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-0034 Â· Pr 3158 Palette
+### DL-0034 · Pr 3158 Palette
 
 - **State:** parked
 - **Owner:** unassigned
 - **PR:** not created
-- **Paths:** `.` â€” scope not yet narrowed; set real globs when
+- **Paths:** `.` — scope not yet narrowed; set real globs when
   this entry is reactivated.
 - **Started:** 2026-08-28
 - **Last verified:** 2026-08-28 (`0171a1d2`)
 - **Summary:** Seeded from local branch `pr-3158-palette`, which is
   2 commit(s) ahead of the default branch with no
   development-log entry.
-- **Parked:** 2026-08-28 â€” seeded during fleet rollout. Assign a
+- **Parked:** 2026-08-28 — seeded during fleet rollout. Assign a
   governing issue and set `Paths` before moving this to a live
   state; a live entry without a real issue is orphaned by
   definition.
 
-### DL-#3903 Â· Close cluster gaps: proximalâ€“distal, impact/putting, technology
+### DL-#3903 · Close cluster gaps: proximal–distal, impact/putting, technology
 
 - **State:** shipped
 - **Owner:** claude (wave-6 agent W6_3903)
@@ -2510,7 +2510,7 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Next step:** No further delivery work for this batch; PR #4267 merged as
   `5aedc884`.
 
-### DL-#3902 Â· Wire lateral links into Build pages: models, repositories, tools
+### DL-#3902 · Wire lateral links into Build pages: models, repositories, tools
 
 - **State:** shipped (PR #4269 squash-merged to main as 1e5725de, 2026-09-08)
 - **Owner:** claude (wave-6 agent W6_3902)
@@ -2518,13 +2518,13 @@ Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
 - **Branch:** `claude/issue-3902-models-lateral`
 - **Paths:** `models/models.qmd`, `models/models-{simulink,mujoco,drake,pinocchio,pendulum,opensim,myosim}.qmd`, `repositories/*.qmd`, `pages/tools.qmd`, `articles/upstreamdrift-educational-integration.qmd`, `articles/rotation-converter.qmd`, `articles/proximal-distal-model-workbench.qmd`
 - **Started:** 2026-09-07
-- **Summary:** Added the canonical markdown `## Related Articles` component to all 8 `models/*.qmd` and all 6 `repositories/*.qmd` pages plus `pages/tools.qmd` and three isolated articles; 177 new relative markdown content links, every modelâ†”repository pair bidirectional.
+- **Summary:** Added the canonical markdown `## Related Articles` component to all 8 `models/*.qmd` and all 6 `repositories/*.qmd` pages plus `pages/tools.qmd` and three isolated articles; 177 new relative markdown content links, every model↔repository pair bidirectional.
 
 ## Shipped (Last 90 Days)
 
 Entries stay here for 90 days after merge, then move to the archive.
 
-### DL-#4712 Â· Two-Hand Wrench Chapter Review
+### DL-#4712 · Two-Hand Wrench Chapter Review
 
 - **State:** shipped
 - **Owner:** codex
