@@ -1,3 +1,7 @@
+# Parameter Review Acceptance — 2026-10-04
+
+Issue4881: full chapter/PDF review and full regression accepted at 117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb. Canonical source and validation records preserve scope, rejected helper errors and all test outcomes. Regular protected PR delivery remains.
+
 # Joint Review — Revalidated External Progress
 
 2026-10-04 15:33 UTC: revalidated current repository state after advancement to 60bb50112. Verified all 15 #4875 changed paths on its actual remote-main merge 0bb9d47f8 and released its claim/presence. Reconciled the later 11-line deletion of uncited usgarules at 4b1285fd5 with preserved original review evidence and new source bindings. Current eight-book CI passes; Launch Monitor has 96 cited/printed entries and 92 pages. All bibliography-page extracted text matches the retained reviewed PDF; 79 complete pages match and 13 have mathematical extraction differences, recorded without a pixel-equivalence claim. Inspected CI pages 67 and 90. Parent delivery and hash changes supersede the temporarily restated older epic checkpoint. No manuscript body edit was made during reconciliation.

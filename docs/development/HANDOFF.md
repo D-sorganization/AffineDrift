@@ -1,3 +1,13 @@
+# Parameter Review #4881 — Accepted Source and Delivery Preparation
+
+The complete chapter 2 review is accepted at `117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb`. Full frozen-tree regression passed 6,856 tests, with 29 skips, 210 deselections, 60 warnings and 93.24% src coverage in 534.77 seconds. Tracked files stayed unchanged throughout. The 94-page PDF has scoped visual acceptance; eight canonical source/evidence hashes are bound in `reports/technical-review/parameter-validation.json`. No new device, human, whole-book scientific or live-site acceptance is implied.
+
+Next: run final metadata checks, publish a regular PR closing #4881, attach it and arm the central guarded merge workflow. Verify actual remote-main bytes before releasing the lease. Parent #4879 is delivered and its receipt is retained. Six successful agy Flash helpers supported the chapter review. Goal remains active.
+
+Next corpus batch #4885 has an isolated worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-dimensionality-review`, branch `fix/dimensionality-integration-review`, session `technical-review-20261004-dimensionality` through 20:06 UTC. Its two article drafts are not yet accepted. It starts from the accepted parameter source and must integrate final delivery metadata before its own publication. Flash inventories and prose assistance remain subject to lead review. Earlier entries below are historical.
+
+---
+
 # Parameter Review #4881 Resumed: Final Validation in Progress
 
 The user resumed the corpus goal. Work continues on `fix/launch-parameter-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-parameter-review`. Chapter2 source, equations and94-page book PDF have received final scoped review; the full frozen-tree regression is next. See `reports/technical-review/parameter-review.md` and the source dossier for evidence. Do not reuse the older paused checkpoint as current acceptance status.

@@ -1,0 +1,69 @@
+{
+  "issue": 4881,
+  "epic": 4009,
+  "status": "Scoped technical and PDF acceptance; protected delivery pending",
+  "accepted_source_commit": "117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb",
+  "git_blob_sha256": {
+    "articles/Launch_Monitor_Technology_Review/sections/02-parameters.tex": "d2d2f7c7e6e3b4da2e0ace43edf73e950f20e14a17fae14a21a03216648a268d",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "6f74e75b4b4aae1fae436f586f82b9dce8df45261bf861583568c4b530cb1560",
+    "articles/Launch_Monitor_Technology_Review/main.tex": "7269f90f69f48024a9ffceaf802f09e5e35a7d54693d86d574622975d5f0be64",
+    "articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex": "18d6db7a14ab1ffb588053d85afe54132cb5bea3a9c9c56a999bfd6d72b95093",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "77dbd32f3e97ccb418e1dccc1e6276d61456936557a5e543b09a5f4b0b00c2b3",
+    "articles/Launch_Monitor_Technology_Review/research/parameter-review-20261004.md": "b16cbd2bc42b4f46f0f602cd90aae178c3d30481bd1fe8aefc2d51bbac6fd8b5",
+    "reports/technical-review/parameter-review.md": "f95b9e4a3d05dde1876f782e61ca368fd28dc6b01240f18ab79ee48bcbdb2e4f",
+    "reports/technical-review/parameter-independent-checks.json": "6483089ffd3f4c74d87947c8d63330c8c62685dc7055c37b4980783aefc8c760"
+  },
+  "scope": "Complete chapter 2 review; supporting bibliography and PDF presentation repair. No new scientific audit of whole book, device performance, human evidence or live website.",
+  "full_regression": {
+    "status": "passed",
+    "head": "117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb",
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "passed": 6856,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 534.77,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "concurrency": "No tracked edits, rendering or commit hooks in this worktree during the run",
+    "scope": "Default selection excludes slow, live, e2e, requires_network and content_lint",
+    "log": "docs/development/technical-review/parameter-final/full-tests.txt",
+    "log_sha256": "8642d3b9c823893801822884fe231a6e5ff72cc0d79bc12e6bc0cdf5ff11c341"
+  },
+  "focused_tests": {
+    "passed": 69,
+    "exit_code": 0
+  },
+  "pdf": {
+    "pages": 94,
+    "printed_bibliography_entries": 101,
+    "unresolved_references": 0,
+    "visual_scope": "Chapter 2 physical pages 9\u201313, TOC 3\u20136, bibliography 87\u201394, title page1 and Appendix A heading page57; exact successive render comparisons and limits in parameter-review.md",
+    "empirical_acceptance": false
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-low",
+    "successful_helpers": 6,
+    "failed_launches": 1,
+    "adjudication": "Lead rejected incorrect spin reversal, fabricated axis swap, inaccurate intermediate arithmetic and invented turnover commands"
+  },
+  "pre_pr": {
+    "status": "all five gates passed",
+    "log": "docs/development/technical-review/parameter-final/pre-pr-final.txt",
+    "affected_tests": "Skipped no mapped tests; does not substitute for full regression"
+  },
+  "publication": {
+    "remote_main_verified": false,
+    "is_draft": false,
+    "parent_pr": 4879,
+    "parent_merge": "b33bcf1a37c1cf8665fb6cc3a0f8abd84a1db496"
+  },
+  "final_metadata_checks": {
+    "passed": 45,
+    "exit_code": 0,
+    "log": "docs/development/technical-review/parameter-final/final-metadata-clean-tests.txt",
+    "initial_failures": "Two root-hygiene failures from full-suite-created build/dist/affinedrift.egg-info; preserved initial log and moved verified untracked workspace-contained directories under parameter-final/packaging-artifacts before rerun."
+  }
+}
