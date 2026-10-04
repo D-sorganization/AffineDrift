@@ -1,8 +1,8 @@
 ---
 issue: 4898
 summary: "Prepare bounded corrections for experimental measurement, filtering and timing"
-dl_state: "in_progress"
-next_step: "Commit revised chapter, listing contracts and scoped PDF, then run frozen full regression"
+dl_state: "in_review"
+next_step: "Publish regular PR on camera-review parent, then protected delivery and fetched-main hash verification"
 owner: "codex"
 branch: "fix/experimental-methods-review"
 ---
@@ -14,3 +14,5 @@ Final 73-page Volume III builds with 38 printed references, no unresolved refere
 The shared bibliography append requires refreshing its exact evidence digests in the claim-audit inventory and generated report. This changes the reference artifact binding only; previously reviewed chapter source and rendered Volume I remain unchanged. UTF-8/LF bytes are canonical.
 
 Initial frozen regression: 6,875 passed, five failed in the book-publication audit because the changed Volume III main source/PDF and shared bibliography retained old dependency hashes. Preserve initial-full-tests.\*. Repair only those bound artifact digests, regenerate derived claim records, retain historical scientific review identities, and rerun the frozen regression. No chapter equation or executable listing changed in this repair.
+
+Accepted repaired source de99d7032d377d7785582bf95b488a6b0d2c32b2: 6,880 passed, 29 skipped, 210 deselected, 60 warnings in 387.59 seconds, 93.24% coverage; clean tracked tree throughout. Exact seven artifact hashes and scoped acceptance are in reports/technical-review/experimental-methods-validation.json. Only chapter 7 advances, leaving 79 pending-prefix corpus rows. Biological multibody and inverse Chapters 5–6 continue in #4900 with their own regression; do not treat that work as accepted here.
