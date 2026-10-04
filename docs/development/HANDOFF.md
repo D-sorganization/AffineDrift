@@ -21,6 +21,9 @@ Active branch `fix/dimensionality-integration-review`, worktree `C:/Users/diete/
 Parent regular PR4886 is open; central guard successfully armed squash auto-merge after the earlier GraphQL rate-limit failure. Verify actual merge and canonical source bytes, then release4881. The next branch integrates its metadata through5959b7c99; preserve accepted parameter source117a416d5. Current4885lease: technical-review-20261004-dimensionality through20:06UTC, presence through20:08UTC. Goal active.
 
 ---
+# Issue #4882 - Freshness Dashboard Page-Relative Links
+
+Branch `claude/issue-4882`: `scripts/generate_companion_freshness.py` now emits route link targets relative to `models/programming/freshness.qmd`; page regenerated, claim-audit evidence refreshed, 12 path-style baseline entries removed (one journey-page entry remains by design). Next: review the draft PR and arm the merge queue.
 
 # Regular PR #4886 — Parameter Delivery Pending
 
