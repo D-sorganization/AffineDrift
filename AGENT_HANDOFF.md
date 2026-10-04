@@ -1,3 +1,59 @@
+# Shared Nomenclature — Regular PR #4870
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4870 is open against main, attached, and guarded squash auto-merge is enabled. Never draft. Final accepted source a738be703d0f161c9a18896c274a8e671256e292 and all twelve bound source/PDF/report files are unchanged. The full offline suite at8068 passed 6,811 tests, 29 skipped and 210 deselected, with93.24% src coverage; the later one-sentence trajectory clarification has separate exact algebra, six native builds, 682-page text comparison, six changed-page inspections, 70 evidence/metadata tests and all17 publication gates. The22 turnover checks also pass. Source and delivery scopes remain distinct.
+
+Parent PR #4869 is delivered as6be3a480a707588776325210171f3fa76ec87f18 with final-head CI37178192004 and exact remote-main verification; its lease/presence are released. Its squash was integrated without changing the child tree after proving equality to an already integrated parent ancestor. See volume2-consistency-remote-main-receipt.json and shared-nomenclature-delivery.json under reports/technical-review. Six successful supplied-text agy CLI Gemini3.8Flash helpers now support this work: five before source acceptance, one final PR copy review. Lead rejected its incorrect claim that earlier focused results were unverified and clarified the PR's bounded validation account.
+
+Push this PR-link turnover, then watch CI on that exact final remote head. Verify actual merge and remote-main Git bytes before releasing #4865's lease/presence, renewed through approximately07:44UTC. Use the saved dieterolson GitHub credential explicitly if inherited GH_TOKEN expires; the old parent monitor's HTTP401 was an observation failure, not failed CI. Preserve untracked raw QA. No full regression is running. The shared source is accepted; the six whole books, queued #4868, remaining corpus and empirical validation remain outside this acceptance. The overall goal remains active. Earlier entries below are historical checkpoints.
+
+---
+
+# Shared Nomenclature — Accepted Source Bound
+
+Final source `a738be703d0f161c9a18896c274a8e671256e292` is committed and pushed. Twelve scientific source/PDF/report files now bind the complete shared-nomenclature review for #4865. The full regression at 8068ddb140caab8bf7152f92f8b5641ab309c078 passed 6,811 tests with 93.24% src coverage; its later one-sentence clarification has separate successful algebra, six native builds, all-page text comparison, six changed-page inspections, 70 evidence/metadata tests and 17 publication gates. Earlier source and review identities remain intact: 89 protected scientific files and 86 other Geometry inputs are Git-unchanged.
+
+The shared-source corpus row is now reviewed with exact scope; this does not clear the six whole books or promote historical website route reviews. See reports/technical-review/shared-nomenclature-delivery.json for immutable hashes and five findings. Five agy CLI Gemini 3.8 Flash helpers supported routine work, with lead adjudication recorded. Next: verify parent PR #4869's actual remote-main delivery, integrate its squash merge normally, then open a regular child PR, attach it and complete protected CI/merge verification. Never draft. The overall goal remains active, and #4868 plus the remaining corpus remain open. No full regression is running. Earlier entries are historical.
+
+---
+
+# Shared Nomenclature — Full Regression and Final Clarification Complete
+
+The full offline suite at `8068ddb140caab8bf7152f92f8b5641ab309c078` passed 6,811 tests, with 29 skipped, 210 deselected and 93.24% src coverage in 1,097.12 seconds. Tracked files, renders and hooks were frozen during the run. A subsequent one-sentence clarification states that a trajectory is considered for specified initial data and inputs; it does not imply observed motion uniquely identifies the input history. Equations and executable code are unchanged. An exact two-input integrator counterexample supports that distinction without asserting universal non-identifiability.
+
+All six PDFs rebuilt successfully with unchanged page counts. Comparison across all 682 pages finds changed text on exactly one nomenclature page per volume. Of the 35 previously inspected page images, 29 are pixel-identical; the six changed pages were manually inspected at 110 dpi and remain legible without clipping. Earlier body-crop evidence retains its original edition scope. The later evidence/book/trust/SPEC run passed 70 tests, and all 17 publication gates pass. The 149 dependent digest updates preserve all other parsed metadata relative to the full-tested checkpoint. See reports/technical-review/shared-nomenclature-validation.json and its linked reports.
+
+Five successful supplied-text agy CLI Gemini 3.8 Flash helpers supported routine preparation and copy review; the lead checked the mathematics and bounded every claim. Commit/push this final source checkpoint, then bind the twelve scientific source/PDF/report files and update the corpus row. Parent regular PR #4869 still requires actual remote-main verification before opening this child PR. Never create a draft PR. The claim for #4865 expires approximately 06:08 UTC; renew if needed. No full regression is running. Preserve raw QA and older acceptance identities. The overall goal remains active; #4868 and the remaining corpus are not cleared. Earlier entries below are historical checkpoints.
+
+---
+
+# Shared Nomenclature — Ready for Full Regression
+
+All 17 publication gates pass after the complete dependency refresh and parent evidence-boundary integration; 70 integration checks pass in 33.19 seconds. Earlier 94 mechanics and 50 metadata checks remain recorded with their exact scopes. Three supplied-text agy CLI Gemini 3.8 Flash helpers have succeeded, including a prepared PR body. Lead review corrected its description of generalized velocity, rejected visual-proof language and distinguished the planned offline full suite from protected browser CI. No scientific source or PDF changes followed final visual inspection.
+
+Commit and push this integration, then run the pinned Python tests/ suite with --cov=src and --timeout=60 from the committed source. Freeze tracked files, renders and Git hooks during that full run. Bind the twelve prospective scientific files only after successful regression. The parent PR #4869 still needs CI37178192004 and exact remote-main verification; do not publish a stacked child PR. Source acceptance/corpus advancement for #4865 and its own regular PR remain pending. The overall goal remains active. Earlier entries are historical checkpoints.
+
+---
+
+# Shared Nomenclature — Parent CI Repair Integrated
+
+Source/PDF checkpoint a3fe27cd49d7986b60bec3e8d442a39c0793f507 is committed. Parent repair 1f9eff7cc5b2717acc98363b58b1c1f6ba377f43 is now integrated into this child: stable finding evidence outside generated output and its new regression are retained alongside the child's newer PDF hashes. The four conflicts were turnover text and the adjacent #4864/#4865 SPEC rows; both histories and both rows are preserved. No scientific source conflict occurred. The dependency report describes the child PDF/hash carry-forward before this separately recorded parent integration.
+
+Parent regular PR #4869 is pushed at 1f9eff7cc; exact-head CI 37178192004 is running. The parent is not yet verified on remote main. Keep the branch independent until that delivery is observed; never create a stacked PR accidentally. Fifty book/trust/SPEC checks also passed locally. The first child commit hook caught the transitive book-audit hash after its PDF hash update; standard regeneration fixed it, and the source checkpoint passed normal hooks. There are 29 book digest updates and 120 claim/generated digest updates with all other pre-integration parsed values identical. Next: post-integration checks, commit/push, stable full regression, immutable source binding and regular PR after verified parent delivery. No full regression is running yet. Earlier entries are historical checkpoints.
+
+---
+
+# Shared Nomenclature — Local Review Checkpoint #4865
+
+Active epic #4009 / corpus #4021 child #4865, branch fix/shared-nomenclature-review in C:/Users/diete/Repositories/Worktrees/AffineDrift-shared-nomenclature-review. Session technical-review-20261004-shared-nomenclature has a lease/presence through approximately 06:08 UTC. The complete shared notation has been reviewed against chapter usage. Local-coordinate qdot remains valid; generalized velocity mapping, state size, power pairing, mass-matrix regularity, full/discrete dynamics Jacobians and curve/evolution distinctions are explicit. Shared running headings and the unchanged DCR formula's print overflow are repaired. Two supplied-text agy CLI Gemini 3.8 Flash helpers supported inventory/copy work; the lead checked all mathematics and scope.
+
+Six final native PDFs compile. Eighteen notation pages were inspected at 110 dpi, plus seventeen adjacent pages in six contact sheets. Parent-source rebuilds isolate pre-existing Volume I index and Volume V generated-source differences. Exact cropped body pixels match on 91 Volume II pages and one Volume I page with an extraction-spacing discrepancy; headers/page digits are excluded explicitly. Other unchanged body pages are compared through extracted text and unchanged source identities. Eighty-nine prior scientific files and 86 other Geometry source inputs are preserved (one Git-clean style file has checkout newline conversion). See shared-nomenclature-render-verification.json and shared-nomenclature-prior-review.json for exact scope and hashes. These are newer PDF editions, not whole-volume scientific clearance.
+
+Independent symbolic quaternion, velocity, force-power and linearization checks pass. Focused mechanics: 94 passed, 6 deselected in 19.87 seconds. Sixteen initial publication gates pass; the seventeenth found stale PDF dependency hashes. Those 29 book hashes and the dependent claim/generated hashes were carried forward with all other parsed values unchanged; the book gate retry passes. Full regression, final source/evidence binding, corpus-status update and regular PR delivery remain. No full regression is running yet. Preserve raw QA and use C:/Users/diete/AppData/Local/Temp/affine-passive-pinned-fa72c4415ed54625846b906ba6af2033/Scripts/python.exe. Never create draft PRs.
+
+Parent regular PR #4869 is still unmerged: exact-head CI37175635139 failed because a finding evidence file under docs/development was absent after the clean site render. Its repair is underway in C:/Users/diete/Repositories/Worktrees/AffineDrift-dof-chapter-review, with a stable reports copy and a finding-output-boundary regression. Integrate that committed parent fix into this branch before final validation/PR publication; verify the parent's actual remote-main merge and maintain its original accepted-source record. Do not overwrite the parent's reviewed PDF with this child's intentionally newer edition. #4868 remains queued and the overall goal remains active. Earlier sections below are historical.
+
+---
+
 # Volume II Delivery — CI Evidence Boundary Repair
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4869 remains unmerged with guarded squash auto-merge enabled. CI Standard 37175635139 failed on head 53e4676ee1e2ffa32a05257cca64913fcbc25769: the clean site render removed a preparation record under docs/development referenced by four findings. A canonically formatted copy with identical parsed JSON content now lives at reports/technical-review/volume2-consistency-preparation.json, and those findings point there. The original accepted source a167deda0e90b6282d5c02e94bbfb82e5ac59862 and all eleven frozen files remain unchanged. The new file is separately recorded as delivery support; no historical source acceptance was rewritten.
