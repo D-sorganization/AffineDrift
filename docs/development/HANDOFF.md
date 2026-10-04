@@ -1,3 +1,7 @@
+# Animated WebP for Dead Fish Figure - #4558
+
+Branch `claude/issue-4558`. `scripts/optimize_images.py` now also writes `static/images/A-Dead-Fish-Swims.webp` (233 KB vs the 281 KB optimized GIF), listed in the manifest and `EXPECTED_OUTPUTS`. `pages/daydreams-doodles.qmd` serves it via `<picture>` with a reduced-motion poster source and the GIF fallback. Tests are in `tests/test_optimize_images.py`. The source GIF and MP4/WebM are intentionally out of scope. Next: review the draft PR, then mark ready and arm the guarded merge. DL-#4558 touched.
+
 # Regular PR #4886 — Parameter Delivery Pending
 
 The accepted parameter review is published at https://github.com/D-sorganization/AffineDrift/pull/4886 (not draft), reviewed source117a416d5 and initial PR head25dee2f98. Full regression and45 metadata checks pass; canonical source acceptance remains unchanged. The central auto-merge guard found no hold but could not arm because GitHub GraphQL was rate-limited. Retry the guard after recovery; do not bypass protected merge. Verify remote-main delivery before releasing4881. Next batch4885 remains isolated and unaccepted. Goal active.
