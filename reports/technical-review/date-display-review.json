@@ -36,15 +36,52 @@
     "adjudication": "Accepted scope boundary/test suggestions. Used span rather than time for unknown instant; rejected invented git date-source value and assumed ISO formatting of existing Quarto dates."
   },
   "full_regression": {
-    "status": "pending"
+    "status": "passed",
+    "head": "70337154ce0e9f018ad6a2752a935b8741007b0c",
+    "passed": 6863,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 593.82,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/date-display/full-tests.txt",
+    "sha256": "017ac7d9ebabf0ab91d5c3f74e535b4f6347546d41c22cbae08a093ade3b0cd7",
+    "scope": "Repository default selection; no tracked edits, renders or hooks during run"
   },
   "delivery": {
     "status": "pending",
     "draft_pr": false
   },
   "pre_pr": {
-    "status": "tooling failure",
-    "issue": "https://github.com/D-sorganization/Repository_Management/issues/1940",
-    "reason": "Black --check string expanded into character argv; direct Black passes; all other gates pass; repair underway, no bypass"
-  }
+    "status": "passed",
+    "tool_source": "Repository_Management ca802ada",
+    "tool_pr": "https://github.com/D-sorganization/Repository_Management/pull/1943",
+    "command": "pre_pr --from-ref 5ccb2d600 --to-ref HEAD",
+    "log": "docs/development/technical-review/date-display/final-source-pre-pr.txt",
+    "mapped_tests": 15,
+    "gates_passed": 5,
+    "exit_code": 0,
+    "initial_failure": "Preserved in pre-pr.txt; Black flag expanded into characters. Repaired tool used; no gate skipped.",
+    "scope_correction": "The first final rerun selected only working metadata. Explicit committed refs then exercised all date implementation changes; those five gates passed with 15 mapped tests. Tool source stayed fixed during that run."
+  },
+  "accepted_source_commit": "70337154ce0e9f018ad6a2752a935b8741007b0c",
+  "git_blob_sha256": {
+    "scripts/post_render_citations.py": "f3da016159c3bae65bbdd63bbf82857188218cf71b947e97627cc6ffe71ad5a0",
+    "scripts/filters/page-header-card.lua": "0b23bd36b7e71912cc9b868930c6311a217a65f69ed889be23c2a6dd2fc086c3",
+    "tests/test_citation_metadata.py": "b99a056ffb586bb660e33f54b0401a2f2f143bde40d6e169f299f806e32319c7"
+  },
+  "article_acceptance_integration": {
+    "commit": "1539aab51",
+    "parent": "5ccb2d600",
+    "scope": "Acceptance metadata and corpus status only; no scientific source or date implementation changed"
+  },
+  "final_metadata_tests": {
+    "passed": 44,
+    "exit_code": 0,
+    "log": "docs/development/technical-review/date-display/final-metadata-tests.txt"
+  },
+  "source_parity": "All 15 canonical parameter/article/date source and evidence blobs verified against accepted hashes after parent metadata integration."
 }

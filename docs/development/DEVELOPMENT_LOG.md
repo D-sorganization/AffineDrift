@@ -1,10 +1,10 @@
 # DL-#4888 — Unverified Date Presentation
 
-The browser exposed Invalid Date in two shared presentation surfaces. TDD reproduced both failures, then a scoped title-placeholder replacement and metadata-aware span fixed them without replacing dates in article prose. Seven new cases and existing metadata/header suites pass; browser output and delegation limits are recorded. Full regression/delivery pending.
+The browser exposed Invalid Date in two shared presentation surfaces. TDD reproduced both failures, then a scoped title-placeholder replacement and metadata-aware span fixed them without replacing dates in article prose. Seven new cases and existing metadata/header suites pass; browser output and delegation limits are recorded. Frozen source 70337154c passed 6,863 tests, 29 skips, 210 deselections and 60 warnings in 593.82 seconds, with 93.24% src coverage and no tracked edits during execution. Article acceptance metadata through 5ccb2d600 is integrated. Five final pre-PR gates passed over explicit source refs using repaired tool ca802ada, with 15 mapped tests; 44 metadata/root/SPEC tests passed. Protected delivery remains.
 
 # Dimensionality and Integration Source Review — 2026-10-04
 
-Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. See the review report for hypotheses, rejected suggestions and outstanding browser/regression acceptance.
+Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. Both reviews, scoped local presentation and full regression are accepted at 6cd4d2eee. Regular PR #4889 is open, stacked on #4886; remote-main delivery remains. See the review report for hypotheses and rejected suggestions.
 
 # Parameter Review Acceptance — 2026-10-04
 
