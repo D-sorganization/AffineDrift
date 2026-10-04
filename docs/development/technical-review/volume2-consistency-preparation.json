@@ -49,6 +49,11 @@
       "source": "articles/The_Geometry_of_Motion/Volume_II/main.tex",
       "problem": "Relationship to Volume III says it will extend to networked and multi-agent systems. Existing Volume III include list instead describes biological/musculoskeletal conventions, muscle models, inverse problems, experimental methods, inference and deformable bodies.",
       "action": "Check actual Volume III introduction and prior scope; update the book relationship consistently during future whole-book review."
+    },
+    {
+      "source": "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+      "problem": "Actual clean rendered HTML omits coordinate singularity, mechanical singularity, task singularity and some because four raw TeX emphasis commands are dropped. The first three leave A is / A may / A is fragments; the fourth loses a logical quantifier in the amplification explanation.",
+      "action": "In queued #4864, replace with HTML-compatible emphasis and verify source-to-render regression and actual output. Do not mutate currently frozen #4863 publication during delivery."
     }
   ],
   "boundaries": "Outline helper supplies organizational suggestions only; different chapter models may intentionally differ. Require mappings and declared assumptions, not identical parameter sets. All other body chapters still require the planned cross-source reading.",
@@ -65,7 +70,7 @@
     "Chapter10 distinguishes trial error convergence, command/noise transients, identifiability, policy optimization and verified capture sets. Common Lyapunov certificates are distinguished from arbitrary stable-controller interpolation. No new correction accepted from preparation."
   ],
   "remaining_whole_book_work": [
-    "Compare the full QMD edition and enclosing combined-TeX front/back matter; eleven combined-TeX body differences have now been read and are recorded, without blanket acceptance.",
+    "Ordered QMD mathematics and parser prose differences are now inventoried/adjudicated. Complete rendered/citation/ancillary coverage and inspect corrected output; parser extraction alone does not certify publication.",
     "Read glossary, further reading, nomenclature/front matter in the enclosing books and verify cross-references, model transitions, notation and bibliography.",
     "Check actual primary-source claims and carry prior verified calculations/render evidence without blanket inheritance.",
     "Claim the next bounded whole-book issue only after a WIP slot is free; correct the confirmed landing/preface mismatches and validate publication.",
@@ -356,5 +361,63 @@
         "+"
       ]
     }
-  ]
+  ],
+  "queued_issue": "https://github.com/D-sorganization/AffineDrift/issues/4864",
+  "queue_scope": "Native epic4009 child, tier:strong; unclaimed until delivery WIP slot frees.",
+  "ordered_math_comparison": {
+    "status": "Ordered parser comparison only; manually review reflow differences and verify source coverage before acceptance.",
+    "math_nodes_per_edition": 1273,
+    "inline_per_edition": 1115,
+    "display_per_edition": 158,
+    "normalization": "Remove whitespace and explicit TeX label commands only. Do not remove matrix row/column separators or mathematical commands.",
+    "ordered_exact_after_normalization": 1271,
+    "mismatches": [
+      {
+        "index": 624,
+        "kind_a": "DisplayMath",
+        "kind_b": "DisplayMath",
+        "combined": "\\delta W=\\tau_s\\delta\\theta_1+\\tau_w(\\delta\\theta_2-\\delta\\theta_1),\n\\qquad Q_\\theta=(\\tau_s-\\tau_w,\\tau_w)^T.",
+        "qmd": "\n\\begin{aligned}\n\\delta W&=\\tau_s\\delta\\theta_1+\\tau_w(\\delta\\theta_2-\\delta\\theta_1),\\\\\nQ_\\theta&=(\\tau_s-\\tau_w,\\tau_w)^T.\n\\end{aligned}\n"
+      },
+      {
+        "index": 671,
+        "kind_a": "DisplayMath",
+        "kind_b": "DisplayMath",
+        "combined": "u=(M_{aa}-M_{au}M_{uu}^{-1}M_{ua})v_a\n  +h_a-M_{au}M_{uu}^{-1}h_u.",
+        "qmd": "\n\\begin{aligned}\nu={}&(M_{aa}-M_{au}M_{uu}^{-1}M_{ua})v_a\\\\\n&+h_a-M_{au}M_{uu}^{-1}h_u.\n\\end{aligned}\n"
+      }
+    ],
+    "adjudication": "Both mismatches are the two Chapter5 aligned display reflows independently checked and visually accepted under #4863. No other ordered mathematical-token difference after the stated normalization. This is edition comparison, not independent proof of all mathematics."
+  },
+  "qmd_raw_nodes": [
+    {
+      "type": "RawInline",
+      "format": "tex",
+      "text": "\\emph{coordinate singularity}"
+    },
+    {
+      "type": "RawInline",
+      "format": "tex",
+      "text": "\\emph{mechanical singularity}"
+    },
+    {
+      "type": "RawInline",
+      "format": "tex",
+      "text": "\\emph{task singularity}"
+    },
+    {
+      "type": "RawInline",
+      "format": "tex",
+      "text": "\\emph{some}"
+    }
+  ],
+  "prose_comparison": {
+    "combined_tokens": 30765,
+    "qmd_tokens": 30875,
+    "difference_groups": 104,
+    "equation_anchor_insertions": 91,
+    "other_groups": 13,
+    "adjudication": "Seven groups concern figure alt/caption duplication or wording (two for Chapter1 and five other figure groups), one a callout identifier, one the Chapter5 citation representation, and four the omitted emphasis terms. All thirteen non-anchor groups inspected. Raw nodes are only the four TeX emphasis commands."
+  },
+  "issue_draft_adjudication": "Additional successful supplied-text Flash draft; corrected wrong VolumeII/main.tex path, invented labels and impossible preservation wording. Preserve historical accepted commits/records, with explicit dependency treatment for intentionally changed shared artifacts after delivery."
 }
