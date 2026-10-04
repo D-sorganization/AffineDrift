@@ -1,12 +1,12 @@
 ---
 issue: 4894
-summary: "Prepare coordinated flight accuracy and design review with primary-reading limits and helper adjudication"
+summary: "Correct the connected flight, accuracy and design chapters with explicit uncertainty and validation limits"
 dl_state: "in_progress"
-next_step: "Complete primary reads and revise chapters 8 9 and 10; validate math, rebuild PDF, freeze regression, then regular PR"
+next_step: "Run frozen full regression; bind evidence; advance three corpus rows only on acceptance; publish regular PR after 4895"
 owner: "codex"
 branch: "fix/flight-accuracy-design-review"
 ---
 
-Two Flash inventories and complete originals read; no publication edits or acceptance yet. Detailed plan is in the book research/flight-accuracy-review-20261004.md. Parent implementation acceptance through 0f81bb1ac is integrated unchanged; PR 4895 remains stacked on 4891. Parameter PR 4886 delivered with eight verified hashes, receipt copied here; article PR 4889 targets main. Follow main dependencies before retargeting children. Current review lease expires 21:40 UTC. Use per-PR fragments under the new upstream policy; keep existing historical shared-file records intact. Local author PDF references stay outside commits.
+Three complete chapters revised and reread; seven read-only agy Gemini 3.8 Flash helpers completed and lead-adjudicated. Primary-study corrections, mathematical derivations and rejected helper claims are documented in articles/Launch_Monitor_Technology_Review/research/flight-accuracy-review-20261004.md. Canonical 102-page PDF builds with 102 printed bibliography entries and no unresolved references. Complete affected chapters, TOC and bibliography were visually checked. Four independent 100-case mathematical checks passed. Full frozen regression and acceptance remain; corpus rows have not advanced.
 
-Delivery update: article PR #4889 is pushed at 9695aa229 on main, with source hashes unchanged and hooks passing. The central guard found no hold but could not arm due to GitHub GraphQL rate limiting at 19:58 UTC; retry after reset without bypassing protection. Parameter PR #4886 is delivered. Date #4891 and implementation #4895 remain dependent. Implementation head 0f81bb1ac and its acceptance metadata are integrated here. This preparation branch passed five explicit-ref pre-PR gates and all push hooks; no new manuscript acceptance is claimed.
+Parent implementation PR #4895 remains stacked on date PR #4891, which depends on article PR #4889. Parameter PR #4886 has delivered with eight verified hashes. Article PR #4889 targets main at 9695aa229; the central guard found no hold but GraphQL rate limiting prevented arming at 20:19 UTC. Do not describe it as armed or merged. Date and tooling leases were renewed by REST through 22:21 UTC after the GraphQL-backed CLI failed; receipts 5984017052 and 5984017176. Current flight review lease lasts through 21:40 UTC. Use per-PR change fragments, preserving historical shared-file records. Keep local author PDFs and contact sheets out of commits.

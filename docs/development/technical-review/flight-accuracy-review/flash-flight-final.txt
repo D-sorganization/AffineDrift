@@ -1,0 +1,53 @@
+Here is the technical review of the revised chapter.
+
+---
+
+### Concrete Corrections and Ambiguities
+
+#### 1. Incomplete Total Derivative of Carry with Regard to Uncertain Inputs
+* **Location:** Section *Numerical Integration and the Landing Event*, below Equation \eqref{eq:landingderivative}:
+  > "For an output $c(\vect{p}_*,t_*,a)$, also include the explicit terms $c_t\,dt_*/da+c_a$ along with $c_{\vect{p}}\,d\vect{p}_*/da$."
+* **Issue:** Mathematical notation/chain rule collision. 
+  In \eqref{eq:landingderivative}, $d\vect{p}_*/da$ is defined as the *total* sensitivity of the landing position:
+  $$\frac{d\vect{p}_*}{da} = Y + \vect{v}\frac{dt_*}{da} = \frac{\partial \vect{p}}{\partial a} + \frac{\partial \vect{p}}{\partial t}\frac{dt_*}{da}.$$
+  Therefore, the total derivative of an output $c(\vect{p}_*, t_*, a)$ with respect to $a$ is:
+  $$\frac{dc}{da} = \nabla_{\vect{p}}c \cdot \frac{d\vect{p}_*}{da} + \frac{\partial c}{\partial t_*}\frac{dt_*}{da} + \frac{\partial c}{\partial a}.$$
+  Writing "along with $c_{\vect{p}}\,d\vect{p}_*/da$" is mathematically correct only if $c$ has an explicit dependence on time $t_*$ that is *not* already captured by position $\vect{p}_*$. However, in golf trajectory modeling, carry $c$ is almost universally a function solely of landing position (e.g., $c = x_*$ or $c = \lVert (x_*, z_*)\rVert$), where $c_t \equiv 0$ and $c_a \equiv 0$. The phrasing as written is easily misread as suggesting that one must add $\vect{v}\frac{dt_*}{da}$ a second time, or that $c_t$ represents the velocity chain-rule term.
+* **Correction:** Clarify the chain rule explicitly:
+  $$\frac{dc}{da} = \nabla_{\vect{p}}c \cdot \frac{d\vect{p}_*}{da} + \frac{\partial c}{\partial t_*}\frac{dt_*}{da} + \frac{\partial c}{\partial a},$$
+  noting that for geometric landing outputs (such as downrange carry $c = x_*$), the partial derivatives $\partial c/\partial t_*$ and $\partial c/\partial a$ vanish identically, leaving $dc/da = \nabla_{\vect{p}}c \cdot (d\vect{p}_*/da)$.
+
+---
+
+#### 2. Notation Collision on Drag Force vs. Model Function $f_D$
+* **Location:** Section *Equations of Motion and Coefficient Conventions*:
+  > "For $C_D\geq0$, drag does nonpositive work relative to the air: $\vect{F}_D\cdot\vect{v}_a=-qAC_DV$."
+* **Issue:** $\vect{F}_D$ is introduced without definition. In \eqref{eq:eom}, the equation of motion is written directly without breaking out aerodynamic force components into named vectors:
+  $$m\dot{\vect{v}} = -qAC_D\frac{\vect{v}_a}{V} + qAC_L\vect{e}_L + m\vect{g}.$$
+  While standard in aerodynamics, defining $\vect{F}_D = -qAC_D\frac{\vect{v}_a}{V}$ before stating the dot product $\vect{F}_D\cdot\vect{v}_a$ removes any ambiguity.
+* **Correction:** Explicitly define the vector drag term: "For drag force $\vect{F}_D = -qAC_D \frac{\vect{v}_a}{V}$ with $C_D \geq 0$..."
+
+---
+
+#### 3. Airspeed Time-Derivative $\dot{V}$ in Wind Fields
+* **Location:** Section *Equations of Motion and Coefficient Conventions*, Equation \eqref{eq:spinratioevolution}:
+  $$\frac{\dot S}{S} = \frac{\vect{\omega}\cdot\dot{\vect{\omega}}}{\lVert\vect{\omega}\rVert^2} - \frac{\dot V}{V}.$$
+* **Issue:** Under the definition $V = \lVert\vect{v}_a\rVert$, $\dot{V} = \frac{\vect{v}_a \cdot \dot{\vect{v}}_a}{V}$. Since $\vect{v}_a = \vect{v} - \vect{w}(\vect{p}, t)$, the time derivative of airspeed is:
+  $$\dot{\vect{v}}_a = \dot{\vect{v}} - \frac{d\vect{w}}{dt} = \dot{\vect{v}} - \left(\frac{\partial \vect{w}}{\partial t} + (\vect{v}\cdot\nabla)\vect{w}\right).$$
+  While equation \eqref{eq:spinratioevolution} is mathematically an exact identity for any scalar $V > 0$, implementers often equate $\dot{V}$ directly with $\frac{\vect{v}_a\cdot\dot{\vect{v}}}{V}$, neglecting spatial wind gradients $(\vect{v}\cdot\nabla)\vect{w}$.
+* **Correction:** Add a brief clarifying clause: "...where $\dot{V} = (\vect{v}_a \cdot \dot{\vect{v}}_a)/V$, with $\dot{\vect{v}}_a = \dot{\vect{v}} - \dot{\vect{w}}$ accounting for spatial wind gradients along the path."
+
+---
+
+#### 4. Ambiguity in "Componentwise" Application of Implicit Differentiation
+* **Location:** Section *Numerical Integration and the Landing Event*:
+  > "Apply it componentwise for a vector of uncertain inputs."
+* **Issue:** In \eqref{eq:landingderivative}, $Y = \partial\vect{p}/\partial a \in \mathbb{R}^3$, $G_{\vect{p}} = \nabla_{\vect{p}}G \in \mathbb{R}^{1\times 3}$, and $a$ is a scalar. When moving from a scalar parameter $a$ to a vector parameter $\vect{a} \in \mathbb{R}^k$, $Y$ becomes a $3 \times k$ Jacobian matrix $\partial\vect{p}/\partial\vect{a}$, and $\nabla_{\vect{a}} t_*$ is a $1 \times k$ gradient row vector:
+  $$\frac{dt_*}{d\vect{a}} = -\frac{G_{\vect{p}}\frac{\partial\vect{p}}{\partial\vect{a}} + G_{\vect{a}}}{G_{\vect{p}}\vect{v} + G_t}.$$
+  Describing this as "apply it componentwise" is ambiguous—it could be misinterpreted as applying it componentwise over spatial dimensions $(x, y, z)$ rather than with respect to each parameter $a_i$.
+* **Correction:** Rephrase for clarity: "When $\vect{a}$ is a parameter vector, replace scalar $a$ across \eqref{eq:landingderivative} by differentiating with respect to each component $a_i$ (or by replacing $Y$ with the $3\times k$ Jacobian $\partial\vect{p}/\partial\vect{a}$ and $G_a$ with the gradient row vector $G_{\vect{a}}$)."
+
+---
+
+### Summary
+The mathematics, vector definitions, and logical progression across the chapter are rigorous, sound, and free of unsupported physical or numerical leaps. Implementing the four concrete adjustments above will resolve the minor ambiguities and prevent potential implementation pitfalls.
