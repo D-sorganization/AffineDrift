@@ -21,14 +21,14 @@ reachable from any live state and `abandoned` from `parked`.
 
 ### DL-#4864 · Volume II Consistency Review
 
-- **State:** in_progress
+- **State:** in_review
 - **Owner:** codex
 - **Issue:** #4864; epic #4009 / corpus #4021
 - **Branch:** fix/volume2-consistency-review
 - **PR:** pending
 - **Summary:** Complete combined-edition review and confirmed web terminology/landing/preface corrections. All eleven body chapters and recorded ancillary/evidence material read; mathematical/prose/header comparisons and eight figure pages inspected during preparation.
 - **Evidence:** reports/technical-review/volume2-consistency-prior-review.json; docs/development/technical-review/volume2-consistency-preparation.json. Parent acceptance stays on the #4867 delivery branch; changed shared artifacts require new scoped evidence.
-- **Next step:** Corrected source, rebuilt PDF, 6 browser regressions, 78 focused cases, 208 content cases and 16 publication gates pass. Twelve final body captures and the revised preface inspected. Save source checkpoint, run full regression, bind scoped acceptance, update corpus and deliver regular PR. Shared nomenclature #4865 and parent-reproduced title-card investigation #4868 remain open; no corpus promotion yet.
+- **Next step:** Full regression at a167deda0e90b6282d5c02e94bbfb82e5ac59862 passed 6810, skipped 29, deselected 210, with 93.24% src coverage in 872.43 seconds. Eleven frozen files bind four new findings while preserving prior review identities. Two combined originals and landing/preface receive scoped corpus updates; #4865/#4868 remain open. Open regular PR and verify protected delivery.
 
 ### DL-#4863 · Underactuation Chapter Review
 

@@ -1,6 +1,6 @@
 {
   "issue": 4864,
-  "status": "Corrected source and scoped checks saved; full regression and acceptance binding pending.",
+  "status": "Complete combined-original/landing source review and bounded body/preface presentation accepted and bound; regular PR and protected delivery pending.",
   "red": {
     "terminology_expected_failures": 2,
     "matrix_expected_mobile_failures": 1,
@@ -119,21 +119,57 @@
     }
   ],
   "full": {
-    "status": "pending"
+    "status": "passed",
+    "source_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
+    "passed": 6810,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 51,
+    "failed": 0,
+    "errors": 0,
+    "seconds": 872.43,
+    "src_coverage_percent": 93.24,
+    "command": "python -u -X utf8 -m pytest tests/ --cov=src --cov-report=xml --cov-report=term --timeout=60 --junitxml=docs/development/technical-review/volume2-full-results.xml",
+    "scope": "Repository default offline marker exclusions, tests/ only. Separate content and browser runs cover their explicit scopes. No source edits, renders or Git hooks ran concurrently."
   },
   "render_verification": "reports/technical-review/volume2-consistency-render-verification.json",
   "delegation": {
-    "successful_supplied_text_agy_flash_helpers": 10,
+    "successful_supplied_text_agy_flash_helpers": 12,
     "failed_attempts": [
       "Test draft produced no usable output after a command request.",
       "Validation draft CLI timeout lacked duration unit."
     ],
-    "adjudication": "Lead review; no permission bypass, invented facts or speculative CSS adopted."
+    "adjudication": "Lead review; no permission bypass, invented facts or speculative CSS adopted.",
+    "delivery_adjudication": "PR draft typo corrected; corpus draft incorrectly calls issue numbers PRs and invents a new acceptance dependency for unchanged #4863 chapters. Preserve their old accepted source and update delivery only."
   },
   "remaining": [
-    "Full local regression and immutable source binding",
     "Regular PR and protected remote-main delivery",
     "Separate shared nomenclature #4865",
-    "Separate baseline title-card investigation #4868"
-  ]
+    "Separate baseline title-card investigation #4868",
+    "Remaining corpus and empirical validation"
+  ],
+  "accepted_source_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
+  "binding_scope": {
+    "new_findings": 4,
+    "existing_findings_preserved": 4,
+    "other_route_identities_preserved": 250,
+    "historical_route_review_preserved": true,
+    "corpus_rows_updated": [
+      "articles/motion-control/Control_Is_Motion_Complete.tex",
+      "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+      "articles/motion-control/chapter5.tex",
+      "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex",
+      "articles/The_Geometry_of_Motion/Volume_II/main.tex",
+      "articles/The_Geometry_of_Motion/quarto/volume2.qmd"
+    ]
+  },
+  "post_binding": {
+    "passed": 100,
+    "protected_files_verified": 82,
+    "frozen_files_verified": 11,
+    "source_unchanged_since_full": true,
+    "skipped": 1,
+    "scope": "Selected underactuation, book audit, claim inventory, scientific trust, SPEC and deployment modules including their content cases; book and claim publication checks also pass.",
+    "seconds": 25.98
+  }
 }
