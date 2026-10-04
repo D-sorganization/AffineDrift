@@ -574,4 +574,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4853 | Correct DCR acceleration-set geometry, endpoint projections and manufactured speed figures; preserve historical proof with plotted-value and render checks. |
 | 2026-10-03 | #4855 | Clarify drift/input force attribution, inertial-frame segment power and joint-motor work; add reproducible double-pendulum counterexamples and preserve prior review. |
 | 2026-10-03 | #4858 | Clarify paired optimal-control chapter smoothness, line-search and control-unit regularization conventions; preserve valid Riccati/DDP mechanics and improve mobile equation layout. |
+| 2026-10-03 | #4860 | Clarify loaded-loop restoring stiffness, muscle constitutive scope and sampled stiffness strategy in the three passive-stabilization chapter sources; retain prior mechanics and empirical limits. |
 | 2026-10-03 | #4861 | Follow apex redirect in live deployment manifest verification and increase build job timeout to 90 min (#4809). |

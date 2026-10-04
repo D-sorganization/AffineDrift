@@ -1,4 +1,4 @@
-\chapter{Passive Stabilization in Parallel Loops}
+\chapter[Passive Stabilization in Parallel Loops]{Passive Stabilization\\in Parallel Loops}
 \label{ch:passive_stabilization}
 
 \section{What Needs to Be Stabilized?}
@@ -40,6 +40,10 @@ M\delta\ddot q+D\delta\dot q+K\delta q=B\delta u+J^T\delta w,
 \qquad Z_q(s)=Ms^2+Ds+K.
 \label{eq:impedance_control}
 \end{equation}
+Here the local equation uses independent perturbation coordinates; its
+matrices are the corresponding reduced matrices when rigid loops are present.
+If $q$ instead retains redundant loop coordinates, retain the linearized
+constraint and reaction equations. Constraint reduction is detailed below.
 Here $Z_q$ maps displacement to generalized force. Mechanical impedance is
 also often defined relative to velocity, in which case it is $Z_q(s)/s$.
 State the convention. Along a swing these coefficients vary; delayed reflex
@@ -60,8 +64,10 @@ as soon as it is below optimal length.
 
 Let muscle length be $l_i(q)$, tension $F_i$, and
 $r_i=-\partial l_i/\partial q$ be its signed moment-arm vector. The generalized
-muscle force is $\tau=\sum_i r_iF_i$. At fixed activation and local history,
-the restoring tangent stiffness is
+muscle force is $\tau=\sum_i r_iF_i$. For this quasistatic constitutive
+approximation, take $F_i=F_i(l_i)$ with activation and internal states held
+fixed, and no independent shortening-velocity variation. The restoring
+tangent stiffness is
 \begin{equation}
 K_q=-\frac{\partial\tau}{\partial q}
 =\sum_i\left[k_i r_i r_i^T-F_i\frac{\partial r_i}{\partial q}\right],
@@ -70,9 +76,12 @@ K_q=-\frac{\partial\tau}{\partial q}
 \end{equation}
 The first term includes squared moment arms; without them a muscle stiffness
 in force per length cannot become joint stiffness in torque per angle. The
-second is a geometric or prestress contribution and need not be positive.
+second is a geometric or prestress contribution and need not be positive semidefinite.
 This local formula needs modification for tendon states, muscle coupling,
-history-dependent response, and neural feedback.
+history-dependent response, and neural feedback. During motion, changing
+geometry can also change shortening velocity at fixed joint velocity. A
+force--velocity law then contributes additional derivatives; it cannot be
+included merely by calling $k_i$ the force--length slope.
 
 Balanced antagonist forces can yield small net torque while both muscles carry
 large tension. Co-contraction commonly raises intrinsic joint stiffness and
@@ -97,6 +106,80 @@ For $J=[1\;1]$ and $K_q=\operatorname{diag}(2,3)$ in consistent units,
 $C_y=1/2+1/3=5/6$. Multiplying both joint stiffnesses by ten divides compliance
 by ten and leaves the rank of $J$ unchanged. Geometry and stiffness interact
 without being the same mathematical object.
+
+\subsection{Loaded Loops: Geometry Enters the Restoring Stiffness}
+
+To compute the preload contribution, consider a smooth conservative static
+equilibrium $q_*$ with fixed activation and fixed spring parameters. Include
+all conservative applied loads in $U(q)$ and use regular stationary constraints
+$\phi(q)=0$, with $A$ of full row rank. With the reaction sign used above,
+$\nabla U(q_*)=A(q_*)^T\lambda_*$. Let the columns of $N$ form a basis of
+$\ker A(q_*)$, so that $\delta q=N\delta\eta$ to first order. Then
+\begin{equation}
+\begin{aligned}
+K_r&=N^TH_LN,\\
+H_L&=U_{qq}-\sum_i\lambda_{*,i}\phi_{i,qq}.
+\end{aligned}
+\label{eq:loaded-loop-stiffness}
+\end{equation}
+
+All derivatives are evaluated at $q_*$. This is the Hessian of
+$U-\lambda_*^T\phi$ restricted to admissible directions, with the multiplier
+held fixed when taking the Hessian. It is the equality-constrained
+second-variation test \cite{Freund2004ConstrainedOptimality}. The minus sign follows from this chapter's
+reaction convention; changing the multiplier convention changes both signs.
+
+The constraint-curvature term is essential. For any feasible curve $q(s)$,
+differentiating $\phi(q(s))=0$ twice gives
+$Aq''+\{q'^T\phi_{i,qq}q'\}_i=0$. Substitution of
+$\nabla U=A^T\lambda_*$ into the second derivative of $U(q(s))$ produces
+the displayed $K_r$. Merely projecting $U_{qq}$ omits the work of the applied
+preload along the curved feasible path. Ideal reactions still do zero net
+work; this geometric effect creates no energy.
+
+If $K_r\succ0$, a small additional task load has static compliance
+$C_y=J_rK_r^{-1}J_r^T$, where $J_r=JN$. Its inverse defines task stiffness
+only when this compliance is nonsingular. This result concerns local static
+response, not finite-frequency impedance. A change of tangent basis must
+transform both $J_r$ and $K_r$; their combined task compliance is unchanged.
+Nonconservative follower loads, delayed feedback, moving constraints, and a
+moving swing require their own linearized dynamics, not this potential test.
+
+\subsection{A Preload Example With Unchanged Degrees of Freedom}
+
+Consider a manufactured point constrained to a circle, with Cartesian
+coordinates $q=(x,y)$ in metres:
+\begin{equation}
+\begin{aligned}
+\phi(q)&=\tfrac12(x^2+y^2-R^2)=0,\\
+U(q)&=\tfrac12k_x(x-a)^2+\tfrac12k_y y^2.
+\end{aligned}
+\label{eq:loaded-loop-example}
+\end{equation}
+
+At $q_*=(R,0)$ choose $N=(0,1)^T$, so $\eta$ measures tangent displacement
+in metres. Then $\lambda_*=k_x(R-a)/R$ and $K_r=k_y-\lambda_*$.
+For $R=1\,\mathrm{m}$, $k_x=100\,\mathrm{N/m}$, and
+$k_y=40\,\mathrm{N/m}$, choosing $a=0.8\,\mathrm{m}$ gives
+$K_r=20\,\mathrm{N/m}$ and tangent compliance $0.05\,\mathrm{m/N}$.
+Choosing $a=0.5\,\mathrm{m}$ instead gives $K_r=-10\,\mathrm{N/m}$:
+the equilibrium is unstable for a positive-mass conservative particle even
+though the ambient Hessian $\operatorname{diag}(100,40)$ is positive definite.
+Its inverse is not a stable static compliance measurement. The constraint
+rank and tangent dimension have not changed.
+
+The exact path $q(\theta)=(R\cos\theta,R\sin\theta)$ checks the result:
+\begin{equation}
+\left.\frac{d^2U(q(\theta))}{d\theta^2}\right|_{\theta=0}
+=R^2(k_y-\lambda_*).
+\label{eq:loaded-loop-curve}
+\end{equation}
+
+Dividing the angular energy curvature by $R^2$ gives tangent-displacement stiffness. These
+numbers illustrate a mechanism, not human tissue parameters or a golf posture
+recommendation. They show why activation-induced loading and loop geometry
+must be assessed together rather than ranking postures by muscle stiffness
+alone.
 
 \section{Energy Minima, Stability, and Attractors}
 \label{sec:attractors}
@@ -201,10 +284,15 @@ For task output $y=h(x)$, the nonlinear task-equivalent set is
 $\{x:h(x)=y^*\}$. At a regular point its tangent is $\ker J$, where
 $J=\partial h/\partial x$. This is not the stationary set of a scalar cost.
 If the task is clubhead speed, the state must include velocities: joint angles
-alone do not determine speed~\cite{Scholz1999}.
+alone do not determine speed. The UCM method originated in task-specific
+coordination analysis~\cite{Scholz1999}; that study examined sit-to-stand, not golf.
+Its framework does not by itself validate clubhead-speed regulation.
 
-Using consistently scaled state coordinates and the corresponding Euclidean
-metric, define $P_\parallel=I-J^+J$, $P_\perp=J^+J$, and sample covariance
+Declare characteristic scales before combining position, velocity and other
+state components. For constant nonsingular $S$ and $\xi=S^{-1}(x-x_*)$, use
+$J_\xi=J_xS$ and $\Sigma_\xi=S^{-1}\Sigma_xS^{-T}$. In the following formulas,
+$J$ and $\Sigma$ mean these consistently scaled quantities. With the Euclidean
+metric in $\xi$, define $P_\parallel=I-J^+J$, $P_\perp=J^+J$, and sample covariance
 $\Sigma$. With $r=\operatorname{rank}J$ and $0<r<n$, variance per dimension is
 \begin{equation}
 V_\parallel=\frac{\operatorname{tr}(P_\parallel\Sigma)}{n-r},\qquad
@@ -245,11 +333,14 @@ Report unfavorable outcomes as well as favorable ones.
 \section{Optimizing a Stiffness Strategy}
 \label{sec:optimization}
 
-Let $\alpha$ parameterize a specified activation or stiffness mechanism. A
-finite-horizon model comparison can minimize
+Let $\alpha$ parameterize a specified activation or stiffness mechanism and
+let $e_k=h_{\rm task}(x_k)-y_k^*$ be the declared task error. For step size
+$h>0$, use a piecewise-linear parameter schedule with
+$\nu_k=(\alpha_{k+1}-\alpha_k)/h$, or an explicit rate input with its own
+dynamics. A finite-horizon model comparison can minimize
 \begin{equation}
 J=\ell_T(x_N)+\sum_{k=0}^{N-1}h\{e_k^TQe_k+u_k^TRu_k+
-c_\alpha(x_k,\alpha_k)+c_{\rm rate}(\dot\alpha_k)\},
+c_\alpha(x_k,\alpha_k)+c_{\rm rate}(\nu_k)\},
 \end{equation}
 subject to state dynamics, contact and loop constraints, input bounds, and
 admissible activation/stiffness rates. Every running-cost term carries the
@@ -286,7 +377,8 @@ $5\,\mathrm{N\,m}$ torque. Double $K$ and explain which quantities change.
 \item Show that the undamped spring conserves energy and therefore cannot
 attract all nearby nonzero-energy states to its equilibrium.
 \item Verify the task-compliance example and preserve the Jacobian rank while
-scaling stiffness. Explain the extra terms introduced by preload.
+scaling stiffness. Derive the circle example from the exact constrained
+energy and explain why projecting the ambient Hessian gives the wrong answer.
 \item Derive the variable-spring energy identity, including moving rest length.
 Identify the terms an actuator must supply or absorb.
 \item For $J=[1\;1]$ and a specified covariance, compute both UCM variances
