@@ -1,3 +1,13 @@
+# Volume II CI Evidence Boundary Repair — #4864
+
+Regular PR https://github.com/D-sorganization/AffineDrift/pull/4869 remains unmerged with guarded squash auto-merge enabled. CI Standard 37175635139 failed on head 53e4676ee1e2ffa32a05257cca64913fcbc25769: the clean site render removed a preparation record under docs/development referenced by four findings. A canonically formatted copy with identical parsed JSON content now lives at reports/technical-review/volume2-consistency-preparation.json, and those findings point there. The original accepted source a167deda0e90b6282d5c02e94bbfb82e5ac59862 and all eleven frozen files remain unchanged. The new file is separately recorded as delivery support; no historical source acceptance was rewritten.
+
+The new regression covering finding evidence outside generated output failed before the repair. Afterward, 70 selected evidence/book/trust/SPEC checks passed in 31.38 seconds. The previous route-review pruning regression also passed during red verification. No full-suite repeat is claimed for this metadata/test-only correction. A thirteenth successful supplied-text agy CLI Gemini 3.8 Flash helper supported delivery turnover; lead verified and corrected its draft. Push this fix, watch CI on the resulting exact remote head, verify actual remote-main bytes, then release #4864's lease and presence (current expiry approximately 05:52 UTC).
+
+Separately claimed #4865 uses C:/Users/diete/Repositories/Worktrees/AffineDrift-shared-nomenclature-review, branch fix/shared-nomenclature-review, session technical-review-20261004-shared-nomenclature (expiry approximately 06:08 UTC). Its source and six PDFs are revised; 94 focused checks pass, 18 notation pages plus 17 adjacent pages have been inspected, and independent mechanical identities pass. Publication validation/acceptance/commit remain underway. Integrate this parent delivery repair before publishing the child. Do not mix its intentionally newer PDFs into the #4869 delivery branch. #4868 remains queued. Preserve all raw QA. The full-corpus goal remains active; never create draft PRs. Earlier sections below are historical checkpoints.
+
+---
+
 # Development Log — AffineDrift
 
 State table for every feature in flight in this repository. Update
