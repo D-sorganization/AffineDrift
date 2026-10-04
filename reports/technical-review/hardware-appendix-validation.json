@@ -1,0 +1,56 @@
+{
+  "issue": 4876,
+  "status": "Complete source/math/PDF review; full repository regression and remote delivery pending",
+  "baseline": "4b92fe90af30ddaa0e2b339e0814375437a4b071",
+  "build": {
+    "command": "pwsh -NoProfile -File articles/Launch_Monitor_Technology_Review/build.ps1",
+    "exit_code": 0,
+    "pages": 92,
+    "undefined_citations_or_references": false,
+    "log": "docs\\development\\technical-review\\hardware-build-layout.txt"
+  },
+  "visual": {
+    "inspected_physical_pages": [5, 63, 64, 65, 66, 67, 68, 88, 89, 90, 91],
+    "scope": "All six final appendix pages; representative TOC and bibliography pages. Earlier title no-wrap attempt overflowed and was rejected; final explicit title break inspected. Existing other-chapter/bibliography minor overfull warnings remain outside appendix scope.",
+    "images": {
+      "docs\\development\\technical-review\\hardware-pages\\final-5.png": "2ba86abfaaa4d3f43f02e9f9af625b307fee0a3af9a12533f2f630b4e951f016",
+      "docs\\development\\technical-review\\hardware-pages\\final-63.png": "b07d64cc7d948c0a9463e545362bb0fb3cf70439819fee17659defd2d981b815",
+      "docs\\development\\technical-review\\hardware-pages\\final-64.png": "422fde5ce9c7978736e6f4ae7598285bb94c61c7dc9b1c8b722d9d9d21875b00",
+      "docs\\development\\technical-review\\hardware-pages\\final-65.png": "63add642bbca8c12e8622bdc43f088e97863d756cfdb08ff11a16190e8c988b5",
+      "docs\\development\\technical-review\\hardware-pages\\final-66.png": "1b077004990812863b99388c2064de42150b00ff9e459b923d9e4d3bb2a02cc1",
+      "docs\\development\\technical-review\\hardware-pages\\final-67.png": "0dacbbc6241283c682d998f5bde1428611e8b1106bf86f267c65f548a9f05c3c",
+      "docs\\development\\technical-review\\hardware-pages\\final-68.png": "9bcc4c59070c027edf00558612b11b758c80a310245565a3f29aaf92fe0badd5",
+      "docs\\development\\technical-review\\hardware-pages\\final-90.png": "721b3c8f0975157fbe628cd6f16de94fef1639346efb9828f665f00707d828fd",
+      "docs\\development\\technical-review\\hardware-pages\\final-91.png": "b6c20001a648bd595fa3032823873120d3f6af0af8c54b2d03185a399724a720"
+    }
+  },
+  "pdf_comparison": {
+    "baseline_pages": 89,
+    "revised_pages": 92,
+    "appendix_physical_pages": [63, 64, 65, 66, 67, 68],
+    "outside_appendix_compared_pages": 73,
+    "normalization": "Remove repeated header/footer, numeric citation labels, line-end hyphenation and whitespace; all other text retained. TOC and bibliography excluded.",
+    "different_page_pairs": []
+  },
+  "focused_tests": {
+    "command": "pytest tests/test_launch_monitor_estimation_rigor.py tests/test_claim_audit_inventory.py tests/test_claim_audit_followup_scope.py tests/test_spec_changelog.py --no-cov -q",
+    "passed": 63,
+    "exit_code": 0,
+    "log": "docs\\development\\technical-review\\hardware-focused-tests.txt"
+  },
+  "titles": {
+    "publishable_sources": 665,
+    "result": "pass"
+  },
+  "full_regression": {
+    "status": "not yet run at this checkpoint"
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-low",
+    "successful_helpers": 5,
+    "authority": "Lead reviewed; raw outputs are candidates, not evidence of correctness"
+  },
+  "source_sha256": "9332c13756ab09da2f6f1ccfffe8bdedb13dab67596d205d0ca4666eff227bbe",
+  "pdf_sha256": "c2126846b90947e44de49d4c2adfbd15953451ccf30d8e36a5a7980f19901465"
+}
