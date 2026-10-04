@@ -1,0 +1,93 @@
+Here is the technical inventory and critical identification of errors, inconsistencies, and omissions in the provided draft chapter.
+
+---
+
+### 1. Geometry vs. Force Coupling and Moment-Arm Power Signs
+
+* **Moment-Arm Definition and Work Conjugacy:**
+  * **Claim in Text:** $\bm{\tau}_{\text{net}} = R(\bm{q})\bm{F}_{\text{muscle}}$ where positive $R$ produces positive torque.
+  * **Error / Sign Inconsistency:** By virtual work / generalized power conservation, the mechanical power developed by the musculotendon units (MTUs) must equal the power transmitted to the skeleton:
+    $$P = \bm{\tau}_{\text{net}}^T \dot{\bm{q}} = \sum_{i=1}^p F_i v_{\text{tendon}, i}^{\text{ext}} = -\sum_{i=1}^p F_i \dot{\ell}_i^{\text{mtu}} = -\bm{F}_{\text{muscle}}^T \dot{\bm{\ell}}^{\text{mtu}}$$
+    (where muscle tension $F_i \ge 0$ pulls, shortening the path length $\dot{\ell}_i^{\text{mtu}} < 0$).
+    Therefore, the kinematic moment-arm matrix $R(\bm{q})$ defined via path-length gradient is:
+    $$R(\bm{q}) \triangleq -\frac{\partial \bm{\ell}^{\text{mtu}}(\bm{q})}{\partial \bm{q}} \in \mathbb{R}^{n \times p}$$
+    yielding:
+    $$\dot{\bm{\ell}}^{\text{mtu}} = -R(\bm{q})^T \dot{\bm{q}}$$
+    The text states in the code docstring: *"positive moment arm produces positive joint torque (typically flexion)"*, but omits the mandatory negative sign connecting tendon excursion to joint coordinates ($\partial \ell / \partial q = -r$), which leads to sign flip errors in tendon velocity and work calculations.
+
+* **Conflation of Coordinate Coupling vs. Physical Kinetic Coupling:**
+  * **Claim in Text:** Under Principle 1, the text asserts that bi-articular muscles act as a *"Coordination constraint: they link joint motions, reducing the effective degrees of freedom and simplifying the control problem."*
+  * **Error:** A bi-articular muscle provides an internal scalar tension force that applies generalized torques at both joints ($\tau_1 = r_1 F, \tau_2 = r_2 F$). **It does not impose a kinematic (holonomic or non-holonomic) constraint.** The kinematic degrees of freedom of the skeleton remain $n$; no coordinates are eliminated ($\dim(\mathcal{Q}) = n$). It couples generalized force inputs, not the underlying configuration manifold.
+
+---
+
+### 2. Incomplete Joint Stiffness Derivative (Geometric Stiffness Omission)
+
+* **Claim in Text (Eq. \ref{eq:ch5:joint-stiffness}):**
+  $$K_{\text{joint}} = \sum_{i=1}^{p} r_i^2(\bm{q}) \cdot \frac{\partial F_{\text{muscle},i}}{\partial \ell_i^M}$$
+* **Mathematical Errors:**
+  1. **Missing Geometric Stiffness Term (Variation of Moment Arm with Angle):**
+     Taking the full analytical derivative of generalized torque $\bm{\tau} = - \frac{\partial \bm{\ell}}{\partial \bm{q}} \bm{F} = R(\bm{q})\bm{F}(\bm{\ell}(\bm{q}))$ with respect to $\bm{q}$:
+     $$K = -\frac{\partial \bm{\tau}}{\partial \bm{q}} = -\frac{\partial R(\bm{q})}{\partial \bm{q}} \bm{F} - R(\bm{q}) \frac{\partial \bm{F}}{\partial \bm{\ell}^{\text{mtu}}} \frac{\partial \bm{\ell}^{\text{mtu}}}{\partial \bm{q}}$$
+     Substituting $\frac{\partial \bm{\ell}^{\text{mtu}}}{\partial \bm{q}} = -R^T$:
+     $$K(\bm{q}) = \underbrace{R(\bm{q}) K_{\text{mtu}}(\bm{q}) R(\bm{q})^T}_{\text{material/musculotendon stiffness}} - \underbrace{\sum_{i=1}^p F_i \frac{\partial \bm{r}_i(\bm{q})}{\partial \bm{q}}}_{\text{geometric / force-moment arm stiffness}}$$
+     Eq. (5.3) completely drops the geometric stiffness term $\sum_i F_i \frac{\partial \bm{r}_i}{\partial \bm{q}}$ (or equivalently $\sum_i F_i \frac{\partial^2 \ell_i}{\partial \bm{q}^2}$). In anatomical joints with wrapping surfaces and changing leverage (e.g., patella, shoulder), $\partial r / \partial q$ is non-zero and can dominate at high tensions.
+  2. **Scalar vs. Matrix Structure:**
+     $K_{\text{joint}}$ is presented as a scalar. For multi-DOF or bi-articular systems, joint stiffness is an $n \times n$ matrix $K \in \mathbb{R}^{n \times n}$ with off-diagonal joint coupling terms ($K_{12} = r_1 r_2 K_{\text{mtu}}$).
+  3. **Conflation of Muscle Fiber Length $\ell^M$ and Total Musculotendon Length $\ell^{\text{mtu}}$:**
+     The text writes $\partial F / \partial \ell^M$ (fiber stiffness) while multiplying by the skeletal moment arm $r_i$ (which relates to $\ell_i^{\text{mtu}} = \ell_i^T + \ell_i^M \cos\alpha$). Because the tendon has compliance $K_T$, the MTU stiffness is the series combination:
+     $$K_{\text{mtu}} = \left( K_T^{-1} + (K_M \cos^2\alpha)^{-1} \right)^{-1} \neq K_M = \frac{\partial F}{\partial \ell^M}$$
+     Ignoring tendon compliance overestimates joint stiffness by orders of magnitude for compliant tendons (e.g., Achilles tendon).
+
+---
+
+### 3. Muscle State vs. Control Input Conflation
+
+* **Claims in Text:**
+  * Eq. (5.1) and (5.2) treat $\bm{F}_{\text{muscle}}$ as the immediate algebraic input.
+  * Code listing treats `muscle_forces` as a static array input.
+  * Exercise 5 says: *"Use prescribed muscle activations and compute the resulting trajectory via forward dynamics."*
+* **Error / Dynamical Inconsistency:**
+  * Muscle force $F_{\text{muscle}}$ is an **algebraic output of internal state variables**, not a control input.
+  * At minimum, a standard Hill-type model has two internal states per muscle:
+    1. **Activation dynamics:** $\dot{a}_i = \frac{1}{\tau_{\text{act}}}(u_i - a_i)$ (activation $a \in [0, 1]$, excitation/neural control $u \in [0, 1]$).
+    2. **Contraction dynamics:** $\dot{\ell}_i^M = f(\ell_i^M, \ell_i^{\text{mtu}}(\bm{q}), \dot{\ell}_i^{\text{mtu}}(\bm{q}, \dot{\bm{q}}), a_i)$, governed by the implicit/explicit force equilibrium between tendon and active muscle fiber:
+       $$F_T(\ell^{\text{mtu}} - \ell^M \cos\alpha) = \left( a F_0 f_L(\ell^M) f_V(\dot{\ell}^M) + F_{PE}(\ell^M) \right)\cos\alpha$$
+  * Forward dynamics cannot be driven by prescribing $\bm{a}(t)$ alone without integrating the internal muscle states $\dot{\ell}^M$, or making the unstated simplifying assumption of an inelastic tendon ($\ell^T = \ell_s^T = \text{const}$).
+
+---
+
+### 4. Floating-Base Coordinates and Dimension Mismatch
+
+* **Claims in Text:**
+  * Section 1: *"connected to a floating base (the pelvis/trunk)."*
+  * Section 2: *"For a 20-DOF model (pelvis + 2 legs + trunk + 2 arms), $M(\bm{q})$ is a $20 \times 20$ symmetric positive-definite matrix."*
+* **Errors:**
+  1. **Floating-Base Dimensions:** A floating base in 3D space requires $SE(3)$ (6 DOFs: 3 translation, 3 rotation). If pelvis = 6, 2 legs = $2 \times 3$ to $2 \times 7$, trunk = 3, 2 arms = $2 \times 4$ to $2 \times 7$, the total degrees of freedom will far exceed 20, or if 20 DOFs is intended, pelvis cannot have full spatial floating-base coordinates alongside anatomical limbs without undercounting.
+  2. **Topological Representation of Rotations ($\bm{q}$ vs. $\bm{v}$):** For a floating base, generalized configuration $\bm{q} \in \mathbb{R}^{n_q}$ uses quaternions for rotation ($n_q = n_v + 1$), whereas velocity $\bm{v} = \dot{\bm{q}} \in \mathbb{R}^{n_v}$ lies in the Lie algebra $\mathfrak{se}(3)$ ($\mathbb{R}^6$). The notation $M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$ implicitly assumes vector-space coordinates where $\dot{\bm{q}} = \bm{v}$, which is invalid for 3D floating-base systems without defining local tangent velocities and connection accelerations ($\dot{\bm{v}}$).
+  3. **Underactuation Matrix:** In Eq. (5.1), $R(\bm{q})\bm{F}_{\text{muscle}}$ has non-zero entries only on actuated internal joints. Muscles cannot actuate the 6 floating-base DOFs directly ($R_{\text{base}} = \bm{0}_{6 \times p}$), making the system fundamentally underactuated unless supported by contact forces $J_c^T \bm{F}_{\text{contact}}$. This structural zero-block in $R(\bm{q})$ is unstated.
+
+---
+
+### 5. Exercise Underspecification and Unsolvability
+
+* **Exercise 1:**
+  * *Prompt:* *"show mathematically how knee extension can produce ankle torque through the bi-articular coupling."*
+  * *Defect:* A muscle's instantaneous force is scalar tension $F \ge 0$. The gastrocnemius moment arms satisfy $\tau_{\text{knee}} = r_{\text{knee}} F$ and $\tau_{\text{ankle}} = r_{\text{ankle}} F$. Ankle torque is produced whenever $F > 0$. If the problem refers to **dynamic induced accelerations** (where knee extension velocity $\dot{q}_k > 0$ stretches the muscle, increasing $F$, or where knee joint torque induces acceleration at the ankle via off-diagonal inertia terms $M^{-1}_{k, a}$), none of the kinematic, force-length-velocity, or inertial parameters are given to solve it.
+* **Exercise 2:**
+  * *Prompt:* *"Compute the joint stiffness when biceps and triceps co-contract at 50\% activation with the elbow at $90^\circ$."*
+  * *Defect:* Completely unsolvable as stated. Missing:
+    * Optimal fiber length $\ell_0^M$ and tendon slack length $\ell_s^T$.
+    * Maximum isometric force $F_0$.
+    * Normalized force-length curve slope $\partial \tilde{f}_L / \partial \tilde{\ell}^M$.
+    * Tendon stiffness $K_T$ (or tendon strain at $F_0$).
+    * Joint moment-arm functions or numeric values at $90^\circ$.
+* **Exercise 3:**
+  * *Prompt:* *"compute $M(\bm{q})$ at three configurations and verify positive-definiteness."*
+  * *Defect:* No link lengths, link masses, centers of mass, or moments of inertia are specified for the 2-segment arm.
+* **Exercise 4:**
+  * *Prompt:* *"Implement the CRBA for a 3-segment leg model using the de Leva segment properties. Compare with Pinocchio output."*
+  * *Defect:* Subject height, total body mass, subject sex (de Leva tables are partitioned by male/female), joint axis definitions, and reference frame conventions are omitted.
+* **Exercise 5:**
+  * *Prompt:* Forward dynamics simulation of a 2-DOF 4-muscle arm using prescribed muscle activations.
+  * *Defect:* Incompatible with the model presented. Eq. (5.1) uses force $\bm{F}$, while the exercise prescribes activations $\bm{a}(t)$ without defining Hill contraction dynamics, maximal isometric forces, or inertia tensors $M(\bm{q})$.
