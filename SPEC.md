@@ -584,3 +584,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4875 | Correct the complete tangent-framework lay summary: local sensitivity, remainder assumptions, coupled swing phases, bounded engineering examples and distinct control algorithms. |
 
 | 2026-10-04 | #4876 | Correct the hardware appendix: sampling and inference limits, trigger timing, camera/protocol integration, conditional CFAR and current equipment-rule status. |
+
+| 2026-10-04 | #4877 | Correct the Bosch insertion plan: attribution, constrained stability, control versus attraction, activation-dependent response, joint power and conditional transfer; verify cited bibliography identities. |
