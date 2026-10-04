@@ -1,3 +1,11 @@
+# Dimensionality and Integration Review #4885 — Source Draft
+
+Active branch `fix/dimensionality-integration-review`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-dimensionality-review`. Both complete originals and revisions read; detailed technical decisions, primary-reading limits and five Flash helper adjudications are in `reports/technical-review/dimensionality-integration-review.md`. Manufactured mathematics and both Quarto renders pass. Browser review and full regression remain; corpus entries must stay pending until acceptance. No engine/human/live-site validation is claimed.
+
+Parent regular PR4886 is open; central guard successfully armed squash auto-merge after the earlier GraphQL rate-limit failure. Verify actual merge and canonical source bytes, then release4881. The next branch integrates its metadata through5959b7c99; preserve accepted parameter source117a416d5. Current4885lease: technical-review-20261004-dimensionality through20:06UTC, presence through20:08UTC. Goal active.
+
+---
+
 # Regular PR #4886 — Parameter Delivery Pending
 
 The accepted parameter review is published at https://github.com/D-sorganization/AffineDrift/pull/4886 (not draft), reviewed source117a416d5 and initial PR head25dee2f98. Full regression and45 metadata checks pass; canonical source acceptance remains unchanged. The central auto-merge guard found no hold but could not arm because GitHub GraphQL was rate-limited. Retry the guard after recovery; do not bypass protected merge. Verify remote-main delivery before releasing4881. Next batch4885 remains isolated and unaccepted. Goal active.

@@ -586,3 +586,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4879 | Correct hardware sampling, timing, integration and conditional inference claims (#4876); correct Bosch attribution, stability, control, intrinsic mechanics, power and transfer claims (#4877). Preserve both reviews and fixed-commit validation. |
 
 | 2026-10-04 | #4886 | Correct launch-monitor timing, reference-point, spin and inference conventions; preserve primary-source and mathematical evidence with rebuilt book PDF. |
+| 2026-10-04 | #4885 | Distinguish geometric, statistical and computational dimensions; bind the educational simulation guide to provider provenance and qualified engine documentation. |
