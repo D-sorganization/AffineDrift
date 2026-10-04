@@ -1,0 +1,162 @@
+Here is the independent mathematical review, identifying missing assumptions, derivations, and counterexamples for each proposed formulation.
+
+---
+
+### 1. Flight Landing Implicit Surface & Carry Gradient
+
+#### Proposed Derivation
+Let the landing event condition be $g(p(t^*, a), t^*, a) = 0$, where $p \in \mathbb{R}^3$ is position, $v(t, a) = \frac{\partial p}{\partial t}$ is velocity, and $a$ is a flight parameter vector.
+Define the fixed-time sensitivity $Y(t, a) \equiv \frac{\partial p(t, a)}{\partial a}$.
+
+Differentiating $g(p(t^*, a), t^*, a) = 0$ totally with respect to $a$:
+$$
+\nabla_p g \cdot \left( \left.\frac{\partial p}{\partial a}\right|_{t^*} + \left.\frac{\partial p}{\partial t}\right|_{t^*} \frac{\mathrm{d}t^*}{\mathrm{d}a} \right) + \frac{\partial g}{\partial t} \frac{\mathrm{d}t^*}{\mathrm{d}a} + \nabla_a g = 0
+$$
+$$
+\implies \left( \nabla_p g \cdot v(t^*, a) + \frac{\partial g}{\partial t} \right) \frac{\mathrm{d}t^*}{\mathrm{d}a} = - \left( \nabla_p g \cdot Y(t^*, a) + \nabla_a g \right)
+$$
+$$
+\frac{\mathrm{d}t^*}{\mathrm{d}a} = -\frac{g_p Y + g_a}{g_p v + g_t}
+$$
+The total derivative of the terminal landing position $p^*(a) \equiv p(t^*(a), a)$ is:
+$$
+\frac{\mathrm{d}p^*}{\mathrm{d}a} = Y(t^*, a) + v(t^*, a) \frac{\mathrm{d}t^*}{\mathrm{d}a}
+$$
+For a general scalar terminal output $J(p(t^*, a), t^*, a)$ (such as downrange carry $x(t^*, a)$):
+$$
+\frac{\mathrm{d}J}{\mathrm{d}a} = \nabla_p J \cdot \frac{\mathrm{d}p^*}{\mathrm{d}a} + \frac{\partial J}{\partial t} \frac{\mathrm{d}t^*}{\mathrm{d}a} + \frac{\partial J}{\partial a} = \nabla_p J \cdot Y(t^*) + \frac{\partial J}{\partial a} + \left( \nabla_p J \cdot v(t^*) + \frac{\partial J}{\partial t} \right) \frac{\mathrm{d}t^*}{\mathrm{d}a}
+$$
+
+#### Vacuum Parabolic Counterexample
+- Trajectory: $y(t) = h + v_y t - \frac{1}{2}g_0 t^2$, $x(t) = v_x t$ ($g_0$ is gravitational acceleration).
+- Target surface: $g(p, t) = y = 0$ ($g_p = [0, 1]^T, g_t = 0, g_a = 0$).
+- For $h = 0$, descending root ($v_y(t^*) < 0$): $t^* = \frac{2v_y}{g_0}$.
+- True terminal carry: $X(v_y) = x(t^*(v_y)) = v_x t^* = \frac{2 v_x v_y}{g_0}$.
+- Exact parameter derivative with respect to $v_y$:
+  $$
+  \frac{\mathrm{d}X}{\mathrm{d}v_y} = \frac{2 v_x}{g_0}
+  $$
+- **Fixed-time derivative failure**:
+  Evaluating at fixed nominal time $t^*$:
+  $$
+  Y_{x, v_y}(t^*) = \left.\frac{\partial x(t)}{\partial v_y}\right|_{t=t^*} = 0
+  $$
+  The fixed-time sensitivity alone predicts zero sensitivity ($\frac{\partial x}{\partial v_y} = 0$).
+- **Correction via terminal sensitivity**:
+  Here $\frac{\mathrm{d}t^*}{\mathrm{d}v_y} = -\frac{g_p Y + g_a}{g_p v + g_t} = -\frac{Y_{y, v_y}(t^*)}{v_y(t^*)} = -\frac{t^*}{v_y - g_0 t^*} = -\frac{2v_y/g_0}{-v_y} = \frac{2}{g_0}$.
+  Then:
+  $$
+  \frac{\mathrm{d}X}{\mathrm{d}v_y} = Y_{x, v_y}(t^*) + v_x(t^*) \frac{\mathrm{d}t^*}{\mathrm{d}v_y} = 0 + v_x \left(\frac{2}{g_0}\right) = \frac{2 v_x}{g_0}
+  $$
+- **Missing Assumptions Identified**:
+  1. **Transversality / Non-grazing impact**: Requires the denominator $g_p v + g_t \neq 0$ (i.e., trajectory must intersect the landing boundary transversally; tangent/grazing landing causes singularity $\frac{\mathrm{d}t^*}{\mathrm{d}a} \to \infty$).
+  2. **Isolated roots**: Implicit function theorem requires $g$ to be $C^1$ in an open neighborhood around $(p(t^*), t^*, a)$.
+  3. **Direct Output Dependence**: If the performance metric $J$ directly depends on $a$ (e.g., $J = x(t^*) - x_0(a)$) or explicitly on $t^*$, the $\frac{\partial J}{\partial a}$ and $\frac{\partial J}{\partial t}$ terms cannot be omitted.
+
+---
+
+### 2. Dimensionless Spin Parameter Rate $\dot{S}/S$
+
+#### Proposed Derivation
+Let $S = \frac{R \|\boldsymbol{\omega}\|}{V}$, where $R$ is a constant characteristic radius, $\omega = \|\boldsymbol{\omega}\| > 0$, and $V = \|\mathbf{v}\| > 0$.
+Taking natural logarithms:
+$$
+\ln S = \ln R + \ln \|\boldsymbol{\omega}\| - \ln V
+$$
+Differentiating with respect to time $t$:
+$$
+\frac{\mathrm{d}}{\mathrm{d}t}(\ln S) = \frac{\dot{S}}{S} = \frac{\frac{\mathrm{d}}{\mathrm{d}t}\|\boldsymbol{\omega}\|}{\|\boldsymbol{\omega}\|} - \frac{\dot{V}}{V}
+$$
+Note that for any differentiable vector $\mathbf{u}(t) \neq \mathbf{0}$, $\frac{\mathrm{d}}{\mathrm{d}t}\|\mathbf{u}\| = \frac{\mathbf{u} \cdot \dot{\mathbf{u}}}{\|\mathbf{u}\|}$.
+
+#### Missing Assumptions Identified
+1. **Strict Positivity**: Requires $\|\boldsymbol{\omega}\| > 0$ and $V > 0$. At $\|\boldsymbol{\omega}\| = 0$, $\|\boldsymbol{\omega}\|$ is not differentiable in $\mathbb{R}^3$ (subgradient required).
+2. **Rigid Body / Invariant Characteristic Length**: Assumes $\dot{R} = 0$. If effective aerodynamic radius deforms or ablates, an additional $+\frac{\dot{R}}{R}$ term is required.
+
+---
+
+### 3. Aerodynamic Drag Power: Air Frame vs. Ground Frame
+
+#### Derivation
+Let $\mathbf{v}$ be ground-relative velocity, $\mathbf{w}$ be wind velocity (ground-relative), and $\mathbf{v}_a = \mathbf{v} - \mathbf{w}$ be airspeed vector with $V_a = \|\mathbf{v}_a\| > 0$.
+Standard aerodynamic drag force:
+$$
+\mathbf{F}_D = - \frac{1}{2}\rho A C_D V_a \mathbf{v}_a = - q A C_D \frac{\mathbf{v}_a}{V_a} \quad (\text{where } q = \frac{1}{2}\rho V_a^2)
+$$
+
+1. **Power in Air Frame** ($P_{\text{air}}$):
+   $$
+   P_{\text{air}} = \mathbf{F}_D \cdot \mathbf{v}_a = - q A C_D \frac{\mathbf{v}_a \cdot \mathbf{v}_a}{V_a} = - q A C_D V_a \le 0 \quad (\text{for } C_D \ge 0)
+   $$
+   Always non-positive (dissipative).
+
+2. **Power in Ground Frame** ($P_{\text{ground}}$):
+   $$
+   P_{\text{ground}} = \mathbf{F}_D \cdot \mathbf{v} = \mathbf{F}_D \cdot (\mathbf{v}_a + \mathbf{w}) = P_{\text{air}} + \mathbf{F}_D \cdot \mathbf{w} = - q A C_D \left( V_a + \frac{\mathbf{v}_a \cdot \mathbf{w}}{V_a} \right)
+   $$
+
+#### Counterexample Showing $P_{\text{ground}} > 0$
+- Suppose tailwind $\mathbf{w} = (20, 0, 0)^T$ m/s, vehicle moving forward slower than wind: $\mathbf{v} = (5, 0, 0)^T$ m/s.
+- Relative airspeed: $\mathbf{v}_a = \mathbf{v} - \mathbf{w} = (-15, 0, 0)^T$ m/s ($V_a = 15$ m/s).
+- Drag force on vehicle:
+  $$
+  \mathbf{F}_D = - q A C_D \frac{(-15, 0, 0)^T}{15} = + q A C_D (1, 0, 0)^T
+  $$
+  The drag force points in the $+x$ direction.
+- Ground power:
+  $$
+  P_{\text{ground}} = \mathbf{F}_D \cdot \mathbf{v} = (+ q A C_D) \cdot 5 > 0
+  $$
+  The wind performs positive mechanical work on the vehicle in the ground reference frame.
+
+---
+
+### 4. Lift Convention: $\mathbf{F}_L = q A C_L \frac{\boldsymbol{\omega} \times \mathbf{v}_a}{\|\boldsymbol{\omega} \times \mathbf{v}_a\|}$
+
+#### Singularities & Convention Consistency
+1. **Undefined Limit at Collinear Vectors (Zero Cross Product)**:
+   When $\boldsymbol{\omega} \parallel \mathbf{v}_a$, $\|\boldsymbol{\omega} \times \mathbf{v}_a\| = 0$. The directional vector is an indeterminate form $0/0$.
+   - *Physical reality*: Magnus lift vanishes continuously as $\sin\theta \to 0$ (where $\theta = \angle(\boldsymbol{\omega}, \mathbf{v}_a)$).
+   - *Issue with definition*: If the direction is normalized to unit length, $C_L$ must carry the factor $\sin\theta = \frac{\|\boldsymbol{\omega} \times \mathbf{v}_a\|}{\|\boldsymbol{\omega}\| V_a}$. Otherwise, the force has a jump discontinuity or non-removable directional singularity at $\theta = 0, \pi$.
+2. **Sign of $C_L$ vs. Orientation**:
+   If $\mathbf{e}_L = \frac{\boldsymbol{\omega} \times \mathbf{v}_a}{\|\boldsymbol{\omega} \times \mathbf{v}_a\|}$ is chosen as the unit vector, the classical Magnus lift magnitude is proportional to $\|\boldsymbol{\omega} \times \mathbf{v}_a\|$.
+   Writing:
+   $$
+   \mathbf{F}_L = \frac{1}{2}\rho A C_{L,0} \frac{R}{\|\mathbf{v}_a\|} (\boldsymbol{\omega} \times \mathbf{v}_a)
+   $$
+   avoids the normalization singularity entirely and is continuous at $\boldsymbol{\omega} \times \mathbf{v}_a = \mathbf{0}$. If normalized unit vector form is forced, $C_L$ must explicitly be defined as a function of the angle $\theta$, namely $C_L(\theta) \propto \sin\theta$, with $C_L(0) = 0$.
+
+---
+
+### 5. Radial Speed Correction: $V = \frac{d}{\cos\beta}$
+
+Let $d$ be observed Doppler velocity along a line of sight at an off-axis angle $\beta \in (-\pi/2, \pi/2)$.
+$$
+V(d, \beta) = d \sec\beta
+$$
+
+#### Partial Derivatives
+$$
+\frac{\partial V}{\partial d} = \sec\beta
+$$
+$$
+\frac{\partial V}{\partial \beta} = d \sec\beta \tan\beta = V \tan\beta
+$$
+
+#### Covariance Gradient & First-Order Error Propagation
+Let the measurement vector be $\mathbf{m} = [d, \beta]^T$ with measurement error covariance:
+$$
+\boldsymbol{\Sigma}_m = \begin{bmatrix} \sigma_d^2 & \sigma_{d\beta} \\ \sigma_{d\beta} & \sigma_\beta^2 \end{bmatrix}
+$$
+The gradient (Jacobian) is:
+$$
+\mathbf{J} = \nabla_{\mathbf{m}} V = \begin{bmatrix} \frac{\partial V}{\partial d} \\ \frac{\partial V}{\partial \beta} \end{bmatrix} = \begin{bmatrix} \sec\beta \\ V \tan\beta \end{bmatrix}
+$$
+The linear propagated variance of reconstructed true speed $V$ is:
+$$
+\sigma_V^2 \approx \mathbf{J}^T \boldsymbol{\Sigma}_m \mathbf{J} = (\sec^2\beta) \sigma_d^2 + 2 (V \sec\beta \tan\beta) \sigma_{d\beta} + (V^2 \tan^2\beta) \sigma_\beta^2
+$$
+
+#### Missing Assumptions & Caveats
+1. **Domain Boundary**: Requires $|\beta| < \pi/2$. As $\beta \to \pm \pi/2$, both sensitivities explode ($\sec\beta \to \infty, \tan\beta \to \infty$), causing geometric dilution of precision (GDOP) singularity.
+2. **Small Error / Non-Gaussianity**: For large angular uncertainties $\sigma_\beta$, the first-order Taylor approximation breaks down because $V(\beta)$ is highly non-linear ($\mathbb{E}[\sec\beta] > \sec(\mathbb{E}[\beta])$ by Jensen's inequality, introducing severe positive estimation bias).

@@ -1,0 +1,88 @@
+Here is the independent mathematical review of each derivation and claim, with actionable errors, algebraic steps, and edge-case verifications distinguished.
+
+---
+
+### 1. Sphere Projection & Tangent Cone
+
+#### Derivation & Verification
+* **Setup**: Pinhole camera at the origin $\mathbf{0}$, normalized image plane $z = 1$, normalized ray $\mathbf{q} = (u, v, 1)^T$. Sphere centered at $\mathbf{c} = (X, Y, Z)^T$ with radius $r$, $Z > r$.
+* **Tangent Cone**: Ray $\lambda \mathbf{q}$ intersects sphere when $\|\lambda \mathbf{q} - \mathbf{c}\|^2 = r^2$, giving quadratic $\lambda^2 (\mathbf{q} \cdot \mathbf{q}) - 2\lambda (\mathbf{c} \cdot \mathbf{q}) + (\mathbf{c} \cdot \mathbf{c} - r^2) = 0$. Tangency occurs when the discriminant vanishes:
+  $$\Delta = 4(\mathbf{c} \cdot \mathbf{q})^2 - 4(\mathbf{q} \cdot \mathbf{q})(\mathbf{c} \cdot \mathbf{c} - r^2) = 0 \iff (\mathbf{c} \cdot \mathbf{q})^2 = (\mathbf{c} \cdot \mathbf{c} - r^2)(\mathbf{q} \cdot \mathbf{q})$$
+  **Status**: **Correct**.
+
+* **Conic in Image Coordinates $(u, v)$**:
+  Let $A = \mathbf{c}\mathbf{c}^T - (\|\mathbf{c}\|^2 - r^2) I_{3\times 3}$. The conic matrix is $C = A$.
+  Expanding $(\mathbf{c} \cdot \mathbf{q})^2 - (\|\mathbf{c}\|^2 - r^2)\|\mathbf{q}\|^2 = 0$ with $\mathbf{q} = (u, v, 1)^T$:
+  $$(Xu + Yv + Z)^2 - (X^2 + Y^2 + Z^2 - r^2)(u^2 + v^2 + 1) = 0$$
+  Grouping into homogeneous coordinates $(u, v, 1)$:
+  $$C_{2\times 2} = \begin{pmatrix} X^2 - (\|\mathbf{c}\|^2 - r^2) & XY \\ XY & Y^2 - (\|\mathbf{c}\|^2 - r^2) \end{pmatrix} = \begin{pmatrix} -(Y^2 + Z^2 - r^2) & XY \\ XY & -(X^2 + Z^2 - r^2) \end{pmatrix}$$
+  The center $(u_0, v_0)^T$ of a conic $\mathbf{x}^T C_{2\times 2} \mathbf{x} + 2 \mathbf{b}^T \mathbf{x} + c_0 = 0$ satisfies:
+  $$C_{2\times 2} \begin{pmatrix} u_0 \\ v_0 \end{pmatrix} = -\mathbf{b} = -\begin{pmatrix} XZ \\ YZ \end{pmatrix}$$
+  Evaluating determinant:
+  $$\det(C_{2\times 2}) = (Y^2 + Z^2 - r^2)(X^2 + Z^2 - r^2) - X^2 Y^2 = (Z^2 - r^2)(X^2 + Y^2 + Z^2 - r^2) = (Z^2 - r^2)(\|\mathbf{c}\|^2 - r^2)$$
+  Inverting $C_{2\times 2}$:
+  $$\begin{pmatrix} u_0 \\ v_0 \end{pmatrix} = \frac{-1}{(Z^2 - r^2)(\|\mathbf{c}\|^2 - r^2)} \begin{pmatrix} -(X^2 + Z^2 - r^2) & -XY \\ -XY & -(Y^2 + Z^2 - r^2) \end{pmatrix} \begin{pmatrix} XZ \\ YZ \end{pmatrix}$$
+  Multiplying the first row:
+  $$XZ(X^2 + Z^2 - r^2) + X Y^2 Z = XZ(X^2 + Y^2 + Z^2 - r^2) = XZ(\|\mathbf{c}\|^2 - r^2)$$
+  Canceling $(\|\mathbf{c}\|^2 - r^2)$:
+  $$u_0 = \frac{XZ}{Z^2 - r^2}, \quad v_0 = \frac{YZ}{Z^2 - r^2}$$
+  In contrast, the perspective projection of the center $\mathbf{c}$ is $(u_p, v_p) = (X/Z, Y/Z)$.
+  **Status**: **Correct**. Note the shift factor $\frac{Z^2}{Z^2 - r^2} = \frac{1}{1 - (r/Z)^2} > 1$, which radially shifts the apparent ellipse center away from the optical center.
+
+---
+
+### 2. Rectified Stereo & Error Propagation
+
+* **Model**: $Z = \frac{f B}{d}$, where $d = u_L - u_R$.
+  $$\frac{\partial Z}{\partial d} = -\frac{f B}{d^2} = -\frac{Z^2}{f B}$$
+* **First-Order Depth Uncertainty**:
+  $$\sigma_Z = \left|\frac{\partial Z}{\partial d}\right| \sigma_d = \frac{Z^2}{f B} \sigma_d$$
+* **Disparity Variance**:
+  $$\mathrm{Var}(d) = \mathrm{Var}(u_L - u_R) = \mathrm{Var}(u_L) + \mathrm{Var}(u_R) - 2\mathrm{Cov}(u_L, u_R)$$
+  **Status**: **Correct**.
+
+---
+
+### 3. Rigid Body Kinematics & Lie Group Representations
+
+* **Spatial vs. Body Increment**:
+  * Let $Q(t) \in \mathrm{SO}(3)$ be the world-from-body rotation, such that $\mathbf{p}_{\text{world}} = Q \mathbf{p}_{\text{body}}$.
+  * Then $Q_{\text{next}} = R_{\text{spatial}} Q \implies R_{\text{spatial}} = Q_{\text{next}} Q^T$.
+  * (Body increment would be $Q^T Q_{\text{next}}$).
+  **Status**: **Correct**.
+
+* **Angular Velocity from Increment**:
+  * For constant spatial angular velocity $\boldsymbol{\omega}$, $\dot{Q} = [\boldsymbol{\omega}]_\times Q$, so $Q(t + \Delta t) = \exp([\boldsymbol{\omega}]_\times \Delta t) Q(t)$.
+  * Thus $R_{\text{spatial}} = \exp([\boldsymbol{\omega}]_\times \Delta t)$.
+  * When $\|\boldsymbol{\omega}\| \Delta t < \pi$, the matrix logarithm is uniquely defined on the principal branch:
+    $$\boldsymbol{\omega} = \frac{1}{\Delta t} \mathrm{vee}(\mathrm{Log}(R))$$
+  **Status**: **Correct**.
+
+* **Angle and Commutativity Nuances**:
+  * Angle from trace: $\mathrm{Tr}(R) = 1 + 2\cos\theta \implies \theta = \arccos\left(\frac{\mathrm{Tr}(R) - 1}{2}\right) \in [0, \pi]$. This yields only the **unsigned** magnitude of rotation.
+  * For time-varying $\boldsymbol{\omega}(t)$, $[\boldsymbol{\omega}(t_1)]_\times$ and $[\boldsymbol{\omega}(t_2)]_\times$ generally do not commute. By the Magnus expansion, the net rotation is **not** simply given by the arithmetic average $\int \boldsymbol{\omega}(t) dt$.
+  **Status**: **Correct**.
+
+* **Velocity Transfer Formula**:
+  * For two points $P, O$ fixed in the same rigid body:
+    $$\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega} \times (\mathbf{p}_P - \mathbf{p}_O)$$
+  **Status**: **Correct**.
+
+---
+
+### 4. Transform Determination: 3D Points vs. 2D Images
+
+* **3D Points**:
+  * Three non-collinear 3D points $\mathbf{p}_1, \mathbf{p}_2, \mathbf{p}_3$ with known correspondences define a non-degenerate triangle. Since distances are preserved ($d_{ij} = \|\mathbf{p}_i - \mathbf{p}_j\| > 0$ and non-collinear), they define a unique right-handed orthonormal triad (e.g., via Kabsch/Horn/Arun), uniquely specifying $(R, \mathbf{t}) \in \mathrm{SE}(3)$.
+  **Status**: **Correct**.
+
+* **Image Detections (Perspective-3-Point / P3P)**:
+  * Three 2D image detections of known 3D points yield a system of quadratic distance equations (the P3P problem).
+  * P3P generically has up to **4 real solutions** in front of the camera (and up to 8 algebraically in $\mathbb{C}$).
+  * Therefore, three image detections do **not** uniquely determine a rigid transform without a 4th point or disambiguating geometric constraints.
+  **Status**: **Correct**.
+
+---
+
+### Summary of Review
+* **Actionable Errors**: None detected. All formulas, matrix algebra, sign conventions, and uniqueness conditions stated in the prompt are mathematically valid.
