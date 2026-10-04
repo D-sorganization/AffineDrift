@@ -1,0 +1,93 @@
+{
+  "issue": 4896,
+  "epic": 4009,
+  "status": "Complete two-chapter source and scoped PDF accepted; protected delivery pending",
+  "accepted_source_commit": "15b8c7bd82bdfcdbad07e54142fe278486db0e17",
+  "git_blob_sha256": {
+    "articles/Launch_Monitor_Technology_Review/sections/05-camera-systems.tex": "a4d52d1f53a2c2866cdc8a7caaf5694a3186de1484dbf0bab720c5745f5f9ed8",
+    "articles/Launch_Monitor_Technology_Review/sections/06-commercial-survey.tex": "f33ac017a02b94a6f3e1ddcb6b667fd3e8537996ba50ed48f4ffae252beb1efb",
+    "articles/Launch_Monitor_Technology_Review/preamble.tex": "b2ed5d330f4ed578e1747eb28124aa0163adbe4f640a9f3daf91e045d09546b0",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "cb80bfe1b40c3821d92a12e7a71a5091888a30a71371ba3ef6c6794d75b8c9d8",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "0d6fec733664b1f1026cafd21524fe1364db69899391ee9bb8349ec9a7b0614c",
+    "articles/Launch_Monitor_Technology_Review/research/camera-survey-review-20261004.md": "3519230aba2a89f845f2a01e11bee2595c1d9ec29fa27ed8604fae3643ebbd8a",
+    "reports/technical-review/camera-survey-independent-checks.json": "46a49121f5d4f977e378be7027740205b309597f8c745c412437120ec5890b26"
+  },
+  "scope": "Complete camera and survey chapters; no empirical device, whole-book or live-site certification",
+  "full_regression": {
+    "head": "15b8c7bd82bdfcdbad07e54142fe278486db0e17",
+    "passed": 6863,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 423.14,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/camera-survey-review/full-tests.txt",
+    "git_blob_sha256": "cae08929752db0ca68aaaebef499e67947f85be9e92f7d009008b2631bb9e147",
+    "notes": "Empty before/after status explicitly saved. No tracked edits, builds or hooks during run; generated root packaging directories verified contained and untracked, then preserved under QA."
+  },
+  "pdf": {
+    "pages": 105,
+    "bibliography_entries": 112,
+    "printed_entries": 112,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Final physical pages 3\u20136 complete TOC, 27\u201334 complete revised chapters and 98\u2013105 complete bibliography",
+    "build_exit": 0,
+    "build_log": "docs/development/technical-review/camera-survey-review/accepted-pass3.txt",
+    "limits": "Existing minor overfull warnings remain in unchanged patent prose and two historical bibliography lines; inspected pages show no clipping or overlap."
+  },
+  "mathematics": {
+    "record": "reports/technical-review/camera-survey-independent-checks.json",
+    "reproduction": "docs/development/technical-review/camera-survey-review/independent-checks-script.txt",
+    "cases_each": 100,
+    "threshold": 1e-6,
+    "scope": "Manufactured sphere, stereo, rotation and point-velocity identities; not physical sensor validation"
+  },
+  "delegation": {
+    "helpers": 5,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only; complete answers lead-adjudicated in source dossier"
+  },
+  "prior_acceptance_reconciliation": {
+    "unchanged_paths": [
+      "articles/Launch_Monitor_Technology_Review/sections/02-parameters.tex",
+      "articles/Launch_Monitor_Technology_Review/main.tex",
+      "articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex",
+      "articles/Launch_Monitor_Technology_Review/research/parameter-review-20261004.md",
+      "reports/technical-review/parameter-review.md",
+      "reports/technical-review/parameter-independent-checks.json",
+      "articles/degrees-of-freedom-and-dimensionality.qmd",
+      "articles/upstreamdrift-educational-integration.qmd",
+      "reports/technical-review/dimensionality-integration-review.md",
+      "docs/development/technical-review/dimensionality-integration/independent-checks.json",
+      "scripts/post_render_citations.py",
+      "scripts/filters/page-header-card.lua",
+      "tests/test_citation_metadata.py",
+      "articles/Launch_Monitor_Technology_Review/sections/appendix-b-implementation.tex",
+      "reports/technical-review/implementation-independent-checks.json",
+      "articles/Launch_Monitor_Technology_Review/sections/08-ball-flight-models.tex",
+      "articles/Launch_Monitor_Technology_Review/sections/09-accuracy.tex",
+      "articles/Launch_Monitor_Technology_Review/sections/10-design-guidance.tex"
+    ],
+    "intentional_changed_paths": [
+      "articles/Launch_Monitor_Technology_Review/preamble.tex",
+      "articles/Launch_Monitor_Technology_Review/references.bib",
+      "articles/Launch_Monitor_Technology_Review/main.pdf"
+    ],
+    "explanation": "Primary-source bibliography and URL wrapping plus regenerated PDF supersede those artifacts; earlier accepted chapter/implementation/date/article sources remain unchanged."
+  },
+  "delivery": {
+    "status": "Ready for regular PR after metadata checks and pre-PR gate",
+    "base": "fix/flight-accuracy-design-review",
+    "dependency": "PR 4897 after 4895 after 4891 after 4889",
+    "next": "Publish regular PR; verify protected merge and seven canonical hashes on fetched main before release"
+  },
+  "metadata_checks": {
+    "passed": 40,
+    "seconds": 24.39,
+    "exit_code": 0,
+    "log": "docs/development/technical-review/camera-survey-review/acceptance-metadata-tests.txt"
+  }
+}
