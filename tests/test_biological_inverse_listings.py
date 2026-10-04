@@ -22,6 +22,8 @@ def listing_namespace(filename: str) -> dict[str, Any]:
     )
     assert match is not None
     namespace: dict[str, Any] = {}
+    # Only repository-owned chapters selected by literal filenames in these tests are executed.
+    # nosemgrep: python.lang.security.audit.exec-detected.exec-detected
     exec(compile(match.group(1), filename, "exec"), namespace)
     return namespace
 
