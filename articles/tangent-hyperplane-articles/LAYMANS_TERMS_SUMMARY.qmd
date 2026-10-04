@@ -1,218 +1,148 @@
 ---
 title: "In Layman's Terms: Tangent Hyperplane Framework"
-description: "A non-technical overview of the tangent hyperplane framework and linear approximations in nonlinear control."
+description: "How local models describe small changes, how errors accumulate, and why the phases of a golf swing remain connected."
 categories:
-- tangent-space
+  - tangent-space
 ---
 
 **Target Audience:** Non-technical readers, practitioners, students
-**Source:** Tangent_Hyperplanes_Unified_Thesis.qmd
-**Date:** January 18, 2026
 
----
+**Reading Path:** Start with the [Tangent-Space Series](../../pages/tangent-hyperplanes.html). The [Full Reference Manuscript](Tangent_Hyperplanes_Unified_Thesis.html) provides a longer treatment.
 
 ## The Big Idea in One Sentence
 
-**"Nonlinear systems have an exact linear *approximation* at every single instant—and you can stitch those approximations together to control the whole system."**
+**A differentiable model tells us how very small changes affect motion near a chosen reference; we can use that information to plan and adjust a movement, while checking the errors, constraints and connections between its phases.**
 
-> **Caveat up front:** The tangent hyperplane at a point is *not* the system — it is the best linear approximation to the system at that point. It is exact only in the limit of zero perturbation; for finite steps it misses second-order curvature (error scales as the square of the step size). See the technical body ([Tangent_Hyperplanes_Unified_Thesis.qmd](Tangent_Hyperplanes_Unified_Thesis.html)) for the precise statement.
-
----
+The derivative is an exact mathematical description of *first-order sensitivity*. Using it to predict a finite change is an approximation. A nonlinear system does not become linear merely because we look at one instant. Keeping that distinction clear makes the geometric viewpoint useful rather than misleading.
 
 ## The Core Problem
 
-Imagine you're driving a car up a winding mountain road. The road curves left, then right, climbs steeply, then levels out. If someone asked you to predict exactly where you'll be in 10 minutes, that's incredibly hard because:
-- The steepness keeps changing
-- The curves aren't uniform
-- Your speed depends on the slope
-- Everything affects everything else
+Imagine driving along a winding mountain road. Your position, speed, steering and road conditions jointly affect what happens next. The road's direction immediately ahead gives useful information, but continuing straight along that direction will not follow every bend.
 
-This is what engineers call a **nonlinear system**—one where small changes don't have simple, predictable effects.
+A golf swing poses a related modeling problem. Body configuration, segment velocities, club motion and the available forces interact. A change in preparation can alter the state entering the downswing, the torques needed later and the eventual club delivery. A model should help us trace those connections.
 
-Most real-world systems are like this: robot arms, aircraft, golf swings, chemical reactions. The traditional approach is to throw up our hands and say *"It's too complicated, let's just approximate it"* or *"Let's simulate it on a computer and hope."*
+In a **linear model**, responses to perturbations add and scale proportionally. A **nonlinear model** does not generally have that property over finite changes. Nonlinearity does not itself mean unpredictability: a nonlinear model may give accurate predictions within its validated conditions. Uncertainty in measurements, parameters and external forces is a separate problem.
 
-**This thesis argues:** *There's a better way.*
+Control engineering already uses linearization alongside nonlinear optimization, simulation and stability analysis. The tangent viewpoint helps explain those established tools and their limits. It does not replace them with a new guarantee of control.
 
----
+## The Key Insight: Compare Nearby Motions
 
-## The Key Insight: Freeze Frame Analysis
+### The Winding-Road Analogy
 
-Here's the trick: **While the system is nonlinear globally (over time), it has an *exact linear approximation* at any single instant.** (The system itself is still nonlinear — the derivative that defines the tangent hyperplane is the exact first-order structure, but the tangent hyperplane only matches the true dynamics to first order.)
+A tangent line gives a curve's direction at a point. It agrees with the curve to first order nearby, but it is not a finite straight section of the curve. A tangent plane provides the corresponding picture for a surface.
 
-Think of it like this:
+For motion, the important object is usually a map from the **state** and **input** to the rate at which the state changes. State means the variables needed to predict the future: for a simple mechanical model, positions and velocities; for a richer model, muscle activation, controller memory or flexible-shaft states may also matter. Input might mean joint torque, muscle excitation or an actuator command. Those are different choices, with different dynamics.
 
-### Analogy: The Winding Road
+Linearizing this map asks: *If we slightly change the state or input from a reference, how does the predicted rate change?* It does not flatten the actual mechanism. Nor is a tangent space of possible state directions the same thing as the graph of the dynamics. The title's hyperplane picture is easiest to visualize for a scalar map. For a vector-valued dynamics map, a derivative or Jacobian is the more precise general description: it collects the sensitivities of all the output components.
 
-- **Globally nonlinear:** The full mountain road is curvy and complex
-- **Locally linear:** But if you "freeze" time and look at just the tiny patch of road right under your tires **right now**, it looks flat and straight
+### Small Changes Around a Reference
 
-That tiny flat patch is called a **"tangent plane"** (or "tangent hyperplane" in math speak).
+Let $x$ denote state and $u$ input. A model supplies the state rate $\dot{x}=f(x,u)$. Near reference values $\bar{x},\bar{u}$, its local prediction is
 
-### What This Means
+$$
+f(\bar{x}+\delta x,\bar{u}+\delta u)
+=f(\bar{x},\bar{u})+A\delta x+B\delta u+r.
+$$
 
-At every moment:
-1. Your car sits on a little flat patch (tangent space)
-2. On that patch, normal linear rules apply: double the gas pedal → double the acceleration
-3. A split-second later, you're on a *different* flat patch (the tangent space has moved)
-4. But at *that* new moment, linear rules apply again—just with different numbers
+Here $A$ and $B$ describe first-order sensitivity, and $r$ is the remainder. The prediction includes the reference rate: in absolute coordinates it is generally **affine**, meaning a linear response plus an offset. Proportionality concerns small *deviations*, not a claim that doubling the gas pedal doubles total acceleration.
 
-**The whole journey** is you hopping from one linear snapshot to the next, each one perfectly simple, even though the overall path is complex.
+If the reference itself follows the model, subtracting its rate gives a local equation for nearby motion: $\delta\dot{x}\approx A(t)\delta x+B(t)\delta u$. The derivative of a smoothly parameterized family of solutions satisfies the corresponding linear equation exactly. This is called the **variational equation**: it describes how sensitivity evolves along the reference. Finite differences between trajectories still have a remainder. Repeatedly changing the reference does not remove that distinction.
 
----
+There is a useful stronger statement in some mechanical models. At a fixed configuration and velocity, rigid-body acceleration can depend *exactly affinely* on applied joint torque when the inertia and any regular constraint equations are fixed. This means a proportional torque contribution plus a baseline contribution from terms such as gravity. It does not make the evolving swing linear, and it does not automatically hold for muscle excitation or through contact changes. A locally linear approximation and an exactly affine input dependence are different claims.
 
 ## Why Does This Matter?
 
-### 1. **We Can Use Simple Tools**
+### We Can Use Local Tools
 
-Linear systems are easy to work with. Engineers have powerful tools (like "LQR controllers" and "Riccati equations") that only work on linear systems.
+Local models make some design problems easier. For example, LQR chooses feedback for specified linear dynamics and a quadratic objective. Applying it around a nonlinear reference gives a local controller whose actual performance still requires assessment. Its mathematical optimality is relative to its model, cost and assumptions; it is not a promise of globally optimal movement. [Tedrake's LQR treatment](https://underactuated.mit.edu/lqr.html) develops this connection.
 
-**The useful observation:** Since a smooth model has a linear tangent description at each state, we can:
-- Use linear tools locally around a reference state or trajectory
-- Recompute those local models as the system moves
-- Track residuals before treating the assembled local predictions as a controller for the nonlinear system
+A useful workflow is to choose a feasible reference, compute sensitivities, propose a change, and evaluate that change in the nonlinear model. Measurements then test whether the model adequately represents the real movement. Small modeling residuals do not compensate for an incorrect model of the athlete.
 
-It is like solving many local problems while checking how much error is introduced when those local pieces are assembled.
+### We Can Describe the Error Honestly
 
-### 2. **We Can Predict Errors**
+Differentiability means the remainder becomes small *relative to the perturbation* as that perturbation shrinks. It does not by itself promise a quadratic error bound. A continuously differentiable function is called $C^1$; that regularity is still insufficient for a general quadratic claim.
 
-When you "linearize" (replace the curve with a straight line), you make an error. But this framework tells you:
-- The error is **quadratic**: If you double your step size, the error goes up 4×
-- The error comes from **curvature**: Sharper curves = bigger errors
-- You can **measure** the error and decide if it's acceptable
+For example, the dimensionless function $f(z)=|z|^{3/2}$ is $C^1$ and has derivative zero at zero. Its linear approximation there is zero, but the error is $|z|^{3/2}$, not bounded by a fixed multiple of $z^2$ arbitrarily close to zero. Halving a small positive perturbation reduces this error by a factor $2^{3/2}$, not four.
 
-### 3. **We Understand Why Things Work**
+A **locally Lipschitz derivative** means that the derivative itself changes at most proportionally to displacement within a neighborhood. It supplies a quadratic remainder bound; bounded second derivatives on the relevant neighborhood are a familiar sufficient condition. With a bound $|r|\leq C|\delta|^2$, doubling the perturbation makes that *bound* four times larger while the same constant applies. The actual error need not grow exactly fourfold: cancellation, direction and higher-order terms matter. For states with different units, scales and a norm (a rule for measuring vector size) must be declared before comparing perturbation sizes.
 
-Many control techniques, including gain scheduling, model predictive control, and trajectory optimization, repeatedly use local models or local approximations.
+The size of a state perturbation, a numerical integration time step and an optimization update are also different quantities. A quadratic local Taylor remainder does not automatically imply a quadratic accumulated trajectory error.
 
-**This framework gives one interpretation:** these methods can be read as ways of exploiting local linear structure while managing residual error, constraints, and finite-step effects. That interpretation is useful, but it does not replace the separate convergence and robustness assumptions each method needs.
+### Local Errors and Earlier Choices Propagate
 
----
+Consider the dimensionless model $\dot{x}=x^2$, starting at $x(0)=\varepsilon$. Its exact solution is $x(t)=\varepsilon/(1-\varepsilon t)$ while the denominator remains positive. Around the reference $x=0$, the linear sensitivity predicts $x(t)\approx\varepsilon$. Their difference is
 
-## Real-World Examples
+$$
+\frac{\varepsilon^2t}{1-\varepsilon t}.
+$$
 
-### Example 1: Robot Arm Picking Up a Cup
+The sensitivity is correct to first order for fixed finite time as $\varepsilon$ tends to zero, but the finite prediction error can grow substantially. Frequent recalculation does not by itself establish stability, feasibility or a reliable horizon. We must examine how dynamics amplify or attenuate disturbances and residuals over the interval of interest.
 
-**The Problem:** The arm has 6 joints. Each joint's torque affects all the others (because of momentum, gravity, and geometry). It's massively nonlinear.
+## What This Means for a Golf Swing
 
-**The Tangent Space Solution:**
-1. **Right now**, the arm is at a specific position
-2. At that position, we compute the "tangent plane"—the exact linear rules for how torques affect motion *right now*
-3. We calculate the optimal torques using simple linear math
-4. The arm moves a tiny bit
-5. Repeat from step 1
+### Phases Are Useful Descriptions, but Remain Connected
 
-**Result:** The arm smoothly reaches the cup, even though we never "solved the full nonlinear problem"—we just solved 100 tiny linear problems in a row.
+A coach may focus attention on the backswing, transition or delivery. That can organize observation and practice, but linearization does not prove that these phases can be fixed independently. Each phase begins with the state produced by the preceding motion. Changes in position, momentum, activation or timing can affect what follows.
 
-### Example 2: Spacecraft Docking With the ISS
+Even a perfectly linear system illustrates this connection. Take a dimensionless one-dimensional model with position rate equal to velocity and velocity rate equal to a commanded acceleration. Start at rest at position zero. Apply constant acceleration $a$ during the first unit of time and $b$ during the second. Direct integration gives
 
-**The Problem:** Orbital mechanics are complex. Thrust in one direction causes rotation. Rotation affects trajectory. Everything couples.
+$$
+v(2)=a+b,\qquad q(2)=\tfrac32a+\tfrac12b.
+$$
 
-**The Tangent Space Solution:**
-1. **Right now**, the spacecraft has a position and velocity
-2. At that state, the dynamics are linear: thrust → acceleration is a simple relationship
-3. We compute the optimal thrust using that local linear model
-4. A moment later, we're in a slightly different state with a slightly different linear model
-5. Repeat
+The first phase affects both final velocity and final position. Increasing $a$ and decreasing $b$ by the same amount preserves final velocity but changes final position. Thus even matching one endpoint quantity does not make two preparations equivalent. This is a mathematical counterexample to phase independence, not a validated model of a golfer or a coaching experiment.
 
-**Result:** The spacecraft docks precisely, using a sequence of locally optimal controls.
+### Connect Preparation, Forces and Delivery
 
-### Example 3: Explaining Why Coaching Works
+For a swing model, a useful question is: *How does a specified change in preparation or input alter later club delivery, under stated constraints?* The answer must distinguish an immediate effect at an identical complete state from the downstream effect after two motions diverge.
 
-**Golf Swing:** A coach breaks the swing into pieces: "Work on your backswing. Now work on your downswing. Now work on your follow-through."
+For instance, comparing two torque choices at the same instant and state isolates an instantaneous model response. Letting each choice evolve allows later states and forces to differ. Retuning the later inputs asks a third question: how well can the system compensate? These comparisons answer different causal questions and should not be mixed.
 
-**Why this makes sense mathematically:**
-- At each phase of the swing, different muscles dominate
-- At each phase, the motion is approximately linear (small changes in torque → proportional changes in speed)
-- By fixing each phase independently, you're effectively linearizing around different points on the swing trajectory
+Kinematic constraints, actuator limits and contact conditions restrict which variations are feasible. A geometric direction is not necessarily achievable by the available muscles and contact forces. Clubhead speed alone also does not describe delivery: position, orientation, velocity direction and impact conditions can change together. A model can expose these tradeoffs, while measured outcomes determine whether they matter as predicted.
 
-This isn't just intuition—it's **mathematically justified** by the tangent space framework.
+Segmenting practice may be useful, but its effectiveness requires evidence about people, learning and transfer to the full swing. Tangent geometry supplies neither a universal muscle sequence nor a proof that a coaching intervention works. The appropriate lesson is to study a phase *in relation to the movement it inherits and the outcomes it changes*.
 
----
+## Illustrative Engineering Applications
 
-## The Three Parts of the Thesis
+### A Robot Reaching for a Cup
 
-### Part I: **Geometry** (Why It Works)
+For a robot arm, inertia, gravity and velocity-dependent forces couple joint motion. A local model can estimate how changed torques influence deviations from a planned reach. A controller can then correct measured errors while respecting joint, torque and collision limits.
 
-Explains what is exact about the tangent construction and what remains approximate when it is used over a finite step. Uses pictures and analogies to show:
-- A tangent plane is the "best flat approximation" to a curvy surface
-- At a point, the derivative is the exact first-order object for a smooth map
-- Finite displacements still have residual terms that depend on curvature and step size
+This is an illustrative design process, not a reported successful experiment. An arbitrary number of small solves cannot guarantee a successful grasp. Reference feasibility, sensing, contact modeling and robustness remain necessary parts of the assessment.
 
-**Takeaway:** Linearization is not merely a hack; it is the local first-order structure of smooth systems, and its finite-step use must be checked against residuals.
+### A Spacecraft Approaching a Dock
 
-### Part II: **Integration** (Accumulating Over Time)
+Local relative-motion models can help plan an approach, but position, velocity and attitude must be treated according to the chosen model. A thrust force through the center of mass need not produce rotation; an offset force can produce a moment. Attitude can affect the direction of thrust.
 
-Shows what happens when you **add up** lots of tiny linear steps to get a full trajectory.
+A sequence of locally optimized commands alone does not guarantee docking. The design must account for collision avoidance, actuator authority, navigation uncertainty and terminal conditions. This example illustrates a possible modeling strategy; no mission result or certification follows from it.
 
-**Key point:** Even though each local effect is linearized at its moment, integrating over time produces nonlinear behavior. The residuals can be estimated or bounded only when the required smoothness, curvature, and step-size assumptions are stated.
+## Related Algorithms Have Different Roles
 
-**Takeaway:** You can use superposition locally, then account for the residual terms introduced by moving along a nonlinear trajectory.
+| Method | Role and Limitation |
+| --- | --- |
+| Linear Quadratic Regulator (LQR) | Feedback design for linear dynamics and a quadratic cost. A nonlinear application commonly uses a local model. |
+| Iterative LQR (iLQR) | Improves a trajectory using linearized dynamics and quadratic local cost models, checking proposed changes by simulating the nonlinear dynamics forward. |
+| Differential Dynamic Programming (DDP) | In its full second-order form, also retains second derivatives of dynamics in the local optimization. |
+| Model Predictive Control (MPC) | Repeatedly solves a finite-horizon problem, applies an initial part of the plan and replans using new state information. Its model may be linear or nonlinear. |
 
-### Part III: **Algorithms** (How to Actually Do It)
+iLQR and DDP normally reason across a time horizon; they are not simply greedy choices for the next instant. Their iterations can run before any physical motion. MPC describes how planning and feedback are organized, and can use different numerical solvers. Local approximations connect these ideas, but do not make the algorithms interchangeable. The starting guess, constraints, numerical safeguards and acceptance of trial steps matter. See [Trajectory Optimization](https://underactuated.mit.edu/trajopt.html) for the algorithmic distinctions.
 
-Provides concrete algorithms for:
-- **DDP/iLQR:** Trajectory optimization by solving a sequence of local LQR problems
-- **MPC:** Real-time control by re-planning at every step
-- **Case studies:** Spacecraft, robot arms, drones
+## What Happens at Impact or a Switch?
 
-**Takeaway:** These algorithms are just repeated application of "linearize → optimize → move → repeat."
+Smooth sensitivity equations apply within a smooth mode. An impact may reset velocities; contact may change the allowed motion. A perturbation can also change *when* an event occurs, so joining two smooth models without accounting for the event can give the wrong sensitivity.
 
----
+A hybrid model must specify its modes, event conditions and reset rules. At grazing contact or a change in event sequence, ordinary differentiability can fail. Shorter steps alone do not repair a missing impact model. [Kong and colleagues' treatment of hybrid sensitivity](https://arxiv.org/abs/2306.06862) explains why event timing matters. For golf, interpreting pre-impact motion and predicting the ball's response therefore require connected but distinct modeling stages.
 
-## Common Objections (And Answers)
+## What the Geometric Viewpoint Contributes
 
-### **"But Linearization Is an Approximation!"**
+The contribution here is an explanatory organization of established mathematics: choose a reference, identify feasible small variations, propagate their effects and evaluate finite changes. Novel terminology does not establish a new theorem, better controller or effective coaching method.
 
-**Answer:** The derivative is the exact first-order object at the point. What is approximate is using that tangent description to predict behavior away from the point. Small steps and frequent re-linearization can reduce the error, but "negligible" must be justified by residual estimates for the system being studied.
+For students, the viewpoint connects derivatives to motion. For engineers, it clarifies what a local prediction assumes and what must be tested. For golf practitioners, it motivates questions about how preparation, forces, timing and delivery interact. The system remains nonlinear; the value comes from understanding and checking the local information we use to reason about it.
 
-Think of it like a map: A flat map of the Earth is "wrong" globally, but a street map of your neighborhood is "exact enough" for walking around the block.
+## Related Articles
 
-### **"This Sounds Like It Only Works for Small Perturbations."**
-
-**Answer:** True for a single linearization. **Iterative methods** such as DDP keep re-linearizing as the system moves, so each solve uses a local model near the current reference trajectory. The quality of the result still depends on step size, conditioning, constraints, and how well the reference trajectory represents the motion.
-
-It's like climbing stairs: Each step is small and linear, but you can climb a tall building by taking many steps.
-
-### **"What About Discontinuous Systems? Impacts? Switches?"**
-
-**Answer:** The framework requires smooth dynamics ($C^1$—continuously differentiable). For impacts or switches, you'd need to:
-- Treat each mode separately
-- Use different techniques (like hybrid automata) at the switching points
-
-The thesis is clear about this limit.
-
----
-
-## What's New Here?
-
-**Not the math**—linearization and Jacobians have been around for centuries.
-
-**What's new:**
-1. **The framing:** Calling it "exact infinitesimal structure" instead of "first-order approximation" changes how people think about it
-2. **The unification:** Showing that LQR, MPC, DDP, gain scheduling, and even some stability proofs all use the same underlying idea
-3. **The pedagogy:** Making the geometric picture (moving tangent spaces) central, not just algebraic manipulations
-
-**Analogy:** It's like someone explaining that all your favorite recipes use the same five basic cooking techniques. The recipes existed before, but now you see the pattern and can create new dishes yourself.
-
----
-
-## Who Should Care?
-
-- **Students:** Understand control theory deeply, not just memorize formulas
-- **Engineers:** Design better controllers by understanding *why* methods work
-- **Researchers:** See connections between disparate fields (geometry, dynamics, optimization)
-- **Coaches/practitioners:** Justify decomposition strategies (breaking complex motions into components)
-
----
-
-## The Bottom Line
-
-**Nonlinear systems are only nonlinear globally.** At every instant, they're perfectly linear. By exploiting this local linearity—linearize, optimize, move, repeat—we can control systems that seemed impossibly complex.
-
-This isn't magic. It's geometry. And geometry, once you see it, makes everything clearer.
-
----
-
-**For the full technical details:** See [Tangent_Hyperplanes_Unified_Thesis.qmd](Tangent_Hyperplanes_Unified_Thesis.html)
-
-**For critical review context:** See [Critiques and Responses](../../critiques/index.html)
+- [Tangent-Space Series](../../pages/tangent-hyperplanes.html): The canonical reading path.
+- [Residuals and Curvature](../tangent-hyperplanes-series/part-4-residuals-curvature.html): Assumptions behind finite-error estimates.
+- [Hybrid Dynamics](../tangent-hyperplanes-series/part-6-hybrid.html): Events, impacts and sensitivity limits.
+- [Full Reference Manuscript](Tangent_Hyperplanes_Unified_Thesis.html): Extended mathematical discussion.
+- [Critiques and Responses](../../critiques/index.html): Critical review context.
