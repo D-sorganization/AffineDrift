@@ -1,5 +1,7 @@
 # Volume II Title-Card Paint Investigation
 
+> **Correction (2026-10-04):** The missing-text interpretations below are retracted. Independent raw PNG comparisons show identical title, description and reading-time regions in paired light/dark and before/after captures. See [Investigation Resolution](title-card-investigation-resolution.md). This historical note preserves the original reasoning; its pending-build and next-step statements are no longer current. No source paint defect is established.
+
 Issue #4868 follows the Volume II review under epic #4009 / corpus #4021. These preliminary observations do not establish a publication defect, a browser defect, or an accepted correction. No publication, CSS, or JavaScript source has changed for this investigation.
 
 ## Observations From the Partial Build

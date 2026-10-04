@@ -1,7 +1,7 @@
 {
   "issue": 4868,
   "recorded_at": "2026-10-04T07:27:06.298441+00:00",
-  "status": "Investigation incomplete. Network readiness improves fresh-navigation captures but does not resolve the ordinary theme-toggle capture. No source correction or capture-only diagnosis accepted.",
+  "status": "Corrected: raw PNG text regions are identical in light/dark and before/after pairs. The earlier missing-text interpretation is retracted; no CSS defect established. See title-card-pixel-corrigendum.json and title-card-investigation-resolution.md.",
   "deployment": {
     "conclusion": "success",
     "head_sha": "ecc23b233e54349981db6622238341c6866a298f",
@@ -18,7 +18,7 @@
     "manifest_sha256": "e02c18efd19ec602847ac3e5546c5cca299309ba17b51ac664e35e1e36284c5e",
     "site_directory": "C:\\Users\\diete\\AppData\\Local\\Temp\\affine-title-card-deploy-6cf9235c9fc340d19db0eb11438c42a8\\site",
     "page_count": 251,
-    "status": "Downloaded and safely extracted exact-revision deployment artifact; own pixel inspection pending. Local full-render process is separate and remains unverified."
+    "status": "Exact deployment artifact verified. Subsequent raw-pixel audit retracts the missing-text interpretation. Local full deployment pipeline remains unverified."
   },
   "deployment_jobs": {
     "raw_path": "docs\\development\\technical-review\\title-card-main-deploy-completed-jobs.jsonl",
@@ -203,7 +203,7 @@
     ],
     "reported_resource_or_execution_errors": 0
   },
-  "controlled_pixel_observations": "All eight v3 initial viewports were inspected. Desktop dark title/description/reading time are absent in both browser modes; desktop light and both mobile themes show them. Headless desktop dark card and following viewport show the text. This remains a capture-order/readiness observation, not a demonstrated cause.",
+  "controlled_pixel_observations": "CORRECTION: the earlier claim of absent desktop dark text was a mistaken interpretation of displayed previews. Exact RGB comparisons retain all three text regions across both themes and viewport capture order, independently within each browser mode.",
   "network_idle_trials": {
     "headed": {
       "raw_path": "docs\\development\\technical-review\\title-card-clean-networkidle-headed.json",
@@ -226,7 +226,7 @@
       ]
     }
   },
-  "network_idle_pixel_observations": "All four first-viewport images per mode are byte-identical. The inspected image for each mode shows title, description and reading time. Four fresh contexts per mode pass this bounded observation; it does not establish a general fix.",
+  "network_idle_pixel_observations": "Four first images per mode are byte-identical and also equal the corresponding v3 desktop dark first image. Therefore these trials do not establish improved paint or a readiness fix.",
   "ordinary_reader_flow": {
     "light": {
       "state": {
@@ -264,7 +264,7 @@
       "startMs": 1791098370408,
       "endMs": 1791098370763,
       "sha256": "11d5f476d45aed5cb249295e9ec2e8469289c269536d9a74d9542ad4a8a7bf14",
-      "pixel_observation": "Title, description and reading time absent from the viewport capture after the UI toggle"
+      "pixel_observation": "CORRECTION: title, description and reading time are present; all three RGB regions are identical to the light reference. Original-resolution reinspection confirms text."
     }
   },
   "native_captures": [
@@ -279,12 +279,13 @@
       "inspection": "Title, description and reading time visible; another window occludes the right part of the target window. These are separate captures at different times, not simultaneous paint evidence."
     }
   ],
-  "next_step": "Distinguish the theme-toggle viewport discrepancy from actual on-screen paint using controlled capture timing/methods. Preserve the failing ordinary-reader capture; do not accept network-idle waiting alone as a fix.",
-  "delegation": "Six supplied-text agy CLI Gemini3.8Flash invocations for4868, with lead review and amendments. A separate helper implemented lead-specified exact preparation checks for queued4871. Helper invocation success is not scientific or visual acceptance.",
+  "next_step": "Deliver the investigation corrigendum without a CSS/JavaScript change; resume queued article review #4871 after delivery.",
+  "delegation": "Nine supplied-text agy CLI Gemini 3.8 Flash invocations for #4868, including final corrigendum checklist. Lead reviewed/amended helpers and retains responsibility for the retracted visual interpretation. Separate #4871 helper is mathematical preparation only.",
   "queued_issue": {
     "number": 4871,
     "url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
     "scope": "Full lay-summary review queued after six identified scientific/pedagogical findings; three independent exact checks passed; no source edits or claim."
   },
-  "evidence_retention": "Raw scripts, logs and images remain in the title-card-review worktree and named temporary directories. This JSON commits metadata and hashes, not the screenshot pixels."
+  "evidence_retention": "Raw scripts, logs and images remain in the title-card-review worktree and named temporary directories. This JSON commits metadata and hashes, not the screenshot pixels.",
+  "supersedes_interpretations_recorded_at": "2026-10-04T07:27:06.298441+00:00"
 }
