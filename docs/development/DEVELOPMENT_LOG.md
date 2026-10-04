@@ -19,14 +19,26 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4860 · Passive-Stabilization Chapter Review
+### DL-#4863 · Underactuation Chapter Review
 
 - **State:** in_review
+- **Owner:** codex
+- **Issue:** #4863; epic #4009 / corpus #4021
+- **Branch:** fix/underactuation-review
+- **PR:** #4867
+- **Summary:** Complete chapter and corresponding combined-volume blocks reviewed; metric decay assumptions and scope clarified while preserving prior mechanics. Eight supplied-text Flash helpers adjudicated. Fifteen print chapter pages plus revised title and twenty web captures inspected; final four browser/axe cells pass.
+- **Evidence:** reports/technical-review/underactuation-review.md; 63 focused checks, 208 content cases and 16 publication gates pass. All 72 protected files and 250 other route identities preserved.
+- **Next step:** Full suite at 0160547578c00a8cb711f6246c3c1480d48dc567 passed 6810 with 93.24% src coverage. Subsequent eight heading-only prefixes pass 63 focused, 208 content, five gates and four browser/axe cells; mathematical text and PDFs unchanged. Accepted source 30625cf420f79ed7ffbe070a6322d0f5903dc025 binds twelve files and four findings. The 63 post-binding checks pass and checkpoint e12767c10 is pushed. Parent update bfebb9d5210ccc3c0e47d92f3e8b63c4ef014d24/main af4c2d42e is integrated; 100 tests pass with one skip. Integration 63812c493 is pushed. Parent #4862 is verified on remote main at 48261ef8587095832b3360648f4cc6d444d6c36b and integrated with the child tree unchanged. Regular PR #4867 is open with guarded squash auto-merge armed. Verify final-head CI and remote-main delivery. Read-only whole-book preparation and confirmed missing HTML terms are queued under unclaimed #4864. No whole-book, empirical or live-site acceptance.
+
+### DL-#4860 · Passive-Stabilization Chapter Review
+
+- **State:** shipped
 - **Owner:** codex
 - **Branch:** fix/passive-stabilization-review
 - **PR:** #4862
 - **Summary:** Three source copies reviewed; conservative loaded-loop stiffness bridge, constitutive/rate conventions and citation scope corrected. Five text-only Flash helpers adjudicated; 38 focused, 204 content, 16 gates and 6805 full cases passed (93.24% source coverage). Seven print pages and ten web captures inspected. Complete current source/scoped presentation locally accepted.
-- **Next step:** Accepted source eff44ef6fa8ee11a37b2d4e82293b297f6745a95 binds eleven files, five findings and three original corpus rows. Parent #4859 is verified on remote main and integrated with the child tree unchanged. Regular PR #4862 is open; 60 post-integration checks pass. Verify final-head CI and protected remote-main publication.
+- **Delivery:** Regular PR #4862 merged as 48261ef8587095832b3360648f4cc6d444d6c36b; full reviewed tree, 24 owned paths, eleven frozen and 61 prior scientific files verified on remote main. CI Standard 37166080212 passed at final head bfebb9d5210ccc3c0e47d92f3e8b63c4ef014d24. Receipt: reports/technical-review/passive-stabilization-remote-main-receipt.json.
+- **Next step:** None for this bounded chapter review. Continue epic #4009 under #4863.
 
 ### DL-#4858 · Paired Optimal-Control Review
 

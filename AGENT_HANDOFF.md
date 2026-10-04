@@ -1,3 +1,21 @@
+# Underactuation Review — Regular PR #4867
+
+Active epic #4009 / corpus #4021 child #4863, branch `fix/underactuation-review`, session `technical-review-20261003-underactuation`; lease/presence through approximately 2026-10-04 03:23 UTC. The accepted review is in regular PR https://github.com/D-sorganization/AffineDrift/pull/4867, with guarded squash auto-merge armed. Never create a draft. The full-corpus goal remains active.
+
+Parent PR #4862 merged at 2026-10-04T01:57:52Z as `48261ef8587095832b3360648f4cc6d444d6c36b`. CI Standard 37166080212 succeeded at final head `bfebb9d5210ccc3c0e47d92f3e8b63c4ef014d24`; its complete tree, 24 changed paths, eleven frozen and 61 prior scientific files match fetched remote main. Canonical receipt: `reports/technical-review/passive-stabilization-remote-main-receipt.json`. Lease and presence are released. Normal integration commit `51b58707a` preserves the complete premerge child tree: three turnover conflicts were resolved only after incoming files were proved identical to the already integrated parent. The earlier prospective merge SHA and older-head CI success are not the actual receipt.
+
+Underactuation source acceptance remains `30625cf420f79ed7ffbe070a6322d0f5903dc025`, binding twelve files and four findings in `reports/technical-review/underactuation-delivery.json`. Four maintained chapter copies define the perturbation state, positive decay rate, smooth metric, coordinate bound and nominal/region/event limits. Existing coordinate, power, feasibility, coupling and reachability mechanics were independently checked. Two equations are reflowed for mobile display; a print title and eight web heading prefixes are repaired. Two original corpus rows become complete; combined-volume component descriptions explicitly retain whole-book consistency pending. Preserve all 72 prior scientific files, 250 other route identities and the historical Volume II route reviewer/date/commit.
+
+Full regression at `0160547578c00a8cb711f6246c3c1480d48dc567`: 6810 passed, 29 skipped, 210 deselected, 93.24% src coverage, 816.02 seconds. Eight later heading-only prefixes leave mathematical text and PDFs unchanged; final headings passed 63 focused tests, 208 content cases (four skips), five relevant publication gates and four desktop/mobile light/dark browser/axe cells. All sixteen gates passed before those heading changes. Fifteen chapter print pages plus revised title and twenty web captures were inspected. Native builds produced a five-page standalone chapter, 94-page complete manuscript and 101-page Geometry Volume II; the built-in compiler platform failure and scratch bibliography repair remain recorded. This is scoped chapter publication evidence, not whole-book or live-deployment acceptance. Post-binding 63 checks and earlier parent integration 100 checks (one skip) pass.
+
+Eight successful supplied-text agy CLI Gemini 3.8 Flash helpers supported scientific review preparation; a ninth supported the regular-PR template. Lead adjudication corrected parent-integration status and made the full-suite-before-heading qualification explicit. The prepared body is `docs/development/technical-review/underactuation-pr-body.md`, with medium exposition risk and an ordinary revert-PR rollback. Final protected CI must cover the final pushed PR head. The PR URL is recorded in mutable delivery/validation/devlog and attached to this chat; central automerge guard succeeded.
+
+Read-only follow-up is saved in `docs/development/technical-review/volume2-consistency-preparation.json`: all eleven body chapters, enclosing material and historical primary-source review records read; ordered mathematics, prose and headings compared; eight numbered current PDF figure pages inspected. Four raw emphasis terms are confirmed missing from actual HTML. Queued, unclaimed native children #4864 (Volume II consistency/web terminology/framing) and #4865 (shared configuration/generalized-velocity notation) remain. Seven successful supplied-text Flash helpers supported this separate preparation. The lead-written landing proposal is `volume2-landing-proposed.qmd.txt` in the same directory; publication sources are unchanged. A raw-emphasis scan found this command only in Volume II's QMD among article QMDs. Subsequent shared QMD/PDF/nomenclature changes need explicit dependency treatment preserving historical accepted commits and records.
+
+Next: verify final-head PR #4867 CI, actual merge and remote-main scientific file identities. The selected delivery/metadata checks pass with repository default marker exclusions; no full-suite repeat is claimed. Continue queued review only with a free WIP slot and valid claim, preserving the delivery branch's accepted source. Raw logs are in `docs/development/technical-review`; canonical scientific records are in `reports/technical-review`. Preserve generated root build/dist/egg-info outside the checkout before a later full regression; no renders, source edits or Git hooks during that regression. Earlier checkpoint sections below are retained as history; current delivery status is above.
+
+---
+
 # Passive-Stabilization Review — Regular PR #4862
 
 Parent PR #4859 merged at 2026-10-03T23:25:01Z as `ca0e1b8bed20f58366e95dd453fecffbdf17cb89`. Its complete reviewed tree, 23 owned paths, nine frozen scientific files and 52 prior files were verified on fetched main. CI Standard passed at the reviewed head. Lease/presence released. Receipt: `reports/technical-review/optimal-control-remote-main-receipt.json`.
@@ -9,6 +27,28 @@ Accepted source `eff44ef6fa8ee11a37b2d4e82293b297f6745a95` binds eleven frozen f
 Five successful text-only agy CLI Gemini 3.8 Flash helpers supported source review; one further helper drafted delivery turnover. Lead adjudicated all output, including correcting the delivery draft's misleading merge direction: main was merged into the child branch, which is not yet delivered to main. The integration and delivery metadata are pushed. Regular PR https://github.com/D-sorganization/AffineDrift/pull/4862 is open, not draft; this PR-link turnover update needs its final push. Sixty post-integration checks passed in 19.98 seconds. Use central guarded normal auto-merge, verify final-head checks and remote-main bytes, then release the claim. Never draft PRs. Preserve untracked QA and generated outputs. No regression is running. Whole-book consistency, remaining corpus review and empirical validation remain distinct; the overall goal is active. Earlier sections below are historical checkpoints.
 
 ---
+
+# Deploy Website Redirect and Timeout Fix — #4809 (PR #4861)
+
+- Repository: `D-sorganization/AffineDrift`
+- Branch: `fix/deploy-website-cache-4809`
+- Governing issue: #4809 (`main is red: Deploy Website (fleet-main-health)`)
+- Pull Request: #4861
+- Objective: Restore green `Deploy Website` on `main` by following the GitHub Pages 301 apex redirect with `--location` when polling `public-site-manifest.json`, and increasing the build job timeout from 60 to 90 minutes to ensure full 251-route verification completes safely on ubuntu-latest runners.
+- Completed:
+  - Updated `.github/workflows/deploy-website.yml`:
+    - Added `--location` to `curl` in `Verify Deployment Manifest and Every Public Page`.
+    - Increased `build` job `timeout-minutes` from 60 to 90 minutes.
+    - Preserved clean uncached Quarto render contract (`actions/cache@` omitted in deploy).
+  - Updated `tests/test_deployment_integrity.py`:
+    - In `test_live_manifest_poll_retries_transient_non_json_responses`, asserted `--location` or `-L` in the poll script.
+  - Updated `SPEC.md` Change Log table for PR #4861.
+- Validation:
+  - `pytest -m content_lint tests/test_deployment_integrity.py`: 18 passed, 1 skipped.
+  - `python3 scripts/check_root_hygiene.py`: passed.
+  - `python3 -m src.tools.code_quality_check`: passed.
+  - `python3 -m scripts.check_spec_changelog`: passed.
+- Next steps: push branch, auto-merge PR #4861, verify landing on main.
 
 # Optimal-Control Review — Regular PR #4859
 
