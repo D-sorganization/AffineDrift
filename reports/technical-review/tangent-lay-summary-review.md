@@ -78,8 +78,16 @@ claiming all outputs inherit every earlier input, and unneeded assertions
 about ball-impact aerodynamics. Clarity suggestions were applied without
 accepting those generalizations.
 
-The initial 48 focused checks and title audit passed. The full regression and
-final browser verification are recorded separately when complete. Rendering
-is a one-route Quarto 1.8.26 check; the preview combines its updated HTML with
-an unchanged, previously verified deployment's supporting assets. It is not
-a new full deployment certification. No other publication source is revised.
+The initial and final 48 focused checks and the 665-source title audit passed.
+Final browser cases cover 1440/390-pixel widths in light/dark mode, with no
+failed requests, console/page errors or document overflow. Each has 28 math
+containers and no MathJax errors after scrolling all lazy placeholders into
+view and waiting for typesetting. Four original-resolution section images
+were inspected; sticky UI occlusion limits the mobile crops. The algorithm
+comparison uses definitions instead of a horizontally scrolling table.
+
+Rendering is a one-route Quarto 1.8.26 check. The preview combines updated
+HTML and generated Bootstrap assets with the previously verified deployment
+assets and the canonical legacy-polyfill pruning function. It is not a full
+deployment certification. The full regression remains pending at this source
+checkpoint. No other publication source is revised.

@@ -118,12 +118,10 @@ A sequence of locally optimized commands alone does not guarantee docking. The d
 
 ## Related Algorithms Have Different Roles
 
-| Method | Role and Limitation |
-| --- | --- |
-| Linear Quadratic Regulator (LQR) | Feedback design for linear dynamics and a quadratic cost. A nonlinear application commonly uses a local model. |
-| Iterative LQR (iLQR) | Improves a trajectory using linearized dynamics and quadratic local cost models, checking proposed changes by simulating the nonlinear dynamics forward. |
-| Differential Dynamic Programming (DDP) | In its full second-order form, also retains second derivatives of dynamics in the local optimization. |
-| Model Predictive Control (MPC) | Repeatedly solves a finite-horizon problem, applies an initial part of the plan and replans using new state information. Its model may be linear or nonlinear. |
+- **Linear Quadratic Regulator (LQR):** Feedback design for linear dynamics and a quadratic cost. A nonlinear application commonly uses a local model.
+- **Iterative LQR (iLQR):** Improves a trajectory using linearized dynamics and quadratic local cost models, checking proposed changes by simulating the nonlinear dynamics forward.
+- **Differential Dynamic Programming (DDP):** In its full second-order form, also retains second derivatives of dynamics in the local optimization.
+- **Model Predictive Control (MPC):** Repeatedly solves a finite-horizon problem, applies an initial part of the plan and replans using new state information. Its model may be linear or nonlinear.
 
 iLQR and DDP normally reason across a time horizon; they are not simply greedy choices for the next instant. Their iterations can run before any physical motion. MPC describes how planning and feedback are organized, and can use different numerical solvers. Local approximations connect these ideas, but do not make the algorithms interchangeable. The starting guess, constraints, numerical safeguards and acceptance of trial steps matter. See [Trajectory Optimization](https://underactuated.mit.edu/trajopt.html) for the algorithmic distinctions.
 
