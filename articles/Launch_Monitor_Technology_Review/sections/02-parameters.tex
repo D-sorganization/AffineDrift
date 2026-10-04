@@ -75,9 +75,10 @@ That illustration is neither a universal correction nor evidence that every rada
 For a manufactured example in SI units, choose $\vect v_O=(40,0,0)$, $\vect r=(0.04,0,0)$ and $\boldsymbol\omega=(0,50,0)$.
 Then $\vect v_P=(40,0,-2)$ and its horizontal heading is $\operatorname{atan2}(-2,40)\simeq-2.86\degs$.
 Reversing $\boldsymbol\omega$ reverses the heading offset; choosing $\boldsymbol\omega=(50,0,0)$ gives zero offset despite the same angular-speed norm.
-An upward change in velocity increases attack angle, but need not make an already upward motion ``shallower.''
+With horizontal speed fixed and nonzero, increasing upward velocity increases attack angle; for an already upward motion, that makes the path steeper.
 These examples demonstrate geometry, not typical golfer values or measured device discrepancies.
 
+\Needspace{10\baselineskip}
 \begin{keypoint}
 A rigid-body twist $(\boldsymbol\omega,\vect v_O)$ and known $\vect r$ permit conversion between reference points (\cref{app:screw}).
 The scalar $\|\boldsymbol\omega\|$ alone does not.
@@ -101,12 +102,13 @@ Direct vector evaluation still works when an azimuth is undefined at a vertical 
 
 Reported face-to-path and spin loft are legitimate declared quantities even when face orientation is evaluated at contact and velocity at GC.
 They are not automatically the local relative contact kinematics required by an impact law.
-For a club point $P$ contacting a ball point $Q$, that relative velocity is
+For ideal rigid club and ball kinematics immediately before contact, the club-point velocity relative to the prospective ball contact point is
 \begin{equation}
 \vect v_{\rm rel}=\vect v_P-
  \left[\vect v_B+\boldsymbol\omega_B\times(\vect p_Q-\vect p_B)\right],
 \end{equation}
-where $B$ is the ball center.
+where $P$ and $Q$ are the respective surface points and $B$ is the ball center.
+During a deformable impact, local surface-deformation velocities must also be included; the displayed rigid-body expression alone does not represent them.
 Its normal and tangential components enter a contact model; compliance, friction and impact location then influence the outgoing ball state (\cref{ch:impact}).
 Knowing two headings does not identify all of those quantities.
 

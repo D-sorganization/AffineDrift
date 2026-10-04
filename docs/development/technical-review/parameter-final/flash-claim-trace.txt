@@ -1,0 +1,47 @@
+### Claim Trace Audit Findings
+
+#### 1. Frame Orthogonality and Basis Projection Inconsistency in Transverse Spin Definitions
+
+* **Exact Sentence:**
+  > "Define $S_{\rm back}=\vect S\cdot\uvec e_b$, $S_{\rm side}=-\vect S\cdot\uvec e_u$ and $S_{\parallel}=\vect S\cdot\uvec v_b$."
+  > *(Followed by: "For horizontal forward flight and $\vect S=(1000,-300,3000)$ rpm in the world frame, $S_\perp\simeq3014.96$ rpm, $S\simeq3176.48$ rpm and $\theta\simeq5.71\degs$.")*
+* **Issue / Conflict:**
+  In the established world coordinate system ($x$ forward, $y$ upward, $z$ right), horizontal forward flight corresponds to $\uvec v_b = (1, 0, 0)$. In the standard flight and spin-axis basis referenced in the dossier (aligning with world-up $y$), the backspin unit vector transverse to forward flight along the pitch axis is directed along $-z$ (or $+z$), and the vertical/yaw axis $\uvec e_u$ is aligned with upward $y = (0, 1, 0)$.
+  Under the source's explicit numerical assignment $\vect S = (S_x, S_y, S_z) = (1000, -300, 3000)$ rpm:
+  - Axial component: $S_\parallel = \vect S \cdot \uvec v_b = 1000$ rpm.
+  - The two transverse components are along $y$ (magnitude $300$) and $z$ (magnitude $3000$).
+  - Calculating $S_\perp = \sqrt{3000^2 + (-300)^2} = \sqrt{9\,090\,000} \simeq 3014.9627$ rpm, and $\theta = \operatorname{atan2}(300, 3000) \simeq 5.7106^\circ$.
+  However, with the displayed definition $S_{\rm side} = -\vect S \cdot \uvec e_u$, if $\uvec e_u = (0, 1, 0)$ represents the transverse "up" unit axis, then $S_y$ is the transverse vertical component, while $S_{\rm back}$ is the horizontal transverse (pitch) component ($\uvec e_b$). Labeling $S_{\rm side}$ with $\uvec e_u$ (transverse up) and $S_{\rm back}$ with $\uvec e_b$ (transverse horizontal/backspin) swaps the conventional aerodynamic axes where sidespin lies about the vertical axis $\uvec e_u$ and backspin lies about the lateral axis $\uvec e_b$. If $S_{\rm side} = -\vect S \cdot \uvec e_u$, then a positive tilt $\theta = \operatorname{atan2}(S_{\rm side}, S_{\rm back})$ reflects an angle measured from the horizontal axis toward the vertical axis, but assigning the label $S_{\rm side}$ to the projection onto $\uvec e_u$ conflicts with the standard definition of backspin as rotation about the transverse pitch axis.
+* **Bounded Fix:**
+  Explicitly define the unit orientation vectors relative to the launch frame:
+  "Use the orthonormal launch frame in \cref{eq:axistilt}: outgoing direction $\uvec v_b$, transverse lateral axis $\uvec e_b$ (pointing left/pitch), and transverse up axis $\uvec e_u$. Define backspin along the lateral axis $S_{\rm back}=\vect S\cdot\uvec e_b$, sidespin component along the transverse vertical axis $S_{\rm side}=-\vect S\cdot\uvec e_u$ (or vice versa according to the convention in \cref{eq:axistilt}), and axial spin $S_{\parallel}=\vect S\cdot\uvec v_b$."
+
+---
+
+#### 2. Sign of Transverse Sidespin in Numerical Example
+
+* **Exact Sentence:**
+  > "For horizontal forward flight and $\vect S=(1000,-300,3000)$ rpm in the world frame, $S_\perp\simeq3014.96$ rpm, $S\simeq3176.48$ rpm and $\theta\simeq5.71\degs$."
+* **Issue / Conflict:**
+  For $\vect S = (1000, -300, 3000)$ in $(x, y, z)$:
+  If $S_{\rm side} = -\vect S \cdot \uvec e_u$ with $\uvec e_u = (0, 1, 0)$, then $S_{\rm side} = -(-300) = +300$. If $S_{\rm back} = 3000$, then $\operatorname{atan2}(300, 3000) = +5.71^\circ$. However, if $z$ is positive to the right, a rotation vector pointing in $+z$ corresponds (by the right-hand rule) to topspin rather than backspin in a standard right-handed frame ($x$ forward, $y$ up, $z$ right), making $\uvec e_b = (0, 0, -1)$ for standard backspin.
+  Evaluating $\vect S \cdot \uvec e_b$ would yield $-3000$ rpm unless $\uvec e_b$ is explicitly declared or the vector components are signed consistently with the world frame.
+* **Bounded Fix:**
+  Align the vector components with the world axes and specify the basis vectors directly:
+  "For horizontal forward flight ($\uvec v_b=(1,0,0)$), with lateral transverse axis $\uvec e_b=(0,0,-1)$ and up axis $\uvec e_u=(0,1,0)$, a spin vector $\vect S=(1000,-300,-3000)$\,rpm in the world frame yields $S_{\rm back}=3000$\,rpm, $S_{\rm side}=300$\,rpm, $S_\perp\simeq3014.96$\,rpm, $S\simeq3176.48$\,rpm and $\theta=\operatorname{atan2}(300,3000)\simeq5.71\degs$."
+
+---
+
+#### 3. Domain Restriction on Dynamic Loft and Attack Angle Difference for Spin Loft Identity
+
+* **Exact Sentence:**
+  > "When $f=p$ and the elevation difference lies in $[-\pi,\pi]$, $\sigma=|\ell-a|$; using a signed difference silently assumes its sign."
+* **Issue / Conflict:**
+  In \cref{eq:parametersspinloft}:
+  $$\cos\sigma = \sin a\sin\ell + \cos a\cos\ell\cos(f-p)$$
+  When $f = p$, $\cos(f - p) = 1$, yielding:
+  $$\cos\sigma = \sin a\sin\ell + \cos a\cos\ell = \cos(\ell - a)$$
+  Because the spin-loft angle $\sigma$ is defined in the principal range $\sigma \in [0, \pi]$, $\cos\sigma = \cos(\ell - a)$ implies $\sigma = |\ell - a|$ only if $|\ell - a| \in [0, \pi]$.
+  Stating that the elevation difference lies in $[-\pi, \pi]$ is mathematically correct since $|\ell - a| \le \pi$. However, dynamic loft $\ell$ and attack angle $a$ are individual elevation angles usually bounded in $(-\pi/2, \pi/2)$. Clarifying that $|\ell - a| \le \pi$ ensures no unstated modulo ambiguity.
+* **Bounded Fix:**
+  "When $f=p$ and $|\ell-a|\le\pi$, $\sigma=|\ell-a|$; using a signed difference silently assumes its sign."

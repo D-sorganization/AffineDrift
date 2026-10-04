@@ -1,3 +1,11 @@
+# Parameter Review #4881 Resumed: Final Validation in Progress
+
+The user resumed the corpus goal. Work continues on `fix/launch-parameter-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-parameter-review`. Chapter2 source, equations and94-page book PDF have received final scoped review; the full frozen-tree regression is next. See `reports/technical-review/parameter-review.md` and the source dossier for evidence. Do not reuse the older paused checkpoint as current acceptance status.
+
+Parent PR4879 merged at b33bcf1a37c1cf8665fb6cc3a0f8abd84a1db496. All11accepted hardware/Bosch paths match their canonical hashes on remote main; the receipt is `reports/technical-review/hardware-bosch-remote-main-receipt.json`. Both leases/presence records were released after verification. Six completed agy Flash helper tasks now support the parameter review; the oversized seventh invocation failed before execution and its narrowed retry is counted once. Goal is active. No empirical device or whole-book technical acceptance is implied. Current claim is technical-review-20261004-parameters-resume through19:49UTC. Earlier entries below are historical.
+
+---
+
 # Paused at User-Requested Handoff: Parameter Review #4881
 
 Continue only after user authorization. The source-review checkpoint is on `fix/launch-parameter-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-parameter-review`, based on205f08913. Read [the detailed handoff](docs/development/technical-review/parameter-review-handoff.md) and the parameter evidence dossier before editing. No #4881 PR is open; provisional chapter and bibliography changes are committed for continuation, not accepted for publication. The canonical PDF still represents the preceding accepted source; a94-page provisional preview is saved separately. Final technical/PDF acceptance and full regression remain.
