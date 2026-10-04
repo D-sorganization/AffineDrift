@@ -1,3 +1,13 @@
+# Implementation Appendix #4890 — Accepted Source
+
+Source `f141a02b5be45db857bee76e2d078ce5a444a135` passed 6,863 tests, 29 skips, 210 deselections and 60 warnings in 453.48 seconds with 93.24% src coverage. The tracked tree stayed unchanged. Complete original/revision and scoped final 97-page PDF review are complete; five canonical files and the portable test-log digest are bound in `reports/technical-review/implementation-validation.json`. Only Appendix B advances in the corpus; 84 rows still have the exact indexed-pending label, which is not a count of all remaining scientific work. The prior parameter bibliography/PDF changed intentionally; 13 other parameter/article/date acceptance paths remain exact. Historical receipts remain intact.
+
+Final metadata checks passed (40), and all five pre-PR gates passed over explicit source refs. This document-only diff maps no Python tests; the full frozen regression is recorded separately. Next: regular PR stacked on #4891 until its actual main delivery; protected merge and canonical-byte verification. Parent #4886 remains in merge-group route accessibility checks as of 19:44 UTC. #4889 and #4891 must be retargeted in dependency order after each parent reaches main. Shared RM #1943 remains open. Parameter claim renewed through 21:37 UTC. No main delivery is asserted.
+
+Next review #4894 is prepared in `C:/Users/diete/Repositories/Worktrees/AffineDrift-flight-accuracy-review`, branch `fix/flight-accuracy-design-review`, lease `technical-review-20261004-flight-accuracy` through 21:40 UTC. Three complete originals read, two read-only Flash inventories adjudicated and detailed source/derivation plan saved in `research/flight-accuracy-review-20261004.md` inside the book. No publication edits or acceptance yet. Integrate this final appendix metadata into that branch before publication. Broad goal active.
+
+---
+
 # Implementation Appendix #4890 — Source and PDF Checkpoint
 
 Active worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-implementation-review`, branch `fix/implementation-appendix-review`, based on date PR #4891 at `73868d111`. Lease `technical-review-20261004-implementation` runs through 21:13 UTC on 2026-10-04. Complete original and revised appendix read; final 97-page PDF has scoped visual acceptance for TOC 3–6, Appendix B 60–66, bibliography 90–97, with 102 printed entries and no unresolved references. Five read-only agy Gemini 3.8 Flash helpers assisted; their mistakes and useful findings are adjudicated in the research dossier. One hundred independent finite-difference checks confirm the radial-speed Jacobian. No empirical device or full-book scientific acceptance is implied.
