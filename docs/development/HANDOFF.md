@@ -1,3 +1,7 @@
+# Animated WebP for Dead Fish Figure - #4558
+
+Branch `claude/issue-4558`. `scripts/optimize_images.py` now also writes `static/images/A-Dead-Fish-Swims.webp` (233 KB vs the 281 KB optimized GIF), listed in the manifest and `EXPECTED_OUTPUTS`. `pages/daydreams-doodles.qmd` serves it via `<picture>` with a reduced-motion poster source and the GIF fallback. Tests are in `tests/test_optimize_images.py`. The source GIF and MP4/WebM are intentionally out of scope. Next: review the draft PR, then mark ready and arm the guarded merge. DL-#4558 touched.
+
 # Issue #4882 - Freshness Dashboard Page-Relative Links
 
 Branch `claude/issue-4882`: `scripts/generate_companion_freshness.py` now emits route link targets relative to `models/programming/freshness.qmd`; page regenerated, claim-audit evidence refreshed, 12 path-style baseline entries removed (one journey-page entry remains by design). Next: review the draft PR and arm the merge queue.
