@@ -1,3 +1,7 @@
+# Implementation Appendix Acceptance — 2026-10-04
+
+Frozen source f141a02b5be45db857bee76e2d078ce5a444a135 passed 6,863 tests with 93.24% src coverage in 453.48 seconds. Scoped final PDF and complete source review accepted, five canonical bindings saved, only the appendix corpus row advanced. Earlier parameter PDF/bibliography hashes remain historical; the other 13 parameter/article/date source bindings are unchanged. Protected delivery remains. Follow-up #4894 groups the connected flight, accuracy and design chapters; two Flash inventories and primary-reading preparation are isolated from this acceptance.
+
 # DL-#4890 — Implementation Appendix Source Checkpoint
 
 2026-10-04: completed full original/revision reading and primary-source checks. Corrected Doppler/window claims, dechirping, club reference-point interpretation, hardware cadence, sensor observation functions and Jacobians, EKF/RTS assumptions, event timing, inverse-club priors, optical blur/overlap and held-out validation. Five read-only Flash helpers were lead-adjudicated. Manufactured arithmetic and 100 finite-difference Jacobians pass. Canonical PDF rebuilt to 97 pages with 102 printed references; scoped final visual review passed after fixing a stranded heading. Full frozen regression and protected delivery remain. See the implementation dossier for derivations, source-reading bounds and rejected helper assertions.
