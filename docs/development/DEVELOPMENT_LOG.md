@@ -1,3 +1,15 @@
+# Bosch Insertion Plan — Fixed-Commit Acceptance #4877
+
+2026-10-04: source checkpoint `73f6f3946649b6a708495cc8d30bc61cbf4b25eb` passed the full regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,087.67 seconds, exit 0. The tracked tree stayed unchanged; no local rendering or hooks overlapped. Five canonical source/evidence hashes bind the complete insertion-plan review and cited bibliography repairs. The corpus advances one row, leaving 89 explicitly pending originals. Eight Flash helpers supported review/PR preparation under lead adjudication. Hardware turnover commit ebf0b82fe is integrated without changing its six accepted source/evidence files. The two completed reviews will share one regular PR and protected delivery cycle. Parent #4875 remains queued; #4878 is only filed read-only preparation. No whole-book or empirical acceptance is added.
+
+---
+
+# Hardware Appendix — Queue and Turnover Update #4876
+
+2026-10-04: recorded the successful full Ruff/Black checks and their log hashes. The six accepted source/evidence files remain unchanged. Parent #4875 passed its complete PR CI and is undergoing protected merge-group validation; no remote-main delivery is claimed. Bosch #4877 is separately committed/pushed at 73f6f3946 and running its fixed-source regression. Updated turnover distinguishes both branches, current leases and the remaining main-target PR workflow. No publication source or PDF was changed.
+
+---
+
 # Hardware Appendix — Fixed-Commit Regression and Acceptance #4876
 
 2026-10-04: accepted source `377ae74fc8917529f36882614012538e2254816f` passed the full repository regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,106.10 seconds, exit 0. The tracked tree remained unchanged throughout; no concurrent rendering or commit hooks. Six source/evidence files now have canonical Git-byte bindings, and one corpus row advances to complete source review. Five Flash source helpers plus one prose helper were lead-reviewed. No additional source correction was needed after the fixed checkpoint. Packaging outputs were preserved beneath QA after the run. Full scope and separate PDF/source validation are in `reports/technical-review/hardware-appendix-validation.json`. Parent #4875 protected delivery and the hardware regular PR remain pending; no hardware measurement, full-book or entire-corpus acceptance is claimed.
