@@ -722,6 +722,19 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Reconcile complete print/web Chapter 3b mechanics and primary-study interpretation, with explicit constrained and state-space accounting; preserve other chapter review scopes.
 - **Next step:** Complete. PR #4709 merged at 984552e17 with CI Standard 36773428069 green; issue lease and presence released. Corpus continues in regular PR #4712.
 
+### DL-#4882 · Page-Relative Freshness Dashboard Links
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** pending (draft; main)
+- **Issue:** #4882 (parent #3896)
+- **Branch:** `claude/issue-4882`
+- **Paths:** `scripts/generate_companion_freshness.py`, `tests/test_companion_freshness.py`, `tests/link_gate_baseline.json`, `models/programming/freshness.qmd`
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-04 (55 focused tests pass; generator and claim-audit `--check` exit 0; site gate passes with one path-style entry left)
+- **Summary:** Freshness dashboard route links now target page-relative paths derived from the output path; 12 path-style baseline entries removed. The journey-page workbench entry stays on purpose.
+- **Next step:** Review the draft PR, then arm it through the merge queue.
+
 ## Archive
 
 Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.

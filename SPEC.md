@@ -590,3 +590,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4888 | Preserve unverified publication dates as readable uncertainty in rendered title and metadata cards without inventing date metadata. |
 | 2026-10-04 | #4890 | Connect launch-monitor implementation to identifiable sensor observations, timing uncertainty, conditional inversion and independently validated optical and radar budgets. |
 | 2026-10-04 | #4894 | Prepare coordinated flight, accuracy and design review with primary-reading limits, mathematical contracts and bounded Flash inventories. |
+| 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
