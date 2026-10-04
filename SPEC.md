@@ -577,5 +577,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-03 | #4860 | Clarify loaded-loop restoring stiffness, muscle constitutive scope and sampled stiffness strategy in the three passive-stabilization chapter sources; retain prior mechanics and empirical limits. |
 | 2026-10-03 | #4861 | Follow apex redirect in live deployment manifest verification and increase build job timeout to 90 min (#4809). |
 | 2026-10-03 | #4863 | Clarify underactuation differential-decay assumptions, finite-interval metric bounds and nominal-versus-regional scope across four chapter copies; retain mechanics and improve scoped print/web presentation. |
-| 2026-10-03 | #4864 | Review combined Volume II consistency, restore omitted web terminology, and align landing/preface claims with the reviewed task and biomechanics scope. |
+| 2026-10-03 | #4864 | Review combined Volume II consistency, restore omitted web terminology, and align landing/preface claims with the reviewed task and biomechanics scope. Preserve finding evidence outside generated site output and check the boundary before delivery. |
 | 2026-10-03 | #4865 | Qualify shared configuration, generalized velocity, force-power, mass-matrix and linearization conventions; repair nomenclature headers and DCR print overflow; regenerate all six dependent Geometry editions with bounded evidence. |
