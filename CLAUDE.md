@@ -418,7 +418,7 @@ Binding fleet-wide from
 - A substantive pull request adds **exactly one** row to the SPEC.md change
   log: `| YYYY-MM-DD | #<your PR or issue> | one-line summary |`. Prefer a
   change fragment (`python shared_scripts/changes_fragment.py new --issue N
-  --summary "..."`): the post-merge collate step writes the row keyed by the
+--summary "..."`): the post-merge collate step writes the row keyed by the
   real PR number, so you never edit `SPEC.md` yourself.
 - **Never put a serial spec version in a row**, and **never bump the
   `Spec Version` field**. That field is release-derived — set by
@@ -797,7 +797,6 @@ The full guide is in
 
 <!-- END FLEET-MANAGED: agent-tiers -->
 
-
 ---
 
 <!-- BEGIN FLEET-MANAGED: pr-lifecycle -->
@@ -814,7 +813,6 @@ The full guide is in
 5. **Don't switch models mid-session (it throws away the prompt cache).**
 
 <!-- END FLEET-MANAGED: pr-lifecycle -->
-
 
 ## Specification
 
