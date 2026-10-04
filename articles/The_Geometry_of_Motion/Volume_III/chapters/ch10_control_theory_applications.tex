@@ -1,254 +1,228 @@
-\chapter{Applications of Control Theory to Biological Systems}
+\chapter[Control Theory in Biological Systems]{Applications of Control Theory\\to Biological Systems}
 \label{ch:control-bio}
-
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This provisional chapter connects simulation, inference and control through a
+verified illustrative rotor. It does not implement a complete muscle model,
+validate a golfer, or prescribe an assistive or clinical controller.
 \end{gomdraftnotice}
 
-\epigraph{%
-  The body is not a robot that happens to be made of meat.
-  It is a system that has evolved to exploit its own physics.
-}{}
-
-\section{Forward Dynamics Simulation}
-
-Forward dynamics simulation integrates the equations of motion given muscle
-excitations $\bm{u}(t)$. A feedback control loop for biological systems is illustrated
-in Figure~\ref{fig:ch10:control-loop}.
-
-\begin{figure}[htbp]
-\centering
-\begin{tikzpicture}[scale=0.9, >=Stealth, node distance=2.2cm]
-  % CNS / Goal
-  \node[draw, thick, fill=blue!10, minimum width=2.2cm, align=center] (cns) {CNS\\(Goal)};
-
-  % Neural command
-  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=cns] (neural) {Neural\\Excitation $\bm{u}(t)$};
-
-  % Muscle dynamics
-  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=neural] (muscle) {Muscle\\Dynamics};
-
-  % Skeletal dynamics
-  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=muscle] (skeletal) {Skeletal\\Dynamics};
-
-  % Measurement
-  \node[draw, thick, fill=orange!10, minimum width=2.2cm, align=center, below of=skeletal] (measure) {Proprioceptive\\Feedback};
-
-  \draw[->, thick] (cns) -- (neural);
-  \draw[->, thick] (neural) -- (muscle);
-  \draw[->, thick] (muscle) -- (skeletal);
-  \draw[->, thick] (skeletal) -- (measure);
-  \draw[->, thick, bend right] (measure) to (cns);
-
-  \node[below] at (neural.south) {Neural input};
-  \node[below] at (skeletal.south) {Motion output};
-\end{tikzpicture}
-\caption{Biological Feedback Control Loop: CNS Goal Signals Drive Neural Excitations Through Muscle and Skeletal Dynamics, With Proprioceptive Feedback Closing the Loop.}
-\label{fig:ch10:control-loop}
-\end{figure}
+\section{A Forward Model Must Declare Its State}
+Forward simulation predicts motion conditional on a mechanical model, initial state,
+external loads and control law. In general coordinates,
 \begin{equation}
-  \ddot{\bm{q}} = M(\bm{q})^{-1}\left[R(\bm{q})\bm{F}_{\text{muscle}} + J_c^T \bm{F}_c
-  - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - g(\bm{q})\right],
-  \label{eq:ch10:forward-dynamics}
+ \dot q=N(q)v,\qquad
+ M(q)\dot v+h(q,v)=R_v(q)F+J_c(q)^T\lambda+Q_{\rm known}.
+ \label{eq:ch10:forward-dynamics}
 \end{equation}
-coupled with the muscle state equations (Chapter~3):
-\begin{align}
-  \dot{a}_i &= (u_i - a_i) / \tau_i, \\
-  \dot{\ell}_i^M &= v_i^M(a_i, \ell_i^M, \ell_i^{MT}(\bm{q})).
-\end{align}
+Here $h$ contains the declared velocity and gravity terms, $R_v$ maps muscle forces
+to generalized forces conjugate to $v$, and $J_cv$ is the velocity conjugate to
+contact wrench $\lambda$. Configuration dimension need not equal velocity dimension;
+a quaternion-based floating body is one reason to retain $N(q)$.
 
-\begin{lstlisting}[language=Python, caption={Forward dynamics integration for a musculoskeletal model.}]
+Activation, fiber length and other internal states require equations consistent with
+the force law. Rigid-tendon force models and compliant-tendon state models are
+different contracts. A promised muscle-force callback must enter the dynamics.
+Using $F_i=F_{0i}a_i$ instead is an idealized actuator law without force-length,
+force-velocity or tendon compliance. Chapter~\ref{ch:muscle-models} develops those
+additional assumptions.
+
+Maintained rigid contacts require compatible motion and solved reaction forces;
+reduced coordinates may yield a smooth ODE within a fixed contact mode. Contact
+creation, separation and impacts need a declared contact law and transition treatment.
+An unconstrained integrator does not supply those mechanics. Numerical stiffness
+and discontinuities determine solver choices; neither explicit nor implicit
+integration alone establishes physical validity.
+
+\section{A Reproducible Antagonist-Driven Rotor}
+Consider one unwrapped angle $q$ with velocity $v$, constant inertia $J>0$, equal
+force scales $F_0>0$ and opposite constant moment arms $+r,-r$. Let $b\ge0$ be
+viscous damping and $\gamma\ge0$ the coefficient of a restoring gravitational
+torque. Use one common activation time $\tau_a>0$:
+\begin{align}
+ \dot q&=v, &J\dot v&=rF_0(a_1-a_2)-bv-\gamma\sin q,\\
+ \dot a_i&=(u_i-a_i)/\tau_a,&0\le u_i&\le1.
+\end{align}
+Units are $J$ in $\mathrm{kg\,m^2}$, $r$ in meters, $F_0$ in newtons, $b$ in
+$\mathrm{N\,m\,s/rad}$, $\gamma$ in $\mathrm{N\,m}$ and $\tau_a$ in seconds.
+A hanging mass distribution would impose a physical relation between $J$ and
+$\gamma$; here they are independently declared toy parameters. There is no contact,
+fiber state, elastic antagonist stiffness or metabolic model.
+
+At $a=0$ the activation derivative is nonnegative; at $a=1$ it is nonpositive.
+The continuous equation preserves the interval for admissible input and initial
+state. This proof does not guarantee exact numerical bounds. The listing checks
+returned samples with a declared $10^{-8}$ numerical allowance and retains raw
+results. It uses smooth input, checks completion and returns scalar $q,v,\tau$
+arrays and an $(N,2)$ activation matrix. For discontinuous input, split integration
+at known switches; adaptive sampling can miss narrow input features. Solver success
+is a numerical status~\cite{SciPyIVPRotor}, not an anatomical conclusion.
+
+\begin{lstlisting}[language=Python, caption={Antagonist-Driven Rotor With First-Order Activation.}]
+from dataclasses import dataclass
+from typing import Callable
 import numpy as np
 from scipy.integrate import solve_ivp
-from typing import Callable
 
-def forward_dynamics_simulation(
-    mass_matrix_func: Callable,
-    coriolis_func: Callable,
-    gravity_func: Callable,
-    moment_arm_func: Callable,
-    muscle_force_func: Callable,
-    excitation_func: Callable,
-    q0: np.ndarray,
-    qdot0: np.ndarray,
-    a0: np.ndarray,
-    t_span: tuple[float, float],
-    n_eval: int = 500
-) -> dict:
-    """Simulate forward dynamics of a musculoskeletal system.
+@dataclass
+class RotorParameters:
+    """SI constants for an illustrative antagonist-driven rotor."""
+    inertia: float
+    moment_arm: float
+    force_scale: float
+    activation_time: float
+    damping: float = 0.0
+    gravity_scale: float = 0.0
 
-    Parameters
-    ----------
-    mass_matrix_func : callable
-        q -> M(q), shape (n_dof, n_dof)
-    coriolis_func : callable
-        (q, qdot) -> C(q, qdot) @ qdot, shape (n_dof,)
-    gravity_func : callable
-        q -> g(q), shape (n_dof,)
-    moment_arm_func : callable
-        q -> R(q), shape (n_dof, n_muscles)
-    muscle_force_func : callable
-        (a, l_M, v_M) -> F_muscle for each muscle
-    excitation_func : callable
-        t -> u(t), shape (n_muscles,)
-    q0 : np.ndarray
-        Initial joint angles.
-    qdot0 : np.ndarray
-        Initial joint velocities.
-    a0 : np.ndarray
-        Initial muscle activations.
-    t_span : tuple
-        (t_start, t_end)
-    n_eval : int
-        Number of output time points.
+def rotor_inputs(times, initial, parameters):
+    """Validate the finite time grid, state and physical parameters."""
+    grid = np.asarray(times, dtype=float)
+    state = np.asarray(initial, dtype=float)
+    values = np.array([parameters.inertia, parameters.moment_arm,
+        parameters.force_scale, parameters.activation_time,
+        parameters.damping, parameters.gravity_scale], dtype=float)
+    if grid.ndim != 1 or grid.size < 2 or not np.all(np.isfinite(grid)):
+        raise ValueError("Times must be a finite vector with at least two entries")
+    if np.any(np.diff(grid) <= 0):
+        raise ValueError("Times must increase strictly")
+    if state.shape != (4,) or not np.all(np.isfinite(state)):
+        raise ValueError("State must be [q, velocity, activation1, activation2]")
+    if np.any(state[2:] < 0) or np.any(state[2:] > 1):
+        raise ValueError("Initial activations must lie in [0, 1]")
+    if not np.all(np.isfinite(values)) or np.any(values[:4] <= 0) or np.any(values[4:] < 0):
+        raise ValueError("Invalid rotor parameters")
+    return grid, state
 
-    Returns
-    -------
-    dict
-        Keys: 't', 'q', 'qdot', 'a', 'tau'
-    """
-    n_dof = len(q0)
-    n_muscles = len(a0)
-    t_eval = np.linspace(t_span[0], t_span[1], n_eval)
-
-    def dynamics(t: float, state: np.ndarray) -> np.ndarray:
-        q = state[:n_dof]
-        qdot = state[n_dof:2*n_dof]
-        a = np.clip(state[2*n_dof:], 0.0, 1.0)
-
-        # Muscle forces (simplified: assume known fiber length)
-        F_muscle = np.array([
-            a[i] * 500.0  # Simplified: F = a * F0
-            for i in range(n_muscles)
-        ])
-
-        # Joint torques
-        R = moment_arm_func(q)
-        tau = R @ F_muscle
-
-        # Skeletal dynamics
-        M = mass_matrix_func(q)
-        C_qdot = coriolis_func(q, qdot)
-        g = gravity_func(q)
-        qddot = np.linalg.solve(M, tau - C_qdot - g)
-
-        # Activation dynamics
-        u = excitation_func(t)
-        tau_act = 0.015  # Illustrative placeholder; replace with a cited model value.
-        tau_deact = 0.050  # Illustrative placeholder; replace with a cited model value.
-        adot = np.where(
-            u > a,
-            (u - a) / tau_act,
-            (u - a) / tau_deact
-        )
-
-        return np.concatenate([qdot, qddot, adot])
-
-    state0 = np.concatenate([q0, qdot0, a0])
-    sol = solve_ivp(dynamics, t_span, state0, t_eval=t_eval,
-                    method='RK45', max_step=0.001)
-
-    return {
-        't': sol.t,
-        'q': sol.y[:n_dof].T,
-        'qdot': sol.y[n_dof:2*n_dof].T,
-        'a': sol.y[2*n_dof:].T,
-    }
+def simulate_rotor(excitation: Callable, times, initial, parameters):
+    """Integrate a smooth-input toy rotor; no contact or fiber dynamics."""
+    grid, state = rotor_inputs(times, initial, parameters)
+    scale = parameters.moment_arm * parameters.force_scale
+    def dynamics(time, current):
+        control = np.asarray(excitation(time), dtype=float)
+        if control.shape != (2,) or not np.all(np.isfinite(control)):
+            raise ValueError("Excitation must be a finite two-vector")
+        if np.any(control < 0) or np.any(control > 1):
+            raise ValueError("Excitation must lie in [0, 1]")
+        position, velocity = current[:2]
+        activation = current[2:]
+        torque = scale * (activation[0] - activation[1])
+        acceleration = (torque - parameters.damping * velocity
+                        - parameters.gravity_scale * np.sin(position)) / parameters.inertia
+        rate = (control - activation) / parameters.activation_time
+        return np.r_[velocity, acceleration, rate]
+    solution = solve_ivp(dynamics, (grid[0], grid[-1]), state,
+                         t_eval=grid, rtol=1e-9, atol=1e-11)
+    if not solution.success:
+        raise RuntimeError(str(solution.message))
+    if solution.y.shape != (4, grid.size) or not np.all(np.isfinite(solution.y)):
+        raise RuntimeError("Incomplete or nonfinite solution")
+    activation = solution.y[2:].T
+    if np.any(activation < -1e-8) or np.any(activation > 1+1e-8):
+        raise RuntimeError("Numerical activation bounds violated")
+    return {"t": solution.t, "q": solution.y[0], "qdot": solution.y[1],
+            "a": activation, "tau": scale * (activation[:, 0] - activation[:, 1])}
 \end{lstlisting}
 
-\section{Predictive Simulation}
-
-Predictive simulation uses trajectory optimization (Volume~I, Chapter~5) to find
-the muscle excitations that produce a desired motion while minimizing a cost:
+\subsection{Exact Activation, Motion and Mechanical Power}
+For constant excitation $\bar u$, with elapsed time $s=t-t_0$,
 \begin{equation}
-  \min_{\bm{u}(\cdot)} \int_0^T \mathcal{L}(\state, \bm{u}) \dt
-  \quad \text{s.t.} \quad \dot{\state} = f(\state, \bm{u}),\;
-  \state(0) = \state_0,\; h(\state, \bm{u}) \leq 0,
-  \label{eq:ch10:predictive-sim}
+ a_i(s)=\bar u_i+(a_i(0)-\bar u_i)e^{-s/\tau_a}.
 \end{equation}
-where $\mathcal{L}$ is a physiologically motivated cost (e.g., metabolic energy,
-muscle fatigue, deviation from desired kinematics) and $h$ captures physical
-constraints (joint limits, muscle force capacity, contact constraints).
+If $b=\gamma=0$, set $A=rF_0/J$, $d=\bar u_1-\bar u_2$ and
+$c=a_1(0)-a_2(0)-d$. Direct integration gives
+\begin{align}
+ v(s)&=v_0+A[d s+c\tau_a(1-e^{-s/\tau_a})],\\
+ q(s)&=q_0+v_0s+A[d s^2/2+c\tau_a\{s-\tau_a(1-e^{-s/\tau_a})\}].
+\end{align}
+These are independent trajectory benchmarks, including nonzero initial activation.
+For the full declared rotor, differentiate its mechanical energy:
+\begin{equation}
+ E=\tfrac12Jv^2+\gamma(1-\cos q),\qquad
+ \dot E=rF_0(a_1-a_2)v-bv^2.
+ \label{eq:ch10:power}
+\end{equation}
+Activation is a command filter with no declared energy storage, so it is absent
+from $E$. Actuator mechanical power does not determine metabolic expenditure.
+Compare energy change with integrated power and refine both ODE and quadrature
+errors. Agreement checks model consistency, not a human energy budget.
 
-\noindent
-Agrachev \& Sachkov \cite{AgrachevSachkov2004}, Theorem~8.1 (Pontryagin's Maximum Principle),
-establishes the fundamental existence and optimality conditions for such optimal control problems.
-Their treatment covers affine systems with constraints and provides both theoretical guarantees
-and computational methods (the method of characteristics) for solving OCPs of this form.
+Equal antagonist activation gives zero net torque here. It does not increase
+mechanical stiffness, because force scales and moment arms have no position
+dependence. Biological co-contraction can affect stiffness through additional
+force, geometry, compliance and feedback mechanisms that must be modeled.
+This connects to the stiffness analysis of Chapter~\ref{ch:multibody-bio}.
 
-\section{Prosthetics and Exoskeleton Control}
+\section{Prediction, Optimization and Optimality}
+A trajectory optimization may minimize
+\begin{equation}
+ J[u]=\Psi(x(T))+\int_0^T L(x,u)\,dt,
+ \qquad \dot x=f(x,u),\quad u\in U,
+\end{equation}
+subject to declared initial, terminal and path constraints. Tracking observations
+and predicting motion from a task-level cost answer different conditional questions.
+An effort penalty is a hypothesis, not automatically a metabolic law or the
+objective used by the nervous system.
 
-The control theory of Volumes~I--II applies directly to assistive devices:
-\begin{itemize}
-  \item \textbf{Powered prostheses}: trajectory tracking with impedance modulation
-  \item \textbf{Exoskeletons}: assist-as-needed control using contraction theory
-  \item \textbf{FES (Functional Electrical Stimulation)}: direct muscle activation
-        control for paralyzed limbs
-\end{itemize}
+Pontryagin's maximum principle supplies necessary conditions under its regularity
+and problem assumptions. In a normal smooth case, with maximizing convention
+$H=p^Tf-L$, they include $\dot x=H_p$, $\dot p=-H_x$ and Hamiltonian maximization
+along a candidate, with appropriate endpoint conditions. Abnormal cases retain a
+cost multiplier; path constraints and hybrid transitions require corresponding
+extensions. Neither existence of an optimum nor global optimality of a computed
+candidate follows from these conditions alone~\cite{LiberzonControlReview}.
+Existence arguments and numerical convergence are separate tasks. Discretized
+solutions need mesh, feasibility and sensitivity checks; the method of
+characteristics is not a general guarantee for a constrained biological optimizer.
 
-\section{Sport Biomechanics Applications}
+\section{What a Golf-Swing Analysis Can Conclude}
+Coordinate count depends on the chosen segments and joints. Ground contact
+constrains motion and supplies external wrench; whether it creates a kinematic loop
+depends on the whole contact and joint graph. Shaft bending changes clubhead
+orientation and transmitted loads. Moment arms couple geometry to force and power.
+These connections prevent independent fits from automatically forming one
+consistent mechanical explanation.
 
-\subsection{The Golf Swing as a Biomechanical System}
+Motion capture estimates kinematics under reconstruction assumptions. Force plates
+measure support wrenches under calibration and contact assignments. EMG measures
+electrical activity processed into a signal related to excitation; it does not
+measure force or mechanical activation directly. Inverse dynamics estimates net
+generalized loads conditional on those inputs. Muscle allocation adds capacity and
+objective assumptions. Forward reproduction tests consistency, but reusing a fitted
+trial does not provide independent predictive validation.
 
-The golf swing demonstrates every concept in this volume:
-\begin{enumerate}
-  \item Multi-segment kinematic chain (15+ DOF)
-  \item Muscle-driven actuation with co-contraction
-  \item Bi-articular coupling (forearm muscles, lats)
-  \item Passive dynamics exploitation (wrist release)
-  \item Shaft flexibility (deformable body)
-  \item Ground reaction force coupling (closed chain at the feet)
-\end{enumerate}
+A wrist-release trajectory can arise from interacting active and passive terms.
+Demonstrating passive release in a simplified model establishes a possible mechanism
+under its conditions, not its exclusive cause in a golfer. Compare interventions,
+measured loads and out-of-sample predictions to distinguish mechanisms. For assistive
+devices, impedance or tracking controllers also need actuator, sensor, contact,
+delay and human-interaction evaluation. A simulated result does not establish
+suitability for a person.
 
-The complete biomechanical analysis integrates:
-\begin{itemize}
-  \item Motion capture (kinematics)
-  \item Force plates (ground reaction forces)
-  \item EMG (muscle activation patterns)
-  \item Inverse dynamics (joint torques)
-  \item Static optimization (muscle forces)
-  \item Forward dynamics validation (predictive simulation)
-\end{itemize}
-
-\section{Synthesis: From Theory to Application}
-
-The progression through this volume mirrors the progression through the series:
-
+\section{Synthesis: Geometry to Evidence}
 \begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}llll@{}}
+\begin{tabular}{@{}p{0.24\textwidth}p{0.65\textwidth}@{}}
 \toprule
-\textbf{Volume} & \textbf{Concept} & \textbf{Biomechanical Application} & \textbf{Agrachev \& Sachkov} \\
+\textbf{Model Layer} & \textbf{Question Passed to the Next Layer}\\
 \midrule
-Vol~0 & Screw axes, PoE & Joint kinematics, ISA analysis \\
-Vol~I & Contraction theory & Stability of muscle-driven systems \\
-Vol~I & DDP/iLQR & Optimal muscle excitation patterns \\
-Vol~II & Trajectory tubes & Motor variability envelopes \\
-Vol~II & Phase variables & Gait cycle parameterization \\
-Vol~III & Hill model & Force prediction \\
-Vol~III & Inverse dynamics & Joint torque estimation \\
-Vol~IV & Motor control & Neural command generation \\
+Geometry & Which velocities, forces and moments are conjugate?\\
+Tissue and actuator & Which force and stiffness law is admissible?\\
+Contact and shaft & Which constraints, deformation and reactions alter motion?\\
+Measurement & Which state or load is observed, in which frame and bandwidth?\\
+Inference & Which quantities are identified, and which remain prior-dependent?\\
+Control & Which predictions distinguish mechanisms on new data?\\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Forward Simulation.}
-        Using the provided code (adapted for a simple 2-DOF model), simulate a
-        reaching movement with prescribed muscle excitation ramps.
-
-  \item \textbf{Predictive vs.\ Tracking.}
-        Compare the muscle activations from static optimization (tracking measured
-        kinematics) with those from predictive simulation (optimizing a metabolic cost).
-
-  \item \textbf{Prosthetic Control.}
-        Design an impedance controller for a prosthetic knee that provides different
-        stiffness during stance and swing phases.
-
-  \item \textbf{(Programming.)} Implement a complete inverse dynamics $\to$ static
-        optimization pipeline for a 3-DOF planar arm model with 6 muscles.
+ \item Use $J=2$, $r=0.1$, $F_0=20$, $\tau_a=0.05$, $b=\gamma=0$ in SI units.
+ Start from $(q,v,a_1,a_2)=(0.3,-0.1,0.2,0.1)$ with input $(0.7,0.3)$.
+ Verify the exact trajectory through $0.5\,\mathrm s$.
+ \item Add $b=0.2$, $\gamma=1$. Check integrated power while refining integration
+ and output grid separately. Explain the two error sources.
+ \item Compare equal and unequal antagonist inputs. Explain why this listing
+ cannot test a claim that co-contraction increases joint stiffness.
+ \item Specify a held-out golf experiment that could distinguish passive release
+ from active torque. Identify measurements, nuisance parameters, competing
+ predictions and a failure criterion before fitting.
 \end{enumerate}

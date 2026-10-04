@@ -1,185 +1,223 @@
 \chapter{Inference on Biological Systems}
 \label{ch:inference}
-
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This provisional technical treatment includes reproducible numerical examples.
+They verify inference under declared assumptions; they do not establish
+subject-specific muscle properties or neural control mechanisms.
 \end{gomdraftnotice}
 
-\epigraph{%
-  We cannot open the body and read the parameters.
-  We must infer them from the traces left by motion.
-}{}
+\section{What the Data Can Identify}
+Joint geometry, tissue properties, external loads and control inputs jointly shape
+motion. Estimating one while treating the others as known can transfer their errors
+into the fitted parameter. Some quantities can be measured or constrained by
+additional experiments; others require inference through a measurement model.
+A fitted parameter is conditional on the model, measurement protocol, initial state
+and calibration, rather than a direct reading of biological truth.
 
-\section{Parameter Identification From Motion Data}
-
-Biological system parameters (muscle strengths, tendon slack lengths, segment inertias)
-cannot typically be measured directly in vivo. They must be inferred from observable
-motion data using optimization and estimation techniques.
-
-\begin{center}
-\begin{tikzpicture}[scale=0.9, >=Stealth, node distance=2cm]
-  \node[draw, thick, fill=blue!10, minimum width=2cm] (model) {Model $f(\state, \bm{\theta})$};
-  \node[draw, thick, fill=blue!10, minimum width=2cm, right of=model] (predict) {Prediction $\hat{\bm{y}}$};
-  \node[draw, thick, fill=green!10, minimum width=2cm, align=center, right of=predict] (compare) {Compare\\to data};
-  \node[draw, thick, fill=red!10, minimum width=2cm, below of=compare] (optimize) {Optimize $\bm{\theta}$};
-
-  \node[left, font=\tiny] at (model.west) {Parameters};
-  \node[below, font=\tiny] at (predict.south) {Observations};
-
-  \draw[->, thick] (model) -- (predict);
-  \draw[->, thick] (predict) -- (compare);
-  \draw[->, thick] (compare) -- (optimize);
-  \draw[<->, thick] (optimize) -- (model);
-
-  \node[draw, thick, fill=orange!10, minimum width=2cm, below of=model] (prior) {Prior $p(\bm{\theta})$};
-  \draw[->, dashed] (prior) -- (optimize) node[midway, left, font=\tiny] {Bayes};
-\end{tikzpicture}
-\end{center}
-
-\subsection{Maximum Likelihood Estimation}
-
-Given a parameterized model $\dot{\state} = f(\state, \bm{\theta})$ with parameters
-$\bm{\theta}$ and noisy observations $\bm{y}_k = h(\state_k) + \bm{v}_k$ at times
-$t_k$, the maximum likelihood estimate is:
+Write a forward prediction as
 \begin{equation}
-  \hat{\bm{\theta}} = \argmin_{\bm{\theta}} \sum_{k=1}^{N}
-  \norm{\bm{y}_k - h(\state_k(\bm{\theta}))}_{R^{-1}}^2,
-  \label{eq:ch8:mle}
+ \dot x=f(x,u,\theta),\qquad
+ \hat y_k=H_k(x(t_k),\theta),\qquad y_k=\hat y_k+\epsilon_k.
 \end{equation}
-where $R$ is the measurement noise covariance.
+Here $H_k$ includes the measured quantity, frame, sensor locations and known
+processing. Unknown initial conditions and calibration constants belong among the
+unknowns or must be propagated as uncertainty. Numerical differentiation of motion
+does not create an independent force measurement.
+Chapter~\ref{ch:experimental} explains why processing and synchronization matter.
 
-\subsection{Bayesian Estimation With Physical Constraints}
+\subsection{Structural and Practical Identifiability}
+For a declared input and observation experiment, structural identifiability asks
+whether distinct admissible parameter vectors can produce exactly the same ideal
+observations. Global uniqueness is stronger than uniqueness near one vector.
+Practical identifiability asks how reliably finite noisy data constrain those
+parameters. A well-conditioned optimizer is neither definition.
 
-The Bayesian framework (introduced in Chapter~6) is particularly valuable for
-biomechanical parameter estimation because it naturally incorporates prior knowledge
-from the literature:
+Consider the manufactured free decay
+\begin{equation}
+ m\ddot q+c\dot q+kq=0,\qquad m>0.
+\end{equation}
+With known initial conditions and only $q(t)$ observed, replacing $(m,c,k)$ by
+$(sm,sc,sk)$, $s>0$, leaves the equation unchanged after division by $m$.
+Thus the experiment cannot identify their absolute scale. It can constrain $c/m$
+and $k/m$ only if the trajectory is informative; a stationary zero trajectory does
+not even determine those ratios. A measured applied force or independently known
+inertia can break the scale ambiguity in a suitably designed experiment.
+More samples of the identical free decay cannot do so.
 
-\begin{lstlisting}[language=Python, caption={Bayesian parameter estimation for musculoskeletal model.}]
+Stack predictions into $\hat y(\theta)$ and examine sensitivity
+$S=\partial\hat y/\partial\theta$. Under fixed Gaussian noise with stacked covariance
+$\Sigma$, $S^T\Sigma^{-1}S$ describes local data information. Null or small singular
+directions expose missing or weak sensitivity after sensible parameter scaling.
+Full local rank does not exclude distant equivalent solutions or establish that
+the chosen physical model is correct.
+
+\section{Likelihood, Prior and Numerical Objective}
+Assume independent $d$-channel errors $\epsilon_k\sim\mathcal N(0,R)$ with a known,
+fixed, symmetric positive-definite $R$. The Gaussian density gives
+\begin{equation}
+ -\log p(y\mid\theta)=\tfrac12\sum_{k=1}^N r_k^TR^{-1}r_k+
+ \tfrac N2\log\det R+\tfrac{Nd}{2}\log(2\pi),
+ \quad r_k=y_k-\hat y_k(\theta).
+\end{equation}
+The normalization and covariance requirements follow the multivariate Gaussian
+model~\cite{SciPyGaussianInference}. Only terms constant in the optimized parameters
+may be dropped. Estimating $R$, comparing model evidence, or using parameter-dependent
+noise requires retaining the appropriate normalization. Time-correlated errors
+require a joint covariance or an explicit stochastic model, rather than treating
+filtered samples as independent replicates. For the independent case,
+$\Sigma=I_N\otimes R$.
+
+For a fixed Gaussian prior with mean $\mu$ and covariance $P\succ0$, the negative
+log-posterior up to an additive constant is
+\begin{equation}
+ \Phi(\theta)=\tfrac12\sum_k r_k^TR^{-1}r_k+
+ \tfrac12(\theta-\mu)^TP^{-1}(\theta-\mu).
+ \label{eq:ch8:map-objective}
+\end{equation}
+Minimizing this objective gives a mode candidate. A prior constrains an ambiguous
+fit using additional assumptions; it does not make the measurements identify an
+unobserved quantity. Document independent prior evidence and check sensitivity to
+its strength and form.
+
+\subsection{A Checked Fixed-Covariance Listing}
+The listing requires an $(N,d)$ observation matrix and predictions of exactly the
+same shape. Scalar time series must be explicitly shaped $(N,1)$. Cholesky factors
+whiten residuals without repeatedly constructing covariance inverses. Singular or
+parameter-dependent covariances need a different likelihood implementation.
+The forward callback must be deterministic, valid throughout the search domain,
+and accurate enough for numerical optimization. This listing omits an analytic
+gradient, so the optimizer uses finite differences; forward-solver error must be
+small enough to resolve those perturbations.
+
+Optional finite box bounds describe a Gaussian prior restricted to that box;
+its fixed normalization does not change the mode. Bounds encode the physical domain,
+not a repair for an invalid model. A Gaussian on log-parameters specifies a different
+prior. Modes depend on parameterization: transforming a density requires its
+Jacobian, so exponentiating a mode in log-space need not give the physical-coordinate
+mode. The optimizer reports a local candidate, not a global-uniqueness certificate.
+
+\clearpage
+\begin{lstlisting}[language=Python, caption={Checked Fixed-Covariance Gaussian MAP Estimation.}]
+from dataclasses import dataclass
+from typing import Callable
 import numpy as np
+from scipy.linalg import solve_triangular
 from scipy.optimize import minimize
 
-def log_posterior(
-    theta: np.ndarray,
-    observations: np.ndarray,
-    forward_model,
-    prior_mean: np.ndarray,
-    prior_cov: np.ndarray,
+@dataclass
+class GaussianProblem:
+    """Fixed covariances; observations have shape (samples, channels)."""
+    observations: np.ndarray
+    forward_model: Callable[[np.ndarray], np.ndarray]
+    prior_mean: np.ndarray
+    prior_cov: np.ndarray
     noise_cov: np.ndarray
-) -> float:
-    """Compute the log-posterior for parameter estimation.
-
-    Parameters
-    ----------
-    theta : np.ndarray
-        Model parameters.
-    observations : np.ndarray, shape (n_obs, n_dims)
-        Observed data.
-    forward_model : callable
-        theta -> predicted_observations.
-    prior_mean : np.ndarray
-        Prior parameter mean.
-    prior_cov : np.ndarray
-        Prior parameter covariance.
-    noise_cov : np.ndarray
-        Observation noise covariance.
-
-    Returns
-    -------
-    float
-        Negative log-posterior (for minimization).
-    """
-    # Log-likelihood
-    predicted = forward_model(theta)
-    residuals = observations - predicted
-    R_inv = np.linalg.inv(noise_cov)
-    log_likelihood = -0.5 * np.sum(residuals @ R_inv * residuals)
-
-    # Log-prior
-    prior_residuals = theta - prior_mean
-    P_inv = np.linalg.inv(prior_cov)
-    log_prior = -0.5 * prior_residuals @ P_inv @ prior_residuals
-
-    return -(log_likelihood + log_prior)
-
-
-def map_estimate(
-    observations: np.ndarray,
-    forward_model,
-    prior_mean: np.ndarray,
-    prior_cov: np.ndarray,
-    noise_cov: np.ndarray,
     bounds: list[tuple[float, float]] | None = None
-) -> np.ndarray:
-    """Compute Maximum A Posteriori (MAP) parameter estimate.
 
-    Parameters
-    ----------
-    observations : np.ndarray
-        Observed data.
-    forward_model : callable
-        Parameter-to-observation mapping.
-    prior_mean : np.ndarray
-        Prior mean from literature.
-    prior_cov : np.ndarray
-        Prior uncertainty.
-    noise_cov : np.ndarray
-        Measurement noise covariance.
-    bounds : list of tuple, optional
-        Physical bounds on parameters.
+def covariance_factor(value, size):
+    """Require a finite symmetric positive-definite covariance."""
+    matrix = np.asarray(value, dtype=float)
+    if matrix.shape != (size, size) or not np.all(np.isfinite(matrix)):
+        raise ValueError("Invalid covariance shape or entries")
+    if not np.allclose(matrix, matrix.T, rtol=1e-12, atol=0):
+        raise ValueError("Covariance must be symmetric")
+    try:
+        return np.linalg.cholesky(matrix)
+    except np.linalg.LinAlgError as error:
+        raise ValueError("Covariance must be positive definite") from error
 
-    Returns
-    -------
-    np.ndarray
-        MAP parameter estimate.
-    """
-    result = minimize(
-        log_posterior,
-        prior_mean,
-        args=(observations, forward_model, prior_mean,
-              prior_cov, noise_cov),
-        method='L-BFGS-B',
-        bounds=bounds
-    )
+def gaussian_objective(problem):
+    """Factor fixed covariances once and return a checked objective."""
+    data = np.asarray(problem.observations, dtype=float)
+    mean = np.asarray(problem.prior_mean, dtype=float)
+    if data.ndim != 2 or 0 in data.shape or not np.all(np.isfinite(data)):
+        raise ValueError("Observations must be a finite nonempty matrix")
+    if mean.ndim != 1 or mean.size == 0 or not np.all(np.isfinite(mean)):
+        raise ValueError("Prior mean must be a finite nonempty vector")
+    noise = covariance_factor(problem.noise_cov, data.shape[1])
+    prior = covariance_factor(problem.prior_cov, mean.size)
+    def objective(theta):
+        predicted = np.asarray(problem.forward_model(theta), dtype=float)
+        if predicted.shape != data.shape or not np.all(np.isfinite(predicted)):
+            raise ValueError("Prediction must match observations exactly")
+        residual = solve_triangular(noise, (data - predicted).T, lower=True)
+        deviation = solve_triangular(prior, theta - mean, lower=True)
+        value = 0.5 * (np.sum(residual**2) + deviation @ deviation)
+        if not np.isfinite(value):
+            raise ValueError("Nonfinite objective")
+        return float(value)
+    return objective
+
+def map_estimate(problem, initial):
+    """Return a local mode candidate; raise on invalid input or failure."""
+    objective = gaussian_objective(problem)
+    start = np.asarray(initial, dtype=float)
+    if start.shape != np.shape(problem.prior_mean) or not np.all(np.isfinite(start)):
+        raise ValueError("Initial parameters must match prior mean")
+    if problem.bounds is not None:
+        limits = np.asarray(problem.bounds, dtype=float)
+        if limits.shape != (start.size, 2) or not np.all(np.isfinite(limits)):
+            raise ValueError("Bounds must be a finite (parameters, 2) matrix")
+        if np.any(limits[:, 0] >= limits[:, 1]):
+            raise ValueError("Lower bounds must be below upper bounds")
+        if np.any(start < limits[:, 0]) or np.any(start > limits[:, 1]):
+            raise ValueError("Initial parameters must lie inside bounds")
+    objective(start)
+    result = minimize(objective, start, method="L-BFGS-B", bounds=problem.bounds)
+    if not result.success:
+        raise RuntimeError(str(result.message))
+    if result.x.shape != start.shape or not np.all(np.isfinite(result.x)):
+        raise RuntimeError("Optimizer returned invalid parameters")
+    objective(result.x)
     return result.x
 \end{lstlisting}
 
-\section{System Identification for Biological Systems}
+\section{A Mode Is Not a Posterior Distribution}
+For manufactured scalar observations $y_k=\theta+\epsilon_k$, take $y=(1,3)$,
+$R=1$, $\mu=0$, $P=1$. Completing the square yields
+\begin{equation}
+ \Phi(\theta)=\tfrac12[(1-\theta)^2+(3-\theta)^2+\theta^2]
+ =\tfrac32(\theta-4/3)^2+\text{constant}.
+\end{equation}
+The exact unbounded posterior has mean and mode $4/3$, variance $1/3$.
+With a box $[0,1]$, the constrained mode is instead $1$; the unbounded Gaussian is
+no longer the posterior distribution. A boundary optimum need not have zero
+unconstrained gradient.
 
-System identification techniques from control theory (Volume~I) apply to biomechanical
-systems with modifications:
+For nonlinear predictions, an interior mode may support a local Gaussian
+approximation using the Hessian of $\Phi$, if positive definite and locally adequate.
+The data Hessian contains both sensitivity products and residual-weighted second
+derivatives of predictions. Replacing it by $S^T\Sigma^{-1}S$ is a Gauss--Newton
+approximation, not an identity in general. Multimodality, weak directions and boundary
+mass can invalidate a single Gaussian summary. Posterior sampling or other
+approximations also need convergence checks.
 
-\begin{enumerate}
-  \item \textbf{Joint impedance identification}: Perturb the limb and measure the
-        response. The stiffness, damping, and inertia of the joint can be estimated
-        from the transfer function.
-  \item \textbf{Muscle parameter identification}: Optimize muscle parameters (F0,
-        optimal length, tendon slack length) to match experimental force or torque data.
-  \item \textbf{Neural control identification}: Estimate the feedback gains used by
-        the nervous system from perturbation experiments.
-\end{enumerate}
+\section{From Identification to a Testable Golf Model}
+Perturbation experiments can constrain effective joint impedance, but posture,
+feedback delay, contact and activation all affect the response. Fitting a stiffness
+term does not separate tendon elasticity from active feedback. Force-angle fitting
+may constrain combinations of force scale and moment arm.
+Chapter~\ref{ch:inverse-problems} explains why a net load does not uniquely allocate
+individual muscle forces. Report the quantities and predictions that the actual
+experiment supports.
 
-\section{Machine Learning Approaches}
-
-Modern ML approaches to biomechanical inference include:
-\begin{itemize}
-  \item Physics-informed neural networks (PINNs) that enforce equations of motion
-  \item Gaussian process regression for joint angle estimation from sparse data
-  \item Deep learning for markerless motion capture pose estimation
-\end{itemize}
+A learned predictor or physics-informed loss adds modeling assumptions. A finite
+penalty on dynamics residuals does not enforce exact dynamics, and exact equation
+satisfaction would not prove correct parameters. Evaluate residuals on independent
+points and predictions on held-out trials or perturbations, including measurement
+uncertainty and differences between subjects. A useful golf comparison asks whether
+a changed grip, load or timing condition distinguishes competing mechanisms,
+rather than whether each can fit the same swing.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{MAP Estimation.}
-        Using the provided code, estimate the optimal fiber length of a biceps muscle
-        from simulated isometric force data at 5 joint angles.
-
-  \item \textbf{Identifiability Analysis.}
-        For a Hill-type muscle model, analyze which parameters can be uniquely estimated
-        from isometric force-angle data alone. Which require dynamic data?
-
-  \item \textbf{(Programming.)} Implement a joint impedance identification experiment:
-        simulate a perturbed pendulum and estimate stiffness and damping from the response.
+ \item Reproduce the scalar posterior with observations shaped $(2,1)$.
+ Change prior variance from $1$ to $4$ and derive the new mean and variance.
+ \item Impose bounds $[0,1]$. Verify the mode and evaluate the unconstrained
+ derivative at that boundary. Explain why it need not vanish.
+ \item Simulate $(m,c,k)=(1,0.4,4)$ and $(3,1.2,12)$ with the same nonzero initial
+ conditions. Design a measured-force experiment that could distinguish them;
+ specify what else must be known.
+ \item For $\hat y=\theta^2$, derive the exact data Hessian and its Gauss--Newton
+ approximation. State when they agree.
 \end{enumerate}
