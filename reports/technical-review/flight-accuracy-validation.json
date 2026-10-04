@@ -1,0 +1,101 @@
+{
+  "issue": 4894,
+  "epic": 4009,
+  "status": "Complete three-chapter source and scoped PDF accepted; protected delivery pending",
+  "accepted_source_commit": "ce6e068c464eb680267b4903695cd43cb9aa7728",
+  "git_blob_sha256": {
+    "articles/Launch_Monitor_Technology_Review/sections/08-ball-flight-models.tex": "a59421c211e709ac9b85e8a39c2e9e8e157a4aa1c0de680dea2adb44b324cf83",
+    "articles/Launch_Monitor_Technology_Review/sections/09-accuracy.tex": "f3ff486b9381f9c3550125a2efa9d901da9014882dd4b4bd55405d2a67f1c296",
+    "articles/Launch_Monitor_Technology_Review/sections/10-design-guidance.tex": "6b5c4019b5a19e0a0926d93abe4083af9df3ce53476b9e09bb5a942f7846edb0",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "db734188446fc089325a5cc96ef33657c0ef85af9ae5259c921f0d70bb237dd2",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "eaac46c956313eef2fc7965fa37a23dac9ff95c0c7c8358847ad8111775f8d2d",
+    "articles/Launch_Monitor_Technology_Review/research/flight-accuracy-review-20261004.md": "b5adacd405d1a9311c1d359fe0c30570fac9f9e0aac9ab7a9c8e13a302bf19e0",
+    "reports/technical-review/flight-accuracy-independent-checks.json": "52293b8a3aae5c88fd14bd13bac410932e6b350e3ae60e5d0552fa81d66cf873"
+  },
+  "scope": "Complete chapters 8, 9 and 10; no empirical device, whole-book scientific or live-site certification",
+  "full_regression": {
+    "head": "ce6e068c464eb680267b4903695cd43cb9aa7728",
+    "passed": 6863,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 488.46,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/flight-accuracy-review/final-full-tests.txt",
+    "git_blob_sha256": "b285ea086db65e1ca1a66fd6c662b9f55781c265632c1acd3428fc2e08a32561",
+    "notes": "No tracked edits, renders or hooks in this worktree during the run. Empty pre-run status was saved explicitly; the empty post-run PowerShell pipeline initially created no file, so clean status was observed again and the empty after file written before acceptance edits. Generated root packaging directories were verified contained/untracked and preserved under QA.",
+    "initial_failure": {
+      "head": "c08e6660a",
+      "passed": 6861,
+      "failed": 2,
+      "cause": "changes/ was absent from the root-directory allowlist; carried the already-validated parent repair without manuscript edits",
+      "log": "docs/development/technical-review/flight-accuracy-review/initial-full-tests.txt"
+    }
+  },
+  "pdf": {
+    "pages": 102,
+    "bibliography_entries": 102,
+    "printed_entries": 102,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Final physical pages 3\u20136 complete TOC, 38\u201349 complete chapters 8\u201310 and 95\u2013102 complete bibliography",
+    "build_log": "docs/development/technical-review/flight-accuracy-review/accepted-build.txt",
+    "build_exit": 0
+  },
+  "mathematics": {
+    "record": "reports/technical-review/flight-accuracy-independent-checks.json",
+    "identities": [
+      "landing-event sensitivity",
+      "radial-speed correction",
+      "conditional face inverse",
+      "spin-ratio derivative"
+    ],
+    "cases_each": 100,
+    "threshold": 1e-6,
+    "scope": "Manufactured identities, not sensor or aerodynamic-model validation"
+  },
+  "delegation": {
+    "helpers": 7,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only; complete outputs lead-adjudicated in the research dossier"
+  },
+  "prior_acceptance_reconciliation": {
+    "unchanged_paths": [
+      "articles/Launch_Monitor_Technology_Review/sections/02-parameters.tex",
+      "articles/Launch_Monitor_Technology_Review/main.tex",
+      "articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex",
+      "articles/Launch_Monitor_Technology_Review/research/parameter-review-20261004.md",
+      "reports/technical-review/parameter-review.md",
+      "reports/technical-review/parameter-independent-checks.json",
+      "articles/degrees-of-freedom-and-dimensionality.qmd",
+      "articles/upstreamdrift-educational-integration.qmd",
+      "reports/technical-review/dimensionality-integration-review.md",
+      "docs/development/technical-review/dimensionality-integration/independent-checks.json",
+      "scripts/post_render_citations.py",
+      "scripts/filters/page-header-card.lua",
+      "tests/test_citation_metadata.py",
+      "articles/Launch_Monitor_Technology_Review/sections/appendix-b-implementation.tex",
+      "reports/technical-review/implementation-independent-checks.json"
+    ],
+    "intentional_changed_paths": [
+      "articles/Launch_Monitor_Technology_Review/references.bib",
+      "articles/Launch_Monitor_Technology_Review/main.pdf"
+    ],
+    "explanation": "Corrected primary-study bibliographic metadata and the rebuilt PDF supersede these two artifacts. All listed earlier parameter, article, date and implementation sources remain unchanged; historical PDF/bibliography receipts are preserved."
+  },
+  "delivery": {
+    "status": "Regular PR preparation; parent PR 4895 is not yet on main",
+    "base": "fix/implementation-appendix-review",
+    "dependency": "PR 4895 after 4891 after 4889",
+    "next": "Open regular PR, verify protected merge and accepted canonical bytes on fetched main before release"
+  },
+  "metadata_tests": {
+    "passed": 40,
+    "seconds": 22.12,
+    "exit_code": 0,
+    "command": "pytest tests/test_citation_metadata.py tests/test_root_hygiene.py tests/test_spec_changelog.py --no-cov",
+    "log": "docs/development/technical-review/flight-accuracy-review/acceptance-metadata-tests.txt"
+  }
+}
