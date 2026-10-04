@@ -35,7 +35,7 @@ jobs:
           echo "Enforcing local-only runner routing (d-sorg-fleet)"
 
   build:
-    timeout-minutes: 60
+    timeout-minutes: 90
     if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     needs: pick-runner
@@ -279,7 +279,7 @@ jobs:
           mkdir -p artifacts/public-site-verification
           LIVE_MANIFEST="$RUNNER_TEMP/public-site-manifest.json"
           for attempt in {1..60}; do
-            if curl --fail --silent --show-error \
+            if curl --fail --silent --show-error --location \
               "$PUBLIC_SITE_URL/public-site-manifest.json?revision=$GITHUB_SHA" \
               --output "$LIVE_MANIFEST"; then
               if SOURCE_REVISION=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["source_revision"])' "$LIVE_MANIFEST" 2>/dev/null); then

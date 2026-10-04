@@ -1,3 +1,25 @@
+# Deploy Website Redirect and Timeout Fix — #4809 (PR #4861)
+
+- Repository: `D-sorganization/AffineDrift`
+- Branch: `fix/deploy-website-cache-4809`
+- Governing issue: #4809 (`main is red: Deploy Website (fleet-main-health)`)
+- Pull Request: #4861
+- Objective: Restore green `Deploy Website` on `main` by following the GitHub Pages 301 apex redirect with `--location` when polling `public-site-manifest.json`, and increasing the build job timeout from 60 to 90 minutes to ensure full 251-route verification completes safely on ubuntu-latest runners.
+- Completed:
+  - Updated `.github/workflows/deploy-website.yml`:
+    - Added `--location` to `curl` in `Verify Deployment Manifest and Every Public Page`.
+    - Increased `build` job `timeout-minutes` from 60 to 90 minutes.
+    - Preserved clean uncached Quarto render contract (`actions/cache@` omitted in deploy).
+  - Updated `tests/test_deployment_integrity.py`:
+    - In `test_live_manifest_poll_retries_transient_non_json_responses`, asserted `--location` or `-L` in the poll script.
+  - Updated `SPEC.md` Change Log table for PR #4861.
+- Validation:
+  - `pytest -m content_lint tests/test_deployment_integrity.py`: 18 passed, 1 skipped.
+  - `python3 scripts/check_root_hygiene.py`: passed.
+  - `python3 -m src.tools.code_quality_check`: passed.
+  - `python3 -m scripts.check_spec_changelog`: passed.
+- Next steps: push branch, auto-merge PR #4861, verify landing on main.
+
 # Optimal-Control Review — Regular PR #4859
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4859 is open, not draft. The accepted scientific source remains `8a8accd335edf66c527893d51b1cd9fe05c9a31a` (nine frozen files). All work is committed and pushed; this turnover update receives its own final push. Verify final-head CI/reviews, use the central guard for ordinary squash auto-merge, and verify owned/frozen bytes on fetched remote main. No further source rewrites are needed unless validation or review identifies a defect. The goal remains active.
