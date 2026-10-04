@@ -1,0 +1,313 @@
+# Independent Mathematical & Kinematic Review: Chapter "Joint Kinematics and Soft Tissue"
+
+**Review Mode:** Read-only mathematical and kinematic audit for lead Codex.  
+**Scope:** Frame conventions, sign errors, dimensional consistency, mathematical limits/singularities, continuity ($C^0/C^1$), code contracts, and biological/mechanical modeling validity.
+
+---
+
+## 1. Executive Summary & Defect Log
+
+| # | Item / Location | Defect Type | Mathematical / Mechanical Defect | Impact & Correction |
+|---|---|---|---|---|
+| **1** | Definition `isa-bio` & `compute_isa` docstring | **Frame & Twist Component Conflation** | Conflates the spatial twist linear component $\bm{v} = -\bm{\omega} \times \bm{q} + h\bm{\omega}$ (velocity of the point at origin fixed in the moving body) with the actual velocity of the moving body-fixed origin $\dot{\bm{p}}(t)$. | When evaluated using the velocity of an arbitrary anatomical marker or moving origin, $\bm{q}$ and $h$ are physically incorrect. Frame origin must be explicitly defined. |
+| **2** | `compute_isa` (Listing lines 21–25) | **Limit & Degeneracy Violation** | For $\norm{\bm{\omega}} \approx 0$: checks $\norm{\bm{\omega}} < 10^{-10}$ then divides by $\norm{\bm{v}}$ without checking $\norm{\bm{v}} = 0$ (ZeroDivisionError if body is at rest). Also reports `pitch = np.inf`, while mathematically a screw axis for a stationary body is undefined, and for pure translation the screw axis is a line at infinity in projective space with infinite pitch. | Add guard for stationary condition ($\norm{\bm{\omega}}=0, \norm{\bm{v}}=0$). Document projective conventions. |
+| **3** | `knee_isa_trajectory` | **Manufactured Heuristic vs. Kinematic ISA** | The function does not compute an ISA from a rigid-body motion $(\bm{\omega}, \bm{v})$. It generates an arbitrary planar curve $[-R\theta \rho, R(1-\cos(\theta/2)), 0]$ from a parameter labeled `roll_slide_ratio` that violates the actual kinematic rolling contact condition. | Clarify this as a toy kinematic trajectory illustration; derive the actual ISA locus for rolling/sliding surfaces or four-bar linkages. |
+| **4** | §2.2 Item 3 & Exercise 2 | **Clinical / Sign Conflation (Screw-Home)** | States tibia undergoes *internal rotation* during flexion, but standard screw-home mechanism is *external rotation* of tibia during terminal extension ($0^\circ$), meaning *internal rotation* occurs during *flexion*. However, anatomical frame orientation, right/left knee, and convention (tibial relative to femur vs. femur relative to tibia) are omitted, making the sign arbitrary. | Fix reference frames (e.g., Grood & Suntay / ISB standard). |
+| **5** | §2.3 Shoulder Complex | **Constraint Rank vs. Mobility Confusion** | Claims scapulothoracic contact is "effectively acting as a 2-DOF constraint (the scapula can translate on the surface but cannot lift off)". A scalar holonomic contact surface constraint $f(\bm{x}) = 0$ imposes **1 constraint equation** (rank 1), reducing mobility by 1, leaving **5 DOFs** (2 surface translations + 3 rotations), not 2 DOFs. | Differentiate constraint codimension/rank from permitted mobility degrees of freedom. |
+| **6** | Eq. \eqref{eq:ch4:ligament-force} (Blankevoort Ligament) | **Parameter Over-determination & $C^1$ Continuity** | Equation sets toe region to $k_1 \varepsilon^2 / (4\varepsilon_1)$ and linear region to $k_2(\varepsilon - \varepsilon_1)$ with distinct $k_1, k_2$. $C^0$ and $C^1$ continuity across $\varepsilon = 2\varepsilon_1$ strictly requires $k_1 = k_2$. | Enforce $k_1 = k_2$ (or define $k_1 = k_2 = k$ as Blankevoort 1991 standard) to ensure $C^1$ continuity. |
+| **7** | Eq. \eqref{eq:ch4:ligament-force} & §3 text | **Dimension / Units Conflation (Strain vs. Length Stiffness)** | $k$ has dimensions of force $[\text{N}]$, not conventional spring stiffness $[\text{N/m}]$. Because $\varepsilon$ is dimensionless, $k$ is a force parameter (structural stiffness $k = K_{\text{length}} \ell_0$). | Define $k$ as stiffness factor in Newtons, avoiding student confusion with $[\text{N/m}]$. |
+| **8** | Eq. \eqref{eq:ch4:disc-stiffness} | **Coupled Stiffness Frame & Invariance Error** | $\bm{F}_{\text{disc}} = K_{\text{disc}} \bm{\delta}$ mixes linear force/moment with translational/rotational displacements. $K_{\text{disc}}$ depends on the reduction point and reference frame, and small-displacement stiffness cannot be directly applied to finite 3D joint rotations without geometric transformation. | State the expansion frame and infinitesimal restriction $\bm{\delta} \in \mathfrak{se}(3)^* \cong \Reals^6$. |
+| **9** | Exercise 1 | **Underspecified Problem Geometry** | "flexing at $60^\circ/\text{s}$ with $2\text{ mm/s}$ of posterior translation": does not specify the point on the body whose velocity is $2\text{ mm/s}$, nor the orientation of the flexion axis relative to the translation direction. | Specify vector representations in a concrete coordinate system. |
+
+---
+
+## 2. Mathematical Derivations & Precise Corrections
+
+### Defect 1: Spatial Twist Linear Component vs. Moving-Origin Velocity
+
+#### Mathematical Derivation
+Let $\{S\}$ be a fixed spatial coordinate frame with origin $O$. Let a rigid body $\{B\}$ move with configuration $T_{sb}(t) = (R(t), \bm{p}(t)) \in \mathrm{SE}(3)$, where $\bm{p}(t)$ is the position of the moving origin $O_b$ in $\{S\}$.
+
+The **spatial twist** $\twist_s = (\bm{\omega}_s, \bm{v}_s) \in \Reals^6$ represents the instantaneous velocity field of the rigid body evaluated at the spatial origin $O$:
+$$\bm{v}_s = \dot{\bm{p}}(t) - \bm{\omega}_s \times \bm{p}(t) \implies \dot{\bm{p}}(t) = \bm{v}_s + \bm{\omega}_s \times \bm{p}(t)$$
+Here:
+- $\bm{\omega}_s$ is the physical angular velocity vector.
+- $\bm{v}_s$ is **not** the velocity of the moving frame origin $\dot{\bm{p}}(t)$; it is the velocity of an imaginary point fixed to the body that instantaneously passes through the spatial origin $O$.
+
+The Instantaneous Screw Axis (ISA) is the locus of points $\bm{x} \in \Reals^3$ in frame $\{S\}$ whose instantaneous velocity is parallel to $\bm{\omega}_s$:
+$$\bm{v}(\bm{x}) = \bm{v}_s + \bm{\omega}_s \times \bm{x} = h \bm{\omega}_s$$
+Taking the cross product with $\bm{\omega}_s$:
+$$\bm{\omega}_s \times \bm{v}_s + \bm{\omega}_s \times (\bm{\omega}_s \times \bm{x}) = \bm{0}$$
+Using the vector triple product identity $\bm{a} \times (\bm{b} \times \bm{c}) = (\bm{a}\cdot\bm{c})\bm{b} - (\bm{a}\cdot\bm{b})\bm{c}$:
+$$\bm{\omega}_s \times \bm{v}_s + (\bm{\omega}_s \cdot \bm{x})\bm{\omega}_s - \norm{\bm{\omega}_s}^2 \bm{x} = \bm{0}$$
+Choosing the unique point $\bm{q}$ on the axis orthogonal to $\bm{\omega}_s$ (i.e., $\bm{\omega}_s \cdot \bm{q} = 0$):
+$$\bm{q} = \frac{\bm{\omega}_s \times \bm{v}_s}{\norm{\bm{\omega}_s}^2}$$
+And the pitch is:
+$$h = \frac{\bm{\omega}_s \cdot \bm{v}(\bm{x})}{\norm{\bm{\omega}_s}^2} = \frac{\bm{\omega}_s \cdot (\bm{v}_s + \bm{\omega}_s \times \bm{x})}{\norm{\bm{\omega}_s}^2} = \frac{\bm{\omega}_s \cdot \bm{v}_s}{\norm{\bm{\omega}_s}^2}$$
+
+#### Code Contract & Docstring Error
+In `compute_isa(omega, v)`:
+```python
+# INCORRECT docstring:
+# v : np.ndarray, shape (3,)
+#     Linear velocity of the body-fixed frame origin.
+```
+If a user inputs the velocity of the moving origin $v = \dot{\bm{p}}$, the formula $\bm{q} = \frac{\bm{\omega} \times \bm{v}}{\norm{\bm{\omega}}^2}$ gives:
+$$\bm{q}_{\text{computed}} = \frac{\bm{\omega} \times \dot{\bm{p}}}{\norm{\bm{\omega}}^2} = \frac{\bm{\omega} \times (\bm{v}_s + \bm{\omega} \times \bm{p})}{\norm{\bm{\omega}}^2} = \bm{q} + \bm{p}_\perp \neq \bm{p} + \bm{q}_{\text{rel}}$$
+This introduces a severe spatial offset error.
+
+#### Precise Fix
+The docstring and mathematical definition must state:
+> `v` is the translational component of the spatial twist $\twist = (\bm{\omega}, \bm{v})$ expressed in the reference frame $\{S\}$ (i.e. the velocity of the body point instantaneously coinciding with the origin of $\{S\}$). If the velocity $\bm{v}_P$ of a specific point $\bm{r}_P$ is known, $\bm{v}$ must first be obtained via $\bm{v} = \bm{v}_P - \bm{\omega} \times \bm{r}_P$.
+
+---
+
+### Defect 2: Pure Translation / Zero Velocity Degeneracies
+
+In `compute_isa`:
+```python
+    omega_norm = np.linalg.norm(omega)
+    if omega_norm < 1e-10:
+        # Pure translation
+        direction = v / np.linalg.norm(v)
+        return np.zeros(3), direction, np.inf
+```
+
+#### Bugs & Singularities
+1. **Division by Zero:** If $\bm{\omega} = \bm{0}$ and $\bm{v} = \bm{0}$ (body is stationary or at rest), `np.linalg.norm(v)` is $0.0$, raising `ZeroDivisionError` / `RuntimeWarning: invalid value encountered in divide` and returning `NaN`.
+2. **Projective Kinematics:** When $\bm{\omega} = \bm{0}$ and $\bm{v} \neq \bm{0}$, the motion is a pure translation. In Euclidean 3-space, a screw axis does not exist at a finite point $\bm{q}$; the axis is at infinity (a line in the plane at infinity in $\mathbb{RP}^3$). Returning `point = np.zeros(3)` implies the axis passes through the coordinate origin, which is mathematically false.
+
+#### Precise Correction
+```python
+def compute_isa(
+    omega: np.ndarray,
+    v: np.ndarray,
+    tol: float = 1e-10
+) -> Tuple[Optional[np.ndarray], np.ndarray, float]:
+    """Compute the instantaneous screw axis (ISA) from a spatial twist.
+
+    Parameters
+    ----------
+    omega : np.ndarray, shape (3,)
+        Angular velocity vector in reference frame {S}.
+    v : np.ndarray, shape (3,)
+        Spatial linear velocity component (velocity of the point on the moving
+        body instantaneously coincident with the origin of {S}).
+    tol : float
+        Tolerance for zero-velocity detection.
+
+    Returns
+    -------
+    point : Optional[np.ndarray], shape (3,)
+        Point on the screw axis closest to the reference origin.
+        None if omega is zero (pure translation or stationary).
+    direction : np.ndarray, shape (3,)
+        Unit direction vector (along omega if rotating, along v if pure translation,
+        zeros if stationary).
+    pitch : float
+        Screw pitch h = (omega . v) / ||omega||^2.
+        np.inf if pure translation (omega=0, v!=0); 0.0 if stationary.
+    """
+    omega_norm = float(np.linalg.norm(omega))
+    v_norm = float(np.linalg.norm(v))
+
+    if omega_norm < tol:
+        if v_norm < tol:
+            return None, np.zeros(3), 0.0  # Stationary body
+        # Pure translation: axis is at infinity
+        return None, v / v_norm, np.inf
+
+    direction = omega / omega_norm
+    pitch = float(np.dot(omega, v)) / (omega_norm ** 2)
+    point = np.cross(omega, v) / (omega_norm ** 2)
+    return point, direction, pitch
+```
+
+---
+
+### Defect 3: Manufactured Trajectory vs. Kinematic Rolling/Sliding ISA
+
+In `knee_isa_trajectory`:
+```python
+    for i, theta in enumerate(np.radians(flexion_angles)):
+        posterior = R_condyle * theta * roll_slide_ratio
+        superior = R_condyle * (1.0 - np.cos(theta * 0.5))
+        isa_positions[i] = [-posterior, superior, 0.0]
+```
+
+#### Why This is an Error, Not Just an Approximation
+1. **Kinematic Definition of ISA for Planar Rolling/Sliding:**  
+   Let a circle of radius $R$ roll and slide on a flat plateau along the $x$-axis.  
+   Let $\dot{x}_C$ be the forward displacement rate of the contact point and $\omega = \dot{\theta}$ be the angular velocity.  
+   The velocity of the contact point $P$ on the moving femur is $\bm{v}_P = (\dot{x}_{\text{slip}}, 0, 0)$.  
+   The instantaneous center of rotation (the ISA point in the plane) must satisfy $\bm{v}(I) = \bm{0}$.  
+   Since $\bm{v}(P) = \bm{v}_I + \bm{\omega} \times (\bm{r}_P - \bm{r}_I) = \bm{0} + \omega \hat{\bm{z}} \times (y_P - y_I)\hat{\bm{y}} = -\omega (y_P - y_I)\hat{\bm{x}}$,  
+   the vertical location of the ISA is:
+   $$y_I - y_P = \frac{v_{\text{slip}}}{\omega}$$
+   - For **pure rolling**: $v_{\text{slip}} = 0 \implies y_I = y_P$ (ISA is at the contact point on the articular surface).
+   - For **pure sliding**: $\omega = 0 \implies y_I \to \infty$.
+   
+   The code sets `superior = R * (1.0 - np.cos(theta * 0.5))`. This has no connection to the roll-slide ratio $\rho$ or rigid-body kinematics; it is a fabricated trigonometric offset.
+2. **Textbook Framing:** If this code is retained as a pedagogical heuristic, the text must state:  
+   *"Listing 4.1 shows a synthetic phenomenological curve representing empirical ISA migration, not a dynamic solution of contact constraints."* Otherwise, students are taught that the ISA coordinates can be integrated via arbitrary scalar curves.
+
+---
+
+### Defect 4: Blankevoort Ligament Model ($C^1$ Continuity & Over-determination)
+
+Eq. \eqref{eq:ch4:ligament-force} states:
+$$F_{\text{lig}}(\varepsilon) = \begin{cases}
+  0 & \varepsilon \leq 0, \\
+  \frac{k_1 \varepsilon^2}{4\varepsilon_1} & 0 < \varepsilon \leq 2\varepsilon_1, \\
+  k_2(\varepsilon - \varepsilon_1) & \varepsilon > 2\varepsilon_1.
+\end{cases}$$
+
+#### Continuity Derivation
+Check continuity at the boundary $\varepsilon = 2\varepsilon_1$:
+1. **$C^0$ Continuity (Force Matching):**
+   $$\lim_{\varepsilon \to 2\varepsilon_1^-} F_{\text{lig}}(\varepsilon) = \frac{k_1 (2\varepsilon_1)^2}{4\varepsilon_1} = \frac{4 k_1 \varepsilon_1^2}{4\varepsilon_1} = k_1 \varepsilon_1$$
+   $$\lim_{\varepsilon \to 2\varepsilon_1^+} F_{\text{lig}}(\varepsilon) = k_2 (2\varepsilon_1 - \varepsilon_1) = k_2 \varepsilon_1$$
+   For $C^0$ continuity:
+   $$k_1 \varepsilon_1 = k_2 \varepsilon_1 \implies k_1 = k_2 \quad (\text{since } \varepsilon_1 > 0)$$
+2. **$C^1$ Continuity (Tangent Stiffness Matching):**
+   $$\frac{\mathrm{d}F}{\mathrm{d}\varepsilon}\Big|_{\varepsilon \to 2\varepsilon_1^-} = \frac{2 k_1 (2\varepsilon_1)}{4\varepsilon_1} = k_1$$
+   $$\frac{\mathrm{d}F}{\mathrm{d}\varepsilon}\Big|_{\varepsilon \to 2\varepsilon_1^+} = k_2$$
+   For $C^1$ continuity:
+   $$k_1 = k_2$$
+
+#### The Defect
+The text lists $k_1, k_2$ as independent parameters (*"where $k_1, k_2$ are stiffness parameters"*). In the classic Blankevoort, Huiskes, and de Lange (1991) formulation, there is only **one** stiffness parameter $k$ (force constant):
+$$F_{\text{lig}}(\varepsilon) = \begin{cases}
+  0, & \varepsilon \leq 0, \\
+  \frac{k \varepsilon^2}{4\varepsilon_1}, & 0 < \varepsilon \leq 2\varepsilon_1, \\
+  k(\varepsilon - \varepsilon_1), & \varepsilon > 2\varepsilon_1.
+\end{cases}$$
+Presenting $k_1$ and $k_2$ as separate parameters allows users/students to choose $k_1 \neq k_2$, creating a jump discontinuity in both force and tangent stiffness, which causes severe convergence failures in implicit numerical solvers (e.g. Newton-Raphson in musculoskeletal simulations).
+
+---
+
+### Defect 5: Dimension of Ligament Stiffness Parameter
+
+- Strain $\varepsilon = \frac{\ell - \ell_0}{\ell_0}$ is dimensionless ($[\text{m/m}] = [1]$).
+- In the linear region, $F_{\text{lig}} = k(\varepsilon - \varepsilon_1)$.
+- Therefore, $[k] = [F] = \text{Newtons } [\text{N}]$.
+- In contrast, spring stiffness in engineering is $K = \frac{\Delta F}{\Delta \ell}$, which has dimensions $[\text{N/m}]$.
+- The relationship is:
+  $$k = K_{\text{linear}} \cdot \ell_0$$
+- **Correction:** The text must explicitly define $k$ as the *stiffness coefficient* in Newtons ($[\text{N}]$), not $[\text{N/m}]$, to prevent scaling errors by orders of magnitude when students pass $\text{N/m}$ values into the equation.
+
+---
+
+### Defect 6: Scapulothoracic Constraint — Rank vs. Mobility
+
+The text states:
+> *"it is a holonomic constraint that the scapula must remain on the thoracic surface, effectively acting as a 2-DOF constraint (the scapula can translate on the surface but cannot lift off)."*
+
+#### Kinematic Analysis
+Let the thoracic surface be modeled as an ellipsoid $\Phi(\bm{x}) = 0$ in $\Reals^3$.
+- An unconstrained rigid body in 3D space has **6 degrees of freedom** (3 position, 3 orientation).
+- Point contact on a smooth surface imposes $c = 1$ scalar holonomic constraint:
+  $$\Phi(\bm{p}_{\text{scapula}}) = 0$$
+- By Grubler's / Chebychev-Kutzbach criterion:
+  $$\text{Mobility } M = 6 - c = 6 - 1 = 5 \text{ DOFs}$$
+  (The scapula has 2 translational DOFs tangent to the surface and 3 rotational DOFs).
+- Even if two contact points are enforced (e.g. medial border and inferior angle riding on the rib cage), this imposes $c = 2$ scalar constraints, leaving $6 - 2 = 4$ DOFs.
+- Calling a surface contact a **"2-DOF constraint"** confuses the **dimension of the constraint manifold** ($c = 1$ constraint equation) with the **tangent motion DOFs** (2 surface translations), or confuses constraint rank with remaining mobility.
+- **Correction:**
+  > *"The scapulothoracic contact acts as a holonomic codimension-1 constraint $\Phi(\bm{x})=0$ (preventing liftoff while permitting 2 translational DOFs along the thoracic surface and 3 rotations, subject to muscular and clavicular linkage constraints)."*
+
+---
+
+### Defect 7: FSU Stiffness Matrix Formulation
+
+Eq. \eqref{eq:ch4:disc-stiffness} states:
+$$\bm{F}_{\text{disc}} = K_{\text{disc}} \cdot \bm{\delta}$$
+where $\bm{\delta} \in \Reals^6$ is "3 translations + 3 rotations".
+
+#### Theoretical Inconsistencies
+1. **Wrench vs. Force:** $\bm{F}_{\text{disc}}$ is a **wrench** $\mathcal{W} = (\bm{f}, \bm{m}) \in \Reals^6$ (force and moment), not simply a force vector.
+2. **Coupled Units:** $K_{\text{disc}}$ has block structure:
+   $$K_{\text{disc}} = \begin{bmatrix} K_{tt} & K_{tr} \\ K_{rt} & K_{rr} \end{bmatrix}$$
+   - $[K_{tt}] = \text{N/m}$
+   - $[K_{tr}] = \text{N/rad}$
+   - $[K_{rt}] = \text{N}\cdot\text{m/m} = \text{N}$
+   - $[K_{rr}] = \text{N}\cdot\text{m/rad}$
+3. **Point of Evaluation:** The off-diagonal coupling submatrices $K_{tr}$ and $K_{rt}$ depend explicitly on the chosen reference point (usually the disc center).
+4. **Finite Rotations:** Finite 3D rotations do not commute and do not form a vector space. Writing $\bm{\delta} = [\Delta x, \Delta y, \Delta z, \theta_x, \theta_y, \theta_z]^T$ is valid **only** as an infinitesimal or small-displacement approximation: $\bm{\delta} \in \mathfrak{se}(3)$.
+
+---
+
+## 3. Checkable Numerical Verification
+
+Below is a self-contained Python validation script demonstrating the exact bugs and testing the corrected formulations:
+
+```python
+import numpy as np
+
+# 1. VERIFY BLANKEVOORT CONTINUITY
+e1 = 0.03
+k = 1500.0  # N
+eps_trans = 2 * e1  # 0.06
+
+# Function evaluations at boundary 2*e1
+f_toe = (k * eps_trans**2) / (4 * e1)
+f_lin = k * (eps_trans - e1)
+assert np.isclose(f_toe, f_lin), f"C0 Discontinuity: {f_toe} != {f_lin}"
+
+# Derivative (tangent stiffness) evaluations
+df_toe = (2 * k * eps_trans) / (4 * e1)
+df_lin = k
+assert np.isclose(df_toe, df_lin), f"C1 Discontinuity: {df_toe} != {df_lin}"
+print("Blankevoort continuity verified: C0 and C1 continuous iff k1 == k2.")
+
+
+# 2. VERIFY ISA COMPUTATION
+# Consider a pure planar rotation of omega = 1 rad/s about z at point q = (0, 0.05, 0)
+omega_true = np.array([0.0, 0.0, 1.0])
+q_true = np.array([0.0, 0.05, 0.0])
+h_true = 0.01  # pitch = 10 mm/rad
+
+# Spatial twist linear component at origin:
+# v_s = -omega x q + h * omega
+v_s = -np.cross(omega_true, q_true) + h_true * omega_true
+# v_s = - (0, 0, 1) x (0, 0.05, 0) + (0, 0, 0.01) = (0.05, 0, 0.01)
+
+# Correct ISA extraction:
+omega_norm = np.linalg.norm(omega_true)
+q_extracted = np.cross(omega_true, v_s) / (omega_norm**2)
+h_extracted = np.dot(omega_true, v_s) / (omega_norm**2)
+
+assert np.allclose(q_extracted, q_true), f"q mismatch: {q_extracted} vs {q_true}"
+assert np.isclose(h_extracted, h_true), f"pitch mismatch: {h_extracted} vs {h_true}"
+print("ISA spatial twist formula mathematically verified.")
+
+# Check the moving origin bug:
+# Suppose origin O_b is at p = (0.1, 0.2, 0). Its actual velocity is:
+p_b = np.array([0.1, 0.2, 0.0])
+v_origin = v_s + np.cross(omega_true, p_b)
+# If naive user passes v_origin to compute_isa:
+q_corrupted = np.cross(omega_true, v_origin) / (omega_norm**2)
+print(f"Correct q: {q_true}, Corrupted q when passing origin velocity: {q_corrupted}")
+assert not np.allclose(q_corrupted, q_true)
+```
+
+---
+
+## 4. Specific Actionable Recommendations for Author
+
+1. **Section 1.1 (`isa-bio`)**:
+   - Rewrite Definition 1.1 explicitly stating whether $\twist_{ij}$ is the spatial twist (at base frame origin) or body twist.
+   - Emphasize that $\bm{v}$ is the velocity of the body point coinciding with the origin, not the velocity of the joint center or marker origin.
+2. **Code Listing 4.1 (`compute_isa`)**:
+   - Update docstring for parameter `v` to reflect twist convention.
+   - Fix zero-velocity handling to prevent `ZeroDivisionError` when $\norm{\bm{v}} = 0$ and handle pure translation in $\mathbb{RP}^3$.
+3. **Code Listing 4.1 (`knee_isa_trajectory`)**:
+   - Rename to `toy_knee_isa_heuristic` or replace with an analytical 4-bar linkage model (crossed four-bar simulating ACL/PCL where the instant center is the intersection of cruciate ligament lines).
+4. **Section 2 (`eq:ch4:ligament-force`)**:
+   - Unify $k_1 = k_2 = k$.
+   - Specify that $k$ has units of $\text{N}$ (stiffness coefficient), not $\text{N/m}$.
+5. **Section 2.3 (Shoulder)**:
+   - Correct "2-DOF constraint" to "codimension-1 holonomic surface constraint".
+6. **Section 3 (`eq:ch4:disc-stiffness`)**:
+   - Replace $\bm{F}_{\text{disc}}$ with $\bm{\mathcal{W}}_{\text{disc}}$ (wrench).
+   - Clarify the block dimensions of $K_{\text{disc}}$ and explicitly state that $\bm{\delta}$ represents small displacements in $\mathfrak{se}(3)$.

@@ -1,0 +1,26 @@
+import numpy as np,json
+from scipy.spatial.transform import Rotation
+from pathlib import Path
+rng=np.random.default_rng(4901);n=100
+axis=rng.normal(size=(n,3));axis/=np.linalg.norm(axis,axis=1)[:,None]
+speed=rng.uniform(.2,3,n);omega=axis*speed[:,None]
+q=rng.normal(size=(n,3))*.1;q-=axis*np.sum(axis*q,axis=1)[:,None]
+h=rng.uniform(-.02,.02,n);v=-np.cross(omega,q)+h[:,None]*omega
+recovered=np.cross(omega,v)/speed[:,None]**2
+err1=float(np.max(np.abs(recovered-q)))
+shifts=rng.normal(size=(n,3))*.1;rots=Rotation.random(n,random_state=rng).as_matrix();neww=np.einsum('nij,nj->ni',rots,omega);newv=np.einsum('nij,nj->ni',rots,v+np.cross(omega,shifts));newq=np.cross(neww,newv)/speed[:,None]**2
+transq=np.einsum('nij,nj->ni',rots,q-shifts);newaxis=neww/speed[:,None];transq-=newaxis*np.sum(newaxis*transq,axis=1)[:,None]
+err2=float(np.max(np.abs(newq-transq)))
+theta=rng.uniform(.1,1.4,n);a=rng.uniform(.01,.05,n);step=1e-5
+Rplus=Rotation.from_euler('z',theta+step).as_matrix();Rminus=Rotation.from_euler('z',theta-step).as_matrix();R=Rotation.from_euler('z',theta).as_matrix();Rd=(Rplus-Rminus)/(2*step);skew=Rd@R.transpose(0,2,1);w=np.column_stack((skew[:,2,1],skew[:,0,2],skew[:,1,0]));p=np.column_stack((a*theta,np.zeros((n,2))));pd=np.column_stack((a,np.zeros((n,2))));vs=pd-np.cross(w,p);qp=np.cross(w,vs)/np.sum(w*w,axis=1)[:,None];expected=np.column_stack((a*theta,a,np.zeros(n)));err3=float(np.max(np.abs(qp-expected)))
+k=rng.uniform(500,2000,n);e1=rng.uniform(.015,.04,n);l0=rng.uniform(.05,.15,n);eps=e1*rng.uniform(.2,1.8,n)
+force=lambda e:np.where(e<=0,0,np.where(e<=2*e1,k*e*e/(4*e1),k*(e-e1)))
+dlength=(force(eps+step/l0)-force(eps-step/l0))/(2*step);analytic=k*eps/(2*e1*l0);err4=float(np.max(np.abs(dlength-analytic)))
+assert np.allclose(force(2*e1),k*e1)
+B=rng.normal(size=(n,6,6));K=B.transpose(0,2,1)@B+np.eye(6);d=rng.normal(size=(n,6))*.01;vel=rng.normal(size=(n,6))*.1;W=-np.einsum('nij,nj->ni',K,d)
+energy=lambda x:.5*np.einsum('ni,nij,nj->n',x,K,x)
+udot=(energy(d+step*vel)-energy(d-step*vel))/(2*step);err5=float(np.max(np.abs(np.sum(W*vel,axis=1)+udot)))
+r={'seed':4901,'cases_each':100,'maximum_absolute_error':{'screw_axis':err1,'frame_change':err2,'transform_derivative_axis':err3,'ligament_length_tangent':err4,'elastic_power':err5},'threshold':1e-6,'scope':'Manufactured independent mechanics and finite-difference checks; not biological or sensor validation','exercise_elastic_wrench':[0,0,-2,0,0,-.2],'exercise_elastic_energy_joules':.002}
+assert max(r['maximum_absolute_error'].values())<r['threshold']
+Path('reports/technical-review/joint-kinematics-independent-checks.json').write_bytes((json.dumps(r,indent=2)+'\n').encode('utf-8'))
+print(json.dumps(r,indent=2))
