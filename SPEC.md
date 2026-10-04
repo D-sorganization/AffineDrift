@@ -582,3 +582,5 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4873 | Record shared-nomenclature remote-main delivery and retract the title-card missing-text finding after raw-pixel verification; preserve deployment provenance and bounded corpus scope. |
 
 | 2026-10-04 | #4875 | Correct the complete tangent-framework lay summary: local sensitivity, remainder assumptions, coupled swing phases, bounded engineering examples and distinct control algorithms. |
+
+| 2026-10-04 | #4880 | Correct Control Is Motion landing page: orbital stability, transverse coordinates, and passivity (#4878). |
