@@ -1,6 +1,6 @@
 {
   "issue": 4876,
-  "status": "Complete source/math/PDF review; full repository regression and remote delivery pending",
+  "status": "Complete source/math/PDF review and full repository regression accepted; protected PR delivery pending",
   "baseline": "4b92fe90af30ddaa0e2b339e0814375437a4b071",
   "build": {
     "command": "pwsh -NoProfile -File articles/Launch_Monitor_Technology_Review/build.ps1",
@@ -21,7 +21,9 @@
       "docs\\development\\technical-review\\hardware-pages\\final-67.png": "0dacbbc6241283c682d998f5bde1428611e8b1106bf86f267c65f548a9f05c3c",
       "docs\\development\\technical-review\\hardware-pages\\final-68.png": "9bcc4c59070c027edf00558612b11b758c80a310245565a3f29aaf92fe0badd5",
       "docs\\development\\technical-review\\hardware-pages\\final-90.png": "721b3c8f0975157fbe628cd6f16de94fef1639346efb9828f665f00707d828fd",
-      "docs\\development\\technical-review\\hardware-pages\\final-91.png": "b6c20001a648bd595fa3032823873120d3f6af0af8c54b2d03185a399724a720"
+      "docs\\development\\technical-review\\hardware-pages\\final-91.png": "b6c20001a648bd595fa3032823873120d3f6af0af8c54b2d03185a399724a720",
+      "docs\\development\\technical-review\\hardware-pages\\final-88.png": "b6cbc2021fe4e5b416da424d0bd218d728d14a6ab2fdf8638c2c7a7ccfe960a4",
+      "docs\\development\\technical-review\\hardware-pages\\final-89.png": "4ff30cdf159ba23711da0a562875773d24889d1164c5029209c1b5e5103a135c"
     }
   },
   "pdf_comparison": {
@@ -43,14 +45,55 @@
     "result": "pass"
   },
   "full_regression": {
-    "status": "not yet run at this checkpoint"
+    "status": "passed",
+    "head": "377ae74fc8917529f36882614012538e2254816f",
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "python": "3.12 (pinned repository environment)",
+    "passed": 6856,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 1106.1,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "concurrency": "No source edits, rendering or commit hooks during the run",
+    "log": "docs/development/technical-review/hardware-full-tests.txt",
+    "log_sha256": "f9948e61ad001f24278eccbd3e80bccbf6d0dcc44d5a4150a5a1c694cc35cbbf",
+    "scope": "Default repository selection excludes slow, live, e2e, requires_network and content_lint markers. No browser or physical hardware tests claimed.",
+    "post_run_artifacts": "Packaging tests left build, dist and affinedrift.egg-info; preserved under docs/development/technical-review/hardware-packaging-artifacts after completion."
   },
   "delegation": {
     "cli": "agy",
     "model": "gemini-3.8-flash-low",
-    "successful_helpers": 5,
-    "authority": "Lead reviewed; raw outputs are candidates, not evidence of correctness"
+    "successful_helpers": 6,
+    "authority": "Lead reviewed; raw outputs are candidates, not evidence of correctness",
+    "scope": "Five source-review helpers plus one PR-prose helper; no further source changes from the prose helper",
+    "prose_corrections": "Removed local file URLs and a wrong evidence path; replaced universal verification wording with the recorded reading/check scope."
   },
   "source_sha256": "9332c13756ab09da2f6f1ccfffe8bdedb13dab67596d205d0ca4666eff227bbe",
-  "pdf_sha256": "c2126846b90947e44de49d4c2adfbd15953451ccf30d8e36a5a7980f19901465"
+  "pdf_sha256": "c2126846b90947e44de49d4c2adfbd15953451ccf30d8e36a5a7980f19901465",
+  "accepted_source_commit": "377ae74fc8917529f36882614012538e2254816f",
+  "git_blob_sha256": {
+    "articles/Launch_Monitor_Technology_Review/sections/appendix-c-hardware.tex": "2ce5281da6d9761d5a7e9a8ddd873af45e689643ad39a38b51d92b65255cf075",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "d6278c7a56d8e1b7f13b142c01282fbf567ea7efc63a3f9fc9099e9785b26202",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "c2126846b90947e44de49d4c2adfbd15953451ccf30d8e36a5a7980f19901465",
+    "articles/Launch_Monitor_Technology_Review/research/hardware-appendix-review-20261004.md": "d5c0cfe0287bb95933685afe21dac16bc868e6e2a0c37bb521cb03c95005a818",
+    "reports/technical-review/hardware-appendix-review.md": "2abf69f5047c55fa4b8c0a0fff78177b2961d4adc4743a49ae94fcdf55fd0973",
+    "reports/technical-review/hardware-appendix-independent-checks.json": "c6986b1099f7c56e4e9407556ae4dff4b5610bbb0b5a371ac7a82b00879e2450"
+  },
+  "additional_gates": {
+    "bibliography_quality": "169 entries; zero violations",
+    "bibliography_cross_file": "passed",
+    "qmd_citation_resolution": "294 QMD files passed; does not cover TeX (validated through book compilation)",
+    "latex_environments": "245 files passed",
+    "claim_audit_evidence_regeneration": "--check passed; no canonical ledger changes",
+    "source_hash_convention": "source_sha256 is the inspected local CRLF file; git_blob_sha256 binds canonical committed bytes at accepted_source_commit"
+  },
+  "final_metadata_checks": {
+    "passed": 77,
+    "exit_code": 0,
+    "scope": "Historical handoff, SPEC, root hygiene, claim-audit inventory and follow-up contracts after metadata update",
+    "log": "docs\\development\\technical-review\\hardware-final-metadata-tests.txt"
+  }
 }

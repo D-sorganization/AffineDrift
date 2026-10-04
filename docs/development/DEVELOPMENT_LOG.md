@@ -1,3 +1,9 @@
+# Hardware Appendix — Fixed-Commit Regression and Acceptance #4876
+
+2026-10-04: accepted source `377ae74fc8917529f36882614012538e2254816f` passed the full repository regression: 6,856 passed, 29 skipped, 210 deselected, 60 warnings, 93.24% src coverage, 1,106.10 seconds, exit 0. The tracked tree remained unchanged throughout; no concurrent rendering or commit hooks. Six source/evidence files now have canonical Git-byte bindings, and one corpus row advances to complete source review. Five Flash source helpers plus one prose helper were lead-reviewed. No additional source correction was needed after the fixed checkpoint. Packaging outputs were preserved beneath QA after the run. Full scope and separate PDF/source validation are in `reports/technical-review/hardware-appendix-validation.json`. Parent #4875 protected delivery and the hardware regular PR remain pending; no hardware measurement, full-book or entire-corpus acceptance is claimed.
+
+---
+
 # Hardware Appendix — Correction Checkpoint #4876
 
 Work is on `fix/hardware-appendix-review` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-hardware-review`, starting from the final PR #4875 head `4b92fe90af30ddaa0e2b339e0814375437a4b071`. Parent PR #4875 remains open with auto-merge enabled through the merge queue: all completed checks passed; E2E site rendering is still running in CI Standard 37190386364. Do not claim it is merged or cancel/restart its build. Its accepted source/evidence bytes remain unchanged here.
