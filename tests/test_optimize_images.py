@@ -39,3 +39,11 @@ def test_daydreams_page_uses_picture_with_reduced_motion_source() -> None:
     assert "A-Dead-Fish-Swims-poster.webp" in page
     assert "static/images/A-Dead-Fish-Swims.webp" in page
     assert 'alt="Dead fish swimming upstream"' in page
+
+
+def test_quarto_publishes_srcset_only_fish_webp_files() -> None:
+    """Quarto does not copy files referenced only via <source srcset>; list them."""
+    config = (REPO_ROOT / "_quarto.yml").read_text(encoding="utf-8")
+
+    assert "static/images/A-Dead-Fish-Swims.webp" in config
+    assert "static/images/A-Dead-Fish-Swims-poster.webp" in config

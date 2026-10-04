@@ -1,6 +1,6 @@
 # Animated WebP for Dead Fish Figure - #4558
 
-Branch `claude/issue-4558`. `scripts/optimize_images.py` now also writes `static/images/A-Dead-Fish-Swims.webp` (233 KB vs the 281 KB optimized GIF), listed in the manifest and `EXPECTED_OUTPUTS`. `pages/daydreams-doodles.qmd` serves it via `<picture>` with a reduced-motion poster source and the GIF fallback. Tests are in `tests/test_optimize_images.py`. The source GIF and MP4/WebM are intentionally out of scope. Next: review the draft PR, then mark ready and arm the guarded merge. DL-#4558 touched.
+Branch `claude/issue-4558`. `scripts/optimize_images.py` now also writes `static/images/A-Dead-Fish-Swims.webp` (233 KB vs the 281 KB optimized GIF), listed in the manifest and `EXPECTED_OUTPUTS`. `pages/daydreams-doodles.qmd` serves it via `<picture>` with a reduced-motion poster source and the GIF fallback. Tests are in `tests/test_optimize_images.py`. The source GIF and MP4/WebM are intentionally out of scope. Next: review the draft PR, then mark ready and arm the guarded merge. DL-#4558 touched. CI e2e public-site verification failed one route on 4 cells because Quarto does not copy files referenced only via `<source srcset>`; both fish WebP files are now listed in `_quarto.yml` resources. No material development-log change - build-config fix inside DL-#4558 scope.
 
 # Regular PR #4886 — Parameter Delivery Pending
 
