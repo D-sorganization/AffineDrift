@@ -1,3 +1,11 @@
+# Date Presentation #4888 — Tested Source Checkpoint
+
+Current worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-date-display`, branch `fix/unverified-date-display`, lease technical-review-20261004-date through20:33UTC. The narrow repair changes the shared Quarto metadata card and scoped title-date postprocessing. Seven new boundary/render tests cover unverified, verified and absent dates, unchanged prose and idempotence. Initial red failures reproduced the defect;31 metadata/date and11 header tests now pass. Ruff, Black and one-file mypy pass. A local browser confirms both title/card say Date unverified, with no invalid datetime or invented publication citation date. See date-display-review.json for limits and failed invocation history.
+
+One read-only agy Flash planner assisted; unattended implementation dispatch was refused for missing agy tool allowlisting. No bypass was used. Full frozen regression and protected delivery remain. Parent source6cd4d2eee contains the two-article review4885 and is undergoing its independent full regression in its own worktree; preserve that tree. Parent PR4886 is in the protected queue with all head checks green. Verify actual remote-main merge before treating it as delivered. Broad corpus goal active.
+
+---
+
 # Dimensionality and Integration Review #4885 — Source Draft
 
 Active branch `fix/dimensionality-integration-review`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-dimensionality-review`. Both complete originals and revisions read; detailed technical decisions, primary-reading limits and five Flash helper adjudications are in `reports/technical-review/dimensionality-integration-review.md`. Manufactured mathematics and both Quarto renders pass. Browser review and full regression remain; corpus entries must stay pending until acceptance. No engine/human/live-site validation is claimed.

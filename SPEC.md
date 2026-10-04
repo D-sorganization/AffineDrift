@@ -587,3 +587,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-10-04 | #4886 | Correct launch-monitor timing, reference-point, spin and inference conventions; preserve primary-source and mathematical evidence with rebuilt book PDF. |
 | 2026-10-04 | #4885 | Distinguish geometric, statistical and computational dimensions; bind the educational simulation guide to provider provenance and qualified engine documentation. |
+| 2026-10-04 | #4888 | Preserve unverified publication dates as readable uncertainty in rendered title and metadata cards without inventing date metadata. |

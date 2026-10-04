@@ -1,0 +1,50 @@
+{
+  "issue": 4888,
+  "scope": "Unverified publication date presentation in Quarto title block and shared metadata card; no article publication date inferred",
+  "tdd": {
+    "initial_new_cases": 5,
+    "red_failures": 2,
+    "red_passing_boundaries": 3,
+    "green_new_cases": 7,
+    "red_log": "docs/development/technical-review/date-display/red-tests.txt",
+    "green_initial_log": "docs/development/technical-review/date-display/green-tests.txt"
+  },
+  "focused_tests": {
+    "metadata_and_dates": 31,
+    "header_card": 11,
+    "exit_codes": 0,
+    "initial_command_error": "Requested nonexistent tests/test_post_render_citations.py; no test ran in that invocation. Corrected paths passed."
+  },
+  "static_checks": {
+    "ruff": "passed",
+    "black": "passed after test formatting",
+    "mypy": "1 source file passed"
+  },
+  "browser": {
+    "local_route": "/articles/upstreamdrift-educational-integration.html",
+    "title_publication": "Date unverified",
+    "card_publication": "Date unverified",
+    "invalid_date_time_attributes": 0,
+    "citation_publication_date_tags": 0,
+    "screenshot": "docs/development/technical-review/date-display/date-header.png",
+    "scope": "Local rendered header/card inspection at1280px; not live-site certification"
+  },
+  "delegation": {
+    "implementation_dispatch": "refused by fleet dispatcher because agy unattended tool allowlist unavailable; no bypass",
+    "read_only_flash_helpers": 1,
+    "model": "gemini-3.8-flash-low",
+    "adjudication": "Accepted scope boundary/test suggestions. Used span rather than time for unknown instant; rejected invented git date-source value and assumed ISO formatting of existing Quarto dates."
+  },
+  "full_regression": {
+    "status": "pending"
+  },
+  "delivery": {
+    "status": "pending",
+    "draft_pr": false
+  },
+  "pre_pr": {
+    "status": "tooling failure",
+    "issue": "https://github.com/D-sorganization/Repository_Management/issues/1940",
+    "reason": "Black --check string expanded into character argv; direct Black passes; all other gates pass; repair underway, no bypass"
+  }
+}

@@ -1,0 +1,11 @@
+### Result
+{
+  "titleDate": "Date unverified",
+  "card": "\n      Published\n      \n        Date unverified\n      \n    ",
+  "invalidDateTimes": 0,
+  "publicationMeta": []
+}
+### Ran Playwright code
+```js
+await page.evaluate('() => ({titleDate:document.querySelector("#title-block-header .date")?.textContent,card:document.querySelector(".page-header-item--published")?.textContent,invalidDateTimes:document.querySelectorAll("time[datetime=\\"Invalid Date\\"]").length,publicationMeta:[...document.querySelectorAll("meta[name=citation_publication_date]")].map(e=>e.content)})');
+```

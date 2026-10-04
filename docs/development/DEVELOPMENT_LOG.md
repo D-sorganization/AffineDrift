@@ -1,3 +1,7 @@
+# DL-#4888 — Unverified Date Presentation
+
+The browser exposed Invalid Date in two shared presentation surfaces. TDD reproduced both failures, then a scoped title-placeholder replacement and metadata-aware span fixed them without replacing dates in article prose. Seven new cases and existing metadata/header suites pass; browser output and delegation limits are recorded. Full regression/delivery pending.
+
 # Dimensionality and Integration Source Review — 2026-10-04
 
 Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. See the review report for hypotheses, rejected suggestions and outstanding browser/regression acceptance.
