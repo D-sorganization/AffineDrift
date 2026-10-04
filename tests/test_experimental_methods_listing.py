@@ -24,6 +24,8 @@ def processor() -> Callable[..., Any]:
     )
     assert match is not None, "The published Python listing must remain executable"
     namespace: dict[str, Any] = {}
+    # Trusted, version-controlled chapter at a fixed path; no external input reaches this test.
+    # nosemgrep: python.lang.security.audit.exec-detected.exec-detected
     exec(compile(match.group(1), str(CHAPTER), "exec"), namespace)
     return namespace["process_mocap_data"]
 
