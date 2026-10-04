@@ -60,10 +60,12 @@ The turnover helper invented paths, commands and Quarto/MathJax steps. **Its che
 - The canonical `articles/Launch_Monitor_Technology_Review/main.pdf` remains the previously accepted92-page hardware PDF. The provisional94-page PDF is committed separately under checkpoint/render for handoff. **Source and canonical PDF intentionally do not yet match; finish acceptance before opening a publication PR.**
 - No changed source/evidence hash is an acceptance certificate. `checkpoint-validation.json` binds the provisional files and records the limits.
 
-## Resumed Final Review on 2026-10-04
+## Resumed Final Review: 2026-10-04
 
 The user resumed the goal after the saved pause. Parent PR4879 merged at b33bcf1a37c1cf8665fb6cc3a0f8abd84a1db496; all11hardware/Bosch canonical source/evidence hashes match their accepted records. The independent receipt is reports/technical-review/hardware-bosch-remote-main-receipt.json.
 
 Two additional agy Gemini3.8Flash helper tasks covered claim tracing and notation. The first notation invocation failed before execution because the combined prompt could not launch through the Windows CLI; the narrowed retry completed. The claim-trace helper proposed reversing the backspin axis, which is incorrect: with x forward and y up, eb=x cross y=+z, and positive-z rotation gives backward surface velocity at the ball top. Its alleged component-axis swap is likewise false. Its absolute-value interval suggestion merely restated the existing correct condition. The notation helper confirmed the rigid-point and dot-product identities but again supplied inaccurate rounded intermediate trigonometric products; the executable NumPy/math values remain authoritative.
 
 Lead accepted two narrow qualifications: hold horizontal speed fixed and nonzero in the attack-angle statement, and restrict the displayed contact-point expression to ideal rigid kinematics immediately before contact, with deformational surface velocities needed during compliant impact. Initial PDF inspection found a one-line split of the keypoint callout; Needspace now keeps the box together. Source, bibliography and render acceptance are recorded separately from the historical provisional checkpoint. These changes do not add empirical device validation or claim whole-book technical clearance.
+
+Final fleet pre-PR repair is recorded in reports/technical-review/parameter-review.md: explicit metadata title, title capitalization, one shortened outline heading and historical-preview preservation. No additional scientific claims were introduced.

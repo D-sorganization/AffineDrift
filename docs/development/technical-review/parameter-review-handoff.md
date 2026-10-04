@@ -1,3 +1,5 @@
+> Historical paused checkpoint. User resumed on2026-10-04. The provisional PDF is preserved at commit0bbf036d820b80045f1f48129314f330e5e87210, path docs/development/technical-review/parameter-checkpoint/render/main.pdf; it is omitted from the final publication diff. Use the final acceptance record for current status.
+
 # Paused Checkpoint: Launch-Monitor Parameter Review
 
 The user requested that development stop after all intermediate work is committed, pushed and documented for another agent. Do not resume the corpus automatically. Resume only when the user assigns continuation. This packet supersedes older active-goal instructions in the historical handoff logs.
@@ -33,7 +35,7 @@ Do not update that queued branch with parameter edits. On an authorized resumpti
 
 PR #4875 is already delivered at0bb9d47f895c9c94412b5f62f0d74981cdb556e3. Its15changed-path receipt is committed. Do not re-investigate its old queue state.
 
-## Routine Work for agy Gemini 3.8 Flash
+## Routine Tasks: Agy Gemini 3.8 Flash
 
 Use actual CLI `agy --model gemini-3.8-flash-low --print $taskPrompt --print-timeout 180s` for bounded read-only prompts. Send supplied text, exact file scope and acceptance criteria. Keep transcripts, exit codes and lead adjudication. Independent routine jobs can run in parallel; never allow multiple writers to the chapter, bibliography, PDF, corpus or turnover files.
 
@@ -47,7 +49,7 @@ Use actual CLI `agy --model gemini-3.8-flash-low --print $taskPrompt --print-tim
 
 Keep conceptual decisions with the lead: changes to frame/sign conventions, contact-law meaning, inferred-versus-measured classification, disputed vendor definitions, or adding empirical/performance claims. #4881 is `tier:strong`; a cheap helper does not independently claim that issue. For separately filed genuinely mechanical `tier:cli` work, use the fleet dispatcher according to current policy.
 
-## Completion Sequence for #4881
+## Completion Sequence: Issue #4881
 
 1. Read nearest AGENTS.md, CLAUDE.md and book CONVENTIONS.md. Check the live claim; post your own lease and presence. The central inbox can be incomplete; absence of messages is not proof of no claim. #4878 was held by local session `affine-control-page-4878`; do not touch it without a fresh claim check.
 2. Perform final technical review of the provisional chapter. Check source paraphrases, unit/sign conventions, treatment of scalar versus vector rates, heading singularities and axial spin. No broad rewrite or additional chapter is required to finish this item.
