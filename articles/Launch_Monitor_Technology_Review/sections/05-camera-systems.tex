@@ -4,166 +4,164 @@
 \section{Imaging Architectures}
 \label{sec:camarch}
 
-Photometric launch monitors capture a short burst of high-speed, IR-strobed
-stereo images over a small capture volume beside (or above) the tee ---
-roughly the first 30\,cm of ball flight --- and reconstruct ball and club
-kinematics photogrammetrically. The commercial family tree:
+Photometric launch monitors estimate motion from calibrated images taken near impact.
+Their useful capture volume depends on camera placement, illumination, exposure timing, resolution and visibility; it is not a universal length of ball flight.
+Multiple cameras can supply simultaneous geometric constraints, while strobed exposures can supply several time-separated observations within one image.
+Neither camera count nor a nominal frame rate alone specifies measurement uncertainty.
 
-\begin{itemize}
-\item \textbf{Foresight Sports} defined the reference floor-unit design.
-The GC2 (2010) used two cameras (``stereoscopic''), with club data via the
-add-on HMT module (two more cameras). The GC3 / Bushnell Launch Pro (a
-Foresight-built rebadge) use three cameras; the GCQuad and QuadMAX use
-four cameras at the corners of the sensor window, capturing on the order
-of 200 images of ball and club per shot at burst rates quoted up to
-10,000\,fps; the ceiling-mounted GCHawk points the same quadrascopic
-package downward~\cite{foresightgcquad,playbetterblp}. Onboard IR object
-tracking detects the teed ball and the inbound clubhead and triggers the
-burst; intrinsics/extrinsics are factory-calibrated (``no calibration
-needed'')~\cite{foresightgcquad}.
-\item \textbf{Uneekor} mounts overhead: EYE~XO/XO2 look straight down from
-$\sim$3\,m with two (XO2: three) high-speed IR cameras at
-3,000+\,fps~\cite{uneekoreyexo}. The overhead geometry sees the clubhead
-and face region directly, enabling sticker-free club data and
-impact-location video replay (Club Optix). The portable EYE~MINI reverts
-to a side view and therefore requires club stickers.
-\item \textbf{ProTee VX}: overhead, two synchronized high-speed cameras
-with IR illumination and an ML shot-analysis pipeline; sticker-free club
-and ball data including vertical/horizontal impact
-point~\cite{proteevx}.
-\item \textbf{Garmin Approach R50}: three high-speed cameras arranged
-horizontally in a floor unit; purely optical ball and club measurement,
-with clubhead data requiring reflective fiducials~\cite{garminr50}.
-\item \textbf{SkyTrak / SkyTrak+}: the original SkyTrak was photometric and
-ball-only; the SkyTrak+ added a dual Doppler radar module specifically for
-club data while the cameras handle ball launch and spin~\cite{skytrakplus}.
-\end{itemize}
+Commercial examples illustrate different observation geometries.
+Foresight's GC3 uses three cameras, while the GCQuad family uses four; supported club outputs depend on the model and enabled features~\cite{foresightgc3,foresightgcquad}.
+Uneekor's overhead EYE~XO2 uses three cameras and club stickers for the documented club-face data; overhead placement does not itself make club measurement markerless~\cite{uneekorxo2manual}.
+ProTee VX instead advertises two overhead cameras and sticker-free club and ball outputs~\cite{proteevx}.
+Garmin's R50 uses three cameras and a club-face sticker for club tracking~\cite{garminr50,garminr50support,garminr50stickers}.
+These are manufacturer descriptions of capabilities, not a common independent accuracy specification.
+The model-specific distinctions in \cref{ch:survey} matter more than a camera-versus-radar label, especially for hybrid instruments.
 
 \section{Ball Measurement}
 
 \subsection{Photogrammetric Position and Velocity}
 
-With factory-known intrinsics $K_i$ and extrinsics $[R_i|\vect{t}_i]$,
-each synchronized image set yields a 3D ball-center fix by triangulation:
-back-project the matched detections as rays and solve the least-squares
-intersection (or the DLT system $\tilde{\vect{x}}\times(P\vect{X})=0$),
-refining by reprojection error. Ball speed is the displacement between
-timestamped fixes; launch angle and direction are the components of the
-initial velocity vector in the calibrated target frame. Two error sources
-dominate: depth error grows quadratically with distance,
+A calibrated camera maps a 3D point to an image through its intrinsics, pose and lens-distortion model.
+For matched observations of the \emph{same physical point}, corrected image coordinates can be triangulated from several views, for example by minimizing reprojection error.
+A ball silhouette needs additional care: its apparent contour is not a set of fixed material points shared between viewpoints.
+Estimating the sphere center from its outline should therefore use a sphere-projection model before treating the result as a point observation.
+
+Let $\vect{p}_k$ and $\vect{p}_{k+1}$ be estimated centers in one calibrated target frame at times separated by $\Delta t>0$.
+Then
+\begin{equation}
+\overline{\vect{v}}_k=\frac{\vect{p}_{k+1}-\vect{p}_k}{\Delta t}
+\end{equation}
+is an interval velocity estimate; its norm is speed.
+Displacement alone is not speed, and an interval estimate need not equal the instantaneous velocity at separation from the club.
+A local trajectory fit can estimate velocity at a declared event time, with timing uncertainty and any extrapolation included in the error budget.
+Launch angles follow by resolving that velocity in the target frame, not by reading image-axis slopes as physical launch angles.
+
+For an ideal rectified stereo pair, let $B$ be the baseline, $f$ the common focal length in pixels, and $d=u_L-u_R>0$ the disparity in pixels.
+Depth along the camera optical axis is $Z=fB/d$.
+Holding calibration fixed, first-order propagation gives
 \begin{equation}
 \label{eq:depth}
-\sigma_Z = \frac{Z^2\,\sigma_{px}}{f\,B},
+\sigma_Z\simeq\frac{Z^2}{fB}\sigma_d,
+\qquad
+\sigma_d^2=\operatorname{Var}(u_L)+\operatorname{Var}(u_R)
+-2\operatorname{Cov}(u_L,u_R).
 \end{equation}
-for baseline $B$ and focal length $f$ --- which is why photometric units
-keep the capture volume small and also exploit the known ball diameter
-(21.34\,mm radius) as an auxiliary range cue; and center-finding bias ---
-fitting the projected \emph{conic} outline rather than taking the blob
-centroid avoids a systematic offset of up to $RZ/f$ pixels.
+Thus two independent image-coordinate errors of standard deviation $\sigma_{px}$ give $\sigma_d=\sqrt{2}\sigma_{px}$, not $\sigma_{px}$.
+The approximation becomes unreliable when disparity uncertainty is large relative to disparity.
+Baseline, focal-length, distortion and alignment uncertainty add further contributions; \cref{eq:depth} is not a bound for every multi-camera layout.
+Camera depth $Z$ must also be transformed into the book's target frame before comparison with launch-monitor coordinates.
 
-\subsection{Spin: Dimple-Pattern Registration}
+\subsection{Why an Ellipse Center Is Not the Ball Center}
+
+The distinction can be derived directly for an ideal pinhole camera.
+Let a sphere of calibrated radius $r$ have center $\vect{c}=(X,Y,Z)^\top$ in camera coordinates, with $Z>r$.
+For a normalized image ray $\vect{q}=(u,v,1)^\top$, tangency requires
+\begin{equation}
+(\vect{c}^{\top}\vect{q})^2
+=(\vect{c}^{\top}\vect{c}-r^2)\vect{q}^{\top}\vect{q}.
+\end{equation}
+The center of this image conic is
+\begin{equation}
+(u_e,v_e)=\frac{Z}{Z^2-r^2}(X,Y),
+\qquad
+(u_c,v_c)=\frac{1}{Z}(X,Y)
+\end{equation}
+for the ellipse center and projected sphere center, respectively.
+Their difference is $r^2/(Z^2-r^2)$ times $(u_c,v_c)$.
+It vanishes on the optical axis but generally does not vanish merely because an ellipse was fitted accurately.
+These are normalized coordinates; the intrinsics convert them to pixels.
+A sphere model, calibration and known or estimated radius supply the correction, while partial occlusion, ball deformation near contact and nonuniform illumination require separate treatment.
+The familiar ball-size range cue is therefore conditional on size and projection assumptions, not an independent exact depth measurement.
+
+\subsection{Spin: Surface-Pattern Registration}
 \label{sec:dimplespin}
 
-The flagship photometric capability is markerless 3D spin. Successive
-frames of the ball are registered on the sphere: the estimator searches
-the rotation $R\in SO(3)$ that best maps the back-projected surface
-texture (the dimple pattern, plus any logo or blemish) of frame $k$ onto
-frame $k{+}1$ --- Foresight brands this \emph{spherical correlation};
-Uneekor, \emph{Dimple Optix}~\cite{foresightspherical,uneekordimple}.
-The recovered $R$ gives everything at once:
+Visible dimples, logos or printed marks can constrain rotation by matching their surface locations between exposures.
+A geometric estimator jointly needs the ball center, radius, camera calibration, exposure times and feature correspondences.
+Changes in lighting, specular reflections, occlusion and repeated texture can produce matches that are photometrically plausible but geometrically wrong.
+Describing this as spherical registration explains a possible observation model; it does not establish the proprietary algorithm inside every camera product.
+
+Let $Q_k\in SO(3)$ map ball-fixed coordinates into a fixed world frame.
+The spatial rotation increment is $R=Q_{k+1}Q_k^\top$.
+Under constant spatial angular velocity over $\Delta t$, and on the branch $\|\vect{\omega}\|\Delta t<\pi$,
 \begin{equation}
 \label{eq:rotangle}
-\hat{\vect{\omega}} = \mathrm{eig}_1(R), \qquad
-\theta = \arccos\!\Bigl(\frac{\mathrm{tr}\,R - 1}{2}\Bigr), \qquad
-\omega = \theta/\Delta t,
+\vect{\omega}=\frac{\operatorname{vee}(\operatorname{Log}R)}{\Delta t},
+\qquad
+\theta=\arccos\!\left(\frac{\operatorname{tr}R-1}{2}\right)\in[0,\pi].
 \end{equation}
-i.e.\ the spin axis is the eigenvector of $R$ with unit eigenvalue and the
-spin rate follows from the per-frame rotation angle. Reported accuracy is
-1--3\% of true spin, independent of ball speed. The known failure mode is
-rotational aliasing at high spin and low frame rate (the $n\cdot2\pi$
-ambiguity), resolved by multi-hypothesis tracking or a
-trajectory-consistency prior. Where resolution cannot support dimple
-registration, systems fall back to \emph{marked balls}: Uneekor QED and
-Rapsodo (RPT balls) track printed high-contrast features, giving closed-form
-rotation from $\ge3$ correspondences via the Kabsch/Horn algorithm.
+Here $\operatorname{vee}$ converts a skew matrix to its axial vector and $\operatorname{Log}$ denotes the principal rotation logarithm on that branch.
+The trace angle alone is unsigned; an eigenvector with eigenvalue one also has an arbitrary sign.
+A consistent rotation-vector construction supplies the orientation information away from the branch boundary.
+Near zero rotation the axis direction is poorly determined; near $\pi$ the principal branch needs particular care.
+If angular velocity changes direction during the interval, the logarithm describes an equivalent finite rotation and is not generally its arithmetic time average.
+
+Rotations separated by complete revolutions can generate the same endpoint orientation, and repeated surface patterns can introduce further ambiguity.
+Additional exposures, independent observations or a justified speed prior may select a candidate; they do not guarantee that an otherwise ambiguous rotation becomes observable.
+Three noncollinear matched 3D surface points are sufficient for a noiseless proper rigid-transform fit, but three arbitrary image detections are not automatically three known 3D correspondences.
+A marked ball can improve correspondence without removing timing or calibration error.
+Rapsodo's RPT pattern is an optical spin aid; Titleist RCT's embedded radar-reflective structure serves a different observation mechanism~\cite{rapsodofaq,garminr10rct}.
+No universal percentage spin accuracy, or independence from ball speed, follows from the registration equations.
 
 \section{Club Measurement}
 \label{sec:camclub}
 
-\subsection{Fiducial Markers: The Foresight Approach}
+\subsection{Fiducial Geometry and Reference Points}
 
-Foresight floor units require retroreflective \textbf{fiducial dots} on
-the clubface. The dot count maps directly to the data
-tier~\cite{foresighthmt,foresightmarkers}: one dot suffices for club
-speed, path, and attack angle (tracking a single 3D point through the
-capture volume); \emph{four dots} --- placed on the vertical centerline,
-equidistant from the horizontal centerline --- define the face plane and
-enable face angle, dynamic loft, lie, closure rate
-(\si{\degree\per\second}), and \textbf{impact location}. Mechanically: the
-IR strobe makes the dots bloom in every frame; triangulating the dot
-constellation across cameras and frames yields the 6-DOF pose of the face
-through impact. Club speed is the pose translation rate; path and attack
-angle are the velocity direction; face angle and dynamic loft are the
-face-plane orientation at contact; impact location is the measured ball
-position expressed in the face frame. The GC3/Launch Pro tier delivers
-speed, path, attack, face angle, and impact via the same stickers but
-omits dynamic loft, lie, and closure rate --- these remain
-GCQuad/QuadMAX exclusives~\cite{playbetterblp}.
+Reflective club markers provide identifiable image features.
+Foresight's documented single-marker mode supplies a limited club-data set, while supported four-marker modes add orientation and impact information~\cite{foresightmarkers,foresightquadmanual}.
+The actual marker layout matters: four collinear points still leave rotation about their line unconstrained.
+A suitable noncollinear constellation can define a rigid pose when its geometry and correspondences are known and visible.
+For a curved driver face, the relationship between that constellation and the selected face-center tangent plane also needs calibration; a plane fitted to arbitrary surface points is not automatically the desired face plane.
 
-\subsection{Sticker-Free Overhead Tracking}
+A single marker trajectory provides that point's position and velocity, not a unique full club pose.
+For two points $P$ and $O$ fixed in a rigid clubhead,
+\begin{equation}
+\vect{v}_P=\vect{v}_O+\vect{\omega}\times(\vect{p}_P-\vect{p}_O),
+\end{equation}
+with every quantity expressed in the same frame and at the same time.
+Consequently, differentiating a pose origin or marker position does not automatically yield the manufacturer's club-speed reference point.
+Path and attack angle inherit this point and timing dependence.
+Impact coordinates additionally require a registered face frame and a defined ball-contact event; a replay image alone is not a calibrated numerical impact-location measurement.
+These are the same measurand distinctions that govern the radar comparison in \cref{ch:accuracy}.
 
-Uneekor's overhead cameras segment the clubhead silhouette directly ---
-no markers --- because the top-down view presents the head against the mat
-with controlled IR illumination; the systems also record actual
-high-speed impact video (face-on via Club Optix), from which impact
-location is read~\cite{uneekoreyexo}. ProTee VX claims the same
-sticker-free club set (speed, path, face, attack, dynamic loft, lie,
-vertical and horizontal impact point) from its overhead ML
-pipeline~\cite{proteevx}. The trade-off is installation: overhead units
-need $\sim$3\,m ceilings, rigid mounting, and a floor-chart calibration.
+The GC3's published club list contains speed, path, attack angle and smash factor; it should not be credited with the GCQuad's face-angle and impact-location feature set~\cite{foresightgc3}.
+Nor is a ratio such as smash factor a separate directly observed primitive simply because it appears in a measured-data list.
+Feature entitlement, marker mode and metric definition should accompany any comparison between units.
 
-\subsection{Calibration}
+\subsection{Overhead Tracking and Calibration}
 
-Factory-rigid multi-camera rigs ship calibrated; the user aligns only the
-target line. Overhead systems require field calibration: Uneekor's
-procedure places a printed calibration chart on the mat, levels it,
-squares it to the screen, and aligns its crosshair to overlays on the
-live camera feeds --- establishing the ground plane, hitting zone, and
-target-line extrinsics~\cite{uneekorcalib}. This is the pattern a DIY
-overhead build should copy.
+Overhead placement offers useful views but does not guarantee an unobstructed face, a marker-free algorithm or a uniquely determined pose.
+The EYE~XO2 manual specifies club stickers, whereas ProTee VX advertises sticker-free image-based club outputs~\cite{uneekorxo2manual,proteevx}.
+Those different designs should not be collapsed into one generic overhead measurement method.
+Learned shape models can help interpret images; their training domain and failure behavior remain part of the measurement system.
 
-\section{The Indoor Argument, and What Cameras Cannot Do}
+Factory calibration concerns internal camera geometry; setup also establishes the target line, ground plane, working distance and hitting zone.
+Moving or tilting a unit, changing its support or obscuring calibration features can change that relationship.
+The EYE~XO2, for example, specifies a mounting envelope and a calibration procedure~\cite{uneekorxo2manual}; other products require their own instructions.
+A DIY build should verify residuals on independent calibration poses and assess timing, distortion, blur and occlusion across its intended volume.
+Fitting the calibration images well is not a held-out accuracy test.
 
-Photometric systems measure actual launch conditions --- including 3D spin
---- in the first foot of flight; nothing is lost when the ball hits a
-screen 2.5\,m away. Radar indoors must infer from a truncated flight.
-This is the structural reason camera units dominate indoor simulation
-while radar dominates outdoor practice: each modality measures what the
-other models~\cite{uneekorphotometric}. The camera's blind spots are
-downrange (all flight is simulated from launch) and, for floor units, the
-club face itself without stickers --- the same face-visibility problem
-radar has, solved with markers instead of models.
+\section{The Indoor Argument and Downrange Limits}
+
+A camera system that obtains the necessary launch and spin observations near impact can estimate launch conditions before the ball reaches a screen.
+This is an important indoor advantage, conditional on the capture window and visibility actually being adequate.
+It does not observe the subsequent aerodynamic trajectory, environmental variation, landing or bounce beyond that screen.
+Those outputs are predictions from the estimated state and the flight/ground models of \cref{ch:flight}.
+Short-flight radar systems likewise combine observations with estimation, while hybrid systems can add complementary image information.
+The useful comparison is which quantities are identifiable under the installed geometry and which uncertainty remains, rather than a claim that one modality measures everything the other models.
 
 \section{DIY and Open-Source Photometric Systems}
 \label{sec:diy}
 
-\textbf{PiTrac}~\cite{pitrac} is the flagship open-source photometric
-build and the most relevant open-source precedent. Instead of
-multi-kfps cameras it uses \emph{strobed multi-exposure capture}: an IR
-LED array pulses several times within one long exposure of a $\sim$\$50
-Raspberry Pi Global Shutter camera, freezing multiple ball images in a
-single frame. One camera watches the teed ball and detects launch; the
-second captures the strobed flight images; a custom PCB sequences
-trigger and strobe. Processing (C++/OpenCV): Hough-circle detection
-locates ball images; strobe-timestamped positions give speed and launch
-angles; 3D spin on all three axes is solved by searching candidate
-rotations that best register the dimple imagery between exposures ---
-Gabor-filter dimple enhancement is documented in the adjacent patent
-literature~\cite{us12401909}. Total BOM $\approx$\$250--300.
-The architecture shares multi-exposure imaging and surface-feature registration principles with the disclosures discussed in \cref{sec:wintriss}; that comparison establishes neither a direct product lineage nor rights clearance.
+PiTrac documents Raspberry Pi cameras, infrared strobes and image processing for launch speed, angles and three-axis spin~\cite{pitrac}.
+Strobed multi-exposure capture can separate effective observation times from the camera's frame rate: pulse duration controls motion blur, while pulse spacing controls displacement, overlap and rotational ambiguity.
+Its evolving build documentation should be consulted for the actual camera configuration, calibration and software version; a computer-and-camera subtotal is not a complete installed-system cost.
+Neither a parts list nor agreement between two frames establishes a validated error distribution across balls, speeds and lighting conditions.
+The shared imaging principles discussed in \cref{sec:wintriss} establish neither direct product lineage nor rights clearance.
 
 \begin{implication}
-PiTrac provides an open implementation of strobed optical capture and image-based motion estimation using commodity hardware.
-Its architecture can inform a radar/optical prototype, but a parts list or successful spin fit is not a measurement-error specification.
-Ball-spin capture and club-face impact imaging require their own visibility, calibration and validation checks; adding a camera does not automatically establish both capabilities.
+Optical launch and club measurements depend on a connected chain: visible features, calibrated geometry, synchronized exposures, defined reference points and justified estimation assumptions.
+A change anywhere in that chain can look like a change in the golfer's swing.
+Preserving those definitions and validating across the intended operating conditions makes the resulting motion estimates interpretable; adding a camera alone does not establish accuracy or all club-face capabilities.
 \end{implication}
