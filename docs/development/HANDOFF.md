@@ -2,6 +2,10 @@
 
 Branch `claude/issue-4558`. `scripts/optimize_images.py` now also writes `static/images/A-Dead-Fish-Swims.webp` (233 KB vs the 281 KB optimized GIF), listed in the manifest and `EXPECTED_OUTPUTS`. `pages/daydreams-doodles.qmd` serves it via `<picture>` with a reduced-motion poster source and the GIF fallback. Tests are in `tests/test_optimize_images.py`. The source GIF and MP4/WebM are intentionally out of scope. Next: review the draft PR, then mark ready and arm the guarded merge. DL-#4558 touched. CI e2e public-site verification failed one route on 4 cells because Quarto does not copy files referenced only via `<source srcset>`; both fish WebP files are now listed in `_quarto.yml` resources. No material development-log change - build-config fix inside DL-#4558 scope.
 
+# Issue #4531 - ADR 0002, Interactive Technology Stack
+
+Branch `claude/issue-4531` (worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4531`), commit SELF, draft PR #4907. Adds `docs/adr/0002-interactive-technology-stack.md` (Accepted; records Board decision D3(d) from PR #4485: OJS for light widgets, Pyodide for faithful `src/` execution, both self-hosted), indexes it in `docs/adr/README.md`, and adds `tests/test_adr_index.py` (every `NNNN-*.md` ADR indexed and has a non-empty `## Status`). RED: 1 failed, 7 passed before indexing; GREEN: 8 passed. Docs and test only: no widget, vendoring or CDN migration (rotation converter, grip-angle simulator) is done here; D4, D7 and D8 stay held. Dev-log entry: DL-#4531. Next: review the draft PR; #4533, #4534 and #4540 may then build to the ADR.
+
 # Issue #4882 - Freshness Dashboard Page-Relative Links
 
 Branch `claude/issue-4882`: `scripts/generate_companion_freshness.py` now emits route link targets relative to `models/programming/freshness.qmd`; page regenerated, claim-audit evidence refreshed, 12 path-style baseline entries removed (one journey-page entry remains by design). Next: review the draft PR and arm the merge queue.
