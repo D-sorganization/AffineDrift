@@ -35,18 +35,17 @@ test.describe("drift vs control sandbox", () => {
     expect(widgetBytes).toBeGreaterThan(0);
     expect(widgetBytes).toBeLessThanOrEqual(CLASS_A_MAX_BYTES);
 
-    // The page's own MathJax lazy-loads TeX extensions and fonts from its CDN
-    // after load; let typesetting settle so only the widget's requests are seen.
-    await page.evaluate(async () => {
-      await window.MathJax?.startup?.promise;
-      await document.fonts.ready;
-    });
-    await page.waitForLoadState("networkidle");
-
+    // The page's MathJax (ui/lazy) typesets equations as they scroll into view
+    // and fetches TeX extensions and fonts from its CDN. That is a site-wide page
+    // dependency, not the widget, so only those requests are exempt here.
+    const PAGE_MATHJAX = "https://cdn.jsdelivr.net/npm/mathjax@";
     const origin = new URL(page.url()).origin;
     const crossOrigin = [];
     page.on("request", (request) => {
-      if (new URL(request.url()).origin !== origin) crossOrigin.push(request.url());
+      const url = request.url();
+      if (new URL(url).origin !== origin && !url.startsWith(PAGE_MATHJAX)) {
+        crossOrigin.push(url);
+      }
     });
 
     await page.locator("#dcsb-preset").selectOption("shoulder-and-wrist");
