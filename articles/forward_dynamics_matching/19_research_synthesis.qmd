@@ -1,0 +1,125 @@
+# Research Synthesis and Priority Gaps {#sec-fdm-synthesis}
+
+## A Review With Bounded Authority
+
+This review combines mathematical exposition, an immutable UpstreamDrift source audit, and a proposed adaptive matching architecture. The audited source revision is `d7c7d07add0d7407a5a3376d5fe4a97aee9112a0`. Checked-in tests and receipts establish what their authors recorded; this review did not rerun native MATLAB, OpenSim, Drake, MuJoCo, or Pinocchio experiments.
+
+The source audit covers the principal matching families discovered through targeted code, test, and documentation inspection. It does not certify every experimental checkpoint or every historical branch. Repository-wide words such as “complete” should therefore be avoided when a narrower evidence status is available.
+
+The literature includes standard trajectory optimization, musculoskeletal optimal control, sparse discovery, and structured neural dynamics [@kelly2017introduction; @betts2010practical; @dembia2020opensim; @brunton2016discovering; @cranmer2020lagrangian; @greydanus2019hamiltonian]. These sources motivate methods and limitations. They do not establish that the proposed combination is novel, nor that it will recover a golfer's true internal dynamics.
+
+## Method Comparison
+
+| Method Family | Estimated Variables | Principal Benefit | Main Failure Mode | Required Independent Check |
+|---|---|---|---|---|
+| Framewise or trajectory inverse kinematics | Configuration and calibration | Efficient geometric initialization | Motion can be dynamically infeasible | Forward controls and physical replay |
+| Inverse dynamics plus force allocation | Net loads and selected actuator/contact allocations | Mechanics-based initialization and diagnosis | Derivative noise, missing loads, nonunique allocation | Recorded forces and feasible forward replay |
+| Single shooting | Initial state, controls, parameters | Direct integrated reproduction | Long-horizon sensitivity and local minima | Refined native uninterrupted integration |
+| Multiple shooting | Controls, parameters, intermediate states | Better local conditioning and data-informed starts | Residual state defects hide discontinuities | Zero-reset native replay and defect gates |
+| Direct collocation | States, controls, parameters at nodes | Sparse treatment of path constraints | Mesh-dependent defects and between-node violations | Mesh refinement and independent reintegration |
+| Filtering and smoothing | State histories and sometimes parameters | Sequential uncertainty and partial observations | Process noise absorbs model mismatch | Predictive innovations and process-noise audit |
+| Derivative-free and multistart search | Any bounded finite parameter vector | Handles black-box engines and difficult starts | Evaluation expense and weak global assurance | All-start accounting and native acceptance |
+| Differentiable physics | Parameters and controls through sensitivities | Efficient local derivatives | Incorrect event, constraint, or discrete-map derivatives | Directional derivative convergence |
+| Inverse neural proposals | Candidate controls or parameters | Fast amortized initialization | Averaging incompatible solutions or domain shift | Native reranking and rejection |
+| Forward surrogate inversion | Parameters through a learned forward map | Cheap search over expensive plants | Optimizer exploits surrogate errors | Exact plant replay and uncertainty checks |
+| Imitation and feedback tracking | Policy or controller parameters | Robust reference-following behavior | Feedback conceals open-loop mismatch | Separate policy and open-loop claims |
+| Adaptive model selection | Geometry, order, structure, latent dimension | Tests adequacy beyond one fixed model | Confounding and selection overfit | Profiled information and held-out comparison |
+
+These families can form one pipeline. Inverse kinematics supplies initialization, inverse dynamics supplies a control guess, collocation or multiple shooting finds a candidate, and single shooting verifies the final result. Neural components can propose starts without replacing the physics acceptance authority.
+
+## Gap 1: A Canonical Represented-Control Contract
+
+UpstreamDrift contains several polynomial, piecewise, Bernstein, and knot-based control paths. Some engine-specific fitters choose their own default bounds and regularizers. This flexibility is useful experimentally, but numerical coefficient equality cannot establish identical represented controls.
+
+The first priority is a versioned control contract binding actuator names, ordering, coefficient-to-power mapping, time normalization, units, bounds, saturation policy, and interpolation. A conversion between basis conventions should preserve the evaluated control function. Conversion tests should include endpoints, interior timestamps, derivatives where meaningful, and integrated work under a declared velocity history.
+
+Polynomial coefficients in physical time have different units by degree. A constant coefficient has torque units, while the coefficient multiplying physical time squared has torque divided by time squared. A comment that gives every coefficient torque units is correct only for a dimensionless-time convention.
+
+This gap is a parity risk, not a demonstrated defect in every engine path. Each adapter must be reviewed against its actual evaluator and tests before changing it. The research book should preserve historical conventions while recommending a canonical representation for future comparisons.
+
+## Gap 2: Data Information Must Be Separated From Prior Information
+
+The existing identifiability module can augment a Jacobian with prior rows before singular-value analysis. That computation evaluates regularized local sensitivity. It should not be interpreted as the rank of information supplied by markers alone.
+
+A future result should publish both data-only and prior-augmented spectra. It should also profile out nuisance parameters, because camera, control, and marker-offset changes can compensate for a dimension change. Parameter names implicated in a null vector help interpretation, but null directions are combinations rather than independent on/off labels for individual joints.
+
+A thin singular-value decomposition needs special care when the number of observations is smaller than the number of parameters. The returned positive-length spectrum may omit right-null directions unless the decomposition or nullspace construction explicitly retains them. The book identifies this as an audit target for underdetermined cases, not a claim that every current output is wrong.
+
+The falsifier is straightforward: construct an observation function with fewer independent outputs than parameters and verify that all missing directions are reported. Add a positive prior and verify that posterior precision changes while the data-only nullspace remains unchanged. These are meaningful TDD cases for a future implementation.
+
+## Gap 3: Geometry and Dynamic Parameters Need Different Evidence
+
+Segment scaling and anthropometric model generation already exist. They provide necessary machinery for adapting a model to a subject, but a configurable scale is not automatically a learned scale. The estimation objective, information, uncertainty, and independent validation still need to be supplied.
+
+Static calibration should estimate observable geometric combinations. Dynamic identification should then estimate only those inertial or passive parameters that measured inputs and informative motion support. A single high-speed trial with unknown actuation is generally a poor basis for assigning independent masses, inertias, damping, and strength.
+
+Population anthropometric tables can supply a prior. Their uncertainty and segment definitions must remain visible. Tight demographic bounds can improve numerical conditioning while preserving a prior-dominated result; the report should describe that result accordingly.
+
+A useful falsification benchmark deliberately allows dimension-control compensation. If the adaptive learner confidently recovers a chosen arm length from an observationally equivalent family, it is overclaiming. Adding an independent elbow marker or calibrated multi-view geometry should reduce the ambiguity when the observation model supports it.
+
+## Gap 4: Tracking, Feasibility, and Replay Need Independent Statuses
+
+Several upstream systems already separate kinematic fit, force feasibility, continuous replay, runtime, and biological actuator qualification. Future reporting should reuse this ladder rather than introduce another scalar “matched” flag.
+
+Feedback-assisted tracking tests the model-controller pair. It can be valuable for stable simulation and initialization, but it does not identify a feedforward control trajectory. A reconstructed actuator history can be replayed independently, provided its interpolation, initial state, contact law, and integration method are preserved.
+
+Force feasibility is another separate status. Satisfying an inverse-dynamics equation at fitted nodes does not show that a forward solver follows the trajectory. A continuous trajectory can also match positions while using unrealistically large reserves or invalid contact reactions.
+
+The highest-value computational gate is uninterrupted native replay with physical audits. It should measure observation residuals, constraint error, torque saturation, contact behavior, energy accounting, and event timing. A result may pass one gate and fail another; the receipt should retain both outcomes.
+
+## Gap 5: Surrogates Need Accepted-Quality Benefit, Not Only Prediction Error
+
+Modern upstream source contains implemented forward surrogate and conditional inverse architectures. Older option directories still contain stubs, so status must be assigned to exact module paths and artifacts. A planning freeze that performed no training does not erase earlier training work elsewhere.
+
+The next research question is whether these models improve time to an accepted native match. A small supervised trajectory error is insufficient if optimization drives the surrogate outside its reliable domain. A neural inverse can also suggest plausible coefficients that fail when replayed by the exact plant.
+
+Benchmark total query cost, native evaluation count, failure rate, accepted quality, and the training cost needed to amortize speed. Include direct optimization and simple retrieval baselines. If the neural method only improves an easy synthetic fixture while degrading difficult observed targets, its promotion should remain restricted.
+
+Split by source trial, subject, model identity, or generated family as appropriate. Adjacent frames from one trajectory should not appear on both sides of a split. Scaling changes and new contact laws require domain checks or renewed training evidence.
+
+## Gap 6: Model Dimension Selection Needs a Registered Hypothesis Space
+
+An adaptive learner should distinguish changes to anatomy, mechanical freedom, latent memory, and representation. A single dimension integer is inadequate when these changes have different physical meanings and computational consequences.
+
+Register a small model ladder with explicit embeddings and observation maps. Compare planar and spatial models, rigid and flexible equipment, and alternative grip or wrist hypotheses only where the recorded channels can distinguish them. An output outside a model's representational scope should trigger a model adequacy failure rather than extreme control fitting.
+
+Use held-out prediction and physical replay to compare the ladder. Preserve alternative models when the score difference is smaller than the uncertainty. Structural uncertainty should propagate into reported loads and counterfactuals instead of disappearing after one selection.
+
+A learned latent state can be included as a separate hypothesis. Its role should be causal prediction from a bounded observation prefix, not whole-trajectory reconstruction. The learner must specify initialization and abstention when observations cannot constrain the hidden memory.
+
+## Gap 7: Observation Uncertainty and Timing Need First-Class Treatment
+
+Markers, inferred joint angles, silhouettes, club outcomes, and projected images have different error processes. Derived channels can share source uncertainty and should not automatically be treated as independent measurements. A force estimate computed from the same kinematics is not an independent force observation.
+
+Synchronization deserves particular attention. A small time shift during rapid motion can create large positional and velocity residuals. Flexible actuation or extra latent state may absorb that shift, creating a false dynamic explanation.
+
+Fit a bounded time offset only under an explicit calibration policy. Preserve the offset in the target identity and validate it against independent timing events if available. If a trial requires a large unexplained shift, investigate acquisition and preprocessing before changing the mechanical model.
+
+Missing data should remain missing. Report observed-channel counts and residual coverage by phase, especially around delivery and contact. A full-trajectory average can conceal a fit that has no observations during its most important interval.
+
+## Gap 8: Numerical Accuracy Must Be a Model-Selection Control
+
+Contact-rich replays can change when the integration step, constraint stabilization, or regularization changes. An adaptive method can therefore select dimensions that compensate for numerical error. Native refinement is necessary before assigning a residual to missing physics.
+
+Compare candidate structures under commensurate numerical accuracy. Equal step sizes are not necessarily equal accuracy because stiffness and state dimension differ. Report convergence of decision-relevant metrics, not merely a common integrator setting.
+
+Derivative checks should follow the actual discrete map used by optimization. Event-time and reset derivatives need their own tests. An accurate derivative of an inaccurate discretization can still optimize the wrong continuous behavior.
+
+## A Research Program With Explicit Outcomes
+
+The first experiment is a synthetic identifiability suite with known truth and deliberately unidentifiable cases. It establishes whether the adaptive method distinguishes recoverable parameters from prior-driven choices. Recovery errors are model results, not empirical subject validation.
+
+The second experiment compares canonical fixed-geometry controls across engines using shared observations and represented inputs. It measures adapter parity and numerical sensitivity before introducing adaptation. Unsupported engines remain explicit matrix cells rather than silently disappearing from the benchmark.
+
+The third experiment estimates restricted geometry from independent calibration and then fits motion controls. It compares fixed, staged, and jointly refined parameter policies. Held-out markers and trials test whether adaptation improves reproducible prediction.
+
+The fourth experiment compares a short structural ladder and optional latent memory. It tests whether more complex models improve independent outcomes while remaining physically feasible. The result may favor no adaptation, or preserve multiple compatible structures.
+
+Physical subject validation requires new measurements, appropriate consent, and independent reference instruments. It remains deferred until collected; no amount of software testing supplies those observations. A maintained publication should list precisely which empirical questions remain open.
+
+## Exercises and Solution Sketches
+
+1. **Coefficient Parity.** Two engines receive equal coefficients but use seconds and normalized time. Are controls equivalent? **Solution:** only if the coefficients are transformed by the appropriate duration powers and ordering; equal vectors alone are insufficient.
+2. **A Prior-Dominated Dimension.** A scale estimate barely changes across trials but changes substantially when its prior mean changes. What should be reported? **Solution:** prior sensitivity and insufficient data support, rather than confident learned morphology.
+3. **Neural Benefit.** A proposal generator is fast but most candidates fail native replay. Which metric is missing? **Solution:** total time and evaluations to accepted quality, including rejected candidates and amortization.
+4. **Model Adequacy.** A planar model cannot reproduce observed spatial club orientation. What should the fitting system do? **Solution:** report representational inadequacy and compare a registered spatial structure; more planar coefficients do not supply the missing coordinate.

@@ -1,0 +1,88 @@
+# Uncertainty, Identifiability, and Validation
+
+A forward model can match measured kinematics for the wrong reasons. A flexible control trajectory can compensate for inaccurate mass properties; a geometric parameter can compensate for a camera-frame error; a compliant contact coefficient can compensate for force-plate timing; and a muscle-strength parameter can trade off against activation. A research-grade matching method must therefore answer two separate questions: does the model reproduce held-out observations under forward simulation, and are the inferred dimensions and internal forces sufficiently identifiable to support the intended scientific claim?
+
+## Structural and Practical Identifiability
+
+A parameter is structurally identifiable if ideal, noise-free, sufficiently rich observations uniquely determine it under the model. Practical identifiability asks whether finite, noisy observations constrain it tightly enough in the experiment. These differ. A parameter may be identifiable in theory but practically uncertain because the movement barely excites its effects. A parameter may appear numerically stable only because bounds or priors constrain it.
+
+Let residual vector $r(\theta)$ contain whitened marker, force, EMG, and other measurement residuals, with decision vector $\theta$ including states, controls, and model parameters. Near a fitted point $\theta^\ast$, linearize $r(\theta^\ast+\delta)\approx r(\theta^\ast)+J\delta$, where $J=\partial r/\partial\theta$. The Gauss-Newton information matrix is $H\approx J^TJ+\Lambda$, where $\Lambda$ represents prior precision or regularization. Singular value decomposition $J=U\Sigma V^T$ reveals weak directions. Small singular values correspond to parameter combinations that produce little observable change. Columns with high correlation reveal compensations. These diagnostics should be computed after meaningful nondimensionalization; otherwise units distort numerical comparisons.
+
+The full Hessian can also include second-order residual curvature and objective terms, but the Jacobian analysis is often easier to interpret. Profile likelihoods provide a more nonlinear view: fix one parameter over a grid, re-optimize other variables, and observe how the objective changes. A flat profile indicates weak identification. Bayesian posterior sampling or Laplace approximations can quantify uncertainty, though multimodality and model misspecification complicate interpretation.
+
+## Why One Trajectory Is Often Insufficient
+
+A single movement typically explores a narrow region of configuration and velocity space. Muscle moment arms change with posture, but if the posture barely varies, different anatomical geometries can be indistinguishable. Segment inertias matter most during acceleration; steady or slow motions provide little information about them. Contact parameters are hard to identify if normal force and foot penetration barely vary. Activation dynamics are difficult to estimate without varied excitation timing. Therefore, a more complex estimator cannot recover information that the experiment did not excite.
+
+Multiple tasks help because shared parameters must explain different motions. Walking at several speeds changes acceleration and contact loading; reaching with varied directions changes joint leverage; repeated trials expose sensor noise and stochastic control variation. A hierarchical fit can share global or subject-level anatomy while assigning trial-specific controls and initial states. The data likelihood then distinguishes persistent model properties from trial-specific control differences.
+
+Optimal experiment design formalizes this idea. One may choose a movement to maximize a criterion of the expected information matrix, such as log-determinant (D-optimality), minimum eigenvalue (E-optimality), or trace (A-optimality). These criteria focus on different goals: reducing parameter-volume uncertainty, improving the weakest direction, or average variance. In practice, safe and repeatable motions with informative variation are preferable to mathematically optimal but infeasible tasks. The selected criterion and parameter scaling must be stated.
+
+## Priors, Regularization, and Model Capacity
+
+Priors are not an admission of failure; they encode available anatomical and physical knowledge. Segment dimensions, mass distributions, joint ranges, and muscle strengths have plausible populations. A Gaussian prior can be written $p\sim\mathcal{N}(p_0,\Sigma_p)$, giving penalty $(p-p_0)^T\Sigma_p^{-1}(p-p_0)$. Positivity or manifold structure may require a transformed distribution. Muscle force and segment length are positive; inertia matrices must be positive definite and obey triangle inequalities; rotations belong to $\mathrm{SO}(3)$. A penalty in raw Cartesian parameter space can violate these constraints, so parameterize with log lengths, Cholesky factors, or manifold coordinates.
+
+Model complexity should increase only when residual structure and cross-validation justify it. An adaptive geometry model could begin with global scale, then individual segment lengths, then joint-center shifts, then shape or muscle-path corrections. Each expansion should answer a predefined question and be tested on held-out data. A richer model will nearly always lower training residual; only transfer to new movement, speed, or session demonstrates useful adaptation. Penalization, hierarchical shrinkage, or Bayesian model comparison can discourage unnecessary dimensions.
+
+A key issue is the distinction between measurement nuisance and physical parameters. Camera translation, marker offsets, soft tissue motion, model dimensions, and joint center locations can all move predicted markers. If only marker residuals are available, these variables can be collinear. Use calibration objects, functional motions, anatomical priors, and multiple sensor types to separate them. Do not allow a subject’s femur length to change just because camera calibration is uncertain.
+
+## Uncertainty Propagation
+
+Once a parameter uncertainty distribution is available, propagate it through the fitted forward model. For each posterior or profile sample, simulate muscle forces, joint loads, predicted motion, and contact quantities. Report intervals for the scientific outputs, not only point estimates of geometry. Sensitivity derivatives $\partial y/\partial p$ can approximate output variance via $\operatorname{Cov}(y)\approx J_p\operatorname{Cov}(p)J_p^T$, but this first-order approximation fails for nonlinearities, contact switches, and multimodal distributions. Sampling or ensemble methods are safer for those cases.
+
+Residuals should also be decomposed by source. A total marker RMSE can hide systematic offsets on one segment; a total force error can hide poor center-of-pressure prediction; a single dynamic-defect norm can hide a severe constraint violation. Report residual time series, distributions, and stratification by sensor, segment, movement phase, and contact state. Check autocorrelation: temporally structured residuals suggest omitted dynamics, delays, or model inadequacy rather than independent sensor noise.
+
+## Validation Design
+
+Validation has several levels:
+
+1. **Numerical verification:** confirm equations, units, sign conventions, derivatives, integrator behavior, and constraint enforcement on analytic or simple cases.
+2. **Training-fit diagnostics:** compare predicted and measured channels used in estimation; inspect each residual and active bound.
+3. **Dynamic feasibility:** independently integrate the fitted controls and parameters; measure rollout error and contact/constraint violations.
+4. **Held-out prediction:** use a held-out trial, stride, speed, task phase, or sensor stream. Avoid random frame-level splits because adjacent frames leak nearly identical information.
+5. **Parameter transfer:** test whether inferred body dimensions and system parameters remain stable across trials and predict a distinct task.
+6. **External validation:** where available, compare internal quantities with independent measurements such as tendon force, ultrasound, instrumented implants, or validated EMG-driven estimates, respecting their own limitations.
+
+Baselines should include a transparent inverse-kinematics/inverse-dynamics workflow and a recognized forward-tracking method such as CMC or MocoTrack when applicable. Baseline comparisons require the same data, model, objective channels, and evaluation metrics. A method should not win by using more sensors or a different target without disclosure. Report compute time and optimization failures, not only best-case accuracy.
+
+## Validation Metrics
+
+Use separate metrics for observation fit and physical consistency. For marker positions, report per-marker RMSE, median, high quantile, and maximum, with robust/outlier handling disclosed. For orientations, use geodesic rotation distance. For forces and moments, report componentwise errors and center of pressure. For state, compare joint angles and speeds. For dynamics, report defect norms, generalized-force balance residuals, holonomic constraint error, and contact complementarity or penetration. For controls, report excitation/activation bounds, smoothness, saturation time, and muscle-force plausibility. For residual actuators, include peak, RMS, impulse, and work. For inferred parameters, report prior-to-posterior changes, uncertainty, covariance/correlation, and bound activity.
+
+Free rollout is particularly important. A collocation solution can be dynamically feasible at its mesh nodes yet fail when controls are integrated between nodes. Starting from the fitted initial state, propagate controls without feedback corrections and compare predicted observations. A separate perturbation test can offset the initial state or parameters slightly and determine whether the model is stable and robust. If the task is inherently feedback controlled, distinguish validating the plant model from validating the controller.
+
+## Model Misspecification and Residual Structure
+
+An estimator assumes some model class is adequate. If the true system contains unmodeled compliance or variable contact, the optimizer may force geometry or controls to compensate. Residuals can guide model expansion: a consistent phase lag may suggest missing activation/tendon dynamics; angle-dependent marker bias may suggest geometry or soft tissue; force error localized at touchdown may suggest contact; cross-axis error may suggest joint-axis misalignment. These interpretations are hypotheses. A residual pattern can have multiple causes, so change one model family at a time and test on held-out data.
+
+A statistically low residual is not enough if the errors are autocorrelated or systematically biased. Conversely, a residual above nominal measurement noise may arise from unavoidable model discrepancy. A useful model can still predict the target quantity if its uncertainty is calibrated and its limitations are clear. Claims should match validation: successful marker tracking supports kinematic reconstruction; accurate held-out force prediction supports dynamic transfer; validated tendon force supports a stronger internal-load claim.
+
+## Worked Example: Two Parameters That Trade Off
+
+Suppose measured angular acceleration is approximately $\ddot{q}=rF_{max}a/I$, with moment arm $r$, maximum force $F_{max}$, activation $a$, and inertia $I$. A single observed acceleration constrains only the ratio $r F_max a/I$. If activation is also optimized freely, increasing $F_{max}$ and decreasing $a$ preserves the same acceleration. Decreasing inertia can be offset by reducing force. The log sensitivity of acceleration is $d\log(\ddot{q})=d\log(r)+d\log(F_{max})+d\log(a)-d\log(I)$.
+
+A single scalar observation identifies one linear combination of four log parameters. Varying posture changes $r$; varying acceleration and load can inform $I$; EMG constrains $a$; independent strength assessment constrains $F_{max}$. This simple derivation explains why diversified measurements and excitation are more important than optimizer sophistication.
+
+## Exercises With Solutions
+
+### Exercise 1: Training and Test Leakage
+
+Why is a random 80/20 split of individual frames weak for validating gait tracking?
+
+**Solution.** Neighboring frames are highly correlated and share the same trial, calibration, subject, and cycle dynamics. The test frames are nearly interpolations of training frames. Hold out a full stride or trial, and ideally test a distinct speed or task.
+
+### Exercise 2: Weak Singular Vector
+
+An SVD of the scaled residual Jacobian shows a weak vector mixing femur length and camera translation. What is the next useful experiment or measurement?
+
+**Solution.** Add independent camera calibration or an anatomical/functional measurement of femur length; alternatively use movements that expose the segment endpoints from varied orientations. More optimization iterations cannot separate parameters whose effects are observationally identical.
+
+### Exercise 3: Criterion Choice
+
+When might E-optimal experimental design be preferable to maximizing the determinant of information?
+
+**Solution.** If one poorly observed parameter direction is especially important, maximizing the smallest eigenvalue can improve the weakest direction. D-optimality reduces total uncertainty volume but may leave one critical direction weak.
+
+## References
+
+Primary retrieved sources informing this chapter include [Dembia et al. (2020), OpenSim Moco](https://doi.org/10.1371/journal.pcbi.1008493), whose indexed text explicitly cautions about local minima and numerical methods; [the 2024 systematic review of methods for reducing motion-to-simulation mismatch](https://doi.org/10.3389/fbioe.2024.1386874), which classifies parameter adjustment, filtering, EMG-informed tracking, controllers, and trajectory optimization; and [Porsa et al. (2016), direct methods in OpenSim](https://doi.org/10.1007/s10439-015-1538-6). The existing local bibliography includes [@olson2026residual_aware] for the repository’s residual-aware perspective and [@featherstone2008rigid] for multibody dynamics context; these local works should be positioned as AffineDrift contributions rather than independent validation evidence.

@@ -1,0 +1,97 @@
+# Differentiable Simulation and Gradient Checking
+
+## Why Gradients Matter in Forward Matching
+
+Forward matching asks for parameters and controls whose simulated motion explains measured kinematics. Let the generalized configuration be $q\in\mathcal Q$, velocity $v\in T_q\mathcal Q$, control $u$, and unknown physical or controller parameters $\theta$. A continuous model has
+$$
+\dot q = N(q)v,\qquad M(q;\theta)\dot v + h(q,v;\theta)=B(q;\theta)u+J(q)^T\lambda,
+$$
+where $N$ maps generalized velocity to configuration derivative, $M$ is inertia, $h$ collects gravity, Coriolis and passive forces, and contact multipliers $\lambda$ enforce active constraints. A forward solver maps the initial state and controls to predicted observations, $\hat y_k=H(q_k,v_k;\theta)$. A weighted fit objective might be
+$$
+J(\theta,u)=\frac12\sum_k r_k^T W_k r_k + \frac12\sum_k \|u_k\|_R^2 + \frac12\|L(\theta-\theta_0)\|^2,\quad r_k=\hat y_k-y_k.
+$$
+The gradient is valuable because the decision dimension grows with time knots, actuator channels, body parameters, and latent model dimensions. But the computed gradient is only meaningful if it differentiates the same discrete map that is evaluated and qualified.
+
+The distinction between continuous and discrete derivatives is foundational. If $x_{k+1}=\Phi_h(x_k,u_k,\theta)$ is the actual numerical step, optimize the composition of these steps. Differentiating the differential equation and then approximating its sensitivity with a different step can yield a gradient that does not point downhill for the implemented objective. For explicit Euler, $x_{k+1}=x_k+h f(x_k,u_k,\theta)$; its exact discrete sensitivity is $A_k=I+h f_x$, $B_k=h f_u$, and $E_k=h f_\theta$. Runge–Kutta and adaptive solvers have more complex computational graphs, including stage evaluations and potentially step-size decisions.
+
+## Three Derivative Routes
+
+Forward sensitivity propagates $S_k=\partial x_k/\partial\theta$:
+$$
+S_{k+1}=\Phi_x S_k+\Phi_\theta.
+$$
+It is attractive when there are few parameters and many outputs. Reverse mode propagates a costate backward. For a discrete objective $\ell_N(x_N)+\sum_{k=0}^{N-1}\ell_k(x_k,u_k,\theta)$,
+$$
+\bar x_N=\nabla_x\ell_N,\quad \bar x_k=\nabla_x\ell_k+\Phi_x^T\bar x_{k+1},\quad \nabla_\theta J=\sum_k(\nabla_\theta\ell_k+\Phi_\theta^T\bar x_{k+1}).
+$$
+This is usually preferable when the parameter/control vector is large and the scalar loss has many residual components. Automatic differentiation (AD) implements forward or reverse chain rules through code; AD is not synonymous with differentiable physics. Dynamic array mutation, foreign simulator calls, contact branches, hidden state, and adaptive control flow can block or distort derivatives.
+
+A third route is adjoint sensitivity for continuous dynamics. It can reduce memory cost by integrating a costate backward, but requires accurate reconstruction of the forward trajectory and correct treatment of events. It is not automatically equivalent to reverse differentiation through a particular solver. Checkpointing trades memory for recomputation. In long swing trajectories, checkpoint boundaries should be deterministic and stored in provenance.
+
+## Matching Observation Geometry
+
+The observation residual must respect its geometry. For marker positions, $r=p_{model}-p_{data}$ is a Euclidean residual after both systems use the same frame, unit, and marker definition. For rotations, subtracting Euler angles can create branch discontinuities. Use a group residual such as $r_R=\operatorname{Log}(R_{data}^T R_{model})\in\mathbb R^3$, with a declared convention and a safeguard near the logarithm cut locus. For joint angles, wrap only genuinely periodic coordinates; do not wrap bounded hinge angles across physically distinct configurations. A robust loss (Huber, Cauchy) changes the derivative and should be stated explicitly. Missing observations should be masked in both residual and normalization; dividing by a fixed total count while observations disappear silently changes effective weights.
+
+Weights carry units. If position noise has standard deviation $\sigma_p$, a statistically interpretable term is $r_p^T\Sigma_p^{-1}r_p$, not an arbitrary sum of millimetres and radians. Whitening improves optimizer scaling and exposes which sensors dominate. Parameter scaling also matters: optimize dimensionless transformed variables, for example log mass or log positive stiffness, then apply chain rule back to physical parameters. Bound transforms must not make near-bound derivatives vanish unintentionally.
+
+## Gradient Verification as an Evidence Ladder
+
+A plausible loss decrease does not establish correct derivatives. Begin with analytic toy systems where the exact solution and gradient are known. For a scalar function $f$, compare AD derivative $g$ with centered differences
+$$
+g_{FD}(\epsilon)=\frac{f(\theta+\epsilon d)-f(\theta-\epsilon d)}{2\epsilon},\qquad e=\frac{|g^Td-g_{FD}|}{\max(1,|g^Td|,|g_{FD}|)}.
+$$
+Sweep epsilon logarithmically: truncation error decreases as $O(\epsilon^2)$, while floating-point cancellation grows as epsilon shrinks. A single epsilon can accidentally look good. Use randomized normalized directions $d$, coordinate checks for selected high-impact parameters, and report absolute plus relative discrepancy.
+
+Test every layer separately: observation residual; one integrator step; rollout; total objective; parameter transforms; and any custom contact derivative. Compare AD against finite differences at smooth interior states. Then test a full small trajectory, followed by the production-sized case. Validate gradients at several states and parameter regimes, especially near bounds and near—but not across—events. Finite differences across an impact compare different event sequences and cannot validate a smooth local derivative. For an event, perturbations must be categorized by whether they preserve event order; otherwise use a hybrid derivative with event-time sensitivity or report nonsmoothness.
+
+A useful directional test checks the first-order Taylor remainder:
+$$
+\rho(\epsilon)=\frac{|J(\theta+\epsilon d)-J(\theta)-\epsilon\nabla J^Td|}{\epsilon}.
+$$
+For a correct derivative in a smooth region, this tends toward zero linearly until roundoff dominates. A second-order test divides by $\epsilon^2$ when Hessian-vector products are claimed. Gradient checks must use identical initial conditions, interpolation, integrator tolerances, contact law, and random seeds. Otherwise disagreement measures a changed experiment rather than derivative error.
+
+## Upstream Implementation Evidence and Limits
+
+The repository contains a Drake AutoDiff fitting path in [src/engines/physics_engines/drake/python/motion_matching/fit_swing_autodiff.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/engines/physics_engines/drake/python/motion_matching/fit_swing_autodiff.py), and a test named in its module docstring, [tests/test_drake_fit_swing_autodiff.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/tests/test_drake_fit_swing_autodiff.py), guarding an AutoDiff issue. MuJoCo includes analytical Jacobian utilities at [src/engines/physics_engines/mujoco/python/motion_matching/jacobians.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/engines/physics_engines/mujoco/python/motion_matching/jacobians.py); Pinocchio/Crocoddyl uses action-model derivatives and FDDP in [src/engines/physics_engines/pinocchio/python/crocoddyl_action.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/engines/physics_engines/pinocchio/python/crocoddyl_action.py) and [full_body_fit.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/engines/physics_engines/pinocchio/python/full_body_fit.py). These are distinct derivative routes, not evidence that every matching route has interchangeable or independently certified gradients. The Crocoddyl action uses implicit Euler; Drake and MJX paths have their own discrete semantics. Any comparison must align objectives, controls, masks, contact, and time grids before interpreting score differences.
+
+A proposed improvement is a shared derivative qualification suite whose backend-neutral fixture records the exact step map, observation map, and parameter vector, then runs directional checks per engine. It should emit a machine-readable receipt with tolerances, seed, smooth/event classification, normed discrepancies, and environment identity. The suite must not certify event-crossing gradients using smooth finite differences. This is a proposal, not a current repository capability.
+
+## Worked Illustrative Scalar Example
+
+Let $x_{k+1}=a x_k+b u_k$, $x_0=1$, with one observation $y_2=2$, $u_0=u_1=1$, and loss $J=\frac12(x_2-y_2)^2$. Since $x_2=a^2+ab+b$,
+$$
+\frac{\partial J}{\partial a}=(x_2-2)(2a+b),\quad \frac{\partial J}{\partial b}=(x_2-2)(a+1).
+$$
+At $a=0.5,b=0.4$, $x_2=1.05$, so the gradient is $(-1.61,-1.725)$. This tiny example exercises rollout and reverse accumulation. An implementation reporting another derivative has a defect before any biomechanics complexity is introduced.
+
+## Exercises and Solutions
+
+**Exercise 1.** Explain why differentiating continuous dynamics with a continuous adjoint may disagree with centered differences of a fixed-step numerical rollout. **Solution.** The finite differences estimate the derivative of the discrete map $\Phi_h^N$; the continuous adjoint estimates sensitivity of the ODE flow. Their difference is integration and discretization error, and can be amplified by unstable or stiff dynamics. Convergence of both as $h\to0$ is informative, but does not make them identical at finite $h$.
+
+**Exercise 2.** A marker residual has standard deviation 4 mm, while a joint-angle residual has standard deviation 0.02 rad. Give normalized squared terms. **Solution.** Use $r_p^2/(4\,\mathrm{mm})^2$ and $r_q^2/(0.02\,\mathrm{rad})^2$, assuming independent scalar errors. Correlations require the full covariance inverse.
+
+**Exercise 3.** Why is a gradient check through impact ambiguous? **Solution.** Perturbations can shift event time, change impact ordering, or switch contact modes. The loss can be nonsmooth or piecewise smooth; a centered difference may straddle branches and estimate neither one-sided derivative. Check mode-preserving directions separately and use a hybrid event derivative when justified.
+
+## Further Reading
+
+Use the repository bibliography entries [@olson2026residual_aware] for residual-aware tangent approximations, [@olson2026hybrid_tangent] for event sensitivities, and standard AD or optimal-control references linked from the main bibliography. Local implementation paths above identify evidence; the proposed qualification harness remains future work.
+
+## Conditioning, Identifiability, and Optimizer Use
+
+A derivative can be correct yet unhelpful. If two columns of the sensitivity matrix $S=\partial \hat y/\partial\theta$ are nearly collinear, the observations respond similarly to two parameters. The local information matrix $F=S^TWS$ then has a large condition number, so small measurement or numerical errors cause large parameter changes. Singular-value decomposition $S=U\Sigma V^T$ reveals which combinations are observable: right singular vectors associated with small singular values are weakly informed directions. Report singular values at the fitted solution and repeat after changing the motion window or observation channels. A low residual alone says nothing about uniqueness.
+
+The optimizer sees gradients in the chosen parameterization. If $\theta$ is transformed from unconstrained $z$, then $\nabla_zJ=(\partial\theta/\partial z)^T\nabla_\theta J$. Log transforms are natural for positive quantities but can make the physical gradient scale strongly depend on the current value. Normalize control and parameter coordinates so one unit in the optimizer has a roughly meaningful effect. A trust-region method can be safer than a large quasi-Newton step when the local linearization is poor. Gradient clipping may stabilize a run but changes the search direction; log clipping events and compare with an unmodified diagnostic gradient.
+
+For trajectory optimization, adjoint gradients can be dominated by long-horizon instability. If a discrete dynamics Jacobian has expanding directions, backward costates can grow exponentially. Multiple shooting limits propagation length by introducing intermediate state variables and continuity defects. This costs variables but often improves conditioning and makes failed segments local. A practical diagnostic plots the norm of state sensitivity and adjoint by time, then checks whether high gradients coincide with contact transitions, poorly observed phases, or unstable modes. Do not respond automatically by increasing regularization: first determine whether the issue is physical identifiability, numerical integration, or a derivative defect.
+
+## Gradient Reliability Reporting Template
+
+For a published differentiable fit, provide: objective definition and units; derivative method and software version; exact discrete integrator and tolerance; custom derivative rules; gradient check directions and seeds; epsilon sweep; maximum and median normalized directional error; tested parameter/state regions; event exclusion or hybrid treatment; and whether checks ran on the same compiled path used in optimization. If a component is nondifferentiable, document the optimizer's treatment (subgradient, smoothing, active-set derivative, or derivative-free step). A statement such as “uses autodiff” omits all of these facts.
+
+A compact reliability table can classify each term as smooth/verified, smooth/unverified, piecewise smooth/event-sensitive, or derivative-free. Include data preprocessing in the graph: if the objective resamples or filters input signals based on parameters, those operations contribute derivatives too. If preprocessing is fixed, state that it is outside the optimization. This prevents the false impression that every part of the scientific pipeline is differentiated.
+
+## A Practical Check Sequence
+
+A reviewable sequence is: freeze a tiny deterministic fixture; validate forward values; verify local derivatives; check rollout derivatives; run a small optimizer; then evaluate a separate longer trajectory. Preserve every fixture and tolerance as data. This sequence locates defects cheaply: if the scalar transform fails, there is no reason to investigate contact or optimizer convergence yet. Once the pipeline passes, keep a representative gradient report attached to the run receipt so later library upgrades can be compared against an explicit baseline.
+
+For every claim about gradient quality, state the tested domain explicitly; a check at one nominal pose does not cover the full parameter box or a different contact branch. Keep failed checks, explain root cause, and rerun after correction.

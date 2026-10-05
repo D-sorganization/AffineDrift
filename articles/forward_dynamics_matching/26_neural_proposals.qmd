@@ -1,0 +1,137 @@
+# Forward Surrogates and Multimodal Inverse Proposals
+
+## Two Different Learned Maps
+
+A forward surrogate approximates the expensive simulator's map from inputs to observations. An inverse proposal approximates a distribution of inputs compatible with observations. These maps have different training labels, uncertainty, and validation requirements, even when both produce candidates for the same native fit.
+
+Write the exact forward observation map as $F(\vartheta;\xi)$, where $\vartheta$ contains the fitted controls and parameters. The context $\xi$ binds model identity, initial state, observation convention, and time grid. A surrogate $\widehat F_\phi$ is trained on native evaluations:
+
+$$
+\min_\phi\sum_{j\in\mathcal T}
+\|W_j(\widehat F_\phi(\vartheta_j;\xi_j)-F(\vartheta_j;\xi_j))\|^2.
+$$
+
+This supervised objective teaches simulator approximation. It does not by itself teach matching to measured motion, identify human controls, or certify feasible dynamics outside the training domain. The native simulator used for labels must already have a declared mechanical meaning.
+
+At query time, surrogate inversion solves
+
+$$
+\hat\vartheta\in\arg\min_{\vartheta\in\Theta}
+\|W(\widehat F_\phi(\vartheta;\xi)-y)\|^2+R(\vartheta).
+$$
+
+The optimizer may discover inputs where surrogate error is much larger than on ordinary test examples. Average supervised accuracy is therefore insufficient. Validation must include the optimized proposals and their exact native rollouts.
+
+An inverse proposal instead learns $p_\omega(\vartheta\mid y,\xi)$. It generates starts for native search or samples a compatible family. A point estimate may be fast, but an underdetermined matching task generally requires alternatives and uncertainty rather than one unique inverse.
+
+## Why Averaging Can Produce an Invalid Inverse
+
+Consider the illustrative map $y=\vartheta^2$ and an observation $y=1$. Two exact inverse solutions are $\vartheta=-1$ and $\vartheta=1$. A squared-error regressor trained equally on both labels can return their conditional mean, zero. Its prediction is between the valid solutions, yet forward evaluation gives zero rather than the observed one.
+
+The example captures a general problem in articulated matching. Different posture branches, torque allocations, or contact strategies can explain similar outputs. Their mean may violate closure, bounds, or the target itself. Label diversity is useful only if the model preserves the modes rather than averages them away.
+
+A deterministic regressor can still be a valuable initializer when training labels follow a consistent selection policy. That policy might select minimum effort within a particular posture branch. The model then learns the selected inverse convention, not the entire physical inverse relation.
+
+## Conditional Variational Proposals
+
+A conditional variational autoencoder introduces a latent proposal variable $z$. Let $q_\varphi(z\mid\vartheta,y,\xi)$ be a training posterior, $p_\eta(z\mid y,\xi)$ a conditional prior, and $p_\omega(\vartheta\mid z,y,\xi)$ a decoder. A conditional evidence lower bound is
+
+$$
+\mathcal L=
+\mathbb E_{q_\varphi}\bigl[\log p_\omega(\vartheta\mid z,y,\xi)\bigr]
+-\operatorname{KL}\bigl(q_\varphi(z\mid\vartheta,y,\xi)
+\|p_\eta(z\mid y,\xi)\bigr).
+$$
+
+At inference, sample from the conditional prior and decode candidate parameters. True coefficient labels are unavailable then, so the training posterior must not be used as if it were the inference prior. This distinction belongs in both tests and model reproduction documentation.
+
+A latent dimension controls proposal capacity; it is not a discovered mechanical degree of freedom. The decoder can ignore the latent variable, producing posterior collapse and nearly identical proposals. Diversity diagnostics should evaluate decoded physical behaviors as well as latent statistics.
+
+Bounded decoder transforms enforce coefficient bounds, but they do not establish forward feasibility. A coefficient box may still permit extreme torques between timestamps, unstable contact, or invalid parameter coupling. Saturating transforms can also suppress gradients near bounds and distort uncertainty.
+
+Train and evaluate the proposal on explicit masks when observations are partial. A missing orientation should not be filled with an identity quaternion and interpreted as measured. The conditioning representation must distinguish measured, derived, and unobserved channels, with uncertainty available to the model.
+
+## Other Proposal Families
+
+Mixture-density models represent several conditional parameter modes directly. They can be useful when alternatives have a manageable structure, but selecting the number of components and preventing unused components requires care. Mixture components should be validated through native outputs rather than interpreted as anatomical categories.
+
+Conditional normalizing flows map a reference distribution to a parameter distribution through invertible transforms. They support density evaluation, but the parameter manifold may contain constraints or disconnected branches that are difficult to express with one unconstrained map. A flow over a redundant coordinate vector can assign probability to invalid candidates.
+
+Diffusion models generate candidates through repeated denoising steps. Their flexibility can represent complex distributions, but sampling cost and physical constraint enforcement matter for interactive matching. Native reranking remains necessary, and a large sample count should be included in query cost.
+
+Retrieval is a strong baseline. A library of native feasible episodes can propose nearby controls or trajectories without training an inverse network. Interpolation between retrieved episodes needs its own feasibility checks; valid endpoints do not guarantee that their averaged parameters remain valid.
+
+## Forward Surrogate Architectures
+
+A sequence surrogate predicts a complete observation history from a control vector and context. Time-conditioned networks evaluate outputs at requested times, while encoder-decoder architectures may emit a fixed grid. A fixed-grid model cannot silently be reused at a different duration or sampling interval.
+
+UpstreamDrift's shared FiLM surrogate conditions a time-dependent network on control coefficients. It emits club-related trajectories and auxiliary joint coordinates. Its quaternion output is normalized and sign-canonicalized, which supports representation consistency but introduces care around the sign boundary.
+
+A per-step surrogate approximates transitions or derivatives instead of complete sequences. It can support new horizons through repeated integration, but errors accumulate and state distribution shifts under rollout. Teacher-forced one-step validation is therefore distinct from uninterrupted prediction.
+
+A physical residual surrogate preserves a known dynamics backbone and learns a correction. This can reduce the approximation task, but the correction may absorb calibration errors, missing contact, or wrong topology. Report its magnitude relative to the mechanical terms and test behavior under perturbations.
+
+## Value Accuracy Does Not Guarantee Gradient Accuracy
+
+Surrogate inversion relies on derivatives with respect to fitted variables. A model can have small value error and poor derivatives. For the illustrative scalar function $F(\vartheta)=0$, define
+
+$$
+\widehat F(\vartheta)=\epsilon\sin(\vartheta/\epsilon^2).
+$$
+
+Its value error is bounded by $\epsilon$, but its derivative has amplitude $1/\epsilon$. As $\epsilon$ decreases, values improve while gradients become more misleading. This is a mathematical counterexample, not an empirical claim about a particular network.
+
+A gradient-aware surrogate benchmark should compare directional derivatives where native sensitivities are available. Where they are unavailable, use a step sweep of native finite differences in smooth regions. Contact transitions need mode-aware treatment; a central difference across two different event sequences does not certify one smooth derivative.
+
+The inference optimizer can exploit gradient errors even if ordinary held-out prediction is good. Trust regions, periodic native evaluations, and final native polishing constrain that exploitation. Their thresholds and evaluation frequency should be tuned on selection data and frozen before test evaluation.
+
+## A Safe Acceleration Pipeline
+
+The proposed pipeline begins with a checked observation contract and compatible checkpoint identity. The model generates a bounded set of candidates, preserving proposal modes and rejection reasons. Each candidate receives a native evaluation before it can be presented as a dynamics match.
+
+Native polishing then refines promising starts using the authoritative objective. A common budget allows fair comparison with direct multistart and retrieval. The final candidate is replayed from its original initial state without learned state injection or shooting-node resets.
+
+Acceptance evaluates the same physical and observation gates used by the classical baseline. A surrogate score is diagnostic evidence for search; it is not an acceptance score. If every proposal fails, the result should say so and invoke a declared fallback rather than quietly return the least invalid sample.
+
+Out-of-domain checks should compare model fingerprints, parameter ranges, time grids, and observation masks. Ensemble disagreement can indicate risk but is not guaranteed to detect every error. The model should abstain on unsupported dimensions and contacts even when its neural output is finite.
+
+## Native Dataset Design
+
+A training episode binds control representation, initial state, model parameters, integration settings, outputs, and failure status. Training data should preserve unsuccessful simulations with explicit labels rather than silently removing them. Their inclusion allows learning failure boundaries and honest acceptance-rate accounting.
+
+Split episodes by generating family, model identity, subject, or capture according to the claim. Nearby controls and trajectories can leak across random splits, producing deceptively easy interpolation. Keep the final test population independent of hyperparameter and architecture selection.
+
+The dataset should sample the physical domain intentionally. Uniform coefficient sampling can generate mostly implausible or numerically unstable swings and leave realistic motion poorly covered. A staged sampling policy can combine broad exploration, feasible baselines, local perturbations, and adversarial proposals, with all selection rules recorded.
+
+Adaptive geometry expands the input context and invalidates older checkpoints unless they were trained for that domain. A surrogate trained on one fixed morphology is not automatically differentiable with respect to segment scales. Parameter conditioning must be present in both labels and architecture before those derivatives have meaning.
+
+## Measuring Useful Benefit
+
+Let $C_{\mathrm{train}}$ be the one-time native generation and training cost, $C_{\mathrm{direct}}$ the baseline query cost, and $C_{\mathrm{accelerated}}$ the total accelerated query cost. If per-query savings are positive, the illustrative amortization threshold is
+
+$$
+N_{\mathrm{break-even}}=
+\frac{C_{\mathrm{train}}}{C_{\mathrm{direct}}-C_{\mathrm{accelerated}}}.
+$$
+
+If the denominator is nonpositive, no positive query count amortizes training under these assumptions. The accelerated cost includes inference, rejected proposals, native polish, replay, and loading overhead. Comparing only neural inference with a complete baseline fit is unfair.
+
+Measure accepted-quality rate as well as speed. A faster method that returns fewer physically accepted matches can be inferior for the intended task. Compare distributions across targets, difficult strata, and independent seeds; report tail latency and unsupported cases.
+
+Stored upstream promotion prose and diagnostic receipts are not consistent enough to establish one universal speedup. The historical chapter preserves that discrepancy. A future promotion should be computed from immutable benchmark and checkpoint evidence rather than a static claim in a model card.
+
+## Relation to Adaptive Dimension Learning
+
+A proposal model can help explore alternative structures, but structure identity must remain explicit. A shared network needs dimension-aware inputs and outputs, or a registered model-specific decoder. Padding coordinates with zeros without a mask can confuse absence with a measured zero state.
+
+Use learned proposals after establishing which dimensions are physically meaningful and observationally supported. A model that proposes many different lengths may represent uncertainty, poor training, or genuine equivalence; native fit and identifiability analysis must distinguish these cases.
+
+The proposal's latent dimension, network width, and output parameter count should be reported separately from the plant's mechanical dimension. Improved prediction does not establish that any of those neural capacity choices correspond to anatomy.
+
+## Exercises and Solution Sketches
+
+1. **Conditional Mean Failure.** Why does the mean of two exact inverse solutions to $y=\vartheta^2$ fail for $y=1$? **Solution:** the inverse set is $\{-1,1\}$ and its mean is zero, outside that set.
+2. **Gradient Accuracy.** Compute the derivative of $\epsilon\sin(\vartheta/\epsilon^2)$. **Solution:** it is $\epsilon^{-1}\cos(\vartheta/\epsilon^2)$, so uniformly small value error need not imply small derivative error.
+3. **Amortization.** What happens if accelerated total query cost exceeds the baseline? **Solution:** training cannot be amortized through those queries under the declared cost model.
+4. **Dimension Identity.** Can a fixed-morphology surrogate certify gradients with respect to a morphology it never receives? **Solution:** no; the parameter conditioning and training domain do not define that derivative.
+5. **Qualification.** A CVAE produces bounded coefficients with good surrogate agreement. What is still required? **Solution:** exact native fitting or evaluation, uninterrupted replay, physical gates, and independent prediction where claimed.

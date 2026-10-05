@@ -1,0 +1,83 @@
+# Control Parameterizations and Continuation Methods
+
+## The Control Representation Is a Modeling Decision
+
+A forward dynamics model maps initial state, controls, parameters, and numerical solver settings to a trajectory. Matching therefore depends strongly on how control is represented. Let the sampled dynamics be $x_{k+1}=\Phi_k(x_k,u_k,\theta)$, with observations $y_k=H(x_k)+\epsilon_k$. An optimizer may choose every control sample, a lower-dimensional basis, a feedback policy, or a structured actuator waveform. Each choice changes the feasible trajectories and the dimension and conditioning of the search. A good parameterization encodes known regularity and actuator structure without forcing the answer toward an unsupported prior.
+
+Piecewise-constant controls are simple: one $u_j$ applies over a time interval. Piecewise-linear controls reduce discontinuities, but require a precise endpoint and interpolation rule. Cubic splines provide smooth derivatives, although unconstrained spline coefficients can overshoot actuator limits between knots. B-splines with nonnegative basis functions make convex bounds easier to enforce. Fourier bases compactly represent periodic motion but impose periodicity and can ring near abrupt events. Wavelets or local radial basis functions give localized flexibility at the cost of more coefficients.
+
+Control knot placement should follow physics and data. Uniform time knots can waste variables in slow phases and undersample rapid transitions. Event-aligned knots may help at impact or release, but event time itself may be uncertain. Adaptive knot refinement should be driven by a declared residual or defect criterion and logged as part of the optimization. Comparing a high-knot model to a low-knot model without matching regularization or effective degrees of freedom is not a fair comparison.
+
+## Regularization and Its Interpretation
+
+A common objective adds effort, magnitude, or smoothness penalties:
+$$
+J(u,\theta)=J_{obs}+\lambda_0\int_0^T\|u(t)\|^2dt+\lambda_1\int_0^T\|\dot u(t)\|^2dt+\lambda_2\int_0^T\|\ddot u(t)\|^2dt.
+$$
+The magnitude penalty discourages large controls. The first derivative penalty discourages rapid changes; the second derivative penalty discourages jerk-like variation. These terms are not interchangeable and have different physical units. Their weights should be scaled from actuator limits, sensor noise, or explicit priors. Report the normalized contributions at the fitted solution; a tiny residual with an enormous control penalty can indicate scaling failure, while a negligible penalty means regularization is inactive.
+
+Smoothness penalties can misrepresent actual control systems. Muscle activation has activation dynamics and bounds; a motor can have rate limits; neural feedback may have latency; passive tissues contribute force without commanded excitation. If the model already contains these actuator dynamics, penalizing the command derivative may double-count smoothness. If physiological control is not observed, an effort penalty is a modeling assumption, not recovered neural truth.
+
+Control and model parameters are often confounded. Greater torque can compensate for larger inertia; gain can trade against damping; an unmodeled passive force can be represented by a biased control. Analyze local identifiability with the joint sensitivity matrix over controls and physical parameters. Fixing selected parameters may be necessary, but the fixed values and resulting conditional interpretation must be explicit. Better excitation or independent force measurements are often more useful than a more powerful optimizer.
+
+## Direct Transcription and Shooting
+
+Single shooting chooses controls and propagates from one initial state. It has relatively few explicit state variables but long products of transition Jacobians. This can cause exploding or vanishing gradients and makes early control changes affect the full remaining trajectory. Multiple shooting introduces state variables at segment boundaries and constrains them with defects:
+$$
+d_j=x_{j+1}-\Phi_j(x_j,u_{j:j+1},\theta)=0.
+$$
+It enlarges the optimization but improves conditioning, enables parallel segment simulation, and makes initialization more flexible. Defect penalties alone do not enforce exact dynamics; final candidates need defect tolerances or constrained solves.
+
+Direct collocation approximates the state within each interval using polynomial basis functions and enforces the dynamics at selected collocation points. It transforms trajectory matching into a sparse nonlinear program. Collocation is especially useful when controls, states, and path constraints must be optimized together. Its solution is a discretized trajectory; independent integration of the resulting controls is essential because collocation defects and between-node interpolation can still yield replay error.
+
+Differential dynamic programming and iterative LQR use local models of dynamics and cost to improve a nominal control sequence. They can be efficient for smooth systems and provide feedback gains around the trajectory. Their performance depends on derivatives, regularization, and local basin. Crocoddyl's FDDP approach is an example present in upstream matching paths, while other engines expose different optimization interfaces. Treat them as algorithm families with specific dynamics and discretization, not a universal engine-independent solver.
+
+## Continuation and Homotopy
+
+A difficult fit can be solved through a family of easier problems. Let $J(z;\alpha)$ depend on continuation parameter $\alpha\in[0,1]$. Start at $\alpha=0$ where the problem is simplified, then gradually move toward the target at $\alpha=1$, using each solution to initialize the next. Possible schedules include gradually adding high-frequency controls, reducing smoothing, tightening constraint tolerances, increasing contact sharpness, increasing observation weights, or moving from a surrogate to the final engine.
+
+For example, replace a nonsmooth hinge $\max(0,-\phi)$ with softplus $s_\kappa(\phi)=\kappa^{-1}\log(1+e^{-\kappa\phi})$. Small $\kappa$ gives a smoother transition; increasing $\kappa$ approaches the hinge. Yet the fitted solution can follow a branch that becomes infeasible or unstable as $\kappa$ grows. At every stage, track objective components, constraint residuals, event schedule, and parameter movement. If a continuation step causes a large jump, reduce the increment, try a different path, or report branch sensitivity.
+
+Continuation is not proof of global optimality. Multiple branches may exist, especially in closed-chain kinematics and hybrid contact. Use multiple initializations, record unsuccessful branches, and compare candidates under the final unsmoothed model. Never report the easier surrogate's objective as the final physical fit. A schedule can also bias the solution; compare plausible schedules on held-out predictions when continuation materially determines the outcome.
+
+## Derivative-Free Optimization
+
+Derivative-free methods are useful when gradients are unavailable, unreliable at hybrid transitions, or too costly to validate. Nelder–Mead, Powell search, pattern search, covariance matrix adaptation, Bayesian optimization, and evolutionary methods have different assumptions and scaling. They can handle black-box objectives but suffer rapidly as dimension grows. A free control at hundreds of time knots is generally a poor candidate for naive derivative-free search.
+
+Reduce dimension first through control bases, block coordinate updates, or physically informed parameter groups. Use derivative-free search for a small set of difficult event or model-choice variables, then gradient-based local refinement within a smooth mode. Bayesian optimization is suitable for expensive low-dimensional tuning, not usually for a high-dimensional control sequence. Covariance adaptation may handle correlated low-dimensional parameters but its covariance estimate becomes costly as dimension grows. Report objective calls and wall time, not just generations.
+
+Hybrid optimization can combine methods: use derivative-free initialization for event timing, then optimize continuous controls with verified gradients; use deterministic grid sweeps for discrete schedules; or compare candidate dimensions with information criteria before continuous refinement. Ensure every candidate is evaluated by the same authoritative objective and final replay. A derivative-free method is not automatically safer: a discontinuous failure penalty can create arbitrary optima, and stochastic search may exploit simulation artifacts.
+
+## Proposed Adaptive Control-Dimension Strategy
+
+An adaptive basis can begin with a small number of control modes and add local basis functions where the trajectory defect or held-out residual warrants more freedom. Let $u(t)=\sum_{i=1}^m c_i\psi_i(t)$. A proposed refinement indicator combines dynamics defect, observation sensitivity, and coefficient uncertainty; basis expansion is allowed only when added modes improve held-out predictive likelihood or a predeclared penalized objective. Prune modes with negligible posterior contribution only after checking that they are not required in a brief high-acceleration phase.
+
+The model should learn control dimension separately from anatomical generalized-coordinate dimension. Otherwise it can confuse richer actuation with richer body structure. A hierarchical prior could place sparsity on control coefficients while a separate discrete prior governs structural dimensions. Cross-validation must hold out entire trials or participants when the claim concerns generalization. This strategy is proposed for future work; it is not an existing upstream feature.
+
+## Upstream Evidence and Caveats
+
+Upstream contains Drake fitting, Pinocchio/Crocoddyl FDDP, and MuJoCo knot optimization implementations under [src/engines/physics_engines](https://github.com/D-sorganization/UpstreamDrift/tree/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/src/engines/physics_engines). Their parameterizations and discrete dynamics differ. Before calling one “best,” compare actual control variables, interpolation, effort terms, bounds, contact handling, and final evaluator. The immutable source links for this chapter should point to the audited repository revision `d7c7d07add0d7407a5a3376d5fe4a97aee9112a0`; a revision link documents code identity, while evidence receipts establish what a particular run did.
+
+## Worked Illustrative Example
+
+Consider an illustrative unit-mass oscillator $\ddot q+q=u$ over a fixed interval. A single constant control may fit the final position but miss an observed mid-trajectory reversal. Adding a second knot permits a sign change and may reduce residual, while an $\int \dot u^2dt$ penalty resists that change. A cubic basis may fit smoothly but overshoot force bounds between knots. This simple example demonstrates that parameterization controls the model's expressive power; it is not empirical evidence about a human swing.
+
+## Exercises and Solutions
+
+**Exercise 1.** When can multiple shooting improve an optimization without changing the physical model? **Solution.** It changes the decision variables and numerical conditioning while retaining the same continuous segment dynamics and continuity constraints. If defects remain nonzero in the final result, however, the candidate does not satisfy that model.
+
+**Exercise 2.** Why can a smoother control produce a worse forward match? **Solution.** The measured trajectory may include rapid but real changes, or actuator dynamics may already account for smoothness. Over-regularization biases the model and worsens prediction.
+
+**Exercise 3.** What is required after a homotopy fit? **Solution.** Evaluate using the target objective and final dynamics, verify constraints and events, run independent forward replay, and report sensitivity to continuation schedule and initialization.
+
+## Further Reading
+
+The AffineDrift bibliography includes [@jacobson1970ddp] for differential dynamic programming and [@olson2026residual_aware] for local model residuals. These references provide context; implementation-specific claims require the pinned source and candidate receipt.
+
+## Choosing a Representation in Practice
+
+The best representation depends on which uncertainty dominates. If measurement timing is reliable but control is unknown, a compact basis with smoothness prior may be appropriate. If the trajectory contains impacts, fixed uniform knots can place no decision point near the event; optimize event times or use a hybrid segmentation. If actuator commands are bounded, encode bounds in the parameterization or enforce them at all quadrature points, not just knot endpoints. If control observations exist, treat them as data with calibration uncertainty rather than a prior of infinite strength.
+
+Assess representation bias by fitting simulated data generated from a richer known control and measuring recovery as knot density changes. Inspect residual autocorrelation: systematic high-frequency residual structure suggests missing flexibility, while isolated noise fitting suggests overparameterization. Plot control uncertainty bands, not only one optimized waveform. A parameterization can yield a stable prediction while individual coefficients remain nonidentifiable, especially when adjacent spline bases overlap strongly.
+
+When increasing basis dimension, warm-start old coefficients and initialize new coefficients at zero so the prior trajectory is preserved. Recompute derivatives and verify the expanded model reproduces the old rollout before optimization. This nested property makes refinement diagnostically interpretable. If the baseline changes at expansion time, compare objective changes only after correcting the embedding or documenting the intentional model change.

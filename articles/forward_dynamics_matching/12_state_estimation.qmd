@@ -1,0 +1,106 @@
+# Filtering, Smoothing, and Data Assimilation for Dynamics Matching
+
+## Why State Estimation Matters
+
+A forward dynamics model is fitted to kinematic records, but the observations are not the state itself. Marker positions are noisy functions of configuration; velocity and acceleration are usually derived; force inputs may be incomplete; and motion capture can contain occlusion, calibration drift, and timing errors. Treating a differentiated trajectory as exact data transfers sensor noise directly into the estimated dynamics. State estimation offers a principled way to represent uncertainty and infer hidden trajectories jointly with model parameters.
+
+Filtering estimates the current state using observations available up to the present time. Smoothing estimates past states using observations from both before and after the time of interest. Offline model matching usually has access to an entire trial, so smoothing is often more appropriate for latent trajectory reconstruction. Filtering remains important for online adaptation, causal prediction, and deployment. The two tasks should not be conflated: a smoother can use future measurements and therefore cannot be used as an online filter without changing the information set.
+
+## State-Space Formulation
+
+Write the continuous dynamics and observation process as
+
+$$
+\dot{x}(t)=f(x(t),u(t),\theta)+w(t), \qquad y_k=h(x(t_k),\theta)+v_k,
+$$
+
+where $x$ contains configuration, velocity, and optional latent states; $u$ is an input; $w$ represents process discrepancy; and $v_k$ is measurement noise. For mechanics, $f$ may arise from a constrained forward model, while $h$ maps the physical state to marker or sensor coordinates. A discrete-time integrator gives a transition model
+
+$$
+x_{k+1}=F_{\Delta t}(x_k,u_k,\theta)+w_k.
+$$
+
+This representation makes assumptions visible. Process noise does not mean that physical motion is intrinsically random in every application. It can stand for unmodeled forces, integration error, uncertain inputs, or unresolved dynamics. If it is too flexible, it can absorb precisely the structural mismatch the research seeks to identify. Its covariance must therefore be interpreted and tested, not merely tuned until the filter follows every observation.
+
+## Extended and Unscented Kalman Filters
+
+The extended Kalman filter (EKF) linearizes the nonlinear transition and observation functions around the current mean. If the predicted state is $\hat x^-_k$ with covariance $P^-_k$, the transition Jacobian $A_k=\partial F/\partial x$ propagates uncertainty approximately as
+
+$$
+P^-_{k+1}=A_kP_kA_k^T+Q_k.
+$$
+
+At an observation, the Jacobian $H_k=\partial h/\partial x$ produces the innovation and Kalman gain. The EKF is computationally efficient when derivatives are available and uncertainty remains local. It can fail when the posterior is strongly nonlinear, multimodal, or near constraints that make Gaussian linearization misleading. Angle wrapping and contact events require special handling.
+
+The unscented Kalman filter (UKF) propagates a set of deterministically chosen sigma points through nonlinear functions, then reconstructs mean and covariance. It avoids explicit Jacobians and can capture some curvature more faithfully than first-order linearization. It still represents uncertainty with a single Gaussian and can behave poorly under multimodality or hard mode switches. Both methods need physically sensible covariance scaling and consistent treatment of constrained coordinates.
+
+For kinematic fitting, the EKF/UKF can jointly track $q$ and $\dot q$ from noisy marker positions without direct numerical second differentiation. However, if the model parameter vector is augmented into the state, parameter learning can be slow or confounded with process noise. A parameter that changes gradually should not be treated as arbitrary high-variance motion state. Alternatives include batch smoothing, dual estimation, or hierarchical Bayesian parameter inference.
+
+## Ensemble and Particle Methods
+
+An ensemble Kalman filter represents uncertainty with a collection of state samples and approximates covariance from their spread. It is useful for large systems where covariance matrices are too expensive, and can assimilate observations without analytic derivatives. The standard ensemble update remains approximately Gaussian and may underrepresent multimodality. Finite ensemble size introduces sampling error; localization and inflation techniques can help in large spatial systems but require domain-specific justification for multibody models.
+
+Particle filters represent a posterior with weighted state samples. They can capture non-Gaussian and multimodal uncertainty, which is valuable when marker configurations correspond to multiple plausible poses or contact modes. Their main challenge is degeneracy: in high dimensions, most weights can collapse onto a few particles. Resampling can reduce effective sample size and lose diversity. Particle smoothers additionally need to connect plausible state histories; naive backward simulation can be expensive and suffer path degeneracy over long sequences.
+
+Ensemble and particle methods are not automatic remedies for unknown inputs. If torque is uncertain, include it as a modeled latent input with a physically meaningful process model or use a separate force measurement. Assigning unconstrained process noise to acceleration can produce a state estimate that fits kinematics while leaving the forward dynamics untested.
+
+## Smoothing and Joint Trajectory Estimation
+
+A classical Rauch–Tung–Striebel (RTS) smoother runs a forward Kalman filter and a backward pass to refine the state history using future observations. For nonlinear dynamics, extended or unscented smoothing variants approximate the same logic. Batch nonlinear least squares and multiple shooting provide alternatives: optimize a complete state trajectory and parameters while penalizing observation residuals and dynamics defects. Direct collocation similarly enforces discretized dynamics at mesh points.
+
+Consider a one-dimensional point mass with noisy position samples $y_k=x_k+v_k$ and a model $\ddot x=a(u;\theta)$. Differentiating observed positions twice yields a noisy acceleration estimate. A smoother instead estimates a sequence $(x_k,\dot x_k)$ that balances the position observations against integrated acceleration dynamics. The posterior covariance shows where velocity and acceleration are poorly determined, especially near trial boundaries or long gaps. This uncertainty should propagate to parameter estimates. A smooth curve alone is not evidence that the assumed force law is correct: compare innovations, residual structure, and forward predictions.
+
+In batch estimation, one objective is
+
+$$
+\mathcal L(x_{0:T},\theta)=\sum_k r_{y,k}^TR_k^{-1}r_{y,k}+\sum_k r_{d,k}^TQ_k^{-1}r_{d,k}+\mathcal R(\theta),
+$$
+
+where $r_y=y-h(x)$ is the observation residual, $r_d=x_{k+1}-F(x_k,u_k;\theta)$ is the dynamics defect, and $\mathcal R$ encodes parameter constraints or priors. This decomposition is useful because it shows whether a fit trusts the measurements, the dynamics, or the regularizer. Very large $Q$ weakens the dynamics constraint; very small $Q$ can force an incorrect model to explain noisy observations. Sensitivity analyses over plausible covariance choices are essential.
+
+## Process Noise Versus Model Error
+
+Process noise can make inference robust to small disturbances, but it can also mask missing dimensions. Suppose the true system has a hidden activation state; a position-only model may track it by increasing acceleration process noise. The state estimate appears adequate, but the inferred model has not explained the memory. Compare residual autocorrelation and dependence on prior inputs. Structured residuals suggest model error; approximately white residuals are more consistent with the assumed noise model, though whiteness alone is not proof of correctness.
+
+A useful model comparison fits the same observation noise across candidates and uses process noise tied to a common physical interpretation. If each candidate receives an independently tuned, unconstrained process covariance, the noisiest model may win by absorbing mismatch. Report process-noise units, covariance structure, estimation method, and sensitivity. For contact, Gaussian process noise is usually a poor surrogate for an impact reset or unilateral constraint.
+
+## Unknown Inputs and Data Assimilation
+
+Unknown torque or external force can be modeled as an augmented state, a stochastic input process, a sparse event sequence, or a bounded nuisance variable. Each choice imposes assumptions. A random-walk torque prior favors slowly varying inputs; a white-noise prior favors rapid variation; a sparse prior favors few impulses. The choice determines which physical effects can be distinguished from passive dynamics. Where possible, measure force or actuator commands directly, synchronize clocks, and calibrate scale.
+
+In human movement, an input model may represent muscle activation, joint torque, or a controller. These are not interchangeable. A state estimator cannot turn an unspecified control policy into ground truth. At minimum, separate measured inputs, inferred inputs, and external disturbances in the data record, and show how inferred input uncertainty affects model conclusions.
+
+## Recommended Workflow
+
+Begin with sensor calibration and a measurement-noise model. Fit a kinematic smoother without dynamics to understand what the sensors support. Then fit the constrained dynamics jointly with trajectories, using either a batch smoother or a clearly specified filter. Inspect innovations by sensor and time, posterior uncertainty near boundaries, constraint residuals, and sensitivity to process noise. Compare differentiated-data and integrated-trajectory baselines only as diagnostic alternatives. Finally, evaluate forward rollouts on complete held-out trials and measured inputs.
+
+For online adaptation, use a causal filter and update model parameters more slowly than state estimates unless evidence supports faster change. Monitor innovation statistics and out-of-domain conditions. For offline research, use smoothing to exploit all observations but report that state estimates are retrospective. Keep the preprocessing and smoother parameters fixed within validation folds to prevent leakage from test trials.
+
+
+## Filtering on A Constrained Configuration Space
+
+Joint angles live on circles and rigid-body orientations live on rotation groups; ordinary Euclidean Gaussian updates can average across a wrap boundary or leave the constraint manifold. For an angle, represent uncertainty with wrapped residuals or embed the orientation as $(\cos q,\sin q)$. This is one-to-one on the circle (angles modulo $2\pi$), although it cannot distinguish different winding counts for an unwrapped angle; Gaussian noise in the two embedded coordinates also induces a nonuniform angular error model. For rotations, use a local tangent perturbation and retract to the group. If the mechanism has holonomic constraints, project estimated states and covariances onto the tangent space or formulate coordinates that satisfy the constraints by construction. Projection changes covariance and should be included in uncertainty propagation.
+
+Contact adds discrete modes. A single Gaussian filter that averages stance and flight hypotheses can represent an impossible intermediate state. An interacting multiple-model filter maintains mode-specific estimates and mixes them with transition probabilities; a particle method can carry explicit mode labels; a hybrid smoother can optimize mode sequence and continuous states jointly. These approaches add complexity and depend on mode transition assumptions. Force sensors, foot switches, or event timing can substantially improve mode estimation. Do not report a precise continuous state if uncertainty is actually split across incompatible contact hypotheses.
+
+## Choosing A Method for the Data Regime
+
+Use a deterministic smoother or batch least squares when the observation map is smooth, noise is modest, and a good initial trajectory is available. Use EKF or UKF for online tracking with relatively unimodal uncertainty and moderate state size. Ensemble methods are attractive when the state is large and covariance factorization is expensive. Particle methods are indicated when the posterior is strongly multimodal or contains discrete alternatives, provided dimensionality is manageable. For offline parameter learning, a smoother and outer parameter optimizer is often simpler to debug than an elaborate joint filter, though it may be computationally heavier.
+
+These are starting points, not a universal ranking. Benchmark candidates on synthetic trajectories with known truth and the same sensor timing, missingness, event frequency, and parameter scale as the actual study. Measure state error, uncertainty coverage, parameter recovery, runtime, and robustness to initial conditions. A method that wins only because it receives a better tuned noise covariance has not established a fair comparison.
+
+## Limitations
+
+Kalman methods rely on Gaussian approximations; particle methods can be computationally prohibitive; smoothing can be overconfident under a wrong model; process-noise tuning is often subjective; and joint state-parameter estimation can be weakly identifiable. A good state estimate is not a validated dynamics model. Model comparison must still assess held-out prediction, physical constraints, and identifiability.
+
+## Exercises
+
+1. Explain why a smoother can estimate a past state more accurately than a filter, and why that same smoother cannot be used as a causal online estimator.
+2. A model fits marker trajectories after increasing acceleration process noise by 100 times. What diagnostics determine whether this represents plausible disturbances or missing dynamics?
+3. Compare EKF, UKF, and particle filtering for a pose estimate with two plausible configurations separated by an occlusion gap.
+
+## Solution Sketches
+
+1. The smoother conditions on future observations as well as past data, reducing uncertainty retrospectively. An online filter at time $t$ cannot use future samples that have not arrived.
+2. Examine units and magnitude against known force variability, innovation autocorrelation, inferred accelerations, sensitivity to the covariance, constraint violations, and held-out forward predictions. Test candidate hidden-state/contact models; do not accept noise inflation solely because it lowers position error.
+3. EKF/UKF Gaussian approximations may average two modes into an implausible pose. A particle filter can represent both hypotheses, at higher computational cost and with degeneracy risk. Add an informative sensor or motion prior if feasible.
