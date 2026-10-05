@@ -183,3 +183,23 @@ read-only job on the worked-example generator belongs to the next batch and is
 not scientific acceptance evidence here. All 800 manufactured checks pass and
 103 focused tests pass. Final source will now be committed and frozen for the
 required complete regression; the corpus ledger is not advanced before that run.
+
+
+## Accepted Source
+
+Source 821594bd58889550348e7fcd6ae4dd99479e4339 passed the frozen full suite:
+7227 passed, 29 skipped, 210 deselected, 60 warnings, 471.42 seconds and 93.25%
+source coverage. Exit zero; tracked tree empty before and after. All eight
+central pre-PR gates pass; no affected tests were mapped for this prose-only
+change. The 103 focused tests and manufactured/render checks remain separate.
+Seven corpus rows are accepted, reducing Indexed-prefix scopes from 49 to 42
+out of 407. This count is not a scientific or empirical completion percentage.
+Nine canonical blob hashes are recorded in tangent-applications-validation.json.
+
+Next batch #4945 annotates all 15 historical tangent/integral drafts in its own
+worktree. Original wording is retained under a superseded label; explicit errata
+appear above it and production render exclusions/redirects remain intact. Three
+Flash jobs and four independent mathematical check groups are underway there.
+Integrate this acceptance before the next batch updates the shared corpus index.
+Putting lease #4937 renewed through 09:06:53 UTC, receipt 5989758531. Protected
+merge queue is progressing through accessibility checks; do not bypass it.
