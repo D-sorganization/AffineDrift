@@ -317,7 +317,7 @@
 - **Summary:** Restores subordinate heading levels without changing chapter prose or incoming anchors. Rebuilds and synchronizes both PDFs with the corrected Chapter30 science. Preserves mobile equation type size. Integrates protected nullspace main squash7f0fed76; retains current turnover records through three documentation conflicts.
 - **Next step:** None for this delivery; broader corpus work continues under #4009/#4021.
 
-### DL-#3902 · Wire lateral links into Build pages: models, repositories, tools
+### DL-#3902 · Wire Lateral Links Into Build Pages: Models, Repositories, Tools
 
 - **State:** shipped (PR #4269 squash-merged to main as 1e5725de, 2026-09-08)
 - **Owner:** claude (wave-6 agent W6_3902)

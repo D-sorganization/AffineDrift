@@ -20,3 +20,5 @@ states remain unchanged. The validator passes, retaining its advisory WIP warnin
 This is generated metadata maintenance under #4952, not a new scientific review
 or a claim to refresh every historical task. Evidence and transformation history:
 docs/development/technical-review/consolidated-20261005/devlog-repair-evidence.json.
+
+The final title gate also required title case for one archived heading; historical body content is unchanged.
