@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 249
+- Reviewed: 250
 - Deferred: 0
 - Exempt: 3
 
@@ -217,6 +217,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/models/research-protocol-readiness.html` | `models/research-protocol-readiness.qmd` | 35 |
 | `/pages/about.html` | `pages/about.qmd` | 3 |
 | `/pages/accessibility.html` | `pages/accessibility.qmd` | 1 |
+| `/pages/big-idea.html` | `pages/big-idea.qmd` | 2 |
 | `/pages/book-reviews.html` | `pages/book-reviews.qmd` | 3 |
 | `/pages/collaborate.html` | `pages/collaborate.qmd` | 3 |
 | `/pages/contact.html` | `pages/contact.qmd` | 3 |
@@ -473,6 +474,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-e009d7835d0d` | `/offline.html` | Exempt | — | None | None | 0 |
 | `ad-route-ca1ccb1f17c1` | `/pages/about.html` | Reviewed | — | None | None | 1 |
 | `ad-route-ae3941a3e7eb` | `/pages/accessibility.html` | Reviewed | — | None | None | 1 |
+| `ad-route-938c0f41d620` | `/pages/big-idea.html` | Reviewed | — | None | None | 0 |
 | `ad-route-2e3ab052cbe1` | `/pages/book-reviews.html` | Reviewed | — | None | None | 1 |
 | `ad-route-8a3bc575a409` | `/pages/collaborate.html` | Reviewed | — | None | None | 1 |
 | `ad-route-6e4e4be935a4` | `/pages/contact.html` | Reviewed | — | None | None | 1 |
