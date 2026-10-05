@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -33,6 +34,19 @@ STATE_LABELS = {
     "pinned": "Pinned (reviewed)",
     "review-required": "Review required (unqualified)",
 }
+
+
+def _page_relative(route: str) -> str:
+    """Return ``route`` as a link target relative to the generated page.
+
+    Root-absolute routes (``/pages/overview.html``) are rejected by the site
+    link gate's path-style rule, so resolve them against the site root and
+    express them relative to ``OUTPUT_PATH``'s directory.
+    """
+    if not route.startswith("/"):
+        return route
+    target = ROOT / route.lstrip("/")
+    return Path(os.path.relpath(target, OUTPUT_PATH.parent)).as_posix()
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -119,7 +133,9 @@ def render_pins_section(pins: list[dict[str, Any]]) -> str:
         )
         if routes:
             details.append(
-                f"#### `{commit[:12]}`\n\n" + "\n".join(f"- [{r}]({r})" for r in routes) + "\n"
+                f"#### `{commit[:12]}`\n\n"
+                + "\n".join(f"- [{r}]({_page_relative(r)})" for r in routes)
+                + "\n"
             )
     return header + "\n".join(lines) + "\n\n### Routes by Pin\n\n" + "\n".join(details)
 
