@@ -107,3 +107,22 @@ only after actual acceptance. Retain all earlier batch receipts and separate
 local acceptance from protected remote-main and public deployment verification.
 Never merge into a topic parent, create a draft, bypass hooks, close another
 session's PR, or renew historical scientific claims merely to fix hashes.
+
+## Regression Repair Checkpoint
+
+The full run at f724af4b4 finished with 7,281 passed, 29 skipped, 210
+deselected and two failures (93.31% coverage). The book-route findings and
+review revision in the claim inventory did not match the renewed canonical
+book audit; a generated trust panel also retained a pre-normalization digest.
+The run regenerated two claims-ledger files, so its tracked tree was not clean
+afterward. This is a failed full run, not acceptance.
+
+Reconciled only the two actually re-reviewed book wrapper records, preserved
+all other review dates and scope, regenerated the dependent ledgers, and
+normalized JSON without unrelated Unicode escaping. All 56 trust/book/audit
+tests now pass (metadata-repair-final-tests.txt). Preserve the failed logs.
+
+Final acceptance will occur in fix/final-partial-sources-review under #4954,
+which includes these repairs plus the five remaining targeted-only source
+reviews. Run one frozen combined regression there before advancing corpus
+rows or claiming completion. No separate tail PR is needed.
