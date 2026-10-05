@@ -8,6 +8,8 @@ import numpy as np
 import pytest
 from scipy.integrate import solve_ivp
 
+GRAVITY_M_S2 = 9.81
+
 
 @pytest.fixture(scope="module")
 def listing_namespace() -> dict[str, Any]:
@@ -59,7 +61,9 @@ def test_mass_matrix_shape_and_symmetry(listing_namespace: dict[str, Any]) -> No
 
 def test_mass_matrix_exact_determinant(listing_namespace: dict[str, Any]) -> None:
     """Verify determinant matches exact analytical formula m * length^4 * (M + m * sin(delta)^2)."""
-    model = _get_model(listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.2, gravity=9.81)
+    model = _get_model(
+        listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.2, gravity=GRAVITY_M_S2
+    )
     q1, q2 = 0.55, -0.25
     delta = q1 - q2
     expected_det = 5.0 * (1.2**4) * (10.0 + 5.0 * (np.sin(delta) ** 2))
@@ -70,7 +74,7 @@ def test_mass_matrix_exact_determinant(listing_namespace: dict[str, Any]) -> Non
 
 def test_acceleration_at_aligned_zero_velocity(listing_namespace: dict[str, Any]) -> None:
     """Verify analytic acceleration a1 = (g/length)*sin(alpha), a2 = 0 when q1=q2=alpha and v=0."""
-    length, gravity = 1.4, 9.81
+    length, gravity = 1.4, GRAVITY_M_S2
     model = _get_model(
         listing_namespace, hip_mass=8.0, foot_mass=3.0, length=length, gravity=gravity
     )
@@ -96,7 +100,7 @@ def test_rhs_kinematic_derivatives(listing_namespace: dict[str, Any]) -> None:
 
 def test_energy_matches_independent_cartesian_oracle(listing_namespace: dict[str, Any]) -> None:
     """Cross-check scalar energy with an independent sum of Cartesian kinetic and potential energy."""
-    m_hip, m_foot, length, g = 12.0, 4.0, 1.5, 9.81
+    m_hip, m_foot, length, g = 12.0, 4.0, 1.5, GRAVITY_M_S2
     model = _get_model(
         listing_namespace, hip_mass=m_hip, foot_mass=m_foot, length=length, gravity=g
     )
@@ -129,7 +133,9 @@ def test_energy_time_derivative_along_trajectory(listing_namespace: dict[str, An
 
 def test_energy_conservation_in_numerical_integration(listing_namespace: dict[str, Any]) -> None:
     """Verify mechanical energy is conserved during continuous trajectory integration via solve_ivp."""
-    model = _get_model(listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.0, gravity=9.81)
+    model = _get_model(
+        listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.0, gravity=GRAVITY_M_S2
+    )
     s0 = np.array([0.25, -0.15, 0.1, -0.2], dtype=float)
     e0 = float(model.energy(s0))
 
@@ -150,8 +156,12 @@ def test_energy_conservation_in_numerical_integration(listing_namespace: dict[st
 def test_mass_matrix_length_scaling(listing_namespace: dict[str, Any]) -> None:
     """Verify quadratic scaling of mass matrix with respect to compass leg length."""
     q = (0.3, -0.5)
-    model1 = _get_model(listing_namespace, hip_mass=7.0, foot_mass=3.0, length=1.0, gravity=9.81)
-    model2 = _get_model(listing_namespace, hip_mass=7.0, foot_mass=3.0, length=2.0, gravity=9.81)
+    model1 = _get_model(
+        listing_namespace, hip_mass=7.0, foot_mass=3.0, length=1.0, gravity=GRAVITY_M_S2
+    )
+    model2 = _get_model(
+        listing_namespace, hip_mass=7.0, foot_mass=3.0, length=2.0, gravity=GRAVITY_M_S2
+    )
     m1 = np.asarray(model1.mass(q), dtype=float)
     m2 = np.asarray(model2.mass(q), dtype=float)
     assert np.allclose(m2, 4.0 * m1, rtol=1e-12)
@@ -193,7 +203,7 @@ def test_invalid_parameters_raise_value_error(listing_namespace: dict[str, Any])
         {"gravity": float("nan")},
         {"hip_mass": float("inf")},
     ]:
-        valid_kwargs = {"hip_mass": 10.0, "foot_mass": 5.0, "length": 1.0, "gravity": 9.81}
+        valid_kwargs = {"hip_mass": 10.0, "foot_mass": 5.0, "length": 1.0, "gravity": GRAVITY_M_S2}
         valid_kwargs.update(bad_args)
         with pytest.raises(ValueError):
             cls(**valid_kwargs)

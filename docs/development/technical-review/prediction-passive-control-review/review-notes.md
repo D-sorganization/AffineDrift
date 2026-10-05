@@ -61,3 +61,7 @@ Final combined listing/reference/book/claim-inventory validation exited0 (audit-
 
 
 Acceptance update: source bfe4dbbe14c816261a492bcd1b9d824e0de3e530 passed 7,004 tests, 29 skipped, 210 deselected, 60 warnings in 477.55s; coverage 93.24%, tracked tree empty before and after. Ten accepted Git-blob hashes are in reports/technical-review/prediction-passive-control-validation.json. Only these three corpus rows advanced: 407 rows, 67 pending-prefix rows. This supersedes earlier pending status above. No whole-volume or empirical certification. PR not created yet. Next batch #4917 has its own worktree/lease and original Flash reviews; no changes to this accepted source.
+
+## CI Consolidation Repair
+
+The repository quality checker rejected repeated gravity literals in the listing tests. Named GRAVITY_M_S2 constants retain 9.81 m/s², independent analytical expectations and all numerical tolerances. The exact quality gate passes. The scoped listing tests pass (12 cases); logs ci-quality-repair and ci-listing-repair record exit zero. This local repair is reserved for consolidation #4947; the original acceptance report remains a record of its earlier frozen source. No separate push of the serial stack.
