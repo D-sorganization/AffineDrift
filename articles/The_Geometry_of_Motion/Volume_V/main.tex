@@ -159,32 +159,34 @@
 \addcontentsline{toc}{chapter}{Preface}
 
 \begin{gomdraftnotice}
-This volume is under active development. All chapters are structural outlines
-with preliminary material that will be expanded in future editions. Exercises,
-worked examples, and backmatter (glossary, further reading) have not yet been
-written.
+This volume is under active development. Chapters 1--9 contain scoped model,
+simulation, local optimization, feedback, identification and analysis examples,
+including a reproducible reinforcement-learning benchmark rollout. Chapter 10
+contains a tested three-link prescribed-motion example with explicitly scoped
+extensions. These components do not constitute a fully implemented or
+experimentally validated end-to-end golf pipeline.
 \end{gomdraftnotice}
 
 This is a book about \emph{doing}. Volumes 0--IV developed the theory of motion: from
 differential geometry through nonlinear control, biomechanics, and motor control. This
-volume puts every tool to work.
+volume explores how those tools can be connected in computational investigations.
 
-The companion software developed alongside this textbook, UpstreamDrift, provides a
-pedagogical simulation environment for multi-body dynamics, trajectory optimization,
-and controller design. It wraps established physics engines (MuJoCo, Drake, Pinocchio,
-OpenSim) behind a consistent Python API, allowing the reader to run every example from
-the preceding four volumes and to build their own analyses.
+The companion project, UpstreamDrift, is the setting for the software
+integration discussions in this volume. Engine interfaces and executable
+examples must be checked against the selected software revision. The capstone
+here runs the repository's local three-link model and does not require every
+engine discussed elsewhere in the volume.
 
 \medskip\noindent\textbf{Disclosure.} UpstreamDrift is developed by the authors of this
 textbook. It is not a production simulation engine; it is an educational platform designed
 to accompany this text and make the theory from Volumes 0--IV executable. The underlying
-physics computations are delegated to the established engines listed above.
+physics engines discussed here are distinct from the direct SciPy and local
+rigid-body examples used to verify particular arguments in this volume.
 
-Every chapter in this volume produces a concrete, runnable result. There are no
-hypothetical exercises---every example uses real code, real models, and real data.
-By the end, you will have implemented a complete pipeline from model construction
-through trajectory optimization to robustness analysis, applied to the golf swing
-as the running case study.
+The capstone distinguishes executable model calculations from proposed
+optimization, muscle, robustness and variability extensions. Its data are
+synthetic. Each extension needs its own implementation, assumptions and
+validation before it can support a scientific conclusion.
 
 \tableofcontents
 \input{../nomenclature}

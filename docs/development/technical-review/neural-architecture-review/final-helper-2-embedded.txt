@@ -1,0 +1,96 @@
+Here is the mathematical and conceptual review of the chapter.
+
+---
+
+### 1. Executive Summary & Assessment of Correctness
+
+The mathematical statements, formulas, dimensional distinctions, and worked numerical examples in the chapter are **sound and mathematically correct**. No fatal errors were found. The chapter carefully distinguishes:
+- **Dimensions**: State dimension ($n$), actuator/input dimension ($m$), reduced command dimension ($k \le m$), and task/observation dimension ($p$).
+- **Computational proxy vs. runtime**: $C_{\text{dense}}$ is explicitly treated as an operational scaling heuristic/proxy across stages rather than a benchmarked wall-clock runtime or exact floating-point flop count.
+- **Input rank vs. controllability**: A decrease in input rank $\operatorname{rank}(W) < n$ does not inherently imply loss of state controllability if the dynamic drift/coupling matrix $A$ provides controllability (via the Kalman rank condition), but uncoordinated input truncation can leave unstable uncontrolled invariant subspaces.
+
+---
+
+### 2. Independent Verification of Worked Examples & Numbers
+
+#### A. Bellman Storage Bound & Exercise 1
+- **Formula:** $\text{Bytes} = 8 \cdot M^n$.
+- **At $M = 10, n = 6$:**
+  $$8 \cdot 10^6 \text{ bytes} = 8\text{ MB (eight million bytes)} \quad \checkmark$$
+- **At $M = 10, n = 10$:**
+  $$8 \cdot 10^{10} \text{ bytes} = 80\text{ GB (eighty billion bytes)} \quad \checkmark$$
+- **Exercise 1 Check:** Budget $= 8 \times 10^9$ bytes.
+  $$8 \cdot 10^n \le 8 \times 10^9 \implies 10^n \le 10^9 \implies n \le 9.$$
+  The largest integer is indeed $n = 9$.
+
+#### B. Dense Local Trajectory Proxy ($C_{\text{dense}}$)
+Formula from Eq. \eqref{eq:ch2:dense-proxy}:
+$$C_{\text{dense}} = H(n^3 + n^2m + nm^2 + m^3)$$
+
+- **Case 1: $n = 4, m = 2, H = 10$**
+  $$n^3 = 64,\quad n^2m = 4^2 \cdot 2 = 32,\quad nm^2 = 4 \cdot 2^2 = 16,\quad m^3 = 8$$
+  $$\text{Sum} = 64 + 32 + 16 + 8 = 120$$
+  $$C_{\text{dense}} = 10 \times 120 = 1200 \quad \checkmark$$
+
+- **Case 2: $n = 4, k = 1, H = 10$**
+  $$n^3 = 64,\quad n^2k = 16 \cdot 1 = 16,\quad nk^2 = 4 \cdot 1 = 4,\quad k^3 = 1$$
+  $$\text{Sum} = 64 + 16 + 4 + 1 = 85$$
+  $$C_{\text{dense}} = 10 \times 85 = 850 \quad \checkmark$$
+
+- **Stored Stage-Hessian Entries:**
+  $$H \cdot n^2 = 10 \cdot 4^2 = 160 \quad \checkmark$$
+
+- **Exercise 2 Check ($n = 40$, fixed $H$):**
+  - For $m = 20$:
+    $$n^3 = 64{,}000$$
+    $$n^2m = 1600 \times 20 = 32{,}000$$
+    $$nm^2 = 40 \times 400 = 16{,}000$$
+    $$m^3 = 8{,}000$$
+    $$\text{Sum} = 64{,}000 + 32{,}000 + 16{,}000 + 8{,}000 = 120{,}000 \implies C = 120{,}000 H$$
+  - For $k = 5$:
+    $$n^3 = 64{,}000$$
+    $$n^2k = 1600 \times 5 = 8{,}000$$
+    $$nk^2 = 40 \times 25 = 1{,}000$$
+    $$k^3 = 125$$
+    $$\text{Sum} = 64{,}000 + 8{,}000 + 1{,}000 + 125 = 73{,}125 \implies C = 73{,}125 H$$
+  - The dominant $n^3 = 64{,}000$ term (and the $Hn^2 = 1{,}600H$ stage Hessian entries) remains completely unchanged.
+
+#### C. Python Function (`planning_costs`)
+- Input validation handles non-integers, booleans, and values $< 1$.
+- `grid_points < 2` raises `ValueError` appropriately.
+- Computations:
+  - `"log10_grid"` evaluates $n \log_{10}(M)$, representing the exponent for grid storage.
+  - `"value_hessian_entries"` computes $H n^2$.
+  - `"dense_proxy"` computes $H(n^3 + n^2m + nm^2 + m^3)$.
+- All equations in code match the mathematical narrative exactly.
+
+#### D. Hidden Unstable Mode & Dynamic Coupling (Section 4 & Exercise 3)
+Given:
+$$\dot x = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix} x + I_2 u$$
+1. **Full actuation with $u = -2x$:**
+   $$\dot x = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix} x - 2 \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} x = \begin{bmatrix} -3 & 0 \\ 0 & -1 \end{bmatrix} x$$
+   Eigenvalues are $\lambda_1 = -3, \lambda_2 = -1$ (asymptotically stable).
+2. **Restricted input $u = \begin{bmatrix} c \\ 0 \end{bmatrix}$:**
+   $$\dot x_1 = -x_1 + c,\qquad \dot x_2 = x_2$$
+   The second state $x_2(t) = e^t x_2(0)$ is decoupled and unstable regardless of $c$.
+   If output is $y = x_1$, the system has an unobservable/uncontrollable unstable mode.
+3. **Exercise 3 Construction (coupled 2-state, 1-input system with rank-2 controllability):**
+   Let:
+   $$\dot x = A x + B c = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix} x + \begin{bmatrix} 1 \\ 0 \end{bmatrix} c$$
+   The controllability matrix is:
+   $$\mathcal{C} = \begin{bmatrix} B & AB \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}, \quad \operatorname{rank}(\mathcal{C}) = 2$$
+   Here, $\operatorname{rank}(B) = 1 < n = 2$, but dynamic coupling allows full controllability.
+
+---
+
+### 3. Detailed Structural & Conceptual Observations
+
+1. **Dimensional Rigor**:
+   - The distinction between state space $\mathbb{R}^n$, input space $\mathbb{R}^m$, synergy subspace $\operatorname{span}(W) \subseteq \mathbb{R}^m$ of dimension $k$, and task manifold $\mathbb{R}^p$ is maintained throughout without conflation.
+   - The text rightly notes that $n = 2\,\text{DOF}$ does not universally hold when auxiliary states (e.g., muscle activations, flexible modes, tendon dynamics) or constrained manifold parameterizations (e.g., unit quaternions $\mathbb{H}$) are present.
+
+2. **Cost Proxy vs. Runtime**:
+   - The chapter clearly states that $C_{\text{dense}}$ is a scale proxy, explicitly warning that sparse dynamics, NLP structure, line searches, and hardware memory hierarchies invalidate treating it as a true floating-point benchmark.
+
+3. **Controllability vs. Synergy Truncation**:
+   - Section 4 accurately prevents readers from concluding that muscle synergy reduction always causes instability; rather, it highlights that without dynamic coupling analysis or task-relevant invariance, blind input projection can isolate unstable internal modes.

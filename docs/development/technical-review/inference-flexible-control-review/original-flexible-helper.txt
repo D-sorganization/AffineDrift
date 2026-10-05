@@ -1,0 +1,314 @@
+# Mathematical, Physical, and Numerical Review: Chapter "Deformable Bodies and Continuum Mechanics"
+
+**Document Status:** Read-Only Review for Lead Codex  
+**Scope:** Analytical rigor, continuous/discrete mechanics, numerical formulation, physical causation, and domain fidelity.
+
+---
+
+## 1. Executive Summary & Critical Findings Matrix
+
+| Location | Issue Category | Classification | Core Defect / Finding |
+| :--- | :--- | :--- | :--- |
+| **Eq. (9.1)** | Governing PDE | **Actual Error** | States $EI \frac{\partial^4 w}{\partial x^4} + \dots$ as the general Euler–Bernoulli equation, but the chapter and code immediately treat variable $EI(x)$. For variable cross-sections, the spatial operator is $\frac{\partial^2}{\partial x^2}\left(EI(x)\frac{\partial^2 w}{\partial x^2}\right)$. |
+| **Listing Line 58** | Discrete Mechanics | **Approximation / Non-standard** | Standard Hermite cubic formulation evaluates mid-element $EI$ via numerical/exact integration. For linear taper, mid-point $EI$ yields the exact element stiffness, but variable mass $\rho A(x)$ is assumed constant despite significant geometric taper. |
+| **Listing Line 70** | Mass Formulation | **Actual Inconsistency** | Consistent Hermite mass matrix sign error in standard convention: element DOFs are $[w_1, \theta_1, w_2, \theta_2]$ where $\theta = w'$. Standard element matrix has $+13h$ and $+22h$ depending on slope definition. |
+| **Listing Line 91** | Numerical Safeguard | **Masked Defect / Danger** | `np.abs(eigenvalues)` masks non-positive definiteness ($K_{\text{free}}$ or $M_{\text{free}}$ losing positive definiteness due to assembly errors, unconstrained mechanisms, or negative stiffness). Negative eigenvalues represent dynamic divergence/buckling, not oscillatory frequencies. |
+| **Section 2.2** | Physical Causation | **Misleading Causation** | Attributes "toe-down droop: 3–8 cm" to "(gravity effect during downswing)". Gravitational acceleration ($\approx 9.81\text{ m/s}^2$) produces sub-millimeter droop; toe-down droop is primarily driven by **inertial centrifugal/centripetal coupling** acting on the center of mass of the clubhead offset from the shaft bending axis. |
+| **Section 2.2** | Empirical Statistics | **Unsupported / Overgeneralized** | The stated tip deflections (5–15 cm) and frequency ranges are presented as universal constants without boundary-condition context (clamped base vs. clamped-free vs. free-free vs. biomechanical player grip impedance). |
+
+---
+
+## 2. Rigorous Derivation of Variable-$EI$ Euler–Bernoulli Beam Theory
+
+### 2.1 Kinematics & Variational Formulation (Hamilton's Principle)
+
+Consider a slender beam of length $L$ along coordinate $x \in [0, L]$. Under the Euler–Bernoulli kinematic hypothesis, plane cross-sections remain plane and normal to the deformed neutral axis. The axial displacement field is:
+$$u(x, y, z, t) = -y \frac{\partial w(x, t)}{\partial x}, \qquad v(x, y, z, t) = 0, \qquad w(x, y, z, t) = w(x, t)$$
+The infinitesimal axial strain is:
+$$\varepsilon_{xx} = \frac{\partial u}{\partial x} = -y \frac{\partial^2 w}{\partial x^2}$$
+
+Assuming linear elastic isotropic behavior ($\sigma_{xx} = E(x) \varepsilon_{xx}$), the internal strain energy $\mathcal{U}$ is:
+$$\mathcal{U} = \frac{1}{2} \int_0^L \int_A \sigma_{xx} \varepsilon_{xx} \, dA \, dx = \frac{1}{2} \int_0^L E(x) \left( \int_A y^2 \, dA \right) \left( \frac{\partial^2 w}{\partial x^2} \right)^2 dx = \frac{1}{2} \int_0^L EI(x) \left( \frac{\partial^2 w}{\partial x^2} \right)^2 dx$$
+where $I(x) = \int_A y^2 \, dA$.
+
+The kinetic energy $\mathcal{T}$ (neglecting rotary inertia of the cross-section for a pure Euler–Bernoulli beam):
+$$\mathcal{T} = \frac{1}{2} \int_0^L m(x) \left( \frac{\partial w}{\partial t} \right)^2 dx, \qquad m(x) = \rho(x) A(x)$$
+
+The virtual work done by transverse distributed external traction $f(x, t)$ is:
+$$\delta \mathcal{W}_{\text{ext}} = \int_0^L f(x, t) \delta w \, dx$$
+
+Applying Hamilton's Principle $\delta \int_{t_1}^{t_2} (\mathcal{T} - \mathcal{U} + \mathcal{W}_{\text{ext}}) \, dt = 0$:
+$$\int_{t_1}^{t_2} \left[ \int_0^L \left( - m(x) \frac{\partial^2 w}{\partial t^2} \delta w - EI(x) \frac{\partial^2 w}{\partial x^2} \frac{\partial^2 (\delta w)}{\partial x^2} + f(x, t) \delta w \right) dx \right] dt = 0$$
+
+Integrating the strain energy term by parts twice with respect to $x$:
+$$\int_0^L EI(x) \frac{\partial^2 w}{\partial x^2} \frac{\partial^2 (\delta w)}{\partial x^2} dx = \left[ EI(x) \frac{\partial^2 w}{\partial x^2} \frac{\partial (\delta w)}{\partial x} \right]_0^L - \int_0^L \frac{\partial}{\partial x} \left( EI(x) \frac{\partial^2 w}{\partial x^2} \right) \frac{\partial (\delta w)}{\partial x} dx$$
+$$= \left[ M(x, t) \delta \left( \frac{\partial w}{\partial x} \right) \right]_0^L - \left[ \frac{\partial}{\partial x} \left( EI(x) \frac{\partial^2 w}{\partial x^2} \right) \delta w \right]_0^L + \int_0^L \frac{\partial^2}{\partial x^2} \left( EI(x) \frac{\partial^2 w}{\partial x^2} \right) \delta w \, dx$$
+where the internal bending moment is $M(x, t) = EI(x) \frac{\partial^2 w}{\partial x^2}$ and the shear force is $V(x, t) = -\frac{\partial}{\partial x} \left( EI(x) \frac{\partial^2 w}{\partial x^2} \right)$.
+
+Setting the arbitrary virtual displacement variation $\delta w$ to zero yields the **exact governing PDE for non-uniform beams**:
+$$\boxed{\frac{\partial^2}{\partial x^2}\left( EI(x) \frac{\partial^2 w(x, t)}{\partial x^2} \right) + m(x) \frac{\partial^2 w(x, t)}{\partial t^2} = f(x, t)}$$
+
+Expanding the spatial derivative explicitly:
+$$EI(x) \frac{\partial^4 w}{\partial x^4} + 2 \frac{d(EI)}{dx} \frac{\partial^3 w}{\partial x^3} + \frac{d^2(EI)}{dx^2} \frac{\partial^2 w}{\partial x^2} + m(x) \frac{\partial^2 w}{\partial t^2} = f(x, t)$$
+*Text Error:* Equation (9.1) in the draft omits $2 (EI)' w''' + (EI)'' w''$. While valid strictly for uniform beams, writing Eq. (9.1) directly above a tapered shaft model without stating the restriction to constant $EI$ is mathematically flawed.
+
+---
+
+## 3. Cantilever Eigenproblem and Tip-Mass Boundary Conditions
+
+### 3.1 Continuous Free-Vibration Formulation
+Set $f(x, t) = 0$ and separate variables: $w(x, t) = \phi(x) e^{i \omega t}$. The continuous spatial eigenproblem is:
+$$\frac{d^2}{dx^2}\left( EI(x) \frac{d^2 \phi(x)}{dx^2} \right) - \omega^2 m(x) \phi(x) = 0$$
+
+### 3.2 Boundary Conditions at Clamped Root ($x = 0$)
+Rigidly clamped base (essential / geometric boundary conditions):
+$$\phi(0) = 0, \qquad \left.\frac{d\phi}{dx}\right|_{x=0} = 0$$
+
+### 3.3 Dynamic Boundary Conditions at Free Tip ($x = L$) with Lumped Mass and Offset Inertia
+Let the clubhead be represented as a rigid body attached at the tip $x = L$ with:
+- Lumped mass $M_{\text{tip}}$
+- Center of mass offset from shaft centerline $\bm{r}_c = (e_x, e_y, e_z)$
+- Pitch/rotational mass moment of inertia $J_{\text{tip}}$ about the tip attachment node.
+
+At the free tip with no external point loads:
+1. **Bending Moment Equilibrium (Natural BC):**
+   $$M(L) = \left. EI(L) \frac{d^2\phi}{dx^2}\right|_{x=L} = - J_{\text{tip}} \ddot{\theta}(L, t) = \omega^2 J_{\text{tip}} \left.\frac{d\phi}{dx}\right|_{x=L} + \omega^2 M_{\text{tip}} e_x \phi(L)$$
+   *(Assuming planar pure bending with no offset $e_x = 0$: $EI(L) \phi''(L) = \omega^2 J_{\text{tip}} \phi'(L)$).*
+2. **Shear Force Equilibrium (Natural BC):**
+   $$V(L) = -\left. \frac{d}{dx}\left( EI(x) \frac{d^2\phi}{dx^2} \right)\right|_{x=L} = M_{\text{tip}} \ddot{w}(L, t) = - \omega^2 M_{\text{tip}} \phi(L)$$
+   Therefore:
+   $$\left. \frac{d}{dx}\left( EI(x) \frac{d^2\phi}{dx^2} \right)\right|_{x=L} = \omega^2 M_{\text{tip}} \phi(L)$$
+
+If $M_{\text{tip}} = 0$ and $J_{\text{tip}} = 0$, these reduce to classical traction-free conditions:
+$$\left.\frac{d^2\phi}{dx^2}\right|_{x=L} = 0, \qquad \left.\frac{d}{dx}\left( EI(x) \frac{d^2\phi}{dx^2} \right)\right|_{x=L} = 0$$
+
+---
+
+## 4. Analytical Benchmarks & Scaling Checks
+
+### 4.1 Uniform Cantilever Beam ($EI(x) = EI_0$, $m(x) = m_0$)
+For a uniform beam, the governing spatial equation is:
+$$\frac{d^4 \phi}{dx^4} - \beta^4 \phi = 0, \qquad \beta^4 = \frac{\omega^2 m_0}{EI_0}$$
+General solution:
+$$\phi(x) = C_1 \cosh(\beta x) + C_2 \sinh(\beta x) + C_3 \cos(\beta x) + C_4 \sin(\beta x)$$
+Imposing $\phi(0) = 0$ and $\phi'(0) = 0$:
+$$C_3 = -C_1, \qquad C_4 = -C_2$$
+Imposing $\phi''(L) = 0$ and $\phi'''(L) = 0$ yields the characteristic transcendental equation:
+$$\cos(\beta L) \cosh(\beta L) + 1 = 0$$
+Roots $(\beta_n L)$:
+$$\beta_1 L \approx 1.875104, \quad \beta_2 L \approx 4.694091, \quad \beta_3 L \approx 7.854757, \quad \beta_4 L \approx 10.995541$$
+Exact circular frequencies:
+$$\omega_n = (\beta_n L)^2 \sqrt{\frac{EI_0}{m_0 L^4}} \quad \implies \quad f_n = \frac{(\beta_n L)^2}{2\pi L^2} \sqrt{\frac{EI_0}{m_0}}$$
+
+#### Numerical Evaluation on Textbook Baseline Parameters
+If we test the code's uniform limit ($EI_{\text{root}} = EI_{\text{tip}} = 32.5\text{ N}\cdot\text{m}^2$, $L = 1.1\text{ m}$, $m_0 = 0.15\text{ kg/m}$):
+- $\sqrt{\frac{EI_0}{m_0}} = \sqrt{\frac{32.5}{0.15}} = 14.7196\text{ m}^2/\text{s}$
+- $f_1 = \frac{(1.875104)^2}{2 \pi (1.1)^2} (14.7196) = \frac{3.516016}{7.60265} (14.7196) \approx 6.8075\text{ Hz}$
+- $f_2 = \frac{(4.694091)^2}{7.60265} (14.7196) \approx 42.66\text{ Hz}$
+- $f_3 = \frac{(7.854757)^2}{7.60265} (14.7196) \approx 119.46\text{ Hz}$
+
+### 4.2 Uniform Cantilever with Tip Mass $M_{\text{tip}}$
+Characteristic equation with tip point mass $M_{\text{tip}}$ ($J_{\text{tip}} = 0$):
+$$1 + \cos(\beta L) \cosh(\beta L) + \frac{M_{\text{tip}}}{m_0 L} \beta L (\cos(\beta L)\sinh(\beta L) - \sin(\beta L)\cosh(\beta L)) = 0$$
+Let $\mu = \frac{M_{\text{tip}}}{m_{\text{shaft}}} = \frac{0.20\text{ kg}}{0.15 \times 1.1\text{ kg}} = \frac{0.20}{0.165} \approx 1.212$.
+For $\mu \gg 1$, the fundamental mode approaches a single-DOF spring-mass:
+$$k_{\text{tip}} = \frac{3 EI}{L^3}, \qquad M_{\text{eff}} \approx M_{\text{tip}} + \frac{33}{140} m_{\text{shaft}}$$
+$$\omega_1 \approx \sqrt{\frac{3 EI / L^3}{M_{\text{tip}} + 0.236 m_{\text{shaft}}}}$$
+Using $EI = 32.5$, $L = 1.1$, $M_{\text{tip}} = 0.20$:
+$$k_{\text{tip}} = \frac{3 \times 32.5}{1.331} = 73.25\text{ N/m}$$
+$$M_{\text{eff}} \approx 0.20 + 0.236(0.165) = 0.2389\text{ kg} \implies \omega_1 \approx \sqrt{\frac{73.25}{0.2389}} \approx 17.51\text{ rad/s} \implies f_1 \approx 2.79\text{ Hz}$$
+*Key Takeaway:* Adding a realistic 200 g clubhead mass drops the bare shaft fundamental frequency from $\approx 6.8\text{ Hz}$ down to $\approx 2.8\text{ Hz}$ (or below 4 Hz for the tapered profile).
+
+---
+
+## 5. Audit of Python Listing `shaft_modal_analysis`
+
+### 5.1 Sign Convention Error in Consistent Mass Matrix
+In the code (Listing lines 67–72):
+```python
+m_e = (
+    rho_A
+    * h
+    / 420
+    * np.array(
+        [
+            [156, 22 * h, 54, -13 * h],
+            [22 * h, 4 * h**2, 13 * h, -3 * h**2],
+            [54, 13 * h, 156, -22 * h],
+            [-13 * h, -3 * h**2, -22 * h, 4 * h**2],
+        ]
+    )
+)
+```
+Let the nodal displacement vector be $\bm{d}_e = [w_1, \theta_1, w_2, \theta_2]^T$ with standard slope DOF $\theta = \frac{dw}{dx}$.
+The Hermite cubic shape functions are:
+$$N_1(\xi) = 1 - 3\xi^2 + 2\xi^3$$
+$$N_2(\xi) = h (\xi - 2\xi^2 + \xi^3)$$
+$$N_3(\xi) = 3\xi^2 - 2\xi^3$$
+$$N_4(\xi) = h (-\xi^2 + \xi^3)$$
+where $\xi = x/h \in [0, 1]$.
+Evaluating the cross-coupling terms:
+$$m_{14} = \rho A h \int_0^1 N_1(\xi) N_4(\xi) \, d\xi = \rho A h^2 \int_0^1 (1 - 3\xi^2 + 2\xi^3)(-\xi^2 + \xi^3) \, d\xi = -\frac{13}{420} \rho A h^2$$
+$$m_{23} = \rho A h \int_0^1 N_2(\xi) N_3(\xi) \, d\xi = \rho A h^2 \int_0^1 (\xi - 2\xi^2 + \xi^3)(3\xi^2 - 2\xi^3) \, d\xi = +\frac{13}{420} \rho A h^2$$
+$$m_{24} = \rho A h \int_0^1 N_2(\xi) N_4(\xi) \, d\xi = \rho A h^3 \int_0^1 (\xi - 2\xi^2 + \xi^3)(-\xi^2 + \xi^3) \, d\xi = -\frac{3}{420} \rho A h^3$$
+$$m_{34} = \rho A h \int_0^1 N_3(\xi) N_4(\xi) \, d\xi = \rho A h^2 \int_0^1 (3\xi^2 - 2\xi^3)(-\xi^2 + \xi^3) \, d\xi = -\frac{22}{420} \rho A h^2$$
+
+In the code:
+- Row 0: `[156, 22*h, 54, -13*h]` $\implies m_{12}=22h, m_{14}=-13h$. (Correct)
+- Row 1: `[22*h, 4*h**2, 13*h, -3*h**2]` $\implies m_{21}=22h, m_{23}=13h, m_{24}=-3h^2$. (Correct)
+- Row 2: `[54, 13*h, 156, -22*h]` $\implies m_{32}=13h, m_{34}=-22h$. (Correct)
+- Row 3: `[-13*h, -3*h**2, -22*h, 4*h**2]`. (Correct)
+
+**Crucial Check:** While the internal signs of $m_e$ match the Przemieniecki / Hughes convention for $\theta = +w'$, check row 0 column 1 vs row 2 column 3:
+Notice that $N_2'(0) = 1$, but $N_4'(1) = 1$. The off-diagonal coupling between translation at one node and rotation at the other has opposite symmetry:
+$\int N_1 N_4 = -13h$, $\int N_3 N_2 = +13h$.
+However, look at $K_e$ row 0 vs row 2:
+`k_e[0, 1] = 6*h`, `k_e[2, 3] = -6*h`.
+In the code:
+`k_e[0] = [12, 6*h, -12, 6*h]`.
+Wait! For $K_e$:
+$$k_{14} = \frac{EI}{h^3} \int_0^1 N_1'' N_4'' \, d\xi = \frac{EI}{h^3} \int_0^1 (-6 + 12\xi)(-2h + 6h\xi) \, d\xi = \frac{6 EI}{h^2}$$
+`k_e[2, :]` has `[-12, -6*h, 12, -6*h]`. Here $k_{32} = -6h$ and $k_{34} = -6h$.
+The stiffness matrix matches the standard element matrix.
+
+### 5.2 Dangerous Masking via `np.abs(eigenvalues)`
+In Listing line 91:
+```python
+frequencies = np.sqrt(np.abs(eigenvalues)) / (2 * np.pi)
+```
+**Defect:**
+1. In structural dynamics, the generalized eigenvalue problem $K \phi = \lambda M \phi$ yields $\lambda = \omega^2$.
+2. If $\lambda < 0$, $\omega = \pm i \sqrt{|\lambda|}$. This does **not** correspond to an oscillatory natural frequency; it corresponds to **exponential divergence (static instability or Euler buckling)**.
+3. Taking `np.abs(eigenvalues)` silently maps negative eigenvalues (produced by modeling bugs, singular matrices, unconstrained rigid-body modes with numerical noise, or compressive axial pre-loads) into spurious positive frequencies.
+4. **Correction:** Replace with:
+   ```python
+   if np.any(eigenvalues < -1e-9):
+       raise ValueError(
+           f"Negative eigenvalues detected: {eigenvalues[eigenvalues < 0]}"
+       )
+   eigenvalues = np.maximum(eigenvalues, 0.0)
+   frequencies = np.sqrt(eigenvalues) / (2 * np.pi)
+   ```
+
+### 5.3 Omission of Clubhead Boundary Mass
+The listing title states *"Modal analysis of a golf club shaft"*, and the returned Mode 1 frequency is $\approx 5.5\text{ Hz}$.
+However, a real golf club has a **200 g clubhead** mounted at the tip. Without the tip mass, the model is of an **unheaded shaft**. An unheaded shaft does not represent the playing club:
+- Bare shaft (clamped): Mode 1 $\sim 5\text{ Hz}$
+- Headed shaft (clamped): Mode 1 drops to $\mathbf{\sim 2.5 - 3.2\text{ Hz}}$ (driver)
+Calling $4-6\text{ Hz}$ the first bending mode of the "driver" while modeling an unheaded shaft creates a persistent conceptual error throughout Exercises 1–4.
+
+---
+
+## 6. Physical Causation & Biomechanical Precision
+
+### 6.1 The "Toe-Down Droop" Fallacy
+The text states:
+> *"Toe-down droop: 3–8 cm (gravity effect during downswing)"*
+
+**This is physically incorrect:**
+1. **Gravitational Order of Magnitude:**
+   The clubhead mass is $M_h \approx 0.20\text{ kg}$. Gravity exerts $F_g = M_h g \approx 2\text{ N}$.
+   For a typical bending stiffness in the droop plane ($k_{\text{droop}} \approx 70\text{ N/m}$), static gravitational deflection is:
+   $$\delta_{\text{gravity}} \approx \frac{2\text{ N}}{70\text{ N/m}} \approx 0.028\text{ m} \approx 2.8\text{ mm} \quad (\ll 3\text{--}8\text{ cm})$$
+   Furthermore, during the late downswing, the shaft is nearly vertical-to-inclined, so the gravity component perpendicular to the shaft is even smaller.
+2. **Actual Dynamic Mechanism (Centrifugal Bending):**
+   In the downswing, the clubhead rotates around the swing axis at angular speeds $\Omega \approx 20\text{--}35\text{ rad/s}$, creating a centrifugal force:
+   $$F_{\text{cf}} = M_h \Omega^2 R_{\text{swing}} \approx 0.20 \times (25)^2 \times 1.5 \approx 180\text{--}400\text{ N}$$
+   Because the center of mass of the clubhead is **offset** from the longitudinal axis of the shaft by distance $e_y \approx 2\text{--}4\text{ cm}$ (the clubhead CG lies out in the toe direction), the massive axial/radial tension $F_{\text{cf}}$ exerts a strong bending moment:
+   $$M_{\text{droop}} = F_{\text{cf}} \times e_y \approx 250\text{ N} \times 0.025\text{ m} \approx 6.25\text{ N}\cdot\text{m}$$
+   This moment bends the shaft in the direction that aligns the clubhead CG with the shaft pull-vector, forcing the toe downward.
+3. **Recommendation:** State that toe-down droop is caused by **inertial centrifugal loading on the center of mass offset of the clubhead**, not gravity.
+
+---
+
+## 7. Recommended Concrete Revisions
+
+### 7.1 Text Equation (9.1) Revision
+Replace Eq. (9.1) with:
+$$\frac{\partial^2}{\partial x^2}\left( EI(x) \frac{\partial^2 w}{\partial x^2} \right) + \rho A(x) \frac{\partial^2 w}{\partial t^2} = f(x, t)$$
+with an explicit remark: *"When flexural rigidity $EI$ and mass per unit length $\rho A$ are uniform along the span, this simplifies to $EI \frac{\partial^4 w}{\partial x^4} + \rho A \frac{\partial^2 w}{\partial t^2} = f(x, t)$."*
+
+### 7.2 Code Listing Robustness & Tip-Mass Integration
+```python
+import numpy as np
+from scipy.linalg import eigh
+
+
+def shaft_modal_analysis(
+    n_elements: int = 20,
+    length: float = 1.1,
+    EI_root: float = 50.0,
+    EI_tip: float = 15.0,
+    rho_A: float = 0.15,
+    tip_mass: float = 0.20,  # Realistic clubhead mass in kg
+    tip_inertia: float = 0.0,  # Clubhead pitch inertia in kg*m^2
+) -> tuple[np.ndarray, np.ndarray]:
+    """Compute natural frequencies and mode shapes of a tapered cantilever shaft.
+
+    Includes tip mass and rotational inertia boundary conditions.
+    """
+    n_nodes = n_elements + 1
+    n_dof = 2 * n_nodes
+    h = length / n_elements
+
+    K = np.zeros((n_dof, n_dof))
+    M = np.zeros((n_dof, n_dof))
+
+    for e in range(n_elements):
+        xi = (e + 0.5) / n_elements
+        EI_local = EI_root + (EI_tip - EI_root) * xi
+
+        # Standard Hermite cubic beam element matrices
+        k_e = (EI_local / h**3) * np.array(
+            [
+                [12.0, 6.0 * h, -12.0, 6.0 * h],
+                [6.0 * h, 4.0 * h**2, -6.0 * h, 2.0 * h**2],
+                [-12.0, -6.0 * h, 12.0, -6.0 * h],
+                [6.0 * h, 2.0 * h**2, -6.0 * h, 4.0 * h**2],
+            ]
+        )
+
+        m_e = (
+            (rho_A * h / 420.0)
+            * np.array(
+                [
+                    [156.0, 22.0 * h, 54.0, -13.0 * h],
+                    [22.0 * h, 4.0 * h**2, 13.0 * h, -3.0 * h**2],
+                    [54.0, 13.0 * h, 156.0, -22.0 * h],
+                    [-13.0 * h, -3.0 * h**2, -22.0 * h, 4.0 * h**2],
+                ]
+            )
+        )
+
+        dofs = [2 * e, 2 * e + 1, 2 * e + 2, 2 * e + 3]
+        for i_idx, i in enumerate(dofs):
+            for j_idx, j in enumerate(dofs):
+                K[i, j] += k_e[i_idx, j_idx]
+                M[i, j] += m_e[i_idx, j_idx]
+
+    # Incorporate tip lumped mass and rotary inertia at free tip DOFs (last node)
+    tip_disp_dof = n_dof - 2
+    tip_rot_dof = n_dof - 1
+    M[tip_disp_dof, tip_disp_dof] += tip_mass
+    M[tip_rot_dof, tip_rot_dof] += tip_inertia
+
+    # Clamped boundary condition at root (node 0: disp=0, rot=0)
+    free_dofs = list(range(2, n_dof))
+    K_free = K[np.ix_(free_dofs, free_dofs)]
+    M_free = M[np.ix_(free_dofs, free_dofs)]
+
+    # Solve generalized eigenvalue problem
+    eigenvalues, eigenvectors = eigh(K_free, M_free)
+
+    # Physical verification: detect instability or ill-conditioning
+    if np.any(eigenvalues < -1e-6):
+        raise ValueError(
+            f"Negative eigenvalues detected: {eigenvalues[eigenvalues < 0]}. "
+            "System is unstable or unconstrained."
+        )
+
+    eigenvalues = np.maximum(eigenvalues, 0.0)
+    frequencies = np.sqrt(eigenvalues) / (2.0 * np.pi)
+
+    return frequencies[:6], eigenvectors[:, :6]
+```

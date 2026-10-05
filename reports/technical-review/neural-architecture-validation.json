@@ -1,0 +1,69 @@
+{
+  "issue": 4908,
+  "epic": 4009,
+  "status": "Complete chapter sources and scoped PDF accepted; protected delivery pending",
+  "accepted_source_commit": "6cd420438e024de3c63fb8fc3a6759fa63ce03db",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch02_curse_of_dimensionality.tex": "f99f3cb6943be2f10b73e9fb437fe3b36c4acbea8b8bc3118266e05253c01f01",
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch03_neural_architecture.tex": "49e490263f449c10a3f58690b1f8d0d3260d6cc20b20117b80bd3c6af5fafd35",
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch11_neural_to_robot.tex": "b0cb2f4a76e5f363c92f257a4588b03a6d2b1f392850877b1e5e74922c797078",
+    "articles/The_Geometry_of_Motion/Volume_IV/main.tex": "20f420887ad63add7078f5be574271c6dacaa3948fa45338c9d6903b812e5859",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "1be4bf1a2d7aa62ff31ad731974cac7f9793a7e87ed73efca7c3c041c3cee8df",
+    "articles/The_Geometry_of_Motion/Volume_IV/main.pdf": "20c4a62ff30da5e6ee1ceaa4f211c914c62f71bbbf13ba242841b2e305f81af9",
+    "tests/test_neural_architecture_listings.py": "a0ca3c00c6a290b4ae0bfa7931b16759aa683db6751adaf7427bd69a5b481007",
+    "reports/technical-review/neural-architecture-independent-checks.json": "24d47393b90e35b85f52ed8242fdaadfbe1d3b6aa7ccf1a9710fb832e00aa9b8"
+  },
+  "scope": "Complete files ch02, ch03 and ch11 (printed Chapters 2, 3, 12); no whole-volume or empirical certification",
+  "full_regression": {
+    "head": "6cd420438e024de3c63fb8fc3a6759fa63ce03db",
+    "passed": 6955,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 465.05,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/neural-architecture-review/full-tests.txt"
+  },
+  "pdf": {
+    "pages": 76,
+    "printed_entries": 46,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3-6, 18-25 and 69-76; five final contact sheets inspected",
+    "build_log": "docs/development/technical-review/neural-architecture-review/accepted-pass7.txt",
+    "limits": "Historical duplicate destinations, package warnings and unchanged-chapter overflow outside acceptance"
+  },
+  "mathematics": {
+    "record": "reports/technical-review/neural-architecture-independent-checks.json",
+    "identities": 6,
+    "cases_each": 100,
+    "threshold": 1e-6,
+    "scope": "Manufactured mathematics, not biological validation"
+  },
+  "actual_listing_tests": 23,
+  "delegation": {
+    "helpers": 7,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only; all complete successful answers lead-adjudicated",
+    "failed_excluded": 1
+  },
+  "delivery": {
+    "status": "Preparing regular PR",
+    "base": "fix/inference-flexible-control-review",
+    "dependency": "PR 4910",
+    "next": "Protected delivery then fetched-main blob verification"
+  },
+  "earlier_runs": {
+    "initial": "6954 passed, one missing structured URL field; repaired without exception or test weakening",
+    "second": "6953 passed, two root-hygiene failures from first-run generated build/dist/egg-info; preserved under QA, same source rerun passed"
+  },
+  "pre_pr": {
+    "base": "6e5534195cbebc9372a749014aeb6b973a8f57f8",
+    "head": "26e51fc97e827c05c31a670f35962f4f1f36d022",
+    "gates": "All five passed",
+    "mapped_tests": 23,
+    "log": "docs/development/technical-review/neural-architecture-review/pre-pr.txt"
+  }
+}

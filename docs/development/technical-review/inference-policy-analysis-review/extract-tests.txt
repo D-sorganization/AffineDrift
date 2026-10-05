@@ -1,0 +1,11 @@
+from pathlib import Path
+p=Path('docs/development/technical-review/inference-policy-analysis-review/flash-estimation-tests.txt')
+s=p.read_text(encoding='utf-8').split('```python',1)[1].split('```',1)[0].strip()+'\n'
+s=s.replace('import importlib\n','')
+s=s.replace('    # nosemgrep: python.lang.security.audit.exec-detected.exec-detected\n    # Executing trusted code extracted dynamically from fixed repository LaTeX chapter source.','    # Repository-owned listing at a fixed path, with no external input.\n    # nosemgrep: python.lang.security.audit.exec-detected.exec-detected')
+s=s.replace('    valid_samples = np.ones((5, 3))\n    valid_torque = np.ones(5)','    valid_samples, valid_torque = _generate_trajectory(np.linspace(0.1, 4.0, 5))')
+s=s.replace('    valid_sigma = np.ones(5)','    valid_sigma = np.ones(5)\n    assert fit_pendulum(valid_samples, valid_torque, valid_sigma)["physical"] is True')
+s=s.replace('    # Weighted residual orthogonality condition:', '    assert np.linalg.norm(res["weighted_residual"]) > 0.1\n    np.testing.assert_allclose(\n        res["weighted_residual"], (res["prediction"] - perturbed_torque) / sigma\n    )\n    # Weighted residual orthogonality condition:')
+s=s.replace('# Unforced undamped qddot = -5 sin(q), making columns 0 and 2 colinear','# Manufactured rank relation qddot = -5 sin(q), not a sampled physical trajectory')
+s += '    with pytest.raises(ValueError):\n        bad_sigma[0] = np.nan\n        fit_pendulum(valid_samples, valid_torque, bad_sigma)\n'
+Path('tests/test_parameter_estimation_listing.py').write_text(s,encoding='utf-8')

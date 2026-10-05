@@ -1,0 +1,86 @@
+Here is the technical editorial audit of the provided source files, distinguishing concrete proven errors/inconsistencies from unverified questions and noting exact locations and suggested corrections.
+
+---
+
+### 1. `articles/Launch_Monitor_Technology_Review/sections/01-introduction.tex`
+
+#### Issue 1.1: Unsupported / Overstated Technical Generalization
+* **Classification:** Proven Inconsistency / Misleading Scope Statement
+* **Location:** Section 2 (*The Two Sensing Families*), paragraph 2:
+  > `"Their weakness is the mirror image of radar's: everything downrange of the capture volume is simulated, and club data requires either fiducial stickers on the face or an overhead viewing geometry."`
+* **Audit Finding:**
+  The claim that club data requires *either* fiducial stickers *or* an overhead viewing geometry is technically inaccurate and contradicts the market examples cited in the same chapter. Several ground-level photometric systems (e.g., Foresight GCQuad, GC3, Bushnell Launch Pro) can measure club delivery parameters without overhead mounting, and modern systems (including camera/radar fusions and stickerless photometric systems like Uneekor EYE MINI or machine-learning-assisted edge detectors) do not strictly require face fiducials.
+* **Suggested Correction:**
+  Change to:
+  > `"Their weakness is the mirror image of radar's: everything downrange of the capture volume is simulated, and direct optical measurement of club-face presentation typically requires high-contrast fiducial markers, dedicated multi-angle optics, or specialized viewing geometries."`
+
+#### Issue 1.2: Overstated Claim of Measurement Fidelity
+* **Classification:** Unsupported Scientific Claim
+* **Location:** Section 2 (*The Two Sensing Families*), paragraph 2:
+  > `"They measure launch conditions --- including 3D spin from dimple-pattern rotation --- essentially perfectly for simulator purposes, then \emph{model} the flight."`
+* **Audit Finding:**
+  The phrase `"essentially perfectly"` is unscientific, unsupported by error bounds, and directly contradicts the text's own neutrality note and Chapter 8/accuracy references (where optical tracking errors, lighting/exposure noise, spin decay, and shutter sync uncertainties are evaluated).
+* **Suggested Correction:**
+  Change to:
+  > `"They measure initial launch conditions --- including 3D spin vector estimation from dimple-pattern tracking --- with high precision over the calibrated capture window, then \emph{model} downrange flight."`
+
+#### Issue 1.3: Reference Timing Inconsistency for Club Delivery
+* **Classification:** Inconsistent Model Assumption / Proven Error
+* **Location:** Section 3 (*Reading Guide*), Keypoint box:
+  > `"All club-delivery values are referenced to the moment of \emph{maximum ball compression}; all ball-launch values to the moment of \emph{separation from the face}."`
+* **Audit Finding:**
+  While ball launch is standardly referenced at separation, standard impact mechanics (e.g., Cochran & Stobbs, TrackMan definitions, USGA/R&A protocols) and commercial photogrammetry reference incoming delivery parameters (such as face angle, dynamic loft, and club path) to the moment of *initial contact* or *immediately prior to impact*, because severe deceleration, face deflection, and twisting occur between first contact and maximum ball compression (~200–250 $\mu$s later). Defining club-delivery values strictly at maximum compression conflicts with TrackMan's stated conventions cited in the same section.
+* **Suggested Correction:**
+  Change to:
+  > `"Unless otherwise specified by a vendor's reported convention, club-delivery values are referenced to the moment of \emph{initial ball contact} (or immediately prior to impact deceleration), whereas ball-launch kinematics are referenced to the moment of \emph{separation from the face}."`
+
+---
+
+### 2. `books/roadmap.qmd`
+
+#### Issue 2.1: Internal Numerical Inconsistency in Manuscript Volume Counts
+* **Classification:** Proven Inconsistency
+* **Location:** Section *Publication-State Key* vs. Section *Reviewed Manuscript Coverage*:
+  > Paragraph 3: `"All four volumes are \textbf{available, provisional research-development manuscripts}. Their 40 mapped notebooks are \textbf{scaffolded} in \texttt{notebooks/geometry\_of_motion/manifest.json}."`
+  > Table below it: Lists **six** volumes (Volume 0, Volume I, Volume II, Volume III, Volume IV, Volume V).
+  > Note under table: `"Counts are derived from the chapter inputs in the four canonical \texttt{main.tex} files."`
+* **Audit Finding:**
+  Paragraph 3 states `"All four volumes"`, yet the table explicitly covers 6 volumes (0 through V), which matches `books/index.qmd` ("six provisional research-development volumes (Volumes 0 through V)"). Furthermore, `"four canonical main.tex files"` fails to clarify which 4 of the 6 volumes have `main.tex` entry points.
+* **Suggested Correction:**
+  Update paragraph 3 to:
+  > `"The core research-development volumes (Volumes 0 through V) are \textbf{available, provisional research-development manuscripts}. Their mapped notebooks are \textbf{scaffolded} in \texttt{notebooks/geometry\_of_motion/manifest.json}."`
+  And revise the note under the table to account for all canonical source entry points.
+
+#### Issue 2.2: Broken / Unverified Publication Coverage Count
+* **Classification:** Unverified Question / Cross-File Inconsistency
+* **Location:** Section *Reviewed Manuscript Coverage* table row for Volume I:
+  > Table row: `"Volume I — Tangent-Space Methods | 10 substantive chapters, including 3B and 9"`
+  > Versus `books/index.qmd` Concordance Table: `"Volume I: Tangent-Space Methods for Nonlinear Control | HTML Chapters (9), Book Page, LaTeX"`
+* **Audit Finding:**
+  `roadmap.qmd` states Volume I has "10 substantive chapters, including 3B and 9", whereas `books/index.qmd` states "HTML Chapters (9)". If Chapter 3B is treated as a distinct substantive chapter, the total chapter count differs across the two index pages.
+* **Suggested Correction:**
+  Harmonize chapter counts across both files (e.g., clarify whether 3B is counted separately or as a sub-chapter, making the total consistently either 9 or 10).
+
+---
+
+### 3. `books/index.qmd`
+
+#### Issue 3.1: Hardcoded / Fragile Manuscript Extent Metadata
+* **Classification:** Proven Editorial / Metadata Fragility
+* **Location:** Section *Core Textbooks and Monographs*, Card 3:
+  > `"[Download the Exact 252-Page PDF](../articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf){.resource-link}"`
+* **Audit Finding:**
+  The exact page count (`"Exact 252-Page PDF"`) is hardcoded in the human-facing link label. If the document is regenerated or compiled with different layout/bibliography/source updates, this label becomes an unverified or stale publication metadata claim.
+* **Suggested Correction:**
+  Change link text to:
+  > `"[Download Monograph PDF](../articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf){.resource-link}"`
+  or link page counts dynamically to the version-pinned manifest audit.
+
+#### Issue 3.2: Heading Title Capitalization Discrepancy
+* **Classification:** Style Guide Violation (Repository Rules)
+* **Location:** Section header:
+  > `## Proximal-to-Distal Study Library`
+  > And card title:
+  > `### Proximal-to-Distal Energy Transfer in the Golf Swing`
+* **Audit Finding:**
+  Under repo rule `AGENTS.md` (*Document Title Capitalization: "capitalize the first letter of every significant word. Keep articles, coordinating conjunctions, and short prepositions lowercase..."*), hyphenated compounds such as "Proximal-to-Distal" should follow the title case standard (e.g., "Proximal-to-Distal" vs "Proximal-To-Distal" depending on whether "to" is kept lowercased as a preposition). Check against `scripts/check_title_case.py`.

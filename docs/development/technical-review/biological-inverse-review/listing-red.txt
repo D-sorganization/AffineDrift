@@ -1,0 +1,96 @@
+.FFFFFFFFF.FFF                                                           [100%]
+================================== FAILURES ===================================
+__________________ test_ik_rejects_invalid_weights[weights0] __________________
+tests\test_biological_inverse_listings.py:48: in test_ik_rejects_invalid_weights
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________________ test_ik_rejects_invalid_weights[weights1] __________________
+tests\test_biological_inverse_listings.py:48: in test_ik_rejects_invalid_weights
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________________ test_ik_rejects_invalid_weights[weights2] __________________
+tests\test_biological_inverse_listings.py:48: in test_ik_rejects_invalid_weights
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________________ test_ik_rejects_invalid_weights[weights3] __________________
+tests\test_biological_inverse_listings.py:48: in test_ik_rejects_invalid_weights
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_______________ test_ik_rejects_invalid_observations[measured0] _______________
+tests\test_biological_inverse_listings.py:56: in test_ik_rejects_invalid_observations
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_______________ test_ik_rejects_invalid_observations[measured1] _______________
+tests\test_biological_inverse_listings.py:56: in test_ik_rejects_invalid_observations
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_______________ test_ik_rejects_invalid_observations[measured2] _______________
+tests\test_biological_inverse_listings.py:56: in test_ik_rejects_invalid_observations
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_____________________ test_ik_rejects_model_broadcasting ______________________
+tests\test_biological_inverse_listings.py:61: in test_ik_rejects_model_broadcasting
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+____________ test_ik_does_not_return_failed_optimizer_as_solution _____________
+tests\test_biological_inverse_listings.py:71: in test_ik_does_not_return_failed_optimizer_as_solution
+    with pytest.raises(RuntimeError, match="iteration limit"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'RuntimeError'>
+____________ test_muscle_mapping_rejects_invalid_tensions[force0] _____________
+tests\test_biological_inverse_listings.py:91: in test_muscle_mapping_rejects_invalid_tensions
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+---------------------------- Captured stdout call -----------------------------
+Shoulder torque: 12.0 N*m
+Elbow torque:    7.6 N*m
+____________ test_muscle_mapping_rejects_invalid_tensions[force1] _____________
+tests\test_biological_inverse_listings.py:91: in test_muscle_mapping_rejects_invalid_tensions
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+---------------------------- Captured stdout call -----------------------------
+Shoulder torque: 12.0 N*m
+Elbow torque:    7.6 N*m
+____________ test_muscle_mapping_rejects_invalid_tensions[force2] _____________
+tests\test_biological_inverse_listings.py:91: in test_muscle_mapping_rejects_invalid_tensions
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+---------------------------- Captured stdout call -----------------------------
+Shoulder torque: 12.0 N*m
+Elbow torque:    7.6 N*m
+============================== warnings summary ===============================
+tests/test_biological_inverse_listings.py::test_muscle_mapping_rejects_invalid_tensions[force1]
+  ch05_multibody_bio.tex:23: RuntimeWarning: invalid value encountered in matmul
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================ slowest 20 durations =============================
+0.76s setup    tests/test_biological_inverse_listings.py::test_ik_recovers_identifiable_synthetic_translation
+0.01s call     tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_weights[weights3]
+0.01s call     tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_observations[measured2]
+0.01s call     tests/test_biological_inverse_listings.py::test_ik_recovers_identifiable_synthetic_translation
+
+(16 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_weights[weights0]
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_weights[weights1]
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_weights[weights2]
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_weights[weights3]
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_observations[measured0]
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_observations[measured1]
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_invalid_observations[measured2]
+FAILED tests/test_biological_inverse_listings.py::test_ik_rejects_model_broadcasting
+FAILED tests/test_biological_inverse_listings.py::test_ik_does_not_return_failed_optimizer_as_solution
+FAILED tests/test_biological_inverse_listings.py::test_muscle_mapping_rejects_invalid_tensions[force0]
+FAILED tests/test_biological_inverse_listings.py::test_muscle_mapping_rejects_invalid_tensions[force1]
+FAILED tests/test_biological_inverse_listings.py::test_muscle_mapping_rejects_invalid_tensions[force2]

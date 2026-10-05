@@ -1,0 +1,61 @@
+{
+  "issue": 4923,
+  "epic": 4009,
+  "status": "Three complete chapters accepted; protected remote-main delivery pending",
+  "accepted_source_commit": "29a555d22ee4c71403259ced67b97b8c66b94ece",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch01_platform_overview.tex": "63ff1f701e8460aaee7dd9166705f0e4e9a6e4bf041cdba38887cac5613f3947",
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch02_engine_comparison.tex": "1a219f585e503b79a73e52d4bc1381e55715c40c0ea22f1218f5a5382a99ee01",
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch03_building_models.tex": "d05cf65a23995b5d0021b230194013a303b7c79b5c8c3a8df6dfccaff088c90d",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "bc7fcd61884d20d03c64433589eba0eb2f78ae9515a7827ad9ba9ff7a2e2d655",
+    "articles/The_Geometry_of_Motion/Volume_V/main.pdf": "71eeb2c55a3e24bcf534e79e656cf7cac79791fdcb7f3cb57760de2c46f5bb97",
+    "tests/test_platform_contract_listings.py": "7c160b14db7625f60adeb4fe4f5ed271f9d9d84559c4f9f5f9116c8c51ab8751",
+    "tests/test_model_urdf_listing.py": "aa088beacffa1ca1d65271a280f941437441f9f38654bc1782845e70205410b1",
+    "reports/technical-review/platform-model-contracts-independent-checks.json": "9f95155c49cda3b8e3e5c9aa1332ccf19874edcf55c7578097a1a16e6cebe63b"
+  },
+  "scope": "Complete Volume V chapters 1-3; bounded engine/source reading and one MuJoCo URDF import; no whole-engine or empirical human certification",
+  "full_regression": {
+    "head": "29a555d22ee4c71403259ced67b97b8c66b94ece",
+    "passed": 7121,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 404.52,
+    "src_coverage_percent": 93.25,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/platform-model-contracts-review/full-tests-final.txt"
+  },
+  "pdf": {
+    "pages": 48,
+    "printed_entries": 26,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3-5, 9-19, 47-48; parent typed listing pages 41-48; final title-repair pass 10 pages 47-48 reinspected",
+    "build_log": "docs/development/technical-review/platform-model-contracts-review/accepted-pass10.txt",
+    "limits": "Two historical overfull boxes in unreviewed chapters 4 and 7; no scoped overflow; historical duplicate destinations/package warnings"
+  },
+  "focused_tests": 49,
+  "combined_tests": 87,
+  "mathematics": {
+    "record": "reports/technical-review/platform-model-contracts-independent-checks.json",
+    "identities": 6,
+    "cases_each": 100,
+    "threshold": 1e-7,
+    "maximum_error": 1.097585244913546e-9,
+    "engine": "MuJoCo 3.4.0",
+    "scope": "Manufactured math and model-import verification; not human validation"
+  },
+  "delegation": {
+    "helpers": 6,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only reviews and test proposals; lead-adjudicated"
+  },
+  "failed_run": "889584996: 7120 passed, one bibliography duplicate-title guard failed because its parser truncated protected URDF prefixes. Distinct source titles repaired without changing the guard; failed log retained.",
+  "delivery": {
+    "status": "Preparing regular PR",
+    "base": "fix/golf-capstone-review",
+    "dependency": "PR 4928",
+    "next": "Protected delivery after verified parent merge, then fetched-main blob verification"
+  }
+}

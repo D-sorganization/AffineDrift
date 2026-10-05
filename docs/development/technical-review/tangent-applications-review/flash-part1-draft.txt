@@ -1,0 +1,173 @@
+---
+title: "Tangent Hyperplanes I: Geometry"
+description: "Geometric foundations of tangent hyperplanes: configuration manifolds, vector fields, and infinitesimal state representations."
+aliases:
+  - ../tangent-hyperplane-articles/Tangent_Hyperplanes.html
+  - ../tangent-hyperplane-contraction/index.html
+  - ../tangent-hyperplane-contraction/chapters/01-foundations.html
+  - ../tangent-hyperplane-articles/Drafts_Original_Articles/Tangent_Hyperplanes_Series_Package/Landing_Manifesto.html
+  - ../tangent-hyperplane-articles/Drafts_Original_Articles/Tangent_Hyperplanes_Series_Package/01_Tangent_Hyperplanes_I_Geometry.html
+categories:
+- tangent-space
+---
+
+## Overview
+
+This article establishes the geometric foundations of tangent spaces and affine tangent approximations for smooth nonlinear systems. Rather than viewing tangent spaces as loose heuristic approximations, we treat them as exact infinitesimal linearizations of embedded manifolds and velocity spaces. We examine how regular constraints define submanifolds, when an affine tangent space is genuinely a hyperplane, how distance scaling behaves under varying orders of differentiability, and what additional conditions are required to transition from infinitesimal geometry to valid feedback control.
+
+## The Intuition: Standing on a Hill
+
+Imagine standing on a gently sloping hill. The terrain beneath your feet is curved: the gradient and elevation vary as you step in any direction. If you place a rigid board or a sheet of stiff paper on the ground, that finite patch does not conform perfectly to the curved earth; there is always a gap between the flat sheet and the undulating ground.
+
+Yet at the single point where the sheet touches your stance, the tangent plane shares the exact instantaneous slope and orientation of the terrain. The tangent space is not an ad hoc guess; it is the unique linear subspace capturing all first-order directional derivatives at that point. As you restrict your attention to a shrinking neighborhood of radius $\epsilon$, the gap between the curved surface and the flat affine tangent space diminishes faster than $\epsilon$ itself.
+
+## Curves, Manifolds, and Tangent Spaces
+
+Formally, consider a smooth embedded manifold $M \subset \mathbb{R}^n$. Tangent vectors are fundamentally velocity vectors of smooth curves traveling through $M$. If $\gamma: (-\delta, \delta) \to M$ is a $C^1$ curve with $\gamma(0) = x$, its derivative $\dot{\gamma}(0) \in \mathbb{R}^n$ is a tangent vector at $x$. The tangent space $T_x M$ is the collection of all such velocity vectors:
+
+$$
+T_x M = \{\dot{\gamma}(0) \in \mathbb{R}^n : \gamma \text{ is a } C^1 \text{ curve on } M \text{ with } \gamma(0) = x\}.
+$$
+
+When $M$ is defined implicitly as the level set of a smooth constraint map $h: \mathbb{R}^n \to \mathbb{R}^p$ (with $p < n$),
+
+$$
+M = \{x \in \mathbb{R}^n : h(x) = 0\},
+$$
+
+every curve $\gamma(t)$ lying in $M$ satisfies $h(\gamma(t)) = 0$ for all $t$. Differentiating with respect to $t$ at $t = 0$ via the chain rule gives:
+
+$$
+\left.\frac{d}{dt} h(\gamma(t))\right|_{t=0} = Dh(x) \dot{\gamma}(0) = 0,
+$$
+
+where $Dh(x) \in \mathbb{R}^{p \times n}$ is the Jacobian matrix of partial derivatives. If $h$ is a $C^1$ mapping and $Dh(x)$ has full row rank ($p$), then by the regular value theorem, $M$ is an embedded $C^1$ submanifold of dimension $n - p$, and the tangent space equals the kernel of the Jacobian under standard matrix multiplication:
+
+$$
+T_x M = \ker(Dh(x)) = \{v \in \mathbb{R}^n : Dh(x) v = 0\}.
+$$
+
+Note that for $p > 1$, $Dh(x) v$ is a matrix-vector product yielding a vector in $\mathbb{R}^p$, rather than a scalar dot product.
+
+## Tangent Spaces and Hyperplanes
+
+The affine tangent space to $M$ at $x$ translates the linear subspace $T_x M$ to the base point:
+
+$$
+\mathcal{T}_x M := x + T_x M = \{x + v \in \mathbb{R}^n : Dh(x) v = 0\}.
+$$
+
+In terminology, an affine subspace of $\mathbb{R}^n$ is called a **hyperplane** if and only if its codimension is 1 (that is, its dimension is $n - 1$). Thus:
+
+- When $p = 1$, the constraint gradient $\nabla h(x)^T \in \mathbb{R}^{1 \times n}$ has a kernel of dimension $n - 1$, and $\mathcal{T}_x M$ is indeed an affine tangent hyperplane.
+- When $p > 1$, the tangent space $T_x M = \ker(Dh(x))$ has dimension $n - p < n - 1$. In this setting, $\mathcal{T}_x M$ is a general affine flat or affine subspace, not a hyperplane.
+
+## The Asymptotics of Tangent Approximation
+
+Why is the tangent space termed an exact infinitesimal description?
+
+Let $x \in M$ and let $\delta x \in T_x M$ be a tangent perturbation with $\|\delta x\| = \epsilon$. If we displace along the affine tangent space to the point $x + \delta x \in \mathbb{R}^n$, we generally leave the manifold $M$. The residual distance to the manifold depends strictly on the regularity of $h$:
+
+1. **$C^1$ Regularity:** By the definition of the Fréchet derivative, $h(x + \delta x) = h(x) + Dh(x)\delta x + o(\|\delta x\|) = o(\epsilon)$. Under the full-rank condition, the distance from $x + \delta x$ to the closest point on $M$ is $o(\epsilon)$, meaning the ratio $\text{dist}(x + \delta x, M)/\epsilon \to 0$ as $\epsilon \to 0$.
+2. **$C^2$ Regularity:** When $h$ is $C^2$ and the second derivatives are bounded in a local neighborhood around a regular point $x$, Taylor's theorem guarantees that the normal deviation scales quadratically:
+
+$$
+\inf_{y \in M} \|x + \delta x - y\| = O(\epsilon^2).
+$$
+
+Importantly, the big-$O$ notation $O(\epsilon^2)$ denotes an asymptotic upper bound: there exists a constant $C > 0$ such that $\text{dist}(x + \delta x, M) \le C \epsilon^2$ for all sufficiently small $\epsilon$. At any finite $\epsilon$, higher-order terms enter, so shrinking $\epsilon$ by a factor of 10 does not produce an exact factor-of-100 reduction in the finite residual, but rather approaches that ratio asymptotically.
+
+## Concrete Example: The Unit Circle
+
+Consider the unit circle $S^1 \subset \mathbb{R}^2$ defined by the scalar constraint:
+
+$$
+h(x_1, x_2) = x_1^2 + x_2^2 - 1 = 0.
+$$
+
+The derivative map is the row vector $Dh(x_1, x_2) = [2x_1 \quad 2x_2]$. At $x_0 = (1, 0)$, $Dh(1, 0) = [2 \quad 0]$, which has full row rank 1. The tangent space is:
+
+$$
+T_{(1,0)} S^1 = \left\{v = \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} \in \mathbb{R}^2 : [2 \quad 0]\begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = 0\right\} = \left\{\begin{bmatrix} 0 \\ \epsilon \end{bmatrix} : \epsilon \in \mathbb{R}\right\}.
+$$
+
+Since the ambient dimension is 2 and $p = 1$, the affine tangent space is a 1-dimensional affine hyperplane (a vertical line):
+
+$$
+\mathcal{T}_{(1,0)} S^1 = \left\{\begin{bmatrix} 1 \\ \epsilon \end{bmatrix} : \epsilon \in \mathbb{R}\right\}.
+$$
+
+Perturbing from $(1, 0)$ along the tangent line by $\delta x = (0, \epsilon)$ brings us to the ambient point $P_\epsilon = (1, \epsilon)$.
+
+### Finding the Closest Point
+
+A common pitfall is to evaluate the horizontal intersection of $S^1$ with the line $x_2 = \epsilon$, which yields the point $(\sqrt{1 - \epsilon^2}, \epsilon)$. However, this horizontal intersection is **not** the closest point on the circle to $(1, \epsilon)$.
+
+Because $S^1$ is centered at the origin, the orthogonal projection of any point $P \ne (0, 0)$ onto the circle is obtained by radial normalization:
+
+$$
+y^*(\epsilon) = \frac{P_\epsilon}{\|P_\epsilon\|} = \frac{(1, \epsilon)}{\sqrt{1 + \epsilon^2}}.
+$$
+
+The true Euclidean distance from $(1, \epsilon)$ to $S^1$ is:
+
+$$
+\text{dist}(P_\epsilon, S^1) = \|P_\epsilon - y^*(\epsilon)\| = \|P_\epsilon\| - 1 = \sqrt{1 + \epsilon^2} - 1.
+$$
+
+Expanding via the binomial series for small $\epsilon$:
+
+$$
+\sqrt{1 + \epsilon^2} - 1 = \left(1 + \frac{1}{2}\epsilon^2 - \frac{1}{8}\epsilon^4 + O(\epsilon^6)\right) - 1 = \frac{1}{2}\epsilon^2 - \frac{1}{8}\epsilon^4 + O(\epsilon^6).
+$$
+
+The true geometric residual is $\frac{1}{2}\epsilon^2 + O(\epsilon^4)$. Notice that at finite $\epsilon$, the $-\frac{1}{8}\epsilon^4$ term alters the ratio: for $\epsilon = 0.1$, the distance is $\sqrt{1.01} - 1 \approx 0.0049629$, which deviates slightly from $\frac{1}{2}(0.1)^2 = 0.005$. The scaling is strictly asymptotic $O(\epsilon^2)$, illustrating why finite perturbations must account for curvature bounds.
+
+## Regularity of Constraints vs. Singularities of Manifolds
+
+A crucial distinction in differential geometry is the difference between a degenerate representation of a constraint and an intrinsic geometric singularity of the underlying set.
+
+The regular value theorem requires $Dh(x)$ to possess full row rank $p$ to deduce that $M = h^{-1}(0)$ is a smooth manifold near $x$. However:
+
+- **Rank failure of $Dh$ does not imply the set is singular.** Consider the constraint $h(x, y) = y^3 = 0$ in $\mathbb{R}^2$. The zero level set is the $x$-axis, which is an undeniably smooth 1-dimensional manifold. Yet the derivative is $Dh(x, y) = [0 \quad 3y^2]$, which vanishes identically on the entire manifold ($\text{rank} = 0 < 1$). The breakdown of full rank reflects an improper algebraic power in the chosen coordinate representation, not a failure of geometric smoothness.
+- **Intrinsic singular points:** True geometric singularities (such as the vertex of the cone $x^2 + y^2 - z^2 = 0$ at the origin, or self-intersections of nodal curves) cannot admit a well-defined tangent space regardless of coordinate choice.
+
+When analyzing physical systems, verify whether a rank deficiency in $Dh$ is an artifact of redundant or poorly parameterized constraints before concluding that the underlying configuration space lacks a tangent bundle.
+
+## Mechanical Analogy: Tangent Speeds vs. Finite Trajectories
+
+In physical mechanics, such as a golf club swing or a robotic linkage moving along a constrained guide, the distinction between infinitesimal velocity and finite spatial displacement is paramount:
+
+1. **Infinitesimal Tangent Speeds:** At any instant $t$, the club head occupies configuration $q(t) \in M$. Its physical velocity vector $\dot{q}(t)$ is an element of the tangent space $T_{q(t)} M$. At that instant, velocity constraints (such as staying in a swing plane or following a track) are satisfied exactly by the linear condition $Dh(q) \dot{q} = 0$.
+2. **Finite Swing Path:** Over any finite time interval $\Delta t > 0$, propagating along the tangent line $q(t) + \dot{q}(t) \Delta t$ leaves the curved manifold of allowable joint configurations. The actual physical swing follows a curved integral curve on $M$, requiring centripetal acceleration and constraint forces to prevent drift off the manifold.
+
+Confusing the instantaneous tangent velocity with the finite trajectory leads to kinematic drift in numerical integrators and erroneous feedforward terms in mechanical controllers.
+
+## From Infinitesimal Geometry to Valid Feedback Control
+
+The exactness of the tangent space at the origin or equilibrium justifies local linearization of smooth nonlinear dynamical systems $\dot{x} = f(x, u)$. If $f(0, 0) = 0$, the first-order approximation on the tangent space is:
+
+$$
+\dot{\delta x} = A \delta x + B \delta u, \quad \text{where } A = \left.\frac{\partial f}{\partial x}\right|_{(0,0)}, \quad B = \left.\frac{\partial f}{\partial u}\right|_{(0,0)}.
+$$
+
+However, infinitesimal geometric validity does not automatically confer dynamic controller validity. In practical nonlinear control design, establishing an effective linear controller (such as an LQR or pole-placement feedback $u = -K \delta x$) requires three distinct analytical foundations:
+
+1. **Stabilizability and Controllability:** The pair $(A, B)$ must be stabilizable. If the uncontrollable modes of the linearized system are unstable, no linear feedback on the tangent space can stabilize the system.
+2. **Cost and Performance Metrics:** Cost structures (such as quadratic weights $Q \succeq 0, R \succ 0$) must reflect the underlying Riemannian metric of the configuration manifold rather than unweighted Cartesian coordinates, ensuring that the control effort remains physically admissible.
+3. **Local Invariant Region (Region of Attraction):** Because the nonlinear residual scales as $O(\|\delta x\|^2 + \|\delta u\|^2)$, there is a finite boundary beyond which the nonlinear dynamics overpower the linear stabilizing terms. A rigorous controller requires a Lyapunov function $V(x) = x^T P x$ verifying a bounded invariant level set $\Omega_c = \{x : V(x) \le c\}$ within which $\dot{V}(x) < 0$. Infinitesimal tangent geometry ensures validity only at the single point $x = 0$; genuine closed-loop stability requires establishing this strictly positive finite region of attraction.
+
+## Looking Ahead
+
+Having established that tangent spaces represent exact velocity spaces and that affine tangent approximations exhibit quadratic geometric residuals under $C^2$ smoothness, we can now investigate how vector fields and equations of motion propagate along these structures. In [Part 2](./part-2-dynamics.html), we analyze the decomposition of nonlinear dynamics into linear systems defined on moving tangent spaces.
+
+## Related Articles
+
+::: {.callout-note}
+## See Also
+
+- **[Screw Theory Reference](../screw-theory-reference.html)** — Lie algebra se(3), twists, and infinitesimal generators of rigid-body motion
+- **[Tangent-Space Series](../../pages/tangent-hyperplanes.html)** — The series hub: full reading order, provenance, and companion material
+- **[The Null Space of the Constraint Jacobian](../null-space-constraint-jacobian.html)** — Constraint gradients and their kernels: the implicit-surface view of the same geometry
+- **[Degrees of Freedom and the Curse of Dimensionality](../degrees-of-freedom-and-dimensionality.html)** — How constraints and structure collapse effective dimensionality
+:::

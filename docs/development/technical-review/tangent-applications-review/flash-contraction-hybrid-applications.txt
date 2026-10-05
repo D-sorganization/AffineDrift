@@ -1,0 +1,132 @@
+# Scientific Audit & Critique: Tangent Hyperplanes V & VI, and Control-Affine Biomechanics
+
+This audit reviews three source texts:
+1. **Tangent Hyperplanes V: Contraction**
+2. **Tangent Hyperplanes VI: Hybrid Systems**
+3. **Applications of the Control-Affine Framework in Golf Swing Biomechanics**
+
+Focus areas:
+- Contraction metric bounds and Riccati/Hessian duality
+- Saltation same-time mapping, transversality, and autonomous vs. time-dependent guards/resets
+- Same-state algebraic residual vs. forward counterfactual intervention and affine-input structure
+
+---
+
+## 1. Contraction Metric Bounds and Stability-Optimality (Riccati) Duality
+
+### 1.1 Mathematical & Theoretical Overclaims
+
+1. **Equating the Riccati Matrix / Value Hessian Directly with a Valid Contraction Metric**
+   - **The Text's Claim:** *"The value-function Hessian $S(t)$ acts like a local metric on perturbations. When feedback makes $A_{\text{cl}}(t) = A(t) - B(t)K(t)$ contracting in that metric, optimality and stability are no longer separate stories."*
+   - **Flaw / Gap:**
+     1. **Uniform Bounds & Metric Regularity:** In differential contraction theory (Lohmiller & Slotine 1998; Manchester & Slotine 2017), a valid Riemannian contraction metric $M(x,t)$ requires strict uniform positive definiteness and boundedness:
+        $$\alpha_1 I \preceq M(x,t) \preceq \alpha_2 I, \quad \forall x \in \mathcal{C}, \; \forall t \ge 0, \quad \text{with } 0 < \alpha_1 \le \alpha_2 < \infty.$$
+        For finite-horizon LQR / DDP, the cost-to-go Hessian $S(t)$ satisfies a backward Riccati differential equation $\dot{S} + S A + A^\top S - S B R^{-1} B^\top S + Q = 0$ with terminal boundary condition $S(t_f) = Q_f$. If $Q_f = 0$ or $Q_f$ is semi-definite (as is standard in minimum-effort or terminal manifold problems), $S(t) \to 0$ as $t \to t_f$, destroying $\alpha_1 > 0$. Even if $Q \succeq 0$, $S(t)$ is only positive semi-definite unless strong observability/detectability assumptions hold along the entire trajectory.
+     2. **Metric Time-Derivative vs. Riccati Dynamics:** In the differential length $V(t, \delta x) = \delta x^\top M(t) \delta x$, the contraction condition requires:
+        $$\dot{M}(t) + A_{\text{cl}}(t)^\top M(t) + M(t) A_{\text{cl}}(t) \preceq -2\lambda M(t).$$
+        Substituting $M(t) = S(t)$ and $K(t) = R^{-1} B(t)^\top S(t)$, the Riccati identity gives:
+        $$\dot{S} + A_{\text{cl}}^\top S + S A_{\text{cl}} = -Q - S B R^{-1} B^\top S.$$
+        While the right-hand side is negative semi-definite (since $Q \succeq 0$ and $R \succ 0$), this **does not** imply $-Q - S B R^{-1} B^\top S \preceq -2\lambda S$. To ensure $\lambda > 0$, one must have $Q + S B R^{-1} B^\top S \succeq 2\lambda S$. If $Q$ is degenerate in some directions and $S B$ does not penalize all states, $\lambda$ collapses to zero.
+     3. **Finsler / Region Geodesic Convexity:** Contraction guarantees that finite distances shrink:
+        $$d(x_1(t), x_2(t)) \le d(x_1(0), x_2(0)) e^{-\lambda t}$$
+        **only if** the region $\mathcal{C}$ is **geodesically convex** with respect to the Riemannian metric $M(x,t)$. In trajectory-centric DDP, the tube surrounding the reference trajectory is rarely verified to be geodesically convex under $S(t)$.
+
+### 1.2 Corrected Mathematical Formulations & Assumptions
+
+- **Explicit Metric Bounds Assumption:**
+  $$\exists \alpha_1, \alpha_2 > 0 \quad \text{s.t.} \quad \alpha_1 I \preceq M(x,t) \preceq \alpha_2 I \quad \forall (x,t) \in \mathcal{T}_\epsilon,$$
+  where $\mathcal{T}_\epsilon = \{(x,t) : \|x - x^*(t)\| \le \epsilon, t \in [0, t_f]\}$.
+- **Riccati Contraction Criterion:**
+  For $S(t)$ to certify contraction with rate $\lambda$, the pair $(A(t), B(t))$ and cost matrices $(Q(t), R(t))$ must satisfy:
+  $$Q(t) + S(t) B(t) R(t)^{-1} B(t)^\top S(t) - 2\lambda S(t) \succeq 0, \quad \forall t \in [0, t_f],$$
+  along with $Q_f \succeq \alpha_1 I$ and $Q(t) \succeq \mu I$ for some $\mu > 0$.
+- **Counterexample / Edge Case:**
+  Consider a 2D single integrator with state $[x_1, x_2]^\top$, input $u$ affecting only $x_1$: $\dot{x}_1 = u$, $\dot{x}_2 = 0$. Let $Q = \text{diag}(1, 0)$, $R = 1$, $Q_f = 0$. The Riccati backward solution has $S_{22}(t) \equiv 0$. $S(t)$ is rank 1; the perturbation in $x_2$ never decays ($\delta \dot{x}_2 = 0$), $S(t)$ is not a valid Riemannian metric, and contraction fails completely despite solving an optimal control problem.
+
+---
+
+## 2. Saltation Matrix: Same-Time Mapping vs. Autonomous/Time-Dependent Guards & Resets
+
+### 2.1 Mathematical & Theoretical Overclaims
+
+1. **Formula Scope Restriction (Time-Dependent Guards / Dynamic Resets Missing)**
+   - **The Text's Claim:**
+     $$\Xi = D R + \frac{\left(f^+ - D R f^-\right)n^\top}{n^\top f^-}, \quad n = \nabla g(x^-).$$
+   - **Flaw / Gap:** This formula is valid **only** for an autonomous, stationary guard $g(x) = 0$ with an autonomous reset map $x^+ = R(x^-)$.
+     - If the guard is time-dependent $g(x,t) = 0$ (e.g., a golf club striking a ball traveling on an incoming trajectory, or moving obstacles / timed periodic gaits), or if the vector fields depend explicitly on time $f(x,u(t),t)$:
+       The variation in switching time $\delta t_*$ is:
+       $$n^\top \delta x^- + \frac{\partial g}{\partial t} \delta t_* + n^\top f^- \delta t_* = 0 \implies \delta t_* = -\frac{n^\top \delta x^-}{\frac{\partial g}{\partial t} + n^\top f^-}.$$
+       The saltation matrix then becomes:
+       $$\Xi = D_x R + \frac{\left(f^+ - D_x R f^- - \frac{\partial R}{\partial t}\right) n^\top}{\frac{\partial g}{\partial t} + n^\top f^-}.$$
+     - If the reset map depends explicitly on time $R(x,t)$, $\frac{\partial R}{\partial t}$ is omitted in the source text.
+2. **Conflating the Jump in Tangent Space with Forward-Time Flow**
+   - **The Text's Claim:** *"At a transition, the perturbation must be mapped through the event timing and reset. That map is the saltation matrix... Across a transverse event with a differentiable reset, the saltation matrix is the first-order map for perturbations through the event."*
+   - **Flaw / Gap (Same-Time vs. Forward-Time Shift):** The saltation matrix $\Xi$ is a **same-time equivalence map** evaluated at the nominal transition time $t_*$. Specifically:
+     $$\delta x(t_*^+) = \Xi \, \delta x(t_*^-).$$
+     However, a perturbed trajectory does not hit the guard at $t_*$; it hits the guard at $t_* + \delta t_*$. The perturbed pre-impact state is $x^-(t_* + \delta t_*) \approx x^-(t_*) + f^- \delta t_* + \delta x(t_*^-)$.
+     $\Xi$ maps the virtual perturbation at $t_*$ by composing:
+     1. Backwards flow of the nominal post-impact field $-f^+ \delta t_*$,
+     2. Linearized reset $D R$,
+     3. Forward flow of the pre-impact field $f^- \delta t_*$.
+     Presenting $\Xi$ without clarifying that $\delta x(t_*^+)$ is an asynchronous virtual perturbation evaluated at the nominal time $t_*$ leads to severe integration errors if an algorithm attempts to compare state errors at the true perturbed impact time.
+3. **The Ball-Club Impact Oversimplification**
+   - **The Text's Claim:** *"treating the whole motion as one smooth trajectory hides the most important discontinuity... club-ball collision is not a smooth continuation of the downswing dynamics... needs either an impact map or a separate collision model."*
+   - **Critique:** In golf club-ball collision, the impact duration is finite ($\approx 450\,\mu\text{s}$), involving massive structural deformation of the ball and clubface. Rigid-body algebraic resets with saltation matrices assume zero-duration impact ($J \to \infty, \Delta t \to 0$). Applying a discrete saltation matrix across a $450\,\mu\text{s}$ contact patch without restitution dynamics or wave propagation can produce worse variational estimates than a stiff penalty/regularized contact model.
+
+### 2.2 Corrected Assumptions & Mathematical Specifications
+
+- **General Saltation Formulation:**
+  For guard $g(x,t) = 0$ and reset $x^+ = R(x^-, t)$, with nominal event at $(x^-(t_*), t_*)$:
+  $$\Xi(t_*) = \nabla_x R(x^-, t_*) + \frac{\left( f^+(R(x^-, t_*), u(t_*^+), t_*) - \nabla_x R(x^-, t_*) f^-(x^-, u(t_*^-), t_*) - \partial_t R(x^-, t_*) \right) \nabla_x g(x^-, t_*)^\top}{\partial_t g(x^-, t_*) + \nabla_x g(x^-, t_*)^\top f^-(x^-, u(t_*^-), t_*)}.$$
+- **Transversality Condition:**
+  $$\left| \partial_t g(x^-, t_*) + \nabla_x g(x^-, t_*)^\top f^-(x^-, u(t_*^-), t_*) \right| \ge \gamma > 0.$$
+- **Proper Framing:**
+  Clarify that $\Xi(t_*)$ propagates variational initial conditions across $t_*$ so that for $t > t_* + \sup |\delta t_*|$, the trajectory difference satisfies $x_{\text{pert}}(t) - x_{\text{nom}}(t) = \Phi^+(t, t_*^+) \Xi(t_*) \Phi^-(t_*^-, 0) \delta x(0) + \mathcal{O}(\|\delta x(0)\|^2)$.
+
+---
+
+## 3. Same-State Residual vs. Forward Counterfactual Intervention & Control-Affine Structure
+
+### 3.1 Mathematical & Biomechanical Overclaims
+
+1. **Equating "Same-State Algebraic Residual" with "Counterfactual Intervention" (ZTCF)**
+   - **The Biomechanics Article's Claim:**
+     *"The Zero Torque Counterfactual (ZTCF) isolates passive mechanical effects by evolving the system under $u(t) \equiv 0$ ... Given measured or simulated total force $F_{\text{total}}$, and drift force $F_{\mathrm{drift}}$ from ZTCF-based computation, input forces are obtained via $F_{\mathrm{input}} = F_{\text{total}} - F_{\mathrm{drift}}$."*
+   - **Core Flaw / Conflation:**
+     There are two fundamentally different definitions of "drift force" being conflated:
+     - **Definition A (Instantaneous Same-State Inverse Dynamics Residual):**
+       Given the *observed* kinematic state $(q(t), \dot{q}(t))$ and acceleration $\ddot{q}(t)$ at instant $t$:
+       $$\tau_{\text{total}}(t) = M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau_{\text{drift}}(q(t), \dot{q}(t)) + B(q(t))u(t).$$
+       Here, $\tau_{\text{drift}}$ is evaluated at the **actual, observed state** $(q(t), \dot{q}(t))$. $F_{\text{input}} = F_{\text{total}} - F_{\text{drift}}$ is an algebraic instantaneous decomposition at the identical state.
+     - **Definition B (Forward Counterfactual Rollout / ZTCF):**
+       Setting $u(t) \equiv 0$ and forward integrating from $t_0$:
+       $$\ddot{q}_{\text{cf}}(t) = -M(q_{\text{cf}})^{-1}\left(C(q_{\text{cf}},\dot{q}_{\text{cf}})\dot{q}_{\text{cf}} + g(q_{\text{cf}})\right), \quad q_{\text{cf}}(t_0) = q(t_0), \dot{q}_{\text{cf}}(t_0) = \dot{q}(t_0).$$
+       For any $t > t_0$, $q_{\text{cf}}(t) \ne q(t)$ and $\dot{q}_{\text{cf}}(t) \ne \dot{q}(t)$.
+     - **The Error:** The document claims that $F_{\mathrm{input}} = F_{\text{total}} - F_{\mathrm{drift}}$ is obtained from a "ZTCF-based computation" evolving the system under $u \equiv 0$. If $F_{\text{drift}}$ is computed along the counterfactual trajectory $x_{\text{cf}}(t)$, subtracting it from the actual measured force $F_{\text{total}}(t)$ at the real state $x(t)$ is physically and mathematically invalid:
+       $$F_{\text{total}}(x(t), u(t)) - F_{\text{drift}}(x_{\text{cf}}(t)) \ne F_{\text{input}}(x(t), u(t)).$$
+       It subtracts forces evaluated at two completely different configurations and velocities.
+2. **Affine-in-Input Assumption in Biomechanics**
+   - **The Text's Claim:** *"The entire methodology assumes that inputs enter the dynamics linearly ($\dot{x} = f(x) + G(x)u$)..."*
+   - **Flaw / Biological Reality:**
+     Musculoskeletal dynamics are **not control-affine** with respect to neural excitations $a(t)$ or muscle activations:
+     - **Hill-Type Muscle Mechanics:**
+       $$F_{\text{muscle}} = F_{\text{max}} \cdot f_L(l_{\text{mtc}}, q) \cdot f_V(v_{\text{mtc}}, q, \dot{q}) \cdot a(t) + F_{\text{passive}}(l_{\text{mtc}}, q).$$
+       The input $a(t) \in [0, 1]$ multiplies the velocity-dependent force-velocity relationship $f_V(\dot{q})$.
+       Furthermore, activation dynamics are nonlinear differential equations:
+       $$\dot{a} = \frac{u_{\text{neural}} - a}{\tau(u_{\text{neural}}, a)}.$$
+       When generalized joint torques $\tau_j$ are treated as inputs $u$, the actuation matrix $B(q)$ is state-dependent, but more critically, torque capacity $\tau_{\text{max}}(q, \dot{q})$ shrinks dramatically at high angular velocities (Hill's hyperbolic relation). Treating $\tau$ as an unconstrained or purely affine input ignores that $\tau$ cannot be varied independently of the velocity $\dot{q}$.
+3. **Causal Attribution Fallacy in ZTCF**
+   - **The Text's Claim:** Calling $u(t) \equiv 0$ an isolation of "passive mechanical effects".
+   - **Flaw:** In multibody dynamics, state-dependent drift accelerations (Coriolis, centrifugal forces $\dot{q}^\top \Gamma(q) \dot{q}$) at time $t$ were **accumulated as a direct causal result of past active torques $u([0, t))$**. Calling Coriolis terms "passive" or "drift" confuses the instantaneous vector field decomposition with historical causal attribution. Without past torque input, the system would not possess the kinetic energy that generates the centrifugal wrench.
+
+---
+
+## 4. Summary Table of Corrections and Recommendations
+
+| Section / Topic | Identified Overclaim / Issue | Technical Correction / Needed Assumption |
+| :--- | :--- | :--- |
+| **Contraction Metric Bounds** | Claiming LQR/DDP Riccati matrix $S(t)$ directly provides a contraction metric. | Must enforce uniform positive bounds $\alpha_1 I \preceq S(t) \preceq \alpha_2 I$ ($Q_f \succ 0$, $Q(t) \succ 0$, detectability) and geodesic convexity of the local tube. Verify $Q + S B R^{-1} B^\top S \succeq 2\lambda S$. |
+| **Saltation Matrix** | Guard and reset assumed autonomous; instantaneous jump equated with forward flow. | Extend $\Xi$ to include $\partial g / \partial t$ and $\partial R / \partial t$. Specify transversality $|n^\top f^- + \partial_t g| \ge \gamma > 0$. Explicitly document $\Xi$ as a same-time virtual equivalence map, not an asynchronous physical event map. |
+| **Hybrid Collision in Golf** | Modeling 450 $\mu$s finite-duration compliant ball impact as an instantaneous rigid saltation reset. | Restrict saltation to rigid mode transitions; note that impact mechanics require either restitution impulses with contact-patch restitution or continuous elastodynamic penalty methods. |
+| **ZTCF vs. Drift Residual** | Conflating same-state algebraic residual ($F_{\text{input}} = F_{\text{total}} - F_{\text{drift}}(x)$) with forward-time counterfactual integration ($u \equiv 0$). | Strictly distinguish: (1) Same-state inverse dynamics decomposition evaluated at actual state $x(t)$, vs. (2) Forward counterfactual trajectory $x_{\text{cf}}(t)$ where $x_{\text{cf}}(t) \ne x(t)$ for $t > t_0$. Never subtract $F(x_{\text{cf}}(t))$ from $F(x(t))$. |
+| **Control-Affine Structure** | Assuming inputs enter linearly without addressing activation dynamics or Hill-type force-velocity coupling. | Explicitly bound the validity of affine decomposition to joint-torque representations; state that biomechanical actuation exhibits state-input coupling ($f_V(\dot{q}) \cdot u$) and activation dynamics. |

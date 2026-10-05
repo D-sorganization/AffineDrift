@@ -1,0 +1,12 @@
+### Result
+{"expanded":{"height":2387.1875,"hidden":false,"aria":"false","codes":0},"collapsed":{"height":0,"hidden":true,"aria":"true"}}
+### Ran Playwright code
+```js
+await (async (page) => { await page.goto("http://127.0.0.1:8875/articles/appendix-applications.html"); await page.setViewportSize({width:390,height:900}); const toggle=page.getByRole("button",{name:/In Layman/}); await toggle.click(); await page.locator(".laymans-terms").scrollIntoViewIfNeeded(); await page.waitForTimeout(700); await page.locator(".laymans-terms").screenshot({path:"appendix-expanded-section.png"}); const expanded=await page.locator(".laymans-terms-content").evaluate(e=>({height:e.getBoundingClientRect().height,hidden:e.hidden,aria:e.getAttribute("aria-hidden"),codes:e.querySelectorAll("pre").length})); await toggle.click(); const collapsed=await page.locator(".laymans-terms-content").evaluate(e=>({height:e.getBoundingClientRect().height,hidden:e.hidden,aria:e.getAttribute("aria-hidden")})); return {expanded,collapsed}; })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8875/articles/appendix-applications.html
+- Page Title: Applications of the Control-Affine Framework in Golf Swing Biomechanics – AffineDrift
+- Console: 2 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-10-05T06-46-26-207Z.log#L53-L54

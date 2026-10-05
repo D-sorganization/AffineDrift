@@ -1,226 +1,244 @@
-\chapter{From Neural Architecture to Robot Control}
+\chapter[Neural Architecture and Robot Control]{From Neural Architecture\\to Robot Control}
 \label{ch:neural-to-robot}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter develops engineering models inspired by motor-control questions.
+The scalar adaptive proof and torque-policy listing have explicit limits;
+neither constitutes a validated neural mechanism or a walking controller.
 \end{gomdraftnotice}
 
-\epigraph{%
-  If we truly understood how humans move,
-  we could build robots that move like humans.
-  We cannot. This tells us something.
-}{}
+\section{Translate a Biological Idea Into a Testable Design}
 
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[scale=0.85]
-  % Hierarchical levels
-  \draw (0.5, 4) rectangle (2.5, 4.8);
-  \draw (1.5, 4.4) node[align=center, anchor=center, font=\small] {Task Planning};
-  \draw (1.5, 4.0) node[align=center, anchor=center, font=\tiny] {(Cortical, 100 ms)};
+The useful transfer from biology is a question about organization: how can
+mechanics, prediction, feedback, and learning share the work? A robot permits
+controlled comparisons, but a successful robot controller does not identify
+the controller used by a human. Conversely, failure of one implementation does
+not refute every biological account with a similar diagram.
 
-  \draw[->, thick] (1.5, 4) -- (1.5, 3.5);
+For a golf-like movement, first declare the plant: coordinates and velocities,
+actuator dynamics, club flexibility if relevant, contact constraints, and the
+measured task. Then define which signals the controller can observe, their
+latencies and uncertainty, and its force or torque limits. Only after those
+choices can an architecture be assessed for tracking, effort, loading, or
+robustness. A block called ``cerebellum'' supplies none of these contracts.
 
-  \draw (0.5, 2.8) rectangle (2.5, 3.6);
-  \draw (1.5, 3.2) node[align=center, anchor=center, font=\small] {Trajectory};
-  \draw (1.5, 2.9) node[align=center, anchor=center, font=\tiny] {(Cerebellar, 50 ms)};
-
-  \draw[->, thick] (1.5, 2.8) -- (1.5, 2.3);
-
-  \draw (0.5, 1.6) rectangle (2.5, 2.4);
-  \draw (1.5, 2.0) node[align=center, anchor=center, font=\small] {CPG Output};
-  \draw (1.5, 1.7) node[align=center, anchor=center, font=\tiny] {(Spinal, 10 ms)};
-
-  \draw[->, thick] (1.5, 1.6) -- (1.5, 1.1);
-
-  \draw (0.5, 0.4) rectangle (2.5, 1.2);
-  \draw (1.5, 0.8) node[align=center, anchor=center, font=\small] {Joint Torques};
-  \draw (1.5, 0.5) node[align=center, anchor=center, font=\tiny] {(Motor neurons, 1 ms)};
-
-  % Feedback paths (dashed)
-  \draw[->, thick, dashed, red] (0.4, 0.8) -- (0.2, 0.8) -- (0.2, 2.0) -- (0.4, 2.0);
-  \draw (0.05, 1.4) node[align=center, anchor=east, font=\tiny, color=red] {error};
-
-  % Title
-  \draw (4, 4.6) node[align=center, anchor=west, font=\small\bf] {Bio-Inspired Hierarchy};
-  \draw (4, 4.2) node[align=center, anchor=west, font=\tiny] {Shallow-wide at each level};
-  \draw (4, 3.85) node[align=center, anchor=west, font=\tiny] {Multi-timescale control};
-\end{tikzpicture}
-\caption{Hierarchical multi-timescale control architecture: each level shallow (1-2
-layers) but wide (thousands of parallel channels), operating at increasing timescales
-and levels of abstraction.}
-\label{fig:ch11:hierarchy}
-\end{figure}
-
-\section{Lessons From Biology for Robot Design}
-
-The four volumes of theory converge on practical design principles for robotic
-control systems:
-
-\begin{insight}{Bio-Inspired Control Design Principles}{bio-robot-design}
-  \begin{enumerate}
-    \item \textbf{Exploit passive dynamics} (Vol~II, Vol~IV Ch~7): design the mechanical
-          system so that natural dynamics do useful work. Use compliance, not rigidity.
-    \item \textbf{Use shallow-wide controllers} (Vol~IV Ch~4): for real-time control,
-          prefer 2--3 layer networks with thousands of neurons over deep networks with
-          hundreds of layers.
-    \item \textbf{Employ synergy-based dimensionality reduction} (Vol~IV Ch~4): define
-          4--8 actuation synergies and control in synergy space, not muscle space.
-    \item \textbf{Implement forward models} (Vol~IV Ch~6): use the Smith predictor
-          architecture to compensate for sensor/actuator delays.
-    \item \textbf{Design for contraction} (Vol~I Ch~4): ensure the closed-loop
-          system is contracting, guaranteeing stability and robustness.
-    \item \textbf{Optimize trajectories, not setpoints} (Vol~II): design
-          trajectory-centric controllers with funnel guarantees.
-    \item \textbf{Accept variability} (Vol~IV Ch~1): allow task-irrelevant
-          variability. Don't over-constrain the controller.
-  \end{enumerate}
+\begin{insight}{Conditional Design Principles}{bio-robot-design}
+\begin{enumerate}
+ \item \textbf{Use favorable mechanics.} Compliance can store energy or shape
+ a useful response, but it also adds deflection, modes, and uncertainty.
+ Choose stiffness and damping for the task; rigidity and compliance are not
+ universal good and bad alternatives.
+ \item \textbf{Measure the computation.} Network width and depth affect cost,
+ expressiveness, and implementation. Chapter~4 does not justify prescribing
+ two or three layers for every real-time task. Measure worst-case latency,
+ memory, approximation error, and closed-loop behavior on the target hardware.
+ \item \textbf{Restrict commands deliberately.} Choose synergy rank from the
+ task and retained feedback authority, not a universal count of four to eight.
+ Chapter~2 distinguishes input reduction from state reduction.
+ \item \textbf{Predict with an error model.} Delay compensation requires a
+ plant model, delay specification, and robustness analysis. A Smith-predictor
+ analogy is not a general solution for uncertain nonlinear contact systems.
+ \item \textbf{State the stability domain.} Contraction or a Lyapunov
+ certificate applies under its metric, domain, inputs, and model assumptions.
+ For autonomous periodic motion, transverse/orbital conditions differ from
+ contraction of all state directions. Impact resets require separate treatment.
+ \item \textbf{Keep constraints in the objective.} Task-insensitive variation
+ may still affect future feasibility, joint loads, actuator saturation, or
+ balance. A funnel certificate is conditional on its verified region and
+ disturbance bounds, not a promise attached to any reference trajectory.
+\end{enumerate}
 \end{insight}
 
-\section{Cerebellar-Inspired Adaptive Control}
+\section{An Adaptive Law With a Complete Sign Contract}
 
-The cerebellum's circuit architecture~\cite{Marr1969,Albus1971,Kawato1987}
-directly suggests an adaptive control scheme:
-\begin{itemize}
-  \item \textbf{Granule cells} (the bulk of some 69 billion cerebellar neurons~\cite{Azevedo2009}): create a compressed basis function
-        representation of input state via mossy fiber--granule cell synapses
-  \item \textbf{Purkinje cells} ($\sim$17 million): linearly combine granule cell outputs;
-        synaptic weights change via LTD when climbing fiber error signals are present
-  \item \textbf{Climbing fiber error} (inferior olive): carries sensory prediction error
-        from brainstem nuclei; signals at $\sim$1 Hz but with precise timing (10 ms resolution)
-\end{itemize}
+Basis-function learning provides a useful engineering analogy to classical
+cerebellar theories~\cite{Marr1969,Albus1971}. In those theories, granule-cell
+expansion is not a compressed low-dimensional state representation. Purkinje
+activity is not a commanded joint torque, and a continuous parameter update is
+not a literal account of discrete spikes or synaptic LTD. Chapter~3 separates
+these computational ideas from the experimental evidence.
 
-This maps directly to:
+To see why signs cannot be judged without a plant, consider the scalar model
 \begin{equation}
-  \control_{\text{adaptive}}(\state) = \hat{W}^T \bm{\phi}(\state),
-  \quad \dot{\hat{W}} = -\Gamma \bm{\phi}(\state) \bm{e}^T,
-  \label{eq:ch11:cerebellar-control}
+ \dot x=\theta_*\phi(x,t)+u,\qquad e=x-x_d,
+ \label{eq:ch11:adaptive-plant}
 \end{equation}
-where $\bm{\phi}(\state)$ are radial basis functions (granule cell expansion),
-$\hat{W}$ are adaptive weights (parallel fiber--Purkinje cell synapses), and
-$\bm{e}$ is the tracking error (climbing fiber signal).
+with constant unknown $\theta_*$, known input gain $+1$, differentiable reference
+$x_d$, and known feature $\phi$. Choose $k,\gamma>0$ and
+\begin{equation}
+ u=\dot x_d-ke-\hat\theta\phi,
+ \qquad \dot{\hat\theta}=\gamma\phi e.
+ \label{eq:ch11:cerebellar-control}
+\end{equation}
+Define $\tilde\theta=\theta_*-\hat\theta$. Then
+\begin{align}
+ \dot e&=-ke+\tilde\theta\phi, &
+ \dot{\tilde\theta}&=-\gamma\phi e,\\
+ V&=\tfrac12 e^2+\frac{\tilde\theta^2}{2\gamma}, &
+ \dot V&=e(-ke+\tilde\theta\phi)
+       -\tilde\theta\phi e=-ke^2\le0.
+ \label{eq:ch11:adaptive-energy}
+\end{align}
+The matching cross terms cancel. Reversing the update sign while keeping this
+plant, error, and control law unchanged loses that cancellation. Changing the
+control or parameter-error convention can change the required sign; there is
+no universally correct standalone matrix update.
 
-\section{CPG-Based Locomotion Controllers}
+The state, input, and feature units must also match. For dimensionless $\phi$,
+$\theta_*$ and $u$ have units of $x$/time, $k$ has units of inverse time, and
+$\gamma$ has units of inverse time squared. Both terms of $V$ then have units
+of $x^2$. A vector generalization needs compatible input and error maps; one
+cannot multiply arbitrary state errors into torque-weight updates and assume
+a stability proof survives.
 
-Following Chapter~8, CPG-based locomotion controllers use coupled oscillators to
-generate walking/running patterns. This architecture is inspired by Grillner's~\cite{Grillner1975}
-demonstration that deafferented spinal cords generate coordinated stepping. The CPG
-provides the \emph{timing} and \emph{synergy} structure; feedback provides \emph{stability}
-and \emph{responsiveness}:
+On an interval where solutions exist, $V(t)\le V(0)$ bounds both the tracking
+and parameter errors. With bounded reference, bounded feature along the
+trajectory, appropriate regularity and continued existence, $\dot e$ is
+bounded and the square-integrable tracking error is uniformly continuous;
+then $e(t)\to0$. This argument assumes exact model structure, no input
+saturation, and no unmodeled disturbance. Those departures require additional
+analysis, not silent reuse of the identity.
 
-\begin{lstlisting}[language=Python, caption={Bio-inspired locomotion controller architecture.}]
+Tracking convergence does not imply parameter identification. If $\phi=0$,
+then $e(t)=e(0)e^{-kt}$ while $\hat\theta$ never changes. Parameter convergence
+requires sufficient excitation and the other identification assumptions; for
+a scalar regressor, a typical excitation condition is
+$\int_t^{t+T}\phi(\tau)^2\,d\tau\ge\alpha>0$. Even this condition is not a
+universal finite-trial learning guarantee. The exact-model Lyapunov bound also
+prevents unbounded parameter drift here without requiring excitation; noise
+and model mismatch are separate reasons to consider projection, leakage, or
+other robust modifications. Fifty successful trials is an experimental result
+to measure, not an outcome that follows from naming a controller adaptive.
+
+\section{A Rhythmic Torque Policy With Explicit Authority}
+
+A periodic command is not necessarily a coupled central pattern generator.
+Consider coefficients
+\begin{equation}
+ c_i(t)=\tfrac12[1+\sin(2\pi f t+\varphi_i)],\qquad
+ \tau=Wc(t)-Ke,
+ \label{eq:ch11:rhythmic-policy}
+\end{equation}
+where $f>0$ is in hertz, $W\in\mathbb R^{n_j\times k_c}$ has torque units,
+$e=(q-q_d,v-v_d)\in\mathbb R^{2n_j}$ is a local actuated-joint error, and
+$K\in\mathbb R^{n_j\times2n_j}$ has the corresponding feedback units.
+The example assumes compatible local joint coordinates, not a floating-base
+quaternion error representation. $W$ and $K$ are supplied explicitly; neither
+random initialization nor zeros should be described as learned or stabilizing.
+
+The feedback term acts directly in joint-torque space. If it were instead
+$WK_c e$, every correction would lie in $\operatorname{col}W$. Retaining a
+full joint-space $K$ can preserve additional torque directions, but it does
+not prove that a particular gain stabilizes a plant. A floating base is not
+directly actuated by these joint torques; contact and internal dynamics must
+transmit their effect.
+
+\begin{lstlisting}[language=Python, caption={A Supplied Rhythmic Policy, Without a Plant}]
+from dataclasses import dataclass
 import numpy as np
 
-class BioInspiredLocomotionController:
-    """Hierarchical control architecture inspired by
-    biological motor control."""
 
-    def __init__(
-        self,
-        n_joints: int,
-        n_synergies: int = 4,
-        cpg_freq: float = 1.0
-    ):
-        self.n_joints = n_joints
-        self.n_synergies = n_synergies
-        self.cpg_freq = cpg_freq
+@dataclass
+class RhythmicPolicy:
+    """Finite torque weights, joint feedback, phases, Hz."""
+    weights: np.ndarray
+    feedback: np.ndarray
+    phases: np.ndarray
+    frequency_hz: float
 
-        # Synergy matrix (learned from motion data)
-        self.W = np.random.randn(n_joints, n_synergies) * 0.1
+    def __post_init__(self):
+        self.weights = np.array(self.weights, dtype=float,
+                                copy=True)
+        self.feedback = np.array(self.feedback, dtype=float,
+                                 copy=True)
+        self.phases = np.array(self.phases, dtype=float,
+                               copy=True)
+        if self.weights.ndim != 2 or min(self.weights.shape) < 1:
+            raise ValueError("Nonempty joint-by-basis weights")
+        n, k = self.weights.shape
+        if (self.feedback.shape != (n, 2*n)
+                or self.phases.shape != (k,)):
+            raise ValueError("Incompatible policy dimensions")
+        if not all(np.all(np.isfinite(a)) for a in
+                   (self.weights, self.feedback, self.phases)):
+            raise ValueError("Policy arrays must be finite")
+        if (np.ndim(self.frequency_hz) != 0
+                or not np.isfinite(self.frequency_hz)
+                or self.frequency_hz <= 0):
+            raise ValueError("Frequency must be positive Hz")
 
-        # CPG phases for each synergy
-        self.phases = np.linspace(
-            0, 2 * np.pi * (1 - 1/n_synergies), n_synergies
-        )
-
-        # Feedback gains (shallow: single layer)
-        self.K_fb = np.zeros((n_synergies, 2 * n_joints))
-
-    def cpg_output(self, t: float) -> np.ndarray:
-        """Generate rhythmic synergy activations from CPG."""
-        activations = np.array([
-            max(0.0, np.sin(2 * np.pi * self.cpg_freq * t + phi))
-            for phi in self.phases
-        ])
-        return activations
-
-    def feedforward(self, t: float) -> np.ndarray:
-        """Feedforward joint torques from CPG + synergies."""
-        c = self.cpg_output(t)
-        return self.W @ c
-
-    def feedback(self, state_error: np.ndarray) -> np.ndarray:
-        """Feedback correction (shallow: one layer)."""
-        c_fb = self.K_fb @ state_error
-        return self.W @ c_fb
-
-    def control(self, t: float,
-                state_error: np.ndarray) -> np.ndarray:
-        """Total control: feedforward (CPG) + feedback."""
-        return self.feedforward(t) + self.feedback(state_error)
-
-
-# Example: 6-joint biped with 4 synergies
-controller = BioInspiredLocomotionController(
-    n_joints=6, n_synergies=4, cpg_freq=1.2
-)
-
-# Generate one cycle of control signals
-t = np.linspace(0, 1.0/1.2, 200)
-torques = np.array([controller.feedforward(ti) for ti in t])
-
-print(f"Bio-inspired controller: {controller.n_joints} joints, "
-      f"{controller.n_synergies} synergies")
-print(f"Control dimensionality reduced from {controller.n_joints} "
-      f"to {controller.n_synergies}")
-print(f"Peak torque magnitude: {np.max(np.abs(torques)):.3f}")
+    def command(self, time, error):
+        """Return joint torques for finite local joint error."""
+        error = np.asarray(error, dtype=float)
+        n = self.weights.shape[0]
+        if error.shape != (2*n,) or not np.all(np.isfinite(error)):
+            raise ValueError("Finite position/velocity error")
+        if np.ndim(time) != 0 or not np.isfinite(time):
+            raise ValueError("Time must be finite seconds")
+        phase = 2*np.pi*self.frequency_hz*time + self.phases
+        coefficients = 0.5*(1 + np.sin(phase))
+        return self.weights @ coefficients - self.feedback @ error
 \end{lstlisting}
 
-\section{Whole-Body Control Architectures}
+At $t=0$, $W=I_2$, phases $(0,\pi/2)$, and
+$K=\left[\begin{smallmatrix}0&1&0&0\\0&0&1&0\end{smallmatrix}\right]$,
+the error $e=(1,2,3,4)^T$ gives $\tau=(-1.5,-2)^T$. This checks the sign and
+matrix mapping, not physical gain selection. With $W=(1,0)^T$ instead, the
+same second feedback row can still command the second joint, outside the
+feedforward subspace.
 
-For humanoid robots, the bio-inspired architecture suggests:
+There is a further dimensional trap. All coefficients share one frequency, so
+$c(t)=a+b\sin(2\pi ft)+d\cos(2\pi ft)$ for fixed vectors $a,b,d$.
+The uncentered sampled coefficient matrix has rank at most three; after
+subtracting the sample mean, rank is at most two. Feedforward torque rank is
+also bounded by $\operatorname{rank}W$. Increasing the number of phase-shifted
+channels does not automatically increase temporal rank. Nonlinear rectification,
+multiple frequencies, coupled oscillator states, or feedback can change that
+conclusion and must be analyzed separately.
 
-\begin{enumerate}
-  \item \textbf{Level 0 (Spinal)}: joint-level impedance control with reflex-like
-        feedback ($\sim$1~ms loop)
-  \item \textbf{Level 1 (CPG)}: rhythmic pattern generation for locomotion
-        ($\sim$10~ms loop)
-  \item \textbf{Level 2 (Cerebellar)}: adaptive feedforward based on forward model
-        predictions ($\sim$50~ms loop)
-  \item \textbf{Level 3 (Cortical)}: trajectory planning and task-level control
-        ($\sim$100~ms loop)
-\end{enumerate}
+This listing has no oscillator coupling, phase resetting, actuator saturation,
+contact model, or plant integration. It neither demonstrates walking nor
+certifies robustness. A proposed locomotion controller must add those missing
+pieces and assess orbital stability and constraint feasibility under specified
+perturbations. Open-loop periodic signals alone do not prove either stability
+or inevitable immediate falling for every possible mechanical system.
 
-Each level is \textbf{shallow} (1--2 layers) but \textbf{wide} (many parallel channels),
-operating at progressively longer timescales.
+\section{Connect the Levels Through Measured Interfaces}
 
-\section{Companion Software: Practical Implementation}
+A practical hierarchy can separate task planning, state estimation, trajectory
+or rhythmic generation, and actuator feedback. These are engineering
+responsibilities, not a one-to-one cortical/cerebellar/spinal map. Choose update
+periods from measured computation, sensing, actuator bandwidth, delay, and
+stability margins. The numbers 1, 10, 50, and 100 ms are not universal biological
+clock rates. A slower layer must define how commands are held or interpolated
+and what a faster layer does when a plan becomes infeasible.
 
-Volume~V provides the practical tools to implement and test these controllers using
-the pedagogical platform accompanying this textbook. The connection points:
-\begin{itemize}
-  \item \textbf{MuJoCo}: test CPG-based locomotion controllers on musculoskeletal models
-  \item \textbf{Drake}: implement trajectory optimization for trajectory-centric control
-  \item \textbf{Pinocchio}: compute forward/inverse dynamics efficiently in real-time
-\end{itemize}
+For golf, an experiment should compare controllers on the same body and club
+model with the same initial-state uncertainty, contact assumptions, and torque
+limits. Report clubhead delivery together with joint loading, tracking error,
+actuator work, constraint violations, and recovery from perturbations. Favorable
+mechanics can reduce intervention while prediction and feedback retain needed
+corrections; those effects are intertwined rather than interchangeable measures
+of success. A low-dimensional nominal swing alone cannot identify which effect
+produced it.
+
+Volume~V discusses candidate software workflows. Availability of a dynamics
+engine or a companion page is not evidence that this policy has been integrated
+and tested in that engine. Such a claim needs a specific model, version, runnable
+configuration, solver settings, and recorded results.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Controller Architecture.}
-        Using the bio-inspired controller code, vary the number of synergies and
-        measure the resulting control signal dimensionality and smoothness.
-
-  \item \textbf{Cerebellar Adaptive Control.}
-        Implement the cerebellar-inspired adaptive controller for a 2-DOF arm and
-        show that it learns an inverse model over 50 trials.
-
-  \item \textbf{Hierarchical Design.}
-        Design a 3-level hierarchical controller for a simulated biped, with
-        impedance control at Level 0, CPG at Level 1, and trajectory correction at Level 2.
-
-  \item \textbf{(Programming.)} Implement the full bio-inspired controller for a
-        MuJoCo walking model and benchmark against a standard PD controller.
+ \item Derive Eq.~\eqref{eq:ch11:adaptive-energy}, including units, and give the
+ $\phi=0$ counterexample to parameter identification. Explain why tracking and
+ learning are different outcomes.
+ \item Verify the rhythmic-policy numerical example and the two temporal-rank
+ bounds. Add a second frequency and examine which bound changes.
+ \item Compare full joint feedback with feedback restricted through $W$ on a
+ declared linear plant. Check controllability or stabilizability and actuator
+ limits before interpreting a tracking plot.
+ \item Design a reproducible nonlinear comparison with a baseline controller.
+ Declare disturbances, contact resets, delays, metrics, and failure criteria.
+ Treat successful simulation as model-specific evidence, not proof of a
+ biological control mechanism.
 \end{enumerate}

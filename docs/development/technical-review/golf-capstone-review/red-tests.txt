@@ -1,0 +1,251 @@
+.........F.....FFFFFFFFFFFFFFFFFFFFFFFFF                                 [100%]
+================================== FAILURES ===================================
+________ TestPipeline.test_summary_runs_and_reports_a_plausible_speed _________
+tests\test_affine_control\test_swing_analysis.py:126: in test_summary_runs_and_reports_a_plausible_speed
+    assert "Joint acceleration norm medians" in text
+E   AssertionError: assert 'Joint acceleration norm medians' in '=== Golf Swing Analysis Summary ===\nDuration: 0.300 s\nPeak clubhead speed: 30.5 m/s (68.3 mph)\nPeak speed time: 0.300 s\nMedian over the swing: drift 50%, control 50%'
+______ test_grid_includes_endpoints_without_exceeding_step[0.3005-0.007] ______
+tests\test_affine_control\test_swing_analysis.py:165: in test_grid_includes_endpoints_without_exceeding_step
+    assert len(analysis.time) == int(np.ceil(duration / step)) + 1
+E   AssertionError: assert 42 == (43 + 1)
+E    +  where 42 = len(array([0.        , 0.00732927, 0.01465854, 0.0219878 , 0.02931707,\n       0.03664634, 0.04397561, 0.05130488, 0.058634...4186585, 0.24919512,\n       0.25652439, 0.26385366, 0.27118293, 0.2785122 , 0.28584146,\n       0.29317073, 0.3005    ]))
+E    +    where array([0.        , 0.00732927, 0.01465854, 0.0219878 , 0.02931707,\n       0.03664634, 0.04397561, 0.05130488, 0.058634...4186585, 0.24919512,\n       0.25652439, 0.26385366, 0.27118293, 0.2785122 , 0.28584146,\n       0.29317073, 0.3005    ]) = SwingAnalysis(segment_lengths=array([0.28, 0.46, 1.1 ]), segment_masses=array([2.16, 1.79, 0.3 ]), time=array([0.     ...1],\n       [2.92682927e+00, 4.59295517e+00, 2.37953599e+01],\n       [0.00000000e+00, 7.34788079e-15, 2.50000000e+01]])).time
+E    +  and   43 = int(np.float64(43.0))
+E    +    where np.float64(43.0) = <ufunc 'ceil'>((0.3005 / 0.007))
+E    +      where <ufunc 'ceil'> = np.ceil
+________ test_grid_includes_endpoints_without_exceeding_step[0.3-1.0] _________
+tests\test_affine_control\test_swing_analysis.py:164: in test_grid_includes_endpoints_without_exceeding_step
+    analysis = synthetic_swing(duration, step)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\affine_control\swing_analysis.py:169: in synthetic_swing
+    rates = np.gradient(angles, dt, axis=0)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Lib\site-packages\numpy\lib\_function_base_impl.py:1308: in gradient
+    raise ValueError(
+E   ValueError: Shape of array too small to calculate a numerical gradient, at least (edge_order + 1) elements are required.
+_____________ test_synthetic_rates_are_analytic_at_both_endpoints _____________
+tests\test_affine_control\test_swing_analysis.py:175: in test_synthetic_rates_are_analytic_at_both_endpoints
+    np.testing.assert_allclose(analysis.joint_velocities[[0, -1]], expected / duration, atol=1e-12)
+E   AssertionError: 
+E   Not equal to tolerance rtol=1e-07, atol=1e-12
+E   
+E   Mismatched elements: 6 / 6 (100%)
+E   First 5 mismatches are at indices:
+E    [0, 0]: 2.1816615649929094 (ACTUAL), 0.0 (DESIRED)
+E    [0, 1]: 13.089969389957467 (ACTUAL), 10.612477850633718 (DESIRED)
+E    [0, 2]: 1.3380896725925684 (ACTUAL), 0.0 (DESIRED)
+E    [1, 0]: 23.998277214922037 (ACTUAL), 20.26833970057931 (DESIRED)
+E    [1, 1]: -13.089969389957476 (ACTUAL), -10.612477850633718 (DESIRED)
+E   Max absolute difference among violations: 3.72993751
+E   Max relative difference among violations: 0.27696224
+E    ACTUAL: array([[  2.181662,  13.089969,   1.33809 ],
+E          [ 23.998277, -13.089969,  10.1638  ]])
+E    DESIRED: array([[  0.      ,  10.612478,   0.      ],
+E          [ 20.26834 , -10.612478,   7.959358]])
+__________ test_inverse_torques_recover_prescribed_second_derivative __________
+tests\test_affine_control\test_swing_analysis.py:189: in test_inverse_torques_recover_prescribed_second_derivative
+    drift, control = analysis.joint_acceleration_components()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+______ test_signed_cancellation_does_not_partition_net_acceleration_norm ______
+tests\test_affine_control\test_swing_analysis.py:202: in test_signed_cancellation_does_not_partition_net_acceleration_norm
+    drift, control = analysis.joint_acceleration_components()
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+___________________ test_summary_duration_uses_elapsed_time ___________________
+tests\test_affine_control\test_swing_analysis.py:215: in test_summary_duration_uses_elapsed_time
+    assert "Duration: 0.300 s" in analysis.summary()
+E   AssertionError: assert 'Duration: 0.300 s' in '=== Golf Swing Analysis Summary ===\nDuration: 10.300 s\nPeak clubhead speed: 40.7 m/s (91.0 mph)\nPeak speed time: 10.300 s\nMedian over the swing: drift 76%, control 24%'
+E    +  where '=== Golf Swing Analysis Summary ===\nDuration: 10.300 s\nPeak clubhead speed: 40.7 m/s (91.0 mph)\nPeak speed time: 10.300 s\nMedian over the swing: drift 76%, control 24%' = summary()
+E    +    where summary = SwingAnalysis(segment_lengths=array([0.28, 0.46, 1.1 ]), segment_masses=array([2.16, 1.79, 0.3 ]), time=array([10.   ,...0],\n       [3.00000000e+01, 4.24264069e+01, 1.40625000e+01],\n       [0.00000000e+00, 7.34788079e-15, 2.50000000e+01]])).summary
+_____________________ test_synthetic_time_contract[0-0.1] _____________________
+tests\test_affine_control\test_swing_analysis.py:221: in test_synthetic_time_contract
+    synthetic_swing(duration, step)
+src\affine_control\swing_analysis.py:169: in synthetic_swing
+    rates = np.gradient(angles, dt, axis=0)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Lib\site-packages\numpy\lib\_function_base_impl.py:1308: in gradient
+    raise ValueError(
+E   ValueError: Shape of array too small to calculate a numerical gradient, at least (edge_order + 1) elements are required.
+
+During handling of the above exception, another exception occurred:
+tests\test_affine_control\test_swing_analysis.py:220: in test_synthetic_time_contract
+    with pytest.raises(ValueError, match="duration|dt"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'duration|dt'
+E     Actual message: 'Shape of array too small to calculate a numerical gradient, at least (edge_order + 1) elements are required.'
+____________________ test_synthetic_time_contract[-1-0.1] _____________________
+tests\test_affine_control\test_swing_analysis.py:221: in test_synthetic_time_contract
+    synthetic_swing(duration, step)
+src\affine_control\swing_analysis.py:159: in synthetic_swing
+    time = np.linspace(0.0, duration, samples)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Lib\site-packages\numpy\_core\function_base.py:125: in linspace
+    raise ValueError(
+E   ValueError: Number of samples, -10, must be non-negative.
+
+During handling of the above exception, another exception occurred:
+tests\test_affine_control\test_swing_analysis.py:220: in test_synthetic_time_contract
+    with pytest.raises(ValueError, match="duration|dt"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'duration|dt'
+E     Actual message: 'Number of samples, -10, must be non-negative.'
+______________________ test_synthetic_time_contract[1-0] ______________________
+tests\test_affine_control\test_swing_analysis.py:221: in test_synthetic_time_contract
+    synthetic_swing(duration, step)
+src\affine_control\swing_analysis.py:158: in synthetic_swing
+    samples = int(duration / dt)
+                  ^^^^^^^^^^^^^
+E   ZeroDivisionError: division by zero
+_____________________ test_synthetic_time_contract[1--1] ______________________
+tests\test_affine_control\test_swing_analysis.py:221: in test_synthetic_time_contract
+    synthetic_swing(duration, step)
+src\affine_control\swing_analysis.py:159: in synthetic_swing
+    time = np.linspace(0.0, duration, samples)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Lib\site-packages\numpy\_core\function_base.py:125: in linspace
+    raise ValueError(
+E   ValueError: Number of samples, -1, must be non-negative.
+
+During handling of the above exception, another exception occurred:
+tests\test_affine_control\test_swing_analysis.py:220: in test_synthetic_time_contract
+    with pytest.raises(ValueError, match="duration|dt"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'duration|dt'
+E     Actual message: 'Number of samples, -1, must be non-negative.'
+_____________________ test_synthetic_time_contract[nan-1] _____________________
+tests\test_affine_control\test_swing_analysis.py:221: in test_synthetic_time_contract
+    synthetic_swing(duration, step)
+src\affine_control\swing_analysis.py:158: in synthetic_swing
+    samples = int(duration / dt)
+              ^^^^^^^^^^^^^^^^^^
+E   ValueError: cannot convert float NaN to integer
+
+During handling of the above exception, another exception occurred:
+tests\test_affine_control\test_swing_analysis.py:220: in test_synthetic_time_contract
+    with pytest.raises(ValueError, match="duration|dt"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'duration|dt'
+E     Actual message: 'cannot convert float NaN to integer'
+_____________________ test_synthetic_time_contract[1-inf] _____________________
+tests\test_affine_control\test_swing_analysis.py:221: in test_synthetic_time_contract
+    synthetic_swing(duration, step)
+src\affine_control\swing_analysis.py:169: in synthetic_swing
+    rates = np.gradient(angles, dt, axis=0)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Lib\site-packages\numpy\lib\_function_base_impl.py:1308: in gradient
+    raise ValueError(
+E   ValueError: Shape of array too small to calculate a numerical gradient, at least (edge_order + 1) elements are required.
+
+During handling of the above exception, another exception occurred:
+tests\test_affine_control\test_swing_analysis.py:220: in test_synthetic_time_contract
+    with pytest.raises(ValueError, match="duration|dt"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'duration|dt'
+E     Actual message: 'Shape of array too small to calculate a numerical gradient, at least (edge_order + 1) elements are required.'
+______________ test_analysis_rejects_invalid_arrays[time-value0] ______________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+______________ test_analysis_rejects_invalid_arrays[time-value1] ______________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+______________ test_analysis_rejects_invalid_arrays[time-value2] ______________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+______________ test_analysis_rejects_invalid_arrays[time-value3] ______________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+__________ test_analysis_rejects_invalid_arrays[joint_angles-value4] __________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+__________ test_analysis_rejects_invalid_arrays[joint_angles-value5] __________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+________ test_analysis_rejects_invalid_arrays[joint_velocities-value6] ________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+_________ test_analysis_rejects_invalid_arrays[joint_torques-value7] __________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+_________ test_analysis_rejects_invalid_arrays[joint_torques-value8] __________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+________ test_analysis_rejects_invalid_arrays[segment_lengths-value9] _________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+________ test_analysis_rejects_invalid_arrays[segment_masses-value10] _________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+________ test_analysis_rejects_invalid_arrays[segment_lengths-value11] ________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+________ test_analysis_rejects_invalid_arrays[segment_masses-value12] _________
+tests\test_affine_control\test_swing_analysis.py:251: in test_analysis_rejects_invalid_arrays
+    analysis.joint_acceleration_components()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'SwingAnalysis' object has no attribute 'joint_acceleration_components'
+============================ slowest 20 durations =============================
+0.20s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_synthetic_swing_is_deterministic
+0.14s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_split_is_not_a_fixed_ratio
+0.13s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_summary_runs_and_reports_a_plausible_speed
+0.13s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_control_contribution_is_exactly_the_torque_response
+0.10s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_zero_torque_gives_zero_control_contribution
+0.03s call     tests/test_affine_control/test_swing_analysis.py::test_synthetic_rates_are_analytic_at_both_endpoints
+
+(14 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_summary_runs_and_reports_a_plausible_speed
+FAILED tests/test_affine_control/test_swing_analysis.py::test_grid_includes_endpoints_without_exceeding_step[0.3005-0.007]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_grid_includes_endpoints_without_exceeding_step[0.3-1.0]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_synthetic_rates_are_analytic_at_both_endpoints
+FAILED tests/test_affine_control/test_swing_analysis.py::test_inverse_torques_recover_prescribed_second_derivative
+FAILED tests/test_affine_control/test_swing_analysis.py::test_signed_cancellation_does_not_partition_net_acceleration_norm
+FAILED tests/test_affine_control/test_swing_analysis.py::test_summary_duration_uses_elapsed_time
+FAILED tests/test_affine_control/test_swing_analysis.py::test_synthetic_time_contract[0-0.1]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_synthetic_time_contract[-1-0.1]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_synthetic_time_contract[1-0]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_synthetic_time_contract[1--1]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_synthetic_time_contract[nan-1]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_synthetic_time_contract[1-inf]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[time-value0]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[time-value1]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[time-value2]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[time-value3]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[joint_angles-value4]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[joint_angles-value5]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[joint_velocities-value6]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[joint_torques-value7]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[joint_torques-value8]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[segment_lengths-value9]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[segment_masses-value10]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[segment_lengths-value11]
+FAILED tests/test_affine_control/test_swing_analysis.py::test_analysis_rejects_invalid_arrays[segment_masses-value12]

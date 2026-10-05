@@ -1,0 +1,57 @@
+Based on a read-only audit of the pinned sources (`load_companion_catalog`, `CompanionGuide`, and `TransferStrategyPanel` at commit `cefcc1878de11804c44cd7d1d19c0ffcf58fa89e`), here is what the contracts demonstrate versus what remains unverified across the five areas:
+
+---
+
+### 1. UI Parity
+* **Demonstrated:**
+  * **Shared Canonical Metadata:** `load_companion_catalog()` and React `CompanionGuide` share the exact same schema structure (`id`, `title`, `model`, `purpose`, `hypothesis`, `falsifier`, `workflow`, `tips`, `observables`, `limitations`, and glossary fields: `term`, `definition`, `plain_language`, `units`, `caution`).
+  * **Independent UI Controls:** React renders guided narrative, glossary search, and a model-switching button (`onSelectModel?.(experiment.model)`). PyQt's `TransferStrategyPanel` renders interactive numeric phase-window spinboxes (`_start_spin`, `_end_spin`), outcome tables (`_metric_labels`), impulse/work attributions (`_source_labels`), and matplotlib canvas plots.
+* **Unverified / Caveats:**
+  * **No Direct Desktop Guide Implementation:** The embedded snippet shows `TransferStrategyPanel`, but no desktop counterpart to `CompanionGuide` (e.g. a PyQt catalog viewer or experiment guide widget).
+  * **No Web Transfer Diagnostics:** The React snippet contains no diagnostic physics panel, power/speed curves, or phase-window slicing corresponding to `TransferStrategyPanel`.
+
+---
+
+### 2. Automatic Preset Loading
+* **Demonstrated:**
+  * **Model Switching Trigger:** In React, selecting an experiment allows triggering a model switch via `onSelectModel?.(experiment.model)`.
+* **Unverified / Caveats:**
+  * **No Parameter Injection or Auto-Load:** The `Experiment` schema contains textual instructions (`workflow`, `tips`, `limitations`), but **no preset parameter map** (e.g. numerical initial conditions, lengths, masses, or drive profiles).
+  * Neither `CompanionGuide` nor `TransferStrategyPanel` exposes logic to automatically populate or apply numerical simulation presets when an experiment is selected.
+
+---
+
+### 3. Universal Run Labeling
+* **Demonstrated:**
+  * **Manifest Factory Contract:** `build_run_manifest()` generates an immutable dictionary enforcing `schema_version = "1.0.0"`, `scientific_status = "exploratory_model_output"`, `experiment_id`, `model_version`, `parameters`, and `units`.
+* **Unverified / Caveats:**
+  * **Not Universally Wired:** Neither `CompanionGuide` nor `TransferStrategyPanel` invokes `build_run_manifest()`.
+  * The manifest builder enforces metadata fields on export, but the sources do not demonstrate whether runs across all models (React or PyQt) are universally stamped or persisted with this manifest.
+
+---
+
+### 4. Phase-Window vs. Full-Trajectory Metrics
+* **Demonstrated:**
+  * **Windowed vs. Full Split in `TransferStrategyPanel`:**
+    * **Phase-Window Metrics:** Computed via `summarize_transfer(self._signals, start_s=start, end_s=end)` and drawn over `[start, end]` (evaluating `distal_energy_gain_j`, `drift_grip_work_j`, `control_grip_work_j`, `negative_grip_work_j`, `wrist_control_work_j`, `peak_grip_force_n`, and `peak_distal_speed_m_s`).
+    * **Full-Trajectory Metrics:** Displayed in `_build_source_group()` ("Full-Trajectory Coordinate Force Sources") via `double_pendulum_force_attribution(result)` and rendered in `_render_sources()`, showing signed/absolute tangent impulse and generalized work across full trajectory coordinates.
+* **Unverified / Caveats:**
+  * Windowing is demonstrated solely in the desktop Python widget (`TransferStrategyPanel`); it is unverified whether the web companion provides phase-window slicing or full-trajectory attributions.
+
+---
+
+### 5. Model Qualification
+* **Demonstrated:**
+  * **Catalog Model Scope:** `_parse_experiment` restricts models to `{"double", "triple", "golfer"}`.
+  * **Desktop Diagnostic Fail-Closed Gate:** In `TransferStrategyPanel.set_result(result, model_type)`, execution **fails closed** if `model_type != "double"`:
+    ```python
+    if model_type != "double":
+        self._signals = None
+        self._status.setText(f"Transfer attribution is not yet qualified for the {model_type} model.")
+        self._clear_metrics()
+        self._clear_sources()
+        return
+    ```
+  * **Scientific Boundary Claims:** Explicit user-facing warnings prevent conflating coordinate terms with anatomical biomechanics (e.g. labeling $\dot{\theta}_1$ as proximal-link velocity rather than anatomical shoulder/torso movement, and noting Christoffel coordinate splits are equation attributions rather than muscle forces).
+* **Unverified / Caveats:**
+  * It remains unverified how `"triple"` or `"golfer"` models are handled at runtime outside `TransferStrategyPanel`, or whether React enforces any corresponding qualification guards before switching views or running analyses.

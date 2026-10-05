@@ -1,0 +1,116 @@
+Here is the adversarial technical review of the provided draft, examining all mathematical derivations, signs, units, boundary conditions, signal-processing filter state conventions, and claims.
+
+---
+
+### 1. Mathematical Derivations, Recurrences, and Filter Equivalence
+
+#### A. Single-Rate Recurrence & Closed Form
+* **Definition:**
+  $$e_k = p_k - x_k, \qquad x_{k+1} = a x_k + b e_k = (a - b)x_k + b p_k$$
+  Units: $p_k, x_k, e_k$ in degrees; $a, b$ dimensionless. Units match consistently.
+* **Closed-form with constant $p$ and $\lambda = a - b$:**
+  $$x_\infty = \frac{b p}{1 - (a - b)} = \frac{b p}{1 - a + b}$$
+  $$e_\infty = p - x_\infty = \frac{(1 - a)p}{1 - a + b}$$
+  $$x_k - x_\infty = \lambda(x_{k-1} - x_\infty) \implies x_k = x_\infty + (x_0 - x_\infty)\lambda^k$$
+  *Verification:* At $k=0$, $x_0 = x_\infty + x_0 - x_\infty = x_0$. At $k=1$, $x_1 = x_\infty(1-\lambda) + \lambda x_0 = b p + (a-b)x_0$.
+  *Calculations:* $a = 0.98, b = 0.05, p = 30^\circ$:
+  $$1 - a + b = 1 - 0.98 + 0.05 = 0.07 = \frac{7}{100}$$
+  $$x_\infty = \frac{0.05 \times 30}{0.07} = \frac{1.5}{0.07} = \frac{150}{7} \approx 21.42857^\circ$$
+  $$e_\infty = \frac{0.02 \times 30}{0.07} = \frac{0.6}{0.07} = \frac{60}{7} \approx 8.5714^\circ$$
+  Values, signs, and asymptotic formulas are exact.
+
+#### B. Washout vs. Clamp Decay Factors
+* **Washout ($p_{N+j} = 0$, veridical feedback):**
+  $$e_{N+j} = -x_{N+j} \implies x_{N+j+1} = (a - b)x_{N+j} = \lambda x_{N+j} \implies x_{N+j} = \lambda^j x_N$$
+  Initial aftereffect error: $e_N = 0 - x_N = -x_N$.
+* **Zero-Error Clamp ($e_{N+j} = 0$ enforced):**
+  $$x_{N+j+1} = a x_{N+j} + b(0) = a x_{N+j} \implies x_{N+j} = a^j x_N$$
+  Deductions are mathematically exact.
+
+#### C. `scipy.signal.lfilter` Implementation Check
+* The code uses:
+  ```python
+  updated, _ = lfilter([1.0], [1.0, -pole], forcing, zi=[pole * initial])
+  ```
+  Let us derive the exact recurrence of `scipy.signal.lfilter(b, a, x, zi=zi)`.
+  For $b = [b_0] = [1.0]$ and $a = [1.0, a_1] = [1.0, -\text{pole}]$:
+  The standard Direct Form II transposed difference equations implemented by SciPy:
+  $$y[n] = b_0 u[n] + z_0[n-1]$$
+  $$z_0[n] = b_1 u[n] - a_1 y[n] = 0 - (-\text{pole}) y[n] = \text{pole} \cdot y[n]$$
+  At step $n=0$:
+  Given `zi = [pole * initial]`:
+  $$y[0] = 1.0 \cdot u[0] + z_0[-1] = u[0] + \text{pole} \cdot x_0$$
+  In the model:
+  For veridical feedback: $\text{pole} = a - b$, $u[0] = b p_0$.
+  Thus:
+  $$y[0] = (a - b) x_0 + b p_0 = x_1$$
+  Next state: $z_0[0] = \text{pole} \cdot y[0] = (a - b) x_1$.
+  At step $n=1$:
+  $$y[1] = u[1] + z_0[0] = b p_1 + (a - b) x_1 = x_2$$
+  Therefore, the output array `updated` contains $[x_1, x_2, \dots, x_N]$.
+  The pretrial states are constructed as:
+  ```python
+  states = np.concatenate(([initial], updated[:-1]))
+  ```
+  This correctly yields $[x_0, x_1, \dots, x_{N-1}]$.
+  `final_state` is `float(updated[-1])` $= x_N$.
+  Errors:
+  `errors = schedule - states if feedback == "veridical" else forcing`
+  Under `"clamp"`, `schedule` must be all zeros (checked by guard), so `forcing` is all zeros, giving zero error.
+  **Conclusion on Python code:** Mathematically and index-wise exact.
+
+#### D. Two-Rate State Matrix & Zero-Error Clamp Rebound
+* State dynamics:
+  $$\begin{pmatrix} x_{f,k+1} \\ x_{s,k+1} \end{pmatrix} = \begin{pmatrix} a_f & 0 \\ 0 & a_s \end{pmatrix} \begin{pmatrix} x_{f,k} \\ x_{s,k} \end{pmatrix} + \begin{pmatrix} b_f \\ b_s \end{pmatrix} e_k$$
+  Since $e_k = p_k - (x_{f,k} + x_{s,k}) = p_k - (1, 1) \begin{pmatrix} x_{f,k} \\ x_{s,k} \end{pmatrix}$:
+  $$\mathbf{x}_{k+1} = \left[ \operatorname{diag}(a_f, a_s) - \begin{pmatrix} b_f \\ b_s \end{pmatrix} (1, 1) \right] \mathbf{x}_k + \begin{pmatrix} b_f \\ b_s \end{pmatrix} p_k$$
+  The state matrix stated in text: $\operatorname{diag}(a_f,a_s)-(b_f,b_s)^{\mathsf T}(1,1)$ matches identically:
+  $$\begin{pmatrix} a_f - b_f & -b_f \\ -b_s & a_s - b_s \end{pmatrix}$$
+* **Spontaneous recovery under clamp:**
+  If $e_k = 0$, $x_{f,j} = a_f^j x_{f,0} = -c a_f^j$, and $x_{s,j} = a_s^j x_{s,0} = c a_s^j$.
+  $$x_j = x_{f,j} + x_{s,j} = c(a_s^j - a_f^j)$$
+  With $0 < a_f < a_s < 1$ and $c > 0$:
+  At $j = 0$, $x_0 = 0$.
+  For $j > 0$, since $a_s > a_f > 0$, $a_s^j > a_f^j \implies x_j > 0$. As $j \to \infty$, $x_j \to 0$.
+  The rebound is strictly positive and transient. Exact.
+
+#### E. Subspace Projection & Restriction Bias
+* Family: $\theta = \theta_0 + S\eta$, with $S \in \mathbb{R}^{d \times m}$ having orthonormal columns ($S^\top S = I_m$).
+* Target $\theta_*$. Minimize $\|\theta_* - (\theta_0 + S\eta)\|_2^2$.
+  Optimal $\eta^* = S^\top (\theta_* - \theta_0)$.
+  Reconstructed parameters:
+  $$\hat{\theta} = \theta_0 + S S^\top (\theta_* - \theta_0)$$
+* Residual vector:
+  $$\theta_* - \hat{\theta} = (\theta_* - \theta_0) - S S^\top (\theta_* - \theta_0) = (I - S S^\top)(\theta_* - \theta_0)$$
+  Formula is exact.
+
+---
+
+### 2. Adversarial Review of Claims and Epistemological Boundaries
+
+1. **Neural Localization & Modularity Claims:**
+   * The text explicitly caveats Smith et al. (2006) and Huang et al. (2011), noting that fast/slow time constants or internal-model/model-free distinctions do not establish distinct anatomical compartments. This satisfies the constraint to avoid unverified neural localization.
+2. **Behavioral vs. Memory Distinctions:**
+   * Correctly distinguishes task error from sensory prediction error, immediate aftereffects from consolidation, and perturbation switching from anterograde/retrograde interference.
+3. **Golf Applications:**
+   * Avoids unverified empirical timing numbers (no millisecond claims for swing dynamics or downswing duration) and distinguishes plant changes (club mass, shaft compliance) from visual/aim changes and environmental factors (wind).
+
+---
+
+### 3. Classification of Findings
+
+#### Unresolved Actual Defects
+* **None detected.** Every equation, sign, unit, boundary condition, and code array index is mathematically rigorous, verifiable, and free of algebraic error.
+
+#### Optional Clarifications / Minor Polish Points (Non-Blocking)
+1. **TikZ Diagram Sign/Orientation Convention:**
+   In Figure \ref{fig:ch9:visuomotor-adaptation}, the curve plots *signed error* $e_k$. During adaptation to a positive perturbation $p > 0$, error starts at $+p$ and falls toward $e_\infty > 0$. Upon sudden removal of perturbation ($p=0$) with positive compensation $x > 0$, error jumps to $-x$ (negative), then recovers toward 0 from below. The TikZ schematic reflects this trajectory ($+2.6 \to +0.75$, jumping to $-1.85 \to -0.05$). This matches $e_k = p_k - x_k$ precisely.
+2. **Code Feedback Validation on Schedule:**
+   The guard:
+   ```python
+   if feedback == "clamp" and np.any(schedule != 0):
+       raise ValueError("Use a zero schedule for the zero-error clamp")
+   ```
+   enforces that a clamp schedule must be explicitly passed as zeros. This is a design choice documented in docstrings and cleanly prevents unintended non-zero forcing under clamp.
+
+The draft is mathematically sound, bounds its claims strictly to what the models and experimental evidence establish, and contains no unresolved defects. Ready for Lead adjudication.

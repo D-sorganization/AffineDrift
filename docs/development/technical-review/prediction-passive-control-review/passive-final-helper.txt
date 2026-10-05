@@ -1,0 +1,156 @@
+# Technical Review: `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch07_passive_control.tex`
+
+**Review Scope:** Read-only technical verification of `ch07_passive_control.tex` covering:
+1. Cartesian kinematics & Euler–Lagrange derivations ($A(q), c(q, \dot{q}), g_q(q)$, signs, determinant, positive definiteness).
+2. Aligned-angle static acceleration check ($q_1 = q_2 = \alpha, v = 0$).
+3. Energy conservation identity and differentiation.
+4. Python code listing consistency with analytical formulations.
+5. World-coordinate contact guard and slope formulation.
+6. Hybrid Poincaré map scope and impact reset conditions.
+7. Golf swing mechanics: control-affine recentering, vector speed decomposition counterexample, and torque vs. excitation dynamics.
+8. Rigorous evaluation of mathematical prose and domain claims.
+
+---
+
+### 1. Kinematics, Dynamics, and Sign Checks
+
+#### 1.1 Position and Velocity Vectors
+With stance foot fixed at $(0,0)$ and angles measured clockwise / positive toward $+x$ from upward vertical:
+$$r_H = l \begin{pmatrix} \sin q_1 \\ \cos q_1 \end{pmatrix}, \qquad r_F = r_H - l \begin{pmatrix} \sin q_2 \\ \cos q_2 \end{pmatrix} = l \begin{pmatrix} \sin q_1 - \sin q_2 \\ \cos q_1 - \cos q_2 \end{pmatrix}$$
+Differentiating with respect to time ($\dot{q}_i = v_i$):
+$$\dot{r}_H = l v_1 \begin{pmatrix} \cos q_1 \\ -\sin q_1 \end{pmatrix}, \qquad \|\dot{r}_H\|^2 = l^2 v_1^2$$
+$$\dot{r}_F = l \begin{pmatrix} v_1 \cos q_1 - v_2 \cos q_2 \\ -v_1 \sin q_1 + v_2 \sin q_2 \end{pmatrix}$$
+$$\|\dot{r}_F\|^2 = l^2 \Bigl( v_1^2 + v_2^2 - 2 v_1 v_2 (\cos q_1 \cos q_2 + \sin q_1 \sin q_2) \Bigr) = l^2 \Bigl( v_1^2 + v_2^2 - 2 v_1 v_2 \cos(q_1 - q_2) \Bigr)$$
+
+#### 1.2 Kinetic and Potential Energies
+$$T = \tfrac{1}{2} M \|\dot{r}_H\|^2 + \tfrac{1}{2} m \|\dot{r}_F\|^2 = \tfrac{1}{2} (M + m) l^2 v_1^2 + \tfrac{1}{2} m l^2 v_2^2 - m l^2 \cos(q_1 - q_2) v_1 v_2$$
+With $z$ upward and $g > 0$:
+$$V = M g z_H + m g z_F = M g l \cos q_1 + m g l (\cos q_1 - \cos q_2) = (M + m) g l \cos q_1 - m g l \cos q_2$$
+Equations (69) and (70) in lines 69–70 are **exact**.
+
+#### 1.3 Euler–Lagrange Equations: Mass Matrix, Coriolis, and Gravity Vector
+Using $L = T - V$, $\frac{d}{dt}\frac{\partial L}{\partial \dot{q}} - \frac{\partial L}{\partial q} = 0$:
+- **Generalized Momenta:**
+  $$p_1 = \frac{\partial L}{\partial v_1} = (M + m) l^2 v_1 - m l^2 \cos \delta \, v_2$$
+  $$p_2 = \frac{\partial L}{\partial v_2} = m l^2 v_2 - m l^2 \cos \delta \, v_1$$
+  where $\delta = q_1 - q_2$. This directly gives the mass matrix:
+  $$A(q) = l^2 \begin{pmatrix} M + m & -m \cos \delta \\ -m \cos \delta & m \end{pmatrix}$$
+- **Time derivatives of Generalized Momenta:**
+  $$\frac{d}{dt} p_1 = (M + m) l^2 \dot{v}_1 - m l^2 \cos \delta \, \dot{v}_2 + m l^2 \sin \delta (v_1 - v_2) v_2$$
+  $$\frac{d}{dt} p_2 = m l^2 \dot{v}_2 - m l^2 \cos \delta \, \dot{v}_1 - m l^2 \sin \delta (v_1 - v_2) v_1$$
+- **Configuration derivatives:**
+  $$\frac{\partial T}{\partial q_1} = m l^2 \sin \delta \, v_1 v_2, \qquad \frac{\partial T}{\partial q_2} = -m l^2 \sin \delta \, v_1 v_2$$
+  $$\frac{\partial V}{\partial q_1} = -(M + m) g l \sin q_1, \qquad \frac{\partial V}{\partial q_2} = m g l \sin q_2$$
+- **Coriolis / Centrifugal Vector $c(q, v)$:**
+  $$c_1 = m l^2 \sin \delta (v_1 - v_2) v_2 - m l^2 \sin \delta \, v_1 v_2 = -m l^2 \sin \delta \, v_2^2$$
+  $$c_2 = -m l^2 \sin \delta (v_1 - v_2) v_1 + m l^2 \sin \delta \, v_1 v_2 = m l^2 \sin \delta \, v_1^2$$
+  $$c = m l^2 \sin \delta \begin{pmatrix} -v_2^2 \\ v_1^2 \end{pmatrix}$$
+- **Gravity Vector $g_q = \nabla_q V$:**
+  $$g_q = g l \begin{pmatrix} -(M + m) \sin q_1 \\ m \sin q_2 \end{pmatrix}$$
+The convention $A \ddot{q} + c + g_q = 0 \implies A \ddot{q} = -c - g_q$ matches lines 72–77 and the Python implementation lines 148–150.
+
+#### 1.4 Determinant and Positive Definiteness
+$$\det A = l^4 \Bigl( (M + m)m - m^2 \cos^2 \delta \Bigr) = m l^4 \bigl( M + m(1 - \cos^2 \delta) \bigr) = m l^4 (M + m \sin^2 \delta)$$
+Since $M > 0$, $m > 0$, and $l > 0$:
+$$\det A \ge M m l^4 > 0 \quad \forall \, \delta \in \mathbb{R}$$
+The leading principal minor is $A_{11} = (M + m) l^2 > 0$. Thus, $A(q) \succ 0$ everywhere without singular configurations. Line 83 is **exact**.
+
+#### 1.5 Aligned-Angle Static Acceleration Check
+Let $q_1 = q_2 = \alpha$ and $v_1 = v_2 = 0$. Then $\delta = 0$, $c = 0$, $\cos \delta = 1$, and:
+$$A = l^2 \begin{pmatrix} M + m & -m \\ -m & m \end{pmatrix}, \qquad -g_q = g l \begin{pmatrix} (M + m) \sin \alpha \\ -m \sin \alpha \end{pmatrix}$$
+Solving $A \ddot{q} = -g_q$:
+$$l^2 \begin{pmatrix} M + m & -m \\ -m & m \end{pmatrix} \begin{pmatrix} \ddot{q}_1 \\ \ddot{q}_2 \end{pmatrix} = g l \sin \alpha \begin{pmatrix} M + m \\ -m \end{pmatrix}$$
+Notice that the right-hand vector is $(g/l) \sin \alpha$ times the first column of $A$. Hence:
+$$\ddot{q}_1 = \frac{g}{l} \sin \alpha, \qquad \ddot{q}_2 = 0$$
+Physical interpretation: When the legs are aligned ($\delta = 0$), the swing foot is located at the origin ($r_F = 0$, the fixed stance foot), so the gravitational torque about the hip on the swing leg vanishes, leaving zero angular acceleration for the swing leg ($\ddot{q}_2 = 0$) while the hip falls forward under gravity ($\ddot{q}_1 = \frac{g}{l}\sin\alpha$). Line 80 is **exact**.
+
+---
+
+### 2. Energy Conservation and Derivative Identity
+
+For the conservative stance phase, total mechanical energy is $E(q, v) = \tfrac{1}{2} v^T A(q) v + V(q)$.
+Differentiating along solutions $\dot{q} = v, \ddot{q} = -A(q)^{-1}(c + g_q)$:
+$$\dot{E} = v^T A(q) \ddot{q} + \tfrac{1}{2} v^T \dot{A}(q) v + \nabla_q V(q)^T v = v^T \bigl( -c - g_q \bigr) + \tfrac{1}{2} v^T \dot{A}(q) v + g_q^T v = v^T \left( \tfrac{1}{2} \dot{A}(q) v - c(q, v) \right)$$
+Computing $\tfrac{1}{2} v^T \dot{A} v$:
+$$\dot{A} = l^2 m \sin \delta \, (\dot{q}_1 - \dot{q}_2) \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} = m l^2 \sin \delta (v_1 - v_2) \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$$
+$$\tfrac{1}{2} v^T \dot{A} v = m l^2 \sin \delta (v_1 - v_2) v_1 v_2$$
+Meanwhile:
+$$v^T c = v_1 (-m l^2 \sin \delta \, v_2^2) + v_2 (m l^2 \sin \delta \, v_1^2) = m l^2 \sin \delta (-v_1 v_2^2 + v_1^2 v_2) = m l^2 \sin \delta (v_1 - v_2) v_1 v_2$$
+Thus:
+$$v^T \left( \tfrac{1}{2} \dot{A}(q) v - c(q, v) \right) \equiv 0 \implies \dot{E} \equiv 0$$
+Lines 154–159 correctly emphasize that $\dot{E} = 0$ requires the term $\tfrac{1}{2} v^T \dot{A} v$; neglecting $\dot{A}$ would yield non-conservation of energy.
+
+---
+
+### 3. Contact Guard, Surface Coordinates, and Poincar\'e Scope
+
+1. **Downhill Surface Equation and Guard:**
+   - The ground line is $z = -x \tan \gamma$ where $\gamma$ is the downward slope angle.
+   - The swing foot coordinate is:
+     $$x_F = l(\sin q_1 - \sin q_2), \qquad z_F = l(\cos q_1 - \cos q_2)$$
+   - The zero-level set of the guard function is:
+     $$h(q) = z_F + x_F \tan \gamma = 0$$
+   - Line 162–163 correctly writes $h(q) = z_F + x_F \tan \gamma = 0$.
+   - **Boundary Conditions & Directional Guard:** As noted in lines 163–165, $h(q) = 0$ has two branches:
+     - Trivial branch: $q_1 = q_2 \implies x_F = 0, z_F = 0$ (swing foot passes through stance foot, "scuffing").
+     - True footfall branch: $h(q) = 0$ with $x_F > 0$ and approaching the surface from above ($\dot{h}(q) = \nabla_q h(q) \cdot \dot{q} < 0$).
+   - The text accurately specifies that the slope belongs in the geometry of the guard, not as an artificial coordinate rotation that alters vertical gravity.
+
+2. **Poincar\'e and Hybrid Scope:**
+   - Lines 160–187 correctly circumscribe the scope: the listing models a single continuous stance phase; walking requires appending:
+     - An impact reset map (e.g., inelastic collision $\mathcal{M}(v^+ - v^-) = J^T \Lambda$ with $J v^+ = 0$).
+     - Stance/swing leg coordinate relabeling.
+     - Contact admissibility checks (non-negative normal reaction forces $F_N \ge 0$, friction cone $\|F_T\| \le \mu F_N$, swing foot clearance $z_F > -x_F \tan \gamma$).
+   - Claims regarding periodic orbits and stability are mathematically sound: orbital stability of limit cycles requires Floquet multipliers / eigenvalues of $DP(x_*)$ strictly inside the open unit disk $\{|\lambda| < 1\}$. Energy balance requires collision dissipation to equal potential energy drop over the step.
+
+---
+
+### 4. Golf Swing Dynamics, Torque vs. Excitation, and Speed Decomposition
+
+1. **Vector vs. Scalar Speed Decomposition:**
+   - Equation (205) is the linear integration of acceleration vectors:
+     $$v(T) = v(0) + \int_0^T a_d(t) dt + \int_0^T a_u(t) dt$$
+   - The norm is subadditive (triangle inequality):
+     $$\|v(T)\| \le \|v(0)\| + \left\| \int_0^T a_d(t) dt \right\| + \left\| \int_0^T a_u(t) dt \right\|$$
+   - **Counterexample Provided:** Two orthogonal velocity increments $\Delta v_1 = (1, 0)^T$ and $\Delta v_2 = (0, 1)^T$ have resultant speed:
+     $$\|\Delta v_1 + \Delta v_2\| = \sqrt{1^2 + 1^2} = \sqrt{2} \approx 1.414 \ne 1 + 1 = 2$$
+   - Therefore, scalar speed $\|v(T)\|$ cannot be partitioned into additive percentages (e.g., "60% passive drift, 40% active control"). Lines 207–208 are mathematically exact.
+
+2. **Control-Affine Shift Invariance:**
+   - For $\dot{x} = f(x) + G(x)u$, a baseline input policy $u_0(x)$ shifts the drift vector field to $f'(x) = f(x) + G(x)u_0(x)$ with input deviation $u' = u - u_0(x)$.
+   - What is labeled "passive drift" is relative to the choice of nominal input $u_0(x)$ (e.g., zero muscle excitation vs. baseline postural tone). Lines 212–218 are mathematically sound.
+
+3. **Neural Excitation vs. Joint Torque:**
+   - Muscle activation dynamics introduce low-pass filtering and non-zero deactivation time constants ($\tau_{\text{deact}} \approx 40\text{–}60\,\text{ms}$) between neural excitation $e(t)$ and active muscle state $a(t)$, plus tendon elasticity.
+   - Setting excitation to zero does not instantaneously zero muscle force, torque, or elastic potential energy. The rejection of speculative universal neural claims in Section 4 is verified and technically grounded.
+
+---
+
+### 5. Identified Mathematical Issues and Recommendations
+
+1. **Definition of $\delta$ vs. Matrix Notation in Lines 67 & 74:**
+   - Line 67 defines $\delta = q_1 - q_2$.
+   - The off-diagonal element of $A$ in line 74 is $-m \cos \delta = -m \cos(q_1 - q_2)$. Since cosine is even, $\cos(q_1 - q_2) = \cos(q_2 - q_1)$, which preserves symmetry.
+   - However, for the Coriolis term $c = m l^2 \sin \delta \begin{pmatrix} -v_2^2 \\ v_1^2 \end{pmatrix}$, note that $\sin \delta = \sin(q_1 - q_2)$ is odd. As derived in Section 1.3:
+     $$c_1 = -m l^2 \sin(q_1 - q_2) v_2^2 = -m l^2 \sin \delta \, v_2^2$$
+     $$c_2 = m l^2 \sin(q_1 - q_2) v_1^2 = m l^2 \sin \delta \, v_1^2$$
+     In Python (`CompassPhase.rhs`):
+     ```python
+     coriolis = (
+         inertial * np.sin(angle1 - angle2) * np.array([-speed2**2, speed1**2])
+     )
+     ```
+     This matches line 75 precisely.
+
+2. **Implicit Assumption in Euler–Lagrange Presentation (Line 72):**
+   - The equation is given as $A\ddot{q} + c + g_q = 0$.
+   - While $c$ contains all velocity-product terms ($v_1^2, v_2^2$), it is worth noting in prose that $c(q, v)$ is the Christoffel-symbol contraction vector $c_k = \sum_{i,j} \Gamma_{ijk} v_i v_j$, which is quadratic in velocities. The notation is standard in robotics literature ($M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = 0$).
+
+3. **Ground Slope Sign in Contact Geometry (Line 162):**
+   - The text defines $z = -x \tan \gamma$. For a downward slope forward ($x > 0$), height $z$ decreases as $x$ increases, meaning $\gamma > 0$ corresponds to a downward slope.
+   - For a step of leg length $l$, swing foot impact requires $x_F > 0$. If $x_F = l(\sin q_1 - \sin q_2) > 0$ and $z_F = l(\cos q_1 - \cos q_2)$, then $z_F + x_F \tan \gamma = 0$ correctly defines the intersection line with the sloped ground.
+
+---
+
+### Summary Conclusion
+The mathematics, equations, sign conventions, code listing, and mechanical interpretations in `ch07_passive_control.tex` are internally consistent, physically and mathematically sound, and rigorously bounded to the declared conservative stance-phase scope. There are no sign errors, no determinant degeneracies, and no unphysical claims.

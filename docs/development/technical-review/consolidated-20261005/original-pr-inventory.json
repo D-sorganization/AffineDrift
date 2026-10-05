@@ -1,0 +1,247 @@
+[
+  {
+    "baseRefName": "main",
+    "body": "Correct the complete experimental-methods chapter's filtering, force-plate, IMU and timing explanations. The chapter now declares wrench frames and origins, distinguishes specific force from acceleration, explains forward/backward filter response, and gives an executable marker-processing example with explicit input and derivative-validity contracts.\n\nCloses #4898. Part of #4009 / #4021.\n\nValidation: frozen source de99d7032 passed 6,880 tests, 29 skipped, 210 deselected; 93.24% coverage. Seventeen published-listing tests, four independent 100-case identities, a rebuilt 73-page PDF with 38 resolved bibliography entries, and complete affected-chapter/TOC/bibliography visual inspection pass. All five shared pre-PR gates and push hooks pass. Initial stale publication-hash failures and a fixed-input test-fixture Semgrep finding are preserved with their resolutions. The latter required only a documented rule-specific comment, with all mapped tests repeated.\n\n## Handoff\n\nStacked on PR #4891 (`fix/unverified-date-display`), which now contains merged camera/flight/implementation PRs #4899/#4897/#4895. Those were parent-branch merges, not main delivery; all canonical hashes remain verified. Retarget to main after #4891 is delivered, arm only through the central automerge guard, then verify seven canonical artifact hashes against fetched remote main before releasing the lease. `reports/technical-review/experimental-methods-validation.json` records source, limits, exact hashes and post-regression comment-only annotation. `changes/4898-experimental-methods-review.md` and the experimental-methods QA review notes preserve derivations, primary-source reading scope and all four Flash-helper adjudications. Only Chapter 7 advances in the corpus index; this is not empirical sensor, clinical or whole-volume certification. Subsequent Chapters 5\u20136 work is isolated in #4900. Broader corpus work remains active.",
+    "headRefName": "fix/experimental-methods-review",
+    "headRefOid": "118b2a811c57c6602232d78bf331c5b742e21586",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4902,
+    "title": "docs(biomechanics): correct experimental measurement and filtering conventions",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4902"
+  },
+  {
+    "baseRefName": "fix/experimental-methods-review",
+    "body": "Correct both complete chapters on biological multibody dynamics and inverse problems. The text now derives moment-arm power and geometric stiffness, distinguishes compliant force coupling from kinematic constraints, states inverse-dynamics load accounting, and explains why force feasibility, optimization choices and tracking accuracy do not identify a person's neural commands.\n\nCloses #4900. Part of #4009 / #4021.\n\nValidation: scientific source 1fe6b8e9f passed 6,894 tests, 29 skipped, 210 deselected; 93.24% coverage. Fourteen tests execute the actual published examples; five independent identities each pass 100 cases. The rebuilt 75-page PDF has 41 resolved references, with complete affected-chapter/TOC/bibliography visual inspection. All 68 integration checks, five shared pre-PR gates, and push hooks pass. Four read-only agy Gemini 3.8 Flash reviews were individually adjudicated; rejected claims and exact primary-source reading scopes are retained.\n\n## Handoff\n\nStacked on experimental-methods PR #4902 (`fix/experimental-methods-review`), then date #4891 and article #4889. Earlier camera/flight/implementation PRs were merged by the owner into their parent branches, not remote main. Retarget this PR to main only after its parent is delivered; arm only through the central automerge guard and verify eight accepted artifact hashes on fetched remote main. `reports/technical-review/biological-inverse-validation.json` records the frozen regression, canonical bytes, parent reconciliation, and a later comment-only annotation documenting trusted test input. `changes/4900-biological-inverse-review.md` and the QA review notes preserve the derivations, exercise data, helper adjudications and next steps. Only Chapters 5\u20136 advance in the corpus index. Joint-kinematics continuation #4901 is isolated and not accepted here. No empirical biological, clinical or whole-volume certification is claimed. The broader goal remains active.",
+    "headRefName": "fix/biological-inverse-review",
+    "headRefOid": "021221d2361939cb19c2cbb70aee0b57a242de4c",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4904,
+    "title": "docs(biomechanics): correct multibody power and inverse inference",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4904"
+  },
+  {
+    "baseRefName": "fix/biological-inverse-review",
+    "body": "Chapter 4 used an undeclared velocity reference for screw-axis extraction and overstated anatomical constraints and stiffness laws. This review defines the spatial twist convention, handles degenerate axes, corrects constraint-rank and ligament-stiffness reasoning, and adds reproducible worked examples. The complete chapter, preface, bibliography and scoped PDF have been reviewed.\n\nCloses #4901. Epic #4009; corpus #4021.\n\nValidation: 6,907 tests passed, 29 skipped, 210 deselected; 93.24% src coverage on frozen source 7d483e596. Thirteen actual-listing tests, five independent identities with 100 cases each, all five central pre-PR gates and push hooks pass. The 76-page PDF has 37 printed references; affected chapter, TOC/preface and bibliography inspected. Two read-only Gemini 3.8 Flash reviews were independently adjudicated.\n\nHandoff: changes/4901-joint-kinematics-review.md and reports/technical-review/joint-kinematics-validation.json contain source hashes, evidence and limits. Only Chapter 4 advances the corpus; 76 pending-prefix rows remain. This is mathematical/source acceptance, not empirical biological certification.\n\nStacked on regular PR #4904. After parent delivery, retarget to main, use the central guarded merge queue, and verify canonical blobs on fetched remote main. Do not merge this topic parent merely to close the PR. Never draft, force push, or bypass protection.\n",
+    "headRefName": "fix/joint-kinematics-review",
+    "headRefOid": "c5d7deef9bf13b152dbf67df67be3b3b9c3246ad",
+    "isDraft": false,
+    "labels": [],
+    "number": 4906,
+    "title": "fix(textbook): establish rigorous joint kinematics and stiffness conventions",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4906"
+  },
+  {
+    "baseRefName": "fix/joint-kinematics-review",
+    "body": "Chapters 8-10 treated covariance-dependent likelihoods, beam boundary conditions and biological control claims too broadly, while their code examples lacked reproducible contracts. This revision supplies checked Gaussian MAP inference, Euler-Bernoulli finite elements with tip mass, and an explicitly limited activation-driven rotor. It distinguishes model identities from evidence about the golf swing.\n\nCloses #4905. Part of #4009 and #4021.\n\nValidation: frozen source 0eb67eaaebc25577189378cc43bd1d98ca9d72b3 passed 6,932 tests (29 skipped, 210 deselected), coverage 93.24%; tracked tree unchanged. Twenty-five actual-listing tests, six independent 100-case mathematical checks, seven adjudicated Gemini 3.8 Flash reviews, and all five central pre-PR gates passed. The 79-page PDF and 41 references were rebuilt; physical pages 3-6 and 61-79 inspected. Exact source/PDF/evidence hashes are in reports/technical-review/inference-flexible-control-validation.json.\n\n## Handoff\n\nRegular stacked PR against #4906. Deliver the existing parent chain through protected main, retarget this PR after its parent is delivered, then verify accepted Git-blob hashes on fetched remote main. Do not auto-merge into a topic parent, force-push, bypass protection, or create drafts. Detailed derivations and rejected helper findings: docs/development/technical-review/inference-flexible-control-review/review-notes.md. Current continuation fragment: changes/4905-inference-flexible-control-review.md. Worktree: C:/Users/diete/Repositories/Worktrees/AffineDrift-inference-flexible-control-review. Branch fix/inference-flexible-control-review, pushed 6e5534195. Corpus has 407 rows and 73 pending-prefix rows after advancing only these three complete chapters; this is not empirical or whole-volume certification. Next batch #4908 is separate and not accepted.\n",
+    "headRefName": "fix/inference-flexible-control-review",
+    "headRefOid": "3044eba72eaf20ac65f99eca2572579a2eedba54",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4910,
+    "title": "fix(textbook): verify inference flexible mechanics and control arguments",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4910"
+  },
+  {
+    "baseRefName": "fix/inference-flexible-control-review",
+    "body": "The dimensionality and neural-control chapters mixed computational examples with stronger claims about biological implementation. This change separates state/input/task dimensions, empirical findings and engineering hypotheses, and replaces incomplete decoding and controller snippets with checked examples.\n\nComplete Volume IV files ch02, ch03 and ch11 (printed Chapters 2, 3 and 12) are reviewed. The update includes explicit population-vector assumptions, Kalman covariance propagation, an adaptive-control Lyapunov derivation, and a periodic torque policy with declared authority and limits. The rendered PDF and bibliography are updated.\n\nValidation: frozen source 6cd420438e024de3c63fb8fc3a6759fa63ce03db passed 6,955 tests (29 skipped, 210 deselected), 93.24% coverage, with unchanged tracked snapshots. All five central pre-PR gates passed; 23 actual-listing tests and six 100-case mathematical checks pass. PDF: 76 pages, 46 references; revised pages, contents and bibliography visually inspected. Seven successful Gemini 3.8 Flash reviews/proposals were lead-adjudicated; one unavailable file-read review is excluded. Earlier bibliography and packaging-artifact failures are preserved with their repairs.\n\nCloses #4908\nPart of #4009 and #4021.\n\n## Handoff\n\nThis is a regular stacked PR against #4910. Do not merge into a topic parent and call it main delivery. After the parent reaches main, retarget to main, use the central guarded merge path, fetch main and verify the eight accepted hashes in reports/technical-review/neural-architecture-validation.json. Detailed technical decisions, primary-source reading limits and rejected helper suggestions are in docs/development/technical-review/neural-architecture-review/review-notes.md; turnover fragment changes/4908-neural-architecture-review.md.\n\nOnly these three corpus rows advance: 407 rows, 70 pending-prefix rows. This is not whole-volume or empirical certification. Existing PDF overflow and package warnings in unchanged chapters remain outside this scoped acceptance. Next batch #4915 is independently in progress. Current upstream chain: #4889 is in the merge queue with PR checks green; #4891 includes owner topic merges #4895/#4897/#4899; then #4902, #4904, #4906, #4910. Preserve all parent content and later PDF/bibliography supersession records.\n",
+    "headRefName": "fix/neural-architecture-review",
+    "headRefOid": "3ad0cdef027c23aab0c60c10a32def756f5e7955",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4916,
+    "title": "fix(books): distinguish neural evidence and verify dimensionality and control examples",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4916"
+  },
+  {
+    "baseRefName": "fix/neural-architecture-review",
+    "body": "Fixes #4915. Part of #4009 and #4021.\n\nThe Volume IV chapters conflated accurate prediction with successful inversion, described a conservative stance ODE as a walking model, and blurred deterministic optimal control, stochastic control and inference. This change corrects the compass-model signs, specifies hybrid-contact and return-map limits, replaces unsupported active/passive speed percentages with a declared counterfactual framework, and provides checked Gaussian-responsibility, inversion and LQR examples. It derives the control-dependent-noise Riccati term and distinguishes minimum jerk, stationary average cost and variational inference.\n\nComplete chapter sources ch06, ch07 and ch10 are reviewed, with primary-reading limits and rejected helper claims documented. The rebuilt 82-page PDF has 50 references; affected chapters, contents and bibliography were visually inspected with no unresolved citations or references. This is scoped technical acceptance, not whole-volume or biological certification.\n\nValidation: frozen source bfe4dbbe14c816261a492bcd1b9d824e0de3e530 passed 7,004 tests, 29 skipped, 210 deselected, 60 warnings in 477.55s; source coverage 93.24%, tracked tree empty before and after. All five central pre-PR gates and 49 actual-listing tests passed. Seven independent identities passed 100 cases each. Nine successful agy Gemini 3.8 Flash reviews/test proposals were lead-adjudicated; two unavailable file-reading attempts are excluded.\n\n## Handoff\n\nBranch: fix/prediction-passive-control-review. Base: fix/neural-architecture-review, regular PR #4916. All source and acceptance work is committed. Ten accepted Git-blob hashes and exact validation logs are in reports/technical-review/prediction-passive-control-validation.json; reasoning and reading scope are in docs/development/technical-review/prediction-passive-control-review/review-notes.md. The change fragment is changes/4915-prediction-passive-control-review.md.\n\nCorpus: 407 rows, 67 pending-prefix rows after advancing only these three chapters. These counts are scope bookkeeping, not a uniform overall completion percentage. Remaining learning/rhythm work is separately tracked in #4917. Retarget this PR only after its parent reaches actual remote main, then use the central guarded merge workflow and verify fetched-main source hashes. Do not merge into a topic parent or bypass protection. The new PDF and common bibliography supersede preceding artifacts while preserving prior reviewed chapter sources. Keep downloaded papers, build intermediates and packaging artifacts untracked. Before rerunning full regression, move only verified untracked root build/dist/egg-info artifacts under QA. Historical duplicate PDF destinations and package warnings remain outside this acceptance.\n",
+    "headRefName": "fix/prediction-passive-control-review",
+    "headRefOid": "dbbcf82ca4400a350ca47401a1c7ae8abb9f6727",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4919,
+    "title": "fix(books): distinguish prediction passive mechanics and stochastic control",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4919"
+  },
+  {
+    "baseRefName": "fix/prediction-passive-control-review",
+    "body": "Correct three complete Volume IV chapters on action-effect planning, rhythmic generators and motor learning. Separate intended/predicted/observed effects, derive the limits of oscillator and phase-stability claims, and correct interference, washout versus error clamp, and hidden-state recovery. Runnable listings have explicit contracts and analytic checks.\n\nValidation: frozen source 1c25166ad562a4d6bf1e3a47f83341aa144f8b60 passed 7,047 tests (93.24% source coverage), 29 skipped, 210 deselected. All five central pre-PR gates pass, including 43 mapped tests. Seven independent mathematical checks each cover 100 manufactured cases. The rebuilt 84-page PDF has 45 references; revised chapters, contents and bibliography were visually inspected, with no unresolved references or overfull boxes. Nine Flash reviews/proposals were lead-adjudicated. This is scoped source verification, not empirical or whole-volume certification.\n\nFixes #4917. Part of #4009 and #4021.\n\n## Handoff\n\nDepends on regular PR #4919; base is fix/prediction-passive-control-review. Do not merge into the topic parent. After parent delivery to remote main, retarget to main, use the central automerge guard and verify the nine source hashes in reports/technical-review/learning-rhythm-validation.json. Review notes and frozen logs are in docs/development/technical-review/learning-rhythm-review; turnover is changes/4917-learning-rhythm-review.md. Corpus has 407 rows, 64 pending-prefix rows. Subsequent capstone work is isolated under #4921.\n",
+    "headRefName": "fix/learning-rhythm-review",
+    "headRefOid": "4bac438c140ee22090473125c3e2105ab10599da",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4922,
+    "title": "fix(textbook): clarify action effects, rhythm and motor learning",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4922"
+  },
+  {
+    "baseRefName": "fix/learning-rhythm-review",
+    "body": "The golf capstone treated instantaneous acceleration norms as a contribution to clubhead motion, and its synthetic trajectory used inconsistent derivative spacing and arbitrary torques. The corrected chapter distinguishes signed same-state acceleration, Cartesian geometry, energy/power and whole-trajectory counterfactuals. The canonical example now uses analytic derivatives and matching inverse-dynamics torques, with explicit limits on biological and optimization claims.\n\nValidation: 7,072 full tests passed, 29 skipped, 210 deselected; source coverage 93.25% at d3f63d6fb4d3b68d390afdfa99d370c823233ec9. Forty focused tests, six independent 100-case checks, five lead-adjudicated Flash reviews and all five pre-PR gates pass. Regenerated 49-page Volume V PDF; complete capstone and affected frontmatter/bibliography visually inspected. Historical overflow in other chapters remains outside this scope. Nine accepted Git-blob hashes and failed/repaired validation logs are preserved.\n\nFixes #4921. Part of #4009 and #4021.\n\n## Handoff\n\nThis regular PR is stacked on #4922. Do not merge it into the topic parent. Retarget only after the parent is verified on remote main, then use the central automerge guard and verify accepted source hashes. Review decisions and exact evidence are in docs/development/technical-review/golf-capstone-review/review-notes.md, reports/technical-review/golf-capstone-validation.json, and changes/4921-golf-capstone-review.md. Corpus: 407 rows, 62 pending-prefix rows. No whole-volume or human-golf certification. MYPYPATH must be the repository root to match canonical src.affine_control imports.",
+    "headRefName": "fix/golf-capstone-review",
+    "headRefOid": "d1641ef332922071db7db93178ec6e5fcfb55135",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4928,
+    "title": "fix(textbook): correct golf capstone attribution and synthetic dynamics",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4928"
+  },
+  {
+    "baseRefName": "fix/golf-capstone-review",
+    "body": "## Problem and Result\n\nVolume V chapters 1\u20133 conflated engine capabilities with wrapper support, presented unmeasured performance rankings, and included a pendulum energy calculation with a zero initial-energy denominator and an incomplete, disconnected URDF export. The chapters now separate those claims, provide tested cylinder simulation/comparison listings and a complete URDF, and explain how model frames, inertia, external forces and actuator assumptions affect golf-swing interpretation.\n\nFixes #4923. Part of epic #4009 and corpus #4021. Depends on #4928; this regular PR initially targets fix/golf-capstone-review solely to isolate its diff. Retarget to main only after the parent is verified there. Do not merge into the topic parent.\n\n## Validation\n\n- 49 actual-listing/XML tests, including MuJoCo 3.4.0 import; all failed against the originals and now pass. 87 combined reference/audit/listing checks passed.\n- Six independent mechanical checks, 100 cases each; maximum error 1.098e-9 below 1e-7.\n- Frozen source 29a555d22ee4c71403259ced67b97b8c66b94ece: 7121 tests passed, 29 skipped, 210 deselected, 60 warnings; 93.25% source coverage; tracked tree unchanged.\n- Rebuilt 48-page PDF, 26 references. Scoped pages inspected, including final bibliography repair; no scoped overflow or unresolved references. Two historical overflows remain in other chapters.\n- Six agy Gemini 3.8 Flash reviews/proposals, with lead adjudication and rejected claims documented.\n\n## Handoff\n\nAcceptance and eight exact source hashes: reports/technical-review/platform-model-contracts-validation.json. Decisions, primary-reading scope, failure history and delegation: docs/development/technical-review/platform-model-contracts-review/review-notes.md. Per-issue turnover: changes/4923-platform-model-contracts-review.md. Three complete corpus rows accepted; 59 pending-prefix rows remain out of 407 inventory rows, which are scope labels rather than a scientific completion percentage. No whole-engine, whole-volume or empirical human validation is claimed.\n",
+    "headRefName": "fix/platform-model-contracts-review",
+    "headRefOid": "55ded1e2e5a03435bfa7a319875369072f608ef4",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4930,
+    "title": "fix(textbook): verify platform, engine and model contracts",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4930"
+  },
+  {
+    "baseRefName": "fix/platform-model-contracts-review",
+    "body": "## Problem and Result\n\nVolume V chapters 4\u20136 confused inverse dynamics with integration, supplied incorrect iLQR value updates without a line search, and overstated tracking and stability guarantees. They now share the canonical three-link model, provide tested simulation and quadratic-minimization listings, and distinguish regulation, trajectory tracking, contraction and finite-time funnels under explicit assumptions. Golf interpretation separates inverse torque, an imposed optimization objective and evidence about human control.\n\nFixes #4927. Part of #4009 and #4021. Depends on #4930; initially targets fix/platform-model-contracts-review to isolate the diff. Retarget only after verified parent delivery to main. Do not merge into the topic parent.\n\n## Validation\n\n- 51 actual-listing tests failed/errored against the originals and pass after correction; 89 combined listing/reference/audit checks pass.\n- Six independent checks, 100 cases each; maximum error 1.289e-10 below 1e-6.\n- Frozen source bece6bee500fb24f82530794e059faab94e44531: 7172 passed, 29 skipped, 210 deselected, 60 warnings; 93.25% coverage; tracked tree unchanged.\n- All five pre-PR gates passed, including 51 mapped tests.\n- Rebuilt 52-page PDF with 28 references; scoped pages inspected, including final affected-page reinspection. No scoped overflow or unresolved references. One historical title overflow remains in chapter 7.\n- Five successful agy Gemini 3.8 Flash reviews/proposals, lead-adjudicated. One failed oversized invocation excluded.\n\n## Handoff\n\nAcceptance and eight exact hashes: reports/technical-review/simulation-feedback-validation.json. Primary-reading scope, derivations, rejected findings, failure history and delivery guidance: docs/development/technical-review/simulation-feedback-review/review-notes.md. Per-issue turnover: changes/4927-simulation-feedback-review.md. Three complete corpus rows accepted, leaving 56 pending-prefix rows of 407 heterogeneous inventory rows. No complete optimizer, whole-volume or empirical human certification.\r\n",
+    "headRefName": "fix/simulation-feedback-review",
+    "headRefOid": "d8774a4c749b0bb13347e1405150c39aba8187f2",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4932,
+    "title": "fix: correct simulation, optimization and feedback textbook claims",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4932"
+  },
+  {
+    "baseRefName": "fix/simulation-feedback-review",
+    "body": "Closes #4931. Supports epic #4009 and corpus #4021.\n\nCorrect complete Geometry of Motion Volume V chapters 7\u20139. Identification now distinguishes observable parameter combinations, excitation/noise assumptions and physical consistency. The executable RL example uses pinned Gymnasium 1.3.0 dynamics, pre-step rewards, and termination versus truncation. Motion analysis uses relative-angle kinematics, explicit velocity metrics, and consistent rigid-body energy and interface power.\n\nValidation: 54 actual-listing tests; 92 combined checks; seven independent 100-case checks; seven lead-adjudicated agy Gemini 3.8 Flash reviews. Frozen source 5d8b250fafa0f40c1e61442d650f5fb385a0e195 passed 7,226 tests, 29 skipped, 210 deselected, with 93.25% source coverage and an unchanged tracked tree. All five central pre-PR gates and commit/push hooks passed. Final 55-page PDF has 33 references, no unresolved citations or overfull text; physical pages 3\u20135, 32\u201343 and 53\u201355 inspected. Gymnasium tests ran locally and skip when its optional dependency is absent.\n\nNine accepted source hashes, primary-source reading scope, rejected helper proposals, failed-run history and turnover guidance are recorded in reports/technical-review/inference-policy-analysis-validation.json and docs/development/technical-review/inference-policy-analysis-review/review-notes.md. Three complete corpus rows accepted: 407 total, 53 still marked full technical audit pending. This count is not a scientific-completion percentage; no trained golf policy or empirical human certification is claimed.\n\nDelivery: regular PR stacked on #4932 to isolate review. Do not merge into the topic parent. Retarget to main only after verified parent delivery; use the central protected merge guard, then verify accepted blobs on fetched remote main. Continuation fragment: changes/4931-inference-policy-analysis-review.md. Next bounded article review: #4933.\n",
+    "headRefName": "fix/inference-policy-analysis-review",
+    "headRefOid": "701056c8a5aafcf465785c484ac0563e57109e9a",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4936,
+    "title": "docs: correct identification, RL benchmark and motion-analysis claims",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4936"
+  },
+  {
+    "baseRefName": "fix/inference-policy-analysis-review",
+    "body": "The workbench article conflated shared guide metadata with executable diagnostics and treated additive work closure as evidence of energy conservation. It now states the pinned provider contracts, distinguishes same-state from forward interventions, derives midpoint wrench and power conventions, and documents a reproducible shaft-mass mismatch: 8 J from the Python fallback mass matrix versus 4 J from the transfer diagnostic at the same illustrative state. Provider follow-up: Tools#5431.\n\nValidation: 56 focused tests; full regression 7,226 passed, 29 skipped, 210 deselected, 93.25% coverage, unchanged tracked tree; all five central pre-PR gates; primary-source/provider inspection; 100 seeded mechanics checks; scoped desktop/mobile rendered review. Initial root-hygiene failures were repaired by moving browser artifacts and rerunning the full suite. Review notes preserve limitations and rejected Flash findings.\n\nCloses #4933. Epic #4009; corpus #4021. Depends on #4936. This regular stacked PR must reach protected main after its parent; do not merge into the topic base. One corpus row accepted, 52 pending-prefix rows of 407; these are scope counts, not a completion percentage. Acceptance hashes and turnover guidance are committed.",
+    "headRefName": "fix/workbench-contract-review",
+    "headRefOid": "f3626e2055617cf5e26ee79f109be6a20302e75b",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4938,
+    "title": "fix(review): correct workbench contracts and energy diagnostics",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4938"
+  },
+  {
+    "baseRefName": "fix/workbench-contract-review",
+    "body": "## Summary\n\nCorrect the complete putting chapter in LaTeX and Quarto and the golf-book nomenclature. The chapter now separates signed sliding-to-rolling contact, rolling inertia on slopes, Stimpmeter calibration, stroke pendulum timing, and impact-to-launch transfer. Correct primary-source citation metadata and restore the chapter to both book contents lists.\n\nCloses #4937. Part of epic #4009 and corpus #4021.\n\n## Handoff\n\n- Branch/head: fix/putting-mechanics-review at582920964; accepted source e38a370c6.\n- This PR is stacked on PR4938. Do not merge into its topic parent. After the parent reaches remote main, retarget main, use the central protected merge guard and verify the ten accepted blobs from putting-mechanics-validation.json.\n- Shared PDF title gate repair: D-sorganization/Repository_Management#1998. The repaired central validator passes all current gates without altering correct book headings.\n- Turnover: docs/development/technical-review/putting-mechanics-review/review-notes.md, scoped change fragment and acceptance report. Next batch #4939 has its own worktree and lease.\n\n## Validation\n\n- Frozen full regression: 7227 passed,29 skipped,210 deselected,60 warnings;650.82s;93.25% coverage; tracked tree unchanged.\n- 20 focused publication/trust tests; publication test reproduced the missing chapter before its correction.\n- Six groups of100 independent mechanics checks; five successful agy Gemini3.8 Flash reviews, lead adjudicated.\n- Rebuilt534-page PDF,145references, no unresolved references/citations; scoped pages inspected. Two historical overfull warnings remain outside new body content.\n- Chapter HTML inspected at390 and1440pixels:93math containers,zero math errors and document overflow.\n- All eight repaired central pre-PR gates and the mapped publication test pass; acceptance-only pre-push check also passes.\n\n## Scope and Limits\n\nThree complete corpus scopes accepted, leaving49 of407 indexed scopes pending. This is not an empirical golfer validation, coaching prescription, whole-book scientific review or live-site certification. Failed stale-digest and original title-gate logs are retained. The standalone local book preview needed the unchanged canonical CSS copied to its server resource directory; deployed root Quarto resources include the canonical CSS.\n\n## Agent Accountability\n\nCodex; session technical-review-20261005-putting, lease receipt5988628060. Regular PR. No shared handoff files, user .commit_msg, branch protections or hooks bypassed.\r\n",
+    "headRefName": "fix/putting-mechanics-review",
+    "headRefOid": "58292096406f931322cf9595a49cacfe7f145ae2",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4940,
+    "title": "fix: correct putting contact and stroke mechanics",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4940"
+  },
+  {
+    "baseRefName": "fix/putting-mechanics-review",
+    "body": "Correct all six canonical tangent-series articles and the applications appendix. The revised explanations separate first variations from finite swing changes, retain DDP feedforward updates, state contraction hypotheses, derive impact-time sensitivity, and distinguish same-state input removal from forward counterfactuals. Repair the moving-tangent figure and the appendix's expanded plain-language section.\n\nCloses #4939. Part of epic #4009 and corpus #4021.\n\nValidation: frozen source 821594bd58889550348e7fcd6ae4dd99479e4339 passed 7227 tests, 29 skipped, 210 deselected and 60 warnings in 471.42 seconds; 93.25% coverage and unchanged tracked tree. All eight central pre-PR gates and acceptance-only gates pass. Also 103 focused tests, eight groups of 100 independent mathematical checks, and nine lead-adjudicated agy Gemini 3.8 Flash jobs. Seven pages checked at 390/1440 pixels: 294 math containers per viewport, no math errors or equation/document overflow. Expanded appendix visibility and ARIA states verified.\n\nSeven complete corpus scopes accepted, leaving 42 of 407 indexed scopes pending; these counts are not empirical validation percentages. Nine canonical hashes and detailed derivation/turnover records are in reports/technical-review/tangent-applications-validation.json and docs/development/technical-review/tangent-applications-review/review-notes.md. Historical mobile title wrapping and local preview CSP/manifest messages remain documented.\n\nThis is a regular PR stacked on putting PR #4940. Do not merge into the topic parent. After that parent reaches remote main, retarget main, use the protected central merge guard, and verify accepted blobs on fetched main. Title-gate dependency: D-sorganization/Repository_Management#1998. Next batch #4945 reviews 15 historical draft sources in a separate worktree.\n\nAgent: codex. Session: technical-review-20261005-tangent-applications. Lease receipt: 5989082122. No shared handoff files or user .commit_msg changed; no branch protections or hooks bypassed.",
+    "headRefName": "fix/tangent-applications-review",
+    "headRefOid": "f52517a9c3d2a8a564e07d03e9d236950c172604",
+    "isDraft": false,
+    "labels": [
+      {
+        "id": "LA_kwDOQbytz88AAAACz35OYQ",
+        "name": "agent:codex",
+        "description": "Touched by Codex.",
+        "color": "1D76DB"
+      }
+    ],
+    "number": 4946,
+    "title": "Correct tangent dynamics, control, hybrid timing and applications",
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4946"
+  }
+]

@@ -1,0 +1,79 @@
+Notice that the prompt explicitly asks: **"Compare the LaTeX and QMD below for omitted prose, formulas, citations, altered technical meaning. Also audit the nomenclature for mathematical errors."** However, only the LaTeX (`TEX: ...`) and the `NOMENCLATURE: ...` sections were provided in the prompt—no corresponding QMD text was pasted or provided.
+
+Here is the audit of the mathematical expressions in the text and the **Nomenclature**, followed by notes on technical consistency and exact expressions:
+
+---
+
+### 1. Missing Input Note (LaTeX vs. QMD)
+* **No QMD text was provided in the prompt.** To compare omitted prose, formulas, citations, or altered technical meaning between LaTeX and QMD, please provide the QMD snippet.
+
+---
+
+### 2. Audit of Mathematical Nomenclature & Expressions
+
+#### A. Nomenclature Audit
+1. **Full State and Flexible Coordinates Representation:**
+   * *Nomenclature entry:*
+     $$\bm{x} = [\bm{q}^T, \dot{\bm{q}}^T]^T\text{; with flexibility, append } \bm{\eta}, \dot{\bm{\eta}} \text{ once.}$$
+   * *Actionable Issue:* The dimension of flexible coordinates is declared as $m$ ($\bm{\eta} \in \mathbb{R}^m$), while rigid coordinates have dimension $n$ ($\bm{q} \in \mathbb{R}^n$). In the same section, $m$ is also used for physical mass ($m$ in the rigid pendulum section: $md$, $T$, etc.). Reusing $m$ as both coordinate dimension and scalar mass creates an ambiguity.
+   * *Exact conflict:*
+     * `$m$` defined as: *Number of flexible shaft modal coordinates.*
+     * `$m$` used in dynamics: *rigid mass / golf ball mass.*
+
+2. **Lagrange Multiplier Sign Convention & Work:**
+   * *Nomenclature entries:*
+     * `$\boldsymbol{\lambda}$`: Constraint multipliers; $\bm{Q}_c = \bm{J}_c^T\boldsymbol{\lambda}$
+     * `$\bm{\Phi}(\bm{q},t) = \bm{0}$`: Holonomic constraints; $\bm{J}_c\dot{\bm{q}} = -\bm{\Phi}_t$ where $\bm{\Phi}_t = \frac{\partial \bm{\Phi}}{\partial t}$.
+     * `$P_{\mathrm{constraint}}(t)$`: Actual power $\bm{Q}_c^T\dot{\bm{q}} = -\boldsymbol{\lambda}^T\bm{\Phi}_t$.
+   * *Consistency check:* If $\bm{Q}_c = \bm{J}_c^T\boldsymbol{\lambda}$, then:
+     $$\bm{Q}_c^T\dot{\bm{q}} = (\bm{J}_c^T\boldsymbol{\lambda})^T\dot{\bm{q}} = \boldsymbol{\lambda}^T\bm{J}_c\dot{\bm{q}} = \boldsymbol{\lambda}^T(-\bm{\Phi}_t) = -\boldsymbol{\lambda}^T\bm{\Phi}_t.$$
+     This is mathematically consistent under the declared convention.
+
+3. **Symbol Reuse for Strain and Regularizer:**
+   * *Nomenclature entry for DCR:* Denominator uses regularizer $\varepsilon$ (`$+\varepsilon$`).
+   * *Nomenclature entry for Biomechanics:* $\varepsilon$ defined as *Strain (deformation per unit length in tissue)*.
+   * *Exact expressions:* $\mathrm{DCR}_{W,\mathcal{U}}(\state) = \frac{\norm{W\bm{a}_{\mathrm{drift}}}}{\sup_{u\in\mathcal{U}}\norm{W\bm{B}_a u}+\varepsilon}$ vs. $\varepsilon$ (strain).
+
+---
+
+#### B. Audit of Formulas in Chapter 14 (Putting Mechanics)
+
+1. **Sliding Energy Dissipation Rate Formula:**
+   * *Text expression:*
+     $$\dot{E} = -\mu_k m g |s|$$
+   * *Derivation / Verification:*
+     $E = \frac{1}{2}mv^2 + \frac{1}{2}I\omega^2$.
+     Differentiating with respect to time:
+     $$\dot{E} = mv\dot{v} + I\omega\dot{\omega} = mv\bigl(-\mu_k g \operatorname{sgn}(s)\bigr) + (\kappa m R^2)\omega\left(\frac{\mu_k g}{\kappa R}\operatorname{sgn}(s)\right) = -\mu_k m g \operatorname{sgn}(s)(v - R\omega) = -\mu_k m g |s|.$$
+     This expression is exact and correct.
+
+2. **Energy Lost During Sliding:**
+   * *Text expression:*
+     $$E_0 - E_r = \frac{m\kappa}{2(1+\kappa)}s_0^2$$
+   * *Derivation / Verification:*
+     $s_0 = v_0 - R\omega_0$. At the transition, $s(t_r) = 0 \implies v_r = R\omega_r$.
+     $$v_r = \frac{v_0 + \kappa R\omega_0}{1+\kappa} = v_0 - \frac{\kappa}{1+\kappa}s_0, \qquad R\omega_r = v_r = R\omega_0 + \frac{1}{1+\kappa}s_0.$$
+     Evaluating initial vs final energy:
+     $$E_0 - E_r = \frac{1}{2}m(v_0^2 - v_r^2) + \frac{1}{2}\kappa m (R^2\omega_0^2 - v_r^2) = \frac{m\kappa}{2(1+\kappa)}(v_0 - R\omega_0)^2 = \frac{m\kappa}{2(1+\kappa)}s_0^2.$$
+     This formula is exact and correct.
+
+3. **Compound Pendulum Equation of Motion & Equivalent Length:**
+   * *Text expression:*
+     $$I_p\ddot\theta + mgd\sin\theta = \tau(t), \qquad L_{\mathrm{eff}} = \frac{I_p}{md}$$
+   * *Linearized equation:* For small $\theta$ and $\tau=0$:
+     $$\ddot\theta + \frac{mgd}{I_p}\theta = 0 \implies \ddot\theta + \frac{g}{L_{\mathrm{eff}}}\theta = 0.$$
+     Period $T = 2\pi\sqrt{L_{\mathrm{eff}}/g}$. Correct.
+   * *Head Speed Formula:*
+     $$U_h = \ell_h\sqrt{\frac{2g}{L_{\mathrm{eff}}}(1-\cos\theta_0)} \simeq \ell_h\omega_n|\theta_0|$$
+     From energy conservation: $\frac{1}{2}I_p\dot\theta^2 = mgd(1-\cos\theta_0) \implies \dot\theta = \sqrt{\frac{2mgd}{I_p}(1-\cos\theta_0)} = \sqrt{\frac{2g}{L_{\mathrm{eff}}}(1-\cos\theta_0)}$.
+     Since $U_h = \ell_h \dot\theta$, the expression is exact.
+
+4. **Rolling Resistance Acceleration and Contact Law:**
+   * *Text expression:*
+     $$\ddot{\mathbf r} = \frac{g\sin\alpha}{1+\kappa}\hat{\mathbf s} - a_0\cos\alpha\,\frac{\dot{\mathbf r}}{\|\dot{\mathbf r}\|}, \qquad a_0 = \frac{c_r g}{1+\kappa}$$
+   * *Dimensional / Mechanical note:* In the first equation, the rolling resistance term is written as $-a_0\cos\alpha\,\frac{\dot{\mathbf r}}{\|\dot{\mathbf r}\|}$.
+     Because $N = mg\cos\alpha$, the opposing moment is $M_r = c_r N R = c_r mg R\cos\alpha$.
+     In angular acceleration: $\dot{\omega}_{\mathrm{res}} = \frac{M_r}{I} = \frac{c_r mgR\cos\alpha}{\kappa m R^2} = \frac{c_r g\cos\alpha}{\kappa R}$.
+     Coupling no-slip constraint $\ddot{x} = R\dot{\omega}$ with translation $m\ddot{x} = -F_t$ and Euler $I\dot{\omega} = F_t R - M_r$:
+     $$(1+\kappa)m\ddot{x} = - \frac{M_r}{R} = -c_r mg\cos\alpha \implies \ddot{x}_{\mathrm{res}} = -\frac{c_r g}{1+\kappa}\cos\alpha = -a_0\cos\alpha.$$
+     Both $a_0 = \frac{c_r g}{1+\kappa}$ and the term $-a_0\cos\alpha\frac{\dot{\mathbf r}}{\|\dot{\mathbf r}\|}$ are consistent.

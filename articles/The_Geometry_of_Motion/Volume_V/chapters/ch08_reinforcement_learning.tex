@@ -1,141 +1,191 @@
-\chapter{Reinforcement Learning for Motor Control}
+\chapter[Reinforcement Learning for Motor Control]{Reinforcement Learning\\for Motor Control}
 \label{ch:rl}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+Reinforcement learning optimizes behavior from interaction data under a specified
+reward and transition process \cite{Sutton2018}. It does not remove the need to
+define an objective. A model-free policy update need not differentiate an
+explicit dynamics model, but its simulated experience still comes from a
+particular mechanical model. A policy that exploits an inaccurate contact rule
+or an arbitrary reward can score well without explaining a human golf swing.
 
-\epigraph{When the model is too complex for optimal control, let the agent learn.}{}
+\section{State, Observation, Action and Reward}
 
-Reinforcement learning (RL) methods can solve motor control problems when the cost function
-is difficult to specify or when model uncertainty is large \cite{Sutton2018}. This chapter
-demonstrates how to formulate multi-body control tasks as RL environments and integrate
-with standard policy optimization algorithms like PPO \cite{schulman2017}.
+A Markov state contains enough information to specify the conditional next-state
+distribution given the action. Joint positions alone generally omit velocity;
+muscle-driven systems may also need activation and tendon states. An observation
+can omit parts of the state, producing a partially observed control problem.
+Neither the observation nor the action must equal generalized coordinates or
+joint torque. State these mappings before selecting an algorithm.
 
-\section{RL Environments in the Companion Platform}
+For a discounted continuing objective,
+$J(\pi)=\mathbb{E}_{\pi}[\sum_{k=0}^{\infty}\gamma^k r_k]$ with
+$0\leq\gamma<1$, the reward scale, discount, sampling interval and action
+constraints jointly define the problem. Changing the interval while holding
+$\gamma$ and per-step rewards fixed generally changes the physical-time
+objective. A continuous discount rate $\rho$ corresponds to
+$\gamma=\exp(-\rho\Delta t)$; a running reward rate needs integration over
+the step. These choices matter when comparing policies with different
+simulation or controller rates.
 
-The companion platform provides Gymnasium-compatible environments for motor control tasks \cite{Sutton2018}.
-Gymnasium (formerly OpenAI Gym) is a standard interface for defining RL environments with
-reset, step, and reward computation methods. This enables use of any RL algorithm implemented
-for Gymnasium.
+Gymnasium's \texttt{reset} returns \texttt{(observation, info)};
+\texttt{step} returns observation, reward, \texttt{terminated},
+\texttt{truncated} and info. Spaces declare action/observation shapes, bounds
+and dtypes, and an environment uses its local random generator
+\cite{GymnasiumEnvironmentReview}. Interface compatibility does not imply
+compatibility with every learning algorithm: for example, a continuous torque
+space requires an algorithm or adaptation that supports continuous actions.
 
-\begin{lstlisting}[language=Python, caption={Custom RL environment for pendulum control.}]
+\section{An Executable Pendulum Benchmark}
+
+The listing runs the maintained \texttt{Pendulum-v1} environment, tested here
+with Gymnasium 1.3.0. Install \texttt{gymnasium==1.3.0}; rendering extras are
+unnecessary. This is a reproducible rollout, not a trained policy or a claim
+that the companion platform supplies a validated muscle-driven golf environment.
+
+The benchmark uses a uniform rod with $m=L=1$, $g=10$, $\Delta t=0.05$,
+$|\tau|\leq2$, and $\theta=0$ \emph{upright}. Its observation is
+$(\cos\theta,\sin\theta,\omega)$, and before numerical clipping,
+\begin{equation}
+  \dot\omega=\frac{3g}{2L}\sin\theta+\frac{3\tau}{mL^2}.
+\end{equation}
+The factors follow from pivot inertia $mL^2/3$ and COM distance $L/2$.
+Positive gravity acceleration near $\theta=0$ makes the upright equilibrium
+unstable. This angle differs from the downward-zero convention in
+Chapter~\ref{ch:param-estimation}; shifting the zero changes the gravity sign.
+
+The implementation first updates angular velocity, clips it to $[-8,8]$,
+then updates angle using that new velocity. This is a semi-implicit Euler
+step with an additional velocity cap, not exact integration or an unconstrained
+physical pendulum. The pre-step reward is
+\begin{equation}
+  r_k=-\left(\bar\theta_k^2+0.1\omega_k^2+0.001\tau_k^2\right),
+  \qquad \bar\theta_k\in[-\pi,\pi).
+\end{equation}
+These benchmark weights define a scalar objective after choosing units;
+squared torque is not mechanical work or muscle metabolic cost
+\cite{GymnasiumPendulumReview,GymnasiumPendulumSourceReview}.
+
+\begin{lstlisting}[language=Python, caption={A Seeded Pendulum Policy Rollout}]
+from collections.abc import Callable
+import gymnasium as gym
 import numpy as np
 
-class PendulumEnv:
-    """Simple pendulum environment for RL benchmarks.
-
-    State: [cos(theta), sin(theta), theta_dot]
-    Action: torque (continuous, clipped to [-2, 2])
-    Reward: -(angle^2 + 0.1*vel^2 + 0.01*action^2)
-    """
-
-    def __init__(self, dt: float = 0.05, max_steps: int = 200):
-        self.dt = dt
-        self.max_steps = max_steps
-        self.g = 9.81
-        self.l = 1.0
-        self.m = 1.0
-        self.max_torque = 2.0
-        self.state = np.zeros(2)
-        self.step_count = 0
-
-    def reset(self, seed: int | None = None) -> np.ndarray:
-        if seed is not None:
-            np.random.seed(seed)
-        self.state = np.array([
-            np.pi + np.random.uniform(-0.1, 0.1),
-            np.random.uniform(-0.5, 0.5)
-        ])
-        self.step_count = 0
-        return self._get_obs()
-
-    def _get_obs(self) -> np.ndarray:
-        theta, theta_dot = self.state
-        return np.array([np.cos(theta), np.sin(theta), theta_dot])
-
-    def step(self, action: float) -> tuple:
-        theta, theta_dot = self.state
-        u = np.clip(action, -self.max_torque, self.max_torque)
-
-        # Dynamics
-        theta_ddot = (-self.g / self.l * np.sin(theta) +
-                      u / (self.m * self.l**2))
-        theta_dot += theta_ddot * self.dt
-        theta += theta_dot * self.dt
-
-        self.state = np.array([theta, theta_dot])
-        self.step_count += 1
-
-        # Reward
-        angle_normalized = ((theta + np.pi) % (2*np.pi)) - np.pi
-        reward = -(angle_normalized**2 +
-                   0.1 * theta_dot**2 +
-                   0.01 * u**2)
-
-        done = self.step_count >= self.max_steps
-        return self._get_obs(), reward, done, {}
-
-
-# Quick test
-env = PendulumEnv()
-obs = env.reset(seed=42)
-total_reward = 0.0
-for _ in range(200):
-    action = np.random.uniform(-2, 2)
-    obs, reward, done, _ = env.step(action)
-    total_reward += reward
-    if done:
-        break
-print(f"Random policy total reward: {total_reward:.1f}")
+def run_pendulum(
+    policy: Callable[[np.ndarray], np.ndarray],
+    seed: int, steps: int,
+) -> dict:
+    """Collect a continuing-task rollout with an external limit."""
+    if (isinstance(seed, bool) or not isinstance(seed, int)
+            or seed < 0):
+        raise ValueError("seed must be a nonnegative integer")
+    if (isinstance(steps, bool) or not isinstance(steps, int)
+            or steps < 1):
+        raise ValueError("steps must be a positive integer")
+    env = gym.make("Pendulum-v1", max_episode_steps=steps)
+    try:
+        obs, _ = env.reset(seed=seed)
+        observations = [obs.copy()]
+        actions, rewards, terminated, truncated = [], [], [], []
+        for _ in range(steps):
+            action = np.asarray(policy(obs.copy()), dtype=np.float32)
+            if not env.action_space.contains(action):
+                raise ValueError("action must be finite (1,) in [-2,2]")
+            obs, reward, terminal, cutoff, _ = env.step(action)
+            observations.append(obs.copy())
+            actions.append(action.copy())
+            rewards.append(reward)
+            terminated.append(terminal)
+            truncated.append(cutoff)
+            if terminal or cutoff:
+                break
+        return {
+            "observations": np.asarray(observations),
+            "actions": np.asarray(actions),
+            "rewards": np.asarray(rewards),
+            "terminated": np.asarray(terminated, dtype=bool),
+            "truncated": np.asarray(truncated, dtype=bool),
+        }
+    finally:
+        env.close()
 \end{lstlisting}
 
-\section{Agent-Environment Loop}
+For a zero-torque baseline, pass \texttt{lambda obs: np.array([0.0])}
+as the policy, with seed 42 and 200 steps. The observation record includes the initial
+state and one observation after each action; rewards correspond to the
+pre-step state. The wrapper rejects actions outside the declared space instead
+of relying on the benchmark's internal clipping. A stochastic policy needs its
+own seeded generator; the environment seed does not seed an arbitrary policy.
+Independent rollout seeds and uncertainty summaries are needed for a performance
+comparison, not just one favorable return.
 
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[
-    every node/.style={align=center, draw, rounded corners, minimum width=2cm, text centered, font=\small},
-    ]
-    % Agent
-    \node[fill=blue!20] (agent) at (2, 2) {RL Agent};
-    % Environment
-    \node[fill=green!20] (env) at (6, 2) {Environment};
+\section{Termination Is Not Truncation}
 
-    % Agent to Environment
-    \draw[->] (3.2, 2.2) -- (4.8, 2.2) node[align=center, above, midway, font=\tiny] {action $a_t$};
+\texttt{Pendulum-v1} has no task-defined terminal state; its standard 200-step
+limit is imposed by the \texttt{TimeLimit} wrapper. The listing sets that external
+collection limit explicitly. Both flags stop collection, but an external
+truncation does not say the continuing task has no future value. A one-step
+target uses the final observation before reset:
+\begin{equation}
+  y_k=r_k+\gamma(1-\mathbf{1}_{\mathrm{terminated}})V(o_{k+1}).
+\end{equation}
+An intrinsically finite-horizon task is different: reaching its horizon is
+termination, and the remaining time must be represented in a Markov state
+\cite{GymnasiumTimeLimitsReview}. Algorithms and vectorized wrappers must also
+distinguish the final observation from an automatically reset observation.
 
-    % Environment to Agent
-    \draw[->] (4.8, 1.8) -- (3.2, 1.8) node[align=center, below, midway, font=\tiny] {state $s_{t+1}$, reward $r_t$};
+\begin{lstlisting}[language=Python, caption={A Continuing-Task Bootstrap Target}]
+def bootstrap_target(
+    reward: float, discount: float,
+    next_value: float, terminated: bool,
+) -> float:
+    """Use terminated, not terminated-or-truncated, as the mask."""
+    values = np.asarray([reward, discount, next_value], dtype=float)
+    if values.shape != (3,) or not np.isfinite(values).all():
+        raise ValueError("reward, discount and value must be finite scalars")
+    if not 0 <= discount <= 1:
+        raise ValueError("discount must be in [0,1]")
+    if not isinstance(terminated, (bool, np.bool_)):
+        raise ValueError("terminated must be boolean")
+    return float(reward + discount * (0.0 if terminated else next_value))
+\end{lstlisting}
 
-    % State and reward processing
-    \node[fill=yellow!20, below of=env] (sim) at (6, 0.3) {Forward Simulation};
-    \node[fill=orange!20, below of=agent] (policy) at (2, 0.3) {Policy Network};
+For $r=2$, $\gamma=0.9$ and $V(o')=5$, an external cutoff gives $y=6.5$;
+a true terminal transition gives $y=2$. This distinction can bias learning even
+when the simulator and reward are otherwise correct. The helper permits
+$\gamma=1$ for finite-horizon or other explicitly justified formulations;
+it does not assert convergence of an undiscounted infinite sum.
 
-    % Agent learning loop
-    \draw[->] (1, 2) -- (1, 0.7) -- (2, 0.7) node[align=center, left, pos=0.5, font=\tiny] {experience};
+\section{From a Benchmark to a Golf Hypothesis}
 
-    \node[right, font=\tiny, fill=white] at (6.5, 0.5) {Computes next\\state via\\forward dynamics};
+PPO is one policy-optimization method, not an assurance of global optimality,
+constraint satisfaction or transfer to a golfer \cite{schulman2017}. Learning
+curves should report environment transitions, evaluation seeds and uncertainty,
+as well as reward and policy settings. Comparisons with trajectory optimization
+need matched dynamics, initial conditions, horizons, constraints and objectives;
+Chapter~5 supplies a local quadratic core, not an end-to-end iLQR baseline.
 
-    \node[right, font=\tiny, fill=white] at (2.5, 0.1) {Learns from\\experience\\via policy\\gradient};
-  \end{tikzpicture}
-  \caption{RL agent-environment loop. The agent selects actions via its policy network;
-    the environment integrates dynamics and computes rewards. Both interact repeatedly.}
-  \label{fig:rl-loop}
-\end{figure}
+In golf, rewarding speed at a loosely defined impact can favor missing the
+ball, an incorrect face orientation or infeasible contact. Specify the strike
+event, club and ball geometry, launch-related quantities, feasible actuator
+states, joint/contact constraints and failure conditions. Penalty rewards do
+not by themselves enforce hard constraints. Domain randomization explores the
+chosen distribution of model variation; it cannot certify robustness to omitted
+mechanics or identify the human nervous system's objective.
 
-\section{From Gym to Golf}
-
-The companion platform's RL pipeline extends from simple benchmarks (pendulum, reaching) to
-full muscle-driven golf swing optimization using MyoSuite environments. The reward
-function is task-specific; for golf, one might maximize clubhead speed at impact while
-penalizing muscle effort.
+An interpretable comparison therefore links Chapters~\ref{ch:param-estimation}
+and~\ref{ch:visualization}: identify what the data constrain, declare the
+remaining model uncertainty, optimize an explicit task, then test motion,
+forces and energy on held-out conditions. Similar club paths can arise from
+different policies and actuator assumptions. A successful learned swing is a
+constructive possibility within the model, not proof that a golfer uses that
+policy.
 
 \section*{Exercises}
 \begin{enumerate}
-  \item Train a PPO agent to swing up the pendulum. Plot the learning curve.
-  \item Compare RL-learned policy with the iLQR solution from Chapter~5.
-  \item Design a reward function for maximizing clubhead speed in a golf model.
+  \item Reproduce one benchmark transition and its pre-step reward from the
+  stated equations. Explain how the velocity cap changes the mechanical model.
+  \item Compare true termination and external truncation for the numerical
+  target above. State which observation a vectorized learner should bootstrap.
+  \item Specify a golf reward and a separate feasibility test. Give one
+  physically undesirable behavior that the reward alone could admit.
 \end{enumerate}

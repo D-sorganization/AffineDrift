@@ -2,27 +2,27 @@
 \label{ch:experimental}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter is a provisional methods reference.
+Its analytical and synthetic examples do not establish accuracy for a particular laboratory, patient population or golf-swing experiment.
 \end{gomdraftnotice}
 
-\epigraph{%
-  The quality of a biomechanical analysis is limited by the quality of the measurements,
-  not the sophistication of the model.
-}{}
+A biomechanical inference links measurements to a model of the body and its environment.
+Camera calibration, marker-to-bone motion, filtering, force frames and clock alignment enter that link together.
+A small position residual does not by itself validate joint acceleration, muscle force or tissue loading.
+This chapter distinguishes the sensor observation from the inferred physical quantity and identifies checks needed before combining measurements.
 
 \section{Motion Capture Systems}
 
 \begin{center}
 \begin{tikzpicture}[scale=0.85, >=Stealth]
   % Lab setup
-  \draw[thick, dashed, gray] (0, 0) rectangle (5, 4) node[above left] {Calibrated Volume};
+  \draw[thick, dashed, gray] (0, 0) rectangle (5, 4);
+  \node[above, font=\small] at (2.5, 4) {Calibrated Volume};
 
   % Cameras
   \node[draw, circle, thick, font=\small] (cam1) at (0.5, 3.5) {Cam 1};
   \node[draw, circle, thick, font=\small] (cam2) at (4.5, 3.5) {Cam 2};
-  \node[draw, circle, thick, font=\small] (cam3) at (2.5, 0.5) {Cam 3};
+  \node[draw, circle, thick, font=\small] (cam3) at (4.5, 0.5) {Cam 3};
 
   % Subject with markers
   \draw[thick] (2.5, 1.5) circle (0.4) node {\tiny S};
@@ -33,7 +33,8 @@ will be added in future editions.
   \node[right, font=\small] at (3, 2.3) {Markers};
 
   % Force plate
-  \draw[very thick, fill=gray!20] (1.5, 0) rectangle (3.5, 0.3) node[below] {Force Plate};
+  \draw[very thick, fill=gray!20] (1.5, -0.6) rectangle (3.5, -0.3);
+  \node[below, font=\small] at (2.5, -0.6) {Force Plate};
 
   % Lines from cameras to markers
   \draw[dashed, thin, gray] (cam1) -- (2.5, 2);
@@ -44,225 +45,231 @@ will be added in future editions.
 
 \subsection{Marker-Based Systems}
 
-Optoelectronic motion capture systems (Vicon, Qualisys, OptiTrack) track retroreflective
-markers attached to the body surface. Standard configurations use 30--80 markers placed
-on bony landmarks following established protocols (Plug-in-Gait, Cleveland Clinic, ISB).
+Optoelectronic systems estimate marker positions from calibrated camera images.
+Camera arrangement, exposure, sampling, marker identification and calibration volume determine the observation conditions~\cite{chiari2005human}.
+Marker counts, diameters and nominal submillimeter instrument tolerances are configuration specifications, not universal biomechanical accuracy bounds.
+A protocol must state its anatomical landmarks, tracking clusters, occlusion handling and segment-frame construction.
+An instrument's sampling rate also does not determine its end-to-end latency or its ability to resolve a short impact event.
 
-Key specifications for biomechanical applications
-\cite{chiari2005human}:
-\begin{itemize}
-  \item \textbf{Sampling rate}: 100--500~Hz for human motion (higher for impacts)
-  \item \textbf{Spatial accuracy}: $<1$~mm in calibrated volume
-  \item \textbf{Marker size}: 9--14~mm diameter
-  \item \textbf{Latency}: important for real-time applications ($<10$~ms achievable)
-\end{itemize}
-
-It is important to note that the instrument accuracy above refers to the camera
-system alone. The dominant error in marker-based biomechanics is not camera noise
-but \emph{soft tissue artifact}---the relative motion between skin markers and the
-underlying bone---discussed in Section~\ref{sec:sta} below
-\cite{leardini2005human}.
+A camera tracks the visible marker rather than the underlying bone.
+Anatomical landmark placement, skin motion and the assumed joint geometry therefore enter the estimated bone pose~\cite{leardini2005human}.
+For golf, the same distinction applies to a torso marker cluster, a club-mounted marker and the particular point whose velocity is reported.
+A calibration check should include independent positions and motions over the intended working volume, with results expressed in the units and directions relevant to the task.
 
 \subsection{Markerless Systems}
 
-Computer vision approaches (OpenPose, MediaPipe, DeepLabCut) estimate joint positions
-from video without physical markers. Accuracy is currently 10--30~mm, insufficient for
-clinical-grade inverse dynamics but useful for field measurements and large-scale studies.
+Video methods can estimate image keypoints, triangulated landmarks or model-based body states, depending on the camera configuration and estimator.
+These outputs are different objects: a visible image feature is not automatically an anatomical joint center in three dimensions.
+Accuracy depends on task, viewpoint, training domain, occlusion, clothing and the reference used for evaluation.
+A universal 10--30\,mm error band or a blanket clinical-suitability judgment cannot be assigned to all markerless approaches.
+Validation must address the intended downstream quantity; position agreement alone does not validate differentiated accelerations or inverse-dynamics moments.
 
-\begin{lstlisting}[language=Python, caption={Motion capture data processing pipeline.}]
+\subsection{An Offline Processing Example}
+
+The following listing processes finite, uniformly sampled marker positions in meters; timestamps and gap handling must be established before calling it.
+It uses second-order filter sections for numerical stability and filters along the time axis~\cite{SciPyButterExperimental,SciPySosFiltFiltExperimental}.
+The caller supplies a cutoff rather than inheriting a universal 6\,Hz choice.
+This is an offline forward--backward operation that uses future samples, not a causal real-time controller.
+At the specified single-pass Butterworth cutoff, ideal forward--backward amplitude is $1/2$ (approximately $-6$\,dB), since the single-pass magnitude is squared.
+The returned velocities and accelerations are finite-difference estimates, with unavailable endpoint derivatives marked as NaN rather than copied from neighbors.
+Padding can still affect nearby samples; record length and a justified edge-exclusion interval must be checked for each application.
+
+\begin{lstlisting}[language=Python, caption={Offline Marker Processing With Declared Frequency and Boundary Limits}]
 import numpy as np
-from scipy.signal import butter, filtfilt
+from scipy.signal import butter, sosfiltfilt
+
 
 def process_mocap_data(
     marker_data: np.ndarray,
     sample_rate: float,
-    cutoff_freq: float = 6.0,
-    filter_order: int = 4
+    cutoff_freq: float,
+    filter_order: int = 4,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Process raw motion capture marker data.
+    """Offline example for finite, uniformly sampled positions in meters.
 
-    Parameters
-    ----------
-    marker_data : np.ndarray, shape (n_frames, n_markers, 3)
-        Raw marker positions in meters.
-    sample_rate : float
-        Sampling frequency in Hz.
-    cutoff_freq : float
-        Low-pass filter cutoff frequency in Hz.
-    filter_order : int
-        Butterworth filter order.
-
-    Returns
-    -------
-    tuple of np.ndarray
-        (positions, velocities, accelerations)
-        Each shape (n_frames, n_markers, 3).
+    Input shape is (frames, markers, 3). cutoff_freq is the
+    single-pass Butterworth -3 dB frequency, not the two-pass
+    -3 dB frequency. Returned positions, velocities and accelerations
+    have the input shape and floating dtype. Endpoint derivatives
+    are NaN; additional edge exclusion needs task-specific checking.
+    Missing markers must be handled explicitly before this function.
     """
-    # Design low-pass Butterworth filter
-    nyquist = sample_rate / 2.0
-    b, a = butter(filter_order, cutoff_freq / nyquist, btype='low')
+    if np.iscomplexobj(marker_data):
+        raise ValueError("Positions must be real-valued")
+    data = np.asarray(marker_data, dtype=float)
+    if data.ndim != 3 or data.shape[1] == 0 or data.shape[2] != 3:
+        raise ValueError("Expected shape (frames, markers, 3)")
+    if not np.isfinite(data).all():
+        raise ValueError("Resolve missing/nonfinite positions first")
+    sample_rate, cutoff_freq = float(sample_rate), float(cutoff_freq)
+    if not np.isfinite(sample_rate) or sample_rate <= 0:
+        raise ValueError("sample_rate must be positive and finite")
+    if not np.isfinite(cutoff_freq) or not 0 < cutoff_freq < sample_rate / 2:
+        raise ValueError("Require 0 < cutoff_freq < Nyquist frequency")
+    if (
+        isinstance(filter_order, (bool, np.bool_))
+        or not isinstance(filter_order, (int, np.integer))
+        or filter_order < 1
+    ):
+        raise ValueError("filter_order must be a positive integer")
 
-    n_frames, n_markers, _ = marker_data.shape
-    positions = np.zeros_like(marker_data)
-    velocities = np.zeros_like(marker_data)
-    accelerations = np.zeros_like(marker_data)
-
+    padlen = 3 * (int(filter_order) + 1)
+    if data.shape[0] <= padlen + 1:
+        raise ValueError("Record too short for the declared padding")
+    sos = butter(filter_order, cutoff_freq, fs=sample_rate, output="sos")
+    positions = sosfiltfilt(sos, data, axis=0, padlen=padlen)
     dt = 1.0 / sample_rate
-
-    for m in range(n_markers):
-        for axis in range(3):
-            # Filter position data
-            positions[:, m, axis] = filtfilt(
-                b, a, marker_data[:, m, axis]
-            )
-
-    # Central difference for velocities
+    velocities = np.full_like(positions, np.nan)
+    accelerations = np.full_like(positions, np.nan)
     velocities[1:-1] = (positions[2:] - positions[:-2]) / (2 * dt)
-    velocities[0] = velocities[1]
-    velocities[-1] = velocities[-2]
-
-    # Central difference for accelerations
     accelerations[1:-1] = (
         positions[2:] - 2 * positions[1:-1] + positions[:-2]
     ) / dt**2
-    accelerations[0] = accelerations[1]
-    accelerations[-1] = accelerations[-2]
-
     return positions, velocities, accelerations
 \end{lstlisting}
 
 \subsection{Soft Tissue Artifact}
 \label{sec:sta}
 
-Soft tissue artifact (STA) is the relative motion between skin-mounted markers
-and the underlying bone caused by deformation of skin, subcutaneous fat, and muscle
-during movement. STA is widely recognized as the dominant source of error in
-marker-based motion capture, frequently exceeding the nominal camera resolution
-by more than an order of magnitude \cite{chiari2005human,peters2010quantification}.
+Soft tissue artifact (STA) is motion of skin-mounted markers relative to bone.
+It can be a major source of error even when the cameras localize each marker precisely~\cite{leardini2005human}.
+Peters and colleagues' review found reported magnitudes exceeding 30\,mm on the thigh and reaching 15\,mm on the tibia, with substantial variation and limitations in the included populations~\cite{peters2010quantification}.
+These are findings from lower-limb studies, not a universal interval for every marker, subject or swing.
 
-The magnitude of STA varies strongly with marker location, anatomical region,
-task, and subject anthropometry. Representative values for the lower limb are
-10--30~mm of skin-marker displacement relative to bone during walking and running,
-with the thigh segment the worst offender and the shank the best
-\cite{chiari2005human,peters2010quantification}. STA is not random noise: it is
-task-correlated and heavily dependent on muscle contraction state, which means
-low-pass filtering cannot remove it.
-
-Practical mitigation strategies include:
-\begin{itemize}
-  \item \textbf{Rigid marker clusters} mounted on lightweight shells, which average
-        out local skin motion over a neighborhood of markers.
-  \item \textbf{Optimal pose estimation}, in which the rigid body pose of a segment
-        is obtained by least-squares fitting of a cluster of markers rather than by
-        differencing pairs of landmarks \cite{chiari2005human}.
-  \item \textbf{Global optimization / inverse kinematics} with joint constraints,
-        which enforces an articulated model and redistributes STA across the chain.
-  \item \textbf{Biplanar fluoroscopy} or bone pins when the research question
-        demands sub-millimeter bone-to-bone accuracy.
-\end{itemize}
-
-STA should always be reported as part of the uncertainty budget of any kinetic
-analysis; inverse dynamics is sensitive to segment orientation errors, and
-moderate STA can produce large errors in computed joint moments.
+STA can contain task-correlated motion within the frequency band of the biological signal; low-pass filtering therefore cannot generally separate it from bone movement.
+Cluster fitting can reduce sensitivity to some local errors but cannot remove a coherent displacement of the whole cluster relative to bone.
+Likewise, constrained inverse kinematics enforces a model and redistributes residuals; a smaller residual is not proof of more accurate bone motion.
+Report both translational and orientation uncertainty and test sensitivity of the inferred loads to plausible marker and joint-frame errors.
+Bone-referenced methods provide a different validation route, subject to their own calibration, field-of-view and measurement limitations.
 
 \subsection{Low-Pass Filter Cutoff Selection}
 \label{sec:filter-cutoff}
 
-Choosing the cutoff frequency for the low-pass Butterworth filter in
-\texttt{process\_mocap\_data()} is not a matter of taste: a cutoff that is too low
-attenuates the true signal (especially accelerations, whose energy extends to
-higher frequencies than positions), while a cutoff that is too high leaves noise
-that is amplified by numerical differentiation.
+A low cutoff can remove genuine rapid motion, while a high cutoff retains noise amplified by differentiation.
+In the frequency domain, differentiation multiplies a component by $i2\pi f$, and a second derivative by $-(2\pi f)^2$.
+It changes spectral weighting, not the frequency of a sinusoid.
+The need for acceleration therefore does not automatically prescribe a higher cutoff.
 
-The standard objective procedure is \textbf{residual analysis}, due to Winter
-\cite{Winter2009}. For a range of candidate cutoffs $f_c$, one computes
-the root-mean-square residual
+Winter's residual-analysis construction compares samples $x_i$ of one scalar coordinate trajectory with filtered samples $\hat{x}_i(f_c)$~\cite[Section 3.4.4.3]{Winter2009}:
 \[
-  R(f_c) = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\bigl(x_i - \hat{x}_i(f_c)\bigr)^2},
+R(f_c)=\sqrt{\frac{1}{N}\sum_{i=1}^{N}
+\bigl(x_i-\hat{x}_i(f_c)\bigr)^2}.
 \]
-where $x_i$ is the raw signal and $\hat{x}_i(f_c)$ is the filtered signal. Plotting
-$R(f_c)$ vs.\ $f_c$ produces a curve that is approximately linear in the high-$f_c$
-regime (residuals reflect only noise) and rises sharply at low $f_c$ (residuals
-include signal). The optimal cutoff is the intersection of the extrapolated linear
-noise-only segment with the $R$-axis, typically in the range 4--10~Hz for
-kinematics of whole-body locomotion and 10--20~Hz for running and impact-dominated
-tasks \cite{Winter2009}. Higher cutoffs are required when downstream
-analysis needs accelerations or joint powers, since differentiation acts as a
-high-pass amplifier.
+Here $N$ is the number of samples and $f_c$ is the candidate cutoff frequency.
+If a suitable high-frequency portion of the residual curve is approximately linear, extrapolate that fitted portion to obtain an ordinate intercept $R_0$.
+That intercept has the signal's units, such as meters; it is not a frequency.
+The described compromise chooses the frequency where the residual curve intersects the horizontal level $R=R_0$.
+This is a conditional signal/noise heuristic, not a guaranteed global optimum or a universal walking, running or golf cutoff.
+State the fitted interval, filter response, endpoint treatment and sensitivity to plausible alternative choices.
+
+Filtering must also be considered across modalities.
+Kristianslund and colleagues showed that changing the relationship between force and marker filtering changed inferred joint moments and participant rankings in a sidestep-cutting study~\cite{Kristianslund2012Filtering}.
+A sharp force transient combined with strongly smoothed kinematics can leave incompatible terms in the equations of motion.
+That result motivates task-specific joint assessment of force and kinematic bandwidth; it does not establish one cutoff for every experiment.
+Preserve raw data and inspect event timing, derivatives and dynamic residuals after processing.
 
 \section{Electromyography (EMG)}
 
-EMG measures the electrical activity of muscles, providing a window into neural
-commands. Surface EMG (sEMG) is non-invasive; intramuscular EMG (using fine-wire
-or needle electrodes) targets deep muscles.
+EMG records electrical potentials associated with muscle-fiber activity through a particular electrode and recording arrangement.
+Surface EMG is affected by electrode geometry, placement, tissue conduction, crosstalk and movement artifact; it is not a direct readout of a unique neural command or muscle force.
+Intramuscular recordings sample differently and should not inherit a surface-electrode processing protocol without justification.
+An EMG-informed force estimate needs additional activation, contraction and tendon assumptions; agreement with kinematics alone does not identify those assumptions.
 
-\subsection{EMG Processing}
+\subsection{EMG Processing and Interpretation}
 
-The raw EMG signal must be processed before use:
-\begin{enumerate}
-  \item \textbf{Band-pass filter}: 20--450~Hz (remove movement artifact and noise)
-  \item \textbf{Full-wave rectification}: $|e(t)|$
-  \item \textbf{Envelope extraction}: low-pass filter at 3--6~Hz
-  \item \textbf{Normalization}: divide by maximum voluntary contraction (MVC) value
-\end{enumerate}
+Specify the recording bandwidth, sample rate and analog anti-aliasing before selecting digital filters.
+A common envelope workflow is band-pass filtering, full-wave rectification and low-pass smoothing, but each frequency setting must match the recording and question.
+Filter transients and smoothing alter onset and peak timing; a smooth envelope is not an instantaneous excitation measurement.
+Any downsampling requires its own anti-aliasing justification.
+
+Normalization expresses an amplitude relative to a stated reference measurement, not automatically as a fraction of maximal force.
+The CEDE consensus distinguishes several normalization approaches, including task-specific maximal contractions, standardized contractions and within-task references~\cite{Besomi2020Normalization}.
+Report the protocol, reference statistic, repeatability and any reason the reference effort may not represent the task.
+A dynamic amplitude exceeding a recorded MVC reference is not in itself a mathematical impossibility.
+Interpretation of comparisons between muscles, sessions or participants depends on what the chosen normalization preserves and removes.
 
 \section{Force Plates}
 
-Force plates measure ground reaction forces (GRF) and moments. Standard specifications:
-\begin{itemize}
-  \item 6-component measurement: $F_x, F_y, F_z, M_x, M_y, M_z$
-  \item Sampling rate: 1000--2000~Hz
-  \item Range: 0--5000~N vertical, 0--2500~N horizontal
-  \item Center of pressure (CoP) accuracy: $<2$~mm
-\end{itemize}
+A six-component force plate reports a calibrated force and moment wrench about a specified origin.
+Rated load, sample rate and nominal CoP accuracy must come from the actual device and calibration, including loading position and magnitude.
+Before combining it with motion capture, transform both force and moment into the declared laboratory frame and account for the change of moment origin.
 
-The center of pressure is computed from force plate outputs:
+For an explicit example, choose a right-handed frame with $+z$ upward, origin $O$ at the wrench-reference point and contact plane $z=h$.
+Let $(\bm F,\bm M_O)$ denote the ground-on-person wrench in that frame, with $F_z>0$ during loaded stance.
+The signed height $h$ is positive when the reference origin lies below the surface.
+At the CoP, $\bm r=(x_{\mathrm{CoP}},y_{\mathrm{CoP}},h)$, assume the remaining contact couple is normal to the plane:
+\[
+\bm M_O=\bm r\times\bm F+(0,0,T_z)^\top.
+\]
+Expanding this identity yields
 \begin{equation}
-  x_{\text{CoP}} = -\frac{M_y + F_x \cdot d_z}{F_z}, \quad
-  y_{\text{CoP}} = \frac{M_x - F_y \cdot d_z}{F_z},
+  x_{\mathrm{CoP}}=\frac{hF_x-M_y}{F_z},\qquad
+  y_{\mathrm{CoP}}=\frac{M_x+hF_y}{F_z},
   \label{eq:ch7:cop}
 \end{equation}
-where $d_z$ is the distance from the force plate surface to the transducer plane.
+and $T_z=M_z-x_{\mathrm{CoP}}F_y+y_{\mathrm{CoP}}F_x$.
+For instance, $h=0.05$\,m, $\bm F=(20,-10,500)$\,N and $\bm M_O=(-19.5,-49,1.8)$\,N\,m give CoP $(0.10,-0.04)$\,m and free moment $T_z=2$\,N\,m.
+A different plate convention requires a consistent transformation, not a memorized sign change.
+In the same frame and about the same origin, negating both force and moment for action/reaction leaves the CoP coordinates unchanged and reverses the free moment.
+
+As $F_z$ approaches zero, these ratios become ill-conditioned; reject unloaded intervals using a threshold justified by noise and the task.
+CoP is not center of mass, and a shared plate under both feet does not independently identify the wrench under each foot.
+A valid whole-body force record also does not by itself determine individual muscle forces or joint contact loads.
 
 \section{Inertial Measurement Units (IMUs)}
 
-IMUs combine accelerometers, gyroscopes, and magnetometers in a compact package.
-They provide:
-\begin{itemize}
-  \item Angular velocity: $\bm{\omega}(t) \in \Reals^3$
-  \item Linear acceleration: $\bm{a}(t) \in \Reals^3$
-  \item Magnetic field: $\bm{B}(t) \in \Reals^3$ (for heading)
-\end{itemize}
+An IMU contains accelerometers and gyroscopes; a magnetometer may be added but is not intrinsic to every unit.
+In a local inertial approximation, let $Q$ map sensor-frame vectors to world coordinates, and let $\bm a_s$ be the world acceleration of the sensor location.
+A calibrated accelerometer observation has the form
+\[
+\bm f_m=Q^\top(\bm a_s-\bm g)+\bm b_a+\bm\eta_a,
+\]
+where $\bm g=(0,0,-g)^\top$ in the upward world frame, with $g>0$ the gravitational acceleration magnitude, $\bm b_a$ is sensor-frame bias and $\bm\eta_a$ is noise.
+Thus the observation is specific force, not kinematic acceleration~\cite{AnalogDevicesInertialExperimental}.
+Ignoring noise, recovery requires $\bm a_s=Q(\bm f_m-\bm b_a)+\bm g$.
+A stationary upward-aligned accelerometer reads approximately $+g$ vertically, whereas ideal free fall has zero specific force.
+Orientation error consequently leaks gravity into the recovered movement acceleration.
 
-Orientation estimation from IMU data is a state estimation problem solvable using
-the extended Kalman filter (Volume~I, Chapter~6) or complementary filters.
+Gyroscope bias accumulates in integrated orientation; magnetometer heading can be disturbed by the local magnetic environment.
+An extended Kalman or complementary filter estimates state only under its observation and disturbance assumptions.
+Treating accelerometer direction as gravity requires negligible or separately modeled translational acceleration, a condition that can fail in rapid swings.
+If the required acceleration is at a different rigid-body point, angular acceleration and centripetal lever-arm terms must also be included.
+Double integration needs initial conditions and drift control; the sensor equations alone do not make absolute position observable.
 
 \section{Data Synchronization}
 
-Multiple measurement systems must be temporally synchronized. Best practices:
-\begin{itemize}
-  \item Hardware sync: trigger all systems from a common clock pulse
-  \item Minimum: force plate and motion capture on the same clock
-  \item EMG-to-motion delay: typically 10--80~ms (electromechanical delay)
-  \item Cross-correlation for post-hoc alignment when hardware sync is unavailable
-\end{itemize}
+A common trigger identifies an event but does not necessarily establish a shared sampling clock or remove transport and processing latency.
+Estimate clock offset and drift, preserve timestamps, and verify synchronization using a physical event observable in the relevant channels.
+Resampling into a common time base does not correct an unknown offset.
+Report the residual timing uncertainty together with each channel's filtering and event-detection method.
+
+Physiological electromechanical delay is distinct from instrument delay.
+An EMG-to-force lag depends on the task and physiological processes and should not be removed as if it were merely a clock error.
+Cross-correlation can support alignment when signals share an appropriate physical event, but mechanically maximizing correlation can erase the biological lag being studied or align unrelated features.
+There is no universal EMG-to-motion shift for every muscle and movement.
+
+\section{Connecting Measurements to Swing Inference}
+
+In a swing analysis, marker geometry establishes segment frames; their differentiated motion contributes inertial terms; force-plate wrenches supply external loading; and EMG or IMUs contribute additional, differently conditioned observations.
+Timing and filtering determine whether those terms describe the same event and bandwidth.
+A mismatch can resemble a change in sequencing, joint moment or apparent energy transfer.
+Assess uncertainty through the full inference chain and distinguish observed movement, model-dependent net joint loads and less identifiable internal muscle or tissue forces.
 
 \section*{Exercises}
 
 \begin{enumerate}
   \item \textbf{Filter Selection.}
-        Using the provided code, filter a synthetic marker trajectory with cutoff
-        frequencies of 4, 6, 8, and 12~Hz. Plot the effect on position, velocity,
-        and acceleration. Discuss the trade-off between noise reduction and signal distortion.
-
+  Generate a known trajectory plus declared noise at a specified sample rate.
+  Compare several cutoffs below Nyquist using position, velocity and acceleration errors; exclude and report an edge interval.
+  Confirm the two-pass amplitude at the declared single-pass cutoff and distinguish synthetic truth from an unobservable experimental trajectory.
   \item \textbf{CoP Computation.}
-        Given force plate data from a vertical jump ($F_z$ peak = 3000~N), compute
-        the center of pressure trajectory during takeoff.
-
+  Reconstruct the wrench from the numerical contact example above, then recover CoP and free moment.
+  Add declared force and moment noise and examine the ratios as normal force decreases.
+  Explain why a peak vertical force alone cannot determine a CoP trajectory.
   \item \textbf{EMG Processing.}
-        Process a synthetic EMG signal (sum of sinusoids + white noise) through the
-        full processing pipeline. Plot each stage.
-
-  \item \textbf{(Programming.)} Implement an IMU orientation estimator using a
-        complementary filter. Test with synthetic gyroscope and accelerometer data.
+  Process a synthetic amplitude-modulated signal through a declared envelope pipeline.
+  Vary smoothing and normalization, and assess their effects on amplitude and timing without interpreting the synthetic envelope as physiological force.
+  \item \textbf{IMU Interpretation.}
+  Simulate stationary, free-fall and accelerating sensor states with known orientation.
+  Recover acceleration from specific force, then introduce orientation and bias errors and quantify the resulting drift.
 \end{enumerate}

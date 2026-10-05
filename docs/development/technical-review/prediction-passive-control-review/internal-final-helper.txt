@@ -1,0 +1,96 @@
+### Technical Review: Chapter 6 (`ch06_internal_models.tex`)
+
+**Scope & Directives Verified:** Read-only inspection of `articles/The_Geometry_of_Motion/Volume_IV/chapters/ch06_internal_models.tex`. No files modified, no git operations performed, no issues created.
+
+---
+
+### 1. Gaussian Posterior Normalization, Dimensions & Covariances
+
+#### Mathematical Formulation (Lines 83–89)
+* **Log-posterior calculation:**
+  $$\ell_i = \log \pi_i - \tfrac{1}{2}\left[(z - \mu_i)^T R_i^{-1}(z - \mu_i) + \log\det R_i + n\log(2\pi)\right]$$
+  $$w_i = \frac{\exp \ell_i}{\sum_j \exp \ell_j} = \frac{\pi_i \mathcal{N}(z; \mu_i, R_i)}{\sum_j \pi_j \mathcal{N}(z; \mu_j, R_j)}$$
+* **Dimensional consistency:** If $z, \mu_i \in \mathbb{R}^n$ and $R_i \in \mathbb{R}^{n \times n}$ with units $[u]$, then $(z - \mu_i)^T R_i^{-1}(z - \mu_i)$ is strictly dimensionless. $\det R_i$ carries units $[u]^n$, matching $n\log(2\pi)$.
+* **Code verification (`gaussian_log_likelihoods` & `responsibilities`, lines 150–189):**
+  * Covariance dimensionality is checked: `covariance.shape == (count, size, size)`.
+  * Symmetry is enforced: `np.allclose(covariance, covariance.swapaxes(-1, -2), rtol=0, atol=1e-12)`.
+  * Positive definiteness is enforced via Cholesky factor $R_i = L_i L_i^T$.
+  * Determinant log-term: $\log\det R_i = 2 \sum_{k=1}^n \log (L_i)_{kk}$, implemented correctly as `2 * np.log(np.diagonal(lower, axis1=1, axis2=2)).sum(axis=1)`.
+  * Quadratic form $(z - \mu_i)^T R_i^{-1}(z - \mu_i) = \|L_i^{-1}(z - \mu_i)\|_2^2$, evaluated stably via `np.linalg.solve(lower, errors[..., None])`.
+  * Log-posterior normalization uses numerically stable Log-Sum-Exp subtraction: `logits -= logits.max()` followed by `np.exp(logits - logsumexp(logits))`.
+* **Variance Example (Lines 191–193):**
+  * For $n=1$, $z - \mu_1 = z - \mu_2 = 0$, $\sigma_1^2 = 1$, $\sigma_2^2 = 4$, $\pi_1 = \pi_2 = 0.5$:
+    $$\mathcal{N}(0; 0, 1) = \frac{1}{\sqrt{2\pi \cdot 1}} = \frac{1}{\sqrt{2\pi}}, \qquad \mathcal{N}(0; 0, 4) = \frac{1}{\sqrt{2\pi \cdot 4}} = \frac{1}{2\sqrt{2\pi}}$$
+    $$w_1 = \frac{1}{1 + 1/2} = \frac{2}{3}, \qquad w_2 = \frac{1/2}{1 + 1/2} = \frac{1}{3}$$
+  * Matches the text exactly: broad density has half peak likelihood, yielding weights $2/3$ and $1/3$.
+
+---
+
+### 2. Least-Squares Reachability and Residuals
+
+#### Formulation & Checks (Lines 51–64, 141–148)
+* For discrete linear dynamics $x_{k+1} = A x_k + B u_k$ and target $x_{k+1}^{\rm des}$:
+  $$d = x_{k+1}^{\rm des} - A x_k, \qquad u_* = B^\dagger d = \arg\min_u \|d - B u\|_2$$
+  $$r = d - B u_* = (I - B B^\dagger) d$$
+* **One-step reachability vs. multi-step controllability:**
+  * Exact one-step reachability requires $d \in \operatorname{range}(B)$, equivalently $r = 0$.
+  * A non-zero residual $r \neq 0$ signifies failure of *one-step* reachability, not uncontrollable dynamics over $N \ge n$ steps.
+  * **Exercise 1 Check (Lines 249–251):** With $A = I_2$, $B = \begin{bmatrix} 0 \\ 1 \end{bmatrix}$, $x_0 = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$, and $x_{\rm des} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$:
+    $$d = \begin{bmatrix} 1 \\ 2 \end{bmatrix} - I_2 \begin{bmatrix} 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$$
+    $$u_* = B^\dagger d = \begin{bmatrix} 0 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix} = 2$$
+    $$r = d - B u_* = \begin{bmatrix} 1 \\ 2 \end{bmatrix} - \begin{bmatrix} 0 \\ 1 \end{bmatrix}(2) = \begin{bmatrix} 1 \\ 0 \end{bmatrix} \neq 0$$
+    The state is not reachable in one step because command only enters channel 2 directly; however, the controllability matrix across steps depends on the coupling in $A$. For $A = I$, the first coordinate is uncontrollable for all steps; for an interconnected $A$ (e.g. companion matrix or velocity-to-position integration $\Delta t$), multi-step controllability can hold even when single-step $B$ does not span the state space. The text properly caveats this distinction (lines 59–63).
+
+---
+
+### 3. Weighted Inverse Counterexample: $110/101$ versus $5.5$
+
+#### Derivation & Verification (Lines 198–211)
+* **Plant specifications:**
+  Scalar states, $A_1 = A_2 = 0$, $B_1 = 1$, $B_2 = 10$, initial $x = 0$, target $x_{\rm des} = 10$.
+  Individual exact commands:
+  $$u_1 = B_1^{-1} x_{\rm des} = \frac{10}{1} = 10, \qquad u_2 = B_2^{-1} x_{\rm des} = \frac{10}{10} = 1$$
+* **Equal-Weight Inverse Mixing (MOSAIC heuristic combination):**
+  Assuming equal responsibilities $w_1 = w_2 = 0.5$:
+  $$u_{\rm mix} = w_1 u_1 + w_2 u_2 = 0.5(10) + 0.5(1) = 5.5$$
+  * When applied to Model 2 ($B_2 = 10$):
+    $$x = B_2 u_{\rm mix} = 10 \times 5.5 = 55 \quad (\text{massive overshoot against desired } 10)$$
+  * When applied to Model 1 ($B_1 = 1$):
+    $$x = B_1 u_{\rm mix} = 1 \times 5.5 = 5.5 \quad (\text{undershoot against desired } 10)$$
+* **Optimal Expected Quadratic Loss Minimizer:**
+  Objective: $\min_u \mathbb{E}[(x_{\rm des} - B_i u)^2] = \sum_i w_i (x_{\rm des} - B_i u)^2$.
+  First-order optimality condition:
+  $$\frac{d}{du}\sum_{i} w_i (x_{\rm des} - B_i u)^2 = -2 \sum_{i} w_i B_i (x_{\rm des} - B_i u) = 0$$
+  $$\implies u_* = \frac{\sum_i w_i B_i x_{\rm des}}{\sum_i w_i B_i^2} = \left(\sum_i w_i B_i^T B_i\right)^{-1} \sum_i w_i B_i^T (x_{\rm des} - A_i x)$$
+  Evaluating with $w_1 = w_2 = 0.5$, $B_1 = 1, B_2 = 10$:
+  $$u_* = \frac{0.5(1 \cdot 10) + 0.5(10 \cdot 10)}{0.5(1^2) + 0.5(10^2)} = \frac{5 + 50}{0.5 + 50} = \frac{55}{50.5} = \frac{110}{101} \approx 1.0891$$
+* **Conclusion:** $u_* = 110/101$ is mathematically exact. The chapter correctly highlights that naive linear combination of controller inverses ($5.5$) differs fundamentally from minimizing expected quadratic tracking error ($110/101$), cleanly refuting the assertion that inverse mixing is generally optimal.
+
+---
+
+### 4. Matched Input-Delay Smith Predictor
+
+#### Formulation (Lines 221–239)
+* **Plant and Predictor Loop:**
+  * True plant: $Y(s) = e^{-s\tau} G(s) U(s)$.
+  * Model: $G_m(s)$ with delay $\tau$.
+  * Effective feedback signal fed to controller:
+    $$y_{\rm eff} = y + (G_m - e^{-s\tau} G_m) u$$
+  * Substituting nominal plant output $y = e^{-s\tau} G u$ into $y_{\rm eff}$:
+    $$y_{\rm eff} = e^{-s\tau} G u + G_m u - e^{-s\tau} G_m u = G_m u + e^{-s\tau}(G - G_m) u$$
+  * Under exact matching ($G_m = G$) and identical initial delay histories:
+    $$y_{\rm eff} = G_m u$$
+* **Critical Boundary Conditions Identified in Chapter:**
+  * Open-loop unstable poles in $G(s)$: The cancellation of $e^{-s\tau} G_m$ occurs outside the feedback loop; unstable plant poles cannot be stabilized if cancellation mismatch or disturbances enter between plant and model.
+  * State integration (Eq. 222–225) $\hat{x}(t) = \hat{x}(t-\tau) + \int_{t-\tau}^t \hat{f}(\hat{x}(s), u(s))\,ds$ is merely open-loop propagation and only functions as a robust closed-loop predictor when coupled with error feedback.
+  * The text rightly rejects declaring neural delay compensation established merely by sketching this block diagram.
+
+---
+
+### 5. Empirical Scope of the MOSAIC Hypothesis
+
+* **Claims Refuted / Rejected as Universal:**
+  1. *Universal inverse optimality:* Naive convex mixing of inverse models does not minimize state error across nonlinear or non-identical $B$ matrices (proven by $110/101$ vs $5.5$).
+  2. *Neural circuit mapping:* Neuroimaging correlations (e.g. Imamizu et al., 2000) show localized task-correlated activation shifts, but do not provide proof of modular, paired forward/inverse computation or unique architectural realization.
+  3. *Unconstrained inversion equivalence:* Inversion cannot be treated as a trivial algebraic $f^{-1}$ without specifying admissibility constraints, kinematic redundancy resolution, and actuator limits.
+* **Findings:** All mathematical claims and code listings in Chapter 6 are derivationally sound, properly normalized, and correctly framed with rigorous engineering caveats.
