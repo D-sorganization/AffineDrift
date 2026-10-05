@@ -1,0 +1,28 @@
+### Editorial Audit Findings
+
+**No findings.**
+
+#### Assessment Summary of Reviewed Diff:
+
+1. **`_includes/mechanics-force-taxonomy.qmd`** (lines 47–56):
+   - **Text:** Clarification that in $\dot E=v^\mathsf{T}\bar B u - v^\mathsf{T}d + P_{\mathrm{external}}$, declared dissipative loads ($d$) and remaining external port power ($P_{\mathrm{external}}$) must not double count external loads absorbed into generalized passive loads $h$, and conservative forces are accounted for via $V$.
+   - **Status:** Mathematically sound, standard energetic accounting under Lagrangian/Euler-Lagrange formulations.
+
+2. **`articles/The_Geometry_of_Motion/Volume_II/main.tex`** (lines 236–241):
+   - **Text:** Accurately reflects Volume III's updated 10-chapter technical outline status, distinguishing worked numerical consistency from biological validation.
+   - **Status:** Supported editorial alignment; evidence vs. validation carefully separated.
+
+3. **`articles/The_Physics_of_Golf/chapters/ch28_impact_collision.tex` & `quarto/ch28_impact_collision.qmd`** (lines 149–170 / 144–165):
+   - **Text:** 
+     - Clarifies that path symmetry preserving spin loft requires equal and opposite horizontal offsets relative to face azimuth: $\cos(\phi - \psi) = \cos(-(\phi - \psi))$ holds when $\psi - \phi$ is negated.
+     - Clarifies that for $v_b = C(v_P\cdot\hat n)\hat n$, total speed $\|v_b\| = C \|v_P\|\cos\Phi$ (assuming approaching contact $\cos\Phi > 0$), while projection along incident velocity $\hat v_P \cdot v_b = C \|v_P\|\cos^2\Phi$.
+     - Explicitly notes parameter variation caveat ($C$ may depend on normal, strike location, and effective mass).
+   - **Status:** Exact mathematical and kinematic identities.
+
+4. **`articles/intentional-constraint-collapse.qmd` & `articles/inverse-dynamics.qmd`**:
+   - **Text:** Title and description adjustments accurately reclassifying speculative or non-unique biomechanical interpretations as testable hypotheses.
+   - **Status:** Rigorously separates empirical observation from hypotheses.
+
+5. **`articles/inverse-dynamics-inference.qmd`** (lines 29–35):
+   - **Text:** Uses the augmented input map $\bar B$ (including unactuated degrees of freedom), correctly checking consistency via $\bar B \bar B^+ \tau_{\mathrm{ID}} = \tau_{\mathrm{ID}}$ before characterizing redundant solutions via $\bar B^+ \tau_{\mathrm{ID}} + n$ for $n \in \ker\bar B$.
+   - **Status:** Standard linear algebra and Moore–Penrose pseudoinverse consistency condition for systems with passive/unactuated coordinates.
