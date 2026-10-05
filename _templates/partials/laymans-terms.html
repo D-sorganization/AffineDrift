@@ -1,59 +1,52 @@
 <!--
   In Layman's Terms Section Template
 
-  Usage in Quarto (.qmd) files:
+  Do not paste this HTML into .qmd pages. Pages use the shared component,
+  rendered by scripts/filters/laymans-terms.lua (#4494):
 
-  <section class="laymans-terms">
-    <h2>
-  <button class="laymans-terms-header" type="button" aria-expanded="false">
-    <span class="laymans-terms-header-title">
-      In Layman's Terms
-    </span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-    <div class="laymans-terms-content">
-      <div class="laymans-terms-inner">
-        <p class="laymans-terms-intro">
-          A plain-language overview for readers without a technical background.
-        </p>
+  ::: {.laymans-terms}
+  ```{=html}
+  <p class="laymans-terms-intro">
+    A plain-language overview for readers without a technical background.
+  </p>
 
-        <div class="laymans-item">
-          <h3>What This Article Is About</h3>
-          <p>Your simplified explanation here...</p>
-          <div class="analogy">Think of it like...</div>
-        </div>
+  <div class="laymans-item">
+    <h3>What This Article Is About</h3>
+    <p>Your simplified explanation here...</p>
+    <div class="analogy">Think of it like...</div>
+  </div>
 
-        <div class="laymans-item">
-          <h3>Key Concept Name</h3>
-          <p>Simple explanation of the concept...</p>
-          <div class="key-takeaway">The main point to remember is...</div>
-        </div>
+  <div class="laymans-item">
+    <h3>Key Concept Name</h3>
+    <p>Simple explanation of the concept...</p>
+    <div class="key-takeaway">The main point to remember is...</div>
+  </div>
+  ```
+  :::
 
-      </div>
-    </div>
-  </section>
+  The filter supplies the section, heading and toggle below, and moves a block
+  authored after the page's "Abstract" heading to directly above it.
 
   Available sub-components:
   - .laymans-item: Container for each topic/concept
   - .analogy: Yellow box for analogies (prefixed with "Analogy:")
   - .key-takeaway: Green box for key points (prefixed with "Key Takeaway:")
 
-  The section is collapsible by default and expands when clicked.
+  The section is open by default and collapses when clicked.
   All accessibility features (ARIA, keyboard navigation) are handled by js/main.js
 -->
 
 <!-- Example Implementation -->
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" type="button" aria-expanded="false">
+  <button class="laymans-terms-header" type="button" aria-expanded="true">
     <span class="laymans-terms-header-title">
       In Layman's Terms
     </span>
     <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
-  <div class="laymans-terms-content">
+  <div class="laymans-terms-content" aria-hidden="false">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
         A plain-language overview for readers without a technical background in control theory or biomechanics.

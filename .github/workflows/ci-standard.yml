@@ -32,7 +32,10 @@ concurrency:
 jobs:
   # ── Dispatcher: enforce local-only routing (NO GitHub-hosted runners) ──────
   pick-runner:
-    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -42,9 +45,15 @@ jobs:
         env:
           REPO_VISIBILITY: ${{ github.event.repository.visibility }}
           RUNNER_TARGET: ${{ vars.RUNNER_TARGET }}
+          FORK_PR: ${{ github.event.pull_request &&
+            github.event.pull_request.head.repo.full_name != github.repository }}
         run: |
           mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-          if [ "$REPO_VISIBILITY" != "public" ]; then
+          if [ "$FORK_PR" = "true" ]; then
+            # Fork PR code never runs on the self-hosted fleet (RM#1989).
+            RUNNER=ubuntu-latest
+            WHY="fork pull request; never routed to the self-hosted fleet"
+          elif [ "$REPO_VISIBILITY" != "public" ]; then
             # Hosted runners are billed on a non-public repo, so routing is not a
             # preference here and RUNNER_TARGET deliberately does not apply.
             RUNNER=d-sorg-fleet
@@ -64,7 +73,10 @@ jobs:
     # (AffineDrift #4126, Repository_Management #1507).
     name: Static checks
     needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
     env:
       PYTHONPATH: .
@@ -399,7 +411,10 @@ jobs:
 
   tests:
     needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
     env:
       BASELINE_TEST_COUNT: 2282
@@ -495,7 +510,10 @@ jobs:
   js-tests:
     timeout-minutes: 30
     needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || needs.pick-runner.outputs.runner }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -515,7 +533,10 @@ jobs:
 
   e2e-tests:
     needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || needs.pick-runner.outputs.runner }}
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -776,7 +797,10 @@ jobs:
     # workflow files; it stays a separate context.
     needs: [pick-runner, static-checks, tests, js-tests, e2e-tests]
     if: always()
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || needs.pick-runner.outputs.runner }}
     timeout-minutes: 5
     steps:
       - name: Require every constituent lane to succeed
@@ -793,7 +817,11 @@ jobs:
   website-lint:
     timeout-minutes: 30
     needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    # Fork PRs are routed to a hosted runner, never skipped (RM#1989).
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || needs.pick-runner.outputs.runner }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -838,7 +866,10 @@ jobs:
   local-only-workflows:
     timeout-minutes: 30
     name: Reject hosted runner routing
-    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' || vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     steps:
       - name: Run local-only workflow guard
         shell: bash

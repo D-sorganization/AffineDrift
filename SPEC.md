@@ -224,6 +224,10 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-05 | #4944 | use a synthetic issue in the change-fragment round-trip test so real collations cannot collide with it |
+| 2026-10-05 | #4891 | Preserve verified and unverified publication-date presentation while integrating parent delivery repairs; Integrate parent CI repairs without changing the accepted implementation appendix; Correct the connected flight, accuracy and design chapters with explicit uncertainty and validation limits; Prepare the camera geometry and commercial survey corrections with primary-source evidence |
+| 2026-10-05 | #4889 | Clarify dimension types and bind educational integration claims to qualified provider evidence |
+| 2026-10-05 | #4918 | Vendor RM-5 Change Fragment Tooling |
 | 2026-10-04 | #4883 | Un-nest See Also callout headings on 17 pages, add series-navigation links to five tangent-hyperplane parts, prune 25 related-coverage baseline entries and guard against stale baseline entries. |
 | 2026-10-04 | #4907 | Record Board decision D3(d) as accepted ADR 0002 (interactive technology stack: OJS plus self-hosted Pyodide, per-widget budgets, parity fixtures) and add an ADR index contract test. |
 | 2026-10-03 | #4836 | Bound passive/distributed-control attribution and stability claims; reconcile the standalone series-spring example with a tested massless junction, segmented force input and complete mechanical energy accounting. |
@@ -595,6 +599,8 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4894 | Prepare coordinated flight, accuracy and design review with primary-reading limits, mathematical contracts and bounded Flash inventories. |
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
 | 2026-10-04 | #4558 | Add animated WebP fish derivative and serve it through a reduced-motion-aware picture element. |
+| 2026-10-04 | #4909 | Render "In Layman's Terms" blocks through one open-by-default Lua-filter component; migrate the 14 existing inline blocks with unchanged wording. |
 | 2026-10-05 | #4913 | Benchmark workflow compares only against a baseline for the runner's platform (15% gate unchanged); otherwise saves one as an artifact and reports no baseline instead of failure. |
 | 2026-10-05 | #4911 | Install pytest-timeout in the benchmark venv (requirements-benchmarks.txt) so the 45 benchmarks run instead of failing on the unknown timeout option (#4911). |
+| 2026-10-05 | #4929 | Keep fork PRs off the self-hosted fleet: job-level fork guard and hosted fork route in workflows, vendored `scripts/fork_pr_runner_guard.py` with a self-scan test (RM#1989). |
 | 2026-10-05 | #4925 | Public-site verifier prints each failed route, viewport/theme and reason plus a capped `::error` annotation after the summary, via `scripts/public-site-failures.js`, so red Deploy Website runs are diagnosable from the job log (#4924). |
