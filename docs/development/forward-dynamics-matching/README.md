@@ -10,7 +10,7 @@ This is a research manuscript and design review. It is not deployed, native-engi
 
 ## Blocks to Publication
 
-GitHub CLI reported API rate-limit exhaustion and invalid authentication during the read-only issue search. Repository network/API rules require stopping network activity on the quota error. No further network calls were made after that error. A ready own-agent GitHub identity is not configured in the cloud runtime. Do not publish using the owner's personal token.
+GitHub CLI reported API rate-limit exhaustion and invalid authentication during the read-only issue search. Repository network/API rules require stopping network activity on the quota error. A legacy bibliography-metadata validator was inadvertently started during the offline batch; it uses Crossref HTTP requests and was terminated when discovered. Its result is excluded from offline acceptance. No live-reference validation is claimed. A ready own-agent GitHub identity is not configured in the cloud runtime. Do not publish using the owner's personal token.
 
 Quarto and pytest are absent from this environment. Existing offline source validators and a local Pandoc preview can be used; neither substitutes for the full Quarto site/visual pipeline or repository regression.
 

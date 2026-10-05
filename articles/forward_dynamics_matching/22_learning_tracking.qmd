@@ -32,7 +32,8 @@ DeepMimic is relevant as an example of physics-based character skill learning fr
 
 ILC assumes repeated execution of a task with repeatable dynamics and updates the feedforward command using prior-trial error. For trial index $j$, let output error be $e_j(t)=r(t)-y_j(t)$. A basic update is
 $$
-u_{j+1}(t)=u_j(t)+L e_j(t),$$
+u_{j+1}(t)=u_j(t)+L e_j(t),
+$$
 where $L$ is a learning operator. A filtered update might be $u_{j+1}=Q(u_j+Le_j)$ to limit high-frequency amplification. Under a linear time-invariant trial model $y=Gu$, a sufficient norm condition for monotone error reduction in a simple setting is $\|I-GL\|<1$. Real systems require robust analysis for model uncertainty, delays, and nonminimum-phase behavior.
 
 ILC is useful when each swing or robot trajectory is repeated under nearly the same conditions. It learns a trajectory-specific feedforward command, not necessarily a general state-feedback strategy. Trial-to-trial variability, changing fatigue, equipment changes, and nonrepeatable disturbances violate assumptions. If one human demonstration is available, ILC cannot be run on that individual without repeated trials; applying its logic to multiple athletes assumes meaningful alignment and a shared task. Distinguish subject-specific adaptation from population learning.

@@ -13,17 +13,13 @@ Structural identifiability asks whether ideal, noise-free, sufficiently rich obs
 For a smooth state-space model,
 
 $$
-
 \dot{x}=f(x,u,\theta), \qquad y=h(x,\theta),
-
 $$
 
 where $x$ is the state, $u$ is the known input, $y$ is the observation, and $\theta$ is a parameter vector, one may study local sensitivity of the predicted output to parameters. For sampled outputs $y_k(\theta)$, define the sensitivity matrix $S_{ki}=\partial y_k/\partial\theta_i$. If a column is zero, that parameter has no local effect on the data. If two columns are nearly proportional, their effects are confounded. The Fisher information approximation is
 
 $$
-
 \mathcal I(\theta)=S^T R^{-1} S,
-
 $$
 
 where $R$ is observation-noise covariance. Small eigenvalues indicate combinations of parameter changes that barely alter the observations. This is a local diagnostic, not proof of global uniqueness, but it is a useful way to expose weak directions.
@@ -35,17 +31,13 @@ In nonlinear systems, observability concerns reconstruction of hidden state from
 Consider a planar pendulum with known length $l$, angle $q$, mass $m$, gravity $g$, viscous coefficient $b$, and applied torque $u$:
 
 $$
-
 ml^2\ddot q+b\dot q+mgl\sin q=u.
-
 $$
 
 Dividing by $ml^2$ gives
 
 $$
-
 \ddot q=\frac{u}{ml^2}-\frac{b}{ml^2}\dot q-\frac{g}{l}\sin q.
-
 $$
 
 If $u=0$, $l$ is known, and $g$ is fixed, observations of a sufficiently varied decay may reveal the ratio $b/m$, but not necessarily $m$ and $b$ separately: multiplying both by a common positive constant leaves the normalized equation unchanged. With measured, calibrated torque input, the acceleration response to $u$ can identify the inertia scale and break that symmetry. If the input torque is itself unknown up to a scale, the ambiguity returns. The issue is not an optimizer defect; it is an invariance of the observation model.

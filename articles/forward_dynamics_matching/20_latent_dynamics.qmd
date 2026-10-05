@@ -7,9 +7,7 @@ A Markov forward model predicts the next state from its current state and input.
 A continuous-time latent model can be written
 
 $$
-
 \dot z=f_\phi(z,u), \qquad y=g_\psi(z),
-
 $$
 
 or, for a mechanics-centered model, $z$ may augment measured configuration and velocity. Neural ordinary differential equations parameterize the derivative function and use a numerical solver to obtain trajectories. Latent ODE methods infer a latent initial state from irregular observations and evolve it continuously. References: Chen et al., [“Neural Ordinary Differential Equations”](https://arxiv.org/abs/1806.07366); Rubanova, Chen, and Duvenaud, [“Latent ODEs for Irregularly-Sampled Time Series”](https://arxiv.org/abs/1907.03907). Related structured neural mechanics approaches include learned Lagrangian and Hamiltonian models [@cranmer2020lagrangian; @greydanus2019hamiltonian; @lutter2019deep]. Live link validation is pending under the repository's current network restriction.
@@ -29,10 +27,8 @@ To decide whether latent memory is warranted, compare a Markov mechanics baselin
 An unconstrained neural vector field can violate kinematic constraints or produce impossible accelerations. A mechanics-first candidate preserves known equations and lets learned components represent specific residuals:
 
 $$
-
 M_\theta(q)\ddot q + C_\theta(q,\dot q)+g_\theta(q)
 =B_\theta(q)u+J(q)^T\lambda+r_\phi(q,\dot q,u,z).
-
 $$
 
 The residual $r_\phi$ should be bounded or regularized and should not override positive-definite inertia, joint constraints, or contact rules. If a latent state is included, its observation relationship and update dynamics should be stated. For instance, it may represent an activation variable with a first-order lag, but such an interpretation should be supported by independent physiological or control data. Without that evidence, call it a learned memory state.
@@ -44,9 +40,7 @@ This architecture is a research proposal, not an implemented AffineDrift feature
 Let a measured joint angle satisfy
 
 $$
-
 I\ddot q+b\dot q=\tau, \qquad \dot a=(u-a)/T, \qquad \tau=k a.
-
 $$
 
 Here $u$ is a command, $a$ a delayed actuator activation, and $T$ a time constant. A model using only $(q,\dot q,u)$ is not Markov because current torque depends on the history of $u$ through $a$. Augmenting with $a$ restores Markov structure. If only q is observed and u is unknown, a latent model may infer a variable that predicts the lag. But that variable cannot be called activation without measurements or a validated actuator model. If u is known and varied in independent pulses, lag parameters may become identifiable; a constant input provides little information about the time constant after transients settle.
