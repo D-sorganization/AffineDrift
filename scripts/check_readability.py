@@ -38,12 +38,13 @@ from src.tools.utils.frontmatter import split_frontmatter
 DEFAULT_GRADE_THRESHOLD: Final = 10.0
 
 # WEB-12.4's rewrite scope: home page, Overview, About, Tools, Technology,
-# the Resources hub and Learning Paths index, the Books hub, and Start Here
-# (WEB-01.1). Pages not yet created are simply absent from the scan; override
+# the Resources hub and Learning Paths index, the Books hub, Start Here
+# (WEB-01.1) and The Big Idea in Five Minutes (WEB-01.4). Pages not yet created are simply absent from the scan; override
 # with --hub-page once they exist.
 DEFAULT_HUB_PAGES: Final[tuple[str, ...]] = (
     "index.qmd",
     "pages/start-here.qmd",
+    "pages/big-idea.qmd",
     "pages/overview.qmd",
     "pages/about.qmd",
     "pages/tools.qmd",

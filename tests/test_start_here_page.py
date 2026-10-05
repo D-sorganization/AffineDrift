@@ -9,20 +9,20 @@ to action, carry no display equations, and score at most grade 10.
 from __future__ import annotations
 
 import re
-from pathlib import Path
 
 import yaml
 
-from scripts.check_readability import (
-    DEFAULT_GRADE_THRESHOLD,
-    DEFAULT_HUB_PAGES,
-    score_prose,
-    split_frontmatter,
+from tests.helpers.entry_pages import (
+    ROOT,
+    assert_no_display_equations,
+    assert_readable_hub_page,
+    assert_routes_every_persona,
+    headings,
+    page_text,
+    section,
 )
 
-ROOT = Path(__file__).resolve().parent.parent
 PAGE_PATH = "pages/start-here.qmd"
-PAGE = ROOT / PAGE_PATH
 SECTIONS = (
     "What AffineDrift Is",
     "The Big Idea in One Picture",
@@ -32,23 +32,13 @@ SECTIONS = (
 )
 
 
-def _text() -> str:
-    """The page source."""
-    return PAGE.read_text(encoding="utf-8")
-
-
 def _section(title: str) -> str:
-    """Body of one ``##`` section."""
-    text = _text()
-    start = text.index(f"## {title}")
-    end = text.find("\n## ", start + 1)
-    return text[start : end if end != -1 else len(text)]
+    return section(PAGE_PATH, title)
 
 
 def test_sections_appear_in_the_specified_order() -> None:
-    headings = re.findall(r"^## (.+?)(?: \{#[^}]+\})?$", _text(), flags=re.MULTILINE)
     # The site link gate requires the canonical Related Articles footer last.
-    assert tuple(headings) == (*SECTIONS, "Related Articles")
+    assert headings(PAGE_PATH) == (*SECTIONS, "Related Articles")
 
 
 def test_intro_is_three_sentences() -> None:
@@ -63,39 +53,32 @@ def test_big_idea_reuses_the_signature_graphic() -> None:
 
 def test_every_persona_has_a_card_linking_to_its_on_ramp() -> None:
     personas = yaml.safe_load((ROOT / "config" / "personas.yml").read_text(encoding="utf-8"))
-    on_ramps = (ROOT / "resources" / "on-ramp-paths.qmd").read_text(encoding="utf-8")
     cards = _section(SECTIONS[2])
+    assert_routes_every_persona(cards)
     for persona_id, persona in personas["personas"].items():
-        anchor = f"onramp-{persona_id.replace('_', '-')}"
-        assert f"{{#{anchor}}}" in on_ramps, anchor
-        assert f"../resources/on-ramp-paths.html#{anchor}" in cards, persona_id
-        assert persona["name"] in cards and persona["tagline"] in cards, persona_id
+        assert persona["tagline"] in cards, persona_id
 
 
 def test_evidence_labels_link_to_the_canonical_definitions() -> None:
-    section = _section(SECTIONS[3])
-    assert "../pages/how-to-read.html#publication-states" in section
-    assert "../pages/how-to-read.html#evidence-ladder" in section
+    section_text = _section(SECTIONS[3])
+    assert "../pages/how-to-read.html#publication-states" in section_text
+    assert "../pages/how-to-read.html#evidence-ladder" in section_text
     for state in ("Available", "Validated", "Experimental", "Planned", "Deprecated", "Opinion"):
-        assert f"**{state}**" in section, state
+        assert f"**{state}**" in section_text, state
 
 
 def test_states_what_the_site_is_not() -> None:
-    section = _section(SECTIONS[4]).lower()
+    section_text = _section(SECTIONS[4]).lower()
     for phrase in ("coaching advice", "peer reviewed", "validated model of a human"):
-        assert phrase in section, phrase
+        assert phrase in section_text, phrase
 
 
 def test_has_no_display_equations() -> None:
-    _, body = split_frontmatter(_text())
-    assert "$$" not in body and "\\[" not in body and "\\begin{" not in body
+    assert_no_display_equations(PAGE_PATH)
 
 
 def test_readability_is_grade_ten_or_lower_and_checked_as_a_hub_page() -> None:
-    assert PAGE_PATH in DEFAULT_HUB_PAGES
-    score = score_prose(split_frontmatter(_text())[1])
-    assert score is not None
-    assert score.grade <= DEFAULT_GRADE_THRESHOLD, score
+    assert_readable_hub_page(PAGE_PATH)
 
 
 def test_is_the_first_navbar_item() -> None:
@@ -114,4 +97,4 @@ def test_is_the_home_page_primary_call_to_action() -> None:
 
 
 def test_overview_is_reachable_from_start_here() -> None:
-    assert "../pages/overview.html" in _text()
+    assert "../pages/overview.html" in page_text(PAGE_PATH)
