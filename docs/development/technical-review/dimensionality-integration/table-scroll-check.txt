@@ -1,0 +1,24 @@
+### Result
+{
+  "width": 390,
+  "documentWidth": 390,
+  "mathErrors": 0,
+  "tables": [
+    {
+      "client": 269,
+      "scroll": 714,
+      "right": 445,
+      "overflow": "auto"
+    },
+    {
+      "client": 269,
+      "scroll": 714,
+      "right": 445,
+      "overflow": "auto"
+    }
+  ]
+}
+### Ran Playwright code
+```js
+await page.evaluate('() => { const rows=[...document.querySelectorAll(".table-wrapper")].map(t=>{t.scrollLeft=t.scrollWidth;return {client:t.clientWidth,scroll:t.scrollWidth,right:t.scrollLeft,overflow:getComputedStyle(t).overflowX}});return {width:innerWidth,documentWidth:document.documentElement.scrollWidth,mathErrors:document.querySelectorAll("mjx-merror").length,tables:rows}}');
+```

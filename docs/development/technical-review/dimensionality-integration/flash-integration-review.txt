@@ -1,0 +1,46 @@
+### Consistency Audit Findings
+
+#### 1. Catalog Status vs. Related Links & Supported Capabilities
+* **Quote:**
+  > `[Simulink Models](../models/models-simulink.html)`
+  * **Reason:** The document specifies that the catalog and snapshot track engine integration categories (MuJoCo, Drake, Pinocchio, OpenSim, MyoSuite). Simulink is neither listed in the provider support matrix nor covered anywhere in the guide's engine overview, making this link an ungrounded catalog reference in this guide.
+* **Quote:**
+  > `[MyoSim Models](../models/models-myosim.html)`
+  * **Reason:** Inconsistent naming with the catalog matrix and body text, which consistently document and reference `MyoSuite`, not `MyoSim`.
+
+---
+
+#### 2. Claimed Execution vs. Proposed / Unverified Status
+* **Quote:**
+  > `"The workflow's declared prerequisites include Python 3.11 or 3.12 and that exact checkout."` vs. `"The snapshot lists Python 3.11 and 3.12 as supported minors. An engine's current package requirements can differ from that older provider environment; construct and record a compatible environment rather than mixing versions implicitly."`
+  * **Reason:** The text claims a rigid execution prerequisite (`"Run inside the provider checkout at the declared snapshot revision"`, Python 3.11/3.12 floor), but simultaneously cautions that current engine requirements can conflict with this older environment. It leaves ambiguous whether executing the integration workflows in Python 3.12 has actually been tested against the external engines or is strictly a proposed spec.
+* **Quote:**
+  > `Matched-model ABA versus a separate equations-of-motion calculation; a declared timing protocol`
+  * **Reason:** Listed in the "Evidence to Produce" table alongside completed volume references without clarifying whether these matched calculations have been run and verified or are purely proposed target milestones for learners.
+
+---
+
+#### 3. Mathematical Notation & Precision
+* **Quote:**
+  > `$$\rho(x,u)=\frac{\|f(x)\|_M}{\|G(x)u\|_M},\qquad \|z\|_M=\sqrt{z^T Mz}.$$`
+  * **Reason:** In standard control-affine dynamics $\dot{x} = f(x) + G(x)u$, if $x \in \mathbb{R}^n$ and $u \in \mathbb{R}^m$, the vector $z$ is in the tangent/velocity space (or state-derivative space $\mathbb{R}^n$). Using simple matrix multiplication $z^T M z$ assumes $z$ is treated as a flat column vector and $M \in \mathbb{R}^{n \times n}$. However, the text later notes: *"A ratio of acceleration contributions is a different definition from a ratio of full state derivatives."* If $f(x)$ and $G(x)u$ represent acceleration components rather than full state derivatives, the dimensions of $M$ and the space of $z$ are undefined in the formula.
+
+---
+
+#### 4. Awkward Prose & Redundancies
+* **Quote:**
+  > `"A formal certificate requires its own assumptions and verification procedure."`
+  * **Reason:** Vague and redundant filler sentence directly following an explicit enumeration of concrete verification steps (*"Check defects, constraint residuals, mesh sensitivity and an independent rollout..."*).
+* **Quote:**
+  > `"The former instruction on this page to install pinocchio>=3.0.0 through pip was incorrect for this robotics library."`
+  * **Reason:** Self-referential change-log prose embedded directly inside an educational reference guide rather than presenting the canonical instructions directly.
+* **Quote:**
+  > `"...the former assertion that experts exhibit $\rho>10$ is removed."`
+  * **Reason:** Awkward editorial meta-commentary detailing what was previously excised rather than stating the current standard and rationale.
+
+---
+
+#### 5. Unsupported Guarantees & Scope Overstatement
+* **Quote:**
+  > `"Linear-time recursion applies to specified tree algorithms with bounded joint dimension; it is not a universal complexity claim for every query, dense matrix output or constrained solve."`
+  * **Reason:** While analytically correct for algorithms like ABA/RNEA, introducing "bounded joint dimension" without defining the context (e.g., maximal vs. minimal coordinates or loop constraints) creates an ambiguous qualification that does not directly clarify the computational complexity for the reader.
