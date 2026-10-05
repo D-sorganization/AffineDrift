@@ -4456,6 +4456,143 @@ body.quarto-dark .status-pill--planned,
   margin-top: 0.4rem;
 }
 /* ===== end css/components/explainer-video.css ===== */
+/* ===== begin css/components/drift-plus-control.css ===== */
+/* css/components/drift-plus-control.css
+   WEB-08.2 (#4554) signature graphic "Drift Plus Control". The inline SVG
+   carries no colours of its own; every stroke and fill comes from these
+   classes so the figure follows the light and dark themes. */
+
+.drift-plus-control {
+  --dpc-drift: #1d4ed8;
+  --dpc-push: #b45309;
+  --dpc-ink: var(--text-primary, #212529);
+  --dpc-muted: var(--text-secondary, #5f6670);
+
+  max-width: 40rem;
+  margin: 1.5rem auto;
+}
+
+[data-theme="dark"] .drift-plus-control {
+  --dpc-drift: #8ab4ff;
+  --dpc-push: #fbbf24;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .drift-plus-control {
+    --dpc-drift: #8ab4ff;
+    --dpc-push: #fbbf24;
+  }
+}
+
+.drift-plus-control .dpc-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.dpc-field {
+  stroke: var(--dpc-muted);
+  stroke-width: 1;
+  opacity: 0.45;
+}
+
+.dpc-field-head {
+  fill: var(--dpc-muted);
+  opacity: 0.45;
+}
+
+.dpc-axis {
+  stroke: var(--dpc-muted);
+  stroke-width: 1;
+}
+
+.dpc-passive,
+.dpc-driven {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.dpc-passive {
+  stroke: var(--dpc-muted);
+  stroke-dasharray: 6 5;
+}
+
+.dpc-driven {
+  stroke: var(--dpc-ink);
+}
+
+.dpc-drift,
+.dpc-push,
+.dpc-sum {
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.dpc-drift {
+  stroke: var(--dpc-drift);
+}
+
+.dpc-drift-head {
+  fill: var(--dpc-drift);
+}
+
+.dpc-push {
+  stroke: var(--dpc-push);
+}
+
+.dpc-push-head {
+  fill: var(--dpc-push);
+}
+
+.dpc-sum {
+  stroke: var(--dpc-ink);
+  stroke-dasharray: 2 6;
+}
+
+.dpc-sum-head {
+  fill: var(--dpc-ink);
+}
+
+.dpc-mark {
+  fill: var(--dpc-ink);
+}
+
+.dpc-label,
+.dpc-axis-label {
+  font-family: inherit;
+  fill: var(--dpc-ink);
+}
+
+.dpc-label {
+  font-size: 20px;
+  font-weight: 600;
+
+  /* A page-coloured halo keeps labels legible where they cross curves. */
+  paint-order: stroke;
+  stroke: var(--bg-body, #fff);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.dpc-label--drift {
+  fill: var(--dpc-drift);
+}
+
+.dpc-label--push {
+  fill: var(--dpc-push);
+}
+
+.dpc-axis-label {
+  font-size: 17px;
+  fill: var(--dpc-muted);
+}
+
+.drift-plus-control figcaption,
+.drift-plus-control details {
+  font-size: 0.95rem;
+  color: var(--dpc-muted);
+}
+/* ===== end css/components/drift-plus-control.css ===== */
 /* ===== begin css/components/quarto-theme.css ===== */
 /* Quarto layout, code tools, and dark theme overrides (WEB-09.9 #4787) */
 

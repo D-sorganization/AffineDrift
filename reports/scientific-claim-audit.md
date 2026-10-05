@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 248
+- Reviewed: 249
 - Deferred: 0
 - Exempt: 3
 
@@ -15,7 +15,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 
 | Route | Canonical Source | Evidence Files |
 |---|---|---:|
-| `/` | `index.qmd` | 3 |
+| `/` | `index.qmd` | 4 |
 | `/articles/affine-nature-golf-swing.html` | `articles/affine-nature-golf-swing.qmd` | 7 |
 | `/articles/appendix-applications.html` | `articles/appendix-applications.qmd` | 1 |
 | `/articles/calculation-framework-comparison/multibody-drift-control-v3.html` | `articles/calculation-framework-comparison/multibody-drift-control-v3.qmd` | 1 |
@@ -136,7 +136,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/articles/The_Physics_of_Golf/quarto/ch32_putting.html` | `articles/The_Physics_of_Golf/quarto/ch32_putting.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/glossary.html` | `articles/The_Physics_of_Golf/quarto/glossary.qmd` | 1 |
 | `/articles/The_Physics_of_Golf/quarto/index.html` | `articles/The_Physics_of_Golf/quarto/index.qmd` | 4 |
-| `/articles/theory-part1.html` | `articles/theory-part1.qmd` | 4 |
+| `/articles/theory-part1.html` | `articles/theory-part1.qmd` | 5 |
 | `/articles/theory-part2.html` | `articles/theory-part2.qmd` | 5 |
 | `/articles/theory-part3.html` | `articles/theory-part3.qmd` | 3 |
 | `/articles/theory-part4.html` | `articles/theory-part4.qmd` | 2 |
@@ -232,6 +232,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
 | `/pages/parameters.html` | `pages/parameters.qmd` | 2 |
 | `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` | 1 |
+| `/pages/start-here.html` | `pages/start-here.qmd` | 2 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
@@ -487,6 +488,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
 | `ad-route-dad0b4221d85` | `/pages/parameters.html` | Reviewed | — | None | None | 0 |
 | `ad-route-223cd7be3af2` | `/pages/privacy-policy.html` | Reviewed | — | None | None | 1 |
+| `ad-route-48284a9d1eff` | `/pages/start-here.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |

@@ -16,7 +16,7 @@
             "index.qmd"
           ],
           "evidence_sha256": {
-            "index.qmd": "5f7d289aa7206bded0b965179f6c7cc825d3e333c329aef397ea302350869522"
+            "index.qmd": "2f38dbe3407995372a6e1f763b477efa5c4e58beea4db36007ebc7bced41a4ec"
           },
           "finding_id": "ad-finding-home-readiness-amplification",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4063",
@@ -33,14 +33,16 @@
           "audience_framing"
         ],
         "evidence_paths": [
+          "_includes/generated/drift-plus-control.qmd",
           "data/trust/site_trust_surface_audit.json",
           "index.qmd",
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
-          "index.qmd": "5f7d289aa7206bded0b965179f6c7cc825d3e333c329aef397ea302350869522",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "_includes/generated/drift-plus-control.qmd": "774edfd046e12ad44f7029a2289adf5b346261b4c3787c83eac8a9a9cf2cfe82",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
+          "index.qmd": "2f38dbe3407995372a6e1f763b477efa5c4e58beea4db36007ebc7bced41a4ec",
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-08-29",
@@ -208,12 +210,35 @@
       ],
       "findings": [
         {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/drift-components-wrench-double-pendulum.qmd",
+            "tests/test_drift_wrench_review.py",
+            "reports/technical-review/drift-wrench-review.md",
+            "reports/technical-review/drift-wrench-prior-review.json",
+            "reports/technical-review/drift-wrench-render-verification.json",
+            "reports/technical-review/drift-wrench-independent-checks.json"
+          ],
+          "evidence_sha256": {
+            "articles/drift-components-wrench-double-pendulum.qmd": "e2733e62bf8a77e0de8639e2d2dfa4152ce5c002702b2a8be4029fe555252b32",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9",
+            "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
+            "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5"
+          },
           "finding_id": "ad-finding-wrench-input-attribution",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855",
           "priority": "p1",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Replace the opening identification of conscious input and passive pulling with the declared same-state input partition; demonstrate that proximal torque changes distal force power even with zero distal torque.",
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/drift-components-wrench-double-pendulum.qmd",
             "tests/test_drift_wrench_review.py",
@@ -224,22 +249,22 @@
           ],
           "evidence_sha256": {
             "articles/drift-components-wrench-double-pendulum.qmd": "e2733e62bf8a77e0de8639e2d2dfa4152ce5c002702b2a8be4029fe555252b32",
-            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
-            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9",
             "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
             "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
-            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5"
           },
-          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
-        },
-        {
           "finding_id": "ad-finding-wrench-power-conventions",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855",
           "priority": "p1",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Make the inertial frame, application point, COM lever/Jacobian and absolute versus relative power explicit. Retain the valid balances and independently verify energy and moment identities; this is not a replacement of incorrect prior power equations.",
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/drift-components-wrench-double-pendulum.qmd",
             "tests/test_drift_wrench_review.py",
@@ -250,48 +275,22 @@
           ],
           "evidence_sha256": {
             "articles/drift-components-wrench-double-pendulum.qmd": "e2733e62bf8a77e0de8639e2d2dfa4152ce5c002702b2a8be4029fe555252b32",
-            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
-            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9",
             "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
             "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
-            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5"
           },
-          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
-        },
-        {
           "finding_id": "ad-finding-wrench-empirical-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855",
           "priority": "p1",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Remove unsupported late-downswing dominance, universal flexible-shaft capacity and spatial face-closure claims. Keep manufactured examples distinct from golfer measurements and leave the empirical critique open.",
-          "evidence_paths": [
-            "articles/drift-components-wrench-double-pendulum.qmd",
-            "tests/test_drift_wrench_review.py",
-            "reports/technical-review/drift-wrench-review.md",
-            "reports/technical-review/drift-wrench-prior-review.json",
-            "reports/technical-review/drift-wrench-render-verification.json",
-            "reports/technical-review/drift-wrench-independent-checks.json"
-          ],
-          "evidence_sha256": {
-            "articles/drift-components-wrench-double-pendulum.qmd": "e2733e62bf8a77e0de8639e2d2dfa4152ce5c002702b2a8be4029fe555252b32",
-            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
-            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
-            "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
-            "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
-            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
-          },
-          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce"
         },
         {
-          "finding_id": "ad-finding-wrench-reproduction",
-          "priority": "p2",
-          "disposition": "corrected",
           "claim_ids": [],
           "critique_ids": [],
-          "rationale": "Resolve the nonexistent equation reference and notation collisions; replace the incomplete Streamlit promise with a declared reproducible example, real source links and publication contracts.",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/drift-components-wrench-double-pendulum.qmd",
             "tests/test_drift_wrench_review.py",
@@ -302,14 +301,17 @@
           ],
           "evidence_sha256": {
             "articles/drift-components-wrench-double-pendulum.qmd": "e2733e62bf8a77e0de8639e2d2dfa4152ce5c002702b2a8be4029fe555252b32",
-            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
-            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9",
             "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
             "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
-            "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+            "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+            "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5"
           },
-          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855"
+          "finding_id": "ad-finding-wrench-reproduction",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4855",
+          "priority": "p2",
+          "rationale": "Resolve the nonexistent equation reference and notation collisions; replace the incomplete Streamlit promise with a declared reproducible example, real source links and publication contracts.",
+          "verification_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce"
         }
       ],
       "review": {
@@ -331,11 +333,11 @@
         "evidence_sha256": {
           "articles/_generated/trust/critique-annotations/drift-components-wrench-double-pendulum.qmd": "b131e8d51b6315acc9dbf13f7abae77b0887a56efeb997516dbe9a32153507a3",
           "articles/drift-components-wrench-double-pendulum.qmd": "e2733e62bf8a77e0de8639e2d2dfa4152ce5c002702b2a8be4029fe555252b32",
-          "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5",
-          "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+          "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9",
           "reports/technical-review/drift-wrench-prior-review.json": "66b7adcb6d9824a69908d6e6bb74f1ebb2e3aa427f2cd485d89a9a90e4be709a",
           "reports/technical-review/drift-wrench-render-verification.json": "ed53ed78ad9c7879de95d17a32520c8444ab7cb8c4a25d398ba8eedb39d5ec01",
-          "reports/technical-review/drift-wrench-independent-checks.json": "26ce1e934014e4d30263b68763a308536e4aecc80b3cc1e1f7cb4f02e1fa1fe9"
+          "reports/technical-review/drift-wrench-review.md": "a526f7dee6919346b1355d853d95e9220bb3eda054faaffe708a33cbb711aa35",
+          "tests/test_drift_wrench_review.py": "6b8d5f9ec29bb5278b462154568f456689b3b03ac66435ab434a9020126821f5"
         },
         "review_commit": "0feeebd0897f67211e076ffb2139bf4445a9e8ce",
         "reviewed_on": "2026-10-03",
@@ -11119,7 +11121,7 @@
         ],
         "evidence_sha256": {
           "_includes/generated/research-releases-summary.qmd": "c41fcc248e92c21b787aab23d1f0133d4fdaba9206610ed8cc39caf73e9b5c85",
-          "_quarto.yml": "41300893f1cb021965fb57820409a0004672dc60827bb23da9b23b5e65c0b3bc",
+          "_quarto.yml": "776aae85e6eaf89e97f16726dac7c7535e26c86976444c91e82d2c0f52ca9626",
           "articles/_generated/proximal-distal-falsification-atlas.qmd": "1be4d14fc1b96a16838d5a83b3a34663d89a5e175da50c4f13c720582915674f",
           "articles/proximal-distal-falsification-atlas.qmd": "b1b40482a0643eaff21a0e39111589e7864303f3587ee1afc063b9255a24fbef",
           "articles/proximal_distal_energy_transfer/data/claim_adjudication_summary.json": "21cd105216d53adb7706f1e21a7be5e0d37c0e2d061b3843fb17fd18fdfeb33a",
@@ -11138,7 +11140,7 @@
           "reports/technical-review/two-hand-wrench-readiness-carry-forward.json": "3ee73d21a9234bdac507485e0369096bd165e662404d4f1e074baef615c9e638",
           "resources/resources-datasets.qmd": "ba312514ad230df7c57812e2422513272360358604f98b5e237b0d9b3fda1559",
           "schemas/proximal-distal-falsification-atlas-v1.schema.json": "eea2f419f0c4fee8a008b7a8f1c3d4d0d541c8f64eb4c2f4285bab9c5e57107d",
-          "scripts/claim_audit_ids.py": "53af87b3c1483f0bb7ab2a1fa8ebac538a99c9fead8ecc73ca17fb3d77772a43",
+          "scripts/claim_audit_ids.py": "264cdf63fbdc165999bd450a49d7f4b7a85790ea6d08d94b2141ea1da9fe167e",
           "scripts/generate_proximal_distal_falsification_atlas.py": "b90549a8330dba445b39ec83398dfd5f13e2e5fc8937ef4f50f322fd8bd18ca3",
           "src/affine_control/falsification_atlas/__init__.py": "428228d516ea55ad134e97e7191c331e793691b39ee87fafe2550e268a8f34ce",
           "src/affine_control/falsification_atlas/errors.py": "8e4931cd6e5a2fdf186bcef1a4f45dbcd4a99f2be9dce372e628eb5fcde0b35a",
@@ -11146,7 +11148,7 @@
           "src/affine_control/falsification_atlas/rendering.py": "8678eabb28a7411fff2e8f8a0831ee786069456aa78193816f92fd33091ffe49",
           "src/affine_control/falsification_atlas/validation.py": "09788efe7654539e87ddb804125ac789cd8cbaa8696a05b612abce079d742691",
           "src/affine_control/research_releases/generator.py": "000245c134de41fab49448399bdcf092470e61d7b461cab5566557eeff4cb6a7",
-          "tests/test_claim_audit_followup_scope.py": "055c677986deb3737d8617a9170e2f8e7777d5a7915830712ea08d74d186f5f2",
+          "tests/test_claim_audit_followup_scope.py": "aba3a6f9ee6812979d3cf7d838ed720e728fd9f8ec07ef852844efb02b949f97",
           "tests/test_falsification_atlas_identities.py": "4991b2d76843dc2dae7a694efc73697db8f3d3a13fb63c3ca6d3fcefa0a49cdd",
           "tests/test_proximal_distal_falsification_atlas.py": "9d47740ea05b40bb6b9f1a42b0a19812cb73b0c20be16d5794f8238171fec548",
           "tests/test_research_artifact_releases.py": "fc04524298c4df9b6f3f72631f79318d96f5a69732c18d120b5254582dacc431"
@@ -12745,14 +12747,31 @@
       "critique_ids": [],
       "findings": [
         {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd",
+            "reports/technical-review/tangent-lay-summary-review.md",
+            "reports/technical-review/tangent-lay-summary-independent-checks.json",
+            "reports/technical-review/tangent-lay-summary-browser-verification.json"
+          ],
+          "evidence_sha256": {
+            "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
+            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d",
+            "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
+            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c"
+          },
           "finding_id": "ad-finding-tangent-lay-summary-local-sensitivity",
-          "priority": "p1",
-          "disposition": "corrected",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
+          "priority": "p1",
           "rationale": "Distinguish exact derivatives and variational sensitivities from finite nonlinear motion; include the affine reference offset and qualify fixed-state torque dependence.",
+          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd"
+        },
+        {
           "claim_ids": [],
           "critique_ids": [],
-          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd",
             "reports/technical-review/tangent-lay-summary-review.md",
@@ -12761,20 +12780,20 @@
           ],
           "evidence_sha256": {
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
-            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c",
+            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d",
             "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
-            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d"
-          }
-        },
-        {
+            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c"
+          },
           "finding_id": "ad-finding-tangent-lay-summary-remainder-regularity",
-          "priority": "p1",
-          "disposition": "corrected",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
+          "priority": "p1",
           "rationale": "Replace universal quadratic and exact fourfold error claims with a checked C1 counterexample, Lipschitz-derivative sufficient condition and bounded finite-error interpretation.",
+          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd"
+        },
+        {
           "claim_ids": [],
           "critique_ids": [],
-          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd",
             "reports/technical-review/tangent-lay-summary-review.md",
@@ -12783,20 +12802,20 @@
           ],
           "evidence_sha256": {
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
-            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c",
+            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d",
             "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
-            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d"
-          }
-        },
-        {
+            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c"
+          },
           "finding_id": "ad-finding-tangent-lay-summary-coupled-phases",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
           "priority": "p1",
-          "disposition": "corrected",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
           "rationale": "Reject independent coaching-phase inference using a checked linear two-phase model; distinguish inherited state, instantaneous comparison, evolving trajectories and retuned inputs; coaching efficacy remains empirical.",
+          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd"
+        },
+        {
           "claim_ids": [],
           "critique_ids": [],
-          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd",
             "reports/technical-review/tangent-lay-summary-review.md",
@@ -12805,20 +12824,20 @@
           ],
           "evidence_sha256": {
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
-            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c",
+            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d",
             "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
-            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d"
-          }
-        },
-        {
+            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c"
+          },
           "finding_id": "ad-finding-tangent-lay-summary-illustrative-outcomes",
-          "priority": "p2",
-          "disposition": "corrected",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
+          "priority": "p2",
           "rationale": "Remove invented grasp/docking guarantees and universal thrust-rotation coupling; retain explicit illustrative model and feasibility limits.",
+          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd"
+        },
+        {
           "claim_ids": [],
           "critique_ids": [],
-          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd",
             "reports/technical-review/tangent-lay-summary-review.md",
@@ -12827,42 +12846,20 @@
           ],
           "evidence_sha256": {
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
-            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c",
+            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d",
             "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
-            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d"
-          }
-        },
-        {
+            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c"
+          },
           "finding_id": "ad-finding-tangent-lay-summary-algorithm-distinctions",
-          "priority": "p2",
-          "disposition": "corrected",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
+          "priority": "p2",
           "rationale": "Separate LQR, iLQR, full DDP and MPC; distinguish horizon-based trajectory iteration from physical execution and preserve constraint/robustness assumptions.",
-          "claim_ids": [],
-          "critique_ids": [],
-          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd",
-          "evidence_paths": [
-            "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd",
-            "reports/technical-review/tangent-lay-summary-review.md",
-            "reports/technical-review/tangent-lay-summary-independent-checks.json",
-            "reports/technical-review/tangent-lay-summary-browser-verification.json"
-          ],
-          "evidence_sha256": {
-            "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
-            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c",
-            "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
-            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d"
-          }
+          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd"
         },
         {
-          "finding_id": "ad-finding-tangent-lay-summary-audience-framing",
-          "priority": "p2",
-          "disposition": "corrected",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
-          "rationale": "Replace the conventional-control caricature and novelty rhetoric; separate nonlinearity from uncertainty, explain hybrid event timing and point to the canonical reading path.",
           "claim_ids": [],
           "critique_ids": [],
-          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd",
             "reports/technical-review/tangent-lay-summary-review.md",
@@ -12871,10 +12868,15 @@
           ],
           "evidence_sha256": {
             "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
-            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c",
+            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d",
             "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
-            "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d"
-          }
+            "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c"
+          },
+          "finding_id": "ad-finding-tangent-lay-summary-audience-framing",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4871",
+          "priority": "p2",
+          "rationale": "Replace the conventional-control caricature and novelty rhetoric; separate nonlinearity from uncertainty, explain hybrid event timing and point to the canonical reading path.",
+          "verification_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd"
         }
       ],
       "review": {
@@ -12892,9 +12894,9 @@
         ],
         "evidence_sha256": {
           "articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd": "d7e0c1b8fd5fdf5c6d13b7c24494c02f1042f0763f9df9cbf0b08d6d4897af19",
-          "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c",
+          "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d",
           "reports/technical-review/tangent-lay-summary-independent-checks.json": "69192fee761772778fa66e9fc82fe80864490709cc2fdd04726ed4bf06de97bf",
-          "reports/technical-review/tangent-lay-summary-browser-verification.json": "02964165a262c40129df6e7ed5e7fb4cb145037809bf9cb50f312818e11f395d"
+          "reports/technical-review/tangent-lay-summary-review.md": "cc8054e3012fb9082e650a02343ac356d7486b4a7d57286f4e572a88f48ff76c"
         },
         "review_commit": "73a1ae4f4f337036d1da211458fa81a3a1da3dbd",
         "reviewed_on": "2026-10-04",
@@ -14545,12 +14547,41 @@
       "critique_ids": [],
       "findings": [
         {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf",
+            "tests/test_optimal_control_conventions.py",
+            "reports/technical-review/optimal-control-review.md",
+            "reports/technical-review/optimal-control-prior-review.json",
+            "reports/technical-review/optimal-control-independent-checks.json",
+            "reports/technical-review/optimal-control-render-verification.json",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
+            "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "0f30500f3dd91811dcee80a2eb23f10270771430ac5fe1f22fb931dc3c49802c",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587",
+            "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd"
+          },
           "finding_id": "ad-finding-optimal-control-regularization-scale",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Declare control units and transform the regularization metric under constant nonsingular scaling; retain the valid fixed-scale mu-I algebra and distinguish numerical penalty from joint damping or metabolic cost.",
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
             "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
@@ -14564,25 +14595,25 @@
           ],
           "evidence_sha256": {
             "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
-            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
             "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "0f30500f3dd91811dcee80a2eb23f10270771430ac5fe1f22fb931dc3c49802c",
-            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
-            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
-            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587",
             "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
             "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
-            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd"
           },
-          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
-        },
-        {
           "finding_id": "ad-finding-optimal-control-local-smoothness",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "State local C2 transition/cost and independent perturbation-coordinate assumptions; identify the separate reset/event-time sensitivity needed through impact without claiming to implement a hybrid solver.",
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
             "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
@@ -14596,57 +14627,25 @@
           ],
           "evidence_sha256": {
             "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
-            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
             "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "0f30500f3dd91811dcee80a2eb23f10270771430ac5fe1f22fb931dc3c49802c",
-            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
-            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
-            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587",
             "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
             "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
-            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd"
           },
-          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
-        },
-        {
           "finding_id": "ad-finding-optimal-control-trial-step",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Define the displayed trial step fraction and its feedforward role; evaluate trial feedback rollouts against the original objective without adding an unimplemented line-search guarantee.",
-          "evidence_paths": [
-            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
-            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
-            "articles/The_Geometry_of_Motion/Volume_I/main.pdf",
-            "tests/test_optimal_control_conventions.py",
-            "reports/technical-review/optimal-control-review.md",
-            "reports/technical-review/optimal-control-prior-review.json",
-            "reports/technical-review/optimal-control-independent-checks.json",
-            "reports/technical-review/optimal-control-render-verification.json",
-            "reports/technical-review/optimal-control-dependency-carry-forward.json"
-          ],
-          "evidence_sha256": {
-            "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
-            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
-            "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "0f30500f3dd91811dcee80a2eb23f10270771430ac5fe1f22fb931dc3c49802c",
-            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
-            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
-            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
-            "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
-            "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
-            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
-          },
-          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a"
         },
         {
-          "finding_id": "ad-finding-optimal-control-mobile-equations",
-          "priority": "p2",
-          "disposition": "corrected",
           "claim_ids": [],
           "critique_ids": [],
-          "rationale": "Reflow equivalent long local-model, Riccati, pendulum and MPC expressions for the actual root-site layout. Preserve original targets and verify print/web presentation without renewing whole-book scientific acceptance.",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex",
             "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd",
@@ -14660,17 +14659,20 @@
           ],
           "evidence_sha256": {
             "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
-            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
             "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "0f30500f3dd91811dcee80a2eb23f10270771430ac5fe1f22fb931dc3c49802c",
-            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
-            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
-            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+            "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587",
             "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+            "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
             "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
-            "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+            "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+            "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd"
           },
-          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858"
+          "finding_id": "ad-finding-optimal-control-mobile-equations",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4858",
+          "priority": "p2",
+          "rationale": "Reflow equivalent long local-model, Riccati, pendulum and MPC expressions for the actual root-site layout. Preserve original targets and verify print/web presentation without renewing whole-book scientific acceptance.",
+          "verification_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a"
         }
       ],
       "review": {
@@ -14692,15 +14694,15 @@
           "reports/technical-review/optimal-control-dependency-carry-forward.json"
         ],
         "evidence_sha256": {
-          "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
           "articles/The_Geometry_of_Motion/Volume_I/chapters/ch05_optimal_control.tex": "c55e58acf02201808ffad7f177d647660194ed1a790d7918244aeadbef09e7a3",
           "articles/The_Geometry_of_Motion/Volume_I/main.pdf": "0f30500f3dd91811dcee80a2eb23f10270771430ac5fe1f22fb931dc3c49802c",
-          "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd",
-          "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
-          "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
+          "articles/The_Geometry_of_Motion/quarto/ch05_optimal_control.qmd": "08c44a7d9026dbb6bba675ce3643aca9cd82bf39043b989ba8c2885321534d7a",
+          "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587",
           "reports/technical-review/optimal-control-independent-checks.json": "945a3293463fbd0ca5189d6880e3e6a7670f696006f130dae70d4e7f415ef861",
+          "reports/technical-review/optimal-control-prior-review.json": "483004025860259e2d25ae798c2ebd3c414af732fe78952bbf3fd88b71566a63",
           "reports/technical-review/optimal-control-render-verification.json": "c885e19809a116fa3b3a975903feb6fd5351034071b44735eb47cf803dc6cac3",
-          "reports/technical-review/optimal-control-dependency-carry-forward.json": "184221502c42056b294ae23efd0e6cc18be11db976c91746d494cb5fbcf28587"
+          "reports/technical-review/optimal-control-review.md": "ecae8b0377ee9cf18e2b3f8ef4e3f40f0d70e2dac2c0f3ce928ccfb73f32ae8e",
+          "tests/test_optimal_control_conventions.py": "d67ee92fc6df3a0ac384e6898c2e32e6d44d5ba16a90f819448a2877b21ea2cd"
         },
         "review_commit": "8a8accd335edf66c527893d51b1cd9fe05c9a31a",
         "reviewed_on": "2026-10-03",
@@ -15212,12 +15214,47 @@
       "critique_ids": [],
       "findings": [
         {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/motion-control/chapter5.tex",
+            "articles/motion-control/Control_Is_Motion_Complete.tex",
+            "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex",
+            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+            "articles/The_Geometry_of_Motion/Volume_II/main.pdf",
+            "articles/motion-control/Control_Is_Motion_Complete.pdf",
+            "tests/test_underactuation_decay.py",
+            "reports/technical-review/underactuation-review.md",
+            "reports/technical-review/underactuation-prior-review.json",
+            "reports/technical-review/underactuation-independent-checks.json",
+            "reports/technical-review/underactuation-render-verification.json",
+            "reports/technical-review/underactuation-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex": "07e187f08cf5c4d75fdc81185a54a4377afae6c198d14bf398aecff94db97c0b",
+            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
+            "articles/motion-control/Control_Is_Motion_Complete.pdf": "7f95025c428d702b1057301e1b7292d0b3da6dc8c41007a15a83cf3d57cf64ab",
+            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
+            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
+            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0",
+            "reports/technical-review/underactuation-independent-checks.json": "6313b233b8b15f02bb00e511380bfe7e66fd6c28bc2077ffd4f9e9922b29668a",
+            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
+            "reports/technical-review/underactuation-render-verification.json": "1bd0dd277492aae766cf05a5b71239cc9d8964e33c366ec56298b21e6661c601",
+            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
+            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559"
+          },
           "finding_id": "ad-finding-underactuation-positive-decay",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Define the perturbation state and smooth nominal variational system. Specify a differentiable symmetric positive metric and a constant positive rate, derive the quadratic exponential estimate, and distinguish zero-rate nonincrease.",
+          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/motion-control/chapter5.tex",
             "articles/motion-control/Control_Is_Motion_Complete.tex",
@@ -15233,29 +15270,29 @@
             "reports/technical-review/underactuation-dependency-carry-forward.json"
           ],
           "evidence_sha256": {
-            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
-            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
             "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex": "07e187f08cf5c4d75fdc81185a54a4377afae6c198d14bf398aecff94db97c0b",
-            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
             "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
             "articles/motion-control/Control_Is_Motion_Complete.pdf": "7f95025c428d702b1057301e1b7292d0b3da6dc8c41007a15a83cf3d57cf64ab",
-            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559",
-            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
-            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
+            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
+            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
+            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0",
             "reports/technical-review/underactuation-independent-checks.json": "6313b233b8b15f02bb00e511380bfe7e66fd6c28bc2077ffd4f9e9922b29668a",
+            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
             "reports/technical-review/underactuation-render-verification.json": "1bd0dd277492aae766cf05a5b71239cc9d8964e33c366ec56298b21e6661c601",
-            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0"
+            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
+            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559"
           },
-          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863"
-        },
-        {
           "finding_id": "ad-finding-underactuation-coordinate-bound",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Derive the coordinate-error estimate using a uniform lower metric bound on the interval and an upper bound at its initial time. A changing metric can shrink while coordinate errors grow; finite downswing estimates do not imply all-time asymptotic stability.",
+          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/motion-control/chapter5.tex",
             "articles/motion-control/Control_Is_Motion_Complete.tex",
@@ -15271,29 +15308,29 @@
             "reports/technical-review/underactuation-dependency-carry-forward.json"
           ],
           "evidence_sha256": {
-            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
-            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
             "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex": "07e187f08cf5c4d75fdc81185a54a4377afae6c198d14bf398aecff94db97c0b",
-            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
             "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
             "articles/motion-control/Control_Is_Motion_Complete.pdf": "7f95025c428d702b1057301e1b7292d0b3da6dc8c41007a15a83cf3d57cf64ab",
-            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559",
-            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
-            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
+            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
+            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
+            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0",
             "reports/technical-review/underactuation-independent-checks.json": "6313b233b8b15f02bb00e511380bfe7e66fd6c28bc2077ffd4f9e9922b29668a",
+            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
             "reports/technical-review/underactuation-render-verification.json": "1bd0dd277492aae766cf05a5b71239cc9d8964e33c366ec56298b21e6661c601",
-            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0"
+            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
+            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559"
           },
-          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863"
-        },
-        {
           "finding_id": "ad-finding-underactuation-certificate-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Distinguish a nominal infinitesimal check, nonlinear regional contraction, finite-disturbance funnel certification and event sensitivity including arrival time/reset derivatives. Retain independently checked feasible-motion, power, zero-dynamics and reachability mechanics.",
+          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/motion-control/chapter5.tex",
             "articles/motion-control/Control_Is_Motion_Complete.tex",
@@ -15309,67 +15346,65 @@
             "reports/technical-review/underactuation-dependency-carry-forward.json"
           ],
           "evidence_sha256": {
-            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
-            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
             "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex": "07e187f08cf5c4d75fdc81185a54a4377afae6c198d14bf398aecff94db97c0b",
-            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
             "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
             "articles/motion-control/Control_Is_Motion_Complete.pdf": "7f95025c428d702b1057301e1b7292d0b3da6dc8c41007a15a83cf3d57cf64ab",
-            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559",
-            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
-            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
+            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
+            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
+            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0",
             "reports/technical-review/underactuation-independent-checks.json": "6313b233b8b15f02bb00e511380bfe7e66fd6c28bc2077ffd4f9e9922b29668a",
+            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
             "reports/technical-review/underactuation-render-verification.json": "1bd0dd277492aae766cf05a5b71239cc9d8964e33c366ec56298b21e6661c601",
-            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0"
+            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
+            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559"
           },
-          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863"
-        },
-        {
           "finding_id": "ad-finding-underactuation-publication",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Reflow two equivalent mobile displays, wrap the Geometry print title between words, and nest seven web sections and one subsection correctly under the chapter while preserving targets. Inspect the revised chapter print pages and scoped mobile/desktop web output.",
-          "evidence_paths": [
-            "articles/motion-control/chapter5.tex",
-            "articles/motion-control/Control_Is_Motion_Complete.tex",
-            "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex",
-            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
-            "articles/The_Geometry_of_Motion/Volume_II/main.pdf",
-            "articles/motion-control/Control_Is_Motion_Complete.pdf",
-            "tests/test_underactuation_decay.py",
-            "reports/technical-review/underactuation-review.md",
-            "reports/technical-review/underactuation-prior-review.json",
-            "reports/technical-review/underactuation-independent-checks.json",
-            "reports/technical-review/underactuation-render-verification.json",
-            "reports/technical-review/underactuation-dependency-carry-forward.json"
-          ],
-          "evidence_sha256": {
-            "articles/motion-control/chapter5.tex": "c45ced556d7b5e73bc762e055f8f466d6ced4a9a62b191c5810eff1e70bd4baa",
-            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
-            "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex": "07e187f08cf5c4d75fdc81185a54a4377afae6c198d14bf398aecff94db97c0b",
-            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
-            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
-            "articles/motion-control/Control_Is_Motion_Complete.pdf": "7f95025c428d702b1057301e1b7292d0b3da6dc8c41007a15a83cf3d57cf64ab",
-            "tests/test_underactuation_decay.py": "d4d19b62b7621060364cc1a5022f2673670b97882e18c192a7e1ccc518c68559",
-            "reports/technical-review/underactuation-review.md": "029c87d9430c13c9b1bc97265f17c7afd5874eec98a897dd8dee648777239485",
-            "reports/technical-review/underactuation-prior-review.json": "6bd9e001626c8724d0f6c926e0d92fceff570dccf2a5ef4f783ff8dc0e7a1434",
-            "reports/technical-review/underactuation-independent-checks.json": "6313b233b8b15f02bb00e511380bfe7e66fd6c28bc2077ffd4f9e9922b29668a",
-            "reports/technical-review/underactuation-render-verification.json": "1bd0dd277492aae766cf05a5b71239cc9d8964e33c366ec56298b21e6661c601",
-            "reports/technical-review/underactuation-dependency-carry-forward.json": "addd7a7ab4c7704c199dbc9f94b17191d90ca368631deb4f2b3f7e7ee88d7dd0"
-          },
-          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4863"
+          "verification_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025"
         },
         {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/The_Geometry_of_Motion/quarto/volume2.qmd",
+            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+            "articles/The_Geometry_of_Motion/Volume_II/main.tex",
+            "articles/The_Geometry_of_Motion/Volume_II/main.pdf",
+            "articles/motion-control/Control_Is_Motion_Complete.tex",
+            "tests/e2e/volume2-text-integrity.spec.js",
+            "reports/technical-review/volume2-consistency-review.md",
+            "reports/technical-review/volume2-consistency-prior-review.json",
+            "reports/technical-review/volume2-consistency-render-verification.json",
+            "reports/technical-review/volume2-consistency-dependency-carry-forward.json",
+            "reports/technical-review/volume2-consistency-preparation.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
+            "articles/The_Geometry_of_Motion/quarto/volume2.qmd": "75aae625f3d1bfa6b25e445bb645c9c8c477d0b297290b596d75f1b6dc74e8d7",
+            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
+            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
+            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
+            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3",
+            "reports/technical-review/volume2-consistency-prior-review.json": "c27fbb25c00652674ab2d922c67dce3d5b588a1d3df63e2508de8e633f68a81b",
+            "reports/technical-review/volume2-consistency-render-verification.json": "61279fd36ec24e7db55dc12c6643c36867730e43d83d0f73cb7825c646f7e9b7",
+            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
+            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435"
+          },
           "finding_id": "ad-finding-volume2-rendered-terminology",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Restore all four expressions lost by raw LaTeX emphasis in HTML: coordinate, mechanical and task singularity, and some in the worst-direction amplification statement. The original browser tests fail before restoration and pass after it.",
+          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Geometry_of_Motion/quarto/volume2.qmd",
             "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
@@ -15384,28 +15419,28 @@
             "reports/technical-review/volume2-consistency-preparation.json"
           ],
           "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
             "articles/The_Geometry_of_Motion/quarto/volume2.qmd": "75aae625f3d1bfa6b25e445bb645c9c8c477d0b297290b596d75f1b6dc74e8d7",
             "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
-            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
-            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
             "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
-            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435",
-            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
+            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
+            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3",
             "reports/technical-review/volume2-consistency-prior-review.json": "c27fbb25c00652674ab2d922c67dce3d5b588a1d3df63e2508de8e633f68a81b",
             "reports/technical-review/volume2-consistency-render-verification.json": "61279fd36ec24e7db55dc12c6643c36867730e43d83d0f73cb7825c646f7e9b7",
-            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
-            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3"
+            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
+            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435"
           },
-          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864"
-        },
-        {
           "finding_id": "ad-finding-volume2-task-framing",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Align the complete landing with the reviewed complementary regulation, tracking, path, event and orbital objectives. State admissible nominal feasibility, finite-swing and phase scope, and the distinction between local response and regional nonlinear guarantees.",
+          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Geometry_of_Motion/quarto/volume2.qmd",
             "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
@@ -15420,64 +15455,28 @@
             "reports/technical-review/volume2-consistency-preparation.json"
           ],
           "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
             "articles/The_Geometry_of_Motion/quarto/volume2.qmd": "75aae625f3d1bfa6b25e445bb645c9c8c477d0b297290b596d75f1b6dc74e8d7",
             "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
-            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
-            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
             "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
-            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435",
-            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
+            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
+            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3",
             "reports/technical-review/volume2-consistency-prior-review.json": "c27fbb25c00652674ab2d922c67dce3d5b588a1d3df63e2508de8e633f68a81b",
             "reports/technical-review/volume2-consistency-render-verification.json": "61279fd36ec24e7db55dc12c6643c36867730e43d83d0f73cb7825c646f7e9b7",
-            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
-            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3"
+            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
+            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435"
           },
-          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864"
-        },
-        {
           "finding_id": "ad-finding-volume2-preface-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Correct the print preface to describe actual Volume III biomechanics and its substantial opening chapters versus later outlines. The rebuilt 101-page PDF changes only preface page 3 in exact same-rasterizer comparison.",
-          "evidence_paths": [
-            "articles/The_Geometry_of_Motion/quarto/volume2.qmd",
-            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
-            "articles/The_Geometry_of_Motion/Volume_II/main.tex",
-            "articles/The_Geometry_of_Motion/Volume_II/main.pdf",
-            "articles/motion-control/Control_Is_Motion_Complete.tex",
-            "tests/e2e/volume2-text-integrity.spec.js",
-            "reports/technical-review/volume2-consistency-review.md",
-            "reports/technical-review/volume2-consistency-prior-review.json",
-            "reports/technical-review/volume2-consistency-render-verification.json",
-            "reports/technical-review/volume2-consistency-dependency-carry-forward.json",
-            "reports/technical-review/volume2-consistency-preparation.json"
-          ],
-          "evidence_sha256": {
-            "articles/The_Geometry_of_Motion/quarto/volume2.qmd": "75aae625f3d1bfa6b25e445bb645c9c8c477d0b297290b596d75f1b6dc74e8d7",
-            "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
-            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
-            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
-            "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
-            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435",
-            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
-            "reports/technical-review/volume2-consistency-prior-review.json": "c27fbb25c00652674ab2d922c67dce3d5b588a1d3df63e2508de8e633f68a81b",
-            "reports/technical-review/volume2-consistency-render-verification.json": "61279fd36ec24e7db55dc12c6643c36867730e43d83d0f73cb7825c646f7e9b7",
-            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
-            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3"
-          },
-          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864"
+          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862"
         },
         {
-          "finding_id": "ad-finding-volume2-matrix-presentation",
-          "priority": "p2",
-          "disposition": "corrected",
           "claim_ids": [],
           "critique_ids": [],
-          "rationale": "Reflow the transient-amplification matrix example into equivalent stacked equalities after a mobile width regression reproduces overflow. Preserve both matrices, numerical claims and anchors; inspect neighboring body content. Separate baseline title-card investigation #4868 remains open.",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Geometry_of_Motion/quarto/volume2.qmd",
             "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
@@ -15492,20 +15491,23 @@
             "reports/technical-review/volume2-consistency-preparation.json"
           ],
           "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
+            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
             "articles/The_Geometry_of_Motion/quarto/volume2.qmd": "75aae625f3d1bfa6b25e445bb645c9c8c477d0b297290b596d75f1b6dc74e8d7",
             "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd": "dae243a28c89c3c8c4749178bc262556cca870d56aad9d134801d0f23eebcdaa",
-            "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
-            "articles/The_Geometry_of_Motion/Volume_II/main.pdf": "de1bdc4782f158fdbd47bbe2765ae9cec47c28b87402bd0d68c8fbaa52c036b8",
             "articles/motion-control/Control_Is_Motion_Complete.tex": "ce7a8700a5ab90ce74dce0e8ba64cbf4ac1317e70cdad4b5daff6a00e342099d",
-            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435",
-            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
+            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
+            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3",
             "reports/technical-review/volume2-consistency-prior-review.json": "c27fbb25c00652674ab2d922c67dce3d5b588a1d3df63e2508de8e633f68a81b",
             "reports/technical-review/volume2-consistency-render-verification.json": "61279fd36ec24e7db55dc12c6643c36867730e43d83d0f73cb7825c646f7e9b7",
-            "reports/technical-review/volume2-consistency-dependency-carry-forward.json": "9853e8c047b960ab8f5764edf2dba316e1652517e1cebcae208b9d3f433a1029",
-            "reports/technical-review/volume2-consistency-preparation.json": "6306396859dbb5b9b73943a8bc7ba794e9a937c04cf693756299c5449ede54b3"
+            "reports/technical-review/volume2-consistency-review.md": "4cc2507a52430e82b0c6ec69b2e02545b84b5bb064f797b4db0db24969822f01",
+            "tests/e2e/volume2-text-integrity.spec.js": "eb6cca72452cf2be36d75c4507a5fa1499b48a7b8b6b574db26ddde4b6fe9435"
           },
-          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864"
+          "finding_id": "ad-finding-volume2-matrix-presentation",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4864",
+          "priority": "p2",
+          "rationale": "Reflow the transient-amplification matrix example into equivalent stacked equalities after a mobile width regression reproduces overflow. Preserve both matrices, numerical claims and anchors; inspect neighboring body content. Separate baseline title-card investigation #4868 remains open.",
+          "verification_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862"
         }
       ],
       "review": {
@@ -16582,12 +16584,45 @@
       "critique_ids": [],
       "findings": [
         {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
+          "evidence_paths": [
+            "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex",
+            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex",
+            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd",
+            "articles/The_Physics_of_Golf/main.pdf",
+            "articles/The_Physics_of_Golf/golf_physics.bib",
+            "tests/test_passive_stabilization_preload.py",
+            "reports/technical-review/passive-stabilization-review.md",
+            "reports/technical-review/passive-stabilization-prior-review.json",
+            "reports/technical-review/passive-stabilization-independent-checks.json",
+            "reports/technical-review/passive-stabilization-render-verification.json",
+            "reports/technical-review/passive-stabilization-dependency-carry-forward.json"
+          ],
+          "evidence_sha256": {
+            "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
+            "articles/The_Physics_of_Golf/golf_physics.bib": "30fa6a25294917c18a89fc10b899e32f40951c6be559baf7038a591e7a2af9ab",
+            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
+            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
+            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
+            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe",
+            "reports/technical-review/passive-stabilization-independent-checks.json": "880643cd32e09933d50108c9c610ae7ba7f9e0e95106bdfa1bce8d7704803609",
+            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
+            "reports/technical-review/passive-stabilization-render-verification.json": "b1af5f4dd920813466e97e57a0d5eb1b57c3d67d0606decfc2850b28066261f4",
+            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
+            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb"
+          },
           "finding_id": "ad-finding-stabilization-loaded-loop",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Make the existing preload caveat computable using the constrained potential Hessian with the declared multiplier sign and independent perturbation coordinates; verify a manufactured circle example without interpreting it as golfer data.",
+          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex",
             "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex",
@@ -16603,27 +16638,27 @@
           ],
           "evidence_sha256": {
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
-            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
             "articles/The_Physics_of_Golf/golf_physics.bib": "30fa6a25294917c18a89fc10b899e32f40951c6be559baf7038a591e7a2af9ab",
-            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb",
-            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
-            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
+            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
+            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
+            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
+            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe",
             "reports/technical-review/passive-stabilization-independent-checks.json": "880643cd32e09933d50108c9c610ae7ba7f9e0e95106bdfa1bce8d7704803609",
+            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
             "reports/technical-review/passive-stabilization-render-verification.json": "b1af5f4dd920813466e97e57a0d5eb1b57c3d67d0606decfc2850b28066261f4",
-            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe"
+            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
+            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb"
           },
-          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860"
-        },
-        {
           "finding_id": "ad-finding-stabilization-constitutive-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Retain the valid muscle moment-arm chain rule with explicit quasistatic length-law assumptions; identify additional force-velocity and internal-state derivatives required during motion.",
+          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex",
             "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex",
@@ -16639,27 +16674,27 @@
           ],
           "evidence_sha256": {
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
-            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
             "articles/The_Physics_of_Golf/golf_physics.bib": "30fa6a25294917c18a89fc10b899e32f40951c6be559baf7038a591e7a2af9ab",
-            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb",
-            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
-            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
+            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
+            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
+            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
+            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe",
             "reports/technical-review/passive-stabilization-independent-checks.json": "880643cd32e09933d50108c9c610ae7ba7f9e0e95106bdfa1bce8d7704803609",
+            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
             "reports/technical-review/passive-stabilization-render-verification.json": "b1af5f4dd920813466e97e57a0d5eb1b57c3d67d0606decfc2850b28066261f4",
-            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe"
+            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
+            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb"
           },
-          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860"
-        },
-        {
           "finding_id": "ad-finding-stabilization-ucm-scope",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Specify the Jacobian and covariance under constant state scaling; locate the cited UCM study in sit-to-stand rather than implying that it validates golf speed regulation.",
+          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95"
+        },
+        {
+          "claim_ids": [],
+          "critique_ids": [],
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex",
             "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex",
@@ -16675,63 +16710,27 @@
           ],
           "evidence_sha256": {
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
-            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
             "articles/The_Physics_of_Golf/golf_physics.bib": "30fa6a25294917c18a89fc10b899e32f40951c6be559baf7038a591e7a2af9ab",
-            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb",
-            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
-            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
+            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
+            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
+            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
+            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe",
             "reports/technical-review/passive-stabilization-independent-checks.json": "880643cd32e09933d50108c9c610ae7ba7f9e0e95106bdfa1bce8d7704803609",
+            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
             "reports/technical-review/passive-stabilization-render-verification.json": "b1af5f4dd920813466e97e57a0d5eb1b57c3d67d0606decfc2850b28066261f4",
-            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe"
+            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
+            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb"
           },
-          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860"
-        },
-        {
           "finding_id": "ad-finding-stabilization-sampled-rate",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860",
           "priority": "p2",
-          "disposition": "corrected",
-          "claim_ids": [],
-          "critique_ids": [],
           "rationale": "Define task error and sampled stiffness-rate input in the finite-horizon objective; preserve the distinction between numerical penalties and calibrated physiological energy costs.",
-          "evidence_paths": [
-            "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex",
-            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex",
-            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd",
-            "articles/The_Physics_of_Golf/main.pdf",
-            "articles/The_Physics_of_Golf/golf_physics.bib",
-            "tests/test_passive_stabilization_preload.py",
-            "reports/technical-review/passive-stabilization-review.md",
-            "reports/technical-review/passive-stabilization-prior-review.json",
-            "reports/technical-review/passive-stabilization-independent-checks.json",
-            "reports/technical-review/passive-stabilization-render-verification.json",
-            "reports/technical-review/passive-stabilization-dependency-carry-forward.json"
-          ],
-          "evidence_sha256": {
-            "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
-            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
-            "articles/The_Physics_of_Golf/golf_physics.bib": "30fa6a25294917c18a89fc10b899e32f40951c6be559baf7038a591e7a2af9ab",
-            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb",
-            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
-            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
-            "reports/technical-review/passive-stabilization-independent-checks.json": "880643cd32e09933d50108c9c610ae7ba7f9e0e95106bdfa1bce8d7704803609",
-            "reports/technical-review/passive-stabilization-render-verification.json": "b1af5f4dd920813466e97e57a0d5eb1b57c3d67d0606decfc2850b28066261f4",
-            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe"
-          },
-          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860"
+          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95"
         },
         {
-          "finding_id": "ad-finding-stabilization-publication",
-          "priority": "p2",
-          "disposition": "corrected",
           "claim_ids": [],
           "critique_ids": [],
-          "rationale": "Remove five paragraph breaks inside Quarto display fences that exposed literal dollar delimiters, reflow equivalent expressions, and wrap the overflowing print title while preserving original targets. Verify actual scoped print/web output.",
+          "disposition": "corrected",
           "evidence_paths": [
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex",
             "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex",
@@ -16747,19 +16746,22 @@
           ],
           "evidence_sha256": {
             "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
-            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
             "articles/The_Physics_of_Golf/golf_physics.bib": "30fa6a25294917c18a89fc10b899e32f40951c6be559baf7038a591e7a2af9ab",
-            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb",
-            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
-            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
+            "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
+            "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
+            "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
+            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe",
             "reports/technical-review/passive-stabilization-independent-checks.json": "880643cd32e09933d50108c9c610ae7ba7f9e0e95106bdfa1bce8d7704803609",
+            "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
             "reports/technical-review/passive-stabilization-render-verification.json": "b1af5f4dd920813466e97e57a0d5eb1b57c3d67d0606decfc2850b28066261f4",
-            "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe"
+            "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
+            "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb"
           },
-          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95",
-          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860"
+          "finding_id": "ad-finding-stabilization-publication",
+          "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4860",
+          "priority": "p2",
+          "rationale": "Remove five paragraph breaks inside Quarto display fences that exposed literal dollar delimiters, reflow equivalent expressions, and wrap the overflowing print title while preserving original targets. Verify actual scoped print/web output.",
+          "verification_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95"
         }
       ],
       "review": {
@@ -16783,17 +16785,17 @@
           "reports/technical-review/passive-stabilization-dependency-carry-forward.json"
         ],
         "evidence_sha256": {
-          "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
           "articles/The_Physics_of_Golf/chapters/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-          "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
-          "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
           "articles/The_Physics_of_Golf/golf_physics.bib": "30fa6a25294917c18a89fc10b899e32f40951c6be559baf7038a591e7a2af9ab",
-          "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb",
-          "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
-          "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
+          "articles/The_Physics_of_Golf/main.pdf": "fd579b122feebf3b9a41d3cb85b6d8f050abacecc9f6a6d6805b05820d547e4d",
+          "articles/The_Physics_of_Golf/quarto/ch09b_passive_stabilization.qmd": "0b7f0f05e14a9183be0a46a77708d9aaf45a33ba9d1b9233277fbd24886ef744",
+          "articles/bosch_integration/golf_chapter/ch09b_passive_stabilization.tex": "31b40018a146b15c20ccf0a9a4edc885fb6c53b07f79379f2a40aff2e7ea1957",
+          "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe",
           "reports/technical-review/passive-stabilization-independent-checks.json": "880643cd32e09933d50108c9c610ae7ba7f9e0e95106bdfa1bce8d7704803609",
+          "reports/technical-review/passive-stabilization-prior-review.json": "bd4100d5d80e02e168eb9ed9c478f23199bb1155532125f0a66329481701366f",
           "reports/technical-review/passive-stabilization-render-verification.json": "b1af5f4dd920813466e97e57a0d5eb1b57c3d67d0606decfc2850b28066261f4",
-          "reports/technical-review/passive-stabilization-dependency-carry-forward.json": "1ae9e8249a8aaa33fd94f8f2dbe5f827e4fc260822c51add2eec1a3741cecefe"
+          "reports/technical-review/passive-stabilization-review.md": "7c8ad22709ace19e1a3eb657e2bd07ad387cf41c5530d17a8de3805a1e2f8712",
+          "tests/test_passive_stabilization_preload.py": "840989ccc526e829733740eb347547de1a05ec5a9f245002c40ee55421a415fb"
         },
         "review_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95",
         "reviewed_on": "2026-10-03",
@@ -18421,15 +18423,17 @@
         ],
         "evidence_paths": [
           "_includes/control-affine-attribution-boundary.qmd",
+          "_includes/generated/drift-plus-control.qmd",
           "_includes/generated/explainers/drift-vs-control.qmd",
           "articles/_generated/trust/critique-annotations/theory-part1.qmd",
           "articles/theory-part1.qmd"
         ],
         "evidence_sha256": {
           "_includes/control-affine-attribution-boundary.qmd": "05d86b9c3aa917c9ec30d63880b46c884df0d85a882d86e970b46ad8b18a9368",
+          "_includes/generated/drift-plus-control.qmd": "774edfd046e12ad44f7029a2289adf5b346261b4c3787c83eac8a9a9cf2cfe82",
           "_includes/generated/explainers/drift-vs-control.qmd": "cbfb19bc6bd4972f1695c530ace82084f67691313d232dfda32522fe3ecbb304",
           "articles/_generated/trust/critique-annotations/theory-part1.qmd": "929e2d1b89a0994037b004a8ab23eed49d381e896cbbe395f9dd251f80f57bac",
-          "articles/theory-part1.qmd": "eb7231f6cfe048a8eaa5541362904f74fff5629245c4d20884294903dd526a42"
+          "articles/theory-part1.qmd": "bfe527659a28a96a5a67851ea8069d21625a652c9733748953ff38e1bbf5d2ef"
         },
         "review_commit": "0f547c4524c5bb9c1a7e28a58e2d42127fa2f33e",
         "reviewed_on": "2026-09-13",
@@ -20200,16 +20204,16 @@
             "articles/The_Geometry_of_Motion/Volume_V/main.tex"
           ],
           "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_0/main.tex": "2b02fba26179159e629a7266f72ca6205eb5fed6b355df0fad0537962002541a",
             "articles/The_Geometry_of_Motion/Volume_I/main.tex": "7a970a98ce56f697f162b864e9028b96ea1ff65486ed54537c8049c1089cc3ea",
             "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
             "articles/The_Geometry_of_Motion/Volume_III/main.tex": "b35d1c3571fe09078dc91398ee3317e279e784d37e68e5f3175be8ba097ee506",
             "articles/The_Geometry_of_Motion/Volume_IV/main.tex": "88ed600e98d040602326141703a905d6634edf4ce664d6dbd12fc52fe742af19",
+            "articles/The_Geometry_of_Motion/Volume_V/main.tex": "9186c822562949cbcad1a588b6c6b004057ce8dab6ae19f5614d1f8fe7b79b99",
             "articles/proximal_distal_energy_transfer/index.qmd": "6eabc6e3e1674e83c32ff8474aee16e063792d5f7672c23728a51c26ee56dda1",
             "articles/proximal_distal_energy_transfer/source_manifest.json": "c89f7011cc78057ae6d5e9ea5d5d8ddafd22d08d0c3c5c3a972c4ccaa71e86a1",
             "books/index.qmd": "c98ca8aaf15af19706b6f9e5aaabbc4b880196926ea0d562394ee5e84da308ba",
-            "notebooks/geometry_of_motion/manifest.json": "4cc70380252c8640603cbb2b7e3f3e0d23f21ddf35ab30a8e136d035bd410b9d",
-            "articles/The_Geometry_of_Motion/Volume_0/main.tex": "2b02fba26179159e629a7266f72ca6205eb5fed6b355df0fad0537962002541a",
-            "articles/The_Geometry_of_Motion/Volume_V/main.tex": "9186c822562949cbcad1a588b6c6b004057ce8dab6ae19f5614d1f8fe7b79b99"
+            "notebooks/geometry_of_motion/manifest.json": "4cc70380252c8640603cbb2b7e3f3e0d23f21ddf35ab30a8e136d035bd410b9d"
           },
           "finding_id": "ad-finding-book-index-state-coherence",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4062",
@@ -20271,14 +20275,14 @@
             "articles/The_Geometry_of_Motion/Volume_V/main.tex"
           ],
           "evidence_sha256": {
+            "articles/The_Geometry_of_Motion/Volume_0/main.tex": "2b02fba26179159e629a7266f72ca6205eb5fed6b355df0fad0537962002541a",
             "articles/The_Geometry_of_Motion/Volume_I/main.tex": "7a970a98ce56f697f162b864e9028b96ea1ff65486ed54537c8049c1089cc3ea",
             "articles/The_Geometry_of_Motion/Volume_II/main.tex": "7e2efa459b5fecb11a32fc9820c9717a9ebdb7cd1892cd3ded99156204bc65ea",
             "articles/The_Geometry_of_Motion/Volume_III/main.tex": "b35d1c3571fe09078dc91398ee3317e279e784d37e68e5f3175be8ba097ee506",
             "articles/The_Geometry_of_Motion/Volume_IV/main.tex": "88ed600e98d040602326141703a905d6634edf4ce664d6dbd12fc52fe742af19",
+            "articles/The_Geometry_of_Motion/Volume_V/main.tex": "9186c822562949cbcad1a588b6c6b004057ce8dab6ae19f5614d1f8fe7b79b99",
             "books/roadmap.qmd": "4e991c1853f38b60e15a08ff7187ea29cb99efdb65ab64f6b795bfc0fab4029a",
-            "notebooks/geometry_of_motion/manifest.json": "4cc70380252c8640603cbb2b7e3f3e0d23f21ddf35ab30a8e136d035bd410b9d",
-            "articles/The_Geometry_of_Motion/Volume_0/main.tex": "2b02fba26179159e629a7266f72ca6205eb5fed6b355df0fad0537962002541a",
-            "articles/The_Geometry_of_Motion/Volume_V/main.tex": "9186c822562949cbcad1a588b6c6b004057ce8dab6ae19f5614d1f8fe7b79b99"
+            "notebooks/geometry_of_motion/manifest.json": "4cc70380252c8640603cbb2b7e3f3e0d23f21ddf35ab30a8e136d035bd410b9d"
           },
           "finding_id": "ad-finding-book-roadmap-completion-amplification",
           "issue_url": "https://github.com/D-sorganization/AffineDrift/issues/4062",
@@ -21934,7 +21938,7 @@
           "scripts/generate_dataset_explorer_manifest.py": "b6b14d45aa22ab7cc365b93a741eaf1f3d58aa53e088a1214cd79cd756f8607c",
           "tests/dataset-explorer-ui.test.js": "40ec299e4900d13cb0403860ebcfcfb2e2a8dafc2d27ba346dc3a4213c7dfdec",
           "tests/dataset-explorer.test.js": "7c42b8ce1fb8aa66ecb465128c92e28393e6415c1cd9a66ee08ef6c5082a879c",
-          "tests/test_claim_audit_inventory.py": "b3c596f4d0195768fa1e030dbca1c7f1d7180eea3e9c83399c230eb3efb891e1",
+          "tests/test_claim_audit_inventory.py": "33e3cc134f8f9252e5a7b3f4e107d80ac3064a6ad623e46a4463e75c14e8531f",
           "tests/test_generate_dataset_explorer_manifest.py": "93e8a1fc18356ed16474043bbba8d9be71ce4445995663a11a62bbc76127259f"
         },
         "review_commit": "3471f7d30245b688a62429726a3b2916442000d2",
@@ -22635,7 +22639,7 @@
         ],
         "evidence_sha256": {
           "_includes/generated/research-readiness-library.qmd": "b58c86b19ed4b1ae4082b4fd5c3e31fe0483a7a3dbf7d8e41e70e751dd36ed90",
-          "_quarto.yml": "41300893f1cb021965fb57820409a0004672dc60827bb23da9b23b5e65c0b3bc",
+          "_quarto.yml": "776aae85e6eaf89e97f16726dac7c7535e26c86976444c91e82d2c0f52ca9626",
           "data/research_protocols/data_dictionary.json": "a39b4ee56f9ecee321f2d2fe1612b351c201e1c813aaf258f99d6e087d4a1720",
           "data/research_protocols/library.json": "09e68d738518f17adf52810299e0f80b3ee7fcd5b2c77fa1ec5892e6631603a5",
           "data/research_protocols/manufactured_dry_runs.json": "4f23dc9ac93900b364846adeefce69adb35543da0b911943ba9a13fe1edc5f5b",
@@ -22648,7 +22652,7 @@
           "reports/technical-review/two-hand-wrench-readiness-carry-forward.json": "3ee73d21a9234bdac507485e0369096bd165e662404d4f1e074baef615c9e638",
           "resources/resources-datasets.qmd": "ba312514ad230df7c57812e2422513272360358604f98b5e237b0d9b3fda1559",
           "schemas/research-protocol-readiness-v1.schema.json": "8462a0c2d2811a72a78e6cb114af5748c58498a18c45986b3ed78abba80581d9",
-          "scripts/claim_audit_ids.py": "53af87b3c1483f0bb7ab2a1fa8ebac538a99c9fead8ecc73ca17fb3d77772a43",
+          "scripts/claim_audit_ids.py": "264cdf63fbdc165999bd450a49d7f4b7a85790ea6d08d94b2141ea1da9fe167e",
           "scripts/generate_research_readiness_library.py": "9780bbada53a8b4a900b17f03fb9769009c69f3f39eb1d2d788ac1c57fd96247",
           "src/affine_control/research_readiness/__init__.py": "0f0e968ff82d2d4b036173e07a3358bf415ff9dfe3cd83e9b23a5cf38e2d87a6",
           "src/affine_control/research_readiness/authority.py": "b35b1482afc3e1d94486075d1f7e8e59fa3169625b7b5b3e9bb55e2c18c80892",
@@ -22663,7 +22667,7 @@
           "src/affine_control/research_readiness/template.py": "ddc840e958fe5c393234924c1304f662e1c20b67b8d55dc33a8f280bb3b0c438",
           "src/affine_control/research_readiness/validation.py": "3bb49be9c209695901bc51330c79acac9899d8d4003e0755b6e69851fffb6a2d",
           "tests/research_readiness_test_support.py": "8a90324c0f32221a93e22a26d683c4a38c8ce32c809a536c2fe4cde5690f9d9b",
-          "tests/test_claim_audit_followup_scope.py": "055c677986deb3737d8617a9170e2f8e7777d5a7915830712ea08d74d186f5f2",
+          "tests/test_claim_audit_followup_scope.py": "aba3a6f9ee6812979d3cf7d838ed720e728fd9f8ec07ef852844efb02b949f97",
           "tests/test_research_protocol_readiness.py": "659ddc34c54526d5a09b83a19c57c564a7c69e7b01d1de763e087dd568a0c1c6",
           "tests/test_research_readiness_authority_red.py": "6aeb66a5d8a63d4123bba66d58e467bea03ca27c5fc0b6af5cb7630601a8e529",
           "tests/test_research_readiness_content.py": "9ab6b2cf129660fd2f90a157060be6a6a228960f77ade01d5b472a322c61a727",
@@ -22728,9 +22732,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/about.qmd": "95b1846d4dac0b9f0662b0781ce3415e155b699c9831834b32409c102de3cbb2",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -22818,9 +22822,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/book-reviews.qmd": "1d9bbae08b203ab3bcf8a652214482212371c16fc82b5f45ad339add08e88b3e",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -22865,9 +22869,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/collaborate.qmd": "023f5f1d92ac20a38e48fd2ba22ab8143f08fe7d4aba509cab36415d09043344",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -22912,9 +22916,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/contact.qmd": "54b9899e48623ee407e7da3e032246562d4f785a92c280a2a32bcc9b18de87ea",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -23032,9 +23036,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/daydreams-doodles.qmd": "8f4e59c3f7f5be2e606331606220e2ce8a467c5fecca0a325e5c2b8615f69c37",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -23079,9 +23083,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/development-roadmap.qmd": "4a2e7aa461ebaede627e3758a9d6a6e8136f6cec13f5a95a70f4493a49d11d0a",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -23210,9 +23214,9 @@
         ],
         "evidence_sha256": {
           "css/manifesto.css": "35117d0650e73a65c9164e7c7ea2c95065822a7455baf1da78e9190ffd2dbbcb",
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/drifter-manifesto.qmd": "5b8debf5a9731ee5d1a261c09ea2fa4647275b6738b42001dcf8224e6358a08d",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8",
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b",
           "reports/technical-review/manifesto-notation-render-verification.json": "c9627edf421f78c60bec0a6fb5b16ce8535733f32139aa54353cbfa77c5f15a6",
           "reports/technical-review/manifesto-notation-review.md": "bb94ab057518cdffe431535d66b9a0f8190e31717469935b55d65095606ecc5b"
         },
@@ -23578,7 +23582,7 @@
           "evidence_sha256": {
             "NOTATION.md": "5c13dbbdf46e723982295f498e6f3bcef26e411d92e3bd882024a93688822ab9",
             "pages/notation.qmd": "5b04a36e8b7008b2b6534112e6e6b9fea380257dc7d21b5a44e899be3e291c56",
-            "styles.css": "75ff26f1d6137cf0ff4fd3d6fc2dcf6fd9136120aa321278cb2dfc55ca6b9857",
+            "styles.css": "c88ee04326bed52484fd7a76f15569e310230cb28f5f0e627f2e4fe085abec3f",
             "tests/test_responsive_layout_contract.py::test_dense_tables_scroll_without_collapsing_long_cells_to_fragments": "3366f928cc423ecc4a3e7b1f0f43307600976b735c1e7a9fb0f0ccf817eaa1fb",
             "tests/test_responsive_layout_contract.py::test_mobile_publication_shell_contains_wide_content_without_page_scroll": "9b75bc2cf8e4748d60c03f8c8fb2fa41c07edeb1638a7abe2f11d00e195f4ee3"
           },
@@ -23604,9 +23608,9 @@
         ],
         "evidence_sha256": {
           "NOTATION.md": "5c13dbbdf46e723982295f498e6f3bcef26e411d92e3bd882024a93688822ab9",
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/notation.qmd": "5b04a36e8b7008b2b6534112e6e6b9fea380257dc7d21b5a44e899be3e291c56",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -23671,9 +23675,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/overview.qmd": "648a94271295ca3543bbf391d058ffbfb58a09e39e306b22e14974f716f3d1b5",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -23755,6 +23759,34 @@
       "status": "reviewed"
     },
     {
+      "audit_id": "ad-route-48284a9d1eff",
+      "claim_ids": [],
+      "critique_ids": [],
+      "findings": [],
+      "review": {
+        "dimensions": [
+          "evidence",
+          "uncertainty",
+          "falsifiers",
+          "audience_framing"
+        ],
+        "evidence_paths": [
+          "_includes/generated/drift-plus-control.qmd",
+          "pages/start-here.qmd"
+        ],
+        "evidence_sha256": {
+          "_includes/generated/drift-plus-control.qmd": "774edfd046e12ad44f7029a2289adf5b346261b4c3787c83eac8a9a9cf2cfe82",
+          "pages/start-here.qmd": "cc961bc251dd957c9a1d8b32fcca369a773cc99e4ef2ba8a543d0bef662e9790"
+        },
+        "review_commit": "e1ec8f62d804567f3a480c02242e0792d815185e",
+        "reviewed_on": "2026-10-05",
+        "reviewer": "claude-4486-20261005; new entry page: site scope, persona routing, label definitions and non-claims only, no new scientific claims; signature figure reviewed in #4554",
+        "source_path": "pages/start-here.qmd"
+      },
+      "route": "/pages/start-here.html",
+      "status": "reviewed"
+    },
+    {
       "audit_id": "ad-route-0689b70b9901",
       "claim_ids": [],
       "critique_ids": [],
@@ -23807,9 +23839,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/tangent-hyperplanes.qmd": "95edfe5dc1ab5ce5ba8e15b40f81e9641b3e7c2844de8367f2ae9affb205bb66",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -23854,9 +23886,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/technology.qmd": "c0cba55ecb0f69e11479962eb9326ea8d71bbce8cd45b7f301627c69291b3263",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -23901,9 +23933,9 @@
           "reports/site-trust-surface-audit.md"
         ],
         "evidence_sha256": {
-          "data/trust/site_trust_surface_audit.json": "96fef068779d79afdfd1701706d9f883182991924d7fc8ebcc4d1e74b63ac645",
+          "data/trust/site_trust_surface_audit.json": "8da88a840ddfd6b7fdadf3b2774d019e3d2e0bfc22ca24539aac72cb92c01381",
           "pages/tools.qmd": "45bd542300dcccb5872bfec1da7ac6f47d3b260951bd7b1cc48d080f3e58d725",
-          "reports/site-trust-surface-audit.md": "5f9fdc3a6ee6a17caaf6c30e2ffe0360d3efd866fb45ab3116aaf3d946934bd8"
+          "reports/site-trust-surface-audit.md": "1c525475fef2383b1fe5eb6dff9fff29494747040c68277dfc08ee2d7197da7b"
         },
         "review_commit": "31664586cae87a3391fdc70d65cc9a78bb3ec24e",
         "reviewed_on": "2026-09-24",
@@ -24342,7 +24374,7 @@
         "evidence_sha256": {
           "NOTATION.md": "5c13dbbdf46e723982295f498e6f3bcef26e411d92e3bd882024a93688822ab9",
           "articles/The_Physics_of_Golf/quarto/ch28_impact_collision.qmd": "d0f2adb16653f5fe3412eab0ba34ac0f6273f44386bc453a59858d7ded8696fd",
-          "articles/theory-part1.qmd": "eb7231f6cfe048a8eaa5541362904f74fff5629245c4d20884294903dd526a42",
+          "articles/theory-part1.qmd": "bfe527659a28a96a5a67851ea8069d21625a652c9733748953ff38e1bbf5d2ef",
           "articles/theory-part2.qmd": "473467f46420094fec1afa544cd4c98c5ff79525acf7802399e757f3840c698c",
           "articles/theory-part5.qmd": "32b655c6654d8ceeacbabacde4dbb5b05ddaeb430f6235daec059571d2c214b8",
           "critiques/index.qmd": "b7c7632dd460f4c2f1564c36f97c1cdffeb6e55a49d1e7681c9915242d448d8b",
@@ -24545,8 +24577,8 @@
           "reports/technical-review/two-hand-wrench-publication-dependencies.json": "201d2a31861a2f11a1ccc0d837cdd5472061383af08bda4008be1dad229b5844",
           "reports/technical-review/two-hand-wrench-readiness-carry-forward.json": "3ee73d21a9234bdac507485e0369096bd165e662404d4f1e074baef615c9e638",
           "resources/resources-datasets.qmd": "ba312514ad230df7c57812e2422513272360358604f98b5e237b0d9b3fda1559",
-          "scripts/claim_audit_ids.py": "53af87b3c1483f0bb7ab2a1fa8ebac538a99c9fead8ecc73ca17fb3d77772a43",
-          "tests/test_claim_audit_followup_scope.py": "055c677986deb3737d8617a9170e2f8e7777d5a7915830712ea08d74d186f5f2"
+          "scripts/claim_audit_ids.py": "264cdf63fbdc165999bd450a49d7f4b7a85790ea6d08d94b2141ea1da9fe167e",
+          "tests/test_claim_audit_followup_scope.py": "aba3a6f9ee6812979d3cf7d838ed720e728fd9f8ec07ef852844efb02b949f97"
         },
         "review_commit": "1a504d98de3805a2d3540896774c580f2a88ff10",
         "reviewed_on": "2026-09-30",
