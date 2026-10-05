@@ -60,3 +60,9 @@ Repository_Management PR1998 fixes the central PDF title checker; its CI-only
 pypdf dependency repair is at 80cdeb2ab. Its current checks are queued, not merged.
 App PR attachment attempts hit the 100-item cap; do not remove unrelated items.
 Primary-checkout user changes and other agents' worktrees remain untouched.
+
+## Combined Validation and Metadata Blocker
+
+Frozen source4160ed572 passed7278 tests,29skipped,210deselected,60warnings in548.49seconds,93.31%coverage; tracked tree clean before and after. All19extra source/CI gates pass. Central pre-PR passes lint, mypy,379affected tests, consistency, import/policy/fragment checks and workflow lint, but initially rejects the inherited unchanged development log. Failure retained.
+
+Issue4952 leases a scripted metadata repair using central helpers and git-blame provenance, with full records retained in the annual archive and duplicate evidence. No gate weakened; no historical scientific test claims renewed. Default30-day archival left225882bytes, so completed entries older than7days were archived to meet the200000-byte budget. Validator now exits zero with its existing advisory4-WIP warning. Active states are preserved. Legacy repeated-field context remains visible; source provenance is appended independently rather than replacing historical test statements. Run the final pre-PR gate and preserve its result before publishing.
