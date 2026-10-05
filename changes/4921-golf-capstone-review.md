@@ -2,10 +2,12 @@
 issue: 4921
 summary: "Correct golf capstone acceleration attribution and synthetic dynamics"
 dl_state: "in_progress"
-next_step: "Commit the verified source, run frozen full regression, then accept two corpus rows and open a regular PR against #4922"
+next_step: "Open regular PR against #4922 after the five pre-PR gates; protected delivery and fetched-main verification remain"
 owner: "codex"
 branch: "fix/golf-capstone-review"
 ---
+
+Accepted source be4bbe6e27d0fb33a2b984c743a2e361e72c136e: 7,072 passed, 29 skipped, 210 deselected, 60 warnings in 413.30 seconds; source coverage 93.25%, exit 0, unchanged tracked tree. Nine source hashes and scoped acceptance are recorded in reports/technical-review/golf-capstone-validation.json. Two corpus rows accepted: 407 total, 62 pending-prefix rows. Earlier full run failed one docstring test (two nested helpers); repaired and rerun, with both logs retained. PDF pass 8 adds only those docstrings; 49 pages, affected pages 43–47 reinspected.
 
 Complete capstone chapter, canonical SwingAnalysis and generated listing reviewed. Signed same-state joint accelerations replace misleading speed attribution; synthetic rates/accelerations are analytic and torques match inverse dynamics. The chapter connects geometry, energy, intervention, measurements, muscles, feedback and variability while distinguishing executable work from extensions. Bounded Volume V preface corrected. No whole-volume or human-golf certification.
 

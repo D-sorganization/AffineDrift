@@ -1,0 +1,56 @@
+import csv
+import hashlib
+import io
+import json
+import subprocess
+from pathlib import Path
+
+root = Path.cwd()
+qa = root / 'docs/development/technical-review/golf-capstone-review'
+head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+assert head == 'be4bbe6e27d0fb33a2b984c743a2e361e72c136e'
+assert (qa/'full-tests-final.exit').read_text().strip() == '0'
+assert (qa/'full-tests-final-before.txt').stat().st_size == 0
+assert (qa/'full-tests-final-after.txt').stat().st_size == 0
+log = (qa/'full-tests-final.txt').read_text(encoding='utf-8')
+assert '7072 passed, 29 skipped, 210 deselected, 60 warnings' in log
+assert 'Total coverage: 93.25%' in log
+paths = [
+ 'articles/The_Geometry_of_Motion/Volume_V/chapters/ch10_golf_swing_project.tex',
+ 'articles/The_Geometry_of_Motion/Volume_V/generated/ch10_swing_analysis.tex',
+ 'src/affine_control/swing_analysis.py',
+ 'scripts/generate_worked_examples.py',
+ 'tests/test_affine_control/test_swing_analysis.py',
+ 'articles/The_Geometry_of_Motion/Volume_V/main.tex',
+ 'articles/The_Geometry_of_Motion/geometry_of_motion.bib',
+ 'articles/The_Geometry_of_Motion/Volume_V/main.pdf',
+ 'reports/technical-review/golf-capstone-independent-checks.json',
+]
+hashes = {p:hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{p}'])).hexdigest() for p in paths}
+record = {
+ 'issue':4921,'epic':4009,
+ 'status':'Complete chapter and canonical listing accepted; protected delivery pending',
+ 'accepted_source_commit':head,'git_blob_sha256':hashes,
+ 'scope':'Complete golf capstone chapter, canonical module and generated listing; bounded preface; no whole-volume or empirical certification',
+ 'full_regression':{'head':head,'passed':7072,'skipped':29,'deselected':210,'warnings':60,'seconds':413.30,'src_coverage_percent':93.25,'exit_code':0,'tracked_tree_unchanged':True,'command':'python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60','log':(qa/'full-tests-final.txt').relative_to(root).as_posix()},
+ 'pdf':{'pages':49,'printed_entries':19,'unresolved_citations_or_references':0,'visual_scope':'Physical pages 3-5 and 39-49 inspected; docstring-only pass 8 affected pages 43-47 reinspected','build_log':(qa/'accepted-pass8.txt').relative_to(root).as_posix(),'limits':'Five historical overfull boxes in other chapters; historical duplicate destinations/package warnings; no capstone overflow'},
+ 'mathematics':{'record':paths[-1],'identities':6,'cases_each':100,'threshold':1e-5,'scope':'Manufactured mathematics; not human or forward-trajectory validation'},
+ 'focused_tests':40,'combined_tests':78,
+ 'delegation':{'helpers':5,'model':'agy Gemini 3.8 Flash','mode':'Read-only reviews and test proposals; lead-adjudicated'},
+ 'delivery':{'status':'Preparing regular PR','base':'fix/learning-rhythm-review','dependency':'PR 4922','next':'Protected delivery then fetched-main blob verification'},
+ 'failed_run':'bd575c8: 7071 passed, one docstring test failed for two nested helpers; docstrings repaired, behavior unchanged; failed log retained',
+}
+(root/'reports/technical-review/golf-capstone-validation.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+index=root/'docs/development/technical-review/corpus-review-index.csv'
+rows=list(csv.DictReader(io.StringIO(index.read_text(encoding='utf-8'))))
+assert len(rows)==407
+changed=0
+for row in rows:
+ if row['Source'] in paths[:2]:
+  assert row['Review Scope'].startswith('Indexed;')
+  row['Review Scope']='Complete Chapter and Canonical Listing Reviewed; Issue #4921; Protected Delivery Pending; No Empirical Certification'
+  changed+=1
+assert changed==2
+output=io.StringIO(newline=''); writer=csv.DictWriter(output,fieldnames=rows[0].keys(),lineterminator='\n')
+writer.writeheader(); writer.writerows(rows)
+index.write_bytes(output.getvalue().encode('utf-8'))
