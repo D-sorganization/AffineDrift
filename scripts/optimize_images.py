@@ -27,6 +27,7 @@ EXPECTED_OUTPUTS: tuple[str, ...] = (
     "navbar_webp",
     "og_card_png",
     "fish_gif",
+    "fish_webp",
     "fish_poster_png",
     "fish_poster_webp",
 )
@@ -43,6 +44,7 @@ class OptimizationManifest:
     og_card_png: Path
     fish_source: Path
     fish_gif: Path
+    fish_webp: Path
     fish_poster_png: Path
     fish_poster_webp: Path
 
@@ -65,6 +67,7 @@ def build_manifest(repo_root: Path) -> OptimizationManifest:
         og_card_png=_resolve(repo_root, "logo/og-card.png"),
         fish_source=_resolve(repo_root, "static/images/A-Dead-Fish-Swims.gif"),
         fish_gif=_resolve(repo_root, "static/images/A-Dead-Fish-Swims-optimized.gif"),
+        fish_webp=_resolve(repo_root, "static/images/A-Dead-Fish-Swims.webp"),
         fish_poster_png=_resolve(repo_root, "static/images/A-Dead-Fish-Swims-poster.png"),
         fish_poster_webp=_resolve(repo_root, "static/images/A-Dead-Fish-Swims-poster.webp"),
     )
@@ -157,7 +160,7 @@ def _optimized_gif_frames(source: Image.Image) -> tuple[list[Image.Image], list[
 
 
 def optimize_fish_animation(manifest: OptimizationManifest) -> None:
-    """Create a smaller animated GIF and static poster derivatives."""
+    """Create smaller animated GIF/WebP and static poster derivatives."""
     source = _load_image(manifest.fish_source)
     frames, durations = _optimized_gif_frames(source)
     if not frames:
@@ -171,6 +174,17 @@ def optimize_fish_animation(manifest: OptimizationManifest) -> None:
         duration=durations,
         loop=0,
         disposal=2,
+    )
+    rgba_frames = [frame.convert("RGBA") for frame in frames]
+    rgba_frames[0].save(
+        manifest.fish_webp,
+        format="WEBP",
+        save_all=True,
+        append_images=rgba_frames[1:],
+        duration=durations,
+        loop=0,
+        quality=WEBP_QUALITY,
+        method=6,
     )
     poster = frames[0].convert("RGBA")
     _save_png(poster, manifest.fish_poster_png)

@@ -168,6 +168,44 @@ all 50 target hashes against the actual protected tree. Public delivery must
 also prove the four amended pages are deployed and their advertised PDFs match
 the stated edition. The prospective comparison alone cannot close the epic.
 
+## Actual Main Integration
+
+At 12:13:41 UTC, #4942 and #4892 merged through the protected queue. Fetched
+main is bc07fb7a34d83827dd94147c31b334682bc97c03. GitHub reported #4953 as dirty,
+with no merge-queue entry, before repair began. This is a real conflict repair,
+not an update of a green or queued branch merely to follow main.
+
+The navigation branch already contains the accepted review head, so merging the
+actual protected base into it produces the combined candidate without replaying
+the scientific edits. Preserve both specification changelog rows (#4558 and
+#4902). Resolve only the six evidence-hash conflict blocks, then regenerate the
+canonical inventory and reports. Do not adopt an entire ledger from either side.
+
+Candidate tree ba2d631caea204720007b278cd2d7929b3f3deab preserves all 145 original
+artifact hashes, all 50 linked manuscript/PDF hashes, and all four amended-page
+hashes. Compared with the navigation checkpoint, the inventory has 86 changed
+hash values and no changed scientific metadata, rationale, identity or decision.
+The conflict regeneration itself changes seven hashes. An initial QA comparison
+misread a UTF-8 snapshot using the Windows default encoding; explicit UTF-8
+decoding eliminated the false rationale differences. No rationale was edited.
+
+An additional Flash review classifies the protected-main QMD diff as 14 appended
+related-article sections, an image presentation change, and digest-table updates.
+Lead inspection confirms that scope. The underlying protocol library, public
+summary and atlas changes are hashes only. The evidence presentation registry
+also advances its generation date from 3 to 5 October; that is preserved as
+generation metadata and does not renew a scientific review. See
+reports/technical-review/final-navigation-integration-checks.json and
+flash-main-integration.txt for evidence and limits.
+
+The integrated tree passes 55 focused publication, navigation, title, link and
+claim-inventory tests. This supplements the earlier 65-test navigation checkpoint
+and preserves the original full-regression receipt at its stated revision.
+Finish canonical audit checks, commit the merge, and run central pre-PR gates.
+Then fast-forward the existing consolidation branch to this combined result,
+update regular PR #4953 to close #4961, and use the central merge guard. Final
+protected-tree and public-site receipts still belong on #4009 before closure.
+
 Repository_Management #1998 is merged at e03344f3d5d0306f990ff295f767dbb1ba74ecd9.
 Thirty-eight of its 39 changed files exactly match the accepted head. The remaining
 test file has only an independent main addition to SCRIPT_COPIES; the repair is

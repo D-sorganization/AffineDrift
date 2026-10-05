@@ -1,6 +1,11 @@
 # Technical Review Consolidation
 
-## Current State
+Current delivery and integration guidance is in
+docs/development/technical-review/current-book-links/review-notes.md and PR #4953.
+The checkpoint and test receipts below are historical; later corpus acceptance
+and the book-link correction supersede their pending-work descriptions.
+
+## Original Consolidation Checkpoint
 
 Epic #4009, corpus #4021, consolidation #4947. Worktree:
 C:/Users/diete/Repositories/Worktrees/AffineDrift-technical-review-consolidated-20261005.
