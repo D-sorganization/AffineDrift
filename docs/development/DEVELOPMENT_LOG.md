@@ -740,6 +740,18 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Last verified:** 2026-10-04 (site-gate tests pass incl. new stale-baseline test; `link-checker.py --site-gate` passes; claim-audit `--check` exit 0)
 - **Summary:** 17 pages use a `title="See Also"` callout attribute instead of a nested `## See Also` heading; five tangent-hyperplane parts gain previous/next links; related-coverage baseline goes from 70 to 45 entries.
 - **Next step:** Review the draft PR, then arm it through the merge queue.
+### DL-#4913 · Benchmark Baseline Platform Detection
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** pending (ready; main)
+- **Issue:** #4913
+- **Branch:** `fix/4913-benchmark-baseline`
+- **Paths:** `.github/workflows/ci-benchmarks.yml`, `scripts/ci/benchmark_compare_args.py`, `tests/test_benchmark_compare_args.py`
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (24 focused tests pass; actionlint reports only pre-existing SC2034 warnings; action-pin tests pass)
+- **Summary:** Benchmarks compare with the 15% gate only against a baseline for the runner platform; otherwise save one as an artifact and report no baseline rather than failure.
+- **Next step:** After merge, commit the Linux CPython 3.12 baseline artifact under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating.
 
 ## Archive
 
