@@ -1,0 +1,228 @@
+"""Tests for CompassPhase dynamics listing extracted from Chapter 7 TeX source."""
+
+import re
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pytest
+from scipy.integrate import solve_ivp
+
+GRAVITY_M_S2 = 9.81
+
+
+@pytest.fixture(scope="module")
+def listing_namespace() -> dict[str, Any]:
+    """Extract, compile, and execute listing blocks from the Chapter 7 TeX source."""
+    repo_root = Path(__file__).resolve().parents[1]
+    tex_path = (
+        repo_root
+        / "articles"
+        / "The_Geometry_of_Motion"
+        / "Volume_IV"
+        / "chapters"
+        / "ch07_passive_control.tex"
+    )
+    if not tex_path.is_file():
+        pytest.fail(f"TeX listing source not found: {tex_path}")
+
+    content = tex_path.read_text(encoding="utf-8")
+    blocks = re.findall(
+        r"\\begin\{lstlisting\}(?:\[.*?\])?\s*\n(.*?)\\end\{lstlisting\}", content, re.DOTALL
+    )
+    combined_code = "\n\n".join(b.strip() for b in blocks if b.strip())
+    if not combined_code:
+        pytest.fail(f"No executable listing blocks found in {tex_path}")
+
+    ns: dict[str, Any] = {"__name__": "listing_tests"}
+    # Repository-owned listings at a fixed path, with no external input.
+    # nosemgrep: python.lang.security.audit.exec-detected.exec-detected
+    exec(compile(combined_code, str(tex_path), "exec"), ns)
+    return ns
+
+
+def _get_model(ns: dict[str, Any], **kwargs: float) -> Any:
+    """Helper to instantiate CompassPhase from the extracted namespace."""
+    cls = ns.get("CompassPhase")
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+    return cls(**kwargs)
+
+
+def test_mass_matrix_shape_and_symmetry(listing_namespace: dict[str, Any]) -> None:
+    """Validate mass matrix dimensions, finiteness, and symmetry across angles."""
+    model = _get_model(listing_namespace)
+    for q in [(0.2, -0.4), (0.0, 0.0), (-1.2, 1.5)]:
+        mass = model.mass(q)
+        arr = np.asarray(mass, dtype=float)
+        assert arr.shape == (2, 2)
+        assert np.all(np.isfinite(arr))
+        assert np.isclose(arr[0, 1], arr[1, 0], atol=1e-12)
+
+
+def test_mass_matrix_exact_determinant(listing_namespace: dict[str, Any]) -> None:
+    """Verify determinant matches exact analytical formula m * length^4 * (M + m * sin(delta)^2)."""
+    model = _get_model(
+        listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.2, gravity=GRAVITY_M_S2
+    )
+    q1, q2 = 0.55, -0.25
+    delta = q1 - q2
+    expected_det = 5.0 * (1.2**4) * (10.0 + 5.0 * (np.sin(delta) ** 2))
+    computed_det = float(np.linalg.det(model.mass((q1, q2))))
+    assert np.isclose(computed_det, expected_det, rtol=1e-12)
+    assert computed_det > 0.0
+
+
+def test_acceleration_at_aligned_zero_velocity(listing_namespace: dict[str, Any]) -> None:
+    """Verify analytic acceleration a1 = (g/length)*sin(alpha), a2 = 0 when q1=q2=alpha and v=0."""
+    length, gravity = 1.4, GRAVITY_M_S2
+    model = _get_model(
+        listing_namespace, hip_mass=8.0, foot_mass=3.0, length=length, gravity=gravity
+    )
+    alpha = 0.35
+    state = (alpha, alpha, 0.0, 0.0)
+    deriv = np.asarray(model.rhs(0.0, state), dtype=float)
+    assert np.isclose(deriv[0], 0.0, atol=1e-14)
+    assert np.isclose(deriv[1], 0.0, atol=1e-14)
+    assert np.isclose(deriv[2], (gravity / length) * np.sin(alpha), rtol=1e-10)
+    assert np.isclose(deriv[3], 0.0, atol=1e-12)
+
+
+def test_rhs_kinematic_derivatives(listing_namespace: dict[str, Any]) -> None:
+    """Check that the first two components of rhs correspond strictly to generalized velocities."""
+    model = _get_model(listing_namespace)
+    state = (0.2, -0.3, 1.75, -2.4)
+    deriv = np.asarray(model.rhs(0.0, state), dtype=float)
+    assert deriv.shape == (4,)
+    assert np.all(np.isfinite(deriv))
+    assert np.isclose(deriv[0], 1.75, atol=1e-14)
+    assert np.isclose(deriv[1], -2.4, atol=1e-14)
+
+
+def test_energy_matches_independent_cartesian_oracle(listing_namespace: dict[str, Any]) -> None:
+    """Cross-check scalar energy with an independent sum of Cartesian kinetic and potential energy."""
+    m_hip, m_foot, length, g = 12.0, 4.0, 1.5, GRAVITY_M_S2
+    model = _get_model(
+        listing_namespace, hip_mass=m_hip, foot_mass=m_foot, length=length, gravity=g
+    )
+    q1, q2, v1, v2 = 0.4, -0.6, 0.8, -1.1
+
+    v_hip = np.array([length * np.cos(q1) * v1, -length * np.sin(q1) * v1])
+    v_swing = v_hip - np.array([length * np.cos(q2) * v2, -length * np.sin(q2) * v2])
+    t_oracle = 0.5 * m_hip * float(np.dot(v_hip, v_hip)) + 0.5 * m_foot * float(
+        np.dot(v_swing, v_swing)
+    )
+    v_oracle = (m_hip + m_foot) * g * (length * np.cos(q1)) - m_foot * g * (length * np.cos(q2))
+    expected_energy = t_oracle + v_oracle
+
+    computed_energy = float(model.energy((q1, q2, v1, v2)))
+    assert np.isclose(computed_energy, expected_energy, rtol=1e-12)
+
+
+def test_energy_time_derivative_along_trajectory(listing_namespace: dict[str, Any]) -> None:
+    """Verify that dE/dt = grad(E) . rhs equals zero using numerical directional derivative."""
+    model = _get_model(listing_namespace)
+    state = np.array([0.3, -0.2, 0.5, -0.4], dtype=float)
+    x_dot = np.asarray(model.rhs(0.0, state), dtype=float)
+
+    h = 1e-7
+    e_plus = float(model.energy(state + h * x_dot))
+    e_minus = float(model.energy(state - h * x_dot))
+    de_dt = (e_plus - e_minus) / (2.0 * h)
+    assert np.isclose(de_dt, 0.0, atol=1e-5)
+
+
+def test_energy_conservation_in_numerical_integration(listing_namespace: dict[str, Any]) -> None:
+    """Verify mechanical energy is conserved during continuous trajectory integration via solve_ivp."""
+    model = _get_model(
+        listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.0, gravity=GRAVITY_M_S2
+    )
+    s0 = np.array([0.25, -0.15, 0.1, -0.2], dtype=float)
+    e0 = float(model.energy(s0))
+
+    sol = solve_ivp(
+        fun=lambda t, s: model.rhs(t, s),
+        t_span=(0.0, 0.08),
+        y0=s0,
+        method="DOP853",
+        rtol=1e-9,
+        atol=1e-11,
+    )
+    assert sol.success
+    energies = [float(model.energy(sol.y[:, i])) for i in range(sol.y.shape[1])]
+    max_drift = float(np.max(np.abs(np.array(energies) - e0)))
+    assert max_drift < 5e-7
+
+
+def test_mass_matrix_length_scaling(listing_namespace: dict[str, Any]) -> None:
+    """Verify quadratic scaling of mass matrix with respect to compass leg length."""
+    q = (0.3, -0.5)
+    model1 = _get_model(
+        listing_namespace, hip_mass=7.0, foot_mass=3.0, length=1.0, gravity=GRAVITY_M_S2
+    )
+    model2 = _get_model(
+        listing_namespace, hip_mass=7.0, foot_mass=3.0, length=2.0, gravity=GRAVITY_M_S2
+    )
+    m1 = np.asarray(model1.mass(q), dtype=float)
+    m2 = np.asarray(model2.mass(q), dtype=float)
+    assert np.allclose(m2, 4.0 * m1, rtol=1e-12)
+
+
+def test_potential_energy_linear_gravity_scaling(listing_namespace: dict[str, Any]) -> None:
+    """Verify that stationary potential energy scales linearly with the gravity parameter."""
+    state = (0.45, -0.3, 0.0, 0.0)
+    m_g1 = _get_model(listing_namespace, hip_mass=6.0, foot_mass=2.0, length=1.1, gravity=5.0)
+    m_g2 = _get_model(listing_namespace, hip_mass=6.0, foot_mass=2.0, length=1.1, gravity=10.0)
+    e1 = float(m_g1.energy(state))
+    e2 = float(m_g2.energy(state))
+    assert np.isclose(e2, 2.0 * e1, rtol=1e-12)
+
+
+def test_input_immutability(listing_namespace: dict[str, Any]) -> None:
+    """Ensure mass, energy, and rhs methods leave input arrays unmodified."""
+    model = _get_model(listing_namespace)
+    q_orig = np.array([0.3, -0.4], dtype=float)
+    q_copy = q_orig.copy()
+    _ = model.mass(q_orig)
+    assert np.array_equal(q_orig, q_copy)
+
+    state_orig = np.array([0.3, -0.4, 0.5, -0.6], dtype=float)
+    state_copy = state_orig.copy()
+    _ = model.energy(state_orig)
+    _ = model.rhs(0.0, state_orig)
+    assert np.array_equal(state_orig, state_copy)
+
+
+def test_invalid_parameters_raise_value_error(listing_namespace: dict[str, Any]) -> None:
+    """Ensure non-positive or non-finite parameters raise ValueError on initialization."""
+    cls = listing_namespace["CompassPhase"]
+    for bad_args in [
+        {"hip_mass": -1.0},
+        {"foot_mass": 0.0},
+        {"length": -0.5},
+        {"gravity": 0.0},
+        {"gravity": float("nan")},
+        {"hip_mass": float("inf")},
+    ]:
+        valid_kwargs = {"hip_mass": 10.0, "foot_mass": 5.0, "length": 1.0, "gravity": GRAVITY_M_S2}
+        valid_kwargs.update(bad_args)
+        with pytest.raises(ValueError):
+            cls(**valid_kwargs)
+
+
+def test_invalid_states_raise_value_error(listing_namespace: dict[str, Any]) -> None:
+    """Ensure malformed or non-finite state and coordinate inputs trigger ValueError."""
+    model = _get_model(listing_namespace)
+    for bad_q in [(0.1,), (0.1, 0.2, 0.3), (np.nan, 0.1), (0.1, np.inf)]:
+        with pytest.raises(ValueError):
+            model.mass(bad_q)
+
+    for bad_state in [
+        (0.1, 0.2, 0.3),
+        (0.1, 0.2, 0.3, 0.4, 0.5),
+        (np.nan, 0.0, 0.0, 0.0),
+        (0.0, 0.0, np.inf, 0.0),
+    ]:
+        with pytest.raises(ValueError):
+            model.energy(bad_state)
+        with pytest.raises(ValueError):
+            model.rhs(0.0, bad_state)
