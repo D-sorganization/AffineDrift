@@ -3,9 +3,11 @@
 ## Scope and Decision
 
 Issue #4961 is a final delivery amendment under #4009. The accepted scientific
-source is PR #4953, head fbee4da94fd699e9710f4c29b42a73a5113f08d4. The running PR
-is unchanged. Work is isolated on fix/current-reviewed-book-links in the former
-final-partial-sources worktree.
+source is PR #4953, head fbee4da94fd699e9710f4c29b42a73a5113f08d4. The navigation work began on fix/current-reviewed-book-links in the former
+final-partial-sources worktree and is now combined with the required protected-main
+conflict repair for existing regular PR #4953. This document records pre-merge
+evidence; the final protected-merge and publication receipts are maintained in
+epic #4009.
 
 A completion audit found 53 manuscript/PDF links across five book pages. Of
 those, 43 hard-pinned targets differ from the accepted tree, four hard-pinned
@@ -240,3 +242,15 @@ Repository_Management #1998 is merged at e03344f3d5d0306f990ff295f767dbb1ba74ecd
 Thirty-eight of its 39 changed files exactly match the accepted head. The remaining
 test file has only an independent main addition to SCRIPT_COPIES; the repair is
 intact. Its issue receipt is posted and its lease and presence are released.
+
+## Final Local Gate Receipt
+
+All eight central pre-PR gates pass at 504c7dd07eb9369965ba36aa607f2840f83e81fd.
+The affected-test run has 379 passes; the earlier integrated publication and
+claim-inventory run has 55 passes. Three Streamlit modules are skipped during
+collection because that optional package is unavailable. The gate runner reports
+its optional absent fleet scripts explicitly; the development-log validator ran
+and passed. No tests, tolerances, coverage floors or protection rules changed.
+See integrated-pre-pr-final.txt for the exact output. Only this receipt and its
+log were added after the gate run. Final protected-main, advertised PDF and
+public-site verification remain required before epic closure.
