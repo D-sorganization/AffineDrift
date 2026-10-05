@@ -1,0 +1,36 @@
+### Table 1: Mechanical, Package, Version, Platform, and Provenance Claims
+
+| Claim / Snippet Target | Claim Category | Specific Item / Assertion Requiring Verification |
+| :--- | :--- | :--- |
+| `pip install "pinocchio>=3.0.0"` | Package / PyPI | Package name on PyPI is `pinocchio` (not `pin`), and `>=3.0.0` is available across stated platforms. |
+| `pip install "mujoco>=3.0.0"` | Package / Version | MuJoCo is distributed via PyPI under package name `mujoco` with minimum version `>= 3.0.0`. |
+| `pip install "myosuite>=2.0.0"` | Package / Version | MyoSuite package name is `myosuite` on PyPI with minimum version `>= 2.0.0`. |
+| `Drake >= 1.20.0` | Version / Platform | Drake minimum release version is `>= 1.20.0` for trajectory optimization / direct collocation / DDP. |
+| `OpenSim >= 4.5` | Version / Platform | OpenSim Python scripting interface minimum version is `>= 4.5`. |
+| `Simulink / MATLAB R2023b or later` | Version / Compatibility | Target Simulink integration requires MATLAB release `R2023b` or later. |
+| OS support claims | Platform | Supported across `Python 3.12`, `Ubuntu 22.04+`, `Windows 11`, and `macOS 13+` for the listed engines. |
+| `D-sorganization/UpstreamDrift` | Provenance / Access | Private GitHub repository URL and organization namespace `https://github.com/D-sorganization/UpstreamDrift`. |
+| `pip install -e ".[dev]"` & Git LFS | Build / Install | Standard editable install target with extra `[dev]` and asset fetching via `git lfs`. |
+| `python scripts/ci/verify_installation.py` | Provenance / Path | Existence and functionality of the installation verification script at `scripts/ci/verify_installation.py`. |
+| `python -m scripts.companion_workflows execute --workflow-id installation-verification` | Provenance / CLI | Existence and interface of the `companion_workflows` module and `installation-verification` workflow ID. |
+| `GOLF_USE_MOCK_ENGINE=1` | Environment Variable | Support for environment variable `GOLF_USE_MOCK_ENGINE` to bypass heavy simulation engines. |
+| Support tiers (`F0`, `F1`, `F2`) | Provenance / Classification | Engine tier classification dividing engines into Supported (`F0`), Extended (`F1`), and Experimental (`F2`). |
+| `pydrake.all` import snippet | API / Imports | Availability of `DiagramBuilder`, `AddMultibodyPlantSceneGraph`, `Parser`, `Simulator` from `pydrake.all`. |
+| `pinocchio` API snippet | API / Functions | Availability of `buildModelFromUrdf`, `forwardKinematics`, `computeFrameJacobian`, `getFrameJacobian`, and enum `pin.LOCAL_WORLD_ALIGNED`. |
+| `mujoco` API snippet | API / Functions | Functions `MjModel.from_xml_path`, `MjData`, `mj_resetData`, `mj_step` and attribute `qpos`. |
+| `gym.make("myoChallengeBimanuaReachFixed-v0")` | API / Environment ID | Specific environment identifier string `"myoChallengeBimanuaReachFixed-v0"` under `gym`/`myosuite`. |
+| Model asset paths (`models/golf_3dof.xml`, `models/golf_sdf/golf_arm.sdf`, `models/golf_arm.urdf`, `models/pendulum_2dof.urdf`) | Provenance / Paths | Existence and naming convention of stated model files in the repository. |
+| Documentation cross-links | Link / Target | Internal URLs (e.g., `../models/programming/engines.html`, `../models/models.html`, `proximal-distal-model-workbench.html`). |
+
+---
+
+### Table 2: Conceptual and Theoretical Claims
+
+| Claim Subject | Claim Context | Specific Assertion Requiring Verification |
+| :--- | :--- | :--- |
+| Contraction Rate | Vol I, Ch 4 | Contraction rate $\lambda$ can be measured from perturbations and matches theoretical predictions derived from LQR eigenvalues. |
+| Drift-Control Ratio (DCR) | Vol I, Ch 8 | Drift-control ratio $\rho(t) > 10$ during the downswing of an expert golf swing, indicating a drift-dominated regime. |
+| Floquet Multipliers | Vol II, Ch 4 | Passive swing dynamics possess orbital stability verifiable via numerical computation of Floquet multipliers. |
+| Numerical Fréchet Derivative | Vol I, Ch 1 | Numeric Fréchet derivative computation across physics simulation engines. |
+| Pinocchio ABA Algorithm Complexity | Vol 0, Ch 6 | Articulated Body Algorithm (ABA) achieves strict $O(n)$ forward dynamics execution timing. |
+| Drake Guarantees | Physics Engines Overview | Trajectory optimization and optimal control via Drake provide formal analytical/numerical guarantees. |
