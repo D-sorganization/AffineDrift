@@ -26,6 +26,7 @@
 @import url("css/components/page-header-card.css");
 @import url("css/components/summary-takeaways.css");
 @import url("css/components/caveats-block.css");
+@import url("css/components/laymans-terms.css");
 @import url("css/components/revision-history.css");
 @import url("css/components/status-badge.css");
 @import url("css/components/where-next.css");
@@ -1730,11 +1731,6 @@ h3:hover .anchor-link,
   transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
 }
 
-/* Shared component (#4494): the <h2> separates the button from its panel. */
-.laymans-terms-content[aria-hidden="false"] {
-  max-height: none;
-}
-
 .laymans-terms-inner {
   padding: 1.5rem;
 }
@@ -1795,23 +1791,6 @@ h3:hover .anchor-link,
   content: "🎯 Analogy: ";
   font-weight: 600;
   color: #856404;
-}
-
-/* Lay blocks render open (#4494), so their light-tinted cards must stay
-   readable on the dark theme too (WCAG AA, tests/e2e/accessibility.spec.js). */
-[data-bs-theme="dark"] .laymans-item .analogy,
-[data-bs-theme="dark"] .laymans-item .key-takeaway,
-body.quarto-dark .laymans-item .analogy,
-body.quarto-dark .laymans-item .key-takeaway {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-[data-bs-theme="dark"] .laymans-item .analogy::before,
-[data-bs-theme="dark"] .laymans-item .key-takeaway::before,
-body.quarto-dark .laymans-item .analogy::before,
-body.quarto-dark .laymans-item .key-takeaway::before {
-  color: inherit;
 }
 
 .laymans-item .key-takeaway {
