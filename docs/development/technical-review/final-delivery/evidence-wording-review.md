@@ -27,4 +27,31 @@ Link the primary source on National Academies; preserve anchor, six labels, keys
 
 Flash inspected the incoming tests. Label/order checks require the existing anchor and six bold numbered labels; definition length must exceed 20 characters. No exact definition strings are pinned. Lead will run the entire evidence-ladder suite plus frontmatter/maturity tests, scoped Quarto rendering/layout checks, canonical claim-audit regeneration and its check. Compare changed metadata semantically: identities, rationales, dates and original acceptance remain unchanged. Only affected source digests should change.
 
-No publication edit has been applied. Wait for actual protected merge of the parent changes; never push to the queued PR. Include the correction and its evidence in final handoff delivery after integrating protected main, using a regular PR with issue #4976. Keep #4009 open until protected/public delivery is proved.
+## Implementation and Local Acceptance
+
+Parent PR #4970 merged on 5 October at 15:11:58 UTC as
+`7904cfc1c6234e5ce0ac31127021f28b81fcb0a5`, verified as an ancestor of fetched
+`origin/main`. Integration commit `7bd543d00` brought that protected guide into
+the final handoff branch without changing the queued #4953 branch. The bounded
+prose correction was then applied to the guide and matching config definition.
+
+All 54 tests in the evidence-ladder, frontmatter, maturity-vocabulary and caveat
+suites pass. Frontmatter validation passes for 245 files. Scoped Quarto HTML
+rendering and canonical claim-audit regeneration checks pass. Semantic comparison
+finds exactly two guide-hash replacements across the audit inventory and derived
+report; review identities, dates, rationales and all other metadata are unchanged.
+All config keys, aliases, flags and non-replication definitions remain unchanged.
+
+Desktop/mobile inspection at 1440/390 pixels finds no horizontal document
+overflow. The primary-source hyperlink resolves to the inspected National
+Academies passage. The single-page local preview reports a missing publication
+manifest, a blocked legacy polyfill and a font-path 404. Sticky navigation and
+floating controls also affect long element captures; viewport captures were
+used to inspect the amended replication and terminology paragraphs. This is
+scoped prose/render evidence, not global layout or accessibility clearance.
+Exact source and screenshot hashes are in
+[the validation receipt](evidence-wording-validation.json).
+
+Protected/public delivery of this clarification is still pending. Publish it
+with the final handoff using a regular PR for #4976; retain #4009 until the
+protected source, public artifacts and final handoff have all been verified.

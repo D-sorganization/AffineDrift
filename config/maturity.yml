@@ -76,10 +76,13 @@ legacy_mappings:
 
 # Evidence ladder (WEB-04.3, issue #4517).
 #
-# Ordered from weakest to strongest support. A page declares its rung with the
-# `evidence-rung` front-matter key. A rung with `requires_measured_data: true`
+# Progression from model-internal results to empirically bounded human application,
+# not a universal ranking of truth. A page declares its claim's rung with the
+# `evidence-rung` front-matter key; other claims do not inherit that support.
+# A rung with `requires_measured_data: true`
 # must also name an `evidence-record`: the id of a `data/datasets.yml` entry
-# flagged `measured_participant_data: true`. Rendered in
+# flagged `measured_participant_data: true`. This prerequisite does not establish
+# replication or application bounds; those require scientific review. Rendered in
 # pages/how-to-read.qmd#evidence-ladder.
 evidence_rungs:
   - key: mathematical-identity
@@ -100,7 +103,7 @@ evidence_rungs:
     requires_measured_data: true
   - key: replicated-result
     label: "Replicated result"
-    definition: "A measured participant result reproduced on an independent dataset or by an independent group."
+    definition: "A measured participant finding supported by a further study addressing the same question using newly collected observations, with agreement assessed in light of uncertainty."
     requires_measured_data: true
   - key: bounded-application
     label: "Bounded application"

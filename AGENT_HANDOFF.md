@@ -30,12 +30,13 @@ its actual revision. Do not imply that an older full run tested a later commit.
 4. Release only this session's leases. Preserve other agents' changes and leave
    superseded PR closure to the repository's redundant-PR closer.
 
-Incoming reader-guide wording needs the bounded clarification tracked in
-[#4976](https://github.com/D-sorganization/AffineDrift/issues/4976), after peer
-PR #4970 reaches protected main. The [adjudication and validation plan](docs/development/technical-review/final-delivery/evidence-wording-review.md)
-distinguish mathematical proof, empirical applicability and replication. Preserve
-the six evidence categories and validator behavior; do not modify queued PRs.
-This follow-up and its public verification remain required for final acceptance.
+Reader-guide clarification [#4976](https://github.com/D-sorganization/AffineDrift/issues/4976)
+is locally accepted after parent PR #4970 reached protected main. The
+[adjudication and validation receipt](docs/development/technical-review/final-delivery/evidence-wording-review.md)
+distinguish mathematical proof, empirical applicability and replication; 54
+focused tests, 245-file frontmatter validation and a scoped HTML render pass.
+The six evidence categories and validator behavior are preserved. This follow-up
+still requires protected/public delivery; do not modify queued PRs.
 
 Finish these delivery steps before starting another review or rewrite. Empirical
 studies, notebook execution, instrument qualification and upstream publications
