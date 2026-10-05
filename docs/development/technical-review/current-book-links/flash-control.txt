@@ -1,0 +1,27 @@
+### Findings Summary
+
+| Source Page | Target Link / Target Artifact | Current Pin / Target URL | Classification | Rationale & Status |
+| :--- | :--- | :--- | :--- | :--- |
+| `books\control-is-motion.qmd` | View Main Source Manuscript (`Volume_II/main.tex`) | `.../blob/f287ce6ab2cd.../Volume_II/main.tex` | **Superseded Manuscript Link** | Points to pre-review commit `f287ce6ab2cd...`. The accepted technical review corrections live at `fbee4da94fd6...` (PR4953). |
+| `books\control-is-motion.qmd` | Chapter source `.tex` files (Ch 01–11) | `.../blob/f287ce6ab2cd.../Volume_II/chapters/ch*.tex` | **Superseded Manuscript Link** | Points to pre-review snapshot `f287ce6ab2cd...`. Canonical `.tex` chapters were corrected in PR4953 / `fbee4da94fd6...`. |
+| `books\control-is-motion.qmd` | Companion Notebooks (Ch 1–11) | `.../blob/f287ce6ab2cd.../notebooks/...` | **Intentional Historical Scaffold Pin** | Scaffolds remain unvalidated historical tutorials; prompt explicitly mandates leaving notebook pins unchanged. |
+| `books\index.qmd` | Review LaTeX Source (`Volume_V/main.tex`) | `.../blob/main/articles/The_Geometry_of_Motion/Volume_V/main.tex` | **Floating Branch Reference** | Points to `main` branch rather than the accepted immutable review commit or PR milestone. |
+| `books\tangent-space-methods.qmd` | View LaTeX Source (`Volume_I/main.tex`) | `.../blob/14b8f1838be9.../Volume_I/main.tex` | **Superseded Manuscript Link** | Pinned to earlier revision `14b8f1838be9...` (which reviewed only appendices/notation), missing the full chapter corrections accepted in `fbee4da94fd6...`. |
+| `books\tangent-space-methods.qmd` | Read the Manuscript PDF (`Volume_I/main.pdf`) | `.../raw/14b8f1838be9.../Volume_I/main.pdf` | **Superseded Manuscript Link** | Direct link to raw PDF compiled at older revision `14b8f1838be9...`. |
+| `books\tangent-space-methods.qmd` | Chapter source `.tex` files (Ch 01–09) | `.../blob/f287ce6ab2cd.../Volume_I/chapters/ch*.tex` | **Superseded Manuscript Link** | Points to stale commit `f287ce6ab2cd...` rather than accepted commit `fbee4da94fd6...`. |
+| `books\tangent-space-methods.qmd` | Companion Notebooks (Ch 1–8) | `.../blob/f287ce6ab2cd.../notebooks/...` | **Intentional Historical Scaffold Pin** | Historical computational scaffolds; preserve existing commit pins per instructions. |
+
+---
+
+### Proposed Link Contract
+
+1. **Manuscript Source Authority (`.tex` & PDF)**:
+   - Update canonical volume roots (`main.tex`, compiled `main.pdf` if available at commit) and chapter sources (`chapters/*.tex`) to reference the accepted review revision `fbee4da94fd699e9710f4c29b42a73a5113f08d4` (or maintain a clear, unified commit pin matching the accepted technical review).
+   - *Minimal Text Adjustment*: Update publication notes to clarify that chapter sources reflect the accepted technical-review corrections through commit `fbee4da9` (PR #4953), while explicitly maintaining that the manuscript remains a provisional research-development model and does not constitute empirical golf authority, clinical instruction, or physical validation.
+
+2. **Notebook Scaffolds Contract**:
+   - Retain existing pins (`f287ce6ab2cd26079bbace6b8f362a1f0a729acd`) for all `.ipynb` notebook links.
+   - Retain the exact disclaimer that notebook companions are historical, unvalidated educational scaffolds whose execution, dependencies, and numerical reproducibility are not certified.
+
+3. **Floating & Hub Links**:
+   - Standardize external LaTeX links in `books\index.qmd` to point either to the versioned tree of the accepted review commit or explicit reviewed snapshots rather than floating `main`.
