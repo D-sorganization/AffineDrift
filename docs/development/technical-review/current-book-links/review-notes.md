@@ -223,12 +223,18 @@ date is unknown while recording the real PR creation date. The entry remains in
 review pending its owning publication workflow; no other task state was changed.
 
 The shared archiver moves 35 older terminal entries intact to the yearly archive,
-leaving 155,832 bytes in the active log. Every archived block and every other
-entry's fields are preserved. The development-log validator now passes with only
+leaving 155,832 bytes in the active log. Every archived entry body and every other
+entry's fields are preserved. Two archived headings (#3904 and #3903) subsequently
+receive the capitalization required by the title gate, without changing their
+wording or bodies. The development-log validator now passes with only
 the existing portfolio WIP warning. Current change fragments were neither
 collated nor deleted. The reusable existing-entry metadata gap is tracked in
 Repository_Management #2008; its library fix is separate from this delivered
 documentation repair. See final-navigation-policy-repair.json for the receipt.
+
+The second central run at 4bbf61314 passes all 379 affected tests with graphics
+disabled and passes the fleet documentation gate; only those two archived heading
+capitalizations require correction before the final run.
 
 Repository_Management #1998 is merged at e03344f3d5d0306f990ff295f767dbb1ba74ecd9.
 Thirty-eight of its 39 changed files exactly match the accepted head. The remaining

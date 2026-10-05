@@ -447,7 +447,7 @@
 - **Summary:** Separates model interventions and causal inference, corrects spatial/beam/mass mechanics and replaces nonexistent wire guarantees with explicit synthetic proposals.
 - **Next step:** Merged and publication verified at 1a8dd00b (deployment 36397339440). No current development; broader goal paused.
 
-### DL-#3904 · Series navigation and tangent-space cluster integration
+### DL-#3904 · Series Navigation and Tangent-Space Cluster Integration
 
 - **State:** shipped
 - **Owner:** claude (wave-8 agent W8_3904)
@@ -474,7 +474,7 @@
 - **Next step:** No further delivery work for this batch; PR #4271 merged as
   `c088f9d0`.
 
-### DL-#3903 · Close cluster gaps: proximal–distal, impact/putting, technology
+### DL-#3903 · Close Cluster Gaps: Proximal–Distal, Impact/Putting, Technology
 
 - **State:** shipped
 - **Owner:** claude (wave-6 agent W6_3903)
