@@ -40,6 +40,21 @@ def _artifact(audit: dict[str, object], path: str, role: str) -> dict[str, str]:
     }
 
 
+def _power_plan(seed: ProgramSeed, *, human: bool) -> str:
+    """State honestly why no power calculation exists yet (WEB-05.6 #4527)."""
+    if not human:
+        return (
+            "Not applicable: no participants are sampled. Precision is set by the "
+            "declared solver tolerances and the size of the declared perturbation family."
+        )
+    return (
+        f"No sample size can be justified yet: there is no pilot estimate of the "
+        f"variance of {seed.outcome}, and any number quoted before a pilot would be "
+        "invented. A pilot must first supply that variance and a smallest effect worth "
+        "detecting."
+    )
+
+
 def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict[str, object]:
     """Build the non-authorizing scientific specification for one program."""
     human = seed.participant_scope == "human"
@@ -99,6 +114,7 @@ def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict
                 "frame": seed.frame,
                 "unit": seed.unit,
                 "calibration_id": f"cal-{seed.slug}",
+                "modality": seed.modality,
             }
         ],
         "calibrations": [
@@ -121,8 +137,7 @@ def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict
                 "is required before collection."
             ),
             "license": (
-                "Manufactured fixture is repository-licensed; measured-data rights "
-                "are unavailable."
+                "Manufactured fixture is repository-licensed; measured-data rights are unavailable."
             ),
             "consent": (
                 "Not applicable to manufactured data; human consent remains unavailable."
@@ -133,8 +148,7 @@ def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict
                 "Human review is required before pilot or collection."
                 if human
                 else (
-                    "Validator-owned participant_scope=none; no human or animal data "
-                    "are permitted."
+                    "Validator-owned participant_scope=none; no human or animal data are permitted."
                 )
             ),
             "human_approval_required": human,
@@ -143,9 +157,7 @@ def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict
         },
         "analysis": {
             "workflow_path": seed.workflow_path,
-            "power_plan": (
-                "Unavailable until a pilot supplies a justified variance or precision basis."
-            ),
+            "power_plan": _power_plan(seed, human=human),
             "exclusion_rules": [
                 "Reject undeclared frames, units, calibration, or provenance",
                 "Do not remove adverse or null outcomes post hoc",
@@ -158,12 +170,12 @@ def _specification(seed: ProgramSeed, dictionary_path: Path, root: Path) -> dict
                 "A manufactured negative or null case is reported as confirmation",
                 "A required gate is satisfied by modeled evidence outside its allowed scope",
             ],
+            "scientific_falsifiers": [seed.scientific_falsifier],
             "null_result_policy": (
                 "Retain negative, null, and unavailable outcomes in every generated view."
             ),
             "deviation_policy": (
-                "Append deviations before analysis and create a new revision after a "
-                "locked change."
+                "Append deviations before analysis and create a new revision after a locked change."
             ),
             "promotion_criteria": [
                 "Meet every target-state gate",
@@ -287,7 +299,7 @@ def _protocol(
                 "to": "simulation-ready",
                 "on": fixture_on,
                 "rationale": (
-                    "The strict schema and adverse manufactured dry run validate " "mechanics only."
+                    "The strict schema and adverse manufactured dry run validate mechanics only."
                 ),
                 "evidence_ids": [f"evidence-{seed.slug}-schema", f"evidence-{seed.slug}-dry-run"],
             },
