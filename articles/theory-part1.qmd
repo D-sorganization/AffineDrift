@@ -13,6 +13,7 @@ canonical: "/articles/theory-part1.html"
 status: "available"
 audience-level: "advanced"
 evidence-rung: "mathematical-identity"
+symbol-hover: true
 prerequisites:
   - "pages/how-to-read.html"
 summary-plain: "Derives the control-affine structure of the golf swing, separating autonomous passive drift from actuated control input channels."
@@ -429,9 +430,9 @@ Computed by `src/affine_control/dynamics.py::spatial_inertia`; checked against t
 Use the complete configuration $z=(q,\eta)$ and $v=\dot z$. In the stated smooth, independent-coordinate model, let $\mathcal L=T-U_g-\tfrac12\eta^\top K_s\eta$ and retain a separately declared passive joint load $\tau_{\mathrm{pas}}(q,\dot q)$. For constant symmetric modal stiffness and damping matrices, the generalized force balance is
 
 $$
-M(z)\dot v+C(z,v)v+g(z)
+\symref{M}{M(z)}\dot v+\symref{C}{C(z,v)}v+\symref{g}{g(z)}
 +\begin{bmatrix}\tau_{\mathrm{pas}}(q,\dot q)\\K_s\eta+C_s\dot\eta\end{bmatrix}
-=\begin{bmatrix}B(q)u\\0\end{bmatrix}.
+=\begin{bmatrix}\symref{B}{B(q)}\symref{u}{u}\\0\end{bmatrix}.
 $$
 
 Here $g(z)=\partial_z U_g(z)$ generally acts on both rigid and modal coordinates. The lower zero says that no **direct generalized input** is applied to the retained shaft coordinates. It does not set their acceleration, velocity, or restoring force to zero. Underactuation is a rank statement: the full $N$-row generalized-force input map has rank less than $N$ when $m>0$ and its lower block vanishes. An arbitrary number of channels need not equal its rank; redundant actuators are possible.
@@ -562,7 +563,7 @@ Here $[\cdot]_{1:n}$ and $[\cdot]_{n+1:n+m}$ denote the rigid and flexible compo
 
 This is a nonlinear control-affine system:
 
-$$\dot{x} = f(x) + G(x)\,u.$$
+$$\dot{\symref{x}{x}} = \symref{f}{f(x)} + \symref{G}{G(x)}\,\symref{u}{u}.$$
 
 Both $f(x)$ and $G(x)$ may depend nonlinearly on state, including through shaft flexibility. The input dependence is linear in $u$ at a fixed state. The purely rigid-body model is recovered by setting $m = 0$.
 
