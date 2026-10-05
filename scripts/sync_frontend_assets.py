@@ -55,6 +55,8 @@ CANONICAL_JS_NAMES = (
     "service-worker-utils.js",
     "ui-components.js",
     "utils.js",
+    "ztcf-explorer.js",
+    "ztcf-explorer-ui.js",
 )
 
 
@@ -67,6 +69,7 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
         source="css/drift-control-sandbox.css",
         mirrors=("docs/css/drift-control-sandbox.css",),
     ),
+    SyncMap(source="css/ztcf-explorer.css", mirrors=("docs/css/ztcf-explorer.css",)),
     SyncMap(
         source="css/search-metrics.css",
         mirrors=("docs/css/search-metrics.css",),

@@ -43,6 +43,7 @@ css:
   - ../css/articulated-body.css
   - ../css/force-measurement.css
   - ../css/zero-torque.css
+  - ../css/ztcf-explorer.css
 format:
   html:
     toc: true
@@ -397,6 +398,89 @@ State which velocities are reset, including any stored in internal states, and c
 **Measurement processing.** Differentiation amplifies motion-measurement noise. Report reconstruction, filtering, differentiation, synchronization and uncertainty together; smoothing trades noise reduction against bias and bandwidth, and does not guarantee accurate accelerations.
 
 **Event definition.** A fixed-time output differs from an output at each branch's impact event. State event localization and what is reported if the branch never reaches impact. A missing event is not assigned the reference branch's value.
+
+## Interactive Counterfactual Explorer {#sec-ztcf-explorer}
+
+Pick an intervention time. The explorer integrates one declared, constant joint torque from the registered fixture state, then branches a zero-torque counterfactual from the *actual* state at that time and runs both to the same horizon.
+
+```{=html}
+<div id="ztx-app">
+<noscript>
+<p>This explorer needs JavaScript. It integrates the registered three-link
+model under a declared constant torque and branches a zero-torque rollout at a
+chosen time. The numbers are reproducible in Python with
+<code>src/affine_control/ztcf_explorer.py::explore</code>.</p>
+</noscript>
+<p class="ztx-badge">Exploratory model output</p>
+<div id="ztx-controls">
+  <label for="ztx-step">Intervention time <i>t</i><sub>i</sub> (s): <span id="ztx-step-value">0</span></label>
+  <input id="ztx-step" type="range" min="0" max="199" step="1" value="50">
+</div>
+<div id="ztx-status" role="status" aria-live="polite"></div>
+<canvas id="ztx-canvas" width="480" height="480" role="img" aria-label="ZTCF counterfactual explorer"></canvas>
+<p class="ztx-legend">
+  <span class="ztx-legend-actual">— Declared-torque run</span> ·
+  <span class="ztx-legend-branch">- - Zero-torque branch from <i>t</i><sub>i</sub></span> ·
+  grey: the chain at <i>t</i><sub>i</sub>. Thick lines show both chains at the horizon; thin lines trace the club tip.
+</p>
+<p class="ztx-legend">Clubhead speed (m/s) against time, range <span id="ztx-range">—</span></p>
+<svg id="ztx-chart" viewBox="0 0 560 140" class="ztx-chart" role="img" aria-label="Clubhead speed of both branches over time; values in the data table">
+  <polyline class="ztx-line-actual" fill="none" stroke-width="2"></polyline>
+  <polyline class="ztx-line-branch" fill="none" stroke-width="2"></polyline>
+  <polyline class="ztx-cursor" fill="none" stroke-width="1"></polyline>
+</svg>
+<table class="ztx-results">
+  <thead>
+    <tr><th scope="col">At the 0.2 s horizon</th><th scope="col">Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Clubhead speed, declared-torque run (m/s)</td><td id="ztx-speed-actual" class="ztx-mono">—</td></tr>
+    <tr><td>Clubhead speed, zero-torque branch (m/s)</td><td id="ztx-speed-branch" class="ztx-mono">—</td></tr>
+    <tr><td>Simulated difference, run minus branch (m/s)</td><td id="ztx-speed-difference" class="ztx-mono">—</td></tr>
+    <tr><td>Joint-angle difference Δ<i>q</i><sub>1</sub>, Δ<i>q</i><sub>2</sub>, Δ<i>q</i><sub>3</sub> (rad)</td><td class="ztx-mono"><span id="ztx-dq1">—</span>, <span id="ztx-dq2">—</span>, <span id="ztx-dq3">—</span></td></tr>
+  </tbody>
+</table>
+<details>
+<summary>Sampled clubhead speeds (data table)</summary>
+<table class="ztx-results">
+  <thead>
+    <tr><th scope="col"><i>t</i> (s)</th><th scope="col">Declared-torque run (m/s)</th><th scope="col">Zero-torque branch (m/s)</th></tr>
+  </thead>
+  <tbody id="ztx-data"></tbody>
+</table>
+</details>
+<div class="ztx-provenance">
+<p><strong>Provenance.</strong> Model, parameters and initial state come from
+<code>data/ztcf/planar_golf_forward_fixture_v2.json</code>, SHA-256
+<code id="ztx-fixture-sha256">65c56f993d7e4eb2fb30efca1cd264f6eead8b2727e3fe010d8f1f885cccc021</code>.
+The declared torque is (40, 15, 3) N·m, held constant; it is illustrative and
+not fitted to a golfer. The Python reference writes each branch as a
+<code>ZTCFIntervention</code> record and replays it through
+<code>execute_ztcf_intervention</code>; the browser mirror is checked against it by
+<code>tests/fixtures/widgets/ztcf-explorer.parity.json</code>.</p>
+</div>
+<div class="ztx-caveats">
+<p><strong>What the difference does not identify.</strong> No contribution fraction
+is identified, and generalized-torque removal does not identify muscle
+activation, force, effort, or intent. The fixture names these as not
+identified:</p>
+<ul>
+  <li>individual muscle forces</li>
+  <li>co-contraction and impedance cost</li>
+  <li>unmodeled loads or contact changes</li>
+  <li>human strategy or coaching outcome</li>
+</ul>
+<p>Open critiques of this page:
+<a href="../critiques/ztcf_identifiability.html">Identifiability and "Input" as a Residual</a> (high),
+<a href="../critiques/static_fallacy_zvcf.html">The Static Fallacy (Zero Velocity Counterfactual)</a> (medium) and
+<a href="../critiques/passive_overshoot_artifact.html">Passive Overshoot Artifact</a> (medium).</p>
+</div>
+</div>
+<script src="../js/ztcf-explorer.js"></script>
+<script src="../js/ztcf-explorer-ui.js"></script>
+```
+
+This is an **exploratory model output**. Watch how the difference changes with $t_i$. It need not shrink steadily as the intervention moves later, because each branch starts from a different state that the torque helped reach. The difference is a simulated trajectory difference inside this model; reading it as a share of speed "supplied by the golfer" needs the extra assumptions discussed in the critiques above.
 
 ## Scope and Limitations
 

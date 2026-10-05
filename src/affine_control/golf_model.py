@@ -11,6 +11,11 @@ that would also require modal states, potentials and the full velocity bias.
 ``eta`` contains signed modal tip-displacement amplitudes in metres. Positive
 body inertias and independent joint velocities make this model's rigid inertia
 positive definite, even at a task-Jacobian singularity.
+
+Browser mirror: ``js/ztcf-explorer.js`` ports the rigid three-link methods
+(kinematics, inertia, gravity, drift, clubhead speed and ``ztcf_trajectory``).
+The widget parity fixture pins this file's digest; after editing it, run
+``python -m scripts.generate_widget_parity`` and keep the JS mirror in step.
 """
 
 from __future__ import annotations

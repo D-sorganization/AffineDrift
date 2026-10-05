@@ -33,6 +33,8 @@ from src.affine_control.double_pendulum_affine import (
     simulate,
     tip_acceleration_split,
 )
+from src.affine_control.ztcf_contract import execute_ztcf_intervention
+from src.affine_control.ztcf_explorer import DECLARED_TORQUE, HORIZON, STEPS, explore, load_fixture
 from src.core.constants import GRAVITY_M_S2
 
 logger = logging.getLogger(__name__)
@@ -140,6 +142,90 @@ def _sandbox_cases() -> list[dict[str, Any]]:
     return cases + [_sandbox_trajectory_case(preset) for preset in SANDBOX_PRESETS]
 
 
+# --------------------------------------------------------------------------
+# ztcf-explorer (WEB-06.4, #4534)
+# --------------------------------------------------------------------------
+
+#: Intervention steps pinned for the widget; the slider moves in these strides.
+ZTCF_STEPS = (0, 50, 100, 150)
+ZTCF_SAMPLE_EVERY = 10
+
+
+def _ztcf_model_inputs() -> dict[str, Any]:
+    """Model parameters and initial state of the registered fixture."""
+    fixture = load_fixture()
+    return {
+        "params": fixture.model.parameters.model_dump(),
+        "q0": list(fixture.state.q),
+        "qd0": list(fixture.state.qd),
+    }
+
+
+def _ztcf_samples(samples: list[Any]) -> dict[str, Any]:
+    """Every ``ZTCF_SAMPLE_EVERY``-th sample, plus the terminal one."""
+    kept = samples[::ZTCF_SAMPLE_EVERY]
+    if (len(samples) - 1) % ZTCF_SAMPLE_EVERY:
+        kept.append(samples[-1])
+    return {
+        "t": [s[0] for s in kept],
+        "q": [_floats(s[1]) for s in kept],
+        "qd": [_floats(s[2]) for s in kept],
+        "clubhead_speed": [float(s[3]) for s in kept],
+    }
+
+
+def _ztcf_replay_case() -> dict[str, Any]:
+    """The registered fixture replayed through the contract (horizon 10 ms)."""
+    fixture = load_fixture()
+    terminal = execute_ztcf_intervention(fixture)
+    integration = fixture.integration
+    return {
+        "id": "fixture-replay",
+        "tolerance": INTEGRATED,
+        "inputs": {
+            **_ztcf_model_inputs(),
+            "duration": integration.end_time - integration.start_time,
+            "steps": integration.steps,
+        },
+        "expected": {
+            "q": list(terminal.q),
+            "qd": list(terminal.qd),
+            "clubhead_speed": terminal.clubhead_speed,
+        },
+    }
+
+
+def _ztcf_explore_case(step: int) -> dict[str, Any]:
+    """Actual run, branched ZTCF and terminal difference at one intervention step."""
+    run = explore(step)
+    return {
+        "id": f"explore-step-{step}",
+        "tolerance": INTEGRATED,
+        "inputs": {
+            **_ztcf_model_inputs(),
+            "torque": list(DECLARED_TORQUE),
+            "horizon": HORIZON,
+            "steps": STEPS,
+            "intervention_step": step,
+            "sample_every": ZTCF_SAMPLE_EVERY,
+        },
+        "expected": {
+            "actual": _ztcf_samples(run.actual),
+            "branch": _ztcf_samples(run.branch),
+            "difference": {
+                "q": _floats(run.difference.q),
+                "qd": _floats(run.difference.qd),
+                "clubhead_speed": float(run.difference.clubhead_speed),
+            },
+        },
+    }
+
+
+def _ztcf_cases() -> list[dict[str, Any]]:
+    """Fixture replay plus one explorer case per pinned intervention step."""
+    return [_ztcf_replay_case()] + [_ztcf_explore_case(step) for step in ZTCF_STEPS]
+
+
 WIDGETS: tuple[WidgetSpec, ...] = (
     WidgetSpec(
         widget="drift-control-sandbox",
@@ -147,6 +233,18 @@ WIDGETS: tuple[WidgetSpec, ...] = (
         source_function="simulate",
         build_cases=_sandbox_cases,
         dependency_paths=("src/affine_control/dynamics.py",),
+    ),
+    WidgetSpec(
+        widget="ztcf-explorer",
+        source_path="src/affine_control/ztcf_explorer.py",
+        source_function="explore",
+        build_cases=_ztcf_cases,
+        dependency_paths=(
+            "src/affine_control/golf_model.py",
+            "src/affine_control/dynamics.py",
+            "src/affine_control/ztcf_contract.py",
+            "data/ztcf/planar_golf_forward_fixture_v2.json",
+        ),
     ),
 )
 
@@ -235,7 +333,7 @@ def stale_fixtures(root: Path = REPO_ROOT) -> list[str]:
     for spec in WIDGETS:
         path = fixture_path(spec, root)
         if not path.is_file() or not fixture_matches(
-            json.loads(path.read_text(encoding="utf-8")), fixture_document(spec, root)
+            json.loads(path.read_text(encoding="utf-8")), json.loads(render_fixture(spec, root))
         ):
             stale.append(spec.widget)
     return stale
