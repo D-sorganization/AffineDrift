@@ -1,0 +1,170 @@
+# The Forward Dynamics Matching Problem {#sec-fdm-problem}
+
+## What the Match Must Establish
+
+Matching a forward dynamics model to recorded motion asks whether a declared mechanical system, initial state, and admissible input can reproduce specified observations. This question differs from asking whether a skeleton can pass through measured points, or whether a controller can keep a simulation near a reference. Each result answers a different inference problem, even when the displayed trajectories look similar.
+
+This book reviews methods for fitting rigid-body, constrained multibody, muscle-driven, compliant, and learned dynamics to kinematic observations. Its application is golf motion, but its equations also apply to gait, robotic manipulation, and other articulated movements. The mathematical arguments below are derivations under declared assumptions; they are not measurements of golfers. Published methods provide external context [@kelly2017introduction; @seth2018opensim; @dembia2020opensim; @uchida2022biomechanics].
+
+A match should identify its observation channels, fitting interval, physical constraints, numerical tolerances, and replay protocol. It should also state which parameters were fixed, estimated, or selected by a prior. A low positional error without this information cannot establish dynamically feasible motion, unique actuation, or anatomically correct internal states.
+
+Consider three outputs from the same target recording. In the first, inverse kinematics independently chooses joint angles at each frame. In the second, a feedback controller follows those angles while applying whatever generalized forces its actuator limits allow. In the third, an optimizer chooses a bounded control trajectory and then integrates it from one initial state without resetting the simulation. Only the third directly demonstrates the declared open-loop forward reproduction, although the other two can provide valuable initialization and diagnostics.
+
+An open-loop match is still conditional on the model. If the model uses ideal torque actuators, its controls are net generalized inputs rather than identified muscle activations. If it uses prescribed ground motion, the work of that moving boundary belongs in the accounting. If it uses a rigid shaft, its apparent wrist motion may compensate for shaft flexibility that the equations cannot represent.
+
+## A Common Mathematical Language
+
+Let $q$ denote configuration coordinates and $v$ generalized velocities. Configuration storage dimension need not equal tangent velocity dimension, particularly when orientations use unit quaternions. Write the kinematic evolution as
+
+$$
+\dot q=N(q)v.
+$$
+
+A quaternion model must use its declared configuration update or retraction. Adding a tangent displacement directly to configuration storage is generally not a valid integration rule. Matching packages must therefore distinguish the coordinate representation from the physical degrees of freedom.
+
+A constrained mechanical model may satisfy
+
+$$
+M(q;\theta)\dot v+b(q,v;\theta)
+=B(q;\theta)u+J(q;\theta)^T\lambda+f_{\mathrm{ext}}(q,v,t;\theta),
+\qquad c(q;\theta)=0.
+$$
+
+Here $M$ is the mass matrix, $b$ includes the declared velocity-dependent, gravity, and passive terms, $B$ maps control channels to generalized forces, and $\lambda$ collects reactions. Parameters $\theta$ may include segment geometry, inertia, damping, contact properties, and sensor calibration. Muscle activation or elastic deformation requires additional states rather than being hidden inside an unexplained torque curve.
+
+For smooth bilateral constraints, differentiating $c(q)=0$ yields a velocity condition and an acceleration condition. If $J$ is the constraint velocity Jacobian, these take the schematic forms
+
+$$
+Jv=0,\qquad J\dot v+\dot Jv=0.
+$$
+
+Solving the mechanical and acceleration equations together gives the saddle-point system
+
+$$
+\begin{bmatrix}M&-J^T\\J&0\end{bmatrix}
+\begin{bmatrix}\dot v\\\lambda\end{bmatrix}
+=
+\begin{bmatrix}Bu+f_{\mathrm{ext}}-b\\-\dot Jv\end{bmatrix}.
+$$
+
+The sign convention for reactions must match the engine adapter. Rank-deficient constraint rows require an explicit independent representation or a documented regularization strategy. A solver that silently changes the rows changes the mechanical problem.
+
+Define the complete state $x=(q,v,a,z)$, where $a$ denotes optional activation states and $z$ optional compliant or latent states. Forward integration produces
+
+$$
+x(t)=\Phi(t,t_0;x_0,u,\theta,k),
+$$
+
+where $k$ identifies a model structure: a joint topology, contact formulation, or selected state dimension. Keeping $k$ explicit prevents a smooth parameter optimizer from being mistaken for a method that changes topology.
+
+## The Observation Model Is Part of the Dynamics Match
+
+A marker recording observes transformed body attachment points, not generalized coordinates directly. For marker $j$ attached to body $b(j)$, a common rigid attachment model is
+
+$$
+y_{ij}=p_{b(j)}(q_i;\theta)+R_{b(j)}(q_i;\theta)s_j+\epsilon_{ij},
+$$
+
+where $s_j$ is the attachment offset in the body frame. Camera observations additionally require projection, lens calibration, and time alignment. Soft-tissue motion means that a constant rigid offset can be an imperfect observation model even if the dynamics are correct.
+
+Let $\psi$ collect observation nuisance parameters, including attachment offsets, camera poses, and synchronization. A general recorded output satisfies
+
+$$
+y_i=h(x(t_i),\theta,\psi)+\epsilon_i.
+$$
+
+Estimating $\psi$ jointly with mechanical parameters can reduce systematic measurement error. It can also create confounding: a camera scale and a segment length may change together without changing the projected image. The fit must report these ambiguities instead of assigning them biological meaning.
+
+Orientation errors require geometry consistent with the measurement. For a measured rotation $R_i^{\mathrm{obs}}$ and prediction $R_i$, use a local rotation-vector residual such as
+
+$$
+r_i^R=\operatorname{Log}((R_i^{\mathrm{obs}})^TR_i).
+$$
+
+Quaternion sign equivalence must be handled before interpreting component errors. A raw quaternion difference can penalize two representations of the same rotation. Near rotation-log branch boundaries, local derivatives and residual interpretation need additional care.
+
+Missing markers define a selection operator $S_i$. The residual is
+
+$$
+r_i=S_i\bigl(h(x(t_i),\theta,\psi)-y_i\bigr).
+$$
+
+A missing channel contributes no information; replacing it with zero invents an observation. Interpolating missing measurements also creates correlated uncertainty, so the interpolated frames should not automatically receive the same statistical weight as independently measured samples.
+
+## The Estimation Objective
+
+For known covariance $\Sigma_i$ on observed channels, define $W_i$ so that $W_i^TW_i=\Sigma_i^{-1}$. A likelihood-based trajectory loss is
+
+$$
+J_{\mathrm{obs}}=\frac12\sum_i\|W_ir_i\|^2.
+$$
+
+Positions, orientations, forces, and pixel coordinates have different units. Whitening or explicitly declared scales prevent the largest numerical unit from dominating the fit. Engineering weights may intentionally emphasize delivery, but they should then be described as preferences rather than measurement covariance.
+
+A broad constrained objective is
+
+$$
+\min_{x_0,u,\theta,\psi,k}
+J_{\mathrm{obs}}+\alpha J_{\mathrm{effort}}+\beta J_{\mathrm{roughness}}
++J_{\mathrm{prior}}+\gamma\mathcal C(k)
+$$
+
+subject to dynamics, contact laws, admissible geometry, control limits, and path constraints. The discrete structure $k$ makes this a family of estimation problems rather than one ordinary smooth nonlinear program. Comparing structures requires a separate selection protocol.
+
+The effort term needs a declared interpretation. An integral of squared torque measures one engineering regularizer, not automatically metabolic energy or neural effort. A muscle activation objective requires a recruitment model and does not uniquely identify physiology from kinematics.
+
+Control roughness can penalize $\int\|\dot u\|^2dt$, while a low-dimensional basis can regularize the trajectory implicitly. Those mechanisms impose different priors. A smooth polynomial input and a piecewise-constant input with a roughness penalty can achieve similar marker errors while predicting different reaction loads.
+
+Robust losses can reduce the influence of isolated observation outliers. They do not repair a wrong marker identity, a timestamp error, or a structurally inadequate model. Correlated residuals and repeated failure around a particular event should trigger model or acquisition review before another loss function is introduced.
+
+## Four Meanings of Learned Dimensions
+
+**Anatomical dimensions** are continuous physical quantities such as link lengths, joint-center locations, and marker offsets. Their estimation keeps the topology fixed while changing geometry. Inertial parameters must change according to an explicit physical scaling law or an independent identification model.
+
+**Mechanical degrees of freedom** describe independent allowable motions after constraints. Adding a scapular coordinate, changing a wrist joint, or releasing a bilateral constraint changes the admissible configuration space. This operation is a structural hypothesis that needs a new coordinate map and model fingerprint.
+
+**Latent state dimension** specifies the size of an unobserved state used to capture memory or unresolved dynamics. A latent coordinate may improve prediction without corresponding to any anatomical joint. Latent coordinates can also rotate or rescale without changing their decoded observations.
+
+**Representation dimension** describes the number of control coefficients, basis functions, retained modes, or sparse dictionary terms. Increasing the polynomial order changes actuation flexibility without necessarily changing the mechanical system. A method should not describe that increase as discovering an additional human degree of freedom.
+
+These dimensions interact. A longer arm can reduce marker error that previously required extra shoulder motion. More flexible controls can compensate for wrong inertia. More latent states can absorb synchronization mistakes. Consequently, dimension adaptation should follow calibration and observability analysis rather than replace them.
+
+## A Derived Ambiguity Example
+
+Consider a single-link planar pendulum with unknown inertia $I$, damping $d$, gravitational moment coefficient $G$, and unrestricted torque $u(t)$:
+
+$$
+I\ddot q+d\dot q+G\sin q=u(t).
+$$
+
+Assume the complete trajectory $q(t)$ is known exactly. For every admissible parameter triple, define the torque by the left-hand side. Every such pair of parameters and torque reproduces the same observed motion. Perfect kinematics therefore does not identify inertia or damping when actuation is unrestricted.
+
+If torque is measured independently, the equation becomes a regression in the parameters:
+
+$$
+u(t)=\begin{bmatrix}\ddot q&\dot q&\sin q\end{bmatrix}
+\begin{bmatrix}I\\d\\G\end{bmatrix}.
+$$
+
+Independent columns across the experiment can identify the three coefficients locally in this simplified model. Near-static data supplies little acceleration information, while a narrow motion interval can make columns nearly dependent.
+
+A torque prior does not create an independent measurement. Minimizing squared torque chooses one member of the family according to the objective. It may be a useful candidate, but its inertia estimate depends on the chosen regularization and bounds.
+
+A free-decay experiment with known zero input provides stronger information about coefficient ratios. Even then, multiplying $I$, $d$, and $G$ by a common factor leaves the zero-input equation unchanged. Absolute load scale requires another measurement or a fixed physical parameter.
+
+## What Counts as a Result
+
+A fitting result should pass three logically distinct screens. Observation agreement evaluates the measured channels. Mechanical feasibility evaluates dynamics, constraints, contacts, controls, and admissible parameters. Predictive evaluation tests observations that did not select the model or tune its weights.
+
+The numerical optimizer contributes another status: termination. A solver can terminate successfully at a poor or physically rejected fit. It can also stop at its budget with a useful but uncertified candidate. Reports should preserve these statuses separately.
+
+A fitting interval is not a validation interval. Holding out isolated adjacent frames provides weak protection against leakage because trajectories and smoothing create strong temporal dependence. Holding out complete trials, subjects, sensor channels, or motion phases asks a more informative generalization question.
+
+The strongest computational replay for an open-loop fit integrates the accepted controls from one declared initial state without resets. Multiple-shooting nodes are optimization variables, not permission to teleport the accepted model through the recording. Contact mode changes and prescribed boundaries must still follow the declared plant.
+
+## Exercises and Solution Sketches
+
+1. **Parameter and Input Ambiguity.** Show why unknown torque prevents unique pendulum inertia identification from perfect angle observations. **Solution:** choose any admissible inertia and evaluate the torque needed by the known angle curve; the observation remains identical.
+2. **Observation Units.** Explain why summing squared marker distances and squared orientation angles without scales has no invariant statistical meaning. **Solution:** changing position units changes one term relative to the other; a covariance or declared engineering scale is required.
+3. **Dimension Interpretation.** A fitting program raises control polynomial degree and improves marker error. What dimension has changed? **Solution:** control representation dimension; mechanical state dimension and anatomical geometry may remain fixed.
+4. **Replay Contract.** A segmented trajectory has small marker errors but nonzero boundary defects. What can be concluded? **Solution:** its independently initialized pieces approximate observations; uninterrupted dynamic reproduction remains unestablished.

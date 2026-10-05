@@ -1,0 +1,106 @@
+# Experimental Design and Model Comparison
+
+## Model Choice Begins With the Question
+
+An experiment cannot be designed without specifying the quantity it is meant to identify. The target might be a physical parameter such as damping, a discrete structure such as whether a joint is free, an effective model for predicting one task, or an anatomical claim. These targets require different evidence. A task predictor can be useful without identifying the true actuator anatomy; a physical parameter estimate requires force and input assumptions; anatomical dimension needs structure-specific measurements or interventions.
+
+Write the candidate models before collecting data. For each candidate, define state, input, observation map, physical constraints, unknown parameters, contact behavior, and predicted differences. Then ask which safe and feasible input or sensor condition makes those predictions diverge most relative to expected measurement noise. This changes experiment design from “record more motion” to “record motion that distinguishes hypotheses.”
+
+## Information and Excitation
+
+For parameter vector $\theta$, the local information matrix is approximately $\mathcal I=S^T R^{-1}S$, with output sensitivity $S$. An experiment can be scored by a design criterion such as maximizing the smallest eigenvalue (E-optimality), the determinant (D-optimality), or reducing variance for a selected parameter combination. These criteria are approximations and need meaningful noise models, but they expose a core principle: repeated observations along an already-excited direction do not inform a parameter that changes predictions orthogonally to that direction.
+
+For structure selection, compute predicted differences between candidates under input sequence u. If two models yield mean outputs $\mu_1(u)$ and $\mu_2(u)$, a simple separation score is
+
+$$
+
+D(u)=(\mu_1(u)-\mu_2(u))^T R^{-1}(\mu_1(u)-\mu_2(u)).
+
+$$
+
+A larger value suggests the candidate predictions are easier to distinguish, subject to nonlinear effects and parameter uncertainty. More principled Bayesian design averages this separation over parameter distributions, but can be computationally expensive. In human movement, safety, comfort, fatigue, and protocol feasibility constrain the design space; maximize useful information within those limits.
+
+## Worked Example: Locked Versus Weakly Free Joint
+
+Suppose one candidate locks coordinate q2 and another allows q2 to move under an unknown stiffness. During normal motion q2 remains nearly fixed, so both predict almost identical marker trajectories. A targeted, low-amplitude perturbation can reveal whether q2 returns with a restoring response or remains constrained. A sensor placed near q2 improves observation sensitivity. The protocol should include repeated perturbations at varied starting positions, because a free coordinate at one equilibrium can still look locked locally.
+
+The trial must also control nuisance effects. If input force is not measured, a lack of movement could reflect weak perturbation rather than a locked constraint. Synchronization errors can mimic lag; marker noise can obscure small motion. Thus the design includes calibration, force measurement, and repeated conditions, not only a perturbation waveform.
+
+## Data Splits That Test the Intended Use
+
+Time samples within one trajectory are highly dependent. Randomly assigning frames to train and test leaks nearly identical neighboring states. For forward dynamics, split by entire trial, initial condition, subject, input waveform, or task condition according to the deployment claim. A model for new conditions should be evaluated on conditions withheld during all tuning. A population model intended for unseen people needs subject-level splits and should report the range of subject variation.
+
+Use nested validation if model order, regularization, preprocessing, or architecture are selected empirically. The outer split estimates generalization; inner folds tune choices. Keep the test set untouched until the model and candidate-selection procedure are frozen. If data are scarce, use repeated grouped splits and report uncertainty rather than a single best score.
+
+## Compare Multiple Dimensions of Quality
+
+A comprehensive comparison includes:
+
+- observation fit: marker or joint-angle likelihood with declared noise model;
+- derivative fit: only when derivative estimation is justified and uncertainty is included;
+- short and long rollout error under measured inputs;
+- response to unseen perturbations and initial conditions;
+- physical feasibility: positive inertia, joint limits, constraint residuals, force bounds;
+- hybrid quality: event timing, mode classification, impulse or contact residuals;
+- robustness: seed, preprocessing, solver, and resampling variation;
+- complexity and uncertainty: parameter groups, active terms, latent size, posterior dispersion.
+
+Do not collapse every metric into one score without retaining components. A weighted total can be useful for a predeclared engineering objective, but it should not erase the fact that one candidate is more accurate and another more physically feasible. Pareto comparisons often communicate these tradeoffs better.
+
+## Bayesian and Frequentist Model Comparison
+
+Information criteria, cross-validation, marginal likelihood, and posterior model probabilities answer related but different questions. Cross-validation asks how well a fitting procedure predicts held-out data under a specified split. Marginal likelihood averages fit over parameter priors and can penalize unused parameter volume; it is sensitive to prior scale. AIC-like criteria estimate expected predictive information under assumptions. None produces a prior-free truth ranking.
+
+For different-dimensional candidate models, reversible-jump MCMC can sample across parameter spaces of changing dimensions. Green's foundational reference is “Reversible jump Markov chain Monte Carlo computation and Bayesian model determination,” Biometrika, 1995, DOI https://doi.org/10.1093/biomet/82.4.711. Link validation is pending. Such methods require careful proposal design and convergence checks. Label switching, symmetric parameterizations, and poor mixing can make model probabilities unreliable. Use synthetic known-truth experiments and multiple chains before interpreting results.
+
+A practical compromise is a candidate table. Fit each physically meaningful structure with identical observation models, comparable prior knowledge, and equal validation effort. Report held-out predictive performance and physical checks. Use Bayesian model comparison as a secondary audit on a manageable candidate set. Conduct sensitivity checks across prior scales. If plausible alternatives remain close, report uncertainty instead of forcing a winner.
+
+## Contacts and Hybrid Protocols
+
+Walking, striking, and other contact-rich motion involve discrete events. Design trials to include clear event labels or force plate data when contact transitions are part of the scientific question. Distinguish rigid contact with impacts from compliant contact with sustained deformation; sample rate and sensor bandwidth must capture the relevant event timescale. A smooth model may fit samples away from impact while failing the impulse itself. Event windows should be scored separately.
+
+If contact cannot be observed directly, include uncertainty in mode labels and compare explicit hybrid candidates. A model may otherwise infer a larger latent state that encodes unobserved stance status. That may help prediction, but it complicates physical interpretation and may fail when event patterns change.
+
+## Adaptive Dimension as A Sequential Decision
+
+For a system that changes over time, dimension adaptation should be treated as sequential inference. A new residual may indicate a changed system, a changed task, fatigue, measurement drift, or out-of-distribution input. Maintain a posterior or score over a finite set of candidate structures, monitor calibrated residuals, and require sustained evidence before switching. A cost for topology changes prevents rapid dimension chatter. Keep a record of triggering conditions and re-evaluate old and new models on shared reference trials.
+
+The adaptive model should have an abstention threshold. If posterior support is diffuse or candidate predictions are too similar under available data, continue with a conservative model and request informative observations. This is especially important for human systems, where an unnecessary structural change could be misleading even if the software remains operational.
+
+## A Reproducible Study Template
+
+1. State the estimand and intended deployment domain.
+2. Enumerate candidate models and mark assumptions that are fixed versus learned.
+3. Specify sensors, calibration, sampling, noise, input measurements, and preprocessing.
+4. Run simulation-based design to find informative and safe trajectories.
+5. Collect training and independent validation trials with grouped splits.
+6. Fit baselines before adaptive models: known mechanics, parameter estimation, sparse residual, and latent residual.
+7. Test identifiability and synthetic recovery under realistic noise.
+8. Compare prediction, physical feasibility, contact behavior, uncertainty, and complexity.
+9. Perform prior, regularization, seed, and preprocessing sensitivity analyses.
+10. Publish the complete candidate inventory, exclusions, validation limits, and scripts needed to reproduce model selection.
+
+## Limitations
+
+Optimal experiment design depends on candidate models and assumed noise. An input that is informative mathematically may be unsafe or unnatural. Human subjects may respond differently to repeated perturbations, creating nonstationarity. Bayesian model probabilities depend on priors; held-out performance depends on the split representing future use. Sparse data may force a compromise between identification and practical prediction. These constraints should be described as limits of evidence, not concealed behind a single metric.
+
+
+## Sequential Allocation of New Trials
+
+An adaptive research program can choose new trials based on the current uncertainty. After fitting candidate models, identify the input condition with the greatest expected reduction in uncertainty or candidate separation, then collect a small batch and update. This is active learning for system identification. It can reduce wasted trials when candidate hypotheses make similar predictions under routine motion. In practice, selection should include a safety filter, fatigue limits, and a stopping rule. A nominally informative experiment should be rejected if plausible parameter uncertainty predicts unsafe forces or motion.
+
+A stopping criterion should be tied to the scientific claim. For parameter estimation, stop when confidence or credible intervals meet a predeclared tolerance over the relevant parameter combinations. For structure selection, stop when one candidate has robust predictive and physical support across prior scales and validation conditions, or when the remaining candidates are observationally equivalent in the feasible domain. Do not stop merely because the optimizer converged or an information criterion changed little on repeated copies of the same trajectory.
+
+Sequential protocols can themselves change the system: participants learn, fatigue, or adapt their strategy. Randomize trial order where feasible, include reference trials throughout the session, and model time/order effects. If a new perturbation changes behavior, that response can be part of the system under study rather than mere noise. Record protocol order and participant state so the analysis can separate stationary mechanics from adaptation.
+
+## Exercises
+
+1. For two candidate models, propose an input sequence that maximizes prediction separation while respecting a bounded torque constraint.
+2. Explain why random frame-level cross-validation overestimates generalization for a trajectory model.
+3. A Bayesian model comparison assigns 0.92 probability to a larger model, but changing the prior scale lowers it to 0.54. What should be reported?
+
+## Solution Sketches
+
+1. Simulate each model across feasible input sequences, compute noise-weighted separation, and optimize under the torque bound. Validate the chosen input with parameter uncertainty and safety constraints; do not use a nominal-only score if parameters are uncertain.
+2. Neighboring frames share nearly identical states and noise conditions, so test frames are effectively represented in training. Group by whole trajectories or trials.
+3. Report strong prior sensitivity and treat the data as insufficient for decisive structure selection. Show held-out predictive performance and the prior assumptions, and seek more discriminating observations.

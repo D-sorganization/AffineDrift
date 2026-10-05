@@ -1,0 +1,175 @@
+# An Adaptive Model-Constrained Matching Design {#sec-fdm-adaptive-design}
+
+## Design Status and Research Claim
+
+This chapter proposes an architecture for adaptive matching; it does not announce a completed UpstreamDrift implementation or a validated human model. The design builds on existing observation contracts, constrained fitting, model identities, ambiguity handling, and independent replay. Its new obligation is to decide which model changes the observations actually support.
+
+The objective is not to let an optimizer freely change every dimension until the displayed motion agrees. That procedure can replace an observation error with a fictitious anatomical change, or replace a missing force with an extra state. The objective is to identify a defensible family of models, preserve uncertainty, and choose complexity using evidence that did not tune the candidate.
+
+We propose separate adaptation loops for geometry, control representation, mechanical structure, and latent memory. Each loop has different admissible changes and different invalidation rules. A geometry change invalidates affected inertia, marker, contact, and replay evidence; a structural change also invalidates coordinate maps and dimension-specific learned checkpoints.
+
+## The Three-Level Estimation Problem
+
+Let $k$ index a registered structure, $\theta_s$ denote subject parameters shared across trials, and $\zeta_j$ denote trial-specific unknowns. A trial-specific vector includes initial state, control coefficients, camera perturbations where appropriate, and contact-event uncertainty. Define the constrained inner fit
+
+$$
+\hat\zeta_j(\theta_s,k)
+\in\arg\min_{\zeta_j\in\mathcal F(\theta_s,k)}
+L_j(\zeta_j,\theta_s,k),
+$$
+
+where $\mathcal F$ enforces the declared dynamics and physical constraints. The shared-parameter level solves
+
+$$
+\hat\theta_s(k)\in\arg\min_{\theta_s\in\Theta_k}
+\sum_{j\in\mathcal T}L_j(\hat\zeta_j(\theta_s,k),\theta_s,k)
++P_k(\theta_s).
+$$
+
+The structure level compares candidates using a separate selection set $\mathcal V$:
+
+$$
+\hat k\in\arg\min_k
+\left[\sum_{j\in\mathcal V}L_j^{\mathrm{pred}}(\hat\theta_s(k),k)
++\gamma\mathcal C(k)\right].
+$$
+
+These equations specify roles, not a guarantee that nested optimization is tractable or globally optimal. A practical system may alternate blocks, approximate inner solves, and compare a small set of structures. Its receipt must record those approximations and the solver budgets.
+
+The predictive loss needs a precise adaptation policy. For a held-out trial, estimating its initial state from a short prefix and then predicting a later interval is different from fitting controls to the entire trial. The latter tests transfer of geometry under new fitting, while the former tests conditional forward prediction. Both are useful, but their scores answer different questions.
+
+A final test set should remain untouched after selecting structure and regularization. Repeatedly choosing dimensions on the same validation trials overfits the selection process even if each inner fit is properly separated. With few recordings, nested cross-validation or an explicitly exploratory designation is more honest than a single confirmatory claim.
+
+## Stage A: Establish the Observation and Model Identity
+
+Every run begins with immutable target and model identities. The target identity binds source bytes, time units, coordinate frames, masks, interpolation policy, sensor calibration, and any derived quantities. The model identity binds topology, physical parameters, actuator ordering, contact laws, configuration representation, and integration settings.
+
+The program first checks that each observed channel has a defined prediction. A positional club trajectory cannot be promoted into measured club orientation. An orientation reconstructed from ball flight is a derived channel with its own model uncertainty, not an independent direct measurement.
+
+The program next defines nuisance parameters and gauge conventions. For image observations, this includes camera calibration, world scale, and permitted camera motion. For markers, it includes attachment offsets and rigid-cluster assumptions. For motion and force data, it includes synchronization and reference-point conventions.
+
+Gauge fixing should be declared once and used by every solver. If absolute world translation is unobserved, fix one reference or quotient out that freedom. Adding a tight prior to all translations can stabilize optimization, but it does not establish that the world origin was observed.
+
+## Stage B: Calibrate Geometry Before Interpreting Dynamics
+
+Start with a fixed topology and a restricted geometry vector. Segment scales, joint centers, and marker offsets should be grouped according to the observations available. A static trial can identify some attachment and alignment relationships, but generally does not identify dynamic inertia.
+
+Use held-out marker clusters or calibration postures to test geometry. A segment scale that improves the fitting markers but degrades an independent cluster may be absorbing soft-tissue movement or a labeling error. The full observation model should be reviewed before the scale is accepted.
+
+The scaling law must remain explicit. UpstreamDrift's shared segment scaler preserves mass while scaling inertia with the square of length. That is a declared approximation, not a consequence of learning subject length alone. Constant-density similarity would instead change mass with the cube and inertia with the fifth power of scale.
+
+The geometric proposal must update every affected attachment consistently. Distal joint translations, centers of mass, markers, contact locations, and graphics need the same declared transformation. Updating only rendered geometry would create a visually convincing but mechanically inconsistent subject model.
+
+A practical geometry loop can alternate marker-offset estimation with bounded segment scales. Each proposed step uses a trust region and is rejected if it worsens held-out geometric prediction or violates positive lengths and inertia consistency. The published result should preserve both the data-only sensitivity and the prior contribution.
+
+## Stage C: Fit Dynamics With Controlled Actuation Flexibility
+
+After calibration, fit trial controls against the forward model with geometry fixed. This baseline reveals whether the declared plant can reproduce observations without co-adapting shape and actuation. It also establishes a comparison for later joint refinement.
+
+Represent controls on normalized time $\sigma=(t-t_0)/T$. For a degree-six polynomial,
+
+$$
+u(t)=\sum_{r=0}^{6}a_r\sigma^r.
+$$
+
+All $a_r$ then have the physical units of the control channel. For a polynomial in physical seconds, the coefficient of $t^r$ has units of control divided by time to power $r$. Sharing numerical bounds between these conventions is not physically equivalent.
+
+Control basis changes require a represented-function comparison, not coefficient equality. A normalized monomial, Bernstein polynomial, and B-spline can encode the same input with different coefficients. Cross-engine parity should compare evaluated input histories, integrated work, and trajectories at common physical timestamps.
+
+Multiple shooting is appropriate when one long rollout becomes difficult to optimize. Its intermediate states improve the numerical search, but final acceptance still requires an uninterrupted native replay. A defect penalty is not a hard continuity guarantee, and a transformed node state requires correctly transformed Jacobians.
+
+After the fixed-geometry baseline, bounded joint refinement may be attempted. Accept a geometry update only if it improves independent prediction and remains supported after profiling control and calibration nuisance variables. Otherwise preserve the fixed geometry and report the unresolved residual.
+
+## The Crucial Test: Profile Out Nuisance Compensation
+
+Let $r$ denote whitened residuals, $J_\theta$ their local derivative with respect to candidate dimensions, and $J_\zeta$ their derivative with respect to nuisance variables. Linearizing gives
+
+$$
+r(\theta+\delta\theta,\zeta+\delta\zeta)
+\approx r+J_\theta\delta\theta+J_\zeta\delta\zeta.
+$$
+
+For a fixed dimension perturbation, nuisance variables can compensate within their local column space. In the unconstrained local least-squares case, remove that compensable component using
+
+$$
+P_\zeta=J_\zeta J_\zeta^+,
+\qquad \widetilde J_\theta=(I-P_\zeta)J_\theta.
+$$
+
+The profiled local information is
+
+$$
+\mathcal I_{\mathrm{data}}=\widetilde J_\theta^T\widetilde J_\theta.
+$$
+
+If a candidate length sensitivity lies entirely in the nuisance column space, this information is zero even if the raw length Jacobian is large. The data can respond strongly to length while remaining unable to distinguish length from a camera or control change.
+
+In practice, compute the projection through a rank-revealing factorization rather than constructing a dense observation-space projector. Column scales should represent meaningful parameter changes, and row whitening should reflect the declared observation model. Singular-value thresholds need a sensitivity analysis; they are numerical decisions rather than universal physical constants.
+
+Equality constraints and active inequality bounds alter feasible nuisance directions. The correct local analysis restricts perturbations to the constraint tangent space or uses a reduced Karush–Kuhn–Tucker system. Treating every bounded nuisance parameter as freely compensating can understate information near a genuine physical boundary.
+
+Prior precision contributes separately:
+
+$$
+\mathcal I_{\mathrm{posterior}}=\mathcal I_{\mathrm{data}}+\Lambda_{\mathrm{prior}}.
+$$
+
+A full-rank posterior matrix can coexist with rank-deficient data information. A parameter supported only by $\Lambda_{\mathrm{prior}}$ should be reported as prior-dominated. Tightening the prior is a modeling decision, not new observational evidence.
+
+The projection is local. Nonlinear profiles may be asymmetric, disconnected, or constrained by contact switches. Important dimensions should also receive finite perturbation profiles: re-optimize nuisance variables at several fixed dimension values and retain alternative feasible solutions.
+
+## Stage D: Adapt Representation Without Inventing Anatomy
+
+Control representation should adapt before mechanical topology when the residual pattern suggests insufficient actuation resolution. Compare a small nested sequence of bases under the same observation and feasibility gates. Penalize complexity and assess held-out replay rather than rewarding training error alone.
+
+An extra basis term is accepted only if its improvement survives uncertainty and numerical refinement. A high-order polynomial may fit one interval while oscillating outside it. A local spline may improve contact timing but introduce unrealistic control rate unless its boundary continuity and rate constraints are specified.
+
+Adaptive mesh refinement belongs to this representation layer. Refine around large integration error, unresolved contact transitions, or high residual curvature. Changing the mesh changes the discrete optimization problem; optimizer termination on one mesh does not prove continuous-time convergence.
+
+The system should preserve the simplest accepted candidate when improvements are indistinguishable. This policy is an engineering choice toward interpretability and reproducibility. It does not prove that the human mechanism uses the smallest representation.
+
+## Stage E: Compare Mechanical Structures
+
+Mechanical changes should come from a finite registered hypothesis set. Examples include planar versus spatial motion, rigid versus flexible shaft, fixed versus compliant grip, and alternative wrist structures. Each candidate needs its own physically coherent state and control maps.
+
+A structure proposal should name the residual it aims to explain. A missing out-of-plane coordinate cannot be repaired by more planar torque coefficients. Conversely, a camera synchronization error should not motivate a new anatomical joint.
+
+Reject dimension candidates that reduce marker error by violating force feasibility or exploiting hidden state resets. Also reject candidates whose improvement disappears when observations are evaluated at the same timestamps and masks. Numerical and acquisition differences should not masquerade as model selection.
+
+When several structures remain compatible with the data, retain them as an ensemble of hypotheses. Report the spread of decision-relevant quantities, including reaction loads and counterfactual predictions. A single best scalar score conceals structural uncertainty that can matter more than parameter covariance within one model.
+
+## Stage F: Add Latent Memory Only With a Testable Role
+
+A latent state may capture unmodeled hysteresis, activation delays, or compliant memory. Its dimension should be chosen by future predictive performance across held-out histories. A decoder that sees the entire target trajectory can improve reconstruction without demonstrating a causal forward state.
+
+Define how the latent state is initialized. If it is fitted separately to every complete held-out trial, the procedure measures reconstruction capacity. If it is inferred from a bounded prefix and then evolved causally, later prediction provides a stronger test of dynamical sufficiency.
+
+The physical and latent components need a declared coupling. A residual generalized force can be bounded and reported separately from the physical actuation. A learned mass matrix requires symmetry, positive definiteness, and coherent velocity terms. Neither choice automatically guarantees conservation, stability, or correct contact behavior.
+
+The latent learner should abstain outside its trained model and observation domains. Model topology, morphology, contact law, time grid, and sensor semantics belong in the checkpoint identity. Silent application across a changed dimension is a contract failure.
+
+## Decision Rules and Failure States
+
+A candidate dimension update is promoted only after it passes physical validity, supported information, independent prediction, and uninterrupted replay. The thresholds should be preregistered for each benchmark family and justified by observation uncertainty or task requirements. This book proposes the gate structure, not universal numerical thresholds.
+
+Failure states should distinguish insufficient observations, solver failure, physical rejection, unsupported runtime, out-of-domain learned model, and ambiguous selection. An ambiguous result is valuable: it identifies which additional measurement or experiment could resolve the choice.
+
+The fit receipt stores all tried candidates, including rejected ones. Reported runtime includes failed starts and native replay costs. Accepted-only timing creates survivorship bias, particularly when a neural proposal produces many fast but infeasible suggestions.
+
+## Worked Synthetic Design Example
+
+Suppose a synthetic two-link arm has known geometry, measured endpoint positions, and independently measured joint torques. Fit a baseline with the correct structure, then perturb one segment length while re-fitting initial state and small sensor offsets. This experiment tests whether the pipeline can recover an identifiable geometry perturbation under controlled conditions.
+
+Now remove torque measurements and allow flexible controls. The geometry estimate may become much less certain because actuation can compensate. Compare raw and profiled sensitivity spectra, finite parameter profiles, and the effect of adding an independent elbow marker.
+
+Finally introduce a delayed elastic component in the synthetic truth. Compare a rigid model, a physical spring state, and a latent residual state using the same prefixes and held-out future observations. The correct selection depends on excitation, noise, and recorded channels; recovery of the generating structure is not guaranteed under insufficient observations.
+
+The benchmark should include a deliberately impossible task: infer absolute mass scale from purely zero-input motion when the equations admit common scaling. A trustworthy adaptive matcher reports nonidentifiability rather than returning a confident numerical estimate because its optimizer finished.
+
+## Exercises and Solution Sketches
+
+1. **Raw Versus Profiled Information.** Let $J_\theta=J_\zeta$ be one nonzero column. What is profiled dimension information? **Solution:** the nuisance projection removes the entire column, giving zero data information.
+2. **A Prior-Rank Trap.** Add a positive diagonal prior precision to a zero data information matrix. What becomes full rank? **Solution:** posterior precision becomes full rank; data identifiability remains absent.
+3. **Scaling Laws.** Compare length scaling at constant mass with constant-density similarity. **Solution:** inertia scales quadratically in the first case; mass scales cubically and inertia to the fifth power in the second.
+4. **Held-Out Adaptation.** Why can fitting controls over an entire held-out trial fail to test future prediction? **Solution:** future observations selected those controls; the experiment tests new-trial reconstruction under transferred parameters.
+5. **Model Promotion.** A latent model lowers training residual but fails contact replay. What is its status? **Solution:** a rejected reconstruction candidate, not an accepted adaptive dynamics model.

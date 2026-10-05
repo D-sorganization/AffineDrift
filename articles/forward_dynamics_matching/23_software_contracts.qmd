@@ -1,0 +1,87 @@
+# Software Architecture and Test Contracts
+
+## Scientific Software Is Part of the Model
+
+A fitted trajectory is produced by code, configuration, data, and numerical libraries. Therefore software architecture determines which scientific claims can be audited. The principles TDD, design by contract (DbC), Law of Demeter (LoD), and DRY are useful when applied as engineering constraints rather than slogans. TDD means that a behavior is specified by a failing test before production implementation; DbC makes assumptions and guarantees explicit; LoD limits a component to collaborators it owns or is directly given; DRY centralizes one authoritative definition of each scientific rule. Applied carelessly, these principles can create brittle tests, overabstract engine differences, or hide meaningful duplicate formulations. This chapter gives a concrete contract-first approach.
+
+A robust matching system separates five responsibilities: (1) data and observation semantics; (2) model and parameter schema; (3) engine adapter and discrete dynamics; (4) optimizer; and (5) independent candidate evaluation and receipt writing. The optimizer should not reach through a provider into engine internals, and a receipt writer should not reconstruct scientific semantics by parsing a filename. Components exchange typed values with units, frames, time grids, and provenance.
+
+## Contracts at Boundaries
+
+A trajectory contract should state configuration representation and tangent convention, velocity dimensions, monotone timestamps, finite values, coordinate units, body/frame identifiers, and observation mask shape. An engine contract should state accepted model identity, integration step policy, contact formulation, interpolation semantics, initial state, and output dimensions. An optimizer contract should state parameter bounds/transforms, deterministic seed, termination criteria, and whether returned values are feasible. An evaluator contract should state which metrics are independent, which use training data, and the thresholds for promotion.
+
+Preconditions reject invalid requests before expensive simulation: for example, timestamps are strictly increasing, a quaternion is normalized within tolerance, active masks align with observation arrays, and positive inertial parameters remain positive after transform. Postconditions check returned state shape, finiteness, timestamp coverage, and physical feasibility. Invariants include conserved identities for idealized tests, model dimensions, and stable parameter ordering. Assertions should carry actionable context and should not silently repair data. If a repair such as quaternion normalization is intended, make it an explicit preprocessing stage and record it.
+
+A useful API returns either a typed result or a typed failure. Do not convert solver failure into a zero trajectory or infinite penalty without preserving its cause; optimizers may exploit discontinuous sentinel values. Separate expected infeasibility from programming errors and numerical breakdown. Each failure receipt should identify phase, state/time, solver status, residual, and retry policy.
+
+## Law of Demeter and Engine Adapters
+
+LoD discourages deep navigation such as `fit.provider.model.data.qpos[...]`. Such expressions couple fit logic to provider internals and engine storage. Pass an explicit `DynamicsProblem` or protocol with operations such as `step(state, control, dt)`, `observe(state)`, and `linearize(state, control)`. The adapter owns engine-specific details. However, this protocol must not erase scientific differences: include a capability/semantics record declaring supported constraints, contact, differentiability, and solver behavior. An adapter that pretends all engines expose identical contact physics creates false abstraction.
+
+For ownership and testability, the objective can depend on injected functions and immutable arrays. The test should be able to replace an engine with a small deterministic fake to verify orchestration, while a separate engine-specific suite checks physical integration. Avoid test doubles that merely repeat production calculations; they prove call choreography but not the physics.
+
+## DRY Without Destroying Provenance
+
+Centralize units conversions, parameter bounds, observation residual definitions, and schema validation when they are scientifically identical. Do not centralize code that only looks similar but has different conventions. For example, two engine adapters may both compute a Jacobian but use different tangent coordinate ordering; sharing the numerical routine is valid only after tests establish the same contract. Explicit conversion functions are better than hidden implicit conversion.
+
+DRY also applies to evidence generation. A single metric implementation should produce both optimizer diagnostics and independent evaluation metrics where definitions are genuinely shared, but fit-time and held-out metrics must not share data selection by accident. Store metric version and input hashes. Avoid duplicating a threshold in code, YAML, and documentation; define one machine-readable policy and render its documentation from that source.
+
+## TDD Workflow for Scientific Changes
+
+Start with a failing test that describes an observable behavior. For a contact law, test signs, units, zero-force cases, normal force nonnegativity, limiting behavior, and energy behavior in a one-body setup. For an adapter, test exact mapping of state order and units. For gradients, test a toy analytic fixture and production directional checks. For a receipt, test schema, hashes, and required fields. Then implement the smallest production change that passes; refactor while preserving tests; finally add an independent scientific check where the original tests could share the same bug.
+
+Test layers should be deliberate:
+
+| Layer | Contract | Example evidence |
+|---|---|---|
+| Pure function | Algebra and boundary values | Force law sign, transform inverse |
+| Adapter | Mapping and units | State round trip, frame labels |
+| Integrator | Discrete dynamics | Analytic oscillator convergence |
+| Optimizer | Decision semantics | Bounds, deterministic termination |
+| End-to-end | Data-to-receipt behavior | Small fixture with hashes |
+| Independent validation | Scientific claim | Fresh engine replay, held-out trial |
+
+Property-based tests are effective for invariants across random valid states, but generated states must lie on the configuration manifold and obey physical bounds. Metamorphic tests can check that changing a global coordinate frame transforms markers consistently, that duplicating an observation with correct covariance scaling preserves the estimate, or that reducing timestep converges toward a reference. These do not replace real data validation.
+
+## Test/Contract Matrix for a Forward Matching Implementation
+
+| Component | Preconditions | Postconditions / invariant | RED test before implementation | Independent check |
+|---|---|---|---|---|
+| Data loader | Declared units, unique times, valid mask | No silent unit/frame change | Reject duplicate/nonfinite timestamps | Compare selected rows to source record |
+| Model schema | Known coordinate and actuator names | Stable ordered dimensions | Reject missing/duplicate IDs | Export/import parity against engine |
+| Parameter transform | Bounds and positivity declared | Round-trip within tolerance | Property test inverse transform | Physical unit and range review |
+| Observation map | Frame and marker map explicit | Shape and frame identities preserved | Known pose gives known marker points | Engine-native FK comparison |
+| Contact law | Convention, units, regularization fixed | Feasible force and declared energy behavior | Zero-gap/separation and friction edge cases | Independent contact fixture/replay |
+| Integrator | Step policy, initial state, controls | Exact endpoint coverage, finite outputs | Analytic ODE convergence test | Alternate solver convergence study |
+| Gradient | Smooth region declared | Directional discrepancy bounded | Analytic scalar/vector gradient | Multi-epsilon production directional test |
+| Optimizer | Seed, limits, termination declared | Feasible candidate or typed failure | Bounds and deterministic toy fit | Re-run in fresh process |
+| Evaluator | Holdout split and metric policy fixed | Metrics trace to exact input hashes | Wrong split/hash is rejected | Fresh independent replay |
+| Receipt | Required provenance fields | Valid schema and reproducible references | Missing field fails schema test | Hash recomputation and replay |
+
+This matrix is a proposed design artifact, not a statement that all rows currently have complete coverage upstream. Existing named evidence includes [tests/test_drake_fit_swing_autodiff.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/tests/test_drake_fit_swing_autodiff.py) and [tests/unit/motion_matching/test_contact_law.py](https://github.com/D-sorganization/UpstreamDrift/blob/d7c7d07add0d7407a5a3376d5fe4a97aee9112a0/tests/unit/motion_matching/test_contact_law.py), cited in upstream implementation/evidence. Coverage must be inspected before asserting that a specific behavior is tested.
+
+## Contracts for Adaptive Model Dimension
+
+An adaptive model introduces a second layer of contract: the candidate set and selection rule. A dimension proposal must specify a valid embedding from (d) to (d+1), the meaning and prior of the new coordinate, an initialization procedure, and a rule for rejecting unsupported dimensions. The nested-model property should hold if the new coordinate is zero or inactive, up to numerical tolerance. A test should verify that inactive expansion reproduces the lower-dimensional outputs. Selection must be evaluated on held-out data; code should make it impossible for training and test masks to alias silently.
+
+Dimension selection is not a single gradient step. It combines discrete model choice and continuous fitting, so test the selection policy with synthetic data where the true dimension is known, under identifiable and deliberately nonidentifiable conditions. A model should retain a set or posterior over plausible dimensions when evidence is weak. The contract should guard against adding coordinates to compensate for mislabeled units, contact mismatch, or poor marker calibration.
+
+## Worked Example: Contract-First Timestep Change
+
+Suppose an integrator currently returns samples at a fixed rate. A request changes the total horizon to 1.0 s at 60 Hz. Before implementation, specify endpoint policy: include both endpoints, giving 61 states at spacing 1/60 s; or provide 60 intervals with a different endpoint convention. Write a failing test that asserts exact returned timestamps and controls interpolated at those timestamps. This catches off-by-one differences before they contaminate optimizer comparisons. Then implement time-grid generation once and have all engine adapters consume it. A provenance record stores the grid itself or a hash plus rule, not only the requested rate.
+
+## Exercises and Solutions
+
+**Exercise 1.** A test asserts that private function `_assemble_force_vector` is called once. Is that sufficient? **Solution.** No. It couples the test to implementation and proves little about physical behavior. Prefer a public contract such as equal-and-opposite action/reaction forces, plus a focused unit test if the helper itself is stable and important.
+
+**Exercise 2.** Two engine adapters contain the same formula but use different velocity tangent conventions. Should they call one shared function? **Solution.** Only after an explicit conversion makes the conventions identical and property tests verify the mapping. Otherwise the apparent duplication represents different mathematics and should remain separate with clear documentation.
+
+**Exercise 3.** What RED test guards nested adaptive dimensions? **Solution.** Generate a trajectory from a (d)-coordinate model, embed it in dimension (d+1) with the added coordinate inactive, and assert predictions agree within declared tolerance. Separately synthesize data requiring the new coordinate and verify held-out predictive improvement under a predeclared selection rule.
+
+## Further Reading
+
+Use [@gebru2021datasheets] for structured provenance and [@olson2026tangent_unified] for local tangent modeling context in the AffineDrift bibliography. The repository's maintained engineering contracts and tests are primary evidence for actual behavior; architectural proposals above require implementation and verification before they become claims.
+
+## Keeping Test Suites Scientifically Useful
+
+A test suite should be fast enough that developers run it during every change, while slower engine and replay tests remain available as explicit qualification jobs. Tag tests by cost and claim: unit, adapter, integration, replay, and scientific validation. A skipped test due to missing optional engine dependencies is not a pass; report skipped coverage. Mutation testing can reveal whether assertions detect meaningful defects, especially for signs, units, and bounds. Review flaky tests as evidence of hidden nondeterminism instead of merely increasing retry counts. Keep fixture generation deterministic and version the generated artifact so changes to a generator do not silently redefine the baseline.

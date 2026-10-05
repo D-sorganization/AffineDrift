@@ -1,0 +1,96 @@
+# Learning Physical Parameters and Anatomical Dimension
+
+## Distinguish Parameters From Structure
+
+A model can contain unknown numerical parameters without uncertainty about its structure. For example, a specified two-link mechanism may have uncertain segment inertias, damping, and actuator gains. Structural adaptation asks whether to add or remove a coordinate, actuator, joint coupling, muscle group, or contact mode. These are different decisions and should not be collapsed into a single parameter vector.
+
+For generalized coordinates $q$, a constrained mechanical system may be written
+
+$$
+
+M(q;\theta)\ddot q+C(q,\dot q;\theta)+g(q;\theta)=B(q;\theta)u+J(q)^T\lambda+\tau_{ext}.
+
+$$
+
+Here $M$ is the mass matrix, $C$ collects velocity-dependent terms, $g$ gravity, $B u$ actuation, and $J^T\lambda$ constraint forces. The coordinate dimension belongs to a candidate topology. The vector $\theta$ contains numerical quantities within that topology. Contact forces $\lambda$ may be governed by complementarity or a compliant law rather than being arbitrary free parameters.
+
+If measured kinematics are $q(t)$, one can compute an inverse-dynamics residual for chosen parameters and assumed inputs. But if the inputs and external loads are unknown, they can absorb errors in $M,C,g$. A parameter optimizer that is permitted to invent arbitrary torques may perfectly reproduce the motion while saying little about the true forward dynamics. The model must state what generates input, whether input is observed, and what regularization or prior constrains unobserved forces.
+
+## Physical Parameter Estimation
+
+Rigid-body inverse dynamics is often linear in a suitable set of inertial parameters, even though the full forward equation is nonlinear in state. For a known trajectory and known external loads, one can write
+
+$$
+
+\tau(t)=Y(q,\dot q,\ddot q)\pi,
+
+$$
+
+where $Y$ is a regressor and $\pi$ collects inertial parameters. Stacking observations gives $\mathbf\tau=\mathbf Y\pi$. A least-squares estimate exists when the relevant columns of $\mathbf Y$ are sufficiently independent. If they are dependent, only combinations of parameters are identifiable. Physical constraints such as positive mass and physically realizable inertia further restrict the feasible set.
+
+For forward matching, derivative noise matters because $\ddot q$ magnifies measurement noise. Rather than differentiate each sample twice and treat acceleration as exact, fit a trajectory smoother with an explicit observation-noise model and use its posterior derivatives, or optimize an integrated trajectory against the measurements. Direct collocation provides another route: state and control values at mesh points are optimization variables, with dynamics enforced through discretized defects. The smoothing or collocation choices must be validated because an overly flexible trajectory can hide dynamics error.
+
+Use scaled parameters and physically meaningful bounds. Parameter scaling is especially important when masses, lengths, damping, and neural residual weights differ by orders of magnitude. When possible, estimate base inertial parameters, not a redundant list of link quantities. Preserve positive-definiteness of the generalized mass matrix $M(q)$ for independent coordinates, but do not treat that condition as sufficient for valid link inertias. Each rigid body also requires positive mass and physically realizable principal moments satisfying the triangle inequalities, equivalently a positive-semidefinite second-moment matrix; parameterize these constraints directly. Standard multibody algorithms and movement-modeling frameworks are described by Featherstone and the OpenSim authors [@featherstone2008rigid; @opensim_lib].
+
+## What Counts as Anatomical Dimension?
+
+An anatomical degree of freedom is grounded in physical structure and joint organization. A behavioral realization dimension is the number of independent state variables needed to reproduce observed input-output behavior. A statistical latent dimension is a representation size chosen by a learning objective. These may coincide in a carefully specified system with complete measurements and sufficient excitation, but they need not.
+
+Consider a human arm model where the shoulder is represented by three rotational coordinates. In a particular reaching task, the subject may keep one rotation nearly fixed. The recorded path then occupies an approximately two-dimensional surface. A dimension-reduction algorithm can correctly summarize that task with two coordinates. It has not shown the shoulder anatomically has two degrees of freedom. Conversely, two muscle activations can produce nearly indistinguishable net joint torques in the observed task. Kinematics may reveal neither that there are two actuators nor how their forces split.
+
+Anatomical claims require an explicit bridge from the data to structure: a specified skeletal model, imaging or physical examination, sensors that identify the relevant coordinate, or controlled perturbations that distinguish candidate structures. A model constrained by known anatomy can still learn effective parameters or a task-specific reduced coordinate system, but label those quantities precisely.
+
+## Candidate-Set Construction
+
+A robust dimension-learning study begins with finite, interpretable candidates. Examples include a locked versus free joint; one versus two actuator groups; a fixed versus state-dependent transmission; a rigid versus compliant contact hypothesis; or alternative observation mappings. Candidate structures should be mechanically valid and sufficiently different to produce testable predictions. Unbounded search over arbitrary coordinate subsets is difficult to interpret because each candidate changes parameterization and potentially sensor mapping.
+
+For each candidate, specify initial conditions, input map, external-force model, parameter priors or bounds, and observation model. Make candidate models comparable in their ability to explain nuisance effects. If one model includes marker offsets and another does not, their fit difference cannot be attributed cleanly to physical dimension. Similarly, if only the larger model receives a neural residual, complexity comparison is not controlled.
+
+A staged strategy is easier to diagnose: first fit known topology and physical parameters; then test a sparse, structured residual; then evaluate a short list of structural alternatives; finally test whether a latent state is needed for predictive memory. Some interactions remain—for example, changing coordinate dimension changes parameter identifiability—so selected joint comparisons should follow staged screening.
+
+## Worked Example: A Hidden Second Coordinate
+
+Suppose a planar double pendulum has coordinates $q_1,q_2$, but a camera observes only the endpoint position $y=h(q_1,q_2)$. During a restricted motion, the endpoint remains close to a curve. A one-coordinate model may reproduce the observed endpoint trajectory with a learned curve parameterization. Yet under a torque perturbation applied at the second joint, the two-coordinate system may move off that curve while the one-coordinate candidate cannot. The distinction is invisible in the original data and visible under a targeted input.
+
+This example suggests the right question is not “Which dimension has the lower training loss?” but “Under what input and observation conditions do these hypotheses make different predictions, and did the experiment include those conditions?” If no feasible input separates the candidates with current sensors, the distinction is not empirically resolved. A selected low-dimensional model may still be useful for prediction within the restricted domain, but the report should not call it anatomical discovery.
+
+## An Adaptive Model Proposal
+
+A research candidate for AffineDrift is a mechanics-first hierarchy with explicit model gates. Let $m$ index candidate topology and contact structure, $z$ represent optional latent memory, and $r_\phi$ be a bounded residual force:
+
+$$
+
+M_{m,\theta}(q)\ddot q+C_{m,\theta}(q,\dot q)+g_{m,\theta}(q)=B_{m,\theta}(q)u+J_m(q)^T\lambda+r_\phi(q,\dot q,u,z).
+
+$$
+
+The candidate model would first verify $M\succ0$, coordinate constraints, and valid contact semantics. A sparse group prior could turn on or off interpretable force families. If held-out residual structure remains and identifiability analysis supports memory, a latent state could be added. Model comparison would include a complexity cost and a reject/abstain outcome. This is a proposed architecture for research; it is not represented as implemented in the repository.
+
+The hierarchy should maintain separate scores: measurement fit, forward rollout, physical feasibility, information adequacy, and complexity. A single weighted scalar can conceal tradeoffs. A model with better fit but frequent constraint violation should not silently win over a feasible model. For each structural choice, log the evidence, priors, candidate inventory, and observed regimes.
+
+## Limitations and Failure Modes
+
+Physical constraints do not guarantee correct physics. An incorrect actuator map can be mechanically elegant. A force residual can still absorb unmodeled anatomy. Known-looking coordinate labels may not align with sensor coordinates. Parameter bounds can make an unidentifiable parameter appear precise at a boundary. Model selection penalties can prefer an overly simple model outside the training domain. Human movement also changes with learning, fatigue, pain, or strategy; a structural change detector may confuse these effects with anatomy.
+
+The solution is not a universal dimension estimator. It is a protocol that states the estimand, checks identifiability, compares physically plausible alternatives, and limits claims to tested inputs and observations.
+
+
+## Constraints, Coordinates, and Effective Degrees of Freedom
+
+A coordinate count should be stated with its constraint convention. If generalized coordinates satisfy holonomic constraints c(q)=0, then local independent configuration dimension is n-rank(∂c/∂q), provided the constraint Jacobian has constant rank near the motion. The corresponding velocity constraints are obtained by differentiating c(q)=0. Redundant coordinates can be computationally convenient, but they are not independent degrees of freedom. In addition, a model may include compliant deformation coordinates that are not rigid-joint degrees of freedom. This is why a textbook or software model's coordinate count cannot be compared casually to a learned latent size.
+
+For an adaptive system, each proposed dimension change should have a semantic type. “Unlock coordinate q3” changes configuration topology. “Add one actuator group” changes the input map. “Add one latent memory state” changes realization dimension. “Add one SINDy term” changes equation support. These operations require different tests, and an automated selector should log exactly which one it performed. The selection objective should penalize each according to scientific and computational consequences rather than treating every scalar parameter equally.
+
+Effective coordinates can be learned from a task trajectory using manifold methods, but the manifold is conditional on the sampled movement distribution. A trajectory may occupy a low-dimensional set because of a controller, task instruction, or participant strategy. To estimate capacity rather than habitual use, perturbations should probe directions outside the observed manifold. A controlled reduced model can therefore be valuable even when it is not an anatomy model; the naming and evaluation target determine whether the inference is correct.
+
+## Exercises
+
+1. Give an example where a task-specific low-dimensional representation is valid for prediction but invalid as an anatomical claim.
+2. Explain why allowing arbitrary unknown torque at every time step weakens inference about inertia.
+3. Design one perturbation and one sensor addition that could distinguish a locked joint candidate from a weakly moving free joint.
+
+## Solution Sketches
+
+1. Reaching trajectories may lie on a low-dimensional coordination manifold while the shoulder and elbow retain additional anatomical motion capacity. The reduction describes the task manifold, not the skeleton.
+2. Arbitrary torque can compensate for almost any acceleration error, making the mapping from inertial parameters to observed trajectory non-unique. Restrict torque through measured input or a justified control model.
+3. Apply a safe perturbation around the suspected joint while measuring a marker cluster or joint encoder that directly observes the coordinate. Repeat across initial states and quantify whether predictions separate relative to sensor noise.

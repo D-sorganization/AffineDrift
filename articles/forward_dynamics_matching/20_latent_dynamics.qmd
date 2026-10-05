@@ -1,0 +1,101 @@
+# Latent Learned Dynamics and Their Physical Interpretation
+
+## Why Introduce A Latent State?
+
+A Markov forward model predicts the next state from its current state and input. If the observed kinematics do not contain enough information to predict future motion, a latent state may carry memory of unobserved activation, control intent, tissue deformation, fatigue, contact mode, or sensor delay. A latent representation can improve prediction even when its coordinates have no direct anatomical interpretation.
+
+A continuous-time latent model can be written
+
+$$
+
+\dot z=f_\phi(z,u), \qquad y=g_\psi(z),
+
+$$
+
+or, for a mechanics-centered model, $z$ may augment measured configuration and velocity. Neural ordinary differential equations parameterize the derivative function and use a numerical solver to obtain trajectories. Latent ODE methods infer a latent initial state from irregular observations and evolve it continuously. References: Chen et al., [“Neural Ordinary Differential Equations”](https://arxiv.org/abs/1806.07366); Rubanova, Chen, and Duvenaud, [“Latent ODEs for Irregularly-Sampled Time Series”](https://arxiv.org/abs/1907.03907). Related structured neural mechanics approaches include learned Lagrangian and Hamiltonian models [@cranmer2020lagrangian; @greydanus2019hamiltonian; @lutter2019deep]. Live link validation is pending under the repository's current network restriction.
+
+The latent dimension is a model capacity choice. It is not automatically the number of physical degrees of freedom. A state coordinate can be transformed by an invertible map while changing the vector field and decoder but preserving the same observations. Extra latent units can be unused, redundant, or encode nuisance history. Conversely, a compact latent model may compress a complex physical system over the limited domain of its training data.
+
+## The Identification Problem
+
+Suppose observations satisfy $y_k=g_\psi(z_k)+\epsilon_k$, while latent states follow $z_{k+1}=F_\phi(z_k,u_k)$. If both $F$ and $g$ are flexible neural functions, many combinations can produce the same observed sequence. The learned state may be poorly determined even when predictions are excellent. This is a familiar realization ambiguity in system identification: observable input-output behavior does not uniquely label hidden coordinates.
+
+The issue gets sharper when controls are unknown. An augmented latent state may reconstruct the recent history of observed motion and thereby infer an effective control signal. That can support forecasting, but it does not tell us whether the latent variable represents neural activation, an omitted force, or a delayed sensor. Independent measurements and interventions are required for semantic interpretation.
+
+To decide whether latent memory is warranted, compare a Markov mechanics baseline, a mechanics model with residual force, and a latent augmented model under identical data splits. If the latent model improves only one-step prediction but not multi-step rollouts, it may exploit local interpolation. If it improves long-horizon prediction across unseen inputs and subjects, it offers stronger evidence for useful memory but still not for anatomical identity.
+
+## Mechanics-First Augmentation
+
+An unconstrained neural vector field can violate kinematic constraints or produce impossible accelerations. A mechanics-first candidate preserves known equations and lets learned components represent specific residuals:
+
+$$
+
+M_\theta(q)\ddot q + C_\theta(q,\dot q)+g_\theta(q)
+=B_\theta(q)u+J(q)^T\lambda+r_\phi(q,\dot q,u,z).
+
+$$
+
+The residual $r_\phi$ should be bounded or regularized and should not override positive-definite inertia, joint constraints, or contact rules. If a latent state is included, its observation relationship and update dynamics should be stated. For instance, it may represent an activation variable with a first-order lag, but such an interpretation should be supported by independent physiological or control data. Without that evidence, call it a learned memory state.
+
+This architecture is a research proposal, not an implemented AffineDrift feature. It should be evaluated against simpler alternatives and should not be introduced as a proven improvement. Candidate constraints may include energy dissipation for passive components, bounded actuator force, smoothness within a mode, and separate reset dynamics at impacts. Each constraint must match the intended physical regime.
+
+## Worked Example: Hidden Actuator Activation
+
+Let a measured joint angle satisfy
+
+$$
+
+I\ddot q+b\dot q=\tau, \qquad \dot a=(u-a)/T, \qquad \tau=k a.
+
+$$
+
+Here $u$ is a command, $a$ a delayed actuator activation, and $T$ a time constant. A model using only $(q,\dot q,u)$ is not Markov because current torque depends on the history of $u$ through $a$. Augmenting with $a$ restores Markov structure. If only q is observed and u is unknown, a latent model may infer a variable that predicts the lag. But that variable cannot be called activation without measurements or a validated actuator model. If u is known and varied in independent pulses, lag parameters may become identifiable; a constant input provides little information about the time constant after transients settle.
+
+A practical diagnostic is to compare predictions after abrupt input changes. The no-latent candidate predicts an immediate response; the lagged model predicts a transient. The input protocol is informative because the hypotheses produce distinguishable trajectories. The latent dimension earns support through a testable response signature, not merely a lower training loss.
+
+## Selecting Latent Dimension
+
+One can fit a sequence of latent sizes and compare held-out sequence likelihood or rollout error with a complexity penalty. A Bayesian formulation may put shrinkage priors on latent coordinates or compare discrete dimensions, but posterior conclusions depend on prior structure and data. Architecture searches should include multiple random seeds and report variation. A dimension that changes with initialization while predictions remain stable is evidence that representation size is not uniquely identified.
+
+Useful controls include: (1) simulate data from known latent dimension and test recovery under realistic noise; (2) simulate data with no latent state but unmodeled contact or delay to see if the estimator invents one; (3) perturb latent size while keeping the decoder and solver fixed; (4) evaluate on held-out input waveforms, not only neighboring timestamps; (5) inspect whether latent trajectories are stable and smooth under small observation perturbations; (6) test whether dimensions map consistently across subjects if population claims are intended.
+
+Latent-state dimension selection should be separated from neural network width, hidden-layer count, solver tolerance, and observation-decoder capacity. These all affect fit complexity. If a model is given a larger decoder and a different integrator at the same time that latent dimension changes, comparisons are uninterpretable.
+
+## Numerical and Physical Considerations
+
+The numerical solver is part of the learned model. Stiff latent dynamics may require implicit solvers; adaptive step-size and tolerances affect gradients and runtime. Contact discontinuities can cause solver difficulties and should use event or mode-aware handling. Long rollouts can reveal drift not visible in teacher-forced training. Keep train and evaluation solvers consistent enough to identify modeling errors, but also test robustness to reasonable solver changes.
+
+Physical invariants can guide architecture. Hamiltonian neural networks parameterize an energy function and use canonical equations; Lagrangian networks parameterize a Lagrangian and derive dynamics. These approaches encode useful structure for suitable conservative or mechanical systems, but they do not automatically solve actuation, friction, contact, or identifiability. The local bibliography lists relevant papers; verify the entries and scope before relying on specific performance claims.
+
+For contact-rich human movement, a single smooth latent ODE may hide discrete stance/flight transitions. Hybrid models provide continuous flows in each mode plus transition guards and reset maps. The latent state can augment those flows, but mode logic should remain explicit where impact physics matters. A learned latent variable that tracks “stance” is not a substitute for checking contact constraints and impulse balance.
+
+## Evaluation and Reporting
+
+Report separate metrics for observed-coordinate reconstruction, one-step prediction, multi-step forward rollout, event timing, constraint violation, and physical plausibility. Use complete held-out trajectories and conditions; random frame splits create leakage. Compare models at equal tuning effort and document parameter counts, latent dimensions, solver settings, and priors. Include uncertainty intervals or ensembles. Check performance under small perturbations to initial conditions and inputs; fragile latent codes can create unstable extrapolation.
+
+A model intended for a specific task may use a latent state without claiming physical discovery. A model intended for scientific interpretation needs stronger evidence: identifiable observation map, independent signal corresponding to the latent, intervention response consistent with the proposed mechanism, and replication under varied conditions.
+
+## Limitations
+
+Latent models can be excellent predictors while remaining uninterpretable. Flexible decoders may compensate for incorrect dynamics. Latent dimension comparisons are sensitive to priors, architecture, optimizer, and training duration. ODE integration assumptions may fail at events or under discrete sampling. Population-level latent axes may rotate or permute across individuals. Good prediction within the training domain does not validate physical extrapolation.
+
+
+## When Memory Is A Better Explanation Than A New Coordinate
+
+A measured configuration may fail to be Markov for several reasons. Actuator activation can lag a command. A viscoelastic tissue model may require an internal strain variable. A camera pipeline may introduce delay. A contact sensor may omit the current mode. Before increasing latent size, test these alternatives because each suggests a different state equation and different evidence. Delay can often be diagnosed by synchronization checks; actuator lag by measured command-response transients; contact mode by force sensing; viscoelasticity by loading-unloading hysteresis. A generic latent state can predict all of these while identifying none of them.
+
+The Markov property can be probed empirically: find pairs of observations with similar measured (q,qdot,u) but different short-term futures. If the difference is systematic and exceeds noise, then the observed state is insufficient under the current input description. This does not prove that a latent coordinate is physically necessary; hidden control and observation error can also cause the effect. Add candidate history summaries and compare them with explicit physical states. Use held-out sequences where the relevant history differs while the current measured state is similar.
+
+Representation alignment matters for subject-level studies. Independently trained latent spaces can be rotated, permuted, or sign-flipped. Averaging latent coordinates across subjects is not meaningful until a mapping or alignment criterion is established. A model may instead compare decoded physical predictions or invariant latent distances. If latent dimensions are claimed to correspond to common mechanisms, test that correspondence with shared perturbations and independent measurements.
+
+## Exercises
+
+1. Explain why an invertible transformation of latent coordinates can preserve observed predictions while changing the learned dynamics.
+2. Design an experiment to distinguish instantaneous actuation from a first-order activation lag.
+3. A latent dimension of 6 outperforms dimension 4 on a random frame split but not on held-out trials. Interpret the result and propose next steps.
+
+## Solution Sketches
+
+1. If $w=T(z)$ is invertible, transform the vector field by the chain rule and decoder by composition; outputs remain the same though coordinate meaning changes.
+2. Apply independently timed input pulses, observe the response onset and decay, and include enough time before/after each pulse to estimate the lag. Measure input and output with synchronized clocks.
+3. Random frame splits likely leak temporal neighbors. The larger model may interpolate trial-specific trajectories but not generalize. Use trial-level splits, examine uncertainty, add varied inputs, and test synthetic dimension recovery before interpreting dimension.

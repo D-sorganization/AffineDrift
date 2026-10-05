@@ -1,0 +1,85 @@
+# Measurement and Preprocessing for Dynamic Matching
+
+A forward dynamics fit is only as meaningful as the map from the world to the model. Before optimizing controls or adapting dimensions, the analyst must define what was measured, where it was measured, which coordinate frames produced it, and how uncertainty enters. Many apparent model failures arise before the equations of motion are evaluated: marker offsets, camera calibration, time synchronization, force-plate assignment, filtering, or a mismatch between the model’s generalized coordinates and the measured observables. The preparation stage should therefore be treated as part of the estimation model rather than as invisible clerical work.
+
+## State, Parameters, and Observations
+
+Let the generalized configuration be $q \in Q$, velocity $v \in T_q Q$, internal actuator states $z$, and static or slowly varying model parameters $p$. A state is $x=(q,v,z)$. The dynamics can be written in first-order form as $\dot{x}=f(x,u,p,w)$,
+
+where $u$ is control and $w$ collects external loads, contact forces, and possible disturbances. A measurement at time $t_k$ is $y_k = h_k(x(t_k), p, c) + \epsilon_k$,
+
+where $h_k$ is a sensor-specific observation function, $c$ represents calibration and nuisance parameters, and $\epsilon_k$ is measurement error. The distinction between $f$ and $h$ matters. A camera measures image coordinates or reconstructed marker positions, not joint torques; an IMU measures specific force and angular velocity, not generalized coordinates; a force plate measures a wrench in its own frame, not the contact force of whichever foot the analyst hopes it measured.
+
+An appropriate state estimator compares predicted observations $h_k$ with sensor outputs. It should not compare a marker measurement directly with a joint angle unless a valid observation model maps the configuration to that angle. For a 3D marker $i$ attached to segment $s$, a simple model is $y_{ik}=R_s(q_k)r_i(p)+t_s(q_k)+\epsilon_{ik}$; more realistic models can add soft tissue displacement, marker placement offsets, camera projection, or visibility-dependent covariance. Frame definitions must be explicit: world, laboratory, segment, sensor, and model frames; handedness; axis direction; origin; angular units; and time origin.
+
+## Noise Models and Weighting
+
+If errors are approximately Gaussian with covariance $\Sigma_k$, the negative log-likelihood contribution is, up to a constant, $r_k^T\Sigma_k^{-1}r_k$, where $r_k=h_k(x,p,c)-y_k$. Thus weighting is not cosmetic. It encodes expected measurement variability. A 2 mm marker uncertainty, a 0.02 rad orientation uncertainty, and a 30 N force uncertainty should not receive equal raw numeric weights. Whitening residuals with a Cholesky factor $L_kL_k^T=\Sigma_k$ gives $L_k^{-1}r_k$, a dimensionless residual whose squared norm has a likelihood interpretation.
+
+Real motion data contain outliers and correlated errors. A marker may be occluded, mislabeled, or displaced by skin motion. Filtering creates temporal correlation, and markers on one rigid segment share calibration and soft-tissue errors. A robust loss such as Huber or Student-t can reduce outlier influence, but it does not repair a systematic coordinate-frame error. If residual structure persists over contiguous intervals or moves together across a segment, model the shared nuisance source instead of downweighting every point. A practical model may include a per-trial marker offset, a time offset, or a low-dimensional soft-tissue deformation term with a prior.
+
+The time base must be modeled as carefully as the spatial frame. If a sensor stream has a time offset $\delta$, then its prediction is $h(x(t_k+\delta))$. A small offset in a high-acceleration movement can look like a wrong inertial parameter or actuator delay. Synchronization can be estimated from hardware trigger signals or jointly through a bounded delay parameter, but the latter can be confounded with muscle activation dynamics. Calibration, synchronization, and physiological delay should therefore have distinct priors and should not be collapsed into one unconstrained phase shift.
+
+## Filtering and Derivatives
+
+Inverse dynamics commonly requires velocity and acceleration, so data are smoothed and differentiated. Differentiation is ill-conditioned: a finite difference divides measurement noise by the sample interval, and a second derivative amplifies it further. Smoothing reduces variance but introduces bias and phase delay. Filtering choices must therefore be documented by filter family, cutoff, order, edge treatment, sample frequency, and whether zero-phase filtering was used. Applying zero-phase filtering offline avoids phase lag but is noncausal and can create endpoint artifacts; a causal filter preserves real-time behavior but delays the signal.
+
+Smoothing splines and state-space estimators offer a more coherent alternative to “filter then differentiate.” One can estimate a smooth trajectory by minimizing $\sum_k\|\hat{q}(t_k)-q_k\|_W^2+\lambda\int\|\hat{q}^{(m)}(t)\|^2\,dt$,
+
+where the first term fits observations and the second penalizes roughness. The smoothing strength $\lambda$ expresses a bias-variance choice. Better still, estimate latent states directly from a dynamic model and sensor likelihood, avoiding a separate differentiation pipeline. But this transfers risk to the model: a poor forward model can bias the state estimate. The right comparison is not “filtered truth versus model truth”; it is a sensitivity analysis across defensible noise and process models.
+
+For rotations, ordinary componentwise filtering of Euler angles can fail near singularities and can average orientations incorrectly. Use a representation with valid geometry—rotation matrices projected onto $\mathrm{SO}(3)$, unit quaternions with sign continuity, or local Lie algebra coordinates—and define residuals with the group logarithm. If orientations $R_{obs}$ and $R_{pred}$ belong to $\mathrm{SO}(3)$, an intrinsic residual is $r_R=\operatorname{Log}(R_{pred}^TR_{obs})\in\mathbb{R}^3$. This respects the geometry and avoids treating angular components as three unrelated scalars.
+
+## Contact and External Loads
+
+Ground reaction measurements are often the strongest constraints on dynamics and among the easiest to mishandle. A force plate reports a wrench about a plate-fixed origin. To compare it with a model wrench about another origin, transform both force and moment consistently. If $r$ shifts the moment reference, then $M_{new}=M_{old}+r\times F$ (with sign depending on the direction of the shift). A correct vertical force with an incorrect center of pressure can still imply the wrong net moment. Verify the plate coordinate transform, calibration, sign, thresholding, and which foot is in contact at each frame. When a foot contacts multiple plates or both feet share a plate, force assignment is an inference problem, not a trivial label.
+
+A forward simulation needs a contact model: prescribed measured wrench, compliant contact, complementarity constraints, or a hybrid contact schedule. Each choice imposes a different scientific assumption. Prescribing the measured wrench can make kinematic tracking easier but does not test the contact model. A compliant penalty model is smooth and convenient but may add stiffness and permit penetration. Complementarity can represent unilateral contact and friction more directly but yields difficult nonsmooth or nonlinear programs. If the contact schedule is known from measurements, it can be fixed for estimation while contact mechanics are tested separately. If it is unknown, phase or contact variables must be inferred with explicit constraints.
+
+External loads should be measured and represented as uncertain quantities. A convenient Gaussian load residual is $r_F = F_model-F_meas$; yet force-plate errors may be biased by calibration, drift, or center-of-pressure uncertainty. For a measured wrench $w$, use a covariance over all six components or separate force and moment covariance blocks with units accounted for. Avoid allowing a large unit imbalance to make translational forces dominate rotational moments simply because newton-meters have numerically smaller values.
+
+## Model Coordinate Compatibility
+
+Kinematic fitting assumes that the model can express the observed motion. A model with the wrong joint topology, missing degree of freedom, or incompatible coordinate convention cannot match every observation no matter how clever the optimizer is. Before fitting, map each measurement to a model quantity and verify range, sign, neutral pose, and anatomical meaning. Joint angles derived from marker trajectories may not coincide with model coordinates because of joint definitions, skin motion, or functional-axis estimation. Therefore marker-space tracking and generalized-coordinate tracking answer different questions. Marker-space residuals preserve the observation geometry; coordinate tracking can be easier to interpret but embeds an upstream kinematic reconstruction.
+
+The model itself brings priors: segment dimensions, inertial properties, joint centers, muscle paths, tendon slack lengths, and actuator limits. Scaling all lengths while leaving inertias unchanged is inconsistent. A uniform geometric scale factor $s$ implies mass scales roughly with $s^3$ under constant density and inertia roughly with $s^5$; real subject-specific distributions require more informed scaling. When “learning dimensions,” parameters should have physical units, plausible bounds, and dependency rules. A dimension parameter is not independent if it changes muscle moment arms, marker locations, contact geometry, and segment inertias simultaneously.
+
+## A Pre-Fit Diagnostic Sequence
+
+A reproducible preprocessing report should include: sample counts and missingness; sensor calibration and frame transforms; synchronization offsets; filtering and derivative method; marker residual distributions by segment; force/moment residual plots; contact labels; range and velocity checks; and the model-to-observation mapping. Plot raw observations and model projections together before running a global optimizer. Check whether a rigid-body segment can fit its own markers. Verify that the measured support wrench has a plausible magnitude and center of pressure. Compare finite-difference and spline derivatives at several cutoffs. These checks often reveal errors that an optimizer would otherwise absorb into implausible parameters.
+
+The baseline should retain raw data and transformations in a machine-readable provenance record. A derived signal should identify its parent signal, units, filter, time base, and coordinate frame. This is crucial for scientific repeatability and for separating model adaptation from preprocessing changes. Do not overwrite raw data or treat an undocumented filter setting as part of the model.
+
+## Worked Derivation: A Marker Residual With Calibration Uncertainty
+
+Suppose a single segment pose is $(R,t)$ and a marker has known segment coordinate $r$. The predicted lab-frame location is $m=Rr+t$. The observed marker is $y=m+\epsilon$, with $\epsilon\sim\mathcal{N}(0,\Sigma_y)$. If the marker placement is uncertain by $\delta r\sim\mathcal{N}(0,\Sigma_r)$, then linearizing gives $\delta m\approx R\delta r$; hence the effective observation covariance is $\Sigma_eff = \Sigma_y + R \Sigma_r R^T$.
+
+The contribution to the objective becomes $(m-y)^T \Sigma_eff^{-1}(m-y)$. This derivation shows why treating all markers as exact rigid points can over-weight a marker with uncertain placement. If several markers share a segment-level skin displacement $b$, the model $y_i=Rr_i+t+b+\epsilon_i$ induces correlated residuals. Estimating one regularized $b$ is more principled than independently inflating each marker covariance, although it introduces an additional latent variable and prior.
+
+## When This Chapter's Assumptions Fail
+
+Gaussian errors are not universal; marker visibility and force-plate clipping create non-Gaussian failures. Rigid segment assumptions fail under soft tissue motion and flexible structures. A fixed contact schedule fails for unexpected contact. Constant dimensions fail across growth or deforming anatomy. A time-invariant camera calibration fails if the rig moves. The practical response is to expose the assumption and test its consequences, not to claim that a single optimizer removes these limitations.
+
+## Exercises With Solutions
+
+### Exercise 1: Weighting Two Sensors
+
+A marker residual is 4 mm with standard deviation 2 mm. An IMU orientation residual is 0.03 rad with standard deviation 0.01 rad. Which contributes more under independent Gaussian noise?
+
+**Solution.** The standardized residuals are 2 and 3, respectively. Their squared contributions are 4 and 9; the orientation residual is more surprising under its stated model. Raw numbers alone would mislead because the units differ.
+
+### Exercise 2: Timing Error
+
+A marker follows $y(t)=A\sin(\omega t)$. A sensor offset is $\delta$. Show the first-order position error.
+
+**Solution.** $y(t+\delta)\approx y(t)+\delta A\omega\cos(\omega t)$. Thus the error grows with frequency and amplitude and is largest near zero crossings. A time error can therefore mimic an amplitude or phase-dependent dynamics defect.
+
+### Exercise 3: Force-Plate Moment Shift
+
+A plate measures force $F$ and moment $M$ about origin $O$. Derive the moment about $O+r$.
+
+**Solution.** The moment about a new point equals the old moment minus the displacement from the old point crossed with the force if $r$ points from $O$ to the new point: $M_{O+r}=M_O-r\times F$. The sign is easiest to verify from the force line of action. State the vector direction in any implementation or report.
+
+## References
+
+Rigid-body dynamics conventions and efficient mechanics algorithms are covered in [@featherstone2008rigid]. Direct biomechanical source links collected for the larger review include [OpenSim (Delp et al., 2007; DOI 10.1109/TBME.2007.901024)](https://doi.org/10.1109/TBME.2007.901024), [OpenSim locomotion review](https://pmc.ncbi.nlm.nih.gov/articles/PMC8361578/) (live URL; full citation metadata pending verification), and the [2024 systematic review of simulation-to-measurement differences](https://doi.org/10.3389/fbioe.2024.1386874) (live URL; full citation metadata pending verification). The direct source retrieval record is in the accompanying literature ledger.

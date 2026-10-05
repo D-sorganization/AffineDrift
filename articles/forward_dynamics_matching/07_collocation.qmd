@@ -1,0 +1,101 @@
+# Direct Collocation for Dynamic Tracking and Model Fitting
+
+Direct collocation turns a continuous-time optimal-control problem into a sparse nonlinear program by representing states and controls at a finite set of mesh points and enforcing approximate equations of motion as algebraic constraints. It is a natural approach when the goal is to fit a forward model to observed kinematics because the trajectory, control, model parameters, contact variables, and measurement residuals can be optimized together. The method is powerful, but it does not eliminate numerical modeling choices. Results depend on the transcription, mesh, scaling, solver, and independent feasibility checks.
+
+## Continuous Problem
+
+Let $\dot{x}=f(x,u,p)$ over $t\in[0,T]$. A tracking objective may be written $J = \int_0^T [r_y(x,p,t)^T W_y r_y(x,p,t) + l_u(u) + l_p(p)] dt + \Phi(x(T),p)$,
+
+subject to path constraints $g(x,u,p)\leq0$, endpoint constraints, and perhaps a phase-dependent contact model. Here $r_y=h(x,p)-y$ is a measurement residual. If parameters are static, they are shared throughout the trajectory. If they are slowly varying, a state equation or temporal prior should describe that evolution explicitly; independently fitting each time point's dimensions makes no physical sense.
+
+The optimal control problem is not just “fit a curve.” It asks for a curve that is dynamically feasible and has controls and parameters consistent with the model and priors. A trajectory can fit markers perfectly while violating force balance; a dynamically feasible trajectory can differ from noisy observed markers; a model can fit with implausible body dimensions unless priors and bounds prevent it. The objective and constraints make these preferences explicit.
+
+## Direct Collocation Transcription
+
+Choose nodes $t_0,\ldots,t_N$ and interval widths $h_k=t_{k+1}-t_k$. Treat $x_k$ and typically $u_k$ as decision variables. A simple trapezoidal defect is $d_k = x_{k+1}-x_k - (h_k/2)[f(x_k,u_k,p)+f(x_{k+1},u_{k+1},p)] = 0$.
+
+The nonlinear program minimizes a quadrature approximation to $J$ subject to all defects, bounds, path constraints, and boundary conditions. Higher-order schemes use midpoint states, polynomial interpolation, or collocation points inside each interval. Hermite-Simpson, for example, adds an interpolated midpoint and enforces consistency at it, improving accuracy for smooth dynamics without requiring an extremely fine mesh.
+
+The key computational benefit is sparsity. Each defect couples only neighboring mesh variables, yielding a sparse Jacobian and Hessian structure. Large biomechanical problems may have many thousands of state, control, and parameter variables, but each local dynamics constraint depends on only a small subset. Sparse interior-point or sequential quadratic programming solvers can exploit that pattern. Automatic differentiation can provide derivatives, but model code must be differentiable and carefully scaled.
+
+Collocation states are independent decision variables during optimization. Therefore they need not equal the result of integrating the controls from the initial state until the defect constraints converge. This freedom makes the NLP easier to initialize than single shooting, especially for unstable long-horizon problems. It also creates a vital obligation: after convergence, independently integrate the model using the optimized controls and parameters. If the trajectory differs materially, the mesh may be too coarse, defects too loose, controls interpolated inconsistently, or the contact/event treatment wrong.
+
+## Objective Construction
+
+A useful objective separates data terms from regularization: $J_{data}=\sum_{k,s}\rho(L_{k,s}^{-1}(h_s(x_k,p)-y_{k,s}))$, $J_{reg}=\lambda_u\sum_k\|u_k\|^2+\lambda_s\sum_k\|u_{k+1}-u_k\|^2/h_k+(p-p_0)^T\Lambda_p(p-p_0)$.
+
+The data term should use sensor-specific covariances or carefully justified weights. Robust losses can protect against outliers. Control effort, smoothness, parameter priors, and residual-actuator penalties should remain separately reported. An arbitrary weight can make a preferred outcome look optimal while hiding a large error elsewhere. Weights can be selected from measurement uncertainty, prior uncertainty, or an explicitly stated scientific tradeoff; sensitivity plots should show whether conclusions depend on them.
+
+For marker tracking, compare predicted marker locations with measured marker positions. For coordinate tracking, compare generalized coordinates and speeds. For force tracking, compare external wrenches and centers of pressure. For EMG-informed fitting, compare processed EMG with excitation or activation only after defining the measurement-to-model transformation and delay. A multimodal objective is more informative only when its terms are calibrated and their correlations are considered.
+
+## Equality and Inequality Constraints
+
+For a constrained mechanical system, one may impose position constraints $\phi(q,p)=0$, velocity constraints $J(q,p)v=0$, and acceleration-level equations. A redundant formulation can be numerically problematic. If the model already exposes a constrained dynamics solve, enforcing its differential-algebraic system consistently is preferable to independently adding inconsistent constraints. Alternatively, use reduced coordinates for simple constraints. Coordinate singularities, redundant constraints, and Baumgarte stabilization can introduce drift or artificial dynamics. Constraint residuals must be monitored at all levels.
+
+Muscle states include activation bounds, fiber length bounds, tendon force relations, and force-length-velocity constraints. Contact adds unilateral normal force, nonpenetration, friction cones, and complementarity or a smooth approximation. Exact complementarity is nonconvex and difficult. Smoothing can improve derivatives but creates a parameter controlling approximation error. A compliant penalty law is simple but stiff. The chosen contact representation should be included in the model comparison rather than hidden in implementation details.
+
+## Mesh Refinement and Numerical Feasibility
+
+An optimal solution to the discretized NLP is not automatically optimal or feasible for the continuous-time model. A coarse mesh may miss rapid transitions, impacts, or high-frequency muscle states. Mesh refinement should be based on defect error, state curvature, contact transitions, and reintegration mismatch. An h-refinement increases node density; p-refinement increases polynomial degree. Adaptive schemes place nodes where the solution changes rapidly. Report mesh spacing and demonstrate convergence of key outputs, not merely solver convergence.
+
+Solver tolerances should be stated for optimality, constraint feasibility, and integration. Variables and constraints must be scaled to comparable numeric ranges. A meter-scale position, 1000 N muscle force, 0.01 activation, and 1e-6 dynamic defect can otherwise produce poor conditioning. Nondimensionalization or explicit scaling can significantly improve behavior. Initial guesses matter: use data-derived states, an RRA/CMC solution, inverse-dynamics controls, or a simpler model. Continuation can gradually increase model complexity or tracking weight.
+
+## Collocation, Multiple Shooting, and Single Shooting
+
+Single shooting has a compact decision vector but can be sensitive over long horizons. Multiple shooting adds segment states and continuity constraints. Collocation includes states at mesh points and local algebraic defect constraints, usually creating a larger but sparse NLP. The approaches can perform similarly on some predictive biomechanics tasks; practical performance depends on dynamics formulation, solver, mesh, and initialization. A fair comparison holds objective, bounds, mesh resolution, derivative quality, and stopping criteria as similar as possible. For systems with stiff muscle dynamics or contact, implicit formulations can improve stability and efficiency.
+
+Collocation excels when the full trajectory is unknown and should be optimized, including motion prediction, tracking, and parameter estimation. A fixed observed motion can also be solved by inverse methods, but that suppresses the question of how parameters affect motion. Jointly optimizing state trajectory, controls, and model parameters exposes those interactions and lets the data pull the simulated motion while equations constrain it.
+
+## OpenSim Moco
+
+OpenSim Moco provides a software framework for musculoskeletal optimal control using direct collocation. Moco supports motion tracking, prediction, parameter optimization, model fitting, EMG-constrained problems, and user-defined costs and constraints. Its MocoTrack workflow is designed for trajectory tracking while retaining optimization over the motion and controls. This is conceptually useful for forward matching: users can compare tracking loss, muscle effort, and model parameter changes in one OCP. Moco is a toolkit, not a guarantee of a scientifically well-posed objective. Users still need correct measurements, weights, priors, model scaling, mesh settings, and validation. The project’s indexed documentation notes advanced users must understand optimal control, numerical methods, and local minima. The original Moco GitHub repository is archived and states development moved to OpenSim core, so implementation references should pin a current release and API.
+
+## Worked Derivation: Trapezoidal Defect Error
+
+For scalar dynamics $\dot{x}=f(x)$, exact integration over a short interval is $x_{k+1}=x_k+hf(x_k)+(h^2/2)f_x(x_k)f(x_k)+O(h^3)$. Trapezoidal integration predicts $x_k+(h/2)[f(x_k)+f(x_{k+1})]$. Expanding $f(x_{k+1})\approx f(x_k)+hf_xf+O(h^2)$ gives the same first and second order terms, leaving a local error of order $h^3$ for smooth dynamics. Over $N=T/h$ intervals, accumulated global error is typically order $h^2$. This textbook order does not apply cleanly across impacts, discontinuous controls, nonsmooth contact, or stiffness; those require phase-aware refinement or different formulations.
+
+
+### Worked Example: Zero Endpoint Defect Can Miss the Interior Path
+
+Consider $\dot{x}=\sin(\omega t)$ on one period $[0,2\pi/\omega]$ with $x(0)=0$. The exact solution is $x(t)=(1-\cos(\omega t))/\omega$. It returns to zero at the final node, while reaching the interior maximum $2/\omega$ at the midpoint. A transcription or diagnostic that checks only endpoint values can therefore report a zero net change while completely missing the excursion. The trapezoidal formula on the whole period also gives zero increment because both endpoint derivatives vanish, so its interval defect is zero when both endpoint states are set to zero. Yet the within-interval state error is $2/\omega$ at midperiod.
+
+Refine the interval by adding the midpoint $t=\pi/\omega$. The observed or collocated midpoint state now exposes the excursion; the two half-period increments are each $2/\omega$, and the node trajectory can represent the maximum. In real fitting, observations may not be available exactly at the most informative point, so evaluate dense-output defects and compare against independently integrated states at interior check points. If the model has characteristic frequency $\omega$, an interval much longer than $1/\omega$ cannot resolve its curvature even if endpoint defects are small. Adaptive refinement should place nodes where dense integration error, state curvature, force changes, or contact transitions exceed a declared tolerance.
+
+This example distinguishes algebraic feasibility of a coarse transcription from accuracy of the represented continuous trajectory. Refinement should be assessed on held-out interior checks as well as the objective: halve the maximum step, reintegrate, and verify that marker residuals, forces, peak states, and key parameter estimates converge. A model whose reported fit changes materially under modest mesh refinement is not numerically settled.
+
+## Failure Modes and Reporting
+
+- Tiny mesh defects are reported but the solution is never reintegrated.
+- A node-sampled control is applied with a different interpolation during rollout.
+- Contact transitions occur between nodes and are missed.
+- A coarse mesh smooths away activation or impact dynamics.
+- Objective weights are tuned until the desired answer appears, with no sensitivity analysis.
+- Parameters hit bounds, yet bound activity is omitted from interpretation.
+- Local solver convergence is reported as evidence of global optimality.
+- Constraints hold at nodes but not between nodes.
+
+A defensible result reports the transcription scheme, mesh and refinement, solver and tolerances, variable scaling, initial guess, objective decomposition, active bounds, defect norms, path-constraint violations, and independent rollout metrics. If the problem has multiple initializations, report variation across them. If model parameters are adapted, report confidence intervals or profiles where possible.
+
+## Exercises With Solutions
+
+### Exercise 1: Defect Scaling
+
+A trapezoidal transcription uses interval width $h=0.02\,\mathrm{s}$. What happens to its asymptotic global error if a smooth solution's mesh is halved?
+
+**Solution.** For a second-order method, global error scales approximately as $h^2$. Halving $h$ should reduce asymptotic error by about four, provided the problem is smooth and solver/integration errors are smaller.
+
+### Exercise 2: Why Reintegration?
+
+A collocation fit has marker RMSE 3 mm and dynamic defects near solver tolerance. Why can rollout still be wrong?
+
+**Solution.** The continuous integration error, control interpolation, off-grid constraints, contact event handling, and accumulated defect effects may differ from the transcription. Independent integration tests the actual forward model's ability to generate the fitted trajectory.
+
+### Exercise 3: Objective Weights
+
+A 1 cm marker residual and 10 N force residual are added as raw squares. Why is the resulting sum uninterpretable?
+
+**Solution.** The terms have different units and scales, and the numeric sum changes under unit conversion. Whiten by measurement covariance or define an explicit dimensionless tradeoff, then report each term separately.
+
+## References
+
+Primary resources retrieved for this review: [Dembia et al., OpenSim Moco, DOI 10.1371/journal.pcbi.1008493](https://doi.org/10.1371/journal.pcbi.1008493); [Moco official overview](https://opensim-org.github.io/opensim-moco-site/); [MocoTrack API documentation](https://opensim-org.github.io/opensim-moco-site/docs/1.1.0/html_user/mocotrack.html); [Porsa et al., direct methods in OpenSim, DOI 10.1007/s10439-015-1538-6](https://doi.org/10.1007/s10439-015-1538-6); [Dorschky et al., direct-collocation tracking of 3D locomotion, DOI 10.1016/j.jbiomech.2017.04.038](https://doi.org/10.1016/j.jbiomech.2017.04.038). The Moco and DOI pages were retrieved or indexed in the parent ledger; metadata for the locomotion paper's full author/volume citation remains pending.
