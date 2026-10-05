@@ -1,3 +1,11 @@
+# Parameter Delivered and Article Main Integration — 2026-10-04
+
+Verified all eight accepted parameter source/evidence hashes on actual remote main d33e635d5 after PR #4886 merge. Released its lease/presence and merged main into #4889 with only metadata conflict resolution; all four accepted article hashes remain unchanged. Retargeted-main delivery preparation follows; CI/protected merge remains.
+
+# Dimensionality and Integration Source Review — 2026-10-04
+
+Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. See the review report for hypotheses, rejected suggestions and outstanding browser/regression acceptance.
+
 # Parameter Review Acceptance — 2026-10-04
 
 Issue4881: full chapter/PDF review and full regression accepted at 117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb. Canonical source and validation records preserve scope, rejected helper errors and all test outcomes. Regular protected PR delivery remains.
