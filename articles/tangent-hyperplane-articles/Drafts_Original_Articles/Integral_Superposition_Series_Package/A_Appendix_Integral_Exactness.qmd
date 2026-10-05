@@ -1,8 +1,21 @@
-
 ---
 title: "Appendix: Exactness of Integral Accumulation"
 format: html
+status: "deprecated"
+canonical: "/articles/tangent-hyperplanes-series/part-7-residual-aware.html"
 ---
+
+## Technical Corrections to This Historical Draft
+
+This source is retained for audit history and is excluded from the production reading path. The corrections below govern its interpretation; the original wording is preserved separately.
+
+For a sufficiently smooth solution, the time-step remainder is locally $O(\Delta t^2)$. Summing $N=T/\Delta t$ such errors over a fixed interval generally yields a global $O(\Delta t)$ bound only with the required consistency and stability estimates; one cannot discard every local term without controlling their accumulation.
+
+Taking the step size to zero recovers the original differential equation, which may remain nonlinear. Superposition is instead a property of its first-variation equation around a common nominal motion. For example, the exact solution of $\dot x=x^2$ is $x(t)=a/(1-at)$ while it exists. Adding two initial values does not add those finite solutions. See [dynamics](../../../tangent-hyperplanes-series/part-2-dynamics.html) and [the explicit remainder example](../../../tangent-hyperplanes-series/part-4-residuals-curvature.html).
+
+Current reading path: [Canonical Series Article](/articles/tangent-hyperplanes-series/part-7-residual-aware.html).
+
+::: {.callout-warning collapse="true" title="Historical Draft: Superseded Wording"}
 
 ## Taylor Expansion
 
@@ -14,3 +27,5 @@ $$
 
 As $\Delta t \to 0$, second-order terms vanish, preserving
 exact linear accumulation of first-order variations.
+
+:::
