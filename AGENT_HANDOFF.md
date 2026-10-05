@@ -1,14 +1,18 @@
 # Current Technical Review Handoff — 5 October 2026
 
 The source-review phase of [epic #4009](https://github.com/D-sorganization/AffineDrift/issues/4009)
-is accepted; protected-main and public delivery remain pending. The current
+is accepted and delivered to protected main; public delivery and the final
+reader-guide clarification remain pending. The current
 [turnover notes](docs/development/technical-review/current-book-links/review-notes.md)
 supersede the historical checkpoints below. They explain the corrections,
 source boundaries, numerical and rendering evidence, and final integration.
 
 Regular [PR #4953](https://github.com/D-sorganization/AffineDrift/pull/4953)
-contains the consolidated corrections and four amended book landing pages at
-`bbdd9698fc64e58708290f9529d4f92f30dca17c`. Guarded auto-merge is armed.
+merged the consolidated corrections and four amended book landing pages on
+5 October at 15:32:58 UTC as `76815ab5e86807ab78d02a98fc69d832b6ab2feb`.
+The queue run `37323929485` passed. The [protected-main receipt](docs/development/technical-review/final-delivery/protected-main-receipt.json)
+confirms exact hashes for all 145 original artifacts, 50 manuscript/PDF targets
+and four amended book pages. Deployment run `37333725326` is in progress.
 The manuscript links retain reviewed source `fbee4da94fd699e9710f4c29b42a73a5113f08d4`;
 that source pin is not a protected-main merge receipt.
 
@@ -21,13 +25,15 @@ its actual revision. Do not imply that an older full run tested a later commit.
 
 ## Remaining Delivery Work
 
-1. Finish the protected CI and merge queue for #4953 without changing a queued PR.
-2. Compare the protected tree with the 145-artifact manifest, all 50 manuscript/PDF
-   target hashes, and the four amended-page hashes in `reports/technical-review/`.
-3. Verify the deployed manifest revision, every-page verification artifact and
+1. Publish the final handoff and reader-guide clarification #4976 in a regular
+   PR. Preserve the verified original artifacts and retain the immutable source
+   pin; do not modify a queued PR.
+2. Verify the deployed manifest revision, every-page verification artifact and
    five advertised PDF downloads. Record the actual revisions and results in
-   epic #4009 and this final handoff before closing the editorial review.
-4. Release only this session's leases. Preserve other agents' changes and leave
+   epic #4009 and a final receipt before closing the editorial review. Include
+   the revised reader-guide prose in the eventual public verification.
+3. Confirm the final handoff's protected merge, then release only this session's
+   leases. Preserve other agents' changes and leave
    superseded PR closure to the repository's redundant-PR closer.
 
 Reader-guide clarification [#4976](https://github.com/D-sorganization/AffineDrift/issues/4976)
