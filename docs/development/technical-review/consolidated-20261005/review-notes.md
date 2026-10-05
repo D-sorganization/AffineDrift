@@ -42,21 +42,56 @@ primary-reading boundaries, independent calculations and rejected helper claims.
 
 ## Continuation
 
-1. Run exact extra CI gates, central pre-PR and frozen full regression. Save the
-   source head and clean tracked status before and after. Do not render, edit
-   sources or change dependencies during the frozen run.
-2. Accept V's fifteen historical scopes only after combined verification. Its
-   source-preservation, 400 independent checks, 30 focused tests and fifteen
-   standalone renders are already recorded, not empirical evidence.
-3. Create one regular main-bound PR with exact original PR/title/issue/test
-   table and closure references. Use the central automerge guard only. Verify
-   fetched remote-main canonical hashes before closing superseded original PRs
-   or releasing their leases.
-4. Continue the 27 remaining scopes after V acceptance: generated worked
-   examples, generated trust panels and publication wrappers. Respect the live
-   Control Is Motion owner (#4878/PR4880); do not duplicate that work.
+1. All 19 extra gates and all eight central pre-PR gates pass. Frozen source
+   4160ed5726aa6ba68587acfe1205e1f74f96dadd passed 7,278 tests with 93.31%
+   coverage; the metadata-only repair was separately checked at 26d60d2ea.
+2. V's fifteen historical scopes are accepted by historical-tangent-validation.json.
+   Combined acceptance pins 107 artifacts; the corpus retains 27 indexed-prefix
+   scopes. Counts describe heterogeneous scopes, not scientific completion.
+3. Create the regular main-bound PR with the original PR/title/issue/test table.
+   Arm through the central guard. Verify fetched remote-main canonical hashes
+   before the redundant-PR closer closes superseded PRs or leases are released.
+4. Tail issue #4950 owns 26 remaining scopes: generated examples/trust panels and
+   publication wrappers. Its isolated worktree is AffineDrift-technical-corpus-tail.
+   Six Flash audits, independent numerical checks, scoped tests and renders pass;
+   frozen regression and acceptance are pending. The final scope is owned by
+   the live Control Is Motion session (#4878/PR4880); do not duplicate it.
 
 Repository_Management PR1998 fixes the central PDF title checker; its CI-only
 pypdf dependency repair is at 80cdeb2ab. Its current checks are queued, not merged.
 App PR attachment attempts hit the 100-item cap; do not remove unrelated items.
 Primary-checkout user changes and other agents' worktrees remain untouched.
+
+## Combined Validation and Metadata Blocker
+
+Frozen source4160ed572 passed7278 tests,29skipped,210deselected,60warnings in548.49seconds,93.31%coverage; tracked tree clean before and after. All19extra source/CI gates pass. Central pre-PR passes lint, mypy,379affected tests, consistency, import/policy/fragment checks and workflow lint, but initially rejects the inherited unchanged development log. Failure retained.
+
+Issue4952 leases a scripted metadata repair using central helpers and git-blame provenance, with full records retained in the annual archive and duplicate evidence. No gate weakened; no historical scientific test claims renewed. Default30-day archival left225882bytes, so completed entries older than7days were archived to meet the200000-byte budget. Validator now exits zero with its existing advisory4-WIP warning. Active states are preserved. Legacy repeated-field context remains visible; source provenance is appended independently rather than replacing historical test statements. Final pre-PR at 26d60d2ea passes all eight gates, including 379 affected tests; pre-pr-accepted.txt/.exit preserve the result. The preservation audit confirms 164 distinct historical summary/state records plus both duplicate source blocks. Initial failed runs remain evidence, not acceptance.
+
+## Delivery Contract and Limits
+
+The canonical source hashes in consolidated-20261005-validation.json describe
+local acceptance, not remote delivery or whole-site visual certification.
+Earlier batch reports retain their original source heads and test counts.
+The 15 historical drafts remain excluded from production. Existing browser
+preview/CSP limitations and PDF layout limitations remain in individual notes.
+Neither mathematical tests nor publication availability establish human-swing,
+clinical, coaching or instrument accuracy. No workflow or protection changed.
+Metadata acceptance updates do not change the frozen scientific source.
+
+## Protected Main Integration
+
+Main advanced to 242d3ef06 with independently merged PR4880 and the PR4944
+change-fragment fixture repair. Six hash-only conflicts in each generated ledger
+were resolved and canonical regeneration passed. Commit 555751262 preserves
+both contributors' source and metadata. Twenty-seven integration tests and all
+eight pre-PR gates pass. Full regression remains explicitly bound to 4160ed572;
+no repeat full run is claimed for the integration. Corpus pending count is now
+26 because main already accepted Control Is Motion. Tail #4950 covers those 26.
+
+The fourth successful consolidation Flash job cross-checked acceptance reports.
+Its alleged contradiction between earlier full-regression source and later
+metadata gate commits was rejected: the separate scopes are intentionally
+recorded. Fifteen scoped acceptances and 27 then-pending other scopes are not
+contradictory. Its delivery warning is already enforced; it confirmed shared
+hashes and metrics agree. Do not treat this helper review as mathematical proof.

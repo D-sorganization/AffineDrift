@@ -10,4 +10,5 @@ collapsed callouts. Retain production exclusions and canonical alias routes.
 Turnover: docs/development/technical-review/historical-tangent-review/review-notes.md.
 Three lead-adjudicated Flash reviews, 400 independent mathematical checks, 30
 focused tests, source-preservation checks and 15 standalone renders pass.
-Frozen regression and corpus acceptance remain required before regular PR.
+Combined source 4160ed572 passes 7,278 full tests with 93.31% coverage; all eight
+central gates pass. Fifteen corpus scopes accepted, protected main pending #4947.

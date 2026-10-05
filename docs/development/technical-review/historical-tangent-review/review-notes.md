@@ -126,3 +126,14 @@ hashes verified. Other live sessions and workflow changes remain excluded.
 The final frozen regression for this historical batch will run on that combined
 tree, rather than opening another serial stack entry. Source commit here saves
 the reviewed corrections and complete scoped evidence first.
+
+## Accepted Combined Validation
+
+The frozen combined source 4160ed5726aa6ba68587acfe1205e1f74f96dadd passes 7,278
+full tests (29 skipped, 210 deselected), with 93.31% coverage and unchanged
+tracked tree. All 19 extra gates and eight central pre-PR gates pass; the latter
+includes the separately validated metadata repair at 26d60d2ea. The fifteen
+historical corpus rows are now accepted, leaving 27 indexed-prefix scopes.
+Exact hashes and limits are in reports/technical-review/historical-tangent-validation.json.
+Protected main delivery remains pending via consolidation #4947. Earlier pending
+statements above describe the historical sequence, not current acceptance.

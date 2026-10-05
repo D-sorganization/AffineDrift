@@ -2,7 +2,7 @@
 issue: 4947
 summary: "Consolidate reviewed mechanics, control and historical corrections for main delivery"
 dl_state: "in_progress"
-next_step: "Run frozen combined regression and all relevant CI gates before opening the regular consolidation PR"
+next_step: "Open regular main-bound PR and use the central merge guard; verify canonical hashes on remote main"
 owner: "codex"
 branch: "feat/technical-review-consolidated-20261005"
 ---
@@ -15,6 +15,7 @@ actual protected main merge and canonical-file verification.
 
 Turnover and evidence: docs/development/technical-review/consolidated-20261005/review-notes.md.
 Original frozen batch acceptances remain historical evidence; combined acceptance
-is pending. The 407-row corpus has 42 pending-prefix scopes, including fifteen
-historical drafts awaiting this combined acceptance. This is not a scientific
+now records 7,278 passing tests, 93.31% coverage, 19 extra gates and all eight
+central pre-PR gates. Fifteen historical scopes are accepted; the 407-row corpus
+has 27 pending-prefix scopes. This is not a scientific
 completion percentage. No empirical human-swing validation is asserted.
