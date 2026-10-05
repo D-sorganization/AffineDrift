@@ -747,6 +747,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4935 · Anti-Phantom-Merge Rule 3 Lists PR Files via Paginated REST API and Fails Closed Above the 3000-File API Cap
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4935
+- **Branch:** merged via #4958
+- **PR:** #4958
+- **Paths:** see #4958
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e1ec8f62`; collated from changes/4935-anti-phantom-merge-rule-3-lists-pr-files.md)
+- **Summary:** anti-phantom-merge rule 3 lists PR files via paginated REST API and fails closed above the 3000-file API cap
+- **Next step:** Shipped in PR #4958.
+
 ### DL-#4943 · Use a Synthetic Issue in the Change-Fragment Round-Trip Test so Real Collations Cannot Collide With It
 
 - **State:** shipped
