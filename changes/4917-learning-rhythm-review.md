@@ -2,7 +2,7 @@
 issue: 4917
 summary: "Distinguish action effects, rhythmic generators and motor-learning processes"
 dl_state: "in_progress"
-next_step: "Run pre-PR checks, open a regular PR against #4919, then protected main delivery"
+next_step: "Open a regular PR against #4919, then protected main delivery"
 owner: "codex"
 branch: "fix/learning-rhythm-review"
 ---
@@ -18,3 +18,5 @@ Delivery chain: #4889 is open on main at c174453c1538a6ead2a540fba655526916eacf9
 Worktree C:/Users/diete/Repositories/Worktrees/AffineDrift-learning-rhythm-review; session technical-review-20261005-learning-rhythm, lease through 03:11 UTC, receipt 5986424716. Exact lease format was posted via REST after a fresh issue read when the central GraphQL call failed. Presence 5986418592. Historical inbox identity/page-limit errors remain. Detailed derivations, helper rejections and primary-reading scope: docs/development/technical-review/learning-rhythm-review/review-notes.md. Keep primary papers, build intermediates and visual sheets untracked.
 
 Next bounded review: issue #4921, worktree AffineDrift-golf-capstone-review, branch fix/golf-capstone-review, based on this accepted source. Original chapter/module fully read; two Flash reviews complete and a test proposal delegated. Correct same-state versus trajectory claims, joint versus Cartesian acceleration, grid spacing and inconsistent synthetic torques. No implementation edits yet at this checkpoint.
+
+Pre-PR acceptance at 66f1b7409 against parent dbbcf82ca: all five central gates passed, including 43 mapped tests. Generated root build, dist and affinedrift.egg-info directories were verified untracked and moved into QA before this run.
