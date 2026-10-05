@@ -1,6 +1,6 @@
 # Issue #4913 - Benchmark Baseline Platform Detection
 
-Branch `fix/4913-benchmark-baseline`: `scripts/ci/benchmark_compare_args.py` (tested) picks compare vs save mode from `.benchmarks/<machine_id>/`; `ci-benchmarks.yml` uses it, adds pipefail, uploads a candidate baseline artifact and reports honest PR status. Next: after merge, a maintainer runs the workflow, downloads artifact `benchmark-baseline-Linux-CPython-3.12-64bit` and commits it under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating. #4912 (pytest-timeout) is a separate open PR.
+Branch `fix/4913-benchmark-baseline`: `scripts/ci/benchmark_compare_args.py` (tested) picks compare vs save mode from `.benchmarks/<machine_id>/` and compares by the highest stored run number (`--benchmark-compare=NNNN`; the save name matches nothing); `ci-benchmarks.yml` uses it, adds pipefail, uploads a candidate baseline artifact and reports honest PR status. Next: after merge, a maintainer runs the workflow, downloads artifact `benchmark-baseline-Linux-CPython-3.12-64bit` and commits it under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating. #4912 (pytest-timeout) is a separate open PR.
 
 # Issue #4882 - Freshness Dashboard Page-Relative Links
 

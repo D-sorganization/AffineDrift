@@ -78,15 +78,26 @@ def decide(
     if not _THRESHOLD.match(threshold):
         raise ValueError(f"invalid threshold {threshold!r}: expected e.g. '15%'")
     artifact = f"benchmark-baseline-{platform_id}"
-    platform_dir = Path(root) / platform_id
-    if platform_dir.is_dir() and any(platform_dir.glob(f"*_{name}.json")):
+    run = _latest_run_number(Path(root) / platform_id, name)
+    if run is not None:
+        # pytest-benchmark selects a stored run by its number prefix
+        # (``0001``), not by the ``--benchmark-save`` name.
         return Decision(
             "compare",
             platform_id,
-            [f"--benchmark-compare={name}", f"--benchmark-compare-fail=mean:{threshold}"],
+            [f"--benchmark-compare={run}", f"--benchmark-compare-fail=mean:{threshold}"],
             artifact,
         )
     return Decision("save", platform_id, [f"--benchmark-save={name}"], artifact)
+
+
+def _latest_run_number(platform_dir: Path, name: str) -> str | None:
+    """Return the highest ``NNNN`` of ``NNNN_<name>.json`` files, or ``None``."""
+    if not platform_dir.is_dir():
+        return None
+    pattern = re.compile(rf"^(\d{{4}})_{re.escape(name)}\.json$")
+    runs = sorted(m.group(1) for f in platform_dir.iterdir() if (m := pattern.match(f.name)))
+    return runs[-1] if runs else None
 
 
 def format_status(

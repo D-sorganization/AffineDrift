@@ -57,7 +57,19 @@ def test_matching_baseline_compares_with_15_percent_gate(tmp_path: Path) -> None
     _seed(tmp_path, LINUX, "0001_initial.json")
     d = decide(tmp_path, LINUX)
     assert d.mode == "compare"
-    assert d.args == ["--benchmark-compare=initial", "--benchmark-compare-fail=mean:15%"]
+    # pytest-benchmark selects a stored run by its number prefix, not by the
+    # --benchmark-save name: "initial" matches nothing and aborts the gate.
+    assert d.args == ["--benchmark-compare=0001", "--benchmark-compare-fail=mean:15%"]
+
+
+def test_compares_against_highest_numbered_baseline(tmp_path: Path) -> None:
+    _seed(tmp_path, LINUX, "0001_initial.json", "0003_initial.json", "0002_other.json")
+    assert decide(tmp_path, LINUX).args[0] == "--benchmark-compare=0003"
+
+
+def test_unnumbered_baseline_file_does_not_count(tmp_path: Path) -> None:
+    _seed(tmp_path, LINUX, "x_initial.json")
+    assert decide(tmp_path, LINUX).mode == "save"
 
 
 def test_other_named_baseline_does_not_count(tmp_path: Path) -> None:
@@ -115,7 +127,7 @@ def test_cli_decide_writes_github_output(
     text = out.read_text(encoding="utf-8")
     assert "mode=compare\n" in text
     assert f"platform={LINUX}\n" in text
-    assert "args=--benchmark-compare=initial --benchmark-compare-fail=mean:15%\n" in text
+    assert "args=--benchmark-compare=0001 --benchmark-compare-fail=mean:15%\n" in text
 
 
 def test_cli_invalid_input_exits_2(capsys: pytest.CaptureFixture[str]) -> None:
