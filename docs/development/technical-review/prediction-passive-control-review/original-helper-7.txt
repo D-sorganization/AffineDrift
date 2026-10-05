@@ -1,0 +1,127 @@
+# Technical Review: Chapter 7 (`ch07_passive_control.tex`) — Issue 4915
+
+---
+
+## 1. Independent First-Principles Derivation of Compass-Gait Dynamics
+
+Let the system be parameterized in an inertial frame where gravity acts in direction $\mathbf{g} = (g\sin\gamma, -g\cos\gamma)$ relative to the slope normal, or directly in world coordinates with slope angle $\gamma$ to horizontal.
+
+Let the stance foot contact point be fixed at the origin $(0,0)$ on an inclined slope tilted at angle $\gamma$:
+- Let $\theta_{\text{st}}$ be the stance leg angle measured counterclockwise from the slope normal (or upright).
+- Stance leg length is $l$; swing leg length is $l$.
+- Point masses:
+  - Hip mass $M$ at position $\mathbf{r}_{\text{hip}} = l \begin{pmatrix} -\sin\theta_{\text{st}} \\ \cos\theta_{\text{st}} \end{pmatrix}$ (or depending on angle conventions).
+  - Swing foot mass $m$ at position $\mathbf{r}_{\text{sw}} = \mathbf{r}_{\text{hip}} + l \begin{pmatrix} \sin\theta_{\text{sw}} \\ -\cos\theta_{\text{sw}} \end{pmatrix}$.
+  - Stance leg mass $m_{\text{st}}$: In standard point-mass compass gait (e.g., Goswami, Thuilot, Espiau 1996; Garcia, Chatterjee, Ruina, Coleman 1998; Westervelt et al. 2007), there is mass $m$ at each foot (or along legs) plus hip mass $M$. While in stance, if the foot is pinned at $(0,0)$, its velocity is zero ($\mathbf{v}_{\text{contact}}=0$), contributing zero to kinetic energy.
+
+### Kinetic Energy ($T$)
+$$\mathbf{v}_{\text{hip}} = \dot{\mathbf{r}}_{\text{hip}} \implies \|\mathbf{v}_{\text{hip}}\|^2 = l^2 \dot{\theta}_{\text{st}}^2$$
+$$\mathbf{r}_{\text{sw}} = \mathbf{r}_{\text{hip}} + \mathbf{r}_{\text{sw/hip}}$$
+$$\mathbf{v}_{\text{sw}} = \mathbf{v}_{\text{hip}} + \dot{\mathbf{r}}_{\text{sw/hip}}$$
+$$\|\mathbf{v}_{\text{sw}}\|^2 = \|\mathbf{v}_{\text{hip}}\|^2 + \|\dot{\mathbf{r}}_{\text{sw/hip}}\|^2 + 2\,\mathbf{v}_{\text{hip}}\cdot \dot{\mathbf{r}}_{\text{sw/hip}}$$
+
+With angles defined relative to the normal to the slope (downhill slope $\gamma$):
+$$\|\mathbf{v}_{\text{sw}}\|^2 = l^2 \dot{\theta}_{\text{st}}^2 + l^2 \dot{\theta}_{\text{sw}}^2 - 2 l^2 \dot{\theta}_{\text{st}}\dot{\theta}_{\text{sw}} \cos(\theta_{\text{st}} - \theta_{\text{sw}})$$
+(or $+2 l^2 \cos(\theta_{\text{st}}-\theta_{\text{sw}})$ depending on whether $\theta$ is signed forward or backward).
+
+Thus, total kinetic energy is quadratic in $(\dot{\theta}_{\text{st}}, \dot{\theta}_{\text{sw}})$:
+$$T = \frac{1}{2}\dot{q}^T \mathbf{M}(q)\dot{q}$$
+where $q = [\theta_{\text{st}}, \theta_{\text{sw}}]^T$.
+$$\mathbf{M}(q) = \begin{bmatrix} (M + m)l^2 & -m l^2 \cos(\theta_{\text{st}} - \theta_{\text{sw}}) \\ -m l^2 \cos(\theta_{\text{st}} - \theta_{\text{sw}}) & m l^2 \end{bmatrix}$$
+
+### Lagrange Equations $\frac{d}{dt}\frac{\partial T}{\partial \dot{q}} - \frac{\partial T}{\partial q} + \frac{\partial V}{\partial q} = 0$
+Writing the equations in standard manipulator form:
+$$\mathbf{M}(q)\ddot{q} + \mathbf{C}(q,\dot{q})\dot{q} + \mathbf{G}(q) = 0 \iff \mathbf{M}(q)\ddot{q} = \boldsymbol{\tau}_{\text{rhs}} = - \mathbf{C}(q,\dot{q})\dot{q} - \mathbf{G}(q)$$
+
+For the swing coordinate $q_2 = \theta_{\text{sw}}$:
+$$\frac{\partial T}{\partial \dot{\theta}_{\text{sw}}} = m l^2 \dot{\theta}_{\text{sw}} - m l^2 \dot{\theta}_{\text{st}} \cos(\theta_{\text{st}} - \theta_{\text{sw}})$$
+$$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\theta}_{\text{sw}}}\right) = m l^2 \ddot{\theta}_{\text{sw}} - m l^2 \ddot{\theta}_{\text{st}} \cos(\theta_{\text{st}} - \theta_{\text{sw}}) + m l^2 \dot{\theta}_{\text{st}}(\dot{\theta}_{\text{st}} - \dot{\theta}_{\text{sw}})\sin(\theta_{\text{st}} - \theta_{\text{sw}})$$
+$$\frac{\partial T}{\partial \theta_{\text{sw}}} = -m l^2 \dot{\theta}_{\text{st}}\dot{\theta}_{\text{sw}}\sin(\theta_{\text{st}} - \theta_{\text{sw}})$$
+Subtracting yields the inertial and Coriolis/centrifugal acceleration terms:
+$$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\theta}_{\text{sw}}}\right) - \frac{\partial T}{\partial \theta_{\text{sw}}} = m l^2 \ddot{\theta}_{\text{sw}} - m l^2 \cos(\theta_{\text{st}} - \theta_{\text{sw}})\ddot{\theta}_{\text{st}} + m l^2 \dot{\theta}_{\text{st}}^2 \sin(\theta_{\text{st}} - \theta_{\text{sw}})$$
+
+When moved to the RHS vector ($C$ in the code), the centrifugal term MUST be:
+$$- m l^2 \dot{\theta}_{\text{st}}^2 \sin(\theta_{\text{st}} - \theta_{\text{sw}})$$
+**Defect in Code (Lines 126–127):**
+The code has:
+```python
+C2 = m * l**2 * dth_st**2 * np.sin(th_st - th_sw) + m * g * l * np.sin(th_sw - slope)
+```
+The quadratic velocity term has the **inverted sign** relative to the LHS Coriolis derivation. If $M \ddot{q} = C$, then:
+$$C_2 = - m l^2 \dot{\theta}_{\text{st}}^2 \sin(\theta_{\text{st}} - \theta_{\text{sw}}) - \frac{\partial V}{\partial \theta_{\text{sw}}}$$
+Moreover, for $C_1$:
+$$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\theta}_{\text{st}}}\right) - \frac{\partial T}{\partial \theta_{\text{st}}} = (M+m)l^2 \ddot{\theta}_{\text{st}} - m l^2 \cos(\theta_{\text{st}}-\theta_{\text{sw}})\ddot{\theta}_{\text{sw}} - m l^2 \dot{\theta}_{\text{sw}}^2 \sin(\theta_{\text{st}} - \theta_{\text{sw}})$$
+Moving to the RHS requires:
+$$C_1 = + m l^2 \dot{\theta}_{\text{sw}}^2 \sin(\theta_{\text{st}} - \theta_{\text{sw}}) - \frac{\partial V}{\partial \theta_{\text{st}}}$$
+In line 124, the code wrote `-m * l**2 * dth_sw**2 * np.sin(...)`. **Both Coriolis/centrifugal signs are flipped.**
+
+---
+
+## 2. Model Structure: Continuous Flow vs. Hybrid Limit Cycles
+
+1. **Absence of Foot-Strike Guard & Reset Map**:
+   - The continuous ODE given in `passive_walker_dynamics` is strictly the continuous stance phase of a double pendulum pinned at the stance toe.
+   - A passive walker **cannot exhibit limit cycles or stable gait through continuous ODE integration alone**. Gait is intrinsically a **hybrid dynamical system** with:
+     - Continuous phase: stance/swing flight governed by Euler-Lagrange equations.
+     - Discrete switching surface (guard): $S = \{(\theta, \dot{\theta}) \mid \theta_{\text{st}} + \theta_{\text{sw}} = 2\gamma \text{ with } \theta_{\text{st}} < \theta_{\text{sw}} \text{ and } \dot{\theta}_{\text{sw}} - \dot{\theta}_{\text{st}} < 0\}$ (geometric foot collision with slope).
+     - Impact / Reset map $\Delta$: Inelastic collision derived via conservation of angular momentum about the impact point (for the whole walker) and about the hip (for the trailing leg), followed by relabeling stance $\leftrightarrow$ swing.
+   - The snippet in lines 137–144 simply runs `solve_ivp` with `events=None` for $t \in [0, 1.5]$. Without the ground collision event, the swing leg swings past the ground line and behaves as an inverted double pendulum that inevitably falls over or scuffs indefinitely.
+2. **Exercise 1 Fallacy (Line 176)**:
+   - Exercise 1 asks the reader: *"Using the provided code, find the set of initial conditions that produce a stable limit cycle (periodic gait)."*
+   - **This is mathematically impossible.** No periodic gait / limit cycle exists in the continuous Hamiltonian/Lagrangian flow of a frictionless double pendulum falling down a potential slope without foot strike and impact dissipation. Without a Poincaré map $(P: S \to S)$ and reset map, the exercise cannot be completed.
+
+---
+
+## 3. Energy Analysis: "Gravity and Inertia Provide All Energy"
+
+- **Line 67 & Figure 7.1 Text**:
+  - *"Gravity and inertia provide all energy; the walker merely guides the descent."*
+  - *"Energy Flow: Gravitational PE $\Rightarrow$ Kinetic energy $\Rightarrow$ Angular momentum"*
+- **Physical Defect**:
+  - **Inertia is NOT an energy source**. Inertia ($M, I$) is a metric tensor on configuration space that determines kinetic energy $T = \frac{1}{2}\dot{q}^T M(q)\dot{q}$; it stores and exchanges kinetic energy, but performs zero net work ($\oint \dot{q}^T M \ddot{q} \, dt$ without potential/non-conservative forces is energy conservation, not generation).
+  - The **sole external energy source** in passive dynamic walking down an incline is the **gravitational potential energy** converted as the center of mass drops down the slope $\Delta z = L_{\text{stride}} \sin\gamma$.
+  - In a limit cycle, this gravitational energy input per step exactly balances the **kinetic energy dissipated during the inelastic foot-strike collision** (and any joint friction).
+  - Listing *"Angular momentum"* as a stage of energy flow ("Gravitational PE $\Rightarrow$ Kinetic energy $\Rightarrow$ Angular momentum") confuses physical dimensions: angular momentum is an invariant or dynamical quantity with units $\text{kg}\cdot\text{m}^2/\text{s}$, not an energy form ($\text{J}$).
+
+---
+
+## 4. Unsupported Golf-Phase Causation & 60/40 Speed Decomposition
+
+- **Lines 151–156 (Golf Swing Passive Causation)**:
+  - Line 152: *"Transition: elastic recoil initiates the downswing passively"*
+    - **Defect**: Downswing initiation in biomechanical literature (e.g., Cochran & Stobbs 1968; Nesbit & Serrano 2005; Kwon et al. 2012) is driven actively by lower-body ground reaction force generation, pelvic rotation, and torso torque. Muscle stretch-shortening cycles contribute, but transition is active motor torque, not an unforced passive elastic recoil.
+  - Line 153: *"Wrist release: centrifugal force passively uncocks the wrists"*
+    - **Defect**: While passive dynamic coupling (cross-coupling inertial torques from arm deceleration/rotation) unhinges the wrists, characterizing it strictly as "centrifugal force" is incomplete and ignores active deceleration of the proximal segment (hub deceleration / kinetic chain torque transfer).
+- **Lines 158–160 (The 60/40 Decomposition Claim)**:
+  - *"In the ZTCF family framework of Volume I, Chapter 7: the drift contribution $f(x)$ accounts for $\sim$60\% of the clubhead speed. The control contribution $G(x)u$ provides the remaining $\sim$40\%."*
+  - **Defect**:
+    1. In control-affine dynamics $\dot{x} = f(x) + G(x)u$, the state trajectory $x(t)$ is the integral of both drift and control over time. Speed at impact is a state variable $v(T) = C x(T)$, which cannot be split into additive scalar percentages (e.g., 60% drift, 40% control) without specifying an explicit path-integral decomposition, reference trajectory, or counterfactual zero-torque control forecast (ZTCF).
+    2. Because $f(x)$ depends nonlinearly on velocities generated by prior control inputs $u(t)$, the velocity at impact would be zero or negligible without active work input. Attributing 60% of terminal speed to "drift" without defining the baseline time horizon $\Delta t$ or the exact counterfactual metric is scientifically ungrounded and misleading.
+
+---
+
+## 5. Summary of Exact Defects, Legitimate Simplifications, and Benchmarks
+
+### Exact Defects
+1. **Flipped Coriolis/Centrifugal Signs**: Lines 124–127 invert signs of the velocity-squared cross-coupling terms in the continuous equations of motion.
+2. **Missing Hybrid Reset Map & Guard**: The code models an unconstrained continuous pendulum, not a bipedal walker. No ground strike event or angular momentum transfer is implemented.
+3. **Unsolvable Exercise 1**: Asking readers to find limit cycles using `solve_ivp` on continuous dynamics without impact equations is mathematically impossible.
+4. **Category Errors in Physics**: Treating "inertia" as an energy source alongside gravity and listing "angular momentum" as an energy flow state.
+5. **Baseless Biomechanical Metrics**: Claiming downswing transition is passive elastic recoil and stating a raw "60% drift / 40% control" decomposition without mathematical definition or citation.
+
+### Legitimate Simplifications (Pedagogically Sound)
+- Point masses at the hip ($M$) and feet ($m$) rather than distributed leg links with moments of inertia (standard McGeer / Garcia compass model).
+- Flat slope with small-angle or planar geometry.
+- Instantaneous, perfectly plastic (inelastic) collision at heel strike with zero foot scuffing during swing.
+
+### Reproducible Benchmark Suggestions
+1. **Benchmark Model**: Implement the standard **Garcia et al. (1998) Simplest Walking Model** or the **Goswami et al. (1996) Compass Gait**:
+   - Define continuous dynamics $\mathbf{M}(q)\ddot{q} + \mathbf{C}(q,\dot{q})\dot{q} + \mathbf{G}(q) = 0$.
+   - Define collision event: `event_foot_strike(t, state)` where $\theta_{\text{sw}} + \theta_{\text{st}} = 2\gamma$ for $\theta_{\text{st}} < 0$.
+   - Implement the algebraic heel-strike transition matrix $\mathbf{Q}^+(\theta^-)\dot{q}^+ = \mathbf{Q}^-(\theta^-)\dot{q}^-$ using angular momentum conservation before and after impact.
+   - Exchange stance and swing indices: $\theta_{\text{st}}^+ = \theta_{\text{sw}}^-$, $\theta_{\text{sw}}^+ = \theta_{\text{st}}^-$.
+2. **Poincaré Map & Limit Cycle Solver**:
+   - Formulate root-finding $P(x^*) - x^* = 0$ on the Poincaré section using `scipy.optimize.root`.
+   - Compute eigenvalues of the Jacobian $DP(x^*)$ to formally establish orbital stability ($|\lambda_i| < 1$).
+3. **Rigorous ZTCF Formulation for Biomechanics**:
+   - Replace the hand-waving "60/40" claim with an exact ZTCF definition: at release time $t_{\text{rel}}$, set $u(t) = 0$ for $t \in [t_{\text{rel}}, t_{\text{impact}}]$ and compute the velocity ratio $v_{\text{passive}}(t_{\text{impact}}) / v_{\text{active}}(t_{\text{impact}})$.

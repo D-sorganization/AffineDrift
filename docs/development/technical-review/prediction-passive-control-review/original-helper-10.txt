@@ -1,0 +1,94 @@
+# Technical Review: Issue 4915 (`ch10_computational_models.tex`)
+
+## Executive Summary & Independent Derivations
+
+### 1. Stochastic OFC vs. Deterministic CARE / Certainty Equivalence
+* **Derivation / Scalar Check**:
+  Consider linear dynamics with additive noise:
+  $$dx_t = (a x_t + b u_t)\,dt + \sigma\,dw_t$$
+  For finite horizon $[0, T]$ with quadratic cost $\mathbb{E}[q_T x_T^2 + \int_0^T (q x_t^2 + r u_t^2)\,dt]$, the dynamic programming equation is:
+  $$-\partial_t V = \min_u \left\{ q x^2 + r u^2 + (a x + b u)\partial_x V + \frac{1}{2}\sigma^2 \partial_{xx} V \right\}$$
+  Substituting $V(t, x) = p(t)x^2 + s(t)$:
+  $$\dot{p} + 2 a p - \frac{b^2}{r} p^2 + q = 0, \quad p(T) = q_T, \qquad \dot{s} + \sigma^2 p = 0, \quad s(T) = 0$$
+  The optimal control is $u^*(t, x) = -\frac{b}{r}p(t)x$. **Additive process covariance $\sigma^2$ affects only the value function baseline $s(t)$, not the feedback gain matrix $K(t) = r^{-1}b p(t)$**.
+* **Contrast with Code Listing (lines 87–123)**:
+  `lqr_ofc` calls `solve_continuous_are(A, B, Q, R)` and accepts an unused `state_noise_cov`. CARE describes the deterministic infinite-horizon LQR / standard stationary Kalman–Bucy filter separation. Presenting deterministic infinite-horizon CARE as the computational implementation of finite-horizon stochastic OFC with signal-dependent noise conflates certainty-equivalent deterministic LQR with stochastic OFC.
+
+### 2. Average Cost vs. Infinite Total Cost with Persistent Noise
+* **Derivation / Invariant Check**:
+  For an infinite-horizon stochastic system with persistent noise $dx = (A x + B u)\,dt + G\,dw$ ($G \neq 0$), under any stabilizing feedback $u = -K x$, the state covariance $\Sigma = \lim_{t\to\infty}\mathbb{E}[x_t x_t^\top]$ satisfies:
+  $$(A - B K)\Sigma + \Sigma (A - B K)^\top + G G^\top = 0$$
+  If $G G^\top \succ 0$ and $(Q + K^\top R K) \succ 0$, the instantaneous expected cost satisfies $\lim_{t\to\infty} \mathbb{E}[x_t^\top Q x_t + u_t^\top R u_t] = \operatorname{tr}\left((Q + K^\top R K)\Sigma\right) > 0$.
+  Consequently, the unscaled cumulative cost integral diverges:
+  $$\mathbb{E}\left[\int_0^\infty (x_t^\top Q x_t + u_t^\top R u_t)\,dt\right] = \infty$$
+  In stochastic control over an infinite horizon, one must minimize the **ergodic average cost** $\lim_{T\to\infty}\frac{1}{T}\mathbb{E}[\int_0^T \dots]$ or use a discounted cost $\mathbb{E}[\int_0^\infty e^{-\rho t}\dots]$. In the standard average-cost formulation, the gain matches CARE, but the total cumulative cost is infinite. Calling continuous CARE the "infinite-horizon OFC solution" without qualifying the cost objective obscures this distinction.
+
+### 3. Control-Dependent Diffusion (Multiplicative Noise)
+* **Derivation / Scalar Counterexample**:
+  Let $dx_t = (a x_t + b u_t)\,dt + \sigma u_t\,dw_t$.
+  The HJB equation for value function $V(t, x) = p(t)x^2$ is:
+  $$-\dot{p} x^2 = \min_u \left\{ q x^2 + r u^2 + 2 p x (a x + b u) + p \sigma^2 u^2 \right\}$$
+  Differentiating with respect to $u$:
+  $$2(r + p \sigma^2) u + 2 p b x = 0 \implies u^*(t, x) = -\frac{b p(t)}{r + \sigma^2 p(t)} x$$
+  And the modified Riccati equation becomes:
+  $$\dot{p} + 2 a p + q - \frac{b^2 p^2}{r + \sigma^2 p} = 0$$
+  *Feedback gains explicitly depend on the diffusion coefficient $\sigma^2$* when noise is control-dependent.
+* **Text Defect**:
+  In lines 57–59, Definition 10.1 defines dynamics as $d\state = f(\state, \control)\,dt + G(\state)\,d\bm{w}$, claiming this represents "signal-dependent motor noise". In Itô calculus, $G(\state)\,d\bm{w}$ is state-dependent diffusion, **not** control-dependent diffusion (which requires $G(\state, \control)\,d\bm{w}$ or $\sum_i F_i \control\,dw_i$). Line 87 (`lqr_ofc`) then ignores control-dependent noise entirely and solves deterministic CARE.
+
+### 4. HJB Equation vs. Stochastic Maximum Principle
+* **Text Defect (lines 63–70)**:
+  Line 65 asserts:
+  > *"the solution is characterised by a Hamilton–Jacobi–Bellman equation for the value function, not by the Pontryagin maximum principle applied along a single trajectory. The deterministic geometric control theory this series draws on elsewhere... does not cover the problem above."*
+* **Correction**:
+  While the *deterministic* PMP along a single deterministic trajectory does not apply directly to SDEs, stochastic optimal control possesses a rigorous adjoint framework: the **Bismut–Peng Stochastic Maximum Principle (SMP)** using Forward-Backward Stochastic Differential Equations (FBSDEs). Claiming stochastic control is characterized *exclusively* by HJB and not by a maximum principle is mathematically inaccurate and cuts off the geometric connection between deterministic Hamiltonian flows and stochastic adjoint systems.
+
+### 5. Minimum Intervention with Coupled Future Task Relevance
+* **Derivation / Multi-step Counterexample**:
+  The text states (lines 78–81, 148–150) that deviations that do not directly enter the running cost are "free" and not corrected.
+  Let $x = (x_1, x_2)^\top$ where $x_1$ has running cost and $x_2$ has no running cost ($Q = \operatorname{diag}(q_1, 0)$), with dynamics:
+  $$\dot{x}_1 = x_2, \quad \dot{x}_2 = u$$
+  Here $x_2$ is velocity/drift feeding into future $x_1$. Solving CARE with $R = [r]$ yields:
+  $$P = \begin{bmatrix} \sqrt{2 q_1 \sqrt{r q_1}} & \sqrt{r q_1} \\ \sqrt{r q_1} & \sqrt{2 r \sqrt{r q_1}} \end{bmatrix}, \quad K = R^{-1} B^\top P = \begin{bmatrix} \sqrt{\frac{q_1}{r}} & \sqrt{2\sqrt{\frac{q_1}{r}}} \end{bmatrix}$$
+  Even though $Q_{22} = 0$, $K_2 \neq 0$ because perturbation in $x_2$ propagates into future task-relevant state $x_1$.
+  Task-irrelevant variability is tolerated *only along uncontrolled manifold subspaces that never couple into future cost-weighted states or terminal constraints*.
+
+### 6. Minimum Jerk vs. Minimum Variance
+* **Text Defect (lines 165–169)**:
+  Line 165 states:
+  > *"Under signal-dependent noise, the optimal trajectory minimizes integrated squared jerk (Flash and Hogan, 1985)."*
+* **Correction**:
+  This conflates two distinct models. Flash and Hogan (1985) postulated an empirical kinematic cost functional $\int \|\dddot{x}\|^2\,dt$. Harris and Wolpert (1998) showed that minimizing **endpoint variance** under signal-dependent motor noise produces trajectory profiles that *resemble* minimum-jerk trajectories, but the cost functions are mathematically distinct. Signal-dependent noise does not minimize integrated jerk; it yields minimum-variance control whose trajectories approximate minimum-jerk kinematics.
+
+### 7. Continuous White-Noise Units
+* **Text Defect (lines 157–162)**:
+  Line 157 defines:
+  $$\control = \bar{\control} + \sigma(\bar{\control}) \bm{\xi}, \quad \sigma(\bar{\control}) = k \|\bar{\control}\|$$
+  stating $\bm{\xi}$ is "white Gaussian noise".
+* **Dimensional / Stochastic Analysis**:
+  In continuous time, idealized white noise $\xi_t = \frac{dw_t}{dt}$ is a distribution of dimension $[\text{time}]^{-1/2}$, so $\operatorname{Var}(\xi_t) = \infty$. Stating $\sigma(\bar{u}) = k \|\bar{u}\|$ with $k \approx 0.01\text{--}0.05$ as a dimensionless ratio conflates discrete-time sample variances ($\Delta w_k \sim \mathcal{N}(0, \Delta t)$ where $\operatorname{Std}(\Delta w / \Delta t) \propto 1/\sqrt{\Delta t}$) with continuous-time diffusion coefficients (where diffusion scale $D$ has units $[\text{control}]^2 \cdot [\text{time}]$).
+
+### 8. Variational Free Energy vs. Action Policies in Active Inference
+* **Text Defect (lines 176–181)**:
+  Equation (10.4) defines static variational free energy:
+  $$F = \mathbb{E}_q[\ln q(\state) - \ln p(\state, \bm{y})]$$
+  and immediately asserts *"The agent chooses actions to minimize $F$"*.
+* **Correction**:
+  In Friston's active inference framework:
+  1. Instantaneous state estimation minimizes variational free energy $F$ with respect to internal beliefs $q(\state)$.
+  2. Motor action in continuous time drives sensory prediction errors to zero through classical reflex arcs (suppressing $\bm{y} - g(\state)$).
+  3. Action selection across time / planning as inference minimizes **expected free energy** $G(\pi)$ over future counterfactual trajectories, which accounts for both epistemic (information-seeking) and pragmatic (utility) value. Minimizing current $F$ alone cannot yield forward motor planning.
+
+---
+
+## Scoped Corrections Table
+
+| Location | Issue / Defect | Scoped Correction |
+| :--- | :--- | :--- |
+| **Def. 10.1 (lines 56–59)** | $d\state = f(\state, \control)dt + G(\state)d\bm{w}$ is state-dependent, not control-dependent diffusion. | Replace with $d\state = f(\state, \control)dt + G_0(\state)d\bm{w} + \sum_i F_i(\state, \control)d w_i$, explicitly showing control entering the diffusion term. |
+| **Lines 63–70** | Erroneously rules out maximum principles in stochastic settings. | Clarify that while *deterministic* PMP along a single trajectory does not apply, the *stochastic maximum principle* (Bismut–Peng FBSDE) is the stochastic counterpart to PMP. |
+| **Listing 10.1 (lines 83–150)** | Solves infinite-horizon deterministic CARE while labeled as stochastic OFC; ignores `state_noise_cov`. | Clarify that deterministic CARE assumes certainty equivalence; highlight that biological OFC (Todorov & Jordan 2002) is a finite-horizon problem with multiplicative noise modifying the Riccati recursions. |
+| **Lines 78–82, 148–150** | Suggests any state component absent from running cost is "free". | Clarify that deviations in task-unweighted dimensions are corrected whenever system dynamics couple them into future cost-weighted states or terminal conditions. |
+| **Eq. 10.3 & lines 157–163** | Conflates continuous white noise with dimensionless discrete coefficient $k \approx 0.01\text{--}0.05$. | Specify discrete-time formulation ($u_k = \bar{u}_k + \Sigma^{1/2}(\bar{u}_k)\xi_k$, $\xi_k \sim \mathcal{N}(0, I)$) or provide proper SDE diffusion units $D(u)dt$ with dimensions $[\text{force}]^2 \cdot \text{s}$. |
+| **Lines 165–169** | Claims signal-dependent noise minimizes integrated squared jerk. | Distinguish the kinematic minimum-jerk hypothesis (Flash & Hogan) from the minimum-variance model under signal-dependent noise (Harris & Wolpert), stating that minimum variance generates near-minimum-jerk trajectories without an explicit jerk penalty. |
+| **Eq. 10.4 & lines 176–181** | Equates action policy selection to minimizing static instantaneous free energy $F$. | Distinguish state-belief update via instantaneous $F$ from action/policy selection via **expected free energy** $G$ (or proprioceptive reflex loops). |

@@ -2,187 +2,255 @@
 \label{ch:passive-control}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter develops a checked conservative stance-phase example and the
+additional conditions needed to study walking. The golf discussion specifies
+testable mechanical comparisons; it does not certify a passive fraction of
+human performance or prescribe a training intervention.
 \end{gomdraftnotice}
 
-\epigraph{%
-  The most efficient movement is one where the body's own mechanics
-  do most of the work, and the nervous system merely guides.
-}{--- Adapted from Frans Bosch}
+\section{Mechanical Organization and Neural Control}
 
-\section{The Frans Bosch Framework}
+Bosch's practitioner framework emphasizes interactions among task, body and
+environmental constraints~\cite{Bosch2015}. This is an organizing perspective,
+not proof that the nervous system only selects initial conditions and stops
+controlling. Configuration, velocity, activation history, material properties,
+sensory information and feedback all influence the subsequent trajectory.
+Some are states, others parameters or inputs; they should not all be called
+a designed drift.
 
-Frans Bosch's work on strength training and coordination \cite{Bosch2015}
-provides a practitioner-oriented framework for understanding how elite athletes
-organize movement. His key insights, translated into the language of this series:
+In a declared control-affine model $\dot x=f(x)+G(x)u$, the drift is the vector
+field at the specified zero input. Choosing posture changes where that field
+is evaluated; changing constitutive properties changes the model. Muscle tone
+can involve continuing activation and energy consumption. It is not
+automatically passive because it changes effective stiffness. Feedback can
+shape apparent impedance while mechanics distribute forces across segments.
 
-\begin{insight}{Self-Organization in Complex Movement}{bosch-self-org}
-  Bosch argues that complex movements are not centrally programmed but
-  \textbf{self-organize} through the interaction of:
-  \begin{enumerate}
-    \item \textbf{Task constraints}: the goal shapes the solution space
-    \item \textbf{Organismic constraints}: the body's anatomy and current state
-    \item \textbf{Environmental constraints}: gravity, ground, implements
-  \end{enumerate}
-  The role of the nervous system is not to specify every muscle activation but to
-  set the \emph{initial conditions} and \emph{constraints} that allow self-organization
-  to produce the desired movement.
+\section{A Conservative Compass Stance Phase}
 
-  In the language of Volume~I: the CNS designs the \emph{drift field} $f(\state)$
-  of the system (through postural configuration and muscle tone) and lets the
-  natural dynamics do the work.
-\end{insight}
+McGeer demonstrated passive downhill walking in particular mechanical
+designs~\cite{McGeer1990}. This establishes a possibility under specific
+mechanical and contact conditions. The following point-mass model illustrates
+continuous dynamics between contacts; it does not reproduce an entire McGeer
+walker or establish a stable gait.
 
-\begin{figure}[h]
+Take horizontal position $x$ positive right and height $z$ positive upward.
+The stance foot is fixed at the origin. Both angles are measured from upward
+vertical, positive toward positive $x$. With leg length $l$,
+\begin{equation}
+ r_H=l\begin{pmatrix}\sin q_1\\\cos q_1\end{pmatrix},\qquad
+ r_F=r_H-l\begin{pmatrix}\sin q_2\\\cos q_2\end{pmatrix}.
+\end{equation}
+The hip $H$ has mass $M>0$ and swing foot $F$ mass $m>0$. Massless rods
+connect them. Any fixed stance-foot mass has zero kinetic energy during this
+phase. Distributed leg inertia, knees, rolling feet and active torques are excluded.
+
+\begin{figure}[htbp]
 \centering
 \begin{tikzpicture}[scale=1.0]
-  % Compass gait walker (simplified)
-  \draw (1, 0) -- (1.5, 1) node[align=center, anchor=south, font=\tiny] {swing};
-  \draw (1, 0) -- (0.5, 1) node[align=center, anchor=south, font=\tiny] {stance};
-
-  % Hip
-  \draw (1, 1) circle (0.12);
-  \draw (1, 1) node[align=center, anchor=center, font=\tiny] {hip};
-
-  % Ground
-  \draw (-0.2, 0) -- (2.2, 0);
-  \draw (0.5, -0.15) node[align=center, anchor=north, font=\tiny] {slope};
-
-  % Forces
-  \draw[->, thick, blue] (1, 0) -- (1, -0.5) node[align=center, anchor=north, font=\tiny] {gravity};
-
-  % Energy flow
-  \draw (3, 1.3) node[align=center, anchor=center, font=\small\bf] {Energy Flow};
-  \draw (3, 0.9) node[align=center, anchor=west] {Gravitational PE};
-  \draw (3, 0.6) node[align=center, anchor=west] {$\Rightarrow$ Kinetic energy};
-  \draw (3, 0.3) node[align=center, anchor=west] {$\Rightarrow$ Angular momentum};
-
-  % Title
-  \draw (0.75, 2.2) node[align=center, anchor=center, font=\small\bf] {Passive Dynamic Walking};
-  \draw (0.75, 1.9) node[align=center, anchor=center, font=\tiny] {(McGeer, 1990)};
+ \draw[thick] (-0.7,0.175)--(2.4,-0.6);
+ \draw[very thick] (0,0)--(0.65,1.4)--(1.55,0.25);
+ \fill (0,0) circle (0.05) node[below left] {Stance Foot};
+ \fill (0.65,1.4) circle (0.08) node[above] {$H,M$};
+ \fill (1.55,0.25) circle (0.06) node[right] {$F,m$};
+ \draw[->] (0.65,1.25)--(0.65,0.7) node[right] {$Mg$};
+ \draw[->] (-0.6,0.7)--(-0.6,1.3) node[left] {$z$};
+ \draw[->] (-0.6,0.7)--(0,0.7) node[below] {$x$};
+ \node[align=center] at (3.7,0.8) {Potential Energy\\$\leftrightarrow$\\Kinetic Energy};
 \end{tikzpicture}
-\caption{Passive dynamic walking: a compass gait on a gentle slope exhibits stable
-walking cycles with zero control input. Gravity and inertia provide all energy;
-the walker merely guides the descent.}
+\caption{Connected Compass Geometry During One Stance Phase. The downhill
+surface defines a future contact event. The illustrated swing foot has
+clearance; these equations alone do not enforce contact admissibility or reset
+velocities at impact.}
 \label{fig:ch7:passive-walker}
 \end{figure}
 
-\section{Passive Dynamic Walking}
+Set $v_i=\dot q_i$ and $\delta=q_1-q_2$. Cartesian energies give
+\begin{align}
+ T&=\tfrac12(M+m)l^2v_1^2+\tfrac12ml^2v_2^2-ml^2\cos\delta\,v_1v_2,\\
+ V&=(M+m)gl\cos q_1-mgl\cos q_2.
+\end{align}
+The Euler--Lagrange equations are $A\ddot q+c+g_q=0$, with
+\begin{align}
+ A&=l^2\begin{pmatrix}M+m&-m\cos\delta\\-m\cos\delta&m\end{pmatrix},\\
+ c&=ml^2\sin\delta\begin{pmatrix}-v_2^2\\v_1^2\end{pmatrix},\qquad
+ g_q=gl\begin{pmatrix}-(M+m)\sin q_1\\m\sin q_2\end{pmatrix}.
+\end{align}
+Thus $A\ddot q=-c-g_q$. Reversing this sign changes the physics. At
+$q_1=q_2=\alpha$, $v=0$, the result is
+$\ddot q_1=(g/l)\sin\alpha$, $\ddot q_2=0$: a displaced upright stance leg
+accelerates away from vertical. Also
+\begin{equation}
+ \det A=ml^4\bigl(M+m\sin^2\delta\bigr)>0,
+\end{equation}
+so $A$ is positive definite. Its units are $\mathrm{kg\,m^2}$; $c,g_q$
+have torque units.
 
-The most striking example of passive dynamics is passive dynamic walking
-(McGeer, 1990): a simple mechanical biped with knees, feet, and hip (no motors)
-walks down a gentle slope in stable limit cycles with zero active control. This
-demonstrates that complex coordinated movement can emerge from mechanical design
-and gravity alone:
-
-\begin{lstlisting}[language=Python, caption={Passive dynamic walker simulation.}]
+\begin{lstlisting}[language=Python, caption={Checked Fixed-Stance Dynamics and Energy.}]
+from dataclasses import dataclass
 import numpy as np
-from scipy.integrate import solve_ivp
-
-def passive_walker_dynamics(
-    t: float,
-    state: np.ndarray,
-    M: float = 10.0,
-    m: float = 5.0,
-    l: float = 1.0,
-    g: float = 9.81,
-    slope: float = 0.05
-) -> np.ndarray:
-    """Dynamics of a 2-DOF passive walker (compass gait).
-
-    Parameters
-    ----------
-    t : float
-        Time.
-    state : np.ndarray
-        [theta_stance, theta_swing, d_theta_stance, d_theta_swing]
-    M : float
-        Hip mass (kg).
-    m : float
-        Leg mass at foot (kg).
-    g : float
-        Gravitational acceleration (m/s^2).
-    slope : float
-        Ground slope (radians).
-
-    Returns
-    -------
-    np.ndarray
-        State derivatives.
-    """
-    th_st, th_sw, dth_st, dth_sw = state
-
-    # Mass matrix
-    M11 = (M + m) * l**2
-    M12 = -m * l**2 * np.cos(th_st - th_sw)
-    M21 = M12
-    M22 = m * l**2
-
-    # Gravity and Coriolis
-    C1 = -m * l**2 * dth_sw**2 * np.sin(th_st - th_sw) \
-         - (M + m) * g * l * np.sin(th_st - slope)
-    C2 = m * l**2 * dth_st**2 * np.sin(th_st - th_sw) \
-         + m * g * l * np.sin(th_sw - slope)
-
-    # Solve M * ddq = C (NO control input!)
-    det = M11 * M22 - M12 * M21
-    ddth_st = (M22 * C1 - M12 * C2) / det
-    ddth_sw = (M11 * C2 - M21 * C1) / det
-
-    return np.array([dth_st, dth_sw, ddth_st, ddth_sw])
 
 
-# Simulate one step of passive walking
-state0 = np.array([0.2, -0.4, -0.5, 1.0])
-sol = solve_ivp(passive_walker_dynamics, [0, 1.5], state0,
-                max_step=0.001, events=None)
-print(f"Passive walker: simulated {sol.t[-1]:.2f}s "
-      f"with {len(sol.t)} timesteps")
-print(f"Final stance angle: {sol.y[0, -1]:.3f} rad")
-print("(No actuators, no controller --- just gravity and mechanics)")
+def finite_vector(value: np.ndarray, size: int) -> np.ndarray:
+    """Require a finite vector of the declared length."""
+    vector = np.asarray(value, dtype=float)
+    if vector.shape != (size,) or not np.all(np.isfinite(vector)):
+        raise ValueError("Invalid vector shape or nonfinite value")
+    return vector
+
+
+@dataclass(frozen=True)
+class CompassPhase:
+    """Conservative fixed-foot phase; no guard or impact reset."""
+
+    hip_mass: float = 10.0
+    foot_mass: float = 5.0
+    length: float = 1.0
+    gravity: float = 9.81
+
+    def __post_init__(self) -> None:
+        values = np.asarray([
+            self.hip_mass, self.foot_mass, self.length, self.gravity
+        ], dtype=float)
+        if not np.all(np.isfinite(values)) or np.any(values <= 0):
+            raise ValueError("Parameters must be finite and positive")
+
+    def mass(self, q: np.ndarray) -> np.ndarray:
+        """Return the symmetric positive-definite inertia matrix."""
+        angles = finite_vector(q, 2)
+        cross = -self.foot_mass * np.cos(angles[0] - angles[1])
+        return self.length**2 * np.array([
+            [self.hip_mass + self.foot_mass, cross],
+            [cross, self.foot_mass],
+        ])
+
+    def energy(self, state: np.ndarray) -> float:
+        """Return kinetic plus gravitational energy in joules."""
+        values = finite_vector(state, 4)
+        angles, velocity = values[:2], values[2:]
+        kinetic = 0.5 * velocity @ self.mass(angles) @ velocity
+        potential = self.gravity * self.length * (
+            (self.hip_mass + self.foot_mass) * np.cos(angles[0])
+            - self.foot_mass * np.cos(angles[1])
+        )
+        return float(kinetic + potential)
+
+    def rhs(self, time: float, state: np.ndarray) -> np.ndarray:
+        """Return phase derivative; time is an unused solver argument."""
+        angle1, angle2, speed1, speed2 = finite_vector(state, 4)
+        inertial = self.foot_mass * self.length**2
+        coriolis = inertial * np.sin(angle1 - angle2) * np.array([
+            -speed2**2, speed1**2
+        ])
+        gravity = self.gravity * self.length * np.array([
+            -(self.hip_mass + self.foot_mass) * np.sin(angle1),
+            self.foot_mass * np.sin(angle2),
+        ])
+        acceleration = np.linalg.solve(
+            self.mass([angle1, angle2]), -coriolis - gravity
+        )
+        return np.concatenate(([speed1, speed2], acceleration))
 \end{lstlisting}
 
-\section{Passive Dynamics in the Golf Swing}
+Exact continuous dynamics conserve $E=T+V$. Numerical integration should
+approximately preserve it as tolerances tighten. This checks the phase
+equations, not contact feasibility, absence of slip or gait stability.
+Differentiating $T$ requires the derivative of the configuration-dependent
+mass matrix; omitting it gives an incorrect energy argument.
 
-The golf swing exemplifies passive dynamics exploitation:
-\begin{enumerate}
-  \item \textbf{Backswing}: energy stored in elastic tissues (muscles, tendons, fascia)
-  \item \textbf{Transition}: elastic recoil initiates the downswing passively
-  \item \textbf{Wrist release}: centrifugal force passively uncocks the wrists
-        (the double pendulum effect from Volume~II, Chapter~5)
-  \item \textbf{Follow-through}: passive deceleration through tissue compliance
-\end{enumerate}
+\section{From a Stance Phase to Walking}
 
-In the ZTCF family framework of Volume~I, Chapter~7: the drift contribution $f(\state)$
-accounts for $\sim$60\% of the clubhead speed. The control contribution
-$G(\state)\control$ provides the remaining $\sim$40\%.
+On a downhill line $z=-x\tan\gamma$, candidate swing-foot contact satisfies
+$h(q)=z_F+x_F\tan\gamma=0$. A valid event must select the approaching foot,
+reject scuffing or the wrong branch, and respect nonpenetration. Stance
+reaction and friction conditions must hold beforehand. With angles measured
+from world vertical, the slope belongs in this geometry, not as an additional
+angle shift in the gravitational terms.
 
-\section{Bernstein's Stage 3: Exploiting DOF}
+An impact law maps the pre-impact state to the post-impact state. A specified
+perfectly inelastic constrained impulse model, for example, uses full-coordinate
+inertia $\mathcal M$, new-contact Jacobian $J$ and impulse $\Lambda$:
+\begin{equation}
+ \mathcal M(v^+-v^-)=J^T\Lambda,\qquad Jv^+=0.
+\end{equation}
+One must specify which old contacts release, check impulse assumptions and
+relabel the legs. This schematic is not a supplied reset for the reduced
+listing. Frictional or compliant impacts require consistent laws of their own.
 
-The connection to Bernstein's learning framework (Chapter~1) is direct:
-\begin{itemize}
-  \item The expert athlete has reached Stage 3 --- exploiting degrees of freedom
-  \item They have learned to configure the body so that passive dynamics
-        \emph{automatically} produce the desired motion
-  \item The control problem is simplified: instead of commanding every muscle,
-        set up the initial conditions and let physics do the work
-\end{itemize}
+A Poincar\'e return map $P$ exists only after these phases and resets are
+defined. A periodic step is a fixed point $P(x_*)=x_*$ on a section. For a
+smooth return map, all eigenvalues of $DP(x_*)$ strictly inside the unit
+circle suffice for local exponential attraction. An eigenvalue outside
+implies instability; eigenvalues on the unit circle require nonlinear
+analysis. Grazing contacts can invalidate the smooth-map assumption.
+Conservative systems can have periodic orbits without an attracting
+walking cycle. In passive downhill walking, gravitational potential loss can
+balance collision and other dissipative losses. Inertia stores and transfers
+energy; it does not supply new energy. Angular momentum has different units
+and is not another form of energy.
+
+\section{What Passive Mechanics Can Mean in Golf}
+
+Elastic tissues and a flexible shaft can store and return energy while
+gravity and intersegmental coupling influence acceleration. Their effects
+depend on geometry, material properties, loading history, contact and
+continuing muscle action. A double-pendulum analogy does not establish that
+elastic recoil initiates every downswing, or that wrist release and
+follow-through are universally passive. A rotating-frame centrifugal term
+represents the equations; it is not an extra energy source or proof of zero
+wrist torque. Compliance can return energy; dissipation or active work is
+needed to explain a sustained reduction in total mechanical energy.
+
+\subsection{Why Speed Has No Universal Passive Percentage}
+
+If physical clubhead acceleration along one actual trajectory is split into
+declared components $a_d+a_u$, then
+\begin{equation}
+ v(T)=v(0)+\int_0^T a_d(t)\,dt+\int_0^T a_u(t)\,dt.
+\end{equation}
+This vector identity does not additively decompose speed $\|v(T)\|$.
+Orthogonal unit velocity increments have resultant speed $\sqrt2$, not two.
+For a configuration output, acceleration also includes a Jacobian-rate term;
+it cannot be read directly from an arbitrary state-vector drift component.
+Earlier inputs determine the state where both components are evaluated.
+Recentring $u'=u-u_0(x)$ gives
+\begin{equation}
+ f'(x)=f(x)+G(x)u_0(x),\qquad \dot x=f'(x)+G(x)u'.
+\end{equation}
+The trajectory is unchanged but its zero-input convention changes. An
+unqualified 60/40 allocation of clubhead speed to drift and control therefore
+has no established basis here and is not retained.
+
+A zero-command comparison in the ZTCF family must declare the release state
+and history, the meaning of zero command, remaining constraints, horizon or
+impact event, and outcome metric. Zero neural excitation does not instantly
+erase activation, muscle force or tendon energy. This counterfactual answers
+a specified model question, not a biological causal fraction. Joint work,
+elastic energy, gravitational work and trajectory differences are complementary
+quantities whose frames and accounting boundaries must be explicit.
+
+\section{Learning to Use Mechanics}
+
+Bernstein's learning perspective motivates asking how coordination changes
+with skill. Experts may exploit coupling while improving estimation,
+anticipatory commands and feedback. These possibilities are compatible.
+Expertise alone does not establish that mechanics automatically produce the
+desired motion after initial setup. Useful experiments compare specified
+perturbations and competing model predictions, including alternatives that
+explain the same observed kinematics.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Passive Walking.} Using the provided code, find the set of
-        initial conditions that produce a stable limit cycle (periodic gait).
-
-  \item \textbf{Energy Analysis.} For the passive walker, plot kinetic and
-        potential energy over one stride. Where does the energy come from?
-
-  \item \textbf{Wrist Release.} Model the wrist release as a passive double
-        pendulum. For what initial angular velocity of the arm does the club
-        reach maximum speed at the bottom?
-
-  \item \textbf{(Programming.)} Add a small actuator to the passive walker
-        and design a minimal controller that stabilizes the gait on level ground.
+ \item \textbf{Sign and Energy Checks.} Derive $T,V,A,c,g_q$ from Cartesian
+ positions. Verify the aligned-angle acceleration and compare the energy
+ derivative with a numerical directional derivative of the listing.
+ \item \textbf{Contact Scope.} Derive $h(q)$ and valid approach conditions
+ for a chosen slope. State the additional assumptions required before a
+ return map can be computed. Do not call a stance integration a stride.
+ \item \textbf{Energy Accounting.} Explain how a periodic downhill step
+ can lose energy at impact while its isolated stance phase conserves energy.
+ Distinguish absolute height from relabelled step coordinates.
+ \item \textbf{Golf Counterfactual.} Specify a release experiment with
+ model, zero-command convention, activation state and impact event. Compare
+ velocity vectors, speeds and joint work. Explain why their percentage
+ differences need not agree or identify a universal passive contribution.
 \end{enumerate}
