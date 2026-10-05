@@ -113,6 +113,7 @@ class SwingAnalysis:
         model = self.model()
 
         def evaluate(angle: Array, rate: Array, torque: Array) -> tuple[Array, Array]:
+            """Solve both signed acceleration components at one state."""
             mass = model.rigid_mass_matrix(angle)
             bias = model.coriolis(angle, rate) @ rate + model.gravity_torque(angle)
             return np.linalg.solve(mass, -bias), np.linalg.solve(mass, torque)
@@ -206,6 +207,7 @@ def synthetic_swing(duration: float = 0.30, dt: float = 0.001) -> SwingAnalysis:
     model = analysis.model()
 
     def inverse(angle: Array, rate: Array, acceleration: Array) -> Array:
+        """Return generalized torque required for one prescribed state."""
         return (
             model.rigid_mass_matrix(angle) @ acceleration
             + model.coriolis(angle, rate) @ rate
