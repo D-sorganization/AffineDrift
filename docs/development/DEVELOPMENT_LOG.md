@@ -728,6 +728,19 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Freshness dashboard route links now target page-relative paths derived from the output path; 12 path-style baseline entries removed. The journey-page workbench entry stays on purpose.
 - **Next step:** Review the draft PR, then arm it through the merge queue.
 
+### DL-#4913 · Benchmark Baseline Platform Detection
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** pending (ready; main)
+- **Issue:** #4913
+- **Branch:** `fix/4913-benchmark-baseline`
+- **Paths:** `.github/workflows/ci-benchmarks.yml`, `scripts/ci/benchmark_compare_args.py`, `tests/test_benchmark_compare_args.py`
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (24 focused tests pass; actionlint reports only pre-existing SC2034 warnings; action-pin tests pass)
+- **Summary:** Benchmarks compare with the 15% gate only against a baseline for the runner platform; otherwise save one as an artifact and report no baseline rather than failure.
+- **Next step:** After merge, commit the Linux CPython 3.12 baseline artifact under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating.
+
 ## Archive
 
 Older entries live in `DEVELOPMENT_LOG_ARCHIVE_<year>.md`.
