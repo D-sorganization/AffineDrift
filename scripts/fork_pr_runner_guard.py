@@ -1,11 +1,10 @@
-# Vendored from D-sorganization/Tools scripts/fork_pr_runner_guard.py @ aadd9336c964766b7f9e2f51266059ee9318c32e
-# (Tools PR #5427, branch fix/4464-fork-pr-self-hosted). The canonical copy is moving
-# to Repository_Management (RM#1989); re-vendor from there once it lands. Rules unchanged.
+#!/usr/bin/env python3
 """Reject workflow jobs that can run fork pull-request code on self-hosted runners.
 
-Tools is a public repository whose CI runs on ``d-sorg-fleet``, self-hosted
-runners on maintainer hardware (issue #4464). A fork pull request must never
-land on that fleet. This checker enforces two rules over
+Public fleet repositories run CI on ``d-sorg-fleet``, self-hosted runners on
+maintainer hardware (Tools#4464). A fork pull request must never land on that
+fleet. Canonical here (Repository_Management#1989), ported from Tools#5427 and
+vendored to the other fleet repositories. This checker enforces two rules over
 ``.github/workflows/*.yml``:
 
 1. **Fork PR code stays off the fleet.** In a workflow triggered by an event
@@ -33,7 +32,7 @@ reusable-workflow calls are treated as self-hosted (fail closed).
 
 The check reads expressions textually and does not evaluate them. It is a
 defence in depth, not a sandbox: on ``pull_request`` a fork can edit the
-workflow file itself, so the repository settings listed in issue #4464
+workflow file itself, so the repository settings listed in Tools#4464
 (approval for all outside collaborators, runner-group access) remain the
 primary control.
 """
@@ -62,7 +61,9 @@ PR_CODE_TRIGGERS = frozenset(
     }
 )
 #: Events whose workflow runs from the base branch with base credentials.
-BASE_CONTEXT_TRIGGERS = frozenset({"pull_request_target", "issue_comment", "workflow_run"})
+BASE_CONTEXT_TRIGGERS = frozenset(
+    {"pull_request_target", "issue_comment", "workflow_run"}
+)
 
 #: The job-level ``if:`` guard: true off pull requests and for same-repo PRs,
 #: false for a fork PR and for a PR whose head repository was deleted.
@@ -275,7 +276,9 @@ def job_violations(
         return []
     violations: list[str] = []
     pr_events = sorted(events & PR_CODE_TRIGGERS)
-    if pr_events and not (requires_conjunct(job.get("if"), SAME_REPO_GUARD) or fork_routed(job)):
+    if pr_events and not (
+        requires_conjunct(job.get("if"), SAME_REPO_GUARD) or fork_routed(job)
+    ):
         violations.append(
             f"{wf_name}::{job_id}: runs on {', '.join(pr_events)} and can reach "
             f"a self-hosted runner without the fork guard; add "
@@ -284,10 +287,11 @@ def job_violations(
         )
     if events & BASE_CONTEXT_TRIGGERS:
         aliases = _head_ref_aliases(workflow, job)
+        privileged = ", ".join(sorted(events & BASE_CONTEXT_TRIGGERS))
         for step in _head_checkout_steps(job, aliases):
             violations.append(
                 f"{wf_name}::{job_id}: step '{step}' checks out PR head code on a "
-                f"self-hosted runner under {', '.join(sorted(events & BASE_CONTEXT_TRIGGERS))}; "
+                f"self-hosted runner under {privileged}; "
                 f"restrict it to {PULL_REQUEST_ONLY} or drop the head ref"
             )
     return violations
@@ -307,16 +311,31 @@ def find_violations(workflow_dir: Path) -> list[str]:
         events = triggers(data)
         for job_id, job in data["jobs"].items():
             if isinstance(job, dict):
-                violations.extend(job_violations(path.name, events, str(job_id), job, data))
+                violations.extend(
+                    job_violations(path.name, events, str(job_id), job, data)
+                )
     return violations
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    """Run the checker as a CLI.
+
+    Preconditions: --workflows-dir (alias --workflows) names a directory.
+    Postconditions: returns 0 when no job breaks a rule, else 1 after logging
+    one ::error:: line per violation.
+    """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--workflows", type=Path, default=Path(".github") / "workflows")
+    parser.add_argument(
+        "--workflows-dir",
+        "--workflows",
+        dest="workflows_dir",
+        type=Path,
+        default=Path(".github") / "workflows",
+        help="Directory of workflow files (default: .github/workflows).",
+    )
     args = parser.parse_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout)
-    violations = find_violations(args.workflows)
+    violations = find_violations(args.workflows_dir)
     for violation in violations:
         LOG.error("::error::%s", violation)
     if violations:
