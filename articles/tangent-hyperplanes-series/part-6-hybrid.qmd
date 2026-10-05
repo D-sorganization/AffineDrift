@@ -8,136 +8,102 @@ categories:
 - tangent-space
 ---
 
-## Why Smooth Tangent Spaces Are Not Enough
+## Smooth Motion and Discrete Events
 
-The first five parts assume that the dynamics are smooth over the interval being
-analyzed. That excludes many systems that matter in mechanics:
+A rigid impact model combines smooth motion between events with guards and reset maps at events. Other models, including compliant finite-duration contact, may represent the same physical interaction through continuous dynamics. Choose the representation before differentiating it; a physical collision does not force every useful model to have an instantaneous state jump.
 
-- foot strikes and ball impacts;
-- contact making and breaking;
-- friction-cone transitions;
-- controllers that switch modes;
-- guards that reset velocity or state.
+This article connects smooth variational dynamics with event sensitivity. The longer [Hybrid Tangent Spaces](../tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html) is companion material. The saltation construction and its limitations are established in [Kong, Payne, Zhu and Johnson's tutorial](https://arxiv.org/html/2306.06862v2), especially Sections III-A and III-B.
 
-Hybrid systems keep the tangent-space idea, but they no longer let one smooth
-Jacobian carry perturbations through the entire trajectory.
+## Declare the Mode, Guard and Reset
 
-This compact part distills the rigorous version of
-[Hybrid Tangent Spaces](../tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html)
-and preserves the critique that hybrid claims need explicit guard, reset, and
-Zeno assumptions.
+In mode $i$, let $\dot x=f_i(x,t)$. A guard $g(x,t)=0$ triggers a transition to mode $j$ with reset $x^+=R(x^-,t)$. The vector fields here include the specified input policy; when that policy is state dependent, its derivatives belong in the closed-loop Jacobian.
 
-## Hybrid Automaton Model
+Within a smooth mode, $\dot\xi=A_i(t)\xi$ propagates an initial-state variation. Independent input variations add the usual forcing term. At a state-triggered event, however, the perturbed trajectory generally reaches the guard at a different time. Applying only $D_xR$ misses that timing effect.
 
-A hybrid system can be represented by modes $q \in Q$, continuous states
-$x \in X_q$, vector fields $f_q$, guard surfaces $G_{ij}$, and reset maps
-$R_{ij}$:
+Assume a single isolated transition, differentiable fields, guard and reset near the event, and the same transition sequence for nearby trajectories. Write
 
 $$
-\dot{x} = f_q(x,u), \qquad x^- \in G_{ij} \Rightarrow x^+ = R_{ij}(x^-).
+n=\nabla_xg(x^-,t_e),\qquad
+\gamma=\partial_tg+n^Tf^-\ne0.
 $$
 
-Inside a fixed mode, the usual variational equation applies:
+Here $f^-=f_i(x^-,t_e)$ and $f^+=f_j(R(x^-,t_e),t_e)$. The condition $\gamma\ne0$ is transversality: the trajectory crosses the moving guard with nonzero normal speed.
+
+## Derive the Event-Time Correction
+
+Let $\xi^-$ denote the variation at the nominal event time using the pre-event flow's local continuation. Differentiating the guard equation yields the event-time variation
 
 $$
-\delta\dot{x} = A_q(t)\delta x + B_q(t)\delta u.
+\delta t_e=-\frac{n^T\xi^-}{\gamma}.
 $$
 
-At a transition, the perturbation must be mapped through the event timing and
-reset. That map is the saltation matrix.
-
-## Saltation Matrix
-
-For a guard with normal $n = \nabla g(x^-)$, pre-impact vector field $f^-$,
-post-impact vector field $f^+$, and reset derivative $D R$, a common saltation
-form is
+The perturbed state first flows for this extra time, undergoes the reset, and is then compared using the post-event continuation at the same nominal time. Therefore
 
 $$
-\Xi =
-D R +
-\frac{\left(f^+ - D R f^-\right)n^\top}{n^\top f^-}.
+\xi^+=D_xR\xi^-
+ +(D_xR f^-+\partial_tR-f^+)\delta t_e.
 $$
 
-The denominator encodes transversality: the trajectory must cross the guard
-rather than slide tangent to it. If $n^\top f^- \approx 0$, the saltation map is
-ill-conditioned and the tangent prediction is not trustworthy.
+Substitution gives the saltation matrix:
 
-:::{.callout-important}
-## The Hybrid Exactness Claim
+$$
+\begin{aligned}
+\xi^+&=\Xi\xi^-,\\
+\Xi&=D_xR+
+\frac{(f^+-D_xR f^--\partial_tR)n^T}{\partial_tg+n^Tf^-}.
+\end{aligned}
+$$
 
-Within each smooth mode, the tangent dynamics are exact infinitesimally. Across
-a transverse event with a differentiable reset, the saltation matrix is the
-first-order map for perturbations through the event. The claim is local to that
-mode sequence and those regularity assumptions.
-:::
+The autonomous guard/reset formula is the special case $\partial_tg=0$, $\partial_tR=0$. Explicit time dependence in the vector fields alone does not require these derivatives to be nonzero.
 
-## Mode-Aware Optimization
+This is a same-time derivative map built from local flow continuations. It is not the difference between two physical trajectories evaluated at their separate impact instants. For an observation after both nearby events, compose the pre-event transition matrix, $\Xi$, and the post-event transition matrix. Direct parameter or input dependence in the guard or reset needs its own additional derivative terms.
 
-DDP and iLQR can be adapted to hybrid systems when the mode sequence is known or
-handled explicitly:
+## Example: A Bouncing Point Mass
 
-1. propagate variational dynamics within each mode;
-2. apply the saltation matrix at each transition;
-3. run the backward pass through the composed linear maps;
-4. update the trajectory while checking whether event times or mode order
-   changed.
+Take height $h$, vertical velocity $v$, gravity $g_0>0$, a stationary floor and restitution coefficient $e\in(0,1]$. Between bounces,
 
-If the mode order changes, the old linearization no longer describes the same
-piecewise-smooth object. The optimizer must either re-linearize under the new
-sequence or use a contact-implicit formulation that treats modes as decision
-variables.
+$$
+f(h,v)=\begin{bmatrix}v\\-g_0\end{bmatrix},
+\qquad R(h,v)=\begin{bmatrix}h\\-ev\end{bmatrix}.
+$$
 
-## Contact-Implicit Caution
+The guard is $h=0$ with incoming $v^-<0$. Its normal is $(1,0)^T$, so
 
-Contact-implicit optimization can avoid preselecting a mode sequence, but it
-replaces the problem with complementarity constraints and numerical
-regularization choices. That is not a free lunch. It moves the difficulty from
-"which mode am I in?" to "how accurately did the complementarity relaxation
-represent contact?"
+$$
+\Xi=\begin{bmatrix}
+-e&0\\
+-(1+e)g_0/v^-&-e
+\end{bmatrix}.
+$$
 
-:::{.callout-warning}
-## Critique to Preserve
+The off-diagonal entry records the effect of changed impact time on velocity at a common comparison time. $D_xR=\operatorname{diag}(1,-e)$ alone omits it. A perfectly inelastic event with $e=0$ requires an appropriate resting-contact mode rather than continued free fall through the floor. This is an idealized sensitivity example, not a club-ball collision model; restitution, contact geometry and relevant internal states must be supplied for that application.
 
-Hybrid tangent-space language should not overstate novelty. Saltation matrices,
-impact mechanics, and contact-implicit optimization are established tools. The
-useful contribution here is editorial: connecting those tools back to the
-tangent-space reading path and making the scope assumptions visible.
-:::
+## Optimization and Stability Across Events
 
-## Zeno and Grazing Events
+For a fixed regular mode sequence, compose smooth transition maps and saltation matrices in the forward sensitivity calculation, then use the corresponding derivatives in the backward optimization pass. If an update changes mode order, the previous derivative need not describe the new rollout. Recompute the event structure or use a formulation designed for such changes.
 
-Two edge cases deserve special treatment:
+Contact-implicit formulations often use contact forces and complementarity conditions to allow contact timing to emerge. They do not necessarily introduce discrete mode variables. Relaxations and smoothing need convergence and physical-consistency checks; a successful numerical solve alone does not establish that the intended contact law was enforced.
 
-- **Zeno behavior:** infinitely many switches in finite time can make the
-  composed tangent map undefined or physically irrelevant.
-- **Grazing contact:** when the trajectory barely touches a guard, event timing
-  is extremely sensitive and saltation terms can blow up.
+Likewise, contraction between events is insufficient if an event expands perturbations too much. A compatible instantaneous metric comparison can use $\Xi^TM^+\Xi\preceq M^-$, together with the continuous-flow conditions and an appropriate event-sequence analysis. This is an additional condition, not a consequence of solving an optimal-control problem.
 
-A rendered page should not present a hybrid tangent calculation as reliable
-unless these cases are excluded or handled by the model.
+## Grazing, Simultaneous Events and Zeno Behavior
 
-## Golf and Impact
+As $\gamma$ approaches zero, timing sensitivity can become large; the denominator alone does not prove every matrix entry diverges because the numerator may also vanish. At exact grazing, the ordinary transverse-event derivation is unavailable. Nearby trajectories may touch, miss or enter different modes.
 
-Golf is a natural hybrid example because the club-ball collision is not a smooth
-continuation of the downswing dynamics. Tangent-space reasoning can still help,
-but the impact must be modeled as a mode transition with a reset or impulse map.
+Simultaneous guards can create different event orders under arbitrarily small perturbations. A single saltation matrix may then need replacement by a piecewise or generalized derivative analysis. Infinitely many transitions in finite time (Zeno behavior) require a defined limiting or regularized model before an infinite composition is meaningful. State explicitly which cases the analysis excludes.
 
-For pre-impact swing control, smooth variational dynamics may be adequate. For
-impact and launch, the model needs either an impact map or a separate collision
-model. Treating the whole motion as one smooth trajectory hides the most
-important discontinuity.
+## Golf Impact and the Measurement Question
 
-## Reading Forward
+A rigid impulse model treats club-ball contact as an idealized reset in velocity; a compliant model resolves deformation and force over a finite interval. Both require declared constitutive assumptions and validation appropriate to the outputs. Smooth pre-impact swing sensitivities do not by themselves predict ball launch: include the event timing and impact model, or integrate and differentiate the compliant contact model.
 
-Hybrid analysis explains when tangent maps jump. [Part 7](./part-7-residual-aware.html)
-uses residuals as runtime signals for when the current tangent model should be
-trusted, shrunk, updated, or abandoned.
+Also distinguish a clubhead state at a fixed time from its state when it reaches the ball. Changing torque or initial posture can change both the approach trajectory and contact time. [Part 7](./part-7-residual-aware.html) discusses how discrepancies can inform whether the current local prediction should be updated or rejected.
 
 ## Related Articles
 
-::: {.callout-note}
-## See Also
+::: {.callout-note title="See Also"}
 
 - **[Tangent-Space Series](../../pages/tangent-hyperplanes.html)** — The series hub: full reading order, provenance, and companion material
 - **[Force and Mobility Ellipsoids](../force-mobility-matrices.html)** — State-dependent mobility across contact modes: the smooth-case picture that saltation maps interrupt
+- **[Tangent Hyperplanes V: Contraction](part-5-contraction.html)** — The previous part of the series
+- **[Tangent Hyperplanes VII: Residual-Aware Control](part-7-residual-aware.html)** — The next part of the series
 :::
