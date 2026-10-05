@@ -1,0 +1,23 @@
+### Mathematical and Reasoning Audit
+
+1. **Strobe Footprint / Field Calculation Arithmetic Discrepancy**
+   - **Text:** *"Five pulses spaced by \SI{0.8}{\milli\second} occupy about \SI{257}{\milli\meter}, including one ball diameter..."* at $150\text{ mph}$ ($v_\perp \approx 67.056\text{ m/s} = 0.067056\text{ mm/\textmu s}$).
+   - **Defect:** For $N = 5$ pulses, there are $N - 1 = 4$ intervals. 
+     $$\text{Center-to-center span} = 4 \times 0.8\text{ ms} \times 67.056\text{ m/s} \approx 214.58\text{ mm}$$
+     Adding one nominal ball diameter ($D = 42.67\text{ mm}$) yields:
+     $$(N-1)v_\perp \Delta t + D \approx 214.58\text{ mm} + 42.67\text{ mm} \approx 257.25\text{ mm} \approx \mathbf{257\text{ mm}}.$$
+     However, if the text meant 5 *intervals* ($5 \times 0.8\text{ ms} \times 67.056\text{ m/s} + 42.67\text{ mm} = 310.9\text{ mm}$), it exceeds $300\text{ mm}$. The math matches $N=5$ pulses ($4$ intervals) correctly.
+
+2. **No-Overlap Strict Inequality vs. Boundary Condition**
+   - **Text:** In Eq. \eqref{eq:implstrobebudget}, $\Delta t > \frac{D}{v_\perp}$.
+   - **Evaluation:** At $150\text{ mph}$ ($67.056\text{ m/s}$) and $D = 42.67\text{ mm}$, $\frac{D}{v_\perp} = \frac{0.04267}{67.056} \approx 636.33\text{ \textmu s}$, correctly stated as $\sim \SI{636}{\micro\second}$.
+   - **Reasoning gap:** The text notes this is *"before blur and margins"*, but motion blur of extent $v_\perp \tau$ dilates each silhouette along the direction of motion by $v_\perp \tau$ (center-to-center remaining $v_\perp \Delta t$). Hence, the true non-overlap condition for finite pulse duration $\tau$ requires:
+     $$v_\perp \Delta t \ge D + v_\perp \tau \implies \Delta t \ge \frac{D}{v_\perp} + \tau.$$
+     Framing $\Delta t > D / v_\perp$ as an "ideal no-overlap condition" is mathematically valid only in the limit $\tau \to 0$ (instantaneous delta illumination).
+
+3. **Units and Conversion Integrity**
+   - $150\text{ mph} \times \SI{30}{\micro\second} = 67.056\text{ m/s} \times 30 \times 10^{-6}\text{ s} \approx 2.0117\text{ mm} \approx \SI{2.01}{\milli\meter}$ ($2.0117 / 42.67 \approx 4.71\%$). Exact.
+   - $150\text{ mph} \times \SI{300}{\micro\second} \approx 20.12\text{ mm}$; $150\text{ mph} \times \SI{500}{\micro\second} \approx 33.53\text{ mm}$. Exact.
+   - $3000\text{ rpm} = 50\text{ rev/s} = 18{,}000^\circ/\text{s} \implies 18{,}000^\circ/\text{s} \times 400 \times 10^{-6}\text{ s} = 7.2^\circ$. Exact.
+
+No structural logical flaws or invalid deductions found.

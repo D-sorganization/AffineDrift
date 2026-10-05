@@ -588,8 +588,13 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4879 | Correct hardware sampling, timing, integration and conditional inference claims (#4876); correct Bosch attribution, stability, control, intrinsic mechanics, power and transfer claims (#4877). Preserve both reviews and fixed-commit validation. |
 
 | 2026-10-04 | #4886 | Correct launch-monitor timing, reference-point, spin and inference conventions; preserve primary-source and mathematical evidence with rebuilt book PDF. |
+| 2026-10-04 | #4880 | Correct Control Is Motion landing page: orbital stability, transverse coordinates, and passivity (#4878). |
 | 2026-10-04 | #4885 | Distinguish geometric, statistical and computational dimensions; bind the educational simulation guide to provider provenance and qualified engine documentation. |
+| 2026-10-04 | #4888 | Preserve unverified publication dates as readable uncertainty in rendered title and metadata cards without inventing date metadata. |
+| 2026-10-04 | #4890 | Connect launch-monitor implementation to identifiable sensor observations, timing uncertainty, conditional inversion and independently validated optical and radar budgets. |
+| 2026-10-04 | #4894 | Prepare coordinated flight, accuracy and design review with primary-reading limits, mathematical contracts and bounded Flash inventories. |
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
 | 2026-10-04 | #4558 | Add animated WebP fish derivative and serve it through a reduced-motion-aware picture element. |
 | 2026-10-05 | #4913 | Benchmark workflow compares only against a baseline for the runner's platform (15% gate unchanged); otherwise saves one as an artifact and reports no baseline instead of failure. |
 | 2026-10-05 | #4911 | Install pytest-timeout in the benchmark venv (requirements-benchmarks.txt) so the 45 benchmarks run instead of failing on the unknown timeout option (#4911). |
+| 2026-10-05 | #4925 | Public-site verifier prints each failed route, viewport/theme and reason plus a capped `::error` annotation after the summary, via `scripts/public-site-failures.js`, so red Deploy Website runs are diagnosable from the job log (#4924). |

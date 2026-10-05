@@ -2,6 +2,21 @@
 
 Verified all eight accepted parameter source/evidence hashes on actual remote main d33e635d5 after PR #4886 merge. Released its lease/presence and merged main into #4889 with only metadata conflict resolution; all four accepted article hashes remain unchanged. Retargeted-main delivery preparation follows; CI/protected merge remains.
 
+# Implementation Appendix Acceptance — 2026-10-04
+
+Frozen source f141a02b5be45db857bee76e2d078ce5a444a135 passed 6,863 tests with 93.24% src coverage in 453.48 seconds. Scoped final PDF and complete source review accepted, five canonical bindings saved, only the appendix corpus row advanced. Earlier parameter PDF/bibliography hashes remain historical; the other 13 parameter/article/date source bindings are unchanged. Protected delivery remains. Follow-up #4894 groups the connected flight, accuracy and design chapters; two Flash inventories and primary-reading preparation are isolated from this acceptance.
+
+# DL-#4890 — Implementation Appendix Source Checkpoint
+
+2026-10-04: completed full original/revision reading and primary-source checks. Corrected Doppler/window claims, dechirping, club reference-point interpretation, hardware cadence, sensor observation functions and Jacobians, EKF/RTS assumptions, event timing, inverse-club priors, optical blur/overlap and held-out validation. Five read-only Flash helpers were lead-adjudicated. Manufactured arithmetic and 100 finite-difference Jacobians pass. Canonical PDF rebuilt to 97 pages with 102 printed references; scoped final visual review passed after fixing a stranded heading. Full frozen regression and protected delivery remain. See the implementation dossier for derivations, source-reading bounds and rejected helper assertions.
+
+# DL-#4888 — Unverified Date Presentation
+
+The browser exposed Invalid Date in two shared presentation surfaces. TDD reproduced both failures, then a scoped title-placeholder replacement and metadata-aware span fixed them without replacing dates in article prose. Seven new cases and existing metadata/header suites pass; browser output and delegation limits are recorded. Frozen source 70337154c passed 6,863 tests, 29 skips, 210 deselections and 60 warnings in 593.82 seconds, with 93.24% src coverage and no tracked edits during execution. Article acceptance metadata through 5ccb2d600 is integrated. Five final pre-PR gates passed over explicit source refs using repaired tool ca802ada, with 15 mapped tests; 44 metadata/root/SPEC tests passed. Protected delivery remains.
+
+# Dimensionality and Integration Source Review — 2026-10-04
+
+Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. Both reviews, scoped local presentation and full regression are accepted at 6cd4d2eee. Regular PR #4889 is open, stacked on #4886; remote-main delivery remains. See the review report for hypotheses and rejected suggestions.
 # Dimensionality and Integration Source Review — 2026-10-04
 
 Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. See the review report for hypotheses, rejected suggestions and outstanding browser/regression acceptance.
@@ -45,6 +60,31 @@ Five successful agy CLI Gemini 3.8 Flash helpers supplied inventory, arithmetic,
 Next: commit the reviewed source checkpoint and run the full suite without concurrent rendering or hook stashing. Exact source/PDF hashes and QA scope are in hardware-appendix-validation.json. Then finish evidence/corpus/turnover, open a regular PR, integrate the actual #4875 merge if necessary, and deliver through the protected queue. Never draft PRs. Local QA is under `docs/development/technical-review`; preserve the baseline PDF and helper failures. Python3.13 has PyMuPDF for PDF QA; pinned Python3.12 for repo checks is `C:/Users/diete/AppData/Local/Temp/affine-passive-pinned-fa72c4415ed54625846b906ba6af2033/Scripts/python.exe`. Use the existing multi-file `build.ps1`; no standalone LaTeX editor compilation is applicable.
 
 Lease session `technical-review-20261004-hardware` expires 2026-10-04T11:04:29.468733+00:00; presence through 11:04:34.339436+00:00. Lease receipt 5978356084 on #4876, presence receipt 5978356263 on Repository_Management#1576. The central inbox is incomplete because the board is truncated/malformed; issue claims remain authoritative. Parent #4871 lease remains held through 10:10 UTC until delivery/release. Broad goal remains active; earlier entries below are historical.
+
+---
+
+# Volume II Control Is Motion Landing Page — Rigor Review and Regular PR #4880
+
+Part of #4009 and the full-corpus review #4021. Governing issue #4878. Active lease is held by local on issue #4878 (receipt https://github.com/D-sorganization/AffineDrift/issues/4878#issuecomment-5981206758). Worktree located in `C:\Users\diete\Repositories\Worktrees\affine-4878-control-is-motion` on branch `fix/4878-control-is-motion`.
+
+The complete `books/control-is-motion.qmd` landing page source is corrected to align technical definitions and chapter summaries with established nonlinear control theory and the reviewed Volume II chapters:
+- **Orbital stability versus timed tracking:** Distinguishes orbital stability ($\operatorname{dist}(x(t), \mathcal{O}) < \epsilon$) and asymptotic orbital attraction ($\lim_{t \to \infty} \operatorname{dist}(x(t), \mathcal{O}) = 0$) from timed tracking error ($\|x(t) - x^*(t)\| \to 0$). Explains that an orbitally stable cycle can attract nearby trajectories while a non-zero asymptotic phase offset $\phi$ persists, leaving persistent time-synchronized tracking error. Scopes finite-horizon athletic maneuvers (golf downswing ~250–350 ms) to finite-time reachability containment, transverse tube invariance, or terminal hitting-set tolerances, rather than an automatic infinite-time periodic orbit.
+- **Transverse coordinates and moving frames:** Formulates local transverse coordinates $z = P(t)\delta x \in \mathbb{R}^{n-1}$ via moving frames, deriving the total time derivative $\dot{z} = (\dot{P}(t) + P(t)A(t))\delta x + P(t)B(t)\delta u$. Clarifies that an arbitrary projection matrix $P(t)$ is not automatically an autonomous, closed reduced system $\dot{z} = A_\perp(t)z + B_\perp(t)\delta u$ without an explicit transverse chart (e.g. moving Poincaré sections with monotonic phase $\dot{\theta} > 0$) that eliminates the along-trajectory tangential component $\delta x_\parallel$.
+- **Zero-input drift versus physical passivity:** Replaces the unqualified label of zero-input drift $f(x)$ as "passive geometry" with explicit port, storage function $V(x) \ge 0$, supply rate $w(u, y) = u^\top y$, and dissipation inequality $\dot{V} \le u^\top y$ requirements. Demonstrates that input coordinate shifts (e.g. non-zero nominal bias $u_0$) move terms between drift and input, which can destroy passivity with respect to the shifted port.
+- **Funnel synthesis chapter summary:** Replaces unqualified "certify convergence" with "certify finite-horizon invariance, reachability containment, and disturbance attenuation under stated assumptions."
+- **Task-dependent problem formulation:** Frames trajectory-centric control as a task-dependent organizing viewpoint within established control theory—well suited for underactuated, ballistic, or rhythmic maneuvers—rather than a universal replacement for classical setpoint regulation or time-indexed tracking.
+- **Primary source attribution:** Attributes established results to Hauser & Hindman (1995), Shiriaev, Freidovich & Gusev (2010), Manchester (2010, 2011), Westervelt et al. (2007), and Tedrake (MIT Underactuated Robotics).
+- **Preserved qualifications:** Retains manuscript provisional state, scaffolded notebook status, and pinned GitHub/Colab links intact.
+
+Validation:
+- Added 5 behavioral unit tests in `tests/test_control_is_motion_landing_page_rigor.py`:
+  1. `test_orbital_attraction_does_not_imply_timed_tracking_convergence`: unit circle attraction with persistent phase offset has non-zero timed error.
+  2. `test_moving_projection_chain_rule_requires_moving_frame_derivatives`: verifying $\dot{z} = (\dot{P} + PA)\delta x + PB\delta u$.
+  3. `test_shifted_input_offset_violates_passive_port_storage`: verifying constant input shift in damped system violates passivity of shifted port.
+  4. `test_tube_invariance_does_not_imply_asymptotic_attraction`: positive invariance of tube does not imply attraction to origin.
+  5. `test_control_is_motion_landing_page_rigor_contracts`: verifying all landing page rigor requirements.
+- Full test suites pass: `pytest tests/test_orbital_stability_rigor.py tests/test_control_is_motion_landing_page_rigor.py` (21 passed in 1.46s).
+- All checks pass: `ruff check .`, `black --check --line-length 100`, `python scripts/check_title_case.py` (665 source files checked), `python scripts/check_bibliography_quality.py`, `python scripts/check_citation_resolution.py` (294 qmd files checked).
 
 ---
 

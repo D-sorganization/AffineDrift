@@ -1,0 +1,17 @@
+### Verified Defects
+
+1. **Undefined Azimuth Singularity / Singular Axis Mismatch**:
+   - In \eqref{eq:implmeasurements}, azimuth is given by $\operatorname{atan2}(q_{iz}, q_{ix})$. With $x$ forward, $y$ up, and $z$ right, this angle lies in the local horizontal ($x$-$z$) plane.
+   - The text asserts: *"azimuth is undefined on the local vertical axis."* 
+   - Mathematically, $\operatorname{atan2}(q_{iz}, q_{ix})$ is undefined only when $q_{ix} = q_{iz} = 0$, which is precisely the local vertical axis ($y$-axis). However, the subsequent elevation expression is $\operatorname{atan2}(q_{iy}, \sqrt{q_{ix}^2 + q_{iz}^2})$, which evaluates to $\pm \pi/2$ (well-defined) when $q_{ix}=q_{iz}=0$.
+   - **Defect**: The text claims range rate requires $\rho_i > 0$ and azimuth is undefined, but fails to note that the elevation Jacobian/gradient is also singular at $q_{ix} = q_{iz} = 0$ (the vertical axis), where the radial component in the denominator of elevation derivatives vanishes.
+
+2. **Sign / Direction Convention in Delay Correction**:
+   - In \eqref{eq:impleventtime}, if $t_{\rm stamp}$ represents the raw detection timestamp at the sensor (as implied by subtracting transit time $d/c_s$ and detection latency $\tau_e$), the notation stating *"Let an acoustic timestamp include sound travel over distance $d$... and electronic/detection delay $\tau_e$"* is ambiguous with respect to sign conventions in clock-synchronization models if $t_{\rm stamp}$ is already software-corrected or latch-delayed. More critically, the text assumes $d$ is constant/known, but $d = \lVert \vect p(t_{\rm event}) - \vect s_{\rm mic} \rVert$, which depends nonlinearly on the impact point $\vect p$.
+
+---
+
+### Optional Elaboration (Not Concrete Defects)
+
+- **Radial Velocity Frame Invariance**: $\uvec u_i^{\mathsf T}\vect v = (\vect q_i/\rho_i)^{\mathsf T}\vect w_i$. While the text switches between local ($\vect q_i, \vect w_i$) in \eqref{eq:implmeasurements} and world vectors ($\uvec u_i, \vect v$) in \eqref{eq:implradialjacobian}, the inner product is orthonormal-invariant ($R_i R_i^{\mathsf T} = I$), so the mathematics is consistent.
+- **Convention on Azimuth/Elevation Signs**: $\operatorname{atan2}(q_{iz}, q_{ix})$ measures angle clockwise from forward toward right; standard spherical conversions often use $(y, x)$ or define elevation from zenith. Defining axes and angles explicitly avoids ambiguity, but the chosen definition is mathematically self-consistent.

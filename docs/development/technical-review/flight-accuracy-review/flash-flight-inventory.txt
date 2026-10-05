@@ -1,0 +1,90 @@
+Here is the review inventory of mathematical definitions, conventions, and claims in the supplied text, prepared in read-only mode without file modifications, tool execution, or external network access.
+
+---
+
+# Scientific Review Inventory: Ball Flight Models and Trajectory Estimation
+
+## 1. Mathematical Definitions and Conventions Requiring Review
+
+### 1.1 Magnus Force Direction and Unit Vector Conventions (\cref{eq:eom})
+- **Algebra / Convention Check**: 
+  $$\tfrac{1}{2}\rho A C_L \lVert\vect{v}_a\rVert^2 \,(\hat{\vect{\omega}} \times \hat{\vect{v}}_a)$$
+  - **Direction**: In classical fluid mechanics / aerodynamics, the Magnus lift force acting on a body spinning with angular velocity $\vect{\omega}$ translating at velocity $\vect{v}_a$ is oriented along $\vect{\omega} \times \vect{v}_a$. 
+    - Writing $\hat{\vect{\omega}} \times \hat{\vect{v}}_a$: for a golf ball with pure backspin, $\vect{v}_a$ is forward ($+\hat{x}$) and backspin $\vect{\omega}$ is directed to the player's left ($+\hat{y}$). Then $\hat{\vect{\omega}} \times \hat{\vect{v}}_a = \hat{y} \times \hat{x} = -\hat{z}$ (pointing downwards, implying negative lift/downforce).
+    - If the standard right-handed convention is assumed ($x$ forward, $y$ left/right, $z$ upward), this term yields negative lift for standard backspin unless $\vect{\omega}$ is non-standardly defined or inverted.
+  - **Magnitude Scaling**: The expression multiplies $\lVert\vect{v}_a\rVert^2$ by the unit vector cross product $(\hat{\vect{\omega}} \times \hat{\vect{v}}_a)$. Note that $\lVert\hat{\vect{\omega}} \times \hat{\vect{v}}_a\rVert = \sin\phi$, where $\phi$ is the angle between spin axis and airspeed vector. If $\vect{\omega}$ is not orthogonal to $\vect{v}_a$ (e.g., in the presence of rifle spin / gyro spin $\vect{\omega} \cdot \hat{\vect{v}}_a \neq 0$), this scales down the lift magnitude by $\sin\phi$ in addition to whatever dependence is already absorbed into $C_L(S)$. Whether $C_L$ is parameterized on total spin $\omega$ or strictly transverse spin $\omega_\perp = \omega \sin\phi$ must be stated explicitly.
+
+### 1.2 Drag Term Consistency (\cref{eq:eom})
+- **Form**: $-\tfrac{1}{2}\rho A C_D \lVert\vect{v}_a\rVert \vect{v}_a$.
+  - Factoring out $\vect{v}_a$, the scalar magnitude is $\tfrac{1}{2}\rho A C_D \lVert\vect{v}_a\rVert^2$, which aligns with standard aerodynamic convention. Direction is antiparallel to airspeed.
+
+### 1.3 Lateral Magnus Force Component and Lateral Acceleration
+- **Claim**: "Tilting the spin axis by $\theta$ rotates the Magnus force off vertical, giving lateral acceleration $(F_M/m)\sin\theta$".
+  - **Missing Assumptions**: This assumes pure backspin tilted around the velocity axis (i.e. zero rifle/sidespin components initially, with pitch angle of velocity $\approx 0$, or $\theta$ defined strictly as roll around the trajectory tangent). If $\theta$ is an Euler angle or azimuth in a fixed Cartesian frame, $(F_M/m)\sin\theta$ is an approximation that ignores pitch/elevation coupling ($v_z \neq 0$).
+
+---
+
+## 2. State Vector and Dynamic Evolution
+
+### 2.1 Spin-Ratio State Dynamics in EKF (\cref{sec:ekf})
+- **Definition Check**: State is defined as $\vect{x} = (\vect{p}, \vect{v}, S, \theta_{\mathrm{axis}})$.
+  - **Algebra / Formulation Issue**: $S$ is defined in \cref{eq:eom} as the kinematic dimensionless ratio $S = \frac{R\omega}{\lVert\vect{v}_a\rVert}$.
+    - If $S$ is treated as an independent state variable rather than $\omega$, then $\dot{S} = \frac{R\dot{\omega}}{\lVert\vect{v}_a\rVert} - \frac{R\omega}{\lVert\vect{v}_a\rVert^2}\frac{d\lVert\vect{v}_a\rVert}{dt}$.
+    - Because $\lVert\vect{v}_a\rVert$ depends directly on $\vect{v}$ and decelerates under drag, $S$ couples directly to the acceleration $\dot{\vect{v}}$.
+    - Physical spin decay laws (such as Smits--Smith's $\approx 4\%/\text{s}$) govern angular speed $\dot{\omega} = -\lambda \omega$, not $\dot{S} = -\lambda S$. Under drag, $\lVert\vect{v}_a\rVert$ decreases faster than $\omega$ decays early in flight, causing $S$ to *increase* during the ascending arc.
+    - Stating $S$ as a filter state without defining its process dynamic equation $\dot{S} = f(\vect{x})$ obscures this coupling. Using physical spin magnitude $\omega$ (or angular velocity vector $\vect{\omega}$) as the state variable is standard and algebraically uncoupled from airspeed.
+
+### 2.2 Spin Axis Representation
+- **Definition Check**: State includes scalar $\theta_{\mathrm{axis}}$.
+  - **Missing Assumptions**: A 3D unit vector $\hat{\vect{\omega}}$ has 2 degrees of freedom (e.g., tilt/spin axis and precession/nutation, or azimuth and elevation). Restricting the state to a single scalar $\theta_{\mathrm{axis}}$ assumes a constrained motion (e.g., zero rifle spin, with axis constrained orthogonal to $\vect{v}$, or fixed elevation).
+
+---
+
+## 3. Event and Boundary Definitions
+
+### 3.1 Carry Landing Event
+- **Definition**: "carry is evaluated where the trajectory returns to launch elevation."
+  - **Missing Assumptions**: This defines flat-ground carry ($z(t_{\mathrm{carry}}) = z(0)$). Real-world courses and testing protocols often differentiate between flat-surface zero-datum carry, fairway elevation drop, and tee height offset (e.g., ball launched from $z = 0.05$\,m tee returning to $z = 0$).
+
+### 3.2 Back-Extrapolation to "Face Separation"
+- **Definition / Claim**: "evaluate the state at the moment of face separation... by smoothing and back-extrapolation".
+  - **Missing Assumptions**: Impact contact time is $\sim 450\,\mu\text{s}$, over which club acceleration and non-aerodynamic forces dominate. Back-extrapolation of pure aerodynamic flight equations (\cref{eq:eom}) can only extrapolate to the point of separation $t_0^+$, assuming the separation timestamp is known or resolved via independent trigger (such as CW radar trigger).
+
+---
+
+## 4. Observability and Trajectory Estimation Claims
+
+### 4.1 Observability of Spin and Spin Axis from Radar
+- **Unsupported Universal Claim**: "radars fit it to partial trajectories to extract spin axis and to extrapolate indoor flights... Including $\theta_{\mathrm{axis}}$ in the state makes spin-axis-from-curvature fall out of the filter naturally".
+  - **Missing Assumptions / Observability Limit**:
+    - Over very short indoor flight tracks ($< 3$--$4$\,m, duration $< 50$--$80$\,ms), lateral aerodynamic curvature due to lift/Magnus force is on the order of a few millimeters to tens of millimeters.
+    - In short indoor bursts, sensor noise and angular resolution of radar (especially patch arrays like K-LD7) often make lateral curvature weakly observable or ill-conditioned without direct Doppler micro-Doppler spin sideband measurements.
+    - Treating this as universally resolved via EKF smoothing over 10–20 detections over 50\,ms without explicit observability / Cramér–Rao Bound conditioning is an unverified assertion.
+
+### 4.2 Measurement Model Linearizations
+- **Definition**: $\dot{r} = \vect{v} \cdot \hat{\vect{p}}$.
+  - **Check**: Valid for radial velocity relative to sensor at origin $\vect{p} = \vect{0}$. Requires specifying that the radar is located at the coordinate origin.
+
+---
+
+## 5. Sensitivity and Uncertainty Examples
+
+### 5.1 Indoor Extrapolation Sensitivities
+- **Claims**:
+  - "at driver speeds, $\pm300$\,rpm maps to roughly $\pm4$--6\,yd of carry and $\pm1$\,yd of side"
+  - "a $\pm2^\circ$ spin-axis error at 2,500\,rpm maps to $\pm3$--4\,yd of side at 250\,yd carry"
+- **Assessment**:
+  - **Parameter Dependence**: These numbers represent specific rule-of-thumb operating points (e.g., driver launch speed $\sim 150$--$165$\,mph, launch angle $\sim 10$--$12^\circ$). They are stated as broad characterizations without specifying baseline launch parameters (ball speed, launch angle, total spin, atmospheric conditions).
+  - **Label as Benchmark / Rule-of-Thumb**: The text should explicitly condition these numerical propagation values on a specific nominal driver condition (e.g., $160$\,mph ball speed, $11^\circ$ launch elevation, nominal $2500$\,rpm backspin).
+
+---
+
+## Summary Table for Lead Review
+
+| Section / Item | Issue Type | Core Finding |
+| :--- | :--- | :--- |
+| **\cref{eq:eom} Magnus term** | Direction / Convention | Check vector cross product $\hat{\vect{\omega}} \times \hat{\vect{v}}_a$ vs. coordinate system orientation (potential sign inversion for backspin lift); clarify whether $\sin\phi$ scaling is intentional. |
+| **\cref{eq:eom} Lateral acceleration** | Missing Assumption | $(F_M/m)\sin\theta$ assumes zero pitch coupling and specific Euler angle definition. |
+| **\cref{sec:ekf} State $\vect{x}$** | Algebra / Dynamic Formulation | Using $S$ as state variable couples to velocity deceleration ($\dot{v}$); spin decay naturally governs $\omega$, not $S$. |
+| **\cref{sec:ekf} Radar Observability** | Unsupported Claim | 50\,ms radar burst trajectory curvature has marginal observability for spin axis indoors without micro-Doppler or prior constraints. |
+| **\cref{ch:flight} Numerical sensitivities** | Context / Baseline Missing | Sensitivity figures ($\pm 300$\,rpm $\rightarrow \pm 4\text{--}6$\,yd) need explicit nominal baseline trajectory conditions. |

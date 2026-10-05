@@ -22,6 +22,7 @@ const {
   isActionableConsoleError,
   isActionablePageError,
 } = require('./public-site-browser-noise.js');
+const { formatFailures } = require('./public-site-failures.js');
 
 const SCHEMA_VERSION = 'affinedrift/public-site-manifest/v1';
 
@@ -651,6 +652,7 @@ async function main() {
     `Public site verification: ${report.evidence_count}/${report.expected_evidence_count} evidence items, ` +
     `${report.failure_count} failed -> ${options.outputPath}`,
   );
+  for (const line of formatFailures(report.results)) console.log(line);
   const axe = report.axe_policy;
   if (axe.mode !== 'off') {
     const cellSuffix = axe.scanned_cell_count !== undefined ? ` (${axe.scanned_cell_count} cells)` : '';
