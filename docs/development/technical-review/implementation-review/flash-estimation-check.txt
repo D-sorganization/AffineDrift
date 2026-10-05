@@ -1,0 +1,29 @@
+### Mathematical Verification
+
+#### 1. Coordinate Transforms & Radar Measurement Model ($h$)
+* **Frame mapping & rotation invariance:** If $R_i \in \mathrm{SO}(3)$ maps sensor to world ($p = R_i q + s_i$), then $q = R_i^T(p - s_i)$ and $w = R_i^T v$. Note that $\rho = \|q\|_2 = \|p - s_i\|_2$ and $q \cdot w = (p - s_i) \cdot v$, making range $\rho$ and radial velocity $v_r = \frac{q \cdot w}{\rho} = u^T v$ invariant to rotation.
+* **Angles & Conventions:** Azimuth $\operatorname{atan2}(q_z, q_x)$ and elevation $\operatorname{atan2}(q_y, \sqrt{q_x^2 + q_z^2})$ assume a sensor frame where forward is along $+x$ (or azimuth lies in the $x$-$z$ plane) and elevation is toward $+y$. 
+* **Singularities:** Undefined at $\rho = 0$ (at sensor center). Elevation has a coordinate singularity/gimbal lock when $q_x = q_z = 0$ (optical axis alignment).
+
+---
+
+#### 2. Radial Speed Jacobians
+* With $v_r = \frac{(p - s_i)^T v}{\rho}$ and $u = \frac{p - s_i}{\rho}$:
+  $$\frac{\partial v_r}{\partial v} = u^T \quad \text{(correct)}$$
+  $$\frac{\partial v_r}{\partial p} = \frac{v^T}{\rho} - \frac{(p - s_i)^T v}{\rho^2} \frac{\partial \rho}{\partial p} = \frac{v^T - v_r u^T}{\rho} = \frac{(v - v_r u)^T}{\rho} \quad \text{(correct)}$$
+* **Units:** $[\partial v_r / \partial v] = \mathrm{m/s} / (\mathrm{m/s}) = 1$ (dimensionless). $[\partial v_r / \partial p] = (\mathrm{m/s}) / \mathrm{m} = \mathrm{s}^{-1}$ (dimensionless $/ \mathrm{s}$).
+
+---
+
+#### 3. Timing & Range Uncertainty
+* **Trigger equation:** $t_0 = t_{\text{stamp}} - \frac{d}{c_s} - \tau_e$. Units are consistent ($[\mathrm{s}] - [\mathrm{m}]/[\mathrm{m/s}] - [\mathrm{s}]$).
+* **Along-track uncertainty:** $\sigma_x = v \cdot \sigma_t = (67.056\text{ m/s}) \times (100 \times 10^{-6}\text{ s}) = 6.7056 \times 10^{-3}\text{ m} = 6.7056\text{ mm}$ (correct arithmetic and units).
+* **Assumption:** Assumes zero velocity error and negligible acceleration over $\sigma_t$.
+
+---
+
+#### 4. Scalar Launch Model Sensitivities
+* Model: $b = wF + (1 - w)P \implies F = P + \frac{b - P}{w} = \frac{b - (1 - w)P}{w}$.
+* Partial derivatives:
+  $$\frac{\partial F}{\partial b} = \frac{1}{w}, \quad \frac{\partial F}{\partial P} = 1 - \frac{1}{w} = -\frac{1 - w}{w}, \quad \frac{\partial F}{\partial w} = -\frac{b - P}{w^2}$$
+* **Signs & Singularities:** All signs and derivatives are exact. Singular at $w = 0$ (requires strictly $w \neq 0$, typically $w \in (0, 1]$).

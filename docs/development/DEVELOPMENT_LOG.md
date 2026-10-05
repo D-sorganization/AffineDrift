@@ -1,3 +1,26 @@
+# Parameter Delivered and Article Main Integration — 2026-10-04
+
+Verified all eight accepted parameter source/evidence hashes on actual remote main d33e635d5 after PR #4886 merge. Released its lease/presence and merged main into #4889 with only metadata conflict resolution; all four accepted article hashes remain unchanged. Retargeted-main delivery preparation follows; CI/protected merge remains.
+
+# Implementation Appendix Acceptance — 2026-10-04
+
+Frozen source f141a02b5be45db857bee76e2d078ce5a444a135 passed 6,863 tests with 93.24% src coverage in 453.48 seconds. Scoped final PDF and complete source review accepted, five canonical bindings saved, only the appendix corpus row advanced. Earlier parameter PDF/bibliography hashes remain historical; the other 13 parameter/article/date source bindings are unchanged. Protected delivery remains. Follow-up #4894 groups the connected flight, accuracy and design chapters; two Flash inventories and primary-reading preparation are isolated from this acceptance.
+
+# DL-#4890 — Implementation Appendix Source Checkpoint
+
+2026-10-04: completed full original/revision reading and primary-source checks. Corrected Doppler/window claims, dechirping, club reference-point interpretation, hardware cadence, sensor observation functions and Jacobians, EKF/RTS assumptions, event timing, inverse-club priors, optical blur/overlap and held-out validation. Five read-only Flash helpers were lead-adjudicated. Manufactured arithmetic and 100 finite-difference Jacobians pass. Canonical PDF rebuilt to 97 pages with 102 printed references; scoped final visual review passed after fixing a stranded heading. Full frozen regression and protected delivery remain. See the implementation dossier for derivations, source-reading bounds and rejected helper assertions.
+
+# DL-#4888 — Unverified Date Presentation
+
+The browser exposed Invalid Date in two shared presentation surfaces. TDD reproduced both failures, then a scoped title-placeholder replacement and metadata-aware span fixed them without replacing dates in article prose. Seven new cases and existing metadata/header suites pass; browser output and delegation limits are recorded. Frozen source 70337154c passed 6,863 tests, 29 skips, 210 deselections and 60 warnings in 593.82 seconds, with 93.24% src coverage and no tracked edits during execution. Article acceptance metadata through 5ccb2d600 is integrated. Five final pre-PR gates passed over explicit source refs using repaired tool ca802ada, with 15 mapped tests; 44 metadata/root/SPEC tests passed. Protected delivery remains.
+
+# Dimensionality and Integration Source Review — 2026-10-04
+
+Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. Both reviews, scoped local presentation and full regression are accepted at 6cd4d2eee. Regular PR #4889 is open, stacked on #4886; remote-main delivery remains. See the review report for hypotheses and rejected suggestions.
+# Dimensionality and Integration Source Review — 2026-10-04
+
+Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. See the review report for hypotheses, rejected suggestions and outstanding browser/regression acceptance.
+
 # Parameter Review Acceptance — 2026-10-04
 
 Issue4881: full chapter/PDF review and full regression accepted at 117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb. Canonical source and validation records preserve scope, rejected helper errors and all test outcomes. Regular protected PR delivery remains.
@@ -741,6 +764,18 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Freshness dashboard route links now target page-relative paths derived from the output path; 12 path-style baseline entries removed. The journey-page workbench entry stays on purpose.
 - **Next step:** Review the draft PR, then arm it through the merge queue.
 
+### DL-#4883 · Un-nest See Also Callout Headings
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** pending (draft; main)
+- **Issue:** #4883 (parent #3896)
+- **Branch:** `claude/issue-4883`
+- **Paths:** `articles/tangent-hyperplanes-series/`, `tests/link_gate_baseline.json`, `tests/test_site_link_gate.py`
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-04 (site-gate tests pass incl. new stale-baseline test; `link-checker.py --site-gate` passes; claim-audit `--check` exit 0)
+- **Summary:** 17 pages use a `title="See Also"` callout attribute instead of a nested `## See Also` heading; five tangent-hyperplane parts gain previous/next links; related-coverage baseline goes from 70 to 45 entries.
+- **Next step:** Review the draft PR, then arm it through the merge queue.
 ### DL-#4913 · Benchmark Baseline Platform Detection
 
 - **State:** in_review

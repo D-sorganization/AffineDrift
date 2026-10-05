@@ -1,0 +1,101 @@
+{
+  "issue": 4890,
+  "epic": 4009,
+  "status": "Complete appendix source and scoped PDF accepted; protected delivery pending",
+  "accepted_source_commit": "f141a02b5be45db857bee76e2d078ce5a444a135",
+  "git_blob_sha256": {
+    "articles/Launch_Monitor_Technology_Review/sections/appendix-b-implementation.tex": "179384e8969027ce9604765b2cde71e4cb76e1b6c2148615c5348efdc2b2146b",
+    "articles/Launch_Monitor_Technology_Review/references.bib": "809ee11bafe56d47b033341c11784d928fe1031167d9559d9b5c27d91c55b1ce",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "f22611656992536dcb4a43d50ccfc7313cc7e21252ab89c120d9364ce4209f7a",
+    "articles/Launch_Monitor_Technology_Review/research/implementation-review-20261004.md": "8d1438d9ccef0c969b8b3b2ec0562075a84aeaadc3270b8f0695c2c2ed7fc7e8",
+    "reports/technical-review/implementation-independent-checks.json": "b54aa9a72b8b24b0a3d955b01f83652b939e4946e66b838e0ccbb4e6204ee168"
+  },
+  "scope": "Complete Appendix B only; no empirical device, whole-book scientific or live-site certification",
+  "full_regression": {
+    "head": "f141a02b5be45db857bee76e2d078ce5a444a135",
+    "passed": 6863,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 453.48,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "concurrency": "No tracked edits, rendering or hooks in this worktree during run",
+    "log": "docs/development/technical-review/implementation-review/full-tests.txt",
+    "git_blob_sha256": "aaa9b3b7aa8c26193d43f6b6c589ac3454cf3be260b6447510d92058d8249f40",
+    "notes": "PowerShell empty git-status pipeline produced no before/after text file; explicit clean status was observed before and after. Test-generated packaging directories were verified contained/untracked and preserved under QA afterward."
+  },
+  "pdf": {
+    "pages": 97,
+    "bibliography_entries": 102,
+    "printed_entries": 102,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Final physical pages 3\u20136 TOC, 60\u201366 complete Appendix B, 90\u201397 complete bibliography",
+    "local_layout_fix": "Needspace keeps B.2 section with its first subsection; scoped pages re-inspected after rebuild",
+    "build_log": "docs/development/technical-review/implementation-review/accepted-build.txt",
+    "build_exit": 0
+  },
+  "mathematics": {
+    "record": "reports/technical-review/implementation-independent-checks.json",
+    "radial_jacobian_cases": 100,
+    "maximum_absolute_error": 2.42239295289437e-9,
+    "threshold": 1e-7,
+    "scope": "Manufactured arithmetic and finite differences; not measured device performance"
+  },
+  "delegation": {
+    "helpers": 5,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only; all findings lead-adjudicated in the research dossier"
+  },
+  "prior_acceptance_reconciliation": {
+    "unchanged_paths": [
+      "articles/Launch_Monitor_Technology_Review/sections/02-parameters.tex",
+      "articles/Launch_Monitor_Technology_Review/main.tex",
+      "articles/Launch_Monitor_Technology_Review/sections/appendix-a-references.tex",
+      "articles/Launch_Monitor_Technology_Review/research/parameter-review-20261004.md",
+      "reports/technical-review/parameter-review.md",
+      "reports/technical-review/parameter-independent-checks.json",
+      "articles/degrees-of-freedom-and-dimensionality.qmd",
+      "articles/upstreamdrift-educational-integration.qmd",
+      "reports/technical-review/dimensionality-integration-review.md",
+      "docs/development/technical-review/dimensionality-integration/independent-checks.json",
+      "scripts/post_render_citations.py",
+      "scripts/filters/page-header-card.lua",
+      "tests/test_citation_metadata.py"
+    ],
+    "intentional_changed_paths": [
+      "articles/Launch_Monitor_Technology_Review/references.bib",
+      "articles/Launch_Monitor_Technology_Review/main.pdf"
+    ],
+    "explanation": "New filtering bibliography entry and rebuilt PDF supersede those two artifacts for this appendix checkpoint. Prior chapter-2 scientific source acceptance remains historical and unchanged; no blanket equality to its older PDF/bibliography is claimed."
+  },
+  "delivery": {
+    "status": "Regular PR open; protected parent delivery pending",
+    "base": "fix/unverified-date-display",
+    "dependency": "PR #4891 after #4889 after #4886; retarget main only after parent delivery",
+    "next": "Verify actual protected merge and canonical source bytes before release",
+    "pr": "https://github.com/D-sorganization/AffineDrift/pull/4895",
+    "draft_pr": false,
+    "initial_head": "ccaa2f04cc0656e5fc70d97c298992828771b9fb"
+  },
+  "pre_pr": {
+    "status": "passed",
+    "gates_passed": 5,
+    "tool_source": "Repository_Management 5ee23e5d78bc71305ea8993497b20e5bed3c6d7c",
+    "command": "pre_pr --from-ref 73868d111 --to-ref f141a02b5",
+    "mapped_tests": 0,
+    "scope": "Document/source-only diff maps no Python tests; full frozen regression is separately recorded",
+    "log": "docs/development/technical-review/implementation-review/pre-pr.txt",
+    "exit_code": 0
+  },
+  "metadata_tests": {
+    "status": "passed",
+    "passed": 40,
+    "seconds": 55.45,
+    "exit_code": 0,
+    "command": "pytest tests/test_citation_metadata.py tests/test_root_hygiene.py tests/test_spec_changelog.py --no-cov",
+    "log": "docs/development/technical-review/implementation-review/metadata-tests.txt"
+  }
+}

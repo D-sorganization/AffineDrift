@@ -1,0 +1,37 @@
+Based on a read-only editorial and technical consistency review of the supplied text, here are the actionable findings, categorized by issue type with quoted short locations:
+
+---
+
+### 1. Undefined References and Cross-Reference Integrity
+
+* **Location:** `"The measurement hierarchy in \cref{tab:hierarchy} applies to every row."`
+  * **Issue:** `\cref{tab:hierarchy}` is referenced directly as foundational context for the table, but no table with label `tab:hierarchy` is provided or introduced in this chapter text. If this cross-reference resolves to an earlier chapter, ensure the anchor exists; otherwise, it is an dangling or unexplained reference.
+* **Location:** `"The point-velocity and marker-registration distinctions in \cref{sec:camclub} apply..."`
+  * **Issue:** `\cref{sec:camclub}` is referenced as technical justification for metric differences. Verify that `sec:camclub` is defined in the document structure, or clarify the term inline if this chapter is standalone.
+
+---
+
+### 2. Misleading Inferences & Unsupported Assertions in Supplied Text
+
+* **Location:** `"...whereas its current product page calls them optional or recommended and displays a broader club-metric list~\cite{uneekorminisupport,uneekoreyexo}."`
+  * **Issue (Mismatched citation anchor):** The sentence discusses the **EYE MINI** product page/support discrepancy, but cites `\cite{uneekoreyexo}` (which indicates the overhead EYE XO line) alongside `uneekorminisupport`. If the claim is specifically about the Eye Mini's product page, citing the Eye XO page creates a citation mismatch/misattribution.
+* **Location:** `"An embedded radar-reflective RCT structure is not interchangeable with an optical RPT pattern."`
+  * **Issue (Unexplained acronyms on first mention):** In the table, RPT and RCT are contrasted before RCT is formally expanded. In the text (§1.3 / §1.4), RPT is expanded (`"RPT denotes Rapsodo Precision Technology"`), but **RCT** (Radar Capture Technology) is never defined anywhere in the text, leaving it as unexplained technical jargon.
+
+---
+
+### 3. Ambiguous Measurement Claims and Scope
+
+* **Location:** `"Foresight GC3 / Bushnell Launch Pro & Three-camera family & GC3's documented club set is speed, path, attack and smash; face orientation and impact location are not established by that list. \\"`
+  * **Issue (Asymmetry between paired models):** The table row groups *GC3* and *Bushnell Launch Pro*, but the entry note only states what GC3's documented set is. Given that the text later notes *"branding and subscriptions should not replace model-specific entitlement checks"*, stating the GC3 restriction without explicitly noting whether Bushnell Launch Pro shares the exact same documented club set leaves the Bushnell Launch Pro's specific interpretation ambiguous.
+* **Location:** `"The separation of TrackMan Home from Home Complete/Commercial..."` / `"The listed Home package club output is narrower than the Home Complete/Commercial set, which includes face orientation and impact location."`
+  * **Issue (Ambiguous measurement context):** While it correctly points out that software tiers gate these metrics, it does not state whether "impact location" on TrackMan iO is an optically observed metric or an algorithmically derived/estimated quantity under those packages.
+
+---
+
+### 4. Technical Phrasing and Editorial Consistency
+
+* **Location:** `"OpenFlight & Radar development architecture & Hardware interfaces and experimental processing are discussed in \cref{app:implementation}; no universal spin-detection yield follows. \\"`
+  * **Issue (Ambiguous terminology):** The phrase `"spin-detection yield"` (and later `"experimental spin-detection fraction"`) is non-standard in radar signal processing. In radar Doppler estimation, standard terminology is either *detection rate*, *track acquisition rate*, or *estimation confidence/success rate*. Using "yield" conflates manufacturing/harvest terms with signal estimation frequency.
+* **Location:** `"SkyTrak ST+ & Photometric ball tracking with dual-radar club tracking..."` vs. `"SkyTrak describes photometric ball tracking and dual-radar club estimation with machine learning for ST+..."`
+  * **Issue (Naming consistency):** Commercial branding is typically "SkyTrak+" rather than "SkyTrak ST+". If "ST+" is used as shorthand to contrast with "ST MAX", define the shorthand at first mention to avoid reader confusion with distinct product SKUs.

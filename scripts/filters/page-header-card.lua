@@ -114,6 +114,8 @@ function Pandoc(doc)
   -- 4. Dates
   local published_raw = meta["date"] or meta["published"] or meta["date-published"]
   local published_str = stringify(published_raw)
+  local publication_unverified = stringify(meta["date-source"]):lower() == "unverified"
+  if publication_unverified then published_str = "Date unverified" end
   local has_published = published_str:match("%S") ~= nil
 
   local reviewed_raw = meta["last-reviewed"] or meta["date-modified"] or meta["reviewed"]
@@ -229,11 +231,16 @@ function Pandoc(doc)
   end
 
   if has_published then
+    local published_markup = '<time datetime="' .. escape_html(published_str) .. '">' .. escape_html(published_str) .. '</time>'
+    if publication_unverified then
+      -- Uncertainty is text, not a machine-readable instant.
+      published_markup = '<span class="date-unverified">Date unverified</span>'
+    end
     table.insert(items,
       '    <div class="page-header-item page-header-item--published">\n' ..
       '      <dt class="page-header-label">Published</dt>\n' ..
       '      <dd class="page-header-value">\n' ..
-      '        <time datetime="' .. escape_html(published_str) .. '">' .. escape_html(published_str) .. '</time>\n' ..
+      '        ' .. published_markup .. '\n' ..
       '      </dd>\n' ..
       '    </div>'
     )

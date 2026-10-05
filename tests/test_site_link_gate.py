@@ -312,6 +312,19 @@ class TestBaseline:
     def test_default_baseline_path_is_in_tests(self) -> None:
         assert BASELINE_PATH.as_posix() == "tests/link_gate_baseline.json"
 
+    def test_committed_baseline_has_no_stale_entries(self) -> None:
+        """Every committed baseline entry must still be reported by the gate (#4883)."""
+        root = Path(__file__).resolve().parent.parent
+        report = run_site_gate(root, use_baseline=False)
+        baseline = json.loads((root / BASELINE_PATH).read_text(encoding="utf-8"))
+        stale = [
+            f"{check}: {entry}"
+            for check, entries in baseline.items()
+            for entry in entries
+            if entry not in report.get(check, [])
+        ]
+        assert not stale, f"stale baseline entries: {stale}"
+
 
 class TestVocabulary:
     def test_vocabulary_ships_with_repo(self) -> None:

@@ -1,0 +1,125 @@
+An inventory of concrete technical inaccuracies and category confusions in the provided source text is detailed below. 
+
+Per your instructions, the concepts of **configuration dimension ($\dim \mathcal{Q}$)**, **state dimension ($\dim T\mathcal{Q}$ or $\dim \mathcal{X}$)**, **control dimension ($\dim \mathcal{U}$)**, **task map kernel / null-space dimension**, **manifold constraints**, **PCA variance rank**, **dissipativity**, **transverse contraction**, and **computational complexity** are explicitly distinguished. Claims of empirical human neuroscience/biomechanics mechanisms are treated as unadjudicated hypotheses and excluded from mathematical facts.
+
+---
+
+### Inaccuracy 1: Confusing Configuration Dimension with State Dimension in Code Comments and Variable Definitions
+
+* **Exact Quote:**
+  > ```python
+  > # Simulate 100 trials of a 2-DoF double pendulum near a limit cycle
+  > ...
+  > n_dof = 4  # [theta1, theta2, dtheta1, dtheta2]
+  > ```
+* **Distinction & Reason:**
+  * **Configuration Dimension vs. State Dimension:** A 2-DoF double pendulum has configuration space $\mathcal{Q} = \mathbb{T}^2$, so its degrees of freedom / configuration dimension is $\dim \mathcal{Q} = 2$. Its state space (tangent bundle $T\mathcal{Q}$) has dimension $2 \times \dim \mathcal{Q} = 4$. Calling the 4-dimensional state vector `n_dof = 4` directly contradicts the definition of degrees of freedom given earlier in the article ("A degree of freedom (DoF) is an independent parameter needed to specify the configuration of a system").
+* **Minimal Fix:**
+  ```python
+  n_dof = 2
+  n_state = 2 * n_dof  # [theta1, theta2, dtheta1, dtheta2]
+  ```
+
+---
+
+### Inaccuracy 2: Conflating Input (Control) Dimension with Configuration / State Degrees of Freedom
+
+* **Exact Quote:**
+  > "In a double pendulum (2 DoF), once you release the top link, the second link follows a trajectory determined entirely by gravity and inertia. The effective control problem is 1-dimensional, not 2-dimensional."
+* **Distinction & Reason:**
+  * **Control Dimension vs. Configuration Dimension vs. Underactuation:** For a 2-DoF double pendulum, the configuration manifold remains 2-dimensional ($\dim \mathcal{Q} = 2$) and the state space remains 4-dimensional ($\dim T\mathcal{Q} = 4$). Actuating only the top link ($m = 1$) makes the system an **underactuated control system** with control dimension $m = 1 < \dim \mathcal{Q}$. The state-space dynamics do not collapse to a 1D differential equation; the phase space remains 4D with a 2nd-order non-integrable dynamic coupling. Calling the control problem "1-dimensional" conflates control input dimension $m = 1$ with state/manifold dimension.
+* **Minimal Fix:**
+  > "In an underactuated double pendulum (2 configuration DoF, 4 state dimensions) actuated only at the first joint, the control input dimension is $m = 1 < n = 2$. Passive dynamics govern the unactuated coordinate rather than an eliminated kinematic degree of freedom."
+
+---
+
+### Inaccuracy 3: Conflating Dissipativity, Transverse Contraction, and Attractor Dimension
+
+* **Exact Quote:**
+  > "Dissipative dynamics contract volume in state space. A system with a stable limit cycle (e.g., a walking gait, a golf swing phase) has its full $n$-dimensional state space contracting exponentially toward a 1-dimensional curve. Control only needs to stabilize perturbations *transverse* to this curve."
+* **Distinction & Reason:**
+  * **Dissipativity vs. Transverse Contraction:** Phase-volume contraction ($\operatorname{div} f < 0$, Liouville's theorem / dissipative vector fields) is a global or average divergence property that merely shrinks $n$-dimensional volume; it does *not* imply convergence of trajectories toward each other or toward a 1D curve (e.g., chaotic attractors like the Lorenz system have volume contraction but positive Lyapunov exponents and non-integer fractal dimensions > 2).
+  * Furthermore, autonomous limit cycles cannot be strictly exponentially contractive everywhere because the tangential Lyapunov exponent along the orbit is zero. Contraction must specifically be **transverse contraction** (orbital contraction / transverse contraction metric on the quotient bundle).
+* **Minimal Fix:**
+  > "Systems exhibiting transverse contraction to an orbitally stable limit cycle contract state perturbations transverse to the 1-dimensional periodic orbit exponentially, reducing trajectory stabilization to an $(n-1)$-dimensional transverse subsystem."
+
+---
+
+### Inaccuracy 4: Misstatement of Contraction Metric Dimension Reduction Mechanics
+
+* **Exact Quote:**
+  > "Volume I Chapter 4 proves that under exponential contraction, the asymptotic behavior of an $n$-dimensional system is confined to a manifold of dimension equal to the number of zero-exponent Lyapunov directions."
+* **Distinction & Reason:**
+  * **Contraction Theory vs. Center Manifold / Lyapunov Exponents:** By definition in nonlinear contraction theory (Lohmiller & Slotine, 1998), a system contracting under a uniformly positive-definite metric with contraction rate $\alpha > 0$ contracts to a *unique trajectory* (dimension 0 for stationary equilibrium, or orbital convergence to a 1D curve if transverse contraction is satisfied). 
+  * The existence of multiple "zero-exponent Lyapunov directions" defines non-contracting directions (e.g., center manifolds or invariant tori), not a property proved by exponential contraction. Contraction does not yield an attractor manifold whose dimension matches arbitrary zero Lyapunov exponents; contraction rules out non-unique solutions in the contracting subspace.
+* **Minimal Fix:**
+  > "Contraction analysis with respect to a transverse metric establishes that trajectories converge exponentially to a 1-dimensional periodic orbit, bounding the asymptotic behavior to the orbit and reducing asymptotic variance to along-orbit phase drift."
+
+---
+
+### Inaccuracy 5: Claiming the Mass Matrix of an Open Kinematic Chain Has Bandwidth 1
+
+* **Exact Quote:**
+  > "This is a structural sparsity argument: the mass matrix is not full but has bandwidth 1 in the joint-space basis. Recognizing this sparsity reduces the curse from exponential to linear."
+* **Distinction & Reason:**
+  * **Manifold Metric / Mass Matrix Sparsity vs. Factorization:** In standard joint-space generalized coordinates for an open kinematic chain, the joint-space inertia matrix $M(q)$ is **dense (fully populated)** because moving an inner joint accelerates all descendant links, creating inertial cross-coupling between all pairs $(i, j)$ with $i \le j$.
+  * Featherstone's Articulated-Body Algorithm (ABA) achieves $O(n)$ complexity without forming or inverting $M(q)$ directly, by propagating spatial articulated inertias recursively. Alternatively, in the $L^T D L$ factorization of $M(q)$ (where $L$ is unit lower triangular), the inverse factors exhibit branch-induced sparsity. The mass matrix $M(q)$ itself is mathematically *not* tridiagonal / bandwidth-1.
+* **Minimal Fix:**
+  > "This is an algorithmic recursive factorization: while the joint-space inertia matrix $M(q)$ is dense, the chain topology enables an $O(n)$ spatial recursive factorization (as in Featherstone's ABA) that computes forward dynamics without explicit matrix inversion."
+
+---
+
+### Inaccuracy 6: Conflating PCA Variance Rank with Nonlinear Manifold Dimension and Task Kernel
+
+* **Exact Quote:**
+  > "In control theory terms: synergies are low-rank approximations to the input space. If the control input $\mathbf{u} \in \mathbb{R}^m$ lies on a $k$-dimensional subspace ($k \ll m$), the effective control problem is $k$-dimensional."
+* **Distinction & Reason:**
+  * **Control Subspace vs. Task Map Kernel vs. PCA Rank:** Restricting inputs $\mathbf{u}$ to an affine or linear subspace $U_k = B_s \mathbf{w} \in \mathbb{R}^m$ ($k < m$) reduces the *control dimension* from $m$ to $k$. However:
+    1. It does not simplify or reduce the underlying configuration manifold $\mathcal{Q}$ ($n$-dimensional) or state space ($2n$-dimensional).
+    2. If $m > n_{\text{task}}$, the system is redundant with respect to a task map $x = f(q)$. The task Jacobian null-space $\ker J(q)$ has dimension $n - n_{\text{task}}$, allowing internal motions that leave task coordinates invariant. 
+    3. Truncating control inputs to a linear subspace is a choice of actuator coupling (reducing actuation rank), distinct from task-space invariance (kernel of the task differential $df$), and distinct from empirical PCA variance rank of kinematic/EMG recordings.
+* **Minimal Fix:**
+  > "In control terms, actuator synergies constrain inputs to a $k$-dimensional subspace ($\mathbf{u} = S \mathbf{w}$, with $S \in \mathbb{R}^{m \times k}$), reducing control authority dimension from $m$ to $k$. This parameterizes the input space, distinct from task-space projection $J(q)\dot{q} = \dot{x}$ where redundancy is governed by $\dim(\ker J(q))$."
+
+---
+
+### Inaccuracy 7: Conflating DDP Per-Iteration Cost with Value Function Dimensionality Reduction
+
+* **Exact Quote:**
+  > "**Differential Dynamic Programming (DDP)** escapes this by approximating the value function quadratically *along a nominal trajectory*, reducing the full $n$-dimensional optimization to a sequence of $O(n^2)$ problems."
+  > ...
+  > | DDP trajectory optimization | Exponential → $O(n^2)$ |
+* **Distinction & Reason:**
+  * **Computational Complexity vs. Dimension:** DDP solves a local trajectory optimization problem along a discretized nominal rollout of $N$ time stages. At each time stage, DDP performs quadratic approximations of the Hamiltonian / Value function, which requires inverting a matrix of size $m \times m$ (control dimension) and multiplying matrices of sizes $n \times n$ and $n \times m$ (where $n$ is state dimension).
+  * The per-stage backward pass computational cost is $O(n^3 + n^2 m + n m^2 + m^3)$, giving a total trajectory sweep complexity of $O(N(n^3 + n^2 m))$—not $O(n^2)$. 
+  * Furthermore, DDP does not evaluate or store a global value function over $\mathbb{R}^n$; it computes a local LQ policy along a single 1D time trajectory $\gamma(t)$, escaping the grid-based Bellman curse of dimensionality at the cost of global optimality.
+* **Minimal Fix:**
+  > "**Differential Dynamic Programming (DDP)** escapes the exponential spatial grid of Bellman dynamic programming by computing a local quadratic expansion of the value function along a nominal trajectory, scaling as $O(N(n^3 + n^2 m))$ per iteration across $N$ time steps rather than $O(G^n)$ on an $n$-dimensional grid with $G$ points per axis."
+
+---
+
+### Inaccuracy 8: Confusing Task Redundancy with Cost Matrix Sparsity
+
+* **Exact Quote:**
+  > "Not all DoF matter equally at all times. At impact, club-head velocity and face angle are critical; hip position is irrelevant. Optimal control exploits this by using time-varying cost matrices $Q(t)$ and $R(t)$ that focus attention on the currently relevant subspace."
+* **Distinction & Reason:**
+  * **Task Map Differential / Task Subspace vs. Manifold Constraints:** When certain kinematic variables are unconstrained or unpenalized at specific times, the task map $y(t) = h(q(t))$ has $\dim(y) \ll \dim(q)$, and $\ker (dh) \neq \{0\}$.
+  * Setting state penalty weight sub-blocks to zero in a quadratic cost matrix $Q(t)$ does *not* reduce the underlying state or configuration dimension of the mechanical system or eliminate degrees of freedom. The system still evolves on the full tangent bundle $T\mathcal{Q}$; unpenalized states remain coupled through inertial and Coriolis forces in the Euler-Lagrange equations.
+* **Minimal Fix:**
+  > "Not all configuration coordinates are constrained by the task map at all times. Task-space formulations reflect this via time-varying terminal or running cost projections $Q(t) = C(t)^T Q_{\text{task}} C(t)$, where unpenalized coordinates lie in $\ker C(t)$, even though the full state dynamics remain coupled."
+
+---
+
+### Inaccuracy 9: Mischaracterizing Table Summary Alignments
+
+* **Exact Quote:**
+  > | Mechanism | Dimension Reduction | Example |
+  > |---|---|---|
+  > | Passive dynamics | $n$ → effective 1-3 | Golf downswing gravity assist |
+  > | Articulated-body sparsity | $O(n^3)$ → $O(n)$ | Robot chain forward dynamics |
+* **Distinction & Reason:**
+  * **Dimension Reduction vs. Algorithmic Complexity:** 
+    * "Articulated-body sparsity" is an algorithmic forward-dynamics solver complexity reduction ($O(n^3)$ algebraic operations to $O(n)$ operations for an $n$-link open tree chain). It does *not* reduce configuration dimension, state dimension, or control dimension: the system still possesses $n$ configuration degrees of freedom and $2n$ states.
+    * "Passive dynamics" alters the vector field drift term $f(x)$ relative to control distribution $g(x)u$, but does not alter the topological configuration dimension $n$ of the manifold.
+* **Minimal Fix:**
+  * Separate the table into two distinct categories: **Dynamical / Subspace Projections** (State, Control, Task) and **Computational Complexity Reductions** (Algorithmic scaling of forward dynamics and trajectory optimization).

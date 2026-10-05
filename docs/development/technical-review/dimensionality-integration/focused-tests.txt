@@ -1,0 +1,44 @@
+....................................F..........................          [100%]
+================================== FAILURES ===================================
+_________ test_canonical_inventory_and_generated_reports_are_current __________
+scripts\generate_claim_audit_inventory.py:125: in _validate_review
+    validate_review_evidence(record, root)
+scripts\claim_audit_evidence.py:225: in validate_review_evidence
+    evidence_paths = validate_digest_map(
+scripts\claim_audit_evidence.py:212: in validate_digest_map
+    raise ReviewEvidenceError(f"{label} digest mismatch: {path}")
+E   scripts.claim_audit_evidence.ReviewEvidenceError: /articles/degrees-of-freedom-and-dimensionality.html review evidence digest mismatch: articles/degrees-of-freedom-and-dimensionality.qmd
+
+The above exception was the direct cause of the following exception:
+tests\test_claim_audit_inventory.py:446: in test_canonical_inventory_and_generated_reports_are_current
+    outputs = generate(
+scripts\generate_claim_audit_inventory.py:347: in generate
+    validate_inventory(inventory, sources)
+scripts\generate_claim_audit_inventory.py:216: in validate_inventory
+    _validate_review(record, sources.root)
+scripts\generate_claim_audit_inventory.py:127: in _validate_review
+    raise AuditContractError(str(exc)) from exc
+E   scripts.generate_claim_audit_inventory.AuditContractError: /articles/degrees-of-freedom-and-dimensionality.html review evidence digest mismatch: articles/degrees-of-freedom-and-dimensionality.qmd
+============================ slowest 20 durations =============================
+7.46s call     tests/test_citation_metadata.py::TestGoogleScholarValidatorOnSamplePages::test_three_sample_pages_validation
+2.48s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_verified_article_emits_full_metadata_and_bibtex_download
+2.46s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_unverified_article_omits_publication_date_and_has_no_nan
+2.46s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_citation_section_meets_accessibility_requirements
+0.58s call     tests/test_dates_and_history.py::TestRealDatesContract::test_zero_date_today_in_all_sources
+0.34s call     tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current
+0.17s call     tests/test_dates_and_history.py::TestRealDatesContract::test_every_emitted_date_has_verification_source
+0.09s call     tests/test_citation_metadata.py::TestArticleFrontmatterCompliance::test_every_article_has_title_and_author
+0.06s call     tests/test_dates_and_history.py::TestRevisionHistoryRendering::test_filter_renders_revision_history_section
+0.06s call     tests/test_claim_audit_inventory.py::test_review_evidence_is_self_contained_and_covers_included_sources
+0.03s call     tests/test_spec_changelog.py::test_vendored_helpers_match_pinned_hashes
+0.03s call     tests/test_claim_audit_inventory.py::test_regenerate_patches_only_digest_values_and_keeps_ledger_formatting
+0.03s call     tests/test_spec_changelog.py::test_pr_keyed_row_is_accepted
+0.02s call     tests/test_claim_audit_inventory.py::test_symbol_bound_evidence_ignores_unrelated_edits_in_the_same_module
+0.02s call     tests/test_claim_audit_inventory.py::test_symbol_bound_evidence_fails_closed_on_missing_or_invalid_symbols
+0.02s call     tests/test_claim_audit_inventory.py::test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers
+0.02s call     tests/test_spec_changelog.py::test_shipped_spec_validates
+0.02s call     tests/test_spec_changelog.py::test_two_distinct_pr_keys_are_accepted
+0.02s call     tests/test_claim_audit_inventory.py::test_corrected_findings_require_exact_byte_digests
+0.01s call     tests/test_citation_metadata.py::TestCitationConfig::test_quarto_yml_enables_citation_and_scholar
+=========================== short test summary info ===========================
+FAILED tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current

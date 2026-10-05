@@ -19,6 +19,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from bs4 import BeautifulSoup
 
 from scripts.check_google_scholar_metadata import (
     extract_citation_meta,
@@ -266,3 +267,65 @@ class TestGoogleScholarValidatorOnSamplePages:
 
         err3 = validate_page_metadata(page3, expected_verified_date="2026-03-10")
         assert not err3, f"Sample 3 validation failed: {err3}"
+
+
+class TestUnverifiedDatePresentation:
+    """Keep uncertainty readable without inventing machine-readable dates."""
+
+    @pytest.mark.integration
+    def test_unverified_header_and_card_preserve_reviewed_date(self) -> None:
+        filter_path = (ROOT / "scripts/filters/page-header-card.lua").as_posix()
+        page = _render_quarto_page(
+            'date: "Date unverified"\ndate-source: "unverified"\n'
+            'date-modified: "2026-10-01"\n'
+            f'filters: ["{filter_path}"]\n',
+            body="A diagnostic may print `Invalid Date`; retain that prose.",
+        )
+        content, _ = process_html_content(page.read_text(encoding="utf-8"), page)
+        soup = BeautifulSoup(content, "html.parser")
+        title_date = soup.select_one("#title-block-header .date")
+        published = soup.select_one(".page-header-item--published")
+        reviewed = soup.select_one(".page-header-item--reviewed")
+        assert title_date is not None and title_date.get_text(strip=True) == "Date unverified"
+        assert published is not None and "Date unverified" in published.get_text()
+        assert published.find("time") is None
+        assert reviewed is not None and "2026" in reviewed.get_text()
+        assert "Invalid Date" in soup.find("code").get_text()
+        assert "citation_publication_date" not in extract_citation_meta(content)
+
+    def test_cleanup_is_scoped_to_the_title_date_and_idempotent(self) -> None:
+        content = (
+            '<header id="title-block-header"><p class="date">Invalid Date</p></header>'
+            '<article><p class="date">Invalid Date</p><code>Invalid Date</code></article>'
+        )
+        updated, _ = process_html_content(content, Path("sample.html"))
+        assert updated == content.replace(
+            '<p class="date">Invalid Date</p></header>',
+            '<p class="date">Date unverified</p></header>',
+        )
+        assert process_html_content(updated, Path("sample.html"))[0] == updated
+
+    @pytest.mark.parametrize("date_text", ["October 1, 2026", "2026-10-01", ""])
+    def test_cleanup_preserves_valid_or_absent_title_dates(self, date_text: str) -> None:
+        content = f'<header id="title-block-header"><p class="date">{date_text}</p></header>'
+        assert process_html_content(content, Path("sample.html"))[0] == content
+
+    @pytest.mark.integration
+    @pytest.mark.parametrize("verified", [True, False])
+    def test_card_preserves_verified_or_missing_publication_date(self, verified: bool) -> None:
+        filter_path = (ROOT / "scripts/filters/page-header-card.lua").as_posix()
+        metadata = f'filters: ["{filter_path}"]\n'
+        if verified:
+            metadata += 'date: "2026-03-10"\ndate-source: "initial-publication-record"\n'
+        page = _render_quarto_page(metadata)
+        content, _ = process_html_content(page.read_text(encoding="utf-8"), page)
+        soup = BeautifulSoup(content, "html.parser")
+        published = soup.select_one(".page-header-item--published")
+        if verified:
+            assert published is not None and published.find("time") is not None
+            assert "2026" in published.get_text()
+            assert extract_citation_meta(content)["citation_publication_date"] == ["2026-03-10"]
+        else:
+            assert published is None
+            assert soup.select_one("#title-block-header .date") is None
+        assert "Invalid Date" not in content

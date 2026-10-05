@@ -1,0 +1,30 @@
+Success: no issues found in 1 source file
+================ pre_pr: Local CI Gate Runner ================
+Running diff-scoped pytest: C:\Users\diete\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Scripts\python.exe -m pytest tests/test_citation_metadata.py -p no:pytestqt
+...............                                                          [100%]
+============================ slowest 20 durations =============================
+9.73s call     tests/test_citation_metadata.py::TestGoogleScholarValidatorOnSamplePages::test_three_sample_pages_validation
+3.12s call     tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_card_preserves_verified_or_missing_publication_date[True]
+3.10s call     tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_card_preserves_verified_or_missing_publication_date[False]
+2.97s call     tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_unverified_header_and_card_preserve_reviewed_date
+2.92s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_verified_article_emits_full_metadata_and_bibtex_download
+2.75s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_citation_section_meets_accessibility_requirements
+2.74s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_unverified_article_omits_publication_date_and_has_no_nan
+0.05s call     tests/test_citation_metadata.py::TestArticleFrontmatterCompliance::test_every_article_has_title_and_author
+0.01s call     tests/test_citation_metadata.py::TestCitationConfig::test_quarto_yml_enables_citation_and_scholar
+0.01s call     tests/test_citation_metadata.py::TestCitationConfig::test_quarto_yml_registers_post_render_citations
+
+(10 durations < 0.005s hidden.  Use -vv to show these durations.)
+15 passed in 28.50s
+[FAIL] Lint & Format
+       FAIL: black format check failed:
+       Usage: black.EXE [OPTIONS] SRC ...
+       Try 'black.EXE --help' for help.
+       
+       Error: Invalid value for 'SRC ...': Path 'c' does not exist.
+[PASS] Diff Mypy
+[PASS] Affected Tests
+[PASS] Semgrep & Import Policy
+[PASS] Policy & Fragment Validators
+==============================================================
+Pre-PR gates FAILED. Fix issues before pushing.
