@@ -36,6 +36,8 @@ CANONICAL_JS_NAMES = (
     "dataset-explorer-ui.js",
     "dcr-visualizer.js",
     "dcr-visualizer-ui.js",
+    "drift-control-sandbox.js",
+    "drift-control-sandbox-ui.js",
     "equation-runtime-gate.js",
     "forms.js",
     "history.js",
@@ -61,6 +63,10 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
     # css/ is the canonical source; docs/css/ is the Quarto-served mirror.
     # src/css/ has been removed (issue #1382); deploy_assets.py now reads from css/ directly.
     SyncMap(source="css/dcr-visualizer.css", mirrors=("docs/css/dcr-visualizer.css",)),
+    SyncMap(
+        source="css/drift-control-sandbox.css",
+        mirrors=("docs/css/drift-control-sandbox.css",),
+    ),
     SyncMap(
         source="css/search-metrics.css",
         mirrors=("docs/css/search-metrics.css",),

@@ -580,6 +580,117 @@ For golf, these distinctions explain why posture, torque history, shaft response
 
 The present derivation is exact for its stated finite-dimensional equations, subject to their regularity and nondegeneracy assumptions. Approximation of a distributed shaft and a human golfer remains a separate question. Verify the assembly numerically, test mode/mesh convergence, compare predicted forces and motions with suitable data, and retain the limits of those comparisons. A successful algebraic check establishes consistency of a model calculation; it does not validate physiology or a universal swing prescription.
 
+### Interactive: Drift Versus Control in a Double Pendulum {#drift-control-sandbox}
+
+This sandbox runs the smallest member of the family above: a rigid planar double pendulum with point masses at the middle of each link, the model of `src/affine_control/dynamics.py::double_pendulum_mass_matrix`. For it, $a_{\mathrm{drift}}=-M^{-1}(C\dot q+\nabla V)$ and $A_{\mathrm{input}}u=M^{-1}Bu$, where a shoulder torque acts on link 1 and a wrist torque acts between the links. Both arms of the split are evaluated at **the same state**, sample by sample, along the driven run. The grey dashed linkage is different: it is the zero-torque trajectory integrated separately from the same initial state, which is what the drift samples are *not*.
+
+```{=html}
+<link rel="stylesheet" href="../css/drift-control-sandbox.css">
+<div id="dcsb-app" data-mode="full">
+<noscript>
+<p>This sandbox needs JavaScript. It integrates the double pendulum from rest
+at a declared top-of-downswing pose under constant shoulder and wrist torques,
+and plots the drift and input joint accelerations at each state. The numbers
+are reproducible in Python with
+<code>src/affine_control/double_pendulum_affine.py::simulate</code>.</p>
+</noscript>
+<p class="dcsb-badge">Exploratory model output</p>
+<div id="dcsb-controls">
+  <div>
+    <label for="dcsb-preset">Scenario</label>
+    <select id="dcsb-preset">
+      <option value="zero-torque">Zero torque (drift only)</option>
+      <option value="shoulder-drive" selected>Shoulder drive</option>
+      <option value="shoulder-and-wrist">Shoulder drive with wrist torque</option>
+    </select>
+  </div>
+  <div>
+    <label for="dcsb-shoulder">Shoulder torque (N·m): <span id="dcsb-shoulder-value">−20</span></label>
+    <input id="dcsb-shoulder" type="range" min="-40" max="40" step="1" value="-20">
+  </div>
+  <div>
+    <label for="dcsb-wrist">Wrist torque (N·m): <span id="dcsb-wrist-value">0</span></label>
+    <input id="dcsb-wrist" type="range" min="-10" max="10" step="0.5" value="0">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-l1">Arm length (m): <span id="dcsb-l1-value">0.75</span></label>
+    <input id="dcsb-l1" type="range" min="0.5" max="1" step="0.05" value="0.75">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-l2">Club length (m): <span id="dcsb-l2-value">1.1</span></label>
+    <input id="dcsb-l2" type="range" min="0.8" max="1.3" step="0.05" value="1.1">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-m1">Arm mass (kg): <span id="dcsb-m1-value">7</span></label>
+    <input id="dcsb-m1" type="range" min="3" max="12" step="0.5" value="7">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-m2">Club mass (kg): <span id="dcsb-m2-value">0.6</span></label>
+    <input id="dcsb-m2" type="range" min="0.2" max="1.5" step="0.1" value="0.6">
+  </div>
+  <div>
+    <label><input id="dcsb-ghost" type="checkbox" checked> Show the zero-torque counterfactual</label>
+  </div>
+</div>
+<div class="dcsb-time-row">
+  <div>
+    <label for="dcsb-time">Time $t$ (s): <span id="dcsb-time-value">0</span></label>
+    <input id="dcsb-time" type="range" min="0" max="500" step="1" value="0">
+  </div>
+  <button id="dcsb-play" type="button" aria-pressed="false">Play</button>
+</div>
+<div id="dcsb-status" role="status" aria-live="polite"></div>
+<canvas id="dcsb-canvas" width="480" height="480" role="img" aria-label="Double pendulum sandbox"></canvas>
+<p class="dcsb-legend">
+  <span class="dcsb-legend-drift">→ Drift part of the club-tip acceleration</span> ·
+  <span class="dcsb-legend-input">→ Input part</span> ·
+  <span class="dcsb-legend-ghost">- - Zero-torque counterfactual</span> ·
+  arrow scale: 1 m on screen = <span id="dcsb-arrow-scale">—</span> m/s²
+</p>
+<div class="dcsb-full-only">
+<p class="dcsb-legend">Joint 1 (arm) acceleration, rad/s², range <span id="dcsb-range-q1">—</span></p>
+<svg id="dcsb-chart-q1" viewBox="0 0 560 140" class="dcsb-chart" role="img" aria-label="Arm drift and input acceleration over time; values in the data table">
+  <polyline class="dcsb-zero" fill="none" stroke-width="1"></polyline>
+  <polyline class="dcsb-line-drift" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-line-input" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-cursor" fill="none" stroke-width="1"></polyline>
+</svg>
+<p class="dcsb-legend">Joint 2 (club) acceleration, rad/s², range <span id="dcsb-range-q2">—</span></p>
+<svg id="dcsb-chart-q2" viewBox="0 0 560 140" class="dcsb-chart" role="img" aria-label="Club drift and input acceleration over time; values in the data table">
+  <polyline class="dcsb-zero" fill="none" stroke-width="1"></polyline>
+  <polyline class="dcsb-line-drift" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-line-input" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-cursor" fill="none" stroke-width="1"></polyline>
+</svg>
+</div>
+<table class="dcsb-results">
+  <thead>
+    <tr><th scope="col">At the selected time</th><th scope="col">Drift</th><th scope="col">Input</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Arm acceleration (rad/s²)</td><td id="dcsb-now-drift-1" class="dcsb-mono">—</td><td id="dcsb-now-input-1" class="dcsb-mono">—</td></tr>
+    <tr><td>Club acceleration (rad/s²)</td><td id="dcsb-now-drift-2" class="dcsb-mono">—</td><td id="dcsb-now-input-2" class="dcsb-mono">—</td></tr>
+    <tr><td>Club-tip acceleration magnitude (m/s²)</td><td id="dcsb-now-tip-drift" class="dcsb-mono">—</td><td id="dcsb-now-tip-input" class="dcsb-mono">—</td></tr>
+  </tbody>
+</table>
+<details>
+<summary>Sampled values along the driven run (data table)</summary>
+<table class="dcsb-results">
+  <thead>
+    <tr><th scope="col">t (s)</th><th scope="col">q₁ (rad)</th><th scope="col">q₂ (rad)</th>
+      <th scope="col">Arm drift</th><th scope="col">Arm input</th>
+      <th scope="col">Club drift</th><th scope="col">Club input</th></tr>
+  </thead>
+  <tbody id="dcsb-data"></tbody>
+</table>
+</details>
+</div>
+<script src="../js/drift-control-sandbox.js"></script>
+<script src="../js/drift-control-sandbox-ui.js"></script>
+```
+
+This is an **exploratory model output**, not a golfer measurement. The masses, lengths, starting pose and constant torques are declared illustrative values, angles are absolute and measured from the downward vertical, and the browser mirror is checked against the Python reference by `tests/fixtures/widgets/drift-control-sandbox.parity.json`. Watch two things. First, with the zero-torque scenario the input arrow vanishes and the driven linkage coincides with the counterfactual. Second, with torque applied the two linkages separate, so later drift values belong to states the torque helped reach. That is why the same-state split does not partition a finite motion into a "passive" path and an "active" path.
+
 ## Related Articles
 
 ::: {.callout-note title="See Also"}
