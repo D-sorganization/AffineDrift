@@ -254,3 +254,13 @@ and passed. No tests, tolerances, coverage floors or protection rules changed.
 See integrated-pre-pr-final.txt for the exact output. Only this receipt and its
 log were added after the gate run. Final protected-main, advertised PDF and
 public-site verification remain required before epic closure.
+
+## Delivery Checkout
+
+Use C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review
+and local branch fix/current-reviewed-book-links for this combined candidate.
+The separate consolidated-20261005 checkout remains at fbee4da94 with pre-existing
+local changes; Git refused its fast-forward, and those files were preserved.
+Push the validated candidate directly to the existing remote branch
+feat/technical-review-consolidated-20261005 without force. PR #4953 remains the
+delivery PR. This routing note changes no reviewed source or gate input.
