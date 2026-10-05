@@ -2840,3 +2840,5 @@ The following record preserves the merged PR #4723 review; its pending delivery 
 - Integrated radar remote main `bd1255f153926c7e653148b8c4db972a08ba7be9`; its lease/presence released at 01:12 UTC. Preserve both completed review streams below. Only heavy-hit full validation and delivery remain in flight for this session.
 
 - Next indexed source is companion Chapter 20 (`ch20_plane_to_space.qmd`, 2632 words). Read-only preparation and two supplied-text Flash inventories are complete locally: inspect observer versus representation invariance, contact wrench admissibility, and exact archived closure/engine evidence. No issue claim, source edit, or completed review for that chapter. Provider facts remain unverified; do not promote delegate conjectures.
+
+- No material handoff change for #4911: one-line pin of `pytest-timeout==2.4.0` in `requirements-benchmarks.txt`; no continuation state affected.
