@@ -1,0 +1,50 @@
+Here is the technical review of the revised chapter.
+
+---
+
+### 1. Mathematical Consistency and Rigour
+
+1. **Equation (13.1) / `\label{eq:designspeeduncertainty}`:**
+   $$\delta V \approx \sec\beta\,\delta d + V\tan\beta\,\delta\beta$$
+   - **Internal check:** Differentiating $V = d\sec\beta$ with respect to $d$ and $\beta$:
+     $$\mathrm{d}V = \sec\beta\,\mathrm{d}d + d\sec\beta\tan\beta\,\mathrm{d}\beta = \sec\beta\,\mathrm{d}d + V\tan\beta\,\mathrm{d}\beta.$$
+   - **Assessment:** Exact first-order expansion. The qualifying remark to treat $\delta\beta$ in radians and account for covariance between $\delta d$ and $\delta\beta$ is mathematically sound.
+
+2. **Equation (13.2) / `\label{eq:designfaceuncertainty}`:**
+   $$\delta f \approx \frac{\delta\ell}{w} - \frac{1-w}{w}\delta p - \frac{\ell-p}{w^2}\delta w$$
+   - **Internal check:** From $\ell = w f + (1-w) p$, solving for $f$:
+     $$f = \frac{\ell - (1-w)p}{w} = \frac{\ell - p}{w} + p.$$
+     Taking partial derivatives:
+     $$\frac{\partial f}{\partial \ell} = \frac{1}{w}, \qquad \frac{\partial f}{\partial p} = 1 - \frac{1}{w} = -\frac{1-w}{w}, \qquad \frac{\partial f}{\partial w} = -\frac{\ell - p}{w^2}.$$
+     Thus:
+     $$\delta f \approx \frac{\delta\ell}{w} - \frac{1-w}{w}\delta p - \frac{\ell-p}{w^2}\delta w.$$
+   - **Assessment:** Correct. The numerical examples citing amplification factors $1.15 \approx 1/0.87$ and $1.32 \approx 1/0.76$ match standard D-plane literature figures often quoted for launch direction sensitivity to face angle.
+
+3. **Screw-Theoretic Twist Observability (Tier 4):**
+   - The statement: *"For a single monostatic radar phase centre, resolved Doppler rows alone do not independently determine all six instantaneous twist components; additional viewpoints, temporal position information or other observations are needed under stated motion assumptions"* is kinematically and electro-dynamically precise. A single phase centre provides only line-of-sight radial projections ($\vect{v}(\vect{r})\cdot\hat{\vect{u}}$), which span at most a 3D subspace of instantaneous rigid-body twists without temporal evolution or angular diversity.
+
+---
+
+### 2. Logical Leaps, Ambiguities, and Misleading Wording
+
+1. **Section 1, Item 1 — Definition of $d$:**
+   - *Current text:* "For a correctly associated target with radial velocity $d=V\cos\beta$..."
+   - *Ambiguity:* In radar and kinematics literature, $d$ commonly denotes distance/range or displacement, while radial velocity is denoted by $v_r$, $v_\text{rad}$, or $\dot{r}$. Using $d$ for radial speed creates a brief notation collision with standard distance metrics (e.g., $d$ in range gating), though it is explicitly defined in the sentence.
+   - *Recommendation:* Replace $d$ with $v_r$ (or $v_\text{rad}$) in both text and Equation (13.1):
+     $$V = v_r \sec\beta, \qquad \delta V \approx \sec\beta\,\delta v_r + V\tan\beta\,\delta\beta.$$
+
+2. **Section 2, Item 3 — "Familiar factors 1.15 and 1.32":**
+   - *Current text:* "The familiar factors 1.15 and 1.32 correspond approximately to $w=0.87$ and $w=0.76$; neither is a universal amplification."
+   - *Ambiguity:* The text does not explicitly clarify *which* partial sensitivity these factors represent. A reader might wonder whether they apply to $\delta\ell$, $\delta p$, or total variance.
+   - *Correction:* Clarify that these are the face-to-launch sensitivity coefficients $1/w$ relating launch direction perturbations to face angle:
+     *"The familiar coefficients $1/w \approx 1.15$ and $1.32$ (corresponding to $w=0.87$ and $w=0.76$)..."*
+
+3. **Section 3, Item 1 — "per-parameter availability":**
+   - *Current text:* "...paired comparison results and per-parameter availability, rather than merely reproducing..."
+   - *Clarity:* In launch monitor validation, this is usually termed *data yield*, *reporting rate*, or *capture rate*. "Availability" is readily understood in an instrumentation context, but pairing it with "(or capture rate)" prevents ambiguity with system uptime.
+
+---
+
+### 3. Conclusion
+
+No mathematical errors or unsupported logical leaps are present. The distinctions between direct observables, kinematic state inversions, and model-based priors are rigorously maintained throughout. Addressing the two minor notation/clarity items above ($d \to v_r$ and specifying $1/w$ for the $1.15/1.32$ factors) will ensure complete clarity.

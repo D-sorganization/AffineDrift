@@ -1,129 +1,146 @@
 \chapter{Commercial System Survey}
 \label{ch:survey}
+% Retain the historical source catalog without using these records as evidence
+% for removed universal performance, algorithm or feature claims.
+\nocite{fccTman4,flightscopebgh,foresighthmt,garminr10accuracy,garminr10data,mevoteardown,mygolfspymlm2pro,uneekordimple,uneekorphotometric,us12401909,playbetterblp}
 
-\Cref{tab:survey} summarizes the sensing architecture of the major
-systems; the notes that follow give the technically salient details per
-device, with sources in the bibliography.
+A product survey is useful only if its categories preserve what the instrument observes, what its estimator assumes and what the purchased configuration reports.
+\Cref{tab:survey} summarizes selected architectures using manufacturer documentation checked on October 4, 2026.
+It is neither an accuracy ranking nor an exhaustive list of current products.
+Firmware, enabled software, ball type, club markers and installation geometry can change the available outputs.
 
-\begin{table}[htbp]
-\centering\footnotesize
-\caption{Launch monitor architecture survey (2026). ``Club source''
-distinguishes directly measured face data (optical) from D-plane-inverted
-or model-estimated face data.}
-\label{tab:survey}
-\begin{tabular}{@{}p{2.6cm}p{3.3cm}p{2.6cm}p{2.9cm}p{2.9cm}@{}}
+The measurement hierarchy in \cref{tab:hierarchy} applies to every row.
+Camera images and radar signals are observations; launch and club states are estimates from those observations; ratios and coordinate transformations are derived quantities; simulated downrange flight is a model prediction.
+An output advertised as ``measured'' still requires a definition, an estimator and uncertainty assessment.
+Conversely, a radar-based face-angle output cannot be assigned to a particular D-plane inverse merely from its sensor category.
+Where public documentation does not disclose that algorithm, the table does not invent one.
+
+\begingroup
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}p{3.0cm}p{5.2cm}p{6.2cm}@{}}
+\caption{Documented Launch-Monitor Architectures and Interpretation Limits}\label{tab:survey}\\
 \toprule
-\textbf{System} & \textbf{Primary sensing} & \textbf{Spin method} &
-\textbf{Club data source} & \textbf{Impact location} \\
+\textbf{System} & \textbf{Observation Architecture} & \textbf{Configuration and Interpretation} \\
 \midrule
-TrackMan 4 & Dual radar (X-band + 24\,GHz) + camera (OERT) &
-  Doppler sidebands & Radar silhouette + camera & Yes (markerless, OERT) \\
-TrackMan iO & 24\,GHz radar + 4{,}600\,fps camera & Camera + radar &
-  Radar + camera & Yes (markerless) \\
-FlightScope X3 & Phased-array multi-freq.\ radar + Fusion cameras &
-  Doppler (dielectric-lens) & Radar; face derived & No \\
-FlightScope Mevo+ & X-band 10.5\,GHz phased array (+ Pro cameras) &
-  Doppler; stickers indoors & Radar; face derived & No \\
-Garmin R10 & 24\,GHz, 3-receiver CW & Doppler ($\ge$20\,m flight) or
-  model & Radar; face calculated & No \\
-Garmin R50 & 3 high-speed cameras & Dimple imaging & Optical
-  (fiducials) & Yes \\
-Full Swing KIT & 24\,GHz CW+FMCW + 4K camera ML & Doppler + ML &
-  Radar + ML & No \\
-Rapsodo MLM2PRO & Radar + 2$\times$240\,fps cameras & Marked ball
-  (RPT/RCT) & Radar; face derived & Video only \\
-Foresight GCQuad / QuadMAX & 4 cameras, IR strobe & Spherical
-  correlation & Optical (4 fiducials) & Yes (measured) \\
-GC3 / Launch Pro & 3 cameras, IR strobe & Spherical correlation &
-  Optical (fiducials; add-on) & Yes \\
-GCHawk & 4 cameras, ceiling & Spherical correlation & Optical &
-  Yes \\
-Uneekor EYE XO2 & 3 overhead IR cameras, 3{,}000+\,fps & Dimple Optix &
-  Optical, sticker-free & Yes + video \\
-Uneekor EYE MINI & 2 cameras, portable & Dimple Optix & Optical
-  (stickers) & Yes \\
-ProTee VX & 2 overhead cameras + ML & Dimple imaging & Optical,
-  sticker-free & Yes \\
-SkyTrak+ / ST MAX & Cameras (ball) + dual radar (club) & Photometric &
-  Radar; face derived & No \\
-OpenFlight (open source) & OPS243-A 24\,GHz + 2$\times$K-LD7 + sound trigger &
-  Doppler I/Q buffer ($\sim$50--60\% detect) & Radar; no face data yet &
-  No \\
-PiTrac (DIY) & 2 Pi GS cameras + IR strobe & Dimple registration &
-  None yet & No \\
+\endfirsthead
+\toprule
+\textbf{System} & \textbf{Observation Architecture} & \textbf{Configuration and Interpretation} \\
+\midrule
+\endhead
 \bottomrule
-\end{tabular}
-\end{table}
+\endfoot
+TrackMan 4 & Synchronized short- and long-range radar with a camera & Optical/radar integration; indoor distance is specified from unit to net, not wholly as ball flight. \\
+TrackMan iO & Radar, high-speed camera and alignment camera & Overhead indoor geometry; club outputs depend on the software package. \\
+FlightScope X3 / X3C & Radar and camera Fusion Tracking & Model-specific setup; X3 documentation includes face impact, and current X3C documentation also lists it. \\
+FlightScope Mevo+ & Radar with a built-in camera & Pro and Face Impact Location are software options; neither means adding a previously absent camera. \\
+Garmin R10 & Radar & Standard-ball spin requirements differ from RCT-assisted indoor requirements; calculated face angle is not a direct image observation. \\
+Garmin R50 & Three cameras & Club sticker required; an impact replay is not by itself evidence of calibrated numerical impact coordinates. \\
+Full Swing KIT & Radar with a video camera & Manufacturer describes ML-enhanced radar; the public account does not establish a camera contribution to every estimate. \\
+Rapsodo MLM2PRO & Radar and two cameras & RPT optical-pattern balls required for reported spin; RCT is a different technology. \\
+Foresight GCQuad / QuadMAX / GCHawk & Four-camera family & Club-marker mode and enabled features matter; do not transfer every model's feature list to the entire family. \\
+Foresight GC3 / Bushnell Launch Pro & Three-camera family & GC3's documented club set is speed, path, attack and smash; face orientation and impact location are not established by that list. \\
+Uneekor EYE XO2 & Three overhead cameras & The manual requires club stickers for club data; overhead placement does not imply marker-free operation. \\
+Uneekor EYE MINI & Two cameras & Club Optix supplies impact video; manual/support and product-page feature descriptions need model/version reconciliation. \\
+ProTee VX & Two overhead cameras & Vendor lists sticker-free ball and club estimates, including numerical impact coordinates; these are capability claims. \\
+SkyTrak ST+ & Photometric ball tracking with dual-radar club tracking & Manufacturer describes learned club estimation; do not assume every ST MAX specification is identical. \\
+OpenFlight & Radar development architecture & Hardware interfaces and experimental processing are discussed in \cref{app:impl}; no universal spin-detection rate follows. \\
+PiTrac & Camera and infrared-strobe development architecture & Configuration and calibration are version-dependent; low-cost parts do not establish validated accuracy. \\
+\end{longtable}
+\endgroup
 
-\section{Radar-First Systems}
+\section{Radar and Hybrid Systems}
 
-\textbf{TrackMan 4 / iO.} The reference radar architecture: two
-synchronized radar subsystems (long-range X-band at the corners for full
-ball flight; higher-frequency 24\,GHz at the center for club and impact),
-receivers sampled at 40\,ksps to pin the impact instant, fused with an
-OERT camera~\cite{fccTman4,trackmanoert,trackmanspecs}. Reports 27+
-parameters including swing plane/direction, low point, dynamic lie, and
-D-plane-derived face data; requires $\ge4.7$\,m of indoor throw. The iO is
-the indoor-optimized repackaging: 24\,GHz radar, 4,600\,fps club/ball
-camera, IR illumination, no minimum-space requirement.
+\subsection{TrackMan 4 and iO}
 
-\textbf{FlightScope X3 / Mevo+.} Phased-array Doppler (X3:
-multi-frequency with direct ranging; Mevo+: X-band 10.5--10.55\,GHz per
-FCC filings~\cite{mevoteardown}) with Fusion Tracking cameras on the X3
-and Mevo+ Pro. Spin measured via the patented dielectric-lens
-phase-demodulation route (\cref{sec:patentflightscope}); metallic
-stickers recommended for short indoor flights. FlightScope's 2022 win
-against TrackMan at the German Federal Court of Justice, after losing the
-2013 EP\,1\,698\,380 case, bookends two decades of radar-spin litigation
-between the two~\cite{flightscopebgh}.
+TrackMan describes two synchronized radar subsystems and optical assistance for TrackMan~4~\cite{trackmanspecs,trackmanoert}.
+Its published minimum indoor distance of 4.7\,m is measured from the device to the net; part of that distance lies behind the ball.
+Treating the entire distance as a required ball-flight segment changes the installation claim.
+The overhead iO has a different geometry and lists 24\,GHz radar, a high-speed camera capable of up to 4,600 frames/s and an alignment camera~\cite{trackmanspecs}.
+It is not simply a rear-mounted TrackMan~4 repackaged above the golfer.
+The listed Home package club output is narrower than the Home Complete/Commercial set, which includes face orientation and impact location.
+Room-clearance and capture requirements still apply even when a product does not require a long radar flight segment.
+These specifications establish advertised configuration, not common error bounds between packages or measurement equivalence with other brands.
 
-\textbf{Garmin Approach R10.} The instructive budget case: a 24\,GHz
-three-receiver CW radar that directly measures only the safe primitives
---- ball speed, launch angles, club speed, club path --- and models the
-rest. Spin requires $\ge$20\,m of flight and $>$90\,mph ball speed (or an
-RCT marked ball indoors); face angle is explicitly a calculated value at
-$\pm2\degs$~\cite{garminr10accuracy,garminr10data}. Garmin's step-up
-R50 abandons radar entirely for three cameras --- a telling modality
-switch for indoor accuracy.
+\subsection{FlightScope X3, X3C and Mevo+}
 
-\textbf{Full Swing KIT.} The patented CW+FMCW dual-mode 24\,GHz radar
-(\cref{sec:fmcw}) with an ML vision assist from its 4K camera; 16
-parameters; third-party testing places it within 1--2\% of
-TrackMan/GCQuad in most conditions~\cite{fullswingkit}.
+FlightScope's Fusion Tracking combines radar and image information; Mevo+ already contains a camera used for alignment, video and tracking~\cite{flightscopefaq}.
+The Pro Package enables additional software outputs, rather than converting a camera-free unit into a camera-equipped one.
+The separate Face Impact Location option is available for Mevo+ without requiring Pro; FlightScope's X3 account describes impact location as included, and its X3C page also lists that feature~\cite{flightscopefaceimpact,flightscopex3csetup}.
+Consequently, a categorical ``no impact location'' entry for these systems is incorrect.
+Short-flight spin operation depends on the prescribed ball treatment, spacing and environment; face-impact imaging also has its own lighting requirements.
+Published patents explain possible sensing methods, but they do not prove that each current model implements every claimed embodiment.
+The distinction between patent evidence and deployed-product evidence is developed in \cref{ch:patents}.
 
-\textbf{Rapsodo MLM2PRO.} Radar for speed/launch plus two 240\,fps
-cameras that read printed RPT/RCT ball markers for measured spin rate and
-axis (claimed within 1\% of reference units) --- the cheapest route to
-\emph{measured} spin, at the cost of proprietary
-balls~\cite{mygolfspymlm2pro}.
+\subsection{Garmin Approach R10}
 
-\section{Camera-First Systems}
+Garmin lists club-head speed, ball speed, launch angle and launch direction as radar-measured quantities and identifies face angle as calculated~\cite{garminr10support}.
+That statement does not identify all details of the internal estimator, nor does it make the remaining displayed metrics independent observations.
+Its standard-ball guidance ties measured spin to substantial flight distance and ball speed; those conditions should not be imposed unchanged on its separate RCT-assisted indoor mode.
+The RCT guidance specifies a minimum ball-to-screen distance and sufficient observed rotation, with longer flight sometimes required; an italic spin result indicates estimation~\cite{garminr10rct}.
+Titleist's Radar Capture Technology (RCT) uses an embedded radar-reflective structure, unlike the optical RPT pattern.
+A vendor tolerance or signal-detection percentage also cannot substitute for an independent, condition-specific error distribution.
 
-\textbf{Foresight GCQuad / QuadMAX / GCHawk.} Quadrascopic IR-strobed
-capture ($\sim$200 images/shot); spherical-correlation spin; four-dot
-fiducial club measurement with closure rate and measured impact location
-(\cref{sec:camclub})~\cite{foresightgcquad,foresighthmt}. Robot testing
-shows the class-leading spin repeatability
-(\cref{ch:accuracy}).
+\subsection{Full Swing KIT and Rapsodo MLM2PRO}
 
-\textbf{GC3 / Bushnell Launch Pro.} Identical triscopic hardware in two
-brands; club data is a paid add-on tier using the same
-stickers~\cite{playbetterblp}.
+Full Swing describes KIT as an ML-enhanced radar system with 16 reported data points and video capability~\cite{fullswingkit}.
+The presence of a camera does not establish that its images enter every kinematic estimate.
+The cited manufacturer technology page does not substantiate a general third-party finding of 1--2\% agreement with other launch monitors, so no such accuracy claim is made here.
 
-\textbf{Uneekor EYE XO2 / EYE MINI / ProTee VX.} Overhead sticker-free
-club measurement (XO2, VX) versus portable sticker-based (EYE MINI);
-Dimple Optix markerless spin; impact video replay~\cite{uneekoreyexo,
-proteevx}.
+Rapsodo's MLM2PRO combines radar with two cameras and requires its RPT-pattern balls to report spin rate and spin axis~\cite{rapsodofaq,rapsodomlm2prorpt}.
+RPT denotes Rapsodo Precision Technology; it is not the Titleist RCT radar treatment.
+The current FAQ lists 15 metrics, including club path and attack angle, but does not list face angle.
+That feature list therefore cannot support calling the device a demonstrated face-angle estimator.
+Its impact video, launch estimates and simulated flight remain distinct outputs.
+Neither a marketing comparison percentage nor an unsupported camera frame rate establishes accuracy across balls, clubs and capture conditions.
 
-\textbf{SkyTrak+ / ST MAX.} The camera-to-radar convergence case: the
-original photometric ball-only SkyTrak gained a dual-radar club module and
-ML fusion in the SkyTrak+~\cite{skytrakplus}.
+\section{Camera Systems}
 
-\section{Open-Source Systems}
+\subsection{Foresight Families}
 
-\textbf{OpenFlight} (radar-first: OPS243-A I/Q rolling buffer + sound
-trigger + K-LD7 interferometric angle radars) and \textbf{PiTrac}
-(camera-first: strobed multi-exposure global-shutter imaging) occupy the
-two ends of the same spectrum the commercial market spans, at roughly
-1/10th the hardware cost. Neither yet measures club face data; both have
-clear, patent-informed paths to it (\cref{ch:implications}).
+The GCQuad manual distinguishes a single-marker club mode from a four-marker mode that adds orientation information; its driver and iron diagrams show a noncollinear layout~\cite{foresightquadmanual}.
+Supported GCQuad-family features include face and impact information, but QuadMAX and overhead GCHawk capabilities should be checked against their own model documentation and enabled features~\cite{foresightmarkers}.
+No generic four-camera description establishes the exact spin algorithm, image count per shot or every club metric.
+The robot comparisons in \cref{ch:accuracy} concern the tested conditions; they do not establish a universal class-leading accuracy ranking.
+
+GC3 and Bushnell Launch Pro belong to the three-camera family, but branding and subscriptions should not replace model-specific entitlement checks~\cite{foresightgc3,bushnelllaunchpro}.
+The GC3 product list specifies club speed, path, attack angle and smash factor.
+Those outputs do not include the GCQuad's full face-orientation and impact-location set.
+The point-velocity and marker-registration distinctions in \cref{sec:camclub} apply even when two units display the same metric name.
+
+\subsection{Uneekor and ProTee}
+
+The EYE~XO2 manual describes three cameras and club stickers; its mounting and calibration instructions are part of the measurement configuration~\cite{uneekorxo2manual}.
+Its optical ball tracking does not make its club tracking sticker-free.
+EYE~MINI is a different, portable two-camera model with impact video.
+Uneekor's model-specific support requires club stickers, whereas its current product page calls them optional or recommended and displays a broader club-metric list~\cite{uneekorminisupport,uneekoreyexo}.
+That documentation discrepancy should be resolved for the installed hardware/software before relying on numerical face or impact outputs; video replay alone is insufficient evidence.
+
+ProTee VX's current product documentation explicitly advertises two cameras, sticker-free ball and club tracking, and numerical horizontal and vertical impact coordinates~\cite{proteevx}.
+That is evidence of an advertised feature set, not an independent validation of the underlying image estimator.
+Overhead placement, learned image interpretation and a large hitting zone each solve different parts of the observation problem.
+None removes the need for calibration, adequate visibility and a declared face-coordinate convention.
+
+\subsection{Garmin R50 and SkyTrak ST+}
+
+Garmin documents three cameras for the R50 and requires a club-face sticker for club tracking~\cite{garminr50,garminr50support,garminr50stickers}.
+The manual's impact-viewing functions should be distinguished from a verified specification of numerical impact coordinates.
+Its use of cameras instead of the R10's radar is an architectural difference, not by itself proof of a quantified accuracy improvement.
+
+SkyTrak describes photometric ball tracking and dual-radar club estimation with machine learning for ST+~\cite{skytrakplus}.
+This is another reason to avoid a strict camera-versus-radar taxonomy.
+The existence of another product, ST MAX, does not justify pooling its hardware, software and feature specifications with ST+ without separate documentation.
+
+\section{Open-Source Systems and Comparison Practice}
+
+The OpenFlight-oriented hardware example and PiTrac illustrate radar and strobed-camera development routes~\cite{an029,pitrac}.
+The sensor interfaces, sample cadence and observability limits in \cref{app:impl} determine what can be inferred from available data; an experimental spin-detection rate is not a transferable product specification.
+PiTrac's evolving documentation likewise needs a pinned build and calibration record before numerical performance can be reproduced.
+A subtotal for computers and cameras omits other hardware, assembly and validation costs.
+Neither project should be assigned a universal price advantage or a proven future club-face capability from a parts list or a patent analogy.
+
+\begin{implication}
+Preserve device, firmware, enabled features, ball and club preparation, installation, reference points, frames and event times.
+Assess changes against repeatability, reference uncertainty and model discrepancy.
+A changed face angle, spin or carry may otherwise reflect the measurement or prediction process rather than the golfer's movement.
+\end{implication}

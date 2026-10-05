@@ -1,0 +1,48 @@
+{
+  "inputs": {
+    "c_m_s": 299792458,
+    "carrier_Hz": 24125000000.0,
+    "complex_sample_rate_Hz": 30000,
+    "samples": 128,
+    "speed_mph": 150,
+    "ball_diameter_m": 0.04267
+  },
+  "results": {
+    "lambda_m": 0.01242663038341969,
+    "Hz_per_mph": 71.94870792913676,
+    "radial_Nyquist_mph": 208.48185369463062,
+    "FFT_bin_Hz": 234.375,
+    "FFT_bin_mph": 3.2575289639786034,
+    "window_ms": 4.266666666666667,
+    "carrier_at_200_mph_Hz": 14389.741585827353,
+    "speed_m_s": 67.056,
+    "spacing_300us_mm": 20.116799999999998,
+    "spacing_500us_mm": 33.528000000000006,
+    "nonoverlap_min_us": 636.3338105464089,
+    "blur_30us_mm": 2.01168,
+    "blur_diameter_fraction": 0.047145066791656906,
+    "five_pulse_800us_span_mm": 257.24920000000003,
+    "spin_3000rpm_400us_deg": 7.2,
+    "acoustic_1m_ms": 2.9154518950437316,
+    "timing_100us_mm": 6.7056
+  },
+  "scope": "Manufactured exact-model calculations, not measured hardware validation.",
+  "radial_jacobian_check": {
+    "random_seed": 4890,
+    "cases": 100,
+    "central_difference_step": 1e-5,
+    "maximum_absolute_error": 2.42239295289437e-9,
+    "pass_threshold": 1e-7
+  },
+  "radial_nonidentifiability_example": {
+    "sensor_position": [0, 0, 0],
+    "ball_position": [3, 0, 0],
+    "velocities": [
+      [50, 0, 0],
+      [50, 10, 20]
+    ],
+    "radial_speeds": [50, 50],
+    "speed_norms": [50, 54.772255750516614],
+    "scope": "One instantaneous radial observation; no claim about a full temporal model"
+  }
+}
