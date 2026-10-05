@@ -269,6 +269,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4009 · Clarify Evidence Terminology and Preserve the Final Technical-Review Handoff
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4009
+- **Branch:** docs/technical-review-final-handoff
+- **PR:** #4977
+- **Paths:** see #4977
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`f3b9fe8e`; collated from changes/4009-technical-review-final-handoff.md)
+- **Summary:** Clarify evidence terminology and preserve the final technical-review handoff
+- **Next step:** Merge guide clarification #4976 and final handoff, then verify public artifacts before epic #4009 acceptance
+
 ### DL-#4961 · Route Book Readers to the Corrected Reviewed Manuscript Editions
 
 - **State:** in_review
