@@ -35,6 +35,14 @@ test.describe("drift vs control sandbox", () => {
     expect(widgetBytes).toBeGreaterThan(0);
     expect(widgetBytes).toBeLessThanOrEqual(CLASS_A_MAX_BYTES);
 
+    // The page's own MathJax lazy-loads TeX extensions and fonts from its CDN
+    // after load; let typesetting settle so only the widget's requests are seen.
+    await page.evaluate(async () => {
+      await window.MathJax?.startup?.promise;
+      await document.fonts.ready;
+    });
+    await page.waitForLoadState("networkidle");
+
     const origin = new URL(page.url()).origin;
     const crossOrigin = [];
     page.on("request", (request) => {

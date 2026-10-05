@@ -33,6 +33,8 @@ for (const route of ROUTES) {
 test("Start Here is the home page's primary call to action", async ({ page }) => {
   await page.goto("/");
   const primary = page.locator(".home-hero__actions a.site-button").first();
-  await expect(primary).toHaveAttribute("href", "pages/start-here.html");
+  // The site rewrites hero links to absolute URLs at runtime, so check where the
+  // link resolves rather than its literal attribute.
+  await expect(primary).toHaveAttribute("href", /(^|\/)pages\/start-here\.html$/);
   await expect(primary).not.toHaveClass(/site-button--ghost/);
 });
