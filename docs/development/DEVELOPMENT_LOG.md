@@ -262,6 +262,84 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4896 · Prepare the Camera Geometry and Commercial Survey Corrections With Primary-Source Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4896
+- **Branch:** fix/camera-survey-review
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4896-camera-survey-review.md)
+- **Summary:** Prepare the camera geometry and commercial survey corrections with primary-source evidence
+- **Next step:** Regular PR #4899 is published; after #4897 merges, retarget, run protected delivery and verify canonical hashes on remote main
+
+### DL-#4894 · Correct the Connected Flight, Accuracy and Design Chapters With Explicit Uncertainty and Validation Limits
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4894
+- **Branch:** fix/flight-accuracy-design-review
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4894-flight-accuracy-preparation.md)
+- **Summary:** Correct the connected flight, accuracy and design chapters with explicit uncertainty and validation limits
+- **Next step:** Publish regular PR after 4895; retarget to main after parent delivery; use central guard and verify canonical hashes; then continue pending corpus
+
+### DL-#4890 · Integrate Parent CI Repairs Without Changing the Accepted Implementation Appendix
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4890
+- **Branch:** fix/implementation-appendix-review
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4890-implementation-delivery.md)
+- **Summary:** Integrate parent CI repairs without changing the accepted implementation appendix
+- **Next step:** After date PR 4891 reaches main, retarget PR 4895 and use central guard; verify the five canonical hashes before release
+
+### DL-#4888 · Preserve Verified and Unverified Publication-Date Presentation While Integrating Parent Delivery Repairs
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4888
+- **Branch:** fix/unverified-date-display
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4888-date-delivery.md)
+- **Summary:** Preserve verified and unverified publication-date presentation while integrating parent delivery repairs
+- **Next step:** After PR 4889 reaches main, retarget PR 4891; use central merge guard and verify the three accepted implementation hashes on remote main
+
+### DL-#4885 · Dimensionality and Educational Integration Review
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4885
+- **Branch:** fix/dimensionality-integration-review
+- **PR:** #4889
+- **Paths:** articles/degrees-of-freedom-and-dimensionality.qmd,articles/upstreamdrift-educational-integration.qmd
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`63028ca3`; collated from changes/4885-article-review-delivery.md)
+- **Summary:** Clarify dimension types and bind educational integration claims to qualified provider evidence
+- **Next step:** Protected main merge of PR 4889, verify four accepted canonical hashes, then retarget date PR 4891
+
+### DL-#1976 · Vendor RM-5 Change Fragment Tooling
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #1976
+- **Branch:** feat/1976-ad-change-fragments
+- **PR:** #4918
+- **Paths:** see #4918
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`8a36da45`; collated from changes/1976-vendor-rm-5-change-fragment-tooling.md)
+- **Summary:** Vendor RM-5 Change Fragment Tooling
+- **Next step:** Merge the pull request.
+
 ### DL-#4531 · ADR 0002, Interactive Technology Stack
 
 - **State:** in_review
@@ -668,6 +746,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4943 · Use a Synthetic Issue in the Change-Fragment Round-Trip Test so Real Collations Cannot Collide With It
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4943
+- **Branch:** merged via #4944
+- **PR:** #4944
+- **Paths:** see #4944
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`242d3ef0`; collated from changes/4943-use-a-synthetic-issue-in-the-change-frag.md)
+- **Summary:** use a synthetic issue in the change-fragment round-trip test so real collations cannot collide with it
+- **Next step:** Shipped in PR #4944.
 
 Entries stay here for 90 days after merge, then move to the archive.
 
