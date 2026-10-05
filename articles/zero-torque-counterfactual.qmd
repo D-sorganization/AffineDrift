@@ -56,42 +56,11 @@ categories:
 
 ::: {.laymans-terms}
 ```{=html}
-      <p class="laymans-terms-intro">
-        Not familiar with control theory or differential equations? Here is what the Zero-Torque Counterfactual means in everyday language.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Model Branch</h3>
-        <p>
-          Imagine freezing the modeled swing at the top of the downswing and asking: "If the model's applied generalized control were set to zero here, where would the club go?"
-        </p>
-        <p>
-          The answer is a <strong>forward Zero-Torque Counterfactual (ZTCF)</strong>: a model-conditioned intervention with declared generalized-control channels set to zero. Only the forces, constraints, contacts, and internal states explicitly retained by the record remain.
-        </p>
-        <div class="analogy">
-          <strong>Software analogy:</strong> Copy one simulator state, change one named input vector to zero, and advance both branches under their declared protocols. This analogy concerns model bookkeeping, not what a golfer's muscles do.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Why Does This Matter?</h3>
-        <p>
-          Comparing two registered model branches yields a simulated trajectory difference. Whether that difference is used as a contribution measure or a causal estimand requires additional assumptions. It does not identify individual muscle forces, co-contraction, metabolic effort, or conscious intent.
-        </p>
-        <div class="key-takeaway">
-          ZTCF evaluates one declared intervention. Interpretation is conditional on the exact model and version, branch state, zeroed inputs, retained inventory, solver, frame, units, horizon, and uncertainty treatment.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>A Thought Experiment, Not a Real Swing</h3>
-        <p>
-          ZTCF is a mathematical intervention, not a measurement of muscle state. A generalized torque can be zero under one coordinate convention even while internal muscle forces, co-contraction, or contact loads are nonzero and unidentified.
-        </p>
-        <p>
-          <strong>Impedance boundary:</strong> Stiffness and damping are retained only when the intervention record declares them as fixed plant parameters or internal states. The intervention does not establish that those quantities were identified from a golfer or can be maintained independently of activation.
-        </p>
-      </div>
+<p class="laymans-terms-intro">New to control theory? Here is what the Zero-Torque Counterfactual means in everyday language.</p>
+<div class="laymans-item"><h3>The Model Branch</h3><p>Freeze the modeled swing at the top of the downswing. Where would the club go if the model's declared applied control were zero here? This is a forward <a href="/pages/glossary.html#zero-torque-counterfactual">Zero-Torque Counterfactual</a> (ZTCF). Only what the record keeps remains: forces, constraints, contacts and internal states.</p><div class="analogy"><strong>Software analogy:</strong> Copy a simulator state, zero one input, and run both branches. This is model bookkeeping, not what muscles do.</div></div>
+<div class="laymans-item"><h3>Why Does This Matter?</h3><p>Comparing two model branches gives a simulated path difference. Reading it as a contribution or a cause needs extra assumptions. It does not identify muscle forces, co-contraction, effort or intent.</p><div class="analogy">ZTCF tests one declared intervention. Its meaning depends on the exact model, branch state, zeroed inputs, retained inventory, solver, frame, horizon and uncertainty handling.</div></div>
+<div class="laymans-item"><h3>A Thought Experiment, Not a Real Swing</h3><p>Zero here means zero in the declared applied-control channel under the stated model. It is not a measurement of muscle state. A generalized torque can be zero under one coordinate choice while muscle forces, co-contraction or contact loads stay nonzero and unidentified. Stiffness and damping stay only if the record declares them as fixed parameters or internal states. The intervention does not show they were identified from a golfer or can be held apart from activation.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> ZTCF is a model intervention. It is not a limp body and it is not no muscle.</div>
 ```
 :::
 
