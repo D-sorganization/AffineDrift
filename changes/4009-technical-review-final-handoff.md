@@ -1,20 +1,19 @@
 ---
 issue: 4009
-summary: "Clarify evidence terminology and preserve the final technical-review handoff"
+summary: "Record protected technical-review delivery and prepare final public acceptance"
 dl_state: "in_review"
-next_step: "Merge guide clarification #4976 and final handoff, then verify public artifacts before epic #4009 acceptance"
+next_step: "Verify final public deployment, then merge the regular closing documentation PR for #4009"
 owner: "codex"
-branch: "docs/technical-review-final-handoff"
+branch: "docs/technical-review-public-acceptance"
 ---
 
-Replace the stale root handoff entry point with the current review scope, evidence
-revisions and remaining delivery checks. Preserve every historical checkpoint
-below it. The detailed current-book-links turnover remains authoritative for the
-integration. Reader-guide clarification #4976 separates model-conditional proof
-from human evidence and empirical replication from original-data reanalysis.
-The six categories and validator behavior remain unchanged. The parent guide
-reached protected main before this correction; 54 focused tests, 245-file
-frontmatter validation and scoped rendering pass. Source-bound validation and
-review rationale are preserved in final-delivery/. Parent PR4953 is delivered to
-protected main at 76815ab5 with exact 145-artifact, 50-target and four-page hashes.
-Final acceptance still requires this handoff's merge and public verification.
+Core corrections and final reader-guide clarification are delivered through
+regular PRs #4953 and #4977. Preserve the original 145 artifacts, 50 linked
+manuscript/PDF targets, four amended pages and final guide/config exactly.
+The closing review binds actual protected-source, queue, corpus and issue-state
+evidence without treating CI or issue closure as scientific certification.
+
+Final publication and closing-documentation acceptance remain pending. Verify
+the actual deployed manifest, complete live route evidence, revised guide and
+five advertised PDFs before closing #4009. Preserve all historical review limits,
+immutable edition pins and provider authority; no new science rewrite is added.

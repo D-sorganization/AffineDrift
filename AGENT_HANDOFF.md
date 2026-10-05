@@ -1,53 +1,38 @@
 # Current Technical Review Handoff — 5 October 2026
 
-The source-review phase of [epic #4009](https://github.com/D-sorganization/AffineDrift/issues/4009)
-is accepted and delivered to protected main; public delivery and the final
-reader-guide clarification remain pending. The current
-[turnover notes](docs/development/technical-review/current-book-links/review-notes.md)
-supersede the historical checkpoints below. They explain the corrections,
-source boundaries, numerical and rendering evidence, and final integration.
+The accepted technical review and final guide are delivered to protected main.
+**Public verification and the closing documentation PR remain pending under
+[epic #4009](https://github.com/D-sorganization/AffineDrift/issues/4009).**
+The [closing review](docs/development/technical-review/final-delivery/closing-review.md)
+is the current evidence map and supersedes historical pending-work instructions.
 
-Regular [PR #4953](https://github.com/D-sorganization/AffineDrift/pull/4953)
-merged the consolidated corrections and four amended book landing pages on
-5 October at 15:32:58 UTC as `76815ab5e86807ab78d02a98fc69d832b6ab2feb`.
-The queue run `37323929485` passed. The [protected-main receipt](docs/development/technical-review/final-delivery/protected-main-receipt.json)
-confirms exact hashes for all 145 original artifacts, 50 manuscript/PDF targets
-and four amended book pages. Deployment run `37333725326` is in progress.
-The manuscript links retain reviewed source `fbee4da94fd699e9710f4c29b42a73a5113f08d4`;
-that source pin is not a protected-main merge receipt.
+Regular PR #4953 merged at `76815ab5e86807ab78d02a98fc69d832b6ab2feb`;
+regular PR #4977 merged at `f3b9fe8eb1ab7cd3ae7f020c3d4f9ca0fb209c04`.
+Actual protected-tree checks preserve all 145 original artifacts, 50 linked
+manuscript/PDF targets, four amended book pages and the final guide/config.
+Retain reviewed edition pin `fbee4da94fd699e9710f4c29b42a73a5113f08d4`.
 
-The 407 historical review rows have dispositions, including 38 immutable upstream
-publication rows. They are not 407 unique articles or empirical certification.
-Eight books' 131 direct inputs and 27 supplementary sources are reconciled.
-The frozen full regression has 7,283 passes at `07c71ed50050253a082189e87ab569673a7d286f`.
-Later integration has 379 affected and 55 focused test passes; each receipt names
-its actual revision. Do not imply that an older full run tested a later commit.
+The 407 heterogeneous rows, 27 supplementary sources and eight books' 131 input
+occurrences are reconciled; all 45 originally named workstreams are closed.
+Preserve 38 immutable upstream publication rows and all empirical/reading limits.
+Neither counts nor closed issues establish scientific validity. The closing
+review separates frozen-source, branch, queue and publication evidence.
 
 ## Remaining Delivery Work
 
-1. Publish the final handoff and reader-guide clarification #4976 in a regular
-   PR. Preserve the verified original artifacts and retain the immutable source
-   pin; do not modify a queued PR.
-2. Verify the deployed manifest revision, every-page verification artifact and
-   five advertised PDF downloads. Record the actual revisions and results in
-   epic #4009 and a final receipt before closing the editorial review. Include
-   the revised reader-guide prose in the eventual public verification.
-3. Confirm the final handoff's protected merge, then release only this session's
-   leases. Preserve other agents' changes and leave
-   superseded PR closure to the repository's redundant-PR closer.
+1. Verify the final public manifest and complete live route evidence, then check
+   the revised guide and five advertised PDFs at that deployed revision.
+2. Complete the acceptance records on `docs/technical-review-public-acceptance`,
+   validate them and publish a regular closing PR for #4009. No new scientific
+   edits belong to this documentation branch.
+3. Verify the closing PR's protected merge, record it on #4009 and release this
+   session's remaining epic lease and presence. The #4976 source lease is already
+   released. Preserve other agents' PRs and untracked QA artifacts.
 
-Reader-guide clarification [#4976](https://github.com/D-sorganization/AffineDrift/issues/4976)
-is locally accepted after parent PR #4970 reached protected main. The
-[adjudication and validation receipt](docs/development/technical-review/final-delivery/evidence-wording-review.md)
-distinguish mathematical proof, empirical applicability and replication; 54
-focused tests, 245-file frontmatter validation and a scoped HTML render pass.
-The six evidence categories and validator behavior are preserved. This follow-up
-still requires protected/public delivery; do not modify queued PRs.
-
-Finish these delivery steps before starting another review or rewrite. Empirical
-studies, notebook execution, instrument qualification and upstream publications
-retain their separately governed boundaries. Tests and algebra do not establish
-human causal mechanisms or coaching prescriptions.
+Empirical studies, notebook execution, instrument qualification and upstream
+publications retain their separately governed boundaries. Tests and algebra do
+not establish human causal mechanisms or coaching prescriptions. Finish this
+publication closeout before starting another review or rewrite.
 
 # Historical Checkpoints
 
