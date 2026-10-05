@@ -39,10 +39,12 @@ class SymbolReference:
 
 
 def _cells(row: str) -> list[str]:
+    """Split one Markdown table row into stripped cell texts."""
     return [cell.strip() for cell in row.strip().strip("|").split("|")]
 
 
 def _parse_row(row: str) -> SymbolReference:
+    """Parse one symbol row; raises ``ValueError`` on any malformed cell."""
     cells = _cells(row)
     if len(cells) != 4:
         raise ValueError(f"symbol row must have four cells: {row!r}")
