@@ -13,7 +13,9 @@ manuscript/PDF targets, four amended pages and final guide/config exactly.
 The closing review binds actual protected-source, queue, deployment-build, corpus and issue-state
 evidence without treating CI or issue closure as scientific certification.
 
-Final publication and closing-documentation acceptance remain pending. Verify
+Final publication and closing-documentation acceptance remain pending. The first
+publishing attempt ran no steps after runner acquisition failed; a job-only retry
+reuses the verified build. Verify
 the actual deployed manifest, complete live route evidence, revised guide and
 five advertised PDFs before closing #4009. Preserve all historical review limits,
 immutable edition pins and provider authority; no new science rewrite is added.

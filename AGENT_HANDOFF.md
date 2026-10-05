@@ -19,7 +19,8 @@ Neither counts nor closed issues establish scientific validity. The closing
 review separates frozen-source, branch, queue and publication evidence.
 
 The final deployment build passed its 1,004 route checks and 158 representative
-checks. Publishing is queued; full live verification remains pending.
+checks. Publishing encountered a hosted-runner acquisition failure. A job-only
+retry preserves the successful build; full live verification remains pending.
 
 ## Remaining Delivery Work
 

@@ -66,8 +66,11 @@ pixel baseline.
 Deployment `37354676786` has completed its build of the final guide revision
 `f3b9fe8`. The [deployment-build receipt](final-deployment-build-receipt.json)
 independently verifies 1,004 route cells and 158 representative checks, with all
-five amended routes present. The publishing job is waiting for a hosted runner;
-no live-publication acceptance is claimed.
+five amended routes present. The first publishing attempt could not acquire a
+hosted runner and ran no steps. The [recovery record](final-deployment-recovery.json)
+binds that terminal failure and the job-only retry, which preserves the successful
+build and artifacts. GitHub reports an active [hosted-runner assignment incident](https://www.githubstatus.com/incidents/3q1yb5m7ltvb).
+Final live-publication acceptance remains outstanding.
 Earlier five-target PDF checks passed at live revision `4b941c3`, but that
 workflow's full live scan was superseded. Those checks do not establish final
 guide publication. Record the actual completed workflow, deployed manifest,
@@ -76,7 +79,7 @@ acceptance. A newer deployment must be verified against its own actual revision.
 
 ## Closeout Checkpoint Validation
 
-All seven receipt JSON files parse, all 15 local links in this review and the current
+All eight receipt JSON files parse, all 16 local links in this review and the current
 handoff resolve, and the entire historical handoff suffix matches protected Git
 text. The inventory receipt distinguishes its original Windows CRLF checksum
 from the identical LF Git blobs at reviewed and protected revisions. A bounded
