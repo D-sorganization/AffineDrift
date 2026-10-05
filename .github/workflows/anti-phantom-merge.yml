@@ -60,7 +60,8 @@ jobs:
           FILES=$(gh pr view "$PR" --repo "$REPO" --json changedFiles --jq .changedFiles)
           TITLE=$(gh pr view "$PR" --repo "$REPO" --json title --jq .title)
           BODY=$(gh pr view "$PR" --repo "$REPO" --json body --jq .body)
-          PR_FILES=$(gh pr view "$PR" --repo "$REPO" --json files --jq ".files[].path")
+          # REST pagination: the GraphQL file listing caps at 100 files.
+          PR_FILES=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
 
           FAIL=""
           fail() { FAIL="${FAIL}- $1\n"; }
@@ -78,9 +79,13 @@ jobs:
             fi
           fi
 
-          # Rule 3: closes-issue path mismatch
+          # Rule 3: closes-issue path mismatch. The REST files API returns at most
+          # 3000 files, so a larger PR cannot be checked: fail closed, never pass
+          # on partial data.
           ISSUE_NUM=$(echo "$BODY" | grep -ioE '(Closes|Fixes|Resolves) #[0-9]+' | head -1 | grep -oE '[0-9]+' || true)
-          if [ -n "$ISSUE_NUM" ]; then
+          if [ -n "$ISSUE_NUM" ] && [ "$FILES" -gt 3000 ]; then
+            fail "Rule 3 (file list truncated): PR changes $FILES files but the GitHub files API lists at most 3,000, so the paths referenced by #$ISSUE_NUM cannot be verified. Split the PR or apply the phantom-guard-override label (admin-only)."
+          elif [ -n "$ISSUE_NUM" ]; then
             ISSUE_BODY=$(gh issue view "$ISSUE_NUM" --repo "$REPO" --json body --jq .body 2>/dev/null || echo "")
             REF_PATHS=$(echo "$ISSUE_BODY" | grep -oE '(src|tests|rust_core|api)/[A-Za-z0-9_./-]+' | sort -u || true)
             if [ -n "$REF_PATHS" ]; then
