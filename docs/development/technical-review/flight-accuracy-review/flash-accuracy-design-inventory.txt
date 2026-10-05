@@ -1,0 +1,84 @@
+# Preparatory Claim & Measurement Inventory
+
+## 1. Inventory of Specific Numeric Claims & Conditions Requiring Verification
+*Note: Evaluated strictly as unverified empirical assertions requiring source checking; no replacement numbers are posited.*
+
+| Parameter / Claim | Reported Value | Stated Conditions / Context | Deficiencies & Verification Requirements |
+| :--- | :--- | :--- | :--- |
+| **TrackMan Pro IIIe clubhead speed difference** | Median $-0.4\text{ mph}$ | Leach et al. (2017), 240 shots (driver, 7-iron, wedge) vs. 5,400 fps 4-camera reference | Median difference only; spreads/dispersions, individual club breakdowns, and reference point definition on clubface are omitted. |
+| **TrackMan Pro IIIe ball speed difference** | $+0.2\text{ mph}$ | Leach et al. (2017), simultaneous optical reference | Dispersion/error bounds not stated; verification against full study required. |
+| **TrackMan Pro IIIe launch angle difference** | $0.0^\circ$ | Leach et al. (2017) | Rounding precision, elevation vs. azimuth split, and dispersion undefined. |
+| **Clubhead velocity benchmark pass rate** | $54\%$ and $29\%$ | "Two devices ever tested against a traceable optical benchmark" (Ch. 2 reference back to Leach 2017) | Unclear which percentage maps to TrackMan Pro IIIe vs. GC2+HMT; specific numeric criteria defining "research-grade tolerance" are not defined. |
+| **Club orientation data return rate** | $62\%$ overall; $19\%$ for utility wedge | Derived from benchmark literature (Leach 2017 context) | Missing breakdown per device (GC2+HMT vs. TrackMan); capture failure causes (lighting, trigger, tracking) unverified. |
+| **TrackMan 4 indoor reliability (ICC)** | Club speed: $0.99$; Ball speed: $0.97\text{--}0.99$; Spin rate: $0.02\text{--}0.60$ | J. Sports Sciences (2024), high-level golfers indoors, truncated flight | Inter-session vs. intra-session conditions, specific ball type (marked vs. unmarked), radar setup distance, and sample size require primary text check. |
+| **Center-strike spin standard deviation** | GCQuad: $\approx 82\text{ rpm}$; TrackMan 4: $\approx 175\text{ rpm}$ | Golf Laboratories robot testing, reported via Foresight & third parties | Club type, nominal spin rate, ball model, strike repeatability, indoor vs. outdoor, and sample size are unspecified; source attribution is secondhand. |
+| **Manufacturer spec claims** | Ball speed: $\pm 1\text{ mph}$; Launch angle: $\pm 1^\circ$; Club face: $\pm 2^\circ$ ("calculated") | Generic market brackets / manufacturer datasheets | Confidence intervals (e.g., $1\sigma$, $2\sigma$, or absolute peak), test protocols, and club speed dependencies are unstandardized. |
+| **D-plane face bias amplification** | $\sim 1.15\times$ (Ch. 1) vs. $1.32\times$ (Ch. 2) | D-plane inversion at measured/nominal loft weighting | **Direct numerical contradiction across chapters** ($\sim 1.15\times$ vs. $1.32\times$). The underlying weighting equations and assumed face/path angles must be audited. |
+| **Radar Doppler module accuracy** | $\pm 0.5\%$ | Commodity 24 GHz CW radar module | Sensor-level bench specification vs. installed system-level accuracy on a non-point-source golf ball; conditions and integration effects unverified. |
+| **Radar spin detection rate** | $\sim 50\text{--}60\%$ | I/Q sideband analysis, minimal CW radar baseline | Window duration, sample rate, ball mark presence/absence, and flight distance needed to achieve this rate are unquantified. |
+| **Aerodynamic drag carry sensitivity** | $\Delta C_D = 0.01 \approx 8\text{ yards}$ carry | Atmospheric/flight modeling (Ch. 2 citing Ch. flight) | Nominal ball speed, launch angle, spin rate, air density, and specific aerodynamic model formulation are unstated. |
+
+---
+
+## 2. Inconsistent Measurement Definitions & Metric Ambiguities
+
+### A. Clubhead Speed Reference Point
+* **Inconsistency:** Ch. 1 notes a multi-mph systematic spread arising from "reference-point differences (geometric center vs. fastest return)." Ch. 2 notes that a CW Doppler module sees a composite smear of head and shaft velocities, proposing an empirical fixed percentile of the velocity distribution to avoid "toe-speed inflation."
+* **Impact:** Without a unified spatial coordinate definition on the clubhead (e.g., center of gravity, geometric face center, or impact point), "club speed" is not comparable across radar percentile estimators and optical tracker tracking points.
+
+### B. Face Angle Definition & Provenance
+* **Inconsistency:** Ch. 1 states radar calculates face angle via D-plane inversion amplifying launch-direction bias by $\sim 1.15\times$. Ch. 2 states the same inversion amplifies launch-direction bias by $1.32\times$.
+* **Ambiguity:** Neither text specifies whether face angle is defined dynamic-at-maximum-compression, pre-impact normal, or projected into the horizontal plane.
+
+### C. Club Path & Attack Angle: Direct vs. Derived
+* **Inconsistency:** Ch. 2 Section 2 calls club path and attack angle from angle radar "legitimate direct measurements." However, Ch. 2 Section 3 (Tier 4) states that a screw-theoretic imaging radar estimator "moves path and attack angle from *derived* to *measured* in \cref{tab:hierarchy}."
+* **Adjudication Note:** Path and attack angle in angle-radar are spatial trajectory derivatives/inversions of an extended moving body, blurring the boundary between direct measurement and model derivation.
+
+---
+
+## 3. Disentangling Metric Categories: Repeatability, Agreement, and Accuracy
+
+1. **Repeatability (Precision / Reliability):**
+   * *TrackMan 4 ICC Study (2024):* Reports high repeatability for club/ball speed ($\text{ICC} \ge 0.97$), but low repeatability for spin rate ($\text{ICC } 0.02\text{--}0.60$). ICC measures consistency within/between sessions, not closeness to truth.
+   * *Robot Testing (Golf Laboratories):* Measures dispersion (standard deviation $\approx 82\text{ rpm}$ vs. $\approx 175\text{ rpm}$) under mechanically repeatable impacts. This measures precision/repeatability, not absolute calibration accuracy.
+2. **Inter-Device Agreement:**
+   * *Leach et al. (2017) & Mevo+ vs. TrackMan 4 (2025):* Evaluates concordance between concurrent instruments. Systematic offsets (e.g., $-0.4\text{ mph}$ median difference) quantify relative agreement. Agreement between two units does not establish ground truth if both share underlying model bias.
+3. **Accuracy (Traceable Ground Truth):**
+   * Strictly limited to validation against independent, calibrated external reference systems (e.g., the 5,400 fps optical reference in Leach et al., achieving benchmark pass criteria of only $54\%$ and $29\%$ for clubhead velocity).
+
+---
+
+## 4. Unsupported Universal Claims
+
+* **"Ball speed is the strongest channel in any radar design: the Doppler line is unambiguous, and $\pm0.5\%$ class accuracy from a commodity module matches commercial practice."**
+  * *Critique:* Universalizes ideal point-target Doppler returns. Ignores ball deformation dynamics at impact, separation from clubface Doppler smear, and multipath reflections in enclosed/cluttered indoor environments.
+* **"[An EKF smoother with back-extrapolation] is the single highest-leverage software upgrade for angle quality, and it costs nothing in hardware."**
+  * *Critique:* Unsubstantiated assertion of optimality ("single highest-leverage"); assumes phase-difference data meets EKF Gaussian noise assumptions during early flight.
+* **"Alignment calibration dominates their accuracy, and no amount of signal processing recovers a misaimed sensor."**
+  * *Critique:* Absolute claim ("no amount of signal processing") ignores multi-sensor cross-calibration or algorithmic boresight estimation from launch-velocity vector distributions.
+* **"The honest disclosure did not cost them anything..."**
+  * *Critique:* Unsubstantiated commercial counterfactual assertion regarding market share, product revenue, and consumer behavior.
+
+---
+
+## 5. Hypotheses vs. Demonstrated Implementation
+
+| System / Feature | Classification | Rationale & Technical Gaps |
+| :--- | :--- | :--- |
+| **Tier 1 (Doppler speed + angle trajectory + D-plane face)** | **Demonstrated Implementation** | Existing commercial and hobbyist architectures (Garmin, Mevo, standard CW modules). |
+| **Tier 2 (Global-shutter optical spin + impact imaging trigger)** | **Demonstrated Implementation** | Known commercial configurations (e.g., MLM2PRO, GC2/GCQuad). |
+| **Tier 3 (Multi-sensor EKF fusion + covariances + versioned flight model)** | **Engineering Hypothesis / Conceptual Framework** | Proposed system design; covariance balancing across asynchronous radar/optical modalities and empirical stability are not validated in text. |
+| **Tier 4 (Screw-theoretic $SE(3)$ imaging radar club estimator)** | **Theoretical Formulation** | Purely analytical model (referencing an appendix); lacks demonstrated hardware implementation, SNR feasibility under club return smearing, or validation data. |
+| **Percentile-based club velocity extraction** | **Heuristic Proposal** | Proposed algorithmic mitigation for CW radar toe-speed inflation; specific percentile cutoff and invariance across club types are unproven. |
+
+---
+
+## 6. Coupling to Downstream Models
+
+1. **Flight Models:**
+   * Radar-truncated flight requires switching from measurement to estimation. Ball spin and launch vector errors propagate non-linearly into trajectory solvers; an unvalidated $\Delta C_D = 0.01$ shift causes $\sim 8\text{ yards}$ carry variance.
+2. **Inverse-Impact Models (D-Plane):**
+   * Commercial radar units reconstruct face angle via inverse D-plane equations using measured path and ball launch angles. This inversion assumes center-face strikes, has no awareness of gear effect, and amplifies launch-direction measurement error by $1.15\times\text{--}1.32\times$.
+3. **Observation Models:**
+   * Radar relies on an aspect-angle cosine projection model from unit position to impact/launch vector.
+   * Optical fiducial tracking relies on calibrated 2D-to-3D pose estimation, constrained by visibility, shutter synchronization, and marker-to-face geometric calibration.

@@ -1,0 +1,26 @@
+FF...                                                                    [100%]
+================================== FAILURES ===================================
+_ TestUnverifiedDatePresentation.test_unverified_header_and_card_preserve_reviewed_date _
+tests\test_citation_metadata.py:289: in test_unverified_header_and_card_preserve_reviewed_date
+    assert title_date is not None and title_date.get_text(strip=True) == "Date unverified"
+E   assert (<p class="date">Invalid Date</p> is not None and 'Invalid Date' == 'Date unverified'
+E     
+E     - Date unverified
+E     + Invalid Date)
+_ TestUnverifiedDatePresentation.test_cleanup_is_scoped_to_the_title_date_and_idempotent _
+tests\test_citation_metadata.py:302: in test_cleanup_is_scoped_to_the_title_date_and_idempotent
+    assert updated == content.replace(
+E   assert '<header id="...de></article>' == '<header id="...de></article>'
+E     
+E     Skipping 38 identical leading characters in diff, use -v to show
+E     - ss="date">Date unverified</p></header><article><p class="date">Invalid Date</p><code>Invalid Date</code></article>
+E     ?               -----------
+E     + ss="date">Invalid Date</p></header><article><p class="date">Invalid Date</p><code>Invalid Date</code></article>
+E     ?           ++++++++
+============================ slowest 20 durations =============================
+7.97s call     tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_unverified_header_and_card_preserve_reviewed_date
+
+(14 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_unverified_header_and_card_preserve_reviewed_date
+FAILED tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_cleanup_is_scoped_to_the_title_date_and_idempotent
