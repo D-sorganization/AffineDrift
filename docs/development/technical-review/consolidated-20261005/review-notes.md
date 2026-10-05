@@ -78,3 +78,20 @@ preview/CSP limitations and PDF layout limitations remain in individual notes.
 Neither mathematical tests nor publication availability establish human-swing,
 clinical, coaching or instrument accuracy. No workflow or protection changed.
 Metadata acceptance updates do not change the frozen scientific source.
+
+## Protected Main Integration
+
+Main advanced to 242d3ef06 with independently merged PR4880 and the PR4944
+change-fragment fixture repair. Six hash-only conflicts in each generated ledger
+were resolved and canonical regeneration passed. Commit 555751262 preserves
+both contributors' source and metadata. Twenty-seven integration tests and all
+eight pre-PR gates pass. Full regression remains explicitly bound to 4160ed572;
+no repeat full run is claimed for the integration. Corpus pending count is now
+26 because main already accepted Control Is Motion. Tail #4950 covers those 26.
+
+The fourth successful consolidation Flash job cross-checked acceptance reports.
+Its alleged contradiction between earlier full-regression source and later
+metadata gate commits was rejected: the separate scopes are intentionally
+recorded. Fifteen scoped acceptances and 27 then-pending other scopes are not
+contradictory. Its delivery warning is already enforced; it confirmed shared
+hashes and metrics agree. Do not treat this helper review as mathematical proof.
