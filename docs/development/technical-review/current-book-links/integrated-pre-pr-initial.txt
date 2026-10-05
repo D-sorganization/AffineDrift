@@ -1,0 +1,76 @@
+Success: no issues found in 2 source files
+================ pre_pr: Local CI Gate Runner ================
+Running diff-scoped pytest: C:\Users\diete\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Scripts\python.exe -m pytest tests/test_affine_control/test_swing_analysis.py tests/test_biological_inverse_listings.py tests/test_computational_lqr_listings.py tests/test_cpg_listings.py tests/test_experimental_methods_listing.py tests/test_inference_flexible_control_listings.py tests/test_internal_model_listings.py tests/test_joint_kinematics_listing.py tests/test_model_urdf_listing.py tests/test_motor_learning_listings.py tests/test_neural_architecture_listings.py tests/test_parameter_estimation_listing.py tests/test_passive_phase_listings.py tests/test_platform_contract_listings.py tests/test_putting_publication.py tests/test_rl_pendulum_listing.py tests/test_simulation_feedback_listings.py tests/test_trajectory_quadratic_listing.py tests/test_visualization_analysis_listings.py -p no:pytestqt
+........................................................................ [ 18%]
+........................................................................ [ 37%]
+.............................F.......................................... [ 56%]
+........................................................................ [ 75%]
+........................................................................ [ 94%]
+...................                                                      [100%]
+================================== FAILURES ===================================
+________________ test_mujoco_import_matches_analytic_mechanics ________________
+tests\test_model_urdf_listing.py:69: in test_mujoco_import_matches_analytic_mechanics
+    mujoco = pytest.importorskip("mujoco")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\mujoco\__init__.py:62: in <module>
+    from mujoco.gl_context import *
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\mujoco\gl_context.py:34: in <module>
+    raise RuntimeError(
+E   RuntimeError: invalid value for environment variable MUJOCO_GL: egl
+============================ slowest 20 durations =============================
+0.80s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_synthetic_swing_is_deterministic
+0.42s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_split_is_not_a_fixed_ratio
+0.38s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_zero_torque_gives_zero_control_contribution
+0.38s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_summary_runs_and_reports_a_plausible_speed
+0.38s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_control_contribution_is_exactly_the_torque_response
+0.22s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_mass_matrix_stays_positive_definite_along_the_swing
+0.21s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_decomposition_requires_torques
+0.08s call     tests/test_model_urdf_listing.py::test_mujoco_import_matches_analytic_mechanics
+0.05s call     tests/test_cpg_listings.py::test_time_scaling_preserves_state_curve
+0.05s call     tests/test_cpg_listings.py::test_scaled_drive_and_initial_preserve_time_dependence
+0.05s call     tests/test_simulation_feedback_listings.py::test_downward_rest_stays_at_rest
+0.04s call     tests/test_cpg_listings.py::test_simulate_shape_and_endpoint_included
+0.03s call     tests/test_affine_control/test_swing_analysis.py::test_grid_includes_endpoints_without_exceeding_step[0.3005-0.007]
+0.03s call     tests/test_cpg_listings.py::test_simulate_copies_initial_state_and_does_not_mutate
+0.02s call     tests/test_inference_flexible_control_listings.py::test_rotor_constant_excitation_analytic
+0.02s call     tests/test_affine_control/test_swing_analysis.py::test_summary_duration_uses_elapsed_time
+0.01s call     tests/test_affine_control/test_swing_analysis.py::test_inverse_torques_recover_prescribed_second_derivative
+0.01s call     tests/test_simulation_feedback_listings.py::test_forced_trajectory_energy_balance
+0.01s call     tests/test_cpg_listings.py::test_symmetric_initial_state_yields_symmetric_trajectory
+0.01s call     tests/test_rl_pendulum_listing.py::test_run_pendulum_physics_and_reward
+=========================== short test summary info ===========================
+FAILED tests/test_model_urdf_listing.py::test_mujoco_import_matches_analytic_mechanics
+1 failed, 378 passed in 15.08s
+
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_streamlit_app.py:10: could not import 'streamlit': No module named 'streamlit'
+SKIPPED [1] tests\test_streamlit_bootstrap.py:15: could not import 'streamlit': No module named 'streamlit'
+SKIPPED [1] tests\test_streamlit_visualization.py:10: could not import 'streamlit': No module named 'streamlit'
+[PASS] Lint & Format
+[PASS] Diff Mypy
+[FAIL] Affected Tests
+       FAIL: affected tests failed (exit code 1)
+[PASS] Consistency Tests
+[PASS] Semgrep & Import Policy
+[PASS] Policy & Fragment Validators
+[FAIL] Fleet Policy Gate
+       FAIL:
+         - shared_scripts/development_log.py exited 1:
+             WARNING: development log portfolio WIP breach
+               - DEVELOPMENT_LOG.md [portfolio_wip_breach]: 4 concurrent WIP entries (in_progress) exceeds the 'personal' portfolio cap of 2.
+                   Remediation: Park or ship entries to bring WIP to <= 2 before starting new work.
+             ERROR: development log
+               - DEVELOPMENT_LOG.md:157 [missing_field]: DL-#4558 is missing required field 'PR'.
+                   Remediation: Add '- **PR:** ...' to DL-#4558.
+               - DEVELOPMENT_LOG.md:157 [missing_field]: DL-#4558 is missing required field 'Paths'.
+                   Remediation: Add '- **Paths:** ...' to DL-#4558.
+               - DEVELOPMENT_LOG.md:157 [missing_field]: DL-#4558 is missing required field 'Started'.
+                   Remediation: Add '- **Started:** ...' to DL-#4558.
+               - DEVELOPMENT_LOG.md:157 [missing_field]: DL-#4558 is missing required field 'Last verified'.
+                   Remediation: Add '- **Last verified:** ...' to DL-#4558.
+               - DEVELOPMENT_LOG.md [size_ceiling]: Development log exceeds 200000 bytes.
+                   Remediation: Move shipped entries to DEVELOPMENT_LOG_ARCHIVE_<year>.md.
+[PASS] Workflow Lint
+       PASS (no workflow files changed)
+==============================================================
+Pre-PR gates FAILED. Fix issues before pushing.

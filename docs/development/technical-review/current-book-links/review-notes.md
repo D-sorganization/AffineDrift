@@ -206,6 +206,30 @@ Then fast-forward the existing consolidation branch to this combined result,
 update regular PR #4953 to close #4961, and use the central merge guard. Final
 protected-tree and public-site receipts still belong on #4009 before closure.
 
+## Final Gate Repairs
+
+The first central pre-PR run at 4e401bd8f passed 378 affected tests and failed one
+MuJoCo import because the process used MUJOCO_GL=egl on Windows. The installed
+MuJoCo implementation permits EGL on Linux, not Windows, and explicitly supports
+MUJOCO_GL=disable. Using that setting creates no graphics context; all three
+URDF/mechanics tests pass. No DLL paths, engine code or tolerances were changed.
+
+The fleet policy gate also found inherited documentation defects: protected main
+contains a 271,632-byte development log and a DL-#4558 record missing required
+metadata. The combined log was 202,689 bytes, above its unchanged 200,000-byte
+limit. Shared collation helpers restore PR #4892 and the verified merge reference,
+preserve owner claude and the existing evidence, and state that the original start
+date is unknown while recording the real PR creation date. The entry remains in
+review pending its owning publication workflow; no other task state was changed.
+
+The shared archiver moves 35 older terminal entries intact to the yearly archive,
+leaving 155,832 bytes in the active log. Every archived block and every other
+entry's fields are preserved. The development-log validator now passes with only
+the existing portfolio WIP warning. Current change fragments were neither
+collated nor deleted. The reusable existing-entry metadata gap is tracked in
+Repository_Management #2008; its library fix is separate from this delivered
+documentation repair. See final-navigation-policy-repair.json for the receipt.
+
 Repository_Management #1998 is merged at e03344f3d5d0306f990ff295f767dbb1ba74ecd9.
 Thirty-eight of its 39 changed files exactly match the accepted head. The remaining
 test file has only an independent main addition to SCRIPT_COPIES; the repair is
