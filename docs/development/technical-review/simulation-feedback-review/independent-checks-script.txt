@@ -1,0 +1,101 @@
+"""Manufactured identities; this is not empirical golf or controller validation."""
+import json
+import runpy
+import sys
+from pathlib import Path
+
+import numpy as np
+from scipy.linalg import expm, solve_continuous_lyapunov
+
+root = Path.cwd()
+sys.path.insert(0, str(root))
+loader = runpy.run_path(str(root / 'tests/test_simulation_feedback_listings.py'))['_listing']
+simulation = loader('ch04_simulation.tex')
+optimization = loader('ch05_trajectory_optimization.tex')
+feedback = loader('ch06_controller_design.tex')
+rng = np.random.default_rng(4927)
+model = simulation.RIGID_MODEL
+
+
+def case(seed):
+    """One independently seeded trial of six algebraic/differential identities."""
+    random = np.random.default_rng(int(seed))
+    raw = random.normal(size=(4, 4))
+    hessian = raw.T @ raw + np.eye(4)
+    gradient = random.normal(size=4)
+    dx = random.normal(size=2)
+    result = optimization.quadratic_step(gradient, hessian, 2)
+    du = result['k'] + result['K'] @ dx
+    z = np.r_[dx, du]
+    reduced = (result['value_offset'] + result['value_gradient'] @ dx
+               + .5 * dx @ result['value_hessian'] @ dx)
+    quadratic_error = abs(gradient @ z + .5 * z @ hessian @ z - reduced)
+
+    mu = random.uniform(.1, 2)
+    hu, cross, hx = random.uniform(.2, 4, size=3)
+    gain = -cross / (hu + mu)
+    original = hx + 2 * cross * gain + hu * gain**2
+    modified = hx - cross**2 / (hu + mu)
+    regularization_error = abs(original - (modified - mu * gain**2))
+
+    q, velocity, target = random.uniform(-1, 1, size=(3, 3))
+    kp, kd = np.diag([2., 3., 4.]), np.diag([.4, .6, .8])
+    state = np.r_[q, velocity]
+    gravity = model.gravity_torque(q)
+    torque = feedback.regulation_torque(feedback.PDGains(kp, kd),
+                                        np.stack([q, velocity]), target, gravity)
+    acceleration = simulation.forward_dynamics(state, torque)
+    mass = model.rigid_mass_matrix(q)
+    step = 1e-5
+    mdot = (model.rigid_mass_matrix(q + step * velocity)
+            - model.rigid_mass_matrix(q - step * velocity)) / (2 * step)
+    vdot = (velocity @ mass @ acceleration + .5 * velocity @ mdot @ velocity
+            + (q - target) @ kp @ velocity)
+    regulation_error = abs(vdot + velocity @ kd @ velocity)
+
+    desired_velocity, desired_acceleration = random.normal(size=(2, 3))
+    error_acceleration = desired_acceleration - kd @ (velocity - desired_velocity) - kp @ (q - target)
+    bias = model.coriolis(q, velocity) @ velocity + gravity
+    computed_torque = mass @ error_acceleration + bias
+    actual_acceleration = simulation.forward_dynamics(state, computed_torque)
+    tracking_error = np.max(np.abs(actual_acceleration - error_acceleration))
+
+    system = np.array([[-1., random.uniform(3., 10.)], [0., -2.]])
+    metric = solve_continuous_lyapunov(system.T, -np.eye(2))
+    eigenvalues = np.linalg.eigvalsh(metric)
+    assert eigenvalues[0] > 0
+    certificate_error = np.max(np.abs(system.T @ metric + metric @ system + np.eye(2)))
+    separation = random.normal(size=2)
+    duration = random.uniform(0., 2.)
+    evolved = expm(system * duration) @ separation
+    bound = (np.sqrt(eigenvalues[-1] / eigenvalues[0])
+             * np.exp(-duration / (2 * eigenvalues[-1])) * np.linalg.norm(separation))
+    assert np.linalg.norm(evolved) <= bound + 1e-12
+
+    disturbance = random.uniform(.01, .8)
+    margin = .2
+    r0 = disturbance + margin + random.uniform(.1, 1.)
+    radius = disturbance + margin + (r0 - disturbance - margin) * np.exp(-duration)
+    radius_dot = -(r0 - disturbance - margin) * np.exp(-duration)
+    worst_vdot = -2 * radius**2 + 2 * radius * disturbance
+    gap = worst_vdot - 2 * radius * radius_dot
+    assert gap < 0
+    funnel_error = abs(gap + 2 * radius * margin)
+    return np.array([quadratic_error, regularization_error, regulation_error,
+                     tracking_error, certificate_error, funnel_error])
+
+
+seeds = rng.integers(0, 2**31, size=100)
+errors = np.vectorize(case, signature='()->(n)')(seeds)
+names = ['reduced_control_quadratic', 'regularized_vs_original_curvature',
+         'PD_regulation_energy_derivative', 'computed_torque_error_dynamics',
+         'non_normal_linear_contraction_metric', 'robust_scalar_funnel_boundary']
+maxima = errors.max(axis=0)
+assert np.all(maxima < 1e-6), maxima
+record = {'issue': 4927, 'seed': 4927, 'cases_per_check': 100, 'threshold': 1e-6,
+          'maximum_error': float(maxima.max()),
+          'checks': dict(zip(names, maxima.tolist(), strict=True)),
+          'scope': 'Manufactured algebra and model identities; no complete optimizer, general contraction/funnel synthesis, human or empirical validation'}
+path = root / 'reports/technical-review/simulation-feedback-independent-checks.json'
+path.write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+print(json.dumps(record, indent=2))

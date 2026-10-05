@@ -1,0 +1,78 @@
+Based on a rigorous technical review of the revised chapters, here is the prioritized list of definite mathematical, mechanical, coordinate, and control-theoretic findings.
+
+---
+
+### Priority 1: High — Mathematical & Control-Theoretic Inconsistencies
+
+#### 1. Inconsistent Contraction Metric Metric-Tensor vs. Dual Metric Definition
+* **Location:** Chapter 3 (\ref{ch:controller-design}), *Contraction Is a Regional Differential Property*:
+  $$\dot W + A^T W + W A \preceq -2\lambda W$$
+* **Issue:** 
+  In contraction theory (Lohmiller & Slotine 1998), if $W(x,t)$ is the Riemannian **metric tensor** (such that the infinitesimal squared distance is $\delta x^T W \delta x$), the differential dynamics $\dot{\delta x} = A \delta x$ yields:
+  $$\frac{\mathrm d}{\mathrm dt}(\delta x^T W \delta x) = \delta x^T (\dot W + A^T W + W A)\delta x \le -2\lambda \delta x^T W \delta x.$$
+  However, in control contraction metrics (CCM, Manchester & Slotine 2017) and dual computational formulations, $W$ commonly denotes the **dual metric** (inverse metric $M^{-1}$), where the condition becomes $-\dot W + A W + W A^T \preceq -2\lambda W$.
+  More critically, the chapter later states:
+  > *"Uniform metric bounds convert this into an exponential Euclidean-distance bound."*
+  For a Riemannian manifold with non-Euclidean metric $W(x,t)$, path length is defined by $L = \int \sqrt{\dot c^T W c'} ds$. For the geodesic length $d(x_1, x_2)$ to satisfy an exponential convergence bound $\dot d \le -\lambda d$, the differential contraction condition requires geodesic convexity or uniform bounds on the Riemann curvature tensor / forward-invariance of a geodesically convex domain. If $W$ is state-dependent, having just a forward-invariant domain in $\mathbb{R}^n$ does not guarantee that the connecting minimal geodesic remains inside that domain. The conditional proof assumption (geodesic convexity of the domain with respect to metric $W$) must be distinguished from ordinary set invariance.
+
+#### 2. Funnel Invariance Condition Boundary Orientation
+* **Location:** Chapter 3 (\ref{ch:controller-design}), *Funnels Bound Finite-Time Motion*:
+  $$V = \rho \implies \partial_t V + \nabla_e V^T f_e(t,e,w) < \dot\rho$$
+* **Issue:** 
+  The condition as written with strict inequality $\partial_t V + \nabla_e V^T f_e < \dot\rho$ on the boundary $\partial \mathcal{F}(t) = \{e : V(t,e) = \rho(t)\}$ guarantees forward invariance (strictly inward flow) if $\rho(t)$ is continuously differentiable and $\mathcal{F}(t)$ is bounded. However:
+  - If $\rho(t)$ is only piecewise differentiable (standard in spline-based funnel synthesis), directional derivatives must be specified.
+  - When $w \in \mathcal{W}$ is an adversarial disturbance, the condition must hold with $\sup_{w \in \mathcal{W}} [\dots] < \dot\rho$. If $\mathcal{W}$ is non-compact or feedback depends on $w$, the quantifier must precede the condition.
+
+---
+
+### Priority 2: Medium — Dynamics, Units & Coordinate Conventions
+
+#### 3. Gravity Term Definition vs. Dynamic Equations Sign
+* **Location:** Chapter 1 (\ref{ch:simulation}), Section 1:
+  $$M(q)\ddot q + C(q,\dot q)\dot q + g(q) = \tau, \qquad g = \nabla_q U$$
+  and listing:
+  ```python
+  bias = (
+      RIGID_MODEL.coriolis(position, velocity) @ velocity
+      + RIGID_MODEL.gravity_torque(position)
+  )
+```
+* **Issue:** 
+  By standard Lagrangian mechanics, $L = T - U$. Lagrange's equations are:
+  $$\frac{\mathrm d}{\mathrm dt}\frac{\partial T}{\partial \dot q} - \frac{\partial T}{\partial q} + \frac{\partial U}{\partial q} = \tau.$$
+  Thus $g(q) = \frac{\partial U}{\partial q} = \nabla_q U$ matches the $+g(q)$ term in $M\ddot q + C\dot q + g = \tau$.
+  In Section 2, the text states:
+  > *"The plane is $(x,y)$ with gravity along $-y$. The first angle is measured from $+x$ ... straight downward chain is $q = (-\pi/2, 0, 0)$."*
+  For a downward configuration under gravity along $-y$, potential energy $U$ increases as $q_1$ rotates upward toward $0$ (horizontal). Therefore, at $q = (-\pi/2, 0, 0)$, $\nabla_q U = 0$ (equilibrium), but at horizontal $q=(0,0,0)$, potential energy is maximal with respect to downward vertical, meaning $\partial U / \partial q_1 > 0$ when displaced upwards. 
+  When checking gravitational generalized torque in Chapter 3:
+  $$\tau = g(q) - K_p e - K_d \dot q$$
+  For this control law to hold against gravity, $\tau$ must balance $+g(q)$, so $+g(q)$ is the holding torque. In the literature, authors frequently define $G(q) = -\nabla_q U$ (generalized gravity force), leading to $M\ddot q + C\dot q - G(q) = \tau$ or $M\ddot q + C\dot q + g(q) = \tau$ where $g(q) = -\tau_g$. The text must explicitly specify whether `gravity_torque` in `dynamic_terms` is the potential gradient $\nabla_q U$ or the gravitational force vector $-G(q)$ to avoid sign cancellation errors between Chapters 1 and 3.
+
+#### 4. iLQR Regularization and Subproblem Equivalence
+* **Location:** Chapter 2 (\ref{ch:traj-opt}), *Deriving the Backward Step*:
+  $$V_{xx} = Q_{xx} + Q_{xu}K = Q_{xx} - Q_{xu}Q_{uu}^{-1}Q_{ux}$$
+  followed by:
+  > *"When gains minimize a modified quadratic, the simplified Schur formulas above describe that modified quadratic. To evaluate an original quadratic under arbitrary gains, retain all terms:
+  > $$V_{xx} = Q_{xx} + Q_{xu}K + K^T Q_{ux} + K^T Q_{uu}K$$"*
+* **Issue:**
+  The second formula for non-optimal / regularized gain $K$ is algebraically exact because:
+  $$Q(\delta x, K \delta x) = \tfrac12 \delta x^T \left( Q_{xx} + Q_{xu}K + K^T Q_{ux} + K^T Q_{uu}K \right) \delta x.$$
+  However, notice that if $K = -(Q_{uu} + \mu I)^{-1} Q_{ux}$, substituting this $K$ into the expression above evaluates the expected curvature of the *unregularized* cost-to-go, whereas setting $V_{xx} = Q_{xx} - Q_{xu}(Q_{uu} + \mu I)^{-1} Q_{ux}$ under-estimates the true quadratic curvature of the unregularized model. The text correctly warns against mixing these, but should explicitly state that the two-sided expansion is the symmetric evaluation of $Q$ under the linear policy $\delta u = K \delta x + k$, which is positive semi-definite if $Q$ is convex.
+
+---
+
+### Priority 3: Minor Technical / Contract Notes
+
+#### 5. LaSalle Invariance Assumption on Compact Sublevel Sets
+* **Location:** Chapter 3 (\ref{ch:controller-design}), Section 1:
+  > *"On a compact forward-invariant sublevel set within the regular coordinate domain, LaSalle's argument identifies the largest invariant subset of $\dot V = 0$: a trajectory remaining there has $\dot q = 0$ and then $K_p e = 0$."*
+* **Verification:**
+  - **Proof Assumption vs. Empirical Claim:** This is a strictly conditional proof assumption. For $V = \tfrac12 \dot q^T M(q) \dot q + \tfrac12 e^T K_p e \le c$, compactness requires that the sublevel set $\{q : e^T K_p e \le 2c\}$ be compact in the coordinate chart. Since joint angles lie on $\mathbb{T}^n$ (or $\mathbb{R}^n$ without unwrapping), if coordinates are Euclidean $\mathbb{R}^n$, sublevel sets are closed and bounded (ellipsoids in $(e, \dot q)$).
+  - However, within that sublevel set, the assumption that $M(q)$ remains uniformly positive definite and that no kinematic singularities occur is necessary for $\dot q \equiv 0 \implies \ddot q \equiv 0 \implies K_p e = 0$. The text mentions "within the regular coordinate domain", which correctly flags the condition.
+
+#### 6. Unit Consistency Across Listings
+* **Listing 1 (Simulation):** State is $(q, \dot q)$ in $(\mathrm{rad}, \mathrm{rad/s})$, torque in $\mathrm{N\cdot m}$.
+* **Listing 3 (Regulation):** `state` has shape `(2, size)` ($q$ row 0, $\dot q$ row 1). 
+  - Gains: $K_p$ has units $\mathrm{N\cdot m / rad}$, $K_d$ has units $\mathrm{N\cdot m \cdot s / rad}$.
+  - In Section 2, Computed Torque gains $\widehat K_p, \widehat K_d$ operate in acceleration space: $\ddot e + \widehat K_d \dot e + \widehat K_p e = 0$, giving $\widehat K_p$ units of $\mathrm{s}^{-2}$ and $\widehat K_d$ units of $\mathrm{s}^{-1}$. 
+  - The distinction made in Chapter 3 between the units of $K_p$ vs $\widehat K_p$ is physically and dimensionally verified.

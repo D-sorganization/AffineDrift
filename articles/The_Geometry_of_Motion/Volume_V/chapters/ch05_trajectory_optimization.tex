@@ -1,184 +1,186 @@
-\chapter{Trajectory Optimization in Practice}
+\chapter[Trajectory Optimization in Practice]{Trajectory Optimization\\in Practice}
 \label{ch:traj-opt}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+A simulated trajectory answers a conditional question about a model and input.
+Optimization adds a declared objective and feasible set; it does not infer the
+objective of a human golfer from the resulting motion. This chapter derives and
+tests the quadratic minimization at the heart of iLQR, then specifies the checks
+needed to turn those local steps into a nonlinear trajectory optimizer.
 
-\epigraph{Theory without practice is empty. Practice without theory is blind.}{}
+\section{The Discrete Problem and Its Approximation}
 
-\section{DDP/iLQR Implementation}
+For a chosen discrete dynamics map $F_k$, solve
+\[
+ \min_{u_0,\ldots,u_{N-1}}\quad
+ J=\phi(x_N)+\sum_{k=0}^{N-1}\ell_k(x_k,u_k),\qquad
+ x_{k+1}=F_k(x_k,u_k),\quad x_0=x_{\mathrm{initial}}.
+\]
+State/input bounds and terminal constraints are additional parts of the problem.
+If $\ell$ represents a continuous running cost, its discretization must include
+the time interval or a stated quadrature rule. Derivatives must describe the
+same discrete map used for rollout, including its integration and input-hold
+conventions. Differentiating a continuous vector field is not automatically
+differentiating its numerical flow map.
 
-Differential Dynamic Programming (DDP) and iterative Linear Quadratic Regulator (iLQR) are
-related algorithms for trajectory optimization \cite{Mayne1966, jacobson1970dpp}. They solve
-the finite-horizon optimal control problem by iteratively linearizing around a nominal
-trajectory and solving quadratic subproblems. Figure~\ref{fig:ilqr-loop} shows the algorithm structure.
+iLQR uses first derivatives $A=F_x$, $B=F_u$ and quadratic cost/value models.
+Full differential dynamic programming (DDP) also retains contractions of the
+next value gradient with second derivatives of $F$. Both are local methods;
+neither name certifies a global optimum~\cite{Mayne1966,jacobson1970dpp,TedrakeTrajectoryFoundations}.
 
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[
-    every node/.style={align=center, draw, rounded corners, minimum width=2cm, text centered, font=\small},
-    ]
-    % Initial trajectory
-    \node[fill=blue!20] (init) at (0, 4) {Initialize\\$\bm{u}_0$};
+At a dynamically feasible nominal trajectory, let $V_x^+,V_{xx}^+$ describe
+the next value approximation. The iLQR coefficients are
+\begin{align*}
+ Q_x&=\ell_x+A^TV_x^+,& Q_u&=\ell_u+B^TV_x^+,\\
+ Q_{xx}&=\ell_{xx}+A^TV_{xx}^+A,&
+ Q_{uu}&=\ell_{uu}+B^TV_{xx}^+B,\\
+ Q_{ux}&=\ell_{ux}+B^TV_{xx}^+A.&
+\end{align*}
+For example, DDP adds $\sum_i(V_x^+)_i\nabla_{uu}^2(F_k)_i$
+to $Q_{uu}$, and analogous terms to the other Hessian blocks.
 
-    % Forward pass
-    \node[fill=green!20] (forward) at (0, 2) {Forward Rollout:\\$\bm{x}(t)$};
+\section{Deriving the Backward Step}
 
-    % Backward pass
-    \node[fill=yellow!20] (backward) at (4, 2) {Backward Pass:\\Compute $k, K$ gains};
+With $z=(\delta x,\delta u)$, expand
+\[
+ Q(z)=Q_0+Q_x^T\delta x+Q_u^T\delta u+
+ \tfrac12\delta x^TQ_{xx}\delta x+
+ \delta u^TQ_{ux}\delta x+\tfrac12\delta u^TQ_{uu}\delta u.
+\]
+If $Q_{uu}\succ0$, stationarity gives
+\[
+ \delta u=k+K\delta x,\qquad
+ k=-Q_{uu}^{-1}Q_u,\quad K=-Q_{uu}^{-1}Q_{ux}.
+\]
+Substitution, including the cross terms, yields the Schur complement
+\begin{align*}
+ V_0-Q_0&=\tfrac12Q_u^Tk,\\
+ V_x&=Q_x+Q_{xu}k,\\
+ V_{xx}&=Q_{xx}+Q_{xu}K
+          =Q_{xx}-Q_{xu}Q_{uu}^{-1}Q_{ux}.
+\end{align*}
+Minimization subtracts a positive-semidefinite term from the state curvature.
+The minus sign therefore matters. The entire Hessian of
+$Q$ need not be positive definite for this conditional control minimization.
 
-    % Line search
-    \node[fill=orange!20] (linesearch) at (2, 0.3) {Line Search:\\Update $\bm{u}$};
-
-    % Convergence check
-    \node[fill=pink!20] (converge) at (2, -1.2) {Converged?};
-
-    % Exit
-    \node[fill=green!20] (exit) at (4, -2.5) {Optimal\\$\bm{x}^*, \bm{u}^*$};
-
-    % Arrows
-    \draw[->] (init) -- (forward);
-    \draw[->] (forward) -- (backward);
-    \draw[->] (backward) -- (linesearch);
-    \draw[->] (linesearch) -- (converge);
-    \draw[->] (converge) -- node[align=center, left] {No} (1, 1) -- (forward);
-    \draw[->] (converge) -- node[align=center, above right] {Yes} (exit);
-  \end{tikzpicture}
-  \caption{iLQR algorithm loop: initialize control trajectory, forward rollout
-    to compute state trajectory, backward pass to compute feedback gains,
-    line search to update controls, and convergence check.}
-  \label{fig:ilqr-loop}
-\end{figure}
-
-Here we implement iLQR end-to-end:
-
-\begin{lstlisting}[language=Python, caption={iLQR implementation for trajectory optimization.}]
+\begin{lstlisting}[language=Python, caption={Exact Minimization of a Local Control Quadratic}]
 import numpy as np
-from typing import Callable, Tuple
 
-def ilqr_solve(
-    dynamics: Callable,
-    cost_running: Callable,
-    cost_terminal: Callable,
-    x0: np.ndarray,
-    u_init: np.ndarray,
-    n_iterations: int = 50,
-    regularization: float = 1e-6
-) -> Tuple[np.ndarray, np.ndarray, list[float]]:
-    """Iterative Linear Quadratic Regulator.
 
-    Parameters
-    ----------
-    dynamics : callable
-        (x, u) -> x_next, (A, B) Jacobians
-    cost_running : callable
-        (x, u) -> (cost, lx, lu, lxx, luu, lux)
-    cost_terminal : callable
-        x -> (cost, lx, lxx)
-    x0 : np.ndarray
-        Initial state.
-    u_init : np.ndarray, shape (T, m)
-        Initial control trajectory.
-    n_iterations : int
-        Maximum iterations.
-    regularization : float
-        Regularization for Quu inversion.
-
-    Returns
-    -------
-    Tuple
-        (x_traj, u_traj, costs)
-    """
-    T, m = u_init.shape
-    n = len(x0)
-
-    # Forward rollout with initial controls
-    x_traj = np.zeros((T + 1, n))
-    x_traj[0] = x0
-    u_traj = u_init.copy()
-
-    for t in range(T):
-        x_next, _ = dynamics(x_traj[t], u_traj[t])
-        x_traj[t + 1] = x_next
-
-    costs = []
-
-    for iteration in range(n_iterations):
-        # Compute total cost
-        total_cost = sum(
-            cost_running(x_traj[t], u_traj[t])[0]
-            for t in range(T)
-        ) + cost_terminal(x_traj[T])[0]
-        costs.append(total_cost)
-
-        # Backward pass
-        Vx_next, Vxx_next = cost_terminal(x_traj[T])[1:]
-        k_gains = np.zeros((T, m))
-        K_gains = np.zeros((T, m, n))
-
-        for t in range(T - 1, -1, -1):
-            _, (A, B) = dynamics(x_traj[t], u_traj[t])
-            _, lx, lu, lxx, luu, lux = cost_running(
-                x_traj[t], u_traj[t]
-            )
-
-            Qx = lx + A.T @ Vx_next
-            Qu = lu + B.T @ Vx_next
-            Qxx = lxx + A.T @ Vxx_next @ A
-            Quu = luu + B.T @ Vxx_next @ B + regularization * np.eye(m)
-            Qux = lux + B.T @ Vxx_next @ A
-
-            Quu_inv = np.linalg.inv(Quu)
-            k_gains[t] = -Quu_inv @ Qu
-            K_gains[t] = -Quu_inv @ Qux
-
-            Vx_next = Qx + K_gains[t].T @ Quu @ k_gains[t]
-            Vxx_next = Qxx + K_gains[t].T @ Quu @ K_gains[t]
-
-        # Forward pass with line search
-        alpha = 1.0
-        x_new = np.zeros_like(x_traj)
-        u_new = np.zeros_like(u_traj)
-        x_new[0] = x0
-
-        for t in range(T):
-            dx = x_new[t] - x_traj[t]
-            u_new[t] = u_traj[t] + alpha * k_gains[t] + K_gains[t] @ dx
-            x_new[t + 1], _ = dynamics(x_new[t], u_new[t])
-
-        x_traj = x_new
-        u_traj = u_new
-
-        if iteration > 0 and abs(costs[-1] - costs[-2]) < 1e-6:
-            break
-
-    return x_traj, u_traj, costs
+def quadratic_step(gradient: np.ndarray, hessian: np.ndarray,
+                   state_size: int) -> dict:
+    """Minimize in control variables ordered after state variables."""
+    gradient = np.asarray(gradient, dtype=float)
+    hessian = np.asarray(hessian, dtype=float)
+    if (gradient.ndim != 1 or gradient.size < 2
+            or not np.all(np.isfinite(gradient))):
+        raise ValueError("Gradient must be a finite vector")
+    if (isinstance(state_size, bool)
+            or not isinstance(state_size, (int, np.integer))
+            or not 1 <= state_size < gradient.size):
+        raise ValueError("State and control blocks must be nonempty")
+    if (hessian.shape != (gradient.size, gradient.size)
+            or not np.all(np.isfinite(hessian))
+            or not np.allclose(hessian, hessian.T,
+                               rtol=1e-12, atol=1e-12)):
+        raise ValueError("Hessian must be finite and symmetric")
+    hessian = (hessian + hessian.T) / 2
+    state = slice(0, state_size)
+    control = slice(state_size, None)
+    huu = hessian[control, control]
+    hux = hessian[control, state]
+    try:
+        np.linalg.cholesky(huu)
+    except np.linalg.LinAlgError as error:
+        raise ValueError("Control Hessian must be positive definite") from error
+    step = -np.linalg.solve(huu, gradient[control])
+    gain = -np.linalg.solve(huu, hux)
+    value_hessian = hessian[state, state] + hux.T @ gain
+    return {
+        "k": step, "K": gain,
+        "value_gradient": gradient[state] + hux.T @ step,
+        "value_hessian": (value_hessian + value_hessian.T) / 2,
+        "value_offset": float(0.5 * gradient[control] @ step),
+    }
 \end{lstlisting}
 
-\section{Application: Optimal Pendulum Swing-Up}
+This executable core is not a complete iLQR solver. It has no nonlinear rollout,
+constraint handling or convergence claim. For the scalar-state/scalar-control
+case $\nabla Q=(3,4)$ and $\nabla^2Q=\left[\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right]$,
+it returns $k=-2$, $K=-1/2$, $V_x=1$, $V_{xx}=3/2$ and $V_0-Q_0=-4$.
+The minimized polynomial is therefore $-4+\delta x+3\delta x^2/4$.
 
-The classic control benchmark: swing a pendulum from the hanging position to
-the inverted equilibrium.
+If $Q_{uu}$ is indefinite, adding a fixed small number to its diagonal does not
+guarantee positive definiteness. A solver must adjust regularization and check
+factorization. When gains minimize a modified quadratic, the simplified Schur
+formulas above describe that modified quadratic. To evaluate an original
+quadratic under arbitrary gains, retain all terms:
+\begin{align*}
+ V_x&=Q_x+Q_{xu}k+K^TQ_u+K^TQ_{uu}k,\\
+ V_{xx}&=Q_{xx}+Q_{xu}K+K^TQ_{ux}+K^TQ_{uu}K.
+\end{align*}
+Mixing regularized gains with unjustified cancellations changes the backward
+model and its predicted improvement.
 
-\section{Application: Optimal Pendulum Swing-Up}
+\section{A Real Acceptance Loop}
 
-The pendulum swing-up is a classic trajectory optimization benchmark. The goal is to
-find the minimum-energy torque sequence that brings the pendulum from the downward
-(stable) equilibrium to the upright (unstable) equilibrium.
+Starting from the fixed initial state, roll out each candidate using
+\[
+ u_k^{\mathrm{trial}}=\bar u_k+\alpha k_k+
+ K_k(x_k^{\mathrm{trial}}-\bar x_k),\qquad
+ x_{k+1}^{\mathrm{trial}}=F_k(x_k^{\mathrm{trial}},u_k^{\mathrm{trial}}).
+\]
+Try decreasing positive step lengths $\alpha$. Evaluate the actual nonlinear
+objective and feasibility for each candidate. Accept a finite, feasible candidate
+only if it satisfies the chosen sufficient-decrease rule; otherwise retain the
+nominal trajectory and adjust regularization or report failure. Assigning
+$\alpha=1$ once is not a line search. Clipping a control after the backward pass
+also changes the subproblem; bounded-control methods must account for active
+constraints.
 
-\section{Application: Golf Swing Optimization}
+Record the accepted trajectory's cost, including the final returned trajectory.
+Small cost change alone may mean a stalled search, numerical noise or a rejected
+step. Report iteration limits and termination reason, feasibility residuals,
+gradient or appropriate constrained stationarity residuals, and discretization
+sensitivity. Initialization and local minima matter; a successful rollout is
+not an optimality certificate.
 
-DDP can be applied to a simplified golf model (3-5 DOF) to optimize clubhead speed
-at ball impact. The cost function would penalize control effort while maximizing
-endpoint velocity. In practice, golf swing optimization requires careful handling
-of contact constraints at impact.
+\section{Pendulum and Golf Objectives}
+
+For a pendulum angle measured from downward vertical, swing-up targets
+$q_N=\pi$ modulo $2\pi$ and $\dot q_N=0$. A smooth periodic terminal penalty
+$w_q(1+\cos q_N)+w_v\dot q_N^2/2$ respects angle wrapping but does not impose an
+exact terminal equality. At the exactly downward, motionless, zero-input
+initialization, this penalty's gradient can vanish; a local method may need a
+nontrivial initial guess. A finite torque bound and specified duration complete
+the physical question.
+
+The running penalty $\int\tau^TR\tau\,\mathrm dt$ is a weighted squared-torque
+effort measure. It is not mechanical work $\int\tau^T\dot q\,\mathrm dt$, positive
+work, electrical consumption or metabolic expenditure. Mechanical net work can
+cancel between positive and negative phases; different objectives can therefore
+favor different motions even with identical dynamics.
+
+For golf, terminal clubhead speed must be paired with a strike location, clubface
+orientation, approach direction, admissible joint motion and actuator limits.
+Specify whether the terminal time is fixed or is a state-dependent impact event.
+Pre-impact speed does not by itself determine ball launch, which also depends on
+contact geometry and the impact model. Muscle excitation requires activation
+states and force limits; replacing excitation with unconstrained joint torque
+changes the feasible set. A ground reaction or second-hand constraint also
+changes the dynamics differentiated by the optimizer.
+
+The coupling is consequential: an inertia or frame error alters both forward
+predictions and their derivatives, so optimization can exploit the error. The
+resulting trajectory is a hypothesis to test with the simulation and feedback
+checks in the adjacent chapters, not evidence that a golfer uses this objective.
 
 \section*{Exercises}
 \begin{enumerate}
-  \item Use the iLQR code to solve the pendulum swing-up problem.
-  \item Extend to a double pendulum and optimize for maximum tip speed.
-  \item Add muscle force constraints and solve the muscle-driven swing-up.
+ \item Derive the scalar minimized polynomial above by completing the square.
+ \item Construct an indefinite $Q_{uu}$ for which adding $10^{-6}I$ still fails.
+ Explain why a factorization check is necessary.
+ \item Specify a pendulum swing-up problem, including bounds, duration, units,
+ initialization and terminal criteria, before selecting a nonlinear solver.
+ \item Compare squared torque and positive mechanical work objectives. State
+ which additional evidence would support either as a model of human effort.
 \end{enumerate}
