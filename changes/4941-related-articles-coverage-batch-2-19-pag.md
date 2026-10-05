@@ -1,4 +1,4 @@
 ---
 issue: 4941
-summary: "Related Articles coverage batch 2: 19 pages and the last path-style link leave the link-gate baseline"
+summary: "Related Articles coverage batch 2: 14 article and model pages leave the link-gate baseline"
 ---
