@@ -154,9 +154,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/critiques/02_aerodynamics.html` | `critiques/02_aerodynamics.md` | 1 |
 | `/critiques/03_neuromuscular_control.html` | `critiques/03_neuromuscular_control.md` | 1 |
 | `/critiques/04_impact_evasion.html` | `critiques/04_impact_evasion.md` | 1 |
+| `/critiques/adjudication-summary.html` | `critiques/adjudication-summary.md` | 1 |
 | `/critiques/control_causality_vs_mechanical.html` | `critiques/control_causality_vs_mechanical.md` | 1 |
 | `/critiques/coulomb_friction_violation.html` | `critiques/coulomb_friction_violation.md` | 1 |
-| `/critiques/DEFENSE_STRATEGY.html` | `critiques/DEFENSE_STRATEGY.md` | 1 |
 | `/critiques/dimensional_inconsistency_dcr.html` | `critiques/dimensional_inconsistency_dcr.md` | 1 |
 | `/critiques/double_pendulum_energy_blindness.html` | `critiques/double_pendulum_energy_blindness.md` | 1 |
 | `/critiques/drift_superposition.html` | `critiques/drift_superposition.md` | 1 |
@@ -408,9 +408,9 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-f015ff569673` | `/critiques/02_aerodynamics.html` | Reviewed | — | None | `crit-aerodynamics` | 0 |
 | `ad-route-40420c57d407` | `/critiques/03_neuromuscular_control.html` | Reviewed | — | None | `crit-neuromuscular-control` | 0 |
 | `ad-route-d3d85eb515d8` | `/critiques/04_impact_evasion.html` | Reviewed | — | None | `crit-impact-evasion` | 0 |
+| `ad-route-82121c057a35` | `/critiques/adjudication-summary.html` | Reviewed | — | None | None | 0 |
 | `ad-route-2027039c64ec` | `/critiques/control_causality_vs_mechanical.html` | Reviewed | — | None | `crit-control-causality-mechanical` | 0 |
 | `ad-route-2eadf638653e` | `/critiques/coulomb_friction_violation.html` | Reviewed | — | None | `crit-coulomb-friction-violation` | 0 |
-| `ad-route-89fff2c320f8` | `/critiques/DEFENSE_STRATEGY.html` | Reviewed | — | None | None | 0 |
 | `ad-route-f8c25ae4826b` | `/critiques/dimensional_inconsistency_dcr.html` | Reviewed | — | None | `crit-dimensional-inconsistency-dcr` | 0 |
 | `ad-route-2e4ae737aa67` | `/critiques/double_pendulum_energy_blindness.html` | Reviewed | — | None | `crit-double-pendulum-energy-blindness` | 0 |
 | `ad-route-28af684111a5` | `/critiques/drift_superposition.html` | Reviewed | — | None | `crit-drift-superposition` | 0 |
