@@ -5557,6 +5557,15 @@ table caption,
   outline: 3px solid var(--accent-blue);
 }
 
+.anchorjs-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+
 #quarto-header {
   background: linear-gradient(
     135deg,
@@ -6588,6 +6597,11 @@ h3:hover .anchor-link,
   transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
 }
 
+/* Shared component (#4494): the <h2> separates the button from its panel. */
+.laymans-terms-content[aria-hidden="false"] {
+  max-height: none;
+}
+
 .laymans-terms-inner {
   padding: 1.5rem;
 }
@@ -6648,6 +6662,23 @@ h3:hover .anchor-link,
   content: "🎯 Analogy: ";
   font-weight: 600;
   color: #856404;
+}
+
+/* Lay blocks render open (#4494), so their light-tinted cards must stay
+   readable on the dark theme too (WCAG AA, tests/e2e/accessibility.spec.js). */
+[data-bs-theme="dark"] .laymans-item .analogy,
+[data-bs-theme="dark"] .laymans-item .key-takeaway,
+body.quarto-dark .laymans-item .analogy,
+body.quarto-dark .laymans-item .key-takeaway {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .laymans-item .analogy::before,
+[data-bs-theme="dark"] .laymans-item .key-takeaway::before,
+body.quarto-dark .laymans-item .analogy::before,
+body.quarto-dark .laymans-item .key-takeaway::before {
+  color: inherit;
 }
 
 .laymans-item .key-takeaway {
