@@ -99,3 +99,30 @@ def test_noscript_summary_matches_the_data() -> None:
     page = (ROOT / "models" / "model-ladder.qmd").read_text(encoding="utf-8")
     last = FRAMES[-1]
     assert f"about {round(last['clubheadSpeed'])} m/s after {last['t']:.2f} s" in page
+
+
+def test_model_joint_positions_end_at_the_club_tip() -> None:
+    q = np.radians([124.0, 35.0, -95.0])
+    points = MODEL.joint_positions(q)
+    assert points.shape == (4, 2)
+    np.testing.assert_allclose(points[0], [0.0, 0.0])
+    for i, length in enumerate(MODEL.lengths):
+        assert np.linalg.norm(points[i + 1] - points[i]) == pytest.approx(length)
+
+
+def test_model_forced_acceleration_is_drift_plus_input() -> None:
+    q, qd, torque = (
+        np.array([2.0, 0.5, -1.2]),
+        np.array([1.0, -2.0, 3.0]),
+        np.array([5.0, 1.0, 0.5]),
+    )
+    np.testing.assert_allclose(
+        MODEL.rigid_mass_matrix(q) @ MODEL.input_acceleration(q, torque), torque, atol=1e-12
+    )
+    np.testing.assert_allclose(
+        MODEL.forced_acceleration(q, qd, torque),
+        MODEL.drift_acceleration(q, qd) + MODEL.input_acceleration(q, torque),
+    )
+    np.testing.assert_allclose(
+        MODEL.forced_acceleration(q, qd, np.zeros(3)), MODEL.drift_acceleration(q, qd)
+    )

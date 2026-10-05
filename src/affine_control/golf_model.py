@@ -221,6 +221,24 @@ class GolfModel:
         bias = self.coriolis(q, qd) @ np.asarray(qd, dtype=float) + self.gravity_torque(q, gravity)
         return -np.linalg.solve(self.rigid_mass_matrix(q), bias)
 
+    def input_acceleration(self, q: Array, torque: Array) -> Array:
+        """``M(q)^-1 u`` -- the joint acceleration the applied torques add to the drift."""
+        return np.linalg.solve(self.rigid_mass_matrix(q), np.asarray(torque, dtype=float))
+
+    def forced_acceleration(
+        self, q: Array, qd: Array, torque: Array, gravity: float = GRAVITY_M_S2
+    ) -> Array:
+        """``qddot`` under applied joint torques: the control-affine drift plus input."""
+        return self.drift_acceleration(q, qd, gravity) + self.input_acceleration(q, torque)
+
+    def joint_positions(self, q: Array) -> Array:
+        """Hub, the two joints and the club tip in metres, shape ``(4, 2)``."""
+        angles = self.link_angles(q)
+        steps = np.asarray(self.lengths)[:, None] * np.column_stack(
+            [np.cos(angles), np.sin(angles)]
+        )
+        return np.vstack([np.zeros(2), np.cumsum(steps, axis=0)])
+
     def clubhead_speed(self, q: Array, qd: Array) -> float:
         """Speed of the club tip, i.e. the distal end of link three."""
         angles = self.link_angles(q)

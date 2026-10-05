@@ -48,15 +48,10 @@ DIGITS = 6
 type Array = NDArray[np.float64]
 
 
-def input_acceleration(q: Array) -> Array:
-    """Joint acceleration produced by the declared torques alone, ``M(q)^-1 u``."""
-    return np.linalg.solve(MODEL.rigid_mass_matrix(q), np.asarray(TORQUE_NM))
-
-
 def _derivative(state: Array) -> Array:
     """``[qdot, qddot]`` of the driven model: drift plus input acceleration."""
     q, qd = state[:3], state[3:]
-    return np.concatenate([qd, MODEL.drift_acceleration(q, qd) + input_acceleration(q)])
+    return np.concatenate([qd, MODEL.forced_acceleration(q, qd, np.asarray(TORQUE_NM))])
 
 
 def _rk4(state: Array) -> Array:
@@ -69,17 +64,14 @@ def _rk4(state: Array) -> Array:
 
 
 def joint_points(q: Array) -> list[list[float]]:
-    """Hub, two joints and club tip in metres, from the model's link angles."""
-    points = [np.zeros(2)]
-    for angle, length in zip(MODEL.link_angles(q), MODEL.lengths, strict=True):
-        points.append(points[-1] + length * np.array([math.cos(angle), math.sin(angle)]))
-    return [[round(float(v), DIGITS) for v in point] for point in points]
+    """Hub, two joints and club tip in metres, rounded for the data module."""
+    return [[round(float(v), DIGITS) for v in point] for point in MODEL.joint_positions(q)]
 
 
 def input_shares(q: Array, qd: Array) -> list[float]:
     """Input share of each link's absolute angular acceleration, in ``[0, 1]``."""
     drift = np.cumsum(MODEL.drift_acceleration(q, qd))
-    pushed = np.cumsum(input_acceleration(q))
+    pushed = np.cumsum(MODEL.input_acceleration(q, np.asarray(TORQUE_NM)))
     total = np.abs(drift) + np.abs(pushed)
     return [
         round(float(p / t), 4) if t > 0 else 0.0 for p, t in zip(np.abs(pushed), total, strict=True)
