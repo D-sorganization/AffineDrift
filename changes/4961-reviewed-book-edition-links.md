@@ -2,7 +2,7 @@
 issue: 4961
 summary: "Route book readers to the corrected reviewed manuscript editions"
 dl_state: "in_progress"
-next_step: "Verify PR4953 merge, pin its protected revision, finish scoped validation and deliver a regular follow-up PR"
+next_step: "Integrate during a required PR4953 conflict repair or use a regular follow-up; verify reviewed target bytes on protected main and public delivery"
 owner: "codex"
 branch: "fix/current-reviewed-book-links"
 ---

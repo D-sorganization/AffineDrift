@@ -22,9 +22,11 @@ this into another science rewrite.
 
 The first edit tried floating main links. The existing publication test requires
 revision-pinned manuscript references. Retain that reproducibility contract:
-pin the corrected edition to PR #4953's protected merge revision and state its
-edition date. Do not weaken the test. The temporary local pin is fbee4da94 and
-must be replaced with the verified protected merge revision before the PR opens.
+pin the corrected edition and state its edition date. Do not weaken the test.
+The initial plan used fbee4da94 temporarily and proposed replacing it with the
+protected merge revision in a separate PR. The integration decision below
+supersedes that plan: retain the immutable reviewed source revision and prove
+that its linked bytes also reached protected main.
 
 ## Changes and Boundaries
 
@@ -84,13 +86,12 @@ runner passed all eight gates against fbee4da94 on 5 October 2026. Its affected-
 mapper found no Python tests for this documentation diff; that result does not
 replace the separate 65 focused publication tests. The runner also reported three
 collection skips for unavailable Streamlit. This checkpoint result must be rerun
-after the final protected-revision pin and rebase.
+after the final conflict resolution and incorporation into the delivery PR.
 
-Pending: wait for #4953's protected merge, verify its
-145-artifact manifest, rebase only the new navigation commit(s) onto that main
-revision, replace the temporary manuscript pin, and finish central pre-PR checks.
-Then open a regular follow-up PR against main. Do not push this correction to the
-already queued consolidation PR or bypass its queue. #4953's full CI passed;
+Pending: wait for the preceding PR's protected merge and inspect #4953's actual
+conflict state. If a genuine conflict requires repair, use the integration
+sequence below. Do not push this correction to the already queued consolidation
+PR or bypass its queue. #4953's full CI passed;
 auto_merge became null with the PR still open, indicating the queued state.
 The final epic closure also requires public-site revision, route evidence and
 the advertised PDF download checks.
@@ -138,6 +139,34 @@ branch's review records. Compare review identities before and after regeneration
 recheck the 145-artifact manifest, and run the applicable integration gates.
 Neither queued branch was edited during this preview. If GitHub instead merges
 the review successfully, use the actual protected result and skip this contingency.
+
+## Single-PR Delivery Decision
+
+The prospective queue conflict makes a further integration check likely. Avoid
+an additional full CI cycle solely to change an already immutable source pin.
+All 50 manuscript/PDF references in the four amended pages were individually
+compared between reviewed commit fbee4da94 and prospective tree 243745286e21:
+every SHA-256 matches. The receipt is
+reports/technical-review/reviewed-book-target-correspondence.json. The source
+commit is an immutable reviewed edition; it is not described as a protected
+merge commit. Its correspondence with the final protected revision remains a
+required completion check, alongside the original 145-artifact manifest and
+the four revised page hashes.
+
+If #4953 is released from the queue with the anticipated real conflict, resolve
+that conflict against actual protected main, then incorporate the already
+committed #4961 navigation correction and these handoff records into #4953.
+Preserve both branches' review identities, regenerate affected audit evidence,
+rerun applicable publication/integration checks and the central pre-PR runner,
+and update the PR body to include Closes #4961 and its validation boundaries.
+Use the central merge guard after the repair; never push to a queued PR.
+This changes packaging, not scientific scope or evidence requirements.
+
+If #4953 merges without requiring a repair, use the existing separate follow-up
+path for #4961. In either path, retain the reviewed source pin only after verifying
+all 50 target hashes against the actual protected tree. Public delivery must
+also prove the four amended pages are deployed and their advertised PDFs match
+the stated edition. The prospective comparison alone cannot close the epic.
 
 Repository_Management #1998 is merged at e03344f3d5d0306f990ff295f767dbb1ba74ecd9.
 Thirty-eight of its 39 changed files exactly match the accepted head. The remaining
