@@ -501,7 +501,7 @@ def render_ch10() -> str:
         [
             BANNER,
             "",
-            "\\begin{lstlisting}[language=Python, caption={Golf swing analysis pipeline, "
+            "\\begin{lstlisting}[language=Python, caption={Prescribed-Motion Analysis, "
             "generated from \\texttt{src/affine\\_control/swing\\_analysis.py}.}]",
             source,
             "\\end{lstlisting}",
