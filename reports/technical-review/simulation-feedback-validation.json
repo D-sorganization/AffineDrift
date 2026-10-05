@@ -1,0 +1,60 @@
+{
+  "issue": 4927,
+  "epic": 4009,
+  "status": "Three complete chapters accepted; protected remote-main delivery pending",
+  "accepted_source_commit": "bece6bee500fb24f82530794e059faab94e44531",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch04_simulation.tex": "01a0c6c32240d0379279be5b848f112555945c969a078190e8c8c32d308e7b20",
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch05_trajectory_optimization.tex": "7eff647ced93b02e9a22ad7ed4dd3242b467a7041680ad94d02fff559ab6a816",
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch06_controller_design.tex": "139897372568b8a18602e571c4bb93aace4348df77016c6d25cea334c5951cac",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "4f7424bd931ab6c21f36f239fb736e7425c5f840997e610eb7bc91cbf2d00845",
+    "articles/The_Geometry_of_Motion/Volume_V/main.pdf": "ce993dba8fe161bb0acacff7a0f94e7d78d780139df20f853a896e433815682b",
+    "tests/test_simulation_feedback_listings.py": "b07d9063b7b114b89bcf9a98cc59af08d15f7859eba5d2d2f1f36e105af2dfdb",
+    "tests/test_trajectory_quadratic_listing.py": "0f130827dcdeffa09cad2f1d8a2b856430080f638a39d7dfe03503c617e898af",
+    "reports/technical-review/simulation-feedback-independent-checks.json": "f44deb1f00743318eda615e743f85523bf8620825c9cd4689586b910668fc2be"
+  },
+  "scope": "Complete Volume V chapters 4-6; simulation, quadratic optimization core and conditional feedback guarantees; no complete optimizer or empirical human certification",
+  "full_regression": {
+    "head": "bece6bee500fb24f82530794e059faab94e44531",
+    "passed": 7172,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 426.26,
+    "src_coverage_percent": 93.25,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/simulation-feedback-review/full-tests.txt"
+  },
+  "pdf": {
+    "pages": 52,
+    "printed_entries": 28,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3-5, 20-31, 50-52; final pass 8 pages 23-25, 29-31 and 50-52 reinspected",
+    "build_log": "docs/development/technical-review/simulation-feedback-review/accepted-pass8.txt",
+    "limits": "One historical chapter 7 title overflow; no scoped overflow; historical duplicate destinations/package warnings"
+  },
+  "focused_tests": 51,
+  "combined_tests": 89,
+  "mathematics": {
+    "record": "reports/technical-review/simulation-feedback-independent-checks.json",
+    "identities": 6,
+    "cases_each": 100,
+    "threshold": 1e-6,
+    "maximum_error": 1.2891410161586236e-10,
+    "scope": "Manufactured model and control identities; not human validation"
+  },
+  "delegation": {
+    "helpers": 5,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only reviews and test proposals; lead-adjudicated"
+  },
+  "failed_run": "Initial combined run: 88 passed, one duplicate bibliography title failed. Reused existing citation key; no guard changed. Oversized Flash invocation failed to launch and is excluded.",
+  "delivery": {
+    "status": "Preparing regular PR",
+    "base": "fix/platform-model-contracts-review",
+    "dependency": "PR 4930",
+    "next": "Protected delivery after verified parent merge, then fetched-main blob verification"
+  }
+}
