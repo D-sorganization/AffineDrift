@@ -560,6 +560,14 @@ describe('formatFailures (#4924 job-log diagnosability)', () => {
     expect(Math.max(...lines.map((l) => l.length))).toBeLessThan(500);
   });
 
+  test('caps repeated identical console errors by position, not by value', () => {
+    const repeated = Array.from({ length: 8 }, () => 'console: same error');
+    const lines = formatFailures([failed('/d.html', ['inspection: boom', ...repeated])], 20);
+    expect(lines.filter((l) => l === '  - console: same error')).toHaveLength(5);
+    expect(lines.join('\n')).toContain('3 more console errors');
+    expect(lines).toContain('  - inspection: boom');
+  });
+
   test('caps ::error annotations and reports omitted count', () => {
     const results = Array.from({ length: 25 }, (_, i) => failed(`/r${i}.html`, ['boom']));
     const lines = formatFailures(results, 20);

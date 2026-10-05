@@ -20,10 +20,10 @@ function formatFailures(results, limit = MAX_FAILURE_ANNOTATIONS) {
   for (const result of failed.slice(0, limit)) {
     const label = `${result.route} (${result.viewport?.id ?? '?'}/${result.theme ?? '?'})`;
     const reasons = result.failures ?? [];
-    const consoleReasons = reasons.filter((r) => r.startsWith('console:'));
-    const shownConsole = new Set(consoleReasons.slice(0, MAX_CONSOLE_REASONS_SHOWN));
-    const shown = reasons.filter((r) => !r.startsWith('console:') || shownConsole.has(r));
-    const hiddenConsole = consoleReasons.length - shownConsole.size;
+    // Cap console errors by position so repeated identical messages count.
+    let consoleSeen = 0;
+    const shown = reasons.filter((r) => !r.startsWith('console:') || ++consoleSeen <= MAX_CONSOLE_REASONS_SHOWN);
+    const hiddenConsole = Math.max(0, consoleSeen - MAX_CONSOLE_REASONS_SHOWN);
     lines.push(`FAILED ${label}${result.status != null ? ` status=${result.status}` : ''}`);
     for (const reason of shown) lines.push(`  - ${truncateReason(reason)}`);
     if (hiddenConsole > 0) lines.push(`  - ... ${hiddenConsole} more console errors`);
