@@ -1,0 +1,252 @@
+# Technical Review: Chapter "Neural Architecture of Motor Control" (Issue #4908)
+
+This review evaluates the chapter outline against rigorous control theory, dynamical systems, and neurophysiological literature. It separates **actual technical/mathematical errors** from **legitimate pedagogical assumptions**, flags **unsupported claims**, and provides **small reproducible counterexamples and tests**.
+
+---
+
+## 1. Executive Summary & Critical Discrepancies
+
+| Topic / Section | Classification | Core Issue / Finding |
+| :--- | :--- | :--- |
+| **TikZ Diagram (Fig 3.1)** | **Actual Error / Misleading** | "Error signal" drawn from Cortex $\to$ Cerebellum; mossy/climbing fiber pathways misrepresented; feedback loop is incomplete. |
+| **Cerebellum & Kalman Filter analogy** | **Conceptual / Mathematical Error** | Conflates the **prior state prediction** step $f(\hat{x}_k, u_k)$ with sensory prediction $g(\hat{x}_{k+1})$; climbing fiber carries **sensory discrepancy** $(y - \hat{y})$, not state estimation error directly. |
+| **Adaptive Law / Sign Contract** | **Missing Condition / Contract Risk** | Purkinje cell LTD is an inhibitory output plasticity rule. Inverting sign contracts or confusing coordinate spaces (sensory error vs. torque/actuator error) leads to positive feedback instability. |
+| **Basal Ganglia MPC Analogy** | **Inexact Analogy / Overstatement** | Basal ganglia action selection (striatal gating via direct/indirect/hyperdirect pathways) implements winner-take-all competitive selection/reinforcement learning, not continuous receding-horizon trajectory optimization. |
+| **Spinal Cord / CPGs & Locomotion** | **Missing Mathematical Contract** | Open-loop limit-cycle feedforward oscillations (CPG pattern generators) do not guarantee stable gait without sensory phase-resetting and closed-loop feedback stabilization. |
+| **Population Vector Coding (Exercise 1)** | **Under-specified / Dimension Mismatch** | Does not specify coordinate basis, normalization factor, baseline firing rate, or non-negativity constraint ($r_i \ge 0$). |
+
+---
+
+## 2. Detailed Technical Breakdown
+
+### A. Cerebellum as a Forward Model vs. State Observer (Kalman Filter)
+
+#### 1. Actual Mathematical Discrepancy: State vs. Output Prediction
+In the text:
+> *"The cerebellum implements $\hat{x}_{k+1} = f(\hat{x}_k, u_k)$ — the state prediction step of the Kalman filter"*
+> *"The climbing fiber error signal implements the innovation update"*
+
+* **The Problem:** 
+  In control theory and state estimation:
+  $$\text{State Transition: } x_{k+1} = f(x_k, u_k) + w_k$$
+  $$\text{Sensory Observation: } y_k = h(x_k) + v_k$$
+  A purely internal **forward dynamic model** predicts future state $\hat{x}_{k+1|k} = f(\hat{x}_k, u_k)$, whereas a **forward sensory model** predicts future sensory feedback $\hat{y}_{k+1} = h(\hat{x}_{k+1|k})$.
+  The climbing fiber from the inferior olive carries a **sensory prediction error** (or task retinal/proprioceptive slip), $e_y = y - \hat{y}$, **not** state innovation in state coordinates unless premultiplied by an observer gain (e.g., Kalman gain $K$).
+* **Dimension & Coordinate Mismatch:**
+  - State dimension: $\dim(x) = n$ (e.g., joint angles, velocities: $2 \times n_{\text{joints}}$).
+  - Observation dimension: $\dim(y) = m$ (e.g., muscle spindle afferents, Golgi tendon organ tension, vision: $m \ne n$, usually $m \gg n$ or partial sensory observation).
+  - Motor control input dimension: $\dim(u) = p$ (muscle activation commands).
+  Equating climbing fiber input directly to a state Kalman update requires mapping through an adjoint/Jacobian transpose $J^T$ or Kalman gain matrix $K \in \mathbb{R}^{n \times m}$.
+
+#### 2. Adaptive-Law Plant / Error / Sign Contract
+* **Neuroanatomy:** Purkinje cells are **GABAergic (strictly inhibitory)** onto deep cerebellar nuclei (DCN).
+* **Plasticity:** Parallel fiber activation paired with climbing fiber spikes causes **LTD (depression)**, which **decreases** Purkinje cell firing rate, thereby **disinhibiting** (increasing output of) DCN neurons.
+* **Control Stability Rule:**
+  If motor plant is $\ddot{\theta} = \tau - B\dot{\theta}$, and cerebellar feedforward compensation produces $\tau_{\text{ff}}$, then:
+  $$\Delta \tau \propto -\Delta \text{Purkinje} \implies \text{LTD decreases } w_{PF} \implies \tau \text{ increases}.$$
+  If the signed error $e = y_{\text{desired}} - y_{\text{actual}}$ drives inferior olive climbing fibers without explicit sign alignment, the adaptation loop exhibits positive feedback:
+  $$\dot{w} = -\gamma \phi(x) e \quad \text{vs.} \quad \dot{w} = +\gamma \phi(x) e$$
+  In control notation, the strictly positive real (SPR) condition or passivity condition on the error transfer function $H(s)$ must be satisfied:
+  $$\text{Re}\{H(j\omega)\} > 0 \quad \forall \omega$$
+  Without stating the sign inversion across the Purkinje $\to$ DCN synapse, an implemented adaptive controller diverges.
+
+---
+
+### B. TikZ Architecture Diagram (Figure 3.1)
+
+1. **Incorrect Flow Direction:** 
+   - Dashed arrow labeled *"error signal"* runs from **Cortex $\to$ Cerebellum**.
+   - In vertebrate neuroanatomy, climbing fiber error signals originate in the **inferior olive** (brainstem/spino-olivary pathways), integrating ascending peripheral feedback with descending cortical inputs. Corticopontine projections convey *efference copy* (motor command / intention), not primary climbing fiber sensory prediction error.
+2. **Missing Deep Cerebellar Nuclei (DCN):**
+   - The cerebellum does not output directly to muscles; its output routes via DCN to thalamus $\to$ cortex (ventrolateral nucleus) and rubrospinal/vestibulospinal pathways.
+
+---
+
+### C. Basal Ganglia: Action Selection vs. Model Predictive Control (MPC)
+
+* **Legitimate Pedagogical Analogy vs. Technical Overstatement:**
+  The chapter states:
+  > *"This is analogous to a model predictive controller evaluating multiple candidate trajectories and selecting the best one."*
+* **Rigorous Correction:**
+  - MPC explicitly solves an optimal control problem online over a finite prediction horizon $T$:
+    $$\min_{u_{0:T-1}} \sum_{t=0}^{T-1} \ell(x_t, u_t) + \Phi(x_T) \quad \text{s.t.} \quad x_{t+1} = f(x_t, u_t), \quad g(x_t, u_t) \le 0$$
+  - The basal ganglia architecture (striatum D1/D2 pathways, GPi/SNr tonically active inhibitory brake, STN hyperdirect stop signal) does **not** evaluate multi-step dynamical forward rollouts of state trajectories (that role is closer to prefrontal/cerebellar loops).
+  - Rather, the basal ganglia implement **action gating / discrete choice arbitration** using value estimates updated via temporal difference (TD) dopamine signaling:
+    $$\text{Winner-Take-All / Softmax Gating: } P(a_i) = \frac{e^{Q(s, a_i)/\tau}}{\sum_j e^{Q(s, a_j)/\tau}}$$
+  - It is more formally analogous to a **reinforcement learning policy arbiter** or **gating network** in a mixture-of-experts architecture, rather than an internal forward-simulating MPC optimizer.
+
+---
+
+### D. Spinal Cord: Central Pattern Generators (CPGs) vs. Stabilized Locomotion
+
+* **Random / Open-Loop Feedforward vs. Limit Cycle Stability:**
+  - A CPG (e.g., half-center oscillator network of reciprocal inhibitory interneurons) generates an autonomous limit cycle:
+    $$\dot{z} = F_{\text{CPG}}(z), \quad z \in \mathbb{R}^k$$
+  - If feedforward rhythm is applied blindly to an inverted pendulum or multi-link biped without closed-loop sensory feedback:
+    $$M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) = \tau_{\text{CPG}}(t)$$
+    the Poincaré map of the walking gait has an unstable eigenvalue ($\exists |\lambda_i| > 1$). Open-loop periodic torques lead to falling within 1–2 strides under any perturbation $\delta q_0 \ne 0$.
+  - Spinal circuits integrate **proprioceptive feedback (Ia, Ib, II afferents)** to modulate phase transitions (e.g., Golgi tendon unloading signaling stance-to-swing transition).
+
+---
+
+### E. Exercise 1: Population Vector Formulation
+
+The exercise asks:
+> *"Given neurons with preferred directions every $45^\circ$, compute the population vector for a movement at $30^\circ$."*
+
+* **Missing Specifications:**
+  Georgopoulos et al. defined the population vector $P(M)$ as:
+  $$P(M) = \sum_{i=1}^N w_i(M) C_i, \quad w_i(M) = r_i(M) - \bar{r}_i$$
+  where $C_i$ is the unit preferred direction vector of neuron $i$, and $r_i(M)$ is its firing rate.
+  Cosine tuning specifies:
+  $$r_i(\theta) = b_i + k_i \cos(\theta - \theta_i)$$
+  If the exercise assumes $b_i = 0$ or does not constrain $r_i \ge 0$, negative firing rates occur:
+  For $\theta = 30^\circ$ and $\theta_i = 180^\circ$ or $225^\circ$:
+  $$\cos(30^\circ - 225^\circ) = \cos(-195^\circ) = -0.966 < 0$$
+  If rectified:
+  $$r_i(\theta) = \max(0, b + k \cos(\theta - \theta_i))$$
+  The reconstructed angle $\hat{\theta} = \arg(P)$ is unbiased only under complete circle symmetry and either non-rectified symmetric linear baseline or sufficiently dense tuning curves.
+
+---
+
+## 3. Minimal Reproducible Counterexamples & Test Scripts
+
+### Counterexample 1: Sign Inversion Instability in Adaptive Forward Model
+Illustrates why omitting the inhibitory Purkinje $\to$ DCN sign contract results in catastrophic divergence.
+
+```python
+import numpy as np
+
+def run_cerebellar_adaptation_test():
+    """
+    Test adaptive control sign contract.
+    Plant: single-joint velocity J * d_omega/dt = tau - B*omega
+    Target: omega_des = 1.0 rad/s
+    """
+    dt = 0.001
+    steps = 2000
+    omega_des = 1.0
+    J, B = 0.1, 0.5
+    
+    for sign in [-1, +1]:
+        omega = 0.0
+        w_synapse = 0.0  # Weight at PF-Purkinje
+        gamma = 2.0      # Learning rate
+        diverged = False
+        
+        for _ in range(steps):
+            # Purkinje firing: r_pc = w_synapse * phi(x)
+            phi = 1.0  # constant input command
+            # DCN output is disinhibited: tau = tau_base - r_pc = tau_base - w * phi
+            # If sign convention is wrong (ignoring GABAergic inhibition):
+            tau = sign * (w_synapse * phi)
+            
+            # Plant dynamics
+            d_omega = (tau - B * omega) / J * dt
+            omega += d_omega
+            
+            # Error signal at Inferior Olive: e = omega_des - omega
+            e = omega_des - omega
+            
+            # LTD: parallel fiber + climbing fiber -> weight change
+            # delta_w = - gamma * phi * e
+            w_synapse += gamma * phi * e * dt
+            
+            if abs(omega) > 100:
+                diverged = True
+                break
+                
+        status = "DIVERGED (Instability)" if diverged else "CONVERGED"
+        print(f"Sign contract {sign:+d}: {status} (Final omega={omega:.2f})")
+
+if __name__ == "__main__":
+    run_cerebellar_adaptation_test()
+```
+
+### Counterexample 2: Unstabilized CPG / Open-Loop Periodic Torque
+Demonstrates that periodic open-loop feedforward torque cannot stabilize an inverted pendulum model of stance.
+
+```python
+import numpy as np
+
+def run_cpg_stability_test():
+    """
+    Stance inverted pendulum: theta_ddot = (g/L)*sin(theta) + tau/m*L^2
+    CPG feedforward torque: tau(t) = A * cos(omega_cpg * t)
+    Linearized near upright: theta_ddot - (g/L)*theta = tau/(m*L^2)
+    Eigenvalues are +/- sqrt(g/L), meaning open-loop feedforward has an unstable pole.
+    """
+    g, L, m = 9.81, 1.0, 1.0
+    omega_0 = np.sqrt(g / L) # ~3.13 rad/s
+    dt = 0.001
+    steps = 1000
+    
+    # Tiny initial perturbation
+    theta = 0.001  # rad
+    theta_dot = 0.0
+    
+    # CPG feedforward torque tuned to nominal trajectory
+    for t_step in range(steps):
+        t = t_step * dt
+        tau_cpg = 0.0  # pure balance test
+        theta_ddot = (g / L) * np.sin(theta) + tau_cpg / (m * L**2)
+        theta_dot += theta_ddot * dt
+        theta += theta_dot * dt
+        
+        if abs(theta) > np.pi / 4:
+            print(f"CPG open-loop fell at t = {t:.3f} s (theta={theta:.2f} rad). Requires state feedback!")
+            return False
+            
+    print("Maintained balance.")
+    return True
+
+if __name__ == "__main__":
+    run_cpg_stability_test()
+```
+
+### Counterexample 3: Population Vector Truncation & Non-Negativity
+Verifies Exercise 1 conditions under rectified vs. non-rectified cosine tuning.
+
+```python
+import numpy as np
+
+def run_population_vector_test():
+    angles_deg = np.arange(0, 360, 45)
+    angles_rad = np.radians(angles_deg)
+    target_deg = 30.0
+    target_rad = np.radians(target_deg)
+    
+    # Case A: Idealized (unrectified, zero baseline)
+    rates_ideal = np.cos(target_rad - angles_rad)
+    pv_x = np.sum(rates_ideal * np.cos(angles_rad))
+    pv_y = np.sum(rates_ideal * np.sin(angles_rad))
+    est_deg_ideal = np.degrees(np.arctan2(pv_y, pv_x))
+    
+    # Case B: Biological rectified without baseline: r = max(0, cos)
+    rates_rect = np.maximum(0.0, np.cos(target_rad - angles_rad))
+    pv_x_rect = np.sum(rates_rect * np.cos(angles_rad))
+    pv_y_rect = np.sum(rates_rect * np.sin(angles_rad))
+    est_deg_rect = np.degrees(np.arctan2(pv_y_rect, pv_x_rect))
+    
+    print(f"Target: {target_deg:.1f}°")
+    print(f"Idealized Population Vector Estimate: {est_deg_ideal:.2f}° (Exact)")
+    print(f"Rectified Population Vector Estimate: {est_deg_rect:.2f}° (Requires baseline subtraction)")
+
+if __name__ == "__main__":
+    run_population_vector_test()
+```
+
+---
+
+## 4. Specific Actionable Recommendations for Chapter Revision
+
+1. **Clarify State vs. Sensory Observer:**
+   - In `\begin{neurobox}`, explicitly distinguish between predicting future state $\hat{x}_{k+1|k}$ and future observation $\hat{y}_{k+1}$. Note that the climbing fiber carries sensory error $\tilde{y} = y - \hat{y}$, requiring an inverse or adjoint transform to correct internal joint states/torques.
+2. **Document Sign Contracts for Plasticity:**
+   - Explicitly state the GABAergic nature of Purkinje cells and why LTD at parallel fiber synapses produces a net *increase* in excitatory drive from the deep cerebellar nuclei.
+3. **Refine TikZ Diagram:**
+   - Disconnect the cortical error signal arrow to the cerebellum. Route efference copy from Cortex $\to$ Pontine Nuclei $\to$ Cerebellum (Mossy fibers), and sensory error from Periphery/Brainstem $\to$ Inferior Olive $\to$ Cerebellum (Climbing fibers).
+4. **Moderate Basal Ganglia vs. MPC Analogy:**
+   - Reframe the basal ganglia comparison as action arbitration/reinforcement-learning gating rather than continuous trajectory MPC optimization.
+5. **Add Phase-Resetting & Sensorimotor Feedback to Spinal CPGs:**
+   - Explicitly note that while CPGs supply feedforward rhythmic drive, dynamic walking requires feedback stabilization and sensory phase-switching.

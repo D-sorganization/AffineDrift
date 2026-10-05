@@ -1,0 +1,89 @@
+### Technical Review: Chapter 11 (`ch11_neural_to_robot.tex`)
+
+This read-only review independently evaluates all mathematical derivations, dimensions/units, Lyapunov stability arguments, rank bounds, code listings, and biological inference limits in [ch11_neural_to_robot.tex](file:///C:/Users/diete/Repositories/Worktrees/AffineDrift-neural-architecture-review/articles/The_Geometry_of_Motion/Volume_IV/chapters/ch11_neural_to_robot.tex).
+
+---
+
+### 1. Scalar Adaptive Law: Sign, Units, and Lyapunov Derivation
+* **Lines 61–85**:
+  * **Plant & Error**: $\dot{x} = \theta_*\phi + u$, $e = x - x_d \implies \dot{e} = \dot{x} - \dot{x}_d = \theta_*\phi + u - \dot{x}_d$.
+  * **Control & Update**: $u = \dot{x}_d - ke - \hat{\theta}\phi$, $\dot{\hat{\theta}} = \gamma\phi e$.
+  * **Closed Loop**: With $\tilde{\theta} = \theta_* - \hat{\theta}$, we have $\dot{\tilde{\theta}} = -\dot{\hat{\theta}} = -\gamma\phi e$, and:
+    $$\dot{e} = \theta_*\phi + (\dot{x}_d - ke - \hat{\theta}\phi) - \dot{x}_d = -ke + \tilde{\theta}\phi.$$
+  * **Candidate Lyapunov Function**:
+    $$V = \frac{1}{2}e^2 + \frac{\tilde{\theta}^2}{2\gamma} \implies \dot{V} = e\dot{e} + \frac{\tilde{\theta}\dot{\tilde{\theta}}}{\gamma} = e(-ke + \tilde{\theta}\phi) + \frac{\tilde{\theta}(-\gamma\phi e)}{\gamma} = -ke^2 \le 0.$$
+  * **Sign Contract**: The cross-term $e\tilde{\theta}\phi$ cancels exactly against $-\tilde{\theta}\phi e$. The signs are strictly self-consistent.
+  * **Units Verification (Lines 87–90)**:
+    * Let $[x]$ be the unit of state $x$, and $[t]$ time.
+    * Feature $\phi$ is dimensionless ($[\phi] = 1$).
+    * $[\dot{x}] = [x][t]^{-1} \implies [u] = [x][t]^{-1}$ and $[\theta_*] = [x][t]^{-1}$.
+    * $e$ has units $[x] \implies [k] = [t]^{-1}$ so that $[ke] = [x][t]^{-1}$.
+    * $[\dot{\hat{\theta}}] = [\theta_*][t]^{-1} = [x][t]^{-2}$. Since $\dot{\hat{\theta}} = \gamma \phi e$, $[\gamma] = \frac{[x][t]^{-2}}{[x]} = [t]^{-2}$.
+    * Candidate terms: $\frac{1}{2}e^2$ has units $[x]^2$; $\frac{\tilde{\theta}^2}{2\gamma}$ has units $\frac{([x][t]^{-1})^2}{[t]^{-2}} = [x]^2$.
+    * Both terms match dimensionally to $[x]^2$. The stated dimensional analysis is mathematically exact.
+
+---
+
+### 2. Lyapunov Convergence & Identification Assumptions
+* **Lines 94–112**:
+  * **Convergence Argument**: $V(t) \le V(0)$ establishes boundedness of $e(t)$ and $\tilde{\theta}(t)$. Under bounded reference $x_d, \dot{x}_d$ and bounded $\phi(x,t)$, $\dot{e} = -ke + \tilde{\theta}\phi$ is bounded. Since $e \in L_2 \cap L_\infty$ and $\dot{e} \in L_\infty$, Barbalat's lemma yields $e(t) \to 0$ as $t \to \infty$.
+  * **Zero-Regressor Counterexample (Lines 102–104)**: If $\phi \equiv 0$, then $\dot{\hat{\theta}} = 0 \implies \hat{\theta}(t) = \hat{\theta}(0)$ for all $t$. The plant reduces to $\dot{x} = u = \dot{x}_d - ke$, which gives $\dot{e} = -ke \implies e(t) = e(0)e^{-kt} \to 0$. Here tracking error converges exponentially, but parameter error $\tilde{\theta}(t) \equiv \theta_* - \hat{\theta}(0)$ undergoes zero adaptation.
+  * **Excitation & Parameter Drift**: The text correctly distinguishes tracking convergence from parameter identification, properly noting persistent excitation $\int_t^{t+T}\phi(\tau)^2\,d\tau \ge \alpha > 0$ for parameter convergence, and noting that the ideal Lyapunov bound precludes drift in the absence of disturbances, whereas unmodeled noise/disturbances necessitate parameter projection or leakage modifications.
+
+---
+
+### 3. Torque Policy Dimensions, Feedback Authority, and Numerical Verification
+* **Lines 116–135 & 141–181 (Code Listing)**:
+  * Formula: $\tau = W c(t) - K e$.
+  * Dimensions: $W \in \mathbb{R}^{n_j \times k_c}$, $c(t) \in \mathbb{R}^{k_c}$, $e = (q - q_d, v - v_d) \in \mathbb{R}^{2n_j}$, $K \in \mathbb{R}^{n_j \times 2n_j} \implies \tau \in \mathbb{R}^{n_j}$.
+  * In the dataclass `RhythmicPolicy`:
+    * `weights`: $(n, k)$, `feedback`: $(n, 2n)$, `phases`: $(k,)$, `frequency_hz`: scalar $>0$.
+    * `error`: $(2n,)$.
+    * Dimensions match across the mathematical formulation and Python implementation.
+  * **Feedback Authority (Lines 129–134, 186–189)**:
+    * If feedback were routed through synergy weights as $W K_c e$, feedback torque would be constrained to $\operatorname{col}(W) \subset \mathbb{R}^{n_j}$.
+    * Retaining general $K \in \mathbb{R}^{n_j \times 2n_j}$ allows feedback corrections along directions in the orthogonal complement $\operatorname{col}(W)^\perp$.
+  * **Numerical Example Check (Lines 183–185)**:
+    * $t = 0$, $W = I_2$, $\text{phases} = (0, \pi/2)$, $K = \begin{bmatrix}0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0\end{bmatrix}$, $e = (1, 2, 3, 4)^T$.
+    * At $t = 0$:
+      * $c_1(0) = \frac{1}{2}(1 + \sin 0) = 0.5$.
+      * $c_2(0) = \frac{1}{2}(1 + \sin(\pi/2)) = 1.0$.
+      * $W c(0) = \begin{bmatrix}1 & 0 \\ 0 & 1\end{bmatrix}\begin{bmatrix}0.5 \\ 1.0\end{bmatrix} = \begin{bmatrix}0.5 \\ 1.0\end{bmatrix}$.
+    * $Ke = \begin{bmatrix}0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0\end{bmatrix}\begin{bmatrix}1 \\ 2 \\ 3 \\ 4\end{bmatrix} = \begin{bmatrix}2 \\ 3\end{bmatrix}$.
+    * $\tau = W c(0) - K e = \begin{bmatrix}0.5 - 2 \\ 1.0 - 3\end{bmatrix} = \begin{bmatrix}-1.5 \\ -2.0\end{bmatrix}$.
+    * The analytical result matches $\tau = (-1.5, -2)^T$ exactly.
+
+---
+
+### 4. Shared-Frequency Temporal Rank Bounds
+* **Lines 190–198**:
+  * Using the angle-addition identity:
+    $$c_i(t) = \frac{1}{2} + \frac{1}{2}\sin(\omega t + \varphi_i) = \frac{1}{2} + \frac{1}{2}\cos(\varphi_i)\sin(\omega t) + \frac{1}{2}\sin(\varphi_i)\cos(\omega t).$$
+  * In vector form:
+    $$c(t) = a + b \sin(\omega t) + d \cos(\omega t),$$
+    where $a = \frac{1}{2}\mathbf{1}$, $b = \frac{1}{2}[\cos \varphi_1, \dots, \cos \varphi_k]^T$, $d = \frac{1}{2}[\sin \varphi_1, \dots, \sin \varphi_k]^T$.
+  * For any sampling times $t_1, \dots, t_m$, every column of the sampled coefficient matrix $C \in \mathbb{R}^{k \times m}$ is a linear combination of the 3 constant vectors $\{a, b, d\}$. Therefore:
+    $$\operatorname{rank}(C) \le 3.$$
+  * Subtracting the temporal mean eliminates the constant offset vector $a$, leaving vectors in $\operatorname{span}\{b, d\}$. Therefore:
+    $$\operatorname{rank}(C - \bar{C}) \le 2.$$
+  * Feedforward torques $\tau_{\text{ff}}(t) = W c(t)$ lie in $\operatorname{col}(W)$, so their spatial rank is at most $\min(n_j, \operatorname{rank}(W), 3)$.
+  * The mathematical rank bounds and dimensional caveats are accurate.
+
+---
+
+### 5. Biological Inference Limits & Open-Loop Stance
+* **Lines 12–24, 54–60, 199–205, 208–224**:
+  * The text maintains strict epistemological boundaries:
+    * A successful robot implementation does not validate that biology uses the same mechanism, nor does engineering failure refute biological theories (Lines 13–16).
+    * Granule-cell expansion and continuous adaptation equations do not constitute literal neural spiking or synaptic LTD models (Lines 54–59).
+    * Rhythmic feedforward generators are not coupled CPGs; open-loop signals alone do not demonstrate locomotion or orbital stability, but neither do they cause inevitable failure across all open-loop dynamical mechanisms (Lines 199–205).
+    * Concrete engineering interface clocks (1, 10, 50, 100 ms) are not universal biological clocks (Lines 212–213).
+
+---
+
+### Summary Findings
+* **Defects / Discrepancies**: None found.
+* **Signs, units, and cancellations**: Verified exact and consistent throughout.
+* **Lyapunov and identification logic**: Sound, complete with explicit regularity assumptions and counterexamples.
+* **Numerical example**: Verified exact ($\tau = [-1.5, -2]^T$).
+* **Rank bounds**: Exact ($3$ uncentered, $2$ centered).
