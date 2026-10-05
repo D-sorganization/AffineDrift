@@ -1,0 +1,12 @@
+### Result
+[{"tag":"MJX-CONTAINER","overflow":"auto","width":619,"scrollWidth":620}]
+### Ran Playwright code
+```js
+await (async (page) => { await page.setViewportSize({width:1440,height:1000}); await page.goto('http://127.0.0.1:8882/articles/inverse-dynamics.html',{waitUntil:'networkidle'}); await page.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=600){window.scrollTo(0,y);await new Promise(r=>setTimeout(r,100));}}); const p=page.getByText('In this energy balance',{exact:false}).first(); await p.scrollIntoViewIfNeeded(); await page.waitForTimeout(1000); await p.scrollIntoViewIfNeeded(); await page.screenshot({path:'C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review/docs/development/technical-review/final-partial-sources/energy-desktop-verified.png'}); return await page.evaluate(()=>Array.from(document.querySelectorAll('mjx-container, .table-responsive, .cell-output-display')).filter(e=>e.scrollWidth>e.clientWidth).map(e=>({tag:e.tagName,overflow:getComputedStyle(e).overflowX,width:e.clientWidth,scrollWidth:e.scrollWidth}))); })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8882/articles/inverse-dynamics.html
+- Page Title: Interpretation of Inverse Dynamics: Understanding the Fundamental Limitations – AffineDrift
+- Console: 2 errors, 0 warnings
+### Events
+- New console entries: ..\AffineDrift-tangent-applications-review\docs\development\technical-review\tangent-applications-review\.playwright-cli\console-2026-10-05T09-04-44-494Z.log#L85-L86

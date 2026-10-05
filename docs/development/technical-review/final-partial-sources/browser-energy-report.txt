@@ -1,0 +1,12 @@
+### Result
+"eight scoped energy captures"
+### Ran Playwright code
+```js
+await (async (page) => { const root='C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review/docs/development/technical-review/final-partial-sources/'; const names=['inverse-dynamics','affine-nature-golf-swing','drifter-manifesto','theory-part3']; for(const width of [390,1440]){await page.setViewportSize({width:width,height:1100}); for(let i=0;i<names.length;i++){ await page.goto('http://127.0.0.1:8882/articles/'+names[i]+'.html',{waitUntil:'networkidle'}); const h=page.getByRole('heading').filter({hasText:'How Geometry, Energy'}).first(); await h.scrollIntoViewIfNeeded(); await page.evaluate(()=>window.scrollBy(0,600)); await page.waitForTimeout(1800); await page.screenshot({path:root+'energy-final-'+i+'-'+width+'.png'}); }} return 'eight scoped energy captures'; })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8882/articles/theory-part3.html
+- Page Title: Theory Series, Part 3: Drift Invariance and Force Taxonomy – AffineDrift
+- Console: 2 errors, 0 warnings
+### Events
+- New console entries: ..\AffineDrift-tangent-applications-review\docs\development\technical-review\tangent-applications-review\.playwright-cli\console-2026-10-05T09-04-44-494Z.log#L68-L84

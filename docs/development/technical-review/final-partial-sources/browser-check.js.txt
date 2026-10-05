@@ -1,0 +1,17 @@
+async (page) => {
+ const out=[];
+ const root='C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review/docs/development/technical-review/final-partial-sources/';
+ const names=['intentional-constraint-collapse','inverse-dynamics','inverse-dynamics-inference','ch28_impact_collision','affine-nature-golf-swing','drifter-manifesto','theory-part3'];
+ for (const width of [390,1440]) {
+  await page.setViewportSize({width:width,height:950});
+  for (let i=0;i<names.length;i++) {
+   const url=i===3?'http://127.0.0.1:8883/'+names[i]+'.html':'http://127.0.0.1:8882/articles/'+names[i]+'.html';
+   await page.goto(url,{waitUntil:'networkidle'});
+   await page.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=700){window.scrollTo(0,y);await new Promise(r=>setTimeout(r,45));}window.scrollTo(0,0);});
+   await page.screenshot({path:root+'browser-'+i+'-'+width+'.png',fullPage:true});
+   const metrics=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,mathErrors:document.querySelectorAll('mjx-merror').length,title:document.title}));
+   out.push({url:url,width:width,metrics:metrics});
+  }
+ }
+ return out;
+}

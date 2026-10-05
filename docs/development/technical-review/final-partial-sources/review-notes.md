@@ -29,3 +29,40 @@ Primary reading this batch: relevant transcripts of Modern Robotics 8.7 Constrai
 Integrate tail repair 931e7f9b2, then freeze the combined tree and run full regression and central pre-PR/source gates. The earlier tail full run had two metadata failures and regenerated tracked files; it is not a passing receipt. Preserve those failed logs and the 56-test successful repair receipt. Advance the 26 tail rows and these five source rows only after combined acceptance.
 
 Create one regular main-targeted PR closing #4950 and #4954; respect #4953's existing merge-queue position. Never re-arm or update a green queued PR, bypass protection/hooks, or close another session's PR. Verify protected remote-main and deployment separately from local review before declaring the epic complete.
+
+## Accepted Local Checkpoint
+
+Source07c71ed50050253a082189e87ab569673a7d286f passed all 7,283 tests,
+29 skipped, 210 deselected, 60 warnings, 93.31% coverage in 512.85 seconds.
+Tracked tree stayed clean. The 19 extra source gates initially passed 18: only
+root hygiene failed because packaging tests created untracked build/dist/egg-info.
+Those directories were verified contained and untracked, moved intact under QA,
+and unchanged root hygiene then passed. Failed logs are retained.
+
+Seven HTML routes were scrolled at 390/1440 widths: no document overflow or
+MathJax errors. Lazy first captures omitted equations; subsequent scroll-through
+views show 41/65/60/586/548/108 math containers in the six root articles. Corrected
+equations and prose were inspected in final mobile captures and the desktop
+energy viewport. Long equations remain horizontally scrollable; preview update
+notifications, CSP and absent-manifest messages are known limits.
+
+The final acceptance report advances 26 tail rows plus five targeted-only rows,
+and reconciles five already reviewed book wrappers with 131 direct input entries
+across eight print books. All 407 paths remain represented, with zero Indexed or
+Targeted-only prefixes. This count is not empirical certification or a count of
+unique articles. Preserve all 38 immutable upstream publication rows and existing
+review/reading boundaries. Fix one inherited unquoted-comma CSV row without
+changing its text.
+
+Supplementary reconciliation maps 27 tracked article/page sources outside the
+historical inventory to generator, include, route or full-source receipts. Both
+impact includes exactly match #4720 hashes; bibliography body matches its full
+#4371 review. Grip chapter TeX matches d7e51655 exactly; QMD differs only in a
+resolved link and Related Articles callout. No new science claimed from those
+bookkeeping checks. Six successful Flash jobs support this batch; failed tool
+access/oversized prompt invocations are excluded.
+
+PR4953 became conflicting after independently merged main5002262d3 introduced
+the shared layman component. Its resolution is isolated in the consolidation
+worktree. Integrate that checked resolution here before final delivery, preserving
+source acceptance and explicitly recording component-only hash amendments.
