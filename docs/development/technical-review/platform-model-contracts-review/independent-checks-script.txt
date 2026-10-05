@@ -1,0 +1,54 @@
+import json
+import re
+from pathlib import Path
+
+import mujoco
+import numpy as np
+from numpy.polynomial.legendre import leggauss
+
+root = Path.cwd()
+rng = np.random.default_rng(4923)
+nodes, weights = leggauss(4)
+radial = (nodes + 1) / 2
+radial_weights = weights * radial
+height = nodes / 2
+height_weights = weights / 2
+azimuth = np.arange(16) * (2 * np.pi / 16)
+rr, zz, tt = np.meshgrid(radial, height, azimuth, indexing='ij')
+quadrature = (radial_weights[:, None, None] * height_weights[None, :, None]
+              * np.ones((1, 1, 16)) / 16).ravel()
+unit_points = np.column_stack([(rr*np.cos(tt)).ravel(), (rr*np.sin(tt)).ravel(), zz.ravel()])
+maxima = {'cylinder_com_inertia_quadrature': 0.0, 'hinge_inertia_quadrature': 0.0,
+          'mujoco_gravity_bias': 0.0, 'mujoco_com_position': 0.0,
+          'mujoco_passive_torque': 0.0, 'work_power_identity': 0.0}
+chapter = root/'articles/The_Geometry_of_Motion/Volume_V/chapters/ch03_building_models.tex'
+xml = re.search(r'\\begin\{lstlisting\}\[language=XML[^\n]*\]\n(.*?)\\end\{lstlisting\}',chapter.read_text(),re.S).group(1)
+model = mujoco.MjModel.from_xml_string(xml)
+data = mujoco.MjData(model)
+for _ in range(100):
+    mass, length, radius = rng.uniform(.1, 3), rng.uniform(.1, 2), rng.uniform(.005, .2)
+    points = unit_points * [radius, radius, length]
+    numerical = mass * np.einsum('i,ij->j', quadrature,
+        np.sum(points**2, axis=1)[:,None] - points**2)
+    transverse = mass*(length**2+3*radius**2)/12
+    exact = np.array([transverse, transverse, mass*radius**2/2])
+    maxima['cylinder_com_inertia_quadrature'] = max(maxima['cylinder_com_inertia_quadrature'],float(np.max(np.abs(numerical-exact))))
+    points[:,2] -= length/2
+    hinge = mass*np.dot(quadrature,points[:,0]**2+points[:,2]**2)
+    maxima['hinge_inertia_quadrature'] = max(maxima['hinge_inertia_quadrature'],abs(hinge-mass*(length**2/3+radius**2/4)))
+    angle, rate = rng.uniform(-2,2), rng.uniform(-5,5)
+    data.qpos[0], data.qvel[0] = angle, rate
+    mujoco.mj_forward(model,data)
+    body = mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_BODY,'rod')
+    maxima['mujoco_gravity_bias'] = max(maxima['mujoco_gravity_bias'],abs(data.qfrc_bias[0]-4.905*np.sin(angle)))
+    maxima['mujoco_com_position'] = max(maxima['mujoco_com_position'],float(np.max(np.abs(data.xipos[body]-[-.5*np.sin(angle),0,-.5*np.cos(angle)]))))
+    maxima['mujoco_passive_torque'] = max(maxima['mujoco_passive_torque'],abs(data.qfrc_passive[0]+.05*rate))
+    acceleration = data.qacc[0]
+    eps=1e-6
+    def energy(q,v): return .5*(1/3+.02**2/4)*v*v+4.905*(1-np.cos(q))
+    derivative = (energy(angle+eps*rate,rate+eps*acceleration)-energy(angle-eps*rate,rate-eps*acceleration))/(2*eps)
+    maxima['work_power_identity'] = max(maxima['work_power_identity'],abs(derivative+.05*rate**2))
+assert max(maxima.values()) < 1e-7, maxima
+record={'issue':4923,'seed':4923,'cases_each':100,'maximum_absolute_errors':maxima,'threshold':1e-7,'mujoco_version':mujoco.__version__,'scope':'Cylinder volume quadrature and same-state mechanics; no human or cross-engine trajectory validation'}
+(root/'reports/technical-review/platform-model-contracts-independent-checks.json').write_text(json.dumps(record,indent=2)+'\n')
+print(json.dumps(record,indent=2))
