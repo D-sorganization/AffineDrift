@@ -27,3 +27,4 @@ What becomes easier or more difficult to do because of this change?
 ## Index
 
 - [0001. Markerless Mocap Publication and Licensing Boundary](0001-markerless-mocap-publication-boundary.md)
+- [0002. Interactive Technology Stack](0002-interactive-technology-stack.md)

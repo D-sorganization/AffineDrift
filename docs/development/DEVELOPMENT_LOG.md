@@ -214,6 +214,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4531 · ADR 0002, Interactive Technology Stack
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4907 (draft)
+- **Issue:** #4531 (WEB-06.1; epic #4543)
+- **Branch:** `claude/issue-4531`
+- **Paths:** `docs/adr/0002-interactive-technology-stack.md`, `docs/adr/README.md`, `tests/test_adr_index.py`
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-04 (`python -m pytest tests/test_adr_index.py -q`: RED 1 failed/7 passed before indexing, GREEN 8 passed; ruff, black and prettier clean)
+- **Summary:** Records Board decision D3(d) (PR #4485) as an accepted ADR: runtime choice rule, self-hosting with no CDN, offline/PWA behaviour, per-widget-class KB and TTI budgets, same-origin `affinedrift` wheel for Pyodide, and a `widget-parity/v1` golden-vector fixture format with a tolerance policy. Adds an ADR index contract test.
+- **Next step:** Get the draft PR reviewed and merged so #4533, #4534 and #4540 can build to the ADR.
+
 ### DL-#4494 · Shared Open-by-Default Layman Component
 
 - **State:** in_review
