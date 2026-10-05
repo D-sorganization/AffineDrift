@@ -79,7 +79,14 @@ scrolling produced the final edited-content captures without changing page CSS.
 Acceptance details: reports/technical-review/reviewed-book-links-validation.json.
 The four pages do not overlap the original 145-artifact delivery manifest.
 
-Pending: save the source checkpoint, wait for #4953's protected merge, verify its
+Source checkpoint: 3ddafd5d1dda8b150f4e7f88b0abf7bd38659611. The central pre-PR
+runner passed all eight gates against fbee4da94 on 5 October 2026. Its affected-test
+mapper found no Python tests for this documentation diff; that result does not
+replace the separate 65 focused publication tests. The runner also reported three
+collection skips for unavailable Streamlit. This checkpoint result must be rerun
+after the final protected-revision pin and rebase.
+
+Pending: wait for #4953's protected merge, verify its
 145-artifact manifest, rebase only the new navigation commit(s) onto that main
 revision, replace the temporary manuscript pin, and finish central pre-PR checks.
 Then open a regular follow-up PR against main. Do not push this correction to the
@@ -87,6 +94,24 @@ already queued consolidation PR or bypass its queue. #4953's full CI passed;
 auto_merge became null with the PR still open, indicating the queued state.
 The final epic closure also requires public-site revision, route evidence and
 the advertised PDF download checks.
+
+## Advertised PDF Delivery Checks
+
+A further agy Gemini 3.8 Flash pass enumerated PDF links extracted from the five
+book navigation pages. Lead inspection confirmed five distinct targets: the
+proximal-to-distal monograph and Volume V as relative website downloads, plus
+Volumes I, III and IV at the reviewed GitHub revision. Volume II offers chapter
+sources here, not a PDF link. This inventory is scoped to those five pages.
+
+After deployment, resolve the actual rendered links and compare downloaded PDF
+SHA-256 values with the corresponding declared edition's Git bytes. For GitHub
+blob links, verify the displayed revision and fetch the raw target for hashing;
+do not hash GitHub's HTML viewer. For relative links, fetch the public website
+route and compare it with the deployed source revision. Preserve the upstream
+monograph's immutable publication contract. Check that responses are PDFs, not
+error pages. Local hashes alone do not prove successful public delivery, and a
+PDF header/footer alone does not prove complete or correct contents. The helper's
+suggested generic commands are therefore a checklist input, not delivery proof.
 
 Repository_Management #1998 is merged at e03344f3d5d0306f990ff295f767dbb1ba74ecd9.
 Thirty-eight of its 39 changed files exactly match the accepted head. The remaining

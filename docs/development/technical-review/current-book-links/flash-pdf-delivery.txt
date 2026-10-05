@@ -1,0 +1,70 @@
+```json
+{
+  "audit_summary": {
+    "pin_commit": "fbee4da94fd699e9710f4c29b42a73a5113f08d4",
+    "pin_status": "temporary reviewed source pin awaiting protected merge, replacement pending",
+    "total_unique_pdf_references": 5
+  },
+  "advertised_pdfs": [
+    {
+      "target": "../articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf",
+      "type": "relative_website_download",
+      "originating_pages": [
+        "books/index.qmd"
+      ]
+    },
+    {
+      "target": "../articles/The_Geometry_of_Motion/Volume_V/main.pdf",
+      "type": "relative_website_download",
+      "originating_pages": [
+        "books/index.qmd"
+      ]
+    },
+    {
+      "target": "https://github.com/D-sorganization/AffineDrift/raw/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_I/main.pdf",
+      "type": "immutable_github_blob",
+      "originating_pages": [
+        "books/tangent-space-methods.qmd"
+      ]
+    },
+    {
+      "target": "https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_III/main.pdf",
+      "type": "immutable_github_blob",
+      "originating_pages": [
+        "books/biomechanics-biology-to-systems.qmd"
+      ]
+    },
+    {
+      "target": "https://github.com/D-sorganization/AffineDrift/blob/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/Volume_IV/main.pdf",
+      "type": "immutable_github_blob",
+      "originating_pages": [
+        "books/human-motor-control.qmd"
+      ]
+    }
+  ],
+  "pages_without_advertised_pdfs": [
+    "books/control-is-motion.qmd"
+  ],
+  "byte_verification_steps": [
+    {
+      "step": 1,
+      "description": "Verify relative website downloads locally against build output directory.",
+      "command": "Get-FileHash -Algorithm SHA256 articles/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf, articles/The_Geometry_of_Motion/Volume_V/main.pdf"
+    },
+    {
+      "step": 2,
+      "description": "Fetch and compute SHA-256 for pinned GitHub targets (converting /blob/ URLs to raw endpoints for byte comparison).",
+      "command": "curl -sL https://github.com/D-sorganization/AffineDrift/raw/fbee4da94fd699e9710f4c29b42a73a5113f08d4/articles/The_Geometry_of_Motion/<Volume_Path>/main.pdf | sha256sum"
+    },
+    {
+      "step": 3,
+      "description": "Verify PDF magic header bytes (0x25 0x50 0x44 0x46 / '%PDF-') and confirm EOF marker ('%%EOF') to prevent corrupted or truncated downloads.",
+      "command": "head -c 5 <file.pdf>; tail -c 6 <file.pdf>"
+    },
+    {
+      "step": 4,
+      "description": "Ensure upstream immutable editions are recorded in cryptographic trust ledgers prior to protected merge and subsequent pin replacement."
+    }
+  ]
+}
+```
