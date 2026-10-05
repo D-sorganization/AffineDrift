@@ -3,6 +3,7 @@ const {
   buildEvidencePlan,
   canonicalPathMatches,
   fixedElementCanObscureHeading,
+  formatFailures,
   headingBeginsWithinViewport,
   isActionableConsoleError,
   isActionablePageError,
@@ -518,5 +519,51 @@ describe('waitForFunction timeouts', () => {
     );
     expect(source).toContain('waitForFunction(');
     expect(source).not.toMatch(/\},\s*\{\s*timeout\s*:/);
+  });
+});
+
+describe('formatFailures (#4924 job-log diagnosability)', () => {
+  const failed = (route, failures, extra = {}) => ({
+    route,
+    viewport: { id: 'mobile' },
+    theme: 'dark',
+    passed: false,
+    failures,
+    ...extra,
+  });
+  const passed = { route: '/ok', viewport: { id: 'mobile' }, theme: 'dark', passed: true, failures: [] };
+
+  test('returns no lines when everything passed', () => {
+    expect(formatFailures([passed], 20)).toEqual([]);
+  });
+
+  test('prints route, viewport, theme and reasons for each failure', () => {
+    const lines = formatFailures(
+      [passed, failed('/a.html', ['inspection: net::ERR_TIMED_OUT', 'document response failed: 503'])],
+      20,
+    );
+    const text = lines.join('\n');
+    expect(text).toContain('/a.html (mobile/dark)');
+    expect(text).toContain('inspection: net::ERR_TIMED_OUT');
+    expect(text).toContain('document response failed: 503');
+    expect(text).not.toContain('/ok');
+    expect(lines.filter((l) => l.startsWith('::error title=Public site verification::'))).toHaveLength(1);
+  });
+
+  test('shows at most 5 console errors per route and truncates long messages', () => {
+    const consoleReasons = Array.from({ length: 8 }, (_, i) => `console: msg${i} ${'x'.repeat(1000)}`);
+    const lines = formatFailures([failed('/c.html', consoleReasons)], 20);
+    const text = lines.join('\n');
+    expect(text).toContain('msg4');
+    expect(text).not.toContain('msg5');
+    expect(text).toContain('3 more console errors');
+    expect(Math.max(...lines.map((l) => l.length))).toBeLessThan(500);
+  });
+
+  test('caps ::error annotations and reports omitted count', () => {
+    const results = Array.from({ length: 25 }, (_, i) => failed(`/r${i}.html`, ['boom']));
+    const lines = formatFailures(results, 20);
+    expect(lines.filter((l) => l.startsWith('::error')).length).toBe(20);
+    expect(lines.join('\n')).toContain('5 more failed items omitted');
   });
 });

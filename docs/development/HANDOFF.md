@@ -1,3 +1,7 @@
+# Issue #4924 - Public Site Verifier Job-Log Diagnostics
+
+Branch `fix/4924-verifier-diagnostics`, commit SELF, PR refs #4924 (not closing: the red run was likely transient). `scripts/verify-public-site.js` gains exported `formatFailures(results, limit)`; `main()` now prints each failed item (route, viewport/theme, reasons, first 5 console errors, truncated to 300 chars) and up to 20 `::error title=Public site verification::` annotations with an omitted count. Pass/fail criteria, timeouts, retries and the artifact report are unchanged. Tests: `npx jest tests/public-site-verifier.test.js` (RED: formatFailures not a function; GREEN: 45 passed with the evidence suite). Change-log row via fragment `changes/4924-*.md` per the repo's fragment convention.
+
 # Issue #4913 - Benchmark Baseline Platform Detection
 
 Branch `fix/4913-benchmark-baseline`: `scripts/ci/benchmark_compare_args.py` (tested) picks compare vs save mode from `.benchmarks/<machine_id>/` and compares by the highest stored run number (`--benchmark-compare=NNNN`; the save name matches nothing); `ci-benchmarks.yml` uses it, adds pipefail, uploads a candidate baseline artifact and reports honest PR status. Next: after merge, a maintainer runs the workflow, downloads artifact `benchmark-baseline-Linux-CPython-3.12-64bit` and commits it under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating. #4912 (pytest-timeout) is a separate open PR.

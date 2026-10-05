@@ -644,6 +644,42 @@ async function runVerification(options) {
   return report;
 }
 
+const MAX_FAILURE_ANNOTATIONS = 20;
+const MAX_CONSOLE_REASONS_SHOWN = 5;
+const MAX_REASON_LENGTH = 300;
+
+function truncateReason(text) {
+  const flat = String(text).replace(/\s+/g, ' ').trim();
+  return flat.length > MAX_REASON_LENGTH ? `${flat.slice(0, MAX_REASON_LENGTH)}...` : flat;
+}
+
+/**
+ * Render failed evidence items as job-log lines (#4924). Diagnostic output
+ * only: never alters pass/fail. Per failing item: a detail block plus one
+ * `::error` annotation, capped at `limit` items with an omitted-count line.
+ */
+function formatFailures(results, limit = MAX_FAILURE_ANNOTATIONS) {
+  const failed = results.filter((result) => !result.passed);
+  const lines = [];
+  for (const result of failed.slice(0, limit)) {
+    const label = `${result.route} (${result.viewport?.id ?? '?'}/${result.theme ?? '?'})`;
+    const reasons = result.failures ?? [];
+    const consoleReasons = reasons.filter((r) => r.startsWith('console:'));
+    const shownConsole = new Set(consoleReasons.slice(0, MAX_CONSOLE_REASONS_SHOWN));
+    const shown = reasons.filter((r) => !r.startsWith('console:') || shownConsole.has(r));
+    const hiddenConsole = consoleReasons.length - shownConsole.size;
+    lines.push(`FAILED ${label}${result.status != null ? ` status=${result.status}` : ''}`);
+    for (const reason of shown) lines.push(`  - ${truncateReason(reason)}`);
+    if (hiddenConsole > 0) lines.push(`  - ... ${hiddenConsole} more console errors`);
+    const summary = truncateReason(shown.join('; ') || 'no failure reason recorded');
+    lines.push(`::error title=Public site verification::${label}: ${summary}`);
+  }
+  if (failed.length > limit) {
+    lines.push(`... ${failed.length - limit} more failed items omitted (see the uploaded report artifact)`);
+  }
+  return lines;
+}
+
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   const report = await runVerification(options);
@@ -651,6 +687,7 @@ async function main() {
     `Public site verification: ${report.evidence_count}/${report.expected_evidence_count} evidence items, ` +
     `${report.failure_count} failed -> ${options.outputPath}`,
   );
+  for (const line of formatFailures(report.results)) console.log(line);
   const axe = report.axe_policy;
   if (axe.mode !== 'off') {
     const cellSuffix = axe.scanned_cell_count !== undefined ? ` (${axe.scanned_cell_count} cells)` : '';
@@ -675,6 +712,7 @@ module.exports = {
   buildEvidencePlan,
   canonicalPathMatches,
   fixedElementCanObscureHeading,
+  formatFailures,
   headingBeginsWithinViewport,
   isActionableConsoleError,
   isActionablePageError,
