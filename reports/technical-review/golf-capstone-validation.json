@@ -1,0 +1,62 @@
+{
+  "issue": 4921,
+  "epic": 4009,
+  "status": "Complete chapter and canonical listing accepted; protected delivery pending",
+  "accepted_source_commit": "d3f63d6fb4d3b68d390afdfa99d370c823233ec9",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch10_golf_swing_project.tex": "f63e6763665bd3c758ac4bb6c7f415173637c9e27d88c3779be175683051b494",
+    "articles/The_Geometry_of_Motion/Volume_V/generated/ch10_swing_analysis.tex": "9e5e684110d82c7b4587661ae84c65721da0a47f911516b6e1d46a8cb0ce4c93",
+    "src/affine_control/swing_analysis.py": "d3a8b94e5770c7962175b1d485e8f59c949db36c92a8d5810974dd2573d1eae6",
+    "scripts/generate_worked_examples.py": "8238fccc0fa74e52c214c5b54c054e12da0b2f6ddd54c966750331f49977dc4f",
+    "tests/test_affine_control/test_swing_analysis.py": "65198c21cdf4ae47edc35838543faf3afc0b54f0a47078acfb0629f1256e0a07",
+    "articles/The_Geometry_of_Motion/Volume_V/main.tex": "c3d0fd956ab77b9f8d46ff8f0c4e1d9222bd38e66c6392211f9d8793e6e4aabc",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "873fb0c3d68924d45fda615909e7ca38c765da79de25743b3eb3443c40b02914",
+    "articles/The_Geometry_of_Motion/Volume_V/main.pdf": "3503ec97043f46a810fec0f57f2eea6fa3c810a0b9bac62dd0323aa824bbbe73",
+    "reports/technical-review/golf-capstone-independent-checks.json": "600318854a291e884aac635af6a036c62c54c6fcd3d9e49d389dc60cd1305395"
+  },
+  "scope": "Complete golf capstone chapter, canonical module and generated listing; bounded preface; no whole-volume or empirical certification",
+  "full_regression": {
+    "head": "d3f63d6fb4d3b68d390afdfa99d370c823233ec9",
+    "passed": 7072,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 444.75,
+    "src_coverage_percent": 93.25,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/golf-capstone-review/full-tests-typed.txt"
+  },
+  "pdf": {
+    "pages": 49,
+    "printed_entries": 19,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3-5 and 39-49 inspected; final type-only pass 9 pages 42-47 reinspected",
+    "build_log": "docs/development/technical-review/golf-capstone-review/accepted-pass9.txt",
+    "limits": "Five historical overfull boxes in other chapters; historical duplicate destinations/package warnings; no capstone overflow"
+  },
+  "mathematics": {
+    "record": "reports/technical-review/golf-capstone-independent-checks.json",
+    "identities": 6,
+    "cases_each": 100,
+    "threshold": 1e-5,
+    "scope": "Manufactured mathematics; not human or forward-trajectory validation"
+  },
+  "focused_tests": 40,
+  "combined_tests": 78,
+  "delegation": {
+    "helpers": 5,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only reviews and test proposals; lead-adjudicated"
+  },
+  "delivery": {
+    "status": "Preparing regular PR",
+    "base": "fix/learning-rhythm-review",
+    "dependency": "PR 4922",
+    "next": "Protected delivery then fetched-main blob verification"
+  },
+  "failed_run": "bd575c8: 7071 passed, one docstring test failed for two nested helpers; docstrings repaired, behavior unchanged; failed log retained",
+  "prior_accepted_source_commit": "be4bbe6e27d0fb33a2b984c743a2e361e72c136e",
+  "type_check": "Canonical MYPYPATH is repository root for src.affine_control imports; two vectorize Any returns annotated with typing.cast; no runtime-value change; all five pre-PR gates pass"
+}

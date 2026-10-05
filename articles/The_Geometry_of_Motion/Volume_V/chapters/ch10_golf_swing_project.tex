@@ -1,189 +1,263 @@
-\chapter{Capstone: The Golf Swing Analysis Pipeline}
+\chapter{Capstone: Golf Swing Analysis}
 \label{ch:golf-capstone}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter provides a runnable, tested three-link example and a roadmap for
+larger investigations. Its synthetic motion is prescribed, not measured or
+optimized. The extensions on muscles, feedback, uncertainty and impact require
+additional implementation and evidence.
 \end{gomdraftnotice}
 
-\epigraph{%
-  We have built the tools. Now let us use them all.
-}{}
+The scientific question is how geometry, inertia and actuation together produce
+an endpoint motion. A rapidly moving clubhead does not by itself reveal which
+joint supplied energy, which muscle was active, or what would happen after
+removing an input. Those questions require different calculations. This capstone
+connects them through one explicit mechanical model, then identifies the extra
+information each extension needs.
 
-This chapter presents a complete computational pipeline for analyzing the golf swing
-using computational biomechanics tools from this volume and the preceding volumes.
-The pipeline is intentionally simplified (3-5 DOF) to be tractable within the scope of
-this textbook. Real golf swings are complex multi-segment movements with 20+ DOF and
-significant muscle redundancy, typically studied via motion capture analysis combined
-with musculoskeletal models \cite{siciliano2009}.
+\section{Model and Question}
 
-\textbf{Important Note on Biomechanical Claims:} All descriptions of swing mechanics in
-this chapter are restricted to mathematical derivations from the model or explicit citations
-of biomechanical literature. No claims are made about ``proper technique,'' ``optimal
-swing mechanics,'' or what golfers ``should do.'' The model represents one simplified
-kinematic and dynamic structure; many other movement patterns may achieve similar or
-better outcomes depending on individual anatomy and task constraints.
+The implemented system has three rigid links and three revolute coordinates.
+The base is fixed. The first angle is measured counterclockwise from the
+horizontal; the other two are relative joint angles. World height increases
+upward and gravity acts downward. Angles, rates and accelerations use radians,
+rad/s and rad/s$^2$; lengths, masses and generalized torques use metres,
+kilograms and N\,m. The chain can illustrate a shoulder--elbow--wrist linkage,
+but it has no moving torso, two-arm closed loop, muscles, shaft flexibility,
+ground contact or ball collision.
 
-\section{Project Overview}
+Each link is a uniform rod with centre of mass at half its length and central
+inertia $I_i=m_i\ell_i^2/12$. The parallel-axis contributions are included when
+the model assembles its mass matrix. The default values are illustrative
+parameters, not subject-specific measurements. A head-heavy club requires
+measured or justified centre-of-mass and inertia parameters; changing its mass
+alone does not implement that distribution. The model therefore supports
+conditional mechanical deductions, not a prescription for human technique.
 
-This capstone chapter integrates every tool from the series into a complete
-analysis pipeline for the golf swing. The pipeline implements:
+\section{Geometry Before Attribution}
 
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}llr@{}}
-\toprule
-\textbf{Stage} & \textbf{Theory Source} & \textbf{Chapter} \\
-\midrule
-1. Model Construction & Screw theory, PoE kinematics & Vol~0 \\
-2. Forward Dynamics & Lagrangian mechanics & Vol~0 \\
-3. Trajectory Optimization & DDP/iLQR & Vol~I \\
-4. Contraction Analysis & Contraction theory & Vol~I \\
-5. Funnel Computation & Trajectory tubes & Vol~II \\
-6. ZTCF family Decomposition & Drift vs.\ control & Vol~I \\
-7. Muscle Force Estimation & Hill model + static opt & Vol~III \\
-8. Motor Analysis & UCM, synergies & Vol~IV \\
-9. Visualization \& Export & Companion platform tools & Vol~V \\
-\bottomrule
-\end{tabular}
-\end{center}
+Let $\theta_i=\sum_{j=1}^{i}q_j$ and
+$\omega_i=\sum_{j=1}^{i}\dot q_j$. The tip position and velocity are
+\begin{align}
+ \bm p(q)&=\sum_{i=1}^{3}\ell_i
+   \begin{bmatrix}\cos\theta_i\\\sin\theta_i\end{bmatrix},\\
+ \bm v(q,\dot q)&=\sum_{i=1}^{3}\ell_i\omega_i
+   \begin{bmatrix}-\sin\theta_i\\\cos\theta_i\end{bmatrix}
+   =J_p(q)\dot q.
+\end{align}
+Here $J_p$ is the $2\times3$ Jacobian of the tip position. It is not the
+six-component spatial-twist Jacobian; the distinction matters when comparing
+robotics conventions \cite{LynchParkJacobianReview}.
+Speed is $s_v=\norm{\bm v}$, taken \emph{after} adding the velocity vectors.
+Their directions depend on configuration. The scalar sum $\sum_i\ell_i|\omega_i|$ discards directional cancellation.
 
-\section{Stage 1: Model}
+For the default lengths $(0.28,0.46,1.10)$\,m and relative rates
+$(5,5,5)$\,rad/s, the straight configuration $q=(0,0,0)$ gives
+$22.5$\,m/s. At $q=(0,\pi,\pi)$ the signed transverse contributions are
+$1.4-4.6+16.5=13.3$\,m/s. The configuration-blind value would overestimate
+this particular folded example by about $69\%$. This is a reproducible
+geometric counterexample, not a population estimate.
+
+\section{What Adds at the Same State}
+
+For this unconstrained rigid model, write
+\begin{equation}
+ M(q)\ddot q+b(q,\dot q)=\tau,\qquad
+ b=C(q,\dot q)\dot q+g(q),\qquad M(q)\succ0.
+\end{equation}
+Forward dynamics evaluates acceleration from the state and input; inverse
+dynamics evaluates the input required by a specified acceleration
+\cite{LynchParkDynamicsReview}. At a \emph{common} state define
+\begin{equation}
+ a_d=-M^{-1}b,\qquad a_u=M^{-1}\tau,\qquad \ddot q=a_d+a_u.
+ \label{eq:capstone-joint-split}
+\end{equation}
+These are signed joint-acceleration vectors. The inverse is notation: the code
+solves linear systems. The equality is exact in the mathematical model, subject
+to numerical error in its implementation. It does not establish that arbitrary
+supplied position, velocity and torque arrays form a dynamically consistent
+trajectory.
+
+\begin{warningbox}
+The magnitudes $\norm{a_d}$ and $\norm{a_u}$ generally do not add to
+$\norm{\ddot q}$. If $\tau=b\ne0$, then $a_u=-a_d$ and the net joint
+acceleration is zero, even though both component norms are positive. Reporting
+those norms as complementary percentages loses the cancellation. The norms also
+depend on the chosen joint coordinates and weighting. They are neither a speed
+partition nor a measure of muscular effort.
+\end{warningbox}
+
+The tip acceleration contains an additional geometric term:
+\begin{align}
+ \bm a_p&=J_p\ddot q+\dot J_p\dot q=\bm a_{p,d}+\bm a_{p,u},\\
+ \bm a_{p,d}&=J_pa_d+\dot J_p\dot q,\qquad
+ \bm a_{p,u}=J_pa_u,\\
+ \dot J_p\dot q&=-\sum_{i=1}^{3}\ell_i\omega_i^2
+   \begin{bmatrix}\cos\theta_i\\\sin\theta_i\end{bmatrix}.
+\end{align}
+These vectors have units m/s$^2$. When $s_v>0$, its instantaneous rate is
+\begin{equation}
+ \dot s_v=\frac{\bm v^{\mathsf T}\bm a_{p,d}}{s_v}
+          +\frac{\bm v^{\mathsf T}\bm a_{p,u}}{s_v}.
+\end{equation}
+The two signed tangential terms can oppose one another. This formula is
+undefined at zero speed; acceleration vectors remain meaningful there.
+The current listing reports joint components, not these Cartesian projections.
+
+At a straight vertical configuration, the ideal model has $g=0$ and
+$C\dot q=0$: derivatives of its relative-angle cosine terms vanish.
+Nevertheless, $\dot J_p\dot q$ can be nonzero. A rotating straight chain can
+have zero joint drift acceleration at that instant and a substantial centripetal
+tip acceleration. Straightness alone is insufficient even for zero joint drift:
+a horizontal chain generally has nonzero gravity torque.
+
+\section{A Counterfactual Is a New Trajectory}
+
+With $x=(q,\dot q)$, write $\dot x=f(x)+G(x)\tau$. A zero-torque trajectory
+released at $t_r$ obeys
+\begin{equation}
+ \dot x_0=f(x_0),\qquad x_0(t_r)=x_u(t_r).
+\end{equation}
+For a driven trajectory $x_u$, their difference satisfies
+\begin{equation}
+ \frac{\dd}{\dd t}(x_u-x_0)
+ =f(x_u)-f(x_0)+G(x_u)\tau.
+\end{equation}
+The drift difference vanishes at release but generally not afterward. Thus
+integrating $M^{-1}\tau$ along the driven path does not by itself recover the
+difference in subsequent joint velocities. Different configurations also change
+the tip Jacobian. Control-affine input dependence does not make entire
+trajectories, or their speed magnitudes, superposable.
+
+A useful comparison declares the release state, retained passive forces,
+intervention and endpoint: a common elapsed time and each trajectory's contact
+event are different experiments. Turning off excitation in a muscle model is
+also different from setting generalized torque to zero; activation and tendon
+states can retain history. Here the unforced system retains gravity and inertia
+and contains no friction or elastic elements. Energy conservation and timestep
+refinement provide checks on its numerical integration
+\cite{LynchParkForwardReview}. They do not validate its human anatomy.
+The separate \texttt{GolfModel.ztcf\_trajectory} routine can support an unforced
+extension; \texttt{SwingAnalysis} does not call it.
+
+\section{A Reproducible Synthetic Example}
+
+The listing prescribes a smooth path, evaluates its analytic first and second
+derivatives, and calculates $\tau=M\ddot q+C\dot q+g$. These are required
+model torques for that path, with no imposed actuator limits. They replace an
+unrelated illustrative torque profile. Inverse-dynamic consistency tests an
+algebraic relationship; a separate forward integration and step-refinement
+comparison would test trajectory reproduction.
+
+For duration $T>0$ and maximum sample spacing $h>0$, the grid contains
+$\lceil T/h\rceil+1$ samples including both endpoints. Its actual spacing is
+$T/\lceil T/h\rceil$, which need not equal $h$. Analytic rates avoid confusing
+those two intervals. With $\sigma=t/T$, the prescribed path is
+\begin{equation}
+ q(\sigma)=\begin{bmatrix}
+ -\pi/2+\pi\sigma^2\\
+ (\pi/3)\sin(\pi\sigma)\\
+ -(\pi/2)\cos(\pi\sigma/2)
+ \end{bmatrix}.
+\end{equation}
+Its nonzero endpoint rates are allowed; this example is not a rest-to-rest
+trajectory. Doubling $T$ at fixed path halves rates and quarters accelerations;
+gravity torque does not scale that way. This distinguishes changing the path,
+changing its timing and changing the mechanical plant.
 
 \input{generated/ch10_swing_analysis}
 
-\begin{warningbox}
-The listing above is generated from \texttt{src/affine\_control/swing\_analysis.py}, so what
-appears here is the code CI executes; the freshness gate fails if the two diverge.
-
-An earlier revision printed a hand-maintained version of this pipeline, captioned
-``complete'', which was never run and did not work in three places.
-
-\texttt{compute\_clubhead\_speed} summed $\dot q_i r_i$ as scalars, with no trigonometry.
-Tip velocity is a \emph{vector} sum whose contributions point in different directions
-depending on the joint angles, so the printed version was configuration-blind: it returned
-the same speed for a straight arm and a folded one. Substituting a folded configuration into
-both gives $13.3$~m/s from the correct Jacobian against $22.5$~m/s from the scalar sum ---
-a $69\%$ overestimate. The old code even accumulated \texttt{cumulative\_angle} and then
-never used it, and carried a Jacobian loop whose body was \texttt{pass}.
-
-\texttt{ZTCF\_decomposition} returned a hardcoded $60/40$ split of clubhead speed. Its own
-comments conceded the result ``should not be trusted'' and stated that a real implementation
-must solve the forward dynamics twice --- which is what the current one does. Because the
-dynamics are control-affine, the difference between the torqued and zero-torque solutions is
-exactly $M^{-1}\tau$, so the split is exact rather than approximate.
-
-The driver assigned \texttt{np.random.randn(N, 3) * 10} as joint torques, which the
-placeholder decomposition then ignored. The pipeline was disconnected at both ends.
-\end{warningbox}
-
-The module above is a library --- it prints nothing, so that it can be imported and tested.
-To exercise it:
-
-\begin{lstlisting}[language=Python, caption={Running the pipeline.}]
+The listing is generated from the canonical module and checked for freshness.
+Run it with:
+\begin{lstlisting}[language=Python, caption={Running the Prescribed-Motion Analysis}]
 from src.affine_control.swing_analysis import synthetic_swing
 
 print(synthetic_swing().summary())
 \end{lstlisting}
 
-\begin{remark}[Reading the summary output]
-This reports a peak clubhead speed near $30$~m/s for the synthetic kinematics.
-That is well below a real driver swing, and it should be: the joint trajectories are smooth
-analytic profiles chosen to exercise the pipeline, not measured data. Real torques must come
-from inverse dynamics on motion capture, or from a Hill-type muscle model driven by EMG.
+The summary reports duration, peak tip speed and its timestamp, plus separate
+medians of joint-acceleration norms in rad/s$^2$. The peak is among sampled
+values, not a certified continuous-time maximum or a ball-impact value. The
+medians are descriptive sample statistics and use every supplied sample;
+nonuniform sampling would weight densely sampled periods more heavily.
+The historical method name \texttt{ztcf\_decomposition} returns those norms;
+\texttt{joint\_acceleration\_components} exposes the signed vectors.
+Neither method integrates a counterfactual.
 
-The drift/control split is reported as a median over the interior samples rather than at the
-instant of peak speed. The endpoints carry one-sided \texttt{np.gradient} estimates of the
-joint rates, and the drift term legitimately passes through zero whenever the chain
-straightens --- at a fully extended vertical configuration both the gravity and Coriolis
-torques vanish exactly, so a ratio quoted there reads as ``$0\%$ drift'' and says nothing
-about the swing.
-\end{remark}
+\section{Connecting Mechanics, Control and Measurement}
 
-\section{Golf Swing Simulation Architecture}
+This example implements model construction, prescribed-motion inverse dynamics,
+tip kinematics and same-state joint decomposition. Optimization, feedback,
+robustness certificates, muscle estimation and variability analysis are
+\emph{extensions}, each with a distinct evidence requirement.
 
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[
-    every node/.style={align=center, draw, rounded corners, minimum width=1.8cm, text centered, font=\tiny},
-    ]
-    % Row 1: Input
-    \node[fill=blue!20] (model) at (0, 6) {Model:\\Kinematics};
-    \node[fill=blue!20] (motion) at (2, 6) {Motion:\\Data};
-    \node[fill=blue!20] (forces) at (4, 6) {Force\\Plates};
+For experimental inverse dynamics, start with synchronized measurements and a
+model that specifies coordinates, inertial parameters and external wrenches.
+Choose sampling and filtering from the signal bandwidth, noise and derivative
+accuracy needed; there is no universal adequate camera rate. In a whole-body
+model, unmeasured contact forces cannot simply be omitted without changing the
+inference. Report assumed forces, constraints and residuals, especially in
+unactuated base coordinates. Motion alone does not generally identify all
+external forces and internal torques simultaneously.
 
-    % Row 2: Dynamics
-    \node[fill=green!20] (forward) at (1, 4.5) {Forward\\Dynamics};
-    \node[fill=green!20] (inverse) at (3, 4.5) {Inverse\\Dynamics};
+Net joint torque also does not uniquely specify muscle force. Moment arms,
+activation and contraction dynamics, passive tissues, force bounds and the
+chosen recruitment criterion affect that estimate. EMG can constrain an
+activation model; it is not a direct force or torque measurement. Refer to the
+biological actuation and inverse-dynamics treatments in Volume~III before
+interpreting recruitment. A later torque response can also depend on earlier
+control through the current velocity, geometry and stored elastic energy.
 
-    % Row 3: Analysis
-    \node[fill=yellow!20] (ZTCF) at (0, 3) {ZTCF};
-    \node[fill=yellow!20] (muscle) at (2, 3) {Muscle\\Force};
-    \node[fill=yellow!20] (ucm) at (4, 3) {UCM};
+For the ideal conservative rigid model, total mechanical energy satisfies
+$\dot E=\dot q^{\mathsf T}\tau$. Internal inertial coupling redistributes
+motion and energy; it is not an additional energy supply. A joint can have a
+large acceleration contribution while doing little instantaneous work if its
+rate is small. Peak ordering, acceleration attribution and joint power therefore
+answer different questions. Specify the system boundary before interpreting
+energy transferred across it.
 
-    % Row 4: Output
-    \node[fill=orange!20] (report) at (2, 1.5) {Summary\\Report};
+A feedback study adds a declared policy, disturbances, sensor information and
+actuator constraints. A finite-time funnel must bound a set of initial states
+through an interval and into a defined terminal set; a calculation only at the
+nominal impact instant is insufficient. If contact is included, the guard and
+reset map must be part of the argument. A contraction condition or successful
+simulation should be reported only over the domain where its hypotheses or
+numerical checks hold.
 
-    % Edges
-    \draw[->] (model) -- (forward);
-    \draw[->] (motion) -- (inverse);
-    \draw[->] (motion) -- (forward);
-    \draw[->] (forces) -- (inverse);
-    \draw[->] (forward) -- (ZTCF);
-    \draw[->] (inverse) -- (muscle);
-    \draw[->] (forward) -- (ucm);
-    \draw[->] (ZTCF) -- (report);
-    \draw[->] (muscle) -- (report);
-    \draw[->] (ucm) -- (report);
-  \end{tikzpicture}
-  \caption{Complete golf swing analysis architecture. Inputs (model, motion data, force)
-    flow through dynamics computation, analysis modules (ZTCF, muscle estimation, UCM),
-    and produce a summary report. Each box references the corresponding chapter from Volumes 0--IV.}
-  \label{fig:golf-arch}
-\end{figure}
-
-\section{Stage 2--9: Full Pipeline}
-
-Each stage of the pipeline builds on the previous, culminating in a complete
-characterization of the swing. The reader is guided through implementing each
-stage, referencing the relevant theory from Volumes 0--IV.
-
-\textbf{Data Requirements:} A complete pipeline requires:
-\begin{itemize}
-  \item Motion capture data: joint angles $\bm{q}(t)$ sampled at sufficient frequency (120+ Hz typical).
-  \item Force measurements: ground reaction forces and moments (optional but recommended).
-  \item Anatomical model: segment lengths, masses, and inertias (from literature or imaging).
-\end{itemize}
+For variability, an ensemble and a task map are essential. At a reference state,
+$D h$ separates first-order task-changing directions from its null space.
+Variance depends on alignment, coordinates, metric, rank and normalization by
+subspace dimension. Artificial torque perturbations describe the simulated
+ensemble; they do not establish a human neural synergy. If the task is a peak
+over time, its differentiability and event alignment require care. A fixed-time
+endpoint map is a simpler starting point.
 
 \section*{Final Exercises}
 
 \begin{enumerate}
-  \item \textbf{Complete Pipeline.} Run the analysis pipeline on the synthetic swing.
-        Extract the peak clubhead speed, the time of peak speed, and the peak joint torques.
-        Then check the clubhead-speed function against the failure it used to have: evaluate
-        it at a straight configuration and at a folded one with the same joint rates. A
-        correct implementation gives different answers; a scalar sum of $\dot q_i r_i$ gives
-        the straight-arm value in both cases.
-
-  \item \textbf{Parameter Study.} Programmatically vary club length ($\pm 10\%$) and mass
-        ($\pm 20\%$). Simulate the swing and measure peak clubhead speed. Plot clubhead
-        speed versus each parameter.
-
-  \item \textbf{Muscle Analysis.} Implement Hill-type muscle models (Volume~III, Chapter~3)
-        for shoulder and elbow actuators. Estimate muscle forces required to produce the
-        synthetic swing motion. Which muscle groups have the highest peak force?
-
-  \item \textbf{Robustness Analysis.} Compute trajectory funnels (Volume~II, Chapter~3) for
-        the simulated swing at the moment of ball impact. Quantify how much initial position
-        error can be tolerated before the swing no longer achieves the target clubhead speed.
-
-  \item \textbf{Variability Analysis.} Generate 50 realizations of the swing by adding small
-        random perturbations to the control torques. Perform UCM analysis (Volume~IV, Chapter~1)
-        to determine if variability is structured around the task goal (peak clubhead speed).
-
-  \item \textbf{Open Project.} Choose a different multi-joint movement (e.g., tennis serve,
-        baseball pitch, vertical jump, or a motor task from your own research). Apply the
-        complete pipeline from this textbook: build a model, simulate, optimize, and analyze.
-        Document in a Jupyter notebook with plots.
+ \item \textbf{Kinematic and Dynamic Consistency.} Run the example and compare
+ the two configurations above. Verify analytic endpoint rates and the residual
+ $M\ddot q+C\dot q+g-\tau$. Explain why the latter does not independently
+ validate the model or its forward integrator.
+ \item \textbf{Two Parameter Studies.} First hold the prescribed joint motion
+ fixed and vary club length and mass separately. Mass changes required torque
+ but not tip kinematics; length changes both. Then construct a forward study
+ with the same initial state and declared input policy. Compare outcomes and
+ explain why these are different experiments.
+ \item \textbf{Signed Contributions.} Set $\tau=b$ at a chosen state. Check
+ cancellation in joint space and compute the remaining $\dot J_p\dot q$ tip
+ acceleration. Contrast vector, norm, tangential-acceleration and power measures.
+ \item \textbf{Release Experiment.} Integrate driven and zero-torque systems
+ from a shared state over a declared interval. Refine the timestep, monitor
+ energy where appropriate, and compare endpoint velocity vectors as well as
+ speeds. Repeat for a different release time without treating either result as
+ a universal contribution percentage.
+ \item \textbf{Muscle and Robustness Extensions.} Specify a muscle model,
+ recruitment objective and feasibility checks, or a feedback policy and terminal
+ set. Implement one bounded extension and report which conclusions depend on
+ its assumptions. An impact study must define contact and reset behavior.
+ \item \textbf{Variability Extension.} Generate an ensemble under an explicit
+ noise model, align samples and analyze a fixed-time task Jacobian. Report
+ sample-size sensitivity and dimension-normalized variances. Explain what
+ additional data would be needed to make a claim about human coordination.
 \end{enumerate}

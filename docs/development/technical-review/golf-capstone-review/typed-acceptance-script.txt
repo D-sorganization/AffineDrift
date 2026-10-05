@@ -1,0 +1,23 @@
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+root=Path.cwd(); qa=root/'docs/development/technical-review/golf-capstone-review'
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert head=='d3f63d6fb4d3b68d390afdfa99d370c823233ec9'
+assert (qa/'full-tests-typed.exit').read_text().strip()=='0'
+assert (qa/'full-tests-typed-before.txt').stat().st_size==0
+assert (qa/'full-tests-typed-after.txt').stat().st_size==0
+log=(qa/'full-tests-typed.txt').read_text(encoding='utf-8')
+assert '7072 passed, 29 skipped, 210 deselected, 60 warnings' in log
+assert 'Total coverage: 93.25%' in log
+path=root/'reports/technical-review/golf-capstone-validation.json'
+record=json.loads(path.read_text())
+record['prior_accepted_source_commit']=record['accepted_source_commit']
+record['accepted_source_commit']=head
+record['git_blob_sha256']={p:hashlib.sha256(subprocess.check_output(['git','show',f'{head}:{p}'])).hexdigest() for p in record['git_blob_sha256']}
+record['full_regression'].update(head=head,seconds=444.75,log=(qa/'full-tests-typed.txt').relative_to(root).as_posix())
+record['pdf'].update(visual_scope='Physical pages 3-5 and 39-49 inspected; final type-only pass 9 pages 42-47 reinspected',build_log=(qa/'accepted-pass9.txt').relative_to(root).as_posix())
+record['type_check']='Canonical MYPYPATH is repository root for src.affine_control imports; two vectorize Any returns annotated with typing.cast; no runtime-value change; all five pre-PR gates pass'
+path.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')

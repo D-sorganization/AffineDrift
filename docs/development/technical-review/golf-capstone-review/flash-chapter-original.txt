@@ -1,0 +1,195 @@
+# Technical Audit & Adjudication: Capstone Golf Swing Analysis Pipeline
+
+**Target Document:** `\chapter{Capstone: The Golf Swing Analysis Pipeline}` (`\label{ch:golf-capstone}`)  
+**Scope:** Rigorous examination of mathematical claims, mechanical definitions, empirical assertions, control-theoretic decompositions (ZTCF), and code contracts.
+
+---
+
+## 1. Executive Summary & Adjudication
+
+The capstone chapter successfully identifies and fixes a classical kinematic bug (scalar vs. vector summation for tip speed). However, it introduces **critical physical and control-theoretic equivocations** regarding Zero-Torque Counterfactual (ZTCF) decomposition, acceleration representations, and centrifugal mechanics:
+
+1. **Equivocation between instantaneous acceleration and trajectory counterfactuals:**  
+   The text states:
+   > *"Because the dynamics are control-affine, the difference between the torqued and zero-torque solutions is exactly $M^{-1}\tau$, so the split is exact rather than approximate."*
+   
+   **Adjudication: Fatal Category Mistake.** This identity holds strictly for **instantaneous same-state joint acceleration** $\ddot{\bm{q}}(t)$. It **does not** hold for velocity $\dot{\bm{q}}(t)$, Cartesian clubhead velocity $\bm{v}_{\text{tip}}(t)$, or integrated state trajectories $\bm{x}(t)$ because forward integration introduces non-linear coupling through Coriolis/centripetal terms $C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$ and state-dependent mass matrices $M(\bm{q})$.
+2. **Equivocation between joint acceleration and Cartesian clubhead acceleration:**  
+   The Cartesian acceleration satisfies $\bm{a}_{\text{tip}} = J(\bm{q})\ddot{\bm{q}} + \dot{J}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$. Projecting $M^{-1}\tau$ through $J(\bm{q})$ ignores the $\dot{J}\dot{\bm{q}}$ convective acceleration and does not yield an additive linear split of velocity magnitude.
+3. **Flawed mechanical claim on vanishing drift:**  
+   The text asserts:
+   > *"...at a fully extended vertical configuration both the gravity and Coriolis torques vanish exactly..."*
+   
+   **Adjudication: Mathematically False.** While Coriolis torques $\dot{q}_j \dot{q}_k$ vanish if relative velocities are zero, centripetal torques $\propto \dot{q}_i^2$ do **not** vanish when the chain is rotating through the vertical.
+
+---
+
+## 2. Granular Mathematical & Empirical Derivations
+
+### 2.1 Instantaneous Acceleration vs. Trajectory Counterfactual (ZTCF)
+
+#### A. Standard Manipulator Dynamics
+Consider an $n$-DOF planar kinematic chain representing torso, arm, and club:
+$$M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$$
+
+At any given instantaneous state $(\bm{q}, \dot{\bm{q}})$, the system is control-affine with respect to generalized torques $\bm{\tau}$:
+$$\ddot{\bm{q}}(\bm{\tau}) = M(\bm{q})^{-1}\big(\bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})\big)$$
+
+Define the **drift joint acceleration** (zero active torque, $\bm{\tau} = \bm{0}$):
+$$\ddot{\bm{q}}_{\text{drift}} \triangleq -M(\bm{q})^{-1}\big(C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q})\big)$$
+
+Define the **control joint acceleration**:
+$$\ddot{\bm{q}}_{\text{ctrl}} \triangleq M(\bm{q})^{-1}\bm{\tau}$$
+
+Because of affine linearity in $\bm{\tau}$ **at the same state $(\bm{q}, \dot{\bm{q}})$**:
+$$\ddot{\bm{q}}(\bm{\tau}) - \ddot{\bm{q}}_{\text{drift}} = \ddot{\bm{q}}_{\text{ctrl}} = M(\bm{q})^{-1}\bm{\tau} \quad \text{(Exact at the acceleration level)}$$
+
+#### B. The Trajectory Counterfactual Breakdown
+The text claims a $60/40$ split of **clubhead speed** $\lVert\bm{v}_{\text{tip}}\rVert$, asserting the split is "exact rather than approximate" by solving forward dynamics twice.
+
+Let trajectory $\bm{x}_{\text{act}}(t) = (\bm{q}(t), \dot{\bm{q}}(t))$ be generated under $\bm{\tau}(t)$.  
+Let counterfactual trajectory $\bm{x}_{\text{cf}}(t) = (\bm{q}_{\text{cf}}(t), \dot{\bm{q}}_{\text{cf}}(t))$ satisfy:
+$$M(\bm{q}_{\text{cf}})\ddot{\bm{q}}_{\text{cf}} + C(\bm{q}_{\text{cf}}, \dot{\bm{q}}_{\text{cf}})\dot{\bm{q}}_{\text{cf}} + \bm{g}(\bm{q}_{\text{cf}}) = \bm{0}, \quad \bm{x}_{\text{cf}}(0) = \bm{x}_{\text{act}}(0)$$
+
+Integrating $\ddot{\bm{q}}_{\text{act}}(t) - \ddot{\bm{q}}_{\text{cf}}(t)$:
+$$\dot{\bm{q}}_{\text{act}}(t) - \dot{\bm{q}}_{\text{cf}}(t) = \int_0^t \Big( M(\bm{q}_{\text{act}})^{-1}\bm{\tau} - \big[\ddot{\bm{q}}_{\text{drift}}(\bm{x}_{\text{act}}) - \ddot{\bm{q}}_{\text{drift}}(\bm{x}_{\text{cf}})\big] \Big) \, \mathrm{d}s$$
+
+Because $\bm{x}_{\text{cf}}(t) \ne \bm{x}_{\text{act}}(t)$ for $t > 0$, the drift terms evaluate along diverging phase-space paths:
+$$M(\bm{q}_{\text{act}}(t))^{-1} \ne M(\bm{q}_{\text{cf}}(t))^{-1} \quad \text{and} \quad C(\bm{x}_{\text{act}})\dot{\bm{q}}_{\text{act}} \ne C(\bm{x}_{\text{cf}})\dot{\bm{q}}_{\text{cf}}$$
+
+Thus:
+$$\dot{\bm{q}}_{\text{act}}(t) \ne \dot{\bm{q}}_{\text{cf}}(t) + \int_0^t M(\bm{q}_{\text{act}}(s))^{-1}\bm{\tau}(s)\,\mathrm{d}s$$
+
+**Conclusion:** The counterfactual drift velocity $\dot{\bm{q}}_{\text{cf}}(t)$ and the actual velocity $\dot{\bm{q}}_{\text{act}}(t)$ cannot be decomposed into linearly superposable components over non-zero time horizons. Confusing instantaneous acceleration additivity with velocity or trajectory decomposition is a fundamental theoretical error.
+
+---
+
+### 2.2 Cartesian Acceleration and Magnitude Ratios
+
+The tip position and velocity are:
+$$\bm{p}_{\text{tip}} = \bm{f}(\bm{q}), \qquad \bm{v}_{\text{tip}} = J(\bm{q})\dot{\bm{q}}$$
+
+The tip Cartesian acceleration is:
+$$\bm{a}_{\text{tip}} = J(\bm{q})\ddot{\bm{q}} + \dot{J}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$$
+
+Substitute same-state acceleration:
+$$\bm{a}_{\text{tip}} = \underbrace{J(\bm{q})\ddot{\bm{q}}_{\text{drift}} + \dot{J}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}}_{\bm{a}_{\text{tip, drift}}} + \underbrace{J(\bm{q})M(\bm{q})^{-1}\bm{\tau}}_{\bm{a}_{\text{tip, ctrl}}}$$
+
+Even at the same state $(\bm{q}, \dot{\bm{q}})$, Cartesian vector acceleration split $\bm{a}_{\text{tip}} = \bm{a}_{\text{tip, drift}} + \bm{a}_{\text{tip, ctrl}}$ does **not** yield an additive split of scalar speed:
+$$\frac{\mathrm{d}}{\mathrm{d}t} \lVert \bm{v}_{\text{tip}} \rVert = \frac{\bm{v}_{\text{tip}} \cdot \bm{a}_{\text{tip}}}{\lVert \bm{v}_{\text{tip}} \rVert} = \frac{\bm{v}_{\text{tip}} \cdot \bm{a}_{\text{tip, drift}}}{\lVert \bm{v}_{\text{tip}} \rVert} + \frac{\bm{v}_{\text{tip}} \cdot \bm{a}_{\text{tip, ctrl}}}{\lVert \bm{v}_{\text{tip}} \rVert}$$
+While tangential acceleration decomposes additively, scalar magnitude $\lVert\bm{a}_{\text{tip}}\rVert \ne \lVert\bm{a}_{\text{tip, drift}}\rVert + \lVert\bm{a}_{\text{tip, ctrl}}\rVert$ due to triangular inequality:
+$$\lVert\bm{a}_{\text{tip, drift}} + \bm{a}_{\text{tip, ctrl}}\rVert \le \lVert\bm{a}_{\text{tip, drift}}\rVert + \lVert\bm{a}_{\text{tip, ctrl}}\rVert$$
+Reporting a percentage ratio based on scalar Euclidean norms (e.g., $\lVert\bm{a}_{\text{drift}}\rVert / (\lVert\bm{a}_{\text{drift}}\rVert + \lVert\bm{a}_{\text{ctrl}}\rVert)$) distorts the directional opposition between drift and control.
+
+---
+
+### 2.3 Vanishing of Coriolis/Centripetal & Gravity at Straight Configurations
+
+The text states:
+> *"...the drift term legitimately passes through zero whenever the chain straightens --- at a fully extended vertical configuration both the gravity and Coriolis torques vanish exactly..."*
+
+#### Mathematical Audit:
+1. **Gravity Torques $\bm{g}(\bm{q})$:**  
+   If the chain is fully extended along the vertical gravity vector $\bm{g} = [0, -g]^T$, the moment arms of all link centers of mass are zero:
+   $$\tau_{g, i} = \sum_{j=i}^n m_j g \, r_{c, j} \sin(\theta_j) = 0 \quad (\text{since } \theta_j = -\pi/2 \text{ or } \pi/2)$$
+   This holds for gravity.
+2. **Velocity-Dependent Torques $C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$:**  
+   The generalized Christoffel symbols of the first kind are:
+   $$c_{ijk} = \frac{1}{2} \left( \frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i} \right)$$
+   For a planar open chain, the inertia matrix entries depend only on relative joint angles $q_2, \dots, q_n$, independent of the base angle $q_1$:
+   $$M_{jk} = I_{jk} + \sum \mu_l \cos(q_{\text{rel}})$$
+   When the chain straightens, $q_{\text{rel}} = 0 \implies \sin(q_{\text{rel}}) = 0 \implies \frac{\partial M_{jk}}{\partial q_i} = 0$.  
+   Consequently, all $c_{ijk} = 0$, meaning **Coriolis and centripetal joint torques in relative coordinates vanish**.
+3. **Caveat on Cartesian vs. Joint Drift:**  
+   While joint Coriolis/centripetal generalized torques vanish at $\bm{q}_{\text{rel}} = \bm{0}$, the Cartesian convective acceleration of the clubhead:
+   $$\dot{J}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} = -\omega^2 \bm{r}_{\text{tip}} \ne \bm{0}$$
+   is the **centripetal acceleration** of the tip. At $30\text{ m/s}$ on a $1.5\text{ m}$ radius, $\lVert\dot{J}\dot{\bm{q}}\rVert = v^2/r \approx 600\text{ m/s}^2$ ($>60\text{ g}$). Stating that the drift term "passes through zero" conflates joint generalized torques with endpoint drift acceleration.
+
+---
+
+## 3. Code Contract & Pipeline Analysis
+
+### 3.1 Kinematics Fix Verification
+The text notes:
+$$\bm{v}_{\text{scalar}} = \sum_{i=1}^n \dot{q}_i r_i \qquad \text{vs.} \qquad \bm{v}_{\text{tip}} = J(\bm{q})\dot{\bm{q}}$$
+For a 2-segment arm with $L_1 = 1.0$, $L_2 = 0.5$, $\dot{q}_1 = 10\text{ rad/s}$, $\dot{q}_2 = 10\text{ rad/s}$:
+- Scalar sum: $v = 10(1.0) + (10+10)(0.5) = 20\text{ m/s}$ (or $10(1.0) + 10(0.5) = 15\text{ m/s}$ depending on whether absolute or relative rates were summed).
+- When folded at $q_2 = 120^\circ$, vector cancellation reduces the tip speed significantly ($13.3\text{ m/s}$ vs. $22.5\text{ m/s}$ as cited).
+- **Adjudication:** The diagnosis of the scalar summation bug is mathematically exact and a solid pedagogical contrast.
+
+### 3.2 Numerical Differentiation Issues
+The text notes:
+> *"The endpoints carry one-sided \texttt{np.gradient} estimates of the joint rates..."*
+- Using `np.gradient` on synthetic or measured trajectory data introduces boundary truncation errors $\mathcal{O}(h)$ vs. $\mathcal{O}(h^2)$ interior central differences.
+- If $\bm{\tau}$ is computed via inverse dynamics from noisy $\dot{\bm{q}}, \ddot{\bm{q}}$, inverse dynamics produces artifactual torque spikes at boundaries.
+
+---
+
+## 4. Minimal Needed Corrections (Adjudication Matrix)
+
+| Section / Claim | Flaw Identified | Severity | Required Editorial & Technical Correction |
+| :--- | :--- | :--- | :--- |
+| **Warning Box: ZTCF Exactness** | Claims $M^{-1}\tau$ makes speed split "exact rather than approximate" | **Critical** | Clarify that instantaneous *joint acceleration* $\ddot{\bm{q}}$ has an exact affine split $\ddot{\bm{q}}_{\text{ctrl}} = M^{-1}\tau$, but integrated *velocity* and *counterfactual trajectory* do **not** superpose due to nonlinear trajectory divergence. |
+| **ZTCF Metric Definition** | Undefined whether decomposition is acceleration, velocity, or counterfactual | **Major** | Explicitly define the metric: (a) Same-state acceleration decomposition $\ddot{\bm{q}}_{\text{drift}}$ vs. $\ddot{\bm{q}}_{\text{ctrl}}$, or (b) Counterfactual trajectory integration $\int \ddot{\bm{q}}_{\text{cf}} \mathrm{d}t$. Do not mix the two. |
+| **Drift Vanishing Remark** | Claims Coriolis/drift vanishes when chain straightens | **Moderate** | Specify that *relative joint torque interactions* vanish at $q_{\text{rel}}=0$, but Cartesian centripetal acceleration $\dot{J}\dot{\bm{q}} = -\omega^2\bm{r}$ is at its maximum at peak angular velocity. |
+| **Figure \ref{fig:golf-arch} Flow** | Shows `motion -> inverse -> forward` cycle without clear distinction | **Minor** | Clarify whether forward dynamics is running in open-loop from inverse-dynamics torques or as a simulation verification loop. |
+
+---
+
+## 5. Bounded Regression Tests (Executable Contracts)
+
+To enforce these distinctions in `src/affine_control/swing_analysis.py` and prevent regression, the following bounded tests should be specified:
+
+### Test 1: Vector vs. Scalar Kinematics Invariant
+```python
+def test_clubhead_speed_geometry_dependence():
+    """Verify tip speed differs between straight and folded chains at identical joint rates."""
+    rates = np.array([5.0, 10.0, 15.0])
+    q_straight = np.array([0.0, 0.0, 0.0])
+    q_folded = np.array([0.0, np.pi / 2, -np.pi / 3])
+
+    v_straight = compute_clubhead_speed(q_straight, rates)
+    v_folded = compute_clubhead_speed(q_folded, rates)
+
+    assert v_straight > v_folded
+    assert not np.isclose(v_straight, v_folded, rtol=1e-2)
+```
+
+### Test 2: Instantaneous Acceleration Additivity (Same-State)
+```python
+def test_instantaneous_joint_acceleration_affine_split():
+    """Verify M(q)^{-1} * tau exactly equals qddot(tau) - qddot(0) at identical (q, qdot)."""
+    q = np.array([0.2, 0.5, -0.3])
+    qdot = np.array([1.0, -2.0, 4.0])
+    tau = np.array([20.0, -10.0, 5.0])
+
+    qddot_full = forward_dynamics(q, qdot, tau)
+    qddot_drift = forward_dynamics(q, qdot, np.zeros_like(tau))
+    M_inv_tau = solve_mass_matrix(q, tau)
+
+    np.testing.assert_allclose(qddot_full - qddot_drift, M_inv_tau, atol=1e-12)
+```
+
+### Test 3: Trajectory Counterfactual Non-Superposition
+```python
+def test_trajectory_counterfactual_non_additivity():
+    """Assert integrated counterfactual velocity does NOT linearly add to control integral."""
+    t_span = (0.0, 0.2)
+    x0 = np.array([0.0, 0.1, 0.0, 0.5, 1.0, 2.0])  # [q, qdot]
+    tau_profile = lambda t: np.array([30.0, 15.0, 5.0])
+
+    t_eval, x_act = simulate_swing(x0, tau_profile, t_span)
+    _, x_drift = simulate_swing(x0, lambda t: np.zeros(3), t_span)
+
+    # Difference in velocity at final step
+    delta_v_actual = x_act[-1, 3:] - x_drift[-1, 3:]
+
+    # Linear control integral assuming fixed state path: \int M(q_act)^{-1} tau dt
+    linear_control_int = integrate_control_acceleration(x_act, tau_profile, t_eval)
+
+    # Non-linear coupling MUST cause divergence over finite horizon
+    discrepancy = np.linalg.norm(delta_v_actual - linear_control_int)
+    assert discrepancy > 1e-3, (
+        "Finite trajectory integration must exhibit nonlinear Coriolis/inertia divergence."
+    )
+```

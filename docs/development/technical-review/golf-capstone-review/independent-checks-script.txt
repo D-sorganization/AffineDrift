@@ -1,0 +1,46 @@
+import json
+from pathlib import Path
+import numpy as np
+from src.affine_control.swing_analysis import SwingAnalysis, synthetic_swing
+
+rng=np.random.default_rng(4921)
+model=SwingAnalysis().model()
+lengths=np.array(model.lengths)
+errors={name:0.0 for name in ['tip_velocity_derivative','tip_acceleration_derivative','same_state_vector_split','mechanical_power_balance','synthetic_time_scaling','nonlinear_counterfactual_derivative']}
+for _ in range(100):
+ q=rng.uniform(-2,2,3);v=rng.uniform(-3,3,3);a=rng.uniform(-2,2,3);tau=rng.uniform(-10,10,3)
+ def position(angle):
+  theta=np.cumsum(angle)
+  return np.array([lengths@np.cos(theta),lengths@np.sin(theta)])
+ def velocity(angle,rate):
+  theta=np.cumsum(angle);omega=np.cumsum(rate)
+  return np.array([-(lengths*omega)@np.sin(theta),(lengths*omega)@np.cos(theta)])
+ step=1e-5
+ fd=(position(q+step*v)-position(q-step*v))/(2*step)
+ errors['tip_velocity_derivative']=max(errors['tip_velocity_derivative'],abs(np.linalg.norm(fd)-model.clubhead_speed(q,v)))
+ theta=np.cumsum(q);omega=np.cumsum(v);alpha=np.cumsum(a)
+ cart=np.array([lengths@(-np.sin(theta)*alpha-np.cos(theta)*omega**2),lengths@(np.cos(theta)*alpha-np.sin(theta)*omega**2)])
+ fd=(velocity(q+step*v+0.5*step**2*a,v+step*a)-velocity(q-step*v+0.5*step**2*a,v-step*a))/(2*step)
+ errors['tip_acceleration_derivative']=max(errors['tip_acceleration_derivative'],float(np.max(np.abs(fd-cart))))
+ mass=model.rigid_mass_matrix(q);bias=model.coriolis(q,v)@v+model.gravity_torque(q)
+ analysis=SwingAnalysis(time=np.array([0.]),joint_angles=q[None],joint_velocities=v[None],joint_torques=tau[None])
+ drift,control=analysis.joint_acceleration_components()
+ total=np.linalg.solve(mass,tau-bias)
+ errors['same_state_vector_split']=max(errors['same_state_vector_split'],float(np.max(np.abs(drift[0]+control[0]-total))))
+ def energy(angle,rate): return 0.5*rate@model.rigid_mass_matrix(angle)@rate+model.potential_energy(angle)
+ torque=mass@a+bias
+ derivative=(energy(q+step*v,v+step*a)-energy(q-step*v,v-step*a))/(2*step)
+ errors['mechanical_power_balance']=max(errors['mechanical_power_balance'],abs(derivative-v@torque))
+ duration=rng.uniform(.2,.8);scale=rng.uniform(1.2,2.0)
+ first=synthetic_swing(duration,duration/4);second=synthetic_swing(scale*duration,scale*duration/4)
+ errors['synthetic_time_scaling']=max(errors['synthetic_time_scaling'],float(np.max(np.abs(first.joint_velocities/scale-second.joint_velocities))))
+ # xdot=x^2+u, x(0)=0: driven x=tan(t), unforced x=0.
+ time=rng.uniform(.05,.6)
+ derivative=(np.tan(time+step)-np.tan(time-step))/(2*step)
+ errors['nonlinear_counterfactual_derivative']=max(errors['nonlinear_counterfactual_derivative'],abs(derivative-(1+np.tan(time)**2)))
+ assert np.tan(time)>time
+threshold=1e-5
+assert max(errors.values())<threshold,errors
+record={'issue':4921,'seed':4921,'cases_each':100,'maximum_absolute_errors':errors,'threshold':threshold,'scope':'Manufactured mathematics and model identity checks, not human golf or forward-trajectory validation'}
+Path('reports/technical-review/golf-capstone-independent-checks.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+print(json.dumps(record,indent=2))

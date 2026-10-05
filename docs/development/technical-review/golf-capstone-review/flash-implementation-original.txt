@@ -1,0 +1,276 @@
+# Technical Audit: Volume V Capstone Golf Swing Analysis Pipeline
+
+## 1. Executive Summary & Adjudication
+
+The audited pipeline in [`SwingAnalysis`](file:///src/affine_control/golf_model.py) replaces the broken textbook listing with syntactically functional kinematics and control-affine dynamic computations. However, a deep mathematical, empirical, and contract audit reveals **four foundational conflations** and **two numerical/contractual defects**:
+
+1. **Conflation of Cartesian Tip Acceleration with Joint Acceleration**: The docstring promises to *"Split clubhead acceleration into drift and control contributions"*, but the implementation computes norms of joint-space accelerations $\|\ddot{q}_{\text{drift}}\|_2$ and $\|\ddot{q}_{\text{ctrl}}\|_2$. These quantities do not live in task/Cartesian space and do not represent clubhead acceleration.
+2. **Magnitude Ratio Fallacy (Triangle Inequality Breakdown)**: In `summary()`, the code computes the percentage share as $\frac{\|\ddot{q}_{\text{drift}}\|}{\|\ddot{q}_{\text{drift}}\| + \|\ddot{q}_{\text{ctrl}}\|}$. Because vectors add linearly while Euclidean norms obey only the triangle inequality ($\|\ddot{q}\| \le \|\ddot{q}_{\text{drift}}\| + \|\ddot{q}_{\text{ctrl}}\|$), the sum of norms is strictly larger than the norm of total acceleration when drift and control are non-collinear or antagonistic. Thus, the computed shares do not partition the actual total acceleration magnitude.
+3. **Same-State Dynamic Decomposition vs. Trajectory Counterfactual (ZTCF)**: The name `ztcf_decomposition` invokes *Zero-Torque Counterfactual* (ZTCF). Evaluating $M(q(t))^{-1}(-b(q(t), \dot{q}(t)))$ at the *actual* trajectory state $(q(t), \dot{q}(t))$ yields the instantaneous **same-state acceleration decomposition**. A true trajectory counterfactual requires forward time-integration $\int_0^T$ of the passive unforced system $\ddot{q}_0 = M(q_0)^{-1}(-b(q_0, \dot{q}_0))$ from $t=0$, which traces an entirely different manifold in state space.
+4. **Consistency & Dynamically Incompatible Synthetic Torques**: In `synthetic_swing`, joint angles $q(t)$ are prescribed kinematically, $\dot{q}(t)$ is obtained via finite difference `np.gradient`, and torques $\tau(t)$ are prescribed via an arbitrary synthetic polynomial/sinusoid profile. The state trajectory and torque trajectory violate the Euler-Lagrange equations: $\tau(t) \neq M(q)\ddot{q} + C(q, \dot{q})\dot{q} + g(q)$.
+5. **Physical Assumption Mismatch in `_rod_inertia`**: `_rod_inertia` computes the central moment of inertia ($I_{\text{cm}} = \frac{1}{12} m \ell^2$) for all links, including the golf club. A golf club is a shaft with a concentrated peripheral head mass (typically ~200 g head at distal tip of a ~100 g shaft), where $I_{\text{cm}} \approx 0.15$ to $0.20\, m \ell^2$ about its center of mass, and the center of mass is at $\sim 0.70$–$0.75\,\ell$, not $0.5\,\ell$.
+6. **Corner Case Zero-Division**: In `summary()`, if $drift + control = 0$ (e.g., at stationary rest $q=0, \dot{q}=0, \tau=0$ in the absence of gravity or along zero-torque zero-bias manifolds), `total` has zero elements, producing `NaN`s in `100.0 * drift / total`.
+
+Below is the complete line-by-line derivation, contract audit, and bounded regression test suite.
+
+---
+
+## 2. Rigorous Mathematical Audit & Derivations
+
+### 2.1 Forward Dynamics: Control-Affine Same-State Acceleration Decomposition
+The equations of motion for the planar manipulator are:
+$$M(q)\ddot{q} + C(q, \dot{q})\dot{q} + g(q) = \tau$$
+
+Where $M(q) \succ 0$ is symmetric positive definite. Letting $b(q, \dot{q}) = C(q, \dot{q})\dot{q} + g(q)$, the instantaneous joint acceleration at state $(q, \dot{q})$ under torque $\tau$ is:
+$$\ddot{q}(q, \dot{q}, \tau) = M(q)^{-1}\left(\tau - b(q, \dot{q})\right)$$
+
+Because the control input $\tau$ appears linearly, the mapping $\tau \mapsto \ddot{q}$ is strictly affine:
+$$\ddot{q} = \ddot{q}_{\text{drift}} + \ddot{q}_{\text{ctrl}}$$
+where:
+$$\ddot{q}_{\text{drift}}(q, \dot{q}) \triangleq -M(q)^{-1}b(q, \dot{q})$$
+$$\ddot{q}_{\text{ctrl}}(q, \tau) \triangleq M(q)^{-1}\tau$$
+
+**Auditing the Implementation**:
+In `ztcf_decomposition`:
+```python
+drift_accel = np.linalg.solve(mass, -bias)
+control_accel = np.linalg.solve(mass, tau)
+```
+This correctly solves the linear system for the **instantaneous joint acceleration components** at the given sample point.
+
+### 2.2 Conflation 1: Joint Acceleration vs. Cartesian Clubhead Acceleration
+The docstring states:
+> *"Split clubhead acceleration into drift and control contributions... Returns the joint-space acceleration magnitudes (drift, control)."*
+
+The tip position in Cartesian coordinates is $x_{\text{tip}} = f(q) \in \mathbb{R}^2$.
+Differentiating with respect to time:
+$$v_{\text{tip}} = J(q)\dot{q}, \quad \text{where } J(q) = \frac{\partial f}{\partial q}$$
+Differentiating again yields the true Cartesian acceleration of the clubhead:
+$$a_{\text{tip}} = \dot{v}_{\text{tip}} = J(q)\ddot{q} + \dot{J}(q, \dot{q})\dot{q}$$
+
+Substituting the control-affine split $\ddot{q} = \ddot{q}_{\text{drift}} + \ddot{q}_{\text{ctrl}}$:
+$$a_{\text{tip}} = \underbrace{\left[J(q)\ddot{q}_{\text{drift}} + \dot{J}(q, \dot{q})\dot{q}\right]}_{a_{\text{tip, drift}}} + \underbrace{J(q)\ddot{q}_{\text{ctrl}}}_{a_{\text{tip, ctrl}}}$$
+
+Notice two critical mathematical discrepancies:
+1. $a_{\text{tip, ctrl}} = J(q) M(q)^{-1} \tau \neq \ddot{q}_{\text{ctrl}}$. The Jacobian converts joint coordinate acceleration into spatial tip acceleration.
+2. The drift term in Cartesian space contains the kinematic convective acceleration $\dot{J}(q, \dot{q})\dot{q}$ (centripetal and tangential accelerations due to frame rotations). Joint-space acceleration norm $\|\ddot{q}_{\text{drift}}\|_2$ completely neglects $\dot{J}\dot{q}$ and the lever arms of $J(q)$.
+3. Joint-space coordinate norms $\|\ddot{q}\|_2 = \sqrt{\sum \ddot{q}_i^2}$ are physically inhomogeneous if the links do not have unit dimension and angle units are mixed with geometric linkages. In Cartesian space, $\|a_{\text{tip}}\|_2$ has consistent physical units ($\text{m/s}^2$).
+
+### 2.3 Conflation 2: Magnitude Ratios & Triangle Inequality Distortion
+In `summary()`, the contribution share is calculated as:
+$$\text{share} = \frac{\|\ddot{q}_{\text{drift}}\|_2}{\|\ddot{q}_{\text{drift}}\|_2 + \|\ddot{q}_{\text{ctrl}}\|_2}$$
+
+Let us analyze this ratio. By the Cauchy-Schwarz and Minkowski triangle inequalities:
+$$\|\ddot{q}_{\text{total}}\|_2 = \|\ddot{q}_{\text{drift}} + \ddot{q}_{\text{ctrl}}\|_2 \le \|\ddot{q}_{\text{drift}}\|_2 + \|\ddot{q}_{\text{ctrl}}\|_2$$
+
+Equality holds **if and only if** $\ddot{q}_{\text{drift}}$ and $\ddot{q}_{\text{ctrl}}$ are non-negative scalar multiples of each other ($\ddot{q}_{\text{ctrl}} = c \ddot{q}_{\text{drift}}$ with $c \ge 0$).
+In a swing:
+- The golfer applies positive torque to accelerate the shoulder/wrist while Coriolis and centripetal terms oppose or transfer energy across links; drift and control vectors are frequently orthogonal or antagonistic ($\langle \ddot{q}_{\text{drift}}, \ddot{q}_{\text{ctrl}} \rangle < 0$).
+- When $\ddot{q}_{\text{ctrl}} = -\ddot{q}_{\text{drift}} \neq 0$, the net acceleration is zero ($\|\ddot{q}_{\text{total}}\| = 0$). Yet the code computes:
+  $$\text{share} = \frac{\|\ddot{q}_{\text{drift}}\|}{\|\ddot{q}_{\text{drift}}\| + \|\ddot{q}_{\text{drift}}\|} = 50\% \text{ drift}, \quad 50\% \text{ control}$$
+  Reporting that a system undergoing zero acceleration is driven 50% by drift and 50% by control is a severe interpretative artifact of scalarizing magnitudes before ratioing.
+
+**Rigorous Task-Space Projection**:
+To decompose the rate of change of clubhead speed $v_{\text{tip}} = \|v_{\text{tip}}\|_2$:
+$$\frac{d}{dt} v_{\text{tip}} = \frac{v_{\text{tip}} \cdot a_{\text{tip}}}{\|v_{\text{tip}}\|} = \hat{t} \cdot a_{\text{tip}} = \hat{t} \cdot a_{\text{tip, drift}} + \hat{t} \cdot a_{\text{tip, ctrl}}$$
+where $\hat{t} = \frac{v_{\text{tip}}}{\|v_{\text{tip}}\|}$ is the unit tangent along the tip velocity.
+Because $\hat{t} \cdot a_{\text{tip}}$ is scalar and strictly linear:
+$$\dot{v}_{\text{tip}} = \dot{v}_{\text{drift}} + \dot{v}_{\text{ctrl}}$$
+Here the sum of contributions is **identically equal** to the actual scalar tangential acceleration $\dot{v}_{\text{tip}}$, without any triangle inequality breakdown.
+
+### 2.4 Conflation 3: Same-State Acceleration vs. Trajectory Counterfactual (ZTCF)
+The function name `ztcf_decomposition` stands for *Zero-Torque Counterfactual*.
+There are two fundamentally different concepts in analytical biomechanics and nonlinear control:
+
+1. **Instantaneous / Same-State Acceleration Decomposition**:
+   Given a state $x(t) = (q(t), \dot{q}(t))$, evaluate:
+   $$\ddot{q}_{\text{drift}}(t) = -M(q(t))^{-1}b(q(t), \dot{q}(t))$$
+   $$\ddot{q}_{\text{ctrl}}(t) = M(q(t))^{-1}\tau(t)$$
+   This is what the code implements. It asks: *"At this exact frozen state, how much of the instantaneous acceleration vector originates from Coriolis/gravity vs. torque?"*
+
+2. **Trajectory Counterfactual (True ZTCF)**:
+   Given an initial release condition $(q(t_0), \dot{q}(t_0))$ (e.g. at the top of the backswing or at the uncocking phase), set $\tau(\sigma) \equiv 0$ for all $\sigma \in [t_0, T]$ and integrate the differential equation:
+   $$\ddot{q}_{\text{cf}}(\sigma) = -M(q_{\text{cf}}(\sigma))^{-1} b(q_{\text{cf}}(\sigma), \dot{q}_{\text{cf}}(\sigma))$$
+   with initial condition $(q_{\text{cf}}(t_0), \dot{q}_{\text{cf}}(t_0)) = (q(t_0), \dot{q}(t_0))$.
+   Then evaluate the counterfactual clubhead speed $v_{\text{cf}}(T)$ and compare it against the driven clubhead speed $v_{\text{actual}}(T)$.
+
+Calling same-state joint acceleration decomposition `ztcf_decomposition` without qualification is a naming misnomer that misleads readers into believing a counterfactual trajectory was integrated.
+
+---
+
+## 3. Detailed Audit of Empirical Claims & Physics Assumptions
+
+### 3.1 Inertia Model for the Golf Club
+In `_rod_inertia(mass, length)`:
+```python
+def _rod_inertia(mass: float, length: float) -> float:
+    return mass * length**2 / 12.0
+```
+- **Upper arm (shoulder to elbow)**: $\ell_1 = 0.28\text{ m}, m_1 = 2.16\text{ kg}$. Modeling as a uniform cylinder is a reasonable 1st-order approximation ($I_{\text{cm}} \approx \frac{1}{12} m \ell^2 = 0.0141\text{ kg}\cdot\text{m}^2$).
+- **Forearm (elbow to wrist)**: $\ell_2 = 0.46\text{ m}, m_2 = 1.79\text{ kg}$. Uniform rod yields $I_{\text{cm}} \approx 0.0316\text{ kg}\cdot\text{m}^2$.
+- **Golf Club**: $\ell_3 = 1.10\text{ m}, m_3 = 0.30\text{ kg}$.
+  - Under `_rod_inertia`:
+    $$I_{\text{cm, rod}} = \frac{0.30 \times 1.10^2}{12} = 0.03025\text{ kg}\cdot\text{m}^2$$
+    Center of mass is assumed at $\ell_3 / 2 = 0.55\text{ m}$.
+  - In reality, a modern driver has:
+    - Shaft: $m_{\text{shaft}} \approx 0.065\text{ kg}$, grip $\approx 0.050\text{ kg}$
+    - Head: $m_{\text{head}} \approx 0.200\text{ kg}$ positioned at $\ell_3 = 1.10\text{ m}$
+    - Actual CM: $r_{\text{cm}} \approx \frac{0.065 \times 0.55 + 0.200 \times 1.10}{0.30} \approx 0.85\text{ m}$ (77% of shaft length).
+    - Actual inertia about CM: $I_{\text{cm}} \approx m_{\text{head}} (1.10 - 0.85)^2 + \frac{m_{\text{shaft}}}{12} (1.10)^2 + m_{\text{shaft}}(0.85 - 0.55)^2 \approx 0.0125 + 0.0065 + 0.0058 \approx 0.025\text{ kg}\cdot\text{m}^2$.
+    - More critically, the distance from wrist joint to CM is $0.85\text{ m}$, not $0.55\text{ m}$. Parallel axis theorem inertia about the wrist joint:
+      $$I_{\text{wrist, actual}} \approx I_{\text{cm}} + m r_{\text{cm}}^2 \approx 0.025 + 0.30(0.85)^2 \approx 0.242\text{ kg}\cdot\text{m}^2$$
+      whereas `_rod_inertia` + $m (\ell/2)^2$ yields:
+      $$I_{\text{wrist, uniform}} = \frac{1}{3} m \ell^2 = \frac{0.30 \times 1.10^2}{3} = 0.121\text{ kg}\cdot\text{m}^2$$
+  - **Empirical impact**: The uniform rod model underestimates the effective moment of inertia of the club about the wrist joint by a factor of $\approx 2.0$. The wrist release dynamics will accelerate twice as fast for a given wrist torque compared to an actual golf club.
+
+### 3.2 Inconsistency in `synthetic_swing`
+In `synthetic_swing()`:
+```python
+angles = np.column_stack(...)
+rates = np.gradient(angles, dt, axis=0)
+torques = np.column_stack(...)
+```
+1. `rates` is computed from `angles` with 2nd-order central differences (`np.gradient`), but $\ddot{q}$ is never computed.
+2. `torques` is specified completely independently of $\ddot{q}$.
+3. When `ztcf_decomposition` is evaluated on this synthetic swing:
+   $$\ddot{q}_{\text{drift}} + \ddot{q}_{\text{ctrl}} = M(q)^{-1}(\tau - b(q, \dot{q}))$$
+   This resulting acceleration $\ddot{q}_{\text{total}}$ is **not** equal to $\frac{d}{dt}\dot{q} = \frac{d^2}{dt^2}q$.
+   Thus, the trajectory is dynamic fiction: the motion $(q, \dot{q})$ does not satisfy Newton-Euler equations under the torques $\tau$. While the docstring acknowledges *"These are not measured data"*, users analyzing the decomposition will observe drift/control numbers that would never produce the motion observed.
+
+---
+
+## 4. Code Contract & Edge Cases
+
+| Method / Symbol | Contract Violation / Edge Case | Consequence |
+| :--- | :--- | :--- |
+| `_require_kinematics()` | Arrays can have mismatched lengths, e.g. `len(time) != len(joint_angles)`. | Fails implicitly downstream in `zip(..., strict=True)` or produces silently truncated outputs. |
+| `ztcf_decomposition()` | `self.joint_torques` length or shape can mismatch `angles`. | `zip(angles, rates, self.joint_torques, strict=True)` raises `ValueError` midway through execution without clean upfront validation. |
+| `ztcf_decomposition()` | $M(q)$ condition number when links align or approach singular configurations. | `np.linalg.solve` will raise `LinAlgError` if singular, or lose precision if ill-conditioned (though $M(q) \succ 0$ is guaranteed for non-zero link masses and distinct joints). |
+| `summary()` | `drift[interior] + control[interior] == 0.0`. | Occurs if $\tau = 0$ and $b(q, \dot{q}) = 0$ (e.g. at rest without gravity). Produces `0.0 / 0.0 = np.nan`. |
+| `summary()` | `time` array with $\le 2$ samples: `interior = slice(1, -1)` is empty. | `drift[interior]` has length 0; `np.median` on empty slice raises `ValueError: zero-size array to reduction operator maximum which has no identity` (or returns `np.nan`). |
+
+---
+
+## 5. Minimal Corrective Architecture
+
+To retain existing functionality while fixing the mathematical and contract errors:
+
+1. **Clarify and Separate Same-State vs. Cartesian Decomposition**:
+   - Keep `same_state_joint_decomposition()` (or alias `ztcf_decomposition` to it with clear docstrings explaining that it computes same-state joint acceleration $\|M^{-1}b\|$ and $\|M^{-1}\tau\|$).
+   - Implement `tangential_acceleration_decomposition()`:
+     Project the task-space tip acceleration onto the velocity unit vector $\hat{t} = v_{\text{tip}} / \|v_{\text{tip}}\|$:
+     $$\dot{v}_{\text{drift}} = \hat{t} \cdot \left[ J(q) \ddot{q}_{\text{drift}} + \dot{J}(q, \dot{q})\dot{q} \right], \quad \dot{v}_{\text{ctrl}} = \hat{t} \cdot \left[ J(q) \ddot{q}_{\text{ctrl}} \right]$$
+     This guarantees $\dot{v}_{\text{drift}} + \dot{v}_{\text{ctrl}} \equiv \dot{v}_{\text{tip}}$.
+2. **Defensive Validation & NaN Protection**:
+   - Guard against `drift + control == 0` with `np.where(total > 1e-9, ...)`.
+   - Validate array shape consistency in `_require_kinematics()`.
+3. **Inverse-Dynamics Consistent Synthetic Swing (Optional / Recommended)**:
+   - Provide an option to compute consistent torques via inverse dynamics:
+     $$\tau_{\text{consistent}}(t) = M(q)\ddot{q} + C(q, \dot{q})\dot{q} + g(q)$$
+     where $\ddot{q}$ is computed by differentiating $\dot{q}$.
+
+---
+
+## 6. Bounded Regression Test Suite
+
+Here is a standalone test suite with strict mathematical invariants to verify the fixes and guard against regressions:
+
+```python
+"""Regression tests for SwingAnalysis and GolfModel dynamic decompositions."""
+
+from __future__ import annotations
+
+import numpy as np
+import pytest
+
+from src.affine_control.golf_model import GolfModel
+from src.tools.golf_pipeline import SwingAnalysis, synthetic_swing
+
+
+class TestGolfPipelineMathematicalContracts:
+    """Rigorous verification of kinematics, dynamics, and affine decomposition."""
+
+    def test_control_affine_linearity_in_joint_space(self) -> None:
+        """Verify M^-1(tau - bias) == M^-1(-bias) + M^-1(tau) to machine precision."""
+        model = GolfModel(
+            masses=(2.16, 1.79, 0.30),
+            lengths=(0.28, 0.46, 1.10),
+            inertias=(0.014, 0.031, 0.030),
+        )
+        q = np.array([0.5, -0.8, 1.2])
+        qd = np.array([2.0, -5.0, 15.0])
+        tau = np.array([80.0, 30.0, 10.0])
+
+        mass = model.rigid_mass_matrix(q)
+        bias = model.coriolis(q, qd) @ qd + model.gravity_torque(q)
+
+        accel_total = np.linalg.solve(mass, tau - bias)
+        accel_drift = np.linalg.solve(mass, -bias)
+        accel_ctrl = np.linalg.solve(mass, tau)
+
+        # Superposition must hold identically
+        np.testing.assert_allclose(
+            accel_total,
+            accel_drift + accel_ctrl,
+            rtol=1e-12,
+            atol=1e-12,
+            err_msg="Control-affine superposition violated in forward dynamics",
+        )
+
+    def test_triangle_inequality_strictly_bounded(self) -> None:
+        """Verify ||drift + control|| <= ||drift|| + ||control|| on synthetic swing."""
+        swing = synthetic_swing(duration=0.30, dt=0.005)
+        drift, control = swing.ztcf_decomposition()
+        
+        # Verify norms are non-negative
+        assert np.all(drift >= 0.0)
+        assert np.all(control >= 0.0)
+
+        # Ensure total norm obeys triangle inequality
+        model = swing.model()
+        _, angles, rates = swing._require_kinematics()
+        for idx, (q, qd, tau) in enumerate(zip(angles, rates, swing.joint_torques, strict=True)):
+            mass = model.rigid_mass_matrix(q)
+            bias = model.coriolis(q, qd) @ qd + model.gravity_torque(q)
+            accel_net = np.linalg.solve(mass, tau - bias)
+            net_norm = np.linalg.norm(accel_net)
+
+            assert net_norm <= drift[idx] + control[idx] + 1e-10
+
+    def test_zero_division_guard_in_summary(self) -> None:
+        """Verify summary does not fail or produce NaN on all-zero state."""
+        time = np.array([0.0, 0.001, 0.002])
+        angles = np.zeros((3, 3))
+        rates = np.zeros((3, 3))
+        torques = np.zeros((3, 3))
+
+        # Model with zero gravity or zero dynamic response
+        swing = SwingAnalysis(
+            time=time,
+            joint_angles=angles,
+            joint_velocities=rates,
+            joint_torques=torques,
+        )
+        # Should execute cleanly without raising unhandled exceptions
+        summary_text = swing.summary()
+        assert "=== Golf Swing Analysis Summary ===" in summary_text
+        assert not np.isnan(swing.clubhead_speed()).any()
+
+    def test_kinematic_clubhead_speed_geometry(self) -> None:
+        """Verify clubhead speed is zero when all rates are zero, positive otherwise."""
+        swing = synthetic_swing(duration=0.10, dt=0.01)
+        speeds = swing.clubhead_speed()
+        assert len(speeds) == len(swing.time)
+        assert (speeds >= 0.0).all()
+
+        # Folded vs extended geometry check
+        model = swing.model()
+        rates = np.array([1.0, 1.0, 1.0])
+        # Fully extended: angles [0, 0, 0]
+        speed_extended = model.clubhead_speed(np.array([0.0, 0.0, 0.0]), rates)
+        # Folded back: angles [0, pi, 0]
+        speed_folded = model.clubhead_speed(np.array([0.0, np.pi, 0.0]), rates)
+        assert speed_extended > speed_folded, (
+            "Speed calculation must reflect trigonometric link cancellation"
+        )
+```
