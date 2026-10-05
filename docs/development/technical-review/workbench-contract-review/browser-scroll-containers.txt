@@ -1,0 +1,55 @@
+### Result
+[
+  {
+    "tag": "TABLE",
+    "class": "caption-top table",
+    "width": 714,
+    "scroll": 714,
+    "overflow": "visible",
+    "parent": {
+      "tag": "DIV",
+      "class": "table-wrapper",
+      "width": 269,
+      "scroll": 714,
+      "overflow": "auto"
+    }
+  },
+  {
+    "tag": "SPAN",
+    "class": "math display",
+    "width": 269,
+    "scroll": 269,
+    "overflow": "auto",
+    "parent": {
+      "tag": "P",
+      "class": "",
+      "width": 269,
+      "scroll": 269,
+      "overflow": "visible"
+    }
+  },
+  {
+    "tag": "SPAN",
+    "class": "math display",
+    "width": 247,
+    "scroll": 247,
+    "overflow": "auto",
+    "parent": {
+      "tag": "P",
+      "class": "",
+      "width": 247,
+      "scroll": 247,
+      "overflow": "visible"
+    }
+  }
+]
+### Ran Playwright code
+```js
+await page.evaluate('() => [...document.querySelectorAll("main .math.display, main .table-responsive, main table")].map(e=>({tag:e.tagName,class:e.className,width:e.clientWidth,scroll:e.scrollWidth,overflow:getComputedStyle(e).overflowX,parent:{tag:e.parentElement.tagName,class:e.parentElement.className,width:e.parentElement.clientWidth,scroll:e.parentElement.scrollWidth,overflow:getComputedStyle(e.parentElement).overflowX}}))');
+```
+### Page
+- Page URL: http://127.0.0.1:8873/articles/proximal-distal-model-workbench.html
+- Page Title: Explore the Proximal–Distal Models – AffineDrift
+- Console: 3 errors, 4 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-10-05T05-09-15-620Z.log#L14

@@ -1,0 +1,73 @@
+Here is the technical and editorial review of the provided article draft, focused strictly on scientific consistency, mathematical accuracy, boundary definitions, and validation claims:
+
+---
+
+### 1. Concrete Scientific & Mathematical Errors
+
+1. **Sign Error in Two-Hand Wrench Midpoint Moment Formula**
+   - **Text statement:**
+     $$\mathbf{d} = \mathbf{r}_R - \mathbf{r}_L,\qquad \mathbf{M}_{\mathrm{mid}} = \frac{\mathbf{d}}{2} \times (\mathbf{f}_R - \mathbf{f}_L) + \mathbf{m}_R + \mathbf{m}_L$$
+   - **Issue:** Let the midpoint be $\mathbf{r}_{\mathrm{mid}} = \frac{1}{2}(\mathbf{r}_R + \mathbf{r}_L)$. The position vectors from the midpoint to the right and left hands are:
+     $$\mathbf{r}_R - \mathbf{r}_{\mathrm{mid}} = +\frac{\mathbf{d}}{2}, \qquad \mathbf{r}_L - \mathbf{r}_{\mathrm{mid}} = -\frac{\mathbf{d}}{2}$$
+     The moment of the forces about the midpoint is:
+     $$\mathbf{M}_{\mathrm{mid}} = \left(+\frac{\mathbf{d}}{2}\right) \times \mathbf{f}_R + \left(-\frac{\mathbf{d}}{2}\right) \times \mathbf{f}_L + \mathbf{m}_R + \mathbf{m}_L = \frac{\mathbf{d}}{2} \times (\mathbf{f}_R - \mathbf{f}_L) + \mathbf{m}_R + \mathbf{m}_L$$
+     **Check:** Notice that this gives $+\frac{\mathbf{d}}{2} \times \mathbf{f}_R - \frac{\mathbf{d}}{2} \times \mathbf{f}_L = \frac{\mathbf{d}}{2}\times(\mathbf{f}_R - \mathbf{f}_L)$.
+     However, look closely at standard cross-product distribution:
+     If $\mathbf{f}_R = -\mathbf{f}_L = \mathbf{f}$ (a pure couple), then $\mathbf{f}_R - \mathbf{f}_L = 2\mathbf{f}$, so $\frac{\mathbf{d}}{2}\times(2\mathbf{f}) = \mathbf{d} \times \mathbf{f}$.
+     *Ambiguity / Trap:* If $\mathbf{f}_R$ and $\mathbf{f}_L$ are *reaction forces on the hands* vs *forces applied to the club*, the sign convention must be explicitly defined. The text introduces $\mathbf{f}_R, \mathbf{f}_L$ under "reaction directions" in the table, but writes the resultant $\mathbf{F} = \mathbf{f}_R + \mathbf{f}_L$ and $\mathbf{m}_R, \mathbf{m}_L$ as "contact moments applied directly to the club". If $\mathbf{f}_R, \mathbf{f}_L$ are reactions on the hands (i.e. from the club), they oppose the forces applied to the club by Newton's third law. The text must state that $\mathbf{f}_R, \mathbf{f}_L$ are the **forces exerted by the hands on the club**.
+
+2. **Sign/System Boundary in Club Actuator Moment Power**
+   - **Text statement:**
+     *"A moment acting **on the club** contributes $P_M = \mathbf{m} \cdot \boldsymbol{\omega}_{\mathrm{club}}$. The net power of an equal-and-opposite actuator moment pair uses the **relative** angular velocity of the two bodies."*
+   - **Boundary Ambiguity:** When an actuator at the wrist applies torque $\tau$ between link 1 (proximal) and link 2 (club), the torque exerted on the club is $\boldsymbol{\tau}_2 = \boldsymbol{\tau}$ and on the proximal link is $\boldsymbol{\tau}_1 = -\boldsymbol{\tau}$.
+     The rate of work done *on the club* across the wrist joint boundary by this torque is $\boldsymbol{\tau} \cdot \boldsymbol{\omega}_2$.
+     The rate of work done *by the internal actuator* is $\boldsymbol{\tau} \cdot (\boldsymbol{\omega}_2 - \boldsymbol{\omega}_1)$.
+     The text states this distinction clearly, but when discussing the club's individual kinetic-energy balance, it omits mentioning that joint reaction forces at the hinge also do work $\mathbf{F}_{\mathrm{joint}} \cdot \mathbf{v}_{\mathrm{joint}}$ unless the hinge is stationary. In the section *"Read Work and Energy With the Same Model"*, mentioning $P_F = \mathbf{F} \cdot \mathbf{v}_{\mathrm{grip}}$ without explicitly specifying that $\mathbf{v}_{\mathrm{grip}}$ is the velocity of the material point of the club at the grip boundary risks conflating a moving joint center with an external contact point.
+
+---
+
+### 2. Point-Mass vs. Distributed-Rod Energy Example Evaluation
+
+- **Formulas evaluated:**
+  $$T_{\mathrm{tip}} = \frac{1}{2}(m_2 + m_c) L_2^2 \omega^2, \qquad T_{\mathrm{rod}} = \frac{1}{2}\left(\frac{m_2}{3} + m_c\right) L_2^2 \omega^2$$
+- **Values given:** $m_2 = 3\,\mathrm{kg}$, $m_c = 1\,\mathrm{kg}$, $L_2 = 1\,\mathrm{m}$, $\omega = 2\,\mathrm{rad/s}$.
+  - $T_{\mathrm{tip}} = \frac{1}{2}(3 + 1)(1^2)(2^2) = \frac{1}{2} \times 4 \times 4 = 8\,\mathrm{J}$.
+  - $T_{\mathrm{rod}} = \frac{1}{2}\left(\frac{3}{3} + 1\right)(1^2)(2^2) = \frac{1}{2}(1 + 1)(4) = 4\,\mathrm{J}$.
+- **Assessment:**
+  - The arithmetic and formulas for rotation about a fixed pivot (stationary proximal link) are **strictly correct**.
+  - **Boundary condition note:** The text correctly specifies *"With the proximal link instantaneously stationary"*. If the proximal link were moving, link 2 would have translational kinetic energy from the proximal endpoint velocity $\mathbf{v}_1$, and cross terms would appear. The stated restriction to an instantaneously stationary proximal link is necessary and properly specified.
+
+---
+
+### 3. Pointwise (Same-State) vs. Forward Counterfactuals
+
+- **Text description:**
+  - Instantaneous intervention: holds state $x$ fixed, changes input $u$, immediate effect is $G(x)(u_1 - u_0)$ for affine dynamics $\dot{x} = f(x) + G(x)u$.
+  - Forward intervention: integrates from the cut state forward in time with the altered input sequence $u(t)$, resulting in trajectory divergence where state and input differences couple over time.
+- **Assessment:**
+  - Mechanically and mathematically sound.
+  - The text correctly warns against conflating the instantaneous tangent acceleration jump with downstream integrated trajectory differences, and emphasizes that passive forces, damping, and state-dependent terms do not vanish simply because active command torque is zeroed.
+
+---
+
+### 4. Claims of Completed Validation / Scientific Qualification
+
+The text is generally cautious and self-limiting, but contains the following latent ambiguities:
+
+1. **Status of the "Governed Technical Monograph" and UpstreamDrift Pinned Commit:**
+   - In *Interpretation Boundary*, the text asserts:
+     *"The governed technical monograph specifies those evidence boundaries and links the deterministic studies behind the article. Its models, claims, and evidence are pinned to UpstreamDrift commit `85cce4d3`."*
+   - **Review Finding:** Citing that a pinned commit contains "evidence" or "deterministic studies" can read as an assertion of complete scientific validation of the underlying physical claims. The text should maintain consistency with the earlier callout (*"Treat interactive results as exploratory_model_output... neither an animation nor a script alone validates them"*) and clarify that `85cce4d3` represents a versioned reference implementation/computational baseline, not certified biological or experimental validation in human golfers.
+
+2. **Work-Closure Residual Interpretation:**
+   - The callout notes:
+     *"Because control force is constructed as total minus drift, a small residual checks the additive split and integration; it does **not** check $\Delta T$ against external work."*
+   - This is an astute observation of an algebraic tautology in the software diagnostics, preventing a false claim of energy validation.
+
+---
+
+### Summary of Recommended Editorial Clarifications
+
+1. **Clarify Force Sign Convention:** In the two-hand wrench discussion, state explicitly that $\mathbf{f}_R$ and $\mathbf{f}_L$ denote the forces exerted *by the hands on the club* (rather than "reaction directions" which implies passive reactions on the hands).
+2. **Clarify Boundary Point for Grip Power:** Explicitly note that in $P_F = \mathbf{F} \cdot \mathbf{v}_{\mathrm{grip}}$, $\mathbf{v}_{\mathrm{grip}}$ is the velocity of the grip interface point on the distal body.
+3. **Qualify External Monograph Evidence:** Clarify that the linked monograph at commit `85cce4d3` documents the computational model specification and synthetic test suites rather than claiming human physiological validation.
