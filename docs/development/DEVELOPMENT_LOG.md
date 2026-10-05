@@ -1,3 +1,11 @@
+# Parameter Delivered and Article Main Integration — 2026-10-04
+
+Verified all eight accepted parameter source/evidence hashes on actual remote main d33e635d5 after PR #4886 merge. Released its lease/presence and merged main into #4889 with only metadata conflict resolution; all four accepted article hashes remain unchanged. Retargeted-main delivery preparation follows; CI/protected merge remains.
+
+# Dimensionality and Integration Source Review — 2026-10-04
+
+Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. See the review report for hypotheses, rejected suggestions and outstanding browser/regression acceptance.
+
 # Parameter Review Acceptance — 2026-10-04
 
 Issue4881: full chapter/PDF review and full regression accepted at 117a416d5a5fd7783e67e3eb6b4c15b2f9b28fcb. Canonical source and validation records preserve scope, rejected helper errors and all test outcomes. Regular protected PR delivery remains.
@@ -738,6 +746,18 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Summary:** Freshness dashboard route links now target page-relative paths derived from the output path; 12 path-style baseline entries removed. The journey-page workbench entry stays on purpose.
 - **Next step:** Review the draft PR, then arm it through the merge queue.
 
+### DL-#4883 · Un-nest See Also Callout Headings
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** pending (draft; main)
+- **Issue:** #4883 (parent #3896)
+- **Branch:** `claude/issue-4883`
+- **Paths:** `articles/tangent-hyperplanes-series/`, `tests/link_gate_baseline.json`, `tests/test_site_link_gate.py`
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-04 (site-gate tests pass incl. new stale-baseline test; `link-checker.py --site-gate` passes; claim-audit `--check` exit 0)
+- **Summary:** 17 pages use a `title="See Also"` callout attribute instead of a nested `## See Also` heading; five tangent-hyperplane parts gain previous/next links; related-coverage baseline goes from 70 to 45 entries.
+- **Next step:** Review the draft PR, then arm it through the merge queue.
 ### DL-#4913 · Benchmark Baseline Platform Detection
 
 - **State:** in_review
