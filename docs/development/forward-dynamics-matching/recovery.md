@@ -15,6 +15,8 @@ The untouched originals are retained in `recovered/cloud-forward-dynamics-origin
 
 After that checkpoint, 21 heading capitalization corrections were applied to `upstream-source-audit.md` to satisfy the shared pre-PR title checker. Its non-heading text is preserved. The untouched audit remains available in the original recovery branch. No manuscript, bibliography, PDF or original validation record was changed.
 
+The normal push hook required regenerating navigation dependency digests in `data/trust/claim_audit_inventory.json` and its generated report. Only four digest values per file changed, for `_quarto.yml` and `books/index.qmd`; findings, scientific status and verification commits were preserved. These administrative hash updates do not renew scientific review.
+
 ## Local Validation and Publication Hold
 
 - Citation-key resolution passed.
