@@ -63,7 +63,11 @@ pixel baseline.
 
 ## Public Acceptance Still Required
 
-Deployment `37354676786` is building the final guide revision `f3b9fe8`.
+Deployment `37354676786` has completed its build of the final guide revision
+`f3b9fe8`. The [deployment-build receipt](final-deployment-build-receipt.json)
+independently verifies 1,004 route cells and 158 representative checks, with all
+five amended routes present. The publishing job is waiting for a hosted runner;
+no live-publication acceptance is claimed.
 Earlier five-target PDF checks passed at live revision `4b941c3`, but that
 workflow's full live scan was superseded. Those checks do not establish final
 guide publication. Record the actual completed workflow, deployed manifest,
@@ -72,7 +76,7 @@ acceptance. A newer deployment must be verified against its own actual revision.
 
 ## Closeout Checkpoint Validation
 
-All six receipt JSON files parse, all 14 local links in this review and the current
+All seven receipt JSON files parse, all 15 local links in this review and the current
 handoff resolve, and the entire historical handoff suffix matches protected Git
 text. The inventory receipt distinguishes its original Windows CRLF checksum
 from the identical LF Git blobs at reviewed and protected revisions. A bounded

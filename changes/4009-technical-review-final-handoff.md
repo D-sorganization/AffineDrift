@@ -10,7 +10,7 @@ branch: "docs/technical-review-public-acceptance"
 Core corrections and final reader-guide clarification are delivered through
 regular PRs #4953 and #4977. Preserve the original 145 artifacts, 50 linked
 manuscript/PDF targets, four amended pages and final guide/config exactly.
-The closing review binds actual protected-source, queue, corpus and issue-state
+The closing review binds actual protected-source, queue, deployment-build, corpus and issue-state
 evidence without treating CI or issue closure as scientific certification.
 
 Final publication and closing-documentation acceptance remain pending. Verify

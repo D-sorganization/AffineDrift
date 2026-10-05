@@ -18,6 +18,9 @@ Preserve 38 immutable upstream publication rows and all empirical/reading limits
 Neither counts nor closed issues establish scientific validity. The closing
 review separates frozen-source, branch, queue and publication evidence.
 
+The final deployment build passed its 1,004 route checks and 158 representative
+checks. Publishing is queued; full live verification remains pending.
+
 ## Remaining Delivery Work
 
 1. Verify the final public manifest and complete live route evidence, then check
