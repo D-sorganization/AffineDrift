@@ -80,6 +80,9 @@ collate internal documentation; the scientific sources and final guide/config
 are unchanged. An independent tree check again preserves all 145 original
 artifacts, 50 linked targets and four amended pages. The real modify/delete
 conflict caused by collation is resolved by retaining the new closing fragment.
+The replacement workflow also failed before acquiring its initial hosted runner,
+at 20:07:54 UTC. Build and deploy were skipped; no steps ran. The official
+incident remained under investigation at the subsequent check.
 Final live-publication acceptance remains outstanding.
 Earlier five-target PDF checks passed at live revision `4b941c3`, but that
 workflow's full live scan was superseded. Those checks do not establish final
@@ -95,7 +98,35 @@ text. The inventory receipt distinguishes its original Windows CRLF checksum
 from the identical LF Git blobs at reviewed and protected revisions. A bounded
 Gemini 3.8 Flash review of the supplied prose and receipts returned no findings;
 the lead retained the separate Git, CI-log and artifact verification above.
-Final pre-PR checks follow completion of the public acceptance records.
+All eight central pre-PR gates passed on the closing documentation checkpoint
+`3061cad41`. No affected Python tests mapped from this documentation diff;
+this is not an additional full-regression run. Repeat applicable gates after
+adding the final public acceptance records.
+
+## Resume Publication After Runner Recovery
+
+1. Read the recovery receipt, verify current remote main and the latest deployment
+   before choosing a run. Do not restart a superseded workflow. Check GitHub's
+   official incident status; repeated retries during the same incident are not
+   evidence of progress. Preserve normal workflow and protection settings.
+2. Observe the chosen run with `gh run watch RUN --repo D-sorganization/AffineDrift --interval 60`.
+   An observer authentication failure requires renewing bot authentication and
+   reconnecting to that run, not restarting CI.
+3. After publishing, download its `live-public-site-verification-SHA` artifact.
+   Independently check the complete route/viewport/theme matrix, unique cells,
+   HTTP status, failures and reported serious/critical axe violations. Derive
+   counts from the actual manifest and bind the artifact to checkout/job logs.
+4. Verify the live manifest's actual source revision before and after the guide
+   and PDF checks. The guide must contain the accepted wording and primary-source
+   link. The five actual advertised PDF links must return HTTP 200, PDF bytes
+   and SHA-256 digests matching their exact intended Git blobs. The guide is
+   HTML, not a sixth PDF. Preserve the reviewed edition pin and provider boundary.
+5. Add the final live receipts, update this review, current root handoff and
+   change fragment; run the central pre-PR gates and normal hooks. Open a regular
+   PR with a Handoff section and `Closes #4009` only after public acceptance.
+   Arm through the central `scripts/automerge_guard.py`; do not update a queued
+   branch. Verify its protected merge and epic closure, then release this
+   session's remaining lease and presence.
 
 ## Future-Agent Guidance
 

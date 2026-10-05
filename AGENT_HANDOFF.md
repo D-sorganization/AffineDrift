@@ -22,7 +22,10 @@ The final deployment build passed its 1,004 route checks and 158 representative
 checks. Publishing encountered a hosted-runner acquisition failure. A job-only
 retry reused the successful build but was superseded by a documentation-only
 main merge. Replacement deployment `37366230234` targets `43ae945891cee0015c53fac03f4066afec5a5375`.
-All reviewed source hashes still match; full live verification remains pending.
+All reviewed source hashes still match. The replacement workflow failed at
+20:07:54 UTC before acquiring its initial hosted runner; build and deploy were
+skipped. The GitHub Actions incident remains under investigation. Full live
+verification remains pending; the closing review has ordered recovery steps.
 The new closing fragment is retained after resolving the collation conflict.
 
 ## Remaining Delivery Work
