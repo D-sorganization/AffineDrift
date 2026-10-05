@@ -1,229 +1,280 @@
-\chapter{Joint Kinematics and Soft Tissue}
+\chapter[Joint Kinematics and Soft Tissue]{Joint Kinematics and\\Soft Tissue}
 \label{ch:joint-kinematics}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter is a provisional modeling reference. Its manufactured examples check
+mechanics and numerical conventions; they do not identify a golfer's joint axes,
+ligament properties, tissue loads, or injury risk.
 \end{gomdraftnotice}
 
-\epigraph{%
-  The knee is not a hinge. The shoulder is not a ball-and-socket.
-  These are useful fictions that biology tolerates but does not enforce.
-}{}
+\section{What an Ideal Joint Represents}
 
-\section{Beyond Ideal Joints}
+A revolute joint admits one relative rotation about a fixed line. A spherical
+joint admits three relative rotations about a fixed center. These are declared
+model reductions, not literal descriptions of every displacement of articular
+surfaces. Their usefulness depends on the motion, loading and output being studied.
+A model sufficient for clubhead trajectory can still be inadequate for estimating
+joint contact or ligament loads. Conversely, adding coordinates without observations
+or constitutive information need not improve an estimate.
 
-Engineering joints are designed to constrain motion to specific degrees of freedom:
-a revolute joint permits one rotation, a prismatic joint permits one translation.
-Biological joints achieve constraint through a fundamentally different mechanism:
-the interaction of articular surfaces, ligaments, joint capsule, and muscle forces.
-This section develops the kinematics of biological joints using the screw theory
-framework of Volume~0, extended to handle the additional complexity.
+Three questions must remain distinct: what relative motion was observed, what
+motions the model permits, and what forces produced that motion. Joint geometry
+links these questions through moment arms, constraints and contact conditions, but
+kinematics alone does not answer the force question. Chapters~5--7 develop those
+links to multibody dynamics, inverse inference and measurement uncertainty.
 
-\begin{center}
-\begin{tikzpicture}[scale=0.85, >=Stealth]
-  % Gimbal lock illustration
-  \node at (0, 3.5) {\textbf{Engineering Revolute}};
-  \draw[thick, fill=gray!20] (0, 0.5) circle (0.8);
-  \draw[->, thick, blue] (0, 0.5) -- (0.8, 0.5) node[right] {1-DOF axis (fixed)};
+\section{The Instantaneous Screw Axis}
 
-  \node at (4, 3.5) {\textbf{Biological Joint}};
-  \draw[thick] (4, 0) ellipse (1.2 and 0.6);
-  \draw[thick] (4, 1) ellipse (1.0 and 0.5);
-  \draw[->, thick, red] (4, 0.5) -- (4.8, 0.8) node[right, font=\small] {ISA migrates};
-  \node[font=\tiny, gray, text width=2cm, align=center] at (4, -0.8) {Coupled rotation\\+ translation};
-\end{tikzpicture}
-\end{center}
+Let $T(t)=(R(t),\bm p(t))$ describe one rigid segment relative to a reference
+segment. All following derivatives are relative to that reference frame, not
+absolute laboratory velocities unless the reference is stationary there. A
+material point with fixed moving-segment coordinates $\bm X$ has
+$\bm x=R\bm X+\bm p$. Define $[\bm\omega]_\times=\dot R R^T$ and
+\begin{equation}
+ \dot{\bm x}=\bm v_s+\bm\omega\times\bm x,
+ \qquad \bm v_s=\dot{\bm p}-\bm\omega\times\bm p.
+ \label{eq:ch4:spatial-velocity}
+\end{equation}
+Thus $\bm v_s$ is the translational component of the spatial twist in the selected
+reference frame. It is the velocity field evaluated at that frame's origin,
+which need not contain an actual material point. It is generally not
+$\dot{\bm p}$, the velocity of the moving frame origin. A measured point velocity
+$\bm u_P$ at $\bm r_P$ gives $\bm v_s=\bm u_P-\bm\omega\times\bm r_P$.
+These definitions agree with $[V_s]=\dot T T^{-1}$; a body twist
+$[V_b]=T^{-1}\dot T$ uses a different frame representation
+\cite{ModernRoboticsTwistsJoint}.
 
-\subsection{The Instantaneous Screw Axis}
-
-Every rigid-body motion can be decomposed into a rotation about and translation along
-a \textbf{screw axis} (Chasles' theorem, Volume~0, Chapter~5). For an engineering
-revolute joint, this screw axis is fixed in both bodies. For a biological joint,
-the instantaneous screw axis (ISA) \emph{moves} as the joint configuration changes.
-
-\begin{definition}{Instantaneous Screw Axis of a Biological Joint}{isa-bio}
-  Given the relative twist $\twist_{ij} = (\bm{\omega}, \bm{v}) \in \Reals^6$ between
-  adjacent segments $i$ and $j$, the instantaneous screw axis has:
-  \begin{itemize}
-    \item Direction: $\hat{\bm{s}} = \bm{\omega} / \norm{\bm{\omega}}$
-    \item Pitch: $h = \bm{\omega} \cdot \bm{v} / \norm{\bm{\omega}}^2$
-    \item Location: $\bm{q} = \bm{\omega} \times \bm{v} / \norm{\bm{\omega}}^2$
-  \end{itemize}
-  For a pure rotation ($h = 0$), the ISA passes through $\bm{q}$ in direction $\hat{\bm{s}}$.
-  Tracking how $\bm{q}$ and $\hat{\bm{s}}$ change with joint angle reveals the coupled
-  kinematics of the biological joint.
+\begin{definition}{Finite Instantaneous Screw Axis}{isa-bio}
+For $\norm{\bm\omega}>0$, define
+\begin{equation}
+ \hat{\bm s}=\frac{\bm\omega}{\norm{\bm\omega}},\qquad
+ h=\frac{\bm\omega\cdot\bm v_s}{\norm{\bm\omega}^2},\qquad
+ \bm q=\frac{\bm\omega\times\bm v_s}{\norm{\bm\omega}^2}.
+\end{equation}
+The axis is the entire line $\bm q+\lambda\hat{\bm s}$, for real $\lambda$.
+The chosen $\bm q$ is the point on that line nearest the reference origin:
+$\bm q\cdot\bm\omega=0$. At every point of the line, the velocity field equals
+$h\bm\omega$. The pitch $h$ is translation per angular displacement, in metres
+per radian when angular speed is expressed in radians per second.
 \end{definition}
 
-\subsection{The Knee: Rolling, Sliding, and Coupled Rotation}
+Indeed, substituting the formula for $\bm q$ into
+$\bm v_s+\bm\omega\times\bm q$ leaves exactly the component of $\bm v_s$
+parallel to $\bm\omega$. The axis formula applies to nonzero pitch as well as
+pure rotation. When $\bm\omega=0$ and $\bm v_s\ne0$, the motion is a pure
+translation with no unique finite screw line; its direction is still defined.
+When both vanish, no motion axis is identified. Near zero angular speed,
+axis location is sensitive to velocity errors. A numerical threshold prevents a
+singular calculation but does not establish a measurement's signal-to-noise ratio.
+A finite-displacement helical axis inferred between two poses is also not generally
+the instantaneous axis at either endpoint.
 
-The tibiofemoral joint exemplifies the complexity of biological kinematics. During
-flexion from $0^\circ$ to $90^\circ$:
-\begin{enumerate}
-  \item The femoral condyles \textbf{roll} on the tibial plateaus (like a wheel on a road)
-  \item They simultaneously \textbf{slide} posteriorly (the contact point moves backward)
-  \item The tibia undergoes coupled \textbf{internal rotation} of approximately $15^\circ$
-        (the ``screw-home'' mechanism)
-  \item The contact area shifts, changing the effective moment arm
-\end{enumerate}
+\subsection{A Reproducible Frame Example}
 
-This coupled motion means the knee ISA migrates superiorly and posteriorly during
-flexion. The position and velocity of the ISA are key outputs of kinematic analysis
-\cite{Crisco2000, Wretenberg1995}. The four-bar linkage model provides a simplified but
-insightful mechanical analog for understanding coupled knee kinematics \cite{OConnor1989}:
+Take $\bm\omega=(0,0,2)$ rad/s, $\bm q=(0.03,-0.02,0)$ m and
+$h=0.005$ m/rad. Then $\bm v_s=(-0.04,-0.06,0.01)$ m/s. At
+$\bm p=(0.10,0.20,-0.10)$ m, the moving-origin velocity is
+$\dot{\bm p}=(-0.44,0.14,0.01)$ m/s. Recovering $\bm v_s$ first gives the
+correct axis. Passing $\dot{\bm p}$ directly instead gives
+$(-0.07,-0.22,0)$ m: a different line. This is a reference-point mistake,
+not evidence of anatomical axis migration.
 
-\begin{lstlisting}[language=Python, caption={Instantaneous screw axis computation for a biological joint.}]
+The listing accepts finite three-vectors in one frame and rejects motions for
+which it does not report a finite axis. The default angular threshold is a
+numerical example in rad/s; select a justified threshold from the actual
+measurement uncertainty before interpreting experimental axes.
+
+\begin{lstlisting}[language=Python, caption={Finite Screw Axis From a Declared Spatial Twist}]
 import numpy as np
-from typing import Tuple
+
 
 def compute_isa(
     omega: np.ndarray,
-    v: np.ndarray
-) -> Tuple[np.ndarray, np.ndarray, float]:
-    """Compute the instantaneous screw axis from a twist.
+    v: np.ndarray,
+    angular_threshold: float = 1e-8,
+) -> tuple[np.ndarray, np.ndarray, float]:
+    """Return nearest axis point, direction and pitch.
 
-    Parameters
-    ----------
-    omega : np.ndarray, shape (3,)
-        Angular velocity vector.
-    v : np.ndarray, shape (3,)
-        Linear velocity of the body-fixed frame origin.
-
-    Returns
-    -------
-    Tuple[np.ndarray, np.ndarray, float]
-        (point_on_axis, axis_direction, pitch)
+    omega: rad/s; v: spatial twist component in m/s.
+    Both are finite (3,) vectors in the same frame.
+    The threshold is positive, finite and in rad/s.
+    Translation, rest and subthreshold rotation raise.
     """
-    omega_norm = np.linalg.norm(omega)
-    if omega_norm < 1e-10:
-        # Pure translation
-        direction = v / np.linalg.norm(v)
-        return np.zeros(3), direction, np.inf
-
-    direction = omega / omega_norm
-    pitch = np.dot(omega, v) / omega_norm**2
-    point = np.cross(omega, v) / omega_norm**2
-
+    omega = np.asarray(omega, dtype=float)
+    v = np.asarray(v, dtype=float)
+    if omega.shape != (3,) or v.shape != (3,):
+        raise ValueError("Expected two three-vectors")
+    if not np.isfinite(omega).all() or not np.isfinite(v).all():
+        raise ValueError("Twist must be finite")
+    if not np.isfinite(angular_threshold) or angular_threshold <= 0:
+        raise ValueError("Invalid angular threshold")
+    speed = np.linalg.norm(omega)
+    if not np.isfinite(speed) or speed <= angular_threshold:
+        raise ValueError("No resolved finite screw axis")
+    direction = omega / speed
+    point = np.cross(direction, v) / speed
+    pitch = float(np.dot(direction, v) / speed)
+    if not np.isfinite(point).all() or not np.isfinite(pitch):
+        raise ValueError("Axis calculation exceeds numeric range")
     return point, direction, pitch
-
-
-def knee_isa_trajectory(
-    flexion_angles: np.ndarray,
-    roll_slide_ratio: float = 0.6
-) -> np.ndarray:
-    """Estimate knee ISA position during flexion.
-
-    Simple model: ISA migrates posteriorly and superiorly
-    with flexion, governed by the roll-to-slide ratio.
-
-    Parameters
-    ----------
-    flexion_angles : np.ndarray
-        Array of flexion angles in degrees.
-    roll_slide_ratio : float
-        Ratio of rolling to total contact displacement.
-        Pure rolling = 1.0, pure sliding = 0.0.
-
-    Returns
-    -------
-    np.ndarray, shape (N, 3)
-        ISA positions in the tibial reference frame.
-    """
-    R_condyle = 0.030  # approximate femoral condyle radius (m)
-    isa_positions = np.zeros((len(flexion_angles), 3))
-
-    for i, theta in enumerate(np.radians(flexion_angles)):
-        # Posterior migration due to rolling
-        posterior = R_condyle * theta * roll_slide_ratio
-        # Superior migration (ISA moves up with flexion)
-        superior = R_condyle * (1.0 - np.cos(theta * 0.5))
-
-        isa_positions[i] = [-posterior, superior, 0.0]
-
-    return isa_positions
 \end{lstlisting}
 
-\subsection{The Shoulder: The Most Complex Joint}
+\subsection{Migration Must Be Derived From Motion}
 
-The glenohumeral joint has the largest range of motion of any joint in the body,
-achieved at the expense of stability. The ``ball-and-socket'' description is a
-gross simplification: quantitative measurements show the humeral head translates during
-abduction \cite{Karduna2000, Dickerson2005}, and the instantaneous center of rotation
-shifts continuously. The instantaneous screw axis of the shoulder is not fixed and
-migrates through the joint during arm motion \cite{Halder2000}.
-
-The shoulder complex involves four joints:
-\begin{enumerate}
-  \item \textbf{Glenohumeral} (GH): primary ball-and-socket, 3 DOF rotation + $\sim$3~mm translation
-  \item \textbf{Acromioclavicular} (AC): 3 DOF rotation, small range
-  \item \textbf{Sternoclavicular} (SC): 3 DOF rotation, small range
-  \item \textbf{Scapulothoracic} (ST): not a true synovial joint; the scapula glides on
-        the thorax, constrained as a \emph{surface contact} rather than a pin joint
-\end{enumerate}
-
-The scapulothoracic ``joint'' is particularly interesting from a mathematical
-perspective: it is a \emph{holonomic constraint} that the scapula must remain on
-the thoracic surface, effectively acting as a 2-DOF constraint (the scapula can
-translate on the surface but cannot lift off).
-
-\section{Ligament Models}
-
-Ligaments constrain joint motion by resisting excessive displacement. They are
-modeled as nonlinear springs with:
+For a transparent planar example, prescribe $R=R_z(\theta)$ and
+$\bm p=(a\theta,0,0)$, where $a$ is a constant length and $\dot\theta\ne0$.
+Then $\bm\omega=(0,0,\dot\theta)$ and
+$\bm v_s=(a\dot\theta,-a\theta\dot\theta,0)$, so
 \begin{equation}
-  F_{\text{lig}}(\varepsilon) = \begin{cases}
-    0 & \varepsilon \leq 0 \text{ (slack)}, \\
-    k_1 \varepsilon^2 / (4\varepsilon_1) & 0 < \varepsilon \leq 2\varepsilon_1 \text{ (toe region)}, \\
-    k_2(\varepsilon - \varepsilon_1) & \varepsilon > 2\varepsilon_1 \text{ (linear region)},
-  \end{cases}
-  \label{eq:ch4:ligament-force}
+ \bm q=(a\theta,a,0),\qquad h=0.
 \end{equation}
-where $\varepsilon = (\ell - \ell_0) / \ell_0$ is the strain, $\ell_0$ is the
-reference length, $\varepsilon_1 \approx 0.03$ is the transition strain, and
-$k_1, k_2$ are stiffness parameters \cite{Blankevoort1991}.
+The axis migrates even though the motion has just one independent coordinate.
+The moving frame origin follows a different path, $(a\theta,0,0)$. This example
+is derived from a specified rigid transform; it is not a knee model and $a$ is
+not a measured rolling-to-sliding ratio. A curve drawn directly as ``ISA position''
+without its velocity field cannot establish a joint's rolling or sliding mechanics.
 
-\section{Spinal Mechanics}
+\section{Biological Geometry and Model Mobility}
 
-The spine presents a unique modeling challenge: 24 vertebrae connected by intervertebral
-discs, each joint having 6 coupled degrees of freedom. The functional spinal unit (FSU)
-consisting of two adjacent vertebrae and their connecting disc is the basic mechanical
-unit.
+\subsection{The Knee}
 
-The intervertebral disc consists of:
-\begin{itemize}
-  \item \textbf{Nucleus pulposus}: a gel-like center that distributes compressive loads
-  \item \textbf{Annulus fibrosus}: concentric rings of collagen fibers that resist
-        torsion and bending
-\end{itemize}
+Descriptions of tibiofemoral motion must identify which segment moves relative to
+which, the anatomical coordinate convention, flexion interval and loading protocol.
+Surface-contact location, material-point velocity and instantaneous screw-axis
+location are different quantities. In a contact model, rolling and sliding are
+assessed using the relative tangential velocities of contacting material points;
+the migration of a contact location alone does not separate them.
 
-A common simplified model treats each FSU as a 6-DOF spring:
+A quasistatic knee model can solve relative pose from prescribed loading,
+articular geometry, ligament paths and constraints. Blankevoort and Huiskes's
+model explicitly made such assumptions and included ligament wrapping
+\cite{Blankevoort1991}. Its assumptions and specimen geometry do not supply a
+universal axis path or a universal axial rotation angle during a golf swing.
+A changing ISA is compatible with several possible joint models and does not,
+by itself, identify a ligament's force or stiffness. For this reason, this chapter
+does not prescribe a generic numerical screw-home curve as anatomical evidence.
+
+\subsection{The Shoulder Complex}
+
+The glenohumeral, acromioclavicular and sternoclavicular articulations participate
+in shoulder motion; scapulothoracic motion describes the scapula relative to the
+thorax. A model may approximate some articulations with spherical joints, but
+then their admitted rotations, suppressed translations and connections must be
+explicit. A translation magnitude is not a count of degrees of freedom.
+
+For a free rigid scapula with six local coordinates, one maintained frictionless
+point-on-surface equation $g(q)=0$ removes one freedom if its Jacobian has rank
+one, leaving five locally. Two independent such equations leave four. Requiring
+a particular surface normal or orientation adds different conditions. These are
+model choices, not consequences of the phrase ``surface contact.'' A unilateral
+contact can also open; the equality describes only its maintained-contact mode.
+The clavicle and the rest of the shoulder chain can add further constraints.
+
+Seth and colleagues instead parameterized scapulothoracic motion using four
+coordinates: two for position on an ellipsoidal surface, upward rotation and
+winging. Their formulation permits the medial border to lift away from the
+surface \cite{Seth2016ScapulaJoint}. This is a concrete counterexample to the claim
+that scapulothoracic motion necessarily consists of two translations with no
+lift-off. It remains a particular model, not a universal anatomical mobility count.
+
+\section{Ligament Force, Length and Stiffness}
+
+For an elastic tensile line element, let $\ell_0>0$ be its zero-load length and
+$\varepsilon=(\ell-\ell_0)/\ell_0$. A continuous quadratic-to-linear law is
 \begin{equation}
-  \bm{F}_{\text{disc}} = K_{\text{disc}} \cdot \bm{\delta},
-  \label{eq:ch4:disc-stiffness}
+ F(\varepsilon)=
+ \begin{cases}
+ 0,&\varepsilon\le0,\\
+ k\varepsilon^2/(4\varepsilon_1),&0<\varepsilon\le2\varepsilon_1,\\
+ k(\varepsilon-\varepsilon_1),&\varepsilon>2\varepsilon_1,
+ \end{cases}
+ \quad k>0,\quad\varepsilon_1>0.
+ \label{eq:ch4:ligament-force}
 \end{equation}
-where $K_{\text{disc}} \in \Reals^{6 \times 6}$ is the stiffness matrix and
-$\bm{\delta} \in \Reals^6$ is the generalized displacement (3 translations + 3 rotations).
+This line-element approximation appears in the knee-model formulation of
+Blankevoort and Huiskes \cite{Blankevoort1991}. Here $k$ has units of newtons,
+because strain is dimensionless. Both branches at $2\varepsilon_1$ give
+$F=k\varepsilon_1$ and $dF/d\varepsilon=k$; at zero both force and slope vanish.
+Thus the law is $C^1$, although its second derivative changes at the joins.
+Independent coefficients in these two branches would generally destroy continuity.
 
+The length tangent is $dF/d\ell=(dF/d\varepsilon)/\ell_0$, in N/m.
+For the manufactured values $k=1000$ N, $\varepsilon_1=0.03$ and
+$\ell_0=0.10$ m, strains $0.03$, $0.06$ and $0.09$ give forces
+$7.5$, $30$ and $60$ N and length tangents $5000$, $10000$ and $10000$ N/m.
+The number $0.03$ is an example parameter, not a universal tissue transition.
+An anatomical reference pose may already be prestrained; its path length is not
+necessarily $\ell_0$.
+
+Path geometry also matters. With $r=-d\ell/dq$ for one coordinate, the generalized
+ligament load is $Q=rF$. Its restoring tangent is
+\begin{equation}
+ -\frac{dQ}{dq}=r^2\frac{dF}{d\ell}-F\frac{dr}{dq}.
+\end{equation}
+A joint stiffness therefore cannot be obtained from the material force slope
+alone. Wrapping changes path length and its derivatives. This connects directly
+to Chapter~5's geometric stiffness term. The line-element law omits rate dependence,
+hysteresis, damage and distributed stress; it cannot independently predict failure.
+
+\section{A Local Model of Spinal Compliance}
+
+Representing adjacent vertebrae as rigid bodies permits six relative motion
+components; a constitutive law couples their resisting loads. This is distinct
+from granting six unresisted motions. An isolated disc model and a complete
+functional spinal unit, including other structures, require different parameters.
+The following is a declared local elastic abstraction, not a calibrated spine model.
+
+About a specified reference pose and preload, choose small translational and
+rotational increments $\delta=(\bm u,\bm\phi)$ in one frame and at a stated
+reduction point. Order the conjugate restoring wrench increment as
+$\Delta W=(\Delta\bm f,\Delta\bm m)$ so that incremental power is
+$\Delta W^T\dot\delta$. Then
+\begin{equation}
+ \Delta W=-K\delta,\qquad
+ K=\begin{pmatrix}K_{uu}&K_{u\phi}\\K_{\phi u}&K_{\phi\phi}\end{pmatrix}.
+ \label{eq:ch4:disc-stiffness}
+\end{equation}
+The minus sign describes the resisting load on the displaced segment; the
+external load required to hold it has the opposite sign. The block units are
+N/m, N/rad, N\,m/m and N\,m/rad, respectively. For a conservative local quadratic
+energy $U=\tfrac12\delta^TK\delta$, $K$ is symmetric in these conjugate
+coordinates; positive definiteness describes a strictly stable elastic reference
+for this abstraction. This need not hold for an arbitrary fitted, preloaded,
+nonconservative or incompletely specified model. Finite rotation increments,
+frame changes and shifted moment reference points require consistent transformations.
+
+The same principles govern a golf model: select enough joint motion to address
+the question, declare the elastic and contact assumptions, and carry the same
+frames into force and power calculations. Reproducing a swing trajectory alone
+does not identify the tissue parameters that support it.
+
+\clearpage
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{ISA Computation.}
-        For a knee flexing at $60^\circ/\text{s}$ with $2$~mm/s of posterior translation,
-        compute the ISA direction, pitch, and location.
-
-  \item \textbf{Screw-Home Mechanism.}
-        Plot the coupled internal rotation of the tibia as a function of knee flexion
-        using the model: $\gamma = 15^\circ \cdot (1 - \cos(\theta / 2))$ for
-        $\theta \in [0, 90^\circ]$.
-
-  \item \textbf{Shoulder Kinematics.}
-        Using screw axis theory, express the configuration of the hand (end-effector)
-        as a product of exponentials through the SC, AC, GH, and elbow joints.
-
-  \item \textbf{(Programming.)} Implement the ligament force model and plot the
-        force-strain curve. Identify the toe region and the linear region.
-
-  \item \textbf{(Programming.)} Create a 3D visualization of the knee ISA trajectory
-        during flexion from $0^\circ$ to $120^\circ$.
+ \item \textbf{Frame Recovery.} Reproduce the numerical screw example. Verify
+ the velocity at three points along its axis. Translate the reference origin by
+ $\bm c=(0.02,0.01,0)$ m without rotating axes: show
+ $\bm v_s'=\bm v_s+\bm\omega\times\bm c$. Compare the same geometric axis
+ line in both frames, accounting for the new nearest-point representative.
+ \item \textbf{Motion and Axis Paths.} Set $a=0.03$ m in the manufactured planar
+ transform. Plot the origin and ISA paths for $0\le\theta\le\pi/2$. Verify the
+ computed axis using numerical derivatives of $T$ at interior points. Explain why
+ an axis path is neither a contact path nor evidence of a biological mechanism.
+ \item \textbf{Constraint Rank.} Write the scalar equation for a body-fixed point
+ lying on a sphere of radius $b$. Linearize it with respect to the body's six
+ local pose increments. State when its rank is one and why two coincident copies
+ of the equation do not remove two freedoms.
+ \item \textbf{Ligament Continuity.} Derive force and strain tangent at both joins;
+ reproduce the three numerical force/length-tangent pairs. For a varying moment
+ arm, derive the additional geometric stiffness term and explain its sign.
+ \item \textbf{Local Elastic Energy.} With translations in metres and rotations in
+ radians, take the following values in the corresponding block units:
+ \[
+ \begin{gathered}
+ K=\operatorname{diag}(1000,1000,2000,10,10,20),\\
+ \delta=(0,0,0.001,0,0,0.01).
+ \end{gathered}
+ \]
+ Compute the restoring wrench and
+ $U$; check that their mechanical powers obey $W^T\dot\delta=-\dot U$.
 \end{enumerate}

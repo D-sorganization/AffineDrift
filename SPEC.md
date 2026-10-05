@@ -598,3 +598,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-05 | #4911 | Install pytest-timeout in the benchmark venv (requirements-benchmarks.txt) so the 45 benchmarks run instead of failing on the unknown timeout option (#4911). |
 | 2026-10-05 | #4925 | Public-site verifier prints each failed route, viewport/theme and reason plus a capped `::error` annotation after the summary, via `scripts/public-site-failures.js`, so red Deploy Website runs are diagnosable from the job log (#4924). |
 | 2026-10-05 | #4904 | Correct biological multibody power, geometric stiffness, compliant-versus-kinematic coupling and inverse-dynamics load accounting across the multibody and inverse-problem chapters (#4900). |
+| 2026-10-05 | #4906 | Define the spatial-twist convention for screw-axis extraction, handle degenerate axes, and correct constraint-rank and ligament-stiffness reasoning in the joint-kinematics chapter (#4901). |
