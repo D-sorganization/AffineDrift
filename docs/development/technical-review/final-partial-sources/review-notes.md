@@ -88,3 +88,9 @@ Volume0 PDF with BibTeX and repeated LaTeX:234pages. The first no-BibTeX
 230-page intermediate was rejected. Exact prior/new hashes are in the final
 validation report and final delivery manifest; this does not renew the chapter's
 full scientific review or pretend the earlier full suite ran on the title edit.
+
+Final central pre-PR at b43550947 passes all eight gates (379 affected tests);
+35 book/audit metadata tests also pass after the title amendment. The delivery
+manifest contains145 exact artifacts. No further scientific development remains
+in the accepted local corpus. Remaining work is protected CI, merge and public
+deployment verification, with the final live receipt recorded on #4009.
