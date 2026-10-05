@@ -1,3 +1,47 @@
+# Current Technical Review Handoff — 5 October 2026
+
+The source-review phase of [epic #4009](https://github.com/D-sorganization/AffineDrift/issues/4009)
+is accepted; protected-main and public delivery remain pending. The current
+[turnover notes](docs/development/technical-review/current-book-links/review-notes.md)
+supersede the historical checkpoints below. They explain the corrections,
+source boundaries, numerical and rendering evidence, and final integration.
+
+Regular [PR #4953](https://github.com/D-sorganization/AffineDrift/pull/4953)
+contains the consolidated corrections and four amended book landing pages at
+`bbdd9698fc64e58708290f9529d4f92f30dca17c`. Guarded auto-merge is armed.
+The manuscript links retain reviewed source `fbee4da94fd699e9710f4c29b42a73a5113f08d4`;
+that source pin is not a protected-main merge receipt.
+
+The 407 historical review rows have dispositions, including 38 immutable upstream
+publication rows. They are not 407 unique articles or empirical certification.
+Eight books' 131 direct inputs and 27 supplementary sources are reconciled.
+The frozen full regression has 7,283 passes at `07c71ed50050253a082189e87ab569673a7d286f`.
+Later integration has 379 affected and 55 focused test passes; each receipt names
+its actual revision. Do not imply that an older full run tested a later commit.
+
+## Remaining Delivery Work
+
+1. Finish the protected CI and merge queue for #4953 without changing a queued PR.
+2. Compare the protected tree with the 145-artifact manifest, all 50 manuscript/PDF
+   target hashes, and the four amended-page hashes in `reports/technical-review/`.
+3. Verify the deployed manifest revision, every-page verification artifact and
+   five advertised PDF downloads. Record the actual revisions and results in
+   epic #4009 and this final handoff before closing the editorial review.
+4. Release only this session's leases. Preserve other agents' changes and leave
+   superseded PR closure to the repository's redundant-PR closer.
+
+Finish these delivery steps before starting another review or rewrite. Empirical
+studies, notebook execution, instrument qualification and upstream publications
+retain their separately governed boundaries. Tests and algebra do not establish
+human causal mechanisms or coaching prescriptions.
+
+# Historical Checkpoints
+
+The entries below retain their original evidence and dates; their pending-work
+instructions do not override the current handoff above.
+
+---
+
 # Two-Article PR #4889 — Parent Delivered
 
 Parameter PR #4886 merged to remote main at d33e635d5f7aab7d983117955db08650df1acb8d on 2026-10-04 19:47 UTC. All eight accepted parameter paths match; receipt saved in reports/technical-review/parameter-remote-main-receipt.json and its lease/presence released. Main is merged into this article branch without changing its four accepted source/evidence hashes. Metadata conflicts retain the newer article acceptance and all main SPEC rows; no scientific source conflict occurred. Next: publish this merge, retarget #4889 to main and arm only through the central guard. Current article lease expires 21:50 UTC. Date PR #4891 follows this PR; implementation PR #4895 follows the date PR and has completed its own source/PDF/full-regression acceptance. Never merge a child into its topic-branch parent. Earlier entries are historical. Goal active.
