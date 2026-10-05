@@ -4641,6 +4641,108 @@ body.quarto-dark .status-pill--planned,
   color: var(--dpc-muted);
 }
 /* ===== end css/components/drift-plus-control.css ===== */
+/* ===== begin css/components/swing-viewer.css ===== */
+/* css/components/swing-viewer.css
+   WEB-06.10 (#4540) planar swing viewer. js/swing-viewer.js colours each
+   link with color-mix() between these two variables, so the figure follows
+   the light and dark themes. */
+
+.swing-viewer {
+  --sv-drift: #1d4ed8;
+  --sv-input: #b45309;
+  --sv-ink: var(--text-primary, #212529);
+  --sv-muted: var(--text-secondary, #5f6670);
+
+  max-width: 36rem;
+  margin: 1.5rem auto;
+}
+
+[data-theme="dark"] .swing-viewer {
+  --sv-drift: #8ab4ff;
+  --sv-input: #fbbf24;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .swing-viewer {
+    --sv-drift: #8ab4ff;
+    --sv-input: #fbbf24;
+  }
+}
+
+.swing-viewer .sv-controls {
+  display: none;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.swing-viewer.sv-ready .sv-controls {
+  display: flex;
+}
+
+.swing-viewer .sv-slider {
+  flex: 1;
+}
+
+.sv-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sv-link {
+  stroke-width: 0.06;
+  stroke-linecap: round;
+}
+
+.sv-joint {
+  fill: var(--sv-ink);
+}
+
+.sv-tip {
+  fill: var(--sv-input);
+}
+
+.sv-trace {
+  fill: none;
+  stroke: var(--sv-muted);
+  stroke-width: 0.015;
+  stroke-dasharray: 0.04 0.04;
+}
+
+.swing-viewer .sv-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.95rem;
+}
+
+.swing-viewer .sv-swatch {
+  display: inline-block;
+  width: 1.5rem;
+  height: 0.35rem;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+  border-radius: 0.2rem;
+}
+
+.swing-viewer .sv-swatch--drift {
+  background: var(--sv-drift);
+}
+
+.swing-viewer .sv-swatch--input {
+  background: var(--sv-input);
+}
+
+.swing-viewer .sv-readout,
+.swing-viewer figcaption {
+  font-size: 0.95rem;
+  color: var(--sv-muted);
+}
+/* ===== end css/components/swing-viewer.css ===== */
 /* ===== begin css/components/quarto-theme.css ===== */
 /* Quarto layout, code tools, and dark theme overrides (WEB-09.9 #4787) */
 

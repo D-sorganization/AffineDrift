@@ -51,6 +51,8 @@ CANONICAL_JS_NAMES = (
     "rotation-converter-ui.js",
     "rotation-converter-viz.js",
     "search-maturity-badge.js",
+    "swing-viewer.js",
+    "swing-viewer-data.js",
     "service-worker-updates.js",
     "service-worker-utils.js",
     "symbol-hover.js",
