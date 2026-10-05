@@ -264,3 +264,14 @@ local changes; Git refused its fast-forward, and those files were preserved.
 Push the validated candidate directly to the existing remote branch
 feat/technical-review-consolidated-20261005 without force. PR #4953 remains the
 delivery PR. This routing note changes no reviewed source or gate input.
+
+## Pre-Push Formatting Receipt
+
+The normal push hook removed one blank line before `steps` in the inherited
+architecture-map-contract workflow. Parsed YAML before and after is identical.
+The scoped central workflow-lint gate passes with actionlint and official
+ShellCheck 0.11.0 (release archive SHA-256
+8a4e35ab0b331c85d73567b12f2a444df187f483e5079ceffa6bda1faa2e740e).
+This formatting correction changes no workflow behavior, scientific source,
+artifact hash, or validation threshold. It supplements the eight-gate receipt
+at 504c7dd07; that receipt is not represented as a rerun at this later commit.
