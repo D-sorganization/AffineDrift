@@ -1,0 +1,115 @@
+# Technical Review: Chapter on Central Pattern Generators (`\label{ch:cpg}`)
+
+---
+
+## 1. Mathematical Rigor & Technical Inaccuracies
+
+### 1.1 Matsuoka Oscillator System ($\ref{eq:ch8:matsuoka}$)
+1. **Coupling weight sign and notation**:
+   - Equation $\ref{eq:ch8:matsuoka}$ writes:
+     $$\tau_1 \dot{x}_i = -x_i - \beta v_i - \sum_{j \neq i} w_{ij} y_j + u_i + s_i$$
+     and states that $w_{ij}$ are "inhibitory coupling weights". 
+   - *Issue*: Because the summation is prefixed by a minus sign, positive values of $w_{ij}$ already yield inhibition. However, the text should explicitly specify the domain $w_{ij} \ge 0$, $\beta \ge 0$, $u_i > 0$, and $\tau_2 > \tau_1 > 0$. Without these bounds, the system is ill-posed as a stable limit-cycle oscillator.
+2. **Missing Necessary & Sufficient Conditions for Sustained Limit Cycles**:
+   - The chapter introduces parameters ($\beta=2.5, w=2.0$) without deriving or stating Matsuoka’s bifurcation conditions.
+   - *Derivation / Boundary Check*:
+     For steady-state tonic activation of a single neuron ($w=0$):
+     $$x^* = u - \beta v^* = u - \beta \max(0, x^*)$$
+     If $x^* > 0$, $x^* = \frac{u}{1+\beta}$. 
+     For two mutually coupled identical units ($u_1 = u_2 = u$), a symmetric non-oscillating fixed point exists at:
+     $$x_1^* = x_2^* = x^* = \frac{u}{1 + \beta + w}$$
+     Oscillations occur via Hopf bifurcation when this equilibrium loses stability. Matsuoka’s classical necessary conditions require:
+     $$1 + \frac{\tau_1}{\tau_2} < w < 1 + \beta \quad \text{and} \quad \frac{\tau_1}{\tau_2} < \frac{\beta}{1 + \beta}$$
+     In the draft's code: $\tau_1/\tau_2 = 0.1/0.3 \approx 0.333$, $w = 2.0$, $\beta = 2.5$. Here:
+     $$1 + 0.333 = 1.333 < 2.0 < 3.5$$
+     which satisfies the necessary condition. These conditions **must be made explicit** in the text so students understand why arbitrary parameter choices often quench into a static latch state (winner-take-all) or damp out to zero.
+
+### 1.2 Kuramoto Phase Oscillator Coupling ($\ref{eq:ch8:phase-coupling}$)
+1. **Sign Convention in Phase Differences**:
+   - The phase dynamics are written as:
+     $$\dot{\phi}_i = \omega_i + \sum_{j} K_{ij} \sin(\phi_j - \phi_i - \psi_{ij})$$
+   - Let $\theta_{ij} = \phi_i - \phi_j$. Then $\phi_j - \phi_i - \psi_{ij} = -\theta_{ij} - \psi_{ij} = -(\theta_{ij} + \psi_{ij})$.
+   - To have a stable fixed phase difference $\phi_i - \phi_j = \psi_{ij}^*$, we need $\dot{\theta}_{ij} = 0$ with negative feedback $\frac{\partial \dot{\theta}_{ij}}{\partial \theta_{ij}} < 0$.
+   - For an all-to-all or ring network, if node $i$ targets a lead of $\psi_{ij}$ ahead of node $j$ ($\phi_i - \phi_j = \psi_{ij}$), the driving error is $(\phi_j - \phi_i + \psi_{ij})$. With the text's current form $\sin((\phi_j - \phi_i) - \psi_{ij})$, the steady-state locked phase difference is $\phi_i - \phi_j = -\psi_{ij}$ (modulo $\pi$ depending on stability). The sign conventions for phase offsets $\psi_{ij}$ vs $\psi_{ji}$ (skew-symmetry $\psi_{ji} = -\psi_{ij}$) need explicit definitions.
+2. **Gait Phase Vectors**:
+   - The quad vector is presented as $\psi = (\phi_1, \phi_2, \phi_3, \phi_4)$ absolute phases, but equation $\ref{eq:ch8:phase-coupling}$ uses pairwise relative phase biases $\psi_{ij}$. 
+   - Clarify limb indexing (e.g., $1=\text{LF}, 2=\text{RF}, 3=\text{LH}, 4=\text{RH}$). Without specifying which leg corresponds to which index, $(0, \pi, \pi/2, 3\pi/2)$ is ambiguous.
+
+---
+
+## 2. Distinction: Empirical Biology vs. Mathematical Models
+
+- **Biological Reality vs. Phenomenological Fit**:
+  - The text lists biological evidence (lamprey, cat, songbird) and immediately transitions to Matsuoka's equations.
+  - *Distinction*: Matsuoka's model is a **phenomenological firing-rate model** (half-center oscillator), not a biophysical conductance model (such as Hodgkin-Huxley or Morris-Lecar with persistent sodium $I_{\text{NaP}}$ and calcium-activated potassium $I_{\text{K(Ca)}}$). 
+  - Lamprey swimming CPGs (Cohen & Wallén) rely on distributed segmental networks with NMDA-dependent pacemaker currents and reciprocal glycine-mediated inhibition. Cat stepping relies on multi-layer spinal networks with afferent sensory resetting.
+  - *Action*: Note clearly that Matsuoka and Kuramoto models abstract away ion channel dynamics into coarse macroscopic rate and phase coordinates.
+
+---
+
+## 3. Code Review & Numerical Robustness
+
+```python
+# From source listing:
+crossings = np.where(np.diff(np.sign(output)))[0]
+if len(crossings) >= 4:
+    periods = np.diff(t[crossings[::2]])
+```
+
+1. **Zero-Crossing Frequency Estimator Fragility**:
+   - `np.diff(np.sign(output))` produces artifacts when `output == 0` (producing 0s in `np.sign`), which can generate spurious transitions.
+   - It computes periods using indices from `t_eval` rather than sub-grid linear interpolation:
+     $$t_{\text{cross}} = t_k - \text{output}[k] \frac{t_{k+1} - t_k}{\text{output}[k+1] - \text{output}[k]}$$
+     Without interpolation, period estimates exhibit step-quantization jitter at $dt = 0.001$.
+2. **Transient vs. Limit Cycle**:
+   - `crossings[::2]` takes early crossings from $t \in [0, 5.0]$, conflating transient decay with the steady-state limit cycle. Crossings should only be sampled after a settling window (e.g., $t > 2.0\,\text{s}$).
+3. **ODE Solver Non-Smoothness**:
+   - The dynamics contain $\max(0, x_i)$, whose derivative is discontinuous at $x_i = 0$ ($C^0$ continuous, not $C^1$). RK45 (Dormand-Prince) steps can stutter or reduce step size needlessly around $x_i \approx 0$. Mentioning smooth approximations like softplus or using an event-aware / fixed-step solver provides cleaner numerical guarantees.
+
+---
+
+## 4. Connection to Golf Swing Reasoning
+
+*Context: A golf swing is a discrete, ballistic, multi-segment kinematic chain, whereas CPGs produce continuous limit-cycle rhythms.*
+
+To make this chapter directly relevant to the golf swing / human biomechanical context:
+1. **Discrete vs. Rhythmic Actions (Ballistic Release vs. Limit Cycles)**:
+   - A golf swing is classically modeled as an episodic, feedforward/feedback hybrid motor program rather than a continuous limit cycle.
+   - However, modern motor control (e.g., Schöner, Hogan, Sternad) models discrete actions as truncated half-cycles or transient excursions of a non-autonomous limit-cycle attractor, or through CPGs driven by a transient supraspinal pulse ($u(t)$ tonic drive gating).
+2. **Rhythmic Submovements & Swing Rhythm**:
+   - Golfers utilize rhythmic pre-shot routines, waggles, and a consistent backswing-to-downswing tempo ratio (typically $3:1$ swing cadence in tour data, e.g., Grober/Novosel).
+   - A two-neuron half-center model demonstrates how differing time constants ($\tau_{\text{back}} \neq \tau_{\text{down}}$) or asymmetric tonic drive naturally encode asymmetric duty cycles (e.g., slow accumulation phase vs. rapid ballistic unloading).
+3. **Inter-Segment Kinematic Chain Coordination via Phase Coupling**:
+   - Equation $\ref{eq:ch8:phase-coupling}$ directly maps to the **proximal-to-distal sequencing** in the kinematic chain (pelvis $\to$ thorax $\to$ lead arm $\to$ club):
+     $$\dot{\phi}_{\text{thorax}} = \omega_{\text{thorax}} + K \sin(\phi_{\text{pelvis}} - \phi_{\text{thorax}} - \Delta\psi)$$
+   - Phase-locking models explain how neuromuscular coupling maintains precise millisecond timing offsets ($\Delta \psi$) across segments despite variable external loads or muscle fatigue.
+
+---
+
+## 5. Bounded Analytical Tests & Suggestions
+
+1. **Analytical Test for Exercise 1**:
+   - Require students to analytically determine the bifurcation point $\beta_{\text{crit}}$ for given $w, \tau_1, \tau_2$ by linearizing around the symmetric state $x_1 = x_2 = x^*$ and computing the eigenvalues of the $4\times4$ Jacobian:
+     $$J = \begin{bmatrix}
+       -\frac{1}{\tau_1} & -\frac{\beta}{\tau_1} & -\frac{w}{\tau_1} H(x^*) & 0 \\
+       \frac{1}{\tau_2} H(x^*) & -\frac{1}{\tau_2} & 0 & 0 \\
+       -\frac{w}{\tau_1} H(x^*) & 0 & -\frac{1}{\tau_1} & -\frac{\beta}{\tau_1} \\
+       0 & 0 & \frac{1}{\tau_2} H(x^*) & -\frac{1}{\tau_2}
+     \end{bmatrix}$$
+     where $H(\cdot)$ is the Heaviside step function.
+2. **Frequency-Scaling Law**:
+   - Show analytically that scaling both $\tau_1 \to \alpha \tau_1$ and $\tau_2 \to \alpha \tau_2$ inversely scales frequency $f \to f/\alpha$ while preserving the limit-cycle trajectory geometry in $(x, v)$ space.
+3. **Phase-Reduction Test for Exercise 2**:
+   - Add a concrete 2-oscillator test with detuned frequencies ($\Delta\omega = \omega_1 - \omega_2$) proving the synchronization locking band:
+     $$|\Delta\omega| \le 2K \implies \phi_1 - \phi_2 = \arcsin\left(\frac{\Delta\omega}{2K}\right) + \psi$$
+
+---
+
+## 6. Actionable Summary Table
+
+| Location | Issue / Defect | Recommended Remediation |
+| :--- | :--- | :--- |
+| **Eq. $\ref{eq:ch8:matsuoka}$** | Undefined sign & bounds for $w_{ij}, \beta, \tau_1, \tau_2$. | Explicitly bound $w_{ij}, \beta > 0$, state Matsuoka oscillation conditions ($1 + \tau_1/\tau_2 < w < 1 + \beta$). |
+| **Eq. $\ref{eq:ch8:phase-coupling}$** | Phase difference sign ambiguity and ambiguous limb indices. | Define $\psi_{ij} = -\psi_{ji}$ and define limb indices explicitly (LF, RF, LH, RH). |
+| **Listing** | Crude zero-crossing detector and unhandled transient. | Add transient discard ($t > 2.0$) and linear interpolation on zero crossings. |
+| **Section 3** | Pure quadruped focus; disconnected from ballistic/golf biomechanics. | Add paragraph on how CPGs model discrete ballistic actions (as single-burst gated limit cycles) and proximal-to-distal sequencing. |

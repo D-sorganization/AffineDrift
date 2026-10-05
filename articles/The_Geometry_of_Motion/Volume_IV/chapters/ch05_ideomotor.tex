@@ -1,146 +1,181 @@
-\chapter{Ideomotor Theory and the Predictive Brain}
+\chapter{Ideomotor Planning}
 \label{ch:ideomotor}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+An intended effect, a prediction of an effect and an observed effect play different
+roles. A golfer may intend a particular launch direction, predict another from the
+current club state, and observe a third after impact. Collapsing those quantities
+into one ``prediction error'' hides the difference between selecting a goal,
+estimating the state and learning from a miss. This chapter connects the ideas
+while keeping their mathematical and evidential roles explicit.
 
-\epigraph{%
-  Every representation of a movement awakens in some degree
-  the actual movement which is its object.
-}{--- William James, 1890}
+\section{Action Effects and the Scope of Event Coding}
 
-\section{Historical Ideomotor Theory}
+Ideomotor theories give anticipated consequences a role in selecting actions.
+The Theory of Event Coding (TEC) proposes a shared representational format for
+perceived events and planned actions: task-relevant features can be integrated
+into event codes\cite{Hommel2001}. It concerns the cognitive relationship between
+perception and action planning. It does not by itself specify muscle recruitment,
+joint torques, a state estimator or a feedback law.
 
-The ideomotor principle, articulated by William James in 1890 \cite{James1890}, states
-that the mere \emph{idea} of a movement tends to produce that movement. Modern
-reformulations by Greenwald (1970) and Hommel et al.\ (2001) have transformed this
-philosophical observation into a testable scientific framework.
+An action-effect association can be studied by changing which sensory effect
+follows an action and testing how the learned effect influences later selection.
+Support for such an association does not uniquely establish a predictive-coding
+circuit, a Bayesian algorithm or a particular neural implementation. TEC's
+``distal'' description is also not synonymous with a coaching instruction to
+attend only outside the body: anticipated body-related effects can enter the
+theory. Claims about the benefits of a particular attentional cue require their
+own task-specific evidence.
 
-\begin{definition}{The Theory of Event Coding (TEC)}{tec-def}
-  The Theory of Event Coding \cite{Hommel2001} proposes that:
-  \begin{enumerate}
-    \item Perception and action share a \textbf{common representational format}
-          (event codes or feature codes)
-    \item Actions are planned in terms of their \textbf{desired sensory effects},
-          not in terms of muscle commands
-    \item The mapping from desired effects to motor commands is learned through
-          experience (bidirectional action-effect associations)
-  \end{enumerate}
-\end{definition}
+For golf, a desired ball flight is an outcome specification. It constrains a
+family of impact states through collision and flight mechanics; it does not
+identify a unique backswing, torque history or muscle pattern. The inverse-model
+discussion in Chapter~\ref{ch:internal-models} explains why selecting an effect
+and computing a feasible command remain separate problems. An intention can
+organize the task without replacing the mechanics that realize it.
 
-\begin{figure}[h]
+\section{Prediction Error, Innovation and Task Error}
+
+Consider the engineering model
+\begin{align}
+ x_{k+1}&=A x_k+B u_k+w_k, & y_k&=H x_k+v_k,\\
+ \hat x^-_k&=A\hat x^+_{k-1}+B u_{k-1}, &
+ \hat y^-_k&=H\hat x^-_k.
+\end{align}
+Here $x$ is a state, $u$ an applied input, $y$ an observation and the superscripts
+$-$ and $+$ denote estimates before and after the current observation. With
+zero-mean independent Gaussian process and measurement noises, known matrices
+and a Gaussian initial state, the Kalman recursion gives the conditional mean
+and covariance. Those are assumptions of this model, not established identities
+between its variables and neural populations.
+
+The innovation and its covariance are
+\begin{equation}
+ \nu_k=y_k-H\hat x^-_k,\qquad
+ S_k=H P^-_k H^{\mathsf T}+R,
+ \label{eq:ch5:prediction-error}
+\end{equation}
+where $R\succ0$ is measurement-noise covariance and $P^-_k\succeq0$ is the
+prior state covariance, so $S_k$ is invertible. The update is
+$\hat x^+_k=\hat x^-_k+K_k\nu_k$, with
+$K_k=P^-_k H^{\mathsf T}S_k^{-1}$. A residual formed using $\hat x^+_k$ has
+already used the measurement and is not this prior innovation. A nonlinear
+residual $y-h(\hat x)$ resembles it algebraically, but generally requires
+additional approximation or a different estimator.
+
+\begin{example}{Precision Is Not a Gain}{precision-gain}
+ For a scalar observation $y=x+v$, let $P^-=4$ and $R=1$ in squared observation
+ units. The measurement precision is $R^{-1}=1$, while $K=4/5$ and the posterior
+ variance is $4/5$. Keeping $R=1$ but using $P^-=1/4$ changes $K$ to $1/5$.
+ Measurement precision alone therefore does not determine the correction.
+ In several dimensions the gain also depends on observation geometry $H$.
+\end{example}
+
+Define a desired observation $r_k$. Task error $y_k-r_k$ and innovation
+$y_k-\hat y^-_k$ can disagree: an exactly predicted miss has zero innovation
+and nonzero task error. Conversely, an unexpectedly successful shot can have
+zero task error and nonzero innovation. The first concerns performance relative
+to a goal; the second concerns consistency with a prediction. Which error drives
+which learning process is an experimental question, not a choice of notation.
+
+\section{A Predictor Is Not the Physical Plant}
+
+\begin{figure}[ht]
 \centering
-\begin{tikzpicture}[scale=1.0]
-  % Desired effect
-  \draw (0.5, 2) rectangle (2, 2.8);
-  \draw (1.25, 2.4) node[align=center, anchor=center] {Desired};
-  \draw (1.25, 2.1) node[align=center, anchor=center, font=\tiny] {Effect};
-
-  % Action representation
-  \draw (3, 2) rectangle (4.5, 2.8);
-  \draw (3.75, 2.4) node[align=center, anchor=center] {Action};
-  \draw (3.75, 2.1) node[align=center, anchor=center, font=\tiny] {Code};
-
-  % Motor command
-  \draw (5.5, 2) rectangle (7, 2.8);
-  \draw (6.25, 2.4) node[align=center, anchor=center] {Motor};
-  \draw (6.25, 2.1) node[align=center, anchor=center, font=\tiny] {Command};
-
-  % Sensory effect (bottom)
-  \draw (5.5, 0.5) rectangle (7, 1.3);
-  \draw (6.25, 0.9) node[align=center, anchor=center] {Sensory};
-  \draw (6.25, 0.6) node[align=center, anchor=center, font=\tiny] {Effect};
-
-  % Arrows: forward links
-  \draw[->, thick] (2, 2.4) -- (3, 2.4) node[align=center, anchor=south, midway, font=\tiny] {encode};
-  \draw[->, thick] (4.5, 2.4) -- (5.5, 2.4) node[align=center, anchor=south, midway, font=\tiny] {forward};
-
-  % Feedback: sensory consequence
-  \draw[->, thick, dashed] (6.25, 2) -- (6.25, 1.3) node[align=center, anchor=west, midway, font=\tiny] {sensory};
-
-  % Title
-  \draw (3.75, 3.3) node[align=center, anchor=center, font=\small\bf] {Ideomotor Principle};
-  \draw (3.75, 3.0) node[align=center, anchor=center, font=\tiny] {(Theory of Event Coding)};
-
-  % Label
-  \draw (8.5, 1.3) node[align=center, anchor=west, font=\tiny] {Desired effect drives};
-  \draw (8.5, 0.9) node[align=center, anchor=west, font=\tiny] {action planning;};
-  \draw (8.5, 0.5) node[align=center, anchor=west, font=\tiny] {prediction error};
-  \draw (8.5, 0.1) node[align=center, anchor=west, font=\tiny] {adjusts execution};
+\begin{tikzpicture}[node distance=5mm, every node/.style={font=\small}]
+ \node[draw,align=center] (u) {Applied\\Command $u$};
+ \node[draw,align=center,right=of u] (p) {Plant and\\Sensors};
+ \node[draw,align=center,right=of p] (y) {Observation\\$y$};
+ \node[draw,align=center,below=of p] (m) {Internal\\Predictor};
+ \node[draw,align=center,right=of m] (yp) {Prediction\\$\hat y^-$};
+ \draw[->] (u)--(p); \draw[->] (p)--(y);
+ \draw[->] (u.south)|-(m.west);
+ \draw[->] (m)--(yp);
 \end{tikzpicture}
-\caption{The ideomotor principle: actions are planned in terms of their desired sensory
-effects rather than muscle commands. The forward model predicts the sensory consequence,
-and prediction error corrects the action.}
+\caption{An Engineering Separation of Plant and Predictor. An Internal Command
+Copy Can Inform Prediction; the Physical Command Acts Through the Plant.}
 \label{fig:ch5:ideomotor-principle}
 \end{figure}
 
-\section{The Predictive Processing Framework}
+An efference copy is an internal copy of a motor command. In a forward-model
+interpretation it informs prediction; it is not itself a feedforward actuator
+signal. The predictor must also represent the relevant state, dynamics and
+observation process. Command does not become observation without the intervening
+plant. Likewise, a forward model need not be a linear transition matrix.
 
-Modern neuroscience interprets the brain as a \textbf{prediction machine} (Clark, 2013;
-Hohwy, 2013):
+If a sensor is delayed by $d$ samples, its observation refers to $x_{k-d}$.
+Comparing that observation with a current-state prediction without aligning
+timestamps introduces an artificial error. Prediction can propagate an estimate
+forward, but uncertainty and model mismatch remain. The duration of a golf
+movement does not establish a universal sensory delay, a universal bandwidth
+limit or the complete absence of useful feedback. Those depend on the loop,
+measurement and intervention being considered.
 
-\begin{insight}{The Brain as a Prediction Machine}{prediction-machine}
-  The brain continuously generates predictions about incoming sensory data.
-  Neural processing is dominated by \textbf{prediction error minimization}:
-  \begin{equation}
-    \varepsilon_k = \bm{y}_k - \hat{\bm{y}}_k = \bm{y}_k - h(\hat{\state}_k),
-    \label{eq:ch5:prediction-error}
-  \end{equation}
-  where $\hat{\bm{y}}_k$ is the predicted observation and $\bm{y}_k$ is the actual
-  observation. This error drives updates to the internal model.
+\section{Active Inference and Receding-Horizon Control}
 
-  In the language of Volume~I, Chapter~6: this is exactly the
-  \textbf{Kalman filter innovation}. The brain implements Bayesian state estimation.
-\end{insight}
-
-\subsection{Active Inference}
-
-Karl Friston's active inference framework (Friston, 2010) extends predictive
-processing to action: instead of only updating beliefs to match observations,
-the agent acts to make observations match predictions. This formalizes the ideomotor
-principle in terms of Free Energy minimization:
+Predictive processing is a family of hypotheses about inference and neural
+computation. Active-inference proposals connect action to the observations
+used for inference\cite{FristonAction2010Review}. For a fixed
+observation $y$ and latent state $z$, variational free energy satisfies
 \begin{equation}
-  \control^* = \argmin_{\control} \mathbb{E}\left[
-  \sum_{k=0}^{T} \norm{\bm{y}_k - \hat{\bm{y}}_k}^2_{R^{-1}}
-  + \norm{\control_k}^2_Q
-  \right],
-  \label{eq:ch5:active-inference}
+ F[q;y]=\mathbb E_q[\log q(z)-\log p(y,z)]
+       =D_{\mathrm{KL}}(q\Vert p(z\mid y))-\log p(y).
 \end{equation}
-which is formally equivalent to model predictive control (Volume~I, Chapter~5).
+Minimizing over $q$ at fixed $y$ is an inference problem. An action law additionally
+requires a generative process, a representation of preferences, an information
+pattern and a rule linking action to future observations. A quadratic tracking
+cost alone does not supply those choices. Chapter~\ref{ch:computational}
+develops the distinction between this identity and control objectives.
 
-\section{Connection to Control Theory}
+An explicit engineering alternative is output-tracking MPC. At time $k$, optimize
+a sequence $u_{0:N-1}$, using local horizon index $j$ and predicted states $x_j$,
+subject to $x_0=\hat x_k$ and the prediction dynamics
+$x_{j+1}=f(x_j,u_j)$:
+\begin{equation}
+ \min_{u_{0:N-1}}\ \Phi(x_N)+\sum_{j=0}^{N-1}
+ \left[\|h(x_j)-r_{k+j}\|_W^2+\|u_j\|_U^2\right],
+ \label{eq:ch5:tracking-mpc}
+\end{equation}
+with stated feasible-state/input sets and weights $W\succeq0$, $U\succ0$.
+Apply the first command, obtain new information and solve again. Weights carry
+the units needed for a consistent objective. An uncertain problem must also
+specify the prediction distribution and how constraints handle uncertainty.
+This is MPC because of its dynamics, horizon and repeated first-action policy,
+not because its objective contains squared errors. Equivalence to an
+active-inference construction must be demonstrated for matched models,
+preferences, constraints and action updates; it is not a general identity.
 
-\begin{center}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}ll@{}}
-\toprule
-\textbf{Neuroscience Term} & \textbf{Control Theory Term} \\
-\midrule
-Forward model & State transition matrix / predictor \\
-Prediction error & Innovation (Kalman filter) \\
-Efference copy & Feedforward control signal \\
-Active inference & Model predictive control \\
-Prior beliefs & State constraints / initial conditions \\
-Precision weighting & Kalman gain / observation weights \\
-Free energy & Variational cost functional \\
-\bottomrule
-\end{tabular}
-\end{center}
+\begin{example}{Perfect Prediction Can Still Miss the Goal}{predicted-miss}
+ Let $x_1=x_0+u$, $x_0=0$, $y_1=x_1$ and desired $r=1$, all in declared
+ normalized units. A perfect predictor gives $\hat y_1=u$ for every $u$.
+ Minimizing $(y_1-\hat y_1)^2+\lambda u^2$, $\lambda>0$, selects $u=0$.
+ Minimizing the tracking objective $(u-1)^2+\lambda u^2$ instead gives
+ $u=1/(1+\lambda)$. Setting $\lambda=1$ yields $0$ versus $1/2$.
+ The difference is the goal specification, despite identical prediction accuracy.
+\end{example}
+
+\section{How the Pieces Connect in a Swing}
+
+Outcome preferences select what matters; mechanics map feasible commands to
+impact states; an estimator combines previous state information with new
+measurements; a controller acts on its information; learning changes a model,
+policy or preference across experience. Passive dynamics and stored elastic
+energy participate in the plant throughout this chain. They do not remove the
+need to distinguish intention, prediction and observation.
+
+A technically useful golf experiment should therefore state which outcome is
+changed, which variables are measured, which command or feedback is manipulated,
+and which competing models make different predictions. Similar-looking swings
+or reduced error alone cannot identify the algorithm that generated them.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Conceptual.} Explain how the ideomotor principle relates to
-        trajectory-centric control (Volume~II). When a golfer imagines impact,
-        what ``prediction'' are they generating?
-
-  \item \textbf{Kalman Connection.} Write out the Kalman filter equations and identify
-        which term corresponds to the prediction error in the predictive processing
-        framework.
-
-  \item \textbf{(Programming.)} Implement an active inference agent that controls a
-        pendulum by minimizing prediction error rather than tracking a reference.
+ \item Derive the two scalar Kalman gains above. Change observation units and
+ transform $H$ and $R$ consistently; explain why a precision is not a gain.
+ \item Solve the one-step example with $|u|\leq u_{\max}$. Determine when the
+ constrained optimum differs from the unconstrained stationary point.
+ \item Specify an action-effect association experiment and an alternative
+ explanation. State what extra evidence would distinguish them.
+ \item For a simulated golf impact goal, separate task error, observation
+ innovation and model-parameter error. Identify what cannot be inferred from
+ ball flight alone and how delayed observations would be timestamped.
 \end{enumerate}
