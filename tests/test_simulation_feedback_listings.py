@@ -10,6 +10,8 @@ from types import ModuleType, SimpleNamespace
 import numpy as np
 import pytest
 
+GRAVITY_M_S2 = 9.81
+
 CHAPTERS = Path(__file__).resolve().parents[1] / "articles/The_Geometry_of_Motion/Volume_V/chapters"
 
 
@@ -60,7 +62,7 @@ def test_horizontal_gravity_matches_rod_moments(simulation: ModuleType) -> None:
     model = simulation.RIGID_MODEL
     m1, m2, m3 = model.masses
     l1, l2, l3 = model.lengths
-    expected = 9.81 * np.array(
+    expected = GRAVITY_M_S2 * np.array(
         [
             m1 * l1 / 2 + m2 * (l1 + l2 / 2) + m3 * (l1 + l2 + l3 / 2),
             m2 * l2 / 2 + m3 * (l2 + l3 / 2),
