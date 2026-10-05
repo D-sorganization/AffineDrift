@@ -1,6 +1,6 @@
 # Workflow Inventory
 
-This directory contains the 12 GitHub Actions workflow files for the AffineDrift
+This directory contains the 13 documented GitHub Actions workflow files for the AffineDrift
 repository. Edits are governed by
 [`Repository_Management/docs/architecture/WORKFLOW_GOVERNANCE.md`](https://github.com/D-sorganization/Repository_Management/blob/main/docs/architecture/WORKFLOW_GOVERNANCE.md):
 keep changes minimal, never rename a workflow file or the `quality-gate` job,
@@ -8,11 +8,11 @@ and reference the governing campaign issue in the PR body.
 
 ## Merge-blocking
 
-| Workflow                      | Purpose                                                                                                                                                                                                                                              | Triggers                                         |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| `ci-standard.yml`             | `static-checks` (lint, format, mypy, ~30 repository gates), `tests` (pytest), `js-tests` (Jest), `e2e-tests` (full-site render, Playwright, axe-core), `website-lint`, and the fan-in `quality-gate` job that the ruleset requires (#4126).             | `push` to `main`, pull requests, manual dispatch |
-| `local-only-runner-guard.yml` | `Reject hosted runner routing` — required by the `block-hosted-runner-merge` ruleset; runs on `ubuntu-latest` as the canary that must work when the fleet is down.                                                                                    | Pull requests, manual dispatch                   |
-| `spec-check.yml`              | Blocks a PR that changes `src/`, `tests/`, `pyproject.toml`, or `package.json` without touching `SPEC.md`, unless labelled `spec-exempt`. Lives in its own workflow file, so it cannot be a `needs` dependency of `quality-gate`. The row **format** half of the same contract is `scripts/check_spec_changelog.py`, a `static-checks` step (RM #1520).                    | Pull requests                                    |
+| Workflow                      | Purpose                                                                                                                                                                                                                                                                                                                                                                                             | Triggers                                         |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `ci-standard.yml`             | `static-checks` (lint, format, mypy, ~30 repository gates), `tests` (pytest), `js-tests` (Jest), `e2e-tests` (full-site render, Playwright, axe-core), `website-lint`, and the fan-in `quality-gate` job that the ruleset requires (#4126).                                                                                                                                                         | `push` to `main`, pull requests, manual dispatch |
+| `local-only-runner-guard.yml` | `Reject hosted runner routing` — required by the `block-hosted-runner-merge` ruleset; runs on `ubuntu-latest` as the canary that must work when the fleet is down.                                                                                                                                                                                                                                  | Pull requests, manual dispatch                   |
+| `spec-check.yml`              | Blocks a PR that changes `src/`, `tests/`, `pyproject.toml`, or `package.json` without touching `SPEC.md` or adding a valid change fragment, unless labelled `spec-exempt`. Lives in its own workflow file, so it cannot be a `needs` dependency of `quality-gate`. The row **format** half of the same contract is `scripts/check_spec_changelog.py`, a `static-checks` step (RM #1520, RM #1976). | Pull requests                                    |
 
 ## Deployment
 
@@ -33,10 +33,11 @@ and reference the governing campaign issue in the PR body.
 
 ## Housekeeping
 
-| Workflow                           | Purpose                              | Triggers      |
-| ---------------------------------- | ------------------------------------ | ------------- |
-| `Jules-Redundant-Issue-Closer.yml` | Closes duplicate agent-filed issues. | Every 6 hours |
-| `Jules-Redundant-PR-Closer.yml`    | Closes superseded agent PRs.         | Every 3 hours |
+| Workflow                           | Purpose                                                                                                                      | Triggers                                                |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| `collate-changes.yml`              | Folds merged change fragments into `SPEC.md` and `DEVELOPMENT_LOG.md`, then deletes them (RM-5, Repository_Management#1976). | `push` to `main` touching `changes/**`, manual dispatch |
+| `Jules-Redundant-Issue-Closer.yml` | Closes duplicate agent-filed issues.                                                                                         | Every 6 hours                                           |
+| `Jules-Redundant-PR-Closer.yml`    | Closes superseded agent PRs.                                                                                                 | Every 3 hours                                           |
 
 ## Notes
 

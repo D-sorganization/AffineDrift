@@ -17,6 +17,9 @@ The browser exposed Invalid Date in two shared presentation surfaces. TDD reprod
 # Dimensionality and Integration Source Review — 2026-10-04
 
 Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. Both reviews, scoped local presentation and full regression are accepted at 6cd4d2eee. Regular PR #4889 is open, stacked on #4886; remote-main delivery remains. See the review report for hypotheses and rejected suggestions.
+# Dimensionality and Integration Source Review — 2026-10-04
+
+Issue4885: two original articles revised after full reads, primary-source checks and five bounded Flash helpers. Four manufactured numerical examples checked; scoped Quarto builds pass. See the review report for hypotheses, rejected suggestions and outstanding browser/regression acceptance.
 
 # Parameter Review Acceptance — 2026-10-04
 
@@ -233,6 +236,19 @@ reachable from any live state and `abandoned` from `parked`.
 `shipped` never returns to `in_progress`; open a new entry instead.
 
 ## Active
+
+### DL-#4531 · ADR 0002, Interactive Technology Stack
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** https://github.com/D-sorganization/AffineDrift/pull/4907 (draft)
+- **Issue:** #4531 (WEB-06.1; epic #4543)
+- **Branch:** `claude/issue-4531`
+- **Paths:** `docs/adr/0002-interactive-technology-stack.md`, `docs/adr/README.md`, `tests/test_adr_index.py`
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-04 (`python -m pytest tests/test_adr_index.py -q`: RED 1 failed/7 passed before indexing, GREEN 8 passed; ruff, black and prettier clean)
+- **Summary:** Records Board decision D3(d) (PR #4485) as an accepted ADR: runtime choice rule, self-hosting with no CDN, offline/PWA behaviour, per-widget-class KB and TTI budgets, same-origin `affinedrift` wheel for Pyodide, and a `widget-parity/v1` golden-vector fixture format with a tolerance policy. Adds an ADR index contract test.
+- **Next step:** Get the draft PR reviewed and merged so #4533, #4534 and #4540 can build to the ADR.
 
 ### DL-#4864 · Volume II Consistency Review
 
@@ -734,6 +750,31 @@ Entries stay here for 90 days after merge, then move to the archive.
 - **Last verified:** 2026-10-04 (55 focused tests pass; generator and claim-audit `--check` exit 0; site gate passes with one path-style entry left)
 - **Summary:** Freshness dashboard route links now target page-relative paths derived from the output path; 12 path-style baseline entries removed. The journey-page workbench entry stays on purpose.
 - **Next step:** Review the draft PR, then arm it through the merge queue.
+
+### DL-#4883 · Un-nest See Also Callout Headings
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** pending (draft; main)
+- **Issue:** #4883 (parent #3896)
+- **Branch:** `claude/issue-4883`
+- **Paths:** `articles/tangent-hyperplanes-series/`, `tests/link_gate_baseline.json`, `tests/test_site_link_gate.py`
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-04 (site-gate tests pass incl. new stale-baseline test; `link-checker.py --site-gate` passes; claim-audit `--check` exit 0)
+- **Summary:** 17 pages use a `title="See Also"` callout attribute instead of a nested `## See Also` heading; five tangent-hyperplane parts gain previous/next links; related-coverage baseline goes from 70 to 45 entries.
+- **Next step:** Review the draft PR, then arm it through the merge queue.
+### DL-#4913 · Benchmark Baseline Platform Detection
+
+- **State:** in_review
+- **Owner:** claude
+- **PR:** pending (ready; main)
+- **Issue:** #4913
+- **Branch:** `fix/4913-benchmark-baseline`
+- **Paths:** `.github/workflows/ci-benchmarks.yml`, `scripts/ci/benchmark_compare_args.py`, `tests/test_benchmark_compare_args.py`
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (24 focused tests pass; actionlint reports only pre-existing SC2034 warnings; action-pin tests pass)
+- **Summary:** Benchmarks compare with the 15% gate only against a baseline for the runner platform; otherwise save one as an artifact and report no baseline rather than failure.
+- **Next step:** After merge, commit the Linux CPython 3.12 baseline artifact under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating.
 
 ## Archive
 
