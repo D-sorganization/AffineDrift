@@ -1,0 +1,168 @@
+"""Reproduce putting identities from Newton--Euler and energy balances."""
+
+import json
+from pathlib import Path
+
+import numpy as np
+from scipy.integrate import solve_ivp
+from scipy.special import ellipk
+
+GRAVITY = 9.81
+CASES = 100
+RNG = np.random.default_rng(4937)
+RESULTS = {}
+
+
+def record(name: str, errors: np.ndarray, tolerance: float = 1e-10) -> None:
+    """Fail rather than accepting an identity outside the stated tolerance."""
+    maximum = float(np.max(np.abs(errors)))
+    assert maximum < tolerance, (name, maximum, tolerance)
+    RESULTS[name] = {"cases": CASES, "maximum_error": maximum, "tolerance": tolerance}
+
+
+def slip_checks() -> None:
+    """Compare closed forms to integrated force, torque and friction work."""
+    mass, radius, kappa, friction = RNG.uniform(0.05, 0.5, (4, CASES))
+    velocity, rim_speed = RNG.uniform(-3, 3, (2, CASES))
+    slip = velocity - rim_speed
+    force = -friction * mass * GRAVITY * np.sign(slip)
+    inertia = kappa * mass * radius**2
+    spin = rim_speed / radius
+    acceleration = force / mass
+    spin_acceleration = -radius * force / inertia
+    event_time = -slip / (acceleration - radius * spin_acceleration)
+    predicted_time = kappa * abs(slip) / ((1 + kappa) * friction * GRAVITY)
+    final_velocity = velocity + acceleration * event_time
+    final_spin = spin + spin_acceleration * event_time
+    predicted_velocity = (velocity + kappa * rim_speed) / (1 + kappa)
+    before = (mass * velocity**2 + inertia * spin**2) / 2
+    after = (mass * final_velocity**2 + inertia * final_spin**2) / 2
+    loss = mass * kappa * slip**2 / (2 * (1 + kappa))
+    friction_work = force * (slip * event_time / 2)
+    errors = np.stack((event_time - predicted_time, final_velocity - predicted_velocity,
+                       final_velocity - radius * final_spin, before - after - loss,
+                       after - before - friction_work))
+    record("slip_newton_euler_and_contact_work", errors)
+
+
+def rolling_checks() -> None:
+    """Resolve traction and resisting torque in a right-handed plane frame."""
+    mass, radius, kappa, resistance = RNG.uniform(0.01, 0.5, (4, CASES))
+    slope = RNG.uniform(0, 0.15, CASES)
+    velocity = RNG.uniform(-3, 3, (CASES, 3))
+    velocity[:, 2] = 0
+    direction = velocity / np.linalg.norm(velocity, axis=1)[:, None]
+    normal = np.array([0.0, 0.0, 1.0])
+    gravity_parallel = np.column_stack((np.zeros(CASES), GRAVITY * np.sin(slope),
+                                       np.zeros(CASES)))
+    normal_force = mass * GRAVITY * np.cos(slope)
+    torque = -(resistance * normal_force * radius)[:, None] * np.cross(normal, direction)
+    acceleration = (gravity_parallel -
+                    (resistance * GRAVITY * np.cos(slope))[:, None] * direction)
+    acceleration /= (1 + kappa)[:, None]
+    traction = mass[:, None] * (acceleration - gravity_parallel)
+    inertia = kappa * mass * radius**2
+    angular_acceleration = np.cross(normal, acceleration) / radius[:, None]
+    net_torque = np.cross(-radius[:, None] * normal, traction) + torque
+    angular_velocity = np.cross(normal, velocity) / radius[:, None]
+    kinetic_rate = mass * (1 + kappa) * np.sum(velocity * acceleration, axis=1)
+    gravity_power = mass * np.sum(gravity_parallel * velocity, axis=1)
+    resistance_power = np.sum(torque * angular_velocity, axis=1)
+    record("rolling_torque_and_energy_balance",
+           np.concatenate(((inertia[:, None] * angular_acceleration - net_torque).ravel(),
+                           kinetic_rate - gravity_power - resistance_power)))
+
+
+def impact_checks() -> None:
+    """Solve impulse and restitution jointly, without assuming a speed gain."""
+    putter_mass, ball_mass = RNG.uniform(0.04, 0.5, (2, CASES))
+    head_speed = RNG.uniform(0.1, 3.0, CASES)
+    restitution = RNG.uniform(0, 1, CASES)
+    impulse = (1 + restitution) * head_speed / (1 / putter_mass + 1 / ball_mass)
+    ball_after = impulse / ball_mass
+    head_after = head_speed - impulse / putter_mass
+    formula = (1 + restitution) * putter_mass * head_speed / (putter_mass + ball_mass)
+    record("central_impact_momentum_and_restitution",
+           np.stack((ball_after - formula,
+                     putter_mass * head_after + ball_mass * ball_after -
+                     putter_mass * head_speed,
+                     ball_after - head_after - restitution * head_speed)))
+
+
+def pendulum_checks() -> None:
+    """Compare head speed to potential energy and the period asymptotic series."""
+    mass, distance, radius = RNG.uniform(0.2, 1.5, (3, CASES))
+    inertia = mass * (distance**2 + RNG.uniform(0.01, 0.2, CASES))
+    length = inertia / (mass * distance)
+    angle = RNG.uniform(0.001, 0.6, CASES)
+    head_speed = radius * np.sqrt(2 * GRAVITY / length * (1 - np.cos(angle)))
+    kinetic = inertia * (head_speed / radius)**2 / 2
+    potential = mass * GRAVITY * distance * (1 - np.cos(angle))
+    record("compound_pendulum_release_energy", kinetic - potential)
+    tiny_angle = np.linspace(0.001, 0.02, CASES)
+    exact_ratio = 2 * ellipk(np.sin(tiny_angle / 2)**2) / np.pi
+    fourth_order = exact_ratio - 1 - tiny_angle**2 / 16
+    record("pendulum_period_small_amplitude_remainder", fourth_order, 2e-9)
+
+
+def constraint_checks() -> None:
+    """Compare actual constraint power to explicit boundary-motion power."""
+    jacobian = RNG.normal(size=(CASES, 2, 3))
+    velocity = RNG.normal(size=(CASES, 3))
+    multiplier = RNG.normal(size=(CASES, 2))
+    boundary_rate = -np.einsum("nij,nj->ni", jacobian, velocity)
+    generalized_force = np.einsum("nji,nj->ni", jacobian, multiplier)
+    actual_power = np.sum(generalized_force * velocity, axis=1)
+    boundary_power = -np.sum(multiplier * boundary_rate, axis=1)
+    record("rheonomous_constraint_actual_power", actual_power - boundary_power)
+
+
+def local_slope_example() -> dict:
+    """Integrate the declared nonzero-speed model and compare its Taylor limit."""
+    slope = np.deg2rad(2)
+    level_deceleration = 0.15
+
+    def rhs(time: float, state: np.ndarray) -> np.ndarray:
+        velocity = state[2:]
+        acceleration = np.array([0, GRAVITY * np.sin(slope) / 1.4])
+        acceleration -= level_deceleration * np.cos(slope) * velocity / np.linalg.norm(velocity)
+        return np.concatenate((velocity, acceleration))
+
+    times = np.array([0.05, 0.1])
+    solution = solve_ivp(rhs, (0, 0.1), [0, 0, 2, 0], t_eval=times,
+                         method="DOP853", rtol=1e-12, atol=1e-14)
+    assert solution.success
+    taylor = np.vstack((2 * times - 0.5 * level_deceleration * np.cos(slope) * times**2,
+                        GRAVITY * np.sin(slope) * times**2 / 2.8))
+    error = np.linalg.norm(solution.y[:2] - taylor, axis=0)
+    assert 7 < error[1] / error[0] < 9
+    return {"seconds": times.tolist(), "numerical_xy": solution.y[:2].T.tolist(),
+            "taylor_xy": taylor.T.tolist(), "error_norms": error.tolist(),
+            "error_ratio": float(error[1] / error[0])}
+
+
+def calibration_examples() -> dict:
+    """Report solved exercise values without hidden empirical constants."""
+    stimp_meters = np.array([9.0, 12.0]) * 0.3048
+    deceleration = 1.83**2 / (2 * stimp_meters)
+    roll_speed = np.sqrt(2 * deceleration * 15 * 0.3048)
+    head_speed = roll_speed / 1.5
+    small_angle = head_speed / (0.9 * np.sqrt(GRAVITY / 0.8))
+    exact_angle = np.arccos(1 - 0.8 * (head_speed / 0.9)**2 / (2 * GRAVITY))
+    return {"deceleration": deceleration.tolist(), "roll_speed": roll_speed.tolist(),
+            "head_speed": head_speed.tolist(), "small_angle_radians": small_angle.tolist(),
+            "exact_angle_radians": exact_angle.tolist(),
+            "period_seconds": float(2 * np.pi * np.sqrt(0.8 / GRAVITY))}
+
+
+slip_checks()
+rolling_checks()
+impact_checks()
+pendulum_checks()
+constraint_checks()
+RESULTS["local_slope_example"] = local_slope_example()
+RESULTS["calibration_examples"] = calibration_examples()
+RESULTS["scope"] = "Manufactured mechanics and examples; no empirical golfer validation."
+output = Path("reports/technical-review/putting-mechanics-independent-checks.json")
+output.write_text(json.dumps(RESULTS, indent=2) + "\n", encoding="utf-8")
+print(json.dumps(RESULTS, indent=2))

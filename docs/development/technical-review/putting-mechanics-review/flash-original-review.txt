@@ -1,0 +1,165 @@
+# Independent Technical Audit: Putting Chapter & Nomenclature
+
+An independent review of the provided draft of Chapter \ref{ch:putting} (*The Physics of Putting*) and the global *Nomenclature* was performed. Below is the detailed breakdown of technical errors, invalid physics assumptions, unverified citation claims, and mathematical corrections.
+
+---
+
+## 1. Executive Summary of Critical Technical Errors
+
+1. **Rolling Rotational Inertia Omission in Green Dynamics & Stimpmeter Formula**:
+   - The equations of motion on a slope ($\ddot{\mathbf{r}}$) and the Stimpmeter friction formula treat the golf ball as a point mass / sliding block of mass $m$, neglecting the rotational kinetic energy and angular momentum of rolling. For a rolling sphere ($I = \beta m r^2$ with $\beta = 2/5$), linear acceleration down an incline is $\frac{g \sin\alpha}{1+\beta} = \frac{5}{7}g\sin\alpha$, and work-energy equivalence requires $\frac{1}{2}m(1+\beta)v_r^2 = F_{\text{roll}} L$.
+2. **Trajectory on a Slope: Parabola vs. Exact Path / Curvature**:
+   - The text claims a putt rolled perpendicular to the fall line follows an exact "parabola". Because rolling resistance opposes the instantaneous velocity vector $\hat{\mathbf{v}}$, the braking force turns as the ball curves. The equations are non-linear; the trajectory is only parabolic in the degenerate short-time perturbation limit where $\dot{y} \ll \dot{x} \approx v_0$.
+3. **Compound Pendulum Timing, Period, and the "2:1 Tempo" Fallacy**:
+   - A free, unforced harmonic pendulum $\ddot{\theta} + \omega_p^2 \theta = 0$ is time-reversible: backswing duration equals downswing duration ($1:1$ ratio, each taking a quarter period $T_p/4 \approx 0.45\text{ s}$). The observed elite $2:1$ tempo ratio cited from Pelz is active motor control / kinematic asymmetry, directly contradicting the claim that it "emerges naturally from a free pendulum". Furthermore, $T_p/2 \approx 0.9\text{ s}$ is the half-period (backswing *or* forward swing to opposite crest), not "backswing plus downswing".
+4. **Neglect of Generic Impact Spin and Impact Speed Separation**:
+   - The chapter assumes the ball leaves with zero spin ($\omega_0 = 0$) and identifies clubhead speed directly with ball launch speed ($v_0 = L_p \omega_p \theta_0$), ignoring dynamic loft/attack angle (which impart backspin or topspin) and the collision restitution dynamics ($v_{\text{ball}} = \frac{1+e}{1 + m/M} v_{\text{head}}$).
+5. **Nomenclature Inconsistency: Moving (Rheonomous) Ideal Constraints**:
+   - The Nomenclature defines $P_{\mathrm{constraint}}(t) = 0$ "identically zero for ideal constraints." This is only true for scleronomous (time-independent) constraints. For rheonomous (moving) ideal constraints $\bm{\Phi}(\bm{q}, t) = \bm{0}$, the constraint forces do work on the system: $P_{\text{constraint}} = -\boldsymbol{\lambda}^T \frac{\partial \bm{\Phi}}{\partial t} \neq 0$.
+
+---
+
+## 2. Detailed Technical Audit & Corrected Formulations
+
+### A. Generic Initial Spin at Impact & Skid Phase (Section \ref{sec:putting_roll_slide} & Exercise 1)
+
+#### Technical Defects:
+- **Zero Spin Assumption**: Putters have static loft ($2^\circ\text{--}4^\circ$) and variable angle of attack. Contact typically occurs below or above the equator, imparting initial backspin $\omega_0 < 0$ or forward overspin $\omega_0 > 0$. Zero spin is an idealized case, not a physical law.
+- **Skid Distance and Duration**:
+  Given initial velocity $v_0$ and initial angular velocity $\omega_0$ (taking forward spin as positive, backspin as negative):
+  $$\dot{v} = -\mu_k g \operatorname{sgn}(v - r\omega), \quad \dot{\omega} = \frac{\mu_k m g r}{I} \operatorname{sgn}(v - r\omega) = \frac{\mu_k g}{\beta r} \operatorname{sgn}(v - r\omega),$$
+  where $I = \beta m r^2$ ($\beta = 2/5 = 0.4$ for a solid homogeneous sphere; for a multi-piece golf ball with a dense core/cover, $\beta \approx 0.38\text{--}0.40$).
+  For forward skid ($v_0 > r\omega_0$):
+  $$v(t) = v_0 - \mu_k g t, \quad \omega(t) = \omega_0 + \frac{\mu_k g}{\beta r} t.$$
+  The condition for pure roll is $v(t_r) = r \omega(t_r)$:
+  $$v_0 - \mu_k g t_r = r\omega_0 + \frac{\mu_k g}{\beta} t_r \implies t_r = \frac{v_0 - r\omega_0}{\mu_k g \left(1 + \frac{1}{\beta}\right)} = \frac{\beta (v_0 - r\omega_0)}{(1+\beta)\mu_k g}.$$
+  For $\beta = 2/5$:
+  $$t_r = \frac{2}{7} \frac{v_0 - r\omega_0}{\mu_k g}.$$
+  If $\omega_0 = 0$, $t_r = \frac{2 v_0}{7 \mu_k g}$.
+- **Distance to Roll**:
+  $$x(t_r) = v_0 t_r - \frac{1}{2}\mu_k g t_r^2 = \frac{v_0^2}{\mu_k g} \left[\frac{2}{7} - \frac{1}{2}\left(\frac{2}{7}\right)^2\right] = \frac{12}{49} \frac{v_0^2}{\mu_k g} \approx 0.2449 \frac{v_0^2}{\mu_k g}.$$
+  The text states that for $v_0$ and $\mu_k = 0.25$, "the skid phase covers about 20\% of the putt length." This is false and confusingly stated: the total length of a putt depends on the subsequent rolling friction $\mu_r$. Specifically:
+  $$x_{\text{total}} = x_{\text{skid}} + x_{\text{roll}} = \frac{12}{49}\frac{v_0^2}{\mu_k g} + \frac{v(t_r)^2}{2 a_{\text{roll}}} = \frac{12}{49}\frac{v_0^2}{\mu_k g} + \frac{25}{49}\frac{v_0^2}{2 a_{\text{roll}}}.$$
+  Since $\mu_r \approx 0.04\text{--}0.07 \ll \mu_k \approx 0.25$, the skid phase covers:
+  $$\frac{x_{\text{skid}}}{x_{\text{total}}} \approx \frac{0.245 / \mu_k}{0.245/\mu_k + 0.510/\mu_r} \approx \frac{0.98}{0.98 + 10.2} \approx 8.7\%,$$
+  not $20\%$. (A $20\%$ skid fraction only occurs if $\mu_r$ is unrealistically close to $\mu_k$).
+
+---
+
+### B. Rolling Dynamics on Slopes: Rotational Inertia & "Parabola" vs. Exact Curvature (Section \ref{sec:putting_slopes})
+
+#### Technical Defects:
+1. **Omission of Rotational Inertia in Equations of Motion**:
+   The text gives:
+   $$\ddot{\mathbf{r}} = -\mu_r g\, \hat{\mathbf{v}} + g \sin \alpha\, \hat{\mathbf{s}} \quad \text{[INCORRECT]}$$
+   When a sphere rolls without slipping on an inclined plane with slope $\alpha$ and rolling resistance, the effective translational acceleration along the slope under gravity is reduced by the rotational inertia factor $(1 + I/(mr^2)) = 1 + \beta = 7/5$:
+   - Gravitational acceleration down the fall line: $a_g = \frac{g \sin\alpha}{1 + \beta} = \frac{5}{7} g \sin\alpha$.
+   - Effective rolling deceleration opposing motion: $a_{\text{roll}} = \frac{\mu_r g}{1+\beta}$ (or defined as an effective deceleration $a_r = \mu_r' g$). Treating the ball as a point mass without the $5/7$ factor introduces a **40% systematic error** in the gravitational break rate relative to rolling deceleration!
+2. **The "Parabola" Fallacy**:
+   - The text claims: *"a putt rolled perpendicular to the fall line follows a parabola toward the low side"*.
+   - A trajectory is a parabola **if and only if** the acceleration orthogonal to the fall line is constant (e.g., zero) while the acceleration along the fall line is constant.
+   - However, in green-plane coordinates with $x$ across the slope and $y$ down the fall line:
+     $$\ddot{x} = -a_r \frac{\dot{x}}{\sqrt{\dot{x}^2 + \dot{y}^2}}, \qquad \ddot{y} = -a_r \frac{\dot{y}}{\sqrt{\dot{x}^2 + \dot{y}^2}} + \frac{5}{7}g \sin\alpha.$$
+   - As the ball curves down the slope, $\dot{y}$ increases, which robs deceleration from $\ddot{x}$ and applies breaking against gravity in $y$.
+   - **Correction**: The path is only approximately parabolic in the **perturbation limit** where $t \ll v_0/a_r$ and $\dot{y} \ll \dot{x}$. Under this small-break approximation:
+     $$\dot{x}(t) \approx v_0 - a_r t \implies x(t) \approx v_0 t - \frac{1}{2}a_r t^2,$$
+     $$\ddot{y}(t) \approx \frac{5}{7}g\sin\alpha - a_r \frac{\dot{y}}{v_0} \approx \frac{5}{7}g\sin\alpha \implies y(t) \approx \frac{1}{2} \left(\frac{5}{7} g \sin\alpha\right) t^2.$$
+     Only when eliminating $t$ to leading order ($t \approx x/v_0$) does one obtain the osculating parabola $y(x) \approx \frac{5 g \sin\alpha}{14 v_0^2} x^2$. Over full break paths, the trajectory deviates significantly from a parabola.
+
+---
+
+### C. Stimpmeter and Definition of Friction Coefficients (Section \ref{sec:putting_stimp})
+
+#### Technical Defects:
+- The text derives $\mu_r = \frac{v_r^2}{2 g L}$ equating translational kinetic energy $\frac{1}{2} m v_r^2$ to $m g \mu_r L$.
+- When the ball exits the Stimpmeter ramp, it is rolling (or rapidly transitions to rolling). The total kinetic energy of a rolling ball is:
+  $$E_k = \frac{1}{2} m v_r^2 + \frac{1}{2} I \omega_r^2 = \frac{1}{2} m v_r^2 (1 + \beta) = \frac{7}{10} m v_r^2.$$
+- If $\mu_r$ is defined as the dimensionless rolling resistance force coefficient ($F_{\text{roll}} = \mu_r m g$), then:
+  $$F_{\text{roll}} L = E_k \implies \mu_r m g L = \frac{1}{2} m v_r^2 (1 + \beta) \implies \mu_r = (1 + \beta) \frac{v_r^2}{2 g L} = \frac{7}{5} \frac{v_r^2}{2 g L}.$$
+- Alternatively, if $\mu_r$ is defined as the *effective deceleration coefficient* $a/g$, then $a = \frac{v_r^2}{2 L}$, so $\mu_{\text{eff}} = \frac{v_r^2}{2 g L}$. The text fails to define whether $\mu_r$ is the rolling resistance force coefficient or the kinematic deceleration ratio, confounding the two by a factor of $7/5$ ($1.4$).
+
+---
+
+### D. Pendulum Stroke, Half-Period vs. Cycle, and the "2:1 Tempo Ratio" (Sections \ref{sec:putting_pendulum} & \ref{sec:putting_tempo})
+
+#### Technical Defects:
+1. **Confusion of Period, Half-Period, and Backswing/Downswing**:
+   - The text states: *"a period $T_p \approx 1.8\text{ s}$, remarkably close to the measured half-period of elite putting strokes ($\approx 0.8\text{--}1.0\text{ s}$ backswing plus downswing)."*
+   - In a harmonic oscillator $\theta(t) = \theta_0 \cos(\omega_p t)$:
+     - **Full period $T_p$**: Backswing ($0 \to -\theta_0$), forward to impact ($-\theta_0 \to 0$), through-swing ($0 \to +\theta_0$), and return ($+\theta_0 \to 0 \to -\theta_0$).
+     - **Half-period $T_p/2$**: Backswing plus forward swing to impact is **NOT** a half period; backswing takes $T_p/4$, downswing to impact takes $T_p/4$. The total stroke from takeaway to impact is **one quarter to one half of a period** depending on whether follow-through is included.
+     - If $T_p \approx 1.8\text{ s}$, then:
+       - Takeaway to top of backswing: $t_{\text{back}} = T_p/4 \approx 0.45\text{ s}$.
+       - Top of backswing to impact: $t_{\text{down}} = T_p/4 \approx 0.45\text{ s}$.
+       - Impact to end of follow-through: $t_{\text{follow}} = T_p/4 \approx 0.45\text{ s}$.
+       - Total time from takeaway to impact is $t_{\text{back}} + t_{\text{down}} = T_p/2 \approx 0.90\text{ s}$. The text incorrectly conflates the full swing cycle, half-period, and stroke segments.
+2. **The "2:1 Tempo" Mathematical Impossibility for Free Pendulums**:
+   - Section \ref{sec:putting_tempo} claims: *"elite putters exhibit extraordinarily consistent tempo ratios---the ratio of backswing to downswing time hovers near 2:1... Because the pendulum frequency is set by geometry... this consistency emerges naturally from the physics"*.
+   - **This claim is completely mathematically and physically false.**
+   - A passive gravity pendulum is governed by $\ddot{\theta} + \omega_p^2 \sin\theta = 0$. The potential is symmetric: $V(\theta) = V(-\theta)$. Trajectories in phase space are symmetric closed orbits. The time taken from $\theta=0$ to maximum amplitude $\theta_0$ is *identically equal* to the time taken from $\theta_0$ back to $\theta=0$:
+     $$t_{\text{back}} = t_{\text{down}} \implies \text{Ratio} \equiv 1:1.$$
+   - A $2:1$ tempo ratio (backswing lasting twice as long as downswing, e.g., $\approx 0.60\text{ s}$ vs. $0.30\text{ s}$) **cannot emerge from an unforced pendulum**. It requires active forward muscular acceleration/torque during the downswing (downward forcing $\tau_{\text{down}} > 0$).
+   - Attributing the $2:1$ tempo to natural passive pendulum frequency contradicts elementary mechanics.
+
+---
+
+### E. Clubhead Speed vs. Ball Launch Speed (Exercise 3)
+
+#### Technical Defects:
+- Exercise 3 writes:
+  $$v_0 = L_p \omega_p \theta_0 \quad \text{[INCORRECT]}$$
+  where $v_0$ is the ball's launch speed.
+- $L_p \omega_p \theta_0$ is the **putter clubhead speed at the bottom of the stroke** ($v_{\text{head}}$), not the ball speed!
+- The ball is struck in a collision characterized by coefficient of restitution $e \approx 0.70\text{--}0.83$ and putter head mass $M \approx 340\text{--}360\text{ g}$ colliding with golf ball mass $m \approx 45.9\text{ g}$.
+- By conservation of momentum and definition of $e$:
+  $$v_0 = v_{\text{ball}} = \left(\frac{1+e}{1 + m/M}\right) v_{\text{head}}.$$
+  For typical values ($e \approx 0.75$, $M = 350\text{ g}$, $m = 45.9\text{ g}$):
+  $$\frac{v_0}{v_{\text{head}}} = \frac{1.75}{1 + 0.131} \approx 1.55.$$
+  Equating $v_0 = v_{\text{head}}$ underestimates the ball speed by $\sim 35\text{--}55\%$, which leads to a $\sim 50\%$ error in calculating backswing amplitude $\theta_0$.
+
+---
+
+### F. Nomenclature: Ideal Constraint Power
+
+#### Technical Defects:
+- The Nomenclature states:
+  > $P_{\mathrm{constraint}}(t)$: *Power associated with constraint forces (identically zero for ideal constraints).*
+- **Correction**: By D'Alembert's principle, ideal constraint forces do zero **virtual work** on **virtual displacements** ($\delta W = \boldsymbol{\lambda}^T \bm{J}_c \delta \bm{q} = 0$).
+- Real power is $P = \boldsymbol{\lambda}^T \dot{\bm{\Phi}}$. If the constraint is time-dependent (rheonomous / moving constraint, such as an actuated guide or moving pivot $\bm{\Phi}(\bm{q}, t) = \bm{0}$), we have:
+  $$\frac{\dd \bm{\Phi}}{\dd t} = \bm{J}_c \dot{\bm{q}} + \frac{\partial \bm{\Phi}}{\partial t} = \bm{0} \implies \bm{J}_c \dot{\bm{q}} = -\frac{\partial \bm{\Phi}}{\partial t}.$$
+  The physical power delivered by the ideal constraint is:
+  $$P_{\text{constraint}} = (\bm{J}_c^T \boldsymbol{\lambda})^T \dot{\bm{q}} = \boldsymbol{\lambda}^T (\bm{J}_c \dot{\bm{q}}) = -\boldsymbol{\lambda}^T \frac{\partial \bm{\Phi}}{\partial t} \not\equiv 0.$$
+- Ideal constraint forces do zero power **if and only if** the constraint is **stationary (scleronomous)**.
+
+---
+
+### G. Citation Verification Warnings
+
+1. **Penner (2002)** (*The physics of putting*, AJP):
+   - Penner explicitly treats loft, impact impact position, coefficient of restitution, and the rotational inertia of the rolling ball ($I = \frac{2}{5}mr^2$). The chapter cites Penner while neglecting rotational inertia in the slope dynamics and omitting putter-ball collision mechanics.
+2. **Pelz (2000)** (*Dave Pelz's Putting Bible*):
+   - Pelz documents the empirical $2:1$ cadence ratio of tour pros, but Pelz does *not* claim a passive, unforced gravity pendulum creates this $2:1$ ratio. The text's assertion that a free pendulum naturally yields a $2:1$ time ratio is physically invalid.
+3. **Karlsen et al. (2008)** & **MacKenzie et al. (2011)**:
+   - MacKenzie's putter studies use inverse dynamics showing substantial active neuromuscular torques during the downswing, directly refuting the notion that putters "swing freely" as passive pendulums with zero torque.
+
+---
+
+## 3. Recommended Mathematical Corrections (Checklist for Revision)
+
+1. **Section \ref{sec:putting_roll_slide}**:
+   - Generalize the initial spin to $\omega_0$.
+   - State the skid time as $t_r = \frac{\beta(v_0 - r\omega_0)}{(1+\beta)\mu_k g}$.
+   - Correct skid fraction relative to total putt distance to include both $\mu_k$ and rolling deceleration $a_r$.
+2. **Section \ref{sec:putting_slopes}**:
+   - Correct the rolling acceleration on slopes to include the rotational inertia factor:
+     $$\ddot{\mathbf{r}} = -a_r \hat{\mathbf{v}} + \frac{g \sin\alpha}{1+\beta} \hat{\mathbf{s}}.$$
+   - Replace "follows a parabola" with "follows an approximately parabolic trajectory in the short-break limit $\dot{y} \ll v_0$".
+3. **Section \ref{sec:putting_stimp}**:
+   - Clarify whether $\mu_r$ is the rolling resistance force coefficient ($F_r = \mu_r m g$, in which case $\mu_r = \frac{7}{5}\frac{v_r^2}{2gL}$) or the kinematic deceleration fraction $a_r/g$.
+4. **Sections \ref{sec:putting_pendulum} & \ref{sec:putting_tempo}**:
+   - Clarify $T_p/4$ (quarter-period) for backswing and downswing of an unforced pendulum ($1:1$ ratio).
+   - Explicitly state that the observed $2:1$ tempo ratio is an active biomechanical strategy requiring forward driving torque $\tau(t) > 0$, not a property of passive gravity pendulums.
+5. **Exercises**:
+   - In Exercise 3, replace $v_0 = L_p \omega_p \theta_0$ with the collision equation $v_{\text{head}} = L_p \omega_p \theta_0$ and $v_0 = \frac{1+e}{1+m/M} v_{\text{head}}$.
+6. **Nomenclature**:
+   - Qualify $P_{\text{constraint}}(t)$: *"identically zero for scleronomous (stationary) ideal constraints; equal to $-\boldsymbol{\lambda}^T \frac{\partial \bm{\Phi}}{\partial t}$ for rheonomous (moving) ideal constraints."*
