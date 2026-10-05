@@ -24,7 +24,7 @@ env:
 jobs:
   benchmark:
     name: Run Performance Benchmarks
-    # Fork PRs never run on the self-hosted fleet (RM#1989).
+    # timing baselines exist only for fleet hardware, so fork PRs skip (RM#1989)
     if: >-
       (!github.event.pull_request ||
       github.event.pull_request.head.repo.full_name == github.repository)
@@ -141,6 +141,7 @@ jobs:
     # Only this job — which never checks out or executes PR-controlled code —
     # is granted pull-requests:write, so the token that runs the benchmark
     # suite cannot post forged CI comments or mutate PR labels/state.
+    # posts PR comments with write permission; fork PRs skip (RM#1989)
     if: >-
       (!github.event.pull_request ||
       github.event.pull_request.head.repo.full_name == github.repository) &&
@@ -208,6 +209,7 @@ jobs:
     timeout-minutes: 90
     name: Benchmark Summary
     needs: benchmark
+    # reports on the skipped benchmark job; fork PRs skip (RM#1989)
     if: >-
       (!github.event.pull_request ||
       github.event.pull_request.head.repo.full_name == github.repository) &&

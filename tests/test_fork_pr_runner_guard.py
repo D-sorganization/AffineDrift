@@ -11,6 +11,7 @@ from pathlib import Path
 from textwrap import dedent
 
 import pytest
+import yaml
 
 from scripts import fork_pr_runner_guard as guard
 
@@ -246,3 +247,45 @@ def test_main_reports_and_exits_nonzero(tmp_path: Path) -> None:
         "on: pull_request\njobs:\n  t:\n    runs-on: ubuntu-latest\n", encoding="utf-8"
     )
     assert guard.main(["--workflows", str(tmp_path)]) == 0
+
+
+def _real_job(workflow: str, job: str) -> dict[str, object]:
+    loaded = yaml.safe_load((WORKFLOWS / workflow).read_text(encoding="utf-8"))
+    return loaded["jobs"][job]  # type: ignore[no-any-return]
+
+
+#: Jobs that validate code or enforce merge policy: a fork PR must still get a
+#: result, so they are routed to a hosted runner rather than skipped.
+FORK_ROUTED_JOBS = [
+    ("spec-check.yml", "spec-freshness"),
+    ("architecture-map-contract.yml", "validate-map"),
+    ("link-checker.yml", "check-links"),
+    ("lint-workflow-files.yml", "lint"),
+    ("ci-standard.yml", "website-lint"),
+    ("anti-phantom-merge.yml", "guard"),
+    ("compile-textbooks.yml", "pick-runner"),
+    ("compile-textbooks.yml", "compile"),
+]
+
+#: Jobs that post comments, run fleet-hardware benchmarks or hold fleet-only
+#: resources: a fork PR skips them.
+FORK_SKIPPED_JOBS = [
+    ("block-self-merge.yml", "block-self-approval"),
+    ("ci-benchmarks.yml", "benchmark"),
+    ("ci-benchmarks.yml", "comment"),
+    ("ci-benchmarks.yml", "summary"),
+]
+
+
+@pytest.mark.parametrize(("workflow", "job_id"), FORK_ROUTED_JOBS)
+def test_validation_jobs_route_fork_prs_instead_of_skipping(workflow: str, job_id: str) -> None:
+    job = _real_job(workflow, job_id)
+    assert guard.fork_routed(job), f"{workflow}:{job_id} must route fork PRs to hosted"
+    condition = str(job.get("if", ""))
+    assert "head.repo.full_name" not in condition, f"{workflow}:{job_id} must not skip fork PRs"
+
+
+@pytest.mark.parametrize(("workflow", "job_id"), FORK_SKIPPED_JOBS)
+def test_fleet_only_jobs_skip_fork_prs(workflow: str, job_id: str) -> None:
+    job = _real_job(workflow, job_id)
+    assert guard.requires_conjunct(job.get("if"), guard.SAME_REPO_GUARD)
