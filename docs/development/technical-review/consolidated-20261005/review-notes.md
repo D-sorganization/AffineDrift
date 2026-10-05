@@ -95,3 +95,14 @@ metadata gate commits was rejected: the separate scopes are intentionally
 recorded. Fifteen scoped acceptances and 27 then-pending other scopes are not
 contradictory. Its delivery warning is already enforced; it confirmed shared
 hashes and metrics agree. Do not treat this helper review as mathematical proof.
+
+## Main Presentation Component Integration
+
+PR4953 became genuinely conflicting after main5002262d3 merged PR4909.
+Integrated that protected main revision. Both SPEC rows are retained. The
+appendix-applications resolution preserves every corrected scientific paragraph
+and adopts the incoming shared laymans-terms wrapper; no scientific text from
+the older main article replaces the accepted revision. Remaining conflicts were
+only evidence digests; canonical regeneration resolves them. Preserve the new
+contributor development-log entry. Integration checks and exact amendment hashes
+are recorded separately; earlier full regression remains bound to its source.

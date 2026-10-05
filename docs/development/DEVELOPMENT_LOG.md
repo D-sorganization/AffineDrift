@@ -282,6 +282,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Summary:** Records Board decision D3(d) (PR #4485) as an accepted ADR: runtime choice rule, self-hosting with no CDN, offline/PWA behaviour, per-widget-class KB and TTI budgets, same-origin `affinedrift` wheel for Pyodide, and a `widget-parity/v1` golden-vector fixture format with a tolerance policy. Adds an ADR index contract test.
 - **Next step:** Get the draft PR reviewed and merged so #4533, #4534 and #4540 can build to the ADR.
 
+### DL-#4494 · Shared Open-by-Default Layman Component
+
+- **State:** in_review
+- **Owner:** claude
+- **Issue:** #4494 (mechanical sub-task); epic #4496
+- **Branch:** claude/issue-4494
+- **PR:** #4909 (draft)
+- **Paths:** scripts/filters/laymans-terms.lua, _quarto.yml, styles.css, _templates/partials/laymans-terms.html, scripts/check_readability.py, articles/ (14 pages), tests/laymans-terms.test.js, tests/test_laymans_terms_component.py, tests/tools/test_check_readability.py
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-05; dark-theme lay-card contrast override added after CI e2e contrast failure; jest laymans-terms 5 passed; pytest component 5 passed (Quarto 1.8.27); lay-block wording byte-identical on 14/14 pages. Source provenance `5002262d36c844fbd23b4cb6264cb6a951e47482` (incoming PR4909 record; historical validation, not a new scientific review).
+- **Summary:** One Lua-filter component replaces 14 inline lay blocks; open by default, placed above the Abstract heading, native-button keyboard toggle. Wording unchanged; rewrite and page extension stay under #4494.
+- **Next step:** Review the draft PR and mark it ready.
+
 ### DL-#4864 · Volume II Consistency Review
 
 - **State:** in_review

@@ -3669,6 +3669,42 @@ code span.va {
   }
 }
 /* ===== end css/components/caveats-block.css ===== */
+/* ===== begin css/components/laymans-terms.css ===== */
+/* "In Layman's Terms" component (#4494), rendered by scripts/filters/laymans-terms.lua. */
+
+/* The <h2> separates the toggle button from its panel, so an open panel needs
+   an explicit height reset. */
+.laymans-terms-content[aria-hidden="false"] {
+  max-height: none;
+}
+
+/* Lay blocks render open, so their light-tinted cards must stay readable on the
+   dark theme too (WCAG AA, tests/e2e/accessibility.spec.js). */
+[data-bs-theme="dark"] .laymans-item .analogy,
+[data-bs-theme="dark"] .laymans-item .key-takeaway,
+body.quarto-dark .laymans-item .analogy,
+body.quarto-dark .laymans-item .key-takeaway {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .laymans-item,
+body.quarto-dark .laymans-item {
+  background: var(--bg-tertiary);
+}
+
+[data-bs-theme="dark"] .laymans-terms-intro,
+body.quarto-dark .laymans-terms-intro {
+  color: var(--text-main);
+}
+
+[data-bs-theme="dark"] .laymans-item .analogy::before,
+[data-bs-theme="dark"] .laymans-item .key-takeaway::before,
+body.quarto-dark .laymans-item .analogy::before,
+body.quarto-dark .laymans-item .key-takeaway::before {
+  color: inherit;
+}
+/* ===== end css/components/laymans-terms.css ===== */
 /* ===== begin css/components/revision-history.css ===== */
 /* Revision History Component (WEB-07.3 #4545)
    Section rendering per-article change history from front-matter `changes`. */
@@ -5556,6 +5592,15 @@ table caption,
   top: 0;
   outline: 3px solid var(--accent-blue);
 }
+
+.anchorjs-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+}
+
 
 #quarto-header {
   background: linear-gradient(
