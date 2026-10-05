@@ -87,39 +87,11 @@ Before writing equations, we ask a bounded question: at a specified model state,
 
 ::: {.laymans-terms}
 ```{=html}
-      <p class="laymans-terms-intro">
-        New to control theory? Here's what this foundational article covers in everyday language.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The Core Question</h3>
-        <p>
-          At a specified state in the model, how much instantaneous motion is assigned to the autonomous dynamics, and how much is assigned to the declared input channel?
-        </p>
-        <div class="analogy">
-          Imagine a skateboard model with gravity and a declared push force. The equations can report the term contributed by each channel at the same state, but that report does not measure the rider's intent, muscles, or biological effort.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>What is a "State"?</h3>
-        <p>
-          The "state" is a snapshot sufficient to predict the declared model under specified future inputs. Here it includes rigid configuration, shaft deformation, and their rates. Pose alone is insufficient, and a physiological model may need additional internal states.
-        </p>
-        <div class="key-takeaway">
-          Given the current state, model parameters, and future declared inputs, the model predicts a trajectory. The state contains the model's represented "memory"; omitted biological states remain outside that prediction.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Modeling Simplifications</h3>
-        <p>
-          To make the math tractable, this framework makes some simplifying assumptions: body parts are treated as rigid (not squishy), the club shaft can bend but in predictable ways, and we ignore air resistance. These are standard engineering approximations.
-        </p>
-        <div class="analogy">
-          It's like how weather models don't track every raindrop—they simplify to make predictions possible whose accuracy must be tested against the intended prediction.
-        </div>
-      </div>
+<p class="laymans-terms-intro">New to control theory? This article asks one question about a swing model. We explain it in plain terms.</p>
+<div class="laymans-item"><h3>The Core Question</h3><p>At one state of the model, how much instant motion comes from the model's own dynamics? How much comes from the declared input channel? A skateboard model with gravity and a push force can report each term at the same state. That report does not measure the rider's intent, muscles, or effort.</p></div>
+<div class="laymans-item"><h3>What Is a State?</h3><p>The <a href="../pages/glossary.html#state-space">state</a> is a snapshot that is enough to predict the model under given future inputs. Here it holds the rigid pose, shaft bend, and their rates. Pose alone is not enough. A physiological model may need more internal states. The state holds only what the model represents, so omitted biological states stay outside its predictions.</p></div>
+<div class="laymans-item"><h3>Modeling Simplifications</h3><p>To keep the math workable, body parts are rigid, the shaft bends in a predictable way, and air resistance is ignored. These are common engineering approximations. Weather models also skip each raindrop. Their accuracy still has to be tested against the prediction we want.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> Given the current state, parameters, and future inputs, the model predicts a trajectory. Its accuracy must be tested.</div>
 ```
 :::
 
