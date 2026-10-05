@@ -735,6 +735,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#2018 · Vendor Automerge_Guard and Requeue_Stalled_Merges (Stalled-Merge Requeue Tooling) From Repository_Management, Byte-Identical to RM#2029; the Vendored Scripts/automerge_guard.py Gets an Explicit 801-Line Module-Size Limit (Owner Decision) Because Trimming It Locally Would Fork the Fleet Copy
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #2018
+- **Branch:** merged via #4980
+- **PR:** #4980
+- **Paths:** see #4980
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`11ae312e`; collated from changes/2018-vendor-automerge-guard-and-requeue-stall.md)
+- **Summary:** Vendor automerge_guard and requeue_stalled_merges (stalled-merge requeue tooling) from Repository_Management, byte-identical to RM#2029; the vendored scripts/automerge_guard.py gets an explicit 801-line module-size limit (owner decision) because trimming it locally would fork the fleet copy
+- **Next step:** Shipped in PR #4980.
+
 ### DL-#4945 · Annotate Technical Errors in Fifteen Historical Tangent and Integral Drafts
 
 - **State:** shipped
