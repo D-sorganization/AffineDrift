@@ -58,6 +58,8 @@ $$
 
 where $r_y=y-h(x)$ is the observation residual, $r_d=x_{k+1}-F(x_k,u_k;\theta)$ is the dynamics defect, and $\mathcal R$ encodes parameter constraints or priors. This decomposition is useful because it shows whether a fit trusts the measurements, the dynamics, or the regularizer. Very large $Q$ weakens the dynamics constraint; very small $Q$ can force an incorrect model to explain noisy observations. Sensitivity analyses over plausible covariance choices are essential.
 
+When $R_k$ or $Q_k$ are estimated, the Gaussian objective also includes their log determinants (and any hyperparameter priors). The displayed weighted least-squares expression assumes fixed covariances; omitting normalization while learning them rewards noise inflation.
+
 ## Process Noise Versus Model Error
 
 Process noise can make inference robust to small disturbances, but it can also mask missing dimensions. Suppose the true system has a hidden activation state; a position-only model may track it by increasing acceleration process noise. The state estimate appears adequate, but the inferred model has not explained the memory. Compare residual autocorrelation and dependence on prior inputs. Structured residuals suggest model error; approximately white residuals are more consistent with the assumed noise model, though whiteness alone is not proof of correctness.

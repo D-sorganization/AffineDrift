@@ -5,9 +5,7 @@
 Sparse identification methods ask whether observed dynamics can be expressed using a small number of candidate functions. In the basic SINDy formulation, measurements of state $x(t)$ and derivative $\dot x(t)$ are assembled into
 
 $$
-
 \dot X=\Theta(X)\Xi,
-
 $$
 
 where $\Theta(X)$ is a library of candidate features and $\Xi$ contains coefficients. A sparse regression seeks a coefficient matrix with few active entries while explaining the derivative data. The method's “model order” is conditional on the chosen state, candidate library, scaling, derivative estimate, and threshold or prior. It does not automatically infer the anatomical dimension of the system.
@@ -19,9 +17,7 @@ Brunton, Proctor, and Kutz introduced sparse identification of nonlinear dynamic
 For a second-order system, one can define a library over configuration, velocity, and known inputs:
 
 $$
-
 \ddot q = \Theta(q,\dot q,u)\Xi.
-
 $$
 
 A generic polynomial library may include constants, coordinate terms, velocity terms, products, and control interactions. For mechanics, a more defensible formulation separates known structure from unknown forces. For example, use a known mass matrix and gravity model, then represent only uncertain passive or actuator forces in a structured library. Alternatively, express inverse dynamics as $\tau=Y(q,\dot q,\ddot q)\pi$, then select among candidate force terms. The latter relies on known or measured net torque and suitable trajectory derivatives.
@@ -41,9 +37,7 @@ Scaling is essential. If one feature has numerical values near 10^3 and another 
 A common objective combines squared residual with an $\ell_1$ penalty:
 
 $$
-
 \min_\Xi \; \|\dot X-\Theta\Xi\|_2^2+\lambda\|\Xi\|_1.
-
 $$
 
 Sequential thresholded least squares alternates regression and coefficient removal. Group lasso can select whole feature families. Bayesian shrinkage, including ARD-style group precisions, can produce posterior uncertainty and relevance rankings. None removes the need for a meaningful feature library or informative experiment. Correlated features can lead to unstable support across data subsets; report selection frequency or posterior uncertainty rather than a single binary support.
@@ -55,9 +49,7 @@ For discrete candidate models, marginal likelihood or reversible-jump sampling c
 Suppose recorded motion obeys
 
 $$
-
 I\ddot q + b\dot q = u, \qquad u=-k\dot q.
-
 $$
 
 Then the observed equation is $I\ddot q+(b+k)\dot q=0$. If only $q(t)$ is measured and $u$ is unobserved, a regression library containing $\dot q$ can estimate an effective decay coefficient proportional to $b+k$, but cannot separate physical damping $b$ from feedback gain $k$. A sparse algorithm may select a damping term and report a compact model. That term is predictive under the same control policy, but its physiological interpretation is unsupported.

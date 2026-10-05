@@ -7,9 +7,7 @@ A model can contain unknown numerical parameters without uncertainty about its s
 For generalized coordinates $q$, a constrained mechanical system may be written
 
 $$
-
 M(q;\theta)\ddot q+C(q,\dot q;\theta)+g(q;\theta)=B(q;\theta)u+J(q)^T\lambda+\tau_{ext}.
-
 $$
 
 Here $M$ is the mass matrix, $C$ collects velocity-dependent terms, $g$ gravity, $B u$ actuation, and $J^T\lambda$ constraint forces. The coordinate dimension belongs to a candidate topology. The vector $\theta$ contains numerical quantities within that topology. Contact forces $\lambda$ may be governed by complementarity or a compliant law rather than being arbitrary free parameters.
@@ -21,9 +19,7 @@ If measured kinematics are $q(t)$, one can compute an inverse-dynamics residual 
 Rigid-body inverse dynamics is often linear in a suitable set of inertial parameters, even though the full forward equation is nonlinear in state. For a known trajectory and known external loads, one can write
 
 $$
-
 \tau(t)=Y(q,\dot q,\ddot q)\pi,
-
 $$
 
 where $Y$ is a regressor and $\pi$ collects inertial parameters. Stacking observations gives $\mathbf\tau=\mathbf Y\pi$. A least-squares estimate exists when the relevant columns of $\mathbf Y$ are sufficiently independent. If they are dependent, only combinations of parameters are identifiable. Physical constraints such as positive mass and physically realizable inertia further restrict the feasible set.
@@ -59,9 +55,7 @@ This example suggests the right question is not “Which dimension has the lower
 A research candidate for AffineDrift is a mechanics-first hierarchy with explicit model gates. Let $m$ index candidate topology and contact structure, $z$ represent optional latent memory, and $r_\phi$ be a bounded residual force:
 
 $$
-
 M_{m,\theta}(q)\ddot q+C_{m,\theta}(q,\dot q)+g_{m,\theta}(q)=B_{m,\theta}(q)u+J_m(q)^T\lambda+r_\phi(q,\dot q,u,z).
-
 $$
 
 The candidate model would first verify $M\succ0$, coordinate constraints, and valid contact semantics. A sparse group prior could turn on or off interpretable force families. If held-out residual structure remains and identifiability analysis supports memory, a latent state could be added. Model comparison would include a complexity cost and a reject/abstain outcome. This is a proposed architecture for research; it is not represented as implemented in the repository.

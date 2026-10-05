@@ -54,7 +54,9 @@ The baseline should retain raw data and transformations in a machine-readable pr
 
 Suppose a single segment pose is $(R,t)$ and a marker has known segment coordinate $r$. The predicted lab-frame location is $m=Rr+t$. The observed marker is $y=m+\epsilon$, with $\epsilon\sim\mathcal{N}(0,\Sigma_y)$. If the marker placement is uncertain by $\delta r\sim\mathcal{N}(0,\Sigma_r)$, then linearizing gives $\delta m\approx R\delta r$; hence the effective observation covariance is $\Sigma_eff = \Sigma_y + R \Sigma_r R^T$.
 
-The contribution to the objective becomes $(m-y)^T \Sigma_eff^{-1}(m-y)$. This derivation shows why treating all markers as exact rigid points can over-weight a marker with uncertain placement. If several markers share a segment-level skin displacement $b$, the model $y_i=Rr_i+t+b+\epsilon_i$ induces correlated residuals. Estimating one regularized $b$ is more principled than independently inflating each marker covariance, although it introduces an additional latent variable and prior.
+For a parameter-dependent covariance, the full Gaussian contribution is $\tfrac12 r^T\Sigma(\theta)^{-1}r+\tfrac12\log\det\Sigma(\theta)$, up to constants. The determinant term cannot be discarded when learning uncertainty or when rotating anisotropic placement covariance changes the effective covariance. Otherwise increasing uncertainty can reduce the quadratic residual without explaining the observations. The preceding quadratic forms assume fixed covariance or describe only the residual part of the likelihood.
+
+The quadratic contribution to the objective becomes $(m-y)^T \Sigma_eff^{-1}(m-y)$. This derivation shows why treating all markers as exact rigid points can over-weight a marker with uncertain placement. If several markers share a segment-level skin displacement $b$, the model $y_i=Rr_i+t+b+\epsilon_i$ induces correlated residuals. Estimating one regularized $b$ is more principled than independently inflating each marker covariance, although it introduces an additional latent variable and prior.
 
 ## When This Chapter's Assumptions Fail
 
