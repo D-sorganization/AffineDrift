@@ -42,3 +42,24 @@ def test_run_blocks_do_not_interpolate_untrusted_expressions() -> None:
         run = str(step.get("run", ""))
         assert "github.event.pull_request" not in run
         assert "head_ref" not in run
+
+
+# --- Rule 3 must see every changed file (AD#4935) ---------------------------
+
+
+def _guard_script() -> str:
+    run = "\n".join(str(s.get("run", "")) for s in _steps())
+    return run.replace("${{ github.actor }}", "tester")
+
+    script = _guard_script()
+    assert re.search(r'gh api --paginate "repos/\$REPO/pulls/\$PR/files"', script)
+
+
+def test_no_gh_pr_view_json_files_remains() -> None:
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert not re.search(r"gh pr view[^\n]*--json\s+files\b", text)
+
+
+def test_rule_3_truncation_at_rest_cap_is_handled_explicitly() -> None:
+    script = _guard_script()
+    assert "3000" in script or "3,000" in script
