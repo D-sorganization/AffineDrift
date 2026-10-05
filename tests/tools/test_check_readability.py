@@ -53,6 +53,16 @@ REAL_LAY_SECTION = """
 ```
 """
 
+# The shared component form (#4494): the wording sits in a raw HTML fence.
+COMPONENT_LAY_BLOCK = """
+::: {.laymans-terms}
+```{=html}
+<p class="laymans-terms-intro">A plain-language overview.</p>
+<div class="laymans-item"><h3>Why It Matters</h3><p>The cat sat on the mat. It was a warm day.</p></div>
+```
+:::
+"""
+
 
 def _write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -134,6 +144,14 @@ class TestExtractLayBlocks:
             "laymans-terms-header-title" not in blocks[0]
             or "In Layman" not in blocks[0].split('laymans-terms-content"')[0]
         )
+
+    def test_extracts_prose_from_shared_component(self) -> None:
+        blocks = extract_lay_blocks(COMPONENT_LAY_BLOCK)
+        assert len(blocks) == 1
+        assert "cat sat on the mat" in blocks[0]
+        # The fence lines must not survive, or code stripping would drop the prose.
+        assert "```" not in blocks[0]
+        assert score_prose(blocks[0]) is not None
 
     def test_no_section_returns_empty_list(self) -> None:
         assert extract_lay_blocks("Just an ordinary paragraph.") == []

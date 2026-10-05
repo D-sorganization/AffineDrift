@@ -63,6 +63,31 @@ Lease session `technical-review-20261004-hardware` expires 2026-10-04T11:04:29.4
 
 ---
 
+# Volume II Control Is Motion Landing Page — Rigor Review and Regular PR #4880
+
+Part of #4009 and the full-corpus review #4021. Governing issue #4878. Active lease is held by local on issue #4878 (receipt https://github.com/D-sorganization/AffineDrift/issues/4878#issuecomment-5981206758). Worktree located in `C:\Users\diete\Repositories\Worktrees\affine-4878-control-is-motion` on branch `fix/4878-control-is-motion`.
+
+The complete `books/control-is-motion.qmd` landing page source is corrected to align technical definitions and chapter summaries with established nonlinear control theory and the reviewed Volume II chapters:
+- **Orbital stability versus timed tracking:** Distinguishes orbital stability ($\operatorname{dist}(x(t), \mathcal{O}) < \epsilon$) and asymptotic orbital attraction ($\lim_{t \to \infty} \operatorname{dist}(x(t), \mathcal{O}) = 0$) from timed tracking error ($\|x(t) - x^*(t)\| \to 0$). Explains that an orbitally stable cycle can attract nearby trajectories while a non-zero asymptotic phase offset $\phi$ persists, leaving persistent time-synchronized tracking error. Scopes finite-horizon athletic maneuvers (golf downswing ~250–350 ms) to finite-time reachability containment, transverse tube invariance, or terminal hitting-set tolerances, rather than an automatic infinite-time periodic orbit.
+- **Transverse coordinates and moving frames:** Formulates local transverse coordinates $z = P(t)\delta x \in \mathbb{R}^{n-1}$ via moving frames, deriving the total time derivative $\dot{z} = (\dot{P}(t) + P(t)A(t))\delta x + P(t)B(t)\delta u$. Clarifies that an arbitrary projection matrix $P(t)$ is not automatically an autonomous, closed reduced system $\dot{z} = A_\perp(t)z + B_\perp(t)\delta u$ without an explicit transverse chart (e.g. moving Poincaré sections with monotonic phase $\dot{\theta} > 0$) that eliminates the along-trajectory tangential component $\delta x_\parallel$.
+- **Zero-input drift versus physical passivity:** Replaces the unqualified label of zero-input drift $f(x)$ as "passive geometry" with explicit port, storage function $V(x) \ge 0$, supply rate $w(u, y) = u^\top y$, and dissipation inequality $\dot{V} \le u^\top y$ requirements. Demonstrates that input coordinate shifts (e.g. non-zero nominal bias $u_0$) move terms between drift and input, which can destroy passivity with respect to the shifted port.
+- **Funnel synthesis chapter summary:** Replaces unqualified "certify convergence" with "certify finite-horizon invariance, reachability containment, and disturbance attenuation under stated assumptions."
+- **Task-dependent problem formulation:** Frames trajectory-centric control as a task-dependent organizing viewpoint within established control theory—well suited for underactuated, ballistic, or rhythmic maneuvers—rather than a universal replacement for classical setpoint regulation or time-indexed tracking.
+- **Primary source attribution:** Attributes established results to Hauser & Hindman (1995), Shiriaev, Freidovich & Gusev (2010), Manchester (2010, 2011), Westervelt et al. (2007), and Tedrake (MIT Underactuated Robotics).
+- **Preserved qualifications:** Retains manuscript provisional state, scaffolded notebook status, and pinned GitHub/Colab links intact.
+
+Validation:
+- Added 5 behavioral unit tests in `tests/test_control_is_motion_landing_page_rigor.py`:
+  1. `test_orbital_attraction_does_not_imply_timed_tracking_convergence`: unit circle attraction with persistent phase offset has non-zero timed error.
+  2. `test_moving_projection_chain_rule_requires_moving_frame_derivatives`: verifying $\dot{z} = (\dot{P} + PA)\delta x + PB\delta u$.
+  3. `test_shifted_input_offset_violates_passive_port_storage`: verifying constant input shift in damped system violates passivity of shifted port.
+  4. `test_tube_invariance_does_not_imply_asymptotic_attraction`: positive invariance of tube does not imply attraction to origin.
+  5. `test_control_is_motion_landing_page_rigor_contracts`: verifying all landing page rigor requirements.
+- Full test suites pass: `pytest tests/test_orbital_stability_rigor.py tests/test_control_is_motion_landing_page_rigor.py` (21 passed in 1.46s).
+- All checks pass: `ruff check .`, `black --check --line-length 100`, `python scripts/check_title_case.py` (665 source files checked), `python scripts/check_bibliography_quality.py`, `python scripts/check_citation_resolution.py` (294 qmd files checked).
+
+---
+
 # Tangent Lay Summary — Accepted Source and Regular PR #4875
 
 Regular PR https://github.com/D-sorganization/AffineDrift/pull/4875 is open against main and attached; never draft. Accepted source 73a1ae4f4f337036d1da211458fa81a3a1da3dbd binds four source/review/math/browser files. Six corrected findings now reference those exact bytes; the earlier route review is preserved separately. The complete article distinguishes local sensitivity and affine offsets from finite motion, qualifies remainder regularity, demonstrates coupled phases, bounds engineering examples and separates control algorithms. Only this publication source changed; production Python/tests are Git-unchanged from f10a0feff. The corpus row records complete source review without empirical coaching acceptance.
@@ -237,6 +262,84 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4896 · Prepare the Camera Geometry and Commercial Survey Corrections With Primary-Source Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4896
+- **Branch:** fix/camera-survey-review
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4896-camera-survey-review.md)
+- **Summary:** Prepare the camera geometry and commercial survey corrections with primary-source evidence
+- **Next step:** Regular PR #4899 is published; after #4897 merges, retarget, run protected delivery and verify canonical hashes on remote main
+
+### DL-#4894 · Correct the Connected Flight, Accuracy and Design Chapters With Explicit Uncertainty and Validation Limits
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4894
+- **Branch:** fix/flight-accuracy-design-review
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4894-flight-accuracy-preparation.md)
+- **Summary:** Correct the connected flight, accuracy and design chapters with explicit uncertainty and validation limits
+- **Next step:** Publish regular PR after 4895; retarget to main after parent delivery; use central guard and verify canonical hashes; then continue pending corpus
+
+### DL-#4890 · Integrate Parent CI Repairs Without Changing the Accepted Implementation Appendix
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4890
+- **Branch:** fix/implementation-appendix-review
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4890-implementation-delivery.md)
+- **Summary:** Integrate parent CI repairs without changing the accepted implementation appendix
+- **Next step:** After date PR 4891 reaches main, retarget PR 4895 and use central guard; verify the five canonical hashes before release
+
+### DL-#4888 · Preserve Verified and Unverified Publication-Date Presentation While Integrating Parent Delivery Repairs
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4888
+- **Branch:** fix/unverified-date-display
+- **PR:** #4891
+- **Paths:** see #4891
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`e37354e7`; collated from changes/4888-date-delivery.md)
+- **Summary:** Preserve verified and unverified publication-date presentation while integrating parent delivery repairs
+- **Next step:** After PR 4889 reaches main, retarget PR 4891; use central merge guard and verify the three accepted implementation hashes on remote main
+
+### DL-#4885 · Dimensionality and Educational Integration Review
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4885
+- **Branch:** fix/dimensionality-integration-review
+- **PR:** #4889
+- **Paths:** articles/degrees-of-freedom-and-dimensionality.qmd,articles/upstreamdrift-educational-integration.qmd
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`63028ca3`; collated from changes/4885-article-review-delivery.md)
+- **Summary:** Clarify dimension types and bind educational integration claims to qualified provider evidence
+- **Next step:** Protected main merge of PR 4889, verify four accepted canonical hashes, then retarget date PR 4891
+
+### DL-#1976 · Vendor RM-5 Change Fragment Tooling
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #1976
+- **Branch:** feat/1976-ad-change-fragments
+- **PR:** #4918
+- **Paths:** see #4918
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`8a36da45`; collated from changes/1976-vendor-rm-5-change-fragment-tooling.md)
+- **Summary:** Vendor RM-5 Change Fragment Tooling
+- **Next step:** Merge the pull request.
+
 ### DL-#4531 · ADR 0002, Interactive Technology Stack
 
 - **State:** in_review
@@ -249,6 +352,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Last verified:** 2026-10-04 (`python -m pytest tests/test_adr_index.py -q`: RED 1 failed/7 passed before indexing, GREEN 8 passed; ruff, black and prettier clean)
 - **Summary:** Records Board decision D3(d) (PR #4485) as an accepted ADR: runtime choice rule, self-hosting with no CDN, offline/PWA behaviour, per-widget-class KB and TTI budgets, same-origin `affinedrift` wheel for Pyodide, and a `widget-parity/v1` golden-vector fixture format with a tolerance policy. Adds an ADR index contract test.
 - **Next step:** Get the draft PR reviewed and merged so #4533, #4534 and #4540 can build to the ADR.
+
+### DL-#4494 · Shared Open-by-Default Layman Component
+
+- **State:** in_review
+- **Owner:** claude
+- **Issue:** #4494 (mechanical sub-task); epic #4496
+- **Branch:** claude/issue-4494
+- **PR:** #4909 (draft)
+- **Paths:** scripts/filters/laymans-terms.lua, _quarto.yml, styles.css, _templates/partials/laymans-terms.html, scripts/check_readability.py, articles/ (14 pages), tests/laymans-terms.test.js, tests/test_laymans_terms_component.py, tests/tools/test_check_readability.py
+- **Started:** 2026-10-04
+- **Last verified:** 2026-10-05; dark-theme lay-card contrast override added after CI e2e contrast failure; jest laymans-terms 5 passed; pytest component 5 passed (Quarto 1.8.27); lay-block wording byte-identical on 14/14 pages.
+- **Summary:** One Lua-filter component replaces 14 inline lay blocks; open by default, placed above the Abstract heading, native-button keyboard toggle. Wording unchanged; rewrite and page extension stay under #4494.
+- **Next step:** Review the draft PR and mark it ready.
 
 ### DL-#4864 · Volume II Consistency Review
 
@@ -630,6 +746,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4943 · Use a Synthetic Issue in the Change-Fragment Round-Trip Test so Real Collations Cannot Collide With It
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4943
+- **Branch:** merged via #4944
+- **PR:** #4944
+- **Paths:** see #4944
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`242d3ef0`; collated from changes/4943-use-a-synthetic-issue-in-the-change-frag.md)
+- **Summary:** use a synthetic issue in the change-fragment round-trip test so real collations cannot collide with it
+- **Next step:** Shipped in PR #4944.
 
 Entries stay here for 90 days after merge, then move to the archive.
 
