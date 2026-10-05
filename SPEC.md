@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-04 | #4883 | Un-nest See Also callout headings on 17 pages, add series-navigation links to five tangent-hyperplane parts, prune 25 related-coverage baseline entries and guard against stale baseline entries. |
 | 2026-10-04 | #4907 | Record Board decision D3(d) as accepted ADR 0002 (interactive technology stack: OJS plus self-hosted Pyodide, per-widget budgets, parity fixtures) and add an ADR index contract test. |
 | 2026-10-03 | #4836 | Bound passive/distributed-control attribution and stability claims; reconcile the standalone series-spring example with a tested massless junction, segmented force input and complete mechanical energy accounting. |
 | 2026-10-03 | #4845 | Correct local task-null geometry, rank-dependent force feasibility and UCM inference; publish a tested reaching-variance example with explicit PDF dependency carry-forward. |
