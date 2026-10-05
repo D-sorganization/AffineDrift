@@ -54,3 +54,7 @@ Pending-prefix corpus rows after R: 53 of407, not a completion percentage. This 
 ## Provider Follow-Up and Final Focused Check
 
 Tools #5431 (https://github.com/D-sorganization/Tools/issues/5431), bug and tier:strong, records the model-choice decision and bounded follow-up test work. Fresh REST source reads confirmed physics.py and transfer_strategy.py have the identical inspected blobs at current Tools main 25bb9205ddccdb38408b51504d3875eb9716e50d; this is not only a historical pinned-source discrepancy. No provider implementation changes were made. Final article render pass5 succeeded; final focused run passed all56tests in12.74seconds. Source whitespace was adjusted to preserve an existing literal phrase contract without weakening its test.
+
+## Frozen Acceptance
+
+Source 11564f73d919e6ac0a7acca0aa1cb8d9e3b8339e: clean rerun7226passed,29skipped,210deselected,60warnings,512.33seconds,93.25%coverage. Initial full run failed two root-hygiene checks because .playwright-cli was at root; moved that untracked artifact under QA and retained the failed logs. Both final tracked status captures are empty. Five pre-PR gates passed with no mapped tests;56focused tests passed separately. One corpus row accepted,52pending-prefix of407. B lease released receipt5988604242; C central guard armed, actual main merge still pending. T #4937 actively reviews putting and nomenclature. Continue the full goal.
