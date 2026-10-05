@@ -587,3 +587,4 @@ attempt; only the revision-matched live gate opts into two retries.
 
 | 2026-10-04 | #4886 | Correct launch-monitor timing, reference-point, spin and inference conventions; preserve primary-source and mathematical evidence with rebuilt book PDF. |
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
+| 2026-10-05 | #4913 | Benchmark workflow compares only against a baseline for the runner's platform (15% gate unchanged); otherwise saves one as an artifact and reports no baseline instead of failure. |

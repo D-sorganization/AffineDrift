@@ -1,3 +1,7 @@
+# Issue #4913 - Benchmark Baseline Platform Detection
+
+Branch `fix/4913-benchmark-baseline`: `scripts/ci/benchmark_compare_args.py` (tested) picks compare vs save mode from `.benchmarks/<machine_id>/`; `ci-benchmarks.yml` uses it, adds pipefail, uploads a candidate baseline artifact and reports honest PR status. Next: after merge, a maintainer runs the workflow, downloads artifact `benchmark-baseline-Linux-CPython-3.12-64bit` and commits it under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating. #4912 (pytest-timeout) is a separate open PR.
+
 # Issue #4882 - Freshness Dashboard Page-Relative Links
 
 Branch `claude/issue-4882`: `scripts/generate_companion_freshness.py` now emits route link targets relative to `models/programming/freshness.qmd`; page regenerated, claim-audit evidence refreshed, 12 path-style baseline entries removed (one journey-page entry remains by design). Next: review the draft PR and arm the merge queue.
