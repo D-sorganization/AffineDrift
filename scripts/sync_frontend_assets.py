@@ -53,6 +53,7 @@ CANONICAL_JS_NAMES = (
     "search-maturity-badge.js",
     "service-worker-updates.js",
     "service-worker-utils.js",
+    "symbol-hover.js",
     "ui-components.js",
     "utils.js",
     "ztcf-explorer.js",
