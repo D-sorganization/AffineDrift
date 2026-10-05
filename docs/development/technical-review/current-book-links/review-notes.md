@@ -113,6 +113,32 @@ error pages. Local hashes alone do not prove successful public delivery, and a
 PDF header/footer alone does not prove complete or correct contents. The helper's
 suggested generic commands are therefore a checklist input, not delivery proof.
 
+## Queue Integration Preview
+
+PR #4958 merged at e1ec8f62d804567f3a480c02242e0792d815185e on 5 October 2026,
+11:26:23 UTC. PR #4942 then preceded #4953, with its site check still running.
+A read-only `git merge-tree` preview of accepted head fbee4da94 with queued prefix
+56cb9b8ade267fc6493713ddf9d7711ab5d4c0d7 produced tree
+243745286e21c013858e8d8e41815d2be4eab1f7. It confirmed actual prospective conflicts
+in claim_audit_inventory.json and generated/claim_audit_report.json, all beneath
+data/trust/. The evidence presentation registry merged automatically.
+
+There are three conflict blocks in each file, six total. All concern evidence
+hashes, not review identities or scientific prose. The Flash helper ambiguously
+described three across both files; the lead counted the extracted blocks directly.
+All 145 frozen artifact hashes match the preview tree. This is prospective
+integration evidence, not proof of protected merge or publication.
+
+Once the preceding change is on protected main and a real conflict requires
+resolution, preserve the automatically merged records and underlying source
+changes. Resolve only the conflicting hash entries to restore parseable JSON,
+then run `python -m scripts.regenerate_claim_audit_evidence` and its `--check`.
+Do not select an entire ledger from one side: that could discard the other
+branch's review records. Compare review identities before and after regeneration,
+recheck the 145-artifact manifest, and run the applicable integration gates.
+Neither queued branch was edited during this preview. If GitHub instead merges
+the review successfully, use the actual protected result and skip this contingency.
+
 Repository_Management #1998 is merged at e03344f3d5d0306f990ff295f767dbb1ba74ecd9.
 Thirty-eight of its 39 changed files exactly match the accepted head. The remaining
 test file has only an independent main addition to SCRIPT_COPIES; the repair is
