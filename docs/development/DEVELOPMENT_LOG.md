@@ -269,6 +269,253 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4961 · Route Book Readers to the Corrected Reviewed Manuscript Editions
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4961
+- **Branch:** feat/technical-review-consolidated-20261005
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4961-reviewed-book-edition-links.md)
+- **Summary:** Route book readers to the corrected reviewed manuscript editions
+- **Next step:** Complete guarded PR4953 delivery; verify all reviewed target bytes and four book pages on protected main and in public delivery
+
+### DL-#4954 · Complete Impact and Inverse-Dynamics Source Review With Book Reconciliation
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4954
+- **Branch:** fix/final-partial-sources-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4954-final-partial-sources.md)
+- **Summary:** Complete impact and inverse-dynamics source review with book reconciliation
+- **Next step:** Source accepted at 07c71ed500; integrate current presentation component and verify protected delivery
+
+### DL-#4952 · Repair Inherited Development-Log Metadata and Archive Completed Records Without Losing Evidence
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4952
+- **Branch:** feat/technical-review-consolidated-20261005
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4952-development-log-metadata-repair.md)
+- **Summary:** Repair inherited development-log metadata and archive completed records without losing evidence
+- **Next step:** Verify the consolidation pre-PR gate against the repaired generated development log
+
+### DL-#4950 · Correct Publication Introductions and Complete Generated-Content Review
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4950
+- **Branch:** fix/technical-corpus-tail
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4950-corpus-tail-review.md)
+- **Summary:** Correct publication introductions and complete generated-content review
+- **Next step:** Local acceptance passed; deliver combined regular PR with #4954 and verify protected publication
+
+### DL-#4947 · Consolidate Reviewed Mechanics, Control and Historical Corrections for Main Delivery
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4947
+- **Branch:** feat/technical-review-consolidated-20261005
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4947-technical-review-consolidation.md)
+- **Summary:** Consolidate reviewed mechanics, control and historical corrections for main delivery
+- **Next step:** Deliver regular PR4953 through the guarded queue and verify protected-main artifacts, book targets and public publication before closing epic4009
+
+### DL-#4937 · Correct Putting Contact, Slope, Calibration and Pendulum Mechanics
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4937
+- **Branch:** fix/putting-mechanics-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4937-putting-mechanics-review.md)
+- **Summary:** Correct putting contact, slope, calibration and pendulum mechanics
+- **Next step:** Deliver regular PR through protected main after parent PR4938; verify accepted blobs on fetched main
+
+### DL-#4933 · Correct Workbench Capability, Intervention and Energy-Diagnostic Claims
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4933
+- **Branch:** fix/workbench-contract-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4933-workbench-contract-review.md)
+- **Summary:** Correct workbench capability, intervention and energy-diagnostic claims
+- **Next step:** Protected delivery after parent PR4936 reaches main; verify accepted blobs and release lease
+
+### DL-#4931 · Correct Identification, RL Benchmark and Motion-Analysis Claims
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4931
+- **Branch:** fix/inference-policy-analysis-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4931-inference-policy-analysis-review.md)
+- **Summary:** Correct identification, RL benchmark and motion-analysis claims
+- **Next step:** Open regular PR against fix/simulation-feedback-review; protected delivery after verified parent merge
+
+### DL-#4927 · Correct Simulation, Local Optimization and Feedback Guarantees
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4927
+- **Branch:** fix/simulation-feedback-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4927-simulation-feedback-review.md)
+- **Summary:** Correct simulation, local optimization and feedback guarantees
+- **Next step:** Deliver the regular PR after verified parent remote-main delivery, then verify accepted blobs on fetched main
+
+### DL-#4923 · Correct Platform, Engine Comparison and Model Construction Contracts
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4923
+- **Branch:** fix/platform-model-contracts-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4923-platform-model-contracts-review.md)
+- **Summary:** Correct platform, engine comparison and model construction contracts
+- **Next step:** Open regular PR against fix/golf-capstone-review; await protected parent delivery, retarget to main and verify accepted blobs
+
+### DL-#4921 · Correct Golf Capstone Acceleration Attribution and Synthetic Dynamics
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4921
+- **Branch:** fix/golf-capstone-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4921-golf-capstone-review.md)
+- **Summary:** Correct golf capstone acceleration attribution and synthetic dynamics
+- **Next step:** Open regular PR against #4922 after the five pre-PR gates; protected delivery and fetched-main verification remain
+
+### DL-#4917 · Distinguish Action Effects, Rhythmic Generators and Motor-Learning Processes
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4917
+- **Branch:** fix/learning-rhythm-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4917-learning-rhythm-review.md)
+- **Summary:** Distinguish action effects, rhythmic generators and motor-learning processes
+- **Next step:** Open a regular PR against #4919, then protected main delivery
+
+### DL-#4915 · Separate Prediction, Passive Mechanics and Stochastic-Control Assumptions
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4915
+- **Branch:** fix/prediction-passive-control-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4915-prediction-passive-control-review.md)
+- **Summary:** Separate prediction, passive mechanics and stochastic-control assumptions
+- **Next step:** Run pre-PR gates, push and open a regular PR against #4916; deliver through the protected dependency chain
+
+### DL-#4908 · Separate Neural Evidence From Dimensional and Controller Assumptions
+
+- **State:** in_progress
+- **Owner:** codex
+- **Issue:** #4908
+- **Branch:** fix/neural-architecture-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4908-neural-architecture-review.md)
+- **Summary:** Separate neural evidence from dimensional and controller assumptions
+- **Next step:** Run central pre-PR gates, push and open regular PR against #4910; deliver after parent main merge
+
+### DL-#4905 · Establish Checked Inference, Flexible-Beam and Control-Model Arguments
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4905
+- **Branch:** fix/inference-flexible-control-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4905-inference-flexible-control-review.md)
+- **Summary:** Establish checked inference, flexible-beam and control-model arguments
+- **Next step:** Push and open regular PR against #4906; deliver parent chain through protected main
+
+### DL-#4901 · Correct Joint Screw-Axis Conventions, Constraint Mobility and Soft-Tissue Stiffness
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4901
+- **Branch:** fix/joint-kinematics-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4901-joint-kinematics-review.md)
+- **Summary:** Correct joint screw-axis conventions, constraint mobility and soft-tissue stiffness
+- **Next step:** Publish regular PR against #4904, then protected delivery and fetched-main hash verification
+
+### DL-#4900 · Correct Biological Coupling, Stiffness, Inverse Dynamics and Force Allocation
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4900
+- **Branch:** fix/biological-inverse-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4900-biological-inverse-review.md)
+- **Summary:** Correct biological coupling, stiffness, inverse dynamics and force allocation
+- **Next step:** Publish regular PR after pre-PR gates, then protected delivery and fetched-main hash verification
+
+### DL-#4898 · Prepare Bounded Corrections for Experimental Measurement, Filtering and Timing
+
+- **State:** in_review
+- **Owner:** codex
+- **Issue:** #4898
+- **Branch:** fix/experimental-methods-review
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4898-experimental-methods-review.md)
+- **Summary:** Prepare bounded corrections for experimental measurement, filtering and timing
+- **Next step:** Publish regular PR on camera-review parent, then protected delivery and fetched-main hash verification
+
+### DL-#4525 · Rename Critiques/DEFENSE_STRATEGY to the Neutral Adjudication-Summary With a Quarto Alias and Redirect-Ledger Entry
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4525
+- **Branch:** claude/issue-4525-adjudication-summary
+- **PR:** #4971
+- **Paths:** see #4971
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`282f7372`; collated from changes/4525-rename-critiques-defense-strategy-to-the.md)
+- **Summary:** Rename critiques/DEFENSE_STRATEGY to the neutral adjudication-summary with a Quarto alias and redirect-ledger entry
+- **Next step:** Owner assigns severities to the three Unknown critiques and dates the Critical tip-mass response
+
 ### DL-#4896 · Prepare the Camera Geometry and Commercial Survey Corrections With Primary-Source Evidence
 
 - **State:** in_review
@@ -474,6 +721,45 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4945 · Annotate Technical Errors in Fifteen Historical Tangent and Integral Drafts
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4945
+- **Branch:** merged via #4953
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4945-historical-tangent-corrections.md)
+- **Summary:** Annotate technical errors in fifteen historical tangent and integral drafts
+- **Next step:** Shipped in PR #4953.
+
+### DL-#4939 · Correct Tangent-Space, Optimization, Contraction and Hybrid Application Claims
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4939
+- **Branch:** merged via #4953
+- **PR:** #4953
+- **Paths:** see #4953
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`76815ab5`; collated from changes/4939-correct-tangent-space-optimization-contr.md)
+- **Summary:** Correct tangent-space, optimization, contraction and hybrid application claims
+- **Next step:** Shipped in PR #4953.
+
+### DL-#4517 · Evidence Ladder: Six Rungs in Config/maturity.yml, Measured-Record Rule Enforced for Every Page, How to Read Lists the Rungs
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4517
+- **Branch:** merged via #4970
+- **PR:** #4970
+- **Paths:** see #4970
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`7904cfc1`; collated from changes/4517-evidence-ladder-six-rungs-in-config-matu.md)
+- **Summary:** Evidence ladder: six rungs in config/maturity.yml, measured-record rule enforced for every page, How to Read lists the rungs
+- **Next step:** Shipped in PR #4970.
 
 ### DL-#1996 · Ci(Security): Re-Vendor Fail-Closed fork_pr_runner_guard.py and fork_pr_guard_analysis.py From Repository_Management #2000; Any Step That Reads the PR Head Fails Unless the Job Is Same-Repo Gated.
 
