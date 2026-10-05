@@ -8,97 +8,118 @@ categories:
 - tangent-space
 ---
 
-## The Linearization-Based Control Principle
+## From a Derivative Model to a Control Problem
 
-If nonlinear dynamics are exactly linear at each instant, then we can use linear control tools — LQR, Riccati equations, all the machinery of linear systems theory — at each instant along a trajectory. **This is the key insight behind DDP, iLQR, and virtually every practical nonlinear control method.**
+[Part 2](./part-2-dynamics.html) derived a linear equation for infinitesimal variations. A nonlinear plant does not become linear at each instant. The useful step is to solve a tractable local control problem, evaluate the resulting policy on the nonlinear dynamics, and check whether the proposed change improves the stated objective.
 
-The logic is elegant: linearize around a nominal trajectory, solve a linear optimal control problem to get a feedback gain, apply that gain, and repeat. Each iteration refines the trajectory. Eventually — if the problem is well-conditioned — the iterations converge to a solution of the nonlinear optimal control problem.
+LQR solves a particular linear-quadratic problem. iLQR and differential dynamic programming (DDP) use related backward recursions inside nonlinear trajectory optimization. Their success requires more than good conditioning: derivative accuracy, feasibility, initialization, globalization and termination criteria all matter. They do not describe every nonlinear control method.
 
-## Linear Quadratic Regulation (LQR)
+## Finite-Horizon LQR and the Cost Convention
 
-The finite-horizon linear quadratic regulator solves the following problem: minimize
-
-$$
-J = \int_{t_0}^{t_f} \left( \|\delta x(t)\|_Q^2 + \|\delta u(t)\|_R^2 \right) dt + \|\delta x(t_f)\|_{Q_f}^2
-$$
-
-subject to the linear dynamics:
+Consider the linear system $\dot\xi=A(t)\xi+B(t)\nu$ and cost
 
 $$
-\delta\dot{x} = A(t)\delta x + B(t)\delta u
+\begin{aligned}
+J={}&\frac12\xi(t_f)^TQ_f\xi(t_f)\\
+&+\frac12\int_{t_0}^{t_f}
+\bigl(\xi^TQ(t)\xi+\nu^TR(t)\nu\bigr)\,dt.
+\end{aligned}
 $$
 
-Here $Q(t) \succeq 0$ and $R(t) \succ 0$ are cost matrices (positive semidefinite and positive definite, respectively), and $\|\cdot\|_M$ denotes the weighted norm $v^T M v$.
-
-The optimal feedback control law is:
+Assume bounded continuous coefficients on a finite interval, symmetric $Q,Q_f\succeq0$, and uniformly positive-definite $R$. This unconstrained finite-horizon problem has a quadratic value function
 
 $$
-\delta u^*(t) = -K(t) \delta x(t)
+V(\xi,t)=\frac12\xi^TS(t)\xi.
 $$
 
-where the gain matrix $K(t)$ is computed via the backward Riccati differential equation:
+Thus $D_\xi^2V=S$. If the cost is instead written without either factor of $1/2$, the value is $\xi^TS\xi$ and its Hessian is $2S$; the feedback gain is unchanged. Also, $v^TQv$ is a squared weighted seminorm when $Q\succeq0$, and the square of a norm only when $Q\succ0$.
+
+Minimizing the Hamilton–Jacobi expression over $\nu$ gives
 
 $$
--\dot{S}(t) = A(t)^T S(t) + S(t) A(t) - S(t) B(t) R(t)^{-1} B(t)^T S(t) + Q(t)
+\nu_*=-K\xi,\qquad K=R^{-1}B^TS,
 $$
 
-with terminal condition $S(t_f) = Q_f$. The gain is then:
+with the backward Riccati equation
 
 $$
-K(t) = R(t)^{-1} B(t)^T S(t)
+\begin{aligned}
+-\dot S&=A^TS+SA-SBR^{-1}B^TS+Q,\\
+S(t_f)&=Q_f.
+\end{aligned}
 $$
 
-The matrix $S(t)$ is the **value function Hessian** — it encodes the cost-to-go from state $x$ at time $t$ under optimal control.
+These are analytic optimality statements for the declared linear problem. Numerical integration and matrix solves introduce tolerances and conditioning errors; the result is not automatically accurate to machine precision. [Tedrake's LQR derivation](https://underactuated.mit.edu/lqr.html) develops the finite-horizon and tracking constructions. General tracking costs can include linear terms, producing an affine policy rather than this zero-centered regulator.
 
-## Differential Dynamic Programming (DDP) and iLQR
+## Why a Feedforward Update Is Essential
 
-The power of linearization becomes clear in DDP (Differential Dynamic Programming) and iLQR (iterative Linear-Quadratic Regulator). These algorithms work as follows:
+For nonlinear optimization, use a discrete dynamics map $x_{k+1}=F_k(x_k,u_k)$ obtained from a declared time discretization. Start with a dynamically feasible nominal rollout $(\bar x_k,\bar u_k)$ and approximate the local action value
 
-1. **Start with a nominal trajectory** $(x̄(t), ū(t))$ — perhaps from some heuristic or previous iteration.
+$$
+\mathcal Q_k(x,u)=\ell_k(x,u)+V_{k+1}(F_k(x,u)).
+$$
 
-2. **Linearize around it:** Compute the Jacobians $A(t)$ and $B(t)$ along the trajectory.
+Expanding about the nominal pair gives linear terms $\mathcal Q_x^T\delta x+\mathcal Q_u^T\delta u$, with gradients written as columns, and quadratic blocks $\mathcal Q_{xx},\mathcal Q_{ux},\mathcal Q_{uu}$. When the local input Hessian is positive definite, minimizing that quadratic yields
 
-3. **Solve LQR backwards:** Run the Riccati equation to get the feedback gain $K(t)$.
+$$
+\begin{aligned}
+\delta u&=k_k+L_k\delta x,\\
+k_k&=-\mathcal Q_{uu}^{-1}\mathcal Q_u,\\
+L_k&=-\mathcal Q_{uu}^{-1}\mathcal Q_{ux}.
+\end{aligned}
+$$
 
-4. **Apply the gain:** Integrate forward with the feedback control
-$$u(t) = ū(t) - K(t)(x(t) - x̄(t))$$
+Here $k_k$ is the feedforward correction; the negative sign is already included in $L_k$. The trial rollout uses
 
-5. **Accept or adjust:** If the cost improved, accept the new trajectory and iterate. Otherwise, backtrack.
+$$
+u_k=\bar u_k+\alpha k_k+L_k(x_k-\bar x_k),
+\qquad 0<\alpha\le1.
+$$
 
-This procedure is called **successive approximation** or **shooting.** Each iteration solves a linear optimal control problem on the linearized system, but the actual system integrated forward is nonlinear. The iterations refine the trajectory and the gain, accounting for nonlinear effects through repeated linearization.
+In this equation $u_k$ is the physical trial input. A feedback-only policy $u_k=\bar u_k+L_k(x_k-\bar x_k)$ reproduces the old nominal rollout when it starts at the same state under the same deterministic model. It cannot improve a nonoptimal nominal input sequence by itself.
 
-## Exactness in the Limit
+For a one-step illustration, let $x_1=x_0+u$, $x_0=0$, and $J=\tfrac12(x_1-1)^2+\tfrac12u^2$. At nominal $u=0$, $\mathcal Q_u=-1$, $\mathcal Q_{uu}=2$, hence $k=1/2$. The full step reduces cost from $1/2$ to $1/4$. Feedback alone leaves $u=0$.
 
-**LQR is exact for the linearized system.** That is: if you solve the Riccati equation and apply the feedback control to the linear system $\delta\dot{x} = A(t)\delta x + B(t)\delta u$, you will get the optimal trajectory for that linear system, to machine precision.
+## iLQR and DDP Use Different Dynamics Derivatives
 
-Residuals from nonlinearity — the $O(\|\delta x\|^2)$ terms we dropped — are not captured by the linearized LQR solution. However, these residuals are *handled by iteration.* You apply the control, integrate the nonlinear system forward, see what trajectory you get, linearize around it, solve LQR again, and repeat. Each iteration accounts for the mismatch between linear and nonlinear dynamics.
+Let $A_k=D_xF_k$, $B_k=D_uF_k$, and let $v=D_xV_{k+1}$ and $P=D_x^2V_{k+1}$ be evaluated at the nominal successor. The second-order chain rule gives, for example,
 
-This is why DDP/iLQR works so well: it is not trying to solve the nonlinear problem in one shot. Instead, it leverages the fact that linearization is exact infinitesimally, and uses iteration to handle the nonlinear corrections systematically.
+$$
+\begin{aligned}
+\mathcal Q_{uu}
+ &=\ell_{uu}+B_k^TPB_k+\sum_i v_iD_{uu}^2F_{k,i},\\
+\mathcal Q_{ux}
+ &=\ell_{ux}+B_k^TPA_k+\sum_i v_iD_{ux}^2F_{k,i}.
+\end{aligned}
+$$
 
-## Connection to Stability and Optimality
+The analogous $xx$ block includes $\sum_i v_iD_{xx}^2F_{k,i}$. Full DDP retains these dynamics-Hessian contractions; iLQR drops them while retaining quadratic cost information. These are derivatives of the **discrete map**, not interchangeable formulas for a continuous vector field. The distinction is also described in [Tedrake's trajectory-optimization notes](https://underactuated.mit.edu/trajopt.html).
 
-The site's [Stability-Optimality Duality](../tangent-hyperplane-contraction/chapters/04-stability-optimality-duality.html) framework reveals a deep connection: **The Riccati matrix $S(t)$ serves a dual role.**
+A practical iteration computes a backward update, regularizes when necessary, rolls out the nonlinear dynamics with a trial step, and compares actual objective improvement with the local prediction. Constraints require explicit handling; clipping an unconstrained policy does not preserve its optimality proof. A lower rollout cost neither proves convergence nor establishes a local minimum. Report feasibility, stationarity, step acceptance and termination tolerances.
 
-- **As a value function:** $S(t)$ encodes the cost-to-go from time $t$ onward under optimal control.
-- **As a contraction metric:** $S(t)$ defines a metric with respect to which the optimal feedback controller is a contraction. Perturbations decay exponentially under the optimal feedback law.
+## Cost Decrease Does Not Automatically Prove Contraction
 
-This duality means that optimizing for cost and ensuring stability are not separate concerns — they are two faces of the same geometric structure. The Riccati matrix simultaneously minimizes cost and ensures robust convergence.
+With the continuous LQR gain above and $A_{\rm cl}=A-BK$, direct substitution gives
 
-## Limitations and Practical Considerations
+$$
+\dot S+A_{\rm cl}^TS+SA_{\rm cl}=-Q-K^TRK.
+$$
 
-:::{.callout-warning}
-**Convergence Requires Small Perturbations or Good Initialization:** DDP/iLQR converge only if the initial trajectory is close enough to the optimal one, or if the nonlinearity is mild. Large deviations cause the linearization to fail, and the iteration may not improve.
+This identity connects cost and differential decay. To use $S$ as a uniformly contracting metric, one additionally needs uniform bounds $aI\preceq S\preceq bI$, $a>0$, and a rate $\lambda>0$ satisfying
 
-**Singular Value Issues:** If the Riccati matrix $S(t)$ becomes ill-conditioned, numerical issues arise. In practice, regularization is often added to ensure robustness.
+$$
+Q+K^TRK\succeq2\lambda S.
+$$
 
-**Computational Cost:** Solving the Riccati equation is $O(n^3)$ per time step. For high-dimensional systems or long horizons, this can be expensive. Approximations like truncated feedback or time-varying gains are sometimes used.
+For nonlinear feedback, the corresponding inequality must hold for the full closed-loop Jacobian throughout the claimed region, not merely at sampled points on one reference. [Part 5](./part-5-contraction.html) explains the geometric conditions.
 
-**No Global Guarantees:** iLQR is a local optimization method. It finds a local minimum, not a global one. The quality of the solution depends heavily on initialization.
-:::
+A counterexample is $\dot x=x+u$ with $Q=Q_f=0$ and $R=1$ on a finite horizon. The optimal policy is $u=0$, because only effort is penalized. Then $S=0$ and perturbations grow as $e^t$. Optimality for this objective supplies neither a metric nor stability.
 
-## Looking Ahead
+## Application to Golf and Humanoid Models
 
-We have now seen the full chain: from geometric tangent spaces to linearized dynamics to linear optimal control to iterative nonlinear control algorithms. The final piece is understanding the error: what happens when the linearization breaks down? In [Part 4](./part-4-residuals-curvature.html), we examine residuals and curvature — the mechanisms by which nonlinearity limits the range of validity of linear tools.
+The objective must distinguish target accuracy, effort proxies, contact feasibility and robustness. A torque penalty is not a measurement of metabolic cost. Derivatives depend on the declared joint, shaft, muscle and contact states; changing those choices changes the local problem.
+
+Dense Riccati-style operations can involve cubic state-dimension costs, but runtime also depends on input dimension, horizon, sparsity, derivative computation and solver implementation. Benchmark the actual model before promising real-time feedback. The next article, [Residuals and Curvature](./part-4-residuals-curvature.html), explains what the local dynamics omit and how that omission accumulates.
 
 ## Related Articles
 

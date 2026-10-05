@@ -1,0 +1,158 @@
+"""Manufactured mathematical checks; no empirical golfer validation."""
+
+import json
+from pathlib import Path
+
+import numpy as np
+from scipy.integrate import solve_ivp
+from scipy.optimize import minimize_scalar
+
+RNG = np.random.default_rng(4939)
+RESULTS: dict[str, dict[str, float | int]] = {}
+
+
+def record(name: str, errors: list[float], tolerance: float) -> None:
+    maximum = max(errors)
+    assert maximum <= tolerance, (name, maximum, tolerance)
+    RESULTS[name] = {"cases": len(errors), "max_error": maximum, "tolerance": tolerance}
+
+
+def circle_and_transport() -> None:
+    projection_errors, transport_errors = [], []
+    for epsilon, angle in zip(RNG.uniform(0.02, 0.8, 100), RNG.uniform(-3, 3, 100)):
+        point = np.array([1.0, epsilon])
+        fit = minimize_scalar(
+            lambda theta: np.sum((point - [np.cos(theta), np.sin(theta)]) ** 2),
+            bounds=(-np.pi / 2, np.pi / 2), method="bounded",
+            options={"xatol": 1e-13},
+        )
+        assert fit.success
+        projection_errors.append(abs(np.sqrt(fit.fun) - (np.hypot(1, epsilon) - 1)))
+        basis = np.array([[-np.sin(angle)], [np.cos(angle)]])
+        basis_rate = np.array([[-np.cos(angle)], [-np.sin(angle)]])
+        rotation = np.array([[0, -1], [1, 0]])
+        coordinate_rate = np.linalg.pinv(basis) @ (rotation @ basis - basis_rate)
+        transport_errors.append(float(np.linalg.norm(coordinate_rate)))
+    record("circle_projection_by_scalar_minimization", projection_errors, 1e-10)
+    record("moving_circle_basis_transport", transport_errors, 1e-13)
+
+
+def finite_trajectory_remainder() -> None:
+    errors = []
+    for epsilon, end in zip(RNG.uniform(0.005, 0.1, 100), RNG.uniform(0.1, 0.8, 100)):
+        actual = solve_ivp(lambda t, x: x * x, [0, end], [epsilon],
+                           method="DOP853", rtol=1e-12, atol=1e-14).y[0, -1]
+        expected = epsilon**2 * end / (1 - epsilon * end)
+        errors.append(abs((actual - epsilon) - expected))
+        assert expected <= epsilon**2 * end / (1 - 0.1 * 0.8)
+    record("finite_remainder_against_independent_ode", errors, 1e-11)
+
+
+def discrete_ddp_chain_rule() -> None:
+    errors = []
+    step = 2e-4
+    for _ in range(100):
+        x, u, c, v = RNG.uniform(-0.5, 0.5, 4)
+        p = RNG.uniform(0.5, 2)
+        next_state = x + u + c * u * u + x * u
+        grad = p * next_state + v
+        a, b = 1 + u, 1 + 2 * c * u + x
+        huu, hux = 1 + b * b * p + grad * 2 * c, b * p * a + grad
+
+        def objective(state: float, control: float) -> float:
+            successor = state + control + c * control**2 + state * control
+            return 0.5 * control**2 + 0.5 * p * successor**2 + v * successor
+
+        numerical_uu = (objective(x, u + step) - 2 * objective(x, u)
+                        + objective(x, u - step)) / step**2
+        numerical_ux = (objective(x + step, u + step) - objective(x + step, u - step)
+                        - objective(x - step, u + step) + objective(x - step, u - step)) / (4 * step**2)
+        errors.append(max(abs(numerical_uu - huu), abs(numerical_ux - hux)))
+    record("ddp_discrete_hessians_by_finite_differences", errors, 2e-7)
+    assert 0.5 * (0.5 - 1)**2 + 0.5 * 0.5**2 == 0.25 < 0.5
+
+
+def riccati_and_task_null_space() -> None:
+    riccati_errors, null_errors = [], []
+    for _ in range(100):
+        a, b = RNG.normal(size=(4, 4)), RNG.normal(size=(4, 2))
+        factors = RNG.normal(size=(4, 4))
+        s = factors.T @ factors + np.eye(4)
+        q, r = np.eye(4), np.diag(RNG.uniform(0.2, 2, 2))
+        k = np.linalg.solve(r, b.T @ s)
+        sdot = -a.T @ s - s @ a + s @ b @ k - q
+        acl = a - b @ k
+        residual = sdot + acl.T @ s + s @ acl + q + k.T @ r @ k
+        riccati_errors.append(float(np.linalg.norm(residual)))
+        jacobian = RNG.normal(size=(3, 7))
+        _, _, vh = np.linalg.svd(jacobian, full_matrices=True)
+        null_vector = vh[-1]
+        null_errors.append(abs(float(null_vector @ jacobian.T @ jacobian @ null_vector)))
+    record("riccati_closed_loop_identity", riccati_errors, 1e-10)
+    record("task_pullback_null_direction", null_errors, 1e-12)
+    actual = solve_ivp(lambda t, x: x, [0, 1], [1.0], method="DOP853",
+                       rtol=1e-12, atol=1e-14).y[0, -1]
+    assert abs(actual - np.e) < 1e-11  # Effort-only optimum u=0 expands.
+
+
+def bounce(state: np.ndarray, end: float, restitution: float) -> np.ndarray:
+    def flow(time: float, value: np.ndarray) -> list[float]:
+        return [value[1], -9.81]
+
+    def floor(time: float, value: np.ndarray) -> float:
+        return float(value[0])
+
+    floor.terminal = True
+    floor.direction = -1
+    before = solve_ivp(flow, [0, end], state, events=floor, method="DOP853",
+                       rtol=1e-12, atol=1e-14)
+    assert len(before.t_events[0]) == 1
+    event_time = before.t_events[0][0]
+    reset = before.y[:, -1].copy()
+    reset[1] *= -restitution
+    after = solve_ivp(flow, [event_time, end], reset, method="DOP853",
+                      rtol=1e-12, atol=1e-14)
+    assert after.success and after.y[0, -1] > 0
+    return after.y[:, -1]
+
+
+def saltation_against_event_integration() -> None:
+    errors = []
+    epsilon = 2e-6
+    for _ in range(100):
+        h, v, restitution = RNG.uniform(0.4, 2), RNG.uniform(-3, -0.2), RNG.uniform(0.3, 0.95)
+        event_time = (v + np.sqrt(v * v + 2 * 9.81 * h)) / 9.81
+        incoming = v - 9.81 * event_time
+        end = event_time + 0.03
+        direction = RNG.normal(size=2)
+        direction /= np.linalg.norm(direction)
+        saltation = np.array([[-restitution, 0], [-(1 + restitution) * 9.81 / incoming, -restitution]])
+        before = np.array([[1, event_time], [0, 1]])
+        after = np.array([[1, end - event_time], [0, 1]])
+        predicted = after @ saltation @ before @ direction
+        state = np.array([h, v])
+        numerical = (bounce(state + epsilon * direction, end, restitution)
+                     - bounce(state - epsilon * direction, end, restitution)) / (2 * epsilon)
+        errors.append(float(np.linalg.norm(numerical - predicted)))
+    record("saltation_against_event_detecting_ode", errors, 2e-7)
+
+
+def same_state_and_forward_response() -> None:
+    errors = []
+    for end in RNG.uniform(0.1, 1, 100):
+        actual = solve_ivp(lambda t, x: x + 1, [0, end], [0.0], method="DOP853",
+                           rtol=1e-12, atol=1e-14).y[0, -1]
+        errors.append(abs(actual - np.expm1(end)))
+        assert actual + 1 > 1  # Forward derivative difference exceeds same-state input.
+    record("forward_counterfactual_vs_same_state", errors, 1e-11)
+
+
+circle_and_transport()
+finite_trajectory_remainder()
+discrete_ddp_chain_rule()
+riccati_and_task_null_space()
+saltation_against_event_integration()
+same_state_and_forward_response()
+output = Path("reports/technical-review/tangent-applications-independent-checks.json")
+output.write_text(json.dumps({"seed": 4939, "scope": "manufactured mathematics only", "checks": RESULTS}, indent=2) + "\n", encoding="utf-8")
+print(json.dumps(RESULTS, indent=2))
