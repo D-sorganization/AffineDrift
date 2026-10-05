@@ -594,6 +594,7 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4890 | Connect launch-monitor implementation to identifiable sensor observations, timing uncertainty, conditional inversion and independently validated optical and radar budgets. |
 | 2026-10-04 | #4894 | Prepare coordinated flight, accuracy and design review with primary-reading limits, mathematical contracts and bounded Flash inventories. |
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
+| 2026-10-04 | #4909 | Render "In Layman's Terms" blocks through one open-by-default Lua-filter component; migrate the 14 existing inline blocks with unchanged wording. |
 | 2026-10-05 | #4913 | Benchmark workflow compares only against a baseline for the runner's platform (15% gate unchanged); otherwise saves one as an artifact and reports no baseline instead of failure. |
 | 2026-10-05 | #4911 | Install pytest-timeout in the benchmark venv (requirements-benchmarks.txt) so the 45 benchmarks run instead of failing on the unknown timeout option (#4911). |
 | 2026-10-05 | #4925 | Public-site verifier prints each failed route, viewport/theme and reason plus a capped `::error` annotation after the summary, via `scripts/public-site-failures.js`, so red Deploy Website runs are diagnosable from the job log (#4924). |
