@@ -1,3 +1,7 @@
+# Issue RM#1989 - Fork PRs Off The Self-Hosted Fleet
+
+Branch `fix/1989-fork-pr-self-hosted`, commit SELF, PR #4929 (refs Repository_Management#1989; no AD issue). Job-level fork guard added to fleet-capable `pull_request` jobs; `ci-standard` lanes route fork PRs to `ubuntu-latest` so required `quality-gate` still reports; `anti-phantom-merge` checks out PR head only on `pull_request`. `scripts/fork_pr_runner_guard.py` is vendored byte-identical from RM PR #1990 (sha256 536d19ad...), excluded from Black, self-scanned by `tests/test_fork_pr_runner_guard.py` (34 passed; RED was 21 violations). Next: owner applies the four admin settings listed in the PR body.
+
 # Issue #4913 - Benchmark Baseline Platform Detection
 
 Branch `fix/4913-benchmark-baseline`: `scripts/ci/benchmark_compare_args.py` (tested) picks compare vs save mode from `.benchmarks/<machine_id>/` and compares by the highest stored run number (`--benchmark-compare=NNNN`; the save name matches nothing); `ci-benchmarks.yml` uses it, adds pipefail, uploads a candidate baseline artifact and reports honest PR status. Next: after merge, a maintainer runs the workflow, downloads artifact `benchmark-baseline-Linux-CPython-3.12-64bit` and commits it under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating. #4912 (pytest-timeout) is a separate open PR.

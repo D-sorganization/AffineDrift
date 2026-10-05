@@ -590,3 +590,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
 | 2026-10-05 | #4913 | Benchmark workflow compares only against a baseline for the runner's platform (15% gate unchanged); otherwise saves one as an artifact and reports no baseline instead of failure. |
 | 2026-10-05 | #4911 | Install pytest-timeout in the benchmark venv (requirements-benchmarks.txt) so the 45 benchmarks run instead of failing on the unknown timeout option (#4911). |
+| 2026-10-05 | #4929 | Keep fork PRs off the self-hosted fleet: job-level fork guard and hosted fork route in workflows, vendored `scripts/fork_pr_runner_guard.py` with a self-scan test (RM#1989). |
