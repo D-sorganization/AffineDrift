@@ -154,6 +154,16 @@ Next: finish and serve the clean build; compare visible-browser and headless Chr
 
 ---
 
+### DL-#4558 · Animated WebP for Dead Fish Figure
+
+- **State:** in_review
+- **Owner:** claude
+- **Issue:** #4558
+- **Branch:** claude/issue-4558
+- **Summary:** Emit an animated WebP from the fish optimizer and serve it through a reduced-motion-aware picture element with the optimized GIF as fallback.
+- **Evidence:** tests/test_optimize_images.py; tests/test_image_budget.py; scripts/optimize_images.py --check.
+- **Next step:** Frontier review of the draft PR, then mark ready and arm the guarded merge.
+
 ### DL-#4868 · Title-Card Paint Investigation
 
 - **State:** in_progress
