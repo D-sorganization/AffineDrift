@@ -4,7 +4,7 @@
 
 This report records route-level audit state. Claim text and critique adjudication remain authoritative in the #4019 claim registry and #4020 critique ledger.
 
-- Reviewed: 248
+- Reviewed: 249
 - Deferred: 0
 - Exempt: 3
 
@@ -232,6 +232,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `/pages/overview.html` | `pages/overview.qmd` | 3 |
 | `/pages/parameters.html` | `pages/parameters.qmd` | 2 |
 | `/pages/privacy-policy.html` | `pages/privacy-policy.qmd` | 1 |
+| `/pages/start-here.html` | `pages/start-here.qmd` | 2 |
 | `/pages/tangent-hyperplanes.html` | `pages/tangent-hyperplanes.qmd` | 3 |
 | `/pages/technology.html` | `pages/technology.qmd` | 3 |
 | `/pages/tools.html` | `pages/tools.qmd` | 3 |
@@ -487,6 +488,7 @@ This report records route-level audit state. Claim text and critique adjudicatio
 | `ad-route-36ae7b392279` | `/pages/overview.html` | Reviewed | — | None | None | 2 |
 | `ad-route-dad0b4221d85` | `/pages/parameters.html` | Reviewed | — | None | None | 0 |
 | `ad-route-223cd7be3af2` | `/pages/privacy-policy.html` | Reviewed | — | None | None | 1 |
+| `ad-route-48284a9d1eff` | `/pages/start-here.html` | Reviewed | — | None | None | 0 |
 | `ad-route-0689b70b9901` | `/pages/tangent-hyperplanes.html` | Reviewed | — | None | None | 2 |
 | `ad-route-67c107f8df01` | `/pages/technology.html` | Reviewed | — | None | None | 1 |
 | `ad-route-fff49fcd3dbb` | `/pages/tools.html` | Reviewed | — | None | None | 1 |
