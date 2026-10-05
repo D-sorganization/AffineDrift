@@ -20,7 +20,10 @@ review separates frozen-source, branch, queue and publication evidence.
 
 The final deployment build passed its 1,004 route checks and 158 representative
 checks. Publishing encountered a hosted-runner acquisition failure. A job-only
-retry preserves the successful build; full live verification remains pending.
+retry reused the successful build but was superseded by a documentation-only
+main merge. Replacement deployment `37366230234` targets `43ae945891cee0015c53fac03f4066afec5a5375`.
+All reviewed source hashes still match; full live verification remains pending.
+The new closing fragment is retained after resolving the collation conflict.
 
 ## Remaining Delivery Work
 

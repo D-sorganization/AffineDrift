@@ -15,7 +15,9 @@ evidence without treating CI or issue closure as scientific certification.
 
 Final publication and closing-documentation acceptance remain pending. The first
 publishing attempt ran no steps after runner acquisition failed; a job-only retry
-reuses the verified build. Verify
+reused the verified build but was superseded by documentation-only main collation.
+Replacement deployment 37366230234 targets 43ae945; reviewed sources are unchanged.
+The new closing fragment is retained after resolving its collation conflict. Verify
 the actual deployed manifest, complete live route evidence, revised guide and
 five advertised PDFs before closing #4009. Preserve all historical review limits,
 immutable edition pins and provider authority; no new science rewrite is added.

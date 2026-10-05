@@ -68,8 +68,18 @@ Deployment `37354676786` has completed its build of the final guide revision
 independently verifies 1,004 route cells and 158 representative checks, with all
 five amended routes present. The first publishing attempt could not acquire a
 hosted runner and ran no steps. The [recovery record](final-deployment-recovery.json)
-binds that terminal failure and the job-only retry, which preserves the successful
-build and artifacts. GitHub reports an active [hosted-runner assignment incident](https://www.githubstatus.com/incidents/3q1yb5m7ltvb).
+binds that terminal failure and the job-only retry, which reused the successful
+build and artifacts. GitHub reported a [hosted-runner assignment incident](https://www.githubstatus.com/incidents/3q1yb5m7ltvb)
+when the first failure was investigated. The retry was subsequently cancelled
+at 19:52:48 UTC because a newer main deployment had priority, as confirmed by
+the job annotation. That cancellation is separate from the earlier runner failure.
+
+Replacement deployment `37366230234` targets
+`43ae945891cee0015c53fac03f4066afec5a5375`. Its only changes from `f3b9fe8`
+collate internal documentation; the scientific sources and final guide/config
+are unchanged. An independent tree check again preserves all 145 original
+artifacts, 50 linked targets and four amended pages. The real modify/delete
+conflict caused by collation is resolved by retaining the new closing fragment.
 Final live-publication acceptance remains outstanding.
 Earlier five-target PDF checks passed at live revision `4b941c3`, but that
 workflow's full live scan was superseded. Those checks do not establish final
