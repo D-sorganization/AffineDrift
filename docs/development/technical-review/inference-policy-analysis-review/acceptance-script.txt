@@ -1,0 +1,66 @@
+import csv
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+root = Path.cwd()
+qa = root / 'docs/development/technical-review/inference-policy-analysis-review'
+head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+assert head == '5d8b250fafa0f40c1e61442d650f5fb385a0e195'
+assert (qa / 'full-tests.exit').read_text().strip() == '0'
+assert (qa / 'full-tests-before.txt').stat().st_size == 0
+assert (qa / 'full-tests-after.txt').stat().st_size == 0
+log = (qa / 'full-tests.txt').read_text(encoding='utf-8')
+assert '7226 passed, 29 skipped, 210 deselected, 60 warnings in 467.70s' in log
+assert 'Total coverage: 93.25%' in log
+chapters = ['articles/The_Geometry_of_Motion/Volume_V/chapters/' + p for p in
+            ['ch07_parameter_estimation.tex', 'ch08_reinforcement_learning.tex', 'ch09_visualization.tex']]
+paths = chapters + ['articles/The_Geometry_of_Motion/geometry_of_motion.bib',
+                   'articles/The_Geometry_of_Motion/Volume_V/main.pdf',
+                   'tests/test_parameter_estimation_listing.py', 'tests/test_rl_pendulum_listing.py', 'tests/test_visualization_analysis_listings.py',
+                   'reports/technical-review/inference-policy-analysis-independent-checks.json']
+record = {
+    'issue': 4931, 'epic': 4009,
+    'status': 'Three complete chapters accepted; protected remote-main delivery pending',
+    'accepted_source_commit': head,
+    'git_blob_sha256': {p: hashlib.sha256(subprocess.check_output(['git', 'show', head + ':' + p])).hexdigest() for p in paths},
+    'scope': 'Complete Volume V chapters 7-9; identification, pinned RL benchmark and mechanical diagnostics; no trained golf policy or empirical human certification',
+    'full_regression': {'head': head, 'passed': 7226, 'skipped': 29, 'deselected': 210,
+        'warnings': 60, 'seconds': 467.70, 'src_coverage_percent': 93.25, 'exit_code': 0,
+        'tracked_tree_unchanged': True,
+        'command': 'python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60',
+        'log': (qa / 'full-tests.txt').relative_to(root).as_posix()},
+    'pdf': {'pages': 55, 'printed_entries': 33, 'unresolved_citations_or_references': 0,
+        'visual_scope': 'Physical pages 3-5, 32-43, 53-55; final pass 5 pages 35-43 reinspected',
+        'build_log': (qa / 'accepted-pass5.txt').relative_to(root).as_posix(),
+        'limits': 'No overfull text or unresolved references; historical duplicate destinations/package/no-author warnings'},
+    'focused_tests': 54, 'combined_tests': 92,
+    'mathematics': {'record': 'reports/technical-review/inference-policy-analysis-independent-checks.json',
+        'identities': 7, 'cases_each': 100, 'threshold': 1e-7, 'maximum_error': 8.742063073441386e-9,
+        'scope': 'Manufactured model and control identities; not human validation'},
+    'delegation': {'helpers': 7, 'model': 'agy Gemini 3.8 Flash', 'mode': 'Read-only reviews and test proposals; lead-adjudicated'},
+    'failed_run': 'Initial combined run had four bibliography digest failures from mixed line endings; normalized source to LF and refreshed evidence. An overbroad negative-torque speed-cap assertion failed and was corrected after checking the trajectory. Other rejected helper proposals and repairs are recorded in review-notes.md.',
+    'delivery': {'status': 'Preparing regular PR', 'base': 'fix/simulation-feedback-review', 'dependency': 'PR 4932',
+        'next': 'Protected delivery after verified parent merge, then fetched-main blob verification'}
+}
+(root / 'reports/technical-review/inference-policy-analysis-validation.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+index = root / 'docs/development/technical-review/corpus-review-index.csv'
+with index.open(encoding='utf-8', newline='') as source:
+    reader = csv.DictReader(source)
+    fields = reader.fieldnames
+    rows = list(reader)
+assert len(rows) == 407
+before = sum(row['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for row in rows)
+assert before == 56, before
+for row in rows:
+    if row['Source'] in chapters:
+        row['Review Scope'] = ('Complete Chapter Review #4931; Source ' + head +
+            '; Identification, Reinforcement Learning and Analysis; Actual Listings, Independent Mechanics, Scoped PDF and Full Regression Accepted; Remote Delivery Pending')
+after = sum(row['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for row in rows)
+assert after == 53, after
+with index.open('w', encoding='utf-8', newline='') as target:
+    writer = csv.DictWriter(target, fieldnames=fields, lineterminator='\n')
+    writer.writeheader()
+    writer.writerows(rows)
+print('Accepted 3 rows; 407 total, 53 pending-prefix rows. These are scope counts, not a scientific-completion percentage.')

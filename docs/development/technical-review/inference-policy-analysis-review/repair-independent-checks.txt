@@ -1,0 +1,11 @@
+from pathlib import Path
+p=Path('docs/development/technical-review/inference-policy-analysis-review/flash-independent-checks.txt')
+s=p.read_text(encoding='utf-8').split('```python',1)[1].split('```',1)[0].strip()+'\n'
+s=s.replace('    beta_direct = np.linalg.lstsq(y_w, t_w, rcond=None)[0]','    solve = np.vectorize(\n        lambda a, b: np.linalg.lstsq(a, b, rcond=None)[0],\n        signature="(n,p),(n,k)->(p,k)",\n    )\n    beta_direct = solve(y_w, t_w)')
+s=s.replace('    beta_scaled = np.linalg.lstsq(y_scaled_w, t_w, rcond=None)[0]','    beta_scaled = solve(y_scaled_w, t_w)')
+s=s.replace('    beta_unscaled = beta_scaled / scale_diag.swapaxes(1, 2)','    beta_unscaled = beta_scaled * scale_diag.swapaxes(1, 2)')
+s=s.replace('    i1, i2 = (m1 * l1**2) / 3.0, (m2 * l2**2) / 3.0','    i1, i2 = icm1, icm2')
+s=s.replace('    err_rot = np.max(np.abs(norm_at_w - norm_rot))','    err_rot = np.max(np.abs(norm_at_w - norm_rot))\n    err_radii = np.max(np.abs(np.linalg.svd(a_mat, compute_uv=False)\n                                  - np.linalg.svd(a_rot, compute_uv=False)))')
+s=s.replace('float(max(err_opt, err_rot))','float(max(err_opt, err_rot, err_radii))')
+s=s.replace('    return summary','    assert all_passed, summary\n    return summary')
+Path('docs/development/technical-review/inference-policy-analysis-review/independent-checks-script.txt').write_text(s,encoding='utf-8')

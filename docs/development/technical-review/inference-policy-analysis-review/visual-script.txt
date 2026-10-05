@@ -1,0 +1,16 @@
+from pathlib import Path
+import fitz
+from PIL import Image, ImageDraw
+qa=Path('docs/development/technical-review/inference-policy-analysis-review')
+doc=fitz.open('articles/The_Geometry_of_Motion/Volume_V/main.pdf')
+pages=[3,4,5,*range(32,44),53,54,55]
+for start in range(0,len(pages),3):
+    group=pages[start:start+3]
+    sheet=Image.new('RGB',(1530,710),'#ddd')
+    for col,number in enumerate(group):
+        pix=doc[number-1].get_pixmap(matrix=fitz.Matrix(1,1))
+        page=Image.frombytes('RGB',[pix.width,pix.height],pix.samples)
+        page.thumbnail((500,680))
+        sheet.paste(page,(col*510,25))
+        ImageDraw.Draw(sheet).text((col*510+8,5),f'Physical page {number}',fill='black')
+    sheet.save(qa/f'visual-{start//3+1}.png')
