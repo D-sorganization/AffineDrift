@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-04 | #4907 | Record Board decision D3(d) as accepted ADR 0002 (interactive technology stack: OJS plus self-hosted Pyodide, per-widget budgets, parity fixtures) and add an ADR index contract test. |
 | 2026-10-03 | #4836 | Bound passive/distributed-control attribution and stability claims; reconcile the standalone series-spring example with a tested massless junction, segmented force input and complete mechanical energy accounting. |
 | 2026-10-03 | #4845 | Correct local task-null geometry, rank-dependent force feasibility and UCM inference; publish a tested reaching-variance example with explicit PDF dependency carry-forward. |
 | 2026-10-02 | #4837 | Align deployment workflow PUBLIC_SITE_URL to canonical apex domain https://affinedrift.com matching CNAME and _quarto.yml (#4573). |
@@ -588,3 +589,4 @@ attempt; only the revision-matched live gate opts into two retries.
 | 2026-10-04 | #4886 | Correct launch-monitor timing, reference-point, spin and inference conventions; preserve primary-source and mathematical evidence with rebuilt book PDF. |
 | 2026-10-04 | #4882 | Emit page-relative route links in the companion freshness dashboard; drop 12 path-style baseline entries. |
 | 2026-10-05 | #4913 | Benchmark workflow compares only against a baseline for the runner's platform (15% gate unchanged); otherwise saves one as an artifact and reports no baseline instead of failure. |
+| 2026-10-05 | #4911 | Install pytest-timeout in the benchmark venv (requirements-benchmarks.txt) so the 45 benchmarks run instead of failing on the unknown timeout option (#4911). |
