@@ -2,7 +2,7 @@
 issue: 4908
 summary: "Separate neural evidence from dimensional and controller assumptions"
 dl_state: "in_progress"
-next_step: "Finish audit binding checks, freeze source and run full regression before a regular PR against #4910"
+next_step: "Repeat frozen full regression after structured bibliography URL repair, then accept and open a regular PR against #4910"
 owner: "codex"
 branch: "fix/neural-architecture-review"
 ---
