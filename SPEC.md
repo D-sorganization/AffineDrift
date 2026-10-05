@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-05 | #4962 | ci(security): re-vendor fail-closed fork_pr_runner_guard.py and fork_pr_guard_analysis.py from Repository_Management #2000; any step that reads the PR head fails unless the job is same-repo gated. |
 | 2026-10-05 | #4942 | Related Articles coverage batch 2: 14 article and model pages leave the link-gate baseline |
 | 2026-10-05 | #4958 | anti-phantom-merge rule 3 lists PR files via paginated REST API and fails closed above the 3000-file API cap |
 | 2026-10-05 | #4944 | use a synthetic issue in the change-fragment round-trip test so real collations cannot collide with it |

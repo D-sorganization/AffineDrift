@@ -757,6 +757,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#1996 · Ci(Security): Re-Vendor Fail-Closed fork_pr_runner_guard.py and fork_pr_guard_analysis.py From Repository_Management #2000; Any Step That Reads the PR Head Fails Unless the Job Is Same-Repo Gated.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #1996
+- **Branch:** merged via #4962
+- **PR:** #4962
+- **Paths:** see #4962
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-05 (`ce7455ba`; collated from changes/1996-ci-security-re-vendor-fail-closed-fork-p.md)
+- **Summary:** ci(security): re-vendor fail-closed fork_pr_runner_guard.py and fork_pr_guard_analysis.py from Repository_Management #2000; any step that reads the PR head fails unless the job is same-repo gated.
+- **Next step:** Shipped in PR #4962.
+
 ### DL-#4941 · Related Articles Coverage Batch 2: 14 Article and Model Pages Leave the Link-Gate Baseline
 
 - **State:** shipped
