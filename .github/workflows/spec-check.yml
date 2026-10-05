@@ -33,7 +33,10 @@ jobs:
     name: Verify SPEC.md freshness
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     # Skip if spec-exempt label is applied or if actor is dependabot
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'spec-exempt') && github.actor != 'dependabot[bot]' }}
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository) &&
+      (!contains(github.event.pull_request.labels.*.name, 'spec-exempt') && github.actor != 'dependabot[bot]')
     timeout-minutes: 5
 
     steps:

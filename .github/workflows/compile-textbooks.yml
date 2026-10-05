@@ -51,6 +51,10 @@ jobs:
   # resolved, and every compile below was blocked -- so the textbooks silently
   # stopped being built at all. Mirrors ci-standard.yml.
   pick-runner:
+    # Fork PRs never run on the self-hosted fleet (RM#1989).
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 2
     outputs:
@@ -80,7 +84,10 @@ jobs:
 
   compile:
     needs: pick-runner
-    if: github.repository == 'D-sorganization/AffineDrift'
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository) &&
+      (github.repository == 'D-sorganization/AffineDrift')
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 40
     strategy:

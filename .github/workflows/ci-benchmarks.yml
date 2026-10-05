@@ -24,6 +24,10 @@ env:
 jobs:
   benchmark:
     name: Run Performance Benchmarks
+    # Fork PRs never run on the self-hosted fleet (RM#1989).
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 30
     steps:
@@ -137,7 +141,10 @@ jobs:
     # Only this job — which never checks out or executes PR-controlled code —
     # is granted pull-requests:write, so the token that runs the benchmark
     # suite cannot post forged CI comments or mutate PR labels/state.
-    if: ${{ github.event_name == 'pull_request' && always() }}
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository) &&
+      (github.event_name == 'pull_request' && always())
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 5
     permissions:
@@ -201,7 +208,10 @@ jobs:
     timeout-minutes: 90
     name: Benchmark Summary
     needs: benchmark
-    if: always()
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository) &&
+      always()
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     steps:
       - name: Report status
