@@ -1,7 +1,7 @@
 ---
 issue: 4923
 summary: "Correct platform, engine comparison and model construction contracts"
-dl_state: "validated"
+dl_state: "in_review"
 next_step: "Open regular PR against fix/golf-capstone-review; await protected parent delivery, retarget to main and verify accepted blobs"
 owner: "codex"
 branch: "fix/platform-model-contracts-review"
