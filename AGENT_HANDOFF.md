@@ -24,8 +24,11 @@ retry reused the successful build but was superseded by a documentation-only
 main merge. Replacement deployment `37366230234` targets `43ae945891cee0015c53fac03f4066afec5a5375`.
 All reviewed source hashes still match. The replacement workflow failed at
 20:07:54 UTC before acquiring its initial hosted runner; build and deploy were
-skipped. The GitHub Actions incident remains under investigation. Full live
-verification remains pending; the closing review has ordered recovery steps.
+skipped. After the user's runner recheck, attempt 2 acquired hosted runners:
+initial job 111979285425 passed and build job 111979394176 started at 21:12 UTC.
+The GitHub Actions incident remains under investigation. Follow this existing
+attempt; full live verification remains pending. The closing review has ordered
+verification and recovery steps.
 The new closing fragment is retained after resolving the collation conflict.
 
 ## Remaining Delivery Work

@@ -83,6 +83,12 @@ conflict caused by collation is resolved by retaining the new closing fragment.
 The replacement workflow also failed before acquiring its initial hosted runner,
 at 20:07:54 UTC. Build and deploy were skipped; no steps ran. The official
 incident remained under investigation at the subsequent check.
+Following the user's runner-capacity recheck, one bounded retry was requested
+at 21:12:26 UTC. Attempt 2 acquired hosted runners: initial job `111979285425`
+passed and build job `111979394176` started. GitHub's broader incident remains
+open; runner acquisition has recovered sufficiently for this attempt to proceed.
+The failed jobs had requested `ubuntu-latest`, not local fleet labels.
+Organization-wide runner capacity was not visible to the bot.
 Final live-publication acceptance remains outstanding.
 Earlier five-target PDF checks passed at live revision `4b941c3`, but that
 workflow's full live scan was superseded. Those checks do not establish final
