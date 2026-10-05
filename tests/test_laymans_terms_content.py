@@ -6,7 +6,8 @@
 2. Every block is at most 250 words and at most Flesch-Kincaid grade 10,
    scored by ``scripts/check_readability.py`` (WEB-12.1 lay-block target).
 3. Every block links at least one site glossary term instead of defining it
-   inline, and every link names a declared glossary key.
+   inline. Links are page-relative (the site gate rejects root-absolute
+   paths), resolve to ``pages/glossary.html`` and name a declared key.
 4. The tangent-series ``*_LAYMAN`` explanations are linked from the lay block
    of the article they accompany.
 """
@@ -26,7 +27,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MIN_RENDERED_PAGES = 15
 MAX_WORDS = 250
 MAX_GRADE = 10.0
-GLOSSARY_LINK_RE = re.compile(r'href="/pages/glossary\.html#([a-z0-9-]+)"')
+GLOSSARY_LINK_RE = re.compile(r'href="((?:\.\./)*)pages/glossary\.html#([a-z0-9-]+)"')
+GLOSSARY_PAGE = ROOT / "pages" / "glossary.html"
 SUPPRESSING_FIELDS = ("summary-plain", "key-takeaways")
 TANGENT = "articles/tangent-hyperplane-articles/Advanced"
 #: Each accessible tangent-series explanation and the article it accompanies.
@@ -79,8 +81,13 @@ def test_lay_block_meets_the_readability_target(path: str) -> None:
 
 @pytest.mark.parametrize("path", sorted(LAY_PAGES))
 def test_lay_block_links_glossary_terms(path: str) -> None:
-    keys = GLOSSARY_LINK_RE.findall(_block(LAY_PAGES[path]))
-    assert keys, f"{path}: link at least one term to /pages/glossary.html#<key>"
+    links = GLOSSARY_LINK_RE.findall(_block(LAY_PAGES[path]))
+    assert links, f"{path}: link at least one term to pages/glossary.html#<key>"
+    page_dir = (ROOT / path).parent
+    for prefix, key in links:
+        target = (page_dir / prefix / "pages" / "glossary.html").resolve()
+        assert target == GLOSSARY_PAGE.resolve(), f"{path}: {prefix}pages/glossary.html#{key}"
+    keys = [key for _, key in links]
     unknown = sorted(set(keys) - set(load_glossary()))
     assert unknown == [], f"{path}: unknown glossary keys {unknown}"
 
