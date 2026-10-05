@@ -1,221 +1,303 @@
-\chapter{Inverse Problems in Biomechanics}
+\chapter[Inverse Problems in Biomechanics]{Inverse Problems in\\Biomechanics}
 \label{ch:inverse-problems}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter is a provisional inference reference. Reproducing a prescribed
+motion or a synthetic example does not validate individual muscle forces,
+joint contact loads or a subject-specific biological explanation.
 \end{gomdraftnotice}
 
-\epigraph{%
-  In biomechanics, we almost never measure forces directly.
-  We measure motion and infer the forces that caused it.
-}{}
+Force plates measure external wrenches; cameras and other sensors provide
+observations used to estimate movement. Inverse dynamics combines these data
+with geometry and inertia to estimate net generalized loads. Muscle-force
+inference adds another layer of assumptions. Keeping those layers separate is
+essential when interpreting a measured golf swing.
 
 \section{The Inverse Dynamics Pipeline}
 
-Inverse dynamics is one of the central tools in biomechanics \cite{Winter2009,Delp2007}:
-given measured kinematics $\bm{q}(t)$, $\dot{\bm{q}}(t)$, $\ddot{\bm{q}}(t)$ and external
-forces $\bm{F}_{\text{ext}}(t)$, compute the net joint torques. By itself, however, the
-calculation stops at net generalized loads; moving from those loads to individual muscle
-forces requires an additional redundancy-resolution or forward-simulation model. The
-complete pipeline, illustrated in Figure~\ref{fig:ch6:id-pipeline}, transforms raw
-experimental data into progressively more model-dependent estimates:
+Using Chapter~5's speed coordinates, define the generalized load still required
+after subtracting declared external and separately modeled loads:
 \begin{equation}
-  \bm{\tau}(t) = M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + g(\bm{q})
-  - J_c^T(\bm{q}) \bm{F}_{\text{ext}}.
-  \label{eq:ch6:inverse-dynamics}
+ Q_{\mathrm{req}}=M(q)\dot v+h(q,v)-J_{\mathrm{ext}}(q)^T\lambda_{\mathrm{ext}}
+                  -Q_{\mathrm{known}}.
+ \label{eq:ch6:inverse-dynamics}
 \end{equation}
+Here $\lambda_{\mathrm{ext}}$ acts on the modeled body, so subtracting it from
+$M\dot v+h$ is the appropriate inverse-dynamics rearrangement.
+$Q_{\mathrm{known}}$ can contain an explicitly modeled passive force; omit it
+if that contribution is intentionally included in the net load being inferred.
+Do not subtract the same passive contribution again during muscle allocation.
+In an independent coordinate chart, $v=\dot q$ and
+$h=C(q,\dot q)\dot q+g(q)$ gives the familiar expression~\cite{OpenSimIDBiological}.
+
+Angular-coordinate components are moments and translational components are forces.
+For a floating model with unactuated overall pose, the corresponding six
+components should vanish when motion, inertial properties and external wrenches
+are dynamically consistent. Nonzero base components are residual forces and
+moments, not biological joint actuators. They can indicate several measurement
+or modeling discrepancies; neither their removal by optimization nor a small
+residual uniquely validates the model.
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}[scale=0.9, >=Stealth, node distance=2.2cm]
-  \node[draw, thick, minimum width=2.5cm, fill=blue!10, align=center] (collect) {Data Collection\\(markers, forces)};
-  \node[draw, thick, minimum width=2.5cm, fill=blue!10, align=center, right of=collect] (process) {Marker\\Processing};
-  \node[draw, thick, minimum width=2.5cm, fill=green!10, align=center, right of=process] (ik) {Inverse\\Kinematics};
-  \node[draw, thick, minimum width=2.5cm, fill=green!10, align=center, right of=ik] (id) {Inverse\\Dynamics};
-  \node[draw, thick, minimum width=2.5cm, fill=red!10, align=center, right of=id] (muscle) {Muscle-Force\\Inference};
-
-  \draw[->, thick] (collect) -- (process);
-  \draw[->, thick] (process) -- (ik);
-  \draw[->, thick] (ik) -- (id);
-  \draw[->, thick] (id) -- (muscle);
-
-  \node[below, font=\small] at (collect.south) {Observables};
-  \node[below, font=\small] at (ik.south) {Kinematics};
-  \node[below, font=\small] at (id.south) {Net torques};
-  \node[below, font=\small] at (muscle.south) {Model-based estimates};
+\begin{tikzpicture}[>=Stealth,node distance=0.35cm]
+ \node[draw,align=center,text width=6cm] (data)
+   {Sensor Observations and Calibration};
+ \node[draw,align=center,text width=6cm,below=of data] (kin)
+   {Marker Processing and Kinematic Estimation};
+ \node[draw,align=center,text width=6cm,below=of kin] (id)
+   {Inverse Dynamics With Inertia and External Wrenches};
+ \node[draw,align=center,text width=6cm,below=of id] (muscle)
+   {Additional Muscle-Force Model and Allocation Assumptions};
+ \draw[->] (data)--(kin);
+ \draw[->] (kin)--(id);
+ \draw[->] (id)--(muscle);
 \end{tikzpicture}
-\caption{The Inverse Dynamics Pipeline: From Raw Experimental Data to Net Joint Moments and Subsequent Model-Based Muscle-Force Estimation.}
+\caption{The Inverse Dynamics Pipeline and Its Additional Modeling Layers.}
 \label{fig:ch6:id-pipeline}
 \end{figure}
 
-The standard pipeline comprises five stages:
-\begin{enumerate}
-  \item \textbf{Data Collection}: Motion capture markers + force plates
-  \item \textbf{Marker Processing}: Filtering, gap-filling, labeling
-  \item \textbf{Inverse Kinematics}: Fit skeleton model to marker data
-  \item \textbf{Inverse Dynamics}: Compute joint torques from RNEA
-  \item \textbf{Muscle Force Estimation}: Infer candidate muscle-force distributions using optimization or controller assumptions
-\end{enumerate}
+The workflow comprises observation processing, kinematic estimation,
+differentiation and net-load calculation, followed optionally by muscle-force
+inference. In a marker workflow, joint speeds and accelerations are derived
+from estimated motion, not directly read from the camera.
+Filtering, soft tissue artifact, frame calibration and timing affect the
+result together (Chapter~7). Net generalized loads do not uniquely specify
+individual muscle forces or joint contact forces.
 
-Stages~1--4 are the standard inverse-kinematics/inverse-dynamics pipeline. Stage~5 is an
-additional modeling layer: it does not follow uniquely from the measured motion and
-external-force data, and different optimization or control assumptions can produce
-different muscle-force histories for the same net joint moments.
+Known per-contact wrenches can be mapped through their Jacobians. If only the
+combined ground wrench is known, its division between the feet is an additional
+unknown; similarly, one resultant club wrench does not identify each hand's
+contribution. Closed-loop reactions require the selected constraint model and
+sufficient boundary data or additional allocation assumptions.
 
 \subsection{Inverse Kinematics}
 
-Given marker positions $\bm{m}_i^{\text{meas}}(t) \in \Reals^3$ for $i = 1, \ldots, N_m$
-markers, inverse kinematics solves:
+For measured marker positions $m_i^{\mathrm{meas}}$ in a common frame, a basic
+single-frame estimate minimizes
 \begin{equation}
-  \bm{q}^*(t) = \argmin_{\bm{q}} \sum_{i=1}^{N_m} w_i
-  \norm{\bm{m}_i^{\text{model}}(\bm{q}) - \bm{m}_i^{\text{meas}}(t)}^2,
-  \label{eq:ch6:ik-optimization}
+ q^*\in\argmin_q\sum_i w_i
+ \lVert m_i^{\mathrm{model}}(q)-m_i^{\mathrm{meas}}\rVert^2,
+ \label{eq:ch6:ik-optimization}
 \end{equation}
-where $\bm{m}_i^{\text{model}}(\bm{q})$ is the predicted marker position from the
-skeleton model and $w_i$ are weighting factors.
+with nonnegative weights and at least one positive weight.
+The model geometry, constraints and marker placement are part of this inference.
+Weights may encode confidence, but scalar weights do not describe arbitrary
+correlated three-dimensional measurement noise.
+The argmin may contain several solutions, and a numerical solver may only
+find a local stationary fit.
 
-\begin{lstlisting}[language=Python, caption={Simplified inverse kinematics solver.}]
+The listing is deliberately an unconstrained local-coordinate example.
+It rejects missing observations, invalid weights and mismatched model shapes,
+and reports optimizer failure rather than silently returning its last iterate.
+L-BFGS-B convergence has explicit numerical stopping conditions~\cite{SciPyLBFGSBiological};
+convergence does not prove identifiability or anatomical accuracy.
+The model callback must be deterministic and side-effect free over its declared
+coordinate domain.
+A production protocol must additionally declare joint limits, loop constraints,
+coordinate charts, dropout policy, initialization, residual diagnostics and
+continuity checks. Adding those assumptions changes the estimator.
+
+\begin{lstlisting}[language=Python, caption={A Local Single-Frame Marker Fit With Failure Checks}]
+from collections.abc import Callable
+
 import numpy as np
 from scipy.optimize import minimize
 
+
 def inverse_kinematics_frame(
     marker_positions_measured: np.ndarray,
-    marker_positions_model_func,
+    marker_positions_model_func: Callable[[np.ndarray], np.ndarray],
     q_initial: np.ndarray,
-    weights: np.ndarray | None = None
+    weights: np.ndarray | None = None,
 ) -> np.ndarray:
-    """Solve inverse kinematics for a single frame.
+    """Fit markers locally in an unconstrained coordinate chart.
 
-    Parameters
-    ----------
-    marker_positions_measured : np.ndarray, shape (n_markers, 3)
-        Measured marker positions.
-    marker_positions_model_func : callable
-        Function q -> (n_markers, 3) predicted marker positions.
-    q_initial : np.ndarray, shape (n_dof,)
-        Initial guess for joint angles.
-    weights : np.ndarray, shape (n_markers,), optional
-        Per-marker weights.
-
-    Returns
-    -------
-    np.ndarray, shape (n_dof,)
-        Optimal joint angles.
+    Measurements and predictions have shape (markers, 3), in meters.
+    Weights are finite, nonnegative and not all zero. Resolve missing
+    markers explicitly before calling. Success is solver convergence,
+    not anatomical accuracy, identifiability or a global optimum.
     """
-    n_markers = marker_positions_measured.shape[0]
-    if weights is None:
-        weights = np.ones(n_markers)
+    measured = np.asarray(marker_positions_measured, dtype=float)
+    q0 = np.asarray(q_initial, dtype=float)
+    if (
+        measured.ndim != 2
+        or measured.shape[1] != 3
+        or not len(measured)
+    ):
+        raise ValueError("Expected a nonempty (markers, 3) array")
+    if q0.ndim != 1 or not q0.size:
+        raise ValueError(
+            "Initial coordinates must be a nonempty vector"
+        )
+    if not np.isfinite(measured).all() or not np.isfinite(q0).all():
+        raise ValueError("Resolve missing/nonfinite inputs first")
+    w = (
+        np.ones(len(measured))
+        if weights is None
+        else np.asarray(weights)
+    )
+    if w.shape != (len(measured),) or not np.isfinite(w).all():
+        raise ValueError("Require one finite weight per marker")
+    if np.any(w < 0) or not np.any(w > 0):
+        raise ValueError(
+            "Weights must be nonnegative and not all zero"
+        )
 
     def objective(q: np.ndarray) -> float:
-        m_model = marker_positions_model_func(q)
-        residuals = m_model - marker_positions_measured
-        return float(np.sum(weights[:, None] * residuals**2))
+        predicted = np.asarray(
+            marker_positions_model_func(q), dtype=float
+        )
+        if predicted.shape != measured.shape:
+            raise ValueError(
+                "Prediction shape must match observations"
+            )
+        if not np.isfinite(predicted).all():
+            raise ValueError("Model predictions must be finite")
+        return float(np.sum(w[:, None] * (predicted - measured) ** 2))
 
-    result = minimize(objective, q_initial, method='L-BFGS-B')
+    result = minimize(objective, q0, method="L-BFGS-B")
+    if not result.success or not np.isfinite(result.x).all():
+        raise RuntimeError(f"IK fit failed: {result.message}")
+    if not np.isfinite(objective(result.x)):
+        raise RuntimeError("IK fit has a nonfinite final residual")
     return result.x
 \end{lstlisting}
 
 \subsection{Bottom-Up vs.\ Top-Down Inverse Dynamics}
 
-\textbf{Bottom-up}: start from the ground contact (where forces are measured by
-force plates) and propagate upward through the kinematic chain. Most accurate when
-force plate data is available.
-
-\textbf{Top-down}: start from the most distal segment and work inward. Useful when
-ground reaction forces are not available (e.g., swimming, throwing).
+Newton--Euler balance propagates forces and moments from a boundary where the
+necessary loads are known or modeled. Lower-limb analysis often starts from
+measured foot--ground loads. An upper-limb calculation may start at a free hand
+or a measured hand--object interface. A free endpoint is a zero-load assumption
+only when no appreciable external interaction occurs there.
+Labels such as bottom-up and top-down are anatomical descriptions, not a
+universal accuracy ordering or a way to avoid unknown external forces.
+Changing recursion direction does not add missing information. With consistent
+boundary conditions and conventions, equivalent balances must agree.
 
 \section{The Muscle Redundancy Problem}
 
-Inverse dynamics gives net joint torques $\bm{\tau} \in \Reals^n$, but we want
-individual muscle forces $\bm{F} \in \Reals^p$ with $p > n$. The exact ratio
-between muscles and generalized coordinates depends on model granularity and how
-muscle groups are represented, but in all such cases the system is
-underdetermined:
+After assigning known passive loads and contact reactions, suppose muscle
+tensions must satisfy
 \begin{equation}
-  R(\bm{q}) \bm{F} = \bm{\tau}, \quad \bm{F} \geq 0.
-  \label{eq:ch6:redundancy}
+ R_v(q)F_T=Q_M,\qquad 0\leq F_T\leq F_{\max},
+ \label{eq:ch6:redundancy}
 \end{equation}
+where the bounds are part of a declared instantaneous model.
+The feasible load set is the image
+\[
+ \mathcal T(q)=\{R_v(q)F:0\leq F\leq F_{\max}\}.
+\]
+It is a convex polytope for fixed finite independent bounds; with no upper
+bounds it is the cone generated by the columns of $R_v$.
+It is not an intersection of force-space inequalities with a load-space image.
+State-dependent muscle dynamics can further restrict which histories are realizable.
 
-\noindent
-From a modeling perspective, this is a constrained input-allocation problem. At a fixed
-configuration, the reachable torque set is the image of $R(\bm{q})$ intersected with the
-nonnegative muscle-force constraints. When $p > n$, multiple muscle-force vectors can
-produce the same joint torque history, so additional physiological or optimization
-assumptions are needed to select among them.
+More muscle-force variables than load equations implies a linear nullspace,
+but does not guarantee a feasible nonnegative solution or more than one
+feasible solution at a boundary. For $R=[1\;1]$ and nonnegative forces,
+a negative target is infeasible, a zero target has the unique solution $(0,0)$,
+and a positive target has multiple solutions if upper bounds permit them.
+For antagonistic $R=[r\;-r]$, adding equal tensions preserves net torque while
+changing other outputs, such as stiffness or internal loading.
+Thus force sharing remains an inference problem even when the net torque is known.
 
 \subsection{Static Optimization}
 
-The most common approach minimizes a cost function:
+One transparent instantaneous approximation declares an effective active
+capacity $c_i(q,v)\geq0$ and passive tendon tension $F_{P,i}(q,v)\geq0$, and sets
+$F_{T,i}=a_i c_i+F_{P,i}$ for activation $0\leq a_i\leq1$.
+The capacity may include specified force-length, force-velocity and pennation
+factors only when the assumed tendon and fiber kinematics justify them.
+For this formulation, $Q_M$ retains both active and passive muscle contributions;
+$Q_{\mathrm{known}}$ excludes the same $R_vF_P$ term. If passive muscle load
+was already subtracted, instead allocate only active tension to the remaining
+target. The optimization then reads
 \begin{equation}
-  \min_{\bm{F}} \sum_{i=1}^{p} \left(\frac{F_i}{F_{0,i}}\right)^\alpha
-  \quad \text{subject to} \quad R(\bm{q})\bm{F} = \bm{\tau},\;
-  0 \leq F_i \leq a_i \cdot f_L(\tilde{\ell}_i) \cdot F_{0,i},
-  \label{eq:ch6:static-opt}
+ \begin{aligned}
+ \min_{0\leq a\leq1}\;&\sum_i a_i^p,\\
+ \text{subject to}\;&R_v\bigl(\operatorname{diag}(c)a+F_P\bigr)=Q_M.
+ \end{aligned}
+ \label{eq:ch6:static-opt}
 \end{equation}
-where $\alpha = 2$ (minimize sum of squared activations) or $\alpha = 3$ (minimize
-metabolic energy proxy). The constraint $F_i \leq a_i \cdot f_L \cdot F_{0,i}$ enforces
-the force-length and activation constraints from Chapter~3.
+Here $a$ is the decision variable and $p>1$ is a modeling choice.
+For $p=2$ the objective is squared activation in this declared model.
+Normalized total force $F_T/F_0$ is generally not activation; passive force,
+length, velocity and transmission geometry prevent that identification.
+Changing $p$ to three does not turn the objective into measured metabolic energy.
 
-\noindent
-This optimization is one way to regularize the nonuniqueness of
-\eqref{eq:ch6:redundancy}. The objective does not arise uniquely from the equations of
-motion; it encodes modeling priorities such as effort minimization, smoothness, or
-physiological plausibility. Different choices of $\alpha$, reserve actuators,
-activation dynamics, or regularization can yield different force-sharing solutions while
-reproducing the same net torque history \cite{Zajac1989,Delp2007}.
+Framewise static optimization does not integrate activation or tendon states.
+OpenSim's documented workflow explicitly distinguishes this approximation from
+muscle dynamics and emphasizes appropriate motion, model and external loads~\cite{OpenSimSOBiological}.
+If the target is outside the feasible set, report failure. Reserve actuators can
+be introduced as explicit additional variables with declared bounds and
+penalties, but their fitted contribution must be reported; they do not prove
+that the original muscles generated the required load.
+
+For a checkable force-sharing example, let $a_1+2a_2=1$ and $0\leq a_i\leq1$.
+Minimizing $a_1^2+a_2^2$ gives $(a_1,a_2)=(0.2,0.4)$.
+Minimizing $a_1^3+a_2^3$ instead gives
+$a_1=1/(1+2\sqrt2)$ and $a_2=\sqrt2/(1+2\sqrt2)$.
+Both reproduce the same target; the chosen cost determines the allocation.
 
 \subsection{Computed Muscle Control (CMC)}
 
-CMC \cite{ThelenAndersonDelp2003} combines forward dynamics with feedback control. It uses a
-PD controller to track the measured kinematics, with the controller output being
-the desired muscle excitations:
+In a local-coordinate tracking description, proportional--derivative feedback
+first specifies desired acceleration:
 \begin{equation}
-  \ddot{\bm{q}}_{\text{des}} = \ddot{\bm{q}}_{\text{meas}} + K_v(\dot{\bm{q}}_{\text{meas}} - \dot{\bm{q}})
-  + K_p(\bm{q}_{\text{meas}} - \bm{q}),
-  \label{eq:ch6:cmc}
+ \ddot q_{\mathrm{des}}=\ddot q_{\mathrm{ref}}
+ +K_v(\dot q_{\mathrm{ref}}-\dot q)+K_p(q_{\mathrm{ref}}-q).
+ \label{eq:ch6:cmc}
 \end{equation}
-where $K_v$ and $K_p$ are velocity and position feedback gains.
-
-CMC is a tracking algorithm rather than a direct measurement technique. It can produce
-dynamically consistent motion in a forward simulation, but its output depends on model
-fidelity, actuator limits, controller tuning, and how closely the measured kinematics can
-actually be realized by the muscle-driven model. General nonlinear-control results explain
-why feedback can reduce tracking error, yet they do not by themselves validate a particular
-muscle-force reconstruction \cite{AgrachevSachkov2004,ThelenAndersonDelp2003}.
+This expression produces accelerations, not muscle excitations.
+CMC then allocates actuator controls to approach the desired acceleration over
+its selected look-ahead interval, and advances the muscle and body states in
+forward simulation~\cite{ThelenAndersonDelp2003,OpenSimCMCBiological}.
+The allocation and dynamics, not the PD equation alone, connect excitation to
+motion. Bounds, initial muscle states, reserves and solver tolerances matter.
+Tracking error can remain when the requested motion is infeasible or the model
+and observations are inconsistent. Successful tracking is not unique recovery
+of the person's neural commands.
 
 \section{Parameter Estimation}
 
-Many biomechanical parameters (segment masses, muscle strengths, joint axis locations)
-are not directly measurable and must be estimated from motion data.
+Masses, inertias, joint geometry and muscle properties may be independently
+measured, assigned from prior evidence or estimated from task data; they are not
+all intrinsically unmeasurable. Each source has a different uncertainty model.
+A small tracking residual can also arise when an adjustable parameter compensates
+for incorrect external loads, timing or other model discrepancy.
 
 \subsection{Bayesian Framework}
 
-The parameter estimation problem is naturally Bayesian:
+For parameters $\theta$, observations $y$ and a declared observation model,
 \begin{equation}
-  p(\bm{\theta} | \bm{y}) \propto p(\bm{y} | \bm{\theta}) \cdot p(\bm{\theta}),
-  \label{eq:ch6:bayes}
+ p(\theta\mid y)\propto p(y\mid\theta)p(\theta),
+ \label{eq:ch6:bayes}
 \end{equation}
-where $\bm{\theta}$ are model parameters, $\bm{y}$ are observations, $p(\bm{y} | \bm{\theta})$
-is the likelihood, and $p(\bm{\theta})$ is the prior (from literature values and
-physical constraints).
+provided the posterior can be normalized.
+The likelihood must state what is observed and how noise, correlations and
+model discrepancy enter. Priors and physical bounds regularize inference but
+do not create new experimental information. Distinct parameter combinations
+can remain observationally equivalent; test sensitivity, identifiability and
+prediction on data outside the fitting interval.
 
 \section*{Exercises}
 
 \begin{enumerate}
-  \item \textbf{Inverse Dynamics.}
-        For a 2-segment pendulum model of the arm, compute the shoulder and elbow
-        torques required during a reaching movement given $\bm{q}(t) = (\sin(\pi t/T), \pi t / (2T))$.
-
-  \item \textbf{Muscle Redundancy.}
-        For a single-DOF elbow with 3 muscles (biceps, brachialis, brachioradialis),
-        solve the static optimization for a given elbow torque. Show that the solution
-        depends on the cost function exponent~$\alpha$.
-
-  \item \textbf{(Programming.)} Implement the static optimization for a 2-DOF,
-        6-muscle system. Compare $\alpha = 2$ and $\alpha = 3$ solutions.
-
-  \item \textbf{(Programming.)} Implement an inverse kinematics solver for a
-        3-segment arm model with 7 markers. Test with synthetic marker data.
+ \item \textbf{Inverse Dynamics.} Use Chapter~5's two-link planar arm with
+ $q_1$ measured counterclockwise from horizontal and $q_2$ relative to link 1.
+ Set downward gravity to $9.81$\,m/s$^2$, no external hand load and $T=1$\,s.
+ For $q(t)=(\sin(\pi t/T),\pi t/(2T))$, derive velocities, accelerations and
+ required torques; verify the total mechanical-power balance.
+ \item \textbf{Feasibility and Redundancy.} Reproduce the three cases for
+ $R=[1\;1]$ and then impose $0\leq F_i\leq1$.
+ Identify the complete feasible target interval and its boundary uniqueness.
+ \item \textbf{Cost-Dependent Allocation.} Derive both force-sharing
+ examples above using a Lagrange multiplier. Verify constraints and bounds,
+ and explain why neither result measures metabolic cost.
+ \item \textbf{Kinematic Inference.} Test the listing on a known rigid
+ translation of two synthetic markers, then choose a model with an
+ unobserved coordinate. Compare residuals and recovered coordinates.
+ Force optimizer failure and confirm that the example reports it.
 \end{enumerate}

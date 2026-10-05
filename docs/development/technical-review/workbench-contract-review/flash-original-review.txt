@@ -1,0 +1,64 @@
+Here is the prioritized technical review of the application appendix and workbench article, distinguishing theoretical/structural mechanics limits from software and execution claims.
+
+---
+
+### 1. High Priority: Inaccurate Control-Affine and Input Structure Claims
+
+* **Conflation of Bounded Input Sets / State-Dependent Input Gain with Non-Affine Dynamics**
+  * **Location**: Application Appendix, *Limitations*, Item 1:
+    > *"All applications assume control-affine structure holds: The entire methodology assumes that inputs enter the dynamics linearly ($\dot{x} = f(x) + G(x)u$). If the system exhibits strong input saturation (e.g., muscles have hard limits on torque that vary with velocity), input nonlinearities, or state-dependent input gain modulation, the affine decomposition becomes approximate or invalid."*
+  * **Technical Inaccuracy**:
+    1. **State-dependent input gain ($G(x)$)**: By explicit definition of control-affine dynamics $\dot{x} = f(x) + G(x)u$, the input matrix $G(x)$ is *inherently state-dependent* (e.g., coordinate transformation matrices, configuration-dependent moment arms, or velocity-dependent gain scalings). State-dependence in $G(x)$ does *not* violate or invalidate the affine decomposition.
+    2. **Input saturation / bounded control sets ($u \in \mathcal{U}(x)$)**: Muscle force-velocity torque limits define a state-dependent constraint set $\mathcal{U}(x) = [u_{\min}(x), u_{\max}(x)]$ on the admissible control magnitude. Restricting $u$ to a bounded or state-dependent set does *not* make the differential equation nonlinear in $u$.
+    3. The decomposition $\dot{x} = f(x) + G(x)u$ (or $F = F_{\text{drift}} + F_{\text{input}}$) remains strictly exact as long as the vector field depends affinely on the chosen input variable $u$. Only terms with genuine nonlinear dependence on the declared input variable (e.g., quadratic control drag $u^2$, nonlinear actuator compliance, or input-coupled hysteresis) break affine linearity.
+  * **Suggested Correction**: Clarify that state-dependent actuator gains $G(x)$ and bounded admissible control envelopes $u \in \mathcal{U}(x)$ are fully compatible with control-affine structure. Reframe the limitation to address genuine non-affine mechanics (e.g., activation dynamics where control enters nonlinearly, or bilinear/product terms between controls).
+
+---
+
+### 2. Medium Priority: Pointwise Decomposition vs. Forward-Counterfactual Trajectories
+
+* **Imprecise Definition of Drift Force via Forward Simulation ($ZTCF$)**
+  * **Location**: Application Appendix, *Interpreting Net Model Input*:
+    > *"Given measured or simulated total force $F_{\text{total}}$, and drift force $F_{\mathrm{drift}}$ from ZTCF-based computation, input forces are obtained via $F_{\mathrm{input}} = F_{\text{total}} - F_{\mathrm{drift}}$."*
+  * **Technical Inaccuracy**:
+    * If $F_{\mathrm{drift}}$ is computed via a forward-integrated ZTCF trajectory ($u(t) \equiv 0$ integrated over time), the resulting state $x_{\mathrm{ZTCF}}(t)$ diverges from the actual trajectory $x(t)$. Subtracting $F_{\mathrm{drift}}(x_{\mathrm{ZTCF}}(t))$ from $F_{\text{total}}(x(t))$ mixes states across counterfactual branches, which is invalid.
+    * The instantaneous decomposition $F_{\text{total}}(x, u) = F_{\mathrm{drift}}(x) + F_{\mathrm{input}}(x, u)$ requires evaluating both terms at the **exact same instantaneous state** $x(t)$.
+  * **Suggested Correction**: Distinguish the **same-state instantaneous decomposition** (evaluating $f(x)$ and $G(x)u$ at the current state $x(t)$) from the **forward-counterfactual trajectory** (integrating $\dot{x} = f(x)$ over $t \in [t_0, t_1]$ with $u \equiv 0$). Make clear that residual extraction requires evaluating $F_{\mathrm{drift}}$ at the instantaneous state of the measured swing.
+
+* **Falsification Criterion: Distal Acceleration Independence**
+  * **Location**: Workbench Article, *What Would Count Against the Mechanism?*:
+    > *"- a distal acceleration that remains unchanged when the declared proximal motion and applied torques are removed;"*
+  * **Technical Inaccuracy**:
+    * In coupled multibody dynamics, removing a proximal generalized drive does not strictly mandate a non-zero shift in instantaneous distal acceleration for all states. At specific singular poses, zero-velocity configurations, or points where kinetic coupling crosses zero ($M_{12}(q) = 0$ or specific force cancellation), distal acceleration can be momentarily invariant to the removed term.
+  * **Suggested Correction**: Frame the falsifier over a finite interval or non-singular trajectory segment rather than implying a pointwise acceleration variation must occur across arbitrary configurations.
+
+---
+
+### 3. Medium Priority: Mechanics Identifiability & Force Couple Attribution
+
+* **Two-Hand Couple Attribution and Zero-Moment Arm Limits**
+  * **Location**: Workbench Article, *Guided Experiments* and *What Would Count Against the Mechanism?*:
+    > *"Two-Hand Force and Equivalent-Couple Mechanism: Hand separation and reaction directions... a two-hand couple that remains when the hands are coincident or the moment arm is set to zero"*
+  * **Technical Boundary**:
+    * Coincident hands ($d \to 0$) mathematically eliminate the macroscopic force-couple moment arm between the two grip centers ($\mathbf{r}_{\text{sep}} \times \mathbf{F}$). However, each physical hand can apply an intrinsic contact traction moment (torsion/twist) through distributed contact shear stress across the cylindrical grip interface.
+  * **Suggested Correction**: Specify that setting hand separation distance to zero eliminates the **couple formed by the pair of discrete point forces**, but does not preclude local traction moments exerted by an individual hand unless point-contact assumptions are declared.
+
+---
+
+### 4. Software Claims Requiring Pinned Provider Verification (No Inferred Behavior)
+
+* **Cross-Repository Commit & File Contract References**
+  * **Location**:
+    1. Tools repository link: `D-sorganization/Tools` at commit `cefcc1878de11804c44cd7d1d19c0ffcf58fa89e`.
+    2. UpstreamDrift monograph link: pinned to commit `85cce4d3307bb7ad3953d9fc6e583e370803515c`.
+    3. JSON catalog path: `src/double_pendulum_golf/resources/companion_catalog.json`.
+    4. Contract identifier: `force-attribution/v1` and the docked analysis tab contract.
+  * **Verification Requirement**:
+    * Pinned hashes, directory paths, and contract naming conventions (`force-attribution/v1`) must be directly validated against the actual repository tree and schema definitions in the host build environment. Without accessing the remote repository or running tools, these references are treated as unverified external software claims.
+
+* **Latency & Real-Time Performance Benchmarks**
+  * **Location**: Application Appendix, *Limitations*, Item 3:
+    > *"For a 26+ DOF model on a motion capture system operating at 60+ Hz, this computational load can exceed real-time constraints on standard hardware. Coaches or systems requiring sub-50ms latency..."*
+  * **Verification Requirement**:
+    * Hardware-specific claims regarding integration throughput for 26+ DOF multibody chains at 60 Hz exceeding 50 ms latency are empirical and solver-dependent (e.g., explicit vs. implicit integrators, analytical Featherstone $O(N)$ Articulated Body Algorithm vs. dense $O(N^3)$ mass-matrix inversion).
+  * **Suggested Correction**: Rephrase as a model-complexity dependency rather than an unsubstantiated hardware bottleneck benchmark.

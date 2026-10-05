@@ -1,133 +1,216 @@
 \chapter{Visualization and Analysis Tools}
 \label{ch:visualization}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+A plot is a measurement of selected model quantities. Its meaning depends on
+coordinate frames, units, scaling and what has been omitted. Visualization can
+expose an inconsistency or suggest a hypothesis; an attractive trajectory alone
+does not validate dynamics, establish causality or reveal a golfer's control
+strategy.
 
-\epigraph{If you cannot see it, you cannot understand it.}{}
+\section{Geometry Before Animation}
 
-\section{3D Motion Visualization}
+For a planar serial chain, let $q_1$ measure the first link from the positive
+$x$ axis and let subsequent $q_i$ be relative joint angles. Then the absolute
+orientation of link $i$ is $\alpha_i=\sum_{j=1}^{i}q_j$, and
+\begin{equation}
+  \bm{p}_i=\bm{p}_{i-1}
+       +L_i(\cos\alpha_i,\sin\alpha_i)^T,\qquad \bm{p}_0=\bm{0}.
+\end{equation}
+A distal angle drawn from a world-horizontal reference is $\alpha_i$, not
+$q_i$. This distinction also changes angular velocities used in energy.
 
-Visualization of multi-body trajectories is essential for understanding simulated motion
-and validating controller behavior. This section covers kinematics-based visualization
-(stick figures), manipulability analysis, and energy flow diagrams.
-
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
-  \begin{tikzpicture}[
-    scale=0.8,
-    ]
-    % Base (ground)
-    \draw[thick] (-1, 0) -- (3, 0);
-    \filldraw[gray!50] (-1, 0) rectangle (0, -0.2);
-
-    % Link 1 (upper arm)
-    \draw[thick, blue] (0, 0) -- (1.5, 1.2) node[align=center, midway, left] {$L_1$};
-    \filldraw[blue, circle, inner sep=3pt] (0, 0) node[align=center, left] {Joint 0};
-    \filldraw[blue, circle, inner sep=3pt] (1.5, 1.2);
-
-    % Link 2 (forearm)
-    \draw[thick, red] (1.5, 1.2) -- (2.8, 1.8) node[align=center, midway, right] {$L_2$};
-    \filldraw[red, circle, inner sep=3pt] (1.5, 1.2) node[align=center, left] {Joint 1};
-    \filldraw[red, circle, inner sep=3pt] (2.8, 1.8) node[align=center, right] {End};
-
-    % Angle annotations
-    \draw[gray, dashed] (0, 0) -- (1, 0);
-    \draw[gray, dashed] (1.5, 1.2) -- (2.5, 1.2);
-    \draw[gray] (0.7, 0) arc (0:40:0.7) node[right, font=\small] {$q_0$};
-    \draw[gray] (2.1, 1.2) arc (0:25:0.6) node[right, font=\small] {$q_1$};
+  \begin{tikzpicture}[scale=2]
+    \coordinate (O) at (0,0);
+    \coordinate (A) at ({1.5*cos(30)},{1.5*sin(30)});
+    \coordinate (B) at ({1.5*cos(30)+cos(10)},{1.5*sin(30)+sin(10)});
+    \draw[gray,dashed] (O) -- (0.8,0);
+    \draw[very thick,blue] (O) -- (A) node[midway,above left] {$L_1$};
+    \draw[very thick,red] (A) -- (B) node[midway,above] {$L_2$};
+    \draw[gray,dashed] (A) -- ++(30:0.8);
+    \draw[->] (0.6,0) arc[start angle=0,end angle=30,radius=0.6];
+    \node at (0.8,0.17) {$q_1$};
+    \draw[->] ($(A)+(30:0.6)$) arc[start angle=30,end angle=10,radius=0.6];
+    \node at ($(A)+(20:0.95)$) {$q_2$};
+    \fill (O) circle (0.025); \fill (A) circle (0.025);
+    \fill (B) circle (0.025);
   \end{tikzpicture}
-  \caption{Stick-figure representation of a 2-link arm. Visualization code computes
-    joint positions from angles using forward kinematics, then renders links and joints.}
+  \caption{Relative Joint Angles: $q_1=30^\circ$, $q_2=-20^\circ$,
+  and Distal Absolute Orientation $\alpha_2=10^\circ$}
   \label{fig:stick-figure}
 \end{figure}
 
-\begin{lstlisting}[language=Python, caption={Stick-figure animation for multi-body motion.}]
+\begin{lstlisting}[language=Python, caption={Planar Joint Positions With Relative Angles}]
 import numpy as np
 
 def compute_joint_positions_2d(
-    q: np.ndarray,
-    lengths: list[float]
+    q: np.ndarray, lengths: np.ndarray,
 ) -> np.ndarray:
-    """Compute 2D joint positions for a serial chain.
+    """Return (n+1,2) positions, including a fixed origin."""
+    angles = np.asarray(q, dtype=float)
+    size = np.asarray(lengths, dtype=float)
+    if angles.ndim != 1 or angles.size == 0:
+        raise ValueError("q must be a nonempty vector")
+    if size.shape != angles.shape or np.any(size <= 0):
+        raise ValueError("lengths must match q and be positive")
+    if not np.isfinite(angles).all() or not np.isfinite(size).all():
+        raise ValueError("angles and lengths must be finite")
+    absolute = np.cumsum(angles)
+    links = size[:, None] * np.column_stack(
+        (np.cos(absolute), np.sin(absolute))
+    )
+    return np.vstack((np.zeros(2), np.cumsum(links, axis=0)))
+\end{lstlisting}
 
-    Parameters
-    ----------
-    q : np.ndarray, shape (n,)
-        Joint angles.
-    lengths : list[float]
-        Segment lengths.
+This computes positions, not an animation and not a three-dimensional
+reconstruction. An animation additionally needs a time base, interpolation,
+fixed axes and a renderer. A 3D chain requires the actual joint axes and
+rigid transforms; changing viewing angle cannot recover missing depth from a
+planar model. Plot COM locations and contact points separately from joints.
+Preserve lengths and compare analytic or finite-difference endpoint velocities
+with the declared Jacobian before interpreting motion.
 
-    Returns
-    -------
-    np.ndarray, shape (n+1, 2)
-        XY positions of each joint (including base).
-    """
-    n = len(q)
-    positions = np.zeros((n + 1, 2))
-    angle_cumulative = 0.0
+\section{A Phase Projection Is Not the Full State}
 
-    for i in range(n):
-        angle_cumulative += q[i]
-        positions[i + 1, 0] = (positions[i, 0] +
-                               lengths[i] * np.cos(angle_cumulative))
-        positions[i + 1, 1] = (positions[i, 1] +
-                               lengths[i] * np.sin(angle_cumulative))
+The following helper preserves the caller's angle convention and returns
+copies. It does not unwrap data. For a coupled multi-joint system, the pair
+$(q_i,\dot q_i)$ is generally a projection: two visits to the same plotted
+point can have different accelerations because other coordinates, actuator
+states or inputs differ. Crossing curves need not violate uniqueness of the
+full dynamics. Wrapping a revolute angle can introduce display jumps;
+unwrapping can hide the physical periodicity. State the choice and use time
+or event markers when comparing swings.
 
-    return positions
-
-
+\begin{lstlisting}[language=Python, caption={An Explicit Joint-State Projection}]
 def phase_portrait(
-    q_history: np.ndarray,
-    qd_history: np.ndarray,
-    joint_idx: int = 0,
-    label: str = "Joint 0"
+    q_history: np.ndarray, qd_history: np.ndarray,
+    joint_idx: int = 0, label: str = "Joint 0",
 ) -> dict:
-    """Compute phase portrait data for a single joint.
-
-    Parameters
-    ----------
-    q_history : (N, n) trajectory data
-    qd_history : (N, n) velocity data
-    joint_idx : int
-    label : str
-
-    Returns
-    -------
-    dict with 'x', 'y', 'label' keys
-    """
+    """Project finite matching (N,n) histories without wrapping."""
+    q = np.asarray(q_history, dtype=float)
+    v = np.asarray(qd_history, dtype=float)
+    if q.ndim != 2 or min(q.shape) < 1 or v.shape != q.shape:
+        raise ValueError("histories must have matching nonempty (N,n) shape")
+    if not np.isfinite(q).all() or not np.isfinite(v).all():
+        raise ValueError("histories must be finite")
+    if (isinstance(joint_idx, bool)
+            or not isinstance(joint_idx, (int, np.integer))
+            or not 0 <= joint_idx < q.shape[1]):
+        raise ValueError("joint index is outside the history")
     return {
-        'x': q_history[:, joint_idx],
-        'y': qd_history[:, joint_idx],
-        'label': label
+        "x": q[:, joint_idx].copy(),
+        "y": v[:, joint_idx].copy(),
+        "label": label,
     }
 \end{lstlisting}
 
-\section{Jacobian and Manipulability Visualization}
+\section{A Velocity Ellipsoid Needs a Metric}
 
-Visualizing the velocity manipulability ellipsoid $J J^T$ at each configuration \cite{Khatib1987}.
-The Jacobian maps joint velocities to end-effector velocities: $\bm{v}_{\text{ee}} = J(\bm{q}) \dot{\bm{q}}$.
-The manipulability ellipsoid is the image of the unit ball under $J$, and its principal axes
-show the directions in which the end-effector can move with maximum ease.
-
-\section{Energy Flow Diagrams}
-
-Energy flow diagrams track how kinetic and potential energy change during motion,
-and how energy is transferred between segments via the kinetic chain. For a
-multi-segment system, the total energy is
+For a fixed configuration, $\bm{v}_{\mathrm{task}}=J\dot{\bm{q}}$ is
+an instantaneous kinematic map. Choose positive rate scales $s_i$ and
+assume $\|\bm{z}\|_2\leq1$ with $\dot{\bm{q}}=D\bm{z}$,
+$D=\operatorname{diag}(s_i)$. The attainable set under this assumption is
 \begin{equation}
-  E_{\text{total}} = \sum_i \left( KE_i + PE_i \right) = \sum_i \left( \frac{1}{2} I_i \dot{q}_i^2 + m_i g h_i \right)
+  \mathcal{E}=\{JD\bm{z}:\|\bm{z}\|_2\leq1\}.
 \end{equation}
-where $I_i$ is the effective inertia, $\dot{q}_i$ is the angular velocity, and $h_i$
-is the height of the center of mass of segment $i$. During ballistic phases (no muscle
-torque), energy is conserved and transferred between kinetic and potential forms.
+If $A=JD=U\Sigma V^T$, its principal directions are columns of $U$
+and its semiaxis lengths are the singular values of $A$, or the square roots
+of eigenvalues of $AA^T$. The matrix $AA^T$ describes the ellipsoid's shape;
+it is not itself the set \cite{ModernRoboticsManipulabilityReview}.
+
+\begin{lstlisting}[language=Python, caption={The Image of a Scaled Joint-Rate Ball}]
+def velocity_ellipsoid(
+    jacobian: np.ndarray, rate_scales: np.ndarray,
+) -> tuple:
+    """Return full task axes, radii (including zeros), and rank."""
+    matrix = np.asarray(jacobian, dtype=float)
+    scales = np.asarray(rate_scales, dtype=float)
+    if matrix.ndim != 2 or min(matrix.shape) < 1:
+        raise ValueError("Jacobian must be a nonempty matrix")
+    if scales.shape != (matrix.shape[1],) or np.any(scales <= 0):
+        raise ValueError("one positive scale is required per joint")
+    if not np.isfinite(matrix).all() or not np.isfinite(scales).all():
+        raise ValueError("Jacobian and scales must be finite")
+    mapped = matrix * scales
+    if not np.isfinite(mapped).all():
+        raise ValueError("scaled Jacobian overflow")
+    axes, singular, _ = np.linalg.svd(mapped, full_matrices=True)
+    radii = np.zeros(matrix.shape[0])
+    radii[:singular.size] = singular
+    return axes, radii, int(np.linalg.matrix_rank(mapped))
+\end{lstlisting}
+
+At a singular configuration the image collapses into a lower-dimensional set;
+do not invert $AA^T$ blindly. Repeated singular values make individual axis
+directions nonunique. The returned rank uses NumPy's numerical tolerance,
+so report scales and tolerance when interpreting a nearly singular result.
+Independent bounds $|\dot q_i|\leq s_i$ form a box, whose linear image is
+generally a zonotope, not this Euclidean-ball ellipsoid. The ball is contained
+in that box and encodes an additional combined-rate budget.
+
+Translational and angular task velocities have different units. Analyze them
+separately or define a task metric, such as an explicitly justified length
+scale, before comparing their magnitudes. A large kinematic semiaxis means
+large instantaneous task velocity under the chosen rate budget; it does not
+mean low torque, low energy, dynamic controllability or physiological ease.
+For golf, clubhead translation, face orientation and strike direction can
+compete for the same joint-rate resources.
+
+\section{Energy Accounting and Transfer}
+
+For rigid segments, include both COM translation and rotation:
+\begin{equation}
+  T=\sum_i\left[
+    \frac12m_i\|\bm{v}_{C_i}\|^2+
+    \frac12\bm{\omega}_i^T I_{C_i}^{\,W}\bm{\omega}_i
+  \right]=\frac12\bm{v}^TM(\bm{q})\bm{v},
+  \qquad U_g=\sum_i m_i g h_{C_i}.
+\end{equation}
+The inertia and angular velocity in each term use the same frame; the
+superscript $W$ denotes world coordinates. For planar relative joints,
+$\omega_i=\sum_{j\leq i}\dot q_j$, not $\dot q_i$ alone.
+COM velocities also depend on upstream motion. Independent terms
+$\tfrac12 I_i\dot q_i^2$ therefore miss translational energy and coupling
+unless a specifically derived model justifies that decomposition.
+
+With ideal fixed supports and conservative gravity, add any conservative
+elastic potential to $U$. The work balance becomes
+\begin{equation}
+  \frac{d}{dt}(T+U)
+    =\bm{v}^T\bm{\tau}_{\mathrm{act}}
+       +P_{\mathrm{ext}}-P_{\mathrm{diss}},
+\end{equation}
+where actuator torque is the generalized force conjugate to $\bm{v}$,
+external power includes moving supports and applied wrenches, and
+$P_{\mathrm{diss}}\geq0$ represents the declared dissipative elements.
+Ideal constraints do no net power only under the corresponding stationary,
+workless constraint assumptions. Impacts require an energy jump balance.
+Zero muscle torque alone does not imply conservation: damping, moving
+contacts or other actuators may remain. Conservative passive elasticity can
+exchange energy with $T+U_g$ while conserving the augmented $T+U$.
+
+An internal joint torque pair has net power
+$\bm{\tau}\cdot(\bm{\omega}_{\mathrm{distal}}
+-\bm{\omega}_{\mathrm{proximal}})$ under the stated sign convention.
+Intersegmental force and moment power depends on the point and frame used;
+include force work at a moving joint when drawing segment energy flows.
+An increase in a distal segment's energy alone does not prove a proximal
+muscle supplied it. Check total work balance first, then define the segment
+boundaries and all crossing powers. Chapter~\ref{ch:golf-capstone} applies
+the canonical model to signed acceleration contributions and prescribed-motion
+torque requirements; those quantities answer different questions from energy
+transfer or neural coordination.
 
 \section*{Exercises}
 \begin{enumerate}
-  \item Animate a 3-link arm tracking a circular path.
-  \item Plot the manipulability ellipsoid during a reaching movement.
-  \item Create an energy flow diagram for the double pendulum golf model.
+  \item Evaluate a two-link chain at $(q_1,q_2)=(0,\pi/2)$ and
+  $(0,\pi)$. Compare a finite-difference endpoint Jacobian with its analytic
+  derivative and identify a singular pose.
+  \item Change one joint-rate scale and plot the resulting ellipsoid. Compare
+  it with the mapped corners of the independent joint-rate box.
+  \item For two uniform rods, calculate COM translational and rotational
+  energies from geometry and compare their sum with
+  $\tfrac12\bm{v}^TM\bm{v}$. Explain why using relative joint rates as
+  absolute segment rates fails.
 \end{enumerate}

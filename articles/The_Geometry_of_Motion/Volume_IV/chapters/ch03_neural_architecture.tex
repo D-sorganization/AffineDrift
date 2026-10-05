@@ -1,168 +1,202 @@
-\chapter{Neural Architecture of Motor Control}
+\chapter[Neural Architecture]{Neural Architecture\\of Motor Control}
 \label{ch:neural-arch}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+The anatomical evidence, computational hypotheses, and engineering analogies in
+this chapter have different scopes. The worked decoder is a manufactured
+example; it does not establish a neural algorithm for the golf swing.
 \end{gomdraftnotice}
 
-\epigraph{%
-  The motor system is not one controller.
-  It is an orchestra of specialized modules,
-  each playing its part in the symphony of movement.
-}{}
+\section{Anatomy Constrains Models Without Identifying an Algorithm}
 
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[scale=1.0]
-  % Cortex box
-  \draw (1, 1) rectangle (3, 4);
-  \draw (2, 3.5) node[align=center, anchor=center, font=\small\bf] {Cortex};
-  \draw (2, 2.7) node[align=center, anchor=center, font=\tiny] {PMC/SMA};
-  \draw (2, 2.3) node[align=center, anchor=center, font=\tiny] {M1};
+A motor command emerges from interacting circuits and acts through a mechanical
+body. A useful architecture must explain both the observed motion and how
+sensory evidence changes subsequent commands. An anatomical connection supports
+a possible information pathway; it does not by itself specify a cost function,
+state estimator, learning rule, or controller frequency. The same movement can
+be compatible with several computational accounts.
 
-  % Basal ganglia
-  \draw (4, 2.5) rectangle (5.5, 3.5);
-  \draw (4.75, 3.0) node[align=center, anchor=center, font=\small\bf] {Basal};
-  \draw (4.75, 2.7) node[align=center, anchor=center, font=\small\bf] {Ganglia};
+\subsection{Cortical Motor Areas}
 
-  % Cerebellum
-  \draw (5.5, 0.5) rectangle (7, 1.5);
-  \draw (6.25, 1.0) node[align=center, anchor=center, font=\small\bf] {Cerebellum};
+M1 is a major source of descending commands, rather than an obligatory final
+cortical stage through which all voluntary commands must pass. Tracing studies
+identified corticospinal projections from several premotor areas as well as
+M1~\cite{DumStrick1991Review}. A projection to spinal cord is not necessarily a
+monosynaptic connection to a motoneuron. In rhesus-monkey forelimb experiments,
+Rathelot and Strick distinguished direct cortico-motoneuronal cells concentrated
+in caudal M1 from pathways involving spinal interneurons~\cite{RathelotStrick2009Review}.
+Thus a drawing containing only cortex followed by motoneurons omits consequential
+processing. Neither the corticospinal population nor its direct motoneuronal
+subset should be equated with the giant Betz-cell class.
 
-  % Spinal cord
-  \draw (1.5, -0.5) rectangle (2.5, 0.5);
-  \draw (2, 0) node[align=center, anchor=center, font=\small\bf] {Spinal};
-  \draw (2, -0.3) node[align=center, anchor=center, font=\tiny] {CPGs};
+Somatotopic maps are useful, but the forelimb populations in that tracing study
+also overlapped. This organization is compatible with coordinated multijoint
+output; it does not prove a fixed, universal synergy matrix. Similarly, labels
+such as premotor cortex and supplementary motor area should not be read as a
+hard separation of external-cue and internal-cue computations. Testing such a
+functional distinction requires a task, recording or intervention, and an
+operational definition of the proposed computation. A fixed preparatory interval
+of 100--200 ms cannot be assigned to all M1 activity without those conditions.
 
-  % Connections
-  \draw[->, thick] (2, 1) -- (2, 0.5) node[align=center, anchor=east, midway, font=\tiny] {motor output};
-  \draw[->, thick, dashed] (3, 2) -- (4, 2.8) node[align=center, anchor=south, midway, font=\tiny] {action sel.};
-  \draw[->, thick, dashed] (3, 3) -- (5.5, 1.2) node[align=center, anchor=south, midway, font=\tiny] {error signal};
-  \draw[->, thick] (2.5, 0.2) -- (4, 0.2);
-  \draw (3.2, 0.4) node[align=center, anchor=south, font=\tiny] {feedback};
+\subsection{Population Coding and Its Interpretation}
 
-\end{tikzpicture}
-\caption{Hierarchical neural motor architecture: cortex plans/initiates, basal ganglia
-selects actions, cerebellum provides error-based learning, spinal cord implements CPGs
-and reflex circuits.}
-\label{fig:ch3:motor-arch}
-\end{figure}
+Georgopoulos and colleagues studied directional tuning and population decoding
+in monkey reaching~\cite{Georgopoulos1982,Georgopoulos1986}. A weighted combination
+of broadly tuned neurons can predict direction much better than a single cell.
+This is evidence about a relationship between activity and movement in the
+recorded task. Successful decoding does not establish that downstream circuits
+perform that exact vector calculation, that every M1 neuron has cosine tuning,
+or that the decoded vector is a joint torque or muscle-force command.
 
-\section{Cortical Motor Areas}
+To make the mathematics explicit, consider a two-dimensional manufactured
+population with preferred directions
+$d_i=(\cos\phi_i,\sin\phi_i)^T$ and rates
+\begin{equation}
+ r_i=b+g\cos(\theta-\phi_i),\qquad b\ge g\ge0.
+\end{equation}
+For eight uniformly spaced $\phi_i=2\pi i/8$, define the baseline-corrected
+population vector
+\begin{equation}
+ P=\sum_{i=0}^7(r_i-b)d_i
+   =g\left(\sum_{i=0}^7 d_id_i^T\right)
+        \begin{bmatrix}\cos\theta\\\sin\theta\end{bmatrix}
+   =4g\begin{bmatrix}\cos\theta\\\sin\theta\end{bmatrix}.
+ \label{eq:ch3:population-vector}
+\end{equation}
+The last equality follows from equal angular sampling: the sum of outer
+products is $4I_2$. For $b=5$, $g=2$, and $\theta=30^\circ$, the result is
+$P=(4\sqrt3,4)^T$ in the rate units used for $r_i$. Its direction is
+$30^\circ$; its magnitude is eight, not eight metres per second. Calibration
+would be needed to infer a physical velocity. If $g=0$, $P=0$ and no direction
+can be recovered; reporting an angle for this zero vector would be misleading.
 
-The cerebral cortex contains several distinct motor areas, each with specialized roles:
+Uneven sampling changes the decoder. With preferred directions
+$(0,0,\pi/2)$, the outer-product sum is $\operatorname{diag}(2,1)$.
+For the same cosine-tuned construction at $30^\circ$, the decoded angle is
+$\arctan(\tan30^\circ/2)\approx16.1^\circ$, even after correct baseline
+subtraction. Noise, baseline estimation, gain heterogeneity, and correlated
+activity add further estimation problems. This example explains why a decoder
+must be evaluated on held-out observations and why its sampling assumptions
+matter; it is not a reanalysis of the original recordings.
 
-\subsection{Primary Motor Cortex (M1)}
+\begin{lstlisting}[language=Python, caption={A Baseline-Corrected Planar Decoder}]
+import numpy as np
 
-M1 (Brodmann area 4) is the final cortical output stage for voluntary movement.
-Layer V contains the giant pyramidal (Betz) cells whose axons form the corticospinal
-tract---the most direct neural pathway from cortex to spinal motor neurons.
 
-Key properties of M1 (experimentally confirmed):
-\begin{itemize}
-  \item \textbf{Somatotopic organization}: body parts are mapped to cortical regions
-        (the motor homunculus), with overlapping representations~\cite{PenfieldBoldrey1937}
-  \item \textbf{Population coding}: individual neurons have broad cosine-shaped directional
-        tuning about a preferred direction~\cite{Georgopoulos1982}, and movement direction is
-        recovered from the vector sum of the population's contributions rather than from any
-        single cell~\cite{Georgopoulos1986}
-  \item \textbf{Preparatory activity}: M1 neurons show activity 100--200~ms before
-        movement onset during motor preparation, reflecting planning processes
-\end{itemize}
+def population_vector(preferred_angles, rates, baseline):
+    """Decode finite, nonnegative rates; zero is legitimate."""
+    angles = np.asarray(preferred_angles, dtype=float)
+    rates = np.asarray(rates, dtype=float)
+    if angles.ndim != 1 or angles.size == 0:
+        raise ValueError("Angles must be a nonempty vector")
+    if rates.shape != angles.shape:
+        raise ValueError("One rate per preferred angle")
+    if (not np.all(np.isfinite(angles))
+            or not np.all(np.isfinite(rates))
+            or np.any(rates < 0)):
+        raise ValueError("Finite angles, nonnegative rates")
+    if (np.ndim(baseline) != 0
+            or not np.isfinite(baseline) or baseline < 0):
+        raise ValueError("Finite nonnegative scalar baseline")
+    directions = np.column_stack((np.cos(angles),
+                                  np.sin(angles)))
+    return (rates - baseline) @ directions
+\end{lstlisting}
 
-\subsection{Premotor Cortex (PMC) and Supplementary Motor Area (SMA)}
+\section{Cerebellar Learning: Evidence and Hypotheses}
 
-\begin{itemize}
-  \item \textbf{PMC}: movement planning based on external cues (visually guided reaching)
-  \item \textbf{SMA}: movement planning based on internal cues (self-initiated sequences)
-  \item Both areas project to M1 and directly to the spinal cord
-\end{itemize}
+Classical cerebellar theories motivate adaptive combinations of basis
+functions~\cite{Marr1969,Albus1971,Kawato1987}. These are computational proposals,
+not an identification of the cerebellum with a single forward model. Forward
+prediction, inverse compensation, state estimation, timing, and learning are
+distinct functions that must be distinguished by their inputs, outputs, and
+experimental consequences. Describing the granule-cell layer as an expansion
+in a basis-function model is also different from claiming that anatomy fixes
+a particular radial-basis network or a compressed state dimension.
 
-\section{Subcortical Motor Structures}
+In Smith and Shadmehr's force-field reaching study, trial-to-trial adjustment
+was impaired in the cerebellar group but preserved in the Huntington's-disease
+groups. Their interpretation combines this result with earlier evidence about
+within-movement correction to argue for a dissociation between two uses of
+error~\cite{SmithShadmehr2005}. This supports a contribution of cerebellar
+integrity to the studied adaptation. It does not locate every learning
+operation in one synapse or establish that all online corrections are intact
+in every cerebellar disorder. Nor does it identify a unique forward versus
+inverse model for golf.
 
-\subsection{Cerebellum: The Forward Model}
+At another scale, Suvrathan and colleagues found region-dependent timing
+requirements for parallel-fiber/Purkinje-cell plasticity, including tuning
+near 120 ms in the flocculus in the studied oculomotor conditions~\cite{Suvrathan2016}.
+A synaptic timing interval, accumulated behavioral learning across trials, and
+closed-loop response latency are different measurements. The first cannot be
+used as a universal cortical sampling period or a golf feedback delay. Likewise,
+a particular climbing-fiber teaching signal does not establish that all such
+activity is the same sensory prediction error, or that LTD is the sole motor
+learning mechanism.
 
-The human cerebellum contains roughly 69 billion neurons---about 80\% of all the neurons in
-the brain, and overwhelmingly granule cells---against some 16 billion in the cerebral
-cortex~\cite{Azevedo2009}. Electrophysiological and lesion studies establish its primary role
-in motor control as a \textbf{forward model}:
+\section{Prediction Is Not a Complete Kalman Filter}
 
-\begin{neurobox}{The Cerebellum as a Forward Model}{cerebellum-forward}
-  The cerebellar circuit~\cite{Marr1969,Albus1971,Kawato1987}:
-  \begin{enumerate}
-    \item Receives a copy of the motor command (efference copy) via the pontine nuclei
-    \item Receives sensory feedback via the inferior olive and mossy fibers
-    \item Computes the predicted sensory consequences of the command using parallel
-          fiber--Purkinje cell synapses (basis function expansion)
-    \item The climbing fiber signal carries sensory prediction error from the inferior olive
-    \item Error-driven learning updates Purkinje cell responses through long-term depression
-          (LTD) at parallel fiber--Purkinje cell synapses. LTD is induced only when parallel
-          fiber activity and the climbing fiber spike fall within a window of a few hundred
-          milliseconds of each other; the optimum is region-specific and appears tuned to
-          each region's own sensorimotor feedback delay~\cite{Suvrathan2016}
-  \end{enumerate}
-  In the language of control theory (Volume~I):
-  \begin{itemize}
-    \item The cerebellum implements $\hat{\state}_{k+1} = f(\hat{\state}_k, \control_k)$
-          --- the state prediction step of the Kalman filter
-    \item The climbing fiber error signal implements the innovation update
-    \item The granule cell layer provides the basis functions for the nonlinear mapping
-  \end{itemize}
-\end{neurobox}
+For a linear discrete-time engineering model, write
+\begin{align}
+ x_{j+1}&=Ax_j+Bu_j+w_j, & y_j&=Cx_j+v_j,\\
+ \hat x^-_{j+1}&=A\hat x^+_j+Bu_j, &
+ \nu_{j+1}&=y_{j+1}-C\hat x^-_{j+1},\\
+ \hat x^+_{j+1}&=\hat x^-_{j+1}+K_{j+1}\nu_{j+1}.
+\end{align}
+The state prediction has state units; the innovation $\nu$ has measurement
+units; the gain maps measurement residuals into state corrections. Under the
+usual known linear-model, independent zero-mean white-noise assumptions with
+covariances $Q,R$, a Kalman filter also propagates
+\begin{align}
+ P^-_{j+1}&=AP^+_jA^T+Q,\\
+ S_{j+1}&=CP^-_{j+1}C^T+R, &
+ K_{j+1}&=P^-_{j+1}C^TS_{j+1}^{-1}.
+\end{align}
+Assume $S$ is invertible; numerical implementations solve the linear system.
+The posterior covariance must also be updated, for example in Joseph form,
+$(I-KC)P^-(I-KC)^T+KRK^T$. Joint Gaussian assumptions make the estimate the
+conditional mean; without them, linear least-squares claims require their own
+second-moment assumptions. For nonlinear models, the prediction and update
+require an explicitly chosen approximation.
 
-Two lines of evidence support this architecture, and it is worth keeping them apart because
-they come from different populations.
+A biological prediction-error signal is therefore not, on its own, an
+innovation \emph{update}. It does not identify $C$, $K$, covariance propagation,
+or the assumptions that justify optimality. The equations offer experimentally
+useful questions about uncertainty weighting; they are not anatomical labels.
 
-In healthy subjects, reaching against a novel force field is initially distorted and then
-straightens with practice; removing the field produces aftereffects that mirror the original
-distortion, which is what implicates a learned internal model of the limb's dynamics rather
-than a stiffer or better-tuned feedback loop~\cite{Shadmehr1994}. In patients with
-cerebellar degeneration, on-line correction within a movement is intact while trial-to-trial
-learning of those same altered dynamics is profoundly impaired---a dissociation that does not
-appear in Huntington's disease, where the deficit falls on the feedback side
-instead~\cite{SmithShadmehr2005}. The first result establishes that an internal model is
-learned; the second locates the learning in the cerebellum.
+\section{Basal Ganglia and Spinal Circuits}
 
-Two timescales are easy to conflate here, and they are not the same quantity. The window in
-which parallel fiber and climbing fiber activity must coincide for LTD to be induced is a few
-hundred milliseconds---that is a coincidence-detection requirement, set by how long the error
-signal takes to arrive. The depression it produces, and the behavioural adaptation that
-follows, accumulate over minutes and tens of trials. Motor learning being slow is therefore
-not in tension with the plasticity rule being fast: the millisecond figure governs
-\emph{whether} a synapse is eligible to change, the minutes figure governs \emph{how much} it
-has changed.
+Action selection is one useful account of basal-ganglia function, but a literal
+``direct pathway on, indirect pathway off'' switch is too simple. Cui and
+colleagues observed activity increases in both pathways around action initiation
+in a mouse operant task~\cite{Cui2013Review}. This observation challenges an
+exclusive activation story; calcium activity associated with movement is not
+by itself proof of causal necessity or a complete alternative algorithm.
+Neither competitive-selection language nor these data establish that the basal
+ganglia solve a receding-horizon trajectory optimization problem.
 
-\subsection{Basal Ganglia: Action Selection}
-
-The basal ganglia implement an action selection mechanism through competitive
-inhibition. The direct pathway facilitates a desired action; the indirect pathway
-suppresses competing actions. This is analogous to a model predictive controller
-evaluating multiple candidate trajectories and selecting the best one.
-
-\section{Spinal Cord: The Local Controller}
-
-The spinal cord is not merely a relay station. It contains:
-\begin{itemize}
-  \item \textbf{Motor neuron pools}: lower motor neurons that directly innervate muscles
-  \item \textbf{Interneuron networks}: local circuits that implement reflexes, pattern
-        generation, and coordination
-  \item \textbf{Central pattern generators} (CPGs): oscillatory circuits for rhythmic
-        movements (Chapter~8)
-\end{itemize}
+Spinal motor pools, interneuronal circuits, sensory feedback, and descending
+commands act together. Pattern generation and reflex pathways can contribute
+to coordination (Chapter~\ref{ch:cpg}), but lower motor neuron output is not a joint
+torque: activation, muscle geometry, contraction dynamics, and tendon mechanics
+intervene (Volume~III). Contact then couples the body to its environment.
+This is why a neural account of a golf swing must specify how its proposed
+signals generate forces and how those forces alter subsequent sensory evidence.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Population Vector.}
-        Given neurons with preferred directions every $45^\circ$, compute the population
-        vector for a movement at $30^\circ$. Plot individual neuron contributions.
-
-  \item \textbf{Cerebellar Forward Model.}
-        Implement a simple forward model using a lookup table. Show how climbing
-        fiber errors update the model over successive trials.
-
-  \item \textbf{(Research.)} Read Georgopoulos et al.\ (1986) and summarize the
-        evidence for population coding in M1.
+ \item Derive Eq.~\eqref{eq:ch3:population-vector}, compute its $30^\circ$
+ example, and repeat with the nonuniform population. Distinguish a zero-vector
+ failure from a biased nonzero direction estimate.
+ \item For a scalar estimator with prior variance four, measurement variance
+ one, and $C=1$, compute the gain and posterior variance. Explain which
+ measurements would be needed before interpreting a neural response as that
+ uncertainty-weighted update. (The values are $0.8$ and $0.8$.)
+ \item Read the methods and results of Smith and Shadmehr (2005). Separate the
+ current trial-to-trial experiment, the earlier online-correction evidence,
+ and the computational interpretation. Do not generalize the patient results
+ to all tasks or all disease severities.
+ \item Propose a perturbation experiment that distinguishes two candidate
+ models with similar unperturbed clubhead trajectories. Specify neural or
+ behavioral observations, mechanical state, timing, and possible confounds.
 \end{enumerate}

@@ -1,0 +1,293 @@
+# Technical Review: Chapters on Parameter Estimation, Reinforcement Learning, and Visualization
+
+Below is the read-only technical review of the three draft chapters (\ref{ch:param-estimation}, \ref{ch:rl}, and \ref{ch:visualization}), organized into:
+1. **Definite Technical Inaccuracies & Runnable-Code Defects** (Equations, Identifiability, Gymnasium API, Kinematics, Manipulability, and Multibody Energy).
+2. **Distinction Between General Concepts & Platform/Suite Claims**.
+3. **Bounded Fixes & Concrete Verification Tests**.
+
+---
+
+## 1. Definite Technical Inaccuracies and Runnable-Code Defects
+
+### A. Parameter Estimation & Identifiability (\ref{ch:param-estimation})
+
+1. **Incorrect Multi-DOF Regressor Assembly & Multi-DOF Identifiability Failure**:
+   - **Flaw**: In `estimate_inertial_params`:
+     ```python
+     for k in range(N):
+         for j in range(n):
+             row = k * n + j
+             Y[row, 0] = qdd_data[k, j]
+             Y[row, 1] = np.sin(q_data[k, j])
+     ```
+     When $n > 1$, every joint $j$ writes into the exact same two global columns (`col 0` and `col 1`) irrespective of DOF index. If $n=2$ and `n_params=2`, joint 0 and joint 1 overwrite/cross-contribute to the same physical parameter slot. If `n_params > 2`, remaining columns remain strictly 0, causing rank deficiency.
+   - **Missing Dynamic Coupling**: For $n > 1$, manipulator equations of motion $M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$ have off-diagonal inertia terms, Coriolis/centrifugal terms ($q_{d, i} q_{d, k}$), and coupled gravitational terms. The 1-DOF toy regressor cannot be presented as a general multi-body linear regressor without defining the base parameter vector $\bm{\pi}_b$.
+   - **Identifiability & Base Inertial Parameters**: The text states: *"The least-squares solution minimizes $\|Y\bm{\pi} - \bm{\tau}\|_2^2$ where $\bm{\pi}$ is the parameter vector \cite{luh1980}"*. Standard link inertial parameters ($10$ per rigid body: mass, 3 first moments, 6 inertia tensor elements) are **not uniquely identifiable** in serial kinematic chains. Only a minimal linear combination known as **base inertial parameters** (Gautier & Khalil) is identifiable. Unconstrained $Y$ is structurally rank-deficient.
+   - **Unused Import**: `from scipy.optimize import minimize` is imported but unused in the listing.
+
+---
+
+### B. Gymnasium API & Pendulum Target Convention (\ref{ch:rl})
+
+1. **Gymnasium API Compliance**:
+   - **`step()` Return Signature**:
+     - *Code*: Returns a 4-tuple: `return self._get_obs(), reward, done, {}`.
+     - *Standard*: Gymnasium API requires a 5-tuple: `(obs, reward, terminated, truncated, info)`. Returning 4 elements causes `ValueError: too many values to unpack (expected 5)` when used with standard Gymnasium wrappers/runners (e.g., Stable-Baselines3).
+   - **`reset()` Return Signature**:
+     - *Code*: Returns `self._get_obs()` directly.
+     - *Standard*: Gymnasium `reset()` must return a 2-tuple: `(obs, info)`.
+   - **PRNG Handling**:
+     - *Code*: `np.random.seed(seed)` mutates global NumPy state.
+     - *Standard*: Gymnasium environments use `super().reset(seed=seed)` and `self.np_random`.
+   - **Inheritance & Spaces**: The class does not inherit from `gymnasium.Env` and does not define `self.action_space` and `self.observation_space` (`gymnasium.spaces.Box`).
+
+2. **Pendulum Target Convention & Upright Inconsistency**:
+   - **Target Angle vs. Upright Zero**:
+     - The reward is:
+       $$\text{reward} = -(\theta_{\text{norm}}^2 + 0.1 \dot{\theta}^2 + 0.01 u^2), \quad \text{where } \theta_{\text{norm}} \in [-\pi, \pi)$$
+       This explicitly rewards $\theta = 0$ as the target.
+     - In the equation of motion:
+       $$\ddot{\theta} = -\frac{g}{l}\sin\theta + \frac{u}{m l^2}$$
+       At $\theta = 0$, $\sin(0) = 0$, which is an equilibrium. However, in standard planar pendulum kinematics measured from the downward vertical:
+       $$\ddot{\theta} = -\frac{g}{l}\sin\theta$$
+       means $\theta = 0$ is the **stable downward hanging rest position**, and $\theta = \pm \pi$ is the unstable upright inverted position.
+     - If $\theta=0$ is the hanging position, minimizing $\theta^2$ rewards hanging still at the bottom, not swinging up. If $\theta=0$ is meant to be the upright position, the gravity torque term must be $+ \frac{g}{l}\sin\theta$ (or $-\frac{g}{l}\sin(\theta)$ if $\theta$ is measured relative to upright counter-clockwise from top, where $\ddot{\theta} = \frac{g}{l}\sin\theta$).
+     - Furthermore, `reset()` sets $\theta \sim \pi \pm 0.1$. If $\theta=0$ were the upright target, resetting to $\pi$ initializes hanging down (consistent with swing-up), but the dynamics equation makes $\theta=0$ stable downward. The sign convention between equations of motion and reward target is inconsistent.
+
+3. **Symplectic Integration vs. Explicit Euler**:
+   - `theta_dot += theta_ddot * self.dt; theta += theta_dot * self.dt` is semi-implicit (symplectic) Euler. The docstring or text should accurately state semi-implicit Euler rather than generic Euler, as explicit Euler diverges rapidly on undamped pendulums.
+
+---
+
+### C. Kinematic Angle Conventions & Visualization (\ref{ch:visualization})
+
+1. **Inconsistency Between Figure \ref{fig:stick-figure} and Code `compute_joint_positions_2d`**:
+   - **Figure \ref{fig:stick-figure}**: Joint 0 is drawn with angle $q_0$ relative to the horizontal ground. Joint 1 is drawn with an angle $q_1$ measured relative to a dashed horizontal reference line parallel to the ground ($x$-axis), i.e., $q_1$ is illustrated as an **absolute world angle**.
+   - **Code**: Accumulates angles:
+     ```python
+     angle_cumulative += q[i]
+     positions[i + 1, 0] = positions[i, 0] + lengths[i] * np.cos(angle_cumulative)
+     ```
+     This assumes $q_i$ are **relative joint angles** (local coordinate frames where $q_1$ is relative to link 1).
+   - **Defect**: The diagram's visual angle annotation contradicts the cumulative summation in forward kinematics. For relative angles, the reference line for $q_1$ at Joint 1 should be the collinear extension of link 1, not the global horizontal.
+
+2. **Manipulability Units and Metric**:
+   - **Manipulability Ellipsoid**: The text calls $J J^T$ the "velocity manipulability ellipsoid."
+   - Strictly, $J J^T$ is the matrix defining the ellipsoid surface via $\bm{v}^T (J J^T)^{-1} \bm{v} \le 1$ (for non-singular $J$). The ellipsoid itself is $\{\bm{v} \mid \bm{v} = J \dot{\bm{q}},\, \|\dot{\bm{q}}\|_2 \le 1\}$.
+   - **Dimensional/Unit Inhomogeneity**: When the end-effector pose includes both translation (m/s) and rotation (rad/s), or when joint velocities have different physical dimensions (e.g., prismatic and revolute joints), the singular values of $J$ mix dimensions (m/s and rad/s).
+   - Consequently, Yoshikawa's volume metric $w = \sqrt{\det(J J^T)}$ is **dimensionally inhomogeneous** across mixed task spaces. The text should explicitly qualify that manipulability ellipsoids apply to pure translational or pure rotational sub-Jacobians ($J_v$ or $J_\omega$), or require dimensional normalization.
+
+---
+
+### D. Multibody Energy Formulation (\ref{ch:visualization})
+
+1. **Incorrect Kinetic Energy Formula for Rigid Bodies**:
+   - Equation given in the chapter:
+     $$E_{\text{total}} = \sum_i \left( KE_i + PE_i \right) = \sum_i \left( \frac{1}{2} I_i \dot{q}_i^2 + m_i g h_i \right)$$
+   - **Defects**:
+     1. **Neglects Translational Kinetic Energy of Segment Centers of Mass**: A segment $i$ in a serial manipulator translates and rotates. The planar kinetic energy is:
+        $$KE_i = \frac{1}{2} m_i \|\bm{v}_{c,i}\|^2 + \frac{1}{2} I_{c,i} \omega_i^2$$
+        Writing only $\frac{1}{2} I_i \dot{q}_i^2$ is only valid for a single rigid body rotating around a fixed pivot with moment of inertia about that fixed pivot. For all subsequent links $i \ge 2$, the joint axis is not fixed in the inertial frame; translating links possess substantial linear kinetic energy.
+     2. **Relative Rates vs. Absolute Angular Velocities**: $\dot{q}_i$ is the relative joint velocity, whereas rigid body rotational energy depends on the absolute angular velocity $\omega_i = \sum_{k=1}^i \dot{q}_k$ (in planar serial chains).
+     3. **Multibody Matrix Form**: The correct general multibody kinetic energy is $KE = \frac{1}{2}\dot{\bm{q}}^T M(\bm{q})\dot{\bm{q}}$, where $M(\bm{q})$ is the configuration-dependent mass matrix.
+
+---
+
+## 2. General Concepts vs. Platform Claims
+
+1. **MyoSuite Integration Claims**:
+   - *Claim in \ref{ch:rl}*: *"The companion platform's RL pipeline extends from simple benchmarks (pendulum, reaching) to full muscle-driven golf swing optimization using MyoSuite environments."*
+   - *Review Distinction*: MyoSuite provides musculoskeletal environments based on MuJoCo (e.g., `myoArm`, `myoLeg`). Connecting Gymnasium RL algorithms to musculoskeletal models is a recognized general approach. However, stating that the companion platform has an out-of-the-box pipeline for *"full muscle-driven golf swing optimization using MyoSuite"* represents an unsupported application-specific claim unless the repository explicitly implements and exports that task wrapper.
+2. **Platform Architectural Distinction**:
+   - Forward dynamics simulation, least-squares system identification, and PPO integration are general multi-body dynamics concepts. They do not require a proprietary engine or unverified claims about UpstreamDrift.
+
+---
+
+## 3. Bounded Fixes and Test Verification Suite
+
+### A. Bounded LaTeX & Code Fixes
+
+#### 1. Correction for Energy Equation (\ref{ch:visualization})
+Replace the scalar equation with the general mass matrix formulation and CoM decomposition:
+```latex
+\begin{equation}
+  E_{\text{total}} = KE(\bm{q}, \dot{\bm{q}}) + PE(\bm{q}) = \frac{1}{2} \dot{\bm{q}}^T M(\bm{q}) \dot{\bm{q}} + \sum_i m_i g h_i(\bm{q})
+\end{equation}
+where $M(\bm{q})$ is the system mass matrix, or equivalently for planar serial links:
+\begin{equation}
+  KE = \sum_i \left( \frac{1}{2} m_i \|\bm{v}_{c,i}(\bm{q}, \dot{\bm{q}})\|^2 + \frac{1}{2} I_{c,i} \omega_i^2 \right)
+\end{equation}
+```
+
+#### 2. Correction for Stick-Figure Angles (\ref{ch:visualization})
+In Figure \ref{fig:stick-figure}, draw the dashed reference line for $q_1$ aligned as an extension of Link 1 (blue vector continuation) rather than parallel to the ground $x$-axis, matching the relative angle assumption $\theta_2 = q_0 + q_1$.
+
+#### 3. Gymnasium-Compliant Pendulum Environment (\ref{ch:rl})
+```python
+import gymnasium as gym
+from gymnasium import spaces
+import numpy as np
+
+
+class PendulumEnv(gym.Env):
+    """Planar pendulum environment conforming to Gymnasium API.
+
+    Upright equilibrium is theta = 0.
+    Equation of motion: theta_ddot = (g / l) * sin(theta) + u / (m * l**2)
+    """
+
+    metadata = {"render_modes": []}
+
+    def __init__(self, dt: float = 0.05, max_steps: int = 200) -> None:
+        super().__init__()
+        self.dt = dt
+        self.max_steps = max_steps
+        self.g = 9.81
+        self.l = 1.0
+        self.m = 1.0
+        self.max_torque = 2.0
+
+        self.action_space = spaces.Box(
+            low=-self.max_torque, high=self.max_torque, shape=(1,), dtype=np.float32
+        )
+        # Obs: [cos(theta), sin(theta), theta_dot]
+        high_obs = np.array([1.0, 1.0, np.finfo(np.float32).max], dtype=np.float32)
+        self.observation_space = spaces.Box(low=-high_obs, high=high_obs, dtype=np.float32)
+
+        self.state: np.ndarray = np.zeros(2, dtype=np.float64)
+        self.step_count = 0
+
+    def reset(
+        self, *, seed: int | None = None, options: dict | None = None
+    ) -> tuple[np.ndarray, dict]:
+        super().reset(seed=seed)
+        # Initialize near hanging position (theta ~ pi)
+        self.state = np.array(
+            [
+                np.pi + self.np_random.uniform(-0.1, 0.1),
+                self.np_random.uniform(-0.5, 0.5),
+            ],
+            dtype=np.float64,
+        )
+        self.step_count = 0
+        return self._get_obs(), {}
+
+    def _get_obs(self) -> np.ndarray:
+        theta, theta_dot = self.state
+        return np.array([np.cos(theta), np.sin(theta), theta_dot], dtype=np.float32)
+
+    def step(self, action: np.ndarray | float) -> tuple[np.ndarray, float, bool, bool, dict]:
+        u = float(np.clip(action, -self.max_torque, self.max_torque))
+        theta, theta_dot = self.state
+
+        # Dynamics where theta = 0 is unstable upright: theta_ddot = (g/l)*sin(theta) + u/(m*l^2)
+        theta_ddot = (self.g / self.l) * np.sin(theta) + u / (self.m * self.l**2)
+        theta_dot += theta_ddot * self.dt
+        theta += theta_dot * self.dt
+
+        self.state = np.array([theta, theta_dot], dtype=np.float64)
+        self.step_count += 1
+
+        angle_normalized = ((theta + np.pi) % (2 * np.pi)) - np.pi
+        reward = -(angle_normalized**2 + 0.1 * (theta_dot**2) + 0.01 * (u**2))
+
+        terminated = False
+        truncated = self.step_count >= self.max_steps
+        return self._get_obs(), float(reward), terminated, truncated, {}
+```
+
+#### 4. Fixed 1-DOF Parameter Estimation Function (\ref{ch:param-estimation})
+Clarify that the routine identifies a 1-DOF pendulum system ($\tau = I \ddot{q} + m g l \sin q$), removing the corrupted multi-DOF outer loop:
+```python
+def estimate_pendulum_inertial_params(
+    q_data: np.ndarray,
+    qdd_data: np.ndarray,
+    tau_data: np.ndarray,
+) -> np.ndarray:
+    """Estimate 1-DOF pendulum base parameters [I, m*g*l] via linear least-squares.
+
+    tau = Y(q, qdd) @ [I, m*g*l]^T
+    """
+    q_vec = q_data.reshape(-1)
+    qdd_vec = qdd_data.reshape(-1)
+    tau_vec = tau_data.reshape(-1)
+
+    Y = np.column_stack([qdd_vec, np.sin(q_vec)])
+    params, _, rank, _ = np.linalg.lstsq(Y, tau_vec, rcond=None)
+    if rank < 2:
+        raise ValueError("Data trajectory is not persistently exciting (rank < 2).")
+    return params
+```
+
+---
+
+### B. Substantive Verification Tests
+
+```python
+import numpy as np
+import pytest
+
+from ch_param_estimation import estimate_pendulum_inertial_params
+from ch_rl import PendulumEnv
+from ch_visualization import compute_joint_positions_2d
+
+
+def test_pendulum_env_gymnasium_spec():
+    """Verify Gymnasium step and reset signatures and shape contracts."""
+    env = PendulumEnv(dt=0.05, max_steps=10)
+    obs, info = env.reset(seed=123)
+
+    assert isinstance(obs, np.ndarray)
+    assert obs.shape == (3,)
+    assert isinstance(info, dict)
+
+    action = np.array([1.0], dtype=np.float32)
+    step_res = env.step(action)
+    assert len(step_res) == 5
+    next_obs, reward, terminated, truncated, step_info = step_res
+
+    assert next_obs.shape == (3,)
+    assert isinstance(reward, float)
+    assert isinstance(terminated, bool)
+    assert isinstance(truncated, bool)
+    assert isinstance(step_info, dict)
+
+
+def test_pendulum_dynamics_upright_equilibrium():
+    """Verify that theta = 0 with u = 0 is an equilibrium (zero acceleration)."""
+    env = PendulumEnv(dt=0.01)
+    env.state = np.array([0.0, 0.0])  # Upright top
+    obs, reward, _, _, _ = env.step(np.array([0.0]))
+    # cos(0) = 1, sin(0) = 0, theta_dot = 0
+    np.testing.assert_allclose(obs, np.array([1.0, 0.0, 0.0]), atol=1e-5)
+    assert reward == pytest.approx(0.0, abs=1e-5)
+
+
+def test_linear_regressor_parameter_recovery():
+    """Verify exact parameter recovery for known 1-DOF pendulum parameters."""
+    true_I = 0.25
+    true_mgl = 4.905
+    N = 100
+    t = np.linspace(0, 2.0, N)
+    q = np.sin(2 * np.pi * t)
+    qdd = -((2 * np.pi) ** 2) * np.sin(2 * np.pi * t)
+    tau = true_I * qdd + true_mgl * np.sin(q)
+
+    estimated = estimate_pendulum_inertial_params(q, qdd, tau)
+    np.testing.assert_allclose(estimated, [true_I, true_mgl], rtol=1e-6)
+
+
+def test_forward_kinematics_relative_angles():
+    """Verify 2D kinematics follows serial link cumulative angle convention."""
+    lengths = [1.0, 1.0]
+    # Shoulder 90 deg (pi/2), Elbow -90 deg (-pi/2) -> End-effector at (1.0, 1.0)
+    q = np.array([np.pi / 2.0, -np.pi / 2.0])
+    positions = compute_joint_positions_2d(q, lengths)
+
+    expected = np.array([
+        [0.0, 0.0],  # Base
+        [0.0, 1.0],  # Joint 1
+        [1.0, 1.0],  # End-effector
+    ])
+    np.testing.assert_allclose(positions, expected, atol=1e-6)
+```

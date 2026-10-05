@@ -1,0 +1,91 @@
+An adversarial technical review of the revised chapter source follows below, examining equations, indices, signs, dimensions/units, boundaries, and evidential claims.
+
+---
+
+### 1. Summary of Findings
+
+- **No critical mathematical errors or sign flips** were found in the equations ($F[q; y]$, $\nu_k$, $S_k$, $K_k$, or Example 5.1/5.2).
+- **Two unresolved technical ambiguities / slight notation collisions** exist:
+  1. **Time indexing alignment in the MPC formulation (\eqref{eq:ch5:active-inference})**: The internal prediction horizon loop uses $j \in \{0, \dots, N-1\}$ with state $x_j$, while the external time is $k$. The stage cost uses $r_{k+j}$ but $h(x_j)$ rather than $h(x_{k+j})$ or an explicitly distinguished predicted state symbol like $\xi_j$ or $x_{j|k}$.
+  2. **Labeling/Key naming convention**: Equation~\eqref{eq:ch5:active-inference} is titled/labeled `\label{eq:ch5:active-inference}`, but the equation represents an MPC formulation, which could cause semantic confusion in cross-referencing.
+- **Empirical/Evidential claims**: The prose rigorously adheres to the negative constraint (no universal sensory delay asserted, no neural localization claims, explicit distinction between statistical inference and mechanical execution).
+
+---
+
+### 2. Equation-by-Equation & Derivation Audit
+
+#### A. State-Space & Kalman Recursion
+$$\begin{aligned}
+x_{k+1} &= A x_k + B u_k + w_k, & y_k &= H x_k + v_k \\
+\hat{x}^-_k &= A \hat{x}^+_{k-1} + B u_{k-1}, & \hat{y}^-_k &= H \hat{x}^-_k
+\end{aligned}$$
+- **Indices & Timing**: 
+  - If $x_{k+1} = A x_k + B u_k + w_k$, then propagating conditional expectation from $k-1$ to $k$ yields $\mathbb{E}[x_k \mid y_{1:k-1}] = A \hat{x}^+_{k-1} + B u_{k-1} = \hat{x}^-_k$. This matches standard discrete-time convention.
+  - The observation at $k$ is $y_k = H x_k + v_k$, and prior prediction is $\hat{y}^-_k = H \hat{x}^-_k$. **Correct.**
+- **Innovation & Gain (\eqref{eq:ch5:prediction-error})**:
+  $$\nu_k = y_k - H \hat{x}^-_k, \qquad S_k = H P^-_k H^{\mathsf T} + R, \qquad K_k = P^-_k H^{\mathsf T} S_k^{-1}$$
+  - Signs, matrix transposes, and inverses are exact.
+
+#### B. Example 1: Precision vs. Gain
+- **Parameters**: Scalar $y = x + v$, $H = 1$, $R = 1$.
+  - Case 1: $P^- = 4$, $R = 1$.
+    $$S = 1 \cdot 4 \cdot 1 + 1 = 5, \quad K = 4/5, \quad P^+ = (1 - K H)P^- = (1 - 4/5)\cdot 4 = 4/5.$$
+    Measurement precision is $R^{-1} = 1^{-1} = 1$. Posterior variance is $4/5$.
+  - Case 2: $P^- = 1/4$, $R = 1$.
+    $$S = 1/4 + 1 = 5/4, \quad K = \frac{1/4}{5/4} = 1/5, \quad P^+ = (1 - 1/5)(1/4) = 1/5.$$
+  - Values $K = 4/5$, $P^+ = 4/5$ and $K = 1/5$ are mathematically exact. The conclusion that precision $R^{-1}$ does not alone set $K$ is algebraically sound.
+
+#### C. Variational Free Energy
+$$F[q; y] = \mathbb{E}_q[\log q(z) - \log p(y, z)] = D_{\mathrm{KL}}(q \Vert p(z \mid y)) - \log p(y)$$
+- **Derivation**:
+  $$\begin{aligned}
+  \mathbb{E}_q[\log q(z) - \log p(y, z)] &= \mathbb{E}_q[\log q(z) - \log p(z \mid y) - \log p(y)] \\
+  &= \int q(z) \log \frac{q(z)}{p(z \mid y)} \, dz - \log p(y) \int q(z) \, dz \\
+  &= D_{\mathrm{KL}}(q \Vert p(z \mid y)) - \log p(y).
+  \end{aligned}$$
+  - Signs: $D_{\mathrm{KL}}(q \Vert p) \ge 0$, so $F[q; y] \ge -\log p(y)$ (evidence lower bound is $-F$). The definition and sign identity are exact.
+
+#### D. Model Predictive Control (\eqref{eq:ch5:active-inference})
+$$\min_{u_{0:N-1}} \Phi(x_N) + \sum_{j=0}^{N-1} \left[ \|h(x_j) - r_{k+j}\|_W^2 + \|u_j\|_U^2 \right]$$
+- **Index & Time Horizon**:
+  - The initial condition states $x_0 = \hat{x}_k$.
+  - The step in the horizon is $j$, running $0 \dots N-1$. At $j$, the tracking target is correctly aligned to actual time $k+j$ via $r_{k+j}$.
+  - The terminal cost $\Phi(x_N)$ penalizes state at prediction horizon step $N$ ($k+N$).
+  - **Defect/Ambiguity**: $x_j$ reuses the symbol $x$ from the plant state equation $x_{k+1} = A x_k + \dots$. In MPC literature, this is typically denoted $x_{j|k}$ or $\hat{x}_{j|k}$ to distinguish the internal open-loop predicted trajectory along the prediction horizon from the true closed-loop state trajectory $x_k$. While standard shorthand in brief textbook summaries, explicitly noting $x_j$ as predicted horizon state avoids confusing $x_0$ with the initial plant state at time 0.
+
+#### E. Example 2: Tracking Objective vs. Prediction Matching
+- Problem: $x_1 = x_0 + u$, $x_0 = 0 \implies x_1 = u$. $y_1 = x_1 = u$, desired $r = 1$.
+- Perfect predictor: $\hat{y}_1(u) = u$.
+- Case 1: Objective $J_1(u) = (y_1 - \hat{y}_1)^2 + \lambda u^2 = (u - u)^2 + \lambda u^2 = \lambda u^2$.
+  - For $\lambda > 0$, $\min_u \lambda u^2 \implies u^* = 0$.
+- Case 2: Tracking objective $J_2(u) = (u - r)^2 + \lambda u^2 = (u - 1)^2 + \lambda u^2$.
+  - Derivative: $2(u - 1) + 2\lambda u = 0 \implies u(1 + \lambda) = 1 \implies u^* = \frac{1}{1 + \lambda}$.
+  - For $\lambda = 1$: $u^* = 1/2$.
+- The counterexample is sound and formally isolates the difference between sensory prediction error and task error.
+
+---
+
+### 3. Classification of Issues
+
+#### Unresolved Actual Defects
+1. **Misleading Equation Label**:
+   - In Section 4:
+     ```latex
+     \label{eq:ch5:active-inference}
+     ```
+     is attached to the standard output-tracking MPC formulation rather than an active-inference equation. While harmless to the compiler, any cross-reference to `\ref{eq:ch5:active-inference}` expecting active inference will point to the classical MPC quadratic program.
+     - *Suggested Fix*: Rename the label to `\label{eq:ch5:tracking-mpc}`.
+
+#### Optional Improvements / Expansions
+1. **Predicted State Notation in Horizon**:
+   - In \eqref{eq:ch5:active-inference}, clarifying $x_{j|k}$ (or noting in prose that $x_j$ denotes the internal predicted state along the $N$-step horizon initialized at $x_0 = \hat{x}_k$) prevents collision with the actual plant state trajectory $x_k$.
+2. **Exercise 2 Boundary Case**:
+   - Exercise 2 asks to solve the one-step example with $|u| \le u_{\max}$. When $u_{\max} < \frac{1}{1+\lambda}$, the constrained optimum is $u^* = u_{\max}$; when $u_{\max} \ge \frac{1}{1+\lambda}$, it is $\frac{1}{1+\lambda}$. Specifying that $u_{\max} > 0$ makes the domain completely clean.
+
+---
+
+### 4. Verification of Evidential and Domain Constraints
+
+- **Golf Timings**: No hard claims about swing phase millisecond intervals, downswing duration, or neural transmission bounds are made. The text explicitly qualifies: *"The duration of a golf movement does not establish a universal sensory delay, a universal bandwidth limit or the complete absence of useful feedback."*
+- **Neural Localization**: Properly avoids mapping forward models or Kalman gains to specific anatomical structures (e.g., cerebellum or motor cortex), noting: *"Those are assumptions of this model, not established identities between its variables and neural populations."*
+- **Literature Claims**: Does not claim unverified empirical findings; citations to Hommel (2001) and Friston (2010) are restricted to broad framework definitions without over-attributing unverified empirical results.

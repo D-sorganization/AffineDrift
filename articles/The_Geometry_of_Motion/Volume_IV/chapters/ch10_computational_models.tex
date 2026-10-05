@@ -1,199 +1,298 @@
-\chapter{Computational Models of Motor Control}
+\chapter[Computational Models of Motor Control]{Computational Models\\of Motor Control}
 \label{ch:computational}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter distinguishes computational objectives, mathematical solutions
+and proposed neural implementations. The executable example solves a
+deterministic full-state linear-quadratic problem. Stochastic and biological
+extensions require the additional assumptions stated below.
 \end{gomdraftnotice}
 
-\epigraph{%
-  A theory of motor control must ultimately be a theory of
-  computation: what is computed, how, and why.
-}{}
+\section{What a Computational Theory Specifies}
 
-\begin{table}[h]
+A model must specify the plant, available information, objective, admissible
+commands and learning assumptions. A similar movement trajectory can arise
+from different choices. Smoothness, adaptation or task-dependent variability
+alone does not identify a unique objective or neural algorithm.
+
+\begin{table}[htbp]
 \centering
-\caption{Comparison of Computational Motor Control Theories.}
+\caption{Distinct Questions Asked by Motor-Control Models.}
 \label{tab:ch10:theories}
-\renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}p{0.22\linewidth}p{0.34\linewidth}p{0.35\linewidth}@{}}
 \toprule
-\textbf{Theory} & \textbf{Learning Rule} & \textbf{Variability} & \textbf{Key Prediction} \\
+\textbf{Model Class}&\textbf{Question}&\textbf{Additional Specification}\\
 \midrule
-OFC & Error feedback & Tolerate task-irrelevant & Bell-shaped velocity \\
-(Todorov, 2004) & & & profiles \\
-\midrule
-Active Inference & Minimize free energy & Prediction error-driven & Sensorimotor uncertainty \\
-(Friston, 2010) & & & shapes movement \\
-\midrule
-Internal Model & Forward model learning & Exploration + exploitation & Gradual visuomotor \\
-(Kawato, 1999) & (climbing fiber error) & & adaptation \\
-\midrule
-Synergy Control & Reduced-dim learning & Synergy-space variability & Movement flexibility \\
-(d'Avella, 2005) & (NMF, ICA) & allowed & without dimensionality \\
+Optimal Feedback Control&Which policy minimizes expected task cost?&
+Plant, observations, noise, cost and constraints\\
+Active Inference&How are beliefs and actions coupled under a generative model?&
+Priors, likelihoods, action effects and update rule\\
+Internal Models&How are outcomes predicted and commands selected?&
+Identification, context, inverse feasibility and feedback\\
+Synergy Models&Which coordinated input or signal subspace is used?&
+Basis, learning rule, mechanics and retained task authority\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\section{Optimal Feedback Control}
+These classes can overlap. An optimal controller can use a forward model and
+a restricted actuator basis. A fitted low-rank signal factorization is not
+itself a controller. A proposed cortical or cerebellar implementation needs
+evidence beyond a behavioral fit.
 
-The dominant computational theory of motor control is optimal feedback control (OFC),
-formulated by Todorov and Jordan~\cite{TodorovJordan2002}. OFC explains motor variability patterns
-(minimum intervention principle), predicts smooth velocity profiles, and unifies
-cerebellar learning with optimal control:
+\section{Stochastic Optimal Feedback Control}
 
-\begin{definition}{The OFC Framework}{ofc-def}
-  The nervous system controls movement by solving, in real-time, the stochastic
-  optimal control problem:
-  \begin{equation}
-    \min_{\control(\cdot)} \mathbb{E}\left[
-    \phi(\state_T) + \int_0^T \ell(\state_t, \control_t) \dt
-    \right],
-    \label{eq:ch10:ofc}
-  \end{equation}
-  subject to:
-  \begin{equation}
-    \dd\state = f(\state, \control) \dt + G(\state) \dd\bm{w},
-  \end{equation}
-  where $\dd\bm{w}$ is Brownian noise representing signal-dependent motor noise.
-\end{definition}
+Todorov and Jordan's account frames coordination in terms of task performance
+under uncertainty~\cite{TodorovJordan2002}. Its simulations use specified
+linear dynamics, multiplicative command noise and delayed/noisy observations.
+This is a computational-level account, not a demonstration that the nervous
+system solves an exact optimization problem in real time.
 
-\noindent
-Equation~\eqref{eq:ch10:ofc} is a \emph{stochastic} optimal control problem, and the distinction
-matters. Because the dynamics carry a Brownian term, the solution is characterised by a
-Hamilton--Jacobi--Bellman equation for the value function, not by the Pontryagin maximum
-principle applied along a single trajectory. The deterministic geometric control theory this
-series draws on elsewhere---Agrachev \& Sachkov \cite{AgrachevSachkov2004}---treats smooth
-ordinary differential equations with no noise term and develops optimality through Pontryagin's
-principle; it does not cover the problem above.
+For a fully observed It\^o diffusion, write
+\begin{align}
+ dx_t&=f(x_t,u_t,t)\,dt+\Sigma(x_t,u_t,t)\,dW_t,\\
+ J^\pi(t,x)&=\mathbb E\left[\Phi(x_T)+
+       \int_t^T L(x_s,u_s,s)\,ds\mid x_t=x\right].
+ \label{eq:ch10:ofc}
+\end{align}
+The policy must be adapted to the declared information and obey the admissible
+input constraints. Brownian increments have covariance $I\,dt$, so
+$\Sigma$ has state units per square root of time. Dependence on $x$ alone is
+state-dependent noise; command-dependent motor noise requires explicit
+dependence on $u$ or an appropriate actuator-state model.
 
-The reason a stochastic formulation is needed at all is that motor noise scales with the
-magnitude of the control signal, so it cannot be treated as a small additive disturbance
-around a nominal plan~\cite{HarrisWolpert1998}. That single fact is what makes the minimum
-intervention principle below a prediction rather than a preference.
+When the value $V=\inf_\pi J^\pi$ is sufficiently smooth and dynamic
+programming applies, its Hamilton--Jacobi--Bellman equation is
+\begin{equation}
+ -V_t=\min_{u\in\mathcal U}\left[
+ L+\nabla V^Tf+\tfrac12\operatorname{tr}
+       (\Sigma\Sigma^T\nabla^2V)\right],\qquad V(T,x)=\Phi(x).
+\end{equation}
+Nonsmooth problems need an appropriate generalized solution concept.
+Partial observations change the information state; substituting an arbitrary
+state estimate into a full-state policy is not generally optimal. Stochastic
+maximum principles also exist. Deterministic Pontryagin conditions cannot
+simply be applied to one noisy sample path to solve the expected-cost problem,
+but it is incorrect to describe HJB as the only stochastic approach.
 
-\subsection{The Minimum Intervention Principle}
+\section{A Checked Deterministic LQR Example}
 
-OFC naturally explains why the nervous system tolerates task-irrelevant variability
-(the UCM from Chapter~1): the optimal controller only corrects deviations that
-affect the cost function. Task-irrelevant deviations are ``free'' and need not be
-corrected.
+Consider $\dot x=Ax+Bu$ with measured state and
+\begin{equation}
+ J=\int_0^\infty(x^TQx+u^TRu)\,dt,
+ \qquad Q\succeq0,\quad R\succ0.
+\end{equation}
+Under stabilizability of $(A,B)$ and detectability of $(Q^{1/2},A)$,
+the stabilizing Riccati solution satisfies
+\begin{equation}
+ A^TP+PA-PBR^{-1}B^TP+Q=0,\qquad
+ K=R^{-1}B^TP,\quad u=-Kx.
+\end{equation}
+The optimal cost is $x(0)^TPx(0)$. These are infinite-horizon regulation
+equations, not a finite-time reaching law with terminal accuracy constraints.
+Tracking a target requires an appropriate equilibrium shift or augmented
+model. The following checked solver exposes no unused noise parameter.
 
-\begin{lstlisting}[language=Python, caption={Linear-quadratic optimal feedback controller.}]
+\begin{lstlisting}[language=Python, caption={Deterministic Continuous LQR With Explicit Preconditions.}]
+from dataclasses import dataclass
 import numpy as np
 from scipy.linalg import solve_continuous_are
 
-def lqr_ofc(
-    A: np.ndarray,
-    B: np.ndarray,
-    Q: np.ndarray,
-    R: np.ndarray,
-    state_noise_cov: np.ndarray | None = None
-) -> tuple[np.ndarray, np.ndarray]:
-    """Compute LQR optimal feedback gains.
 
-    This implements the infinite-horizon OFC solution.
-
-    Parameters
-    ----------
-    A : np.ndarray, shape (n, n)
-        State dynamics matrix.
-    B : np.ndarray, shape (n, m)
-        Input matrix.
-    Q : np.ndarray, shape (n, n)
-        State cost matrix.
-    R : np.ndarray, shape (m, m)
-        Control cost matrix.
-    state_noise_cov : np.ndarray, shape (n, n), optional
-        Process noise covariance.
-
-    Returns
-    -------
-    tuple
-        (K, P) where K is the optimal gain and P is the Riccati solution.
-    """
-    # Solve continuous algebraic Riccati equation
-    P = solve_continuous_are(A, B, Q, R)
-
-    # Optimal gain
-    K = np.linalg.solve(R, B.T @ P)
-
-    return K, P
+def finite_matrix(value: np.ndarray) -> np.ndarray:
+    """Copy a nonempty finite matrix for a model boundary."""
+    matrix = np.array(value, dtype=float, copy=True)
+    if matrix.ndim != 2 or min(matrix.shape) == 0:
+        raise ValueError("Expected a nonempty matrix")
+    if not np.isfinite(matrix).all():
+        raise ValueError("Matrix must be finite")
+    return matrix
 
 
-# Example: 2D reaching with motor noise
-# State: [x, y, dx, dy], Control: [Fx, Fy]
-A = np.array([
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-    [0, 0, -2, 0],  # damping
-    [0, 0, 0, -2],
-])
-B = np.array([
-    [0, 0],
-    [0, 0],
-    [1, 0],
-    [0, 1],
-])
+def check_weight(matrix: np.ndarray, size: int, strict: bool) -> None:
+    """Require symmetric PSD cost, or PD input cost if strict."""
+    if matrix.shape != (size, size):
+        raise ValueError("Incorrect cost-matrix dimension")
+    if not np.allclose(matrix, matrix.T, rtol=0, atol=1e-12):
+        raise ValueError("Cost matrices must be symmetric")
+    eigenvalues = np.linalg.eigvalsh(matrix)
+    if np.any(eigenvalues < 0) or (strict and np.any(eigenvalues <= 0)):
+        raise ValueError("Invalid cost definiteness")
 
-# Task: reach to target with minimum effort
-# High cost on position at target, low cost on path
-Q = np.diag([10, 10, 1, 1])  # Position matters more than velocity
-R = 0.01 * np.eye(2)  # Low control cost
 
-K, P = lqr_ofc(A, B, Q, R)
-print("OFC gain matrix K:")
-print(K)
-print("\nMinimum intervention: gains are higher for")
-print("task-relevant (position) than task-irrelevant dimensions")
+def check_stabilizable(matrix: np.ndarray, inputs: np.ndarray) -> None:
+    """PBH-test modes in the closed right half-plane, in floating point."""
+    eigenvalues = np.linalg.eigvals(matrix)
+    modes = eigenvalues[eigenvalues.real >= 0]
+    if modes.size == 0:
+        return
+    size = matrix.shape[0]
+    state_blocks = modes[:, None, None] * np.eye(size) - matrix
+    input_blocks = np.broadcast_to(inputs, (len(modes), *inputs.shape))
+    pbh = np.concatenate((state_blocks, input_blocks), axis=2)
+    if np.any(np.linalg.matrix_rank(pbh) < size):
+        raise ValueError("Unstable or neutral mode violates stabilizability")
+
+
+@dataclass
+class LQRProblem:
+    """Full-state deterministic regulation with stabilizing CARE."""
+
+    A: np.ndarray
+    B: np.ndarray
+    Q: np.ndarray
+    R: np.ndarray
+
+    def __post_init__(self) -> None:
+        self.A = finite_matrix(self.A)
+        self.B = finite_matrix(self.B)
+        self.Q = finite_matrix(self.Q)
+        self.R = finite_matrix(self.R)
+        size = self.A.shape[0]
+        if self.A.shape != (size, size) or self.B.shape[0] != size:
+            raise ValueError("Incompatible dynamics dimensions")
+        check_weight(self.Q, size, False)
+        check_weight(self.R, self.B.shape[1], True)
+
+    def solve(self) -> tuple[np.ndarray, np.ndarray]:
+        """Return (K, P); ill-conditioned problems may be rejected."""
+        check_stabilizable(self.A, self.B)
+        # Symmetric PSD Q and its square root have the same range.
+        check_stabilizable(self.A.T, self.Q)
+        try:
+            value = solve_continuous_are(self.A, self.B, self.Q, self.R)
+            gain = np.linalg.solve(self.R, self.B.T @ value)
+        except np.linalg.LinAlgError as error:
+            raise ValueError("No reliable stabilizing CARE solution") from error
+        return gain, value
 \end{lstlisting}
 
-\section{Signal-Dependent Noise}
+The dual PBH test checks detectability, not full observability. Stable
+unactuated or unobserved modes are allowed. Numerical rank and eigenvalue
+tests are sensitive near singularity or the imaginary axis; this small
+listing is not a certified solver for poorly scaled systems.
 
-A key feature of biological motor systems is that motor noise is
-\textbf{signal-dependent}: the noise variance scales with the control signal magnitude:
+\subsection{A Zero Instantaneous Penalty Need Not Mean Irrelevance}
+
+For the double integrator $\dot x_1=x_2$, $\dot x_2=u$, choose
+$Q=\operatorname{diag}(1,0)$, $R=1$. Then
 \begin{equation}
-  \control = \bar{\control} + \sigma(\bar{\control}) \bm{\xi},
-  \quad \sigma(\bar{\control}) = k \norm{\bar{\control}},
-  \label{eq:ch10:signal-dep-noise}
+ P=\begin{pmatrix}\sqrt2&1\\1&\sqrt2\end{pmatrix},\qquad
+ K=\begin{pmatrix}1&\sqrt2\end{pmatrix}.
 \end{equation}
-where $\bm{\xi}$ is white Gaussian noise and $k$ is the noise coefficient (empirically
-$k \approx 0.01$--$0.05$ in human reaching). This property has been measured extensively
-(Schmidt et al., 1979; Harris and Wolpert, 1998).
+Velocity has zero direct running penalty but changes future position error,
+so the controller feeds it back. By contrast, with
+$A=\operatorname{diag}(-1,-2)$, $B=I$, the same $Q$ and $R=I$,
+$K=P=\operatorname{diag}(\sqrt2-1,0)$: the second mode is stable, decoupled
+and cost-free. These examples distinguish instantaneous output null space
+from irrelevance to the entire future task.
 
-Under signal-dependent noise, the optimal trajectory minimizes integrated squared jerk
-(Flash and Hogan, 1985). This is a key prediction of OFC: the bell-shaped velocity
-profiles observed in human reaching emerge naturally as solutions to the signal-dependent
-noise minimization problem, not from any explicit minimization of jerk (Todorov, 2004).
+Minimum intervention is a conditional consequence of the complete control
+problem. Mechanical coupling, constraints, future contacts, observation
+quality and noise can make a currently unpenalized deviation important.
+Signal-dependent noise can change the tradeoff but is not the sole possible
+reason to tolerate variability. In golf, a posture variation preserving the
+current clubhead location may still alter future impact velocity or contact
+feasibility.
 
-\section{Active Inference (Friston Framework)}
+\section{Additive and Command-Dependent Noise}
 
-Active inference (Friston, 2010; Friston et al., 2016) reframes motor control as
-inference: the agent minimizes prediction error by acting to make observations match
-its generative model. This is formalized through variational free energy minimization:
+Consider a fully observed linear system with additive noise $D\,dW$.
+For finite-horizon quadratic cost the value has form $V=x^TP(t)x+c(t)$.
+The diffusion
+contributes $\operatorname{tr}(PDD^T)$, independent of $u$, so the Riccati
+gain is unchanged under these assumptions. Noise still changes covariance
+and expected cost. Persistent noise with positive running cost generally
+makes the undiscounted infinite total cost diverge. For a stable stationary
+closed loop, the corresponding long-run average cost is
+$\operatorname{tr}(PDD^T)$ under the standard integrability conditions.
+This is a different criterion from the deterministic integral above.
+
+For contrast, let
 \begin{equation}
-  F = \mathbb{E}_q[\ln q(\state) - \ln p(\state, \bm{y})],
-  \label{eq:ch10:free-energy}
+ dx=(ax+bu)\,dt+\sigma u\,dW,\qquad L=qx^2+ru^2.
 \end{equation}
-where $F$ is the variational free energy, $q(\state)$ is the approximate posterior belief,
-and $p(\state, \bm{y})$ is the generative model. The agent chooses actions to minimize
-$F$. This unifies action, perception, and learning under a single principle. While the
-experimental evidence is still developing, active inference correctly predicts many
-phenomena including the minimum intervention principle and why the brain is tolerant of
-task-irrelevant variability.
+With value coefficient $p(t)$, the HJB terms depending on command are
+$(r+\sigma^2p)u^2+2bpxu$. Thus, when the denominator is positive,
+\begin{equation}
+ u_*=-\frac{bp}{r+\sigma^2p}x,\qquad
+ \dot p+2ap+q-\frac{b^2p^2}{r+\sigma^2p}=0.
+\end{equation}
+Here $\dot p=dp/dt$ uses forward time; the equation is solved backward
+from the terminal cost coefficient $p(T)$. With $q\geq0$, $r>0$ and a
+nonnegative terminal coefficient, the quadratic problem has nonnegative
+$p$ and positive denominator on its finite solution interval.
+Command-dependent noise
+changes the gain; applying the deterministic CARE listing would solve a
+different problem. If $u$ has state-per-time units, $\sigma$ here has
+square-root-of-time units. Noise coefficients cannot be transferred between
+discrete samples and continuous diffusions without specifying scaling.
+
+Harris and Wolpert studied a particular minimum-variance formulation with
+command-dependent noise~\cite{HarrisWolpert1998}. Their discrete model uses
+$x_{k+1}=Ax_k+B(u_k+w_k)$ and $\operatorname{Var}(w_k)=k_nu_k^2$,
+with a cost accumulating postmovement position variance. Neural command is
+not automatically joint torque. Neither a universal human noise coefficient
+nor a universal golf trajectory follows from that model.
+
+\section{Minimum Jerk Is a Different Objective}
+
+Flash and Hogan considered integrated squared hand jerk in planar arm
+movements~\cite{FlashHogan1985}. For a scalar unconstrained displacement with
+fixed duration $T$ and zero endpoint velocity and acceleration, minimizing
+$\int_0^T(\dddot x)^2dt$ gives
+\begin{equation}
+ x(t)=x_0+(x_T-x_0)(10s^3-15s^4+6s^5),\qquad s=t/T.
+\end{equation}
+The Euler--Poisson condition is $x^{(6)}=0$; six endpoint conditions determine
+the polynomial. Strict convexity in jerk, together with those conditions,
+establishes the unique minimizer. Its speed is proportional to
+$30s^2(1-s)^2$, with maximum $15|x_T-x_0|/(8T)$ at $s=1/2$.
+This derivation is kinematic: it includes neither muscle energetics nor
+signal-dependent noise. A minimum-variance model may produce similar shapes
+under particular dynamics, but it is not generally equivalent to minimizing
+jerk. Similar mean profiles require other experiments to distinguish objectives.
+
+\section{Active Inference Needs an Action Model}
+
+For a fixed observation $y$ and normalized approximate posterior $q(x)$,
+\begin{align}
+ F[q;y]&=\mathbb E_q[\log q(x)-\log p(x,y)]\\
+       &=D_{\rm KL}\bigl(q(x)\,\|\,p(x\mid y)\bigr)-\log p(y).
+ \label{eq:ch10:free-energy}
+\end{align}
+This identity requires compatible probability densities and finite relevant
+integrals. Minimizing over $q$ at fixed $y$ performs inference. The expression
+contains no action-to-observation dynamics by itself, so it does not specify
+a command law. Free energy here is an information-theoretic quantity, not
+mechanical energy in joules.
+
+Friston and colleagues supply a particular extension coupling action and
+inference~\cite{FristonAction2010Review}. Under their stated approximations,
+action changes sensory signals and a gradient update reduces the resulting
+precision-weighted prediction error. The proposal includes priors,
+generative dynamics and sensory mappings; its simulations do not establish
+that all motor circuits use this rule. Other active-inference formulations
+may use explicit future policy objectives and information terms.
+
+To compare such a model with optimal control, declare the same plant,
+observations, constraints, prior preferences and task conditions. Compare
+predictions and perturbation responses rather than equating the word
+``error'' across objectives. This links prediction, mechanics and feedback
+without treating their mathematical compatibility as biological proof.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{OFC Reaching.} Using the LQR code, simulate reaching movements
-        to different targets. Show that task-irrelevant variability is tolerated.
-
-  \item \textbf{Signal-Dependent Noise.} Simulate reaching with and without
-        signal-dependent noise. Plot the trajectory variability as a function of
-        movement speed.
-
-  \item \textbf{(Programming.)} Implement the minimum-jerk model and the
-        minimum-variance model. Show that both predict smooth bell-shaped velocity
-        profiles.
+ \item \textbf{Future Relevance.} Verify both LQR examples and explain
+ why a zero velocity penalty does not imply zero velocity feedback.
+ \item \textbf{Noise and Cost.} Derive the scalar command-noise Riccati
+ equation. Contrast a finite-horizon expected cost with stationary average
+ cost under additive noise; specify units and terminal conditions.
+ \item \textbf{Trajectory Objectives.} Verify all six minimum-jerk
+ endpoint conditions and the speed maximum. Choose a fully specified
+ minimum-variance model and test whether its trajectory coincides; do not
+ assume equivalence from a bell-shaped plot.
+ \item \textbf{Inference and Action.} Derive the free-energy identity.
+ State what additional model and objective would select an action, and what
+ empirical observations could distinguish it from a competing controller.
 \end{enumerate}

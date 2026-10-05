@@ -1,155 +1,166 @@
 \chapter{Physics Engine Comparison}
 \label{ch:engine-comparison}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+An engine comparison needs a specified question, model and accuracy target.
+Solvers may disagree because their contact laws differ, an import changed the
+inertia, or an integration is inaccurate. Conversely, agreement can preserve a
+shared modeling mistake. This chapter gives a comparison protocol and executable
+error metric; it presents no measured cross-engine speed ranking or energy-drift
+curves.
 
-\epigraph{All models are wrong. Some are useful. The useful ones depend on the question.}{}
+\section{Establish Model Equivalence First}
 
-\section{Benchmark: Simple Pendulum}
+Begin with the contact-free cylinder pendulum of Chapter~\ref{ch:platform}.
+Match the fixed base, joint frame and axis, COM inertia, gravity, damping,
+initial state, force inputs and duration. Verify loaded parameters rather than
+assuming identical XML implies identical interpreted physics. At several states,
+compare mass, gravitational generalized force and passive torque against the
+analytic values $I_P$, $mgL\sin q/2$ and $-b\dot q$.
 
-We simulate the same pendulum in all engines and compare accuracy, computation time,
-and energy conservation across different timesteps. The benchmark code provides a
-repeatable framework for evaluating engine performance on a standard task.
+Next vary solver tolerances or internal step sizes and compare trajectories at
+common timestamps. An adaptive solver's output interval is not its internal
+step size. For fixed-step methods, record substeps and control-update timing.
+Interpolation introduces its own error, especially across impacts. Keep
+event-time and pre/post-impact comparisons separate from smooth-trajectory
+interpolation.
 
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[
-    scale=0.9,
-    ]
-    % Axes
-    \draw[->] (0, 0) -- (5, 0) node[align=center, right] {Time Step (ms)};
-    \draw[->] (0, 0) -- (0, 4) node[align=center, above] {Energy Drift (\%)};
+\section{Measure the Right Error}
 
-    % Grid
-    \draw[gray!30, step=0.5] (0, 0) grid (5, 4);
+For the unforced pendulum, define the energy-work residual
+\begin{equation}
+ r_E(t)=E(t)-E(0)+\int_0^t b\dot q(s)^2\,ds.
+\end{equation}
+With applied generalized torque $\tau$, subtract
+$\int_0^t\tau\dot q\,ds$ as well. Numerical integration of work contributes
+to residual error. With impacts or other dissipative forces, include the
+corresponding loss or jump law. A percentage relative to $E(0)$ is undefined
+when $E(0)=0$ and sensitive to the arbitrary potential-energy reference; report
+joules or a declared positive characteristic scale instead.
 
-    % Curves (approximate)
-    \draw[thick, blue] (0.5, 0.1) .. controls (1.5, 0.3) .. (2.5, 0.8) .. controls (3.5, 1.5) .. (4.5, 2.5);
-    \draw[thick, red] (0.5, 0.2) .. controls (1.5, 0.6) .. (2.5, 1.4) .. controls (3.5, 2.2) .. (4.5, 3.1);
-    \draw[thick, green] (0.5, 0.15) .. controls (1.5, 0.4) .. (2.5, 1.0) .. controls (3.5, 1.8) .. (4.5, 2.8);
+Energy conservation does not guarantee phase accuracy. A trajectory can stay
+near the correct energy surface while reaching the wrong position at a specified
+time. For aligned Euclidean states $x_i$ and reference states $x_i^*$, choose
+positive scales $s_j$ with each coordinate's units and define
+\begin{equation}
+ e_{ij}=\frac{x_{ij}-x_{ij}^*}{s_j},\qquad
+ E_{\rm RMS}=\left[\frac{1}{T}\int_{t_0}^{t_1}\|e(t)\|^2dt\right]^{1/2},
+ \quad T=t_1-t_0.
+\end{equation}
+The scales make mixed angle/rate or position/velocity comparisons dimensionless
+and declare the relative importance assigned to each component. This code uses
+trapezoidal quadrature and reports the largest sampled norm, not a certified
+continuous-time maximum.
 
-    % Labels
-    \node[below left, font=\small, fill=white] at (1, 1.5) {MuJoCo};
-    \node[below left, font=\small, fill=white] at (1, 2.2) {Drake};
-    \node[below left, font=\small, fill=white] at (1, 1.8) {Pinocchio};
-
-    % Markers
-    \filldraw[blue, circle, inner sep=1.5pt] (2.5, 0.8);
-    \filldraw[red, circle, inner sep=1.5pt] (2.5, 1.4);
-    \filldraw[green, circle, inner sep=1.5pt] (2.5, 1.0);
-  \end{tikzpicture}
-  \caption{Representative energy drift curves for pendulum simulation across
-    physics engines at different timesteps. Smaller drift indicates better
-    numerical integration accuracy. This is a schematic only; actual values
-    depend on integration method and model parameters.}
-  \label{fig:benchmark-drift}
-\end{figure}
-
-\begin{lstlisting}[language=Python, caption={Cross-engine benchmark framework.}]
+\begin{lstlisting}[language=Python, caption={Time-Weighted Errors on an Aligned Euclidean Grid}]
 import numpy as np
-from dataclasses import dataclass
-from typing import Protocol
+from scipy.integrate import trapezoid
 
-@dataclass
-class BenchmarkResult:
-    """Results from a physics engine benchmark."""
-    engine_name: str
-    positions: np.ndarray    # (n_steps, n_dof)
-    velocities: np.ndarray   # (n_steps, n_dof)
-    times: np.ndarray        # (n_steps,)
-    wall_time_seconds: float
-    energy_drift: float      # relative energy change
 
-class PhysicsEngine(Protocol):
-    def simulate(self, q0: np.ndarray, qd0: np.ndarray,
-                 t_end: float, dt: float) -> BenchmarkResult: ...
-
-def compare_engines(
-    engines: dict[str, PhysicsEngine],
-    q0: np.ndarray,
-    t_end: float = 5.0,
-    dt: float = 0.001
-) -> dict[str, BenchmarkResult]:
-    """Run the same simulation across multiple engines.
-
-    Parameters
-    ----------
-    engines : dict
-        Mapping of engine name to engine instance.
-    q0 : np.ndarray
-        Initial configuration.
-    t_end : float
-        Simulation duration.
-    dt : float
-        Time step.
-
-    Returns
-    -------
-    dict
-        Mapping of engine name to BenchmarkResult.
-    """
-    results = {}
-    qd0 = np.zeros_like(q0)
-
-    for name, engine in engines.items():
-        result = engine.simulate(q0, qd0, t_end, dt)
-        results[name] = result
-        print(f"{name:15s}: wall_time={result.wall_time_seconds:.3f}s, "
-              f"energy_drift={result.energy_drift:.2e}")
-
-    return results
+def trajectory_errors(times: np.ndarray, actual: np.ndarray,
+                      reference: np.ndarray,
+                      scales: np.ndarray) -> dict[str, float]:
+    """Return dimensionless RMS and sampled maximum normalized state errors."""
+    times = np.asarray(times, dtype=float)
+    actual = np.asarray(actual, dtype=float)
+    reference = np.asarray(reference, dtype=float)
+    scales = np.asarray(scales, dtype=float)
+    if (times.ndim != 1 or times.size < 2
+            or not np.all(np.isfinite(times))):
+        raise ValueError("times must be finite 1D with >= 2 samples")
+    if np.any(np.diff(times) <= 0):
+        raise ValueError("times must strictly increase")
+    if (actual.ndim != 2 or actual.shape != reference.shape
+            or actual.shape[0] != times.size or actual.shape[1] == 0):
+        raise ValueError("states must have matching nonempty (N, d) shapes")
+    if not np.all(np.isfinite(actual)) or not np.all(np.isfinite(reference)):
+        raise ValueError("states must be finite")
+    if (scales.shape != (actual.shape[1],)
+            or not np.all(np.isfinite(scales)) or np.any(scales <= 0)):
+        raise ValueError("one finite positive scale is required per coordinate")
+    squared = np.sum(((actual - reference) / scales)**2, axis=1)
+    mean_square = trapezoid(squared, times) / (times[-1] - times[0])
+    return {"rms": float(np.sqrt(mean_square)),
+            "max": float(np.sqrt(np.max(squared)))}
 \end{lstlisting}
 
-\section{Contact Model Comparison}
+For $t=(0,1,3)$ and scalar normalized errors $(0,1,3)$, the trapezoidal integral
+of squared error is $10.5$, giving $\sqrt{3.5}$. The unweighted node RMS is
+$\sqrt{10/3}$; neither equals the exact continuous RMS $\sqrt{3}$ for
+$e(t)=t$ on this coarse grid. Refinement matters.
 
-Different physics engines implement different contact models, each with trade-offs
-between computational efficiency and physical accuracy. Table~\ref{tab:contact-comparison}
-summarizes the key approaches.
+The caller must first construct physically appropriate differences. Subtracting
+quaternion components is not an orientation error: $q$ and $-q$ encode the same
+rotation. Use a declared relative-rotation logarithm and tangent-frame convention,
+with care near angle $\pi$. Periodic angles require a wrapping or unwrapping
+convention. Two simulations' difference is an agreement metric; calling it
+accuracy requires an independently justified reference, such as an analytic
+limit or a documented convergence study.
 
-\begin{table}[h]
-\centering
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{@{}p{2cm}p{2.5cm}p{2.5cm}p{2.5cm}@{}}
-\toprule
-\textbf{Engine} & \textbf{Contact Model} & \textbf{Advantages} & \textbf{Limitations} \\
-\midrule
-MuJoCo & Soft contact with implicit integration \cite{todorov2012} & Fast, stable, convex optimization & Allows non-physical penetration \\
-Drake & Rigid with hydroelastic contact & Physics-based, predictable & Computationally expensive \\
-Pinocchio & No built-in contact handling & Pure rigid-body dynamics & Requires external contact library \\
-OpenSim & Hunt-Crossley damping model & Suitable for biomechanics & Limited geometry types \\
-\bottomrule
-\end{tabular}
-\caption{Contact model implementations across physics engines. Selection depends on
-  simulation accuracy requirements versus real-time performance constraints.}
-\label{tab:contact-comparison}
-\end{table}
+\section{Contact Law, Solver and Integrator Are Separate Choices}
 
-\section{Benchmark Interpretation}
+The contact model specifies forces or impulses; the solver computes their
+coupled solution; the integrator advances state. Collision geometry and contact
+detection add further approximations. An engine name does not identify all
+these choices.
 
-Benchmark results should be interpreted as follows:
+\begin{description}[style=nextline]
+ \item[MuJoCo.] Its soft-contact formulation uses convex optimization and
+ relaxes strict complementarity. Contact parameters describe the selected
+ compliant behavior; integration method and step settings are separate choices.
+ A nominal penetration value is neither automatically an error nor evidence
+ of validated tissue deformation \cite{MuJoCoComputationReview}.
+ \item[Drake.] Hydroelastic contact uses pressure fields and contact surfaces
+ to model compliant interaction while bodies retain rigid-body motion. It does
+ not resolve arbitrary elastic waves inside bodies. Geometry representations,
+ compliant/rigid pairing and point-contact fallback settings affect which
+ contacts are supported \cite{DrakeHydroelasticReview}.
+ \item[Pinocchio.] Constrained and impulse dynamics are available; saying
+ ``no contact dynamics'' is incorrect. Supplying constraints differs from
+ implementing collision detection, friction and time integration together.
+ Identify the additional model and algorithms actually used
+ \cite{PinocchioAlgorithmsReview}.
+ \item[OpenSim.] Behavior depends on the selected force component. For example,
+ the documented HuntCrossleyForce uses Hertz-based interactions between spheres
+ and half-spaces, with material and friction parameters. That component's
+ geometry restrictions do not describe every OpenSim contact component
+ \cite{OpenSimHuntCrossleyReview}.
+\end{description}
 
-\begin{itemize}
-  \item \textbf{Wall Time}: Real computation time (engine-dependent; use for performance comparison only on identical hardware).
-  \item \textbf{Energy Drift}: Magnitude of energy conservation error, reported as a percentage. Systems with damping
-    dissipate energy; drift measures additional numerical errors relative to expected dissipation.
-  \item \textbf{Trajectory Error}: Point-wise difference between engines in phase space, measured as RMS error or maximum
-    deviation. Serves as a proxy for integration accuracy.
-\end{itemize}
+Changing contact stiffness changes the physical model and can also make its
+equations numerically harder to resolve. Report both effects. In golf,
+foot-ground loading, hand-club constraints and club-ball impact can require
+different resolutions. Agreement on a smooth pendulum does not validate these
+contact regimes.
+
+\section{A Reproducible Comparison Record}
+
+For each run record model and parameter hashes, engine and wrapper versions,
+gravity and force conventions, solver and integrator options, internal steps or
+tolerances, output and command timing, and initial state. Record computer,
+thread configuration, precision, initialization/warm-up policy and repeated
+timing trials. Separate loading, compilation, stepping and output costs. Report
+timing variability and failed runs, not just the fastest successful sample.
+
+Compare cost at a declared error tolerance as well as error at a declared cost.
+Equal nominal timesteps need not yield equal accuracy. Start with analytic
+limits, then smooth multibody cases, and then the required contact regime.
+With experimental data, propagate measurement and parameter uncertainty: a
+converged solver cannot compensate for an incorrect joint axis or unmeasured
+external force. These checks support conclusions about a specified model and
+observable, not an unrestricted winner among engines.
 
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Double Pendulum Benchmark.} Run the benchmark framework for a double pendulum
-    across all available engines. Plot wall time versus integration error for each engine.
-
-  \item \textbf{Energy Conservation Study.} Compare energy conservation across engines with
-    timesteps $\Delta t \in \{0.001, 0.005, 0.01\}$ seconds. Which engine exhibits the smallest
-    energy drift for a fixed timestep?
-
-  \item \textbf{Contact Model Validation.} Implement a bouncing ball benchmark and compare
-    the computed trajectory with analytical predictions (assuming ideal elastic collision).
+ \item \textbf{Pendulum Refinement.} Use the same physical cylinder in two
+ available implementations. Report parameter agreement, phase error, work
+ residual and runtime across refinements; identify the reference's own error.
+ \item \textbf{Nonuniform Sampling.} Reproduce the three-node example, refine
+ the grid, and distinguish quadrature error from simulation error.
+ \item \textbf{Contact Reference.} Compare a bouncing-ball model with the
+ ballistic flight and restitution law it assumes. Ideal elastic impact is a
+ suitable reference only for that limit, not automatically for dissipative
+ compliant contact.
+ \item \textbf{Swing Observable.} Choose clubhead velocity, joint torque or
+ contact impulse. State units, alignment, uncertainty and model assumptions
+ before choosing a metric.
 \end{enumerate}

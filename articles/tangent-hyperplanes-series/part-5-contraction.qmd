@@ -10,155 +10,111 @@ categories:
 - tangent-space
 ---
 
-## Why Contraction Belongs in the Series
+## From One Reference Trajectory to a Region
 
-Parts 1-4 established the local geometry: tangent spaces carry exact first-order
-information, variational dynamics propagate perturbations along a reference
-trajectory, and finite perturbations create residuals whose size depends on
-curvature. Contraction theory asks a complementary question:
+A variational model describes sensitivities along a chosen trajectory. Contraction asks for a stronger property: do all admissible infinitesimal separations shrink throughout a stated region? Integrating that differential result along connecting curves can then bound finite trajectory separation. The region and its invariance are part of the proof.
 
-> Can we prove that nearby trajectories forget their initial separation?
+This article develops the connection to [Part 3's control problem](./part-3-control.html). The longer [Contraction Theory Meets Tangent Spaces](../tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html) is companion material; a numerical example or proposed algorithm there does not substitute for a certificate for a particular golf model.
 
-If the answer is yes, local tangent-space perturbations are not merely useful
-for computing a feedback law. They also become stability certificates.
+## Differential Length and Its Derivative
 
-This compact part distills the corrected core of the longer reference article
-[Contraction Theory Meets Tangent Spaces](../tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html).
-The source article remains available for derivations, examples, code sketches,
-and its companion critique. This page is the canonical reading-path version.
-
-## The Differential Object
-
-For a smooth autonomous system
+Consider $\dot x=f(x,t)$ with Jacobian $A=D_xf$. Assume a continuously differentiable symmetric metric $M(x,t)$ with uniform bounds
 
 $$
-\dot{x} = f(x),
+aI\preceq M(x,t)\preceq bI,\qquad 0<a\le b<\infty.
 $$
 
-the first variation satisfies
+For the first variation $\dot\xi=A\xi$, define the **squared** differential length
 
 $$
-\delta \dot{x} = A(x)\delta x,
-\qquad
-A(x) = \frac{\partial f}{\partial x}(x).
+V(x,\xi,t)=\xi^TM(x,t)\xi.
 $$
 
-The perturbation vector $\delta x$ lives in the tangent space. Contraction
-theory studies whether the norm of that perturbation decreases for every nearby
-trajectory in a region.
-
-With a positive-definite metric $M(x)$, define the differential length
+Its length is $\sqrt V$. Along the flow,
 
 $$
-V(x, \delta x) = \delta x^\top M(x)\delta x.
+\dot V=\xi^T\bigl(\dot M+A^TM+MA\bigr)\xi,
 $$
 
-The system is contracting with rate $\lambda > 0$ in that metric if
+where the total derivative is
 
 $$
-\dot{M} + A^\top M + M A \preceq -2\lambda M.
+\dot M=\partial_tM+\sum_j f_j\partial_{x_j}M.
 $$
 
-This is the tangent-space version of exponential forgetting: every infinitesimal
-separation shrinks at a certified rate.
-
-:::{.callout-important}
-## Local Certificate, Not Global Magic
-
-A contraction inequality is only as broad as the region, metric, smoothness, and
-mode assumptions used to verify it. It does not make a nonlinear plant globally
-linear, and it does not remove the finite-scale residuals from [Part 4](./part-4-residuals-curvature.html).
-It certifies that the differential dynamics in a stated region are shrinking.
-:::
-
-## Stability-Optimality Duality
-
-The useful bridge to control is that the same tangent objects appear in optimal
-control. LQR and local DDP/iLQR solve Riccati equations over the variational
-system
+If, for a uniform rate $\lambda>0$,
 
 $$
-\delta\dot{x} = A(t)\delta x + B(t)\delta u.
+\dot M+A^TM+MA\preceq-2\lambda M,
 $$
 
-The value-function Hessian $S(t)$ acts like a local metric on perturbations.
-When feedback makes
+then $V(t)\le e^{-2\lambda(t-t_0)}V(t_0)$ and differential lengths decrease at rate $\lambda$. Checking only $A^TM+MA$ omits the metric's change along the trajectory. These are the differential ingredients of [Lohmiller and Slotine's contraction analysis](https://www.mit.edu/~nsl/preprints/contraction.pdf).
+
+## Why Connecting Curves and Invariance Matter
+
+For a differentiable curve $\gamma(s)$ joining two states, its metric length at time $t$ is
 
 $$
-A_{\text{cl}}(t) = A(t) - B(t)K(t)
+L_M(\gamma,t)=\int_0^1
+\sqrt{\gamma'(s)^TM(\gamma(s),t)\gamma'(s)}\,ds.
 $$
 
-contracting in that metric, optimality and stability are no longer separate
-stories. The controller is optimizing a local quadratic model while also shaping
-how perturbations decay.
+Assume solutions exist for the claimed horizon, and all points of the connecting curve evolve inside the region where the contraction inequality holds. Applying the differential bound to each curve tangent and integrating gives
 
-:::{.callout-note}
-## What the Duality Claims
+$$
+L_M(\gamma_t,t)\le e^{-\lambda(t-t_0)}L_M(\gamma_{t_0},t_0).
+$$
 
-The compact claim is conservative: Riccati and contraction analyses both live on
-the tangent bundle, and in favorable cases the Riccati matrix supplies a
-contraction-like metric for the closed-loop variational dynamics. The stronger
-claim that any optimal controller is automatically a useful contraction
-certificate needs hypotheses about controllability, costs, regularity, and the
-region of validity.
-:::
+For a path-connected forward-invariant region, take the infimum over connecting curves in that region to obtain the same bound for its intrinsic metric distance. No argument can connect two components through an unverified part of state space. Uniform metric bounds permit comparison with Euclidean lengths; comparison with straight-line endpoint distance additionally needs a suitable connecting-path geometry, such as the straight segment lying in the region.
 
-## Contraction-DDP as a Design Pattern
+Sampling the inequality on a nominal trajectory is a diagnostic, not a proof throughout a surrounding tube. A regional certificate requires analytic bounds, verified numerical bounds, or another method that covers the stated domain. Time-varying tubes need an explicit argument that the evolving connecting curves remain admissible.
 
-A contraction-aware DDP loop can be read as a disciplined version of the
-standard residual-reduction loop:
+## When a Riccati Matrix Supplies a Metric
 
-1. Linearize along the current trajectory.
-2. Solve the local quadratic control problem.
-3. Check whether the closed-loop tangent dynamics shrink perturbations in the
-   chosen metric.
-4. Penalize or reject updates that improve cost while damaging the stability
-   certificate.
-5. Re-integrate the nonlinear system and repeat.
+Using the half-quadratic cost convention in Part 3, the LQR value Hessian is $S(t)$. With $K=R^{-1}B^TS$, the Riccati equation implies
 
-The key engineering benefit is explicitness. Instead of hoping that the local
-controller is stable because the rollout improved, the method asks for a
-differential certificate at each step.
+$$
+\begin{aligned}
+\dot S+(A-BK)^TS+S(A-BK)\\
+{}=-Q-K^TRK.
+\end{aligned}
+$$
 
-## Coordinate-Free View
+To conclude contraction in this metric, verify both $aI\preceq S\preceq bI$ and
 
-The metric $M(x)$ should not be confused with a fixed Euclidean norm. In
-mechanical systems, natural coordinates, task-space coordinates, and
-configuration-space coordinates can imply different metrics. Pullback metrics
-make this explicit: a task-space stability objective can be transported back to
-joint space through the relevant Jacobian.
+$$
+Q+K^TRK\succeq2\lambda S
+$$
 
-This is why contraction is a good fit for tangent-space language. The object
-being certified is not "distance" in a casual plotting sense; it is the length
-of a tangent vector under a chosen metric.
+over the claimed interval. Positive-semidefinite $S$ may assign zero length to nonzero variations and cannot serve as a full-state Riemannian metric. A zero terminal state cost often makes uniform positivity fail at the horizon endpoint.
 
-## Biomechanics and Golf
+Neither finite-horizon optimality nor a decreasing rollout objective supplies these hypotheses automatically. For example, $\dot x=x+u$ with only a positive input penalty has optimal $u=0$, $S=0$, and expanding state perturbations. More generally, for a nonlinear policy $u=\pi(x,t)$, use the full closed-loop Jacobian
 
-The advanced manuscript uses golf-swing stability margins as a motivating
-example. The compact reading-path version keeps the claim modest:
+$$
+A_{\rm cl}=D_xf(x,\pi,t)+D_uf(x,\pi,t)D_x\pi(x,t).
+$$
 
-- a swing model can define a nominal trajectory and local variational dynamics;
-- feedback, muscle synergies, or impedance-like effects can be interpreted as
-  shaping a local metric;
-- stability margins are meaningful only when the model, measured states, and
-  perturbation region are stated explicitly.
+A gain computed on one reference curve does not establish this regional inequality.
 
-:::{.callout-warning}
-## Critique to Preserve
+## Task-Space Metrics Can Miss Joint Motion
 
-The contraction interpretation is a hypothesis generator for biomechanics, not
-a substitute for measurement. Human movement includes soft tissue, delays,
-contact changes, neural variability, and unmodeled actuation. A contraction
-margin computed from a simplified model should be reported as a model-local
-certificate, not as proof that the athlete's nervous system optimizes that
-metric.
-:::
+Let a task map be $y=\psi(q)$ with Jacobian $J=D_q\psi$, and let its task metric be $W\succ0$. Its pullback quadratic form is
 
-## Reading Forward
+$$
+M_q=J^TWJ.
+$$
 
-Contraction theory is the smooth shrinking-perturbation story. [Part 6](./part-6-hybrid.html)
-handles the case where the smoothness assumptions break at impacts, contacts,
-or controller mode switches.
+This is positive definite only if $J$ has full column rank on the chosen tangent coordinates. A clubhead position task generally has fewer outputs than a whole-body joint model has coordinates. Joint variations in $\ker J$ then have zero task length, even though the body moved.
+
+Such a form can certify a task-space or restricted-subspace statement when the relevant dynamics and assumptions support it. It cannot certify contraction of every joint direction. Adding a positive joint-space term defines a different metric whose contraction inequality must be checked again; numerical regularization is not a proof of unobserved stability.
+
+## A Contraction-Aware Design Proposal
+
+A proposed optimization loop can compute local feedback, assess a candidate differential inequality, and penalize or reject steps that violate a specified stability condition. It must still handle feasibility, nonlinear rollout and the regional verification problem. This is a design pattern, not an implemented or experimentally validated algorithm established by this article.
+
+For golf and humanoid models, state the contact mode, actuator and delay models, state estimates, parameter uncertainty, metric units, region and rate. A favorable margin belongs to that declared closed-loop model. It does not establish that an athlete's nervous system optimizes the same metric, or that unmodeled muscle and soft-tissue behavior shares the certificate.
+
+[Part 6](./part-6-hybrid.html) considers the additional derivative map required at a state-triggered contact transition. Smooth contraction between events alone does not guarantee contraction across them.
 
 ## Related Articles
 

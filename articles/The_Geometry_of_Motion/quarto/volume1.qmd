@@ -3,20 +3,22 @@ title: "The Geometry of Motion — Volume I: Tangent-Space Methods for Nonlinear
 description: "Tangent-space foundations, variational dynamics, contraction metrics, local optimal control, and counterfactual decompositions for nonlinear mechanical systems."
 ---
 
-**Volume I: Tangent-Space Methods for Nonlinear Control** establishes the theoretical core of the *Geometry of Motion* series. While standard nonlinear control methods frequently rely on global feedback linearization or static equilibrium expansions, high-speed movement and athletic biomechanics require analyzing perturbations directly along dynamic reference trajectories.
+**Volume I: Tangent-Space Methods for Nonlinear Control** develops local geometric tools for analyzing motion along reference trajectories. Equilibrium linearization, feedback linearization and trajectory-based methods address different questions; the relevant choice depends on the model and control objective.
 
-First variations of nonlinear trajectories naturally belong to the tangent bundle of the state manifold. By formulating variational equations in moving frames, first-order perturbations obey exact linear time-varying dynamics. This framework enables rigorous superposition of control inputs, differential dynamic programming (DDP), metric-based contraction verification, and counterfactual decompositions that separate autonomous passive momentum drift from active actuator authority.
+For a differentiable flow, derivatives of trajectories with respect to initial conditions or inputs satisfy exact linear variational equations along the nominal trajectory. These are infinitesimal variations. Finite trajectory differences generally contain higher-order terms, and a moving frame also contributes a basis-transport term.
+
+The chapters connect that distinction to local optimal control, contraction certificates and counterfactual calculations. Linear superposition requires a common linear operator; same-state acceleration additivity in a control-affine model does not imply additivity of finite nonlinear interventions. Drift denotes the model's declared zero-input dynamics, which may include gravity, elastic forces, dissipation and retained baseline actuation. It is not synonymous with passive momentum or absence of muscle activity.
 
 This volume is presented as an addressable, chapter-by-chapter reading path where each derivation retains its own testable assertions, mathematical proofs, and canonical URL.
 
 ## Geometry and Variational Dynamics
 
-The first four chapters establish the coordinate-free differential geometry of moving trajectories:
+The first four entries develop the geometry and coordinate representations of motion:
 
 1. [Foundations](ch01_foundations.html) — Tangent spaces, moving frames, coordinate invariance, and exactness of first variations.
 2. [Variational Dynamics](ch02_variational.html) — State-transition matrices, variational differential equations, and transport of perturbations.
-3. [Superposition](ch03_superposition.html) — Decomposition of affine control systems into autonomous drift and controlled response components.
-4. [Induced Acceleration in Biomechanics](ch03b_induced_acceleration_biomechanics.html) — Rigorous attribution of joint accelerations to muscle forces, velocity effects, and gravity.
+3. [Superposition](ch03_superposition.html) — Same-state acceleration decomposition and the limits of trajectory superposition.
+4. [Induced Acceleration in Biomechanics](ch03b_induced_acceleration_biomechanics.html) — Model-conditioned attribution of joint accelerations to declared forces, velocity effects and gravity.
 
 ## Control, Contraction, and Applications
 
@@ -24,7 +26,7 @@ The remaining six chapters develop contraction metrics, optimal control algorith
 
 5. [Contraction](ch04_contraction.html) — Differential contraction analysis, Riemannian metric certificates, and exponential convergence tubes.
 6. [Optimal Control](ch05_optimal_control.html) — Finite-horizon trajectory optimization, iterative LQR (iLQR), differential dynamic programming, and Riccati backward sweeps.
-7. [Duality](ch06_duality.html) — Mathematical duality between trajectory tracking stability and optimal quadratic regulation.
+7. [Duality](ch06_duality.html) — Riccati value and stability identities under their stated linear-quadratic assumptions.
 8. [Counterfactuals](ch07_counterfactuals.html) — Forward-dynamics counterfactual simulations, drift-control ratios, and causal attribution limits.
 9. [Applications](ch08_applications.html) — Practical engineering applications in robotic manipulation, gait, and biomechanical athletic swings.
 10. [Parallel Mechanisms, Constrained Dynamics, and Geometric Control](ch09_parallel_mechanisms_constrained_dynamics.html) — Kinematic closed loops, algebraic constraints, and projection methods.

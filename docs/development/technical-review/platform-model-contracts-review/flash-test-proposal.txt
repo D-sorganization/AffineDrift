@@ -1,0 +1,104 @@
+Here is the bounded `pytest` suite proposal designed around the three specified textbook APIs and contract boundaries, using exact mechanics, non-uniform trapezoidal checks, and decoupled XML/MuJoCo validation.
+
+---
+
+### Structure & Test Organization
+
+```text
+tests/
+├── test_pendulum_simulation.py   # API 1: RodParameters & simulate_pendulum
+├── test_trajectory_metrics.py     # API 2: Non-uniform grid trajectory_errors
+└── test_urdf_mechanics.py         # API 3: Mandatory URDF XML tree & optional MuJoCo import
+```
+
+---
+
+### 1. API 1: Rod Parameters & Pendulum Dynamics
+**Target Components:** `RodParameters`, `simulate_pendulum`
+
+* **Contract Validation (`test_rod_parameters_contracts`):**
+  * Assert parameter instantiation succeeds for valid values ($m=1.0, L=1.0, r=0.02, b=0.05$).
+  * Test validation raises `ValueError` on: non-positive mass/length/radius ($m \le 0, L \le 0, r \le 0$), negative damping ($b < 0$), non-finite values (`inf`, `nan`).
+  * Verify computed attribute: `pivot_inertia == m * (L**2 / 3.0 + r**2 / 4.0)` using `numpy.testing.assert_allclose`.
+
+* **Simulation Input Contract Violations (`test_simulate_pendulum_invalid_contracts`):**
+  * Assert error raised when `times` has length $< 2$, does not start at $t=0$, contains non-finite values, or is not strictly increasing ($t_{k+1} \le t_k$).
+  * Assert error raised on invalid `initial` tuple dimension or non-finite state.
+
+* **Trajectory Shape & Nonzero Initial Energy (`test_simulate_pendulum_shapes_and_energy`):**
+  * Simulate with initial $(q_0, v_0) = (0.2, 0.0)$, $t = \text{linspace}(0, 2, 201)$.
+  * Validate dictionary keys `{"t", "q", "qd", "energy", "dissipated"}` and verify shapes equal $(N,)$.
+  * Confirm $E_0 > 0$. At rest state $(q_0, v_0) = (0, 0)$, verify $E(t) = 0$ and $W(t) = 0$ exactly (absolute check, avoiding zero-division/ratios).
+
+* **Energy Conservation & Dissipation Consistency (`test_simulate_pendulum_energy_conservation`):**
+  * With $b = 0.05$, verify $E(t) + W(t) - E_0 \approx 0$ across all steps:
+    $$\max_k \left| E(t_k) + W(t_k) - E_0 \right| < \epsilon$$
+    checked via `numpy.testing.assert_allclose(energy + dissipated, energy[0], atol=1e-5)`.
+  * With $b = 0.0$, verify $W(t) \equiv 0$ and $E(t) = E_0$ within solver tolerance.
+
+* **Small-Angle Natural Frequency (`test_simulate_pendulum_small_angle_frequency`):**
+  * Initialize at small perturbation $q_0 = 0.01\text{ rad}, v_0 = 0$, $b = 0$.
+  * Analytical linearized natural frequency: $\omega_n = \sqrt{\frac{m g (L/2)}{I_{\text{pivot}}}}$.
+  * Assert zero-crossing intervals of $q(t)$ match half-period $T/2 = \pi / \omega_n$ to high precision.
+
+---
+
+### 2. API 2: Trajectory Error Metrics
+**Target Component:** `trajectory_errors(times, actual, reference, scales)`
+
+* **Contract Validation (`test_trajectory_errors_contracts`):**
+  * Reject non-strictly increasing `times`, $N < 2$, or non-finite elements.
+  * Reject mismatched array dimensions between `actual` and `reference` ($N \times d$).
+  * Reject `scales` whose length $\neq d$, or containing values $\le 0$ or non-finite.
+
+* **Non-Uniform Grid Trapezoidal Verification (`test_trajectory_errors_nonuniform_grid_analytic`):**
+  * Define explicit 1D non-uniform grid, e.g., $t = [0.0, 1.0, 3.0]$, duration $\Delta T = 3.0$.
+  * Set reference $\equiv 0$, unit scale $s = 1.0$, and actual error profile $e(t) = t$.
+  * Squared error at nodes: $e(0)^2 = 0$, $e(1)^2 = 1$, $e(3)^2 = 9$.
+  * Analytic trapezoidal integral:
+    $$\int_0^3 e(t)^2 \, dt \approx \frac{0 + 1}{2} (1 - 0) + \frac{1 + 9}{2} (3 - 1) = 0.5 + 10.0 = 10.5$$
+  * Analytic time-weighted RMS:
+    $$\text{RMS} = \sqrt{\frac{10.5}{3.0}} = \sqrt{3.5} \approx 1.8708287$$
+  * Compare with unweighted node mean ($\sqrt{(0^2 + 1^2 + 9^2)/3} = \sqrt{82/3} \approx 5.228$); assert the metric matches the trapezoidal calculation and explicitly diverges from the unweighted mean.
+  * Validate `max_error` strictly equals $\max \|(x_{\text{act}} - x_{\text{ref}}) / s\| = 3.0$.
+
+* **Multi-Dimensional Scaling (`test_trajectory_errors_multidimensional`):**
+  * Validate $(N, d)$ inputs with disparate anisotropic coordinate scales (e.g., position in meters vs. angle in radians).
+  * Assert invariance when scaling raw error and corresponding scale parameter proportionally.
+
+---
+
+### 3. API 3: URDF Listing Mechanics & Optional MuJoCo Import
+**Target Component:** Fixed XML/URDF tree & optional MuJoCo model ingestion
+
+* **Mandatory XML Mechanics & Kinematic Tree Tests (`test_urdf_xml_mechanics_spec`):**
+  * Parse XML tree (`xml.etree.ElementTree`) directly from the extracted URDF payload.
+  * **Topology:** Verify `<robot>` root, single child `<link name="rod">` connected to parent `<link name="base">` via revolute joint `<joint type="revolute">`.
+  * **Axis & Origin:** Revolute joint origin at $(0, 0, 0)$, axis `xyz="0 1 0"`.
+  * **Dynamics & Limits:**
+    * `<joint>/<limit effort="20" velocity="30" lower="-3.14" upper="3.14"/>`.
+    * `<joint>/<dynamics damping="0.05"/>`.
+  * **Inertial Properties:**
+    * `<link name="rod">/<inertial>/<mass value="1.0"/>`.
+    * `<origin xyz="0 0 -0.5"/>` (COM located halfway down rod along $-z$).
+    * Moments of inertia: $I_{xx} = I_{yy} = 0.0834333333333333$, $I_{zz} = 0.0002$.
+  * **Geometry:** Both `<visual>` and `<collision>` elements define `<cylinder length="1.0" radius="0.02"/>`.
+
+* **Optional MuJoCo Import Validation (`test_urdf_mujoco_import`):**
+  * Decorate with `@pytest.mark.skipif("mujoco not in sys.modules and importlib.util.find_spec('mujoco') is None", reason="mujoco not installed")`.
+  * Load model via `mujoco.MjModel.from_xml_string(urdf_content)`.
+  * **Degrees of Freedom & Mass:**
+    * `model.nq == 1` and `model.nv == 1`.
+    * `numpy.testing.assert_allclose(sum(model.body_mass), 1.0)`.
+  * **Inertia Matrix / Mass Matrix at $q = 0.3$:**
+    * Set `data.qpos[0] = 0.3`, `data.qvel[0] = 0.0`. Run `mujoco.mj_forward(model, data)`.
+    * Evaluate scalar joint inertia $M(q)$. By parallel axis theorem about pivot:
+      $$I_{\text{pivot}, y} = I_{\text{com}, y} + m d^2 = 0.0834333333333333 + 1.0 \times (0.5)^2 \approx 0.3334333333333333$$
+    * Compute dense mass matrix with `mujoco.mj_fullM(model, M, data.qM)`; assert `M[0, 0]` matches $I_{\text{pivot}, y}$.
+  * **Gravity Bias & Passive Torque:**
+    * Evaluate generalized force from gravity bias at $q = 0.3$:
+      $$\tau_g = m g \frac{L}{2} \sin(0.3) = 1.0 \times 9.81 \times 0.5 \times \sin(0.3)$$
+      Assert `data.qfrc_bias[0]` matches $\tau_g$ (sign adjusted for convention).
+    * Set velocity `data.qvel[0] = v = 2.0`. Confirm passive torque/damping force:
+      $$\tau_{\text{passive}} = -b \cdot v = -0.05 \times 2.0 = -0.1$$
+      Assert `data.qfrc_passive[0]` matches $-0.1$.

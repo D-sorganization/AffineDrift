@@ -1,0 +1,27 @@
+### Result
+[
+  {
+    "style": "font-size: 113%; position: relative;",
+    "font": "12.8461px",
+    "width": 269,
+    "scroll": 269,
+    "parentFont": "15.113px"
+  },
+  {
+    "style": "font-size: 113.1%; position: relative;",
+    "font": "11.0542px",
+    "width": 247,
+    "scroll": 247,
+    "parentFont": "13.005px"
+  }
+]
+### Ran Playwright code
+```js
+await page.evaluate('() => [...document.querySelectorAll(".math.display mjx-container")].map(e=>({style:e.getAttribute("style"),font:getComputedStyle(e).fontSize,width:e.clientWidth,scroll:e.scrollWidth,svg:e.querySelector("svg")?.outerHTML.slice(0,260),parentFont:getComputedStyle(e.parentElement).fontSize}))');
+```
+### Page
+- Page URL: http://127.0.0.1:8873/articles/proximal-distal-model-workbench.html
+- Page Title: Explore the Proximal–Distal Models – AffineDrift
+- Console: 3 errors, 1 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-10-05T05-09-15-620Z.log#L18

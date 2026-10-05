@@ -1,218 +1,201 @@
-\chapter{Deformable Bodies and Continuum Mechanics}
+\chapter[Deformable Bodies and Continuum Mechanics]{Deformable Bodies\\and Continuum Mechanics}
 \label{ch:deformable}
-
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This provisional treatment develops a small-deflection beam model and reproducible
+verification problems. It does not validate a particular club, tissue material,
+impact model or injury prediction.
 \end{gomdraftnotice}
 
-\epigraph{%
-  When the rigid-body assumption fails, we do not abandon mechanics.
-  We embrace the continuum.
-}{}
+\section{Choosing the Required Mechanical Resolution}
+Rigid links can approximate gross motion while failing to describe local strain,
+stored elastic energy or load-dependent geometry. Whether that matters depends on
+the question. Clubhead orientation may require shaft bending and torsion;
+internal tissue stress requires appropriate constitutive laws, geometry and boundary
+conditions. Adding finite elements alone does not validate stress estimates,
+damage thresholds or biological material parameters.
 
-\section{When Rigid-Body Assumptions Fail}
+A model may combine a moving rigid reference with small elastic deformation.
+Small local strain does not imply small overall rigid rotation. Derive the coupled
+kinetic energy and forces consistently: appending independent elastic oscillators
+to rigid-body equations generally misses inertial coupling and reactions.
+This connects flexible modeling to force and parameter inference in
+Chapters~\ref{ch:inverse-problems} and~\ref{ch:inference}.
 
-The rigid-body model fails when:
-\begin{enumerate}
-  \item \textbf{Internal stresses are needed}: to predict injury, fracture, or tissue damage
-  \item \textbf{Deformation affects kinematics}: shaft flexibility in golf, spine compliance
-  \item \textbf{Wave propagation matters}: impact biomechanics, blast injury
-  \item \textbf{Fluid-structure interaction}: blood flow, synovial fluid, respiratory mechanics
-\end{enumerate}
-
-\section{Beam Models for Long Bones and Shafts}
-
-When deformation is small and the body is slender (length $\gg$ diameter), beam
-theory provides an efficient model. A schematic representation of the finite element
-beam model is shown in Figure~\ref{fig:ch9:beam-fem}.
-
-\begin{figure}[htbp]
-\centering
-\begin{tikzpicture}[scale=0.85, >=Stealth]
-  % Continuous beam
-  \draw[very thick] (0, 2) -- (6, 2.3) node[right] {Euler-Bernoulli beam};
-  \filldraw (0, 2) circle (3pt);
-  \node[below] at (0, 2) {Clamped};
-
-  % Distributed load
-  \draw[->, thick, red] (1.5, 2.8) -- (1.5, 2.2) node[right] {$f(x,t)$};
-  \draw[->, thick, red] (3, 2.9) -- (3, 2.2);
-  \draw[->, thick, red] (4.5, 2.8) -- (4.5, 2.2);
-
-  % Finite elements
-  \node at (3, 0.8) {\textbf{Discretization into FE elements}};
-  \filldraw (0, 0) circle (2pt);
-  \filldraw (1.5, 0.1) circle (2pt);
-  \filldraw (3, 0) circle (2pt);
-  \filldraw (4.5, 0.05) circle (2pt);
-  \filldraw (6, 0.2) circle (2pt);
-
-  \draw (0, 0) -- (1.5, 0.1) -- (3, 0) -- (4.5, 0.05) -- (6, 0.2);
-
-  % Deformation
-  \draw[dashed, gray] (0, 2) -- (0, 0);
-  \draw[dashed, gray] (6, 2.3) -- (6, 0.2);
-\end{tikzpicture}
-\caption{Finite Element Beam Model: Continuous Euler-Bernoulli Beam (Top) and Its Discretization Into Nodal Elements (Bottom).}
-\label{fig:ch9:beam-fem}
-\end{figure}
-
-For a Euler-Bernoulli beam:
+\section{A Stationary Planar Euler--Bernoulli Beam}
+Let $x\in[0,L]$ follow an initially straight, stationary beam, with small transverse
+deflection $w(x,t)$. Plane sections remain normal to the centerline; shear deformation
+and cross-section rotary inertia are neglected. Let $B(x)=E(x)I(x)>0$ be bending
+rigidity in $\mathrm{N\,m^2}$ and $\mu(x)>0$ mass per length in $\mathrm{kg/m}$.
+For linear elasticity without damping, axial preload or initial curvature,
 \begin{equation}
-  EI \frac{\partial^4 w}{\partial x^4} + \rho A \frac{\partial^2 w}{\partial t^2} = f(x, t),
-  \label{eq:ch9:euler-bernoulli}
+ T=\tfrac12\int_0^L\mu\dot w^2\,dx,\qquad
+ U=\tfrac12\int_0^LB(w'')^2\,dx.
 \end{equation}
-where $E$ is the elastic modulus, $I$ is the second moment of area, $\rho$ is
-density, $A$ is cross-sectional area, $w(x,t)$ is transverse displacement, and
-$f$ is the distributed load.
-
-\subsection{Modal Analysis}
-
-The solution is expanded in modes:
+The weak balance against an admissible virtual displacement $\delta w$ is
 \begin{equation}
-  w(x, t) = \sum_{k=1}^{N} \phi_k(x) \eta_k(t),
-  \label{eq:ch9:modal-expansion}
+ \int_0^L\mu\ddot w\,\delta w\,dx+
+ \int_0^LBw''\delta w''\,dx=\int_0^Lf\delta w\,dx,
 \end{equation}
-where $\phi_k(x)$ are mode shapes and $\eta_k(t)$ are modal coordinates. This converts
-the PDE to a system of ODEs that can be appended to the rigid-body equations of motion.
+with point-load work if present. Integrating twice in space gives
+\begin{equation}
+ (B(x)w'')''+\mu(x)\ddot w=f(x,t).
+ \label{eq:ch9:euler-bernoulli}
+\end{equation}
+Here $f$ is force per length in $\mathrm{N/m}$. The constant-rigidity form
+$B\partial_x^4w+\mu\ddot w=f$ is a special case. Weak formulations and cubic Hermite
+interpolation are treated in the TU Delft beam notes~\cite{DelftBeamReview}.
 
-\subsection{Golf Club Shaft Flexibility}
+For a clamped root, $w(0)=w'(0)=0$. A bare unloaded tip has $Bw''(L)=0$ and
+$(Bw'')'(L)=0$. A point mass $m_t$ adds $\tfrac12m_t\dot w(L)^2$ to kinetic energy
+and $m_t\ddot w(L)\delta w(L)$ to the weak balance. The resulting boundary condition
+is $(Bw'')'(L)=m_t\ddot w(L)$ under this energy convention. For
+$w=\phi e^{i\omega t}$ it becomes $(B\phi'')'(L)=-m_t\omega^2\phi(L)$.
+No offset center of mass or head rotary inertia is included in this point-mass model.
 
-The golf club shaft is the most accessible example of a flexible link in sport
-biomechanics. A typical shaft has:
-\begin{itemize}
-  \item Length: $\sim$1.1~m
-  \item First bending mode: 4--6~Hz (driver), 6--10~Hz (irons)
-  \item Tip deflection at impact: 5--15~cm
-  \item Lead/lag deflection: 2--5~cm
-  \item Toe-down droop: 3--8~cm (gravity effect during downswing)
-\end{itemize}
+\subsection{Finite Elements and Modal Coordinates}
+On an element of length $h$, let $\xi=x/h$ and
+\begin{align}
+ N_1&=1-3\xi^2+2\xi^3,&N_2&=h(\xi-2\xi^2+\xi^3),\\
+ N_3&=3\xi^2-2\xi^3,&N_4&=h(-\xi^2+\xi^3).
+\end{align}
+The nodal vector is $(w_1,w'_1,w_2,w'_2)^T$; translation and slope entries have
+different units. Substituting $w=N d_e$ gives
+\begin{equation}
+ K_e=\int B(N'')^TN''\,dx,\qquad M_e=\int\mu N^TN\,dx.
+\end{equation}
+The listing integrates these products exactly for constant element properties.
+A supplied linear rigidity taper is approximated by its midpoint value on each
+element. This is not exact integration of the variable-rigidity curvature product.
+Mass per length is independently constant. A geometry-based taper requires
+consistent $I(x)$ and $A(x)$ rather than assuming they vary identically.
 
-\begin{lstlisting}[language=Python, caption={Modal analysis of a golf club shaft.}]
+After imposing root constraints, solve $K\phi_j=\omega_j^2M\phi_j$ with
+$\phi_i^TM\phi_j=\delta_{ij}$. The symmetric generalized eigensolver uses this
+normalization~\cite{SciPyEighBeam}. Returned columns include the two zero root
+entries. Plot even rows for transverse displacement; odd rows are slopes.
+Mode sign is arbitrary and magnitude depends on normalization. Negative eigenvalues
+must not be converted into frequencies using absolute values. This positive clamped
+model rejects nonpositive results, which may indicate invalid assembly, numerical
+conditioning or a model outside the stated assumptions.
+
+\begin{lstlisting}[language=Python, caption={Stationary Planar Cantilever With Optional Point Tip Mass.}]
+from dataclasses import dataclass
 import numpy as np
 from scipy.linalg import eigh
 
-def shaft_modal_analysis(
-    n_elements: int = 20,
-    length: float = 1.1,
-    EI_root: float = 50.0,
-    EI_tip: float = 15.0,
-    rho_A: float = 0.15
-) -> tuple[np.ndarray, np.ndarray]:
-    """Compute natural frequencies and mode shapes of a tapered shaft.
+@dataclass
+class BeamParameters:
+    """SI parameters of a stationary planar cantilever, not a full club."""
+    length: float
+    rigidity_root: float
+    rigidity_tip: float
+    mass_per_length: float
+    tip_mass: float = 0.0
 
-    Uses finite element beam model with linear EI taper.
+def beam_matrices(parameters, n_elements):
+    """Assemble Hermite elements with piecewise-constant midpoint rigidity."""
+    values = np.array([parameters.length, parameters.rigidity_root,
+                       parameters.rigidity_tip, parameters.mass_per_length,
+                       parameters.tip_mass], dtype=float)
+    if not np.all(np.isfinite(values)) or np.any(values[:4] <= 0) or values[4] < 0:
+        raise ValueError("Positive beam properties and nonnegative tip mass required")
+    if isinstance(n_elements, bool) or not isinstance(n_elements, (int, np.integer)):
+        raise ValueError("Element count must be an integer")
+    if n_elements < 2:
+        raise ValueError("At least two elements required")
+    length, root, tip, density, tip_mass = values
+    step = length / n_elements
+    local_k = np.array([[12, 6*step, -12, 6*step],
+        [6*step, 4*step**2, -6*step, 2*step**2],
+        [-12, -6*step, 12, -6*step],
+        [6*step, 2*step**2, -6*step, 4*step**2]]) / step**3
+    local_m = density * step / 420 * np.array([
+        [156, 22*step, 54, -13*step],
+        [22*step, 4*step**2, 13*step, -3*step**2],
+        [54, 13*step, 156, -22*step],
+        [-13*step, -3*step**2, -22*step, 4*step**2]])
+    rigidity = root + (tip-root) * (np.arange(n_elements)+0.5) / n_elements
+    dofs = 2*np.arange(n_elements)[:, None] + np.arange(4)
+    stiffness = np.zeros((2*n_elements+2, 2*n_elements+2))
+    mass = np.zeros_like(stiffness)
+    indices = (dofs[:, :, None], dofs[:, None, :])
+    np.add.at(stiffness, indices, rigidity[:, None, None] * local_k)
+    np.add.at(mass, indices, np.broadcast_to(local_m, (n_elements, 4, 4)))
+    mass[-2, -2] += tip_mass
+    return stiffness, mass
 
-    Parameters
-    ----------
-    n_elements : int
-        Number of finite elements.
-    length : float
-        Shaft length in meters.
-    EI_root : float
-        Flexural rigidity at root (grip end) in N*m^2.
-    EI_tip : float
-        Flexural rigidity at tip (head end) in N*m^2.
-    rho_A : float
-        Mass per unit length in kg/m.
-
-    Returns
-    -------
-    tuple of np.ndarray
-        (frequencies_hz, mode_shapes)
-    """
-    n_nodes = n_elements + 1
-    n_dof = 2 * n_nodes  # displacement + rotation at each node
-    h = length / n_elements
-
-    K = np.zeros((n_dof, n_dof))
-    M = np.zeros((n_dof, n_dof))
-
-    for e in range(n_elements):
-        # Local EI for this element (linear taper)
-        xi = (e + 0.5) / n_elements
-        EI_local = EI_root + (EI_tip - EI_root) * xi
-
-        # Euler-Bernoulli beam element stiffness matrix
-        k_e = EI_local / h**3 * np.array([
-            [12,   6*h,  -12,   6*h],
-            [6*h,  4*h**2, -6*h, 2*h**2],
-            [-12, -6*h,   12,  -6*h],
-            [6*h,  2*h**2, -6*h, 4*h**2]
-        ])
-
-        # Consistent mass matrix
-        m_e = rho_A * h / 420 * np.array([
-            [156,   22*h,  54,   -13*h],
-            [22*h,  4*h**2, 13*h, -3*h**2],
-            [54,    13*h,  156,  -22*h],
-            [-13*h, -3*h**2, -22*h, 4*h**2]
-        ])
-
-        # Assembly
-        dofs = [2*e, 2*e+1, 2*e+2, 2*e+3]
-        for i_idx, i in enumerate(dofs):
-            for j_idx, j in enumerate(dofs):
-                K[i, j] += k_e[i_idx, j_idx]
-                M[i, j] += m_e[i_idx, j_idx]
-
-    # Boundary conditions: clamped at root (grip)
-    free_dofs = list(range(2, n_dof))  # Remove first node
-    K_free = K[np.ix_(free_dofs, free_dofs)]
-    M_free = M[np.ix_(free_dofs, free_dofs)]
-
-    # Solve eigenvalue problem
-    eigenvalues, eigenvectors = eigh(K_free, M_free)
-
-    # Convert to Hz
-    frequencies = np.sqrt(np.abs(eigenvalues)) / (2 * np.pi)
-
-    return frequencies[:6], eigenvectors[:, :6]
-
-
-# Example
-freqs, modes = shaft_modal_analysis()
-print("Natural frequencies (Hz):")
-for i, f in enumerate(freqs):
-    print(f"  Mode {i+1}: {f:.1f} Hz")
+def shaft_modal_analysis(parameters, n_elements=20):
+    """Return up to six frequencies and full nodal mass-normalized modes."""
+    stiffness, mass = beam_matrices(parameters, n_elements)
+    eigenvalues, vectors = eigh(stiffness[2:, 2:], mass[2:, 2:])
+    if not np.all(np.isfinite(eigenvalues)) or np.any(eigenvalues <= 0):
+        raise ValueError("Cantilever eigenvalues must be finite and positive")
+    count = min(6, eigenvalues.size)
+    modes = np.zeros((mass.shape[0], count))
+    modes[2:] = vectors[:, :count]
+    return np.sqrt(eigenvalues[:count]) / (2*np.pi), modes
 \end{lstlisting}
 
-\section{Finite Element Methods (Overview)}
-
-For complex geometries (vertebral bodies, skull, articular surfaces), the finite
-element method (FEM) provides the most general approach. While a full treatment is
-beyond this text's scope, the key concept is:
-
-The continuous domain $\Omega$ is divided into elements, and the displacement field
-is approximated using shape functions:
+\section{Verification Before Interpreting a Shaft}
+For a uniform bare cantilever, separation and the four boundary conditions give
+\[\cos\beta_j\cosh\beta_j=-1.\]
+The first dimensionless roots are $1.87510407$,
+$4.69409113$, $7.85475744$, so
 \begin{equation}
-  \bm{u}(\bm{x}, t) \approx \sum_{i} N_i(\bm{x}) \bm{u}_i(t),
-  \label{eq:ch9:fem-approx}
+ f_j=\frac{\beta_j^2}{2\pi L^2}\sqrt{B/\mu}.
 \end{equation}
-leading to the assembled system:
-\begin{equation}
-  M_{\text{FEM}} \ddot{\bm{u}} + C_{\text{FEM}} \dot{\bm{u}} + K_{\text{FEM}} \bm{u} = \bm{f}_{\text{ext}}.
-  \label{eq:ch9:fem-system}
-\end{equation}
+Manufactured $L=1\,\mathrm m$, $B=1\,\mathrm{N\,m^2}$ and
+$\mu=1\,\mathrm{kg/m}$ give approximately $0.5596$, $3.5069$ and
+$9.8194\,\mathrm{Hz}$. Mesh refinement must approach these values. Multiplying
+$B$ by four doubles frequencies; doubling $L$ quarters them for a uniform beam
+with unchanged $B,\mu$. These checks test more than reproduction of a single plot.
 
+At fixed $K$, adding nonnegative point mass increases the mass quadratic form.
+The Rayleigh quotient $d^TKd/(d^TMd)$ cannot increase for any fixed admissible
+nonzero $d$; the variational eigenvalue characterization makes ordered frequencies
+nonincreasing. This does not determine a universal driver frequency. Grip
+compliance, head inertia and offsets, bending plane, geometry, preload and shaft
+construction change the eigenproblem.
+
+\subsection{Deflection, Forcing and Timescale}
+For a uniform beam under static tip force $F$, solving the equilibrium equation
+with tip moment zero gives $w(L)=FL^3/(3B)$. This is a linear static benchmark,
+not an impact-deflection prediction. During a swing, transverse gravity components,
+base acceleration and rotation, head inertia and center-of-mass offsets can all
+contribute. Toe-down and lead/lag labels require declared club axes. Assigning
+droop entirely to gravity or to one inertial term without a load balance is unjustified.
+
+With fixed boundaries, truncate $w=\sum_{j=1}^r\phi_j\eta_j$. Under an appropriate
+diagonal damping model, mass-normalized coordinates satisfy
+\begin{equation}
+ \ddot\eta_j+2\zeta_j\omega_j\dot\eta_j+\omega_j^2\eta_j=Q_j.
+\end{equation}
+For a distributed load alone, $Q_j=\int_0^L\phi_j(x)f(x,t)\,dx$; point loads add their modal work terms. In a finite element model, $Q_j=\phi_j^Tf_{\rm nodal}$.
+For sinusoidal forcing at angular frequency $\Omega$, neglecting inertia requires
+$\Omega/\omega_j\ll1$, with damping and transient terms also negligible relative
+to stiffness. Counting natural cycles during a downswing alone does not justify
+a quasi-static approximation. Initial vibration, impact and rapidly changing forcing
+may remain important.
+
+\section{Beyond the Beam Approximation}
+The assembled equation $M\ddot d+C\dot d+Kd=f$ describes a particular linearized
+model with specified damping and boundaries. Large deformation, nonlinear material
+response and changing contact generally produce state-dependent internal forces
+and possibly constraints. Mesh convergence verifies discretization of a chosen
+model; it cannot establish the constitutive law or supply missing measurements.
+Shaft compliance changes clubhead motion and interaction loads, so rigid-body
+inference and flexible dynamics need consistent geometry, frames and force conventions.
+
+\clearpage
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Shaft Frequency.}
-        Using the provided code, compute how the first natural frequency changes
-        as the tip-to-root EI ratio varies from 0.1 to 0.9. Plot the result.
-
-  \item \textbf{Mode Shapes.}
-        Plot the first three mode shapes of the shaft. Identify nodes (zero-crossings)
-        and antinodes (maximum displacement).
-
-  \item \textbf{Timescale Separation.}
-        If the golf downswing takes 0.25~s, estimate the number of oscillation cycles
-        for each of the first 3 modes. Which modes are quasi-static?
-
-  \item \textbf{(Programming.)} Add a tip mass (clubhead, 0.2~kg) to the shaft FEM
-        model and recompute the natural frequencies. How does the clubhead mass affect
-        the frequencies?
+ \item Compute the first three uniform-beam frequencies for 4, 8, 16 and 32
+ elements. Compare with the analytical roots and report relative errors.
+ \item Add point masses $0$, $0.1$, $0.2\,\mathrm{kg}$ to the manufactured beam.
+ Verify ordered frequencies do not increase and check $\Phi^TM\Phi=I$.
+ \item Recover static tip compliance by solving the clamped assembled system.
+ Keep deflections small and distinguish this load case from a moving club.
+ \item Compare one damped mode for $\Omega/\omega=0.01$, $0.5$ and $1$.
+ Explain why a swing duration of $0.25\,\mathrm s$ alone is insufficient
+ to choose a quasi-static model.
 \end{enumerate}

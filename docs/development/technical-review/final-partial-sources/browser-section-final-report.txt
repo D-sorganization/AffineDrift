@@ -1,0 +1,12 @@
+### Result
+[{"name":"intentional-constraint-collapse","metrics":{"errors":0,"math":41}},{"name":"inverse-dynamics","metrics":{"errors":0,"math":65}},{"name":"inverse-dynamics-inference","metrics":{"errors":0,"math":60}},{"name":"affine-nature-golf-swing","metrics":{"errors":0,"math":586}},{"name":"drifter-manifesto","metrics":{"errors":0,"math":548}},{"name":"theory-part3","metrics":{"errors":0,"math":108}}]
+### Ran Playwright code
+```js
+await (async (page) => { const out=[]; const root='C:/Users/diete/Repositories/Worktrees/AffineDrift-final-partial-sources-review/docs/development/technical-review/final-partial-sources/'; const names=['intentional-constraint-collapse','inverse-dynamics','inverse-dynamics-inference','affine-nature-golf-swing','drifter-manifesto','theory-part3']; await page.setViewportSize({width:390,height:1100}); for(let i=0;i<names.length;i++){ await page.goto('http://127.0.0.1:8882/articles/'+names[i]+'.html',{waitUntil:'networkidle'}); await page.evaluate(async()=>{for(let y=0;y<document.body.scrollHeight;y+=700){window.scrollTo(0,y);await new Promise(r=>setTimeout(r,80));}}); const text=i===0?'Formal Definition':i===2?'From Generalized Torque':'How Geometry, Energy'; const heading=page.getByRole('heading').filter({hasText:text}).first(); await heading.scrollIntoViewIfNeeded(); await page.waitForTimeout(1200); const dismiss=page.getByRole('button',{name:'Dismiss',exact:true}); if(await dismiss.count()) await dismiss.click(); await page.evaluate(()=>window.scrollBy(0,280)); await page.waitForTimeout(600); await page.screenshot({path:root+'section-final-'+i+'-390.png'}); out.push({name:names[i],metrics:await page.evaluate(()=>({errors:document.querySelectorAll('mjx-merror').length,math:document.querySelectorAll('mjx-container').length}))}); } return out; })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8882/articles/theory-part3.html
+- Page Title: Theory Series, Part 3: Drift Invariance and Force Taxonomy – AffineDrift
+- Console: 2 errors, 1 warnings
+### Events
+- New console entries: ..\AffineDrift-tangent-applications-review\docs\development\technical-review\tangent-applications-review\.playwright-cli\console-2026-10-05T09-04-44-494Z.log#L54-L67

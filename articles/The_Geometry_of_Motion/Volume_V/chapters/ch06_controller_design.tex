@@ -1,111 +1,199 @@
 \chapter{Controller Design and Testing}
 \label{ch:controller-design}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+A nominal trajectory, a tracking controller and a certified region of operation
+are different objects. Optimization proposes a motion; feedback responds to
+departures from it; a stability or safety argument states what follows under
+explicit assumptions. These distinctions matter when interpreting a golf swing:
+a repeatable outcome need not imply rigid tracking of every joint angle.
 
-\epigraph{A controller is only as good as its worst-case performance.}{}
+\section{Gravity Compensation for a Constant Target}
 
-This chapter covers implementation of feedback controllers for multi-body systems,
-from proportional-derivative (PD) control to contraction-based designs. All controllers
-assume full state feedback, i.e., direct access to positions and velocities.
+Consider $M(q)\ddot q+C(q,\dot q)\dot q+g(q)=\tau$ with full joint actuation,
+exact gravity compensation, no unmodeled external force and a constant target
+$q_*$. In a Euclidean joint-coordinate domain define $e=q-q_*$ and choose
+\[
+ \tau=g(q)-K_pe-K_d\dot q,\qquad K_p=K_p^T\succ0,\quad K_d=K_d^T\succ0.
+\]
+The energy-like function and its derivative are
+\begin{align*}
+ V&=\tfrac12\dot q^TM(q)\dot q+\tfrac12e^TK_pe,\\
+ \dot V&=-\dot q^TK_d\dot q+
+ \tfrac12\dot q^T(\dot M-2C)\dot q=-\dot q^TK_d\dot q.
+\end{align*}
+The last equality uses a Christoffel choice of $C$. Negative semidefiniteness
+alone does not prove convergence. On a compact forward-invariant sublevel set
+within the regular coordinate domain, LaSalle's argument identifies the largest
+invariant subset of $\dot V=0$: a trajectory remaining there has $\dot q=0$ and
+then $K_pe=0$. Thus the equilibrium is asymptotically stable under these
+assumptions~\cite{SlotineLi1991}. A momentary zero velocity is not by itself an
+equilibrium. Angle wrapping, joint limits, saturation, underactuation and
+coordinate singularities require separate treatment before a global claim.
 
-\section{PD Control With Gravity Compensation}
+\begin{lstlisting}[language=Python, caption={Gravity-Compensated Regulation With Explicit Gain Contracts}]
+from dataclasses import dataclass
 
-The proportional-derivative controller with gravity compensation is the simplest
-nonlinear controller that guarantees asymptotic stability for mechanical systems
-without external disturbances \cite{SlotineLi1991}.
-
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[
-    every node/.style={align=center, draw, rounded corners, minimum width=1.8cm, text centered, font=\small},
-    ]
-    % Desired trajectory
-    \node[fill=blue!20] (desired) at (0, 2) {Desired\\Trajectory};
-    % Error computation
-    \node[fill=green!20] (error) at (2, 2) {Error\\$e = q_d - q$};
-    % PD law
-    \node[fill=yellow!20] (pd) at (4, 2) {PD Control\\$K_p e + K_d \dot{e}$};
-    % Gravity compensation
-    \node[fill=orange!20] (gravity) at (4, 0.3) {Gravity\\$g(q)$};
-    % Summing junction
-    \node[fill=pink!20] (sum) at (6, 1.2) {$+$};
-    % System
-    \node[fill=purple!20] (sys) at (8, 1.2) {Multi-Body\\System};
-    % State feedback
-    \node[fill=blue!20] (feedback) at (8, -0.5) {Measured\\$q, \dot{q}$};
-
-    % Arrows
-    \draw[->] (desired) -- (error);
-    \draw[->] (error) -- (pd);
-    \draw[->] (gravity) -- (sum);
-    \draw[->] (pd) -- (sum);
-    \draw[->] (sum) -- (sys);
-    \draw[->] (sys) -- (8, 0.3) -- (feedback);
-    \draw[->] (feedback) -- (1, 0.3) -- (error);
-  \end{tikzpicture}
-  \caption{PD control with gravity compensation. The controller computes an error signal
-    from desired and measured positions, applies PD gains, and adds gravity compensation
-    to achieve asymptotic tracking.}
-  \label{fig:pd-control}
-\end{figure}
-
-\begin{lstlisting}[language=Python, caption={PD controller with gravity compensation.}]
 import numpy as np
 
-class PDGravityCompController:
-    """PD controller with gravity compensation.
 
-    From Volume I, Chapter 3: the simplest nonlinear controller
-    that guarantees asymptotic stability.
-    """
+def positive_gain(value: np.ndarray) -> np.ndarray:
+    """Copy a finite symmetric positive-definite gain matrix."""
+    gain = np.array(value, dtype=float, copy=True)
+    if (gain.ndim != 2 or gain.shape[0] == 0
+            or gain.shape[0] != gain.shape[1]
+            or not np.all(np.isfinite(gain))
+            or not np.allclose(gain, gain.T, rtol=1e-12, atol=1e-12)):
+        raise ValueError("Gain must be finite, square and symmetric")
+    gain = (gain + gain.T) / 2
+    try:
+        np.linalg.cholesky(gain)
+    except np.linalg.LinAlgError as error:
+        raise ValueError("Gain must be positive definite") from error
+    gain.setflags(write=False)
+    return gain
 
-    def __init__(self, Kp: np.ndarray, Kd: np.ndarray,
-                 gravity_func=None):
-        self.Kp = Kp
-        self.Kd = Kd
-        self.gravity_func = gravity_func
 
-    def compute(self, q: np.ndarray, qd: np.ndarray,
-                q_des: np.ndarray, qd_des: np.ndarray) -> np.ndarray:
-        """Compute control torques.
+@dataclass(frozen=True)
+class PDGains:
+    """Constant gains for a fully actuated regulation example."""
 
-        Parameters
-        ----------
-        q, qd : current state
-        q_des, qd_des : desired state
+    proportional: np.ndarray
+    derivative: np.ndarray
 
-        Returns
-        -------
-        tau : np.ndarray, control torques
-        """
-        tau = self.Kp @ (q_des - q) + self.Kd @ (qd_des - qd)
-        if self.gravity_func is not None:
-            tau += self.gravity_func(q)
-        return tau
+    def __post_init__(self) -> None:
+        """Check dimensions and retain defensive matrix copies."""
+        proportional = positive_gain(self.proportional)
+        derivative = positive_gain(self.derivative)
+        if proportional.shape != derivative.shape:
+            raise ValueError("Gain dimensions must match")
+        object.__setattr__(self, "proportional", proportional)
+        object.__setattr__(self, "derivative", derivative)
+
+
+def regulation_torque(gains: PDGains, state: np.ndarray,
+                      target: np.ndarray, gravity: np.ndarray
+                      ) -> np.ndarray:
+    """Regulate a constant target; state rows are q and qdot."""
+    size = gains.proportional.shape[0]
+    state = np.asarray(state, dtype=float)
+    target = np.asarray(target, dtype=float)
+    gravity = np.asarray(gravity, dtype=float)
+    if (state.shape != (2, size) or target.shape != (size,)
+            or gravity.shape != (size,)
+            or not np.all(np.isfinite(state))
+            or not np.all(np.isfinite(target))
+            or not np.all(np.isfinite(gravity))):
+        raise ValueError("State, target and gravity must match gains")
+    return (gravity - gains.proportional @ (state[0] - target)
+            - gains.derivative @ state[1])
 \end{lstlisting}
 
-\section{Trajectory Tracking With Contraction}
+The supplied gravity vector must be evaluated at the current configuration with
+the same model and sign convention as the plant. A finite vector is not proof
+that it is physically correct. The example returns generalized torque without
+actuator saturation; adding saturation changes the stability argument. Gains in
+this law map position and velocity errors into torque, so their units differ
+from the acceleration-feedback gains used below.
+To connect this listing to Chapter~\ref{ch:simulation}, reshape its flat
+six-component state to \texttt{state.reshape(2, 3)}, use three-dimensional gains,
+and evaluate gravity at \texttt{state[:3]} inside the torque callback.
 
-Contraction theory provides tools for analyzing nonlinear stability with global guarantees
-\cite{LohmillerSlotine1998, ManchesterSlotine2017}. A contraction-based controller designs
-the feedback law to make the closed-loop system contracting with respect to a suitable metric,
-guaranteeing exponential convergence to the desired trajectory from any initial condition.
+\section{Why Moving Targets Need a Different Argument}
 
-\section{Funnel Control}
+For $e=q-q_d(t)$, the commonly extended law
+$\tau=g-K_pe-K_d\dot e$ gives
+\[
+ M\ddot e+(C+K_d)\dot e+K_pe=-M\ddot q_d-C\dot q_d.
+\]
+The right side need not vanish at perfect tracking. For the unit-mass system
+$\ddot q=\tau$ with $q_d=\sin t$, at $t=\pi/2$ and zero tracking error this law
+commands zero torque, although the desired acceleration is $-1$. Hence
+$\ddot e=1$: exact tracking immediately fails.
 
-Trajectory funnels define regions around a nominal trajectory within which the controller
-guarantees convergence \cite{MajumdarTedrake2017}. This is useful for handling model uncertainty
-and disturbances. Funnel computation requires solving a set of linear matrix inequalities (LMIs)
-at each time step.
+Under the same ideal full-actuation and exact-model assumptions, computed torque
+instead chooses
+\[
+ \tau=M(q)\bigl(\ddot q_d-\widehat K_d\dot e-\widehat K_pe\bigr)
+       +C(q,\dot q)\dot q+g(q),
+\]
+so $\ddot e+\widehat K_d\dot e+\widehat K_pe=0$. Constant symmetric
+positive-definite $\widehat K_p,\widehat K_d$ make this linear error system
+asymptotically, and hence exponentially, stable. This is a model-based tracking
+result, not a statement that gravity-only PD tracks every reference
+\cite{LynchParkComputedTorqueReview}. Inertia errors now enter the feedforward
+and feedback terms. Numerical differentiation of a noisy reference can demand
+unrealistic accelerations; a dynamically feasible, sufficiently smooth reference
+and an actuator-aware design remain necessary.
+
+\section{Contraction Is a Regional Differential Property}
+
+For a smooth closed-loop vector field $\dot x=f_{\mathrm{cl}}(x,t)$, define
+$A=\partial f_{\mathrm{cl}}/\partial x$. A contraction certificate can use a
+smooth metric $W(x,t)$ satisfying
+\[
+ aI\preceq W\preceq bI,\qquad
+ \dot W+A^TW+WA\preceq-2\lambda W,
+ \quad a,b,\lambda>0.
+\]
+Here $\dot W$ includes change along the flow; $W$ is not necessarily the physical
+inertia matrix, and denotes the metric itself rather than its inverse.
+On a convex forward-invariant Euclidean coordinate domain, transport the initial
+straight connecting path by the flow. Its metric length contracts; the uniform
+bounds give $\|x(t)-y(t)\|\le\sqrt{b/a}\,e^{-\lambda t}\|x(0)-y(0)\|$.
+For a more general domain, an appropriate bound on connecting-path length is
+needed in addition to invariance. The desired
+trajectory must itself solve the closed-loop equations. A certificate on a
+limited domain says nothing about initial states outside it; a global conclusion
+needs a global domain and well-defined solutions. Designing a control
+contraction metric and checking the resulting closed-loop certificate are
+additional tasks, not consequences of naming the method
+\cite{LohmillerSlotine1998}.
+
+\section{Funnels Bound Finite-Time Motion}
+
+In error coordinates about a feasible trajectory, let
+$\dot e=f_e(t,e,w)$ with a specified disturbance set. A funnel is a family
+$\mathcal F(t)=\{e:V(t,e)\le\rho(t)\}$. Under the usual smoothness and regular
+boundary assumptions, a sufficient inward-pointing condition is
+\[
+ V=\rho\quad\Longrightarrow\quad
+ \partial_tV+\nabla_eV^Tf_e(t,e,w)<\dot\rho
+ \quad\hbox{for every admissible }w.
+\]
+With the initial set inside $\mathcal F(0)$, this bounds motion through a finite
+horizon. It does not alone prove convergence to zero. A terminal-set condition
+connects the funnel to the required outcome. Polynomial sum-of-squares methods
+can produce semidefinite subproblems, but joint searches are generally nonconvex.
+Checking only discrete times is an approximation, not an all-time certificate
+\cite{MajumdarTedrake2017,TedrakeFunnelReview}.
+
+For golf, the admissible tube must also respect torque limits, joint limits and
+strike geometry. At a contact event, the reset must map the pre-impact set into
+the intended post-impact set. A bound that ignores this reset cannot certify
+the resulting ball/club motion.
+
+\section{Testing the Coupled System}
+
+Test regulation with constant targets and tracking with nonzero reference
+acceleration; these reveal different failures. Vary inertia, gravity estimates,
+delays, sampling and measurement noise within declared ranges. Position and
+velocity feedback usually comes from an estimator, so estimator errors enter
+the closed loop; an ideal full-state proof does not cover them automatically.
+Check actuator feasibility and task-space error alongside joint error.
+
+A simulated success under sampled perturbations is evidence about those trials,
+not a universal certificate. Conversely, a certificate for an ideal model is
+conditional on its domain and uncertainty assumptions. Connecting both forms of
+evidence to measured impact outcomes gives the swing argument more explanatory
+force than treating stable-looking joint traces as proof of human control laws.
 
 \section*{Exercises}
 \begin{enumerate}
-  \item Implement PD control for the 2-DOF arm and track a circular trajectory.
-  \item Add gravity compensation and compare tracking error.
-  \item Implement a contraction-based controller and verify convergence.
+ \item Derive the regulation energy identity and identify the invariant subset
+ where its derivative vanishes. State the compactness/domain assumptions.
+ \item Reproduce the unit-mass sinusoidal counterexample and add the missing
+ acceleration feedforward term.
+ \item Explain how gain units differ between torque PD and computed torque.
+ \item Specify a finite-horizon strike funnel, including disturbance bounds,
+ actuator constraints, terminal set and an impact reset condition.
 \end{enumerate}

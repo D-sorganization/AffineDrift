@@ -1,0 +1,105 @@
+# Final Adversarial Technical Review: Chapter on Central Pattern Generators
+
+This review audits mathematical derivations, physical dimensions, sign conventions, boundary/bifurcation conditions, code implementation, and biological/biomechanical claims.
+
+---
+
+### 1. Mathematical Derivations, Equations, and Signs
+
+1. **Equilibrium Point ($x_*$)**:
+   $$\tau_1\dot x_i = -x_i - \beta v_i - w y_j + u = 0, \quad \tau_2\dot v_i = -v_i + y_i = 0$$
+   With $x_i > 0$, $y_i = x_i$, so $v_i = x_i$. Setting $x_1 = x_2 = x_*$:
+   $$-x_* - \beta x_* - w x_* + u = 0 \implies x_* = \frac{u}{1+\beta+w}.$$
+   *Verification:* **Correct** for $u > 0, \beta \ge 0, w \ge 0$.
+
+2. **Linearization & Modal Jacobians ($J_+, J_-$)**:
+   In the active orthant ($x_1, x_2 > 0$):
+   $$\dot x_1 = \frac{1}{\tau_1}(-x_1 - \beta v_1 - w x_2 + u), \quad \dot v_1 = \frac{1}{\tau_2}(-v_1 + x_1)$$
+   $$\dot x_2 = \frac{1}{\tau_1}(-x_2 - \beta v_2 - w x_1 + u), \quad \dot v_2 = \frac{1}{\tau_2}(-v_2 + x_2)$$
+   Let $s_x = x_1 + x_2$, $s_v = v_1 + v_2$, $d_x = x_1 - x_2$, $d_v = v_1 - v_2$:
+   - Sum dynamics:
+     $$\tau_1 \dot s_x = -(1+w)s_x - \beta s_v + 2u, \quad \tau_2 \dot s_v = s_x - s_v$$
+     $$J_+ = \begin{pmatrix} -(1+w)/\tau_1 & -\beta/\tau_1 \\ 1/\tau_2 & -1/\tau_2 \end{pmatrix}$$
+     $$\operatorname{tr} J_+ = -\frac{1+w}{\tau_1} - \frac{1}{\tau_2} < 0, \quad \det J_+ = \frac{1+w+\beta}{\tau_1 \tau_2} > 0.$$
+     Sum mode is strictly Hurwitz stable.
+   - Difference dynamics:
+     $$\tau_1 \dot d_x = -(1-w)d_x - \beta d_v = (w-1)d_x - \beta d_v, \quad \tau_2 \dot d_v = d_x - d_v$$
+     $$J_- = \begin{pmatrix} (w-1)/\tau_1 & -\beta/\tau_1 \\ 1/\tau_2 & -1/\tau_2 \end{pmatrix}$$
+     $$\operatorname{tr} J_- = \frac{w-1}{\tau_1} - \frac{1}{\tau_2}, \quad \det J_- = \frac{-(w-1) - (-\beta)}{\tau_1 \tau_2} = \frac{1+\beta-w}{\tau_1 \tau_2}.$$
+   *Verification:* **Exact match**.
+
+3. **Bifurcation / Instability Range**:
+   $J_-$ has eigenvalues with positive real parts if either $\det J_- < 0$ or ($\operatorname{tr} J_- > 0$ and $\det J_- > 0$).
+   - $\operatorname{tr} J_- > 0 \iff w - 1 > \frac{\tau_1}{\tau_2} \iff w > 1 + \frac{\tau_1}{\tau_2}$.
+   - $\det J_- > 0 \iff w < 1 + \beta$.
+   Together: $1 + \frac{\tau_1}{\tau_2} < w < 1 + \beta$ generates a Hopf bifurcation condition across $\operatorname{tr} J_- = 0$.
+   *Verification:* **Correct**.
+
+4. **Phase Oscillator Difference Dynamics**:
+   $$\dot\phi_i = \omega_i + \sum_j K_{ij} \sin(\phi_j - \phi_i - \psi_{ij})$$
+   For $N=2$, $\psi_{12} = \psi_{21} = 0$, $K_{12} = K_{21} = K > 0$, $\delta = \phi_2 - \phi_1$:
+   $$\dot\phi_1 = \omega_1 + K \sin(\phi_2 - \phi_1) = \omega_1 + K \sin\delta$$
+   $$\dot\phi_2 = \omega_2 + K \sin(\phi_1 - \phi_2) = \omega_2 - K \sin\delta$$
+   $$\dot\delta = \dot\phi_2 - \dot\phi_1 = (\omega_2 - \omega_1) - 2K \sin\delta = \Delta\omega - 2K \sin\delta.$$
+   - Equilibrium: $\sin\delta^* = \frac{\Delta\omega}{2K}$, requiring $|\Delta\omega| \le 2K$.
+   - Linearization around $\delta^*$: $\frac{d}{d\delta}(\dot\delta) = -2K \cos\delta^*$.
+   - For stability: $-2K \cos\delta^* < 0 \iff \cos\delta^* > 0$.
+   *Verification:* **Exact and rigorous**. Boundary $|\Delta\omega| = 2K \implies \cos\delta^* = 0$ (saddle-node bifurcation; nonhyperbolic).
+
+---
+
+### 2. Units and Dimensional Homogeneity
+
+- **Matsuoka rate model**:
+  - $\tau_1, \tau_2$: dimensions of time $[T]$.
+  - $\dot x_i, \dot v_i$: $[1/T]$.
+  - $x_i, v_i, y_i, u, \beta, w$: dimensionless normalized rate quantities.
+  - RHS of $\tau_1 \dot x_i$ has all dimensionless terms; dividing by $\tau_1$ gives $[1/T]$.
+- **Phase coupling model**:
+  - $\phi_i, \psi_{ij}$: dimensionless radians.
+  - $\omega_i$: $[\mathrm{rad}/T] \equiv [1/T]$.
+  - $K_{ij}$: $[\mathrm{rad}/T] \equiv [1/T]$.
+  - Argument of sine: dimensionless.
+- **Laplacian matrix $L$**:
+  - Elements have units of $K_{ij}$ ($[1/T]$).
+  - $\dot\eta = -L\eta$ is dimensionally consistent ($[1/T] \times [\mathrm{dimensionless}] = [1/T]$).
+
+---
+
+### 3. Code Audit (`MatsuokaOscillator`)
+
+1. **Python syntax and typing**: Valid Python 3.10+ / 3.12 syntax with complete type annotations.
+2. **Post-init parameter checks**:
+   - Accurately checks shape `(2,)`, finiteness, strict positivity for `tau`, and nonnegativity for `gains` and `drive`.
+   - Immutable update via `object.__setattr__(self, "tau", tuple(times))` is correct for `@dataclass(frozen=True)`.
+3. **State checking**:
+   - `checked_state` verifies shape `(4,)`, finiteness, and creates a copy.
+4. **Integration logic & solver robustness**:
+   - `solve_ivp` called with explicit tolerances `rtol=1e-10`, `atol=1e-12`.
+   - Vectorized evaluation across `t_eval=grid` starting at $0$ strictly increasing.
+   - Vector field equations inside `dynamics` match the mathematical definitions verbatim.
+5. **Initial condition in script**:
+   - `initial = np.array([0.1, 0, -0.1, 0])` is asymmetric ($x_1 = 0.1, x_2 = -0.1$), breaking the symmetric invariant subspace and allowing the unstable antisymmetric mode to grow.
+
+---
+
+### 4. Biological, Biomechanical, and Empirical Scope
+
+- **Isolated cord evidence**: Precisely identifies Cohen & Wallén (1980) as establishing central rhythmic output in isolated lamprey spinal cord with chemical excitation (D-glutamate, L-DOPA) while explicitly bounding what it does not prove (not free swimming, not human golf swing, not Matsuoka rate-equations).
+- **Quadruped phase vectors**:
+  - Foot ordering explicitly stated: (LF, RF, LH, RH).
+  - Trot: $\alpha = (0, \pi, \pi, 0) \implies$ LF and RH are in phase ($0$), RF and LH are in phase ($\pi$). Diagonal pairs synchronous. **Correct.**
+  - Pace: $\alpha = (0, \pi, 0, \pi) \implies$ LF and LH are in phase ($0$), RF and RH are in phase ($\pi$). Ipsilateral pairs synchronous. **Correct.**
+  - Bound: $\alpha = (0, 0, \pi, \pi) \implies$ forelegs synchronous ($0$), hindlegs synchronous ($\pi$). **Correct.**
+  - Distinguishes phase vectors from actual physical gaits (duty factor, foot clearance, contact wrench).
+- **Kinematic sequence & golf mechanics**:
+  - Correctly notes that proximal-to-distal velocity peak ordering (pelvis $\to$ thorax $\to$ arm $\to$ club) is kinematic observation and does not prove coupled neural oscillators or passive elastic whip models without modeling plant dynamics, constraints, and work.
+
+---
+
+### 5. Summary of Findings
+
+- **Unresolved Defects**: None. Every equation, sign, unit, matrix entry, and bifurcation bound is derived and validated.
+- **Discretionary / Optional Refinements (for lead adjudication)**:
+  - In Section 3, while defining the phase model, $\psi_{ij} = \alpha_j - \alpha_i$ is used. Note that with $\phi_j - \phi_i - \psi_{ij}$, setting $\phi_i = \omega t + \alpha_i$ gives $\phi_j - \phi_i - \psi_{ij} = (\omega t + \alpha_j) - (\omega t + \alpha_i) - (\alpha_j - \alpha_i) = 0$, confirming the target phases are uncoupled equilibria. If directional convention in graph literature is defined as $\psi_{ij} = \alpha_i - \alpha_j$, signs invert; the text's internal convention is consistent and correct.
+  - In Exercise 1, "Derive $J_+$ and $J_-$" could optionally prompt the student to compute the exact Hopf frequency $\omega = \sqrt{\det J_-}$ at $\operatorname{tr} J_- = 0$.

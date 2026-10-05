@@ -1,0 +1,29 @@
+================ pre_pr: Local CI Gate Runner ================
+Running diff-scoped pytest: C:\Users\diete\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Scripts\python.exe -m pytest tests/test_experimental_methods_listing.py -p no:pytestqt
+.................                                                        [100%]
+============================ slowest 20 durations =============================
+0.96s setup    tests/test_experimental_methods_listing.py::test_integer_positions_keep_fractional_motion
+
+(19 durations < 0.005s hidden.  Use -vv to show these durations.)
+17 passed in 1.67s
+[PASS] Lint & Format
+[PASS] Diff Mypy
+[PASS] Affected Tests
+[FAIL] Semgrep & Import Policy
+       FAIL: semgrep check failed:
+       ┌────────────────┐
+       │ 1 Code Finding │
+       └────────────────┘
+                                                     
+           tests\test_experimental_methods_listing.py
+           ❯❱ python.lang.security.audit.exec-detected.exec-detected
+                 ❰❰ Blocking ❱❱
+                 Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this 
+                 content can be input from outside the program, this may be a code injection vulnerability. Ensure
+                 evaluated content is not definable by external sources.                                          
+                 Details: https://sg.run/ndRX                                                                     
+                                                                                                                  
+                  27┆ exec(compile(match.group(1), str(CHAPTER), "exec"), namespace)
+[PASS] Policy & Fragment Validators
+==============================================================
+Pre-PR gates FAILED. Fix issues before pushing.

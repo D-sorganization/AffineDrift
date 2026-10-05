@@ -1,0 +1,40 @@
+### Bounded Integration Audit Findings
+
+#### 1. Nature of the Changes
+* **Navigation & Cross-Referencing Additions (14 files):**
+  * `articles/technology-club-fitting.qmd`
+  * `articles/technology-heavy-hit-impact-coupling.qmd`
+  * `articles/technology-launch-monitors.qmd`
+  * `articles/technology-motion-capture.qmd`
+  * `articles/theory-part2.qmd`
+  * `articles/theory-part3.qmd`
+  * `models/active-impedance-identification.qmd`
+  * `models/bilateral-hand-wrench-validation.qmd`
+  * `models/equipment-individual-response.qmd`
+  * `models/hybrid-impact-contact.qmd`
+  * `models/model-ladder.qmd`
+  * `models/neural-timing-feedback.qmd`
+  * `models/population-generalization.qmd`
+  * `models/research-protocol-readiness.qmd`
+  * **Classification:** Append-only additions of a trailing `## Related Articles` section containing Markdown links. No existing text, equations, or scientific arguments were altered or deleted in these files.
+
+* **Media/Accessibility Enhancement (1 file):**
+  * `pages/daydreams-doodles.qmd`
+  * **Classification:** Purely presentational/accessibility update. Replaces a bare `<img>` tag with a `<picture>` element adding responsive WebP sources and `(prefers-reduced-motion: reduce)` poster support, retaining the original GIF as a fallback with explicit `width` and `height`. No scientific claims or text modified.
+
+* **Digest/Evidence Tracking Updates (1 file):**
+  * `resources/resources-datasets.qmd`
+  * **Classification:** Updates SHA-256 hash entries in a summary table for `library.json` and `public_summary.json`.
+  * **Non-Navigation / Claim Assessment:** While this does not alter prose arguments or physical equations directly, updating checksum entries reflects modifications to underlying data artifacts (`library.json`, `public_summary.json`). If these artifact changes correspond to content updates, they represent updated audit state rather than purely static presentation.
+
+#### 2. Claim Changes & Lost Content
+* **Scientific Arguments / Equations:** **None altered.** Zero mathematical formulations, derivations, boundary conditions, or scientific claims in the audited articles/models were modified.
+* **Lost Content:** **None detected.** All additions are strictly additive (append-only related links or DOM enhancement wrapping existing image media).
+
+---
+
+### Audit Boundaries & Limitations
+
+* **Scope Limit:** Strictly evaluated the provided diff hunk in isolation. No tool calls or repository inspections were executed.
+* **Underlying Artifacts Unverified:** The contents and diffs of the modified JSON payloads (`library.json`, `public_summary.json`) are not present in this diff; their updated digests could not be independently inspected or verified.
+* **No Global Validation:** Neither target hyperlink resolution, global layout consistency, rendered Quarto HTML output, nor trust ledger cross-checks (`data/trust/*.json`) were evaluated across the rest of the workspace.

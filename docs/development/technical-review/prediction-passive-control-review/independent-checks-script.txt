@@ -1,0 +1,95 @@
+"""Run from the repository root; manufactured identities, not biological evidence."""
+import json
+from pathlib import Path
+import numpy as np
+from scipy.special import logsumexp
+
+rng = np.random.default_rng(4915)
+count = 100
+errors = {}
+
+# Cartesian energy derivative versus the Lagrangian velocity contraction.
+q = rng.uniform(-0.7, 0.7, (count, 2))
+v = rng.uniform(-2, 2, (count, 2))
+mass = rng.uniform(1, 12, count)
+length = rng.uniform(0.5, 2, count)
+delta = q[:, 0] - q[:, 1]
+factor = mass * length**2 * np.sin(delta)
+c = factor[:, None] * np.column_stack((-v[:, 1]**2, v[:, 0]**2))
+v_c = np.einsum('ni,ni->n', v, c)
+half_mass_derivative = factor * (v[:, 0] - v[:, 1]) * v[:, 0] * v[:, 1]
+errors['passive_energy_cancellation'] = float(np.max(np.abs(v_c-half_mass_derivative)))
+
+# Posterior model weights are invariant under common invertible units changes.
+means = rng.normal(size=(count, 3, 2))
+observed = rng.normal(size=(count, 1, 2))
+std = rng.uniform(0.4, 2, (count, 3, 2))
+prior = rng.dirichlet(np.ones(3), count)
+units = rng.uniform(0.2, 10, (count, 1, 2))
+loglik = -0.5 * (((observed-means)/std)**2).sum(axis=2)-np.log(std).sum(axis=2)
+loglik_scaled = -0.5 * (((observed-means)*units/(std*units))**2).sum(axis=2)
+loglik_scaled -= np.log(std*units).sum(axis=2)
+logits = loglik+np.log(prior)
+scaled = loglik_scaled+np.log(prior)
+weights = np.exp(logits-logsumexp(logits,axis=1,keepdims=True))
+weights_scaled = np.exp(scaled-logsumexp(scaled,axis=1,keepdims=True))
+errors['gaussian_units_invariance'] = float(np.max(np.abs(weights-weights_scaled)))
+
+# Fixed-probability expected one-step loss: its gradient vanishes at the optimizer.
+gains = rng.uniform(0.3, 8, (count, 3))
+targets = rng.uniform(-5, 5, (count, 3))
+optimal = (prior*gains*targets).sum(axis=1)/(prior*gains**2).sum(axis=1)
+gradient = 2*(prior*gains*(gains*optimal[:,None]-targets)).sum(axis=1)
+errors['expected_inverse_loss_stationarity'] = float(np.max(np.abs(gradient)))
+
+# Additive-noise average cost independently from stationary scalar variance.
+a = rng.uniform(-2, 2, count)
+b = rng.uniform(0.5, 2, count)
+q_cost = rng.uniform(0.2, 3, count)
+r_cost = rng.uniform(0.3, 3, count)
+diffusion = rng.uniform(0.1, 2, count)
+p = (a+np.sqrt(a*a+b*b*q_cost/r_cost))/(b*b/r_cost)
+k = b*p/r_cost
+closed = a-b*k
+assert np.all(closed < 0)
+variance = diffusion**2/(-2*closed)
+direct_cost = (q_cost+r_cost*k*k)*variance
+errors['additive_average_cost'] = float(np.max(np.abs(direct_cost-p*diffusion**2)))
+
+# Scalar control-noise HJB minimization with strictly positive command curvature.
+sigma = rng.uniform(0, 2, count)
+value_coefficient = rng.uniform(0.1, 4, count)
+x = rng.normal(size=count)
+curvature = r_cost+sigma*sigma*value_coefficient
+command = -b*value_coefficient*x/curvature
+stationarity = 2*curvature*command+2*b*value_coefficient*x
+errors['control_noise_stationarity'] = float(np.max(np.abs(stationarity)))
+
+# Minimum jerk: independent polynomial boundary solve and exact Gaussian quadrature.
+constraints = np.array([[1,0,0,0,0,0],[1,1,1,1,1,1],[0,1,0,0,0,0],
+                        [0,1,2,3,4,5],[0,0,2,0,0,0],[0,0,2,6,12,20]],float)
+displacement = rng.uniform(-5,5,count)
+duration = rng.uniform(0.3,3,count)
+rhs = np.zeros((6,count)); rhs[1]=displacement
+coefficients = np.linalg.solve(constraints,rhs).T
+nodes, quadrature = np.polynomial.legendre.leggauss(5)
+s = (nodes+1)/2
+jerk = 6*coefficients[:,3,None]+24*coefficients[:,4,None]*s+60*coefficients[:,5,None]*s*s
+integral = (jerk*jerk @ (quadrature/2))/duration**5
+errors['minimum_jerk_integral'] = float(np.max(np.abs(integral-720*displacement**2/duration**5)))
+
+# Finite-state free-energy identity uses direct joint normalization independently.
+joint = rng.uniform(0.1,1,(count,3,2)); joint /= joint.sum(axis=(1,2),keepdims=True)
+belief = rng.dirichlet(np.ones(3),count)
+likelihood_column = joint[:,:,1]
+evidence = likelihood_column.sum(axis=1)
+posterior = likelihood_column/evidence[:,None]
+free_energy = (belief*(np.log(belief)-np.log(likelihood_column))).sum(axis=1)
+kl = (belief*(np.log(belief)-np.log(posterior))).sum(axis=1)
+errors['free_energy_identity'] = float(np.max(np.abs(free_energy-kl+np.log(evidence))))
+assert max(errors.values()) < 1e-6, errors
+record = {'seed':4915,'cases_each':count,'maximum_absolute_error':errors,'threshold':1e-6,
+          'scope':'Manufactured mathematical identities; no biological or gait validation'}
+Path('reports/technical-review/prediction-passive-control-independent-checks.json').write_text(
+    json.dumps(record,indent=2)+'\n',encoding='utf-8')
+print(json.dumps(record,indent=2))

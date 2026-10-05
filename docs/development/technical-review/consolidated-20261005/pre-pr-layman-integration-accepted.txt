@@ -1,0 +1,48 @@
+Success: no issues found in 2 source files
+================ pre_pr: Local CI Gate Runner ================
+Running diff-scoped pytest: C:\Users\diete\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Scripts\python.exe -m pytest tests/test_affine_control/test_swing_analysis.py tests/test_biological_inverse_listings.py tests/test_computational_lqr_listings.py tests/test_cpg_listings.py tests/test_experimental_methods_listing.py tests/test_inference_flexible_control_listings.py tests/test_internal_model_listings.py tests/test_joint_kinematics_listing.py tests/test_model_urdf_listing.py tests/test_motor_learning_listings.py tests/test_neural_architecture_listings.py tests/test_parameter_estimation_listing.py tests/test_passive_phase_listings.py tests/test_platform_contract_listings.py tests/test_putting_publication.py tests/test_rl_pendulum_listing.py tests/test_simulation_feedback_listings.py tests/test_trajectory_quadratic_listing.py tests/test_visualization_analysis_listings.py -p no:pytestqt
+........................................................................ [ 18%]
+........................................................................ [ 37%]
+........................................................................ [ 56%]
+........................................................................ [ 75%]
+........................................................................ [ 94%]
+...................                                                      [100%]
+============================ slowest 20 durations =============================
+0.57s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_synthetic_swing_is_deterministic
+0.33s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_control_contribution_is_exactly_the_torque_response
+0.26s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_summary_runs_and_reports_a_plausible_speed
+0.25s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_split_is_not_a_fixed_ratio
+0.25s call     tests/test_affine_control/test_swing_analysis.py::TestZtcfDecomposition::test_zero_torque_gives_zero_control_contribution
+0.16s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_decomposition_requires_torques
+0.12s call     tests/test_affine_control/test_swing_analysis.py::TestPipeline::test_mass_matrix_stays_positive_definite_along_the_swing
+0.07s call     tests/test_model_urdf_listing.py::test_mujoco_import_matches_analytic_mechanics
+0.03s call     tests/test_simulation_feedback_listings.py::test_downward_rest_stays_at_rest
+0.03s call     tests/test_cpg_listings.py::test_scaled_drive_and_initial_preserve_time_dependence
+0.03s call     tests/test_cpg_listings.py::test_time_scaling_preserves_state_curve
+0.02s call     tests/test_affine_control/test_swing_analysis.py::test_grid_includes_endpoints_without_exceeding_step[0.3005-0.007]
+0.02s call     tests/test_cpg_listings.py::test_simulate_shape_and_endpoint_included
+0.02s call     tests/test_simulation_feedback_listings.py::test_forced_trajectory_energy_balance
+0.01s call     tests/test_cpg_listings.py::test_simulate_copies_initial_state_and_does_not_mutate
+0.01s call     tests/test_inference_flexible_control_listings.py::test_rotor_constant_excitation_analytic
+0.01s call     tests/test_platform_contract_listings.py::test_energy_work_balance[0.0]
+0.01s call     tests/test_cpg_listings.py::test_symmetric_initial_state_yields_symmetric_trajectory
+0.01s call     tests/test_rl_pendulum_listing.py::test_run_pendulum_physics_and_reward
+0.01s call     tests/test_affine_control/test_swing_analysis.py::test_inverse_torques_recover_prescribed_second_derivative
+379 passed in 10.25s
+
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_streamlit_app.py:10: could not import 'streamlit': No module named 'streamlit'
+SKIPPED [1] tests\test_streamlit_bootstrap.py:15: could not import 'streamlit': No module named 'streamlit'
+SKIPPED [1] tests\test_streamlit_visualization.py:10: could not import 'streamlit': No module named 'streamlit'
+[PASS] Lint & Format
+[PASS] Diff Mypy
+[PASS] Affected Tests
+[PASS] Consistency Tests
+[PASS] Semgrep & Import Policy
+[PASS] Policy & Fragment Validators
+[PASS] Fleet Policy Gate
+       PASS (scripts/fleet_policy_gate.py not present in this repo; skipped; scripts/render_agent_rules.py not present in this repo; skipped)
+[PASS] Workflow Lint
+       PASS (no workflow files changed)
+==============================================================
+All pre-PR gates PASSED. Ready to open PR and arm auto-merge.

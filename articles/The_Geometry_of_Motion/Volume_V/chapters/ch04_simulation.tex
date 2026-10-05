@@ -1,146 +1,171 @@
 \chapter{Forward and Inverse Simulation}
 \label{ch:simulation}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+Forward dynamics predicts acceleration from a state and specified forces. Inverse
+dynamics computes the generalized forces required by a specified motion, under
+a specified model and external loading. Inverse kinematics instead solves for
+configurations that realize a geometric task. These operations answer different
+questions: an inverse-dynamic torque is not a unique explanation of the muscles
+or intentions that produced an observed swing.
 
-\epigraph{Forward simulation answers ``what happens if\ldots?''\\
-Inverse dynamics answers ``what caused this?''}{}
+\section{Dynamics Evaluation Is Not Time Integration}
 
-The forward dynamics problem computes accelerations from forces, while inverse dynamics
-(also called the inverse kinematics problem when phrased in terms of finding required
-torques) computes forces from desired accelerations. Both are fundamental to control design
-and trajectory planning.
+For a fixed-base rigid chain with minimal joint coordinates, write
+\begin{equation}
+ M(q)\ddot q+C(q,\dot q)\dot q+g(q)=\tau.
+ \label{eq:simulation-rigid-dynamics}
+\end{equation}
+Here $M$ is the inertia matrix, $C\dot q$ the velocity-dependent generalized
+force, and $g=\nabla_q U$ the gravitational term. The two algebraic operations are
+\[
+ \operatorname{FD}(q,\dot q,\tau)
+   =\operatorname{solve}(M,\tau-C\dot q-g),\qquad
+ \operatorname{ID}(q,\dot q,\ddot q)=M\ddot q+C\dot q+g.
+\]
+Solving the linear system avoids explicitly forming $M^{-1}$.
 
-\section{Forward Dynamics With the Companion Platform}
+The recursive Newton--Euler algorithm (RNEA) evaluates inverse dynamics using
+both a forward kinematic/acceleration pass and a backward wrench pass. They are
+not alternative switches for forward versus inverse dynamics. One can construct
+the bias and mass-matrix columns with repeated inverse-dynamics calls, then
+solve for acceleration; the articulated-body algorithm (ABA) computes forward
+dynamics directly. Neither RNEA nor ABA advances time. A separate integrator
+uses the resulting vector field~\cite{Featherstone2008,LynchParkRNEAReview}.
 
-Forward dynamics integration typically uses explicit or implicit Runge-Kutta methods,
-or specialized algorithms such as the Recursive Newton-Euler Algorithm (RNEA) for
-rigid-body systems \cite{Featherstone2008, Featherstone1983}.
+\section{A Reproducible Rigid Golf-Chain Example}
 
-\begin{lstlisting}[language=Python, caption={Forward dynamics simulation pipeline.}]
+The following listing runs from the repository root with Python 3.12, NumPy and
+SciPy. It uses the same canonical uniform-rod model as the capstone
+(Chapter~\ref{ch:golf-capstone}), rather than a second incompatible set of
+pendulum equations. The three lengths are $(0.28,0.46,1.10)$ metres and masses
+$(2.16,1.79,0.30)$ kilograms; these are teaching parameters, not measured subject
+data. Each COM is halfway along its rod and $I_{\mathrm{COM}}=m\ell^2/12$.
+
+The plane is $(x,y)$ with gravity along $-y$. The first angle is measured from
+$+x$; the other two are relative angles. Thus a straight downward chain is
+$q=(-\pi/2,0,0)$, whereas $q=0$ is horizontal. The state is
+$(q_1,q_2,q_3,\dot q_1,\dot q_2,\dot q_3)$, with radians, seconds and newton-metres
+as the angular, time and torque conventions. This fixed-base model has no
+contact, joint limits, damping, muscle activation or shaft deformation. Its
+generalized torque input is not an excitation signal.
+
+\begin{lstlisting}[language=Python, caption={Forward and Inverse Dynamics of the Canonical Rigid Chain}]
+from collections.abc import Callable
+
 import numpy as np
 from scipy.integrate import solve_ivp
 
-def forward_dynamics_rnea(
-    q: np.ndarray,
-    qd: np.ndarray,
-    tau: np.ndarray,
-    model_params: dict
-) -> np.ndarray:
-    """Compute joint accelerations using RNEA-based forward dynamics.
+from src.affine_control.swing_analysis import SwingAnalysis
 
-    Parameters
-    ----------
-    q : np.ndarray, shape (n,)
-        Joint positions.
-    qd : np.ndarray, shape (n,)
-        Joint velocities.
-    tau : np.ndarray, shape (n,)
-        Applied joint torques.
-    model_params : dict
-        Model parameters (masses, lengths, inertias).
+RIGID_MODEL = SwingAnalysis().model()
 
-    Returns
-    -------
-    np.ndarray, shape (n,)
-        Joint accelerations.
-    """
-    n = len(q)
-    masses = model_params['masses']
-    lengths = model_params['lengths']
-    g = model_params.get('gravity', 9.81)
 
-    # Simple 2-link model for demonstration
-    if n == 2:
-        m1, m2 = masses[:2]
-        l1, l2 = lengths[:2]
-        lc1, lc2 = l1/2, l2/2
-        I1 = m1 * l1**2 / 12
-        I2 = m2 * l2**2 / 12
+def finite_vector(value: np.ndarray, size: int) -> np.ndarray:
+    """Return a finite vector of the required physical dimension."""
+    result = np.asarray(value, dtype=float)
+    if result.shape != (size,) or not np.all(np.isfinite(result)):
+        raise ValueError(f"Expected a finite vector of size {size}")
+    return result
 
-        # Mass matrix
-        M = np.array([
-            [I1 + I2 + m1*lc1**2 + m2*(l1**2 + lc2**2 + 2*l1*lc2*np.cos(q[1])),
-             I2 + m2*(lc2**2 + l1*lc2*np.cos(q[1]))],
-            [I2 + m2*(lc2**2 + l1*lc2*np.cos(q[1])),
-             I2 + m2*lc2**2]
-        ])
 
-        # Coriolis
-        h = m2 * l1 * lc2 * np.sin(q[1])
-        C = np.array([[-h*qd[1], -h*(qd[0]+qd[1])],
-                       [h*qd[0], 0]])
+def dynamic_terms(state: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Return the inertia matrix and total gravity/velocity bias."""
+    state = finite_vector(state, 6)
+    position, velocity = state[:3], state[3:]
+    mass = RIGID_MODEL.rigid_mass_matrix(position)
+    bias = (RIGID_MODEL.coriolis(position, velocity) @ velocity
+            + RIGID_MODEL.gravity_torque(position))
+    return mass, bias
 
-        # Gravity
-        gvec = np.array([
-            (m1*lc1 + m2*l1)*g*np.sin(q[0]) + m2*lc2*g*np.sin(q[0]+q[1]),
-            m2*lc2*g*np.sin(q[0]+q[1])
-        ])
 
-        qdd = np.linalg.solve(M, tau - C @ qd - gvec)
-    else:
-        # Placeholder for general n-DOF
-        qdd = np.zeros(n)
+def inverse_dynamics(state: np.ndarray,
+                     acceleration: np.ndarray) -> np.ndarray:
+    """Return required generalized torque for this rigid model."""
+    mass, bias = dynamic_terms(state)
+    return mass @ finite_vector(acceleration, 3) + bias
 
-    return qdd
 
-# Example simulation
-params = {'masses': [2.0, 1.0], 'lengths': [0.3, 0.25], 'gravity': 9.81}
-q0 = np.array([np.pi/4, np.pi/6])
-qd0 = np.zeros(2)
-qdd = forward_dynamics_rnea(q0, qd0, np.zeros(2), params)
-print(f"Gravity-driven accelerations: {qdd}")
+def forward_dynamics(state: np.ndarray,
+                     torque: np.ndarray) -> np.ndarray:
+    """Return acceleration; reject unsupported state/torque shapes."""
+    mass, bias = dynamic_terms(state)
+    return np.linalg.solve(mass, finite_vector(torque, 3) - bias)
+
+
+def simulate(initial: np.ndarray, times: np.ndarray,
+             control: Callable[[float, np.ndarray], np.ndarray]
+             ) -> dict[str, np.ndarray]:
+    """Integrate a smooth torque law at requested output times."""
+    initial = finite_vector(initial, 6)
+    times = np.asarray(times, dtype=float)
+    if (times.ndim != 1 or times.size < 2
+            or not np.all(np.isfinite(times)) or times[0] != 0
+            or np.any(np.diff(times) <= 0)):
+        raise ValueError("Times must increase from zero")
+
+    def derivative(time: float, state: np.ndarray) -> np.ndarray:
+        """Evaluate continuous feedback at internal solver stages."""
+        acceleration = forward_dynamics(state, control(time, state))
+        return np.concatenate([state[3:], acceleration])
+
+    result = solve_ivp(derivative, (0, times[-1]), initial,
+                       t_eval=times, method="DOP853",
+                       rtol=1e-8, atol=1e-10)
+    if not result.success:
+        raise RuntimeError("Forward integration failed")
+    return {"time": result.t, "state": result.y.T}
 \end{lstlisting}
 
-\section{Simulation Loop and Integration Schemes}
+For example, passing a callback that returns \texttt{np.zeros(3)} releases this
+model with zero applied joint torque. The solver still includes gravity and
+inertial coupling. Its adaptive internal steps differ from the requested output
+times. The callback describes continuous feedback evaluated at intermediate
+states; a sampled controller with held commands must instead specify its update
+times and integrate separately across those discontinuities. Contact events
+likewise require an event law and, where applicable, a velocity reset.
 
-Figure~\ref{fig:sim-loop} illustrates the typical forward simulation loop. At each
-timestep, we compute accelerations from the equations of motion, integrate to update
-velocities and positions, and advance to the next timestep.
+The canonical model obtains gravity and Christoffel terms using finite
+differences with coordinate step $10^{-6}$ radians. Tightening an integrator's
+tolerance cannot remove the derivative approximation error. The listing is an
+explicit mass-matrix solve, not an implementation of RNEA or a benchmark of the
+companion platform's engine adapters.
+The method named \texttt{gravity\_torque} returns $\nabla U$, the holding-torque
+term on the left of the dynamics equation, not the applied gravity force
+$-\nabla U$.
 
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[
-    every node/.style={align=center, draw, rounded corners, minimum width=2.2cm, text centered, font=\small},
-    ]
-    % State
-    \node[fill=blue!20] (state) at (0, 0) {Current State\\$\bm{q}, \dot{\bm{q}}$};
-    % Compute accelerations
-    \node[fill=green!20] (forces) at (3, 0) {Compute Forces\\$\bm{f}(\bm{q}, \dot{\bm{q}}, t)$};
-    % Solve dynamics
-    \node[fill=yellow!20] (dynamics) at (6, 0) {Forward Dynamics\\$\ddot{\bm{q}} = M^{-1}(\bm{f} - C - G)$};
-    % Integrate
-    \node[fill=orange!20] (integrate) at (9, 0) {Integrate\\(RK4, Euler, etc)};
-    % Next state
-    \node[fill=blue!20] (next) at (12, 0) {Next State\\$\bm{q}_{k+1}, \dot{\bm{q}}_{k+1}$};
+\section{Verification Before Interpretation}
 
-    % Arrows
-    \draw[->] (state) -- (forces);
-    \draw[->] (forces) -- (dynamics);
-    \draw[->] (dynamics) -- (integrate);
-    \draw[->] (integrate) -- (next);
-    \draw[->] (12.8, -0.3) -- (12.8, -1.2) -- (0, -1.2) -- (0, -0.4) node[align=center, above, pos=0.5, fill=white] {repeat};
-  \end{tikzpicture}
-  \caption{Forward simulation loop: from current state to forces (gravity, contacts, actuators),
-    compute accelerations via forward dynamics, integrate, and update to next state.}
-  \label{fig:sim-loop}
-\end{figure}
+The identity $\operatorname{ID}(\operatorname{FD}(\tau))=\tau$ at a common
+$(q,\dot q)$ checks algebra and conventions, but shared errors can cancel. Use
+independent tests too: gravitational moments at a horizontal configuration,
+equilibrium of the downward chain, positive inertia, and mechanical work balance.
+For this model,
+\[
+ E=\tfrac12\dot q^T M(q)\dot q+U(q),\qquad
+ E(t)-E(0)=\int_0^t\dot q^T\tau\,\mathrm dt.
+\]
+This follows from the Christoffel identity
+$\dot M-2C$ skew-symmetric. It does not require $C$ itself to be skew-symmetric.
+Energy residual and state/phase convergence should both be checked as numerical
+settings change; energy agreement alone does not establish trajectory accuracy.
 
-\section{Inverse Dynamics Pipeline}
-
-The inverse dynamics problem solves for torques given desired motion: given $\bm{q}(t),
-\dot{\bm{q}}(t), \ddot{\bm{q}}(t)$, compute $\bm{\tau}(t)$. This is implemented via the
-Recursive Newton-Euler Algorithm (RNEA) \cite{Featherstone2008, luh1980}. The RNEA
-can be run either forward (for forward dynamics) or backward (for inverse dynamics)
-through the kinematic chain.
+For measured golf motion the equation becomes, schematically,
+$M\dot v+h=B\tau+J^T\lambda$. Ground and hand forces, passive tissues and actuator
+dynamics must be allocated consistently. A floating base has unactuated
+equations; an arbitrary kinematic recording need not admit a feasible solution.
+Even when net joint torque is identified, many muscle-force combinations may
+produce it. Differentiation noise, filtering and inertia uncertainty propagate
+directly into that estimate. Forward replay under the inferred input tests
+consistency; independent measurements test the physical model.
 
 \section*{Exercises}
 \begin{enumerate}
-  \item Run forward dynamics for a 2-link pendulum and plot trajectories.
-  \item Implement inverse dynamics and verify $\text{ID}(\text{FD}(\tau)) = \tau$.
-  \item Compare with Pinocchio's RNEA implementation for timing.
+ \item Derive the horizontal gravitational moments from COM lever arms and
+ compare them with \texttt{inverse\_dynamics} at zero velocity and acceleration.
+ \item Release the straight downward and horizontal configurations. Explain why
+ only the first is an equilibrium, and compare energy residual with state error.
+ \item Apply a smooth torque, integrate its power, and refine the solver
+ tolerances. Distinguish time integration error from finite-difference error.
+ \item Specify the external-force and actuation assumptions needed to replay a
+ measured swing. Explain why a torque round trip cannot identify muscle forces.
 \end{enumerate}

@@ -1,0 +1,110 @@
+"""Run at repository root; manufactured mathematics, not human evidence."""
+import json
+from pathlib import Path
+import numpy as np
+
+rng = np.random.default_rng(4917)
+count = 100
+errors = {}
+
+# Scalar Gaussian posterior optimum from the derivative of both quadratic terms.
+prior_var = rng.uniform(0.2, 5, count)
+noise_var = rng.uniform(0.2, 5, count)
+prior_mean, observation = rng.normal(size=(2, count))
+gain = prior_var / (prior_var + noise_var)
+posterior = prior_mean + gain * (observation - prior_mean)
+gradient = (posterior - prior_mean) / prior_var + (posterior - observation) / noise_var
+errors['gaussian_precision_vs_gain_stationarity'] = float(np.max(np.abs(gradient)))
+
+# Tracking stationary point versus zero innovation with a perfect predictor.
+penalty = rng.uniform(0.1, 3, count)
+target = rng.uniform(0.1, 5, count)
+command = target / (1 + penalty)
+tracking_gradient = 2 * (command - target) + 2 * penalty * command
+errors['tracking_goal_stationarity'] = float(np.max(np.abs(tracking_gradient)))
+assert np.all(target**2 > 0)  # Zero command still misses this target.
+
+# Four-state Jacobian independently compared with sum/difference blocks.
+tau1 = rng.uniform(0.1, 1, count)
+tau2 = rng.uniform(0.1, 1, count)
+beta = rng.uniform(0.1, 3, count)
+weight = rng.uniform(0.1, 3, count)
+drive = rng.uniform(0.1, 3, count)
+equilibrium = drive / (1 + beta + weight)
+state = np.repeat(equilibrium[:, None], 4, axis=1)
+
+def rate(values):
+    x1, v1, x2, v2 = np.moveaxis(values, -1, 0)
+    return np.stack(((-x1-beta[:, None]*v1-weight[:, None]*np.maximum(x2,0)+drive[:, None])/tau1[:, None],
+                     (-v1+np.maximum(x1,0))/tau2[:, None],
+                     (-x2-beta[:, None]*v2-weight[:, None]*np.maximum(x1,0)+drive[:, None])/tau1[:, None],
+                     (-v2+np.maximum(x2,0))/tau2[:, None]), axis=-1)
+
+step = 1e-6
+plus = state[:, None, :] + step*np.eye(4)[None, :, :]
+minus = state[:, None, :] - step*np.eye(4)[None, :, :]
+jacobian = ((rate(plus)-rate(minus))/(2*step)).swapaxes(1,2)
+transform = np.array([[1,0,1,0],[0,1,0,1],[1,0,-1,0],[0,1,0,-1]])/np.sqrt(2)
+blocks = transform @ jacobian @ transform.T
+expected = np.zeros((count,4,4))
+expected[:,0,0]=-(1+weight)/tau1
+expected[:,2,2]=(weight-1)/tau1
+expected[:,0,1]=expected[:,2,3]=-beta/tau1
+expected[:,1,0]=expected[:,3,2]=1/tau2
+expected[:,1,1]=expected[:,3,3]=-1/tau2
+errors['rate_model_sum_difference_jacobian'] = float(np.max(np.abs(blocks-expected)))
+
+# Phase offsets: finite-difference coupling derivative at target is -L.
+alpha = rng.uniform(-np.pi, np.pi, (count,4))
+raw = rng.uniform(0.1, 2, (count,4,4))
+coupling = (raw + raw.swapaxes(1,2))/2
+coupling *= (1-np.eye(4))[None,:,:]
+bias = alpha[:,None,:]-alpha[:,:,None]
+
+def phase_rate(values):
+    relative = values[:,:,None,:]-values[:,:,:,None]
+    return np.sum(coupling[:,None,:,:]*np.sin(relative-bias[:,None,:,:]),axis=-1)
+
+plus = alpha[:,None,:]+step*np.eye(4)[None,:,:]
+minus = alpha[:,None,:]-step*np.eye(4)[None,:,:]
+derivative = ((phase_rate(plus)-phase_rate(minus))/(2*step)).swapaxes(1,2)
+negative_laplacian = coupling-np.eye(4)[None,:,:]*coupling.sum(axis=2)[:,:,None]
+errors['phase_target_laplacian'] = float(np.max(np.abs(derivative-negative_laplacian)))
+
+# Constant-input finite state satisfies recurrence, including nonzero x0.
+retention = rng.uniform(0.7,0.99,count)
+sensitivity = rng.uniform(0.01,0.3,count)
+perturbation = rng.uniform(-40,40,count)
+initial = rng.normal(size=count)
+pole = retention-sensitivity
+fixed = sensitivity*perturbation/(1-pole)
+trials = np.arange(31)
+states = fixed[:,None]+(initial-fixed)[:,None]*pole[:,None]**trials
+residual = states[:,1:]-(retention[:,None]*states[:,:-1]+sensitivity[:,None]*(perturbation[:,None]-states[:,:-1]))
+errors['finite_trial_recurrence'] = float(np.max(np.abs(residual)))
+
+# Opposing hidden states have zero output initially but rebound under zero error.
+fast = rng.uniform(0.3,0.6,count)
+slow = rng.uniform(0.8,0.99,count)
+memory = rng.uniform(0.1,10,count)
+hidden = np.stack((-memory[:,None]*fast[:,None]**trials,
+                    memory[:,None]*slow[:,None]**trials),axis=1)
+rebound = memory[:,None]*(slow[:,None]**trials-fast[:,None]**trials)
+errors['hidden_state_clamp_rebound'] = float(np.max(np.abs(hidden.sum(axis=1)-rebound)))
+assert np.all(rebound[:,1] > 0)
+
+# Least-squares subspace residual: normal equations and Pythagorean decomposition.
+basis, _ = np.linalg.qr(rng.normal(size=(count,5,2)), mode='reduced')
+delta = rng.normal(size=(count,5))
+coeff = np.einsum('nij,ni->nj',basis,delta)
+projection = np.einsum('nij,nj->ni',basis,coeff)
+residual = delta-projection
+normal = np.einsum('nij,ni->nj',basis,residual)
+pythagoras = np.sum(delta**2,axis=1)-np.sum(projection**2,axis=1)-np.sum(residual**2,axis=1)
+errors['subspace_restriction_residual'] = float(max(np.max(np.abs(normal)),np.max(np.abs(pythagoras))))
+
+assert all(error < 1e-6 for error in errors.values()), errors
+result = {'issue':4917,'seed':4917,'cases_each':count,'maximum_absolute_errors':errors,
+          'threshold':1e-6,'scope':'Independent manufactured mathematical checks; no biological validation'}
+Path('reports/technical-review/learning-rhythm-independent-checks.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+print(json.dumps(result,indent=2))

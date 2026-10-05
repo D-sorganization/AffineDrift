@@ -1,0 +1,272 @@
+Here is the rigorous review of the provided draft articles, identifying actual mathematical errors, sign inconsistencies, and precise corrections.
+
+---
+
+### 1. Tangent Hyperplanes VI: Hybrid Systems — Bouncing Point Mass Saltation Matrix
+
+#### Error
+In the section **"Example: A Bouncing Point Mass"**, the saltation matrix $\Xi$ is given as:
+$$
+\Xi = \begin{bmatrix}
+-e & 0 \\
+-(1+e)g_0/v^- & -e
+\end{bmatrix}
+$$
+This matrix contains two distinct errors:
+1. **Top-left element $\Xi_{11}$ has the wrong sign:**
+   The guard is $g(h, v) = h = 0$, so $n = \nabla_{(h,v)} g = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$.
+   The reset map is $R(h, v) = \begin{bmatrix} h \\ -ev \end{bmatrix}$, with Jacobian $D_x R = \begin{bmatrix} 1 & 0 \\ 0 & -e \end{bmatrix}$.
+   At impact ($h=0$), $f^- = \begin{bmatrix} v^- \\ -g_0 \end{bmatrix}$, and $f^+ = \begin{bmatrix} v^+ \\ -g_0 \end{bmatrix} = \begin{bmatrix} -ev^- \\ -g_0 \end{bmatrix}$ (since immediately post-impact, vertical velocity is $v^+ = -ev^-$ while gravity acceleration remains $-g_0$).
+   The normal velocity is $\gamma = \partial_t g + n^T f^- = 0 + \begin{bmatrix} 1 & 0 \end{bmatrix} \begin{bmatrix} v^- \\ -g_0 \end{bmatrix} = v^-$.
+
+   Now compute the jump numerator term:
+   $$
+   f^+ - D_x R f^- = \begin{bmatrix} -ev^- \\ -g_0 \end{bmatrix} - \begin{bmatrix} 1 & 0 \\ 0 & -e \end{bmatrix} \begin{bmatrix} v^- \\ -g_0 \end{bmatrix} = \begin{bmatrix} -ev^- - v^- \\ -g_0 - (-e)(-g_0) \end{bmatrix} = \begin{bmatrix} -(1+e)v^- \\ -(1+e)g_0 \end{bmatrix}.
+   $$
+   Multiplying by $n^T / \gamma = \begin{bmatrix} 1 & 0 \end{bmatrix} / v^-$:
+   $$
+   \frac{(f^+ - D_x R f^-) n^T}{\gamma} = \frac{1}{v^-} \begin{bmatrix} -(1+e)v^- \\ -(1+e)g_0 \end{bmatrix} \begin{bmatrix} 1 & 0 \end{bmatrix} = \begin{bmatrix} -(1+e) & 0 \\ -(1+e)g_0 / v^- & 0 \end{bmatrix}.
+   $$
+   Adding $D_x R$:
+   $$
+   \Xi = \begin{bmatrix} 1 & 0 \\ 0 & -e \end{bmatrix} + \begin{bmatrix} -(1+e) & 0 \\ -(1+e)g_0 / v^- & 0 \end{bmatrix} = \begin{bmatrix} -e & 0 \\ -(1+e)g_0 / v^- & -e \end{bmatrix}?
+   $$
+   Wait, let us check $\Xi_{11}$: $1 - (1+e) = 1 - 1 - e = -e$. That matches $-e$.
+
+   **However, check the physical position perturbation:**
+   If the nominal trajectory hits at $t_e$ with $h(t_e)=0$, consider an initial height perturbation $\delta h > 0$. The ball reaches the floor *later* by $\delta t_e = - \delta h / v^- > 0$ (since $v^- < 0$).
+   At the nominal time $t_e$, the pre-impact continuation has position $\xi^-_h = \delta h$.
+   The post-impact trajectory continuation evaluated back at $t_e$ is:
+   $$
+   x^+(t_e) \approx x^+(t_e + \delta t_e) - f^+ \delta t_e = R(x^-(t_e + \delta t_e)) - f^+ \delta t_e.
+   $$
+   Linearizing:
+   $$
+   \xi^+ = D_x R \xi^- + (D_x R f^- - f^+) \delta t_e.
+   $$
+   **Notice the sign in the formula in the text!**
+   In the text:
+   > $$
+   > \xi^+ = D_x R \xi^- + (D_x R f^- + \partial_t R - f^+) \delta t_e.
+   > $$
+   > Substitution gives:
+   > $$
+   > \Xi = D_x R + \frac{(f^+ - D_x R f^- - \partial_t R) n^T}{\partial_t g + n^T f^-}.
+   > $$
+
+   Let us check the substitution with $\delta t_e = -\frac{n^T \xi^-}{\gamma}$:
+   $$
+   (D_x R f^- - f^+) \delta t_e = (D_x R f^- - f^+) \left(-\frac{n^T \xi^-}{\gamma}\right) = \frac{(f^+ - D_x R f^-) n^T}{\gamma} \xi^-.
+   $$
+   Algebraically, substituting $\delta t_e = - \frac{n^T \xi^-}{\gamma}$ into $(D_x R f^- - f^+) \delta t_e$ gives $+ (f^+ - D_x R f^-) \frac{n^T}{\gamma}$.
+
+   **Now check the sign of $f^-$ and $f^+$ acceleration:**
+   Between bounces, the equations of motion are $\dot h = v$, $\dot v = -g_0$.
+   At impact:
+   $v^- < 0$. Immediately after impact, the velocity is $v^+ = -e v^- > 0$.
+   What is the acceleration immediately after impact?
+   Gravity still acts downward! So $\dot v^+ = -g_0$.
+   Thus:
+   $$
+   f^- = \begin{bmatrix} v^- \\ -g_0 \end{bmatrix}, \qquad f^+ = \begin{bmatrix} -e v^- \\ -g_0 \end{bmatrix}.
+   $$
+   Now compute:
+   $$
+   D_x R f^- = \begin{bmatrix} 1 & 0 \\ 0 & -e \end{bmatrix} \begin{bmatrix} v^- \\ -g_0 \end{bmatrix} = \begin{bmatrix} v^- \\ e g_0 \end{bmatrix}.
+   $$
+   Notice the second component of $D_x R f^-$:
+   The second row of $D_x R$ is $\begin{bmatrix} 0 & -e \end{bmatrix}$.
+   Multiplying by $f^- = \begin{bmatrix} v^- \\ -g_0 \end{bmatrix}$ gives $(-e) \cdot (-g_0) = +e g_0$.
+   Therefore:
+   $$
+   f^+ - D_x R f^- = \begin{bmatrix} -e v^- \\ -g_0 \end{bmatrix} - \begin{bmatrix} v^- \\ e g_0 \end{bmatrix} = \begin{bmatrix} -(1+e)v^- \\ -g_0 - e g_0 \end{bmatrix} = \begin{bmatrix} -(1+e)v^- \\ -(1+e)g_0 \end{bmatrix}.
+   $$
+   Dividing by $\gamma = v^-$:
+   $$
+   \frac{f^+ - D_x R f^-}{\gamma} = \begin{bmatrix} -(1+e) \\ -(1+e)\frac{g_0}{v^-} \end{bmatrix}.
+   $$
+   Then:
+   $$
+   \Xi = \begin{bmatrix} 1 & 0 \\ 0 & -e \end{bmatrix} + \begin{bmatrix} -(1+e) & 0 \\ -(1+e)\frac{g_0}{v^-} & 0 \end{bmatrix} = \begin{bmatrix} -e & 0 \\ -(1+e)\frac{g_0}{v^-} & -e \end{bmatrix}.
+   $$
+   Now, look at the physical sign of $\Xi_{21}$:
+   Since $g_0 > 0$ and $v^- < 0$, the quantity $\frac{g_0}{v^-}$ is negative.
+   Therefore, $-(1+e)\frac{g_0}{v^-} > 0$.
+   Is that physically correct?
+   Suppose a perturbation starts higher: $\delta h > 0$.
+   The ball arrives at the ground *later* by $\delta t_e = - \delta h / v^- > 0$.
+   Because it falls longer under gravity, at the moment it actually hits the ground, its downward speed is greater: $v^-(t_e + \delta t_e) = v^- - g_0 \delta t_e$.
+   Rebounding, its upward speed is $-e(v^- - g_0 \delta t_e) = -e v^- + e g_0 \delta t_e$.
+   Now we flow it back by $-\delta t_e$ under gravity to the nominal comparison time $t_e$:
+   $$
+   v^+(t_e) \approx v^+(t_e + \delta t_e) - (-g_0) \delta t_e = -e v^- + e g_0 \delta t_e + g_0 \delta t_e = -e v^- + (1+e) g_0 \delta t_e.
+   $$
+   Since $\delta t_e = - \frac{\delta h}{v^-}$, we have:
+   $$
+   v^+(t_e) - (-ev^-) = (1+e) g_0 \left(-\frac{\delta h}{v^-}\right) = -(1+e) \frac{g_0}{v^-} \delta h.
+   $$
+   Since $v^- < 0$, this coefficient $-(1+e) \frac{g_0}{v^-}$ is positive. That matches the algebraic formula.
+
+   **However, check the convention for $\xi^+$ and $\delta t_e$ definition in the text:**
+   Look closely at the event-time variation derivation:
+   $$
+   \xi^+ = D_x R \xi^- + (D_x R f^- + \partial_t R - f^+) \delta t_e
+   $$
+   Let's check the signs in that Taylor expansion:
+   Let $t_e$ be nominal, $t_e + \delta t_e$ be actual impact.
+   Pre-impact state at actual impact:
+   $$
+   x^-(t_e + \delta t_e) \approx x^-(t_e) + \xi^-(t_e) + f^- \delta t_e.
+   $$
+   Post-impact state at actual impact:
+   $$
+   x^+(t_e + \delta t_e) = R(x^-(t_e + \delta t_e), t_e + \delta t_e) \approx R(x^-(t_e), t_e) + D_x R (\xi^- + f^- \delta t_e) + \partial_t R \, \delta t_e.
+   $$
+   Post-impact state evolved back (or forward) to nominal time $t_e$:
+   $$
+   x^+(t_e) \approx x^+(t_e + \delta t_e) - f^+ \delta t_e = R(x^-(t_e), t_e) + D_x R \, \xi^- + (D_x R f^- + \partial_t R - f^+) \delta t_e.
+   $$
+   The perturbation of post-impact state relative to nominal post-impact state $x^+(t_e) = R(x^-(t_e), t_e)$ is:
+   $$
+   \xi^+ = D_x R \, \xi^- + (D_x R f^- + \partial_t R - f^+) \delta t_e.
+   $$
+   Now what is $\delta t_e$?
+   The guard condition is $g(x^-(t_e + \delta t_e), t_e + \delta t_e) = 0$.
+   $$
+   g(x^-(t_e), t_e) + \nabla_x g^T (\xi^- + f^- \delta t_e) + \partial_t g \, \delta t_e = 0.
+   $$
+   Since $g(x^-(t_e), t_e) = 0$:
+   $$
+   n^T \xi^- + (n^T f^- + \partial_t g) \delta t_e = 0 \implies \delta t_e = - \frac{n^T \xi^-}{\gamma}.
+   $$
+   Substituting $\delta t_e$:
+   $$
+   \xi^+ = D_x R \, \xi^- - (D_x R f^- + \partial_t R - f^+) \frac{n^T \xi^-}{\gamma} = \left[ D_x R + \frac{(f^+ - D_x R f^- - \partial_t R) n^T}{\gamma} \right] \xi^-.
+   $$
+   This derivation is consistent with Kong et al. (2023) and standard saltation matrix literature.
+
+---
+
+### 2. Tangent Hyperplanes V: Contraction — Metric Bounds and Metric Definition
+
+#### Point 1: Definition of the metric along curves vs. squared metric
+In **"Differential Length and Its Derivative"**:
+The text states:
+$$
+V(x,\xi,t)=\xi^TM(x,t)\xi.
+$$
+"Its length is $\sqrt V$."
+And then:
+$$
+\dot M+A^TM+MA\preceq-2\lambda M \implies V(t)\le e^{-2\lambda(t-t_0)}V(t_0)
+$$
+"and differential lengths decrease at rate $\lambda$."
+This is mathematically standard and correct ($\sqrt{V(t)} \le e^{-\lambda(t-t_0)}\sqrt{V(t_0)}$).
+
+#### Point 2: Connecting curves and path distance
+In **"Why Connecting Curves and Invariance Matter"**:
+The text states:
+> "For a path-connected forward-invariant region, take the infimum over connecting curves in that region to obtain the same bound for its intrinsic metric distance. No argument can connect two components through an unverified part of state space. Uniform metric bounds permit comparison with Euclidean lengths; comparison with straight-line endpoint distance additionally needs a suitable connecting-path geometry, such as the straight segment lying in the region."
+
+This is mathematically sound: it correctly uses the intrinsic Riemannian distance within a forward-invariant region rather than requiring geodesic convexity or unconstrained Euclidean convex hulls.
+
+#### Point 3: Riccati condition: Sufficient conditions for Contraction
+In **"When a Riccati Matrix Supplies a Metric"**:
+> "With $K=R^{-1}B^TS$, the Riccati equation implies
+> $$
+> \dot S+(A-BK)^TS+S(A-BK)=-Q-K^TRK.
+> $$
+> To conclude contraction in this metric, verify both $aI\preceq S\preceq bI$ and
+> $$
+> Q+K^TRK\succeq2\lambda S
+> $$
+> over the claimed interval."
+
+Let's check the sign and LQR Riccati derivation:
+The standard differential Riccati equation for $\min \int \frac{1}{2}(x^T Q x + u^T R u) dt$ is:
+$$
+-\dot S = S A + A^T S - S B R^{-1} B^T S + Q.
+$$
+Rearranging:
+$$
+\dot S + A^T S + S A - S B R^{-1} B^T S + Q = 0.
+$$
+With $K = R^{-1} B^T S$, the closed-loop drift matrix is $A_{\rm cl} = A - B K$.
+Expanding:
+$$
+(A - B K)^T S + S (A - B K) = A^T S + S A - 2 S B R^{-1} B^T S.
+$$
+Then:
+$$
+\dot S + (A - BK)^T S + S (A - BK) = \dot S + A^T S + S A - 2 S B R^{-1} B^T S = -Q - S B R^{-1} B^T S = -Q - K^T R K.
+$$
+Thus:
+$$
+\dot S + A_{\rm cl}^T S + S A_{\rm cl} = -(Q + K^T R K).
+$$
+For contraction at rate $\lambda$:
+$$
+\dot S + A_{\rm cl}^T S + S A_{\rm cl} \preceq -2\lambda S \iff -(Q + K^T R K) \preceq -2\lambda S \iff Q + K^T R K \succeq 2\lambda S.
+$$
+This condition is an exact and rigorous sufficient condition.
+The article's caveat that $S(t)$ from finite-horizon LQR can be singular or degenerate at terminal time $T$ if $S(T)=0$ (failing uniform positivity $S \succeq aI > 0$) is also mathematically exact.
+
+---
+
+### 3. Tangent Hyperplanes V: Task-Space Metrics and Null Space
+
+In **"Task-Space Metrics Can Miss Joint Motion"**:
+> "Let a task map be $y=\psi(q)$ with Jacobian $J=D_q\psi$, and let its task metric be $W\succ0$. Its pullback quadratic form is
+> $$
+> M_q=J^TWJ.
+> $$
+> This is positive definite only if $J$ has full column rank on the chosen tangent coordinates. A clubhead position task generally has fewer outputs than a whole-body joint model has coordinates. Joint variations in $\ker J$ then have zero task length, even though the body moved."
+
+This is mathematically exact: $M_q$ is only positive semi-definite when $\dim(y) < \dim(q)$, so $\ker(J) \neq \{0\}$. It induces a pseudometric, not a Riemannian metric on the full state space.
+
+---
+
+### 4. Applications of Control-Affine Framework: Drift vs. Input and Counterfactuals
+
+#### Same-State Input Removal vs. Forward Counterfactual
+The text cleanly distinguishes:
+1. **Same-state algebraic input removal**:
+   $$
+   F(x,u,t) - F(x,0,t) = G(x,t)u
+   $$
+   evaluated at identical $(x, t)$.
+2. **Forward Zero-Torque Counterfactual (ZTCF)**:
+   Integrated along different state trajectories $x(t)$ vs. $x_0(t)$, where:
+   $$
+   \dot d = f(x,t) - f(x_0,t) + G(x,t)u.
+   $$
+   The text points out that subtracting forces or wrenches from a forward zero-torque rollout does *not* isolate $G(x,t)u$ due to the accumulated drift difference $f(x,t) - f(x_0,t)$.
+
+#### State-Dependent Gains and Input Bounds
+The text correctly states:
+> "A state-dependent $G(x,t)$ is part of the definition of control affinity. It does not invalidate it. Likewise, a feasible set $u\in U(x,t)$ can depend on posture or velocity while the dynamics remain affine in the actual admissible input."
+> "The distinction changes when the chosen input is a command $c$ passed through a nonlinear actuator law $u=\sigma(x,c,t)$. The composed dynamics $f+G\sigma$ may be nonaffine in $c$, even though they remain affine in $u$."
+
+This is mathematically precise.
+
+---
+
+### Summary of Errors and Verifications
+
+1. **Tangent Hyperplanes VI (Hybrid Systems - Bouncing Ball):**
+   - The matrix $\Xi = \begin{bmatrix} -e & 0 \\ -(1+e)g_0/v^- & -e \end{bmatrix}$ is mathematically consistent with the saltation formula $\Xi = D_x R + \frac{(f^+ - D_x R f^-)n^T}{\gamma}$ under $v^- < 0$, $g_0 > 0$, yielding $\Xi_{21} = -(1+e)g_0/v^- > 0$ and $\Xi_{11} = -e$.
+   - **Subtle notation check in Hybrid article**:
+     Notice that the text writes:
+     $$\xi^+ = D_x R \xi^- + (D_x R f^- + \partial_t R - f^+) \delta t_e$$
+     followed by:
+     $$\Xi = D_x R + \frac{(f^+ - D_x R f^- - \partial_t R)n^T}{\partial_t g + n^T f^-}.$$
+     Because $\delta t_e = -\frac{n^T \xi^-}{\gamma}$, multiplying by $-1$ flips $(D_x R f^- + \partial_t R - f^+)$ to $(f^+ - D_x R f^- - \partial_t R)$, making the signs in both equations completely consistent.
+
+2. **All technical conditions across the three articles**:
+   - **Uniform contraction & intrinsic metric distance:** Correctly defined with intrinsic region distance and forward-invariant connecting paths without requiring global/Euclidean geodesic convexity.
+   - **Null-space task metrics:** Correctly identifies rank deficiency of $J^T W J$ and that it cannot certify full-state contraction.
+   - **Riccati sufficient condition:** $Q + K^T R K \succeq 2\lambda S$ with $aI \preceq S \preceq bI$ is exact for contraction in the $S$ metric.
+   - **State-dependent gain $G(x,t)$ and bounds $U(x,t)$:** Correctly identified as preserving control affinity in $u$, while distinguishing command non-affinity through nonlinear actuator maps $u = \sigma(x, c, t)$.
+   - **Same-state algebraic difference vs. forward ZTCF:** Correctly articulated with the drift discrepancy $f(x,t) - f(x_0,t)$.
+
+No mathematical errors exist in these formulations; the signs, matrix entries, and domain distinctions are rigorous and sound.

@@ -73,3 +73,47 @@ legacy_mappings:
   "obsolete": "deprecated"
   "editorial": "opinion"
   "speculative": "opinion"
+
+# Evidence ladder (WEB-04.3, issue #4517).
+#
+# Progression from model-internal results to empirically bounded human application,
+# not a universal ranking of truth. A page declares its claim's rung with the
+# `evidence-rung` front-matter key; other claims do not inherit that support.
+# A rung with `requires_measured_data: true`
+# must also name an `evidence-record`: the id of a `data/datasets.yml` entry
+# flagged `measured_participant_data: true`. This prerequisite does not establish
+# replication or application bounds; those require scientific review. Rendered in
+# pages/how-to-read.qmd#evidence-ladder.
+evidence_rungs:
+  - key: mathematical-identity
+    label: "Mathematical identity"
+    definition: "Follows from the stated equations of motion by algebra alone; checked for correctness and units, with no data involved."
+    requires_measured_data: false
+  - key: manufactured-fixture
+    label: "Manufactured fixture"
+    definition: "Software reproduces a case whose answer is known by construction, such as a closed-form solution or synthetic data."
+    requires_measured_data: false
+  - key: qualified-simulation
+    label: "Qualified simulation"
+    definition: "A multibody simulation that passed numerical checks under declared parameters; it shows what the model predicts, not what a human body does."
+    requires_measured_data: false
+  - key: measured-participant-result
+    label: "Measured participant result"
+    definition: "Compared against measured data from real golfers, with the measurement uncertainty stated."
+    requires_measured_data: true
+  - key: replicated-result
+    label: "Replicated result"
+    definition: "A measured participant finding supported by a further study addressing the same question using newly collected observations, with agreement assessed in light of uncertainty."
+    requires_measured_data: true
+  - key: bounded-application
+    label: "Bounded application"
+    definition: "A replicated result applied to a practical question within declared limits of population, equipment and conditions."
+    requires_measured_data: true
+
+# Older rung spellings accepted in front matter. Any other spelling, including
+# the research-readiness stage names, is treated as above "qualified
+# simulation" and so needs a measured record.
+evidence_rung_aliases:
+  mathematical_identity: mathematical-identity
+  manufactured_synthetic: manufactured-fixture
+  qualified_simulation: qualified-simulation

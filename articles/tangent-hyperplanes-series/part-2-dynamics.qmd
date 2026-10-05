@@ -8,113 +8,100 @@ categories:
 - tangent-space
 ---
 
-## The Hidden Linearity of Nonlinear Systems
+## First Variations Along a Reference Motion
 
-The tangent space is not only a geometric construction; it is the natural home of variational dynamics. Consider a smooth nonlinear control system:
+Consider a smooth-mode control system $\dot x=f(x,u)$ in a local state chart, with $x\in\mathbb R^n$ and $u\in\mathbb R^m$. Its first variation is linear even when its finite trajectories are strongly nonlinear. This statement concerns derivatives of the flow, not the addition of complete swings.
 
-$$
-\dot{x} = f(x, u)
-$$
-
-where $x \in \mathbb{R}^n$ is the state, $u \in \mathbb{R}^m$ is the control input, and $f$ is a smooth vector field. The state evolution may be strongly nonlinear; the claim below concerns only the first variation along a specified trajectory.
-
-The key insight is narrower and stronger than a generic "local linear model" slogan: **at every instant on a reference trajectory, the first variation of the equations of motion is a linear system on the tangent space. The matrices $A(t)$ and $B(t)$ are Jacobians of the dynamics evaluated on that trajectory.**
-
-This does not make the nonlinear system globally linear. It says that the derivative -- the infinitesimal response to perturbations -- is a linear operator by definition. Standard treatments of nonlinear systems, applied nonlinear control, and differential dynamic programming use this same variational object [@khalil2002nonlinear; @slotine1991applied; @jacobson1970ddp].
-
-## Linearization Along a Reference Trajectory
-
-Suppose we have a reference trajectory $(x^*(t), u^*(t))$ satisfying:
+Let $x_\epsilon(t),u_\epsilon(t)$ be a differentiable family of solutions on a common finite interval, with nominal pair $\bar x=x_0$, $\bar u=u_0$. Define
 
 $$
-\dot{x}^*(t) = f(x^*(t), u^*(t)).
+\xi(t)=\left.\partial_\epsilon x_\epsilon(t)\right|_0,
+\qquad
+\nu(t)=\left.\partial_\epsilon u_\epsilon(t)\right|_0.
 $$
 
-Now consider a perturbed trajectory $x(t) = x^*(t) + \delta x(t)$ driven by a perturbed control $u(t) = u^*(t) + \delta u(t)$. The perturbed system satisfies:
+Assume $f$ is $C^1$ in state and input, with sufficient continuity in time and in the parameterized controls to differentiate the solution's integral equation. Differentiation gives
 
 $$
-\dot{x}^*(t) + \delta\dot{x}(t) = f(x^*(t) + \delta x(t), u^*(t) + \delta u(t)).
+\begin{aligned}
+\dot\xi&=A(t)\xi+B(t)\nu,\\
+A&=D_xf(\bar x,\bar u),\\
+B&=D_uf(\bar x,\bar u).
+\end{aligned}
 $$
 
-Subtracting the reference trajectory equation and expanding the right-hand side to first order using the Taylor series:
+The matrices have dimensions $n\times n$ and $n\times m$. This is exact for the derivative $\xi$. Control affinity is not required: a differentiable nonlinear dependence on $u$ also has a linear first derivative. Standard variational analysis and local optimal control use this object [@khalil2002nonlinear; @slotine1991applied; @jacobson1970ddp].
+
+## Finite Differences Are Different Objects
+
+For another actual solution define $\Delta x=x-\bar x$ and $\Delta u=u-\bar u$. Subtraction of the two dynamics gives
 
 $$
-f(x^* + \delta x, u^* + \delta u) =
-f(x^*, u^*) +
-\frac{\partial f}{\partial x}\bigg|_{(x^*,u^*)} \delta x +
-\frac{\partial f}{\partial u}\bigg|_{(x^*,u^*)} \delta u +
-R_2(\delta x,\delta u),
+\Delta\dot x=A\Delta x+B\Delta u+R_2.
 $$
 
-where $R_2(\delta x,\delta u)$ collects terms of second order and higher. Dropping that residual gives the variational equation:
+If $f$ is $C^2$ and its Hessian has operator norm at most $H$ along the relevant state-input line segments,
 
 $$
-\delta\dot{x}(t) = A(t)\delta x(t) + B(t)\delta u(t)
+\|R_2\|\le\frac H2\| (\Delta x,\Delta u)\|^2.
 $$
 
-where the Jacobian matrices are defined as:
+Choose units or scales for the combined coordinates before using this norm. The Hessian includes mixed state-input terms. With only $C^1$ regularity one generally obtains a little-$o$ remainder, not this quadratic bound.
 
-$$
-A(t) = \frac{\partial f}{\partial x}\bigg|_{(x^*(t),u^*(t))}
-$$
-
-$$
-B(t) = \frac{\partial f}{\partial u}\bigg|_{(x^*(t),u^*(t))}.
-$$
-
-These are $n \times n$ and $n \times m$ matrices, respectively, evaluated along the reference trajectory at each time $t$.
+For a twice differentiable solution family, $x_\epsilon=\bar x+\epsilon\xi+O(\epsilon^2)$ on a suitable fixed interval. The factor $\epsilon$ matters: $\xi$ is a derivative with respect to the family parameter, while $\Delta x$ is a finite difference. The second-order term can vanish; nonlinear systems do not have a nonzero residual in every direction.
 
 ## Moving Tangent Spaces
 
-![Moving tangent spaces](./figures/moving_tangent.svg){fig-alt="A trajectory passes through a sequence of moving tangent spaces, each carrying the local linear perturbation dynamics."}
+![Moving tangent spaces](./figures/moving_tangent.svg){fig-alt="A reference trajectory carries tangent perturbations through changing tangent spaces."}
 
-The tangent space at the reference state $x^*(t)$ is the space in which this linearized perturbation system evolves. As the system evolves, the reference state moves along the trajectory, and the tangent space moves with it. At each instant $t$, the tangent hyperplane is:
+On an embedded $d$-dimensional manifold $M\subset\mathbb R^n$, admissible variations satisfy $\xi(t)\in T_{\bar x(t)}M$. Their ordinary ambient derivatives need not belong to that same tangent space. For the circle $\bar x(t)=(\cos t,\sin t)$, the unit tangent $\xi=(-\sin t,\cos t)$ has derivative $\dot\xi=-\bar x$, which is normal to the circle.
 
-$$
-H_{x^*(t)} = x^*(t) + T_{x^*(t)} M.
-$$
-
-The perturbation $\delta x(t)$ lives in this moving linear subspace. The matrices $A(t)$ and $B(t)$ describe how perturbations grow or shrink within this space.
-
-## Superposition: Exact, Not Approximate
-
-Here is the crucial property: **superposition holds exactly for the variational equation.** If two perturbations solve the same linearized dynamics, their sum solves the same linearized dynamics with summed inputs.
-
-If $\delta x_1(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_1$ and $\delta x_2(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_2$, then $\delta x_1(t) + \delta x_2(t)$ is exactly a solution to $\delta\dot{x} = A(t)\delta x + B(t)(\delta u_1 + \delta u_2)$.
-
-The statement is exact for the differential equation after the residual $R_2$ has been removed. It is not an exact statement about finite perturbations of the original nonlinear system.
-
-## The State Transition Matrix
-
-Solutions to the linearized system can be expressed using the state transition matrix (also called the fundamental matrix) $\Phi(t, t_0)$, which satisfies:
+Let the columns of $E(t)\in\mathbb R^{n\times d}$ form a differentiable tangent basis, and write $\xi=E\eta$. Then
 
 $$
-\dot{\Phi}(t, t_0) = A(t)\Phi(t, t_0), \quad \Phi(t_0, t_0) = I
+E\dot\eta+\dot E\eta=AE\eta+B\nu.
 $$
 
-A solution to the linearized system with control input is:
+If the ambient variational field preserves admissibility, the right side minus $\dot E\eta$ lies in the range of $E$. Applying a left inverse $E^+=(E^TE)^{-1}E^T$ gives
 
 $$
-\delta x(t) = \Phi(t, t_0)\delta x(t_0) + \int_{t_0}^{t} \Phi(t, \tau) B(\tau) \delta u(\tau) \, d\tau
+\dot\eta=E^+(AE-\dot E)\eta+E^+B\nu.
 $$
 
-This is the exact solution of the variational equation. Its accuracy as a prediction of the original nonlinear trajectory is limited by the omitted residual $R_2$.
+A rectangular tangent basis has no ordinary matrix inverse. The transport term $\dot E\eta$ records the changing basis. In the unconstrained space $\mathbb R^n$, tangent spaces have a canonical common vector-space identification; no rotation is forced merely because the reference point moves.
 
-## Limitations: Finite Perturbations and Nonlinearity
+## Superposition and Initial Conditions
 
-The linearized system is exact infinitesimally. For finite perturbations, the story is more complicated:
+For the same $A(t),B(t)$, two variational solutions add: $\xi_1+\xi_2$ solves the equation driven by $\nu_1+\nu_2$, with initial value $\xi_1(t_0)+\xi_2(t_0)$. The shared nominal trajectory is the usual way to ensure common coefficients. Variations around different nonlinear reference swings generally use different operators and cannot be combined this way.
 
-:::{.callout-warning}
-**Higher-Order Terms Neglected:** The error from dropping $R_2(\delta x,\delta u)$ is non-zero for finite perturbations. Under bounded second derivatives, the leading residual scales quadratically with perturbation size.
+This exact linear property does not imply that finite controlled trajectories add. State changes alter later drift and input maps. Even a control-affine system $f_0(x)+G(x)u$ normally has nonlinear finite input-to-trajectory behavior.
 
-**Superposition Breaks Down:** Superposition holds exactly for the linearized system. But when you add the higher-order correction terms back in, two small perturbations no longer combine linearly — there are interaction terms.
+## Propagation Over a Finite Interval
 
-**Validity Range:** The linearized system is trustworthy only when $\|\delta x(t)\|$ and $\|\delta u(t)\|$ remain small. In nonlinear systems, small initial perturbations can grow exponentially. Eventually, the linearization fails.
-:::
+For continuous, or bounded piecewise-continuous, coefficients on a smooth-mode interval, the state transition matrix satisfies
 
-## Looking Ahead
+$$
+\partial_t\Phi(t,s)=A(t)\Phi(t,s),\qquad \Phi(s,s)=I.
+$$
 
-The fact that we can extract a linear system from nonlinear dynamics — and that this linear system is exact infinitesimally — opens the door to using powerful control tools. In [Part 3](./part-3-control.html), we will see how differential dynamic programming and iterative linear-quadratic regulation exploit this fact to design nonlinear controllers.
+The exact variation is
+
+$$
+\xi(t)=\Phi(t,t_0)\xi(t_0)
++\int_{t_0}^{t}\Phi(t,s)B(s)\nu(s)\,ds.
+$$
+
+For finite increments, the same expression using $\Delta x(t_0),\Delta u$ needs the additional term $\int\Phi R_2\,ds$. Large transition-matrix norms amplify that remainder. Instantaneous eigenvalues alone do not characterize general time-varying or nonnormal growth. An unstable system can still have perfectly valid infinitesimal dynamics; its useful finite prediction neighborhood may shrink with the horizon.
+
+A state-triggered impact requires an event-timing map as well as smooth propagation. Piecewise-continuous coefficients alone do not account for perturbed contact times or velocity resets; [Part 6](./part-6-hybrid.html) supplies that step.
+
+## What This Means for a Swing Model
+
+Within a fixed contact mode, differentiate a simulated swing with respect to an initial joint angle, velocity or specified input profile. The resulting variation predicts the first-order change at the same physical time. Compare that prediction with nearby nonlinear rollouts over several perturbation sizes to test its finite range.
+
+A clubface-at-impact measurement is different from a fixed-time measurement because the perturbation may change impact time. Account for that timing before interpreting a sensitivity as a change in launch conditions. Neither sensitivity calculation identifies a muscle strategy without an additional actuation and measurement model.
+
+[Part 3](./part-3-control.html) uses these variations for local optimization. [Part 4](./part-4-residuals-curvature.html) derives an explicit bound for the finite trajectory discrepancy.
 
 ## Related Articles
 

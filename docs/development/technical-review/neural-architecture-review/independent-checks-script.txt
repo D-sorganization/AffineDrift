@@ -1,0 +1,61 @@
+from pathlib import Path
+import json
+import numpy as np
+from scipy.linalg import expm
+
+rng = np.random.default_rng(4908)
+errors = {k: 0.0 for k in ('uniform_population', 'nonuniform_population',
+    'kalman_joseph', 'adaptive_lyapunov', 'rhythmic_factorization', 'hidden_mode')}
+for _ in range(100):
+    theta = rng.uniform(-np.pi, np.pi)
+    gain = rng.uniform(0.1, 4)
+    angles = np.arange(8) * np.pi / 4
+    dirs = np.column_stack((np.cos(angles), np.sin(angles)))
+    rates = 5 + gain * np.cos(theta - angles)
+    pop = (rates - 5) @ dirs
+    exact = 4 * gain * np.array([np.cos(theta), np.sin(theta)])
+    errors['uniform_population'] = max(errors['uniform_population'], float(np.max(abs(pop-exact))))
+    angles = np.array([0, 0, np.pi/2])
+    dirs = np.column_stack((np.cos(angles), np.sin(angles)))
+    pop = (gain * np.cos(theta-angles)) @ dirs
+    exact = gain * np.array([2*np.cos(theta), np.sin(theta)])
+    errors['nonuniform_population'] = max(errors['nonuniform_population'], float(np.max(abs(pop-exact))))
+    raw = rng.normal(size=(3,3)); prior = raw @ raw.T + np.eye(3)
+    raw = rng.normal(size=(2,2)); noise = raw @ raw.T + np.eye(2)
+    obs = rng.normal(size=(2,3)); innovation = obs @ prior @ obs.T + noise
+    kalman = np.linalg.solve(innovation, obs @ prior).T
+    residual = np.eye(3)-kalman @ obs
+    joseph = residual @ prior @ residual.T + kalman @ noise @ kalman.T
+    information = np.linalg.inv(np.linalg.inv(prior) + obs.T @ np.linalg.solve(noise, obs))
+    errors['kalman_joseph'] = max(errors['kalman_joseph'], float(np.max(abs(joseph-information))))
+    error, tilde, phi = rng.normal(size=3)
+    k, gamma = rng.uniform(0.2, 3, size=2)
+    state = np.array([error,tilde]); derivative=np.array([-k*error+tilde*phi,-gamma*phi*error])
+    def energy(z): return (z[0]**2+z[1]**2/gamma)/2
+    delta=1e-6; fd=(energy(state+delta*derivative)-energy(state-delta*derivative))/(2*delta)
+    errors['adaptive_lyapunov'] = max(errors['adaptive_lyapunov'], float(abs(fd+k*error**2)))
+    phase=rng.uniform(-np.pi,np.pi,8); omega=rng.uniform(0.1,10); times=rng.uniform(0,2,20)
+    direct=0.5*(1+np.sin(omega*times[:,None]+phase))
+    factor=0.5+0.5*np.sin(omega*times[:,None])*np.cos(phase)+0.5*np.cos(omega*times[:,None])*np.sin(phase)
+    errors['rhythmic_factorization']=max(errors['rhythmic_factorization'],float(np.max(abs(direct-factor))))
+    assert np.linalg.matrix_rank(direct-direct.mean(axis=0),tol=1e-10)<=2
+    initial=rng.normal(size=2); time=rng.uniform(0,3)
+    state=expm(np.diag([-3,1])*time)@initial
+    expected=initial*np.array([np.exp(-3*time),np.exp(time)])
+    errors['hidden_mode']=max(errors['hidden_mode'],float(np.max(abs(state-expected))))
+assert max(errors.values())<1e-6
+# A lower-rank input can retain controllability through coupling.
+A=np.array([[0.,1.],[1.,0.]]); B=np.array([[1.],[0.]])
+assert np.linalg.matrix_rank(np.column_stack((B,A@B)))==2
+# Paired half-wave cosine samples do not cause the bias claimed by an original helper.
+angles=np.arange(8)*np.pi/4; dirs=np.column_stack((np.cos(angles),np.sin(angles)))
+rectified=np.maximum(0,np.cos(np.pi/6-angles))@dirs
+assert np.allclose(rectified,2*np.array([np.cos(np.pi/6),np.sin(np.pi/6)]))
+record={'seed':4908,'cases_each':100,'maximum_absolute_error':errors,'threshold':1e-6,
+ 'scope':'Manufactured mathematical identities, not biological validation',
+ 'scalar_kalman':{'gain':0.8,'posterior_variance':0.8},
+ 'nonuniform_decoded_angle_degrees':float(np.rad2deg(np.arctan(np.tan(np.pi/6)/2))),
+ 'coupled_single_input_controllability_rank':2,
+ 'original_helper_rectified_uniform_bias_claim':'Rejected by paired-direction identity'}
+Path('reports/technical-review/neural-architecture-independent-checks.json').write_bytes((json.dumps(record,indent=2)+'\n').encode())
+print(json.dumps(record,indent=2))

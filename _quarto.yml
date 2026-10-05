@@ -41,6 +41,10 @@ project:
     - content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py
     - src/tools/wrist_universal_joint/grip_angle_polynomial_evaluator.js
     - robots.txt
+    # Referenced only via <source srcset> in pages/daydreams-doodles.qmd, which
+    # Quarto does not detect, so publish them explicitly (#4558).
+    - static/images/A-Dead-Fish-Swims.webp
+    - static/images/A-Dead-Fish-Swims-poster.webp
 
 # Emits Schema.org JSON-LD for pages that opt in with a `schema-type`
 # frontmatter field (see scripts/filters/schema-jsonld.lua). A no-op for
@@ -297,6 +301,7 @@ format:
     filters:
       - scripts/filters/page-header-card.lua
       - scripts/filters/summary-takeaways.lua
+      - scripts/filters/laymans-terms.lua
       - scripts/filters/caveats-block.lua
       - scripts/filters/revision-history.lua
       - scripts/filters/where-next.lua

@@ -1,119 +1,188 @@
-\chapter{Parameter Estimation and Model Fitting}
+\chapter[Parameter Estimation and Model Fitting]{Parameter Estimation\\and Model Fitting}
 \label{ch:param-estimation}
 
-\begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
-\end{gomdraftnotice}
+Fitting a trajectory does not by itself identify a body, an actuator or a
+control strategy. A golf model can reproduce the same club motion with different
+segment parameters, joint torques and muscle activations. Identification asks
+which parameter combinations the available measurements can distinguish, under
+specified geometry, force measurements and noise assumptions. Validation then
+asks whether those parameters predict independent observations.
 
-\epigraph{All models are wrong, but some are less wrong than others once you fit them.}{}
+\section{What Is Linear in the Inertial Parameters?}
 
-Parameter estimation uses measured motion data to infer unknown model parameters such as
-segment masses, inertias, and damping coefficients. This chapter covers least-squares
-methods for linear and bilinear problems, and optimization methods for nonlinear problems.
-
-\section{System Identification for Multi-Body Models}
-
-The linear regression approach exploits the linearity of the equations of motion with
-respect to inertial parameters. Given measured trajectories $\bm{q}(t), \dot{\bm{q}}(t),
-\ddot{\bm{q}}(t)$ and applied torques $\bm{\tau}(t)$, we form the regressor matrix
-$Y(\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}})$ such that
+For rigid bodies with fixed joint geometry and known gravity, inverse dynamics
+is linear in each body's mass, three first moments and six independent inertia
+components about a fixed body-frame origin. These ten entries are not the
+independently varied mass, center-of-mass position and inertia about the center
+of mass. Products and parallel-axis terms connect those descriptions
+\cite{WensingPhysicalIdentificationReview,TedrakeSystemIdentificationReview}.
+After accounting for known external forces and any separately modeled passive
+terms, stacked observations satisfy
 \begin{equation}
-  \bm{\tau} = Y(\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}}) \bm{\pi}
+  \bm{y}=Y(\bm{q},\bm{v},\dot{\bm{v}})\bm{\pi}+\bm{\epsilon}.
 \end{equation}
-where $\bm{\pi}$ is the parameter vector \cite{luh1980}. The least-squares solution
-minimizes $\|Y\bm{\pi} - \bm{\tau}\|^2_2$.
+Here $\bm{y}$ contains generalized force observations, not automatically motor
+commands or muscle excitations; floating-base equations include unactuated
+coordinates. The regressor depends on the actual mechanism. A two-column
+pendulum regressor cannot identify arbitrary segment inertias in a golf model.
 
-\begin{lstlisting}[language=Python, caption={Inertial parameter estimation from motion data.}]
+Even exact measurements may determine only a set of \emph{base parameter
+combinations}: if $Y\bm{d}=0$, then $\bm{\pi}$ and
+$\bm{\pi}+\bm{d}$ give the same predictions. Structural ambiguity cannot be
+removed by taking more samples of the same uninformative motion. Additional
+excitation can improve an experiment's rank within the structurally identifiable
+subspace. Singular values must be interpreted after declaring parameter units
+and scaling; a condition number of mixed-unit columns is not an intrinsic
+physical property.
+
+\section{A Complete, Bounded Pendulum Fit}
+
+Consider a fixed-pivot uniform thin rod with $q=0$ downward, positive applied
+torque in the direction of increasing $q$, and viscous damping:
+\begin{equation}
+  J\ddot q+b\dot q+c\sin q=\tau,\qquad
+  J=\frac{mL^2}{3},\quad c=\frac{mgL}{2}.
+  \label{eq:identified-rod}
+\end{equation}
+The unknown coefficients are $\bm{\pi}=(J,b,c)^T$; $J$ is the
+pivot inertia, $b$ has units $\mathrm{N\,m\,s/rad}$ and $c$ is a torque.
+Radians are dimensionless in the mechanical equations. The following listing
+fits exactly this model. Each row of \texttt{samples} is
+$(q,\dot q,\ddot q)$ in SI units, and \texttt{sigma} is a strictly positive
+torque standard deviation. It minimizes
+$\sum_k[(Y_k\bm{\pi}-\tau_k)/\sigma_k]^2$ by whitening and column scaling.
+It reports an unconstrained estimate and rejects numerical rank deficiency.
+
+\begin{lstlisting}[language=Python, caption={Weighted Identification of a Damped Uniform Rod}]
 import numpy as np
-from scipy.optimize import minimize
 
-def estimate_inertial_params(
-    q_data: np.ndarray,
-    qd_data: np.ndarray,
-    qdd_data: np.ndarray,
-    tau_data: np.ndarray,
-    n_params: int
-) -> np.ndarray:
-    """Estimate inertial parameters using least-squares.
+def fit_pendulum(
+    samples: np.ndarray, torque: np.ndarray,
+    sigma: np.ndarray,
+) -> dict:
+    """Fit [pivot inertia, damping, gravity torque].
 
-    The equations of motion are LINEAR in inertial parameters:
-    tau = Y(q, qd, qdd) * pi
-    where Y is the regressor matrix and pi is the parameter vector.
-
-    Parameters
-    ----------
-    q_data : (N, n) joint positions
-    qd_data : (N, n) joint velocities
-    qdd_data : (N, n) joint accelerations
-    tau_data : (N, n) joint torques
-    n_params : int number of inertial parameters
-
-    Returns
-    -------
-    np.ndarray estimated parameters
+    samples: finite (N,3), N>=3; torque/sigma: finite (N,).
+    sigma>0; columns must have numerical rank three.
     """
-    N, n = q_data.shape
-
-    # Build regressor matrix (simplified for 1-DOF)
-    Y = np.zeros((N * n, n_params))
-    tau_vec = tau_data.reshape(-1)
-
-    for k in range(N):
-        for j in range(n):
-            row = k * n + j
-            Y[row, 0] = qdd_data[k, j]  # Inertia
-            Y[row, 1] = np.sin(q_data[k, j])  # Gravity
-
-    # Least squares solution
-    params, _, _, _ = np.linalg.lstsq(Y, tau_vec, rcond=None)
-    return params
+    data = np.asarray(samples, dtype=float)
+    y = np.asarray(torque, dtype=float)
+    sd = np.asarray(sigma, dtype=float)
+    if data.ndim != 2 or data.shape[1] != 3:
+        raise ValueError("samples must have shape (N,3)")
+    n = data.shape[0]
+    if n < 3 or y.shape != (n,) or sd.shape != (n,):
+        raise ValueError("need N>=3 and matching vectors")
+    if not all(np.isfinite(a).all() for a in (data, y, sd)):
+        raise ValueError("all inputs must be finite")
+    if np.any(sd <= 0):
+        raise ValueError("sigma must be positive")
+    q, velocity, acceleration = data.T
+    design = np.column_stack(
+        (acceleration, velocity, np.sin(q))
+    )
+    whitened = design / sd[:, None]
+    scale = np.linalg.norm(whitened, axis=0)
+    if np.any(scale == 0) or not np.isfinite(scale).all():
+        raise ValueError("unusable regressor scale")
+    scaled = whitened / scale
+    beta, _, rank, singular = np.linalg.lstsq(
+        scaled, y / sd, rcond=None
+    )
+    if rank < 3:
+        raise ValueError("parameters are not identifiable")
+    parameters = beta / scale
+    prediction = design @ parameters
+    inertia, damping, gravity = parameters
+    return {
+        "parameters": parameters,
+        "prediction": prediction,
+        "weighted_residual": (prediction - y) / sd,
+        "singular_values": singular,
+        "physical": bool(
+            inertia > 0 and damping >= 0 and gravity > 0
+        ),
+    }
 \end{lstlisting}
 
-\section{Parameter Estimation Landscape}
+For full column rank the fixed-regressor quadratic has a unique global
+minimum; an initial guess is unnecessary. With deficient rank it has a
+flat set of minimizers, even if a numerical routine returns one vector.
+Column scaling improves numerical representation but cannot create rank.
+The reported singular values belong to the scaled, whitened design.
+The \texttt{physical} flag applies only to this rod model: negative coefficients
+are reported, not silently clipped. Constrained fitting would change the
+optimization problem and should report its active constraints and residual.
 
-\begin{figure}[h]
-  \centering
-  \begin{tikzpicture}[
-    scale=1.2,
-    ]
-    % Axes
-    \draw[->] (0, 0) -- (4, 0) node[align=center, right] {Parameter 1};
-    \draw[->] (0, 0) -- (0, 4) node[align=center, above] {Parameter 2};
+With calibrated torque, known $g>0$, $J>0$ and $c>0$, the uniform-rod
+hypothesis gives
+\begin{equation}
+  L=\frac{3gJ}{2c},\qquad
+  m=\frac{4c^2}{3g^2J}.
+\end{equation}
+These formulas differ from a point-mass pendulum. If only unforced motion is
+observed, division by $J$ exposes only $b/J$ and $c/J$: multiplying
+$(J,b,c)$ by a positive common factor leaves the trajectory unchanged.
+For undamped unforced motion, the acceleration and sine columns are dependent.
+A mass estimate from such data requires additional information, not a more
+powerful optimizer.
 
-    % Elliptical contours (cost function level sets)
-    \draw[gray!50] (2, 2) ellipse (1.5 and 1.2);
-    \draw[gray!50] (2, 2) ellipse (1 and 0.8);
-    \draw[gray!50] (2, 2) ellipse (0.5 and 0.4);
+\section{Uncertainty and Physical Consistency}
 
-    % Minimum
-    \node[fill=red, circle, inner sep=2pt] (min) at (2, 2) {};
-    \node[below right] at (min) {Optimum};
+The weighted least-squares interpretation treats the regressor as known and
+torque errors as independent with the supplied standard deviations. Gaussian
+errors additionally give a maximum-likelihood interpretation. Motion capture
+instead makes $q$, $\dot q$ and especially $\ddot q$ uncertain; differentiation
+and smoothing can correlate errors in time and with the response. The listing
+does not solve that errors-in-variables problem. State-space or output-error
+fitting can propagate a declared measurement model, but brings nonlinear
+optimization, initial-state uncertainty and its own identifiability questions
+\cite{TedrakeSystemIdentificationReview}.
 
-    % Sample points
-    \node[fill=blue, circle, inner sep=1.5pt] at (1, 2.5) {};
-    \node[fill=blue, circle, inner sep=1.5pt] at (3, 1.5) {};
-    \node[fill=blue, circle, inner sep=1.5pt] at (0.5, 1) {};
+For multi-body inertial identification, a positive mass matrix alone does not
+guarantee a realizable mass distribution. A body's central inertia must satisfy
+the principal-moment triangle inequalities as well as nonnegativity; an extended
+three-dimensional body normally gives strict inequalities. Equivalently, its
+central second-moment matrix
+$\Sigma_C=\tfrac12\operatorname{tr}(I_C)I-I_C$ is positive semidefinite.
+Physical-consistency constraints on the combined inertial parameters can be
+formulated without independently clipping inertia entries
+\cite{WensingPhysicalIdentificationReview}. The pendulum flag above is not
+such a general certificate.
 
-    % Labels
-    \node[left] at (-0.3, 3.5) {Cost Function};
-    \node[left] at (-0.3, 3) {Contours};
-  \end{tikzpicture}
-  \caption{Parameter estimation as optimization over the parameter space. Least-squares
-    methods seek the minimum of the cost function (red point) from initial guesses (blue points).}
-  \label{fig:param-landscape}
-\end{figure}
+Separate structural ambiguity, finite-sample uncertainty and model discrepancy.
+Report torque calibration, coordinate conventions, filters, excitation,
+scaled rank diagnostics and held-out prediction errors. Resampling correlated
+records as independent points understates uncertainty. A prior can stabilize
+an estimate, but information supplied by that prior must not be presented as
+identified from the motion.
 
-\section{Muscle Parameter Calibration}
+\section{Muscle Calibration and Golf Interpretation}
 
-Muscle parameters (Hill model constants: $a$, $F_{\max}$, optimal fiber length, etc.) can
-be estimated by fitting model predictions to force or EMG measurements. This requires
-nonlinear optimization, typically using gradient-based methods \cite{nocedal2006}.
+Net joint torque is one observation equation, not a unique allocation of force
+among muscles. EMG is an electrical measurement, not a direct muscle-force
+measurement. Excitation-to-activation dynamics, force--length--velocity behavior,
+tendon compliance, moment arms and electrode normalization all affect a proposed
+comparison \cite{CEINMSCalibrationReview}. Maximum isometric force and activation scaling can compensate for
+one another; changing geometry can also change inferred force. A fitted Hill
+model needs an explicit observation model and measurements that constrain the
+parameters being reported. Chapter~\ref{ch:platform} distinguishes a supported
+modeling capability from a validated application.
+
+For a golf swing, first test whether the same inertial and passive parameters
+predict different swing speeds and conditions. Then ask whether an activation
+or control hypothesis improves independent force, EMG or perturbation
+predictions. A good kinematic fit alone cannot distinguish a neural strategy
+from a different combination of inertia, actuation and external support.
 
 \section*{Exercises}
 \begin{enumerate}
-  \item Estimate the mass and length of a pendulum from simulated motion data.
-  \item Add measurement noise and study estimation robustness.
-  \item Implement Bayesian estimation with prior knowledge from literature.
+  \item Generate $q(t)=0.3\sin t+0.2\sin(2.3t)$ with analytic derivatives.
+  Construct torque using $(J,b,c)=(0.4,0.1,2)$ and recover the coefficients.
+  State which assumptions make the reconstructed mass and length meaningful.
+  \item Compare heteroscedastic torque noise with noise added to position before
+  differentiation. Explain why the same weighted regression has different
+  statistical validity in the two experiments.
+  \item Construct an unforced record and exhibit its parameter ambiguity.
+  Propose one additional measurement or input that would resolve the mass scale.
 \end{enumerate}

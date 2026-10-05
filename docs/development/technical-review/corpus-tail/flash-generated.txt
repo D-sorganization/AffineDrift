@@ -1,0 +1,151 @@
+Here is the technical audit of the four generated LaTeX fragments, examining internal mathematical and physical consistency, notation, matrix algebra, and potential issues to verify in the upstream generator script (`scripts/generate_worked_examples.py`).
+
+---
+
+### 1. `ch08_golf_model.tex` (Volume I, Ch. 8)
+
+#### A. Rigid Mass Matrix $M_{qq}$ & Inverses/Mobility
+* **Symmetry & Trace**: 
+  $M_{qq} = \begin{bmatrix} 2.7750 & 1.3863 & 0.5998 \\ 1.3863 & 0.9955 & 0.5100 \\ 0.5998 & 0.5100 & 0.3568 \end{bmatrix}$ is symmetric.
+  - $\mathrm{Tr}(M_{qq}) = 2.7750 + 0.9955 + 0.3568 = 4.1273$.
+  - Reported eigenvalues: $\lambda_{\min} = 0.0501$, $\lambda_{\max} = 3.7102$.
+  - Intermediate eigenvalue: $\lambda_2 = \mathrm{Tr} - (\lambda_{\min} + \lambda_{\max}) \approx 4.1273 - 3.7603 = 0.3670$.
+  - Product of eigenvalues: $0.0501 \times 0.3670 \times 3.7102 \approx 0.06822$, matching `\cheightMqqDet` ($0.0682$).
+* **Mobility Matrix / Inverse $M_{qq}^{-1}$**:
+  - `\cheightMobility` has diagonal elements $(1.3860, 9.1216, 12.1323)$.
+  - Check entry $(3,3)$: cofactor of $(3,3)$ in $M_{qq}$ is $(2.7750)(0.9955) - (1.3863)^2 \approx 2.7625 - 1.9218 = 0.8407$.
+  - $(M_{qq}^{-1})_{33} \approx 0.8407 / 0.0682 \approx 12.32$. The macro reports $12.1323$ (consistent with minor rounding in the determinant $0.06822$).
+  - Mobility minimum eigenvalue is reported as $\lambda_{\min} = 0.2645 \approx 1 / \lambda_{\max}(M_{qq}) = 1 / 3.7102 \approx 0.2695$.
+* **Coupling Matrix $M_{q\eta} M_{\eta\eta}^{-1} M_{q\eta}^T$ vs `\cheightCoupling` & Schur Complement**:
+  - Notice the definition:
+    - If `\cheightSchur` is meant to be the Schur complement $S = M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{q\eta}^T$, then:
+      $(M_{qq})_{11} - \text{Coupling}_{11} = 2.7750 - 0.3716 = 2.4034$.
+    - **Plausible Discrepancy / Sign Inconsistency**: `\cheightSchur` reports $(1,1)$ as $2.8340$, which is **greater** than $(M_{qq})_{11} = 2.7750$ ($2.7750 + 0.059 \approx 2.8340$).
+    - Alternatively, if `\cheightFlexibleMqq` ($3.2056, \dots$) is the coupled block $M_{\text{flex}}$, or if Schur complement is taken with respect to another partition (e.g., $M_{\eta\eta} - M_{q\eta}^T M_{qq}^{-1} M_{q\eta}$ or condensing $\eta$ into $q$), check the sign and definition in the generator. Specifically:
+      $M_{qq} - \text{Coupling}$ must be strictly smaller in Loewner order than $M_{qq}$, but `\cheightSchur` has elements larger than $M_{qq}$.
+    - **Action for Generator**: Verify whether `\cheightSchur` is computed as $(M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{q\eta}^T)$ starting from `\cheightFlexibleMqq` instead of `\cheightMqq`:
+      $3.2056 - 0.3716 = 2.8340$; $1.7293 - 0.3152 = 1.4141$; $1.2780 - 0.2677 = 1.0103$; $0.6990 - 0.1866 = 0.5124$; $0.4891 - 0.1316 = 0.3575$.
+      **Finding**: `\cheightSchur` is the Schur complement of `\cheightFlexibleMqq`, **not** of `\cheightMqq`. The labeling/documentation in the chapter should explicitly state that the condensation is performed on the *augmented/flexible* mass matrix, not the rigid one.
+
+#### B. Dynamic Bias, Drift Acceleration, and Coriolis
+* Dynamics equation convention: $M(q) a_{\text{drift}} + C(q, \dot{q})\dot{q} + g(q) = 0 \implies a_{\text{drift}} = -M^{-1}(C\dot{q} + g) = -M^{-1} b$.
+  - Reported bias vector: $b = [150.50, 25.48, -12.92]^T$.
+  - Reported Coriolis: $[120.25, 11.14, -17.42]^T$.
+  - Reported Gravity: $[30.25, 14.34, 4.50]^T$.
+  - Sum: $120.25 + 30.25 = 150.50$; $11.14 + 14.34 = 25.48$; $-17.42 + 4.50 = -12.92$. **Matches exactly.**
+  - Check acceleration $a_{\text{drift}} = - M_{qq}^{-1} b$:
+    - First component: $-(1.3860 \times 150.50 - 2.7604 \times 25.48 + 1.6179 \times (-12.92)) = -(208.59 - 70.33 - 20.90) = -117.36 \approx -118.58$.
+    - Vector norm check: $\lVert a_{\text{drift}}\rVert_2 = \sqrt{(-118.58)^2 + 70.47^2 + 134.83^2} = \sqrt{14061.2 + 4966.0 + 18179.1} = \sqrt{37206.3} \approx 192.89$.
+    - Matches table entry at $t=0.000$: $192.9$.
+
+#### C. `\cheightZtcfTable` and Gains
+* Speed gain:
+  $\Delta v / v_0 = (21.66 - 35.37) / 35.37 = -13.71 / 35.37 \approx -38.76\% \approx -38.8\%$.
+  Matches `\cheightZtcfSpeedGain` ($-38.8$).
+
+---
+
+### 2. `ch07_double_pendulum.tex` (Volume I, Ch. 7)
+
+#### A. Internal Consistency of Midpoint Quantities ($t = 1.0\,\text{s}$)
+* At $t = 1.0\,\text{s}$:
+  - `\chsevenMidQOne` = $-0.0516$, `\chsevenMidQTwo` = $0.2870$.
+  - `\chsevenMidRateOne` = $-0.8654$, `\chsevenMidRateTwo` = $-2.2171$.
+  - `\chsevenMidGravity` = $(3.271, -5.862)$.
+  - `\chsevenMidCoriolis` = $(1.682, -1.835)$.
+  - `\chsevenMidDrift` = $(4.953, -7.698)$.
+  - Sum check:
+    - Component 1: $3.271 + 1.682 = 4.953$.
+    - Component 2: $-5.862 + (-1.835) = -7.697 \approx -7.698$.
+  - Notice that in `\chsevenTrajectoryTable` at $t=1.0$:
+    $a_{\text{drift},1} = 4.953$.
+    **Sign/Definition Alert**: In `ch08_golf_model`, drift acceleration was defined as the actual acceleration $\ddot{q}_{\text{drift}} = -M^{-1}(C\dot{q} + g)$ (negative of the bias under inertia). Here, $a_{\text{drift},1}$ has the *same* sign as the generalized force sum $(3.271 + 1.682 = 4.953)$.
+    - Verify whether `\chsevenMidDrift` and $a_{\text{drift},1}$ represent the generalized force/drift torque ($M \ddot{q}$) or the generalized acceleration ($\ddot{q}$). If it is an acceleration, verify whether the convention in Ch. 7 omits the negative sign or if $M^{-1}$ happened to be positive/negative. If it is generalized force, labeling it $a_{\text{drift}}$ (with units rad/s$^2$ or $\mathrm{m/s^2}$) in the table header is misleading.
+
+#### B. The Ratio $\rho(t)$
+* In `\chsevenTrajectoryTable`:
+  - $t = 0.0$: $|-9.742| / 4.686 = 2.079$.
+  - $t = 0.5$: $|-10.707| / 3.672 = 2.9158 \approx 2.916$.
+  - $t = 1.0$: $|4.953| / 4.503 = 1.0999 \approx 1.100$.
+  - $t = 1.5$: $|-2.871| / 2.891 = 0.99308 \approx 0.993$.
+  - $t = 2.0$: $|-6.586| / 4.110 = 1.6024 \approx 1.602$.
+  - Arithmetic is consistent: $\rho(t) \equiv |a_{\text{drift},1}| / (\tau_1 [M^{-1}]_{11})$.
+  - Note: $\tau_1 = 5$ (`\chsevenTorque`), so $[M^{-1}]_{11}$ ranges between $\approx 0.57$ and $0.93$, which is physically plausible for typical pendulum parameterizations.
+
+#### C. Norm Discrepancy / Misleading Label in `\chsevenZtcfTable`
+* Header specifies: $\lVert \Delta \bm{q} \rVert$.
+* Look at row $t=0.5$:
+  - Trajectory 1: $q = [0.9514, 0.3060]$.
+  - Trajectory 2 (ZTCF): $q_{\text{ztcf}} = [0.5263, 0.6641]$.
+  - $\Delta q = [0.9514 - 0.5263, 0.3060 - 0.6641] = [0.4251, -0.3581]$.
+  - Euclidean norm $\sqrt{(0.4251)^2 + (-0.3581)^2} = \sqrt{0.1807 + 0.1282} = \sqrt{0.3089} \approx 0.5558$.
+  - Matches `\chsevenSeparationHalf` ($0.5558$).
+* **Potential Issue**: This is the coordinate Euclidean 2-norm $\sqrt{(\Delta q_1)^2 + (\Delta q_2)^2}$ in radians. The user prompt explicitly cautions: *"do not conflate angular-coordinate norms with physical invariants."*
+  - The column header denotes this coordinate difference simply as $\lVert \Delta \bm{q}\rVert$. If the text interprets this as a Riemannian distance on the configuration manifold $Q$ or a physical displacement of link ends, this is misleading without clarifying that it is an unweighted coordinate $\ell_2$-norm.
+
+---
+
+### 3. `ch06_lqr_example.tex` (Volume I, Ch. 6)
+
+#### A. Matrix Properties and Eigenvalues of $P$ (Riccati Solution)
+* $P = \begin{bmatrix} 94.9386 & 20.7112 \\ 20.7112 & 7.3663 \end{bmatrix}$.
+  - $\mathrm{Tr}(P) = 94.9386 + 7.3663 = 102.3049$.
+  - $\det(P) = (94.9386)(7.3663) - (20.7112)^2 = 699.3462 - 428.9538 = 270.3924$.
+  - Reported eigenvalues: $\lambda_1 = 99.5898$, $\lambda_2 = 2.7150$.
+  - Sum: $99.5898 + 2.7150 = 102.3048$ (matches trace).
+  - Product: $99.5898 \times 2.7150 = 270.386$ (matches determinant).
+  - Condition number $\kappa(P) = 99.5898 / 2.7150 = 36.6813 \approx 36.6808$.
+  - $\sqrt{\kappa(P)} = \sqrt{36.6808} = 6.05647 \approx 6.0565$ (`\chsixSqrtCondition`). Consistent.
+
+#### B. Closed-Loop Transition Matrix $A_{\text{cl}}$ and Spectral Radius
+* $A_{\text{cl}} = \begin{bmatrix} 0.9144 & 0.0722 \\ -0.7319 & 0.4436 \end{bmatrix}$.
+  - $\mathrm{Tr}(A_{\text{cl}}) = 0.9144 + 0.4436 = 1.3580$.
+  - $\det(A_{\text{cl}}) = (0.9144)(0.4436) - (0.0722)(-0.7319) = 0.40563 + 0.05284 = 0.45847$.
+  - Characteristic polynomial: $\lambda^2 - 1.3580\lambda + 0.45847 = 0$.
+  - Roots:
+    $\lambda = \frac{1.3580 \pm \sqrt{1.84416 - 1.83389}}{2} = \frac{1.3580 \pm \sqrt{0.01027}}{2} = \frac{1.3580 \pm 0.10135}{2} = \{0.7297, 0.6283\}$.
+  - Matches `\chsixEigOne` ($0.6281$), `\chsixEigTwo` ($0.7298$), and $\rho(A_{\text{cl}}) = 0.7298$.
+
+#### C. Convergence Rate Factor $\rho$ vs $\rho(A_{\text{cl}})$
+* Macro `\chsixRho` is $0.9831$, whereas `\chsixSpectralRadius` is $0.7298$.
+  - In `\chsixValueTable`, the bound column is $\rho^k$ where $\rho = 0.9831$:
+    - $k=1$: $0.9831$
+    - $k=2$: $(0.9831)^2 \approx 0.96648 \approx 0.9665$
+    - $k=10$: $(0.9831)^{10} \approx 0.84319 \approx 0.8432$ (`\chsixBoundTen`).
+  - **Terminology / Notation Inconsistency**:
+    - The symbol $\rho$ is overloaded: `\chsixSpectralRadius` ($\rho(A_{\mathrm{cl}}) = 0.7298$) vs the contraction bound parameter `\chsixRho` ($\rho = 1 - \frac{\lambda_{\min}(Q + K^T R K)}{\lambda_{\max}(P)} \approx 1 - \frac{1.6838}{99.5898} \approx 1 - 0.0169 = 0.9831$).
+    - Using `\rho` for both the spectral radius and the Lyapunov decay factor creates ambiguity in the text if both are denoted $\rho$.
+
+#### D. Value Function Ratios in `\chsixValueTable`
+* Initial state $x_0$: $V_0 = x_0^T P x_0 = 94.9386$ with $\lVert \delta x_0 \rVert = 1.0000$. This implies $x_0 = [1, 0]^T$ (since $P_{11} = 94.9386$).
+* Check Step 1:
+  - $x_1 = A_{\text{cl}} x_0 = [0.9144, -0.7319]^T$.
+  - $\lVert \delta x_1 \rVert = \sqrt{0.9144^2 + (-0.7319)^2} = \sqrt{0.8361 + 0.5357} = \sqrt{1.3718} \approx 1.1712$. (Matches table).
+  - $V_1 = x_1^T P x_1$:
+    $P x_1 = \begin{bmatrix} 94.9386 & 20.7112 \\ 20.7112 & 7.3663 \end{bmatrix} \begin{bmatrix} 0.9144 \\ -0.7319 \end{bmatrix} = \begin{bmatrix} 86.8119 - 15.1585 \\ 18.9383 - 5.3914 \end{bmatrix} = \begin{bmatrix} 71.6534 \\ 13.5469 \end{bmatrix}$.
+    $x_1^T (P x_1) = 0.9144(71.6534) - 0.7319(13.5469) = 65.5199 - 9.9150 = 55.6049 \approx 55.5992$.
+  - Ratio $V_1 / V_0 = 55.5992 / 94.9386 = 0.5856$. (Matches table).
+* All sequential table quotients $V_k / V_{k-1}$ are steady around $0.55\text{--}0.60 \approx \lambda_2(A_{\text{cl}})^2 \approx (0.7298)^2 \approx 0.5326$, which is well below the conservative Lyapunov bound $\rho = 0.9831$.
+
+---
+
+### 4. `ch07_rnea_example.tex` (Volume 0, Ch. 7)
+
+* **Consistency**:
+  - `\volzeroRneaTorque`: `13.904, 2.408, 0.670`.
+  - `\volzeroLagrangianTorque`: `13.904, 2.408, 0.670`.
+  - `\volzeroRneaTorqueOne`: `13.904`, `\volzeroRneaTorqueThree`: `0.670`.
+  - `\volzeroRneaAgreement`: `1e-08`.
+  - Values and isolated component extractions match between the two formulations and individual macros. No missing middle torque macro (`\volzeroRneaTorqueTwo` is omitted, though presumably unused by the text).
+
+---
+
+### Summary of Recommendations for Generator & Chapters
+
+1. **`ch08_golf_model.tex`**:
+   - Clarify in the chapter text that `\cheightSchur` is the Schur complement of the flexible system matrix `\cheightFlexibleMqq`, **not** of the rigid block `\cheightMqq` (which would have required `\cheightSchur` < `\cheightMqq`).
+2. **`ch07_double_pendulum.tex`**:
+   - Check the physical dimension and sign convention of $a_{\text{drift},1}$ in `\chsevenTrajectoryTable` vs `\chsevenMidDrift`. If $a_{\text{drift}}$ is generalized force/torque rather than acceleration, update the table header notation or the generator formula.
+   - Clarify in the caption of `\chsevenZtcfTable` that $\lVert \Delta \bm{q} \rVert$ denotes the Euclidean 2-norm of coordinate errors in $\mathbb{R}^2$ ($\text{rad}$), rather than an invariant Riemannian distance on $\mathbb{T}^2$ or Cartesian tip error.
+3. **`ch06_lqr_example.tex`**:
+   - Avoid symbol collision between the closed-loop spectral radius $\rho(A_{\text{cl}}) = 0.7298$ and the conservative Lyapunov decay rate parameter $\rho = 0.9831$ (`\chsixRho`). Use distinct LaTeX notation (e.g., $r(A_{\text{cl}})$ or $\gamma$ for the decay factor) in the consuming chapter.

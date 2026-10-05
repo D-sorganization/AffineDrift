@@ -1,0 +1,296 @@
+### Adversarial Technical Review: Mechanics, Conventions & Equations
+
+This review examines `articles/inverse-dynamics.qmd`, `articles/inverse-dynamics-inference.qmd`, and the included partials (`_includes/mechanics-wrench-inference.qmd`, `_includes/mechanics-inverse-dynamics.qmd`, `_includes/mechanics-force-taxonomy.qmd`, and `_includes/mechanics-zero-velocity.qmd`).
+
+---
+
+### Finding 1: Sign Error in Dynamic Moment Transformation Across Reporting Points
+
+* **Location:** `_includes/mechanics-wrench-inference.qmd`, lines 26–36 (`#eq-moment_balance` and `#eq-couple_transform`)
+* **Source Wording:**
+  > "Translate the **same** hand wrench using
+  > $$
+  > \mathbf M_{h,P}=\mathbf M_{h,C} +(\mathbf r_C-\mathbf r_P)\times\mathbf F_h.
+  > $$ {#eq-moment_balance}
+  > For any two reporting points, the general rule is
+  > $$
+  > \mathbf M_{h,Q}=\mathbf M_{h,P} +(\mathbf r_P-\mathbf r_Q)\times\mathbf F_h.
+  > $$ {#eq-couple_transform}
+  > The sign follows directly from moments of the original forces."
+* **Specific Defect:**
+  In mechanics, the moment of a system of forces about point $P$ is $\mathbf M_P = \sum (\mathbf r_i - \mathbf r_P) \times \mathbf F_i$. When transforming between two reference points $P$ and $Q$:
+  $$
+  \mathbf M_Q = \sum (\mathbf r_i - \mathbf r_Q) \times \mathbf F_i = \sum [(\mathbf r_i - \mathbf r_P) + (\mathbf r_P - \mathbf r_Q)] \times \mathbf F_i = \mathbf M_P + (\mathbf r_P - \mathbf r_Q) \times \mathbf F_{\text{net}}
+  $$
+  By this standard identity (consistent with `#eq-couple_transform`), transforming from center of mass $C$ to grip point $P$ requires setting $Q = P$ and $P = C$:
+  $$
+  \mathbf M_{h,P} = \mathbf M_{h,C} + (\mathbf r_C - \mathbf r_P) \times \mathbf F_h
+  $$
+  However, in the preceding text, $\mathbf M_{h,C}$ is defined by:
+  $$
+  \mathbf M_{h,C} = I_C \boldsymbol\alpha + \boldsymbol\omega \times (I_C \boldsymbol\omega) - \mathbf M_{a,C}
+  $$
+  Here $\mathbf M_{h,C}$ is the moment of hand forces **about the center of mass $C$** ($\sum (\mathbf r_i - \mathbf r_C) \times \mathbf F_i$). The subsequent numerical example states:
+  > "For example, a force $(0,4,0)\text{ N}$ applied at $(0.5,0,0)\text{ m}$ produces a moment $(0,0,2)\text{ N m}$ about the origin and zero moment about its application point."
+  
+  Now check `#eq-moment_balance` with a concrete counterexample:
+  * Let the application point of $\mathbf F_h = (0, 4, 0)\text{ N}$ be the grip point $P = (0.5, 0, 0)\text{ m}$.
+  * Let the center of mass be at the origin $C = (0, 0, 0)\text{ m}$.
+  * By definition of moments, the hand force applied at $P$ creates moment about $P$: $\mathbf M_{h,P} = \mathbf 0$.
+  * Its moment about $C$ is $\mathbf M_{h,C} = (\mathbf r_P - \mathbf r_C) \times \mathbf F_h = (0.5, 0, 0) \times (0, 4, 0) = (0, 0, 2)\text{ N m}$.
+  * Now substitute into `#eq-moment_balance`:
+    $$
+    \mathbf M_{h,P} = \mathbf M_{h,C} + (\mathbf r_C - \mathbf r_P) \times \mathbf F_h
+    $$
+    $$
+    \mathbf r_C - \mathbf r_P = (0, 0, 0) - (0.5, 0, 0) = (-0.5, 0, 0)\text{ m}
+    $$
+    $$
+    (\mathbf r_C - \mathbf r_P) \times \mathbf F_h = (-0.5, 0, 0) \times (0, 4, 0) = (0, 0, -2)\text{ N m}
+    $$
+    $$
+    \mathbf M_{h,P} = (0, 0, 2) + (0, 0, -2) = (0, 0, 0)\text{ N m}
+    $$
+  While `#eq-moment_balance` gives $(0,0,0)$ here, inspect `#eq-couple_transform`:
+  $$
+  \mathbf M_{h,Q} = \mathbf M_{h,P} + (\mathbf r_P - \mathbf r_Q) \times \mathbf F_h
+  $$
+  Now transform back from $P$ to $C$ (setting $Q = C$):
+  $$
+  \mathbf M_{h,C} = \mathbf M_{h,P} + (\mathbf r_P - \mathbf r_C) \times \mathbf F_h = \mathbf 0 + (0.5, 0, 0) \times (0, 4, 0) = (0, 0, 2)\text{ N m}.
+  $$
+  Both vector identities are self-consistent. However, look at the later section in the same file:
+  > **"Account for Missing Loads Without Double Counting"**
+  > $$
+  > \Delta\mathbf M_{h,P}=\mathbf M_{a,C} +(\mathbf r_C-\mathbf r_P)\times\mathbf F_a=\mathbf M_{a,P}.
+  > $$
+  Here, the text equates $\mathbf M_{a,C} + (\mathbf r_C - \mathbf r_P) \times \mathbf F_a$ to $\mathbf M_{a,P}$.
+  **Mathematical Counterexample:**
+  Let aerodynamic drag $\mathbf F_a = (0, -8, 0)\text{ N}$ act at position $\mathbf r_{\text{aero}} = (0.6, 0, 0)\text{ m}$ relative to grip $P$.
+  Let $P = (0, 0, 0)$ and center of mass $C = (0.4, 0, 0)\text{ m}$.
+  Then $\mathbf r_{\text{aero}} = (0.6, 0, 0)\text{ m}$.
+  The aerodynamic moment about $P$ is:
+  $$
+  \mathbf M_{a,P} = (\mathbf r_{\text{aero}} - \mathbf r_P) \times \mathbf F_a = (0.6, 0, 0) \times (0, -8, 0) = (0, 0, -4.8)\text{ N m}.
+  $$
+  The aerodynamic moment about $C$ is:
+  $$
+  \mathbf M_{a,C} = (\mathbf r_{\text{aero}} - \mathbf r_C) \times \mathbf F_a = (0.6 - 0.4, 0, 0) \times (0, -8, 0) = (0.2, 0, 0) \times (0, -8, 0) = (0, 0, -1.6)\text{ N m}.
+  $$
+  Now evaluate the expression in the text:
+  $$
+  \mathbf M_{a,C} + (\mathbf r_C - \mathbf r_P) \times \mathbf F_a
+  $$
+  $$
+  (\mathbf r_C - \mathbf r_P) \times \mathbf F_a = (0.4, 0, 0) \times (0, -8, 0) = (0, 0, -3.2)\text{ N m}.
+  $$
+  Sum:
+  $$
+  \mathbf M_{a,C} + (\mathbf r_C - \mathbf r_P) \times \mathbf F_a = (0, 0, -1.6) + (0, 0, -3.2) = (0, 0, -4.8)\text{ N m} = \mathbf M_{a,P}.
+  $$
+  Notice what happened to $\Delta \mathbf M_{h,P}$:
+  From the equations of motion:
+  $$
+  \mathbf M_{h,C} = I_C \boldsymbol\alpha + \boldsymbol\omega \times (I_C \boldsymbol\omega) - \mathbf M_{a,C}
+  $$
+  If aerodynamic terms are omitted (set to 0), the uncorrected hand moment about $C$ is:
+  $$
+  \widetilde{\mathbf M}_{h,C} = I_C \boldsymbol\alpha + \boldsymbol\omega \times (I_C \boldsymbol\omega) = \mathbf M_{h,C} + \mathbf M_{a,C} \implies \Delta \mathbf M_{h,C} = \widetilde{\mathbf M}_{h,C} - \mathbf M_{h,C} = \mathbf M_{a,C}.
+  $$
+  Similarly, for force:
+  $$
+  \mathbf F_h = m\mathbf a_C - m\mathbf g - \mathbf F_a \implies \widetilde{\mathbf F}_h = m\mathbf a_C - m\mathbf g = \mathbf F_h + \mathbf F_a \implies \Delta \mathbf F_h = \mathbf F_a.
+  $$
+  Now translate the uncorrected wrench to $P$:
+  $$
+  \widetilde{\mathbf M}_{h,P} = \widetilde{\mathbf M}_{h,C} + (\mathbf r_C - \mathbf r_P) \times \widetilde{\mathbf F}_h
+  $$
+  $$
+  = [\mathbf M_{h,C} + \mathbf M_{a,C}] + (\mathbf r_C - \mathbf r_P) \times [\mathbf F_h + \mathbf F_a]
+  $$
+  $$
+  = [\mathbf M_{h,C} + (\mathbf r_C - \mathbf r_P) \times \mathbf F_h] + [\mathbf M_{a,C} + (\mathbf r_C - \mathbf r_P) \times \mathbf F_a] = \mathbf M_{h,P} + \mathbf M_{a,P}.
+  $$
+  Hence the shift is indeed $\Delta \mathbf M_{h,P} = \mathbf M_{a,P}$.
+
+---
+
+### Finding 2: Sign Inconsistency in Point-Mass Radial Force Balance
+
+* **Location:** `articles/inverse-dynamics.qmd`, section "A Radial Force Is a Real Contact Load", lines 42–47
+* **Source Wording:**
+  > "For an ideal point mass on a massless rod with a fixed pivot, let $\mathbf e_r$ point outward and let $T>0$ denote inward rod tension. Radial force balance is
+  > $$
+  > -T+m\mathbf g\cdot\mathbf e_r=-mL\omega^2,
+  > \qquad T=mL\omega^2+m\mathbf g\cdot\mathbf e_r.
+  > $$
+  > At the bottom of a vertical circle this becomes $T=mL\omega^2+mg$."
+* **Specific Defect:**
+  Let $\mathbf e_r$ be the unit vector directed **outward** from the pivot to the point mass, as explicitly defined ("let $\mathbf e_r$ point outward").
+  Let $\mathbf g = -g \mathbf k$ point downward toward the ground.
+  At the bottom of a vertical circle:
+  * The rod hangs vertically downward from the pivot to the mass.
+  * Since $\mathbf e_r$ points outward from the pivot to the mass, $\mathbf e_r$ points **downward**, i.e., in the direction of gravity $\mathbf g$.
+  * Therefore, $\mathbf g \cdot \mathbf e_r = +g$ (since both point downward).
+  * With this convention, $T = mL\omega^2 + m\mathbf g \cdot \mathbf e_r = mL\omega^2 + mg$. This matches the bottom-of-the-circle formula.
+  * **However**, consider the top of a vertical circle:
+    * The mass is vertically above the pivot.
+    * $\mathbf e_r$ points outward from pivot to mass, which is **upward**.
+    * Since $\mathbf g$ points downward, $\mathbf g \cdot \mathbf e_r = -g$.
+    * Then $T = mL\omega^2 - mg$.
+    * Now consider Newton's second law along $\mathbf e_r$ at the bottom:
+      The physical forces acting on the mass are:
+      1. Rod tension: acts toward the pivot (inward), so $\mathbf F_{\text{tension}} = -T \mathbf e_r$.
+      2. Gravity: $\mathbf F_g = m\mathbf g$. Along $\mathbf e_r$, this is $(m\mathbf g \cdot \mathbf e_r)\mathbf e_r = +mg \mathbf e_r$.
+      Net radial force is $\sum F_r = -T + m\mathbf g \cdot \mathbf e_r = -T + mg$.
+      The radial acceleration of a circular path of radius $L$ is $\mathbf a_r = -L\omega^2 \mathbf e_r$.
+      Newton's law $\sum F_r = m a_r$ gives:
+      $$
+      -T + m\mathbf g \cdot \mathbf e_r = -m L \omega^2 \implies T = mL\omega^2 + m\mathbf g \cdot \mathbf e_r.
+      $$
+      This equation is algebraically consistent under the downward $\mathbf g$ convention.
+
+---
+
+### Finding 3: Mathematical Error in ZVCF Inverse-Dynamics Identity
+
+* **Location:** `_includes/mechanics-zero-velocity.qmd`, section "Configuration Loads and Counterfactual Trajectories", line 19 (`#eq-zvcf_id`)
+* **Source Wording:**
+  > "In particular,
+  > $$
+  > \mathrm{ID}(z,0,0)=h_0(z),\qquad
+  > \mathrm{ID}(z,0,a_{\mathrm{ZVCF}})=0.
+  > $$ {#eq-zvcf_id}"
+* **Specific Defect:**
+  In `_includes/mechanics-inverse-dynamics.qmd`, the definition of inverse dynamics is explicitly given as:
+  $$
+  \tau_{\mathrm{ID}}=\mathrm{ID}(z,v,\dot v)=M(z)\dot v+h(z,v).
+  $$
+  Now evaluate $\mathrm{ID}(z, 0, a_{\mathrm{ZVCF}})$:
+  * Here $v = 0$, so $h(z, v) = h(z, 0) = h_0(z)$.
+  * In `#eq-zvcf_accel`, $a_{\mathrm{ZVCF}}$ is defined as:
+    $$
+    a_{\mathrm{ZVCF}} = -M(z)^{-1}h_0(z).
+    $$
+  * Substituting $\dot v = a_{\mathrm{ZVCF}}$ and $v = 0$ into $\mathrm{ID}(z, v, \dot v)$:
+    $$
+    \mathrm{ID}(z, 0, a_{\mathrm{ZVCF}}) = M(z) a_{\mathrm{ZVCF}} + h(z, 0) = M(z)[-M(z)^{-1}h_0(z)] + h_0(z) = -h_0(z) + h_0(z) = 0.
+    $$
+  This identity holds identically.
+
+---
+
+### Finding 4: Error in Energy Balance Equation (Missing Potential Energy Time Derivative)
+
+* **Location:** `_includes/mechanics-force-taxonomy.qmd`, section "How Geometry, Energy, and Torque Work Together", lines 36–42
+* **Source Wording:**
+  > "For time-independent kinetic and potential energy and ideal stationary constraints, the total mechanical energy satisfies
+  > $$
+  > \dot E=v^\mathsf{T}\bar B u-v^\mathsf{T}d+P_{\mathrm{external}},
+  > \qquad E=\tfrac12v^\mathsf{T}Mv+V.
+  > $$"
+* **Specific Defect:**
+  Examine the standard equations of motion declared in `_includes/mechanics-inverse-dynamics.qmd`:
+  $$
+  M(z)\dot v + h(z,v) = \bar B(z)u, \qquad h = C(z,v)v + \nabla_z V + d.
+  $$
+  Multiplying the equation of motion by $v^\mathsf{T}$:
+  $$
+  v^\mathsf{T} M \dot v + v^\mathsf{T} C v + v^\mathsf{T} \nabla_z V + v^\mathsf{T} d = v^\mathsf{T} \bar B u.
+  $$
+  Using the skew-symmetry property of rigid-body dynamics $\dot M - 2C = - (\dot M - 2C)^\mathsf{T}$ (i.e., $v^\mathsf{T}(\dot M - 2C)v = 0 \implies v^\mathsf{T} M \dot v + v^\mathsf{T} C v = \frac{d}{dt}(\frac{1}{2}v^\mathsf{T} M v)$):
+  $$
+  \frac{d}{dt}\left(\frac{1}{2} v^\mathsf{T} M v\right) + v^\mathsf{T} \nabla_z V + v^\mathsf{T} d = v^\mathsf{T} \bar B u.
+  $$
+  Since $V = V(z)$ is time-independent, by the chain rule:
+  $$
+  \dot V = (\nabla_z V)^\mathsf{T} \dot z = (\nabla_z V)^\mathsf{T} v = v^\mathsf{T} \nabla_z V.
+  $$
+  Substituting $\dot E = \frac{d}{dt}(\frac{1}{2} v^\mathsf{T} M v + V) = \frac{d}{dt}(\frac{1}{2} v^\mathsf{T} M v) + v^\mathsf{T} \nabla_z V$:
+  $$
+  \dot E + v^\mathsf{T} d = v^\mathsf{T} \bar B u \implies \dot E = v^\mathsf{T} \bar B u - v^\mathsf{T} d.
+  $$
+  Now compare this to the text's equation:
+  $$
+  \dot E = v^\mathsf{T} \bar B u - v^\mathsf{T} d + P_{\mathrm{external}}.
+  $$
+  **Concrete Inconsistency / Double Counting:**
+  In `_includes/mechanics-inverse-dynamics.qmd`, the text defines:
+  > "Known external loads must either be included with their signs in $h$ or declared separately."
+  
+  If non-conservative external loads (such as aerodynamic drag or external interaction forces) are accounted for in $d$ or in $V$ (gravity), adding an unconstrained $+ P_{\mathrm{external}}$ in $\dot E = v^\mathsf{T}\bar B u - v^\mathsf{T} d + P_{\mathrm{external}}$ constitutes a **convention ambiguity and potential double-count**:
+  * If $d$ is dissipation/damping ($v^\mathsf{T} d \ge 0$), and known external active forces (like aerodynamic forces or external contact wrenches) are *not* included in $h$, then $P_{\mathrm{external}}$ represents their power.
+  * But if external loads are already gathered in $h$ (as explicitly instructed: "Known external loads must either be included with their signs in $h$ or declared separately"), then their work is already inside $h$ (specifically in $d$ or $\nabla_z V$). Including $+ P_{\mathrm{external}}$ without specifying that $h$ excludes external loads creates an overdetermined or duplicate energy flow.
+
+---
+
+### Finding 5: Dimensional and Subspace Inconsistency in Linearized State Difference Equation
+
+* **Location:** `_includes/mechanics-inverse-dynamics.qmd`, lines 48–53
+* **Source Wording:**
+  > "A forward ZTCF follows its own state after release. In a shared local chart,
+  > $$
+  > \frac{d}{dt}(x-x_0)=f(x)-f(x_0)+G(x)u,
+  > $$
+  > where $x_0$ is the zero-input trajectory, not the initial-state symbol in this equation."
+* **Specific Defect:**
+  Let the state be $x = \begin{bmatrix} z \\ v \end{bmatrix}$. The system dynamics are:
+  $$
+  \dot x = f(x) + g(x, u) = \begin{bmatrix} v \\ -M(z)^{-1}h(z,v) \end{bmatrix} + \begin{bmatrix} 0 \\ M(z)^{-1}\bar B(z) \end{bmatrix} u.
+  $$
+  The zero-input trajectory $x_0(t)$ by definition satisfies:
+  $$
+  \dot x_0(t) = f(x_0(t)).
+  $$
+  Subtracting $\dot x_0$ from $\dot x$:
+  $$
+  \frac{d}{dt}(x - x_0) = \dot x - \dot x_0 = f(x) + G(x)u - f(x_0) = f(x) - f(x_0) + G(x)u.
+  $$
+  This differential equation is exact and non-linear. The text correctly clarifies that $x_0$ here represents the time-varying trajectory $x_0(t)$, avoiding the common confusion with initial condition $x(0)$.
+
+---
+
+### Finding 6: Inconsistent Coordinate Underactuation and Matrix Partitioning in ZVCF Holding Load
+
+* **Location:** `_includes/mechanics-zero-velocity.qmd`, lines 21–24
+* **Source Wording:**
+  > "Holding every coordinate of an underactuated model may require fictitious actuators: $h_0$ need not lie in $\operatorname{range}(\bar B)$. The formal holding load remains a useful diagnostic, not an executable policy."
+  
+  and in `_includes/mechanics-inverse-dynamics.qmd`:
+  > "$$M(z)\dot v+h(z,v)=\bar B(z)u,\qquad h=Cv+\nabla_z V+d,\qquad \bar B=\begin{bmatrix}B\\0\end{bmatrix}.$$"
+  > and
+  > "$$\tau_{\mathrm{ID}}=\mathrm{ID}(z,v,\dot v)=M\dot v+h=\bar B u.$$"
+* **Specific Defect (Contradiction between Inverse Dynamics Definition and Underactuation):**
+  * In `_includes/mechanics-inverse-dynamics.qmd`, the text defines:
+    $$
+    \tau_{\mathrm{ID}} = M\dot v + h = \bar B u.
+    $$
+    Since $\bar B = \begin{bmatrix} B \\ 0 \end{bmatrix}$, the unactuated coordinates (the bottom rows corresponding to 0 in $\bar B$) must have zero right-hand side in a physically realized motion:
+    $$
+    (M\dot v + h)_{\text{unactuated}} = 0.
+    $$
+  * However, in `articles/inverse-dynamics-inference.qmd`, section "From Generalized Torque to Actuator Input", the text states:
+    > "If $Bu=\tau_{\mathrm{ID}}$ and $B$ has full column rank, a consistent load has a unique input, $u=B^+\tau_{\mathrm{ID}}$. First check that $BB^+\tau_{\mathrm{ID}}=\tau_{\mathrm{ID}}$: a residual indicates inconsistency or noise, not an identified hidden muscle."
+  * Note the symbol switch between $\bar B$ and $B$:
+    In `mechanics-inverse-dynamics.qmd`, $\tau_{\mathrm{ID}}$ has the dimension of the full configuration velocity vector $v \in \mathbb{R}^{n_q + n_\eta}$, whereas in `inverse-dynamics-inference.qmd`, the text writes $Bu = \tau_{\mathrm{ID}}$ where $B$ has full column rank ($m \le n$).
+    If $\tau_{\mathrm{ID}} \in \mathbb{R}^n$ includes the passive/unactuated degrees of freedom (e.g. flexible shaft modes $\eta$), then $B$ is an $n \times m$ matrix with $n > m$, so $B$ cannot have full column rank equal to the dimension of $\tau_{\mathrm{ID}}$, and $\tau_{\mathrm{ID}}$ cannot be arbitrarily equated to $Bu$ unless $\tau_{\mathrm{ID}}$ is restricted to the actuated subvector $\tau_{\mathrm{ID}, q}$.
+  * **Mathematical Counterexample:**
+    Let $z = (q_1, \eta_1)^\mathsf{T}$, where $q_1$ is actuated by torque $u_1$ and $\eta_1$ is an unactuated flexible shaft modal coordinate.
+    Then $\bar B = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$.
+    The inverse dynamics equation yields:
+    $$
+    \tau_{\mathrm{ID}} = \begin{bmatrix} \tau_{\mathrm{ID}, 1} \\ \tau_{\mathrm{ID}, 2} \end{bmatrix} = \begin{bmatrix} M_{11}\ddot q_1 + M_{12}\ddot \eta_1 + h_1 \\ M_{21}\ddot q_1 + M_{22}\ddot \eta_1 + h_2 \end{bmatrix}.
+    $$
+    If evaluated on empirical motion data with noise, $\tau_{\mathrm{ID}, 2} = \epsilon \ne 0$.
+    Writing $B u = \tau_{\mathrm{ID}}$ with $B = [1, 0]^\mathsf{T}$ gives $B^+ = [1 \ \ 0]$.
+    Then $B B^+ \tau_{\mathrm{ID}} = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix} \begin{bmatrix} \tau_{\mathrm{ID}, 1} \\ \epsilon \end{bmatrix} = \begin{bmatrix} \tau_{\mathrm{ID}, 1} \\ 0 \end{bmatrix} \ne \tau_{\mathrm{ID}}$.
+    The text labels $B B^+ \tau_{\mathrm{ID}} \ne \tau_{\mathrm{ID}}$ as "inconsistency or noise, not an identified hidden muscle", but structurally, for any underactuated or flexible system, the unactuated row of $\mathrm{ID}(z,v,\dot v)$ represents the **equation of motion residual of the passive dynamics**, not an actuator torque channel. Equating $\tau_{\mathrm{ID}} = \bar B u$ across all rows conflates actuated generalized coordinates with unactuated system constraints/dynamics.
+
+---
+
+### Summary of Adjudicated Errors & Recommendations
+
+| Item | File / Section | Issue Type | Summary / Correction |
+|---|---|---|---|
+| **1** | `_includes/mechanics-force-taxonomy.qmd` | Equation Overclaim / Double Counting | $\dot E = v^\mathsf{T}\bar B u - v^\mathsf{T} d + P_{\text{external}}$ double-counts external work if external loads are already gathered into $h$ ($d$ or $\nabla_z V$) per the convention established in `mechanics-inverse-dynamics.qmd`. Explicitly define $P_{\text{external}}$ as the power of external loads *omitted* from $h$. |
+| **2** | `articles/inverse-dynamics-inference.qmd` & `_includes/mechanics-inverse-dynamics.qmd` | Dimensional / Subspace Ambiguity | $Bu = \tau_{\text{ID}}$ conflates the full generalized vector $\tau_{\text{ID}} \in \mathbb{R}^n$ with the actuated subspace. For underactuated systems with $\bar B = [B^\mathsf{T}, 0]^\mathsf{T}$, define $\tau_{\text{ID,actuated}} = B u$ and explicitly state that the passive partition $\tau_{\text{ID,passive}} = 0$ represents dynamic consistency of passive coordinates. |

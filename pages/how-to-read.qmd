@@ -78,19 +78,18 @@ Publication status is strictly **claim-specific** and **model-conditioned**:
 
 ## The Evidence Ladder {#evidence-ladder}
 
-Scientific statements on AffineDrift respect a four-level evidence hierarchy. Claims are never permitted to claim a higher level on the ladder than their accompanying validation demonstrates:
+These six evidence categories organize the progression from model-internal results to empirically bounded human applications. They are not a universal ranking of truth: an identity may hold exactly under stated assumptions while the model's applicability to a golfer remains untested. A page's declared rung summarizes the evidence for its stated claim; other statements do not inherit that support.
 
-```
-  ▲  Level 3: Empirical Human Validation (Kinematic & kinetic measurements with human cohorts)
-  │  Level 2: Multibody Dynamics Simulation (Full 3D forward simulations, sensitivity testing)
-  │  Level 1: Numerical Solver Verification (Energy accounting, solver convergence, counterfactual checks)
-  │  Level 0: Analytical & Mathematical Identities (Equations of motion, Lie brackets, coordinate transformations)
-```
+1. **Mathematical identity**: follows from the stated equations of motion by algebra alone. It is checked for correctness and units, with no data involved.
+2. **Manufactured fixture**: software reproduces a case whose answer is known by construction, such as a closed-form solution or synthetic data.
+3. **Qualified simulation**: a multibody simulation that passed numerical checks (energy accounting, convergence) under declared parameters. It shows what the model predicts, not what a human body does.
+4. **Measured participant result**: compared against measured data from real golfers, with the measurement uncertainty stated.
+5. **Replicated result**: a measured participant finding supported by a further study addressing the same question using newly collected observations, with agreement assessed in light of uncertainty.
+6. **Bounded application**: a replicated result applied to a practical question within declared limits of population, equipment and conditions.
 
-- **Level 0 — Analytical Identities**: Equations derived from first-principles classical mechanics (Lagrangian or Hamiltonian mechanics). Verification requires only mathematical correctness and dimensional consistency.
-- **Level 1 — Numerical Verification**: Confirmation that software implementations solve the declared analytical equations consistently (e.g., energy conservation in unforced regimes, convergence under step-size reduction).
-- **Level 2 — Model-Conditioned Simulation**: Forward dynamic predictions under specified parameter sets (e.g., rigid-body segments, lumped elasticity). These establish what the mathematical model predicts, not necessarily how a human body functions.
-- **Level 3 — Empirical Human Validation**: Direct comparison against synchronized motion capture, force-plate kinetics, and electromyography across human golfer cohorts with quantified measurement uncertainty.
+Rungs 4–6 require measured participant observations. The build checks that a page declaring one of these rungs links a catalogue record flagged as measured participant data. This is a necessary prerequisite; scientific review must still establish that the data support the claimed comparison, any replication and the application limits.
+
+Following the [National Academies' terminology](https://www.nationalacademies.org/read/25303/chapter/3), repeating an analysis with the original data can establish computational reproducibility; empirical replication requires new observations. A different research group alone does not turn reanalysis of the same observations into empirical replication.
 
 ---
 
@@ -151,4 +150,3 @@ For software implementations and mathematical models, reference the immutable gi
 - [Development Roadmap](development-roadmap.html) — Status authorities and live planning maps
 - [Critiques & Responses](../critiques/index.html) — Published critique records and response evaluations
 - [Learning Paths](../resources/learning-paths.html) — Guided reading pathways by background and interest
-

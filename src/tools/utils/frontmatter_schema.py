@@ -7,7 +7,8 @@ Enforces:
 3. Plain-language summary (maximum 60 words).
 4. Key takeaways (3 to 5 items).
 5. Explicit prohibition of 'date: today'.
-6. Governed evidence-rung (WEB-04.3).
+6. Governed evidence-rung (WEB-04.3); on every page, a rung above qualified
+   simulation must link a measured data record (#4517).
 7. Strict validation for core pages with an allowlist for pages in migration.
 """
 
@@ -22,6 +23,7 @@ import jsonschema
 import yaml
 
 from src.core.contracts import require
+from src.tools.utils.evidence_ladder import check_evidence_rung
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas" / "article-front-matter-v1.schema.json"
@@ -138,6 +140,9 @@ def validate_article_frontmatter(
     date_val = str(fm.get("date", "")).strip().lower()
     if date_val == "today":
         errors.append(f"{norm_path}: 'date: today' is prohibited. Use a real publication date.")
+
+    # Rule 2: no page outranks its measured evidence (WEB-04.3), allowlisted or not
+    errors.extend(check_evidence_rung(fm, norm_path))
 
     cfg = allowlist_config if allowlist_config is not None else load_frontmatter_allowlist()
     core_pages = set(cfg.get("core_pages", []))

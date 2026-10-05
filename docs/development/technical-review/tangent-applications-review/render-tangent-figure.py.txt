@@ -1,0 +1,32 @@
+"""Regenerate the scientific tangent-space figure from exact circle geometry."""
+
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+plt.rcParams.update({"svg.fonttype": "none", "font.size": 12, "svg.hashsalt": "tangent-4939"})
+figure, axis = plt.subplots(figsize=(7, 3.8), layout="constrained")
+theta = np.linspace(0.15, 2.9, 300)
+axis.plot(np.cos(theta), np.sin(theta), color="#222222", linewidth=2, label="Reference Motion on a Circle")
+for index, angle, color in [(1, 0.7, "#b23b32"), (2, 1.9, "#245c9d")]:
+    point = np.array([np.cos(angle), np.sin(angle)])
+    tangent = np.array([-np.sin(angle), np.cos(angle)])
+    assert abs(point @ tangent) < 1e-14
+    segment = point[:, None] + tangent[:, None] * np.array([[-0.42, 0.42]])
+    axis.plot(*segment, color=color, linewidth=2)
+    axis.scatter(*point, color=color, s=32, zorder=4)
+    axis.annotate(rf"$\bar x(t_{index})$", point, xytext=(8, -22), textcoords="offset points", color=color)
+axis.set(xlim=(-1.1, 1.25), ylim=(0, 1.35), xlabel=r"$x_1$", ylabel=r"$x_2$", title="Moving Tangent Spaces")
+axis.set_aspect("equal")
+axis.spines[["top", "right"]].set_visible(False)
+axis.grid(alpha=0.15)
+axis.legend(loc="lower center", frameon=False, fontsize=10)
+figure.savefig(Path("articles/tangent-hyperplanes-series/figures/moving_tangent.svg"), metadata={"Date": None})
+plt.close(figure)
+
+output = Path("articles/tangent-hyperplanes-series/figures/moving_tangent.svg")
+output.write_text("\n".join(line.rstrip() for line in output.read_text(encoding="utf-8").splitlines()) + "\n", encoding="utf-8", newline="\n")

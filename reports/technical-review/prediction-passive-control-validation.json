@@ -1,0 +1,67 @@
+{
+  "issue": 4915,
+  "epic": 4009,
+  "status": "Complete chapter sources and scoped PDF accepted; protected delivery pending",
+  "accepted_source_commit": "bfe4dbbe14c816261a492bcd1b9d824e0de3e530",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch06_internal_models.tex": "25d752faafabb7a727c3405987e7d44abb5fe0aa3312f2e4f92227fcf7dda5a0",
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch07_passive_control.tex": "c202d6b9ae23a427281165fb3f2229b9cf835c441bba2b33baf3484169431af0",
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch10_computational_models.tex": "172b26291ae9ecbd3f51863bd6d0c2bd911d04f7261e6e9481166480da32c217",
+    "articles/The_Geometry_of_Motion/Volume_IV/main.tex": "e2aecd30b189ae3cca3900593e1cff2e909bb62d0d766467984bfcf29f19f410",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "0b95af8f377b5aebdef99bbfe499ce46b63fd166a7ee24bdabf2e9e8b2455dbf",
+    "articles/The_Geometry_of_Motion/Volume_IV/main.pdf": "300050f2050e18bbe4fcaa17e783ea48dadec00c0e81b753a3f42e5c753b99a7",
+    "tests/test_internal_model_listings.py": "eba65f120143ada382e638de68667844bfec5aa224e6a8de1d9a499705183e47",
+    "tests/test_passive_phase_listings.py": "9b9ffa54b5c7857df7f64b4522a323c600593d2bd7f7de602c244b43bf916c87",
+    "tests/test_computational_lqr_listings.py": "1c76b91cfd03c314c5beb4064c1f7204fb172107932888f8ab7f97a1e2cf9851",
+    "reports/technical-review/prediction-passive-control-independent-checks.json": "0d6c515f5ed8b1676d31623e4c6e5dde91478d99760b7ac4a85d01d429ce62cb"
+  },
+  "scope": "Complete files ch06, ch07 and ch10 (printed Chapters 6, 7, 11); no whole-volume or empirical certification",
+  "full_regression": {
+    "head": "bfe4dbbe14c816261a492bcd1b9d824e0de3e530",
+    "passed": 7004,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 477.55,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/prediction-passive-control-review/full-tests.txt"
+  },
+  "pdf": {
+    "pages": 82,
+    "printed_entries": 50,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3-6, 37-46, 68-73 and 79-82; four final contact sheets inspected",
+    "build_log": "docs/development/technical-review/prediction-passive-control-review/accepted-pass5.txt",
+    "limits": "Historical duplicate destinations and package warnings; unchanged learning-chapter overflow outside acceptance"
+  },
+  "mathematics": {
+    "record": "reports/technical-review/prediction-passive-control-independent-checks.json",
+    "identities": 7,
+    "cases_each": 100,
+    "threshold": 1e-6,
+    "scope": "Manufactured mathematics, not human or gait validation"
+  },
+  "actual_listing_tests": 49,
+  "delegation": {
+    "helpers": 9,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only reviews and test proposals; successful answers lead-adjudicated",
+    "failed_excluded": 2
+  },
+  "delivery": {
+    "status": "Preparing regular PR",
+    "base": "fix/neural-architecture-review",
+    "dependency": "PR 4916",
+    "next": "Protected delivery then fetched-main blob verification"
+  },
+  "pre_pr": {
+    "base": "3ad0cdef027c23aab0c60c10a32def756f5e7955",
+    "head": "d6faa7f1eb5c1168ddfdd742c66db8824a0a90cb",
+    "gates": "All five passed",
+    "mapped_tests": 49,
+    "log": "docs/development/technical-review/prediction-passive-control-review/pre-pr.txt"
+  }
+}

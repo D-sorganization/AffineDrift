@@ -1,0 +1,27 @@
+import csv,hashlib,json,subprocess
+from pathlib import Path
+root=Path.cwd(); qa=root/'docs/development/technical-review/workbench-contract-review'
+head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert head=='11564f73d919e6ac0a7acca0aa1cb8d9e3b8339e'
+assert (qa/'full-tests.exit').read_text().strip()=='0'
+assert all((qa/name).stat().st_size==0 for name in ('full-tests-before.txt','full-tests-after.txt'))
+log=(qa/'full-tests.txt').read_text(encoding='utf-8')
+assert '7226 passed, 29 skipped, 210 deselected, 60 warnings in 512.33s' in log
+paths=['articles/proximal-distal-model-workbench.qmd','reports/technical-review/workbench-contract-independent-checks.json','docs/development/technical-review/workbench-contract-review/provider-source-manifest.json']
+record={'issue':4933,'epic':4009,'status':'Complete article accepted; protected remote-main delivery pending','accepted_source_commit':head,'git_blob_sha256':{p:hashlib.sha256(subprocess.check_output(['git','show',head+':'+p])).hexdigest() for p in paths},'full_regression':{'passed':7226,'skipped':29,'deselected':210,'warnings':60,'seconds':512.33,'src_coverage_percent':93.25,'exit_code':0,'tracked_tree_unchanged':True,'head':head,'log':str((qa/'full-tests.txt').relative_to(root)).replace('\\','/')},'focused_tests':56,'pre_pr':'All five gates pass; no automatically mapped tests, separately executed 56 focused tests','mathematics':'100 seeded provider-energy difference and midpoint-wrench identities; explicit additive closure counterexample; see independent-checks JSON','browser':'Rendered single article, desktop1440 and mobile390,18 math containers,zero errors/deferred math after scrolling,zero document overflow; known local asset/CSP console issues recorded','delegation':'Four successful agy Gemini3.8 Flash reviews, lead adjudicated; two next-corpus preliminary audits excluded','provider_follow_up':'D-sorganization/Tools#5431','failed_run':'Initial full run7224pass2root-hygiene failures: browser cache at root. Safely moved untracked cache under QA; index refreshed for unchanged fragment line endings. Clean complete rerun passed; failed logs retained.','delivery':{'status':'Preparing regular PR','base':'fix/inference-policy-analysis-review','dependency':'PR4936','next':'Verify actual parent main merge, retarget, central protected merge, fetched-main accepted-blob verification'}}
+(root/'reports/technical-review/workbench-contract-validation.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+index=root/'docs/development/technical-review/corpus-review-index.csv'
+with index.open(encoding='utf-8',newline='') as f:
+ reader=csv.DictReader(f); fields=reader.fieldnames; rows=list(reader)
+assert len(rows)==407
+assert sum(r['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for r in rows)==53
+for row in rows:
+ if row['Source']==paths[0]: row['Review Scope']='Complete Article Review #4933; Source '+head+'; Provider Contracts, Counterfactuals, Wrench and Energy Diagnostics; Primary Sources, Independent Checks, Rendered Inspection and Full Regression Accepted; Remote Delivery Pending'
+assert sum(r['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for r in rows)==52
+with index.open('w',encoding='utf-8',newline='') as f:
+ writer=csv.DictWriter(f,fieldnames=fields,lineterminator='\n'); writer.writeheader(); writer.writerows(rows)
+notes=qa/'review-notes.md'
+with notes.open('a',encoding='utf-8',newline='\n') as f:f.write('\n## Frozen Acceptance\n\nSource '+head+': clean rerun7226passed,29skipped,210deselected,60warnings,512.33seconds,93.25%coverage. Initial full run failed two root-hygiene checks because .playwright-cli was at root; moved that untracked artifact under QA and retained the failed logs. Both final tracked status captures are empty. Five pre-PR gates passed with no mapped tests;56focused tests passed separately. One corpus row accepted,52pending-prefix of407. B lease released receipt5988604242; C central guard armed, actual main merge still pending. T #4937 actively reviews putting and nomenclature. Continue the full goal.\n')
+fragment=root/'changes/4933-workbench-contract-review.md'
+s=fragment.read_text(); s=s.replace('dl_state: "in_progress"','dl_state: "in_review"').replace('Complete frozen regression, accept the reviewed article, and open a regular PR against fix/inference-policy-analysis-review','Protected delivery after parent PR4936 reaches main; verify accepted blobs and release lease')
+fragment.write_text(s+'\nFrozen source acceptance:7226passed,29skipped,210deselected,512.33seconds,93.25%coverage; clean tracked tree. Corpus now52pending-prefix rows of407. See workbench-contract-validation.json.\n',encoding='utf-8',newline='\n')

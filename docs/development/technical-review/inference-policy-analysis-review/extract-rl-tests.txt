@@ -1,0 +1,18 @@
+from pathlib import Path
+p=Path('docs/development/technical-review/inference-policy-analysis-review/flash-rl-tests.txt')
+s=p.read_text(encoding='utf-8').split('```python',1)[1].split('```',1)[0].strip()+'\n'
+s=s.replace('import gymnasium as gym  # noqa: E402\n','')
+s=s.replace('parents[4]','parents[1]').replace('        pytest.skip(f"TeX file not found at: {tex_path}")','        pytest.fail(f"TeX file not found at: {tex_path}")')
+s=s.replace('    # nosemgrep:', '    # Repository-owned listing at a fixed path, with no external input.\n    # nosemgrep:')
+s=s.replace('    obs: np.ndarray, action: float, dt: float = 0.05, g: float = 10.0, m: float = 1.0, length: float = 1.0','    obs: np.ndarray, action: float')
+s=s.replace('        dt: Time step duration.\n        g: Gravitational acceleration constant.\n        m: Pendulum point mass.\n        length: Pendulum rod length.\n','')
+s=s.replace('    cos_th, sin_th, thdot =','    dt, g, m, length = 0.05, 10.0, 1.0, 1.0\n    cos_th, sin_th, thdot =')
+s=s.replace('    assert rollout["truncated"] == [False, False, False, True]','    np.testing.assert_array_equal(rollout["truncated"], [False, False, False, True])')
+s=s.replace('    assert state_before[0] == state_after[0]','    assert state_before[0] == state_after[0]\n    assert state_before[2:] == state_after[2:]')
+s=s.replace('    ("reward", "discount", "next_val", "terminated"),','    "case",')
+s=s.replace('    ch08: ModuleType, reward: Any, discount: Any, next_val: Any, terminated: Any','    ch08: ModuleType, case: tuple[Any, ...]')
+s=s.replace('    bootstrap_target = getattr(ch08, "bootstrap_target")\n    with pytest.raises','    reward, discount, next_val, terminated = case\n    bootstrap_target = getattr(ch08, "bootstrap_target")\n    with pytest.raises')
+Path('tests/test_rl_pendulum_listing.py').write_text(s,encoding='utf-8')
+p=Path('tests/test_visualization_analysis_listings.py')
+s=p.read_text().replace('velocity_ellipsoid = _MOD.velocity_ellipsoid','def velocity_ellipsoid(jacobian: np.ndarray, scales: np.ndarray) -> tuple:\n    """Call the actual listing; preserve RED tests of existing other functions."""\n    return _MOD.velocity_ellipsoid(jacobian, scales)')
+p.write_text(s,encoding='utf-8')
