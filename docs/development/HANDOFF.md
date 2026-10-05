@@ -1,9 +1,38 @@
+# Two-Article PR #4889 — Parent Delivered
+
+Parameter PR #4886 merged to remote main at d33e635d5f7aab7d983117955db08650df1acb8d on 2026-10-04 19:47 UTC. All eight accepted parameter paths match; receipt saved in reports/technical-review/parameter-remote-main-receipt.json and its lease/presence released. Main is merged into this article branch without changing its four accepted source/evidence hashes. Metadata conflicts retain the newer article acceptance and all main SPEC rows; no scientific source conflict occurred. Next: publish this merge, retarget #4889 to main and arm only through the central guard. Current article lease expires 21:50 UTC. Date PR #4891 follows this PR; implementation PR #4895 follows the date PR and has completed its own source/PDF/full-regression acceptance. Never merge a child into its topic-branch parent. Earlier entries are historical. Goal active.
+
+---
+
+# Two-Article Review #4885 — Accepted Source
+
+Accepted source `6cd4d2eee0b5e5f73c0bfc698a862bc5566b558a` passed the full frozen-tree regression:6,856 tests,29 skips,210 deselections,60 warnings and93.24% src coverage in512.05seconds. Both full article reviews and scoped local presentation checks are complete; four canonical source/evidence hashes are bound in `reports/technical-review/dimensionality-integration-validation.json`. Five read-only Flash helpers supported lead review. No engine, human or live-site certification is implied. Test-created packaging directories were verified untracked/workspace-contained and preserved under QA after the run.
+
+Current delivery: regular PR [#4889](https://github.com/D-sorganization/AffineDrift/pull/4889), initial head `073117a7c2a76304cb6d8d2889f72c44249b7c01`, branch `fix/dimensionality-integration-review`. It targets parent `fix/launch-parameter-review` until #4886 reaches remote main. Do not merge into the topic branch: retarget main after parent delivery, preserve accepted source hashes, then arm the central merge guard. Metadata checks passed (45); pre-push hooks passed. No source changes since acceptance.
+
+Date-display #4888 is committed at `70337154c` in `C:/Users/diete/Repositories/Worktrees/AffineDrift-date-display`; its full frozen regression is running. Shared pre-PR tool defects are repaired at Repository_Management `f7395f5b` for issue #1940; five local gates passed. The first RM push failed because its direct-script pytest hook lacked repository PYTHONPATH; retry sets PYTHONPATH to that worktree without bypassing hooks. Integrate this article-acceptance metadata into the date branch after its frozen run. Parent #4886 remains queue position 2 awaiting merge-group execution (18:56 UTC). Broad goal remains active. Earlier handoff sections below are historical and superseded where they conflict with this current status.
+
+---
+
+# Dimensionality and Integration Review #4885 — Source Draft
+
+Active branch `fix/dimensionality-integration-review`, worktree `C:/Users/diete/Repositories/Worktrees/AffineDrift-dimensionality-review`. Both complete originals and revisions read; detailed technical decisions, primary-reading limits and five Flash helper adjudications are in `reports/technical-review/dimensionality-integration-review.md`. Manufactured mathematics and both Quarto renders pass. Browser review and full regression remain; corpus entries must stay pending until acceptance. No engine/human/live-site validation is claimed.
+
+Parent regular PR4886 is open; central guard successfully armed squash auto-merge after the earlier GraphQL rate-limit failure. Verify actual merge and canonical source bytes, then release4881. The next branch integrates its metadata through5959b7c99; preserve accepted parameter source117a416d5. Current4885lease: technical-review-20261004-dimensionality through20:06UTC, presence through20:08UTC. Goal active.
+
+---
 # Issue #4913 - Benchmark Baseline Platform Detection
 
 Branch `fix/4913-benchmark-baseline`: `scripts/ci/benchmark_compare_args.py` (tested) picks compare vs save mode from `.benchmarks/<machine_id>/` and compares by the highest stored run number (`--benchmark-compare=NNNN`; the save name matches nothing); `ci-benchmarks.yml` uses it, adds pipefail, uploads a candidate baseline artifact and reports honest PR status. Next: after merge, a maintainer runs the workflow, downloads artifact `benchmark-baseline-Linux-CPython-3.12-64bit` and commits it under `.benchmarks/Linux-CPython-3.12-64bit/` to enable gating. #4912 (pytest-timeout) is a separate open PR.
 # Issue #4531 - ADR 0002, Interactive Technology Stack
 
 Branch `claude/issue-4531` (worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4531`), commit SELF, draft PR #4907. Adds `docs/adr/0002-interactive-technology-stack.md` (Accepted; records Board decision D3(d) from PR #4485: OJS for light widgets, Pyodide for faithful `src/` execution, both self-hosted), indexes it in `docs/adr/README.md`, and adds `tests/test_adr_index.py` (every `NNNN-*.md` ADR indexed and has a non-empty `## Status`). RED: 1 failed, 7 passed before indexing; GREEN: 8 passed. Docs and test only: no widget, vendoring or CDN migration (rotation converter, grip-angle simulator) is done here; D4, D7 and D8 stay held. Dev-log entry: DL-#4531. Next: review the draft PR; #4533, #4534 and #4540 may then build to the ADR.
+
+# Issue #4883 - See Also Callout Headings Un-nested
+
+Branch `claude/issue-4883`: 17 pages now use `::: {.callout-note title="See Also"}` so the gate sees their links; parts 2, 4, 5, 6, 7 of the tangent-hyperplanes series gain previous/next links; 25 related-coverage baseline entries removed (70 to 45); new `test_committed_baseline_has_no_stale_entries` guard; claim-audit evidence regenerated. Next: review the draft PR and arm the merge queue.
+
+---
 
 # Issue #4882 - Freshness Dashboard Page-Relative Links
 
