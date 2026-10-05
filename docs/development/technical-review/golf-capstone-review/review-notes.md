@@ -38,6 +38,8 @@ PDF: 49 pages, 19 bibliography entries. Physical pages 3–5 and 39–49 visuall
 
 ## Delivery and Coordination
 
+Pre-PR mypy initially saw both affine_control and src.affine_control because the central default search path includes src and the repository root. Set MYPYPATH to this repository root, matching the existing src.affine_control imports; no checks are disabled. Mypy then identified two vectorize results inferred as Any. Explicit typing.cast annotations now document their already-tested array/tuple shapes without changing runtime values. Regenerated listing/PDF pass 9, still 49 pages; physical pages 42–47 reinspected. All five pre-PR gates and 40 mapped tests pass with the canonical search path. This type-only source revision will receive a fresh frozen regression and supersede the prior acceptance hashes before the PR opens.
+
 Accepted frozen source be4bbe6e27d0fb33a2b984c743a2e361e72c136e: 7,072 passed, 29 skipped, 210 deselected, 60 warnings in 413.30 seconds; source coverage 93.25%, exit 0, unchanged tracked tree. Nine Git-blob hashes recorded. Two corpus rows accepted, leaving 62 pending-prefix rows of 407. Full-test packaging outputs were verified untracked and moved into QA before the pre-PR gate. PR #4889 subsequently received another owner update to 2e0b448cdc10442baf8afe5d15486f73ca05d2ab; current CI is running again. Do not mistake the previous head's green run for acceptance of the new head.
 
 E/F/G/H/K lease renewals through 04:33:09 UTC: receipts 5987111390, 5987111606, 5987111853, 5987112064, 5987112257. New issue #4923 covers Volume V chapters 1–3 with separate worktree and tests; no changes to that scope belong in this PR.

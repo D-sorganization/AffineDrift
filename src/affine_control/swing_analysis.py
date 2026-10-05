@@ -9,6 +9,7 @@ requirements of the prescribed motion under the uniform-rod model.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import cast
 
 import numpy as np
 from numpy.typing import NDArray
@@ -91,7 +92,7 @@ class SwingAnalysis:
         _, angles, rates = self._require_kinematics()
         model = self.model()
         evaluate = np.vectorize(model.clubhead_speed, signature="(n),(n)->()")
-        return evaluate(angles, rates)
+        return cast(Array, evaluate(angles, rates))
 
     def joint_acceleration_components(self) -> tuple[Array, Array]:
         """Return signed same-state drift/control arrays, each shape (N, 3).
@@ -113,7 +114,7 @@ class SwingAnalysis:
             return np.linalg.solve(mass, -bias), np.linalg.solve(mass, torque)
 
         batch = np.vectorize(evaluate, signature="(n),(n),(n)->(n),(n)")
-        return batch(angles, rates, torques)
+        return cast(tuple[Array, Array], batch(angles, rates, torques))
 
     def ztcf_decomposition(self) -> tuple[Array, Array]:
         """Return same-state joint-acceleration norms in rad/s^2.
