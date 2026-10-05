@@ -3,7 +3,6 @@ const {
   buildEvidencePlan,
   canonicalPathMatches,
   fixedElementCanObscureHeading,
-  formatFailures,
   headingBeginsWithinViewport,
   isActionableConsoleError,
   isActionablePageError,
@@ -17,6 +16,7 @@ const {
   waitForSettledPage,
   waitForVisibleMath,
 } = require('../scripts/verify-public-site.js');
+const { formatFailures } = require('../scripts/public-site-failures.js');
 const fs = require('fs');
 const path = require('path');
 
