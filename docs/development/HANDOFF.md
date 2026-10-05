@@ -1,3 +1,7 @@
+# Issue #4531 - ADR 0002, Interactive Technology Stack
+
+Branch `claude/issue-4531` (worktree `C:/Users/diete/Repositories/AffineDrift-worktrees/claude-4531`), commit SELF, draft PR #4907. Adds `docs/adr/0002-interactive-technology-stack.md` (Accepted; records Board decision D3(d) from PR #4485: OJS for light widgets, Pyodide for faithful `src/` execution, both self-hosted), indexes it in `docs/adr/README.md`, and adds `tests/test_adr_index.py` (every `NNNN-*.md` ADR indexed and has a non-empty `## Status`). RED: 1 failed, 7 passed before indexing; GREEN: 8 passed. Docs and test only: no widget, vendoring or CDN migration (rotation converter, grip-angle simulator) is done here; D4, D7 and D8 stay held. Dev-log entry: DL-#4531. Next: review the draft PR; #4533, #4534 and #4540 may then build to the ADR.
+
 # Issue #4883 - See Also Callout Headings Un-nested
 
 Branch `claude/issue-4883`: 17 pages now use `::: {.callout-note title="See Also"}` so the gate sees their links; parts 2, 4, 5, 6, 7 of the tangent-hyperplanes series gain previous/next links; 25 related-coverage baseline entries removed (70 to 45); new `test_committed_baseline_has_no_stale_entries` guard; claim-audit evidence regenerated. Next: review the draft PR and arm the merge queue.
@@ -2842,3 +2846,5 @@ The following record preserves the merged PR #4723 review; its pending delivery 
 - Integrated radar remote main `bd1255f153926c7e653148b8c4db972a08ba7be9`; its lease/presence released at 01:12 UTC. Preserve both completed review streams below. Only heavy-hit full validation and delivery remain in flight for this session.
 
 - Next indexed source is companion Chapter 20 (`ch20_plane_to_space.qmd`, 2632 words). Read-only preparation and two supplied-text Flash inventories are complete locally: inspect observer versus representation invariance, contact wrench admissibility, and exact archived closure/engine evidence. No issue claim, source edit, or completed review for that chapter. Provider facts remain unverified; do not promote delegate conjectures.
+
+- No material handoff change for #4911: one-line pin of `pytest-timeout==2.4.0` in `requirements-benchmarks.txt`; no continuation state affected.
