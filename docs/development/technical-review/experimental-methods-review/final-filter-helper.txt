@@ -1,0 +1,32 @@
+### Precise Remaining Defects
+
+1. **Python Contract: Edge Case When `frames == 2`**
+   - **Defect:** For a low filter order (e.g., `filter_order = 1`), `padlen = 3 * (1 + 1) = 6`. However, if `filter_order` is not constrained to be large enough, or more generally when `frames < 3`, `data.shape[0] <= padlen + 1` handles long records, but the finite difference slices (`positions[2:]`, `positions[1:-1]`, `positions[:-2]`) assume at least 3 samples exist along axis 0. If `padlen` were small (or if tested with minimal padding where `frames == 2`), the slice `1:-1` on a 2-frame array yields an empty slice (`slice(1, 1)`), resulting in an unpopulated interior rather than a defined 3-point central stencil, while endpoint assignment rules intend to leave boundaries as NaN. More critically, if `data.shape[0] == 0` (frames = 0), `data.shape[1] == 0` and `data.shape[2] != 3` are checked, but `data.shape[0] == 0` is not explicitly rejected in the shape check prior to the `padlen` evaluation.
+   - **Correction:** In the shape check, include `data.shape[0] < 3` (or require `data.shape[0] <= max(padlen + 1, 2)`) to make the derivative contract explicitly guarantee at least one interior frame.
+
+2. **SciPy `sosfiltfilt` Padlen Semantics / Default Relationship**
+   - **Defect:** `padlen = 3 * (int(filter_order) + 1)` uses `filter_order` directly, but SciPy's internal default padding for `sosfiltfilt` is based on the SOS matrix length (number of sections $n_{\text{sections}} = \lceil \text{order}/2 \rceil$) or filter impulse response length, typically $3 \times (2 \times n_{\text{sections}} + 1)$. While a custom `padlen` is permissible, calling `filter_order` without clarifying that `sosfiltfilt` operates on second-order biquads can cause under-padding relative to standard SciPy defaults when `filter_order` is odd or high order.
+
+3. **Residual Analysis Formulation: Marker / Coordinate Flattening or Summation Index**
+   - **Defect:** In Section \ref{sec:filter-cutoff}, Winter's residual formula is written as:
+     \[
+     R(f_c)=\sqrt{\frac{1}{N}\sum_{i=1}^{N} \bigl(x_i-\hat{x}_i(f_c)\bigr)^2}
+     \]
+     Here, $x_i$ represents a scalar 1D coordinate series of length $N$ (e.g., a single spatial coordinate component). In the preceding subsection, `marker_data` has shape `(frames, markers, 3)`. Without defining $x_i$ as an individual coordinate trajectory or specifying whether $R(f_c)$ is computed per coordinate or pooled across coordinates/markers, the formula creates an indexing mismatch with the 3D marker array contract.
+
+---
+
+### Optional Changes
+
+1. **Typing and Return Annotation in Listing**
+   - In modern Python (3.9+ / 3.12), `numpy.typing.NDArray[np.float64]` provides a stricter array contract than bare `np.ndarray`, reflecting the docstring's float specification.
+
+2. **Acceleration Stencil Precision Statement**
+   - The central difference formula for acceleration $\frac{x_{i+1} - 2x_i + x_{i-1}}{\Delta t^2}$ is standard $\mathcal{O}(\Delta t^2)$. Clarifying in the docstring that this is the standard second-order central difference stencil helps distinguish it from consecutive first-difference operations.
+
+3. **Winter Residual Curve Intersection Clarification**
+   - Text states: *"The described compromise chooses the frequency where the residual curve intersects the horizontal level $R=R_0$."* 
+   - While faithful to Winter's heuristic description, pointing out that $R_0$ is the extrapolated RMS noise estimate helps readers understand why the horizontal line represents an estimated baseline noise floor.
+
+4. **STA Orientation Bounds**
+   - While translational STA magnitudes (exceeding 30 mm thigh, 15 mm shank) from Peters et al. (2010) are cited, adding typical reported rotational error ranges (e.g., up to $5^\circ$--$20^\circ$, depending on DOF and segment) provides a complete picture matching the later sentence *"Report both translational and orientation uncertainty"*.

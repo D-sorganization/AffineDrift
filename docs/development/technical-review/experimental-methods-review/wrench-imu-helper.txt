@@ -1,0 +1,128 @@
+# Part 1: Center of Pressure (CoP) & Free Torque Derivation
+
+### 1. Setup & Wrench Reduction
+- **Frame & Geometry**: Right-handed frame with origin $O = (0,0,0)^T$ and vertical axis $+z$ upward. The contact surface is the horizontal plane $z = h$.
+- **Contact Point / CoP**: $\mathbf{r}_{\text{cop}} = (x, y, h)^T$.
+- **Applied Wrench at $O$**: $\mathbf{F} = (F_x, F_y, F_z)^T$, $\mathbf{M}_O = (M_x, M_y, M_z)^T$ (acting on the person from the plate).
+- **Assumed contact wrench structure**: A point force $\mathbf{F}$ at $\mathbf{r}_{\text{cop}}$ plus a residual pure contact couple (free moment) purely normal to the plane: $\mathbf{T} = (0, 0, T_z)^T$.
+
+By moment transfer:
+$$\mathbf{M}_O = \mathbf{r}_{\text{cop}} \times \mathbf{F} + \mathbf{T}$$
+
+Expanding the cross product:
+$$\mathbf{r}_{\text{cop}} \times \mathbf{F} = \begin{pmatrix} x \\ y \\ h \end{pmatrix} \times \begin{pmatrix} F_x \\ F_y \\ F_z \end{pmatrix} = \begin{pmatrix} y F_z - h F_y \\ h F_x - x F_z \\ x F_y - y F_x \end{pmatrix}$$
+
+Equating components with $\mathbf{M}_O = (M_x, M_y, M_z)^T$:
+1. $M_x = y F_z - h F_y \implies y F_z = M_x + h F_y \implies y = \frac{M_x + h F_y}{F_z}$
+2. $M_y = h F_x - x F_z \implies x F_z = h F_x - M_y \implies x = \frac{h F_x - M_y}{F_z}$
+3. $M_z = x F_y - y F_x + T_z \implies T_z = M_z - (x F_y - y F_x) = M_z - x F_y + y F_x$
+
+Both expressions for $x, y$ and $T_z$ **exactly match the proposed equations**.
+
+---
+
+### 2. Properties, Signs, Units & Conditioning
+
+- **Units**:
+  - $[h F_{x,y}] = \text{m} \cdot \text{N} = \text{N}\cdot\text{m}$, $[M_{x,y}] = \text{N}\cdot\text{m}$, $[F_z] = \text{N} \implies [x], [y] = \frac{\text{N}\cdot\text{m}}{\text{N}} = \text{m}$ (Consistent).
+  - $[T_z] = \text{N}\cdot\text{m} - \text{m}\cdot\text{N} = \text{N}\cdot\text{m}$ (Consistent).
+- **Action / Reaction Invariance**:
+  - If using person-on-ground wrench $(\mathbf{F}', \mathbf{M}'_O) = (-\mathbf{F}, -\mathbf{M}_O)$:
+    $$x = \frac{h(-F_x) - (-M_y)}{-F_z} = \frac{-(h F_x - M_y)}{-F_z} = \frac{h F_x - M_y}{F_z}$$
+    Coordinates $x, y$ are strictly invariant under simultaneous sign negation of $(\mathbf{F}, \mathbf{M}_O)$.
+    $$T'_z = -M_z - x(-F_y) + y(-F_x) = -T_z$$
+    (Free torque negates under Newton's third law, as required).
+- **General signed $h$**:
+  - The derivation places no mathematical restriction on the sign of $h$. If $O$ is above the contact plane, $h < 0$; the formulas remain identical.
+- **Low-$F_z$ Conditioning**:
+  - As $F_z \to 0$ (swing phase, foot liftoff, or flight), $x$ and $y$ are ill-conditioned ($0/0$ or divergence). Standard plate processing gates CoP calculation with a threshold (e.g., $F_z > 10\text{--}50\,\text{N}$).
+
+---
+
+### 3. Assumptions & Rejection of Overgeneralizations
+
+1. **Planar horizontal contact**: Assumes contact lies strictly in $z = h$. On stairs, ramps, or compliant surfaces where contact depth varies, CoP is not uniquely defined by a single scalar $h$.
+2. **Residual couple assumption**: Assumes friction/contact mechanics cannot sustain unmodeled horizontal surface couples $(T_x = 0, T_y = 0)$.
+3. **Convex hull / multi-contact overgeneralization**: CoP is the equivalent center of pressure. When two feet are on the same plate, $(x, y)$ falls somewhere between the two feet (often outside either foot's contact area), not necessarily inside an individual foot sole.
+4. **Sign convention trap**: If $+z$ is downward (common in some aeronautics/biomechanics platforms), $F_z$ is negative in stance, and cross-product signs flip.
+
+---
+
+### 4. Manufactured Numerical Examples (CoP)
+
+#### Example 1: Standard Stance ($h = +0.05\,\text{m}$)
+- $\mathbf{F} = (20, -10, 500)\,\text{N}$, $h = 0.05\,\text{m}$
+- Suppose true contact is at $\mathbf{r} = (0.10, -0.04, 0.05)\,\text{m}$ with $T_z = 2.0\,\text{N}\cdot\text{m}$.
+- Resulting moment at $O$:
+  - $M_x = y F_z - h F_y = (-0.04)(500) - (0.05)(-10) = -20 + 0.5 = -19.5\,\text{N}\cdot\text{m}$
+  - $M_y = h F_x - x F_z = (0.05)(20) - (0.10)(500) = 1.0 - 50.0 = -49.0\,\text{N}\cdot\text{m}$
+  - $M_z = x F_y - y F_x + T_z = (0.10)(-10) - (-0.04)(20) + 2.0 = -1.0 + 0.8 + 2.0 = 1.8\,\text{N}\cdot\text{m}$
+- Recovery:
+  - $x = \frac{(0.05)(20) - (-49.0)}{500} = \frac{1.0 + 49.0}{500} = 0.10\,\text{m}$ ✓
+  - $y = \frac{-19.5 + (0.05)(-10)}{500} = \frac{-19.5 - 0.5}{500} = -0.04\,\text{m}$ ✓
+  - $T_z = 1.8 - (0.10)(-10) + (-0.04)(20) = 1.8 - (-1.0) - 0.8 = 2.0\,\text{N}\cdot\text{m}$ ✓
+
+#### Example 2: Negative Height ($h = -0.02\,\text{m}$, origin above plane)
+- $\mathbf{F} = (-30, 40, 600)\,\text{N}$, $h = -0.02\,\text{m}$
+- True contact: $\mathbf{r} = (-0.05, 0.08, -0.02)\,\text{m}$, $T_z = -1.5\,\text{N}\cdot\text{m}$.
+- Resulting moment:
+  - $M_x = (0.08)(600) - (-0.02)(40) = 48 + 0.8 = 48.8\,\text{N}\cdot\text{m}$
+  - $M_y = (-0.02)(-30) - (-0.05)(600) = 0.6 + 30.0 = 30.6\,\text{N}\cdot\text{m}$
+  - $M_z = (-0.05)(40) - (0.08)(-30) + (-1.5) = -2.0 + 2.4 - 1.5 = -1.1\,\text{N}\cdot\text{m}$
+- Recovery:
+  - $x = \frac{(-0.02)(-30) - 30.6}{600} = \frac{0.6 - 30.6}{600} = -0.05\,\text{m}$ ✓
+  - $y = \frac{48.8 + (-0.02)(40)}{600} = \frac{48.8 - 0.8}{600} = 0.08\,\text{m}$ ✓
+  - $T_z = -1.1 - (-0.05)(40) + (0.08)(-30) = -1.1 - (-2.0) - 2.4 = -1.5\,\text{N}\cdot\text{m}$ ✓
+
+---
+
+# Part 2: Accelerometer Specific Force & Kinematic Acceleration
+
+### 1. Model & Sign Conventions
+- An ideal accelerometer measures specific force $\mathbf{f}$ (support force per unit mass):
+  $$\mathbf{f}_{\text{world}} = \mathbf{a}_{\text{world}} - \mathbf{g}_{\text{world}}$$
+  *(Check: at rest in standard gravity with $+z$ up, $\mathbf{a}=0$ and $\mathbf{g}_{\text{world}} = (0, 0, -g)^T \implies \mathbf{f}_{\text{world}} = (0,0,+g)^T$, reading $+1g$ upward).*
+- Let $\mathbf{Q} \in SO(3)$ be the **world-from-body** rotation matrix ($\mathbf{v}_{\text{world}} = \mathbf{Q} \mathbf{v}_{\text{body}} \implies \mathbf{v}_{\text{body}} = \mathbf{Q}^T \mathbf{v}_{\text{world}}$).
+- Including sensor bias $\mathbf{b}$ in body frame:
+  $$\mathbf{f}_{\text{body}} = \mathbf{Q}^T (\mathbf{a}_{\text{world}} - \mathbf{g}_{\text{world}}) + \mathbf{b}$$
+- **Recovering world kinematic acceleration $\mathbf{a}_{\text{world}}$**:
+  1. Subtract bias: $\mathbf{f}_{\text{body}} - \mathbf{b} = \mathbf{Q}^T (\mathbf{a}_{\text{world}} - \mathbf{g}_{\text{world}})$
+  2. Multiply by $\mathbf{Q}$: $\mathbf{Q}(\mathbf{f}_{\text{body}} - \mathbf{b}) = \mathbf{a}_{\text{world}} - \mathbf{g}_{\text{world}}$
+  3. Add gravity:
+     $$\mathbf{a}_{\text{world}} = \mathbf{Q}(\mathbf{f}_{\text{body}} - \mathbf{b}) + \mathbf{g}_{\text{world}}$$
+Both stated forward and inverse equations are **exact and correct**.
+
+---
+
+### 2. Common Overgeneralizations & Pitfalls to Reject
+1. **Neglecting Gravity Vector Definition**: If gravity is defined as positive vector magnitude downwards $\mathbf{g} = (0, 0, g)^T$ without sign care, sign errors occur. Standard physical convention is $\mathbf{g}_{\text{world}} = (0, 0, -9.81)^T\,\text{m/s}^2$.
+2. **Point-Mass vs Rigid-Body (Centripetal/Tangential Acceleration)**: This formula holds strictly for an accelerometer collocated at the center of mass or tracking point. If offset from a rotating body center by lever arm $\mathbf{r}_b$, additional terms appear: $\mathbf{\omega} \times (\mathbf{\omega} \times \mathbf{r}_b) + \mathbf{\dot{\omega}} \times \mathbf{r}_b$.
+3. **Definition of $\mathbf{Q}$**: Confusing body-from-world with world-from-body will invert $\mathbf{Q}$ and transpose operations.
+
+---
+
+### 3. Manufactured Numerical Examples (Accelerometer)
+
+Let $\mathbf{g}_{\text{world}} = (0, 0, -9.80)^T\,\text{m/s}^2$.
+
+#### Example 1: Upright Stance with Lateral Acceleration
+- Orientation: Identity $\mathbf{Q} = \mathbf{I}_3$ (body aligned with world).
+- Bias: $\mathbf{b} = (0.1, -0.05, 0.2)^T\,\text{m/s}^2$.
+- True kinematic acceleration: $\mathbf{a}_{\text{world}} = (2.0, 0.0, 0.0)^T\,\text{m/s}^2$.
+- Forward specific force:
+  - $\mathbf{a}_{\text{world}} - \mathbf{g}_{\text{world}} = (2.0, 0.0, 0.0)^T - (0, 0, -9.8)^T = (2.0, 0.0, 9.8)^T\,\text{m/s}^2$.
+  - $\mathbf{f}_{\text{body}} = \mathbf{I}^T (2.0, 0.0, 9.8)^T + (0.1, -0.05, 0.2)^T = (2.1, -0.05, 10.0)^T\,\text{m/s}^2$.
+- Inversion / Recovery:
+  $$\mathbf{a}_{\text{world}} = \mathbf{I} \left(\begin{pmatrix} 2.1 \\ -0.05 \\ 10.0 \end{pmatrix} - \begin{pmatrix} 0.1 \\ -0.05 \\ 0.2 \end{pmatrix}\right) + \begin{pmatrix} 0 \\ 0 \\ -9.8 \end{pmatrix} = \begin{pmatrix} 2.0 \\ 0.0 \\ 9.8 \end{pmatrix} + \begin{pmatrix} 0 \\ 0 \\ -9.8 \end{pmatrix} = \begin{pmatrix} 2.0 \\ 0.0 \\ 0.0 \end{pmatrix}\,\text{m/s}^2 \quad \text{✓}$$
+
+#### Example 2: $90^\circ$ Pitch Rotation (Nose Down / Forward Tilt)
+- Orientation: $90^\circ$ pitch about world $+y$, mapping body $z$ to world $x$ and body $x$ to world $-z$:
+  $$\mathbf{Q} = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0 \end{pmatrix}, \quad \mathbf{Q}^T = \begin{pmatrix} 0 & 0 & -1 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \end{pmatrix}$$
+- Bias: $\mathbf{b} = (0.0, 0.0, 0.0)^T\,\text{m/s}^2$.
+- True kinematic acceleration: $\mathbf{a}_{\text{world}} = (0.0, 0.0, 1.0)^T\,\text{m/s}^2$ (accelerating vertically upwards).
+- Forward:
+  - $\mathbf{a}_{\text{world}} - \mathbf{g}_{\text{world}} = (0.0, 0.0, 1.0)^T - (0, 0, -9.8)^T = (0.0, 0.0, 10.8)^T\,\text{m/s}^2$.
+  - $\mathbf{f}_{\text{body}} = \mathbf{Q}^T (0.0, 0.0, 10.8)^T = (-10.8, 0.0, 0.0)^T\,\text{m/s}^2$.
+- Inversion / Recovery:
+  $$\mathbf{Q} \mathbf{f}_{\text{body}} = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0 \end{pmatrix} \begin{pmatrix} -10.8 \\ 0.0 \\ 0.0 \end{pmatrix} = \begin{pmatrix} 0.0 \\ 0.0 \\ 10.8 \end{pmatrix}$$
+  $$\mathbf{a}_{\text{world}} = \begin{pmatrix} 0.0 \\ 0.0 \\ 10.8 \end{pmatrix} + \begin{pmatrix} 0 \\ 0 \\ -9.8 \end{pmatrix} = \begin{pmatrix} 0.0 \\ 0.0 \\ 1.0 \end{pmatrix}\,\text{m/s}^2 \quad \text{✓}$$

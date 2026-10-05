@@ -1,0 +1,86 @@
+### Executive Summary of Audit Findings
+
+| Category | Priority | Issue Summary |
+| :--- | :--- | :--- |
+| **Equation / Sign Errors** | **P1 (Critical)** | Center of Pressure ($\text{CoP}$) sign convention in Eq.~\eqref{eq:ch7:cop} is ambiguous or incorrect without a stated coordinate frame. |
+| **Algorithmic / Mathematical Errors** | **P1 (Critical)** | Winter's residual analysis intercept rule is stated backwards (extrapolating to the $R$-axis vs. projecting back from noise line). |
+| **Numerical Differentiation Errors** | **P2 (High)** | Boundary condition handling in `process_mocap_data` introduces artificial zero derivatives ($v=0, a=0$) at boundaries. |
+| **Filtering Artifacts** | **P2 (High)** | `filtfilt` forward-backward filtering squares the frequency response, halving the effective cutoff attenuation point from $-3\text{ dB}$ to $-6\text{ dB}$. |
+| **Unsupported Biological Inferences** | **P2 (High)** | Conflation of physiological *electromechanical delay* (EMD) with instrumentation synchronization latency. |
+| **Physiological / Biophysical Oversimplification** | **P3 (Medium)** | MVC normalization presented as universal without noting issues with spasticity, pain, or non-isometric dynamic contractions. |
+| **Missing Interpretation Connections** | **P3 (Medium)** | IMU accelerometers measure *specific force* ($a - g$), not kinematic linear acceleration $a(t)$. |
+
+---
+
+### Part 1: Concrete Proofs of Errors & Technical Flaws
+
+#### 1. Inconsistent / Incomplete Center of Pressure Formulation (Eq.~\eqref{eq:ch7:cop})
+* **Stated Equation:**
+  $$x_{\text{CoP}} = -\frac{M_y + F_x \cdot d_z}{F_z}, \quad y_{\text{CoP}} = \frac{M_x - F_y \cdot d_z}{F_z}$$
+* **Proof of Error:**
+  In rigid body statics, the moments measured about the origin of the force plate transducer coordinate system (at depth $-d_z$ along the $z$-axis) by a reaction force $\mathbf{F} = [F_x, F_y, F_z]^T$ applied at the top plate surface $[x_{\text{CoP}}, y_{\text{CoP}}, 0]^T$ are given by $\mathbf{M} = \mathbf{r} \times \mathbf{F}$.
+  With $\mathbf{r} = [x_{\text{CoP}}, y_{\text{CoP}}, d_z]^T$:
+  $$M_x = y_{\text{CoP}} F_z - d_z F_y \implies y_{\text{CoP}} = \frac{M_x + d_z F_y}{F_z}$$
+  $$M_y = d_z F_x - x_{\text{CoP}} F_z \implies x_{\text{CoP}} = \frac{-M_y + d_z F_x}{F_z}$$
+  Depending on whether $\mathbf{F}$ is defined as the force *on* the plate or the ground reaction force *on* the subject, signs of both terms change. In Eq.~\eqref{eq:ch7:cop}, the signs are:
+  - $x_{\text{CoP}} = -(M_y + F_x d_z)/F_z = (-M_y - F_x d_z)/F_z$
+  - $y_{\text{CoP}} = (M_x - F_y d_z)/F_z$
+  
+  The relative sign between the moment and the shear force lever arm ($F_{x,y} d_z$) is internally inconsistent for standard right-handed Cartesian frames ($+z$ pointing upward or downward). Without an explicitly defined coordinate frame and reaction force sign convention, this formula produces erroneous CoP locations.
+
+---
+
+#### 2. False Mathematical Description of Winter's Residual Analysis
+* **Stated Text (Section~\ref{sec:filter-cutoff}):**
+  > *"The optimal cutoff is the intersection of the extrapolated linear noise-only segment with the $R$-axis..."*
+* **Proof of Error:**
+  In Winter (2009, *Biomechanics and Motor Control of Human Movement*, 4th ed., §3.4.2), the residual curve $R(f_c)$ approaches a non-zero straight line with negative slope at higher frequencies (representing high-frequency white/Gaussian noise). 
+  - Extrapolating the high-frequency line back to $f_c = 0$ yields the estimated RMS residual error of the noise alone, $R_{\text{noise\_est}} = R_0$.
+  - The optimal cutoff $f_c^*$ is **not** the intersection with the $R$-axis; it is the frequency where a horizontal line drawn at $R = R_0$ intersects the actual $R(f_c)$ curve:
+    $$R(f_c^*) = R_0 = \lim_{f_c \to f_{\text{Nyq}}} \text{intercept}(R(f_c)).$$
+  Stating that the optimal cutoff is the intersection with the $R$-axis would mean $f_c^* = 0\text{ Hz}$, which is dimensionally and conceptually false.
+
+---
+
+#### 3. Mathematical & Algorithmic Flaws in Listing 1 (`process_mocap_data`)
+
+* **A. Boundary Condition Distortion:**
+  ```python
+  velocities[0] = velocities[1]
+  velocities[-1] = velocities[-2]
+  accelerations[0] = accelerations[1]
+  accelerations[-1] = accelerations[-2]
+  ```
+  This hardcoded assignment clamps boundary rates to neighboring values rather than using forward/backward difference schemes ($\mathcal{O}(\Delta t)$ or $\mathcal{O}(\Delta t^2)$). More critically, calculating central difference accelerations directly from already differentiated positions without consistent boundary handling creates step discontinuities at the ends.
+
+* **B. Effective Filter Order & Cutoff Shift in `filtfilt`:**
+  Applying `scipy.signal.filtfilt` with a 4th-order Butterworth filter runs the filter forward and backward. 
+  - The effective filter order is doubled ($n_{\text{eff}} = 2 \times 4 = 8$).
+  - The transfer function amplitude becomes $|H(j\omega)|^2$. At the specified nominal cutoff $f_c$, the attenuation is not $-3\text{ dB}$ ($1/\sqrt{2}$), but $-6\text{ dB}$ ($1/2$).
+  - A frequency correction factor $C = \left(\sqrt{2}^{1/n} - 1\right)^{-0.25}$ (or equivalent for order $n$) must be applied to `cutoff_freq` if an actual $-3\text{ dB}$ cutoff is intended.
+
+---
+
+#### 4. Unsupported Biological Inference / Conflation in Data Synchronization
+* **Stated Text (Section 5):**
+  > *"EMG-to-motion delay: typically 10--80~ms (electromechanical delay)"*
+* **Proof of Flaw:**
+  Electromechanical delay (EMD) is an intrinsic physiological latency between motor unit action potential generation and force transmission through elastic tendinous tissue. 
+  - Listing EMD under **Data Synchronization** implies that hardware clocks or acquisition systems should apply a 10–80 ms timing shift to align EMG signals with kinematic data.
+  - Doing so introduces artificial lead/lag errors: EMD is a variable, state-dependent physiological property (dependent on muscle compliance, joint angle, contraction velocity, and muscle type), **not** an instrumentation calibration offset or acquisition transmission delay.
+
+---
+
+### Part 2: Conjectures & Biomechanical Nuances
+
+1. **IMU Kinematic Acceleration vs. Specific Force:**
+   - *Issue:* Section 4 defines IMU linear acceleration as $\bm{a}(t) \in \mathbb{R}^3$.
+   - *Conjecture:* Triaxial accelerometers do not measure kinematic acceleration $\ddot{\mathbf{x}}(t)$; they measure specific gravito-inertial force $\mathbf{f} = \ddot{\mathbf{x}}(t) - \mathbf{g}$. Without subtracting gravity in the navigation frame, treating $\bm{a}(t)$ as pure linear acceleration leads directly to unconstrained drift upon double integration.
+
+2. **Full-Wave Rectification vs. Spectral Filtering Order:**
+   - *Issue:* Section 2.1 prescribes: (1) Band-pass filter 20–450 Hz $\to$ (2) Full-wave rectification $\to$ (3) Low-pass filter at 3–6 Hz.
+   - *Conjecture:* While this produces a linear envelope, it omits anti-aliasing considerations if downsampling is performed after envelope extraction, and does not address high-pass filtering (typically 20–30 Hz) required to remove cardiac (ECG) artifacts in trunk/shoulder EMG recordings.
+
+3. **Generalization of Lower-Limb STA Magnitudes:**
+   - *Issue:* Stating STA is 10–30 mm with shank being the "best".
+   - *Conjecture:* While distal shank displays lower artifact than the mid-thigh, the perimalleolar region or proximal shank near the fibular head experiences rotational displacements up to 10–15° relative to the tibia. Absolute translation is only one component; rotational errors induced by STA are often the principal cause of inverse dynamics crosstalk (e.g., knee ab/adduction moments).
