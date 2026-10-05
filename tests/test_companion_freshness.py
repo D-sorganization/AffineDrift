@@ -62,6 +62,17 @@ def _installed_store(tmp_path: Path) -> Path:
 
 
 @pytest.mark.unit
+def test_route_link_targets_are_page_relative(tmp_path: Path) -> None:
+    import re
+
+    page = freshness.render_page(freshness.load_inputs(_installed_store(tmp_path)))
+    targets = re.findall(r"^- \[(/[^\]]*)\]\(([^)]*)\)$", page, flags=re.M)
+    assert len(targets) == 2
+    assert all(not target.startswith("/") for _, target in targets)
+    assert ("/models/programming/index.html", "index.html") in targets
+
+
+@pytest.mark.unit
 def test_page_reports_active_pin_provider_verdict_and_every_pin(tmp_path: Path) -> None:
     store = _installed_store(tmp_path)
     page = freshness.render_page(freshness.load_inputs(store))
@@ -72,7 +83,7 @@ def test_page_reports_active_pin_provider_verdict_and_every_pin(tmp_path: Path) 
     assert "### Provider Blockers" in page
     assert "1 active, 0 pinned, 1 review required" in page
     assert "Review required (unqualified)" in page
-    assert "- [/pages/overview.html](/pages/overview.html)" in page
+    assert "- [/pages/overview.html](../../pages/overview.html)" in page
     assert "Newer is not approved" in page
     # Deterministic: rendering twice yields identical bytes.
     assert page == freshness.render_page(freshness.load_inputs(store))
