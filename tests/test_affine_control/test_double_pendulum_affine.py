@@ -24,15 +24,16 @@ from src.affine_control.double_pendulum_affine import (
     tip_position,
 )
 from src.affine_control.dynamics import double_pendulum_mass_matrix
+from src.core.constants import GRAVITY_M_S2
 
-PARAMS = DoublePendulumParams(m1=7.0, m2=0.6, l1=0.75, l2=1.1, gravity=9.81)
+PARAMS = DoublePendulumParams(m1=7.0, m2=0.6, l1=0.75, l2=1.1, gravity=GRAVITY_M_S2)
 Q = np.array([2.3, 3.6])
 QD = np.array([-1.5, 2.0])
 
 
 def test_params_reject_nonphysical_values() -> None:
     for bad in ({"m1": 0.0}, {"l2": -1.0}, {"gravity": float("nan")}, {"m2": float("inf")}):
-        values = {"m1": 1.0, "m2": 1.0, "l1": 1.0, "l2": 1.0, "gravity": 9.81} | bad
+        values = {"m1": 1.0, "m2": 1.0, "l1": 1.0, "l2": 1.0, "gravity": GRAVITY_M_S2} | bad
         with pytest.raises(ValueError):
             DoublePendulumParams(**values)
 

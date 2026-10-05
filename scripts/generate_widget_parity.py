@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import logging
+import math
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -32,6 +33,7 @@ from src.affine_control.double_pendulum_affine import (
     simulate,
     tip_acceleration_split,
 )
+from src.core.constants import GRAVITY_M_S2
 
 logger = logging.getLogger(__name__)
 
@@ -46,12 +48,17 @@ INTEGRATED = {"abs": 1e-9, "rel": 1e-9}
 
 @dataclass(frozen=True)
 class WidgetSpec:
-    """One widget: its id, cited Python source, and case builder."""
+    """One widget: its id, cited Python source, case builder, and ported modules.
+
+    ``dependency_paths`` lists every other module whose functions the JS mirror
+    ports; their digests are pinned too, so editing one makes the fixture stale.
+    """
 
     widget: str
     source_path: str
     source_function: str
     build_cases: Callable[[], list[dict[str, Any]]]
+    dependency_paths: tuple[str, ...] = ()
 
 
 def _floats(values: Any) -> Any:
@@ -64,7 +71,7 @@ def _floats(values: Any) -> Any:
 # --------------------------------------------------------------------------
 
 #: Declared illustrative parameters shared with js/drift-control-sandbox.js.
-SANDBOX_PARAMS = {"m1": 7.0, "m2": 0.6, "l1": 0.75, "l2": 1.1, "gravity": 9.81}
+SANDBOX_PARAMS = {"m1": 7.0, "m2": 0.6, "l1": 0.75, "l2": 1.1, "gravity": GRAVITY_M_S2}
 SANDBOX_HORIZON = 0.5
 SANDBOX_STEPS = 500
 SANDBOX_SAMPLE_EVERY = 25
@@ -139,6 +146,7 @@ WIDGETS: tuple[WidgetSpec, ...] = (
         source_path="src/affine_control/double_pendulum_affine.py",
         source_function="simulate",
         build_cases=_sandbox_cases,
+        dependency_paths=("src/affine_control/dynamics.py",),
     ),
 )
 
@@ -153,19 +161,72 @@ def fixture_path(spec: WidgetSpec, root: Path = REPO_ROOT) -> Path:
     return root / "tests" / "fixtures" / "widgets" / f"{spec.widget}.parity.json"
 
 
-def render_fixture(spec: WidgetSpec, root: Path = REPO_ROOT) -> str:
-    """Return the fixture text for ``spec``, generated from current ``src/``."""
-    source = root / spec.source_path
-    document = {
+def fixture_document(spec: WidgetSpec, root: Path = REPO_ROOT) -> dict[str, Any]:
+    """Return the fixture content for ``spec``, generated from current ``src/``."""
+
+    def digest(path: str) -> str:
+        """SHA-256 of one repository file."""
+        return hashlib.sha256((root / path).read_bytes()).hexdigest()
+
+    return {
         "schema": SCHEMA,
         "widget": spec.widget,
         "source": f"{spec.source_path}::{spec.source_function}",
-        "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        "source_sha256": digest(spec.source_path),
+        "dependency_sha256": {path: digest(path) for path in spec.dependency_paths},
         "generator": GENERATOR,
         "tolerance": CLOSED_FORM,
         "cases": spec.build_cases(),
     }
-    return json.dumps(document, indent=2) + "\n"
+
+
+def render_fixture(spec: WidgetSpec, root: Path = REPO_ROOT) -> str:
+    """Return the fixture text for ``spec``: deterministic JSON, one trailing newline."""
+    return json.dumps(fixture_document(spec, root), indent=2) + "\n"
+
+
+def _close(committed: Any, fresh: Any, tolerance: dict[str, float]) -> bool:
+    """Exact match, except that numbers may differ within ``tolerance``."""
+    numbers = (int, float)
+    if isinstance(fresh, float) or isinstance(committed, float):
+        return (
+            isinstance(committed, numbers)
+            and isinstance(fresh, numbers)
+            and math.isclose(committed, fresh, rel_tol=tolerance["rel"], abs_tol=tolerance["abs"])
+        )
+    if isinstance(fresh, dict):
+        return (
+            isinstance(committed, dict)
+            and committed.keys() == fresh.keys()
+            and all(_close(committed[key], fresh[key], tolerance) for key in fresh)
+        )
+    if isinstance(fresh, list):
+        return (
+            isinstance(committed, list)
+            and len(committed) == len(fresh)
+            and all(_close(c, f, tolerance) for c, f in zip(committed, fresh, strict=True))
+        )
+    return bool(committed == fresh)
+
+
+def fixture_matches(committed: dict[str, Any], fresh: dict[str, Any]) -> bool:
+    """True when ``committed`` equals ``fresh`` up to each case's numeric tolerance.
+
+    Every field other than ``cases`` must match exactly, including the source
+    digest. LAPACK builds differ in the last bits across platforms, so case
+    numbers are compared within the case tolerance (default: the document's).
+    """
+    if committed.keys() != fresh.keys():
+        return False
+    if any(committed[key] != value for key, value in fresh.items() if key != "cases"):
+        return False
+    cases, expected = committed["cases"], fresh["cases"]
+    if not isinstance(cases, list) or len(cases) != len(expected):
+        return False
+    return all(
+        _close(case, want, want.get("tolerance", fresh["tolerance"]))
+        for case, want in zip(cases, expected, strict=True)
+    )
 
 
 def stale_fixtures(root: Path = REPO_ROOT) -> list[str]:
@@ -173,7 +234,9 @@ def stale_fixtures(root: Path = REPO_ROOT) -> list[str]:
     stale = []
     for spec in WIDGETS:
         path = fixture_path(spec, root)
-        if not path.is_file() or path.read_text(encoding="utf-8") != render_fixture(spec, root):
+        if not path.is_file() or not fixture_matches(
+            json.loads(path.read_text(encoding="utf-8")), fixture_document(spec, root)
+        ):
             stale.append(spec.widget)
     return stale
 

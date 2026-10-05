@@ -47,6 +47,16 @@ def test_fixture_pins_the_cited_source_digest() -> None:
     assert integrated and all(c["tolerance"] == {"abs": 1e-9, "rel": 1e-9} for c in integrated)
 
 
+def test_fixture_pins_every_module_the_js_mirror_ports() -> None:
+    spec = _spec()
+    fixture = json.loads(fixture_path(spec).read_text(encoding="utf-8"))
+    dynamics = "src/affine_control/dynamics.py"
+    assert spec.dependency_paths == (dynamics,)
+    assert fixture["dependency_sha256"] == {
+        dynamics: hashlib.sha256((REPO_ROOT / dynamics).read_bytes()).hexdigest()
+    }
+
+
 def test_render_is_deterministic() -> None:
     assert render_fixture(_spec()) == render_fixture(_spec())
 

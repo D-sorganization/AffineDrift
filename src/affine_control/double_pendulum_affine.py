@@ -34,6 +34,7 @@ from src.affine_control.dynamics import (
     double_pendulum_mass_matrix,
     planar_double_pendulum_trajectory,
 )
+from src.core.constants import GRAVITY_M_S2
 
 type Array = NDArray[np.float64]
 
@@ -58,9 +59,10 @@ class DoublePendulumParams:
     m2: float
     l1: float
     l2: float
-    gravity: float = 9.81
+    gravity: float = GRAVITY_M_S2
 
     def __post_init__(self) -> None:
+        """Reject non-finite or non-positive parameters (fail closed)."""
         for name in ("m1", "m2", "l1", "l2", "gravity"):
             value = getattr(self, name)
             if not (math.isfinite(value) and value > 0.0):
