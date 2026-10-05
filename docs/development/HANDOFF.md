@@ -1,3 +1,8 @@
+# Issue RM#1989 - Fork PRs Off The Self-Hosted Fleet
+
+Branch `fix/1989-fork-pr-self-hosted`, commit SELF, PR #4929 (refs Repository_Management#1989; no AD issue). Job-level fork guard added to fleet-capable `pull_request` jobs; `ci-standard` lanes route fork PRs to `ubuntu-latest` so required `quality-gate` still reports; `anti-phantom-merge` checks out PR head only on `pull_request`. `scripts/fork_pr_runner_guard.py` is vendored byte-identical from RM PR #1990 (sha256 536d19ad...), excluded from Black, self-scanned by `tests/test_fork_pr_runner_guard.py` (34 passed; RED was 21 violations). Next: owner applies the four admin settings listed in the PR body.
+
+Follow-up (Codex review 4180573889): code-validating and merge-policy jobs (`spec-freshness`, `validate-map`, `check-links`, `lint`, `website-lint`, anti-phantom `guard`, compile-textbooks) now route fork PRs to `ubuntu-latest` instead of skipping; comment/benchmark/self-merge jobs still skip. `tests/test_fork_pr_runner_guard.py` pins both lists.
 # Issue #4924 - Public Site Verifier Job-Log Diagnostics
 
 Branch `fix/4924-verifier-diagnostics`, commit SELF, PR refs #4924 (not closing: the red run was likely transient). `scripts/verify-public-site.js` gains exported `formatFailures(results, limit)`; `main()` now prints each failed item (route, viewport/theme, reasons, first 5 console errors, truncated to 300 chars) and up to 20 `::error title=Public site verification::` annotations with an omitted count. Pass/fail criteria, timeouts, retries and the artifact report are unchanged. Tests: `npx jest tests/public-site-verifier.test.js` (RED: formatFailures not a function; GREEN: 45 passed with the evidence suite). Change-log row via fragment `changes/4924-*.md` per the repo's fragment convention.
