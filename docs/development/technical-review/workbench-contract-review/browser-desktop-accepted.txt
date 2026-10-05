@@ -1,0 +1,6 @@
+### Result
+{"lazy":0,"errors":0,"width":1440,"scrollWidth":1440}
+### Ran Playwright code
+```js
+await (async (page) => { await page.setViewportSize({width:1440,height:1000}); for(let y=0;y<await page.evaluate(()=>document.documentElement.scrollHeight);y+=650){await page.evaluate(v=>window.scrollTo(0,v),y);await page.waitForTimeout(250);} await page.evaluate(()=>window.scrollTo(0,0)); await page.waitForTimeout(500); await page.screenshot({path:"docs/development/technical-review/workbench-contract-review/desktop-accepted.png",fullPage:true}); return await page.evaluate(()=>({lazy:document.querySelectorAll("mjx-lazy").length,errors:document.querySelectorAll("mjx-merror").length,width:innerWidth,scrollWidth:document.documentElement.scrollWidth})); })(page);
+```
