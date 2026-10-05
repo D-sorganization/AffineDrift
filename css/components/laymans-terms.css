@@ -6,6 +6,12 @@
   max-height: none;
 }
 
+/* Links in a lay block sit in running text, so they are underlined rather than
+   told apart by colour alone (WCAG 1.4.1, axe link-in-text-block). */
+.laymans-terms a {
+  text-decoration: underline;
+}
+
 /* Lay blocks render open, so their light-tinted cards must stay readable on the
    dark theme too (WCAG AA, tests/e2e/accessibility.spec.js). */
 [data-bs-theme="dark"] .laymans-item .analogy,
