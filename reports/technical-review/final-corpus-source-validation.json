@@ -41,7 +41,9 @@
     "articles/inverse-dynamics-inference.qmd": "4c6fd5bfd6b98614109f207b63bbce74db4a2ad1a85473798c9b42244e2cf3b2",
     "articles/inverse-dynamics.qmd": "31c4bdd0fa237a02821a861abf39dfb3c1b4c1403e7128be74d7bfcf8808f661",
     "books/index.qmd": "c98ca8aaf15af19706b6f9e5aaabbc4b880196926ea0d562394ee5e84da308ba",
-    "books/roadmap.qmd": "4e991c1853f38b60e15a08ff7187ea29cb99efdb65ab64f6b795bfc0fab4029a"
+    "books/roadmap.qmd": "4e991c1853f38b60e15a08ff7187ea29cb99efdb65ab64f6b795bfc0fab4029a",
+    "articles/The_Geometry_of_Motion/Volume_0/main.pdf": "9943d23be22657444afbb820401b96e7e972c653f2576a9c5fa3a2116b32662b",
+    "articles/Launch_Monitor_Technology_Review/main.pdf": "b211129c67c4c733075d8ae1e71b0c743a9cacf613793090b6fb3ae5efad14ab"
   },
   "full_regression": {
     "passed": 7283,
@@ -263,5 +265,34 @@
       "review_scope": "Complete Source Review #4950; Generated Examples/Trust or Publication Wrapper as Declared in corpus-tail/scope.json; Final Combined Source 07c71ed50050253a082189e87ab569673a7d286f; Independent Checks and Scoped Renders Accepted; 7283 Full Tests Passed; Protected Delivery Pending #4954; No Empirical Certification"
     }
   ],
-  "delivery": "Local acceptance only; regular PR, protected remote-main and publication verification pending."
+  "delivery": "Consolidated into existing regular PR4953 while not queued. Protected remote-main and deployment verification pending.",
+  "main_presentation_integration": {
+    "head": "bf63866f7",
+    "parent": "5dc0f0a5b980291414466cf042fc11e85a55da3c",
+    "main": "5002262d36c844fbd23b4cb6264cb6a951e47482",
+    "scientific_acceptance_hash_amendments": {},
+    "tests_passed": 118,
+    "tests_log": "docs\\development\\technical-review\\final-partial-sources\\integration-tests.txt",
+    "full_regression_boundary": "7283-test full run remains at 07c71ed500; integration has current focused and pre-PR gates, not a claimed repeated full run."
+  },
+  "quaternion_heading_amendment": {
+    "scope": "Title-only wording preserves mathematical q/-q convention, uses Opposite Unit Quaternions, and keeps original generated web anchor explicitly. All non-heading source bytes unchanged.",
+    "artifacts": {
+      "articles/The_Geometry_of_Motion/Volume_0/chapters/ch04_rotations_se3.tex": {
+        "frozen_sha256": "3e3a038f22d126a6164360cef517e4e209c4d9437bc9a8074e07116ae6235685",
+        "amended_sha256": "fbd6685ea5dc08e5e18a5024bbc4057cc378f89102457da49f6ac5fb295d3122"
+      },
+      "articles/The_Geometry_of_Motion/quarto/vol0_ch04_rotations_se3.qmd": {
+        "frozen_sha256": "59bc7fed46333dc6f644c51430eea9a8ffbd08bfd358168e54a4039570a4525d",
+        "amended_sha256": "f0dc60d7f44296d0639706b82a7900730d6f0bdeceab541cdc48591889619895"
+      },
+      "articles/The_Geometry_of_Motion/Volume_0/main.pdf": {
+        "frozen_sha256": "9943d23be22657444afbb820401b96e7e972c653f2576a9c5fa3a2116b32662b",
+        "amended_sha256": "45ef90cf68778aeaf8a1cc3bc59e28838039c1fdfde800bd096c3955f1018a84"
+      }
+    },
+    "tests_passed": 26,
+    "render": "Standalone HTML succeeds and old anchor is present; complete LaTeX/BibTeX rebuild 234 pages; heading page83 inspected. Initial no-BibTeX 230-page intermediate was rejected, not committed.",
+    "full_regression_boundary": "Earlier full suite remains pinned to 07c71ed500; this heading amendment has focused tests and final pre-PR validation."
+  }
 }

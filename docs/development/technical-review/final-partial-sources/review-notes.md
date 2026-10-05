@@ -66,3 +66,25 @@ PR4953 became conflicting after independently merged main5002262d3 introduced
 the shared layman component. Its resolution is isolated in the consolidation
 worktree. Integrate that checked resolution here before final delivery, preserving
 source acceptance and explicitly recording component-only hash amendments.
+
+## Final Delivery Integration
+
+Integrated validated consolidation5dc0f0a5b and protected main5002262d3 at
+bf63866f7; only one hash conflict in each generated audit file, canonically
+regenerated. All final accepted source hashes remain exact. Integration tests
+pass118 cases. The full regression remains correctly pinned to07c71ed500.
+
+To avoid another duplicate CI/merge queue, this completed batch is included in
+existing regular PR4953 before it enters the queue. This supersedes the earlier
+plan for a separate #4950/#4954 PR. The exact final delivery artifact manifest
+is reports/technical-review/final-delivery-artifact-manifest.json. Keep original
+PRs for the redundant-PR closer; do not close other sessions' PRs.
+
+The final PDF-title gate flagged lowercase q/-q in a plain-text bookmark.
+Replace only the paired heading with Opposite Unit Quaternions; retain the
+original web anchor explicitly and all non-heading bytes exactly. Twenty-six
+rotation checks pass; standalone HTML resolves the anchor. Rebuild the full
+Volume0 PDF with BibTeX and repeated LaTeX:234pages. The first no-BibTeX
+230-page intermediate was rejected. Exact prior/new hashes are in the final
+validation report and final delivery manifest; this does not renew the chapter's
+full scientific review or pretend the earlier full suite ran on the title edit.
