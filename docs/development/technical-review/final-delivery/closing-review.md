@@ -1,8 +1,9 @@
 # Final Technical Review Acceptance
 
 The technical review and final guide are delivered to protected main through
-regular PRs #4953 and #4977. **Final public verification and the closing
-documentation PR remain pending.** This checkpoint does not close epic #4009.
+regular PRs #4953 and #4977. **Final public acceptance has passed.** This closing
+record preserves the evidence for protected completion of epic #4009; the epic
+records this documentation PR's actual merge and the final session release.
 
 ## Scope and Technical Argument
 
@@ -35,7 +36,7 @@ accepted and rejected helper findings, and the bounded implementation decision.
 | Deliver the reviewed manuscripts and book navigation | [Protected tree comparison](final-protected-tree-receipt.json): all 145 original artifacts, 50 manuscript/PDF targets and four amended pages match. [Navigation turnover](../current-book-links/review-notes.md) records the unchanged notebooks and the immutable edition contract. |
 | Clarify evidence terminology | [Protected guide receipt](final-guide-protected-receipt.json) and [local validation](evidence-wording-validation.json). The guide, config and then-current handoff files match the accepted PR head. |
 | Organize and complete the named workstreams | [GitHub closure snapshot](final-named-workstream-states.json): all 45 workstreams named in the original checklist are closed. Historical unchecked boxes are not current pending work. |
-| Verify final public delivery and handoff | Pending the final manifest, full live route evidence, five advertised PDF checks, revised guide check and protected closing-documentation merge. |
+| Verify final public delivery and handoff | [Final public acceptance](final-public-acceptance.json): stable manifest, complete live route matrix, five advertised PDF hashes and revised guide text/link. This PR delivers the final closing records; verify its protected merge before completing the goal. |
 
 ## Protected Delivery and Validation
 
@@ -61,78 +62,58 @@ policies and scoped visual reviews do not certify universal accessibility or
 scientific truth. The screenshot baseline remains a candidate, not an approved
 pixel baseline.
 
-## Public Acceptance Still Required
+## Final Public Acceptance
 
-Deployment `37354676786` has completed its build of the final guide revision
-`f3b9fe8`. The [deployment-build receipt](final-deployment-build-receipt.json)
-independently verifies 1,004 route cells and 158 representative checks, with all
-five amended routes present. The first publishing attempt could not acquire a
-hosted runner and ran no steps. The [recovery record](final-deployment-recovery.json)
-binds that terminal failure and the job-only retry, which reused the successful
-build and artifacts. GitHub reported a [hosted-runner assignment incident](https://www.githubstatus.com/incidents/3q1yb5m7ltvb)
-when the first failure was investigated. The retry was subsequently cancelled
-at 19:52:48 UTC because a newer main deployment had priority, as confirmed by
-the job annotation. That cancellation is separate from the earlier runner failure.
+Revision `43ae945891cee0015c53fac03f4066afec5a5375` was published on
+5 October 2026 at 22:21:30 UTC. Deployment `37366230234`, attempt 2,
+completed its Pages step successfully. A newer main deployment cancelled that
+workflow's subsequent live scan; its overall conclusion remains cancelled.
 
-Replacement deployment `37366230234` targets
-`43ae945891cee0015c53fac03f4066afec5a5375`. Its only changes from `f3b9fe8`
-collate internal documentation; the scientific sources and final guide/config
-are unchanged. An independent tree check again preserves all 145 original
-artifacts, 50 linked targets and four amended pages. The real modify/delete
-conflict caused by collation is resolved by retaining the new closing fragment.
-The replacement workflow also failed before acquiring its initial hosted runner,
-at 20:07:54 UTC. Build and deploy were skipped; no steps ran. The official
-incident remained under investigation at the subsequent check.
-Following the user's runner-capacity recheck, one bounded retry was requested
-at 21:12:26 UTC. Attempt 2 acquired hosted runners: initial job `111979285425`
-passed and build job `111979394176` started. GitHub's broader incident remains
-open; runner acquisition has recovered sufficiently for this attempt to proceed.
-The failed jobs had requested `ubuntu-latest`, not local fleet labels.
-Organization-wide runner capacity was not visible to the bot.
-Final live-publication acceptance remains outstanding.
-Earlier five-target PDF checks passed at live revision `4b941c3`, but that
-workflow's full live scan was superseded. Those checks do not establish final
-guide publication. Record the actual completed workflow, deployed manifest,
-route artifact, guide text/link check and five PDF hashes before publication
-acceptance. A newer deployment must be verified against its own actual revision.
+The [public acceptance receipt](final-public-acceptance.json) therefore binds
+a separate completed live scan, using the unchanged repository verifier.
+All 251 routes passed in both mobile and desktop viewports and both themes:
+1,004 unique expected cells, zero failures and zero reported serious/critical
+axe violations. The manifest was identical before and after the scan. The
+independent matrix auditor rejects missing or duplicate cells, bad HTTP status,
+disabled axe checks and incorrect viewport definitions; nine synthetic cases
+checked its positive and failure behavior.
 
-## Closeout Checkpoint Validation
+The live guide contains the three accepted evidence distinctions and the
+National Academies link. All five advertised PDFs return the intended PDF bytes
+and match their exact Git SHA-256 digests. No PDF is invented for the
+Control Is Motion landing page. The full live report, manifests, guide/PDF
+receipts, helper checks and protected-tree evidence are retained in the
+[compressed evidence archive](final-public-acceptance-evidence.json.gz), with
+compressed and uncompressed digests in the receipt.
 
-All eight receipt JSON files parse, all 16 local links in this review and the current
-handoff resolve, and the entire historical handoff suffix matches protected Git
-text. The inventory receipt distinguishes its original Windows CRLF checksum
-from the identical LF Git blobs at reviewed and protected revisions. A bounded
-Gemini 3.8 Flash review of the supplied prose and receipts returned no findings;
-the lead retained the separate Git, CI-log and artifact verification above.
-All eight central pre-PR gates passed on the closing documentation checkpoint
-`3061cad41`. No affected Python tests mapped from this documentation diff;
-this is not an additional full-regression run. Repeat applicable gates after
-adding the final public acceptance records.
+The actual publication build artifact independently passes 1,004 route cells
+and 158 representative checks. The earlier [deployment-build receipt](final-deployment-build-receipt.json)
+and [recovery record](final-deployment-recovery.json) preserve their original
+stages and failures; historical pending flags do not override this final receipt.
+Build and live checks are separate evidence, not additive test totals.
 
-## Resume Publication After Runner Recovery
+Protected main `55c9bf47a314b6416d80750aa02d3cf6a868aecf` retains all reviewed
+artifacts and final guide/config. Its changes after the verified public revision
+affect merge tooling, its tests/configuration and internal bookkeeping. No
+reviewed public sources changed. A documentation-only closing merge does not
+require an endless series of identical publication-receipt PRs; inspect any
+subsequent changes before claiming that earlier public acceptance still applies.
 
-1. Read the recovery receipt, verify current remote main and the latest deployment
-   before choosing a run. Do not restart a superseded workflow. Check GitHub's
-   official incident status; repeated retries during the same incident are not
-   evidence of progress. Preserve normal workflow and protection settings.
-2. Observe the chosen run with `gh run watch RUN --repo D-sorganization/AffineDrift --interval 60`.
-   An observer authentication failure requires renewing bot authentication and
-   reconnecting to that run, not restarting CI.
-3. After publishing, download its `live-public-site-verification-SHA` artifact.
-   Independently check the complete route/viewport/theme matrix, unique cells,
-   HTTP status, failures and reported serious/critical axe violations. Derive
-   counts from the actual manifest and bind the artifact to checkout/job logs.
-4. Verify the live manifest's actual source revision before and after the guide
-   and PDF checks. The guide must contain the accepted wording and primary-source
-   link. The five actual advertised PDF links must return HTTP 200, PDF bytes
-   and SHA-256 digests matching their exact intended Git blobs. The guide is
-   HTML, not a sixth PDF. Preserve the reviewed edition pin and provider boundary.
-5. Add the final live receipts, update this review, current root handoff and
-   change fragment; run the central pre-PR gates and normal hooks. Open a regular
-   PR with a Handoff section and `Closes #4009` only after public acceptance.
-   Arm through the central `scripts/automerge_guard.py`; do not update a queued
-   branch. Verify its protected merge and epic closure, then release this
-   session's remaining lease and presence.
+## Closeout Validation and Delivery
+
+All nine final receipt JSON files parse, their local evidence links resolve,
+and the original historical handoff suffix is preserved. The inventory receipt
+distinguishes its original Windows CRLF checksum from the identical LF Git
+blobs at reviewed and protected revisions. Flash assisted with bounded
+documentation and receipt checks; the lead retained scientific adjudication,
+Git correspondence, actual job-log binding and public acceptance.
+
+The central eight-gate pre-PR validation is run again for this final documentation
+diff, alongside normal commit/push hooks. It does not substitute for the frozen
+source regression or actual protected-source CI recorded above. Open this PR
+ready for review, arm it through the central guarded merge path, and verify its
+actual protected merge and epic closure before marking the goal complete.
+Release the session's remaining lease and presence after that verification.
 
 ## Future-Agent Guidance
 

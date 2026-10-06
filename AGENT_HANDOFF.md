@@ -1,51 +1,46 @@
-# Current Technical Review Handoff — 5 October 2026
+# Final Technical Review Handoff — 5 October 2026
 
 The accepted technical review and final guide are delivered to protected main.
-**Public verification and the closing documentation PR remain pending under
-[epic #4009](https://github.com/D-sorganization/AffineDrift/issues/4009).**
-The [closing review](docs/development/technical-review/final-delivery/closing-review.md)
-is the current evidence map and supersedes historical pending-work instructions.
+**Final public acceptance has passed.** The
+[closing review](docs/development/technical-review/final-delivery/closing-review.md)
+and [public receipt](docs/development/technical-review/final-delivery/final-public-acceptance.json)
+are the final evidence map. [Epic #4009](https://github.com/D-sorganization/AffineDrift/issues/4009)
+records the closing documentation PR's protected merge and administrative release.
 
 Regular PR #4953 merged at `76815ab5e86807ab78d02a98fc69d832b6ab2feb`;
 regular PR #4977 merged at `f3b9fe8eb1ab7cd3ae7f020c3d4f9ca0fb209c04`.
-Actual protected-tree checks preserve all 145 original artifacts, 50 linked
+Protected-tree comparisons preserve all 145 original artifacts, 50 linked
 manuscript/PDF targets, four amended book pages and the final guide/config.
 Retain reviewed edition pin `fbee4da94fd699e9710f4c29b42a73a5113f08d4`.
 
 The 407 heterogeneous rows, 27 supplementary sources and eight books' 131 input
 occurrences are reconciled; all 45 originally named workstreams are closed.
 Preserve 38 immutable upstream publication rows and all empirical/reading limits.
-Neither counts nor closed issues establish scientific validity. The closing
-review separates frozen-source, branch, queue and publication evidence.
+Neither counts nor closed issues establish scientific validity.
 
-The final deployment build passed its 1,004 route checks and 158 representative
-checks. Publishing encountered a hosted-runner acquisition failure. A job-only
-retry reused the successful build but was superseded by a documentation-only
-main merge. Replacement deployment `37366230234` targets `43ae945891cee0015c53fac03f4066afec5a5375`.
-All reviewed source hashes still match. The replacement workflow failed at
-20:07:54 UTC before acquiring its initial hosted runner; build and deploy were
-skipped. After the user's runner recheck, attempt 2 acquired hosted runners:
-initial job 111979285425 passed and build job 111979394176 started at 21:12 UTC.
-The GitHub Actions incident remains under investigation. Follow this existing
-attempt; full live verification remains pending. The closing review has ordered
-verification and recovery steps.
-The new closing fragment is retained after resolving the collation conflict.
+Public revision `43ae945891cee0015c53fac03f4066afec5a5375` passed the independent
+live scan: 251 routes, 1,004 unique viewport/theme cells, zero failures and zero
+reported serious/critical axe violations. The manifest was unchanged throughout.
+The final guide wording/link and all five advertised PDF hashes also pass.
+The published build separately passed 1,004 route cells and 158 representative
+checks. Full raw live evidence is retained with the final receipt.
 
-## Remaining Delivery Work
+## Protected Closeout
 
-1. Verify the final public manifest and complete live route evidence, then check
-   the revised guide and five advertised PDFs at that deployed revision.
-2. Complete the acceptance records on `docs/technical-review-public-acceptance`,
-   validate them and publish a regular closing PR for #4009. No new scientific
-   edits belong to this documentation branch.
-3. Verify the closing PR's protected merge, record it on #4009 and release this
-   session's remaining epic lease and presence. The #4976 source lease is already
-   released. Preserve other agents' PRs and untracked QA artifacts.
+The closing branch is `docs/technical-review-public-acceptance`; `SELF`
+identifies this handoff's commit. This branch contains only acceptance records
+and internal turnover updates. Open a regular PR, run the central pre-PR gates
+and normal hooks, and use the protected merge queue. Verify the actual merge
+and epic closure, then release session `technical-review-20261005-final-handoff`.
+The #4976 source lease is already released. Preserve other agents' PRs and the
+owned untracked `.playwright-cli/` and `output/` QA artifacts.
 
-Empirical studies, notebook execution, instrument qualification and upstream
-publications retain their separately governed boundaries. Tests and algebra do
-not establish human causal mechanisms or coaching prescriptions. Finish this
-publication closeout before starting another review or rewrite.
+Read the closing review and source-bound adjudications before future changes.
+Delegate mechanical inventory checks to Flash and independently review its
+conceptual suggestions. Empirical studies, notebook execution, instrument
+qualification and upstream publications retain their separately governed
+boundaries. Tests and algebra do not establish human causal mechanisms or
+coaching prescriptions. No additional scientific rewrite is part of this closeout.
 
 # Historical Checkpoints
 
