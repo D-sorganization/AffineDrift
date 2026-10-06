@@ -38,6 +38,11 @@ describe('Touch Target CSS Contract (WCAG 2.5.5, #4563)', () => {
     expect(css).toMatch(/\.code-copy-button\s*\{[^}]*min-height:\s*44px/);
   });
 
+  test('.navbar-nav .nav-link never wraps, so a long label cannot reflow the navbar', () => {
+    const css = fs.readFileSync(path.join(ROOT, 'css', 'components', 'quarto-theme.css'), 'utf8');
+    expect(css).toMatch(/\.navbar-nav \.nav-link\s*\{[^}]*white-space:\s*nowrap/);
+  });
+
   test('.page-header-cite-link in page-header-card.css declares 44px min-dimensions', () => {
     const css = fs.readFileSync(path.join(ROOT, 'css', 'components', 'page-header-card.css'), 'utf8');
     expect(css).toMatch(/\.page-header-cite-link\s*\{[^}]*min-height:\s*44px/);
