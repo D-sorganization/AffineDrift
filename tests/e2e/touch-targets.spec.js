@@ -43,6 +43,11 @@ test.describe('Touch Target Compliance (WCAG 2.5.5)', () => {
           element: elementName,
           selector: selector,
           compliant: false,
+          // Name the offending element so a failure is diagnosable from the log.
+          target: await element.evaluate(
+            (el) =>
+              `${el.tagName.toLowerCase()}.${[...el.classList].join('.')} "${el.textContent.trim().slice(0, 40)}" ${el.getBoundingClientRect().height.toFixed(2)}px tall`
+          ),
           height: Math.round(height),
           width: Math.round(width),
           minRequired: MIN_TOUCH_TARGET,
@@ -272,6 +277,9 @@ test.describe('Touch Target Compliance (WCAG 2.5.5)', () => {
         compliant,
         nonCompliant,
       });
+      results
+        .filter(r => !r.compliant)
+        .forEach(r => console.warn(`✗ ${test.name}: ${r.target}`));
     }
 
     console.log('\n=== Touch Target Compliance Summary ===');
@@ -296,7 +304,7 @@ test.describe('Touch Target Compliance (WCAG 2.5.5)', () => {
       if (nonCompliantList.length > 0) {
         console.warn(`✗ ${test.name}: ${nonCompliantList.length} undersized:`);
         nonCompliantList.forEach(r => {
-          console.warn(`  - ${r.height}×${r.width}px (needs ${r.minRequired}×${r.minRequired}px)`);
+          console.warn(`  - ${r.target}: ${r.height}×${r.width}px (needs ${r.minRequired}×${r.minRequired}px)`);
         });
       }
     }

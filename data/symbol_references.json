@@ -1,0 +1,55 @@
+{
+  "schema": "affinedrift/symbol-references/v1",
+  "source": "NOTATION.md",
+  "anchor": "/pages/notation.html#equation-symbol-definitions",
+  "symbols": [
+    {
+      "key": "x",
+      "tex": "x",
+      "name": "State x",
+      "definition": "Modeled state of the declared effective plant; for a mechanical model, the generalized coordinates and their velocities."
+    },
+    {
+      "key": "f",
+      "tex": "f(x)",
+      "name": "Drift f(x)",
+      "definition": "Complete autonomous drift of the declared effective plant: its evolution when the declared control is zero, including every retained state-dependent load."
+    },
+    {
+      "key": "G",
+      "tex": "G(x)",
+      "name": "Input map G(x)",
+      "definition": "Matrix or collection of control vector fields that multiplies the declared control; uppercase G throughout control-affine equations."
+    },
+    {
+      "key": "u",
+      "tex": "u",
+      "name": "Control input u",
+      "definition": "Declared control input: the channel a counterfactual sets to zero. State its physical level and admissible set."
+    },
+    {
+      "key": "M",
+      "tex": "M(q)",
+      "name": "Mass matrix M(q)",
+      "definition": "Generalized inertia matrix: the symmetric positive-definite kinetic-energy metric in the chosen coordinates."
+    },
+    {
+      "key": "C",
+      "tex": "C(q,\\dot q)",
+      "name": "Coriolis matrix C(q, q-dot)",
+      "definition": "Velocity-product matrix of the kinetic model; C times the generalized velocity gives the Coriolis and centrifugal loads."
+    },
+    {
+      "key": "g",
+      "tex": "g(q)",
+      "name": "Gravity vector g(q)",
+      "definition": "Gravity generalized-force vector, the gradient of the gravitational potential; lowercase g is reserved for gravity."
+    },
+    {
+      "key": "B",
+      "tex": "B(q)",
+      "name": "Actuation matrix B(q)",
+      "definition": "Maps the declared control input to generalized forces, so the applied load is B(q) times u."
+    }
+  ]
+}

@@ -85,7 +85,12 @@ class TestContentFirstStructure:
 
     def test_raw_html_fence_is_closed(self, home_text: str) -> None:
         """The home page layout must render as HTML, not an escaped code block."""
-        assert home_text.count("```{=html}") == 1
+        # The layout block is split once around the generated signature-graphic
+        # include (#4554); every raw fence it opens must still be closed.
+        opened = home_text.count("```{=html}")
+        closed = sum(1 for line in home_text.splitlines() if line.strip() == "```")
+        assert opened >= 1
+        assert opened == closed
         assert home_text.rstrip().endswith("```")
 
 

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from src.core.contracts import require
+
 
 @dataclass(frozen=True)
 class ProgramSeed:
@@ -23,6 +25,13 @@ class ProgramSeed:
     evidence_origin: str
     calculation_path: str
     workflow_path: str
+    scientific_falsifier: str
+    modality: str
+
+    def __post_init__(self) -> None:
+        """Every program states a scientific falsifier and a measurement modality."""
+        require(bool(self.scientific_falsifier.strip()), "scientific_falsifier is required")
+        require(bool(self.modality.strip()), "modality is required")
 
 
 PROGRAMS = (
@@ -41,6 +50,16 @@ PROGRAMS = (
         "analytical",
         "tests/test_scientific_trust_metadata.py",
         "tests/test_dcr_reachability_contract.py",
+        (
+            "Across the declared family of bounded input perturbations, ranking states by "
+            "DCR orders their finite-horizon reachable-set widths no better than a "
+            "shuffled-state baseline, so DCR carries no information about reachability in "
+            "that family."
+        ),
+        (
+            "Analytical and numerical computation on declared models; no physical "
+            "measurement is involved."
+        ),
     ),
     ProgramSeed(
         4034,
@@ -58,6 +77,13 @@ PROGRAMS = (
         "modeled",
         "src/affine_control/model_ladder_fixtures.py",
         "src/affine_control/model_ladder_protocol.py",
+        (
+            "A conclusion the planar rung declares stable, such as the proximal-to-distal "
+            "peak-speed order or the sign of a drift-control split, reverses or moves "
+            "beyond its declared tolerance when the spatial, closed-chain or flexible-"
+            "shaft rung is added."
+        ),
+        ("Multibody simulation across declared model rungs; no physical measurement is involved."),
     ),
     ProgramSeed(
         4035,
@@ -75,13 +101,23 @@ PROGRAMS = (
         "manufactured-synthetic",
         "src/affine_control/hand_wrench_fixtures.py",
         "src/affine_control/hand_wrench_protocol.py",
+        (
+            "Under the declared grip perturbations, the measured bilateral wrench matrix "
+            "is rank-deficient or its reconstruction error exceeds the calibration limits,"
+            " so the lead-hand and trail-hand force and moment components cannot be "
+            "separated."
+        ),
+        (
+            "Two calibrated six-axis force/torque transducers built into the grip, "
+            "synchronized with optical motion capture."
+        ),
     ),
     ProgramSeed(
         4036,
         "active-impedance",
         "Active Impedance Identification",
         "/models/active-impedance-identification.html",
-        "Can declared perturbations distinguish active impedance from modeled passive response?",
+        ("Can declared perturbations distinguish active impedance from modeled passive response?"),
         "stiffness, damping, and residual diagnostics",
         "planned mechanical perturbation",
         "displacement, force, activation, and response",
@@ -91,6 +127,15 @@ PROGRAMS = (
         "manufactured-synthetic",
         "src/affine_control/impedance_result_fixtures.py",
         "src/affine_control/impedance_protocol.py",
+        (
+            "On held-out perturbation trials, a passive-only model with fixed stiffness "
+            "and damping and no activation-dependent terms predicts the measured force and"
+            " displacement response as well as the active-impedance model does."
+        ),
+        (
+            "A mechanical perturbation device with force sensing, optical motion capture "
+            "and surface EMG."
+        ),
     ),
     ProgramSeed(
         4037,
@@ -108,6 +153,16 @@ PROGRAMS = (
         "manufactured-synthetic",
         "src/affine_control/neural_timing_fixtures.py",
         "src/affine_control/neural_timing_analysis.py",
+        (
+            "Kinematic and muscle-activation onsets after a declared perturbation do not "
+            "differ from unperturbed trials within the declared short- and long-latency "
+            "response windows, so the competing feedback-timing hypotheses cannot be told "
+            "apart."
+        ),
+        (
+            "Surface EMG with sensory or mechanical perturbation, synchronized with "
+            "optical motion capture at a declared sampling rate."
+        ),
     ),
     ProgramSeed(
         4038,
@@ -124,6 +179,17 @@ PROGRAMS = (
         "modeled",
         "src/affine_control/impact_contact_fixtures.py",
         "src/affine_control/impact_contact_models.py",
+        (
+            "Across admissible contact models and event-time choices, predicted ball "
+            "speed, launch angle and spin differ by less than the declared resolution of "
+            "a launch monitor, so the modeled contact detail makes no observable "
+            "difference to "
+            "the impact outcome."
+        ),
+        (
+            "Numerical simulation of declared contact models; comparison with launch-"
+            "monitor and high-speed video data is unavailable."
+        ),
     ),
     ProgramSeed(
         4039,
@@ -141,6 +207,16 @@ PROGRAMS = (
         "manufactured-synthetic",
         "src/affine_control/population_generalization_fixtures.py",
         "src/affine_control/population_generalization.py",
+        (
+            "Error on held-out participants, sessions, sites or equipment exceeds within-"
+            "sample error by more than the declared transport margin, or calibration fails"
+            " in a declared subgroup, so the model does not generalize beyond its "
+            "development sample."
+        ),
+        (
+            "Group-held-out evaluation of measured outcomes from motion capture and "
+            "launch-monitor sessions, split by participant, session, site and equipment."
+        ),
     ),
     ProgramSeed(
         4040,
@@ -158,5 +234,14 @@ PROGRAMS = (
         "manufactured-synthetic",
         "src/affine_control/equipment_response_fixtures.py",
         "src/affine_control/equipment_response_analysis.py",
+        (
+            "Within-golfer differences between randomized equipment conditions are no "
+            "larger than session-to-session repeatability after multiplicity correction, "
+            "so no individual equipment response is identifiable."
+        ),
+        (
+            "Randomized repeated-measures sessions with a calibrated launch monitor and "
+            "strain-gauge shaft instrumentation."
+        ),
     ),
 )

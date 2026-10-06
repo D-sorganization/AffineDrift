@@ -107,3 +107,11 @@ def test_rendered_block_is_open_by_default() -> None:
 def test_rendered_block_is_moved_above_the_abstract() -> None:
     html = _render_html("## Abstract\n\nAbstract text.\n\n" + _LAY_BODY)
     assert html.index('class="laymans-terms"') < html.index("Abstract text.")
+
+
+def test_lay_block_links_are_underlined() -> None:
+    """Links inside a lay block never rely on colour alone (axe link-in-text-block)."""
+    css = (ROOT / "css/components/laymans-terms.css").read_text(encoding="utf-8")
+    rule = re.search(r"\.laymans-terms a\s*\{([^}]*)\}", css)
+    assert rule is not None
+    assert "text-decoration: underline" in rule.group(1)
