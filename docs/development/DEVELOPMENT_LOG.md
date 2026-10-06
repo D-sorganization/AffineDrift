@@ -774,6 +774,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4987 · E2e Touch-Targets Spec Waits for Fonts and Finite Animations/Transitions Before Measuring, Fixing Sub-Pixel (43.9998Px) Intermittent Failures
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4987
+- **Branch:** merged via #4988
+- **PR:** #4988
+- **Paths:** see #4988
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`dde25989`; collated from changes/4987-e2e-touch-targets-spec-waits-for-fonts-a.md)
+- **Summary:** e2e touch-targets spec waits for fonts and finite animations/transitions before measuring, fixing sub-pixel (43.9998px) intermittent failures
+- **Next step:** Shipped in PR #4988.
+
 ### DL-#4967 · Related Articles Sections on 11 Article Pages; Link-Gate Related-Coverage Baseline 31 to 20 (#3896 Batch 3)
 
 - **State:** shipped
