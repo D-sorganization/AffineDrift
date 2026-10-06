@@ -1,0 +1,136 @@
+{
+  "scope": "Infrastructure interruption and job-only retry record; this is not public acceptance.",
+  "observed_at": "2026-10-05T19:51:50.648314+00:00",
+  "run_id": 37354676786,
+  "source_revision": "f3b9fe8eb1ab7cd3ae7f020c3d4f9ca0fb209c04",
+  "incident_url": "https://www.githubstatus.com/incidents/3q1yb5m7ltvb",
+  "incident_update_observed": "2026-10-05T19:15:00Z",
+  "incident_summary": "GitHub reports delays assigning hosted runners. The job failure below is consistent with that incident.",
+  "attempt_1": {
+    "deploy_job_id": 111944189578,
+    "run_conclusion": "failure",
+    "job_conclusion": "cancelled",
+    "runner_id": 0,
+    "reported_steps": [],
+    "queued_at": "2026-10-05T19:30:04Z",
+    "completed_at": "2026-10-05T19:45:08Z",
+    "failure_annotation": "The job was not acquired by Runner of type hosted even after multiple attempts"
+  },
+  "retry": {
+    "requested_at": "2026-10-05T19:48:43Z",
+    "run_attempt": 2,
+    "deploy_job_id": 111950517352,
+    "status_when_recorded": "queued",
+    "scope": "Publishing job only",
+    "preserved_build": {
+      "original_job_id": 111914133294,
+      "attempt_2_record_job_id": 111950517613,
+      "conclusion": "success",
+      "original_started_at": "2026-10-05T18:16:43Z",
+      "original_completed_at": "2026-10-05T19:30:04Z",
+      "render_started_at": "2026-10-05T18:18:22Z",
+      "render_completed_at": "2026-10-05T18:55:53Z"
+    },
+    "unchanged_artifacts": {
+      "github-pages": 11367990272,
+      "public-site-verification-f3b9fe8eb1ab7cd3ae7f020c3d4f9ca0fb209c04": 11367109497
+    },
+    "outcome": {
+      "conclusion": "cancelled",
+      "completed_at": "2026-10-05T19:52:48Z",
+      "steps": [],
+      "annotation": "Canceling since a higher priority waiting request for Deploy Website-refs/heads/main exists"
+    }
+  },
+  "build_receipt": "final-deployment-build-receipt.json",
+  "public_acceptance_pending_when_recorded": true,
+  "replacement": {
+    "run_id": 37366230234,
+    "source_revision": "43ae945891cee0015c53fac03f4066afec5a5375",
+    "status_when_recorded": "queued",
+    "source_comparison_base": "f3b9fe8eb1ab7cd3ae7f020c3d4f9ca0fb209c04",
+    "changed_paths": [
+      "SPEC.md",
+      "changes/4009-technical-review-final-handoff.md",
+      "docs/development/DEVELOPMENT_LOG.md"
+    ],
+    "scope": "Internal change-fragment collation only; scientific sources and final guide/config unchanged.",
+    "protected_tree_check": {
+      "revision": "43ae945891cee0015c53fac03f4066afec5a5375",
+      "timestamp": "2026-10-05T19:58:29.447044+00:00",
+      "groups": {
+        "original_artifacts": {
+          "count": 145,
+          "mismatches": []
+        },
+        "linked_targets": {
+          "count": 50,
+          "mismatches": []
+        },
+        "amended_pages": {
+          "count": 4,
+          "mismatches": []
+        }
+      },
+      "passed": true
+    },
+    "outcome": {
+      "run_conclusion": "failure",
+      "updated_at": "2026-10-05T20:07:54Z",
+      "failed_job_id": 111951978542,
+      "failed_job_name": "pick-runner",
+      "runner_id": 0,
+      "steps": [],
+      "annotation": "The job was not acquired by Runner of type hosted even after multiple attempts",
+      "build_conclusion": "skipped",
+      "deploy_conclusion": "skipped"
+    }
+  },
+  "latest_incident_check": {
+    "checked_at": "2026-10-05T20:08:23Z",
+    "status": "investigating",
+    "last_update_at": "2026-10-05T19:50:50.722Z"
+  },
+  "latest_live_manifest_check": {
+    "source_revision": "4b941c369cf0365596950185b192f9777fb7cb5b",
+    "scope": "Older public revision; final guide publication not accepted."
+  },
+  "user_requested_retry": {
+    "requested_at": "2026-10-05T21:12:26Z",
+    "run_id": 37366230234,
+    "run_attempt": 2,
+    "source_revision": "43ae945891cee0015c53fac03f4066afec5a5375",
+    "reason": "User requested resumption and runner-capacity check after more than an hour since the terminal failure.",
+    "pick_runner": {
+      "job_id": 111979285425,
+      "conclusion": "success",
+      "runner_id": 1000771083,
+      "labels": [
+        "ubuntu-latest"
+      ]
+    },
+    "build": {
+      "job_id": 111979394176,
+      "status_when_observed": "in_progress",
+      "runner_id": 1000771086,
+      "labels": [
+        "ubuntu-latest"
+      ]
+    },
+    "capacity_observation": "Both jobs acquired GitHub-hosted runners. Repository-level runner endpoint returned no directly registered runners; organization-level runner and RUNNER_TARGET reads returned 403, so organization-wide capacity was not established.",
+    "incident_status": "investigating",
+    "incident_updated_at": "2026-10-05T21:09:15.657Z",
+    "public_acceptance_pending_when_recorded": true
+  },
+  "final_resolution": {
+    "pages_publication": "success",
+    "revision": "43ae945891cee0015c53fac03f4066afec5a5375",
+    "run_id": 37366230234,
+    "attempt": 2,
+    "deploy_job_id": 112005504437,
+    "pages_step_completed_at": "2026-10-05T22:21:30Z",
+    "workflow_live_scan": "Cancelled by newer-main concurrency; no live artifact was produced.",
+    "independent_live_acceptance": "Completed with an unchanged manifest, all expected route cells passing, guide text/link present and all advertised PDF hashes matching.",
+    "acceptance_receipt": "final-public-acceptance.json"
+  }
+}
