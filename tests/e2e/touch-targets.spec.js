@@ -13,9 +13,41 @@ test.describe('Touch Target Compliance (WCAG 2.5.5)', () => {
   const MIN_TOUCH_TARGET = 44; // pixels
 
   /**
+   * Wait until the page's layout is at rest, so measurements are deterministic.
+   *
+   * boundingBox() reports the transformed box. The homepage hides below-the-fold
+   * sections with a 0.4s opacity/translateY transition (js/ui-components.js
+   * initFadeAnimations) that starts at DOMContentLoaded. When `load` fires
+   * quickly, a measurement lands mid-transition: the fractional translateY makes
+   * a 44px control report 43.9998px and fail `height >= 44`, intermittently
+   * (#4987). We wait for web fonts and for every finite running animation or
+   * transition to finish, across two consecutive frames. The 44px minimum is
+   * not changed.
+   */
+  const waitForLayoutSettled = async (page) => {
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      const nextFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
+      const hasRunningFiniteAnimation = () =>
+        document.getAnimations().some((animation) => {
+          const active =
+            animation.playState === 'running' || animation.pending;
+          const finite = Number.isFinite(animation.effect.getComputedTiming().endTime);
+          return active && finite;
+        });
+      let quietFrames = 0;
+      while (quietFrames < 2) {
+        await nextFrame();
+        quietFrames = hasRunningFiniteAnimation() ? 0 : quietFrames + 1;
+      }
+    });
+  };
+
+  /**
    * Helper function to check if an element meets touch target requirements
    */
   const checkTouchTarget = async (page, selector, elementName) => {
+    await waitForLayoutSettled(page);
     const elements = await page.locator(selector).all();
 
     if (elements.length === 0) {
