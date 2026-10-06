@@ -269,6 +269,58 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#4584 · WEB-11.6 Symbol Hover References: NOTATION.md Symbol Table Generates Data/Symbol_References.Json; Symbol-Hover.Lua Marks \symref Symbols on Opted-In Pages With MathJax Class Hooks Plus a Native Details Symbol List; Js/Symbol-Hover.Js Adds Pointer Tooltips; Theory Part 1 Opts In.
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4584
+- **Branch:** claude/issue-4584
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4584-web-11-6-symbol-hover-references-notatio.md)
+- **Summary:** WEB-11.6 symbol hover references: NOTATION.md symbol table generates data/symbol_references.json; symbol-hover.lua marks \symref symbols on opted-in pages with MathJax class hooks plus a native details symbol list; js/symbol-hover.js adds pointer tooltips; theory Part 1 opts in.
+- **Next step:** Adopt symbol-hover on further theory pages as authors mark symbols.
+
+### DL-#4554 · WEB-08.2: Drift Plus Control Signature Graphic, an Inline Theme-Aware SVG Generated From the SimplePendulum Control-Affine Split, on the Home Page and Theory Part 1 Header
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4554
+- **Branch:** claude/issue-4554-signature-graphic
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4554-web-08-2-drift-plus-control-signature-gr.md)
+- **Summary:** WEB-08.2: Drift Plus Control signature graphic, an inline theme-aware SVG generated from the SimplePendulum control-affine split, on the home page and theory Part 1 header
+- **Next step:** Owner confirms physical accuracy; decide OG card; reuse on Start Here and Big Idea when they land
+
+### DL-#4533 · WEB-06.3 Drift vs Control Double-Pendulum Sandbox on Theory Part 1: Src/Affine_Control/double_pendulum_affine.py Split, Checked JS Mirror, Widget-Parity V1 Generator and Fixture, Jest/Pytest/Playwright Class A Checks
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4533
+- **Branch:** claude/issue-4533
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4533-web-06-3-drift-vs-control-double-pendulu.md)
+- **Summary:** WEB-06.3 Drift vs Control double-pendulum sandbox on theory Part 1: src/affine_control/double_pendulum_affine.py split, checked JS mirror, widget-parity v1 generator and fixture, Jest/pytest/Playwright class A checks
+- **Next step:** Embed the lite mode (data-mode=lite) on the Big Idea page under #4489
+
+### DL-#4489 · WEB-01.4: Add the Big Idea in Five Minutes, an Equation-Free Explainer of Drift Versus Control, ZTCF and DCR With Where-Each-Analogy-Breaks Notes, Linked From Start Here, the Home Hero and Theory Part 1; Share Entry-Page Test Contracts in Tests/Helpers/entry_pages.py
+
+- **State:** in_review
+- **Owner:** unassigned
+- **Issue:** #4489
+- **Branch:** claude/issue-4489-big-idea
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4489-web-01-4-add-the-big-idea-in-five-minute.md)
+- **Summary:** WEB-01.4: add The Big Idea in Five Minutes, an equation-free explainer of drift versus control, ZTCF and DCR with where-each-analogy-breaks notes, linked from Start Here, the home hero and Theory Part 1; share entry-page test contracts in tests/helpers/entry_pages.py
+- **Next step:** Two non-specialist reader reviews recorded on #4489 (human step)
+
 ### DL-#4961 · Route Book Readers to the Corrected Reviewed Manuscript Editions
 
 - **State:** in_review
@@ -613,12 +665,12 @@ reachable from any live state and `abandoned` from `parked`.
 - **Owner:** claude
 - **Issue:** #4494 (mechanical sub-task); epic #4496
 - **Branch:** claude/issue-4494
-- **PR:** #4909 (draft)
+- **PR:** #4909 (draft), #4979
 - **Paths:** scripts/filters/laymans-terms.lua, _quarto.yml, styles.css, _templates/partials/laymans-terms.html, scripts/check_readability.py, articles/ (14 pages), tests/laymans-terms.test.js, tests/test_laymans_terms_component.py, tests/tools/test_check_readability.py
 - **Started:** 2026-10-04
-- **Last verified:** 2026-10-05; dark-theme lay-card contrast override added after CI e2e contrast failure; jest laymans-terms 5 passed; pytest component 5 passed (Quarto 1.8.27); lay-block wording byte-identical on 14/14 pages. Source provenance `5002262d36c844fbd23b4cb6264cb6a951e47482` (incoming PR4909 record; historical validation, not a new scientific review).
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4494-web-01-9-lay-blocks-on-18-core-pages-rew.md)
 - **Summary:** One Lua-filter component replaces 14 inline lay blocks; open by default, placed above the Abstract heading, native-button keyboard toggle. Wording unchanged; rewrite and page extension stay under #4494.
-- **Next step:** Review the draft PR and mark it ready.
+- **Next step:** Owner: decide whether summary-plain pages (theory 2-5, superposition) should keep WEB-03.3 suppression of lay blocks
 
 ### DL-#4864 · Volume II Consistency Review
 
@@ -721,6 +773,84 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4967 · Related Articles Sections on 11 Article Pages; Link-Gate Related-Coverage Baseline 31 to 20 (#3896 Batch 3)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4967
+- **Branch:** merged via #4979
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4967-related-articles-sections-on-11-article.md)
+- **Summary:** Related Articles sections on 11 article pages; link-gate related-coverage baseline 31 to 20 (#3896 batch 3)
+- **Next step:** Shipped in PR #4979.
+
+### DL-#4555 · WEB-08.4: Two Captioned, Data-Generated Animated Explainers (Drift vs Control, ZTCF) With a Reproducible Encoder, Manifest and --Check Gate
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4555
+- **Branch:** merged via #4979
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4555-web-08-4-two-captioned-data-generated-an.md)
+- **Summary:** WEB-08.4: two captioned, data-generated animated explainers (drift vs control, ZTCF) with a reproducible encoder, manifest and --check gate
+- **Next step:** Shipped in PR #4979.
+
+### DL-#4540 · Planar Swing Viewer on the Model-Ladder Page: Precomputed golf_model.py Frames With Drift vs Input Colouring; Phase 2 Blocked On #4973
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4540
+- **Branch:** merged via #4979
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4540-planar-swing-viewer-on-the-model-ladder.md)
+- **Summary:** Planar swing viewer on the model-ladder page: precomputed golf_model.py frames with drift vs input colouring; Phase 2 blocked on #4973
+- **Next step:** Shipped in PR #4979.
+
+### DL-#4534 · WEB-06.4: ZTCF Counterfactual Explorer on the ZTCF Page; Branches Replayed Through Execute_Ztcf_Intervention; JS Mirror Parity-Pinned to Golf_Model, Dynamics, Ztcf_Contract and the V2 Fixture; Fixture SHA-256 and Ledger Critiques Shown
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4534
+- **Branch:** merged via #4979
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4534-web-06-4-ztcf-counterfactual-explorer-on.md)
+- **Summary:** WEB-06.4: ZTCF counterfactual explorer on the ZTCF page; branches replayed through execute_ztcf_intervention; JS mirror parity-pinned to golf_model, dynamics, ztcf_contract and the v2 fixture; fixture SHA-256 and ledger critiques shown
+- **Next step:** Shipped in PR #4979.
+
+### DL-#4527 · Scientific Falsifier, Named Measurement Modality and Honest Power Statement for All 8 Research Protocols (Backward-Compatible Schema Extension)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4527
+- **Branch:** merged via #4979
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4527-scientific-falsifier-named-measurement-m.md)
+- **Summary:** Scientific falsifier, named measurement modality and honest power statement for all 8 research protocols (backward-compatible schema extension)
+- **Next step:** Shipped in PR #4979.
+
+### DL-#4486 · WEB-01.1: Start Here Entry Page (What the Site Is, Drift Plus Control Picture, Persona Cards, Evidence Labels, What the Site Is Not), First Navbar Item and Home Primary CTA; Grade 6.8
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4486
+- **Branch:** merged via #4979
+- **PR:** #4979
+- **Paths:** see #4979
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`efd1a62e`; collated from changes/4486-web-01-1-start-here-entry-page-what-the.md)
+- **Summary:** WEB-01.1: Start Here entry page (what the site is, Drift Plus Control picture, persona cards, evidence labels, what the site is not), first navbar item and home primary CTA; grade 6.8
+- **Next step:** Shipped in PR #4979.
 
 ### DL-#4009 · Clarify Evidence Terminology and Preserve the Final Technical-Review Handoff
 
