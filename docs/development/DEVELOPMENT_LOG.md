@@ -269,19 +269,6 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
-### DL-#4009 · Clarify Evidence Terminology and Preserve the Final Technical-Review Handoff
-
-- **State:** in_review
-- **Owner:** codex
-- **Issue:** #4009
-- **Branch:** docs/technical-review-final-handoff
-- **PR:** #4977
-- **Paths:** see #4977
-- **Started:** 2026-10-05
-- **Last verified:** 2026-10-05 (`f3b9fe8e`; collated from changes/4009-technical-review-final-handoff.md)
-- **Summary:** Clarify evidence terminology and preserve the final technical-review handoff
-- **Next step:** Merge guide clarification #4976 and final handoff, then verify public artifacts before epic #4009 acceptance
-
 ### DL-#4961 · Route Book Readers to the Corrected Reviewed Manuscript Editions
 
 - **State:** in_review
@@ -734,6 +721,19 @@ reachable from any live state and `abandoned` from `parked`.
 - **Next step:** Owner/frontier review of the draft PR; no further implementation planned pending review feedback.
 
 ## Shipped (Last 90 Days)
+
+### DL-#4009 · Clarify Evidence Terminology and Preserve the Final Technical-Review Handoff
+
+- **State:** shipped
+- **Owner:** codex
+- **Issue:** #4009
+- **Branch:** docs/technical-review-final-handoff
+- **PR:** #4977, #4984
+- **Paths:** see #4977
+- **Started:** 2026-10-05
+- **Last verified:** 2026-10-06 (`cd125768`; collated from changes/4009-technical-review-final-handoff.md)
+- **Summary:** Clarify evidence terminology and preserve the final technical-review handoff
+- **Next step:** Verify this closing PR's protected merge and epic closure, then release the final session lease
 
 ### DL-#2018 · Vendor Automerge_Guard and Requeue_Stalled_Merges (Stalled-Merge Requeue Tooling) From Repository_Management, Byte-Identical to RM#2029; the Vendored Scripts/automerge_guard.py Gets an Explicit 801-Line Module-Size Limit (Owner Decision) Because Trimming It Locally Would Fork the Fleet Copy
 
