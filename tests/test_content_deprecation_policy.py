@@ -7,7 +7,7 @@ Enforces:
    - How a page is bannered (frontmatter declaration, status-banner--deprecated, status-badge--deprecated).
    - When a page is removed (preservation guarantee, no broken links, removal restricted to ephemeral scratch).
    - How URLs are preserved (permanent aliases redirects and canonical pointers).
-3. css/components/status-banner.css and docs/styles.css define .status-banner--deprecated and .status-pill--deprecated.
+3. css/components/status-banner.css and the flattened styles.css bundle define .status-banner--deprecated and .status-pill--deprecated.
 4. Deprecated family files (e.g. tangent-space drafts) have status: "deprecated", canonical links, and deprecation banners.
 """
 
@@ -16,10 +16,12 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from scripts.bundle_css import bundle
+
 ROOT = Path(__file__).resolve().parents[1]
 CONTRIBUTING_MD = ROOT / "CONTRIBUTING.md"
 STATUS_BANNER_CSS = ROOT / "css/components/status-banner.css"
-DOCS_STYLES_CSS = ROOT / "docs/styles.css"
+BUNDLE_ENTRY_CSS = ROOT / "styles.css"
 
 TANGENT_DRAFTS_DIR = (
     ROOT
@@ -63,9 +65,9 @@ def test_status_banner_css_has_deprecated_styles() -> None:
     assert "body.quarto-dark .status-pill--deprecated" in content
 
 
-def test_docs_styles_css_maintains_status_banner_parity() -> None:
-    assert DOCS_STYLES_CSS.exists()
-    content = DOCS_STYLES_CSS.read_text(encoding="utf-8")
+def test_bundled_styles_css_maintains_status_banner_parity() -> None:
+    """The deployed _site/styles.css is built from styles.css (issue #4597)."""
+    content = bundle(BUNDLE_ENTRY_CSS, ROOT)
 
     assert ".status-banner--deprecated" in content
     assert ".status-pill--deprecated" in content

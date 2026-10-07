@@ -175,7 +175,7 @@ def test_ci_captures_revision_bound_representative_visual_evidence() -> None:
     assert content.index("python3 scripts/bundle_css.py") < content.index(
         "scripts/verify-public-site-visual.js"
     )
-    assert "scripts/prune_internal_docs_from_deploy.py --docs-dir docs" in content
+    assert "scripts/prune_internal_docs_from_deploy.py --docs-dir _site" in content
     assert "scripts/public_site_manifest.py" in content
     assert '--source-revision "$GITHUB_SHA"' in content
     assert "scripts/verify-public-site-visual.js" in content
@@ -191,7 +191,7 @@ def test_ci_enforces_scientific_claim_audit_coverage_when_e2e_renders_site() -> 
 
     assert "Enforce scientific claim-audit coverage" in content
     assert "scripts.generate_claim_audit_inventory" in content
-    assert "--manifest docs/public-site-manifest.json" in content
+    assert "--manifest _site/public-site-manifest.json" in content
     assert "--check" in content
     assert "--enforce-publication" in content
 
@@ -201,7 +201,7 @@ def test_e2e_quarto_render_is_cached_and_skipped_only_on_exact_source_hash_match
 
     An inexact match (any rendered source changed) must still take the full,
     unconditional `quarto render --to html` path that #4126 relies on for
-    complete route coverage -- a restore-keys fallback could restore a docs/
+    complete route coverage -- a restore-keys fallback could restore a _site/
     tree that does not reflect the current commit, so it must not be used.
     """
     content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
@@ -253,7 +253,7 @@ def test_deploy_workflow_enforces_url_stability_and_redirect_policy() -> None:
 
     assert "src.tools.check_redirects" in content
     assert "--previous-manifest" in content
-    assert "--current-manifest docs/public-site-manifest.json" in content
+    assert "--current-manifest _site/public-site-manifest.json" in content
     assert "--redirects config/redirects.yml" in content
     assert content.index("Fetch previously deployed manifest") < content.index(
         "Verify URL Stability and Redirect Policy"

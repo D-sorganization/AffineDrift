@@ -304,11 +304,11 @@ class TestMainWritesOnlyRequestedOutput:
     def test_main_does_not_write_a_root_copy(self, tmp_path, monkeypatch):
         monkeypatch.chdir(tmp_path)
         monkeypatch.setattr("scripts.generate_feed.collect_items", lambda: [])
-        monkeypatch.setattr("sys.argv", ["generate_feed.py", "--output", "docs/feed.xml"])
+        monkeypatch.setattr("sys.argv", ["generate_feed.py", "--output", "_site/feed.xml"])
 
         main()
 
-        assert (tmp_path / "docs" / "feed.xml").exists()
+        assert (tmp_path / "_site" / "feed.xml").exists()
         assert not (tmp_path / "feed.xml").exists()
 
 
@@ -320,12 +320,12 @@ class TestMainValidatesBeforeWriting:
         monkeypatch.setattr(
             "scripts.generate_feed.build_feed_xml", lambda *_args, **_kwargs: "<rss><channel>"
         )
-        monkeypatch.setattr("sys.argv", ["generate_feed.py", "--output", "docs/feed.xml"])
+        monkeypatch.setattr("sys.argv", ["generate_feed.py", "--output", "_site/feed.xml"])
 
         with pytest.raises(FeedValidationError):
             main()
 
-        assert not (tmp_path / "docs" / "feed.xml").exists()
+        assert not (tmp_path / "_site" / "feed.xml").exists()
         assert not (tmp_path / "feed.xml").exists()
 
 
@@ -350,7 +350,7 @@ class TestDeployWorkflowWiring:
         source_link_check = workflow.index("name: Post-generation Link Check")
 
         assert render < feed_generation < source_link_check
-        assert workflow.count("python3 scripts/generate_feed.py --output docs/feed.xml") == 1
+        assert workflow.count("python3 scripts/generate_feed.py --output _site/feed.xml") == 1
         assert workflow.count("python3 -m src.tools.check_links") == 1
         assert "run: python3 -m src.tools.check_links" in workflow
 
