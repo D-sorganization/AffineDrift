@@ -142,7 +142,12 @@ def resolve_relative_path(*, root: Path, source_file: Path, url: str) -> Path:
 
 
 def path_exists_in_search_roots(*, root: Path, target: Path) -> bool:
-    """Check for file existence in root, src/, and docs/ search roots.
+    """Check for file existence in root, src/, docs/, and _site/ search roots.
+
+    ``docs/`` holds tracked internal documentation (ADRs, dev logs) that can
+    cross-reference itself; ``_site/`` is the Quarto build output (issue
+    #4597). Both are checked so link validation works before and after a
+    render.
 
     Args:
         root: The project root directory.
@@ -156,4 +161,8 @@ def path_exists_in_search_roots(*, root: Path, target: Path) -> bool:
     if not target.is_relative_to(root):
         return False
     relative = target.relative_to(root)
-    return (root / "src" / relative).exists() or (root / "docs" / relative).exists()
+    return (
+        (root / "src" / relative).exists()
+        or (root / "docs" / relative).exists()
+        or (root / "_site" / relative).exists()
+    )

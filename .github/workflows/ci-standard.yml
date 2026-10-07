@@ -146,13 +146,13 @@ jobs:
 
       - run: pip install mypy types-PyYAML types-requests
       - name: Verify frontend asset sync
-        # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
-        # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
+        # _site/ HTML is not committed (issue #1419, #4597); sync mirrors inside _site/
+        # are rebuilt by Quarto at deploy time. Skip here if _site/ is absent.
         run: |
-          if [ -d "docs" ] && [ -f "docs/index.html" ]; then
+          if [ -d "_site" ] && [ -f "_site/index.html" ]; then
             python3 scripts/sync_frontend_assets.py --check
           else
-            echo "docs/ not present (expected: built by deploy workflow). Skipping frontend asset sync."
+            echo "_site/ not present (expected: built by deploy workflow). Skipping frontend asset sync."
           fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
@@ -365,15 +365,15 @@ jobs:
         run: python3 -m src.tools.code_quality_check
 
       - name: Verify Site Health (Broken Links Blocking)
-        # docs/ HTML is no longer committed (issue #1419); site health runs in
+        # _site/ HTML is not committed (issue #1419, #4597); site health runs in
         # deploy-website.yml after Quarto renders the site. This step will always
-        # skip in ci-standard.yml because docs/index.html is never present here —
+        # skip in ci-standard.yml because _site/index.html is never present here —
         # that is intentional and expected. The check runs post-deploy instead.
         run: |
-          if [ -f "docs/index.html" ]; then
+          if [ -f "_site/index.html" ]; then
             python3 -m src.tools.check_site_health --fail-on broken
           else
-            echo "docs/ HTML not present (expected: built by deploy workflow). Skipping site health check."
+            echo "_site/ HTML not present (expected: built by deploy workflow). Skipping site health check."
           fi
 
       # FIX: Run Python-based MATLAB Quality Check (Works without License)
@@ -519,8 +519,16 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: ".nvmrc"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
       - name: Install Dependencies
         run: npm ci
+      - name: Build CSS bundle
+        # service-worker-precache.test.js asserts against the flattened _site/styles.css
+        # bundle (issue #4597: no longer a tracked mirror file); bundle_css.py has no
+        # dependencies beyond the standard library.
+        run: python3 scripts/bundle_css.py
       - name: Run JS Tests
         run: npm test -- --coverage
       - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
@@ -581,7 +589,7 @@ jobs:
           echo "key=quarto-render-v2-${key}" >> "$GITHUB_OUTPUT"
       - name: Restore cached Quarto render
         # Skip the render only on an exact key match. There is no restore-keys
-        # fallback -- an inexact match must never restore a docs/ tree that does
+        # fallback -- an inexact match must never restore a _site/ tree that does
         # not reflect this commit, so any changed render input falls through to
         # the full render below, unchanged from before this cache existed.
         id: quarto_cache
@@ -589,7 +597,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
-            docs
+            _site
             .quarto
           key: ${{ steps.quarto_cache_key.outputs.key }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -681,7 +689,7 @@ jobs:
         # 14 hand-listed pages (#4126). The site has no executable cells, so a
         # Quarto freeze cache would buy nothing; the render is pure Pandoc.
         # WEB-13.1 (#4595): skipped only when the cache step above restored an
-        # exact match, so docs/ already is what this render would produce.
+        # exact match, so _site/ already is what this render would produce.
         if: steps.e2e_changes.outputs.run == 'true' && steps.quarto_cache.outputs.cache-hit != 'true'
         run: quarto render --to html
       - name: Sync Frontend Assets
@@ -693,7 +701,7 @@ jobs:
           # deploy artifacts) before Playwright runs: script-src does not
           # allow cdnjs.cloudflare.com, so the un-pruned tag trips a CSP
           # violation on every math page (#4565).
-          python3 scripts/prune_internal_docs_from_deploy.py --docs-dir docs
+          python3 scripts/prune_internal_docs_from_deploy.py --docs-dir _site
           python3 scripts/public_site_manifest.py
 
       - name: Enforce scientific claim-audit coverage
@@ -703,7 +711,7 @@ jobs:
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           python3 -m scripts.generate_claim_audit_inventory \
-            --manifest docs/public-site-manifest.json \
+            --manifest _site/public-site-manifest.json \
             --check \
             --enforce-publication
 
@@ -746,16 +754,16 @@ jobs:
         # in the "Sync Frontend Assets" step above, before Playwright ran.
         run: |
           python3 scripts/public_site_manifest.py \
-            --docs-dir docs \
+            --docs-dir _site \
             --source-root . \
             --source-revision "$GITHUB_SHA" \
-            --output docs/public-site-manifest.json
-          python3 -m http.server 8000 --directory docs > "$RUNNER_TEMP/affinedrift-visual.log" 2>&1 &
+            --output _site/public-site-manifest.json
+          python3 -m http.server 8000 --directory _site > "$RUNNER_TEMP/affinedrift-visual.log" 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
           node scripts/verify-public-site-visual.js \
             --base-url http://127.0.0.1:8000 \
-            --manifest docs/public-site-manifest.json \
+            --manifest _site/public-site-manifest.json \
             --output artifacts/public-site-verification/pr-representative.json \
             --screenshot-dir artifacts/public-site-verification/screenshots \
             --candidate-baseline artifacts/public-site-verification/candidate-baseline.json
@@ -765,12 +773,12 @@ jobs:
         # Fails the build on any serious or critical axe finding.
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
-          python3 -m http.server 8000 --directory docs > "$RUNNER_TEMP/affinedrift-axe.log" 2>&1 &
+          python3 -m http.server 8000 --directory _site > "$RUNNER_TEMP/affinedrift-axe.log" 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
           node scripts/verify-public-site.js \
             --base-url http://127.0.0.1:8000 \
-            --manifest docs/public-site-manifest.json \
+            --manifest _site/public-site-manifest.json \
             --viewports desktop-small,mobile \
             --themes light,dark \
             --axe fail \

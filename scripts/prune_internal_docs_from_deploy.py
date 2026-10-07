@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Prune internal markdown and non-deployable source files from docs/ deploy artifact directory."""
+"""Prune non-deployable stray artifacts from the Quarto build output directory.
+
+Issue #4597: the build output moved to ``_site/`` (see ``_quarto.yml``), which
+is no longer the same directory as the tracked internal documentation under
+``docs/`` (ADRs, dev logs, CSS plans). Raw markdown from that tracked content
+can therefore no longer land in the deploy artifact, so this script only
+handles the remaining, unrelated concerns: legacy HTML resources that Quarto's
+render-exclusion copies pull into the output regardless, and a stale polyfill
+tag Pandoc still emits.
+"""
 
 from __future__ import annotations
 
@@ -47,39 +56,16 @@ def strip_legacy_math_polyfill(docs_dir: Path) -> list[Path]:
     return changed
 
 
-def prune_internal_markdown_files(docs_dir: Path) -> list[Path]:
-    """Remove raw markdown files from docs/ deploy directory so internal docs are not published.
-
-    Args:
-        docs_dir: Path to the docs directory containing rendered output.
-
-    Returns:
-        List of deleted Path objects.
-    """
-    deleted: list[Path] = []
-    if not docs_dir.exists():
-        return deleted
-
-    for md_file in list(docs_dir.rglob("*.md")):
-        try:
-            md_file.unlink()
-            deleted.append(md_file)
-        except OSError as exc:
-            logger.warning("Failed to unlink %s: %s", md_file, exc)
-
-    return deleted
-
-
 def prune_internal_deploy_artifacts(docs_dir: Path) -> list[Path]:
     """Remove every explicitly nonpublic artifact from a rendered deployment.
 
     Quarto's render exclusions prevent QMD execution but do not stop existing
     HTML files under an excluded source tree from being copied as resources.
-    This post-render boundary therefore removes both raw Markdown and the known
-    internal/retired HTML projections before manifest generation and upload.
+    This post-render boundary removes those known internal/retired HTML
+    projections before manifest generation and upload.
     """
     strip_legacy_math_polyfill(docs_dir)
-    deleted = prune_internal_markdown_files(docs_dir)
+    deleted: list[Path] = []
     if not docs_dir.is_dir():
         return deleted
 
@@ -101,11 +87,11 @@ def prune_internal_deploy_artifacts(docs_dir: Path) -> list[Path]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Prune raw markdown from deploy output")
+    parser = argparse.ArgumentParser(description="Prune internal artifacts from deploy output")
     parser.add_argument(
         "--docs-dir",
-        default="docs",
-        help="Path to docs directory (default: docs)",
+        default="_site",
+        help="Path to the Quarto build output directory (default: _site)",
     )
     args = parser.parse_args()
 

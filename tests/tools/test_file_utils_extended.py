@@ -88,18 +88,18 @@ class TestFindHtmlFiles:
     """Tests for find_html_files()."""
 
     def test_finds_html_in_docs_by_default(self, tmp_path: Path) -> None:
-        """Should find HTML files in docs/ directory by default."""
+        """Should find HTML files in _site/ directory by default (issue #4597)."""
         from src.tools.utils.file_utils import find_html_files
 
-        docs = tmp_path / "docs"
-        docs.mkdir()
-        (docs / "page.html").write_text("<html></html>", encoding="utf-8")
+        site = tmp_path / "_site"
+        site.mkdir()
+        (site / "page.html").write_text("<html></html>", encoding="utf-8")
         result = find_html_files(root_dir=tmp_path, docs_only=True)
         names = [p.name for p in result]
         assert "page.html" in names
 
     def test_returns_empty_when_docs_missing(self, tmp_path: Path) -> None:
-        """Should return empty list when docs/ directory doesn't exist."""
+        """Should return empty list when _site/ directory doesn't exist."""
         from src.tools.utils.file_utils import find_html_files
 
         result = find_html_files(root_dir=tmp_path, docs_only=True)
@@ -118,10 +118,10 @@ class TestFindHtmlFiles:
         """Should respect the limit parameter."""
         from src.tools.utils.file_utils import find_html_files
 
-        docs = tmp_path / "docs"
-        docs.mkdir()
+        site = tmp_path / "_site"
+        site.mkdir()
         for i in range(5):
-            (docs / f"page{i}.html").write_text("<html></html>", encoding="utf-8")
+            (site / f"page{i}.html").write_text("<html></html>", encoding="utf-8")
         result = find_html_files(root_dir=tmp_path, docs_only=True, limit=2)
         assert len(result) <= 2
 
