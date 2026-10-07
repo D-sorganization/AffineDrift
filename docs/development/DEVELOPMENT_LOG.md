@@ -774,6 +774,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#1893 · Archive HANDOFF.md (129 Old Sections) and Shipped DEVELOPMENT_LOG.md Entries (17) Verbatim Into Docs/Development/Archive/ and the Yearly DL Archive (RM#1893).
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #1893
+- **Branch:** merged via #4991
+- **PR:** #4991
+- **Paths:** docs/development/HANDOFF.md; docs/development/DEVELOPMENT_LOG.md; docs/development/DEVELOPMENT_LOG_ARCHIVE_2026.md; docs/development/archive/HANDOFF_ARCHIVE_2026.md
+- **Started:** 2026-10-07
+- **Last verified:** 2026-10-07 (`921f3fd2`; collated from changes/1893-archive-handoff-devlog.md)
+- **Summary:** Archive HANDOFF.md (129 old sections) and shipped DEVELOPMENT_LOG.md entries (17) verbatim into docs/development/archive/ and the yearly DL archive (RM#1893).
+- **Next step:** Shipped in PR #4991.
+
 ### DL-#4882 · Page-Relative Freshness Dashboard Links
 
 - **State:** in_review
