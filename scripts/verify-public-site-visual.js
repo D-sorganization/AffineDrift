@@ -16,7 +16,7 @@ const {
 function parseArgs(argv) {
   const options = {
     baseUrl: "http://localhost:8000",
-    manifestPath: "docs/public-site-manifest.json",
+    manifestPath: "_site/public-site-manifest.json",
     outputPath: "artifacts/public-site-verification/visual-results.json",
     screenshotDir: "artifacts/public-site-verification/screenshots",
     candidateBaselinePath: undefined,

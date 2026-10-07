@@ -96,7 +96,7 @@ docker compose up --build
 
 The preview is then served at `http://localhost:8080`. The image verifies the
 Quarto package checksum, installs Python dependencies from the hash-locked
-`requirements-docker.lock`, and writes `docs/build-provenance.json` into the
+`requirements-docker.lock`, and writes `_site/build-provenance.json` into the
 rendered site. Pass credentials through environment variables or your deployment
 platform's secret store; do not bake secrets into the image.
 
@@ -120,7 +120,8 @@ AffineDrift/
 ├── styles.css           Site styling
 ├── js/                  JavaScript modules
 ├── tests/               Python test suite
-└── docs/                Rendered output and repository documentation
+├── docs/                Internal documentation (ADRs, dev logs, CSS plans)
+└── _site/               Rendered output (git-ignored, built by `quarto render`)
 ```
 
 ## Repository documentation

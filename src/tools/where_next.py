@@ -180,9 +180,14 @@ def _validate_link_target(
             repo_root / f"{stem_rel}.md",
             repo_root / f"{stem_rel}.html",
             repo_root / "docs" / clean_rel,
+            repo_root / "_site" / clean_rel,
         ]
     else:
-        candidates = [repo_root / clean_rel, repo_root / "docs" / clean_rel]
+        candidates = [
+            repo_root / clean_rel,
+            repo_root / "docs" / clean_rel,
+            repo_root / "_site" / clean_rel,
+        ]
 
     if not any(c.exists() for c in candidates):
         errors.append(f"{page_key}: link target does not exist on disk: {href} ({target_norm})")

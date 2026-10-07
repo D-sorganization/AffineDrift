@@ -233,11 +233,11 @@ def find_html_files(
     docs_only: bool = True,
     limit: int | None = None,
 ) -> list[Path]:
-    """Find HTML files, typically in docs directory.
+    """Find HTML files, typically in the Quarto build output directory.
 
     Args:
         root_dir: Root directory to search from.
-        docs_only: Whether to only search in docs/ directory.
+        docs_only: Whether to only search in _site/ (the rendered output).
         limit: Maximum number of files to return.
 
     Returns:
@@ -249,7 +249,7 @@ def find_html_files(
     root = Path(root_dir)
 
     if docs_only:
-        search_path = root / "docs"
+        search_path = root / "_site"
         if not search_path.exists():
             return []
     else:

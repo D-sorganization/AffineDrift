@@ -2,11 +2,11 @@
 #
 # Current build strategy:
 #   - css/ and js/ are the canonical source directories
-#   - docs/css/ and docs/js/ are mirrors enforced by sync_frontend_assets.py
-#   - Quarto renders *.qmd → docs/*.html (run: quarto render)
+#   - _site/css/ and _site/js/ are mirrors enforced by sync_frontend_assets.py
+#   - Quarto renders *.qmd → _site/*.html (run: quarto render)
 #
 # Usage:
-#   make build       Sync canonical assets to docs/ mirrors
+#   make build       Sync canonical assets to _site/ mirrors
 #   make check       Verify no drift between canonical assets and mirrors
 #   make lint        Run CSS and HTML linters
 #   make test        Run unit and integration tests

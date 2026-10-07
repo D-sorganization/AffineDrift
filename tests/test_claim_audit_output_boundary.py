@@ -46,9 +46,8 @@ def test_review_evidence_survives_deployment_pruning(tmp_path: Path) -> None:
         validate_review_evidence(record, tmp_path)
 
     output.mkdir(parents=True, exist_ok=True)
-    internal_note = output / "nonpublic-note.md"
-    internal_note.write_text("Internal deployment fixture", encoding="utf-8")
-    assert internal_note in prune_internal_deploy_artifacts(output)
+    # Markdown can no longer reach the output (issue #4597), so pruning removes nothing here.
+    assert prune_internal_deploy_artifacts(output) == []
     for record in records:
         validate_review_evidence(record, tmp_path)
         for evidence in record["review"]["evidence_paths"]:

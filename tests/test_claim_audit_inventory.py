@@ -538,7 +538,7 @@ def test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers() -
     workflow = (ROOT / ".github/workflows/deploy-website.yml").read_text(encoding="utf-8")
 
     assert "scripts.generate_claim_audit_inventory" in workflow
-    assert "--manifest docs/public-site-manifest.json" in workflow
+    assert "--manifest _site/public-site-manifest.json" in workflow
     assert "--enforce-publication" in workflow
 
 

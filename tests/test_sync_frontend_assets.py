@@ -14,4 +14,4 @@ def test_every_canonical_javascript_module_has_a_deploy_sync_map() -> None:
     assert mapped == expected
     for mapping in SYNC_MAPS:
         if mapping.source.startswith("js/"):
-            assert mapping.mirrors == (f"docs/{mapping.source}",)
+            assert mapping.mirrors == (f"_site/{mapping.source}",)

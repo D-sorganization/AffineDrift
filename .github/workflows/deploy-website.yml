@@ -152,43 +152,43 @@ jobs:
           to: html
 
       - name: Generate sitemap.xml
-        run: python3 scripts/generate_sitemap.py --output docs/sitemap.xml
+        run: python3 scripts/generate_sitemap.py --output _site/sitemap.xml
 
       - name: Generate RSS feed.xml
-        run: python3 scripts/generate_feed.py --output docs/feed.xml
+        run: python3 scripts/generate_feed.py --output _site/feed.xml
 
       - name: Post-generation Link Check
         run: python3 -m src.tools.check_links
 
       - name: Bundle CSS (flatten @import waterfall)
         # Flattens the canonical css/ @import graph into a single render-blocking
-        # docs/styles.css bundle, then validates docs/css/ mirrors match css/.
+        # _site/styles.css bundle, then validates _site/css/ mirrors match css/.
         run: python3 scripts/bundle_css.py
 
       - name: Verify frontend asset sync
-        # docs/css/ and docs/js/ are populated by Quarto render above.
+        # _site/css/ and _site/js/ are populated by Quarto render above.
         # Running --check here validates that canonical sources match their
         # generated mirrors — any genuine drift will correctly fail the build.
         run: python3 scripts/sync_frontend_assets.py --check
 
       - name: Minify deploy frontend assets
         # Keep canonical css/ and js/ files readable; shrink only the rendered
-        # docs/ artifact uploaded to GitHub Pages.
+        # _site/ artifact uploaded to GitHub Pages.
         run: python3 scripts/minify_deploy_assets.py
 
       - name: Post-build Health Check
         run: python3 -m src.tools.check_site_health --fail-on broken
 
-      - name: Prune internal markdown files from deploy artifact
-        run: python3 scripts/prune_internal_docs_from_deploy.py --docs-dir docs
+      - name: Prune internal artifacts from deploy output
+        run: python3 scripts/prune_internal_docs_from_deploy.py --docs-dir _site
 
       - name: Generate revision-bound public site manifest
         run: |
           python3 scripts/public_site_manifest.py \
-            --docs-dir docs \
+            --docs-dir _site \
             --source-root . \
             --source-revision "$GITHUB_SHA" \
-            --output docs/public-site-manifest.json
+            --output _site/public-site-manifest.json
 
       - name: Verify URL Stability and Redirect Policy
         # Deploy fails if a previously published route disappears without
@@ -196,9 +196,9 @@ jobs:
         run: |
           python3 -m src.tools.check_redirects \
             --previous-manifest "$RUNNER_TEMP/redirect-check/previous-public-site-manifest.json" \
-            --current-manifest docs/public-site-manifest.json \
+            --current-manifest _site/public-site-manifest.json \
             --redirects config/redirects.yml \
-            --docs-dir docs
+            --docs-dir _site
 
       - name: Enforce scientific claim-audit coverage
         # Blocking by design: publication must be truthful. Ledger bookkeeping
@@ -207,22 +207,22 @@ jobs:
         # on manifest coverage or a publication blocker (#4124, RM #1507).
         run: |
           python3 -m scripts.generate_claim_audit_inventory \
-            --manifest docs/public-site-manifest.json \
+            --manifest _site/public-site-manifest.json \
             --check \
             --enforce-publication
 
       - name: Verify every rendered public page
         run: |
-          python3 -m http.server 8000 --directory docs > "$RUNNER_TEMP/affinedrift-site.log" 2>&1 &
+          python3 -m http.server 8000 --directory _site > "$RUNNER_TEMP/affinedrift-site.log" 2>&1 &
           SERVER_PID=$!
           trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
           node scripts/verify-public-site.js \
             --base-url http://127.0.0.1:8000 \
-            --manifest docs/public-site-manifest.json \
+            --manifest _site/public-site-manifest.json \
             --output artifacts/public-site-verification/local-every-page.json
           node scripts/verify-public-site-visual.js \
             --base-url http://127.0.0.1:8000 \
-            --manifest docs/public-site-manifest.json \
+            --manifest _site/public-site-manifest.json \
             --output artifacts/public-site-verification/local-representative.json \
             --screenshot-dir artifacts/public-site-verification/screenshots \
             --candidate-baseline artifacts/public-site-verification/candidate-baseline.json
@@ -241,7 +241,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
-          path: docs
+          path: _site
 
   deploy:
     timeout-minutes: 30

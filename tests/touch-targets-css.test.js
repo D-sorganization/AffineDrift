@@ -49,8 +49,8 @@ describe('Touch Target CSS Contract (WCAG 2.5.5, #4563)', () => {
     expect(css).toMatch(/\.page-header-cite-link\s*\{[^}]*min-width:\s*44px/);
   });
 
-  test('bundled docs/styles.css includes the touch target rules', () => {
-    const bundle = fs.readFileSync(path.join(ROOT, 'docs', 'styles.css'), 'utf8');
+  test('bundled _site/styles.css includes the touch target rules', () => {
+    const bundle = fs.readFileSync(path.join(ROOT, '_site', 'styles.css'), 'utf8');
     expect(bundle).toMatch(/\.entry-list__title\s*\{[^}]*min-height:\s*44px/);
     expect(bundle).toMatch(/\.site-button\s*\{[^}]*min-height:\s*44px/);
     expect(bundle).toMatch(/\.provenance-note a\s*\{[^}]*min-height:\s*44px/);

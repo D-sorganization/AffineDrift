@@ -141,7 +141,7 @@ def process_directory(docs_dir: Path) -> int:
     Parameters
     ----------
     docs_dir : Path
-        The directory containing rendered HTML output (e.g. docs/).
+        The directory containing rendered HTML output (e.g. _site/).
 
     Returns
     -------
@@ -186,7 +186,7 @@ def main() -> int:
         "--docs-dir",
         type=Path,
         default=None,
-        help="Path to output directory (defaults to QUARTO_PROJECT_OUTPUT_DIR or docs)",
+        help="Path to output directory (defaults to QUARTO_PROJECT_OUTPUT_DIR or _site)",
     )
     args = parser.parse_args()
 
@@ -197,7 +197,7 @@ def main() -> int:
             output_dir = Path(env_dir)
         else:
             repo_root = Path(__file__).resolve().parent.parent
-            output_dir = repo_root / "docs"
+            output_dir = repo_root / "_site"
 
     process_directory(output_dir)
     return 0
