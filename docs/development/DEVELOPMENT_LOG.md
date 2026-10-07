@@ -774,6 +774,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4956 · Refresh Requirements-Docker.Lock to Match the Python-Minor-Patch Bump (Hypothesis, Markdown, Mypy, Ruff)
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4956
+- **Branch:** merged via #4956
+- **PR:** #4956
+- **Paths:** see #4956
+- **Started:** 2026-10-06
+- **Last verified:** 2026-10-06 (`b68b139b`; collated from changes/4956-refresh-requirements-docker-lock-to-matc.md)
+- **Summary:** Refresh requirements-docker.lock to match the python-minor-patch bump (hypothesis, markdown, mypy, ruff)
+- **Next step:** Shipped in PR #4956.
+
 ### DL-#4987 · E2e Touch-Targets Spec Waits for Fonts and Finite Animations/Transitions Before Measuring, Fixing Sub-Pixel (43.9998Px) Intermittent Failures
 
 - **State:** shipped
