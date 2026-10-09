@@ -2,34 +2,51 @@
 
 # AffineDrift Project Status
 
-Steward projection generated on 2026-09-24 from
+Steward projection generated on 2026-10-07 from
 [CHARTER.md](CHARTER.md), the published [catalog](../development/planning/catalog.json),
 recent merged PRs, and CI state on `main`.
 This is the impact/acoustics slice, not a whole-repository progress assessment.
 
-Sources verified: issue #4253 open; main CI green (CI Standard, Deploy Website:
-success 2026-09-24); no open PRs; five merges since the 2026-09-23 steward pass.
+Sources verified: issue #4253 open; main CI **red** (`Deploy Website` failure
+on `0d7a5816`, 2026-10-07T06:34:14Z, tracked by auto-issue #4993; `CI Standard`
+and `Performance Benchmarks` green on the same push); 3 open PRs, all drafts
+(#4949, #4823, #4683) outside this slice; 209 PRs merged since the 2026-09-24
+steward pass; 39 open issues repo-wide.
 
 ## Progress
 
 | ID | Feature | Status | Progress | Last Change |
 | --- | --- | --- | --- | --- |
-| IA-THEORY | Source review and qualified numerical synthesis | in-progress | Active — chapters 1–2 corrected and published; contraction lay, force–mobility and nonlinear-control articles shipped; corpus audit ongoing | 2026-09-24 |
-| DV-4253 | Physical and perceptual evidence synthesis | parked | Awaiting verified prerequisites | 2026-09-23 |
+| IA-THEORY | Source review and qualified numerical synthesis | in-progress | Active — content/scientific-accuracy fixes continue to merge (e.g. #4790, #4788, #4785 chapter corrections); trust/evidence-ladder and claim-registry work shipped (#4970, #4971); corpus audit ongoing | 2026-10-07 |
+| DV-4253 | Physical and perceptual evidence synthesis | parked | Awaiting verified prerequisites; unchanged in [catalog.json](../development/planning/catalog.json) since 2026-09-23 | 2026-09-23 |
 
-## Recent Activity (since 2026-09-23)
+## Recent Activity (since 2026-09-24)
 
-- **#4454 / #4452** — fleet-managed agent section syncs merged to main.
-- **#4453** — `docs(audit)`: site-surface audit provenance reconciliation (#4429) merged.
-  DL-#4429 in the development log shows `in_progress`; the merge resolves it but the
-  log entry has not yet been updated to `shipped` — a follow-on steward or session
-  should reconcile that entry.
-- **#4451** — `fix(content)`: Chapter 1 (why physics) force/work/drift corrections merged;
-  DL-#4450 shipped.
-- **#4449** — `docs(review)`: Chapter 2 publication checkpoint saved.
+209 PRs merged in the window — far above a normal steward cadence — driven mostly
+by a new website epic program (E1–E14, issues #4496–#4610 and their WEB-xx
+sub-issues, opened 2026-10-04) alongside the ongoing textbook/content audit.
+Representative merges:
+
+- **#4970** — `feat(trust)`: evidence ladder rungs and measured-record rule (#4517).
+- **#4971** — `fix(critiques)`: rename DEFENSE_STRATEGY to adjudication-summary with redirect (#4525).
+- **#4792 / #4793** — maturity-vocabulary consolidation and article front-matter schema validation (website epic feeder work).
+- **#4979** — `feat(site)`: consolidated claude PRs — sandbox, ZTCF explorer, explainers, Start Here, Big Idea, swing viewer.
+- **#4988** — `fix(e2e)`: settle layout before measuring touch targets.
+- **#4980** — vendored stalled-merge requeue tooling from Repository_Management (#2018).
+- Ongoing chapter/content corrections (#4785, #4788, #4790 and others) continue the
+  IA-THEORY source-review line.
+
+No merge in the window touches DV-4253's prerequisites or closes #4253.
 
 ## Blockers
 
+- (first appeared 2026-10-07) **Main CI is red.** `Deploy Website` failed on the
+  latest `main` push (`0d7a5816`, 2026-10-07T06:34:14Z); auto-tracked by issue
+  #4993 (`fleet-main-health`), which closes itself once a run on `main` succeeds.
+  The two prior pushes same day were cancelled runs, not failures. `CI Standard`
+  and `Performance Benchmarks` are green on the same commit, so this looks scoped
+  to the deploy step. Not yet a day old — watch; escalate to Decisions Needed if
+  still red on the next steward pass.
 - DV-4253 lacks the qualified downstream physical/radiation and controlled blinded
   perception evidence described in the owner plan. Numerical work does not clear
   these gates. Source review and qualified numerical synthesis can continue.
@@ -39,7 +56,11 @@ success 2026-09-24); no open PRs; five merges since the 2026-09-23 steward pass.
 - (first appeared 2026-09-23) DV-4253: Board decision pending on whether to resource the
   [Owner Plan](https://github.com/D-sorganization/AffineDrift/blob/main/docs/development/planning/DV-4253.md);
   funding, access dates, execution capacity and accountable human/equipment owner
-  are unverified. _(Under 14-day threshold; routine hold — no board proposal yet.)_
+  are unverified. _(14 days as of 2026-10-07 — at the `scope.proposal_age_days`
+  threshold. This is a resourcing/scope decision, a Board-proposal candidate per
+  the playbook, but this run had no `submit_proposal` tool or
+  `shared_scripts.board_proposals` CLI available in the worktree to file one.
+  Flagging for a run with that tool/scope attached.)_
 - (first appeared 2026-09-23) DV-4253: Decide how to obtain and qualify qualified Tools/UpstreamDrift
   physical impact and radiation results with uncertainty; prerequisite evidence
   remains unavailable.

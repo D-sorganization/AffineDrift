@@ -774,6 +774,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Shipped (Last 90 Days)
 
+### DL-#4597 · Move the Quarto Output-Dir From Docs/ to the Git-Ignored _Site/ so Docs/ Holds Only Tracked Internal Documentation; Untrack the Committed CSS/JS/PDF Build Mirrors, Drop the Markdown-Pruning Half of prune_internal_docs_from_deploy.py, and Pin the Separation in Tests/test_site_output_dir.py. Supersedes Draft #4683.
+
+- **State:** shipped
+- **Owner:** unassigned
+- **Issue:** #4597
+- **Branch:** chore/4597-site-output-dir
+- **PR:** #4995
+- **Paths:** see #4995
+- **Started:** 2026-10-07
+- **Last verified:** 2026-10-07 (`d6cfe470`; collated from changes/4597-move-the-quarto-output-dir-from-docs-to.md)
+- **Summary:** Move the Quarto output-dir from docs/ to the git-ignored _site/ so docs/ holds only tracked internal documentation; untrack the committed CSS/JS/PDF build mirrors, drop the markdown-pruning half of prune_internal_docs_from_deploy.py, and pin the separation in tests/test_site_output_dir.py. Supersedes draft #4683.
+- **Next step:** Shipped in PR #4995.
+
 ### DL-#1893 · Archive HANDOFF.md (129 Old Sections) and Shipped DEVELOPMENT_LOG.md Entries (17) Verbatim Into Docs/Development/Archive/ and the Yearly DL Archive (RM#1893).
 
 - **State:** shipped

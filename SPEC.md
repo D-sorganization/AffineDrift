@@ -224,6 +224,7 @@ The `Archived entry (spec X.Y.Z)` paragraphs below are frozen: they are the pre-
 
 | Date       | PR    | Changes    |
 | ---------- | ----- | ---------- |
+| 2026-10-07 | #4995 | Move the Quarto output-dir from docs/ to the git-ignored _site/ so docs/ holds only tracked internal documentation; untrack the committed CSS/JS/PDF build mirrors, drop the markdown-pruning half of prune_internal_docs_from_deploy.py, and pin the separation in tests/test_site_output_dir.py. Supersedes draft #4683. |
 | 2026-10-07 | #4991 | Archive HANDOFF.md (129 old sections) and shipped DEVELOPMENT_LOG.md entries (17) verbatim into docs/development/archive/ and the yearly DL archive (RM#1893). |
 | 2026-10-06 | #4956 | Refresh requirements-docker.lock to match the python-minor-patch bump (hypothesis, markdown, mypy, ruff) |
 | 2026-10-06 | #4988 | e2e touch-targets spec waits for fonts and finite animations/transitions before measuring, fixing sub-pixel (43.9998px) intermittent failures |
