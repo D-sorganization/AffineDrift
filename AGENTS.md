@@ -310,9 +310,9 @@ AffineDrift is an educational textbook rendered with Quarto. The following rules
 
 #### 7c. CSS Architecture
 
-- **CSS lives in two places:** `css/` (canonical) and `docs/` (mirror built by Quarto).
-- ✅ **Edit CSS only in `css/`** — never edit `docs/` CSS directly.
-- CI enforces that `docs/` mirrors match `css/` exactly.
+- **CSS lives in two places:** `css/` (canonical) and `_site/` (mirror built by Quarto).
+- ✅ **Edit CSS only in `css/`** — never edit `_site/` CSS directly.
+- CI enforces that `_site/` mirrors match `css/` exactly.
 - CSS file sizes are enforced by `check_styles_budget.py`.
 - **MathJax Responsive Design:** Math equations on mobile must scroll horizontally. Do not use fixed font sizes that break mobile layouts. See `styles.css` for `mjx-container` responsive rules.
 
@@ -360,7 +360,7 @@ general Python standards above.
 
 ### Quarto Authoring Standards
 
-- **Source files:** Author in `.qmd` (Quarto Markdown). Do not edit rendered `docs/` HTML directly.
+- **Source files:** Author in `.qmd` (Quarto Markdown). Do not edit rendered `_site/` HTML directly.
 - **Code cells:** Use `{python}` or `{javascript}` fenced blocks for executable content.
 - **Cross-references:** Use `@sec-`, `@fig-`, `@eq-` syntax. Register new chapters in `_quarto.yml`.
 - **Bibliography:** Add entries to `references/` directory. Cite with `[@key]`. Validate with the
@@ -370,7 +370,7 @@ general Python standards above.
 
 ### CSS Discipline
 
-- **Edit CSS only in `css/`** — never in `docs/`. CI enforces mirroring; direct `docs/` CSS edits
+- **Edit CSS only in `css/`** — never in `_site/`. CI enforces mirroring; direct `_site/` CSS edits
   will fail the CSS mirror enforcement gate.
 - **CSS budget:** Stylesheet sizes are enforced by CI. Do not bloat stylesheets.
 

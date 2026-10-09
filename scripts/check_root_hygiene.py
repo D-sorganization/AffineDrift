@@ -177,6 +177,7 @@ PERMITTED_LOCAL_CACHES: frozenset[str] = frozenset(
         ".pytest_cache",
         ".quarto",
         ".ruff_cache",
+        "_site",
         "coverage.json",
         "coverage.xml",
         "node_modules",

@@ -70,7 +70,7 @@ Tools for checking and fixing content quality:
 Extract and validate links from HTML files.
 
 ```bash
-python check_links.py docs/articles/my-article.html
+python check_links.py _site/articles/my-article.html
 # Outputs: List of all links and their status
 ```
 
@@ -80,7 +80,7 @@ Comprehensive site health check - validates internal links and generates sitemap
 
 ```bash
 python check_site_health.py
-# Checks all HTML files in docs/ directory
+# Checks all HTML files in _site/ directory
 ```
 
 #### `verify_images.py`
@@ -88,7 +88,7 @@ python check_site_health.py
 Validate that all image URLs in HTML files resolve correctly.
 
 ```bash
-python verify_images.py docs/index.html
+python verify_images.py _site/index.html
 # Reports: broken images, missing alt text
 ```
 
@@ -149,7 +149,7 @@ python update_navigation.py
 Convert Markdown articles to HTML using project templates.
 
 ```bash
-python publish_manual_article.py --input article.md --output docs/articles/
+python publish_manual_article.py --input article.md --output _site/articles/
 ```
 
 ## Interactive Tools

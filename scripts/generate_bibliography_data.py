@@ -123,9 +123,9 @@ def _process_reading_paths(output_dir: Path) -> None:
 def main() -> None:
     """Generate JSON data for the interactive bibliography from YAML sources.
     Reads 'data/bibliography.yaml' and 'articles/*-bibliography.md',
-    and converts them to JSON in 'docs/data'.
+    and converts them to JSON in '_site/data'.
     """
-    output_dir = Path("docs/data")
+    output_dir = Path("_site/data")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     all_refs: dict[str, dict[str, Any]] = {}

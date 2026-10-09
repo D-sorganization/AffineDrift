@@ -145,7 +145,7 @@ AffineDrift/
 ### Input & Output Data
 
 - **Input**: Swing trajectories (YAML/JSON), Quarto Markdown (.qmd), LaTeX book sources (.tex), configuration parameters (`_quarto.yml`).
-- **Output**: Optimized swing trajectories (NumPy/JSON), static website (HTML/CSS/JS in `docs/`), test and coverage reports (`coverage.xml`), claim-audit reports.
+- **Output**: Optimized swing trajectories (NumPy/JSON), static website (HTML/CSS/JS in the git-ignored `_site/` build output), test and coverage reports (`coverage.xml`), claim-audit reports.
 
 ### Configuration
 
@@ -208,7 +208,7 @@ quarto render
 
 ### Build Artifacts
 
-Static website in `docs/`, public site manifest (`docs/public-site-manifest.json`), coverage report (`coverage.xml`), and claim-audit inventory reports.
+Static website in `_site/`, public site manifest (`_site/public-site-manifest.json`), coverage report (`coverage.xml`), and claim-audit inventory reports.
 
 ## 11. Roadmap & Open Issues
 

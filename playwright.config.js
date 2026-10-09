@@ -2,8 +2,8 @@ const { defineConfig, devices } = require('@playwright/test');
 
 const webServerCommand =
   process.platform === 'win32'
-    ? 'py -3 -m http.server 8000 --directory docs'
-    : 'python3 -m http.server 8000 --directory docs';
+    ? 'py -3 -m http.server 8000 --directory _site'
+    : 'python3 -m http.server 8000 --directory _site';
 
 module.exports = defineConfig({
   testDir: './tests/e2e',

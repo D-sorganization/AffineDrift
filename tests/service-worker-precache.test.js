@@ -2,7 +2,7 @@
  * Contract test: the service worker must precache the deployed stylesheet
  * bundle, not the modular source @import graph. `styles.css` remains modular
  * for authoring, while scripts/bundle_css.py renders a flattened
- * `docs/styles.css` for deployment.
+ * `_site/styles.css` for deployment.
  *
  * Regression test for the 2026-06-09 web audit.
  */
@@ -66,8 +66,8 @@ describe('service worker stylesheet precache contract', () => {
   const swSource = readText('service-worker.js');
   const sourceImportedStylesheets = collectSourceImportedStylesheets();
 
-  test('deployed docs/styles.css is a flattened bundle', () => {
-    expect(readText('docs/styles.css')).not.toMatch(/@import\s+/);
+  test('deployed _site/styles.css is a flattened bundle', () => {
+    expect(readText('_site/styles.css')).not.toMatch(/@import\s+/);
   });
 
   test('precaches bundled and independently linked stylesheets', () => {
