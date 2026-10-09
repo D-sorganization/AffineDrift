@@ -1,0 +1,86 @@
+Here is the review of the test suites, focusing strictly on substantive defects (wrong expected values, vacuous assertions, dimension/mathematical discrepancies) and distinguishing actionable suggestions.
+
+---
+
+### 1. Substantive Defects
+
+#### Defect 1: State Layout Transposition in `test_regulation_torque_and_equilibrium`
+- **Location:** `test_regulation_torque_and_equilibrium`
+  ```python
+  gains = feedback.PDGains(np.diag([4.0, 9.0]), np.diag([2.0, 3.0]))
+  state = np.array([[0.4, -0.2], [0.1, -0.3]])
+  target = np.array([0.2, 0.1])
+  gravity = np.array([1.2, 0.4])
+  np.testing.assert_allclose(
+      feedback.regulation_torque(gains, state, target, gravity), [0.2, 4.0], atol=1e-12
+  )
+  ```
+- **Issue:** 
+  The test feeds `state` shaped `(2, 2)` where row 0 is `[0.4, -0.2]` and row 1 is `[0.1, -0.3]`.
+  Under canonical $2$-DoF mechanical state representation:
+  - If state is shape `(2, 2)` representing $[q, \dot{q}]$, then $q = [0.4, -0.2]$ and $\dot{q} = [0.1, -0.3]$.
+  - The regulation torque formula specified is $\tau = g - K_p(q - q_{\text{target}}) - K_d \dot{q}$.
+  - Evaluating coordinate 0:
+    $$\tau_0 = 1.2 - 4.0 \cdot (0.4 - 0.2) - 2.0 \cdot (0.1) = 1.2 - 0.8 - 0.2 = 0.2$$
+  - Evaluating coordinate 1:
+    $$\tau_1 = 0.4 - 9.0 \cdot (-0.2 - 0.1) - 3.0 \cdot (-0.3) = 0.4 - 9.0(-0.3) - (-0.9) = 0.4 + 2.7 + 0.9 = 4.0$$
+  - **However**, notice how `state` is packed in `test_regulation_boundary`:
+    `(np.zeros(4), np.zeros(2), np.zeros(2))` is treated as invalid in `test_regulation_boundary`, while `simulation` functions (`forward_dynamics`, `inverse_dynamics`, `simulate`) explicitly expect a 1D state vector of length $2n$ (`np.zeros(6)`). 
+  - If `regulation_torque` requires 2D `(2, n)` shape for `(q, v)`, then `test_state_contract` vs `test_regulation_boundary` are mutually incompatible conventions across the two modules without clear documentation. More critically, in:
+    ```python
+    feedback.regulation_torque(gains, np.stack([target, np.zeros(2)]), target, gravity)
+    ```
+    the test assumes row 0 is position and row 1 is velocity, whereas if a flat vector `np.r_[target, np.zeros(2)]` is expected by canonical golf models, passing `np.zeros(4)` raising `ValueError` indicates `regulation_torque` strictly forbids flat 1D state vectors (unlike `simulation` which requires flat 1D `(6,)` state vectors).
+
+#### Defect 2: Vacuous Assertion in `test_moving_target_counterexample`
+- **Location:** `test_moving_target_counterexample`
+  ```python
+  required_acceleration = -1.0  # Unit mass, r=sin(t) at t=pi/2.
+  assert torque[0] - required_acceleration == 1.0
+  ```
+- **Issue:** 
+  The line `assert torque[0] - required_acceleration == 1.0` tests purely that `0 - (-1.0) == 1.0`. Since `assert torque[0] == 0` was already asserted right above it, `assert torque[0] - required_acceleration == 1.0` is an arithmetic tautology on a local Python float ($0 - (-1) = 1$), not a check on the model or dynamics. It does not check that an inverse dynamics call or acceleration calculation actually produced `required_acceleration`.
+
+#### Defect 3: Non-Stationary Perturbation Direction in `test_manufactured_mixed_system`
+- **Location:** `test_manufactured_mixed_system`
+  ```python
+  q_full = np.einsum("bi,i->b", z_opt, g) + 0.5 * np.einsum("bi,ij,bj->b", z_opt, h, z_opt)
+  ...
+  delta_quad = 0.5 * np.einsum("bi,ij,bj->b", delta_u, hu_u, delta_u)
+  np.testing.assert_allclose(q_pert - q_full, delta_quad, rtol=1e-12, atol=1e-12)
+  ```
+- **Issue:**
+  The expansion holds identically only because $\nabla_u Q(x, u^*(x)) = g_u + H_{ux} \delta x + H_{uu} u^* = 0$. While mathematically valid for verifying the stationary point in $u$, notice:
+  ```python
+  q_red = (
+      v_off
+      + np.einsum("bi,i->b", dx_samples, v_grad)
+      + 0.5 * np.einsum("bi,ij,bj->b", dx_samples, v_hess, dx_samples)
+  )
+  np.testing.assert_allclose(q_full, q_red, rtol=1e-12, atol=1e-12)
+  ```
+  The Schur complement reduction of $Q(x, u)$ assumes $Q(\delta x, \delta u) = \frac{1}{2} z^T H z + g^T z$. In `test_manufactured_mixed_system`, $v_{\text{offset}}$ is asserted to absorb the constant term:
+  $$v_{\text{offset}} = -\frac{1}{2} g_u^T H_{uu}^{-1} g_u$$
+  For $n=2, m=2$:
+  $g_u = [0.5, 3.0]^T$, $H_{uu} = \begin{pmatrix} 4 & 1 \\ 1 & 3 \end{pmatrix}$, $\det(H_{uu}) = 11$.
+  $$H_{uu}^{-1} = \frac{1}{11} \begin{pmatrix} 3 & -1 \\ -1 & 4 \end{pmatrix}$$
+  $$H_{uu}^{-1} g_u = \frac{1}{11} \begin{pmatrix} 3(0.5) - 3.0 \\ -0.5 + 4(3.0) \end{pmatrix} = \frac{1}{11} \begin{pmatrix} -1.5 \\ 11.5 \end{pmatrix}$$
+  $$v_{\text{offset}} = -\frac{1}{2} [0.5(-1.5) + 3.0(11.5)] / 11 = -\frac{1}{2} (-0.75 + 34.5)/11 = -\frac{33.75}{22} \approx -1.53409$$
+  This check itself is sound, but `dx_samples[0] = [0.0, 0.0]`. When $\delta x = 0$, $q_{\text{full}}[0]$ equals $g_u^T k + \frac{1}{2} k^T H_{uu} k = v_{\text{offset}}$, confirming consistency.
+
+---
+
+### 2. Suggestions (Non-blocking improvements)
+
+1. **State Vector Representation Consistency:**
+   - In `ch04_simulation.tex`, `state` is a flat 1D array of shape `(6,)` (`(2n,)`).
+   - In `ch06_controller_design.tex`, `state` is a 2D array of shape `(2, n)` (`[position, velocity]`).
+   - *Suggestion:* Unify or explicitly parameterize tests for both 1D (`(2n,)`) and 2D (`(2, n)`) arrays if the chapter API allows flat states, or add docstring clarification explaining why regulation uses `(2, n)` while forward/inverse dynamics uses `(2n,)`.
+
+2. **Integration Error Tolerance in `test_forced_trajectory_energy_balance`:**
+   - Trapezoidal quadrature `np.trapezoid(states[:, 3:] @ torque, times)` has an $O(\Delta t^2)$ discretization error, while `solve_ivp` with RK45 has different truncation characteristics. The tolerance `2e-7` is tight and sensitive to the chosen time step grid (161 points over 0.04s).
+   - *Suggestion:* Use higher-order quadrature (e.g. Simpson's rule via `scipy.integrate.simpson`) to make the test less sensitive to grid size without inflating tolerances.
+
+3. **Check Condition Number / Symmetry on $H_{xx}$ in `INVALID_INPUTS`:**
+   - `INVALID_INPUTS` verifies asymmetric $H$, non-SPD $H_{uu}$, non-integers, and wrong shapes.
+   - *Suggestion:* Add test cases specifically where $H_{xx}$ is asymmetric vs $H_{uu}$ is asymmetric, ensuring the exception message (or contract) distinguishes whether the full Hessian or only the control block $H_{uu}$ failed symmetry/SPD requirements.

@@ -1,0 +1,25 @@
+from pathlib import Path
+import json, numpy as np
+from scipy.integrate import solve_ivp
+from scipy.linalg import solve_discrete_are
+qa=Path('docs/development/technical-review/corpus-tail')
+# Independent closed-form point-mass equations, avoiding the repository's
+# numerical Christoffel implementation and fixed-step RK4 integrator.
+def rhs(t,y,torque):
+ q1,q2,v1,v2=y; delta=q1-q2
+ m=np.array([[2.,np.cos(delta)],[np.cos(delta),1.]])
+ bias=np.array([np.sin(delta)*v2*v2+19.62*np.sin(q1),-np.sin(delta)*v1*v1+9.81*np.sin(q2)])
+ return np.r_[y[2:],np.linalg.solve(m,np.array([torque,0.])-bias)]
+t=np.arange(5)*.5; y0=[np.pi/4,np.pi/6,2.,-1.]
+actual=solve_ivp(lambda t,y:rhs(t,y,5.),[0,2],y0,t_eval=t,method='DOP853',rtol=1e-11,atol=1e-12)
+zero=solve_ivp(lambda t,y:rhs(t,y,0.),[0,2],y0,t_eval=t,method='DOP853',rtol=1e-11,atol=1e-12)
+printed=np.array([[.7854,.5236,2,-1],[.9514,.3060,-1.4024,.1886],[-.0516,.2870,-.8654,-2.2171],[-.0242,-1.0481,-.1023,-1.0901],[-.0517,-.5357,-.3469,3.1249]])
+err=float(np.max(np.abs(actual.y.T-printed)));assert err<5e-5,err
+sep=np.linalg.norm(actual.y[:2]-zero.y[:2],axis=0);sep_error=float(np.max(np.abs(sep-[0,.5558,.5393,.4955,.5855])));assert sep_error<5e-5
+A=np.array([[1,.1],[.981,1.]]);B=np.array([[.005],[.1]]);Q=np.diag([10.,1.]);R=np.array([[.1]])
+S=solve_discrete_are(A,B,Q,R);K=np.linalg.solve(R+B.T@S@B,B.T@S@A);F=A-B@K;D=Q+K.T@R@K
+identity=float(np.max(np.abs(S-F.T@S@F-D)));assert identity<1e-10
+rng=np.random.default_rng(4950); directions=rng.normal(size=(100,2));loss=np.einsum('bi,ij,bj->b',directions,S,directions)-np.einsum('bi,ij,bj->b',directions@F.T,S,directions@F.T);expected=np.einsum('bi,ij,bj->b',directions,D,directions)
+variation_error=float(np.max(np.abs(loss-expected)));assert variation_error<1e-10
+result={'scope':'Manufactured mathematical checks, not empirical golfer validation','seed':4950,'double_pendulum':{'method':'Independent analytic point-mass equations with DOP853 vs printed RK4 trajectory','sample_times':t.tolist(),'maximum_state_error':err,'maximum_separation_error':sep_error,'printing_tolerance':5e-5},'lqr':{'matrix_identity_error':identity,'direction_cases':100,'maximum_value_identity_error':variation_error,'tolerance':1e-10,'spectral_radius':float(max(abs(np.linalg.eigvals(F))))}}
+(qa/'independent-checks.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))

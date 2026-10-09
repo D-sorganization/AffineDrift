@@ -1,0 +1,66 @@
+import csv
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+root = Path.cwd()
+qa = root / 'docs/development/technical-review/simulation-feedback-review'
+head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+assert head == 'bece6bee500fb24f82530794e059faab94e44531'
+assert (qa / 'full-tests.exit').read_text().strip() == '0'
+assert (qa / 'full-tests-before.txt').stat().st_size == 0
+assert (qa / 'full-tests-after.txt').stat().st_size == 0
+log = (qa / 'full-tests.txt').read_text(encoding='utf-8')
+assert '7172 passed, 29 skipped, 210 deselected, 60 warnings in 426.26s' in log
+assert 'Total coverage: 93.25%' in log
+chapters = ['articles/The_Geometry_of_Motion/Volume_V/chapters/' + p for p in
+            ['ch04_simulation.tex', 'ch05_trajectory_optimization.tex', 'ch06_controller_design.tex']]
+paths = chapters + ['articles/The_Geometry_of_Motion/geometry_of_motion.bib',
+                   'articles/The_Geometry_of_Motion/Volume_V/main.pdf',
+                   'tests/test_simulation_feedback_listings.py', 'tests/test_trajectory_quadratic_listing.py',
+                   'reports/technical-review/simulation-feedback-independent-checks.json']
+record = {
+    'issue': 4927, 'epic': 4009,
+    'status': 'Three complete chapters accepted; protected remote-main delivery pending',
+    'accepted_source_commit': head,
+    'git_blob_sha256': {p: hashlib.sha256(subprocess.check_output(['git', 'show', head + ':' + p])).hexdigest() for p in paths},
+    'scope': 'Complete Volume V chapters 4-6; simulation, quadratic optimization core and conditional feedback guarantees; no complete optimizer or empirical human certification',
+    'full_regression': {'head': head, 'passed': 7172, 'skipped': 29, 'deselected': 210,
+        'warnings': 60, 'seconds': 426.26, 'src_coverage_percent': 93.25, 'exit_code': 0,
+        'tracked_tree_unchanged': True,
+        'command': 'python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60',
+        'log': (qa / 'full-tests.txt').relative_to(root).as_posix()},
+    'pdf': {'pages': 52, 'printed_entries': 28, 'unresolved_citations_or_references': 0,
+        'visual_scope': 'Physical pages 3-5, 20-31, 50-52; final pass 8 pages 23-25, 29-31 and 50-52 reinspected',
+        'build_log': (qa / 'accepted-pass8.txt').relative_to(root).as_posix(),
+        'limits': 'One historical chapter 7 title overflow; no scoped overflow; historical duplicate destinations/package warnings'},
+    'focused_tests': 51, 'combined_tests': 89,
+    'mathematics': {'record': 'reports/technical-review/simulation-feedback-independent-checks.json',
+        'identities': 6, 'cases_each': 100, 'threshold': 1e-6, 'maximum_error': 1.2891410161586236e-10,
+        'scope': 'Manufactured model and control identities; not human validation'},
+    'delegation': {'helpers': 5, 'model': 'agy Gemini 3.8 Flash', 'mode': 'Read-only reviews and test proposals; lead-adjudicated'},
+    'failed_run': 'Initial combined run: 88 passed, one duplicate bibliography title failed. Reused existing citation key; no guard changed. Oversized Flash invocation failed to launch and is excluded.',
+    'delivery': {'status': 'Preparing regular PR', 'base': 'fix/platform-model-contracts-review', 'dependency': 'PR 4930',
+        'next': 'Protected delivery after verified parent merge, then fetched-main blob verification'}
+}
+(root / 'reports/technical-review/simulation-feedback-validation.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+index = root / 'docs/development/technical-review/corpus-review-index.csv'
+with index.open(encoding='utf-8', newline='') as source:
+    reader = csv.DictReader(source)
+    fields = reader.fieldnames
+    rows = list(reader)
+assert len(rows) == 407
+before = sum(row['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for row in rows)
+assert before == 59, before
+for row in rows:
+    if row['Source'] in chapters:
+        row['Review Scope'] = ('Complete Chapter Review #4927; Source ' + head +
+            '; Simulation, Optimization and Feedback; Actual Listings, Independent Mechanics, Scoped PDF and Full Regression Accepted; Remote Delivery Pending')
+after = sum(row['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for row in rows)
+assert after == 56, after
+with index.open('w', encoding='utf-8', newline='') as target:
+    writer = csv.DictWriter(target, fieldnames=fields, lineterminator='\n')
+    writer.writeheader()
+    writer.writerows(rows)
+print('Accepted 3 rows; 407 total, 56 pending-prefix rows. These are scope counts, not a scientific-completion percentage.')

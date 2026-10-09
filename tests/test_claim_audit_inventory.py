@@ -510,7 +510,7 @@ def test_deferred_route_partition_is_exhaustive_and_exact() -> None:
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4055"]
     del expected_deferred["https://github.com/D-sorganization/AffineDrift/issues/4054"]
     assert len(deferred) == 0
-    assert len(reviewed_completed_batches) == 228
+    assert len(reviewed_completed_batches) == 230
     assert observed == expected_deferred
     # This companion is newly published, outside the original deferred-route census.
     companion = _find_route(inventory, "/articles/null-space-constraint-jacobian-bibliography.html")
@@ -538,7 +538,7 @@ def test_deploy_workflow_enforces_rendered_coverage_and_publication_blockers() -
     workflow = (ROOT / ".github/workflows/deploy-website.yml").read_text(encoding="utf-8")
 
     assert "scripts.generate_claim_audit_inventory" in workflow
-    assert "--manifest docs/public-site-manifest.json" in workflow
+    assert "--manifest _site/public-site-manifest.json" in workflow
     assert "--enforce-publication" in workflow
 
 

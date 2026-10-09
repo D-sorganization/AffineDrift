@@ -1,0 +1,296 @@
+{
+  "issue": 4819,
+  "base_checkpoint": "682b709bc31459a882421062d2632282b78ed356",
+  "status": "Regular combined PR4820 open; registration checkpoint and guarded merge pending",
+  "source_commit": "1a7521e581bab0e6aa40df3f9bf0cb5ddafdee66",
+  "bound": true,
+  "remote_main_verified": false,
+  "full_regression": {
+    "passed": 6632,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "failed": 0,
+    "seconds": 540.31,
+    "coverage_percent": 79.33
+  },
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 893,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "content_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/synthesis-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "title_checks": 655,
+  "math": [
+    {
+      "width": 390,
+      "total": 48,
+      "rendered": 48,
+      "displays": 2,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "total": 48,
+      "rendered": 48,
+      "displays": 2,
+      "errors": 0,
+      "placeholders": 0,
+      "overflow": false
+    }
+  ],
+  "publication": {
+    "before_pages": 234,
+    "after_pages": 237,
+    "normalized_page_opcodes": [
+      {
+        "kind": "equal",
+        "before": [1, 4],
+        "after": [1, 4]
+      },
+      {
+        "kind": "replace",
+        "before": [5, 5],
+        "after": [5, 5]
+      },
+      {
+        "kind": "equal",
+        "before": [6, 200],
+        "after": [6, 200]
+      },
+      {
+        "kind": "replace",
+        "before": [201, 206],
+        "after": [201, 208]
+      },
+      {
+        "kind": "equal",
+        "before": [207, 207],
+        "after": [209, 209]
+      },
+      {
+        "kind": "replace",
+        "before": [208, 214],
+        "after": [210, 217]
+      },
+      {
+        "kind": "equal",
+        "before": [215, 235],
+        "after": [218, 238]
+      }
+    ],
+    "chapter29_prose_unchanged_after_figure_label_exclusion": true,
+    "final_pages_identical_to_inspected_initial_rasters": [
+      201, 202, 203, 205, 206, 208, 209, 210
+    ],
+    "final_visually_inspected_pages": [
+      5, 204, 205, 207, 210, 211, 212, 213, 214, 215, 216, 217, 218
+    ],
+    "initial_visually_inspected_pages": [
+      200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210
+    ],
+    "canonical_public_pdf_identical": true,
+    "scope": "Chapter28 plus reused synthesis figure in Chapter29 and bounded pagination; not whole-book scientific acceptance."
+  },
+  "browser_cells": [
+    {
+      "viewport": {
+        "height": 844,
+        "id": "mobile",
+        "width": 390
+      },
+      "theme": "light",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 844,
+        "id": "mobile",
+        "width": 390
+      },
+      "theme": "dark",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 900,
+        "id": "desktop",
+        "width": 1440
+      },
+      "theme": "light",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    },
+    {
+      "viewport": {
+        "height": 900,
+        "id": "desktop",
+        "width": 1440
+      },
+      "theme": "dark",
+      "passed": true,
+      "failures": [],
+      "axe_violations": []
+    }
+  ],
+  "preview_remediation": "Initial four cells reported missing preview public-site-manifest.json. Added the single-route preview manifest; all four final cells pass. No source/browser gate was weakened.",
+  "zoom": {
+    "opened": true,
+    "closed": true
+  },
+  "final_browser_source": {
+    "pinnedCatalogLink": 1,
+    "correctedReference": true,
+    "oldReference": false
+  },
+  "helpers": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-high",
+    "completed_and_reviewed": 6
+  },
+  "prior_findings_preserved": 201,
+  "prior_dependencies_unchanged": 204,
+  "prior_dependencies_changed": 2,
+  "provider_dynamics_rerun": false,
+  "human_study": false,
+  "corpus_pending_before_binding": 104,
+  "commands": {
+    "full_regression": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60",
+    "render": "quarto render articles/proximal-distal-a-journey-through-the-swing.qmd --to pdf; followed sequentially by --to html",
+    "scoped_publication": "node scripts/verify-public-site.js --base-url http://127.0.0.1:8782 --manifest docs/development/technical-review/synthesis-single-route-manifest.json --output docs/development/technical-review/synthesis-browser-final.json --screenshots",
+    "static_and_gates": "Exact arguments in local synthesis_static.py and synthesis_content_gates.py"
+  },
+  "post_format_checks": {
+    "passed": 37,
+    "failed": 2,
+    "seconds": 48.82,
+    "failures": [
+      "test_root_matches_allowlist_and_hygiene_script_passes",
+      "test_check_root_hygiene_cli_passes"
+    ],
+    "reason": "Full-suite packaging tests created root build/dist/affinedrift.egg-info after the full run's hygiene checks. Preserved those directories under QA; no scientific change.",
+    "hygiene_rerun_pending": false,
+    "hygiene_rerun": "6 passed in 0.68s"
+  },
+  "corpus_pending": 103,
+  "source_audits_pending": 103,
+  "companion_findings_total": 209,
+  "post_binding_tests": {
+    "passed": 44,
+    "failed": 0,
+    "seconds": 29.34
+  },
+  "binding_commit": "c19ff2d993ea0a0a0f1cd8151e54b03df93d1869",
+  "remote_topic_verified_commit": "1d2a48ccd8020f5fbc74c583d03bcb1078d1ce2c",
+  "normal_commit_push_hooks_passed": true,
+  "pr_prose_adjudication": "Lead corrected helper wording from103active audits to103pending source audits, removed repetition and updated44post-binding checks to actual pass. No new scientific acceptance.",
+  "parent_remote_main_verified": true,
+  "parent_merge_commit": "41c7a6df057ae0fd35f85b1bf001afdc19596f4b",
+  "parent_receipt": "reports/technical-review/lagrangian-remote-main-receipt.json",
+  "integration_validation": "reports/technical-review/synthesis-integration-validation.json",
+  "post_integration_checks": {
+    "passed": 53,
+    "failed": 0,
+    "seconds": 47.13,
+    "scope": "Chapters18/28, Lagrangian numerical/provenance checks, complete audit-ledger contracts and root hygiene after squash-ancestry reconciliation."
+  },
+  "pr": 4820,
+  "pr_url": "https://github.com/D-sorganization/AffineDrift/pull/4820"
+}

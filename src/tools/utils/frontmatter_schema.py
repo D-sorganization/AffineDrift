@@ -7,7 +7,8 @@ Enforces:
 3. Plain-language summary (maximum 60 words).
 4. Key takeaways (3 to 5 items).
 5. Explicit prohibition of 'date: today'.
-6. Governed evidence-rung (WEB-04.3).
+6. Governed evidence-rung (WEB-04.3); on every page, a rung above qualified
+   simulation must link a measured data record (#4517).
 7. Strict validation for core pages with an allowlist for pages in migration.
 """
 
@@ -22,6 +23,7 @@ import jsonschema
 import yaml
 
 from src.core.contracts import require
+from src.tools.utils.evidence_ladder import check_evidence_rung
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas" / "article-front-matter-v1.schema.json"
@@ -94,6 +96,32 @@ def normalize_rel_path(path: Path | str) -> str:
         return p.as_posix()
 
 
+def _check_content_constraints(fm: dict[str, Any], norm_path: str) -> list[str]:
+    """Validate summary word count, takeaways count, and caveats structure."""
+    errors: list[str] = []
+    summary_plain = fm.get("summary-plain")
+    if summary_plain and isinstance(summary_plain, str):
+        words = re.findall(r"\b\w+\b", summary_plain)
+        if len(words) > 60:
+            errors.append(
+                f"{norm_path}: 'summary-plain' exceeds 60 words (found {len(words)} words)"
+            )
+
+    takeaways = fm.get("key-takeaways")
+    if takeaways is not None:
+        if not isinstance(takeaways, list) or not (3 <= len(takeaways) <= 5):
+            errors.append(f"{norm_path}: 'key-takeaways' must contain between 3 and 5 items")
+
+    caveats = fm.get("caveats")
+    if caveats is not None:
+        from src.tools.caveats_block import validate_caveats_dict
+
+        for ce in validate_caveats_dict(caveats):
+            errors.append(f"{norm_path}: {ce}")
+
+    return errors
+
+
 def validate_article_frontmatter(
     fm: dict[str, Any],
     rel_path: str,
@@ -112,6 +140,9 @@ def validate_article_frontmatter(
     date_val = str(fm.get("date", "")).strip().lower()
     if date_val == "today":
         errors.append(f"{norm_path}: 'date: today' is prohibited. Use a real publication date.")
+
+    # Rule 2: no page outranks its measured evidence (WEB-04.3), allowlisted or not
+    errors.extend(check_evidence_rung(fm, norm_path))
 
     cfg = allowlist_config if allowlist_config is not None else load_frontmatter_allowlist()
     core_pages = set(cfg.get("core_pages", []))
@@ -134,19 +165,5 @@ def validate_article_frontmatter(
         field = ".".join(str(p) for p in err.path) if err.path else "root"
         errors.append(f"{norm_path}: schema error at '{field}': {err.message}")
 
-    # Additional constraint: summary-plain word count <= 60 words
-    summary_plain = fm.get("summary-plain")
-    if summary_plain and isinstance(summary_plain, str):
-        words = re.findall(r"\b\w+\b", summary_plain)
-        if len(words) > 60:
-            errors.append(
-                f"{norm_path}: 'summary-plain' exceeds 60 words (found {len(words)} words)"
-            )
-
-    # Additional constraint: key-takeaways must have between 3 and 5 items
-    takeaways = fm.get("key-takeaways")
-    if takeaways is not None:
-        if not isinstance(takeaways, list) or not (3 <= len(takeaways) <= 5):
-            errors.append(f"{norm_path}: 'key-takeaways' must contain between 3 and 5 items")
-
+    errors.extend(_check_content_constraints(fm, norm_path))
     return errors

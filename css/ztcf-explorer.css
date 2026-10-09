@@ -1,0 +1,131 @@
+/* ZTCF counterfactual explorer (articles/zero-torque-counterfactual.qmd, issue #4534). */
+
+#ztx-app {
+  --ztx-actual: #1f2937;
+  --ztx-branch: #2563eb;
+  --ztx-past: #9ca3af;
+
+  font-family: system-ui, sans-serif;
+  max-width: 46rem;
+}
+
+[data-theme="dark"] #ztx-app {
+  --ztx-actual: #e5e7eb;
+  --ztx-branch: #60a5fa;
+  --ztx-past: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #ztx-app {
+    --ztx-actual: #e5e7eb;
+    --ztx-branch: #60a5fa;
+    --ztx-past: #6b7280;
+  }
+}
+
+.ztx-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+#ztx-controls {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+#ztx-controls label {
+  display: block;
+  font-size: 0.82rem;
+}
+
+#ztx-controls input[type="range"] {
+  width: 100%;
+}
+
+#ztx-status {
+  font-size: 0.82rem;
+  min-height: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+#ztx-status[data-valid="false"] {
+  font-weight: 600;
+}
+
+#ztx-canvas {
+  display: block;
+  width: 100%;
+  max-width: 30rem;
+  height: auto;
+  aspect-ratio: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.ztx-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.ztx-chart .ztx-line-actual {
+  stroke: var(--ztx-actual);
+}
+
+.ztx-chart .ztx-line-branch {
+  stroke: var(--ztx-branch);
+  stroke-dasharray: 6 4;
+}
+
+.ztx-chart .ztx-cursor {
+  stroke: var(--ztx-past);
+}
+
+.ztx-legend {
+  font-size: 0.82rem;
+  margin: 0.4rem 0;
+}
+
+.ztx-legend-actual {
+  color: var(--ztx-actual);
+}
+
+.ztx-legend-branch {
+  color: var(--ztx-branch);
+}
+
+.ztx-results {
+  width: 100%;
+  font-size: 0.85rem;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+}
+
+.ztx-results th,
+.ztx-results td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.ztx-mono,
+.ztx-provenance code {
+  font-family: ui-monospace, monospace;
+  overflow-wrap: anywhere;
+}
+
+.ztx-provenance,
+.ztx-caveats {
+  font-size: 0.85rem;
+}

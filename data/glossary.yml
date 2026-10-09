@@ -1,0 +1,553 @@
+# data/glossary.yml
+# Site-wide glossary terms, definitions, symbols, and canonical page references.
+# Governed by Issue #4490 [WEB-01.5].
+
+acceleration:
+  name: "Acceleration"
+  plain: "The rate at which an object's speed or direction changes over time."
+  technical: "The second time derivative of position in a declared reference frame, a = d^2r/dt^2."
+  symbols:
+    - "a"
+    - '\ddot{r}'
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+aerodynamic-drag:
+  name: "Aerodynamic Drag"
+  plain: "Air resistance opposing motion relative to the surrounding air."
+  technical: "The force component opposite air-relative velocity $v_a$. Its magnitude is $D=\\tfrac12\\rho\\|v_a\\|^2 C_D A$ for declared air density, reference area and drag coefficient; the coefficient depends on the flow regime."
+  symbols:
+    - "F_D"
+    - "C_D"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+aerodynamic-lift:
+  name: "Aerodynamic Lift"
+  plain: "An aerodynamic force perpendicular to the relative airflow. On a spinning ball it can point upward, sideways or downward."
+  technical: "The aerodynamic force component perpendicular to air-relative velocity. A stated lift direction and signed coefficient give $L=\\tfrac12\\rho\\|v_a\\|^2 C_L A$; spin, surface condition and flow regime affect its magnitude and direction."
+  symbols:
+    - "F_L"
+    - "C_L"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+affine-control-system:
+  name: "Affine Control System"
+  plain: "A model whose predicted change is a zero-input part plus a part proportional to its chosen inputs at the current state."
+  technical: "A system $\\dot{x}=f_p(x)+G_p(x)u$, affine in the declared input $u$ at fixed complete state and model settings $p$. State dependence may be nonlinear; torque affinity does not establish neural-excitation affinity or additive trajectories."
+  symbols: ["f_p", "G_p", "u"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+affine-decomposition:
+  name: "Affine Decomposition"
+  plain: "Splitting the change predicted at one state into the zero-input prediction and the increment caused by the chosen input."
+  technical: "The pointwise split $\\dot{x}=f_p(x)+G_p(x)u$ for a declared effective plant. Retained activation, elasticity, damping and compatible reactions may remain at $u=0$; the split does not identify physiological passivity."
+  symbols: ["f_p(x)", "G_p(x)u"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+angular-acceleration:
+  name: "Angular Acceleration"
+  plain: "The rate at which rotational spin speed or rotation axis changes over time."
+  technical: "The time derivative of angular velocity vector in a declared reference frame, alpha = d(omega)/dt."
+  symbols:
+    - '\alpha'
+    - '\dot{\omega}'
+  canonical_page: "articles/rotation-representations-reference.qmd"
+
+angular-momentum:
+  name: "Angular Momentum"
+  plain: "Momentum associated with rotation and motion about a specified point."
+  technical: "About origin $O$, sum the particle momenta:\n\n$$\nH_O=\\sum_i(r_i-r_O)\\times m_i v_i\n$$\n\nUse velocities in a declared inertial frame. For rigid-body spin about its center of mass, $H_C=I_C\\omega$; translation contributes to momentum about other origins."
+  symbols: ["H_O", "H_C"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+angular-velocity:
+  name: "Angular Velocity"
+  plain: "How quickly an object rotates around an axis and the direction of that axis."
+  technical: "The axial vector omega describing the instantaneous rate and axis of rotation of a rigid body."
+  symbols:
+    - '\omega'
+  canonical_page: "articles/rotation-representations-reference.qmd"
+
+backswing:
+  name: "Backswing"
+  plain: "The movement taking the club away from the ball toward the transition into the downswing."
+  technical: "A swing phase establishing configuration, velocities and retained body/club states for subsequent motion. Transition need not make every segment, joint or elastic mode stationary."
+  symbols: []
+  canonical_page: "articles/theory-part1.qmd"
+
+ball-compression:
+  name: "Ball Compression"
+  plain: "A ball rating based on its deformation in a specified compression test."
+  technical: "A protocol-dependent rating of deformation under a prescribed compression test. It is distinct from dynamic impact deformation, coefficient of restitution and material modulus; compare ratings only under compatible procedures."
+  symbols: []
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+center-of-mass:
+  name: "Center of Mass"
+  plain: "The average position of a body's mass, with each part weighted by its mass."
+  technical: "$r_C=(\\sum_i m_i r_i)/(\\sum_i m_i)$, or the corresponding mass integral. It describes mass distribution and is distinct from the ground-contact center of pressure."
+  symbols: ["r_C"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+center-of-pressure:
+  name: "Center of Pressure"
+  plain: "The summary location of normal pressure on a contact surface, such as the ground under the feet."
+  technical: "For planar contact with normal pressure $p$ and nonzero normal load, $r_{\\rm COP}=\\int r p\\,dA/\\int p\\,dA$. The equivalent contact wrench may retain a free normal couple; COP becomes ill-conditioned near unloading."
+  symbols: ["r_{\\rm COP}"]
+  canonical_page: "articles/technology-force-measurement.qmd"
+
+clubhead-speed:
+  name: "Clubhead Speed"
+  plain: "How fast a specified point on the clubhead moves, usually just before impact. State which point and measurement method are used."
+  technical: "$v_c=\\|v_P(t_{\\rm impact}^-)\\|$ for a declared head point $P$. Face center, geometric head center and center of mass can have different velocities during rotation; use the instrument reporting convention consistently."
+  symbols: ["v_c", "v_P"]
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+coefficient-of-restitution:
+  name: "Coefficient of Restitution"
+  plain: "The ratio of how fast contacting bodies separate to how fast they approached, measured along the same contact normal."
+  technical: "$e=-v_{\\rm rel,n}^+/v_{\\rm rel,n}^-$, where signed relative contact-point normal velocities use one declared normal before and after collision, with $v_{\\rm rel,n}^-<0$. This differs from ball speed divided by incoming clubhead speed."
+  symbols:
+    - "e"
+    - "COR"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+constraint-force:
+  name: "Constraint Force"
+  plain: "A reaction that enforces a modeled joint or contact restriction. Ideal reactions can transfer energy between connected bodies even when they do no net work on the whole assembly."
+  technical: "For ideal constraints, the generalized reaction is $Q_c=J_c^\\mathsf T\\lambda$. Stationary constraints with $J_c\\dot q=0$ give $Q_c^\\mathsf T\\dot q=0$; moving constraints, friction and subsystem power need separate treatment."
+  symbols: ["Q_c=J_c^\\mathsf T\\lambda"]
+  canonical_page: "articles/null-space-constraint-jacobian.qmd"
+
+control-authority:
+  name: "Control Authority"
+  plain: "The changes in acceleration that the model's allowed inputs can produce at the current state."
+  technical: "The instantaneous set $\\{B_a(x)u:u\\in\\mathcal U(x)\\}$ in a declared acceleration space. Scalar capacity needs a specified metric; local authority alone does not determine finite-horizon reachability."
+  symbols: ["B_a(x)\\mathcal U(x)"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+control-input:
+  name: "Control Input"
+  plain: "The command or load chosen as the input to a model. A joint torque, muscle activation and neural excitation are different input choices."
+  technical: "The declared input vector $u(t)\\in\\mathcal U(x)$ and its physical port. In a torque-driven mechanical model, generalized actuation is $B(q)u$; neural excitation requires an explicit actuator model and may have different input dependence."
+  symbols:
+    - "u(t)"
+    - '\tau'
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+cost-function:
+  name: "Cost Function"
+  plain: "A mathematical score defining what an optimization seeks to improve, such as accuracy, speed or effort."
+  technical: "A declared objective over states, inputs and outcomes, often combining running and terminal costs. State whether it is minimized or maximized, how terms are scaled, and which constraints restrict feasible solutions."
+  symbols:
+    - "J"
+    - '\mathcal{L}(x, u)'
+  canonical_page: "articles/nonlinear-control-insights.qmd"
+
+degrees-of-freedom:
+  name: "Degrees of Freedom"
+  plain: "The number of independent variables needed locally to describe a system's configuration."
+  technical: "The local dimension of a regular configuration manifold. Starting from $N$ independent configuration variables, $k$ independent regular holonomic constraints give $N-k$ degrees of freedom; redundant constraints and singular points require separate analysis."
+  symbols:
+    - "DoF"
+    - "n"
+  canonical_page: "articles/degrees-of-freedom-and-dimensionality.qmd"
+
+double-pendulum:
+  name: "Double Pendulum"
+  plain: "A classic two-segment mechanical model representing the arms and the golf club."
+  technical: "A planar or spatial multibody system with two rigid links connected by revolute or universal joints, often modeling torso/arms and club."
+  symbols: []
+  canonical_page: "articles/drift-components-wrench-double-pendulum.qmd"
+
+downswing:
+  name: "Downswing"
+  plain: "The movement from the backswing transition toward club-ball impact."
+  technical: "A swing phase whose segment accelerations and energy changes depend on applied loads, constraints and current state. The phase name does not imply that every segment accelerates monotonically or that gravity supplies all clubhead energy."
+  symbols: []
+  canonical_page: "articles/theory-part1.qmd"
+
+drift:
+  name: "Drift"
+  plain: "The change a model predicts when its chosen control input is zero. Stored activation, elastic loads and other retained states can still affect that change."
+  technical: "The complete zero-declared-input vector field $f_p(x)$ of the specified effective plant. Include retained internal-state evolution and compatible constraints; declare frozen parameters, contact mode and any prescribed time dependence."
+  symbols: ["f_p(x)"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+drift-control-ratio:
+  name: "Drift-Control Ratio (DCR)"
+  plain: "A comparison of the model's zero-input acceleration with the largest acceleration its allowed controls can add. The ratio can exceed one and does not measure muscle effort."
+  technical: "At a fixed state, compare acceleration magnitudes using\n\n$$\n\\mathrm{DCR}_{W,\\mathcal U}(x)=\\|W a_d(x)\\|_2/[\\sup_{u\\in\\mathcal U(x)}\\|W B_a(x)u\\|_2+\\varepsilon]\n$$\n\nHere $a_d$ and $B_a u$ share one acceleration space, scaling $W$, bounded admissible input set $\\mathcal U$ and reported regularizer $\\varepsilon$. This is a capacity ratio, not a fraction of motion."
+  symbols:
+    - "DCR"
+  canonical_page: "articles/drift-control-ratio.qmd"
+
+dynamic-coupling:
+  name: "Dynamic Coupling"
+  plain: "A load or motion in one part of a linked system can affect acceleration elsewhere."
+  technical: "The interdependence of multibody motion through inertia, state-dependent forces and constraints. At fixed state in an unconstrained torque model, acceleration increments satisfy $\\Delta\\ddot q=M^{-1}B\\Delta u$; constrained dynamics require the compatible acceleration map."
+  symbols:
+    - "M(q)^{-1}"
+  canonical_page: "articles/force-mobility-matrices.qmd"
+
+equations-of-motion:
+  name: "Equations of Motion"
+  plain: "The equations relating the current state, applied loads and constraints to the predicted change in motion."
+  technical: "For a declared mechanical model,\n\n$$\nM(q)\\dot v+h(q,v,z)=B(q)u+Q_{\\rm ext}+H^\\mathsf T\\lambda\n$$\n\nUse $\\dot q=N(q)v$, any internal-state equations, and compatible constraints. Define retained loads and signs; $v$ need not equal $\\dot q$."
+  symbols: ["M", "v", "q", "h", "B", "Q_{\\rm ext}", "H", "\\lambda"]
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+extension:
+  name: "Extension"
+  plain: "An anatomical joint movement; at the wrist, moving the hand toward the back of the forearm."
+  technical: "Movement defined relative to the joint and local anatomical axes. Wrist extension is dorsal motion of the hand relative to the forearm; its contribution to club orientation depends on forearm pose and grip geometry."
+  symbols: []
+  canonical_page: "articles/theory-part2.qmd"
+
+fail-closed:
+  name: "Fail-Closed"
+  plain: "A safety rule where a check stops and refuses to pass if it cannot verify complete evidence."
+  technical: "A validation policy that treats indeterminate, missing, or corrupt records as failing rather than defaulting to permissive execution."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+feedback-control:
+  name: "Feedback Control"
+  plain: "Adjusting a command using observations of what the system is doing or has done."
+  technical: "A policy using measured or estimated state, output or history. Sensor delay, estimation, actuation and remaining time constrain its effects; feedback need not have direct access to the full state or use one explicit error signal."
+  symbols:
+    - "u(x)"
+  canonical_page: "articles/nonlinear-control-insights.qmd"
+
+feedforward-control:
+  name: "Feedforward Control"
+  plain: "Choosing commands from a reference or prediction without waiting for the resulting tracking error."
+  technical: "A control contribution based on a reference, model or anticipated disturbance rather than the resulting feedback error. It can change during movement and coexist with feedback; it need not be a fixed program chosen before the swing."
+  symbols:
+    - "u(t)"
+  canonical_page: "articles/ideomotor-theory-and-predictive-brain.qmd"
+
+flexion:
+  name: "Flexion"
+  plain: "An anatomical bending movement; at the wrist, moving the palm toward the front of the forearm."
+  technical: "Movement defined for a particular joint and local anatomical axes. Wrist palmar flexion differs from radial-ulnar deviation; anatomical direction should not be inferred from a global camera-plane angle alone."
+  symbols: []
+  canonical_page: "articles/theory-part2.qmd"
+
+forward-dynamics:
+  name: "Forward Dynamics"
+  plain: "Calculating instantaneous acceleration or state change from a specified state, input and loads. Repeating that calculation during integration predicts motion."
+  technical: "Solve the declared equations of motion for the state derivative, including constraint reactions and internal-state evolution where required. Inputs, external loads, parameters, contact mode and initial state must be specified for a forward trajectory."
+  symbols: ["\\dot x"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+generalized-coordinates:
+  name: "Generalized Coordinates"
+  plain: "Variables used to describe a system's configuration, such as joint angles or shaft-deformation amplitudes."
+  technical: "A minimal set $q$ provides local coordinates on the configuration manifold. Redundant representations, such as unit quaternions, require their constraints; a single nonsingular minimal chart need not cover every configuration."
+  symbols:
+    - "q"
+    - "q_i"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+generalized-forces:
+  name: "Generalized Forces"
+  plain: "Force-like or torque-like quantities paired with the model's chosen coordinate displacements."
+  technical: "The virtual-work coefficients defined by $\\delta W=Q^\\mathsf T\\delta q$. They include contributions from applied forces and couples through their kinematic maps; units, signs and scaling depend on the coordinate convention."
+  symbols:
+    - "Q_i"
+    - '\tau'
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+governed:
+  name: "Governed"
+  plain: "Within the publication's declared review and claim-tracking process."
+  technical: "Subject to the stated review, provenance and publication rules. Governance describes a process; the current evidence record determines a claim's review status and scientific support."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+ground-reaction-force:
+  name: "Ground Reaction Force (GRF)"
+  plain: "The force the ground exerts on the golfer through shoe contact."
+  technical: "The resultant of contact traction over the declared foot-ground boundary. Newton's third-law partner acts on the ground; the full ground-reaction wrench also includes moments about a specified point."
+  symbols: ["F_{\\rm GRF}"]
+  canonical_page: "articles/technology-force-measurement.qmd"
+
+ideomotor-theory:
+  name: "Ideomotor Theory"
+  plain: "An account of action selection that emphasizes the effects a person expects an action to produce."
+  technical: "A family of accounts linking action representation and selection to anticipated perceptual effects. Translating that idea into a golf controller requires explicit model and objective choices; it does not identify one established neural algorithm."
+  symbols: []
+  canonical_page: "articles/ideomotor-theory-and-predictive-brain.qmd"
+
+impact:
+  name: "Impact"
+  plain: "The brief collision during which contact forces change the motion and deformation of the clubhead and ball."
+  technical: "Contact from initial touch to separation, with impulse $J=\\int F\\,dt$. Duration and peak force depend on the collision; impulse divided by duration gives mean force, not peak force."
+  symbols:
+    - '\Delta t_{impact}'
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+induced-acceleration:
+  name: "Induced Acceleration"
+  plain: "The acceleration contribution assigned to a specified force or torque in a declared model at the current state."
+  technical: "At fixed state and constraint mode, a generalized-force increment maps to an acceleration increment through the solved dynamics. $M^{-1}\\Delta Q$ applies in an unconstrained model; ideal constraints change this map and induce accompanying reaction increments."
+  symbols: ["\\Delta\\ddot q"]
+  canonical_page: "articles/superposition.qmd"
+
+inverse-dynamics:
+  name: "Inverse Dynamics"
+  plain: "Using measured or prescribed motion and a mechanical model to estimate the net loads needed to produce it."
+  technical: "Infer generalized loads from kinematics, inertia and declared external/contact loads. Unmeasured reactions can leave the inverse problem nonunique; net joint moments do not uniquely determine individual muscle or tendon forces."
+  symbols: ["Q_{\\rm net}"]
+  canonical_page: "articles/inverse-dynamics.qmd"
+
+kinetic-chain:
+  name: "Kinetic Chain"
+  plain: "Connected body segments whose motion and loads influence one another."
+  technical: "An articulated open or closed mechanical chain. Joint forces and couples can transfer power between segments; the direction and amount require a declared system boundary and force-velocity accounting, rather than an assumed one-way flow."
+  symbols: []
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+kinetic-energy:
+  name: "Kinetic Energy"
+  plain: "The energy associated with translational and rotational motion."
+  technical: "For a rigid multibody system, sum each body's translational and rotational contributions:\n\n$$\n\\tfrac12m_i\\|v_{C_i}\\|^2+\\tfrac12\\omega_i^\\mathsf T I_{C_i}\\omega_i\n$$\n\nUse center-of-mass velocities and inertia tensors in consistent frames. Time-independent minimal kinematics give $T=\\tfrac12\\dot q^\\mathsf T M(q)\\dot q$; prescribed moving boundaries may add affine velocity terms."
+  symbols:
+    - "T"
+    - "E_k"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+lag:
+  name: "Lag"
+  plain: "A golf term often used for the angle between the lead forearm and clubshaft before impact."
+  technical: "An informal kinematic descriptor requiring declared segments, angle convention and three-dimensional geometry. It is not uniquely a wrist deviation angle, a stored-energy measure, or evidence of a deliberately held release."
+  symbols: []
+  canonical_page: "articles/theory-part1.qmd"
+
+lagrangian-mechanics:
+  name: "Lagrangian Mechanics"
+  plain: "A way to derive motion equations using kinetic and potential energy, together with applied loads and constraints."
+  technical: "For $L=T-V$, the Euler-Lagrange equations take the form\n\n$$\nd(\\partial L/\\partial\\dot q_i)/dt-\\partial L/\\partial q_i=Q_i^{\\rm nc}\n$$\n\nHere $Q^{\\rm nc}$ contains loads not already represented by $V$; constraints and coordinate conventions must be specified."
+  symbols:
+    - "L = T - V"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+launch-angle:
+  name: "Launch Angle"
+  plain: "The elevation angle of the ball's initial flight direction above a declared horizontal plane."
+  technical: "The elevation angle of the outgoing ball velocity at impact separation, relative to the stated horizontal reference plane. A sloping ground surface is not automatically that reference."
+  symbols:
+    - '\theta_{launch}'
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+linear-momentum:
+  name: "Linear Momentum"
+  plain: "Mass times center-of-mass velocity for a body, or the sum of the momenta of a system's parts."
+  technical: "In a declared inertial frame, $p=\\sum_i m_i v_i=Mv_C$ for a fixed-mass system. Its derivative equals the resultant external force; internal forces cancel in the whole-system balance."
+  symbols: ["p=Mv_C"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+magnus-effect:
+  name: "Magnus Effect"
+  plain: "A spin-related aerodynamic force that can curve a ball's flight."
+  technical: "A transverse aerodynamic effect associated with spin relative to airflow. A simplified model uses a coefficient times $\\omega\\times v_a$; its sign and magnitude depend on the declared ball and flow regime, not spin alone."
+  symbols:
+    - "F_M"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+moment-of-inertia:
+  name: "Moment of Inertia"
+  plain: "A measure of how mass is distributed relative to a rotation axis or reference point."
+  technical: "The inertia tensor about a specified point is\n\n$$\nI=\\int[(r^\\mathsf T r)\\mathbf 1-rr^\\mathsf T]\\,dm\n$$\n\nHere $r$ is position relative to that point and $\\mathbf 1$ is the identity matrix. For unit axis $e$ through the point, the scalar moment is $e^\\mathsf T I e$. Distinguish mass inertia from area moments used in beam theory."
+  symbols:
+    - "I"
+    - "MOI"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+motor-program:
+  name: "Motor Program"
+  plain: "A theoretical description of an organized command pattern for a movement."
+  technical: "A motor-control construct describing coordinated command structure or timing. Its neural representation and interaction with feedback require evidence; using the term does not establish a stored, fully open-loop golf-swing sequence."
+  symbols: []
+  canonical_page: "articles/ideomotor-theory-and-predictive-brain.qmd"
+
+muscle-torque:
+  name: "Muscle Torque"
+  plain: "The turning moment produced by muscle-tendon force about a specified joint axis."
+  technical: "A moment determined by musculotendon force and its configuration-dependent moment arm. Net inverse-dynamics joint moments can include other tissue loads and do not uniquely identify individual muscle forces or coactivation."
+  symbols:
+    - '\tau_{muscle}'
+  canonical_page: "articles/theory-part2.qmd"
+
+null-space:
+  name: "Null Space"
+  plain: "The input directions that a specified linear map sends to zero. The map determines whether this means preserving a task or satisfying a constraint."
+  technical: "$\\ker A=\\{v:Av=0\\}$. A task Jacobian kernel gives zero instantaneous task velocity; a regular stationary constraint Jacobian kernel gives compatible velocities. These kernels need not coincide and do not by themselves describe finite motions."
+  symbols: ["\\ker A"]
+  canonical_page: "articles/null-space-constraint-jacobian.qmd"
+
+phase-portrait:
+  name: "Phase Portrait"
+  plain: "A picture of trajectories and flow directions in a system's state space."
+  technical: "A geometric representation of dynamical trajectories. Position versus velocity is a common two-dimensional example; larger state spaces need selected coordinates or projections, which can hide distinctions between trajectories."
+  symbols: []
+  canonical_page: "articles/nonlinear-control-insights.qmd"
+
+potential-energy:
+  name: "Potential Energy"
+  plain: "Energy associated with configuration, such as height in a gravity field or elastic deformation."
+  technical: "A scalar $V(q)$ giving conservative generalized forces $Q=-\\partial V/\\partial q$ with the declared coordinate convention. Damping, hysteresis and active loads generally require additional force or internal-state descriptions."
+  symbols:
+    - "V"
+    - "U"
+  canonical_page: "articles/lagrangian-reference.qmd"
+
+power:
+  name: "Power"
+  plain: "The rate at which a force or couple transfers mechanical energy across a declared boundary."
+  technical: "For a rigid body, $P=F\\cdot v_O+\\tau_O\\cdot\\omega$ uses the resultant wrench and body-point velocity at the same point $O$ in consistent frames. Workless total reactions can still exchange power between subsystems."
+  symbols:
+    - "P"
+    - '\dot{W}'
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+pronation:
+  name: "Pronation"
+  plain: "Forearm rotation that turns the palm posteriorly from the anatomical reference position."
+  technical: "Relative motion at the radioulnar joints in which the radius rotates across the ulna. Palm direction in the room also depends on upper-arm posture; pronation is not an extra independent coordinate of an ideal two-axis wrist model."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+protected:
+  name: "Protected"
+  plain: "Subject to configured repository rules governing changes to a branch."
+  technical: "A branch-policy status whose actual restrictions depend on the configured rules and authorized exceptions. Required checks, reviews and allowed update paths must be read from that configuration."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+provenance:
+  name: "Provenance"
+  plain: "The recorded origin and processing history of a claim, dataset or artifact."
+  technical: "Source identifiers, versions, transformations and relevant parameters documenting how an artifact was produced. Hashes can verify recorded byte identity; provenance or a matching hash alone does not establish scientific validity."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+proximal-to-distal:
+  name: "Proximal-to-Distal Sequence"
+  plain: "A pattern in which motion peaks of segments nearer the trunk precede peaks of more distal segments."
+  technical: "A sequencing description requiring declared segments, axes, velocity measures and events. Ordered angular-speed peaks do not by themselves establish ordered torque peaks, energy-flow direction or a universally optimal swing."
+  symbols: []
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+qualified:
+  name: "Qualified"
+  plain: "Presented with stated assumptions, limits and evidence scope."
+  technical: "A claim bounded by its mathematical domain, model assumptions, uncertainty and evidential support. Qualification should distinguish demonstrated results from hypotheses and untested extensions."
+  symbols: []
+  canonical_page: "pages/overview.qmd"
+
+radial-deviation:
+  name: "Radial Deviation"
+  plain: "Movement of the hand toward the thumb side relative to the forearm."
+  technical: "A direction of wrist-complex motion defined in an anatomical frame. Its contribution to forearm-shaft angle depends on grip and the other rotations; it is not by itself a complete definition of golf wrist cock."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+reachable-set:
+  name: "Reachable Set"
+  plain: "The states a specified model can reach from a starting state within a stated time and its allowed controls and constraints."
+  technical: "$\\mathcal R(T,x_0)$ collects states reachable at time $T$ from $x_0$ under the declared dynamics, admissible input histories and state/contact restrictions. A set reachable by time $T$ is a distinct convention to state explicitly."
+  symbols:
+    - '\mathcal{R}(T, x_0)'
+  canonical_page: "articles/drift-control-ratio.qmd"
+
+smash-factor:
+  name: "Smash Factor"
+  plain: "Ball speed just after impact divided by clubhead speed just before impact, using the stated measurement convention."
+  technical: "$\\mathrm{SF}=v_b^+/v_c^-$ for declared points and times. It is a speed ratio, not an energy fraction: for a translating head of mass $M$ and ball mass $m$, their corresponding translational-energy ratio is $(m/M)\\mathrm{SF}^2$."
+  symbols:
+    - "SF"
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+spin-rate:
+  name: "Spin Rate"
+  plain: "How fast the golf ball rotates around its spin axis right after leaving the clubface."
+  technical: "The magnitude of the ball's angular velocity vector immediately following impact separation, typically reported in revolutions per minute (rpm)."
+  symbols:
+    - '\omega_{ball}'
+  canonical_page: "articles/impact-mechanics-and-ball-flight.qmd"
+
+state-space:
+  name: "State Space"
+  plain: "The possible complete states of a model, containing the information it needs, together with future inputs, to predict what happens next."
+  technical: "The space of admissible complete states. A regular minimal second-order mechanical model has local state $(q,\\dot q)$ of dimension $2n$; internal activation, elastic memory or controller states can add dimensions, and hybrid modes require explicit treatment."
+  symbols: ["x"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+supination:
+  name: "Supination"
+  plain: "Forearm rotation returning the palm toward the anterior anatomical reference orientation."
+  technical: "Relative motion at the radioulnar joints that brings the radius toward its parallel reference relationship with the ulna. Global palm-up or palm-forward appearance also depends on shoulder and elbow posture."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+torque:
+  name: "Torque"
+  plain: "The turning moment of a force or a force couple about a specified point or axis."
+  technical: "A force contributes $\\tau_O=r_{OP}\\times F$ about $O$; a pure couple contributes a moment independently of origin. The resulting angular acceleration depends on the complete inertia, motion, loads and constraints."
+  symbols:
+    - '\tau'
+    - "M"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+ulnar-deviation:
+  name: "Ulnar Deviation"
+  plain: "Movement of the hand toward the little-finger side relative to the forearm."
+  technical: "A direction of wrist-complex motion defined in an anatomical frame. It can contribute to uncocking, but a golf release involves the declared grip, forearm motion and other joint coordinates as well."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+underactuation:
+  name: "Underactuation"
+  plain: "A condition in which the available actuator directions cannot independently change every mechanical acceleration direction in the declared model."
+  technical: "For independent mechanical coordinates, $M(q)\\ddot q+h=B(q)u$ with invertible $M$ is locally underactuated when $\\operatorname{rank}B<n$. Reduce compatible constraints first; input bounds and finite-horizon controllability are separate questions."
+  symbols: ["\\operatorname{rank} B<n"]
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+vector-field:
+  name: "Vector Field"
+  plain: "A direction and rate of change assigned at each point of a specified space."
+  technical: "A vector field on a manifold assigns each point $x$ a tangent vector $f(x)\\in T_xM$. In a dynamical model this specifies instantaneous state evolution; the state space need not be ordinary physical position space."
+  symbols:
+    - "f(x)"
+  canonical_page: "articles/affine-nature-golf-swing.qmd"
+
+work:
+  name: "Work"
+  plain: "Mechanical energy transferred by loads acting through motion along a stated path."
+  technical: "For a rigid-body wrench, work is the time integral of power:\n\n$$\nW=\\int(F\\cdot v_O+\\tau_O\\cdot\\omega)\\,dt\n$$\n\nUse force, moment and body-point velocity at the same reference point $O$. For time-independent kinematics, generalized-coordinate work is $\\int Q^\\mathsf T dq$ with consistent coordinates and loads."
+  symbols:
+    - "W"
+  canonical_page: "articles/proximal-distal-energy-transfer.qmd"
+
+wrist-cock:
+  name: "Wrist Cock"
+  plain: "A coaching term often describing how the clubshaft folds relative to the lead forearm."
+  technical: "An informal descriptor often associated with radial deviation. State the measured anatomical coordinate or forearm-shaft angle; grip geometry and other rotations prevent a universal one-angle identification."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+wrist-hinge:
+  name: "Wrist Hinge"
+  plain: "A coaching term for wrist motion whose meaning should be stated by the author or coach."
+  technical: "When used for flexion-extension, it denotes palmar-dorsal wrist motion, distinct from radial-ulnar deviation. The label alone does not specify anatomical axes, signs, grip geometry or a complete release motion."
+  symbols: []
+  canonical_page: "articles/wrist-universal-joint.qmd"
+
+zero-torque-counterfactual:
+  name: "Zero-Torque Counterfactual (ZTCF) Family"
+  plain: "A family of model comparisons that set the declared applied-control input to zero. State which comparison is used and which body, club and actuator states remain."
+  technical: "The ZTCF family includes a pointwise drift sample, a stitched trace of samples along achieved states, a forward zero-input integration, and a branched integration from an achieved state. Only the latter two integrate the dynamics; zero declared input does not mean absent muscle activation."
+  symbols:
+    - "ZTCF"
+  canonical_page: "articles/zero-torque-counterfactual.qmd"

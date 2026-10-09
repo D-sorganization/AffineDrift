@@ -66,6 +66,14 @@ abnormal extremals require the corresponding more general conditions.
 
 \section{A Dimensionally Consistent Local Model}
 
+For the Taylor models below, assume the transition and stage/terminal costs
+are twice continuously differentiable near the feasible nominal trajectory.
+Use independent local coordinates for state perturbations. If a transition
+includes an impact, a fixed-mode flow Jacobian alone omits the reset and
+event-time sensitivity. This smooth derivation does not supply those event
+derivatives; a hybrid transition requires its own applicable treatment
+\cite{Kong2024SaltationFoundations}.
+
 Let $(\bar x_k,\bar u_k)$ be dynamically feasible and write
 $\delta x=x-\bar x$, $\delta u=u-\bar u$. Derivatives below are evaluated
 on that trajectory. Use column gradients,
@@ -192,6 +200,10 @@ If no trial is acceptable, increase regularization or report failure.
 line search or tiny regularized step is not a certificate of convergence.
 \end{enumerate}
 
+Here $\alpha$ is a trial step fraction, $0<\alpha\le1$. It scales the
+feedforward correction; the feedback term uses the trial trajectory's state
+deviation. Test the resulting rollout against the original objective.
+
 When choosing a policy, regularization may replace $Q_{uu}$ by $Q_{uu}+\mu I$.
 Choose $\mu$ large enough to obtain positive definiteness. To evaluate that
 policy in the original quadratic model, use general substitution:
@@ -201,6 +213,25 @@ S_k&=Q_{xx}+Q_{xu}K+K^TQ_{ux}+K^TQ_{uu}K.
 \end{align}
 Mixing regularized gains with an unqualified Schur-complement update silently
 changes the model. State the regularization convention implemented.
+
+Identity regularization uses a declared control scale. For inputs with
+different units or characteristic magnitudes, normalize the controls or specify
+a fixed positive-definite regularization metric $W$. Choose $\mu W$ with units
+compatible with $Q_{uu}$; the added quadratic penalty is
+$\tfrac{\mu}{2}\delta u^TW\delta u$, with $\mu\ge0$.
+Under a constant nonsingular change of scale $\delta u=T_u\delta v$,
+\begin{equation}
+\begin{aligned}
+H_{\rm reg}&=Q_{uu}+\mu W,\\
+H_{{\rm reg},v}&=T_u^TQ_{uu}T_u+\mu T_u^TWT_u.
+\end{aligned}
+\label{eq:ch5:regularization-scale}
+\end{equation}
+The metric transforms by congruence. Replacing $T_u^TWT_u$ by an identity
+matrix generally changes the physical trial policy. The original $\mu I$
+rule is valid in its declared scale; it is not invariant to arbitrary input
+rescaling. Numerical regularization is not a measurement of mechanical joint
+damping or metabolic expenditure.
 
 Both methods use local Taylor approximations. Solving a quadratic subproblem
 exactly does not make that approximation globally exact or establish a global

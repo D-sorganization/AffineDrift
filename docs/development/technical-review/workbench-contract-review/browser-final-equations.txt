@@ -1,0 +1,12 @@
+### Result
+{"errors":0,"width":390,"scrollWidth":390}
+### Ran Playwright code
+```js
+await (async (page) => { await page.reload(); await page.locator(".math.display").nth(0).scrollIntoViewIfNeeded(); await page.waitForTimeout(350); await page.screenshot({path:"docs/development/technical-review/workbench-contract-review/mobile-wrench-final.png"}); await page.locator(".callout").filter({hasText:"A Known Diagnostic Consistency Limit"}).scrollIntoViewIfNeeded(); await page.waitForTimeout(350); await page.locator(".callout").filter({hasText:"A Known Diagnostic Consistency Limit"}).screenshot({path:"docs/development/technical-review/workbench-contract-review/mobile-energy-final.png"}); return await page.evaluate(()=>({errors:document.querySelectorAll("mjx-merror").length,width:innerWidth,scrollWidth:document.documentElement.scrollWidth})); })(page);
+```
+### Page
+- Page URL: http://127.0.0.1:8873/articles/proximal-distal-model-workbench.html
+- Page Title: Explore the Proximal–Distal Models – AffineDrift
+- Console: 3 errors, 0 warnings
+### Events
+- New console entries: .playwright-cli\console-2026-10-05T05-09-15-620Z.log#L15-L17

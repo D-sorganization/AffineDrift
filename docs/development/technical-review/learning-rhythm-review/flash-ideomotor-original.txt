@@ -1,0 +1,84 @@
+Here is the rigorous technical review of the draft chapter **"Ideomotor Theory and the Predictive Brain"** (\label{ch:ideomotor}), covering mathematical correctness, modeling assumptions vs. empirical evidence, control-theoretic mappings, and concrete suggestions for connecting with golf swing biomechanics.
+
+---
+
+### 1. Mathematical Rigor & Formulation Issues
+
+#### A. Confusion Between Prior Predictions and Reference Trajectories in Active Inference (Eq. \ref{eq:ch5:active-inference})
+* **Equation in draft:**
+  $$\control^* = \argmin_{\control} \mathbb{E}\left[ \sum_{k=0}^{T} \norm{\bm{y}_k - \hat{\bm{y}}_k}^2_{R^{-1}} + \norm{\control_k}^2_Q \right]$$
+* **Inaccuracy:**
+  In standard predictive processing / active inference (Friston et al.), the prediction error minimized by motor action is between the **sensory observation $\bm{y}_k$** and a **prior expectation (or "desired/preferred" sensory observation $\bm{y}^*_k$ / generative model prior)**, *not* an open loop/conditional prediction $\hat{\bm{y}}_k = h(\hat{\bm{x}}_k)$ driven purely by current beliefs.
+  If $\hat{\bm{y}}_k$ is the brain’s current estimate of what will be observed given the current state ($\hat{\bm{y}}_k = \mathbb{E}[\bm{y}_k|\hat{\bm{x}}_k]$), then minimizing $\norm{\bm{y}_k - \hat{\bm{y}}_k}$ merely minimizes perceptual estimation error, not task error. Motor action minimizes the divergence between incoming sensory sensations and *prior preferences* $\bm{\eta}_k$ (attractors / target trajectories).
+* **Derivation Fix:**
+  Define the generative model with prior preferences $\bm{y}^{\text{ref}}_k$ (or target observation density $p(\bm{y})$). Active inference acts to minimize free energy $\mathcal{F} \approx D_{\mathrm{KL}}(q(\bm{x}) \parallel p(\bm{x})) - \mathbb{E}_{q}[\ln p(\bm{y}|\bm{x})]$. Under Laplace approximations with Gaussian assumptions and fixed setpoints/trajectories $\bm{y}^{\text{target}}_k$, the action minimization takes the form:
+  $$\control^* = \argmin_{\control} \mathbb{E}\left[ \sum_{k=0}^T \norm{\bm{y}_k(\control) - \bm{y}^{\text{target}}_k}^2_{\bm{\Pi}_y} + \norm{\control_k}^2_{\bm{\Pi}_u} \right]$$
+  where $\bm{\Pi}_y$ is sensory precision (inverse covariance $\bm{\Sigma}_y^{-1}$). Note also that standard quadratic weighting uses $Q$ for state/output errors and $R$ for control effort, whereas Eq. \ref{eq:ch5:active-inference} inverts standard control nomenclature ($R^{-1}$ for output, $Q$ for control).
+
+#### B. Kalman Filter Mapping (Eq. \ref{eq:ch5:prediction-error})
+* In Eq. \ref{eq:ch5:prediction-error}, $\bm{\varepsilon}_k = \bm{y}_k - h(\hat{\bm{x}}_k)$ is called the innovation. In standard Kalman filtering, the innovation is strictly $\tilde{\bm{y}}_k = \bm{y}_k - h(\hat{\bm{x}}_{k|k-1})$ (the *a priori* state estimate prior to measurement update). If $\hat{\bm{x}}_k$ denotes the *a posteriori* estimate $\hat{\bm{x}}_{k|k}$, then $\bm{y}_k - h(\hat{\bm{x}}_{k|k})$ is the *residual*, not the innovation.
+* **Fix:** Clearly specify the temporal index: $\hat{\bm{x}}_{k|k-1} = f(\hat{\bm{x}}_{k-1|k-1}, \control_{k-1})$. Then:
+  $$\bm{\varepsilon}_k = \bm{y}_k - h(\hat{\bm{x}}_{k|k-1})$$
+  and the belief update follows the classical gain step: $\hat{\bm{x}}_{k|k} = \hat{\bm{x}}_{k|k-1} + \bm{K}_k \bm{\varepsilon}_k$.
+
+---
+
+### 2. Control Theory vs. Neuroscience Terminology Mapping Table
+
+Several entries in the comparison table are conceptually skewed or inaccurate in engineering control theory:
+
+| Term in Draft | Draft Mapping | Technical Critique & Derivation Counterexample | Recommended Accurate Mapping |
+| :--- | :--- | :--- | :--- |
+| **Efference Copy** | Feedforward control signal | **Incorrect.** A feedforward signal goes directly to the plant (actuator/muscle). An *efference copy* (von Holst & Mittelstaedt, 1950) is an internal duplicate of the motor command routed specifically to the *internal forward model* to predict reafference and compute expected sensory feedback. | Internal copy of motor command sent to the state predictor / internal forward model |
+| **Prior Beliefs** | State constraints / initial conditions | **Inexact.** Priors in Bayesian filtering and active inference act as regularizers, Bayesian priors $p(\bm{x}_0)$, or reference trajectory attractors/setpoints in cost functionals—not hard state constraints. | Prior distributions $p(\bm{x}_{k|k-1})$ or target reference trajectories $\bm{y}^*(t)$ |
+| **Precision Weighting** | Kalman gain / observation weights | **Precision is inverse covariance**, not Kalman gain. The Kalman gain is $\bm{K}_k = \bm{P}_{k|k-1} \bm{H}^T (\bm{H}\bm{P}_{k|k-1}\bm{H}^T + \bm{R})^{-1}$. Precision weighting corresponds to $\bm{R}^{-1}$ (sensory precision) and $\bm{Q}^{-1}$ (process/model precision). The Kalman gain emerges as the relative ratio of these precisions. | Inverse measurement covariance $\bm{R}^{-1}$ (observation precision) and state precision $\bm{P}^{-1}$ |
+| **Active Inference** | Model Predictive Control (MPC) | **Partial analogy.** MPC uses receding-horizon optimization over control sequences. Active inference as formulated by Friston minimizes variational free energy via gradient flows or path integrals. Pointing out the exact equivalence requires qualifying the cost functional and horizon. | Output-tracking MPC / Optimal feedback control under variational uncertainty |
+
+---
+
+### 3. Empirical Evidence vs. Theoretical Models
+
+* **Ideomotor / TEC Distinction:**
+  * *Empirical:* Hommel’s 2-stage model of ideomotor action (acquisition phase where action $\rightarrow$ effect is learned via Hebbian contiguity; application phase where activating the effect representation primes/triggers the motor pattern).
+  * *Model:* Active inference claims motor commands are simply proprioceptive prediction error cancellations (reflex arcs executing high-level kinematic predictions). This is a strong computational hypothesis, not an established physiological fact—many neurophysiologists emphasize explicit descending motor commands (efference copy + motor cortex corticospinal drive) rather than pure equilibrium-point / reflex-driven cancellation.
+* **Delays in Biological Control Loops:**
+  * Sensorimotor loops have massive transport and processing latencies: visual feedback has a minimum latency of $\tau \approx 100\text{--}150\text{ ms}$, somatosensory/proprioceptive $\tau \approx 30\text{--}60\text{ ms}$, monosynaptic stretch reflex $\tau \approx 20\text{--}30\text{ ms}$.
+  * The draft ignores sensorimotor delay $\tau$. An equation without latency ($\bm{y}_k - h(\hat{\bm{x}}_k)$) implies instantaneous feedback.
+
+---
+
+### 4. Grounding in the Golf Swing (Actionable Extensions & Counterexamples)
+
+A high-velocity golf downswing takes approximately **$250\text{--}300\text{ ms}$**, with the final pre-impact release (unhinging / clubhead delivery) lasting **$<50\text{ ms}$**. This provides a benchmark for testing ideomotor theory and active inference:
+
+1. **Downswing Ballistics vs. Visual Feedback Horizon:**
+   * Because visual feedback delay ($\approx 120\text{ ms}$) is roughly half of the total downswing duration and greater than the delivery phase duration, closed-loop visual correction of clubface angle at impact is impossible.
+   * *Analytical Test:* Show that an agent relying on visual observation $\bm{y}_k^{\text{visual}}$ with latency $\tau = 120\text{ ms}$ has a gain margin that goes to zero if bandwidth exceeds $\omega_c \approx \frac{\pi}{2\tau} \approx 13\text{ rad/s}$.
+2. **Ideomotor Planning at Impact:**
+   * In ideomotor terms, the golfer plans the movement in terms of distal sensory effects: clubface-ball collision dynamics, sound of contact, ball flight trajectory, or kinematic impact geometry ("shaft lean", "divot ahead of the ball").
+   * The internal forward model generates an *efference copy* that predicts sensory reafference (proprioceptive muscle spindle rates, tactile club grip pressures). During the downswing, fast subcortical proprioceptive feedback ($30\text{ ms}$) and mechanical impedance (muscle stiffness control) correct disturbances before visual feedback can arrive.
+3. **Internal vs. External Focus of Attention:**
+   * Connect TEC (common coding) to Gabriele Wulf’s extensive empirical literature on *external focus* (focusing on the clubhead trajectory or ball target) versus *internal focus* (focusing on joint angles or wrists):
+   * TEC predicts that distal effect representation (external focus) avoids the degrees-of-freedom bottleneck (Bernstein's problem) by letting the forward/inverse models coordinate muscle synergies automatically.
+
+---
+
+### 5. Diagram & Exercise Review
+
+* **Figure \ref{fig:ch5:ideomotor-principle} (TikZ):**
+  * The dashed arrow from "Motor Command" to "Sensory Effect" labeled `sensory` actually represents the **physical interaction with the environment (the plant)**, producing physical/sensory consequences.
+  * The "Forward Model" is mentioned in the caption, but **does not exist** as a block in the diagram. An accurate TEC / internal model diagram must show:
+    $$\text{Motor Command} \longrightarrow \text{Internal Forward Model} \longrightarrow \text{Predicted Sensory Effect}$$
+    and the comparator subtracting predicted sensory effect from actual sensory effect to yield prediction error.
+* **Exercise 1:**
+  * Excellent conceptual prompt, but specify: "Contrast how distal effect planning (ball flight / club shaft dynamics) differs from joint-torque control during the $250\text{ ms}$ downswing, accounting for sensorimotor delay."
+* **Exercise 2:**
+  * Add the state-space formulation: require the reader to write out $\bm{x}_{k+1} = \bm{A}\bm{x}_k + \bm{B}\bm{u}_k + \bm{w}_k$, $\bm{y}_k = \bm{H}\bm{x}_k + \bm{v}_k$, compute $\bm{S}_k = \bm{H}\bm{P}_{k|k-1}\bm{H}^T + \bm{R}$, and show that the Kalman innovation $\tilde{\bm{y}}_k$ is normalized by precision $\bm{S}_k^{-1}$.
+* **Exercise 3:**
+  * Pendulum control via active inference: specify whether the pendulum is an inverted pendulum under torque limits or a simple passive pendulum. Note that in active inference, setpoints are encoded as prior Gaussian beliefs over state trajectories $p(\bm{x})$ centered on the upright angle $\theta = \pi$. Provide the specific variational update or state prediction equation to prevent ambiguous implementations.
+
+---
+
+### 6. Identified Uncertainties
+
+* **Volume I & II Cross-References:** The text references "Volume I, Chapter 6 (Kalman Filter)", "Volume I, Chapter 5 (MPC)", and "Volume II (Trajectory-Centric Control)". The reviewer cannot verify if variable notations ($\bm{x}_k$ vs. $\state_k$, $\control$ vs. $\bm{u}$) match the exact conventions of those companion chapters. Verify notation consistency (e.g., standardizing on $\bm{x}_k$ and $\bm{u}_k$).

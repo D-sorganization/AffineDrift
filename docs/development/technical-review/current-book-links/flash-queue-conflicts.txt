@@ -1,0 +1,47 @@
+An audit of the provided prospective Git conflict hunks based solely on the embedded payload:
+
+---
+
+### 1. Audit of Conflict Hunks: Evidence Hashes vs. Scientific Prose / Review Identities
+
+* **Files in Conflict**:
+  * `data/trust/claim_audit_inventory.json`
+  * `data/trust/generated/claim_audit_report.json`
+* **Nature of Differences**:
+  * **Evidence Hashes Only**: All three conflict hunks across both JSON files consist strictly of cryptographic SHA-256 hash updates mapped to file paths:
+    * `data/trust/generated/evidence_presentation_registry.json`
+    * `data/research_protocols/public_summary.json`
+    * `data/trust/proximal_distal_falsification_atlas.json`
+    * `models/research-protocol-readiness.qmd`
+  * **No Scientific Prose or Review Identities**:
+    * There are **no** conflicting textual narratives, scientific prose modifications, claim identifiers, or review identities in these hunks.
+    * The differences reflect derived audit ledger tracking / checksum divergence resulting from upstream source changes on the respective branches.
+
+---
+
+### 2. Recommended Minimal Resolution
+
+To preserve both branches and maintain intact historical review identities:
+
+1. **Reconcile Upstream Content / Review Identity Files**:
+   * Complete the three-way merge of any actual underlying source files (e.g., protocol summaries, falsification atlas, or narrative `.qmd` files) preserving their distinct review identities and scientific contributions from both branches.
+2. **Regenerate Evidence Checksums via Canonical Tooling**:
+   * Rather than hand-resolving or picking either branch's stale hashes in `claim_audit_inventory.json` and `claim_audit_report.json`, run the canonical regeneration script:
+     ```bash
+     python3 -m scripts.regenerate_claim_audit_evidence
+     ```
+   * This recomputes the SHA-256 digests against the merged tree across all tracked evidence paths (`data/trust/generated/evidence_presentation_registry.json`, `data/research_protocols/public_summary.json`, `data/trust/proximal_distal_falsification_atlas.json`, etc.) without altering historical claim IDs.
+3. **Verify Integrity**:
+   * Verify the ledger conformance with:
+     ```bash
+     python3 -m scripts.regenerate_claim_audit_evidence --check
+     ```
+
+*(Note: As specified, neither the queued branch nor protected `main` has been modified; this resolution applies strictly to the prospective reconciliation workflow).*
+
+---
+
+### 3. Limitations
+
+* **Embedded-Only Scope**: This analysis is based exclusively on the provided JSON payload snippet (`conflicts` object containing 3 hunks across 2 audit files). Any conflicts outside this embedded snippet (e.g., uncommitted working tree differences or untracked merge artifacts) cannot be evaluated from this input alone.
+* **Underlying Content Omission**: The exact textual diff of `models/research-protocol-readiness.qmd` or the data files is not present in the payload; only their resulting SHA-256 hash divergences are captured. Regenerating evidence requires that the underlying merged working tree files exist on disk in a clean state.

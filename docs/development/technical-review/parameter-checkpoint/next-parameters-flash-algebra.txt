@@ -1,0 +1,148 @@
+Here is the rigorous mathematical analysis, assumption audit, overclaim flags, and exact vector counterexamples/verifications for each candidate point.
+
+---
+
+### Point 1: Rigid-Body Impact Point Velocity $\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{r}$
+
+#### 1. Mathematical Formulation
+For a rigid body rotating with angular velocity $\boldsymbol{\omega}$ about a reference point $O$ moving at $\mathbf{v}_O$, the velocity at impact point $P = O + \mathbf{r}$ is:
+$$\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{r}$$
+The velocity increment $\Delta \mathbf{v} = \mathbf{v}_P - \mathbf{v}_O = \boldsymbol{\omega} \times \mathbf{r}$ has magnitude:
+$$\|\Delta \mathbf{v}\| = \|\boldsymbol{\omega}\| \|\mathbf{r}\| \sin\theta$$
+where $\theta$ is the angle between $\boldsymbol{\omega}$ and $\mathbf{r}$.
+
+The directional deviation $\Delta \theta_{\text{path}}$ in the horizontal ($xy$) plane is given by the difference between $\operatorname{atan2}(v_{P,y}, v_{P,x})$ and $\operatorname{atan2}(v_{O,y}, v_{O,x})$.
+
+#### 2. Verification & Explicit Dependencies
+- The magnitude $\|\Delta \mathbf{v}\|$ depends strictly on the cross product, which requires $\|\boldsymbol{\omega}\|$, $\|\mathbf{r}\|$, and their relative orientation $\sin\theta$. It **cannot** be determined by $\|\boldsymbol{\omega}\|$ alone.
+- Both the horizontal direction (path offset) and vertical direction (angle-of-attack offset) depend on the complete 3D vector components of $\mathbf{v}_O$, $\boldsymbol{\omega}$, and $\mathbf{r}$.
+- A fixed offset (such as $3^\circ$) or a fixed sign (always in-to-out or out-to-in) is **physically false** as a general kinematic identity: changing the strike location $\mathbf{r}$ (e.g., heel vs. toe) reverses the sign of $\boldsymbol{\omega} \times \mathbf{r}$, and changing the orientation/sign of $\boldsymbol{\omega}$ (e.g., closing vs. opening rate) likewise reverses the sign.
+
+#### 3. Assumptions & Overclaim Flags
+- **Assumptions Required**: Rigid body kinematics; constant or instantaneous $\boldsymbol{\omega}$ and $\mathbf{v}_O$ at the instant considered; $\mathbf{r}$ is the displacement vector from reference tracking center $O$ to contact point $P$.
+- **Overclaim Warning**: Claiming any universal numerical offset (such as $3^\circ$ or $2\text{ m/s}$) conflates an empirical observation or specific club geometry under typical swing mechanics with an intrinsic kinematic law. The sign and magnitude can be zero, positive, or negative depending entirely on $\mathbf{r}$ and $\boldsymbol{\omega}$.
+
+#### 4. Simple Exact Vector Example
+Let Cartesian coordinates be: $x$ forward (target line), $y$ lateral (left/right), $z$ vertical.
+- Center velocity: $\mathbf{v}_O = (40, 0, 0)\text{ m/s}$ (heading along $+x$).
+- Angular velocity: pure closure rotation about vertical axis $z$, $\boldsymbol{\omega} = (0, 0, \omega_z)$ with $\omega_z = 20\text{ rad/s}$.
+
+Compare two strike locations $\mathbf{r}_{\text{toe}}$ and $\mathbf{r}_{\text{heel}}$:
+- **Case A (Toe strike)**: $\mathbf{r} = (0, 0.05, 0)\text{ m}$.
+  $$\boldsymbol{\omega} \times \mathbf{r} = (0, 0, 20) \times (0, 0.05, 0) = (-1.0, 0, 0)\text{ m/s}$$
+  $$\mathbf{v}_P = (39, 0, 0)\text{ m/s} \implies \text{horizontal path offset} = 0^\circ, \text{ speed change } = -1\text{ m/s}.$$
+- **Case B (Off-center forward strike)**: $\mathbf{r} = (0.05, 0, 0)\text{ m}$.
+  $$\boldsymbol{\omega} \times \mathbf{r} = (0, 0, 20) \times (0.05, 0, 0) = (0, 1.0, 0)\text{ m/s}$$
+  $$\mathbf{v}_P = (40, 1.0, 0)\text{ m/s} \implies \theta_{\text{path}} = \arctan(1/40) \approx +1.432^\circ.$$
+- **Case C (Reversed displacement / opposite side)**: $\mathbf{r} = (-0.05, 0, 0)\text{ m}$.
+  $$\boldsymbol{\omega} \times \mathbf{r} = (0, -1.0, 0)\text{ m/s} \implies \mathbf{v}_P = (40, -1.0, 0)\text{ m/s} \implies \theta_{\text{path}} \approx -1.432^\circ.$$
+*Conclusion*: The offset magnitude and sign vary continuously with $\mathbf{r}$ and $\boldsymbol{\omega}$; no universal constant or single sign exists.
+
+---
+
+### Point 2: 3D Direction Vectors, Dot Product, and Spin Loft
+
+#### 1. Mathematical Formulation
+Let heading (azimuth) be measured from the $x$-axis in the $xy$-plane ($\phi, \psi$), and elevation (pitch) above the $xy$-plane be ($\alpha, \lambda$).
+For any ray with elevation $\alpha$ and heading $\phi$, the standard spherical unit direction vector is:
+$$\hat{\mathbf{u}} = \begin{pmatrix} \cos\alpha \cos\phi \\ \cos\alpha \sin\phi \\ \sin\alpha \end{pmatrix}$$
+Let:
+- Club path unit vector $\hat{\mathbf{v}}$ have elevation $\alpha$ and heading $\phi$.
+- Face normal unit vector $\hat{\mathbf{n}}$ have elevation $\lambda$ and heading $\psi$.
+
+Their inner product is:
+$$\hat{\mathbf{v}} \cdot \hat{\mathbf{n}} = (\cos\alpha \cos\phi)(\cos\lambda \cos\psi) + (\cos\alpha \sin\phi)(\cos\lambda \sin\psi) + \sin\alpha \sin\lambda$$
+Factoring $\cos\alpha \cos\lambda$ from the first two terms:
+$$\cos\phi \cos\psi + \sin\phi \sin\psi = \cos(\psi - \phi)$$
+Therefore:
+$$\cos\theta_{\text{loft}} = \hat{\mathbf{v}} \cdot \hat{\mathbf{n}} = \sin\alpha \sin\lambda + \cos\alpha \cos\lambda \cos(\psi - \phi)$$
+where $\theta_{\text{loft}} = \arccos(\hat{\mathbf{v}} \cdot \hat{\mathbf{n}}) \in [0, \pi]$.
+
+When headings match ($\psi = \phi$):
+$$\cos(\psi - \phi) = \cos(0) = 1$$
+$$\cos\theta_{\text{loft}} = \sin\alpha \sin\lambda + \cos\alpha \cos\lambda = \cos(\lambda - \alpha)$$
+Since $\cos(-x) = \cos(x)$ and for typical elevation ranges $\lambda, \alpha \in [-\pi/2, \pi/2]$ with $|\lambda - \alpha| \le \pi$:
+$$\theta_{\text{loft}} = |\lambda - \alpha|$$
+
+#### 2. Assumptions & Overclaim Flags
+- **Assumptions Required**:
+  1. $\hat{\mathbf{v}}$ and $\hat{\mathbf{n}}$ must be non-zero vectors normalized to unit length.
+  2. Elevation $\alpha, \lambda \in [-\pi/2, \pi/2]$ (or $[ -90^\circ, 90^\circ ]$).
+  3. Headings $\phi, \psi$ are well-defined (not evaluated at the coordinate singularities $\alpha, \lambda = \pm \pi/2$ where $\cos\alpha = 0$).
+  4. The identity $\theta_{\text{loft}} = |\lambda - \alpha|$ requires $|\lambda - \alpha| \in [0, \pi]$, which holds universally under standard elevation limits $[-\pi/2, \pi/2]$.
+- **Overclaim Warning**:
+  - Stating $\cos\theta = \cos(\lambda - \alpha) \implies \theta = \lambda - \alpha$ without absolute value is an overclaim, because geometric angle between vectors is strictly non-negative ($\theta \in [0, \pi]$).
+  - Approximating $\theta_{\text{loft}} \approx \sqrt{(\lambda - \alpha)^2 + (\psi - \phi)^2}$ is only a small-angle Taylor approximation ($\cos x \approx 1 - x^2/2$); equating the approximation to the exact spherical law is an overclaim.
+
+#### 3. Simple Exact Vector Example
+- Club path: heading $\phi = 0^\circ$, elevation $\alpha = -5^\circ = -\frac{\pi}{36}\text{ rad}$.
+- Face normal: heading $\psi = 0^\circ$ (equal heading), elevation $\lambda = 15^\circ = \frac{\pi}{12}\text{ rad}$.
+
+Unit vectors:
+$$\hat{\mathbf{v}} = \begin{pmatrix} \cos(-5^\circ) \\ 0 \\ \sin(-5^\circ) \end{pmatrix}, \quad \hat{\mathbf{n}} = \begin{pmatrix} \cos(15^\circ) \\ 0 \\ \sin(15^\circ) \end{pmatrix}$$
+Dot product:
+$$\hat{\mathbf{v}} \cdot \hat{\mathbf{n}} = \cos(-5^\circ)\cos(15^\circ) + \sin(-5^\circ)\sin(15^\circ) = \cos(15^\circ - (-5^\circ)) = \cos(20^\circ)$$
+$$\theta_{\text{loft}} = \arccos(\cos(20^\circ)) = 20^\circ = |15^\circ - (-5^\circ)|$$
+
+If $\psi = 10^\circ$, $\phi = 0^\circ$, $\lambda = 15^\circ$, $\alpha = -5^\circ$:
+$$\hat{\mathbf{v}} \cdot \hat{\mathbf{n}} = \sin(-5^\circ)\sin(15^\circ) + \cos(-5^\circ)\cos(15^\circ)\cos(10^\circ)$$
+$$\approx (-0.087156)(0.258819) + (0.996195)(0.965926)(0.984808) \approx -0.022559 + 0.947629 = 0.925070$$
+$$\theta_{\text{loft}} = \arccos(0.925070) \approx 22.32^\circ \neq |15^\circ - (-5^\circ)| = 20^\circ$$
+
+---
+
+### Point 3: 3D Spin Vector Resolution and Tilt Angle
+
+#### 1. Mathematical Formulation
+A general angular velocity (spin) vector $\mathbf{S} \in \mathbb{R}^3$ has three independent orthogonal components:
+$$\mathbf{S} = S_x \hat{\mathbf{i}} + S_y \hat{\mathbf{j}} + S_z \hat{\mathbf{k}}$$
+In trajectory/launch coordinates:
+- $S_x$: longitudinal / axial / forward / rifle / gyro spin (parallel to trajectory).
+- $S_y$: transverse backspin/topspin (perpendicular to trajectory in horizontal plane).
+- $S_z$: transverse sidespin (vertical component, perpendicular to trajectory).
+
+The true Euclidean $L_2$ norm is:
+$$\|\mathbf{S}\| = \sqrt{S_x^2 + S_y^2 + S_z^2}$$
+The transverse spin magnitude (obliquity plane magnitude) is:
+$$S_{\text{trans}} = \sqrt{S_y^2 + S_z^2}$$
+A single "spin tilt angle" $\tau$ in the transverse plane is defined by:
+$$S_y = S_{\text{trans}} \cos\tau, \quad S_z = S_{\text{trans}} \sin\tau$$
+Therefore:
+$$S_y^2 + S_z^2 = S_{\text{trans}}^2 (\cos^2\tau + \sin^2\tau) = S_{\text{trans}}^2$$
+
+#### 2. Verification & Explicit Dependencies
+- If and only if $S_x = 0$ (zero rifle/gyro component), we have $S_{\text{trans}} = \|\mathbf{S}\|$, which allows:
+  $$S_y = \|\mathbf{S}\| \cos\tau, \quad S_z = \|\mathbf{S}\| \sin\tau$$
+- If $S_x \neq 0$, then:
+  $$\|\mathbf{S}\| = \sqrt{S_x^2 + S_{\text{trans}}^2} > S_{\text{trans}}$$
+  Representing the 3D vector magnitude as only $\|\mathbf{S}\|\cos\tau$ and $\|\mathbf{S}\|\sin\tau$ violates the Pythagorean theorem:
+  $$(\|\mathbf{S}\|\cos\tau)^2 + (\|\mathbf{S}\|\sin\tau)^2 = \|\mathbf{S}\|^2 \neq S_y^2 + S_z^2$$
+
+#### 3. Assumptions & Overclaim Flags
+- **Assumptions Required**:
+  - The 2D decomposition $(S \cos\tau, S \sin\tau)$ strictly assumes $S_x \equiv 0$ (pure transverse spin assumption) or defines $S$ to be $S_{\text{trans}}$ rather than total vector norm $\|\mathbf{S}\|$.
+- **Overclaim Warning**:
+  - Asserting that any 3D spin vector $\mathbf{S}$ with total magnitude $S = \|\mathbf{S}\|$ can be resolved into $(S \cos\tau, S \sin\tau)$ is an overclaim that discards the axial (rifle) degree of freedom.
+  - In full rigid-body mechanics, oblique impacts generally produce non-zero components along all three principal axes.
+
+#### 4. Simple Exact Vector Example
+Let trajectory be along the $x$-axis.
+- Let $\mathbf{S} = (300, 400, 0)\text{ rad/s}$ ($S_x = 300$, $S_y = 400$, $S_z = 0$).
+- Total vector norm:
+  $$\|\mathbf{S}\| = \sqrt{300^2 + 400^2 + 0^2} = \sqrt{90000 + 160000} = 500\text{ rad/s}$$
+- Transverse norm:
+  $$S_{\text{trans}} = \sqrt{400^2 + 0^2} = 400\text{ rad/s}$$
+- Transverse tilt angle $\tau = 0^\circ$ ($\cos 0^\circ = 1, \sin 0^\circ = 0$).
+
+If resolved incorrectly using total norm $\|\mathbf{S}\| = 500$:
+$$S_y^{\text{claimed}} = 500 \cos(0^\circ) = 500 \neq 400$$
+$$S_z^{\text{claimed}} = 500 \sin(0^\circ) = 0$$
+$$\sqrt{(S_y^{\text{claimed}})^2 + (S_z^{\text{claimed}})^2 + S_x^2} = \sqrt{500^2 + 300^2} = \sqrt{340000} \approx 583.1 \neq 500$$
+The representation overstates the backspin component by $25\%$ ($500$ vs $400$) and is kinematically inconsistent unless $S_x = 0$.
+
+---
+
+### Summary Checklist for Lead Review
+1. **$\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{r}$**: Correctly verified. Offset requires full vectors $\boldsymbol{\omega}$ and $\mathbf{r}$. Universal numerical shifts or invariant signs are unphysical.
+2. **$\cos\theta_{\text{loft}} = \sin\alpha \sin\lambda + \cos\alpha \cos\lambda \cos(\psi - \phi)$**: Correctly verified from unit vector dot product; resolves to $|\lambda - \alpha|$ when $\psi = \phi$.
+3. **$\mathbf{S} = (S_x, S_y, S_z)$**: Correctly verified. Resolving total norm $S$ into 2D tilt projections requires $S_x = 0$ or defining $S$ strictly as the transverse norm $S_{\text{trans}}$.

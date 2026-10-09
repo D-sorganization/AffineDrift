@@ -1,0 +1,66 @@
+import csv
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+root = Path.cwd()
+qa = root / 'docs/development/technical-review/platform-model-contracts-review'
+head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+assert head == '29a555d22ee4c71403259ced67b97b8c66b94ece'
+assert (qa / 'full-tests-final.exit').read_text().strip() == '0'
+assert (qa / 'full-tests-final-before.txt').stat().st_size == 0
+assert (qa / 'full-tests-final-after.txt').stat().st_size == 0
+log = (qa / 'full-tests-final.txt').read_text(encoding='utf-8')
+assert '7121 passed, 29 skipped, 210 deselected, 60 warnings in 404.52s' in log
+assert 'Total coverage: 93.25%' in log
+chapters = ['articles/The_Geometry_of_Motion/Volume_V/chapters/' + p for p in
+            ['ch01_platform_overview.tex', 'ch02_engine_comparison.tex', 'ch03_building_models.tex']]
+paths = chapters + ['articles/The_Geometry_of_Motion/geometry_of_motion.bib',
+                   'articles/The_Geometry_of_Motion/Volume_V/main.pdf',
+                   'tests/test_platform_contract_listings.py', 'tests/test_model_urdf_listing.py',
+                   'reports/technical-review/platform-model-contracts-independent-checks.json']
+record = {
+    'issue': 4923, 'epic': 4009,
+    'status': 'Three complete chapters accepted; protected remote-main delivery pending',
+    'accepted_source_commit': head,
+    'git_blob_sha256': {p: hashlib.sha256(subprocess.check_output(['git', 'show', head + ':' + p])).hexdigest() for p in paths},
+    'scope': 'Complete Volume V chapters 1-3; bounded engine/source reading and one MuJoCo URDF import; no whole-engine or empirical human certification',
+    'full_regression': {'head': head, 'passed': 7121, 'skipped': 29, 'deselected': 210,
+        'warnings': 60, 'seconds': 404.52, 'src_coverage_percent': 93.25, 'exit_code': 0,
+        'tracked_tree_unchanged': True,
+        'command': 'python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60',
+        'log': (qa / 'full-tests-final.txt').relative_to(root).as_posix()},
+    'pdf': {'pages': 48, 'printed_entries': 26, 'unresolved_citations_or_references': 0,
+        'visual_scope': 'Physical pages 3-5, 9-19, 47-48; parent typed listing pages 41-48; final title-repair pass 10 pages 47-48 reinspected',
+        'build_log': (qa / 'accepted-pass10.txt').relative_to(root).as_posix(),
+        'limits': 'Two historical overfull boxes in unreviewed chapters 4 and 7; no scoped overflow; historical duplicate destinations/package warnings'},
+    'focused_tests': 49, 'combined_tests': 87,
+    'mathematics': {'record': 'reports/technical-review/platform-model-contracts-independent-checks.json',
+        'identities': 6, 'cases_each': 100, 'threshold': 1e-7, 'maximum_error': 1.097585244913546e-9,
+        'engine': 'MuJoCo 3.4.0', 'scope': 'Manufactured math and model-import verification; not human validation'},
+    'delegation': {'helpers': 6, 'model': 'agy Gemini 3.8 Flash', 'mode': 'Read-only reviews and test proposals; lead-adjudicated'},
+    'failed_run': '889584996: 7120 passed, one bibliography duplicate-title guard failed because its parser truncated protected URDF prefixes. Distinct source titles repaired without changing the guard; failed log retained.',
+    'delivery': {'status': 'Preparing regular PR', 'base': 'fix/golf-capstone-review', 'dependency': 'PR 4928',
+        'next': 'Protected delivery after verified parent merge, then fetched-main blob verification'}
+}
+(root / 'reports/technical-review/platform-model-contracts-validation.json').write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8')
+index = root / 'docs/development/technical-review/corpus-review-index.csv'
+with index.open(encoding='utf-8', newline='') as source:
+    reader = csv.DictReader(source)
+    fields = reader.fieldnames
+    rows = list(reader)
+assert len(rows) == 407
+before = sum(row['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for row in rows)
+assert before == 62, before
+for row in rows:
+    if row['Source'] in chapters:
+        row['Review Scope'] = ('Complete Chapter Review #4923; Source ' + head +
+            '; Engine and Model Contracts; Actual Listings, Independent Mechanics, Scoped PDF and Full Regression Accepted; Remote Delivery Pending')
+after = sum(row['Review Scope'].startswith('Indexed; Full Technical Audit Pending') for row in rows)
+assert after == 59, after
+with index.open('w', encoding='utf-8', newline='') as target:
+    writer = csv.DictWriter(target, fieldnames=fields, lineterminator='\n')
+    writer.writeheader()
+    writer.writerows(rows)
+print('Accepted 3 rows; 407 total, 59 pending-prefix rows. These are scope counts, not a scientific-completion percentage.')

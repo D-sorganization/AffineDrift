@@ -8,7 +8,7 @@ Usage:
     python check_links.py <file_path>
 
 Example:
-    python check_links.py docs/articles/my-article.html
+    python check_links.py _site/articles/my-article.html
 """
 
 import logging
@@ -137,7 +137,7 @@ def _resolve_target_path(*, root_path: Path, file_path: Path, url: str) -> Path:
 
 
 def _path_exists_in_search_roots(*, root_path: Path, target_path: Path) -> bool:
-    """Check for target existence in root, src, and docs prefixes."""
+    """Check for target existence in root, src, docs, and _site prefixes."""
     return path_exists_in_search_roots(root=root_path, target=target_path)
 
 

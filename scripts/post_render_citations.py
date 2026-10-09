@@ -45,6 +45,26 @@ BIBTEX_LABEL_PATTERN = re.compile(
 )
 
 
+TITLE_BLOCK_PATTERN = re.compile(
+    r'(<header\b[^>]*\bid="title-block-header"[^>]*>)(.*?)(</header>)',
+    re.DOTALL | re.IGNORECASE,
+)
+INVALID_TITLE_DATE_PATTERN = re.compile(
+    r'(<p\s+class="date"\s*>)\s*Invalid Date\s*(</p>)',
+    re.IGNORECASE,
+)
+
+
+def normalize_title_publication_date(content: str) -> str:
+    """Replace Quarto's invalid title-date placeholder without altering article prose."""
+
+    def replace_title(match: re.Match[str]) -> str:
+        title = INVALID_TITLE_DATE_PATTERN.sub(r"\1Date unverified\2", match.group(2))
+        return match.group(1) + title + match.group(3)
+
+    return TITLE_BLOCK_PATTERN.sub(replace_title, content)
+
+
 def process_html_content(content: str, html_path: Path) -> tuple[str, str | None]:
     """Process one rendered HTML document's citation metadata and extract BibTeX.
 
@@ -112,7 +132,7 @@ def process_html_content(content: str, html_path: Path) -> tuple[str, str | None
             flags=re.IGNORECASE,
         )
 
-    return content, bibtex_str
+    return normalize_title_publication_date(content), bibtex_str
 
 
 def process_directory(docs_dir: Path) -> int:
@@ -121,7 +141,7 @@ def process_directory(docs_dir: Path) -> int:
     Parameters
     ----------
     docs_dir : Path
-        The directory containing rendered HTML output (e.g. docs/).
+        The directory containing rendered HTML output (e.g. _site/).
 
     Returns
     -------
@@ -166,7 +186,7 @@ def main() -> int:
         "--docs-dir",
         type=Path,
         default=None,
-        help="Path to output directory (defaults to QUARTO_PROJECT_OUTPUT_DIR or docs)",
+        help="Path to output directory (defaults to QUARTO_PROJECT_OUTPUT_DIR or _site)",
     )
     args = parser.parse_args()
 
@@ -177,7 +197,7 @@ def main() -> int:
             output_dir = Path(env_dir)
         else:
             repo_root = Path(__file__).resolve().parent.parent
-            output_dir = repo_root / "docs"
+            output_dir = repo_root / "_site"
 
     process_directory(output_dir)
     return 0

@@ -1,9 +1,29 @@
 ---
 title: "Screw Theory Reference for Control-Affine Multibody Dynamics"
-description: "Reference guide for screw theory notation and concepts in control-affine multibody dynamics, including twists, wrenches, and exponential coordinates."
+description: "Twists, wrenches, Jacobians, and forward dynamics: what screw coordinates establish about golf swing mechanics and what requires a separate physical model."
 author: "Dieter Olson"
 date: "2025-11-28"
 date-source: "initial-publication-record"
+date-modified: "2026-10-03"
+status: available
+audience-level: advanced
+evidence-rung: manufactured-fixture
+canonical: "https://affinedrift.com/articles/screw-theory-reference.html"
+bibliography: ../references/affine-drift.bib
+summary-plain: "Screw theory connects turning, moving, forces, and moments. Those connections help keep golf models consistent. They do not reveal muscle effort by themselves. This reference separates how motion is represented, how loads are mapped, and how a complete model predicts acceleration."
+abstract: "Twist and wrench duality gives a consistent language for spatial mechanics. This reference derives the required frame maps, qualifies wrench inversion, and connects rigid-body balances to constrained multibody dynamics and explicitly defined counterfactuals."
+key-takeaways:
+  - "A twist represents instantaneous rigid motion; an entire swing generally has changing screw axes."
+  - "Wrench transformations preserve power, while inversion of joint effort requires compatibility and a chosen metric."
+  - "A complete forward model defines drift and control; geometry alone does not identify physiological effort."
+caveats:
+  evidence-level: "Mathematical identities and manufactured numerical examples"
+  establishes:
+    - "Consistent angular-first twist and wrench maps, with explicit reference frames and moment origins."
+    - "Conditional load inversion and forward dynamics for the declared rigid, modal, and ideal-constraint models."
+  does-not-establish:
+    - "A unique distribution of two-hand forces or individual muscle activity from club motion alone."
+    - "A validated human swing model, a universal coaching prescription, or trajectory superposition."
 format:
   html:
     toc: true
@@ -11,340 +31,393 @@ format:
     number-sections: false
     code-fold: true
 categories:
-- reference
+  - reference
 ---
 
 ## Introduction
 
-Every rigid body motion in three dimensions—no matter how complicated—is equivalent to a twist about a single axis in space. This astonishing fact, discovered by Michel Chasles in 1830, is the foundation of screw theory. It means that a combination of rotation AND translation can always be described as a "screwing" motion about one particular axis. Your arm rotating while it swings forward? That's a screw motion. The club twisting while it accelerates downward? Also a screw. Even the most complex simultaneous spinning and translating motion of a golf club can be expressed as a single screw.
+Screw theory connects a rigid body's turning and translation to the forces and moments acting on it.
+Its value is consistency: motion and effort can be expressed at different frames without changing their physical pairing.
+A golf model then needs a separate dynamics model to predict acceleration and a separate measurement argument to identify loads.
+Keeping those steps distinct prevents a geometric identity from becoming an unsupported claim about player effort.
 
-This simplicity is powerful. Instead of tracking six separate numbers (three rotational components, three translational components), you track them together as a unified geometric object: the screw axis and the "pitch" of the screw. And the beautiful part: forces and moments also fit into this same screw framework, as "wrenches." Once you think in screws, complex 3D mechanics becomes elegant.
+This reference uses angular-first conventions associated with Lynch and Park [@lynch2017modern].
+It develops instantaneous geometry, load duality, forward dynamics, and counterfactual evaluation in that order.
+The numerical examples are manufactured checks of the stated equations.
+The source notes identify the author-provided transcripts used for the standard definitions.
 
-Screw theory provides a compact and geometrically natural language for representing rigid-body motions and forces. Its central objects are twists (instantaneous motions) and wrenches (forces and moments), related to the Lie group $SE(3)$ and its Lie algebra $\mathfrak{se}(3)$. This reference document summarizes the formalism needed to interpret the control-affine multibody golf swing model in screw-theoretic terms.
+## Configurations, Twists, and Screw Axes
 
-::: {.callout-note}
-## Frame Convention
-All 6-vectors (twists $\mathcal{V}$, wrenches $\mathcal{F}$) and matrices ($J$, $B$) in this article are expressed in the **space frame** (fixed world frame $s$) unless explicitly subscripted $_b$ for the body frame. Body-frame quantities transform via the adjoint: $\mathcal{V}_s = \mathrm{Ad}_{T_{sb}} \mathcal{V}_b$ for twists. Wrenches transform with the transpose acting in the *opposite* direction, so that the power $\mathcal{F}^\top\mathcal{V}$ stays frame-invariant: $\mathcal{F}_b = \mathrm{Ad}_{T_{sb}}^\top \mathcal{F}_s$, equivalently $\mathcal{F}_s = \mathrm{Ad}_{T_{sb}}^{-\top} \mathcal{F}_b$.
-:::
+### A Configuration and Its Instantaneous Velocity
 
-## The Lie Group $SE(3)$ and Its Algebra
-
-Rigid-body configurations belong to the special Euclidean group
+Let $s$ be a fixed inertial frame and $b$ a frame attached to a rigid body.
+The transform $T_{sb}$ maps body coordinates into space coordinates:
 
 $$
-SE(3)
+T_{sb}=
+\begin{bmatrix}R&\mathbf r\\0&1\end{bmatrix}\in SE(3),
+\qquad R\in SO(3),\quad\mathbf r\in\mathbb R^3.
+$$
+
+Here $R$ gives orientation and $\mathbf r$ is the body origin's position in $s$.
+The hat operator satisfies $\widehat{\boldsymbol\omega}\mathbf y=\boldsymbol\omega\times\mathbf y$.
+For an angular-first twist $\mathcal V=[\boldsymbol\omega^\top,\mathbf v^\top]^\top$, its matrix representation is
+
+$$
+[\mathcal V]^\wedge=
+\begin{bmatrix}\widehat{\boldsymbol\omega}&\mathbf v\\0&0\end{bmatrix}.
+$$
+
+The spatial and body twists follow from $[\mathcal V_s]^\wedge=\dot T_{sb}T_{sb}^{-1}$ and $[\mathcal V_b]^\wedge=T_{sb}^{-1}\dot T_{sb}$.
+Multiplying these matrices gives @eq-screw-spatial-velocity:
+
+$$
+\mathbf v_s=\dot{\mathbf r}-\boldsymbol\omega_s\times\mathbf r,
+\qquad
+\mathbf v_b=R^\top\dot{\mathbf r},
+\qquad
+\boldsymbol\omega_b=R^\top\boldsymbol\omega_s.
+$$ {#eq-screw-spatial-velocity}
+
+The spatial linear component $\mathbf v_s$ is the rigid velocity field evaluated at the space origin.
+It need not equal the velocity of the body's own origin.
+At a material point whose space position is $\mathbf y$, the velocity is $\dot{\mathbf y}=\mathbf v_s+\boldsymbol\omega_s\times\mathbf y$.
+The field also has a mathematical extension to points outside the body.
+
+For an illustrative body origin fixed at $\mathbf r=(1,0,0)\ \mathrm m$, take $\boldsymbol\omega_s=(0,0,2)\ \mathrm{rad/s}$.
+Equation @eq-screw-spatial-velocity gives $\mathbf v_s=(0,-2,0)\ \mathrm{m/s}$ even though $\dot{\mathbf r}=0$.
+Evaluating the field at $\mathbf y=\mathbf r$ recovers the stationary body origin.
+
+### General Pitch and Degenerate Cases
+
+A general instantaneous screw includes translation along its axis.
+For $\boldsymbol\omega\ne0$, its pitch $h$ and closest axis point $\mathbf a_\perp$ satisfy @eq-screw-pitch:
+
+$$
+\mathbf v=-\boldsymbol\omega\times\mathbf a+h\boldsymbol\omega,
+\qquad
+h=\frac{\boldsymbol\omega^\top\mathbf v}{\|\boldsymbol\omega\|^2},
+\qquad
+\mathbf a_\perp=\frac{\boldsymbol\omega\times\mathbf v}{\|\boldsymbol\omega\|^2}.
+$$ {#eq-screw-pitch}
+
+Every point $\mathbf a=\mathbf a_\perp+\ell\boldsymbol\omega/\|\boldsymbol\omega\|$ describes the same axis line, where $\ell$ is a signed length.
+The cross-product identity reconstructs $\mathbf v$ from that line and $h$.
+The shorter formula $\mathbf v=-\boldsymbol\omega\times\mathbf a$ applies to zero-pitch motion.
+
+For a manufactured example, let $\boldsymbol\omega=(0,0,2)\ \mathrm{rad/s}$, $\mathbf a=(1,0,0)\ \mathrm m$, and $h=0.3\ \mathrm{m/rad}$.
+The resulting $\mathbf v=(0,-2,0.6)\ \mathrm{m/s}$ includes an axial component that a zero-pitch formula would lose.
+The two quotients recover the stated pitch and closest axis point.
+
+Pure translation has $\boldsymbol\omega=0$ and $\mathbf v\ne0$.
+Its direction is defined, but the quotients above do not define a finite pitch or a unique axis location.
+The conventional description as an infinite-pitch screw is a limiting interpretation.
+At rest, neither a rotation axis nor a translation direction is determined.
+Small angular speeds also make axis recovery sensitive to velocity errors.
+
+### Finite Displacement and a Whole Swing
+
+Chasles' displacement theorem concerns the rigid displacement between two poses.
+For spatial poses $T_0$ and $T_1$, that displacement is $\Delta T_s=T_1T_0^{-1}$.
+A screw exponential can represent it, with branch choices and degeneracies that must be specified.
+A finite displacement axis need not equal an instantaneous axis at either endpoint.
+
+A changing swing is a curve $T(t)$ whose instantaneous screw generally changes with time.
+A single constant generator describes the whole curve only for that special motion family.
+Packaging motion into screw coordinates preserves the body's six kinematic degrees of freedom; it does not reduce their number.
+
+## Wrenches, Frames, and Power
+
+A wrench combines a force $\mathbf f$ and its moment $\mathbf m$ about a stated origin:
+
+$$
+\mathcal F=\begin{bmatrix}\mathbf m\\\mathbf f\end{bmatrix},
+\qquad
+\mathcal P=\mathcal F^\top\mathcal V
+=\mathbf m^\top\boldsymbol\omega+\mathbf f^\top\mathbf v.
+$$
+
+For forces acting on one rigid body, this pairing gives their mechanical power when the twist and wrench share the same origin and coordinates.
+A moment includes both applied couples and the moment of any offset force.
+Changing the origin therefore changes its moment components.
+
+The adjoint $A=\operatorname{Ad}_{T_{sb}}$ and its dual give @eq-screw-duality:
+
+$$
+\begin{aligned}
+A&=\begin{bmatrix}R&0\\\widehat{\mathbf r}R&R\end{bmatrix},
+&\mathcal V_s&=A\mathcal V_b,\\
+\mathcal F_s&=A^{-\top}\mathcal F_b,
+&\mathcal F_b&=A^\top\mathcal F_s.
+\end{aligned}
+$$ {#eq-screw-duality}
+
+Substitution proves power invariance: $\mathcal F_s^\top\mathcal V_s=\mathcal F_b^\top\mathcal V_b$.
+The corresponding three-vector relations are $\mathbf f_s=R\mathbf f_b$ and $\mathbf m_s=R\mathbf m_b+\mathbf r\times R\mathbf f_b$.
+A twist map applied directly to a wrench generally violates these relations.
+The six components form dual objects, not interchangeable lists of numbers.
+
+## Home Joint Screws and the Current Jacobian
+
+A joint's home screw describes its axis at a chosen reference configuration.
+For a revolute joint with unit direction $\mathbf e_i$ through $\mathbf a_i$, its home screw is $\mathbf S_i=[\mathbf e_i^\top,(-\mathbf e_i\times\mathbf a_i)^\top]^\top$.
+A prismatic joint has $\mathbf S_i=[\mathbf0^\top,\mathbf e_i^\top]^\top$ with the appropriate displacement coordinate.
+Let $\mathbf q$ collect the joint coordinates.
+
+Upstream joint motion changes downstream axes in space.
+For an open chain described by the product of exponentials, the current column is
+
+$$
+J_{s,i}(\mathbf q)=
+\operatorname{Ad}_{e^{[\mathbf S_1]^\wedge q_1}\cdots e^{[\mathbf S_{i-1}]^\wedge q_{i-1}}}\mathbf S_i,
+\qquad
+\mathcal V_s=J_s(\mathbf q)\dot{\mathbf q}.
+$$
+
+The product is the identity for the first joint.
+Stacking fixed home screws is generally correct only at the home configuration.
+Alternatively, an author may define each screw as the already-transformed current column, but must say so.
+The body Jacobian is $J_b=A^{-1}J_s$.
+
+In an illustrative planar two-revolute-joint chain, let the second home axis pass through $(1,0,0)\ \mathrm m$ and point along $z$.
+A first-joint rotation of $\pi/2\ \mathrm{rad}$ about the origin moves that axis to $(0,1,0)\ \mathrm m$.
+Its angular-first column changes from $(0,0,1,0,-1,0)^\top$ to $(0,0,1,1,0,0)^\top$ in SI coordinates.
+The latter generates zero point velocity on the current second-joint axis, as required.
+
+## Load Duality and the Limits of Wrench Inversion
+
+### A Forward Load Map
+
+Virtual power maps an applied endpoint wrench to generalized load:
+
+$$
+\boldsymbol\tau_{\mathrm{load}}=J_s^\top\mathcal F_s,
+\qquad
+\boldsymbol\tau_{\mathrm{load}}^\top\dot{\mathbf q}
+=\mathcal F_s^\top J_s\dot{\mathbf q}.
+$$
+
+This identity states the contribution of that specified load.
+An actuator's total generalized effort also participates in acceleration, other applied loads, and constraint reactions.
+It need not be the image of one endpoint wrench.
+The body-frame form gives the same generalized load because $J_b^\top\mathcal F_b=J_s^\top\mathcal F_s$.
+
+### Compatibility, Residuals, and Metrics
+
+Set $L=J_s^\top\in\mathbb R^{n\times6}$ and suppose a generalized load $\boldsymbol\tau$ is supplied.
+Exact recovery requires $\boldsymbol\tau\in\operatorname{range}(L)$.
+The ordinary Moore–Penrose estimate and its residual are
+
+$$
+\mathcal F_*=L^+\boldsymbol\tau,
+\qquad
+\boldsymbol\rho=\boldsymbol\tau-L\mathcal F_*,
+\qquad
+L^\top\boldsymbol\rho=0.
+$$ {#eq-screw-load-residual}
+
+Equation @eq-screw-load-residual is a least-squares result in the chosen numerical coordinates.
+A nonzero residual means that this endpoint-wrench model cannot reproduce all supplied generalized efforts.
+When the residual vanishes, all exact solutions are $\mathcal F_*+\mathbf n$ with $\mathbf n\in\ker L$.
+The minimum Euclidean norm solution itself is unique, including when the physical solution family is not.
+
+Consider the manufactured, nondimensional algebraic map $L=[I_6;\mathbf e_1^\top]$ and $\boldsymbol\tau=(1,0,0,0,0,0,-1)^\top$.
+Its columns are independent, yet $L^\top\boldsymbol\tau=0$.
+The estimate is $\mathcal F_*=0$ and $\|\boldsymbol\rho\|=\sqrt2$.
+Full column rank guarantees uniqueness of a compatible wrench; it does not make every load compatible.
+This matrix example specifies no robot posture or physiological force distribution.
+
+A norm also requires a scale and a purpose.
+Moments and forces have different units, and arbitrary numerical rescaling changes an unweighted minimum.
+A physically specified optimization may instead minimize $\mathcal F^\top Q\mathcal F$, for a declared positive-definite metric $Q$.
+Residual weighting likewise needs an explicit choice when generalized coordinates mix units or measurement uncertainties.
+
+For an illustrative constraint $m/(1\ \mathrm m)+f=2\ \mathrm N$, an unweighted norm in numerical $\mathrm{N\,m}$ and $\mathrm N$ selects $(m,f)=(1\ \mathrm{N\,m},1\ \mathrm N)$.
+Using numerical $\mathrm{N\,mm}$ instead, the same unweighted prescription selects approximately $2\times10^{-6}\ \mathrm{N\,m}$ and $1.999998\ \mathrm N$.
+Converting the original metric to $\operatorname{diag}(10^{-6},1)$ restores the original physical answer.
+These calculations use one fixed moment origin.
+Under the wrench map in @eq-screw-duality, the same quadratic form requires $Q_s=AQ_bA^\top$; a fixed Euclidean norm is not generally invariant to an origin shift.
+
+## Generalized Actuation and Boundary Wrenches
+
+An actuation matrix $B(\mathbf q)\in\mathbb R^{n\times m}$ maps declared inputs $\mathbf u\in\mathbb R^m$ to generalized effort: $\boldsymbol\tau_{\mathrm{act}}=B\mathbf u$.
+Its rows refer to generalized coordinates, not the six Cartesian components of a twist.
+Changing the Cartesian expression frame therefore does not justify premultiplying $B$ by a spatial adjoint.
+A change of generalized coordinates is a separate transformation of generalized efforts.
+
+If the input actually specifies a boundary wrench, define a six-row distribution matrix $W_b$.
+For the same input components $\mathbf u$ in both descriptions, the correct maps are
+
+$$
+\mathcal F_{\mathrm{input},b}=W_b\mathbf u,
+\qquad
+W_s=A^{-\top}W_b,
+\qquad
+\boldsymbol\tau_{\mathrm{load}}=J_s^\top W_s\mathbf u.
+$$ {#eq-screw-wrench-input}
+
+Equation @eq-screw-wrench-input requires a physical boundary and an input definition.
+Representing an arbitrary $B$ this way additionally requires each column of $B$ to lie in $\operatorname{range}(J_s^\top)$.
+A pseudoinverse cannot supply the missing physical premise.
+
+In a rigid-club idealization, the two hand-on-club wrenches add after transport to one origin:
+
+$$
+\mathcal F_{\mathrm{grip},s}
+=\operatorname{Ad}_{T_{sL}}^{-\top}\mathcal F_L
++\operatorname{Ad}_{T_{sR}}^{-\top}\mathcal F_R.
+$$
+
+The local frames $L$ and $R$ locate the two interfaces; both wrenches act on the club.
+Gravity and other external loads enter the club's total balance separately.
+One net six-component wrench generally does not determine two unrestricted six-component hand wrenches.
+Contact geometry, admissible load directions, instrumented forces, and additional constitutive assumptions can constrain that distribution.
+Club motion plus assumed inertia can support an inverse-dynamics estimate, but differentiated motion and uncertain external loads propagate into that estimate.
+
+## From Wrench Balance to Forward Dynamics
+
+### One Rigid Body
+
+Let $I_b$ be the constant spatial inertia in a body-fixed frame, and let $\mathcal F_{\mathrm{applied},b}$ include every applied wrench on that body.
+With angular-first ordering, define
+
+$$
+\operatorname{ad}_{\mathcal V_b}
+=\begin{bmatrix}\widehat{\boldsymbol\omega_b}&0\\
+\widehat{\mathbf v_b}&\widehat{\boldsymbol\omega_b}\end{bmatrix},
+\qquad
+\operatorname{ad}_{\mathcal V_b}^*=-\operatorname{ad}_{\mathcal V_b}^\top.
+$$
+
+Newton–Euler balance is $I_b\dot{\mathcal V}_b+\operatorname{ad}_{\mathcal V_b}^*I_b\mathcal V_b=\mathcal F_{\mathrm{applied},b}$.
+The inertial terms belong on the demand side of that equation.
+Adding those terms to gravity and elastic loads does not define an autonomous applied wrench.
+
+Suppose the applied wrench is $\mathcal F_{0,b}(x;p)+W_b(x;p)\mathbf u$, where $x$ is the retained state and $p$ specifies the fixed model settings.
+Solving the balance gives the conditional affine acceleration in @eq-screw-forward-body:
+
+$$
+\dot{\mathcal V}_b
+=I_b^{-1}\!\left(\mathcal F_{0,b}-\operatorname{ad}_{\mathcal V_b}^*I_b\mathcal V_b\right)
++I_b^{-1}W_b\mathbf u.
+$$ {#eq-screw-forward-body}
+
+The full state derivative also contains pose kinematics, $\dot T_{sb}=T_{sb}[\mathcal V_b]^\wedge$, and any retained internal-state dynamics.
+A wrench alone is not that state derivative.
+In spatial coordinates, inertia becomes $I_s=A^{-\top}I_bA^{-1}$ and generally varies with pose.
+The equivalent balance retains the declared coadjoint sign: $\mathcal F_s=I_s\dot{\mathcal V}_s-\operatorname{ad}_{\mathcal V_s}^\top I_s\mathcal V_s$.
+
+A manufactured torque-free body at its center of mass illustrates the sign.
+Take principal moments $(2,3,4)\ \mathrm{kg\,m^2}$ and body angular velocity $(1,2,3)\ \mathrm{rad/s}$.
+Euler's equation gives body angular acceleration $(-3,2,-0.5)\ \mathrm{rad/s^2}$.
+The six-vector balance produces the same result; zero applied torque does not require constant angular-velocity components.
+
+### A Coupled, Constrained Multibody Model
+
+A whole-player model assembles all retained bodies and deformation coordinates.
+Let $\mathbf q$ denote its generalized configuration, $z$ its other internal states, $M$ its mass matrix, and $\mathbf h$ the terms placed on the left of its effort balance.
+For ideal stationary equality constraints with velocity Jacobian $J_c$, the equations are
+
+$$
+\begin{bmatrix}M&-J_c^\top\\J_c&0\end{bmatrix}
+\begin{bmatrix}\ddot{\mathbf q}\\\boldsymbol\lambda\end{bmatrix}
 =
-\left\{
-\begin{bmatrix}
-R & p \\
-0 & 1
-\end{bmatrix}
-:
-R\in SO(3), \;
-p\in \mathbb{R}^3
-\right\}.
-$$
+\begin{bmatrix}B\mathbf u-\mathbf h\\-\dot J_c\dot{\mathbf q}\end{bmatrix},
+\qquad J_c\dot{\mathbf q}=0.
+$$ {#eq-screw-constrained}
 
-Its Lie algebra is
+Here $\boldsymbol\lambda$ denotes constraint reactions; gravity, elasticity, damping, and other retained terms enter $\mathbf h$ with the stated balance's signs.
+If $M$ is positive definite and $J_c$ has independent rows, the block system is invertible.
+At a fixed complete state and constraint mode, solving @eq-screw-constrained gives both acceleration and reaction as affine functions of $\mathbf u$.
+Workless reactions can therefore depend on control input.
+Their classification cannot be inferred from zero constraint power alone.
 
-$$
-\mathfrak{se}(3)
-=
-\left\{
-\begin{bmatrix}
-\hat{\omega} & v \\
-0 & 0
-\end{bmatrix}
-:
-\omega, v \in \mathbb{R}^3
-\right\},
-$$
+For a manufactured two-coordinate system, choose $M=\operatorname{diag}(2,3)\ \mathrm{kg}$, $J_c=(1,1)$, applied autonomous load $(0,-3)\ \mathrm N$, and input force along the first coordinate.
+At zero velocity, input $u=0\ \mathrm N$ gives acceleration $(0.6,-0.6)\ \mathrm{m/s^2}$ and reaction $1.2\ \mathrm N$.
+Input $u=5\ \mathrm N$ gives $(1.6,-1.6)\ \mathrm{m/s^2}$ and reaction $-1.8\ \mathrm N$.
+Both satisfy the constraint, and their fixed-state dependence is affine.
 
-where $\hat{\omega}$ is the skew-symmetric matrix corresponding to the vector $\omega$ via the hat operator.
+The construction assumes a valid, fixed constraint mode.
+Redundant constraints, unilateral contact transitions, sliding friction, and prescribed moving boundaries require their own solution conditions.
+Explicit time or driver phase must be retained when needed.
+These requirements belong to the dynamics model; a change to screw coordinates does not eliminate them.
 
-## Twists
+## Flexible Shafts and Fixed-State Affinity
 
-A twist is a 6-vector
+Modal coordinates describe deformation beyond a single rigid pose.
+For a linear modal model with coordinates $\boldsymbol\eta$, constant stiffness $K$, and damping $D$, define generalized restoring effort by
 
 $$
-\mathcal{V} =
-\begin{bmatrix}
-\omega \\ v
-\end{bmatrix},
+\mathbf Q_{\mathrm{shaft}}=-K\boldsymbol\eta-D\dot{\boldsymbol\eta}.
 $$
 
-representing angular velocity $\omega$ and linear velocity $v$ of a body frame. For a reference point $q \in \mathbb{R}^3$ on the axis of motion, one has
+The signs refer to effort acting on the shaft in the positive modal-coordinate directions.
+For symmetric $K\succeq0$ and $D\succeq0$, the modal elastic energy is $U=\boldsymbol\eta^\top K\boldsymbol\eta/2$.
+The balance $\dot U+\mathbf Q_{\mathrm{shaft}}^\top\dot{\boldsymbol\eta}=-\dot{\boldsymbol\eta}^\top D\dot{\boldsymbol\eta}\le0$ verifies the restoring and damping signs.
+
+A modal shape is not automatically a boundary wrench.
+If a boundary velocity map is $\mathcal V_{\mathrm{boundary}}=H_\eta\dot{\boldsymbol\eta}$, virtual power gives $\mathbf Q_\eta^{\mathrm{external}}=H_\eta^\top\mathcal F_{\mathrm{boundary}}$.
+Inferring a boundary wrench from generalized effort raises the same compatibility and uniqueness questions discussed above.
+Internal distributed elasticity need not be representable by one endpoint wrench at all.
+A beam or finite-element reduction must supply the actual load and kinematic maps.
+
+For the stated modal law, $\partial\mathbf Q_{\mathrm{shaft}}/\partial\mathbf u=0$ when the complete state and model settings are held fixed.
+Inputs can nevertheless change deformation and velocity over time, changing subsequent shaft forces.
+If the selected input directly changes stiffness, damping, or a constitutive law, the fixed-state premise must be reconsidered.
+A model can retain activation or impedance as state, but must then include those states and their dynamics consistently.
+
+Wrenches expressed at the same origin add linearly.
+This force-addition identity does not superpose the trajectories of a nonlinear model.
+Geometry, inertia, velocity coupling, and retained shaft state all evolve along those trajectories.
+
+## Counterfactuals in the Declared Model
+
+### The Zero-Torque Counterfactual Family
+
+After solving the chosen forward model, write its complete control-affine state equation as $\dot x=f_p(x)+G_p(x)\mathbf u$.
+The [canonical notation](../pages/notation.html) defines the Zero-Torque Counterfactual (ZTCF) family by zeroing the declared applied-control channel while preserving the stated effective plant.
+Its constructions answer different questions:
+
+- A **pointwise ZTCF sample** evaluates $f_p(x(t))$ at one achieved state.
+- A **stitched pointwise ZTCF trace** collects those samples along achieved states; it is not an integrated solution.
+- A **forward ZTCF trajectory** integrates $\dot x=f_p(x)$ from a declared initial state.
+- A **branched ZTCF trajectory** starts that integration from a declared achieved state for comparison with the achieved future.
+
+The retained plant includes the stated inertia, gravity, elasticity, damping, internal memory, and compatible constraints.
+The zeroed input level must be explicit: generalized torque, boundary wrench, activation command, and impedance command are different model choices.
+The construction does not identify muscle activation or physiological effort by itself.
+
+### Instantaneous Zero-Velocity Counterfactual Acceleration
+
+For unconstrained or appropriately reduced coordinates, write $M(\mathbf q)\ddot{\mathbf q}+\mathbf h(\mathbf q,\dot{\mathbf q},z;p)=B\mathbf u$.
+The instantaneous Zero-Velocity Counterfactual (ZVCF) acceleration is
 
 $$
-v = -\omega \times q.
-$$
-
-This yields the Pl\"ucker representation of screws.
-
-## Wrenches
-
-A wrench is a 6-vector
-
-$$
-\mathcal{F} =
-\begin{bmatrix}
-n \\ f
-\end{bmatrix},
-$$
-
-where $f$ is the force and $n$ is the moment about a reference point. The instantaneous power is
-
-$$
-\mathcal{F}^\top \mathcal{V}
-= n^\top \omega + f^\top v.
-$$
-
-This pairing is invariant under coordinate transformations and is fundamental to screw theory.
-
-## Adjoint Transformations
-
-For a homogeneous transform
-
-$$
-g =
-\begin{bmatrix}
-R & p \\
-0 & 1
-\end{bmatrix}
-\in SE(3),
-$$
-
-the adjoint representation is
-
-$$
-\mathrm{Ad}_g
-=
-\begin{bmatrix}
-R & 0 \\
-\hat{p}R & R
-\end{bmatrix}.
-$$
-
-It maps twists and wrenches as
-
-$$
-\mathcal{V}_b = \mathrm{Ad}_g \,\mathcal{V}_a, \qquad
-\mathcal{F}_a = \mathrm{Ad}_g^\top \,\mathcal{F}_b,
-$$
-
-where subscripts denote different frames. Note the wrench transpose runs in the opposite direction to the twist map: this is exactly what keeps the power $\mathcal{F}^\top\mathcal{V}$ invariant, since $\mathcal{F}_a^\top \mathcal{V}_a = (\mathrm{Ad}_g^\top \mathcal{F}_b)^\top \mathcal{V}_a = \mathcal{F}_b^\top \mathrm{Ad}_g \mathcal{V}_a = \mathcal{F}_b^\top \mathcal{V}_b$.
-
-## Joint Screws and the Screw Jacobian
-
-A revolute joint $i$ is represented by a screw axis
-
-$$
-S_i =
-\begin{bmatrix}
-\omega_i \\ -\omega_i \times q_i
-\end{bmatrix},
-$$
-
-with $\omega_i$ the unit axis of rotation and $q_i$ a point on that axis. For an $n$-DOF chain, the body twist can be written as
-
-$$
-\mathcal{V} = \sum_{i=1}^n S_i \dot{\theta}_i.
-$$
-
-Stacking the screw axes gives the screw Jacobian
-
-$$
-J_s(q) = [S_1 \;\; S_2 \;\; \cdots \;\; S_n],
-$$
-
-so that
-
-$$
-\mathcal{V} = J_s(q)\,\dot{\theta}.
-$$
-
-## Screw Dynamics (Newton--Euler in Screw Form)
-
-The spatial Newton--Euler equation for a rigid body can be written as
-
-$$
-\mathcal{F} =
-I_s(q)\dot{\mathcal{V}}
-+
-\mathrm{ad}^\ast_{\mathcal{V}} I_s(q)\mathcal{V},
-$$
-
-where $I_s(q)$ is the spatial inertia and $\mathrm{ad}^\ast_{\mathcal{V}} = -\mathrm{ad}^\top_{\mathcal{V}}$ is the coadjoint (dual adjoint) operator — the same minus-transpose duality $\times^\ast = -\times^\top$ used throughout (Lynch \& Park convention). The first term corresponds to inertia, and the second term collects Coriolis and centrifugal effects. Additional spatial wrenches represent gravity and other external forces.
-
-Thus a drift wrench can be expressed as
-
-$$
-\mathcal{F}_{\mathrm{drift}}
-=
-I_s\dot{\mathcal{V}}
-+
-\mathrm{ad}^\ast_{\mathcal{V}} I_s \mathcal{V}
-+
-\mathcal{F}_{g}
-+
-\mathcal{F}_{\mathrm{shaft}},
-$$
-
-where $\mathcal{F}_g$ is a gravity wrench and $\mathcal{F}_{\mathrm{shaft}}$ is the contribution of flexible shaft forces.
-
-## Control-Affine Structure in Screw Coordinates
-
-Joint torques $\tau \in \mathbb{R}^n$ relate to input wrenches via the well-posed (forward) map
-
-$$
-\tau = J_s(q)^\top \mathcal{F}_{\mathrm{input}},
-$$
-
-which is the screw-coordinate statement of the force--torque duality. Inverting this for the wrench is only possible up to the null space of $J_s^\top$: for a general $n$-DOF chain $J_s$ is $6\times n$ and not square, so we use the Moore--Penrose pseudoinverse to recover the minimum-norm input wrench,
-
-$$
-\mathcal{F}_{\mathrm{input}}
-=
-\bigl(J_s(q)^\top\bigr)^{+}\tau
-=
-\bigl(J_s(q)^\top\bigr)^{+} B u,
-$$
-
-which reduces to $J_s(q)^{-\top}\tau$ in the special case of a square, invertible $J_s$. Here $B$ is the input distribution matrix (expressed in the **space frame**, following the convention fixed in the introduction) and $u$ is the vector of joint inputs. A body-frame input distribution $B_b$ --- natural for grip-force measurements taken in the hand frame --- relates to the spatial form as $B_s = \mathrm{Ad}_{T_{sb}}\, B_b$. The total wrench at a given point is then
-
-$$
-\mathcal{F}_{\mathrm{total}}
-=
-\mathcal{F}_{\mathrm{drift}}(x)
-+
-\mathcal{F}_{\mathrm{input}}(x,u).
-$$
-
-This reproduces the affine decomposition: passive drift wrenches plus active input wrenches.
-
-## Flexible Shaft Forces in Screw Form
-
-Flexible shaft forces can be modeled as distributed elastic wrenches. For mode $i$:
-
-$$
-\mathcal{F}_{\mathrm{shaft},i}
-=
-K_i x_{s,i} S_{s,i}
-+
-D_i \dot{x}_{s,i} S_{s,i},
-$$
-
-where $x_{s,i}$ and $\dot{x}_{s,i}$ are modal coordinates, $K_i$ and $D_i$ are stiffness and damping, and $S_{s,i}$ is the associated mode screw. Importantly,
-
-$$
-\frac{\partial \mathcal{F}_{\mathrm{shaft}}}{\partial u} = 0,
-$$
-
-so shaft forces contribute only to drift and do not affect the linear dependence on $u$.
-
-## Superposition in Screw Space
-
-Because wrenches add linearly, the total wrench decomposition
-
-$$
-\mathcal{F}_{\mathrm{total}}
-=
-\mathcal{F}_{\mathrm{drift}}
-+
-\mathcal{F}_{\mathrm{input}}
-$$
-
-holds in any screw coordinate representation. This coordinate-free linearity is a geometric expression of the superposition principle for forces in control-affine mechanical systems.
-
-## ZTCF Family and ZVCF in Screw Coordinates
-
-In the Zero Torque Counterfactual (ZTCF), all inputs are set to zero, so
-
-$$
-\dot{x} = f(x),
-$$
-
-and the corresponding wrench is purely
-
-$$
-\mathcal{F}_{\mathrm{ZTCF}} = \mathcal{F}_{\mathrm{drift}}.
-$$
-
-In the Zero Velocity Counterfactual (ZVCF), velocity-dependent drift mechanisms and input wrenches are removed, and the state is evaluated at zero velocity, so that only configuration-dependent drift wrenches remain:
-
-$$
-\mathcal{F}_{\mathrm{ZVCF}} = \mathcal{F}_{\mathrm{drift}}(q, 0).
-$$
-
-These constructions mirror the affine decomposition in screw space.
-
-## Summary
-
-Screw theory provides a rigorous, coordinate-free representation of rigid-body motions and forces. Within this framework, drift dynamics appear as drift wrenches, input torques generate input wrenches through the screw Jacobian, flexible shaft forces reside in the drift term, and the total wrench always decomposes as a sum of drift and input components. This aligns exactly with the control-affine decomposition established for the multibody golf swing model.
-
-## Limitations
-
-:::{.callout-warning}
-Screw theory provides a powerful geometric language for rigid-body mechanics, but it has inherent boundaries:
-
-1. **Screw coordinates assume rigid body motion**: The entire framework—twists, wrenches, the Lie group $SE(3)$—is predicated on rigid body kinematics. When a limb segment, the club shaft, or the ball deforms during motion, the assumption breaks. Finite deformations require extension to continuum mechanics or distributed parameter models, and the elegant screw representation becomes local (differential) rather than global.
-
-2. **Flexible shaft dynamics require extended screw formulations**: While modal decomposition of shaft bending can be incorporated into the extended generalized coordinates (as in the Lagrangian section), the wrench representation becomes cluttered. Distributed elastic wrenches do not combine as cleanly as rigid-body wrenches. The superposition principle still holds, but the geometric intuition—one screw axis per degree of freedom—is lost.
-
-3. **Gyroscopic effects in 3D require careful treatment of angular momentum coupling**: When a body spins rapidly (e.g., the club's handle rotation during the downswing) while simultaneously following a changing trajectory, gyroscopic torques emerge from $\mathrm{ad}^*_{\mathcal{V}} I_s \mathcal{V}$. These are nonlinear couplings between different twist components. The screw Jacobian formulation assumes these are captured in the drift term, but the high sensitivity of gyroscopic forces to measurement noise and modeling error can make the decomposition unstable.
-:::
-
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This article uses "Screw Theory" to describe how objects move and feel force in 3D space. Here is the simple version.
-      </p>
-
-      <div class="laymans-item">
-        <h3>Twists and Screws</h3>
-        <p>In 3D, any movement can be described as rotating around a line while sliding along it—just like a screw. A "Twist" is simply the math word for this combined turning and moving.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Opening a jar of pickles. Your hand rotates the lid (twist) while it moves upward (slide). Both happen at once.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Wrenches</h3>
-        <p>A "Wrench" combines the force you push with and the twisting leverage (torque) you apply. It bundles all the effort into one package.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> Using a literal wrench. You push on the handle (force) to create a turning effect (torque) on the bolt.
-        </div>
-      </div>
-
-       <div class="laymans-item">
-        <h3>Drift vs. Input</h3>
-        <p>The math separates what happens naturally (Drift) from what you actively cause (Input). Even complex 3D forces follow this simple rule.</p>
-        <div class="analogy">
-<strong>Think of it like:</strong> A roller coaster. The loops and turns it does by itself after the initial hill are "Drift" (gravity + track). If it had a booster engine you controlled, that would be "Input".
-        </div>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> Complex 3D golf motions can be broken down into simple "screw-like" movements and forces, separating natural momentum from player effort.
-      </div>
-    </div>
-  </div>
-</section>
+\mathbf a_{\mathrm{ZVCF}}(\mathbf q,z;p)
+=-M(\mathbf q)^{-1}\mathbf h(\mathbf q,0,z_0;p),
+\qquad \mathbf u=0.
+$$ {#eq-screw-zvcf}
+
+In @eq-screw-zvcf, $z_0$ zeros the declared velocity-like internal states and preserves the remaining internal state.
+Configuration, contact mode, and specified model parameters remain fixed.
+A constrained formulation instead evaluates its compatible constrained solve at those settings; feasibility must be checked for prescribed boundary motion.
+
+The result is an instantaneous acceleration, not a wrench, state, or releasable trajectory.
+Multiplication by a mass matrix can define a generalized-force representation, but does not turn it into a measured hand wrench.
+This distinction connects screw geometry to counterfactual mechanics: coordinate consistency is necessary, while the complete forward model determines what is being compared.
+
+## Sources and Scope
+
+Lynch and Park's *Modern Robotics* supplies the standard geometric-mechanics conventions [@lynch2017modern].
+The author-provided page transcripts used here cover [twists](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-3-2-twists-part-1-of-2/), [wrenches](https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-4-wrenches/), [space Jacobians](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-1-1-space-jacobian/), and [statics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-2-statics-of-open-chains/).
+Further transcripts discuss [singularities](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-3-singularities/), [manipulability](https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-4-manipulability/), [rigid-body dynamics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-2-dynamics-of-a-single-rigid-body-part-2-of-2/), and [constrained dynamics](https://modernrobotics.northwestern.edu/nu-gm-book-resource/8-7-constrained-dynamics/).
+The examples above check algebra under explicit assumptions; they report no new golfer experiment.
 
 ## Related Articles
 
-- [Lagrangian Reference](lagrangian-reference.html) — Scalar energy approach to control-affine equations of motion
-- [Rotation Representations Reference](rotation-representations-reference.html) — Euler angles, quaternions, axis-angle, and angular velocity in 3D
-- [Mathematical Notation Reference](../pages/notation.html) — Normative symbols, twists, wrenches, and control-affine conventions
-- [Force and Mobility Ellipsoids](force-mobility-matrices.html) — Geometric interpretation of directional strength and mobility using Jacobians
-- [The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html) — Unconstrained motion and reciprocal wrench systems in closed chains
-- [Tangent Hyperplanes I: Geometry](tangent-hyperplanes-series/part-1-geometry.html) — Lie group manifolds, tangent spaces, and local linearizations
-
-
+- **[Lagrangian Reference](lagrangian-reference.html)**—Energy, generalized effort, and complete forward dynamics.
+- **[Rotation Representations Reference](rotation-representations-reference.html)**—Euler angles, quaternions, axis-angle, and angular velocity.
+- **[Mathematical Notation Reference](../pages/notation.html)**—Canonical twists, wrenches, and counterfactual definitions.
+- **[Force and Mobility Ellipsoids](force-mobility-matrices.html)**—How Jacobians and chosen metrics describe directional capabilities.
+- **[The Null Space of the Constraint Jacobian](null-space-constraint-jacobian.html)**—Admissible motion and reciprocal loads in closed chains.
+- **[Tangent Hyperplanes I: Geometry](tangent-hyperplanes-series/part-1-geometry.html)**—Configuration manifolds and their local linear descriptions.

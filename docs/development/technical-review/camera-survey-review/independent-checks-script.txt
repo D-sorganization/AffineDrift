@@ -1,0 +1,48 @@
+from pathlib import Path
+import json
+import numpy as np
+rng = np.random.default_rng(4896)
+errors = {key: [] for key in ('sphere_conic_center', 'stereo_depth_jacobian', 'spatial_rotation_log', 'rigid_point_velocity')}
+def skew(w):
+    x,y,z=w
+    return np.array([[0,-z,y],[z,0,-x],[-y,x,0]])
+def rotation(w):
+    theta=np.linalg.norm(w)
+    if theta == 0:
+        return np.eye(3)
+    a=skew(w/theta)
+    return np.eye(3)+np.sin(theta)*a+(1-np.cos(theta))*(a@a)
+for _ in range(100):
+    r=rng.uniform(.01,.05)
+    c=np.r_[rng.uniform(-1,1,2),rng.uniform(.1,4)]
+    C=np.outer(c,c)-(c@c-r*r)*np.eye(3)
+    center=-np.linalg.solve(C[:2,:2],C[:2,2])
+    proposed=c[2]*c[:2]/(c[2]**2-r*r)
+    errors['sphere_conic_center'].append(float(np.linalg.norm(center-proposed)))
+    f=rng.uniform(200,1600); B=rng.uniform(.05,.5); d=rng.uniform(10,300); h=1e-4
+    numeric=(f*B/(d+h)-f*B/(d-h))/(2*h)
+    analytic=-f*B/d**2
+    errors['stereo_depth_jacobian'].append(float(abs(numeric-analytic)/max(1,abs(analytic))))
+    direction=rng.normal(size=3); angle=rng.uniform(.05,2.8)
+    omega=direction/np.linalg.norm(direction)*angle
+    Q=rotation(rng.normal(size=3)); R=rotation(omega)@Q@Q.T
+    theta=np.arccos(np.clip((np.trace(R)-1)/2,-1,1))
+    W=(R-R.T)*theta/(2*np.sin(theta))
+    recovered=np.array([W[2,1],W[0,2],W[1,0]])
+    errors['spatial_rotation_log'].append(float(np.linalg.norm(recovered-omega)))
+    p=rng.normal(size=3); origin=rng.normal(size=3); velocity=rng.normal(size=3); h=1e-6
+    plus=origin+h*velocity+rotation(h*omega)@Q@p
+    minus=origin-h*velocity+rotation(-h*omega)@Q@p
+    numeric=(plus-minus)/(2*h)
+    analytic=velocity+np.cross(omega,Q@p)
+    errors['rigid_point_velocity'].append(float(np.linalg.norm(numeric-analytic)))
+report={'issue':4896,'seed':4896,'cases_per_identity':100,'acceptance_threshold':1e-6,
+        'scope':'Manufactured geometric/kinematic identities; not empirical launch-monitor accuracy or calibration validation',
+        'method':{'sphere':'Solve stationary conic center from independent matrix construction',
+                  'stereo':'Central difference of reciprocal disparity mapping',
+                  'rotation':'Rodrigues composition at random initial pose and skew extraction',
+                  'point_velocity':'Central difference of translated, rotating point'},
+        'max_errors':{key:max(values) for key,values in errors.items()}}
+assert all(error<1e-6 for error in report['max_errors'].values())
+Path('reports/technical-review/camera-survey-independent-checks.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+print(json.dumps(report,indent=2))

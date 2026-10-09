@@ -1,0 +1,122 @@
+Here is the rigorous review of the provided draft articles **Tangent Hyperplanes III: Control** and **Tangent Hyperplanes IV: Residuals and Curvature**, evaluating the targeted topics and formulas.
+
+---
+
+### Audit Findings & Verification Summary
+
+1. **Cost factor $1/2$ and Value Function Hessian**:
+   - The cost has the explicit factor $\frac{1}{2}$ on both terminal and running costs:
+     $$J = \frac12\xi(t_f)^TQ_f\xi(t_f) + \frac12\int_{t_0}^{t_f} (\xi^TQ\xi + \nu^TR\nu)\,dt.$$
+   - The text states: $V(\xi,t)=\frac12\xi^TS(t)\xi \implies D_\xi^2 V = S$. This is mathematically correct.
+   - The note on omitting the factor of $1/2$ giving $2S$ and preserving the feedback gain $K = R^{-1}B^T S$ is exact.
+
+2. **Riccati Identity & Closed-Loop Lyapunov Identity**:
+   - Continuous Riccati differential equation:
+     $$-\dot S = A^T S + S A - S B R^{-1} B^T S + Q.$$
+   - With $A_{\mathrm{cl}} = A - BK = A - B R^{-1} B^T S$, we calculate:
+     $$A_{\mathrm{cl}}^T S + S A_{\mathrm{cl}} = (A^T - S B R^{-1} B^T)S + S(A - B R^{-1} B^T S) = A^T S + S A - 2 S B R^{-1} B^T S.$$
+     Substituting $-\dot S$:
+     $$\dot S + A_{\mathrm{cl}}^T S + S A_{\mathrm{cl}} = -(A^T S + S A - S B R^{-1} B^T S + Q) + (A^T S + S A - 2 S B R^{-1} B^T S) = -Q - S B R^{-1} B^T S.$$
+     Since $K = R^{-1}B^T S$, $K^T R K = S B R^{-1} R R^{-1} B^T S = S B R^{-1} B^T S$.
+     Thus $\dot S + A_{\mathrm{cl}}^T S + S A_{\mathrm{cl}} = -Q - K^T R K$.
+   - The identity in the text is mathematically exact.
+
+3. **Discrete DDP vs. iLQR Hessian Contractions**:
+   - For $x_{k+1} = F_k(x_k, u_k)$ and $\mathcal Q_k(x, u) = \ell_k(x, u) + V_{k+1}(F_k(x, u))$:
+     Let $v = D_x V_{k+1}$ (row vector or 1D component gradient $v_i$). By the chain rule:
+     $$D_u \mathcal Q_k = D_u \ell_k + v D_u F_k = \ell_u + v B_k.$$
+     Differentiating with respect to $u$:
+     $$\mathcal Q_{uu} = \ell_{uu} + B_k^T (D_x^2 V_{k+1}) B_k + \sum_i v_i D_{uu}^2 F_{k,i}.$$
+     Similarly, $\mathcal Q_{ux} = \ell_{ux} + B_k^T (D_x^2 V_{k+1}) A_k + \sum_i v_i D_{ux}^2 F_{k,i}$.
+   - The statement that full DDP retains $\sum_i v_i D^2 F_{k,i}$ while iLQR drops these second-order dynamics contractions is exact and standard.
+
+4. **Feedforward Gain Signs and One-Step Example**:
+   - Quadratic expansion: $\Delta \mathcal Q \approx \mathcal Q_u^T \delta u + \mathcal Q_x^T \delta x + \frac12 \delta u^T \mathcal Q_{uu} \delta u + \delta u^T \mathcal Q_{ux} \delta x + \frac12 \delta x^T \mathcal Q_{xx} \delta x$.
+   - Minimizing with respect to $\delta u$:
+     $$\mathcal Q_u + \mathcal Q_{uu}\delta u + \mathcal Q_{ux}\delta x = 0 \implies \delta u = -\mathcal Q_{uu}^{-1}\mathcal Q_u - \mathcal Q_{uu}^{-1}\mathcal Q_{ux}\delta x.$$
+   - Setting $k_k = -\mathcal Q_{uu}^{-1}\mathcal Q_u$ and $L_k = -\mathcal Q_{uu}^{-1}\mathcal Q_{ux}$ matches the definition and update $u_k = \bar u_k + \alpha k_k + L_k(x_k - \bar x_k)$.
+   - In the example: $x_1 = x_0 + u$, $x_0 = 0$, $J = \frac12(x_1 - 1)^2 + \frac12 u^2 = \frac12(u - 1)^2 + \frac12 u^2 = u^2 - u + \frac12$.
+     - At nominal $u=0$:
+       $$\mathcal Q(u) = u^2 - u + \tfrac12 \implies \mathcal Q_u = -1, \quad \mathcal Q_{uu} = 2.$$
+     - $k = -\mathcal Q_{uu}^{-1}\mathcal Q_u = - \frac{-1}{2} = 1/2$.
+     - For step $u = 0 + 1/2 = 1/2$: $J(0) = 1/2$, $J(1/2) = \frac12(-1/2)^2 + \frac12(1/2)^2 = 1/8 + 1/8 = 1/4$.
+   - Cost drops from $1/2$ to $1/4$. All signs and numbers are exact.
+
+5. **Full Taylor Mixed Remainder**:
+   - In Part IV, the integral remainder $R_2 = \int_0^1 (1-s) D^2f(\bar z + s\Delta z)[\Delta z, \Delta z]\,ds$ correctly captures the symmetric bilinear form on $\Delta z = (\Delta x, \Delta u)$.
+   - The example $f(x,u) = xu$ at $(0,0)$ gives $Df(0,0) = 0$, $D^2f[\Delta z, \Delta z] = 2\Delta x \Delta u$, and $\int_0^1 (1-s) 2 \Delta x \Delta u\,ds = \Delta x \Delta u$.
+   - The text emphasizes that mixed terms cannot be dropped, and notes that norms/bounds containing sums of squares validly bound bilinear/cross terms without false rejection.
+
+6. **Finite-Horizon Error Bound and Perturbation Ratio**:
+   - **Error bound**:
+     With $\dot r = A(t)r + R_2(t)$, $r(t_0) = 0$,
+     $$r(t) = \int_{t_0}^t \Phi(t,s) R_2(s)\,ds.$$
+     With $\|\Phi(t,s)\| \le K e^{L(t-s)}$, $L \ge 0$, and $\|R_2(s)\| \le \frac12 H \|\Delta z(s)\|^2 \le \frac12 H C_0^2 \epsilon^2$:
+     $$\|r(t)\| \le \int_{t_0}^t K e^{L(t-s)} \frac12 H C_0^2 \epsilon^2\,ds \le \frac12 K H C_0^2 \epsilon^2 \int_{t_0}^t e^{L(t-s)}\,ds.$$
+     Over an interval of length $T$, since $e^{L(t-s)} \le e^{LT}$ for $0 \le t - s \le T$, bounding the integrand by $e^{LT}$ gives $\int_{t_0}^t e^{L(t-s)}\,ds \le T e^{LT}$.
+     Hence $\|r(t)\| \le \frac12 K H C_0^2 T e^{LT}\epsilon^2$. The bound is rigorous.
+   - **Perturbation Ratio**:
+     For $\dot x = x^2, x(0) = \epsilon$:
+     $$x(t) = \frac{\epsilon}{1 - \epsilon t}.$$
+     Linearization at $\bar x = 0$ is $\dot{\hat\xi} = 0, \hat\xi(0) = \epsilon \implies \hat\xi(t) = \epsilon$.
+     Residual:
+     $$r(\epsilon, t) = x(t) - \hat\xi(t) = \frac{\epsilon}{1 - \epsilon t} - \epsilon = \frac{\epsilon - \epsilon(1 - \epsilon t)}{1 - \epsilon t} = \frac{\epsilon^2 t}{1 - \epsilon t}.$$
+     Ratio of $r(2\epsilon, t)$ to $r(\epsilon, t)$:
+     $$\frac{r(2\epsilon, t)}{r(\epsilon, t)} = \frac{\frac{(2\epsilon)^2 t}{1 - 2\epsilon t}}{\frac{\epsilon^2 t}{1 - \epsilon t}} = 4 \frac{1 - \epsilon t}{1 - 2\epsilon t}.$$
+     This is exact.
+
+---
+
+### Specific Defect Found in Part III
+
+#### 1. Inconsistent Expansion Indexing for Value Function / Successor State
+* **Location**: Part III, under section **"Why a Feedforward Update Is Essential"** and **"iLQR and DDP Use Different Dynamics Derivatives"**.
+* **Issue**:
+  Under "Why a Feedforward Update Is Essential":
+  $$\mathcal Q_k(x,u)=\ell_k(x,u)+V_{k+1}(F_k(x,u))$$
+  Then in the next section:
+  > "Let $A_k=D_xF_k$, $B_k=D_uF_k$, and let $v=D_xV_{k+1}$ and $P=D_x^2V_{k+1}$ be evaluated at the nominal successor."
+
+  Notice that in the expansion:
+  $$\mathcal Q_x^T\delta x+\mathcal Q_u^T\delta u$$
+  and
+  $$k_k=-\mathcal Q_{uu}^{-1}\mathcal Q_u,\qquad L_k=-\mathcal Q_{uu}^{-1}\mathcal Q_{ux}$$
+  $\mathcal Q_u$ and $\mathcal Q_x$ are written without transposes in the gain definitions ($k_k = -\mathcal Q_{uu}^{-1}\mathcal Q_u$, which assumes $\mathcal Q_u$ is a column vector of dimension $m\times 1$), whereas the Taylor expansion writes $\mathcal Q_x^T \delta x + \mathcal Q_u^T \delta u$, treating $\mathcal Q_x, \mathcal Q_u$ as column vectors.
+  However, in:
+  $$D_u \mathcal Q_k$$
+  the text defines:
+  > "and let $v=D_xV_{k+1}$ and $P=D_x^2V_{k+1}$ be evaluated at the nominal successor. The second-order chain rule gives, for example,
+  > $$
+  > \begin{aligned}
+  > \mathcal Q_{uu}
+  >  &=\ell_{uu}+B_k^TPB_k+\sum_i v_iD_{uu}^2F_{k,i},\\
+  > \mathcal Q_{ux}
+  >  &=\ell_{ux}+B_k^TPA_k+\sum_i v_iD_{ux}^2F_{k,i}.
+  > \end{aligned}
+  > $$"
+
+  If $v = D_x V_{k+1}$ is evaluated at the nominal successor $\bar x_{k+1} = F_k(\bar x_k, \bar u_k)$, $v_i$ are the components of the gradient. In standard vector calculus notation where $v = \nabla_x V_{k+1}$ (column vector), $v_i$ denotes $[\nabla_x V_{k+1}]_i$. If $v = D_x V_{k+1}$ is a Jacobian row vector ($1 \times n$), $v_i$ is its $i$-th entry. Either way, $\sum_i v_i D^2 F_{k,i}$ is mathematically standard and unambiguous.
+
+#### 2. Minor Dimension Inconsistency in Gradient Term $\mathcal Q_u$ vs. $k_k$
+* **Location**: Part III, "Why a Feedforward Update Is Essential":
+  $$\text{linear terms }\mathcal Q_x^T\delta x+\mathcal Q_u^T\delta u$$
+  Here $\mathcal Q_u$ is defined as a column vector ($m \times 1$) so that $\mathcal Q_u^T \delta u$ is a scalar.
+  In the example:
+  > "At nominal $u=0$, $\mathcal Q_u=-1$, $\mathcal Q_{uu}=2$, hence $k=1/2$."
+  Here $\mathcal Q_u$ is scalar $-1$, and $k = - \mathcal Q_{uu}^{-1} \mathcal Q_u = - (2)^{-1} (-1) = 1/2$. This matches completely.
+
+---
+
+### Summary of Verification Against Review Checklist
+
+| Check Item | Status | Comments |
+| :--- | :--- | :--- |
+| **Cost factor $1/2$ convention** | **PASS** | Both running and terminal costs consistently include $\frac{1}{2}$; Hessian is $S$; zero-factor alternative is correctly noted as yielding Hessian $2S$ with identical gain $K$. |
+| **Riccati differential identity** | **PASS** | $\dot S+A_{\rm cl}^TS+SA_{\rm cl}=-Q-K^TRK$ holds identically with $A_{\rm cl} = A - BK$ and $K = R^{-1}B^T S$. |
+| **Discrete DDP vs. iLQR contractions** | **PASS** | Formula correctly specifies $\sum_i v_i D^2 F_{k,i}$ for DDP and clarifies that iLQR omits these second-order dynamics terms. |
+| **Feedforward gain sign & example** | **PASS** | $k_k = -\mathcal Q_{uu}^{-1}\mathcal Q_u$; for $J = \frac12(x_1-1)^2 + \frac12 u^2$ at $u=0$, $\mathcal Q_u = -1$, $\mathcal Q_{uu} = 2 \implies k = 1/2$, reducing cost from $1/2$ to $1/4$. |
+| **Full Taylor mixed remainder** | **PASS** | Correctly identifies $R_2$ as bilinear in $\Delta z = (\Delta x, \Delta u)$, demonstrating with $f(x,u)=xu$ that mixed cross terms cannot be omitted. Sum of squares bounding cross terms is respected. |
+| **Finite-horizon error bound** | **PASS** | Bound $\|r(t)\| \le \frac12 K H C_0^2 T e^{LT} \epsilon^2$ is mathematically sound and respects variation of constants on finite horizon. |
+| **Perturbation ratio** | **PASS** | For $\dot x = x^2$, exact closed-form solution yields $\frac{r(2\epsilon,t)}{r(\epsilon,t)} = 4\frac{1-\epsilon t}{1-2\epsilon t} \to 4$ as $\epsilon \to 0$. |
+
+Both articles are mathematically sound, consistent in notation and conventions, and free of actual errors. No text replacements are required.

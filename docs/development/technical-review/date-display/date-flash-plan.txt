@@ -1,0 +1,31 @@
+### Proposed Minimal Shared Fix
+
+1. **Lua Filter / Card**:
+   - Check `meta["date-source"]` (or fallback to checking if date string contains `"Invalid Date"`).
+   - If `date-source == "unverified"`, render `<span class="date-unverified">Date unverified</span>` (or `<time class="date-unverified">Date unverified</time>` without a `datetime` attribute).
+2. **Post-Render HTML Cleanup (Scoped)**:
+   - Target only `<p class="date">Invalid Date</p>` inside `<header id="title-block-header">`.
+   - Replace with `<p class="date date-unverified">Date unverified</p>` (or strip the block if unverified dates should not appear in title blocks).
+
+### Should `<time datetime="...">` Retain `Invalid Date`?
+**No.** Per W3C/HTML standards, the `datetime` attribute on `<time>` must parse as a valid date string. Emitting `datetime="Invalid Date"` violates HTML validity and breaks machine-readable semantics. If the date is unverified, omit the `datetime` attribute entirely or use a `<span>`.
+
+---
+
+### 5 Boundary Tests
+
+1. **Explicit Unverified Metadata**:
+   - **Input**: `date: "Date unverified"`, `date-source: "unverified"`.
+   - **Expectation**: Title block emits `"Date unverified"`, card emits text `"Date unverified"` without `datetime="Invalid Date"`, prose containing the phrase "Invalid Date" is unchanged.
+2. **Concrete Verified ISO Date**:
+   - **Input**: `date: "2026-03-15"`, `date-source: "git"`.
+   - **Expectation**: Card retains `<time datetime="2026-03-15">`, title block formats normally.
+3. **Separate Reviewed / Modified Date**:
+   - **Input**: `date: "Date unverified"`, `date-modified: "2026-10-01"`.
+   - **Expectation**: Created date shows unverified, reviewed/modified date preserves valid `<time datetime="2026-10-01">`.
+4. **Prose & Code Invariance**:
+   - **Input**: Code block `console.log(new Date("foo"))` producing literal `Invalid Date`.
+   - **Expectation**: Exact text preserved; only title-block and metadata cards are transformed.
+5. **Missing Date / Null Meta**:
+   - **Input**: No `date` or `date-source` defined.
+   - **Expectation**: Clean omission with no NaN, `Invalid Date`, or empty `<time>` tags.

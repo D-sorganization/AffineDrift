@@ -141,6 +141,44 @@
       ],
       "description": "Governed rung on the evidence ladder (WEB-04.3)"
     },
+    "evidence-record": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Id of the data/datasets.yml entry, flagged measured_participant_data, that supports a rung above qualified-simulation (WEB-04.3 #4517)"
+    },
+    "caveats": {
+      "type": "object",
+      "required": ["establishes", "does-not-establish"],
+      "properties": {
+        "evidence-level": {
+          "type": "string",
+          "description": "Readable evidence level description (e.g. Theory, Simulation, Empirical)"
+        },
+        "establishes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Positive assertions and established claims with scope bounds"
+        },
+        "does-not-establish": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Negative boundaries and limitations retained from the prose"
+        },
+        "open-critiques": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Auto-linked critiques or open inquiries"
+        },
+        "next-gate": {
+          "type": "string",
+          "description": "Next validation or qualification gate"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Standard 'What This Shows / What It Does Not Show' caveat block (WEB-03.4 #4509)"
+    },
     "format": {
       "type": "object"
     },

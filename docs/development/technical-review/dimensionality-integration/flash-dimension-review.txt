@@ -1,0 +1,47 @@
+### Notation & Mathematical Precision
+
+1. **Quote:**  
+   `"A seven-coordinate arm model can have many more muscle commands than joint coordinates, yet a six-component endpoint pose does not specify its endpoint velocity or the ball's launch state."`  
+   **Reason:** Conflates coordinate spaces. An endpoint pose belongs to $SE(3)$ (configuration level), whereas velocities and launch conditions belong to the tangent bundle / state level. The comparison should explicitly qualify that a static configuration output cannot specify dynamic/rate quantities.
+
+2. **Quote:**  
+   `$$\dot M+A^T M+MA\preceq-2\lambda M,\qquad A=D_xF,\quad\lambda>0.$$`  
+   `"Here $\dot M$ includes the metric's derivative along the flow."`  
+   **Reason:** Notation collision and missing qualification. Using standard dot notation $\dot M$ alongside the explicit Jacobian terms $A^T M + M A$ ambiguously suggests a total time derivative rather than the Lie derivative or partial directional derivative $\sum_i \dot{x}_i \frac{\partial M}{\partial x_i} + \frac{\partial M}{\partial t}$. 
+
+3. **Quote:**  
+   `$$H\bigl(N^3+N^2m+Nm^2+m^3\bigr),$$`  
+   **Reason:** Dimensional symbol inconsistency. The table and preceding sections designate mechanical state dimension as $2n$ (or configuration dimension $n$). Introducing $N$ here without explicit definition creates ambiguous notation against $n$.
+
+---
+
+### Internal Contradictions & Code Verification
+
+4. **Quote:**  
+   `"three principal components explain only about 86% of the variance."`  
+   `"# 4 [0.57142857 0.71428571 0.85714286 1.        ]"`  
+   **Reason:** Numerical mismatch. For the defined features $\sin(\theta), \sin(2\theta), \cos(\theta), 2\cos(2\theta)$, the variance weights are proportional to $1, 1, 1, 4$ (sum = 7). The singular values squared scale as $[4, 1, 1, 1]$, giving cumulative variance fractions of $4/7 \approx 0.5714$, $5/7 \approx 0.7143$, $6/7 \approx 0.8571$, and $7/7 = 1.0$. However, sorting descending by singular value places the dominant component first, making the cumulative variance curve:
+   - PC1 ($4/7$): $\approx 57.14\%$
+   - PC2 ($5/7$): $\approx 71.43\%$
+   - PC3 ($6/7$): $\approx 85.71\%$
+   While the code output comment aligns with standard SVD output order, describing the first three as explaining "only about 86%" when one feature alone holds $4/7$ of the variance requires qualification that components are ordered by descending singular value.
+
+---
+
+### Awkward Prose & Missing Qualifications
+
+5. **Quote:**  
+   `"The count depends on the chosen model: rigid segments, joint constraints, muscle states, tendon compliance and implement deformation all matter."`  
+   **Reason:** Grammatically awkward list structure. The phrase mixes kinematic model choices ("rigid segments, joint constraints") with continuous/distributed dynamics ("muscle states, tendon compliance and implement deformation") without clear categorization.
+
+6. **Quote:**  
+   `"A large drift-control ratio can indicate a large drift contribution relative to the chosen control contribution, using a declared metric and scale."`  
+   **Reason:** Tautological phrasing ("drift-control ratio can indicate a large drift contribution relative to the chosen control contribution"). It states that the ratio indicates the ratio without conveying analytical meaning.
+
+7. **Quote:**  
+   `"Summing each joint's nominal constraints is valid only when those constraints are independent; closed loops and singular configurations require a rank analysis."`  
+   **Reason:** Missing qualification. Overconstrained mechanisms or redundant kinematic loops can lower mobility without changing nominal joint counts, requiring differential rank analysis of the constraint Pfaffian matrix rather than an algebraic sum.
+
+8. **Quote:**  
+   `"Kinematic redundancy does not establish feasible muscle forces, balance, collision avoidance or a dynamically reachable trajectory."`  
+   **Reason:** Missing qualification. Needs explicit phrasing that dynamic feasibility requires intersection with the control-admissible set and torque/wrench cone, not merely the existence of a configuration null space.

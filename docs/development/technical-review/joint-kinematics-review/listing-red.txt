@@ -1,0 +1,77 @@
+.FFFFF.FFFFF.                                                            [100%]
+================================== FAILURES ===================================
+__________ test_unsupported_or_invalid_twist_is_rejected[omega0-v0] ___________
+tests\test_joint_kinematics_listing.py:60: in test_unsupported_or_invalid_twist_is_rejected
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________ test_unsupported_or_invalid_twist_is_rejected[omega1-v1] ___________
+tests\test_joint_kinematics_listing.py:60: in test_unsupported_or_invalid_twist_is_rejected
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________ test_unsupported_or_invalid_twist_is_rejected[omega2-v2] ___________
+tests\test_joint_kinematics_listing.py:60: in test_unsupported_or_invalid_twist_is_rejected
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________ test_unsupported_or_invalid_twist_is_rejected[omega3-v3] ___________
+tests\test_joint_kinematics_listing.py:60: in test_unsupported_or_invalid_twist_is_rejected
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________ test_unsupported_or_invalid_twist_is_rejected[omega4-v4] ___________
+tests\test_joint_kinematics_listing.py:60: in test_unsupported_or_invalid_twist_is_rejected
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+__________ test_unsupported_or_invalid_twist_is_rejected[omega6-v6] ___________
+tests\test_joint_kinematics_listing.py:60: in test_unsupported_or_invalid_twist_is_rejected
+    with pytest.raises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'ValueError'>
+_______________ test_invalid_angular_threshold_is_rejected[0.0] _______________
+tests\test_joint_kinematics_listing.py:67: in test_invalid_angular_threshold_is_rejected
+    listing["compute_isa"](np.array([0.0, 0.0, 1.0]), np.zeros(3), threshold)
+E   TypeError: compute_isa() takes 2 positional arguments but 3 were given
+______________ test_invalid_angular_threshold_is_rejected[-1.0] _______________
+tests\test_joint_kinematics_listing.py:67: in test_invalid_angular_threshold_is_rejected
+    listing["compute_isa"](np.array([0.0, 0.0, 1.0]), np.zeros(3), threshold)
+E   TypeError: compute_isa() takes 2 positional arguments but 3 were given
+_______________ test_invalid_angular_threshold_is_rejected[nan] _______________
+tests\test_joint_kinematics_listing.py:67: in test_invalid_angular_threshold_is_rejected
+    listing["compute_isa"](np.array([0.0, 0.0, 1.0]), np.zeros(3), threshold)
+E   TypeError: compute_isa() takes 2 positional arguments but 3 were given
+_______________ test_invalid_angular_threshold_is_rejected[inf] _______________
+tests\test_joint_kinematics_listing.py:67: in test_invalid_angular_threshold_is_rejected
+    listing["compute_isa"](np.array([0.0, 0.0, 1.0]), np.zeros(3), threshold)
+E   TypeError: compute_isa() takes 2 positional arguments but 3 were given
+============================== warnings summary ===============================
+tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega0-v0]
+  C:\Users\diete\Repositories\Worktrees\AffineDrift-joint-kinematics-review\articles\The_Geometry_of_Motion\Volume_III\chapters\ch04_joint_kinematics.tex:25: RuntimeWarning: invalid value encountered in divide
+    \begin{tikzpicture}[scale=0.85, >=Stealth]
+
+tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega4-v4]
+  C:\Users\diete\Repositories\Worktrees\AffineDrift-joint-kinematics-review\articles\The_Geometry_of_Motion\Volume_III\chapters\ch04_joint_kinematics.tex:29: RuntimeWarning: invalid value encountered in dot
+    \draw[->, thick, blue] (0, 0.5) -- (0.8, 0.5) node[right] {1-DOF axis (fixed)};
+
+tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega4-v4]
+  C:\Users\diete\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Lib\site-packages\numpy\_core\numeric.py:1716: RuntimeWarning: invalid value encountered in multiply
+    multiply(a0, b1, out=cp2)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================ slowest 20 durations =============================
+0.01s call     tests/test_joint_kinematics_listing.py::test_recover_axis_from_point_velocity
+
+(19 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega0-v0]
+FAILED tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega1-v1]
+FAILED tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega2-v2]
+FAILED tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega3-v3]
+FAILED tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega4-v4]
+FAILED tests/test_joint_kinematics_listing.py::test_unsupported_or_invalid_twist_is_rejected[omega6-v6]
+FAILED tests/test_joint_kinematics_listing.py::test_invalid_angular_threshold_is_rejected[0.0]
+FAILED tests/test_joint_kinematics_listing.py::test_invalid_angular_threshold_is_rejected[-1.0]
+FAILED tests/test_joint_kinematics_listing.py::test_invalid_angular_threshold_is_rejected[nan]
+FAILED tests/test_joint_kinematics_listing.py::test_invalid_angular_threshold_is_rejected[inf]

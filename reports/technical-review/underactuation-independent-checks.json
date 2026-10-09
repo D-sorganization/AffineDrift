@@ -1,0 +1,41 @@
+{
+  "euler_lagrange_residual": ["0", "0"],
+  "mass_matrix_det_residual": "0",
+  "energy_rate_balance_residual": "0",
+  "forcing_c_ne_1_residual": "0",
+  "forcing_c_eq_1_residual": "0",
+  "verified": true,
+  "issue": 4863,
+  "scope": "Manufactured algebraic examples and independent derivations; no empirical golfer or optimizer performance evidence.",
+  "block_elimination": {
+    "mass": [
+      [3.0, 1.0, 0.5],
+      [1.0, 2.0, 0.2],
+      [0.5, 0.2, 1.5]
+    ],
+    "bias": [0.3, -0.2, 1.0],
+    "command": [-1.0, 2.0],
+    "torque": [-1.0, 2.68],
+    "recovered_acceleration": [-1.0, 2.0, -0.6000000000000001],
+    "schur_eigenvalues": [1.3757093208116762, 3.4309573458549907]
+  },
+  "exercise_classification": {
+    "c_positive": "Homogeneous state is bounded oscillation; forced resonance at c=1 grows via -t cos(t)/2.",
+    "c_zero": "Homogeneous error is a+bt; generic initial velocity yields linear growth.",
+    "c_negative": "Homogeneous modes exp(plus/minus sqrt(-c)t); generic perturbations grow."
+  },
+  "metric_fixture": {
+    "state": "Scaled two-dimensional manufactured linear state",
+    "generator": "diag(-lambda-2,-lambda+2)",
+    "metric": "diag(exp(4t),exp(-4t))",
+    "identity": "dot V = -2 lambda V",
+    "rates_tested": [0, 1],
+    "window": [0, 1],
+    "initial_vectors": [
+      [1, 0],
+      [0, 1]
+    ],
+    "counterexample": "lambda=1 and initial (0,1): coordinate norm e at t=1, metric squared error exp(-2); metric lacks all-time uniform positive lower bound."
+  },
+  "source_checks": "Mass/bias derived from Cartesian positions; positive-mass determinant; energy rate exact; existing virtual-work, coupling-sign and bounded-input tests retained; forward-time drift x(T)=T with |y(T)|<=T follows integration and triangle inequality."
+}

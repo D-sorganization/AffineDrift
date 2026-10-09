@@ -1,0 +1,45 @@
+# Editorial Delivery Audit: Canonical Manuscript Links vs. Scaffold Scaffolding
+
+This audit evaluates the landing pages `books/biomechanics-biology-to-systems.qmd` (Volume III) and `books/human-motor-control.qmd` (Volume IV) against the accepted canonical review state through commit `fbee4da94fd699e9710f4c29b42a73a5113f08d4` (PR #4953).
+
+---
+
+## 1. Audit Findings Table
+
+| Document | Link Text / Target Category | Current Target / Ref | Evaluation & Status | Recommendation |
+| :--- | :--- | :--- | :--- | :--- |
+| **Vol III** (`biomechanics...`) | `View Main Source Manuscript`, `Read the Volume III PDF` | `b7c4334554be0208a41f9a9b6a7b4613791638da` | **Superseded manuscript edition.** Links to early snapshot; excludes reviewed and corrected chapters accepted through `fbee4da`. | Retarget to accepted canonical commit `fbee4da94fd699e9710f4c29b42a73a5113f08d4` (or track `main` if branch-linked). Update preamble to reflect that all canonical chapters received technical review. |
+| **Vol III** (`biomechanics...`) | `Source .tex` (Ch 01) | `3875b82d18d27078d6d0aa22fcfa4ca4acf65a58` | **Superseded manuscript edition.** Historical patch pin; misses subsequent canonical corrections. | Retarget to accepted commit `fbee4da94fd699e9710f4c29b42a73a5113f08d4`. |
+| **Vol III** (`biomechanics...`) | `Source .tex` (Ch 02) | `b7c4334554be0208a41f9a9b6a7b4613791638da` | **Superseded manuscript edition.** | Retarget to accepted commit `fbee4da94fd699e9710f4c29b42a73a5113f08d4`. |
+| **Vol III** (`biomechanics...`) | `Source .tex` (Ch 03) | `d7be93d34322f2cbb73f8c933cf22991e604a2e5` | **Superseded manuscript edition.** | Retarget to accepted commit `fbee4da94fd699e9710f4c29b42a73a5113f08d4`. |
+| **Vol III** (`biomechanics...`) | `Source .tex` (Ch 04–10) | `f287ce6ab2cd26079bbace6b8f362a1f0a729acd` | **Superseded manuscript edition.** Pinned to the pre-review scaffold commit; readers miss the accepted technical review corrections. | Retarget all chapter `Source .tex` links to accepted commit `fbee4da94fd699e9710f4c29b42a73a5113f08d4`. |
+| **Vol III** (`biomechanics...`) | `View Notebook on GitHub` (Ch 01–10) | `f287ce6ab2cd26079bbace6b8f362a1f0a729acd` | **Intentional historical scaffold.** Notebooks remain unvalidated scaffolds. | **Keep unchanged.** Preserve current historical pin `f287ce6ab...`. |
+| **Vol IV** (`human-motor-control`) | `View Current Main Source Manuscript`, `Read the Current Volume PDF` | `main` | **Branch floating reference.** Directs to latest branch head. | Maintain `main` or pin explicitly to `fbee4da94fd699e9710f4c29b42a73a5113f08d4` depending on repository branch release policy. |
+| **Vol IV** (`human-motor-control`) | `Current Source .tex` (Ch 01, Ch 04, Ch 07b) | `main` | **Branch floating reference.** Directs to latest branch head. | Retain as primary source links or align with canonical contract. |
+| **Vol IV** (`human-motor-control`) | `Source .tex` (Duplicate links for Ch 01, Ch 04) | `f287ce6ab2cd26079bbace6b8f362a1f0a729acd` | **Ambiguous / superseded duplicate.** Pinned to baseline commit alongside `main` links without clear provenance distinction. | Either label explicitly as `Baseline Scaffold Source (.tex)` or update canonical reference to `fbee4da94fd699e9710f4c29b42a73a5113f08d4`. |
+| **Vol IV** (`human-motor-control`) | `Source .tex` (Ch 02, 03, 05, 06, 07, 08, 09, 10, 11) | `f287ce6ab2cd26079bbace6b8f362a1f0a729acd` | **Superseded manuscript edition.** Directs readers to unreviewed scaffold text for chapters that have now undergone canonical technical review. | Retarget canonical chapter `.tex` links to `fbee4da94fd699e9710f4c29b42a73a5113f08d4` (or `main`). |
+| **Vol IV** (`human-motor-control`) | `View Notebook on GitHub` (Ch 01–11) | `f287ce6ab2cd26079bbace6b8f362a1f0a729acd` | **Intentional historical scaffold.** Scaffolds remain unvalidated. | **Keep unchanged.** Preserve current historical pin `f287ce6ab...`. |
+
+---
+
+## 2. Proposed Link & Delivery Contract
+
+### A. Clear Partitioning: Corrected Manuscript vs. Historical Scaffolds
+1. **Canonical Manuscript Source & PDF (`.tex`, `.pdf`)**:
+   - Must point to the latest reviewed and accepted manuscript commit (`fbee4da94fd699e9710f4c29b42a73a5113f08d4`) or the canonical release branch (`main`), ensuring readers access the corrected mathematical formulations and updated scoping.
+2. **Computational Scaffolds (`.ipynb`, Colab)**:
+   - Remain strictly pinned to their original scaffold baseline (`f287ce6ab2cd26079bbace6b8f362a1f0a729acd`).
+   - Do not claim validation or parity with the updated text.
+
+### B. Minimal Editorial Preamble Adjustments
+
+#### Volume III (`books/biomechanics-biology-to-systems.qmd`)
+- **Current text**:
+  > *"The PDF includes the corrected introduction and Chapters 1-3: model choice, musculoskeletal conventions, and muscle models. Other chapters retain their separate review status; rebuilding the book does not validate the complete volume."*
+- **Recommended adjustment**:
+  > *"This edition reflects the technically reviewed and corrected manuscript through accepted revision `fbee4da` (all canonical chapters). Rebuilding the book incorporates these formal editorial and mathematical corrections, but does not constitute empirical or clinical validation. Accompanying Jupyter notebooks remain historical, unvalidated computational scaffolds."*
+
+#### Volume IV (`books/human-motor-control.qmd`)
+- **Recommended adjustment**:
+  - Resolve the duplicate `Source .tex` links for Chapters 1 and 4 so current readers are not directed back to `f287ce6...` while assuming they are reading the accepted review text.
+  - Clarify in the opening notes that notebook scaffolds remain pinned to initial baseline references and are not validated against current neuro-computational models.

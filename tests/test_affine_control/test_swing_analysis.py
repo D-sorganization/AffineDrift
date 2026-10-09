@@ -123,7 +123,9 @@ class TestPipeline:
     def test_summary_runs_and_reports_a_plausible_speed(self) -> None:
         text = synthetic_swing().summary()
         assert "Peak clubhead speed" in text
-        assert "Median over the swing" in text
+        assert "Joint acceleration norm medians" in text
+        assert "rad/s^2" in text
+        assert "%" not in text
 
     def test_analysis_requires_kinematics(self) -> None:
         with pytest.raises(ValueError, match="joint_angles"):
@@ -155,3 +157,102 @@ class TestPipeline:
         model = analysis.model()
         for q in analysis.joint_angles[::25]:
             assert np.min(np.linalg.eigvalsh(model.rigid_mass_matrix(q))) > 0.0
+
+
+@pytest.mark.parametrize("duration,step", [(0.3005, 0.007), (0.3, 1.0)])
+def test_grid_includes_endpoints_without_exceeding_step(duration: float, step: float) -> None:
+    analysis = synthetic_swing(duration, step)
+    assert len(analysis.time) == int(np.ceil(duration / step)) + 1
+    assert analysis.time[0] == 0.0
+    assert analysis.time[-1] == duration
+    assert np.all(np.diff(analysis.time) <= step * (1 + 1e-12))
+
+
+def test_synthetic_rates_are_analytic_at_both_endpoints() -> None:
+    duration = 0.31
+    analysis = synthetic_swing(duration, 0.04)
+    expected = np.array([[0, np.pi**2 / 3, 0], [2 * np.pi, -np.pi**2 / 3, np.pi**2 / 4]])
+    np.testing.assert_allclose(analysis.joint_velocities[[0, -1]], expected / duration, atol=1e-12)
+
+
+def test_inverse_torques_recover_prescribed_second_derivative() -> None:
+    duration = 0.31
+    analysis = synthetic_swing(duration, 0.04)
+    fraction = analysis.time / duration
+    expected = (
+        np.column_stack(
+            [
+                np.full_like(fraction, 2 * np.pi),
+                -np.pi**3 / 3 * np.sin(np.pi * fraction),
+                np.pi**3 / 8 * np.cos(np.pi * fraction / 2),
+            ]
+        )
+        / duration**2
+    )
+    drift, control = analysis.joint_acceleration_components()
+    np.testing.assert_allclose(drift + control, expected, rtol=1e-10, atol=1e-8)
+
+
+def test_signed_cancellation_does_not_partition_net_acceleration_norm() -> None:
+    analysis = SwingAnalysis(
+        time=np.array([4.0]),
+        joint_angles=np.array([[0.1, -0.2, 0.3]]),
+        joint_velocities=np.array([[0.5, 0.2, -0.4]]),
+    )
+    model = analysis.model()
+    angles, rates = analysis.joint_angles[0], analysis.joint_velocities[0]
+    analysis.joint_torques = (model.coriolis(angles, rates) @ rates + model.gravity_torque(angles))[
+        None
+    ]
+    drift, control = analysis.joint_acceleration_components()
+    assert drift.shape == control.shape == (1, 3)
+    np.testing.assert_allclose(drift + control, 0, atol=1e-10)
+    drift_norm, control_norm = analysis.ztcf_decomposition()
+    np.testing.assert_allclose(drift_norm, np.linalg.norm(drift, axis=1))
+    np.testing.assert_allclose(control_norm, np.linalg.norm(control, axis=1))
+    assert drift_norm[0] + control_norm[0] > 1
+    assert "%" not in analysis.summary()
+
+
+def test_summary_duration_uses_elapsed_time() -> None:
+    analysis = synthetic_swing(0.3, 0.05)
+    analysis.time += 10
+    assert "Duration: 0.300 s" in analysis.summary()
+
+
+@pytest.mark.parametrize(
+    "duration,step", [(0, 0.1), (-1, 0.1), (1, 0), (1, -1), (np.nan, 1), (1, np.inf)]
+)
+def test_synthetic_time_contract(duration: float, step: float) -> None:
+    with pytest.raises(ValueError, match="duration|dt"):
+        synthetic_swing(duration, step)
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("time", np.array([])),
+        ("time", np.array([0.0, 0.0])),
+        ("time", np.array([0.0, np.nan])),
+        ("time", np.array([[0.0, 0.1]])),
+        ("joint_angles", np.zeros((2, 2))),
+        ("joint_angles", np.full((2, 3), np.inf)),
+        ("joint_velocities", np.zeros((1, 3))),
+        ("joint_torques", np.zeros((2, 2))),
+        ("joint_torques", np.full((2, 3), np.nan)),
+        ("segment_lengths", np.array([1.0, 0.0, 1.0])),
+        ("segment_masses", np.array([1.0, -1.0, 1.0])),
+        ("segment_lengths", np.array([1.0, np.inf, 1.0])),
+        ("segment_masses", np.ones(2)),
+    ],
+)
+def test_analysis_rejects_invalid_arrays(field: str, value: np.ndarray) -> None:
+    analysis = SwingAnalysis(
+        time=np.array([0.0, 0.1]),
+        joint_angles=np.zeros((2, 3)),
+        joint_velocities=np.zeros((2, 3)),
+        joint_torques=np.zeros((2, 3)),
+    )
+    setattr(analysis, field, value)
+    with pytest.raises(ValueError, match=field):
+        analysis.joint_acceleration_components()

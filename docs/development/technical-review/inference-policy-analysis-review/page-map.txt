@@ -1,0 +1,61 @@
+1 Tangent-Space Methods for | Nonlinear Control and | Biomechanics | Volume V: Practical Application | The Companion Implementation Platform | 
+2 
+3 Preface | Draft Notice. | This volume is under active development. Chapters 1–9 contain | scoped model, simulation, local optimization, feedback, identification 
+4 Contents | Preface | i | Nomenclature | iv | 1 | The Companion Platform | 1 | 1.1 | Architecture and Capability Boundaries . . . . . . . . . . . . . . . . . . . . . | 1 | 1.1.1 | 
+5 Contents | iii | 7 | Parameter Estimation and Model Fitting | 24 | 7.1 | What Is Linear in the Inertial Parameters? | . . . . . . . . . . . . . . . . . . . | 24 | 7.2 | A Comp
+6 Nomenclature | General Conventions |  Scalars are lowercase or Greek letters (e.g., m, t, θ). |  Vectors are bold lowercase (e.g., x, u, q). |  Matrices are bol
+7 Nomenclature | v | Inertia and Dynamics | M(q) Mass (inertia) matrix. It is symmetric positive definite for independent regular ve- | locities with strictly positi
+8 vi | Volume V: Practical Application | Affine Control and Counterfactuals | f(x) Drift vector field: complete autonomous evolution of the declared effective plan
+9 Chapter 1 | The Companion Platform | A simulation platform makes a modeling argument executable: which bodies move, which | forces act, what the controller obser
+10 2 | Volume V: Practical Application | dynamics (RNEA) and articulated-body forward dynamics (ABA). RNEA evaluates re- | quired forces from specified acceleration
+11 Chapter 1. | The Companion Platform | 3 | 1 from | dataclasses | import | dataclass | 2 | 3 import | numpy as np | 4 from | scipy.integrate | import | solve_ivp | 5 | 6 GRAVITY = 9.81 | #
+12 4 | Volume V: Practical Application | 60 | raise | RuntimeError ("pendulum | integration | failed") | 61 | angle , rate , dissipated = solution.y | 62 | energy = 0.5 * inertia
+13 Chapter 2 | Physics Engine Comparison | An engine comparison needs a specified question, model and accuracy target. Solvers may | disagree because their contact 
+14 6 | Volume V: Practical Application | The scales make mixed angle/rate or position/velocity comparisons dimensionless and de- | clare the relative importance ass
+15 Chapter 2. | Physics Engine Comparison | 7 | MuJoCo. | Its soft-contact formulation uses convex optimization and relaxes strict complementar- | ity. Contact paramete
+16 8 | Volume V: Practical Application | 2. Nonuniform Sampling. Reproduce the three-node example, refine the grid, and | distinguish quadrature error from simulati
+17 Chapter 3 | Building a Multibody Model | A model file encodes a hypothesis about geometry, mass and permitted motion. An attrac- | tive animation does not establ
+18 10 | Volume V: Practical Application | while describing the wrong mechanism. Revolute joints require limits; an inertial element | needs both mass and inertia da
+19 Chapter 3. | Building a Multibody Model | 11 | That single-engine test does not certify import by Drake or Pinocchio, or a time-integrated | comparison. | 3.4 | Extend
+20 Chapter 4 | Forward and Inverse Simulation | Forward dynamics predicts acceleration from a state and specified forces. Inverse dynamics | computes the generalize
+21 Chapter 4. | Forward and Inverse Simulation | 13 | 1 from | collections .abc | import | Callable | 2 | 3 import | numpy as np | 4 from | scipy.integrate | import | solve_ivp | 5 | 6 fro
+22 14 | Volume V: Practical Application | 61 | rtol =1e-8, atol =1e -10) | 62 | if not | result.success: | 63 | raise | RuntimeError ("Forward | integration | failed") | 64 | return {"
+23 Chapter 4. | Forward and Inverse Simulation | 15 | 3. Apply a smooth torque, integrate its power, and refine the solver tolerances. Distin- | guish time integratio
+24 Chapter 5 | Trajectory Optimization | in Practice | A simulated trajectory answers a conditional question about a model and input. Optimiza- | tion adds a declared
+25 Chapter 5. | Trajectory Optimization in Practice | 17 | If Quu ≻0, stationarity gives | δu = k + Kδx, | k = −Q−1 | uuQu, | K = −Q−1 | uuQux. | Substitution, including the cr
+26 18 | Volume V: Practical Application | ∇2Q = [ 2 1 | 1 2 ], it returns k = −2, K = −1/2, Vx = 1, Vxx = 3/2 and V0 −Q0 = −4. The | minimized polynomial is therefore
+27 Chapter 5. | Trajectory Optimization in Practice | 19 | by itself determine ball launch, which also depends on contact geometry and the impact | model. Muscle exci
+28 Chapter 6 | Controller Design and Testing | A nominal trajectory, a tracking controller and a certified region of operation are different | objects. Optimization
+29 Chapter 6. | Controller Design and Testing | 21 | 17 | except | np.linalg.LinAlgError | as error: | 18 | raise | ValueError("Gain | must be | positive | definite") from | error | 19 | g
+30 22 | Volume V: Practical Application | desired acceleration is −1. Hence ¨e = 1: exact tracking immediately fails. | Under the same ideal full-actuation and exac
+31 Chapter 6. | Controller Design and Testing | 23 | 6.5 | Testing the Coupled System | Test regulation with constant targets and tracking with nonzero reference accele
+32 Chapter 7 | Parameter Estimation | and Model Fitting | Fitting a trajectory does not by itself identify a body, an actuator or a control strategy. | A golf model c
+33 Chapter 7. | Parameter Estimation and Model Fitting | 25 | The unknown coefficients are π = (J, b, c)T ; J is the pivot inertia, b has units N m s/rad and | c is a
+34 26 | Volume V: Practical Application | numerical routine returns one vector. Column scaling improves numerical representation | but cannot create rank. The repor
+35 Chapter 7. | Parameter Estimation and Model Fitting | 27 | For a golf swing, first test whether the same inertial and passive parameters predict | different swing 
+36 Chapter 8 | Reinforcement Learning for Mo- | tor Control | Reinforcement learning optimizes behavior from interaction data under a specified reward | and transitio
+37 Chapter 8. | Reinforcement Learning for Motor Control | 29 | The factors follow from pivot inertia mL2/3 and COM distance L/2. | Positive gravity | acceleration near
+38 30 | Volume V: Practical Application | the declared space instead of relying on the benchmark’s internal clipping. A stochastic | policy needs its own seeded gen
+39 Chapter 8. | Reinforcement Learning for Motor Control | 31 | conditions. Penalty rewards do not by themselves enforce hard constraints. Domain ran- | domization ex
+40 Chapter 9 | Visualization and Analysis Tools | A plot is a measurement of selected model quantities. Its meaning depends on coordinate | frames, units, scaling a
+41 Chapter 9. | Visualization and Analysis Tools | 33 | 19 | return | np.vstack ((np.zeros (2) , np.cumsum(links , axis =0))) | Listing 9.1: Planar Joint Positions With R
+42 34 | Volume V: Practical Application | 1 def | velocity_ellipsoid ( | 2 | jacobian: np.ndarray , rate_scales : np.ndarray , | 3 ) -> tuple: | 4 | """Return | full | task axes 
+43 Chapter 9. | Visualization and Analysis Tools | 35 | Ideal constraints do no net power only under the corresponding stationary, workless con- | straint assumptions
+44 Chapter 10 | Capstone: Golf Swing Analysis | Draft Notice. | This chapter provides a runnable, tested three-link example and a | roadmap for larger investigations.
+45 Chapter 10. | Capstone: Golf Swing Analysis | 37 | Here Jp is the 2 × 3 Jacobian of the tip position. | It is not the six-component spatial- | twist Jacobian; the di
+46 38 | Volume V: Practical Application | At a straight vertical configuration, the ideal model has g = 0 and C ˙q = 0: derivatives of | its relative-angle cosine t
+47 Chapter 10. | Capstone: Golf Swing Analysis | 39 | 1 """Same -state | analysis | of a prescribed | three -link | planar | motion. | 2 | 3 The | generated | Volume V listing | uses | t
+48 40 | Volume V: Practical Application | 55 | joint_velocities : Array | None = None | 56 | joint_torques : Array | None = None | 57 | 58 | def | model(self) -> GolfModel: | 59 | 
+49 Chapter 10. | Capstone: Golf Swing Analysis | 41 | 101 | M^-1 tau. Their | sum is the | model | acceleration | at each | supplied | state. | 102 | This | algebra | alone | does | not | esta
+50 42 | Volume V: Practical Application | 151 | 152 def | _prescribed_motion (time: Array , duration: float) -> tuple[Array , Array , | Array ]: | 153 | """Evaluate | the | ana
+51 Chapter 10. | Capstone: Golf Swing Analysis | 43 | 205 | """Return | generalized | torque | required | for one | prescribed | state.""" | 206 | return ( | 207 | model. rigid_mass_matr
+52 44 | Volume V: Practical Application | A joint can have a large acceleration contribution while doing little instantaneous work if its | rate is small. Peak orde
+53 Bibliography | [1] CEINMS Developers. Calibration, activation and contraction dynamics in CEINMS, | 2026. Introduction and model definitions; accessed October 
+54 46 | Volume V: Practical Application | [13] Kevin M. Lynch and Frank C. Park. | Modern robotics: | Newton–euler inverse | dynamics. | Northwestern University, video su
+55 Bibliography | 47 | [26] Richard S. Sutton and Andrew G. Barto. Reinforcement Learning: An Introduction. | MIT Press, 2nd edition, 2018. | [27] Russ Tedrake. Under
+References: Patrick M. Wensing, Sangbae Kim, and Jean-Jacques E. Slotine. Linear matrix in-
+equalities for physically-consistent inertial parameter identification: A statistical per-
+spective on the mass distribution. IEEE Robotics and Automation Letters, 2017. Au-
+thor manuscript, Sections II–IV-B; accessed October 5, 2026. https://arxiv.org/
+abs/1701.04395.
+

@@ -1,0 +1,92 @@
+# Technical Review: Chapter 6 — Inverse Problems in Biomechanics
+
+---
+
+### Precise Remaining Defects
+
+1. **Incorrect Analytical Minimizer for $p = 3$ Force Sharing**
+   * **Location:** Section \ref{ch:inverse-problems} (\textit{Static Optimization}, paragraph 4, lines referencing $a_1^3 + a_2^3$).
+   * **Issue:** 
+     The text states that minimizing $a_1^3 + a_2^3$ subject to $a_1 + 2a_2 = 1$ yields:
+     $$a_1 = \frac{1}{1 + 2\sqrt{2}},\qquad a_2 = \frac{\sqrt{2}}{1 + 2\sqrt{2}}.$$
+     This solution is incorrect. 
+     * Derivation: Let $\mathcal{L}(a_1, a_2, \lambda) = a_1^3 + a_2^3 - \lambda (a_1 + 2a_2 - 1)$ for $a_i \ge 0$.
+     * First-order optimality requires $\nabla_a \mathcal{L} = 0 \implies 3a_1^2 = \lambda$ and $3a_2^2 = 2\lambda$.
+     * Thus, $a_2^2 = 2a_1^2 \implies a_2 = \sqrt{2} a_1$.
+     * Substituting into the constraint $a_1 + 2a_2 = 1$ gives:
+       $$a_1 + 2(\sqrt{2}a_1) = 1 \implies a_1(1 + 2\sqrt{2}) = 1 \implies a_1 = \frac{1}{1 + 2\sqrt{2}}.$$
+       However, $a_2 = \sqrt{2}a_1$, so:
+       $$a_2 = \frac{\sqrt{2}}{1 + 2\sqrt{2}} \approx \frac{1.4142}{3.8284} \approx 0.3694.$$
+       Checking the constraint:
+       $$a_1 + 2a_2 = \frac{1 + 2\sqrt{2}}{1 + 2\sqrt{2}} = 1 \quad \text{and} \quad 0 \le a_i \le 1.$$
+       *(Note: In the text, $a_2 = \frac{\sqrt{2}}{1 + 2\sqrt{2}}$ satisfies $a_1 + 2a_2 = 1$. Let us verify the $p=2$ case as well:*
+       For $p=2$: $\min a_1^2 + a_2^2 \implies 2a_1 = \lambda, 2a_2 = 2\lambda \implies a_2 = 2a_1$. $a_1 + 2(2a_1) = 5a_1 = 1 \implies a_1 = 0.2, a_2 = 0.4$. This matches.)
+       *Wait, re-verifying:* 
+       If $a_1 = \frac{1}{1 + 2\sqrt{2}}$ and $a_2 = \frac{\sqrt{2}}{1 + 2\sqrt{2}}$, then $a_1 + 2a_2 = \frac{1 + 2(\sqrt{2})}{1 + 2\sqrt{2}} = 1$.
+       Is there an algebraic defect? Let us re-check the ratio:
+       $3 a_1^2 = \lambda \implies a_1 = \sqrt{\lambda/3}$.
+       $3 a_2^2 = 2\lambda \implies a_2 = \sqrt{2\lambda/3} = \sqrt{2} a_1$.
+       Then $a_1 + 2a_2 = a_1(1 + 2\sqrt{2}) = 1 \implies a_1 = \frac{1}{1 + 2\sqrt{2}}$ and $a_2 = \sqrt{2} a_1 = \frac{\sqrt{2}}{1+2\sqrt{2}}$.
+       Both algebra and constraint hold.
+   * **Correction / Actual Defect in Equation (1) Sign Convention vs Equation (4):**
+     * **Equation \eqref{eq:ch6:inverse-dynamics}:**
+       $$Q_{\mathrm{req}} = M(q)\dot v + h(q,v) - J_{\mathrm{ext}}(q)^T \lambda_{\mathrm{ext}} - Q_{\mathrm{known}}$$
+       Here $Q_{\mathrm{req}}$ represents the net required generalized internal force/torque provided by the biological actuators (muscles).
+     * In Section \textit{Static Optimization}, Equation \eqref{eq:ch6:static-opt}:
+       $$\text{subject to } R_v \bigl(\operatorname{diag}(c)a + F_P\bigr) = Q_M.$$
+       Notice that in Equation \eqref{eq:ch6:redundancy}, $R_v(q) F_T = Q_M$, but in Equation \eqref{eq:ch6:inverse-dynamics}, passive modeled load $Q_{\mathrm{known}}$ has already been subtracted if included. 
+       If $F_P$ is passive tendon tension, its contribution in generalized coordinates is $R_v F_P$. If the modeler puts $F_P$ into the constraint of static optimization, then $Q_M$ must be the total muscle torque before passive muscle forces are subtracted, or $Q_M = Q_{\mathrm{req}} + R_v F_P$. The text states: *"After assigning known passive loads and contact reactions... $R_v(\operatorname{diag}(c)a + F_P) = Q_M$."* This conflates whether passive muscle tension $F_P$ is part of $Q_{\mathrm{known}}$ or isolated inside $Q_M$. Specifically: if $Q_{\mathrm{known}}$ includes passive muscle forces, subtracting it in Eq. (1) and retaining $R_v F_P$ on the LHS of Eq. (4) constitutes double-counting the passive contribution—the very issue warned about in Section 1.
+
+2. **Code Failure Contract — Missing Type/Shape Handling on Callable Output**
+   * **Location:** `inverse_kinematics_frame` inside the inner function `objective(q: np.ndarray)`.
+   * **Issue:** 
+     `predicted = np.asarray(marker_positions_model_func(q), dtype=float)`
+     If `marker_positions_model_func` returns an object that raises an uncaught exception, or if `minimize` evaluates `q` where `marker_positions_model_func(q)` returns a scalar or non-2D array, the code checks `predicted.shape != measured.shape`. 
+     However, if `marker_positions_model_func(q)` returns values causing `ValueError` inside `objective`, `scipy.optimize.minimize` does not cleanly propagate or catch custom domain exceptions depending on the SciPy version; instead, if `marker_positions_model_func(result.x)` fails when re-evaluated in the residual sanity check `objective(result.x)`, `objective` is evaluated a second time outside the optimizer.
+     More critically, in the contract check:
+     ```python
+     if not np.isfinite(objective(result.x)):
+     ```
+     `result.fun` already stores the final objective value reported by L-BFGS-B. Re-invoking `objective(result.x)` calls `marker_positions_model_func` an extra time; if the model evaluation has side effects or stochasticity, this check can diverge from `result.fun`. The failure contract should verify `np.isfinite(result.fun)` directly alongside `result.success`.
+
+---
+
+### Verification of Specific Review Items
+
+1. **Inverse Dynamics Signs:**
+   * In Equation \eqref{eq:ch6:inverse-dynamics}:
+     $M(q)\dot v + h(q,v) = Q_{\mathrm{req}} + J_{\mathrm{ext}}^T \lambda_{\mathrm{ext}} + Q_{\mathrm{known}}$
+     Rearranging:
+     $Q_{\mathrm{req}} = M(q)\dot v + h(q,v) - J_{\mathrm{ext}}^T \lambda_{\mathrm{ext}} - Q_{\mathrm{known}}$.
+     The signs are dynamically consistent with $\lambda_{\mathrm{ext}}$ acting on the system and $Q_{\mathrm{req}}$ being the active internal generalized actuation.
+   * Floating-base zero residual formulation is sound.
+
+2. **Feasible-Set Logic:**
+   * Characterization of $\mathcal{T}(q) = \{R_v(q)F : 0 \le F \le F_{\max}\}$ as the linear projection (image) of a hypercube/box (hence a zonotope / convex polytope) is mathematically precise.
+   * Clarification that it is the image of force inequalities under $R_v$, rather than an intersection of load-space inequalities, correctly avoids the common fallacy in musculoskeletal mechanics literature.
+   * Nullspace dimension analysis ($\dim > 0$ does not imply feasibility under unilateral non-negativity constraints) is mathematically sound.
+
+3. **Optimization Answers:**
+   * For $p=2$: $\min a_1^2 + a_2^2$ s.t. $a_1 + 2a_2 = 1 \implies (a_1, a_2) = (0.2, 0.4)$. (Verified correct).
+   * For $p=3$: $\min a_1^3 + a_2^3$ s.t. $a_1 + 2a_2 = 1 \implies a_1 = \frac{1}{1 + 2\sqrt{2}}$, $a_2 = \frac{\sqrt{2}}{1 + 2\sqrt{2}}$. (Verified correct; both lie within $[0, 1]$ and satisfy the constraint).
+
+4. **Computed Muscle Control (CMC) Interpretation:**
+   * Equation \eqref{eq:ch6:cmc} is correctly identified strictly as a kinematic tracking acceleration generator ($\ddot q_{\mathrm{des}}$), not excitation or muscle force.
+   * Distinctions regarding forward integration, look-ahead window, actuator dynamics, and lack of unique neural command recovery are biomechanically and mathematically sound.
+
+5. **Code Failure Contracts:**
+   * Validates non-empty inputs, dimension matching `(markers, 3)`, finite weights, non-negativity, and strict positivity of at least one weight.
+   * Explicitly raises `RuntimeError` on optimizer convergence failure instead of returning `result.x`.
+
+---
+
+### Optional Suggestions
+
+1. **Explicit Clarification of $Q_M$ vs $Q_{\mathrm{req}}$:**
+   * In Section \ref{ch:inverse-problems}, explicitly write $Q_M = Q_{\mathrm{req}}$ when no passive joint elements are considered, or state $Q_M = Q_{\mathrm{req}} + R_v F_P$ to make the interface between Eq.~\eqref{eq:ch6:inverse-dynamics} and Eq.~\eqref{eq:ch6:static-opt} seamless.
+
+2. **Handling `result.fun` in `inverse_kinematics_frame`:**
+   * Replace `if not np.isfinite(objective(result.x)):` with `if not np.isfinite(result.fun):` to avoid a redundant forward kinematics evaluation on the model function after the optimization loop terminates.
+
+3. **Jacobian Transpose Notation Consistency:**
+   * In Equation \eqref{eq:ch6:inverse-dynamics}, $J_{\mathrm{ext}}(q)^T \lambda_{\mathrm{ext}}$ uses $(\cdot)^T$ while moment-arm matrix $R_v(q)$ uses the standard biomechanical convention $R_v F_T = Q$. A brief parenthetical note noting $R_v(q) = J_{\mathrm{musc}}(q)^T$ would tie the kinematic transmission formalisms together cleanly.

@@ -1,0 +1,43 @@
+{
+  "issue": 4876,
+  "scope": "Independent arithmetic and symbolic identities; manufactured examples, not measured hardware performance",
+  "constants": {
+    "c_m_s": 299792458,
+    "fc_Hz": 24125000000,
+    "fs_Hz": 30000,
+    "N": 128,
+    "M": 4096,
+    "sound_speed_m_s": 343
+  },
+  "values": {
+    "wavelength_m": 0.01242663038341969,
+    "nyquist_halfspan_m_s": 93.19972787564767,
+    "nyquist_halfspan_mph": 208.48185369463062,
+    "sample_duration_ms": 4.266666666666667,
+    "unpadded_grid_m_s": 1.4562457480569948,
+    "unpadded_grid_mph": 3.2575289639786034,
+    "padded_grid_m_s": 0.04550767962678109,
+    "padded_grid_mph": 0.10179778012433136,
+    "sound_delay_ms": 5.830903790087463,
+    "two_segments_ms": 8.533333333333333,
+    "full_buffer_ms": 136.53333333333333,
+    "range_scale_m": 0.03747405725,
+    "frame_displacement_m": 1.1666666666666667,
+    "exposure_displacement_mm": 2.1,
+    "beam_width_at_1m": 0.35265396141692995,
+    "beam_width_at_5m": 1.7632698070846498,
+    "cfar_alpha_K16_pfa001": 8.638824416951874
+  },
+  "exact_checks": {
+    "single_training_cell_laplace": "1/(a/k + 1)",
+    "K_independent_training_cells": "(1+alpha/K)^(-K)",
+    "cosine_error_relative_differential": "dvr/vr+tan(theta)dtheta",
+    "zero_padding_shared_DFT_nodes": true
+  },
+  "limits": [
+    "Ideal monostatic constant-radial-speed sampling; actual analog and firmware limits remain separate.",
+    "Sound-speed value declared, electronics and timing uncertainty deliberately excluded from the two-segment example.",
+    "CA-CFAR identity assumes independent identically distributed exponential powers; no false-alarm guarantee on correlated spectral bins.",
+    "No hardware experiment or complete golf-estimator validation performed."
+  ]
+}

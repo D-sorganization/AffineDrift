@@ -1,139 +1,131 @@
 \chapter{Design Guidance for Implementers}
 \label{ch:implications}
 
-This chapter distills the review into design guidance, organised by what a
-given sensing architecture can and cannot deliver. It is written for anyone
-building a launch monitor, and equally for anyone evaluating one: the same
-reasoning that tells an engineer which parameters are reachable tells a
-buyer which reported numbers deserve trust.
+A useful design starts with the quantity the user needs and works backward to the observations required to estimate it.
+Ball launch, club delivery and simulated carry share data, but they are not interchangeable validation targets.
+This chapter connects the sensing geometry of the earlier chapters, the implementation conditions of \cref{app:impl}, and the evidence standard of \cref{ch:accuracy}.
+The resulting capability tiers are proposed development stages with acceptance conditions, not claims that a parts list already delivers commercial performance.
 
-The baseline throughout is a \textbf{minimal radar architecture} --- a
-single continuous-wave Doppler module for speed, one or two interferometric
-angle-radar modules for direction, a hardware impact trigger, and an
-embedded host. Representative parts are named where they are useful
-(the OmniPreSense OPS243-A at 24\,GHz, the RFbeam K-LD7, a Raspberry Pi
-class host), but nothing here depends on those specific choices. This
-configuration is a minimal but honest instance of the commercial radar
-architecture, and it is the cheapest starting point that measures anything
-directly.
+A possible starting architecture combines a continuous-wave Doppler module, one or more angle-sensitive radar modules, a synchronized impact trigger and an embedded host.
+The OPS243-A and K-LD7 are examples discussed elsewhere in the review, not interchangeable building blocks: their observables, latency, sampling and access to raw data differ.
+Demonstrating a valid radial-speed channel is a useful first milestone.
+Calling this arrangement the cheapest accurate monitor, or equivalent to a commercial radar architecture, would require evidence about costs and performance that the component list does not supply.
 
-\section{Ball Data}
+\section{Ball Data: Match Each Claim to Its Observations}
 
 \begin{enumerate}
-\item \textbf{Ball speed} is the strongest channel in any radar design: the
-Doppler line is unambiguous, and $\pm0.5\%$ class accuracy from a commodity
-module matches commercial practice. Apply the aspect-angle (cosine)
-correction using the measured launch angles --- at 3--5\,ft behind the tee
-with a driver launch of $12\degs$ the radial underestimate is small but
-\emph{systematic}, and systematic errors are the ones that survive
-averaging.
-\item \textbf{Launch angles}: treat angle-radar bursts as a short
-trajectory, not a single detection. An EKF smoother over the ring buffer
-(\cref{sec:ekf}) with back-extrapolation to the impact timestamp is the
-single highest-leverage software upgrade for angle quality, and it costs
-nothing in hardware.
-\item \textbf{Spin rate} is where radar earns its reputation for
-inconsistency. A $\sim$50--60\% detection rate from I/Q sideband analysis is
-consistent with the physics rather than evidence of a bug: sideband SNR
-depends on ball-surface asymmetry and observation time
-(\cref{sec:radarspin}). Improvements in order of cost: longer observation
-windows (later trigger cutoff); cepstrum or harmonic-product comb estimation
-with equal-spacing qualification; marked-ball guidance for indoor use; and
-honest fallback --- report estimated spin from club type, speed and loft
-priors, clearly flagged, which is what Garmin does and documents.
+\item \textbf{Ball speed.}
+A Doppler observation constrains radial velocity, not automatically total ball speed.
+Separate ball returns from club, shaft and multipath returns, and establish calibration, aliasing limits and timing before claiming an accuracy tolerance.
+For a correctly associated target with radial velocity $v_r=V\cos\beta$, where $\beta$ is the angle between velocity and the sensor's line of sight, the local correction is
+\begin{equation}
+\label{eq:designspeeduncertainty}
+V=v_r\sec\beta,\qquad
+\delta V\approx\sec\beta\,\delta v_r+V\tan\beta\,\delta\beta.
+\end{equation}
+Use radians for the angle perturbation and retain covariance between the inputs when propagating uncertainty.
+The correction becomes ill-conditioned near perpendicular motion.
+The relevant $\beta$ depends on sensor position and the instantaneous trajectory; it is not simply the vertical launch angle in every installation.
+\item \textbf{Launch angles.}
+Fit a trajectory only when the burst contains enough correctly timed and associated observations for the proposed state.
+Filtering and smoothing can combine those observations, but cannot create information that the cadence or viewing geometry did not provide (\cref{sec:ekf}).
+Compare the resulting launch angles against independent observations at a declared separation time, and test the benefit over a simpler estimator on held-out shots.
+\item \textbf{Spin rate.}
+Treat harmonic selection, surface-pattern ambiguity, observation duration and signal-to-noise ratio as explicit parts of the estimator (\cref{sec:radarspin}).
+No universal 50--60\% detection ceiling follows from radar physics.
+Longer windows can improve spectral resolution while also admitting changing geometry, acceleration and additional targets; comb or cepstral methods need tests for missed fundamentals and integer-multiple aliases.
+A fallback from club, speed or loft priors is an impact-model prediction and must remain labeled as such.
+Report its validation separately from successful rotation-sensitive observations.
 \emph{Disclosure reference:} US8845442 describes radar spin processing; the technical map in \cref{sec:fto} does not determine clearance or a technique-wide expiry date.
-\item \textbf{Spin axis}: short flight segments may provide too little trajectory information to separate axis, aerodynamic coefficients and launch-condition errors reliably.
+\item \textbf{Spin axis.}
+Short flight segments may provide too little trajectory information to separate axis, aerodynamic coefficients and launch-condition errors reliably.
 Rotation-related observations from receiver geometry provide another disclosed route (\cref{sec:patentflightscope}), but require suitable hardware and validated signal processing.
 Optical rotation estimates and explicitly labeled impact-model estimates are further options; their observation requirements and error sources differ.
+Retain competing rotation hypotheses or withhold an axis when the observations do not resolve them.
 \end{enumerate}
 
-\section{Club Data}
+\section{Club Data: Define the Point, Frame and Time}
 
 \begin{enumerate}
-\item \textbf{Club speed}: define and document the reference point --- this
-is the single most consequential and most neglected decision in the whole
-design (\cref{sec:pathreference}). A CW module sees a smear of head and
-shaft returns; gating the pre-impact spectrum and taking a fixed percentile
-of the velocity distribution, rather than the maximum, approximates a stable
-reference and avoids the toe-speed inflation that plagues naive processors
-(\cref{sec:radarclub}). Validate smash factor against the loft-appropriate
-ceiling (\cref{sec:smash}) and flag violations rather than displaying them.
-\item \textbf{Club path} and \textbf{attack angle} from angle radar are
-legitimate direct measurements --- the same primitives a consumer radar unit
-measures. Alignment calibration dominates their accuracy, and no amount of
-signal processing recovers a misaimed sensor.
-\item \textbf{Face angle}: the D-plane inversion (\cref{eq:faceinversion})
-with the loft-dependent weight (\cref{eq:obliqueness}) is exactly what
-radar-only commercial units report. Implement it --- but label it
-\emph{derived}, propagate its error (a $1.32\times$ amplification of
-launch-direction bias at the measured weight; see the caution in
-\cref{sec:facepathweighting}), and suppress it on detected off-centre
-strikes once impact location is available. The D-plane forward model doubles
-as a simulator's launch generator, so one well-tested module serves both
-directions.
-\item \textbf{Impact location}: club and ball imaging offers a concrete route to locating contact relative to the face.
+\item \textbf{Club speed.}
+Define the reference point and event time before processing a pre-impact spectrum (\cref{sec:pathreference}).
+For a rigid head, velocities at two points satisfy $\vect{v}_B=\vect{v}_A+\vect{\omega}\times(\vect{r}_B-\vect{r}_A)$.
+A fixed spectral percentile may be a repeatable signal feature, but it does not by itself identify either point or remove the rotational contribution.
+Reflectivity, viewing direction and shaft returns can change the percentile without the same change in the declared head-point speed.
+Validate the mapping against tracked head motion over varied clubs and strikes.
+Smash factor is a useful diagnostic only with compatible ball and club definitions; an idealized impact-model bound is not a universal hard rejection threshold (\cref{sec:smash}).
+\item \textbf{Club path and attack angle.}
+These describe the direction of velocity at the chosen point and time, derived from sufficient trajectory information in a calibrated frame.
+A scattering-centre angle is not itself either quantity.
+Alignment, association, differentiation, reference-point motion and timing all contribute uncertainty.
+Check them separately rather than assuming alignment always dominates or that adding a radar makes path and attack angle direct observations.
+\item \textbf{Face angle.}
+The conditional D-plane inverse in \cref{eq:faceinversion} is a possible estimator, not a verified description of every commercial algorithm.
+For a planar model $\ell=wf+(1-w)p$ with nonzero weight $w$, launch direction $\ell$, face angle $f$ and path $p$, first-order propagation gives
+\begin{equation}
+\label{eq:designfaceuncertainty}
+\delta f\approx\frac{\delta\ell}{w}
+-\frac{1-w}{w}\delta p
+-\frac{\ell-p}{w^2}\delta w.
+\end{equation}
+The launch-to-face sensitivity $1/w$ is approximately 1.15 for $w=0.87$ and 1.32 for $w=0.76$; neither is a universal amplification.
+Include covariance, weight uncertainty and model discrepancy, especially when strike location and gear effect violate the centered-impact approximation (\cref{sec:facepathweighting}).
+If those conditions are unknown, enlarging uncertainty or withholding the result is more defensible than presenting the inverse as a face observation.
+A shared forward/inverse software module still requires independent validation; algebraic consistency alone is insufficient.
+\item \textbf{Impact location and orientation.}
+Club and ball imaging offers a concrete route to locating contact relative to the face.
 The Acushnet and Wintriss disclosures (\cref{sec:patentacushnet,sec:wintriss}) illustrate measurement architectures, rather than complete validated implementations or blanket rights clearance.
 Face fiducials can constrain orientation through calibrated image geometry and a known marker-to-face relationship.
 Camera count alone does not establish three-dimensional observability, visibility at impact or achieved accuracy.
+Account for lens distortion, exposure blur, strobe timing, marker placement and the relation between the reconstructed surface and the face normal being reported.
 \end{enumerate}
 
-\section{Capability Tiers}
+\section{Capability Tiers and Acceptance Conditions}
 
-The following tiers are cumulative. Each is a coherent product in its own
-right, and each is defined by what it moves from derived to measured rather
-than by a parts list.
+Each stage adds a testable capability to the preceding system.
+An unsuccessful estimate at one stage must not be silently replaced by a more restrictive prior and then relabeled as a new measurement.
 
 \begin{enumerate}
-\item \textbf{Tier 1 --- radar only.} EKF smoothing, comb-based spin with
-honest fallback, D-plane-derived face data with provenance flags,
-smash-factor sanity gates, and a documented alignment-calibration procedure.
-This delivers the consumer-radar feature set. Everything club-face-related
-is inferred.
-\item \textbf{Tier 2 --- add optical spin, then impact imaging.} One or two
-global-shutter cameras with an IR strobe, at modest incremental cost.
-Calibrated image sequences can support launch-angle and surface-rotation estimation; impact-location capture additionally needs a suitable view of the club and ball.
-Radar may contribute triggering, speed and trajectory observations, depending on the sensor arrangement.
-The disclosures in \cref{ch:patents} supply design comparisons, not a guarantee that this combination is accurate or cleared for a particular implementation.
-\item \textbf{Tier 3 --- true fusion.} A single EKF consuming radar speed,
-radar angles and camera fixes with per-sensor covariances; a flight model
-per \cref{ch:flight} with versioned coefficients; and a validation protocol
-per \cref{ch:accuracy}. The versioning matters more than it sounds:
-\cref{ch:flight} shows that a coefficient difference of 0.01 in $C_D$ is
-worth roughly eight yards, so an unversioned model change is a silent
-recalibration of every number the device has ever reported.
-\item \textbf{Tier 4 --- measured club delivery.} An imaging radar with
-custom chirp firmware feeding the screw-theoretic rigid-body estimator of
-\cref{app:screw}: per-detection Doppler rows solved for the club's twist,
-smoothed on $SE(3)$, and projected into club speed at a declared reference
-point, measured path and attack angle, closure rate, and an ISA-defined
-swing plane. This moves path and attack angle from \emph{derived} to
-\emph{measured} in \cref{tab:hierarchy}. Face angle and impact location
-remain assigned to the optical module in this proposed architecture; the allocation is a design choice, not proof that every other sensing approach is impossible.
+\item \textbf{Tier 1 --- validated radar observations.}
+Establish calibrated radial velocity and whatever directional information the selected hardware actually provides.
+Synchronize the trigger and observation windows, define ball/club association and preserve raw or sufficiently detailed intermediate data for replay.
+Add spin or impact-model outputs only with provenance and separately tested failure criteria.
+Acceptance requires a declared operating range, paired comparison results and per-parameter availability, rather than merely reproducing a consumer monitor's list of display fields.
+\item \textbf{Tier 2 --- optical rotation and impact constraints.}
+Add synchronized imaging where it addresses an identified ambiguity or missing observable.
+Calibrated image sequences can constrain launch direction and surface rotation; impact location also requires an adequate view of the ball and club near contact.
+A global shutter avoids row-to-row exposure timing differences but does not eliminate motion blur; illumination and exposure duration remain design variables.
+Radar can contribute speed and triggering, while optical observations can distinguish rotation hypotheses.
+Acceptance includes occlusion, marker symmetry, timing and calibration tests across the intended shot range, with costs measured for the actual implementation.
+\item \textbf{Tier 3 --- validated joint estimation and prediction.}
+Fuse complementary observations with sensor-specific measurement functions, timestamps and covariance models.
+Shared calibration or processing can correlate their errors; counting the same information twice produces unjustifiably narrow uncertainty.
+Version the flight model and propagate launch, aerodynamic and environmental uncertainty to the landing event (\cref{ch:flight}).
+Acceptance requires checks that fusion improves held-out performance and uncertainty calibration, including prediction error on independently observed trajectories.
+There is no universal yardage equivalent for a fixed coefficient change.
+\item \textbf{Tier 4 --- observable club motion.}
+Recover the club's pose and velocity from an observation geometry that supports the requested rigid-body state, then evaluate speed, path and attack angle at the declared point and time.
+The screw-theoretic formulation in \cref{app:screw} provides the kinematic framework, but its rank and ambiguity analysis is part of the design requirement.
+For a single monostatic radar phase centre, resolved Doppler rows alone do not independently determine all six instantaneous twist components; additional viewpoints, temporal position information or other observations are needed under stated motion assumptions.
+Custom chirps and an $SE(3)$ smoother do not remove that ambiguity by themselves.
+An instantaneous screw axis also becomes poorly conditioned near zero angular speed and is not automatically a global swing plane.
+Optical face and impact measurements can be combined with the recovered motion, provided their frames and event times are aligned.
+Acceptance requires reference-point, pose, twist and derived-axis validation, including the configurations in which the output must be withheld.
 \end{enumerate}
 
 \section{Reporting Honesty as a Design Feature}
 
-The clearest lesson of this review is not about sensors at all.
+A reported quantity should carry its definition, provenance, uncertainty and relevant model version.
+The hierarchy in \cref{tab:hierarchy} organizes dependence on observations and assumptions; it is not an accuracy ranking.
+Both a camera pose and a radar trajectory are estimates from sensor observations, and each can be wrong for different reasons.
+The independent evidence in \cref{ch:accuracy} shows why return rate and agreement must be reported together, and why selected-shot precision cannot stand in for accuracy on all attempts.
 
-Commercial marketing blurs the measured/derived boundary, and the
-independent validation literature repeatedly punishes the derived
-quantities: clubhead velocity met research-grade tolerance on 54\% and 29\%
-of shots for the two devices ever tested against a traceable optical
-benchmark, and club orientation data was returned on only 62\% of shots
-overall --- 19\% for a utility wedge (\cref{ch:accuracy}). None of that
-appears on a specification sheet.
+A useful shot record distinguishes observed channels, model-conditioned estimates, simulated outcomes and prior-based fallbacks.
+Preserve the coordinate frame, reference point, event time, calibration identifier, ball configuration and rejection reason alongside the value.
+If an uncertainty interval is conditional on a fixed aerodynamic or impact model, state that condition.
+Do not manufacture an uncertainty number where its calibration has not been tested.
 
-An instrument can therefore differentiate itself by doing the opposite:
-tagging every reported parameter with its provenance (measured, derived, or
-estimated), its uncertainty, and the model version used, and reporting its
-own per-shot success rate rather than only its best-case tolerance.
-\Cref{tab:hierarchy} is effectively the schema for that tagging.
-
-Two vendors already demonstrate that this is commercially survivable rather
-than suicidal. Garmin publishes an explicit measured-versus-calculated split
-with tolerances on each side, and states outright that its face angle is
-algorithmic. TrackMan publishes the reference-point discrepancy between its
-own quantities and warns that numbers from different methodologies
-``aren't comparable.'' Both remain market leaders in their segments. The
-honest disclosure did not cost them anything, and it is the closest thing
-this industry has to a standard worth adopting.
+These distinctions help the golfer interpret changes in the swing.
+A change in predicted carry can originate in ball launch, atmosphere or software; a change in club speed can originate in a different reference point; an apparent face change can originate in the assumptions of an impact inverse.
+The design objective is to make those alternatives testable with synchronized observations and a documented chain of inference.
+That is what turns a plausible display into an instrument that can support research and coaching decisions.

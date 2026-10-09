@@ -1,0 +1,36 @@
+[
+  {
+    "case": "1: C1 non-quadratic remainder",
+    "f(x)": "Abs(x)**(3/2)",
+    "domain": "real x; positive h for residual ratios",
+    "derivative_continuous_at_zero": true,
+    "dq_limit_zero": 0,
+    "residual": "h**(3/2)",
+    "residual_over_h_lim": 0,
+    "residual_over_h2_lim": "oo",
+    "interpretation": "C1 guarantees o(h) remainder, not quadratic O(h^2)"
+  },
+  {
+    "case": "2: nonlinear scalar flow",
+    "flow": "eps/(-eps*t + 1)",
+    "domain": "1 - eps*t > 0",
+    "ode_residual": 0,
+    "x(0)": "eps",
+    "d_x_d_eps_at_eps0": 1,
+    "x(t)_minus_eps": "-eps**2*t/(eps*t - 1)",
+    "interpretation": "Nonlinear scalar flow counterexample; sensitivity at eps=0 is 1"
+  },
+  {
+    "case": "3: double integrator phase coupling",
+    "v(2)": "a + b",
+    "q(2)": "3*a/2 + b/2",
+    "dq2_da": "3/2",
+    "interpretation": "Linear model exhibits phase coupling (dq(2)/da = 3/2); independent of coaching evidence",
+    "matched_velocity_input_change": {
+      "a_change": "d",
+      "b_change": "-d",
+      "velocity_change": "0",
+      "position_change": "d"
+    }
+  }
+]

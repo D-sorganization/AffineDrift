@@ -1,224 +1,234 @@
-\chapter{Multi-Body Dynamics of Biological Chains}
+\chapter[Multi-Body Dynamics of Biological Chains]{Multi-Body Dynamics of\\Biological Chains}
 \label{ch:multibody-bio}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter is a provisional mechanical reference. Its manufactured examples
+check model identities; they do not identify a person's muscle forces or validate
+a particular anatomical model.
 \end{gomdraftnotice}
 
-\epigraph{%
-  The human body is a high-dimensional articulated system with
-  changing contacts and compliant tissues. Rigid-body dynamics is
-  a useful approximation, but never the whole story.
-}{}
+A biological chain combines several kinds of coupling. Inertia couples
+accelerations; a muscle path distributes tension across coordinates; a contact
+can constrain motion; and muscle states limit how neural excitation changes
+force. These mechanisms must be distinguished before interpreting the golf
+swing as coordinated or low-dimensional.
 
 \section{Open-Chain vs.\ Closed-Chain Biomechanics}
 
-Most human movement involves open kinematic chains (the limbs) connected to a floating
-base (the pelvis/trunk). However, many functional activities create temporary closed
-chains: the stance phase of gait (foot on ground), pushing against a wall, or the golf
-swing when both hands grip the club.
+A tree of rigid segments is a useful starting model, with a floating pelvis
+and articulated limbs. Connecting both hands to the same rigid club can close a
+loop through the arms and trunk. A fixed foot constrains motion relative to the
+world, but one contact does not automatically create the same internal loop as
+a two-hand grip. Multiple supports can introduce additional loop constraints.
+The result depends on which bodies, joints and contact freedoms the model includes.
 
 \begin{center}
-\begin{tikzpicture}[scale=0.85, >=Stealth, node distance=1.5cm]
-  % Open chain
-  \node[draw, circle, thick] (base1) at (0, 2) {0};
-  \node[draw, circle, thick] (j1) at (1.5, 2) {1};
-  \node[draw, circle, thick] (j2) at (3, 2) {2};
-  \node[draw, circle, thick] (j3) at (4.5, 2) {3};
-
-  \draw[thick] (base1) -- (j1) -- (j2) -- (j3);
-
-  \node[below] at (2.25, 1.5) {\textbf{Open Chain} (arm reaching)};
-
-  % Closed chain
-  \node[draw, circle, thick] (base2) at (0, -1) {0};
-  \node[draw, circle, thick] (j4) at (1.5, -1) {1};
-  \node[draw, circle, thick] (j5) at (3, -1) {2};
-  \node[draw, circle, thick] (ground) at (3, -2.5) {Ground};
-
-  \draw[thick] (base2) -- (j4) -- (j5) -- (ground);
-  \draw[thick, dashed] (ground) -- (base2) node[midway, below] {contact};
-
-  \node[below] at (2.25, -3.2) {\textbf{Closed Chain} (gait stance phase)};
+\begin{tikzpicture}[>=Stealth, scale=0.8]
+  \node[draw,circle] (o0) at (0,0) {0};
+  \node[draw,circle] (o1) at (1.5,0) {1};
+  \node[draw,circle] (o2) at (3,0) {2};
+  \draw[thick] (o0)--(o1)--(o2);
+  \node[below] at (1.5,-0.6) {Open Chain};
+  \node[draw] (trunk) at (1.5,-2) {Trunk};
+  \node[draw] (left) at (0,-3.2) {Arm 1};
+  \node[draw] (right) at (3,-3.2) {Arm 2};
+  \node[draw] (club) at (1.5,-4.4) {Club};
+  \draw[thick] (trunk)--(left)--(club)--(right)--(trunk);
+  \node[below] at (1.5,-5) {Two-Hand Loop};
 \end{tikzpicture}
 \end{center}
 
+For a stationary holonomic constraint $\phi(q)=0$, permissible velocities obey
+$J_c(q)v=0$, and accelerations obey
+$J_c\dot v+\dot J_c v=0$ in the chosen velocity coordinates.
+Ideal constraint reactions do no work on those permissible velocities.
+A frictional ground contact also requires unilateral normal force and an
+appropriate friction law: solving a bilateral constraint equation does not
+prove that the foot remains in contact or does not slip.
+Grip compliance and club flexibility likewise change the rigid-loop approximation.
+
 \subsection{Equations of Motion for Biological Chains}
 
-The equations of motion for an $n$-DOF musculoskeletal system take the standard
-Lagrangian form:
+Let $q\in\mathbb R^{n_q}$ describe configuration locally or through a constrained
+representation, and let $v\in\mathbb R^{n_v}$ contain generalized speeds.
+Write $\dot q=N(q)v$; for independent local angle and translation coordinates,
+$N=I$ and $v=\dot q$. A quaternion orientation uses four entries for three
+rotational freedoms, so $n_q$ and $n_v$ need not match~\cite{SimbodyMobilitiesBiological}.
+A declared rigid-segment model has the form
 \begin{equation}
-  M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + g(\bm{q})
-  = R(\bm{q}) \bm{F}_{\text{muscle}} + J_c^T(\bm{q}) \bm{F}_{\text{contact}},
-  \label{eq:ch5:eom-bio}
+ M(q)\dot v+h(q,v)=R_v(q)F_T+Q_{\mathrm{other}}+J_c(q)^T\lambda,
+ \label{eq:ch5:eom-bio}
 \end{equation}
-where:
-\begin{itemize}
-  \item $M(\bm{q}) \in \Reals^{n \times n}$ is the mass matrix (from segment inertial properties)
-  \item $C(\bm{q}, \dot{\bm{q}}) \in \Reals^{n \times n}$ is the Coriolis/centrifugal matrix
-  \item $g(\bm{q}) \in \Reals^n$ is the gravity vector
-  \item $R(\bm{q}) \in \Reals^{n \times p}$ is the muscle moment arm matrix ($p$ muscles, $n$ DOF)
-  \item $\bm{F}_{\text{muscle}} \in \Reals^p$ are the muscle forces (from Hill models, Chapter~3)
-  \item $J_c(\bm{q})$ is the contact Jacobian
-  \item $\bm{F}_{\text{contact}}$ are external contact forces
-\end{itemize}
+where $M$ is $n_v\times n_v$, $h$ includes inertial velocity terms and gravity,
+$F_T\in\mathbb R^p$ contains tendon tensions, and $Q_{\mathrm{other}}$ contains
+additional modeled loads. These can include passive ligaments, damping or
+external actuators; count each contribution once. The reaction vector $\lambda$
+and Jacobian must be power-conjugate: $\lambda^TJ_cv$ is contact power.
+For a spatial wrench, its force, moment, point and frame must all be declared.
 
-The key difference from Volume~I's $\bm{\tau} = B\bm{u}$ is that joint torques are
-no longer direct control inputs. Instead:
+If $\ell_i^{MT}(q)$ is a differentiable musculotendon path length and tension
+$F_{T,i}\geq0$ pulls along that path, define
+\[
+ R_{q,ji}=-\frac{\partial\ell_i^{MT}}{\partial q_j},\qquad
+ R_v=N^TR_q,\qquad \dot\ell^{MT}=-R_v^Tv.
+\]
+Then the muscle contribution and its power are
 \begin{equation}
-  \bm{\tau}_{\text{net}} = R(\bm{q}) \bm{F}_{\text{muscle}}
-  = \sum_{i=1}^{p} \bm{r}_i(\bm{q}) F_{\text{muscle},i},
-  \label{eq:ch5:net-torque}
+ Q_M=R_vF_T,\qquad Q_M^Tv=-F_T^T\dot\ell^{MT}.
+ \label{eq:ch5:net-torque}
 \end{equation}
-where $\bm{r}_i(\bm{q}) \in \Reals^n$ is the $i$-th column of $R$, giving the moment
-arm vector of muscle $i$ across all joints. This moment-arm mapping is the
-standard bridge between muscle models and generalized coordinates in
-musculoskeletal simulation \cite{Zajac1989,Delp2007}.
+These are generalized loads: angular rows give moments, while translational
+rows give forces. Tendon tension need not equal fiber force when pennation or
+other transmission geometry intervenes (Chapter~3).
+For a free-body description using overall pose and internal joint coordinates,
+internal muscle path lengths are invariant to overall rigid motion; muscle
+loads cannot supply an independent external base wrench.
+
+Force is an admissible idealized input if the model explicitly assumes direct
+force actuation. In a muscle-driven model it instead follows from activation,
+contraction and tendon states and their constitutive equations~\cite{millard2013flexing}.
+Excitation, activation, fiber force and tendon tension are different quantities.
+Prescribing activation bypasses activation dynamics; it does not automatically
+specify tendon force or remove the need for contraction assumptions.
 
 \subsection{Bi-Articular Muscles}
 
-Unlike engineering actuators that span a single joint, many muscles cross two
-or more joints. These \textbf{bi-articular} (or multi-articular) muscles create
-mechanical coupling between joints that is not captured by the simple
-one-actuator-per-joint abstraction common in introductory robotics.
+A muscle crossing two joints contributes one tension to two generalized loads.
+Engineering tendon drives can do this too. Sharing an actuator does not impose
+a relation $\phi(q)=0$ between the joint angles; ordinary compliant muscle
+coupling therefore does not reduce the configuration dimension.
+An imposed fixed musculotendon length would be an additional idealized constraint.
+The rank and feasible image of $R_v$ describe instantaneous force allocation,
+not the number of kinematic freedoms or nonlinear controllability by themselves.
 
-\begin{principle}{The Coordination Function of Bi-articular Muscles}{biarticular}
-  Bi-articular muscles serve two distinct functions:
-  \begin{enumerate}
-    \item \textbf{Energy transfer}: they can transport mechanical energy from one joint to
-          another without requiring a separate distal actuator. When the proximal joint
-          extends (muscle shortening at the proximal end) and the distal joint flexes
-          (muscle lengthening at the distal end), mechanical power can be redistributed
-          from proximal to distal coordinates \cite{Zajac1989,Neptune2001}. The metabolic
-          cost still depends on activation, contraction velocity, and force history.
-    \item \textbf{Coordination constraint}: they link joint motions, reducing the
-          effective degrees of freedom and simplifying the control problem.
-  \end{enumerate}
-  This is a form of \emph{mechanical intelligence}---the morphology of the
-  musculoskeletal system performs part of the control task. The gastrocnemius,
-  for example, crosses both the knee and ankle, coupling knee extension to ankle
-  plantarflexion during the push-off phase of gait.
-
-  \noindent
-  \textbf{Control-Theoretic Perspective:} The matrix $R(\bm{q})$ can be read as a
-  state-dependent input map from muscle forces to generalized torques. Bi-articular
-  muscles may create dependencies among its columns, which is one reason the effective
-  control directions in a musculoskeletal model can be lower-dimensional than the raw
-  muscle count. Geometric control language is useful for describing that reduction
-  \cite{AgrachevSachkov2004}, but the specific structure of $R(\bm{q})$ remains
-  anatomy- and model-dependent.
+\begin{principle}{Power Accounting Across Two Joints}{biarticular}
+For two local joint angles with moment arms $r_1,r_2$, the coordinate powers are
+$P_1=r_1F_T\dot q_1$ and $P_2=r_2F_T\dot q_2$.
+Their sum is $-F_T\dot\ell^{MT}$.
+Opposite coordinate powers can cancel while tension remains nonzero.
+Cancellation establishes a skeletal coordinate-power balance, not zero
+metabolic cost or a uniquely identified energy path between physical segments.
+If the musculotendon unit shortens, lengthens or stores elastic energy, its
+net mechanical exchange must also enter the ledger.
 \end{principle}
 
-\begin{lstlisting}[language=Python, caption={Computing joint torques from muscle forces through moment arms.}]
+For a manufactured example, $r_1=-0.03$\,m, $r_2=0.04$\,m,
+$F_T=500$\,N and $(\dot q_1,\dot q_2)=(2,1.5)$\,rad/s give
+$P_1=-30$\,W, $P_2=30$\,W and $\dot\ell^{MT}=0$.
+Changing the second velocity to $1$\,rad/s gives $\dot\ell^{MT}=0.02$\,m/s
+and net skeletal power $-10$\,W.
+These numbers illustrate the signs; they are not gastrocnemius measurements.
+For the swing, the analogous analysis must distinguish joint-coordinate powers,
+segment boundary wrench powers and muscle/tendon storage before claiming
+proximal-to-distal energy transfer.
+
+\begin{lstlisting}[language=Python, caption={Mapping Tendon Tension to Generalized Muscle Loads}]
 import numpy as np
+
 
 def compute_joint_torques(
     moment_arms: np.ndarray,
-    muscle_forces: np.ndarray
+    muscle_forces: np.ndarray,
 ) -> np.ndarray:
-    """Compute net joint torques from muscle forces and moment arms.
+    """Map nonnegative tendon tensions to generalized muscle loads.
 
-    Parameters
-    ----------
-    moment_arms : np.ndarray, shape (n_joints, n_muscles)
-        Moment arm matrix R(q). Each column gives the moment arm
-        of one muscle across all joints. Sign convention: positive
-        moment arm produces positive joint torque (typically flexion).
-    muscle_forces : np.ndarray, shape (n_muscles,)
-        Force produced by each muscle (always positive).
-
-    Returns
-    -------
-    np.ndarray, shape (n_joints,)
-        Net joint torques.
+    R has shape (n_coordinates, n_muscles), and R[j, i] is
+    -d(length_i)/d(q_j). Rotational rows give moments in N*m;
+    translational rows give forces in N for meter coordinates.
+    This map does not determine tension from neural excitation.
     """
-    return moment_arms @ muscle_forces
+    if np.iscomplexobj(moment_arms) or np.iscomplexobj(muscle_forces):
+        raise ValueError("Inputs must be real")
+    r = np.asarray(moment_arms, dtype=float)
+    force = np.asarray(muscle_forces, dtype=float)
+    if r.ndim != 2 or force.ndim != 1 or r.shape[1] != force.size:
+        raise ValueError("Require R:(n,p) and tension:(p,)")
+    if not np.isfinite(r).all() or not np.isfinite(force).all():
+        raise ValueError("Inputs must be finite")
+    if np.any(force < 0):
+        raise ValueError("Tension must be nonnegative")
+    return r @ force
 
 
-# Example: 2-DOF elbow system with 4 muscles
-# Joints: shoulder flexion, elbow flexion
-# Muscles: anterior deltoid, biceps (biarticular),
-#          triceps (biarticular), brachialis
-#
-# Convention: R has shape (n_joints, n_muscles) so that
-# tau = R @ F maps the muscle-force vector to a joint-torque
-# vector via a single matrix-vector product. Each row is a joint
-# and each column is a muscle. This is the shape that
-# compute_joint_torques() expects.
-R = np.array([
-    # deltoid, biceps, triceps, brachialis
-    [0.05,  0.03,  -0.025,  0.0 ],  # row 0: shoulder moment arms (m)
-    [0.0,   0.04,  -0.020,  0.03],  # row 1: elbow moment arms (m)
-])  # Shape: (2 joints, 4 muscles) -- ready to use as-is
-
-# Note: biceps has moment arms at BOTH joints (bi-articular)
-muscle_forces = np.array([200.0, 150.0, 100.0, 120.0])  # Newtons
-
-tau = compute_joint_torques(R, muscle_forces)
-print(f"Shoulder torque: {tau[0]:.1f} N*m")
-print(f"Elbow torque:    {tau[1]:.1f} N*m")
+# Manufactured two-angle, four-tendon example; not anatomy data.
+R = np.array([[0.05, 0.03, -0.025, 0.0],
+              [0.0, 0.04, -0.020, 0.03]])
+force = np.array([200.0, 150.0, 100.0, 120.0])
+torque = compute_joint_torques(R, force)  # [12.0, 7.6] N*m
 \end{lstlisting}
 
 \subsection{Co-Contraction and Joint Stiffness}
 
-When antagonist muscles co-contract (both agonist and antagonist are active
-simultaneously), the net joint torque may be zero but the joint \textbf{stiffness}
-increases. This is because each active muscle acts as a spring:
+Define restoring tangent stiffness in independent local coordinates as
+$K=-\partial Q_M/\partial q$, under stated activation, velocity and internal-state
+or equilibrium conditions. In a quasistatic model with
+$F_T=F_T(\ell^{MT})$ and $K_{MT}=\partial F_T/\partial\ell^{MT}$,
 \begin{equation}
-  K_{\text{joint}} = \sum_{i=1}^{p} r_i^2(\bm{q}) \cdot \frac{\partial F_{\text{muscle},i}}{\partial \ell_i^M},
-  \label{eq:ch5:joint-stiffness}
+ K=R_qK_{MT}R_q^T-\sum_i F_{T,i}\frac{\partial r_i}{\partial q},
+ \label{eq:ch5:joint-stiffness}
 \end{equation}
-where $\partial F / \partial \ell^M$ is the short-range stiffness of the muscle, which
-depends on activation level.
+where $r_i$ is column $i$ of $R_q$.
+The first term is the material contribution; the second reflects changing
+moment arms. A scalar constant-arm model reduces to $K=\sum_i r_i^2k_i$.
+A fiber force-length slope is not automatically the effective musculotendon
+stiffness or the experimentally measured short-range stiffness.
+For aligned, nonpennate linear muscle and tendon springs in series,
+$k_{MT}=(k_M^{-1}+k_T^{-1})^{-1}$; pennation, state dependence and history
+require their own derivation.
 
-Co-contraction is metabolically expensive but biomechanically important: it allows the
-nervous system to modulate joint \emph{impedance} independently of net joint
-\emph{torque}. This is better understood as a biologically compliant analogue of
-impedance control rather than a literal duplicate of a rigid torque source
-\cite{Zajac1989,millard2013flexing}.
-
-Position-dependent stiffness modulation gives a useful control vocabulary for
-discussing state-dependent actuation. Geometric control theory describes how
-state-dependent inputs change closed-loop structure \cite{AgrachevSachkov2004},
-but the actual stiffness law in biomechanics still has to come from muscle,
-tendon, and contact modeling rather than from control theory alone.
+Matched antagonists can increase positive material stiffness while their net
+moment cancels. For constant moment arms $+0.03$ and $-0.03$\,m, equal tensions
+cancel, and two effective stiffnesses of $1000$\,N/m give
+$K=1.8$\,N\,m/rad. Unequal forces or changing geometry need not preserve that
+balance. Muscle force-length branches and geometric terms can also change the
+sign of tangent stiffness. Neither a universal increase nor independent control
+of every impedance component follows from co-contraction alone.
+Impedance additionally involves inertia, damping, feedback and timescale;
+static tangent stiffness is only one part of it (Chapter~3).
 
 \section{The Mass Matrix of the Human Body}
 
-Computing the mass matrix $M(\bm{q})$ for a full musculoskeletal model follows the
-same recursive algorithms as Volume~0, Chapter~10 (the Composite Rigid Body Algorithm),
-using the segment inertial properties from Chapter~2. The key computational steps are:
+The composite rigid body algorithm applies after selecting the tree, velocity
+coordinates and physically admissible segment inertias. Product-of-exponentials
+kinematics is one compatible representation, not a compulsory preprocessing step.
+The kinetic energy is $T=\tfrac12v^TM(q)v$.
+Positive definiteness requires that every nonzero modeled speed produce positive
+kinetic energy; redundant coordinates, singular parameterizations or massless
+unregularized freedoms can violate this condition.
+A model with 20 independent speeds has a $20\times20$ mass matrix, but naming
+body regions does not establish that count.
 
-\begin{enumerate}
-  \item Define the kinematic tree (segment connectivity and joint types)
-  \item Compute forward kinematics using the product of exponentials
-  \item Apply the CRBA to compute $M(\bm{q})$
-\end{enumerate}
-
-For a 20-DOF model (pelvis + 2 legs + trunk + 2 arms), $M(\bm{q})$ is a
-$20 \times 20$ symmetric positive-definite matrix.
+For constraints represented by $v=Z(q)w$, where $Z$ spans admissible velocities,
+the reduced kinetic matrix is $Z^TMZ$. Constraint multipliers and reaction-force
+indeterminacy are separate from the positive definiteness of this reduced matrix.
+This distinction matters in a two-hand club model: closing the loop changes
+admissible motion and reactions without making the underlying segment inertias
+nonphysical.
 
 \section*{Exercises}
 
 \begin{enumerate}
-  \item \textbf{Bi-articular Energy Transfer.}
-        For the gastrocnemius (crossing knee and ankle), show mathematically how
-        knee extension can produce ankle torque through the bi-articular coupling.
-
-  \item \textbf{Co-Contraction Analysis.}
-        Compute the joint stiffness when biceps and triceps co-contract at 50\%
-        activation with the elbow at $90^\circ$.
-
-  \item \textbf{Mass Matrix Properties.}
-        For a 2-segment arm model, compute $M(\bm{q})$ at three configurations and
-        verify positive-definiteness. Plot the condition number as a function of elbow angle.
-
-  \item \textbf{(Programming.)} Implement the CRBA for a 3-segment leg model using
-        the de~Leva segment properties. Compare with Pinocchio output.
-
-  \item \textbf{(Programming.)} Simulate a 2-DOF arm with 4 muscles (as in the code
-        listing) performing a reaching movement. Use prescribed muscle activations
-        and compute the resulting trajectory via forward dynamics.
+ \item \textbf{Bi-Articular Power.} Reproduce both numerical power examples.
+ Explain why zero total musculotendon length rate does not establish zero
+ fiber work, tendon energy change or metabolic expenditure individually.
+ \item \textbf{Co-Contraction.} Reproduce the $1.8$\,N\,m/rad stiffness example.
+ Then take $r_1(q)=0.03+0.005q$\,m and $r_2=-0.03$\,m at $q=0$, with
+ both tensions $100$\,N and both $k_{MT}=1000$\,N/m.
+ Include the geometric term and verify $K=1.3$\,N\,m/rad by differentiating
+ the local torque law.
+ \item \textbf{Mass Matrix.} Use a planar two-link arm with relative joint
+ angles, link lengths $0.3$\,m, masses $1$\,kg, midpoint centers of mass and
+ centroidal inertias $mL^2/12$.
+ Derive $M(q)$ and inspect its eigenvalues at elbow angles $0$, $\pi/2$
+ and $\pi$. Report the coordinate scaling when comparing condition numbers.
+ \item \textbf{Algorithm Comparison.} For the same manufactured links plus
+ a third identical link, implement or call CRBA and compare with another
+ dynamics implementation using identical joint frames and inertias.
+ Check $\tfrac12v^TMv$ against summed segment kinetic energies.
+ \item \textbf{Forward Simulation.} For the two-link arm, explicitly choose
+ direct tendon-force inputs and use the listing's $R$ with constant tensions.
+ Declare gravity, initial conditions and integration tolerances.
+ Then explain which additional equations and parameters are needed to replace
+ prescribed forces by neural excitations; do not call the force-driven example
+ a validated muscle-driven reach.
 \end{enumerate}

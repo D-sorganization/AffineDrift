@@ -1,0 +1,201 @@
+{
+  "issue": 4864,
+  "status": "Delivered through regular PR4869; final-head CI passed and exact remote-main Git evidence verified. Parent lease and presence released.",
+  "red": {
+    "terminology_expected_failures": 2,
+    "matrix_expected_mobile_failures": 1,
+    "matrix_width": 317.46875,
+    "column_plus_rounding_allowance": 272.65625
+  },
+  "browser_regressions": {
+    "passed": 6,
+    "seconds": 8.9
+  },
+  "focused": {
+    "passed": 78,
+    "deselected": 23,
+    "seconds": 32.23
+  },
+  "content_lint": {
+    "passed": 208,
+    "skipped": 4,
+    "deselected": 6882,
+    "seconds": 116.66
+  },
+  "publication_gates": [
+    {
+      "exit_code": 0,
+      "check": ["check_latex_environments"],
+      "log": "docs/development/technical-review/volume2-gate-check_latex_environments.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "log": "docs/development/technical-review/volume2-gate-check_terminology.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["generate_worked_examples", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-generate_worked_examples.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "log": "docs/development/technical-review/volume2-gate-check_tree_parity.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "log": "docs/development/technical-review/volume2-gate-check_latex_structure.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["validate_frontmatter"],
+      "log": "docs/development/technical-review/volume2-gate-validate_frontmatter.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["validate_accessibility", "--qmd-only"],
+      "log": "docs/development/technical-review/volume2-gate-validate_accessibility.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_scaffolding_styling"],
+      "log": "docs/development/technical-review/volume2-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_bibliography_quality"],
+      "log": "docs/development/technical-review/volume2-gate-check_bibliography_quality.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_bibliography_cross_file"],
+      "log": "docs/development/technical-review/volume2-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_citation_resolution"],
+      "log": "docs/development/technical-review/volume2-gate-check_citation_resolution.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_qmd_citation_keys"],
+      "log": "docs/development/technical-review/volume2-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["check_title_case"],
+      "log": "docs/development/technical-review/volume2-gate-check_title_case.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["generate_research_readiness_library", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "exit_code": 0,
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "log": "docs/development/technical-review/volume2-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "full": {
+    "status": "passed",
+    "source_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
+    "passed": 6810,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 51,
+    "failed": 0,
+    "errors": 0,
+    "seconds": 872.43,
+    "src_coverage_percent": 93.24,
+    "command": "python -u -X utf8 -m pytest tests/ --cov=src --cov-report=xml --cov-report=term --timeout=60 --junitxml=docs/development/technical-review/volume2-full-results.xml",
+    "scope": "Repository default offline marker exclusions, tests/ only. Separate content and browser runs cover their explicit scopes. No source edits, renders or Git hooks ran concurrently."
+  },
+  "render_verification": "reports/technical-review/volume2-consistency-render-verification.json",
+  "delegation": {
+    "successful_supplied_text_agy_flash_helpers": 12,
+    "failed_attempts": [
+      "Test draft produced no usable output after a command request.",
+      "Validation draft CLI timeout lacked duration unit."
+    ],
+    "adjudication": "Lead review; no permission bypass, invented facts or speculative CSS adopted.",
+    "delivery_adjudication": "PR draft typo corrected; corpus draft incorrectly calls issue numbers PRs and invents a new acceptance dependency for unchanged #4863 chapters. Preserve their old accepted source and update delivery only."
+  },
+  "remaining": [
+    "Regular PR and protected remote-main delivery",
+    "Separate shared nomenclature #4865",
+    "Separate baseline title-card investigation #4868",
+    "Remaining corpus and empirical validation"
+  ],
+  "accepted_source_commit": "a167deda0e90b6282d5c02e94bbfb82e5ac59862",
+  "binding_scope": {
+    "new_findings": 4,
+    "existing_findings_preserved": 4,
+    "other_route_identities_preserved": 250,
+    "historical_route_review_preserved": true,
+    "corpus_rows_updated": [
+      "articles/motion-control/Control_Is_Motion_Complete.tex",
+      "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+      "articles/motion-control/chapter5.tex",
+      "articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex",
+      "articles/The_Geometry_of_Motion/Volume_II/main.tex",
+      "articles/The_Geometry_of_Motion/quarto/volume2.qmd"
+    ]
+  },
+  "post_binding": {
+    "passed": 100,
+    "protected_files_verified": 82,
+    "frozen_files_verified": 11,
+    "source_unchanged_since_full": true,
+    "skipped": 1,
+    "scope": "Selected underactuation, book audit, claim inventory, scientific trust, SPEC and deployment modules including their content cases; book and claim publication checks also pass.",
+    "seconds": 25.98
+  },
+  "pull_request": "https://github.com/D-sorganization/AffineDrift/pull/4869",
+  "draft": false,
+  "output_boundary_ci_repair": {
+    "failed_run": 37175635139,
+    "failed_head": "53e4676ee1e2ffa32a05257cca64913fcbc25769",
+    "failed_gate": "Enforce scientific claim-audit coverage",
+    "red": "New finding-output-boundary regression fails on docs/development preparation evidence; existing route-review pruning test passes.",
+    "green": {
+      "passed": 70,
+      "seconds": 31.38,
+      "command": "pytest tests/test_claim_audit_output_boundary.py::test_finding_evidence_is_outside_generated_output tests/test_claim_audit_inventory.py tests/test_book_publication_audit.py tests/test_scientific_trust_metadata.py tests/test_spec_changelog.py -m \"not slow and not live_simulation and not e2e and not requires_network\""
+    },
+    "repair": "Stable report copy with exactly equal parsed JSON after normal Prettier formatting; four finding path/digest substitutions; original accepted source and eleven frozen files unchanged.",
+    "scope": "No repeat of the full scientific suite claimed. CI must rerun on the new final pushed head."
+  },
+  "delegation_ci_turnover": "One additional successful supplied-text agy CLI Gemini3.8Flash helper drafted turnover; lead corrected spacing and updated completed validation from actual results.",
+  "remote_main_receipt": "reports/technical-review/volume2-consistency-remote-main-receipt.json",
+  "delivery": {
+    "reviewed_head": "1f9eff7cc5b2717acc98363b58b1c1f6ba377f43",
+    "merge_commit": "6be3a480a707588776325210171f3fa76ec87f18",
+    "merged_at": "2026-10-04T05:45:08Z",
+    "ci_standard_run": 37178192004,
+    "ci_conclusion": "success",
+    "lease_release": "https://github.com/D-sorganization/AffineDrift/issues/4864#issuecomment-5977057554",
+    "presence_release": "https://github.com/D-sorganization/Repository_Management/issues/1576#issuecomment-5977058064"
+  }
+}

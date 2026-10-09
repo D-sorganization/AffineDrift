@@ -1,0 +1,151 @@
+{
+  "incoming_main": "dd16c1ee5919eccd80ce1314df5457f12231d23f",
+  "previous_topic": "0e6d772c523537910a68646aaf77d7af36390ddc",
+  "incoming_paths": [
+    "AGENT_HANDOFF.md",
+    "SPEC.md",
+    "data/trust/claim_audit_inventory.json",
+    "data/trust/generated/claim_audit_report.json",
+    "docs/architecture/C4.md",
+    "docs/development/DEVELOPMENT_LOG.md",
+    "docs/development/HANDOFF.md",
+    "docs/development/necromatcher-research-handoff.md",
+    "resources/resources-datasets.qmd",
+    "schemas/historical-player-research-v1.schema.json",
+    "src/affine_control/historical_research/__init__.py",
+    "src/affine_control/historical_research/admission.py",
+    "src/affine_control/historical_research/consumer.py",
+    "src/affine_control/historical_research/models.py",
+    "src/affine_control/historical_research/rendering.py",
+    "tests/test_historical_research_admission_regressions.py",
+    "tests/test_historical_research_budgets.py",
+    "tests/test_historical_research_handoff.py",
+    "tests/test_historical_research_schema.py"
+  ],
+  "shared_paths": [
+    "AGENT_HANDOFF.md",
+    "SPEC.md",
+    "data/trust/claim_audit_inventory.json",
+    "data/trust/generated/claim_audit_report.json",
+    "docs/development/DEVELOPMENT_LOG.md",
+    "docs/development/HANDOFF.md"
+  ],
+  "unchanged_frozen_screw_files": 5,
+  "unchanged_frozen_parent_files": 13,
+  "changed_route_ids": ["ad-route-c1ddd8da5e36"],
+  "incoming_implementation_exact": true,
+  "incoming_devlog_entry_exact": true,
+  "owned_devlog_entry_passes": true,
+  "current_devlog_findings": 68,
+  "scope": "Combined main integration accepted after full Python3.12 regression and static/publication gates. Source scientific and bounded browser acceptance remain at their separately pinned revisions.",
+  "integration_checkpoint": "SELF",
+  "full_regression": {
+    "command": "py -3.12 -X utf8 -m pytest --cov --cov-report=xml --timeout=60 --basetemp <fresh isolated task directory>",
+    "passed": 6728,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 60,
+    "seconds": 577.71,
+    "coverage_percent": 79.51,
+    "exit_code": 0
+  },
+  "static": [
+    {
+      "check": "ruff",
+      "exit_code": 0
+    },
+    {
+      "check": "black",
+      "exit_code": 0
+    },
+    {
+      "check": "mypy",
+      "exit_code": 0
+    },
+    {
+      "check": "tracked-python-quality",
+      "files": 911,
+      "issues": {},
+      "exit_code": false
+    }
+  ],
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/screw_reference_historical_integration-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "source_site_gate": "passed",
+  "lease_expires": "2026-10-03T04:47:19.221341Z",
+  "presence_expires": "2026-10-03T04:47:23.254064Z"
+}

@@ -16,130 +16,103 @@ categories:
 - theory-core
 ---
 
-## Introduction
+## What the Decomposition Can Tell Us
 
-This document outlines practical applications of the control-affine decomposition used in modern multibody golf swing analysis. The decomposition
+A useful golf model separates the effect of the declared input at a given state from the motion the same model would produce with that input set to zero. It can also simulate a future after changing an input. These are different calculations, and they answer different questions.
 
-$$
-F_{\text{total}} = F_{\mathrm{drift}} + F_{\mathrm{input}}
-$$
-
-is directly actionable for simulation, interpretation of measured forces, model personalization, and advanced data-driven modeling. The material here complements the [Drifter Manifesto theory series](../pages/drifter-manifesto.html) by linking theory to practical biomechanics contexts, including the insights developed in prior work on momentum-driven interaction forces.
-
-## Counterfactual Analysis (ZTCF) Family
-
-The Zero Torque Counterfactual (ZTCF) isolates passive mechanical effects by evolving the system under
+For a control-affine model with complete state $x$,
 
 $$
-u(t) \equiv 0.
+\dot x=F(x,u,t)=f(x,t)+G(x,t)u,
 $$
 
-The resulting modeled drift wrench can include inertial, gravitational, Coriolis, centrifugal, and elastic shaft terms. Comparing it with a compatible measured or simulated net wrench shows how the **declared model** partitions those generalized quantities. It does not identify muscle force or physiological effort.
+$f$ is the zero-input vector field and $G$ maps the declared input into state derivatives. The state must include any retained shaft, muscle-activation, controller or contact variables needed for a Markov model. The input might be generalized torque, excitation, a force amplitude or a command; changing that definition changes the partition.
 
-## Interpreting Net Model Input
+This appendix connects the [Drifter Manifesto theory series](../pages/drifter-manifesto.html) to simulation and measurement. The purpose is reproducible mechanical questions with stated assumptions, rather than a unique decomposition of human intent.
 
-Given measured or simulated total force $F_{\text{total}}$, and drift force $F_{\mathrm{drift}}$ from ZTCF-based computation, input forces are obtained via
+## Same-State Input Removal
+
+At the same state, time, parameters and smooth contact mode,
 
 $$
-F_{\mathrm{input}} = F_{\text{total}} - F_{\mathrm{drift}}.
+F(x,u,t)-F(x,0,t)=G(x,t)u.
 $$
 
-This residual can support estimation of a net generalized input when the total and drift quantities use the same coordinates, frame, reference point, sign convention, units, constraints, and model parameters. It does not by itself reconstruct individual muscles, distribute load between the hands, or identify intent.
+This is an exact algebraic identity for the declared affine model. No second trajectory needs to be integrated. It distinguishes the immediate effect of the present input from the zero-input derivative at that state.
 
-## Shaft Mechanics
+For a force or wrench output, additionally specify its measurement map. If a compatible output has the form
 
-In a model that treats shaft elasticity as autonomous state dynamics, the retained elastic terms appear in the drift field. That bookkeeping choice does not make shaft reaction forces direct indicators of muscle action. Different state, input, contact, and shaft models can partition the terms differently and must declare that partition.
+$$
+w(x,u,t)=w_0(x,t)+D(x,t)u,
+$$
 
-## Simulation and Validation
+then $w(x,u,t)-w_0(x,t)=D(x,t)u$. Both terms must share a frame, reference point, coordinate convention, units and consistent constraint solution. Dynamics being affine in $u$ does not automatically make every processed sensor output affine. Contact-mode changes, nonlinear constitutive relations or input-dependent output transformations need separate treatment.
 
-The affine formulation supports:
+Inferring $u$ from this residual requires an identifiable map. If $D$ has a null space, multiple inputs produce the same output. Errors in parameters, contact forces or measurements also enter the residual. A net generalized torque estimate is not an estimate of each muscle force or each hand's load.
 
-- torque estimation through forward-dynamics matching,
+## Forward Zero-Torque Counterfactuals
 
-- counterfactual mechanical tests,
+A forward Zero Torque Counterfactual (ZTCF) starts from a declared state $x(t_0)$ and integrates
 
-- player-specific simulations based on geometry and inertial parameters.
+$$
+\dot x_0=f(x_0,t),\qquad x_0(t_0)=x(t_0).
+$$
 
-## Data Interpretation
+The controlled trajectory evolves under $\dot x=f(x,t)+G(x,t)u$. Their difference $d=x-x_0$ obeys
 
-The decomposition provides a reproducible basis for classifying retained model terms into drift, declared input, and constraint/contact components. Applying those labels to measurements requires compatible frames, parameters, boundary conditions, and uncertainty; the categories are not unique anatomical or causal labels.
+$$
+\dot d=f(x,t)-f(x_0,t)+G(x,t)u.
+$$
 
-## Machine Learning Applications
+At the shared initial state, the drift difference vanishes. Later it generally does not. Consequently, subtracting a wrench from the forward zero-input trajectory from a wrench on the controlled trajectory does not isolate the same-state input contribution. It is a finite model-conditioned trajectory comparison that includes changed geometry, velocity and internal state.
 
-Drift and input terms can be supplied as model-derived features to a learning system. Any improvement in sample efficiency, prediction, or interpretability must be demonstrated on leakage-safe held-out data. A learned latent input must not be relabeled as muscle activity, effort, or intent without independent measurements and an identification model.
+For a dimensionless illustration, $\dot x=x+u$, $x(0)=0$, and constant $u=1$ give $x=e^t-1$ while $x_0=0$. The same-state input effect is always $1$, but the difference in trajectory derivatives is $e^t$. Even this linear example distinguishes an instantaneous input map from accumulated response.
 
-## Summary
+Calling a zero-input rollout “passive” also needs care. Stored kinetic and elastic energy may have been created by earlier actuation. If muscle activation is retained as a state, setting present excitation to zero does not instantly remove activation or force. Specify exactly what is clamped, retained or reset; a mechanical intervention is not a claim that a real golfer could reproduce it by relaxing.
 
-The control-affine decomposition provides a transparent bookkeeping framework for simulation, measurement-model comparison, net generalized-input estimation, shaft modeling, and ML feature construction. Its conclusions remain conditional on the declared model, data, uncertainty, and identifiability limits.
+## Shaft Mechanics and Constraint Forces
 
-## Limitations
+With shaft deformation and deformation rate in the state, retained elastic and damping terms can belong to the drift field. Their later forces depend on the initial deformation and the subsequent coupled motion. Removing a grip torque does not erase stored shaft energy.
 
-:::{.callout-warning}
-While the applications described above leverage the control-affine framework effectively, they operate within important constraints:
+A rigid-shaft model, a flexible-shaft model and a muscle-driven model may therefore assign different terms to drift and input. Constraint reactions must be solved consistently in each declared contact mode. They cannot simply be copied from an observed controlled motion into a different counterfactual while claiming an independently solved response.
 
-1. **All applications assume control-affine structure holds**: The entire methodology assumes that inputs enter the dynamics linearly ($\dot{x} = f(x) + G(x)u$). If the system exhibits strong input saturation (e.g., muscles have hard limits on torque that vary with velocity), input nonlinearities, or state-dependent input gain modulation, the affine decomposition becomes approximate or invalid. Biological systems often exhibit these nonlinearities at high intensity.
+Equipment comparisons should hold the intended boundary conditions and output definitions explicit. A change in predicted clubhead speed after changing stiffness is a result of that model and intervention, not proof that the same golfer would preserve the original motor command or contact behavior.
 
-2. **ML applications require sufficient training data to separate drift from input effects**: Machine learning models trained to predict or classify drift versus input components require labeled data or sufficient observational diversity. With limited swing samples (typical for individual golfers), the ML model may overfit to spurious correlations between drift and input, failing to generalize. The sample efficiency improves with transfer learning from a large reference population, but this reintroduces population-level bias.
+## State-Dependent Gains and Input Limits
 
-3. **Real-time ZTCF computation may not be feasible for high-DOF systems**: Counterfactual simulation (particularly ZTCF) requires forward integration of the full system model at high temporal resolution. For a 26+ DOF model on a motion capture system operating at 60+ Hz, this computational load can exceed real-time constraints on standard hardware. Coaches or systems requiring sub-50ms latency for online feedback may be forced to use approximate or reduced-order drift estimates, sacrificing accuracy.
+A state-dependent $G(x,t)$ is part of the definition of control affinity. It does not invalidate it. Likewise, a feasible set $u\in U(x,t)$ can depend on posture or velocity while the dynamics remain affine in the actual admissible input.
+
+The distinction changes when the chosen input is a command $c$ passed through a nonlinear actuator law $u=\sigma(x,c,t)$. The composed dynamics $f+G\sigma$ may be nonaffine in $c$, even though they remain affine in $u$. Saturation limits and activation dynamics should therefore be specified rather than used as blanket reasons to accept or reject an affine formulation.
+
+For example, a force amplitude multiplied by a state-dependent force-length or force-velocity coefficient is still affine in that amplitude at fixed state. Excitation-dependent activation time constants, equilibrium muscle equations or other constitutive choices may alter affinity in the neural command. Examine the actual equations and state/input choice; “biological” alone does not decide the mathematical property.
+
+## Simulation, Measurement and Validation
+
+A credible analysis reports the model, input channel, initial state, time horizon, constraint modes, parameter uncertainty, solver tolerances and observable being compared. Useful checks include same-state algebraic closure, forward integration convergence, contact consistency and comparison with independent measurements.
+
+These checks answer different questions. Algebraic closure verifies bookkeeping. Numerical convergence verifies a solver's consistency with the equations. Agreement with held-out motion or force data provides evidence about those equations and parameter estimates. None alone establishes individual muscle attribution or a universally optimal swing.
+
+Compute-time claims likewise need a benchmark: hardware, state and input dimensions, contact and muscle complexity, horizon, solver settings, derivative calculations and end-to-end latency. Degrees of freedom or a camera sample rate alone cannot establish whether a counterfactual is fast enough for online feedback. Reduced models trade fidelity for speed in ways that should be measured for the intended output.
+
+## Learning From Model-Derived Features
+
+Drift, input and counterfactual features can be supplied to a learning system, but their labels inherit the model's assumptions. Evaluate predictive benefit on player- and session-separated held-out data, with preprocessing and parameter fitting confined to the training split. Otherwise repeated swings from one player or fitted model parameters can leak information into evaluation.
+
+Transfer learning may improve performance, worsen it under domain shift, or introduce population bias; improvement is an empirical question. A latent input is not muscle activity, metabolic effort or intent without independent measurements and a validated identification model. The practical value of the decomposition is that it makes these model-conditioned hypotheses precise enough to test.
+
+::: {.laymans-terms}
+```{=html}
+<p class="laymans-terms-intro">This appendix describes tools built on the drift and input split. Each tool inherits the limits of the model behind it.</p>
+<div class="laymans-item"><h3>The What-If Game</h3><p>Inside a declared model, we can change an input or parameter and simulate it. For example, set one modeled joint torque to zero, or change the shaft stiffness. These are <a href="../pages/glossary.html#zero-torque-counterfactual">counterfactual</a> comparisons, not observations of a real golfer. A flight simulator with the wind switched off is similar, but a real pilot would still react in ways this model does not.</p></div>
+<div class="laymans-item"><h3>Separating Input from Drift</h3><p>At a declared state, the equations separate a net input term from the drift term. That result does not identify single muscles, hand forces, neural intent, or effort. Those need extra measurements and models. The split is like a ledger of terms for gravity, motion, and input. It cannot see the driver's muscles or intentions.</p></div>
+<div class="laymans-item"><h3>Features for Learning Systems</h3><p>A model can supply drift and input features to a learning system. Held-out data must show whether they improve prediction. Do not label them intent or muscle activity unless those were measured independently.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> The split is a transparent ledger for a declared mechanical model. It supports testable comparisons. It does not attribute muscle, intent, or real-world cause without more evidence.</div>
+```
 :::
-
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        This appendix outlines how we can use the "Drift vs. Input" math to build practical tools for training and analysis.
-      </p>
-
-      <div class="laymans-item">
-        <h3>The "What If" Game (Counterfactuals)</h3>
-        <p>
-          Within a declared model, we can change an input or parameter and simulate questions such as "What if this modeled joint torque were set to zero?" or "What if the modeled shaft stiffness changed?" These are model-conditioned comparisons, not direct observations of what a real golfer would do.
-        </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> A flight simulator. You can program the wind to stop (counterfactual) to see how the plane flies on its own, without putting a real pilot in danger.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Separating Modeled Input from Drift</h3>
-        <p>
-          The equations can separate a net modeled input term from the model's drift term at a declared state. That result does not identify individual muscles, bilateral hand forces, neural intent, or physiological effort without additional measurements and models.
-        </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> A simulator's force ledger. It can report which terms the chosen equations assigned to gravity, motion, and declared input, but it cannot inspect the driver's muscles or intentions.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>Cleaning Data for AI</h3>
-        <p>
-          A model can provide drift and input features for a learning system. Whether those features improve prediction must be tested on held-out data, and they should not be labelled as intent or muscle activity unless those quantities were independently measured.
-        </p>
-        <div class="analogy">
-          <strong>Think of it like:</strong> Comparing a sensor trace with a simulator's baseline. The difference can be a useful feature, but it does not by itself say which biological process produced that difference.
-        </div>
-      </div>
-
-      <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The decomposition is a transparent ledger for a declared mechanical model. It can support testable comparisons while keeping muscle, intent, and real-world causal attribution outside its authority unless additional evidence identifies them.
-      </div>
-    </div>
-
-  </div>
-</section>
 
 ## Related Articles
 
-::: {.callout-note}
-## See Also
+::: {.callout-note title="See Also"}
 
 - **[Part 5: Numerical Consistency Check](theory-part5.html)** — The reproducibility protocol that governs the simulations these applications rely on
 - **[Part 3: Drift Invariance and Force Taxonomy](theory-part3.html)** — Defines the drift/input partition this appendix applies to practical contexts

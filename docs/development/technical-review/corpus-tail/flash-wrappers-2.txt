@@ -1,0 +1,66 @@
+### Technical Editorial Audit: Book Front Matter and Wrappers
+
+---
+
+#### 1. Inconsistent Chapter Enumeration and Title Mismatch
+- **Files**: 
+  - `articles/The_Geometry_of_Motion/quarto/index.qmd`
+  - `articles/The_Geometry_of_Motion/quarto/volume1.qmd`
+- **Issue**: **[Proven Error]** In `index.qmd`, Chapter 3b is listed as an auxiliary chapter:
+  - `Chapter 3: Superposition from Linear to Affine`
+  - `Chapter 3b: Induced Acceleration in Biomechanics`
+  - `Chapter 4: Contraction Theory and Metric Certificates` ... through `Chapter 9`.
+  
+  In `volume1.qmd`, the chapters are renumbered sequentially 1 through 10, causing an off-by-one mismatch for all subsequent chapters:
+  - 4 is assigned to `Induced Acceleration in Biomechanics` (labeled `3b` in index).
+  - 5 is assigned to `Contraction` (labeled `Chapter 4` in index).
+  - 6 is assigned to `Optimal Control` (labeled `Chapter 5` in index).
+  - 7 is assigned to `Duality` (labeled `Chapter 6` in index).
+  - 8 is assigned to `Counterfactuals` (labeled `Chapter 7` in index).
+  - 9 is assigned to `Applications` (labeled `Chapter 8` in index).
+  - 10 is assigned to `Parallel Mechanisms...` (labeled `Chapter 9` in index).
+  
+  Furthermore, chapter titles are inconsistent (e.g., `Foundations, Tangent Spaces, and Exactness` vs. `Foundations`; `Parallel Mechanisms and Constrained Dynamics` vs. `Parallel Mechanisms, Constrained Dynamics, and Geometric Control`).
+- **Correction**: Harmonize chapter numbers and titles between `index.qmd` and `volume1.qmd`. In `volume1.qmd`, retain `3b` or renumber consistently across both index and volume pages.
+
+---
+
+#### 2. Slug / Filename Inconsistency in Volume 0 Chapter 4 Link
+- **Files**:
+  - `articles/The_Geometry_of_Motion/quarto/index.qmd`
+  - `articles/The_Geometry_of_Motion/quarto/volume0.qmd`
+- **Issue**: **[Proven Error]** Chapter 4 is titled *"Rotations, Quaternions, and SO(3)"*, but the target HTML hyperlink in both files is `vol0_ch04_rotations_se3.html`. While $\mathrm{SE}(3)$ denotes rigid-body motions/twists (the subject of Chapters 5 and 6), the chapter title explicitly specifies $\mathrm{SO}(3)$ (rotations).
+- **Correction**: Confirm whether the target file is `vol0_ch04_rotations_so3.html` or `vol0_ch04_rotations_se3.html`, and align the URI slug with the canonical filename and chapter scope.
+
+---
+
+#### 3. Overstated Claim on Exact Linear Time-Varying Dynamics for Variations on Manifolds
+- **File**: `articles/The_Geometry_of_Motion/quarto/volume1.qmd`
+- **Text**: *"By formulating variational equations in moving frames, first-order perturbations obey exact linear time-varying dynamics."*
+- **Issue**: **[Proven Error / Inconsistent Model Assumptions]** Variational perturbation equations along a reference trajectory represent a first-order Taylor/Lie linearization of the nonlinear flow. Perturbation dynamics are an exact linear system only in the infinitesimal limit ($T_x M$ / tangent bundle); for finite perturbations $\delta x$ on a curved configuration manifold $M$, the true dynamics include higher-order geometric terms (e.g., Riemann curvature tensors or higher-order Lie brackets depending on connection/coordinate choice). Saying perturbations obey "exact linear time-varying dynamics" is misleading unless explicitly qualified as *infinitesimal* variations or defined via the linear variational operator.
+- **Correction**: Change to *"first-order infinitesimal variations obey exact linear time-varying (LTV) variational equations"* or *"first-order perturbation approximations obey linear time-varying dynamics."*
+
+---
+
+#### 4. Scope and Completeness Discrepancy for Volume II
+- **Files**:
+  - `articles/The_Geometry_of_Motion/quarto/index.qmd`
+  - `articles/The_Geometry_of_Motion/quarto/volume1.qmd`
+- **Issue**: **[Misleading Scope Statement]** `index.qmd` states: *"Volumes 0–II are rendered as HTML chapters here."* However, under `Volume II: Control Is Motion`, only `[Volume II Overview](volume2.html)` is listed—no chapters are provided, unlike Volumes 0 and I. In `volume1.qmd`, the text directs the reader: *"Continue directly to Volume II: Control Is Motion (volume2.html) for trajectory architecture, transverse coordinates, and orbital funnel synthesis."*
+- **Correction**: Clarify in the status callout and TOC of `index.qmd` whether Volume II consists only of an overview/outline at present, or list its rendered chapters if they exist.
+
+---
+
+#### 5. Relative Link Resolution in Future Volume PDF Editions
+- **File**: `articles/The_Geometry_of_Motion/quarto/index.qmd`
+- **Links**: `../Volume_III/main.pdf`, `../Volume_IV/main.pdf`, `../Volume_V/main.pdf`
+- **Issue**: **[Unverified Question / Potential Broken Reference]** If `articles/The_Geometry_of_Motion/quarto/index.qmd` renders to an HTML site output directory (e.g., `_site/` or root `docs/` depending on Quarto project config), relative links traversing up one directory (`../Volume_III/...`) may not resolve unless the unrendered PDF sources or builds are explicitly copied and preserved at that relative path in the publication web tree.
+- **Correction**: Verify the deployment build directory structure or route links through site-relative URLs (e.g., `/articles/The_Geometry_of_Motion/Volume_III/main.pdf`).
+
+---
+
+#### 6. Unchecked Metadata Date in Launch Monitor Review
+- **File**: `articles/Launch_Monitor_Technology_Review/main.tex`
+- **Line**: `\date{August 19, 2026}`
+- **Issue**: **[Unverified Question / Publication Metadata]** The date is hardcoded to a fixed date (`August 19, 2026`). While it matches the document's revision vintage, hardcoding future or fixed dates in LaTeX templates without a generated or parameter-driven timestamp macro can lead to stale publication metadata across document re-compilations.
+- **Correction**: Verify if `\date{August 19, 2026}` is the intended fixed publication/release date, or replace with `\date{\today}` if continuously updated.

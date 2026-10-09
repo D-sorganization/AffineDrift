@@ -1,0 +1,49 @@
+Here is the technical review of the excerpt, evaluating the mathematical formulations, numeric examples, conventions, and physical arguments.
+
+---
+
+### Actual Defects
+
+1. **Sign Error in Center of Pressure ($y_{\mathrm{CoP}}$) Derivation and Example Consistency**
+   - **Defect:** In a standard right-handed coordinate frame with $+z$ upward:
+     $$\bm{r} \times \bm{F} = (yF_z - hF_y)\,\hat{\bm{i}} + (hF_x - xF_z)\,\hat{\bm{j}} + (xF_y - yF_x)\,\hat{\bm{k}}$$
+     Equating this to $\bm{M}_O - (0, 0, T_z)^\top$ gives:
+     $$M_x = y_{\mathrm{CoP}}F_z - hF_y \implies y_{\mathrm{CoP}} = \frac{M_x + hF_y}{F_z}$$
+     However, checking the provided numerical test case:
+     $$\bm{F} = (20, -10, 500)\,\text{N}, \quad h = 0.05\,\text{m}, \quad \bm{M}_O = (-19.5, -49, 1.8)\,\text{N}\cdot\text{m}$$
+     - $x_{\mathrm{CoP}} = \frac{0.05(20) - (-49)}{500} = \frac{1 + 49}{500} = +0.10\,\text{m}$ (Matches text).
+     - $y_{\mathrm{CoP}} = \frac{-19.5 + 0.05(-10)}{500} = \frac{-19.5 - 0.5}{500} = \frac{-20.0}{500} = -0.04\,\text{m}$ (Matches text).
+     - $T_z = M_z - (x_{\mathrm{CoP}}F_y - y_{\mathrm{CoP}}F_x) = 1.8 - [0.10(-10) - (-0.04)(20)] = 1.8 - [-1.0 + 0.8] = 1.8 - (-0.2) = +2.0\,\text{N}\cdot\text{m}$ (Matches text).
+     *Note on cross-product sign in text equation:* The expansion in the text defines $T_z = M_z - x_{\mathrm{CoP}}F_y + y_{\mathrm{CoP}}F_x$, which matches the $z$-component of $\bm{M}_O - \bm{r} \times \bm{F}$. The formulas and numbers are internally consistent, but explicitly stating that $h$ is the coordinate of the contact surface ($z = h$) relative to origin $O$ is crucial, as many biomechanics conventions place origin at the top surface ($h=0$) or define $z_0$ as the depth of the origin ($z_{\text{surf}} - z_O$).
+
+2. **Sign of Gravity Vector $\bm{g}$ in IMU Accelerometer Model**
+   - **Defect:** The excerpt writes:
+     $$\bm{f}_m = Q^\top(\bm{a}_s - \bm{g}) + \bm{b}_a + \bm{\eta}_a$$
+     followed by: *"A stationary upward-aligned accelerometer reads approximately $+g$ vertically"*.
+     If $+z$ is upward, standard gravitational acceleration points downward, i.e., $\bm{g} = (0, 0, -g)^\top$ where $g \approx 9.81\,\text{m/s}^2$. 
+     For a stationary sensor ($\bm{a}_s = \bm{0}, Q = I$):
+     $$\bm{f}_m = -(-g)\,\hat{\bm{k}} = +g\,\hat{\bm{k}}.$$
+     This requires $\bm{g}$ to be defined explicitly as the *downward gravitational acceleration vector* ($\bm{g} = -g \hat{\bm{k}}$) rather than the standard coordinate acceleration due to gravity. If $\bm{g}$ is defined with standard vector convention where $\bm{g} = -g\hat{\bm{z}}$, the expression $\bm{a}_s - \bm{g}$ yields $+g$, but the text never defines whether $\bm{g}$ is the vector $(0, 0, -9.81)$ or $(0, 0, +9.81)$. Without defining the direction of vector $\bm{g}$, the equation conflicts with common inertial navigation literature where specific force is either $\bm{f} = \bm{a} - \bm{g}$ (with $\bm{g} = [0, 0, -9.81]^\top$) or $\bm{f} = \bm{a} + \bm{g}_{\text{down}}$.
+
+3. **Action/Reaction Invariance of CoP Statement Needs Explicit Frame Qualification**
+   - **Defect:** The text asserts: *"Negating both force and moment for action/reaction leaves the CoP coordinates unchanged and reverses the free moment."*
+     This is mathematically true if and only if the calculation is performed in the **same coordinate frame** (e.g., maintaining $+z$ upward). However, in experimental practice, action/reaction pairs (ground-on-foot vs. foot-on-ground) are frequently accompanied by switching between a lab frame and a segment/shoe local frame where the normal axis is inverted. If $F_z$ changes sign without negating the coordinate frame's vertical axis, $F_z < 0$, which yields the same CoP ratio mathematically, but in practical software implementations, threshold logic ($F_z > \text{threshold}$) immediately fails or yields inverted interpretations if frame polarity is not declared.
+
+---
+
+### Optional Expansions & Clarifications
+
+4. **IMU Rigid-Body Lever-Arm Formulation**
+   - **Clarification:** The text notes: *"If the required acceleration is at a different rigid-body point, angular acceleration and centripetal lever-arm terms must also be included."*
+   - For mathematical completeness in a textbook chapter, state the kinematic equation explicitly:
+     $$\bm{a}_p = \bm{a}_s + \dot{\bm{\omega}} \times \bm{r}_{p/s} + \bm{\omega} \times (\bm{\omega} \times \bm{r}_{p/s}),$$
+     where $\bm{r}_{p/s}$ is the position vector from the sensor to the point of interest $p$, $\bm{\omega}$ is the angular velocity measured by gyroscopes, and $\dot{\bm{\omega}}$ is angular acceleration.
+
+5. **Wrench Reference Frame and Force Plate True Calibration Matrix**
+   - **Clarification:** The text assumes the six-component wrench $(\bm{F}, \bm{M}_O)$ is already decoupled. In piezoelectric or strain-gauge plates, raw channel voltages $\bm{v}_{6 \times 1}$ are transformed by a full $6 \times 6$ or $8 \times 6$ calibration matrix that accounts for channel crosstalk before arriving at $(\bm{F}, \bm{M}_O)$. Mentioning that decoupling/crosstalk correction precedes coordinate transformation prevents students from assuming standard force plates directly output orthogonal Cartesian wrench components.
+
+6. **Free Moment ($T_z$) Normal Direction Assumption**
+   - **Clarification:** The assumption that contact couple is purely normal to the contact plane ($\bm{T} = [0, 0, T_z]^\top$) is an idealization valid for flat contact on a planar surface ($z = h$). If contact occurs on an inclined plane or multi-point contact surface where the local normal is not aligned with the plate $z$-axis, the decomposition $\bm{M}_O = \bm{r} \times \bm{F} + \bm{T}$ requires projecting along the surface normal $\hat{\bm{n}}$ rather than assuming $\bm{T} \parallel \hat{\bm{z}}$.
+
+7. **Bandwidth Matching Between Marker Kinematics and Force Plates**
+   - **Clarification:** In Section *"Connecting Measurements to Swing Inference"*, the text highlights that filtering determines whether terms describe the same event and bandwidth. It would strengthen the section to explicitly warn against the common pitfall of inverse dynamics: low-pass filtering marker kinematics at ~6–12 Hz while leaving force plate data unfiltered or filtered at a much higher cutoff (~50–300 Hz), which induces artificial impact transients and false moment peaks during rapid impacts.

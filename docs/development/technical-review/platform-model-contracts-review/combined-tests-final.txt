@@ -1,0 +1,45 @@
+........................................................................ [ 82%]
+........F......                                                          [100%]
+================================== FAILURES ===================================
+_________ test_canonical_inventory_and_generated_reports_are_current __________
+scripts\generate_claim_audit_inventory.py:125: in _validate_review
+    validate_review_evidence(record, root)
+scripts\claim_audit_evidence.py:225: in validate_review_evidence
+    evidence_paths = validate_digest_map(
+scripts\claim_audit_evidence.py:212: in validate_digest_map
+    raise ReviewEvidenceError(f"{label} digest mismatch: {path}")
+E   scripts.claim_audit_evidence.ReviewEvidenceError: /books/biomechanics-biology-to-systems.html review evidence digest mismatch: data/trust/book_publication_audit.json
+
+The above exception was the direct cause of the following exception:
+tests\test_claim_audit_inventory.py:446: in test_canonical_inventory_and_generated_reports_are_current
+    outputs = generate(
+scripts\generate_claim_audit_inventory.py:347: in generate
+    validate_inventory(inventory, sources)
+scripts\generate_claim_audit_inventory.py:216: in validate_inventory
+    _validate_review(record, sources.root)
+scripts\generate_claim_audit_inventory.py:127: in _validate_review
+    raise AuditContractError(str(exc)) from exc
+E   scripts.generate_claim_audit_inventory.AuditContractError: /books/biomechanics-biology-to-systems.html review evidence digest mismatch: data/trust/book_publication_audit.json
+============================ slowest 20 durations =============================
+4.72s call     tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current
+0.51s setup    tests/test_platform_contract_listings.py::test_physical_parameter_domain[-1.0-mass]
+0.38s call     tests/test_book_publication_audit.py::test_report_is_deterministic_and_current
+0.35s call     tests/test_book_publication_audit.py::test_followup_findings_keep_the_original_book_audit_identity
+0.35s call     tests/test_book_publication_audit.py::test_book_audit_is_schema_valid_exactly_scoped_and_self_contained
+0.05s call     tests/test_model_urdf_listing.py::test_mujoco_import_matches_analytic_mechanics
+0.05s call     tests/test_book_publication_audit.py::test_validator_rejects_missing_or_wrong_digest_and_weak_p1
+0.02s call     tests/test_claim_audit_inventory.py::test_review_evidence_is_self_contained_and_covers_included_sources
+0.02s call     tests/test_claim_audit_inventory.py::test_symbol_bound_evidence_ignores_unrelated_edits_in_the_same_module
+0.02s call     tests/test_book_publication_audit.py::test_followup_findings_reject_wrong_repository_or_non_issue_urls[https://github.com/other/AffineDrift/issues/4733]
+0.02s call     tests/test_claim_audit_inventory.py::test_corrected_findings_require_exact_byte_digests
+0.02s setup    tests/test_claim_audit_inventory.py::test_review_evidence_is_self_contained_and_covers_included_sources
+0.02s call     tests/test_book_publication_audit.py::test_followup_findings_reject_wrong_repository_or_non_issue_urls[https://github.com/D-sorganization/AffineDrift/issues/0]
+0.02s call     tests/test_book_publication_audit.py::test_followup_findings_reject_wrong_repository_or_non_issue_urls[https://github.com/D-sorganization/AffineDrift/issues/4733/extra]
+0.02s call     tests/test_book_publication_audit.py::test_followup_findings_reject_wrong_repository_or_non_issue_urls[https://github.com/D-sorganization/AffineDrift/issues/4733\n]
+0.01s call     tests/test_book_publication_audit.py::test_followup_findings_reject_wrong_repository_or_non_issue_urls[https://github.com/D-sorganization/AffineDrift/pull/4733]
+0.01s call     tests/test_book_publication_audit.py::test_followup_findings_reject_wrong_repository_or_non_issue_urls[http://github.com/D-sorganization/AffineDrift/issues/4733]
+0.01s call     tests/test_claim_audit_inventory.py::test_regenerate_patches_only_digest_values_and_keeps_ledger_formatting
+0.01s call     tests/test_claim_audit_inventory.py::test_p0_p1_findings_fail_closed_or_block_publication
+0.01s call     tests/test_claim_audit_inventory.py::test_schema_is_strict_and_status_records_are_auditable
+=========================== short test summary info ===========================
+FAILED tests/test_claim_audit_inventory.py::test_canonical_inventory_and_generated_reports_are_current

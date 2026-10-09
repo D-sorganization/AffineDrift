@@ -1,0 +1,186 @@
+Here is the rigorous review of the chapter draft, checking all equations, claims, proofs, and definitions.
+
+---
+
+### 1. Concrete Errors & Inaccuracies
+
+#### A. PBH Detectability Implementation in Python Listing (Critical Bug)
+In the Python listing:
+```python
+check_stabilizable(self.A.T, self.Q)
+```
+- **Error:** Detectability of $(Q^{1/2}, A)$ is equivalent to observability/detectability of $(C, A)$ with $C^T C = Q$. The PBH test for stabilizability of $(A, B)$ checks that $[\lambda I - A \quad B]$ has full row rank for all $\lambda \in \sigma(A)$ with $\operatorname{Re}(\lambda) \ge 0$.
+  For detectability of $(C, A)$, the condition is that $\begin{bmatrix} \lambda I - A \\ C \end{bmatrix}$ has full column rank for all unobservable modes with $\operatorname{Re}(\lambda) \ge 0$, which is equivalent to stabilizability of $(A^T, C^T)$.
+  Therefore, the matrix passed to the second argument must be $C^T$ (where $C^T C = Q$ or $C = Q^{1/2}$), which has size $n \times p$ (or $n \times n$).
+  However, in `check_stabilizable(matrix, inputs)`:
+  ```python
+  size = matrix.shape[0]
+  state_blocks = modes[:, None, None] * np.eye(size) - matrix
+  input_blocks = np.broadcast_to(inputs, (len(modes), *inputs.shape))
+  pbh = np.concatenate((state_blocks, input_blocks), axis=2)
+  if np.any(np.linalg.matrix_rank(pbh) < size):
+      ...
+  ```
+  Passing `self.A.T` as `matrix` and `self.Q` as `inputs` checks $\operatorname{rank}[\lambda I - A^T \quad Q] = n$.
+  While it is true that $\operatorname{span}(Q) = \operatorname{span}(Q^{1/2})$ when $Q$ is symmetric PSD, the text explicitly comments:
+  `# For PSD Q, Q and its square root have the same null space.`
+  Notice the mathematical confusion: PBH checks image/range concatenation $[\lambda I - A^T \quad Q]$. The column space (range) of $Q$ equals the column space of $Q^{1/2}$ (since $\ker(Q) = \ker(Q^{1/2})$ and for symmetric matrices $(\ker M)^\perp = \operatorname{im} M$). Thus $[\lambda I - A^T \quad Q]$ has the same rank as $[\lambda I - A^T \quad Q^{1/2}]$.
+  **However**, the text claims:
+  > *"For PSD Q, Q and its square root have the same null space."*
+  
+  The reason $[\lambda I - A^T \quad Q]$ works in place of $[\lambda I - A^T \quad Q^{1/2}]$ is that their **ranges** (column spaces) are identical, not because of their null spaces directly (though they are dual via symmetry). More importantly, in the body of `LQRProblem.__post_init__`, `self.Q` is only checked via `check_weight(self.Q, size, False)`, meaning $Q$ is allowed to be PSD ($Q \succeq 0$), but if $Q=0$ and $A$ has unstable modes, it will correctly raise a stabilizability error. But if $Q$ is not symmetric, `check_weight` caught it. The comment should say: *"For symmetric PSD $Q$, $\operatorname{im}(Q) = \operatorname{im}(Q^{1/2})$."*
+
+#### B. Sign of the Scalar Command-Noise Riccati Equation
+In the section on command-dependent noise:
+> With value coefficient $p(t)$, the HJB terms depending on command are $(r+\sigma^2p)u^2+2bpxu$. Thus, when the denominator is positive,
+> $$u_*=-\frac{bp}{r+\sigma^2p}x,\qquad \dot p+2ap+q-\frac{b^2p^2}{r+\sigma^2p}=0.$$
+
+- **Derivation & Error:**
+  For $V(t, x) = p(t)x^2$, we have:
+  $$V_t = \dot{p}(t)x^2, \quad V_x = 2p(t)x, \quad V_{xx} = 2p(t).$$
+  The HJB equation is:
+  $$-V_t = \min_u \left[ L + V_x (ax + bu) + \tfrac{1}{2} V_{xx} \sigma^2 u^2 \right]$$
+  $$-\dot{p}x^2 = \min_u \left[ qx^2 + ru^2 + 2px(ax + bu) + p\sigma^2 u^2 \right]$$
+  Grouping the terms in $u$:
+  $$(r + \sigma^2 p) u^2 + 2bpx u$$
+  Minimizing over $u$ yields:
+  $$u_* = -\frac{bp}{r + \sigma^2 p} x.$$
+  Substituting $u_*$ back into the brackets:
+  $$-\dot{p}x^2 = qx^2 + 2ap x^2 - \frac{b^2 p^2}{r + \sigma^2 p} x^2.$$
+  Dividing by $x^2$ and moving all terms to one side:
+  $$\dot{p} + 2ap + q - \frac{b^2 p^2}{r + \sigma^2 p} = 0 \quad \Longrightarrow \quad -\dot{p} = 2ap + q - \frac{b^2 p^2}{r + \sigma^2 p}.$$
+  In standard control notation (where backward integration runs with terminal condition $p(T) = \phi$), writing $\dot{p} + \dots = 0$ means:
+  $$\dot{p}(t) = -2ap - q + \frac{b^2 p^2}{r + \sigma^2 p}.$$
+  This equation itself is mathematically consistent with $\dot{p} = \frac{d}{dt}p(t)$ running forward from $t$ to $T$.
+  **However**, check the consistency with the standard HJB definition earlier:
+  $$-V_t = \min_u [\dots]$$
+  Here $-V_t = -\dot{p}x^2$. So $-\dot{p} = 2ap + q - \frac{b^2 p^2}{r+\sigma^2 p} \iff \dot{p} + 2ap + q - \frac{b^2 p^2}{r+\sigma^2 p} = 0$. That matches!
+  **Wait**, what about the stationary CARE / infinite horizon? If $\dot{p} = 0$, $2ap + q - \frac{b^2 p^2}{r+\sigma^2 p} = 0$.
+  Notice: if $\sigma = 0$, this is $2ap + q - \frac{b^2 p^2}{r} = 0$, which is $a^T p + p a - p b r^{-1} b^T p + q = 0$. That matches continuous-time algebraic Riccati.
+  **Subtle issue:** What if $r + \sigma^2 p < 0$? The text says "when the denominator is positive". For $q \ge 0$, $p(t) \ge 0$ whenever terminal cost $\ge 0$, so $r + \sigma^2 p > 0$ holds automatically since $r > 0$.
+
+#### C. Itô HJB Equation Formulation
+In Section 2:
+$$dx_t = f(x_t, u_t, t)\,dt + \Sigma(x_t, u_t, t)\,dW_t$$
+$$-V_t = \min_{u \in \mathcal{U}} \left[ L + \nabla V^T f + \tfrac{1}{2} \operatorname{tr}(\Sigma\Sigma^T \nabla^2 V) \right]$$
+- **Mathematical check:**
+  By Itô's formula for $V(t, x_t)$:
+  $$dV = \left( V_t + \nabla V^T f + \tfrac{1}{2} \operatorname{tr}(\Sigma \Sigma^T \nabla^2 V) \right) dt + \nabla V^T \Sigma dW_t.$$
+  Since $\operatorname{tr}(\Sigma \Sigma^T \nabla^2 V) = \operatorname{tr}(\Sigma^T \nabla^2 V \Sigma)$, this matches the standard definition.
+  However, look at the notation: $\nabla V^T f$ treats $\nabla V$ as a column vector. In many conventions $\nabla V$ is a row vector or column vector; $\nabla V^T f$ assumes column vector. This is consistent.
+
+#### D. Additive Noise and Long-Run Average Cost Claim (Exact Formula Discrepancy)
+In Section 4:
+> "For a stable stationary closed loop, the corresponding long-run average cost is $\operatorname{tr}(PDD^T)$ under the standard integrability conditions. This is a different criterion from the deterministic integral above."
+
+- **Derivation & Error:**
+  Let the closed-loop system be:
+  $$dx = (A - BK)x\,dt + D\,dW_t = A_{cl}x\,dt + D\,dW_t.$$
+  The running cost is $L(x, u) = x^T Q x + u^T R u = x^T (Q + K^T R K)x$.
+  The long-run average cost is:
+  $$\lambda = \lim_{T \to \infty} \frac{1}{T} \mathbb{E}\left[ \int_0^T (x^T Q x + u^T R u)\,dt \right] = \operatorname{tr}\left( (Q + K^T R K) X_\infty \right),$$
+  where $X_\infty = \lim_{t \to \infty} \mathbb{E}[x(t)x(t)^T]$ is the stationary state covariance satisfying:
+  $$A_{cl} X_\infty + X_\infty A_{cl}^T + DD^T = 0.$$
+  Now evaluate $\operatorname{tr}(PDD^T)$:
+  Substitute $DD^T = -(A_{cl} X_\infty + X_\infty A_{cl}^T)$:
+  $$\operatorname{tr}(P DD^T) = -\operatorname{tr}(P(A_{cl} X_\infty + X_\infty A_{cl}^T)) = -\operatorname{tr}((A_{cl}^T P + P A_{cl}) X_\infty).$$
+  Recall that for LQR with $K = R^{-1} B^T P$:
+  $$A_{cl}^T P + P A_{cl} = (A - B K)^T P + P(A - B K) = A^T P + P A - 2 P B R^{-1} B^T P.$$
+  From the continuous algebraic Riccati equation:
+  $$A^T P + P A - P B R^{-1} B^T P + Q = 0 \implies A^T P + P A - 2 P B R^{-1} B^T P = -(Q + K^T R K).$$
+  Thus:
+  $$-\operatorname{tr}((A_{cl}^T P + P A_{cl}) X_\infty) = \operatorname{tr}((Q + K^T R K) X_\infty) = \lambda.$$
+  **So $\lambda = \operatorname{tr}(P DD^T)$ is algebraically correct!**
+  *However*, the text says:
+  > "With full-state linear dynamics and additive diffusion $D\,dW$, the usual finite-horizon quadratic value has form $V=x^TP(t)x+c(t)$. The diffusion contributes $\operatorname{tr}(PDD^T)$, independent of $u$..."
+  
+  In the finite-horizon HJB equation:
+  $$-V_t = \min_u [x^TQx + u^TRu + \nabla V^T(Ax+Bu) + \tfrac{1}{2}\operatorname{tr}(DD^T \nabla^2 V)].$$
+  Since $\nabla^2 V = 2P(t)$, the diffusion term is:
+  $$\tfrac{1}{2}\operatorname{tr}(DD^T (2P(t))) = \operatorname{tr}(P(t)DD^T).$$
+  This gives $\dot{c}(t) = -\operatorname{tr}(P(t)DD^T)$, so $c(t) = \int_t^T \operatorname{tr}(P(s)DD^T)\,ds$.
+  This is completely correct.
+
+#### E. Double Integrator Example Verification
+In Section 3.1:
+> For the double integrator $\dot x_1=x_2$, $\dot x_2=u$, choose $Q=\operatorname{diag}(1,0)$, $R=1$. Then
+> $$P=\begin{pmatrix}\sqrt2&1\\1&\sqrt2\end{pmatrix},\qquad K=\begin{pmatrix}1&\sqrt2\end{pmatrix}.$$
+
+- **Derivation & Verification:**
+  $A = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$, $B = \begin{pmatrix} 0 \\ 1 \end{pmatrix}$, $Q = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$, $R = 1$.
+  Let $P = \begin{pmatrix} p_{11} & p_{12} \\ p_{12} & p_{22} \end{pmatrix}$.
+  $$A^T P + P A = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix} \begin{pmatrix} p_{11} & p_{12} \\ p_{12} & p_{22} \end{pmatrix} + \begin{pmatrix} p_{11} & p_{12} \\ p_{12} & p_{22} \end{pmatrix} \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} = \begin{pmatrix} 0 & p_{11} \\ p_{11} & 2p_{12} \end{pmatrix}.$$
+  $$P B R^{-1} B^T P = \begin{pmatrix} p_{12} \\ p_{22} \end{pmatrix} \begin{pmatrix} p_{12} & p_{22} \end{pmatrix} = \begin{pmatrix} p_{12}^2 & p_{12} p_{22} \\ p_{12} p_{22} & p_{22}^2 \end{pmatrix}.$$
+  ARE:
+  $$\begin{pmatrix} 0 & p_{11} \\ p_{11} & 2p_{12} \end{pmatrix} - \begin{pmatrix} p_{12}^2 & p_{12} p_{22} \\ p_{12} p_{22} & p_{22}^2 \end{pmatrix} + \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} = 0.$$
+  1. $(1,1)$ entry: $-p_{12}^2 + 1 = 0 \implies p_{12} = 1$ (for stabilizability / positive definiteness).
+  2. $(1,2)$ entry: $p_{11} - p_{12} p_{22} = 0 \implies p_{11} = p_{22}$.
+  3. $(2,2)$ entry: $2p_{12} - p_{22}^2 = 0 \implies 2(1) - p_{22}^2 = 0 \implies p_{22} = \sqrt{2}$.
+  Hence $p_{11} = \sqrt{2}$.
+  $$P = \begin{pmatrix} \sqrt{2} & 1 \\ 1 & \sqrt{2} \end{pmatrix}.$$
+  Gain $K = R^{-1} B^T P = 1 \cdot \begin{pmatrix} 0 & 1 \end{pmatrix} \begin{pmatrix} \sqrt{2} & 1 \\ 1 & \sqrt{2} \end{pmatrix} = \begin{pmatrix} 1 & \sqrt{2} \end{pmatrix}$.
+  Closed-loop matrix $A - BK = \begin{pmatrix} 0 & 1 \\ -1 & -\sqrt{2} \end{pmatrix}$.
+  Characteristic polynomial: $s(s + \sqrt{2}) + 1 = s^2 + \sqrt{2}s + 1$, roots in left half-plane.
+  **This example is exact.**
+
+#### F. Second Example Verification ($A = \operatorname{diag}(-1, -2)$)
+> with $A=\operatorname{diag}(-1,-2)$, $B=I$, the same $Q$ and $R=I$, $K=P=\operatorname{diag}(\sqrt2-1,0)$: the second mode is stable, decoupled and cost-free.
+
+- **Derivation & Verification:**
+  $A = \begin{pmatrix} -1 & 0 \\ 0 & -2 \end{pmatrix}$, $B = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$, $Q = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix}$, $R = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$.
+  Since all matrices are diagonal, $P = \operatorname{diag}(p_1, p_2)$ decouples:
+  For mode 1:
+  $$2(-1)p_1 - p_1^2 + 1 = 0 \implies p_1^2 + 2p_1 - 1 = 0 \implies p_1 = \frac{-2 + \sqrt{4 + 4}}{2} = \sqrt{2} - 1.$$
+  For mode 2:
+  $$2(-2)p_2 - p_2^2 + 0 = 0 \implies p_2(-4 - p_2) = 0 \implies p_2 = 0 \text{ (stabilizing since } a_2 = -2 < 0).$$
+  $K = R^{-1} B^T P = P = \operatorname{diag}(\sqrt{2}-1, 0)$.
+  Closed-loop eigenvalues: $-1 - (\sqrt{2}-1) = -\sqrt{2} < 0$, and $-2 - 0 = -2 < 0$.
+  **This example is exact.**
+
+#### G. Minimum Jerk Trajectory Verification
+In Section 5:
+> Euler--Poisson condition is $x^{(6)}=0$; six endpoint conditions determine the polynomial. Strict convexity in jerk, together with those conditions, establishes the unique minimizer. Its speed is proportional to $30s^2(1-s)^2$, with maximum $15|x_T-x_0|/(8T)$ at $s=1/2$.
+
+- **Derivation & Verification:**
+  Let $x(t) = x_0 + (x_T - x_0) p(s)$, where $s = t/T \in [0, 1]$.
+  $p(s) = 10s^3 - 15s^4 + 6s^5$.
+  Check boundary conditions:
+  - $p(0) = 0 \implies x(0) = x_0$.
+  - $p(1) = 10 - 15 + 6 = 1 \implies x(T) = x_T$.
+  - $p'(s) = 30s^2 - 60s^3 + 30s^4 = 30s^2(1 - 2s + s^2) = 30s^2(1 - s)^2$.
+    - $p'(0) = 0 \implies \dot{x}(0) = 0$.
+    - $p'(1) = 0 \implies \dot{x}(T) = 0$.
+  - $p''(s) = 60s - 180s^2 + 120s^3 = 60s(1 - 3s + 2s^2) = 60s(1 - s)(1 - 2s)$.
+    - $p''(0) = 0 \implies \ddot{x}(0) = 0$.
+    - $p''(1) = 0 \implies \ddot{x}(T) = 0$.
+  Speed:
+  $$v(t) = \dot{x}(t) = \frac{x_T - x_0}{T} p'(s) = \frac{x_T - x_0}{T} \cdot 30 s^2 (1 - s)^2.$$
+  At $s = 1/2$:
+  $$p'(1/2) = 30 \left(\frac{1}{4}\right) \left(\frac{1}{4}\right) = \frac{30}{16} = \frac{15}{8}.$$
+  Maximum speed is indeed $\frac{15 |x_T - x_0|}{8 T}$ at $s = 1/2$.
+  **This derivation is exact.**
+
+#### H. Active Inference Identity & Scope
+In Section 6:
+> $$F[q;y]=\mathbb E_q[\log q(x)-\log p(x,y)]=D_{\rm KL}\bigl(q(x)\,\|\,p(x\mid y)\bigr)-\log p(y).$$
+
+- **Derivation & Verification:**
+  $$F[q; y] = \int q(x) \log \frac{q(x)}{p(x, y)} \, dx = \int q(x) \log \frac{q(x)}{p(x \mid y) p(y)} \, dx$$
+  $$= \int q(x) \log \frac{q(x)}{p(x \mid y)} \, dx - \int q(x) \log p(y) \, dx = D_{\rm KL}(q(x) \,\|\, p(x \mid y)) - \log p(y).$$
+  This is the exact variational free energy identity (specifically, negative evidence lower bound, $-\text{ELBO}$).
+  **Scope critique:**
+  The draft correctly notes that $F[q; y]$ by itself only defines inference over hidden states $x$ given a *fixed* sensory observation $y$. To generate actions, Friston's formulation assumes actions change future sensory inputs (via physical transmission), and actions are chosen via gradient descent on free energy $\dot{a} = -\frac{\partial F}{\partial a} = -\frac{\partial F}{\partial y} \frac{\partial y}{\partial a}$, or expected free energy (EFE) for policy selection. The text’s conceptual characterization is sound.
+
+---
+
+### 2. Summary of Recommended Edits
+
+1. **Clarify comment on PBH detectability in Python code:**
+   - Change `# For PSD Q, Q and its square root have the same null space.`
+   - To: `# For symmetric PSD Q, im(Q) = im(Q^(1/2)), so [sI - A.T, Q] tests detectability.`
+   *(Testing range vs null space: PBH tests whether the concatenated matrix has full row rank, which depends on the column span of $Q$ spanning the unobservable left eigenspaces).*
+
+2. **Clarify time derivative sign convention in the scalar HJB equation:**
+   - In:
+     $$\dot p+2ap+q-\frac{b^2p^2}{r+\sigma^2p}=0$$
+     Clarify that $\dot{p}$ represents the forward time derivative $\frac{dp}{dt}$, which integrates backward from terminal condition $p(T) = \phi$ (i.e. $-\dot{p} = 2ap + q - \dots$), to avoid confusion with the stationary CARE where the time derivative vanishes.

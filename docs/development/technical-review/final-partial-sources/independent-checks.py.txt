@@ -1,0 +1,55 @@
+import json
+from pathlib import Path
+import numpy as np
+
+rng = np.random.default_rng(4954)
+errors = {key: [] for key in ['impact_momentum', 'impact_loss', 'spin_loft_symmetry',
+    'wrench_power', 'constraint_solve', 'constraint_work', 'actuator_consistency',
+    'external_energy']}
+for _ in range(100):
+    mass, ball, speed = rng.uniform(.15,.3), rng.uniform(.04,.05), rng.uniform(10,60)
+    restitution = rng.uniform(0,1)
+    outgoing = np.linalg.solve([[mass,ball],[-1,1]], [mass*speed,restitution*speed])
+    errors['impact_momentum'].append(abs(mass*outgoing[0]+ball*outgoing[1]-mass*speed))
+    measured_loss = .5*mass*speed**2-.5*mass*outgoing[0]**2-.5*ball*outgoing[1]**2
+    exact_loss = .5*mass*ball/(mass+ball)*(1-restitution**2)*speed**2
+    errors['impact_loss'].append(abs(measured_loss-exact_loss))
+    loft, attack, face, offset = rng.uniform(-.5,.5,4)
+    normal=np.array([np.cos(loft)*np.cos(face),np.sin(loft),np.cos(loft)*np.sin(face)])
+    vectors=[np.array([np.cos(attack)*np.cos(path),np.sin(attack),np.cos(attack)*np.sin(path)]) for path in [face-offset,face+offset]]
+    errors['spin_loft_symmetry'].append(abs(normal@vectors[0]-normal@vectors[1]))
+    force, moment, velocity, omega, shift = rng.normal(size=(5,3))
+    shifted_moment = moment-np.cross(shift,force)
+    shifted_velocity = velocity+np.cross(omega,shift)
+    errors['wrench_power'].append(abs(force@velocity+moment@omega-force@shifted_velocity-shifted_moment@omega))
+    raw=rng.normal(size=(5,5)); mass_matrix=raw.T@raw+np.eye(5)
+    constraint=rng.normal(size=(2,5)); load=rng.normal(size=5)
+    inv=np.linalg.inv(mass_matrix)
+    constrained=inv-inv@constraint.T@np.linalg.solve(constraint@inv@constraint.T,constraint@inv)
+    system=np.block([[mass_matrix,-constraint.T],[constraint,np.zeros((2,2))]])
+    direct=np.linalg.solve(system,np.r_[load,np.zeros(2)])
+    errors['constraint_solve'].append(float(np.max(np.abs(direct[:5]-constrained@load))))
+    errors['constraint_work'].append(abs(direct[:5]@constraint.T@direct[5:]))
+    actuator=np.r_[rng.normal(size=(3,2)),np.zeros((2,2))]
+    input_value=rng.normal(size=2); generalized=actuator@input_value
+    errors['actuator_consistency'].append(float(np.max(np.abs(np.linalg.pinv(actuator)@generalized-input_value))))
+    velocity=rng.normal(size=5); stiffness=np.eye(5); position=rng.normal(size=5)
+    dissipation=.3*velocity; external=rng.normal(size=5)
+    acceleration=np.linalg.solve(mass_matrix,generalized+external-stiffness@position-dissipation)
+    derivative=velocity@mass_matrix@acceleration+position@stiffness@velocity
+    ledger=velocity@generalized-velocity@dissipation+velocity@external
+    errors['external_energy'].append(abs(derivative-ledger))
+maxima={key:float(max(value)) for key,value in errors.items()}
+assert all(value<1e-10 for value in maxima.values()), maxima
+face=np.deg2rad(5); loft=np.deg2rad(12); attack=np.deg2rad(2.5)
+angles=[float(np.rad2deg(np.arccos(np.sin(loft)*np.sin(attack)+np.cos(loft)*np.cos(attack)*np.cos(face-np.deg2rad(path))))) for path in [-3,3]]
+assert abs(angles[0]-angles[1])>2
+spin=np.cross([1.,0.,0.],[np.cos(loft),np.sin(loft),0.])
+top_velocity=np.cross(spin,[0.,1.,0.])
+assert spin[2]>0 and top_velocity[0]<0
+report={'scope':'Independent manufactured identities, not golfer observations','seed':4954,
+    'cases_per_group':100,'tolerance':1e-10,'maximum_errors':maxima,
+    'nonzero_face_fixed_global_path_counterexample_degrees':angles,
+    'backspin_check':'Positive z spin gives negative x velocity at ball top in forward/up/right frame; retain v cross n sign'}
+Path('docs/development/technical-review/final-partial-sources/independent-checks.json').write_text(json.dumps(report,indent=2)+'\n',newline='\n')
+print(json.dumps(report,indent=2))

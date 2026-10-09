@@ -1,0 +1,61 @@
+{
+  "issue": 4931,
+  "epic": 4009,
+  "status": "Three complete chapters accepted; protected remote-main delivery pending",
+  "accepted_source_commit": "5d8b250fafa0f40c1e61442d650f5fb385a0e195",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch07_parameter_estimation.tex": "9aad266a17e929610896cbdf48a564ee78c92dc99ea8bd3bd483e63ed9d0bc1f",
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch08_reinforcement_learning.tex": "9ca56af929a363edf0f4941c22a75672674106f036e30450772b189a1dadf78a",
+    "articles/The_Geometry_of_Motion/Volume_V/chapters/ch09_visualization.tex": "debb9d6eab6535a6fb3393c3a82df68771ba7c8d83a24fd70676fae78a75e50e",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "22289f1a49aaef1ef617bb657a5644aebf0e7b2a007df92cfdf177905b938d88",
+    "articles/The_Geometry_of_Motion/Volume_V/main.pdf": "ebf5c9d9f4b8528f6974562a15c82263ffb0a669d26157e709872b62064c623b",
+    "tests/test_parameter_estimation_listing.py": "c29943d26ee1abb5fc9cd4cd1dca2a6522263467cc26750b53fe1bb0dceb8095",
+    "tests/test_rl_pendulum_listing.py": "0fefa52b3a47d2015ed0248f3400b49d17e000294fa7c4aaa271f1a6b14788a5",
+    "tests/test_visualization_analysis_listings.py": "60e109413e5eb712faff55445733ba10e0644fce182bd923ddb5c811073505fd",
+    "reports/technical-review/inference-policy-analysis-independent-checks.json": "4faffba53e8a226d826232191509874dfceada486abba855d5c30cbb8796dc2b"
+  },
+  "scope": "Complete Volume V chapters 7-9; identification, pinned RL benchmark and mechanical diagnostics; no trained golf policy or empirical human certification",
+  "full_regression": {
+    "head": "5d8b250fafa0f40c1e61442d650f5fb385a0e195",
+    "passed": 7226,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 467.7,
+    "src_coverage_percent": 93.25,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/inference-policy-analysis-review/full-tests.txt"
+  },
+  "pdf": {
+    "pages": 55,
+    "printed_entries": 33,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3-5, 32-43, 53-55; final pass 5 pages 35-43 reinspected",
+    "build_log": "docs/development/technical-review/inference-policy-analysis-review/accepted-pass5.txt",
+    "limits": "No overfull text or unresolved references; historical duplicate destinations/package/no-author warnings"
+  },
+  "focused_tests": 54,
+  "combined_tests": 92,
+  "mathematics": {
+    "record": "reports/technical-review/inference-policy-analysis-independent-checks.json",
+    "identities": 7,
+    "cases_each": 100,
+    "threshold": 1e-7,
+    "maximum_error": 8.742063073441386e-9,
+    "scope": "Manufactured model and control identities; not human validation"
+  },
+  "delegation": {
+    "helpers": 7,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only reviews and test proposals; lead-adjudicated"
+  },
+  "failed_run": "Initial combined run had four bibliography digest failures from mixed line endings; normalized source to LF and refreshed evidence. An overbroad negative-torque speed-cap assertion failed and was corrected after checking the trajectory. Other rejected helper proposals and repairs are recorded in review-notes.md.",
+  "delivery": {
+    "status": "Preparing regular PR",
+    "base": "fix/simulation-feedback-review",
+    "dependency": "PR 4932",
+    "next": "Protected delivery after verified parent merge, then fetched-main blob verification"
+  }
+}

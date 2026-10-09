@@ -1,0 +1,72 @@
+Here is the rigorous review of the provided draft text, restricted strictly to actual errors and ambiguous mathematical assumptions with precise replacement language.
+
+---
+
+### Part I: Geometry
+
+#### 1. Ambiguity / Insufficiency in Local vs. Global Regularity & Distance Upper Bound
+- **Location:** Section *Finite Displacements and Smoothness*
+- **Issue:**
+  $$\operatorname{dist}(x+v, M) \le C \epsilon^2$$
+  is stated as holding "in a sufficiently small regular neighborhood", but without specifying that $x+v$ must remain within this neighborhood or restricting $\epsilon \le \epsilon_0$. For an unbounded tangent vector $v$, the quadratic bound fails globally (e.g., on a compact manifold like $S^1$, $\operatorname{dist}(x+v, S^1) \le \operatorname{diam}(S^1)$ which is $O(1)$, not $\le C\|v\|^2$, or diverges as $\|v\| \to \infty$ linearly: $\operatorname{dist}(P, S^1) = \sqrt{1+\epsilon^2}-1 \sim \epsilon$). The bound is strictly local.
+- **Precise Replacement:**
+  > "With $C^2$ regularity and bounded second derivatives in a neighborhood of $x$, there exist constants $\epsilon_0 > 0$ and $C > 0$ such that for all $v \in T_xM$ with $\|v\| = \epsilon \le \epsilon_0$,
+  >
+  > $$\operatorname{dist}(x+v, M) \le C\epsilon^2.$$"
+
+---
+
+#### 2. Truncation Order / Remainder Scale in Circle Taylor Series
+- **Location:** Section *Example: The Unit Circle*
+- **Issue:**
+  $$\sqrt{1+\epsilon^2}-1 = \frac{\epsilon^2}{2} - \frac{\epsilon^4}{8} + O(\epsilon^6)$$
+  The Taylor expansion of $(1+u)^{1/2}$ for $u = \epsilon^2$ is:
+  $$(1+u)^{1/2} - 1 = \frac{1}{2}u - \frac{1}{8}u^2 + \frac{1}{16}u^3 + O(u^4) = \frac{\epsilon^2}{2} - \frac{\epsilon^4}{8} + \frac{\epsilon^6}{16} + O(\epsilon^8).$$
+  Writing $+ O(\epsilon^6)$ is not strictly false in big-$O$ notation, but it is ambiguous and non-standard because the order $\epsilon^6$ term is non-zero ($+\frac{1}{16}\epsilon^6$); it truncates before displaying the order of the actual remainder or omits the leading coefficient of $\epsilon^6$.
+- **Precise Replacement:**
+  > $$
+  > \begin{aligned}
+  > \operatorname{dist}(P,S^1)
+  >  &=\sqrt{1+\epsilon^2}-1\\
+  >  &=\frac{\epsilon^2}{2}-\frac{\epsilon^4}{8}+O(\epsilon^6) \quad \text{or more precisely} \quad \frac{\epsilon^2}{2}-\frac{\epsilon^4}{8}+\frac{\epsilon^6}{16}+O(\epsilon^8).
+  > \end{aligned}
+  > $$
+  *(Note: The numerical evaluation for $\epsilon=0.1$ gives $\sqrt{1.01}-1 \approx 0.0049875621$, which exactly matches the text's $0.00498756$.)*
+
+---
+
+### Part II: Dynamics
+
+#### 3. Moving Tangent Spaces: Admissibility of Ambient Variational Field vs. Projection
+- **Location:** Section *Moving Tangent Spaces*
+- **Issue:**
+  The text states:
+  > "If the ambient variational field preserves admissibility, the right side minus $\dot E\eta$ lies in the range of $E$. Applying a left inverse $E^+=(E^TE)^{-1}E^T$ gives
+  >
+  > $$\dot\eta=E^+(AE-\dot E)\eta+E^+B\nu.$$"
+
+  This phrasing conflates the ambient linearized dynamics with the manifold's intrinsic tangent bundle kinematics. If a system is constrained to evolve on a sub-manifold $M$ (e.g., holonomic constraints $h(x)=0$), the unconstrained variational vector field $A(t)E\eta + B(t)\nu$ does *not* automatically satisfy the derivative constraint without constraint reaction forces/multipliers, or if the dynamics $\dot x = f(x,u)$ are already tangent to $M$, then $\dot\xi \in T_{\bar x(t)}M$ is guaranteed only for tangent controls $\nu$. More critically, if $\dot\xi = E\dot\eta + \dot E\eta$ is tangent to $M$, then $\dot\xi \in \operatorname{range}(E)$ identically, so:
+  $$E\dot\eta = \dot\xi - \dot E\eta.$$
+  Here $\dot\xi - \dot E\eta$ lies in the range of $E$ **if and only if** $\dot E\eta$ is also tangent to $M$—which the text itself just demonstrated is **false** in the preceding circle example ($\dot E\eta = \dot\xi_{\text{basis}} = -\bar x$, which is orthogonal/normal to the tangent space, not in $\operatorname{range}(E)$!).
+
+  Therefore, $\dot\xi - \dot E\eta$ has a non-zero normal component. Multiplying by $E^+$ orthogonal-projects both sides onto $\operatorname{range}(E)$. While $E^+ E \dot\eta = \dot\eta$, $E^+\dot E\eta$ extracts only the tangential component of the basis transport (the connection coefficients / Christoffel symbols of the frame). The text incorrectly implies that the ambient expression *itself* must lie in $\operatorname{range}(E)$ before applying $E^+$.
+- **Precise Replacement:**
+  > "Since $\xi(t) = E(t)\eta(t)$ remains tangent to $M$, its projection onto the tangent space must equal its internal representation: $E^+\xi = \eta$. Differentiating in the ambient space yields $\dot\xi = E\dot\eta + \dot E\eta = AE\eta + B\nu$. While individual terms such as $\dot E\eta$ generally have non-zero normal components, projecting the ambient equation onto the tangent space via the left inverse $E^+ = (E^TE)^{-1}E^T$ (satisfying $E^+E = I_d$) isolates the intrinsic coordinate evolution:
+  >
+  > $$\dot\eta=E^+(AE-\dot E)\eta+E^+B\nu.$$"
+
+---
+
+#### 4. Event-Time vs. Same-Time Perturbations in Swing / Impact Model
+- **Location:** Section *What This Means for a Swing Model*
+- **Issue:**
+  The text states:
+  > "A clubface-at-impact measurement is different from a fixed-time measurement because the perturbation may change impact time. Account for that timing before interpreting a sensitivity as a change in launch conditions."
+
+  While identifying the distinction between fixed-time and event-time variations, it omits the precise relationship required to map a fixed-time variation $\xi(t)$ to an event-triggered variation at impact surface $s(x) = 0$ (Poincaré map / saltation variation). Without this, the distinction remains qualitative.
+- **Precise Replacement:**
+  > "A clubface-at-impact measurement is evaluated at an event time $\tau$ defined by a switching or contact surface $s(x)=0$, rather than at a fixed nominal time $t_f$. A state perturbation $\Delta x$ induces a first-order timing shift $d\tau = -\frac{Ds(\bar x(t_f))\xi(t_f)}{Ds(\bar x(t_f))\dot{\bar x}(t_f)}$ (assuming transversal crossing $Ds\,\dot{\bar x} \neq 0$). The total variation at impact is therefore the event-time sensitivity:
+  >
+  > $$\xi_{\text{event}} = \xi(t_f) + \dot{\bar x}(t_f)\,d\tau = \left(I - \frac{\dot{\bar x}(t_f)Ds(\bar x(t_f))}{Ds(\bar x(t_f))\dot{\bar x}(t_f)}\right)\xi(t_f).$$
+  >
+  > Account for this saltation projection before interpreting a fixed-time variation as a change in launch conditions."

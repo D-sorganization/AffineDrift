@@ -1,194 +1,199 @@
-\chapter{Sensor Hardware and Integration Reference}
+\chapter[Sensor Hardware and Integration Reference]{Sensor Hardware and Integration\\Reference}
 \label{app:hardware}
 
-This appendix is a specification-level reference for the commodity sensing
-components a launch monitor can be built from, drawn from vendor datasheets
-and application notes (all linked). The parts covered here are
-representative rather than prescriptive: they are the modules for which
-manufacturers publish enough detail to reason about performance, which makes
-them useful worked examples whether or not they end up in a given design.
-
-Two of them are documented for this application by their own manufacturers.
-OmniPreSense's sports application note AN-029 covers a golf configuration
-directly~\cite{an029}, which is unusual and worth exploiting --- most radar
-modules are documented for traffic and presence sensing, leaving the
-sports-specific parameters to be derived from first principles.
+A launch monitor connects sampled signals to estimates of ball and club motion, then connects those estimates to impact and flight models.
+Every connection adds assumptions: the target must be identified, the measurement time and reference frame must be known, and any missing components must be supplied by additional observations or a declared model.
+This appendix uses documented components as worked examples, not as an endorsed bill of materials or evidence that a particular combination achieves launch-monitor accuracy.
+Read the specifications below with the measurement hierarchy in \cref{tab:hierarchy} and the impact definitions in \cref{ch:impact}.
+Manufacturer specifications describe particular hardware, firmware and test conditions; the calculations here establish conditional limits, not measured performance of a completed instrument.
 
 \section{OmniPreSense OPS243-A (24\,GHz CW Doppler)}
 
-\subsection{Hardware}
-Per the product brief~\cite{ops243brief}: 24.00--24.25\,GHz ISM band,
-11\,dBm transmit power (FCC ID 2ALLL243A), patch antenna with
-\textbf{20$\degs$ azimuth $\times$ 24$\degs$ elevation} $-3$\,dB
-beamwidth (footprint $\sim$0.4\,m wide at 1\,m, 1.8\,m at 5\,m); motion
-detection 1--100\,m; speed to 348\,mph at 50\,ksps; accuracy spec
-0.5\%; USB CDC + 3.3\,V UART (default 19{,}200\,8N1); 5--24\,V supply,
-1.7\,W active.
+\subsection{Hardware and Configuration Boundaries}
+The OPS243 product brief distinguishes the Doppler-only OPS243-A from the Doppler/FMCW OPS243-C: the former does not provide range from its unmodulated carrier~\cite{ops243brief}.
+The brief lists a 24.00--24.25\,GHz band, 11\,dBm transmit power and a $20\degs\times24\degs$ transmit beamwidth at $-3$\,dB.
+The horizontal contour width at axial distance $r$ is approximately $2r\tan(10\degs)$: 0.353\,m at 1\,m and 1.763\,m at 5\,m.
+A beamwidth contour is not a hard detection boundary, and the family-level 1--100\,m motion-detection claim is not a golf-ball range guarantee.
 
-\subsection{API Essentials}
-From AN-010~\cite{an010}: sample rate \texttt{S=n} (1--1000\,ksps;
-10\,ksps default); buffer 1024/512/256/128 via
-\texttt{S>}/\texttt{S<}/\texttt{S[}/\texttt{S(}; zero-padding
-\texttt{Xn}/\texttt{X=16}/\texttt{X=32} to a 4096-point FFT. Speed
-ceiling and resolution scale with sample rate (10\,ksps
-$\to$ 31.1\,m/s at 0.061\,m/s; 50\,ksps $\to$ 155.4\,m/s at
-0.304\,m/s per 1024-sample buffer). Output modes: \texttt{OJ} JSON,
-\texttt{OT} timestamps, \texttt{OM} magnitudes, \texttt{O=n}
-multi-object (to 16), \texttt{OF} post-FFT, \texttt{OR} raw I/Q.
-Filters: \texttt{R>}/\texttt{R<} speed, \texttt{R$\pm$} direction,
-\texttt{M>} magnitude, \texttt{K+} peak averaging; built-in
-cosine-error correction \texttt{\^{}/$\pm$n.n} (0--89$\degs$).
-\texttt{A!}\ persists settings to flash.
+Electrical details also require the exact variant: the USB/UART version uses 3.3\,V UART signaling, whereas an RS-232 version uses different levels.
+The brief permits a 24\,V supply only for revision-C boards, otherwise 13.5\,V maximum; its 1.7\,W typical active-power table entry explicitly names OPS243-C~\cite{ops243brief}.
+Do not transfer these values indiscriminately between board revisions and sensor variants or use a headline accuracy percentage as an established golf-shot uncertainty.
 
-\subsection{Rolling Buffer and Triggering}
-From AN-027~\cite{an027}: \texttt{G1} enters rolling-buffer mode with a
-fixed \textbf{4096-sample I/Q buffer organized as 32 segments of 128
-samples}; trigger by software (\texttt{S!}) or a 3.3\,V rising edge on
-\textbf{J3 pin 3 (HOST\_INT)}; \texttt{S\#n} sets the pre/post-trigger
-split (default 8 $\to$ 1024 pre + 3072 post). At 30\,ksps
-the buffer spans 136.5\,ms with a 208.5\,mph ceiling --- AN-027's
-``golf ball setting.'' The app note wires a \textbf{SparkFun SEN-14262
-Gate output directly to HOST\_INT} (the standard hardware-trigger wiring) and
-flags the acoustic-latency budget: sound from 2\,m arrives
-$\sim$6.6\,ms late, so the pre-trigger split must cover the
-impact-to-trigger gap (their example \texttt{S\#18}).
+AN-010 documents the default 10\,ksps rate, selectable sample buffers, zero-padding, timestamped JSON and raw I/Q outputs~\cite{an010}.
+For the golf example below, \texttt{S=30} sets 30\,ksps, \texttt{S(} selects 128 acquired samples and \texttt{X=32} requests a 4096-point transform; configure the buffer before the padding multiplier.
+\texttt{OT}, \texttt{OM} and \texttt{OJ} select timestamps, magnitudes and JSON; \texttt{OR} supplies raw samples, while \texttt{O2} requests two reported speeds.
+The UART default is 19,200 baud, 8N1.
+Verify supported commands and read back the configuration for the installed firmware before saving it with \texttt{A!}.
 
-\subsection{The Vendor Golf Recipe (AN-029)}
-AN-029~\cite{an029} specifies: \texttt{S=30} (209\,mph ceiling),
-\texttt{S(} 128-sample segments, \texttt{X=32} (4096-point FFT,
-0.1\,mph resolution, $\sim$200\,Hz report rate), \texttt{US},
-\texttt{R>10} to mask waggle, \texttt{M>10}, \texttt{O2} to report
-ball + club for smash factor (gated 1.0--1.50, matching
-\cref{sec:smash}), \texttt{K+} averaging, sensor 2--3\,m behind the
-ball. Golf balls are rated ``high'' reflectivity, detectable 5--10\,m.
+\subsection{Sampling, Grid Spacing and Identifiability}
+For an ideal monostatic CW observation, the magnitude of Doppler frequency satisfies $|f_D|=2|v_r|/\lambda$, where $v_r$ is radial velocity and $\lambda=c/f_c$.
+The sign depends on the receiver convention; it must be checked before transforming observations into the book's coordinate frame.
+For centered complex sampling at rate $f_s$, $N$ acquired samples and an $M$-point transform with $M\ge N$, the nominal quantities are
+\begin{equation}
+\label{eq:hardwaredopplergrid}
+ |v_r|<\frac{\lambda f_s}{4},\qquad
+ T=\frac{N}{f_s},\qquad
+ \Delta v_N=\frac{\lambda f_s}{2N},\qquad
+ \Delta v_M=\frac{\lambda f_s}{2M}.
+\end{equation}
+Here $\Delta v_N$ and $\Delta v_M$ are the unpadded and padded velocity-grid spacings.
+The first expression is a sampling limit, subject also to the analog passband and firmware; it is not a guaranteed detection speed.
+With $f_c=24.125$\,GHz, $c=299{,}792{,}458$\,m/s, $f_s=30{,}000$\,s$^{-1}$, $N=128$ and $M=4096$, these give 93.20\,m/s (208.48\,mph), 4.267\,ms, 1.456\,m/s (3.258\,mph) and 0.04551\,m/s (0.1018\,mph), respectively.
+
+Zero-padding samples the same finite-record spectrum on a finer grid; it adds no observed cycles.
+An isolated peak can be localized more finely than the unpadded bin spacing under suitable signal-to-noise and signal-model conditions, but neither spacing is a universal accuracy specification or a guaranteed separation between two resolvable targets.
+Windowing, unequal target strengths, acceleration and clutter change the estimation problem.
+This distinction explains why AN-029's nominal 0.1\,mph figure cannot establish 0.1\,mph measurement accuracy~\cite{an029}.
+Likewise, a 200\,Hz reporting example has 5\,ms between outputs; that alone does not establish a 5\,ms independent observation, capture duty cycle or processing latency.
+
+The sensor observes $v_r=\uvec{r}^{\mathsf T}\vect{v}$, where $\uvec{r}$ points from sensor to target for a positive-receding convention.
+Target bearing and velocity direction are different quantities: knowing the former does not determine the latter.
+If the angle $\theta$ between velocity and line of sight is independently known, $v=v_r/\cos\theta$; near transverse motion, small angular errors become strongly amplified.
+For small signed perturbations, $\delta v/v\approx\delta v_r/v_r+\tan\theta\,\delta\theta$, with $\delta\theta$ in radians and nonzero denominators.
+A fixed cosine correction cannot recover an unknown, changing trajectory.
+
+\subsection{Rolling Buffer and Trigger Timing}
+AN-027 describes a separate capture mode: \texttt{G1} stores 4096 complex samples in 32 segments of 128, with subsequent processing off the sensor~\cite{an027}.
+A software \texttt{S!} command or 3.3\,V rising edge on J3 pin 3 (\texttt{HOST\_INT}) triggers completion.
+\texttt{S\#n} selects the historical segment count; the default eight gives 1024 pre-trigger and 3072 post-trigger samples.
+The record spans 136.53\,ms at 30\,ksps.
+The note illustrates a microphone gate connection, but its \texttt{S\#18} example uses 250\,ksps and must not be copied as a universal golf setting.
+
+Choose the pre-trigger history from an explicit timing budget.
+For source-to-microphone distance $d$, sound speed $c_s$, trigger-chain delay $\tau_e$, desired pre-impact history $\tau_h$ and a bound $\tau_q$ on segment/timestamp uncertainty, require
+\begin{equation}
+\label{eq:hardwaretriggerbudget}
+ \frac{128n}{f_s}\ge \frac{d}{c_s}+\tau_e+\tau_h+\tau_q,
+ \qquad 0\le n\le32.
+\end{equation}
+At the declared illustrative value $c_s=343$\,m/s, 2\,m takes 5.831\,ms, not 6.6\,ms; the latter estimate in AN-027 is not adopted here.
+Ignoring electronics and quantization only for an arithmetic example, 2\,ms of pre-impact history requires two segments at 30\,ksps, providing 8.533\,ms total history.
+This is not a deployment recommendation: measure or conservatively bound the omitted delays and retain enough post-trigger data for the intended estimator.
+
+\subsection{Interpreting the Vendor Golf Example}
+AN-029 places the sensor about 2--3\,m behind the ball and gives a configuration using 30\,ksps, 128 samples, padding to 4096, mph output, a lower speed filter, a magnitude threshold and peak averaging~\cite{an029}.
+Its reported 5--10\,m golf-ball detection distance is vendor application guidance, not a qualification across balls and environments.
+Two reported peaks still require target association: neither peak order nor a plausible speed ratio proves which echo belongs to the ball or to a specified point on the clubhead.
+The ball and rotating club can have different line-of-sight projections and different measurement times.
+Before forming the smash factor of \cref{sec:smash}, establish the relevant ball/club speed definitions, timing and projection corrections.
+A 1.0--1.50 acceptance gate would be an implementation heuristic, not a physical theorem; record rejected shots to avoid hiding failures through selection.
+Radial-speed observations alone do not uniquely determine three-dimensional launch velocity or spin.
 
 \section{RFbeam K-LD7 (24\,GHz FSK, Dual-RX Angle)}
 
-Per the datasheet~\cite{kld7}: 24.050--24.250\,GHz FSK (two
-frequencies, enabling range via phase difference); EIRP 6\,dBm; 1\,TX +
-\textbf{2 I/Q RX patches at 6.223\,mm ($\approx\lambda/2$) spacing} ---
-the interferometric baseline of \cref{eq:interferometry}; beam
-80$\degs$\,H $\times$ 34$\degs$\,V. Per-frame 256-point complex FFT;
-\textbf{angle $\pm$90$\degs$ at 1$\degs$ resolution from the
-Rx1--Rx2 phase difference}; distance 5\,cm--100\,m (resolution 5\,cm at
-the 5\,m range setting); speed 0.1--100\,km/h --- note the
-\textbf{62\,mph speed ceiling}, which confines the K-LD7 to angle and
-club-speed work; ball speed must come from a separate CW module. Frame time at
-the 100\,km/h setting is 29\,ms ($\sim$34\,Hz).
+Revision B describes one transmitter and two I/Q receivers separated by 6.223\,mm, with FSK range estimation and an $80\degs\times34\degs$ antenna pattern~\cite{kld7}.
+Its table lists 6\,dBm typical and 10\,dBm maximum EIRP; the distance range starts at 0.005\,m, not 0.05\,m, and the nominal distance resolution is 5\,cm at the 5\,m range setting.
+These are distinct entries, not demonstrated millimeter-range golf performance.
+The 1$\degs$ angular-resolution entry likewise does not certify one-degree golf accuracy or full-field sensitivity.
 
-UART protocol (115200\,8E1 default, to 3\,Mbaud via \texttt{INIT}):
-message types \texttt{RADC} (raw ADC: 256\,I + 256\,Q for Rx1@$f_A$,
-Rx2@$f_A$, Rx1@$f_B$ --- the payload an interferometric angle solution
-consumes), \texttt{RFFT} (spectrum + threshold), \texttt{PDAT} (up to
-12 raw targets: distance/speed/angle/magnitude), \texttt{TDAT}
-(tracked target), \texttt{DDAT} (flags), \texttt{DONE} (frame counter
---- use it to detect dropped frames); requested via the \texttt{GNFD}
-bitfield. Configuration: \texttt{RSPI} max speed, \texttt{RRAI} max
-range, \texttt{THOF} threshold offset (10--60\,dB), \texttt{RBFR} base
-frequency (three channels for multi-module coexistence --- set
-co-located units to different channels), \texttt{TRFT} tracking filter,
-detection-window bounds (\texttt{MIRA}/\texttt{MARA}/\texttt{MIAN}/
-\texttt{MAAN}/\texttt{MISP}/\texttt{MASP}). Positive speed = receding.
+The maximum speed setting is 100\,km/h (27.78\,m/s or 62.14\,mph), with a typical 29\,ms frame duration~\cite{kld7}.
+It restricts both club and ball observations when their radial components exceed that limit; assigning the module to club speed does not remove the restriction.
+More transverse placement may reduce Doppler but worsens the conversion to total speed and changes visibility.
+Out-of-range targets can produce erroneous detections, rather than a clean indication that the limit was exceeded.
+
+The host interface defaults to 115200 baud, 8E1; \texttt{INIT} can select up to 3\,Mbaud.
+\texttt{GNFD} requests raw samples (\texttt{RADC}), spectra (\texttt{RFFT}), detections (\texttt{PDAT}), a tracked target (\texttt{TDAT}) and/or frame completion (\texttt{DONE})~\cite{kld7}.
+Check frame counters and measured transfer time: a nominal acquisition period does not guarantee that every requested raw frame reaches the host.
+Calibration must also establish antenna geometry, phase offsets, target association and timing before combining this module with another sensor.
 
 \section{TI IWR6843 (60--64\,GHz FMCW MIMO)}
 
-Per the datasheet~\cite{iwr6843}: 60--64\,GHz with \textbf{4\,GHz
-chirp bandwidth} ($\sim$3.75\,cm native range resolution);
-\textbf{3\,TX / 4\,RX = 12 virtual antennas} (TDM-MIMO); on-chip
-C674x DSP + radar hardware accelerator (FFT, log-magnitude, CFAR);
-complex-baseband ADC to 12.5\,Msps. The LEVM/ISK-class EVMs give
-$\sim$120$\degs$ azimuth FoV with $\sim$15$\degs$ azimuth angular
-resolution (8 virtual azimuth antennas) and coarse elevation; the AOP
-variant trades resolution for a 130$\degs\times$130$\degs$ field. The
-out-of-box mmWave SDK demo streams a TLV point cloud
-($x,y,z$, Doppler) at $\sim$10--20\,Hz --- \emph{too slow for a 3\,ms
-launch window}; using the IWR6843 for launch measurement requires a
-custom chirp/frame configuration (short frames, high Doppler span) and
-low-level processing, for which TI's people-tracking labs
-(TIDEP-01000/01010) are the closest starting points~\cite{iwr6843}.
-TI's forums confirm no golf-specific lab exists. The natural
-role: a single sensor that measures range, angle, and radial speed
-simultaneously --- replacing a pair of single-baseline angle modules ---
-once the custom chirp work is done.
+The IWR6843 has three transmitters, four receivers, a DSP and radar hardware acceleration; the datasheet distinguishes 12.5\,Msps complex-1x sampling from 25\,Msps real/complex-2x sampling~\cite{iwr6843}.
+The 60--64\,GHz tuning range is not a statement that every configuration processes 4\,GHz of useful chirp bandwidth.
+For an effective processed sweep bandwidth $B$, the nominal range-separation scale is $\Delta R=c/(2B)$, or 3.747\,cm at $B=4$\,GHz~\cite{tichirp}.
+Windowing and signal conditions affect separation; isolated-target range precision is a different quantity.
+Array geometry and the selected board determine angular coverage and aperture, so a count of twelve TX--RX channels is not twelve independent azimuth elements.
+
+Time-division MIMO acquires the transmitter channels at different instants; velocity-induced phase must be compensated before interpreting the virtual array as an angle measurement~\cite{timimo}.
+For a uniform single-target phase-sampling model with same-transmitter inter-chirp revisit interval $T_r$ within a burst, the principal unaliased radial-speed interval has half-width $\lambda/(4T_r)$, while coherent observation time sets a velocity-separation scale near $\lambda/(2T_{\rm obs})$.
+Thus faster updates, wider unambiguous speed, more transmitter channels and finer Doppler separation compete for acquisition time~\cite{tichirp,timimo}.
+Ambiguity-resolution methods can alter this design tradeoff but need their own assumptions and validation.
+
+A 10--20\,Hz output stream has 50--100\,ms between reports; this is not necessarily its internal coherent dwell time.
+Such reporting alone does not establish coverage of a chosen 3\,ms launch interval, and shortening the frame alone does not prove a working launch monitor.
+Specify the chirps, usable bandwidth, ADC interval, transmitter schedule, synchronization, target return strength and processing/transport latency together.
+Range, direction and radial velocity estimates can then constrain a trajectory model; a single range-angle-Doppler detection still lacks the tangential velocity components and does not establish spin or club delivery.
 
 \section{Raspberry Pi Global Shutter Camera (Optical Module)}
 
-Sony IMX296 sensor: 1456$\times$1088, 3.45\,\si{\micro\meter} pixels,
-true global shutter, exposures to $\sim$30\,\si{\micro\second}, max
-$\sim$60\,fps streaming~\cite{pigscam}. The key feature for
-\cref{app:optical} is the \textbf{XTR external-trigger pad}: pulse low
-to expose (exposure = pulse width + 14.26\,\si{\micro\second}); frame
-rate follows the pulse train; multiple cameras on one trigger line are
-hardware-synchronized; enable with
-\texttt{v4l2-ctl -c trigger\_mode=1} (early boards: remove R11 if Q2
-is fitted)~\cite{pigscam}. Continuous 60\,fps cannot capture flight ---
-the strobed multi-exposure design of \cref{app:optical} is the correct
-use of this sensor.
+The IMX296 camera provides 1456$\times$1088 pixels of 3.45\,\si{\micro\meter} pitch, full-resolution operation near 60\,fps and short exposures near 30\,\si{\micro\second}, subject to operating conditions~\cite{pigsproduct}.
+Its XTR trigger is a \textbf{1.8\,V input}; the documented exposure is the low pulse width plus 14.26\,\si{\micro\second}.
+Shared pulses can synchronize cameras, but accepted pulse rates and actual frame timing must be verified.
+Raspberry Pi documents enabling the IMX296 external-trigger mode through
+\begin{quote}\small\ttfamily
+ echo 1 | sudo tee /sys/module/imx296/parameters/trigger\_mode
+\end{quote}
+Use the documented procedure for the installed driver version.
+Boards with Q2 fitted require the documented R11 modification; use suitable level conversion and board-specific instructions~\cite{pigscam}.
+
+Exposure duration controls motion blur; frame interval controls temporal sampling.
+At 60\,fps, consecutive frames are 16.67\,ms apart: a ball moving at 70\,m/s travels 1.167\,m between them, but only 2.1\,mm during a 30\,\si{\micro\second} exposure.
+Whether that yields usable images depends on field of view, magnification, illumination and trigger timing.
+It cannot supply two consecutive frame samples within a 3\,ms interval, but it can record flight over a larger observation region.
+Multiple flashes within one exposure, as discussed in \cref{app:optical}, are one possible architecture; a faster camera or a different observation window is another.
+None alone establishes spin observability without resolvable surface features, timing and calibrated geometry.
 
 \section{Simulator Integration: GSPro Open Connect}
 \label{app:gspro}
 
-GSPro's Open Connect v1~\cite{gspro} is the only fully documented open
-launch-monitor protocol and is the sensible native output
-(PiTrac ships it; E6/TruGolf and Foresight FSX require partnership
-agreements~\cite{pitrac}). Mechanics: JSON over TCP to
-\texttt{127.0.0.1:0921}, launch monitor as client. Minimum shot
-message: \texttt{DeviceID}, \texttt{ShotNumber}, \texttt{APIversion},
-\texttt{ShotDataOptions\{ContainsBallData, ContainsClubData\}}, and
-\texttt{BallData} with the five required fields:
-\begin{center}\small
-\begin{tabular}{@{}llll@{}}
-\toprule
-Field & Units & Required & Maps to \\
-\midrule
-\texttt{Speed} & mph & yes & ball speed (\cref{tab:ballparams}) \\
-\texttt{VLA} & deg & yes & launch angle \\
-\texttt{HLA} & deg & yes & launch direction \\
-\texttt{TotalSpin} & rpm & yes$^{*}$ & spin rate \\
-\texttt{SpinAxis} & deg & yes$^{*}$ & spin-axis tilt ($-$ = draw) \\
-\bottomrule
-\end{tabular}
+GSPro Open Connect v1 is a documented JSON-over-TCP interface; its sample endpoint is localhost port 921, with the launch monitor acting as client~\cite{gspro}.
+It is an integration example, not an assertion that no other documented protocol exists.
+A shot supplies device identity, shot number, API version, data-presence options and ball fields including \texttt{Speed} (mph), \texttt{VLA}/\texttt{HLA} (degrees) and spin data.
+The specification accepts \texttt{TotalSpin}/\texttt{SpinAxis} or \texttt{BackSpin}/\texttt{SideSpin}; it also describes optional club fields, readiness/heartbeat messages and a player-information response~\cite{gspro}.
 
-\smallskip
-\footnotesize $^{*}$or \texttt{BackSpin}+\texttt{SideSpin}, related by
-\cref{eq:spincomponents}.
-\end{center}
-Optional \texttt{ClubData} carries \texttt{Speed},
-\texttt{AngleOfAttack}, \texttt{Path}, \texttt{FaceToTarget},
-\texttt{Loft}, \texttt{Lie}, \texttt{SpeedAtImpact},
-\texttt{VerticalFaceImpact}, \texttt{HorizontalFaceImpact},
-\texttt{ClosureRate} --- precisely the \cref{tab:clubparams} set, so
-the provenance tagging of \cref{ch:implications} carries through
-unchanged. Status flags (\texttt{LaunchMonitorIsReady},
-\texttt{LaunchMonitorBallDetected}, \texttt{IsHeartBeat}) and the
-201 player-info response (handedness, selected club --- useful for
-per-club priors, \cref{app:priors}) complete the loop.
+Numeric field names do not preserve the scientific meaning of a measurement automatically.
+Verify units, angle signs, handedness, reference points and event times against \cref{ch:params}; avoid labeling a signed spin-axis value as a draw independently of handedness and convention.
+Two spin parameters also do not encode an unrestricted three-component spin vector; any mapping must state its representation assumptions.
+The documented schema supplies no general per-field uncertainty or measurement-provenance contract.
+Keep a separate, shot-linked record of raw evidence, calibration, inferred versus observed quantities and unavailable values, as motivated by \cref{ch:implications}.
+Do not replace unavailable spin with an apparently measured zero or silently present a prior-driven estimate as an observation simply to fill a required field.
+An accepted simulator message confirms transport compatibility, not measurement validity.
 
-\section{Regulatory Constants for the Physics Engine}
+\section{Equipment Rules and Model Parameters}
 
-USGA/R\&A equipment rules anchor the models of
-\cref{ch:impact,ch:flight}~\cite{usgarules}: ball mass
-$\le45.93$\,g and diameter $\ge42.67$\,mm (the constants in
-\cref{eq:eom}); clubhead characteristic time
-$\mathrm{CT}\le239$\,\si{\micro\second} (+18 tolerance)
-$\approx$ COR 0.830 --- the $e$ in \cref{eq:ballspeed}; head MOI
-$\le5900$\,g\,cm$^2$ (+100) about the vertical CG axis --- the upper
-bound on $I_h$ in \cref{eq:gear}; volume $\le460$\,cc. The Overall
-Distance Standard (317\,yd + 3 at 120\,mph clubhead / 10$\degs$ /
-2520\,rpm; from January 2028, 125\,mph / 11$\degs$ / 2200\,rpm) is a
-useful end-to-end sanity envelope for the flight model: a conforming
-ball simulated at ALC conditions must not materially exceed
-320\,yd~\cite{usgarules}.
+Equipment conformance limits are constraints, not measured properties of every conforming club or ball.
+The ball rules specify mass at most 45.93\,g and diameter at least 42.67\,mm~\cite{randaballrules}.
+Using these limiting values in \cref{eq:eom} is a declared modeling choice; it does not identify a particular ball's mass, diameter, inertia or aerodynamic coefficients.
+
+The driver spring-effect test uses a characteristic-time limit of 239\,\si{\micro\second} with an 18\,\si{\micro\second} test tolerance~\cite{usgactnotice}.
+This pendulum-test quantity is not the club--ball contact duration or a universal conversion to the restitution coefficient $e$ in \cref{eq:ballspeed}.
+That coefficient belongs to the declared impact model, incident speed, impact location and club/ball pairing.
+The wood-head volume limit is 460\,cm$^3$ with a 10\,cm$^3$ tolerance; the MOI limit is 5900\,g\,cm$^2$ with a 100\,g\,cm$^2$ test tolerance about the vertical CG axis at a 60$\degs$ lie angle~\cite{randaclubrules}.
+This is one specified inertia component, not a bound automatically transferable to every axis in \cref{eq:gear}.
+
+\textbf{Status checked October 4, 2026:} the December 2023 announcement described changing the ODS test from 120\,mph/10$\degs$/2520\,rpm to 125\,mph/11$\degs$/2200\,rpm, originally beginning in 2028~\cite{usgaods2023}.
+The June 17, 2026 joint statement superseded that timetable: no ODS testing change before January 2030 while alternative approaches are evaluated~\cite{usgaods2026}.
+Do not present the earlier 2028 schedule as current or assume the eventual conditions are settled.
+The 317\,yd limit plus 3\,yd tolerance concerns the specified overall-distance test, not a universal maximum carry for a conforming ball~\cite{randaballrules}.
+A flight-model comparison requires the actual launch conditions, atmosphere, aerodynamic characterization and prescribed bounce/roll treatment; merely keeping an arbitrary simulation below 320\,yd neither validates it nor certifies ball conformance.
 
 \section{Detection Theory: CFAR Selection}
 
-A typical CFAR setting (SNR $>15$ over a 150-bin DC mask) is a
-cell-averaging scheme. The radar literature~\cite{cfartutorial}
-distinguishes: CA-CFAR (mean of training cells around the cell under
-test, guard cells excluded; threshold $\alpha\hat P_n$ with $\alpha$
-set by the desired false-alarm probability) --- optimal in homogeneous
-noise; and \textbf{OS-CFAR} (order statistic: the $k$-th ranked
-training cell) --- robust when two targets sit close together, at
-$\sim$0.5--1\,dB detection loss. The club-then-ball geometry of a golf
-shot is precisely the two-closely-spaced-targets case, so OS-CFAR is
-the better default for the impact window.
+Constant-false-alarm-rate (CFAR) detection adapts a threshold to an estimate of local background power.
+A fixed SNR cutoff and a masked region around zero Doppler do not, by themselves, specify a cell-averaging CFAR detector.
+CA-CFAR uses the mean of training-cell powers, excluding guard cells around the cell under test; OS-CFAR uses a selected order statistic~\cite{cfartutorial,cfarmethods}.
+The training region, guard width, rank where applicable, noise model and target false-alarm probability are part of the algorithm.
+
+For an illustrative square-law CA detector, suppose the test-cell noise and $K$ training-cell powers are independent exponential variables with common mean $\mu$.
+Let $\bar P$ be their training mean and declare a detection when $P_{\rm CUT}>\alpha\bar P$.
+Conditioning on the training samples gives
+\begin{equation}
+\label{eq:hardwarecfar}
+ P_{\rm FA}=\mathbb E\!\left[e^{-\alpha\bar P/\mu}\right]
+ =\left(1+\frac{\alpha}{K}\right)^{-K},\qquad
+ \alpha=K\left(P_{\rm FA}^{-1/K}-1\right).
+\end{equation}
+The product follows from the exponential Laplace transform for each independent training cell.
+It is a conditional model calculation, not a false-alarm guarantee for real golf data: windowing and zero-padding can correlate spectral samples, while clutter and target leakage can invalidate the common-background model.
+A mask specified only as a number of padded bins also changes its physical velocity width when the FFT configuration changes.
+
+OS-CFAR can reduce the effect of some high-power contaminated training cells, with performance depending on the chosen rank and contamination pattern; it is not universally superior for a club followed by a ball~\cite{cfarmethods}.
+Their closeness in physical space or time does not establish closeness in the processed range--Doppler cells.
+Guard cells cannot separate unresolved targets, and neither a universal 0.5--1\,dB loss nor a preferred detector follows from the shot geometry alone.
+Compare candidate detectors at matched false-alarm targets on declared single-target, multiple-target and clutter cases, including nondetections and mistaken associations.
+
+\begin{implication}
+The useful design unit is the complete observation chain: sensor geometry, acquisition window, synchronization, estimator, uncertainty record and downstream model.
+A finer reported number does not create a new physical observation; a plausible impact or flight result does not independently validate the measurements used to produce it.
+Preserve these distinctions when relating measured ball flight back to club delivery and, further upstream, to the golfer's swing.
+\end{implication}

@@ -1,0 +1,140 @@
+/* Drift vs Control double-pendulum sandbox (articles/theory-part1.qmd, issue #4533). */
+
+#dcsb-app {
+  --dcsb-drift: #2563eb;
+  --dcsb-input: #c2410c;
+  --dcsb-linkage: #1f2937;
+  --dcsb-ghost: #6b7280;
+
+  font-family: system-ui, sans-serif;
+  max-width: 46rem;
+}
+
+[data-theme="dark"] #dcsb-app {
+  --dcsb-drift: #60a5fa;
+  --dcsb-input: #fb923c;
+  --dcsb-linkage: #e5e7eb;
+  --dcsb-ghost: #9ca3af;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #dcsb-app {
+    --dcsb-drift: #60a5fa;
+    --dcsb-input: #fb923c;
+    --dcsb-linkage: #e5e7eb;
+    --dcsb-ghost: #9ca3af;
+  }
+}
+
+.dcsb-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+#dcsb-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+#dcsb-controls label,
+.dcsb-time-row label {
+  display: block;
+  font-size: 0.82rem;
+}
+
+#dcsb-controls input[type="range"],
+#dcsb-controls select,
+.dcsb-time-row input {
+  width: 100%;
+}
+
+.dcsb-time-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: end;
+  margin-bottom: 0.75rem;
+}
+
+.dcsb-time-row > div {
+  flex: 1;
+}
+
+#dcsb-play {
+  min-width: 5rem;
+  min-height: 2.75rem;
+}
+
+#dcsb-canvas {
+  display: block;
+  max-width: 30rem;
+  margin: 0 auto;
+}
+
+#dcsb-canvas,
+.dcsb-chart {
+  width: 100%;
+  height: auto;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.dcsb-line-drift {
+  stroke: var(--dcsb-drift);
+}
+
+.dcsb-line-input {
+  stroke: var(--dcsb-input);
+}
+
+.dcsb-zero,
+.dcsb-cursor {
+  stroke: var(--dcsb-ghost);
+}
+
+.dcsb-legend {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dcsb-legend-drift {
+  color: var(--dcsb-drift);
+}
+
+.dcsb-legend-input {
+  color: var(--dcsb-input);
+}
+
+.dcsb-legend-ghost {
+  color: var(--dcsb-ghost);
+}
+
+#dcsb-status {
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.dcsb-results td,
+.dcsb-results th {
+  padding: 0.2rem 0.5rem;
+}
+
+.dcsb-mono {
+  font-family: ui-monospace, monospace;
+}
+
+#dcsb-app[data-mode="lite"] .dcsb-full-only {
+  display: none;
+}

@@ -13,6 +13,7 @@ canonical: "/articles/theory-part1.html"
 status: "available"
 audience-level: "advanced"
 evidence-rung: "mathematical-identity"
+symbol-hover: true
 prerequisites:
   - "pages/how-to-read.html"
 summary-plain: "Derives the control-affine structure of the golf swing, separating autonomous passive drift from actuated control input channels."
@@ -21,6 +22,18 @@ key-takeaways:
   - "The golf swing equations of motion admit a strict control-affine decomposition into drift and input."
   - "Generalized muscular forces enter linearly through a state-dependent control input matrix."
   - "The autonomous drift field encapsulates all passive gravitational, Coriolis, and velocity-dependent forces."
+caveats:
+  evidence-level: "Theory (Mathematical Identity)"
+  establishes:
+    - "Mathematical formulation of the coupled golfer-club system as a control-affine dynamical system."
+    - "Instantaneous decomposition of the phase space vector field into autonomous drift and input components."
+  does-not-establish:
+    - "Individual muscle recruitment, motor unit activation, or neural intent."
+    - "Aerodynamic clubhead drag, compliant foot-ground shear traction, or impact collision mechanics."
+    - "Empirical validation on human golfers without subject-specific parameter identification."
+  open-critiques:
+    - "[Critique: Affine Nature of the Golf Swing](affine-nature-golf-swing.html)"
+  next-gate: "Simscape torque matching (GATE-SIM-01) and laboratory force plate qualification."
 changes:
   - date: "2026-09-10"
     description: "Wired reference cluster cross-article links (#4364)."
@@ -41,6 +54,10 @@ categories:
 
 {{< include _generated/trust/critique-annotations/theory-part1.qmd >}}
 
+{{< include ../_includes/generated/drift-plus-control.qmd >}}
+
+New to the idea? [The Big Idea in Five Minutes](../pages/big-idea.html) explains drift and control without equations before this page derives them.
+
 ::: {.callout-note}
 ## Canonical Version
 
@@ -57,66 +74,23 @@ This is the authoritative treatment of the control-affine framework for the golf
 - **Terminology:** The terms "drift" and "input" are standard in nonlinear control. "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' naming for these constructions in the golf context.
 :::
 
-::: {.callout-note}
-## Scope & Exclusions
-This model captures the mechanical structure of coupled rigid bodies (golfer's limbs and torso) and a flexible shaft connected at the grip. It includes inertia, gravity, elastic and damping forces from shaft bending, and joint torques as declared inputs. It explicitly excludes aerodynamic drag, compliant or changing foot contact, marker dynamics, muscle activation delays, and impacts. Ideal fixed-base support reactions are retained through the constraints even when eliminated from the independent-coordinate equations. Terms retained in the chosen equations can be separated into autonomous and declared-input components; what is excluded lies outside the model's scope and must not be attributed by the decomposition.
-:::
-
 {{< include ../_includes/control-affine-attribution-boundary.qmd >}}
 
 The golf swing is a high-speed, full-body motion executed by a mechanically complex, constrained multibody system. Conventional inverse dynamics can estimate net generalized loads consistent with motion and external-force measurements, but it does not identify individual-muscle forces, neural intent, or a unique real-world cause. This paper develops a strictly theoretical control-affine model and separates its instantaneous vector field into autonomous (drift) and declared-input terms. The Zero Torque Counterfactual (ZTCF), Zero Velocity Counterfactual (ZVCF), and force taxonomy are model-conditioned diagnostics; empirical interpretation requires parameter identification, qualifying measurements, and validation.
 
 Before writing equations, we ask a bounded question: at a specified model state, how much instantaneous evolution is assigned to the autonomous term, and how much to the declared torque input channel? This is mathematical bookkeeping inside a chosen mechanical model, not a direct reading of what the golfer intended or which muscles produced the motion.
 
+::: {.laymans-terms}
 ```{=html}
-<!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
-<section class="laymans-terms">
-  <h2>
-  <button type="button" class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
-  </button>
-</h2>
-  <div class="laymans-terms-content">
-    <div class="laymans-terms-inner">
-      <p class="laymans-terms-intro">
-        New to control theory? Here's what this foundational article covers in everyday language.
-      </p>
+<p class="laymans-terms-intro">New to control theory? Here is what this foundational article covers in everyday language.</p>
+<div class="laymans-item"><h3>The Core Question</h3><p>At a given state in the model, how much of the instantaneous motion comes from the model's own <a href="../pages/glossary.html#drift">drift</a>, and how much from the declared input channel?</p><div class="analogy">Picture a skateboard model with gravity and a declared push force. The equations can report each channel's share at the same state. That report does not measure the rider's intent, muscles or biological effort.</div></div>
+<div class="laymans-item"><h3>What Is a State?</h3><p>The state is a snapshot that is enough to predict the declared model under stated future inputs. Here it holds the rigid pose, shaft bend and their rates. Pose alone is not enough. A physiological model may need more internal states.</p><div class="analogy">The model predicts a path from the current state, its parameters and the declared future inputs. The state is the model's stored memory. Biological states left out stay outside the prediction.</div></div>
+<div class="laymans-item"><h3>The Modeling Simplifications</h3><p>To keep the math workable, body parts are treated as rigid. The shaft can bend, but in predictable ways. Air resistance is ignored. These are standard engineering approximations.</p><div class="analogy">Weather models do not track every raindrop either. They simplify so prediction is possible. Their accuracy must still be tested against the prediction you want.</div></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> The article splits motion into the model's own drift and the declared input, at one state, inside stated simplifications.</div>
+```
+:::
 
-      <div class="laymans-item">
-        <h3>The Core Question</h3>
-        <p>
-          At a specified state in the model, how much instantaneous motion is assigned to the autonomous dynamics, and how much is assigned to the declared input channel?
-        </p>
-        <div class="analogy">
-          Imagine a skateboard model with gravity and a declared push force. The equations can report the term contributed by each channel at the same state, but that report does not measure the rider's intent, muscles, or biological effort.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>What is a "State"?</h3>
-        <p>
-          The "state" is a snapshot sufficient to predict the declared model under specified future inputs. Here it includes rigid configuration, shaft deformation, and their rates. Pose alone is insufficient, and a physiological model may need additional internal states.
-        </p>
-        <div class="key-takeaway">
-          Given the current state, model parameters, and future declared inputs, the model predicts a trajectory. The state contains the model's represented "memory"; omitted biological states remain outside that prediction.
-        </div>
-      </div>
-
-      <div class="laymans-item">
-        <h3>The Modeling Simplifications</h3>
-        <p>
-          To make the math tractable, this framework makes some simplifying assumptions: body parts are treated as rigid (not squishy), the club shaft can bend but in predictable ways, and we ignore air resistance. These are standard engineering approximations.
-        </p>
-        <div class="analogy">
-          It's like how weather models don't track every raindrop—they simplify to make predictions possible whose accuracy must be tested against the intended prediction.
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+```{=html}
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
   <h2>
@@ -432,9 +406,9 @@ Computed by `src/affine_control/dynamics.py::spatial_inertia`; checked against t
 Use the complete configuration $z=(q,\eta)$ and $v=\dot z$. In the stated smooth, independent-coordinate model, let $\mathcal L=T-U_g-\tfrac12\eta^\top K_s\eta$ and retain a separately declared passive joint load $\tau_{\mathrm{pas}}(q,\dot q)$. For constant symmetric modal stiffness and damping matrices, the generalized force balance is
 
 $$
-M(z)\dot v+C(z,v)v+g(z)
+\symref{M}{M(z)}\dot v+\symref{C}{C(z,v)}v+\symref{g}{g(z)}
 +\begin{bmatrix}\tau_{\mathrm{pas}}(q,\dot q)\\K_s\eta+C_s\dot\eta\end{bmatrix}
-=\begin{bmatrix}B(q)u\\0\end{bmatrix}.
+=\begin{bmatrix}\symref{B}{B(q)}\symref{u}{u}\\0\end{bmatrix}.
 $$
 
 Here $g(z)=\partial_z U_g(z)$ generally acts on both rigid and modal coordinates. The lower zero says that no **direct generalized input** is applied to the retained shaft coordinates. It does not set their acceleration, velocity, or restoring force to zero. Underactuation is a rank statement: the full $N$-row generalized-force input map has rank less than $N$ when $m>0$ and its lower block vanishes. An arbitrary number of channels need not equal its rank; redundant actuators are possible.
@@ -565,7 +539,7 @@ Here $[\cdot]_{1:n}$ and $[\cdot]_{n+1:n+m}$ denote the rigid and flexible compo
 
 This is a nonlinear control-affine system:
 
-$$\dot{x} = f(x) + G(x)\,u.$$
+$$\dot{\symref{x}{x}} = \symref{f}{f(x)} + \symref{G}{G(x)}\,\symref{u}{u}.$$
 
 Both $f(x)$ and $G(x)$ may depend nonlinearly on state, including through shaft flexibility. The input dependence is linear in $u$ at a fixed state. The purely rigid-body model is recovered by setting $m = 0$.
 
@@ -583,10 +557,124 @@ For golf, these distinctions explain why posture, torque history, shaft response
 
 The present derivation is exact for its stated finite-dimensional equations, subject to their regularity and nondegeneracy assumptions. Approximation of a distributed shaft and a human golfer remains a separate question. Verify the assembly numerically, test mode/mesh convergence, compare predicted forces and motions with suitable data, and retain the limits of those comparisons. A successful algebraic check establishes consistency of a model calculation; it does not validate physiology or a universal swing prescription.
 
+### Interactive: Drift Versus Control in a Double Pendulum {#drift-control-sandbox}
+
+This sandbox runs the smallest member of the family above: a rigid planar double pendulum with point masses at the middle of each link, the model of `src/affine_control/dynamics.py::double_pendulum_mass_matrix`. For it, $a_{\mathrm{drift}}=-M^{-1}(C\dot q+\nabla V)$ and $A_{\mathrm{input}}u=M^{-1}Bu$, where a shoulder torque acts on link 1 and a wrist torque acts between the links. Both arms of the split are evaluated at **the same state**, sample by sample, along the driven run. The grey dashed linkage is different: it is the zero-torque trajectory integrated separately from the same initial state, which is what the drift samples are *not*.
+
+```{=html}
+<link rel="stylesheet" href="../css/drift-control-sandbox.css">
+<div id="dcsb-app" data-mode="full">
+<noscript>
+<p>This sandbox needs JavaScript. It integrates the double pendulum from rest
+at a declared top-of-downswing pose under constant shoulder and wrist torques,
+and plots the drift and input joint accelerations at each state. The numbers
+are reproducible in Python with
+<code>src/affine_control/double_pendulum_affine.py::simulate</code>.</p>
+</noscript>
+<p class="dcsb-badge">Exploratory model output</p>
+<div id="dcsb-controls">
+  <div>
+    <label for="dcsb-preset">Scenario</label>
+    <select id="dcsb-preset">
+      <option value="zero-torque">Zero torque (drift only)</option>
+      <option value="shoulder-drive" selected>Shoulder drive</option>
+      <option value="shoulder-and-wrist">Shoulder drive with wrist torque</option>
+    </select>
+  </div>
+  <div>
+    <label for="dcsb-shoulder">Shoulder torque (N·m): <span id="dcsb-shoulder-value">−20</span></label>
+    <input id="dcsb-shoulder" type="range" min="-40" max="40" step="1" value="-20">
+  </div>
+  <div>
+    <label for="dcsb-wrist">Wrist torque (N·m): <span id="dcsb-wrist-value">0</span></label>
+    <input id="dcsb-wrist" type="range" min="-10" max="10" step="0.5" value="0">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-l1">Arm length (m): <span id="dcsb-l1-value">0.75</span></label>
+    <input id="dcsb-l1" type="range" min="0.5" max="1" step="0.05" value="0.75">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-l2">Club length (m): <span id="dcsb-l2-value">1.1</span></label>
+    <input id="dcsb-l2" type="range" min="0.8" max="1.3" step="0.05" value="1.1">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-m1">Arm mass (kg): <span id="dcsb-m1-value">7</span></label>
+    <input id="dcsb-m1" type="range" min="3" max="12" step="0.5" value="7">
+  </div>
+  <div class="dcsb-full-only">
+    <label for="dcsb-m2">Club mass (kg): <span id="dcsb-m2-value">0.6</span></label>
+    <input id="dcsb-m2" type="range" min="0.2" max="1.5" step="0.1" value="0.6">
+  </div>
+  <div>
+    <label><input id="dcsb-ghost" type="checkbox" checked> Show the zero-torque counterfactual</label>
+  </div>
+</div>
+<div class="dcsb-time-row">
+  <div>
+    <label for="dcsb-time">Time $t$ (s): <span id="dcsb-time-value">0</span></label>
+    <input id="dcsb-time" type="range" min="0" max="500" step="1" value="0">
+  </div>
+  <button id="dcsb-play" type="button" aria-pressed="false">Play</button>
+</div>
+<div id="dcsb-status" role="status" aria-live="polite"></div>
+<canvas id="dcsb-canvas" width="480" height="480" role="img" aria-label="Double pendulum sandbox"></canvas>
+<p class="dcsb-legend">
+  <span class="dcsb-legend-drift">→ Drift part of the club-tip acceleration</span> ·
+  <span class="dcsb-legend-input">→ Input part</span> ·
+  <span class="dcsb-legend-ghost">- - Zero-torque counterfactual</span> ·
+  arrow scale: 1 m on screen = <span id="dcsb-arrow-scale">—</span> m/s²
+</p>
+<div class="dcsb-full-only">
+<p class="dcsb-legend">Joint 1 (arm) acceleration, rad/s², range <span id="dcsb-range-q1">—</span></p>
+<svg id="dcsb-chart-q1" viewBox="0 0 560 140" class="dcsb-chart" role="img" aria-label="Arm drift and input acceleration over time; values in the data table">
+  <polyline class="dcsb-zero" fill="none" stroke-width="1"></polyline>
+  <polyline class="dcsb-line-drift" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-line-input" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-cursor" fill="none" stroke-width="1"></polyline>
+</svg>
+<p class="dcsb-legend">Joint 2 (club) acceleration, rad/s², range <span id="dcsb-range-q2">—</span></p>
+<svg id="dcsb-chart-q2" viewBox="0 0 560 140" class="dcsb-chart" role="img" aria-label="Club drift and input acceleration over time; values in the data table">
+  <polyline class="dcsb-zero" fill="none" stroke-width="1"></polyline>
+  <polyline class="dcsb-line-drift" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-line-input" fill="none" stroke-width="2"></polyline>
+  <polyline class="dcsb-cursor" fill="none" stroke-width="1"></polyline>
+</svg>
+</div>
+<table class="dcsb-results">
+  <thead>
+    <tr><th scope="col">At the selected time</th><th scope="col">Drift</th><th scope="col">Input</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Arm acceleration (rad/s²)</td><td id="dcsb-now-drift-1" class="dcsb-mono">—</td><td id="dcsb-now-input-1" class="dcsb-mono">—</td></tr>
+    <tr><td>Club acceleration (rad/s²)</td><td id="dcsb-now-drift-2" class="dcsb-mono">—</td><td id="dcsb-now-input-2" class="dcsb-mono">—</td></tr>
+    <tr><td>Club-tip acceleration magnitude (m/s²)</td><td id="dcsb-now-tip-drift" class="dcsb-mono">—</td><td id="dcsb-now-tip-input" class="dcsb-mono">—</td></tr>
+  </tbody>
+</table>
+<details>
+<summary>Sampled values along the driven run (data table)</summary>
+<table class="dcsb-results">
+  <thead>
+    <tr><th scope="col">t (s)</th><th scope="col">q₁ (rad)</th><th scope="col">q₂ (rad)</th>
+      <th scope="col">Arm drift</th><th scope="col">Arm input</th>
+      <th scope="col">Club drift</th><th scope="col">Club input</th></tr>
+  </thead>
+  <tbody id="dcsb-data"></tbody>
+</table>
+</details>
+</div>
+<script src="../js/drift-control-sandbox.js"></script>
+<script src="../js/drift-control-sandbox-ui.js"></script>
+```
+
+This is an **exploratory model output**, not a golfer measurement. The masses, lengths, starting pose and constant torques are declared illustrative values, angles are absolute and measured from the downward vertical, and the browser mirror is checked against the Python reference by `tests/fixtures/widgets/drift-control-sandbox.parity.json`. Watch two things. First, with the zero-torque scenario the input arrow vanishes and the driven linkage coincides with the counterfactual. Second, with torque applied the two linkages separate, so later drift values belong to states the torque helped reach. That is why the same-state split does not partition a finite motion into a "passive" path and an "active" path.
+
+### The Same Scenario, Animated {#sec-drift-control-animation}
+
+{{< include ../_includes/generated/explainers/drift-vs-control.qmd >}}
+
 ## Related Articles
 
-::: {.callout-note}
-## See Also
+::: {.callout-note title="See Also"}
 
 - **[Part 2: Counterfactual Diagnostics (ZTCF/ZVCF)](theory-part2.html)** — Uses the control-affine structure to define and analyze zero-torque and zero-velocity counterfactuals
 - **[Part 3: Drift Invariance and Force Taxonomy](theory-part3.html)** — Examines same-state drift invariance under a declared input convention

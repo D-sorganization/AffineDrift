@@ -1,0 +1,89 @@
+Here is the mathematical audit of the four items, evaluating validity, algebraic derivations, domains, limits, and potential failure modes.
+
+---
+
+### 1. Rectified Stereo Depth, Derivatives, and Error Propagation
+
+* **Depth & Derivative:**
+  * For ideal parallel stereo, $Z = \frac{f B}{d}$.
+  * Derivative with respect to disparity $d$:
+    $$\frac{dZ}{dd} = -\frac{f B}{d^2} = -\frac{Z^2}{f B}$$
+    **Verdict:** Exact and correct.
+* **First-order Variance Propagation:**
+  * Taylor expansion yields $\Delta Z \approx \left(\frac{dZ}{dd}\right)\Delta d = -\frac{Z^2}{f B}\Delta d$, hence:
+    $$\sigma_Z \approx \frac{Z^2}{f B}\sigma_d$$
+  * For $d = u_L - u_R$, the variance is:
+    $$\sigma_d^2 = \operatorname{Var}(u_L) + \operatorname{Var}(u_R) - 2\operatorname{Cov}(u_L, u_R)$$
+    **Verdict:** Exact for local first-order linearized propagation.
+* **Limits & Counterexample to Universal Application:**
+  * **Asymmetry / Non-Gaussianity:** When $\sigma_d$ is not infinitesimal relative to $d$ (especially at large $Z$ where $d \to 0$), $Z$ follows a reciprocal/ratio distribution (e.g., Cauchy-like heavy tails if $d \sim \mathcal{N}$). The mean $\mathbb{E}[Z]$ diverges or is strongly biased ($\mathbb{E}[1/d] > 1/\mathbb{E}[d]$ by Jensen's inequality).
+  * **Sign / Divergence breakdown:** If $d \le 0$ has nonzero probability under the error model, linear Gaussian propagation predicts finite bounds, whereas real reconstructed $Z$ can cross through $\pm \infty$ or become negative (behind the cameras).
+
+---
+
+### 2. Sphere Silhouette Conic and Perspective Center Shift
+
+* **Tangent Cone Equation:**
+  * For sphere center $\mathbf{c} = (X, Y, Z)^T$ with radius $r$, the ray direction $\mathbf{q} = (u, v, 1)^T$ is tangent to the sphere if the angle $\theta$ between $\mathbf{q}$ and $\mathbf{c}$ satisfies $\sin\theta = r/\|\mathbf{c}\|$, meaning $\cos^2\theta = 1 - r^2/\|\mathbf{c}\|^2 = \frac{\|\mathbf{c}\|^2 - r^2}{\|\mathbf{c}\|^2}$.
+  * Since $\cos\theta = \frac{\mathbf{c}\cdot\mathbf{q}}{\|\mathbf{c}\|\|\mathbf{q}\|}$, squaring yields:
+    $$(\mathbf{c}\cdot\mathbf{q})^2 = (\|\mathbf{c}\|^2 - r^2)(\mathbf{q}\cdot\mathbf{q})$$
+    **Verdict:** Exact and correct.
+* **Conic Center Derivation & Algebra:**
+  * Expand the quadratic form in $(u, v)$:
+    $$\mathbf{q}^T \mathbf{A} \mathbf{q} = 0, \quad \text{where } \mathbf{A} = \mathbf{c}\mathbf{c}^T - (\|\mathbf{c}\|^2 - r^2)\mathbf{I}_3$$
+  * Let $\mathbf{A} = \begin{pmatrix} \mathbf{A}_{2\times 2} & \mathbf{b} \\ \mathbf{b}^T & c_{33} \end{pmatrix}$, with:
+    $$\mathbf{A}_{2\times 2} = \begin{pmatrix} X^2 - (\|\mathbf{c}\|^2 - r^2) & XY \\ XY & Y^2 - (\|\mathbf{c}\|^2 - r^2) \end{pmatrix}, \quad \mathbf{b} = \begin{pmatrix} XZ \\ YZ \end{pmatrix}$$
+  * The center of the affine conic in $(u, v)$ satisfies $\mathbf{A}_{2\times 2} \begin{pmatrix} u_e \\ v_e \end{pmatrix} + \mathbf{b} = \mathbf{0}$, meaning $\begin{pmatrix} u_e \\ v_e \end{pmatrix} = -\mathbf{A}_{2\times 2}^{-1}\mathbf{b}$.
+  * Let $\lambda = \|\mathbf{c}\|^2 - r^2$. Note that $\mathbf{A}_{2\times 2} = \begin{pmatrix} X \\ Y \end{pmatrix}\begin{pmatrix} X & Y \end{pmatrix} - \lambda \mathbf{I}_2$.
+  * By Sherman-Morrison inversion:
+    $$\mathbf{A}_{2\times 2}^{-1} = -\frac{1}{\lambda}\left(\mathbf{I}_2 + \frac{\begin{pmatrix} X \\ Y \end{pmatrix}\begin{pmatrix} X & Y \end{pmatrix}}{\lambda - (X^2 + Y^2)}\right) = -\frac{1}{\lambda}\left(\mathbf{I}_2 + \frac{1}{Z^2 - r^2}\begin{pmatrix} X \\ Y \end{pmatrix}\begin{pmatrix} X & Y \end{pmatrix}\right)$$
+  * Multiplying by $\mathbf{b} = Z \begin{pmatrix} X \\ Y \end{pmatrix}$:
+    $$\mathbf{A}_{2\times 2}^{-1}\mathbf{b} = -\frac{Z}{\lambda}\begin{pmatrix} X \\ Y \end{pmatrix}\left(1 + \frac{X^2+Y^2}{Z^2-r^2}\right) = -\frac{Z}{\lambda}\begin{pmatrix} X \\ Y \end{pmatrix}\left(\frac{\lambda}{Z^2-r^2}\right) = -\frac{Z}{Z^2-r^2}\begin{pmatrix} X \\ Y \end{pmatrix}$$
+  * Therefore:
+    $$\begin{pmatrix} u_e \\ v_e \end{pmatrix} = -\mathbf{A}_{2\times 2}^{-1}\mathbf{b} = \begin{pmatrix} \frac{ZX}{Z^2 - r^2} \\ \frac{ZY}{Z^2 - r^2} \end{pmatrix}$$
+    **Verdict:** Exact and algebraically verified.
+* **Domain & Limits:**
+  * **Bounded Ellipse condition:** The silhouette is an ellipse if and only if the plane tangent cone does not intersect the focal plane ($Z=0$) parallel to any generatrix. The determinant $\det(\mathbf{A}_{2\times 2}) = \lambda (\lambda - X^2 - Y^2) = (\|\mathbf{c}\|^2 - r^2)(Z^2 - r^2) > 0$. Since $\|\mathbf{c}\| > r$, this requires $Z > r$.
+  * If $0 < Z \le r$, the sphere crosses or touches the camera plane $Z=0$; the silhouette conic becomes a parabola or hyperbola, and $(u_e, v_e)$ moves to infinity or ceases to be an interior ellipse center.
+  * **Discrepancy:** The projected sphere center is $(u_p, v_p) = (X/Z, Y/Z)$.
+    $$\Delta u = u_e - u_p = \frac{X}{Z}\left(\frac{Z^2}{Z^2 - r^2} - 1\right) = \frac{X}{Z}\left(\frac{r^2}{Z^2 - r^2}\right)$$
+    Fitting an ellipse yields $(u_e, v_e)$, which has an outward radial perspective bias relative to $(X/Z, Y/Z)$ that grows with $(r/Z)^2$. Ellipse fitting alone cannot resolve $(X/Z, Y/Z)$ without knowing or solving for the 3D depth/radius ratio.
+
+---
+
+### 3. World-Frame Orientation Increment, Logarithm, and Angular Velocity
+
+* **Spatial vs. Body Frame Increments:**
+  * For orientations $Q_k, Q_{k+1} \in \mathrm{SO}(3)$ mapping vectors from body frame to world frame ($\mathbf{x}_w = Q \mathbf{x}_b$):
+    $$Q_{k+1} = R \, Q_k \implies R = Q_{k+1} Q_k^T$$
+    $R$ is indeed the **spatial (world-frame)** rotation increment. (In contrast, $Q_k^T Q_{k+1}$ is the body-frame increment).
+* **Constant Angular Velocity:**
+  * If the spatial angular velocity $\boldsymbol{\omega}(t) \equiv \boldsymbol{\omega}_0$ is constant over $[t_k, t_k + \Delta t]$:
+    $$\dot{Q}(t) = [\boldsymbol{\omega}_0]_\times Q(t) \implies Q_{k+1} = \exp([\boldsymbol{\omega}_0]_\times \Delta t) Q_k \implies R = \exp([\boldsymbol{\omega}_0 \Delta t]_\times)$$
+    If $\|\boldsymbol{\omega}_0\|\Delta t < \pi$, the principal matrix logarithm uniquely maps back:
+    $$\boldsymbol{\omega}_0 = \frac{1}{\Delta t}\operatorname{vee}(\operatorname{Log}(R))$$
+    **Verdict:** Exact and correct.
+* **Varying Angular Velocity (Noncommuting directions):**
+  * When $\boldsymbol{\omega}(t)$ varies non-directionally ($\boldsymbol{\omega}(t_1) \times \boldsymbol{\omega}(t_2) \ne \mathbf{0}$), the Magnus expansion applies:
+    $$\operatorname{Log}(R) = \int_0^{\Delta t} [\boldsymbol{\omega}(t)]_\times dt - \frac{1}{2}\int_0^{\Delta t}\int_0^{t} [\boldsymbol{\omega}(t), \boldsymbol{\omega}(\tau)]_\times d\tau dt + \dots$$
+  * Thus $\frac{1}{\Delta t}\operatorname{vee}(\operatorname{Log}(R)) \ne \frac{1}{\Delta t}\int_0^{\Delta t} \boldsymbol{\omega}(t)dt$ due to non-commutative commutators (coning motion). It represents the single equivalent rotation vector over the interval, not the arithmetic mean.
+* **Angle/Axis Branch Ambiguities:**
+  * $\operatorname{tr}(R) = 1 + 2\cos\theta$ only determines $\cos\theta$, restricting $\theta \in [0, \pi]$.
+  * The skew-symmetric part $(R - R^T)/(2\sin\theta)$ identifies the axis along with the sign of $\sin\theta$; at $\theta = \pi$, $\sin\theta = 0$ and the axis must be obtained from the symmetric part $R + I$, yielding an unsigned axis $\pm \mathbf{n}$ (a non-orientable singular point).
+  * Sampling cannot resolve full rotations modulo $2\pi k$ ($k \in \mathbb{Z}$), nor can an object's discrete rotation symmetries (e.g., $180^\circ$ ambiguities for axially symmetric bodies) be resolved without continuous tracking.
+
+---
+
+### 4. Rigid-Body Point Pose and Velocity Kinematics
+
+* **3D Rigid Transformation Uniqueness:**
+  * A proper rigid transform $(R, \mathbf{t}) \in \mathrm{SE}(3)$ has 6 degrees of freedom.
+  * 3 non-collinear matched 3D points $\mathbf{p}_1, \mathbf{p}_2, \mathbf{p}_3$ define an affine span of dimension 2 (a unique oriented orthonormal coordinate triad via $\mathbf{v}_1 = \frac{\mathbf{p}_2 - \mathbf{p}_1}{\|\mathbf{p}_2 - \mathbf{p}_1\|}$, $\mathbf{v}_2 = \frac{(\mathbf{p}_3 - \mathbf{p}_1) - (\mathbf{v}_1 \cdot (\mathbf{p}_3 - \mathbf{p}_1))\mathbf{v}_1}{\|\dots\|}$, $\mathbf{v}_3 = \mathbf{v}_1 \times \mathbf{v}_2$).
+  * This determines $R \in \mathrm{SO}(3)$ and $\mathbf{t} \in \mathbb{R}^3$ uniquely without noise.
+* **Collinear Degeneracy:**
+  * For $N \ge 3$ collinear points (such as four collinear dots), any rotation around the line of points leaves their positions invariant. The rotation is indeterminate up to a 1D subgroup $\mathrm{SO}(2)$.
+* **Single Marker vs. Full Body Pose & Rigid Kinematics:**
+  * A single point marker gives only position $\mathbf{p}(t) \in \mathbb{R}^3$ and translational velocity $\mathbf{v}(t) \in \mathbb{R}^3$; it provides 0 rotational degrees of freedom.
+  * For two points $P$ and $O$ fixed on the same rigid body:
+    $$\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega} \times (\mathbf{p}_P - \mathbf{p}_O)$$
+    **Verdict:** Exact and correct, provided $\mathbf{v}_P, \mathbf{v}_O, \boldsymbol{\omega}$, and $(\mathbf{p}_P - \mathbf{p}_O)$ are all expressed in the same reference frame at the same instant $t$.

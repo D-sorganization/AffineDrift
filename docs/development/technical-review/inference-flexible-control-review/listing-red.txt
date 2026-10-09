@@ -1,0 +1,215 @@
+FFFFFFFFFFFFFFFFFFFFF                                                    [100%]
+================================== FAILURES ===================================
+__________________________ test_gaussian_closed_form __________________________
+tests\test_inference_flexible_control_listings.py:44: in test_gaussian_closed_form
+    result = inference["map_estimate"](problem(inference), np.zeros(1))
+                                       ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+__________________ test_gaussian_observation_contract[bad0] ___________________
+tests\test_inference_flexible_control_listings.py:51: in test_gaussian_observation_contract
+    inference["map_estimate"](replace(problem(inference), observations=bad), np.zeros(1))
+                                      ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+__________________ test_gaussian_observation_contract[bad1] ___________________
+tests\test_inference_flexible_control_listings.py:51: in test_gaussian_observation_contract
+    inference["map_estimate"](replace(problem(inference), observations=bad), np.zeros(1))
+                                      ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+_______________________ test_gaussian_prediction_shape ________________________
+tests\test_inference_flexible_control_listings.py:55: in test_gaussian_prediction_shape
+    task = replace(problem(inference), forward_model=lambda theta: np.array([theta[0]]))
+                   ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+___________________ test_gaussian_covariance_contract[cov0] ___________________
+tests\test_inference_flexible_control_listings.py:63: in test_gaussian_covariance_contract
+    inference["map_estimate"](replace(problem(inference), noise_cov=cov), np.zeros(1))
+                                      ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+___________________ test_gaussian_covariance_contract[cov1] ___________________
+tests\test_inference_flexible_control_listings.py:63: in test_gaussian_covariance_contract
+    inference["map_estimate"](replace(problem(inference), noise_cov=cov), np.zeros(1))
+                                      ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+___________________ test_gaussian_covariance_contract[cov2] ___________________
+tests\test_inference_flexible_control_listings.py:63: in test_gaussian_covariance_contract
+    inference["map_estimate"](replace(problem(inference), noise_cov=cov), np.zeros(1))
+                                      ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+_______________________ test_gaussian_optimizer_failure _______________________
+tests\test_inference_flexible_control_listings.py:69: in test_gaussian_optimizer_failure
+    inference["map_estimate"](problem(inference), np.zeros(1))
+                              ^^^^^^^^^^^^^^^^^^
+tests\test_inference_flexible_control_listings.py:39: in problem
+    return ns["GaussianProblem"](np.array([[1.0], [3.0]]),
+           ^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'GaussianProblem'
+__________________ test_uniform_cantilever_and_clamped_modes __________________
+tests\test_inference_flexible_control_listings.py:73: in test_uniform_cantilever_and_clamped_modes
+    params = beam["BeamParameters"](1.0, 1.0, 1.0, 1.0)
+             ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'BeamParameters'
+---------------------------- Captured stdout setup ----------------------------
+Natural frequencies (Hz):
+  Mode 1: 7.8 Hz
+  Mode 2: 43.8 Hz
+  Mode 3: 118.1 Hz
+  Mode 4: 229.0 Hz
+  Mode 5: 376.9 Hz
+  Mode 6: 561.7 Hz
+_______________________ test_beam_scaling_and_tip_mass ________________________
+tests\test_inference_flexible_control_listings.py:82: in test_beam_scaling_and_tip_mass
+    params = beam["BeamParameters"](1.0, 1.0, 1.0, 1.0)
+             ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'BeamParameters'
+---------------------------- Captured stdout setup ----------------------------
+Natural frequencies (Hz):
+  Mode 1: 7.8 Hz
+  Mode 2: 43.8 Hz
+  Mode 3: 118.1 Hz
+  Mode 4: 229.0 Hz
+  Mode 5: 376.9 Hz
+  Mode 6: 561.7 Hz
+___________________ test_beam_parameter_contract[length-0] ____________________
+tests\test_inference_flexible_control_listings.py:92: in test_beam_parameter_contract
+    params = beam["BeamParameters"](1.0, 1.0, 1.0, 1.0)
+             ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'BeamParameters'
+---------------------------- Captured stdout setup ----------------------------
+Natural frequencies (Hz):
+  Mode 1: 7.8 Hz
+  Mode 2: 43.8 Hz
+  Mode 3: 118.1 Hz
+  Mode 4: 229.0 Hz
+  Mode 5: 376.9 Hz
+  Mode 6: 561.7 Hz
+________________ test_beam_parameter_contract[rigidity_tip--1] ________________
+tests\test_inference_flexible_control_listings.py:92: in test_beam_parameter_contract
+    params = beam["BeamParameters"](1.0, 1.0, 1.0, 1.0)
+             ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'BeamParameters'
+---------------------------- Captured stdout setup ----------------------------
+Natural frequencies (Hz):
+  Mode 1: 7.8 Hz
+  Mode 2: 43.8 Hz
+  Mode 3: 118.1 Hz
+  Mode 4: 229.0 Hz
+  Mode 5: 376.9 Hz
+  Mode 6: 561.7 Hz
+______________ test_beam_parameter_contract[mass_per_length-nan] ______________
+tests\test_inference_flexible_control_listings.py:92: in test_beam_parameter_contract
+    params = beam["BeamParameters"](1.0, 1.0, 1.0, 1.0)
+             ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'BeamParameters'
+---------------------------- Captured stdout setup ----------------------------
+Natural frequencies (Hz):
+  Mode 1: 7.8 Hz
+  Mode 2: 43.8 Hz
+  Mode 3: 118.1 Hz
+  Mode 4: 229.0 Hz
+  Mode 5: 376.9 Hz
+  Mode 6: 561.7 Hz
+__________________ test_beam_parameter_contract[tip_mass--1] __________________
+tests\test_inference_flexible_control_listings.py:92: in test_beam_parameter_contract
+    params = beam["BeamParameters"](1.0, 1.0, 1.0, 1.0)
+             ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'BeamParameters'
+---------------------------- Captured stdout setup ----------------------------
+Natural frequencies (Hz):
+  Mode 1: 7.8 Hz
+  Mode 2: 43.8 Hz
+  Mode 3: 118.1 Hz
+  Mode 4: 229.0 Hz
+  Mode 5: 376.9 Hz
+  Mode 6: 561.7 Hz
+__________________ test_negative_eigenvalue_is_not_frequency __________________
+tests\test_inference_flexible_control_listings.py:100: in test_negative_eigenvalue_is_not_frequency
+    beam["shaft_modal_analysis"](beam["BeamParameters"](1, 1, 1, 1))
+                                 ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'BeamParameters'
+---------------------------- Captured stdout setup ----------------------------
+Natural frequencies (Hz):
+  Mode 1: 7.8 Hz
+  Mode 2: 43.8 Hz
+  Mode 3: 118.1 Hz
+  Mode 4: 229.0 Hz
+  Mode 5: 376.9 Hz
+  Mode 6: 561.7 Hz
+___________________ test_rotor_constant_excitation_analytic ___________________
+tests\test_inference_flexible_control_listings.py:104: in test_rotor_constant_excitation_analytic
+    params = rotor["RotorParameters"](2.0, 0.1, 20.0, 0.05)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'RotorParameters'
+____________________ test_rotor_excitation_contract[bad0] _____________________
+tests\test_inference_flexible_control_listings.py:120: in test_rotor_excitation_contract
+    rotor["simulate_rotor"](lambda t: bad, np.array([0, 0.1]), np.zeros(4), rotor["RotorParameters"](1, 1, 1, 0.1))
+    ^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'simulate_rotor'
+____________________ test_rotor_excitation_contract[bad1] _____________________
+tests\test_inference_flexible_control_listings.py:120: in test_rotor_excitation_contract
+    rotor["simulate_rotor"](lambda t: bad, np.array([0, 0.1]), np.zeros(4), rotor["RotorParameters"](1, 1, 1, 0.1))
+    ^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'simulate_rotor'
+____________________ test_rotor_excitation_contract[bad2] _____________________
+tests\test_inference_flexible_control_listings.py:120: in test_rotor_excitation_contract
+    rotor["simulate_rotor"](lambda t: bad, np.array([0, 0.1]), np.zeros(4), rotor["RotorParameters"](1, 1, 1, 0.1))
+    ^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'simulate_rotor'
+____________________ test_rotor_time_and_initial_contract _____________________
+tests\test_inference_flexible_control_listings.py:124: in test_rotor_time_and_initial_contract
+    params = rotor["RotorParameters"](1, 1, 1, 0.1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'RotorParameters'
+__________________________ test_rotor_solver_failure __________________________
+tests\test_inference_flexible_control_listings.py:133: in test_rotor_solver_failure
+    rotor["simulate_rotor"](lambda t: np.zeros(2), np.array([0, 0.1]), np.zeros(4), rotor["RotorParameters"](1, 1, 1, 0.1))
+    ^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'simulate_rotor'
+============================ slowest 20 durations =============================
+0.46s setup    tests/test_inference_flexible_control_listings.py::test_gaussian_closed_form
+0.04s setup    tests/test_inference_flexible_control_listings.py::test_rotor_constant_excitation_analytic
+0.01s setup    tests/test_inference_flexible_control_listings.py::test_uniform_cantilever_and_clamped_modes
+
+(17 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_closed_form
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_observation_contract[bad0]
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_observation_contract[bad1]
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_prediction_shape
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_covariance_contract[cov0]
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_covariance_contract[cov1]
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_covariance_contract[cov2]
+FAILED tests/test_inference_flexible_control_listings.py::test_gaussian_optimizer_failure
+FAILED tests/test_inference_flexible_control_listings.py::test_uniform_cantilever_and_clamped_modes
+FAILED tests/test_inference_flexible_control_listings.py::test_beam_scaling_and_tip_mass
+FAILED tests/test_inference_flexible_control_listings.py::test_beam_parameter_contract[length-0]
+FAILED tests/test_inference_flexible_control_listings.py::test_beam_parameter_contract[rigidity_tip--1]
+FAILED tests/test_inference_flexible_control_listings.py::test_beam_parameter_contract[mass_per_length-nan]
+FAILED tests/test_inference_flexible_control_listings.py::test_beam_parameter_contract[tip_mass--1]
+FAILED tests/test_inference_flexible_control_listings.py::test_negative_eigenvalue_is_not_frequency
+FAILED tests/test_inference_flexible_control_listings.py::test_rotor_constant_excitation_analytic
+FAILED tests/test_inference_flexible_control_listings.py::test_rotor_excitation_contract[bad0]
+FAILED tests/test_inference_flexible_control_listings.py::test_rotor_excitation_contract[bad1]
+FAILED tests/test_inference_flexible_control_listings.py::test_rotor_excitation_contract[bad2]
+FAILED tests/test_inference_flexible_control_listings.py::test_rotor_time_and_initial_contract
+FAILED tests/test_inference_flexible_control_listings.py::test_rotor_solver_failure

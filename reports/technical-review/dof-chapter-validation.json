@@ -1,0 +1,187 @@
+{
+  "issue": 4845,
+  "source_acceptance": true,
+  "status": "Complete Chapter 1 accepted, source-bound and verified on remote main",
+  "full_regression_checkpoint": "f5eb47370611412a429de6e0875837f77bd3db00",
+  "full_regression": {
+    "passed": 6737,
+    "skipped": 29,
+    "deselected": 187,
+    "warnings": 51,
+    "seconds": 729.65
+  },
+  "coverage_percent": 93.24,
+  "command": "pytest tests/ --cov=src --cov-report=xml --timeout=120; existing CI command and repository default markers",
+  "full_regression_exit_code": 0,
+  "full_regression_owned_hashes": {
+    "AGENT_HANDOFF.md": "f1cd34c558bbe48f2584301886645175fcb672b99edcde65fe78e06711a655d7",
+    "SPEC.md": "6b3d950812bd07709a2d9f395b90f2de6730f08c2156f4aa140267b387e19f4a",
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch01_dof_problem.tex": "4e0caac3732e2494f5a7120931bc8ce32492ae787b201f9ccd966ebdde612350",
+    "articles/The_Geometry_of_Motion/Volume_IV/main.pdf": "0c428135797a7367d9a32519585cbf27570d03a3b06a36d7d97142397412b23c",
+    "books/human-motor-control.qmd": "9f4a3ea781163c0c0751c077f560df7b6bb46635fa5d24550798b62981e7c2b4",
+    "data/trust/book_publication_audit.json": "39f525da79cefe9b428c925e1d357ae88d125c7725b96170d855701386466157",
+    "data/trust/claim_audit_inventory.json": "ba72763f09b096153caf21463c133677b3e9bfd26d1c8e8415341a6e888b11a6",
+    "data/trust/generated/claim_audit_report.json": "79dd93936aabb7d80b3c229b2f169a5b8e2d7481a1a461b4234a37a314ee5adc",
+    "docs/development/DEVELOPMENT_LOG.md": "85056dbb3518798c06f37b4b478abfac541e0e46de035f93a85f96f78a4b56e1",
+    "docs/development/HANDOFF.md": "91839b50995e27b92b1119725837ea3bbac070ec31ccb4e49e6205fdc25fef76",
+    "reports/book-publication-audit.md": "297f35f996994e950453312a036671b473bc1b7e34b2bc3d52fd2ff5f22c9b9f",
+    "reports/scientific-claim-audit.md": "6f763dc3907dc798819adff0db975c9f2fe619a6fed9bbf2e4f4d6c979fb9c6e",
+    "reports/technical-review/dof-chapter-dependency-carry-forward.json": "50ff1ce822e743f527c99e3bccee1de93156f66c6b1a99353562032be22620cf",
+    "reports/technical-review/dof-chapter-prior-review.json": "38a66f93fff2887f4462e57b45f729e158bbbe6a3cfe4372beca40e0884cafde",
+    "reports/technical-review/dof-chapter-render-verification.json": "d4c256e13e2b9587d7107308bbd91f160a915c8de2af2764ed88efc393059e17",
+    "reports/technical-review/dof-chapter-review.md": "5b67c0188b01dd4470580bbab015d31cb18e14568575275dd7909bf1ee77ab2a",
+    "src/affine_control/ucm_analysis.py": "f723d16bf1778ee465248da4d640cda2fa21ffdf3dd78e57d288c98c3e9b5a8e",
+    "tests/test_book_publication_audit.py": "093ff13f3edb1ed9f1f985aa43d01984e5068633ec8c4bf9e2ad0986860a9d71",
+    "tests/test_dof_chapter_review.py": "6ef5f9e47953922adb128b3522ad2b4e38a5a48d71cd4b1d8fe47f59c3589f44",
+    "tests/test_ucm_analysis.py": "b9e426aa369106e3d4ad7d2b55e4b6b7c1539975cf29c62b88ce1d1516e482e9"
+  },
+  "scope": "Repository tests/ with default marker selection; separate benchmarks/ are not part of this invocation. No CI or live-deployment claim.",
+  "focused_cases": 149,
+  "new_numerical_cases": 25,
+  "static": "Ruff and Black100 on changed Python; configured mypy 98 source files and strict UCM module; Python quality; 665 title checks; SPEC and generated audit freshness.",
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_latex_environments.py.log"
+    },
+    {
+      "check": [
+        "check_terminology.py",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_terminology.py.log"
+    },
+    {
+      "check": ["generate_worked_examples.py", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-generate_worked_examples.py.log"
+    },
+    {
+      "check": [
+        "check_tree_parity.py",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_tree_parity.py.log"
+    },
+    {
+      "check": [
+        "check_latex_structure.py",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_latex_structure.py.log"
+    },
+    {
+      "check": ["validate_frontmatter.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-validate_frontmatter.py.log"
+    },
+    {
+      "check": ["validate_accessibility.py", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-validate_accessibility.py.log"
+    },
+    {
+      "check": ["check_scaffolding_styling.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_scaffolding_styling.py.log"
+    },
+    {
+      "check": ["check_bibliography_quality.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_bibliography_quality.py.log"
+    },
+    {
+      "check": ["check_bibliography_cross_file.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_bibliography_cross_file.py.log"
+    },
+    {
+      "check": ["check_citation_resolution.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_citation_resolution.py.log"
+    },
+    {
+      "check": ["check_qmd_citation_keys.py"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/dof-gate-check_qmd_citation_keys.py.log"
+    }
+  ],
+  "failed_first_full_run": {
+    "checkpoint": "cfa3c9f344532cfeccf17993fb8cc6566021fe56",
+    "timeout_seconds": 60,
+    "failure": "test_review_evidence_survives_deployment_pruning timed out while reading files; no full summary or usable coverage result",
+    "isolated_retry_pass_seconds": 40.0,
+    "retry_policy": "Use existing CI 120-second timeout, no assertion/configuration change"
+  },
+  "render_evidence": "reports/technical-review/dof-chapter-render-verification.json",
+  "dependency_evidence": "reports/technical-review/dof-chapter-dependency-carry-forward.json",
+  "delegation": "Last two agy Gemini 3.8 Flash generation calls failed for insufficient credits; no new helper output.",
+  "post_full_change": "Only the historical Chapter 4 provenance assertion now compares with its preserved source revision, preparing the route for Chapter 1 acceptance. Numerical code/chapter/PDF unchanged. All 149 focused checks passed after this change, before binding.",
+  "post_full_focused_result": {
+    "passed": 149,
+    "seconds": 23.11
+  },
+  "source_checkpoint": "8160bb8ba7a981f39b7a6bbbde13d21f15740f32",
+  "current_evidence_hashes": {
+    "articles/The_Geometry_of_Motion/Volume_IV/chapters/ch01_dof_problem.tex": "4e0caac3732e2494f5a7120931bc8ce32492ae787b201f9ccd966ebdde612350",
+    "articles/The_Geometry_of_Motion/Volume_IV/main.pdf": "0c428135797a7367d9a32519585cbf27570d03a3b06a36d7d97142397412b23c",
+    "books/human-motor-control.qmd": "9f4a3ea781163c0c0751c077f560df7b6bb46635fa5d24550798b62981e7c2b4",
+    "src/affine_control/ucm_analysis.py": "f723d16bf1778ee465248da4d640cda2fa21ffdf3dd78e57d288c98c3e9b5a8e",
+    "tests/test_ucm_analysis.py": "b9e426aa369106e3d4ad7d2b55e4b6b7c1539975cf29c62b88ce1d1516e482e9",
+    "tests/test_dof_chapter_review.py": "6ef5f9e47953922adb128b3522ad2b4e38a5a48d71cd4b1d8fe47f59c3589f44",
+    "tests/test_book_publication_audit.py": "482bec0475c7a5f6009508361c2c65d752e03336f5bf38c3dc46b71b5db37b9e",
+    "reports/technical-review/dof-chapter-review.md": "cc891617354f7eccbdbaa000c858fcfbde4c7ff6fc3ca448cba22c76608cb8f2",
+    "reports/technical-review/dof-chapter-prior-review.json": "38a66f93fff2887f4462e57b45f729e158bbbe6a3cfe4372beca40e0884cafde",
+    "reports/technical-review/dof-chapter-dependency-carry-forward.json": "9c878ac43c5d38e218cbf467bccd59c0d3d9f3c939bff8bb56b9834c60de80b9",
+    "reports/technical-review/dof-chapter-render-verification.json": "b10e090f39e4ea48eece2a69366c98987ffa04c2ef1d76f8bf976681523fec2f"
+  },
+  "remaining": "No remaining Chapter 1 delivery work; 96 original sources and whole-book consistency remain under epic #4009.",
+  "bound_focused_result": {
+    "passed": 149,
+    "seconds": 22.38
+  },
+  "remote_main_receipt": "reports/technical-review/dof-chapter-remote-main-receipt.json",
+  "ci": {
+    "databaseId": 37120237483,
+    "url": "https://github.com/D-sorganization/AffineDrift/actions/runs/37120237483",
+    "headSha": "959d7748e0856e4bc2c1461a308646c0d706eec6",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "textbook_compilation_ci": {
+    "databaseId": 37120237585,
+    "url": "https://github.com/D-sorganization/AffineDrift/actions/runs/37120237585",
+    "headSha": "959d7748e0856e4bc2c1461a308646c0d706eec6",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "remote_ci_python_result": {
+    "passed": 6688,
+    "coverage_percent": 93.21,
+    "scope": "Primary CI selection; complete details in remote-main receipt."
+  },
+  "turnover_validation": {
+    "checkpoint": "SELF",
+    "focused_test_modules": [
+      "tests/test_development_docs_structure.py",
+      "tests/test_spec_changelog.py",
+      "tests/test_book_publication_audit.py",
+      "tests/test_claim_audit_inventory.py"
+    ],
+    "pytest_exit_code": 0,
+    "command": "pytest <listed modules> --no-cov --timeout=120 --basetemp <fresh task-specific temporary directory> -q",
+    "evidence_freshness": "passed",
+    "spec_changelog": "passed",
+    "owned_development_log_entry": "passed",
+    "frozen_source_files_unchanged": 11
+  }
+}

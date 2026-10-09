@@ -1,0 +1,88 @@
+{
+  "issue": 4900,
+  "epic": 4009,
+  "status": "Complete two-chapter source and scoped PDF accepted; protected delivery pending",
+  "accepted_source_commit": "1fe6b8e9f36cf234584589910976568f43d8d33e",
+  "git_blob_sha256": {
+    "articles/The_Geometry_of_Motion/Volume_III/chapters/ch05_multibody_bio.tex": "fbb28b93e862b6d000f4c08218ba7cd820365e65c4227e7233439bb9bebd1077",
+    "articles/The_Geometry_of_Motion/Volume_III/chapters/ch06_inverse_problems.tex": "f834e8b626bff874918fdbc145c09a81893a052500d8259d092189111f8198f8",
+    "articles/The_Geometry_of_Motion/Volume_III/main.tex": "23064ce7879e6ba107d8c97be39977f94fa704ef017238376abfa68b8e18e8b1",
+    "articles/The_Geometry_of_Motion/geometry_of_motion.bib": "71461da0c9425aee4dbd292fa6760af8318c67d86ea23d9135c8251f34e2224d",
+    "articles/The_Geometry_of_Motion/Volume_III/main.pdf": "3bc2fe015dda8337a6dab5b52b7493a78949846e5b106c0bd3ef22a8f8b811cf",
+    "tests/test_biological_inverse_listings.py": "5551b3752f9e37e51d66d2d22a442090a207caf547038041939f41398ddeb69b",
+    "reports/technical-review/biological-inverse-independent-checks.json": "8ae19e712f9508628b155ced0729a72d4d95054b5ccc5be7add71eb3a621890e",
+    "docs/development/technical-review/biological-inverse-review/review-notes.md": "f46323927076871e4206dbd4315d280ffff9fe373f43dcc5e17e09c1b88a4c06"
+  },
+  "scope": "Complete Chapters 5 and 6; no whole-volume, empirical biological or clinical certification",
+  "full_regression": {
+    "head": "1fe6b8e9f36cf234584589910976568f43d8d33e",
+    "passed": 6894,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 539.63,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "log": "docs/development/technical-review/biological-inverse-review/full-tests.txt"
+  },
+  "pdf": {
+    "pages": 75,
+    "printed_entries": 41,
+    "unresolved_citations_or_references": 0,
+    "visual_scope": "Physical pages 3\u20136, 42\u201352 and 73\u201375: preface/TOC, both complete affected chapters and bibliography",
+    "build_exit": 0,
+    "build_log": "docs/development/technical-review/biological-inverse-review/accepted-pass4.txt",
+    "limits": "Warnings in other chapters and historical duplicate destinations are outside this acceptance"
+  },
+  "mathematics": {
+    "record": "reports/technical-review/biological-inverse-independent-checks.json",
+    "cases_each": 100,
+    "threshold": 1e-6,
+    "scope": "Five manufactured identities; no biological validation"
+  },
+  "delegation": {
+    "helpers": 4,
+    "model": "agy Gemini 3.8 Flash",
+    "mode": "Read-only; all complete responses lead-adjudicated"
+  },
+  "prior_acceptance_reconciliation": {
+    "parent_acceptance_merged": "ec01deef606634628f1927c9accc4ad1d23190c3",
+    "unchanged_paths": [
+      "articles/The_Geometry_of_Motion/Volume_III/chapters/ch07_experimental_methods.tex"
+    ],
+    "intentional_changed_paths": [
+      "articles/The_Geometry_of_Motion/Volume_III/main.tex",
+      "articles/The_Geometry_of_Motion/geometry_of_motion.bib",
+      "articles/The_Geometry_of_Motion/Volume_III/main.pdf"
+    ],
+    "explanation": "Parent #4898 acceptance and test trust-boundary comments integrated; its chapter source remains unchanged. Current Volume III main/PDF/shared bibliography supersede parent publication artifacts."
+  },
+  "delivery": {
+    "status": "Not yet published",
+    "base": "fix/experimental-methods-review",
+    "dependency": "PR 4902 after 4891 after 4889",
+    "next": "Publish regular PR, then protected delivery and fetched-main canonical hashes",
+    "parent_reconciliation_commit": "d13955478c37ea47e34122f6b9f284d3a04ca4c8",
+    "canonical_hashes_unchanged": true
+  },
+  "post_regression_annotation": {
+    "commit": "1ec476217c9bb9639acd2724b7b8727e3ec71b48",
+    "path": "tests/test_biological_inverse_listings.py",
+    "original_sha256": "d30262dcdc3d6b869ccfada54f47df19a335e805a98d3adf00596f0c0bbb20e9",
+    "scope": "Comments only documenting repository-owned fixed listing input; no test behavior change. All 14 mapped tests and five pre-PR gates pass."
+  },
+  "pre_pr": {
+    "base": "51a6dbdce",
+    "head": "1ec476217c9bb9639acd2724b7b8727e3ec71b48",
+    "five_gates": "passed",
+    "mapped_tests": 14,
+    "log": "docs/development/technical-review/biological-inverse-review/pre-pr.txt"
+  },
+  "metadata_checks": {
+    "passed": 68,
+    "exit_code": 0,
+    "log": "docs/development/technical-review/biological-inverse-review/acceptance-metadata-tests.txt"
+  }
+}

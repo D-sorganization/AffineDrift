@@ -1,0 +1,68 @@
+# Technical Editorial Audit
+
+**Reviewed Documents:**
+- `articles/The_Geometry_of_Motion/Volume_0/main.tex`
+- `articles/The_Geometry_of_Motion/Volume_V/main.tex`
+
+---
+
+### 1. Proven Errors & Inconsistencies
+
+#### 1.1 Inconsistent Series Title Between Volumes
+- **File:** `articles/The_Geometry_of_Motion/Volume_V/main.tex` (Line 108) vs. `articles/The_Geometry_of_Motion/Volume_0/main.tex` (Line 183)
+- **Issue:** The root series title differs between volumes. Volume 0 uses:
+  ```latex
+  \title{{\Huge\bfseries\color{chapblue} The Geometry of Motion}\\[0.4cm] ...}
+  ```
+  while Volume V uses:
+  ```latex
+  \title{{\Huge\bfseries\color{chapblue} Tangent-Space Methods for Nonlinear Control and Biomechanics}\\[0.4cm] ...}
+  ```
+  In Volume V's preface prose (Line 131), the text explicitly refers to the entire work as having a singular overarching scope: *"Volumes 0--IV developed the theory of motion... This volume explores how those tools can be connected in computational investigations."*
+- **Suggested Correction:** Standardize the main series title across volumes (e.g., set Volume V's main title to `\Huge\bfseries\color{chapblue} The Geometry of Motion` with a subtitle/series descriptor matching the editorial convention, or clarify if Volume V represents an independent companion monograph).
+
+---
+
+#### 1.2 Broken Scope/Reference to Subsequent Volumes
+- **File:** `articles/The_Geometry_of_Motion/Volume_0/main.tex` (Lines 198–202)
+- **Issue:** The Preface outlines the series architecture as:
+  > *"foundational armor needed to attack the subsequent volumes on Tangent Spaces (Volume I) and Trajectory Control (Volume II)."*
+  
+  However, Volume V’s preface (Lines 131–133) lists a 6-volume series spanning through Volume IV and Volume V (*"Volumes 0--IV developed the theory of motion: from differential geometry through nonlinear control, biomechanics, and motor control"*). Volume 0 truncates the scope description, omitting Volumes III, IV, and V.
+- **Suggested Correction:** Update Volume 0's preface to reflect the full multi-volume series scope:
+  ```latex
+  \dots to attack the subsequent volumes on Tangent Spaces (Volume I), Trajectory Control (Volume II), Biomechanics (Volume III), Motor Control (Volume IV), and Practical Application (Volume V).
+  ```
+
+---
+
+#### 1.3 Incomplete Back Matter File Structure in Volume V
+- **File:** `articles/The_Geometry_of_Motion/Volume_V/main.tex` (Lines 163–166) vs. `articles/The_Geometry_of_Motion/Volume_0/main.tex` (Lines 226–228)
+- **Issue:** Volume 0 includes `chapters/glossary` and `chapters/further_reading` in its `\backmatter`. Volume V jumps directly from `ch10_golf_swing_project` to `\printindex` without a glossary or concluding literature/further reading include, creating an inconsistent back-matter structure for the textbook series.
+- **Suggested Correction:** Verify whether `chapters/further_reading` and `chapters/glossary` are intended for Volume V; if applicable, add `\include{chapters/further_reading}` before `\printindex`.
+
+---
+
+### 2. Unverified Questions & Structural Observations
+
+#### 2.1 Missing Macro Guard for `\theorem` in Volume V
+- **File:** `articles/The_Geometry_of_Motion/Volume_V/main.tex` (Lines 69–78)
+- **Issue:** In `Volume_0/main.tex` (Lines 124–135), an explicit patch was implemented:
+  ```latex
+  \@ifundefined{c@theorem}{\newcounter{theorem}[chapter]}{}
+  ```
+  with an accompanying comment noting that guarding on `\theorem` instead of `\c@theorem` causes counter conflicts in sibling volumes. In `Volume_V/main.tex`, the preamble defines:
+  ```latex
+  \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}
+  ```
+  without the counter guard or the `lemma` environment defined in Volume 0.
+- **Question/Suggested Verification:** Does Volume V compile cleanly if an included chapter invokes `\begin{lemma}` or `\begin{theorem}` alongside custom tcolorbox environments? If Volume V imports `../geometry_of_motion.sty`, ensure that `\newtheorem{theorem}` does not collide with shared macros.
+
+---
+
+#### 2.2 Broken Citation Risk for Shared Bibliography
+- **Files:**
+  - `articles/The_Geometry_of_Motion/Volume_0/main.tex` (Line 231)
+  - `articles/The_Geometry_of_Motion/Volume_V/main.tex` (Line 169)
+- **Issue:** Both files invoke `\bibliography{../geometry_of_motion}` with `\bibliographystyle{plain}`. 
+- **Question/Suggested Verification:** Ensure `geometry_of_motion.bib` resides exactly at `articles/The_Geometry_of_Motion/geometry_of_motion.bib` (one directory above `Volume_0/` and `Volume_V/`) and that all keys cited across `ch01`–`ch12` (Vol 0) and `ch01`–`ch10` (Vol V) resolve without undefined citation warnings during BibTeX compilation.

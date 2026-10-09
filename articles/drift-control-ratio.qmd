@@ -32,7 +32,7 @@ This article derives the distinction between available capacity and realized inp
 {{< include ../_includes/generated/claims-ledger/drift-control-ratio.qmd >}}
 
 <details class="technical-explanation">
-<summary>In Layman's Terms</summary>
+<summary>Reachability in More Detail</summary>
 
 A moving golfer and club already have velocity, configuration and tissue state. New muscle commands act on that existing state. DCR asks how large one modeled acceleration contribution is compared with the capacity of another; it does not divide a swing into percentages supplied by physics and the golfer.
 
@@ -56,6 +56,16 @@ A small available correction can matter if the required adjustment is small. Con
 These are authored modeling questions. They are not quotations from unnamed critics or evidence that any one mechanism explains expert golf.
 
 </details>
+
+::: {.laymans-terms}
+```{=html}
+<p class="laymans-terms-intro">The <a href="../pages/glossary.html#drift-control-ratio">drift-control ratio</a> compares two modeled accelerations. One is what the club and golfer do with zero input. The other is the most the allowed inputs could add.</p>
+<div class="laymans-item"><h3>A Model Number</h3><p>The ratio depends on the chosen model, coordinates, and input limits. It does not measure muscle effort. It does not show that control has vanished or that energy is used well.</p></div>
+<div class="laymans-item"><h3>Size Is Not Reach</h3><p>Think of a canoe in a steady current. A stronger current shifts where you can end up. It need not shrink the range of places you can reach. A real swing has changing geometry, muscle limits, and an impact.</p></div>
+<div class="laymans-item"><h3>What Is Withdrawn</h3><p>The earlier growth figure for the downswing is withdrawn. No complete model run supported it. The exact and synthetic examples show mathematical limits only, not golfer results.</p></div>
+<div class="key-takeaway"><strong>Key Takeaway:</strong> A large or small ratio does not tell you whether a shot can be fixed before impact. Direction, time, and the target outcome also matter.</div>
+```
+:::
 
 ## Introduction {#introduction}
 
@@ -173,11 +183,11 @@ $$
 The drift and input effects are evaluated at the same state. $W$ selects/scales the coordinates or task directions; the norm and admissible input set $\mathcal U(x)$ are part of the definition. In the equations above, $a_{\mathrm{drift}}=a_d$. The denominator describes **available capacity**, not the current command. See the [Mathematical Notation Reference](../pages/notation.html).
 :::
 
-![Local Vector Decomposition of Phase Space State Derivative Into Zero-Input Drift Vector $f(x)$ and Bounded Control Authority Set $G(x)\mathcal{U}$, Showing How Control Spans Corrections Relative to a Shifting Drift Center.](figures/core_theory/fig_dcr_vector_decomposition.svg){#fig-dcr-vector-decomposition width=95% fig-alt="A 2D projection of phase space showing a trajectory curve, the unactuated drift vector pointing forward-downward, and an ellipsoidal reachable velocity region shifted by drift, showing how control acts relative to the drift baseline."}
+![Fixed-State Acceleration Sets in a Declared Normalized Example.](figures/core_theory/fig_dcr_vector_decomposition.svg){#fig-dcr-vector-decomposition width=95% fig-alt="Two ellipses in normalized acceleration coordinates: input effects centered at zero and total accelerations shifted by a fixed drift. Three arrows show drift, one admissible input contribution, and their sum. This is a constructed local example, not a trajectory."}
 
 <details>
-<summary>Long description</summary>
-The vector diagram illustrates the decomposition of the instantaneous phase-space state derivative $\dot{x}$ into two additive components. The drift vector $f(x)$ represents the passive, unactuated evolution governed by velocity and Coriolis/centrifugal forces, pointing along a curved baseline. Centered at the tip of the drift vector is a bounded reachable set $G(x)\mathcal{U}$ representing the control authority envelope. Because control actions displace the state derivative relative to the drift velocity rather than from the origin, high drift speed shifts the center of achievable corrections without eliminating the reachability volume.
+<summary>Long Description</summary>
+At one fixed state, use normalized acceleration coordinates, the Euclidean norm, $W=I$ and $\varepsilon=0$. Declare $a_d=(2,0.5)$, $B_a=\operatorname{diag}(1,0.5)$ and the unit disk $\mathcal U=\{u:\|u\|_2\leq1\}$. The blue ellipse is the input-only set $B_a\mathcal U$, centered at zero acceleration. The green ellipse is the total acceleration set $a_d+B_a\mathcal U$, translated by drift. The origin is zero acceleration, not the system's current state. The admissible input $u=(-0.5,0.5)$ supplies $B_a u=(-0.5,0.25)$, giving total acceleration $(1.5,0.75)$. Available acceleration capacity is one, so DCR is $\sqrt{4.25}$ in this stipulated example. The diagram supplies no state trajectory, finite-time reachable set or measured golfer result.
 </details>
 
 Let $d=\|Wa_d\|$, $c_{\max}=\sup_{u\in\mathcal U}\|WB_a u\|$ and $r=\|WB_a u_{\mathrm{used}}\|$. Assume the capacity is finite. The policy-dependent drift-to-realized-input ratio is
@@ -406,11 +416,11 @@ Convexity cannot be silently dropped. In $\dot x=u$, with instantaneous inputs r
 
 Subtracting the nominal drift leaves the control-effect set at first order. A bounded set of this kind is generally not a cone. Earlier **control-cone**, **drift-tube** and **pancake** pictures can at most name possible finite-horizon anisotropy. They remain **unvalidated hypotheses** about golfer-club outcomes, not consequences of high DCR or counterparts of relativistic causal limits.
 
-![Finite-Horizon Reachable Set Envelopes Contracting as Time-to-Impact $\Delta t$ Decreases Under Bounded Control Authority, Contrasting Terminal Dispersion With Local DCR.](figures/core_theory/fig_dcr_reachability_tubes.svg){#fig-dcr-reachability-tubes width=95% fig-alt="Diagram showing reachable clubhead positions contracting from a broad reachable envelope at 100 ms before impact to a tight delivery window at 15 ms, illustrating that time horizon rather than DCR magnitude determines terminal controllability."}
+![Endpoint Projections of a Bounded Double Integrator.](figures/core_theory/fig_dcr_reachability_tubes.svg){#fig-dcr-reachability-tubes width=95% fig-alt="Two panels show exact marginal endpoint intervals for a normalized double integrator starting from rest at the origin. Position half-width grows as T squared over two; velocity half-width grows as T. Each horizon uses the same fixed initial state."}
 
 <details>
-<summary>Long description</summary>
-The schematic displays terminal reachable sets projected across time horizons before impact. At 100 ms before impact, the reachable set envelope is broad, providing wide positional authority to correct clubhead alignment. As time-to-impact decreases to 50 ms and 15 ms, the achievable positional set shrinks rapidly because double-integrating bounded control torque over a dwindling time interval $\Delta t$ scales correction capacity as $\mathcal{O}(\Delta t^2)$. This temporal boundary explains the narrowing delivery window without requiring the instantaneous control authority to vanish.
+<summary>Long Description</summary>
+For the declared normalized system $\dot q=v$, $\dot v=u$, $|u|\leq1$, start every horizon $T\in[0,1]$ from the same fixed initial state $q(0)=v(0)=0$, with no state or input-rate constraints. The attainable endpoint position interval is $[-T^2/2,T^2/2]$ and the velocity interval is $[-T,T]$. Constant controls $u=\pm1$ attain the respective extremes. These are exact marginal projections, not a claim that every position-velocity pair in their enclosing rectangle is jointly reachable. Acceleration drift is zero and acceleration-space DCR remains zero, although the full-state drift is $(v,0)$. The panels show how horizon changes attainable corrections in this model; they are not statistical dispersion, golfer delivery windows or calibrated time-to-impact bounds.
 </details>
 
 ### Accessibility, Actuation and Gramians {#sec-anisotropy}
@@ -584,14 +594,14 @@ If the resulting event-output Jacobian is $J_e$ and the relevant small perturbat
 
 ## A Mechanical Counterexample to Monotone Growth {#schematic-illustration-drift-vs-control-magnitude}
 
-![Evolution of Drift Acceleration $\|a_d(t)\|$, Maximum Control Authority Capacity $\sup \|B_a u\|$, and the Resulting Instantaneous Drift-Control Ratio (DCR) Across the Four Biomechanical Phases of the Downswing.](figures/core_theory/fig_dcr_swing_phases.svg){#fig-dcr-swing-phases width=95% fig-alt="A multi-curve plot showing drift acceleration rising sharply after release, active torque capacity remaining bounded, and DCR increasing toward impact without implying loss of steering authority."}
+![Quadratic Velocity Dependence Does Not Imply Monotone DCR.](figures/core_theory/fig_dcr_swing_phases.svg){#fig-dcr-swing-phases width=95% fig-alt="Two panels sample a manufactured mechanical model at separate states with q equal to zero. Drift magnitude falls from one to zero, then rises to three and eight at speeds zero, one, two and three. Capacity stays one, so DCR follows the same nonmonotone pattern."}
 
 <details>
-<summary>Long description</summary>
-The four-phase plot traces drift acceleration, control capacity, and DCR across transition, early downswing, release, and pre-impact phases. Drift acceleration $\|a_d(t)\|$ starts low during early transition and climbs sharply following release as clubhead velocity and interaction accelerations peak. Maximum control authority $\sup \|B_a u\|$ remains bounded across all phases by physiological torque limits. Consequently, the ratio DCR grows as impact approaches, illustrating that high DCR is an expected signature of rapid ballistic acceleration rather than an indicator of system uncontrollability.
+<summary>Long Description</summary>
+The manufactured model derived below has $\ddot q=1-\dot q^2+e^{-2q}u$. At separate states with $q=0$, $|u|\leq1$, $W=1$ and $\varepsilon=0$, drift magnitude is $|1-\nu^2|$ and available acceleration capacity is one. The upper panel shows those acceleration quantities; the lower panel shows their dimensionless ratio, DCR. At speeds $\nu=0,1,2,3$, DCR takes values $1,0,3,8$. Cancellation first reduces drift magnitude to zero; increasing the speed parameter further makes it rise. The horizontal coordinate is a speed parameter, not elapsed downswing time. These states do not describe a trajectory that holds configuration fixed while velocity is nonzero, and the plot contains no golfer measurements or physiological capacity estimate.
 </details>
 
-The earlier phase plot used arbitrary functions, and its description did not match their shapes. The following declared mechanical example replaces it with equations that can be checked exactly. **This is a manufactured model and a family of states, not a golfer trajectory or a downswing measurement.**
+The curves in @fig-dcr-swing-phases follow the declared mechanical example below, whose equations can be checked exactly. **This is a manufactured model and a family of states, not a golfer trajectory or a downswing measurement.**
 
 Use dimensionless coordinate $q$ and time $s$, obtained after selecting reference coordinate, time and energy scales. Dots in this example refer to $s$. Define normalized inertia $I(q)=e^{2q}$, kinetic energy $T=\tfrac12 I(q)\dot q^2$ and potential $U=-\tfrac12e^{2q}$. The generalized input $u$ is normalized consistently with those scales. Euler–Lagrange gives
 
@@ -644,14 +654,15 @@ The [MIT multibody dynamics notes](https://underactuated.mit.edu/multibody.html)
 
 The worked mathematical examples are derived in this article with explicit assumptions and independently checked in the repository tests. The bounded protocol retains analytic, null, negative and unavailable outcomes. The previous video descriptions and timestamps have been removed because they were not verified as supporting the claims attributed to them. A general dynamics or relativity resource cannot serve as evidence for a golf-swing correction limit.
 
-## See Also {#see-also}
-
-- [Proximal-to-Distal Energy Transfer in the Golf Swing](proximal-distal-energy-transfer.html) for a related counterfactual modeling study.
-- [Mathematical Notation Reference](../pages/notation.html) for the canonical DCR and input conventions.
-- [Muscle Force Generation](The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html) for activation, force capacity and tendon state.
-- [Flexible Shaft Dynamics](The_Physics_of_Golf/quarto/ch11_flexible_shaft.html) for coupled shaft motion and energy accounting.
-- [Passive and Distributed Control](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html) for impedance, held controllers and stability assumptions.
-
 ## Acknowledgments {#acknowledgments}
 
 Computational modeling assistance and structured drafting support for this article were provided by ChatGPT (OpenAI). All theoretical content, arguments, and conclusions are the work of the named author.
+
+## Related Articles
+
+- [Proximal-to-Distal Energy Transfer in the Golf Swing](proximal-distal-energy-transfer.html) — a related counterfactual modeling study
+- [Zero-Torque Counterfactual (ZTCF) Family](zero-torque-counterfactual.html) — the counterfactual operation that separates drift from control
+- [Mathematical Notation Reference](../pages/notation.html) — the canonical DCR and input conventions
+- [Muscle Force Generation](The_Physics_of_Golf/quarto/ch17_muscle_force_generation.html) — activation, force capacity and tendon state
+- [Flexible Shaft Dynamics](The_Physics_of_Golf/quarto/ch11_flexible_shaft.html) — coupled shaft motion and energy accounting
+- [Passive and Distributed Control](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html) — impedance, held controllers and stability assumptions

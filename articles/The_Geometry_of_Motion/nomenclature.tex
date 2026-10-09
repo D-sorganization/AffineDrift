@@ -1,5 +1,6 @@
 \chapter*{Nomenclature}
 \addcontentsline{toc}{chapter}{Nomenclature}
+\markboth{Nomenclature}{Nomenclature}
 
 \section*{General Conventions}
 \begin{itemize}
@@ -9,35 +10,69 @@
     \item Expected values and sets are denoted by blackboard bold or script (e.g., $\mathbb{E}, \mathcal{S}$).
 \end{itemize}
 
+These are default conventions; each chapter declares its model, frames, and
+any local reuse of symbols. The mechanical entries below use $n$ independent,
+regular local configuration coordinates and $\mathbf{v}=\dot{\mathbf{q}}$.
+This convention is local: it does not identify every configuration manifold
+with a Euclidean space or apply unchanged to redundant representations.
+
 \section*{State and Kinematics}
 \begin{description}
-    \item[$\mathbf{q} \in \mathbb{R}^n$] Joint configuration vector (generalized coordinates).
-    \item[$\dot{\mathbf{q}} \in \mathbb{R}^n$] Joint velocity vector (generalized velocities).
-    \item[$\ddot{\mathbf{q}} \in \mathbb{R}^n$] Joint acceleration vector.
-    \item[$\mathbf{x} \in \mathbb{R}^{nx}$] System state vector; commonly $\mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T$ for mechanical systems.
+    \item[$\mathbf{q} \in \mathbb{R}^n$] Configuration coordinates in the declared local chart.
+    \item[$\dot{\mathbf{q}} \in \mathbb{R}^n$] Coordinate rates; the generalized velocities under the local convention above.
+    \item[$\ddot{\mathbf{q}} \in \mathbb{R}^n$] Second time derivatives of these coordinates, not necessarily Cartesian point accelerations.
+    \item[$\mathbf{x} \in \mathbb{R}^{n_x}$] State-vector representation with $n_x$ components; commonly $\mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T$ locally, with actuator or internal states added when needed. Redundant state representations also retain their constraints.
     \item[$\mathbf{u} \in \mathbb{R}^m$] Control input vector (e.g., joint torques, muscle activations).
-    \item[$\boldsymbol{\tau} \in \mathbb{R}^n$] Generalized forces/torques acting on the joints.
+    \item[$\boldsymbol{\tau} \in \mathbb{R}^n$] Generalized forces conjugate to $\mathbf{q}$, with power $\boldsymbol{\tau}^T\dot{\mathbf{q}}$; components need not all be joint torques.
     \item[$t \in \mathbb{R}$] Time.
 \end{description}
 
+More generally, write $\mathbf{q}\in\mathbb{R}^{n_q}$ for a configuration
+representation and $\mathbf{v}\in\mathbb{R}^{n_v}$ for generalized velocities,
+with $\dot{\mathbf{q}}=\mathbf{N}(\mathbf{q})\mathbf{v}$ on the admissible domain.
+A unit quaternion has four components with a norm constraint, while angular
+velocity has three components in a declared frame. Configuration rates and
+generalized velocities therefore need not have the same dimension. See
+\href{https://underactuated.mit.edu/multibody.html}{Tedrake's multibody notes}
+for this representation convention. Constraints and any time-dependent
+kinematics must be included in the chosen model.
+
 \section*{Inertia and Dynamics}
 \begin{description}
-    \item[$\mathbf{M}(\mathbf{q})$] Mass (inertia) matrix, symmetric positive definite.
-    \item[$\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$] Coriolis and centrifugal force matrix.
-    \item[$\mathbf{g}(\mathbf{q})$] Gravity vector.
-    \item[$\mathbf{J}(\mathbf{q})$] Jacobian matrix relating joint velocities to task-space velocities ($\dot{\mathbf{p}} = \mathbf{J}(\mathbf{q})\dot{\mathbf{q}}$).
+    \item[$\mathbf{M}(\mathbf{q})$] Mass (inertia) matrix. It is symmetric positive definite for independent regular velocities with strictly positive modeled kinetic energy for every nonzero velocity. Constrained, redundant, massless, or singular representations require their own treatment.
+    \item[$\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$] Coriolis/centrifugal matrix; $\mathbf{C}\dot{\mathbf{q}}$ is the generalized velocity-product force in the local mechanical equation. The matrix factorization is not unique.
+    \item[$\mathbf{g}(\mathbf{q})$] Generalized gravity term; its sign follows the side of the mechanical equation on which the chapter places it.
+    \item[$\mathbf{J}(\mathbf{q})$] Coordinate Jacobian of a time-independent task map $\mathbf{p}(\mathbf{q})$, so $\dot{\mathbf{p}}=\mathbf{J}\dot{\mathbf{q}}$ in the stated coordinates and frames.
 \end{description}
 
+With $\dot{\mathbf{q}}=\mathbf{N}\mathbf{v}$, the corresponding velocity Jacobian is
+$\mathbf{J}_v=\mathbf{J}_q\mathbf{N}$. Force components must change with the velocity convention:
+$\boldsymbol{\tau}_v=\mathbf{N}^T\boldsymbol{\tau}_q$ gives
+$\boldsymbol{\tau}_v^T\mathbf{v}=\boldsymbol{\tau}_q^T\dot{\mathbf{q}}$.
+Thus the same club-point motion and mechanical power must result from
+consistently paired kinematic and force representations.
+
 \section*{Control and Optimization}
+For the indexed entries, declare a discrete update
+$\mathbf{x}_{k+1}=F_k(\mathbf{x}_k,\mathbf{u}_k)$ and a nominal pair
+$(\bar{\mathbf{x}}_k,\bar{\mathbf{u}}_k)$. Its derivatives are evaluated at
+that pair. These are derivatives of the full update, including the chosen
+sampling or numerical integration rule, not of zero-input drift alone.
 \begin{description}
-    \item[$\mathbf{A}_k = \frac{\partial f}{\partial \mathbf{x}}$] Local Jacobian matrix of the state dynamics.
-    \item[$\mathbf{B}_k = \frac{\partial f}{\partial \mathbf{u}}$] Local Jacobian matrix of the control input.
+    \item[$\mathbf{A}_k = D_x F_k$] State Jacobian of the declared discrete update at the nominal pair.
+    \item[$\mathbf{B}_k = D_u F_k$] Input Jacobian of that update at the same pair.
     \item[$V(\mathbf{x})$ or $\mathcal{V}$] Value function or Lyapunov function.
     \item[$\mathbf{Q}$] State penalty matrix in LQR/DDP.
     \item[$\mathbf{R}$] Control penalty matrix in LQR/DDP.
     \item[$\mathbf{K}$] Feedback gain matrix ($\delta\mathbf{u} = -\mathbf{K}\delta\mathbf{x}$).
-    \item[$\boldsymbol{\gamma}$] A trajectory or flow, mapping time and initial conditions to states.
+    \item[$\boldsymbol{\gamma}$] A curve with a declared parameter; for specified initial data and an input law, $\boldsymbol{\gamma}(t)$ denotes a particular timed state trajectory. A solution map $\phi(t;t_0,\mathbf{x}_0)$ instead retains dependence on initial time and state, for a fixed evolution law on its domain of existence.
 \end{description}
+
+Continuous-time chapters define their Jacobians from the full differential
+equation. Some use $f(\mathbf{x},\mathbf{u},t)$ for that full right-hand side;
+the autonomous $f(\mathbf{x})$ below denotes only the declared zero-input drift.
+Neither convention makes a discrete input Jacobian equal to the continuous
+one without accounting for the sampling interval and evolution.
 
 \section*{Affine Control and Counterfactuals}
 \begin{description}
@@ -46,7 +81,11 @@
     \item[$\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\mathbf{u}$] Control-affine system equations of motion.
     \item[$\mathbf{x}^{\mathrm{ZTCF}}(t)$] Forward Zero-Torque Counterfactual trajectory under $\mathbf{u}(t) \equiv \mathbf{0}$.
     \item[$\mathbf{a}_{\mathrm{ZVCF}}(\mathbf{q}, \mathbf{z})$] Instantaneous Zero-Velocity Counterfactual acceleration with velocity and declared control set to zero.
-    \item[$\mathrm{DCR}_{W,\mathcal{U}}(\mathbf{x})$] Drift-Control Ratio in a declared acceleration or task-projected space: $\frac{\|W \mathbf{a}_{\mathrm{drift}}\|_2}{\sup_{\mathbf{u}\in\mathcal{U}}\|W B_a \mathbf{u}\|_2 + \varepsilon}$.
+    \item[$\mathrm{DCR}_{W,\mathcal{U}}(\mathbf{x})$] Drift-Control Ratio in a declared acceleration or task-projected space:
+    \[
+      \mathrm{DCR}_{W,\mathcal{U}}(\mathbf{x})
+      =\frac{\|W \mathbf{a}_{\mathrm{drift}}\|_2}{\sup_{\mathbf{u}\in\mathcal{U}}\|W B_a \mathbf{u}\|_2 + \varepsilon}.
+    \]
 \end{description}
 
 \section*{Biomechanics and Motor Control}

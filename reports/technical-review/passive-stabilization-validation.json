@@ -1,0 +1,288 @@
+{
+  "issue": 4860,
+  "status": "Complete three-source review/scoped presentation accepted and bound; regular PR and remote-main delivery pending.",
+  "red": {
+    "passed": 6,
+    "failed": 3,
+    "note": "Explicit all-marker run; earlier default run excluded content-lint tests."
+  },
+  "focused": {
+    "passed": 21,
+    "seconds": 3.37,
+    "scope": "New preload checks and retained long-form mechanics tests."
+  },
+  "print": {
+    "pages": 523,
+    "manually_inspected_pdf_pages": [141, 142, 143, 144, 145, 146, 147],
+    "printed_pages": "111\u2013117",
+    "original_pdf_pages_inspected": [141, 142, 143, 144, 145, 146],
+    "bibtex_exit": 0,
+    "final_pdflatex_exit": 0,
+    "unresolved_references": false,
+    "chapter_overfull": false,
+    "remaining_book_overfull": "Three pre-existing warnings outside this chapter: nomenclature, list of figures, damping chapter title.",
+    "scope": "Enclosing book compiled; only this chapter manually reviewed."
+  },
+  "delegation": {
+    "successful_flash_helpers": 5,
+    "model": "gemini-3.8-flash-low",
+    "authority": "Text-only preparation; lead owns scientific and acceptance decisions."
+  },
+  "web": "First root render stopped before output; retry in clean temporary checkout is running.",
+  "preservation": {
+    "prior_scientific_files_exact": 61,
+    "other_route_identities_unchanged": 250,
+    "book_audit_identity_unchanged": true,
+    "original_source_targets_preserved": true
+  },
+  "focused_final": {
+    "passed": 38,
+    "seconds": 5.43,
+    "scope": "Preload and display parsing, retained long-form mechanics, and book-publication audit."
+  },
+  "web_initial": {
+    "browser_cells": 4,
+    "failed": 0,
+    "axe_serious_or_critical": 0,
+    "manual_finding": "Five pre-existing blank lines inside dollar-fenced displays leave literal delimiters visible; removed and guarded; final render pending."
+  },
+  "web_final": {
+    "browser_cells": 4,
+    "failed_cells": 0,
+    "axe_serious_or_critical": 0,
+    "manual_captures": 10,
+    "raw_delimiters": 0
+  },
+  "render_verification": "reports/technical-review/passive-stabilization-render-verification.json",
+  "content_lint": {
+    "passed": 204,
+    "skipped": 4,
+    "deselected": 6832,
+    "seconds": 14.88
+  },
+  "publication_gates_initial": [
+    {
+      "check": ["check_latex_environments"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_latex_environments.txt"
+    },
+    {
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_terminology.txt"
+    },
+    {
+      "check": ["generate_worked_examples", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-generate_worked_examples.txt"
+    },
+    {
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_tree_parity.txt"
+    },
+    {
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_latex_structure.txt"
+    },
+    {
+      "check": ["validate_frontmatter"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-validate_frontmatter.txt"
+    },
+    {
+      "check": ["validate_accessibility", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-validate_accessibility.txt"
+    },
+    {
+      "check": ["check_scaffolding_styling"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "check": ["check_bibliography_quality"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_bibliography_quality.txt"
+    },
+    {
+      "check": ["check_bibliography_cross_file"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "check": ["check_citation_resolution"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_citation_resolution.txt"
+    },
+    {
+      "check": ["check_qmd_citation_keys"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "check": ["check_title_case"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_title_case.txt"
+    },
+    {
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "exit_code": 1,
+      "log": "docs/development/technical-review/passive-stabilization-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "check": ["generate_research_readiness_library", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "publication_gates_final": [
+    {
+      "check": ["check_latex_environments"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_latex_environments.txt"
+    },
+    {
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_terminology.txt"
+    },
+    {
+      "check": ["generate_worked_examples", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-generate_worked_examples.txt"
+    },
+    {
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_tree_parity.txt"
+    },
+    {
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_latex_structure.txt"
+    },
+    {
+      "check": ["validate_frontmatter"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-validate_frontmatter.txt"
+    },
+    {
+      "check": ["validate_accessibility", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-validate_accessibility.txt"
+    },
+    {
+      "check": ["check_scaffolding_styling"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "check": ["check_bibliography_quality"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_bibliography_quality.txt"
+    },
+    {
+      "check": ["check_bibliography_cross_file"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "check": ["check_citation_resolution"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_citation_resolution.txt"
+    },
+    {
+      "check": ["check_qmd_citation_keys"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "check": ["check_title_case"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-check_title_case.txt"
+    },
+    {
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-digests-final.txt"
+    },
+    {
+      "check": ["generate_research_readiness_library", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/passive-stabilization-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "full": {
+    "tested_checkpoint": "46c43cc8487876f1e14a14bab8cb0977cf91b5dd",
+    "passed": 6805,
+    "skipped": 29,
+    "failed": 0,
+    "errors": 0,
+    "seconds": 431.006,
+    "coverage_percent": 93.24,
+    "coverage_scope": "src",
+    "deselected": 206,
+    "warnings": 51,
+    "pytest_summary_seconds": 431.22
+  },
+  "accepted_source_commit": "eff44ef6fa8ee11a37b2d4e82293b297f6745a95",
+  "post_binding": {
+    "passed": 67,
+    "seconds": 33.17,
+    "scope": "New preload/publication contracts, book audit, claim inventory and generated trust metadata."
+  },
+  "corpus_preservation": {
+    "source_rows": 407,
+    "changed_rows": 3,
+    "unchanged_rows": 404
+  },
+  "pull_request": "https://github.com/D-sorganization/AffineDrift/pull/4862",
+  "draft": false,
+  "post_integration": {
+    "passed": 60,
+    "seconds": 19.98,
+    "scope": "Preload, book audit, claim inventory and scientific trust metadata; merged child tree equals prior reviewed tree."
+  },
+  "remote_main_receipt": "reports/technical-review/passive-stabilization-remote-main-receipt.json",
+  "merged_commit": "48261ef8587095832b3360648f4cc6d444d6c36b"
+}

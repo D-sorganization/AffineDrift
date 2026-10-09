@@ -1,0 +1,160 @@
+# Scientific and Technical Audit: Tangent Hyperplanes III & IV
+
+This audit evaluates the theoretical foundations, equations, and assertions presented in the draft chapters on **Control (Part III)** and **Residuals and Curvature (Part IV)**.
+
+---
+
+## 1. Executive Summary & Critical Inconsistencies
+
+1. **Feedforward Term Missing in iLQR / DDP**:
+   - The text asserts that the forward rollout policy is purely linear feedback: $u(t) = \bar{u}(t) - K(t)(x(t) - \bar{x}(t))$.
+   - In standard trajectory optimization via iLQR/DDP, a nominal trajectory is not generally an unperturbed open-loop optimum for the updated value function. Hence, the control update **must include a feedforward correction term** $k(t)$ (often scaled by linesearch parameter $\alpha \in (0, 1]$):
+     $$u(t) = \bar{u}(t) + \alpha k(t) - K(t)(x(t) - \bar{x}(t)).$$
+     Omitting $k(t)$ prevents trajectory refinement when starting from an arbitrary nominal trajectory with $x(t_0) = \bar{x}(t_0)$.
+
+2. **Conflation of iLQR and Full DDP**:
+   - The text lumps DDP and iLQR together under standard first-order Jacobians ($A(t), B(t)$) and Riccati equations.
+   - **iLQR** (iterative LQR / SLQ) neglects dynamics second derivatives ($\nabla_{xx}^2 f, \nabla_{xu}^2 f, \nabla_{uu}^2 f$).
+   - **True DDP** retains dynamic Hessians contracted with the cost-to-go gradient $V_x(t)$.
+
+3. **Value Function Hessian vs. Cost-to-Go Matrix**:
+   - The Riccati matrix $S(t)$ from standard tracking/stabilizing LQR with quadratic costs $\frac{1}{2}\delta x^T Q \delta x$ satisfies $\nabla^2 V(\bar{x}) = S(t)$ only when the cost function has a factor of $\frac{1}{2}$. The text omits the $\frac{1}{2}$ factor in the integral cost definition:
+     $$J = \int (\|\delta x\|_Q^2 + \|\delta u\|_R^2) dt,$$
+     which introduces an off-by-a-factor-of-2 mismatch in the Riccati differential equation and the Hessian identification $\nabla^2 V = 2 S(t)$.
+
+4. **Inconsistent and Ambiguous Residual Definitions**:
+   - In Part IV, the text defines:
+     $$\delta x(t) = \Phi(t, t_0)\delta x(t_0) + \int_{t_0}^t \Phi(t, \tau) B(\tau) \delta u(\tau) d\tau,$$
+     and then sets $x(t) = \bar{x}(t) + \hat{x}(t)$ (using undefined symbol $\hat{x}(t)$), followed by $r(t) = x(t) - [\bar{x}(t) + \hat{x}(t)] = 0$. The text conflates the linearized perturbation $\delta x(t)$ with predicted state $\hat{x}(t)$ and nonlinear trajectory $x(t)$.
+
+5. **Finite-Horizon Error Bounds & Gronwall Exponentials**:
+   - The bound $\|r(t)\| \le C \cdot [\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2]$ drops the explicit exponential horizon dependence $e^{L_A (t - t_0)}$ and the cross-product terms $\|\delta x(t_0)\| \cdot \|\delta u\|_\infty$. The bound requires precise assumptions on the Lipschitz continuity of the vector field's Jacobian (or boundedness of the Hessian tensor).
+
+---
+
+## 2. Detailed Technical Audit & Mathematical Formulations
+
+### A. Missing Feedforward Correction in iLQR / DDP
+
+#### Issue
+Step 4 of Part III states:
+$$u(t) = \bar{u}(t) - K(t)(x(t) - \bar{x}(t)).$$
+If an initial rollout has no initial state deviation ($x(t_0) = \bar{x}(t_0)$), this feedback law yields $u(t) \equiv \bar{u}(t)$ along the noise-free simulation, resulting in **zero trajectory update**.
+
+#### Correction & Assumptions
+In discrete/continuous dynamic programming, the second-order expansion of the action-value function (Q-function) about $(\bar{x}, \bar{u})$ is:
+$$Q(\delta x, \delta u) \approx Q_0 + Q_x^T \delta x + Q_u^T \delta u + \frac{1}{2}\begin{bmatrix} \delta x \\ \delta u \end{bmatrix}^T \begin{bmatrix} Q_{xx} & Q_{xu} \\ Q_{ux} & Q_{uu} \end{bmatrix} \begin{bmatrix} \delta x \\ \delta u \end{bmatrix}.$$
+Minimizing with respect to $\delta u$:
+$$\nabla_{\delta u} Q = Q_u + Q_{ux}\delta x + Q_{uu}\delta u = 0 \implies \delta u^*(t) = k(t) - K(t)\delta x(t),$$
+where:
+$$k(t) = -Q_{uu}(t)^{-1} Q_u(t), \quad K(t) = Q_{uu}(t)^{-1} Q_{ux}(t).$$
+The forward rollout with step-size $\alpha \in (0, 1]$ from backtracking line search must be:
+$$\boxed{u(t) = \bar{u}(t) + \alpha k(t) - K(t)(x(t) - \bar{x}(t)).}$$
+
+---
+
+### B. Distinction Between iLQR and Differential Dynamic Programming (DDP)
+
+#### Issue
+The text treats DDP and iLQR as identical algorithms using $A(t) = \nabla_x f$ and $B(t) = \nabla_u f$.
+
+#### Precise Formulations
+Let $V(x, t)$ be the optimal cost-to-go, with gradient $v(t) = \nabla_x V(\bar{x}(t), t)$ and Hessian $V_{xx}(t) = \nabla_{xx}^2 V(\bar{x}(t), t)$.
+- **iLQR (Gauss-Newton Approximation)**:
+  $$Q_{xx}(t) = \ell_{xx}(t) + A(t)^T V_{xx}(t) A(t),$$
+  $$Q_{uu}(t) = \ell_{uu}(t) + B(t)^T V_{xx}(t) B(t),$$
+  $$Q_{ux}(t) = \ell_{ux}(t) + B(t)^T V_{xx}(t) A(t).$$
+- **Full DDP (Newton-type)**:
+  Includes the tensor contractions with the value gradient $v(t)$:
+  $$Q_{xx}(t) = \ell_{xx}(t) + A(t)^T V_{xx}(t) A(t) + \sum_{i} v_i(t) \nabla_{xx}^2 f_i(\bar{x}(t), \bar{u}(t)),$$
+  $$Q_{uu}(t) = \ell_{uu}(t) + B(t)^T V_{xx}(t) B(t) + \sum_{i} v_i(t) \nabla_{uu}^2 f_i(\bar{x}(t), \bar{u}(t)),$$
+  $$Q_{ux}(t) = \ell_{ux}(t) + B(t)^T V_{xx}(t) A(t) + \sum_{i} v_i(t) \nabla_{ux}^2 f_i(\bar{x}(t), \bar{u}(t)).$$
+
+---
+
+### C. Factor of $\frac{1}{2}$, Norm Notation, and Riccati Differential Equation
+
+#### Issue
+The text defines:
+$$J = \int_{t_0}^{t_f} \left( \|\delta x(t)\|_Q^2 + \|\delta u(t)\|_R^2 \right) dt + \|\delta x(t_f)\|_{Q_f}^2,$$
+and states: "$\|\cdot\|_M$ denotes the weighted norm $v^T M v$".
+1. $v^T M v$ is the squared weighted norm $\|v\|_M^2$, not $\|v\|_M$. Writing $\|\delta x\|_Q^2$ with that definition implies $(v^T Q v)^2$.
+2. Standard LQR incorporates a factor of $\frac{1}{2}$. Without $\frac{1}{2}$, the Hamiltonian is:
+   $$\mathcal{H} = \delta x^T Q \delta x + \delta u^T R \delta u + \lambda^T (A \delta x + B \delta u).$$
+   Then $\nabla_{\delta u} \mathcal{H} = 2 R \delta u + B^T \lambda = 0 \implies \delta u = -\frac{1}{2} R^{-1} B^T \lambda$.
+   Setting $\lambda(t) = 2 S(t) \delta x(t)$ leads to an extraneous factor of 2 or inconsistent definitions across $S(t)$ and $K(t)$.
+
+#### Corrected Formulation
+Standardize the cost functional:
+$$\boxed{J = \frac{1}{2}\int_{t_0}^{t_f} \left( \delta x(t)^T Q(t)\delta x(t) + \delta u(t)^T R(t)\delta u(t) \right) dt + \frac{1}{2}\delta x(t_f)^T Q_f \delta x(t_f),}$$
+under which the value function is $V(\delta x, t) = \frac{1}{2}\delta x^T S(t) \delta x$, the value Hessian is $\nabla_{\delta x \delta x}^2 V = S(t)$, and the backward Differential Riccati Equation (DRE) is:
+$$\boxed{-\dot{S}(t) = A(t)^T S(t) + S(t) A(t) - S(t) B(t) R(t)^{-1} B(t)^T S(t) + Q(t), \quad S(t_f) = Q_f.}$$
+
+---
+
+### D. Contraction Metric Duality Caveat
+
+#### Issue
+Part III states: *"The Riccati matrix $S(t)$ serves a dual role... As a contraction metric: $S(t)$ defines a metric with respect to which the optimal feedback controller is a contraction."*
+
+#### Audit Note
+This holds in general only under additional conditions:
+1. $S(t)$ must be strictly positive definite ($S(t) \succeq \alpha I > 0$), which requires uniform observability/detectability of $(A(t), Q(t)^{1/2})$.
+2. The closed-loop system matrix $F(t) = A(t) - B(t) K(t) = A(t) - B(t)R(t)^{-1}B(t)^T S(t)$ satisfies:
+   $$\dot{S} + F^T S + S F = -Q - S B R^{-1} B^T S \preceq -Q \preceq 0.$$
+   For contraction in the metric $M(t) = S(t)$, the generalized metric derivative must satisfy $\dot{S} + F^T S + S F \le -\beta S$ ($\beta > 0$), which requires strict positive definiteness $Q(t) + S B R^{-1} B^T S \ge \beta S(t)$.
+
+---
+
+### E. Residual Definition and Finite-Horizon Bounds
+
+#### Issue
+In Part IV:
+$$\delta x(t) = \Phi(t, t_0)\delta x(t_0) + \int_{t_0}^t \Phi(t, \tau) B(\tau) \delta u(\tau) d\tau,$$
+$$x(t) = \bar{x}(t) + \hat{x}(t), \quad r(t) = x(t) - [\bar{x}(t) + \hat{x}(t)].$$
+Here $\hat{x}(t)$ is used without definition, and asserting $x(t) = \bar{x}(t) + \hat{x}(t)$ would make $r(t) \equiv 0$ by tautology. Furthermore, the bound $\|r(t)\| \le C [\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2]$ omits time dependence and cross terms.
+
+#### Correct Formulation
+Let $\bar{x}(t)$ be the nominal trajectory generated by $\dot{\bar{x}}(t) = f(\bar{x}(t), \bar{u}(t))$.
+Let $x(t)$ be the actual nonlinear state satisfying:
+$$\dot{x}(t) = f(x(t), u(t)), \quad x(t_0) = \bar{x}(t_0) + \delta x_0, \quad u(t) = \bar{u}(t) + \delta u(t).$$
+Define the linear perturbation model state $\delta x_{lin}(t)$:
+$$\delta\dot{x}_{lin}(t) = A(t)\delta x_{lin}(t) + B(t)\delta u(t), \quad \delta x_{lin}(t_0) = \delta x_0,$$
+where $A(t) = D_x f(\bar{x}(t), \bar{u}(t))$ and $B(t) = D_u f(\bar{x}(t), \bar{u}(t))$.
+The linearized trajectory prediction is:
+$$x_{lin}(t) \triangleq \bar{x}(t) + \delta x_{lin}(t) = \bar{x}(t) + \Phi(t, t_0)\delta x_0 + \int_{t_0}^t \Phi(t, \tau) B(\tau)\delta u(\tau) d\tau.$$
+The true state deviation is $\delta x(t) \triangleq x(t) - \bar{x}(t)$.
+The **residual** is defined as the error between the nonlinear deviation and the linear prediction:
+$$\boxed{r(t) \triangleq x(t) - x_{lin}(t) = \delta x(t) - \delta x_{lin}(t).}$$
+
+#### Rigorous Error Bound via Gronwall's Inequality
+Assume:
+1. $f \in C^2(\mathbb{R}^n \times \mathbb{R}^m, \mathbb{R}^n)$.
+2. On a compact domain containing the trajectories, the Hessian of $f$ is bounded:
+   $$\sup_{(x,u)} \|D^2 f(x, u)\| \le L_H.$$
+3. The Jacobian satisfies $\|A(t)\| \le L_A$.
+
+By Taylor's theorem with integral remainder:
+$$f(\bar{x} + \delta x, \bar{u} + \delta u) - f(\bar{x}, \bar{u}) = A(t)\delta x + B(t)\delta u + w(t),$$
+where $\|w(t)\| \le \frac{1}{2} L_H (\|\delta x(t)\| + \|\delta u(t)\|)^2$.
+Then the residual dynamics are:
+$$\dot{r}(t) = \dot{x}(t) - \dot{\bar{x}}(t) - \delta\dot{x}_{lin}(t) = A(t) r(t) + w(t), \quad r(t_0) = 0.$$
+Integrating via the state transition matrix $\Phi(t, \tau)$:
+$$r(t) = \int_{t_0}^t \Phi(t, \tau) w(\tau) d\tau.$$
+Since $\|\Phi(t, \tau)\| \le e^{L_A (t - \tau)}$ and using the first-order Gronwall bound for $\|\delta x(t)\| \le e^{(L_A + L_B)(t - t_0)}(\|\delta x_0\| + \int \|\delta u\|)$:
+$$\boxed{\|r(t)\| \le \frac{L_H}{2} \frac{e^{2 L_{cl}(t - t_0)} - 1}{L_{cl}} \left( \|\delta x(t_0)\| + \int_{t_0}^t \|\delta u(\tau)\| d\tau \right)^2.}$$
+In terms of norms on a finite horizon $[t_0, t_f]$ with $T = t_f - t_0$:
+$$\boxed{\|r(t)\| \le C(T) \cdot \left( \|\delta x(t_0)\| + \|\delta u\|_{L^1} \right)^2 \le \tilde{C}(T) \cdot \left( \|\delta x(t_0)\|^2 + \|\delta u\|_{L^\infty}^2 \right),}$$
+where $C(T) = \mathcal{O}(e^{2 L T})$ grows exponentially with horizon length $T$.
+
+---
+
+## 3. Summary of Recommended Edits
+
+| Section | Current Text Defect | Recommended Replacement |
+| :--- | :--- | :--- |
+| **III: Step 4** | $u(t) = \bar{u}(t) - K(t)(x(t) - \bar{x}(t))$ | $u(t) = \bar{u}(t) + \alpha k(t) - K(t)(x(t) - \bar{x}(t))$ with feedforward $k(t) = -Q_{uu}^{-1} Q_u$ and linesearch parameter $\alpha$. |
+| **III: LQR Cost** | $J = \int (\|\delta x\|_Q^2 + \|\delta u\|_R^2) dt + \|\delta x(t_f)\|_{Q_f}^2$ | Add explicit $\frac{1}{2}$ prefactor; clarify $\|v\|_M^2 \triangleq v^T M v$. |
+| **III: Algorithms** | DDP and iLQR treated as identical first-order Riccati algorithms | Clarify that iLQR drops dynamics second derivatives ($\nabla^2 f = 0$), while full DDP includes tensor contractions $v(t) \cdot \nabla^2 f$. |
+| **IV: Residual Def.** | $r(t) = x(t) - [\bar{x}(t) + \hat{x}(t)]$ with $x(t) = \bar{x}(t) + \hat{x}(t)$ | Define $x_{lin}(t) \triangleq \bar{x}(t) + \delta x_{lin}(t)$ and set $r(t) \triangleq x(t) - x_{lin}(t)$. |
+| **IV: Residual Bound**| $\|r(t)\| \le C [\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2]$ | Include cross-terms $(\|\delta x_0\| + \|\delta u\|)^2$ and explicit exponential horizon factor $e^{\mathcal{O}(L T)}$. |

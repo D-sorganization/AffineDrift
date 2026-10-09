@@ -33,6 +33,10 @@ dependencies = [
     "defusedxml>=0.7.1",
 ]
 
+[project.optional-dependencies]
+# Encoder for scripts/generate_explainer_videos.py (WEB-08.4); not needed at build time.
+media = ["imageio-ffmpeg>=0.6.0"]
+
 [tool.setuptools]
 include-package-data = true
 
@@ -183,9 +187,12 @@ max-complexity = 10
 "tests/test_critical_physics_fixes.py" = ["F821", "E402", "E731", "F401"]
 "src/tools/**/*.py" = ["E501", "S603", "S607"]
 "scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901", "S310", "S314"]
-"shared_scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901"]
+"shared_scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901", "S101", "S110"]
 # Canonical fleet copies: assertions narrow types after runtime checks; SELF is a commit marker.
 "shared_scripts/deferred_planning.py" = ["S101"]
+"scripts/fork_pr_guard_analysis.py" = ["S101"]
+"scripts/requeue_stalled_merges.py" = ["S101"]
+"tests/test_automerge_guard.py" = ["C901"]
 "shared_scripts/handoff_validator.py" = ["S105"]
 "src/affine_control/swing_optimizer.py" = ["S101"]
 "articles/**/*.py" = ["S603", "S607"]
@@ -213,6 +220,12 @@ force-exclude = '''
   ^/shared_scripts/
   | ^/scripts/spec_rows_merge_driver\.py$
   | ^/scripts/install_spec_merge_driver\.py$
+  | ^/scripts/fork_pr_runner_guard\.py$
+  | ^/scripts/fork_pr_guard_analysis\.py$
+  | ^/scripts/automerge_guard\.py$
+  | ^/scripts/requeue_stalled_merges\.py$
+  | ^/tests/test_automerge_guard\.py$
+  | ^/tests/test_requeue_stalled_merges\.py$
   | ^/scripts/bump_spec_version\.py$
 )
 '''

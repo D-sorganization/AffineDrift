@@ -1,119 +1,162 @@
-\chapter{The Curse of Dimensionality --- And How Humans Solve It}
+\chapter[Dimensionality and Control]{Dimensionality, Structure,\\and Motor Control}
 \label{ch:curse-dim}
 
 \begin{gomdraftnotice}
-This chapter is under active development and contains only a structural outline
-with preliminary material. Full exposition, worked examples, proofs, and exercises
-will be added in future editions.
+This chapter distinguishes mathematical dimensions and conditional computational
+costs. Its worked examples are manufactured checks, not measurements of neural
+computation or evidence that the brain solves a particular optimization problem.
 \end{gomdraftnotice}
 
-\epigraph{%
-  In ten dimensions, the unit hypercube has $2^{10} = 1024$ corners.
-  In a hundred, it has $2^{100} \approx 10^{30}$.
-  The nervous system controls hundreds of dimensions every second.
-}{}
+\section{Which Dimension Is Being Reduced?}
 
-\section{Classical Curse of Dimensionality}
+A golf model can have many mechanical states but a small number of adjustable
+commands. Those are different statements. Write a continuous-time model as
+\begin{equation}
+  \dot x=f(x,u),\qquad x\in\mathbb R^n,\quad u\in\mathbb R^m.
+\end{equation}
+Here $n$ is the local state dimension and $m$ is the input dimension. Joint
+coordinates and velocities often supply mechanical states, but activation,
+fiber length, estimator states, and flexible modes can add others. Quaternion
+coordinates and constraints require a distinction between stored coordinates
+and independent local dimensions (Volume~III). Thus $n=2\,\mathrm{DOF}$ is not
+a universal model identity.
 
-The curse of dimensionality \cite{Bellman1961} states that the computational resources
-needed to solve many problems grow \emph{exponentially} with the state dimension $n$:
+A fixed input parameterization $u=Wc$, with $W\in\mathbb R^{m\times k}$,
+changes the adjustable input dimension to at most $\operatorname{rank}W\le k$.
+The state still obeys $\dot x=f(x,Wc)$ in $n$ dimensions. A task output
+$y=h(x)\in\mathbb R^p$ describes what is scored or observed; it need not
+provide a closed $p$-dimensional dynamics. A valid reduced state model needs
+additional invariance, closure, or approximation conditions and an error
+bound appropriate to the task. Low-rank fitted muscle activity alone supplies
+none of these guarantees.
 
-\begin{definition}{The Curse of Dimensionality}{curse-def}
-  For a control problem with state dimension $n$:
-  \begin{itemize}
-    \item \textbf{Grid-based methods} (dynamic programming): cost $\sim \mathcal{O}(N^n)$
-          where $N$ is the grid resolution per dimension
-    \item \textbf{Sample-based methods} (Monte Carlo, RL): sample complexity grows
-          polynomially in $n$ but with large constants
-    \item \textbf{Trajectory optimization} (DDP, collocation): cost $\sim \mathcal{O}(n^3 \cdot T)$
-          per iteration --- the only scalable approach for deterministic systems
-  \end{itemize}
-\end{definition}
+\section{What the Computational Curse Actually Says}
 
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[scale=1.0]
-  % Axes
-  \draw[->, thick] (0, 0) -- (6, 0) node[align=center, anchor=north] {Dimension ($n$)};
-  \draw[->, thick] (0, 0) -- (0, 5) node[align=center, anchor=east, rotate=90] {Computational Cost};
+For a tensor-product grid with $M$ values on each of $n$ independent state
+axes, there are $M^n$ grid sites~\cite{Bellman1961}. One double-precision value
+per site requires $8M^n$ bytes, before actions, transitions, interpolation,
+or multiple time slices. At $M=10$, $n=6$ already requires eight million
+bytes; $n=10$ requires eighty billion. This is a storage count, not a runtime
+estimate. FLOPS alone cannot establish feasibility: wall time, operations per
+update, memory, action discretization, and accuracy must also be specified.
 
-  % Grid-based (exponential)
-  \draw[red, thick, smooth] plot coordinates {
-    (1, 0.3) (1.5, 0.6) (2, 1.2) (2.5, 2.4) (3, 4.8)
-  } node[anchor=west] {\small Grid: $O(N^n)$};
+Sampling does not have one universal dimension law. For independent samples
+of a fixed integrand with finite variance, the sample-mean variance is
+$\operatorname{Var}(F)/N_s$. The familiar $N_s^{-1/2}$ root-mean-square rate
+has no explicit dimension exponent, but the variance and cost per sample can
+depend on dimension. Learning an unknown policy or covering a state space is
+a different problem. Its complexity depends on regularity, function class,
+exploration, noise, and the requested error; a blanket polynomial guarantee
+for reinforcement learning is unjustified.
 
-  % DDP (cubic)
-  \draw[blue, thick, smooth] plot coordinates {
-    (1, 0.2) (2, 0.5) (3, 1.0) (4, 1.5) (5, 2.5) (6, 3.5)
-  } node[anchor=west] {\small DDP: $O(n^3)$};
+Trajectory methods exploit temporal and algebraic structure instead of
+covering every state. Their performance is conditional too. In a dense local
+quadratic backward pass, let $A$ be $n\times n$, $B$ be $n\times m$, and $P$
+be an $n\times n$ value Hessian. Products such as $A^TPA$, $B^TPA$, and
+$B^TPB$, together with an $m\times m$ control solve, motivate the proxy
+\begin{equation}
+ C_{\mathrm{dense}}=H(n^3+n^2m+nm^2+m^3),
+ \label{eq:ch2:dense-proxy}
+\end{equation}
+for $H$ stages. Coefficients are deliberately omitted: this is an operation
+scaling proxy, not an exact flop count or measured benchmark. Derivative
+construction, line search, constraints, full DDP dynamics curvature, sparse
+factorizations, and implementation choices change the cost. Direct collocation
+has its own sparse nonlinear-program structure; it cannot be assigned this
+formula without examining its solver. Neither family is the only scalable
+approach to every deterministic problem.
 
-  % Synergy reduction (flat)
-  \draw[green, thick] (0, 0.3) -- (6, 0.3) node[align=center, anchor=west] {\small Synergies: $O(k^3)$};
+Replacing $m$ by $k$ in this proxy retains the $Hn^3$ term and the need to
+represent state curvature. There is no general flat $O(k^3)$ cost curve as the
+body dimension increases. For $n=4$, $m=2$, $H=10$, the proxy is 1200; setting
+$k=1$ gives 850, while the $Hn^2=160$ stored stage-Hessian entries are unchanged.
+Actual implementations can store fewer matrices; this count refers to retaining
+one dense state Hessian per stage.
 
-  % Shaded region (infeasible)
-  \fill[red, opacity=0.1] (4, 5) -- (6, 5) -- (6, 0) -- (4, 0) -- cycle;
-  \draw (5, 3) node[anchor=center, align=center] {\small Curse\\ \small region};
+\begin{lstlisting}[language=Python, caption={Conditional Counts, Not Runtime Benchmarks}]
+import math
 
-  \draw (3, 4.2) node[align=center, anchor=center, font=\small] {Exponential growth};
-\end{tikzpicture}
-\caption{The curse of dimensionality: computational cost grows exponentially with dimension
-for grid-based methods, cubically for DDP, and remains constant when using synergy-based
-dimensionality reduction (where $k \ll n$).}
-\label{fig:ch2:curse-viz}
-\end{figure}
 
-\section{Biological Solutions}
-
-Humans solve the dimensionality problem through five complementary mechanisms:
-
-\subsection{1. Synergy-Based Compression}
-As introduced in Chapter~4: $\bm{u}(t) = W \bm{c}(t)$ reduces $p$-dimensional muscle
-space to $k$-dimensional synergy space, with $k/p \approx 4/400 = 1\%$.
-
-\subsection{2. Hierarchical Decomposition}
-Multi-level processing decomposes the global problem into independent subproblems.
-
-\subsection{3. Passive Dynamics Exploitation}
-The drift field $f(\state)$ does useful work. The controller only corrects deviations.
-This reduces the effective control dimension (Volume~II, passive dynamics).
-
-\subsection{4. Internal Models and Prediction}
-Forward models predict consequences, enabling open-loop execution with sparse
-feedback corrections (see Chapter~6).
-
-\subsection{5. Task-Space Control}
-Control in a low-dimensional task space rather than the full joint/muscle space.
-The null space absorbs variability (UCM framework, Chapter~1).
-
-\begin{lstlisting}[language=Python, caption={Computational cost comparison across methods.}]
-import numpy as np
-
-def computational_cost_table(n_dims: list[int]) -> None:
-    """Print computational cost for different methods vs dimension."""
-    print(f"{'n_dim':>6} {'Grid (N=10)':>15} {'DDP (T=100)':>15} "
-          f"{'Synergy (k=5)':>15}")
-    print("-" * 55)
-    for n in n_dims:
-        grid_cost = 10**n if n <= 10 else float('inf')
-        ddp_cost = n**3 * 100
-        synergy_cost = 5**3 * 100  # After reduction to k=5
-        print(f"{n:>6d} {grid_cost:>15.0e} {ddp_cost:>15.0e} "
-              f"{synergy_cost:>15.0e}")
-
-computational_cost_table([2, 5, 10, 20, 50, 100, 200])
+def planning_costs(n_state, n_control, horizon=100,
+                   grid_points=10):
+    """Return counts for positive integer dimensions/stages."""
+    values = (n_state, n_control, horizon, grid_points)
+    if any(isinstance(v, bool) or not isinstance(v, int)
+           or v < 1 for v in values):
+        raise ValueError("Use positive Python integers")
+    if grid_points < 2:
+        raise ValueError("At least two grid points per axis")
+    n, m = n_state, n_control
+    return {
+        "log10_grid": n * math.log10(grid_points),
+        "value_hessian_entries": horizon * n**2,
+        "dense_proxy": horizon * (
+            n**3 + n**2*m + n*m**2 + m**3),
+    }
 \end{lstlisting}
 
+The logarithmic grid count remains representable for ordinary large dimension
+inputs; an arbitrary cutoff such as declaring every $n>10$ infinite would
+confuse practical cost with mathematical overflow. Python integer proxy counts
+do not overflow at a fixed machine-integer width. Neither property makes a
+large optimal-control problem tractable.
+
+\section{Structure Can Help Without Erasing the Body}
+
+\begin{description}[style=nextline]
+  \item[Synergies.] A restricted command basis can regularize estimation and
+  reduce policy search. Its rank, task fit, and lost actuator authority must
+  be checked; there is no universal four-synergy description of all muscles.
+  Coefficient constraints can reduce the reachable input set further.
+  \item[Hierarchy.] Separating task selection, estimation, and feedback can
+  make design manageable. Their parts remain coupled by the body, measurements,
+  constraints, and delays.
+  \item[Passive dynamics.] Gravity, inertia, elasticity, and contact can carry
+  a useful motion, reducing required intervention or work in a specified
+  task. They also propagate disturbances and can destabilize motion. A useful
+  drift field does not by itself reduce state or input dimension.
+  \item[Prediction.] A forward model can support state estimation and feedback
+  despite delay. Prediction is not restricted to open-loop execution, and its
+  usefulness depends on model error and uncertainty (Chapters~3 and~6).
+  \item[Task coordinates.] For a regular task map, perturbations in
+  $\ker Dh(x)$ preserve the output to first order at that instant. They can
+  still change contact, joint loading, future output, or constraint feasibility.
+  Task-insensitive variation is not an unlimited safe space.
+\end{description}
+
+\section{A Hidden Unstable Mode}
+
+Consider the fully actuated system
+\begin{equation}
+ \dot x=\begin{bmatrix}-1&0\\0&1\end{bmatrix}x+I_2u.
+\end{equation}
+With $u=-2x$, both eigenvalues are negative. Restricting commands to
+$u=(c,0)^T$ leaves $\dot x_2=x_2$, regardless of how $c$ is chosen. Scoring
+only $y=x_1$ can therefore report success while $x_2(t)=e^t x_2(0)$ diverges.
+The example demonstrates a possible loss, not a theorem that every reduction
+in input rank destroys controllability: dynamic coupling can preserve
+controllability with fewer inputs.
+
+For golf, clubhead delivery is a low-dimensional task description, but pelvis,
+trunk, limb, club, and contact states jointly determine whether that delivery
+remains feasible. A concise command representation is valuable when it retains
+the corrections needed for those coupled dynamics. The right empirical
+comparison holds the task and disturbances fixed, reports tracking, loading,
+actuator limits, and robustness, and measures computational cost. Counting
+synergy coefficients cannot substitute for that comparison.
+
 \section*{Exercises}
-
 \begin{enumerate}
-  \item \textbf{Scaling Analysis.}
-        Using the computational cost table, determine the maximum state dimension for
-        which grid-based dynamic programming is feasible (assuming $10^{12}$ FLOPS).
-
-  \item \textbf{Synergy Efficiency.}
-        If a motor task uses 100 muscles with 5 synergies, by what factor does the
-        synergy decomposition reduce the dimensionality of the control problem?
-
-  \item \textbf{(Programming.)} Implement DDP for a 2-DOF, 5-DOF, and 10-DOF chain.
-        Measure computation time per iteration. Verify cubic scaling in state dimension.
+ \item Compute the largest integer $n$ permitting one $M=10$ value grid in
+ a budget of $8\times10^9$ bytes. State why this does not yet certify a dynamic
+ programming calculation. (The storage bound gives $n=9$.)
+ \item For $n=40$, compare $m=20$ with $k=5$ in
+ Eq.~\eqref{eq:ch2:dense-proxy}, keeping $H$ fixed. Identify the unchanged terms
+ and distinguish coefficient count from independent actuator authority.
+ \item Derive the unstable-mode example and construct a coupled two-state,
+ one-input system whose controllability matrix has rank two.
+ \item Benchmark a chosen trajectory solver over chain sizes. Report state,
+ input and constraint dimensions, derivative method, tolerance, hardware,
+ iteration counts, and wall time. Test a scaling hypothesis rather than
+ requiring a predetermined cubic result.
 \end{enumerate}

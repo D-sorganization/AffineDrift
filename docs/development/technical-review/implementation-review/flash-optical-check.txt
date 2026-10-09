@@ -1,0 +1,27 @@
+### Arithmetic & Assumption Verification
+
+1. **Center Separation ($300\text{–}500\,\mu\text{s}$ at $67.056\,\text{m/s}$)**:
+   - $67.056 \times 0.000300 = 0.0201168\,\text{m} = \mathbf{20.1168\,\text{mm}}$.
+   - $67.056 \times 0.000500 = 0.033528\,\text{m} = \mathbf{33.528\,\text{mm}}$. **Correct.**
+
+2. **Non-Overlap Condition ($D / v_\perp$)**:
+   - $0.04267\,\text{m} / 67.056\,\text{m/s} \approx \mathbf{636.334\,\mu\text{s}}$. **Correct.**
+
+3. **Motion Blur ($30\,\mu\text{s}$ illumination)**:
+   - $67.056 \times 30 \times 10^{-6} = 0.00201168\,\text{m} = \mathbf{2.01168\,\text{mm}}$.
+   - Fraction of diameter: $2.01168 / 42.67 \approx 4.7145\% \approx \mathbf{4.714\%}$. **Correct.**
+
+4. **Five-Pulse Span**:
+   - **Arithmetic Error**: Five pulses define $5 - 1 = 4$ intervals, not 5.
+     - Four intervals at $0.8\,\text{ms}$: $4 \times 0.8\,\text{ms} \times 67.056\,\text{m/s} = 4 \times 53.6448\,\text{mm} = \mathbf{214.5792\,\text{mm}}$.
+     - The stated value $214.5792\,\text{mm}$ is correct for **4 intervals (5 pulses)**. Adding one diameter ($42.67\,\text{mm}$) gives $214.5792 + 42.67 = \mathbf{257.2492\,\text{mm}}$.
+     - The numbers are **arithmetically consistent for 5 pulses**, though phrasing often confuses $N$ pulses with $N$ intervals.
+
+5. **Rotation Angle ($3000\,\text{rpm}$ over $400\,\mu\text{s}$)**:
+   - $\omega = 3000\,\text{rev/min} = 50\,\text{rev/s} = 18{,}000^\circ/\text{s}$.
+   - $\Delta\theta = 18{,}000^\circ/\text{s} \times 0.000400\,\text{s} = \mathbf{7.2^\circ}$. **Correct.**
+
+6. **Optical / Physical Assumptions**:
+   - **Blur boundary effect**: Pure translation blur during flash extends outer silhouette boundaries along the velocity vector by $v_\perp \cdot t_{\text{pulse}}$, which slightly increases the non-overlap threshold to $D + v_\perp \cdot t_{\text{pulse}}$ (i.e. $\Delta t > D/v_\perp + t_{\text{pulse}}$) if complete background clearance between blurs is required.
+   - **Constant depth / pinhole perspective**: Transverse motion across a wide FOV induces varying ray angle / scale change across edges unless telecentric or depth-compensated.
+   - Exposure, global shutter, ambient dominance, and rotational ambiguity statements are valid.

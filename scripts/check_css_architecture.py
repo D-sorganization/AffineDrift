@@ -104,7 +104,7 @@ def check_rules(repo_root: Path) -> list[str]:
             )
 
     # Forbid var() inside @media preludes across every authored stylesheet
-    # (root entry + the modular css/ tree). The rendered docs/ bundle inherits
+    # (root entry + the modular css/ tree). The rendered _site/ bundle inherits
     # correctness from these sources via scripts/bundle_css.py.
     media_var_targets = discover_authored_stylesheets(repo_root, root_stylesheet)
     for css_file in media_var_targets:

@@ -22,6 +22,13 @@ Conventions follow Featherstone and Lynch & Park: spatial **motion** vectors are
 angular-first, ``V = (omega, v)``; spatial **force** vectors are moment-first,
 ``F = (n, f)``. Mixing that with the opposite ordering silently transposes every
 6-vector and every adjoint, so it is asserted in the tests.
+
+Browser mirrors: ``js/drift-control-sandbox.js`` ports
+:func:`double_pendulum_mass_matrix`, :func:`christoffel_coriolis`,
+:func:`double_pendulum_coriolis` and :func:`planar_double_pendulum_trajectory`;
+``js/ztcf-explorer.js`` ports :func:`christoffel_coriolis`.
+The widget parity fixtures pin this file's digest; after editing it, run
+``python -m scripts.generate_widget_parity`` and keep the JS mirrors in step.
 """
 
 from __future__ import annotations

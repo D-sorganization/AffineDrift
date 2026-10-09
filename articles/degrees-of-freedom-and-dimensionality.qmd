@@ -4,21 +4,34 @@ description: "A cross-cutting treatment of the degrees-of-freedom problem and cu
 author: "Dieter Olson"
 date: "Date unverified"
 date-source: "unverified"
-date-modified: "2026-09-10"
-last-reviewed: "2026-09-10"
+date-modified: "2026-10-04"
+last-reviewed: "2026-10-04"
 canonical: "/articles/degrees-of-freedom-and-dimensionality.html"
 status: "available"
 audience-level: "intermediate"
 evidence-rung: "mathematical-identity"
 prerequisites:
   - "pages/how-to-read.html"
-summary-plain: "Explains how geometric constraints and low-dimensional manifolds resolve the curse of dimensionality across human movement."
-abstract: "This article investigates Bernstein's degrees-of-freedom problem in athletic motor control through the lens of geometric nonlinear control. It demonstrates how passive mechanics and task-level kinematic constraints collapse hundreds of anatomical degrees of freedom onto low-dimensional manifolds."
+summary-plain: "Explains which dimensions constraints, control choices and data summaries can reduce, and why fast computation does not prove a low-dimensional human controller."
+abstract: "This article distinguishes configuration, state, input, task and statistical dimensions in movement models. It relates mechanical constraints, passive dynamics, contraction, recursive dynamics algorithms and local trajectory optimization without treating them as equivalent reductions or evidence of a neural mechanism."
 key-takeaways:
-  - "Athletes control high-dimensional multibody dynamics by exploiting low-dimensional physical manifolds."
-  - "Geometric constraints naturally resolve the motor-control curse of dimensionality."
-  - "Motor coordination functions as an architected constraint manager rather than an individual joint commander."
+  - "A reduction must name the variables, assumptions and outcomes it preserves."
+  - "Fewer task outputs or input channels do not eliminate the remaining mechanical states."
+  - "Low-dimensional recordings alone do not identify a neural coordination mechanism."
+caveats:
+  evidence-level: "Theory (Mathematical Identity)"
+  establishes:
+    - "Local dimension counts under independent constraints and distinctions between geometric, statistical and computational reduction."
+    - "Mathematical formulation of Bernstein's degrees-of-freedom problem within geometric nonlinear control."
+  does-not-establish:
+    - "Direct measurement of central nervous system motor primitives or spinal reflex circuits in living golfers."
+    - "Empirical optimality of individual swing trajectories without subject-specific parameter identification."
+  open-critiques:
+    - "CRIT-003: Model assumes rigid linkages; soft-tissue deformation and muscle-tendon compliance are excluded."
+  next-gate: "For a proposed human-control mechanism, compare explicit alternative models on independent perturbation data; this article supplies no such validation."
 changes:
+  - date: "2026-10-04"
+    description: "Separated dimension categories, corrected dynamics and complexity claims, and checked a synthetic PCA example (#4885)."
   - date: "2026-09-10"
     description: "Wired motor-control and neuroscience cluster links (#4365)."
   - date: "2026-09-08"
@@ -29,257 +42,195 @@ categories:
 - motor-control
 ---
 
-## The Central Paradox
+## What Does a Smaller Control Problem Mean?
 
-A golfer controls more than 200 degrees of freedom in real time to produce a repeatable,
-high-speed motion. A robot designed to replicate this performance would require solving a
-reinforcement learning problem in a space of astronomical size. Yet humans learn the golf
-swing in months.
+A repeatable swing coordinates many joints, muscles and contacts, but an anatomical count alone does not tell us how difficult that coordination is.
+The count depends on the chosen model: rigid segments, joint constraints, muscle states, tendon compliance and implement deformation all matter.
+A robot need not solve this task by tabulating every possible state or by reinforcement learning.
+Likewise, successful human movement does not reveal which mathematical reduction, if any, the nervous system uses.
 
-This is not magic. It is architecture. Understanding how the nervous system—and well-designed
-controllers—solve the curse of dimensionality is a central theme running through all volumes
-of *Geometric Control of Nonlinear Systems*.
+Bernstein's degrees-of-freedom problem asks how many available motions can be coordinated to achieve a task.
+For golf, the useful question is more specific: **which motions and forces can vary while preserving the required club delivery, and which variations change its feasibility or sensitivity?**
+Answering it connects geometry, dynamics, control and measurement, but requires keeping their different dimensions separate.
 
-::: {.callout-note}
-## Key Principle
+## Five Different Counts
 
-**The curse of dimensionality is real, but escapable with the right geometry.** The core
-insight is that high-dimensional systems governed by physics do not explore their full
-state space uniformly—they are constrained to low-dimensional manifolds defined by
-conservation laws, mechanical linkages, and passive dynamics. Identifying and exploiting
-this low-dimensional structure is the fundamental strategy.
-:::
+| Quantity | Meaning | Typical Model Count |
+|---|---|---|
+| Configuration $q$ | Independent coordinates specifying posture | $n$ |
+| Mechanical state $(q,v)$ | Posture and generalized velocity | $2n$ for a regular unconstrained second-order model |
+| Input $u$ | Independently specified actuator commands | $m$ |
+| Task output $y$ | Quantities the movement should achieve | $d$ outputs, with independence determined by their Jacobian |
+| Data representation | Features needed for a chosen reconstruction error | Depends on sampling, units, noise and the approximation method |
 
+Muscle activation, tendon, shaft and controller dynamics can add states beyond $(q,v)$.
+An actuator count is not a configuration count.
+A seven-coordinate arm model can have many more muscle commands than joint coordinates, yet a six-component endpoint pose does not specify its endpoint velocity or the ball's launch state.
 
-## What Is a Degree of Freedom?
+A free rigid body has six configuration dimensions: three for position and three for orientation.
+Euler angles give only a local orientation chart; quaternion storage uses four numbers subject to a unit constraint and still represents three orientation dimensions.
+For $b$ moving rigid bodies with independent, regular holonomic constraints of total rank $c$, the local configuration dimension is $6b-c$.
+Ground is not a moving body in this count.
+Summing each joint's nominal constraints is valid only when those constraints are independent; closed loops and singular configurations require a rank analysis.
+Velocity constraints that are not integrable into configuration constraints require separate treatment.
 
-A **degree of freedom (DoF)** is an independent parameter needed to specify the
-configuration of a system. For a rigid body in three dimensions:
+## Task Redundancy and Dynamic Feasibility
 
-- 3 translational DoF ($x, y, z$)
-- 3 rotational DoF ($\phi, \theta, \psi$)
-- **Total: 6 DoF per free rigid body**
+Let $y=h(q)$ be a smooth configuration task and $J_h=Dh(q)$ its Jacobian in local coordinates.
+Where its rank is locally constant at $r$, the fixed-task configurations form a local level manifold of dimension $n-r$.
+Its tangent velocities satisfy
 
-A system of $n$ rigid bodies connected by joints has:
+$$J_h(q)v=0,\qquad \dim\ker J_h(q)=n-r.$$
 
-$$N_\text{DoF} = 6n - \sum_j c_j$$
+A seven-coordinate arm with a locally independent six-component pose task therefore has one instantaneous task-null direction.
+At a singularity the kernel can grow while task mobility is lost; the kernel alone need not describe the exact solution set.
+For example, $h(q)=q^2$ has derivative zero at $q=0$, although the exact level set $h(q)=0$ contains only that point.
 
-where $c_j$ is the number of constraints imposed by joint $j$. A revolute (hinge) joint
-imposes 5 constraints, leaving 1 DoF. A ball-and-socket joint imposes 3 constraints,
-leaving 3 DoF.
+Kinematic redundancy does not establish feasible muscle forces, balance, collision avoidance or a dynamically reachable trajectory.
+Joint coordinates absent from an impact penalty can still change moment arms, inertial coupling, actuator limits and the ability to reach impact.
+For club delivery, use a state-dependent terminal map $y=g(x(T))$ when velocity or implement state matters.
+Its domain and Jacobian differ from those of a posture-only task.
+The [Volume IV treatment](../books/human-motor-control.html#book4-ch1) develops this distinction alongside force allocation.
 
-**Example — human arm:** shoulder (3 DoF ball joint) + elbow (1 DoF hinge) +
-forearm/wrist (3 DoF: pronation–supination plus wrist flexion and deviation) = 7 DoF
-for arm positioning alone.
+## Passive Dynamics and Input Synergies
 
+A released, unactuated double pendulum has two configuration dimensions, four mechanical state dimensions and zero commanded inputs.
+Both links evolve from their initial conditions under the coupled equations of motion.
+Having no inputs does not turn the state dynamics into a one-dimensional system.
+Each individual nonstationary trajectory is locally a curve; that observation does not place all nearby trajectories on the same curve.
+For a smooth differential equation with unique solutions, the finite-time flow is locally invertible wherever it is defined, so nearby states do not literally collapse onto a lower-dimensional set in finite time.
+Asymptotic attraction and approximate reduced models are different claims.
 
-## The Curse of Dimensionality
+For a declared control-affine model $\dot x=f(x)+G(x)u$, the drift is what remains at the chosen zero input.
+That choice need not remove elastic forces, gravity, contact or every internal actuator state.
+A large drift-control ratio can indicate a large drift contribution relative to the chosen control contribution, using a declared metric and scale.
+It does not establish an invariant manifold, controllability, insensitivity to perturbations or a neural strategy.
 
-The "curse of dimensionality" (Bellman, 1957) refers to the exponential growth of volume
-with dimension. If each DoF spans a range of 100 discrete values, then:
+If inputs are restricted to $u=S a$, where $S\in\mathbb R^{m\times k}$ has rank $k$, then $a$ supplies $k$ independent commands.
+The mechanical state dimension remains unchanged, and the restricted input family may sacrifice useful control authority.
+This is a precise model of an input synergy.
+Low-rank EMG or motion data alone do not establish that the nervous system implements it: task and biomechanical constraints can also produce correlated signals.
+[Kutch and Valero-Cuevas's analysis](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1002434) demonstrates this identifiability problem; it does not disprove neural synergies.
 
-| Dimensions | Grid Points |
-|-----------|-------------|
-| 1 | $10^2$ = 100 |
-| 6 | $10^{12}$ = 1 trillion |
-| 20 | $10^{40}$ — more than atoms in the observable universe |
-| 200 | $10^{400}$ — computationally intractable |
+## Dissipation, Contraction and Periodic Motion
 
-A naive tabular approach to controlling a 200-DoF system is impossible. Yet humans do it.
+Energy dissipation, phase-volume shrinkage and contraction of every perturbation are different properties.
+For the manufactured system $\dot x=x$, $\dot y=-2y$, area shrinks as $e^{-t}$ while a perturbation in $x$ grows as $e^t$.
+Negative divergence therefore does not prove contraction of distances.
 
+For $\dot x=F(x,t)$, a contraction test can use a positive-definite metric $M(x,t)$ and require
 
-## How the Curse Is Broken
+$$\dot M+A^T M+MA\preceq-2\lambda M.$$
 
-### 1. Passive Dynamics Reduce Effective DoF
+Here $A=D_xF$ and $\lambda>0$.
 
-The most powerful mechanism: **physics does most of the work for free.** In a double
-pendulum (2 DoF), once you release the top link, the second link follows a trajectory
-determined entirely by gravity and inertia. The effective control problem is 1-dimensional,
-not 2-dimensional.
+Here $\dot M=\partial_t M+\sum_i F_i\partial_{x_i}M$ is the metric's total derivative along the flow.
+The rate is meaningful on a specified domain with suitable invariance and uniform metric bounds.
+It is not determined by counting zero Lyapunov exponents, and it does not alone prescribe a controller's sampling bandwidth.
 
-This is the drift-control ratio $\rho$ from Chapter 8 of Volume I: when $\rho \gg 1$,
-passive dynamics dominate and control authority is small. The system moves along a
-low-dimensional manifold in state space without requiring high-dimensional input.
+An autonomous nonstationary periodic orbit has a neutral phase direction.
+Orbital stability allows a phase shift; it is different from convergence to the same state at the same clock time.
+[Transverse contraction results](https://arxiv.org/abs/1209.4433) supply sufficient conditions for convergence toward a periodic orbit, with domain, invariance and nonvanishing-flow hypotheses.
+They do not follow merely from a system being dissipative or from finding several similar trajectories.
+A golf downswing is a finite-duration maneuver with an impact event, not automatically a limit cycle.
+Finite-horizon perturbation propagation and event sensitivity may be the appropriate objects instead.
 
-### 2. Hierarchical Synergies
+## Computational Structure Without Dimension Reduction
 
-The nervous system groups muscles into **motor synergies**—coordinated activation
-patterns that reduce effective DoF from hundreds to tens. Bernstein (1967) observed that
-experienced performers freeze some DoF first, then progressively unlock them as skill
-develops.
+### A Grid Is One Representation
 
-In control theory terms: synergies are low-rank approximations to the input space.
-If the control input $\mathbf{u} \in \mathbb{R}^m$ lies on a $k$-dimensional subspace
-($k \ll m$), the effective control problem is $k$-dimensional.
+A grid with $g$ samples on each of $N$ state axes contains $g^N$ points.
+For $g=100$, the counts are $10^{12}$ for six dimensions and $10^{40}$ for twenty.
+This is a burden of that representation, not a theorem that every controller must visit those points.
+Dynamic programming is a principle of optimality; an explicit uniform grid is one numerical implementation.
+When applying it to mechanics, count state dimensions rather than substituting configuration dimensions without velocities.
 
-### 3. Contraction to Low-Dimensional Attractors
+### Recursive Multibody Dynamics
 
-Dissipative dynamics contract volume in state space. A system with a stable limit cycle
-(e.g., a walking gait, a golf swing phase) has its full $n$-dimensional state space
-contracting exponentially toward a 1-dimensional curve. Control only needs to stabilize
-perturbations *transverse* to this curve.
+The joint-space mass matrix of a serial chain is generally dense.
+A proximal joint moves downstream masses and therefore couples to several other joints.
+For a manufactured planar three-link chain, with massless 1 m rods and 1 kg point masses at their distal ends, relative joint angles in radians give the following mass matrix at the straight configuration (entries in kg m$^2$):
 
-This is formalized in Volume I, Chapter 4: contraction metrics quantify how rapidly
-nearby trajectories converge, and the contraction rate $\lambda$ determines the effective
-bandwidth required from the controller.
+$$M=\begin{bmatrix}14&8&3\\8&5&2\\3&2&1\end{bmatrix}.$$
 
-### 4. Sparse Reward Structure
+The nonzero $(1,3)$ entry directly contradicts a bandwidth-one claim.
+[Featherstone's articulated-body algorithm](https://royfeatherstone.org/spatial/v2/) uses tree recursion to compute forward dynamics without explicitly forming and inverting the dense matrix.
+For an unconstrained tree with bounded joint dimension, its arithmetic cost is linear in the number of bodies; contact and loop-constraint solves add work.
+This is an algorithmic improvement with the same physical coordinates, not elimination of degrees of freedom.
 
-Not all DoF matter equally at all times. At impact, club-head velocity and face angle are
-critical; hip position is irrelevant. Optimal control exploits this by using
-time-varying cost matrices $Q(t)$ and $R(t)$ that focus attention on the currently
-relevant subspace.
+### Local Trajectory Optimization
 
+Iterative LQR linearizes dynamics and uses a quadratic cost approximation along a nominal trajectory.
+Differential dynamic programming also retains second derivatives of the dynamics.
+Both construct local updates rather than storing a global value function on a uniform state grid; see [Tedrake's derivation](https://underactuated.csail.mit.edu/trajopt.html).
+They offer no general guarantee of finding the globally best golf swing.
 
-## Volume-by-Volume Treatment
+For $H$ time stages, $N$ states and $m$ controls, dense backward-pass matrix algebra can cost on the order of
 
-| Volume | Core DoF/Dimensionality Concept |
-|--------|--------------------------------|
-| **Vol 0** (Mathematical Primer) | Configuration space, tangent spaces, dimension of Lie groups |
-| **Vol I** (Geometry of Motion) | Tangent-space linearization; dimension of attractor manifolds; contraction rank |
-| **Vol II** (Multibody Dynamics) | Articulated-body algorithm; $O(n)$ complexity for $n$-link chains |
-| **Vol III** (Optimal Control) | Curse of dimensionality in value functions; DDP as second-order manifold method |
-| **Vol IV** (Machine Learning) | Latent-space dimensionality reduction; neural synergies; sample complexity |
+$$H\bigl(N^3+N^2m+Nm^2+m^3\bigr),$$
 
-### Vol 0: Configuration Space Geometry
+before accounting for derivative evaluation, rollout, line searches and additional constraints.
+Sparsity and specialized derivatives can improve this bound.
+A universal $O(N^2)$ claim suppresses necessary dimensions and assumptions.
+Neither method automatically reduces the dimension of the state being optimized.
 
-The configuration space $\mathcal{Q}$ of a mechanical system is a **manifold** — a curved
-space that looks locally like $\mathbb{R}^n$ but may have global topology distinct from
-flat space ($SO(3)$, $SE(3)$, tori). The dimension of $\mathcal{Q}$ is the number of DoF.
+## A Synthetic PCA Example
 
-Key result from Vol 0: the Lie group $SO(3)$ has dimension 3 (three angular DoF), and its
-Lie algebra $\mathfrak{so}(3)$ provides a flat 3D space for doing velocity calculations —
-reducing curved-space computation to flat-space linear algebra.
-
-### Vol I: Contraction and Manifold Dimension
-
-Volume I Chapter 4 proves that under exponential contraction, the asymptotic behavior of
-an $n$-dimensional system is confined to a manifold of dimension equal to the number of
-zero-exponent Lyapunov directions. A rigid body undergoing periodic motion in $\mathbb{R}^6$
-asymptotically follows a 1D curve (the limit cycle).
-
-### Vol II: $O(n)$ Articulated-Body Algorithms
-
-For an $n$-link kinematic chain, naive matrix inversion to solve the equations of motion
-costs $O(n^3)$. The Articulated-Body Algorithm (Featherstone, 2008) achieves $O(n)$ by
-exploiting the chain structure — joint $k+1$ only couples to joint $k$, not all prior joints.
-
-This is a structural sparsity argument: the mass matrix is not full but has bandwidth 1
-in the joint-space basis. Recognizing this sparsity reduces the curse from exponential
-to linear.
-
-### Vol III: DDP and Second-Order Value Approximation
-
-Dynamic Programming solves control problems optimally but requires gridding the state space
-— exponential in dimension. **Differential Dynamic Programming (DDP)** escapes this by
-approximating the value function quadratically *along a nominal trajectory*, reducing the
-full $n$-dimensional optimization to a sequence of $O(n^2)$ problems. The price: local
-optimality rather than global.
-
-### Vol IV: Neural Synergies and Latent Space
-
-Deep neural networks learn low-dimensional latent representations of high-dimensional
-input spaces. In motor control, the network learns that $m$ muscle activations can be
-parameterized by $k \ll m$ latent variables (synergies). The effective policy dimension
-is $k$, not $m$.
-
-
-## Python: Intrinsic Dimensionality Estimation
+Principal component analysis measures linear variance representation, not the intrinsic dimension of an arbitrary curved set.
+The following dimensionless example is a constructed curve, not a pendulum simulation, a limit cycle established from dynamics, or human movement data.
+All features are specified on the same arbitrary scale.
 
 ```python
 import numpy as np
-from sklearn.decomposition import PCA
 
-
-def estimate_intrinsic_dimension(trajectories, variance_threshold=0.95):
-    """
-    Estimate the intrinsic dimensionality of a set of trajectories
-    using PCA-based variance explained.
-
-    Parameters
-    ----------
-    trajectories : np.ndarray, shape (T, n)
-        Matrix of states across time/trials
-    variance_threshold : float
-        Fraction of variance to explain
-
-    Returns
-    -------
-    k : int
-        Number of dimensions explaining variance_threshold of total variance
-    explained : np.ndarray
-        Cumulative variance explained by each PC
-    """
-    pca = PCA()
-    pca.fit(trajectories)
-    cumvar = np.cumsum(pca.explained_variance_ratio_)
-    k = np.searchsorted(cumvar, variance_threshold) + 1
-    return k, cumvar
-
-
-# Simulate 100 trials of a 2-DoF double pendulum near a limit cycle
-# (all starting from slightly different initial conditions)
-rng = np.random.default_rng(42)
-n_trials = 100
-n_steps = 200
-n_dof = 4  # [theta1, theta2, dtheta1, dtheta2]
-
-# Nominal trajectory on a 1D limit cycle + small noise
-t = np.linspace(0, 2 * np.pi, n_steps)
-nominal = np.column_stack([np.sin(t), np.sin(2 * t),
-                           np.cos(t), 2 * np.cos(2 * t)])
-noise_scale = 0.1
-
-trials = nominal[np.newaxis, :, :] + noise_scale * rng.standard_normal(
-    (n_trials, n_steps, n_dof)
+phase = np.linspace(0.0, 2.0 * np.pi, 200, endpoint=False)
+features = np.column_stack((
+    np.sin(phase), np.sin(2.0 * phase),
+    np.cos(phase), 2.0 * np.cos(2.0 * phase),
+))
+centered = features - features.mean(axis=0)
+singular_values = np.linalg.svd(centered, compute_uv=False)
+variance = singular_values**2
+cumulative_variance = np.cumsum(variance) / variance.sum()
+components_95 = int(
+    np.searchsorted(cumulative_variance, 0.95) + 1
 )
-# Flatten: each row is one time step from any trial
-data = trials.reshape(-1, n_dof)
-
-k, cumvar = estimate_intrinsic_dimension(data)
-print(f"Intrinsic dimension (95% variance): {k} out of {n_dof}")
-print(f"Cumulative variance: {cumvar}")
-# Linear PCA needs all 4 PCs here: the four columns are uncorrelated harmonics
-# with variances ~[0.5, 0.5, 0.5, 2.0], so cumulative variance reaches only
-# ~57%/71%/86%/100% across PC1..PC4. The manifold is intrinsically 1-D (a single
-# parameter t), but because it is *nonlinearly* embedded, linear variance is
-# spread across every coordinate. This is exactly why nonlinear intrinsic-
-# dimension estimators (correlation dimension, Isomap, etc.) are needed.
+print(components_95, cumulative_variance)
+# 4 [0.57142857 0.71428571 0.85714286 1.        ]
 ```
 
-The curve above is parameterized by the single variable `t`, so its *intrinsic*
-dimension is 1. Yet linear PCA reports 4, because PCA can only capture variance
-along straight axes and the trajectory curves through all four coordinates. The
-gap between the intrinsic dimension (1) and the linear-PCA estimate (4) is the
-signature of a curved low-dimensional manifold — a motivating case for nonlinear
-dimensionality estimation.
+The noiseless curve has one intrinsic dimension because a single periodic parameter specifies it, with the first and third features identifying phase.
+Its linear span needs all four harmonic features: three principal components explain only about 86% of the variance.
+Changing feature units or scaling changes the variance fractions.
+Adding nondegenerate Gaussian noise in every feature gives the population distribution full-dimensional support, even if observations cluster near the curve.
+For finite samples, inferred intrinsic dimension also depends on neighborhood scale and noise treatment.
+A low-dimensional embedding or a high explained-variance score is not, by itself, a verified reduced dynamical model.
 
+## Connections Across the Series
 
-## Summary
+| Source | Relevant Connection |
+|---|---|
+| Volume 0, Mathematical Primer, Chapters 2–4 and 7–10 | State versus configuration; rotations; recursive and articulated-body algorithms |
+| [Volume I, Tangent-Space Methods](../books/tangent-space-methods.html) | Variational dynamics, contraction, optimal control and model-conditioned drift attribution |
+| [Volume II, Control Is Motion](../books/control-is-motion.html) | Orbital stability, underactuation, finite trajectories and phase coordinates |
+| [Volume III, Biomechanics](../books/biomechanics-biology-to-systems.html) | Muscle state, joint models, multibody coupling and inverse inference |
+| [Volume IV, Human Motor Control](../books/human-motor-control.html) | Task redundancy, learning, synergies and their empirical alternatives |
+| Volume V, Practical Application | Implementing and testing declared models; see the [integration guide](upstreamdrift-educational-integration.html) |
 
-| Mechanism | Dimension Reduction | Example |
-|----------|---------------------|---------|
-| Passive dynamics | $n$ → effective 1-3 | Golf downswing gravity assist |
-| Synergies / basis decomposition | $m$ → $k \ll m$ | Muscle activation patterns |
-| Contraction to attractor | $n$ → attractor dim | Walking gait limit cycle |
-| Articulated-body sparsity | $O(n^3)$ → $O(n)$ | Robot chain forward dynamics |
-| DDP trajectory optimization | Exponential → $O(n^2)$ | Golf swing optimization |
-| Neural latent space | $m$ → $k$ | Motor cortex dimensionality |
-
-**The lesson across all volumes:** high-dimensional mechanical systems are not uniformly
-high-dimensional. They have structure — symmetries, conservation laws, passive dynamics,
-joint topology — that collapses their effective dimensionality to something manageable.
-Good control theory finds and exploits that structure.
+For a golf model, choose the outcome first, declare the full state and feasible controls, then justify each approximation against that outcome.
+Task redundancy can create alternative postures; passive dynamics shape their evolution; input restrictions constrain corrections; and efficient algorithms make those calculations practical.
+Their interaction is the useful insight.
+Whether a golfer's nervous system uses a corresponding representation remains a separate empirical question.
 
 ## Related Articles
 
-- [Ideomotor Theory and the Predictive Brain Model](ideomotor-theory-and-predictive-brain.html) — How predictive coding and Bernstein's three stages of skill acquisition manage the dimensionality of motor control
-- [Passive Distributed Control: Frans Bosch Framework](passive-distributed-control.html) — Passive dynamics and self-organization as the primary dimensionality-reduction strategy in skilled movement
+- [Ideomotor Theory and the Predictive Brain Model](ideomotor-theory-and-predictive-brain.html) — Hypotheses about prediction and coordination in motor control
+- [Passive Distributed Control: Frans Bosch Framework](passive-distributed-control.html) — Mechanical coupling, passive responses and limits of neural inference
 - [Nonlinear Control Theory Insights](nonlinear-control-insights.html) — Underactuation and drift dominance: why few inputs can steer a high-dimensional drift-dominated system
 - [Motor Control II: Learning the Swing](The_Physics_of_Golf/quarto/ch25_motor_learning.html) — Physics of Golf chapter on how motor learning progressively frees and exploits degrees of freedom
 - [Volume IV: Human Motor Control](../books/human-motor-control.html) — Book volume opening with the degrees-of-freedom problem and the curse of dimensionality (Chapters 1–2)
 - [Tangent Hyperplanes I: Geometry](tangent-hyperplanes-series/part-1-geometry.html) — Constraint manifolds and tangent spaces: how constraints determine the degrees of freedom a model can act on
 - [Superposition in Affine Control Systems](superposition.html) — Input-to-acceleration superposition at a fixed state in the control-affine formulation
-- [Force and Mobility Ellipsoids](force-mobility-matrices.html) — Mobility ellipsoids as the geometric measure of effective control dimensionality
+- [Force and Mobility Ellipsoids](force-mobility-matrices.html) — Metric-dependent maps between loads and motion
 - [Tangent-Space Series](../pages/tangent-hyperplanes.html) — Series hub with the full reading order and provenance notes
 

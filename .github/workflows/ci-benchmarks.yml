@@ -24,6 +24,10 @@ env:
 jobs:
   benchmark:
     name: Run Performance Benchmarks
+    # timing baselines exist only for fleet hardware, so fork PRs skip (RM#1989)
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 30
     steps:
@@ -47,17 +51,45 @@ jobs:
           python -m pip install --no-cache-dir -r requirements-benchmarks.txt
           echo "$RUNNER_TEMP/benchmark-venv/bin" >> "$GITHUB_PATH"
 
-      - name: Run benchmarks and compare with baseline
-        id: benchmark
+      - name: Select baseline for this platform
+        id: baseline
         run: |
-          # Run benchmarks and compare against the initial baseline
-          # Warn on >5% regression, fail on >15% regression
+          python scripts/ci/benchmark_compare_args.py decide \
+            --github-output "$GITHUB_OUTPUT"
+
+      - name: Run benchmarks (compare when a platform baseline exists)
+        id: benchmark
+        env:
+          BENCH_ARGS: ${{ steps.baseline.outputs.args }}
+        run: |
+          # pipefail so a pytest failure is not masked by tee.
+          set -o pipefail
+          # compare mode: --benchmark-compare=initial with the 15% fail gate.
+          # save mode (no baseline for this platform): --benchmark-save=initial.
+          # shellcheck disable=SC2086
           python -m pytest benchmarks/ \
             --benchmark-only \
-            --benchmark-compare=initial \
-            --benchmark-compare-fail=mean:15% \
+            $BENCH_ARGS \
             -v \
             --tb=short 2>&1 | tee benchmark_output.txt
+
+      - name: Write benchmark status
+        if: always()
+        env:
+          BENCH_MODE: ${{ steps.baseline.outputs.mode }}
+          BENCH_PLATFORM: ${{ steps.baseline.outputs.platform }}
+          BENCH_ARTIFACT: ${{ steps.baseline.outputs.artifact }}
+          BENCH_OUTCOME: ${{ steps.benchmark.outcome }}
+        run: |
+          if [ -z "$BENCH_MODE" ]; then
+            echo "Benchmark run did not complete" > benchmark_status.txt
+          else
+            python scripts/ci/benchmark_compare_args.py status \
+              --mode "$BENCH_MODE" --outcome "$BENCH_OUTCOME" \
+              --platform "$BENCH_PLATFORM" --artifact "$BENCH_ARTIFACT" \
+              > benchmark_status.txt
+          fi
+          cat benchmark_status.txt
 
       - name: Check for regressions (warn on >5%)
         if: always()
@@ -85,8 +117,17 @@ jobs:
           name: benchmark-results
           path: |
             benchmark_output.txt
+            benchmark_status.txt
             .benchmarks/
           if-no-files-found: warn
+
+      - name: Upload candidate baseline
+        if: steps.baseline.outputs.mode == 'save' && steps.benchmark.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ steps.baseline.outputs.artifact }}
+          path: .benchmarks/${{ steps.baseline.outputs.platform }}/
+          if-no-files-found: error
 
       - name: Fail if regressions exceed 15%
         if: steps.benchmark.outcome == 'failure'
@@ -100,7 +141,11 @@ jobs:
     # Only this job — which never checks out or executes PR-controlled code —
     # is granted pull-requests:write, so the token that runs the benchmark
     # suite cannot post forged CI comments or mutate PR labels/state.
-    if: ${{ github.event_name == 'pull_request' && always() }}
+    # posts PR comments with write permission; fork PRs skip (RM#1989)
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository) &&
+      (github.event_name == 'pull_request' && always())
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 5
     permissions:
@@ -124,9 +169,10 @@ jobs:
               ? fs.readFileSync(path, 'utf8')
               : 'benchmark_output.txt was not created; inspect install and benchmark steps.';
 
-            const status = output.includes('passed')
-              ? 'All benchmarks passed'
-              : 'Benchmark run failed or did not complete';
+            const statusPath = 'benchmark-results/benchmark_status.txt';
+            const status = fs.existsSync(statusPath)
+              ? fs.readFileSync(statusPath, 'utf8').trim()
+              : 'Benchmark run did not complete';
 
             // Extract summary lines
             const lines = output.split('\n');
@@ -163,7 +209,11 @@ jobs:
     timeout-minutes: 90
     name: Benchmark Summary
     needs: benchmark
-    if: always()
+    # reports on the skipped benchmark job; fork PRs skip (RM#1989)
+    if: >-
+      (!github.event.pull_request ||
+      github.event.pull_request.head.repo.full_name == github.repository) &&
+      always()
     runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     steps:
       - name: Report status

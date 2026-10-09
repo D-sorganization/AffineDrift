@@ -1,0 +1,25 @@
+Success: no issues found in 1 source file
+================ pre_pr: Local CI Gate Runner ================
+Running diff-scoped pytest: C:\Users\diete\AppData\Local\Temp\affine-passive-pinned-fa72c4415ed54625846b906ba6af2033\Scripts\python.exe -m pytest tests/test_citation_metadata.py -p no:pytestqt
+...............                                                          [100%]
+============================ slowest 20 durations =============================
+9.26s call     tests/test_citation_metadata.py::TestGoogleScholarValidatorOnSamplePages::test_three_sample_pages_validation
+6.53s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_unverified_article_omits_publication_date_and_has_no_nan
+2.85s call     tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_unverified_header_and_card_preserve_reviewed_date
+2.82s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_verified_article_emits_full_metadata_and_bibtex_download
+2.79s call     tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_card_preserves_verified_or_missing_publication_date[False]
+2.76s call     tests/test_citation_metadata.py::TestUnverifiedDatePresentation::test_card_preserves_verified_or_missing_publication_date[True]
+2.62s call     tests/test_citation_metadata.py::TestGoogleScholarAndCitationRendering::test_citation_section_meets_accessibility_requirements
+0.05s call     tests/test_citation_metadata.py::TestArticleFrontmatterCompliance::test_every_article_has_title_and_author
+0.01s call     tests/test_citation_metadata.py::TestCitationConfig::test_quarto_yml_enables_citation_and_scholar
+0.01s call     tests/test_citation_metadata.py::TestCitationConfig::test_quarto_yml_registers_post_render_citations
+
+(10 durations < 0.005s hidden.  Use -vv to show these durations.)
+15 passed in 30.83s
+[PASS] Lint & Format
+[PASS] Diff Mypy
+[PASS] Affected Tests
+[PASS] Semgrep & Import Policy
+[PASS] Policy & Fragment Validators
+==============================================================
+All pre-PR gates PASSED. Ready to open PR and arm auto-merge.

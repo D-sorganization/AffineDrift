@@ -24,6 +24,7 @@ __all__ = [
     "ZTCFIntervention",
     "ZTCFUnavailableError",
     "execute_ztcf_intervention",
+    "supported_model",
 ]
 
 
@@ -260,6 +261,12 @@ def _validate_supported_protocol(intervention: ZTCFIntervention) -> None:
         raise UnsupportedZTCFEngineError("engine-unsupported load protocol")
 
 
+def supported_model(intervention: ZTCFIntervention) -> GolfModel:
+    """Return the registered model for a supported protocol, or fail closed."""
+    _validate_supported_protocol(intervention)
+    return _build_supported_model(intervention.model)
+
+
 def execute_ztcf_intervention(intervention: ZTCFIntervention) -> TerminalState:
     """Replay a supported intervention or fail closed without substituting engines."""
     if intervention.status == "unavailable":
@@ -267,8 +274,7 @@ def execute_ztcf_intervention(intervention: ZTCFIntervention) -> TerminalState:
         if failure is None:
             raise ZTCFUnavailableError("invalid_contract: unavailable record lacks failure")
         raise ZTCFUnavailableError(f"{failure.code}: {failure.message}")
-    _validate_supported_protocol(intervention)
-    model = _build_supported_model(intervention.model)
+    model = supported_model(intervention)
     integration = intervention.integration
     duration = integration.end_time - integration.start_time
     trajectory = model.ztcf_trajectory(

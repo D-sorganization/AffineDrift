@@ -1,0 +1,54 @@
+# Turnover Checklist: Parameter Review Completion (`#4881`)
+
+**Branch:** `fix/launch-parameter-review` (base: `205f08913`)
+**Parent PR:** `#4879`
+**Status:** Paused — provisional chapter edits & 5 vendor bibliography entries staged; final full regression, technical acceptance, PDF layout audit, and `main.pdf` replacement pending.
+
+---
+
+### Step Classification Legend
+- 🟢 **Mechanical (Safe to delegate):** Command execution, parity checks, asset building, report updates, PR submission.
+- 🔴 **Conceptual / Escalation (Requires Lead sign-off):** Any change to mathematical formulas, parameter definitions, scientific citations, or interpretation of manufactured vs. empirical values (e.g., spin loft $22.320502^\circ$).
+
+---
+
+### Ordered Executor Checklist
+
+1. 🟢 **Claim Issue `#4881`**
+   - Assign `#4881` to executor or post in-progress comment.
+
+2. 🟢 **Inspect Parent Merge (`#4879`)**
+   - Verify PR `#4879` has actually merged into `main`.
+   - Rebase or sync `fix/launch-parameter-review` against updated `main` (preserving branch base chain from `205f08913`).
+
+3. 🔴 **Preserve Bindings & Enforce Escalation Boundaries**
+   - Ensure `data/trust/*.json` evidence bindings remain intact.
+   - ⚠️ **Escalate to Lead:** Do *not* modify scientific definitions, equations, or treat manufactured values (e.g., spin loft $22.320502^\circ$) as empirical data without lead approval.
+
+4. 🟢 **Read Dossier & Audit Labels / Citations**
+   - Review audit dossier notes for the parameter review.
+   - Audit cross-reference labels (`@sec-`, `@fig-`, `@eq-`) and ensure 1:1 citation parity for the 5 new vendor references in `references/` against chapter citations.
+
+5. 🟢 **Build Rendered PDF & Audit Layout**
+   - Render Quarto target to PDF.
+   - Inspect visual layout: check Parameter Chapter flow, Table of Contents (TOC), bibliography formatting, and MathJax/equation rendering.
+   - Replace root `main.pdf` artifact only after inspection succeeds.
+
+6. 🟢 **Run Pinned Local Quality Gates (Isolated Environment)**
+   - Ensure **zero concurrent edits** while the test suite executes.
+   - Run linter/formatting checks: `ruff check`, `black --check --line-length 100`.
+   - Run type checks and title case validator: `mypy`, `python scripts/check_title_case.py`.
+   - Run test suite & coverage gate: `pytest tests/ --cov=src --cov-report=xml --timeout=60`.
+
+7. 🟢 **Save Evidence & Update Ledger**
+   - Run evidence regeneration: `python -m scripts.regenerate_claim_audit_evidence`.
+   - Commit resulting trust ledger updates.
+   - Append one row recording status and evidence hash to the tracking `SPEC` file.
+
+8. 🟢 **Submit PR (Ready for Review)**
+   - Open a standard, non-draft PR targeting `main` referencing `#4881`:
+     `gh pr create --base main --head fix/launch-parameter-review --title "fix(parameters): complete launch parameter review audit (#4881)" ...`
+
+9. 🟢 **Guarded Auto-Merge & Main Receipt**
+   - Enable guarded auto-merge conditional on required checks passing (`gh pr merge --auto --squash` or repository convention).
+   - Poll/confirm receipt of actual merge commit into `main` branch before closing `#4881`.

@@ -1,0 +1,115 @@
+FFFFFFFFFFFF                                                             [100%]
+================================== FAILURES ===================================
+_____________________ test_mass_matrix_shape_and_symmetry _____________________
+tests\test_passive_phase_listings.py:51: in test_mass_matrix_shape_and_symmetry
+    model = _get_model(listing_namespace)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+---------------------------- Captured stdout setup ----------------------------
+Passive walker: simulated 1.50s with 1502 timesteps
+Final stance angle: -0.930 rad
+(No actuators, no controller --- just gravity and mechanics)
+_____________________ test_mass_matrix_exact_determinant ______________________
+tests\test_passive_phase_listings.py:62: in test_mass_matrix_exact_determinant
+    model = _get_model(listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.2, gravity=9.81)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+_________________ test_acceleration_at_aligned_zero_velocity __________________
+tests\test_passive_phase_listings.py:74: in test_acceleration_at_aligned_zero_velocity
+    model = _get_model(
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+_______________________ test_rhs_kinematic_derivatives ________________________
+tests\test_passive_phase_listings.py:88: in test_rhs_kinematic_derivatives
+    model = _get_model(listing_namespace)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+______________ test_energy_matches_independent_cartesian_oracle _______________
+tests\test_passive_phase_listings.py:100: in test_energy_matches_independent_cartesian_oracle
+    model = _get_model(listing_namespace, hip_mass=m_hip, foot_mass=m_foot, length=l, gravity=g)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+________________ test_energy_time_derivative_along_trajectory _________________
+tests\test_passive_phase_listings.py:117: in test_energy_time_derivative_along_trajectory
+    model = _get_model(listing_namespace)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+______________ test_energy_conservation_in_numerical_integration ______________
+tests\test_passive_phase_listings.py:130: in test_energy_conservation_in_numerical_integration
+    model = _get_model(listing_namespace, hip_mass=10.0, foot_mass=5.0, length=1.0, gravity=9.81)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+_______________________ test_mass_matrix_length_scaling _______________________
+tests\test_passive_phase_listings.py:151: in test_mass_matrix_length_scaling
+    model1 = _get_model(listing_namespace, hip_mass=7.0, foot_mass=3.0, length=1.0, gravity=9.81)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+________________ test_potential_energy_linear_gravity_scaling _________________
+tests\test_passive_phase_listings.py:161: in test_potential_energy_linear_gravity_scaling
+    m_g1 = _get_model(listing_namespace, hip_mass=6.0, foot_mass=2.0, length=1.1, gravity=5.0)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+___________________________ test_input_immutability ___________________________
+tests\test_passive_phase_listings.py:170: in test_input_immutability
+    model = _get_model(listing_namespace)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+__________________ test_invalid_parameters_raise_value_error __________________
+tests\test_passive_phase_listings.py:185: in test_invalid_parameters_raise_value_error
+    cls = listing_namespace["CompassPhase"]
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'CompassPhase'
+____________________ test_invalid_states_raise_value_error ____________________
+tests\test_passive_phase_listings.py:202: in test_invalid_states_raise_value_error
+    model = _get_model(listing_namespace)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_passive_phase_listings.py:45: in _get_model
+    assert cls is not None, "CompassPhase class missing from listing namespace"
+E   AssertionError: CompassPhase class missing from listing namespace
+E   assert None is not None
+============================ slowest 20 durations =============================
+0.07s setup    tests/test_passive_phase_listings.py::test_mass_matrix_shape_and_symmetry
+
+(19 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ===========================
+FAILED tests/test_passive_phase_listings.py::test_mass_matrix_shape_and_symmetry
+FAILED tests/test_passive_phase_listings.py::test_mass_matrix_exact_determinant
+FAILED tests/test_passive_phase_listings.py::test_acceleration_at_aligned_zero_velocity
+FAILED tests/test_passive_phase_listings.py::test_rhs_kinematic_derivatives
+FAILED tests/test_passive_phase_listings.py::test_energy_matches_independent_cartesian_oracle
+FAILED tests/test_passive_phase_listings.py::test_energy_time_derivative_along_trajectory
+FAILED tests/test_passive_phase_listings.py::test_energy_conservation_in_numerical_integration
+FAILED tests/test_passive_phase_listings.py::test_mass_matrix_length_scaling
+FAILED tests/test_passive_phase_listings.py::test_potential_energy_linear_gravity_scaling
+FAILED tests/test_passive_phase_listings.py::test_input_immutability - Assert...
+FAILED tests/test_passive_phase_listings.py::test_invalid_parameters_raise_value_error
+FAILED tests/test_passive_phase_listings.py::test_invalid_states_raise_value_error

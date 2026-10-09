@@ -26,9 +26,12 @@ What remains difficult is identifying the physiological source of that input. Mu
 
 ## From Generalized Torque to Actuator Input
 
-If $Bu=\tau_{\mathrm{ID}}$ and $B$ has full column rank, a consistent load has a unique input, $u=B^+\tau_{\mathrm{ID}}$. First check that $BB^+\tau_{\mathrm{ID}}=\tau_{\mathrm{ID}}$: a residual indicates inconsistency or noise, not an identified hidden muscle.
+Use the full generalized-input map $\bar B$ defined above, including its unactuated rows.
+If $\bar B u=\tau_{\mathrm{ID}}$ and $\bar B$ has full column rank, a consistent load has a unique input, $u=\bar B^+\tau_{\mathrm{ID}}$.
+First check that $\bar B\bar B^+\tau_{\mathrm{ID}}=\tau_{\mathrm{ID}}$: a residual indicates inconsistency or noise, not an identified hidden muscle.
+In an unactuated row, this is a consistency check on the passive dynamics, not a request for a hidden actuator.
 
-With redundant actuators, $u=B^+\tau_{\mathrm{ID}}+n$ for $n\in\ker B$. Muscle nonnegativity, force–length/velocity properties, activation dynamics and independent measurements restrict this family. A minimum-norm solution is an assumption about allocation, not an observation of the nervous system.
+With redundant actuators and a consistent load, $u=\bar B^+\tau_{\mathrm{ID}}+n$ for $n\in\ker\bar B$. Muscle nonnegativity, force–length/velocity properties, activation dynamics and independent measurements restrict this family. A minimum-norm solution is an assumption about allocation, not an observation of the nervous system.
 
 An inverse-dynamics implementation that omits passive tissue forces estimates a net joint load that includes them. A model that explicitly subtracts those forces estimates a different residual input. Declare that boundary before comparing results. This is especially important when impedance was identified from an actively contracting subject.
 

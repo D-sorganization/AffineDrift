@@ -1,0 +1,40 @@
+### Consistency Check Findings
+
+Based on a read-only cross-check between the two reports (Consolidated Report for Issue 4947 / Epic 4009 and Historical Tangent Scope Report for Issue 4945 / Epic 4009), here are the concrete findings regarding contradictions, unsupported completion claims, and delivery scope:
+
+---
+
+#### 1. Commit Hash Divergence Between Pre-PR Gates and Full Regression
+- **Contradiction / Discrepancy**:
+  - In both reports, `pre_pr.head` is recorded as `26d60d2eaf999af56e0c9cf78a5b1b8eebb88ac2`.
+  - Conversely, `accepted_source_commit` and `full_regression.head` are recorded as `4160ed5726aa6ba68587acfe1205e1f74f96dadd`.
+  - In Report 4947, `metadata_repair.source_head` is also set to `26d60d2eaf999af56e0c9cf78a5b1b8eebb88ac2`, accompanied by `scientific_sources_changed: false`.
+  - **Finding**: Pre-PR gating (`pre-pr-accepted.txt`) was executed against commit `26d60d2...`, not the final `accepted_source_commit` (`4160ed5...`). There is no log entry demonstrating that the 8 pre-PR gates were re-run directly against `4160ed5...`.
+
+---
+
+#### 2. Scope Representation and Corpus Status (Issue 4945 vs. 4947)
+- **Contradiction / Overclaim**:
+  - Report 4945 states under `status`: `"Fifteen complete historical source scopes accepted; protected main delivery pending"`.
+  - Report 4947 notes under `corpus`:
+    - `rows: 407`
+    - `indexed_prefix_remaining: 27`
+    - `warning: "Heterogeneous review scopes; not a scientific-completion percentage"`
+  - **Finding**: While Report 4945 claims completion of its 15 historical source scopes, 27 indexed prefix review scopes remain unreviewed/unresolved across the overarching 407-row corpus. Report 4945's phrasing could be misconstrued as general historical completion rather than strictly covering its specific 15 files.
+
+---
+
+#### 3. Delivery and Closure Dependency
+- **Delivery Overclaim / Inconsistency**:
+  - Report 4947 explicitly instructs:
+    - `"Regular PR pending; leave original PRs open until protected main verification"`
+  - Report 4945 states:
+    - `"Pending regular consolidation PR and protected main hash verification"` (pointing delivery to Issue 4947).
+  - **Finding**: Neither report can claim delivery completion or issue closure; acceptance is strictly local to the worktree/commit `4160ed5...`, and any closure of underlying issues/PRs prior to protected `main` post-merge hash verification would be an overclaim.
+
+---
+
+#### 4. Shared Blob Hash Alignment
+- **Verification**:
+  - All 16 file paths and SHA256 hashes listed in Report 4945 match the corresponding entries in Report 4947 exactly (e.g., `reports/technical-review/historical-tangent-independent-checks.json` evaluates to `d1d58ea6cedbe42c3177486b15f94582580051bd6493da0ada60270866712616` in both).
+  - Both reports reference identical full regression test metrics (7,278 passed, 29 skipped, 210 deselected, 60 warnings, 548.49s, 93.31% src coverage, exit code 0). No hash or test count mismatch exists across the shared subsets.

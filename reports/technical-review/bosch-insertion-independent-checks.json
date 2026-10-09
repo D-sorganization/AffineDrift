@@ -1,0 +1,33 @@
+{
+  "issue": 4877,
+  "status": "Independent manufactured algebra checks passed; source acceptance and publication validation pending",
+  "scalar_model": {
+    "units": "nondimensional",
+    "gain": "constant k>0",
+    "solution": "x0*exp(-k*t)",
+    "cost": "k*x0**2/2 + x0**2/(2*k)",
+    "cost_difference_k2_minus_k1": "x0**2/4",
+    "strict_difference_condition": "x0 != 0",
+    "scope": "Counterexample to stability implying optimality; no neural or physiological inference"
+  },
+  "antagonist_model": {
+    "assumptions": "Fixed geometry with equal and opposite moment arms; admissible common force increment",
+    "net_torque_difference": "0",
+    "scope": "No universal stiffness, contact-force or metabolic-cost monotonicity inferred"
+  },
+  "rotor_model": {
+    "assumptions": "Ideal rotors about one fixed common axis; positive scalar inertias; constant equal/opposite actuator torque; no other axial torques",
+    "angular_momentum_derivative": "0",
+    "power_energy_residual": "0",
+    "manufactured_fixture": {
+      "Ip_kg_m2": 2,
+      "Id_kg_m2": 1,
+      "tau_N_m": 2,
+      "wp0_rad_s": 1,
+      "wd0_rad_s": 3,
+      "duration_s": 0.5,
+      "energy_change_J": "11/4"
+    },
+    "scope": "Mechanical identity; no golf timing, transfer or optimality claim"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "issue": 4877,
+  "status": "Complete source, mathematics, local fragment presentation and fixed-commit repository regression accepted; protected delivery pending",
+  "baseline": "b4835a040dfe4515e6ec40dd802db952ce78e550",
+  "scope": "Insertion plan and cited identities in its two bibliography fragments; six destination chapters unchanged; no route or whole-book acceptance",
+  "source_local_byte_sha256": {
+    "articles/bosch_integration/cross_references/existing_chapter_additions.tex": "7b8382f948eddfe6353a0903d97ae4dbd69d5129fd0c2ce0208701165ef3c834",
+    "articles/bosch_integration/bib_entries/golf_physics_additions.bib": "0c86952ca3f1ef13b652ab55c213ca8a0c0401f2ae74663334ae962ce6d4123f",
+    "articles/bosch_integration/bib_entries/geometry_of_motion_additions.bib": "3f2d99b3e312f93aeca506b751f11a8606ddbdb3aefce0583d5d434072a55e9b"
+  },
+  "mathematics": {
+    "record": "reports/technical-review/bosch-insertion-independent-checks.json",
+    "result": "Exact symbolic checks passed; manufactured examples only"
+  },
+  "build": {
+    "toolchain": "pdflatex, biber, repeated pdflatex",
+    "wrappers": ["golf", "geometry"],
+    "pages_each": 5,
+    "final_exit_codes": [0, 0],
+    "undefined_citations_or_references": false,
+    "overfull_box_warnings": false,
+    "prose_citation_keys": 6,
+    "extra_qa_only_citation": "Loeb1995",
+    "logs": ["bosch-golf-compile-final.txt", "bosch-geometry-final.txt"],
+    "first_attempt": "PowerShell unquoted output-directory interpolation caused misplaced files and biber failure; preserved, corrected command succeeded"
+  },
+  "visual": {
+    "inspected_golf_pages": [1, 2, 3, 4, 5],
+    "paired_extracted_text_equal": true,
+    "paired_native_rgb_equal": true,
+    "scope": "Local fragment wrappers only; no target-book or web rendering certification",
+    "computational_comparison": {
+      "renderer": "PyMuPDF",
+      "scale": 1,
+      "nominal_dpi": 72,
+      "colorspace": "RGB",
+      "alpha": false,
+      "pairs": [
+        {
+          "page": 1,
+          "text_equal": true,
+          "rgb_equal": true
+        },
+        {
+          "page": 2,
+          "text_equal": true,
+          "rgb_equal": true
+        },
+        {
+          "page": 3,
+          "text_equal": true,
+          "rgb_equal": true
+        },
+        {
+          "page": 4,
+          "text_equal": true,
+          "rgb_equal": true
+        },
+        {
+          "page": 5,
+          "text_equal": true,
+          "rgb_equal": true
+        }
+      ]
+    }
+  },
+  "delegation": {
+    "cli": "agy",
+    "model": "gemini-3.8-flash-low",
+    "successful_source_helpers": 6,
+    "report_review": "completed, exit 0; spurious scope/pixel contradiction claims rejected, helper-attribution wording clarified",
+    "authority": "Lead adjudication recorded in review; helpers are not evidence",
+    "successful_total_helpers": 8,
+    "pr_prose": "Eighth helper completed; lead separated computational pixel equality from visual inspection and removed repetitive/overbroad wording."
+  },
+  "focused_tests": {
+    "status": "passed",
+    "passed": 77,
+    "exit_code": 0,
+    "command": "python -m pytest tests/test_check_bibliography_cross_file.py tests/test_citation_metadata.py tests/test_check_latex_environments.py tests/test_claim_audit_inventory.py tests/test_claim_audit_followup_scope.py tests/test_spec_changelog.py --no-cov -q",
+    "log": "docs/development/technical-review/bosch-focused-tests.txt"
+  },
+  "full_regression": {
+    "status": "passed",
+    "head": "73f6f3946649b6a708495cc8d30bc61cbf4b25eb",
+    "command": "python -X utf8 -m pytest --cov=src --cov-report=xml --timeout=60",
+    "python": "3.12 pinned repository environment",
+    "passed": 6856,
+    "skipped": 29,
+    "deselected": 210,
+    "warnings": 60,
+    "seconds": 1087.67,
+    "src_coverage_percent": 93.24,
+    "exit_code": 0,
+    "tracked_tree_unchanged": true,
+    "concurrency": "No tracked edits, rendering or commit hooks in this worktree during the run",
+    "scope": "Default selection excludes slow, live, e2e, requires_network and content_lint; no new browser, physical or empirical acceptance",
+    "log": "docs/development/technical-review/bosch-full-tests.txt",
+    "log_sha256": "cb0733d4f9723dc656829b2b89eef3a9e594e653cda8fed23bf096d7f04db81a",
+    "post_run_artifacts": "Test-created build, dist and affinedrift.egg-info preserved beneath docs/development/technical-review/bosch-packaging-artifacts after successful run; verified workspace-contained paths and no tracked content before moving."
+  },
+  "publication": {
+    "pull_request": 4879,
+    "url": "https://github.com/D-sorganization/AffineDrift/pull/4879",
+    "is_draft": false,
+    "dependency": 4875,
+    "remote_main_verified": false,
+    "scope": "Joint delivery of #4876 and #4877; parent #4875 merged and all 15 changed paths verified",
+    "dependency_delivered_commit": "0bb9d47f895c9c94412b5f62f0d74981cdb556e3"
+  },
+  "qa_directory": "docs/development/technical-review",
+  "qa_sha256": {
+    "bosch-golf-compile-final.txt": "97a210d6b4143917343aaa50844cfc601eabd275d348f6dd819b5fc28b520edc",
+    "bosch-geometry-final.txt": "93c521f6d0b100a3016c8d19842af4984f41896ab9768f7158a37ec4d8405f73",
+    "golf.pdf": "460f0208d6234ae043ce98b4bf5f9c571740ebfb1cdc9e921395cee54ec94d35",
+    "geometry.pdf": "d21412bcd067b2e1baa91b1489232ffa7db24c51109969043a700534943c1f4f"
+  },
+  "additional_gates": {
+    "titles": "665 sources passed",
+    "latex_environments": "245 files passed",
+    "bibliography_cross_file": "passed; canonical site bibliography scope",
+    "claim_audit_evidence": "regeneration --check passed",
+    "initial_direct_script_failures": "Bibliography-quality and citation-resolution direct script invocation failed to import src; corrected module invocations both passed. Initial logs preserved.",
+    "bibliography_quality": "169 canonical site entries, zero violations; not a complete audit of the Bosch fragments",
+    "qmd_citation_resolution": "294 QMD files passed; TeX keys checked through scoped biber builds"
+  },
+  "accepted_source_commit": "73f6f3946649b6a708495cc8d30bc61cbf4b25eb",
+  "git_blob_sha256": {
+    "articles/bosch_integration/cross_references/existing_chapter_additions.tex": "7084338af1a9a7cb2bfc829d5d92f3bf849bd6d5fb5288f6a13ebc3337644e1d",
+    "articles/bosch_integration/bib_entries/golf_physics_additions.bib": "8966c50ffa9c436fb4ea9802a29a28b5474122c665a181e721b3442c2a634bb0",
+    "articles/bosch_integration/bib_entries/geometry_of_motion_additions.bib": "0a57b9d1d1c0a488a19e22b996345eb19ccebbba06e0e2e5088d843edad2d0cc",
+    "reports/technical-review/bosch-insertion-review.md": "66b33a6f12cb0c2848239e9701041304f99f09b847bb9668be1c83ad135de213",
+    "reports/technical-review/bosch-insertion-independent-checks.json": "f431f3d4f92399da1ad50e05cdfc281eef13bd0c87c7a2e4641a67cecf9e2a28"
+  },
+  "reproduction": {
+    "working_directory": "Repository root",
+    "wrappers": {
+      "golf": "\\documentclass[11pt]{article}\n\\usepackage[T1]{fontenc}\n\\usepackage[margin=1in]{geometry}\n\\usepackage{amsmath,amssymb}\n\\usepackage{csquotes}\n\\usepackage[backend=biber,style=numeric]{biblatex}\n\\addbibresource{articles/bosch_integration/bib_entries/golf_physics_additions.bib}\n\\begin{document}\n\\section*{Coordination and Mechanical Control: Insertion-Plan QA}\n\\input{articles/bosch_integration/cross_references/existing_chapter_additions.tex}\n\\nocite{Loeb1995}\n\\printbibliography\n\\end{document}\n",
+      "geometry": "\\documentclass[11pt]{article}\n\\usepackage[T1]{fontenc}\n\\usepackage[margin=1in]{geometry}\n\\usepackage{amsmath,amssymb}\n\\usepackage{csquotes}\n\\usepackage[backend=biber,style=numeric]{biblatex}\n\\addbibresource{articles/bosch_integration/bib_entries/geometry_of_motion_additions.bib}\n\\begin{document}\n\\section*{Coordination and Mechanical Control: Insertion-Plan QA}\n\\input{articles/bosch_integration/cross_references/existing_chapter_additions.tex}\n\\nocite{Loeb1995}\n\\printbibliography\n\\end{document}\n"
+    },
+    "commands": "For each wrapper: pdflatex -interaction=nonstopmode -halt-on-error with quoted interpolated output-directory; biber with matching quoted input/output directories and job name; repeat pdflatex twice. Logs and wrapper paths in local QA.",
+    "hash_convention": "source_local_byte_sha256 preserves inspected checkout bytes; git_blob_sha256 binds canonical committed bytes."
+  },
+  "corpus_pending_count": {
+    "exact_unqualified_pending_rows": 88,
+    "all_explicit_full_audit_pending_rows": 89
+  },
+  "final_metadata_checks": {
+    "passed": 77,
+    "exit_code": 0,
+    "scope": "Historical research handoff, SPEC, root hygiene, claim audit inventory and follow-up contracts after acceptance and metadata merge",
+    "log": "docs/development/technical-review/bosch-final-metadata-tests.txt"
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "issue": 4863,
+  "status": "Complete current chapter source/scoped presentation accepted and bound; regular PR and protected delivery pending.",
+  "red": {
+    "passed": 5,
+    "failed": 4,
+    "seconds": 2.73,
+    "failures": "Expected missing source disclosures in four editions; numerical checks already passed."
+  },
+  "focused_initial": {
+    "passed": 13,
+    "seconds": 1.28
+  },
+  "focused_final": {
+    "passed": 63,
+    "seconds": 25.42
+  },
+  "content_lint": {
+    "passed": 208,
+    "skipped": 4,
+    "deselected": 6837,
+    "seconds": 23.63
+  },
+  "publication_gates": [
+    {
+      "check": ["check_latex_environments"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_latex_environments.txt"
+    },
+    {
+      "check": [
+        "check_terminology",
+        "--baseline",
+        "config/terminology-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_terminology.txt"
+    },
+    {
+      "check": ["generate_worked_examples", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-generate_worked_examples.txt"
+    },
+    {
+      "check": [
+        "check_tree_parity",
+        "--baseline",
+        "config/tree-parity-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_tree_parity.txt"
+    },
+    {
+      "check": [
+        "check_latex_structure",
+        "--root",
+        "articles",
+        "--baseline",
+        "config/latex-structure-baseline.json"
+      ],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_latex_structure.txt"
+    },
+    {
+      "check": ["validate_frontmatter"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-validate_frontmatter.txt"
+    },
+    {
+      "check": ["validate_accessibility", "--qmd-only"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-validate_accessibility.txt"
+    },
+    {
+      "check": ["check_scaffolding_styling"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_scaffolding_styling.txt"
+    },
+    {
+      "check": ["check_bibliography_quality"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_bibliography_quality.txt"
+    },
+    {
+      "check": ["check_bibliography_cross_file"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_bibliography_cross_file.txt"
+    },
+    {
+      "check": ["check_citation_resolution"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_citation_resolution.txt"
+    },
+    {
+      "check": ["check_qmd_citation_keys"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_qmd_citation_keys.txt"
+    },
+    {
+      "check": ["check_title_case"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-check_title_case.txt"
+    },
+    {
+      "check": ["regenerate_claim_audit_evidence", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-regenerate_claim_audit_evidence.txt"
+    },
+    {
+      "check": ["generate_research_readiness_library", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-generate_research_readiness_library.txt"
+    },
+    {
+      "check": ["generate_proximal_distal_falsification_atlas", "--check"],
+      "exit_code": 0,
+      "log": "docs/development/technical-review/underactuation-gate-generate_proximal_distal_falsification_atlas.txt"
+    }
+  ],
+  "render_verification": "reports/technical-review/underactuation-render-verification.json",
+  "delegation": "Eight successful text-only agy CLI Gemini 3.8 Flash helpers; lead adjudicated all output.",
+  "preservation": {
+    "protected_files_exact": 72,
+    "other_route_identities_exact": 250,
+    "historical_target_identity_retained": true,
+    "book_audit_unchanged": true
+  },
+  "full": {
+    "tested_checkpoint": "0160547578c00a8cb711f6246c3c1480d48dc567",
+    "passed": 6810,
+    "skipped": 29,
+    "failed": 0,
+    "errors": 0,
+    "seconds": 815.599,
+    "pytest_summary_seconds": 816.02,
+    "deselected": 210,
+    "warnings": 51,
+    "coverage_percent": 93.24,
+    "coverage_scope": "src",
+    "tracked_files_unchanged_through_run": true
+  },
+  "post_full_heading_only": {
+    "delta": {
+      "full_test_checkpoint": "0160547578c00a8cb711f6246c3c1480d48dc567",
+      "file": "articles/The_Geometry_of_Motion/quarto/volume2_content.qmd",
+      "changed_headings": 8,
+      "change": "Seven section headings level2 to level3; one subsection level3 to level4. Existing chapter/section anchor strings and mathematical body unchanged.",
+      "pre_sha256": "11fe1f71f7461c7891b15d8e106506ad1de0816af70dcbe097c19b7d1b91f785",
+      "post_sha256": "a0ed9a14cd92a41b68e14b1c4bed400a10e0f8d944131518a617009a673a361c",
+      "helper": "Separate supplied-heading Flash inventory; missing-anchor claim rejected because the explicit next-line span already exists."
+    },
+    "focused": {
+      "passed": 63,
+      "seconds": 27.4
+    },
+    "content_lint": {
+      "passed": 208,
+      "skipped": 4,
+      "deselected": 6837,
+      "seconds": 24.69
+    },
+    "publication_gates": [
+      {
+        "check": ["check_title_case"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-check_title_case.txt"
+      },
+      {
+        "check": ["validate_frontmatter"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-validate_frontmatter.txt"
+      },
+      {
+        "check": ["validate_accessibility", "--qmd-only"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-validate_accessibility.txt"
+      },
+      {
+        "check": ["check_qmd_citation_keys"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-check_qmd_citation_keys.txt"
+      },
+      {
+        "check": ["regenerate_claim_audit_evidence", "--check"],
+        "exit_code": 0,
+        "log": "docs/development/technical-review/underactuation-heading-gate-regenerate_claim_audit_evidence.txt"
+      }
+    ],
+    "browser_cells_passed": 4,
+    "additional_manually_inspected_captures": 8,
+    "qualification": "The full suite tested the named checkpoint before eight heading-only prefix edits and derived digest refresh. Post-edit focused/content/publication/render checks cover final headings; protected CI must validate the final PR head."
+  },
+  "accepted_source_commit": "30625cf420f79ed7ffbe070a6322d0f5903dc025",
+  "post_binding": {
+    "passed": 63,
+    "seconds": 19.1,
+    "scope": "Underactuation decay/retained rigor, book audit, claim inventory and scientific trust metadata."
+  },
+  "parent_update": {
+    "previous_head": "c3e50f877c0ffbb2f7af5e8981c3803d9958a89f",
+    "current_head": "bfebb9d5210ccc3c0e47d92f3e8b63c4ef014d24",
+    "main": "af4c2d42e4f89e448b32b5b771dfc552de7db1af",
+    "scope": "Normal merge of deployment fix #4861 and parent turnover; accepted chapter files remain unchanged. Parent current-head protected CI and actual delivery remain pending."
+  },
+  "post_parent_integration": {
+    "passed": 100,
+    "skipped": 1,
+    "seconds": 42.89,
+    "scope": "Deployment integrity, underactuation decay and retained rigor, book audit, claim inventory, scientific trust metadata and SPEC row contract."
+  },
+  "post_verified_parent_metadata": {
+    "exit_code": 0,
+    "log": "docs/development/technical-review/underactuation-delivered-parent-tests.txt",
+    "scope": "Selected underactuation decay/rigor, book audit, claim inventory, scientific trust metadata, SPEC and deployment integrity modules using repository default marker exclusions. Quiet output suppresses the final count; this is not a repeated full suite."
+  },
+  "pull_request": "https://github.com/D-sorganization/AffineDrift/pull/4867",
+  "draft": false,
+  "remote_main_delivery": {
+    "merge_commit": "897dd890704a18481ba229d35add610694da0285",
+    "ci_standard_run": 37170328750,
+    "conclusion": "success",
+    "reviewed_head": "95c3c6d1512f32244f9078583dff77bea1ca58d9"
+  }
+}
